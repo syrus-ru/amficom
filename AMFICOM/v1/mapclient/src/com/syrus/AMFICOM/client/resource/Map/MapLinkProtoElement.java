@@ -1,5 +1,5 @@
 /**
- * $Id: MapLinkProtoElement.java,v 1.8 2004/10/06 09:27:38 krupenn Exp $
+ * $Id: MapLinkProtoElement.java,v 1.9 2004/10/09 13:34:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,7 +33,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2004/10/06 09:27:38 $
+ * @version $Revision: 1.9 $, $Date: 2004/10/09 13:34:33 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -62,17 +62,17 @@ public final class MapLinkProtoElement
 			Dimension bindingDimension)
 	{
 		super();
-		setId(id);
-		setName(name);
-		setDescription(description);
-		setBindingDimension(bindingDimension);
+		this.setId(id);
+		this.setName(name);
+		this.setDescription(description);
+		this.setBindingDimension(bindingDimension);
 	}
 	
 	public MapLinkProtoElement(MapLinkProtoElement_Transferable transferable)
 	{
 		super();
 		this.transferable = transferable;
-		setLocalFromTransferable();
+		this.setLocalFromTransferable();
 	}
 
 	public void setLocalFromTransferable()
@@ -155,7 +155,7 @@ public final class MapLinkProtoElement
 
 	public String getToolTipText()
 	{
-		return "proto " + getName();
+		return "proto " + this.getName();
 	}
 
 	public Point2D.Double getAnchor()

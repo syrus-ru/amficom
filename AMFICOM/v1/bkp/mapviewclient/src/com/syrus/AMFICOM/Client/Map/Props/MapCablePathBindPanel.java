@@ -64,14 +64,14 @@ public final class MapCablePathBindPanel extends JPanel implements ObjectResourc
 	private JLabel startNodeLabel = new JLabel();
 	private JLabel startLinkLabel = new JLabel();
 	private JTextField startNodeTextField = new JTextField();
-	private ObjectResourceComboBox startLinkComboBox = new ObjectResourceComboBox();
+	private ObjectResourceComboBox startLinkComboBox = new ObjectResourceComboBox(MapPhysicalLinkElement.typ);
 
 	private JPanel endPanel = new JPanel();
 	private JLabel endNodeTitleLabel = new JLabel();
 	private JLabel endNodeLabel = new JLabel();
 	private JLabel endLinkLabel = new JLabel();
 	private JTextField endNodeTextField = new JTextField();
-	private ObjectResourceComboBox endLinkComboBox = new ObjectResourceComboBox();
+	private ObjectResourceComboBox endLinkComboBox = new ObjectResourceComboBox(MapPhysicalLinkElement.typ);
 
 	MapNodeElement startNode;
 	MapNodeElement endNode;
@@ -255,8 +255,8 @@ public final class MapCablePathBindPanel extends JPanel implements ObjectResourc
 		endLinkComboBox.setContents(emnelinks, true);
 		endLinkComboBox.setSelected(null);
 		
-		startLinkComboBox.setEnabled(startNode.equals(path.getEndNode()));
-		endLinkComboBox.setEnabled(endNode.equals(path.getStartNode()));
+		startLinkComboBox.setEnabled(!startNode.equals(path.getEndNode()));
+		endLinkComboBox.setEnabled(!endNode.equals(path.getStartNode()));
 	}
 
 	private void addBinding()

@@ -1,5 +1,5 @@
 /**
- * $Id: MapActionCommandBundle.java,v 1.3 2004/09/23 10:07:14 krupenn Exp $
+ * $Id: MapActionCommandBundle.java,v 1.4 2004/10/09 13:33:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,13 +30,14 @@ import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
 
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
 import java.awt.geom.Point2D;
+import java.util.Iterator;
 
 /**
  *  
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/09/23 10:07:14 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/09 13:33:40 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -243,4 +244,31 @@ public class MapActionCommandBundle extends CommandBundle
 		add(cmd);
 	}
 
+	protected void removeCablePathLinks(MapCablePathElement cablePath)
+	{
+		for(Iterator it = cablePath.getLinks().iterator(); it.hasNext();)
+		{
+			MapPhysicalLinkElement link = (MapPhysicalLinkElement )it.next();
+			if(link instanceof MapUnboundLinkElement)
+			{
+				removePhysicalLink(link);
+				link.sortNodes();
+				for(Iterator it2 = link.getSortedNodes().iterator(); it2.hasNext();)
+				{
+					MapNodeElement node = (MapNodeElement )it2.next();
+					if(node instanceof MapPhysicalNodeElement)
+						removeNode(node);
+				}
+			}
+			else
+			{
+				link.getBinding().unbind(cablePath.getSchemeCableLink());
+			}
+		}
+	}
+
+	protected void removeMeasurementPathCables(MapMeasurementPathElement mPath)
+	{
+		mPath.clearCablePaths();
+	}
 }

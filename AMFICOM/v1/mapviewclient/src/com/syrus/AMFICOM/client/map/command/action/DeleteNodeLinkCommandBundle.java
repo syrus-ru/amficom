@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteNodeLinkCommandBundle.java,v 1.2 2004/10/06 09:27:27 krupenn Exp $
+ * $Id: DeleteNodeLinkCommandBundle.java,v 1.3 2004/10/09 13:33:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,6 +23,8 @@ import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
 
+import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 import java.util.Iterator;
 
 /**
@@ -32,7 +34,7 @@ import java.util.Iterator;
  * состоит из последовательности атомарных действий
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/10/06 09:27:27 $
+ * @version $Revision: 1.3 $, $Date: 2004/10/09 13:33:40 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -353,6 +355,14 @@ public class DeleteNodeLinkCommandBundle extends MapActionCommandBundle
 			}//if ! (node.isActive())
 		}//MapSiteNodeElement && MapPhysicalNodeElement
 			
+		MapView mapView = logicalNetLayer.getMapView();
+
+		for(Iterator it = mapView.getCablePaths(nodeLink).iterator(); it.hasNext();)
+		{
+			MapCablePathElement cpath = (MapCablePathElement )it.next();
+			mapView.scanCable(cpath.getSchemeCableLink());
+		}
+
 //		logicalNetLayer.getMapView().removePath( mapPhysicalLinkElement.getId() );
 
 		logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));

@@ -70,7 +70,7 @@ public final class MapMarkerPropertiesController
 		return name;
 	}
 
-	public Object getValue(final ObjectResource object, final String key)
+	public Object getValue(final Object object, final String key)
 	{
 		Object result = null;
 		MapMarker marker = (MapMarker )object;
@@ -115,9 +115,9 @@ public final class MapMarkerPropertiesController
 		return false;
 	}
 
-	public void setValue(ObjectResource objectResource, final String key, final Object value)
+	public void setValue(Object object, final String key, final Object value)
 	{
-		MapMarker marker = (MapMarker )objectResource;
+		MapMarker marker = (MapMarker )object;
 
 		if (key.equals(PROPERTY_DISTANCE))
 		{

@@ -4,30 +4,16 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesDialog;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
-import com.syrus.AMFICOM.Client.Map.Command.Action.BindCablePathCommandBundle;
-import com.syrus.AMFICOM.Client.Map.Command.Action.DeleteSelectionCommand;
-import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Map.Props.MapCablePathPane;
-import com.syrus.AMFICOM.Client.Map.Props.MapPropsManager;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 
-import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Scheme.CableChannelingItem;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import java.util.LinkedList;
-import java.util.List;
 import javax.swing.JMenuItem;
-import java.util.Iterator;
 
 public class CablePathPopupMenu extends MapPopupMenu 
 {
@@ -106,6 +92,7 @@ public class CablePathPopupMenu extends MapPopupMenu
 	private void showProperties()
 	{
 		super.showProperties(path);
+		getLogicalNetLayer().getMapView().scanCable(path.getSchemeCableLink());
 	}
 
 	private void removeCablePath()

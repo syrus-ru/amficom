@@ -1,5 +1,5 @@
 /**
- * $Id: MapCablePathElement.java,v 1.9 2004/10/06 09:27:28 krupenn Exp $
+ * $Id: MapCablePathElement.java,v 1.10 2004/10/09 13:34:24 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -49,7 +49,7 @@ import java.util.ListIterator;
  * 
  * 
  * 
- * @version $Revision: 1.9 $, $Date: 2004/10/06 09:27:28 $
+ * @version $Revision: 1.10 $, $Date: 2004/10/09 13:34:24 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -592,5 +592,16 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 	{
 		return MapPropertiesManager.getAlarmedThickness();
 	}
-	
+
+	public Point getPosition(MapPhysicalLinkElement link)
+	{
+		String lid = link.getId();
+		for(Iterator it = getSchemeCableLink().channelingItems.iterator(); it.hasNext();)
+		{
+			CableChannelingItem cci = (CableChannelingItem )it.next();
+			if(cci.physicalLinkId.equals(lid))
+				return new Point(cci.row_x, cci.place_y);
+		}
+		return new Point(-1, -1);
+	}
 }

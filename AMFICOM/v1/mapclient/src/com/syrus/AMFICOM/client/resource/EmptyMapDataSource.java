@@ -232,7 +232,7 @@ public class EmptyMapDataSource
 		if(!getSession().isOpened())
 			return;
 
-		String fileName = openFileForReading();
+		String fileName = this.openFileForReading();
 		if(fileName == null)
 		{
 			JOptionPane.showMessageDialog(
@@ -268,7 +268,7 @@ public class EmptyMapDataSource
 		if(!getSession().isOpened())
 			return;
 			
-		String fileName = openFileForWriting();
+		String fileName = this.openFileForWriting();
 		if(fileName == null)
 		{
 			JOptionPane.showMessageDialog(

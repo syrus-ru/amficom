@@ -94,13 +94,13 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 	public void setColumn(String field, String value)
 	{
 		if(field.equals(COLUMN_ID))
-			setId(value);
+			this.setId(value);
 		else
 		if(field.equals(COLUMN_NAME))
-			setName(value);
+			this.setName(value);
 		else
 		if(field.equals(COLUMN_DESCRIPTION))
-			setDescription(value);
+			this.setDescription(value);
 		else
 		if(field.equals(COLUMN_PHYSICAL_LINK_ID))
 			linkId = value;
@@ -117,7 +117,7 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 
 	public MapMarkElement()
 	{
-		setImageId(IMAGE_NAME);
+		this.setImageId(IMAGE_NAME);
 
 		attributes = new HashMap();
 
@@ -130,18 +130,18 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 			MapPhysicalLinkElement link,
 			double len)
 	{
-		setId(id);
-		setName(id);
+		this.setId(id);
+		this.setName(id);
 		this.map = map;
 		this.link = link;
 		this.linkId = link.getId();
-		setImageId(IMAGE_NAME);
+		this.setImageId(IMAGE_NAME);
 		
 		if(map != null)
 			mapId = map.getId();
 		attributes = new HashMap();
 
-		moveToFromStartLt(len);
+		this.moveToFromStartLt(len);
 
 		transferable = new MapMarkElement_Transferable();
 	}
@@ -149,8 +149,8 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 	public MapMarkElement(MapMarkElement_Transferable transferable)
 	{
 		this.transferable = transferable;
-		setLocalFromTransferable();
-		setImageId(IMAGE_NAME);
+		this.setLocalFromTransferable();
+		this.setImageId(IMAGE_NAME);
 
 		attributes = new HashMap();
 	}
@@ -267,7 +267,7 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 		{
 			map = (Map )Pool.get(com.syrus.AMFICOM.Client.Resource.Map.Map.typ, this.mapId);
 		}
-		moveToFromStartLt(distance);
+		this.moveToFromStartLt(distance);
 	}
 
 	public Object getTransferable()
@@ -367,7 +367,7 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 	public void setAnchor(Point2D.Double aAnchor)
 	{
 		anchor = aAnchor;
-		distance = getFromStartLengthLt();
+		distance = this.getFromStartLengthLt();
 	}
 
 	//рисуем маркер
@@ -380,7 +380,7 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 
 		MapCoordinatesConverter converter = getMap().getConverter();
 
-		Point p = converter.convertMapToScreen( getAnchor());
+		Point p = converter.convertMapToScreen( this.getAnchor());
 
 		Graphics2D pg = ( Graphics2D)g;
 		pg.setStroke(new BasicStroke(MapPropertiesManager.getBorderThickness()));
@@ -389,10 +389,10 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 		pg.setBackground(MapPropertiesManager.getTextBackground());
 		pg.setFont(MapPropertiesManager.getFont());
 
-		int width = getBounds().width;
+		int width = this.getBounds().width;
 		int height = g.getFontMetrics().getHeight();
 
-		String s1 = getName();
+		String s1 = this.getName();
 		pg.drawRect(
 				p.x + width, 
 				p.y - height + 2,
@@ -424,7 +424,7 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 			MapNodeLinkElement nl = (MapNodeLinkElement )it.next();
 			if(nl == nodeLink)
 			{
-				pathLength += getSizeInDoubleLt();
+				pathLength += this.getSizeInDoubleLt();
 				break;
 			}
 			else
@@ -450,9 +450,9 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 			if ( startNodeLink == nodeLink)
 			{
 				if ( bufferStartNode == startNode)
-					return path_length + getSizeInDoubleLt();
+					return path_length + this.getSizeInDoubleLt();
 				else
-					return path_length + startNodeLink.getSizeInDoubleLt() - getSizeInDoubleLt();
+					return path_length + startNodeLink.getSizeInDoubleLt() - this.getSizeInDoubleLt();
 			}
 			else
 			{
@@ -493,15 +493,15 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 			if ( startNodeLink == nodeLink)
 			{
 				if ( bufferStartNode == startNode)
-					return path_length + getSizeInDoubleLf();
+					return path_length + this.getSizeInDoubleLf();
 				else
-					return path_length + startNodeLink.getSizeInDoubleLf() - getSizeInDoubleLf();
+					return path_length + startNodeLink.getSizeInDoubleLf() - this.getSizeInDoubleLf();
 			}
 			else
 			{
 				path_length = path_length + startNodeLink.getSizeInDoubleLf();
 
-				Iterator it = getNodeLinksContainingNode(bufferEndNode).iterator();
+				Iterator it = this.getNodeLinksContainingNode(bufferEndNode).iterator();
 				MapNodeLinkElement bufferNodeLink = (MapNodeLinkElement)it.next();
 
 				while( it.hasNext() && ( bufferNodeLink == startNodeLink ) )
@@ -530,7 +530,7 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 			MapNodeLinkElement nl = (MapNodeLinkElement )it.previous();
 			if(nl == nodeLink)
 			{
-				pathLength += nl.getLengthLt() - getSizeInDoubleLt();
+				pathLength += nl.getLengthLt() - this.getSizeInDoubleLt();
 				break;
 			}
 			else
@@ -560,11 +560,11 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 			{
 				if ( bufferStartNode == startNode)
 				{
-					return path_length + endNodeLink.getSizeInDoubleLt() - getSizeInDoubleLt();
+					return path_length + endNodeLink.getSizeInDoubleLt() - this.getSizeInDoubleLt();
 				}
 				else
 				{
-					return path_length + getSizeInDoubleLt();
+					return path_length + this.getSizeInDoubleLt();
 				}
 			}
 			else
@@ -611,18 +611,18 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 			{
 				if ( bufferStartNode == startNode)
 				{
-					return path_length + endNodeLink.getSizeInDoubleLf() - getSizeInDoubleLf();
+					return path_length + endNodeLink.getSizeInDoubleLf() - this.getSizeInDoubleLf();
 				}
 				else
 				{
-					return path_length + getSizeInDoubleLf();
+					return path_length + this.getSizeInDoubleLf();
 				}
 			}
 			else
 			{
 				path_length = path_length + endNodeLink.getSizeInDoubleLf();
 
-				Iterator it = getNodeLinksContainingNode(bufferStartNode).iterator();
+				Iterator it = this.getNodeLinksContainingNode(bufferStartNode).iterator();
 				MapNodeLinkElement bufferNodeLink = (MapNodeLinkElement)it.next();
 
 				while( it.hasNext() && ( bufferNodeLink == endNodeLink ) )
@@ -640,14 +640,14 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 */
 	public double getSizeInDoubleLt()
 	{
-		MapCoordinatesConverter converter = getMap().getConverter();
+		MapCoordinatesConverter converter = this.getMap().getConverter();
 		
 		link.sortNodes();
 		
 		List nodes = link.getSortedNodes();
 		
 		Point2D.Double from;
-		Point2D.Double to = getAnchor();
+		Point2D.Double to = this.getAnchor();
 
 		if(nodes.indexOf(nodeLink.getStartNode()) < nodes.indexOf(nodeLink.getEndNode()))
 			from = nodeLink.getStartNode().getAnchor();
@@ -660,8 +660,8 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 /*
 	public double getSizeInDoubleLf()
 	{
-		double Kd = getMap().getPhysicalLink(nodeLink.getPhysicalLinkId()).getKd();
-		return getSizeInDoubleLt() * Kd;
+		double Kd = this.getMap().getPhysicalLink(nodeLink.getPhysicalLinkId()).getKd();
+		return this.getSizeInDoubleLt() * Kd;
 	}
 */
 	public double getDistance()
@@ -672,7 +672,7 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 	//Передвинуть в точку на заданной расстоянии от начала
 	public void moveToFromStartLt(double distance)
 	{
-		MapCoordinatesConverter converter = getMap().getConverter();
+		MapCoordinatesConverter converter = this.getMap().getConverter();
 
 		this.distance = distance;
 		
@@ -680,7 +680,7 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 
 		if ( distance > link.getLengthLt())
 		{
-			moveToFromStartLt(link.getLengthLt());
+			this.moveToFromStartLt(link.getLengthLt());
 			return;
 		}
 
@@ -706,7 +706,7 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 		Point2D.Double dsp = nodeLink.getStartNode().getAnchor();
 		Point sp = converter.convertMapToScreen(dsp);
 
-		setAnchor(
+		this.setAnchor(
 			converter.convertScreenToMap(
 				new Point(
 					(int)Math.round(sp.x + sin_b * path),
@@ -747,9 +747,9 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 		attributes = (HashMap )in.readObject();
 
 		transferable = new MapMarkElement_Transferable();
-		updateLocalFromTransferable();
+		this.updateLocalFromTransferable();
 
-//		moveToFromStart(this.distance);
+//		this.moveToFromStart(this.distance);
 	}
 
 

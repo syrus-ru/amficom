@@ -1,17 +1,14 @@
 package com.syrus.AMFICOM.Client.Map.Props;
 
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Scheme.SchemePanelNoEdition;
 import com.syrus.AMFICOM.Client.General.Scheme.UgoPanel;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceListBox;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
+import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
-
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
-import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -55,7 +52,7 @@ public final class MapSiteBindPanel extends JPanel implements ObjectResourceProp
 
 	}
 
-	private void jbInit() throws Exception
+	private void jbInit()
 	{
 		this.setLayout(gridBagLayout1);
 		this.setName(LangModelMap.getString("SiteBinding"));
@@ -157,9 +154,6 @@ public final class MapSiteBindPanel extends JPanel implements ObjectResourceProp
 		{
 			ex.printStackTrace();
 		} 
-		finally 
-		{
-		}
 		
 		return false;
 	}

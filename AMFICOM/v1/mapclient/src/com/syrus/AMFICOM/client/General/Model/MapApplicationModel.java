@@ -9,119 +9,119 @@ public class MapApplicationModel extends ApplicationModel
 {
 	public MapApplicationModel()
 	{
-		add("menuMap");
-		add("menuMapNew");
-		add("menuMapOpen");
-		add("menuMapClose");
-		add("menuMapSave");
-		add("menuMapOptions");
-		add("menuExit");
+		super.add("menuMap");
+		super.add("menuMapNew");
+		super.add("menuMapOpen");
+		super.add("menuMapClose");
+		super.add("menuMapSave");
+		super.add("menuMapOptions");
+		super.add("menuExit");
 
-		add("menuEdit");
-		add("menuEditUndo");
-		add("menuEditRedo");
-		add("menuEditCut");
-		add("menuEditCopy");
-		add("menuEditPaste");
-		add("menuEditDelete");
-		add("menuEditSelectAll");
-		add("menuEditSelect");
+		super.add("menuEdit");
+		super.add("menuEditUndo");
+		super.add("menuEditRedo");
+		super.add("menuEditCut");
+		super.add("menuEditCopy");
+		super.add("menuEditPaste");
+		super.add("menuEditDelete");
+		super.add("menuEditSelectAll");
+		super.add("menuEditSelect");
 
-		add("menuView");
-		add("menuViewNavigator");
-		add("menuViewToolbar");
-		add("menuViewRefresh");
-		add("menuViewPoints");
-		add("menuViewMetrics");
-		add("menuViewPanel");
+		super.add("menuView");
+		super.add("menuViewNavigator");
+		super.add("menuViewToolbar");
+		super.add("menuViewRefresh");
+		super.add("menuViewPoints");
+		super.add("menuViewMetrics");
+		super.add("menuViewPanel");
 
-		add("menuNavigate");
-		add("menuNavigateLeft");
-		add("menuNavigateRight");
-		add("menuNavigateUp");
-		add("menuNavigateDown");
-		add("menuNavigateZoomIn");
-		add("menuNavigateZoomOut");
-		add("menuNavigateZoomBox");
-		add("menuNavigateZoomSelection");
-		add("menuNavigateZoomMap");
-		add("menuNavigateCenterPoint");
-		add("menuNavigateCenterSelection");
-		add("menuNavigateCenterMap");
+		super.add("menuNavigate");
+		super.add("menuNavigateLeft");
+		super.add("menuNavigateRight");
+		super.add("menuNavigateUp");
+		super.add("menuNavigateDown");
+		super.add("menuNavigateZoomIn");
+		super.add("menuNavigateZoomOut");
+		super.add("menuNavigateZoomBox");
+		super.add("menuNavigateZoomSelection");
+		super.add("menuNavigateZoomMap");
+		super.add("menuNavigateCenterPoint");
+		super.add("menuNavigateCenterSelection");
+		super.add("menuNavigateCenterMap");
 
-		add("menuElement");
-		add("menuElementCatalogue");
-		add("menuElementGroup");
-		add("menuElementUngroup");
-		add("menuElementAlign");
-		add("menuElementProperties");
+		super.add("menuElement");
+		super.add("menuElementCatalogue");
+		super.add("menuElementGroup");
+		super.add("menuElementUngroup");
+		super.add("menuElementAlign");
+		super.add("menuElementProperties");
 
-		add("menuMarker");
-		add("menuMarkerCreate");
-		add("menuMarkerDelete");
-		add("menuMarkerDeleteAll");
+		super.add("menuMarker");
+		super.add("menuMarkerCreate");
+		super.add("menuMarkerDelete");
+		super.add("menuMarkerDeleteAll");
 
-		add("menuHelp");
-		add("menuHelpContents");
-		add("menuHelpFind");
-		add("menuHelpTips");
-		add("menuHelpCourse");
-		add("menuHelpHelp");
-		add("menuHelpAbout");
+		super.add("menuHelp");
+		super.add("menuHelpContents");
+		super.add("menuHelpFind");
+		super.add("menuHelpTips");
+		super.add("menuHelpCourse");
+		super.add("menuHelpHelp");
+		super.add("menuHelpAbout");
 
-		add("mapActionMoveNode");
-		add("mapActionMoveEquipment");
-		add("mapActionMoveKIS");
+		super.add("mapActionMoveNode");
+		super.add("mapActionMoveEquipment");
+		super.add("mapActionMoveKIS");
 
-		add("mapActionShowLink");
-		add("mapActionShowEquipment");
-		add("mapActionShowKIS");
-		add("mapActionShowPath");
+		super.add("mapActionShowLink");
+		super.add("mapActionShowEquipment");
+		super.add("mapActionShowKIS");
+		super.add("mapActionShowPath");
 
-		add("mapActionCreateLink");
-		add("mapActionCreateEquipment");
-		add("mapActionCreateKIS");
-		add("mapActionCreatePath");
+		super.add("mapActionCreateLink");
+		super.add("mapActionCreateEquipment");
+		super.add("mapActionCreateKIS");
+		super.add("mapActionCreatePath");
 
-		add("mapActionDeleteNode");
-		add("mapActionDeleteEquipment");
-		add("mapActionDeleteKIS");
-		add("mapActionDeletePath");
+		super.add("mapActionDeleteNode");
+		super.add("mapActionDeleteEquipment");
+		super.add("mapActionDeleteKIS");
+		super.add("mapActionDeletePath");
 
-		add("mapActionMarkerMove");
-		add("mapActionMarkerCreate");
-		add("mapActionMarkerDelete");
+		super.add("mapActionMarkerMove");
+		super.add("mapActionMarkerCreate");
+		super.add("mapActionMarkerDelete");
 
-		add("mapActionMarkShow");
-		add("mapActionMarkMove");
-		add("mapActionMarkCreate");
-		add("mapActionMarkDelete");
+		super.add("mapActionMarkShow");
+		super.add("mapActionMarkMove");
+		super.add("mapActionMarkCreate");
+		super.add("mapActionMarkDelete");
 
-		add("mapActionIndication");
+		super.add("mapActionIndication");
 
-		add("mapActionViewProperties");
-		add("mapActionEditProperties");
+		super.add("mapActionViewProperties");
+		super.add("mapActionEditProperties");
 
-		add("mapActionShowProto");
-		add("mapActionReload");
+		super.add("mapActionShowProto");
+		super.add("mapActionReload");
 
-		add("mapModeNodeLink");
-		add("mapModeLink");
-		add("mapModeCablePath");
-		add("mapModePath");
+		super.add("mapModeNodeLink");
+		super.add("mapModeLink");
+		super.add("mapModeCablePath");
+		super.add("mapModePath");
 
-		add("mapActionZoomIn");
-		add("mapActionZoomOut");
-		add("mapActionZoomToPoint");
-		add("mapActionZoomBox");
-		add("mapActionCenterSelection");
-		add("mapActionMoveToCenter");
+		super.add("mapActionZoomIn");
+		super.add("mapActionZoomOut");
+		super.add("mapActionZoomToPoint");
+		super.add("mapActionZoomBox");
+		super.add("mapActionCenterSelection");
+		super.add("mapActionMoveToCenter");
 
-		add("mapModeViewNodes");
+		super.add("mapModeViewNodes");
 
-		add("mapActionHandPan");
+		super.add("mapActionHandPan");
 		
-		add("mapActionMeasureDistance");
+		super.add("mapActionMeasureDistance");
 
 	}
 

@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertiesManager.java,v 1.7 2004/10/06 14:10:05 krupenn Exp $
+ * $Id: MapPropertiesManager.java,v 1.8 2004/10/09 13:34:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -43,7 +43,7 @@ import java.util.Map;
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2004/10/06 14:10:05 $
+ * @version $Revision: 1.8 $, $Date: 2004/10/09 13:34:33 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -188,11 +188,11 @@ public final class MapPropertiesManager
 		try
 		{
 			iniFile = new IniFile(iniFileName);
-			setFromIniFile();
+			MapPropertiesManager.setFromIniFile();
 		}
 		catch(java.io.IOException e)
 		{
-			setDefaults();
+			MapPropertiesManager.setDefaults();
 		}
 	}
 	
@@ -337,17 +337,17 @@ public final class MapPropertiesManager
 
 	public static void setScaledImageSize(String imageId, int width, int height)
 	{
-		Image img = getScaledImage(imageId);
+		Image img = MapPropertiesManager.getScaledImage(imageId);
 		if(img.getWidth(null) != width
 			|| img.getHeight(null) != height)
 		{
-			img = getImage(imageId);
+			img = MapPropertiesManager.getImage(imageId);
 			img = img.getScaledInstance(
 				width,
 				height,
 				Image.SCALE_SMOOTH);
 			scaledImages.put(imageId, img);
-			loadImage(img);
+			MapPropertiesManager.loadImage(img);
 		}
 	}
 
@@ -359,7 +359,7 @@ public final class MapPropertiesManager
 			ImageResource ir = ImageCatalogue.get(imageId);
 			img = ir.getImage();
 			originalImages.put(imageId, img);
-			loadImage(img);
+			MapPropertiesManager.loadImage(img);
 		}
 		return img;
 	}
@@ -369,7 +369,7 @@ public final class MapPropertiesManager
 		Image img = (Image )scaledImages.get(imageId);
 		if(img == null)
 		{
-			img = getImage(imageId);
+			img = MapPropertiesManager.getImage(imageId);
 			scaledImages.put(imageId, img);
 		}
 		return img;
@@ -382,7 +382,7 @@ public final class MapPropertiesManager
 	{
 		synchronized(tracker) 
 		{
-            int id = getNextID();
+            int id = MapPropertiesManager.getNextID();
 
 			tracker.addImage(image, id);
 			try 

@@ -3,7 +3,7 @@ package com.syrus.AMFICOM.Client.Map.Popup;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceSelectionDialog;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.Map.Command.Action.BindToSiteCommandBundle;
+import com.syrus.AMFICOM.Client.Map.Command.Action.BindUnboundNodeToSiteCommandBundle;
 import com.syrus.AMFICOM.Client.Map.Command.Action.CreateSiteCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.DeleteNodeCommandBundle;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
@@ -116,7 +116,7 @@ public class UnboundPopupMenu extends MapPopupMenu
 		MapSiteNodeElement site = super.selectSiteNode();
 		if(site != null)
 		{
-			BindToSiteCommandBundle command = new BindToSiteCommandBundle(unbound, site);
+			BindUnboundNodeToSiteCommandBundle command = new BindUnboundNodeToSiteCommandBundle(unbound, site);
 			command.setLogicalNetLayer(logicalNetLayer);
 			logicalNetLayer.getCommandList().add(command);
 			logicalNetLayer.getCommandList().execute();

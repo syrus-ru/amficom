@@ -81,12 +81,12 @@ public final class CableBindingController implements ObjectResourceController
 		return name;
 	}
 
-	public Object getValue(final ObjectResource objectResource, final String key)
+	public Object getValue(final Object object, final String key)
 	{
 		Object result = null;
-		if (objectResource instanceof CableChannelingItem) 
+		if (object instanceof CableChannelingItem) 
 		{
-			CableChannelingItem cci = (CableChannelingItem )objectResource;
+			CableChannelingItem cci = (CableChannelingItem )object;
 			if (key.equals(KEY_START_NODE))
 			{
 				MapNodeElement mne = (MapNodeElement )map.getNode(cci.startSiteId);
@@ -120,11 +120,27 @@ public final class CableBindingController implements ObjectResourceController
 
 	public boolean isEditable(final String key)
 	{
-		return false;
+		boolean editable = false;
+		if (key.equals(KEY_START_SPARE)
+			|| key.equals(KEY_END_SPARE))
+		{
+			editable = true;
+		}
+		return editable;
 	}
 
-	public void setValue(ObjectResource objectResource, final String key, final Object value)
+	public void setValue(Object object, final String key, final Object value)
 	{
+		CableChannelingItem cci = (CableChannelingItem )object;
+		if (key.equals(KEY_START_SPARE))
+		{
+			cci.startSpare = Double.parseDouble((String )value);
+		}
+		else
+		if (key.equals(KEY_END_SPARE))
+		{
+			cci.endSpare = Double.parseDouble((String )value);
+		}
 	}
 
 	public String getKey(final int index) 

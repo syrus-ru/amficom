@@ -1,5 +1,5 @@
 /**
- * $Id: DropSchemePathCommand.java,v 1.1 2004/09/23 10:07:14 krupenn Exp $
+ * $Id: PlaceSchemePathCommand.java,v 1.1 2004/10/09 13:33:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -36,12 +36,12 @@ import java.util.Iterator;
  * Разместить элемент типа mpe на карте. используется при переносе 
  * (drag/drop), в точке point (в экранных координатах)
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/23 10:07:14 $
+ * @version $Revision: 1.1 $, $Date: 2004/10/09 13:33:40 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
  */
-public class DropSchemePathCommand extends MapActionCommandBundle
+public class PlaceSchemePathCommand extends MapActionCommandBundle
 {
 	/**
 	 * Выбранный фрагмент линии
@@ -63,7 +63,7 @@ public class DropSchemePathCommand extends MapActionCommandBundle
 	 */
 	Point point;
 
-	public DropSchemePathCommand(SchemePath path)
+	public PlaceSchemePathCommand(SchemePath path)
 	{
 		super();
 		this.path = path;
@@ -82,7 +82,11 @@ public class DropSchemePathCommand extends MapActionCommandBundle
 		startNode = mne[0];
 		endNode = mne[1];
 		
-		mPath = createMeasurementPath(path, startNode, endNode);
+		mPath = mapView.findMeasurementPath(path);
+		if(mPath == null)
+			mPath = super.createMeasurementPath(path, startNode, endNode);
+		else
+			super.removeMeasurementPathCables(mPath);
 
 		for(Iterator it = path.links.iterator(); it.hasNext();)
 		{

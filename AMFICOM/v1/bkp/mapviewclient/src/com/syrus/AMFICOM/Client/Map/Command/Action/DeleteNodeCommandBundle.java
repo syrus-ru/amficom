@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteNodeCommandBundle.java,v 1.2 2004/10/06 09:27:27 krupenn Exp $
+ * $Id: DeleteNodeCommandBundle.java,v 1.3 2004/10/09 13:33:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,6 +23,9 @@ import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
 
+import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundNodeElement;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 import java.util.Iterator;
 
 /**
@@ -31,7 +34,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/10/06 09:27:27 $
+ * @version $Revision: 1.3 $, $Date: 2004/10/09 13:33:40 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -61,6 +64,14 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 		if ( !getContext().getApplicationModel().isEnabled("mapActionDeleteEquipment"))
 		{
 			return;
+		}
+
+		MapView mapView = logicalNetLayer.getMapView();
+
+		for(Iterator it = mapView.getCablePaths(node).iterator(); it.hasNext();)
+		{
+			MapCablePathElement cpath = (MapCablePathElement )it.next();
+			mapView.scanCable(cpath.getSchemeCableLink());
 		}
 
 		//При удалении узла удаляются все фрагменты линий, исходящие из него
@@ -118,6 +129,12 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 		}//while(e.hasNext())
 
 		removeNode(node);
+
+		for(Iterator it = mapView.getCablePaths(node).iterator(); it.hasNext();)
+		{
+			MapCablePathElement cpath = (MapCablePathElement )it.next();
+			mapView.scanCable(cpath.getSchemeCableLink());
+		}
 	}
 	
 	/**
@@ -266,6 +283,19 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 		}//if ( node.isActive() )
 	}
 
+	protected void deleteUnbound(MapUnboundNodeElement unbound)
+	{
+		MapView mapView = logicalNetLayer.getMapView();
+	
+		deleteSite(unbound);
+		
+		for(Iterator it = mapView.getCablePaths(unbound).iterator(); it.hasNext();)
+		{
+			MapCablePathElement cpath = (MapCablePathElement )it.next();
+			mapView.scanCable(cpath.getSchemeCableLink());
+		}
+	}
+
 	/**
 	 * Удалить метку на физической линии
 	 */
@@ -290,14 +320,21 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 		map = logicalNetLayer.getMapView().getMap();
 		
 		//В зависимости от того какого типа node и от флагов разрешения удаляем
+		if ( node instanceof MapUnboundNodeElement)
+		{
+			deleteUnbound((MapUnboundNodeElement )node);
+		}
+		else
 		if ( node instanceof MapSiteNodeElement)
 		{
 			deleteSite((MapSiteNodeElement )node);
 		}
+		else
 		if ( node instanceof MapPhysicalNodeElement)
 		{
 			deletePhysicalNode((MapPhysicalNodeElement )node);
 		}
+		else
 		if ( node instanceof MapMarkElement)
 		{
 			deleteMark((MapMarkElement )node);

@@ -65,7 +65,7 @@ public final class MapMarkPropertiesController
 		return name;
 	}
 
-	public Object getValue(final ObjectResource object, final String key)
+	public Object getValue(final Object object, final String key)
 	{
 		Object result = null;
 		MapMarkElement mark = (MapMarkElement )object;
@@ -100,9 +100,9 @@ public final class MapMarkPropertiesController
 		return false;
 	}
 
-	public void setValue(ObjectResource objectResource, final String key, final Object value)
+	public void setValue(Object object, final String key, final Object value)
 	{
-		MapMarkElement node = (MapMarkElement )objectResource;
+		MapMarkElement node = (MapMarkElement )object;
 
 		if (key.equals(PROPERTY_NAME))
 		{

@@ -61,14 +61,14 @@ public final class SimpleMapElementController implements ObjectResourceControlle
 		return name;
 	}
 
-	public Object getValue(final ObjectResource objectResource, final String key)
+	public Object getValue(final Object object, final String key)
 	{
 		Object result = null;
-		if (objectResource instanceof MapElement) 
+		if (object instanceof MapElement) 
 		{
-			MapElement me = (MapElement )objectResource;
+			MapElement me = (MapElement )object;
 			if (key.equals(KEY_NAME))
-				result = objectResource.getName();
+				result = ((ObjectResource )object).getName();
 			else
 			if (key.equals(KEY_TYPE))
 			{
@@ -89,7 +89,7 @@ public final class SimpleMapElementController implements ObjectResourceControlle
 				}
 				else
 					result = 
-						LangModel.getString("node" + objectResource.getTyp());
+						LangModel.getString("node" + ((ObjectResource )object).getTyp());
 			}
 		}
 		return result;
@@ -100,7 +100,7 @@ public final class SimpleMapElementController implements ObjectResourceControlle
 		return false;
 	}
 
-	public void setValue(ObjectResource objectResource, final String key, final Object value)
+	public void setValue(Object object, final String key, final Object value)
 	{
 	}
 

@@ -1,5 +1,5 @@
 /**
- * $Id: MapMeasurementPathElement.java,v 1.6 2004/10/06 09:27:28 krupenn Exp $
+ * $Id: MapMeasurementPathElement.java,v 1.7 2004/10/09 13:34:24 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,15 +11,12 @@
 
 package com.syrus.AMFICOM.Client.Resource.MapView;
 
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
-import com.syrus.AMFICOM.Client.General.UI.PropertiesPanel;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
 
@@ -43,7 +40,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2004/10/06 09:27:28 $
+ * @version $Revision: 1.7 $, $Date: 2004/10/09 13:34:24 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -335,6 +332,12 @@ public class MapMeasurementPathElement extends MapLinkElement implements Seriali
 	public void addCablePath(MapCablePathElement cpath)
 	{
 		cablePaths.add(cpath);
+		cablePathsSorted = false;
+	}
+
+	public void clearCablePaths()
+	{
+		cablePaths.clear();
 		cablePathsSorted = false;
 	}
 

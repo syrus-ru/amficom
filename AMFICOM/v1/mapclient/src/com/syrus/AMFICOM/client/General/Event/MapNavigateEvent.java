@@ -1,5 +1,5 @@
 /**
- * $Id: MapNavigateEvent.java,v 1.2 2004/09/29 15:02:30 krupenn Exp $
+ * $Id: MapNavigateEvent.java,v 1.3 2004/10/09 13:34:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,7 +15,7 @@ package com.syrus.AMFICOM.Client.General.Event;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/09/29 15:02:30 $
+ * @version $Revision: 1.3 $, $Date: 2004/10/09 13:34:33 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -90,7 +90,7 @@ public class MapNavigateEvent extends MapEvent
 			long typ)
 	{
 		super(source, MAP_NAVIGATE);
-		setTyp(typ);
+		this.setTyp(typ);
 	}
 	
 	public MapNavigateEvent(
@@ -107,7 +107,7 @@ public class MapNavigateEvent extends MapEvent
         this.mapPathId = mapPathId;
         this.meId = meId;
 
-		setTyp(typ);
+		this.setTyp(typ);
 	}
 
 	public MapNavigateEvent(

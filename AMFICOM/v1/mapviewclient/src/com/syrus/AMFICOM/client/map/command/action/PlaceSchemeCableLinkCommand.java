@@ -1,5 +1,5 @@
 /**
- * $Id: DropSchemeCableLinkCommand.java,v 1.5 2004/10/06 09:27:27 krupenn Exp $
+ * $Id: PlaceSchemeCableLinkCommand.java,v 1.1 2004/10/09 13:33:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,38 +10,36 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Scheme.CableChannelingItem;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
-
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
+import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+import com.syrus.AMFICOM.Client.Resource.Scheme.CableChannelingItem;
+import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
 
 import java.awt.Point;
-import java.util.ArrayList;
+
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Iterator;
 
 /**
  * Разместить элемент типа mpe на карте. используется при переносе 
  * (drag/drop), в точке point (в экранных координатах)
  * 
- * @version $Revision: 1.5 $, $Date: 2004/10/06 09:27:27 $
+ * @version $Revision: 1.1 $, $Date: 2004/10/09 13:33:40 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
  */
-public class DropSchemeCableLinkCommand extends MapActionCommandBundle
+public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
 {
 	/**
 	 * Выбранный фрагмент линии
@@ -54,7 +52,7 @@ public class DropSchemeCableLinkCommand extends MapActionCommandBundle
 	MapNodeLinkElement nodeLink;
 
 	SchemeCableLink scl = null;
-	String prev_site_id;
+	String prevSiteId;
 	
 	Map map;
 	MapView mapView;
@@ -64,33 +62,16 @@ public class DropSchemeCableLinkCommand extends MapActionCommandBundle
 	 */
 	Point point;
 
-	public DropSchemeCableLinkCommand(SchemeCableLink scl)
+	public PlaceSchemeCableLinkCommand(SchemeCableLink scl)
 	{
 		super();
 		this.scl = scl;
 	}
-/*
-	private void sort()
-	{
-		CableChannelingItem[] ccis = new CableChannelingItem[scl.channeling_items.size()];
-		for(Iterator it = scl.channeling_items.iterator(); it.hasNext();)
-		{
-			CableChannelingItem cci = (CableChannelingItem )it.next();
-			ccis[cci.n] = cci;
-		}
-		List list = new ArrayList();
-		for(int i = 0; i < ccis.length; i++)
-			list.add(ccis[i]);
-			
-		scl.channeling_items = list;
-	}
-*/
+
 	public void execute()
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "execute()");
 
-		DataSourceInterface dataSource = aContext.getDataSource();
-	
 		mapView = logicalNetLayer.getMapView();
 		map = mapView.getMap();
 		
@@ -101,46 +82,55 @@ public class DropSchemeCableLinkCommand extends MapActionCommandBundle
 		
 		cablePath = mapView.findCablePath(scl);
 		if(cablePath == null)
-			cablePath = createCablePath(scl, startNode, endNode);
+			cablePath = super.createCablePath(scl, startNode, endNode);
+		else
+			super.removeCablePathLinks(cablePath);
 
 		scl.channelingItems = sortCCIS(startNode, endNode, scl.channelingItems);
 		List ccis = (List )scl.channelingItems;
 
 		MapSiteNodeElement bufferStartSite = startNode;
-		MapSiteNodeElement bufferEndSite;
 
 		for(Iterator it = ccis.iterator(); it.hasNext();)
 		{
 			CableChannelingItem cci = (CableChannelingItem )it.next();
 			MapSiteNodeElement smsne = map.getMapSiteNodeElement(cci.startSiteId);
 			MapSiteNodeElement emsne = map.getMapSiteNodeElement(cci.endSiteId);
-			MapPhysicalLinkElement link = map.getPhysicalLink(cci.physicalLinkId);
 			if(smsne == null
-				|| emsne == null
-				|| link == null)
+				|| emsne == null)
 			{
-				break;
+				continue;
 			}
-			
-			if(smsne == bufferStartSite)
-				bufferEndSite = emsne;
-			else
-				bufferEndSite = smsne;
+
+			MapPhysicalLinkElement link = map.getPhysicalLink(cci.physicalLinkId);
+			if(link == null)
+			{
+				unbound = super.createUnboundLink(bufferStartSite, smsne);
+				cablePath.addLink(unbound);
+				unbound.setCablePath(cablePath);
+
+				nodeLink = super.createNodeLink(bufferStartSite, endNode);
+				unbound.addNodeLink(nodeLink);
+				nodeLink.setPhysicalLinkId(unbound.getId());
+			}
+
+			link.getBinding().add(scl);
+			if(cci.row_x != -1
+				&& cci.place_y != -1)
+				link.getBinding().bind(scl, cci.row_x, cci.place_y);
 
 			cablePath.addLink(link);
 
-			bufferStartSite = bufferEndSite;
+			bufferStartSite = emsne;
 		}
 
 		if(endNode != bufferStartSite)
 		{
-			unbound = createUnboundLink(bufferStartSite, endNode);
-			unbound.setCablePath(cablePath);
-			
-			nodeLink = createNodeLink(bufferStartSite, endNode);
-	
+			unbound = super.createUnboundLink(bufferStartSite, endNode);
 			cablePath.addLink(unbound);
-			
+			unbound.setCablePath(cablePath);
+
+			nodeLink = super.createNodeLink(bufferStartSite, endNode);
 			unbound.addNodeLink(nodeLink);
 			nodeLink.setPhysicalLinkId(unbound.getId());
 		}
@@ -162,7 +152,7 @@ public class DropSchemeCableLinkCommand extends MapActionCommandBundle
 		List retCCIs = new LinkedList();
 		
 		int count = ccis.size();
-		
+
 		for (int i = 0; i < count; i++) 
 		{
 			for(Iterator it = ccis.iterator(); it.hasNext();)

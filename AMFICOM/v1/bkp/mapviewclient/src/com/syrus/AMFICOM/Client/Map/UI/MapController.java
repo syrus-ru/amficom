@@ -69,10 +69,10 @@ public final class MapController implements ObjectResourceController
 		return name;
 	}
 
-	public Object getValue(final ObjectResource objectResource, final String key)
+	public Object getValue(final Object object, final String key)
 	{
 		Object result = null;
-		Map map = (Map )objectResource;
+		Map map = (Map )object;
 		if (key.equals(KEY_NAME))
 		{
 			result = map.getName();
@@ -105,7 +105,7 @@ public final class MapController implements ObjectResourceController
 		return false;
 	}
 
-	public void setValue(ObjectResource objectResource, final String key, final Object value)
+	public void setValue(Object object, final String key, final Object value)
 	{
 	}
 

@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteSelectionCommand.java,v 1.3 2004/10/06 14:11:56 krupenn Exp $
+ * $Id: DeleteSelectionCommand.java,v 1.4 2004/10/09 13:33:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,10 +11,9 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapState;
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
@@ -23,10 +22,9 @@ import com.syrus.AMFICOM.Client.Resource.Map.MapLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.VoidMapElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -37,7 +35,7 @@ import java.util.LinkedList;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/10/06 14:11:56 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/09 13:33:40 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -99,8 +97,8 @@ public class DeleteSelectionCommand extends MapActionCommandBundle
 				if (link.isSelected() 
 					&& !(link instanceof MapUnboundLinkElement))
 				{
-					for(Iterator it = link.getNodeLinks().iterator(); it.hasNext();)
-						nodeLinksToDelete.add((MapNodeLinkElement )it.next());
+//					for(Iterator it = link.getNodeLinks().iterator(); it.hasNext();)
+//						nodeLinksToDelete.add((MapNodeLinkElement )it.next());
 					linksToDelete.add(link);
 				}
 			}
@@ -187,6 +185,16 @@ public class DeleteSelectionCommand extends MapActionCommandBundle
 */
 
 		// создать список команд удаления фрагментов
+		e = linksToDelete.iterator();
+		while (e.hasNext())
+		{
+			DeletePhysicalLinkCommandBundle command = new DeletePhysicalLinkCommandBundle(
+					(MapPhysicalLinkElement )e.next());
+			command.setLogicalNetLayer(logicalNetLayer);
+			add(command);
+		}
+
+		// создать список команд удаления фрагментов
 		e = nodeLinksToDelete.iterator();
 		while (e.hasNext())
 		{
@@ -210,7 +218,11 @@ public class DeleteSelectionCommand extends MapActionCommandBundle
 		e = cablePathsToDelete.iterator();
 		while (e.hasNext())
 		{
-			removeCablePath((MapCablePathElement)e.next());
+//			removeCablePath((MapCablePathElement )e.next());
+			UnPlaceSchemeCableLinkCommand command = new UnPlaceSchemeCableLinkCommand(
+					(MapCablePathElement )e.next());
+			command.setLogicalNetLayer(logicalNetLayer);
+			command.execute();
 		}
 		
 /*

@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalLinkElement.java,v 1.20 2004/10/06 09:27:38 krupenn Exp $
+ * $Id: MapPhysicalLinkElement.java,v 1.21 2004/10/09 13:34:33 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -15,18 +15,16 @@ import com.syrus.AMFICOM.CORBA.General.ElementAttribute_Transferable;
 import com.syrus.AMFICOM.CORBA.Map.MapPhysicalLinkElement_Transferable;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
-import com.syrus.AMFICOM.Client.General.UI.PropertiesPanel;
 import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.General.ElementAttribute;
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.ResourceUtil;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Stroke;
@@ -47,7 +45,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.20 $, $Date: 2004/10/06 09:27:38 $
+ * @version $Revision: 1.21 $, $Date: 2004/10/09 13:34:33 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -86,80 +84,18 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 
 	protected MapPhysicalLinkBinding binding;
 
+	/**
+	 * пор€док нумерации труб сверху вниз
+	 */	
+	protected boolean topToBottom = true;
+
+	/**
+	 * пор€док нумерации слева направо
+	 */	
+	protected boolean leftToRight = true;
+
 	public static String[][] exportColumns = null;
 
-	public String[][] getExportColumns()
-	{
-		if(exportColumns == null)
-		{
-			exportColumns = new String[10][2];
-			exportColumns[0][0] = COLUMN_ID;
-			exportColumns[1][0] = COLUMN_NAME;
-			exportColumns[2][0] = COLUMN_DESCRIPTION;
-			exportColumns[3][0] = COLUMN_PROTO_ID;
-			exportColumns[4][0] = COLUMN_START_NODE_ID;
-			exportColumns[5][0] = COLUMN_END_NODE_ID;
-			exportColumns[6][0] = COLUMN_NODE_LINKS;
-			exportColumns[7][0] = COLUMN_CITY;
-			exportColumns[8][0] = COLUMN_STREET;
-			exportColumns[9][0] = COLUMN_BUILDING;
-		}
-		exportColumns[0][1] = getId();
-		exportColumns[1][1] = getName();
-		exportColumns[2][1] = getDescription();
-		exportColumns[3][1] = getMapProtoId();
-		exportColumns[4][1] = getStartNode().getId();
-		exportColumns[5][1] = getEndNode().getId();
-		exportColumns[6][1] = "";
-		for(Iterator it = getNodeLinks().iterator(); it.hasNext();)
-		{
-			MapNodeLinkElement mnle = (MapNodeLinkElement )it.next();
-			exportColumns[6][1] += mnle.getId() + " ";
-		}
-		exportColumns[7][1] = getCity();
-		exportColumns[8][1] = getStreet();
-		exportColumns[9][1] = getBuilding();
-		
-		return exportColumns;
-	}
-	
-	public void setColumn(String field, String value)
-	{
-		if(field.equals(COLUMN_ID))
-			setId(value);
-		else
-		if(field.equals(COLUMN_NAME))
-			setName(value);
-		else
-		if(field.equals(COLUMN_DESCRIPTION))
-			setDescription(value);
-		else
-		if(field.equals(COLUMN_PROTO_ID))
-			setMapProtoId(value);
-		else
-		if(field.equals(COLUMN_START_NODE_ID))
-			startNodeId = value;
-		else
-		if(field.equals(COLUMN_END_NODE_ID))
-			endNodeId = value;
-		else
-		if(field.equals(COLUMN_NODE_LINKS))
-		{
-			nodeLinkIds.clear();
-			for(Iterator it = ResourceUtil.parseStrings(value).iterator(); it.hasNext();)
-				nodeLinkIds.add(it.next());
-		}
-		else
-		if(field.equals(COLUMN_CITY))
-			setCity(value);
-		else
-		if(field.equals(COLUMN_STREET))
-			setStreet(value);
-		else
-		if(field.equals(COLUMN_BUILDING))
-			setBuilding(value);
-	}
-	
 	public MapPhysicalLinkElement()
 	{
 		selected = false;
@@ -264,6 +200,10 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 		{
 			this.nodeLinkIds.add( transferable.nodeLinkIds[i]);
 		}
+		
+		binding = new MapPhysicalLinkBinding(this, new Dimension(
+				transferable.dimensionX,
+				transferable.dimensionY));
 	}
 
 	public void setTransferableFromLocal()
@@ -274,6 +214,9 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 		transferable.mapId = map.id;
 		transferable.startNodeId = this.startNode.getId();
 		transferable.endNodeId = this.endNode.getId();
+
+		transferable.dimensionX = binding.getDimension().width;
+		transferable.dimensionY = binding.getDimension().height;
 
 		int l = this.attributes.size();
 		int i = 0;
@@ -434,7 +377,6 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 				showName = false;
 			}
 		}
-
 	}
 
 	public void paint(Graphics g, Rectangle2D.Double visibleBounds)
@@ -578,9 +520,12 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 		if(!nodeLinksSorted)
 		{
 			MapNodeElement smne = this.getStartNode();
+			MapNodeLinkElement nl = null;
 			ArrayList vec = new ArrayList();
 			ArrayList nodevec = new ArrayList();
-			while(!smne.equals(this.getEndNode()))
+			int count = getNodeLinks().size();
+			for (int i = 0; i < count; i++) 
+//			while(!smne.equals(this.getEndNode()))
 			{
 				nodevec.add(smne);
 
@@ -588,20 +533,25 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 				{
 					MapNodeLinkElement nodeLink = (MapNodeLinkElement )it.next();
 
-					if(nodeLink.getStartNode().equals(smne))
+					if(! nodeLink.equals(nl))
 					{
-						vec.add(nodeLink);
-						it.remove();
-						smne = nodeLink.getEndNode();
-						break;
-					}
-					else
-					if(nodeLink.getEndNode().equals(smne))
-					{
-						vec.add(nodeLink);
-						it.remove();
-						smne = nodeLink.getStartNode();
-						break;
+						if(nodeLink.getStartNode().equals(smne))
+						{
+							vec.add(nodeLink);
+							it.remove();
+							smne = nodeLink.getEndNode();
+							nl = nodeLink;
+							break;
+						}
+						else
+						if(nodeLink.getEndNode().equals(smne))
+						{
+							vec.add(nodeLink);
+							it.remove();
+							smne = nodeLink.getStartNode();
+							nl = nodeLink;
+							break;
+						}
 					}
 				}
 			}
@@ -661,6 +611,78 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 		updateLengthLt();
 	}
 
+	public String[][] getExportColumns()
+	{
+		if(exportColumns == null)
+		{
+			exportColumns = new String[10][2];
+			exportColumns[0][0] = COLUMN_ID;
+			exportColumns[1][0] = COLUMN_NAME;
+			exportColumns[2][0] = COLUMN_DESCRIPTION;
+			exportColumns[3][0] = COLUMN_PROTO_ID;
+			exportColumns[4][0] = COLUMN_START_NODE_ID;
+			exportColumns[5][0] = COLUMN_END_NODE_ID;
+			exportColumns[6][0] = COLUMN_NODE_LINKS;
+			exportColumns[7][0] = COLUMN_CITY;
+			exportColumns[8][0] = COLUMN_STREET;
+			exportColumns[9][0] = COLUMN_BUILDING;
+		}
+		exportColumns[0][1] = getId();
+		exportColumns[1][1] = getName();
+		exportColumns[2][1] = getDescription();
+		exportColumns[3][1] = getMapProtoId();
+		exportColumns[4][1] = getStartNode().getId();
+		exportColumns[5][1] = getEndNode().getId();
+		exportColumns[6][1] = "";
+		for(Iterator it = getNodeLinks().iterator(); it.hasNext();)
+		{
+			MapNodeLinkElement mnle = (MapNodeLinkElement )it.next();
+			exportColumns[6][1] += mnle.getId() + " ";
+		}
+		exportColumns[7][1] = getCity();
+		exportColumns[8][1] = getStreet();
+		exportColumns[9][1] = getBuilding();
+		
+		return exportColumns;
+	}
+	
+	public void setColumn(String field, String value)
+	{
+		if(field.equals(COLUMN_ID))
+			setId(value);
+		else
+		if(field.equals(COLUMN_NAME))
+			setName(value);
+		else
+		if(field.equals(COLUMN_DESCRIPTION))
+			setDescription(value);
+		else
+		if(field.equals(COLUMN_PROTO_ID))
+			setMapProtoId(value);
+		else
+		if(field.equals(COLUMN_START_NODE_ID))
+			startNodeId = value;
+		else
+		if(field.equals(COLUMN_END_NODE_ID))
+			endNodeId = value;
+		else
+		if(field.equals(COLUMN_NODE_LINKS))
+		{
+			nodeLinkIds.clear();
+			for(Iterator it = ResourceUtil.parseStrings(value).iterator(); it.hasNext();)
+				nodeLinkIds.add(it.next());
+		}
+		else
+		if(field.equals(COLUMN_CITY))
+			setCity(value);
+		else
+		if(field.equals(COLUMN_STREET))
+			setStreet(value);
+		else
+		if(field.equals(COLUMN_BUILDING))
+			setBuilding(value);
+	}
+	
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException
 	{
 		out.writeObject(id);

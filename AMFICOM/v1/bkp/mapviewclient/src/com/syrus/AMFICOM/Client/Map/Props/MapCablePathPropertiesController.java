@@ -72,7 +72,7 @@ public final class MapCablePathPropertiesController
 		return name;
 	}
 
-	public Object getValue(final ObjectResource object, final String key)
+	public Object getValue(final Object object, final String key)
 	{
 		Object result = null;
 		MapCablePathElement path = (MapCablePathElement )object;
@@ -141,9 +141,9 @@ public final class MapCablePathPropertiesController
 		return false;
 	}
 
-	public void setValue(ObjectResource objectResource, final String key, final Object value)
+	public void setValue(Object object, final String key, final Object value)
 	{
-		MapCablePathElement path = (MapCablePathElement )objectResource;
+		MapCablePathElement path = (MapCablePathElement )object;
 
 		if (key.equals(PROPERTY_NAME))
 		{

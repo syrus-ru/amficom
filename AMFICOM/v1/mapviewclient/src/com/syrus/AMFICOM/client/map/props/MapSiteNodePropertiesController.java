@@ -66,7 +66,7 @@ public final class MapSiteNodePropertiesController
 		return name;
 	}
 
-	public Object getValue(final ObjectResource object, final String key)
+	public Object getValue(final Object object, final String key)
 	{
 		Object result = null;
 		MapSiteNodeElement site = (MapSiteNodeElement )object;
@@ -103,9 +103,9 @@ public final class MapSiteNodePropertiesController
 		return false;
 	}
 
-	public void setValue(ObjectResource objectResource, final String key, final Object value)
+	public void setValue(Object object, final String key, final Object value)
 	{
-		MapSiteNodeElement site = (MapSiteNodeElement )objectResource;
+		MapSiteNodeElement site = (MapSiteNodeElement )object;
 
 		if (key.equals(PROPERTY_NAME))
 		{

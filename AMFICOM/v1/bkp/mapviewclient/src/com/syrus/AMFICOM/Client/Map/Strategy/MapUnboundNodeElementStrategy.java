@@ -1,5 +1,5 @@
 /**
- * $Id: MapUnboundNodeElementStrategy.java,v 1.3 2004/10/06 14:11:56 krupenn Exp $
+ * $Id: MapUnboundNodeElementStrategy.java,v 1.4 2004/10/09 13:34:24 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 
-import com.syrus.AMFICOM.Client.Map.Command.Action.BindToSiteCommandBundle;
+import com.syrus.AMFICOM.Client.Map.Command.Action.BindUnboundNodeToSiteCommandBundle;
 import com.syrus.AMFICOM.Client.Map.Command.Action.MoveSelectionCommandBundle;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapState;
@@ -37,7 +37,7 @@ import javax.swing.SwingUtilities;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/10/06 14:11:56 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/09 13:34:24 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -167,8 +167,8 @@ public final class MapUnboundNodeElementStrategy implements  MapStrategy
 							if(!(site instanceof MapUnboundNodeElement))
 								if(site.isMouseOnThisObject(point))
 								{
-									command = new BindToSiteCommandBundle(unbound, site);
-									((BindToSiteCommandBundle )command).setLogicalNetLayer(logicalNetLayer);
+									command = new BindUnboundNodeToSiteCommandBundle(unbound, site);
+									((BindUnboundNodeToSiteCommandBundle)command).setLogicalNetLayer(logicalNetLayer);
 									logicalNetLayer.getCommandList().add(command);
 									logicalNetLayer.getCommandList().execute();
 									command = null;

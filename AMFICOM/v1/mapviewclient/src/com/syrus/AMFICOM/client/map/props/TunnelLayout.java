@@ -1,22 +1,30 @@
 package com.syrus.AMFICOM.Client.Map.Props;
 
+import com.jgraph.graph.GraphConstants;
+import com.jgraph.pad.EllipseCell;
+
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
+import com.syrus.AMFICOM.Client.General.Event.OperationListener;
+import com.syrus.AMFICOM.Client.General.Event.SchemeNavigateEvent;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Scheme.GraphActions;
+import com.syrus.AMFICOM.Client.General.Scheme.SchemeGraph;
+import com.syrus.AMFICOM.Client.General.Scheme.UgoPanel;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkBinding;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import java.util.*;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Point;
+import java.awt.Rectangle;
 
-import com.jgraph.graph.*;
-import com.jgraph.pad.*;
-import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.Scheme.*;
-import javax.swing.JPanel;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class TunnelLayout implements OperationListener
 {
 	private ApplicationContext internalContext = new ApplicationContext();
-//	private SchemePanelNoEdition panel;
 	private UgoPanel panel;
 	private static final int RADIUS = 20;
 	private static final int SPACE = 2;
@@ -27,21 +35,17 @@ public class TunnelLayout implements OperationListener
 	EllipseCell[][] cells;
 
 	Point activeCoordinates = null;
+	
+	MapLinkBindPanel parent;
 
-	public TunnelLayout(MapPhysicalLinkBinding binding)
+	public TunnelLayout(MapLinkBindPanel parent)
 	{
-		this();
-		setBinding(binding);
-	}
+		this.parent = parent;
 
-	public TunnelLayout()
-	{
 		internalContext.setDispatcher(new Dispatcher());
 
 		panel = new UgoPanel(internalContext);
 		panel.getGraph().setGraphEditable(false);
-//		panel = new SchemePanelNoEdition(internalContext);
-//		panel.getGraph().setActualSize(new Dimension(0, 0));
 
 		internalContext.getDispatcher().register(this, SchemeNavigateEvent.type);
 	}
@@ -61,27 +65,37 @@ public class TunnelLayout implements OperationListener
 				Object[] objs = (Object[])ev.getSource();
 				panel.getGraph().removeSelectionCells();
 
+				for (int i = 0; i < m; i++) 
+				{
+					for (int j = 0; j < n; j++) 
+					{
+						GraphActions.setObjectBackColor(panel.getGraph(), cells[i][j], Color.WHITE);
+					}
+				}
+
 				for (int k = 0; k < objs.length; k++)
 				{
 					if (objs[k] instanceof EllipseCell)
 					{
 						EllipseCell cell = (EllipseCell )objs[k];
+						GraphActions.setObjectBackColor(panel.getGraph(), cell, Color.YELLOW);
+						panel.getGraph().setSelectionCell(cell);
 						
-						for (int i = 0; i < m; i++) 
+						boolean found = false;
+						for (int i = 0; i < m && !found; i++) 
 						{
-							for (int j = 0; j < n; j++) 
-							{
+							for (int j = 0; j < n && !found; j++) 
 								if(cells[i][j].equals(cell))
 								{
 									activeCoordinates = new Point(i, j);
-									panel.getGraph().setSelectionCell(cell);
-									return;
+									found = true;
+									parent.cableBindingSelected(i, j);
 								}
-							}
 						}
 						
 					}
 				}
+				panel.getGraph().setGraphChanged(true);
 			}
 			else
 			if(ev.SCHEME_ALL_DESELECTED)
@@ -118,10 +132,6 @@ public class TunnelLayout implements OperationListener
 						(j + 1) * SPACE + 2 * j * RADIUS,
 						2 * RADIUS,
 						2 * RADIUS);
-//						(3 * i + 1) * radius, 
-//						(3 * j + 1) * radius, 
-//						2 * radius, 
-//						2 * radius);
 				cells[i][j] = addCell(panel.getGraph(), "", bounds);
 			}
 	}
@@ -132,10 +142,10 @@ public class TunnelLayout implements OperationListener
 		panel.getGraph().setSelectionCell(cells[activeCoordinates.x][activeCoordinates.y]);
 	}
 	
-	public ObjectResource getActiveElement()
-	{
-		return binding.getBound(activeCoordinates.x, activeCoordinates.y);
-	}
+//	public ObjectResource getActiveElement()
+//	{
+//		return binding.getBound(activeCoordinates.x, activeCoordinates.y);
+//	}
 
 	public void setActiveCoordinates(Point activeCoordinates)
 	{
@@ -154,11 +164,8 @@ public class TunnelLayout implements OperationListener
 		{
 			for (int j = 0; j < n; j++) 
 			{
-				ObjectResource or = binding.getBound(i, j);
-				if(or == null)
-					cells[i][j].setUserObject("");
-				else
-					cells[i][j].setUserObject(or.getName());
+				List list = binding.getBound(i, j);
+				cells[i][j].setUserObject(String.valueOf(list.size()));
 			}
 		}
 	}
@@ -169,7 +176,7 @@ public class TunnelLayout implements OperationListener
 		EllipseCell cell = new EllipseCell(userObject);
 		Map map = GraphConstants.createMap();
 		GraphConstants.setBounds(map, bounds);
-		GraphConstants.setOpaque(map, true);
+		GraphConstants.setOpaque(map, false);
 		GraphConstants.setSizeable(map, false);
 		GraphConstants.setBorderColor(map, Color.BLACK);
 		viewMap.put(cell, map);

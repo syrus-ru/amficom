@@ -4,16 +4,16 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceListBox;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
-import com.syrus.AMFICOM.Client.Map.Props.BindingLabel;
-import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkBinding;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 
+import com.syrus.AMFICOM.Client.Resource.Scheme.CableChannelingItem;
+import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Point;
-import java.awt.SystemColor;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -34,14 +34,14 @@ public final class MapLinkBindPanel extends JPanel implements ObjectResourceProp
 {
 	private GridBagLayout gridBagLayout1 = new GridBagLayout();
 
-	MapPhysicalLinkElement link;
+	private MapPhysicalLinkElement link;
 	
 	private JLabel titleLabel = new JLabel();
 	private ObjectResourceListBox cableList = new ObjectResourceListBox();
 
-	private TunnelLayout tunnelLayout = new TunnelLayout();
+	private TunnelLayout tunnelLayout = null;
 
-	JScrollPane scrollPane = new JScrollPane();
+	private JScrollPane scrollPane = new JScrollPane();
 	
 	private JPanel jPanel1 = new JPanel();
 	private JButton bindButton = new JButton();
@@ -52,6 +52,7 @@ public final class MapLinkBindPanel extends JPanel implements ObjectResourceProp
 
 	public MapLinkBindPanel()
 	{
+		tunnelLayout = new TunnelLayout(this);
 		try
 		{
 			jbInit();
@@ -63,7 +64,7 @@ public final class MapLinkBindPanel extends JPanel implements ObjectResourceProp
 
 	}
 
-	private void jbInit() throws Exception
+	private void jbInit()
 	{
 		this.setLayout(gridBagLayout1);
 		this.setName(LangModelMap.getString("LinkBinding"));
@@ -76,21 +77,6 @@ public final class MapLinkBindPanel extends JPanel implements ObjectResourceProp
 					cableSelected(or);
 				}
 			});
-/*			
-		table.addMouseListener(new MouseListener()
-			{
-				public void mouseClicked(MouseEvent e)
-				{
-					int col = table.columnAtPoint(e.getPoint());
-					int row = table.rowAtPoint(e.getPoint());
-					cableBindingSelected(col, row);
-				}
-				public void mouseEntered(MouseEvent e) {}
-				public void mouseExited(MouseEvent e) {}
-				public void mousePressed(MouseEvent e) {}
-				public void mouseReleased(MouseEvent e) {}
-			});
-*/
 		bindButton.setText("Привязать");
 		bindButton.addActionListener(new ActionListener()
 			{
@@ -167,10 +153,39 @@ public final class MapLinkBindPanel extends JPanel implements ObjectResourceProp
 		tunnelLayout.setActiveElement(or);
 	}
 
-//	public void cableBindingSelected(int col, int row)
-//	{
-//		model.setActiveCoordinates(new Point(col, row));
-//	}
+	public void cableBindingSelected(int col, int row)
+	{
+//		tunnelLayout.setActiveCoordinates(new Point(col, row));
+		MapPhysicalLinkBinding binding = link.getBinding();
+		String lid = link.getId();
+		List list = binding.getBindObjects();
+		if(list != null)
+		{
+			cableList.getSelectionModel().clearSelection();
+			for(Iterator it = list.iterator(); it.hasNext();)
+			{
+				SchemeCableLink scl = (SchemeCableLink )it.next();
+				for(Iterator it2 = scl.channelingItems.iterator(); it2.hasNext();)
+				{
+					CableChannelingItem cci = (CableChannelingItem )it2.next();
+					if(cci.row_x == col
+						&& cci.place_y == row)
+					{
+						cableList.setSelected(scl);
+					}
+				}
+/*
+				MapCablePathElement cpath = (MapCablePathElement )
+				Point position = cpath.getPosition(link);
+				if(position.x == col
+					&& position.y == row)
+				{
+					cableList.setSelected(cpath);
+				}
+*/
+			}
+		}
+	}
 
 	public void bind(ObjectResource or)
 	{
@@ -200,9 +215,6 @@ public final class MapLinkBindPanel extends JPanel implements ObjectResourceProp
 		{
 			ex.printStackTrace();
 		} 
-		finally 
-		{
-		}
 		
 		return false;
 	}

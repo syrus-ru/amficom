@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalNodeElementStrategy.java,v 1.3 2004/10/06 14:11:56 krupenn Exp $
+ * $Id: MapPhysicalNodeElementStrategy.java,v 1.4 2004/10/09 13:34:24 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 
 import com.syrus.AMFICOM.Client.Map.Command.Action.BindPhysicalNodeToSiteCommandBundle;
-import com.syrus.AMFICOM.Client.Map.Command.Action.BindToSiteCommandBundle;
+import com.syrus.AMFICOM.Client.Map.Command.Action.BindUnboundNodeToSiteCommandBundle;
 import com.syrus.AMFICOM.Client.Map.Command.Action.CreateNodeLinkCommandBundle;
 import com.syrus.AMFICOM.Client.Map.Command.Action.MoveFixedDistanceCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.MoveSelectionCommandBundle;
@@ -42,7 +42,7 @@ import javax.swing.SwingUtilities;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/10/06 14:11:56 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/09 13:34:24 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see

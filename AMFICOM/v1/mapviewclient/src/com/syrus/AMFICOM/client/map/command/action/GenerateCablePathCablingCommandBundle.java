@@ -1,5 +1,5 @@
 /**
- * $Id: BindCablePathCommandBundle.java,v 1.3 2004/10/06 09:27:27 krupenn Exp $
+ * $Id: GenerateCablePathCablingCommandBundle.java,v 1.1 2004/10/09 13:33:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -34,12 +34,12 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/10/06 09:27:27 $
+ * @version $Revision: 1.1 $, $Date: 2004/10/09 13:33:40 $
  * @module
  * @author $Author: krupenn $
  * @see
  */
-public class BindCablePathCommandBundle extends MapActionCommandBundle
+public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundle
 {
 	/**
 	 * Удаляемый узел
@@ -53,7 +53,7 @@ public class BindCablePathCommandBundle extends MapActionCommandBundle
 	MapView mapView;
 	Map map;
 
-	public BindCablePathCommandBundle(MapCablePathElement path, MapNodeProtoElement proto)
+	public GenerateCablePathCablingCommandBundle(MapCablePathElement path, MapNodeProtoElement proto)
 	{
 		this.path = path;
 		this.proto = proto;
@@ -83,6 +83,7 @@ public class BindCablePathCommandBundle extends MapActionCommandBundle
 
 			if(link instanceof MapUnboundLinkElement)
 			{
+				path.removeLink(link);
 				MapUnboundLinkElement un = (MapUnboundLinkElement )link;
 				link = createPhysicalLink(un.getStartNode(), un.getEndNode());
 				removePhysicalLink(un);
@@ -92,6 +93,7 @@ public class BindCablePathCommandBundle extends MapActionCommandBundle
 					mnle.setPhysicalLinkId(link.getId());
 					link.addNodeLink(mnle);
 				}
+				path.addLink(link);
 			}
 
 			chi.add(getCCI(link));

@@ -62,7 +62,7 @@ public final class MapNodeLinkPropertiesController
 		return name;
 	}
 
-	public Object getValue(final ObjectResource object, final String key)
+	public Object getValue(final Object object, final String key)
 	{
 		Object result = null;
 		MapNodeLinkElement nodeLink = (MapNodeLinkElement )object;
@@ -102,9 +102,9 @@ public final class MapNodeLinkPropertiesController
 		return false;
 	}
 
-	public void setValue(ObjectResource objectResource, final String key, final Object value)
+	public void setValue(Object object, final String key, final Object value)
 	{
-		MapNodeLinkElement nodeLink = (MapNodeLinkElement )objectResource;
+		MapNodeLinkElement nodeLink = (MapNodeLinkElement )object;
 
 		if (key.equals(PROPERTY_NAME))
 		{

@@ -1,5 +1,5 @@
 /**
- * $Id: MapPopupMenu.java,v 1.7 2004/10/06 14:11:56 krupenn Exp $
+ * $Id: MapPopupMenu.java,v 1.8 2004/10/09 13:34:24 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,8 +17,8 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesDialog;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceSelectionDialog;
-import com.syrus.AMFICOM.Client.Map.Command.Action.BindCablePathCommandBundle;
-import com.syrus.AMFICOM.Client.Map.Command.Action.BindToSiteCommandBundle;
+import com.syrus.AMFICOM.Client.Map.Command.Action.GenerateCablePathCablingCommandBundle;
+import com.syrus.AMFICOM.Client.Map.Command.Action.BindUnboundNodeToSiteCommandBundle;
 import com.syrus.AMFICOM.Client.Map.Command.Action.CreateCollectorCommandAtomic;
 import com.syrus.AMFICOM.Client.Map.Command.Action.CreateSiteCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.DeleteSelectionCommand;
@@ -56,7 +56,7 @@ import javax.swing.JPopupMenu;
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2004/10/06 14:11:56 $
+ * @version $Revision: 1.8 $, $Date: 2004/10/09 13:34:24 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -313,7 +313,7 @@ public abstract class MapPopupMenu extends JPopupMenu
 		
 		MapSiteNodeElement site = command.getSite();
 
-		BindToSiteCommandBundle command2 = new BindToSiteCommandBundle(unbound, site);
+		BindUnboundNodeToSiteCommandBundle command2 = new BindUnboundNodeToSiteCommandBundle(unbound, site);
 		command2.setLogicalNetLayer(logicalNetLayer);
 		getLogicalNetLayer().getCommandList().add(command2);
 		getLogicalNetLayer().getCommandList().execute();
@@ -327,8 +327,8 @@ public abstract class MapPopupMenu extends JPopupMenu
 				MapNodeProtoElement.typ, 
 				MapNodeProtoElement.WELL);
 
-		BindCablePathCommandBundle command = 
-				new BindCablePathCommandBundle(path, proto);
+		GenerateCablePathCablingCommandBundle command = 
+				new GenerateCablePathCablingCommandBundle(path, proto);
 		command.setLogicalNetLayer(logicalNetLayer);
 		getLogicalNetLayer().getCommandList().add(command);
 		getLogicalNetLayer().getCommandList().execute();

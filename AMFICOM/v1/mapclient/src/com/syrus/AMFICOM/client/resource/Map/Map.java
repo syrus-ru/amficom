@@ -1,5 +1,5 @@
 /**
- * $Id: Map.java,v 1.8 2004/10/06 09:19:20 krupenn Exp $
+ * $Id: Map.java,v 1.9 2004/10/09 13:34:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -36,7 +36,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2004/10/06 09:19:20 $
+ * @version $Revision: 1.9 $, $Date: 2004/10/09 13:34:33 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -112,7 +112,7 @@ public final class Map extends StubResource implements Serializable
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "constructor call", getClass().getName(), "Map(" + transferable + ")");
 		this.transferable = transferable;
-		setLocalFromTransferable();
+		this.setLocalFromTransferable();
 	}
 
 	public static String[][] exportColumns = null;
@@ -136,13 +136,13 @@ public final class Map extends StubResource implements Serializable
 	public void setColumn(String field, String value)
 	{
 		if(field.equals(COLUMN_ID))
-			setId(value);
+			this.setId(value);
 		else
 		if(field.equals(COLUMN_NAME))
-			setName(value);
+			this.setName(value);
 		else
 		if(field.equals(COLUMN_DESCRIPTION))
-			setDescription(value);
+			this.setDescription(value);
 	}
 
 	/**
@@ -618,7 +618,7 @@ public final class Map extends StubResource implements Serializable
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getNodeLink(" + mapNodeLinkElementID + ")");
 		
-		Iterator e = getNodeLinks().iterator();
+		Iterator e = this.getNodeLinks().iterator();
 
 		while (e.hasNext())
 		{
@@ -638,7 +638,7 @@ public final class Map extends StubResource implements Serializable
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getNodeLink(" + start_node + ", " + end_node + ")");
 		
-		for(Iterator it = getNodeLinks().iterator(); it.hasNext();)
+		for(Iterator it = this.getNodeLinks().iterator(); it.hasNext();)
 		{
 			MapNodeLinkElement link = (MapNodeLinkElement )it.next();
 			if (((link.startNode == start_node) && (link.endNode == end_node)) ||
@@ -664,7 +664,7 @@ public final class Map extends StubResource implements Serializable
 	public List getPhysicalLinksAt(MapNodeElement node)
 	{
 		LinkedList returnNodeLink = new LinkedList();
-		Iterator e = getPhysicalLinks().iterator();
+		Iterator e = this.getPhysicalLinks().iterator();
 
 		while (e.hasNext())
 		{
@@ -738,7 +738,7 @@ public final class Map extends StubResource implements Serializable
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getPhysicalLink(" + start_node + ", " + end_node + ")");
 		
-		for(Iterator it = getPhysicalLinks().iterator(); it.hasNext();)
+		for(Iterator it = this.getPhysicalLinks().iterator(); it.hasNext();)
 		{
 			MapPhysicalLinkElement link = (MapPhysicalLinkElement )it.next();
 			if (((link.startNode == start_node) && (link.endNode == end_node)) ||
@@ -800,7 +800,7 @@ public final class Map extends StubResource implements Serializable
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getCollector(" + mple + ")");
 		
-		for(Iterator it = getCollectors().iterator(); it.hasNext();)
+		for(Iterator it = this.getCollectors().iterator(); it.hasNext();)
 		{
 			MapPipePathElement cp = (MapPipePathElement )it.next();
 			if(cp.getLinks().contains(mple))
@@ -854,7 +854,7 @@ public final class Map extends StubResource implements Serializable
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getNode(" + nodeID + ")");
 		
-		for(Iterator it = getNodes().iterator(); it.hasNext();)
+		for(Iterator it = this.getNodes().iterator(); it.hasNext();)
 		{
 			MapNodeElement node = (MapNodeElement )it.next();
 			if ( node.getId().equals(nodeID ) )
@@ -870,7 +870,7 @@ public final class Map extends StubResource implements Serializable
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getMapSiteNodeElement(" + nodeId + ")");
 		
-		Iterator e = getMapSiteNodeElements().iterator();
+		Iterator e = this.getMapSiteNodeElements().iterator();
 		while (e.hasNext())
 		{
 			MapSiteNodeElement msne = 
@@ -956,7 +956,7 @@ public final class Map extends StubResource implements Serializable
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "deselectAll()");
 		
-		Iterator e = getAllElements().iterator();
+		Iterator e = this.getAllElements().iterator();
 		while ( e.hasNext())
 		{
 			MapElement mapElement = (MapElement )e.next();
@@ -1013,7 +1013,7 @@ public final class Map extends StubResource implements Serializable
 //		deleted_nodesIds = new LinkedList();
 //		deleted_nodeLinksIds = new LinkedList();
 //		deleted_physicalLinksIds = new LinkedList();
-		updateFromPool();
+		this.updateFromPool();
 //		Pool.put("serverimage", getId(), this);
 	}
 

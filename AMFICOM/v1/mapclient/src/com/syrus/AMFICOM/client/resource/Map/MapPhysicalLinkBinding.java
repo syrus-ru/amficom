@@ -6,13 +6,14 @@ import java.awt.Dimension;
 import java.awt.Point;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public final class MapPhysicalLinkBinding 
 {
 	private MapPhysicalLinkElement link = null;
 	
-	private ObjectResource[][] bindingMap = null;
+	private List[][] bindingMap = null;
 	
 	private ArrayList bindObjects = new ArrayList();
 	
@@ -40,6 +41,19 @@ public final class MapPhysicalLinkBinding
 		}
 	}
 	
+	public void clear()
+	{
+		bindObjects.clear();
+
+		for (int i = 0; i < bindingMap.length; i++) 
+		{
+			for (int j = 0; j < bindingMap[i].length; j++) 
+			{
+				bindingMap[i][j] = new LinkedList();
+			}
+		}
+	}
+	
 	public List getBindObjects()
 	{
 		return (List )bindObjects.clone();
@@ -53,13 +67,13 @@ public final class MapPhysicalLinkBinding
 	public void setDimension(Dimension dimension)
 	{
 		this.dimension = dimension;
-		ObjectResource[][] bindingMap2 = new ObjectResource[dimension.width][dimension.height];
+		List[][] bindingMap2 = new List[dimension.width][dimension.height];
 
 		for (int i = 0; i < bindingMap2.length; i++) 
 		{
 			for (int j = 0; j < bindingMap2[i].length; j++) 
 			{
-				bindingMap2[i][j] = null;
+				bindingMap2[i][j] = new LinkedList();
 			}
 		}
 		
@@ -72,7 +86,7 @@ public final class MapPhysicalLinkBinding
 				int minj = Math.min(bindingMap[i].length, bindingMap2[i].length);
 				for (int j = 0; j < minj; j++) 
 				{
-					bindingMap2[i][j] = bindingMap[i][j];
+					bindingMap2[i][j].addAll(bindingMap[i][j]);
 				}
 			}
 		}
@@ -81,23 +95,18 @@ public final class MapPhysicalLinkBinding
 	
 	public void bind(ObjectResource or, int i, int j)
 	{
-		ObjectResource or1 = getBound(i, j);
-		if(or1 != null)
-		{
-			unbind(or1);
-		}
 		unbind(or);
-		bindingMap[i][j] = or;
+		bindingMap[i][j].add(or);
 	}
 	
 	public void unbind(ObjectResource or)
 	{
 		Point binding = getBinding(or);
 		if(binding != null)
-			bindingMap[binding.x][binding.y] = null;
+			bindingMap[binding.x][binding.y].remove(or);
 	}
 	
-	public ObjectResource getBound(int i, int j)
+	public List getBound(int i, int j)
 	{
 		return bindingMap[i][j];
 	}
@@ -111,7 +120,7 @@ public final class MapPhysicalLinkBinding
 		{
 			for (int j = 0; j < bindingMap[i].length; j++) 
 			{
-				if(bindingMap[i][j] == or)
+				if(bindingMap[i][j].contains(or))
 					return true;
 			}
 		}
@@ -127,7 +136,7 @@ public final class MapPhysicalLinkBinding
 		{
 			for (int j = 0; j < bindingMap[i].length; j++) 
 			{
-				if(bindingMap[i][j] == or)
+				if(bindingMap[i][j].contains(or))
 					return new Point(i, j);
 			}
 		}

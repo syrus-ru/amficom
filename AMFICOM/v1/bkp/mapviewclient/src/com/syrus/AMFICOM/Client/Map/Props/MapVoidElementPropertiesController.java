@@ -58,7 +58,7 @@ public final class MapVoidElementPropertiesController
 		return name;
 	}
 
-	public Object getValue(final ObjectResource object, final String key)
+	public Object getValue(final Object object, final String key)
 	{
 		Object result = null;
 
@@ -80,9 +80,9 @@ public final class MapVoidElementPropertiesController
 		return false;
 	}
 
-	public void setValue(ObjectResource objectResource, final String key, final Object value)
+	public void setValue(Object object, final String key, final Object value)
 	{
-		VoidMapElement ve = (VoidMapElement )objectResource;
+		VoidMapElement ve = (VoidMapElement )object;
 		MapView mapView = ve.getMapView();
 
 		if (key.equals(PROPERTY_NAME))

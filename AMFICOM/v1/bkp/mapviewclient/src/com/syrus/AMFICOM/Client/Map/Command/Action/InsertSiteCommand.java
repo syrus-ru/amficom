@@ -1,5 +1,5 @@
 /**
- * $Id: InsertSiteCommand.java,v 1.4 2004/10/06 09:27:27 krupenn Exp $
+ * $Id: InsertSiteCommand.java,v 1.5 2004/10/09 13:33:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,34 +10,34 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
+import com.syrus.AMFICOM.Client.General.Event.MapEvent;
+import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
+import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElementState;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
+import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPipePathElement;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.ResourceUtil;
-
-import com.syrus.AMFICOM.Client.General.Event.MapEvent;
-import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
-import com.syrus.AMFICOM.Client.Resource.Map.Map;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+import com.syrus.AMFICOM.Client.Resource.Scheme.CableChannelingItem;
 
 import java.awt.Point;
-import java.awt.geom.Point2D;
 
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 
 /**
  * Разместить элемент типа mpe на карте. используется при переносе 
  * (drag/drop), в точке point (в экранных координатах)
  * 
- * @version $Revision: 1.4 $, $Date: 2004/10/06 09:27:27 $
+ * @version $Revision: 1.5 $, $Date: 2004/10/09 13:33:40 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -89,7 +89,7 @@ public class InsertSiteCommand extends MapActionCommandBundle
 		link = map.getPhysicalLink(node.getPhysicalLinkId());
 		
 		// создать новый узел
-		site = createSite(
+		site = super.createSite(
 				node.getAnchor(),
 				proto);
 
@@ -124,7 +124,7 @@ public class InsertSiteCommand extends MapActionCommandBundle
 
 		if(node.isActive())
 		{
-			link1 = createPhysicalLink(link.getStartNode(), site);
+			link1 = super.createPhysicalLink(link.getStartNode(), site);
 			link1.setProto(link.getProto());
 			MapPipePathElement collector = logicalNetLayer.getMapView().getMap().getCollector(link);
 			if(collector != null)
@@ -184,6 +184,34 @@ public class InsertSiteCommand extends MapActionCommandBundle
 					}
 				}
 			}//for(;;)
+
+			MapView mapView = logicalNetLayer.getMapView();
+	
+			for(Iterator it = mapView.getCablePaths(link).iterator(); it.hasNext();)
+			{
+				MapCablePathElement cpath = (MapCablePathElement )it.next();
+				List ccis = cpath.getSchemeCableLink().channelingItems;
+				for(ListIterator lit = ccis.listIterator(); lit.hasNext();)
+				{
+					CableChannelingItem cci = (CableChannelingItem )lit.next();
+					if(cci.physicalLinkId.equals(link.getId()))
+					{
+						CableChannelingItem cci2 = new CableChannelingItem(dataSource.GetUId(CableChannelingItem.typ));
+						cci2.endSiteId = site.getId();
+						cci2.endSpare = cci.endSpare;
+						cci2.physicalLinkId = link1.getId();
+						cci2.startSpare = cci.startSpare;
+						cci2.startSiteId = cci.startSiteId;
+
+						cci.startSiteId = site.getId();
+
+						lit.add(cci2);
+						
+						break;
+					}
+				}
+				mapView.scanCable(cpath.getSchemeCableLink());
+			}
 		}
 
 		registerStateChange(link, pls, link.getState());

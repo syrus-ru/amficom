@@ -1,5 +1,5 @@
 /**
- * $Id: MapLinkElement.java,v 1.8 2004/09/23 10:05:29 krupenn Exp $
+ * $Id: MapLinkElement.java,v 1.9 2004/10/09 13:34:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,7 +32,7 @@ import java.util.HashMap;
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2004/09/23 10:05:29 $
+ * @version $Revision: 1.9 $, $Date: 2004/10/09 13:34:33 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -114,7 +114,7 @@ public abstract class MapLinkElement extends StubResource implements MapElement
 
 	public String getDomainId()
 	{
-		return getMap().getDomainId();
+		return this.getMap().getDomainId();
 	}
 	
 	public String getName()
@@ -197,9 +197,9 @@ public abstract class MapLinkElement extends StubResource implements MapElement
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getOtherNode(" + node + ")");
 		
 
-		if ( getEndNode() == node )
+		if ( this.getEndNode() == node )
 			return getStartNode();
-		if ( getStartNode() == node )
+		if ( this.getStartNode() == node )
 			return getEndNode();
 		return null;
 	}
@@ -218,11 +218,11 @@ public abstract class MapLinkElement extends StubResource implements MapElement
 	public void revert(MapElementState state)
 	{
 		MapLinkElementState mles = (MapLinkElementState )state;
-		setName(mles.name);
-		setDescription(mles.description);
+		this.setName(mles.name);
+		this.setDescription(mles.description);
 		attributes = new HashMap(mles.attributes);
-		setStartNode(mles.startNode);
-		setEndNode(mles.endNode);
+		this.setStartNode(mles.startNode);
+		this.setEndNode(mles.endNode);
 	}
 
 //////////////////////////////////////////////////////////////////////////

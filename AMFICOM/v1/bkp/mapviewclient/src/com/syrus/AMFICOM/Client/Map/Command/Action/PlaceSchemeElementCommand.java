@@ -1,5 +1,5 @@
 /**
- * $Id: DropSchemeElementCommand.java,v 1.4 2004/10/06 09:27:27 krupenn Exp $
+ * $Id: PlaceSchemeElementCommand.java,v 1.1 2004/10/09 13:33:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,17 +10,18 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
-
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundNodeElement;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
+import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
 
 import java.awt.Point;
 import java.awt.geom.Point2D;
@@ -29,12 +30,12 @@ import java.awt.geom.Point2D;
  * Разместить элемент типа mpe на карте. используется при переносе 
  * (drag/drop), в точке point (в экранных координатах)
  * 
- * @version $Revision: 1.4 $, $Date: 2004/10/06 09:27:27 $
+ * @version $Revision: 1.1 $, $Date: 2004/10/09 13:33:40 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
  */
-public class DropSchemeElementCommand extends MapActionCommand
+public class PlaceSchemeElementCommand extends MapActionCommand
 {
 	/**
 	 * Выбранный фрагмент линии
@@ -52,7 +53,7 @@ public class DropSchemeElementCommand extends MapActionCommand
 	Point point = null;
 	Point2D.Double coordinatePoint = null;
 
-	public DropSchemeElementCommand(
+	public PlaceSchemeElementCommand(
 			SchemeElement se,
 			Point2D.Double dpoint)
 	{
@@ -62,7 +63,7 @@ public class DropSchemeElementCommand extends MapActionCommand
 	}
 
 
-	public DropSchemeElementCommand(
+	public PlaceSchemeElementCommand(
 			SchemeElement se,
 			Point point)
 	{
@@ -84,30 +85,37 @@ public class DropSchemeElementCommand extends MapActionCommand
 		if(coordinatePoint == null)
 			coordinatePoint = logicalNetLayer.convertScreenToMap(point);
 		
-		map = logicalNetLayer.getMapView().getMap();
-		
-		MapElement me = logicalNetLayer.getMapElementAtPoint(point);
-		
-		if(me instanceof MapSiteNodeElement
-			&& !(me instanceof MapUnboundNodeElement))
+		MapView mapView = logicalNetLayer.getMapView();
+		map = mapView.getMap();
+
+		site = mapView.findElement(se);
+		if(site == null)
 		{
-			site = (MapSiteNodeElement )me;
-			se.siteId = site.getId();
-		}
-		else
-		{
-			unbound = new MapUnboundNodeElement(
-				se,
-				dataSource.GetUId(MapSiteNodeElement.typ),
-				coordinatePoint,
-				map,
-				logicalNetLayer.getDefaultScale() / logicalNetLayer.getScale(),
-				logicalNetLayer.getUnboundProto());
-		
-			Pool.put(MapSiteNodeElement.typ, unbound.getId(), unbound);
-			map.addNode(unbound);
+			MapElement me = logicalNetLayer.getMapElementAtPoint(point);
 			
-			site = unbound;
+			if(me instanceof MapSiteNodeElement
+				&& !(me instanceof MapUnboundNodeElement))
+			{
+				site = (MapSiteNodeElement )me;
+				se.siteId = site.getId();
+			}
+			else
+			{
+				unbound = new MapUnboundNodeElement(
+					se,
+					dataSource.GetUId(MapSiteNodeElement.typ),
+					coordinatePoint,
+					map,
+					logicalNetLayer.getDefaultScale() / logicalNetLayer.getScale(),
+					logicalNetLayer.getUnboundProto());
+			
+				Pool.put(MapSiteNodeElement.typ, unbound.getId(), unbound);
+				map.addNode(unbound);
+				
+				site = unbound;
+			}
+			
+			mapView.scanCables((Scheme )Pool.get(Scheme.typ, se.getSchemeId()));
 		}
 
 		// операция закончена - оповестить слушателей

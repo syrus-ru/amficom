@@ -59,7 +59,7 @@ public final class MapSelectionPropertiesController
 		return name;
 	}
 
-	public Object getValue(final ObjectResource object, final String key)
+	public Object getValue(final Object object, final String key)
 	{
 		Object result = null;
 		MapSelection selection = (MapSelection )object;
@@ -76,7 +76,7 @@ public final class MapSelectionPropertiesController
 		return false;
 	}
 
-	public void setValue(ObjectResource objectResource, final String key, final Object value)
+	public void setValue(Object object, final String key, final Object value)
 	{
 	}
 

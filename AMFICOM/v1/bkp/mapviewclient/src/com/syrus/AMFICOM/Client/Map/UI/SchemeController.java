@@ -69,10 +69,10 @@ public final class SchemeController implements ObjectResourceController
 		return name;
 	}
 
-	public Object getValue(final ObjectResource objectResource, final String key)
+	public Object getValue(final Object object, final String key)
 	{
 		Object result = null;
-		Scheme sc = (Scheme )objectResource;
+		Scheme sc = (Scheme )object;
 		if (key.equals(KEY_NAME))
 		{
 			result = sc.getName();
@@ -105,7 +105,7 @@ public final class SchemeController implements ObjectResourceController
 		return false;
 	}
 
-	public void setValue(ObjectResource objectResource, final String key, final Object value)
+	public void setValue(Object object, final String key, final Object value)
 	{
 	}
 

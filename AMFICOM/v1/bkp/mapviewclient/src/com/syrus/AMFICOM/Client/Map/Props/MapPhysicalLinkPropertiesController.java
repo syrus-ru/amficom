@@ -68,7 +68,7 @@ public final class MapPhysicalLinkPropertiesController
 		return name;
 	}
 
-	public Object getValue(final ObjectResource object, final String key)
+	public Object getValue(final Object object, final String key)
 	{
 		Object result = null;
 		MapPhysicalLinkElement link = (MapPhysicalLinkElement )object;
@@ -123,9 +123,9 @@ public final class MapPhysicalLinkPropertiesController
 		return false;
 	}
 
-	public void setValue(ObjectResource objectResource, final String key, final Object value)
+	public void setValue(Object object, final String key, final Object value)
 	{
-		MapPhysicalLinkElement link = (MapPhysicalLinkElement )objectResource;
+		MapPhysicalLinkElement link = (MapPhysicalLinkElement )object;
 
 		if (key.equals(PROPERTY_NAME))
 		{

@@ -1,5 +1,5 @@
 /**
- * $Id: MapView.java,v 1.9 2004/10/06 14:11:56 krupenn Exp $
+ * $Id: MapView.java,v 1.10 2004/10/09 13:34:24 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,25 +12,26 @@ package com.syrus.AMFICOM.Client.Resource.MapView;
 
 import com.syrus.AMFICOM.CORBA.Map.MapView_Transferable;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
-import com.syrus.AMFICOM.Client.General.UI.PropertiesPanel;
-import com.syrus.AMFICOM.Client.Map.Command.Action.DropSchemeCableLinkCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Action.DropSchemeElementCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Action.DropSchemePathCommand;
+import com.syrus.AMFICOM.Client.Map.Command.Action.PlaceSchemeCableLinkCommand;
+import com.syrus.AMFICOM.Client.Map.Command.Action.PlaceSchemeElementCommand;
+import com.syrus.AMFICOM.Client.Map.Command.Action.PlaceSchemePathCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.RemoveCablePathCommandAtomic;
 import com.syrus.AMFICOM.Client.Map.Command.Action.RemoveMeasurementPathCommandAtomic;
 import com.syrus.AMFICOM.Client.Map.Command.Action.RemoveNodeCommandAtomic;
+import com.syrus.AMFICOM.Client.Map.Command.Action.UnPlaceSchemeCableLinkCommand;
+import com.syrus.AMFICOM.Client.Map.Command.Action.UnPlaceSchemeElementCommand;
+import com.syrus.AMFICOM.Client.Map.Command.Action.UnPlaceSchemePathCommand;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
+import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkBinding;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
 import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.Client.Resource.Scheme.CableChannelingItem;
 import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
@@ -54,7 +55,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.9 $, $Date: 2004/10/06 14:11:56 $
+ * @version $Revision: 1.10 $, $Date: 2004/10/09 13:34:24 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -483,14 +484,20 @@ public final class MapView extends StubResource
 
 	public void scanCable(SchemeCableLink schemeCableLink)
 	{
+		MapSiteNodeElement[] mne = getSideNodes(schemeCableLink);
 		MapCablePathElement cp = findCablePath(schemeCableLink);
 		if(cp == null)
 		{
-			MapSiteNodeElement[] mne = getSideNodes(schemeCableLink);
-	
 			if(mne[0] != null && mne[1] != null)
 			{
 				placeElement(schemeCableLink);
+			}
+		}
+		else
+		{
+			if(mne[0] == null && mne[1] == null)
+			{
+				unplaceElement(cp);
 			}
 		}
 	}
@@ -531,35 +538,50 @@ public final class MapView extends StubResource
 	public void removePaths(Scheme scheme)
 	{
 		Collection schemePaths = scheme.getTopologicalPaths();
-		for(Iterator it = getMeasurementPaths().iterator(); it.hasNext();)
+		for(Iterator it = schemePaths.iterator(); it.hasNext();)
 		{
-			MapMeasurementPathElement mp = (MapMeasurementPathElement )it.next();
-			if(schemePaths.contains(mp.getSchemePath()))
+			SchemePath path = (SchemePath )it.next();
+			MapMeasurementPathElement mp = findMeasurementPath(path);
+			if(mp != null)
 			{
-				RemoveMeasurementPathCommandAtomic cmd = 
-					new RemoveMeasurementPathCommandAtomic(mp);
-				cmd.setLogicalNetLayer(logicalNetLayer);
-				cmd.execute();
-				removeMeasurementPath(mp);
+				unplaceElement(mp);
 			}
 		}
+//		for(Iterator it = getMeasurementPaths().iterator(); it.hasNext();)
+//		{
+//			MapMeasurementPathElement mp = (MapMeasurementPathElement )it.next();
+//			if(schemePaths.contains(mp.getSchemePath()))
+//			{
+//				RemoveMeasurementPathCommandAtomic cmd = 
+//					new RemoveMeasurementPathCommandAtomic(mp);
+//				cmd.setLogicalNetLayer(logicalNetLayer);
+//				cmd.execute();
+//				removeMeasurementPath(mp);
+//			}
+//		}
 	}
 
 	public void removeCables(Scheme scheme)
 	{
 		Collection schemeCables = scheme.getTopologicalCableLinks();
-		for(Iterator it = getCablePaths().iterator(); it.hasNext();)
+		for(Iterator it = schemeCables.iterator(); it.hasNext();)
 		{
-			MapCablePathElement cp = (MapCablePathElement )it.next();
-			if(schemeCables.contains(cp.getSchemeCableLink()))
+			SchemeCableLink scl = (SchemeCableLink )it.next();
+			MapCablePathElement cp = findCablePath(scl);
+			if(cp != null)
 			{
-				RemoveCablePathCommandAtomic cmd = 
-					new RemoveCablePathCommandAtomic(cp);
-				cmd.setLogicalNetLayer(logicalNetLayer);
-				cmd.execute();
-				removeCablePath(cp);
+				unplaceElement(cp);
 			}
 		}
+
+//		for(Iterator it = getCablePaths().iterator(); it.hasNext();)
+//		{
+//			MapCablePathElement cp = (MapCablePathElement )it.next();
+//			if(schemeCables.contains(cp.getSchemeCableLink()))
+//			{
+//				unplaceElement(cp);
+//			}
+//		}
 	}
 
 	public void removeElements(Scheme scheme)
@@ -569,13 +591,9 @@ public final class MapView extends StubResource
 		{
 			SchemeElement se = (SchemeElement )it.next();
 			MapSiteNodeElement site = findElement(se);
-			if(site != null && site instanceof MapUnboundNodeElement)
+			if(site != null)
 			{
-				RemoveNodeCommandAtomic cmd = 
-					new RemoveNodeCommandAtomic(site);
-				cmd.setLogicalNetLayer(logicalNetLayer);
-				cmd.execute();
-				getMap().removeNode(site);
+				unplaceElement(site, se);
 			}
 		}
 	}
@@ -585,14 +603,28 @@ public final class MapView extends StubResource
 	 */
 	public void placeElement(SchemeElement se, Point2D.Double point)
 	{
-		DropSchemeElementCommand cmd = new DropSchemeElementCommand(se, point);
+		PlaceSchemeElementCommand cmd = new PlaceSchemeElementCommand(se, point);
+		cmd.setLogicalNetLayer(logicalNetLayer);
+		cmd.execute();
+	}
+
+	public void unplaceElement(MapSiteNodeElement node, SchemeElement se)
+	{
+		UnPlaceSchemeElementCommand cmd = new UnPlaceSchemeElementCommand(node, se);
 		cmd.setLogicalNetLayer(logicalNetLayer);
 		cmd.execute();
 	}
 
 	public void placeElement(SchemeCableLink scl)
 	{
-		DropSchemeCableLinkCommand cmd = new DropSchemeCableLinkCommand(scl);
+		PlaceSchemeCableLinkCommand cmd = new PlaceSchemeCableLinkCommand(scl);
+		cmd.setLogicalNetLayer(logicalNetLayer);
+		cmd.execute();
+	}
+	
+	public void unplaceElement(MapCablePathElement cp)
+	{
+		UnPlaceSchemeCableLinkCommand cmd = new UnPlaceSchemeCableLinkCommand(cp);
 		cmd.setLogicalNetLayer(logicalNetLayer);
 		cmd.execute();
 	}
@@ -603,7 +635,14 @@ public final class MapView extends StubResource
 	 */
 	public void placeElement(SchemePath sp)
 	{
-		DropSchemePathCommand cmd = new DropSchemePathCommand(sp);
+		PlaceSchemePathCommand cmd = new PlaceSchemePathCommand(sp);
+		cmd.setLogicalNetLayer(logicalNetLayer);
+		cmd.execute();
+	}
+
+	public void unplaceElement(MapMeasurementPathElement mp)
+	{
+		UnPlaceSchemePathCommand cmd = new UnPlaceSchemePathCommand(mp);
 		cmd.setLogicalNetLayer(logicalNetLayer);
 		cmd.execute();
 	}
@@ -717,9 +756,9 @@ public final class MapView extends StubResource
 			if(node instanceof MapUnboundNodeElement)
 				if(((MapUnboundNodeElement)node).getSchemeElement().equals(se))
 					return node;
-			if(se != null)
-				if(se.siteId != null)
-					if(se.siteId.equals(node.getId()))
+			if(se != null
+				&& se.siteId != null
+				&& se.siteId.equals(node.getId()))
 						return node;
 		}
 		return null;
@@ -1006,13 +1045,32 @@ public final class MapView extends StubResource
 	}
 
 	/**
-	 * 
+	 * remove all temporary objects on mapview when mapview was edited and
+	 * closed without saving
 	 */
 	public void revert()
 	{
 		removeMarkers();
 	}
 
+	public void updateLinkBinding(MapPhysicalLinkElement link)
+	{
+		MapPhysicalLinkBinding binding = link.getBinding();
+		binding.clear();
+		String lid = link.getId();
+		for(Iterator it = getCablePaths(link).iterator(); it.hasNext();)
+		{
+			MapCablePathElement cpath = (MapCablePathElement )it.next();
+			for(Iterator it2 = cpath.getSchemeCableLink().channelingItems.iterator(); it2.hasNext();)
+			{
+				CableChannelingItem cci = (CableChannelingItem )it.next();
+				if(cci.physicalLinkId.equals(lid))
+				{
+					binding.bind(cpath.getSchemeCableLink(), cci.row_x, cci.place_y);
+				}
+			}
+		}
+	}
 
 	public void setDescription(String description)
 	{

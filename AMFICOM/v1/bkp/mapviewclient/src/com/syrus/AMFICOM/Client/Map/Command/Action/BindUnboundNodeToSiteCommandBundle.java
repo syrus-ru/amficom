@@ -1,5 +1,5 @@
 /**
- * $Id: BindToSiteCommandBundle.java,v 1.4 2004/09/29 16:13:07 krupenn Exp $
+ * $Id: BindUnboundNodeToSiteCommandBundle.java,v 1.1 2004/10/09 13:33:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,6 +13,7 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
 
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
@@ -23,6 +24,7 @@ import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundNodeElement;
 
 import java.util.Iterator;
+import java.util.List;
 
 /**
  *  Команда удаления элемента наследника класса MapNodeElement. Команда
@@ -30,12 +32,12 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/09/29 16:13:07 $
+ * @version $Revision: 1.1 $, $Date: 2004/10/09 13:33:40 $
  * @module
  * @author $Author: krupenn $
  * @see
  */
-public class BindToSiteCommandBundle extends MapActionCommandBundle
+public class BindUnboundNodeToSiteCommandBundle extends MapActionCommandBundle
 {
 	/**
 	 * Удаляемый узел
@@ -50,7 +52,7 @@ public class BindToSiteCommandBundle extends MapActionCommandBundle
 	 */
 	Map map;
 
-	public BindToSiteCommandBundle(MapUnboundNodeElement unbound, MapSiteNodeElement site)
+	public BindUnboundNodeToSiteCommandBundle(MapUnboundNodeElement unbound, MapSiteNodeElement site)
 	{
 		this.unbound = unbound;
 		this.site = site;
@@ -60,13 +62,12 @@ public class BindToSiteCommandBundle extends MapActionCommandBundle
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "execute()");
 
-		map = logicalNetLayer.getMapView().getMap();
+		MapView mapView = logicalNetLayer.getMapView();
+		map = mapView.getMap();
 		
-		//При удалении узла удаляются все фрагменты линий, исходящие из него
-		java.util.List nodeLinks = unbound.getNodeLinks();
-		Iterator e = nodeLinks.iterator();
-
-		for(Iterator it = logicalNetLayer.getMapView().getCablePaths(unbound).iterator(); it.hasNext();)
+		List cablePaths = logicalNetLayer.getMapView().getCablePaths(unbound);
+		
+		for(Iterator it = cablePaths.iterator(); it.hasNext();)
 		{
 			MapCablePathElement cp = (MapCablePathElement )it.next();
 			if(cp.getEndNode() == unbound)
@@ -75,10 +76,11 @@ public class BindToSiteCommandBundle extends MapActionCommandBundle
 				cp.setStartNode(site);
 		}
 
+		//При удалении узла удаляются все фрагменты линий, исходящие из него
 		// бежим по списку удаляемых фрагментов
-		while(e.hasNext())
+		for(Iterator it = unbound.getNodeLinks().iterator(); it.hasNext();)
 		{
-			MapNodeLinkElement nodeLink = (MapNodeLinkElement )e.next();
+			MapNodeLinkElement nodeLink = (MapNodeLinkElement )it.next();
 			MapPhysicalLinkElement physicalLink = map
 					.getPhysicalLink(nodeLink.getPhysicalLinkId());
 
@@ -103,10 +105,16 @@ public class BindToSiteCommandBundle extends MapActionCommandBundle
 		}//while(e.hasNext())
 
 		removeNode(unbound);
-		
+
 		SchemeElement se = unbound.getSchemeElement();
 		prevSiteId = se.siteId;		
 		se.siteId = site.getId();
+
+		for(Iterator it = cablePaths.iterator(); it.hasNext();)
+		{
+			MapCablePathElement cp = (MapCablePathElement )it.next();
+			mapView.scanCable(cp.getSchemeCableLink());
+		}
 		
 		logicalNetLayer.repaint();
 	}

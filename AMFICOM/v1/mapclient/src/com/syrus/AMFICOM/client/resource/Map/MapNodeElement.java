@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeElement.java,v 1.11 2004/09/29 15:03:34 krupenn Exp $
+ * $Id: MapNodeElement.java,v 1.12 2004/10/09 13:34:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -36,7 +36,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.11 $, $Date: 2004/09/29 15:03:34 $
+ * @version $Revision: 1.12 $, $Date: 2004/10/09 13:34:33 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -123,20 +123,20 @@ public abstract class MapNodeElement extends StubResource
 		int w = (int )((double )getDefaultBounds().width * scaleCoefficient);
 		int h = (int )((double )getDefaultBounds().height * scaleCoefficient);
 		
-		if (w >= getMaxBounds().width || h >= getMaxBounds().height )
+		if (w >= this.getMaxBounds().width || h >= this.getMaxBounds().height )
 		{
-			w = getMaxBounds().width;
-			h = getMaxBounds().height;
+			w = this.getMaxBounds().width;
+			h = this.getMaxBounds().height;
 		}
 		else
-		if (w <= getMinBounds().width || h <= getMinBounds().height )
+		if (w <= this.getMinBounds().width || h <= this.getMinBounds().height )
 		{
-			w = getMinBounds().width;
-			h = getMinBounds().height;
+			w = this.getMinBounds().width;
+			h = this.getMinBounds().height;
 		}
-		setBounds(new Rectangle(w, h));
+		this.setBounds(new Rectangle(w, h));
 
-		MapPropertiesManager.setScaledImageSize(getImageId(), w, h);
+		MapPropertiesManager.setScaledImageSize(this.getImageId(), w, h);
 	}
 	
 	/**

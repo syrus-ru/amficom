@@ -60,7 +60,7 @@ public final class MapCollectorPropertiesController
 		return name;
 	}
 
-	public Object getValue(final ObjectResource object, final String key)
+	public Object getValue(final Object object, final String key)
 	{
 		Object result = null;
 		MapPipePathElement path = (MapPipePathElement )object;
@@ -84,9 +84,9 @@ public final class MapCollectorPropertiesController
 		return false;
 	}
 
-	public void setValue(ObjectResource objectResource, final String key, final Object value)
+	public void setValue(Object object, final String key, final Object value)
 	{
-		MapPipePathElement path = (MapPipePathElement )objectResource;
+		MapPipePathElement path = (MapPipePathElement )object;
 
 		if (key.equals(PROPERTY_NAME))
 		{
