@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMainFrame.java,v 1.22 2005/02/25 13:49:16 krupenn Exp $
+ * $Id: MapEditorMainFrame.java,v 1.23 2005/03/01 15:43:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -27,14 +27,11 @@ import java.util.Properties;
 import javax.swing.BorderFactory;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JViewport;
 
-import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.ConnectionInterface;
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.SessionInterface;
 import com.syrus.AMFICOM.Client.General.Command.CloseAllInternalCommand;
 import com.syrus.AMFICOM.Client.General.Command.Command;
@@ -96,7 +93,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * 
  * 
  * 
- * @version $Revision: 1.22 $, $Date: 2005/02/25 13:49:16 $
+ * @version $Revision: 1.23 $, $Date: 2005/03/01 15:43:32 $
  * @module mapviewclient_v1
  * @author $Author: krupenn $
  */
@@ -593,14 +590,13 @@ public class MapEditorMainFrame extends JFrame
 				SessionInterface ssi = (SessionInterface )cce.getSource();
 				if(this.aContext.getSessionInterface().equals(ssi))
 				{
-					if(!Checker.checkCommandByUserId(
-							((RISDSessionInfo )this.aContext.getSessionInterface()).getUserId(),
-//							((RISDSessionInfo )this.aContext.getSessionInterface()).getUserIdentifier().toString(),
-							Checker.topologyEditing))
-					{
-						JOptionPane.showMessageDialog(null, LangModelMap.getString("NotEnoughRights"), LangModel.getString("Error"), JOptionPane.OK_OPTION);
-						return;
-					}
+//					if(!Checker.checkCommandByUserId(
+//							((RISDSessionInfo )this.aContext.getSessionInterface()).getUserId(),
+//							Checker.topologyEditing))
+//					{
+//						JOptionPane.showMessageDialog(null, LangModelMap.getString("NotEnoughRights"), LangModel.getString("Error"), JOptionPane.OK_OPTION);
+//						return;
+//					}
 					setSessionOpened();
 				}
 			}
