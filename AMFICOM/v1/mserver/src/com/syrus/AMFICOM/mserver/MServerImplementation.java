@@ -1,5 +1,5 @@
 /*
- * $Id: MServerImplementation.java,v 1.29 2005/03/18 18:18:13 arseniy Exp $
+ * $Id: MServerImplementation.java,v 1.30 2005/03/22 16:05:29 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,8 +11,10 @@ package com.syrus.AMFICOM.mserver;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
+import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.MCM;
 import com.syrus.AMFICOM.administration.Server;
@@ -93,7 +95,7 @@ import com.syrus.AMFICOM.mserver.corba.MServerPOA;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/03/18 18:18:13 $
+ * @version $Revision: 1.30 $, $Date: 2005/03/22 16:05:29 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -945,18 +947,46 @@ public class MServerImplementation extends MServerPOA {
         }
 	}
 
-	public void updateTestStatus(Identifier_Transferable idT, TestStatus status, Identifier_Transferable mcmUserIdT) {
-		Identifier id = new Identifier(idT);
-		Identifier mcmUserId = new Identifier(mcmUserIdT);
-		Log.debugMessage("Updating status of test '" + id + "' to " + status.value() + " on MCM '" + mcmUserId + "'", Log.DEBUGLEVEL07);
+	public void updateTestStatus (Identifier_Transferable testIdT, TestStatus status, Identifier_Transferable mcmIdT) {
+		Identifier testId = new Identifier(testIdT);
+		Identifier mcmId = new Identifier(mcmIdT);
 		try {
-			Test test = (Test) MeasurementStorableObjectPool.getStorableObject(id, true);
+			MCM mcm = (MCM) AdministrationStorableObjectPool.getStorableObject(mcmId, true);
+			Test test = (Test) MeasurementStorableObjectPool.getStorableObject(testId, true);
+			
+			Log.debugMessage("Updating status of test '" + testId + "' on MCM '" + mcmId
+					+ "' from " + test.getStatus().value() + " to " + status.value(), Log.DEBUGLEVEL07);
 			test.setStatus(status);
 			TestDatabase testDatabase = (TestDatabase) MeasurementDatabaseContext.getTestDatabase();
-			testDatabase.update(test, mcmUserId, StorableObjectDatabase.UPDATE_FORCE);
+			testDatabase.update(test, mcm.getUserId(), StorableObjectDatabase.UPDATE_FORCE);
 		}
 		catch (ApplicationException ae) {
-			Log.errorMessage("updateTestStatus | Cannot update status of test '" + id + "' -- " + ae.getMessage());
+			Log.errorMessage("updateTestStatus | Cannot update status of test '" + testId + "' -- " + ae.getMessage());
+		}
+	}
+
+	public void updateTestsStatus (Identifier_Transferable[] testIdsT, TestStatus status, Identifier_Transferable mcmIdT) {
+		Identifier mcmId = new Identifier(mcmIdT);
+		Collection tests = new LinkedList();
+		try {
+			MCM mcm = (MCM) AdministrationStorableObjectPool.getStorableObject(mcmId, true);
+			Identifier testId;
+			Test test;
+			for (int i = 0; i < testIdsT.length; i++) {
+				testId = new Identifier(testIdsT[i]);
+				test = (Test) MeasurementStorableObjectPool.getStorableObject(testId, true);
+				Log.debugMessage("Updating status of test '" + testId + "' on MCM '" + mcmId
+						+ "' from " + test.getStatus().value() + " to " + status.value(), Log.DEBUGLEVEL07);
+				test.setStatus(status);
+				tests.add(test);
+			}
+
+			TestDatabase testDatabase = (TestDatabase) MeasurementDatabaseContext.getTestDatabase();
+			testDatabase.update(tests, mcm.getUserId(), StorableObjectDatabase.UPDATE_FORCE);
+
+		}
+		catch (ApplicationException ae) {
+			Log.errorMessage("updateTestStatus | Cannot update status of tests -- " + ae.getMessage());
 		}
 	}
 

@@ -141,9 +141,13 @@ module corba {
 			raises (general::corba::AMFICOMRemoteException);
 
 
-		void updateTestStatus(in general::corba::Identifier_Transferable id,
+		void updateTestStatus(in general::corba::Identifier_Transferable test_id,
 			in measurement::corba::TestStatus status,
-			in general::corba::Identifier_Transferable mcm_user_id);
+			in general::corba::Identifier_Transferable mcm_id);
+
+		void updateTestsStatus(in general::corba::IdentifierSeq_Transferable test_ids,
+			in measurement::corba::TestStatus status,
+			in general::corba::Identifier_Transferable mcm_id);
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
