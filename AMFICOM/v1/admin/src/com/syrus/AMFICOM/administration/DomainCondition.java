@@ -1,5 +1,5 @@
 /*
- * $Id: DomainCondition.java,v 1.3 2005/02/11 16:18:30 bob Exp $
+ * $Id: DomainCondition.java,v 1.4 2005/02/11 16:30:29 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,6 @@
 package com.syrus.AMFICOM.administration;
 
 import java.util.Collection;
-import java.util.List;
 
 import com.syrus.AMFICOM.administration.corba.DomainCondition_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -23,8 +22,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
  * @deprecated use {@link com.syrus.AMFICOM.general.LinkedIdsCondition}
- * @version $Revision: 1.3 $, $Date: 2005/02/11 16:18:30 $
- * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2005/02/11 16:30:29 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 public class DomainCondition implements StorableObjectCondition {
