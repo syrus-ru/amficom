@@ -83,7 +83,7 @@ $(LIBNAME): .mach
 	$(IDL2JAVA) $(IDL2JAVAFLAGS) \
 		$(IDLDIR)/mcm.idl
 	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
-		-classpath $(APPCLASSPATH):$(VBJCLASSPATH) \
+		-classpath $(APPCLASSPATH) \
 		-sourcepath $(SRCDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/corba/*.java
 	touch $@
@@ -99,6 +99,14 @@ clean:	cleanmach cleancorba
 cleanmach:
 	rm -rf $(CLASSDIR)/com/syrus/AMFICOM/mcm/*.class
 	rm -f .mach
+
+.PHONY:	cleanhead
+cleanhead:
+	$(RM) -f \
+		$(TRANSCEIVER_DIR)/com_syrus_AMFICOM_mcm_Transceiver.h \
+		$(DADARA_DIR)/com_syrus_AMFICOM_mcm_DadaraAnalysisManager.h \
+		.head
+	
 
 .PHONY:	cleancorba
 cleancorba:
