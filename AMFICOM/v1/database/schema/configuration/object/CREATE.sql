@@ -1,4 +1,0 @@
-@@server
-@@mcm
-@@equipment
-@@monitoredelement

@@ -1,2 +1,0 @@
-@@equipmenttype
-@@mcmtype

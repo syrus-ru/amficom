@@ -1,3 +1,0 @@
-@@serverproperty
-@@users
-@@domain
