@@ -1,5 +1,5 @@
 /*
- * $Id: ImageResourceDatabase.java,v 1.8 2005/02/03 09:16:57 bob Exp $
+ * $Id: ImageResourceDatabase.java,v 1.9 2005/02/08 10:23:33 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,10 +26,8 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.general.StringFieldCondition;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceDataPackage.ImageResourceSort;
@@ -41,7 +39,7 @@ import com.syrus.util.database.DatabaseString;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.8 $, $Date: 2005/02/03 09:16:57 $
+ * @version $Revision: 1.9 $, $Date: 2005/02/08 10:23:33 $
  * @module resource_v1
  */
 
@@ -227,30 +225,6 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		AbstractImageResource abstractImageResource = this.fromStorableObject(storableObject);
 		super.retrieveEntity(abstractImageResource);		
-	}
-
-	public List retrieveByCondition(List ids,
-			StorableObjectCondition condition)
-			throws RetrieveObjectException, IllegalDataException {
-		List list = null;
-		if (condition instanceof StringFieldCondition){
-			StringFieldCondition stringFieldCondition = (StringFieldCondition)condition;
-			String sqlCondition = new String();
-			sqlCondition = COLUMN_SORT + EQUALS + stringFieldCondition.getSort(); 
-			try {
-				list = this.retrieveByIds(ids, sqlCondition);
-			} catch (IllegalDataException e) {
-				String msg = "ImageResourceDatabase.retrieveByCondition | IllegalDataException: " + e.getMessage(); //$NON-NLS-1$
-				throw new RetrieveObjectException(msg, e);
-			} catch (RetrieveObjectException e) {
-				String msg = "ImageResourceDatabase.retrieveByCondition | RetrieveObjectException: " + e.getMessage(); //$NON-NLS-1$
-				throw new RetrieveObjectException(msg, e);
-			}			
-		} else {
-			Log.errorMessage("ImageResourceDatabase.retrieveByCondition | Unknown condition class: " + condition); //$NON-NLS-1$
-			list = this.retrieveButIds(ids);
-		}
-		return list;
 	}
 
 	public List retrieveByIds(List ids, String condition)
