@@ -1,5 +1,5 @@
 /*
- * $Id: StringFieldCondition.java,v 1.3 2004/10/20 06:29:19 bob Exp $
+ * $Id: StringFieldCondition.java,v 1.4 2004/10/20 07:58:09 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/10/20 06:29:19 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/20 07:58:09 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -28,7 +28,15 @@ public class StringFieldCondition implements StorableObjectCondition {
 		this.string = transferable.field_string;
 		this.entityCode = new Short(transferable.entity_code);
 		this.sort = transferable.sort.value();
+	}	
+	
+	public StringFieldCondition(String string, Short entityCode){
+		this.string = string;
+		this.entityCode = entityCode;		
+		this.sort = StringFieldSort._STRINGSORT_BASE;		
 	}
+	
+	
 	
 	public StringFieldCondition(String string, Short entityCode, StringFieldSort sort){
 		this.string = string;
@@ -38,6 +46,10 @@ public class StringFieldCondition implements StorableObjectCondition {
 
 	public StringFieldCondition(String string, short entityCode, StringFieldSort sort){
 		this(string, new Short(entityCode), sort);		
+	}
+	
+	public StringFieldCondition(String string, short entityCode){
+		this(string, entityCode, StringFieldSort.STRINGSORT_BASE);		
 	}
 
 	
