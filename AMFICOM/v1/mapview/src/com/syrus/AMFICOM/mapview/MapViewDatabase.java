@@ -1,5 +1,5 @@
 /*
-* $Id: MapViewDatabase.java,v 1.7 2005/02/21 07:48:08 bob Exp $
+* $Id: MapViewDatabase.java,v 1.8 2005/02/24 15:57:09 bob Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -46,7 +46,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/02/21 07:48:08 $
+ * @version $Revision: 1.8 $, $Date: 2005/02/24 15:57:09 $
  * @author $Author: bob $
  * @module mapview_v1
  */
@@ -193,10 +193,8 @@ public class MapViewDatabase extends StorableObjectDatabase {
 				resultSet.getDouble(COLUMN_SCALE),
 				resultSet.getDouble(COLUMN_DEFAULTSCALE),
 				(com.syrus.AMFICOM.map.Map)MapStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MAP_ID), true));
-		}catch(DatabaseException de){
-			throw new RetrieveObjectException(this.getEnityName() + "Database.updateEntityFromResultSet | cannot retrieve map" ,  de);
-		} catch (CommunicationException ce) {
-			throw new RetrieveObjectException(this.getEnityName() + "Database.updateEntityFromResultSet | cannot retrieve map" ,  ce);
+		} catch(ApplicationException ae){
+			throw new RetrieveObjectException(this.getEnityName() + "Database.updateEntityFromResultSet | cannot retrieve map" ,  ae);
 		}
 		return map;
 	}
@@ -235,27 +233,25 @@ public class MapViewDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void update(StorableObject storableObject, Identifier modifierId, int updateKind) throws IllegalDataException, VersionCollisionException, UpdateObjectException {
-		MapView map = this.fromStorableObject(storableObject);
+	public void update(StorableObject storableObject, Identifier modifierId, int updateKind) throws VersionCollisionException, UpdateObjectException {
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
 		switch (updateKind) {
 			case UPDATE_CHECK:
-				super.checkAndUpdateEntity(map, modifierId, false);
-				characteristicDatabase.updateCharacteristics(map);
+				super.checkAndUpdateEntity(storableObject, modifierId, false);
+				characteristicDatabase.updateCharacteristics(storableObject);
 				break;
 			case UPDATE_FORCE:					
 			default:
-				super.checkAndUpdateEntity(map, modifierId, true);
-				characteristicDatabase.updateCharacteristics(map);
+				super.checkAndUpdateEntity(storableObject, modifierId, true);
+				characteristicDatabase.updateCharacteristics(storableObject);
 				return;
 		}
-		Collection maps = Collections.singletonList(map);
+		Collection maps = Collections.singletonList(storableObject);
 		this.updateSchemeIds(maps);
 	}
 	
 	
-	public void update(Collection storableObjects, Identifier modifierId, int updateKind) throws IllegalDataException,
-		VersionCollisionException, UpdateObjectException {
+	public void update(Collection storableObjects, Identifier modifierId, int updateKind) throws VersionCollisionException, UpdateObjectException {
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
 		switch (updateKind) {
 			case UPDATE_CHECK:
@@ -271,7 +267,7 @@ public class MapViewDatabase extends StorableObjectDatabase {
 		this.updateSchemeIds(storableObjects);
 	}	
 	
-	private void updateSchemeIds(Collection mapViews) throws UpdateObjectException, IllegalDataException {
+	private void updateSchemeIds(Collection mapViews) throws UpdateObjectException {
 		if (mapViews == null || mapViews.isEmpty())
 			return;
 
@@ -279,7 +275,12 @@ public class MapViewDatabase extends StorableObjectDatabase {
 		
 		for (Iterator colIter = mapViews.iterator(); colIter.hasNext();) {
 			StorableObject storableObject = (StorableObject) colIter.next();
-	        MapView mapView = fromStorableObject(storableObject);
+	        MapView mapView;
+			try {
+				mapView = fromStorableObject(storableObject);
+			} catch (IllegalDataException e) {
+				throw new UpdateObjectException("MapViewDatabase.updateSchemeIds | storableObject isn't map view");
+			}
 	        Collection linkedObjectList = mapView.getSchemes();
 	
 	        Collection linkedObjectIds = new ArrayList(linkedObjectList.size());
@@ -289,7 +290,11 @@ public class MapViewDatabase extends StorableObjectDatabase {
 	        mapIdLinkedObjectIds.put(mapView.getId(), linkedObjectIds);
 		}
 		
-		super.updateLinkedEntities(mapIdLinkedObjectIds, MAPVIEW_SCHEME, LINK_COLUMN_MAPVIEW_ID, LINK_COLUMN_SCHEME_ID);
+		try {
+			super.updateLinkedEntities(mapIdLinkedObjectIds, MAPVIEW_SCHEME, LINK_COLUMN_MAPVIEW_ID, LINK_COLUMN_SCHEME_ID);
+		}  catch (IllegalDataException e) {
+			throw new UpdateObjectException("MapViewDatabase.updateSchemeIds | cannot update map view scheme", e);
+		}
 
 	}
 	
