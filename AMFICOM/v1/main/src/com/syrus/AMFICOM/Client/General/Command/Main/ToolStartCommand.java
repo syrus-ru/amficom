@@ -155,6 +155,7 @@ class MyThread extends Thread
 				LangModelSchematics.initialize();
 				LangModelMap.initialize();
 				LangModelReport.initialize();
+				LangModelConfig.initialize();
 				new com.syrus.AMFICOM.Client.Model.Model(new DefaultModelApplicationModelFactory());
 			}
 			else
