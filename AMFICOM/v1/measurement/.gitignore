@@ -1,6 +1,7 @@
 classes
 nbproject
-test
+cache
+logs
 build.xml
 *.deploy
 *.jar

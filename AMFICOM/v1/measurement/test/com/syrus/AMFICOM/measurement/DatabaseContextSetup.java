@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.1 2005/02/04 14:18:32 bob Exp $
+ * $Id: DatabaseContextSetup.java,v 1.2 2005/02/22 14:12:22 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -57,8 +57,8 @@ import com.syrus.AMFICOM.measurement.TestDatabase;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/02/04 14:18:32 $
- * @author $Author: bob $
+ * @version $Revision: 1.2 $, $Date: 2005/02/22 14:12:22 $
+ * @author $Author: arseniy $
  * @module cmserver_v1
  */
 
@@ -108,6 +108,7 @@ public abstract class DatabaseContextSetup {
 		MeasurementDatabaseContext.init(new MeasurementTypeDatabase(),
 				new AnalysisTypeDatabase(),
 				new EvaluationTypeDatabase(),
+				new ModelingTypeDatabase(),
 				new SetDatabase(),
 				new ModelingDatabase(),
 				new MeasurementSetupDatabase(),
