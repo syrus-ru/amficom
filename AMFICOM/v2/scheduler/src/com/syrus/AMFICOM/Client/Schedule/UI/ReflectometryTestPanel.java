@@ -44,7 +44,6 @@ import com.syrus.AMFICOM.measurement.StringFieldCondition;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.corba.SetSort;
 import com.syrus.util.ByteArray;
-import com.syrus.util.Log;
 
 /**
  * @author Vladimir Dolzhenko
@@ -145,6 +144,8 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 
 	private Test					test;
 	private AComboBox				waveLengthComboBox			= new AComboBox();
+
+	private Identifier				meId;
 
 	public ReflectometryTestPanel() {
 		init();
@@ -288,8 +289,9 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 
 					RISDSessionInfo sessionInterface = (RISDSessionInfo) this.aContext.getSessionInterface();
 					Identifier id = IdentifierPool.generateId(ObjectEntities.SET_ENTITY_CODE);
-					set = Set.createInstance(id, sessionInterface.getUserIdentifier(), SetSort.SET_SORT_MEASUREMENT_PARAMETERS,
-												"Set created by Scheduler", params, null);
+					set = Set.createInstance(id, sessionInterface.getUserIdentifier(),
+												SetSort.SET_SORT_MEASUREMENT_PARAMETERS, "Set created by Scheduler",
+												params, Collections.singletonList(this.meId));
 					MeasurementStorableObjectPool.putStorableObject(set);
 
 				} catch (IOException ioe) {
@@ -315,6 +317,8 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 		if (commandName.equals(TestUpdateEvent.TYPE)) {
 			TestUpdateEvent tue = (TestUpdateEvent) ae;
 			setTest(tue.test);
+		} else if (commandName.equals(SchedulerModel.COMMAND_CHANGE_ME_TYPE)){
+			this.meId = (Identifier) ae.getSource();
 		}
 	}
 
@@ -643,10 +647,12 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 	private void initModule(Dispatcher dispatcher) {
 		this.dispatcher = dispatcher;
 		this.dispatcher.register(this, TestUpdateEvent.TYPE);
+		this.dispatcher.register(this, SchedulerModel.COMMAND_CHANGE_ME_TYPE);
 	}
 
 	public void unregisterDispatcher() {
 		this.dispatcher.unregister(this, TestUpdateEvent.TYPE);
+		this.dispatcher.unregister(this, SchedulerModel.COMMAND_CHANGE_ME_TYPE);
 	}
 
 	private void selectCBValue(AComboBox cb, double value) {

@@ -321,7 +321,7 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 	public ElementsTreePanel(ApplicationContext aContext) throws ApplicationException {
 		this.aContext = aContext;
 		this.dispatcher = aContext.getDispatcher();
-		((SchedulerModel) this.aContext.getApplicationModel()).setTreeModel(new TestsTreeModel(aContext));
+		//((SchedulerModel) this.aContext.getApplicationModel()).setTreeModel(new TestsTreeModel(aContext));
 
 		setLayout(new BorderLayout());
 
