@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.41 2005/04/01 08:19:55 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.42 2005/04/01 09:07:06 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.41 $, $Date: 2005/04/01 08:19:55 $
+ * @version $Revision: 1.42 $, $Date: 2005/04/01 09:07:06 $
  * @module
  */
 public class ModelTraceManager
@@ -90,6 +90,10 @@ extends ModelTraceAndEvents
 				break;
 			case SimpleReflectogramEvent.NOTIDENTIFIED:
 				last.xMax = evBegin;
+				if (evBegin < evEnd)
+					evBegin++;
+				if (evBegin < evEnd)
+					evEnd--;
 				thresholds.add(new ThreshDY(i, false, evBegin, evEnd));
 				last = null;
 				break;
