@@ -1,5 +1,5 @@
 /*
- * $Id: ViewItem.java,v 1.3 2005/03/11 12:07:32 bob Exp $
+ * $Id: ViewItem.java,v 1.4 2005/03/14 09:06:47 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/03/11 12:07:32 $
+ * @version $Revision: 1.4 $, $Date: 2005/03/14 09:06:47 $
  * @author $Author: bob $
  * @module filter_v1
  */
@@ -56,6 +56,7 @@ public class ViewItem extends AbstractItem implements Item, ItemListener {
 											};
 
 	private Item		sourceItem;
+	private boolean		service				= false;
 
 	public static Map	item2ItemViewMap	= new HashMap();
 
@@ -92,14 +93,20 @@ public class ViewItem extends AbstractItem implements Item, ItemListener {
 		this.sourceItem.addChangeListener(this);
 	}
 
+	ViewItem(boolean service) {
+		if (!service)
+			throw new UnsupportedOperationException("only service constructor!");
+		this.service = service;
+	}
+
 	private void addChild(	Item childItem,
 							boolean addToSource) {
 
-		System.out.println("ViewItem.addChild | this.name: " + this.sourceItem.getName() + "\n\t name: "
+		System.out.println("ViewItem.addChild | this.name: " + (this.service ? "service" : this.sourceItem.getName()) + "\n\t name: "
 				+ childItem.getName());
 		if (this.children == null)
 			this.children = new LinkedList();
-		if (this.children.size() <= this.sourceItem.getMaxChildrenCount()) {
+		if (this.service || this.getChildrenCount() <= this.sourceItem.getMaxChildrenCount()) {
 			ViewItem viewItem;
 			if (childItem instanceof ViewItem) {
 				viewItem = (ViewItem) childItem;
@@ -114,7 +121,7 @@ public class ViewItem extends AbstractItem implements Item, ItemListener {
 			this.children.add(viewItem);
 			this.sortedChildren = false;
 
-			if (addToSource)
+			if (!this.service && !viewItem.isService() && addToSource)
 				this.sourceItem.addChild(viewItem.getSourceItem());
 
 			Collection parents1 = viewItem.getParents();
@@ -150,7 +157,7 @@ public class ViewItem extends AbstractItem implements Item, ItemListener {
 			viewItem = (ViewItem) item2ItemViewMap.get(childItem);
 
 		if (this.children != null) {
-			System.out.println("ViewItem.removeChild | this.name: " + this.sourceItem.getName() + "\n\t name: "
+			System.out.println("ViewItem.removeChild | this.name: " +(this.service ? "service" :  this.sourceItem.getName()) + "\n\t name: "
 					+ childItem.getName());
 			this.children.remove(viewItem);
 		}
@@ -158,7 +165,7 @@ public class ViewItem extends AbstractItem implements Item, ItemListener {
 		Collection parents1 = childItem.getParents();
 		if (parents1 != null && parents1.contains(this))
 			viewItem.removeParent(this, removeFromSource);
-		if (removeFromSource)
+		if (!this.service && removeFromSource)
 			this.sourceItem.removeChild(viewItem.getSourceItem());
 	}
 
@@ -185,8 +192,8 @@ public class ViewItem extends AbstractItem implements Item, ItemListener {
 		} else
 			viewItem = (ViewItem) item2ItemViewMap.get(parent);
 
-		if ((this.parents == null && this.sourceItem.getMaxParentCount() == 0)
-				|| (this.parents != null && this.parents.size() > this.sourceItem.getMaxParentCount()))
+		if (!this.service && 
+				(this.getParentCount() > this.sourceItem.getMaxParentCount()))
 			throw new UnsupportedOperationException("There cannot be more than " + this.sourceItem.getMaxParentCount()
 					+ " parent items at item '" + this.sourceItem.getName() + "', parent item '" + viewItem.getName()
 					+ '\'');
@@ -198,12 +205,34 @@ public class ViewItem extends AbstractItem implements Item, ItemListener {
 
 		this.parents.add(viewItem);
 
-		if (addToSource)
+		if (!this.service && !viewItem.isService() && addToSource)
 			this.sourceItem.addParent(viewItem.sourceItem);
 
 		Collection children1 = viewItem.getChildren();
 		if (children1 == null || !children1.contains(this))
 			viewItem.addChild(this, addToSource);
+	}
+	
+	public int getParentCount() {
+		int count = 0;
+		if (this.parents != null && !this.parents.isEmpty()) {
+			for (Iterator it = this.parents.iterator(); it.hasNext();) {
+				ViewItem viewItem = (ViewItem) it.next();
+				count += viewItem.isService() ? 0 : 1;
+			}
+		}
+		return count;
+	}
+
+	public int getChildrenCount() {
+		int count = 0;
+		if (this.children != null && !this.children.isEmpty()) {
+			for (Iterator it = this.children.iterator(); it.hasNext();) {
+				ViewItem viewItem = (ViewItem) it.next();
+				count += viewItem.isService() ? 0 : 1;
+			}
+		}
+		return count;
 	}
 
 	public void addParent(Item parent) {
@@ -254,11 +283,11 @@ public class ViewItem extends AbstractItem implements Item, ItemListener {
 	}
 
 	public String getName() {
-		return this.sourceItem.getName();
+		return (this.service ? "service" : this.sourceItem.getName());
 	}
 
 	public Object getObject() {
-		return this.sourceItem.getObject();
+		return (this.service ? null : this.sourceItem.getObject());
 	}
 
 	public Item getSourceItem() {
@@ -355,7 +384,7 @@ public class ViewItem extends AbstractItem implements Item, ItemListener {
 					// edge) / 2);
 				} else {
 					int vMinH2 = viewItem.getMinY();
-					viewItem.move(0, vMaxH -vMinH2 + edge);
+					viewItem.move(0, vMaxH - vMinH2 + edge);
 				}
 
 				vMaxH = viewItem.getMaxY();
@@ -363,8 +392,8 @@ public class ViewItem extends AbstractItem implements Item, ItemListener {
 			}
 		}
 	}
-	
-	public void separateChildrenX(int width1) {			
+
+	public void separateChildrenX(int width1) {
 		if (this.children != null && !this.children.isEmpty()) {
 			for (Iterator it = this.children.iterator(); it.hasNext();) {
 				ViewItem viewItem = (ViewItem) it.next();
@@ -373,7 +402,7 @@ public class ViewItem extends AbstractItem implements Item, ItemListener {
 			}
 		}
 	}
-	
+
 	public int getMinX() {
 		int minX = this.x;
 		if (this.children != null && !this.children.isEmpty()) {
@@ -429,5 +458,11 @@ public class ViewItem extends AbstractItem implements Item, ItemListener {
 	public void setWidth(int width) {
 		this.width = width;
 	}
+
+	
+	public boolean isService() {
+		return this.service;
+	}
+	
 
 }
