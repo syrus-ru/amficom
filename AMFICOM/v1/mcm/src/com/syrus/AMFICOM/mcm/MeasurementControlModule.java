@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.57 2005/01/21 08:41:41 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.58 2005/02/15 15:09:20 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.mcm;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ import com.syrus.AMFICOM.administration.User;
 import com.syrus.AMFICOM.administration.corba.Domain_Transferable;
 import com.syrus.AMFICOM.administration.corba.MCM_Transferable;
 import com.syrus.AMFICOM.administration.corba.Server_Transferable;
+import com.syrus.AMFICOM.configuration.ConfigurationDatabaseContext;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.configuration.KIS;
@@ -63,7 +65,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.57 $, $Date: 2005/01/21 08:41:41 $
+ * @version $Revision: 1.58 $, $Date: 2005/02/15 15:09:20 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -222,7 +224,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 
 	private static void prepareTestList() {
 		testList = Collections.synchronizedList(new ArrayList());
-		List tests;
+		Collection tests;
 		TestDatabase testDatabase = (TestDatabase)MeasurementDatabaseContext.getTestDatabase();
 
 		try {
@@ -609,7 +611,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 
 				Equipment_Transferable eqT = mServerRef.transmitEquipment(kisT.equipment_id);
 				try {
-					(new Equipment(eqT)).insert();
+					ConfigurationDatabaseContext.getEquipmentDatabase().insert(new Equipment(eqT));
 				}
 				catch (CreateObjectException coe) {
 					Log.errorException(coe);
@@ -618,7 +620,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 				for (int j = 0; j < eqT.port_ids.length; j++) {
 					portT = mServerRef.transmitPort(eqT.port_ids[j]);
 					try {
-						(new Port(portT)).insert();
+						ConfigurationDatabaseContext.getPortDatabase().insert(new Port(portT));
 					}
 					catch (CreateObjectException coe) {
 						Log.errorException(coe);
@@ -629,7 +631,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 				 *  and subsequent information. Disregard now	*/
 
 				try {
-					(new KIS(kisT)).insert();
+					ConfigurationDatabaseContext.getKISDatabase().insert(new KIS(kisT));
 				}
 				catch (CreateObjectException coe) {
 					Log.errorException(coe);
@@ -639,7 +641,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 				for (int j = 0; j < kisT.measurement_port_ids.length; j++) {
 					mportT = mServerRef.transmitMeasurementPort(kisT.measurement_port_ids[j]);
 					try {
-						(new MeasurementPort(mportT)).insert();
+						ConfigurationDatabaseContext.getMeasurementPortDatabase().insert(new MeasurementPort(mportT));
 					}
 					catch (CreateObjectException coe) {
 						Log.errorException(coe);
@@ -654,14 +656,14 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 					for (int k = 0; k < mesT[j].monitored_domain_member_ids.length; k++) {
 						tpT = mServerRef.transmitTransmissionPath(mesT[j].monitored_domain_member_ids[k]);
 						try {
-							(new TransmissionPath(tpT)).insert();
+							ConfigurationDatabaseContext.getTransmissionPathDatabase().insert(new TransmissionPath(tpT));
 						}
 						catch (CreateObjectException coe) {
 							Log.errorException(coe);
 						}
 					}
 					try {
-						(new MonitoredElement(mesT[j])).insert();
+						ConfigurationDatabaseContext.getMonitoredElementDatabase().insert(new MonitoredElement(mesT[j]));
 					}
 					catch (CreateObjectException coe) {
 						Log.errorException(coe);
