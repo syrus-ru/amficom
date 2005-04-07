@@ -15,6 +15,7 @@ import java.util.ArrayList;
 
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
+import javax.swing.JSpinner;
 import javax.swing.SpinnerDateModel;
 import javax.swing.JSpinner.DateEditor;
 
@@ -163,7 +164,7 @@ public class GeneralTimeFilterPanel extends FilterPanel
 		hiTimeSpin.setValue(new Date(Long.parseLong ((String) vec.get(2))));
 	}
 
-	void spinDate_mousePressed(MouseEvent e, TimeSpinner spin)
+	void spinDate_mousePressed(MouseEvent e, JSpinner spin)
 	{
 		JFormattedTextField textField = ((DateEditor)spin.getEditor()).getTextField();
 		FontMetrics fontMetrics = textField.getFontMetrics(textField.getFont());
