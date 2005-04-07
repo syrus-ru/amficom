@@ -1,5 +1,5 @@
 /**
- * $Id: CenterSelectionCommand.java,v 1.15 2005/04/05 13:42:38 krupenn Exp $
+ * $Id: CenterSelectionCommand.java,v 1.16 2005/04/07 14:15:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * Центрировать геометрическое место точек, являющих собой центры 
  * выделенных элементов карты
  * @author $Author: krupenn $
- * @version $Revision: 1.15 $, $Date: 2005/04/05 13:42:38 $
+ * @version $Revision: 1.16 $, $Date: 2005/04/07 14:15:17 $
  * @module mapviewclient_v1
  */
 public class CenterSelectionCommand extends MapNavigateCommand
@@ -51,16 +51,12 @@ public class CenterSelectionCommand extends MapNavigateCommand
 		double x = 0.0D;
 		double y = 0.0D;
 
-		for(Iterator it = mapView.getMap().getSelectedElements().iterator(); it.hasNext();)
-		{
+		for(Iterator it = mapView.getMap().getSelectedElements().iterator(); it.hasNext();) {
 			me = (MapElement)it.next();
-			if(me.isSelected())
-			{
-				DoublePoint an = me.getLocation();
-				x += an.getX();
-				y += an.getY();
-				count++;
-			}
+			DoublePoint an = me.getLocation();
+			x += an.getX();
+			y += an.getY();
+			count++;
 		}
 
 /*
