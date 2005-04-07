@@ -1,5 +1,5 @@
 /*
- * $Id: TestController.java,v 1.5 2005/04/07 14:35:46 bob Exp $
+ * $Id: TestController.java,v 1.6 2005/04/07 16:02:55 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.util.Arrays;
 import java.util.Collections;
@@ -29,7 +30,7 @@ import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/04/07 14:35:46 $
+ * @version $Revision: 1.6 $, $Date: 2005/04/07 16:02:55 $
  * @author $Author: bob $
  * @module module
  */
@@ -87,7 +88,8 @@ public class TestController implements ObjectResourceController {
 	private Component getStatusComponent(TestStatus testStatus, String name) {
 		ComparableLabel label = new ComparableLabel(name);
 		label.setOpaque(true);
-		label.setBackground(SchedulerModel.getColor(testStatus));		
+		Color color = SchedulerModel.getColor(testStatus);
+		label.setBackground(color);
 		return label;
 	}
 	

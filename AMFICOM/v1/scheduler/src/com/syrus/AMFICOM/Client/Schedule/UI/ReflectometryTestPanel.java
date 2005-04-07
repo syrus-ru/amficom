@@ -35,7 +35,6 @@ import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.UI.AComboBox;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
@@ -146,16 +145,16 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 
 	private ApplicationContext		aContext;
 
-	AComboBox						maxDistanceComboBox			= new AComboBox();
-	AComboBox						pulseWidthComboBox			= new AComboBox();
-	AComboBox						resolutionComboBox			= new AComboBox();
-	private AComboBox				averageQuantityComboBox		= new AComboBox();
+	JComboBox						maxDistanceComboBox			= new JComboBox();
+	JComboBox						pulseWidthComboBox			= new JComboBox();
+	JComboBox						resolutionComboBox			= new JComboBox();
+	private JComboBox				averageQuantityComboBox		= new JComboBox();
 	private Dispatcher				dispatcher;
 	private SchedulerModel			schedulerModel;
 
 	private JTextField				refractTextField			= new JTextField();
 
-	private AComboBox				waveLengthComboBox			= new AComboBox();
+	private JComboBox				waveLengthComboBox			= new JComboBox();
 
 	private Identifier				meId;
 	
@@ -366,7 +365,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 		String commandName = ae.getActionCommand();
 		Environment.log(Environment.LOG_LEVEL_INFO, "commandName:" + commandName, getClass().getName());
 		if (commandName.equals(SchedulerModel.COMMAND_CHANGE_ME_TYPE)) {
-			this.setMonitoredElementId((Identifier) ae.getSource());
+			this.meId = (Identifier) ae.getSource();
 		}
 	}
 
@@ -712,26 +711,37 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 		gbc.weighty = 0.0;
 		gbc.gridwidth = GridBagConstraints.RELATIVE;
 		add(refractLabel, gbc);
+		gbc.weightx = 3.0;
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
 		add(this.refractTextField, gbc);
+		gbc.weightx = 1.0;
 		gbc.gridwidth = GridBagConstraints.RELATIVE;
 		add(waveLengthLabel, gbc);
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
+		gbc.weightx = 3.0;
 		add(this.waveLengthComboBox, gbc);
+		gbc.weightx = 1.0;
 		gbc.gridwidth = GridBagConstraints.RELATIVE;
 		add(countOfAverageOutLabel, gbc);
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
+		gbc.weightx = 3.0;
 		add(this.averageQuantityComboBox, gbc);
+		gbc.weightx = 1.0;
 		gbc.gridwidth = GridBagConstraints.RELATIVE;
 		add(pulseWidthLabel, gbc);
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
+		gbc.weightx = 3.0;
 		add(this.pulseWidthComboBox, gbc);
+		gbc.weightx = 1.0;
 		gbc.gridwidth = GridBagConstraints.RELATIVE;
 		add(resolutionLabel, gbc);
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
+		gbc.weightx = 3.0;
 		add(this.resolutionComboBox, gbc);
+		gbc.weightx = 1.0;
 		gbc.gridwidth = GridBagConstraints.RELATIVE;
 		add(maxDistanceLabel, gbc);
+		gbc.weightx = 3.0;
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
 		add(this.maxDistanceComboBox, gbc);
 		gbc.weighty = 1.0;
@@ -749,7 +759,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 		this.dispatcher.unregister(this, SchedulerModel.COMMAND_CHANGE_ME_TYPE);
 	}
 
-	private void selectCBValue(	AComboBox cb,
+	private void selectCBValue(	JComboBox cb,
 								double value) {
 		for (int i = 0; i < cb.getItemCount(); i++) {
 			Object obj = cb.getItemAt(i);
@@ -766,7 +776,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 		}
 	}
 
-	private void selectCBValue(	AComboBox cb,
+	private void selectCBValue(	JComboBox cb,
 								int value) {
 		for (int i = 0; i < cb.getItemCount(); i++) {
 			Object obj = cb.getItemAt(i);
@@ -783,7 +793,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 		}
 	}
 
-	private void selectCBValue(	AComboBox cb,
+	private void selectCBValue(	JComboBox cb,
 								long value) {
 		for (int i = 0; i < cb.getItemCount(); i++) {
 			Object obj = cb.getItemAt(i);

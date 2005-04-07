@@ -479,6 +479,8 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 
 	public void commitChanges() throws ApplicationException {
 		MeasurementStorableObjectPool.flush(true);
+		this.refreshTests();
+		this.refreshTest();
 	}
 
 	private void generateTest() throws ApplicationException {
@@ -558,6 +560,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 				color = SchedulerModel.COLOR_COMPLETED;
 				break;
 			case TestStatus._TEST_STATUS_SCHEDULED:
+			case TestStatus._TEST_STATUS_NEW:
 				color = SchedulerModel.COLOR_SCHEDULED;
 				break;
 			case TestStatus._TEST_STATUS_PROCESSING:
