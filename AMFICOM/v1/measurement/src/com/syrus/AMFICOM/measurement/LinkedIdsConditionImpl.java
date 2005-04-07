@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.31 2005/04/04 13:13:46 bass Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.32 2005/04/07 14:03:17 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,17 +9,20 @@
 package com.syrus.AMFICOM.measurement;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/04/04 13:13:46 $
- * @author $Author: bass $
+ * @version $Revision: 1.32 $, $Date: 2005/04/07 14:03:17 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -243,6 +246,40 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 	}
 
 	public boolean isNeedMore(final Set storableObjects) {
+		Identifier id;
+		switch (this.entityCode.shortValue()) {
+			case ObjectEntities.MEASUREMENT_ENTITY_CODE:
+				switch (this.linkedEntityCode) {
+					case ObjectEntities.TEST_ENTITY_CODE:
+						Set measurements = new HashSet(storableObjects);
+						Test test;
+						for (Iterator it = this.linkedIds.iterator(); it.hasNext();) {
+							id = (Identifier) it.next();
+							try {
+								test = (Test) MeasurementStorableObjectPool.getStorableObject(id, false);
+							}
+							catch (ApplicationException ae) {
+								Log.errorException(ae);
+								continue;
+							}
+							Measurement measurement;
+							int testNumberOfMeasurements = 0;
+							for (Iterator it1 = measurements.iterator(); it1.hasNext();) {
+								measurement = (Measurement) it1.next();
+								if (measurement.getTestId().equals(id)) {
+									it1.remove();
+									testNumberOfMeasurements++;
+								}
+							}
+							if (testNumberOfMeasurements < test.getNumberOfMeasurements())
+								return true;
+						}
+						return false;
+				}
+					
+				break;
+		}
+
 		return true;
 	}
 }
