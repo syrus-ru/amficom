@@ -80,10 +80,9 @@ InitialAnalysis::InitialAnalysis(
 	else
 	{	int i;
 		for (i = 0; i < lastNonZeroPoint; i++)
-		{	noise[i] = externalNoise[i];// FIXME - не учитывает THRESHOLD_TO_NOISE_RATIO		
+		{	noise[i] = externalNoise[i];// FIXME - не учитывает THRESHOLD_TO_NOISE_RATIO
         }
 	}
-
 	prf_b("IA: analyse");
 	performAnalysis();
 	prf_b("IA: done");
@@ -182,9 +181,10 @@ return;
         sp2 = (Splash*)splashes[i+1];
     	double dist = sp2->begin_thr - sp1->end_thr;
 		// отмечаем , что найден новый коннектор
-        if( dist<reflectiveSize*2			// если всплески близко (это же значение используется в SetConnectorParamsBySplashes)
+        if( ( sp1->begin_conn_n !=-1
+        	&& dist<reflectiveSize*2			// если всплески близко (это же значение используется в SetConnectorParamsBySplashes)
         	&& (sp1->sign>0 && sp2->sign<0) // первый положительный, а второй - отрицательный
-			&& ( sp1->begin_conn_n !=-1 )
+			)
           )
         {   EventParams *ep = new EventParams;
             SetConnectorParamsBySplashes((EventParams&)*ep, (Splash&)*sp1, (Splash&)*sp2 );
@@ -202,8 +202,8 @@ return;
 		    events->add(ep);
             i++;// потому что состоит из двух всплесков
         }
-
-        else if( sp1->begin_weld_n != -1 && fabs(sp1->end_weld_n-sp1->begin_weld_n)<1) //сварка
+        // сварка 
+        else if( sp1->begin_weld_n != -1 && fabs(sp1->end_weld_n-sp1->begin_weld_n)>1) //сварка
         {	EventParams *ep = new EventParams;
 			SetSpliceParamsBySplash( (EventParams&)*ep, (Splash&)*sp1 );
             events->add(ep);
@@ -328,12 +328,16 @@ void InitialAnalysis::findAllWletSplashes(double* f_wlet, ArrList& splashes)
 		spl.sign = sign;
 
         spl.begin_thr--;
-        if(spl.begin_thr < spl.end_thr)// begin>end только если образ так и не пересёк ни разу верхний порог
-        {   splashes.add(&spl);
+        if(  spl.begin_thr < spl.end_thr // begin>end только если образ так и не пересёк ни разу верхний порог
+	         && spl.begin_weld_n != -1 // !!!  добавляем только существенные всплески ( если эту проверку убрать, то распознавание коннекторов надо изменить, так как если между двумя коннекторными всплесками вдруг окажется случайный незначимый всплеск вверх, то конннектор распознан НЕ БУДЕТ ! )
+           )
+        {
+        	splashes.add(&spl);
         }
 #ifdef debug_lines
-        //xs[cou] = begin*delta_x; xe[cou] = begin_nonoise*delta_x; ys[cou] = -minimalConnector*2; ye[cou] = minimalConnector*2; cou++;
-        //xs[cou] = end_nonoise*delta_x; xe[cou] = end_nonoise*delta_x;     ys[cou] = -minimalConnector*2; ye[cou] = minimalConnector*2; col[cou]= 0xFFFFFF; cou++;
+        double begin = spl.begin_weld_n, end = spl.end_weld_n;
+        xs[cou] = begin*delta_x; xe[cou] = begin*delta_x; ys[cou] = -minimalConnector*2; ye[cou] = minimalConnector*2; cou++;
+        xs[cou] = end*delta_x; xe[cou] = end*delta_x; ys[cou] = -minimalConnector*2; ye[cou] = minimalConnector*2; col[cou]= 0xFFFFFF; cou++;
         // отображаем пороги
         xs[cou] = 0; ys[cou] =  minimalThreshold; xe[cou] = lastNonZeroPoint*delta_x; ye[cou] =  minimalThreshold; col[cou] = 0x004444; cou++;
         xs[cou] = 0; ys[cou] = -minimalThreshold; xe[cou] = lastNonZeroPoint*delta_x; ye[cou] = -minimalThreshold; col[cou] = 0x004444; cou++;
