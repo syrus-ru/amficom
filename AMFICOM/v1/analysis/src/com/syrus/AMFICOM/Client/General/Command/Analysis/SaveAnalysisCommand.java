@@ -83,6 +83,7 @@ public class SaveAnalysisCommand extends VoidCommand
 					type,
 					new Identifier(bs.monitoredElementId),
 					m,
+					"DADARA Analysis", // @todo: give a better name
 					m.getSetup().getCriteriaSet());
 		}
 		catch(CreateObjectException ex)
