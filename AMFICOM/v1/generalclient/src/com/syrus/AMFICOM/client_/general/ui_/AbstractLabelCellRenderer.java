@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
  * Abstract class for JLabel and simple Component (witch extends JLabel)
  * rendering at JTable
  * 
- * @version $Revision: 1.10 $, $Date: 2005/03/22 11:22:54 $
+ * @version $Revision: 1.11 $, $Date: 2005/04/07 14:31:28 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -35,8 +35,6 @@ public abstract class AbstractLabelCellRenderer extends JLabel implements TableC
 	public static final double	ONE_MINUS_ALPHA	= 1.0 - ALPHA;
 	
 	protected Map				renderers;
-
-	private Component			component;
 
 	private Color				unselectedForeground;
 
@@ -67,14 +65,18 @@ public abstract class AbstractLabelCellRenderer extends JLabel implements TableC
 													boolean hasFocus,
 													int rowIndex,
 													int vColIndex) {
-		this.component = this;
-		if (value instanceof Component) {
-			this.component = (Component) value;
+		super.setBackground(table.getBackground());
+		if (value instanceof JLabel) {
+			JLabel label = ((JLabel) value);
+			this.setText(label.getText());
+			this.setBackground(label.getBackground());
 		} else {
-			TableCellRenderer cellRenderer = (TableCellRenderer) this.renderers.get(value.getClass());
-			if (cellRenderer != null)
-				return cellRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, rowIndex,
-					vColIndex);
+			if (value != null) {
+				TableCellRenderer cellRenderer = (TableCellRenderer) this.renderers.get(value.getClass());
+				if (cellRenderer != null)
+					return cellRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, rowIndex,
+						vColIndex);
+			}
 			this.setText((value == null) ? "" : value.toString()); 
 				
 		}
@@ -82,7 +84,7 @@ public abstract class AbstractLabelCellRenderer extends JLabel implements TableC
 		Object obj = null;
 		String colId = null;
 		int mColIndex = table.convertColumnIndexToModel(vColIndex);
-		super.setBackground(table.getBackground());
+		
 
 		Object tableModel = table.getModel();
 		if (tableModel instanceof ObjectResourceTableModel) {
@@ -100,41 +102,41 @@ public abstract class AbstractLabelCellRenderer extends JLabel implements TableC
 			}
 		}
 
-		Color color = super.getBackground();
+//		Color color = super.getBackground();
+		Color color = this.getBackground();
 
 		if (isSelected) {
-			this.component.setForeground((this.unselectedForeground != null) ? this.unselectedForeground : table
+			this.setForeground((this.unselectedForeground != null) ? this.unselectedForeground : table
 					.getForeground());
 			Font font = table.getFont();
 			font = new Font(font.getName(), Font.BOLD | Font.ITALIC, font.getSize());
-			this.component.setFont(font);
+			this.setFont(font);
 			Color c = table.getSelectionBackground();
 			// calculate color with alpha-channel weight alpha
-			this.component
-					.setBackground(new Color(
+			this.setBackground(new Color(
 												(int) (c.getRed() * ONE_MINUS_ALPHA + ALPHA * color.getRed()) % 256,
 												(int) (c.getGreen() * ONE_MINUS_ALPHA + ALPHA * color.getGreen()) % 256,
 												(int) (c.getBlue() * ONE_MINUS_ALPHA + ALPHA * color.getBlue()) % 256));
 
 		} else {
-			this.component.setForeground((this.unselectedForeground != null) ? this.unselectedForeground : table
+			this.setForeground((this.unselectedForeground != null) ? this.unselectedForeground : table
 					.getForeground());
-			this.component.setFont(table.getFont());
-			this.component.setBackground(color);
+			this.setFont(table.getFont());
+			this.setBackground(color);
 		}
 
 		if (hasFocus) {
 			setBorder(UIManager.getBorder("Table.focusCellHighlightBorder"));
 			// //$NON-NLS-1$
 			if (table.isCellEditable(rowIndex, vColIndex)) {
-				this.component.setForeground(UIManager.getColor("Table.focusCellForeground")); //$NON-NLS-1$
-				// component.setBackground(UIManager.getColor("Table.focusCellBackground"));
+				this.setForeground(UIManager.getColor("Table.focusCellForeground")); //$NON-NLS-1$
+				// setBackground(UIManager.getColor("Table.focusCellBackground"));
 			}
 		} else {
 			setBorder(UIManager.getBorder(ResourceKeys.TABLE_NO_FOCUS_BORDER));
 		}
 
-		return this.component;
+		return this;
 	}
 
 	public void setBackground(Color c) {
