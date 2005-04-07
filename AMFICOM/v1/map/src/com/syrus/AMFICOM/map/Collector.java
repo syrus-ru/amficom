@@ -1,5 +1,5 @@
 /**
- * $Id: Collector.java,v 1.30 2005/04/05 12:02:16 krupenn Exp $
+ * $Id: Collector.java,v 1.31 2005/04/07 13:56:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,6 +10,16 @@
  */
 
 package com.syrus.AMFICOM.map;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
+import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -24,25 +34,16 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.corba.*;
+import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.Collector_Transferable;
-
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-
-import org.omg.CORBA.portable.IDLEntity;
 
 /**
  * Коллектор на топологической схеме, который характеризуется набором входящих
  * в него линий. Линии не обязаны быть связными.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.30 $, $Date: 2005/04/05 12:02:16 $
+ * @version $Revision: 1.31 $, $Date: 2005/04/07 13:56:00 $
  * @module map_v1
  */
 public class Collector extends StorableObject implements MapElement {
@@ -373,7 +374,7 @@ public class Collector extends StorableObject implements MapElement {
 			exportMap.put(COLUMN_ID, this.id);
 			exportMap.put(COLUMN_NAME, this.name);
 			exportMap.put(COLUMN_DESCRIPTION, this.description);
-			Set physicalLinkIds = new HashSet(getPhysicalLinks().size());
+			Collection physicalLinkIds = new HashSet(getPhysicalLinks().size());
 			for (Iterator it = getPhysicalLinks().iterator(); it.hasNext();) {
 				PhysicalLink link = (PhysicalLink) it.next();
 				physicalLinkIds.add(link.getId());
@@ -387,7 +388,7 @@ public class Collector extends StorableObject implements MapElement {
 		Identifier id1 = (Identifier) exportMap1.get(COLUMN_ID);
 		String name1 = (String) exportMap1.get(COLUMN_NAME);
 		String description1 = (String) exportMap1.get(COLUMN_DESCRIPTION);
-		Set physicalLinkIds1 = (Set) exportMap1.get(COLUMN_LINKS);
+		Collection physicalLinkIds1 = (Collection) exportMap1.get(COLUMN_LINKS);
 
 		if (id1 == null || creatorId == null || name1 == null || description1 == null || physicalLinkIds1 == null)
 			throw new IllegalArgumentException("Argument is 'null'");
