@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalImageCache.java,v 1.1 2005/04/07 14:19:18 peskovsky Exp $
+ * $Id: TopologicalImageCache.java,v 1.2 2005/04/07 14:34:49 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.Client.Map.MapDataException;
 
 /**
  * @author $Author: peskovsky $
- * @version $Revision: 1.1 $, $Date: 2005/04/07 14:19:18 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/07 14:34:49 $
  * @module mapinfo_v1
  */
 public class TopologicalImageCache
@@ -201,8 +201,8 @@ public class TopologicalImageCache
 		
 		DoublePoint cacheTopLeft = this.miLayer.convertScreenToMap(
 				new Point(
-						(int)Math.round(this.imageSize.width * TopologicalImageCache.MARGIN_SIZE),
-						(int)Math.round(this.imageSize.height * TopologicalImageCache.MARGIN_SIZE)));
+						(int)Math.round(-this.imageSize.width * TopologicalImageCache.MARGIN_SIZE),
+						(int)Math.round(-this.imageSize.height * TopologicalImageCache.MARGIN_SIZE)));
 		
 		DoublePoint cacheBottomRight = this.miLayer.convertScreenToMap(
 				new Point(
@@ -847,7 +847,7 @@ class TopologicalCacheThread extends Thread
 /**
  * Структура запроса изображения с сервера
  * @author $Author: peskovsky $
- * @version $Revision: 1.1 $, $Date: 2005/04/07 14:19:18 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/07 14:34:49 $
  * @module mapinfo_v1
  */
 class TopologicalRequest implements Comparable
