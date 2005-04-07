@@ -31,8 +31,6 @@ public class InitialAnalysisCommand extends VoidCommand {
 			double[] pars = new double[params.length];
 			for (int i = 0; i < params.length; i++)
 				pars[i] = params[i];
-			if (pars[6] > 1) //убрать фитировку
-				pars[6] = 1;
 
 			ModelTraceManager mtm = CoreAnalysisManager.makeAnalysis(
 					0, bs, pars, tracesMap);

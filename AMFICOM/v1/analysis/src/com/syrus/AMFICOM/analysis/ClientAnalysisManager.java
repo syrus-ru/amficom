@@ -1,5 +1,5 @@
 /*
- * $Id: ClientAnalysisManager.java,v 1.4 2005/03/29 16:00:51 saa Exp $
+ * $Id: ClientAnalysisManager.java,v 1.5 2005/04/07 15:22:54 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,21 +17,18 @@ import com.syrus.AMFICOM.Client.Analysis.Heap;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.4 $, $Date: 2005/03/29 16:00:51 $
+ * @version $Revision: 1.5 $, $Date: 2005/04/07 15:22:54 $
  * @module
  */
 public class ClientAnalysisManager extends CoreAnalysisManager
 {
 	private final String propertiesFileName = "analysis.properties";
 
-	double[] defaultMinuitParams = { 0.04, //минимальный уровень события
-			0.06, //минимальный уровень сварки
-			0.2, //минимальный уровень коннектора
-			3, //минимальный уровень конца
-			.1, //максимальный уровень шума
-			0.3, //скорость спадания (форм-фактор) коннектора (0..1)
-			4, //стратегия (int [0..3])
-			0, //номер вейвлета [0..8] (предпочтителен 0)
+	double[] defaultMinuitParams = {
+			0.05, //минимальный уровень события
+			0.07, //минимальный уровень сварки
+			0.21, //минимальный уровень коннектора
+			3 //коэфф. запаса для шума
 	};
 
 	public ClientAnalysisManager() {
