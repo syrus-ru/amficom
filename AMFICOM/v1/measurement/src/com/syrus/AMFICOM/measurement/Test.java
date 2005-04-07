@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.101 2005/04/04 16:06:27 bass Exp $
+ * $Id: Test.java,v 1.102 2005/04/07 13:55:18 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,8 +29,6 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
@@ -46,8 +44,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.101 $, $Date: 2005/04/04 16:06:27 $
- * @author $Author: bass $
+ * @version $Revision: 1.102 $, $Date: 2005/04/07 13:55:18 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -56,8 +54,7 @@ public class Test extends StorableObject {
 
 	protected static final int		RETRIEVE_MEASUREMENTS	= 1;
 	protected static final int		RETRIEVE_LAST_MEASUREMENT	= 2;
-	protected static final int		RETRIEVE_NUMBER_OF_MEASUREMENTS	= 3;
-	protected static final int		RETRIEVE_NUMBER_OF_RESULTS	= 4;
+	protected static final int		RETRIEVE_NUMBER_OF_RESULTS	= 3;
 	/**
 	 * @deprecated
 	 */
@@ -76,6 +73,7 @@ public class Test extends StorableObject {
 	private MonitoredElement monitoredElement;
 	private int	returnType;
 	private String description;
+	private int numberOfMeasurements;
 	private java.util.Set measurementSetupIds;
 
 	private MeasurementSetup mainMeasurementSetup;
@@ -99,6 +97,10 @@ public class Test extends StorableObject {
 	}
 
 	public Measurement createMeasurement(Identifier measurementCreatorId, Date startTime) throws CreateObjectException {
+		if (this.status != TestStatus._TEST_STATUS_PROCESSING)
+			throw new CreateObjectException("Status of test '" + this.id + "' is " + this.status
+					+ ", not " + TestStatus._TEST_STATUS_PROCESSING + " (PROCESSING)");
+
 		Measurement measurement;
 		try {
 			measurement = Measurement.createInstance(measurementCreatorId,
@@ -116,6 +118,8 @@ public class Test extends StorableObject {
 		}
 		super.modified = new Date(System.currentTimeMillis());
 		super.modifierId = measurementCreatorId;
+		this.numberOfMeasurements++;
+		super.changed = true;
 		try {
 			this.testDatabase.update(this, measurementCreatorId, StorableObjectDatabase.UPDATE_FORCE);
 		}
@@ -161,7 +165,8 @@ public class Test extends StorableObject {
 		this.measurementSetupIds = new HashSet();
 		this.setMeasurementSetupIds0(measurementSetupIds);
 		this.status = TestStatus._TEST_STATUS_NEW;
-		
+		this.numberOfMeasurements = 0;
+
 		this.testDatabase = MeasurementDatabaseContext.getTestDatabase();
 	}
 
@@ -265,6 +270,7 @@ public class Test extends StorableObject {
 
 		this.returnType = tt.return_type.value();
 		this.description = tt.description;
+		this.numberOfMeasurements = tt.number_of_measurements;
 
 		this.measurementSetupIds = Identifier.fromTransferables(tt.measurement_setup_ids);
 		if (!this.measurementSetupIds.isEmpty()) {
@@ -363,6 +369,7 @@ public class Test extends StorableObject {
 				(Identifier_Transferable) this.monitoredElement.getId().getTransferable(),
 				TestReturnType.from_int(this.returnType),
 				this.description,
+				this.numberOfMeasurements,
 				msIdsT);
 	}
 
@@ -378,15 +385,6 @@ public class Test extends StorableObject {
 	public Measurement retrieveLastMeasurement() throws RetrieveObjectException, ObjectNotFoundException {
 		try {
 			return (Measurement) this.testDatabase.retrieveObject(this, RETRIEVE_LAST_MEASUREMENT, null);
-		}
-		catch (IllegalDataException e) {
-			throw new RetrieveObjectException(e.getMessage(), e);
-		}
-	}
-
-	public int retrieveNumberOfMeasurements() throws RetrieveObjectException, ObjectNotFoundException {
-		try {
-			return ((Integer) this.testDatabase.retrieveObject(this, RETRIEVE_NUMBER_OF_MEASUREMENTS, null)).intValue();
 		}
 		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
@@ -425,14 +423,6 @@ public class Test extends StorableObject {
 		this.evaluationTypeId = evaluationTypeId;
 	}
 
-//	/**
-//	 * @param measurementSetupIds The measurementSetupIds to set.
-//	 */
-//	public void setMeasurementSetupIds(List measurementSetupIds) {
-//		super.changed = true;
-//		this.measurementSetupIds = measurementSetupIds;
-//	}
-
 	/**
 	 * @param measurementTypeId The measurementTypeId to set.
 	 */
@@ -464,25 +454,6 @@ public class Test extends StorableObject {
 		this.status = status.value();
 	}
 
-	/*
-	 * public ArrayList getMeasurements() { return this.measurements; }
-	 */
-	/**
-	 * @deprecated
-	 */
-	public void updateStatus(TestStatus status1, Identifier modifierId1) throws UpdateObjectException {
-		this.status = status1.value();
-		super.modified = new Date(System.currentTimeMillis());
-		super.modifierId = modifierId1;
-		try {
-			this.testDatabase = MeasurementDatabaseContext.getTestDatabase();
-			this.testDatabase.update(this, modifierId1, StorableObjectDatabase.UPDATE_FORCE);
-		}
-		catch (VersionCollisionException vce){
-			throw new UpdateObjectException(vce.getMessage(), vce);
-		}
-	}
-
 	/**
 	 * @param temporalPatternId The temporalPatternId to set.
 	 */
@@ -496,6 +467,10 @@ public class Test extends StorableObject {
 	public void setTemporalType(TestTemporalType temporalType) {
 		super.changed = true;
 		this.temporalType = temporalType.value();
+	}
+
+	public int getNumberOfMeasurements() {
+		return this.numberOfMeasurements;
 	}
 
 	public synchronized void setAttributes(Date created,
@@ -513,7 +488,8 @@ public class Test extends StorableObject {
 										   int status,
 										   MonitoredElement monitoredElement,
 										   int returnType,
-										   String description) {
+										   String description,
+										   int numberOfMeasurements) {
 		super.setAttributes(created,
 			modified,
 			creatorId,
@@ -532,6 +508,7 @@ public class Test extends StorableObject {
 		this.monitoredElement = monitoredElement;
 		this.returnType = returnType;
 		this.description = description;
+		this.numberOfMeasurements = numberOfMeasurements;
 	}
 
 	protected synchronized void setMeasurementSetupIds0(java.util.Set measurementSetupIds) {
