@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalItem.java,v 1.11 2005/04/06 11:54:09 max Exp $
+ * $Id: LogicalItem.java,v 1.12 2005/04/07 10:54:27 bob Exp $
  *
  * Copyright ? 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,8 +13,8 @@ import java.util.Iterator;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/04/06 11:54:09 $
- * @author $Author: max $
+ * @version $Revision: 1.12 $, $Date: 2005/04/07 10:54:27 $
+ * @author $Author: bob $
  * @module filter_v1
  */
 public class LogicalItem extends AbstractItem {
@@ -149,6 +149,10 @@ public class LogicalItem extends AbstractItem {
 
 	public String getName() {
 		return this.name;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
 	}
 
 //	public List getParents() {
