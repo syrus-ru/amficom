@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractItem.java,v 1.9 2005/03/28 07:47:12 bob Exp $
+ * $Id: AbstractItem.java,v 1.10 2005/04/07 10:53:42 bob Exp $
  *
  * Copyright ? 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,9 @@
 
 package com.syrus.AMFICOM.logic;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -16,24 +19,25 @@ import java.util.List;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/03/28 07:47:12 $
+ * @version $Revision: 1.10 $, $Date: 2005/04/07 10:53:42 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module filter_v1
  */
-public abstract class AbstractItem implements Item {
+public abstract class AbstractItem implements Item, PropertyChangeListener {
 
 	protected List				children;
 
 	protected Item				parent;
 
-	protected ItemListener[]	listener	= new ItemListener[0];
+	/** List&lt;ItemListener&gt; */
+	protected List				itemListeners			= new ArrayList();
+
+	public static final String	OBJECT_NAME_PROPERTY	= "ObjectNameProperty";
 
 	protected boolean checkForRecursion(Item child,
 										Item parentItem) {
-		if (child.equals(parentItem)) {
-			return true;
-		}
+		if (child.equals(parentItem)) { return true; }
 		boolean recursionExists = false;
 		List children2 = child.getChildren();
 		if (children2 != null && !children2.isEmpty()) {
@@ -52,40 +56,35 @@ public abstract class AbstractItem implements Item {
 	}
 
 	public void addChangeListener(ItemListener itemListener) {
-		ItemListener[] itemListeners = new ItemListener[this.listener.length + 1];
-		System.arraycopy(this.listener, 0, itemListeners, 1, this.listener.length);
-		itemListeners[0] = itemListener;
-		this.listener = itemListeners;
+		this.itemListeners.add(itemListener);
 	}
 
 	public void removeChangeListener(ItemListener itemListener) {
-		int index = -1;
-		for (int i = 0; i < this.listener.length; i++) {
-			if (this.listener[i].equals(itemListener)) {
-				index = i;
-				break;
-			}
-		}
-		if (index >= -1) {
-			ItemListener[] itemListeners = new ItemListener[this.listener.length - 1];
-			System.arraycopy(this.listener, 0, itemListeners, 0, index);
-			System.arraycopy(this.listener, index + 1, itemListeners, index, itemListeners.length - index);
-			this.listener = itemListeners;
+		this.itemListeners.remove(itemListener);
+	}
+
+	public void propertyChange(PropertyChangeEvent event) {
+		String propertyName = event.getPropertyName();
+		if (propertyName.equals(OBJECT_NAME_PROPERTY)) {
+			Object oldValue = event.getOldValue();
+			Object newValue = event.getNewValue();
+			this.fireObjectNameChanged(this, oldValue.toString(), newValue.toString());
 		}
 	}
 
 	public void addChild(Item childItem) {
 		Log.debugMessage("AbstractItem.addChild | this.name: " + this.toString() + " \n\t name: "
 				+ childItem.toString(), Log.FINEST);
-		
+
 		if (!this.canHaveChildren())
 			throw new UnsupportedOperationException("Item " + this.getName() + " can not have children.");
-		
+
 		if (this.children == null) {
 			this.children = new LinkedList();
 		}
 
-		if (this.checkForRecursion(childItem, this)) { throw new UnsupportedOperationException("Recursion isn't supported."); }
+		if (this.checkForRecursion(childItem, this)) { throw new UnsupportedOperationException(
+																								"Recursion isn't supported."); }
 
 		if (this.children.contains(childItem))
 			return;
@@ -105,7 +104,7 @@ public abstract class AbstractItem implements Item {
 	}
 
 	public void setParent(Item parent) {
-		Log.debugMessage("AbstractItem.setParent | name:" + this.toString() +"\n\tparent:"
+		Log.debugMessage("AbstractItem.setParent | name:" + this.toString() + "\n\tparent:"
 				+ (parent == null ? "'null'" : parent.toString()), Log.FINEST);
 
 		Item oldParent = this.parent;
@@ -126,21 +125,27 @@ public abstract class AbstractItem implements Item {
 			if (!children2.isEmpty() && children2.contains(this))
 				this.parent.addChild(this);
 		}
-		
+
 		Item notNullParent = this.parent == null ? oldParent : this.parent;
 		this.fireParentChanged(this, oldParent, this.parent, notNullParent);
 	}
-	
-	protected void fireParentChanged(Item item, Item oldParent, Item newParent, Item oldSourceParent) {
-		for (int i = 0; i < this.listener.length; i++) {
-			this.listener[i].setParentPerformed( item, oldParent, newParent);
-			Log.debugMessage(this.toString() + " listener[" + i + "(" + this.listener[i].getClass().getName() + ")" + "].setParentPerformed | item:" + item.toString()
-				+ ", oldParent:" + (oldParent == null ? "'null'" : oldParent.toString())
-				+ ", newParent:" + (newParent == null ? "'null'" : newParent.toString()), Log.FINEST);
+
+	protected void fireParentChanged(	Item item,
+										Item oldParent,
+										Item newParent,
+										Item oldSourceParent) {
+		int i = 0;
+		for (Iterator it = this.itemListeners.iterator(); it.hasNext(); i++) {
+			ItemListener itemListener = (ItemListener) it.next();
+			itemListener.setParentPerformed(item, oldParent, newParent);
+			Log.debugMessage(this.toString() + " listener[" + i + "(" + itemListener.getClass().getName() + ")"
+					+ "].setParentPerformed | item:" + item.toString() + ", oldParent:"
+					+ (oldParent == null ? "'null'" : oldParent.toString()) + ", newParent:"
+					+ (newParent == null ? "'null'" : newParent.toString()), Log.FINEST);
 		}
 		/* yeah, really compare reference */
-//		if (thisParent == this)
-//			return;
+		// if (thisParent == this)
+		// return;
 		if (this.parent == null && oldSourceParent == this)
 			return;
 		if (oldSourceParent instanceof AbstractItem) {
@@ -149,11 +154,26 @@ public abstract class AbstractItem implements Item {
 		}
 	}
 
+	protected void fireObjectNameChanged(	Item item,
+											String oldName,
+											String newName) {
+		for (Iterator it = this.itemListeners.iterator(); it.hasNext();) {
+			ItemListener itemListener = (ItemListener) it.next();
+			itemListener.setObjectNameChanged(item, oldName, newName);
+		}
+		if (this.parent == null)
+			return;
+		if (this.parent instanceof AbstractItem) {
+			AbstractItem abstractItem = (AbstractItem) this.parent;
+			abstractItem.fireObjectNameChanged(item, oldName, newName);
+		}
+	}
+
 	public Item getParent() {
 		return this.parent;
 	}
-	
-	public void print(final int deep) { 
+
+	public void print(final int deep) {
 		char[] cs = new char[deep];
 		for (int i = 0; i < cs.length; i++) {
 			cs[i] = '\t';
@@ -169,11 +189,11 @@ public abstract class AbstractItem implements Item {
 			}
 		}
 	}
-	
+
 	public String toString() {
 		String className = this.getClass().getName();
 		int lastDotIndex = className.lastIndexOf('.');
-		className = lastDotIndex >=0 ? className.substring(lastDotIndex + 1) : className;
+		className = lastDotIndex >= 0 ? className.substring(lastDotIndex + 1) : className;
 		return this.getName() + '{' + className + '}';
 	}
 }
