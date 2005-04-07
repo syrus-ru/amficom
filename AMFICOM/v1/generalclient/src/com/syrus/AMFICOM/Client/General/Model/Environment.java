@@ -1,5 +1,5 @@
 /*
- * $Id: Environment.java,v 1.22 2005/04/07 07:00:58 bob Exp $
+ * $Id: Environment.java,v 1.23 2005/04/07 08:11:21 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -56,7 +56,7 @@ import com.syrus.io.IniFile;
  * Класс Environment используется для хранения общей для приложения информации.
  * 
  * @author $Author: bob $
- * @version $Revision: 1.22 $, $Date: 2005/04/07 07:00:58 $
+ * @version $Revision: 1.23 $, $Date: 2005/04/07 08:11:21 $
  * @module generalclient_v1
  */
 public final class Environment
@@ -283,7 +283,7 @@ public final class Environment
 		UIManager.put(ResourceKeys.INSETS_ICONED_BUTTON, new UIDefaults.LazyValue() {
 
 			public Object createValue(UIDefaults table) {
-				return new Insets(2, 2, 2, 2);
+				return new Insets(1, 1, 1, 1);
 			}
 		});
 
