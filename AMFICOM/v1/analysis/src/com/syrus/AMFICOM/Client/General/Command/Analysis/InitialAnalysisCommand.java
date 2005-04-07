@@ -33,7 +33,7 @@ public class InitialAnalysisCommand extends VoidCommand {
 				pars[i] = params[i];
 
 			ModelTraceManager mtm = CoreAnalysisManager.makeAnalysis(
-					0, bs, pars, tracesMap);
+					bs, pars, tracesMap);
 
 			// фитировка нужна для определения вспомогательных парметров
 //	        ep = AnalysisManager.fitTrace(

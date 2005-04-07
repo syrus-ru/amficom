@@ -68,7 +68,7 @@ public class MinuitAnalyseCommand extends VoidCommand
 			Map tracesMap = Heap.getBsBellCoreMap();
 
 	  ModelTraceManager mtm = CoreAnalysisManager.makeAnalysis(
-		  0, bs, params, tracesMap);
+		  bs, params, tracesMap);
 
 	  //for (int i = 0; i < 2; i++) // FIXIT
 	  //ep = AnalysisManager.fitTrace(
