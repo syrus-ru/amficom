@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.28 2005/03/31 10:48:33 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.29 2005/04/07 15:26:38 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.28 $, $Date: 2005/03/31 10:48:33 $
+ * @version $Revision: 1.29 $, $Date: 2005/04/07 15:26:38 $
  * @module
  */
 
@@ -232,7 +232,7 @@ public class CoreAnalysisManager
 	 * 
 	 * @param strategy степень аппроксимации. Недокументировано.
 	 * @param bs рефлектограмма
-	 * @param pars набор параметров для IA: { level, weld, connector, end }
+	 * @param pars набор параметров для IA: { level, weld, connector, noiseFactor }
 	 * @param bellcoreTraces хэш всех открытых р/г для определения пределов колебаний
 	 * @return массив событий
 	 */
