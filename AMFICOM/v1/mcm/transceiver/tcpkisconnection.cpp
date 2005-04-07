@@ -126,14 +126,14 @@ JNIEXPORT jboolean JNICALL Java_com_syrus_AMFICOM_mcm_TCPKISConnection_transmitM
 	WriteSegmentStatus wrt_ret = transmit_segment(kis_socket, timewait, measurement_segment);
 	switch (wrt_ret) {
 		case WSS_OK:
-			printf("(tcpkisconnection) Successfully transferred measurement segment\n");
+			printf("(tcpkisconnection) Successfully transferred measurement segment of length %d\n", measurement_segment->getLength());
 			break;
 		case WSS_INVALID_SOCKET:
 		case WSS_CANNOT_WRITE_DATA:
-			printf("(tcpkisconnection) Cannot transmit measurement segment\n");
+			printf("(tcpkisconnection) Cannot transmit measurement segment of length %d\n", measurement_segment->getLength());
 			break;
 		default:
-			printf("(tcpkisconnection) Illegal return value of transmit_segment: %d\n", wrt_ret);
+			printf("(tcpkisconnection) Illegal return value of transmit_segment: %d for measurement segment of length %d\n", wrt_ret, measurement_segment->getLength());
 	}
 
 	delete measurement_segment;
