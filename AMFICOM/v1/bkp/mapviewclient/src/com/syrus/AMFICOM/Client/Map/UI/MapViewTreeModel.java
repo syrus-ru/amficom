@@ -1,11 +1,7 @@
 /**
- * $Id: MapViewTreeModel.java,v 1.8 2005/04/06 17:41:12 krupenn Exp $
- *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
- *
+ * $Id: MapViewTreeModel.java,v 1.9 2005/04/07 14:13:52 krupenn Exp $ Syrus
+ * Systems Научно-технический центр Проект: АМФИКОМ Автоматизированный
+ * МногоФункциональный Интеллектуальный Комплекс Объектного Мониторинга
  * Платформа: java 1.4.1
  */
 
@@ -20,7 +16,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
 
 import javax.swing.ImageIcon;
 
@@ -29,7 +24,6 @@ import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
 import com.syrus.AMFICOM.Client.Map.Controllers.NodeTypeController;
 import com.syrus.AMFICOM.client_.general.ui_.tree_.IconedNode;
 import com.syrus.AMFICOM.logic.Item;
-import com.syrus.AMFICOM.logic.ItemTreeModel;
 import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
@@ -39,87 +33,85 @@ import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.mapview.MapView;
 
-
 /**
- * @version $Revision: 1.8 $, $Date: 2005/04/06 17:41:12 $
+ * @version $Revision: 1.9 $, $Date: 2005/04/07 14:13:52 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
-public class MapViewTreeModel extends ItemTreeModel 
-{
+public class MapViewTreeModel {
 	public static final String MAP_BRANCH = "Map";
+
 	public static final String MAPS_BRANCH = "innermaps";
 
+	public static final String NONAME_BRANCH = "noname";
+
 	MapView mapView = null;
+
+	Item root;
 
 	Item topLevelItem;
 
 	static MapElementComparator mapElementComparator = new MapElementComparator();
+
 	static MapComparator mapComparator = new MapComparator();
+
 	static SiteNodeTypeComparator siteNodeTypeComparator = new SiteNodeTypeComparator();
 
 	static final int IMG_SIZE = 16;
 
-	static ImageIcon mapViewIcon = new ImageIcon(
-			Toolkit.getDefaultToolkit()
-				.getImage("images/mapview.gif")
-					.getScaledInstance(
-						IMG_SIZE,
-						IMG_SIZE,
-						Image.SCALE_SMOOTH));
-	static ImageIcon mapIcon = new ImageIcon(
-			Toolkit.getDefaultToolkit()
-				.getImage("images/map.gif")
-					.getScaledInstance(
-						IMG_SIZE,
-						IMG_SIZE,
-						Image.SCALE_SMOOTH));
-	static ImageIcon nodeIcon = new ImageIcon(
-			Toolkit.getDefaultToolkit()
-				.getImage("images/node_in_tree.gif")
-					.getScaledInstance(
-						IMG_SIZE,
-						IMG_SIZE,
-						Image.SCALE_SMOOTH));
-	static ImageIcon linkIcon = new ImageIcon(
-			Toolkit.getDefaultToolkit()
-				.getImage("images/linkmode.gif")
-					.getScaledInstance(
-						IMG_SIZE,
-						IMG_SIZE,
-						Image.SCALE_SMOOTH));
-	static ImageIcon collIcon = new ImageIcon(
-			Toolkit.getDefaultToolkit()
-				.getImage("images/collector.gif")
-					.getScaledInstance(
-						IMG_SIZE,
-						IMG_SIZE,
-						Image.SCALE_SMOOTH));
+	static ImageIcon mapViewIcon = new ImageIcon(Toolkit.getDefaultToolkit()
+			.getImage("images/mapview.gif").getScaledInstance(
+					IMG_SIZE,
+					IMG_SIZE,
+					Image.SCALE_SMOOTH));
 
-	static ImageIcon folderIcon = new ImageIcon(
-			Toolkit.getDefaultToolkit()
-				.getImage("images/folder.gif")
-					.getScaledInstance(
-						IMG_SIZE,
-						IMG_SIZE,
-						Image.SCALE_SMOOTH));
+	static ImageIcon mapIcon = new ImageIcon(Toolkit.getDefaultToolkit()
+			.getImage("images/map.gif").getScaledInstance(
+					IMG_SIZE,
+					IMG_SIZE,
+					Image.SCALE_SMOOTH));
+
+	static ImageIcon nodeIcon = new ImageIcon(Toolkit.getDefaultToolkit()
+			.getImage("images/node_in_tree.gif").getScaledInstance(
+					IMG_SIZE,
+					IMG_SIZE,
+					Image.SCALE_SMOOTH));
+
+	static ImageIcon linkIcon = new ImageIcon(Toolkit.getDefaultToolkit()
+			.getImage("images/linkmode.gif").getScaledInstance(
+					IMG_SIZE,
+					IMG_SIZE,
+					Image.SCALE_SMOOTH));
+
+	static ImageIcon collIcon = new ImageIcon(Toolkit.getDefaultToolkit()
+			.getImage("images/collector.gif").getScaledInstance(
+					IMG_SIZE,
+					IMG_SIZE,
+					Image.SCALE_SMOOTH));
+
+	static ImageIcon folderIcon = new ImageIcon(Toolkit.getDefaultToolkit()
+			.getImage("images/folder.gif").getScaledInstance(
+					IMG_SIZE,
+					IMG_SIZE,
+					Image.SCALE_SMOOTH));
 
 	public MapViewTreeModel(Item root) {
-		super(root);
-//		buildTree(mapView);
+		this.root = root;
 	}
-	
+
 	public void setMapView(MapView mapView) {
 		buildTree(mapView);
 	}
 
-	public Item findNode(Object object)
-	{
-		return findNode((Item )getRoot(), object);
+	public Item getRoot() {
+		return this.root;
 	}
 
-	public Item findNode(Item item, Object object)
-	{
+	public Item findNode(Object object) {
+		return findNode(getRoot(), object);
+	}
+
+	public Item findNode(Item item, Object object) {
 		if(item.getObject().equals(object))
 			return item;
 		for(Iterator iter = item.getChildren().iterator(); iter.hasNext();) {
@@ -129,14 +121,69 @@ public class MapViewTreeModel extends ItemTreeModel
 				return foundNode;
 		}
 		return null;
-		
+
+	}
+
+	public String getObjectName(Object object) {
+		if(object instanceof String)
+			return LangModelMap.getString((String )object);
+		else
+		if(object instanceof MapView) {
+			MapView mapView = (MapView )object;
+			return mapView.getName();
+		}
+		else
+		if(object instanceof Map) {
+			Map map = (Map )object;
+			return map.getName();
+		}
+		else
+		if(object instanceof SiteNodeType) {
+			SiteNodeType type = (SiteNodeType )object;
+			return type.getName();
+		}
+		else
+		if(object instanceof MapElement) {
+			MapElement mapElement = (MapElement )object;
+			return mapElement.getName();
+		}
+		return LangModelMap.getString(NONAME_BRANCH);
+	}
+
+	public String getNodeName(Item node) {
+		if(node.getObject() instanceof String)
+			return LangModelMap.getString((String )(node.getObject()));
+		else
+		if(node.getObject() instanceof MapView) {
+			MapView mapView = (MapView )node.getObject();
+			return mapView.getName();
+		}
+		else
+		if(node.getObject() instanceof Map) {
+			Map map = (Map )node.getObject();
+			return map.getName();
+		}
+		else
+		if(node.getObject() instanceof SiteNodeType) {
+			SiteNodeType type = (SiteNodeType )node.getObject();
+			return type.getName();
+		}
+		else
+		if(node.getObject() instanceof MapElement) {
+			MapElement mapElement = (MapElement )node
+					.getObject();
+			return mapElement.getName();
+		}
+		return LangModelMap.getString(NONAME_BRANCH);
 	}
 
 	void buildTree(MapView mapView) {
 		if(mapView == null) {
-			Item root = (Item )getRoot();
+			Item root = getRoot();
 			root.getChildren().clear();
-			this.topLevelItem = new IconedNode("noname", getObjectName("noname"));
+			this.topLevelItem = new IconedNode(
+					NONAME_BRANCH,
+					getObjectName(NONAME_BRANCH));
 			root.addChild(this.topLevelItem);
 		}
 		else {
@@ -144,9 +191,12 @@ public class MapViewTreeModel extends ItemTreeModel
 				updateTree(this.topLevelItem);
 			}
 			else {
-				Item root = (Item )getRoot();
+				Item root = getRoot();
 				root.getChildren().clear();
-				this.topLevelItem = new IconedNode(mapView, getObjectName(mapView), mapViewIcon);
+				this.topLevelItem = new IconedNode(
+						mapView,
+						getObjectName(mapView),
+						mapViewIcon);
 				root.addChild(this.topLevelItem);
 				Item mapNode = new IconedNode(
 						MapViewTreeModel.MAP_BRANCH,
@@ -161,7 +211,7 @@ public class MapViewTreeModel extends ItemTreeModel
 
 	Item buildMapTree(Map map) {
 		Item node;
-			
+
 		node = new IconedNode(map, getObjectName(map), mapIcon);
 
 		node.addChild(buildMapsTree(map));
@@ -172,63 +222,17 @@ public class MapViewTreeModel extends ItemTreeModel
 		return node;
 	}
 
-	public String getObjectName(Object object) {
-		if(object instanceof String)
-			return LangModelMap.getString((String )object);
-		else if(object instanceof MapView) {
-			MapView mapView = (MapView )object;
-			return mapView.getName();
-		}
-		else if(object instanceof Map) {
-			Map map = (Map )object;
-			return map.getName();
-		}
-		else if(object instanceof SiteNodeType) {
-			SiteNodeType type = (SiteNodeType )object;
-			return type.getName();
-		}
-		else if(object instanceof MapElement) {
-			MapElement mapElement = (MapElement )object;
-			return mapElement.getName();
-		}
-		return LangModelMap.getString("noname");
-	}
-
-	
-	public String getNodeName(Item node) {
-		if(node.getObject() instanceof String)
-			return LangModelMap.getString((String )(node.getObject()));
-		else if(node.getObject() instanceof MapView) {
-			MapView mapView = (MapView )node.getObject();
-			return mapView.getName();
-		}
-		else if(node.getObject() instanceof Map) {
-			Map map = (Map )node.getObject();
-			return map.getName();
-		}
-		else if(node.getObject() instanceof SiteNodeType) {
-			SiteNodeType type = (SiteNodeType )node.getObject();
-			return type.getName();
-		}
-		else if(node.getObject() instanceof MapElement) {
-			MapElement mapElement = (MapElement )node.getObject();
-			return mapElement.getName();
-		}
-		return LangModelMap.getString("noname");
-	}
-
 	Item buildMapsTree(Map map) {
 		Item mapChildrenNode = new IconedNode(
-				MapViewTreeModel.MAPS_BRANCH, 
+				MapViewTreeModel.MAPS_BRANCH,
 				getObjectName(MapViewTreeModel.MAPS_BRANCH),
 				folderIcon);
 
 		List mapsChildren = new ArrayList();
 		mapsChildren.addAll(map.getMaps());
 		Collections.sort(mapsChildren, MapViewTreeModel.mapComparator);
-		
-		for(Iterator it = mapsChildren.iterator(); it.hasNext();)
-		{
+
+		for(Iterator it = mapsChildren.iterator(); it.hasNext();) {
 			Map innerMap = (Map )it.next();
 			mapChildrenNode.addChild(buildMapTree(innerMap));
 		}
@@ -238,13 +242,12 @@ public class MapViewTreeModel extends ItemTreeModel
 
 	Item buildSiteTree(Map map) {
 		Item siteChildrenNode = new IconedNode(
-				MapViewController.ELEMENT_SITENODE, 
+				MapViewController.ELEMENT_SITENODE,
 				getObjectName(MapViewController.ELEMENT_SITENODE),
 				folderIcon);
 
 		java.util.Map types = this.getSiteNodeTypes(map);
-		for(Iterator it = types.keySet().iterator(); it.hasNext();)
-		{
+		for(Iterator it = types.keySet().iterator(); it.hasNext();) {
 			SiteNodeType type = (SiteNodeType )it.next();
 			List siteNodes = (List )types.get(type);
 			siteChildrenNode.addChild(buildSiteTree(type, siteNodes));
@@ -254,62 +257,77 @@ public class MapViewTreeModel extends ItemTreeModel
 
 	Item buildSiteTree(SiteNodeType type, List siteNodes) {
 		IconedNode siteChildrenNode = new IconedNode(
-				type, 
+				type,
 				getObjectName(type),
-				new ImageIcon(
-					NodeTypeController.getImage(type).getScaledInstance(
-						IMG_SIZE, 
-						IMG_SIZE, 
-						Image.SCALE_SMOOTH)));
+				new ImageIcon(NodeTypeController.getImage(type)
+						.getScaledInstance(
+								IMG_SIZE,
+								IMG_SIZE,
+								Image.SCALE_SMOOTH)));
 
 		Collections.sort(siteNodes, MapViewTreeModel.mapElementComparator);
 		for(Iterator it = siteNodes.iterator(); it.hasNext();) {
 			SiteNode site = (SiteNode )it.next();
-			siteChildrenNode.addChild(new IconedNode(site, getObjectName(site), siteChildrenNode.getIcon(), true));
+			siteChildrenNode.addChild(new IconedNode(
+					site,
+					getObjectName(site),
+					siteChildrenNode.getIcon(),
+					false));
 		}
-				
+
 		return siteChildrenNode;
 	}
 
-
 	Item buildNodeTree(Map map) {
 		Item nodeChildrenNode = new IconedNode(
-				MapViewController.ELEMENT_TOPOLOGICALNODE, 
+				MapViewController.ELEMENT_TOPOLOGICALNODE,
 				getObjectName(MapViewController.ELEMENT_TOPOLOGICALNODE),
 				folderIcon);
 		List nodes = new ArrayList(map.getTopologicalNodes());
 		Collections.sort(nodes, MapViewTreeModel.mapElementComparator);
 		for(Iterator it = nodes.iterator(); it.hasNext();) {
 			TopologicalNode topologicalNode = (TopologicalNode )it.next();
-			nodeChildrenNode.addChild(new IconedNode(topologicalNode, getObjectName(topologicalNode), nodeIcon, true));
+			nodeChildrenNode.addChild(new IconedNode(
+					topologicalNode,
+					getObjectName(topologicalNode),
+					nodeIcon,
+					false));
 		}
 		return nodeChildrenNode;
 	}
 
 	Item buildLinkTree(Map map) {
 		Item linkChildrenNode = new IconedNode(
-				MapViewController.ELEMENT_PHYSICALLINK, 
+				MapViewController.ELEMENT_PHYSICALLINK,
 				getObjectName(MapViewController.ELEMENT_PHYSICALLINK),
 				folderIcon);
 		List links = new ArrayList(map.getPhysicalLinks());
 		Collections.sort(links, MapViewTreeModel.mapElementComparator);
 		for(Iterator it = links.iterator(); it.hasNext();) {
 			PhysicalLink link = (PhysicalLink )it.next();
-			linkChildrenNode.addChild(new IconedNode(link, getObjectName(link), linkIcon, true));
+			linkChildrenNode.addChild(new IconedNode(
+					link,
+					getObjectName(link),
+					linkIcon,
+					false));
 		}
 		return linkChildrenNode;
 	}
 
 	Item buildCollTree(Map map) {
 		Item collChildrenNode = new IconedNode(
-				MapViewController.ELEMENT_COLLECTOR, 
+				MapViewController.ELEMENT_COLLECTOR,
 				getObjectName(MapViewController.ELEMENT_COLLECTOR),
 				folderIcon);
 		List collectors = new ArrayList(map.getCollectors());
 		Collections.sort(collectors, MapViewTreeModel.mapElementComparator);
 		for(Iterator it = collectors.iterator(); it.hasNext();) {
 			Collector collector = (Collector )it.next();
-			collChildrenNode.addChild(new IconedNode(collector, getObjectName(collector), collIcon, true));
+			collChildrenNode.addChild(new IconedNode(
+					collector,
+					getObjectName(collector),
+					collIcon,
+					false));
 		}
 		return collChildrenNode;
 
@@ -331,7 +349,7 @@ public class MapViewTreeModel extends ItemTreeModel
 
 	void updateTree(Item node) {
 		Item mapTopNode = (Item )node.getChildren().iterator().next();
-		
+
 		Item mapNode = (Item )mapTopNode.getChildren().iterator().next();
 		Map map = (Map )mapNode.getObject();
 		if(map.equals(this.mapView.getMap()))
@@ -348,13 +366,21 @@ public class MapViewTreeModel extends ItemTreeModel
 			Item childNode = (Item )iter.next();
 			if(childNode.getObject().equals(MapViewTreeModel.MAPS_BRANCH))
 				updateMapsTree(childNode, map);
-			else if(childNode.getObject().equals(MapViewController.ELEMENT_SITENODE))
+			else
+			if(childNode.getObject().equals(
+					MapViewController.ELEMENT_SITENODE))
 				updateSiteTree(childNode, map);
-			else if(childNode.getObject().equals(MapViewController.ELEMENT_TOPOLOGICALNODE))
+			else
+			if(childNode.getObject().equals(
+					MapViewController.ELEMENT_TOPOLOGICALNODE))
 				updateNodeTree(childNode, map);
-			else if(childNode.getObject().equals(MapViewController.ELEMENT_PHYSICALLINK))
+			else
+			if(childNode.getObject().equals(
+					MapViewController.ELEMENT_PHYSICALLINK))
 				updateLinkTree(childNode, map);
-			else if(childNode.getObject().equals(MapViewController.ELEMENT_COLLECTOR))
+			else
+			if(childNode.getObject().equals(
+					MapViewController.ELEMENT_COLLECTOR))
 				updateCollTree(childNode, map);
 		}
 	}
@@ -363,11 +389,11 @@ public class MapViewTreeModel extends ItemTreeModel
 		List mapsChildren = new ArrayList();
 		mapsChildren.addAll(map.getMaps());
 		Collections.sort(mapsChildren, MapViewTreeModel.mapComparator);
-		
+
 		java.util.Map nodePresense = new HashMap();
-		
+
 		List toRemove = new LinkedList();
-		
+
 		for(Iterator iter = node.getChildren().iterator(); iter.hasNext();) {
 			Item childNode = (Item )iter.next();
 			Map innerMap = (Map )childNode.getObject();
@@ -378,21 +404,22 @@ public class MapViewTreeModel extends ItemTreeModel
 			else
 				toRemove.add(childNode);
 		}
-		for(Iterator it = toRemove.iterator(); it.hasNext();)
-		{
-			node.getChildren().remove(it.next());
+		for(Iterator it = toRemove.iterator(); it.hasNext();) {
+			Item childItem = (Item )it.next();
+			childItem.setParent(null);
+			// node.getChildren().remove(it.next());
 		}
-		
+
 		int i = 0;
 		for(Iterator it = mapsChildren.iterator(); it.hasNext();) {
 			Map innerMap = (Map )it.next();
 			Item childNode = (Item )nodePresense.get(innerMap);
 			if(childNode == null) {
 				Item newItem = buildMapTree(innerMap);
-//				if(node.getChildren().isEmpty())
-					node.addChild(newItem);
-//				else
-//					node.getChildren().add(i, newItem);
+				// if(node.getChildren().isEmpty())
+				node.addChild(newItem);
+				// else
+				// node.getChildren().add(i, newItem);
 			}
 			i++;
 		}
@@ -402,9 +429,9 @@ public class MapViewTreeModel extends ItemTreeModel
 		java.util.Map types = this.getSiteNodeTypes(map);
 
 		java.util.Map nodePresense = new HashMap();
-		
+
 		List toRemove = new LinkedList();
-		
+
 		for(Iterator iter = node.getChildren().iterator(); iter.hasNext();) {
 			Item childNode = (Item )iter.next();
 			SiteNodeType type = (SiteNodeType )childNode.getObject();
@@ -416,11 +443,12 @@ public class MapViewTreeModel extends ItemTreeModel
 			else
 				toRemove.add(childNode);
 		}
-		for(Iterator it = toRemove.iterator(); it.hasNext();)
-		{
-			node.getChildren().remove(it.next());
+		for(Iterator it = toRemove.iterator(); it.hasNext();) {
+			Item childItem = (Item )it.next();
+			childItem.setParent(null);
+			// node.getChildren().remove(it.next());
 		}
-		
+
 		int i = 0;
 		for(Iterator it = types.keySet().iterator(); it.hasNext();) {
 			SiteNodeType type = (SiteNodeType )it.next();
@@ -428,10 +456,10 @@ public class MapViewTreeModel extends ItemTreeModel
 			if(childNode == null) {
 				List siteNodes = (List )types.get(type);
 				Item newItem = buildSiteTree(type, siteNodes);
-//				if(node.getChildren().isEmpty())
-					node.addChild(newItem);
-//				else
-//					node.getChildren().add(i, newItem);
+				// if(node.getChildren().isEmpty())
+				node.addChild(newItem);
+				// else
+				// node.getChildren().add(i, newItem);
 			}
 			i++;
 		}
@@ -441,9 +469,9 @@ public class MapViewTreeModel extends ItemTreeModel
 		Collections.sort(siteNodes, MapViewTreeModel.mapElementComparator);
 
 		java.util.Map nodePresense = new HashMap();
-		
+
 		List toRemove = new LinkedList();
-		
+
 		for(Iterator iter = node.getChildren().iterator(); iter.hasNext();) {
 			Item childNode = (Item )iter.next();
 			SiteNode site = (SiteNode )childNode.getObject();
@@ -452,58 +480,68 @@ public class MapViewTreeModel extends ItemTreeModel
 			else
 				toRemove.add(childNode);
 		}
-		for(Iterator it = toRemove.iterator(); it.hasNext();)
-		{
-			node.getChildren().remove(it.next());
+		for(Iterator it = toRemove.iterator(); it.hasNext();) {
+			Item childItem = (Item )it.next();
+			childItem.setParent(null);
+			// node.getChildren().remove(it.next());
 		}
-		
+
 		int i = 0;
 		for(Iterator it = siteNodes.iterator(); it.hasNext();) {
 			SiteNode site = (SiteNode )it.next();
 			Item childNode = (Item )nodePresense.get(site);
 			if(childNode == null) {
-				Item newItem = new IconedNode(site, getObjectName(site), ((IconedNode )node).getIcon(), true); 
-//				if(node.getChildren().isEmpty())
-					node.addChild(newItem);
-//				else
-//					node.getChildren().add(i, newItem);
+				Item newItem = new IconedNode(
+						site,
+						getObjectName(site),
+						((IconedNode )node).getIcon(),
+						false);
+				// if(node.getChildren().isEmpty())
+				node.addChild(newItem);
+				// else
+				// node.getChildren().add(i, newItem);
 			}
 			i++;
 		}
 	}
-
 
 	void updateNodeTree(Item node, Map map) {
 		List nodes = new ArrayList(map.getTopologicalNodes());
 		Collections.sort(nodes, MapViewTreeModel.mapElementComparator);
 
 		java.util.Map nodePresense = new HashMap();
-		
+
 		List toRemove = new LinkedList();
-		
+
 		for(Iterator iter = node.getChildren().iterator(); iter.hasNext();) {
 			Item childNode = (Item )iter.next();
-			TopologicalNode topologicalNode = (TopologicalNode )childNode.getObject();
+			TopologicalNode topologicalNode = (TopologicalNode )childNode
+					.getObject();
 			if(nodes.contains(topologicalNode))
 				nodePresense.put(topologicalNode, childNode);
 			else
 				toRemove.add(childNode);
 		}
-		for(Iterator it = toRemove.iterator(); it.hasNext();)
-		{
-			node.getChildren().remove(it.next());
+		for(Iterator it = toRemove.iterator(); it.hasNext();) {
+			Item childItem = (Item )it.next();
+			childItem.setParent(null);
+			// node.getChildren().remove(it.next());
 		}
-		
+
 		int i = 0;
 		for(Iterator it = nodes.iterator(); it.hasNext();) {
 			TopologicalNode topologicalNode = (TopologicalNode )it.next();
 			Item childNode = (Item )nodePresense.get(topologicalNode);
 			if(childNode == null) {
-				Item newItem = new IconedNode(topologicalNode, getObjectName(topologicalNode), nodeIcon, true);
-//				if(node.getChildren().isEmpty())
-					node.addChild(newItem);
-//				else
-//					node.getChildren().add(i, newItem);
+				Item newItem = new IconedNode(
+						topologicalNode,
+						getObjectName(topologicalNode),
+						nodeIcon,
+						false);
+				// if(node.getChildren().isEmpty())
+				node.addChild(newItem);
+				// else
+				// node.getChildren().add(i, newItem);
 			}
 			i++;
 		}
@@ -514,9 +552,9 @@ public class MapViewTreeModel extends ItemTreeModel
 		Collections.sort(links, MapViewTreeModel.mapElementComparator);
 
 		java.util.Map nodePresense = new HashMap();
-		
+
 		List toRemove = new LinkedList();
-		
+
 		for(Iterator iter = node.getChildren().iterator(); iter.hasNext();) {
 			Item childNode = (Item )iter.next();
 			PhysicalLink link = (PhysicalLink )childNode.getObject();
@@ -525,21 +563,26 @@ public class MapViewTreeModel extends ItemTreeModel
 			else
 				toRemove.add(childNode);
 		}
-		for(Iterator it = toRemove.iterator(); it.hasNext();)
-		{
-			node.getChildren().remove(it.next());
+		for(Iterator it = toRemove.iterator(); it.hasNext();) {
+			Item childItem = (Item )it.next();
+			childItem.setParent(null);
+			// node.getChildren().remove(it.next());
 		}
-		
+
 		int i = 0;
 		for(Iterator it = links.iterator(); it.hasNext();) {
 			PhysicalLink link = (PhysicalLink )it.next();
 			Item childNode = (Item )nodePresense.get(link);
 			if(childNode == null) {
-				Item newItem = new IconedNode(link, getObjectName(link), linkIcon, true);
-//				if(node.getChildren().isEmpty())
-					node.addChild(newItem);
-//				else
-//					node.getChildren().add(i, newItem);
+				Item newItem = new IconedNode(
+						link,
+						getObjectName(link),
+						linkIcon,
+						false);
+				// if(node.getChildren().isEmpty())
+				node.addChild(newItem);
+				// else
+				// node.getChildren().add(i, newItem);
 			}
 			i++;
 		}
@@ -550,9 +593,9 @@ public class MapViewTreeModel extends ItemTreeModel
 		Collections.sort(collectors, MapViewTreeModel.mapElementComparator);
 
 		java.util.Map nodePresense = new HashMap();
-		
+
 		List toRemove = new LinkedList();
-		
+
 		for(Iterator iter = node.getChildren().iterator(); iter.hasNext();) {
 			Item childNode = (Item )iter.next();
 			Collector collector = (Collector )childNode.getObject();
@@ -561,21 +604,26 @@ public class MapViewTreeModel extends ItemTreeModel
 			else
 				toRemove.add(childNode);
 		}
-		for(Iterator it = toRemove.iterator(); it.hasNext();)
-		{
-			node.getChildren().remove(it.next());
+		for(Iterator it = toRemove.iterator(); it.hasNext();) {
+			Item childItem = (Item )it.next();
+			childItem.setParent(null);
+			// node.getChildren().remove(it.next());
 		}
-		
+
 		int i = 0;
 		for(Iterator it = collectors.iterator(); it.hasNext();) {
 			Collector collector = (Collector )it.next();
 			Item childNode = (Item )nodePresense.get(collector);
 			if(childNode == null) {
-				Item newItem = new IconedNode(collector, getObjectName(collector), collIcon, true);
-//				if(node.getChildren().isEmpty())
-					node.addChild(newItem);
-//				else
-//					node.getChildren().add(i, newItem);
+				Item newItem = new IconedNode(
+						collector,
+						getObjectName(collector),
+						collIcon,
+						false);
+				// if(node.getChildren().isEmpty())
+				node.addChild(newItem);
+				// else
+				// node.getChildren().add(i, newItem);
 			}
 			i++;
 		}

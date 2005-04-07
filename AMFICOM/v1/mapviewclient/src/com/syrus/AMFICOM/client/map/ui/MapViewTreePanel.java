@@ -12,7 +12,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
@@ -26,16 +25,18 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.client_.general.ui_.tree_.IconedNode;
-import com.syrus.AMFICOM.client_.general.ui_.tree_.IconedTreeUI;
 import com.syrus.AMFICOM.logic.Item;
+import com.syrus.AMFICOM.logic.ItemTreeModel;
+import com.syrus.AMFICOM.logic.LogicalTreeUI;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.mapview.MapView;
 
 public final class MapViewTreePanel extends JPanel 
 		implements OperationListener, TreeSelectionListener {
 
-	JTree tree = null;
-	MapViewTreeModel model = null;
+	LogicalTreeUI treeUI;
+	JTree tree;
+	MapViewTreeModel model;
 
 	ApplicationContext aContext;
 
@@ -73,13 +74,17 @@ public final class MapViewTreePanel extends JPanel
 		this.model = new MapViewTreeModel(rootItem);
 		this.treeRenderer = new MapViewTreeCellRenderer(this.model);
 
-		this.tree = new JTree(this.model);
+		this.treeUI = new LogicalTreeUI(rootItem, false);
+		this.tree = this.treeUI.getTree();
+		ItemTreeModel treeModel = (ItemTreeModel )this.tree.getModel();
+		treeModel.setAllwaysSort(false);
+
 		this.scroll.getViewport().add(this.tree);
 		this.tree.addTreeSelectionListener(this);
 		this.tree.getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
 		this.tree.setCellRenderer(this.treeRenderer);
 
-		this.tree.setRootVisible(true);
+		this.tree.setRootVisible(false);
 	}
 
 	public void setContext(ApplicationContext aContext) {
@@ -134,17 +139,18 @@ public final class MapViewTreePanel extends JPanel
 					MapElement mapElement = (MapElement )mne.getSource();
 					Item node = this.model.findNode(mapElement);
 					if(node != null) {
-//						TreePath path = new TreePath(node.getPath());
-//						this.tree.getSelectionModel().addSelectionPath(path);
-//						this.tree.scrollPathToVisible(path);
+						TreePath path = new TreePath(node);
+						this.tree.getSelectionModel().addSelectionPath(path);
+						this.tree.getSelectionModel().setSelectionPath(path);
+						this.tree.scrollPathToVisible(path);
 					}
 				}
 				else if (mne.isMapElementDeselected()) {
 					MapElement mapElement = (MapElement )mne.getSource();
 					Item node = this.model.findNode(mapElement);
 					if(node != null) {
-//						TreePath path = new TreePath(node.getPath());
-//						this.tree.getSelectionModel().removeSelectionPath(path);
+						TreePath path = new TreePath(node);
+						this.tree.getSelectionModel().removeSelectionPath(path);
 					}
 				}
 			}
