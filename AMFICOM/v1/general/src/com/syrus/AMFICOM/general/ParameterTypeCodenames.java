@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeCodenames.java,v 1.5 2005/04/07 11:13:07 bob Exp $
+ * $Id: ParameterTypeCodenames.java,v 1.6 2005/04/07 11:14:22 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/04/07 11:13:07 $
+ * @version $Revision: 1.6 $, $Date: 2005/04/07 11:14:22 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -17,13 +17,13 @@ public class ParameterTypeCodenames {
 
 	public static final String	REFLECTOGRAMMA				= "reflectogramma";
 
-//	public static final String 	TRACE_FLAGS 				= "ref_flags";
-//	public static final String	TRACE_WAVELENGTH			= "ref_wvlen";
-//	public static final String	TRACE_LENGTH				= "ref_trclen";
-//	public static final String	TRACE_RESOLUTION			= "ref_res";
-//	public static final String	TRACE_PULSE_WIDTH			= "ref_pulswd";
-//	public static final String	TRACE_INDEX_OF_REFRACTION	= "ref_ior";
-//	public static final String	TRACE_AVERAGE_COUNT			= "ref_scans";
+	public static final String 	TRACE_FLAGS 				= "ref_flags";
+	public static final String	TRACE_WAVELENGTH			= "ref_wvlen";
+	public static final String	TRACE_LENGTH				= "ref_trclen";
+	public static final String	TRACE_RESOLUTION			= "ref_res";
+	public static final String	TRACE_PULSE_WIDTH			= "ref_pulswd";
+	public static final String	TRACE_INDEX_OF_REFRACTION	= "ref_ior";
+	public static final String	TRACE_AVERAGE_COUNT			= "ref_scans";
 	public static final String	TRACE_EVENTS				= "traceeventarray";
 
 	public static final String	DADARA_EVENTS				= "dadara_event_array";
