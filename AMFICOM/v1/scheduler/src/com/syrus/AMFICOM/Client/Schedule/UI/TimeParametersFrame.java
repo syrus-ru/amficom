@@ -128,7 +128,7 @@ public class TimeParametersFrame extends JInternalFrame {
 			Insets gbcInsetsDefault = gbc.insets;
 			gbc.fill = GridBagConstraints.BOTH;
 			this.setLayout(new GridBagLayout());
-			JLabel beginLabel = new JLabel("Начало:");
+			JLabel beginLabel = new JLabel(LangModelSchedule.getString("Start") + ':');
 			gbc.gridx = 1;
 			gbc.gridy++;
 			add(beginLabel, gbc);
@@ -139,7 +139,7 @@ public class TimeParametersFrame extends JInternalFrame {
 			this.startTimeSpinner = new TimeSpinner();
 			this.startDateSpinner = new DateSpinner();
 			final JButton startDateButton = new JButton(UIStorage.CALENDAR_ICON);
-			startDateButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
+			startDateButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 			startDateButton.setDefaultCapable(false);
 
 			startDateButton.setFocusable(false);
@@ -162,7 +162,7 @@ public class TimeParametersFrame extends JInternalFrame {
 
 			gbc.gridx = 1;
 			gbc.gridy++;
-			JLabel endingLabel = new JLabel("Окончание:");
+			JLabel endingLabel = new JLabel(LangModelSchedule.getString("Finish") + ':');
 			add(endingLabel, gbc);
 			gbc.weightx = 1.0;
 			gbc.gridx = 1;
@@ -170,7 +170,7 @@ public class TimeParametersFrame extends JInternalFrame {
 			this.endTimeSpinner = new TimeSpinner();
 			this.endDateSpinner = new DateSpinner();
 			final JButton endDateButton = new JButton(UIStorage.CALENDAR_ICON);
-			endDateButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
+			endDateButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 			endDateButton.setDefaultCapable(false);
 
 			endDateButton.setFocusable(false);
@@ -296,11 +296,11 @@ public class TimeParametersFrame extends JInternalFrame {
 
 			});
 
-			addTemporalPatternButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
+			addTemporalPatternButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 
 			final JButton removeTemporalPatternButton = new JButton(UIStorage.MINUS_ICON);
 			removeTemporalPatternButton.setEnabled(false);
-			removeTemporalPatternButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
+			removeTemporalPatternButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 
 			removeTemporalPatternButton.addActionListener(new ActionListener() {
 
@@ -422,6 +422,7 @@ public class TimeParametersFrame extends JInternalFrame {
 
 			{
 				this.applyButton = new JButton(LangModelSchedule.getString("Apply"));
+				this.applyButton.setEnabled(false);
 				this.createButton = new JButton(LangModelSchedule.getString("Create"));
 
 				this.applyButton.addActionListener(new ActionListener() {

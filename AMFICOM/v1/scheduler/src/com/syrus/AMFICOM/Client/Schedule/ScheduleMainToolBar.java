@@ -27,7 +27,7 @@ public class ScheduleMainToolBar extends JToolBar implements ApplicationModelLis
 		this.sessionOpen.setIcon(UIManager.getIcon(ResourceKeys.ICON_OPEN_SESSION));
 		this.sessionOpen.setToolTipText(LangModel.getString("menuSessionNew"));
 		this.sessionOpen.setName(ScheduleMainMenuBar.MENU_SESSION_NEW);
-		this.sessionOpen.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
+		this.sessionOpen.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 		this.sessionOpen.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {

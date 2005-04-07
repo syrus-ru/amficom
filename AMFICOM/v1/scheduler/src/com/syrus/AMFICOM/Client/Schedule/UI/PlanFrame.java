@@ -6,6 +6,7 @@ import java.awt.SystemColor;
 import javax.swing.Icon;
 import javax.swing.JInternalFrame;
 import javax.swing.JScrollPane;
+import javax.swing.JToolBar;
 import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.General.Command.Command;
@@ -17,7 +18,7 @@ import com.syrus.AMFICOM.Client.Schedule.WindowCommand;
 public class PlanFrame extends JInternalFrame {
 
 	//private ApplicationContext aContext;
-	private PlanToolBar	toolBar;
+	private JToolBar	toolBar;
 	private PlanPanel	mainPanel;
 	private Command command;
 
@@ -36,7 +37,7 @@ public class PlanFrame extends JInternalFrame {
 
 		//		PlanLayeredPanel panel = new PlanLayeredPanel();
 		this.mainPanel = new PlanPanel(scroll, aContext);
-		this.toolBar = this.mainPanel.getToolBar();
+		this.toolBar = this.mainPanel.getToolBar().getToolBar();
 		//		panel.setGraphPanel(mainPanel);
 		scroll.getViewport().add(this.mainPanel);
 
