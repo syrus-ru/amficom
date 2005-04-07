@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.48 2005/04/01 14:12:32 bob Exp $
+ * $Id: StorableObject.java,v 1.49 2005/04/07 16:01:56 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.Log;
  * same identifier, comparison of object references (in Java terms) is enough.
  *
  * @author $Author: bob $
- * @version $Revision: 1.48 $, $Date: 2005/04/01 14:12:32 $
+ * @version $Revision: 1.49 $, $Date: 2005/04/07 16:01:56 $
  * @module general_v1
  */
 public abstract class StorableObject implements Identifiable, TransferableObject, Serializable {
@@ -146,7 +146,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	public final void updateFromHeaderTransferable(StorableObject_Transferable sot) {
 		this.modified = new Date(sot.modified);
 		this.modifierId = new Identifier(sot.modifier_id);
-		if (this.version != sot.version)
+		if (this.version != sot.version || (this.version == 0 && sot.version == 0))
 			this.changed = false;
 		this.version = sot.version;
 	}
