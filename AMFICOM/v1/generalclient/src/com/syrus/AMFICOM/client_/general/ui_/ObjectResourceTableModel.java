@@ -14,8 +14,8 @@ import javax.swing.table.AbstractTableModel;
 import java.util.Iterator;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/02/22 11:02:34 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.7 $, $Date: 2005/04/07 14:31:06 $
+ * @author $Author: bob $
  * @module generalclient_v1
  */
 public class ObjectResourceTableModel extends AbstractTableModel {
@@ -122,8 +122,9 @@ public class ObjectResourceTableModel extends AbstractTableModel {
 		Object object =  this.orList.get(rowIndex);
 		Object obj = this.controller.getValue(object, key);
 
-		if (this.controller.getPropertyValue(key) instanceof Map) {
-			Map map = (Map) this.controller.getPropertyValue(key);
+		Object propertyValue = this.controller.getPropertyValue(key);
+		if (propertyValue instanceof Map) {
+			Map map = (Map) propertyValue;
 			Object keyObject = null;
 			for (Iterator it = map.keySet().iterator(); it.hasNext();) {
 				Object keyObj = it.next();
