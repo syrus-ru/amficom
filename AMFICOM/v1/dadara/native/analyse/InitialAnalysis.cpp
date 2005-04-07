@@ -12,9 +12,6 @@
 
 #include "../common/prf.h"
 
-// Коэффициент запаса: эта величина умножается на оценку 3 сигма шума, и используется как добавка к порогам обнаружения.
-// бОльшие значения коэффициента соответствуют меньшей чувствительности.
-const double THRESHOLD_TO_NOISE_RATIO = 2;
 //------------------------------------------------------------------------------------------------------------
 // Construction/Destruction
 InitialAnalysis::InitialAnalysis(
@@ -24,6 +21,7 @@ InitialAnalysis::InitialAnalysis(
 	double minimalThreshold,	//минимальный уровень события
 	double minimalWeld,			//минимальный уровень неотражательного события
 	double minimalConnector,	//минимальный уровень отражательного события
+	double noiseFactor,			// множитель для уровня шума (около 2.0)
 	int reflectiveSize,			//характерная длина отражательного события
 	int nonReflectiveSize,		//характерная длина неотражательного события
 	int lengthTillZero,			//вычисленная заранее длина ( ==0 -> найти самим)
@@ -74,7 +72,8 @@ InitialAnalysis::InitialAnalysis(
 		// вычисляем уровень шума
 		{ const int sz = lastNonZeroPoint;
 		  const int width = wlet_width;
-		  fillNoiseArray(data, data_length, sz, 1 + width/20, noise);
+		  //fillNoiseArray(data, data_length, sz, 1 + width/20, noise);
+		  fillNoiseArray(data, data_length, sz, 1.0, noiseFactor, noise);
 		}
 	}
 	else
@@ -354,16 +353,13 @@ void InitialAnalysis::calcAverageFactor(double* fw, int scale, double norma1)
 	average_factor = f_wlet_avrg * norma1 / getWLetNorma2(scale);
 }
 // -------------------------------------------------------------------------------------------------
-void InitialAnalysis::fillNoiseArray(double *y, int data_length, int N, double Neff, double *outNoise)
+void InitialAnalysis::fillNoiseArray(double *y, int data_length, int N, double Neff, double noiseFactor, double *outNoise)
 {	findNoiseArray(y, outNoise, data_length, N); // external function from findNoise.cpp
 	int i;
-	if (true || Neff < 1) // кажется, без true никак
-	{	Neff = 1;
-	}
 	for (i = 0; i < N; i++)
 	{	// кто скажет, что sqrt(Neff) в цикле сильно влияет на
 		// быстродействие АМФИКОМа, того назову плохим словом.
-		outNoise[i] *= THRESHOLD_TO_NOISE_RATIO * 3 / sqrt(Neff);
+		outNoise[i] *= noiseFactor * 3 / sqrt(Neff);
 	}
 }
 //------------------------------------------------------------------------------------------------------------

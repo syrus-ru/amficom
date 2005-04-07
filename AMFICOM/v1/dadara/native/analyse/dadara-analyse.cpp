@@ -24,6 +24,10 @@
 
 #define ANALYSE_SIMPLE_DEBUG
 
+// Коэффициент запаса: эта величина умножается на оценку 3 сигма шума, и используется как добавка к порогам обнаружения.
+// бОльшие значения коэффициента соответствуют меньшей чувствительности.
+const double THRESHOLD_TO_NOISE_RATIO = 2;
+
 /*
  * Class:     com_syrus_AMFICOM_analysis_CoreAnalysisManager
  * Method:    analyse3
@@ -64,6 +68,8 @@ Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_analyse3(
 	if (noiseL < traceLength)
 		noiseL = 0;
 
+	double noiseFactor = THRESHOLD_TO_NOISE_RATIO;
+
 	// корректируем параметры. FIXME: не корректировать, а проверить валидатором
 	if (min_level < 0.01)
 		min_level =  0.01;
@@ -84,6 +90,7 @@ Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_analyse3(
 		min_level,
 		min_weld,
 		min_connector,
+		noiseFactor,
 		reflectiveSize,
 		nonReflectiveSize,
 		traceLength,

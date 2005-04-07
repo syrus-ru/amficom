@@ -30,6 +30,7 @@ public:
 		double minimalThreshold,
 		double minimalWeld,
 		double minimalConnector,
+		double noiseFactor,
 		int reflectiveSize,
 		int nonReflectiveSize,
 		int lengthTillZero = 0,
@@ -72,7 +73,7 @@ private:
     void calc_rms_line(double *arr, int beg, int end, double& a, double& b);// (c) Vit
 
 	// заполнить массив шума (шум не постоянен, поэтому используем массив для описания значеня шума в каждой точке)
-	void fillNoiseArray(double *y, int data_length, int N, double Neff, double *outNoise);
+	void fillNoiseArray(double *y, int data_length, int N, double Neff, double NoiseFactor, double *outNoise);
 	void getNoise(double *noise, int freq);
 
 	// подготовка среднего значения
