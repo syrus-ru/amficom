@@ -9,7 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.DefaultCellEditor;
 import javax.swing.Icon;
 import javax.swing.JButton;
@@ -142,17 +141,6 @@ implements OperationListener, bsHashChangeListener, PrimaryMTMListener
 			 new Integer((int)minuitParams[6]),
 			 new Integer((int)minuitParams[7])
 		});
-		/*
-		tModelMinuit.updateData(new Double[][]{
-			{ new Double(minuitParams[2])},
-			{ new Double(minuitParams[1])},
-			{ new Double(minuitParams[3])},
-			{ new Double(minuitParams[0])},
-			{ new Double(minuitParams[4])},
-			{ new Double(minuitParams[5])},
-			{ new Double(minuitParams[6])},
-			{ new Double(minuitParams[7]) }
-		});*/
 
 		jTable.setModel(tModelMinuit);
 		jTable.getColumnModel().getColumn(0).setPreferredWidth(250);
@@ -160,10 +148,6 @@ implements OperationListener, bsHashChangeListener, PrimaryMTMListener
 
 	private void updColorModel()
 	{
-//		scrollPane.getViewport().setBackground(SystemColor.window);
-//		jTable.setBackground(SystemColor.window);
-//		jTable.setForeground(ColorManager.getColor("textColor"));
-//		jTable.setGridColor(ColorManager.getColor("tableGridColor"));
 	}
 
 	private void jbInit() throws Exception
@@ -176,20 +160,6 @@ implements OperationListener, bsHashChangeListener, PrimaryMTMListener
 		this.setTitle(LangModelAnalyse.getString("analysisSelectionTitle"));
 
 		tModelMinuit = new ParamTableModel();
-		/*tModelMinuit = new FixedSizeEditableTableModel (
-				new String[] { LangModelAnalyse.getString("analysisSelectionKey"),
-											 LangModelAnalyse.getString("analysisSelectionValue")},
-				new Double[] { new Double(1), new Double(1) },
-				new String[] { LangModelAnalyse.getString("analysisMinConnector"),
-											 LangModelAnalyse.getString("analysisMinWeld"),
-											 LangModelAnalyse.getString("analysisMinEnd"),
-											 LangModelAnalyse.getString("analysisMinEvent"),
-											 LangModelAnalyse.getString("analysisNSigma"),
-											 LangModelAnalyse.getString("analysisFormFactor"),
-											 LangModelAnalyse.getString("analysisStrategy"),
-											 LangModelAnalyse.getString("analysisWavelet")},
-				new int[] { 1 });
-*/
 		jTable = new ATable (tModelMinuit);
 		jTable.setDefaultRenderer(Object.class, new ModelParamsTableRenderer(tModelMinuit));
 		jTable.setDefaultEditor(Object.class, new ModelParamsTableEditor(tModelMinuit));
@@ -198,9 +168,6 @@ implements OperationListener, bsHashChangeListener, PrimaryMTMListener
 		JButton analysisInitialButton = new JButton();
 		JButton analysisDefaultsButton = new JButton();
 
-//		analysisStartButton.setMaximumSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
-//		analysisStartButton.setMinimumSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
-//		analysisStartButton.setPreferredSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
 		analysisStartButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 		analysisStartButton.setToolTipText(LangModelAnalyse.getString("analysisStart"));
 		analysisStartButton.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_PERFORM_ANALYSIS));
@@ -212,9 +179,6 @@ implements OperationListener, bsHashChangeListener, PrimaryMTMListener
 			}
 		});
 
-//		analysisInitialButton.setMaximumSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
-//		analysisInitialButton.setMinimumSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
-//		analysisInitialButton.setPreferredSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
 		analysisInitialButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 		analysisInitialButton.setToolTipText(LangModelAnalyse.getString("analysisInitial"));
 		analysisInitialButton.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_INITIAL_ANALYSIS));
@@ -227,9 +191,6 @@ implements OperationListener, bsHashChangeListener, PrimaryMTMListener
 		});
 
 
-//		analysisDefaultsButton.setMaximumSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
-//		analysisDefaultsButton.setMinimumSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
-//		analysisDefaultsButton.setPreferredSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
 		analysisDefaultsButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 		analysisDefaultsButton.setToolTipText(LangModelAnalyse.getString("analysisDefaults"));
 		analysisDefaultsButton.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_DEFAULT_ANALYSIS));
@@ -270,13 +231,6 @@ implements OperationListener, bsHashChangeListener, PrimaryMTMListener
 	public Object getDoubleValueAt(Object obj, int row)
 	{
 		return obj;
-		/*if (row < 5)
-			return obj;
-		if (row == 5)
-			return ((JComboBox)obj).getSelectedItem();
-		if (row == 6)
-			return new Double(((JComboBox)obj).getSelectedIndex()-1);
-		return ((JComboBox)obj).getSelectedItem();*/
 	 }
 
 	void analysisStartButton_actionPerformed(ActionEvent e)
