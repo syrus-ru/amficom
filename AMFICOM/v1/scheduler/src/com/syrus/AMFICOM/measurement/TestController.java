@@ -1,5 +1,5 @@
 /*
- * $Id: TestController.java,v 1.4 2005/03/14 15:11:42 bob Exp $
+ * $Id: TestController.java,v 1.5 2005/04/07 14:35:46 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,14 +8,17 @@
 
 package com.syrus.AMFICOM.measurement;
 
-import java.util.ArrayList;
+import java.awt.Component;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.JLabel;
+
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
+import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.KIS;
@@ -26,7 +29,7 @@ import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/03/14 15:11:42 $
+ * @version $Revision: 1.5 $, $Date: 2005/04/07 14:35:46 $
  * @author $Author: bob $
  * @module module
  */
@@ -49,19 +52,31 @@ public class TestController implements ObjectResourceController {
 	private Map						statusMap;
 	private Map						temporalTypeMap;
 
+	private class ComparableLabel extends JLabel implements Comparable {
+		
+		
+		public ComparableLabel(String string) {
+			super(string);
+		}
+		
+		public int compareTo(Object o) {
+			return ((ComparableLabel)o).getText().compareTo(this.getText());
+		}
+	}
+	
 	private TestController() {
 
 		//		 empty private constructor
 		String[] keysArray = new String[] { KEY_TEMPORAL_TYPE, KEY_MONITORED_ELEMENT, KEY_TEST_OBJECT,
 				KEY_MEASUREMENT_TYPE, KEY_START_TIME, KEY_STATUS};
-		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
+		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 
 		this.statusMap = new HashMap();
-		this.statusMap.put(LangModelSchedule.getString("Aborted"), TestStatus.TEST_STATUS_ABORTED);
-		this.statusMap.put(LangModelSchedule.getString("Completed"), TestStatus.TEST_STATUS_COMPLETED);
-		this.statusMap.put(LangModelSchedule.getString("New"), TestStatus.TEST_STATUS_NEW);
-		this.statusMap.put(LangModelSchedule.getString("Processing"), TestStatus.TEST_STATUS_PROCESSING);
-		this.statusMap.put(LangModelSchedule.getString("Scheduled"), TestStatus.TEST_STATUS_SCHEDULED);
+		this.addStatusItem(TestStatus.TEST_STATUS_ABORTED, LangModelSchedule.getString("Aborted"));
+		this.addStatusItem(TestStatus.TEST_STATUS_COMPLETED, LangModelSchedule.getString("Completed"));
+		this.addStatusItem(TestStatus.TEST_STATUS_NEW, LangModelSchedule.getString("New"));
+		this.addStatusItem(TestStatus.TEST_STATUS_PROCESSING, LangModelSchedule.getString("Processing"));
+		this.addStatusItem(TestStatus.TEST_STATUS_SCHEDULED, LangModelSchedule.getString("Scheduled"));
 
 		this.temporalTypeMap = new HashMap();
 		this.temporalTypeMap.put(LangModelSchedule.getString("Onetime"), TestTemporalType.TEST_TEMPORAL_TYPE_ONETIME);
@@ -69,6 +84,17 @@ public class TestController implements ObjectResourceController {
 		this.temporalTypeMap.put(LangModelSchedule.getString("Continual"), TestTemporalType.TEST_TEMPORAL_TYPE_CONTINUOUS);
 	}
 
+	private Component getStatusComponent(TestStatus testStatus, String name) {
+		ComparableLabel label = new ComparableLabel(name);
+		label.setOpaque(true);
+		label.setBackground(SchedulerModel.getColor(testStatus));		
+		return label;
+	}
+	
+	private void addStatusItem(TestStatus testStatus, String name) {
+		this.statusMap.put(this.getStatusComponent(testStatus, name), testStatus);
+	}
+	
 	public static TestController getInstance() {
 		if (!initialized) {
 			synchronized (lock) {
@@ -166,8 +192,9 @@ public class TestController implements ObjectResourceController {
 				}
 			else if (key.equals(KEY_START_TIME))
 				value = SIMPLE_DATE_FORMAT.format(test.getStartTime()); //$NON-NLS-1$
-			else if (key.equals(KEY_STATUS))
-				value = test.getStatus(); //$NON-NLS-1$
+			else if (key.equals(KEY_STATUS)) {
+				return test.getStatus();
+			}
 		}
 		return value;
 	}
