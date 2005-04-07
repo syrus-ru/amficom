@@ -1,5 +1,5 @@
 /**
- * $Id: Mark.java,v 1.27 2005/04/06 17:38:27 krupenn Exp $
+ * $Id: Mark.java,v 1.28 2005/04/07 10:07:24 arseniy Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -19,7 +19,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
-import java.util.SortedSet;
 
 import org.omg.CORBA.portable.IDLEntity;
 
@@ -46,8 +45,8 @@ import com.syrus.AMFICOM.map.corba.Mark_Transferable;
  * в св€зи с чем методы класса {@link AbstractNode}, работающие с лини€ми и 
  * фрагментами линий, переопределены и бросают 
  * <code>{@link UnsupportedOperationException}</code>.
- * @author $Author: krupenn $
- * @version $Revision: 1.27 $, $Date: 2005/04/06 17:38:27 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.28 $, $Date: 2005/04/07 10:07:24 $
  * @module map_v1
  */
 public class Mark extends AbstractNode {

@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractNode.java,v 1.17 2005/04/06 17:38:27 krupenn Exp $
+ * $Id: AbstractNode.java,v 1.18 2005/04/07 10:07:24 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,29 +10,27 @@
  */
 package com.syrus.AMFICOM.map;
 
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
+import org.omg.CORBA.portable.IDLEntity;
+
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
-
-import org.omg.CORBA.portable.IDLEntity;
-
 /**
  * Абстрактный класс, описывающий узловой элемент топологической схемы 
  * ({@link Map}). Узловой объект характеризуется наличием координат
  * ({@link #location}) и изображением ({@link #imageId}).
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.17 $, $Date: 2005/04/06 17:38:27 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.18 $, $Date: 2005/04/07 10:07:24 $
  * @module map_v1
  * @see SiteNode
  * @see TopologicalNode
