@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.70 2005/04/05 16:09:18 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.71 2005/04/07 16:02:03 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -58,7 +58,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.70 $, $Date: 2005/04/05 16:09:18 $
+ * @version $Revision: 1.71 $, $Date: 2005/04/07 16:02:03 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -351,14 +351,20 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 
 	public void run() {
 		Test test;
+		Identifier testId;
 		MServer mServerRef;
 		Result_Transferable[] resultsT;
 		while (this.running) {
 			if (!testList.isEmpty()) {
 				if (((Test) testList.get(0)).getStartTime().getTime() <= System.currentTimeMillis() + this.forwardProcessing) {
 					test = (Test) testList.remove(0);
-					Log.debugMessage("Starting test processor for test '" + test.getId() + "'", Log.DEBUGLEVEL07);
-					startTestProcessor(test);
+					testId = test.getId();
+					if (!testProcessors.containsKey(testId)) {
+						Log.debugMessage("Starting test processor for test '" + testId + "'", Log.DEBUGLEVEL07);
+						startTestProcessor(test);
+					}
+					else
+						Log.errorMessage("Test processor for test '" + testId + "' already started");
 				}
 			}
 			
