@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.29 2005/04/07 15:26:38 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.30 2005/04/07 15:27:44 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.29 $, $Date: 2005/04/07 15:26:38 $
+ * @version $Revision: 1.30 $, $Date: 2005/04/07 15:27:44 $
  * @module
  */
 
@@ -230,7 +230,6 @@ public class CoreAnalysisManager
 	 * порядком вызова IA, fit, calcMutualParameters и выставлением нач. порогов.
 	 * @todo: declare to throw "invalid parameters exception"
 	 * 
-	 * @param strategy степень аппроксимации. Недокументировано.
 	 * @param bs рефлектограмма
 	 * @param pars набор параметров для IA: { level, weld, connector, noiseFactor }
 	 * @param bellcoreTraces хэш всех открытых р/г для определения пределов колебаний
@@ -239,7 +238,7 @@ public class CoreAnalysisManager
 
 	// strategy == 0: min fitting
 	public static ModelTraceManager makeAnalysis(
-			int strategy, BellcoreStructure bs,
+			BellcoreStructure bs,
 			double[] pars, Map bellcoreTraces)
 	{
 		long t0 = System.currentTimeMillis();
