@@ -19,6 +19,7 @@ CREATE TABLE Test (
  monitored_element_id VARCHAR2(32) NOT NULL,
  return_type NUMBER(2, 0) NOT NULL,
  description VARCHAR2(256),
+ number_of_measurements NUMBER(10) NOT NULL,
 --
  CONSTRAINT test_pk PRIMARY KEY (id),
  CONSTRAINT test_creator_fk FOREIGN KEY (creator_id)
