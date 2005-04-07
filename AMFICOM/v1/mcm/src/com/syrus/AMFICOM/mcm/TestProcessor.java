@@ -1,5 +1,5 @@
 /*
- * $Id: TestProcessor.java,v 1.44 2005/04/01 21:57:59 arseniy Exp $
+ * $Id: TestProcessor.java,v 1.45 2005/04/07 14:04:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2005/04/01 21:57:59 $
+ * @version $Revision: 1.45 $, $Date: 2005/04/07 14:04:32 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -133,7 +133,7 @@ public abstract class TestProcessor extends SleepButWorkThread {
 		Result measurementResult = null;
 		if (lastMeasurement != null) {
 			try{
-				this.numberOfScheduledMeasurements = this.test.retrieveNumberOfMeasurements();
+				this.numberOfScheduledMeasurements = this.test.getNumberOfMeasurements();
 				this.numberOfReceivedMResults = this.test.retrieveNumberOfResults(ResultSort.RESULT_SORT_MEASUREMENT);
 				switch (lastMeasurement.getStatus().value()) {
 					case MeasurementStatus._MEASUREMENT_STATUS_SCHEDULED:
