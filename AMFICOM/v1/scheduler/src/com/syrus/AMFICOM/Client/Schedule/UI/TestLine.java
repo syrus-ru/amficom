@@ -3,6 +3,7 @@ package com.syrus.AMFICOM.Client.Schedule.UI;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -37,7 +38,6 @@ import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.TemporalPattern;
 import com.syrus.AMFICOM.measurement.Test;
-import com.syrus.AMFICOM.measurement.corba.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 import com.syrus.util.Log;
 
@@ -56,27 +56,6 @@ public class TestLine extends JLabel implements TestsEditor, TestEditor {
 			return (int) (this.startTime - testTimeLine.startTime);
 		}
 	}
-	/**
-	 * @TODO recast using alpha
-	 */
-	public static final Color	COLOR_ABORDED				= Color.RED;
-	public static final Color	COLOR_ABORDED_SELECTED		= Color.RED.darker();
-
-	public static final Color	COLOR_ALARM					= Color.ORANGE.darker();
-	public static final Color	COLOR_ALARM_SELECTED		= Color.ORANGE;
-	public static final Color	COLOR_COMPLETED				= Color.GREEN.darker();
-	public static final Color	COLOR_COMPLETED_SELECTED	= Color.GREEN;
-	public static final Color	COLOR_PROCCESSING			= Color.CYAN.darker();
-	public static final Color	COLOR_PROCCESSING_SELECTED	= Color.CYAN;
-
-	public static final Color	COLOR_SCHEDULED				= Color.WHITE.darker();
-	public static final Color	COLOR_SCHEDULED_SELECTED	= Color.WHITE;
-	public static final Color	COLOR_UNRECOGNIZED			= new Color(20, 20, 60);
-
-	public static final Color	COLOR_WARNING				= Color.YELLOW.darker();
-	public static final Color	COLOR_WARNING_SELECTED		= Color.YELLOW;
-
-	public static final int		MINIMAL_WIDTH				= 7;
 
 	Collection					tests						= new LinkedList();
 
@@ -101,6 +80,8 @@ public class TestLine extends JLabel implements TestsEditor, TestEditor {
 
 	private String				title;
 	
+	int minimalWidth = 0;
+	
 	private MouseListener testLineMouseListener;
 
 	public TestLine(ApplicationContext aContext,
@@ -112,6 +93,9 @@ public class TestLine extends JLabel implements TestsEditor, TestEditor {
 		this.title = title;
 		this.monitoredElementId = monitoredElementId;
 		this.acquireTests();
+		Font font2 = UIManager.getLookAndFeelDefaults().getFont("Button.font");
+		FontMetrics fontMetrics = this.getFontMetrics(font2);
+		this.minimalWidth = fontMetrics.charWidth('W');
 	}
 	
 	public MouseListener getTestLineMouseListener() {
@@ -143,7 +127,7 @@ public class TestLine extends JLabel implements TestsEditor, TestEditor {
 								int st = PlanPanel.MARGIN / 2 + (int) (TestLine.this.scale * (testTimeLine.startTime - TestLine.this.start));
 								int en = PlanPanel.MARGIN / 2 + (int) (TestLine.this.scale * (testTimeLine.startTime + testTimeLine.duration - TestLine.this.start));
 								
-								en = (en - st < MINIMAL_WIDTH) ? st + MINIMAL_WIDTH : en;
+								en = (en - st < minimalWidth) ? st + minimalWidth : en;
 								// System.out.println("."+((x >= st) && (x <=
 								// en) && (y
 								// >=
@@ -204,7 +188,7 @@ public class TestLine extends JLabel implements TestsEditor, TestEditor {
 			for (Iterator it = this.unsavedTests.iterator(); it.hasNext();) {
 				Test test = (Test) it.next();
 				g.setColor(this.flash ? (((this.selectedTest == null) || (!this.selectedTest.getId().equals(
-					test.getId()))) ? COLOR_SCHEDULED : COLOR_SCHEDULED_SELECTED) : COLOR_UNRECOGNIZED);
+					test.getId()))) ? SchedulerModel.COLOR_SCHEDULED : SchedulerModel.COLOR_SCHEDULED_SELECTED) : SchedulerModel.COLOR_UNRECOGNIZED);
 				this.drawTestRect(g, test);
 			}
 		}
@@ -250,47 +234,13 @@ public class TestLine extends JLabel implements TestsEditor, TestEditor {
 			g.drawLine(0, this.height - 1, this.width, this.height - 1);
 			synchronized (this.tests) {
 				for (Iterator it = this.tests.iterator(); it.hasNext();) {
-					Color color;
 					Test test = (Test) it.next();
 					if (test.isChanged())
 						continue;
-					if ((this.selectedTest != null) && (this.selectedTest.getId().equals(test.getId()))) {
-						switch (test.getStatus().value()) {
-							case TestStatus._TEST_STATUS_COMPLETED:
-								color = COLOR_COMPLETED_SELECTED;
-								break;
-							case TestStatus._TEST_STATUS_SCHEDULED:
-								color = COLOR_SCHEDULED_SELECTED;
-								break;
-							case TestStatus._TEST_STATUS_PROCESSING:
-								color = COLOR_PROCCESSING_SELECTED;
-								break;
-							case TestStatus._TEST_STATUS_ABORTED:
-								color = COLOR_ABORDED_SELECTED;
-								break;
-							default:
-								color = COLOR_UNRECOGNIZED;
-								break;
-						}
-					} else {
-						switch (test.getStatus().value()) {
-							case TestStatus._TEST_STATUS_COMPLETED:
-								color = COLOR_COMPLETED;
-								break;
-							case TestStatus._TEST_STATUS_SCHEDULED:
-								color = COLOR_SCHEDULED;
-								break;
-							case TestStatus._TEST_STATUS_PROCESSING:
-								color = COLOR_PROCCESSING;
-								break;
-							case TestStatus._TEST_STATUS_ABORTED:
-								color = COLOR_ABORDED;
-								break;
-							default:
-								color = COLOR_UNRECOGNIZED;
-								break;
-						}
-					}
+					Color color = SchedulerModel.getColor(test.getStatus());
+					if ((this.selectedTest == null) || (!this.selectedTest.getId().equals(test.getId()))) {
+						color = color.darker();
+					} 
 					g.setColor(color);
 					drawTestRect(g, test);
 				}
@@ -475,9 +425,9 @@ public class TestLine extends JLabel implements TestsEditor, TestEditor {
 			int w = en - x + 1;
 			TestTemporalType temporalType = test.getTemporalType();
 			if (temporalType.value() == TestTemporalType._TEST_TEMPORAL_TYPE_CONTINUOUS)
-				w = (w > MINIMAL_WIDTH) ? w : MINIMAL_WIDTH;
+				w = (w > minimalWidth) ? w : minimalWidth;
 			else
-				w = MINIMAL_WIDTH;
+				w = minimalWidth;
 
 			/**
 			 * TODO remove when ok
@@ -520,7 +470,7 @@ public class TestLine extends JLabel implements TestsEditor, TestEditor {
 			
 			Color mColor = g.getColor();
 			if (testTimeLine.haveMeasurement) {
-				g.setColor(TestLine.COLOR_COMPLETED);
+				g.setColor(SchedulerModel.COLOR_COMPLETED);
 			}
 			g.fillRect(x + 2, y + 2, w - 3, h - 3);
 			g.draw3DRect(x, y, w, h, true);

@@ -5,11 +5,12 @@
 
 package com.syrus.AMFICOM.Client.Schedule.UI;
 
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
@@ -17,11 +18,14 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.swing.BorderFactory;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
@@ -34,12 +38,12 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.UI.AComboBox;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
-import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.CharacteristicTypeCodenames;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
@@ -126,27 +130,13 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 	public static final String		PANEL_NAME					= TestParametersPanel.PARAMETERS_PANEL_PREFIX
 																		+ "Reflectometry";			//$NON-NLS-1$
 
-	public static final String		PULSE_WIDTH					= "pulswd";						//$NON-NLS-1$
-	public static final String		RESOLUTION					= "res";							//$NON-NLS-1$
-	public static final String		PARAMETER_PREFIX			= "ref_";
-	public static final String		PARAMETER_AVERAGE_QUANTITY	= "ref_scans";						//$NON-NLS-1$
-	public static final String		PARAMETER_MAX_DISTANCE		= PARAMETER_PREFIX + MAX_DISTANCE;	//$NON-NLS-1$	
-
-	public static final String		PARAMETER_PULSE_WIDTH		= PARAMETER_PREFIX + PULSE_WIDTH;	//$NON-NLS-1$
-	public static final String		PARAMETER_REFRACTION		= "ref_ior";						//$NON-NLS-1$
-	public static final String		PARAMETER_RESOLUTION		= PARAMETER_PREFIX + RESOLUTION;	//$NON-NLS-1$
-	public static final String		PARAMETER_WAVELENGHT		= "ref_wvlen";						//$NON-NLS-1$
-
 	private static final boolean	DEBUG						= false;
 
-	ListNumberComparator			comparator					= new ListNumberComparator();
-	AComboBox						maxDistanceComboBox			= new AComboBox();
+	ListNumberComparator			comparator					= new ListNumberComparator();	
 	double							maxIndexOfRefraction		= 1.46820;
 	double							minIndexOfRefraction		= 1.46820;
-	AComboBox						pulseWidthComboBox			= new AComboBox();
-	AComboBox						resolutionComboBox			= new AComboBox();
 	Map								pulseWidthMap;
-	Map								resolutionMap;
+	List							resolutionList;
 	Map								traceLength;
 	Map								indexOfRefraction;
 	Map								averageCount;
@@ -156,6 +146,9 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 
 	private ApplicationContext		aContext;
 
+	AComboBox						maxDistanceComboBox			= new AComboBox();
+	AComboBox						pulseWidthComboBox			= new AComboBox();
+	AComboBox						resolutionComboBox			= new AComboBox();
 	private AComboBox				averageQuantityComboBox		= new AComboBox();
 	private Dispatcher				dispatcher;
 	private SchedulerModel			schedulerModel;
@@ -165,6 +158,8 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 	private AComboBox				waveLengthComboBox			= new AComboBox();
 
 	private Identifier				meId;
+	
+	long maxPoints;
 
 	public ReflectometryTestPanel() {
 		init();
@@ -369,7 +364,6 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 
 	public void operationPerformed(OperationEvent ae) {
 		String commandName = ae.getActionCommand();
-		// Object obj = ae.getSource();
 		Environment.log(Environment.LOG_LEVEL_INFO, "commandName:" + commandName, getClass().getName());
 		if (commandName.equals(SchedulerModel.COMMAND_CHANGE_ME_TYPE)) {
 			this.setMonitoredElementId((Identifier) ae.getSource());
@@ -404,69 +398,68 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 			else
 				this.averageCount.clear();
 
-			if (this.resolutionMap == null)
-				this.resolutionMap = new HashMap();
+			if (this.resolutionList == null)
+				this.resolutionList = new LinkedList();
 			else
-				this.resolutionMap.clear();
+				this.resolutionList.clear();
 
 			if (this.pulseWidthMap == null)
 				this.pulseWidthMap = new HashMap();
 			else
 				this.pulseWidthMap.clear();
 
-			Pattern pattern = Pattern.compile(ParameterTypeCodenames.TRACE_WAVELENGTH + "_(\\d+)_("
-					+ ParameterTypeCodenames.TRACE_LENGTH + "|" + ParameterTypeCodenames.TRACE_PULSE_WIDTH + "|"
-					+ ParameterTypeCodenames.TRACE_INDEX_OF_REFRACTION + "|"
-					+ ParameterTypeCodenames.TRACE_AVERAGE_COUNT + ")");
+			Pattern pattern = Pattern.compile(CharacteristicTypeCodenames.TRACE_WAVELENGTH_PREFIX + "(\\d+)("
+					+ CharacteristicTypeCodenames.TRACE_LENGTH_SUFFIX + "|" + CharacteristicTypeCodenames.TRACE_PULSE_WIDTH_SUFFIX + "|"
+					+ CharacteristicTypeCodenames.TRACE_INDEX_OF_REFRACTION_SUFFIX + "|"
+					+ CharacteristicTypeCodenames.TRACE_AVERAGE_COUNT_SUFFIX + ")");
 			for (Iterator it = characteristics.iterator(); it.hasNext();) {
 				Characteristic characteristic = (Characteristic) it.next();
-				String name = characteristic.getName();
+				StorableObjectType type = characteristic.getType();
+//				System.out.println("characteristicType is " + type.getId());
+				String codename = type.getCodename();
 				String value = characteristic.getValue();
-				// System.out.println(characteristic.getId() + "\t" +
-				// characteristic.getName() + "\t"
-				// + characteristic.getValue());
-				if (name.equals(PARAMETER_AVERAGE_QUANTITY)) {
-					String[] values = value.split("\\s+");
-					Arrays.sort(values, this.comparator);
-					this.averageQuantityComboBox.removeAllItems();
-					for (int i = 0; i < values.length; i++)
-						this.averageQuantityComboBox.addItem(values[i]);
+//				System.out.println("codename is '" + codename + "', value is " + value);				
 
-				} else if (name.equals(ParameterTypeCodenames.TRACE_WAVELENGTH)) {
+				if (codename.equals(CharacteristicTypeCodenames.TRACE_WAVELENGTH)) {
 					String[] values = value.split("\\s+");
 					Arrays.sort(values, this.comparator);
 					this.waveLengthComboBox.removeAllItems();
 					for (int i = 0; i < values.length; i++)
 						this.waveLengthComboBox.addItem(values[i]);
 
-				} else if (name.equals(ParameterTypeCodenames.TRACE_RESOLUTION)) {
+				} else if (codename.equals(CharacteristicTypeCodenames.TRACE_RESOLUTION)) {
 					String[] values = value.split("\\s+");
-					Arrays.sort(values, this.comparator);
+					Arrays.sort(values, this.comparator);					
 					this.resolutionComboBox.removeAllItems();
-					for (int i = 0; i < values.length; i++)
+					for (int i = 0; i < values.length; i++) {
+						this.resolutionList.add(values[i]);
 						this.resolutionComboBox.addItem(values[i]);
+					}
 
-				} else if (name.equals(CHARACTER_MAX_REFRACTION)) {
+				} else if (codename.equals(CharacteristicTypeCodenames.TRACE_MAXPOINTS)) {
+					this.maxPoints = Long.parseLong(value);
+				}
+				else if (codename.equals(CHARACTER_MAX_REFRACTION)) {
 					try {
 						this.maxIndexOfRefraction = Double.parseDouble(value);
 					} catch (NumberFormatException nfe) {
 						this.maxIndexOfRefraction = 0.0;
 					}
 
-				} else if (name.equals(CHARACTER_MIN_REFRACTION)) {
+				} else if (codename.equals(CHARACTER_MIN_REFRACTION)) {
 					try {
 						this.minIndexOfRefraction = Double.parseDouble(value);
 					} catch (NumberFormatException nfe) {
 						this.minIndexOfRefraction = 0.0;
 					}
 				} else {
-					Matcher matcher = pattern.matcher(name);
+					Matcher matcher = pattern.matcher(codename);
 					if (matcher.find()) {
 						String waveLength = null;
 						String suffix = null;
 						for (int j = 0; j <= matcher.groupCount(); j++) {
-							String substring = name.substring(matcher.start(j), matcher.end(j));
-							// System.out.println("j:"+j+"\t"+substring);
+							String substring = codename.substring(matcher.start(j), matcher.end(j));
+//							System.out.println("j:"+j+"\t"+substring);
 							switch (j) {
 								case 1:
 									waveLength = substring;
@@ -478,13 +471,13 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 						}
 						if ((waveLength != null) && (suffix != null)) {
 							Map map = null;
-							if (suffix.equals(ParameterTypeCodenames.TRACE_LENGTH))
+							if (suffix.equals(CharacteristicTypeCodenames.TRACE_LENGTH_SUFFIX))
 								map = this.traceLength;
-							else if (suffix.equals(ParameterTypeCodenames.TRACE_PULSE_WIDTH)) {
+							else if (suffix.equals(CharacteristicTypeCodenames.TRACE_PULSE_WIDTH_SUFFIX)) {
 								map = this.pulseWidthMap;
-							} else if (suffix.equals(ParameterTypeCodenames.TRACE_INDEX_OF_REFRACTION)) {
+							} else if (suffix.equals(CharacteristicTypeCodenames.TRACE_INDEX_OF_REFRACTION_SUFFIX)) {
 								map = this.indexOfRefraction;
-							} else if (suffix.equals(ParameterTypeCodenames.TRACE_AVERAGE_COUNT)) {
+							} else if (suffix.equals(CharacteristicTypeCodenames.TRACE_AVERAGE_COUNT_SUFFIX)) {
 								map = this.averageCount;
 							}
 							if (map != null) {
@@ -653,17 +646,6 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 		setBorder(BorderFactory.createEtchedBorder());
 		setLayout(new GridBagLayout());
 		// refractTextField.setText("1.467"); //$NON-NLS-1$
-		// maxDistanceComboBox
-//		{
-//			Dimension d = new Dimension(75, 20);
-//			UIStorage.setRigidSize(this.refractTextField, d);
-//			UIStorage.setRigidSize(this.waveLengthComboBox, d);
-//			UIStorage.setRigidSize(this.averageQuantityComboBox, d);
-//			UIStorage.setRigidSize(this.pulseWidthComboBox, d);
-//			UIStorage.setRigidSize(this.resolutionComboBox, d);
-//			UIStorage.setRigidSize(this.maxDistanceComboBox, d);
-//
-//		}
 
 		this.refractTextField.addActionListener(new ActionListener() {
 
@@ -694,33 +676,28 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 			}
 		});
 
-		// this.maxDistanceComboBox.addItemListener(new ItemListener() {
-		//
-		// public void itemStateChanged(ItemEvent e) {
-		// if (e.getStateChange() == ItemEvent.SELECTED) {
-		// AComboBox comboBox = (AComboBox) e.getSource();
-		// String maxLength = (String) comboBox.getSelectedItem();
-		// for (int index = 0; index <= 1; index++) {
-		// Map map;
-		// AComboBox aComboBox;
-		// if (index == 0) {
-		// map = ReflectometryTestPanel.this.pulseWidthMap;
-		// aComboBox = ReflectometryTestPanel.this.pulseWidthComboBox;
-		// } else {
-		// map = ReflectometryTestPanel.this.resolutionMap;
-		// aComboBox = ReflectometryTestPanel.this.resolutionComboBox;
-		// }
-		// String value = (String) map.get(maxLength);
-		// String[] values = value.split("\\s+");
-		// Arrays.sort(values, ReflectometryTestPanel.this.comparator);
-		// aComboBox.removeAllItems();
-		// for (int i = 0; i < values.length; i++)
-		// aComboBox.addItem(values[i]);
-		// }
-		//
-		// }
-		// }
-		// });
+		
+		this.maxDistanceComboBox.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				JComboBox comboBox = (JComboBox) e.getSource();
+				/* 1000 m is 1 km */
+				Object selectedItem = comboBox.getSelectedItem();
+				if (selectedItem == null)
+					return;
+				double maxDistance = 1000.0 * Double.parseDouble(selectedItem.toString());
+				ReflectometryTestPanel.this.resolutionComboBox.removeAllItems();
+				for (Iterator it = ReflectometryTestPanel.this.resolutionList.iterator(); it.hasNext();) {
+					String res = (String) it.next();					
+					double resolution = Double.parseDouble(res);
+					if (maxDistance/resolution < ReflectometryTestPanel.this.maxPoints) {
+						ReflectometryTestPanel.this.resolutionComboBox.addItem(res);
+					}
+				}
+				
+				
+			}
+		});
+		
 		JLabel refractLabel = new JLabel(LangModelSchedule.getString("Index_Of_Refraction")); //$NON-NLS-1$
 		JLabel waveLengthLabel = new JLabel(LangModelSchedule.getString("WaveLength")); //$NON-NLS-1$
 		JLabel countOfAverageOutLabel = new JLabel(LangModelSchedule.getString("AverageQuantity")); //$NON-NLS-1$

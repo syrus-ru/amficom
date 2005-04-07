@@ -6,6 +6,7 @@
 
 package com.syrus.AMFICOM.Client.Schedule;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -61,6 +62,7 @@ import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestTemporalStamps;
 import com.syrus.AMFICOM.measurement.TestWrapper;
 import com.syrus.AMFICOM.measurement.corba.TestReturnType;
+import com.syrus.AMFICOM.measurement.corba.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 import com.syrus.util.Log;
 
@@ -85,7 +87,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 	private static final int			FLAG_CREATE						= 1 << 2;
 	private ApplicationContext			aContext;
 	private Dispatcher					dispatcher;
-	
+
 	private int							flag							= 0;
 
 	private ObjectResourceTreeModel		treeModel;
@@ -116,6 +118,35 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 	private TestTemporalStamps			testTimeStamps					= null;
 
 	private DataSourceInterface			dataSourceInterface;
+
+	/**
+	 * @TODO recast using alpha
+	 */
+	public static final Color	COLOR_ABORDED				= Color.RED;
+
+	public static final Color	COLOR_ABORDED_SELECTED		= Color.RED.darker();
+
+	public static final Color	COLOR_ALARM					= Color.ORANGE.darker();
+
+	public static final Color	COLOR_ALARM_SELECTED		= Color.ORANGE;
+
+	public static final Color	COLOR_COMPLETED				= Color.GREEN.darker();
+
+	public static final Color	COLOR_COMPLETED_SELECTED	= Color.GREEN;
+
+	public static final Color	COLOR_PROCCESSING			= Color.CYAN.darker();
+
+	public static final Color	COLOR_PROCCESSING_SELECTED	= Color.CYAN;
+
+	public static final Color	COLOR_SCHEDULED				= Color.WHITE.darker();
+
+	public static final Color	COLOR_SCHEDULED_SELECTED	= Color.WHITE;
+
+	public static final Color	COLOR_UNRECOGNIZED			= new Color(20, 20, 60);
+
+	public static final Color	COLOR_WARNING				= Color.YELLOW.darker();
+
+	public static final Color	COLOR_WARNING_SELECTED		= Color.YELLOW;
 
 	public SchedulerModel(ApplicationContext aContext) {
 		this.aContext = aContext;
@@ -185,7 +216,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 	/**
 	 * @return saved tests
 	 */
-	public Collection getTests() {		
+	public Collection getTests() {
 		return this.tests;
 	}
 
@@ -232,7 +263,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 				new EquivalentCondition(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE), true);
 
 			LinkedIdsCondition domainCondition = new LinkedIdsCondition(sessionInterface.getDomainIdentifier(),
-																		ObjectEntities.ME_ENTITY_CODE);			
+																		ObjectEntities.ME_ENTITY_CODE);
 
 			Collection monitoredElements = ConfigurationStorableObjectPool.getStorableObjectsByCondition(
 				domainCondition, true);
@@ -243,9 +274,10 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 				MeasurementType measurementType = (MeasurementType) iter.next();
 				MeasurementTypeItem measurementTypeItem = new MeasurementTypeItem(measurementType.getId());
 				measurementTypeItems.add(measurementTypeItem);
-				measurementTypeItem.setChildrenFactory(new MeasurementTypeChildrenFactory(sessionInterface.getDomainIdentifier()));
+				measurementTypeItem.setChildrenFactory(new MeasurementTypeChildrenFactory(sessionInterface
+						.getDomainIdentifier()));
 			}
-			
+
 			this.elementsViewer.setElements(measurementTypeItems);
 
 			if (!monitoredElements.isEmpty()) {
@@ -277,10 +309,16 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 			this.kisEditor.setKIS((KIS) ConfigurationStorableObjectPool.getStorableObject(measurementPort.getKISId(),
 				true));
 			this.monitoredElementEditor.setMonitoredElement(monitoredElement);
-			this.analysisTypeEditor.setAnalysisType((AnalysisType) MeasurementStorableObjectPool.getStorableObject(
-				this.selectedTest.getAnalysisTypeId(), true));
-			this.evaluationTypeEditor.setEvaluationType((EvaluationType) MeasurementStorableObjectPool
-					.getStorableObject(this.selectedTest.getEvaluationTypeId(), true));
+
+			Identifier analysisTypeId = this.selectedTest.getAnalysisTypeId();
+			if (analysisTypeId != null)
+				this.analysisTypeEditor.setAnalysisType((AnalysisType) MeasurementStorableObjectPool.getStorableObject(
+					analysisTypeId, true));
+
+			Identifier evaluationTypeId = this.selectedTest.getEvaluationTypeId();
+			if (evaluationTypeId != null)
+				this.evaluationTypeEditor.setEvaluationType((EvaluationType) MeasurementStorableObjectPool
+						.getStorableObject(evaluationTypeId, true));
 			Collection measurementSetupIds = this.selectedTest.getMeasurementSetupIds();
 			if (!measurementSetupIds.isEmpty()) {
 				Identifier mainMeasurementSetupId = (Identifier) measurementSetupIds.iterator().next();
@@ -292,12 +330,14 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 
 			this.returnTypeEditor.setReturnType(this.selectedTest.getReturnType());
 			{
+				Identifier temporalPatternId = this.selectedTest.getTemporalPatternId();
+				TemporalPattern temporalPattern = null;
+				if (temporalPatternId != null)
+					temporalPattern = (TemporalPattern) MeasurementStorableObjectPool.getStorableObject(
+						temporalPatternId, true);
 				TestTemporalStamps timeStamps = new TestTemporalStamps(this.selectedTest.getTemporalType(),
 																		this.selectedTest.getStartTime(),
-																		this.selectedTest.getEndTime(),
-																		(TemporalPattern) MeasurementStorableObjectPool
-																				.getStorableObject(this.selectedTest
-																						.getTemporalPatternId(), true));
+																		this.selectedTest.getEndTime(), temporalPattern);
 				this.testTemporalStampsEditor.setTestTemporalStamps(timeStamps);
 			}
 
@@ -393,31 +433,32 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 																		ObjectEntities.TEST_ENTITY_CODE,
 																		TestWrapper.COLUMN_END_TIME);
 
-		
 		CompoundCondition compoundCondition1 = new CompoundCondition(startTypicalCondition, CompoundConditionSort.OR,
-																	endTypicalCondition);
-		
+																		endTypicalCondition);
+
 		CompoundCondition compoundCondition2 = new CompoundCondition(startTypicalCondition1, CompoundConditionSort.AND,
-			endTypicalCondition2);
+																		endTypicalCondition2);
 
 		CompoundCondition compoundCondition = new CompoundCondition(compoundCondition1, CompoundConditionSort.OR,
-			compoundCondition2);
-		
+																	compoundCondition2);
+
 		this.tests = MeasurementStorableObjectPool.getStorableObjectsByCondition(compoundCondition, true);
 
 		for (Iterator it = this.tests.iterator(); it.hasNext();) {
 			Test test = (Test) it.next();
-			System.out.println(">"+test.getId());
+			System.out.println(">" + test.getId());
 		}
-		
-//		{
-//			List alarmsIds = null;
-//			List testArgumentSetIds = null;
-//			if (alarmsIds != null)
-//				dsi.GetAlarms((String[]) alarmsIds.toArray(new String[alarmsIds.size()]));
-//			if (testArgumentSetIds != null)
-//				dsi.LoadTestArgumentSets((String[]) testArgumentSetIds.toArray(new String[testArgumentSetIds.size()]));
-//		}
+
+		// {
+		// List alarmsIds = null;
+		// List testArgumentSetIds = null;
+		// if (alarmsIds != null)
+		// dsi.GetAlarms((String[]) alarmsIds.toArray(new
+		// String[alarmsIds.size()]));
+		// if (testArgumentSetIds != null)
+		// dsi.LoadTestArgumentSets((String[]) testArgumentSetIds.toArray(new
+		// String[testArgumentSetIds.size()]));
+		// }
 
 		this.dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, LangModelSchedule
 				.getString("Updating_tests_from_BD_finished"))); //$NON-NLS-1$
@@ -429,7 +470,8 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 	}
 
 	public void setSelectedTest(Test selectedTest) throws ApplicationException {
-		if (this.selectedTest == null || selectedTest == null || !this.selectedTest.getId().equals(selectedTest.getId())) {
+		if (this.selectedTest == null || selectedTest == null
+				|| !this.selectedTest.getId().equals(selectedTest.getId())) {
 			this.selectedTest = selectedTest;
 			this.refreshTest();
 		}
@@ -473,8 +515,8 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 					test = Test.createInstance(modifierId, startTime, endTime, temporalPattern == null ? null
 							: temporalPattern.getId(), temporalType, this.measurementType.getId(),
 						this.analysisType == null ? null : this.analysisType.getId(), this.evaluationType == null
-								? null : this.evaluationType.getId(), this.monitoredElement, this.returnType,
-						sdf.format(startTime), measurementSetupIds);
+								? null : this.evaluationType.getId(), this.monitoredElement, this.returnType, sdf
+								.format(startTime), measurementSetupIds);
 
 					MeasurementStorableObjectPool.putStorableObject(test);
 				} catch (IllegalObjectEntityException e) {
@@ -489,7 +531,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 							? null : temporalPattern.getId(), this.measurementType.getId(), this.analysisType == null
 							? null : this.analysisType.getId(), this.evaluationType == null ? null
 							: this.evaluationType.getId(), test.getStatus().value(), this.monitoredElement,
-					this.returnType.value(), sdf.format(startTime));
+					this.returnType.value(), sdf.format(startTime), test.getNumberOfMeasurements());
 			}
 			try {
 				MeasurementStorableObjectPool.putStorableObject(test);
@@ -507,6 +549,28 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		exception.printStackTrace();
 		JOptionPane.showMessageDialog(component, exception.getMessage(), LangModelSchedule.getString("Error"),
 			JOptionPane.OK_OPTION);
+	}
+	
+	public static Color getColor(TestStatus testStatus) {
+		Color color;
+		switch (testStatus.value()) {
+			case TestStatus._TEST_STATUS_COMPLETED:
+				color = SchedulerModel.COLOR_COMPLETED;
+				break;
+			case TestStatus._TEST_STATUS_SCHEDULED:
+				color = SchedulerModel.COLOR_SCHEDULED;
+				break;
+			case TestStatus._TEST_STATUS_PROCESSING:
+				color = SchedulerModel.COLOR_PROCCESSING;
+				break;
+			case TestStatus._TEST_STATUS_ABORTED:
+				color = SchedulerModel.COLOR_ABORDED;
+				break;
+			default:
+				color = SchedulerModel.COLOR_UNRECOGNIZED;
+				break;
+		}
+		return color;
 	}
 
 	public void addTestsEditor(TestsEditor testsEditor) {
