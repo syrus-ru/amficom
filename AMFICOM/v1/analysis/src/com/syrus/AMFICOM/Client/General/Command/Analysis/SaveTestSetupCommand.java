@@ -107,16 +107,7 @@ public class SaveTestSetupCommand extends VoidCommand
 			ms.setDescription(s);
 		}
 
-		try
-		{
-			ms.attachToMonitoredElement(
-					new Identifier(bs.monitoredElementId),
-					new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id));
-		}
-		catch(UpdateObjectException ex)
-		{
-			ex.printStackTrace();
-		}
+		ms.attachToMonitoredElement(new Identifier(bs.monitoredElementId));
 
 		/**
 		 * @todo use flush(false) to non forced saving
