@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalConditionUI.java,v 1.13 2005/03/28 07:45:07 bob Exp $
+ * $Id: LogicalConditionUI.java,v 1.14 2005/04/07 10:49:04 bob Exp $
  *
  * Copyright ? 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -23,6 +24,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.ScrollPaneConstants;
 
+import com.syrus.AMFICOM.logic.AbstractItem;
 import com.syrus.AMFICOM.logic.ChildrenFactory;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.logic.LogicalItem;
@@ -32,7 +34,7 @@ import com.syrus.AMFICOM.logic.Populatable;
 import com.syrus.AMFICOM.logic.ServiceItem;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/03/28 07:45:07 $
+ * @version $Revision: 1.14 $, $Date: 2005/04/07 10:49:04 $
  * @author $Author: bob $
  * @module filter_v1
  */
@@ -183,7 +185,25 @@ public class LogicalConditionUI {
 			
 			((ServiceItem)this.rootItem).setChildrenFactory(new ChildrenFactory(){
 				public void populate(Item item) {
-					LogicalItem result = new LogicalItem(LogicalItem.ROOT);
+					final LogicalItem result = new LogicalItem(LogicalItem.ROOT);
+					
+					new Thread() {
+						int i = 0;
+						public void run() {
+							while (true) {		
+								String oldName = result.getName();
+								result.setName("Result" + i++);
+								String newName = result.getName();
+								result.propertyChange(new PropertyChangeEvent(this, AbstractItem.OBJECT_NAME_PROPERTY, oldName, newName));
+								try {
+									Thread.sleep(1000);
+								} catch (InterruptedException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+							}
+						}
+					}.start();
 
 					item.addChild(result);
 
@@ -195,6 +215,7 @@ public class LogicalConditionUI {
 					LogicalItem andOperator3 = new LogicalItem(LogicalItem.AND);
 					andOperator1.addChild(andOperator2);
 					andOperator1.addChild(andOperator3);
+					
 					//LogicalItem condition1 = new LogicalItem();
 					//LogicalItem condition2 = new LogicalItem(LogicalItem.CONDITION, "TectCondition2");
 					//andOperator0.addChild(condition1);
