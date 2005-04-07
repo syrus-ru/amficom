@@ -1,5 +1,5 @@
 /**
- * $Id: MoveSelectionCommandBundle.java,v 1.8 2005/02/18 12:19:45 krupenn Exp $
+ * $Id: MoveSelectionCommandBundle.java,v 1.9 2005/04/07 14:16:07 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,13 +20,14 @@ import com.syrus.AMFICOM.Client.Map.MapConnectionException;
 import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
+import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.Mark;
 
 /**
  * Перемещение объектов по карте. Команда является пучком команд 
  * (CommandBundle), передвгающих отдельные элементы.
  * @author $Author: krupenn $
- * @version $Revision: 1.8 $, $Date: 2005/02/18 12:19:45 $
+ * @version $Revision: 1.9 $, $Date: 2005/04/07 14:16:07 $
  * @module mapviewclient_v1
  */
 public class MoveSelectionCommandBundle extends MapActionCommandBundle
@@ -147,15 +148,14 @@ public class MoveSelectionCommandBundle extends MapActionCommandBundle
 	 */
 	protected void setElements()
 	{
-		Iterator e = this.logicalNetLayer.getMapView().getMap().getNodes().iterator();
+		Iterator iter = this.logicalNetLayer.getMapView().getMap().getSelectedElements().iterator();
 
-		while (e.hasNext() )
+		while (iter.hasNext() )
 		{
-			AbstractNode node = (AbstractNode)e.next();
-			if (node.isSelected())
-			{
-				if(node instanceof Mark)
-				{
+			MapElement mapElement = (MapElement )iter.next();
+			if(mapElement instanceof AbstractNode) {
+				AbstractNode node = (AbstractNode)mapElement;
+				if(node instanceof Mark) {
 					Mark mme = (Mark)node;
 					super.add(new MoveMarkCommand(mme));
 				}
