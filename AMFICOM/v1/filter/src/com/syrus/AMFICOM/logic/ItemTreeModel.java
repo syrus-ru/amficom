@@ -1,5 +1,5 @@
 /*-
- * $Id: ItemTreeModel.java,v 1.8 2005/04/01 08:37:09 max Exp $
+ * $Id: ItemTreeModel.java,v 1.9 2005/04/07 10:55:40 bob Exp $
  *
  * Copyright ? 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,8 +23,8 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/04/01 08:37:09 $
- * @author $Author: max $
+ * @version $Revision: 1.9 $, $Date: 2005/04/07 10:55:40 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module filter_v1
  */
@@ -465,6 +465,12 @@ public class ItemTreeModel implements TreeModel, ItemListener {
 		} else {
 			this.parentSortedChildren.remove(oldParent);
 		}
+	}	
+
+	public void setObjectNameChanged(	Item item,
+										String oldName,
+										String newName) {
+		this.nodeChanged(item);		
 	}
 
 	public ItemListener getItemListener() {
