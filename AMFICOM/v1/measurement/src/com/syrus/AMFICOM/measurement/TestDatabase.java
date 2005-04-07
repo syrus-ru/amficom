@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.87 2005/04/05 15:40:23 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.88 2005/04/07 13:57:33 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,7 +45,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.87 $, $Date: 2005/04/05 15:40:23 $
+ * @version $Revision: 1.88 $, $Date: 2005/04/07 13:57:33 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -72,7 +72,8 @@ public class TestDatabase extends StorableObjectDatabase {
 				+ TestWrapper.COLUMN_STATUS + COMMA
 				+ TestWrapper.COLUMN_MONITORED_ELEMENT_ID + COMMA
 				+ TestWrapper.COLUMN_RETURN_TYPE + COMMA
-				+ StorableObjectWrapper.COLUMN_DESCRIPTION;
+				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
+				+ TestWrapper.COLUMN_NUMBER_OF_MEASUREMENTS;
 		}
 		return columns;
 	}
@@ -80,6 +81,7 @@ public class TestDatabase extends StorableObjectDatabase {
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues =  QUESTION + COMMA
+				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -112,7 +114,8 @@ public class TestDatabase extends StorableObjectDatabase {
 			+ test.getStatus().value() + COMMA
 			+ DatabaseIdentifier.toSQLString(test.getMonitoredElement().getId()) + COMMA
 			+ test.getReturnType().value() + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(test.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE;
+			+ APOSTOPHE + DatabaseString.toQuerySubString(test.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
+			+ test.getNumberOfMeasurements();
 	}
 
 	protected String retrieveQuery(String condition) {
@@ -142,6 +145,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, test.getMonitoredElement().getId());
 		preparedStatement.setInt(++startParameterNumber, test.getReturnType().value());
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, test.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		preparedStatement.setInt(++startParameterNumber, test.getNumberOfMeasurements());
 		return startParameterNumber;
 	}
 
@@ -174,21 +178,22 @@ public class TestDatabase extends StorableObjectDatabase {
 		}
 		String description = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION));
 		test.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
-						   DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
-						   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
-						   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-						   resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
-						   resultSet.getInt(TestWrapper.COLUMN_TEMPORAL_TYPE),
-						   DatabaseDate.fromQuerySubString(resultSet, TestWrapper.COLUMN_START_TIME),
-						   DatabaseDate.fromQuerySubString(resultSet, TestWrapper.COLUMN_END_TIME),
-						   DatabaseIdentifier.getIdentifier(resultSet, TestWrapper.COLUMN_TEMPORAL_PATTERN_ID),
-						   DatabaseIdentifier.getIdentifier(resultSet, TestWrapper.COLUMN_MEASUREMENT_TYPE_ID),
-						   DatabaseIdentifier.getIdentifier(resultSet, TestWrapper.COLUMN_ANALYSIS_TYPE_ID),
-						   DatabaseIdentifier.getIdentifier(resultSet, TestWrapper.COLUMN_EVALUATION_TYPE_ID),
-						   resultSet.getInt(TestWrapper.COLUMN_STATUS),
-						   monitoredElement,
-						   resultSet.getInt(TestWrapper.COLUMN_RETURN_TYPE),
-						   (description != null) ? description: "");
+				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
+				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+				resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
+				resultSet.getInt(TestWrapper.COLUMN_TEMPORAL_TYPE),
+				DatabaseDate.fromQuerySubString(resultSet, TestWrapper.COLUMN_START_TIME),
+				DatabaseDate.fromQuerySubString(resultSet, TestWrapper.COLUMN_END_TIME),
+				DatabaseIdentifier.getIdentifier(resultSet, TestWrapper.COLUMN_TEMPORAL_PATTERN_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, TestWrapper.COLUMN_MEASUREMENT_TYPE_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, TestWrapper.COLUMN_ANALYSIS_TYPE_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, TestWrapper.COLUMN_EVALUATION_TYPE_ID),
+				resultSet.getInt(TestWrapper.COLUMN_STATUS),
+				monitoredElement,
+				resultSet.getInt(TestWrapper.COLUMN_RETURN_TYPE),
+				(description != null) ? description : "",
+				resultSet.getInt(TestWrapper.COLUMN_NUMBER_OF_MEASUREMENTS));
 
 		return test;
 	}
@@ -270,8 +275,6 @@ public class TestDatabase extends StorableObjectDatabase {
 				return this.retrieveMeasurementsOrderByStartTime(test, (MeasurementStatus)arg);
 			case Test.RETRIEVE_LAST_MEASUREMENT:
 				return this.retrieveLastMeasurement(test);
-			case Test.RETRIEVE_NUMBER_OF_MEASUREMENTS:
-				return this.retrieveNumberOfMeasurements(test);
 			case Test.RETRIEVE_NUMBER_OF_RESULTS:
 				return this.retrieveNumberOfResults(test, (ResultSort)arg);
 			default:
@@ -360,44 +363,6 @@ public class TestDatabase extends StorableObjectDatabase {
 		}
 		catch (SQLException sqle) {
 			String mesg = "TestDatabase.retrieveLastMeasurement | Cannot retrieve last measurement for test '" + testIdStr + "' -- " + sqle.getMessage();
-			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			} finally {
-				DatabaseConnection.releaseConnection(connection);
-			}
-		}
-	}
-
-	private Integer retrieveNumberOfMeasurements(Test test) throws RetrieveObjectException, ObjectNotFoundException {
-		String testIdStr = DatabaseIdentifier.toSQLString(test.getId());
-		String sql = SQL_SELECT
-			+ SQL_COUNT + " count "
-			+ SQL_FROM + ObjectEntities.MEASUREMENT_ENTITY
-			+ SQL_WHERE + MeasurementWrapper.COLUMN_TEST_ID + EQUALS + testIdStr;
-		Statement statement = null;
-		ResultSet resultSet = null;
-		Connection connection = DatabaseConnection.getConnection();
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("TestDatabase.retrieveNumberOfMeasurements | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql);
-			if (resultSet.next())
-				return new Integer(resultSet.getInt("count"));
-			throw new ObjectNotFoundException("No number of measurements for test '" + testIdStr + "'");
-		}
-		catch (SQLException sqle) {
-			String mesg = "TestDatabase.retrieveNumberOfMeasurements | Cannot retrieve number of measurements for test '" + testIdStr + "' -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -532,119 +497,6 @@ public class TestDatabase extends StorableObjectDatabase {
 				TestWrapper.LINK_COLUMN_TEST_ID,
 				TestWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID);
 	}
-	/*
-	private void updateStatus(Test test) throws UpdateObjectException {
-		String testIdStr = DatabaseIdentifier.toSQLString(test.getId());
-		String sql = SQL_UPDATE + ObjectEntities.TEST_ENTITY
-			+ SQL_SET
-			+ TestWrapper.COLUMN_STATUS + EQUALS + Integer.toString(test.getStatus().value()) + COMMA
-			+ StorableObjectWrapper.COLUMN_MODIFIED + EQUALS + DatabaseDate.toUpdateSubString(test.getModified()) + COMMA
-			+ StorableObjectWrapper.COLUMN_MODIFIER_ID + EQUALS + DatabaseIdentifier.toSQLString(test.getModifierId())
-			+ SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + testIdStr;
-		Statement statement = null;
-		Connection connection = DatabaseConnection.getConnection();
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("TestDatabase.updateStatus | Trying: " + sql, Log.DEBUGLEVEL09);
-			statement.executeUpdate(sql);
-			connection.commit();
-		}
-		catch (SQLException sqle) {
-			String mesg = "TestDatabase.updateStatus | Cannot update status of test '" + testIdStr + "' -- " + sqle.getMessage();
-			throw new UpdateObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				statement = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			} finally {
-				DatabaseConnection.releaseConnection(connection);
-			}
-		}
-	}
-
-	private void updateModified(Test test) throws UpdateObjectException {
-		String testIdStr = DatabaseIdentifier.toSQLString(test.getId());
-		String sql = SQL_UPDATE + ObjectEntities.TEST_ENTITY
-			+ SQL_SET
-			+ StorableObjectWrapper.COLUMN_MODIFIED + EQUALS + DatabaseDate.toUpdateSubString(test.getModified()) + COMMA
-			+ StorableObjectWrapper.COLUMN_MODIFIER_ID + EQUALS + DatabaseIdentifier.toSQLString(test.getModifierId())
-			+ SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + testIdStr;
-		Statement statement = null;
-		Connection connection = DatabaseConnection.getConnection();
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("TestDatabase.updateModified | Trying: " + sql, Log.DEBUGLEVEL09);
-			statement.executeUpdate(sql);
-			connection.commit();
-		}
-		catch (SQLException sqle) {
-			String mesg = "TestDatabase.updateModified | Cannot update modified of test '" + testIdStr + "' -- " + sqle.getMessage();
-			throw new UpdateObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				statement = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			} finally {
-				DatabaseConnection.releaseConnection(connection);
-			}
-		}
-	}
-*/
-//	public java.util.Set retrieveTests(TestStatus status) throws RetrieveObjectException {
-//		java.util.Set objects = null;
-//		try{
-//			objects = this.retrieveByIdsByCondition(null, TestWrapper.COLUMN_STATUS + EQUALS + Integer.toString(status.value())
-//									+ SQL_ORDER_BY + TestWrapper.COLUMN_START_TIME + SQL_ASC);
-//		}
-//		catch(IllegalDataException ide) {
-//			Log.debugMessage("TestDatabase.retrieveTests | Trying: " + ide, Log.DEBUGLEVEL09);
-//		}
-//		return objects;
-//	}
-
-//	public java.util.Set retrieveTestsForMCM(Identifier mcmId, TestStatus status) throws RetrieveObjectException {
-//		
-//		String mcmIdStr = DatabaseIdentifier.toSQLString(mcmId);
-//		String condition = TestWrapper.COLUMN_MONITORED_ELEMENT_ID + SQL_IN + OPEN_BRACKET
-//				+ SQL_SELECT
-//				+ StorableObjectWrapper.COLUMN_ID
-//				+ SQL_FROM + ObjectEntities.ME_ENTITY
-//				+ SQL_WHERE + MonitoredElementWrapper.COLUMN_MEASUREMENT_PORT_ID + SQL_IN + OPEN_BRACKET
-//					+ SQL_SELECT
-//					+ StorableObjectWrapper.COLUMN_ID
-//					+ SQL_FROM + ObjectEntities.MEASUREMENTPORT_ENTITY
-//					+ SQL_WHERE + MeasurementPortWrapper.COLUMN_KIS_ID + SQL_IN + OPEN_BRACKET
-//						+ SQL_SELECT
-//						+ StorableObjectWrapper.COLUMN_ID
-//						+ SQL_FROM + ObjectEntities.KIS_ENTITY
-//						+ SQL_WHERE + KISWrapper.COLUMN_MCM_ID + EQUALS + mcmIdStr
-//					+ CLOSE_BRACKET
-//				+ CLOSE_BRACKET
-//			+ CLOSE_BRACKET
-//				+ SQL_AND + TestWrapper.COLUMN_STATUS + EQUALS + Integer.toString(status.value())
-//			+ SQL_ORDER_BY + TestWrapper.COLUMN_START_TIME + SQL_ASC;		
-//
-//		java.util.Set objects = null;
-//		
-//		try {
-//			objects = this.retrieveByIdsByCondition(null, condition);
-//		}
-//		catch (IllegalDataException ide) {			
-//			Log.debugMessage("TestDatabase.retrieveTestsForMCM | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
-//		}
-//		
-//		return objects;
-//	}
 
 	protected java.util.Set retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
 		java.util.Set collection = super.retrieveByCondition(conditionQuery);
