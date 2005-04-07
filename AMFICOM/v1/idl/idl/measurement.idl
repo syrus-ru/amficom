@@ -1,5 +1,5 @@
 /*
- * $Id: measurement.idl,v 1.56 2005/04/01 14:16:36 arseniy Exp $
+ * $Id: measurement.idl,v 1.57 2005/04/07 13:50:30 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -225,6 +225,7 @@ module corba {
 		general::corba::Identifier_Transferable monitored_element_id;
 		TestReturnType return_type;
 		general::corba::WString256 description;
+		long number_of_measurements;
 		general::corba::IdentifierSeq_Transferable measurement_setup_ids;
 	};
 
