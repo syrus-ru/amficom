@@ -17,7 +17,6 @@ import com.syrus.AMFICOM.Client.Map.MapDataException;
 public class MapImagePanel extends JPanel
 {
 	private Image mapImage = null;
-	private Image mapPaintableImage = null;
 
 	MapInfoLogicalNetLayer layerToPaint = null;
 
@@ -50,41 +49,18 @@ public class MapImagePanel extends JPanel
 		});
 	}
 
-	public void refreshImages()
-	{
-		if (	(this.mapImage == null)
-				||(this.mapImage.getWidth(this) != this.getWidth())
-				||(this.mapImage.getHeight(this) != this.getHeight()))
-		{
-			this.mapImage = new BufferedImage(
-					this.getWidth(),
-					this.getHeight(),
-				BufferedImage.TYPE_USHORT_565_RGB);
-			
-			this.mapPaintableImage = new BufferedImage(
-					this.getWidth(),
-					this.getHeight(),
-				BufferedImage.TYPE_USHORT_565_RGB);
-			
-			System.out.println(new Date(System.currentTimeMillis()).toString() +
-				" MapImagePanel - new BufferedImages created.");
-		}
-	}
-	
-	public void redrawMainImage()
-	{
-		this.mapImage.getGraphics().drawImage(this.mapPaintableImage,0,0,this);
-	}
-	
-	public Image getPaintableImage()
-	{
-		return this.mapPaintableImage;
-	}
-
-	public Image getCurrentImage()
+	public Image getImage()
 	{
 		return this.mapImage;
 	}
+	
+	public void setImage(Image newImage)
+	{
+		this.mapImage = newImage;
+//		if (newImage != null)
+//			this.mapImage.getGraphics().drawImage(newImage,0,0,this);
+	}
+	
 	
 	public void setLogicalLayer(MapInfoLogicalNetLayer layerToPaint)
 	{

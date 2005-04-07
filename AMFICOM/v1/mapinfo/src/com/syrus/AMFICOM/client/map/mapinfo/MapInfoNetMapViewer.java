@@ -65,9 +65,6 @@ public class MapInfoNetMapViewer extends NetMapViewer
 		{
 			this.lnl = new MapInfoLogicalNetLayer(this);
 			
-			this.lnl.setCenter(MapPropertiesManager.getCenter());
-			this.lnl.setScale(MapPropertiesManager.getZoom());
-			
 			if(this.mapImagePanel == null)
 			{
 				this.mapImagePanel = new MapImagePanel();
@@ -115,6 +112,10 @@ public class MapInfoNetMapViewer extends NetMapViewer
 					this.mapImagePanel.addMouseMotionListener(this.mml);
 				}
 			}
+			
+			this.lnl.initializeImageCache();
+			this.lnl.setCenter(MapPropertiesManager.getCenter());
+			this.lnl.setScale(MapPropertiesManager.getZoom());
 		}
 		catch(Throwable e)
 		{

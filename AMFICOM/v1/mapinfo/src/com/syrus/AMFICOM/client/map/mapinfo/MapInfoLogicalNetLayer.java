@@ -1,11 +1,7 @@
 package com.syrus.AMFICOM.Client.Map.Mapinfo;
 
 import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.Point;
-import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
 import java.io.EOFException;
@@ -17,10 +13,7 @@ import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
-
-import javax.swing.ImageIcon;
 
 import com.mapinfo.mapj.MapJ;
 import com.mapinfo.util.DoubleRect;
@@ -29,30 +22,21 @@ import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.NetMapViewer;
-import com.syrus.AMFICOM.Client.Map.SpatialLayer;
 import com.syrus.AMFICOM.Client.Map.SpatialObject;
 import com.syrus.AMFICOM.map.DoublePoint;
 
 public class MapInfoLogicalNetLayer extends LogicalNetLayer
 {
-	public static final double ZOOM_FACTOR = 2D;
-
-	protected MapInfoNetMapViewer nmViewer = null;
-
-	/** Флаг того, что после последней перерисовки карты был изменён
-	 *  масштаб.
-	 */	
-	private boolean zoomChanged = true;
-	
-	/** Флаг того, что после последней перерисовки карты был изменён
-	 *  масштаб.
-	 */	
-	private DoublePoint lastCenter = null;
-	
 	/**
 	 * Для вывода времени в отладочных сообщениях
 	 */
-	private SimpleDateFormat sdFormat = new SimpleDateFormat("E M d H:m:s:S");
+	public SimpleDateFormat sdFormat = new SimpleDateFormat("E M d H:m:s:S");
+	
+	public static final double ZOOM_FACTOR = 2D;
+
+	private MapInfoNetMapViewer nmViewer = null;
+	
+	private TopologicalImageCache imageCache = null;
 	
 	public MapInfoLogicalNetLayer(NetMapViewer viewer)
 	{
@@ -63,10 +47,18 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 				getClass().getName(),
 				"SpatialLogicalNetLayer(" + viewer + ")");
 
-		// logicalLayerMapTool = new LogicalLayerMapTool(this);
 		setMapViewer(viewer);
 	}
 
+	/**
+	 * Вызывается после создания визуальной компоненты
+	 *
+	 */
+	public void initializeImageCache()
+	{
+		this.imageCache = new TopologicalImageCache(this);		
+	}
+	
 	public void setMapImageSize(int width, int height)
 	{
 		if((width > 0) && (height > 0))
@@ -77,6 +69,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 					width,
 					height));
 
+			this.imageCache.sizeChanged();
 			repaint(true);
 		}
 	}
@@ -135,7 +128,11 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 
 	public double convertMapToScreen(double topologicalDistance)
 	{
-		throw new UnsupportedOperationException();
+		Point p1 = convertMapToScreen(new DoublePoint(0, 0));
+		Point p2 = convertMapToScreen(new DoublePoint(topologicalDistance, 0));		
+		
+		double returnValue = Math.pow((Math.pow(p2.x - p1.x,2) + Math.pow(p2.y - p1.y,2)),0.5);
+		return returnValue;
 	}
 
 	public DoublePoint pointAtDistance(
@@ -179,10 +176,11 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	{
 		try
 		{
-			this.lastCenter = getCenter();
 			getLocalMapJ().setCenter(new com.mapinfo.util.DoublePoint(
 					center.getX(),
 					center.getY()));
+			
+			this.imageCache.centerChanged();			
 		}
 		catch(Exception exc)
 		{
@@ -247,222 +245,13 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 			System.out.println(this.sdFormat.format(new Date(System.currentTimeMillis())) +
 					" MIFLNL - repaint - Entered full repaint");
 			
-			this.nmViewer.mapImagePanel.refreshImages();
-			Image resultImage = this.nmViewer.mapImagePanel.getPaintableImage();
-			Graphics riGraphics = resultImage.getGraphics();
-		
-			String uriString = ((MapInfoNetMapViewer )this.viewer).getConnection().getURL();
-			
-			Dimension mipSize = this.nmViewer.mapImagePanel.getSize();	
-			Point curCenterScreen = new Point(
-					(int)mipSize.getWidth() / 2,
-					(int)mipSize.getHeight() / 2);
-			
-			Point lastCenterScreen = this.convertMapToScreen(this.lastCenter);
-
-			int shiftX = lastCenterScreen.x - curCenterScreen.x;
-			int shiftY = lastCenterScreen.y - curCenterScreen.y;
-			
-			if (			((mipSize.width - Math.abs(shiftX)) * //Если площадь пересечения старого изображения и нового меньше 1/4
-								 (mipSize.height - Math.abs(shiftY))
-								 < mipSize.width * mipSize.height / 4)
-						|| (mipSize.width - Math.abs(shiftX) < 0) //или был сдвиг больше чем на ширину/высоту экрана
-						|| (mipSize.height - Math.abs(shiftY) < 0)		 
-						||	this.zoomChanged) //или был изменён масштаб
-			{
-				//Перерисовываем всю область карты
-				uriString += createRenderCommandString(
-						this.nmViewer.mapImagePanel.getWidth(),
-						this.nmViewer.mapImagePanel.getHeight(),
-						this.getCenter().getX(),
-						this.getCenter().getY(),
-						this.getScale());
-				
-				Image fullImage = this.getServerMapImage(uriString,mipSize.width,mipSize.height);
-				
-				riGraphics.drawImage(
-						(new ImageIcon(fullImage)).getImage(),
-						0,
-						0,
-						this.nmViewer.mapImagePanel);
-
-				System.out.println(this.sdFormat.format(new Date(System.currentTimeMillis())) +
-					" MIFLNL - repaint - full screen image received");
-				
-				this.zoomChanged = false;
-			}
-			else
-			{
-				//иначе перерисовываем два прямоугольника: вертикальный и горизонтальный -
-				//а также добавляем прямоугольник со старого изображения
-
-				if ((shiftX == 0) && (shiftY == 0))
-					//Сдвига не было, масштаб не менялся - перерисовывать нечего!
-					return;
-		
-				//Вертикальный (либо сверху, либо снизу ограничен горизонтальным)
-				Image vertImage = null;
-				if (shiftX != 0)
-				{
-					Point vertSegmentCenter = new Point();
-				 	vertSegmentCenter.x = (shiftX > 0) ? shiftX / 2 : mipSize.width + shiftX / 2;
-				 	vertSegmentCenter.y = mipSize.height / 2 + shiftY / 2;				 	
-				 	
-					DoublePoint vertSegmentCenterSphCoords =
-						this.convertScreenToMap(vertSegmentCenter);
-					
-					String reqVString = uriString + createRenderCommandString(
-							Math.abs(shiftX),
-							mipSize.height - Math.abs(shiftY),
-							vertSegmentCenterSphCoords.getX(),
-							vertSegmentCenterSphCoords.getY(),
-							this.getScale() * Math.abs(shiftX) / mipSize.width);
-					
-					vertImage = this.getServerMapImage(reqVString,Math.abs(shiftX),mipSize.height);					
-
-					System.out.println(this.sdFormat.format(new Date(System.currentTimeMillis())) +
-						" MIFLNL - repaint - got vertical screen segment");
-				}
-				
-				//Горизонтальный
-				Image horizImage = null;
-				if (shiftY != 0)
-				{
-					Point horizSegmentCenter = new Point();
-				 	horizSegmentCenter.x = mipSize.width / 2;
-					horizSegmentCenter.y = (shiftY > 0) ? shiftY / 2 : mipSize.height + shiftY / 2;
-				 	
-					DoublePoint horizSegmentCenterSphCoords =
-						this.convertScreenToMap(horizSegmentCenter);
-					
-					String reqHString = uriString + createRenderCommandString(
-							mipSize.width,
-							Math.abs(shiftY),
-							horizSegmentCenterSphCoords.getX(),
-							horizSegmentCenterSphCoords.getY(),
-							this.getScale());
-					
-					horizImage = this.getServerMapImage(reqHString,mipSize.width,Math.abs(shiftY));					
-
-					System.out.println(this.sdFormat.format(new Date(System.currentTimeMillis())) +
-						" MIFLNL - repaint - got horizontal screen segment");
-				}
-
-				
-				//Drawing old image usable area to new image				
-				riGraphics.drawImage(
-					this.nmViewer.mapImagePanel.getCurrentImage(),
-					shiftX,
-					shiftY,
-					this.nmViewer.mapImagePanel);
-
-				System.out.println(this.sdFormat.format(new Date(System.currentTimeMillis())) +
-				" MIFLNL - repaint - old image segment drawn");
-				
-				//Drawing vertical new part of image
-				if (shiftX != 0)
-				{
-					int vertStartX = (shiftX > 0) ? 0 : mipSize.width + shiftX;
-					int vertStartY = (shiftY > 0) ? shiftY : 0;				
-					
-					riGraphics.drawImage(
-							(new ImageIcon(vertImage)).getImage(),
-							vertStartX,
-							vertStartY,
-							this.nmViewer.mapImagePanel);
-	
-					System.out.println(this.sdFormat.format(new Date(System.currentTimeMillis())) +
-					" MIFLNL - repaint - vertical image segment drawn");
-				}
-				
-				//Drawing horizontal new part of image
-				if (shiftY != 0)
-				{
-					int horizStartY = (shiftY > 0) ? 0 : mipSize.height + shiftY;				
-					riGraphics.drawImage(
-							(new ImageIcon(horizImage)).getImage(),
-							0,
-							horizStartY,
-							this.nmViewer.mapImagePanel);
-					
-					System.out.println(this.sdFormat.format(new Date(System.currentTimeMillis())) +
-					" MIFLNL - repaint - horizontal image segment drawn");
-				}				
-			}
+			this.nmViewer.mapImagePanel.setImage(this.imageCache.getImage());
+			System.out.println(this.sdFormat.format(new Date(System.currentTimeMillis())) +
+				" MIFLNL - repaint - Exiting full repaint");
 		}
-		this.nmViewer.mapImagePanel.redrawMainImage();
-		this.nmViewer.mapImagePanel.repaint();
+		this.nmViewer.mapImagePanel.repaint();		
 	}
 
-	private Image getServerMapImage(String requestURIString, int imageWidth, int imageHeight)
-	{
-		try
-		{
-			URI mapServerURI = new URI(requestURIString);
-			URL mapServerURL = new URL(mapServerURI.toASCIIString());
-
-			URLConnection s = mapServerURL.openConnection();
-
-			System.out.println(this.sdFormat.format(new Date(System.currentTimeMillis())) +
-					" MIFLNL - getServerMapImage - Conection opened for URL: " + mapServerURL);
-
-			if(s.getInputStream() == null)
-				return null;
-			
-			ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
-
-			System.out.println(this.sdFormat.format(new Date(System.currentTimeMillis())) +
-					" MIFLNL - getServerMapImage - got data at ObjectInputStream");
-
-			try
-			{
-				Object readObject = ois.readObject();
-				if(readObject instanceof String)
-				{
-					Environment.log(
-							Environment.LOG_LEVEL_FINER,
-							(String )readObject);
-					return null;
-				}
-			}
-			catch(IOException optExc)
-			{	
-			}
-
-			int dataSize = imageWidth * imageHeight * 2;
-			byte[] img = new byte[dataSize];
-
-			System.out.println(this.sdFormat.format(new Date(System.currentTimeMillis())) +
-					" MIFLNL - getServerMapImage - allocated " + dataSize + " bytes of memory");
-
-			try
-			{
-				ois.readFully(img);
-			}
-			catch(EOFException eofExc)
-			{
-			}
-			
-			System.out.println(this.sdFormat.format(new Date(System.currentTimeMillis())) +
-					" MIFLNL - getServerMapImage - Read array from stream");
-
-			ois.close();
-
-			Image imageReceived = Toolkit.getDefaultToolkit().createImage(img);
-
-			System.out.println(this.sdFormat.format(new Date(System.currentTimeMillis())) +
-					" MIFLNL - getServerMapImage - Image created");
-			
-			return imageReceived;
-		}
-		catch(Exception exc)
-		{
-			exc.printStackTrace();
-		}
-		
-		return null;
-	}
-		
 	/**
 	 * Устанавить курсор мыши на компоненте отображения карты
 	 */
@@ -504,7 +293,8 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 		{
 			getLocalMapJ().setZoom(z);
 			updateZoom();
-			this.zoomChanged = true;
+			
+			this.imageCache.scaleChanged();			
 		}
 		catch(Exception exc)
 		{
@@ -553,7 +343,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 
 			updateZoom();
 			
-			this.zoomChanged = true;			
+			this.imageCache.scaleChanged();
 		}
 		catch(Exception e)
 		{
@@ -671,54 +461,8 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 		super.setMapViewer(mapViewer);
 
 		this.nmViewer = (MapInfoNetMapViewer )mapViewer;
-		// this.mapImagePanel = this.nmViewer.mapImagePanel;
-		// this.localMapJ = this.nmViewer.localMapJ;
 	}
 	
-	/**
-	 * 
-	 * @param width Ширина сегмента
-	 * @param height Высота сегмента
-	 * @param centerX X центра сегмента в сферических координатах
-	 * @param centerY Y центра сегмента в сферических координатах
-	 * @param scale Массштаб
-	 * @return Строку параметров для HTTP запроса к серверу
-	 * топографии 
-	 */
-	public String createRenderCommandString(
-			int width,
-			int height,
-			double centerX,
-			double centerY,
-			double scale)
-	{
-		String result = "";
-
-		result += "?" + ServletCommandNames.COMMAND_NAME + "="
-		+ ServletCommandNames.CN_RENDER_IMAGE;
-		
-		result += "&" + ServletCommandNames.PAR_WIDTH + "="	+ width;
-		result += "&" + ServletCommandNames.PAR_HEIGHT + "=" + height;
-		result += "&" + ServletCommandNames.PAR_CENTER_X + "=" + centerX;
-		result += "&" + ServletCommandNames.PAR_CENTER_Y + "=" + centerY;
-		result += "&" + ServletCommandNames.PAR_ZOOM_FACTOR + "=" + scale;
-
-		int index = 0;
-		Iterator layersIt = ((MapInfoNetMapViewer )this.viewer).getLayers()
-				.iterator();
-		for(; layersIt.hasNext();)
-		{
-			SpatialLayer spL = (SpatialLayer )layersIt.next();
-			result += "&" + ServletCommandNames.PAR_LAYER_VISIBLE + index + "="
-					+ (spL.isVisible() ? 1 : 0);
-			result += "&" + ServletCommandNames.PAR_LAYER_LABELS_VISIBLE + index
-					+ "=" + (spL.isLabelVisible() ? 1 : 0);
-			index++;
-		}
-
-		return result;
-	}
-
 	public String createSearchCommandString(String nameToSearch)
 	{
 		String result = "";
