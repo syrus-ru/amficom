@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeImageResource.java,v 1.13 2005/04/04 13:10:29 bass Exp $
+ * $Id: SchemeImageResource.java,v 1.14 2005/04/08 12:58:23 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import java.util.zip.*;
 import org.omg.CORBA.portable.IDLEntity;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.13 $, $Date: 2005/04/04 13:10:29 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2005/04/08 12:58:23 $
  * @module resource_v1
  */
 public final class SchemeImageResource extends AbstractImageResource {
@@ -78,20 +78,6 @@ public final class SchemeImageResource extends AbstractImageResource {
 		} catch (IllegalObjectEntityException ioee) {
 			throw new CreateObjectException("SchemeImageResource.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
 		}
-	}
-
-	public static SchemeImageResource getInstance(final ImageResource_Transferable imageResource) throws CreateObjectException {
-		final SchemeImageResource schemeImageResource = new SchemeImageResource(imageResource);
-		final StorableObjectDatabase imageResourceDatabase1 = ResourceDatabaseContext.getImageResourceDatabase();
-		if (imageResourceDatabase1 != null) {
-			schemeImageResource.imageResourceDatabase = imageResourceDatabase1;
-			try {
-				imageResourceDatabase1.insert(schemeImageResource);
-			} catch (IllegalDataException ide) {
-				throw new CreateObjectException(ide.getMessage(), ide);
-			}
-		}
-		return schemeImageResource;
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*
- * $Id: BitmapImageResource.java,v 1.11 2005/04/04 13:10:29 bass Exp $
+ * $Id: BitmapImageResource.java,v 1.12 2005/04/08 12:58:23 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,24 +8,25 @@
 
 package com.syrus.AMFICOM.resource;
 
+import java.util.Date;
+
+import org.omg.CORBA.portable.IDLEntity;
+
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.resource.corba.ImageResource_Transferable;
 import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceData;
-import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceDataPackage.*;
-import java.util.Date;
-import org.omg.CORBA.portable.IDLEntity;
+import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceDataPackage.BitmapImageResourceData;
+import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceDataPackage.ImageResourceSort;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2005/04/04 13:10:29 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.12 $, $Date: 2005/04/08 12:58:23 $
  * @module resource_v1
  */
 public final class BitmapImageResource extends AbstractBitmapImageResource {
@@ -68,36 +69,20 @@ public final class BitmapImageResource extends AbstractBitmapImageResource {
 		this.image = image;
 	}
 
-	public static BitmapImageResource createInstance(final Identifier creatorId,
-			final String codename,
-			final byte image[]) throws CreateObjectException {
+	public static BitmapImageResource createInstance(final Identifier creatorId, final String codename, final byte image[])
+			throws CreateObjectException {
 		try {
-			BitmapImageResource bitmapImageResource = new BitmapImageResource(
-				IdentifierPool.getGeneratedIdentifier(
-					ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE),
+			BitmapImageResource bitmapImageResource = new BitmapImageResource(IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE),
 					creatorId,
 					0L,
 					codename,
 					image);
 			bitmapImageResource.changed = true;
 			return bitmapImageResource;
-		} catch (IllegalObjectEntityException ioee) {
+		}
+		catch (IllegalObjectEntityException ioee) {
 			throw new CreateObjectException("BitmapImageResource.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
 		}
-	}
-
-	public static BitmapImageResource getInstance(final ImageResource_Transferable imageResource) throws CreateObjectException {
-		final BitmapImageResource bitmapImageResource = new BitmapImageResource(imageResource);
-		final StorableObjectDatabase imageResourceDatabase1 = ResourceDatabaseContext.getImageResourceDatabase();
-		if (imageResourceDatabase1 != null) {
-			bitmapImageResource.imageResourceDatabase = imageResourceDatabase1;
-			try {
-				imageResourceDatabase1.insert(bitmapImageResource);
-			} catch (IllegalDataException ide) {
-				throw new CreateObjectException(ide.getMessage(), ide);
-			}
-		}
-		return bitmapImageResource;
 	}
 
 	/**

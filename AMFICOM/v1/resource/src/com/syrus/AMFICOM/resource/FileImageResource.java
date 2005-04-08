@@ -1,5 +1,5 @@
 /*
- * $Id: FileImageResource.java,v 1.12 2005/04/04 13:10:29 bass Exp $
+ * $Id: FileImageResource.java,v 1.13 2005/04/08 12:58:23 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import java.util.Date;
 import org.omg.CORBA.portable.IDLEntity;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2005/04/04 13:10:29 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.13 $, $Date: 2005/04/08 12:58:23 $
  * @module resource_v1
  */
 public final class FileImageResource extends AbstractBitmapImageResource {
@@ -68,20 +68,6 @@ public final class FileImageResource extends AbstractBitmapImageResource {
 		} catch (IllegalObjectEntityException ioee) {
 			throw new CreateObjectException("FileImageResource.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
 		}
-	}
-
-	public static FileImageResource getInstance(final ImageResource_Transferable imageResource) throws CreateObjectException {
-		final FileImageResource fileImageResource = new FileImageResource(imageResource);
-		final StorableObjectDatabase imageResourceDatabase1 = ResourceDatabaseContext.getImageResourceDatabase();
-		if (imageResourceDatabase1 != null) {
-			fileImageResource.imageResourceDatabase = imageResourceDatabase1;
-			try {
-				imageResourceDatabase1.insert(fileImageResource);
-			} catch (IllegalDataException ide) {
-				throw new CreateObjectException(ide.getMessage(), ide);
-			}
-		}
-		return fileImageResource;
 	}
 
 	/**
