@@ -97,10 +97,10 @@ implements bsHashChangeListener, CurrentTraceChangeListener
 					},
 					null);
 		jTable = new ATable(tModel);
-		jTable.getColumnModel().getColumn(0).setPreferredWidth(160);
+//		jTable.getColumnModel().getColumn(0).setPreferredWidth(160);
 
 		setContentPane(mainPanel);
-		this.setSize(new Dimension(200, 213));
+//		this.setSize(new Dimension(200, 213));
 		this.setResizable(true);
 		this.setClosable(true);
 		this.setIconifiable(true);
@@ -113,9 +113,9 @@ implements bsHashChangeListener, CurrentTraceChangeListener
 		scrollPane.setAutoscrolls(true);
 
 		jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		jTable.setPreferredScrollableViewportSize(new Dimension(200, 213));
+//		jTable.setPreferredScrollableViewportSize(new Dimension(200, 213));
 //		jTable.setMaximumSize(new Dimension(200, 213));
-		jTable.setMinimumSize(new Dimension(200, 213));
+//		jTable.setMinimumSize(new Dimension(200, 213));
 		mainPanel.add(scrollPane, BorderLayout.CENTER);
 		scrollPane.getViewport().add(jTable);
 		updColorModel();

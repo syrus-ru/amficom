@@ -207,7 +207,7 @@ class MapMarkersToolBar extends TraceEventsToolBar
 				createToolButton(
 				createMarkerTButton,
 				null,
-				UIManager.getInsets(ResourceKeys.INSETS_NULL),
+				UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON),
 				null,
 				LangModelAnalyse.getString("addmarker"),
 				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_MARKER),
@@ -224,7 +224,7 @@ class MapMarkersToolBar extends TraceEventsToolBar
 				createToolButton(
 				deleteMarkerButton,
 				null,
-				UIManager.getInsets(ResourceKeys.INSETS_NULL),
+				UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON),
 				null,
 				LangModelAnalyse.getString("removemarker"),
 				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_DELETE_MARKER),

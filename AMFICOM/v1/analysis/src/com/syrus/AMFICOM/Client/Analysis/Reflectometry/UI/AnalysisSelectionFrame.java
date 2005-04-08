@@ -146,7 +146,7 @@ implements OperationListener, bsHashChangeListener, PrimaryMTMListener
 		JButton analysisInitialButton = new JButton();
 		JButton analysisDefaultsButton = new JButton();
 
-		analysisStartButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
+		analysisStartButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 		analysisStartButton.setToolTipText(LangModelAnalyse.getString("analysisStart"));
 		analysisStartButton.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_PERFORM_ANALYSIS));
 		analysisStartButton.addActionListener(new ActionListener()
@@ -157,7 +157,7 @@ implements OperationListener, bsHashChangeListener, PrimaryMTMListener
 			}
 		});
 
-		analysisInitialButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
+		analysisInitialButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 		analysisInitialButton.setToolTipText(LangModelAnalyse.getString("analysisInitial"));
 		analysisInitialButton.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_INITIAL_ANALYSIS));
 		analysisInitialButton.addActionListener(new ActionListener()
@@ -169,6 +169,7 @@ implements OperationListener, bsHashChangeListener, PrimaryMTMListener
 		});
 
 
+		analysisDefaultsButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 		analysisDefaultsButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 		analysisDefaultsButton.setToolTipText(LangModelAnalyse.getString("analysisDefaults"));
 		analysisDefaultsButton.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_DEFAULT_ANALYSIS));
@@ -189,9 +190,9 @@ implements OperationListener, bsHashChangeListener, PrimaryMTMListener
 		jToolBar1.add(analysisInitialButton);
 		jToolBar1.add(analysisDefaultsButton);
 
-		jTable.getColumnModel().getColumn(0).setPreferredWidth(250);
-		jTable.setPreferredScrollableViewportSize(new Dimension(200, 213));
-		jTable.setMinimumSize(new Dimension(200, 213));
+//		jTable.getColumnModel().getColumn(0).setPreferredWidth(250);
+//		jTable.setPreferredScrollableViewportSize(new Dimension(200, 213));
+//		jTable.setMinimumSize(new Dimension(200, 213));
 		jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		scrollPane.setViewport(viewport);

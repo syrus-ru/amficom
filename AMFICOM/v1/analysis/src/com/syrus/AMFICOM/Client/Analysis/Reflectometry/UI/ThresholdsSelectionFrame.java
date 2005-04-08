@@ -106,23 +106,23 @@ implements OperationListener, bsHashChangeListener
 		this.jTable = new ATable(this.tModelEmpty);
 		
 		JButton alysisInitialButton = new JButton();
-		alysisInitialButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
+		alysisInitialButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 		
 		JButton analysisDefaultsButton = new JButton();
-		analysisDefaultsButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
+		analysisDefaultsButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 		
 		JButton increaseThreshButton = new JButton();
-		increaseThreshButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
+		increaseThreshButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 		
 		JButton decreaseThreshButton = new JButton();
-		decreaseThreshButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
+		decreaseThreshButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 		
 		
 		JButton previuosEventButton = new JButton();
-		previuosEventButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
+		previuosEventButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 		
 		JButton nextEventButton = new JButton();
-		nextEventButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
+		nextEventButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 
 		alysisInitialButton.setToolTipText(LangModelAnalyse.getString("analysisInitial"));
 		alysisInitialButton.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_INITIAL));

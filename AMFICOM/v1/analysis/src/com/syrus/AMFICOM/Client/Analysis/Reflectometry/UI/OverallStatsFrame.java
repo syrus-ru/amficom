@@ -139,11 +139,11 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 					},
 					null);
 		this.jTable = new ATable(tModel);
-		this.jTable.getColumnModel().getColumn(0).setPreferredWidth(130);
+//		this.jTable.getColumnModel().getColumn(0).setPreferredWidth(130);
 
 		this.getContentPane().add(tabbedPane, BorderLayout.CENTER);
 
-		this.setSize(new Dimension(200, 213));
+//		this.setSize(new Dimension(200, 213));
 		this.setResizable(true);
 		this.setClosable(true);
 		this.setIconifiable(true);
@@ -157,9 +157,9 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 		tabbedPane.add(LangModelAnalyse.getString("Title.main"), mainPanel);
 
 		this.jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		this.jTable.setPreferredScrollableViewportSize(new Dimension(200, 213));
-		this.jTable.setMaximumSize(new Dimension(200, 213));
-		this.jTable.setMinimumSize(new Dimension(200, 213));
+//		this.jTable.setPreferredScrollableViewportSize(new Dimension(200, 213));
+//		this.jTable.setMaximumSize(new Dimension(200, 213));
+//		this.jTable.setMinimumSize(new Dimension(200, 213));
 		mainPanel.add(scrollPane, BorderLayout.CENTER);
 		scrollPane.getViewport().add(jTable);
 		tabbedPane.setEnabledAt(0, true);

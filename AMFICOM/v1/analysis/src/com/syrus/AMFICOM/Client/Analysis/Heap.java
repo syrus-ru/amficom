@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.14 2005/04/06 11:23:24 bob Exp $
+ * $Id: Heap.java,v 1.15 2005/04/08 06:13:35 bob Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.io.BellcoreStructure;
  * использование остальных методов работы с BS
  * 
  * @author $Author: bob $
- * @version $Revision: 1.14 $, $Date: 2005/04/06 11:23:24 $
+ * @version $Revision: 1.15 $, $Date: 2005/04/08 06:13:35 $
  * @module
  */
 public class Heap
@@ -124,7 +124,7 @@ public class Heap
 	
 	public static Color getColor(String id) {
 		Color color = null;
-		System.out.println("id is '" + id + "'");
+//		System.out.println("id is '" + id + "'");
 		color = (Color) idColorMap.get(id);
 		if (color == null) {
 			color = UIManager.getColor(id);
@@ -137,16 +137,16 @@ public class Heap
 			String id1 = null;
 			while (id1 == null) {
 				id1 = AnalysisResourceKeys.COLOR_TRACE_PREFIX + i++;
-				System.out.println("search by " + id1);
+//				System.out.println("search by " + id1);
 				color = (Color) idColorMap.get(id1);
 				if (color != null)
 					id1 = null;
 			}
-			System.out.println("by id:" + id1);
+//			System.out.println("by id:" + id1);
 			color = UIManager.getColor(id1);
 			if (color == null) {
 				Random random = new Random();
-				System.out.println("by random");
+//				System.out.println("by random");
 				color = new Color(Math.abs(random.nextInt()) % 256, Math.abs(random.nextInt()) % 256, Math
 						.abs(random.nextInt()) % 256);
 			}
@@ -154,8 +154,8 @@ public class Heap
 			if (!id1.equals(id))
 				idColorMap.put(id, color);
 		}
-		System.out.println(color);
-		System.out.println();
+//		System.out.println(color);
+//		System.out.println();
 		return color;
 	}
 	

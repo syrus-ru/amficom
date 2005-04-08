@@ -106,7 +106,7 @@ implements OperationListener, bsHashChangeListener
 //		this.getContentPane().add(mainPanel);
 		this.getContentPane().add(mainPanel);
 
-		this.setSize(new Dimension(200, 213));
+//		this.setSize(new Dimension(200, 213));
 		this.setResizable(true);
 		this.setClosable(true);
 		this.setIconifiable(true);
@@ -119,9 +119,9 @@ implements OperationListener, bsHashChangeListener
 		scrollPane.setAutoscrolls(true);
 
 		jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		jTable.setPreferredScrollableViewportSize(new Dimension(200, 213));
-		jTable.setMaximumSize(new Dimension(200, 213));
-		jTable.setMinimumSize(new Dimension(200, 213));
+//		jTable.setPreferredScrollableViewportSize(new Dimension(200, 213));
+//		jTable.setMaximumSize(new Dimension(200, 213));
+//		jTable.setMinimumSize(new Dimension(200, 213));
 		mainPanel.add(scrollPane, BorderLayout.CENTER);
 		scrollPane.getViewport().add(jTable);
 

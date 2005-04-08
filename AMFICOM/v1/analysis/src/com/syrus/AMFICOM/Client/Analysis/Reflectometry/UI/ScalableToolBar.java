@@ -1,5 +1,5 @@
 /*-
-* $Id: ScalableToolBar.java,v 1.2 2005/04/06 15:46:45 bob Exp $
+* $Id: ScalableToolBar.java,v 1.3 2005/04/08 06:13:35 bob Exp $
 *
 * Copyright © 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/06 15:46:45 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/08 06:13:35 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module analysis_v1
@@ -64,7 +64,7 @@ public class ScalableToolBar extends ToolBarPanel
 				createToolButton(
 				exButton,
 				null,
-				UIManager.getInsets(ResourceKeys.INSETS_NULL),
+				UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON),
 				null,
 				LangModelAnalyse.getString("encreasex"),
 				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_ENLARGE_X),
@@ -81,7 +81,7 @@ public class ScalableToolBar extends ToolBarPanel
 				createToolButton(
 				eyButton,
 				null,
-				UIManager.getInsets(ResourceKeys.INSETS_NULL),
+				UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON),
 				null,
 				LangModelAnalyse.getString("encreasey"),
 				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_ENLARGE_Y),
@@ -98,7 +98,7 @@ public class ScalableToolBar extends ToolBarPanel
 				createToolButton(
 				dxButton,
 				null,
-				UIManager.getInsets(ResourceKeys.INSETS_NULL),
+				UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON),
 				null,
 				LangModelAnalyse.getString("decreasex"),
 				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_REDUCE_X),
@@ -115,7 +115,7 @@ public class ScalableToolBar extends ToolBarPanel
 				createToolButton(
 				dyButton,
 				null,
-				UIManager.getInsets(ResourceKeys.INSETS_NULL),
+				UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON),
 				null,
 				LangModelAnalyse.getString("decreasey"),
 				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_REDUCE_Y),
@@ -132,7 +132,7 @@ public class ScalableToolBar extends ToolBarPanel
 				createToolButton(
 				fitButton,
 				null,
-				UIManager.getInsets(ResourceKeys.INSETS_NULL),
+				UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON),
 				null,
 				LangModelAnalyse.getString("fittoscreen"),
 				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_FIT),

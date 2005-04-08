@@ -224,7 +224,7 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 		this.getContentPane().add(tabbedPane, BorderLayout.CENTER);
 
 //		setContentPane(mainPanel);
-		this.setSize(new Dimension(200, 200));
+//		this.setSize(new Dimension(200, 200));
 		this.setResizable(true);
 		this.setClosable(true);
 		this.setIconifiable(true);
@@ -239,8 +239,8 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 		scrollPane.setAutoscrolls(true);
 
 		jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		jTable.setPreferredScrollableViewportSize(new Dimension(200, 200));
-		jTable.setMinimumSize(new Dimension(200, 200));
+//		jTable.setPreferredScrollableViewportSize(new Dimension(200, 200));
+//		jTable.setMinimumSize(new Dimension(200, 200));
 		mainPanel.add(scrollPane, BorderLayout.CENTER);
 		scrollPane.getViewport().add(jTable);
 		tabbedPane.setEnabledAt(0, true);
@@ -250,15 +250,15 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 
 		ctModel = new CompareTableModel();
 		jTableComp = new ATable (ctModel);
-		jTableComp.getColumnModel().getColumn(0).setPreferredWidth(120);
-		jTableComp.getColumnModel().getColumn(1).setPreferredWidth(100);
+//		jTableComp.getColumnModel().getColumn(0).setPreferredWidth(120);
+//		jTableComp.getColumnModel().getColumn(1).setPreferredWidth(100);
 
 		mainPanelComp.setLayout(new BorderLayout());
 		mainPanelComp.setBorder(BorderFactory.createLoweredBevelBorder());
 		scrollPaneComp.setViewport(viewportComp);
 		scrollPaneComp.setAutoscrolls(true);
-		jTableComp.setPreferredScrollableViewportSize(new Dimension(200, 213));
-		jTableComp.setMinimumSize(new Dimension(200, 213));
+//		jTableComp.setPreferredScrollableViewportSize(new Dimension(200, 213));
+//		jTableComp.setMinimumSize(new Dimension(200, 213));
 		jTableComp.setDefaultRenderer(Object.class, new CompareTableRenderer());
 
 		mainPanelComp.add(scrollPaneComp, BorderLayout.CENTER);

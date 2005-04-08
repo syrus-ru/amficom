@@ -53,42 +53,42 @@ public class AnalyseMainToolBar extends JToolBar implements ApplicationModelList
 				new AnalyseMainToolBar_this_actionAdapter(this);
 
 		this.sessionOpen.setIcon(UIManager.getIcon(ResourceKeys.ICON_OPEN_SESSION));
-		this.sessionOpen.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
+		this.sessionOpen.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 		this.sessionOpen.setToolTipText(LangModel.getString("menuSessionNew"));
 		this.sessionOpen.setName("menuSessionNew");
 		this.sessionOpen.addActionListener(actionAdapter);
 		
 		this.traceDownload.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_DOWNLOAD_TRACE));
-		this.traceDownload.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
+		this.traceDownload.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 		this.traceDownload.setToolTipText(LangModelAnalyse.getString("menuTraceDownload"));
 		this.traceDownload.setName("menuTraceDownload");
 		this.traceDownload.addActionListener(actionAdapter);
 		
 		this.traceAddCompare.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_DOWNLOAD_ADD));
-		this.traceAddCompare.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
+		this.traceAddCompare.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 		this.traceAddCompare.setToolTipText(LangModelAnalyse.getString("menuTraceAddCompare"));
 		this.traceAddCompare.setName("menuTraceAddCompare");
 		this.traceAddCompare.addActionListener(actionAdapter);
 		
 		this.traceRemoveCompare.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_DOWNLOAD_REMOVE ));
-		this.traceRemoveCompare.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
+		this.traceRemoveCompare.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 		this.traceRemoveCompare.setToolTipText(LangModelAnalyse.getString("menuTraceRemoveCompare"));
 		this.traceRemoveCompare.setName("menuTraceRemoveCompare");
 		this.traceRemoveCompare.addActionListener(actionAdapter);
 
 
 		this.buttonFileOpen.setIcon(UIManager.getIcon(ResourceKeys.ICON_OPEN_FILE));
-		this.buttonFileOpen.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
+		this.buttonFileOpen.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 		this.buttonFileOpen.setToolTipText(LangModelAnalyse.getString("menuFileOpen"));
 		this.buttonFileOpen.setName("menuFileOpen");
 		this.buttonFileOpen.addActionListener(actionAdapter);
 		this.fileAdd.setIcon(UIManager.getIcon(ResourceKeys.ICON_ADD_FILE));
-		this.fileAdd.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
+		this.fileAdd.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 		this.fileAdd.setToolTipText(LangModelAnalyse.getString("menuFileAddCompare"));
 		this.fileAdd.setName("menuFileAddCompare");
 		this.fileAdd.addActionListener(actionAdapter);
 		this.fileRemove.setIcon(UIManager.getIcon(ResourceKeys.ICON_REMOVE_FILE));
-		this.fileRemove.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
+		this.fileRemove.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 		this.fileRemove.setToolTipText(LangModelAnalyse.getString("menuFileRemoveCompare"));
 		this.fileRemove.setName("menuFileRemoveCompare");
 		this.fileRemove.addActionListener(actionAdapter);

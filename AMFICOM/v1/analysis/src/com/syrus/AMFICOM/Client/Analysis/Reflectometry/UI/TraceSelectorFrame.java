@@ -85,10 +85,10 @@ implements bsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener
 //		tModel = new GeneralTableModel();
 
 		jTable = new ColorChooserTable (tModel);
-		jTable.getColumnModel().getColumn(0).setPreferredWidth(250);
+//		jTable.getColumnModel().getColumn(0).setPreferredWidth(250);
 
 		setContentPane(mainPanel);
-		this.setSize(new Dimension(200, 213));
+//		this.setSize(new Dimension(200, 213));
 		this.setResizable(true);
 		this.setClosable(true);
 		this.setIconifiable(true);
