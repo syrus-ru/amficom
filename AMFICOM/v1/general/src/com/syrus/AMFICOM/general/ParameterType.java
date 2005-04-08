@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterType.java,v 1.16 2005/04/08 12:01:56 arseniy Exp $
+ * $Id: ParameterType.java,v 1.17 2005/04/08 13:00:07 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,12 +19,12 @@ import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/04/08 12:01:56 $
+ * @version $Revision: 1.17 $, $Date: 2005/04/08 13:00:07 $
  * @author $Author: arseniy $
  * @module general_v1
  */
 
-public class ParameterType extends StorableObjectType {
+public final class ParameterType extends StorableObjectType {
 	private static final long serialVersionUID = 4050767108738528569L;
 
 	private String name;

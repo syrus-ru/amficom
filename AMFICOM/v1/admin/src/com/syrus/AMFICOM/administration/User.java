@@ -1,5 +1,5 @@
 /*
- * $Id: User.java,v 1.14 2005/04/08 12:02:07 arseniy Exp $
+ * $Id: User.java,v 1.15 2005/04/08 13:00:15 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,12 +29,12 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/04/08 12:02:07 $
+ * @version $Revision: 1.15 $, $Date: 2005/04/08 13:00:15 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
 
-public class User extends StorableObject {
+public final class User extends StorableObject {
 	private static final long serialVersionUID = 7173419705878464356L;
 	
 	private String login;

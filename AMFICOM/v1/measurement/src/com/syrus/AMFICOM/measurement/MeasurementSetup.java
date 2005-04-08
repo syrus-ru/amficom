@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.58 2005/04/08 12:33:24 arseniy Exp $
+ * $Id: MeasurementSetup.java,v 1.59 2005/04/08 13:01:51 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,12 +29,12 @@ import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.58 $, $Date: 2005/04/08 12:33:24 $
+ * @version $Revision: 1.59 $, $Date: 2005/04/08 13:01:51 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
 
-public class MeasurementSetup extends StorableObject {
+public final class MeasurementSetup extends StorableObject {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>

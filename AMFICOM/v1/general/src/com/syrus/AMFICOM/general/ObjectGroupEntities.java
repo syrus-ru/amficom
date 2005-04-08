@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectGroupEntities.java,v 1.11 2005/02/09 13:52:30 arseniy Exp $
+ * $Id: ObjectGroupEntities.java,v 1.12 2005/04/08 13:00:07 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,7 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/02/09 13:52:30 $
+ * @version $Revision: 1.12 $, $Date: 2005/04/08 13:00:07 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -38,6 +38,7 @@ public final class ObjectGroupEntities {
 
 	private ObjectGroupEntities() {
 		// singleton constructor
+		assert false;
 	}
 
 	public static short stringToCode(final String groupString) {

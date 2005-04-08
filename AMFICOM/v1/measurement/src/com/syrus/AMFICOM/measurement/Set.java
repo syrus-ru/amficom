@@ -1,5 +1,5 @@
 /*
- * $Id: Set.java,v 1.58 2005/04/08 12:33:24 arseniy Exp $
+ * $Id: Set.java,v 1.59 2005/04/08 13:01:51 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,12 +33,12 @@ import com.syrus.util.HashCodeGenerator;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.58 $, $Date: 2005/04/08 12:33:24 $
+ * @version $Revision: 1.59 $, $Date: 2005/04/08 13:01:51 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
 
-public class Set extends StorableObject {
+public final class Set extends StorableObject {
 	/**
 	 * Comment for <code>serialVersionUID</code>
 	 */

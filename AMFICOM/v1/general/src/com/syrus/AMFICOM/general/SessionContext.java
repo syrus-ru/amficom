@@ -1,5 +1,5 @@
 /*
-* $Id: SessionContext.java,v 1.3 2005/04/01 09:29:22 arseniy Exp $
+* $Id: SessionContext.java,v 1.4 2005/04/08 13:00:07 arseniy Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.general;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/04/01 09:29:22 $
+ * @version $Revision: 1.4 $, $Date: 2005/04/08 13:00:07 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -21,6 +21,7 @@ public final class SessionContext {
 	
 	private SessionContext() {
 		// singleton
+		assert false;
 	}
 	
 	public static void init(final AccessIdentity accessIdentity1, final String serverHostName1) {

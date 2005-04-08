@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectConditionBuilder.java,v 1.2 2005/03/17 13:40:35 arseniy Exp $
+ * $Id: StorableObjectConditionBuilder.java,v 1.3 2005/04/08 13:00:07 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,6 +20,7 @@ public final class StorableObjectConditionBuilder {
 
 	private StorableObjectConditionBuilder() {
 		// singleton
+		assert false;
 	}
 
 	public static StorableObjectCondition_Transferable getConditionTransferable(StorableObjectCondition condition) {

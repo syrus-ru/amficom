@@ -1,5 +1,5 @@
 /*
- * $Id: EventType.java,v 1.14 2005/04/08 12:39:01 arseniy Exp $
+ * $Id: EventType.java,v 1.15 2005/04/08 13:04:49 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,12 +34,12 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/04/08 12:39:01 $
+ * @version $Revision: 1.15 $, $Date: 2005/04/08 13:04:49 $
  * @author $Author: arseniy $
  * @module event_v1
  */
 
-public class EventType extends StorableObjectType {
+public final class EventType extends StorableObjectType {
 	private static final long serialVersionUID = -8660055955879452510L;
 
 	public static final String CODENAME_MEASUREMENT_ALARM = "measurement_alarm";

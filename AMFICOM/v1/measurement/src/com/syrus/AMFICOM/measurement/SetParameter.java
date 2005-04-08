@@ -1,5 +1,5 @@
 /*
- * $Id: SetParameter.java,v 1.26 2005/04/08 12:47:46 bob Exp $
+ * $Id: SetParameter.java,v 1.27 2005/04/08 13:03:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,12 +28,13 @@ import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.util.ByteArray;
+import com.syrus.util.Log;
 
 import org.omg.CORBA.portable.IDLEntity;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/04/08 12:47:46 $
- * @author $Author: bob $
+ * @version $Revision: 1.27 $, $Date: 2005/04/08 13:03:53 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -144,29 +145,37 @@ public class SetParameter implements TransferableObject, TypedObject, Identifiab
 			case DataType._DATA_TYPE_INTEGER:
 				try {
 					string = Integer.toString(byteArray.toInt());
-				} catch (IOException e) {
-					// nothing
+				}
+				catch (IOException ioe) {
+					// Never
+					Log.errorException(ioe);
 				}
 				break;
 			case DataType._DATA_TYPE_DOUBLE:
 				try {
 					string = Double.toString(byteArray.toDouble());
-				} catch (IOException e) {
-					// nothing
+				}
+				catch (IOException ioe) {
+					// Never
+					Log.errorException(ioe);
 				}
 				break;
 			case DataType._DATA_TYPE_STRING:
 				try {
 					string = byteArray.toUTFString();
-				} catch (IOException e) {
-					// nothing
+				}
+				catch (IOException ioe) {
+					// Never
+					Log.errorException(ioe);
 				}
 				break;
 			case DataType._DATA_TYPE_LONG:
 				try {
 					string = Long.toString(byteArray.toLong());
-				} catch (IOException e) {
-					// nothing
+				}
+				catch (IOException ioe) {
+					// Never
+					Log.errorException(ioe);
 				}
 				break;
 		}

@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeCodenames.java,v 1.7 2005/04/08 08:05:12 arseniy Exp $
+ * $Id: ParameterTypeCodenames.java,v 1.8 2005/04/08 13:00:07 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/04/08 08:05:12 $
+ * @version $Revision: 1.8 $, $Date: 2005/04/08 13:00:07 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -55,5 +55,6 @@ public final class ParameterTypeCodenames {
 
 	private ParameterTypeCodenames() {
 		//singleton
+		assert false;
 	}
 }

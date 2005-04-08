@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicTypeCodenames.java,v 1.2 2005/04/08 08:02:53 arseniy Exp $
+ * $Id: CharacteristicTypeCodenames.java,v 1.3 2005/04/08 13:00:07 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/08 08:02:53 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/08 13:00:07 $
  * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module general_v1
@@ -30,5 +30,6 @@ public final class CharacteristicTypeCodenames {
 
 	private CharacteristicTypeCodenames() {
 		//singleton
+		assert false;
 	}
 }

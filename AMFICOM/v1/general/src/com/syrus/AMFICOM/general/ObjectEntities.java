@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectEntities.java,v 1.52 2005/03/24 15:46:01 arseniy Exp $
+ * $Id: ObjectEntities.java,v 1.53 2005/04/08 13:00:07 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.52 $, $Date: 2005/03/24 15:46:01 $
+ * @version $Revision: 1.53 $, $Date: 2005/04/08 13:00:07 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -301,6 +301,7 @@ public final class ObjectEntities {
 
 	private ObjectEntities() {
 		// empty singleton constructor
+		assert false;
 	}
 
 	public static short stringToCode(final String entity) {

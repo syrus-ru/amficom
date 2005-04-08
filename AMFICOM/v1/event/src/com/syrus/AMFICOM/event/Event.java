@@ -1,5 +1,5 @@
 /*
- * $Id: Event.java,v 1.17 2005/04/08 12:39:01 arseniy Exp $
+ * $Id: Event.java,v 1.18 2005/04/08 13:04:49 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,12 +33,12 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/04/08 12:39:01 $
+ * @version $Revision: 1.18 $, $Date: 2005/04/08 13:04:49 $
  * @author $Author: arseniy $
  * @module event_v1
  */
 
-public class Event extends StorableObject implements TypedObject {
+public final class Event extends StorableObject implements TypedObject {
 	private static final long serialVersionUID = 3977015150102788401L;
 
 	protected static final int UPDATE_STATUS = 1;

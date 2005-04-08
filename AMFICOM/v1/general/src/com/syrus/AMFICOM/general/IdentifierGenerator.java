@@ -1,5 +1,5 @@
 /*
- * $Id: IdentifierGenerator.java,v 1.5 2004/12/20 13:32:57 arseniy Exp $
+ * $Id: IdentifierGenerator.java,v 1.6 2005/04/08 13:00:07 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/12/20 13:32:57 $
+ * @version $Revision: 1.6 $, $Date: 2005/04/08 13:00:07 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -25,6 +25,7 @@ public class IdentifierGenerator {
 	
 	private IdentifierGenerator() {
 		// singleton constructor
+		assert false;
 	}
 	
 	public static synchronized Identifier generateIdentifier(short entityCode) throws IllegalObjectEntityException, IdentifierGenerationException {
