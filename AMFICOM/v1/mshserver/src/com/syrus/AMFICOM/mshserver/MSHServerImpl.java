@@ -1,27 +1,16 @@
-/*
- * $Id: MSHServerImpl.java,v 1.5 2005/04/01 15:12:43 bass Exp $
+/*-
+ * $Id: MSHServerImpl.java,v 1.6 2005/04/08 09:32:27 bass Exp $
  *
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+ * Copyright © 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.mshserver;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
-import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
-import com.syrus.AMFICOM.administration.Domain;
-import com.syrus.AMFICOM.administration.User;
-import com.syrus.AMFICOM.administration.UserWrapper;
+import com.syrus.AMFICOM.general.AccessIdentity;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
@@ -36,8 +25,6 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
@@ -45,28 +32,18 @@ import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.map.Collector;
-import com.syrus.AMFICOM.map.CollectorDatabase;
 import com.syrus.AMFICOM.map.Map;
-import com.syrus.AMFICOM.map.MapDatabase;
 import com.syrus.AMFICOM.map.MapDatabaseContext;
 import com.syrus.AMFICOM.map.MapStorableObjectPool;
 import com.syrus.AMFICOM.map.Mark;
-import com.syrus.AMFICOM.map.MarkDatabase;
 import com.syrus.AMFICOM.map.NodeLink;
-import com.syrus.AMFICOM.map.NodeLinkDatabase;
 import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.map.PhysicalLinkDatabase;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
-import com.syrus.AMFICOM.map.PhysicalLinkTypeDatabase;
 import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.map.SiteNodeDatabase;
 import com.syrus.AMFICOM.map.SiteNodeType;
-import com.syrus.AMFICOM.map.SiteNodeTypeDatabase;
 import com.syrus.AMFICOM.map.TopologicalNode;
-import com.syrus.AMFICOM.map.TopologicalNodeDatabase;
 import com.syrus.AMFICOM.map.corba.Collector_Transferable;
 import com.syrus.AMFICOM.map.corba.Map_Transferable;
 import com.syrus.AMFICOM.map.corba.Mark_Transferable;
@@ -76,152 +53,29 @@ import com.syrus.AMFICOM.map.corba.PhysicalLink_Transferable;
 import com.syrus.AMFICOM.map.corba.SiteNodeType_Transferable;
 import com.syrus.AMFICOM.map.corba.SiteNode_Transferable;
 import com.syrus.AMFICOM.map.corba.TopologicalNode_Transferable;
-import com.syrus.AMFICOM.mshserver.corba.MSHServerOperations;
+import com.syrus.AMFICOM.scheme.SchemeDatabaseContext;
+import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.util.Log;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
+import org.omg.CORBA.portable.IDLEntity;
+
 /**
- * @version $Revision: 1.5 $, $Date: 2005/04/01 15:12:43 $
+ * @version $Revision: 1.6 $, $Date: 2005/04/08 09:32:27 $
  * @author $Author: bass $
  * @module mshserver_1
  */
-public class MSHServerImpl implements MSHServerOperations {
+public final class MSHServerImpl extends MSHServerSchemeTransmit {
+	private static final long serialVersionUID = 3762810480783274295L;
 
-	// ////////////////////////////////Name
-	// Resolver/////////////////////////////////////////////////
+	/*-********************************************************************
+	 * Method(s) specified by IdentifierGeneratorServer.                  *
+	 **********************************************************************/
 
-	/**
-	 * Comment for <code>serialVersionUID</code>
-	 */
-	private static final long								serialVersionUID		= 3762810480783274295L;
-
-
-	public String lookupDomainName(Identifier_Transferable idTransferable) throws AMFICOMRemoteException {
-		try {
-			Identifier id = new Identifier(idTransferable);
-			return ( (Domain)AdministrationStorableObjectPool.getStorableObject(id, true) ).getName();
-		}
-		catch (RetrieveObjectException roe) {
-			Log.errorException(roe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
-		}
-		catch (ApplicationException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		}
-		catch (Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
-	}
-
-	public String lookupUserLogin(Identifier_Transferable identifier_Transferable) throws AMFICOMRemoteException {
-		try {
-			Identifier id = new Identifier(identifier_Transferable);
-			return ( (User)AdministrationStorableObjectPool.getStorableObject(id, true) ).getLogin();
-		}
-		catch (RetrieveObjectException roe) {
-			Log.errorException(roe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
-		}
-		catch (ApplicationException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		}
-		catch (Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
-	}
-
-	public String lookupUserName(Identifier_Transferable identifier_Transferable) throws AMFICOMRemoteException {
-		try {
-			Identifier id = new Identifier(identifier_Transferable);
-			return ( (User)AdministrationStorableObjectPool.getStorableObject(id, true) ).getName();
-		}
-		catch (RetrieveObjectException roe) {
-			Log.errorException(roe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
-		}
-		catch (ApplicationException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		}
-		catch (Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
-	}
-
-	public Identifier_Transferable reverseLookupDomainName(String domainName) throws AMFICOMRemoteException {
-		try {
-			TypicalCondition condition = new TypicalCondition(domainName, OperationSort.OPERATION_EQUALS,
-																ObjectEntities.DOMAIN_ENTITY_CODE,
-																StorableObjectWrapper.COLUMN_NAME);
-			Collection collection = AdministrationStorableObjectPool.getStorableObjectsByCondition(condition, true);
-			if (collection.isEmpty())
-				throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO,
-													"list is empty"); //$NON-NLS-1$
-			Identifier id = ((Domain) collection.iterator().next()).getId();
-			return (Identifier_Transferable) id.getTransferable();
-		} catch (RetrieveObjectException roe) {
-			Log.errorException(roe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
-		} catch (ApplicationException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		} catch (Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
-	}
-
-	public Identifier_Transferable reverseLookupUserLogin(String userLogin) throws AMFICOMRemoteException {
-		try {
-			Log.debugMessage("CMServerImpl.reverseLookupUserLogin | userLogin " + userLogin, Log.DEBUGLEVEL07); //$NON-NLS-1$
-			TypicalCondition condition = new TypicalCondition(userLogin, OperationSort.OPERATION_EQUALS,
-																ObjectEntities.USER_ENTITY_CODE,
-																UserWrapper.COLUMN_LOGIN);
-			Collection collection = AdministrationStorableObjectPool.getStorableObjectsByCondition(condition, true);
-			Identifier id = ((User) collection.iterator().next()).getId();
-			return (Identifier_Transferable) id.getTransferable();
-		} catch (RetrieveObjectException roe) {
-			Log.errorException(roe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
-		} catch (ApplicationException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		} catch (Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
-	}
-
-	public Identifier_Transferable reverseLookupUserName(final String userName)
-			throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.reverseLookupUserName | userName = " + userName, Log.DEBUGLEVEL07); //$NON-NLS-1$
-		try {
-			TypicalCondition condition = new TypicalCondition(userName, OperationSort.OPERATION_EQUALS,
-																ObjectEntities.USER_ENTITY_CODE,
-																StorableObjectWrapper.COLUMN_NAME);
-			Collection collection = AdministrationStorableObjectPool.getStorableObjectsByCondition(condition, true);
-			Identifier id = ((User) collection.iterator().next()).getId();
-			return (Identifier_Transferable) id.getTransferable();
-		} catch (RetrieveObjectException roe) {
-			Log.errorException(roe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe
-				.getMessage());
-		} catch (ApplicationException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		} catch (Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
-	}
-
-
-	// /////////////////////////////////////// Identifier Generator
-	// ////////////////////////////////////////////////
 	public Identifier_Transferable getGeneratedIdentifier(short entityCode) throws AMFICOMRemoteException {
 		try {
 			Log.debugMessage("MSHServerImpl.getGeneratedIdentifier | generate new Identifer for " //$NON-NLS-1$
@@ -266,648 +120,196 @@ public class MSHServerImpl implements MSHServerOperations {
 		}
 	}
 
-	public void delete(Identifier_Transferable idTransferable, AccessIdentifier_Transferable accessIdentifier)
+	public void delete(final Identifier_Transferable id,
+			final AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
-		Log.debugMessage("MSHServerImpl.delete | trying to delete... ", Log.DEBUGLEVEL03); //$NON-NLS-1$
-		Identifier id = new Identifier(idTransferable);
-		short entityCode = id.getMajor();
+		final Identifier id1 = new Identifier(id);
+		Log.debugMessage("MSHServerImpl.delete | Trying to delete object '" //$NON-NLS-1$
+				+ id1 + "' as requested by user '" //$NON-NLS-1$
+				+ (new AccessIdentity(accessIdentifier)).getUserId() + '\'',
+				Log.INFO);
+		final short entityCode = id1.getMajor();
 		if (ObjectGroupEntities.isInMapGroup(entityCode))
-			MapStorableObjectPool.delete(id);
+			MapStorableObjectPool.delete(id1);
+		else if (ObjectGroupEntities.isInSchemeGroup(entityCode))
+			SchemeStorableObjectPool.delete(id1);
+		else
 			Log.errorMessage("MSHServerImpl.delete | Wrong entity code: " + entityCode); //$NON-NLS-1$
 	}
 
-	public void deleteList(Identifier_Transferable[] idTransferables, AccessIdentifier_Transferable accessIdentifier)
+	public void deleteList(final Identifier_Transferable ids[],
+			final AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
-		Log.debugMessage("MSHServerImpl.deleteList | Trying to delete... ", Log.DEBUGLEVEL03); //$NON-NLS-1$
-		List idList = new ArrayList(idTransferables.length);
-		Set mapList = new HashSet(idTransferables.length);
-		for (int i = 0; i < idTransferables.length; i++) {
-			idList.add(new Identifier(idTransferables[i]));
-		}
-		for (Iterator iter = idList.iterator(); iter.hasNext();) {
-			Identifier id = (Identifier) iter.next();
-			short entityCode = id.getMajor();
+		Log.debugMessage("MSHServerImpl.deleteList | Trying to delete " //$NON-NLS-1$
+				+ ids.length
+				+ " object(s) as requested by user '" //$NON-NLS-1$
+				+ (new AccessIdentity(accessIdentifier)).getUserId()
+				+ '\'', Log.INFO);
+		final Set ids1 = Identifier.fromTransferables(ids);
+		final Set mapIds = new HashSet(ids.length);
+		final Set schemeIds = new HashSet(ids.length);
+		for (final Iterator idIterator = ids1.iterator(); idIterator.hasNext();) {
+			final Identifier id = (Identifier) idIterator.next();
+			final short entityCode = id.getMajor();
 			if (ObjectGroupEntities.isInMapGroup(entityCode))
-				mapList.add(id);
-			Log.errorMessage("MSHServerImpl.deleteList | Wrong entity code: " + entityCode); //$NON-NLS-1$
+				mapIds.add(id);
+			else if (ObjectGroupEntities.isInSchemeGroup(entityCode))
+				schemeIds.add(id);
+			else
+				Log.errorMessage("MSHServerImpl.deleteList | Wrong entity code: " + entityCode); //$NON-NLS-1$
 		}
 		try {
-			MapStorableObjectPool.delete(mapList);
-		} catch (IllegalDataException ide) {
-			Log.errorException(ide);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ide.getMessage());
+			MapStorableObjectPool.delete(mapIds);
+			SchemeStorableObjectPool.delete(schemeIds);
+		} catch (final IllegalDataException ide) {
+			/*
+			 * Never.
+			 */
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_DELETE, CompletionStatus.COMPLETED_NO, ide.getMessage());
 		} 
 	}
 
-	private StorableObject_Transferable receiveStorableObject(StorableObject storableObject, StorableObjectDatabase database, AccessIdentifier_Transferable accessIdentifier, 
-	                                   boolean force)
+	/**
+	 * @param storableObject
+	 * @param accessIdentifier
+	 * @param force
+	 * @throws AMFICOMRemoteException
+	 * @see MSHServerMapReceive#receiveStorableObject(StorableObject, AccessIdentifier_Transferable, boolean)
+	 */
+	StorableObject_Transferable receiveStorableObject(
+			final StorableObject storableObject,
+			final AccessIdentifier_Transferable accessIdentifier, 
+			final boolean force)
 			throws AMFICOMRemoteException {
-		Log.debugMessage("MSHServerImpl.receiveStorableObject | Received siteNode", Log.DEBUGLEVEL07); //$NON-NLS-1$
 		try {
-			MapStorableObjectPool.putStorableObject(storableObject);
-			database.update(storableObject, new Identifier(accessIdentifier.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
-					: StorableObjectDatabase.UPDATE_CHECK);
-			return storableObject.getHeaderTransferable();
-
-		} catch (UpdateObjectException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		} catch (IllegalObjectEntityException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, e
-					.getMessage());
-		} catch (VersionCollisionException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_VERSION_COLLISION, CompletionStatus.COMPLETED_NO, e
-					.getMessage());
-		} catch (Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
-	}
-	
-	protected StorableObject_Transferable[] getListHeaders(final Set storableObjects) {
-		StorableObject_Transferable[] headers = new StorableObject_Transferable[storableObjects.size()];
-		int i=0;
-		for (Iterator it = storableObjects.iterator(); it.hasNext();i++) 
-			headers[i] = ((StorableObject) it.next()).getHeaderTransferable();
-		return headers;
-	}
-
-	public StorableObject_Transferable receiveSiteNode(SiteNode_Transferable siteNodeTransferable,
-								boolean force,
-								AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		Log.debugMessage("MSHServerImpl.receiveSiteNode | Received siteNode", Log.DEBUGLEVEL07); //$NON-NLS-1$
-		SiteNode siteNode;
-		try {
-			siteNode = new SiteNode(siteNodeTransferable);
-		} catch (CreateObjectException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		}
-		SiteNodeDatabase database = MapDatabaseContext.getSiteNodeDatabase();
-		return this.receiveStorableObject(siteNode, database, accessIdentifier, force);
-	}
-
-	public StorableObject_Transferable receiveTopologicalNode(	TopologicalNode_Transferable topologicalNodeTransferable,
-										boolean force,
-										AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		Log.debugMessage("MSHServerImpl.receiveTopologicalNode | Received topologicalNode", Log.DEBUGLEVEL07); //$NON-NLS-1$
-
-		TopologicalNode topologicalNode;
-		try {
-			topologicalNode = new TopologicalNode(topologicalNodeTransferable);
-		} catch (CreateObjectException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		}
-		TopologicalNodeDatabase database = MapDatabaseContext.getTopologicalNodeDatabase();
-		return this.receiveStorableObject(topologicalNode, database, accessIdentifier, force);
-	}
-
-	public StorableObject_Transferable receiveNodeLink(NodeLink_Transferable nodeLinkTransferable,
-								boolean force,
-								AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		Log.debugMessage("MSHServerImpl.receiveNodeLink | Received nodeLink", Log.DEBUGLEVEL07); //$NON-NLS-1$
-		NodeLink nodeLink;
-		try {
-			nodeLink = new NodeLink(nodeLinkTransferable);
-		} catch (CreateObjectException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		}
-		NodeLinkDatabase database = MapDatabaseContext.getNodeLinkDatabase();
-		return this.receiveStorableObject(nodeLink, database, accessIdentifier, force);
-	}
-
-	public StorableObject_Transferable receiveMark(Mark_Transferable markTransferable,
-							boolean force,
-							AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		Log.debugMessage("MSHServerImpl.receiveMark | Received mark", Log.DEBUGLEVEL07); //$NON-NLS-1$
-		Mark mark;
-		try {
-			mark = new Mark(markTransferable);
-		} catch (CreateObjectException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		}
-		MarkDatabase database = MapDatabaseContext.getMarkDatabase();
-		return this.receiveStorableObject(mark, database, accessIdentifier, force);
-	}
-
-	public StorableObject_Transferable receivePhysicalLink(PhysicalLink_Transferable physicalLinkTransferable,
-									boolean force,
-									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		Log.debugMessage("MSHServerImpl.receivePhysicalLink | Received physicalLink", Log.DEBUGLEVEL07); //$NON-NLS-1$
-		PhysicalLink physicalLink;
-		try {
-			physicalLink = new PhysicalLink(physicalLinkTransferable);
-		} catch (CreateObjectException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		}
-		PhysicalLinkDatabase database = MapDatabaseContext.getPhysicalLinkDatabase();
-		return this.receiveStorableObject(physicalLink, database, accessIdentifier, force);
-	}
-
-	public StorableObject_Transferable receiveCollector(	Collector_Transferable collectorTransferable,
-									boolean force,
-									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		Log.debugMessage("MSHServerImpl.receiveCollector | Received collector", Log.DEBUGLEVEL07); //$NON-NLS-1$
-		Collector collector;
-		try {
-			collector = new Collector(collectorTransferable);
-		} catch (CreateObjectException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		}
-		CollectorDatabase database = MapDatabaseContext.getCollectorDatabase();
-		return this.receiveStorableObject(collector, database, accessIdentifier, force);
-	}
-
-	public StorableObject_Transferable receiveMap(	Map_Transferable mapTransferable,
-							boolean force,
-							AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		Log.debugMessage("MSHServerImpl.receiveMap | Received map", Log.DEBUGLEVEL07); //$NON-NLS-1$
-
-		Map map;
-		try {
-			map = new Map(mapTransferable);
-		} catch (CreateObjectException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		}
-		MapDatabase database = MapDatabaseContext.getMapDatabase();
-		return this.receiveStorableObject(map, database, accessIdentifier, force);
-	}
-
-	public StorableObject_Transferable receiveSiteNodeType(SiteNodeType_Transferable siteNodeTypeTransferable,
-									boolean force,
-									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		Log.debugMessage("MSHServerImpl.receiveSiteNodeType | Received siteNodeType", Log.DEBUGLEVEL07); //$NON-NLS-1$
-		SiteNodeType siteNodeType;
-		try {
-			siteNodeType = new SiteNodeType(siteNodeTypeTransferable);
-		} catch (CreateObjectException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		}
-		SiteNodeTypeDatabase database = MapDatabaseContext.getSiteNodeTypeDatabase();
-		return this.receiveStorableObject(siteNodeType, database, accessIdentifier, force);
-	}
-
-	public StorableObject_Transferable receivePhysicalLinkType(PhysicalLinkType_Transferable physicalLinkTypeTransferable,
-										boolean force,
-										AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		Log.debugMessage("MSHServerImpl.receivePhysicalLinkType | Received physicalLinkType", Log.DEBUGLEVEL07); //$NON-NLS-1$
-		PhysicalLinkType physicalLinkType;
-		try {
-			physicalLinkTypeTransferable.header.modifier_id = accessIdentifier.user_id;
-			physicalLinkType = new PhysicalLinkType(physicalLinkTypeTransferable);
-		} catch (CreateObjectException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		}
-		PhysicalLinkTypeDatabase database = MapDatabaseContext.getPhysicalLinkTypeDatabase();
-		return this.receiveStorableObject(physicalLinkType, database, accessIdentifier, force);
-	}
-
-	public StorableObject_Transferable[] receiveSiteNodes(	SiteNode_Transferable[] siteNodeTransferables,
-									boolean force,
-									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		Log.debugMessage("MSHServerImpl.receiveSiteNodes | Received " + siteNodeTransferables.length + " site node(s)", //$NON-NLS-1$ //$NON-NLS-2$
-			Log.DEBUGLEVEL07);
-		Set siteNodeList = new HashSet(siteNodeTransferables.length);
-		try {
-
-			for (int i = 0; i < siteNodeTransferables.length; i++) {
-				SiteNode siteNode = new SiteNode(siteNodeTransferables[i]);
-				MapStorableObjectPool.putStorableObject(siteNode);
-				siteNodeList.add(siteNode);
-			}
-
-			SiteNodeDatabase database = MapDatabaseContext.getSiteNodeDatabase();
-			database.update(siteNodeList, new Identifier(accessIdentifier.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
-					: StorableObjectDatabase.UPDATE_CHECK);
-			
-			return this.getListHeaders(siteNodeList);
-
-		} catch (UpdateObjectException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		} catch (IllegalObjectEntityException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, e
-					.getMessage());
-		} catch (VersionCollisionException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_VERSION_COLLISION, CompletionStatus.COMPLETED_NO, e
-					.getMessage());
-		} catch (CreateObjectException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		} catch (Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
-	}
-
-	public StorableObject_Transferable[] receiveTopologicalNodes(TopologicalNode_Transferable[] topologicalNodeTransferables,
-										boolean force,
-										AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		Log.debugMessage("MSHServerImpl.receiveTopologicalNodes | Received " + topologicalNodeTransferables.length //$NON-NLS-1$
-				+ " topological node(s)", Log.DEBUGLEVEL07); //$NON-NLS-1$
-		Set siteNodeList = new HashSet(topologicalNodeTransferables.length);
-		try {
-
-			for (int i = 0; i < topologicalNodeTransferables.length; i++) {
-				TopologicalNode topologicalNode = new TopologicalNode(topologicalNodeTransferables[i]);
-				MapStorableObjectPool.putStorableObject(topologicalNode);
-				siteNodeList.add(topologicalNode);
-			}
-
-			TopologicalNodeDatabase database = MapDatabaseContext
-					.getTopologicalNodeDatabase();
-			database.update(siteNodeList, new Identifier(accessIdentifier.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
-					: StorableObjectDatabase.UPDATE_CHECK);
-			
-			return this.getListHeaders(siteNodeList);
-
-		} catch (UpdateObjectException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		} catch (IllegalObjectEntityException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, e
-					.getMessage());
-		} catch (VersionCollisionException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_VERSION_COLLISION, CompletionStatus.COMPLETED_NO, e
-					.getMessage());
-		} catch (CreateObjectException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		} catch (Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
-	}
-
-	public StorableObject_Transferable[] receiveNodeLinks(	NodeLink_Transferable[] nodeLinkTransferables,
-									boolean force,
-									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		Log.debugMessage("MSHServerImpl.receiveNodeLinks | Received " + nodeLinkTransferables.length + " node link(s)", //$NON-NLS-1$ //$NON-NLS-2$
-			Log.DEBUGLEVEL07);
-		Set nodeLinkList = new HashSet(nodeLinkTransferables.length);
-		try {
-
-			for (int i = 0; i < nodeLinkTransferables.length; i++) {
-				NodeLink nodeLink = new NodeLink(nodeLinkTransferables[i]);
-				MapStorableObjectPool.putStorableObject(nodeLink);
-				nodeLinkList.add(nodeLink);
-			}
-
-			NodeLinkDatabase database = MapDatabaseContext.getNodeLinkDatabase();
-			database.update(nodeLinkList, new Identifier(accessIdentifier.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
-					: StorableObjectDatabase.UPDATE_CHECK);
-			return this.getListHeaders(nodeLinkList);
-		} catch (UpdateObjectException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		} catch (IllegalObjectEntityException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, e
-					.getMessage());
-		} catch (VersionCollisionException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_VERSION_COLLISION, CompletionStatus.COMPLETED_NO, e
-					.getMessage());
-		} catch (CreateObjectException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		} catch (Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
-	}
-
-	public StorableObject_Transferable[] receiveMarks(	Mark_Transferable[] markTransferables,
-								boolean force,
-								AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		Log.debugMessage("MSHServerImpl.receiveMarks | Received " + markTransferables.length + " mark(s)", //$NON-NLS-1$ //$NON-NLS-2$
-			Log.DEBUGLEVEL07);
-		Set markList = new HashSet(markTransferables.length);
-		try {
-
-			for (int i = 0; i < markTransferables.length; i++) {
-				Mark mark = new Mark(markTransferables[i]);
-				MapStorableObjectPool.putStorableObject(mark);
-				markList.add(mark);
-			}
-
-			MarkDatabase database = MapDatabaseContext.getMarkDatabase();
-			database.update(markList,
-				new Identifier(accessIdentifier.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
+			final short entityCode = storableObject.getId().getMajor();
+			final Identifier userId = (new AccessIdentity(accessIdentifier)).getUserId();
+			Log.debugMessage("MSHServerImpl.receiveStorableObject | Receiving a(n) " //$NON-NLS-1$
+					+ ObjectEntities.codeToString(entityCode)
+					+ " as requested by user '" + userId + '\'', //$NON-NLS-1$
+					Log.INFO);
+			StorableObjectDatabase storableObjectDatabase = null;
+			if (ObjectGroupEntities.isInMapGroup(entityCode)) {
+				storableObjectDatabase = MapDatabaseContext.getDatabase(entityCode);
+				MapStorableObjectPool.putStorableObject(storableObject);
+			} else if (ObjectGroupEntities.isInSchemeGroup(entityCode)) {
+				storableObjectDatabase = SchemeDatabaseContext.getDatabase(entityCode);
+				SchemeStorableObjectPool.putStorableObject(storableObject);
+			} else
+				assert false;
+			storableObjectDatabase.update(storableObject,
+					userId,
+					force
+						? StorableObjectDatabase.UPDATE_FORCE
 						: StorableObjectDatabase.UPDATE_CHECK);
-			return this.getListHeaders(markList);
-
-		} catch (UpdateObjectException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		} catch (IllegalObjectEntityException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, e
-					.getMessage());
-		} catch (VersionCollisionException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_VERSION_COLLISION, CompletionStatus.COMPLETED_NO, e
-					.getMessage());
-		} catch (CreateObjectException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		} catch (Throwable t) {
+			return storableObject.getHeaderTransferable();
+		} catch (final UpdateObjectException uoe) {
+			Log.errorException(uoe);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, uoe.getMessage());
+		} catch (final IllegalObjectEntityException ioee) {
+			Log.errorException(ioee);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, ioee.getMessage());
+		} catch (final VersionCollisionException vce) {
+			Log.errorException(vce);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_VERSION_COLLISION, CompletionStatus.COMPLETED_NO, vce.getMessage());
+		} catch (final Throwable t) {
 			Log.errorException(t);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
 		}
 	}
 
-	public StorableObject_Transferable[] receivePhysicalLinks(	PhysicalLink_Transferable[] physicalLinkTransferables,
-										boolean force,
-										AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		Log.debugMessage("MSHServerImpl.receivePhysicalLinks | Received " + physicalLinkTransferables.length //$NON-NLS-1$
-				+ " physical link(s)", Log.DEBUGLEVEL07); //$NON-NLS-1$
-		Set physicalLinkList = new HashSet(physicalLinkTransferables.length);
-		try {
-
-			for (int i = 0; i < physicalLinkTransferables.length; i++) {
-				PhysicalLink physicalLink = new PhysicalLink(physicalLinkTransferables[i]);
-				MapStorableObjectPool.putStorableObject(physicalLink);
-				physicalLinkList.add(physicalLink);
-			}
-
-			PhysicalLinkDatabase database = MapDatabaseContext.getPhysicalLinkDatabase();
-			database.update(physicalLinkList, new Identifier(accessIdentifier.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
-					: StorableObjectDatabase.UPDATE_CHECK);
-			return this.getListHeaders(physicalLinkList);
-
-		} catch (UpdateObjectException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		} catch (IllegalObjectEntityException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, e
-					.getMessage());
-		} catch (VersionCollisionException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_VERSION_COLLISION, CompletionStatus.COMPLETED_NO, e
-					.getMessage());
-		} catch (CreateObjectException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		} catch (Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
-	}
-
-	public StorableObject_Transferable[] receiveCollectors(	Collector_Transferable[] collectorTransferables,
-									boolean force,
-									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		Log.debugMessage("MSHServerImpl.receiveCollectors | Received " + collectorTransferables.length //$NON-NLS-1$
-				+ " collector(s)", Log.DEBUGLEVEL07); //$NON-NLS-1$
-		Set collectorList = new HashSet(collectorTransferables.length);
-		try {
-
-			for (int i = 0; i < collectorTransferables.length; i++) {
-				Collector collector = new Collector(collectorTransferables[i]);
-				MapStorableObjectPool.putStorableObject(collector);
-				collectorList.add(collector);
-			}
-
-			CollectorDatabase database = MapDatabaseContext.getCollectorDatabase();
-			database.update(collectorList, new Identifier(accessIdentifier.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
-					: StorableObjectDatabase.UPDATE_CHECK);
-			return this.getListHeaders(collectorList);
-
-		} catch (UpdateObjectException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		} catch (IllegalObjectEntityException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, e
-					.getMessage());
-		} catch (VersionCollisionException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_VERSION_COLLISION, CompletionStatus.COMPLETED_NO, e
-					.getMessage());
-		} catch (CreateObjectException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		} catch (Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
-	}
-
-	public StorableObject_Transferable[] receiveMaps(Map_Transferable[] mapTransferables,
-							boolean force,
-							AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		Log.debugMessage("MSHServerImpl.receiveMaps | Received " + mapTransferables.length + " map(s)", //$NON-NLS-1$ //$NON-NLS-2$
-			Log.DEBUGLEVEL07);
-		Set mapList = new HashSet(mapTransferables.length);
-		try {
-
-			for (int i = 0; i < mapTransferables.length; i++) {
-				Map map = new Map(mapTransferables[i]);
-				MapStorableObjectPool.putStorableObject(map);
-				mapList.add(map);
-			}
-
-			MapDatabase database = MapDatabaseContext.getMapDatabase();
-			database.update(mapList, new Identifier(accessIdentifier.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
-					: StorableObjectDatabase.UPDATE_CHECK);
-			return this.getListHeaders(mapList);
-
-		} catch (UpdateObjectException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		} catch (IllegalObjectEntityException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, e
-					.getMessage());
-		} catch (VersionCollisionException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_VERSION_COLLISION, CompletionStatus.COMPLETED_NO, e
-					.getMessage());
-		} catch (CreateObjectException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		} catch (Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
-	}
-
-	public StorableObject_Transferable[] receiveSiteNodeTypes(	SiteNodeType_Transferable[] siteNodeTypeTransferables,
-										boolean force,
-										AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		Log.debugMessage("MSHServerImpl.receiveSiteNodeTypes | Received " + siteNodeTypeTransferables.length //$NON-NLS-1$
-				+ " site node type(s)", Log.DEBUGLEVEL07); //$NON-NLS-1$
-		Set siteNodeTypeList = new HashSet(siteNodeTypeTransferables.length);
-		try {
-
-			for (int i = 0; i < siteNodeTypeTransferables.length; i++) {
-				SiteNodeType siteNodeType = new SiteNodeType(siteNodeTypeTransferables[i]);
-				MapStorableObjectPool.putStorableObject(siteNodeType);
-				siteNodeTypeList.add(siteNodeType);
-			}
-
-			SiteNodeTypeDatabase database = MapDatabaseContext.getSiteNodeTypeDatabase();
-			database.update(siteNodeTypeList, new Identifier(accessIdentifier.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
-					: StorableObjectDatabase.UPDATE_CHECK);
-
-			return this.getListHeaders(siteNodeTypeList);
-		} catch (UpdateObjectException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		} catch (IllegalObjectEntityException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, e
-					.getMessage());
-		} catch (VersionCollisionException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_VERSION_COLLISION, CompletionStatus.COMPLETED_NO, e
-					.getMessage());
-		} catch (CreateObjectException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		} catch (Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
-	}
-
-	public StorableObject_Transferable[] receivePhysicalLinkTypes(	PhysicalLinkType_Transferable[] physicalLinkTypeTransferables,
-											boolean force,
-											AccessIdentifier_Transferable accessIdentifier)
+	/**
+	 * @param storableObjects
+	 * @param accessIdentifier
+	 * @param force
+	 * @throws AMFICOMRemoteException
+	 * @see MSHServerMapReceive#receiveStorableObjects(Set, AccessIdentifier_Transferable, boolean)
+	 */
+	StorableObject_Transferable[] receiveStorableObjects(
+			final Set storableObjects,
+			final AccessIdentifier_Transferable accessIdentifier,
+			final boolean force)
 			throws AMFICOMRemoteException {
-		Log.debugMessage("MSHServerImpl.receivePhysicalLinkTypes | Received " + physicalLinkTypeTransferables.length //$NON-NLS-1$
-				+ " physical link type(s)", Log.DEBUGLEVEL07); //$NON-NLS-1$
-		Set physicalLinkTypeList = new HashSet(physicalLinkTypeTransferables.length);
 		try {
-
-			for (int i = 0; i < physicalLinkTypeTransferables.length; i++) {
-				physicalLinkTypeTransferables[i].header.modifier_id = accessIdentifier.user_id;
-				PhysicalLinkType physicalLinkType = new PhysicalLinkType(physicalLinkTypeTransferables[i]);
-				MapStorableObjectPool.putStorableObject(physicalLinkType);
-				physicalLinkTypeList.add(physicalLinkType);
-			}
-
-			PhysicalLinkTypeDatabase database = MapDatabaseContext
-					.getPhysicalLinkTypeDatabase();
-
-			database.update(physicalLinkTypeList, new Identifier(accessIdentifier.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
-					: StorableObjectDatabase.UPDATE_CHECK);
-			return this.getListHeaders(physicalLinkTypeList);
-
-		} catch (UpdateObjectException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		} catch (IllegalObjectEntityException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, e
-					.getMessage());
-		} catch (VersionCollisionException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_VERSION_COLLISION, CompletionStatus.COMPLETED_NO, e
-					.getMessage());
-		} catch (CreateObjectException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		} catch (Throwable t) {
+			if (storableObjects.isEmpty())
+				return new StorableObject_Transferable[0];
+			assert StorableObject.hasSingleTypeEntities(storableObjects);
+			final short entityCode = StorableObject.getEntityCodeOfStorableObjects(storableObjects);
+			final Identifier userId = (new AccessIdentity(accessIdentifier)).getUserId();
+			Log.debugMessage("MSHServerImpl.receiveStorableObjects | Receiving " //$NON-NLS-1$
+					+ storableObjects.size() + ' '
+					+ ObjectEntities.codeToString(entityCode)
+					+ "(s) as requested by user '" + userId + '\'', ///$NON-NLS-1$
+					Log.INFO);
+			StorableObjectDatabase storableObjectDatabase = null;
+			if (ObjectGroupEntities.isInMapGroup(entityCode))
+				storableObjectDatabase = MapDatabaseContext.getDatabase(entityCode);
+			else if (ObjectGroupEntities.isInSchemeGroup(entityCode))
+				storableObjectDatabase = SchemeDatabaseContext.getDatabase(entityCode);
+			else
+				assert false;
+			storableObjectDatabase.update(storableObjects,
+					userId,
+					force
+						? StorableObjectDatabase.UPDATE_FORCE
+						: StorableObjectDatabase.UPDATE_CHECK);
+			return getListHeaders(storableObjects);
+		} catch (final UpdateObjectException uoe) {
+			Log.errorException(uoe);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, uoe.getMessage());
+		} catch (final VersionCollisionException vce) {
+			Log.errorException(vce);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_VERSION_COLLISION, CompletionStatus.COMPLETED_NO, vce.getMessage());
+		} catch (final Throwable t) {
 			Log.errorException(t);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
 		}
 	}
 
-	private Object transmitObject(Identifier_Transferable idTransferable, AccessIdentifier_Transferable accessIdentifier)
+	/**
+	 * @param id
+	 * @param accessIdentifier
+	 * @throws AMFICOMRemoteException
+	 * @see MSHServerMapTransmit#transmitStorableObject(Identifier_Transferable, AccessIdentifier_Transferable)
+	 */
+	IDLEntity transmitStorableObject(
+			final Identifier_Transferable id,
+			final AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
-		Identifier id = new Identifier(idTransferable);
-		Log.debugMessage("MSHServerImpl.transmitObject | require " + id.toString(), Log.DEBUGLEVEL07); //$NON-NLS-1$
 		try {
-			StorableObject storableObject = MapStorableObjectPool.getStorableObject(id, true);
+			final Identifier id1 = new Identifier(id);
+			final short entityCode = id1.getMajor();
+			final Identifier userId = (new AccessIdentity(accessIdentifier)).getUserId();
+			Log.debugMessage("MSHServerImpl.transmitStorableObject | Transmitting a(n) " //$NON-NLS-1$
+					+ ObjectEntities.codeToString(entityCode)
+					+ " as requested by user '" + userId + '\'', //$NON-NLS-1$
+					Log.INFO);
+			StorableObject storableObject = null;
+			if (ObjectGroupEntities.isInMapGroup(entityCode))
+				storableObject = MapStorableObjectPool.getStorableObject(id1, true);
+			else if (ObjectGroupEntities.isInSchemeGroup(entityCode))
+				storableObject = SchemeStorableObjectPool.getStorableObject(id1, true);
+			else
+				assert false;
 			return storableObject.getTransferable();
-		} catch (ObjectNotFoundException onfe) {
+		} catch (final ObjectNotFoundException onfe) {
 			Log.errorException(onfe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES, onfe
-					.getMessage());
-		} catch (RetrieveObjectException roe) {
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES, onfe.getMessage());
+		} catch (final RetrieveObjectException roe) {
 			Log.errorException(roe);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
-		} catch (CommunicationException ce) {
+		} catch (final CommunicationException ce) {
 			Log.errorException(ce);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ce.getMessage());
-		} catch (DatabaseException de) {
+		} catch (final DatabaseException de) {
 			Log.errorException(de);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, de.getMessage());
-		} catch (Throwable t) {
+		} catch (final Throwable t) {
 			Log.errorException(t);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
 		}
 	}
 
-	public SiteNode_Transferable transmitSiteNode(	Identifier_Transferable idTransferable,
-													AccessIdentifier_Transferable accessIdentifier)
-			throws AMFICOMRemoteException {
-		return (SiteNode_Transferable) this.transmitObject(idTransferable, accessIdentifier);
-	}
-
-	public TopologicalNode_Transferable transmitTopologicalNode(Identifier_Transferable id_Transferable,
-																AccessIdentifier_Transferable accessIdentifier)
-			throws AMFICOMRemoteException {
-		return (TopologicalNode_Transferable) this.transmitObject(id_Transferable, accessIdentifier);
-	}
-
-	public NodeLink_Transferable transmitNodeLink(	Identifier_Transferable idTransferable,
-													AccessIdentifier_Transferable accessIdentifier)
-			throws AMFICOMRemoteException {
-		return (NodeLink_Transferable) this.transmitObject(idTransferable, accessIdentifier);
-	}
-
-	public Mark_Transferable transmitMark(	Identifier_Transferable idTransferable,
-											AccessIdentifier_Transferable accessIdentifier)
-			throws AMFICOMRemoteException {
-		return (Mark_Transferable) this.transmitObject(idTransferable, accessIdentifier);
-	}
-
-	public PhysicalLink_Transferable transmitPhysicalLink(	Identifier_Transferable idTransferable,
-															AccessIdentifier_Transferable accessIdentifier)
-			throws AMFICOMRemoteException {
-		return (PhysicalLink_Transferable) this.transmitObject(idTransferable, accessIdentifier);
-	}
-
-	public Collector_Transferable transmitCollector(Identifier_Transferable idTransferable,
-													AccessIdentifier_Transferable accessIdentifier)
-			throws AMFICOMRemoteException {
-		return (Collector_Transferable) this.transmitObject(idTransferable, accessIdentifier);
-	}
-
-	public Map_Transferable transmitMap(Identifier_Transferable idTransferable,
-										AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		return (Map_Transferable) this.transmitObject(idTransferable, accessIdentifier);
-	}
-
-	public SiteNodeType_Transferable transmitSiteNodeType(	Identifier_Transferable idTransferable,
-															AccessIdentifier_Transferable accessIdentifier)
-			throws AMFICOMRemoteException {
-		return (SiteNodeType_Transferable) this.transmitObject(idTransferable, accessIdentifier);
-	}
-
-	public PhysicalLinkType_Transferable transmitPhysicalLinkType(	Identifier_Transferable idTransferable,
-																	AccessIdentifier_Transferable accessIdentifier)
-			throws AMFICOMRemoteException {
-		return (PhysicalLinkType_Transferable) this.transmitObject(idTransferable, accessIdentifier);
-	}
 
 	private Collection transmitObjects(Identifier_Transferable[] ids_Transferable, StorableObjectCondition condition)
 			throws AMFICOMRemoteException {
@@ -1148,5 +550,4 @@ public class MSHServerImpl implements MSHServerOperations {
 
 		return transferables;
 	}
-	
 }

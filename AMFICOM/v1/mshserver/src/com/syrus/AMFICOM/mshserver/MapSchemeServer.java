@@ -1,12 +1,24 @@
-/*
- * $Id: MapSchemeServer.java,v 1.1 2004/12/09 10:19:20 cvsadmin Exp $
+/*-
+ * $Id: MapSchemeServer.java,v 1.2 2005/04/08 09:32:27 bass Exp $
  *
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+ * Copyright © 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.mshserver;
+
+import com.syrus.AMFICOM.general.CORBAServer;
+import com.syrus.AMFICOM.general.SleepButWorkThread;
+import com.syrus.AMFICOM.map.MapStorableObjectPool;
+import com.syrus.AMFICOM.mshserver.corba.MSHServer;
+import com.syrus.AMFICOM.mshserver.corba.MSHServerPOATie;
+import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
+import com.syrus.util.Application;
+import com.syrus.util.ApplicationProperties;
+import com.syrus.util.Log;
+import com.syrus.util.corba.JavaSoftORBUtil;
+import com.syrus.util.database.DatabaseConnection;
 
 import java.net.InetAddress;
 
@@ -18,48 +30,32 @@ import org.omg.CosNaming.NamingContextPackage.AlreadyBound;
 import org.omg.PortableServer.POA;
 import org.omg.PortableServer.POAHelper;
 
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-import com.syrus.AMFICOM.general.CORBAServer;
-import com.syrus.AMFICOM.general.SleepButWorkThread;
-import com.syrus.AMFICOM.map.MapStorableObjectPool;
-import com.syrus.AMFICOM.mshserver.corba.MSHServer;
-import com.syrus.AMFICOM.mshserver.corba.MSHServerPOATie;
-import com.syrus.util.Application;
-import com.syrus.util.ApplicationProperties;
-import com.syrus.util.Log;
-import com.syrus.util.corba.JavaSoftORBUtil;
-import com.syrus.util.database.DatabaseConnection;
-
 /**
- * @version $Revision: 1.1 $, $Date: 2004/12/09 10:19:20 $
- * @author $Author: cvsadmin $
+ * @version $Revision: 1.2 $, $Date: 2005/04/08 09:32:27 $
+ * @author $Author: bass $
  * @module cmserver_v1
  */
 public class MapSchemeServer extends SleepButWorkThread {
 
-	public static final String	APPLICATION_NAME			= "mshserver";
+	public static final String	APPLICATION_NAME			= "mshserver"; //$NON-NLS-1$
 
-	public static final String	KEY_DB_HOST_NAME			= "DBHostName";
+	public static final String	KEY_DB_HOST_NAME			= "DBHostName"; //$NON-NLS-1$
 
-	public static final String	KEY_DB_SID					= "DBSID";
+	public static final String	KEY_DB_SID					= "DBSID"; //$NON-NLS-1$
 
-	public static final String	KEY_DB_CONNECTION_TIMEOUT	= "DBConnectionTimeout";
+	public static final String	KEY_DB_CONNECTION_TIMEOUT	= "DBConnectionTimeout"; //$NON-NLS-1$
 
-	public static final String	KEY_DB_LOGIN_NAME			= "DBLoginName";
+	public static final String	KEY_DB_LOGIN_NAME			= "DBLoginName"; //$NON-NLS-1$
 
-	public static final String	KEY_TICK_TIME				= "TickTime";
+	public static final String	KEY_TICK_TIME				= "TickTime"; //$NON-NLS-1$
 
-	public static final String	KEY_MAX_FALLS				= "MaxFalls";
+	public static final String	KEY_MAX_FALLS				= "MaxFalls"; //$NON-NLS-1$
 
-	public static final String	KEY_MSERVER_ID				= "MServerID";
-
-	public static final String	MSERVER_ID					= "Server_1";
-
-	public static final String	DB_SID						= "amficom";
+	public static final String	DB_SID						= "amficom"; //$NON-NLS-1$
 
 	public static final int		DB_CONNECTION_TIMEOUT		= 120;
 
-	public static final String	DB_LOGIN_NAME				= "amficom";
+	public static final String	DB_LOGIN_NAME				= "amficom"; //$NON-NLS-1$
 
 	public static final int		TICK_TIME					= 5;
 
@@ -106,15 +102,15 @@ public class MapSchemeServer extends SleepButWorkThread {
 		DatabaseContextSetup.initDatabaseContext();
 		DatabaseContextSetup.initObjectPools();
 		/* Start main loop */
-		final MapSchemeServer clientMeasurementServer = new MapSchemeServer();
-		Log.debugMessage("MapSchemeServer.startup | Ready.", Log.DEBUGLEVEL03);
-		clientMeasurementServer.start();
+		final MapSchemeServer mapSchemeServer = new MapSchemeServer();
+		Log.debugMessage("MapSchemeServer.startup | Ready.", Log.DEBUGLEVEL03); //$NON-NLS-1$
+		mapSchemeServer.start();
 
 		/* Add shutdown hook */
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 
 			public void run() {
-				clientMeasurementServer.shutdown();
+				mapSchemeServer.shutdown();
 			}
 		});
 	}
@@ -125,13 +121,13 @@ public class MapSchemeServer extends SleepButWorkThread {
 			ORB orb = JavaSoftORBUtil.getInstance().getORB();
 
 			POA rootPOA = POAHelper.narrow(orb
-					.resolve_initial_references("RootPOA"));
+					.resolve_initial_references("RootPOA")); //$NON-NLS-1$
 			rootPOA.the_POAManager().activate();
 			NamingContextExt rootNamingCtx = NamingContextExtHelper.narrow(orb
-					.resolve_initial_references("NameService"));
+					.resolve_initial_references("NameService")); //$NON-NLS-1$
 
 			final String hostName = InetAddress.getLocalHost()
-					.getCanonicalHostName().replaceAll("\\.", "_");
+					.getCanonicalHostName().replaceAll("\\.", "_"); //$NON-NLS-1$ //$NON-NLS-2$
 
 			NameComponent childPath[] = rootNamingCtx.to_name(hostName);
 
@@ -146,7 +142,7 @@ public class MapSchemeServer extends SleepButWorkThread {
 
 			MSHServer server = (new MSHServerPOATie(new MSHServerImpl(), rootPOA))
 					._this(orb);
-			NameComponent serverPath[] = rootNamingCtx.to_name("MSHServer");
+			NameComponent serverPath[] = rootNamingCtx.to_name("MSHServer"); //$NON-NLS-1$
 			childNamingCtx.rebind(serverPath, server);
 			corbaServer = new CORBAServer();
 
@@ -163,13 +159,13 @@ public class MapSchemeServer extends SleepButWorkThread {
 			ORB orb = JavaSoftORBUtil.getInstance().getORB();
 
 			POA rootPOA = POAHelper.narrow(orb
-					.resolve_initial_references("RootPOA"));
+					.resolve_initial_references("RootPOA")); //$NON-NLS-1$
 			rootPOA.the_POAManager().activate();
 			NamingContextExt rootNamingCtx = NamingContextExtHelper.narrow(orb
-					.resolve_initial_references("NameService"));
+					.resolve_initial_references("NameService")); //$NON-NLS-1$
 
 			final String hostName = InetAddress.getLocalHost()
-					.getCanonicalHostName().replaceAll("\\.", "_");
+					.getCanonicalHostName().replaceAll("\\.", "_"); //$NON-NLS-1$ //$NON-NLS-2$
 
 			NameComponent childPath[] = rootNamingCtx.to_name(hostName);
 
@@ -182,7 +178,7 @@ public class MapSchemeServer extends SleepButWorkThread {
 						.resolve_str(hostName));
 			}
 
-			NameComponent serverPath[] = rootNamingCtx.to_name("MSHServer");
+			NameComponent serverPath[] = rootNamingCtx.to_name("MSHServer"); //$NON-NLS-1$
 
 			childNamingCtx.unbind(serverPath);			
 
@@ -198,7 +194,7 @@ public class MapSchemeServer extends SleepButWorkThread {
 		case FALL_CODE_NO_ERROR:
 			break;
 		default:
-			Log.errorMessage("processError | Unknown error code: "
+			Log.errorMessage("processError | Unknown error code: " //$NON-NLS-1$
 					+ super.fallCode);
 		}
 		super.clearFalls();
@@ -206,10 +202,10 @@ public class MapSchemeServer extends SleepButWorkThread {
 
 	protected synchronized void shutdown() {/* !! Need synchronization */
 		this.running = false;
-		Log.debugMessage("MapSchemeServer.shutdown | serialize ConfigurationStorableObjectPool" , Log.DEBUGLEVEL03);
-		ConfigurationStorableObjectPool.serializePool();
-		Log.debugMessage("MapSchemeServer.shutdown | serialize MeasurementStorableObjectPool" , Log.DEBUGLEVEL03);
+		Log.debugMessage("MapSchemeServer.shutdown | serialize MapStorableObjectPool" , Log.DEBUGLEVEL03); //$NON-NLS-1$
 		MapStorableObjectPool.serializePool();
+		Log.debugMessage("MapSchemeServer.shutdown | serialize SchemeStorableObjectPool" , Log.DEBUGLEVEL03); //$NON-NLS-1$
+		SchemeStorableObjectPool.serializePool();
 	}
 
 	public void run() {
