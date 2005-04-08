@@ -1,53 +1,51 @@
 /*
- * $Id: ConfigureTestCase.java,v 1.7 2005/02/04 14:21:34 bob Exp $
+ * $Id: ConfigureTestCase.java,v 1.8 2005/04/08 14:43:56 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
+
 package test.com.syrus.AMFICOM.configuration;
 
-import java.util.List;
-
+import java.util.Set;
 
 import junit.extensions.TestSetup;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import com.syrus.AMFICOM.configuration.ConfigurationDatabaseContext;
-import com.syrus.AMFICOM.configuration.Domain;
-import com.syrus.AMFICOM.configuration.DomainDatabase;
-import com.syrus.AMFICOM.configuration.User;
-import com.syrus.AMFICOM.configuration.UserDatabase;
+import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
+import com.syrus.AMFICOM.administration.Domain;
+import com.syrus.AMFICOM.administration.User;
+import com.syrus.AMFICOM.cmserver.DatabaseContextSetup;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DefaultIdentifierGeneratorServer;
+import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.mserver.DatabaseContextSetup;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.util.Application;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.database.DatabaseConnection;
 
-
 /**
- * @version $Revision: 1.7 $, $Date: 2005/02/04 14:21:34 $
+ * @version $Revision: 1.8 $, $Date: 2005/04/08 14:43:56 $
  * @author $Author: bob $
  * @module tools
  */
-public class ConfigureTestCase extends TestCase{
+public class ConfigureTestCase extends TestCase {
 
 	public static final int		DB_CONNECTION_TIMEOUT	= 120;
 
 	public static final String	DB_SID					= "mcm";
-	
-	public static Identifier domainId;
 
-	protected static Identifier	creatorId;	
-	
-	public ConfigureTestCase(String name){
-		super(name);		
+	public static Identifier	domainId;
+
+	protected static Identifier	creatorId;
+
+	public ConfigureTestCase(String name) {
+		super(name);
 	}
 
 	public static Test suiteWrapper(Class clazz) {
@@ -70,29 +68,21 @@ public class ConfigureTestCase extends TestCase{
 		establishDatabaseConnection();
 		DatabaseContextSetup.initDatabaseContext();
 		DatabaseContextSetup.initObjectPools();
-		UserDatabase userDatabase = (UserDatabase) ConfigurationDatabaseContext.getUserDatabase();
-		DomainDatabase domainDatabase = (DomainDatabase) ConfigurationDatabaseContext.getDomainDatabase();
-		List userList = null;
-		List domainList = null;
+
+		EquivalentCondition equivalentCondition = new EquivalentCondition(ObjectEntities.USER_ENTITY_CODE);
 		try {
-			userList = userDatabase.retrieveByIds(null, null);
-			domainList = domainDatabase.retrieveByIds(null, null);
-		} catch (RetrieveObjectException roe) {
-			roe.printStackTrace();
-		} catch (IllegalDataException ide) {
-			ide.printStackTrace();
+			Set users = AdministrationStorableObjectPool.getStorableObjectsByCondition(equivalentCondition, true);
+			equivalentCondition.setEntityCode(ObjectEntities.DOMAIN_ENTITY_CODE);
+			Set domains = AdministrationStorableObjectPool.getStorableObjectsByCondition(equivalentCondition, true);
+
+			ConfigureTestCase.creatorId = ((User) users.iterator().next()).getId();
+			ConfigureTestCase.domainId = ((Domain) domains.iterator().next()).getId();
+
+			IdentifierPool.init(new DefaultIdentifierGeneratorServer());
+		} catch (ApplicationException e) {
+			fail();
 		}
 
-		if ((userList == null) || (userList.isEmpty()))
-			fail("must be at less one user at db");
-
-		if ((domainList == null) || (domainList.isEmpty()))
-			fail("must be at less one domain at db");
-
-		ConfigureTestCase.creatorId = ((User) userList.get(0)).getId();
-		ConfigureTestCase.domainId = ((Domain) domainList.get(0)).getId();
-		
-		IdentifierPool.init(new DefaultIdentifierGeneratorServer());
 	}
 
 	static void oneTimeTearDown() {
