@@ -129,8 +129,8 @@ implements bsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener
 		}
 		});
 
-		jTable.setPreferredScrollableViewportSize(new Dimension(200, 213));
-		jTable.setMinimumSize(new Dimension(200, 213));
+//		jTable.setPreferredScrollableViewportSize(new Dimension(200, 213));
+//		jTable.setMinimumSize(new Dimension(200, 213));
 		mainPanel.add(scrollPane, BorderLayout.CENTER);
 		scrollPane.getViewport().add(jTable);
 	}

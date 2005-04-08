@@ -222,9 +222,9 @@ implements OperationListener, bsHashChangeListener
 		jToolBar.add(previuosEventButton);
 		jToolBar.add(nextEventButton);
 
-		this.jTable.getColumnModel().getColumn(0).setPreferredWidth(250);
-		this.jTable.setPreferredScrollableViewportSize(new Dimension(200, 213));
-		this.jTable.setMinimumSize(new Dimension(200, 213));
+//		this.jTable.getColumnModel().getColumn(0).setPreferredWidth(250);
+//		this.jTable.setPreferredScrollableViewportSize(new Dimension(200, 213));
+//		this.jTable.setMinimumSize(new Dimension(200, 213));
 		this.jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		this.jTable.setColumnSelectionAllowed(true);

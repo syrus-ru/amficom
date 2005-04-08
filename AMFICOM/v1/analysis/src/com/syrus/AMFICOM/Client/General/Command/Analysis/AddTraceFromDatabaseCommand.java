@@ -1,6 +1,7 @@
 package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.Analysis.UI.ReflectogrammLoadDialog;
@@ -78,17 +79,17 @@ public class AddTraceFromDatabaseCommand extends VoidCommand
 			dialog = new ReflectogrammLoadDialog (aContext);
 			Heap.setRLDialogByKey(parent.getName(), dialog);
 		}
-		dialog.show();
-
-		if(dialog.ret_code == 0)
+		
+		if(dialog.showDialog() == JOptionPane.CANCEL_OPTION)
 			return;
-		if (dialog.getResult() == null)
+		
+		Result result = dialog.getResult();
+		if (result == null)
 			return;
 
 		BellcoreStructure bs = null;
-		Result res = dialog.getResult();
 
-		SetParameter[] parameters = res.getParameters();
+		SetParameter[] parameters = result.getParameters();
 		for (int i = 0; i < parameters.length; i++)
 		{
 			SetParameter param = parameters[i];
@@ -99,8 +100,8 @@ public class AddTraceFromDatabaseCommand extends VoidCommand
 		if (bs == null)
 			return;
 
-		if (res.getSort().equals(ResultSort.RESULT_SORT_MEASUREMENT))
-			bs.title = ((Measurement)res.getAction()).getName();
+		if (result.getSort().equals(ResultSort.RESULT_SORT_MEASUREMENT))
+			bs.title = ((Measurement)result.getAction()).getName();
 		Heap.putSecondaryTraceByKey(bs.title, bs);
 		Heap.secondaryTraceOpened(bs.title, bs);
 		Heap.setCurrentTrace(bs.title);

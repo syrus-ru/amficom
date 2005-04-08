@@ -2,6 +2,7 @@ package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
 import java.awt.Cursor;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
@@ -80,17 +81,18 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 		}
 
 		//Environment.getActiveWindow()
-		dialog.show();
 
-		if(dialog.ret_code == 0)
+		if(dialog.showDialog() == JOptionPane.CANCEL_OPTION)
 			return;
-		if (dialog.getResult() == null)
+		
+		Result result = dialog.getResult();
+		if (result == null)
 			return;
 
 		BellcoreStructure bs = null;
-		Result res = dialog.getResult();
+		
 
-		SetParameter[] parameters = res.getParameters();
+		SetParameter[] parameters = result.getParameters();
 		for (int i = 0; i < parameters.length; i++)
 		{
 			SetParameter param = parameters[i];
@@ -108,8 +110,8 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 		}
 		Heap.setBSPrimaryTrace(bs);
 
-		if (res.getSort().equals(ResultSort.RESULT_SORT_MEASUREMENT)) {
-			Measurement m = (Measurement)res.getAction();
+		if (result.getSort().equals(ResultSort.RESULT_SORT_MEASUREMENT)) {
+			Measurement m = (Measurement)result.getAction();
 			Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
 			bs.title = m.getName();
 			bs.monitoredElementId = m.getMonitoredElementId().getIdentifierString();

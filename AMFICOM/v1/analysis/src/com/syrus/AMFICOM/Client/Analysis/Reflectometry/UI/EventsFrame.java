@@ -3,7 +3,7 @@ package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
+import java.awt.FontMetrics;
 
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
@@ -210,17 +210,20 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 
 		jTable = new ATable(tModel);
 
-		jTable.getColumnModel().getColumn(0).setPreferredWidth(25);
-		jTable.getColumnModel().getColumn(0).setMaxWidth(40);
-		jTable.getColumnModel().getColumn(1).setPreferredWidth(85);
-		jTable.getColumnModel().getColumn(2).setPreferredWidth(75);
-		jTable.getColumnModel().getColumn(3).setPreferredWidth(80);
-		jTable.getColumnModel().getColumn(4).setPreferredWidth(75);
-		jTable.getColumnModel().getColumn(5).setPreferredWidth(70);
-		jTable.getColumnModel().getColumn(6).setPreferredWidth(85);
+		{
+			FontMetrics fontMetrics = this.jTable.getFontMetrics(this.jTable.getFont());			
+			jTable.getColumnModel().getColumn(0).setPreferredWidth(fontMetrics.stringWidth("WW"));
+			jTable.getColumnModel().getColumn(0).setMaxWidth(fontMetrics.stringWidth("WWWW"));
+		}
+//		jTable.getColumnModel().getColumn(1).setPreferredWidth(85);
+//		jTable.getColumnModel().getColumn(2).setPreferredWidth(75);
+//		jTable.getColumnModel().getColumn(3).setPreferredWidth(80);
+//		jTable.getColumnModel().getColumn(4).setPreferredWidth(75);
+//		jTable.getColumnModel().getColumn(5).setPreferredWidth(70);
+//		jTable.getColumnModel().getColumn(6).setPreferredWidth(85);
 
 		setContentPane(mainPanel);
-		this.setSize(new Dimension(200, 213));
+//		this.setSize(new Dimension(200, 213));
 		this.setResizable(true);
 		this.setClosable(true);
 		this.setIconifiable(true);
@@ -254,8 +257,8 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 		}
 		});
 
-		jTable.setPreferredScrollableViewportSize(new Dimension(200, 213));
-		jTable.setMinimumSize(new Dimension(200, 213));
+//		jTable.setPreferredScrollableViewportSize(new Dimension(200, 213));
+//		jTable.setMinimumSize(new Dimension(200, 213));
 
 		jTable.setDefaultRenderer(Object.class, new EventTableRenderer(jTable));
 

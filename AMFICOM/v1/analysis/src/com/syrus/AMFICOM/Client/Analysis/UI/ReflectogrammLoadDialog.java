@@ -5,11 +5,14 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Collection;
 import java.util.Iterator;
 
+import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
@@ -40,15 +43,16 @@ import com.syrus.io.BellcoreStructure;
 
 public class ReflectogrammLoadDialog extends JDialog 
 {
-	public int ret_code = 0;
-	Object resource;
+	private Object resource;
 
 	private ApplicationContext aContext;
 	private Identifier domainId;
 
-	JButton okButton;
+	private JButton okButton;
 	private JButton cancelButton;
-	private JButton updateButton1 = new JButton();
+	private JButton updateButton = new JButton();
+	
+	private int resultCode = JOptionPane.CANCEL_OPTION;
 
 	JScrollPane scrollPane = new JScrollPane();
 
@@ -74,41 +78,31 @@ public class ReflectogrammLoadDialog extends JDialog
 
 		setTitle(LangModelAnalyse.getString("trace"));
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		Dimension frameSize = new Dimension(350, 600);
-		if(frameSize.height > screenSize.height)
 		{
-			frameSize.height = screenSize.height - 34;
+			int width = (int) (screenSize.getWidth() / 3);
+			int height = (int) (2 * screenSize.getHeight() / 3);
+			this.setSize(width, height);
+			setLocation((screenSize.width - width) / 2, (screenSize.height - height) / 2);
 		}
-		if(frameSize.width > screenSize.width)
-		{
-			frameSize.width = screenSize.width - 10;
-		}
-		setSize(new Dimension(355, 613));
-		setLocation((screenSize.width - frameSize.width) / 2, (screenSize.height - frameSize.height - 30) / 2);
 
 		setResizable(true);
 
 		JPanel ocPanel = new JPanel();
-		ocPanel.setMinimumSize(new Dimension(293, 30));
-		ocPanel.setPreferredSize(new Dimension(350, 35));
 		ocPanel.setLayout(new FlowLayout());
 
-		okButton = new JButton();
-		okButton.setText(LangModelAnalyse.getString("okButton"));
-		okButton.setEnabled(false);
-		okButton.setMaximumSize(new Dimension(91, 27));
-		okButton.setMinimumSize(new Dimension(91, 27));
-		okButton.setPreferredSize(new Dimension(91, 27));
-		okButton.addActionListener(new java.awt.event.ActionListener()
+		this.okButton = new JButton();
+		this.okButton.setText(LangModelAnalyse.getString("okButton"));
+		this.okButton.setEnabled(false);
+		this.okButton.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
 			{
 				okButton_actionPerformed(e);
 			}
 		});
-		cancelButton = new JButton();
-		cancelButton.setText(LangModelAnalyse.getString("cancelButton"));
-		cancelButton.addActionListener(new java.awt.event.ActionListener()
+		this.cancelButton = new JButton();
+		this.cancelButton.setText(LangModelAnalyse.getString("cancelButton"));
+		this.cancelButton.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
 			{
@@ -116,28 +110,21 @@ public class ReflectogrammLoadDialog extends JDialog
 			}
 		});
 
-		cancelButton.setMaximumSize(new Dimension(91, 27));
-		cancelButton.setMinimumSize(new Dimension(91, 27));
-		cancelButton.setPreferredSize(new Dimension(91, 27));
-
-		updateButton1.setMaximumSize(new Dimension(91, 27));
-		updateButton1.setMinimumSize(new Dimension(91, 27));
-		updateButton1.setPreferredSize(new Dimension(91, 27));
-
-		updateButton1.setText(LangModelAnalyse.getString("refreshButton"));
-		updateButton1.addActionListener(new java.awt.event.ActionListener()
+		this.updateButton.setText(LangModelAnalyse.getString("refreshButton"));
+		this.updateButton.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
 			{
 				updateButton1_actionPerformed(e);
 			}
 		});
-		ocPanel.add(okButton);
-		ocPanel.add(updateButton1, null);
-		ocPanel.add(cancelButton);
+		ocPanel.add(Box.createHorizontalGlue());
+		ocPanel.add(this.okButton);
+		ocPanel.add(this.updateButton);
+		ocPanel.add(this.cancelButton);
 		getContentPane().setLayout(new BorderLayout());
 
-		this.getContentPane().add(scrollPane, BorderLayout.CENTER);
+		this.getContentPane().add(this.scrollPane, BorderLayout.CENTER);
 
 		setTree();
 
@@ -175,7 +162,7 @@ public class ReflectogrammLoadDialog extends JDialog
 			childrenFactory.setDomainId(domainId);
 			PopulatableItem item = new PopulatableItem();
 			item.setObject(ArchiveChildrenFactory.ROOT);
-			item.setName("Архив");
+			item.setName(LangModelAnalyse.getString("Archive"));
 			item.setChildrenFactory(childrenFactory);
 			item.populate();			
 			LogicalTreeUI treeUI = new LogicalTreeUI(item, false);
@@ -202,7 +189,7 @@ public class ReflectogrammLoadDialog extends JDialog
 			});
 			
 			getContentPane().add(scrollPane, BorderLayout.CENTER);
-			setTitle("Выберите рефлектограмму" + " (" + domain.getName() + ")");
+			setTitle(LangModelAnalyse.getString("Choose reflectogram") + " (" + domain.getName() + ")");
 		}
 		catch(ApplicationException ex)
 		{
@@ -212,41 +199,33 @@ public class ReflectogrammLoadDialog extends JDialog
 
 	void okButton_actionPerformed(ActionEvent e)
 	{
-		ret_code = 1;
+		this.resultCode = JOptionPane.OK_OPTION;
 		dispose();
 	}
 
 	void cancelButton_actionPerformed(ActionEvent e)
 	{
-		ret_code = 0;
+		this.resultCode = JOptionPane.CANCEL_OPTION;
 		dispose();
 	}
 
 	void updateButton1_actionPerformed(ActionEvent e)
 	{
 		setTree();
-		okButton.setEnabled(false);
+		this.okButton.setEnabled(false);
 		super.show();
+	}
+	
+	public int showDialog() {
+		this.show();
+		return this.resultCode;
 	}
 
 	public Result getResult()
 	{
-		if(resource == null)
-			return null;
 		if(!(resource instanceof Result))
-			return null;
-
-		Result r = (Result)resource;
-		/*			String type = r.getResultType();
-			 String name = null;
-			 if(type != null && type.equals("modeling"))
-			 {
-				name = ((ObjectResource)Pool.get(Modeling.TYPE, r.getModelingId())).getName();
-			 }
-			 if(name != null)
-				r.setName(name);*/
-
-		return r;
+			return null;		
+		return (Result) resource;
 	}
 
 	public BellcoreStructure getBellcoreStructure()
