@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.30 2005/04/08 09:24:33 bass Exp $
+ * $Id: Map.java,v 1.31 2005/04/08 09:41:29 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,19 @@
  */
 
 package com.syrus.AMFICOM.map;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+
+import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -37,8 +50,8 @@ import org.omg.CORBA.portable.IDLEntity;
  * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на 
  * линиях, коллекторов (объединяющих в себе линии).
  * 
- * @author $Author: bass $
- * @version $Revision: 1.30 $, $Date: 2005/04/08 09:24:33 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.31 $, $Date: 2005/04/08 09:41:29 $
  * @module map_v1
  * @todo make maps persistent 
  */
@@ -58,7 +71,7 @@ public class Map extends DomainMember {
 	public static final String COLUMN_MODIFIED = "modified";
 
 	/**
-	 * набор параметров для экспорта. инициализируется только в случае
+	 * Набор параметров для экспорта. инициализируется только в случае
 	 * необходимости экспорта
 	 */
 	private static java.util.Map exportMap = null;
@@ -75,7 +88,10 @@ public class Map extends DomainMember {
 
 	protected transient Set maps;
 	protected transient Set selectedElements;
-	protected transient Set allElements;
+	/**
+	 * Сортированный список всех элементов топологической схемы
+	 */
+	protected transient Collection allElements;
 	protected transient Set nodeElements;
 
 	Map(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
@@ -119,7 +135,7 @@ public class Map extends DomainMember {
 
 		this.maps = new HashSet();
 		this.selectedElements = new HashSet();
-		this.allElements = new HashSet();
+		this.allElements = new LinkedList();
 		this.nodeElements = new HashSet();
 	}
 
@@ -867,7 +883,7 @@ public class Map extends DomainMember {
 	 * 
 	 * @return список всех элементов
 	 */
-	public Set getAllElements() {
+	public Collection getAllElements() {
 		this.allElements.clear();
 
 		this.allElements.addAll(this.getAllMarks());
@@ -878,7 +894,7 @@ public class Map extends DomainMember {
 		this.allElements.addAll(this.getAllPhysicalLinks());
 		this.allElements.addAll(this.getAllCollectors());
 
-		return Collections.unmodifiableSet(this.allElements);
+		return Collections.unmodifiableCollection(this.allElements);
 	}
 
 	/**
