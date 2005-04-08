@@ -1,5 +1,5 @@
 /*
- * $Id: Event.java,v 1.16 2005/04/08 08:50:49 arseniy Exp $
+ * $Id: Event.java,v 1.17 2005/04/08 12:39:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/04/08 08:50:49 $
+ * @version $Revision: 1.17 $, $Date: 2005/04/08 12:39:01 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -64,7 +64,12 @@ public class Event extends StorableObject implements TypedObject {
 	}
 
 	public Event(Event_Transferable et) throws CreateObjectException {
-		this.fromTransferable(et);
+		try {
+			this.fromTransferable(et);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}
 
 	protected Event(Identifier id,
@@ -123,32 +128,20 @@ public class Event extends StorableObject implements TypedObject {
 		}
 	}
 
-	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
+	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
 		Event_Transferable et = (Event_Transferable) transferable;
 
 		super.fromTransferable(et.header);
 
-		try {
-			this.type = (EventType) EventStorableObjectPool.getStorableObject(new Identifier(et.type_id), true);
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
+		this.type = (EventType) EventStorableObjectPool.getStorableObject(new Identifier(et.type_id), true);
 
 		this.description = et.description;
 
 		this.eventParameters = new HashSet(et.parameters.length);
-		try {
-			for (int i = 0; i < et.parameters.length; i++)
-				this.eventParameters.add(new EventParameter(et.parameters[i]));
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
+		for (int i = 0; i < et.parameters.length; i++)
+			this.eventParameters.add(new EventParameter(et.parameters[i]));
 
-		this.eventSourceIds = new HashSet(et.event_source_ids.length);
-		for (int i = 0; i < et.event_source_ids.length; i++)
-			this.eventSourceIds.add(new Identifier(et.event_source_ids[i]));
+		this.eventSourceIds = Identifier.fromTransferables(et.event_source_ids);
 	}
 
 	public IDLEntity getTransferable() {

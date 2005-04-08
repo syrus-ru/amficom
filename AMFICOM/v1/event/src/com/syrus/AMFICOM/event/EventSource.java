@@ -1,5 +1,5 @@
 /*
- * $Id: EventSource.java,v 1.11 2005/04/08 08:50:49 arseniy Exp $
+ * $Id: EventSource.java,v 1.12 2005/04/08 12:39:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,6 +15,7 @@ import java.util.Set;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.event.corba.EventSource_Transferable;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -25,13 +26,14 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/04/08 08:50:49 $
+ * @version $Revision: 1.12 $, $Date: 2005/04/08 12:39:01 $
  * @author $Author: arseniy $
  * @module event_v1
  */
-public class EventSource extends StorableObject {
+public final class EventSource extends StorableObject {
 	private static final long serialVersionUID = 3833179220682682674L;
 
 	private Identifier sourceEntityId;
@@ -48,7 +50,7 @@ public class EventSource extends StorableObject {
 		}
 	}
 
-	public EventSource(EventSource_Transferable est) throws CreateObjectException {
+	public EventSource(EventSource_Transferable est) {
 		this.fromTransferable(est);
 	}
 
@@ -83,9 +85,15 @@ public class EventSource extends StorableObject {
 		}
 	}
 
-	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
+	protected void fromTransferable(IDLEntity transferable) {
 		EventSource_Transferable est = (EventSource_Transferable) transferable;
-		super.fromTransferable(est);
+		try {
+			super.fromTransferable(est);
+		}
+		catch (ApplicationException ae) {
+			// Never
+			Log.errorException(ae);
+		}
 		this.sourceEntityId = new Identifier(est.source_entity_id);
 	}
 

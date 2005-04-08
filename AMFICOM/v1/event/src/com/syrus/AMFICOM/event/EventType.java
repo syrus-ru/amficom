@@ -1,5 +1,5 @@
 /*
- * $Id: EventType.java,v 1.13 2005/04/08 08:50:49 arseniy Exp $
+ * $Id: EventType.java,v 1.14 2005/04/08 12:39:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/04/08 08:50:49 $
+ * @version $Revision: 1.14 $, $Date: 2005/04/08 12:39:01 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -69,7 +69,12 @@ public class EventType extends StorableObjectType {
 	}
 
 	public EventType(EventType_Transferable ett) throws CreateObjectException {
-		this.fromTransferable(ett);
+		try {
+			this.fromTransferable(ett);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}
 
 	protected EventType(Identifier id,
@@ -122,28 +127,24 @@ public class EventType extends StorableObjectType {
 		}
 	}
 
-	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
+	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
 		EventType_Transferable ett = (EventType_Transferable) transferable;
 
 		super.fromTransferable(ett.header, ett.codename, ett.description);
 
-		try {
-			Set parTypeIds = new HashSet(ett.parameter_type_ids.length);
-			for (int i = 0; i < ett.parameter_type_ids.length; i++)
-				parTypeIds.add(new Identifier(ett.parameter_type_ids[i]));
-
-			this.parameterTypes = GeneralStorableObjectPool.getStorableObjects(parTypeIds, true);
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
+		Set parTypeIds = Identifier.fromTransferables(ett.parameter_type_ids);
+		this.parameterTypes = GeneralStorableObjectPool.getStorableObjects(parTypeIds, true);
 	}
 
 	public IDLEntity getTransferable() {
-		Identifier_Transferable[] parTypeIds = new Identifier_Transferable[this.parameterTypes.size()];
-		int i = 0;
-		for (Iterator iterator = this.parameterTypes.iterator(); iterator.hasNext();)
-			parTypeIds[i++] = (Identifier_Transferable) ((ParameterType) iterator.next()).getId().getTransferable();
+		Identifier_Transferable[] parTypeIds = null;
+		try {
+			parTypeIds = Identifier.createTransferables(this.parameterTypes);
+		}
+		catch (IllegalDataException ide) {
+			// Never
+			Log.errorException(ide);
+		}
 
 		return new EventType_Transferable(super.getHeaderTransferable(),
 										super.codename,
