@@ -1,5 +1,5 @@
 /*
- * $Id: CMGeneralReceive.java,v 1.12 2005/04/01 17:38:27 arseniy Exp $
+ * $Id: CMGeneralReceive.java,v 1.13 2005/04/08 09:30:59 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,16 +39,15 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/04/01 17:38:27 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.13 $, $Date: 2005/04/08 09:30:59 $
+ * @author $Author: bass $
  * @module cmserver_v1
  */
 
 public abstract class CMGeneralReceive extends CMServerPOA {
-
 	private static final long serialVersionUID = 4217287655251415892L;	
 
-	protected StorableObject_Transferable[] getListHeaders(Set storableObjects) {
+	final StorableObject_Transferable[] getListHeaders(Set storableObjects) {
 		StorableObject_Transferable[] headers = new StorableObject_Transferable[storableObjects.size()];
 		int i=0;
 		for (Iterator it = storableObjects.iterator(); it.hasNext();i++) 

@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.95 2005/04/01 17:39:21 arseniy Exp $
+ * $Id: CMServerImpl.java,v 1.96 2005/04/08 09:30:59 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,8 +42,8 @@ import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.95 $, $Date: 2005/04/01 17:39:21 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.96 $, $Date: 2005/04/08 09:30:59 $
+ * @author $Author: bass $
  * @module cmserver_v1
  */
 
@@ -189,30 +189,31 @@ public class CMServerImpl extends CMMeasurementTransmit {
 
     // Delete methods
 
-	public void delete(Identifier_Transferable id_Transferable, AccessIdentifier_Transferable accessIdentifier)
+	public void delete(final Identifier_Transferable id,
+			final AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
-		Identifier id = new Identifier(id_Transferable);
-		Log.debugMessage("CMServerImpl.delete | trying to delete object '" + id
-				+ "' on request of user '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
-		short entityCode = id.getMajor();
+		final Identifier id1 = new Identifier(id);
+		Log.debugMessage("CMServerImpl.delete | trying to delete object '" + id1 //$NON-NLS-1$
+				+ "' as requested by user '" + (new AccessIdentity(accessIdentifier)).getUserId() + "'", Log.DEBUGLEVEL07);  //$NON-NLS-1$//$NON-NLS-2$
+		final short entityCode = id1.getMajor();
 		if (ObjectGroupEntities.isInGeneralGroup(entityCode))
-			GeneralStorableObjectPool.delete(id);
-		if (ObjectGroupEntities.isInAdministrationGroup(entityCode))
-			AdministrationStorableObjectPool.delete(id);
-		if (ObjectGroupEntities.isInConfigurationGroup(entityCode))
-			ConfigurationStorableObjectPool.delete(id);
-		if (ObjectGroupEntities.isInMeasurementGroup(entityCode))
-			MeasurementStorableObjectPool.delete(id);
-		Log.errorMessage("CMServerImpl.delete | Wrong entity code: " + entityCode);
+			GeneralStorableObjectPool.delete(id1);
+		else if (ObjectGroupEntities.isInAdministrationGroup(entityCode))
+			AdministrationStorableObjectPool.delete(id1);
+		else if (ObjectGroupEntities.isInConfigurationGroup(entityCode))
+			ConfigurationStorableObjectPool.delete(id1);
+		else if (ObjectGroupEntities.isInMeasurementGroup(entityCode))
+			MeasurementStorableObjectPool.delete(id1);
+		else
+			Log.errorMessage("CMServerImpl.delete | Wrong entity code: " + entityCode); //$NON-NLS-1$
 
 	}
 
 	public void deleteList(Identifier_Transferable[] id_Transferables, AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
 		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
-		Log.debugMessage("CMServerImpl.deleteList | Trying to delete " + id_Transferables.length
-				+ " objects on request of user '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+		Log.debugMessage("CMServerImpl.deleteList | Trying to delete " + id_Transferables.length //$NON-NLS-1$
+				+ " objects on request of user '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07); //$NON-NLS-1$ //$NON-NLS-2$
 
 		Set ids = Identifier.fromTransferables(id_Transferables);
 		Set generalList = new HashSet(id_Transferables.length);
@@ -225,13 +226,14 @@ public class CMServerImpl extends CMMeasurementTransmit {
 			short entityCode = id.getMajor();
 			if (ObjectGroupEntities.isInGeneralGroup(entityCode))
 				generalList.add(id);
-			if (ObjectGroupEntities.isInAdministrationGroup(entityCode))
+			else if (ObjectGroupEntities.isInAdministrationGroup(entityCode))
 				administrationList.add(id);
-			if (ObjectGroupEntities.isInConfigurationGroup(entityCode))
+			else if (ObjectGroupEntities.isInConfigurationGroup(entityCode))
 				configurationList.add(id);
-			if (ObjectGroupEntities.isInMeasurementGroup(entityCode))
+			else if (ObjectGroupEntities.isInMeasurementGroup(entityCode))
 				measurementList.add(id);
-			Log.errorMessage("CMServerImpl.deleteList | Wrong entity code: " + entityCode);
+			else
+				Log.errorMessage("CMServerImpl.deleteList | Wrong entity code: " + entityCode); //$NON-NLS-1$
 		}
 		try {
 			GeneralStorableObjectPool.delete(generalList);
