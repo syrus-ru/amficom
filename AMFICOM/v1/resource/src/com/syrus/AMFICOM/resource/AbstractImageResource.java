@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractImageResource.java,v 1.7 2005/04/02 15:29:47 arseniy Exp $
+ * $Id: AbstractImageResource.java,v 1.8 2005/04/08 12:57:16 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,34 +14,33 @@ import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
 
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.resource.corba.ImageResource_Transferable;
 import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceDataPackage.ImageResourceSort;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.7 $, $Date: 2005/04/02 15:29:47 $
+ * @version $Revision: 1.8 $, $Date: 2005/04/08 12:57:16 $
  * @module resource_v1
  */
 public abstract class AbstractImageResource extends StorableObject {
 	static final long serialVersionUID = -730035505208725678L;
-
-	StorableObjectDatabase imageResourceDatabase;
 
 	/**
 	 * Server-side constructor. Shouldn't be invoked by clients.
 	 */
 	protected AbstractImageResource(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
-		this.imageResourceDatabase = ResourceDatabaseContext.getImageResourceDatabase();
+
+		ImageResourceDatabase database = ResourceDatabaseContext.getImageResourceDatabase();
 		try {
-			this.imageResourceDatabase.retrieve(this);
+			database.retrieve(this);
 		}
 		catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
@@ -59,7 +58,6 @@ public abstract class AbstractImageResource extends StorableObject {
 			final Identifier modifierId,
 			final long version) {
 		super(id, created, modified, creatorId, modifierId, version);
-		this.imageResourceDatabase = ResourceDatabaseContext.getImageResourceDatabase();
 	}
 
 	/**
@@ -67,11 +65,15 @@ public abstract class AbstractImageResource extends StorableObject {
 	 * @throws CreateObjectException 
 	 */
 	protected AbstractImageResource(final ImageResource_Transferable irt) throws CreateObjectException {
-		this.imageResourceDatabase = ResourceDatabaseContext.getImageResourceDatabase();
-		this.fromTransferable(irt);
+		try {
+			this.fromTransferable(irt);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}
 
-	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
+	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
 		ImageResource_Transferable irt = (ImageResource_Transferable) transferable;
 		super.fromTransferable(irt.header);
 	}
