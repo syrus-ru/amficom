@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicType.java,v 1.19 2005/04/08 12:01:56 arseniy Exp $
+ * $Id: CharacteristicType.java,v 1.20 2005/04/08 12:59:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,12 +20,12 @@ import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/04/08 12:01:56 $
+ * @version $Revision: 1.20 $, $Date: 2005/04/08 12:59:32 $
  * @author $Author: arseniy $
  * @module general_v1
  */
 
-public class CharacteristicType extends StorableObjectType {
+public final class CharacteristicType extends StorableObjectType {
 	private static final long serialVersionUID = 6153350736368296076L;
 
 	private int dataType;
