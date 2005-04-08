@@ -1,5 +1,5 @@
 /*
- * $Id: MapStorableObjectPool.java,v 1.11 2005/04/08 09:24:34 bass Exp $
+ * $Id: MapStorableObjectPool.java,v 1.12 2005/04/08 14:16:03 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,9 +23,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Set;
 
+import org.omg.CORBA.portable.IDLEntity;
+
 /**
- * @version $Revision: 1.11 $, $Date: 2005/04/08 09:24:34 $
- * @author $Author: bass $
+ * @version $Revision: 1.12 $, $Date: 2005/04/08 14:16:03 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -329,6 +331,10 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 
 	public static StorableObject putStorableObject(StorableObject storableObject) throws IllegalObjectEntityException {
 		return instance.putStorableObjectImpl(storableObject);
+	}
+
+	public static StorableObject fromTransferable(Identifier id, IDLEntity transferable) throws ApplicationException {
+		return instance.fromTransferableImpl(id, transferable);
 	}
 
 	public static void flush(boolean force) throws ApplicationException {

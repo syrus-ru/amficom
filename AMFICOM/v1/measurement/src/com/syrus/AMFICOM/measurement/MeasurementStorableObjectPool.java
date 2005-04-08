@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.76 2005/04/08 08:55:06 bass Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.77 2005/04/08 14:12:24 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,6 +7,11 @@
  */
 
 package com.syrus.AMFICOM.measurement;
+
+import java.util.Collections;
+import java.util.HashMap;
+
+import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -19,12 +24,9 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
-import java.util.Collections;
-import java.util.HashMap;
-
 /**
- * @version $Revision: 1.76 $, $Date: 2005/04/08 08:55:06 $
- * @author $Author: bass $
+ * @version $Revision: 1.77 $, $Date: 2005/04/08 14:12:24 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -391,6 +393,10 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 		return instance.putStorableObjectImpl(storableObject);
 	}
 
+	public static StorableObject fromTransferable(Identifier id, IDLEntity transferable) throws ApplicationException {
+		return instance.fromTransferableImpl(id, transferable);
+	}
+
 	public static void flush(boolean force) throws ApplicationException{		 
 		instance.flushImpl(force);
 	}
@@ -426,4 +432,5 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 	public static void truncateObjectPool(final short entityCode) {
 		instance.truncateObjectPoolImpl(entityCode);
 	}
+
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: ResourceStorableObjectPool.java,v 1.13 2005/04/08 09:07:28 bass Exp $
+ * $Id: ResourceStorableObjectPool.java,v 1.14 2005/04/08 14:12:37 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,9 +23,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Set;
 
+import org.omg.CORBA.portable.IDLEntity;
+
 /**
- * @author $Author: bass $
- * @version $Revision: 1.13 $, $Date: 2005/04/08 09:07:28 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2005/04/08 14:12:37 $
  * @module resource_v1
  */
 public final class ResourceStorableObjectPool extends StorableObjectPool {
@@ -168,11 +170,14 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 		}
 	}
 
-	public static StorableObject putStorableObject(StorableObject storableObject)
-			throws IllegalObjectEntityException {
+	public static StorableObject putStorableObject(StorableObject storableObject) throws IllegalObjectEntityException {
 		return instance.putStorableObjectImpl(storableObject);
 	}
-	
+
+	public static StorableObject fromTransferable(Identifier id, IDLEntity transferable) throws ApplicationException {
+		return instance.fromTransferableImpl(id, transferable);
+	}
+
 	public static void flush(boolean force) throws ApplicationException{		 
 		instance.flushImpl(force);
 	}

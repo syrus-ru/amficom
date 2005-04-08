@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.72 2005/04/08 08:52:59 bass Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.73 2005/04/08 14:12:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,9 +23,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Set;
 
+import org.omg.CORBA.portable.IDLEntity;
+
 /**
- * @version $Revision: 1.72 $, $Date: 2005/04/08 08:52:59 $
- * @author $Author: bass $
+ * @version $Revision: 1.73 $, $Date: 2005/04/08 14:12:16 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -426,6 +428,10 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 
 	public static StorableObject putStorableObject(StorableObject storableObject) throws IllegalObjectEntityException {
 		return instance.putStorableObjectImpl(storableObject);
+	}
+
+	public static StorableObject fromTransferable(Identifier id, IDLEntity transferable) throws ApplicationException {
+		return instance.fromTransferableImpl(id, transferable);
 	}
 
 	public static void flush(boolean force) throws ApplicationException {		 
