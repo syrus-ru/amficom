@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupWrapper.java,v 1.6 2005/04/08 12:47:46 bob Exp $
+ * $Id: MeasurementSetupWrapper.java,v 1.7 2005/04/08 15:37:28 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,10 +12,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.syrus.AMFICOM.general.ParameterType;
+import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/04/08 12:47:46 $
+ * @version $Revision: 1.7 $, $Date: 2005/04/08 15:37:28 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -75,11 +77,44 @@ public class MeasurementSetupWrapper implements StorableObjectWrapper {
 			if (key.equals(LINK_COLUMN_MONITORED_ELEMENT_ID))
 				return measurementSetup.getMonitoredElementIds();
 			if (key.equals(SUMMARY_INFO)) {
-				
+				return this.getMeasurementSetupInfo(measurementSetup);
 			}
 
 		}
 		return null;
+	}
+	
+	private void addSetParameterInfo(StringBuffer buffer, String title, SetParameter[] parameters) {
+		buffer.append(title);
+		buffer.append('\n');
+		for (int i = 0; i < parameters.length; i++) {				
+			String string = parameters[i].getStringValue();
+			if (string != null) {
+				StorableObjectType type = parameters[i].getType();
+				buffer.append(type.getDescription() + ':' + string + '\n'); 
+			}
+		}
+		buffer.append('\n');
+	}
+	
+	private String getMeasurementSetupInfo(MeasurementSetup measurementSetup) {
+		Set parameterSet = measurementSetup.getParameterSet();
+		Set criteriaSet = measurementSetup.getCriteriaSet();
+		Set etalon = measurementSetup.getEtalon();
+		StringBuffer buffer = new StringBuffer();
+		if (parameterSet != null) {
+			this.addSetParameterInfo(buffer, "Measurement parameters:",  parameterSet.getParameters());
+		}
+		
+		if (criteriaSet != null) {
+			this.addSetParameterInfo(buffer, "Criteria parameters:",  criteriaSet.getParameters());
+		}
+		
+		if (etalon != null) {
+			this.addSetParameterInfo(buffer, "Etalon parameters:",  etalon.getParameters());			
+		}
+
+		return buffer.toString();
 	}
 
 	public boolean isEditable(final String key) {
