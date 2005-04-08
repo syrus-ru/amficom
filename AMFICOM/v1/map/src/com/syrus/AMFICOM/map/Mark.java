@@ -1,26 +1,12 @@
-/**
- * $Id: Mark.java,v 1.29 2005/04/08 09:09:29 arseniy Exp $
+/*-
+ * $Id: Mark.java,v 1.30 2005/04/08 09:24:33 bass Exp $
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
+ * Copyright ї 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.map;
-
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Set;
-
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -37,6 +23,17 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.Mark_Transferable;
 
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Set;
+
+import org.omg.CORBA.portable.IDLEntity;
+
 /**
  * Метка на линии на топологической схеме. Метка частично характеризуется 
  * абстрактным узлом, одняко привязан к некоторой дистанции на линии и, 
@@ -44,8 +41,8 @@ import com.syrus.AMFICOM.map.corba.Mark_Transferable;
  * в связи с чем методы класса {@link AbstractNode}, работающие с линиями и 
  * фрагментами линий, переопределены и бросают 
  * <code>{@link UnsupportedOperationException}</code>.
- * @author $Author: arseniy $
- * @version $Revision: 1.29 $, $Date: 2005/04/08 09:09:29 $
+ * @author $Author: bass $
+ * @version $Revision: 1.30 $, $Date: 2005/04/08 09:24:33 $
  * @module map_v1
  */
 public class Mark extends AbstractNode {
@@ -85,7 +82,7 @@ public class Mark extends AbstractNode {
 	protected transient NodeLink nodeLink;
 	protected transient AbstractNode startNode;
 
-	public Mark(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
+	Mark(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
 		MarkDatabase database = MapDatabaseContext.getMarkDatabase();
@@ -97,7 +94,7 @@ public class Mark extends AbstractNode {
 		}
 	}
 
-	public Mark(Mark_Transferable mt) throws CreateObjectException {
+	Mark(Mark_Transferable mt) throws CreateObjectException {
 		super(mt.header);
 		super.name = mt.name;
 		super.description = mt.description;
@@ -124,7 +121,7 @@ public class Mark extends AbstractNode {
 		}
 	}
 
-	protected Mark(final Identifier id,
+	Mark(final Identifier id,
 			final Identifier creatorId,
 			final long version,
 			final String name,

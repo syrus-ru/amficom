@@ -1,26 +1,12 @@
-/**
- * $Id: Map.java,v 1.29 2005/04/08 09:09:29 arseniy Exp $
+/*-
+ * $Id: Map.java,v 1.30 2005/04/08 09:24:33 bass Exp $
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
+ * Copyright ї 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.map;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -35,13 +21,24 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.Map_Transferable;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
+import org.omg.CORBA.portable.IDLEntity;
+
 /**
  * Топологическая схема, которая содержит в себе набор связанных друг с другом
  * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на 
  * линиях, коллекторов (объединяющих в себе линии).
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.29 $, $Date: 2005/04/08 09:09:29 $
+ * @author $Author: bass $
+ * @version $Revision: 1.30 $, $Date: 2005/04/08 09:24:33 $
  * @module map_v1
  * @todo make maps persistent 
  */
@@ -81,7 +78,7 @@ public class Map extends DomainMember {
 	protected transient Set allElements;
 	protected transient Set nodeElements;
 
-	public Map(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
+	Map(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
 		MapDatabase database = MapDatabaseContext.getMapDatabase();
@@ -93,11 +90,11 @@ public class Map extends DomainMember {
 		}
 	}
 
-	public Map(Map_Transferable mt) throws CreateObjectException {
+	Map(Map_Transferable mt) throws CreateObjectException {
 		this.fromTransferable(mt);
 	}
 
-	protected Map(final Identifier id, 
+	Map(final Identifier id, 
 				  final Identifier creatorId, 
 				  final long version,
 				  final Identifier domainId, 

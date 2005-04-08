@@ -1,26 +1,12 @@
-/**
- * $Id: PhysicalLink.java,v 1.45 2005/04/08 09:09:29 arseniy Exp $
+/*-
+ * $Id: PhysicalLink.java,v 1.46 2005/04/08 09:24:33 bass Exp $
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
+ * Copyright ї 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.map;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -43,6 +29,19 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.map.corba.PhysicalLink_Transferable;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+
+import org.omg.CORBA.portable.IDLEntity;
+
 /**
  * Линия топологический схемы. Линия имеет начальный и конечный узлы, 
  * внутренние топологические узлы (список не хранится явно) и состоит из
@@ -51,8 +50,8 @@ import com.syrus.AMFICOM.map.corba.PhysicalLink_Transferable;
  * Предуствновленными являются  два типа - 
  * тоннель (<code>{@link PhysicalLinkType#TUNNEL}</code>) 
  * и коллектор (<code>{@link PhysicalLinkType#COLLECTOR}</code>).
- * @author $Author: arseniy $
- * @version $Revision: 1.45 $, $Date: 2005/04/08 09:09:29 $
+ * @author $Author: bass $
+ * @version $Revision: 1.46 $, $Date: 2005/04/08 09:24:33 $
  * @module map_v1
  * @todo make binding.dimension persistent (just as bindingDimension for PhysicalLinkType)
  * @todo nodeLinks should be transient
@@ -110,7 +109,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	protected transient List sortedNodes = new LinkedList();
 	protected transient boolean nodeLinksSorted = false;
 
-	public PhysicalLink(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
+	PhysicalLink(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
 		PhysicalLinkDatabase database = MapDatabaseContext.getPhysicalLinkDatabase();
@@ -122,7 +121,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		}
 	}
 
-	public PhysicalLink(PhysicalLink_Transferable plt) throws CreateObjectException {
+	PhysicalLink(PhysicalLink_Transferable plt) throws CreateObjectException {
 		this.fromTransferable(plt);
 	}
 

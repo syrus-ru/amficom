@@ -1,24 +1,12 @@
-/**
- * $Id: NodeLink.java,v 1.32 2005/04/08 09:09:29 arseniy Exp $
+/*-
+ * $Id: NodeLink.java,v 1.33 2005/04/08 09:24:34 bass Exp $
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
+ * Copyright ї 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.map;
-
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -36,13 +24,22 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.NodeLink_Transferable;
 
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
+import org.omg.CORBA.portable.IDLEntity;
+
 /**
  * Фрагмент линии на топологической схеме. Фрагмент представляет собой линейный
  * отрезок, соединяющий два концевых узла ({@link AbstractNode}). Фрагменты 
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
- * @author $Author: arseniy $
- * @version $Revision: 1.32 $, $Date: 2005/04/08 09:09:29 $
+ * @author $Author: bass $
+ * @version $Revision: 1.33 $, $Date: 2005/04/08 09:24:34 $
  * @module map_v1
  */
 public class NodeLink extends StorableObject implements MapElement {
@@ -78,7 +75,7 @@ public class NodeLink extends StorableObject implements MapElement {
 	protected transient boolean removed = false;
 	protected transient boolean alarmState = false;
 
-	public NodeLink(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
+	NodeLink(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
 		NodeLinkDatabase database = MapDatabaseContext.getNodeLinkDatabase();
@@ -90,11 +87,11 @@ public class NodeLink extends StorableObject implements MapElement {
 		}
 	}
 
-	public NodeLink(NodeLink_Transferable nlt) throws CreateObjectException {
+	NodeLink(NodeLink_Transferable nlt) throws CreateObjectException {
 		this.fromTransferable(nlt);
 	}
 
-	protected NodeLink(final Identifier id,
+	NodeLink(final Identifier id,
 			final Identifier creatorId,
 			final long version,
 			final String name,

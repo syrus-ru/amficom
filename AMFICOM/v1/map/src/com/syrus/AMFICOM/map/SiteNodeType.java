@@ -1,23 +1,12 @@
-/**
- * $Id: SiteNodeType.java,v 1.23 2005/04/08 09:09:29 arseniy Exp $
+/*-
+ * $Id: SiteNodeType.java,v 1.24 2005/04/08 09:24:33 bass Exp $
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
+ * Copyright ї 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.map;
-
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -36,14 +25,22 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.SiteNodeType_Transferable;
 
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
+import org.omg.CORBA.portable.IDLEntity;
+
 /**
  * Тип сетевого узла топологической схемы. Существует несколько 
  * предустановленных  типов сетевых узлов, которые определяются полем 
  * {@link #codename}, соответствующим какому-либо значению {@link #WELL}, 
  * {@link #PIQUET}, {@link #ATS}, {@link #BUILDING}, {@link #UNBOUND}, 
  * {@link #CABLE_INLET}, {@link #TOWER}
- * @author $Author: arseniy $
- * @version $Revision: 1.23 $, $Date: 2005/04/08 09:09:29 $
+ * @author $Author: bass $
+ * @version $Revision: 1.24 $, $Date: 2005/04/08 09:24:33 $
  * @module map_v1
  */
 public class SiteNodeType extends StorableObjectType implements Characterizable {
@@ -75,7 +72,7 @@ public class SiteNodeType extends StorableObjectType implements Characterizable 
 	private String name;
 	private boolean topological;
 
-	public SiteNodeType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
+	SiteNodeType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
 		SiteNodeTypeDatabase database = MapDatabaseContext.getSiteNodeTypeDatabase();
@@ -87,11 +84,11 @@ public class SiteNodeType extends StorableObjectType implements Characterizable 
 		}
 	}
 
-	public SiteNodeType(SiteNodeType_Transferable sntt) throws CreateObjectException {
+	SiteNodeType(SiteNodeType_Transferable sntt) throws CreateObjectException {
 		this.fromTransferable(sntt);
 	}
 
-	protected SiteNodeType(final Identifier id,
+	SiteNodeType(final Identifier id,
 			final Identifier creatorId,
 			final long version,
 			final String codename,

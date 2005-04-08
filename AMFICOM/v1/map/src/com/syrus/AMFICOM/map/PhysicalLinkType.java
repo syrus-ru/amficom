@@ -1,21 +1,12 @@
-/**
- * $Id: PhysicalLinkType.java,v 1.27 2005/04/08 09:09:29 arseniy Exp $
+/*-
+ * $Id: PhysicalLinkType.java,v 1.28 2005/04/08 09:24:33 bass Exp $
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
+ * Copyright ї 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.map;
-
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -34,13 +25,21 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.PhysicalLinkType_Transferable;
 
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
+import org.omg.CORBA.portable.IDLEntity;
+
 /**
  * Тип линии топологической схемы. Существует несколько предустановленных 
  * типов линий, которые определяются полем {@link #codename}, соответствующим
  * какому-либо значению {@link #TUNNEL}, {@link #COLLECTOR}, {@link #INDOOR}, 
  * {@link #SUBMARINE}, {@link #OVERHEAD}, {@link #UNBOUND}
- * @author $Author: arseniy $
- * @version $Revision: 1.27 $, $Date: 2005/04/08 09:09:29 $
+ * @author $Author: bass $
+ * @version $Revision: 1.28 $, $Date: 2005/04/08 09:24:33 $
  * @module map_v1
  */
 public class PhysicalLinkType extends StorableObjectType implements Characterizable {
@@ -75,7 +74,7 @@ public class PhysicalLinkType extends StorableObjectType implements Characteriza
 	 */
 	private IntDimension 			bindingDimension;
 
-	public PhysicalLinkType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
+	PhysicalLinkType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
 		PhysicalLinkTypeDatabase database = MapDatabaseContext.getPhysicalLinkTypeDatabase();
@@ -87,11 +86,11 @@ public class PhysicalLinkType extends StorableObjectType implements Characteriza
 		}
 	}
 
-	public PhysicalLinkType(PhysicalLinkType_Transferable pltt) throws CreateObjectException {
+	PhysicalLinkType(PhysicalLinkType_Transferable pltt) throws CreateObjectException {
 		this.fromTransferable(pltt);
 	}
 
-	protected PhysicalLinkType(final Identifier id,
+	PhysicalLinkType(final Identifier id,
 			final Identifier creatorId,
 			final long version,
 			final String codename,

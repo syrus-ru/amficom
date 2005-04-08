@@ -1,24 +1,12 @@
-/**
- * $Id: TopologicalNode.java,v 1.27 2005/04/08 09:09:29 arseniy Exp $
+/*-
+ * $Id: TopologicalNode.java,v 1.28 2005/04/08 09:24:34 bass Exp $
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
+ * Copyright ї 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.map;
-
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -36,13 +24,22 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.TopologicalNode_Transferable;
 
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
+import org.omg.CORBA.portable.IDLEntity;
+
 /**
  * Топологический узел нв топологической схеме. Топологический узел может
  * быть концевым для линии и для фрагмента линии. В физическом смысле
  * топологический узел соответствует точке изгиба линии и не требует 
  * дополнительной описательной информации.
- * @author $Author: arseniy $
- * @version $Revision: 1.27 $, $Date: 2005/04/08 09:09:29 $
+ * @author $Author: bass $
+ * @version $Revision: 1.28 $, $Date: 2005/04/08 09:24:34 $
  * @module map_v1
  * @todo physicalLink should be transient
  */
@@ -75,7 +72,7 @@ public class TopologicalNode extends AbstractNode {
 	 */
 	private transient boolean canBind = false;
 
-	public TopologicalNode(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
+	TopologicalNode(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
 		TopologicalNodeDatabase database = MapDatabaseContext.getTopologicalNodeDatabase();
@@ -87,7 +84,7 @@ public class TopologicalNode extends AbstractNode {
 		}
 	}
 
-	public TopologicalNode(TopologicalNode_Transferable tnt) throws CreateObjectException {
+	TopologicalNode(TopologicalNode_Transferable tnt) throws CreateObjectException {
 		super(tnt.header);
 		super.name = tnt.name;
 		super.description = tnt.description;
@@ -107,7 +104,7 @@ public class TopologicalNode extends AbstractNode {
 		}
 	}
 
-	protected TopologicalNode(final Identifier id,
+	TopologicalNode(final Identifier id,
 			final Identifier creatorId,
 			final long version,
 			String name,
@@ -129,7 +126,7 @@ public class TopologicalNode extends AbstractNode {
 		this.characteristics = new HashSet();
 	}
 
-	protected TopologicalNode(final Identifier id,
+	TopologicalNode(final Identifier id,
 			final Identifier creatorId,
 			final long version,
 			String name,

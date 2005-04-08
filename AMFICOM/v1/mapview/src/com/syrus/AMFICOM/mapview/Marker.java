@@ -1,12 +1,9 @@
-/**
- * $Id: Marker.java,v 1.11 2005/04/06 16:06:35 krupenn Exp $
+/*-
+ * $Id: Marker.java,v 1.12 2005/04/08 09:26:53 bass Exp $
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
+ * Copyright ї 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.mapview;
@@ -17,7 +14,7 @@ import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LocalIdentifierGenerator;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.corba.*;
+import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
@@ -25,10 +22,12 @@ import com.syrus.AMFICOM.map.MapElementState;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.SiteNode;
 
-import java.util.*;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Set;
+
 import org.omg.CORBA.portable.IDLEntity;
 
 /**
@@ -52,9 +51,9 @@ import org.omg.CORBA.portable.IDLEntity;
  * 
  * 
  * 
- * @version $Revision: 1.11 $, $Date: 2005/04/06 16:06:35 $
+ * @version $Revision: 1.12 $, $Date: 2005/04/08 09:26:53 $
  * @module mapview_v1
- * @author $Author: krupenn $
+ * @author $Author: bass $
  */
 
 public class Marker extends AbstractNode

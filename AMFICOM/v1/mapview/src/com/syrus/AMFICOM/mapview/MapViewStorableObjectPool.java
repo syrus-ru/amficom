@@ -1,5 +1,5 @@
 /*
- * $Id: MapViewStorableObjectPool.java,v 1.8 2005/04/01 13:08:48 bob Exp $
+ * $Id: MapViewStorableObjectPool.java,v 1.9 2005/04/08 09:26:53 bass Exp $
  *
  * Copyright ? 2004 Syrus Systems.
  * ѕвиапр-жейпкаехмкл зепжф.
@@ -7,10 +7,6 @@
  */
 
 package com.syrus.AMFICOM.mapview;
-
-import java.util.Collections;
-import java.util.Hashtable;
-import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -23,9 +19,13 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Set;
+
 /**
- * @version $Revision: 1.8 $, $Date: 2005/04/01 13:08:48 $
- * @author $Author: bob $
+ * @version $Revision: 1.9 $, $Date: 2005/04/08 09:26:53 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -72,7 +72,7 @@ public final class MapViewStorableObjectPool extends StorableObjectPool {
 	public static void init(MapViewObjectLoader mvObjectLoader1, final int size) {
 		if (instance == null)
 			instance = new MapViewStorableObjectPool();
-		instance.objectPoolMap = Collections.synchronizedMap(new Hashtable(size));
+		instance.objectPoolMap = Collections.synchronizedMap(new HashMap(size));
 
 		mvObjectLoader = mvObjectLoader1;
 
@@ -85,7 +85,7 @@ public final class MapViewStorableObjectPool extends StorableObjectPool {
 		if (instance == null)
 			instance = new MapViewStorableObjectPool();
 
-		instance.objectPoolMap = Collections.synchronizedMap(new Hashtable(OBJECT_POOL_MAP_SIZE));
+		instance.objectPoolMap = Collections.synchronizedMap(new HashMap(OBJECT_POOL_MAP_SIZE));
 		mvObjectLoader = mvObjectLoader1;
 		instance.addObjectPool(ObjectEntities.MAPVIEW_ENTITY_CODE, MAPVIEW_OBJECT_POOL_SIZE);
 

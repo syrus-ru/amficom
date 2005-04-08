@@ -1,25 +1,12 @@
-/**
- * $Id: Collector.java,v 1.32 2005/04/08 09:09:29 arseniy Exp $
+/*-
+ * $Id: Collector.java,v 1.33 2005/04/08 09:24:33 bass Exp $
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
+ * Copyright ї 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.map;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -37,12 +24,22 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.Collector_Transferable;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
+import org.omg.CORBA.portable.IDLEntity;
+
 /**
  * Коллектор на топологической схеме, который характеризуется набором входящих
  * в него линий. Линии не обязаны быть связными.
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.32 $, $Date: 2005/04/08 09:09:29 $
+ * @author $Author: bass $
+ * @version $Revision: 1.33 $, $Date: 2005/04/08 09:24:33 $
  * @module map_v1
  */
 public class Collector extends StorableObject implements MapElement {
@@ -74,7 +71,7 @@ public class Collector extends StorableObject implements MapElement {
 	protected transient boolean removed = false;
 	protected transient boolean alarmState = false;
 
-	public Collector(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
+	Collector(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 		this.physicalLinks = new HashSet();
 		this.characteristics = new HashSet();
@@ -88,11 +85,11 @@ public class Collector extends StorableObject implements MapElement {
 		}
 	}
 
-	public Collector(Collector_Transferable ct) throws CreateObjectException {
+	Collector(Collector_Transferable ct) throws CreateObjectException {
 		this.fromTransferable(ct);
 	}
 
-	protected Collector(final Identifier id,
+	Collector(final Identifier id,
 			final Identifier creatorId,
 			final long version,
 			final String name,

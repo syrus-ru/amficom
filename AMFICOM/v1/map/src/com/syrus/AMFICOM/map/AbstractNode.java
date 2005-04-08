@@ -1,14 +1,18 @@
-/**
- * $Id: AbstractNode.java,v 1.18 2005/04/07 10:07:24 arseniy Exp $
+/*-
+ * $Id: AbstractNode.java,v 1.19 2005/04/08 09:24:33 bass Exp $
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
+ * Copyright ї 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.map;
+
+import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 
 import java.util.Collections;
 import java.util.Date;
@@ -18,19 +22,13 @@ import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
 
-import com.syrus.AMFICOM.general.Characteristic;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
-
 /**
  * Абстрактный класс, описывающий узловой элемент топологической схемы 
  * ({@link Map}). Узловой объект характеризуется наличием координат
  * ({@link #location}) и изображением ({@link #imageId}).
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.18 $, $Date: 2005/04/07 10:07:24 $
+ * @author $Author: bass $
+ * @version $Revision: 1.19 $, $Date: 2005/04/08 09:24:33 $
  * @module map_v1
  * @see SiteNode
  * @see TopologicalNode
@@ -83,33 +81,7 @@ public abstract class AbstractNode
 		this.characteristics = new HashSet();
 	}
 
-	/**
-	 * @deprecated use constructor with DoublePoint location
-	 * instead of pair longitude, latitude
-	 */
-	protected AbstractNode(Identifier id,
-			Date created,
-			Date modified,
-			Identifier creatorId,
-			Identifier modifierId,
-			long version,
-			String name,
-			String desription,
-			double longitude,
-			double latitude) {
-		this(
-			id,
-			created,
-			modified,
-			creatorId,
-			modifierId,
-			version,
-			name,
-			desription,
-			new DoublePoint(longitude, latitude));
-	}
-
-	protected AbstractNode(Identifier id,
+	AbstractNode(Identifier id,
 			Date created,
 			Date modified,
 			Identifier creatorId,
@@ -125,7 +97,7 @@ public abstract class AbstractNode
 		this.characteristics = new HashSet();
 	}
 
-	protected AbstractNode(StorableObject_Transferable transferable) throws CreateObjectException {
+	AbstractNode(StorableObject_Transferable transferable) throws CreateObjectException {
 		this.fromTransferable(transferable);
 	}
 

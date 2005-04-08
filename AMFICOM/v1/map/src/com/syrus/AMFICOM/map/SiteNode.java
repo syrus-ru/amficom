@@ -1,24 +1,12 @@
-/**
- * $Id: SiteNode.java,v 1.29 2005/04/08 09:09:29 arseniy Exp $
+/*-
+ * $Id: SiteNode.java,v 1.30 2005/04/08 09:24:33 bass Exp $
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
+ * Copyright ї 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.map;
-
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -43,6 +31,15 @@ import com.syrus.AMFICOM.resource.AbstractBitmapImageResource;
 import com.syrus.AMFICOM.resource.AbstractImageResource;
 import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
 
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
+import org.omg.CORBA.portable.IDLEntity;
+
 /**
  * Сетевой узел на топологической схеме. Характеризуется типом 
  * (<code>{@link SiteNodeType}</code>). 
@@ -55,8 +52,8 @@ import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
  * Дополнительно описывается полями
  * {@link #city}, {@link #street}, {@link #building} для поиска по 
  * географическим параметрам. 
- * @author $Author: arseniy $
- * @version $Revision: 1.29 $, $Date: 2005/04/08 09:09:29 $
+ * @author $Author: bass $
+ * @version $Revision: 1.30 $, $Date: 2005/04/08 09:24:33 $
  * @module map_v1
  */
 public class SiteNode extends AbstractNode implements TypedObject {
@@ -90,7 +87,7 @@ public class SiteNode extends AbstractNode implements TypedObject {
 	private String street;
 	private String building;
 
-	public SiteNode(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
+	SiteNode(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
 		SiteNodeDatabase database = MapDatabaseContext.getSiteNodeDatabase();
@@ -102,7 +99,7 @@ public class SiteNode extends AbstractNode implements TypedObject {
 		}
 	}
 
-	public SiteNode(SiteNode_Transferable snt) throws CreateObjectException {
+	SiteNode(SiteNode_Transferable snt) throws CreateObjectException {
 		super(snt.header);
 		super.name = snt.name;
 		super.description = snt.description;

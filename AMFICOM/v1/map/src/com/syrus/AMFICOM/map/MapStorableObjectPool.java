@@ -1,5 +1,5 @@
 /*
- * $Id: MapStorableObjectPool.java,v 1.10 2005/04/01 11:11:05 bob Exp $
+ * $Id: MapStorableObjectPool.java,v 1.11 2005/04/08 09:24:34 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,10 +7,6 @@
  */
 
 package com.syrus.AMFICOM.map;
-
-import java.util.Collections;
-import java.util.Hashtable;
-import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -23,9 +19,13 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Set;
+
 /**
- * @version $Revision: 1.10 $, $Date: 2005/04/01 11:11:05 $
- * @author $Author: bob $
+ * @version $Revision: 1.11 $, $Date: 2005/04/08 09:24:34 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -71,9 +71,10 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 		try {
 			clazz = Class.forName(cacheClass.getName());
 			instance = new MapStorableObjectPool(clazz);
-		} catch (ClassNotFoundException e) {
-			Log.errorMessage("Cache class '" + cacheClass.getName() + "' cannot be found, use default '"
-					+ ((clazz == null) ? "null" : clazz.getName()) + "'");
+		} catch (final ClassNotFoundException cnfe) {
+			Log.errorMessage("Cache class '" + cacheClass.getName() //$NON-NLS-1$
+					+ "' cannot be found, using default"); //$NON-NLS-1$
+			instance = new MapStorableObjectPool();
 		}
 		init(mObjectLoader1, size);
 	}
@@ -81,7 +82,7 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 	public static void init(MapObjectLoader mObjectLoader1, final int size) {
 		if (instance == null)
 			instance = new MapStorableObjectPool();
-		instance.objectPoolMap = Collections.synchronizedMap(new Hashtable(size));
+		instance.objectPoolMap = Collections.synchronizedMap(new HashMap(size));
 
 		mObjectLoader = mObjectLoader1;
 
@@ -102,7 +103,7 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 		if (instance == null)
 			instance = new MapStorableObjectPool();
 
-		instance.objectPoolMap = Collections.synchronizedMap(new Hashtable(OBJECT_POOL_MAP_SIZE));
+		instance.objectPoolMap = Collections.synchronizedMap(new HashMap(OBJECT_POOL_MAP_SIZE));
 		mObjectLoader = mObjectLoader1;
 
 		instance.addObjectPool(ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE, SITE_NODE_TYPE_OBJECT_POOL_SIZE);
