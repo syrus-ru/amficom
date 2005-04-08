@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsCondition.java,v 1.27 2005/04/04 13:07:04 bass Exp $
+ * $Id: LinkedIdsCondition.java,v 1.28 2005/04/08 08:51:01 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,19 +8,20 @@
 
 package com.syrus.AMFICOM.general;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-import org.omg.CORBA.portable.IDLEntity;
-
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.LinkedIdsCondition_Transferable;
 import com.syrus.util.Log;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+
+import org.omg.CORBA.portable.IDLEntity;
 
 /**
  * If one needs to write a implementation for <code>LinkedIdsCondition</code>
@@ -66,7 +67,7 @@ import com.syrus.util.Log;
  * </ul>
  * 
  * @author $Author: bass $
- * @version $Revision: 1.27 $, $Date: 2005/04/04 13:07:04 $
+ * @version $Revision: 1.28 $, $Date: 2005/04/08 08:51:01 $
  * @module general_v1
  */
 public class LinkedIdsCondition implements StorableObjectCondition {
@@ -381,7 +382,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 	}
 
 	protected Map sort(Set linkIds) {
-		Map codeIdsMap = new Hashtable();
+		Map codeIdsMap = new HashMap();
 		for (Iterator it = linkIds.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			short code = id.getMajor();

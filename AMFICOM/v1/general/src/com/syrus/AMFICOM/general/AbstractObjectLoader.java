@@ -1,3 +1,11 @@
+/*-
+ * $Id: AbstractObjectLoader.java,v 1.3 2005/04/08 08:51:01 bass Exp $
+ * 
+ * Copyright © 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
 package com.syrus.AMFICOM.general;
 
 import java.util.HashSet;
@@ -6,22 +14,14 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
-/*
- * $Id: AbstractObjectLoader.java,v 1.2 2005/04/05 10:29:54 arseniy Exp $
- * 
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
- */
-
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/05 10:29:54 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/04/08 08:51:01 $
+ * @author $Author: bass $
  * @module general_v1
  */
 public abstract class AbstractObjectLoader {
 
-	protected Set retrieveFromDatabase(final StorableObjectDatabase database, final Set ids) throws RetrieveObjectException {
+	protected final Set retrieveFromDatabase(final StorableObjectDatabase database, final Set ids) throws RetrieveObjectException {
 		try {
 			return database.retrieveByIdsByCondition(ids, null);
 		}
@@ -31,7 +31,7 @@ public abstract class AbstractObjectLoader {
 		}
 	}
 
-	protected Set retrieveFromDatabaseButIdsByCondition(final StorableObjectDatabase database,
+	protected final Set retrieveFromDatabaseButIdsByCondition(final StorableObjectDatabase database,
 			final Set ids,
 			final StorableObjectCondition condition)
 			throws RetrieveObjectException {
@@ -44,7 +44,7 @@ public abstract class AbstractObjectLoader {
 		}
 	}
 
-	protected Identifier_Transferable[] createLoadIdsTransferable(final Set ids, final Set butObjects) throws IllegalDataException {
+	protected final Identifier_Transferable[] createLoadIdsTransferable(final Set ids, final Set butObjects) throws IllegalDataException {
 		Identifier id;
 		Set loadIds = new HashSet(ids);
 		for (Iterator it = butObjects.iterator(); it.hasNext();) {
@@ -55,7 +55,7 @@ public abstract class AbstractObjectLoader {
 		return Identifier.createTransferables(loadIds);
 	}
 
-	protected Identifier_Transferable[] createLoadButIdsTransferable(final Set ids, final Set alsoButObjects)
+	protected final Identifier_Transferable[] createLoadButIdsTransferable(final Set ids, final Set alsoButObjects)
 			throws IllegalDataException {
 		Identifier id;
 		Set loadButIds = new HashSet(ids);

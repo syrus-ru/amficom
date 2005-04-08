@@ -1,5 +1,5 @@
 /*
- * $Id: GeneralStorableObjectPool.java,v 1.14 2005/04/01 06:34:57 bob Exp $
+ * $Id: GeneralStorableObjectPool.java,v 1.15 2005/04/08 08:51:01 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,15 +8,15 @@
 
 package com.syrus.AMFICOM.general;
 
-import java.util.Collections;
-import java.util.Hashtable;
-import java.util.Set;
-
 import com.syrus.util.Log;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Set;
+
 /**
- * @version $Revision: 1.14 $, $Date: 2005/04/01 06:34:57 $
- * @author $Author: bob $
+ * @version $Revision: 1.15 $, $Date: 2005/04/08 08:51:01 $
+ * @author $Author: bass $
  * @module general_v1
  */
 
@@ -44,7 +44,7 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 		if (instance == null)
 			instance = new GeneralStorableObjectPool();
 
-		instance.objectPoolMap = Collections.synchronizedMap(new Hashtable(OBJECT_POOL_MAP_SIZE));
+		instance.objectPoolMap = Collections.synchronizedMap(new HashMap(OBJECT_POOL_MAP_SIZE));
 
 		gObjectLoader = gObjectLoader1;
 
@@ -59,7 +59,7 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 		if (instance == null)
 			instance = new GeneralStorableObjectPool();
 
-		instance.objectPoolMap = Collections.synchronizedMap(new Hashtable(OBJECT_POOL_MAP_SIZE));
+		instance.objectPoolMap = Collections.synchronizedMap(new HashMap(OBJECT_POOL_MAP_SIZE));
 
 		gObjectLoader = gObjectLoader1;
 

@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.71 2005/04/01 07:57:28 bob Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.72 2005/04/08 08:52:59 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,10 +7,6 @@
  */
 
 package com.syrus.AMFICOM.configuration;
-
-import java.util.Collections;
-import java.util.Hashtable;
-import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -23,9 +19,13 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Set;
+
 /**
- * @version $Revision: 1.71 $, $Date: 2005/04/01 07:57:28 $
- * @author $Author: bob $
+ * @version $Revision: 1.72 $, $Date: 2005/04/08 08:52:59 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
@@ -66,7 +66,7 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 		if (instance == null)
 			instance = new ConfigurationStorableObjectPool();
 
-		instance.objectPoolMap = Collections.synchronizedMap(new Hashtable(OBJECT_POOL_MAP_SIZE));
+		instance.objectPoolMap = Collections.synchronizedMap(new HashMap(OBJECT_POOL_MAP_SIZE));
 
 		cObjectLoader = cObjectLoader1;
 
@@ -93,7 +93,7 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 		if (instance == null)
 			instance = new ConfigurationStorableObjectPool();
 
-		instance.objectPoolMap = Collections.synchronizedMap(new Hashtable(OBJECT_POOL_MAP_SIZE));
+		instance.objectPoolMap = Collections.synchronizedMap(new HashMap(OBJECT_POOL_MAP_SIZE));
 
 		cObjectLoader = cObjectLoader1;
 

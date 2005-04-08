@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractCloneableStorableObject.java,v 1.2 2005/04/01 14:12:32 bob Exp $
+ * $Id: AbstractCloneableStorableObject.java,v 1.3 2005/04/08 08:51:01 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,8 +13,8 @@ import java.util.Date;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.2 $, $Date: 2005/04/01 14:12:32 $
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/04/08 08:51:01 $
  * @module general_v1
  */
 public abstract class AbstractCloneableStorableObject extends StorableObject implements CloneableStorableObject {
@@ -43,7 +43,7 @@ public abstract class AbstractCloneableStorableObject extends StorableObject imp
 	}
 
 	protected AbstractCloneableStorableObject() {
-		super();
+		// super();
 	}
 
 	/**

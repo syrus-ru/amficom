@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.63 2005/04/06 13:50:34 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.64 2005/04/08 08:51:01 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,8 +23,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.63 $, $Date: 2005/04/06 13:50:34 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.64 $, $Date: 2005/04/08 08:51:01 $
+ * @author $Author: bass $
  * @module general_v1
  */
 public abstract class StorableObjectPool {
@@ -683,53 +683,6 @@ public abstract class StorableObjectPool {
 	protected abstract Set refreshStorableObjects(final Set storableObjects) throws ApplicationException;
 
 	/**
-	 * This method should only be invoked during assertion evaluation, and never
-	 * in a release system.
-	 * 
-	 * @param storableObjects
-	 *            non-null set of pure java storable objects (empty set is
-	 *            ok).
-	 * @return <code>true</code> if all entities within this set are of the
-	 *         same type, <code>false</code> otherwise.
-	 */
-	protected boolean hasSingleTypeEntities(final Set storableObjects) {
-		/*
-		 * Nested assertions are ok.
-		 */
-		assert storableObjects != null;
-
-		if (storableObjects.size() == 0)
-			return true;
-
-		final Iterator storableObjectIterator = storableObjects.iterator();
-		final short entityCode = ((StorableObject) storableObjectIterator.next()).getId().getMajor();
-		while (storableObjectIterator.hasNext())
-			if (entityCode != ((StorableObject) storableObjectIterator.next()).getId().getMajor())
-				return false;
-		return true;
-	}
-
-	/**
-	 * Code that invokes this method, should preliminarily call
-	 * {@link #hasSingleTypeEntities(Set)} with the same parameter and
-	 * ensure that return value is <code>true</code>, e.g.:
-	 * 
-	 * <pre>
-	 * assert hasSingleTypeEntities(storableObjects) : &quot;Storable objects of different type are saved separately...&quot;;
-	 * </pre>
-	 * 
-	 * @param storableObjects
-	 *            non-null, non-empty set of pure java storable objects of the
-	 *            same type.
-	 * @return common type of storable objects supplied as <code>short</code>.
-	 */
-	protected short getEntityCodeOfStorableObjects(final Set storableObjects) {
-		assert storableObjects.size() >= 1;
-
-		return ((StorableObject) storableObjects.iterator().next()).getId().getMajor();
-	}
-
-	/**
 	 * @param entityCode
 	 * @param storableObjects
 	 * @param force
@@ -739,7 +692,7 @@ public abstract class StorableObjectPool {
 	 * @throws IllegalDataException
 	 * @todo Change signature of this method to the one without
 	 *       <code>entityCode</code>, rewrite overriding classes in order for
-	 *       them to use {@link #getEntityCodeOfStorableObjects(Set)}.
+	 *       them to use {@link StorableObject#getEntityCodeOfStorableObjects(Set)}.
 	 */
 	protected abstract void saveStorableObjects(final short entityCode,
 												final Set storableObjects,

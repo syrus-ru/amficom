@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.75 2005/03/31 16:27:21 bob Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.76 2005/04/08 08:55:06 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,9 +7,6 @@
  */
 
 package com.syrus.AMFICOM.measurement;
-
-import java.util.Collections;
-import java.util.Hashtable;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -22,9 +19,12 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
+import java.util.Collections;
+import java.util.HashMap;
+
 /**
- * @version $Revision: 1.75 $, $Date: 2005/03/31 16:27:21 $
- * @author $Author: bob $
+ * @version $Revision: 1.76 $, $Date: 2005/04/08 08:55:06 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -63,7 +63,7 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 		if (instance == null)
 			instance = new MeasurementStorableObjectPool();
 
-		instance.objectPoolMap = Collections.synchronizedMap(new Hashtable(OBJECT_POOL_MAP_SIZE));
+		instance.objectPoolMap = Collections.synchronizedMap(new HashMap(OBJECT_POOL_MAP_SIZE));
 
 		mObjectLoader = mObjectLoader1;
 
@@ -89,7 +89,7 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 		if (instance == null)
 			instance = new MeasurementStorableObjectPool();
 
-		instance.objectPoolMap = Collections.synchronizedMap(new Hashtable(OBJECT_POOL_MAP_SIZE));
+		instance.objectPoolMap = Collections.synchronizedMap(new HashMap(OBJECT_POOL_MAP_SIZE));
 
 		mObjectLoader = mObjectLoader1;
 

@@ -1,5 +1,5 @@
 /*
- * $Id: AdministrationStorableObjectPool.java,v 1.14 2005/04/01 06:51:54 bob Exp $
+ * $Id: AdministrationStorableObjectPool.java,v 1.15 2005/04/08 08:52:08 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,10 +7,6 @@
  */
 
 package com.syrus.AMFICOM.administration;
-
-import java.util.Collections;
-import java.util.Hashtable;
-import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -23,9 +19,13 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Set;
+
 /**
- * @version $Revision: 1.14 $, $Date: 2005/04/01 06:51:54 $
- * @author $Author: bob $
+ * @version $Revision: 1.15 $, $Date: 2005/04/08 08:52:08 $
+ * @author $Author: bass $
  * @module administration_v1
  */
 
@@ -55,7 +55,7 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 		if (instance == null)
 			instance = new AdministrationStorableObjectPool();
 
-		instance.objectPoolMap = Collections.synchronizedMap(new Hashtable(OBJECT_POOL_MAP_SIZE));
+		instance.objectPoolMap = Collections.synchronizedMap(new HashMap(OBJECT_POOL_MAP_SIZE));
 
 		aObjectLoader = aObjectLoader1;
 
@@ -72,7 +72,7 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 		if (instance == null)
 			instance = new AdministrationStorableObjectPool();
 
-		instance.objectPoolMap = Collections.synchronizedMap(new Hashtable(OBJECT_POOL_MAP_SIZE));
+		instance.objectPoolMap = Collections.synchronizedMap(new HashMap(OBJECT_POOL_MAP_SIZE));
 
 		aObjectLoader = aObjectLoader1;
 

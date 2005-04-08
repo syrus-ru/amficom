@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.49 2005/04/07 16:01:56 bob Exp $
+ * $Id: StorableObject.java,v 1.50 2005/04/08 08:51:01 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,15 +8,16 @@
 
 package com.syrus.AMFICOM.general;
 
-import java.io.Serializable;
-import java.util.Date;
-import java.util.Set;
-
-import org.omg.CORBA.portable.IDLEntity;
-
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.util.Log;
+
+import java.io.Serializable;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.Set;
+
+import org.omg.CORBA.portable.IDLEntity;
 
 /**
  * {@link Object#equals(Object)}and {@link Object#hashCode()} methods are
@@ -26,8 +27,8 @@ import com.syrus.util.Log;
  * there can only be a single inctance of <code>StorableObject</code> with the
  * same identifier, comparison of object references (in Java terms) is enough.
  *
- * @author $Author: bob $
- * @version $Revision: 1.49 $, $Date: 2005/04/07 16:01:56 $
+ * @author $Author: bass $
+ * @version $Revision: 1.50 $, $Date: 2005/04/08 08:51:01 $
  * @module general_v1
  */
 public abstract class StorableObject implements Identifiable, TransferableObject, Serializable {
@@ -276,5 +277,51 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 		clone.version = 0L;
 		clone.changed = true;
 		return clone;
+	}
+
+	/**
+	 * This method should only be invoked during assertion evaluation, and
+	 * never in a release system.
+	 * 
+	 * @param storableObjects non-null set of storable objects (empty set is
+	 *        ok).
+	 * @return <code>true</code> if all entities within this set are of
+	 *         the same type, <code>false</code> otherwise.
+	 */
+	public static boolean hasSingleTypeEntities(final Set storableObjects) {
+		/*
+		 * Nested assertions are ok.
+		 */
+		assert storableObjects != null;
+
+		if (storableObjects.isEmpty())
+			return true;
+
+		final Iterator storableObjectIterator = storableObjects.iterator();
+		final short entityCode = ((StorableObject) storableObjectIterator.next()).getId().getMajor();
+		while (storableObjectIterator.hasNext())
+			if (entityCode != ((StorableObject) storableObjectIterator.next()).getId().getMajor())
+				return false;
+		return true;
+	}
+
+	/**
+	 * Code that invokes this method, should preliminarily call
+	 * {@link #hasSingleTypeEntities(Set)}with the same parameter and
+	 * ensure that return value is <code>true</code>, e.g.:
+	 * 
+	 * <pre>
+	 * assert hasSingleTypeEntities(storableObjects) : &quot;Storable objects of different type should be treated separately...&quot;;
+	 * </pre>
+	 * 
+	 * @param storableObjects non-null, non-empty set of storable objects of
+	 *        the same type.
+	 * @return common type of storable objects supplied as
+	 *         <code>short</code>.
+	 */
+	public static short getEntityCodeOfStorableObjects(final Set storableObjects) {
+		assert storableObjects != null && !storableObjects.isEmpty();
+
+		return ((StorableObject) storableObjects.iterator().next()).getId().getMajor();
 	}
 }
