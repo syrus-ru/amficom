@@ -1,5 +1,5 @@
 /*
- * $Id: Characteristic.java,v 1.20 2005/04/04 16:04:41 bass Exp $
+ * $Id: Characteristic.java,v 1.21 2005/04/08 08:05:43 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,8 +19,8 @@ import com.syrus.AMFICOM.general.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/04/04 16:04:41 $
- * @author $Author: bass $
+ * @version $Revision: 1.21 $, $Date: 2005/04/08 08:05:43 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -36,14 +36,12 @@ public class Characteristic extends StorableObject implements TypedObject {
 	private boolean editable;
 	private boolean visible;
 
-	private StorableObjectDatabase characteristicDatabase;
-
 	public Characteristic(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
-		this.characteristicDatabase = GeneralDatabaseContext.getCharacteristicDatabase();
+		CharacteristicDatabase database = GeneralDatabaseContext.getCharacteristicDatabase();
 		try {
-			this.characteristicDatabase.retrieve(this);
+			database.retrieve(this);
 		}
 		catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
@@ -51,7 +49,6 @@ public class Characteristic extends StorableObject implements TypedObject {
 	}
 
 	public Characteristic(Characteristic_Transferable ct) throws CreateObjectException {
-		this.characteristicDatabase = GeneralDatabaseContext.getCharacteristicDatabase();
 		this.fromTransferable(ct);
 	}
 
@@ -81,8 +78,6 @@ public class Characteristic extends StorableObject implements TypedObject {
 
 				this.editable = editable;
 				this.visible = visible;
-
-				this.characteristicDatabase = GeneralDatabaseContext.getCharacteristicDatabase();
 	}
 
 	/**

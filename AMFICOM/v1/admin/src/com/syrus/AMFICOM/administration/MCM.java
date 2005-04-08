@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.15 2005/04/04 16:02:30 bass Exp $
+ * $Id: MCM.java,v 1.16 2005/04/08 08:10:41 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,13 +29,12 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/04/04 16:02:30 $
- * @author $Author: bass $
+ * @version $Revision: 1.16 $, $Date: 2005/04/08 08:10:41 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 
@@ -50,15 +49,14 @@ public class MCM extends DomainMember implements Characterizable {
 
 	private Set characteristics;
 
-	private StorableObjectDatabase mcmDatabase;
-
 	public MCM(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
 		this.characteristics = new HashSet();
-		this.mcmDatabase = AdministrationDatabaseContext.getMCMDatabase();
+
+		MCMDatabase database = AdministrationDatabaseContext.getMCMDatabase();
 		try {
-			this.mcmDatabase.retrieve(this);
+			database.retrieve(this);
 		}
 		catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
@@ -66,7 +64,6 @@ public class MCM extends DomainMember implements Characterizable {
 	}
 
 	public MCM(MCM_Transferable mt) throws CreateObjectException {
-		this.mcmDatabase = AdministrationDatabaseContext.getMCMDatabase();
 		this.fromTransferable(mt);		
 	}
 
@@ -93,8 +90,6 @@ public class MCM extends DomainMember implements Characterizable {
 		this.serverId = serverId;
 
 		this.characteristics = new HashSet();
-
-		this.mcmDatabase = AdministrationDatabaseContext.getMCMDatabase();
 	}
 
 	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {

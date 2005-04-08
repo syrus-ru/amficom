@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.16 2005/04/04 16:02:30 bass Exp $
+ * $Id: Domain.java,v 1.17 2005/04/08 08:10:41 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.administration;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/04/04 16:02:30 $
- * @author $Author: bass $
+ * @version $Revision: 1.17 $, $Date: 2005/04/08 08:10:41 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 
@@ -35,7 +35,6 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
@@ -47,15 +46,14 @@ public class Domain extends DomainMember implements Characterizable {
 
 	private Set characteristics;
 
-	private StorableObjectDatabase domainDatabase;
-
 	public Domain(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);	
-		
+
 		this.characteristics = new HashSet();
-		this.domainDatabase = AdministrationDatabaseContext.getDomainDatabase();
+
+		DomainDatabase database = AdministrationDatabaseContext.getDomainDatabase();
 		try {
-			this.domainDatabase.retrieve(this);
+			database.retrieve(this);
 		}
 		catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
@@ -63,7 +61,6 @@ public class Domain extends DomainMember implements Characterizable {
 	}
 
 	public Domain(Domain_Transferable dt) throws CreateObjectException {
-		this.domainDatabase = AdministrationDatabaseContext.getDomainDatabase();
 		this.fromTransferable(dt);
 	}
 
@@ -84,8 +81,6 @@ public class Domain extends DomainMember implements Characterizable {
 		this.description = description;
 
 		this.characteristics = new HashSet();
-
-		this.domainDatabase = AdministrationDatabaseContext.getDomainDatabase();
 	}
 
 	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {

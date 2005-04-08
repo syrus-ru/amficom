@@ -1,5 +1,5 @@
 /*
- * $Id: User.java,v 1.12 2005/04/04 16:02:31 bass Exp $
+ * $Id: User.java,v 1.13 2005/04/08 08:10:41 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,12 +25,11 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/04/04 16:02:31 $
- * @author $Author: bass $
+ * @version $Revision: 1.13 $, $Date: 2005/04/08 08:10:41 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 
@@ -42,14 +41,12 @@ public class User extends StorableObject {
 	private String name;
 	private String description;
 
-	private StorableObjectDatabase userDatabase;
-
 	public User(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
-		this.userDatabase = AdministrationDatabaseContext.getUserDatabase();
+		UserDatabase database = AdministrationDatabaseContext.getUserDatabase();
 		try {
-			this.userDatabase.retrieve(this);
+			database.retrieve(this);
 		}
 		catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
@@ -57,10 +54,10 @@ public class User extends StorableObject {
 	}
 
 	public User(User_Transferable ut) {
-		this.userDatabase = AdministrationDatabaseContext.getUserDatabase();
 		try {
 			this.fromTransferable(ut);
-		} catch (CreateObjectException e) {
+		}
+		catch (CreateObjectException e) {
 			Log.debugException(e, Log.WARNING);
 		}
 	}
@@ -82,8 +79,6 @@ public class User extends StorableObject {
 		this.sort = sort;
 		this.name = name;
 		this.description = description;
-
-		this.userDatabase = AdministrationDatabaseContext.getUserDatabase();
 	}
 
 	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {

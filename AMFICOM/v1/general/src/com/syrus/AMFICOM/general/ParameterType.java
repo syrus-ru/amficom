@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterType.java,v 1.14 2005/04/04 16:04:41 bass Exp $
+ * $Id: ParameterType.java,v 1.15 2005/04/08 08:05:43 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,8 +19,8 @@ import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/04/04 16:04:41 $
- * @author $Author: bass $
+ * @version $Revision: 1.15 $, $Date: 2005/04/08 08:05:43 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -30,14 +30,12 @@ public class ParameterType extends StorableObjectType {
 	private String name;
 	private int dataType;
 
-	private StorableObjectDatabase parameterTypeDatabase;
-
 	public ParameterType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.parameterTypeDatabase = GeneralDatabaseContext.getParameterTypeDatabase();
+		ParameterTypeDatabase database = GeneralDatabaseContext.getParameterTypeDatabase();
 		try {
-			this.parameterTypeDatabase.retrieve(this);
+			database.retrieve(this);
 		}
 		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
@@ -47,10 +45,11 @@ public class ParameterType extends StorableObjectType {
 	public ParameterType(ParameterType_Transferable ptt) {
 		try {
 			this.fromTransferable(ptt);
-		} catch (CreateObjectException e) {
+		}
+		catch (CreateObjectException e) {
+			// Never
 			Log.debugException(e, Log.WARNING);
 		}
-		this.parameterTypeDatabase = GeneralDatabaseContext.getParameterTypeDatabase();
 	}
 
 	protected ParameterType(Identifier id,
@@ -70,8 +69,6 @@ public class ParameterType extends StorableObjectType {
 				description);
 		this.name = name;
 		this.dataType = dataType;
-
-		this.parameterTypeDatabase = GeneralDatabaseContext.getParameterTypeDatabase();
 	}
 
 	/**

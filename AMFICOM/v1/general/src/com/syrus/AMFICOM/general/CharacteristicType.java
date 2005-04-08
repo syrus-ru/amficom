@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicType.java,v 1.17 2005/04/04 16:04:41 bass Exp $
+ * $Id: CharacteristicType.java,v 1.18 2005/04/08 08:05:43 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,8 +20,8 @@ import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/04/04 16:04:41 $
- * @author $Author: bass $
+ * @version $Revision: 1.18 $, $Date: 2005/04/08 08:05:43 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -31,14 +31,12 @@ public class CharacteristicType extends StorableObjectType {
 	private int dataType;
 	private int sort;
 
-	private StorableObjectDatabase characteristicTypeDatabase;
-
 	public CharacteristicType(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
-		this.characteristicTypeDatabase = GeneralDatabaseContext.getCharacteristicTypeDatabase();
+		CharacteristicTypeDatabase database = GeneralDatabaseContext.getCharacteristicTypeDatabase();
 		try {
-			this.characteristicTypeDatabase.retrieve(this);
+			database.retrieve(this);
 		}
 		catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
@@ -46,11 +44,11 @@ public class CharacteristicType extends StorableObjectType {
 	}
 
 	public CharacteristicType(CharacteristicType_Transferable ctt) {
-		this.characteristicTypeDatabase = GeneralDatabaseContext.getCharacteristicTypeDatabase();
-		
 		try {
 			this.fromTransferable(ctt);
-		} catch (CreateObjectException e) {
+		}
+		catch (CreateObjectException e) {
+			// Never
 			Log.debugException(e, Log.WARNING);
 		}
 	}
@@ -72,8 +70,6 @@ public class CharacteristicType extends StorableObjectType {
 							description);
 		this.dataType = dataType;
 		this.sort = sort;
-
-		this.characteristicTypeDatabase = GeneralDatabaseContext.getCharacteristicTypeDatabase();
 	}
 	
 	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
