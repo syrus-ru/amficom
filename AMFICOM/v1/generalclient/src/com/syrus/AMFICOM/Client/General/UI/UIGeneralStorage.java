@@ -12,13 +12,15 @@ import java.awt.Font;
 import javax.swing.JComponent;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/04/08 07:58:06 $
+ * @version $Revision: 1.4 $, $Date: 2005/04/08 11:30:57 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module generalclient_v1
  */
 public final class UIGeneralStorage {
 
+	private static final double SCALE_FACTOR = 1.25;  
+	
 	public static final Font	DIALOG_FONT	= new Font("Dialog", Font.PLAIN, 11);
 	public static final Font	SMALL_FONT	= new Font("Dialog", Font.PLAIN, 10);
 
@@ -30,10 +32,10 @@ public final class UIGeneralStorage {
 	public static void fixHorizontalSize(JComponent component) {
 		Dimension minimumSize = component.getMinimumSize();
 		Dimension maximumSize = component.getMaximumSize();
-		maximumSize.width = minimumSize.width;
+		maximumSize.width = (int) (SCALE_FACTOR * minimumSize.width);
 		component.setMaximumSize(maximumSize);
 		Dimension preferredSize = component.getPreferredSize();
-		preferredSize.width = minimumSize.width;
+		preferredSize.width = (int) (SCALE_FACTOR * minimumSize.width);
 		component.setPreferredSize(preferredSize);
 	}
 }
