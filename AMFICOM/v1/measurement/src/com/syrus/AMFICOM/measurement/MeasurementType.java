@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementType.java,v 1.59 2005/04/04 16:06:27 bass Exp $
+ * $Id: MeasurementType.java,v 1.60 2005/04/08 08:47:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,14 +28,13 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.59 $, $Date: 2005/04/04 16:06:27 $
- * @author $Author: bass $
+ * @version $Revision: 1.60 $, $Date: 2005/04/08 08:47:01 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -51,8 +50,6 @@ public class MeasurementType extends ActionType {
 	private java.util.Set outParameterTypes;
 	private java.util.Set measurementPortTypes;
 
-	private StorableObjectDatabase	measurementTypeDatabase;
-
 	public MeasurementType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
@@ -60,9 +57,9 @@ public class MeasurementType extends ActionType {
 		this.outParameterTypes = new HashSet();
 		this.measurementPortTypes = new HashSet();
 
-		this.measurementTypeDatabase = MeasurementDatabaseContext.getMeasurementTypeDatabase();
+		MeasurementTypeDatabase database = MeasurementDatabaseContext.getMeasurementTypeDatabase();
 		try {
-			this.measurementTypeDatabase.retrieve(this);
+			database.retrieve(this);
 		}
 		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
@@ -82,7 +79,6 @@ public class MeasurementType extends ActionType {
 	}
 
 	public MeasurementType(MeasurementType_Transferable mtt) throws CreateObjectException {
-		this.measurementTypeDatabase = MeasurementDatabaseContext.getMeasurementTypeDatabase();
 		this.fromTransferable(mtt);
 	}
 
@@ -111,8 +107,6 @@ public class MeasurementType extends ActionType {
 
 		this.measurementPortTypes = new HashSet();
 		this.setMeasurementPortTypes0(measurementPortTypes);
-
-		this.measurementTypeDatabase = MeasurementDatabaseContext.getMeasurementTypeDatabase();
 	}
 
 	/**

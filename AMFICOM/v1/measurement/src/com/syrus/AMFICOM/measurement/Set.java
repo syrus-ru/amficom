@@ -1,5 +1,5 @@
 /*
- * $Id: Set.java,v 1.56 2005/04/06 15:01:32 arseniy Exp $
+ * $Id: Set.java,v 1.57 2005/04/08 08:47:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,6 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.AMFICOM.measurement.corba.SetSort;
@@ -33,7 +32,7 @@ import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.56 $, $Date: 2005/04/06 15:01:32 $
+ * @version $Revision: 1.57 $, $Date: 2005/04/08 08:47:02 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -47,9 +46,8 @@ public class Set extends StorableObject {
 	private int sort;
 	private String description;
 	private SetParameter[] parameters;
-	private java.util.Set monitoredElementIds;
 
-	private StorableObjectDatabase setDatabase;
+	private java.util.Set monitoredElementIds;
 
 	protected static final String ID_MONITORED_ELEMENTS_IDS = "monitoredElementId"+KEY_VALUE_SEPERATOR;
 	protected static final String ID_SORT = "sort"+KEY_VALUE_SEPERATOR;
@@ -60,9 +58,9 @@ public class Set extends StorableObject {
 
 		this.monitoredElementIds = new HashSet();
 		
-		this.setDatabase = MeasurementDatabaseContext.getSetDatabase();
+		SetDatabase database = MeasurementDatabaseContext.getSetDatabase();
 		try {
-			this.setDatabase.retrieve(this);
+			database.retrieve(this);
 		}
 		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
@@ -70,9 +68,7 @@ public class Set extends StorableObject {
 	}
 
 	public Set(Set_Transferable st) throws CreateObjectException {
-		this.setDatabase = MeasurementDatabaseContext.getSetDatabase();
 		this.fromTransferable(st);
-		
 	}	
 	
 	protected Set(Identifier id,
@@ -91,10 +87,9 @@ public class Set extends StorableObject {
 		this.sort = sort;
 		this.description = description;
 		this.parameters = parameters;
+
 		this.monitoredElementIds = new HashSet();
 		this.setMonitoredElementIds0(monitoredElementIds);
-		
-		this.setDatabase = MeasurementDatabaseContext.getSetDatabase();
 	}
 	
 	/**

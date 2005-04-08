@@ -1,5 +1,5 @@
 /*
- * $Id: Analysis.java,v 1.50 2005/04/04 16:06:28 bass Exp $
+ * $Id: Analysis.java,v 1.51 2005/04/08 08:47:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,23 +13,22 @@ import java.util.HashSet;
 
 import org.omg.CORBA.portable.IDLEntity;
 
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.50 $, $Date: 2005/04/04 16:06:28 $
- * @author $Author: bass $
+ * @version $Revision: 1.51 $, $Date: 2005/04/08 08:47:01 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -42,14 +41,12 @@ public class Analysis extends Action {
 	private String name;
 	private Set criteriaSet;
 
-	private StorableObjectDatabase analysisDatabase;
-
 	public Analysis(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.analysisDatabase = MeasurementDatabaseContext.getAnalysisDatabase();
+		AnalysisDatabase database = MeasurementDatabaseContext.getAnalysisDatabase();
 		try {
-			this.analysisDatabase.retrieve(this);
+			database.retrieve(this);
 		}
 		catch (IllegalDataException ide){
 			throw new RetrieveObjectException(ide.getMessage(), ide);
@@ -57,7 +54,6 @@ public class Analysis extends Action {
 	}
 
   public Analysis(Analysis_Transferable at) throws CreateObjectException {
-		this.analysisDatabase = MeasurementDatabaseContext.getAnalysisDatabase();
 		this.fromTransferable(at);
 	}
 
@@ -81,9 +77,6 @@ public class Analysis extends Action {
 
 		this.name = name;
 		this.criteriaSet = criteriaSet;
-
-		this.analysisDatabase = MeasurementDatabaseContext.getAnalysisDatabase();
-
 	}
 	
 	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {

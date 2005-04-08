@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisType.java,v 1.58 2005/04/04 16:06:27 bass Exp $
+ * $Id: AnalysisType.java,v 1.59 2005/04/08 08:47:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,14 +26,13 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.58 $, $Date: 2005/04/04 16:06:27 $
- * @author $Author: bass $
+ * @version $Revision: 1.59 $, $Date: 2005/04/08 08:47:01 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -52,8 +51,6 @@ public class AnalysisType extends ActionType {
 
 	private java.util.Set measurementTypeIds;
 
-	private StorableObjectDatabase	analysisTypeDatabase;	
-
 	public AnalysisType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
@@ -64,9 +61,9 @@ public class AnalysisType extends ActionType {
 
 		this.measurementTypeIds = new HashSet();
 
-		this.analysisTypeDatabase = MeasurementDatabaseContext.getAnalysisTypeDatabase();
+		AnalysisTypeDatabase database = MeasurementDatabaseContext.getAnalysisTypeDatabase();
 		try {
-			this.analysisTypeDatabase.retrieve(this);
+			database.retrieve(this);
 		}
 		catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
@@ -88,7 +85,6 @@ public class AnalysisType extends ActionType {
 	}
 
 	public AnalysisType(AnalysisType_Transferable att) throws CreateObjectException {
-		this.analysisTypeDatabase = MeasurementDatabaseContext.getAnalysisTypeDatabase();
 		this.fromTransferable(att);
 	}
 
@@ -126,8 +122,6 @@ public class AnalysisType extends ActionType {
 
 		this.measurementTypeIds = new HashSet();
 		this.setMeasurementTypeIds0(measurementTypeIds);
-
-		this.analysisTypeDatabase = MeasurementDatabaseContext.getAnalysisTypeDatabase();
 	}
 	
 	/**

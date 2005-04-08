@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.32 2005/04/04 16:06:27 bass Exp $
+ * $Id: Modeling.java,v 1.33 2005/04/08 08:47:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,8 +8,8 @@
 
 package com.syrus.AMFICOM.measurement;
 
-import java.util.Date;
 import java.util.Collections;
+import java.util.Date;
 
 import org.omg.CORBA.portable.IDLEntity;
 
@@ -22,14 +22,13 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Modeling_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/04/04 16:06:27 $
- * @author $Author: bass $
+ * @version $Revision: 1.33 $, $Date: 2005/04/08 08:47:02 $
+ * @author $Author: arseniy $
  * @author arseniy
  * @module measurement_v1
  */
@@ -42,15 +41,13 @@ public class Modeling extends Action {
 
 	private String name;
 	private Set argumentSet;
-	
-	private StorableObjectDatabase modelingDatabase;
 
 	public Modeling(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.modelingDatabase = MeasurementDatabaseContext.getModelingDatabase();
+		ModelingDatabase database = MeasurementDatabaseContext.getModelingDatabase();
 		try {
-			this.modelingDatabase.retrieve(this);
+			database.retrieve(this);
 		}
 		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
@@ -58,7 +55,6 @@ public class Modeling extends Action {
 	}
 
 	public Modeling(Modeling_Transferable mt) throws CreateObjectException {
-		this.modelingDatabase = MeasurementDatabaseContext.getModelingDatabase();
 		this.fromTransferable(mt);
 	}
 
@@ -80,9 +76,6 @@ public class Modeling extends Action {
 			null);
 		this.name = name;
 		this.argumentSet = argumentSet;
-
-		this.modelingDatabase = MeasurementDatabaseContext.getModelingDatabase();
-
 	}
 
 	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {

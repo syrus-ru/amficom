@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.102 2005/04/07 13:55:18 arseniy Exp $
+ * $Id: Test.java,v 1.103 2005/04/08 08:47:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,7 +44,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.102 $, $Date: 2005/04/07 13:55:18 $
+ * @version $Revision: 1.103 $, $Date: 2005/04/08 08:47:02 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -78,8 +78,6 @@ public class Test extends StorableObject {
 
 	private MeasurementSetup mainMeasurementSetup;
 
-	private StorableObjectDatabase	testDatabase;
-
 	private Identifier kisId;
 	private Identifier mcmId;
 
@@ -87,9 +85,9 @@ public class Test extends StorableObject {
 		super(id);
 		this.measurementSetupIds = new HashSet();
 
-		this.testDatabase = MeasurementDatabaseContext.getTestDatabase();
+		TestDatabase database = MeasurementDatabaseContext.getTestDatabase();
 		try {
-			this.testDatabase.retrieve(this);
+			database.retrieve(this);
 		}
 		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
@@ -120,8 +118,10 @@ public class Test extends StorableObject {
 		super.modifierId = measurementCreatorId;
 		this.numberOfMeasurements++;
 		super.changed = true;
+
+		TestDatabase database = MeasurementDatabaseContext.getTestDatabase();
 		try {
-			this.testDatabase.update(this, measurementCreatorId, StorableObjectDatabase.UPDATE_FORCE);
+			database.update(this, measurementCreatorId, StorableObjectDatabase.UPDATE_FORCE);
 		}
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae.getMessage(), ae);
@@ -166,8 +166,6 @@ public class Test extends StorableObject {
 		this.setMeasurementSetupIds0(measurementSetupIds);
 		this.status = TestStatus._TEST_STATUS_NEW;
 		this.numberOfMeasurements = 0;
-
-		this.testDatabase = MeasurementDatabaseContext.getTestDatabase();
 	}
 
 	/**
@@ -237,7 +235,6 @@ public class Test extends StorableObject {
 	}
 
 	public Test(Test_Transferable tt) throws CreateObjectException {
-		this.testDatabase = MeasurementDatabaseContext.getTestDatabase();
 		this.fromTransferable(tt);
 	}
 
@@ -374,8 +371,9 @@ public class Test extends StorableObject {
 	}
 
 	public java.util.Set retrieveMeasurementsOrderByStartTime(MeasurementStatus measurementStatus)	throws RetrieveObjectException, ObjectNotFoundException {
+		TestDatabase database = MeasurementDatabaseContext.getTestDatabase();
 		try {
-			return (java.util.Set) this.testDatabase.retrieveObject(this, RETRIEVE_MEASUREMENTS, measurementStatus);
+			return (java.util.Set) database.retrieveObject(this, RETRIEVE_MEASUREMENTS, measurementStatus);
 		}
 		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
@@ -383,8 +381,9 @@ public class Test extends StorableObject {
 	}
 	
 	public Measurement retrieveLastMeasurement() throws RetrieveObjectException, ObjectNotFoundException {
+		TestDatabase database = MeasurementDatabaseContext.getTestDatabase();
 		try {
-			return (Measurement) this.testDatabase.retrieveObject(this, RETRIEVE_LAST_MEASUREMENT, null);
+			return (Measurement) database.retrieveObject(this, RETRIEVE_LAST_MEASUREMENT, null);
 		}
 		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
@@ -392,8 +391,9 @@ public class Test extends StorableObject {
 	}
 
 	public int retrieveNumberOfResults(ResultSort resultSort) throws RetrieveObjectException, ObjectNotFoundException {
+		TestDatabase database = MeasurementDatabaseContext.getTestDatabase();
 		try {
-			return ((Integer) this.testDatabase.retrieveObject(this, RETRIEVE_NUMBER_OF_RESULTS, resultSort)).intValue();
+			return ((Integer) database.retrieveObject(this, RETRIEVE_NUMBER_OF_RESULTS, resultSort)).intValue();
 		}
 		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);

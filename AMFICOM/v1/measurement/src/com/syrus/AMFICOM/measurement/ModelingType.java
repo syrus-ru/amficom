@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingType.java,v 1.16 2005/04/04 16:06:27 bass Exp $
+ * $Id: ModelingType.java,v 1.17 2005/04/08 08:47:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,31 +9,30 @@
 package com.syrus.AMFICOM.measurement;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Date;
 
 import org.omg.CORBA.portable.IDLEntity;
 
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.ParameterType;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.ParameterType;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ModelingType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/04/04 16:06:27 $
- * @author $Author: bass $
+ * @version $Revision: 1.17 $, $Date: 2005/04/08 08:47:02 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -48,17 +47,15 @@ public class ModelingType extends ActionType {
 	private java.util.Set inParameterTypes;
 	private java.util.Set outParameterTypes;
 
-	private StorableObjectDatabase modelingTypeDatabase;
-
 	public ModelingType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
 		this.inParameterTypes = new HashSet();
 		this.outParameterTypes = new HashSet();
 
-		this.modelingTypeDatabase = MeasurementDatabaseContext.getModelingTypeDatabase();
+		ModelingTypeDatabase database = MeasurementDatabaseContext.getModelingTypeDatabase();
 		try {
-			this.modelingTypeDatabase.retrieve(this);
+			database.retrieve(this);
 		}
 		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
@@ -76,7 +73,6 @@ public class ModelingType extends ActionType {
 	}
 
 	public ModelingType(ModelingType_Transferable mtt) throws CreateObjectException {
-		this.modelingTypeDatabase = MeasurementDatabaseContext.getModelingTypeDatabase();
 		this.fromTransferable(mtt);
 	}
 
@@ -101,8 +97,6 @@ public class ModelingType extends ActionType {
 
 		this.outParameterTypes = new HashSet();
 		this.setOutParameterTypes0(outParameterTypes);
-
-		this.modelingTypeDatabase = MeasurementDatabaseContext.getModelingTypeDatabase();
 	}
 
 	/**

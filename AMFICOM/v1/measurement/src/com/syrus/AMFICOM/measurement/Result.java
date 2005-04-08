@@ -1,5 +1,5 @@
 /*
- * $Id: Result.java,v 1.47 2005/04/04 13:13:45 bass Exp $
+ * $Id: Result.java,v 1.48 2005/04/08 08:47:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,6 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
@@ -31,8 +30,8 @@ import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.47 $, $Date: 2005/04/04 13:13:45 $
- * @author $Author: bass $
+ * @version $Revision: 1.48 $, $Date: 2005/04/08 08:47:02 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -45,14 +44,12 @@ public class Result extends StorableObject {
 	private int sort;
 	private SetParameter[] parameters;
 
-	private StorableObjectDatabase resultDatabase;
-
 	public Result(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.resultDatabase = MeasurementDatabaseContext.getResultDatabase();
+		ResultDatabase database = MeasurementDatabaseContext.getResultDatabase();
 		try {
-			this.resultDatabase.retrieve(this);
+			database.retrieve(this);
 		}
 		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
@@ -60,7 +57,6 @@ public class Result extends StorableObject {
 	}
 
 	public Result(Result_Transferable rt) throws CreateObjectException {
-		this.resultDatabase = MeasurementDatabaseContext.getResultDatabase();
 		this.fromTransferable(rt);
 	}	
 
@@ -79,8 +75,6 @@ public class Result extends StorableObject {
 		this.action = action;
 		this.sort = sort;
 		this.parameters = parameters;
-
-		this.resultDatabase = MeasurementDatabaseContext.getResultDatabase();
 	}
 	
 	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {

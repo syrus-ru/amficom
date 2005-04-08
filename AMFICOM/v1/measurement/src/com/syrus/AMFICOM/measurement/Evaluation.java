@@ -1,5 +1,5 @@
 /*
- * $Id: Evaluation.java,v 1.48 2005/04/04 13:13:46 bass Exp $
+ * $Id: Evaluation.java,v 1.49 2005/04/08 08:47:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,14 +22,13 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2005/04/04 13:13:46 $
- * @author $Author: bass $
+ * @version $Revision: 1.49 $, $Date: 2005/04/08 08:47:01 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -41,14 +40,12 @@ public class Evaluation extends Action {
 
 	private Set thresholdSet;
 
-	private StorableObjectDatabase evaluationDatabase;
-
 	public Evaluation(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.evaluationDatabase = MeasurementDatabaseContext.getEvaluationDatabase();
+		EvaluationDatabase database = MeasurementDatabaseContext.getEvaluationDatabase();
 		try {
-			this.evaluationDatabase.retrieve(this);
+			database.retrieve(this);
 		}
 		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
@@ -56,7 +53,6 @@ public class Evaluation extends Action {
 	}
 
 	public Evaluation(Evaluation_Transferable et) throws CreateObjectException {
-		this.evaluationDatabase = MeasurementDatabaseContext.getEvaluationDatabase();
 		this.fromTransferable(et);
 	}
 
@@ -78,8 +74,6 @@ public class Evaluation extends Action {
 				measurement);
 
 		this.thresholdSet = thresholdSet;
-
-		this.evaluationDatabase = MeasurementDatabaseContext.getEvaluationDatabase();
 	}
 
 	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {

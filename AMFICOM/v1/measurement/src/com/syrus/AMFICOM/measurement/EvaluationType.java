@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationType.java,v 1.54 2005/04/04 16:06:27 bass Exp $
+ * $Id: EvaluationType.java,v 1.55 2005/04/08 08:47:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,25 +15,24 @@ import java.util.Iterator;
 
 import org.omg.CORBA.portable.IDLEntity;
 
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.ParameterType;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.ParameterType;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.54 $, $Date: 2005/04/04 16:06:27 $
- * @author $Author: bass $
+ * @version $Revision: 1.55 $, $Date: 2005/04/08 08:47:01 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -52,8 +51,6 @@ public class EvaluationType extends ActionType {
 
 	private java.util.Set measurementTypeIds;
 
-	private StorableObjectDatabase evaluationTypeDatabase;
-
 	public EvaluationType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
@@ -64,9 +61,9 @@ public class EvaluationType extends ActionType {
 
 		this.measurementTypeIds = new HashSet();
 
-		this.evaluationTypeDatabase = MeasurementDatabaseContext.getEvaluationTypeDatabase();
+		EvaluationTypeDatabase database = MeasurementDatabaseContext.getEvaluationTypeDatabase();
 		try {
-			this.evaluationTypeDatabase.retrieve(this);
+			database.retrieve(this);
 		}
 		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
@@ -88,7 +85,6 @@ public class EvaluationType extends ActionType {
 	}
 
 	public EvaluationType(EvaluationType_Transferable ett) throws CreateObjectException {
-		this.evaluationTypeDatabase = MeasurementDatabaseContext.getEvaluationTypeDatabase();
 		this.fromTransferable(ett);
 	}	
 	
@@ -126,8 +122,6 @@ public class EvaluationType extends ActionType {
 
 		this.measurementTypeIds = new HashSet();
 		this.setMeasurementTypeIds0(measurementTypeIds);
-
-		this.evaluationTypeDatabase = MeasurementDatabaseContext.getEvaluationTypeDatabase();
 	}
 
 	/**

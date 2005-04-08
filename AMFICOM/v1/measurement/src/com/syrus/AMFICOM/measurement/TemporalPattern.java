@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPattern.java,v 1.68 2005/04/04 16:06:27 bass Exp $
+ * $Id: TemporalPattern.java,v 1.69 2005/04/08 08:47:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,14 +29,13 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.measurement.corba.TemporalPattern_Transferable;
 import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.68 $, $Date: 2005/04/04 16:06:27 $
- * @author $Author: bass $
+ * @version $Revision: 1.69 $, $Date: 2005/04/08 08:47:02 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -779,7 +778,6 @@ public class TemporalPattern extends StorableObject {
 
 	private String[]		cronStrings;
 	private String			description;
-	private StorableObjectDatabase	temporalPatternDatabase;
 
 	/**
 	 * Map of <{@link TimeLine},{@link TimeLine}>
@@ -792,17 +790,17 @@ public class TemporalPattern extends StorableObject {
 
 	public TemporalPattern(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
-		this.temporalPatternDatabase = MeasurementDatabaseContext.getTemporalPatternDatabase();
+
+		TemporalPatternDatabase database = MeasurementDatabaseContext.getTemporalPatternDatabase();
 		try {
-			this.temporalPatternDatabase.retrieve(this);
-		} catch (IllegalDataException ide) {
+			database.retrieve(this);
+		}
+		catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
-
 	}
 
 	public TemporalPattern(TemporalPattern_Transferable tpt) throws CreateObjectException {
-		this.temporalPatternDatabase = MeasurementDatabaseContext.getTemporalPatternDatabase();
 		this.fromTransferable(tpt);
 	}
 
@@ -822,7 +820,6 @@ public class TemporalPattern extends StorableObject {
 				this.addTemplate(cronStrings[i]);
 		}
 		this.changed = false;
-		this.temporalPatternDatabase = MeasurementDatabaseContext.getTemporalPatternDatabase();
 	}
 
 	private TemporalPattern(Identifier id, Identifier creatorId, long version, String description, java.util.Set cronString) {
@@ -839,8 +836,6 @@ public class TemporalPattern extends StorableObject {
 		}
 
 		this.changed = false;
-
-		this.temporalPatternDatabase = MeasurementDatabaseContext.getTemporalPatternDatabase();
 	}
 
 	/**

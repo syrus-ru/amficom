@@ -1,5 +1,5 @@
 /*
- * $Id: EventType.java,v 1.12 2005/04/04 16:03:20 bass Exp $
+ * $Id: EventType.java,v 1.13 2005/04/08 08:50:49 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,35 +8,34 @@
 
 package com.syrus.AMFICOM.event;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Collections;
 import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
 
+import com.syrus.AMFICOM.event.corba.EventType_Transferable;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.StorableObjectType;
-import com.syrus.AMFICOM.general.TypedObject;
-import com.syrus.AMFICOM.general.ParameterType;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.ParameterType;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectType;
+import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.event.corba.EventType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/04/04 16:03:20 $
- * @author $Author: bass $
+ * @version $Revision: 1.13 $, $Date: 2005/04/08 08:50:49 $
+ * @author $Author: arseniy $
  * @module event_v1
  */
 
@@ -47,16 +46,14 @@ public class EventType extends StorableObjectType {
 
 	private Set parameterTypes;
 
-	private StorableObjectDatabase eventTypeDatabase;
-
 	public EventType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
 		this.parameterTypes = new HashSet();
 
-		this.eventTypeDatabase = EventDatabaseContext.getEventTypeDatabase();
+		EventTypeDatabase database = EventDatabaseContext.getEventTypeDatabase();
 		try {
-			this.eventTypeDatabase.retrieve(this);
+			database.retrieve(this);
 		}
 		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
@@ -72,7 +69,6 @@ public class EventType extends StorableObjectType {
 	}
 
 	public EventType(EventType_Transferable ett) throws CreateObjectException {
-		this.eventTypeDatabase = EventDatabaseContext.getEventTypeDatabase();
 		this.fromTransferable(ett);
 	}
 
@@ -93,8 +89,6 @@ public class EventType extends StorableObjectType {
 
 		this.parameterTypes = new HashSet(); 
 		this.setParameterTypes0(parameterTypes);
-
-		this.eventTypeDatabase = EventDatabaseContext.getEventTypeDatabase();
 	}
 
 	/**

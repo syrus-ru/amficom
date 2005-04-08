@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.59 2005/04/04 16:06:27 bass Exp $
+ * $Id: Measurement.java,v 1.60 2005/04/08 08:47:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,6 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
 import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
@@ -31,8 +30,8 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.59 $, $Date: 2005/04/04 16:06:27 $
- * @author $Author: bass $
+ * @version $Revision: 1.60 $, $Date: 2005/04/08 08:47:01 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -54,14 +53,12 @@ public class Measurement extends Action {
 	private String localAddress;
 	private Identifier testId;
 
-	private StorableObjectDatabase measurementDatabase;
-
 	public Measurement(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.measurementDatabase = MeasurementDatabaseContext.getMeasurementDatabase();
+		MeasurementDatabase database = MeasurementDatabaseContext.getMeasurementDatabase();
 		try {
-			this.measurementDatabase.retrieve(this);
+			database.retrieve(this);
 		}
 		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
@@ -69,7 +66,6 @@ public class Measurement extends Action {
 	}
 
 	public Measurement(Measurement_Transferable mt) throws CreateObjectException {
-		this.measurementDatabase = MeasurementDatabaseContext.getMeasurementDatabase();
 		this.fromTransferable(mt);
 	}
 
@@ -100,8 +96,6 @@ public class Measurement extends Action {
 		this.status = MeasurementStatus._MEASUREMENT_STATUS_SCHEDULED;
 		this.localAddress = localAddress;
 		this.testId = testId;
-
-		this.measurementDatabase = MeasurementDatabaseContext.getMeasurementDatabase();
 	}
 
 	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {

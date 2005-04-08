@@ -1,5 +1,5 @@
 /*
- * $Id: Event.java,v 1.15 2005/04/04 16:03:20 bass Exp $
+ * $Id: Event.java,v 1.16 2005/04/08 08:50:49 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,14 +28,13 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/04/04 16:03:20 $
- * @author $Author: bass $
+ * @version $Revision: 1.16 $, $Date: 2005/04/08 08:50:49 $
+ * @author $Author: arseniy $
  * @module event_v1
  */
 
@@ -50,16 +49,14 @@ public class Event extends StorableObject implements TypedObject {
 	private Set eventParameters;	//Set <EventParameter>
 	private Set eventSourceIds; //Set <Identifier>
 
-	private StorableObjectDatabase eventDatabase;
-
 	public Event(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 		this.eventParameters = new HashSet();
 		this.eventSourceIds = new HashSet();
 
-		this.eventDatabase = EventDatabaseContext.getEventDatabase();
+		EventDatabase database = EventDatabaseContext.getEventDatabase();
 		try {
-			this.eventDatabase.retrieve(this);
+			database.retrieve(this);
 		}
 		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
@@ -67,7 +64,6 @@ public class Event extends StorableObject implements TypedObject {
 	}
 
 	public Event(Event_Transferable et) throws CreateObjectException {
-		this.eventDatabase = EventDatabaseContext.getEventDatabase();
 		this.fromTransferable(et);
 	}
 
@@ -92,8 +88,6 @@ public class Event extends StorableObject implements TypedObject {
 		
 		this.eventSourceIds = new HashSet(eventSourceIds.size());
 		this.setEventSourceIds0(eventSourceIds);
-
-		this.eventDatabase = EventDatabaseContext.getEventDatabase();
 	}
 
 	/**

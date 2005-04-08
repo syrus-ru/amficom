@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.56 2005/04/06 15:01:32 arseniy Exp $
+ * $Id: MeasurementSetup.java,v 1.57 2005/04/08 08:47:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,12 +25,11 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 
 /**
- * @version $Revision: 1.56 $, $Date: 2005/04/06 15:01:32 $
+ * @version $Revision: 1.57 $, $Date: 2005/04/08 08:47:01 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -48,18 +47,17 @@ public class MeasurementSetup extends StorableObject {
 	private Set etalon;
 	private String description;
 	private long measurementDuration;
-	private java.util.Set monitoredElementIds;
 
-	private StorableObjectDatabase measurementSetupDatabase;
+	private java.util.Set monitoredElementIds;
 
 	public MeasurementSetup(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
 		this.monitoredElementIds = new HashSet();
 
-		this.measurementSetupDatabase = MeasurementDatabaseContext.getMeasurementSetupDatabase();
+		MeasurementSetupDatabase database = MeasurementDatabaseContext.getMeasurementSetupDatabase();
 		try {
-			this.measurementSetupDatabase.retrieve(this);
+			database.retrieve(this);
 		}
 		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
@@ -67,7 +65,6 @@ public class MeasurementSetup extends StorableObject {
 	}
 
 	public MeasurementSetup(MeasurementSetup_Transferable mst) throws CreateObjectException {
-		this.measurementSetupDatabase = MeasurementDatabaseContext.getMeasurementSetupDatabase();
 		this.fromTransferable(mst);
 	}
 
@@ -95,8 +92,6 @@ public class MeasurementSetup extends StorableObject {
 		this.measurementDuration = measurementDuration;
 		this.monitoredElementIds = new HashSet();
 		this.setMonitoredElementIds0(monitoredElementIds);
-		
-		this.measurementSetupDatabase = MeasurementDatabaseContext.getMeasurementSetupDatabase();
 	}
 	
 	/**
