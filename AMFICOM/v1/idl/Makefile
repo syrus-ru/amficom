@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.22 2005/03/04 13:14:22 bass Exp $
+# $Id: Makefile,v 1.23 2005/04/08 08:42:24 bass Exp $
 #
 # vim:ft=make:
 #
@@ -7,11 +7,6 @@
 MODULE_NAME = idl_v1
 
 LIBNAME = corba.jar
-LIBNAME_OBJECT = ServerObjectInterface.jar
-LIBNAME_ADMIN = ServerInterface_Admin.jar
-LIBNAME_ALARM = ServerInterface_Alarm.jar
-LIBNAME_GENERAL = ServerInterface_General.jar
-LIBNAME_REPORT = ServerInterface_Report.jar
 
 JAVACFLAGS = -source 1.4
 SUNJAVACFLAGS = -target 1.4
@@ -19,10 +14,9 @@ JIKESFLAGS = -target 1.4.2
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
-$(call checkenve,ORACLE_HOME)
 
 .PHONY: export
-export: $(LIBNAME) $(LIBNAME_OBJECT) $(LIBNAME_ADMIN) $(LIBNAME_ALARM) $(LIBNAME_GENERAL) $(LIBNAME_REPORT)
+export: $(LIBNAME)
 
 .PHONY: all
 all: .all
@@ -37,7 +31,7 @@ all: .all
 	touch $@
 
 # Target created for IDEs compiling everything from scratch not to tie client
-# code to (cm)server implementation.
+# code to server implementations.
 .PHONY: xtra
 xtra: .xtra
 
@@ -49,6 +43,7 @@ xtra: .xtra
 	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/cmserver.idl
 	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/mshserver.idl
 	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/map.idl
+	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/scheme.idl
 	if [ -f ../mcm_v1/idl/mcm.idl ]; then $(IDLJ) $(IDLJFLAGS) ../mcm_v1/idl/mcm.idl; fi
 	if [ -f ../mserver_v1/idl/mserver.idl ]; then $(IDLJ) $(IDLJFLAGS) ../mserver_v1/idl/mserver.idl; fi
 	touch $@
@@ -104,45 +99,3 @@ distclean: clean
 $(LIBNAME): .all
 	$(JAR) cf $@ \
 		-C $(CLASSDIR) com
-
-$(LIBNAME_OBJECT): .all
-	$(JAR) cf $@ \
-		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/AMFICOM.class \
-		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/AMFICOMHelper.class \
-		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/AMFICOMHolder.class \
-		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/AMFICOMOperations.class \
-		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/AMFICOMPOA.class \
-		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/AMFICOMPOATie.class \
-		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/_AMFICOMStub.class \
-		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/AMFICOMClient.class \
-		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/AMFICOMClientHelper.class \
-		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/AMFICOMClientHolder.class \
-		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/AMFICOMClientOperations.class \
-		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/AMFICOMClientPOA.class \
-		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/AMFICOMClientPOATie.class \
-		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/_AMFICOMClientStub.class
-
-$(LIBNAME_ADMIN): .all
-	$(JAR) cf $@ \
-		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/Admin
-
-$(LIBNAME_ALARM): .all
-	$(JAR) cf $@ \
-		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/Alarm
-
-$(LIBNAME_GENERAL): .all
-	$(JAR) cf $@ \
-		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/Constant \
-		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/General \
-		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/Resource \
-		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/Constants.class \
-		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/ConstantsHelper.class \
-		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/ConstantsHolder.class \
-		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/ConstantsOperations.class \
-		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/ConstantsPOA.class \
-		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/ConstantsPOATie.class \
-		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/_ConstantsStub.class
-
-$(LIBNAME_REPORT): .all
-	$(JAR) cf $@ \
-		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/Report
