@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeCodenames.java,v 1.6 2005/04/07 11:14:22 bob Exp $
+ * $Id: ParameterTypeCodenames.java,v 1.7 2005/04/08 08:05:12 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,11 +9,11 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/04/07 11:14:22 $
- * @author $Author: bob $
+ * @version $Revision: 1.7 $, $Date: 2005/04/08 08:05:12 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
-public class ParameterTypeCodenames {
+public final class ParameterTypeCodenames {
 
 	public static final String	REFLECTOGRAMMA				= "reflectogramma";
 
