@@ -1,5 +1,5 @@
 /*
- * $Id: GeneralTestCase.java,v 1.1 2005/04/08 15:31:49 bob Exp $
+ * $Id: GeneralTestCase.java,v 1.2 2005/04/08 15:40:50 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package test.com.syrus.AMFICOM.general;
 
+import java.util.Date;
 import java.util.Set;
 
 import junit.extensions.TestSetup;
@@ -19,18 +20,20 @@ import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.User;
 import com.syrus.AMFICOM.cmserver.DatabaseContextSetup;
+import com.syrus.AMFICOM.general.AccessIdentity;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DefaultIdentifierGeneratorServer;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.SessionContext;
 import com.syrus.util.Application;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/08 15:31:49 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/08 15:40:50 $
  * @author $Author: bob $
  * @module tools
  */
@@ -79,6 +82,8 @@ public class GeneralTestCase extends TestCase {
 			GeneralTestCase.domainId = ((Domain) domains.iterator().next()).getId();
 
 			IdentifierPool.init(new DefaultIdentifierGeneratorServer());
+			
+			SessionContext.init(new AccessIdentity(new Date(), domainId, creatorId, "Session_0"), "");
 		} catch (ApplicationException e) {
 			fail();
 		}
