@@ -1,5 +1,5 @@
 /*
-* $Id: EquivalentCondition.java,v 1.7 2005/04/04 13:07:03 bass Exp $
+* $Id: EquivalentCondition.java,v 1.8 2005/04/08 14:36:15 bob Exp $
 *
 * Copyright ø 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import com.syrus.AMFICOM.general.corba.EquivalentCondition_Transferable;
 /**
  * Equivalent (identical, allways true) condition
  * written with especial cynicism
- * @version $Revision: 1.7 $, $Date: 2005/04/04 13:07:03 $
- * @author ÷÷œ‘ $Author: bass $
+ * @version $Revision: 1.8 $, $Date: 2005/04/08 14:36:15 $
+ * @author ÷÷œ‘ $Author: bob $
  * @module general_v1
  */
 public final class EquivalentCondition implements StorableObjectCondition {
@@ -51,6 +51,11 @@ public final class EquivalentCondition implements StorableObjectCondition {
 
 	public void setEntityCode(final Short entityCode) {
 		this.entityCode = entityCode;
+
+	}
+	
+	public void setEntityCode(final short entityCode) {
+		this.setEntityCode(new Short(entityCode));
 
 	}
 
