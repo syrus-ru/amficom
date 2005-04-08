@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.103 2005/04/08 08:47:02 arseniy Exp $
+ * $Id: Test.java,v 1.104 2005/04/08 12:33:24 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,7 +44,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.103 $, $Date: 2005/04/08 08:47:02 $
+ * @version $Revision: 1.104 $, $Date: 2005/04/08 12:33:24 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -235,10 +235,15 @@ public class Test extends StorableObject {
 	}
 
 	public Test(Test_Transferable tt) throws CreateObjectException {
-		this.fromTransferable(tt);
+		try {
+			this.fromTransferable(tt);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}
 
-	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
+	public void fromTransferable(IDLEntity transferable) throws ApplicationException {
 		Test_Transferable tt = (Test_Transferable)transferable;
 		super.fromTransferable(tt.header);
 		this.temporalType = tt.temporal_type.value();
@@ -257,13 +262,8 @@ public class Test extends StorableObject {
 
 		this.status = tt.status.value();
 
-		try {
-			this.monitoredElement = (MonitoredElement) ConfigurationStorableObjectPool.getStorableObject(new Identifier(tt.monitored_element_id),
-					true);
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
+		this.monitoredElement = (MonitoredElement) ConfigurationStorableObjectPool.getStorableObject(new Identifier(tt.monitored_element_id),
+				true);
 
 		this.returnType = tt.return_type.value();
 		this.description = tt.description;
@@ -272,15 +272,10 @@ public class Test extends StorableObject {
 		this.measurementSetupIds = Identifier.fromTransferables(tt.measurement_setup_ids);
 		if (!this.measurementSetupIds.isEmpty()) {
 			Identifier msId = (Identifier) this.measurementSetupIds.iterator().next();
-			try {
-				this.mainMeasurementSetup = (MeasurementSetup) MeasurementStorableObjectPool.getStorableObject(msId, true);
-			}
-			catch (ApplicationException ae) {
-				throw new CreateObjectException(ae);
-			}
+			this.mainMeasurementSetup = (MeasurementSetup) MeasurementStorableObjectPool.getStorableObject(msId, true);
 		}
 		else
-			throw new CreateObjectException("Cannot find measurement setup for test '" + this.id + '\'');
+			throw new IllegalDataException("Cannot find measurement setup for test '" + this.id + '\'');
 	}
 
 	public short getEntityCode() {

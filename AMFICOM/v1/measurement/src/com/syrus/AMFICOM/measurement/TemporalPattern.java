@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPattern.java,v 1.69 2005/04/08 08:47:02 arseniy Exp $
+ * $Id: TemporalPattern.java,v 1.70 2005/04/08 12:33:24 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,6 +20,7 @@ import java.util.regex.Pattern;
 
 import org.omg.CORBA.portable.IDLEntity;
 
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -34,7 +35,7 @@ import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.69 $, $Date: 2005/04/08 08:47:02 $
+ * @version $Revision: 1.70 $, $Date: 2005/04/08 12:33:24 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -801,7 +802,12 @@ public class TemporalPattern extends StorableObject {
 	}
 
 	public TemporalPattern(TemporalPattern_Transferable tpt) throws CreateObjectException {
-		this.fromTransferable(tpt);
+		try {
+			this.fromTransferable(tpt);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}
 
 	protected TemporalPattern(Identifier id, Identifier creatorId, long version, String description, String[] cronStrings) {
@@ -905,16 +911,15 @@ public class TemporalPattern extends StorableObject {
 	}
 
 	
-	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
+	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
 		TemporalPattern_Transferable tpt = (TemporalPattern_Transferable)transferable;
 		super.fromTransferable(tpt.header);
 
 		this.description = tpt.description;
 
 		this.removeAll();
-		for (int i = 0; i < tpt.cron_strings.length; i++) {
+		for (int i = 0; i < tpt.cron_strings.length; i++)
 			this.addTemplate(tpt.cron_strings[i]);
-		}
 
 		this.changed = false;
 	}

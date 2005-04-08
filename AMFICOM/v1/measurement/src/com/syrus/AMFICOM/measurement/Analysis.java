@@ -1,5 +1,5 @@
 /*
- * $Id: Analysis.java,v 1.51 2005/04/08 08:47:01 arseniy Exp $
+ * $Id: Analysis.java,v 1.52 2005/04/08 12:33:24 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2005/04/08 08:47:01 $
+ * @version $Revision: 1.52 $, $Date: 2005/04/08 12:33:24 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -48,13 +48,18 @@ public class Analysis extends Action {
 		try {
 			database.retrieve(this);
 		}
-		catch (IllegalDataException ide){
+		catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
 	}
 
   public Analysis(Analysis_Transferable at) throws CreateObjectException {
-		this.fromTransferable(at);
+  	try {
+			this.fromTransferable(at);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}
 
 	protected Analysis(Identifier id,
@@ -79,22 +84,15 @@ public class Analysis extends Action {
 		this.criteriaSet = criteriaSet;
 	}
 	
-	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
-		Analysis_Transferable at = (Analysis_Transferable)transferable;
-		super.fromTransferable(at.header,
-			  null,
-			  new Identifier(at.monitored_element_id),
-			  null);
+	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
+		Analysis_Transferable at = (Analysis_Transferable) transferable;
+		super.fromTransferable(at.header, null, new Identifier(at.monitored_element_id), null);
 
-		try {
-			super.type = (AnalysisType)MeasurementStorableObjectPool.getStorableObject(new Identifier(at.type_id), true);
-			super.parentAction = (at.measurement_id.identifier_string.length() != 0) ? (Measurement) MeasurementStorableObjectPool.getStorableObject(new Identifier(at.measurement_id), true) : null;
+		super.type = (AnalysisType) MeasurementStorableObjectPool.getStorableObject(new Identifier(at.type_id), true);
+		super.parentAction = (at.measurement_id.identifier_string.length() != 0)
+				? (Measurement) MeasurementStorableObjectPool.getStorableObject(new Identifier(at.measurement_id), true) : null;
 
-			this.criteriaSet = (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(at.criteria_set_id), true);
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
+		this.criteriaSet = (Set) MeasurementStorableObjectPool.getStorableObject(new Identifier(at.criteria_set_id), true);
 	}
 
 	public IDLEntity getTransferable() {

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.57 2005/04/08 08:47:01 arseniy Exp $
+ * $Id: MeasurementSetup.java,v 1.58 2005/04/08 12:33:24 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.measurement;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 
 import org.omg.CORBA.portable.IDLEntity;
 
@@ -27,9 +26,10 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.57 $, $Date: 2005/04/08 08:47:01 $
+ * @version $Revision: 1.58 $, $Date: 2005/04/08 12:33:24 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -65,7 +65,12 @@ public class MeasurementSetup extends StorableObject {
 	}
 
 	public MeasurementSetup(MeasurementSetup_Transferable mst) throws CreateObjectException {
-		this.fromTransferable(mst);
+		try {
+			this.fromTransferable(mst);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}
 
 	protected MeasurementSetup(Identifier id,
@@ -139,44 +144,42 @@ public class MeasurementSetup extends StorableObject {
 		}
 	}
 
-	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
+	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
 		MeasurementSetup_Transferable mst = (MeasurementSetup_Transferable)transferable;
 		super.fromTransferable(mst.header);
 
-		try {
-			this.parameterSet = (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(mst.parameter_set_id), true);
-			/**
-			 * @todo when change DB Identifier model ,change identifier_string
-			 *       to identifier_code
-			 */
-			this.criteriaSet = (mst.criteria_set_id.identifier_string.length() != 0) ? (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(mst.criteria_set_id), true) : null;
-			/**
-			 * @todo when change DB Identifier model ,change identifier_string
-			 *       to identifier_code
-			 */
-			this.thresholdSet = (mst.threshold_set_id.identifier_string.length() != 0) ? (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(mst.threshold_set_id), true) : null;
-			/**
-			 * @todo when change DB Identifier model ,change identifier_string
-			 *       to identifier_code
-			 */
-			this.etalon = (mst.etalon_id.identifier_string.length() != 0) ? (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(mst.etalon_id), true) : null;
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
+		this.parameterSet = (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(mst.parameter_set_id), true);
+		/**
+		 * @todo when change DB Identifier model ,change identifier_string
+		 *       to identifier_code
+		 */
+		this.criteriaSet = (mst.criteria_set_id.identifier_string.length() != 0) ? (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(mst.criteria_set_id), true) : null;
+		/**
+		 * @todo when change DB Identifier model ,change identifier_string
+		 *       to identifier_code
+		 */
+		this.thresholdSet = (mst.threshold_set_id.identifier_string.length() != 0) ? (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(mst.threshold_set_id), true) : null;
+		/**
+		 * @todo when change DB Identifier model ,change identifier_string
+		 *       to identifier_code
+		 */
+		this.etalon = (mst.etalon_id.identifier_string.length() != 0) ? (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(mst.etalon_id), true) : null;
 
 		this.description = mst.description;
 		this.measurementDuration = mst.measurement_duration;
-		this.monitoredElementIds = new HashSet(mst.monitored_element_ids.length);
-		for (int i = 0; i < mst.monitored_element_ids.length; i++)
-			this.monitoredElementIds.add(new Identifier(mst.monitored_element_ids[i]));
+
+		this.monitoredElementIds = Identifier.fromTransferables(mst.monitored_element_ids);
 	}
 
 	public IDLEntity getTransferable() {
-		Identifier_Transferable[] meIds = new Identifier_Transferable[this.monitoredElementIds.size()];
-		int i = 0;
-		for (Iterator it = this.monitoredElementIds.iterator(); it.hasNext(); i++)
-			meIds[i] = (Identifier_Transferable) ((Identifier) it.next()).getTransferable();
+		Identifier_Transferable[] meIds = null;
+		try {
+			meIds = Identifier.createTransferables(this.monitoredElementIds);
+		}
+		catch (IllegalDataException ide) {
+			// Never
+			Log.errorException(ide);
+		}
 
 		return new MeasurementSetup_Transferable(super.getHeaderTransferable(),
 												 (Identifier_Transferable) this.parameterSet.getId().getTransferable(),

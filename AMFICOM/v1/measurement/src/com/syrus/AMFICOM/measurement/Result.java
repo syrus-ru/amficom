@@ -1,5 +1,5 @@
 /*
- * $Id: Result.java,v 1.48 2005/04/08 08:47:02 arseniy Exp $
+ * $Id: Result.java,v 1.49 2005/04/08 12:33:24 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2005/04/08 08:47:02 $
+ * @version $Revision: 1.49 $, $Date: 2005/04/08 12:33:24 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -57,7 +57,12 @@ public class Result extends StorableObject {
 	}
 
 	public Result(Result_Transferable rt) throws CreateObjectException {
-		this.fromTransferable(rt);
+		try {
+			this.fromTransferable(rt);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}	
 
 	protected Result(Identifier id,
@@ -77,70 +82,48 @@ public class Result extends StorableObject {
 		this.parameters = parameters;
 	}
 	
-	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
+	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
 		Result_Transferable rt = (Result_Transferable) transferable;
 		super.fromTransferable(rt.header);
 
 		this.sort = rt.sort.value();
 		switch (this.sort) {
 			case ResultSort._RESULT_SORT_MEASUREMENT:
-				try {
-					this.action = (Measurement)MeasurementStorableObjectPool.getStorableObject(new Identifier(rt.measurement_id), true);
-				}
-				catch (ApplicationException ae) {
-					throw new CreateObjectException("Cannot create result -- " + ae.getMessage(), ae);
-				}			
+				this.action = (Measurement) MeasurementStorableObjectPool.getStorableObject(new Identifier(rt.measurement_id), true);
 				break;
 			case ResultSort._RESULT_SORT_ANALYSIS:
-				try {
-					this.action = (Analysis)MeasurementStorableObjectPool.getStorableObject(new Identifier(rt.analysis_id), true);
-				}
-				catch (ApplicationException ae) {
-					throw new CreateObjectException("Cannot create result -- " + ae.getMessage(), ae);
-				}
+				this.action = (Analysis) MeasurementStorableObjectPool.getStorableObject(new Identifier(rt.analysis_id), true);
 				break;
 			case ResultSort._RESULT_SORT_EVALUATION:
-				try {
-					this.action = (Evaluation)MeasurementStorableObjectPool.getStorableObject(new Identifier(rt.evaluation_id), true);
-				}
-				catch (ApplicationException ae) {
-					throw new CreateObjectException("Cannot create result -- " + ae.getMessage(), ae);
-				}
+				this.action = (Evaluation) MeasurementStorableObjectPool.getStorableObject(new Identifier(rt.evaluation_id), true);
 				break;
 			case ResultSort._RESULT_SORT_MODELING:
-				try {
-					this.action = (Modeling)MeasurementStorableObjectPool.getStorableObject(new Identifier(rt.evaluation_id), true);
-				}
-				catch (ApplicationException ae) {
-					throw new CreateObjectException("Cannot create result -- " + ae.getMessage(), ae);
-				}
+				this.action = (Modeling) MeasurementStorableObjectPool.getStorableObject(new Identifier(rt.evaluation_id), true);
 				break;
-
 			default:
 				Log.errorMessage("Result.init | Illegal sort: " + this.sort + " of result '" + super.id.toString() + "'");
 		}
 
-		try {
-			this.parameters = new SetParameter[rt.parameters.length];
-			for (int i = 0; i < this.parameters.length; i++)
-				this.parameters[i] = new SetParameter(rt.parameters[i]);
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
+		this.parameters = new SetParameter[rt.parameters.length];
+		for (int i = 0; i < this.parameters.length; i++)
+			this.parameters[i] = new SetParameter(rt.parameters[i]);
 	}
 	
 	public IDLEntity getTransferable() {
 		Parameter_Transferable[] pts = new Parameter_Transferable[this.parameters.length];
 		for (int i = 0; i < pts.length; i++)
-			pts[i] = (Parameter_Transferable)this.parameters[i].getTransferable();
+			pts[i] = (Parameter_Transferable) this.parameters[i].getTransferable();
 		return new Result_Transferable(super.getHeaderTransferable(),
-									   (this.sort == ResultSort._RESULT_SORT_MEASUREMENT) ? (Identifier_Transferable) this.action.getId().getTransferable() : (new Identifier_Transferable("")),
-									   (this.sort == ResultSort._RESULT_SORT_ANALYSIS) ? (Identifier_Transferable) this.action.getId().getTransferable() : (new Identifier_Transferable("")),
-									   (this.sort == ResultSort._RESULT_SORT_EVALUATION) ? (Identifier_Transferable) this.action.getId().getTransferable() : (new Identifier_Transferable("")),
-									   (this.sort == ResultSort._RESULT_SORT_MODELING) ? (Identifier_Transferable) this.action.getId().getTransferable() : (new Identifier_Transferable("")),
-									   ResultSort.from_int(this.sort),
-									   pts);
+				(this.sort == ResultSort._RESULT_SORT_MEASUREMENT) ? (Identifier_Transferable) this.action.getId().getTransferable()
+						: (new Identifier_Transferable("")),
+				(this.sort == ResultSort._RESULT_SORT_ANALYSIS) ? (Identifier_Transferable) this.action.getId().getTransferable()
+						: (new Identifier_Transferable("")),
+				(this.sort == ResultSort._RESULT_SORT_EVALUATION) ? (Identifier_Transferable) this.action.getId().getTransferable()
+						: (new Identifier_Transferable("")),
+				(this.sort == ResultSort._RESULT_SORT_MODELING) ? (Identifier_Transferable) this.action.getId().getTransferable()
+						: (new Identifier_Transferable("")),
+				ResultSort.from_int(this.sort),
+				pts);
 	}
 
 	public short getEntityCode() {

@@ -1,5 +1,5 @@
 /*
- * $Id: Set.java,v 1.57 2005/04/08 08:47:02 arseniy Exp $
+ * $Id: Set.java,v 1.58 2005/04/08 12:33:24 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,9 +30,10 @@ import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.AMFICOM.measurement.corba.SetSort;
 import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
 import com.syrus.util.HashCodeGenerator;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.57 $, $Date: 2005/04/08 08:47:02 $
+ * @version $Revision: 1.58 $, $Date: 2005/04/08 12:33:24 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -68,7 +69,12 @@ public class Set extends StorableObject {
 	}
 
 	public Set(Set_Transferable st) throws CreateObjectException {
-		this.fromTransferable(st);
+		try {
+			this.fromTransferable(st);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}	
 	
 	protected Set(Identifier id,
@@ -128,34 +134,32 @@ public class Set extends StorableObject {
 		}
 	}
 
-	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
+	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
 		Set_Transferable st = (Set_Transferable)transferable;
 		super.fromTransferable(st.header);
 		this.sort = st.sort.value();
 		this.description = st.description;
 
-		try {
-			this.parameters = new SetParameter[st.parameters.length];
-			for (int i = 0; i < this.parameters.length; i++)
-				this.parameters[i] = new SetParameter(st.parameters[i]);
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
+		this.parameters = new SetParameter[st.parameters.length];
+		for (int i = 0; i < this.parameters.length; i++)
+			this.parameters[i] = new SetParameter(st.parameters[i]);
 
-		this.monitoredElementIds = new HashSet(st.monitored_element_ids.length);
-		for (int i = 0; i < st.monitored_element_ids.length; i++)
-			this.monitoredElementIds.add(new Identifier(st.monitored_element_ids[i]));
+		this.monitoredElementIds = Identifier.fromTransferables(st.monitored_element_ids);
 	}
+
 	public IDLEntity getTransferable() {
 		Parameter_Transferable[] pts = new Parameter_Transferable[this.parameters.length];
 		for (int i = 0; i < pts.length; i++)
 			pts[i] = (Parameter_Transferable) this.parameters[i].getTransferable();
 
-		Identifier_Transferable[] meIds = new Identifier_Transferable[this.monitoredElementIds.size()];
-		int i = 0;
-		for (Iterator iterator = this.monitoredElementIds.iterator(); iterator.hasNext();)
-			meIds[i++] = (Identifier_Transferable) ((Identifier) iterator.next()).getTransferable();
+		Identifier_Transferable[] meIds = null;
+		try {
+			meIds = Identifier.createTransferables(this.monitoredElementIds);
+		}
+		catch (IllegalDataException ide) {
+			// Never
+			Log.errorException(ide);
+		}
 
 		return new Set_Transferable(super.getHeaderTransferable(),
 				SetSort.from_int(this.sort),

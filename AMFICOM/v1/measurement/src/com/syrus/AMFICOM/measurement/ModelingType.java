@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingType.java,v 1.17 2005/04/08 08:47:02 arseniy Exp $
+ * $Id: ModelingType.java,v 1.18 2005/04/08 12:33:24 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.measurement.corba.ModelingType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/04/08 08:47:02 $
+ * @version $Revision: 1.18 $, $Date: 2005/04/08 12:33:24 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -73,7 +73,12 @@ public class ModelingType extends ActionType {
 	}
 
 	public ModelingType(ModelingType_Transferable mtt) throws CreateObjectException {
-		this.fromTransferable(mtt);
+		try {
+			this.fromTransferable(mtt);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}
 
 	protected ModelingType(Identifier id,
@@ -132,31 +137,19 @@ public class ModelingType extends ActionType {
 		}
 	}
 
-	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
-		ModelingType_Transferable mtt = (ModelingType_Transferable)transferable;
-		super.fromTransferable(mtt.header,
-			  mtt.codename,
-			  mtt.description);
+	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
+		ModelingType_Transferable mtt = (ModelingType_Transferable) transferable;
+		super.fromTransferable(mtt.header, mtt.codename, mtt.description);
 
-		try {
-			java.util.Set parTypeIds;
+		java.util.Set parTypeIds;
 
-			parTypeIds = new HashSet(mtt.in_parameter_type_ids.length);
-			for (int i = 0; i < mtt.in_parameter_type_ids.length; i++)
-				parTypeIds.add(new Identifier(mtt.in_parameter_type_ids[i]));
-			this.inParameterTypes = GeneralStorableObjectPool.getStorableObjects(parTypeIds, true);
-			
-			parTypeIds.clear();
-			for (int i = 0; i < mtt.out_parameter_type_ids.length; i++)
-				parTypeIds.add(new Identifier(mtt.out_parameter_type_ids[i]));
-			this.outParameterTypes = GeneralStorableObjectPool.getStorableObjects(parTypeIds, true);
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
+		parTypeIds = Identifier.fromTransferables(mtt.in_parameter_type_ids);
+		this.inParameterTypes = GeneralStorableObjectPool.getStorableObjects(parTypeIds, true);
 
+		parTypeIds = Identifier.fromTransferables(mtt.out_parameter_type_ids);
+		this.outParameterTypes = GeneralStorableObjectPool.getStorableObjects(parTypeIds, true);
 	}
-	
+
 	public IDLEntity getTransferable() {
 		int i;
 

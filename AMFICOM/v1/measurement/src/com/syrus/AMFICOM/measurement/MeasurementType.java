@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementType.java,v 1.60 2005/04/08 08:47:01 arseniy Exp $
+ * $Id: MeasurementType.java,v 1.61 2005/04/08 12:33:24 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.60 $, $Date: 2005/04/08 08:47:01 $
+ * @version $Revision: 1.61 $, $Date: 2005/04/08 12:33:24 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -79,7 +79,12 @@ public class MeasurementType extends ActionType {
 	}
 
 	public MeasurementType(MeasurementType_Transferable mtt) throws CreateObjectException {
-		this.fromTransferable(mtt);
+		try {
+			this.fromTransferable(mtt);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}
 
 	protected MeasurementType(Identifier id,
@@ -144,35 +149,22 @@ public class MeasurementType extends ActionType {
 		}
 	}
 
-	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
-		MeasurementType_Transferable mtt = (MeasurementType_Transferable)transferable;
-		super.fromTransferable(mtt.header,
-			  mtt.codename,
-			  mtt.description);
+	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
+		MeasurementType_Transferable mtt = (MeasurementType_Transferable) transferable;
+		super.fromTransferable(mtt.header, mtt.codename, mtt.description);
 
-		try {
-			java.util.Set typeIds;
-			
-			typeIds = new HashSet(mtt.in_parameter_type_ids.length);
-			for (int i = 0; i < mtt.in_parameter_type_ids.length; i++)
-				typeIds.add(new Identifier(mtt.in_parameter_type_ids[i]));
-			this.inParameterTypes = GeneralStorableObjectPool.getStorableObjects(typeIds, true);
+		java.util.Set typeIds;
 
-			typeIds.clear();
-			for (int i = 0; i < mtt.out_parameter_type_ids.length; i++)
-				typeIds.add(new Identifier(mtt.out_parameter_type_ids[i]));
-			this.outParameterTypes = GeneralStorableObjectPool.getStorableObjects(typeIds, true);
+		typeIds = Identifier.fromTransferables(mtt.in_parameter_type_ids);
+		this.inParameterTypes = GeneralStorableObjectPool.getStorableObjects(typeIds, true);
 
-			typeIds.clear();
-			for (int i = 0; i < mtt.measurement_port_type_ids.length; i++)
-				typeIds.add(new Identifier(mtt.measurement_port_type_ids[i]));
-			this.measurementPortTypes = ConfigurationStorableObjectPool.getStorableObjects(typeIds, true);
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
+		typeIds = Identifier.fromTransferables(mtt.out_parameter_type_ids);
+		this.outParameterTypes = GeneralStorableObjectPool.getStorableObjects(typeIds, true);
+
+		typeIds = Identifier.fromTransferables(mtt.measurement_port_type_ids);
+		this.measurementPortTypes = ConfigurationStorableObjectPool.getStorableObjects(typeIds, true);
 	}
-	
+
 	public IDLEntity getTransferable() {
 		int i;
 

@@ -1,5 +1,5 @@
 /*
- * $Id: Evaluation.java,v 1.49 2005/04/08 08:47:01 arseniy Exp $
+ * $Id: Evaluation.java,v 1.50 2005/04/08 12:33:24 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.49 $, $Date: 2005/04/08 08:47:01 $
+ * @version $Revision: 1.50 $, $Date: 2005/04/08 12:33:24 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -53,7 +53,12 @@ public class Evaluation extends Action {
 	}
 
 	public Evaluation(Evaluation_Transferable et) throws CreateObjectException {
-		this.fromTransferable(et);
+		try {
+			this.fromTransferable(et);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}
 
 	protected Evaluation(Identifier id,
@@ -76,22 +81,15 @@ public class Evaluation extends Action {
 		this.thresholdSet = thresholdSet;
 	}
 
-	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
-		Evaluation_Transferable et = (Evaluation_Transferable)transferable;
-		super.fromTransferable(et.header,
-			  null,
-			  new Identifier(et.monitored_element_id),
-			  null);
+	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
+		Evaluation_Transferable et = (Evaluation_Transferable) transferable;
+		super.fromTransferable(et.header, null, new Identifier(et.monitored_element_id), null);
 
-		try {
-			super.type = (EvaluationType)MeasurementStorableObjectPool.getStorableObject(new Identifier(et.type_id), true);
-			super.parentAction = (et.measurement_id.identifier_string.length() != 0) ? (Measurement) MeasurementStorableObjectPool.getStorableObject(new Identifier(et.measurement_id), true) : null;
+		super.type = (EvaluationType) MeasurementStorableObjectPool.getStorableObject(new Identifier(et.type_id), true);
+		super.parentAction = (et.measurement_id.identifier_string.length() != 0)
+				? (Measurement) MeasurementStorableObjectPool.getStorableObject(new Identifier(et.measurement_id), true) : null;
 
-			this.thresholdSet = (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(et.threshold_set_id), true);
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
+		this.thresholdSet = (Set) MeasurementStorableObjectPool.getStorableObject(new Identifier(et.threshold_set_id), true);
 	}
 
 	public IDLEntity getTransferable() {

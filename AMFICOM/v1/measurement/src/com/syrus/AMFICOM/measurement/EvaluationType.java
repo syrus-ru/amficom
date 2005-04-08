@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationType.java,v 1.55 2005/04/08 08:47:01 arseniy Exp $
+ * $Id: EvaluationType.java,v 1.56 2005/04/08 12:33:24 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.55 $, $Date: 2005/04/08 08:47:01 $
+ * @version $Revision: 1.56 $, $Date: 2005/04/08 12:33:24 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -85,7 +85,12 @@ public class EvaluationType extends ActionType {
 	}
 
 	public EvaluationType(EvaluationType_Transferable ett) throws CreateObjectException {
-		this.fromTransferable(ett);
+		try {
+			this.fromTransferable(ett);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}	
 	
 	protected EvaluationType(Identifier id,
@@ -167,41 +172,25 @@ public class EvaluationType extends ActionType {
 		}
 	}
 
-	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
+	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
 		EvaluationType_Transferable ett = (EvaluationType_Transferable)transferable;
 		super.fromTransferable(ett.header, ett.codename, ett.description);
 
-		try {
-			java.util.Set parTypIds;
+		java.util.Set parTypIds;
 
-			parTypIds = new HashSet(ett.in_parameter_type_ids.length);
-			for (int i = 0; i < ett.in_parameter_type_ids.length; i++)
-				parTypIds.add(new Identifier(ett.in_parameter_type_ids[i]));
-			this.inParameterTypes = GeneralStorableObjectPool.getStorableObjects(parTypIds, true);
+		parTypIds = Identifier.fromTransferables(ett.in_parameter_type_ids);
+		this.inParameterTypes = GeneralStorableObjectPool.getStorableObjects(parTypIds, true);
 
-			parTypIds.clear();
-			for (int i = 0; i < ett.threshold_parameter_type_ids.length; i++)
-				parTypIds.add(new Identifier(ett.threshold_parameter_type_ids[i]));
-			this.thresholdParameterTypes = GeneralStorableObjectPool.getStorableObjects(parTypIds, true);
+		parTypIds = Identifier.fromTransferables(ett.threshold_parameter_type_ids);
+		this.thresholdParameterTypes = GeneralStorableObjectPool.getStorableObjects(parTypIds, true);
 
-			parTypIds.clear();
-			for (int i = 0; i < ett.etalon_parameter_type_ids.length; i++)
-				parTypIds.add(new Identifier(ett.etalon_parameter_type_ids[i]));
-			this.etalonParameterTypes = GeneralStorableObjectPool.getStorableObjects(parTypIds, true);
+		parTypIds = Identifier.fromTransferables(ett.etalon_parameter_type_ids);
+		this.etalonParameterTypes = GeneralStorableObjectPool.getStorableObjects(parTypIds, true);
 
-			parTypIds.clear();
-			for (int i = 0; i < ett.out_parameter_type_ids.length; i++)
-				parTypIds.add(new Identifier(ett.out_parameter_type_ids[i]));
-			this.outParameterTypes = GeneralStorableObjectPool.getStorableObjects(parTypIds, true);
+		parTypIds = Identifier.fromTransferables(ett.out_parameter_type_ids);
+		this.outParameterTypes = GeneralStorableObjectPool.getStorableObjects(parTypIds, true);
 
-
-			this.measurementTypeIds = new HashSet(ett.measurement_type_ids.length);
-			for (int i = 0; i < ett.measurement_type_ids.length; i++)
-				this.measurementTypeIds.add(new Identifier(ett.measurement_type_ids[i]));
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
+		this.measurementTypeIds = Identifier.fromTransferables(ett.measurement_type_ids);
 	}
 
 	public IDLEntity getTransferable() {

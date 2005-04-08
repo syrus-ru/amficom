@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.33 2005/04/08 08:47:02 arseniy Exp $
+ * $Id: Modeling.java,v 1.34 2005/04/08 12:33:24 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.measurement.corba.Modeling_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/04/08 08:47:02 $
+ * @version $Revision: 1.34 $, $Date: 2005/04/08 12:33:24 $
  * @author $Author: arseniy $
  * @author arseniy
  * @module measurement_v1
@@ -55,7 +55,12 @@ public class Modeling extends Action {
 	}
 
 	public Modeling(Modeling_Transferable mt) throws CreateObjectException {
-		this.fromTransferable(mt);
+		try {
+			this.fromTransferable(mt);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}
 
 	protected Modeling(Identifier id,
@@ -78,31 +83,23 @@ public class Modeling extends Action {
 		this.argumentSet = argumentSet;
 	}
 
-	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
-		Modeling_Transferable mt = (Modeling_Transferable)transferable;
-		super.fromTransferable(mt.header,
-			  null,
-			  new Identifier(mt.monitored_element_id),
-			  null);
+	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
+		Modeling_Transferable mt = (Modeling_Transferable) transferable;
+		super.fromTransferable(mt.header, null, new Identifier(mt.monitored_element_id), null);
 
-		try {
-			super.type = (ModelingType)MeasurementStorableObjectPool.getStorableObject(new Identifier(mt.type_id), true);
+		super.type = (ModelingType) MeasurementStorableObjectPool.getStorableObject(new Identifier(mt.type_id), true);
 
-			this.argumentSet = (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(mt.argument_set_id), true);
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
+		this.argumentSet = (Set) MeasurementStorableObjectPool.getStorableObject(new Identifier(mt.argument_set_id), true);
 
 		this.name = mt.name;
 	}
-	
+
 	public IDLEntity getTransferable() {
 		return new Modeling_Transferable(super.getHeaderTransferable(),
-									(Identifier_Transferable)super.type.getId().getTransferable(),
-									(Identifier_Transferable)super.monitoredElementId.getTransferable(),
-									this.name,
-									(Identifier_Transferable)this.argumentSet.getId().getTransferable());
+				(Identifier_Transferable) super.type.getId().getTransferable(),
+				(Identifier_Transferable) super.monitoredElementId.getTransferable(),
+				this.name,
+				(Identifier_Transferable) this.argumentSet.getId().getTransferable());
 	}
 
   public short getEntityCode() {
