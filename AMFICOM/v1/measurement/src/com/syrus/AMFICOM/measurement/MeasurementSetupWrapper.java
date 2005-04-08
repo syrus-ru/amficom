@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupWrapper.java,v 1.5 2005/04/05 15:40:56 arseniy Exp $
+ * $Id: MeasurementSetupWrapper.java,v 1.6 2005/04/08 12:47:46 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/04/05 15:40:56 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/04/08 12:47:46 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 public class MeasurementSetupWrapper implements StorableObjectWrapper {
@@ -26,6 +26,7 @@ public class MeasurementSetupWrapper implements StorableObjectWrapper {
 	public static final String				COLUMN_MEASUREMENT_DURAION			= "measurement_duration";
 	public static final String				COLUMN_PARAMETER_SET_ID				= "parameter_set_id";
 	public static final String				COLUMN_THRESHOLD_SET_ID				= "threshold_set_id";
+	public static final String 				SUMMARY_INFO						= "summary_info";
 	public static final String				LINK_COLUMN_MONITORED_ELEMENT_ID					= "monitored_element_id";
 	public static final String				LINK_COLUMN_MEASUREMENT_SETUP_ID	= "measurement_setup_id";
 
@@ -73,6 +74,9 @@ public class MeasurementSetupWrapper implements StorableObjectWrapper {
 				return new Long(measurementSetup.getMeasurementDuration());
 			if (key.equals(LINK_COLUMN_MONITORED_ELEMENT_ID))
 				return measurementSetup.getMonitoredElementIds();
+			if (key.equals(SUMMARY_INFO)) {
+				
+			}
 
 		}
 		return null;

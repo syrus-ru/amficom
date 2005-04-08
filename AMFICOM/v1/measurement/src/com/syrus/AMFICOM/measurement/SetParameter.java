@@ -1,5 +1,5 @@
 /*
- * $Id: SetParameter.java,v 1.25 2005/04/04 13:13:46 bass Exp $
+ * $Id: SetParameter.java,v 1.26 2005/04/08 12:47:46 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,8 @@
 
 package com.syrus.AMFICOM.measurement;
 
+
+import java.io.IOException;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -22,13 +24,16 @@ import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TransferableObject;
 import com.syrus.AMFICOM.general.TypedObject;
+import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
+import com.syrus.util.ByteArray;
+
 import org.omg.CORBA.portable.IDLEntity;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/04/04 13:13:46 $
- * @author $Author: bass $
+ * @version $Revision: 1.26 $, $Date: 2005/04/08 12:47:46 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -130,6 +135,43 @@ public class SetParameter implements TransferableObject, TypedObject, Identifiab
 //					
 //		return str;
 //	}
+	
+	public String getStringValue() {
+		String string = null;
+		ByteArray byteArray = new ByteArray(this.value);
+		DataType dataType = this.type.getDataType();
+		switch (dataType.value()) {
+			case DataType._DATA_TYPE_INTEGER:
+				try {
+					string = Integer.toString(byteArray.toInt());
+				} catch (IOException e) {
+					// nothing
+				}
+				break;
+			case DataType._DATA_TYPE_DOUBLE:
+				try {
+					string = Double.toString(byteArray.toDouble());
+				} catch (IOException e) {
+					// nothing
+				}
+				break;
+			case DataType._DATA_TYPE_STRING:
+				try {
+					string = byteArray.toUTFString();
+				} catch (IOException e) {
+					// nothing
+				}
+				break;
+			case DataType._DATA_TYPE_LONG:
+				try {
+					string = Long.toString(byteArray.toLong());
+				} catch (IOException e) {
+					// nothing
+				}
+				break;
+		}
+		return string;
+	}
 
 	public static byte[] getValueByTypeCodename(SetParameter[] params, String keyCodename) throws ObjectNotFoundException {
 		for (int i = 0; i < params.length; i++) {
