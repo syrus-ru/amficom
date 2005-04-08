@@ -1,5 +1,5 @@
 /*
- * $Id: ClientGeneralObjectLoader.java,v 1.12 2005/04/08 15:11:00 bob Exp $
+ * $Id: ClientGeneralObjectLoader.java,v 1.13 2005/04/08 15:47:27 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/04/08 15:11:00 $
+ * @version $Revision: 1.13 $, $Date: 2005/04/08 15:47:27 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -41,7 +41,7 @@ public class ClientGeneralObjectLoader extends AbstractClientObjectLoader implem
 		return  (AccessIdentifier_Transferable) SessionContext.getAccessIdentity().getTransferable();
 	}
 	
-	private StorableObject fromTransferable(Identifier id, IDLEntity transferable) throws CreateObjectException {
+	private StorableObject fromTransferable(Identifier id, IDLEntity transferable) throws ApplicationException {
 		StorableObject so = null;
 		try {
 			so = GeneralStorableObjectPool.getStorableObject(id, false);
@@ -53,7 +53,7 @@ public class ClientGeneralObjectLoader extends AbstractClientObjectLoader implem
 		return so;
 	}
 
-	public ParameterType loadParameterType(Identifier id) throws CommunicationException, CreateObjectException {
+	public ParameterType loadParameterType(Identifier id) throws ApplicationException {
 		try {
 			ParameterType_Transferable ptt = this.server.transmitParameterType((Identifier_Transferable) id.getTransferable(),
 				getAccessIdentifierTransferable());
@@ -68,8 +68,7 @@ public class ClientGeneralObjectLoader extends AbstractClientObjectLoader implem
 		}
 	}
 
-	public CharacteristicType loadCharacteristicType(Identifier id) throws RetrieveObjectException,
-			CommunicationException, CreateObjectException {
+	public CharacteristicType loadCharacteristicType(Identifier id) throws ApplicationException {
 		try {
 			CharacteristicType_Transferable ctt = this.server.transmitCharacteristicType((Identifier_Transferable) id
 				.getTransferable(), getAccessIdentifierTransferable());
@@ -102,7 +101,7 @@ public class ClientGeneralObjectLoader extends AbstractClientObjectLoader implem
 		}
 	}
 
-	public Set loadParameterTypes(Set ids) throws DatabaseException, CommunicationException {
+	public Set loadParameterTypes(Set ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -150,7 +149,7 @@ public class ClientGeneralObjectLoader extends AbstractClientObjectLoader implem
 		}
 	}
 
-	public Set loadCharacteristicTypes(Set ids) throws DatabaseException, CommunicationException {
+	public Set loadCharacteristicTypes(Set ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;

@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementObjectLoader.java,v 1.29 2005/04/06 09:03:00 bob Exp $
+ * $Id: ClientMeasurementObjectLoader.java,v 1.30 2005/04/08 15:47:27 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,6 @@ import org.omg.CORBA.portable.IDLEntity;
 import com.syrus.AMFICOM.cmserver.corba.CMServer;
 import com.syrus.AMFICOM.general.AbstractClientObjectLoader;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.SessionContext;
@@ -45,7 +44,7 @@ import com.syrus.AMFICOM.measurement.corba.TemporalPattern_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/04/06 09:03:00 $
+ * @version $Revision: 1.30 $, $Date: 2005/04/08 15:47:27 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -91,7 +90,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 		}
 	}
 	
-	private StorableObject fromTransferable(Identifier id, IDLEntity transferable) throws CreateObjectException {
+	private StorableObject fromTransferable(Identifier id, IDLEntity transferable) throws ApplicationException {
 		StorableObject so = null;
 		try {
 			so = MeasurementStorableObjectPool.getStorableObject(id, false);

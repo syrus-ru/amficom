@@ -1,5 +1,5 @@
 /*
- * $Id: RISDSessionInfo.java,v 1.31 2005/04/04 16:05:43 bass Exp $
+ * $Id: RISDSessionInfo.java,v 1.32 2005/04/08 15:47:27 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -73,8 +73,8 @@ import com.syrus.util.corba.JavaSoftORBUtil;
 import com.syrus.util.prefs.IIOPConnectionManager;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.31 $, $Date: 2005/04/04 16:05:43 $
+ * @author $Author: bob $
+ * @version $Revision: 1.32 $, $Date: 2005/04/08 15:47:27 $
  * @module generalclient_v1
  */
 public final class RISDSessionInfo extends SessionInterface {
@@ -277,7 +277,7 @@ public final class RISDSessionInfo extends SessionInterface {
 
 				userId,
 
-				new Identifier_Transferable("Null_0"));
+				"нахЪ");
 			this.domainId = new Identifier(this.accessIdentifier.domain_id);
 			this.userId = new Identifier(this.accessIdentifier.user_id);
 			final Class clazz = StorableObjectResizableLRUMap.class;
@@ -298,7 +298,7 @@ public final class RISDSessionInfo extends SessionInterface {
 			IdentifierPool.init(cmServer);
 //			IdentifierPool.init(new LocalIdentifierGeneratorServer());
 			System.err.println("domainId: " + this.accessIdentifier.domain_id.identifier_string);
-			System.err.println("sessionId: " + this.accessIdentifier.session_id.identifier_string);
+			System.err.println("sessionId: " + this.accessIdentifier.session_code);
 			System.err.println("started: " + new java.util.Date(this.accessIdentifier.started));
 			System.err.println("userId: " + this.accessIdentifier.user_id.identifier_string);
 			add(this);
@@ -368,14 +368,14 @@ public final class RISDSessionInfo extends SessionInterface {
 						this.LogonTime,
 						user.getName(),
 						this.userId.getIdentifierString(),
-						"Null_0",
+						"нахЪ",
 						this.domainId.getIdentifierString());
 				this.session_state = SESSION_OPENED;
 				this.accessIdentifier = new AccessIdentifier_Transferable(
 						this.LogonTime,
 						(Identifier_Transferable)this.domainId.getTransferable(),
 						(Identifier_Transferable)this.userId.getTransferable(),
-						new Identifier_Transferable("Null_0"));
+						"нахЪ");
 				
 				/* TODO really hostname can be 'null' ? */
 				SessionContext.init(new AccessIdentity(this.accessIdentifier), null);
@@ -443,7 +443,7 @@ public final class RISDSessionInfo extends SessionInterface {
 
  
 			System.err.println("domainId: " + this.accessIdentifier.domain_id.identifier_string);
-			System.err.println("sessionId: " + this.accessIdentifier.session_id.identifier_string);
+			System.err.println("sessionId: " + this.accessIdentifier.session_code);
 			System.err.println("started: " + new java.util.Date(this.accessIdentifier.started));
 			System.err.println("userId: " + this.accessIdentifier.user_id.identifier_string);
 			

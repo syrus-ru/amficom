@@ -1,5 +1,5 @@
 /*
- * $Id: ClientConfigurationObjectLoader.java,v 1.25 2005/04/06 08:03:26 bob Exp $
+ * $Id: ClientConfigurationObjectLoader.java,v 1.26 2005/04/08 15:47:27 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -52,7 +52,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/04/06 08:03:26 $
+ * @version $Revision: 1.26 $, $Date: 2005/04/08 15:47:27 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -94,7 +94,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 		}
 	}
 	
-	private StorableObject fromTransferable(Identifier id, IDLEntity transferable) throws CreateObjectException {
+	private StorableObject fromTransferable(Identifier id, IDLEntity transferable) throws ApplicationException {
 		StorableObject so = null;
 		try {
 			so = ConfigurationStorableObjectPool.getStorableObject(id, false);
@@ -106,7 +106,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 		return so;
 	}
 
-	public CableLinkType loadCableLinkType(Identifier id) throws DatabaseException, CommunicationException {
+	public CableLinkType loadCableLinkType(Identifier id) throws ApplicationException {
 		try {
 			CableLinkType_Transferable cltt = this.server.transmitCableLinkType((Identifier_Transferable) id.getTransferable(),
 				getAccessIdentifierTransferable());			
@@ -121,7 +121,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 		}
 	}
 
-	public CableThread loadCableThread(Identifier id) throws DatabaseException, CommunicationException {
+	public CableThread loadCableThread(Identifier id) throws ApplicationException {
 		try {
 			CableThread_Transferable ctt = this.server.transmitCableThread((Identifier_Transferable) id.getTransferable(),
 				getAccessIdentifierTransferable());			
@@ -136,7 +136,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 		}
 	}
 
-	public CableThreadType loadCableThreadType(Identifier id) throws DatabaseException, CommunicationException {
+	public CableThreadType loadCableThreadType(Identifier id) throws ApplicationException {
 		try {
 			CableThreadType_Transferable cttt = this.server.transmitCableThreadType((Identifier_Transferable) id
 				.getTransferable(), getAccessIdentifierTransferable());
@@ -151,7 +151,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 		}
 	}
 
-	public Set loadCableLinkTypes(Set ids) throws DatabaseException, CommunicationException {
+	public Set loadCableLinkTypes(Set ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -174,7 +174,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 		}
 	}
 
-	public Set loadCableThreads(Set ids) throws DatabaseException, CommunicationException {
+	public Set loadCableThreads(Set ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -197,7 +197,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 		}
 	}
 
-	public Set loadCableThreadTypes(Set ids) throws DatabaseException, CommunicationException {
+	public Set loadCableThreadTypes(Set ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -241,7 +241,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 		}
 	}
 
-	public Equipment loadEquipment(Identifier id) throws RetrieveObjectException, CommunicationException {
+	public Equipment loadEquipment(Identifier id) throws ApplicationException {
 		try {
 			Equipment_Transferable et = this.server.transmitEquipment((Identifier_Transferable) id.getTransferable(),
 				getAccessIdentifierTransferable());
@@ -259,7 +259,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 		}
 	}
 
-	public Set loadEquipments(Set ids) throws DatabaseException, CommunicationException {
+	public Set loadEquipments(Set ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -308,7 +308,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 		}
 	}
 
-	public EquipmentType loadEquipmentType(Identifier id) throws RetrieveObjectException, CommunicationException {
+	public EquipmentType loadEquipmentType(Identifier id) throws ApplicationException {
 		try {
 			EquipmentType_Transferable ett = this.server.transmitEquipmentType((Identifier_Transferable) id.getTransferable(),
 				getAccessIdentifierTransferable());
@@ -326,7 +326,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 		}
 	}
 
-	public Set loadEquipmentTypes(Set ids) throws DatabaseException, CommunicationException {
+	public Set loadEquipmentTypes(Set ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -374,7 +374,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 		}
 	}
 
-	public KIS loadKIS(Identifier id) throws RetrieveObjectException, CommunicationException {
+	public KIS loadKIS(Identifier id) throws ApplicationException {
 		try {
 			KIS_Transferable kt = this.server.transmitKIS((Identifier_Transferable) id.getTransferable(),
 				getAccessIdentifierTransferable());
@@ -391,7 +391,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 		}
 	}
 
-	public Set loadKISs(Set ids) throws DatabaseException, CommunicationException {
+	public Set loadKISs(Set ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -440,7 +440,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 		}
 	}
 
-	public Link loadLink(Identifier id) throws DatabaseException, CommunicationException {
+	public Link loadLink(Identifier id) throws ApplicationException {
 		try {
 			Link_Transferable lt = this.server.transmitLink((Identifier_Transferable) id.getTransferable(),
 				getAccessIdentifierTransferable());
@@ -457,7 +457,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 		}
 	}
 
-	public Set loadLinks(Set ids) throws DatabaseException, CommunicationException {
+	public Set loadLinks(Set ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -505,7 +505,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 		}
 	}
 
-	public LinkType loadLinkType(Identifier id) throws RetrieveObjectException, CommunicationException {
+	public LinkType loadLinkType(Identifier id) throws ApplicationException {
 		try {
 			LinkType_Transferable ltt = this.server.transmitLinkType((Identifier_Transferable) id.getTransferable(),
 				getAccessIdentifierTransferable());
@@ -522,7 +522,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 		}
 	}
 
-	public Set loadLinkTypes(Set ids) throws DatabaseException, CommunicationException {
+	public Set loadLinkTypes(Set ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -645,7 +645,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 		}
 	}
 
-	public MeasurementPort loadMeasurementPort(Identifier id) throws RetrieveObjectException, CommunicationException {
+	public MeasurementPort loadMeasurementPort(Identifier id) throws ApplicationException {
 		try {
 			MeasurementPort_Transferable mpt = this.server.transmitMeasurementPort((Identifier_Transferable) id
 				.getTransferable(), getAccessIdentifierTransferable());
@@ -664,7 +664,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 		}
 	}
 
-	public Set loadMeasurementPorts(Set ids) throws DatabaseException, CommunicationException {
+	public Set loadMeasurementPorts(Set ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -714,8 +714,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 		}
 	}
 
-	public MeasurementPortType loadMeasurementPortType(Identifier id) throws RetrieveObjectException,
-			CommunicationException {
+	public MeasurementPortType loadMeasurementPortType(Identifier id) throws ApplicationException {
 		try {
 			MeasurementPortType_Transferable mptt = this.server.transmitMeasurementPortType((Identifier_Transferable) id
 				.getTransferable(), getAccessIdentifierTransferable());
@@ -734,7 +733,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 		}
 	}
 
-	public Set loadMeasurementPortTypes(Set ids) throws DatabaseException, CommunicationException {
+	public Set loadMeasurementPortTypes(Set ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -759,8 +758,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 		}
 	}
 
-	public Set loadMeasurementPortTypesButIds(StorableObjectCondition condition, Set ids) throws DatabaseException,
-			CommunicationException {
+	public Set loadMeasurementPortTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -797,7 +795,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 		}
 	}
 
-	public Set loadMonitoredElements(Set ids) throws DatabaseException, CommunicationException {
+	public Set loadMonitoredElements(Set ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -820,8 +818,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 		}
 	}
 
-	public Set loadMonitoredElementsButIds(StorableObjectCondition condition, Set ids) throws DatabaseException,
-			CommunicationException {
+	public Set loadMonitoredElementsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			MonitoredElement_Transferable[] transferables;
@@ -844,7 +841,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 		}
 	}
 
-	public Port loadPort(Identifier id) throws RetrieveObjectException, CommunicationException {
+	public Port loadPort(Identifier id) throws ApplicationException {
 		try {
 			Port_Transferable pt = this.server.transmitPort((Identifier_Transferable) id.getTransferable(),
 				getAccessIdentifierTransferable());
@@ -861,7 +858,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 		}
 	}
 
-	public Set loadPorts(Set ids) throws DatabaseException, CommunicationException {
+	public Set loadPorts(Set ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -886,8 +883,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 		}
 	}
 
-	public Set loadPortsButIds(StorableObjectCondition condition, Set ids) throws DatabaseException,
-			CommunicationException {
+	public Set loadPortsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			Port_Transferable[] transferables;
@@ -911,7 +907,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 		}
 	}
 
-	public PortType loadPortType(Identifier id) throws RetrieveObjectException, CommunicationException {
+	public PortType loadPortType(Identifier id) throws ApplicationException {
 		try {
 			PortType_Transferable ptt = this.server.transmitPortType((Identifier_Transferable) id.getTransferable(),
 				getAccessIdentifierTransferable());
@@ -929,7 +925,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 		}
 	}
 
-	public Set loadPortTypes(Set ids) throws DatabaseException, CommunicationException {
+	public Set loadPortTypes(Set ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -954,8 +950,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 		}
 	}
 
-	public Set loadPortTypesButIds(StorableObjectCondition condition, Set ids) throws DatabaseException,
-			CommunicationException {
+	public Set loadPortTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -977,7 +972,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 		}
 	}
 
-	public TransmissionPath loadTransmissionPath(Identifier id) throws RetrieveObjectException, CommunicationException {
+	public TransmissionPath loadTransmissionPath(Identifier id) throws ApplicationException {
 		try {
 			TransmissionPath_Transferable tpt = this.server.transmitTransmissionPath((Identifier_Transferable) id
 				.getTransferable(), getAccessIdentifierTransferable());
@@ -996,7 +991,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 		}
 	}
 
-	public Set loadTransmissionPaths(Set ids) throws DatabaseException, CommunicationException {
+	public Set loadTransmissionPaths(Set ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -1021,8 +1016,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 		}
 	}
 
-	public Set loadTransmissionPathsButIds(StorableObjectCondition condition, Set ids) throws DatabaseException,
-			CommunicationException {
+	public Set loadTransmissionPathsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			TransmissionPath_Transferable[] transferables;
@@ -1046,8 +1040,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 		}
 	}
 
-	public TransmissionPathType loadTransmissionPathType(Identifier id) throws DatabaseException,
-			CommunicationException {
+	public TransmissionPathType loadTransmissionPathType(Identifier id) throws ApplicationException {
 		try {
 			TransmissionPathType_Transferable tptt = this.server.transmitTransmissionPathType((Identifier_Transferable) id
 				.getTransferable(), getAccessIdentifierTransferable());
@@ -1066,7 +1059,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 		}
 	}
 
-	public Set loadTransmissionPathTypes(Set ids) throws DatabaseException, CommunicationException {
+	public Set loadTransmissionPathTypes(Set ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -1091,8 +1084,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 		}
 	}
 
-	public Set loadTransmissionPathTypesButIds(StorableObjectCondition condition, Set ids) throws DatabaseException,
-			CommunicationException {
+	public Set loadTransmissionPathTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;

@@ -1,5 +1,5 @@
 /*
- * $Id: ClientAdministrationObjectLoader.java,v 1.12 2005/04/06 07:58:54 bob Exp $
+ * $Id: ClientAdministrationObjectLoader.java,v 1.13 2005/04/08 15:47:27 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/04/06 07:58:54 $
+ * @version $Revision: 1.13 $, $Date: 2005/04/08 15:47:27 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -55,7 +55,7 @@ public class ClientAdministrationObjectLoader extends AbstractClientObjectLoader
 		return  (AccessIdentifier_Transferable) SessionContext.getAccessIdentity().getTransferable();
 	}
 	
-	private StorableObject fromTransferable(Identifier id, IDLEntity transferable) throws CreateObjectException {
+	private StorableObject fromTransferable(Identifier id, IDLEntity transferable) throws ApplicationException {
 		StorableObject so = null;
 		try {
 			so = AdministrationStorableObjectPool.getStorableObject(id, false);
@@ -92,7 +92,7 @@ public class ClientAdministrationObjectLoader extends AbstractClientObjectLoader
 		}
 	}
 
-	public Domain loadDomain(Identifier id) throws RetrieveObjectException, CommunicationException {
+	public Domain loadDomain(Identifier id) throws ApplicationException {
 		try {
 			Domain_Transferable dt = this.cmserver.transmitDomain((Identifier_Transferable) id.getTransferable(),
 				getAccessIdentifierTransferable());
@@ -109,7 +109,7 @@ public class ClientAdministrationObjectLoader extends AbstractClientObjectLoader
 		}
 	}
 
-	public Set loadDomains(Set ids) throws DatabaseException, CommunicationException {
+	public Set loadDomains(Set ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -158,7 +158,7 @@ public class ClientAdministrationObjectLoader extends AbstractClientObjectLoader
 		}
 	}
 
-	public MCM loadMCM(Identifier id) throws RetrieveObjectException, CommunicationException {
+	public MCM loadMCM(Identifier id) throws ApplicationException {
 		try {
 			MCM_Transferable mt = this.cmserver.transmitMCM((Identifier_Transferable) id.getTransferable(),
 				getAccessIdentifierTransferable());
@@ -175,7 +175,7 @@ public class ClientAdministrationObjectLoader extends AbstractClientObjectLoader
 		}
 	}
 
-	public Set loadMCMs(Set ids) throws DatabaseException, CommunicationException {
+	public Set loadMCMs(Set ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -224,7 +224,7 @@ public class ClientAdministrationObjectLoader extends AbstractClientObjectLoader
 		}
 	}
 
-	public Server loadServer(Identifier id) throws RetrieveObjectException, CommunicationException {
+	public Server loadServer(Identifier id) throws ApplicationException {
 		try {
 			Server_Transferable st = this.cmserver.transmitServer((Identifier_Transferable) id.getTransferable(),
 				getAccessIdentifierTransferable());
@@ -241,7 +241,7 @@ public class ClientAdministrationObjectLoader extends AbstractClientObjectLoader
 		}
 	}
 
-	public Set loadServers(Set ids) throws DatabaseException, CommunicationException {
+	public Set loadServers(Set ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -290,7 +290,7 @@ public class ClientAdministrationObjectLoader extends AbstractClientObjectLoader
 		}
 	}
 
-	public User loadUser(Identifier id) throws RetrieveObjectException, CommunicationException, CreateObjectException {
+	public User loadUser(Identifier id) throws ApplicationException {
 		try {
 			User_Transferable ut = this.cmserver.transmitUser((Identifier_Transferable) id.getTransferable(),
 				getAccessIdentifierTransferable());
@@ -304,7 +304,7 @@ public class ClientAdministrationObjectLoader extends AbstractClientObjectLoader
 		}
 	}
 
-	public Set loadUsers(Set ids) throws DatabaseException, CommunicationException {
+	public Set loadUsers(Set ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
