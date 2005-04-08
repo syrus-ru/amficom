@@ -1,5 +1,5 @@
 /*
- * $Id: Environment.java,v 1.23 2005/04/07 08:11:21 bob Exp $
+ * $Id: Environment.java,v 1.24 2005/04/08 07:58:06 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.Client.General.Model;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Toolkit;
@@ -56,7 +57,7 @@ import com.syrus.io.IniFile;
  * Класс Environment используется для хранения общей для приложения информации.
  * 
  * @author $Author: bob $
- * @version $Revision: 1.23 $, $Date: 2005/04/07 08:11:21 $
+ * @version $Revision: 1.24 $, $Date: 2005/04/08 07:58:06 $
  * @module generalclient_v1
  */
 public final class Environment
@@ -308,7 +309,16 @@ public final class Environment
 		defaults.put("Table.background", Color.WHITE);
 		defaults.put("Table.foreground", Color.BLACK);
 		defaults.put("Table.gridColor", Color.BLACK);
-		defaults.put("Viewport.background", Color.WHITE);		
+		defaults.put("Viewport.background", Color.WHITE);
+		
+		Font font = new Font("Dialog", Font.PLAIN, 10);
+		
+		defaults.put("TextField.font", font);
+		
+		defaults.put("ComboBox.font", font);
+		defaults.put("ComboBox.background", defaults.get("window"));
+		defaults.put("ComboBox.disabledBackground", defaults.get("window"));
+		
 		defaults.put(ResourceKeys.COLOR_GRAPHICS_BACKGROUND, Color.WHITE);
 	}
 
