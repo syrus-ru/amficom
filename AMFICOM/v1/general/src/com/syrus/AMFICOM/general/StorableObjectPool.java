@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.64 2005/04/08 08:51:01 bass Exp $
+ * $Id: StorableObjectPool.java,v 1.65 2005/04/08 14:11:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,13 +18,15 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import org.omg.CORBA.portable.IDLEntity;
+
 import com.syrus.io.LRUMapSaver;
 import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.64 $, $Date: 2005/04/08 08:51:01 $
- * @author $Author: bass $
+ * @version $Revision: 1.65 $, $Date: 2005/04/08 14:11:01 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public abstract class StorableObjectPool {
@@ -109,7 +111,7 @@ public abstract class StorableObjectPool {
 
 	}
 
-	protected void cleanChangedStorableObjectImpl(final Short entityCode) {
+	protected final void cleanChangedStorableObjectImpl(final Short entityCode) {
 		short code = entityCode.shortValue();
 		if (this.deletedIds != null) {
 			for (Iterator it = this.deletedIds.iterator(); it.hasNext();) {
@@ -128,14 +130,14 @@ public abstract class StorableObjectPool {
 		}
 	}
 
-	protected void cleanChangedStorableObjectsImpl() {
+	protected final void cleanChangedStorableObjectsImpl() {
 		for (Iterator it = this.objectPoolMap.keySet().iterator(); it.hasNext();) {
 			Short entityCode = (Short) it.next();
 			this.cleanChangedStorableObjectImpl(entityCode);
 		}
 	}
 
-	protected synchronized void deleteImpl(final Identifier id) {
+	protected final synchronized void deleteImpl(final Identifier id) {
 		Short entityCode = new Short(id.getMajor());
 		LRUMap lruMap = (LRUMap) this.objectPoolMap.get(entityCode);
 		if (lruMap != null)
@@ -153,7 +155,7 @@ public abstract class StorableObjectPool {
 		// this.deleteStorableObject(id);
 	}
 
-	protected synchronized void deleteImpl(final Set objects) throws IllegalDataException {
+	protected final synchronized void deleteImpl(final Set objects) throws IllegalDataException {
 		Object object;
 		Identifier id;
 		for (Iterator it = objects.iterator(); it.hasNext();) {
@@ -199,7 +201,7 @@ public abstract class StorableObjectPool {
 	 * @throws CommunicationException
 	 * @throws IllegalDataException
 	 */
-	protected synchronized void flushImpl(final boolean force) throws ApplicationException {
+	protected final synchronized void flushImpl(final boolean force) throws ApplicationException {
 
 		/* delete objects ! */
 		if (this.deletedIds != null) {
@@ -350,7 +352,7 @@ public abstract class StorableObjectPool {
 		return storableObject;
 	}
 
-	protected StorableObject getStorableObjectImpl(final Identifier objectId, final boolean useLoader) throws ApplicationException {
+	protected final StorableObject getStorableObjectImpl(final Identifier objectId, final boolean useLoader) throws ApplicationException {
 		assert objectId != null : "Null identifier supplied";
 
 		if (objectId != null) {
@@ -398,7 +400,7 @@ public abstract class StorableObjectPool {
 	 * @param useLoader
 	 * @throws ApplicationException
 	 */
-	protected Set getStorableObjectsByConditionButIdsImpl(final Set ids,
+	protected final Set getStorableObjectsByConditionButIdsImpl(final Set ids,
 			final StorableObjectCondition condition,
 			final boolean useLoader) throws ApplicationException {
 		assert ids != null : "Supply an empty set instead";
@@ -493,7 +495,7 @@ public abstract class StorableObjectPool {
 		return soSet;
 	}
 
-	protected Set getStorableObjectsByConditionImpl(final StorableObjectCondition condition, final boolean useLoader)
+	protected final Set getStorableObjectsByConditionImpl(final StorableObjectCondition condition, final boolean useLoader)
 			throws ApplicationException {
 		return this.getStorableObjectsByConditionButIdsImpl(Collections.EMPTY_SET, condition, useLoader);
 	}
@@ -507,7 +509,7 @@ public abstract class StorableObjectPool {
 	 * @todo Check references within workspace, convert a run time warning (if
 	 *       objectIds is null) into a run time error.
 	 */
-	protected Set getStorableObjectsImpl(final Set objectIds, final boolean useLoader) throws ApplicationException {
+	protected final Set getStorableObjectsImpl(final Set objectIds, final boolean useLoader) throws ApplicationException {
 		Set set = null;
 		Map objectQueueMap = null;
 		if (objectIds != null) {
@@ -592,7 +594,7 @@ public abstract class StorableObjectPool {
 	protected abstract Set loadStorableObjectsButIds(final StorableObjectCondition condition, final Set ids)
 			throws ApplicationException;
 
-	protected void populatePools() {
+	protected final void populatePools() {
 		try {
 			for (Iterator it = this.objectPoolMap.keySet().iterator(); it.hasNext();) {
 				Short objectEntityCode = (Short) it.next();
@@ -611,7 +613,7 @@ public abstract class StorableObjectPool {
 	 *            a non-null pure java storable object.
 	 * @throws IllegalObjectEntityException
 	 */
-	protected StorableObject putStorableObjectImpl(final StorableObject storableObject) throws IllegalObjectEntityException {
+	protected final StorableObject putStorableObjectImpl(final StorableObject storableObject) throws IllegalObjectEntityException {
 		// */
 		assert storableObject != null;
 		/*
@@ -632,12 +634,37 @@ public abstract class StorableObjectPool {
 	}
 
 	/**
+	 * Get Storable Object from pool for id,
+	 * update it's fields from transferable
+	 * and return it.
+	 * If not found in pool -- return null
+	 * @param id
+	 * @param transferable
+	 * @return
+	 * @throws ApplicationException
+	 */
+	protected final StorableObject fromTransferableImpl(Identifier id, IDLEntity transferable) throws ApplicationException {
+		StorableObject storableObject = null;
+		try {
+			storableObject = this.getStorableObjectImpl(id, false);
+		}
+		catch (ApplicationException ae) {
+			Log.errorException(ae);
+		}
+
+		if (storableObject != null)
+			storableObject.fromTransferable(transferable);
+		
+		return storableObject;
+	}
+
+	/**
 	 * Refresh only unchanged storable objects.
 	 * 
 	 * @throws DatabaseException
 	 * @throws CommunicationException
 	 */
-	protected void refreshImpl() throws ApplicationException {
+	protected final void refreshImpl() throws ApplicationException {
 		Log.debugMessage(this.selfGroupName + "StorableObjectPool.refreshImpl | trying to refresh Pool...", Log.DEBUGLEVEL03);
 		final Set storableObjects = new HashSet();
 		final Set entityCodes = this.objectPoolMap.keySet();
@@ -698,7 +725,7 @@ public abstract class StorableObjectPool {
 												final Set storableObjects,
 												final boolean force) throws ApplicationException;
 
-	protected void serializePoolImpl() {
+	protected final void serializePoolImpl() {
 		final Set entityCodeSet = this.objectPoolMap.keySet();
 		for (final Iterator it = entityCodeSet.iterator(); it.hasNext();) {
 			final Short entityCode = (Short) it.next();
@@ -706,7 +733,7 @@ public abstract class StorableObjectPool {
 		}
 	}
 
-	protected void truncateObjectPoolImpl(final short entityCode) {
+	protected final void truncateObjectPoolImpl(final short entityCode) {
 		LRUMap objectPool = (LRUMap) this.objectPoolMap.get(new Short(entityCode));
 		if (objectPool instanceof StorableObjectResizableLRUMap)
 			((StorableObjectResizableLRUMap) objectPool).truncate(true);
@@ -714,4 +741,5 @@ public abstract class StorableObjectPool {
 			Log.errorMessage("StorableObjectPool.truncateObjectPoolImpl | ERROR: Object pool class '" + objectPool.getClass().getName()
 					+ "' not 'StorableObjectResizableLRUMap' -- cannot truncate pool"); 
 	}
+
 }
