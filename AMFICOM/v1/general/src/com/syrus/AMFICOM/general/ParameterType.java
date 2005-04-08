@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterType.java,v 1.15 2005/04/08 08:05:43 arseniy Exp $
+ * $Id: ParameterType.java,v 1.16 2005/04/08 12:01:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/04/08 08:05:43 $
+ * @version $Revision: 1.16 $, $Date: 2005/04/08 12:01:56 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -43,13 +43,7 @@ public class ParameterType extends StorableObjectType {
 	}
 
 	public ParameterType(ParameterType_Transferable ptt) {
-		try {
-			this.fromTransferable(ptt);
-		}
-		catch (CreateObjectException e) {
-			// Never
-			Log.debugException(e, Log.WARNING);
-		}
+		this.fromTransferable(ptt);
 	}
 
 	protected ParameterType(Identifier id,
@@ -110,9 +104,15 @@ public class ParameterType extends StorableObjectType {
 		}
 	}
 
-	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
+	protected void fromTransferable(IDLEntity transferable) {
 		ParameterType_Transferable ptt = (ParameterType_Transferable) transferable;
-		super.fromTransferable(ptt.header, ptt.codename, ptt.description);
+		try {
+			super.fromTransferable(ptt.header, ptt.codename, ptt.description);
+		}
+		catch (ApplicationException ae) {
+			// Never
+			Log.errorException(ae);
+		}
 		this.name = ptt.name;
 		this.dataType = ptt.data_type.value();
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.45 2005/04/08 08:31:11 arseniy Exp $
+ * $Id: MonitoredElement.java,v 1.46 2005/04/08 12:02:20 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,6 +19,7 @@ import org.omg.CORBA.portable.IDLEntity;
 import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -30,7 +31,7 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2005/04/08 08:31:11 $
+ * @version $Revision: 1.46 $, $Date: 2005/04/08 12:02:20 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -60,7 +61,12 @@ public class MonitoredElement extends DomainMember {
 	}
 
 	public MonitoredElement(MonitoredElement_Transferable met) throws CreateObjectException {
-		this.fromTransferable(met);
+		try {
+			this.fromTransferable(met);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}
 	
 	protected MonitoredElement(Identifier id,
@@ -125,35 +131,31 @@ public class MonitoredElement extends DomainMember {
 			throw new CreateObjectException("MonitoredElement.createInstance | cannot generate identifier ", e);
 		}
 	}
-	
-	protected void fromTransferable(IDLEntity transferable)
-			throws CreateObjectException {
+
+	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
 		MonitoredElement_Transferable met = (MonitoredElement_Transferable) transferable;
-		super.fromTransferable(met.header,
-				  new Identifier(met.domain_id));
+		super.fromTransferable(met.header, new Identifier(met.domain_id));
 		this.measurementPortId = new Identifier(met.measurement_port_id);
 		this.sort = met.sort.value();
 		this.localAddress = met.local_address;
-		this.monitoredDomainMemberIds = new HashSet(met.monitored_domain_member_ids.length);
 
 		this.name = met.name;
-		for (int i= 0; i < met.monitored_domain_member_ids.length; i++)
-			this.monitoredDomainMemberIds.add(new Identifier(met.monitored_domain_member_ids[i]));
-			
+
+		this.monitoredDomainMemberIds = Identifier.fromTransferables(met.monitored_domain_member_ids);
 	}
 
 	public IDLEntity getTransferable() {
 		Identifier_Transferable[] mdmIds = new Identifier_Transferable[this.monitoredDomainMemberIds.size()];
 		int i = 0;
 		for (Iterator it = this.monitoredDomainMemberIds.iterator(); it.hasNext();)
-			mdmIds[i++] = (Identifier_Transferable)((Identifier)it.next()).getTransferable();
+			mdmIds[i++] = (Identifier_Transferable) ((Identifier) it.next()).getTransferable();
 		return new MonitoredElement_Transferable(super.getHeaderTransferable(),
-												 (Identifier_Transferable)this.getDomainId().getTransferable(),
-												 this.name,
-												 (Identifier_Transferable)this.measurementPortId.getTransferable(),
-												 MonitoredElementSort.from_int(this.sort),
-												 this.localAddress,
-												 mdmIds);
+				(Identifier_Transferable) this.getDomainId().getTransferable(),
+				this.name,
+				(Identifier_Transferable) this.measurementPortId.getTransferable(),
+				MonitoredElementSort.from_int(this.sort),
+				this.localAddress,
+				mdmIds);
 	}
 
 	public Identifier getMeasurementPortId() {

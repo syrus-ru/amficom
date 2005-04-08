@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.16 2005/04/08 08:10:41 arseniy Exp $
+ * $Id: MCM.java,v 1.17 2005/04/08 12:02:07 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/04/08 08:10:41 $
+ * @version $Revision: 1.17 $, $Date: 2005/04/08 12:02:07 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -64,7 +64,12 @@ public class MCM extends DomainMember implements Characterizable {
 	}
 
 	public MCM(MCM_Transferable mt) throws CreateObjectException {
-		this.fromTransferable(mt);		
+		try {
+			this.fromTransferable(mt);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}		
 	}
 
 	protected MCM(Identifier id,
@@ -92,7 +97,7 @@ public class MCM extends DomainMember implements Characterizable {
 		this.characteristics = new HashSet();
 	}
 
-	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
+	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
 		MCM_Transferable mt = (MCM_Transferable)transferable;
 		super.fromTransferable(mt.header, new Identifier(mt.domain_id));
 		this.name = mt.name;
@@ -101,15 +106,8 @@ public class MCM extends DomainMember implements Characterizable {
 		this.userId = new Identifier(mt.user_id);
 		this.serverId = new Identifier(mt.server_id);
 
-		try {
-			this.characteristics = new HashSet(mt.characteristic_ids.length);
-			for (int i = 0; i < mt.characteristic_ids.length; i++)
-				this.characteristics.add(GeneralStorableObjectPool.getStorableObject(new Identifier(mt.characteristic_ids[i]), true));
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
-
+		Set characteristicIds = Identifier.fromTransferables(mt.characteristic_ids);
+		this.characteristics = GeneralStorableObjectPool.getStorableObjects(characteristicIds, true);
 	}
 	
 	public IDLEntity getTransferable() {

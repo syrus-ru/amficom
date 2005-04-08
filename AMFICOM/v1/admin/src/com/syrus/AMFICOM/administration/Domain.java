@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.17 2005/04/08 08:10:41 arseniy Exp $
+ * $Id: Domain.java,v 1.18 2005/04/08 12:02:07 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.administration;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/04/08 08:10:41 $
+ * @version $Revision: 1.18 $, $Date: 2005/04/08 12:02:07 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -61,7 +61,12 @@ public class Domain extends DomainMember implements Characterizable {
 	}
 
 	public Domain(Domain_Transferable dt) throws CreateObjectException {
-		this.fromTransferable(dt);
+		try {
+			this.fromTransferable(dt);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}
 
 	protected Domain(Identifier id,
@@ -83,21 +88,14 @@ public class Domain extends DomainMember implements Characterizable {
 		this.characteristics = new HashSet();
 	}
 
-	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
+	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
 		Domain_Transferable dt = (Domain_Transferable)transferable;
 		super.fromTransferable(dt.header, (dt.domain_id.identifier_string.length() != 0) ? (new Identifier(dt.domain_id)) : null);
 		this.name = dt.name;
 		this.description = dt.description;
 
-		try {
-			this.characteristics = new HashSet(dt.characteristic_ids.length);
-			for (int i = 0; i < dt.characteristic_ids.length; i++)
-				this.characteristics.add(GeneralStorableObjectPool.getStorableObject(new Identifier(dt.characteristic_ids[i]), true));
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
-
+		Set characteristicIds = Identifier.fromTransferables(dt.characteristic_ids);
+		this.characteristics = GeneralStorableObjectPool.getStorableObjects(characteristicIds, true);
 	}
 	
 	public IDLEntity getTransferable() {

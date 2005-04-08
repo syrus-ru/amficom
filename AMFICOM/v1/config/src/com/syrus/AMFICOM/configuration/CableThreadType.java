@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadType.java,v 1.28 2005/04/08 08:31:11 arseniy Exp $
+ * $Id: CableThreadType.java,v 1.29 2005/04/08 12:02:20 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
  * optical fiber (or an <i>abstract </i> optical fiber), the latter is a type of
  * cable (or an <i>abstract </i> cable containing this thread).
  *
- * @version $Revision: 1.28 $, $Date: 2005/04/08 08:31:11 $
+ * @version $Revision: 1.29 $, $Date: 2005/04/08 12:02:20 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -63,9 +63,14 @@ public final class CableThreadType extends StorableObjectType {
 		}
 	}
 
-	public CableThreadType(final CableThreadType_Transferable transferable)
+	public CableThreadType(final CableThreadType_Transferable cttt)
 			throws CreateObjectException {
-		this.fromTransferable(transferable);
+		try {
+			this.fromTransferable(cttt);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}
 
 	protected CableThreadType(final Identifier id,
@@ -125,28 +130,15 @@ public final class CableThreadType extends StorableObjectType {
 					ioee);
 		}
 	}
-	
-	protected void fromTransferable(IDLEntity transferable)
-			throws CreateObjectException {
+
+	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
 		CableThreadType_Transferable cttt = (CableThreadType_Transferable) transferable;
-		super.fromTransferable(cttt.header, cttt.codename,
-				cttt.description);
+		super.fromTransferable(cttt.header, cttt.codename, cttt.description);
 		this.name = cttt.name;
 		this.color = cttt.color;
-		try {
-			this.linkType = (LinkType) ConfigurationStorableObjectPool
-					.getStorableObject(
-							new Identifier(
-									cttt.linkTypeId),
-							true);
-			this.cableLinkType = (CableLinkType) ConfigurationStorableObjectPool
-					.getStorableObject(
-							new Identifier(
-									cttt.cableLinkTypeId),
-							true);
-		} catch (final ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
+		this.linkType = (LinkType) ConfigurationStorableObjectPool.getStorableObject(new Identifier(cttt.linkTypeId), true);
+		this.cableLinkType = (CableLinkType) ConfigurationStorableObjectPool.getStorableObject(new Identifier(cttt.cableLinkTypeId),
+				true);
 	}
 
 	public IDLEntity getTransferable() {

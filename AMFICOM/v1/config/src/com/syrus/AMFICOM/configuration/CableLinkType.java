@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkType.java,v 1.31 2005/04/08 08:31:11 arseniy Exp $
+ * $Id: CableLinkType.java,v 1.32 2005/04/08 12:02:20 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/04/08 08:31:11 $
+ * @version $Revision: 1.32 $, $Date: 2005/04/08 12:02:20 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -66,7 +66,12 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 	}
 
 	public CableLinkType(CableLinkType_Transferable cltt) throws CreateObjectException {
-		this.fromTransferable(cltt);
+		try {
+			this.fromTransferable(cltt);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}
 
 	protected CableLinkType(Identifier id,
@@ -137,25 +142,17 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 		}
 	}
 
-	protected void fromTransferable(IDLEntity transferable)
-			throws CreateObjectException {
-		CableLinkType_Transferable cltt = (CableLinkType_Transferable)transferable;
+	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
+		CableLinkType_Transferable cltt = (CableLinkType_Transferable) transferable;
 		super.fromTransferable(cltt.header, cltt.codename, cltt.description);
 		this.sort = cltt.sort.value();
 		this.manufacturer = cltt.manufacturer;
 		this.manufacturerCode = cltt.manufacturerCode;
 		this.imageId = new Identifier(cltt.image_id);
 		this.name = cltt.name;
-		try {
-			this.characteristics = new HashSet(cltt.characteristic_ids.length);
-			Set characteristicIds = new HashSet(cltt.characteristic_ids.length);
-			for (int i = 0; i < cltt.characteristic_ids.length; i++)
-				characteristicIds.add(new Identifier(cltt.characteristic_ids[i]));
-			this.characteristics.addAll(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
+
+		Set characteristicIds = Identifier.fromTransferables(cltt.characteristic_ids);
+		this.characteristics = GeneralStorableObjectPool.getStorableObjects(characteristicIds, true);
 	}
 	
 	public IDLEntity getTransferable() {

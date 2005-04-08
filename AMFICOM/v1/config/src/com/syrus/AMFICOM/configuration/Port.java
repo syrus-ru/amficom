@@ -1,5 +1,5 @@
 /*
- * $Id: Port.java,v 1.52 2005/04/08 08:31:11 arseniy Exp $
+ * $Id: Port.java,v 1.53 2005/04/08 12:02:20 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.52 $, $Date: 2005/04/08 08:31:11 $
+ * @version $Revision: 1.53 $, $Date: 2005/04/08 12:02:20 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -66,7 +66,12 @@ public class Port extends StorableObject implements Characterizable, TypedObject
 	}
 
 	public Port(Port_Transferable pt) throws CreateObjectException {
-		this.fromTransferable(pt);
+		try {
+			this.fromTransferable(pt);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}
 
 	protected Port(Identifier id,
@@ -123,32 +128,20 @@ public class Port extends StorableObject implements Characterizable, TypedObject
 			throw new CreateObjectException("Port.createInstance | cannot generate identifier ", e);
 		}
 	}
-	
-	protected void fromTransferable(IDLEntity transferable)
-			throws CreateObjectException {
+
+	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
 		Port_Transferable pt = (Port_Transferable) transferable;
 		super.fromTransferable(pt.header);
 
-		try {
-			this.type = (PortType)ConfigurationStorableObjectPool.getStorableObject(new Identifier(pt.type_id), true);
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
+		this.type = (PortType) ConfigurationStorableObjectPool.getStorableObject(new Identifier(pt.type_id), true);
 
 		this.description = pt.description;
 		this.equipmentId = new Identifier(pt.equipment_id);
 
 		this.sort = pt.sort.value();
 
-		try {
-			this.characteristics = new HashSet(pt.characteristic_ids.length);
-			for (int i = 0; i < pt.characteristic_ids.length; i++)
-				this.characteristics.add(GeneralStorableObjectPool.getStorableObject(new Identifier(pt.characteristic_ids[i]), true));
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
+		Set characteristicIds = Identifier.fromTransferables(pt.characteristic_ids);
+		this.characteristics = GeneralStorableObjectPool.getStorableObjects(characteristicIds, true);
 	}
 	
 

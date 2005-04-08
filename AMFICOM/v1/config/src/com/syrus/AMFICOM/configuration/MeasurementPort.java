@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPort.java,v 1.46 2005/04/08 08:31:11 arseniy Exp $
+ * $Id: MeasurementPort.java,v 1.47 2005/04/08 12:02:20 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2005/04/08 08:31:11 $
+ * @version $Revision: 1.47 $, $Date: 2005/04/08 12:02:20 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -68,7 +68,12 @@ public class MeasurementPort extends StorableObject implements Characterizable, 
 	}
 
 	public MeasurementPort(MeasurementPort_Transferable mpt) throws CreateObjectException {
-		this.fromTransferable(mpt);
+		try {
+			this.fromTransferable(mpt);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}
 
 	protected MeasurementPort(Identifier id,
@@ -129,32 +134,21 @@ public class MeasurementPort extends StorableObject implements Characterizable, 
 			throw new CreateObjectException("MeasurementPort.createInstance | cannot generate identifier ", e);
 		}
 	}
-	
-	protected void fromTransferable(IDLEntity transferable)
-			throws CreateObjectException {
-		MeasurementPort_Transferable mpt = (MeasurementPort_Transferable) transferable; 
+
+	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
+		MeasurementPort_Transferable mpt = (MeasurementPort_Transferable) transferable;
 		super.fromTransferable(mpt.header);
 
-		try {
-			this.type = (MeasurementPortType)ConfigurationStorableObjectPool.getStorableObject(new Identifier(mpt.type_id), true);
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
+		this.type = (MeasurementPortType) ConfigurationStorableObjectPool.getStorableObject(new Identifier(mpt.type_id), true);
 
 		this.name = mpt.name;
 		this.description = mpt.description;
 
 		this.kisId = new Identifier(mpt.kis_id);
-		this.portId = new Identifier(mpt.port_id);	
-		try {
-			this.characteristics = new HashSet(mpt.characteristic_ids.length);
-			for (int i = 0; i < mpt.characteristic_ids.length; i++)
-				this.characteristics.add(GeneralStorableObjectPool.getStorableObject(new Identifier(mpt.characteristic_ids[i]), true));
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
+		this.portId = new Identifier(mpt.port_id);
+
+		Set characteristicIds = Identifier.fromTransferables(mpt.characteristic_ids);
+		this.characteristics = GeneralStorableObjectPool.getStorableObjects(characteristicIds, true);
 	}
 
 	public IDLEntity getTransferable() {

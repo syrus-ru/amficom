@@ -1,5 +1,5 @@
 /*
- * $Id: User.java,v 1.13 2005/04/08 08:10:41 arseniy Exp $
+ * $Id: User.java,v 1.14 2005/04/08 12:02:07 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,6 +16,7 @@ import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.administration.corba.UserSort;
 import com.syrus.AMFICOM.administration.corba.User_Transferable;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -28,7 +29,7 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/04/08 08:10:41 $
+ * @version $Revision: 1.14 $, $Date: 2005/04/08 12:02:07 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -54,12 +55,7 @@ public class User extends StorableObject {
 	}
 
 	public User(User_Transferable ut) {
-		try {
-			this.fromTransferable(ut);
-		}
-		catch (CreateObjectException e) {
-			Log.debugException(e, Log.WARNING);
-		}
+		this.fromTransferable(ut);
 	}
 
 	protected User(Identifier id,
@@ -81,14 +77,19 @@ public class User extends StorableObject {
 		this.description = description;
 	}
 
-	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
+	protected void fromTransferable(IDLEntity transferable) {
 		User_Transferable ut = (User_Transferable) transferable;
-		super.fromTransferable(ut.header);
+		try {
+			super.fromTransferable(ut.header);
+		}
+		catch (ApplicationException ae) {
+			// Never
+			Log.errorException(ae);
+		}
 		this.login = ut.login;
 		this.sort = ut.sort.value();
 		this.name = ut.name;
 		this.description = ut.description;
-
 	}
 	
 	public IDLEntity getTransferable() {

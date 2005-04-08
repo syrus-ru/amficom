@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.57 2005/04/08 08:31:11 arseniy Exp $
+ * $Id: TransmissionPath.java,v 1.58 2005/04/08 12:02:20 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 /**
- * @version $Revision: 1.57 $, $Date: 2005/04/08 08:31:11 $
+ * @version $Revision: 1.58 $, $Date: 2005/04/08 12:02:20 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -67,7 +67,12 @@ public class TransmissionPath extends DomainMember implements MonitoredDomainMem
 	}
 
 	public TransmissionPath(TransmissionPath_Transferable tpt) throws CreateObjectException {
-		this.fromTransferable(tpt);
+		try {
+			this.fromTransferable(tpt);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}
 
 	protected TransmissionPath(Identifier id,
@@ -128,28 +133,18 @@ public class TransmissionPath extends DomainMember implements MonitoredDomainMem
 			throw new CreateObjectException("TransmissionPath.createInstance | cannot generate identifier ", e);
 		}
 	}
-	
-	protected void fromTransferable(IDLEntity transferable)
-			throws CreateObjectException {
+
+	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
 		TransmissionPath_Transferable tpt = (TransmissionPath_Transferable) transferable;
-		super.fromTransferable(tpt.header,
-				new Identifier(tpt.domain_id));
+		super.fromTransferable(tpt.header, new Identifier(tpt.domain_id));
 
 		this.name = tpt.name;
 		this.description = tpt.description;
 		this.startPortId = new Identifier(tpt.start_port_id);
 		this.finishPortId = new Identifier(tpt.finish_port_id);
 
-		try {
-			this.characteristics = new HashSet(tpt.characteristic_ids.length);
-			for (int i = 0; i < tpt.characteristic_ids.length; i++)
-				this.characteristics.add(GeneralStorableObjectPool.getStorableObject(new Identifier(tpt.characteristic_ids[i]), true));
-
-			this.type = (TransmissionPathType) ConfigurationStorableObjectPool.getStorableObject(new Identifier(tpt.type_id), true);
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
+		Set characteristicIds = Identifier.fromTransferables(tpt.characteristic_ids);
+		this.characteristics = GeneralStorableObjectPool.getStorableObjects(characteristicIds, true);
 	}
 
 	public IDLEntity getTransferable() {

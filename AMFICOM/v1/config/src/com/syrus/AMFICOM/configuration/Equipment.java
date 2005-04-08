@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.81 2005/04/08 08:31:11 arseniy Exp $
+ * $Id: Equipment.java,v 1.82 2005/04/08 12:02:20 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.81 $, $Date: 2005/04/08 08:31:11 $
+ * @version $Revision: 1.82 $, $Date: 2005/04/08 12:02:20 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -78,7 +78,12 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 	}
 
 	public Equipment(Equipment_Transferable et) throws CreateObjectException {
-		this.fromTransferable(et);
+		try {
+			this.fromTransferable(et);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}
 
 	protected Equipment(Identifier id,
@@ -189,19 +194,12 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 			throw new CreateObjectException("Equipment.createInstance | cannot generate identifier ", e);
 		}
 	}
-	
-	protected void fromTransferable(IDLEntity transferable)
-			throws CreateObjectException {
+
+	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
 		Equipment_Transferable et = (Equipment_Transferable) transferable;
-		super.fromTransferable(et.header,
-				new Identifier(et.domain_id));
-		
-		try {
-			this.type = (EquipmentType)ConfigurationStorableObjectPool.getStorableObject(new Identifier(et.type_id), true);
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
+		super.fromTransferable(et.header, new Identifier(et.domain_id));
+
+		this.type = (EquipmentType) ConfigurationStorableObjectPool.getStorableObject(new Identifier(et.type_id), true);
 
 		this.name = et.name;
 		this.description = et.description;
@@ -216,14 +214,8 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 		this.swVersion = et.swVersion;
 		this.inventoryNumber = et.inventoryNumber;
 
-		try {
-			this.characteristics = new HashSet(et.characteristic_ids.length);
-			for (int i = 0; i < et.characteristic_ids.length; i++)
-				this.characteristics.add(GeneralStorableObjectPool.getStorableObject(new Identifier(et.characteristic_ids[i]), true));
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
+		Set characteristicIds = Identifier.fromTransferables(et.characteristic_ids);
+		this.characteristics = GeneralStorableObjectPool.getStorableObjects(characteristicIds, true);
 	}
 
 	public IDLEntity getTransferable() {

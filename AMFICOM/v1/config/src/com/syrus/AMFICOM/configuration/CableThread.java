@@ -1,5 +1,5 @@
 /*
- * $Id: CableThread.java,v 1.19 2005/04/08 08:31:11 arseniy Exp $
+ * $Id: CableThread.java,v 1.20 2005/04/08 12:02:20 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,13 +29,13 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/04/08 08:31:11 $
+ * @version $Revision: 1.20 $, $Date: 2005/04/08 12:02:20 $
  * @author $Author: arseniy $
  * @module config_v1
  */
 public class CableThread extends DomainMember implements TypedObject {
 
-	private static final long	serialVersionUID	= 3258415027823063600L;
+	private static final long serialVersionUID = 3258415027823063600L;
 
 	private String name;
 	private String description;
@@ -54,7 +54,12 @@ public class CableThread extends DomainMember implements TypedObject {
 	}
 
 	public CableThread(CableThread_Transferable ctt) throws CreateObjectException {
-		this.fromTransferable(ctt);
+		try {
+			this.fromTransferable(ctt);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}
 
 	protected CableThread(Identifier id,
@@ -99,28 +104,22 @@ public class CableThread extends DomainMember implements TypedObject {
 			throw new CreateObjectException("CableThread.createInstance | cannot generate identifier ", e);
 		}
 	}
-	
-	protected void fromTransferable(IDLEntity transferable)
-			throws CreateObjectException {
+
+	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
 		CableThread_Transferable ctt = (CableThread_Transferable) transferable;
-		super.fromTransferable(ctt.header,new Identifier(ctt.domain_id));
-	
+		super.fromTransferable(ctt.header, new Identifier(ctt.domain_id));
+
 		this.name = ctt.name;
 		this.description = ctt.description;
-		try {
-			this.type = (CableThreadType) ConfigurationStorableObjectPool.getStorableObject(new Identifier(ctt.type_id), true);
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
+		this.type = (CableThreadType) ConfigurationStorableObjectPool.getStorableObject(new Identifier(ctt.type_id), true);
 	}
 
 	public IDLEntity getTransferable() {
 		return new CableThread_Transferable(super.getHeaderTransferable(),
-																 (Identifier_Transferable)this.getDomainId().getTransferable(),
-																 this.name,
-																 this.description,
-																 (Identifier_Transferable)this.type.getId().getTransferable());
+				(Identifier_Transferable) this.getDomainId().getTransferable(),
+				this.name,
+				this.description,
+				(Identifier_Transferable) this.type.getId().getTransferable());
 	}
 
 	protected synchronized void setAttributes(Date created,

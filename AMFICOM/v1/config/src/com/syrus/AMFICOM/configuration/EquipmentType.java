@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentType.java,v 1.53 2005/04/08 08:31:11 arseniy Exp $
+ * $Id: EquipmentType.java,v 1.54 2005/04/08 12:02:20 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.53 $, $Date: 2005/04/08 08:31:11 $
+ * @version $Revision: 1.54 $, $Date: 2005/04/08 12:02:20 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -42,11 +42,11 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 public class EquipmentType extends StorableObjectType implements Characterizable {
 	private static final long serialVersionUID = 9157517478787463967L;
 
-	private String                     name;
-	private String                     manufacturer;
-	private String                     manufacturerCode;
+	private String name;
+	private String manufacturer;
+	private String manufacturerCode;
 
-	private Set                       characteristics;
+	private Set characteristics;
 
 	public EquipmentType(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
@@ -63,7 +63,12 @@ public class EquipmentType extends StorableObjectType implements Characterizable
 	}
 
 	public EquipmentType(EquipmentType_Transferable ett) throws CreateObjectException {
-		this.fromTransferable(ett);
+		try {
+			this.fromTransferable(ett);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}
 
 	protected EquipmentType(Identifier id,
@@ -123,24 +128,17 @@ public class EquipmentType extends StorableObjectType implements Characterizable
 		}
 	}
 
-	protected void fromTransferable(IDLEntity transferable)
-			throws CreateObjectException {
+	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
 		EquipmentType_Transferable ett = (EquipmentType_Transferable) transferable;
-		super.fromTransferable(ett.header,
-				ett.codename,
-				ett.description);
+		super.fromTransferable(ett.header, ett.codename, ett.description);
 		this.name = ett.name;
 		this.manufacturer = ett.manufacturer;
 		this.manufacturerCode = ett.manufacturerCode;
-		try {
-			this.characteristics = new HashSet(ett.characteristic_ids.length);
-			for (int i = 0; i < ett.characteristic_ids.length; i++)
-				this.characteristics.add(GeneralStorableObjectPool.getStorableObject(new Identifier(ett.characteristic_ids[i]), true));
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
+
+		Set characteristicIds = Identifier.fromTransferables(ett.characteristic_ids);
+		this.characteristics = GeneralStorableObjectPool.getStorableObjects(characteristicIds, true);
 	}
+
 	public IDLEntity getTransferable() {
 		int i = 0;
 		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];

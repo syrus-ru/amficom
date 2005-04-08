@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.71 2005/04/08 08:31:11 arseniy Exp $
+ * $Id: KIS.java,v 1.72 2005/04/08 12:02:20 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.71 $, $Date: 2005/04/08 08:31:11 $
+ * @version $Revision: 1.72 $, $Date: 2005/04/08 12:02:20 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -72,7 +72,12 @@ public final class KIS extends DomainMember implements Characterizable {
 	}
 
 	public KIS(KIS_Transferable kt) throws CreateObjectException {
-		this.fromTransferable(kt);
+		try {
+			this.fromTransferable(kt);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}
 
 	protected KIS(Identifier id,
@@ -141,9 +146,8 @@ public final class KIS extends DomainMember implements Characterizable {
 			throw new CreateObjectException("KIS.createInstance | cannot generate identifier ", e);
 		}
 	}
-	
-	protected void fromTransferable(IDLEntity transferable)
-			throws CreateObjectException {
+
+	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
 		KIS_Transferable kt = (KIS_Transferable) transferable;
 		super.fromTransferable(kt.header, new Identifier(kt.domain_id));
 
@@ -154,14 +158,8 @@ public final class KIS extends DomainMember implements Characterizable {
 		this.hostname = kt.hostname;
 		this.tcpPort = kt.tcp_port;
 
-		try {
-			this.characteristics = new HashSet(kt.characteristic_ids.length);
-			for (int i = 0; i < kt.characteristic_ids.length; i++)
-				this.characteristics.add(GeneralStorableObjectPool.getStorableObject(new Identifier(kt.characteristic_ids[i]), true));
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
+		Set characteristicIds = Identifier.fromTransferables(kt.characteristic_ids);
+		this.characteristics = GeneralStorableObjectPool.getStorableObjects(characteristicIds, true);
 	}
 
 	public IDLEntity getTransferable() {

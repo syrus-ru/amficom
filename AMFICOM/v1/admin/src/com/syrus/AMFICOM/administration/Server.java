@@ -1,5 +1,5 @@
 /*
- * $Id: Server.java,v 1.17 2005/04/08 08:10:41 arseniy Exp $
+ * $Id: Server.java,v 1.18 2005/04/08 12:02:07 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/04/08 08:10:41 $
+ * @version $Revision: 1.18 $, $Date: 2005/04/08 12:02:07 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -65,7 +65,12 @@ public class Server extends DomainMember implements Characterizable {
 	}
 
 	public Server(Server_Transferable st) throws CreateObjectException {
-		this.fromTransferable(st);	
+		try {
+			this.fromTransferable(st);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}	
 	}
 
 	protected Server(Identifier id,
@@ -91,23 +96,16 @@ public class Server extends DomainMember implements Characterizable {
 		this.characteristics = new HashSet();
 	}
 
-	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
-		Server_Transferable st = (Server_Transferable)transferable;
-		super.fromTransferable(st.header,
-			  new Identifier(st.domain_id));
+	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
+		Server_Transferable st = (Server_Transferable) transferable;
+		super.fromTransferable(st.header, new Identifier(st.domain_id));
 		this.name = st.name;
 		this.description = st.description;
 		this.hostname = st.hostname;
 		this.userId = new Identifier(st.user_id);
 
-		try {
-			this.characteristics = new HashSet(st.characteristic_ids.length);
-			for (int i = 0; i < st.characteristic_ids.length; i++)
-				this.characteristics.add(GeneralStorableObjectPool.getStorableObject(new Identifier(st.characteristic_ids[i]), true));
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
+		Set characteristicIds = Identifier.fromTransferables(st.characteristic_ids);
+		this.characteristics = GeneralStorableObjectPool.getStorableObjects(characteristicIds, true);
 	}
 	
 	public IDLEntity getTransferable() {

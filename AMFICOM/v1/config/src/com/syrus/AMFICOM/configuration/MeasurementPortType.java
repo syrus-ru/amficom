@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortType.java,v 1.40 2005/04/08 08:31:11 arseniy Exp $
+ * $Id: MeasurementPortType.java,v 1.41 2005/04/08 12:02:20 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2005/04/08 08:31:11 $
+ * @version $Revision: 1.41 $, $Date: 2005/04/08 12:02:20 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -61,7 +61,12 @@ public class MeasurementPortType extends StorableObjectType implements Character
 	}
 
 	public MeasurementPortType(MeasurementPortType_Transferable mptt) throws CreateObjectException {
-		this.fromTransferable(mptt);
+		try {
+			this.fromTransferable(mptt);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}
 
 	protected MeasurementPortType(Identifier id,
@@ -110,22 +115,14 @@ public class MeasurementPortType extends StorableObjectType implements Character
 			throw new CreateObjectException("MeasurementPortType.createInstance | cannot generate identifier ", e);
 		}
 	}
-	
-	protected void fromTransferable(IDLEntity transferable)
-			throws CreateObjectException {
+
+	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
 		MeasurementPortType_Transferable mptt = (MeasurementPortType_Transferable) transferable;
-		super.fromTransferable(mptt.header,
-				  mptt.codename,
-				  mptt.description);		
+		super.fromTransferable(mptt.header, mptt.codename, mptt.description);
 		this.name = mptt.name;
-		try {
-			this.characteristics = new HashSet(mptt.characteristic_ids.length);
-			for (int i = 0; i < mptt.characteristic_ids.length; i++)
-				this.characteristics.add(GeneralStorableObjectPool.getStorableObject(new Identifier(mptt.characteristic_ids[i]), true));
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
+
+		Set characteristicIds = Identifier.fromTransferables(mptt.characteristic_ids);
+		this.characteristics = GeneralStorableObjectPool.getStorableObjects(characteristicIds, true);
 	}
 
 	public IDLEntity getTransferable() {

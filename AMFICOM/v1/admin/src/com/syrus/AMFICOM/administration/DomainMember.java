@@ -1,5 +1,5 @@
 /*
- * $Id: DomainMember.java,v 1.9 2005/04/01 14:43:07 bob Exp $
+ * $Id: DomainMember.java,v 1.10 2005/04/08 12:02:07 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,14 +12,14 @@ import java.util.Date;
 
 import org.omg.CORBA.portable.IDLEntity;
 
-import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/04/01 14:43:07 $
- * @author $Author: bob $
+ * @version $Revision: 1.10 $, $Date: 2005/04/08 12:02:07 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 
@@ -49,9 +49,9 @@ public abstract class DomainMember extends StorableObject {
 		this.domainId = domainId;
 	}	
 
-	protected void fromTransferable(IDLEntity transferable, Identifier domainId) throws CreateObjectException {
+	protected void fromTransferable(IDLEntity transferable, Identifier domainId1) throws ApplicationException {
 		super.fromTransferable(transferable);
-		this.domainId = domainId;
+		this.domainId = domainId1;
 	}
 
 	public final Identifier getDomainId() {

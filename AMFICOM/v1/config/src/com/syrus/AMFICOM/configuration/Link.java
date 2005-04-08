@@ -1,5 +1,5 @@
 /*
- * $Id: Link.java,v 1.44 2005/04/08 08:31:11 arseniy Exp $
+ * $Id: Link.java,v 1.45 2005/04/08 12:02:20 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2005/04/08 08:31:11 $
+ * @version $Revision: 1.45 $, $Date: 2005/04/08 12:02:20 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -73,7 +73,12 @@ public class Link extends DomainMember implements Characterizable, TypedObject {
 	}
 
 	public Link(Link_Transferable lt) throws CreateObjectException  {
-		this.fromTransferable(lt);
+		try {
+			this.fromTransferable(lt);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}
 
 	protected Link(Identifier id,
@@ -150,12 +155,10 @@ public class Link extends DomainMember implements Characterizable, TypedObject {
 			throw new CreateObjectException("Link.createInstance | cannot generate identifier ", e);
 		}
 	}
-	
-	protected void fromTransferable(IDLEntity transferable)
-			throws CreateObjectException {
+
+	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
 		Link_Transferable lt = (Link_Transferable) transferable;
-		super.fromTransferable(lt.header,
-				new Identifier(lt.domain_id));
+		super.fromTransferable(lt.header, new Identifier(lt.domain_id));
 
 		this.name = lt.name;
 		this.description = lt.description;
@@ -164,21 +167,10 @@ public class Link extends DomainMember implements Characterizable, TypedObject {
 		this.supplierCode = lt.supplierCode;
 		this.sort = lt.sort.value();
 
-		try {
-			this.characteristics = new HashSet(lt.characteristic_ids.length);
-			for (int i = 0; i < lt.characteristic_ids.length; i++)
-				this.characteristics.add(GeneralStorableObjectPool.getStorableObject(new Identifier(lt.characteristic_ids[i]), true));
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
+		Set characteristicIds = Identifier.fromTransferables(lt.characteristic_ids);
+		this.characteristics = GeneralStorableObjectPool.getStorableObjects(characteristicIds, true);
 
-		try {
-			this.type = (AbstractLinkType) ConfigurationStorableObjectPool.getStorableObject(new Identifier(lt.type_id), true);
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
+		this.type = (AbstractLinkType) ConfigurationStorableObjectPool.getStorableObject(new Identifier(lt.type_id), true);
 	}
 
 	public IDLEntity getTransferable() {

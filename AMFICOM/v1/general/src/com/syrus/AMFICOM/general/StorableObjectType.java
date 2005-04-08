@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectType.java,v 1.16 2005/04/04 13:07:04 bass Exp $
+ * $Id: StorableObjectType.java,v 1.17 2005/04/08 12:01:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,8 +13,8 @@ import java.util.Date;
 import org.omg.CORBA.portable.IDLEntity;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/04/04 13:07:04 $
- * @author $Author: bass $
+ * @version $Revision: 1.17 $, $Date: 2005/04/08 12:01:56 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -45,7 +45,8 @@ public abstract class StorableObjectType extends StorableObject {
 		// empty
 	}
 	
-	protected void fromTransferable(final IDLEntity transferable, final String codename1, final String description1) throws CreateObjectException {
+	protected void fromTransferable(final IDLEntity transferable, final String codename1, final String description1)
+			throws ApplicationException {
 		super.fromTransferable(transferable);
 		this.codename = codename1;
 		this.description = description1;

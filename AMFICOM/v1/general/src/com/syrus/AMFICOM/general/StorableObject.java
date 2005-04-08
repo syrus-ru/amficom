@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.50 2005/04/08 08:51:01 bass Exp $
+ * $Id: StorableObject.java,v 1.51 2005/04/08 12:01:56 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,8 +27,8 @@ import org.omg.CORBA.portable.IDLEntity;
  * there can only be a single inctance of <code>StorableObject</code> with the
  * same identifier, comparison of object references (in Java terms) is enough.
  *
- * @author $Author: bass $
- * @version $Revision: 1.50 $, $Date: 2005/04/08 08:51:01 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.51 $, $Date: 2005/04/08 12:01:56 $
  * @module general_v1
  */
 public abstract class StorableObject implements Identifiable, TransferableObject, Serializable {
@@ -96,8 +96,9 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	/**
 	 * Will be overridden by descendants.
 	 * @throws CreateObjectException 
+	 * @throws ApplicationException 
 	 */
-	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
+	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
 		StorableObject_Transferable sot = (StorableObject_Transferable) transferable;
 		this.id = new Identifier(sot.id);
 		this.created = new Date(sot.created);

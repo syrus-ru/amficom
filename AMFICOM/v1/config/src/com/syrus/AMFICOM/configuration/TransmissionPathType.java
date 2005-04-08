@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathType.java,v 1.39 2005/04/08 08:31:11 arseniy Exp $
+ * $Id: TransmissionPathType.java,v 1.40 2005/04/08 12:02:20 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/04/08 08:31:11 $
+ * @version $Revision: 1.40 $, $Date: 2005/04/08 12:02:20 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -62,7 +62,12 @@ public class TransmissionPathType extends StorableObjectType implements Characte
 	}
 
 	public TransmissionPathType(TransmissionPathType_Transferable tptt) throws CreateObjectException {
-		this.fromTransferable(tptt);
+		try {
+			this.fromTransferable(tptt);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}
 
 	protected TransmissionPathType(Identifier id,
@@ -102,20 +107,14 @@ public class TransmissionPathType extends StorableObjectType implements Characte
 			throw new CreateObjectException("TransmissionPathType.createInstance | cannot generate identifier ", e);
 		}
 	}
-	
-	protected void fromTransferable(IDLEntity transferable)
-			throws CreateObjectException {
+
+	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
 		TransmissionPathType_Transferable tptt = (TransmissionPathType_Transferable) transferable;
 		super.fromTransferable(tptt.header, tptt.codename, tptt.description);
 		this.name = tptt.name;
-		try {
-			this.characteristics = new HashSet(tptt.characteristic_ids.length);
-			for (int i = 0; i < tptt.characteristic_ids.length; i++)
-				this.characteristics.add(GeneralStorableObjectPool.getStorableObject(
-					new Identifier(tptt.characteristic_ids[i]), true));
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
+
+		Set characteristicIds = Identifier.fromTransferables(tptt.characteristic_ids);
+		this.characteristics = GeneralStorableObjectPool.getStorableObjects(characteristicIds, true);
 	}
 
 	public IDLEntity getTransferable() {

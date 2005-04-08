@@ -1,5 +1,5 @@
 /*
- * $Id: LinkType.java,v 1.40 2005/04/04 16:02:41 bass Exp $
+ * $Id: LinkType.java,v 1.41 2005/04/08 12:02:20 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,13 +30,12 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2005/04/04 16:02:41 $
- * @author $Author: bass $
+ * @version $Revision: 1.41 $, $Date: 2005/04/08 12:02:20 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -55,15 +54,13 @@ public class LinkType extends AbstractLinkType implements Characterizable {
 
 	private Set characteristics;
 
-	private StorableObjectDatabase linkTypeDatabase;
-
 	public LinkType(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
 		this.characteristics = new HashSet();
-		this.linkTypeDatabase = ConfigurationDatabaseContext.getLinkTypeDatabase();
+		LinkTypeDatabase database = ConfigurationDatabaseContext.getLinkTypeDatabase();
 		try {
-			this.linkTypeDatabase.retrieve(this);
+			database.retrieve(this);
 		}
 		catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
@@ -71,8 +68,12 @@ public class LinkType extends AbstractLinkType implements Characterizable {
 	}
 
 	public LinkType(LinkType_Transferable ltt) throws CreateObjectException {
-		this.linkTypeDatabase = ConfigurationDatabaseContext.getLinkTypeDatabase();
-		fromTransferable(ltt);
+		try {
+			this.fromTransferable(ltt);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}
 
 	protected LinkType(Identifier id,
@@ -99,8 +100,6 @@ public class LinkType extends AbstractLinkType implements Characterizable {
 		this.manufacturerCode = manufacturerCode;
 		this.imageId = imageId;
 		this.characteristics = new HashSet();
-
-		this.linkTypeDatabase = ConfigurationDatabaseContext.getLinkTypeDatabase();
 	}
 
 	/**
@@ -137,10 +136,9 @@ public class LinkType extends AbstractLinkType implements Characterizable {
 			throw new CreateObjectException("LinkType.createInstance | cannot generate identifier ", e);
 		}
 	}
-	
-	protected void fromTransferable(IDLEntity transferable, String codename,
-			String description) throws CreateObjectException {
-		LinkType_Transferable ltt = (LinkType_Transferable) transferable; 
+
+	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
+		LinkType_Transferable ltt = (LinkType_Transferable) transferable;
 		super.fromTransferable(ltt.header, ltt.codename, ltt.description);
 
 		this.sort = ltt.sort.value();
@@ -148,14 +146,9 @@ public class LinkType extends AbstractLinkType implements Characterizable {
 		this.manufacturerCode = ltt.manufacturerCode;
 		this.imageId = new Identifier(ltt.image_id);
 		this.name = ltt.name;
-		try {
-			this.characteristics = new HashSet(ltt.characteristic_ids.length);
-			for (int i = 0; i < ltt.characteristic_ids.length; i++)
-				this.characteristics.add(GeneralStorableObjectPool.getStorableObject(new Identifier(ltt.characteristic_ids[i]), true));
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
+
+		Set characteristicIds = Identifier.fromTransferables(ltt.characteristic_ids);
+		this.characteristics = GeneralStorableObjectPool.getStorableObjects(characteristicIds, true);
 	}
 
 	public IDLEntity getTransferable() {
