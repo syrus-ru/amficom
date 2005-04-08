@@ -1,5 +1,5 @@
 /**
- * $Id: NodeLink.java,v 1.31 2005/04/05 12:02:16 krupenn Exp $
+ * $Id: NodeLink.java,v 1.32 2005/04/08 09:09:29 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,7 +32,6 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.NodeLink_Transferable;
@@ -42,8 +41,8 @@ import com.syrus.AMFICOM.map.corba.NodeLink_Transferable;
  * отрезок, соединяющий два концевых узла ({@link AbstractNode}). Фрагменты 
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
- * @author $Author: krupenn $
- * @version $Revision: 1.31 $, $Date: 2005/04/05 12:02:16 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.32 $, $Date: 2005/04/08 09:09:29 $
  * @module map_v1
  */
 public class NodeLink extends StorableObject implements MapElement {
@@ -74,8 +73,6 @@ public class NodeLink extends StorableObject implements MapElement {
 
 	private Set characteristics;
 
-	private StorableObjectDatabase nodeLinkDatabase;
-
 	protected transient Map map;
 	protected transient boolean selected = false;
 	protected transient boolean removed = false;
@@ -84,9 +81,9 @@ public class NodeLink extends StorableObject implements MapElement {
 	public NodeLink(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.nodeLinkDatabase = MapDatabaseContext.getNodeLinkDatabase();
+		NodeLinkDatabase database = MapDatabaseContext.getNodeLinkDatabase();
 		try {
-			this.nodeLinkDatabase.retrieve(this);
+			database.retrieve(this);
 		}
 		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
@@ -94,7 +91,6 @@ public class NodeLink extends StorableObject implements MapElement {
 	}
 
 	public NodeLink(NodeLink_Transferable nlt) throws CreateObjectException {
-		this.nodeLinkDatabase = MapDatabaseContext.getNodeLinkDatabase();
 		this.fromTransferable(nlt);
 	}
 
@@ -119,8 +115,6 @@ public class NodeLink extends StorableObject implements MapElement {
 		this.length = length;
 
 		this.characteristics = new HashSet();
-
-		this.nodeLinkDatabase = MapDatabaseContext.getNodeLinkDatabase();
 
 		this.selected = false;
 	}

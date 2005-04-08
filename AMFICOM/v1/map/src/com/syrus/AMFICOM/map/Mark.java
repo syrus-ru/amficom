@@ -1,5 +1,5 @@
 /**
- * $Id: Mark.java,v 1.28 2005/04/07 10:07:24 arseniy Exp $
+ * $Id: Mark.java,v 1.29 2005/04/08 09:09:29 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,7 +33,6 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.Mark_Transferable;
@@ -46,7 +45,7 @@ import com.syrus.AMFICOM.map.corba.Mark_Transferable;
  * фрагментами линий, переопределены и бросают 
  * <code>{@link UnsupportedOperationException}</code>.
  * @author $Author: arseniy $
- * @version $Revision: 1.28 $, $Date: 2005/04/07 10:07:24 $
+ * @version $Revision: 1.29 $, $Date: 2005/04/08 09:09:29 $
  * @module map_v1
  */
 public class Mark extends AbstractNode {
@@ -82,8 +81,6 @@ public class Mark extends AbstractNode {
 	private String street;
 	private String building;
 
-	private StorableObjectDatabase markDatabase;
-
 	protected transient double sizeInDoubleLt;
 	protected transient NodeLink nodeLink;
 	protected transient AbstractNode startNode;
@@ -91,9 +88,9 @@ public class Mark extends AbstractNode {
 	public Mark(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.markDatabase = MapDatabaseContext.getMarkDatabase();
+		MarkDatabase database = MapDatabaseContext.getMarkDatabase();
 		try {
-			this.markDatabase.retrieve(this);
+			database.retrieve(this);
 		}
 		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
@@ -155,8 +152,6 @@ public class Mark extends AbstractNode {
 		this.building = building;
 
 		super.characteristics = new HashSet();
-
-		this.markDatabase = MapDatabaseContext.getMarkDatabase();
 	}
 
 	public static Mark createInstance(final Identifier creatorId,

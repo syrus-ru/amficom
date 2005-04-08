@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLink.java,v 1.44 2005/04/07 13:56:25 krupenn Exp $
+ * $Id: PhysicalLink.java,v 1.45 2005/04/08 09:09:29 arseniy Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -34,7 +34,6 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypedObject;
@@ -52,8 +51,8 @@ import com.syrus.AMFICOM.map.corba.PhysicalLink_Transferable;
  * ѕредуствновленными €вл€ютс€  два типа - 
  * тоннель (<code>{@link PhysicalLinkType#TUNNEL}</code>) 
  * и коллектор (<code>{@link PhysicalLinkType#COLLECTOR}</code>).
- * @author $Author: krupenn $
- * @version $Revision: 1.44 $, $Date: 2005/04/07 13:56:25 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.45 $, $Date: 2005/04/08 09:09:29 $
  * @module map_v1
  * @todo make binding.dimension persistent (just as bindingDimension for PhysicalLinkType)
  * @todo nodeLinks should be transient
@@ -101,8 +100,6 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 
 	private Set characteristics;
 
-	private StorableObjectDatabase physicalLinkDatabase;
-
 	private transient List nodeLinks = null;
 	protected transient Map map = null;
 	protected transient boolean selected = false;
@@ -116,9 +113,9 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	public PhysicalLink(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.physicalLinkDatabase = MapDatabaseContext.getPhysicalLinkDatabase();
+		PhysicalLinkDatabase database = MapDatabaseContext.getPhysicalLinkDatabase();
 		try {
-			this.physicalLinkDatabase.retrieve(this);
+			database.retrieve(this);
 		}
 		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
@@ -126,7 +123,6 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	}
 
 	public PhysicalLink(PhysicalLink_Transferable plt) throws CreateObjectException {
-		this.physicalLinkDatabase = MapDatabaseContext.getPhysicalLinkDatabase();
 		this.fromTransferable(plt);
 	}
 
@@ -166,8 +162,6 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 
 		this.characteristics = new HashSet();
 		this.nodeLinks = new ArrayList();
-
-		this.physicalLinkDatabase = MapDatabaseContext.getPhysicalLinkDatabase();
 
 		this.selected = false;
 

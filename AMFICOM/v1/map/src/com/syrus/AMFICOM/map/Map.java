@@ -1,5 +1,5 @@
 /**
- * $Id: Map.java,v 1.28 2005/04/06 16:03:38 krupenn Exp $
+ * $Id: Map.java,v 1.29 2005/04/08 09:09:29 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,7 +32,6 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.Map_Transferable;
 
@@ -41,8 +40,8 @@ import com.syrus.AMFICOM.map.corba.Map_Transferable;
  * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на 
  * линиях, коллекторов (объединяющих в себе линии).
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.28 $, $Date: 2005/04/06 16:03:38 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.29 $, $Date: 2005/04/08 09:09:29 $
  * @module map_v1
  * @todo make maps persistent 
  */
@@ -77,19 +76,17 @@ public class Map extends DomainMember {
 	private Set marks;
 	private Set collectors;
 
-	private StorableObjectDatabase mapDatabase;
-
-	protected transient Set maps = new HashSet();
-	protected transient Set selectedElements = new HashSet();
-	protected transient Set allElements = new HashSet();
-	protected transient Set nodeElements = new HashSet();
+	protected transient Set maps;
+	protected transient Set selectedElements;
+	protected transient Set allElements;
+	protected transient Set nodeElements;
 
 	public Map(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.mapDatabase = MapDatabaseContext.getMapDatabase();
+		MapDatabase database = MapDatabaseContext.getMapDatabase();
 		try {
-			this.mapDatabase.retrieve(this);
+			database.retrieve(this);
 		}
 		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
@@ -97,7 +94,6 @@ public class Map extends DomainMember {
 	}
 
 	public Map(Map_Transferable mt) throws CreateObjectException {
-		this.mapDatabase = MapDatabaseContext.getMapDatabase();
 		this.fromTransferable(mt);
 	}
 
@@ -123,8 +119,11 @@ public class Map extends DomainMember {
 		this.physicalLinks = new HashSet();
 		this.marks = new HashSet();
 		this.collectors = new HashSet();
+
 		this.maps = new HashSet();
-		this.mapDatabase = MapDatabaseContext.getMapDatabase();
+		this.selectedElements = new HashSet();
+		this.allElements = new HashSet();
+		this.nodeElements = new HashSet();
 	}
 
 	public static Map createInstance(Identifier creatorId, Identifier domainId, String name, String description)

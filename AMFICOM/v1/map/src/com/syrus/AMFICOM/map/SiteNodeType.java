@@ -1,5 +1,5 @@
 /**
- * $Id: SiteNodeType.java,v 1.22 2005/04/04 16:06:12 bass Exp $
+ * $Id: SiteNodeType.java,v 1.23 2005/04/08 09:09:29 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,6 +10,14 @@
  */
 
 package com.syrus.AMFICOM.map;
+
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
+import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -23,19 +31,10 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectType;
-import com.syrus.AMFICOM.general.corba.*;
+import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.SiteNodeType_Transferable;
-
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-
-import org.omg.CORBA.portable.IDLEntity;
 
 /**
  * Тип сетевого узла топологической схемы. Существует несколько 
@@ -43,8 +42,8 @@ import org.omg.CORBA.portable.IDLEntity;
  * {@link #codename}, соответствующим какому-либо значению {@link #WELL}, 
  * {@link #PIQUET}, {@link #ATS}, {@link #BUILDING}, {@link #UNBOUND}, 
  * {@link #CABLE_INLET}, {@link #TOWER}
- * @author $Author: bass $
- * @version $Revision: 1.22 $, $Date: 2005/04/04 16:06:12 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.23 $, $Date: 2005/04/08 09:09:29 $
  * @module map_v1
  */
 public class SiteNodeType extends StorableObjectType implements Characterizable {
@@ -76,14 +75,12 @@ public class SiteNodeType extends StorableObjectType implements Characterizable 
 	private String name;
 	private boolean topological;
 
-	private StorableObjectDatabase siteNodeTypeDatabase;
-
 	public SiteNodeType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.siteNodeTypeDatabase = MapDatabaseContext.getSiteNodeTypeDatabase();
+		SiteNodeTypeDatabase database = MapDatabaseContext.getSiteNodeTypeDatabase();
 		try {
-			this.siteNodeTypeDatabase.retrieve(this);
+			database.retrieve(this);
 		}
 		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
@@ -91,7 +88,6 @@ public class SiteNodeType extends StorableObjectType implements Characterizable 
 	}
 
 	public SiteNodeType(SiteNodeType_Transferable sntt) throws CreateObjectException {
-		this.siteNodeTypeDatabase = MapDatabaseContext.getSiteNodeTypeDatabase();
 		this.fromTransferable(sntt);
 	}
 
@@ -116,8 +112,6 @@ public class SiteNodeType extends StorableObjectType implements Characterizable 
 		this.topological = topological;
 
 		this.characteristics = new HashSet();
-
-		this.siteNodeTypeDatabase = MapDatabaseContext.getSiteNodeTypeDatabase();
 	}
 
 	public static SiteNodeType createInstance(final Identifier creatorId,

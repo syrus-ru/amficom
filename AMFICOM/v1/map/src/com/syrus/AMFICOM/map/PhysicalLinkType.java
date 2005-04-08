@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLinkType.java,v 1.26 2005/04/04 16:06:12 bass Exp $
+ * $Id: PhysicalLinkType.java,v 1.27 2005/04/08 09:09:29 arseniy Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -8,6 +8,14 @@
  */
 
 package com.syrus.AMFICOM.map;
+
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
+import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -21,27 +29,18 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectType;
-import com.syrus.AMFICOM.general.corba.*;
+import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.PhysicalLinkType_Transferable;
-
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-
-import org.omg.CORBA.portable.IDLEntity;
 
 /**
  * “ип линии топологической схемы. —уществует несколько предустановленных 
  * типов линий, которые определ€ютс€ полем {@link #codename}, соответствующим
  * какому-либо значению {@link #TUNNEL}, {@link #COLLECTOR}, {@link #INDOOR}, 
  * {@link #SUBMARINE}, {@link #OVERHEAD}, {@link #UNBOUND}
- * @author $Author: bass $
- * @version $Revision: 1.26 $, $Date: 2005/04/04 16:06:12 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.27 $, $Date: 2005/04/08 09:09:29 $
  * @module map_v1
  */
 public class PhysicalLinkType extends StorableObjectType implements Characterizable {
@@ -76,14 +75,12 @@ public class PhysicalLinkType extends StorableObjectType implements Characteriza
 	 */
 	private IntDimension 			bindingDimension;
 
-	private StorableObjectDatabase	physicalLinkTypeDatabase;
-
 	public PhysicalLinkType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.physicalLinkTypeDatabase = MapDatabaseContext.getPhysicalLinkTypeDatabase();
+		PhysicalLinkTypeDatabase database = MapDatabaseContext.getPhysicalLinkTypeDatabase();
 		try {
-			this.physicalLinkTypeDatabase.retrieve(this);
+			database.retrieve(this);
 		}
 		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
@@ -91,7 +88,6 @@ public class PhysicalLinkType extends StorableObjectType implements Characteriza
 	}
 
 	public PhysicalLinkType(PhysicalLinkType_Transferable pltt) throws CreateObjectException {
-		this.physicalLinkTypeDatabase = MapDatabaseContext.getPhysicalLinkTypeDatabase();
 		this.fromTransferable(pltt);
 	}
 
@@ -117,8 +113,6 @@ public class PhysicalLinkType extends StorableObjectType implements Characteriza
 			this.bindingDimension = new IntDimension(bindingDimension.getWidth(), bindingDimension.getHeight());
 
 		this.characteristics = new HashSet();
-
-		this.physicalLinkTypeDatabase = MapDatabaseContext.getPhysicalLinkTypeDatabase();
 	}
 
 	public static PhysicalLinkType createInstance(final Identifier creatorId,

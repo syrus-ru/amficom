@@ -1,5 +1,5 @@
 /**
- * $Id: Collector.java,v 1.31 2005/04/07 13:56:00 krupenn Exp $
+ * $Id: Collector.java,v 1.32 2005/04/08 09:09:29 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,7 +33,6 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.Collector_Transferable;
@@ -42,8 +41,8 @@ import com.syrus.AMFICOM.map.corba.Collector_Transferable;
  * Коллектор на топологической схеме, который характеризуется набором входящих
  * в него линий. Линии не обязаны быть связными.
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.31 $, $Date: 2005/04/07 13:56:00 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.32 $, $Date: 2005/04/08 09:09:29 $
  * @module map_v1
  */
 public class Collector extends StorableObject implements MapElement {
@@ -70,8 +69,6 @@ public class Collector extends StorableObject implements MapElement {
 	private Set physicalLinks;
 	private Set characteristics;
 
-	private StorableObjectDatabase collectorDatabase;
-
 	protected transient Map map;
 	protected transient boolean selected = false;
 	protected transient boolean removed = false;
@@ -82,9 +79,9 @@ public class Collector extends StorableObject implements MapElement {
 		this.physicalLinks = new HashSet();
 		this.characteristics = new HashSet();
 
-		this.collectorDatabase = MapDatabaseContext.getCollectorDatabase();
+		CollectorDatabase database = MapDatabaseContext.getCollectorDatabase();
 		try {
-			this.collectorDatabase.retrieve(this);
+			database.retrieve(this);
 		}
 		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
@@ -92,7 +89,6 @@ public class Collector extends StorableObject implements MapElement {
 	}
 
 	public Collector(Collector_Transferable ct) throws CreateObjectException {
-		this.collectorDatabase = MapDatabaseContext.getCollectorDatabase();
 		this.fromTransferable(ct);
 	}
 
@@ -112,8 +108,6 @@ public class Collector extends StorableObject implements MapElement {
 
 		this.physicalLinks = new HashSet();
 		this.characteristics = new HashSet();
-
-		this.collectorDatabase = MapDatabaseContext.getCollectorDatabase();
 	}
 
 	public static Collector createInstance(Identifier creatorId, Map map, String name, String description)

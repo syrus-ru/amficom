@@ -1,5 +1,5 @@
 /**
- * $Id: TopologicalNode.java,v 1.26 2005/04/04 13:15:58 bass Exp $
+ * $Id: TopologicalNode.java,v 1.27 2005/04/08 09:09:29 arseniy Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -30,7 +31,6 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
@@ -41,8 +41,8 @@ import com.syrus.AMFICOM.map.corba.TopologicalNode_Transferable;
  * быть концевым дл€ линии и дл€ фрагмента линии. ¬ физическом смысле
  * топологический узел соответствует точке изгиба линии и не требует 
  * дополнительной описательной информации.
- * @author $Author: bass $
- * @version $Revision: 1.26 $, $Date: 2005/04/04 13:15:58 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.27 $, $Date: 2005/04/08 09:09:29 $
  * @module map_v1
  * @todo physicalLink should be transient
  */
@@ -67,7 +67,6 @@ public class TopologicalNode extends AbstractNode {
 	 * false одна
 	 */
 	private boolean active;
-	private StorableObjectDatabase topologicalNodeDatabase;
 
 	private transient PhysicalLink physicalLink = null;
 
@@ -79,9 +78,9 @@ public class TopologicalNode extends AbstractNode {
 	public TopologicalNode(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.topologicalNodeDatabase = MapDatabaseContext.getTopologicalNodeDatabase();
+		TopologicalNodeDatabase database = MapDatabaseContext.getTopologicalNodeDatabase();
 		try {
-			this.topologicalNodeDatabase.retrieve(this);
+			database.retrieve(this);
 		}
 		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
@@ -128,8 +127,6 @@ public class TopologicalNode extends AbstractNode {
 		this.active = active;
 
 		this.characteristics = new HashSet();
-
-		this.topologicalNodeDatabase = MapDatabaseContext.getTopologicalNodeDatabase();
 	}
 
 	protected TopologicalNode(final Identifier id,
@@ -154,8 +151,6 @@ public class TopologicalNode extends AbstractNode {
 		this.active = active;
 
 		this.characteristics = new HashSet();
-
-		this.topologicalNodeDatabase = MapDatabaseContext.getTopologicalNodeDatabase();
 
 		this.selected = false;
 	}

@@ -1,5 +1,5 @@
 /**
- * $Id: SiteNode.java,v 1.28 2005/04/05 12:02:16 krupenn Exp $
+ * $Id: SiteNode.java,v 1.29 2005/04/08 09:09:29 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -30,12 +31,11 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.*;
+import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.map.corba.SiteNode_Transferable;
@@ -55,8 +55,8 @@ import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
  * Дополнительно описывается полями
  * {@link #city}, {@link #street}, {@link #building} для поиска по 
  * географическим параметрам. 
- * @author $Author: krupenn $
- * @version $Revision: 1.28 $, $Date: 2005/04/05 12:02:16 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.29 $, $Date: 2005/04/08 09:09:29 $
  * @module map_v1
  */
 public class SiteNode extends AbstractNode implements TypedObject {
@@ -90,14 +90,12 @@ public class SiteNode extends AbstractNode implements TypedObject {
 	private String street;
 	private String building;
 
-	private StorableObjectDatabase siteNodeDatabase;
-
 	public SiteNode(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.siteNodeDatabase = MapDatabaseContext.getSiteNodeDatabase();
+		SiteNodeDatabase database = MapDatabaseContext.getSiteNodeDatabase();
 		try {
-			this.siteNodeDatabase.retrieve(this);
+			database.retrieve(this);
 		}
 		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
@@ -157,8 +155,6 @@ public class SiteNode extends AbstractNode implements TypedObject {
 		this.building = building;
 
 		this.characteristics = new HashSet();
-
-		this.siteNodeDatabase = MapDatabaseContext.getSiteNodeDatabase();
 
 		this.selected = false;
 	}
