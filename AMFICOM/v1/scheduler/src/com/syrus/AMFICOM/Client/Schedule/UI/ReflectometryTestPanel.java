@@ -28,6 +28,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
@@ -36,6 +37,7 @@ import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
+import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
@@ -53,6 +55,7 @@ import com.syrus.AMFICOM.general.ParameterTypeCodenames;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
+import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.CompoundConditionSort;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
@@ -64,7 +67,10 @@ import com.syrus.AMFICOM.measurement.corba.SetSort;
 import com.syrus.util.ByteArray;
 
 /**
+ * @version $Revision: 1.18 $, $Date: 2005/04/08 16:46:46 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
+ * @module scheduler_v1
  */
 public class ReflectometryTestPanel extends ParametersTestPanel implements ParametersTest, OperationListener {
 
@@ -152,7 +158,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 	private Dispatcher				dispatcher;
 	private SchedulerModel			schedulerModel;
 
-	private JTextField				refractTextField			= new JTextField();
+	private JTextField				refractTextField			= new JTextField(8);
 
 	private JComboBox				waveLengthComboBox			= new JComboBox();
 
@@ -286,7 +292,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 			String waveStr = wave.toString();
 			if ((waveStr == null) || (waveStr.length() == 0))
 				throw new IllegalArgumentException(LangModelSchedule.getString("wave_length_is_not_set"));
-			byteArray = new ByteArray(((int) Double.parseDouble(waveStr)));
+			byteArray = this.getByteArray(waveStr, wvlenParameterType);
 
 			params[0] = SetParameter.createInstance(wvlenParameterType, byteArray.getBytes());
 
@@ -297,7 +303,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 			String distanceStr = distance.toString();
 			if ((distanceStr == null) || (distanceStr.length() == 0))
 				throw new IllegalArgumentException(LangModelSchedule.getString("distance_is_not_set"));
-			byteArray = new ByteArray(Double.parseDouble(distanceStr));
+			byteArray =  this.getByteArray(distanceStr, trclenParameterType); 
 
 			params[1] = SetParameter.createInstance(trclenParameterType, byteArray.getBytes());
 
@@ -307,7 +313,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 			String resolutionStr = resolution.toString();
 			if ((resolutionStr == null) || (resolutionStr.length() == 0))
 				throw new IllegalArgumentException(LangModelSchedule.getString("resolution_is_not_set"));
-			byteArray = new ByteArray(Double.parseDouble(resolutionStr));
+			byteArray = this.getByteArray(resolutionStr, resParameterType);
 
 			params[2] = SetParameter.createInstance(resParameterType, byteArray.getBytes());
 
@@ -318,14 +324,14 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 			if ((pulseStr == null) || (pulseStr.length() == 0))
 				throw new IllegalArgumentException(LangModelSchedule.getString("pulse_width_is_not_set"));
 
-			byteArray = new ByteArray(Long.parseLong(pulseStr));
+			byteArray = this.getByteArray(pulseStr, pulswdParameterType);
 
 			params[3] = SetParameter.createInstance(pulswdParameterType, byteArray.getBytes());
 
 			String refract = this.refractTextField.getText();
 			if ((refract == null) || (refract.length() == 0))
 				throw new IllegalArgumentException(LangModelSchedule.getString("index_of_refraction_is_not_set")); //$NON-NLS-1$
-			byteArray = new ByteArray(Double.parseDouble(refract));
+			byteArray = this.getByteArray(refract, iorParameterType);
 
 			params[4] = SetParameter.createInstance(iorParameterType, byteArray.getBytes());
 
@@ -336,7 +342,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 			if ((averageStr == null) || (averageStr.length() == 0))
 				throw new IllegalArgumentException(LangModelSchedule.getString("average_quantity_is_not_set"));
 
-			byteArray = new ByteArray(Double.parseDouble(averageStr));
+			byteArray = this.getByteArray(averageStr, scansParameterType);
 
 			params[5] = SetParameter.createInstance(scansParameterType, byteArray.getBytes());
 
@@ -359,6 +365,26 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 			this.schedulerModel.setBreakData();
 		}
 		return set;
+	}
+	
+	private ByteArray getByteArray(String value, ParameterType parameterType) {
+		ByteArray byteArray = null;
+		DataType dataType = parameterType.getDataType();
+		switch (dataType.value()) {
+			case DataType._DATA_TYPE_INTEGER:
+				byteArray = new ByteArray(Integer.parseInt(value));
+				break;
+			case DataType._DATA_TYPE_DOUBLE:
+				byteArray = new ByteArray(Double.parseDouble(value));
+				break;
+			case DataType._DATA_TYPE_STRING:
+				byteArray = new ByteArray(value);
+				break;
+			case DataType._DATA_TYPE_LONG:
+				byteArray = new ByteArray(Long.parseLong(value));
+				break;
+		}
+		return byteArray;
 	}
 
 	public void operationPerformed(OperationEvent ae) {
@@ -412,12 +438,13 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 					+ CharacteristicTypeCodenames.TRACE_INDEX_OF_REFRACTION_SUFFIX + "|"
 					+ CharacteristicTypeCodenames.TRACE_AVERAGE_COUNT_SUFFIX + ")");
 			for (Iterator it = characteristics.iterator(); it.hasNext();) {
+				System.out.println();
 				Characteristic characteristic = (Characteristic) it.next();
 				StorableObjectType type = characteristic.getType();
-//				System.out.println("characteristicType is " + type.getId());
+				System.out.println("characteristicType is " + type.getId());
 				String codename = type.getCodename();
 				String value = characteristic.getValue();
-//				System.out.println("codename is '" + codename + "', value is " + value);				
+				System.out.println("codename is '" + codename + "', value is " + value);				
 
 				if (codename.equals(CharacteristicTypeCodenames.TRACE_WAVELENGTH)) {
 					String[] values = value.split("\\s+");
@@ -458,7 +485,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 						String suffix = null;
 						for (int j = 0; j <= matcher.groupCount(); j++) {
 							String substring = codename.substring(matcher.start(j), matcher.end(j));
-//							System.out.println("j:"+j+"\t"+substring);
+							System.out.println("j:"+j+"\t"+substring);
 							switch (j) {
 								case 1:
 									waveLength = substring;
@@ -487,62 +514,45 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 				}
 			}
 
-			int wavelength = (int) Double.parseDouble(this.waveLengthComboBox.getSelectedItem().toString());
-			{
-				String value = (String) this.traceLength.get(Integer.toString(wavelength));
-				String[] values = value.split("\\s+");
-				Arrays.sort(values, this.comparator);
-				this.maxDistanceComboBox.removeAllItems();
-				for (int i = 0; i < values.length; i++)
-					this.maxDistanceComboBox.addItem(values[i]);
-			}
+			String wavelength = this.waveLengthComboBox.getSelectedItem().toString();
+			if (wavelength != null) {
+				System.out.println("wavelength is " + wavelength);
+				{
+					String value = (String) this.traceLength.get(wavelength);
+					System.out.println(value);
+					String[] values = value.split("\\s+");
+					Arrays.sort(values, this.comparator);
+					this.maxDistanceComboBox.removeAllItems();
+					for (int i = 0; i < values.length; i++)
+						this.maxDistanceComboBox.addItem(values[i]);
+				}
 
-			{
-				String value = (String) this.pulseWidthMap.get(Integer.toString(wavelength));
-				String[] values = value.split("\\s+");
-				Arrays.sort(values, this.comparator);
-				this.pulseWidthComboBox.removeAllItems();
-				for (int i = 0; i < values.length; i++)
-					this.pulseWidthComboBox.addItem(values[i]);
-			}
+				{
+					String value = (String) this.pulseWidthMap.get(wavelength);
+					String[] values = value.split("\\s+");
+					Arrays.sort(values, this.comparator);
+					this.pulseWidthComboBox.removeAllItems();
+					for (int i = 0; i < values.length; i++)
+						this.pulseWidthComboBox.addItem(values[i]);
+				}
 
-			{
-				String value = (String) this.indexOfRefraction.get(Integer.toString(wavelength));
-				String[] values = value.split("\\s+");
-				Arrays.sort(values, this.comparator);
-				this.refractTextField.setText(values[0]);
-			}
+				{
+					String value = (String) this.indexOfRefraction.get(wavelength);
+					String[] values = value.split("\\s+");
+					Arrays.sort(values, this.comparator);
+					this.refractTextField.setText(values[0]);
+				}
 
-			{
-				String value = (String) this.averageCount.get(Integer.toString(wavelength));
-				String[] values = value.split("\\s+");
-				Arrays.sort(values, this.comparator);
-				this.averageQuantityComboBox.removeAllItems();
-				for (int i = 0; i < values.length; i++)
-					this.averageQuantityComboBox.addItem(values[i]);
+				{
+					String value = (String) this.averageCount.get(wavelength);
+					String[] values = value.split("\\s+");
+					Arrays.sort(values, this.comparator);
+					this.averageQuantityComboBox.removeAllItems();
+					for (int i = 0; i < values.length; i++)
+						this.averageQuantityComboBox.addItem(values[i]);
+				}
 			}
-
-			/*
-			 * if (this.waveLengthComboBox.getItemCount() == 0)
-			 * this.waveLengthComboBox.addItem(DEFAULT_WAVELENGTH);
-			 * 
-			 * if (this.averageQuantityComboBox.getItemCount() == 0)
-			 * this.averageQuantityComboBox.addItem(DEFAULT_AVERAGE_QUANTITY);
-			 * this.refractTextField.setText(Double.toString(this.minIndexOfRefraction));
-			 * if (this.resolutionMap.keySet().size() ==
-			 * this.pulseWidthMap.keySet().size()) {
-			 * 
-			 * java.util.Set set = this.resolutionMap.keySet(); Object[] values =
-			 * set.toArray(); Arrays.sort(values, this.comparator); if
-			 * (this.resolutionMap.keySet().size() == 0) {
-			 * this.resolutionMap.put(DEFAULT_DISTANCE, DEFAULT_RESOLUTION);
-			 * this.pulseWidthMap.put(DEFAULT_DISTANCE, DEFAULT_PULSEWIDTH); }
-			 * if (values.length == 0) values = new String[] {
-			 * DEFAULT_DISTANCE}; this.maxDistanceComboBox.removeAllItems(); for
-			 * (int i = 0; i < values.length; i++)
-			 * this.maxDistanceComboBox.addItem(values[i].toString());
-			 * this.maxDistanceComboBox.setSelectedIndex(0); }
-			 */
+			
 		} catch (ApplicationException ae) {
 			SchedulerModel.showErrorMessage(this, ae);
 		}
@@ -552,21 +562,16 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 	public void setTest(Test test) {
 		if (test != null) {
 			/**
-			 * FIXME fix set the same test
+			 * FIXME how set for many measurementSetup ???
 			 */
-			{
-				/**
-				 * FIXME how set for many measurementSetup ???
-				 */
-				for (Iterator it = test.getMeasurementSetupIds().iterator(); it.hasNext();) {
-					Identifier id = (Identifier) it.next();
-					try {
-						MeasurementSetup measurementSetup = (MeasurementSetup) MeasurementStorableObjectPool
-								.getStorableObject(id, true);
-						setSet(measurementSetup.getParameterSet());
-					} catch (ApplicationException ae) {
-						SchedulerModel.showErrorMessage(this, ae);
-					}
+			for (Iterator it = test.getMeasurementSetupIds().iterator(); it.hasNext();) {
+				Identifier id = (Identifier) it.next();
+				try {
+					MeasurementSetup measurementSetup = (MeasurementSetup) MeasurementStorableObjectPool
+							.getStorableObject(id, true);
+					setSet(measurementSetup.getParameterSet());
+				} catch (ApplicationException ae) {
+					SchedulerModel.showErrorMessage(this, ae);
 				}
 			}
 		}
@@ -579,65 +584,36 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 			return;
 		}
 
-		try {
+		SetParameter[] setParameters = set.getParameters();
+		for (int i = 0; i < setParameters.length; i++) {
+			StorableObjectType type = setParameters[i].getType();
+			if (type instanceof ParameterType) {
+				ParameterType parameterType = (ParameterType) type;
+				String codename = parameterType.getCodename();
+				if (codename.equals(ParameterTypeCodenames.TRACE_LENGTH)) {
+					selectCBValue(this.maxDistanceComboBox, setParameters[i].getStringValue());
+				}
 
-			SetParameter[] setParameters = set.getParameters();
-			for (int i = 0; i < setParameters.length; i++) {
-				StorableObjectType type = setParameters[i].getType();
-				if (type instanceof ParameterType) {
-					ParameterType parameterType = (ParameterType) type;
-					String codename = parameterType.getCodename();
-					byte[] value = setParameters[i].getValue();
-					if (codename.equals(ParameterTypeCodenames.TRACE_LENGTH)) {
-						double length = new ByteArray(value).toDouble();
-						if (DEBUG)
-							System.out.println("length:" + length); //$NON-NLS-1$
-						selectCBValue(this.maxDistanceComboBox, length);
-					}
+			}
+		}
 
+		for (int i = 0; i < setParameters.length; i++) {
+			StorableObjectType type = setParameters[i].getType();
+			if (type instanceof ParameterType) {
+				ParameterType parameterType = (ParameterType) type;
+				String codename = parameterType.getCodename();
+				if (codename.equals(ParameterTypeCodenames.TRACE_INDEX_OF_REFRACTION)) {
+					this.refractTextField.setText(setParameters[i].getStringValue());
+				} else if (codename.equals(ParameterTypeCodenames.TRACE_WAVELENGTH)) {
+					selectCBValue(this.waveLengthComboBox, setParameters[i].getStringValue());
+				} else if (codename.equals(ParameterTypeCodenames.TRACE_AVERAGE_COUNT)) {						
+					selectCBValue(this.averageQuantityComboBox, setParameters[i].getStringValue());
+				} else if (codename.equals(ParameterTypeCodenames.TRACE_RESOLUTION)) {
+					selectCBValue(this.resolutionComboBox, setParameters[i].getStringValue());
+				} else if (codename.equals(ParameterTypeCodenames.TRACE_PULSE_WIDTH)) {
+					selectCBValue(this.pulseWidthComboBox, setParameters[i].getStringValue());
 				}
 			}
-
-			for (int i = 0; i < setParameters.length; i++) {
-				StorableObjectType type = setParameters[i].getType();
-				if (type instanceof ParameterType) {
-					ParameterType parameterType = (ParameterType) type;
-					String codename = parameterType.getCodename();
-					byte[] value = setParameters[i].getValue();
-
-					if (codename.equals(ParameterTypeCodenames.TRACE_INDEX_OF_REFRACTION)) {
-						double refraction = new ByteArray(value).toDouble();
-						if (DEBUG)
-							System.out.println("refraction:" + refraction); //$NON-NLS-1$
-						this.refractTextField.setText(new Double(refraction).toString());
-					} else if (codename.equals(ParameterTypeCodenames.TRACE_WAVELENGTH)) {
-						int wavelength = new ByteArray(value).toInt();
-						if (DEBUG)
-							System.out.println("wavelength:" + wavelength); //$NON-NLS-1$
-						selectCBValue(this.waveLengthComboBox, wavelength);
-					} else if (codename.equals(ParameterTypeCodenames.TRACE_AVERAGE_COUNT)) {
-						double averages = (int) new ByteArray(value).toDouble();
-						if (DEBUG)
-							System.out.println("averages:" + averages); //$NON-NLS-1$
-						selectCBValue(this.averageQuantityComboBox, averages);
-					} else if (codename.equals(ParameterTypeCodenames.TRACE_RESOLUTION)) {
-						double resolution = new ByteArray(value).toDouble();
-						if (DEBUG)
-							System.out.println("resolution:" + resolution); //$NON-NLS-1$
-						selectCBValue(this.resolutionComboBox, resolution);
-					} else if (codename.equals(ParameterTypeCodenames.TRACE_PULSE_WIDTH)) {
-						// double pulsewidth = new
-						// ByteArray(p.value).toDouble();
-						long pulsewidth = new ByteArray(value).toLong();
-						if (DEBUG)
-							System.out.println("pulsewidth:" + pulsewidth); //$NON-NLS-1$
-						selectCBValue(this.pulseWidthComboBox, pulsewidth);
-					}
-				}
-			}
-
-		} catch (IOException ioe) {
-			Environment.log(Environment.LOG_LEVEL_WARNING, ioe.getMessage());
 		}
 	}
 
@@ -707,46 +683,47 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.anchor = GridBagConstraints.FIRST_LINE_START;
+		gbc.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		gbc.weightx = 1.0;
 		gbc.weighty = 0.0;
 		gbc.gridwidth = GridBagConstraints.RELATIVE;
-		add(refractLabel, gbc);
-		gbc.weightx = 3.0;
+		this.add(refractLabel, gbc);
+		gbc.weightx = 0.0;
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
-		add(this.refractTextField, gbc);
+		this.add(this.refractTextField, gbc);
 		gbc.weightx = 1.0;
 		gbc.gridwidth = GridBagConstraints.RELATIVE;
-		add(waveLengthLabel, gbc);
+		this.add(waveLengthLabel, gbc);
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
-		gbc.weightx = 3.0;
-		add(this.waveLengthComboBox, gbc);
+		gbc.weightx = 0.0;
+		this.add(this.waveLengthComboBox, gbc);
 		gbc.weightx = 1.0;
 		gbc.gridwidth = GridBagConstraints.RELATIVE;
-		add(countOfAverageOutLabel, gbc);
+		this.add(countOfAverageOutLabel, gbc);
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
-		gbc.weightx = 3.0;
-		add(this.averageQuantityComboBox, gbc);
+		gbc.weightx = 0.0;
+		this.add(this.averageQuantityComboBox, gbc);
 		gbc.weightx = 1.0;
 		gbc.gridwidth = GridBagConstraints.RELATIVE;
-		add(pulseWidthLabel, gbc);
+		this.add(pulseWidthLabel, gbc);
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
-		gbc.weightx = 3.0;
-		add(this.pulseWidthComboBox, gbc);
+		gbc.weightx = 0.0;
+		this.add(this.pulseWidthComboBox, gbc);
 		gbc.weightx = 1.0;
 		gbc.gridwidth = GridBagConstraints.RELATIVE;
-		add(resolutionLabel, gbc);
+		add(resolutionLabel, gbc);		
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
-		gbc.weightx = 3.0;
-		add(this.resolutionComboBox, gbc);
+		gbc.weightx = 0.0;
+		this.add(this.resolutionComboBox, gbc);
 		gbc.weightx = 1.0;
 		gbc.gridwidth = GridBagConstraints.RELATIVE;
-		add(maxDistanceLabel, gbc);
-		gbc.weightx = 3.0;
+		this.add(maxDistanceLabel, gbc);
+		gbc.weightx = 0.0;
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
-		add(this.maxDistanceComboBox, gbc);
+		this.add(this.maxDistanceComboBox, gbc);
 		gbc.weighty = 1.0;
 		gbc.anchor = GridBagConstraints.SOUTH;
-		add(new JLabel(), gbc);
+		this.add(new JLabel(), gbc);
 
 	}
 
@@ -760,49 +737,13 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 	}
 
 	private void selectCBValue(	JComboBox cb,
-								double value) {
+								String value) {
 		for (int i = 0; i < cb.getItemCount(); i++) {
 			Object obj = cb.getItemAt(i);
 			String item = obj.toString();
-			double v = Double.parseDouble(item);
 			if (DEBUG)
-				System.out.println("item:" + v); //$NON-NLS-1$
-			if (v == value) {
-				cb.setSelectedItem(obj);
-				if (DEBUG)
-					System.out.println("selected"); //$NON-NLS-1$
-				break;
-			}
-		}
-	}
-
-	private void selectCBValue(	JComboBox cb,
-								int value) {
-		for (int i = 0; i < cb.getItemCount(); i++) {
-			Object obj = cb.getItemAt(i);
-			String item = obj.toString();
-			int v = (int) Double.parseDouble(item);
-			if (DEBUG)
-				System.out.println("item:" + v); //$NON-NLS-1$
-			if (v == value) {
-				cb.setSelectedItem(obj);
-				if (DEBUG)
-					System.out.println("selected"); //$NON-NLS-1$
-				break;
-			}
-		}
-	}
-
-	private void selectCBValue(	JComboBox cb,
-								long value) {
-		for (int i = 0; i < cb.getItemCount(); i++) {
-			Object obj = cb.getItemAt(i);
-			String item = obj.toString();
-			// item = item.replaceAll(".", "");
-			long v = Long.parseLong(item);
-			if (DEBUG)
-				System.out.println("item:" + v); //$NON-NLS-1$
-			if (v == value) {
+				System.out.println("item:" + item); //$NON-NLS-1$
+			if (item.equals(value)) {
 				cb.setSelectedItem(obj);
 				if (DEBUG)
 					System.out.println("selected"); //$NON-NLS-1$

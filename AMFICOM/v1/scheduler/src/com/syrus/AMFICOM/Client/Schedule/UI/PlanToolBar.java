@@ -21,6 +21,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -45,6 +46,7 @@ import com.syrus.AMFICOM.Client.General.UI.AComboBox;
 import com.syrus.AMFICOM.Client.General.UI.CalendarUI;
 import com.syrus.AMFICOM.Client.General.UI.DateSpinner;
 import com.syrus.AMFICOM.Client.General.UI.TimeSpinner;
+import com.syrus.AMFICOM.Client.General.UI.UIGeneralStorage;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
@@ -123,7 +125,7 @@ class PlanToolBar {
 		Font font2 = this.toolBar.getFont();
 		FontMetrics fontMetrics = this.toolBar.getFontMetrics(font2);
 		this.w = fontMetrics.charWidth('W');
-		this.h = w;
+		this.h = this.w;
 
 		String[] scales = new String[PlanPanel.SCALES.length];
 		for (int i = 0; i < scales.length; i++)
@@ -283,15 +285,20 @@ class PlanToolBar {
 		});
 
 		this.toolBar.add(new JLabel(LangModelSchedule.getString("Detalization") + ':')); //$NON-NLS-1$
+		UIGeneralStorage.fixHorizontalSize(this.scaleComboBox);
 		this.toolBar.add(this.scaleComboBox);
 		this.toolBar.addSeparator();
 		this.toolBar.add(new JLabel(LangModelSchedule.getString("Date") + ':')); //$NON-NLS-1$
+		
+		UIGeneralStorage.fixHorizontalSize(this.dateSpinner);
 		this.toolBar.add(this.dateSpinner);
 		this.toolBar.add(this.dateButton);
 		this.toolBar.addSeparator();
 		this.toolBar.add(new JLabel(LangModelSchedule.getString("Time") + ':')); //$NON-NLS-1$
 
+		UIGeneralStorage.fixHorizontalSize(this.timeSpinner);
 		this.toolBar.add(this.timeSpinner);
+
 		this.nowButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 		this.toolBar.add(this.nowButton);
 		this.toolBar.addSeparator();
@@ -371,6 +378,7 @@ class PlanToolBar {
 		 * @TODO add when TestFilter've been updated
 		 */
 		// box.add(this.filterButton);
+		this.toolBar.add(Box.createHorizontalGlue());
 		this.toolBar.add(this.zoomInButton);
 		this.toolBar.add(this.zoomOutButton);
 		this.toolBar.add(this.zoomNoneButton);

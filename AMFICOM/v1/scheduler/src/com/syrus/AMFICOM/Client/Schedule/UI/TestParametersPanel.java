@@ -7,6 +7,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -23,10 +25,13 @@ import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -56,6 +61,7 @@ import com.syrus.AMFICOM.measurement.EvaluationType;
 import com.syrus.AMFICOM.measurement.EvaluationTypeController;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MeasurementSetupController;
+import com.syrus.AMFICOM.measurement.MeasurementSetupWrapper;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.Set;
 import com.syrus.AMFICOM.measurement.SetParameter;
@@ -91,7 +97,6 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 	JCheckBox					useAnalysisBox;
 
 	private Dispatcher			dispatcher;
-	private List				meList;
 
 	private JRadioButton		patternRadioButton;
 
@@ -171,6 +176,32 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 		// this.testMap = new HashMap();
 		patternPanel.add(new JLabel(LangModelSchedule.getString("Patterns")), gbc);
 		this.testSetups = new ObjList(MeasurementSetupController.getInstance(), MeasurementSetupController.KEY_NAME);
+		this.testSetups.addMouseListener(new MouseAdapter() {
+
+			public void mouseClicked(MouseEvent e) {
+				if (SwingUtilities.isRightMouseButton(e)) {
+					final ObjList objList = (ObjList) e.getSource();
+					final MeasurementSetup measurementSetup = (MeasurementSetup) objList.getSelectedValue();
+					final JMenuItem deleteTestMenuItem = new JMenuItem("Show Measurement setup summary info");
+					final JPopupMenu popup = new JPopupMenu();
+					popup.add(deleteTestMenuItem);
+					popup.show(objList, e.getX(), e.getY());				
+
+					deleteTestMenuItem.addActionListener(new ActionListener() {
+
+						public void actionPerformed(ActionEvent e) {
+							MeasurementSetupWrapper wrapper = MeasurementSetupWrapper.getInstance();
+							String info = (String) wrapper.getValue(measurementSetup,
+								MeasurementSetupWrapper.SUMMARY_INFO);
+							JOptionPane.showConfirmDialog(objList, info, "Measurement setup summary info",
+								JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE);
+
+						}
+					});
+
+				}
+			}
+		});
 		this.testSetups.addListSelectionListener(new ListSelectionListener() {
 
 			public void valueChanged(ListSelectionEvent e) {
@@ -191,9 +222,8 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 								java.util.Set set = new HashSet(setParameters.length);
 								for (int i = 0; i < setParameters.length; i++)
 									set.add(setParameters[i].getId());
-								linkedIdsCondition = new LinkedIdsCondition(
-										set,
-										ObjectEntities.ANALYSISTYPE_ENTITY_CODE);
+								linkedIdsCondition = new LinkedIdsCondition(set,
+																			ObjectEntities.ANALYSISTYPE_ENTITY_CODE);
 
 								Collection analysisTypes = MeasurementStorableObjectPool.getStorableObjectsByCondition(
 									linkedIdsCondition, true);
@@ -206,7 +236,7 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 							}
 						}
 
-						TestParametersPanel.this.evaluationComboBox.removeAll();					
+						TestParametersPanel.this.evaluationComboBox.removeAll();
 						{
 							Set thresholdSet = measurementSetup.getThresholdSet();
 							if (thresholdSet != null) {
@@ -214,12 +244,12 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 								java.util.Set set = new HashSet(setParameters.length);
 								for (int i = 0; i < setParameters.length; i++)
 									set.add(setParameters[i].getId());
-								if (linkedIdsCondition == null)		{
+								if (linkedIdsCondition == null) {
 									linkedIdsCondition = new LinkedIdsCondition(
-										set,
-										ObjectEntities.EVALUATIONTYPE_ENTITY_CODE);
+																				set,
+																				ObjectEntities.EVALUATIONTYPE_ENTITY_CODE);
 								}
-								
+
 								else {
 									linkedIdsCondition.setEntityCode(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE);
 									linkedIdsCondition.setLinkedIds(set);

@@ -48,6 +48,7 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.UI.CalendarUI;
 import com.syrus.AMFICOM.Client.General.UI.DateSpinner;
 import com.syrus.AMFICOM.Client.General.UI.TimeSpinner;
+import com.syrus.AMFICOM.Client.General.UI.UIGeneralStorage;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
@@ -152,9 +153,11 @@ public class TimeParametersFrame extends JInternalFrame {
 			});
 			{
 				Box box = new Box(BoxLayout.X_AXIS);
+				UIGeneralStorage.fixHorizontalSize(this.startDateSpinner);
 				box.add(this.startDateSpinner);
 				box.add(startDateButton);
 				box.add(Box.createHorizontalGlue());
+				UIGeneralStorage.fixHorizontalSize(this.startTimeSpinner);
 				box.add(this.startTimeSpinner);
 				gbc.gridwidth = GridBagConstraints.REMAINDER;
 				add(box, gbc);
@@ -183,9 +186,11 @@ public class TimeParametersFrame extends JInternalFrame {
 			});
 			{
 				Box box = new Box(BoxLayout.X_AXIS);
+				UIGeneralStorage.fixHorizontalSize(this.endDateSpinner);
 				box.add(this.endDateSpinner);
 				box.add(endDateButton);
 				box.add(Box.createHorizontalGlue());
+				UIGeneralStorage.fixHorizontalSize(this.endTimeSpinner);
 				box.add(this.endTimeSpinner);
 				gbc.gridwidth = GridBagConstraints.REMAINDER;
 				add(box, gbc);

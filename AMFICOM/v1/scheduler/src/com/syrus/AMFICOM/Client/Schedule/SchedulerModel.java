@@ -487,7 +487,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE) {
 
 			Test test = (this.flag == FLAG_APPLY) ? this.selectedTest : null;
-
+			SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
 			java.util.Set measurementSetupIds;
 			if (this.measurementSetup == null) {
 				if (this.set == null)
@@ -495,7 +495,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 				RISDSessionInfo sessionInterface = (RISDSessionInfo) this.aContext.getSessionInterface();
 				try {
 					this.measurementSetup = MeasurementSetup.createInstance(sessionInterface.getUserIdentifier(),
-						this.set, null, null, null, "created by Scheduler", 1000 * 60 * 10, Collections
+						this.set, null, null, null, "created by Scheduler /" + sdf.format(new Date()) + "/" , 1000 * 60 * 10, Collections
 								.singleton(this.monitoredElement.getId()));
 					MeasurementStorableObjectPool.putStorableObject(this.measurementSetup);
 				} catch (IllegalObjectEntityException e) {
@@ -510,8 +510,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 			Date startTime = this.testTimeStamps.getStartTime();
 			Date endTime = this.testTimeStamps.getEndTime();
 			TestTemporalType temporalType = this.testTimeStamps.getTestTemporalType();
-			TemporalPattern temporalPattern = this.testTimeStamps.getTemporalPattern();
-			SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
+			TemporalPattern temporalPattern = this.testTimeStamps.getTemporalPattern();			
 			if (test == null) {
 				try {
 					test = Test.createInstance(modifierId, startTime, endTime, temporalPattern == null ? null

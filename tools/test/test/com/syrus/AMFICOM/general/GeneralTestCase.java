@@ -1,5 +1,5 @@
 /*
- * $Id: GeneralTestCase.java,v 1.2 2005/04/08 15:40:50 bob Exp $
+ * $Id: GeneralTestCase.java,v 1.3 2005/04/08 16:44:42 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,6 +24,7 @@ import com.syrus.AMFICOM.general.AccessIdentity;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DefaultIdentifierGeneratorServer;
 import com.syrus.AMFICOM.general.EquivalentCondition;
+import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -33,7 +34,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/08 15:40:50 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/08 16:44:42 $
  * @author $Author: bob $
  * @module tools
  */
@@ -91,7 +92,13 @@ public class GeneralTestCase extends TestCase {
 	}
 
 	static void oneTimeTearDown() {
-
+		try {
+			GeneralStorableObjectPool.flush(true);
+			AdministrationStorableObjectPool.flush(true);
+		} catch (ApplicationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		DatabaseConnection.closeConnection();
 	}
 

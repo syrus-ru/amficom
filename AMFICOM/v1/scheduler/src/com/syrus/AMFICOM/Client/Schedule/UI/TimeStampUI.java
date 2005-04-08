@@ -5,7 +5,6 @@ import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -26,19 +25,13 @@ import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.measurement.TemporalPattern;
 
-/*
- * 
- * Created on 20.05.2004
- *  
- */
-
 /**
- * @author bob
- *  
+ * @version $Revision: 1.5 $, $Date: 2005/04/08 16:46:46 $
+ * @author $Author: bob $
+ * @author Vladimir Dolzhenko
+ * @module scheduler_v1
  */
 public class TimeStampUI {
-
-	public static final Insets			NULL_INSETS				= new Insets(0, 0, 0, 0);
 
 	public static final String[]		SHORT_DAY_OF_WEEK_NAMES	= new String[] { LangModelSchedule.getString("mon"),
 			LangModelSchedule.getString("tue"), LangModelSchedule.getString("wed"), LangModelSchedule.getString("thu"),
@@ -160,7 +153,7 @@ public class TimeStampUI {
 		gbc.fill = GridBagConstraints.BOTH;
 		for (int i = 0; i < this.hoursToggleButton.length; i++) {
 			this.hoursToggleButton[i] = new JToggleButton(Integer.toString(i), false);
-			this.hoursToggleButton[i].setMargin(NULL_INSETS);
+			this.hoursToggleButton[i].setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 			gbc.gridwidth = 1;
 			if ((i + 2) % 6 == 0)
 				gbc.gridwidth = GridBagConstraints.RELATIVE;
@@ -209,7 +202,7 @@ public class TimeStampUI {
 		this.normalMinToggleButton = new JToggleButton[12];
 		for (int i = 0; i < this.minutesToggleButton.length; i++) {
 			this.minutesToggleButton[i] = new JToggleButton(Integer.toString(i), false);
-			this.minutesToggleButton[i].setMargin(NULL_INSETS);
+			this.minutesToggleButton[i].setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 			gbc.gridwidth = 1;
 			if ((i + 2) % 10 == 0)
 				gbc.gridwidth = GridBagConstraints.RELATIVE;
@@ -219,7 +212,7 @@ public class TimeStampUI {
 			if (i % 5 == 0) {
 				gbc.gridwidth = 1;
 				this.normalMinToggleButton[i / 5] = new JToggleButton(Integer.toString(i), false);
-				this.normalMinToggleButton[i / 5].setMargin(NULL_INSETS);
+				this.normalMinToggleButton[i / 5].setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 				if ((i * 5 + 2) % 6 == 0)
 					gbc.gridwidth = GridBagConstraints.RELATIVE;
 				if ((i * 5 + 1) % 6 == 0)
@@ -309,7 +302,7 @@ public class TimeStampUI {
 		gbc.fill = GridBagConstraints.BOTH;
 		for (int i = 0; i < this.daysToggleButton.length; i++) {
 			this.daysToggleButton[i] = new JToggleButton(Integer.toString(i + 1), false);
-			this.daysToggleButton[i].setMargin(NULL_INSETS);
+			this.daysToggleButton[i].setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 			gbc.gridwidth = 1;
 			if ((i + 2) % 7 == 0)
 				gbc.gridwidth = GridBagConstraints.RELATIVE;
@@ -330,7 +323,7 @@ public class TimeStampUI {
 		gbc.fill = GridBagConstraints.BOTH;
 		for (int i = 0; i < this.weekToggleButton.length; i++) {
 			this.weekToggleButton[i] = new JToggleButton(SHORT_DAY_OF_WEEK_NAMES[i], true);
-			this.weekToggleButton[i].setMargin(NULL_INSETS);
+			this.weekToggleButton[i].setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 			gbc.gridwidth = 1;
 			if ((i + 2) % 4 == 0)
 				gbc.gridwidth = GridBagConstraints.RELATIVE;
@@ -370,7 +363,7 @@ public class TimeStampUI {
 
 		for (int i = 0; i < this.monthToggleButton.length; i++) {
 			this.monthToggleButton[i] = new JToggleButton(SHORT_MONTH_NAMES[i], false);
-			this.monthToggleButton[i].setMargin(NULL_INSETS);
+			this.monthToggleButton[i].setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 			gbc.gridwidth = 1;
 			if ((i + 2) % 4 == 0)
 				gbc.gridwidth = GridBagConstraints.RELATIVE;
