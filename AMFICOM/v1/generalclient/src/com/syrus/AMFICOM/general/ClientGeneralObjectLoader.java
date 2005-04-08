@@ -1,5 +1,5 @@
 /*
- * $Id: ClientGeneralObjectLoader.java,v 1.11 2005/04/04 15:29:09 bob Exp $
+ * $Id: ClientGeneralObjectLoader.java,v 1.12 2005/04/08 15:11:00 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/04/04 15:29:09 $
+ * @version $Revision: 1.12 $, $Date: 2005/04/08 15:11:00 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -92,7 +92,7 @@ public class ClientGeneralObjectLoader extends AbstractClientObjectLoader implem
 			if (characteristic == null)
 				characteristic = new Characteristic(ct);
 			return characteristic;	
-		} catch (CreateObjectException e) {
+		} catch (ApplicationException e) {
 			String msg = "ClientGeneralObjectLoader.loadCharacteristic | new Characteristic(" + id.toString() + ")";
 			throw new RetrieveObjectException(msg, e);
 		} catch (AMFICOMRemoteException e) {
@@ -143,7 +143,7 @@ public class ClientGeneralObjectLoader extends AbstractClientObjectLoader implem
 				set.add(characteristic);
 			}
 			return set;
-		} catch (CreateObjectException e) {
+		} catch (ApplicationException e) {
 			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
 			throw new CommunicationException(e);
@@ -235,7 +235,7 @@ public class ClientGeneralObjectLoader extends AbstractClientObjectLoader implem
 				set.add(new Characteristic(transferables[j]));
 			}
 			return set;
-		} catch (CreateObjectException e) {
+		} catch (ApplicationException e) {
 			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
 			throw new CommunicationException(e);
