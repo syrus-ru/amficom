@@ -1,7 +1,7 @@
 /*-
- * $Id: DatabaseSchemeObjectLoader.java,v 1.1 2005/04/01 13:59:07 bass Exp $
+ * $Id: DatabaseSchemeObjectLoader.java,v 1.2 2005/04/08 09:26:11 bass Exp $
  *
- * Copyright ¿ 2005 Syrus Systems.
+ * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -15,7 +15,7 @@ import java.util.*;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/04/01 13:59:07 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/08 09:26:11 $
  * @module scheme_v1
  */
 public class DatabaseSchemeObjectLoader implements SchemeObjectLoader {
@@ -866,6 +866,9 @@ public class DatabaseSchemeObjectLoader implements SchemeObjectLoader {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @deprecated
+	 */
 	private void delete(final Identifier id, final Set ids) throws IllegalDataException {
 		short entityCode = (id != null) ? id.getMajor() : 0;
 		if (id == null) {

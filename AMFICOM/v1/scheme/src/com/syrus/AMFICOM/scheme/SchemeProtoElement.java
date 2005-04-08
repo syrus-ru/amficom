@@ -1,28 +1,59 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.13 2005/04/04 13:17:21 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.14 2005/04/08 09:26:11 bass Exp $
  *
- * Copyright ¿ 2005 Syrus Systems.
+ * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.scheme;
 
-import com.syrus.AMFICOM.configuration.*;
-import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.configuration.EquipmentType;
+import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.Characterizable;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Describable;
+import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.Namable;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.TransferableObject;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
-import com.syrus.AMFICOM.logic.*;
-import com.syrus.AMFICOM.resource.*;
-import com.syrus.AMFICOM.scheme.logic.*;
+import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.logic.Item;
+import com.syrus.AMFICOM.logic.ItemListener;
+import com.syrus.AMFICOM.resource.BitmapImageResource;
+import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
+import com.syrus.AMFICOM.resource.SchemeImageResource;
+import com.syrus.AMFICOM.scheme.corba.SchemeProtoElement_Transferable;
+import com.syrus.AMFICOM.scheme.logic.Library;
+import com.syrus.AMFICOM.scheme.logic.LibraryEntry;
 import com.syrus.util.Log;
-import java.util.*;
+
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
 import org.omg.CORBA.portable.IDLEntity;
 
 /**
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.13 $, $Date: 2005/04/04 13:17:21 $
+ * @version $Revision: 1.14 $, $Date: 2005/04/08 09:26:11 $
  * @module scheme_v1
  */
 public final class SchemeProtoElement extends AbstractCloneableStorableObject
@@ -30,27 +61,27 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		LibraryEntry {
 	private static final long serialVersionUID = 3689348806202569782L;
 
-	private Set characteristics;
+	private String name;
 
 	private String description;
 
-	private Identifier equipmentTypeId;
-
 	private String label;
 
-	private String name;
-
-	private Identifier parentSchemeProtoElementId;
-
-	private Identifier parentSchemeProtoGroupId;
-
-	private Identifier schemeCellId;
-
-	private StorableObjectDatabase schemeProtoElementDatabase; 
+	private Identifier equipmentTypeId;
 
 	private Identifier symbolId;
 
 	private Identifier ugoCellId;
+
+	private Identifier schemeCellId;
+
+	private Identifier parentSchemeProtoGroupId;
+
+	private Identifier parentSchemeProtoElementId;
+
+	private SchemeProtoElementDatabase schemeProtoElementDatabase; 
+
+	private Set characteristics;
 
 	/**
 	 * @param id
@@ -127,8 +158,16 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 				: parentSchemeProtoElement.id;
 
 		this.characteristics = new HashSet();
-
 		this.schemeProtoElementDatabase = SchemeDatabaseContext.getSchemeProtoElementDatabase();
+	}
+
+	/**
+	 * @param transferable
+	 * @throws CreateObjectException
+	 */
+	SchemeProtoElement(final SchemeProtoElement_Transferable transferable) throws CreateObjectException {
+		this.schemeProtoElementDatabase = SchemeDatabaseContext.getSchemeProtoElementDatabase();
+		fromTransferable(transferable);
 	}
 
 	/**
@@ -862,5 +901,36 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 			return;
 		this.ugoCellId = newUgoCellId;
 		this.changed = true;
+	}
+
+	/**
+	 * @param transferable
+	 * @throws CreateObjectException
+	 * @see StorableObject#fromTransferable(IDLEntity)
+	 */
+	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
+		final SchemeProtoElement_Transferable schemeProtoElement = (SchemeProtoElement_Transferable) transferable;
+		super.fromTransferable(schemeProtoElement.header);
+		this.name = schemeProtoElement.name;
+		this.description = schemeProtoElement.description;
+		this.label = schemeProtoElement.label;
+		this.equipmentTypeId = new Identifier(schemeProtoElement.equipmentTypeId);
+		this.symbolId = new Identifier(schemeProtoElement.symbolId);
+		this.ugoCellId = new Identifier(schemeProtoElement.ugoCellId);
+		this.schemeCellId = new Identifier(schemeProtoElement.schemeCellId);
+		this.parentSchemeProtoGroupId = new Identifier(schemeProtoElement.parentSchemeProtoGroupId);
+		this.parentSchemeProtoElementId = new Identifier(schemeProtoElement.parentSchemeProtoElementId);
+		try {
+			final Identifier_Transferable characteristicIds[] = schemeProtoElement.characteristicIds;
+			final int length = characteristicIds.length;
+			if (this.characteristics == null)
+				this.characteristics = new HashSet(length);
+			else
+				this.characteristics.clear();
+			for (int i = 0; i < length; i++)
+				this.characteristics.add(GeneralStorableObjectPool.getStorableObject(new Identifier(characteristicIds[i]), true));
+		} catch (final ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}
 }

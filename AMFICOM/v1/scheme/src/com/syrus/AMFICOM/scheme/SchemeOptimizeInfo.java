@@ -1,7 +1,7 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.7 2005/04/04 13:17:21 bass Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.8 2005/04/08 09:26:11 bass Exp $
  *
- * Copyright ¿ 2005 Syrus Systems.
+ * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -9,6 +9,8 @@
 package com.syrus.AMFICOM.scheme;
 
 import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfo_Transferable;
+
 import java.util.*;
 import org.omg.CORBA.portable.IDLEntity;
 
@@ -16,7 +18,7 @@ import org.omg.CORBA.portable.IDLEntity;
  * #05 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/04/04 13:17:21 $
+ * @version $Revision: 1.8 $, $Date: 2005/04/08 09:26:11 $
  * @module scheme_v1
  */
 public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
@@ -53,11 +55,22 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 
 	private double waveLength;
 
+	private SchemeOptimizeInfoDatabase schemeOptimizeInfoDatabase;
+
 	/**
 	 * @param id
+	 * @throws RetrieveObjectException
+	 * @throws ObjectNotFoundException
 	 */
-	protected SchemeOptimizeInfo(Identifier id) {
+	SchemeOptimizeInfo(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
+	
+		this.schemeOptimizeInfoDatabase = SchemeDatabaseContext.getSchemeOptimizeInfoDatabase();
+		try {
+			this.schemeOptimizeInfoDatabase.retrieve(this);
+		} catch (final IllegalDataException ide) {
+			throw new RetrieveObjectException(ide.getMessage(), ide);
+		}
 	}
 
 	/**
@@ -68,10 +81,19 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 	 * @param modifierId
 	 * @param version
 	 */
-	protected SchemeOptimizeInfo(Identifier id, Date created,
+	SchemeOptimizeInfo(Identifier id, Date created,
 			Date modified, Identifier creatorId,
 			Identifier modifierId, long version) {
 		super(id, created, modified, creatorId, modifierId, version);
+	}
+
+	/**
+	 * @param transferable
+	 * @throws CreateObjectException
+	 */
+	SchemeOptimizeInfo(final SchemeOptimizeInfo_Transferable transferable) throws CreateObjectException {
+		this.schemeOptimizeInfoDatabase = SchemeDatabaseContext.getSchemeOptimizeInfoDatabase();
+		fromTransferable(transferable);
 	}
 
 	public static SchemeOptimizeInfo createInstance(
@@ -345,5 +367,14 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 			return;
 		this.waveLength = waveLength;
 		this.changed = true;
+	}
+
+	/**
+	 * @param transferable
+	 * @throws CreateObjectException
+	 * @see StorableObject#fromTransferable(IDLEntity)
+	 */
+	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
+		throw new UnsupportedOperationException();
 	}
 }

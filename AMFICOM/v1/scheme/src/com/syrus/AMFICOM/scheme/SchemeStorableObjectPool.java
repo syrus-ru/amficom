@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeStorableObjectPool.java,v 1.11 2005/04/01 13:59:07 bass Exp $
+ * $Id: SchemeStorableObjectPool.java,v 1.12 2005/04/08 09:26:11 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,11 +9,13 @@
 package com.syrus.AMFICOM.scheme;
 
 import com.syrus.AMFICOM.general.*;
+import com.syrus.util.Log;
+
 import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2005/04/01 13:59:07 $
+ * @version $Revision: 1.12 $, $Date: 2005/04/08 09:26:11 $
  * @todo Move to corba subpackage.
  * @module scheme_v1
  */
@@ -40,8 +42,13 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 		instance.deleteImpl(id);
 	}
 
-	public static void delete(final Set ids) throws DatabaseException, CommunicationException {
-		throw new UnsupportedOperationException();
+	/**
+	 * @param objects a <code>Set</code> of {@link Identifier}s and/or
+	 *        {@link Identifiable}s.
+	 * @throws IllegalDataException
+	 */
+	public static void delete(final Set objects) throws IllegalDataException {
+		instance.deleteImpl(objects);
 	}
 
 	public static void flush(final boolean force) throws VersionCollisionException, DatabaseException, CommunicationException, IllegalDataException {
@@ -68,17 +75,33 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 		throw new UnsupportedOperationException();
 	}
 
-//	public static void init(final SchemeObjectLoader schemeObjectLoader) {
-//		throw new UnsupportedOperationException();
-//	}
+	public static void init(final SchemeObjectLoader schemeObjectLoader) {
+		throw new UnsupportedOperationException();
+	}
 
-//	public static void init(final SchemeObjectLoader schemeObjectLoader, final Class cacheClass, final int size) {
-//		throw new UnsupportedOperationException();
-//	}
+	/**
+	 * @param schemeObjectLoader
+	 * @param cacheClass
+	 * @param size
+	 */
+	public static void init(final SchemeObjectLoader schemeObjectLoader, final Class cacheClass, final int size) {
+		Class clazz = null;
+		try {
+			clazz = Class.forName(cacheClass.getName());
+			instance = new SchemeStorableObjectPool(clazz);
+		} catch (final ClassNotFoundException cnfe) {
+			Log.errorMessage("Cache class '" + cacheClass.getName() //$NON-NLS-1$
+					+ "' cannot be found, using default"); //$NON-NLS-1$
+			instance = new SchemeStorableObjectPool();
+		}
+		init(schemeObjectLoader, size);
+	}
 
-//	public static void init(final SchemeObjectLoader schemeObjectLoader, final int size) {
-//		throw new UnsupportedOperationException();
-//	}
+	public static void init(final SchemeObjectLoader schemeObjectLoader, final int size) {
+		if (instance == null)
+			instance = new SchemeStorableObjectPool();
+		throw new UnsupportedOperationException();
+	}
 
 	public static StorableObject putStorableObject(final StorableObject iStorableObject)
 			throws IllegalObjectEntityException {

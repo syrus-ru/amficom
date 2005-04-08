@@ -1,7 +1,7 @@
 /*-
- * $Id: SchemeElement.java,v 1.10 2005/04/04 13:17:21 bass Exp $
+ * $Id: SchemeElement.java,v 1.11 2005/04/08 09:26:11 bass Exp $
  *
- * Copyright ¿ 2005 Syrus Systems.
+ * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -13,6 +13,8 @@ import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.resource.*;
+import com.syrus.AMFICOM.scheme.corba.SchemeElement_Transferable;
+
 import java.util.*;
 import org.omg.CORBA.portable.IDLEntity;
 
@@ -20,7 +22,7 @@ import org.omg.CORBA.portable.IDLEntity;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2005/04/04 13:17:21 $
+ * @version $Revision: 1.11 $, $Date: 2005/04/08 09:26:11 $
  * @module scheme_v1
  */
 public final class SchemeElement extends AbstractSchemeElement implements
@@ -49,11 +51,22 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 */
 	private Identifier ugoCellId;
 
+	private SchemeElementDatabase schemeElementDatabase;
+
 	/**
 	 * @param id
+	 * @throws RetrieveObjectException
+	 * @throws ObjectNotFoundException
 	 */
-	protected SchemeElement(Identifier id) {
+	SchemeElement(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
+
+		this.schemeElementDatabase = SchemeDatabaseContext.getSchemeElementDatabase();
+		try {
+			this.schemeElementDatabase.retrieve(this);
+		} catch (final IllegalDataException ide) {
+			throw new RetrieveObjectException(ide.getMessage(), ide);
+		}
 	}
 
 	/**
@@ -64,10 +77,19 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 * @param modifierId
 	 * @param version
 	 */
-	protected SchemeElement(Identifier id, Date created, Date modified,
+	SchemeElement(Identifier id, Date created, Date modified,
 			Identifier creatorId, Identifier modifierId,
 			long version) {
 		super(id, created, modified, creatorId, modifierId, version);
+	}
+
+	/**
+	 * @param transferable
+	 * @throws CreateObjectException
+	 */
+	SchemeElement(final SchemeElement_Transferable transferable) throws CreateObjectException {
+		this.schemeElementDatabase = SchemeDatabaseContext.getSchemeElementDatabase();
+		fromTransferable(transferable);
 	}
 
 	/**
@@ -353,6 +375,15 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 * @see com.syrus.AMFICOM.scheme.SchemeCellContainer#setUgoCell(SchemeImageResource)
 	 */
 	public void setUgoCell(final SchemeImageResource ugoCellImpl) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param transferable
+	 * @throws CreateObjectException
+	 * @see StorableObject#fromTransferable(IDLEntity)
+	 */
+	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
 		throw new UnsupportedOperationException();
 	}
 

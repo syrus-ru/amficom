@@ -1,7 +1,7 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.7 2005/04/04 13:17:21 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.8 2005/04/08 09:26:11 bass Exp $
  *
- * Copyright ¿ 2005 Syrus Systems.
+ * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -10,6 +10,8 @@ package com.syrus.AMFICOM.scheme;
 
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.map.*;
+import com.syrus.AMFICOM.scheme.corba.CableChannelingItem_Transferable;
+
 import java.util.*;
 import org.omg.CORBA.portable.IDLEntity;
 
@@ -17,7 +19,7 @@ import org.omg.CORBA.portable.IDLEntity;
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/04/04 13:17:21 $
+ * @version $Revision: 1.8 $, $Date: 2005/04/08 09:26:11 $
  * @module scheme_v1
  */
 public final class CableChannelingItem extends AbstractCloneableStorableObject
@@ -46,14 +48,14 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject
 
 	private double startSpare;
 
-	private StorableObjectDatabase cableChannelingItemDatabase; 
+	private CableChannelingItemDatabase cableChannelingItemDatabase; 
 
 	/**
 	 * @param id
 	 * @throws RetrieveObjectException 
 	 * @throws ObjectNotFoundException 
 	 */
-	protected CableChannelingItem(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
+	CableChannelingItem(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 	
 		this.cableChannelingItemDatabase = SchemeDatabaseContext.getCableChannelingItemDatabase();
@@ -72,10 +74,19 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject
 	 * @param modifierId
 	 * @param version
 	 */
-	protected CableChannelingItem(Identifier id, Date created,
+	CableChannelingItem(Identifier id, Date created,
 			Date modified, Identifier creatorId,
 			Identifier modifierId, long version) {
 		super(id, created, modified, creatorId, modifierId, version);
+	}
+
+	/**
+	 * @param transferable
+	 * @throws CreateObjectException
+	 */
+	CableChannelingItem(final CableChannelingItem_Transferable transferable) throws CreateObjectException {
+		this.cableChannelingItemDatabase = SchemeDatabaseContext.getCableChannelingItemDatabase();
+		fromTransferable(transferable);
 	}
 
 	/**
@@ -245,6 +256,15 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject
 	}
 
 	public void setStartSpare(final double startSpare) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param transferable
+	 * @throws CreateObjectException
+	 * @see StorableObject#fromTransferable(IDLEntity)
+	 */
+	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
 		throw new UnsupportedOperationException();
 	}
 }

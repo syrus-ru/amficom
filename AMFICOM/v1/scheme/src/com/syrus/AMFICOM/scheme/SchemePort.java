@@ -1,7 +1,7 @@
 /*-
- * $Id: SchemePort.java,v 1.8 2005/04/04 13:17:21 bass Exp $
+ * $Id: SchemePort.java,v 1.9 2005/04/08 09:26:11 bass Exp $
  *
- * Copyright ¿ 2005 Syrus Systems.
+ * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -12,6 +12,8 @@ import com.syrus.AMFICOM.configuration.Port;
 import com.syrus.AMFICOM.configuration.corba.PortSort;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
+import com.syrus.AMFICOM.scheme.corba.SchemePort_Transferable;
+
 import java.util.*;
 import org.omg.CORBA.portable.IDLEntity;
 
@@ -19,17 +21,28 @@ import org.omg.CORBA.portable.IDLEntity;
  * #08 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/04/04 13:17:21 $
+ * @version $Revision: 1.9 $, $Date: 2005/04/08 09:26:11 $
  * @module scheme_v1
  */
 public final class SchemePort extends AbstractSchemePort {
 	private static final long serialVersionUID = 3256436993469658930L;
 
+	private SchemePortDatabase schemePortDatabase;
+
 	/**
 	 * @param id
+	 * @throws RetrieveObjectException
+	 * @throws ObjectNotFoundException
 	 */
-	protected SchemePort(Identifier id) {
+	SchemePort(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
+
+		this.schemePortDatabase = SchemeDatabaseContext.getSchemePortDatabase();
+		try {
+			this.schemePortDatabase.retrieve(this);
+		} catch (final IllegalDataException ide) {
+			throw new RetrieveObjectException(ide.getMessage(), ide);
+		}
 	}
 
 	/**
@@ -40,10 +53,19 @@ public final class SchemePort extends AbstractSchemePort {
 	 * @param modifierId
 	 * @param version
 	 */
-	protected SchemePort(Identifier id, Date created, Date modified,
+	SchemePort(Identifier id, Date created, Date modified,
 			Identifier creatorId, Identifier modifierId,
 			long version) {
 		super(id, created, modified, creatorId, modifierId, version);
+	}
+
+	/**
+	 * @param transferable
+	 * @throws CreateObjectException
+	 */
+	SchemePort(final SchemePort_Transferable transferable) throws CreateObjectException {
+		this.schemePortDatabase = SchemeDatabaseContext.getSchemePortDatabase();
+		fromTransferable(transferable);
 	}
 
 	/**
@@ -166,6 +188,15 @@ public final class SchemePort extends AbstractSchemePort {
 	 *             -- instead.
 	 */
 	public void setSchemeLink(final SchemeLink schemeLink) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param transferable
+	 * @throws CreateObjectException
+	 * @see StorableObject#fromTransferable(IDLEntity)
+	 */
+	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
 		throw new UnsupportedOperationException();
 	}
 }

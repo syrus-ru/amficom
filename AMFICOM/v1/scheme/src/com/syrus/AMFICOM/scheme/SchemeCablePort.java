@@ -1,7 +1,7 @@
 /*-
- * $Id: SchemeCablePort.java,v 1.8 2005/04/04 13:17:20 bass Exp $
+ * $Id: SchemeCablePort.java,v 1.9 2005/04/08 09:26:11 bass Exp $
  *
- * Copyright ¿ 2005 Syrus Systems.
+ * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -12,6 +12,8 @@ import com.syrus.AMFICOM.configuration.Port;
 import com.syrus.AMFICOM.configuration.corba.PortSort;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
+import com.syrus.AMFICOM.scheme.corba.SchemeCablePort_Transferable;
+
 import java.util.*;
 import org.omg.CORBA.portable.IDLEntity;
 
@@ -19,17 +21,28 @@ import org.omg.CORBA.portable.IDLEntity;
  * #09 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/04/04 13:17:20 $
+ * @version $Revision: 1.9 $, $Date: 2005/04/08 09:26:11 $
  * @module scheme_v1
  */
 public final class SchemeCablePort extends AbstractSchemePort {
 	private static final long serialVersionUID = 4050767078690534455L;
 
+	private SchemeCablePortDatabase schemeCablePortDatabase;
+
 	/**
 	 * @param id
+	 * @throws RetrieveObjectException
+	 * @throws ObjectNotFoundException
 	 */
-	protected SchemeCablePort(Identifier id) {
+	SchemeCablePort(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
+		
+		this.schemeCablePortDatabase = SchemeDatabaseContext.getSchemeCablePortDatabase();
+		try {
+			this.schemeCablePortDatabase.retrieve(this);
+		} catch (final IllegalDataException ide) {
+			throw new RetrieveObjectException(ide.getMessage(), ide);
+		}
 	}
 
 	/**
@@ -40,10 +53,19 @@ public final class SchemeCablePort extends AbstractSchemePort {
 	 * @param modifierId
 	 * @param version
 	 */
-	protected SchemeCablePort(Identifier id, Date created, Date modified,
+	SchemeCablePort(Identifier id, Date created, Date modified,
 			Identifier creatorId, Identifier modifierId,
 			long version) {
 		super(id, created, modified, creatorId, modifierId, version);
+	}
+
+	/**
+	 * @param transferable
+	 * @throws CreateObjectException
+	 */
+	SchemeCablePort(final SchemeCablePort_Transferable transferable) throws CreateObjectException {
+		this.schemeCablePortDatabase = SchemeDatabaseContext.getSchemeCablePortDatabase();
+		fromTransferable(transferable);
 	}
 
 	/**
@@ -153,6 +175,15 @@ public final class SchemeCablePort extends AbstractSchemePort {
 	 *             -- instead.
 	 */
 	public void setSchemeCableLink(final SchemeCableLink schemeCableLink) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param transferable
+	 * @throws CreateObjectException
+	 * @see StorableObject#fromTransferable(IDLEntity)
+	 */
+	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
 		throw new UnsupportedOperationException();
 	}
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeLink.java,v 1.4 2005/03/28 12:01:28 bass Exp $
+ * $Id: AbstractSchemeLink.java,v 1.5 2005/04/08 09:26:11 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import java.util.Date;
  * {@link AbstractSchemeLink}instead.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/03/28 12:01:28 $
+ * @version $Revision: 1.5 $, $Date: 2005/04/08 09:26:11 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemeLink extends AbstractSchemeElement {
@@ -81,6 +81,10 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 			Date modified, Identifier creatorId,
 			Identifier modifierId, long version) {
 		super(id, created, modified, creatorId, modifierId, version);
+	}
+
+	protected AbstractSchemeLink() {
+		// super();
 	}
 
 	public abstract AbstractLinkType getAbstractLinkType();

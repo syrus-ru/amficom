@@ -1,7 +1,7 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.10 2005/04/04 13:17:21 bass Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.11 2005/04/08 09:26:11 bass Exp $
  *
- * Copyright ¿ 2005 Syrus Systems.
+ * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -9,6 +9,8 @@
 package com.syrus.AMFICOM.scheme;
 
 import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.scheme.corba.SchemeMonitoringSolution_Transferable;
+
 import java.util.*;
 import org.omg.CORBA.portable.IDLEntity;
 
@@ -16,7 +18,7 @@ import org.omg.CORBA.portable.IDLEntity;
  * #06 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2005/04/04 13:17:21 $
+ * @version $Revision: 1.11 $, $Date: 2005/04/08 09:26:11 $
  * @module scheme_v1
  */
 public final class SchemeMonitoringSolution extends
@@ -31,11 +33,22 @@ public final class SchemeMonitoringSolution extends
 
 	private double price;
 
+	private SchemeMonitoringSolutionDatabase schemeMonitoringSolutionDatabase; 
+
 	/**
 	 * @param id
+	 * @throws RetrieveObjectException
+	 * @throws ObjectNotFoundException
 	 */
-	protected SchemeMonitoringSolution(Identifier id) {
+	SchemeMonitoringSolution(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
+	
+		this.schemeMonitoringSolutionDatabase = SchemeDatabaseContext.getSchemeMonitoringSolutionDatabase();
+		try {
+			this.schemeMonitoringSolutionDatabase.retrieve(this);
+		} catch (final IllegalDataException ide) {
+			throw new RetrieveObjectException(ide.getMessage(), ide);
+		}
 	}
 
 	/**
@@ -46,10 +59,19 @@ public final class SchemeMonitoringSolution extends
 	 * @param modifierId
 	 * @param version
 	 */
-	protected SchemeMonitoringSolution(Identifier id, Date created,
+	SchemeMonitoringSolution(Identifier id, Date created,
 			Date modified, Identifier creatorId,
 			Identifier modifierId, long version) {
 		super(id, created, modified, creatorId, modifierId, version);
+	}
+
+	/**
+	 * @param transferable
+	 * @throws CreateObjectException
+	 */
+	SchemeMonitoringSolution(final SchemeMonitoringSolution_Transferable transferable) throws CreateObjectException {
+		this.schemeMonitoringSolutionDatabase = SchemeDatabaseContext.getSchemeMonitoringSolutionDatabase();
+		fromTransferable(transferable);
 	}
 
 	public static SchemeMonitoringSolution createInstance(
@@ -177,6 +199,15 @@ public final class SchemeMonitoringSolution extends
 	 * @deprecated
 	 */
 	public void setSchemePathsAsArray(final SchemePath schemePaths[]) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param transferable
+	 * @throws CreateObjectException
+	 * @see StorableObject#fromTransferable(IDLEntity)
+	 */
+	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
 		throw new UnsupportedOperationException();
 	}
 }

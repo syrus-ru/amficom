@@ -1,7 +1,7 @@
 /*-
- * $Id: SchemePath.java,v 1.11 2005/04/04 13:17:21 bass Exp $
+ * $Id: SchemePath.java,v 1.12 2005/04/08 09:26:11 bass Exp $
  *
- * Copyright ¿ 2005 Syrus Systems.
+ * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -12,14 +12,17 @@ import com.syrus.AMFICOM.configuration.TransmissionPath;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.scheme.corba.PathElementKind;
+import com.syrus.AMFICOM.scheme.corba.SchemePath_Transferable;
+
 import java.util.*;
+
 import org.omg.CORBA.portable.IDLEntity;
 
 /**
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2005/04/04 13:17:21 $
+ * @version $Revision: 1.12 $, $Date: 2005/04/08 09:26:11 $
  * @module scheme_v1
  */
 public final class SchemePath extends AbstractCloneableStorableObject implements
@@ -40,11 +43,23 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 
 	private Identifier transmissionPathId;
 
+	private SchemePathDatabase schemePathDatabase;
+
 	/**
 	 * @param id
+	 * @throws RetrieveObjectException
+	 * @throws ObjectNotFoundException
 	 */
-	protected SchemePath(final Identifier id) {
+	SchemePath(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
+		
+		this.characteristics = new HashSet();
+		this.schemePathDatabase = SchemeDatabaseContext.getSchemePathDatabase();
+		try {
+			this.schemePathDatabase.retrieve(this);
+		} catch (final IllegalDataException ide) {
+			throw new RetrieveObjectException(ide.getMessage(), ide);
+		}
 	}
 
 	/**
@@ -55,10 +70,19 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 * @param modifierId
 	 * @param version
 	 */
-	protected SchemePath(final Identifier id, final Date created,
+	SchemePath(final Identifier id, final Date created,
 			final Date modified, final Identifier creatorId,
 			final Identifier modifierId, final long version) {
 		super(id, created, modified, creatorId, modifierId, version);
+	}
+
+	/**
+	 * @param transferable
+	 * @throws CreateObjectException
+	 */
+	SchemePath(final SchemePath_Transferable transferable) throws CreateObjectException {
+		this.schemePathDatabase = SchemeDatabaseContext.getSchemePathDatabase();
+		fromTransferable(transferable);
 	}
 
 	/**
@@ -281,7 +305,16 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 		throw new UnsupportedOperationException();
 	}
 
-	/* ********************************************************************
+	/**
+	 * @param transferable
+	 * @throws CreateObjectException
+	 * @see StorableObject#fromTransferable(IDLEntity)
+	 */
+	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
+		throw new UnsupportedOperationException();
+	}
+
+	/*-********************************************************************
 	 * Non-model methods.                                                 *
 	 **********************************************************************/
 

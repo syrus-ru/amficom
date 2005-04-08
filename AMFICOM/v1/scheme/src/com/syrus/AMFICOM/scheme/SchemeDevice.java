@@ -1,7 +1,7 @@
 /*-
- * $Id: SchemeDevice.java,v 1.8 2005/04/04 13:17:21 bass Exp $
+ * $Id: SchemeDevice.java,v 1.9 2005/04/08 09:26:11 bass Exp $
  *
- * Copyright ¿ 2005 Syrus Systems.
+ * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -10,14 +10,17 @@ package com.syrus.AMFICOM.scheme;
 
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
+import com.syrus.AMFICOM.scheme.corba.SchemeDevice_Transferable;
+
 import java.util.*;
+
 import org.omg.CORBA.portable.IDLEntity;
 
 /**
  * #07 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/04/04 13:17:21 $
+ * @version $Revision: 1.9 $, $Date: 2005/04/08 09:26:11 $
  * @module scheme_v1
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -34,11 +37,23 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	
 	private Identifier parentSchemeProtoElementId;
 
+	private SchemeDeviceDatabase schemeDeviceDatabase;
+
 	/**
 	 * @param id
+	 * @throws RetrieveObjectException
+	 * @throws ObjectNotFoundException
 	 */
-	protected SchemeDevice(Identifier id) {
+	SchemeDevice(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
+
+		this.characteristics = new HashSet();
+		this.schemeDeviceDatabase = SchemeDatabaseContext.getSchemeDeviceDatabase();
+		try {
+			this.schemeDeviceDatabase.retrieve(this);
+		} catch (final IllegalDataException ide) {
+			throw new RetrieveObjectException(ide.getMessage(), ide);
+		}
 	}
 
 	/**
@@ -49,12 +64,21 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 * @param modifierId
 	 * @param version
 	 */
-	protected SchemeDevice(Identifier id, Date created, Date modified,
+	SchemeDevice(Identifier id, Date created, Date modified,
 			Identifier creatorId, Identifier modifierId,
 			long version) {
 		super(id, created, modified, creatorId, modifierId, version);
 	}
 
+	/**
+	 * @param transferable
+	 * @throws CreateObjectException
+	 */
+	SchemeDevice(final SchemeDevice_Transferable transferable) throws CreateObjectException {
+		this.schemeDeviceDatabase = SchemeDatabaseContext.getSchemeDeviceDatabase();
+		fromTransferable(transferable);
+	}
+	
 	/**
 	 * @deprecated Use {@link #createInstance(Identifier)}instead.
 	 */
@@ -261,6 +285,15 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 * @deprecated
 	 */
 	public void setSchemePortsAsArray(final SchemePort schemePorts[]) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param transferable
+	 * @throws CreateObjectException
+	 * @see StorableObject#fromTransferable(IDLEntity)
+	 */
+	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
 		throw new UnsupportedOperationException();
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractSchemeElement.java,v 1.7 2005/04/01 13:59:08 bass Exp $
+ * $Id: AbstractSchemeElement.java,v 1.8 2005/04/08 09:26:11 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import java.util.*;
  * {@link AbstractSchemeElement}instead.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/04/01 13:59:08 $
+ * @version $Revision: 1.8 $, $Date: 2005/04/08 09:26:11 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemeElement extends
@@ -46,8 +46,9 @@ public abstract class AbstractSchemeElement extends
 	/**
 	 * @param id
 	 */
-	protected AbstractSchemeElement(Identifier id) {
+	protected AbstractSchemeElement(final Identifier id) {
 		super(id);
+		this.characteristics = new HashSet();
 	}
 
 	/**
@@ -62,6 +63,10 @@ public abstract class AbstractSchemeElement extends
 			Date modified, Identifier creatorId,
 			Identifier modifierId, long version) {
 		super(id, created, modified, creatorId, modifierId, version);
+	}
+
+	protected AbstractSchemeElement() {
+		// super();
 	}
 
 	/**

@@ -1,7 +1,7 @@
 /*-
- * $Id: Scheme.java,v 1.7 2005/04/04 13:17:21 bass Exp $
+ * $Id: Scheme.java,v 1.8 2005/04/08 09:26:11 bass Exp $
  *
- * Copyright ¿ 2005 Syrus Systems.
+ * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -9,49 +9,80 @@
 package com.syrus.AMFICOM.scheme;
 
 import com.syrus.AMFICOM.administration.AbstractCloneableDomainMember;
-import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Describable;
+import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.Namable;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.TransferableObject;
 import com.syrus.AMFICOM.map.Map;
-import com.syrus.AMFICOM.resource.*;
+import com.syrus.AMFICOM.resource.BitmapImageResource;
+import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.corba.SchemeKind;
-import java.util.*;
+import com.syrus.AMFICOM.scheme.corba.Scheme_Transferable;
+
+import java.util.Date;
+import java.util.Set;
+
 import org.omg.CORBA.portable.IDLEntity;
 
 /**
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/04/04 13:17:21 $
+ * @version $Revision: 1.8 $, $Date: 2005/04/08 09:26:11 $
  * @module scheme_v1
  */
 public final class Scheme extends AbstractCloneableDomainMember implements Describable, SchemeCellContainer {
 	private static final long serialVersionUID = 3257289136389173298L;
 
-	private Identifier currentSchemeMonitoringSolutionId;
+	private String name;
 
 	private String description;
 
-	private int height;
-
 	private String label;
 
-	private Identifier mapId;
+	private int width;
 
-	private String name;
-
-	private Identifier parentSchemeElementId;
-
-	private Identifier schemeCellId;
+	private int height;
 
 	private SchemeKind schemeKind;
+
+	private Identifier mapId;
 
 	private Identifier symbolId;
 
 	private Identifier ugoCellId;
 
-	private int width;
+	private Identifier schemeCellId;
 
-	Scheme(final Identifier id) {
+	private Identifier currentSchemeMonitoringSolutionId;
+
+	private Identifier parentSchemeElementId;
+
+	private SchemeDatabase schemeDatabase;
+
+	/**
+	 * @param id
+	 * @throws RetrieveObjectException
+	 * @throws ObjectNotFoundException
+	 */
+	Scheme(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
+
+		this.schemeDatabase = SchemeDatabaseContext.getSchemeDatabase();
+		try {
+			this.schemeDatabase.retrieve(this);
+		} catch (final IllegalDataException ide) {
+			throw new RetrieveObjectException(ide.getMessage(), ide);
+		}
 	}
 
 	/**
@@ -67,6 +98,15 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		assert name != null;
 		this.name = name;
 		this.description = description;
+	}
+
+	/**
+	 * @param transferable
+	 * @throws CreateObjectException
+	 */
+	Scheme(final Scheme_Transferable transferable) throws CreateObjectException {
+		this.schemeDatabase = SchemeDatabaseContext.getSchemeDatabase();
+		fromTransferable(transferable);
 	}
 
 	/**
@@ -363,5 +403,27 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		super.setAttributes(created, modified, creatorId, modifierId, version, domainId);
 		this.name = name;
 		this.description = description;
+	}
+
+	/**
+	 * @param transferable
+	 * @throws CreateObjectException
+	 * @see StorableObject#fromTransferable(IDLEntity)
+	 */
+	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
+		final Scheme_Transferable scheme = (Scheme_Transferable) transferable;
+		super.fromTransferable(scheme.header, new Identifier(scheme.domainId));
+		this.name = scheme.name;
+		this.description = scheme.description;
+		this.label = scheme.label;
+		this.width = scheme.width;
+		this.height = scheme.height;
+		this.schemeKind = scheme.schemeKind;
+		this.mapId = new Identifier(scheme.mapId);
+		this.symbolId = new Identifier(scheme.symbolId);
+		this.ugoCellId = new Identifier(scheme.ugoCellId);
+		this.schemeCellId = new Identifier(scheme.schemeCellId);
+		this.currentSchemeMonitoringSolutionId = new Identifier(scheme.currentSchemeMonitoringSolutionId);
+		this.parentSchemeElementId = new Identifier(scheme.parentSchemeElementId);
 	}
 }

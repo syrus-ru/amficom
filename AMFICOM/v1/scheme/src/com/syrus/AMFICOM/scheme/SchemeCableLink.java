@@ -1,7 +1,7 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.9 2005/04/04 13:17:21 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.10 2005/04/08 09:26:11 bass Exp $
  *
- * Copyright ¿ 2005 Syrus Systems.
+ * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -12,6 +12,8 @@ import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.configuration.corba.LinkSort;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
+import com.syrus.AMFICOM.scheme.corba.SchemeCableLink_Transferable;
+
 import java.util.*;
 import org.omg.CORBA.portable.IDLEntity;
 
@@ -19,17 +21,28 @@ import org.omg.CORBA.portable.IDLEntity;
  * #11 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/04/04 13:17:21 $
+ * @version $Revision: 1.10 $, $Date: 2005/04/08 09:26:11 $
  * @module scheme_v1
  */
 public final class SchemeCableLink extends AbstractSchemeLink {
 	private static final long serialVersionUID = 3760847878314274867L;
 
+	private SchemeCableLinkDatabase schemeCableLinkDatabase;
+
 	/**
 	 * @param id
+	 * @throws RetrieveObjectException
+	 * @throws ObjectNotFoundException
 	 */
-	SchemeCableLink(Identifier id) {
+	SchemeCableLink(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
+	
+		this.schemeCableLinkDatabase = SchemeDatabaseContext.getSchemeCableLinkDatabase();
+		try {
+			this.schemeCableLinkDatabase.retrieve(this);
+		} catch (final IllegalDataException ide) {
+			throw new RetrieveObjectException(ide.getMessage(), ide);
+		}
 	}
 
 	/**
@@ -44,6 +57,15 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 			Identifier creatorId, Identifier modifierId,
 			long version) {
 		super(id, created, modified, creatorId, modifierId, version);
+	}
+
+	/**
+	 * @param transferable
+	 * @throws CreateObjectException
+	 */
+	SchemeCableLink(final SchemeCableLink_Transferable transferable) throws CreateObjectException {
+		this.schemeCableLinkDatabase = SchemeDatabaseContext.getSchemeCableLinkDatabase();
+		fromTransferable(transferable);
 	}
 
 	/**
@@ -245,6 +267,15 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	}
 
 	public void setTargetSchemeCablePort(final SchemeCablePort targetSchemeCablePort) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param transferable
+	 * @throws CreateObjectException
+	 * @see StorableObject#fromTransferable(IDLEntity)
+	 */
+	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
 		throw new UnsupportedOperationException();
 	}
 }

@@ -1,41 +1,71 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.10 2005/04/04 13:17:21 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.11 2005/04/08 09:26:11 bass Exp $
  *
- * Copyright ¿ 2005 Syrus Systems.
+ * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.scheme;
 
-import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.logic.*;
-import com.syrus.AMFICOM.resource.*;
-import com.syrus.AMFICOM.scheme.logic.*;
+import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Describable;
+import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.Namable;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.TransferableObject;
+import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.logic.Item;
+import com.syrus.AMFICOM.logic.ItemListener;
+import com.syrus.AMFICOM.resource.BitmapImageResource;
+import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
+import com.syrus.AMFICOM.scheme.corba.SchemeProtoGroup_Transferable;
+import com.syrus.AMFICOM.scheme.logic.Library;
+import com.syrus.AMFICOM.scheme.logic.LibraryEntry;
 import com.syrus.util.Log;
-import java.util.*;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
 import org.omg.CORBA.portable.IDLEntity;
 
 /**
  * #01 in hierarchy.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2005/04/04 13:17:21 $
+ * @version $Revision: 1.11 $, $Date: 2005/04/08 09:26:11 $
  * @module scheme_v1
  */
 public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 		implements Describable, SchemeSymbolContainer, Library {
 	private static final long serialVersionUID = 3256721788422862901L;
 
+	private String name;
+
 	private String description;
 
-	private String name;
+	private Identifier symbolId;
 
 	private Identifier parentSchemeProtoGroupId;
 
-	private StorableObjectDatabase schemeProtoGroupDatabase; 
+	private SchemeProtoGroupDatabase schemeProtoGroupDatabase; 
 
-	private Identifier symbolId;
+	private ArrayList itemListeners = new ArrayList();
 
 	/**
 	 * @param id
@@ -88,6 +118,15 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	}
 
 	/**
+	 * @param transferable
+	 * @throws CreateObjectException 
+	 */
+	SchemeProtoGroup(final SchemeProtoGroup_Transferable transferable) throws CreateObjectException {
+		this.schemeProtoGroupDatabase = SchemeDatabaseContext.getSchemeProtoGroupDatabase();
+		fromTransferable(transferable);
+	}
+
+	/**
 	 * @param creatorId cannot be <code>null</code>.
 	 * @param name cannot be <code>null</code>.
 	 * @param description cannot be <code>null</code>, but can be empty.
@@ -126,7 +165,8 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	 * @see Item#addChangeListener(ItemListener)
 	 */
 	public void addChangeListener(final ItemListener itemListener) {
-		throw new UnsupportedOperationException();
+		assert !this.itemListeners.contains(itemListener);
+		this.itemListeners.add(0, itemListener);
 	}
 
 	/**
@@ -352,10 +392,14 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 
 	/**
 	 * @see TransferableObject#getTransferable()
-	 * @todo Implement.
 	 */
 	public IDLEntity getTransferable() {
-		throw new UnsupportedOperationException();
+		return new SchemeProtoGroup_Transferable(
+				getHeaderTransferable(),
+				this.name,
+				this.description,
+				(Identifier_Transferable) this.symbolId.getTransferable(),
+				(Identifier_Transferable) this.parentSchemeProtoGroupId.getTransferable());
 	}
 
 	/**
@@ -370,7 +414,8 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	 * @see Item#removeChangeListener(ItemListener)
 	 */
 	public void removeChangeListener(final ItemListener itemListener) {
-		throw new UnsupportedOperationException();
+		assert this.itemListeners.contains(itemListener);
+		this.itemListeners.remove(itemListener);
 	}
 
 	/**
@@ -548,5 +593,19 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 			return;
 		this.symbolId = newSymbolId;
 		this.changed = true;
+	}
+
+	/**
+	 * @param transferable
+	 * @throws CreateObjectException
+	 * @see StorableObject#fromTransferable(IDLEntity)
+	 */
+	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
+		final SchemeProtoGroup_Transferable schemeProtoGroup = (SchemeProtoGroup_Transferable) transferable;
+		super.fromTransferable(schemeProtoGroup.header);
+		this.name = schemeProtoGroup.name;
+		this.description = schemeProtoGroup.description;
+		this.symbolId = new Identifier(schemeProtoGroup.symbolId);
+		this.parentSchemeProtoGroupId = new Identifier(schemeProtoGroup.parentSchemeProtoGroupId);
 	}
 }
