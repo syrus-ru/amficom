@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.30 2005/03/18 10:37:35 peskovsky Exp $
+ * $Id: MapFrame.java,v 1.31 2005/04/08 14:19:21 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,7 +20,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 import javax.swing.event.InternalFrameEvent;
 
@@ -81,7 +80,7 @@ import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
  * 
  * 
  * 
- * @version $Revision: 1.30 $, $Date: 2005/03/18 10:37:35 $
+ * @version $Revision: 1.31 $, $Date: 2005/04/08 14:19:21 $
  * @author $Author: peskovsky $
  * @module mapviewclient_v1
  */
@@ -109,9 +108,14 @@ public class MapFrame extends JInternalFrame
 	protected MapToolBar mapToolBar;
 
 	/**
-	 * Панель схемных объектов
+	 * Панель с доступными для добавления объектами карты
 	 */
 	protected MapElementsBarPanel mapElementsPanel;
+
+	/**
+	 * Панель отображающая координты курсора и масштаб
+	 */
+	protected MapStatusbar mapStatusbar;
 	
 	/**
 	 * Экземпляр класса. Поскольку вид карты отнимает слишком много 
@@ -158,6 +162,7 @@ public class MapFrame extends JInternalFrame
 		initModule();
 
 		this.mapToolBar.setLogicalNetLayer(this.mapViewer.getLogicalNetLayer());
+		this.mapStatusbar.setLogicalNetLayer(this.mapViewer.getLogicalNetLayer());		
 	}
 	
 	/**
@@ -182,8 +187,7 @@ public class MapFrame extends JInternalFrame
 		this.setTitle(LangModelMap.getString("Map"));
 		this.getContentPane().setLayout(new BorderLayout());
 
-//		JPanel toolBarPanel = new JPanel();
-		JPanel mapPanel = new JPanel();
+//		JPanel mapPanel = new JPanel();
 		
 		// визуальный компонент обозревателя карты
 		JComponent mapVisualComponent;
@@ -193,18 +197,17 @@ public class MapFrame extends JInternalFrame
 		mapVisualComponent = this.mapViewer.getVisualComponent();
 
 		this.mapToolBar = new MapToolBar();
-//		toolBarPanel.setLayout(new BorderLayout());
-//		toolBarPanel.add(this.mapToolBar, BorderLayout.WEST);
-
+		this.mapStatusbar = new MapStatusbar();
 		this.mapElementsPanel = new MapElementsBarPanel();
 		
-		mapPanel.setLayout(new BorderLayout());
-		mapPanel.add(mapVisualComponent, BorderLayout.CENTER);
+//		mapPanel.setLayout(new BorderLayout());
+//		mapPanel.add(mapVisualComponent, BorderLayout.CENTER);
 
-//		this.getContentPane().add(toolBarPanel, BorderLayout.NORTH);
-		this.getContentPane().add(this.mapToolBar, BorderLayout.NORTH);		
-		this.getContentPane().add(mapPanel, BorderLayout.CENTER);
+		this.getContentPane().add(this.mapToolBar, BorderLayout.NORTH);
+		this.getContentPane().add(this.mapStatusbar, BorderLayout.SOUTH);
 		this.getContentPane().add(this.mapElementsPanel, BorderLayout.WEST);
+//		this.getContentPane().add(mapPanel, BorderLayout.CENTER);
+		this.getContentPane().add(mapVisualComponent, BorderLayout.CENTER);		
 		
 		this.addComponentListener(new MapMainFrameComponentAdapter(this));
 		this.addInternalFrameListener(new MapMainFrameInternalFrameAdapter(this));
@@ -260,8 +263,6 @@ public class MapFrame extends JInternalFrame
 			if(this.aContext.getDispatcher() != null)
 			{
 				this.aContext.getDispatcher().unregister(this, MapEvent.MAP_ELEMENT_CHANGED);
-				this.aContext.getDispatcher().unregister(this, MapEvent.MAP_ELEMENT_SELECTED);
-				this.aContext.getDispatcher().unregister(this, MapEvent.MAP_ELEMENT_DESELECTED);
 				this.aContext.getDispatcher().unregister(this, MapEvent.MAP_NAVIGATE);
 				this.aContext.getDispatcher().unregister(this, MapEvent.PLACE_ELEMENT);
 				this.aContext.getDispatcher().unregister(this, MapEvent.MAP_VIEW_CENTER_CHANGED);
@@ -281,8 +282,6 @@ public class MapFrame extends JInternalFrame
 			this.aContext = aContext;
 			setModel(aContext.getApplicationModel());
 			aContext.getDispatcher().register(this, MapEvent.MAP_ELEMENT_CHANGED);
-			aContext.getDispatcher().register(this, MapEvent.MAP_ELEMENT_SELECTED);
-			aContext.getDispatcher().register(this, MapEvent.MAP_ELEMENT_DESELECTED);
 			aContext.getDispatcher().register(this, MapEvent.MAP_NAVIGATE);
 			aContext.getDispatcher().register(this, MapEvent.PLACE_ELEMENT);
 			aContext.getDispatcher().register(this, MapEvent.MAP_VIEW_CENTER_CHANGED);
@@ -361,13 +360,13 @@ public class MapFrame extends JInternalFrame
 		if(ae.getActionCommand().equals(MapEvent.MAP_VIEW_CENTER_CHANGED))
 		{
 			DoublePoint p = (DoublePoint )ae.getSource();
-			this.mapToolBar.showLatLong(p.getX(), p.getY());
+			this.mapStatusbar.showLatLong(p.getX(), p.getY());
 		}
 		else
 		if(ae.getActionCommand().equals(MapEvent.MAP_VIEW_SCALE_CHANGED))
 		{
 			Double p = (Double )ae.getSource();
-			this.mapToolBar.showScale(p.doubleValue());
+			this.mapStatusbar.showScale(p.doubleValue());
 		}
 		else
 		if(ae.getActionCommand().equals(MapEvent.MAP_VIEW_SELECTED))
@@ -586,6 +585,8 @@ public class MapFrame extends JInternalFrame
 
 	void thisComponentShown(ComponentEvent e)
 	{//empty
+		MapFrame.this.mapViewer.
+			getVisualComponent().getComponentListeners()[0].componentShown(e);
 	}
 
 	void thisComponentHidden(ComponentEvent e)

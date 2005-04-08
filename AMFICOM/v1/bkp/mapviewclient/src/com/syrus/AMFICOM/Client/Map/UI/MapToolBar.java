@@ -1,5 +1,5 @@
 /**
- * $Id: MapToolBar.java,v 1.17 2005/02/18 12:19:47 krupenn Exp $
+ * $Id: MapToolBar.java,v 1.18 2005/04/08 14:19:21 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,11 +11,12 @@ package com.syrus.AMFICOM.Client.Map.UI;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.Image;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
@@ -23,9 +24,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
-import javax.swing.JTextField;
+import javax.swing.JPanel;
 import javax.swing.JToggleButton;
-import javax.swing.JToolBar;
 
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
@@ -35,16 +35,14 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationModelListener;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.map.DoublePoint;
 
 /**
  * Панель инструментов окна карты
- * @version $Revision: 1.17 $, $Date: 2005/02/18 12:19:47 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.18 $, $Date: 2005/04/08 14:19:21 $
+ * @author $Author: peskovsky $
  * @module mapviewclient_v1
  */
-public final class MapToolBar extends JToolBar 
+public final class MapToolBar extends JPanel 
 		implements ApplicationModelListener//, OperationListener
 {
 	private ApplicationModel aModel = null;
@@ -70,19 +68,11 @@ public final class MapToolBar extends JToolBar
 
 	private LogicalNetLayer logicalNetLayer;
 
-	private JLabel latitudeLabel = new JLabel();
-	JTextField latitudeTextField = new JTextField();
-	private JLabel longitudeLabel = new JLabel();
-	JTextField longitudeField = new JTextField();
-	private JLabel scaleLabel = new JLabel();
-	JTextField scaleField = new JTextField();
-
 	private JButton optionsButton = new JButton();
 
 	private JButton shotButton = new JButton();
 
 	private static Dimension buttonSize = new Dimension(24, 24);
-	private static Dimension fieldSize = new Dimension(60, 24);
 
 	public NodeSizePanel nodeSizePanel;
 	
@@ -114,31 +104,6 @@ public final class MapToolBar extends JToolBar
 //		penp.setLogicalNetLayer(logicalNetLayer);
 	}
 
-	public void showLatLong (double latitude, double longitude)
-	{
-		try
-		{
-			this.latitudeTextField.setText(MapPropertiesManager.getCoordinatesFormat().format(latitude));
-			this.longitudeField.setText(MapPropertiesManager.getCoordinatesFormat().format(longitude));
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
-
-	public void showScale (double scale)
-	{
-		try
-		{
-			this.scaleField.setText(MapPropertiesManager.getScaleFormat().format(scale));
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
-	
 	private void jbInit()
 	{
 		MapToolBarActionAdapter actionAdapter =
@@ -300,112 +265,43 @@ public final class MapToolBar extends JToolBar
 				}
 			});
 	
-		
-		this.latitudeLabel.setText(LangModelMap.getString("Latitude"));
-		this.latitudeTextField.setText("0.0000");
-		this.latitudeTextField.setPreferredSize(fieldSize);
-		this.latitudeTextField.setMaximumSize(fieldSize);
-		this.latitudeTextField.setMinimumSize(fieldSize);
-		this.longitudeLabel.setText(LangModelMap.getString("Longitude"));
-		this.longitudeField.setText("0.0000");
-		this.longitudeField.setPreferredSize(fieldSize);
-		this.longitudeField.setMaximumSize(fieldSize);
-		this.longitudeField.setMinimumSize(fieldSize);
-
-		this.scaleLabel.setText(LangModelMap.getString("Scale"));
-		this.scaleField.setText("0.0");
-		this.scaleField.setPreferredSize(fieldSize);
-		this.scaleField.setMaximumSize(fieldSize);
-		this.scaleField.setMinimumSize(fieldSize);
-
-		this.scaleField.addKeyListener(new KeyListener()
-			{
-				public void keyPressed(KeyEvent e) 
-				{
-					if(e.getKeyCode() == KeyEvent.VK_ENTER)
-					{
-						try
-						{
-							double scale = Double.parseDouble(MapToolBar.this.scaleField.getText());
-							if(scale > 0)
-							{
-								getLogicalNetLayer().setScale(scale);
-								getLogicalNetLayer().repaint(true);
-							}
-						}
-						catch(Exception ex)
-						{
-							System.out.println("Wring number format");
-						}
-					}
-				}
-				public void keyReleased(KeyEvent e) {/*empty*/}
-				public void keyTyped(KeyEvent e) {/*empty*/}
-			});
-
-		KeyListener longlatKeyListener = new KeyListener()
-			{
-				public void keyPressed(KeyEvent e)
-				{
-					if(e.getKeyCode() == KeyEvent.VK_ENTER)
-					{
-						try
-						{
-							double lon = Double.parseDouble(MapToolBar.this.longitudeField.getText());
-							double lat = Double.parseDouble(MapToolBar.this.latitudeTextField.getText());
-							getLogicalNetLayer().setCenter(
-								new DoublePoint(lat, lon));
-							getLogicalNetLayer().repaint(true);
-						}
-						catch(Exception ex)
-						{
-							System.out.println(ex.getMessage());
-						}
-					}
-				}
-				public void keyReleased(KeyEvent e) {/*empty*/}
-				public void keyTyped(KeyEvent e) {/*empty*/}
-			};
-		this.latitudeTextField.addKeyListener(longlatKeyListener);
-		this.longitudeField.addKeyListener(longlatKeyListener);
-
 		this.nodeSizePanel = new NodeSizePanel(this.logicalNetLayer);
 //		this.penp = new MapPenBarPanel(this.logicalNetLayer);
 
 		this.setBorder(BorderFactory.createEtchedBorder());
+		this.setPreferredSize(new Dimension(-1,buttonSize.height + 10));
 
-		this.add(this.zoomInButton);
-		this.add(this.zoomOutButton);
-		this.add(this.zoomToPointButton);
-		this.add(this.zoomToRectButton);
-		this.addSeparator();
-		this.add(this.moveToCenterButton);
-		this.add(this.moveHandButton);
-		this.add(this.centerObjectButton);
-		this.addSeparator();
-		this.add(this.measureDistanceButton);
-		this.add(this.moveFixedButton);
-		this.addSeparator();
-		this.add(this.showNodesButton);
-		this.addSeparator();
-		this.add(this.showNodeLinkToggleButton);
-		this.add(this.showPhysicalToggleButton);
-		this.add(this.showCablePathToggleButton);
-		this.add(this.showTransPathToggleButton);
-		this.addSeparator();
-		this.add(this.latitudeLabel);
-		this.add(this.latitudeTextField);
-		this.add(this.longitudeLabel);
-		this.add(this.longitudeField);
-		this.addSeparator();
-		this.add(this.scaleLabel);
-		this.add(this.scaleField);
-		this.addSeparator();
-		this.add(this.nodeSizePanel);
-		this.addSeparator();
-		this.add(this.optionsButton);
-		this.addSeparator();
-		this.add(this.shotButton);
+		JPanel innerPanel = new JPanel();
+		innerPanel.setLayout(new GridBagLayout());
+		
+		innerPanel.add(this.moveHandButton,new GridBagConstraints(0,0,1,1,0,0,GridBagConstraints.WEST,GridBagConstraints.NONE,new Insets(1,30,1,0),0,0));
+		
+		innerPanel.add(this.zoomInButton,new GridBagConstraints(1,0,1,1,0,0,GridBagConstraints.WEST,GridBagConstraints.NONE,new Insets(1,10,1,0),0,0));
+		innerPanel.add(this.zoomOutButton,new GridBagConstraints(2,0,1,1,0,0,GridBagConstraints.WEST,GridBagConstraints.NONE,new Insets(1,0,1,0),0,0));
+		innerPanel.add(this.zoomToRectButton,new GridBagConstraints(3,0,1,1,0,0,GridBagConstraints.WEST,GridBagConstraints.NONE,new Insets(1,0,1,0),0,0));
+		//		this.add(this.zoomToPointButton,new GridBagConstraints(0,0,1,1,0,0,GridBagConstraints.WEST,GridBagConstraints.NONE,new Insets(1,0,1,0),0,0));
+		
+		innerPanel.add(this.moveToCenterButton,new GridBagConstraints(4,0,1,1,0,0,GridBagConstraints.WEST,GridBagConstraints.NONE,new Insets(1,10,1,0),0,0));
+		innerPanel.add(this.centerObjectButton,new GridBagConstraints(5,0,1,1,0,0,GridBagConstraints.WEST,GridBagConstraints.NONE,new Insets(1,0,1,0),0,0));
+
+		innerPanel.add(this.measureDistanceButton,new GridBagConstraints(6,0,1,1,0,0,GridBagConstraints.WEST,GridBagConstraints.NONE,new Insets(1,10,1,0),0,0));
+//		this.add(this.moveFixedButton,new GridBagConstraints(7,0,1,1,0,0,GridBagConstraints.WEST,GridBagConstraints.NONE,new Insets(1,0,1,0),0,0));
+
+		innerPanel.add(this.showNodesButton,new GridBagConstraints(8,0,1,1,0,0,GridBagConstraints.WEST,GridBagConstraints.NONE,new Insets(1,20,1,0),0,0));
+
+		innerPanel.add(this.showNodeLinkToggleButton,new GridBagConstraints(9,0,1,1,0,0,GridBagConstraints.WEST,GridBagConstraints.NONE,new Insets(1,10,1,0),0,0));
+		innerPanel.add(this.showPhysicalToggleButton,new GridBagConstraints(10,0,1,1,0,0,GridBagConstraints.WEST,GridBagConstraints.NONE,new Insets(1,0,1,0),0,0));
+		innerPanel.add(this.showCablePathToggleButton,new GridBagConstraints(11,0,1,1,0,0,GridBagConstraints.WEST,GridBagConstraints.NONE,new Insets(1,0,1,0),0,0));
+		innerPanel.add(this.showTransPathToggleButton,new GridBagConstraints(12,0,1,1,0,0,GridBagConstraints.WEST,GridBagConstraints.NONE,new Insets(1,0,1,0),0,0));
+
+		innerPanel.add(this.nodeSizePanel,new GridBagConstraints(13,0,1,1,0,0,GridBagConstraints.WEST,GridBagConstraints.NONE,new Insets(1,10,1,0),0,0));
+
+		innerPanel.add(this.optionsButton,new GridBagConstraints(14,0,1,1,0,0,GridBagConstraints.WEST,GridBagConstraints.NONE,new Insets(1,10,1,0),0,0));
+
+		innerPanel.add(this.shotButton,new GridBagConstraints(15,0,1,1,0,0,GridBagConstraints.WEST,GridBagConstraints.NONE,new Insets(1,10,1,0),0,0));
+		
+		this.setLayout(new BorderLayout());
+		this.add(innerPanel,BorderLayout.WEST);
 //		this.add(this.penp);
 	}
 

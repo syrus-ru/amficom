@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementsBarPanel.java,v 1.10 2005/03/18 10:37:35 peskovsky Exp $
+ * $Id: MapElementsBarPanel.java,v 1.11 2005/04/08 14:19:21 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,6 +21,7 @@ import java.awt.FlowLayout;
 import java.util.Collection;
 import java.util.Iterator;
 
+import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
 /**
@@ -28,7 +29,7 @@ import javax.swing.JPanel;
  * 
  * 
  * 
- * @version $Revision: 1.10 $, $Date: 2005/03/18 10:37:35 $
+ * @version $Revision: 1.11 $, $Date: 2005/04/08 14:19:21 $
  * @author $Author: peskovsky $
  * @module mapviewclient_v1
  */
@@ -52,7 +53,8 @@ public final class MapElementsBarPanel extends JPanel
 	private void jbInit()
 	{
 		this.setLayout(new FlowLayout(FlowLayout.CENTER));
-		this.setPreferredSize(new Dimension(MapElementLabel.ELEMENT_DIMENSION + 5, -1));		
+		this.setPreferredSize(new Dimension(MapElementLabel.ELEMENT_DIMENSION + 10, -1));
+		this.setBorder(BorderFactory.createEtchedBorder());
 	}
 
 	public void setContext(ApplicationContext aContext)

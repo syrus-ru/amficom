@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.56 2005/04/05 13:40:56 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.57 2005/04/08 14:19:21 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -77,8 +77,8 @@ import com.syrus.AMFICOM.scheme.*;
  * 
  * 
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.56 $, $Date: 2005/04/05 13:40:56 $
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.57 $, $Date: 2005/04/08 14:19:21 $
  * @module mapviewclient_v2
  */
 public abstract class LogicalNetLayer implements MapCoordinatesConverter
@@ -887,7 +887,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 
 					sel.clear();
 					sel.addAll(selectedElements);
-					this.sendMapEvent(new MapEvent(sel, MapEvent.MAP_ELEMENT_SELECTED));
+//					this.sendMapEvent(new MapEvent(sel, MapEvent.MAP_ELEMENT_SELECTED));
 				}
 				else
 				if(selectedElements.size() == 1)
@@ -896,7 +896,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 //				{
 						MapElement me = (MapElement)selectedElements.iterator().next();
 						setCurrentMapElement(me);
-						this.sendMapEvent(new MapEvent(me, MapEvent.MAP_ELEMENT_SELECTED));
+//						this.sendMapEvent(new MapEvent(me, MapEvent.MAP_ELEMENT_SELECTED));
 //				}
 				}
 				else
@@ -905,7 +905,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 //				if(getCurrentMapElement() instanceof MapSelection)
 //				{
 						setCurrentMapElement(com.syrus.AMFICOM.mapview.VoidElement.getInstance(getMapView()));
-						this.sendMapEvent(new MapEvent(getCurrentMapElement(), MapEvent.MAP_ELEMENT_SELECTED));
+//						this.sendMapEvent(new MapEvent(getCurrentMapElement(), MapEvent.MAP_ELEMENT_SELECTED));
 //				}
 				}
 				updateZoom();

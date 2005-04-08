@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertiesManager.java,v 1.12 2005/03/17 12:29:50 peskovsky Exp $
+ * $Id: MapPropertiesManager.java,v 1.13 2005/04/08 14:19:21 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -52,7 +52,7 @@ import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
  * <li>zoom
  * 
  * @author $Author: peskovsky $
- * @version $Revision: 1.12 $, $Date: 2005/03/17 12:29:50 $
+ * @version $Revision: 1.13 $, $Date: 2005/04/08 14:19:21 $
  * @module mapviewclient_v1
  */
 public final class MapPropertiesManager 
@@ -355,9 +355,19 @@ public final class MapPropertiesManager
 		dataBaseURL = properties.getProperty(KEY_DATA_BASE_URL);
 
 		mapType = properties.getProperty(KEY_MAP_TYPE);
+		
 		lastLong = properties.getProperty(KEY_LAST_LONGITUDE);
+		if (lastLong.equals("NaN"))
+			lastLong = "0.0000";
+		
 		lastLat = properties.getProperty(KEY_LAST_LATITUDE);
+		if (lastLat.equals("NaN"))
+			lastLat = "0.0000";
+		
 		lastZoom = properties.getProperty(KEY_LAST_ZOOM);
+		if (lastZoom.equals("NaN"))
+			lastZoom = "0.0000";
+		
 		lastDirectory = properties.getProperty(KEY_LAST_DIRECTORY);
 //		selectionColor = iniFile.getValue("selectionColor");
 //		selectionStyle = iniFile.getValue("selectionStyle");
