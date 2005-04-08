@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.20 2005/04/05 12:46:20 max Exp $
+* $Id: MapView.java,v 1.21 2005/04/08 11:09:48 krupenn Exp $
 *
 * Copyright њ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -50,8 +50,8 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
  * канализационную
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
- * @author $Author: max $
- * @version $Revision: 1.20 $, $Date: 2005/04/05 12:46:20 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.21 $, $Date: 2005/04/08 11:09:48 $
  * @module mapview_v1
  * @todo use getCenter, setCenter instead of pair longitude, latitude
  */
@@ -869,9 +869,9 @@ public class MapView extends DomainMember {
 	 * ѕолучить список всех олементов контекста карты.
 	 * @return список всех топологических элементов
 	 */
-	public Collection getAllElements()
+	public List getAllElements()
 	{
-		Collection returnVector = getMap().getAllElements();
+		List returnedElements = getMap().getAllElements();
 		
 		Iterator e;
 
@@ -879,24 +879,24 @@ public class MapView extends DomainMember {
 		while (e.hasNext())
 		{
 			MapElement mapElement = (MapElement)e.next();
-			returnVector.add( mapElement);
+			returnedElements.add( mapElement);
 		}
 
 		e = getMeasurementPaths().iterator();
 		while (e.hasNext())
 		{
 			MapElement mapElement = (MapElement)e.next();
-			returnVector.add( mapElement);
+			returnedElements.add( mapElement);
 		}
 
 		e = this.markers.iterator();
 		while (e.hasNext())
 		{
 			MapElement mapElement = (MapElement)e.next();
-			returnVector.add( mapElement);
+			returnedElements.add( mapElement);
 		}
 
-		return returnVector;
+		return returnedElements;
 	}
 
 	/**

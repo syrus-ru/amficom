@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.31 2005/04/08 09:41:29 krupenn Exp $
+ * $Id: Map.java,v 1.32 2005/04/08 11:09:27 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,6 @@
 package com.syrus.AMFICOM.map;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -34,24 +33,13 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.Map_Transferable;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
-import org.omg.CORBA.portable.IDLEntity;
-
 /**
  * Топологическая схема, которая содержит в себе набор связанных друг с другом
  * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на 
  * линиях, коллекторов (объединяющих в себе линии).
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.31 $, $Date: 2005/04/08 09:41:29 $
+ * @version $Revision: 1.32 $, $Date: 2005/04/08 11:09:27 $
  * @module map_v1
  * @todo make maps persistent 
  */
@@ -91,7 +79,7 @@ public class Map extends DomainMember {
 	/**
 	 * Сортированный список всех элементов топологической схемы
 	 */
-	protected transient Collection allElements;
+	protected transient List allElements;
 	protected transient Set nodeElements;
 
 	Map(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
@@ -883,7 +871,7 @@ public class Map extends DomainMember {
 	 * 
 	 * @return список всех элементов
 	 */
-	public Collection getAllElements() {
+	public List getAllElements() {
 		this.allElements.clear();
 
 		this.allElements.addAll(this.getAllMarks());
@@ -894,7 +882,7 @@ public class Map extends DomainMember {
 		this.allElements.addAll(this.getAllPhysicalLinks());
 		this.allElements.addAll(this.getAllCollectors());
 
-		return Collections.unmodifiableCollection(this.allElements);
+		return Collections.unmodifiableList(this.allElements);
 	}
 
 	/**
