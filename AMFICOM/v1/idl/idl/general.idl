@@ -1,5 +1,5 @@
 /*
- * $Id: general.idl,v 1.63 2005/03/29 20:59:36 arseniy Exp $
+ * $Id: general.idl,v 1.64 2005/04/08 12:40:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,15 +16,14 @@ module syrus {
 module AMFICOM {
 module general {
 module corba {
+
 	typedef string<32> String32;
-
 	typedef wstring<32> WString32;
-
 	typedef wstring<64> WString64;
-
 	typedef wstring<128> WString128;
-
 	typedef wstring<256> WString256;
+
+	typedef sequence <long> LongSeq;
 
 	struct Identifier_Transferable {
 #ifdef NUMERIC_IDENTIFIER
