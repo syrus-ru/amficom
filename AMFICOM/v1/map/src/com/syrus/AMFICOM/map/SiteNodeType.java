@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.24 2005/04/08 09:24:33 bass Exp $
+ * $Id: SiteNodeType.java,v 1.25 2005/04/08 14:51:00 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,13 @@
  */
 
 package com.syrus.AMFICOM.map;
+
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -24,14 +31,7 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.SiteNodeType_Transferable;
-
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-
-import org.omg.CORBA.portable.IDLEntity;
+import com.syrus.util.Log;
 
 /**
  * Тип сетевого узла топологической схемы. Существует несколько 
@@ -39,8 +39,8 @@ import org.omg.CORBA.portable.IDLEntity;
  * {@link #codename}, соответствующим какому-либо значению {@link #WELL}, 
  * {@link #PIQUET}, {@link #ATS}, {@link #BUILDING}, {@link #UNBOUND}, 
  * {@link #CABLE_INLET}, {@link #TOWER}
- * @author $Author: bass $
- * @version $Revision: 1.24 $, $Date: 2005/04/08 09:24:33 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.25 $, $Date: 2005/04/08 14:51:00 $
  * @module map_v1
  */
 public class SiteNodeType extends StorableObjectType implements Characterizable {
@@ -85,7 +85,12 @@ public class SiteNodeType extends StorableObjectType implements Characterizable 
 	}
 
 	SiteNodeType(SiteNodeType_Transferable sntt) throws CreateObjectException {
-		this.fromTransferable(sntt);
+		try {
+			this.fromTransferable(sntt);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}
 
 	SiteNodeType(final Identifier id,
@@ -138,7 +143,7 @@ public class SiteNodeType extends StorableObjectType implements Characterizable 
 		}
 	}
 
-	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
+	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
 		SiteNodeType_Transferable sntt = (SiteNodeType_Transferable) transferable;
 		super.fromTransferable(sntt.header, sntt.codename, sntt.description);
 
@@ -146,17 +151,8 @@ public class SiteNodeType extends StorableObjectType implements Characterizable 
 		this.imageId = new Identifier(sntt.imageId);
 		this.topological = sntt.topological;
 
-		try {
-			this.characteristics = new HashSet(sntt.characteristicIds.length);
-			Set characteristicIds = new HashSet(sntt.characteristicIds.length);
-			for (int i = 0; i < sntt.characteristicIds.length; i++)
-				characteristicIds.add(new Identifier(sntt.characteristicIds[i]));
-
-			this.characteristics.addAll(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
+		Set ids = Identifier.fromTransferables(sntt.characteristicIds);
+		this.characteristics = GeneralStorableObjectPool.getStorableObjects(ids, true);
 	}
 
 	public Set getDependencies() {
@@ -176,10 +172,15 @@ public class SiteNodeType extends StorableObjectType implements Characterizable 
 	}
 
 	public IDLEntity getTransferable() {
-		int i = 0;
-		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
-		for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)
-			charIds[i++] = (Identifier_Transferable) ((Characteristic) iterator.next()).getId().getTransferable();
+		Identifier_Transferable[] charIds = null;
+		try {
+			charIds = Identifier.createTransferables(this.characteristics);
+		}
+		catch (IllegalDataException ide) {
+			// Never
+			Log.errorException(ide);
+		}
+
 		return new SiteNodeType_Transferable(super.getHeaderTransferable(),
 				this.codename,
 				this.name,

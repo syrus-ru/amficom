@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.33 2005/04/08 09:24:33 bass Exp $
+ * $Id: Collector.java,v 1.34 2005/04/08 14:51:00 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,6 +23,7 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.Collector_Transferable;
+import com.syrus.util.Log;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -38,8 +39,8 @@ import org.omg.CORBA.portable.IDLEntity;
  * Коллектор на топологической схеме, который характеризуется набором входящих
  * в него линий. Линии не обязаны быть связными.
  * 
- * @author $Author: bass $
- * @version $Revision: 1.33 $, $Date: 2005/04/08 09:24:33 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.34 $, $Date: 2005/04/08 14:51:00 $
  * @module map_v1
  */
 public class Collector extends StorableObject implements MapElement {
@@ -86,7 +87,12 @@ public class Collector extends StorableObject implements MapElement {
 	}
 
 	Collector(Collector_Transferable ct) throws CreateObjectException {
-		this.fromTransferable(ct);
+		try {
+			this.fromTransferable(ct);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}
 
 	Collector(final Identifier id,
@@ -127,29 +133,20 @@ public class Collector extends StorableObject implements MapElement {
 		}
 	}
 
-	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
+	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
 		Collector_Transferable ct = (Collector_Transferable) transferable;
 		super.fromTransferable(ct.header);
 
 		this.name = ct.name;
 		this.description = ct.description;
 
-		try {
-			this.physicalLinks = new HashSet(ct.physicalLinkIds.length);
-			HashSet physicalLinkIds = new HashSet(ct.physicalLinkIds.length);
-			for (int i = 0; i < ct.characteristicIds.length; i++)
-				physicalLinkIds.add(new Identifier(ct.physicalLinkIds[i]));
-			this.physicalLinks.addAll(MapStorableObjectPool.getStorableObjects(physicalLinkIds, true));
+		Set ids;
 
-			this.characteristics = new HashSet(ct.characteristicIds.length);
-			HashSet characteristicIds = new HashSet(ct.characteristicIds.length);
-			for (int i = 0; i < ct.characteristicIds.length; i++)
-				characteristicIds.add(new Identifier(ct.characteristicIds[i]));
-			this.characteristics.addAll(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
+		ids = Identifier.fromTransferables(ct.physicalLinkIds);
+		this.physicalLinks = MapStorableObjectPool.getStorableObjects(ids, true);
+
+		ids = Identifier.fromTransferables(ct.characteristicIds);
+		this.characteristics = GeneralStorableObjectPool.getStorableObjects(ids, true);
 	}
 
 	public Set getDependencies() {
@@ -159,15 +156,16 @@ public class Collector extends StorableObject implements MapElement {
 	}
 
 	public IDLEntity getTransferable() {
-		int i = 0;
-		Identifier_Transferable[] physicalLinkIds = new Identifier_Transferable[this.physicalLinks.size()];
-		for (Iterator iterator = this.physicalLinks.iterator(); iterator.hasNext();)
-			physicalLinkIds[i++] = (Identifier_Transferable) ((PhysicalLink) iterator.next()).getId().getTransferable();
-
-		i = 0;
-		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
-		for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)
-			charIds[i++] = (Identifier_Transferable) ((Characteristic) iterator.next()).getId().getTransferable();
+		Identifier_Transferable[] physicalLinkIds = null;
+		Identifier_Transferable[] charIds = null;
+		try {
+			physicalLinkIds = Identifier.createTransferables(this.physicalLinks);
+			charIds = Identifier.createTransferables(this.characteristics);
+		}
+		catch (IllegalDataException ide) {
+			// Never
+			Log.errorException(ide);
+		}
 
 		return new Collector_Transferable(super.getHeaderTransferable(), this.name, this.description, physicalLinkIds, charIds);
 	}

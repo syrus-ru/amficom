@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.28 2005/04/08 09:24:33 bass Exp $
+ * $Id: PhysicalLinkType.java,v 1.29 2005/04/08 14:51:00 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,13 @@
  */
 
 package com.syrus.AMFICOM.map;
+
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -24,22 +31,15 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.PhysicalLinkType_Transferable;
-
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-
-import org.omg.CORBA.portable.IDLEntity;
+import com.syrus.util.Log;
 
 /**
  * Тип линии топологической схемы. Существует несколько предустановленных 
  * типов линий, которые определяются полем {@link #codename}, соответствующим
  * какому-либо значению {@link #TUNNEL}, {@link #COLLECTOR}, {@link #INDOOR}, 
  * {@link #SUBMARINE}, {@link #OVERHEAD}, {@link #UNBOUND}
- * @author $Author: bass $
- * @version $Revision: 1.28 $, $Date: 2005/04/08 09:24:33 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.29 $, $Date: 2005/04/08 14:51:00 $
  * @module map_v1
  */
 public class PhysicalLinkType extends StorableObjectType implements Characterizable {
@@ -87,7 +87,12 @@ public class PhysicalLinkType extends StorableObjectType implements Characteriza
 	}
 
 	PhysicalLinkType(PhysicalLinkType_Transferable pltt) throws CreateObjectException {
-		this.fromTransferable(pltt);
+		try {
+			this.fromTransferable(pltt);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}
 
 	PhysicalLinkType(final Identifier id,
@@ -139,23 +144,14 @@ public class PhysicalLinkType extends StorableObjectType implements Characteriza
 		}
 	}
 
-	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
+	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
 		PhysicalLinkType_Transferable pltt = (PhysicalLinkType_Transferable) transferable;
 		super.fromTransferable(pltt.header, pltt.codename, pltt.description);
 
 		this.name = pltt.name;
 
-		try {
-			this.characteristics = new HashSet(pltt.characteristicIds.length);
-			Set characteristicIds = new HashSet(pltt.characteristicIds.length);
-			for (int i = 0; i < pltt.characteristicIds.length; i++)
-				characteristicIds.add(new Identifier(pltt.characteristicIds[i]));
-
-			this.characteristics.addAll(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
+		Set ids = Identifier.fromTransferables(pltt.characteristicIds);
+		this.characteristics = GeneralStorableObjectPool.getStorableObjects(ids, true);
 	}
 
 	public Set getDependencies() {
@@ -163,10 +159,14 @@ public class PhysicalLinkType extends StorableObjectType implements Characteriza
 	}
 
 	public IDLEntity getTransferable() {
-		int i = 0;
-		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
-		for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)
-			charIds[i++] = (Identifier_Transferable) ((Characteristic) iterator.next()).getId().getTransferable();
+		Identifier_Transferable[] charIds = null;
+		try {
+			charIds = Identifier.createTransferables(this.characteristics);
+		}
+		catch (IllegalDataException ide) {
+			// Never
+			Log.errorException(ide);
+		}
 
 		return new PhysicalLinkType_Transferable(super.getHeaderTransferable(),
 				this.codename,

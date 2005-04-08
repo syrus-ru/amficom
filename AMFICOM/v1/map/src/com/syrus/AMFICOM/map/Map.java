@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.32 2005/04/08 11:09:27 krupenn Exp $
+ * $Id: Map.java,v 1.33 2005/04/08 14:51:00 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,14 +32,15 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.Map_Transferable;
+import com.syrus.util.Log;
 
 /**
  * Топологическая схема, которая содержит в себе набор связанных друг с другом
  * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на 
  * линиях, коллекторов (объединяющих в себе линии).
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.32 $, $Date: 2005/04/08 11:09:27 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.33 $, $Date: 2005/04/08 14:51:00 $
  * @module map_v1
  * @todo make maps persistent 
  */
@@ -95,7 +96,12 @@ public class Map extends DomainMember {
 	}
 
 	Map(Map_Transferable mt) throws CreateObjectException {
-		this.fromTransferable(mt);
+		try {
+			this.fromTransferable(mt);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}
 
 	Map(final Identifier id, 
@@ -147,77 +153,55 @@ public class Map extends DomainMember {
 		}
 	}
 
-	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
+	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
 		Map_Transferable mt = (Map_Transferable) transferable;
 		super.fromTransferable(mt.header, new Identifier(mt.domain_id));
 
 		this.name = mt.name;
 		this.description = mt.description;
 
-		try {
-			this.siteNodes = new HashSet(mt.siteNodeIds.length);
-			HashSet siteNodeIds = new HashSet(mt.siteNodeIds.length);
-			for (int i = 0; i < mt.siteNodeIds.length; i++)
-				siteNodeIds.add(new Identifier(mt.siteNodeIds[i]));
-			this.siteNodes.addAll(MapStorableObjectPool.getStorableObjects(siteNodeIds, true));
+		Set ids;
+		
+		ids = Identifier.fromTransferables(mt.siteNodeIds);
+		this.siteNodes = MapStorableObjectPool.getStorableObjects(ids, true);
 
-			for (Iterator it = this.siteNodes.iterator(); it.hasNext();) {
-				((SiteNode) it.next()).setMap(this);
-			}
-
-			this.topologicalNodes = new HashSet(mt.topologicalNodeIds.length);
-			HashSet topologicalNodeIds = new HashSet(mt.topologicalNodeIds.length);
-			for (int i = 0; i < mt.topologicalNodeIds.length; i++)
-				topologicalNodeIds.add(new Identifier(mt.topologicalNodeIds[i]));
-			this.topologicalNodes.addAll(MapStorableObjectPool.getStorableObjects(topologicalNodeIds, true));
-
-			for (Iterator it = this.topologicalNodes.iterator(); it.hasNext();) {
-				((TopologicalNode) it.next()).setMap(this);
-			}
-
-			this.nodeLinks = new HashSet(mt.nodeLinkIds.length);
-			HashSet nodeLinkIds = new HashSet(mt.nodeLinkIds.length);
-			for (int i = 0; i < mt.nodeLinkIds.length; i++)
-				nodeLinkIds.add(new Identifier(mt.nodeLinkIds[i]));
-			this.nodeLinks.addAll(MapStorableObjectPool.getStorableObjects(nodeLinkIds, true));
-
-			for (Iterator it = this.nodeLinks.iterator(); it.hasNext();) {
-				((NodeLink) it.next()).setMap(this);
-			}
-
-			this.physicalLinks = new HashSet(mt.physicalLinkIds.length);
-			HashSet physicalNodeLinkIds = new HashSet(mt.physicalLinkIds.length);
-			for (int i = 0; i < mt.physicalLinkIds.length; i++)
-				physicalNodeLinkIds.add(new Identifier(mt.physicalLinkIds[i]));
-			this.physicalLinks.addAll(MapStorableObjectPool.getStorableObjects(physicalNodeLinkIds, true));
-
-			for (Iterator it = this.physicalLinks.iterator(); it.hasNext();) {
-				((PhysicalLink) it.next()).setMap(this);
-			}
-
-			this.marks = new HashSet(mt.markIds.length);
-			HashSet markIds = new HashSet(mt.markIds.length);
-			for (int i = 0; i < mt.markIds.length; i++)
-				markIds.add(new Identifier(mt.markIds[i]));
-			this.marks.addAll(MapStorableObjectPool.getStorableObjects(markIds, true));
-
-			for (Iterator it = this.marks.iterator(); it.hasNext();) {
-				((Mark) it.next()).setMap(this);
-			}
-
-			this.collectors = new HashSet(mt.collectorIds.length);
-			HashSet collectorIds = new HashSet(mt.collectorIds.length);
-			for (int i = 0; i < mt.collectorIds.length; i++)
-				collectorIds.add(new Identifier(mt.collectorIds[i]));
-			this.collectors.addAll(MapStorableObjectPool.getStorableObjects(collectorIds, true));
-
-			for (Iterator it = this.collectors.iterator(); it.hasNext();) {
-				((Collector) it.next()).setMap(this);
-			}
-
+		for (Iterator it = this.siteNodes.iterator(); it.hasNext();) {
+			((SiteNode) it.next()).setMap(this);
 		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+
+		ids = Identifier.fromTransferables(mt.topologicalNodeIds);
+		this.topologicalNodes = MapStorableObjectPool.getStorableObjects(ids, true);
+
+		for (Iterator it = this.topologicalNodes.iterator(); it.hasNext();) {
+			((TopologicalNode) it.next()).setMap(this);
+		}
+
+		ids = Identifier.fromTransferables(mt.nodeLinkIds);
+		this.nodeLinks = MapStorableObjectPool.getStorableObjects(ids, true);
+
+		for (Iterator it = this.nodeLinks.iterator(); it.hasNext();) {
+			((NodeLink) it.next()).setMap(this);
+		}
+
+		ids = Identifier.fromTransferables(mt.physicalLinkIds);
+		this.physicalLinks = MapStorableObjectPool.getStorableObjects(ids, true);
+
+		for (Iterator it = this.physicalLinks.iterator(); it.hasNext();) {
+			((PhysicalLink) it.next()).setMap(this);
+		}
+
+		ids = Identifier.fromTransferables(mt.markIds);
+		this.marks = MapStorableObjectPool.getStorableObjects(ids, true);
+
+		for (Iterator it = this.marks.iterator(); it.hasNext();) {
+			((Mark) it.next()).setMap(this);
+		}
+
+		ids = Identifier.fromTransferables(mt.collectorIds);
+		this.collectors = MapStorableObjectPool.getStorableObjects(ids, true);
+
+		for (Iterator it = this.collectors.iterator(); it.hasNext();) {
+			((Collector) it.next()).setMap(this);
 		}
 	}
 
@@ -233,35 +217,24 @@ public class Map extends DomainMember {
 	}
 
 	public IDLEntity getTransferable() {
-		int i = 0;
-		Identifier_Transferable[] siteNodeIds = new Identifier_Transferable[this.siteNodes.size()];
-		for (Iterator iterator = this.siteNodes.iterator(); iterator.hasNext();)
-			siteNodeIds[i++] = (Identifier_Transferable) ((SiteNode) iterator.next()).getId().getTransferable();
-
-		i = 0;
-		Identifier_Transferable[] topologicalNodeIds = new Identifier_Transferable[this.topologicalNodes.size()];
-		for (Iterator iterator = this.topologicalNodes.iterator(); iterator.hasNext();)
-			topologicalNodeIds[i++] = (Identifier_Transferable) ((TopologicalNode) iterator.next()).getId().getTransferable();
-
-		i = 0;
-		Identifier_Transferable[] nodeLinkIds = new Identifier_Transferable[this.nodeLinks.size()];
-		for (Iterator iterator = this.nodeLinks.iterator(); iterator.hasNext();)
-			nodeLinkIds[i++] = (Identifier_Transferable) ((NodeLink) iterator.next()).getId().getTransferable();
-
-		i = 0;
-		Identifier_Transferable[] physicalNodeLinkIds = new Identifier_Transferable[this.physicalLinks.size()];
-		for (Iterator iterator = this.physicalLinks.iterator(); iterator.hasNext();)
-			physicalNodeLinkIds[i++] = (Identifier_Transferable) ((PhysicalLink) iterator.next()).getId().getTransferable();
-
-		i = 0;
-		Identifier_Transferable[] markIds = new Identifier_Transferable[this.marks.size()];
-		for (Iterator iterator = this.marks.iterator(); iterator.hasNext();)
-			markIds[i++] = (Identifier_Transferable) ((Mark) iterator.next()).getId().getTransferable();
-
-		i = 0;
-		Identifier_Transferable[] collectorIds = new Identifier_Transferable[this.collectors.size()];
-		for (Iterator iterator = this.collectors.iterator(); iterator.hasNext();)
-			collectorIds[i++] = (Identifier_Transferable) ((Collector) iterator.next()).getId().getTransferable();
+		Identifier_Transferable[] siteNodeIds = null;
+		Identifier_Transferable[] topologicalNodeIds = null;
+		Identifier_Transferable[] nodeLinkIds = null;
+		Identifier_Transferable[] physicalNodeLinkIds	= null;
+		Identifier_Transferable[] markIds = null;
+		Identifier_Transferable[] collectorIds = null;
+		try {
+			siteNodeIds = Identifier.createTransferables(this.siteNodes);
+			topologicalNodeIds = Identifier.createTransferables(this.topologicalNodes);
+			nodeLinkIds = Identifier.createTransferables(this.nodeLinks);
+			physicalNodeLinkIds = Identifier.createTransferables(this.physicalLinks);
+			markIds = Identifier.createTransferables(this.marks);
+			collectorIds = Identifier.createTransferables(this.collectors);
+		}
+		catch (IllegalDataException ide) {
+			// Never
+			Log.errorException(ide);
+		}
 
 		return new Map_Transferable(super.getHeaderTransferable(),
 				(Identifier_Transferable) this.getDomainId().getTransferable(),

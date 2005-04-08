@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractNode.java,v 1.19 2005/04/08 09:24:33 bass Exp $
+ * $Id: AbstractNode.java,v 1.20 2005/04/08 14:51:00 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.map;
 
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -27,8 +28,8 @@ import org.omg.CORBA.portable.IDLEntity;
  * ({@link Map}). Узловой объект характеризуется наличием координат
  * ({@link #location}) и изображением ({@link #imageId}).
  * 
- * @author $Author: bass $
- * @version $Revision: 1.19 $, $Date: 2005/04/08 09:24:33 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.20 $, $Date: 2005/04/08 14:51:00 $
  * @module map_v1
  * @see SiteNode
  * @see TopologicalNode
@@ -98,10 +99,15 @@ public abstract class AbstractNode
 	}
 
 	AbstractNode(StorableObject_Transferable transferable) throws CreateObjectException {
-		this.fromTransferable(transferable);
+		try {
+			this.fromTransferable(transferable);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}
 
-	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
+	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
 		StorableObject_Transferable sot = (StorableObject_Transferable) transferable;
 		super.fromTransferable(sot);
 		this.characteristics = new HashSet();

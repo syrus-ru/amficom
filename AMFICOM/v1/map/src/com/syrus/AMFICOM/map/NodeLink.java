@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.33 2005/04/08 09:24:34 bass Exp $
+ * $Id: NodeLink.java,v 1.34 2005/04/08 14:51:00 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,14 @@
  */
 
 package com.syrus.AMFICOM.map;
+
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -23,23 +31,15 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.NodeLink_Transferable;
-
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-
-import org.omg.CORBA.portable.IDLEntity;
+import com.syrus.util.Log;
 
 /**
  * Фрагмент линии на топологической схеме. Фрагмент представляет собой линейный
  * отрезок, соединяющий два концевых узла ({@link AbstractNode}). Фрагменты 
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
- * @author $Author: bass $
- * @version $Revision: 1.33 $, $Date: 2005/04/08 09:24:34 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.34 $, $Date: 2005/04/08 14:51:00 $
  * @module map_v1
  */
 public class NodeLink extends StorableObject implements MapElement {
@@ -88,7 +88,12 @@ public class NodeLink extends StorableObject implements MapElement {
 	}
 
 	NodeLink(NodeLink_Transferable nlt) throws CreateObjectException {
-		this.fromTransferable(nlt);
+		try {
+			this.fromTransferable(nlt);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}
 
 	NodeLink(final Identifier id,
@@ -154,35 +159,32 @@ public class NodeLink extends StorableObject implements MapElement {
 		}
 	}
 
-	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
+	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
 		NodeLink_Transferable nlt = (NodeLink_Transferable) transferable;
 		super.fromTransferable(nlt.header);
 
 		this.name = nlt.name;
 		this.length = nlt.length;
 
-		try {
-			this.physicalLink = (PhysicalLink) MapStorableObjectPool.getStorableObject(new Identifier(nlt.physicalLinkId), true);
+		this.physicalLink = (PhysicalLink) MapStorableObjectPool.getStorableObject(new Identifier(nlt.physicalLinkId), true);
 
-			this.startNode = (AbstractNode) MapStorableObjectPool.getStorableObject(new Identifier(nlt.startNodeId), true);
-			this.endNode = (AbstractNode) MapStorableObjectPool.getStorableObject(new Identifier(nlt.endNodeId), true);
+		this.startNode = (AbstractNode) MapStorableObjectPool.getStorableObject(new Identifier(nlt.startNodeId), true);
+		this.endNode = (AbstractNode) MapStorableObjectPool.getStorableObject(new Identifier(nlt.endNodeId), true);
 
-			this.characteristics = new HashSet(nlt.characteristicIds.length);
-			Set characteristicIds = new HashSet(nlt.characteristicIds.length);
-			for (int i = 0; i < nlt.characteristicIds.length; i++)
-				characteristicIds.add(new Identifier(nlt.characteristicIds[i]));
-			this.characteristics.addAll(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
+		Set characteristicIds = Identifier.fromTransferables(nlt.characteristicIds);
+		this.characteristics.addAll(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
 	}
 
 	public IDLEntity getTransferable() {
 		int i = 0;
-		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
-		for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)
-			charIds[i++] = (Identifier_Transferable) ((Characteristic) iterator.next()).getId().getTransferable();
+		Identifier_Transferable[] charIds = null;
+		try {
+			charIds = Identifier.createTransferables(this.characteristics);
+		}
+		catch (IllegalDataException ide) {
+			// Never
+			Log.errorException(ide);
+		}
 
 		return new NodeLink_Transferable(super.getHeaderTransferable(),
 				this.name,

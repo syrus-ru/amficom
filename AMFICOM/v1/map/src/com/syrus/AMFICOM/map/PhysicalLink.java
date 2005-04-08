@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.46 2005/04/08 09:24:33 bass Exp $
+ * $Id: PhysicalLink.java,v 1.47 2005/04/08 14:51:00 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,6 +28,7 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.map.corba.PhysicalLink_Transferable;
+import com.syrus.util.Log;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -50,8 +51,8 @@ import org.omg.CORBA.portable.IDLEntity;
  * Предуствновленными являются  два типа - 
  * тоннель (<code>{@link PhysicalLinkType#TUNNEL}</code>) 
  * и коллектор (<code>{@link PhysicalLinkType#COLLECTOR}</code>).
- * @author $Author: bass $
- * @version $Revision: 1.46 $, $Date: 2005/04/08 09:24:33 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.47 $, $Date: 2005/04/08 14:51:00 $
  * @module map_v1
  * @todo make binding.dimension persistent (just as bindingDimension for PhysicalLinkType)
  * @todo nodeLinks should be transient
@@ -122,7 +123,12 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	}
 
 	PhysicalLink(PhysicalLink_Transferable plt) throws CreateObjectException {
-		this.fromTransferable(plt);
+		try {
+			this.fromTransferable(plt);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}
 
 	protected PhysicalLink(final Identifier id,
@@ -239,7 +245,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		}
 	}
 
-	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
+	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
 		PhysicalLink_Transferable plt = (PhysicalLink_Transferable) transferable;
 		super.fromTransferable(plt.header);
 
@@ -254,22 +260,14 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		this.leftToRight = plt.leftToRight;
 		this.topToBottom = plt.topToBottom;
 
-		try {
-			this.physicalLinkType = (PhysicalLinkType) MapStorableObjectPool.getStorableObject(new Identifier(plt.physicalLinkTypeId),
-					true);
+		this.physicalLinkType = (PhysicalLinkType) MapStorableObjectPool.getStorableObject(new Identifier(plt.physicalLinkTypeId),
+				true);
 
-			this.startNode = (AbstractNode) MapStorableObjectPool.getStorableObject(new Identifier(plt.startNodeId), true);
-			this.endNode = (AbstractNode) MapStorableObjectPool.getStorableObject(new Identifier(plt.endNodeId), true);
+		this.startNode = (AbstractNode) MapStorableObjectPool.getStorableObject(new Identifier(plt.startNodeId), true);
+		this.endNode = (AbstractNode) MapStorableObjectPool.getStorableObject(new Identifier(plt.endNodeId), true);
 
-			this.characteristics = new HashSet(plt.characteristicIds.length);
-			Set characteristicIds = new HashSet(plt.characteristicIds.length);
-			for (int i = 0; i < plt.characteristicIds.length; i++)
-				characteristicIds.add(new Identifier(plt.characteristicIds[i]));
-			this.characteristics.addAll(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
+		Set ids = Identifier.fromTransferables(plt.characteristicIds);
+		this.characteristics = GeneralStorableObjectPool.getStorableObjects(ids, true);
 
 		this.selected = false;
 
@@ -281,12 +279,14 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	}
 
 	public IDLEntity getTransferable() {
-		int i = 0;
-		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
-		for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)
-			charIds[i++] = (Identifier_Transferable) ((Characteristic) iterator.next()).getId().getTransferable();
-
-		i = 0;
+		Identifier_Transferable[] charIds = null;
+		try {
+			charIds = Identifier.createTransferables(this.characteristics);
+		}
+		catch (IllegalDataException ide) {
+			// Never
+			Log.errorException(ide);
+		}
 		Identifier_Transferable[] nodeLinkIds = new Identifier_Transferable[0];
 
 		return new PhysicalLink_Transferable(super.getHeaderTransferable(),
