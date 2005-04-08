@@ -1,5 +1,5 @@
 /*
- * $Id: CommonConfigurationTest.java,v 1.2 2005/04/01 11:02:30 bass Exp $
+ * $Id: CommonConfigurationTest.java,v 1.3 2005/04/08 15:31:27 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,8 +38,8 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/01 11:02:30 $
- * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/04/08 15:31:27 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 public abstract class CommonConfigurationTest extends TestCase {
@@ -127,7 +127,7 @@ public abstract class CommonConfigurationTest extends TestCase {
 		SessionContext.init(new AccessIdentity(new Date(System.currentTimeMillis()),
 				new Identifier("Domain_2464"),
 				new Identifier("Users_58"),
-				new Identifier("sessiya_1")), "aldan");
+				"sessionCode"), "aldan");
 	}
 
 	private static void initStorableObjectPools() {

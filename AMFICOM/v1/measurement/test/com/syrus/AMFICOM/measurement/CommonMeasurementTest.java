@@ -1,5 +1,5 @@
 /*
- * $Id: CommonMeasurementTest.java,v 1.2 2005/04/01 14:34:27 bass Exp $
+ * $Id: CommonMeasurementTest.java,v 1.3 2005/04/08 15:31:35 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -56,8 +56,8 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/01 14:34:27 $
- * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/04/08 15:31:35 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 public class CommonMeasurementTest extends TestCase {
@@ -157,7 +157,7 @@ public class CommonMeasurementTest extends TestCase {
 		SessionContext.init(new AccessIdentity(new Date(System.currentTimeMillis()),
 				new Identifier("Domain_2464"),
 				new Identifier("Users_58"),
-				new Identifier("sessiya_1")), "aldan");
+				"sessionCode"), "aldan");
 	}
 
 	private static void initStorableObjectPools() {
