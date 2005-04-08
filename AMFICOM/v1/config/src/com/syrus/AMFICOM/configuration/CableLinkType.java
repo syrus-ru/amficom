@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkType.java,v 1.30 2005/04/04 16:02:41 bass Exp $
+ * $Id: CableLinkType.java,v 1.31 2005/04/08 08:31:11 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,14 +30,13 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/04/04 16:02:41 $
- * @author $Author: bass $
+ * @version $Revision: 1.31 $, $Date: 2005/04/08 08:31:11 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 public final class CableLinkType extends AbstractLinkType implements Characterizable {
@@ -52,16 +51,14 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 
 	private Set characteristics;
 
-	private StorableObjectDatabase cableLinkTypeDatabase;
-
 	public CableLinkType(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
 		this.characteristics = new HashSet();
 
-		this.cableLinkTypeDatabase = ConfigurationDatabaseContext.getCableLinkTypeDatabase();
+		CableLinkTypeDatabase database = ConfigurationDatabaseContext.getCableLinkTypeDatabase();
 		try {
-			this.cableLinkTypeDatabase.retrieve(this);
+			database.retrieve(this);
 		}
 		catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
@@ -69,7 +66,6 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 	}
 
 	public CableLinkType(CableLinkType_Transferable cltt) throws CreateObjectException {
-		this.cableLinkTypeDatabase = ConfigurationDatabaseContext.getCableLinkTypeDatabase();
 		this.fromTransferable(cltt);
 	}
 
@@ -98,8 +94,6 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 		this.imageId = imageId;
 
 		this.characteristics = new HashSet();
-
-		this.cableLinkTypeDatabase = ConfigurationDatabaseContext.getCableLinkTypeDatabase();
 	}
 
 	/**

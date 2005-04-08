@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathType.java,v 1.38 2005/04/04 16:02:41 bass Exp $
+ * $Id: TransmissionPathType.java,v 1.39 2005/04/08 08:31:11 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,41 +29,40 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/04/04 16:02:41 $
- * @author $Author: bass $
+ * @version $Revision: 1.39 $, $Date: 2005/04/08 08:31:11 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
 public class TransmissionPathType extends StorableObjectType implements Characterizable {
 
-	private static final long		serialVersionUID	= 5311725679846973948L;
+	private static final long serialVersionUID = 5311725679846973948L;
 
-	private String					name;
+	private String name;
 
-	private Set					characteristics;
-
-	private StorableObjectDatabase	transmissionPathTypeDatabase;
+	private Set characteristics;
 
 	public TransmissionPathType(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
+
 		this.characteristics = new HashSet();
-		this.transmissionPathTypeDatabase = ConfigurationDatabaseContext.getTransmissionPathTypeDatabase();
+
+		TransmissionPathTypeDatabase database = ConfigurationDatabaseContext.getTransmissionPathTypeDatabase();
 		try {
-			this.transmissionPathTypeDatabase.retrieve(this);
-		} catch (IllegalDataException ide) {
+			database.retrieve(this);
+		}
+		catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
 	}
 
 	public TransmissionPathType(TransmissionPathType_Transferable tptt) throws CreateObjectException {
-		this.transmissionPathTypeDatabase = ConfigurationDatabaseContext.getTransmissionPathTypeDatabase();
-		fromTransferable(tptt);
+		this.fromTransferable(tptt);
 	}
 
 	protected TransmissionPathType(Identifier id,
@@ -76,8 +75,6 @@ public class TransmissionPathType extends StorableObjectType implements Characte
 				version, codename, description);
 		this.name = name;
 		this.characteristics = new HashSet();
-
-		this.transmissionPathTypeDatabase = ConfigurationDatabaseContext.getTransmissionPathTypeDatabase();
 	}
 
 	/**

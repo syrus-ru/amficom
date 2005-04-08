@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentType.java,v 1.52 2005/04/04 16:02:41 bass Exp $
+ * $Id: EquipmentType.java,v 1.53 2005/04/08 08:31:11 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,14 +29,13 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.52 $, $Date: 2005/04/04 16:02:41 $
- * @author $Author: bass $
+ * @version $Revision: 1.53 $, $Date: 2005/04/08 08:31:11 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -49,15 +48,14 @@ public class EquipmentType extends StorableObjectType implements Characterizable
 
 	private Set                       characteristics;
 
-	private StorableObjectDatabase     equipmentTypeDatabase;
-
 	public EquipmentType(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
 		this.characteristics = new HashSet();
-		this.equipmentTypeDatabase = ConfigurationDatabaseContext.getEquipmentTypeDatabase();
+
+		EquipmentTypeDatabase database = ConfigurationDatabaseContext.getEquipmentTypeDatabase();
 		try {
-			this.equipmentTypeDatabase.retrieve(this);
+			database.retrieve(this);
 		}
 		catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
@@ -65,8 +63,7 @@ public class EquipmentType extends StorableObjectType implements Characterizable
 	}
 
 	public EquipmentType(EquipmentType_Transferable ett) throws CreateObjectException {
-		this.equipmentTypeDatabase = ConfigurationDatabaseContext.getEquipmentTypeDatabase();
-		fromTransferable(ett);
+		this.fromTransferable(ett);
 	}
 
 	protected EquipmentType(Identifier id,
@@ -89,8 +86,6 @@ public class EquipmentType extends StorableObjectType implements Characterizable
 		this.manufacturer = manufacturer;
 		this.manufacturerCode = manufacturerCode;
 		this.characteristics = new HashSet();
-
-		this.equipmentTypeDatabase = ConfigurationDatabaseContext.getEquipmentTypeDatabase();
 	}
 
 

@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.44 2005/04/04 16:02:41 bass Exp $
+ * $Id: MonitoredElement.java,v 1.45 2005/04/08 08:31:11 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,12 +27,11 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2005/04/04 16:02:41 $
- * @author $Author: bass $
+ * @version $Revision: 1.45 $, $Date: 2005/04/08 08:31:11 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -46,15 +45,14 @@ public class MonitoredElement extends DomainMember {
 
 	private Set monitoredDomainMemberIds;
 
-	private StorableObjectDatabase monitoredElementDatabase;
-
 	public MonitoredElement(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
 		this.monitoredDomainMemberIds = new HashSet();
-		this.monitoredElementDatabase = ConfigurationDatabaseContext.getMonitoredElementDatabase();
+
+		MonitoredElementDatabase database = ConfigurationDatabaseContext.getMonitoredElementDatabase();
 		try {
-			this.monitoredElementDatabase.retrieve(this);
+			database.retrieve(this);
 		}
 		catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
@@ -62,8 +60,7 @@ public class MonitoredElement extends DomainMember {
 	}
 
 	public MonitoredElement(MonitoredElement_Transferable met) throws CreateObjectException {
-		this.monitoredElementDatabase = ConfigurationDatabaseContext.getMonitoredElementDatabase();
-		fromTransferable(met);
+		this.fromTransferable(met);
 	}
 	
 	protected MonitoredElement(Identifier id,
@@ -89,8 +86,6 @@ public class MonitoredElement extends DomainMember {
 
 		this.monitoredDomainMemberIds = new HashSet();
 		this.setMonitoredDomainMemberIds0(monitoredDomainMemberIds);
-
-		this.monitoredElementDatabase = ConfigurationDatabaseContext.getMonitoredElementDatabase();
 	}
 	
 	/**

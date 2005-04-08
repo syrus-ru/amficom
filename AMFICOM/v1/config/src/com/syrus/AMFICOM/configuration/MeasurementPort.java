@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPort.java,v 1.45 2005/04/04 16:02:41 bass Exp $
+ * $Id: MeasurementPort.java,v 1.46 2005/04/08 08:31:11 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,27 +18,26 @@ import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.configuration.corba.MeasurementPort_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2005/04/04 16:02:41 $
- * @author $Author: bass $
+ * @version $Revision: 1.46 $, $Date: 2005/04/08 08:31:11 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 public class MeasurementPort extends StorableObject implements Characterizable, TypedObject {
@@ -54,15 +53,14 @@ public class MeasurementPort extends StorableObject implements Characterizable, 
 
 	private Set characteristics;
 
-	private StorableObjectDatabase measurementPortDatabase;
-
 	public MeasurementPort(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.measurementPortDatabase = ConfigurationDatabaseContext.getMeasurementPortDatabase();
 		this.characteristics = new HashSet();
+
+		MeasurementPortDatabase database = ConfigurationDatabaseContext.getMeasurementPortDatabase();
 		try {
-			this.measurementPortDatabase.retrieve(this);
+			database.retrieve(this);
 		}
 		catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
@@ -70,8 +68,7 @@ public class MeasurementPort extends StorableObject implements Characterizable, 
 	}
 
 	public MeasurementPort(MeasurementPort_Transferable mpt) throws CreateObjectException {
-		this.measurementPortDatabase = ConfigurationDatabaseContext.getMeasurementPortDatabase();
-		fromTransferable(mpt);
+		this.fromTransferable(mpt);
 	}
 
 	protected MeasurementPort(Identifier id,
@@ -94,8 +91,6 @@ public class MeasurementPort extends StorableObject implements Characterizable, 
 		this.kisId = kisId;
 		this.portId = portId;
 		this.characteristics = new HashSet();
-
-		this.measurementPortDatabase = ConfigurationDatabaseContext.getMeasurementPortDatabase();
 	}
 	
 	/**

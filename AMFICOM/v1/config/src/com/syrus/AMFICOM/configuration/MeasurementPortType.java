@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortType.java,v 1.39 2005/04/04 16:02:41 bass Exp $
+ * $Id: MeasurementPortType.java,v 1.40 2005/04/08 08:31:11 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,14 +29,13 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/04/04 16:02:41 $
- * @author $Author: bass $
+ * @version $Revision: 1.40 $, $Date: 2005/04/08 08:31:11 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -47,15 +46,14 @@ public class MeasurementPortType extends StorableObjectType implements Character
 
 	private Set characteristics;
 
-	private StorableObjectDatabase measurementPortTypeDatabase;
-
 	public MeasurementPortType(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
 		this.characteristics = new HashSet();
-		this.measurementPortTypeDatabase = ConfigurationDatabaseContext.getMeasurementPortTypeDatabase();
+
+		MeasurementPortTypeDatabase database = ConfigurationDatabaseContext.getMeasurementPortTypeDatabase();
 		try {
-			this.measurementPortTypeDatabase.retrieve(this);
+			database.retrieve(this);
 		}
 		catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
@@ -63,8 +61,7 @@ public class MeasurementPortType extends StorableObjectType implements Character
 	}
 
 	public MeasurementPortType(MeasurementPortType_Transferable mptt) throws CreateObjectException {
-		this.measurementPortTypeDatabase = ConfigurationDatabaseContext.getMeasurementPortTypeDatabase();
-		fromTransferable(mptt);
+		this.fromTransferable(mptt);
 	}
 
 	protected MeasurementPortType(Identifier id,
@@ -83,8 +80,6 @@ public class MeasurementPortType extends StorableObjectType implements Character
 				  description);				
 			this.name = name;
 			this.characteristics = new HashSet();
-
-			this.measurementPortTypeDatabase = ConfigurationDatabaseContext.getMeasurementPortTypeDatabase();
 	}
 	
 	/**

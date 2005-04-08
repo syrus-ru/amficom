@@ -1,5 +1,5 @@
 /*
- * $Id: Port.java,v 1.51 2005/04/04 16:02:41 bass Exp $
+ * $Id: Port.java,v 1.52 2005/04/08 08:31:11 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,15 +31,14 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2005/04/04 16:02:41 $
- * @author $Author: bass $
+ * @version $Revision: 1.52 $, $Date: 2005/04/08 08:31:11 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 public class Port extends StorableObject implements Characterizable, TypedObject {
@@ -52,15 +51,14 @@ public class Port extends StorableObject implements Characterizable, TypedObject
 
 	private Set characteristics;
 
-	private StorableObjectDatabase portDatabase;
-
 	public Port(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
 		this.characteristics = new HashSet();
-		this.portDatabase = ConfigurationDatabaseContext.getPortDatabase();
+
+		PortDatabase database = ConfigurationDatabaseContext.getPortDatabase();
 		try {
-			this.portDatabase.retrieve(this);
+			database.retrieve(this);
 		}
 		catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
@@ -68,8 +66,7 @@ public class Port extends StorableObject implements Characterizable, TypedObject
 	}
 
 	public Port(Port_Transferable pt) throws CreateObjectException {
-		this.portDatabase = ConfigurationDatabaseContext.getPortDatabase();
-		fromTransferable(pt);
+		this.fromTransferable(pt);
 	}
 
 	protected Port(Identifier id,
@@ -91,8 +88,6 @@ public class Port extends StorableObject implements Characterizable, TypedObject
 		this.sort = sort;
 
 		this.characteristics = new HashSet();
-
-		this.portDatabase = ConfigurationDatabaseContext.getPortDatabase();
 	}
 
 	/**

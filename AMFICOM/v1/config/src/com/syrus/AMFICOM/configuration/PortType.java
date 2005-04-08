@@ -1,5 +1,5 @@
 /*
- * $Id: PortType.java,v 1.46 2005/04/04 16:02:41 bass Exp $
+ * $Id: PortType.java,v 1.47 2005/04/08 08:31:11 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,14 +30,13 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2005/04/04 16:02:41 $
- * @author $Author: bass $
+ * @version $Revision: 1.47 $, $Date: 2005/04/08 08:31:11 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -49,15 +48,14 @@ public class PortType extends StorableObjectType implements Characterizable {
 
 	private Set characteristics;
 
-	private StorableObjectDatabase portTypeDatabase;
-
 	public PortType(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
 		this.characteristics = new HashSet();
-		this.portTypeDatabase = ConfigurationDatabaseContext.getPortTypeDatabase();
+
+		PortTypeDatabase database = ConfigurationDatabaseContext.getPortTypeDatabase();
 		try {
-			this.portTypeDatabase.retrieve(this);
+			database.retrieve(this);
 		}
 		catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
@@ -65,8 +63,7 @@ public class PortType extends StorableObjectType implements Characterizable {
 	}
 
 	public PortType(PortType_Transferable ptt) throws CreateObjectException {
-		this.portTypeDatabase = ConfigurationDatabaseContext.getPortTypeDatabase();
-		fromTransferable(ptt);
+		this.fromTransferable(ptt);
 	}
 
 	protected PortType(Identifier id,
@@ -87,8 +84,6 @@ public class PortType extends StorableObjectType implements Characterizable {
 		this.name = name;
 		this.sort = sort;
 		this.characteristics = new HashSet();
-
-		this.portTypeDatabase = ConfigurationDatabaseContext.getPortTypeDatabase();
 	}
 
 

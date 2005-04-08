@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.80 2005/04/04 16:02:41 bass Exp $
+ * $Id: Equipment.java,v 1.81 2005/04/08 08:31:11 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,6 @@ import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
-import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
@@ -28,10 +27,10 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
@@ -39,8 +38,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.80 $, $Date: 2005/04/04 16:02:41 $
- * @author $Author: bass $
+ * @version $Revision: 1.81 $, $Date: 2005/04/08 08:31:11 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -48,32 +47,30 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 
 	private static final long serialVersionUID = -6115401698444070841L;
 
-	private EquipmentType          type;
-	private String                 name;
-	private String                 description;
-	private Identifier             imageId;
-	private float                  longitude;
-	private float                  latitude;
-	private String                 supplier;
-	private String                 supplierCode;
-	private String                 hwSerial;
-	private String                 hwVersion;
-	private String                 swSerial;
-	private String                 swVersion;
-	private String                 inventoryNumber;
+	private EquipmentType type;
+	private String name;
+	private String description;
+	private Identifier imageId;
+	private float longitude;
+	private float latitude;
+	private String supplier;
+	private String supplierCode;
+	private String hwSerial;
+	private String hwVersion;
+	private String swSerial;
+	private String swVersion;
+	private String inventoryNumber;
 
 	private Set characteristics;
-
-	private StorableObjectDatabase equipmentDatabase;
 
 	public Equipment(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
 		this.characteristics = new HashSet();
 
-		this.equipmentDatabase = ConfigurationDatabaseContext.getEquipmentDatabase();
+		EquipmentDatabase database = ConfigurationDatabaseContext.getEquipmentDatabase();
 		try {
-			this.equipmentDatabase.retrieve(this);
+			database.retrieve(this);
 		}
 		catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
@@ -81,8 +78,7 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 	}
 
 	public Equipment(Equipment_Transferable et) throws CreateObjectException {
-		this.equipmentDatabase = ConfigurationDatabaseContext.getEquipmentDatabase();
-		fromTransferable(et);
+		this.fromTransferable(et);
 	}
 
 	protected Equipment(Identifier id,
@@ -125,8 +121,6 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 		this.inventoryNumber = inventoryNumber;
 
 		this.characteristics = new HashSet();
-
-		this.equipmentDatabase = ConfigurationDatabaseContext.getEquipmentDatabase();
 	}
 
 	/**

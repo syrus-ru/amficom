@@ -1,5 +1,5 @@
 /*
- * $Id: Link.java,v 1.43 2005/04/04 16:02:41 bass Exp $
+ * $Id: Link.java,v 1.44 2005/04/08 08:31:11 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,15 +30,14 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2005/04/04 16:02:41 $
- * @author $Author: bass $
+ * @version $Revision: 1.44 $, $Date: 2005/04/08 08:31:11 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 public class Link extends DomainMember implements Characterizable, TypedObject {
@@ -59,15 +58,14 @@ public class Link extends DomainMember implements Characterizable, TypedObject {
 
 	private Set characteristics;
 
-	private StorableObjectDatabase linkDatabase;
-
 	public Link(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
 		this.characteristics = new HashSet();
-		this.linkDatabase = ConfigurationDatabaseContext.getLinkDatabase();
+
+		LinkDatabase database = ConfigurationDatabaseContext.getLinkDatabase();
 		try {
-			this.linkDatabase.retrieve(this);
+			database.retrieve(this);
 		}
 		catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
@@ -75,8 +73,7 @@ public class Link extends DomainMember implements Characterizable, TypedObject {
 	}
 
 	public Link(Link_Transferable lt) throws CreateObjectException  {
-		this.linkDatabase = ConfigurationDatabaseContext.getLinkDatabase();
-		fromTransferable(lt);
+		this.fromTransferable(lt);
 	}
 
 	protected Link(Identifier id,
@@ -110,8 +107,6 @@ public class Link extends DomainMember implements Characterizable, TypedObject {
 		this.color = color;
 		this.mark = mark;
 		this.characteristics = new HashSet();
-
-		this.linkDatabase = ConfigurationDatabaseContext.getLinkDatabase();
 	}
 
 	/**

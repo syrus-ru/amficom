@@ -1,5 +1,5 @@
 /*
- * $Id: CableThread.java,v 1.18 2005/04/04 16:02:41 bass Exp $
+ * $Id: CableThread.java,v 1.19 2005/04/08 08:31:11 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,14 +24,13 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/04/04 16:02:41 $
- * @author $Author: bass $
+ * @version $Revision: 1.19 $, $Date: 2005/04/08 08:31:11 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 public class CableThread extends DomainMember implements TypedObject {
@@ -42,14 +41,12 @@ public class CableThread extends DomainMember implements TypedObject {
 	private String description;
 	private CableThreadType type;
 
-	private StorableObjectDatabase cableThreadDatabase;
-
 	public CableThread(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
-		this.cableThreadDatabase = ConfigurationDatabaseContext.getCableThreadDatabase();
+		CableThreadDatabase database = ConfigurationDatabaseContext.getCableThreadDatabase();
 		try {
-			this.cableThreadDatabase.retrieve(this);
+			database.retrieve(this);
 		}
 		catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
@@ -57,8 +54,7 @@ public class CableThread extends DomainMember implements TypedObject {
 	}
 
 	public CableThread(CableThread_Transferable ctt) throws CreateObjectException {
-		this.cableThreadDatabase = ConfigurationDatabaseContext.getCableThreadDatabase();
-		fromTransferable(ctt);
+		this.fromTransferable(ctt);
 	}
 
 	protected CableThread(Identifier id,
@@ -78,8 +74,6 @@ public class CableThread extends DomainMember implements TypedObject {
 		this.name = name;
 		this.description = description;
 		this.type = type;
-	
-		this.cableThreadDatabase = ConfigurationDatabaseContext.getCableThreadDatabase();
 	}
 
 	public static CableThread createInstance(Identifier creatorId,

@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.56 2005/04/04 16:02:41 bass Exp $
+ * $Id: TransmissionPath.java,v 1.57 2005/04/08 08:31:11 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,14 +30,13 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 /**
- * @version $Revision: 1.56 $, $Date: 2005/04/04 16:02:41 $
- * @author $Author: bass $
+ * @version $Revision: 1.57 $, $Date: 2005/04/08 08:31:11 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -53,16 +52,14 @@ public class TransmissionPath extends DomainMember implements MonitoredDomainMem
 
 	private Set characteristics;
 
-	private StorableObjectDatabase transmissionPathDatabase;
-
 	public TransmissionPath(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
 		this.characteristics = new HashSet();
 
-		this.transmissionPathDatabase = ConfigurationDatabaseContext.getTransmissionPathDatabase();
+		TransmissionPathDatabase database = ConfigurationDatabaseContext.getTransmissionPathDatabase();
 		try {
-			this.transmissionPathDatabase.retrieve(this);
+			database.retrieve(this);
 		}
 		catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
@@ -70,8 +67,7 @@ public class TransmissionPath extends DomainMember implements MonitoredDomainMem
 	}
 
 	public TransmissionPath(TransmissionPath_Transferable tpt) throws CreateObjectException {
-		this.transmissionPathDatabase = ConfigurationDatabaseContext.getTransmissionPathDatabase();
-		fromTransferable(tpt);
+		this.fromTransferable(tpt);
 	}
 
 	protected TransmissionPath(Identifier id,
@@ -91,8 +87,6 @@ public class TransmissionPath extends DomainMember implements MonitoredDomainMem
 		this.finishPortId = finishPortId;
 
 		this.characteristics = new HashSet();
-
-		this.transmissionPathDatabase = ConfigurationDatabaseContext.getTransmissionPathDatabase();
 	}
 
 	/**

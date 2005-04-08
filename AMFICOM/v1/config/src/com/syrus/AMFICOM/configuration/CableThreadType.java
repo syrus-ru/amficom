@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadType.java,v 1.27 2005/04/04 13:09:40 bass Exp $
+ * $Id: CableThreadType.java,v 1.28 2005/04/08 08:31:11 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,6 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
@@ -35,8 +34,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
  * optical fiber (or an <i>abstract </i> optical fiber), the latter is a type of
  * cable (or an <i>abstract </i> cable containing this thread).
  *
- * @version $Revision: 1.27 $, $Date: 2005/04/04 13:09:40 $
- * @author $Author: bass $
+ * @version $Revision: 1.28 $, $Date: 2005/04/08 08:31:11 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -52,14 +51,12 @@ public final class CableThreadType extends StorableObjectType {
 	private LinkType linkType;
 	private CableLinkType cableLinkType;
 
-	private StorableObjectDatabase	cableThreadTypeDatabase;
-
 	public CableThreadType(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
-		this.cableThreadTypeDatabase = ConfigurationDatabaseContext.getCableThreadTypeDatabase();
+		CableThreadTypeDatabase database = ConfigurationDatabaseContext.getCableThreadTypeDatabase();
 		try {
-			this.cableThreadTypeDatabase.retrieve(this);
+			database.retrieve(this);
 		}
 		catch (final IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
@@ -68,8 +65,7 @@ public final class CableThreadType extends StorableObjectType {
 
 	public CableThreadType(final CableThreadType_Transferable transferable)
 			throws CreateObjectException {
-		this.cableThreadTypeDatabase = ConfigurationDatabaseContext.getCableThreadTypeDatabase();
-		fromTransferable(transferable);
+		this.fromTransferable(transferable);
 	}
 
 	protected CableThreadType(final Identifier id,
@@ -94,8 +90,6 @@ public final class CableThreadType extends StorableObjectType {
 		this.color = color;
 		this.linkType = linkType;
 		this.cableLinkType = cableLinkType;
-
-		this.cableThreadTypeDatabase = ConfigurationDatabaseContext.getCableThreadTypeDatabase();
 	}
 
 	/**
