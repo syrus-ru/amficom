@@ -1,5 +1,5 @@
 /*
- * $Id: general.idl,v 1.64 2005/04/08 12:40:57 arseniy Exp $
+ * $Id: general.idl,v 1.65 2005/04/08 15:28:49 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -98,9 +98,9 @@ module corba {
 //////////////////// AccessIdentifier ///////////////////
 	struct AccessIdentifier_Transferable {
 		long long started;
-		general::corba::Identifier_Transferable domain_id;
-		general::corba::Identifier_Transferable user_id;		
-		general::corba::Identifier_Transferable session_id;
+		Identifier_Transferable domain_id;
+		Identifier_Transferable user_id;		
+		WString64 session_code;
 	};
 
 ////////////////////// ParameterType //////////////////////
