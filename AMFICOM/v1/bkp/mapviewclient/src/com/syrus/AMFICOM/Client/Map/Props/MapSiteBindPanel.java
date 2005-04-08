@@ -213,7 +213,7 @@ public final class MapSiteBindPanel
 	
 		CablePath cablePath = mapView.findCablePath(scl);
 
-		Set cablePathLinks = cablePath.getLinks();
+		List cablePathLinks = cablePath.getLinks();
 		Collection siteLinks = mapView.getMap().getPhysicalLinksAt(this.site);
 
 		PhysicalLink linkRight = null;
