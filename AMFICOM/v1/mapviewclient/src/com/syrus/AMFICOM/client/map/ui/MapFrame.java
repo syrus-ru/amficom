@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.31 2005/04/08 14:19:21 peskovsky Exp $
+ * $Id: MapFrame.java,v 1.32 2005/04/08 14:24:21 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -80,7 +80,7 @@ import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
  * 
  * 
  * 
- * @version $Revision: 1.31 $, $Date: 2005/04/08 14:19:21 $
+ * @version $Revision: 1.32 $, $Date: 2005/04/08 14:24:21 $
  * @author $Author: peskovsky $
  * @module mapviewclient_v1
  */
@@ -115,7 +115,7 @@ public class MapFrame extends JInternalFrame
 	/**
 	 * Панель отображающая координты курсора и масштаб
 	 */
-	protected MapStatusbar mapStatusbar;
+	protected MapStatusBar mapStatusbar;
 	
 	/**
 	 * Экземпляр класса. Поскольку вид карты отнимает слишком много 
@@ -197,7 +197,7 @@ public class MapFrame extends JInternalFrame
 		mapVisualComponent = this.mapViewer.getVisualComponent();
 
 		this.mapToolBar = new MapToolBar();
-		this.mapStatusbar = new MapStatusbar();
+		this.mapStatusbar = new MapStatusBar();
 		this.mapElementsPanel = new MapElementsBarPanel();
 		
 //		mapPanel.setLayout(new BorderLayout());
