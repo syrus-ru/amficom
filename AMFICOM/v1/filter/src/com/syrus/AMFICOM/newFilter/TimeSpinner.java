@@ -21,13 +21,15 @@ public class TimeSpinner extends JSpinner
 
 	public JComponent getEditor()
 	{
-		if (editor == null)
-			editor = new TimeSpinnerEditor(this, pattern);
-		return editor;
+		if (this.editor == null)
+			this.editor = new TimeSpinnerEditor(this, pattern);
+		return this.editor;
 	}
 
 	static class TimeSpinnerEditor extends JSpinner.DateEditor
 	{
+		private static final long serialVersionUID = 3258128063895449650L;
+
 		TimeSpinnerEditor(JSpinner spinner, String pattern)
 		{
 			super(spinner, pattern);

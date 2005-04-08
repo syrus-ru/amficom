@@ -1,5 +1,5 @@
 /*
- * $Id: ResourceStorableObjectPool.java,v 1.12 2005/04/01 09:07:54 bob Exp $
+ * $Id: ResourceStorableObjectPool.java,v 1.13 2005/04/08 09:07:28 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,16 +8,24 @@
 
 package com.syrus.AMFICOM.resource;
 
-import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectGroupEntities;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 import java.util.Collections;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Set;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.12 $, $Date: 2005/04/01 09:07:54 $
+ * @author $Author: bass $
+ * @version $Revision: 1.13 $, $Date: 2005/04/08 09:07:28 $
  * @module resource_v1
  */
 public final class ResourceStorableObjectPool extends StorableObjectPool {
@@ -52,7 +60,7 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 	public static void init(ResourceObjectLoader rObjectLoader1, final int size) {
 		if (instance == null)
 			instance = new ResourceStorableObjectPool();
-		instance.objectPoolMap = Collections.synchronizedMap(new Hashtable(size));
+		instance.objectPoolMap = Collections.synchronizedMap(new HashMap(size));
 
 		rObjectLoader = rObjectLoader1;
 
@@ -65,7 +73,7 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 		if (instance == null)
 			instance = new ResourceStorableObjectPool();
 		
-		instance.objectPoolMap = Collections.synchronizedMap(new Hashtable(OBJECT_POOL_MAP_SIZE));
+		instance.objectPoolMap = Collections.synchronizedMap(new HashMap(OBJECT_POOL_MAP_SIZE));
 
 		rObjectLoader = rObjectLoader1;
 		

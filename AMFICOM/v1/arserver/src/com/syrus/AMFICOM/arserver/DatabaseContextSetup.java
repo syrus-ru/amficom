@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.3 2005/04/04 13:55:21 bass Exp $
+ * $Id: DatabaseContextSetup.java,v 1.4 2005/04/08 09:09:26 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,16 +22,13 @@ import com.syrus.AMFICOM.resource.ResourceDatabaseContext;
 import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
 import com.syrus.util.ApplicationProperties;
 
-
-
 /**
- * @version $Revision: 1.3 $, $Date: 2005/04/04 13:55:21 $
+ * @version $Revision: 1.4 $, $Date: 2005/04/08 09:09:26 $
  * @author $Author: bass $
  * @module mserver_v1
  */
 
-public abstract class DatabaseContextSetup {
-	
+class DatabaseContextSetup {
 	public static final String 	KEY_RESOURCE_POOL_SIZE = "ImageResourcePoolSize"; //$NON-NLS-1$
 	public static final String 	KEY_GENERAL_POOL_SIZE = "GeneralPoolSize"; //$NON-NLS-1$
 	public static final String 	KEY_ADMINISTRATION_POOL_SIZE = "AdministrationPoolSize"; //$NON-NLS-1$
@@ -45,7 +42,7 @@ public abstract class DatabaseContextSetup {
 	public static final String 	DEFAULT_DATABASE_LOADER_ONLY = "false"; //$NON-NLS-1$
 
 	private DatabaseContextSetup() {
-		// empty
+		assert false;
 	}
 
 	public static void initDatabaseContext() {

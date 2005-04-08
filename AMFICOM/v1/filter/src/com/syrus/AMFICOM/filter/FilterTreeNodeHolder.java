@@ -1,5 +1,5 @@
 /*
- * $Id: FilterTreeNodeHolder.java,v 1.3 2005/04/04 16:03:44 bass Exp $
+ * $Id: FilterTreeNodeHolder.java,v 1.4 2005/04/08 09:06:41 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,11 +11,13 @@ package com.syrus.AMFICOM.filter;
 import java.io.*;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/04/04 16:03:44 $
+ * @version $Revision: 1.4 $, $Date: 2005/04/08 09:06:41 $
  * @module filter_v1
  */
 public class FilterTreeNodeHolder implements Serializable
 {
+	private static final long serialVersionUID = 3691035461384681266L;
+
 	public String id = "";
 	public int state = 0;
 	public String name = "";

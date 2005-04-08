@@ -1,21 +1,17 @@
 /*
- * $Id: ARServerImpl.java,v 1.9 2005/04/04 13:55:21 bass Exp $
+ * $Id: ARServerImpl.java,v 1.10 2005/04/08 09:09:26 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
+
 package com.syrus.AMFICOM.arserver;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-
 import com.syrus.AMFICOM.arserver.corba.ARServerPOA;
+import com.syrus.AMFICOM.general.AccessIdentity;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
@@ -23,13 +19,13 @@ import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierGenerator;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
-import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectGroupEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.general.StorableObjectConditionBuilder;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
@@ -38,7 +34,6 @@ import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
-import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.StorableObjectConditionSort;
 import com.syrus.AMFICOM.resource.AbstractImageResource;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.resource.FileImageResource;
@@ -50,63 +45,44 @@ import com.syrus.AMFICOM.resource.corba.ImageResource_Transferable;
 import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceDataPackage.ImageResourceSort;
 import com.syrus.util.Log;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
 /**
- * @version $Revision: 1.9 $, $Date: 2005/04/04 13:55:21 $
+ * @version $Revision: 1.10 $, $Date: 2005/04/08 09:09:26 $
  * @author $Author: bass $
  * @module arserver_v1
  */
-public class ARServerImpl extends ARServerPOA {
-	
+public final class ARServerImpl extends ARServerPOA {
 	private static final long	serialVersionUID	= 3257291335395782967L;
 	
-	protected StorableObjectCondition restoreCondition(StorableObjectCondition_Transferable transferable)
-			throws IllegalDataException {
-		StorableObjectCondition condition = null;
-		switch (transferable.discriminator().value()) {
-			case StorableObjectConditionSort._COMPOUND:
-				condition = new CompoundCondition(transferable.compoundCondition());
-				break;
-			case StorableObjectConditionSort._LINKED_IDS:
-				condition = new LinkedIdsCondition(transferable.linkedIdsCondition());
-				break;
-			case StorableObjectConditionSort._TYPICAL:
-				condition = new TypicalCondition(transferable.typicalCondition());
-				break;
-			case StorableObjectConditionSort._EQUIVALENT:
-				condition = new EquivalentCondition(transferable.equialentCondition());
-				break;
-			default:
-				String msg = "ARServerImpl.restoreCondition | condition class " + transferable.getClass().getName() //$NON-NLS-1$
-						+ " is not suppoted"; //$NON-NLS-1$
-				Log.errorMessage(msg);
-				throw new IllegalDataException(msg);
-
-		}
-		return condition;
-	}
-	
 	// delete methods
-	public void delete(Identifier_Transferable id_Transferable, 
-			AccessIdentifier_Transferable accessIdentifier)
+	public void delete(final Identifier_Transferable id, 
+			final AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
-		Identifier id = new Identifier(id_Transferable);
-		Log.debugMessage("ARServerImplementation.delete | trying to delete " + id, Log.DEBUGLEVEL03); //$NON-NLS-1$
-		ResourceStorableObjectPool.delete(id);
+		final Identifier id1 = new Identifier(id);
+		Log.debugMessage("ARServerImpl.delete | trying to delete object '" + id1 //$NON-NLS-1$
+				+ "' as requested by user '" + (new AccessIdentity(accessIdentifier)).getUserId() + "'", Log.INFO);  //$NON-NLS-1$ //$NON-NLS-2$
+		final short entityCode = id1.getMajor();
+		if (ObjectGroupEntities.isInResourceGroup(entityCode))
+			ResourceStorableObjectPool.delete(id1);
+		else
+			Log.errorMessage("ARServerImpl.delete | Wrong entity code: " + entityCode); //$NON-NLS-1$
 	}
 	
 	public void deleteList(Identifier_Transferable[] id_Transferables,
 			AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
-		Log.debugMessage("ARServerImplementation.deleteList | Trying to delete... ", Log.DEBUGLEVEL03); //$NON-NLS-1$
-		final Set idList = new HashSet(id_Transferables.length);
-		for (int i = 0; i < id_Transferables.length; i++)
-			idList.add(new Identifier(id_Transferables[i]));			
+		Log.debugMessage("ARServerImpl.deleteList | Trying to delete... ", Log.DEBUGLEVEL03); //$NON-NLS-1$
+		final Set idList = Identifier.fromTransferables(id_Transferables);
 		try {
-        	ResourceStorableObjectPool.delete(idList);
-        } catch (IllegalDataException e) {
-        	 Log.errorException(e);
-             throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e
-                     .getMessage());
+			ResourceStorableObjectPool.delete(idList);
+		} catch (IllegalDataException e) {
+			Log.errorException(e);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_DELETE, CompletionStatus.COMPLETED_NO, e
+					.getMessage());
 		}
 	}
 	
@@ -118,7 +94,7 @@ public class ARServerImpl extends ARServerPOA {
 		/**
 		 * TODO check user for access
 		 */
-		Log.debugMessage("ARServerImplementation.receiveImageResource | Received " + " imageResource", Log.DEBUGLEVEL07); //$NON-NLS-1$ //$NON-NLS-2$
+		Log.debugMessage("ARServerImpl.receiveImageResource | Received " + " imageResource", Log.DEBUGLEVEL07); //$NON-NLS-1$ //$NON-NLS-2$
 		try {
 			imageResource_Transferable.header.modifier_id = accessIdentifier.user_id;
 			ImageResourceSort sort = imageResource_Transferable.data.discriminator();
@@ -166,7 +142,7 @@ public class ARServerImpl extends ARServerPOA {
         /**
         * TODO check user for access
         */
-        Log.debugMessage("ARServerImplementation.receiveImageResources | Received " //$NON-NLS-1$
+        Log.debugMessage("ARServerImpl.receiveImageResources | Received " //$NON-NLS-1$
             + imageResource_Transferables.length + " ImageResources", Log.DEBUGLEVEL07); //$NON-NLS-1$
         final Set imageResources = new HashSet(imageResource_Transferables.length);
         try {
@@ -363,7 +339,7 @@ public class ARServerImpl extends ARServerPOA {
 				+ " item(s) ", Log.DEBUGLEVEL07); //$NON-NLS-1$
 		try {
 			Collection list;
-			StorableObjectCondition condition = this.restoreCondition(storableObjectCondition_Transferable);
+			StorableObjectCondition condition = StorableObjectConditionBuilder.restoreCondition(storableObjectCondition_Transferable);
 			if (identifier_Transferables.length > 0) {
 				final Set ids = new HashSet(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)

@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalTreeUI.java,v 1.13 2005/03/31 15:52:25 bob Exp $
+ * $Id: LogicalTreeUI.java,v 1.14 2005/04/08 09:06:41 bass Exp $
  *
  * Copyright ? 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,10 +24,10 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EventObject;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -57,16 +57,16 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/03/31 15:52:25 $
- * @author $Author: bob $
+ * @version $Revision: 1.14 $, $Date: 2005/04/08 09:06:41 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module filter_v1
  */
 public class LogicalTreeUI implements SelectionListener, AddDeleteItems {
 
-	protected static Hashtable	renderers;
+	protected static Map	renderers;
 
-	protected static Hashtable	editors;
+	protected static Map	editors;
 	
 	public class ItemTreeCellRenderer implements TreeCellRenderer {		
 		

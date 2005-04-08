@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractItem.java,v 1.10 2005/04/07 10:53:42 bob Exp $
+ * $Id: AbstractItem.java,v 1.11 2005/04/08 09:06:41 bass Exp $
  *
  * Copyright ? 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.logic;
+
+import com.syrus.util.Log;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -16,11 +18,9 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.syrus.util.Log;
-
 /**
- * @version $Revision: 1.10 $, $Date: 2005/04/07 10:53:42 $
- * @author $Author: bob $
+ * @version $Revision: 1.11 $, $Date: 2005/04/08 09:06:41 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module filter_v1
  */
@@ -30,8 +30,11 @@ public abstract class AbstractItem implements Item, PropertyChangeListener {
 
 	protected Item				parent;
 
-	/** List&lt;ItemListener&gt; */
-	protected List				itemListeners			= new ArrayList();
+	/**
+	 * Not <code>List</code>, but <em>exactly</em> <code>ArrayList</code>.
+	 * @todo Implement smth similar to {@link javax.swing.event.EventListenerList}.
+	 */
+	protected ArrayList itemListeners = new ArrayList();
 
 	public static final String	OBJECT_NAME_PROPERTY	= "ObjectNameProperty";
 
@@ -55,11 +58,13 @@ public abstract class AbstractItem implements Item, PropertyChangeListener {
 		return recursionExists;
 	}
 
-	public void addChangeListener(ItemListener itemListener) {
-		this.itemListeners.add(itemListener);
+	public void addChangeListener(final ItemListener itemListener) {
+		assert !this.itemListeners.contains(itemListener);
+		this.itemListeners.add(0, itemListener);
 	}
 
-	public void removeChangeListener(ItemListener itemListener) {
+	public void removeChangeListener(final ItemListener itemListener) {
+		assert this.itemListeners.contains(itemListener);
 		this.itemListeners.remove(itemListener);
 	}
 
@@ -129,14 +134,14 @@ public abstract class AbstractItem implements Item, PropertyChangeListener {
 		Item notNullParent = this.parent == null ? oldParent : this.parent;
 		this.fireParentChanged(this, oldParent, this.parent, notNullParent);
 	}
-
-	protected void fireParentChanged(	Item item,
-										Item oldParent,
-										Item newParent,
-										Item oldSourceParent) {
-		int i = 0;
-		for (Iterator it = this.itemListeners.iterator(); it.hasNext(); i++) {
-			ItemListener itemListener = (ItemListener) it.next();
+	
+	protected void fireParentChanged(final Item item, final Item oldParent, final Item newParent, final Item oldSourceParent) {
+		for (int i = 0; i < this.itemListeners.size(); i++) {
+			/*
+			 * Exactly #get(), not #iterator(), as the latter is
+			 * much slower for an ArrayList.
+			 */
+			final ItemListener itemListener = (ItemListener) this.itemListeners.get(i);
 			itemListener.setParentPerformed(item, oldParent, newParent);
 			Log.debugMessage(this.toString() + " listener[" + i + "(" + itemListener.getClass().getName() + ")"
 					+ "].setParentPerformed | item:" + item.toString() + ", oldParent:"

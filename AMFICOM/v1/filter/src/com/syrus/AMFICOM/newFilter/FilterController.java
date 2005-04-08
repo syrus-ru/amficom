@@ -1,27 +1,15 @@
 /*
- * $Id: FilterController.java,v 1.5 2005/04/06 12:18:17 max Exp $
+ * $Id: FilterController.java,v 1.6 2005/04/08 09:06:41 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
+
 package com.syrus.AMFICOM.newFilter;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Set;
-
-import javax.swing.event.PopupMenuEvent;
-import javax.swing.event.PopupMenuListener;
-
-import com.syrus.AMFICOM.general.ConditionWrapper;
 import com.syrus.AMFICOM.general.CompoundCondition;
+import com.syrus.AMFICOM.general.ConditionWrapper;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
@@ -30,9 +18,20 @@ import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.CompoundConditionSort;
 import com.syrus.util.Log;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
+
 /**
- * @version $Revision: 1.5 $, $Date: 2005/04/06 12:18:17 $
- * @author $Author: max $
+ * @version $Revision: 1.6 $, $Date: 2005/04/08 09:06:41 $
+ * @author $Author: bass $
  * @module filter_v1
  */
 public class FilterController implements ActionListener, PopupMenuListener {

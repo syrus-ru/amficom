@@ -1,5 +1,5 @@
 /*
- * $Id: LogicSchemeBase.java,v 1.3 2004/08/24 12:52:08 peskovsky Exp $
+ * $Id: LogicSchemeBase.java,v 1.4 2005/04/08 09:06:41 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,11 +15,13 @@ import java.util.ArrayList;
 import java.util.ListIterator;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/08/24 12:52:08 $
+ * @version $Revision: 1.4 $, $Date: 2005/04/08 09:06:41 $
  * @module filter_v1
  */
 public class LogicSchemeBase implements Serializable
 {
+	private static final long serialVersionUID = 3258132453318537783L;
+
 	public List schemeElements = new ArrayList();
 	public List finishedLinks = new ArrayList();
 	public List activeZones = new ArrayList();
@@ -41,11 +43,11 @@ public class LogicSchemeBase implements Serializable
 	//результату
 	public void organizeStandartScheme()
 	{
-		finishedLinks.clear();
-		activeZones.clear();
+		this.finishedLinks.clear();
+		this.activeZones.clear();
 
 		List schemeEls = new ArrayList();
-		for (ListIterator lIt = schemeElements.listIterator(); lIt.hasNext();)
+		for (ListIterator lIt = this.schemeElements.listIterator(); lIt.hasNext();)
 		{
 			LogicSchemeElementBase se = (LogicSchemeElementBase)lIt.next();
 
@@ -53,12 +55,12 @@ public class LogicSchemeBase implements Serializable
 			{
 				schemeEls.add(se);
 				se.out.getLinks().clear();
-				activeZones.add(se.out);
+				this.activeZones.add(se.out);
 			}
 		}
-		schemeElements = schemeEls;
+		this.schemeElements = schemeEls;
 
-		treeResult = createLogicSchemeElement(
+		this.treeResult = createLogicSchemeElement(
 				LogicSchemeElementBase.t_result,
 				null,
 				"",
@@ -66,7 +68,7 @@ public class LogicSchemeBase implements Serializable
 				50,
 				this);
 
-		schemeElements.add(treeResult);
+		this.schemeElements.add(this.treeResult);
 
 		LogicSchemeElementBase andElem = createLogicSchemeElement(
 				LogicSchemeElementBase.t_operand,
@@ -76,18 +78,18 @@ public class LogicSchemeBase implements Serializable
 				50,
 				this);
 
-		schemeElements.add(andElem);
+		this.schemeElements.add(andElem);
 
-		for (int i = 0; i < schemeElements.size() - 2; i++)
+		for (int i = 0; i < this.schemeElements.size() - 2; i++)
 		{
-			LogicSchemeElementBase se = (LogicSchemeElementBase)schemeElements.get(i);
+			LogicSchemeElementBase se = (LogicSchemeElementBase)this.schemeElements.get(i);
 			tryToAddLink(se.out, andElem.input);
 		}
-		tryToAddLink(andElem.out, treeResult.input);
+		tryToAddLink(andElem.out, this.treeResult.input);
 
-		for (int i = 0; i < schemeElements.size(); i++)
+		for (int i = 0; i < this.schemeElements.size(); i++)
 		{
-			LogicSchemeElementBase se = (LogicSchemeElementBase)schemeElements.get(i);
+			LogicSchemeElementBase se = (LogicSchemeElementBase)this.schemeElements.get(i);
 			if (se.type.equals(LogicSchemeElementBase.t_condition))
 			{
 				se.x = 5;
@@ -99,24 +101,24 @@ public class LogicSchemeBase implements Serializable
 	//Определяем какому объекту принадлежит точка
 	public ProSchemeElementBase identifyObject (int x, int y)
 	{
-		for (int i = 0; i < activeZones.size(); i++)
+		for (int i = 0; i < this.activeZones.size(); i++)
 		{
-			ElementsActiveZoneBase az = (ElementsActiveZoneBase)activeZones.get(i);
+			ElementsActiveZoneBase az = (ElementsActiveZoneBase)this.activeZones.get(i);
 			if ((az.owner.x + az.x < x) && (x < az.owner.x + az.x + az.size) &&
 				(az.owner.y + az.y < y) && (y < az.owner.y + az.y + az.size))
 				return az;
 		}
 
-		for (int i = 0; i < finishedLinks.size(); i++)
+		for (int i = 0; i < this.finishedLinks.size(); i++)
 		{
-			FinishedLinkBase fl = (FinishedLinkBase)finishedLinks.get(i);
+			FinishedLinkBase fl = (FinishedLinkBase)this.finishedLinks.get(i);
 			if (fl.tryToSelect(x,y))
 				return fl;
 		}
 
-		for (int i = 0; i < schemeElements.size(); i++)
+		for (int i = 0; i < this.schemeElements.size(); i++)
 		{
-			LogicSchemeElementBase se = (LogicSchemeElementBase)schemeElements.get(i);
+			LogicSchemeElementBase se = (LogicSchemeElementBase)this.schemeElements.get(i);
 			if ((se.x < x) && (x < se.x + LogicSchemeElementBase.width) &&
 				(se.y < y) && (y < se.y + LogicSchemeElementBase.height))
 				return se;
@@ -139,16 +141,16 @@ public class LogicSchemeBase implements Serializable
 				to.getLinks().size() == 1)
 			return;
 
-		for (int i = 0; i < finishedLinks.size(); i++)
+		for (int i = 0; i < this.finishedLinks.size(); i++)
 		{
-			FinishedLinkBase fl = (FinishedLinkBase)finishedLinks.get(i);
+			FinishedLinkBase fl = (FinishedLinkBase)this.finishedLinks.get(i);
 			if (fl.az1.equals(from) && fl.az2.equals(to) ||
 				fl.az2.equals(from) && fl.az1.equals(to))
 			return;
 		}
 
 		FinishedLinkBase fl = createFinishedLink(from, to);
-		finishedLinks.add (fl);
+		this.finishedLinks.add (fl);
 		from.addLink(fl);
 		to.addLink(fl);
 	}
@@ -158,9 +160,9 @@ public class LogicSchemeBase implements Serializable
 	{
 		int result = 0;
 
-		for (int i = 0; i < schemeElements.size(); i++)
+		for (int i = 0; i < this.schemeElements.size(); i++)
 		{
-			LogicSchemeElementBase se = (LogicSchemeElementBase)schemeElements.get(i);
+			LogicSchemeElementBase se = (LogicSchemeElementBase)this.schemeElements.get(i);
 			if (se.type.equals(LogicSchemeElementBase.t_condition))
 				result++;
 		}
@@ -181,9 +183,9 @@ public class LogicSchemeBase implements Serializable
 		if (schemeIsEmpty())
 			return false;
 
-		for (int i = 0; i < activeZones.size(); i++)
+		for (int i = 0; i < this.activeZones.size(); i++)
 		{
-			ElementsActiveZoneBase curActiveZone = (ElementsActiveZoneBase)activeZones.get(i);
+			ElementsActiveZoneBase curActiveZone = (ElementsActiveZoneBase)this.activeZones.get(i);
 			if (curActiveZone.getLinks().size() == 0)
 				return false;
 		}
@@ -200,13 +202,13 @@ public class LogicSchemeBase implements Serializable
 		{
 			LogicSchemeElementBase se = (LogicSchemeElementBase)element;
 
-			for (int i = 0; i < finishedLinks.size(); i++)
+			for (int i = 0; i < this.finishedLinks.size(); i++)
 			{
-				FinishedLinkBase fl = (FinishedLinkBase)finishedLinks.get(i);
+				FinishedLinkBase fl = (FinishedLinkBase)this.finishedLinks.get(i);
 
 				if (se.input != null)
 					if (fl.az1.equals(se.input) || fl.az2.equals(se.input))
-						if (finishedLinks.remove(fl))
+						if (this.finishedLinks.remove(fl))
 						{
 							fl.az1.removeLink(fl);
 							fl.az2.removeLink(fl);
@@ -215,7 +217,7 @@ public class LogicSchemeBase implements Serializable
 
 				if (se.out != null)
 					if (fl.az1.equals(se.out) || fl.az2.equals(se.out))
-						if (finishedLinks.remove(fl))
+						if (this.finishedLinks.remove(fl))
 						{
 							fl.az1.removeLink(fl);
 							fl.az2.removeLink(fl);
@@ -224,12 +226,12 @@ public class LogicSchemeBase implements Serializable
 			}
 
 			if (se.input != null)
-				activeZones.remove(se.input);
+				this.activeZones.remove(se.input);
 
 			if (se.out != null)
-				activeZones.remove(se.out);
+				this.activeZones.remove(se.out);
 
-			schemeElements.remove(se);
+			this.schemeElements.remove(se);
 		}
 
 		if (element.getTyp().equals(FinishedLinkBase.TYP))
@@ -237,16 +239,16 @@ public class LogicSchemeBase implements Serializable
 			FinishedLinkBase fl = (FinishedLinkBase)element;
 			fl.az1.removeLink(fl);
 			fl.az2.removeLink(fl);
-			finishedLinks.remove(fl);
+			this.finishedLinks.remove(fl);
 		}
 	}
 
 	public void addFilterExpression(FilterExpressionInterface fe)
 	{
 		int maxY = 0;
-		for (int i = 0; i < schemeElements.size(); i++)
+		for (int i = 0; i < this.schemeElements.size(); i++)
 		{
-			LogicSchemeElementBase lse = (LogicSchemeElementBase)schemeElements.get(i);
+			LogicSchemeElementBase lse = (LogicSchemeElementBase)this.schemeElements.get(i);
 			if (lse.y > maxY)
 				maxY = lse.y;
 		}
@@ -259,16 +261,16 @@ public class LogicSchemeBase implements Serializable
 			maxY + 10,
 			this);
 
-		schemeElements.add(se);
+		this.schemeElements.add(se);
 	}
 
 	public void replaceFilterExpression(FilterExpressionInterface fe_old, FilterExpressionInterface fe_new)
 	{
 		int ind = -1;
 		LogicSchemeElementBase lse = null;
-		for (ind = schemeElements.size() - 1; ind >= 0 ; ind--)
+		for (ind = this.schemeElements.size() - 1; ind >= 0 ; ind--)
 		{
-			lse = (LogicSchemeElementBase)schemeElements.get(ind);
+			lse = (LogicSchemeElementBase)this.schemeElements.get(ind);
 			if (lse.operandType.equals(Integer.toString(fe_old.getListID())))
 //			if (lse.filterExpression.equals(fe_old))
 				break;
@@ -282,9 +284,9 @@ public class LogicSchemeBase implements Serializable
 
 	public void removeFilterExpression(FilterExpressionInterface fe)
 	{
-		for (int i = 0; i < schemeElements.size(); i++)
+		for (int i = 0; i < this.schemeElements.size(); i++)
 		{
-			LogicSchemeElementBase se = (LogicSchemeElementBase)schemeElements.get(i);
+			LogicSchemeElementBase se = (LogicSchemeElementBase)this.schemeElements.get(i);
 
 			if (se.operandType.equals(Integer.toString(fe.getListID())))
 			{
@@ -296,15 +298,15 @@ public class LogicSchemeBase implements Serializable
 
 	public void clearFilterExpressions()
 	{
-		schemeElements.clear();
-		finishedLinks.clear();
-		activeZones.clear();
+		this.schemeElements.clear();
+		this.finishedLinks.clear();
+		this.activeZones.clear();
 	}
 
 	public List getFilterExpressions()
 	{
 		List result = new ArrayList();
-		for (ListIterator lIt = schemeElements.listIterator(); lIt.hasNext();)
+		for (ListIterator lIt = this.schemeElements.listIterator(); lIt.hasNext();)
 		{
 			LogicSchemeElementBase se = (LogicSchemeElementBase)lIt.next();
 
@@ -364,14 +366,14 @@ public class LogicSchemeBase implements Serializable
 		if (!checkScheme())
 			ok = true;
 		else
-			ok = passesConstraints(or, treeResult);
+			ok = passesConstraints(or, this.treeResult);
 		return ok;
 	}
 
 	private boolean passesConstraints(Object or, LogicSchemeElementBase top)
 	{
 		if (top.type.equals(LogicSchemeElementBase.t_condition))
-			return filter.expression(top.filterExpression, or);
+			return this.filter.expression(top.filterExpression, or);
 
 		List allTopLinks = top.input.getLinks();
 
@@ -406,7 +408,7 @@ public class LogicSchemeBase implements Serializable
 	public String getLogicString()
 	{
 		if (checkScheme())
-			return getLogicFor(treeResult);
+			return getLogicFor(this.treeResult);
 		return "N/A";
 	}
 
@@ -436,7 +438,7 @@ public class LogicSchemeBase implements Serializable
 				result = result + " " + LogicSchemeElementBase.string(top.operandType) + " " + getLogicFor(curInputElement);
 		}
 
-		if (top != treeResult)
+		if (top != this.treeResult)
 			return "(" + result + ")";
 
 		return result;
@@ -445,11 +447,11 @@ public class LogicSchemeBase implements Serializable
 	//Блок процедур для воссановления схемы по логическому выражению
 	public void restoreSchemeByLogic (String expression, List filterExpressions)
 	{
-		finishedLinks.clear();
-		activeZones.clear();
-		schemeElements.clear();
+		this.finishedLinks.clear();
+		this.activeZones.clear();
+		this.schemeElements.clear();
 
-		treeResult = createLogicSchemeElement(
+		this.treeResult = createLogicSchemeElement(
 				LogicSchemeElementBase.t_result,
 				null,
 				"",
@@ -457,10 +459,10 @@ public class LogicSchemeBase implements Serializable
 				0,
 				this);
 
-		schemeElements.add(treeResult);
+		this.schemeElements.add(this.treeResult);
 
 		tryToAddLink((getSchemeFromLogic(expression, filterExpressions)).out,
-					 treeResult.input);
+					 this.treeResult.input);
 
 //		setSchemeCoords();
 	}
@@ -492,50 +494,47 @@ public class LogicSchemeBase implements Serializable
 					0, //когда дерево построим
 					this);
 
-			schemeElements.add(se);
+			this.schemeElements.add(se);
 
 			return se;
 		}
-		else
+		String operatorFound = null;
+		List positions = new ArrayList();
+
+		findHighestPriorityOperators(expression, operatorFound, positions);
+
+		LogicSchemeElementBase se = createLogicSchemeElement(
+				LogicSchemeElementBase.t_operand,
+				null,
+				operatorFound,
+				0,
+				0,
+				this);
+
+		this.schemeElements.add(se);
+
+		int curIndex = 0; //массив в строке
+		int i = 0; //Это индекс в массиве координат операторов данного ранга
+		do
 		{
-			String operatorFound = null;
-			List positions = new ArrayList();
+			int posI = ((Integer )positions.get(i)).intValue();
 
-			findHighestPriorityOperators(expression, operatorFound, positions);
+			String subStringI = expression.substring(curIndex, posI);
 
-			LogicSchemeElementBase se = createLogicSchemeElement(
-					LogicSchemeElementBase.t_operand,
-					null,
-					operatorFound,
-					0,
-					0,
-					this);
+			LogicSchemeElementBase se1 = getSchemeFromLogic(subStringI, filterExpressions);
+			this.schemeElements.add(se1);
+			tryToAddLink(se1.out, se.input);
 
-			schemeElements.add(se);
-
-			int curIndex = 0; //массив в строке
-			int i = 0; //Это индекс в массиве координат операторов данного ранга
-			do
-			{
-				int posI = ((Integer )positions.get(i)).intValue();
-
-				String subStringI = expression.substring(curIndex, posI);
-
-				LogicSchemeElementBase se1 = getSchemeFromLogic(subStringI, filterExpressions);
-				schemeElements.add(se1);
-				tryToAddLink(se1.out, se.input);
-
-				curIndex = posI + operatorFound.length();
-	/*
-				if (operatorFound.equals(LogicSchemeElement_yo.String("label_and")))
-					curIndex = posI + 1;
-				if (operatorFound.equals(LogicSchemeElement_yo.String("label_or")))
-				curIndex = posI + 3;
-	*/
-				i++;
-			}
-			while (i < positions.size());
+			curIndex = posI + operatorFound.length();
+/*
+			if (operatorFound.equals(LogicSchemeElement_yo.String("label_and")))
+				curIndex = posI + 1;
+			if (operatorFound.equals(LogicSchemeElement_yo.String("label_or")))
+			curIndex = posI + 3;
+*/
+			i++;
 		}
+		while (i < positions.size());
 		return null;
 	}
 
