@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServerSetup.java,v 1.32 2005/04/01 21:47:42 arseniy Exp $
+ * $Id: MeasurementServerSetup.java,v 1.33 2005/04/11 12:38:35 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -69,7 +69,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/04/01 21:47:42 $
+ * @version $Revision: 1.33 $, $Date: 2005/04/11 12:38:35 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -85,6 +85,7 @@ public final class MeasurementServerSetup {
 
 	private MeasurementServerSetup() {
 		// singleton constructor
+		assert false;
 	}
 
 	public static void main(String[] args) {
