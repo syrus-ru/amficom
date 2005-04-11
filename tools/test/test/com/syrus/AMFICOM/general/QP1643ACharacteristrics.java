@@ -1,5 +1,5 @@
 /*
- * $Id: QP1643ACharacteristrics.java,v 1.4 2005/04/11 08:53:08 bob Exp $
+ * $Id: QP1643ACharacteristrics.java,v 1.5 2005/04/11 12:42:07 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/04/11 08:53:08 $
+ * @version $Revision: 1.5 $, $Date: 2005/04/11 12:42:07 $
  * @author $Author: bob $
  * @module tools
  */
@@ -216,67 +216,68 @@ public class QP1643ACharacteristrics extends GeneralTestCase {
 
 		}
 
-		{
-			CharacteristicType resolutionType = CharacteristicType.createInstance(creatorId,
-				CharacteristicTypeCodenames.UNITS_RESOLUTION, "resolution unit type", DataType._DATA_TYPE_STRING,
-				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL);
-
-			GeneralStorableObjectPool.putStorableObject(resolutionType);
-
-			Characteristic resolutionCharacteristic = Characteristic.createInstance(creatorId, resolutionType,
-				"resolution unit", "resolution unit", CharacteristicSort._CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE, "м",
-				measurementPortTypeId, false, true);
-			GeneralStorableObjectPool.putStorableObject(resolutionCharacteristic);
-		}
-
-		{
-			CharacteristicType waveLengthType = CharacteristicType.createInstance(creatorId,
-				CharacteristicTypeCodenames.UNITS_WAVELENGTH, "wave length unit type", DataType._DATA_TYPE_STRING,
-				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL);
-
-			GeneralStorableObjectPool.putStorableObject(waveLengthType);
-
-			Characteristic characteristic = Characteristic.createInstance(creatorId, waveLengthType, "wavelength unit",
-				"wavelength unit", CharacteristicSort._CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE, "нм",
-				measurementPortTypeId, false, true);
-			GeneralStorableObjectPool.putStorableObject(characteristic);
-		}
-
-		{
-			CharacteristicType averageCountType = CharacteristicType.createInstance(creatorId,
-				CharacteristicTypeCodenames.UNITS_AVERAGE_COUNT, "average count unit type", DataType._DATA_TYPE_STRING,
-				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL);
-
-			GeneralStorableObjectPool.putStorableObject(averageCountType);
-			Characteristic characteristic = Characteristic.createInstance(creatorId, averageCountType,
-				"average count unit", "average count unit",
-				CharacteristicSort._CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE, "точек", measurementPortTypeId, false,
-				true);
-			GeneralStorableObjectPool.putStorableObject(characteristic);
-		}
-
-		{
-			CharacteristicType traceLengthType = CharacteristicType.createInstance(creatorId,
-				CharacteristicTypeCodenames.UNITS_TRACE_LENGTH, "trace length unit type", DataType._DATA_TYPE_STRING,
-				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL);
-
-			GeneralStorableObjectPool.putStorableObject(traceLengthType);
-			Characteristic characteristic = Characteristic.createInstance(creatorId, traceLengthType,
-				"trace length unit", "trace length unit", CharacteristicSort._CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE,
-				"км", measurementPortTypeId, false, true);
-			GeneralStorableObjectPool.putStorableObject(characteristic);
-		}
-
-		{
-			CharacteristicType pulseWidthType = CharacteristicType.createInstance(creatorId,
-				CharacteristicTypeCodenames.UNITS_PULSE_WIDTH, "average count unit type", DataType._DATA_TYPE_STRING,
-				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL);
-
-			GeneralStorableObjectPool.putStorableObject(pulseWidthType);
-			Characteristic characteristic = Characteristic.createInstance(creatorId, pulseWidthType,
-				"pulse width unit", "pulse width unit", CharacteristicSort._CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE,
-				"нс", measurementPortTypeId, false, true);
-			GeneralStorableObjectPool.putStorableObject(characteristic);
-		}
+		/* TODO units characteristic to parameter type*/
+//		{
+//			CharacteristicType resolutionType = CharacteristicType.createInstance(creatorId,
+//				CharacteristicTypeCodenames.UNITS_RESOLUTION, "resolution unit type", DataType._DATA_TYPE_STRING,
+//				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL);
+//
+//			GeneralStorableObjectPool.putStorableObject(resolutionType);
+//
+//			Characteristic resolutionCharacteristic = Characteristic.createInstance(creatorId, resolutionType,
+//				"resolution unit", "resolution unit", CharacteristicSort._CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE, "м",
+//				measurementPortTypeId, false, true);
+//			GeneralStorableObjectPool.putStorableObject(resolutionCharacteristic);
+//		}
+//
+//		{
+//			CharacteristicType waveLengthType = CharacteristicType.createInstance(creatorId,
+//				CharacteristicTypeCodenames.UNITS_WAVELENGTH, "wave length unit type", DataType._DATA_TYPE_STRING,
+//				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL);
+//
+//			GeneralStorableObjectPool.putStorableObject(waveLengthType);
+//
+//			Characteristic characteristic = Characteristic.createInstance(creatorId, waveLengthType, "wavelength unit",
+//				"wavelength unit", CharacteristicSort._CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE, "нм",
+//				measurementPortTypeId, false, true);
+//			GeneralStorableObjectPool.putStorableObject(characteristic);
+//		}
+//
+//		{
+//			CharacteristicType averageCountType = CharacteristicType.createInstance(creatorId,
+//				CharacteristicTypeCodenames.UNITS_AVERAGE_COUNT, "average count unit type", DataType._DATA_TYPE_STRING,
+//				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL);
+//
+//			GeneralStorableObjectPool.putStorableObject(averageCountType);
+//			Characteristic characteristic = Characteristic.createInstance(creatorId, averageCountType,
+//				"average count unit", "average count unit",
+//				CharacteristicSort._CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE, "точек", measurementPortTypeId, false,
+//				true);
+//			GeneralStorableObjectPool.putStorableObject(characteristic);
+//		}
+//
+//		{
+//			CharacteristicType traceLengthType = CharacteristicType.createInstance(creatorId,
+//				CharacteristicTypeCodenames.UNITS_TRACE_LENGTH, "trace length unit type", DataType._DATA_TYPE_STRING,
+//				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL);
+//
+//			GeneralStorableObjectPool.putStorableObject(traceLengthType);
+//			Characteristic characteristic = Characteristic.createInstance(creatorId, traceLengthType,
+//				"trace length unit", "trace length unit", CharacteristicSort._CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE,
+//				"км", measurementPortTypeId, false, true);
+//			GeneralStorableObjectPool.putStorableObject(characteristic);
+//		}
+//
+//		{
+//			CharacteristicType pulseWidthType = CharacteristicType.createInstance(creatorId,
+//				CharacteristicTypeCodenames.UNITS_PULSE_WIDTH, "average count unit type", DataType._DATA_TYPE_STRING,
+//				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL);
+//
+//			GeneralStorableObjectPool.putStorableObject(pulseWidthType);
+//			Characteristic characteristic = Characteristic.createInstance(creatorId, pulseWidthType,
+//				"pulse width unit", "pulse width unit", CharacteristicSort._CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE,
+//				"нс", measurementPortTypeId, false, true);
+//			GeneralStorableObjectPool.putStorableObject(characteristic);
+//		}
 	}
 }
