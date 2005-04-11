@@ -89,49 +89,6 @@ public class AnalysisUtil
 		return parameterType;
 	}
 
-	/*
-	public static CharacteristicType getCharacteristicType(Identifier userId, String codename, CharacteristicTypeSort sort, DataType dataType)
-	{
-		StorableObjectCondition pTypeCondition = new StringFieldCondition(
-				codename,
-				ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE,
-				StringFieldSort.STRINGSORT_BASE);
-
-		try
-		{
-			List pTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
-			for (Iterator it = pTypes.iterator(); it.hasNext();)
-			{
-				CharacteristicType type = (CharacteristicType)it.next();
-				if (type.getCodename().equals(codename))
-					return type;
-			}
-		}
-		catch(ApplicationException ex)
-		{
-			System.err.println("Exception searching ParameterType. Creating new one.");
-			ex.printStackTrace();
-		}
-
-		try
-		{
-				return CharacteristicType.createInstance(
-				userId,
-				codename,
-				"",
-				dataType.value(),
-				sort);
-		}
-		catch(CreateObjectException e)
-		{
-				// FIXME
-				System.err.println("AnalysisUtil.getCharacteristicType: Exception in createInstance. Wanna die.");
-				e.printStackTrace();
-				return null;
-		}
-	}
-	*/
-
 	public static AnalysisType getAnalysisType(Identifier userId, String codename)
 	{
 		StorableObjectCondition aTypeCondition =
@@ -213,26 +170,6 @@ public class AnalysisUtil
 //			ms.setCriteriaSet(criteriaSet);
 //		}
 	}
-
-	/**
-	 * Method for loading ThresholdSet for certain TestSetup to Pool. If there is no
-	 * ThresholdSet attached to TestSetup default ThresholdSet created by call method
-	 * createDefaultThresholdSet(userId, ms);
-	 * @param userId Identifier
-	 * @param ms MeasurementSetup
-	 */
-	// FIXME: remove
-	/*public static void load_Thresholds(Identifier userId, MeasurementSetup ms)
-	{
-		Set thresholdSet = ms.getThresholdSet();
-
-		ModelTraceManager mtm = Heap.getMTMEtalon();
-		if (mtm == null)
-			return;
-
-		if (thresholdSet != null)
-			setParamsFromThresholdsSet(thresholdSet,  mtm);
-	}*/
 
 	/**
 	 * Method for loading Etalon for certain TestSetup to Pool. If there is no
