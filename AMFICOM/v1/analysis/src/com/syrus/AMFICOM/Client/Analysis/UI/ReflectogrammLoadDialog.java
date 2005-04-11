@@ -1,7 +1,14 @@
-
+/*-
+ * $Id: ReflectogrammLoadDialog.java,v 1.14 2005/04/11 15:54:35 bob Exp $
+ *
+ * Copyright © 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
 package com.syrus.AMFICOM.Client.Analysis.UI;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Toolkit;
@@ -42,6 +49,11 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.io.BellcoreReader;
 import com.syrus.io.BellcoreStructure;
 
+/**
+ * @version $Revision: 1.14 $, $Date: 2005/04/11 15:54:35 $
+ * @author $Author: bob $
+ * @module analysis_v1
+ */
 public class ReflectogrammLoadDialog extends JDialog {
 
 	JButton						okButton;
@@ -54,6 +66,8 @@ public class ReflectogrammLoadDialog extends JDialog {
 
 	private JButton				cancelButton;
 	private JButton				updateButton	= new JButton();
+	
+	private PopulatableItem rootItem;
 
 	public ReflectogrammLoadDialog(ApplicationContext aContext) {
 		super(Environment.getActiveWindow());
@@ -101,7 +115,13 @@ public class ReflectogrammLoadDialog extends JDialog {
 		this.updateButton.setText(LangModelAnalyse.getString("refreshButton"));
 		this.updateButton.addActionListener(new ActionListener() {
 
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e) {		
+				try {
+					MeasurementStorableObjectPool.refresh();
+				} catch (ApplicationException e1) {
+					JOptionPane.showMessageDialog((Component) e.getSource(), e1.getMessage(), LangModelAnalyse.getString("Error"),
+						JOptionPane.OK_OPTION);
+				}
 				ReflectogrammLoadDialog.this.setTree();
 				ReflectogrammLoadDialog.this.okButton.setEnabled(false);
 				ReflectogrammLoadDialog.this.show();
@@ -135,45 +155,50 @@ public class ReflectogrammLoadDialog extends JDialog {
 	void setTree() {
 		this.domainId = ((RISDSessionInfo) aContext.getSessionInterface()).getDomainIdentifier();
 
-		getContentPane().remove(scrollPane);
-		this.scrollPane = new JScrollPane();
-
+		
+//		getContentPane().remove(scrollPane);
+	
+			
 		try {
-			Identifier domainId = ((RISDSessionInfo) aContext.getSessionInterface()).getDomainIdentifier();
-			Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
+			if (this.rootItem == null) {
+				Identifier domainId = ((RISDSessionInfo) aContext.getSessionInterface()).getDomainIdentifier();
+				Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
 
-			ArchiveChildrenFactory childrenFactory = ArchiveChildrenFactory.getInstance();
-			childrenFactory.setDomainId(domainId);
-			PopulatableItem item = new PopulatableItem();
-			item.setObject(ArchiveChildrenFactory.ROOT);
-			item.setName(LangModelAnalyse.getString("Archive"));
-			item.setChildrenFactory(childrenFactory);
-			item.populate();
-			LogicalTreeUI treeUI = new LogicalTreeUI(item, false);
-			treeUI.setRenderer(IconPopulatableItem.class, new ItemTreeIconLabelCellRenderer());
-			treeUI.getTreeModel().setAllwaysSort(false);
-			this.scrollPane.getViewport().add(treeUI.getTree(), null);
-			treeUI.addSelectionListener(new SelectionListener() {
+				ArchiveChildrenFactory childrenFactory = ArchiveChildrenFactory.getInstance();
+				childrenFactory.setDomainId(domainId);
+				this.rootItem = new PopulatableItem();
+				this.rootItem.setObject(ArchiveChildrenFactory.ROOT);
+				this.rootItem.setName(LangModelAnalyse.getString("Archive"));
+				this.rootItem.setChildrenFactory(childrenFactory);
+				LogicalTreeUI treeUI = new LogicalTreeUI(this.rootItem, false);
+				treeUI.setRenderer(IconPopulatableItem.class, new ItemTreeIconLabelCellRenderer());
+				treeUI.getTreeModel().setAllwaysSort(false);
+				this.scrollPane.getViewport().add(treeUI.getTree(), null);
+				treeUI.addSelectionListener(new SelectionListener() {
 
-				public void selectedItems(Collection items) {
-					if (!items.isEmpty()) {
-						for (Iterator it = items.iterator(); it.hasNext();) {
-							Item item = (Item) it.next();
-							Object object = item.getObject();
-							if (object instanceof Result) {
-								okButton.setEnabled(true);
-								result = (Result) object;
-							} else {
-								okButton.setEnabled(false);
+					public void selectedItems(Collection items) {
+						if (!items.isEmpty()) {
+							for (Iterator it = items.iterator(); it.hasNext();) {
+								Item item = (Item) it.next();
+								Object object = item.getObject();
+								if (object instanceof Result) {
+									okButton.setEnabled(true);
+									result = (Result) object;
+								} else {
+									okButton.setEnabled(false);
+								}
 							}
 						}
+
 					}
+				});
 
-				}
-			});
+				getContentPane().add(this.scrollPane, BorderLayout.CENTER);
+				setTitle(LangModelAnalyse.getString("Choose reflectogram") + " (" + domain.getName() + ")");
+			}
+			this.rootItem.removeAllChildren();
+			this.rootItem.populate();
 
-			getContentPane().add(scrollPane, BorderLayout.CENTER);
-			setTitle(LangModelAnalyse.getString("Choose reflectogram") + " (" + domain.getName() + ")");
 		} catch (ApplicationException ex) {
 			ex.printStackTrace();
 		}
