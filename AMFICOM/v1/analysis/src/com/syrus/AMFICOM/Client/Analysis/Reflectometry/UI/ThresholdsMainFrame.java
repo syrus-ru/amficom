@@ -256,9 +256,9 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener, CurrentTr
 
 		aModel.setCommand("menuAnalyseUpload", new SaveAnalysisCommand(aContext));
 		aModel.setCommand("menuSaveTestSetup", new SaveTestSetupCommand(aContext,
-				SaveTestSetupCommand.CRITERIA + SaveTestSetupCommand.ETALON + SaveTestSetupCommand.THRESHOLDS));
+				SaveTestSetupCommand.CRITERIA + SaveTestSetupCommand.ETALON));// + SaveTestSetupCommand.THRESHOLDS));
 		aModel.setCommand("menuSaveTestSetupAs", new SaveTestSetupAsCommand(aContext,
-				SaveTestSetupCommand.CRITERIA + SaveTestSetupCommand.ETALON + SaveTestSetupCommand.THRESHOLDS));
+				SaveTestSetupCommand.CRITERIA + SaveTestSetupCommand.ETALON));// + SaveTestSetupCommand.THRESHOLDS));
 		aModel.setCommand("menuCreateTestSetup", new CreateTestSetupCommand(aContext));
 		aModel.setCommand("menuLoadTestSetup", new LoadTestSetupCommand(aContext));
 

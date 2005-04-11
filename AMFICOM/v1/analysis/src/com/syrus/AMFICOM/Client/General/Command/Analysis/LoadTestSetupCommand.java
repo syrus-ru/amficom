@@ -64,9 +64,9 @@ public class LoadTestSetupCommand extends VoidCommand
 
 		if (ms.getEtalon() != null)
 			AnalysisUtil.load_Etalon(ms);
-
-		if (ms.getThresholdSet() != null)
-			AnalysisUtil.load_Thresholds(userId, ms);
+//
+//		if (ms.getThresholdSet() != null)
+//			AnalysisUtil.load_Thresholds(userId, ms);
 
 		aContext.getDispatcher().notify(new RefUpdateEvent(this,
 				RefUpdateEvent.THRESHOLDS_UPDATED_EVENT));

@@ -60,9 +60,10 @@ public class SaveTestSetupAsCommand extends VoidCommand
 			return;
 		}
 
-		if (((type & SaveTestSetupCommand.ETALON) != 0 ||
-				 (type & SaveTestSetupCommand.THRESHOLDS) != 0) &&
-				 !Heap.hasEventParamsForPrimaryTrace())
+		if (((type & SaveTestSetupCommand.ETALON) != 0
+			//	|| (type & SaveTestSetupCommand.THRESHOLDS) != 0
+			)
+			&& !Heap.hasEventParamsForPrimaryTrace())
 		{
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
@@ -87,13 +88,13 @@ public class SaveTestSetupAsCommand extends VoidCommand
 				newms.getMonitoredElementIds(),
 				mtm));
 
-		if ((type & SaveTestSetupCommand.THRESHOLDS) != 0)
-		{
-			newms.setThresholdSet(AnalysisUtil.createThresholdSet(
-					userId,
-					newms.getMonitoredElementIds(),
-					mtm));
-		}
+//		if ((type & SaveTestSetupCommand.THRESHOLDS) != 0)
+//		{
+//			newms.setThresholdSet(AnalysisUtil.createThresholdSet(
+//					userId,
+//					newms.getMonitoredElementIds(),
+//					mtm));
+//		}
 
 		new SaveTestSetupCommand(aContext, type).execute();
 

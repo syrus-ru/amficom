@@ -131,7 +131,7 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 				Heap.setMTMEtalon(null);
 			}
 	
-			AnalysisUtil.load_Thresholds(userId, ms);
+			//AnalysisUtil.load_Thresholds(userId, ms);
 	
 			new InitialAnalysisCommand().execute();
 	

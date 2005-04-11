@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import com.syrus.AMFICOM.analysis.dadara.DataStreamableUtil;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -220,7 +221,8 @@ public class AnalysisUtil
 	 * @param userId Identifier
 	 * @param ms MeasurementSetup
 	 */
-	public static void load_Thresholds(Identifier userId, MeasurementSetup ms)
+	// FIXME: remove
+	/*public static void load_Thresholds(Identifier userId, MeasurementSetup ms)
 	{
 		Set thresholdSet = ms.getThresholdSet();
 
@@ -230,7 +232,7 @@ public class AnalysisUtil
 
 		if (thresholdSet != null)
 			setParamsFromThresholdsSet(thresholdSet,  mtm);
-	}
+	}*/
 
 	/**
 	 * Method for loading Etalon for certain TestSetup to Pool. If there is no
@@ -243,8 +245,7 @@ public class AnalysisUtil
 		Set etalon = ms.getEtalon();
 		Set metas = ms.getParameterSet();
 
-		ModelTraceManager mtm = null;
-		BellcoreStructure bsEt=null;
+		BellcoreStructure bsEt = null;
 
 		SetParameter[] params = etalon.getParameters();
 		for (int i = 0; i < params.length; i++)
@@ -252,7 +253,9 @@ public class AnalysisUtil
 			ParameterType type = (ParameterType)params[i].getType();
 			if (type.getCodename().equals(ParameterTypeCodenames.DADARA_ETALON_EVENTS))
 			{
-				mtm = ModelTraceManager.eventsAndTraceFromByteArray(params[i].getValue());
+				ModelTraceManager mtm = (ModelTraceManager)DataStreamableUtil.
+					readDataStreamableFromBA(params[i].getValue(),
+						ModelTraceManager.getReader());
 				Heap.setMTMEtalon(mtm);
 				Heap.setEtalonEtalonMetas(metas);
 			}
@@ -334,9 +337,10 @@ public class AnalysisUtil
 		{
 			SetParameter[] params = new SetParameter[2];
 
+			// FIXME: save both events and thresholds
 			ParameterType ptype = getParameterType(userId, ParameterTypeCodenames.DADARA_ETALON_EVENTS, DataType.DATA_TYPE_RAW);
 			params[0] = SetParameter.createInstance(ptype,
-					mtm.eventsAndTraceToByteArray());
+					DataStreamableUtil.writeDataStreamableToBA(mtm));
 
 			BellcoreStructure bs = Heap.getBSPrimaryTrace();
 
@@ -361,7 +365,8 @@ public class AnalysisUtil
 		}
 	}
 
-	public static Set createThresholdSet(Identifier userId, java.util.Set meIds, ModelTraceManager mtm)
+	// FIXME: remove this
+	/*public static Set createThresholdSet(Identifier userId, java.util.Set meIds, ModelTraceManager mtm)
 	{
 		SetParameter[] params = new SetParameter[2];
 
@@ -402,7 +407,7 @@ public class AnalysisUtil
 			e.printStackTrace();
 			return null;
 		}
-}
+    }*/
 
 	public static void setParamsFromThresholdsSet(Set thresholdSet, ModelTraceManager mtm)
 	{
@@ -421,10 +426,10 @@ public class AnalysisUtil
 				{
 				}
 			}
-			else if (type.getCodename().equals(ParameterTypeCodenames.DADARA_THRESHOLDS))
+			/*else if (type.getCodename().equals(ParameterTypeCodenames.DADARA_THRESHOLDS))
 			{
 				mtm.setThresholdsFromByteArray(params[i].getValue());
-			}
+			}*/
 		}
 	}
 //

@@ -111,7 +111,7 @@ public class SaveAnalysisCommand extends VoidCommand
 
 			ptype = AnalysisUtil.getParameterType(userId, ParameterTypeCodenames.DADARA_EVENTS, DataType.DATA_TYPE_RAW);
 			params[2] = SetParameter.createInstance(ptype,
-				mtae.eventsAndTraceToByteArray());
+				DataStreamableUtil.writeDataStreamableToBA(mtae));
 		}
 			catch (CreateObjectException e)
 			{

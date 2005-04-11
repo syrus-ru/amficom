@@ -18,7 +18,7 @@ public class SaveTestSetupCommand extends VoidCommand
 {
 	public static final long CRITERIA = 0x00000001;
 	public static final long ETALON = 0x00000002;
-	public static final long THRESHOLDS = 0x00000004;
+	//public static final long THRESHOLDS = 0x00000004;
 
 	private ApplicationContext aContext;
 
@@ -79,7 +79,7 @@ public class SaveTestSetupCommand extends VoidCommand
 				.getSessionInterface()).getAccessIdentifier().user_id);
 		ms.setCriteriaSet(AnalysisUtil.createCriteriaSetFromParams(user_id, ms.getMonitoredElementIds()));
 
-		if ((type & ETALON) != 0 || (type & THRESHOLDS) != 0)
+		if ((type & ETALON) != 0)// || (type & THRESHOLDS) != 0)
 		{
 			ModelTraceManager mtm = Heap.getMTMEtalon();
 			if (mtm == null)
@@ -92,8 +92,8 @@ public class SaveTestSetupCommand extends VoidCommand
 			}
 			if ((type & ETALON) != 0)
 				ms.setEtalon(AnalysisUtil.createEtalon(user_id, ms.getMonitoredElementIds(), mtm));
-			if ((type & THRESHOLDS) != 0)
-				ms.setThresholdSet(AnalysisUtil.createThresholdSet(user_id, ms.getMonitoredElementIds(), mtm));
+//			if ((type & THRESHOLDS) != 0)
+//				ms.setThresholdSet(AnalysisUtil.createThresholdSet(user_id, ms.getMonitoredElementIds(), mtm));
 		}
 
 		if (ms.getDescription().equals(""))
