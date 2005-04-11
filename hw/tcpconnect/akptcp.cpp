@@ -69,6 +69,11 @@ WriteSegmentStatus transmit_segment(SOCKET sockfd, const unsigned int timewait, 
 	}
 
 	unsigned int segment_length = segment->getLength();
+	if (segment_length > MAX_SEGMENT_LENGTH) {
+		printf("(akptcp) Illegal length of segment: %u; must be in (0, %u]. Cannot transmit\n", segment_length, MAX_SEGMENT_LENGTH);
+		return WSS_CANNOT_WRITE_DATA;
+	}
+
 	uint32_t nlength = htonl(segment_length);
 	unsigned int data_length = HEADERSIZE + segment_length;
 	char* data = new char[data_length];
