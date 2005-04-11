@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupWrapper.java,v 1.7 2005/04/08 15:37:28 bob Exp $
+ * $Id: MeasurementSetupWrapper.java,v 1.8 2005/04/11 11:49:13 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,16 +12,15 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/04/08 15:37:28 $
+ * @version $Revision: 1.8 $, $Date: 2005/04/11 11:49:13 $
  * @author $Author: bob $
  * @module measurement_v1
  */
-public class MeasurementSetupWrapper implements StorableObjectWrapper {
+public class MeasurementSetupWrapper extends StorableObjectWrapper {
 
 	public static final String				COLUMN_CRITERIA_SET_ID				= "criteria_set_id";
 	public static final String				COLUMN_ETALON_ID					= "etalon_id";

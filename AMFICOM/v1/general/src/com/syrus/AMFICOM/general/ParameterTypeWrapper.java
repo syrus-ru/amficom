@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeWrapper.java,v 1.6 2005/04/04 06:59:26 bob Exp $
+ * $Id: ParameterTypeWrapper.java,v 1.7 2005/04/11 11:48:18 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,11 +15,11 @@ import java.util.List;
 import com.syrus.AMFICOM.general.corba.DataType;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/04/04 06:59:26 $
+ * @version $Revision: 1.7 $, $Date: 2005/04/11 11:48:18 $
  * @author $Author: bob $
  * @module general_v1
  */
-public class ParameterTypeWrapper implements StorableObjectWrapper {
+public class ParameterTypeWrapper extends StorableObjectWrapper {
 
 	public static final String				COLUMN_DATA_TYPE	= "data_type";
 

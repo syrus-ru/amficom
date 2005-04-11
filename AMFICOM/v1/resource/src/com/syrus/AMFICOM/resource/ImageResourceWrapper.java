@@ -1,5 +1,5 @@
 /*
- * $Id: ImageResourceWrapper.java,v 1.3 2005/04/04 07:06:38 bob Exp $
+ * $Id: ImageResourceWrapper.java,v 1.4 2005/04/11 11:49:41 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,11 +16,11 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceDataPackage.ImageResourceSort;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/04/04 07:06:38 $
+ * @version $Revision: 1.4 $, $Date: 2005/04/11 11:49:41 $
  * @author $Author: bob $
  * @module resource_v1
  */
-public class ImageResourceWrapper implements StorableObjectWrapper {
+public class ImageResourceWrapper extends StorableObjectWrapper {
 
 	public static final String				COLUMN_SORT	= "sort"; //$NON-NLS-1$
 

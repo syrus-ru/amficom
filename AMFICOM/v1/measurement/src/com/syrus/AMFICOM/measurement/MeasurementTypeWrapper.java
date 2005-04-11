@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeWrapper.java,v 1.6 2005/04/01 08:43:32 bob Exp $
+ * $Id: MeasurementTypeWrapper.java,v 1.7 2005/04/11 11:49:13 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,11 +15,11 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/04/01 08:43:32 $
+ * @version $Revision: 1.7 $, $Date: 2005/04/11 11:49:13 $
  * @author $Author: bob $
  * @module measurement_v1
  */
-public class MeasurementTypeWrapper implements StorableObjectWrapper {
+public class MeasurementTypeWrapper extends StorableObjectWrapper {
 
 	public static final String				MODE_IN									= "IN";
 	public static final String				MODE_OUT								= "OUT";

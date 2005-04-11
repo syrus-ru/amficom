@@ -1,5 +1,5 @@
 /*
- * $Id: EventWrapper.java,v 1.7 2005/04/01 09:00:59 bob Exp $
+ * $Id: EventWrapper.java,v 1.8 2005/04/11 11:49:32 bob Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,11 +15,11 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/04/01 09:00:59 $
+ * @version $Revision: 1.8 $, $Date: 2005/04/11 11:49:32 $
  * @author $Author: bob $
  * @module event_v1
  */
-public class EventWrapper implements StorableObjectWrapper {
+public class EventWrapper extends StorableObjectWrapper {
 
 	public static final String LINK_COLUMN_EVENT_ID	= "event_id";
 

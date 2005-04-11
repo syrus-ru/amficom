@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentWrapper.java,v 1.10 2005/04/04 07:04:22 bob Exp $
+ * $Id: EquipmentWrapper.java,v 1.11 2005/04/11 11:48:35 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,11 +18,11 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/04/04 07:04:22 $
+ * @version $Revision: 1.11 $, $Date: 2005/04/11 11:48:35 $
  * @author $Author: bob $
  * @module configuration_v1
  */
-public final class EquipmentWrapper implements StorableObjectWrapper {
+public final class EquipmentWrapper extends StorableObjectWrapper {
 
 	// table :: Equipment
 	// description VARCHAR2(256),

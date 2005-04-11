@@ -1,5 +1,5 @@
 /*
- * $Id: MapWrapper.java,v 1.8 2005/04/04 07:05:08 bob Exp $
+ * $Id: MapWrapper.java,v 1.9 2005/04/11 11:51:24 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,11 +17,11 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/04/04 07:05:08 $
+ * @version $Revision: 1.9 $, $Date: 2005/04/11 11:51:24 $
  * @author $Author: bob $
  * @module map_v1
  */
-public class MapWrapper implements StorableObjectWrapper {
+public class MapWrapper extends StorableObjectWrapper {
 
 	// name VARCHAR2(128),
 	// description VARCHAR2(256),

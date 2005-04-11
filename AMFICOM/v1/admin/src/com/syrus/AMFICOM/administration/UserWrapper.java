@@ -1,5 +1,5 @@
 /*
- * $Id: UserWrapper.java,v 1.3 2005/04/04 07:00:18 bob Exp $
+ * $Id: UserWrapper.java,v 1.4 2005/04/11 11:48:27 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,11 +16,11 @@ import com.syrus.AMFICOM.administration.corba.UserSort;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/04/04 07:00:18 $
+ * @version $Revision: 1.4 $, $Date: 2005/04/11 11:48:27 $
  * @author $Author: bob $
  * @module admin_v1
  */
-public class UserWrapper implements StorableObjectWrapper {
+public class UserWrapper extends StorableObjectWrapper {
 
 	// table :: users
 	// description VARCHAR2(256),

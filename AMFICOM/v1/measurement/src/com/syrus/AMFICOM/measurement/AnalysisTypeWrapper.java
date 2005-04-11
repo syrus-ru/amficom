@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeWrapper.java,v 1.8 2005/04/01 08:43:32 bob Exp $
+ * $Id: AnalysisTypeWrapper.java,v 1.9 2005/04/11 11:49:13 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,11 +15,11 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/04/01 08:43:32 $
+ * @version $Revision: 1.9 $, $Date: 2005/04/11 11:49:13 $
  * @author $Author: bob $
  * @module measurement_v1
  */
-public class AnalysisTypeWrapper implements StorableObjectWrapper {
+public class AnalysisTypeWrapper extends StorableObjectWrapper {
 
 	public static final String MODE_IN = "IN";
 	public static final String MODE_CRITERION = "CRI";

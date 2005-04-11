@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXML.java,v 1.21 2005/04/01 06:34:57 bob Exp $
+ * $Id: StorableObjectXML.java,v 1.22 2005/04/11 11:48:18 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,6 @@ package com.syrus.AMFICOM.general;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -31,7 +30,7 @@ import java.util.Set;
  * {@link com.syrus.AMFICOM.general.Characteristic}) which must have static
  * getInstance method.
  * 
- * @version $Revision: 1.21 $, $Date: 2005/04/01 06:34:57 $
+ * @version $Revision: 1.22 $, $Date: 2005/04/11 11:48:18 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -45,47 +44,12 @@ public class StorableObjectXML {
 		this.driver = driver;
 	}
 
-	private StorableObjectWrapper getWrapper(final short entityCode) throws IllegalDataException {
-		StorableObjectWrapper wrapper = null;
-		String className = ObjectGroupEntities.getPackageName(entityCode) + "."
-				+ ObjectEntities.codeToString(entityCode) + "Wrapper";
-		try {
-			Class clazz = Class.forName(className);
-			Method method = clazz.getMethod("getInstance", new Class[0]);
-			wrapper = (StorableObjectWrapper) method.invoke(null, new Object[0]);
-
-		} catch (ClassNotFoundException e) {
-			throw new IllegalDataException("StorableObjectXML.getWrapper | Class " + className //$NON-NLS-1$
-					+ " not found on the classpath - " + e.getMessage());
-		} catch (SecurityException e) {
-			throw new IllegalDataException("StorableObjectXML.getWrapper | Caught " + e.getMessage());
-		} catch (NoSuchMethodException e) {
-			throw new IllegalDataException("StorableObjectXML.getWrapper | Class " + className //$NON-NLS-1$
-					+ " haven't getInstance static method - " + e.getMessage());
-		} catch (IllegalArgumentException e) {
-			throw new IllegalDataException("StorableObjectXML.getWrapper | Caught " + e.getMessage());
-		} catch (IllegalAccessException e) {
-			throw new IllegalDataException("StorableObjectXML.getWrapper | Caught " + e.getMessage());
-		} catch (InvocationTargetException e) {
-			final Throwable cause = e.getCause();
-			if (cause instanceof AssertionError) {
-				final String message = cause.getMessage();
-				if (message == null)
-					assert false;
-				else
-					assert false: message;
-			} else				
-				throw new IllegalDataException("StorableObjectXML.getWrapper | Caught " + e.getMessage());
-		}
-		return wrapper;
-	}
-
 	public StorableObject retrieve(final Identifier identifier) throws IllegalDataException, ObjectNotFoundException,
 			RetrieveObjectException {
 		Map objectMap = this.driver.getObjectMap(identifier);
 		short entityCode = identifier.getMajor();
 		StorableObject storableObject = getStorableObject(identifier, (String) objectMap.get(CLASSNAME));
-		StorableObjectWrapper wrapper = this.getWrapper(entityCode);
+		StorableObjectWrapper wrapper = StorableObjectWrapper.getWrapper(entityCode);
 		storableObject.setAttributes((Date) objectMap.get(StorableObjectWrapper.COLUMN_CREATED), (Date) objectMap
 				.get(StorableObjectWrapper.COLUMN_MODIFIED), (Identifier) objectMap
 				.get(StorableObjectWrapper.COLUMN_CREATOR_ID), (Identifier) objectMap
@@ -141,7 +105,7 @@ public class StorableObjectXML {
 								boolean force,
 								final Identifier modifierId) throws IllegalDataException, VersionCollisionException,
 			UpdateObjectException {
-		StorableObjectWrapper wrapper = this.getWrapper(storableObject.getId().getMajor());
+		StorableObjectWrapper wrapper = StorableObjectWrapper.getWrapper(storableObject.getId().getMajor());
 		List keys = wrapper.getKeys();
 		Map objectMap = new HashMap();
 		for (Iterator it = keys.iterator(); it.hasNext();) {

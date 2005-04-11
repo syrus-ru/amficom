@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementWrapper.java,v 1.4 2005/04/01 08:43:32 bob Exp $
+ * $Id: MeasurementWrapper.java,v 1.5 2005/04/11 11:49:13 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,11 +18,11 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/04/01 08:43:32 $
+ * @version $Revision: 1.5 $, $Date: 2005/04/11 11:49:13 $
  * @author $Author: bob $
  * @module measurement_v1
  */
-public class MeasurementWrapper implements StorableObjectWrapper {
+public class MeasurementWrapper extends StorableObjectWrapper {
 
 	public static final String			COLUMN_MONITORED_ELEMENT_ID	= "monitored_element_id";
 	public static final String			COLUMN_SETUP_ID				= "setup_id";

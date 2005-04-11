@@ -1,5 +1,5 @@
 /*
- * $Id: DomainWrapper.java,v 1.4 2005/04/04 07:00:18 bob Exp $
+ * $Id: DomainWrapper.java,v 1.5 2005/04/11 11:48:27 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,11 +16,11 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/04/04 07:00:18 $
+ * @version $Revision: 1.5 $, $Date: 2005/04/11 11:48:27 $
  * @author $Author: bob $
  * @module admin_v1
  */
-public class DomainWrapper implements StorableObjectWrapper {
+public class DomainWrapper extends StorableObjectWrapper {
 
 	private static DomainWrapper	instance;
 

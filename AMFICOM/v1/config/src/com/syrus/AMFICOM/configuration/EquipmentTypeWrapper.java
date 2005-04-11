@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentTypeWrapper.java,v 1.7 2005/04/04 07:04:22 bob Exp $
+ * $Id: EquipmentTypeWrapper.java,v 1.8 2005/04/11 11:48:35 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,12 +16,12 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/04/04 07:04:22 $
+ * @version $Revision: 1.8 $, $Date: 2005/04/11 11:48:35 $
  * @author $Author: bob $
  * @module configuration_v1
  */
 
-public final class EquipmentTypeWrapper implements StorableObjectWrapper {
+public final class EquipmentTypeWrapper extends StorableObjectWrapper {
 
 	// manufacturer VARCHAR2(64),
 	public static final String			COLUMN_MANUFACTURER			= "manufacturer";
