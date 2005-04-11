@@ -1,5 +1,5 @@
 /*-
- * $Id: PopulatableItem.java,v 1.1 2005/03/31 09:54:30 bob Exp $
+ * $Id: PopulatableItem.java,v 1.2 2005/04/11 15:53:31 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,10 +8,14 @@
 
 package com.syrus.AMFICOM.logic;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 /**
  * Populatable item with default properties
  * 
- * @version $Revision: 1.1 $, $Date: 2005/03/31 09:54:30 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/11 15:53:31 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module filter_v1
@@ -61,6 +65,17 @@ public class PopulatableItem extends AbstractItem implements Populatable {
 			this.populated = true;
 		}
 
+	}
+	
+	public void removeAllChildren() {
+		if (this.children != null && !this.children.isEmpty()) {
+			List list = new ArrayList(this.children);
+			for (Iterator it = list.iterator(); it.hasNext();) {
+				Item item = (Item) it.next();
+				item.setParent(null);
+			}
+			this.populated = false;
+		}
 	}
 
 	public void setCanHaveChildren(boolean canHaveChildren) {
