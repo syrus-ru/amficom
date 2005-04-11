@@ -124,7 +124,8 @@ class Splash
  	int end_conn_n;
     int end_conn;
 
-    int sign;  // знак всплеска 
+	double f_extr;		// экстремальное значение всплеска 
+    int sign;  // знак всплеска
 
 	// инициализируем неопределёнными значениями ()
     Splash()
@@ -142,7 +143,7 @@ class Splash
  		begin_conn_n 	= -1;
     	end_conn 		= -1;
  		end_conn_n 		= -1;
-
+        f_extr 			= 0;
     	sign 			= 0;
     }
 };

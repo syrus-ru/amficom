@@ -148,7 +148,7 @@ void InitialAnalysis::findEventsBySplashes(ArrList& splashes)
     int end = -1;
     if( splashes.getLength() <=2 )
 return;
-	  Splash* sp1 = (Splash*)splashes[0];
+	Splash* sp1 = (Splash*)splashes[0];
     Splash* sp2;
     if(sp1->sign<0)
     { begin = 0;
@@ -236,9 +236,12 @@ int InitialAnalysis::processIfIsConnector(int i, ArrList& splashes)
       break;}
           if(sp2->begin_weld_n != -1 && sp2->sign < 0)//ищем последний сварочный вниз на отрезке reflSize
           { shift = j-i;
+            sp2 = (Splash*)splashes[i+shift];
           }
           if(sp2->begin_conn_n != -1 && sp2->sign > 0)//если нашли коннекторный вверх, то значит найдено начало нового коннектора
           { shift = j-i;
+            sp2 = (Splash*)splashes[i+shift];
+            shift--;// чтобы этот же всплеск был началом следующего коннектора
       break;
           }
         }
@@ -246,7 +249,6 @@ int InitialAnalysis::processIfIsConnector(int i, ArrList& splashes)
       //  если таки нашли коннектор, то добавляем это в события
       if(shift!=0)
       { EventParams *ep = new EventParams;
-        sp2 = (Splash*)splashes[i+shift];
         setConnectorParamsBySplashes((EventParams&)*ep, (Splash&)*sp1, (Splash&)*sp2 );
         events->add(ep);
       }
@@ -317,6 +319,7 @@ void InitialAnalysis::findAllWletSplashes(double* f_wlet, ArrList& splashes)
      continue;
 		Splash& spl = (Splash&)(*(new Splash()));// раз уж пересекли хотя бы один порог, то объект уже должен быть создан;
         spl.begin_thr = i;
+        spl.f_extr = f_wlet[i];
 		int sign, sign_cur;
    		if(f_wlet[i]>0) { sign = 1;}
         else            { sign = -1;}
@@ -371,6 +374,7 @@ void InitialAnalysis::findAllWletSplashes(double* f_wlet, ArrList& splashes)
         	{	spl.end_thr = i;
      	break;
      		}
+            if(fabs(spl.f_extr)<fabs(f_wlet[i])){ spl.f_extr = f_wlet[i];}
         }
 		spl.sign = sign;
 
