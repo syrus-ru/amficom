@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.44 2005/04/11 10:47:10 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.45 2005/04/11 10:58:15 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.44 $, $Date: 2005/04/11 10:47:10 $
+ * @version $Revision: 1.45 $, $Date: 2005/04/11 10:58:15 $
  * @module
  */
 public class ModelTraceManager
@@ -333,18 +333,13 @@ public class ModelTraceManager
 
 	public void updateUpperThreshToContain(double[] yTop)
 	{
-		CoreAnalysisManager.nExtendThreshToCoverCurve(getModelTrace().getYArray(), yTop,
+		CoreAnalysisManager.nExtendThreshToCoverCurve(mtae.getModelTrace().getYArray(), yTop,
 			tDX, tDY, Thresh.SOFT_UP, Thresh.HARD_UP);
-	}
-
-	public ModelTrace getModelTrace()
-	{
-		return mtae.getModelTrace();
 	}
 
 	public void updateLowerThreshToContain(double[] yTop)
 	{
-		CoreAnalysisManager.nExtendThreshToCoverCurve(getModelTrace().getYArray(), yTop,
+		CoreAnalysisManager.nExtendThreshToCoverCurve(mtae.getModelTrace().getYArray(), yTop,
 			tDX, tDY, Thresh.SOFT_DOWN, Thresh.HARD_DOWN);
 	}
 
@@ -714,10 +709,16 @@ public class ModelTraceManager
 		return new UnmodifiableModelTraceAndEvents(mtae);
 	}
 
+	/**
+	 * @deprecated use getMTAE().getNEvents()
+	 */
 	public int getNEvents()
 	{
 		return mtae.getNEvents();
 	}
+	/**
+	 * @deprecated use getMTAE().getSimpleEvent()
+	 */
 	public SimpleReflectogramEvent getSimpleEvent(int nEvent)
 	{
 		return mtae.getSimpleEvent(nEvent);
