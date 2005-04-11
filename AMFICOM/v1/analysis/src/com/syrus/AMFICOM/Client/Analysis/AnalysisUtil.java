@@ -281,26 +281,21 @@ public class AnalysisUtil
 				ParameterTypeCodenames.MIN_EVENT_LEVEL,//0
 				ParameterTypeCodenames.MIN_SPLICE,//1
 				ParameterTypeCodenames.MIN_CONNECTOR,//2
-				ParameterTypeCodenames.MIN_END_LEVEL,//3
-				ParameterTypeCodenames.MAX_NOISE_LEVEL,//4
-				ParameterTypeCodenames.CONNECTOR_FORM_FACTOR,//5
-				ParameterTypeCodenames.STRATEGY,//6
-				ParameterTypeCodenames.WAVELET_TYPE//7
+				ParameterTypeCodenames.MIN_END_LEVEL //3 FIXME: should be NOISE_FACTOR
+				//ParameterTypeCodenames.MIN_END_LEVEL,// -- not used anymore
+				//ParameterTypeCodenames.MAX_NOISE_LEVEL,// -- not used anymore
+				//ParameterTypeCodenames.CONNECTOR_FORM_FACTOR,// -- not used anymore
+				//ParameterTypeCodenames.STRATEGY,// -- not used anymore
+				//ParameterTypeCodenames.WAVELET_TYPE// -- not used anymore
 		};
 
 		try
 		{
-			for (int i = 0; i < 6; i++)
+			for (int i = 0; i < 4; i++)
 			{
 				ParameterType ptype = getParameterType(userId, parameterCodenames[i], DataType.DATA_TYPE_DOUBLE);
 				params[i] = SetParameter.createInstance(ptype,
 						ByteArray.toByteArray(defaultMinuitParams[i]));
-			}
-			for (int i = 6; i < 8; i++)
-			{
-				ParameterType ptype = getParameterType(userId, parameterCodenames[i], DataType.DATA_TYPE_INTEGER);
-				params[i] = SetParameter.createInstance(ptype,
-						ByteArray.toByteArray((int)defaultMinuitParams[i]));
 			}
 		}
 		catch (CreateObjectException e)
@@ -365,50 +360,7 @@ public class AnalysisUtil
 		}
 	}
 
-	// FIXME: remove this
-	/*public static Set createThresholdSet(Identifier userId, java.util.Set meIds, ModelTraceManager mtm)
-	{
-		SetParameter[] params = new SetParameter[2];
-
-		try
-		{
-			ParameterType ptype = getParameterType(userId, ParameterTypeCodenames.DADARA_THRESHOLDS, DataType.DATA_TYPE_RAW);
-			params[0] = SetParameter.createInstance(ptype,
-					mtm.toThresholdsByteArray());
-
-			byte[] minLevel;
-			try
-			{
-				Double level = Heap.getMinTraceLevel();
-				minLevel = ByteArray.toByteArray(level == null ? 0d : level.doubleValue());
-			}
-			catch(Exception ex)
-			{
-				minLevel = new byte[0];
-			}
-
-			ptype = getParameterType(userId, ParameterTypeCodenames.DADARA_MIN_TRACE_LEVEL, DataType.DATA_TYPE_DOUBLE);
-			params[1] = SetParameter.createInstance(ptype,
-					minLevel);
-
-			Set thresholdSet = Set.createInstance(
-					userId,
-					SetSort.SET_SORT_EVALUATION_THRESHOLDS,
-					"",
-					params,
-					meIds);
-
-			return thresholdSet;
-		}
-		catch (CreateObjectException e)
-		{
-			// FIXME
-			System.err.println("AnalysisUtil.createThresholdSet: CreateObjectException -- wanna die.");
-			e.printStackTrace();
-			return null;
-		}
-    }*/
-
+	// FIXME: не используется? - а должен бы...
 	public static void setParamsFromThresholdsSet(Set thresholdSet, ModelTraceManager mtm)
 	{
 		SetParameter[] params = thresholdSet.getParameters();
@@ -426,241 +378,33 @@ public class AnalysisUtil
 				{
 				}
 			}
-			/*else if (type.getCodename().equals(ParameterTypeCodenames.DADARA_THRESHOLDS))
-			{
-				mtm.setThresholdsFromByteArray(params[i].getValue());
-			}*/
 		}
 	}
-//
-//	public static boolean save_CriteriaSet(DataSourceInterface dataSource, BellcoreStructure bs)
-//	{
-//		try
-//		{
-//			TestSetup ts = (TestSetup)Pool.get(TestSetup.TYPE, bs.test_setup_id);
-//			CriteriaSet cs;
-//
-//			if (ts.getCriteriaSetId().equals(""))
-//			{
-//				cs = createDefaultCriteriaSet(dataSource);
-//				Pool.put(CriteriaSet.TYPE, cs.getId(), cs);
-//
-//				ts.setAnalysisTypeId(AnalysisUtil.DADARA);
-//				ts.setCriteriaSetId(cs.getId());
-//			}
-//			else
-//			{
-//				cs = (CriteriaSet)Pool.get(CriteriaSet.TYPE, ts.getCriteriaSetId());
-//				setCriteriaSetFromParams(cs);
-//			}
-//			dataSource.saveCriteriaSet(cs.getId());
-//			dataSource.attachCriteriaSetToME(cs.getId(), bs.monitored_element_id);
-//		}
-//		catch (Exception ex)
-//		{
-//			System.out.println("Error saving CriteriaSet. ME not set");
-//			ex.printStackTrace();
-//			return false;
-//		}
-//		return true;
-//	}
-//
-//	public static boolean save_Etalon(DataSourceInterface dataSource, BellcoreStructure bs, ReflectogramEvent[] ep)
-//	{
-//		try
-//		{
-//			TestSetup ts = (TestSetup)Pool.get(TestSetup.TYPE, bs.test_setup_id);
-//
-//			// save etalon and attach to monitored element
-//			Etalon et;
-//
-//			if (ts.getEthalonId().length() == 0)
-//			{
-//				et = createEtalon(dataSource, ep);
-//				Pool.put(Etalon.TYPE, et.getId(), et);
-//
-//				ts.setEthalonId(et.getId());
-//				ts.setEvaluationTypeId(AnalysisUtil.DADARA);
-//			}
-//			else
-//			{
-//				et = (Etalon)Pool.get(Etalon.TYPE, ts.getEthalonId());
-//				if (et == null)
-//				{
-//					et = createEtalon(dataSource, ep);
-//					Pool.put(Etalon.TYPE, et.getId(), et);
-//
-//					ts.setEthalonId(et.getId());
-//					ts.setEvaluationTypeId(AnalysisUtil.DADARA);
-//				}
-//				else
-//					updateEtalon(et, ep);
-//			}
-//			dataSource.saveEtalon(et.getId());
-//			dataSource.attachEtalonToME(et.getId(), bs.monitored_element_id);
-//		}
-//
-//		catch (Exception ex)
-//		{
-//			System.out.println("Error saving Etalon. ME not set");
-//			ex.printStackTrace();
-//			return false;
-//		}
-//		return true;
-//	}
-//
-//	public static boolean save_Thresholds(DataSourceInterface dataSource, BellcoreStructure bs, ReflectogramEvent[] ep)
-//	{
-//		try
-//		{
-//			TestSetup tset = (TestSetup)Pool.get(TestSetup.TYPE, bs.test_setup_id);
-//			ThresholdSet ts;
-//
-//			if (tset.getThresholdSetId().length() == 0)
-//			{
-//				ts = createDefaultThresholdSet(dataSource, ep);
-//				Pool.put(ThresholdSet.TYPE, ts.getId(), ts);
-//				setThresholdsSetFromParams(ts);
-//				tset.setThresholdSetId(ts.getId());
-//				tset.setEvaluationTypeId(AnalysisUtil.DADARA);
-//			}
-//			else
-//			{
-//				ts = (ThresholdSet)Pool.get(ThresholdSet.TYPE, tset.getThresholdSetId());
-//				setThresholdsSetFromParams(ts);
-//			}
-//			dataSource.saveThresholdSet(ts.getId());
-//			dataSource.attachThresholdSetToME(ts.getId(), bs.monitored_element_id);
-//		}
-//		catch (Exception ex)
-//		{
-//			System.out.println("Error saving saveThresholdSet. ME not set");
-//			ex.printStackTrace();
-//			return false;
-//		}
-//		return true;
-//	}
-//
-//	public static void setThresholdsSetFromParams(ThresholdSet ts)
-//	{
-//		ReflectogramEvent[] ep = (ReflectogramEvent[])Pool.get("eventparams", RefUpdateEvent.PRIMARY_TRACE);
-//		Double min_level = (Double)Pool.get("min_trace_level", RefUpdateEvent.PRIMARY_TRACE);
-//		if (ep == null || min_level == null)
-//			return;
-//
-//		Threshold[] threshs = new Threshold[ep.length];
-//		for (int i = 0; i < ep.length; i++)
-//			threshs[i] = ep[i].getThreshold();
-//
-//		for (Iterator it = ts.getThresholdList().iterator(); it.hasNext();)
-//		{
-//			Parameter p = (Parameter)it.next();
-//			if (p.getCodename().equals("dadara_thresholds"))
-//			{
-//				p.setValue(Threshold.toByteArray(threshs));
-//			}
-//			if (p.getCodename().equals("dadara_min_trace_level"))
-//			{
-//				try
-//				{
-//					p.setValue(ByteArray.toByteArray(min_level.doubleValue()));
-//				}
-//				catch (IOException ex)
-//				{
-//					ex.printStackTrace();
-//				}
-//			}
-//		}
-//	}
-//
-//	static void updateEtalon(Etalon et, ReflectogramEvent[] ep)
-//	{
-//		for (Iterator it = et.getEthalonParameterList().iterator(); it.hasNext();)
-//		{
-//			Parameter p = (Parameter)it.next();
-//			if (p.getCodename().equals(DADARA_ETALON_ARRAY))
-//			{
-//				p.setValue(ReflectogramEvent.toByteArray(ep));
-//			}
-//			if (p.getCodename().equals(REFLECTOGRAMM))
-//			{
-//				BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", RefUpdateEvent.PRIMARY_TRACE);
-//				p.setValue(new BellcoreWriter().write(bs));
-//			}
-//		}
-//	}
-//
-//	public static void setCriteriaSetFromParams(Set criteriaSet)
-//	{
-//		double[] defaultMinuitParams;
-//		defaultMinuitParams = (double[])Pool.get(xxx "analysisparameters", "minuitanalysis");
-//		if (defaultMinuitParams == null)
-//			defaultMinuitParams = (double[])Pool.get(xxx "analysisparameters", "minuitdefaults");
-//
-//		try
-//		{
-//			SetParameter[] params = criteriaSet.getParameters();
-//			for (int i = 0; i < params.length; i++)
-//			{
-//				ParameterType p = (ParameterType)params[i].getType();
-//				if (p.getCodename().equals("ref_uselinear"))
-//					params[i].setValue(ByteArray.toByteArray((int)defaultMinuitParams[7]));
-//				else if (p.getCodename().equals("ref_strategy"))
-//					params[i].setValue(ByteArray.toByteArray((int)defaultMinuitParams[6]));
-//				else if (p.getCodename().equals("ref_conn_fall_params"))
-//					params[i].setValue(ByteArray.toByteArray(defaultMinuitParams[5]));
-//				else if (p.getCodename().equals("ref_min_level"))
-//					params[i].setValue(ByteArray.toByteArray(defaultMinuitParams[0]));
-//				else if (p.getCodename().equals("ref_max_level_noise"))
-//					params[i].setValue(ByteArray.toByteArray(defaultMinuitParams[4]));
-//				else if (p.getCodename().equals("ref_min_level_to_find_end"))
-//					params[i].setValue(ByteArray.toByteArray(defaultMinuitParams[3]));
-//				else if (p.getCodename().equals("ref_min_weld"))
-//					params[i].setValue(ByteArray.toByteArray(defaultMinuitParams[1]));
-//				else if (p.getCodename().equals("ref_min_connector"))
-//					params[i].setValue(ByteArray.toByteArray(defaultMinuitParams[2]));
-//			}
-//		}
-//		catch (IOException ex)
-//		{
-//			ex.printStackTrace();
-//		}
-//	}
 
 	public static void setParamsFromCriteriaSet(Set criteriaSet)
 	{
-		double[] minuitParams = Heap.getMinuitAnalysisParams();
-
 		try
 		{
+			double[] minuitParams = new double[4];
 			SetParameter[] params = criteriaSet.getParameters();
 			for (int i = 0; i < params.length; i++)
 			{
 				ParameterType p = (ParameterType)params[i].getType();
-				if (p.getCodename().equals(ParameterTypeCodenames.WAVELET_TYPE))
-					minuitParams[7] = new ByteArray(params[i].getValue()).toInt();
-				else if (p.getCodename().equals(ParameterTypeCodenames.STRATEGY))
-					minuitParams[6] = new ByteArray(params[i].getValue()).toInt();
-				else if (p.getCodename().equals(ParameterTypeCodenames.CONNECTOR_FORM_FACTOR))
-					minuitParams[5] = new ByteArray(params[i].getValue()).toDouble();
-				else if (p.getCodename().equals(ParameterTypeCodenames.MIN_EVENT_LEVEL))
+				if (p.getCodename().equals(ParameterTypeCodenames.MIN_EVENT_LEVEL))
 					minuitParams[0] = new ByteArray(params[i].getValue()).toDouble();
-				else if (p.getCodename().equals(ParameterTypeCodenames.MAX_NOISE_LEVEL))
-					minuitParams[4] = new ByteArray(params[i].getValue()).toDouble();
-				else if (p.getCodename().equals(ParameterTypeCodenames.MIN_END_LEVEL))
-					minuitParams[3] = new ByteArray(params[i].getValue()).toDouble();
 				else if (p.getCodename().equals(ParameterTypeCodenames.MIN_SPLICE))
 					minuitParams[1] = new ByteArray(params[i].getValue()).toDouble();
 				else if (p.getCodename().equals(ParameterTypeCodenames.MIN_CONNECTOR))
 					minuitParams[2] = new ByteArray(params[i].getValue()).toDouble();
+				else if (p.getCodename().equals(ParameterTypeCodenames.MIN_END_LEVEL))
+					minuitParams[3] = new ByteArray(params[i].getValue()).toDouble();
 			}
+			Heap.setMinuitAnalysisParams((double[])minuitParams.clone());
+			Heap.setMinuitInitialParams((double[])minuitParams.clone());
 		}
 		catch (IOException ex)
 		{
 			ex.printStackTrace();
 		}
-		double[] minuitInitialParams = Heap.getMinuitInitialParams(); 
-		for (int i = 0; i < minuitParams.length; i++)
-			minuitInitialParams[i] = minuitParams[i];
 	}
 }
