@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.43 2005/04/11 10:35:31 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.44 2005/04/11 10:47:10 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.43 $, $Date: 2005/04/11 10:35:31 $
+ * @version $Revision: 1.44 $, $Date: 2005/04/11 10:47:10 $
  * @module
  */
 public class ModelTraceManager
@@ -708,8 +708,18 @@ public class ModelTraceManager
 		return mtae.eventsAndTraceToByteArray();
 	}
 
+	// @todo: определиться, использовать getMTAE() или delegate-методы 
 	public ModelTraceAndEvents getMTAE()
 	{
 		return new UnmodifiableModelTraceAndEvents(mtae);
+	}
+
+	public int getNEvents()
+	{
+		return mtae.getNEvents();
+	}
+	public SimpleReflectogramEvent getSimpleEvent(int nEvent)
+	{
+		return mtae.getSimpleEvent(nEvent);
 	}
 }
