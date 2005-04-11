@@ -1,5 +1,5 @@
 /*
- * $Id: ClientGeneralObjectLoader.java,v 1.13 2005/04/08 15:47:27 bob Exp $
+ * $Id: ClientGeneralObjectLoader.java,v 1.14 2005/04/11 11:55:53 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/04/08 15:47:27 $
+ * @version $Revision: 1.14 $, $Date: 2005/04/11 11:55:53 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -172,8 +172,7 @@ public class ClientGeneralObjectLoader extends AbstractClientObjectLoader implem
 		}
 	}
 
-	public Set loadParameterTypesButIds(StorableObjectCondition condition, Set ids) throws DatabaseException,
-			CommunicationException {
+	public Set loadParameterTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
