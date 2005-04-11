@@ -1,5 +1,5 @@
 /*
- * $Id: MServerImplementation.java,v 1.43 2005/04/06 16:11:12 arseniy Exp $
+ * $Id: MServerImplementation.java,v 1.44 2005/04/11 12:37:27 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.mserver;
 import java.util.HashSet;
 import java.util.Iterator;
 
-import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.MCM;
 import com.syrus.AMFICOM.administration.Server;
@@ -63,6 +62,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectConditionBuilder;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
+import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.general.corba.CharacteristicType_Transferable;
 import com.syrus.AMFICOM.general.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
@@ -95,13 +95,12 @@ import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
 import com.syrus.AMFICOM.measurement.corba.TemporalPattern_Transferable;
-import com.syrus.AMFICOM.measurement.corba.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.AMFICOM.mserver.corba.MServerPOA;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2005/04/06 16:11:12 $
+ * @version $Revision: 1.44 $, $Date: 2005/04/11 12:37:27 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -670,6 +669,29 @@ public class MServerImplementation extends MServerPOA {
 
 
 
+
+
+	public MeasurementPortType_Transferable[] transmitMeasurementPortTypes(Identifier_Transferable[] ids_Transferable)
+			throws AMFICOMRemoteException {
+		java.util.Set ids = Identifier.fromTransferables(ids_Transferable);
+
+		java.util.Set objects = null;
+		try {
+			objects = ConfigurationStorableObjectPool.getStorableObjects(ids, true);
+		}
+		catch (ApplicationException ae) {
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
+		}
+
+		MeasurementPortType_Transferable[] transferables = new MeasurementPortType_Transferable[objects.size()];
+		int i = 0;
+		MeasurementPortType measurementPortType;
+		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+			measurementPortType = (MeasurementPortType) it.next();
+			transferables[i] = (MeasurementPortType_Transferable) measurementPortType.getTransferable();
+		}
+		return transferables;
+	}
 
 	public KIS_Transferable[] transmitKISs(Identifier_Transferable[] ids_Transferable) throws AMFICOMRemoteException {
 		java.util.Set ids = Identifier.fromTransferables(ids_Transferable);
@@ -1362,49 +1384,44 @@ public class MServerImplementation extends MServerPOA {
 
 
 
-
-	public void updateTestStatus(Identifier_Transferable testIdT, TestStatus status, Identifier_Transferable mcmIdT) {
-		Identifier testId = new Identifier(testIdT);
-		Identifier mcmId = new Identifier(mcmIdT);
-		try {
-			MCM mcm = (MCM) AdministrationStorableObjectPool.getStorableObject(mcmId, true);
-			Test test = (Test) MeasurementStorableObjectPool.getStorableObject(testId, true);
-
-			Log.debugMessage("Updating status of test '" + testId + "' on MCM '" + mcmId
-					+ "' from " + test.getStatus().value() + " to " + status.value(), Log.DEBUGLEVEL07);
-			test.setStatus(status);
-			TestDatabase testDatabase = MeasurementDatabaseContext.getTestDatabase();
-			testDatabase.update(test, mcm.getUserId(), StorableObjectDatabase.UPDATE_FORCE);
+  public void updateTest(Test_Transferable tt, AccessIdentifier_Transferable ait) {
+  	Identifier id = new Identifier(tt.header.id);
+  	Test test = null;
+  	try {
+			test = (Test) MeasurementStorableObjectPool.fromTransferable(id, tt);
 		}
 		catch (ApplicationException ae) {
-			Log.errorMessage("updateTestStatus | Cannot update status of test '" + testId + "' -- " + ae.getMessage());
+			Log.errorException(ae);
 		}
-	}
 
-	public void updateTestsStatus (Identifier_Transferable[] testIdsT, TestStatus status, Identifier_Transferable mcmIdT) {
-		Identifier mcmId = new Identifier(mcmIdT);
-		java.util.Set tests = new HashSet();
-		try {
-			MCM mcm = (MCM) AdministrationStorableObjectPool.getStorableObject(mcmId, true);
-			Identifier testId;
-			Test test;
-			for (int i = 0; i < testIdsT.length; i++) {
-				testId = new Identifier(testIdsT[i]);
-				test = (Test) MeasurementStorableObjectPool.getStorableObject(testId, true);
-				Log.debugMessage("Updating status of test '" + testId + "' on MCM '" + mcmId
-						+ "' from " + test.getStatus().value() + " to " + status.value(), Log.DEBUGLEVEL07);
-				test.setStatus(status);
-				tests.add(test);
+  	if (test != null) {
+  		try {
+				TestDatabase database = MeasurementDatabaseContext.getTestDatabase();
+				database.update(test, new Identifier(ait.user_id), StorableObjectDatabase.UPDATE_FORCE);
 			}
+			catch (ApplicationException ae) {
+				Log.errorException(ae);
+			}
+  	}
+  }
 
-			TestDatabase testDatabase = MeasurementDatabaseContext.getTestDatabase();
-			testDatabase.update(tests, mcm.getUserId(), StorableObjectDatabase.UPDATE_FORCE);
-
-		}
-		catch (ApplicationException ae) {
-			Log.errorMessage("updateTestStatus | Cannot update status of tests -- " + ae.getMessage());
-		}
-	}
+//	public void updateTestStatus(Identifier_Transferable testIdT, TestStatus status, Identifier_Transferable mcmIdT) {
+//		Identifier testId = new Identifier(testIdT);
+//		Identifier mcmId = new Identifier(mcmIdT);
+//		try {
+//			MCM mcm = (MCM) AdministrationStorableObjectPool.getStorableObject(mcmId, true);
+//			Test test = (Test) MeasurementStorableObjectPool.getStorableObject(testId, true);
+//
+//			Log.debugMessage("Updating status of test '" + testId + "' on MCM '" + mcmId
+//					+ "' from " + test.getStatus().value() + " to " + status.value(), Log.DEBUGLEVEL07);
+//			test.setStatus(status);
+//			TestDatabase testDatabase = MeasurementDatabaseContext.getTestDatabase();
+//			testDatabase.update(test, mcm.getUserId(), StorableObjectDatabase.UPDATE_FORCE);
+//		}
+//		catch (ApplicationException ae) {
+//			Log.errorMessage("updateTestStatus | Cannot update status of test '" + testId + "' -- " + ae.getMessage());
+//		}
+//	}
 
 
 

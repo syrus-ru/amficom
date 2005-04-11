@@ -112,6 +112,9 @@ module corba {
 
 
 
+		configuration::corba::MeasurementPortTypeSeq_Transferable transmitMeasurementPortTypes(in general::corba::IdentifierSeq_Transferable ids_Transferable)
+			raises (general::corba::AMFICOMRemoteException);
+
 		configuration::corba::KISSeq_Transferable transmitKISs(in general::corba::IdentifierSeq_Transferable ids_Transferable)
 			raises (general::corba::AMFICOMRemoteException);
 
@@ -249,14 +252,13 @@ module corba {
 
 
 
-		void updateTestStatus(in general::corba::Identifier_Transferable test_id,
-						in measurement::corba::TestStatus status,
-						in general::corba::Identifier_Transferable mcm_id);
-
-		void updateTestsStatus(in general::corba::IdentifierSeq_Transferable test_ids,
-						in measurement::corba::TestStatus status,
-						in general::corba::Identifier_Transferable mcm_id);
-
+		void updateTest(in measurement::corba::Test_Transferable test,
+						in general::corba::AccessIdentifier_Transferable accessIdentifier);
+/*
+		void updateTests(in measurement::corba::TestSeq_Transferable tests,
+						in general::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (general::corba::AMFICOMRemoteException);
+*/
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 		void ping(in octet i);
