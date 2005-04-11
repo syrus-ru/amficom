@@ -183,7 +183,7 @@ return;
       }
       sp1 = (Splash*)splashes[i];
       sp2 = (Splash*)splashes[i+1];
-      int dist = fabs(sp2->begin_weld_n - sp1->end_weld_n);
+      int dist = abs(sp2->begin_weld_n - sp1->end_weld_n);
       // две сварки "+" и "-" очень близко
       if( dist<reflectiveSize/2			// если всплески очень близко
           && (sp1->sign>0 && sp2->sign<0) // первый положительный, а второй - отрицательный
