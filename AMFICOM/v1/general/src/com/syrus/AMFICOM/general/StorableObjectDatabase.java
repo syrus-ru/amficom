@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.138 2005/04/06 13:53:40 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.139 2005/04/11 13:30:42 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.138 $, $Date: 2005/04/06 13:53:40 $
+ * @version $Revision: 1.139 $, $Date: 2005/04/11 13:30:42 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -1403,8 +1403,6 @@ public abstract class StorableObjectDatabase {
 		Matcher matcher = pattern.matcher(values);
 		String[] parsedValues = new String[columnCount];
 		int valueCounter = 0;
-		Log.debugMessage("insertValue:\"" + values + "\"", Log.DEBUGLEVEL09);
-		Log.debugMessage("columnCount:" + columnCount, Log.DEBUGLEVEL09);
 		while (matcher.find()) {
 			for (int i = 1; i <= matcher.groupCount(); i++) {
 				int start = matcher.start(i);
