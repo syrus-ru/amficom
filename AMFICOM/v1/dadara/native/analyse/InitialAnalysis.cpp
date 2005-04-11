@@ -71,7 +71,6 @@ InitialAnalysis::InitialAnalysis(
 	{	prf_b("IA: noise");
 		// вычисляем уровень шума
 		{ const int sz = lastNonZeroPoint;
-		  const int width = wlet_width;
 		  //fillNoiseArray(data, data_length, sz, 1 + width/20, noise);
 		  fillNoiseArray(data, data_length, sz, 1.0, noiseFactor, noise);
 		}
@@ -140,9 +139,7 @@ void InitialAnalysis::performAnalysis()
 }
 //-------------------------------------------------------------------------------------------------
 void InitialAnalysis::findEventsBySplashes(ArrList& splashes)
-{   double mc = minimalConnector;
-    double mw = minimalWeld;
-//* мёртвую зону ищём  чуть иначе
+{//* мёртвую зону ищём  чуть иначе
     int shift = 0;
     int begin = -1;
     int end = -1;
@@ -458,7 +455,7 @@ void InitialAnalysis::centerWletImageOnly(double* f_wlet, int scale, int begin, 
 //------------------------------------------------------------------------------------------------------------
 void InitialAnalysis::performTransformationOnly(double* f, int begin, int end, double* f_wlet, int freq, double norma)
 {
-	int len = end - begin;
+	//int len = end - begin;
 	SineWavelet wavelet;
 	wavelet.transform(freq, f, lastNonZeroPoint, begin, end - 1, f_wlet + begin, norma);
 }
