@@ -275,7 +275,7 @@ void InitialAnalysis::setConnectorParamsBySplashes( EventParams& ep, Splash& sp1
    ep.begin = sp1.begin_thr;
    if(ep.begin<0){ep.begin=0;}
    ep.end = sp2.end_thr;
-   if(sp2.begin_conn_n != -1)// если это начало нового коннектора
+   if(sp2.begin_conn_n != -1 && sp2.sign > 0)// если это начало нового коннектора
    { ep.end = sp2.begin_thr;
    }
    if(ep.end>lastNonZeroPoint)
