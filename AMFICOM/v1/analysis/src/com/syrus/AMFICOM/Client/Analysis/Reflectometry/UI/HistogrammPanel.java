@@ -16,6 +16,7 @@ import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 import com.syrus.AMFICOM.analysis.dadara.Histogramm;
 import com.syrus.AMFICOM.analysis.dadara.MathRef;
+import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEvents;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
 import com.syrus.AMFICOM.analysis.dadara.Wavelet;
@@ -59,9 +60,9 @@ public class HistogrammPanel extends ScaledGraphPanel
 
 		init();
 
-		ModelTraceManager mtm = Heap.getMTMPrimary();
-		if (mtm != null)
-			updateHistogrammData(0, mtm.getModelTrace().getLength() - 1);
+		ModelTraceAndEvents mtae = Heap.getMTAEPrimary();
+		if (mtae != null)
+			updateHistogrammData(0, mtae.getModelTrace().getLength() - 1);
 		else
 			updateHistogrammData(0, y.length / 2);
 	}

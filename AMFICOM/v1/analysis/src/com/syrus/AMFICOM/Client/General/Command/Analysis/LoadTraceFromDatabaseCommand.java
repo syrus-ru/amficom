@@ -11,6 +11,7 @@ import com.syrus.AMFICOM.Client.General.*;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEvents;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.measurement.*;
@@ -135,7 +136,7 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 			new InitialAnalysisCommand().execute();
 	
 			ModelTraceManager mtmEtalon = Heap.getMTMEtalon();
-			ModelTraceManager mtmEvents = Heap.getMTMPrimary();
+			ModelTraceAndEvents mtmEvents = Heap.getMTAEPrimary();
 	
 			if (mtmEtalon != null && mtmEvents != null)
 			{
@@ -144,7 +145,7 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 				// XXX: removed by saa because had no effect due to mistake
 	
 				// correct event types
-				// FIXME: (is necessary??)
+				// FIXME: (is necessary?? if not, remove this stupid code)
 				//mtmEvents.fixEventTypes(mtmEtalon, delta);
 			}
 

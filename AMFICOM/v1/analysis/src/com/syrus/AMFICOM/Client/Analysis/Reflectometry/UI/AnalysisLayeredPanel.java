@@ -17,6 +17,7 @@ import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
+import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEvents;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 
 public class AnalysisLayeredPanel extends TraceEventsLayeredPanel implements OperationListener
@@ -50,8 +51,8 @@ public class AnalysisLayeredPanel extends TraceEventsLayeredPanel implements Ope
 					{
 						((AnalysisPanel)panel).updEvents(RefUpdateEvent.PRIMARY_TRACE);
 
-						ModelTraceManager mtm = Heap.getMTMPrimary();
-						((AnalysisPanel)panel).updateTrace(mtm); // FIXME: нужно UpdateMTM или UpdateTrace?
+						ModelTraceAndEvents mtae = Heap.getMTAEPrimary();
+						((AnalysisPanel)panel).updateTrace(mtae); // FIXME: нужно UpdateMTM или UpdateTrace?
 						((AnalysisPanel)panel).updMarkers();
 						jLayeredPane.repaint();
 					}

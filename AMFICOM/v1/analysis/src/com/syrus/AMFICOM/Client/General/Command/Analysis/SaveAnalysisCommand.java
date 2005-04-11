@@ -49,7 +49,7 @@ public class SaveAnalysisCommand extends VoidCommand
 		}
 
 		RefAnalysis refanalysis = Heap.getRefAnalysisByKey(Heap.PRIMARY_TRACE_KEY);
-		ModelTraceManager mtm = Heap.getMTMPrimary();
+		ModelTraceAndEventsImpl mtae = Heap.getMTAEPrimary();
 
 		Measurement m = null;
 		try
@@ -111,7 +111,7 @@ public class SaveAnalysisCommand extends VoidCommand
 
 			ptype = AnalysisUtil.getParameterType(userId, ParameterTypeCodenames.DADARA_EVENTS, DataType.DATA_TYPE_RAW);
 			params[2] = SetParameter.createInstance(ptype,
-				mtm.eventsAndTraceToByteArray());
+				mtae.eventsAndTraceToByteArray());
 		}
 			catch (CreateObjectException e)
 			{

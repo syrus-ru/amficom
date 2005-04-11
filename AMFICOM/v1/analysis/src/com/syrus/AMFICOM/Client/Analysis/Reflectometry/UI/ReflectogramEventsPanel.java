@@ -21,7 +21,7 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 	public boolean draw_noise_level = false;
 
 	//protected ReflectogramEvent[] ep;
-	protected ModelTraceManager mtm; // используется только в методах, вызываемых из paint()
+	protected ModelTraceAndEvents mtae; // используется только в методах, вызываемых из paint()
 	protected ReflectogramAlarm[] alarms;
 
 	protected Double min_trace_level;
@@ -41,9 +41,9 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 		this.dispatcher = dispatcher;
 	}
 
-	public void updateTrace (ModelTraceManager mtm) // was: updateEvents
+	public void updateTrace (ModelTraceAndEvents mtae) // was: updateEvents
 	{
-		this.mtm = mtm;
+		this.mtae = mtae;
 	}
 
 	public void updateAlarms (ReflectogramAlarm[] alarms)
@@ -241,20 +241,20 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 	*/
 	protected void paint_modeled_trace(Graphics g)
 	{
-		if (mtm == null)
+		if (mtae == null)
 			return;
 		g.setColor(UIManager.getColor(AnalysisResourceKeys.COLOR_MODELED));
-		drawModelCurve(g, mtm.getModelTrace(), null, false);
+		drawModelCurve(g, mtae.getModelTrace(), null, false);
 	}
 
 	protected void paint_reflectogram_events(Graphics g)
 	{
-		if (mtm == null)
+		if (mtae == null)
 		{
 			paint_events(g); // метод суперкласса....
 			return;
 		}
-		SimpleReflectogramEvent []ep = mtm.getSimpleEvents();
+		SimpleReflectogramEvent []ep = mtae.getSimpleEvents();
 		for(int j=0; j<ep.length; j++)
 		{
 			if ((ep[j].getBegin() < end) && (ep[j].getEnd() > start))

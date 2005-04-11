@@ -263,12 +263,6 @@ public class AnalysisUtil
 				bsEt.title = "Эталон (" + (ms.getDescription().equals("") ? ms.getId().getIdentifierString() : ms.getDescription()) + ")";
 			}
 		}
-
-		if(bsEt!=null && mtm!=null)
-		{
-			double deltaX = bsEt.getResolution();
-			mtm.setDeltaX(deltaX);
-		}
 	}
 
 	public static Set createCriteriaSetFromParams(Identifier userId, java.util.Set meIds)

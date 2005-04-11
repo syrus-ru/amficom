@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.15 2005/04/08 06:13:35 bob Exp $
+ * $Id: Heap.java,v 1.16 2005/04/11 10:36:56 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,6 +25,8 @@ import com.syrus.AMFICOM.Client.General.Event.PrimaryMTMListener;
 import com.syrus.AMFICOM.Client.General.Event.bsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryTraceListener;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
+import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEvents;
+import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEventsImpl;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
@@ -36,8 +38,8 @@ import com.syrus.io.BellcoreStructure;
  * пока что API этой замены избыточна - например, getAllBSMap() делает необязательным
  * использование остальных методов работы с BS
  * 
- * @author $Author: bob $
- * @version $Revision: 1.15 $, $Date: 2005/04/08 06:13:35 $
+ * @author $Author: saa $
+ * @version $Revision: 1.16 $, $Date: 2005/04/11 10:36:56 $
  * @module
  */
 public class Heap
@@ -56,7 +58,7 @@ public class Heap
 	private static Map bsBellCoreMap;				// "bellcoremap", "current": GUI-level BS hash; do not confuse with bsHash
 	private static Double minTraceLevel;			// "min_trace_level", PRIMARY_TRACE_KEY
 	private static HashMap dialogHash = new HashMap();	// "dialog", "*"
-	private static ModelTraceManager primaryMTM = null;
+	private static ModelTraceAndEventsImpl primaryMTAE = null;
 	private static ModelTraceManager etalonMTM = null;
 
 	private static Map idColorMap = new HashMap();
@@ -72,14 +74,14 @@ public class Heap
 		dialogHash.put(key, dialog);
 	}
 
-	public static ModelTraceManager getMTMPrimary() {
-		return primaryMTM;
+	public static ModelTraceAndEventsImpl getMTAEPrimary() {
+		return primaryMTAE;
 	}
 	public static ModelTraceManager getMTMEtalon() {
 		return etalonMTM;
 	}
-	public static void setMTMPrimary(ModelTraceManager mtm) {
-		primaryMTM = mtm;
+	public static void setMTAEPrimary(ModelTraceAndEventsImpl mtae) {
+		primaryMTAE = mtae;
 	}
 	public static void setMTMEtalon(ModelTraceManager mtm) {
 		etalonMTM = mtm;
@@ -233,7 +235,7 @@ public class Heap
 	}
 	public static boolean hasEventParamsForPrimaryTrace() // XXX
 	{
-		return getMTMPrimary() != null; // XXX
+		return getMTAEPrimary() != null; // XXX
 	}
 	public static boolean hasEventParamsForEtalonTrace() // XXX
 	{

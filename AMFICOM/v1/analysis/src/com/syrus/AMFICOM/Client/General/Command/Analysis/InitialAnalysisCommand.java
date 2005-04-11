@@ -1,7 +1,5 @@
 package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
-import java.util.Map;
-
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
@@ -26,24 +24,21 @@ public class InitialAnalysisCommand extends VoidCommand {
 				params = Heap.getMinuitAnalysisParams();
 			}
 
-			Map tracesMap = Heap.getBsBellCoreMap();
-
 			double[] pars = new double[params.length];
 			for (int i = 0; i < params.length; i++)
 				pars[i] = params[i];
 
-			ModelTraceManager mtm = CoreAnalysisManager.makeAnalysis(
-					bs, pars, tracesMap);
+			ModelTraceAndEventsImpl mtae = CoreAnalysisManager.makeAnalysis(bs, pars);
 
 			// фитировка нужна для определения вспомогательных парметров
 //	        ep = AnalysisManager.fitTrace(
 //	            y, deltaX, ep, (int)params[6], meanAttenuation[0]);
 
 	        RefAnalysis a = new RefAnalysis();
-			a.decode(y, mtm);
+			a.decode(y, mtae);
 
 			Heap.setRefAnalysisByKey(RefUpdateEvent.PRIMARY_TRACE, a);
-			Heap.setMTMPrimary(mtm);
+			Heap.setMTAEPrimary(mtae);
 		}
 	}
 }

@@ -8,6 +8,7 @@ import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEvents;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
@@ -77,7 +78,7 @@ public class SaveTestSetupAsCommand extends VoidCommand
 			return;
 
 		Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
-		ModelTraceManager mtm = Heap.getMTMPrimary();
+		ModelTraceManager mtm = Heap.getMTMEtalon();
 		newms.setCriteriaSet(AnalysisUtil.createCriteriaSetFromParams(
 				userId,
 				newms.getMonitoredElementIds()));

@@ -30,6 +30,7 @@ import com.syrus.AMFICOM.Client.General.UI.FixedSizeEditableTableModel;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.MathRef;
 import com.syrus.AMFICOM.analysis.dadara.ModelTrace;
+import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEvents;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramComparer;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
@@ -188,7 +189,7 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 	private void setWholeData()
 	{
 		ModelTraceManager etalonMTM = Heap.getMTMEtalon();
-		ModelTraceManager dataMTM = Heap.getMTMPrimary();
+		ModelTraceAndEvents dataMTM = Heap.getMTAEPrimary();
 		if(etalonMTM == null || dataMTM == null || dataMTM.getNEvents() == 0)
 		{
 			tabbedPane.setSelectedIndex(0);
@@ -199,14 +200,14 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 
 		ModelTrace etalonMTrace = etalonMTM.getModelTrace();
 		ModelTrace dataMTrace = dataMTM.getModelTrace();
-		SimpleReflectogramEvent []etalonSRE = etalonMTM.getSimpleEvents();
+		SimpleReflectogramEvent []etalonSRE = etalonMTM.getMTAE().getSimpleEvents();
 		SimpleReflectogramEvent []dataSRE = dataMTM.getSimpleEvents();
-	
+
 		double maxDeviation = ReflectogramComparer.getMaxDeviation(etalonMTrace, dataMTrace);
 		double meanDeviation = ReflectogramComparer.getMeanDeviation(etalonMTrace, dataMTrace);
 		double etalonLength = ReflectogramMath.getLastConnectorBegin(etalonSRE) * deltaX;
 		double dataLength = ReflectogramMath.getLastConnectorBegin(dataSRE) * deltaX;
-		double lossDifference = ReflectogramComparer.getLossDifference(etalonMTM, dataMTM);
+		double lossDifference = ReflectogramComparer.getLossDifference(etalonMTM.getMTAE(), dataMTM);
 
 		wctModel.setValueAt(String.valueOf(MathRef.round_3(dataLength))+ " " + LangModelAnalyse.getString("km"), 0, 1);
 		wctModel.setValueAt(String.valueOf(MathRef.round_3(etalonLength)) + " " + LangModelAnalyse.getString("km"), 1, 1);

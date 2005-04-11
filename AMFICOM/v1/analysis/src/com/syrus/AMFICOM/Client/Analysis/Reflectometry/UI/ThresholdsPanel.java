@@ -38,8 +38,8 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 
 		this.et_mtm = mtm;
 
-		if (c_event >= mtm.getNEvents())
-			c_event = mtm.getNEvents() - 1;
+		if (c_event >= mtm.getMTAE().getNEvents())
+			c_event = mtm.getMTAE().getNEvents() - 1;
 	}
 
 	public void showEvent (int num)
@@ -49,8 +49,8 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 		if (num == -1)
 			return;
 
-		if (et_mtm != null && c_event >= et_mtm.getNEvents())
-			c_event = et_mtm.getNEvents() - 1;
+		if (et_mtm != null && c_event >= et_mtm.getMTAE().getNEvents())
+			c_event = et_mtm.getMTAE().getNEvents() - 1;
 		else
 			c_event = num;
 
@@ -78,7 +78,7 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 			// проверяем, попадает ли X мыши в область текущего события
 			if (this.c_event >= 0)
 			{
-				SimpleReflectogramEvent simpleEvent = this.et_mtm.getSimpleEvent(this.c_event);
+				SimpleReflectogramEvent simpleEvent = this.et_mtm.getMTAE().getSimpleEvent(this.c_event);
 				double currposF = coord2indexF(this.currpos.x);
 				double mouseCouplingF = MOUSE_COUPLING / this.scaleX;
 				if (!(currposF >= simpleEvent.getBegin() - mouseCouplingF
@@ -200,7 +200,7 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 	{
 	    // если кликнули, но не на текущее событие, переходим к новому событию
 	    int pos = coord2index(e.getPoint().x);
-	    int evId = et_mtm != null ? et_mtm.getEventByCoord(pos) : -1;
+	    int evId = et_mtm != null ? et_mtm.getMTAE().getEventByCoord(pos) : -1;
 		if (evId != -1 && evId != c_event)
 		{
 		    dispatcher.notify(new RefUpdateEvent(

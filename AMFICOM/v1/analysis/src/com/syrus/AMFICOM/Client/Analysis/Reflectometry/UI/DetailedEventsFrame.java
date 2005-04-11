@@ -21,7 +21,7 @@ public class DetailedEventsFrame extends JInternalFrame
 implements OperationListener, bsHashChangeListener, EtalonMTMListener
 {
 	private ModelTraceManager etalonMTM;
-	private ModelTraceManager dataMTM;
+	private ModelTraceAndEvents dataMTM;
 	private ModelTrace alignedDataMT;
 
 	private Map tModels = new HashMap(6);
@@ -105,7 +105,7 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 					a = Heap.getRefAnalysisByKey(Heap.PRIMARY_TRACE_KEY);
 					bs = Heap.getBSPrimaryTrace();
 					res_km = bs.getResolution() / 1000.0;
-					dataMTM = Heap.getMTMPrimary();
+					dataMTM = Heap.getMTAEPrimary();
 					if(dataMTM != null && etalonMTM != null)
 						makeAlignedDataMT();
 					else alignedDataMT = null;
@@ -286,7 +286,7 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 
 		// ищем парное событие
 		ComplexReflectogramEvent[] dataCRE = dataMTM.getComplexEvents();
-		ComplexReflectogramEvent[] etalonCRE = etalonMTM.getComplexEvents(); 
+		ComplexReflectogramEvent[] etalonCRE = etalonMTM.getMTAE().getComplexEvents(); 
 		ReflectogramComparer rComp = new ReflectogramComparer(
 			dataCRE,
 			etalonCRE);

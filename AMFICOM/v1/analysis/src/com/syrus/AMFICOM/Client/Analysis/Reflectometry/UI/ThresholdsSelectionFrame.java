@@ -329,7 +329,7 @@ implements OperationListener, bsHashChangeListener
 			if (rue.eventSelected()) {
 				if (et_mtm != null) {
 					current_ev = Integer.parseInt((String) rue.getSource());
-					if (current_ev < 0 || current_ev >= et_mtm.getNEvents()) {
+					if (current_ev < 0 || current_ev >= et_mtm.getMTAE().getNEvents()) {
 						System.out.println("Warning: current_ev out of range");
 						current_ev = 0;
 					}
@@ -348,8 +348,8 @@ implements OperationListener, bsHashChangeListener
 			return;
 		if (current_ev == -1)
 			return;
-		if (current_ev >= et_mtm.getNEvents())
-			current_ev = et_mtm.getNEvents() - 1;
+		if (current_ev >= et_mtm.getMTAE().getNEvents())
+			current_ev = et_mtm.getMTAE().getNEvents() - 1;
 
 		ModelTraceManager.ThreshEditor[] te = et_mtm.getThreshEditors(current_ev);
 		String[] pColumns = new String[te.length + 1];

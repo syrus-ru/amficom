@@ -10,6 +10,7 @@ import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Event.bsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
+import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEvents;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.io.BellcoreStructure;
 
@@ -142,8 +143,8 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 		if (id.equals(Heap.PRIMARY_TRACE_KEY))
 		{
 			p = new ThresholdsPanel(panel, dispatcher, y, deltaX);
-			ModelTraceManager mtm = Heap.getMTMPrimary();
-			((ThresholdsPanel)p).updateTrace(mtm);
+			ModelTraceAndEvents mtae = Heap.getMTAEPrimary();
+			((ThresholdsPanel)p).updateTrace(mtae);
 			((ThresholdsPanel)p).updEvents(Heap.PRIMARY_TRACE_KEY);
 			((ThresholdsPanel)p).updateNoiseLevel();
 			((ThresholdsPanel)p).draw_min_trace_level = true;

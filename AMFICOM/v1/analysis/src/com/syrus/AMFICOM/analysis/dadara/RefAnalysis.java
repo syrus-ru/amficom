@@ -13,7 +13,7 @@ public class RefAnalysis
 	{
 	}
 
-	public void decode (double[] y, ModelTraceManager mtm)
+	public void decode (double[] y, ModelTraceAndEvents mtm)
 	{
 		ComplexReflectogramEvent[] re = mtm.getComplexEvents();
 		ModelTrace mt = mtm.getModelTrace();

@@ -17,6 +17,7 @@ import com.syrus.AMFICOM.Client.General.Event.bsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
+import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEvents;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.io.BellcoreStructure;
 
@@ -67,9 +68,9 @@ implements OperationListener, bsHashChangeListener
 				{
 					if(rue.analysisPerformed())
 					{
-						ModelTraceManager mtm = Heap.getMTMPrimary();
+						ModelTraceAndEvents mtae = Heap.getMTAEPrimary();
 						((ThresholdsPanel)panel).updEvents(Heap.PRIMARY_TRACE_KEY);
-						((ThresholdsPanel)panel).updateTrace(mtm);
+						((ThresholdsPanel)panel).updateTrace(mtae);
 						updScale2fitCurrentEv(.2, 1.);
 						jLayeredPane.repaint();
 					}
@@ -135,7 +136,7 @@ implements OperationListener, bsHashChangeListener
 		{
 			SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
 			if (panel instanceof ThresholdsPanel)
-				((ThresholdsPanel)panel).mtm = null;
+				((ThresholdsPanel)panel).mtae = null;
 		}
 	}
 }
