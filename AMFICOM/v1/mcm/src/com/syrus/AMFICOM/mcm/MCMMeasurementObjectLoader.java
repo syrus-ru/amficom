@@ -1,5 +1,5 @@
 /*
- * $Id: MCMMeasurementObjectLoader.java,v 1.27 2005/04/06 16:09:37 arseniy Exp $
+ * $Id: MCMMeasurementObjectLoader.java,v 1.28 2005/04/11 12:42:38 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,8 +18,10 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.SessionContext;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
+import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.AnalysisType;
@@ -45,12 +47,12 @@ import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
 import com.syrus.AMFICOM.measurement.corba.TemporalPattern_Transferable;
-import com.syrus.AMFICOM.measurement.corba.TestStatus;
+import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/04/06 16:09:37 $
+ * @version $Revision: 1.28 $, $Date: 2005/04/11 12:42:38 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -645,9 +647,8 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 
 		MServer mServerRef = MeasurementControlModule.mServerConnectionManager.getVerifiedMServerReference();
 		try {
-			mServerRef.updateTestStatus((Identifier_Transferable) test.getId().getTransferable(),
-					test.getStatus(),
-					(Identifier_Transferable) MeasurementControlModule.mcmId.getTransferable());
+			mServerRef.updateTest((Test_Transferable) test.getTransferable(),
+					(AccessIdentifier_Transferable) SessionContext.getAccessIdentity().getTransferable());
 		}
 		catch (Throwable throwable) {
 			Log.errorException(throwable);
@@ -655,24 +656,7 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 	}
 
 	public void saveTests(java.util.Set collection, boolean force) throws ApplicationException {
-		if (collection == null || collection.isEmpty())
-			return;
-
-		super.saveTests(collection, force);
-		
-		Identifier_Transferable[] idsT = Identifier.createTransferables(collection);
-
-		TestStatus status = ((Test) collection.iterator().next()).getStatus();
-
-		MServer mServerRef = MeasurementControlModule.mServerConnectionManager.getVerifiedMServerReference();
-		try {
-			mServerRef.updateTestsStatus(idsT,
-					status,
-					(Identifier_Transferable) MeasurementControlModule.mcmId.getTransferable());
-		}
-		catch (Throwable throwable) {
-			Log.errorException(throwable);
-		}
+		throw new UnsupportedOperationException("May be not need this? " + collection + ", " + force);
 	}
 
 
