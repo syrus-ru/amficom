@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterType.java,v 1.17 2005/04/08 13:00:07 arseniy Exp $
+ * $Id: ParameterType.java,v 1.18 2005/04/11 11:41:45 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,25 +10,31 @@ package com.syrus.AMFICOM.general;
 
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
 
+import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.DataType;
+import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/04/08 13:00:07 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.18 $, $Date: 2005/04/11 11:41:45 $
+ * @author $Author: bob $
  * @module general_v1
  */
 
-public final class ParameterType extends StorableObjectType {
+public final class ParameterType extends StorableObjectType implements Characterizable {
 	private static final long serialVersionUID = 4050767108738528569L;
 
 	private String name;
 	private int dataType;
+	
+	private Set characteristics; 
 
 	public ParameterType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
@@ -42,7 +48,7 @@ public final class ParameterType extends StorableObjectType {
 		}
 	}
 
-	public ParameterType(ParameterType_Transferable ptt) {
+	public ParameterType(ParameterType_Transferable ptt) throws ApplicationException {
 		this.fromTransferable(ptt);
 	}
 
@@ -63,6 +69,8 @@ public final class ParameterType extends StorableObjectType {
 				description);
 		this.name = name;
 		this.dataType = dataType;
+		
+		this.characteristics = new HashSet();
 	}
 
 	/**
@@ -104,7 +112,7 @@ public final class ParameterType extends StorableObjectType {
 		}
 	}
 
-	protected void fromTransferable(IDLEntity transferable) {
+	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
 		ParameterType_Transferable ptt = (ParameterType_Transferable) transferable;
 		try {
 			super.fromTransferable(ptt.header, ptt.codename, ptt.description);
@@ -115,14 +123,23 @@ public final class ParameterType extends StorableObjectType {
 		}
 		this.name = ptt.name;
 		this.dataType = ptt.data_type.value();
+		
+		Set characteristicIds = Identifier.fromTransferables(ptt.characteristic_ids);
+		this.characteristics = GeneralStorableObjectPool.getStorableObjects(characteristicIds, true);
 	}
 	
   public IDLEntity getTransferable() {
+	  	int i = 0;
+		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
+		for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)
+			charIds[i++] = (Identifier_Transferable)((Characteristic)iterator.next()).getId().getTransferable();
+		
 		return new ParameterType_Transferable(super.getHeaderTransferable(),
 											  super.codename,
 											  super.description != null ? super.description : "",
 											  this.name,
-											  DataType.from_int(this.dataType));
+											  DataType.from_int(this.dataType),
+											  charIds);
 	}
 
 	public String getName() {
@@ -175,6 +192,39 @@ public final class ParameterType extends StorableObjectType {
 		this.dataType = dataType;
 	}
 
+	public void addCharacteristic(Characteristic characteristic) {
+		if (characteristic != null) {
+			this.characteristics.add(characteristic);
+			super.changed = true;
+		}
+	}
+
+	public void removeCharacteristic(Characteristic characteristic) {
+		if (characteristic != null) {
+			this.characteristics.remove(characteristic);
+			super.changed = true;
+		}
+	}
+
+	public Set getCharacteristics() {
+		return Collections.unmodifiableSet(this.characteristics);
+	}
+
+	public void setCharacteristics0(final Set characteristics) {
+		this.characteristics.clear();
+		if (characteristics != null)
+			this.characteristics.addAll(characteristics);
+	}
+
+	public void setCharacteristics(final Set characteristics) {
+		this.setCharacteristics0(characteristics);
+		super.changed = true;
+	}
+	
+	public CharacteristicSort getCharacteristicSort() {
+		return CharacteristicSort.CHARACTERISTIC_SORT_PARAMETER_TYPE;
+	}
+	
 	public Set getDependencies() {
 		return Collections.EMPTY_SET;
 	}

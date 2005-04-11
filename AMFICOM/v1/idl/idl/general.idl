@@ -1,5 +1,5 @@
 /*
- * $Id: general.idl,v 1.65 2005/04/08 15:28:49 arseniy Exp $
+ * $Id: general.idl,v 1.66 2005/04/11 11:41:38 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -112,6 +112,8 @@ module corba {
 
 		WString128 name;
 		DataType data_type;
+		
+		IdentifierSeq_Transferable characteristic_ids;
 	};
 
 	typedef sequence <ParameterType_Transferable> ParameterTypeSeq_Transferable;
@@ -172,7 +174,8 @@ module corba {
 		CHARACTERISTIC_SORT_PHYSICAL_LINK_TYPE,
 		CHARACTERISTIC_SORT_TOPOLOGICAL_NODE,
 		CHARACTERISTIC_SORT_SITE_NODE,
-		CHARACTERISTIC_SORT_SITE_NODE_TYPE
+		CHARACTERISTIC_SORT_SITE_NODE_TYPE,
+		CHARACTERISTIC_SORT_PARAMETER_TYPE
 	};
 
 	struct Characteristic_Transferable {
