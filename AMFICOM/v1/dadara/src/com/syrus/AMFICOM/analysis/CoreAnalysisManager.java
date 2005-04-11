@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.33 2005/04/11 10:58:48 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.34 2005/04/11 14:45:40 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.33 $, $Date: 2005/04/11 10:58:48 $
+ * @version $Revision: 1.34 $, $Date: 2005/04/11 14:45:40 $
  * @module
  */
 
@@ -233,11 +233,8 @@ public class CoreAnalysisManager
 	 * 
 	 * @param bs рефлектограмма
 	 * @param pars набор параметров для IA: { level, weld, connector, noiseFactor }
-	 * @param bellcoreTraces хэш всех открытых р/г для определения пределов колебаний
 	 * @return массив событий
 	 */
-
-	// strategy == 0: min fitting
 	public static ModelTraceAndEventsImpl makeAnalysis(
 			BellcoreStructure bs,
 			double[] pars)
