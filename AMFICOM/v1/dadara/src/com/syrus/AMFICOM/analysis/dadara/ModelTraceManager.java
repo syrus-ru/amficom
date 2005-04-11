@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.45 2005/04/11 10:58:15 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.46 2005/04/11 14:46:07 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,8 +7,6 @@
  */
 package com.syrus.AMFICOM.analysis.dadara;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -18,11 +16,17 @@ import java.util.LinkedList;
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 
 /**
+ * Объект этого класса заведует хранением
+ * эталонной пары {события + модельная кривая},
+ * порогов к событиями (пока нет) и модельной кривой (есть),
+ * генерацией пороговых кривых и сохранением/восстановлением порогов.
+ *
  * @author $Author: saa $
- * @version $Revision: 1.45 $, $Date: 2005/04/11 10:58:15 $
+ * @version $Revision: 1.46 $, $Date: 2005/04/11 14:46:07 $
  * @module
  */
 public class ModelTraceManager
+implements DataStreamable
 {
 	protected static final long SIGNATURE_THRESH = 3353620050119193102L;
 	public static final String CODENAME = "ModelTraceManager";
@@ -32,6 +36,8 @@ public class ModelTraceManager
 	protected Thresh[] tL; // полный список порогов
 	protected ThreshDX[] tDX; // список DX-порогов
 	protected ThreshDY[] tDY; // список DY-порогов
+
+	private static DataStreamable.Reader dsReader;
 
 	protected void invalidateThMTCache()
 	{
@@ -127,7 +133,7 @@ public class ModelTraceManager
 		return mtae.getSE();
 	}
 
-	private void setTL(Thresh tl[])
+	protected void setTL(Thresh tl[])
 	{
 		tL = tl;
 		// формируем отдельно списки tDX и tDY
@@ -148,7 +154,7 @@ public class ModelTraceManager
 		tDY = (ThreshDY[] )thresholds.toArray(new ThreshDY[thresholds.size()]);
 	}
 
-	/** создает MTM на основе ModelTraceAndEvents
+	/** создает MTM на основе эталонной пары {события + м.ф.} ModelTraceAndEvents
 	 * 
 	 * @param mtae опорная кривая
 	 */
@@ -161,6 +167,7 @@ public class ModelTraceManager
 	 * Создает MTM на основе модельной кривой mf и списка событий se.
 	 * Не изменяет полученные mf, se; также предполагает что они
 	 * не будут изменяться извне.
+	 * <br> unused??
 	 * @param se список событий
 	 * @param mf модельная кривая
 	 * @param deltaX разрешение (метры на отсчет)
@@ -350,7 +357,7 @@ public class ModelTraceManager
 		//re[nEvent].setThreshold(new Threshold());
 	}
 
-	public byte[] toThresholdsByteArray()
+	/*public byte[] toThresholdsByteArray()
 	{
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		DataOutputStream dos = new DataOutputStream(baos);
@@ -396,7 +403,7 @@ public class ModelTraceManager
 			System.out.println("SignatureMismatchException caught: " + e);
 			e.printStackTrace();
 		}
-	}
+	}*/
 
 	/**
 	 * Интерфейс для управления порогами мышью
@@ -692,18 +699,26 @@ public class ModelTraceManager
 		return new SimpleReflectogramEventImpl(begin, end, getSE()[nEvent].getEventType());
 	}
 
+	/**
+	 * Создает MTM по эталонной паре события+м.ф., считанной из ByteArray
+	 * @param bar
+	 * @return MTM с неопределенными порогами 
+	 */
 	public static ModelTraceManager eventsAndTraceFromByteArray(byte[] bar)
 	{
-		ModelTraceAndEventsImpl mtae = ModelTraceAndEventsImpl.eventsAndTraceFromByteArray(bar);
+		ModelTraceAndEventsImpl mtae = (ModelTraceAndEventsImpl)DataStreamableUtil.readDataStreamableFromBA(bar, ModelTraceAndEventsImpl.getReader()); 
 		return new ModelTraceManager(mtae);
 	}
 
 	public byte[] eventsAndTraceToByteArray()
 	{
-		return mtae.eventsAndTraceToByteArray();
+		return DataStreamableUtil.writeDataStreamableToBA(mtae);
 	}
 
-	// @todo: определиться, использовать getMTAE() или delegate-методы 
+	/**
+	 * Возвращает эталонные модельную кривую и список событий.
+	 * @return ModelTraceAndEvents эталона
+	 */
 	public ModelTraceAndEvents getMTAE()
 	{
 		return new UnmodifiableModelTraceAndEvents(mtae);
@@ -722,5 +737,38 @@ public class ModelTraceManager
 	public SimpleReflectogramEvent getSimpleEvent(int nEvent)
 	{
 		return mtae.getSimpleEvent(nEvent);
+	}
+
+	public void writeToDOS(DataOutputStream dos) throws IOException
+	{
+		mtae.writeToDOS(dos);
+		dos.writeLong(SIGNATURE_THRESH);
+		Thresh.writeArrayToDOS(tL, dos);
+	}
+
+	private static class DSReader implements DataStreamable.Reader
+	{
+		// FIXME: very poor technique: init with defaults to oeverride a moment later, isn't it?
+		public DataStreamable readFromDIS(DataInputStream dis) throws IOException, SignatureMismatchException
+		{
+			ModelTraceAndEventsImpl mtae = (ModelTraceAndEventsImpl)ModelTraceAndEventsImpl.getReader().readFromDIS(dis);
+			ModelTraceManager mtm = new ModelTraceManager(mtae);
+			mtm.invalidateThMTCache();
+			long signature = dis.readLong();
+			if (signature != SIGNATURE_THRESH)
+				throw new SignatureMismatchException();
+			Thresh[] tl2 = Thresh.readArrayFromDIS(dis);
+			if (mtm.tL.length != tl2.length) 
+				throw new SignatureMismatchException();
+			mtm.setTL(tl2);
+			return mtm;
+		}
+	}
+
+	public static DataStreamable.Reader getReader()
+	{
+		if (dsReader == null)
+			dsReader = new DSReader();
+		return dsReader;
 	}
 }
