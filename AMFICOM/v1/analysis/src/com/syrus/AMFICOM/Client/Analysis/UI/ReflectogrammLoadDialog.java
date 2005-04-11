@@ -1,3 +1,4 @@
+
 package com.syrus.AMFICOM.Client.Analysis.UI;
 
 import java.awt.BorderLayout;
@@ -41,40 +42,26 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.io.BellcoreReader;
 import com.syrus.io.BellcoreStructure;
 
-public class ReflectogrammLoadDialog extends JDialog 
-{
-	private Object resource;
+public class ReflectogrammLoadDialog extends JDialog {
 
-	private ApplicationContext aContext;
-	private Identifier domainId;
+	JButton						okButton;
+	Result						result;
+	int							resultCode		= JOptionPane.CANCEL_OPTION;
+	JScrollPane					scrollPane		= new JScrollPane();
 
-	private JButton okButton;
-	private JButton cancelButton;
-	private JButton updateButton = new JButton();
-	
-	private int resultCode = JOptionPane.CANCEL_OPTION;
+	private ApplicationContext	aContext;
+	private Identifier			domainId;
 
-	JScrollPane scrollPane = new JScrollPane();
+	private JButton				cancelButton;
+	private JButton				updateButton	= new JButton();
 
-
-	public ReflectogrammLoadDialog(ApplicationContext aContext)
-	{
+	public ReflectogrammLoadDialog(ApplicationContext aContext) {
 		super(Environment.getActiveWindow());
 		this.aContext = aContext;
-		domainId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().domain_id);
-		try
-		{
-			jbInit();
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
+		this.domainId = new Identifier(
+										((RISDSessionInfo) aContext.getSessionInterface()).getAccessIdentifier().domain_id);
 
-	private void jbInit() throws Exception
-	{
-		setModal(true);
+		this.setModal(true);
 
 		setTitle(LangModelAnalyse.getString("trace"));
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -85,7 +72,7 @@ public class ReflectogrammLoadDialog extends JDialog
 			setLocation((screenSize.width - width) / 2, (screenSize.height - height) / 2);
 		}
 
-		setResizable(true);
+		this.setResizable(true);
 
 		JPanel ocPanel = new JPanel();
 		ocPanel.setLayout(new FlowLayout());
@@ -93,84 +80,81 @@ public class ReflectogrammLoadDialog extends JDialog
 		this.okButton = new JButton();
 		this.okButton.setText(LangModelAnalyse.getString("okButton"));
 		this.okButton.setEnabled(false);
-		this.okButton.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-				okButton_actionPerformed(e);
+		this.okButton.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				ReflectogrammLoadDialog.this.resultCode = JOptionPane.OK_OPTION;
+				ReflectogrammLoadDialog.this.dispose();
 			}
 		});
 		this.cancelButton = new JButton();
 		this.cancelButton.setText(LangModelAnalyse.getString("cancelButton"));
-		this.cancelButton.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-				cancelButton_actionPerformed(e);
+		this.cancelButton.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				ReflectogrammLoadDialog.this.resultCode = JOptionPane.CANCEL_OPTION;
+				ReflectogrammLoadDialog.this.dispose();
+
 			}
 		});
 
 		this.updateButton.setText(LangModelAnalyse.getString("refreshButton"));
-		this.updateButton.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-				updateButton1_actionPerformed(e);
+		this.updateButton.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				ReflectogrammLoadDialog.this.setTree();
+				ReflectogrammLoadDialog.this.okButton.setEnabled(false);
+				ReflectogrammLoadDialog.this.show();
 			}
 		});
 		ocPanel.add(Box.createHorizontalGlue());
 		ocPanel.add(this.okButton);
 		ocPanel.add(this.updateButton);
 		ocPanel.add(this.cancelButton);
-		getContentPane().setLayout(new BorderLayout());
+		this.getContentPane().setLayout(new BorderLayout());
 
 		this.getContentPane().add(this.scrollPane, BorderLayout.CENTER);
 
-		setTree();
+		this.setTree();
 
 		this.getContentPane().add(ocPanel, BorderLayout.SOUTH);
 	}
 
-	public void setVisible(boolean key)
-	{
-		if(!domainId.equals(new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().domain_id)))
+	public void setVisible(boolean key) {
+		if (!domainId.equals(((RISDSessionInfo) aContext.getSessionInterface()).getDomainIdentifier()))
 			setTree();
 		super.setVisible(key);
 	}
 
-	public void show()
-	{
-		if(!domainId.equals(new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().domain_id)))
+	public void show() {
+		if (!this.domainId.equals(((RISDSessionInfo) aContext.getSessionInterface()).getDomainIdentifier()))
 			setTree();
 		super.show();
 	}
 
-	private void setTree()
-	{
-		domainId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().domain_id);
+	void setTree() {
+		this.domainId = ((RISDSessionInfo) aContext.getSessionInterface()).getDomainIdentifier();
 
 		getContentPane().remove(scrollPane);
-		scrollPane = new JScrollPane();
+		this.scrollPane = new JScrollPane();
 
-		try
-		{
-			Identifier domainId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().domain_id);
-			Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(
-					domainId, true);		
-			
+		try {
+			Identifier domainId = ((RISDSessionInfo) aContext.getSessionInterface()).getDomainIdentifier();
+			Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
+
 			ArchiveChildrenFactory childrenFactory = ArchiveChildrenFactory.getInstance();
 			childrenFactory.setDomainId(domainId);
 			PopulatableItem item = new PopulatableItem();
 			item.setObject(ArchiveChildrenFactory.ROOT);
 			item.setName(LangModelAnalyse.getString("Archive"));
 			item.setChildrenFactory(childrenFactory);
-			item.populate();			
+			item.populate();
 			LogicalTreeUI treeUI = new LogicalTreeUI(item, false);
 			treeUI.setRenderer(IconPopulatableItem.class, new ItemTreeIconLabelCellRenderer());
 			treeUI.getTreeModel().setAllwaysSort(false);
 			this.scrollPane.getViewport().add(treeUI.getTree(), null);
 			treeUI.addSelectionListener(new SelectionListener() {
-				
+
 				public void selectedItems(Collection items) {
 					if (!items.isEmpty()) {
 						for (Iterator it = items.iterator(); it.hasNext();) {
@@ -178,86 +162,55 @@ public class ReflectogrammLoadDialog extends JDialog
 							Object object = item.getObject();
 							if (object instanceof Result) {
 								okButton.setEnabled(true);
-								resource = object;
+								result = (Result) object;
 							} else {
 								okButton.setEnabled(false);
 							}
 						}
 					}
-					
+
 				}
 			});
-			
+
 			getContentPane().add(scrollPane, BorderLayout.CENTER);
 			setTitle(LangModelAnalyse.getString("Choose reflectogram") + " (" + domain.getName() + ")");
-		}
-		catch(ApplicationException ex)
-		{
+		} catch (ApplicationException ex) {
 			ex.printStackTrace();
 		}
-	}	
-
-	void okButton_actionPerformed(ActionEvent e)
-	{
-		this.resultCode = JOptionPane.OK_OPTION;
-		dispose();
 	}
 
-	void cancelButton_actionPerformed(ActionEvent e)
-	{
-		this.resultCode = JOptionPane.CANCEL_OPTION;
-		dispose();
-	}
-
-	void updateButton1_actionPerformed(ActionEvent e)
-	{
-		setTree();
-		this.okButton.setEnabled(false);
-		super.show();
-	}
-	
 	public int showDialog() {
-		this.show();
+		super.show();
 		return this.resultCode;
 	}
 
-	public Result getResult()
-	{
-		if(!(resource instanceof Result))
-			return null;		
-		return (Result) resource;
+	public Result getResult() {
+		return this.result;
 	}
 
-	public BellcoreStructure getBellcoreStructure()
-	{
+	public BellcoreStructure getBellcoreStructure() {
 		BellcoreStructure bs = null;
 
-		Result res = getResult();
-		if(res == null)
+		if (this.result == null)
 			return null;
 
-		SetParameter[] parameters = res.getParameters();
-		for(int i = 0; i < parameters.length; i++)
-		{
+		SetParameter[] parameters = this.result.getParameters();
+		for (int i = 0; i < parameters.length; i++) {
 			SetParameter param = parameters[i];
-			ParameterType type = (ParameterType)param.getType();
-			if(type.getCodename().equals(ParameterTypeCodenames.REFLECTOGRAMMA))
+			ParameterType type = (ParameterType) param.getType();
+			if (type.getCodename().equals(ParameterTypeCodenames.REFLECTOGRAMMA))
 				bs = new BellcoreReader().getData(param.getValue());
 		}
 
-		
 		try {
-			if (res.getSort().equals(ResultSort.RESULT_SORT_MEASUREMENT)) {
-				Measurement measurement = (Measurement) res.getAction();
-				Test test = (Test) MeasurementStorableObjectPool.getStorableObject(
-						measurement.getTestId(), true);
-				bs.monitoredElementId = test.getMonitoredElement().getId()
-						.getIdentifierString();
+			if (this.result.getSort().equals(ResultSort.RESULT_SORT_MEASUREMENT)) {
+				Measurement measurement = (Measurement) this.result.getAction();
+				Test test = (Test) MeasurementStorableObjectPool.getStorableObject(measurement.getTestId(), true);
+				bs.monitoredElementId = test.getMonitoredElement().getId().getIdentifierString();
 				bs.title = test.getDescription();
 			}
-		}
-		catch(ApplicationException ex)
-		{
+		} catch (ApplicationException ex) {
+			// nothing ?
 		}
 		return bs;
 	}
