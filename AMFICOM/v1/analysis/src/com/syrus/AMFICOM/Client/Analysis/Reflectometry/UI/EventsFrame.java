@@ -31,6 +31,7 @@ import com.syrus.AMFICOM.Client.General.Model.AnalyseApplicationModel;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.Client.General.UI.ATable;
 import com.syrus.AMFICOM.Client.General.UI.FixedSizeEditableTableModel;
+import com.syrus.AMFICOM.Client.General.UI.UIGeneralStorage;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.ComplexReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.MathRef;
@@ -286,6 +287,7 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 				this.jTable.setRowSelectionInterval(this.selected, this.selected);
 				this.jTable.scrollRectToVisible(this.jTable.getCellRect(this.jTable.getSelectedRow(), this.jTable.getSelectedColumn(), true));
 			}
+		UIGeneralStorage.arrangeTableColumns(this.jTable);
 	}
 
 	void setTableModel(BellcoreStructure bs, TraceEvent[] events)
@@ -506,4 +508,6 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 		etalon = null;
 		setNoComparedWithEtalonColor();
 	}
+	
+	
 }
