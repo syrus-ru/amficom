@@ -86,18 +86,19 @@ private:
 	void centerWletImageOnly(double* f_wlet, int scale, int begin, int end, double norma1);
 
 	// анализ
-    void findAllWletSplashes(double* f_wlet, ArrList& splashes);
-    void findEventsBySplashes(ArrList&  splashes);
-	void SetSpliceParamsBySplash( EventParams& ep, Splash& sp1);
-    void SetConnectorParamsBySplashes( EventParams& ep, Splash& sp1, Splash& sp2);
-	void SetUnrecognizedParamsBySplashes( EventParams& ep, Splash& sp1, Splash& sp2);
-    void deleteAllEventsAfterLastConnector();
-    void addLinearPartsBetweenEvents();
-    void correctAllConnectorsFronts(double *arr);
-    void correctAllSpliceCoords(); // ф-я ПОРТИТ вейвлет образ !  (так как использует тот же массив для хранения образа на другом масштабе)
-    void correctSpliceCoords(int n);
-    void excludeShortLinesBetweenConnectors(double* data, int evSizeC);
-	void trimAllEvents(); // из-за расширения всплесков события могу немного наползать друг на друга, выравниваем их 
+  void findAllWletSplashes(double* f_wlet, ArrList& splashes);
+  void findEventsBySplashes(ArrList&  splashes);
+  int  processIfIsConnector(int i, ArrList& splashes);// посмотреть, есть ли что-то похожее на коннектор , если начать с i-го всплеска, и если есть - обработать и добавить, изменив значение i и вернув сдвиг; если ничего не нашли, то сдвиг равен 0 
+  void setSpliceParamsBySplash( EventParams& ep, Splash& sp1);
+  void setConnectorParamsBySplashes( EventParams& ep, Splash& sp1, Splash& sp2);
+  void setUnrecognizedParamsBySplashes( EventParams& ep, Splash& sp1, Splash& sp2);
+  void deleteAllEventsAfterLastConnector();
+  void addLinearPartsBetweenEvents();
+  void correctAllConnectorsFronts(double *arr);
+  void correctAllSpliceCoords(); // ф-я ПОРТИТ вейвлет образ !  (так как использует тот же массив для хранения образа на другом масштабе)
+  void correctSpliceCoords(int n);
+  void excludeShortLinesBetweenConnectors(double* data, int evSizeC);
+	void trimAllEvents(); // из-за расширения всплесков события могу немного наползать друг на друга, выравниваем их
 	void verifyResults();
 
 // Wavelet constants;
