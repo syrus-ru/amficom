@@ -1,5 +1,5 @@
 /*
- * $Id: MCMConfigurationObjectLoader.java,v 1.27 2005/04/05 10:43:30 arseniy Exp $
+ * $Id: MCMConfigurationObjectLoader.java,v 1.28 2005/04/11 12:40:45 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,6 +25,7 @@ import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.configuration.MeasurementPortDatabase;
 import com.syrus.AMFICOM.configuration.MeasurementPortType;
+import com.syrus.AMFICOM.configuration.MeasurementPortTypeDatabase;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.configuration.MonitoredElementDatabase;
 import com.syrus.AMFICOM.configuration.Port;
@@ -60,7 +61,7 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/04/05 10:43:30 $
+ * @version $Revision: 1.28 $, $Date: 2005/04/11 12:40:45 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -554,6 +555,59 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 
 
 
+
+	public Set loadMeasurementPortTypes(Set ids) throws RetrieveObjectException {
+		MeasurementPortTypeDatabase database = ConfigurationDatabaseContext.getMeasurementPortTypeDatabase();
+		Set objects = super.retrieveFromDatabase(database, ids);
+		Identifier_Transferable[] loadIdsT = null;
+		try {
+			loadIdsT = super.createLoadIdsTransferable(ids, objects);
+		}
+		catch (IllegalDataException ide) {
+			// Never
+			Log.errorException(ide);
+		}
+		if (loadIdsT.length == 0)
+			return objects;
+
+		Set loadedObjects = new HashSet();
+
+		try {
+			MServer mServerRef = MeasurementControlModule.mServerConnectionManager.getVerifiedMServerReference();
+			MeasurementPortType_Transferable[] transferables = mServerRef.transmitMeasurementPortTypes(loadIdsT);
+			for (int i = 0; i < transferables.length; i++) {
+				try {
+					loadedObjects.add(new MeasurementPortType(transferables[i]));
+				}
+				catch (CreateObjectException coe) {
+					Log.errorException(coe);
+				}
+			}
+		}
+		catch (CommunicationException ce) {
+			Log.errorException(ce);
+		}
+		catch (AMFICOMRemoteException are) {
+			Log.errorMessage("MCMConfigurationObjectLoader.loadMeasurementPortTypes | Cannot load objects from MeasurementServer");
+		}
+		catch (Throwable throwable) {
+			Log.errorException(throwable);
+		}
+
+		if (!loadedObjects.isEmpty()) {
+			objects.addAll(loadedObjects);
+
+			try {
+				database.insert(loadedObjects);
+			}
+			catch (ApplicationException ae) {
+				Log.errorException(ae);
+			}
+		}
+
+		return objects;
+	}
+
 	public Set loadKISs(Set ids) throws RetrieveObjectException {
 		KISDatabase database = ConfigurationDatabaseContext.getKISDatabase();
 		Set objects = super.retrieveFromDatabase(database, ids);
@@ -864,10 +918,6 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 
 	public Set loadMeasurementPortsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
-	}
-
-	public Set loadMeasurementPortTypes(Set ids) throws ApplicationException {
-		throw new UnsupportedOperationException("Method not implemented, ids: " + ids);
 	}
 
 	public Set loadMeasurementPortTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
