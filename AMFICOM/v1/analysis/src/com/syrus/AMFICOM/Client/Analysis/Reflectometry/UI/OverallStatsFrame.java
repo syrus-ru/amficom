@@ -189,25 +189,25 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 	private void setWholeData()
 	{
 		ModelTraceManager etalonMTM = Heap.getMTMEtalon();
-		ModelTraceAndEvents dataMTM = Heap.getMTAEPrimary();
-		if(etalonMTM == null || dataMTM == null || dataMTM.getNEvents() == 0)
+		ModelTraceAndEvents dataMTAE = Heap.getMTAEPrimary();
+		if(etalonMTM == null || dataMTAE == null || dataMTAE.getNEvents() == 0)
 		{
 			tabbedPane.setSelectedIndex(0);
 			tabbedPane.setEnabledAt(1, false);
 			return;
 		}
-		double deltaX = dataMTM.getDeltaX()/1000.;
+		double deltaX = dataMTAE.getDeltaX()/1000.;
 
-		ModelTrace etalonMTrace = etalonMTM.getModelTrace();
-		ModelTrace dataMTrace = dataMTM.getModelTrace();
+		ModelTrace etalonMTrace = etalonMTM.getMTAE().getModelTrace();
+		ModelTrace dataMTrace = dataMTAE.getModelTrace();
 		SimpleReflectogramEvent []etalonSRE = etalonMTM.getMTAE().getSimpleEvents();
-		SimpleReflectogramEvent []dataSRE = dataMTM.getSimpleEvents();
+		SimpleReflectogramEvent []dataSRE = dataMTAE.getSimpleEvents();
 
 		double maxDeviation = ReflectogramComparer.getMaxDeviation(etalonMTrace, dataMTrace);
 		double meanDeviation = ReflectogramComparer.getMeanDeviation(etalonMTrace, dataMTrace);
 		double etalonLength = ReflectogramMath.getLastConnectorBegin(etalonSRE) * deltaX;
 		double dataLength = ReflectogramMath.getLastConnectorBegin(dataSRE) * deltaX;
-		double lossDifference = ReflectogramComparer.getLossDifference(etalonMTM.getMTAE(), dataMTM);
+		double lossDifference = ReflectogramComparer.getLossDifference(etalonMTM.getMTAE(), dataMTAE);
 
 		wctModel.setValueAt(String.valueOf(MathRef.round_3(dataLength))+ " " + LangModelAnalyse.getString("km"), 0, 1);
 		wctModel.setValueAt(String.valueOf(MathRef.round_3(etalonLength)) + " " + LangModelAnalyse.getString("km"), 1, 1);

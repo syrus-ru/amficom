@@ -21,7 +21,7 @@ public class DetailedEventsFrame extends JInternalFrame
 implements OperationListener, bsHashChangeListener, EtalonMTMListener
 {
 	private ModelTraceManager etalonMTM;
-	private ModelTraceAndEvents dataMTM;
+	private ModelTraceAndEvents dataMTAE;
 	private ModelTrace alignedDataMT;
 
 	private Map tModels = new HashMap(6);
@@ -86,11 +86,11 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 
 	private void makeAlignedDataMT()
 	{
-		if (etalonMTM == null || dataMTM == null)
+		if (etalonMTM == null || dataMTAE == null)
 			return;
 		alignedDataMT = ReflectogramMath.createAlignedArrayModelTrace(
-			dataMTM.getModelTrace(),
-			etalonMTM.getModelTrace());
+			dataMTAE.getModelTrace(),
+			etalonMTM.getMTAE().getModelTrace());
 	}
 
 	public void operationPerformed(OperationEvent ae)
@@ -105,8 +105,8 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 					a = Heap.getRefAnalysisByKey(Heap.PRIMARY_TRACE_KEY);
 					bs = Heap.getBSPrimaryTrace();
 					res_km = bs.getResolution() / 1000.0;
-					dataMTM = Heap.getMTAEPrimary();
-					if(dataMTM != null && etalonMTM != null)
+					dataMTAE = Heap.getMTAEPrimary();
+					if(dataMTAE != null && etalonMTM != null)
 						makeAlignedDataMT();
 					else alignedDataMT = null;
 					if (selected >= a.events.length)
@@ -278,14 +278,14 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 			tabbedPane.setEnabledAt(1, false);
 			return;
 		}
-		if(nEvent >= dataMTM.getNEvents() || nEvent < 0)
+		if(nEvent >= dataMTAE.getNEvents() || nEvent < 0)
 		{
 			return;
 		}
-		double deltaX = dataMTM.getDeltaX();
+		double deltaX = dataMTAE.getDeltaX();
 
 		// ищем парное событие
-		ComplexReflectogramEvent[] dataCRE = dataMTM.getComplexEvents();
+		ComplexReflectogramEvent[] dataCRE = dataMTAE.getComplexEvents();
 		ComplexReflectogramEvent[] etalonCRE = etalonMTM.getMTAE().getComplexEvents(); 
 		ReflectogramComparer rComp = new ReflectogramComparer(
 			dataCRE,
@@ -343,9 +343,9 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 		ctModel.setValueAt(etalonT, 1, 1);
 
 		// сравнение по модельной кривой
-		ModelTrace etalonMT = etalonMTM.getModelTrace();
-		double difference    = ReflectogramComparer.getMaxDeviation(dataMTM, etalonMT, nEvent);
-		double meanDeviation = ReflectogramComparer.getMeanDeviation(dataMTM, etalonMT, nEvent);
+		ModelTrace etalonMT = etalonMTM.getMTAE().getModelTrace();
+		double difference    = ReflectogramComparer.getMaxDeviation(dataMTAE, etalonMT, nEvent);
+		double meanDeviation = ReflectogramComparer.getMeanDeviation(dataMTAE, etalonMT, nEvent);
 
 		difference           = ((int)(difference*1000.))/1000.; // точность 0.001 дБ
 		meanDeviation        = ((int)(meanDeviation*1000.))/1000.;
@@ -532,7 +532,7 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 	public void etalonMTMCUpdated()
 	{
 		etalonMTM = Heap.getMTMEtalon();
-		if(dataMTM != null)
+		if(dataMTAE != null)
 			makeAlignedDataMT();
 		else
 			alignedDataMT = null;
