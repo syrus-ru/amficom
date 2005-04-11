@@ -1,5 +1,5 @@
 /*
- * $Id: ADefaultTableCellRenderer.java,v 1.5 2005/03/23 08:41:07 bob Exp $
+ * $Id: ADefaultTableCellRenderer.java,v 1.6 2005/04/11 10:27:05 bob Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,16 +29,13 @@ import javax.swing.table.TableCellRenderer;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/03/23 08:41:07 $
+ * @version $Revision: 1.6 $, $Date: 2005/04/11 10:27:05 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module generalclient_v1
  */
 public class ADefaultTableCellRenderer extends JLabel implements TableCellRenderer {
 
-	/**
-	 * 
-	 */
 	private static final long					serialVersionUID	= 3832622897947948339L;
 	/**
 	 * Weight of color blending using alpha-channel
@@ -140,10 +137,11 @@ public class ADefaultTableCellRenderer extends JLabel implements TableCellRender
 	 */
 	public static class ObjectRenderer extends JLabel implements TableCellRenderer {
 
+		private static final long	serialVersionUID	= 3257007670052335929L;
+		
 		private Color	unselectedForeground;
 
 		public ObjectRenderer() {
-			System.out.println("ObjectRenderer | ");
 			super.setOpaque(true);
 			super.setBorder(UIManager.getBorder(ResourceKeys.TABLE_NO_FOCUS_BORDER));
 		}
@@ -214,20 +212,22 @@ public class ADefaultTableCellRenderer extends JLabel implements TableCellRender
 
 	public static class NumberRenderer extends ObjectRenderer {
 
+		private static final long	serialVersionUID	= 4122257333184640821L;
+
 		public NumberRenderer() {
 			super();
-			System.out.println("NumberRenderer | ");
 			setHorizontalAlignment(SwingConstants.LEFT);
 		}
 	}
 
 	public static class DoubleRenderer extends NumberRenderer {
 
+		private static final long	serialVersionUID	= 3256719567941023285L;
+
 		NumberFormat	formatter;
 
 		public DoubleRenderer() {
 			super();
-			System.out.println("DoubleRenderer | ");
 		}
 
 		public void setValue(Object value) {
@@ -240,6 +240,7 @@ public class ADefaultTableCellRenderer extends JLabel implements TableCellRender
 
 	public static class DateRenderer extends ObjectRenderer {
 
+		private static final long	serialVersionUID	= 3545516226924066360L;
 		DateFormat	formatter;
 
 		public DateRenderer() {
@@ -256,6 +257,8 @@ public class ADefaultTableCellRenderer extends JLabel implements TableCellRender
 
 	public static class IconRenderer extends ObjectRenderer {
 
+		private static final long	serialVersionUID	= 3257003237696420146L;
+
 		public IconRenderer() {
 			super();
 			setHorizontalAlignment(SwingConstants.CENTER);
@@ -267,6 +270,8 @@ public class ADefaultTableCellRenderer extends JLabel implements TableCellRender
 	}
 
 	public static class BooleanRenderer extends JCheckBox implements TableCellRenderer {
+
+		private static final long	serialVersionUID	= 3258132461891563831L;
 
 		public BooleanRenderer() {
 			super();
