@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.31 2005/04/07 15:58:59 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.32 2005/04/11 10:35:31 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.31 $, $Date: 2005/04/07 15:58:59 $
+ * @version $Revision: 1.32 $, $Date: 2005/04/11 10:35:31 $
  * @module
  */
 
@@ -18,6 +18,7 @@ import java.util.Map;
 
 import com.syrus.io.BellcoreStructure;
 import com.syrus.AMFICOM.analysis.dadara.ModelFunction;
+import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEventsImpl;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEventImpl;
@@ -237,9 +238,9 @@ public class CoreAnalysisManager
 	 */
 
 	// strategy == 0: min fitting
-	public static ModelTraceManager makeAnalysis(
+	public static ModelTraceAndEventsImpl makeAnalysis(
 			BellcoreStructure bs,
-			double[] pars, Map bellcoreTraces)
+			double[] pars)
 	{
 		long t0 = System.currentTimeMillis();
 	    // достаем данные
@@ -293,22 +294,30 @@ public class CoreAnalysisManager
 //		for (int i = 0; i < ep.length; i++)
 //			ep[i].setDefaultThreshold(bs, bellcoreTraces);
 
-		ModelTraceManager mtm = new ModelTraceManager(se, mf, deltaX);
+		ModelTraceAndEventsImpl mtae = new ModelTraceAndEventsImpl(se, mf, deltaX);
 
 		long t5 = System.currentTimeMillis();
-		// теперь формируем пороги, если только это нужно
-		// FIXME: testing...
-		if (bellcoreTraces != null)
-			updateMTMThresholdsByBSMap(mtm, bellcoreTraces);
-		// @todo: добавить запас к порогам - и по DX, и по DY
 
-		long t6 = System.currentTimeMillis();
 		System.out.println("makeAnalysis: getDataAndLength: " + (t1-t0) + "; noiseArray:" + (t2-t1)
 			+ "; IA: " + (t3-t2) + "; fit: " + (t4-t3)
 			+ "; makeMTM: " + (t5-t4)
-			+ "; updThresh: " + (t6-t5)
 			);
 
+		return mtae;
+	}
+
+	public static ModelTraceManager makeThresholds(ModelTraceAndEventsImpl mtae,
+			Map bellcoreTraces)
+	{
+		long t5 = System.currentTimeMillis();
+		ModelTraceManager mtm = new ModelTraceManager(mtae);
+		if (bellcoreTraces != null)
+			updateMTMThresholdsByBSMap(mtm, bellcoreTraces);
+		// @todo: добавить запас к порогам - и по DX, и по DY
+		long t6 = System.currentTimeMillis();
+		System.out.println("makeThresholds: "
+			+ "; updThresh: " + (t6-t5)
+			);
 		return mtm;
 	}
 

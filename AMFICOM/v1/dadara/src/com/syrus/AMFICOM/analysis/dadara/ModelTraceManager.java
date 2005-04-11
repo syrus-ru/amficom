@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.42 2005/04/01 09:07:06 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.43 2005/04/11 10:35:31 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,14 +19,15 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.42 $, $Date: 2005/04/01 09:07:06 $
+ * @version $Revision: 1.43 $, $Date: 2005/04/11 10:35:31 $
  * @module
  */
 public class ModelTraceManager
-extends ModelTraceAndEvents
 {
+	protected static final long SIGNATURE_THRESH = 3353620050119193102L;
 	public static final String CODENAME = "ModelTraceManager";
 
+	private ModelTraceAndEventsImpl mtae;
 	private ModelTrace[] thMTCache = null;
 	protected Thresh[] tL; // полный список порогов
 	protected ThreshDX[] tDX; // список DX-порогов
@@ -116,6 +117,16 @@ extends ModelTraceAndEvents
 		setTL(tl);
 	}
 
+	private ModelFunction getMF()
+	{
+		return mtae.getMF();
+	}
+
+	protected SimpleReflectogramEventImpl[] getSE()
+	{
+		return mtae.getSE();
+	}
+
 	private void setTL(Thresh tl[])
 	{
 		tL = tl;
@@ -137,6 +148,15 @@ extends ModelTraceAndEvents
 		tDY = (ThreshDY[] )thresholds.toArray(new ThreshDY[thresholds.size()]);
 	}
 
+	/** создает MTM на основе ModelTraceAndEvents
+	 * 
+	 * @param mtae опорна€ крива€
+	 */
+	public ModelTraceManager(ModelTraceAndEventsImpl mtae)
+	{
+		this.mtae = mtae;
+		createTH();
+	}
 	/**
 	 * —оздает MTM на основе модельной кривой mf и списка событий se.
 	 * Ќе измен€ет полученные mf, se; также предполагает что они
@@ -147,8 +167,7 @@ extends ModelTraceAndEvents
 	 */
 	public ModelTraceManager(SimpleReflectogramEventImpl[] se, ModelFunction mf, double deltaX)
 	{
-		super(se, mf, deltaX);
-		createTH();
+		this(new ModelTraceAndEventsImpl(se, mf, deltaX));
 	}
 
 	/**
@@ -291,6 +310,11 @@ extends ModelTraceAndEvents
 		return thMt;
 	}
 
+	private int getTraceLength()
+	{
+		return mtae.getTraceLength();
+	}
+
 	/**
 	 * ¬ыдает модельную кривую указанного порога на участке указанного событи€,
 	 * такую, как будто бы на соседних событи€х порога нет совсем.
@@ -311,6 +335,11 @@ extends ModelTraceAndEvents
 	{
 		CoreAnalysisManager.nExtendThreshToCoverCurve(getModelTrace().getYArray(), yTop,
 			tDX, tDY, Thresh.SOFT_UP, Thresh.HARD_UP);
+	}
+
+	public ModelTrace getModelTrace()
+	{
+		return mtae.getModelTrace();
 	}
 
 	public void updateLowerThreshToContain(double[] yTop)
@@ -666,5 +695,21 @@ extends ModelTraceAndEvents
 		if (begin < 0)
 			return null;
 		return new SimpleReflectogramEventImpl(begin, end, getSE()[nEvent].getEventType());
+	}
+
+	public static ModelTraceManager eventsAndTraceFromByteArray(byte[] bar)
+	{
+		ModelTraceAndEventsImpl mtae = ModelTraceAndEventsImpl.eventsAndTraceFromByteArray(bar);
+		return new ModelTraceManager(mtae);
+	}
+
+	public byte[] eventsAndTraceToByteArray()
+	{
+		return mtae.eventsAndTraceToByteArray();
+	}
+
+	public ModelTraceAndEvents getMTAE()
+	{
+		return new UnmodifiableModelTraceAndEvents(mtae);
 	}
 }
