@@ -7,7 +7,7 @@ import java.util.List;
 
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
-public final class CableThreadTypeController implements ObjectResourceController
+public final class CableThreadTypeController extends ObjectResourceController
 {
 	public static final String COLUMN_COLOR = "color";
 	public static final String COLUMN_LINK_TYPE_ID = "link_type_id";

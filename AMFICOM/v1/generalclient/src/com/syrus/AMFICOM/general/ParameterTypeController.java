@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeController.java,v 1.1 2005/02/16 12:56:15 stas Exp $
+ * $Id: ParameterTypeController.java,v 1.2 2005/04/11 12:17:07 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import java.util.List;
 
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
-public final class ParameterTypeController implements ObjectResourceController {
+public final class ParameterTypeController extends ObjectResourceController {
 
 	private static ParameterTypeController	instance;
 

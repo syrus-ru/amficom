@@ -5,7 +5,7 @@ import java.util.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
-public final class MeasurementPortController implements ObjectResourceController
+public final class MeasurementPortController extends ObjectResourceController
 {
 	public static final String COLUMN_KIS_ID = "kis_id";
 	public static final String COLUMN_PORT_ID = "port_id";

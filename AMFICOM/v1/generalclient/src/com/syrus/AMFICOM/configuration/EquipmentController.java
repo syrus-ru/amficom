@@ -6,7 +6,7 @@ import java.util.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
-public final class EquipmentController implements ObjectResourceController {
+public final class EquipmentController extends ObjectResourceController {
 
 	public static final String			COLUMN_IMAGE_ID			= "imageId";
 	public static final String			COLUMN_LONGITUDE		= "longitude";

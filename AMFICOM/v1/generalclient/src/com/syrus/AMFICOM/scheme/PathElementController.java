@@ -4,7 +4,7 @@ import java.util.*;
 
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
-public final class PathElementController implements ObjectResourceController
+public final class PathElementController extends ObjectResourceController
 {
 	public static final String COLUMN_SEQUENTIAL_NUMBER = "number";
 	public static final String COLUMN_SCHEME_ID = "scheme_id";

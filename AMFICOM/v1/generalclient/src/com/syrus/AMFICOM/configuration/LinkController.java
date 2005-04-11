@@ -5,7 +5,7 @@ import java.util.*;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.general.*;
 
-public final class LinkController implements ObjectResourceController
+public final class LinkController extends ObjectResourceController
 {
 	public static final String COLUMN_SORT = "sort";
 	public static final String COLUMN_SUPPLIER = "supplier";

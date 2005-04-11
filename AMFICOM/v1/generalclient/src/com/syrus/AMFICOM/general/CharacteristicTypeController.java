@@ -8,7 +8,7 @@ import java.util.List;
 
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
-public final class CharacteristicTypeController implements ObjectResourceController {
+public final class CharacteristicTypeController extends ObjectResourceController {
 
 	private static CharacteristicTypeController	instance;
 	public static final String					COLUMN_DATA_TYPE	= "type";

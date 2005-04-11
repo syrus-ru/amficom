@@ -5,7 +5,7 @@ import java.util.*;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.general.*;
 
-public final class SchemeCableThreadController implements ObjectResourceController
+public final class SchemeCableThreadController extends ObjectResourceController
 {
 	public static final String COLUMN_THREAD_ID = "thread_id";
 	public static final String COLUMN_SOURCE_SCHEME_PORT_ID = "source_scheme_port_id";

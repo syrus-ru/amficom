@@ -5,7 +5,7 @@ import java.util.*;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.general.*;
 
-public final class SchemeElementController implements ObjectResourceController
+public final class SchemeElementController extends ObjectResourceController
 {
 	public static final String COLUMN_LABEL = "label";
 	public static final String COLUMN_SYMBOL_ID = "symbol_id";

@@ -15,36 +15,36 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
  * constructor must be private and its instance must be obtained using a static
  * method <code>getInstance()</code>.
  * 
- * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/03/16 13:40:57 $
+ * @author $Author: bob $
+ * @version $Revision: 1.7 $, $Date: 2005/04/11 12:17:07 $
  * @see <a href =
  *      "http://bass.science.syrus.ru/java/Bitter%20Java.pdf">&laquo;Bitter
  *      Java&raquo; by Bruce A. Tate </a>
  * @module generalclient_v1
  */
 
-public interface ObjectResourceController extends StorableObjectWrapper {
+public abstract class ObjectResourceController extends StorableObjectWrapper {
 
-	final String			COLUMN_ALARM_TYPE_NAME	= "alarm_type_name";
-	final String			COLUMN_GENERATED		= "generated";
-	final String			COLUMN_KIS_ID			= "kis_id";
-	final String			COLUMN_LOCAL_ID			= "local_id";
-	final String			COLUMN_ME_ID			= "monitored_element_id";
-	final String			COLUMN_PORT_ID			= "port_id";
-	final String			COLUMN_SOURCE_NAME		= "source_name";
-	final String			COLUMN_START_TIME		= "start_time";
-	final String			COLUMN_STATUS			= "status";
-	final String			COLUMN_TEMPORAL_TYPE	= "temporal_type";
-	final String			COLUMN_TEST_TYPE_ID		= "test_type_id";
+	public static final String			COLUMN_ALARM_TYPE_NAME	= "alarm_type_name";
+	public static final String			COLUMN_GENERATED		= "generated";
+	public static final String			COLUMN_KIS_ID			= "kis_id";
+	public static final String			COLUMN_LOCAL_ID			= "local_id";
+	public static final String			COLUMN_ME_ID			= "monitored_element_id";
+	public static final String			COLUMN_PORT_ID			= "port_id";
+	public static final String			COLUMN_SOURCE_NAME		= "source_name";
+	public static final String			COLUMN_START_TIME		= "start_time";
+	public static final String			COLUMN_STATUS			= "status";
+	public static final String			COLUMN_TEMPORAL_TYPE	= "temporal_type";
+	public static final String			COLUMN_TEST_TYPE_ID		= "test_type_id";
 
-	final String			COLUMN_TYPE_LIST		= "list";
-	final String			COLUMN_TYPE_LONG		= "long";
-	final String			COLUMN_TYPE_NUMERIC		= "numeric";
-	final String			COLUMN_TYPE_RANGE		= "range";
-	final String			COLUMN_TYPE_STRING		= "string";
-	final String			COLUMN_TYPE_TIME		= "time";
+	public static final String			COLUMN_TYPE_LIST		= "list";
+	public static final String			COLUMN_TYPE_LONG		= "long";
+	public static final String			COLUMN_TYPE_NUMERIC		= "numeric";
+	public static final String			COLUMN_TYPE_RANGE		= "range";
+	public static final String			COLUMN_TYPE_STRING		= "string";
+	public static final String			COLUMN_TYPE_TIME		= "time";
 
-	final String			DATE_FORMAT				= "dd.MM.yy HH:mm:ss";
-	final SimpleDateFormat	SIMPLE_DATE_FORMAT		= new SimpleDateFormat(DATE_FORMAT);
+	public static final String			DATE_FORMAT				= "dd.MM.yy HH:mm:ss";
+	public static final SimpleDateFormat	SIMPLE_DATE_FORMAT		= new SimpleDateFormat(DATE_FORMAT);
 
 }

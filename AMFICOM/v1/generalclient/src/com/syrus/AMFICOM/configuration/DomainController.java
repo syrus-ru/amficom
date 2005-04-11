@@ -5,7 +5,7 @@ import java.util.*;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.client_.resource.*;
 
-public final class DomainController implements ObjectResourceController
+public final class DomainController extends ObjectResourceController
 {
 
 	private static DomainController instance;

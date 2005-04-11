@@ -8,7 +8,7 @@ import java.util.List;
 
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
-public final class SchemeController implements ObjectResourceController
+public final class SchemeController extends ObjectResourceController
 {
 	public static final String COLUMN_LABEL = "label";
 	public static final String COLUMN_TYPE = "type";

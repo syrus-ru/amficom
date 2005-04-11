@@ -6,7 +6,7 @@ import java.util.*;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.general.*;
 
-public final class KISController implements ObjectResourceController {
+public final class KISController extends ObjectResourceController {
 
 	public static final String		COLUMN_EQUIPMENT_ID			= "equipment_id";
 	public static final String		COLUMN_MCM_ID				= "mcm_id";

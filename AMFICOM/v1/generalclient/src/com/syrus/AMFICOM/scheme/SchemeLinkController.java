@@ -5,7 +5,7 @@ import java.util.*;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.general.*;
 
-public final class SchemeLinkController implements ObjectResourceController
+public final class SchemeLinkController extends ObjectResourceController
 {
 	public static final String COLUMN_SOURCE_SCHEME_PORT_ID = "source_scheme_port_id";
 	public static final String COLUMN_TARGET_SCHEME_PORT_ID = "target_scheme_port_id";

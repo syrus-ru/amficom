@@ -5,7 +5,7 @@ import java.util.*;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.general.*;
 
-public final class SchemePathController implements ObjectResourceController
+public final class SchemePathController extends ObjectResourceController
 {
 	public static final String COLUMN_START_DEVICE_ID = "start_device_id";
 	public static final String COLUMN_END_DEVICE_ID = "end_device_id";

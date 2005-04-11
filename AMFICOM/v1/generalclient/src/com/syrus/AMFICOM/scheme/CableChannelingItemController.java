@@ -7,7 +7,7 @@ import java.util.List;
 
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
-public final class CableChannelingItemController implements ObjectResourceController
+public final class CableChannelingItemController extends ObjectResourceController
 {
 	public static final String COLUMN_SEQUENTIAL_NUMBER = "number";
 	public static final String COLUMN_START_SITE_NODE_ID = "start_site_node_id";

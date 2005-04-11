@@ -6,7 +6,7 @@ import java.util.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
-public final class EquipmentTypeController implements ObjectResourceController {
+public final class EquipmentTypeController extends ObjectResourceController {
 
 	public static final String				COLUMN_MANUFACTURER			= "manufacturer";
 	public static final String				COLUMN_MANUFACTURER_CODE	= "manufacturer_code";

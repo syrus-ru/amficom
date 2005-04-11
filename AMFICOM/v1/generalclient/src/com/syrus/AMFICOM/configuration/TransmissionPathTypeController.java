@@ -5,7 +5,7 @@ import java.util.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
-public final class TransmissionPathTypeController implements ObjectResourceController
+public final class TransmissionPathTypeController extends ObjectResourceController
 {
 	private static TransmissionPathTypeController instance;
 

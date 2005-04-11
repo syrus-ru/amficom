@@ -7,7 +7,7 @@ import java.util.List;
 
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
-public final class MonitoredElementController implements ObjectResourceController
+public final class MonitoredElementController extends ObjectResourceController
 {
 	public static final String COLUMN_MEASUREMENT_PORT_ID = "measurement_port_id";
 	public static final String COLUMN_SORT = "sort";

@@ -7,7 +7,7 @@ import java.util.List;
 
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
-public final class CableThreadController implements ObjectResourceController
+public final class CableThreadController extends ObjectResourceController
 {
 	private static CableThreadController instance;
 

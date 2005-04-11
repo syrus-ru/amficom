@@ -5,7 +5,7 @@ import java.util.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
-public final class PortTypeController implements ObjectResourceController
+public final class PortTypeController extends ObjectResourceController
 {
 	private static PortTypeController instance;
 

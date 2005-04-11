@@ -5,7 +5,7 @@ import java.util.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
-public final class PortController implements ObjectResourceController
+public final class PortController extends ObjectResourceController
 {
 	public static final String COLUMN_SORT = "sort";
 	public static final String COLUMN_EQUIPMENT_ID = "equipment_id";

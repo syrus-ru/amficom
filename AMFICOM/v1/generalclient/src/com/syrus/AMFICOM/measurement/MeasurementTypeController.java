@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeController.java,v 1.3 2005/03/16 13:40:57 bass Exp $
+ * $Id: MeasurementTypeController.java,v 1.4 2005/04/11 12:17:07 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.measurement;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/03/16 13:40:57 $
+ * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2005/04/11 12:17:07 $
  * @module generalclient_v1
  */
 
@@ -18,7 +18,7 @@ import java.util.*;
 
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
-public final class MeasurementTypeController implements ObjectResourceController
+public final class MeasurementTypeController extends ObjectResourceController
 {
 	private static MeasurementTypeController instance;
 

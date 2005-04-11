@@ -4,7 +4,7 @@ import java.util.*;
 
 import com.syrus.AMFICOM.client_.resource.*;
 
-public final class TestController implements ObjectResourceController
+public final class TestController extends ObjectResourceController
 {
 	public static final String KEY_START_TIME = "starttime";
 

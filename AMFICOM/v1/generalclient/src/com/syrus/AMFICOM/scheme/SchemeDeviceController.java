@@ -5,7 +5,7 @@ import java.util.*;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.general.*;
 
-public final class SchemeDeviceController implements ObjectResourceController
+public final class SchemeDeviceController extends ObjectResourceController
 {
 	public static final String COLUMN_SCHEME_PORT_IDS = "scheme_port_ids";
 	public static final String COLUMN_SCHEME_CABLEPORT_IDS = "scheme_cableport_ids";

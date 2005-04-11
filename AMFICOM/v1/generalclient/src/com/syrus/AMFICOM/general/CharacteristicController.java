@@ -5,7 +5,7 @@ import java.util.*;
 
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
-public final class CharacteristicController implements ObjectResourceController {
+public final class CharacteristicController extends ObjectResourceController {
 
 	private static CharacteristicController	instance;
 	public static final String				COLUMN_SORT				= "sort";

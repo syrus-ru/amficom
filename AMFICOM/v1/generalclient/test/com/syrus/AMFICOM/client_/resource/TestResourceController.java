@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.client_.general.ui.MLabel;
 /**
  * @author Vladimir Dolzhenko
  */
-public class TestResourceController implements ObjectResourceController {
+public class TestResourceController extends ObjectResourceController {
 
 	public static final String		KEY_ID			= "id";
 	public static final String		KEY_NAME		= "name";

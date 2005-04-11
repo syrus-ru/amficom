@@ -5,7 +5,7 @@ import java.util.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
-public final class TransmissionPathController implements ObjectResourceController
+public final class TransmissionPathController extends ObjectResourceController
 {
 	public static final String COLUMN_START_PORT_ID = "start_port_id";
 	public static final String COLUMN_FINISH_PORT_ID= "finish_port_id";
