@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerMeasurementObjectLoader.java,v 1.38 2005/04/05 11:04:22 arseniy Exp $
+ * $Id: CMServerMeasurementObjectLoader.java,v 1.39 2005/04/11 14:48:58 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,10 @@
 package com.syrus.AMFICOM.cmserver;
 
 import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -42,13 +45,13 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/04/05 11:04:22 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.39 $, $Date: 2005/04/11 14:48:58 $
+ * @author $Author: bob $
  * @module cmserver_v1
  */
 public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 	
-	private long lastRefresh = 0;
+	private Map  lastRefesh; 
 	
 	/**
 	 * refresh timeout
@@ -57,21 +60,27 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 	
 	public CMServerMeasurementObjectLoader(long refreshTimeout) {
 		this.refreshTimeout = refreshTimeout;
+		this.lastRefesh = new HashMap();
 	}
 
 	public Set refresh(Set storableObjects) throws DatabaseException, CommunicationException {
 		/* refresh no often than one in refreshTimeout ms */
-		if (System.currentTimeMillis() - this.lastRefresh < this.refreshTimeout)
-			return Collections.EMPTY_SET;
-
-		this.lastRefresh = System.currentTimeMillis();
-
 		if (storableObjects.isEmpty())
 			return Collections.EMPTY_SET;
 
-		short entityCode = ((StorableObject) storableObjects.iterator().next()).getId().getMajor();
+		StorableObject firstStorableObject = (StorableObject) storableObjects.iterator().next();
+		Short entityCode = new Short(firstStorableObject.getId().getMajor());
+		
+		Date lastRefreshDate = (Date) this.lastRefesh.get(entityCode);
+		
+		if (lastRefreshDate != null && System.currentTimeMillis() - lastRefreshDate.getTime() < this.refreshTimeout)
+			return Collections.EMPTY_SET;
+
+		/* put current date*/
+		this.lastRefesh.put(entityCode, new Date()); 
+
 		try {
-			StorableObjectDatabase database = MeasurementDatabaseContext.getDatabase(entityCode);
+			StorableObjectDatabase database = MeasurementDatabaseContext.getDatabase(entityCode.shortValue());
 			if (database != null)
 				return database.refresh(storableObjects);
 
