@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupWrapper.java,v 1.8 2005/04/11 11:49:13 bob Exp $
+ * $Id: MeasurementSetupWrapper.java,v 1.9 2005/04/11 13:02:15 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,13 +10,17 @@ package com.syrus.AMFICOM.measurement;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
+import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.CharacteristicTypeCodenames;
+import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/04/11 11:49:13 $
+ * @version $Revision: 1.9 $, $Date: 2005/04/11 13:02:15 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -89,8 +93,21 @@ public class MeasurementSetupWrapper extends StorableObjectWrapper {
 		for (int i = 0; i < parameters.length; i++) {				
 			String string = parameters[i].getStringValue();
 			if (string != null) {
-				StorableObjectType type = parameters[i].getType();
-				buffer.append(type.getDescription() + ':' + string + '\n'); 
+				ParameterType parameterType = (ParameterType) parameters[i].getType();
+				buffer.append(parameterType.getDescription() + ':' + string);
+				java.util.Set characteristics = parameterType.getCharacteristics();
+				if (!characteristics.isEmpty()) {
+					for (Iterator it = characteristics.iterator(); it.hasNext();) {
+						Characteristic characteristic = (Characteristic) it.next();
+						StorableObjectType type = characteristic.getType();
+						if (type.getCodename().startsWith(CharacteristicTypeCodenames.UNITS_PREFIX)) {
+							buffer.append(' ' + characteristic.getValue());
+							/* TODO check for all codename ?*/
+							break;
+						}
+					}
+				}
+				buffer.append('\n');
 			}
 		}
 		buffer.append('\n');
