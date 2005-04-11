@@ -50,9 +50,9 @@ SOURCES := com/syrus/util/KISConnectionLRUMap.java \
 	com/syrus/AMFICOM/mcm/AnalysisManager.java \
 	com/syrus/AMFICOM/mcm/EvaluationManager.java \
 	com/syrus/AMFICOM/mcm/AnalysisEvaluationProcessor.java \
-	com/syrus/AMFICOM/mcm/DadaraAnalysisManager.java \
 	com/syrus/AMFICOM/mcm/MeasurementControlModuleSetup.java
 
+#	com/syrus/AMFICOM/mcm/DadaraAnalysisManager.java
 
 
 all: $(LIBNAME) $(LIBNAME_INTERFACE)

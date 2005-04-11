@@ -1,5 +1,5 @@
 /*
- * $Id: DadaraAnalysisManager.java,v 1.27 2005/03/22 15:21:03 arseniy Exp $
+ * $Id: DadaraAnalysisManager.java,v 1.28 2005/04/11 12:43:36 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.mcm;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/03/22 15:21:03 $
+ * @version $Revision: 1.28 $, $Date: 2005/04/11 12:43:36 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -213,7 +213,7 @@ public class DadaraAnalysisManager implements AnalysisManager, EvaluationManager
 					OperationSort.OPERATION_EQUALS,
 					new Short(ObjectEntities.PARAMETERTYPE_ENTITY_CODE),
 					StorableObjectWrapper.COLUMN_CODENAME);
-				pt = (ParameterType )GeneralStorableObjectPool.getStorableObjectsByCondition(tc, true);
+				pt = (ParameterType) GeneralStorableObjectPool.getStorableObjectsByCondition(tc, true).iterator().next();
 			}
 			catch (ApplicationException ae) {
 				throw new AnalysisException("Cannot find parameter type of codename: '" + key + "' -- " + ae.getMessage(), ae);

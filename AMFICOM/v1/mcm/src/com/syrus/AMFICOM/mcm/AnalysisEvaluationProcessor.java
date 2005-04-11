@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisEvaluationProcessor.java,v 1.22 2005/04/08 09:29:26 bass Exp $
+ * $Id: AnalysisEvaluationProcessor.java,v 1.23 2005/04/11 12:43:36 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/04/08 09:29:26 $
- * @author $Author: bass $
+ * @version $Revision: 1.23 $, $Date: 2005/04/11 12:43:36 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 
@@ -49,6 +49,7 @@ public class AnalysisEvaluationProcessor {
 
 	private AnalysisEvaluationProcessor() {
 		//singleton
+		assert false;
 	}
 
 	public static Result[] analyseEvaluate(Result measurementResult) throws AnalysisException, EvaluationException {
