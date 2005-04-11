@@ -1,5 +1,5 @@
 /*-
- * $Id: ArchiveChildrenFactory.java,v 1.4 2005/04/06 15:50:39 bob Exp $
+ * $Id: ArchiveChildrenFactory.java,v 1.5 2005/04/11 08:24:40 bob Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,11 +24,13 @@ import javax.swing.UIManager;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
+import com.syrus.AMFICOM.configuration.MonitoredElementWrapper;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.logic.ChildrenFactory;
@@ -48,7 +50,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/04/06 15:50:39 $
+ * @version $Revision: 1.5 $, $Date: 2005/04/11 08:24:40 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module analysis_v1
@@ -71,8 +73,8 @@ public class ArchiveChildrenFactory implements ChildrenFactory {
 	private static final String				MEASUREMENTSETUPS	= "measurementsetups";
 	private static final String				MODELS				= "models";
 	private static final String				PREDICTED			= "predicted";
-	
-	private SimpleDateFormat dateFormat;
+
+	private SimpleDateFormat				dateFormat;
 
 	private ArchiveChildrenFactory() {
 		// singleton
@@ -94,7 +96,7 @@ public class ArchiveChildrenFactory implements ChildrenFactory {
 		return instance;
 	}
 
-	public void populate(Item item) {	
+	public void populate(Item item) {
 		Object nodeObject = item.getObject();
 		if (nodeObject instanceof String) {
 			String s = (String) nodeObject;
@@ -114,16 +116,20 @@ public class ArchiveChildrenFactory implements ChildrenFactory {
 			} else if (s.equals(MEASUREMENTS) || s.equals(PREDICTED)) {
 				LinkedIdsCondition condition = new LinkedIdsCondition(this.domainId, ObjectEntities.ME_ENTITY_CODE);
 				try {
-					Collection mes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
-					for (Iterator it = mes.iterator(); it.hasNext();) {
+					Set meSet = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
+					List list = new LinkedList(meSet);
+
+					Collections.sort(list, new WrapperComparator(MonitoredElementWrapper.getInstance(),
+																	StorableObjectWrapper.COLUMN_NAME));
+					for (Iterator it = list.iterator(); it.hasNext();) {
 						MonitoredElement me = (MonitoredElement) it.next();
 						IconPopulatableItem item2 = new IconPopulatableItem();
 						item2.setObject(me);
 						item2.setName(me.getName());
 						item2.setChildrenFactory(this);
-						
+
 						item2.setIcon(UIManager.getIcon(ResourceKeys.ICON_MINI_PATHMODE));
-						
+
 						item.addChild(item2);
 					}
 				} catch (ApplicationException ex) {
@@ -147,7 +153,7 @@ public class ArchiveChildrenFactory implements ChildrenFactory {
 				try {
 					Set paths = SchemeStorableObjectPool.getStorableObjectsByCondition(condition, true);
 					for (Iterator it = paths.iterator(); it.hasNext();) {
-						SchemePath path = (SchemePath) it.next();						
+						SchemePath path = (SchemePath) it.next();
 						IconPopulatableItem item2 = new IconPopulatableItem();
 						item2.setObject(path);
 						item2.setName(path.getName());
@@ -165,7 +171,7 @@ public class ArchiveChildrenFactory implements ChildrenFactory {
 				try {
 					Collection mSetups = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
 					for (Iterator it = mSetups.iterator(); it.hasNext();) {
-						MeasurementSetup measurementSetup = (MeasurementSetup) it.next();						
+						MeasurementSetup measurementSetup = (MeasurementSetup) it.next();
 						IconPopulatableItem item2 = new IconPopulatableItem();
 						item2.setObject(measurementSetup);
 						item2.setName(measurementSetup.getDescription());
@@ -336,20 +342,18 @@ public class ArchiveChildrenFactory implements ChildrenFactory {
 																	OperationSort.OPERATION_IN_RANGE,
 																	ObjectEntities.TEST_ENTITY_CODE,
 																	TestWrapper.COLUMN_END_TIME);
-				//*/
+				// */
 				condition = condition1;
-				/*/
-				TypicalCondition condition2 = new TypicalCondition(startDate, endDate,
-																	OperationSort.OPERATION_IN_RANGE,
-																	ObjectEntities.TEST_ENTITY_CODE,
-																	TestWrapper.COLUMN_START_TIME);
-				try {
-					condition = new CompoundCondition(condition1, CompoundConditionSort.AND, condition2);
-				} catch (CreateObjectException e) {
-					// it's cannot be occur
-					throw new UnsupportedOperationException();
-				}
-				//*/
+				/*
+				 * / TypicalCondition condition2 = new
+				 * TypicalCondition(startDate, endDate,
+				 * OperationSort.OPERATION_IN_RANGE,
+				 * ObjectEntities.TEST_ENTITY_CODE,
+				 * TestWrapper.COLUMN_START_TIME); try { condition = new
+				 * CompoundCondition(condition1, CompoundConditionSort.AND,
+				 * condition2); } catch (CreateObjectException e) { // it's
+				 * cannot be occur throw new UnsupportedOperationException(); } //
+				 */
 				try {
 					Set tests = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
 					List list = new LinkedList(tests);
