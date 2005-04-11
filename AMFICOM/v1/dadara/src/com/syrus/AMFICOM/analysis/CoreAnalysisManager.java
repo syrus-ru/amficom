@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.32 2005/04/11 10:35:31 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.33 2005/04/11 10:58:48 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.32 $, $Date: 2005/04/11 10:35:31 $
+ * @version $Revision: 1.33 $, $Date: 2005/04/11 10:58:48 $
  * @module
  */
 
@@ -330,7 +330,7 @@ public class CoreAnalysisManager
 	private static void updateMTMThresholdsByBSMap(ModelTraceManager mtm, Map bellcoreTraces)
 	{
 		// определяем верхнюю и нижнюю границы
-		double[] yBase = mtm.getModelTrace().getYArray();
+		double[] yBase = mtm.getMTAE().getModelTrace().getYArray();
 		double[] yMax = new double[yBase.length];
 		double[] yMin = new double[yBase.length];
 		System.arraycopy(yBase, 0, yMax, 0, yBase.length);
