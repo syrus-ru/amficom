@@ -1,5 +1,5 @@
 /*-
- * $Id: ArchiveChildrenFactory.java,v 1.5 2005/04/11 08:24:40 bob Exp $
+ * $Id: ArchiveChildrenFactory.java,v 1.6 2005/04/11 15:54:21 bob Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,7 +50,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/04/11 08:24:40 $
+ * @version $Revision: 1.6 $, $Date: 2005/04/11 15:54:21 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module analysis_v1
@@ -341,7 +341,7 @@ public class ArchiveChildrenFactory implements ChildrenFactory {
 				TypicalCondition condition1 = new TypicalCondition(startDate, endDate,
 																	OperationSort.OPERATION_IN_RANGE,
 																	ObjectEntities.TEST_ENTITY_CODE,
-																	TestWrapper.COLUMN_END_TIME);
+																	TestWrapper.COLUMN_START_TIME);
 				// */
 				condition = condition1;
 				/*
