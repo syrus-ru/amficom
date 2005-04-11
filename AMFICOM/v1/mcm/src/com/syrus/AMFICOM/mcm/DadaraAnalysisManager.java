@@ -1,5 +1,5 @@
 /*
- * $Id: DadaraAnalysisManager.java,v 1.28 2005/04/11 12:43:36 arseniy Exp $
+ * $Id: DadaraAnalysisManager.java,v 1.29 2005/04/11 15:24:55 saa Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.mcm;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/04/11 12:43:36 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.29 $, $Date: 2005/04/11 15:24:55 $
+ * @author $Author: saa $
  * @module mcm_v1
  */
 
@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
+import com.syrus.AMFICOM.analysis.dadara.DataStreamableUtil;
 import com.syrus.AMFICOM.analysis.dadara.ModelFunction;
 import com.syrus.AMFICOM.analysis.dadara.ModelTrace;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceComparer;
@@ -51,7 +52,7 @@ public class DadaraAnalysisManager implements AnalysisManager, EvaluationManager
 	// input SetParameters codenames
 	public static final String CODENAME_REFLECTOGRAMMA = "reflectogramma";
 	public static final String CODENAME_DADARA_ETALON_MTM_MT_SE = "dadara_etalon_mtm_mt_se";
-	public static final String CODENAME_DADARA_ETALON_MTM_THRESH = "dadara_etalon_mtm_thresh";
+	//public static final String CODENAME_DADARA_ETALON_MTM_THRESH = "dadara_etalon_mtm_thresh"; // etalon thresholds are stored together with etalon itself
 	public static final String CODENAME_DADARA_ETALON_BREAK_THRESH = "dadara_etalon_break_thresh";
 
 	// output SetParameters codenames
@@ -110,9 +111,11 @@ public class DadaraAnalysisManager implements AnalysisManager, EvaluationManager
 	{
 		// read etalon r/g and its thresholds
 		byte[] etalonData = getParameter(CODENAME_DADARA_ETALON_MTM_MT_SE);
-		byte[] threshData = getParameter(CODENAME_DADARA_ETALON_MTM_THRESH);
-		ModelTraceManager mtm = ModelTraceManager.eventsAndTraceFromByteArray(etalonData);
-		mtm.setThresholdsFromByteArray(threshData);
+//		byte[] threshData = getParameter(CODENAME_DADARA_ETALON_MTM_THRESH);
+//		ModelTraceManager mtm = ModelTraceManager.eventsAndTraceFromByteArray(etalonData);
+//		mtm.setThresholdsFromByteArray(threshData);
+		ModelTraceManager mtm = (ModelTraceManager)DataStreamableUtil.
+			readDataStreamableFromBA(etalonData, ModelTraceManager.getReader());
 		return mtm;
 	}
 
