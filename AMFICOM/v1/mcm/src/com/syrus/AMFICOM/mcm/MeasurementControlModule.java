@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.71 2005/04/07 16:02:03 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.72 2005/04/11 12:39:33 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -58,7 +58,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.71 $, $Date: 2005/04/07 16:02:03 $
+ * @version $Revision: 1.72 $, $Date: 2005/04/11 12:39:33 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -187,8 +187,10 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		}
 
 		/* Activate session context */
-		SessionContext.init(new AccessIdentity(new Date(System.currentTimeMillis()), mcm.getDomainId(), mcm.getUserId(), null),
-				server.getHostName());
+		SessionContext.init(new AccessIdentity(new Date(System.currentTimeMillis()),
+				mcm.getDomainId(),
+				mcm.getUserId(),
+				"sessionCode"), server.getHostName());
 
 		/*	Create CORBA server with servant(s)	*/
 		activateCORBAServer();

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServer.java,v 1.29 2005/04/05 12:18:50 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.30 2005/04/11 12:38:28 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -46,7 +46,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/04/05 12:18:50 $
+ * @version $Revision: 1.30 $, $Date: 2005/04/11 12:38:28 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -139,8 +139,10 @@ public class MeasurementServer extends SleepButWorkThread {
 		}
 
 		/*	Activate session context*/
-		SessionContext.init(new AccessIdentity(new Date(System.currentTimeMillis()), server.getDomainId(), server.getUserId(), null),
-				server.getHostName());
+		SessionContext.init(new AccessIdentity(new Date(System.currentTimeMillis()),
+				server.getDomainId(),
+				server.getUserId(),
+				"sessionCode"), server.getHostName());
 
 		/*	Create CORBA server with servant(s)	*/
 		activateCORBAServer();
