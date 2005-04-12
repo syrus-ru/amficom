@@ -206,7 +206,8 @@ public class MathRef
 			return 0;
 		double s = 0.001;
 		double loss = y1 - y2;
-		return (-10*Math.log(s/2d *(1d - Math.exp(-2d*0.23*Math.abs(loss))))/Math.log(10));
+		double ret = (-10*Math.log(s/2d *(1d - Math.exp(-2d*0.23*Math.abs(loss))))/Math.log(10));
+		return ret; // @todo: replace values < -99 with '-inf' (?)
 	}
 
 	// вычислить сигму для отражения
