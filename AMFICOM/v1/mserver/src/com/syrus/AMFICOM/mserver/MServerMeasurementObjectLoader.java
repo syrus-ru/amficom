@@ -1,5 +1,5 @@
 /*
- * $Id: MServerMeasurementObjectLoader.java,v 1.22 2005/04/05 12:20:14 arseniy Exp $
+ * $Id: MServerMeasurementObjectLoader.java,v 1.23 2005/04/12 17:19:41 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/04/05 12:20:14 $
+ * @version $Revision: 1.23 $, $Date: 2005/04/12 17:19:41 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -340,27 +340,13 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 			return objects;
 
 		Set loadedObjects = new HashSet();
-		Identifier_Transferable[] loadIdsT = null;
-		try {
-			loadIdsT = Identifier.createTransferables(loadIds);
-		}
-		catch (IllegalDataException ide) {
-			//Never
-			Log.errorException(ide);
-		}
+		Identifier_Transferable[] loadIdsT = Identifier.createTransferables(loadIds);
 
 		if (preferredMCMId != null) {
 			Log.debugMessage("MServerMeasurementObjectLoader.loadMeasurements | Trying to load from MCM '" + preferredMCMId + "'",
 					Log.DEBUGLEVEL09);
-			if (getMeasurementsFromMCM(preferredMCMId, loadIdsT, loadIds, loadedObjects)) {
-				try {
-					loadIdsT = Identifier.createTransferables(loadIds);
-				}
-				catch (IllegalDataException ide) {
-					// Never
-					Log.errorException(ide);
-				}
-			}
+			if (getMeasurementsFromMCM(preferredMCMId, loadIdsT, loadIds, loadedObjects))
+				loadIdsT = Identifier.createTransferables(loadIds);
 		}	//if (preferredMCMId != null)
 
 		if (!loadIds.isEmpty()) {
@@ -370,15 +356,8 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 			Identifier mcmId1;
 			for (Iterator it = mcmIds.iterator(); it.hasNext() && !loadIds.isEmpty();) {
 				mcmId1 = (Identifier) it.next();
-				if (getMeasurementsFromMCM(mcmId1, loadIdsT, loadIds, loadedObjects)) {
-					try {
-						loadIdsT = Identifier.createTransferables(loadIds);
-					}
-					catch (IllegalDataException ide) {
-						// Never
-						Log.errorException(ide);
-					}
-				}
+				if (getMeasurementsFromMCM(mcmId1, loadIdsT, loadIds, loadedObjects))
+					loadIdsT = Identifier.createTransferables(loadIds);
 			}
 
 		}	// if (!loadIds.isEmpty())
@@ -412,27 +391,12 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 			return objects;
 
 		Set loadedObjects = new HashSet();
-		Identifier_Transferable[] loadIdsT = null;
-		try {
-			loadIdsT = Identifier.createTransferables(loadIds);
-		}
-		catch (IllegalDataException ide) {
-			//Never
-			Log.errorException(ide);
-		}
-
+		Identifier_Transferable[] loadIdsT = Identifier.createTransferables(loadIds);
 		if (preferredMCMId != null) {
 			Log.debugMessage("MServerMeasurementObjectLoader.loadAnalyses | Trying to load from MCM '" + preferredMCMId + "'",
 					Log.DEBUGLEVEL09);
-			if (getAnalysesFromMCM(preferredMCMId, loadIdsT, loadIds, loadedObjects)) {
-				try {
-					loadIdsT = Identifier.createTransferables(loadIds);
-				}
-				catch (IllegalDataException ide) {
-					// Never
-					Log.errorException(ide);
-				}
-			}
+			if (getAnalysesFromMCM(preferredMCMId, loadIdsT, loadIds, loadedObjects))
+				loadIdsT = Identifier.createTransferables(loadIds);
 		}	//if (preferredMCMId != null)
 
 		if (!loadIds.isEmpty()) {
@@ -442,15 +406,8 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 			Identifier mcmId1;
 			for (Iterator it = mcmIds.iterator(); it.hasNext() && !loadIds.isEmpty();) {
 				mcmId1 = (Identifier) it.next();
-				if (getAnalysesFromMCM(mcmId1, loadIdsT, loadIds, loadedObjects)) {
-					try {
-						loadIdsT = Identifier.createTransferables(loadIds);
-					}
-					catch (IllegalDataException ide) {
-						// Never
-						Log.errorException(ide);
-					}
-				}
+				if (getAnalysesFromMCM(mcmId1, loadIdsT, loadIds, loadedObjects))
+					loadIdsT = Identifier.createTransferables(loadIds);
 			}
 
 		}	// if (!loadIds.isEmpty())
@@ -484,27 +441,13 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 			return objects;
 
 		Set loadedObjects = new HashSet();
-		Identifier_Transferable[] loadIdsT = null;
-		try {
-			loadIdsT = Identifier.createTransferables(loadIds);
-		}
-		catch (IllegalDataException ide) {
-			//Never
-			Log.errorException(ide);
-		}
+		Identifier_Transferable[] loadIdsT = Identifier.createTransferables(loadIds);
 
 		if (preferredMCMId != null) {
 			Log.debugMessage("MServerMeasurementObjectLoader.loadEvaluations | Trying to load from MCM '" + preferredMCMId + "'",
 					Log.DEBUGLEVEL09);
-			if (getEvaluationsFromMCM(preferredMCMId, loadIdsT, loadIds, loadedObjects)) {
-				try {
-					loadIdsT = Identifier.createTransferables(loadIds);
-				}
-				catch (IllegalDataException ide) {
-					// Never
-					Log.errorException(ide);
-				}
-			}
+			if (getEvaluationsFromMCM(preferredMCMId, loadIdsT, loadIds, loadedObjects))
+				loadIdsT = Identifier.createTransferables(loadIds);
 		}	//if (preferredMCMId != null)
 
 		if (!loadIds.isEmpty()) {
@@ -514,16 +457,9 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 			Identifier mcmId1;
 			for (Iterator it = mcmIds.iterator(); it.hasNext() && !loadIds.isEmpty();) {
 				mcmId1 = (Identifier) it.next();
-				if (getEvaluationsFromMCM(mcmId1, loadIdsT, loadIds, loadedObjects)) {
-					try {
-						loadIdsT = Identifier.createTransferables(loadIds);
-					}
-					catch (IllegalDataException ide) {
-						// Never
-						Log.errorException(ide);
-					}
-				}
-				}
+				if (getEvaluationsFromMCM(mcmId1, loadIdsT, loadIds, loadedObjects))
+					loadIdsT = Identifier.createTransferables(loadIds);
+			}
 
 		}	//if (!loadIds.isEmpty())
 
@@ -697,14 +633,7 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 		}
 
 		Set loadedObjects = new HashSet();
-		Identifier_Transferable[] loadButIdsT = null;
-		try {
-			loadButIdsT = Identifier.createTransferables(loadButIds);
-		}
-		catch (IllegalDataException ide) {
-			//Never
-			Log.errorException(ide);
-		}
+		Identifier_Transferable[] loadButIdsT = Identifier.createTransferables(loadButIds);
 		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
 
 		Set mcmIds = MeasurementServer.getMCMIds();
@@ -780,14 +709,7 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 		}
 
 		Set loadedObjects = new HashSet();
-		Identifier_Transferable[] loadButIdsT = null;
-		try {
-			loadButIdsT = Identifier.createTransferables(loadButIds);
-		}
-		catch (IllegalDataException ide) {
-			//Never
-			Log.errorException(ide);
-		}
+		Identifier_Transferable[] loadButIdsT = Identifier.createTransferables(loadButIds);
 		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
 
 		Set mcmIds = MeasurementServer.getMCMIds();
@@ -862,14 +784,7 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 		}
 
 		Set loadedObjects = new HashSet();
-		Identifier_Transferable[] loadButIdsT = null;
-		try {
-			loadButIdsT = Identifier.createTransferables(loadButIds);
-		}
-		catch (IllegalDataException ide) {
-			//Never
-			Log.errorException(ide);
-		}
+		Identifier_Transferable[] loadButIdsT = Identifier.createTransferables(loadButIds);
 		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
 
 		Set mcmIds = MeasurementServer.getMCMIds();

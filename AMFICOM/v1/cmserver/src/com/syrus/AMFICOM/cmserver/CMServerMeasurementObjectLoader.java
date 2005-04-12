@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerMeasurementObjectLoader.java,v 1.39 2005/04/11 14:48:58 bob Exp $
+ * $Id: CMServerMeasurementObjectLoader.java,v 1.40 2005/04/12 17:17:29 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,7 +19,6 @@ import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -45,8 +44,8 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/04/11 14:48:58 $
- * @author $Author: bob $
+ * @version $Revision: 1.40 $, $Date: 2005/04/12 17:17:29 $
+ * @author $Author: arseniy $
  * @module cmserver_v1
  */
 public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
@@ -218,14 +217,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 	public Set loadMeasurements(Set ids) throws RetrieveObjectException {
 		MeasurementDatabase database = MeasurementDatabaseContext.getMeasurementDatabase();
 		Set objects = super.retrieveFromDatabase(database, ids);
-		Identifier_Transferable[] loadIdsT = null;
-		try {
-			loadIdsT = super.createLoadIdsTransferable(ids, objects);
-		}
-		catch (IllegalDataException ide) {
-			// Never
-			Log.errorException(ide);
-		}
+		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
 		if (loadIdsT.length == 0)
 			return objects;
 
@@ -270,14 +262,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 	public Set loadAnalyses(Set ids) throws RetrieveObjectException {
 		AnalysisDatabase database = MeasurementDatabaseContext.getAnalysisDatabase();
 		Set objects = super.retrieveFromDatabase(database, ids);
-		Identifier_Transferable[] loadIdsT = null;
-		try {
-			loadIdsT = super.createLoadIdsTransferable(ids, objects);
-		}
-		catch (IllegalDataException ide) {
-			// Never
-			Log.errorException(ide);
-		}
+		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
 		if (loadIdsT.length == 0)
 			return objects;
 
@@ -322,14 +307,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 	public Set loadEvaluations(Set ids) throws RetrieveObjectException {
 		EvaluationDatabase database = MeasurementDatabaseContext.getEvaluationDatabase();
 		Set objects = super.retrieveFromDatabase(database, ids);
-		Identifier_Transferable[] loadIdsT = null;
-		try {
-			loadIdsT = super.createLoadIdsTransferable(ids, objects);
-		}
-		catch (IllegalDataException ide) {
-			// Never
-			Log.errorException(ide);
-		}
+		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
 		if (loadIdsT.length == 0)
 			return objects;
 
@@ -378,14 +356,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 	public Set loadMeasurementsButIds(StorableObjectCondition condition, Set ids) throws RetrieveObjectException {
 		MeasurementDatabase database = MeasurementDatabaseContext.getMeasurementDatabase();
 		Set objects = super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
-		Identifier_Transferable[] loadButIdsT = null;
-		try {
-			loadButIdsT = super.createLoadButIdsTransferable(ids, objects);
-		}
-		catch (IllegalDataException ide) {
-			// Never
-			Log.errorException(ide);
-		}
+		Identifier_Transferable[] loadButIdsT = super.createLoadButIdsTransferable(ids, objects);
 		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
 
 		Set loadedObjects = new HashSet();
@@ -429,14 +400,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 	public Set loadAnalysesButIds(StorableObjectCondition condition, Set ids) throws RetrieveObjectException {
 		AnalysisDatabase database = MeasurementDatabaseContext.getAnalysisDatabase();
 		Set objects = super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
-		Identifier_Transferable[] loadButIdsT = null;
-		try {
-			loadButIdsT = super.createLoadButIdsTransferable(ids, objects);
-		}
-		catch (IllegalDataException ide) {
-			// Never
-			Log.errorException(ide);
-		}
+		Identifier_Transferable[] loadButIdsT = super.createLoadButIdsTransferable(ids, objects);
 		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
 
 		Set loadedObjects = new HashSet();
@@ -480,14 +444,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 	public Set loadEvaluationsButIds(StorableObjectCondition condition, Set ids) throws RetrieveObjectException {
 		EvaluationDatabase database = MeasurementDatabaseContext.getEvaluationDatabase();
 		Set objects = super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
-		Identifier_Transferable[] loadButIdsT = null;
-		try {
-			loadButIdsT = super.createLoadButIdsTransferable(ids, objects);
-		}
-		catch (IllegalDataException ide) {
-			// Never
-			Log.errorException(ide);
-		}
+		Identifier_Transferable[] loadButIdsT = super.createLoadButIdsTransferable(ids, objects);
 		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
 
 		Set loadedObjects = new HashSet();
