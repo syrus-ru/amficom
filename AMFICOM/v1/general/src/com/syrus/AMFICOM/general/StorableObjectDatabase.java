@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.139 2005/04/11 13:30:42 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.140 2005/04/12 16:14:29 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.139 $, $Date: 2005/04/11 13:30:42 $
+ * @version $Revision: 1.140 $, $Date: 2005/04/12 16:14:29 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -256,7 +256,7 @@ public abstract class StorableObjectDatabase {
 				+ StorableObjectWrapper.COLUMN_ID + COMMA
 				+ StorableObjectWrapper.COLUMN_VERSION
 				+ SQL_FROM + this.getEnityName()
-				+ SQL_WHERE + "1=0");
+				+ SQL_WHERE + DatabaseStorableObjectCondition.FALSE_CONDITION);
 		Set refreshObjectIds = new HashSet();
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 			storableObject = (StorableObject) it.next();
@@ -389,8 +389,7 @@ public abstract class StorableObjectDatabase {
 		}
 	}
 
-	public Set retrieveByCondition(StorableObjectCondition condition) throws RetrieveObjectException,
-			IllegalDataException {
+	public Set retrieveByCondition(StorableObjectCondition condition) throws RetrieveObjectException, IllegalDataException {
 		return this.retrieveByCondition(this.getConditionQuery(condition));
 	}
 
@@ -486,7 +485,7 @@ public abstract class StorableObjectDatabase {
 			String tableName,
 			String idColumnName,
 			String linkedIdColumnName)
-			throws RetrieveObjectException, IllegalDataException {
+			throws RetrieveObjectException {
 		if (storableObjects == null || storableObjects.isEmpty())
 			return Collections.EMPTY_MAP;
 
@@ -1131,12 +1130,7 @@ public abstract class StorableObjectDatabase {
 			return;
 
 		StringBuffer sql = new StringBuffer(SQL_SELECT + idColumnName + COMMA + linkedIdColumnName + SQL_FROM + tableName + SQL_WHERE);
-		try {
-			sql.append(idsEnumerationString(idLinkedIdMap.keySet(), idColumnName, true));
-		}
-		catch (IllegalDataException ide) {
-			throw new UpdateObjectException(ide);
-		}
+		sql.append(idsEnumerationString(idLinkedIdMap.keySet(), idColumnName, true));
 
 		Map dbLinkedObjIdsMap = new HashMap();
 		Identifier id;
@@ -1220,11 +1214,11 @@ public abstract class StorableObjectDatabase {
 
 	// //////////////////// delete /////////////////////////
 
-	public void delete(StorableObject storableObject) throws IllegalDataException {
+	public final void delete(StorableObject storableObject) {
 		this.delete(storableObject.getId());
 	}
 
-	public void delete(Identifier id) throws IllegalDataException {
+	public void delete(Identifier id) {
 		Statement statement = null;
 		Connection connection = DatabaseConnection.getConnection();
 		try {
@@ -1252,18 +1246,12 @@ public abstract class StorableObjectDatabase {
 		}
 	}
 
-	public void delete(Set objects) {
-		if ((objects == null) || (objects.isEmpty()))
+	public void delete(Set identifiables) {
+		if ((identifiables == null) || (identifiables.isEmpty()))
 			return;
 
 		StringBuffer stringBuffer = new StringBuffer(SQL_DELETE_FROM + this.getEnityName() + SQL_WHERE);
-		try {
-			stringBuffer.append(idsEnumerationString(objects, StorableObjectWrapper.COLUMN_ID, true));
-		}
-		catch (IllegalDataException ide) {
-			Log.errorException(ide);
-			return;
-		}
+		stringBuffer.append(idsEnumerationString(identifiables, StorableObjectWrapper.COLUMN_ID, true));
 
 		Statement statement = null;
 		Connection connection = DatabaseConnection.getConnection();
@@ -1295,24 +1283,18 @@ public abstract class StorableObjectDatabase {
 		if (idLinkedObjectIdsMap == null || idLinkedObjectIdsMap.isEmpty())
 			return;
 
-		StringBuffer sql = new StringBuffer(SQL_DELETE_FROM + tableName + SQL_WHERE + "1=0");
+		StringBuffer sql = new StringBuffer(SQL_DELETE_FROM + tableName + SQL_WHERE + DatabaseStorableObjectCondition.FALSE_CONDITION);
 
 		Identifier id;
 		Set linkedObjIds;
-		try {
-			for (Iterator it = idLinkedObjectIdsMap.keySet().iterator(); it.hasNext();) {
-				id = (Identifier) it.next();
-				linkedObjIds = (Set) idLinkedObjectIdsMap.get(id);
+		for (Iterator it = idLinkedObjectIdsMap.keySet().iterator(); it.hasNext();) {
+			id = (Identifier) it.next();
+			linkedObjIds = (Set) idLinkedObjectIdsMap.get(id);
 
-				sql.append(SQL_OR + OPEN_BRACKET + idColumnName + EQUALS + DatabaseIdentifier.toSQLString(id) + SQL_AND + OPEN_BRACKET);
-				sql.append(idsEnumerationString(linkedObjIds, linkedIdColumnName, true));
-				sql.append(CLOSE_BRACKET);
-				sql.append(CLOSE_BRACKET);
-			}
-		}
-		catch (IllegalDataException ide) {
-			Log.errorException(ide);
-			return;
+			sql.append(SQL_OR + OPEN_BRACKET + idColumnName + EQUALS + DatabaseIdentifier.toSQLString(id) + SQL_AND + OPEN_BRACKET);
+			sql.append(idsEnumerationString(linkedObjIds, linkedIdColumnName, true));
+			sql.append(CLOSE_BRACKET);
+			sql.append(CLOSE_BRACKET);
 		}
 
 		Statement statement = null;
@@ -1350,33 +1332,25 @@ public abstract class StorableObjectDatabase {
 	 * string like "idColumn NOT IN ('id1', 'id2',... , 'idN') AND idColumn NOT
 	 * IN ('id3', 'id4',... , 'idM') ..."
 	 * 
-	 * @param objects
+	 * @param identifiables
 	 * @param idColumn
 	 * @param inList
 	 * @return String for "WHERE" subclause of SQL query
 	 * @throws IllegalDataException
 	 */
-	protected static StringBuffer idsEnumerationString(Set objects, String idColumn, boolean inList)
-			throws IllegalDataException {
-		if (objects == null || objects.isEmpty())
-			return new StringBuffer(inList ? "1=0" : "1=1");
+	protected static StringBuffer idsEnumerationString(Set identifiables, String idColumn, boolean inList) {
+		if (identifiables == null || identifiables.isEmpty())
+			return new StringBuffer(inList ? DatabaseStorableObjectCondition.FALSE_CONDITION
+					: DatabaseStorableObjectCondition.TRUE_CONDITION);
 
 		StringBuffer stringBuffer = new StringBuffer(OPEN_BRACKET + idColumn + (inList ? SQL_IN : SQL_NOT_IN) + OPEN_BRACKET);
 
-		Object object;
+		Identifiable identifiable;
 		Identifier id;
 		int i = 0;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			object = it.next();
-			if (object instanceof Identifier)
-				id = (Identifier) object;
-			else
-				if (object instanceof Identifiable)
-					id = ((Identifiable) object).getId();
-				else
-					throw new IllegalDataException("StorableObjectDatabase.listIdsString | Object " + object.getClass().getName()
-							+ " isn't Identifier or Identifiable");
-
+		for (Iterator it = identifiables.iterator(); it.hasNext(); i++) {
+			identifiable = (Identifiable) it.next();
+			id = identifiable.getId();
 			stringBuffer.append(DatabaseIdentifier.toSQLString(id));
 			if (it.hasNext()) {
 				if (((i + 1) % MAXIMUM_EXPRESSION_NUMBER != 0))
@@ -1425,14 +1399,23 @@ public abstract class StorableObjectDatabase {
 		return parsedValues;
 	}
 
-	private String getConditionQuery(StorableObjectCondition condition) throws IllegalDataException {
+	private String getConditionQuery(StorableObjectCondition condition) {
 		DatabaseStorableObjectCondition databaseStorableObjectCondition = this.reflectDatabaseCondition(condition);
+		if (databaseStorableObjectCondition == null)
+			return DatabaseStorableObjectCondition.TRUE_CONDITION;
+
 		short conditionCode = databaseStorableObjectCondition.getEntityCode().shortValue();
-		if (!this.checkEntity(conditionCode))
-			throw new IllegalDataException(this.getEnityName() + "Database.retrieveByCondition | Incompatible condition ("
-					+ ObjectEntities.codeToString(conditionCode) + ") and database (" + this.getEnityName()
-					+ ") classes");
-		String conditionQuery = databaseStorableObjectCondition.getSQLQuery();
+		assert (this.checkEntity(conditionCode)) : this.getEnityName() + "Database.retrieveByCondition | Incompatible condition ("
+					+ ObjectEntities.codeToString(conditionCode) + ") and database (" + this.getEnityName() + ") classes";
+
+		String conditionQuery;
+		try {
+			conditionQuery = databaseStorableObjectCondition.getSQLQuery();
+		}
+		catch (IllegalObjectEntityException ioee) {
+			Log.errorException(ioee);
+			conditionQuery = DatabaseStorableObjectCondition.TRUE_CONDITION;
+		}
 		return conditionQuery;
 	}
 	
@@ -1442,7 +1425,7 @@ public abstract class StorableObjectDatabase {
 		return (ObjectEntities.stringToCode(enityName) == conditionCode);		
 	}
 
-	private DatabaseStorableObjectCondition reflectDatabaseCondition(StorableObjectCondition condition) throws IllegalDataException {
+	private DatabaseStorableObjectCondition reflectDatabaseCondition(StorableObjectCondition condition) {
 		DatabaseStorableObjectCondition databaseStorableObjectCondition = null;
 		String className = condition.getClass().getName();
 		int lastPoint = className.lastIndexOf('.');
@@ -1454,31 +1437,22 @@ public abstract class StorableObjectDatabase {
 			databaseStorableObjectCondition = (DatabaseStorableObjectCondition) constructor.newInstance(new Object[] {condition});
 		}
 		catch (ClassNotFoundException e) {
-			String msg = this.getEnityName() + "Database.reflectDatabaseCondition | Class " + dbClassName //$NON-NLS-1$
-					+ " not found on the classpath";
-			throw new IllegalDataException(msg, e);
+			Log.errorException(e);
 		}
 		catch (SecurityException e) {
-			String msg = this.getEnityName() + "Database.reflectDatabaseCondition | Caught " + e.getMessage();
-			throw new IllegalDataException(msg, e);
+			Log.errorException(e);
 		}
 		catch (NoSuchMethodException e) {
-			String msg = this.getEnityName() + "Database.reflectDatabaseCondition | Class  " + dbClassName
-					+ " haven't constructor (" + className + ")";
-			throw new IllegalDataException(msg, e);
+			Log.errorException(e);
 		}
 		catch (IllegalArgumentException e) {
-			String msg = this.getEnityName() + "Database.reflectDatabaseCondition | Class  " + dbClassName
-					+ " haven't constructor (" + className + ")";
-			throw new IllegalDataException(msg, e);
+			Log.errorException(e);
 		}
 		catch (InstantiationException e) {
-			String msg = this.getEnityName() + "Database.reflectDatabaseCondition | Caught " + e.getMessage();
-			throw new IllegalDataException(msg, e);
+			Log.errorException(e);
 		}
 		catch (IllegalAccessException e) {
-			String msg = this.getEnityName() + "Database.reflectDatabaseCondition | Caught " + e.getMessage();
-			throw new IllegalDataException(msg, e);
+			Log.errorException(e);
 		}
 		catch (InvocationTargetException e) {
 			final Throwable cause = e.getCause();
@@ -1490,8 +1464,7 @@ public abstract class StorableObjectDatabase {
 					assert false : message;
 			}
 			else {
-				String msg = this.getEnityName() + "Database.reflectDatabaseCondition | Caught " + e.getMessage();
-				throw new IllegalDataException(msg, e);
+				Log.errorException(e);
 			}
 		}
 		return databaseStorableObjectCondition;
