@@ -188,7 +188,7 @@ public class AnalysisUtil
 		for (int i = 0; i < params.length; i++)
 		{
 			ParameterType type = (ParameterType)params[i].getType();
-			if (type.getCodename().equals(ParameterTypeCodenames.DADARA_ETALON_EVENTS))
+			if (type.getCodename().equals(ParameterTypeCodenames.DADARA_ETALON_MTM))
 			{
 				ModelTraceManager mtm = (ModelTraceManager)DataStreamableUtil.
 					readDataStreamableFromBA(params[i].getValue(),
@@ -215,15 +215,10 @@ public class AnalysisUtil
 			defaultMinuitParams = Heap.getMinuitDefaultParams();
 
 		String[] parameterCodenames = new String[] {
-				ParameterTypeCodenames.MIN_EVENT_LEVEL,//0
+				ParameterTypeCodenames.MIN_EVENT,//0
 				ParameterTypeCodenames.MIN_SPLICE,//1
 				ParameterTypeCodenames.MIN_CONNECTOR,//2
-				ParameterTypeCodenames.MIN_END_LEVEL //3 FIXME: should be NOISE_FACTOR
-				//ParameterTypeCodenames.MIN_END_LEVEL,// -- not used anymore
-				//ParameterTypeCodenames.MAX_NOISE_LEVEL,// -- not used anymore
-				//ParameterTypeCodenames.CONNECTOR_FORM_FACTOR,// -- not used anymore
-				//ParameterTypeCodenames.STRATEGY,// -- not used anymore
-				//ParameterTypeCodenames.WAVELET_TYPE// -- not used anymore
+				ParameterTypeCodenames.DADARA_NOISE_FACTOR //3
 		};
 
 		try
@@ -270,7 +265,7 @@ public class AnalysisUtil
 			SetParameter[] params = new SetParameter[2];
 
 			// FIXME: save both events and thresholds
-			ParameterType ptype = getParameterType(userId, ParameterTypeCodenames.DADARA_ETALON_EVENTS, DataType.DATA_TYPE_RAW);
+			ParameterType ptype = getParameterType(userId, ParameterTypeCodenames.DADARA_ETALON_MTM, DataType.DATA_TYPE_RAW);
 			params[0] = SetParameter.createInstance(ptype,
 					DataStreamableUtil.writeDataStreamableToBA(mtm));
 
@@ -327,13 +322,13 @@ public class AnalysisUtil
 			for (int i = 0; i < params.length; i++)
 			{
 				ParameterType p = (ParameterType)params[i].getType();
-				if (p.getCodename().equals(ParameterTypeCodenames.MIN_EVENT_LEVEL))
+				if (p.getCodename().equals(ParameterTypeCodenames.MIN_EVENT))
 					minuitParams[0] = new ByteArray(params[i].getValue()).toDouble();
 				else if (p.getCodename().equals(ParameterTypeCodenames.MIN_SPLICE))
 					minuitParams[1] = new ByteArray(params[i].getValue()).toDouble();
 				else if (p.getCodename().equals(ParameterTypeCodenames.MIN_CONNECTOR))
 					minuitParams[2] = new ByteArray(params[i].getValue()).toDouble();
-				else if (p.getCodename().equals(ParameterTypeCodenames.MIN_END_LEVEL))
+				else if (p.getCodename().equals(ParameterTypeCodenames.DADARA_NOISE_FACTOR))
 					minuitParams[3] = new ByteArray(params[i].getValue()).toDouble();
 			}
 			Heap.setMinuitAnalysisParams((double[])minuitParams.clone());

@@ -65,20 +65,12 @@ public class SaveAnalysisCommand extends VoidCommand
 		}
 
 		Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
-//		String s = JOptionPane.showInputDialog(
-//				Environment.getActiveWindow(),
-//				LangModelAnalyse.getString("newname"),
-//				LangModelAnalyse.getString("analysis"),
-//				JOptionPane.OK_CANCEL_OPTION);
-//		if (s == null || s.equals(""))
-//			return;
-//		a.setName(s);
 
-		AnalysisType type = AnalysisUtil.getAnalysisType(userId, ParameterTypeCodenames.DADARA);
 		Analysis a = null;
 		try
 		{
-			a = Analysis.createInstance(
+			AnalysisType type = AnalysisUtil.getAnalysisType(userId, ParameterTypeCodenames.DADARA);
+			Analysis.createInstance(
 					userId,
 					type,
 					new Identifier(bs.monitoredElementId),
@@ -109,7 +101,7 @@ public class SaveAnalysisCommand extends VoidCommand
 			params[1] = SetParameter.createInstance(ptype,
 					bac.encode());
 
-			ptype = AnalysisUtil.getParameterType(userId, ParameterTypeCodenames.DADARA_EVENTS, DataType.DATA_TYPE_RAW);
+			ptype = AnalysisUtil.getParameterType(userId, ParameterTypeCodenames.DADARA_MTAE, DataType.DATA_TYPE_RAW);
 			params[2] = SetParameter.createInstance(ptype,
 				DataStreamableUtil.writeDataStreamableToBA(mtae));
 		}
