@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathType.java,v 1.40 2005/04/08 12:02:20 arseniy Exp $
+ * $Id: TransmissionPathType.java,v 1.41 2005/04/12 14:52:46 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2005/04/08 12:02:20 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.41 $, $Date: 2005/04/12 14:52:46 $
+ * @author $Author: bob $
  * @module config_v1
  */
 
@@ -114,7 +114,8 @@ public class TransmissionPathType extends StorableObjectType implements Characte
 		this.name = tptt.name;
 
 		Set characteristicIds = Identifier.fromTransferables(tptt.characteristic_ids);
-		this.characteristics = GeneralStorableObjectPool.getStorableObjects(characteristicIds, true);
+		this.characteristics = new HashSet(tptt.characteristic_ids.length);
+		this.setCharacteristics0(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
 	}
 
 	public IDLEntity getTransferable() {

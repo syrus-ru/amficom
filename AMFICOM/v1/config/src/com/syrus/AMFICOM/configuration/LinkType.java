@@ -1,5 +1,5 @@
 /*
- * $Id: LinkType.java,v 1.41 2005/04/08 12:02:20 arseniy Exp $
+ * $Id: LinkType.java,v 1.42 2005/04/12 14:52:46 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2005/04/08 12:02:20 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.42 $, $Date: 2005/04/12 14:52:46 $
+ * @author $Author: bob $
  * @module config_v1
  */
 
@@ -148,7 +148,8 @@ public class LinkType extends AbstractLinkType implements Characterizable {
 		this.name = ltt.name;
 
 		Set characteristicIds = Identifier.fromTransferables(ltt.characteristic_ids);
-		this.characteristics = GeneralStorableObjectPool.getStorableObjects(characteristicIds, true);
+		this.characteristics = new HashSet(ltt.characteristic_ids.length);
+		this.setCharacteristics0(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
 	}
 
 	public IDLEntity getTransferable() {

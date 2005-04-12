@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.72 2005/04/08 12:02:20 arseniy Exp $
+ * $Id: KIS.java,v 1.73 2005/04/12 14:52:46 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,8 +36,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.72 $, $Date: 2005/04/08 12:02:20 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.73 $, $Date: 2005/04/12 14:52:46 $
+ * @author $Author: bob $
  * @module config_v1
  */
 
@@ -159,7 +159,9 @@ public final class KIS extends DomainMember implements Characterizable {
 		this.tcpPort = kt.tcp_port;
 
 		Set characteristicIds = Identifier.fromTransferables(kt.characteristic_ids);
-		this.characteristics = GeneralStorableObjectPool.getStorableObjects(characteristicIds, true);
+		this.characteristics = new HashSet(kt.characteristic_ids.length);
+		this.setCharacteristics0(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
+
 	}
 
 	public IDLEntity getTransferable() {

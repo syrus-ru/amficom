@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterType.java,v 1.19 2005/04/12 13:55:38 bob Exp $
+ * $Id: ParameterType.java,v 1.20 2005/04/12 14:48:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/04/12 13:55:38 $
+ * @version $Revision: 1.20 $, $Date: 2005/04/12 14:48:32 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -127,7 +127,8 @@ public final class ParameterType extends StorableObjectType implements Character
 		this.dataType = ptt.data_type.value();
 		
 		Set characteristicIds = Identifier.fromTransferables(ptt.characteristic_ids);
-		this.characteristics = GeneralStorableObjectPool.getStorableObjects(characteristicIds, true);
+		this.characteristics = new HashSet(ptt.characteristic_ids.length);
+		this.setCharacteristics0(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
 	}
 	
   public IDLEntity getTransferable() {

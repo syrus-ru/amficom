@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.18 2005/04/08 12:02:07 arseniy Exp $
+ * $Id: Domain.java,v 1.19 2005/04/12 14:49:38 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.administration;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/04/08 12:02:07 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.19 $, $Date: 2005/04/12 14:49:38 $
+ * @author $Author: bob $
  * @module administration_v1
  */
 
@@ -95,7 +95,8 @@ public class Domain extends DomainMember implements Characterizable {
 		this.description = dt.description;
 
 		Set characteristicIds = Identifier.fromTransferables(dt.characteristic_ids);
-		this.characteristics = GeneralStorableObjectPool.getStorableObjects(characteristicIds, true);
+		this.characteristics = new HashSet(dt.characteristic_ids.length);
+		this.setCharacteristics0(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
 	}
 	
 	public IDLEntity getTransferable() {

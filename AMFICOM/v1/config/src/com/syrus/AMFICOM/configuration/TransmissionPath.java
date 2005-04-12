@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.58 2005/04/08 12:02:20 arseniy Exp $
+ * $Id: TransmissionPath.java,v 1.59 2005/04/12 14:52:46 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 /**
- * @version $Revision: 1.58 $, $Date: 2005/04/08 12:02:20 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.59 $, $Date: 2005/04/12 14:52:46 $
+ * @author $Author: bob $
  * @module config_v1
  */
 
@@ -144,7 +144,8 @@ public class TransmissionPath extends DomainMember implements MonitoredDomainMem
 		this.finishPortId = new Identifier(tpt.finish_port_id);
 
 		Set characteristicIds = Identifier.fromTransferables(tpt.characteristic_ids);
-		this.characteristics = GeneralStorableObjectPool.getStorableObjects(characteristicIds, true);
+		this.characteristics = new HashSet(tpt.characteristic_ids.length);
+		this.setCharacteristics0(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
 	}
 
 	public IDLEntity getTransferable() {

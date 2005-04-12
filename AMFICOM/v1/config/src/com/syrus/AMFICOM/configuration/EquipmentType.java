@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentType.java,v 1.54 2005/04/08 12:02:20 arseniy Exp $
+ * $Id: EquipmentType.java,v 1.55 2005/04/12 14:52:46 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.54 $, $Date: 2005/04/08 12:02:20 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.55 $, $Date: 2005/04/12 14:52:46 $
+ * @author $Author: bob $
  * @module config_v1
  */
 
@@ -136,7 +136,8 @@ public class EquipmentType extends StorableObjectType implements Characterizable
 		this.manufacturerCode = ett.manufacturerCode;
 
 		Set characteristicIds = Identifier.fromTransferables(ett.characteristic_ids);
-		this.characteristics = GeneralStorableObjectPool.getStorableObjects(characteristicIds, true);
+		this.characteristics = new HashSet(ett.characteristic_ids.length);
+		this.setCharacteristics0(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
 	}
 
 	public IDLEntity getTransferable() {
