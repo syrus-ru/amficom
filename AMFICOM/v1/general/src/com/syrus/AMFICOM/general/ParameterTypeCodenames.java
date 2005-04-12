@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeCodenames.java,v 1.8 2005/04/08 13:00:07 arseniy Exp $
+ * $Id: ParameterTypeCodenames.java,v 1.9 2005/04/12 12:28:40 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/04/08 13:00:07 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.9 $, $Date: 2005/04/12 12:28:40 $
+ * @author $Author: bob $
  * @module general_v1
  */
 public final class ParameterTypeCodenames {
@@ -26,28 +26,21 @@ public final class ParameterTypeCodenames {
 	public static final String	TRACE_AVERAGE_COUNT			= "ref_scans";
 	public static final String	TRACE_EVENTS				= "traceeventarray";
 
-	public static final String	DADARA_EVENTS				= "dadara_event_array";
-	public static final String	DADARA_ETALON_EVENTS		= "dadara_etalon_event_array";
-	public static final String	DADARA_THRESHOLDS			= "dadara_thresholds";
-	public static final String	DADARA_MIN_TRACE_LEVEL		= "dadara_min_trace_level";
-	public static final String	DADARA						= "dadara";
-	public static final String	DADARA_ALARMS				= "dadara_alarm_array";
-
 	//prediction
 	public static final String	PREDICTION_TIME				= "predictionTime";
 	public static final String	PREDICTION_DATA_FROM		= "time_start";
 	public static final String	PREDICTION_DATA_TO			= "time_end";
 
-	// analysis params
-	public static final String	WAVELET_TYPE				= "ref_uselinear";
-	public static final String	EVENT_SIZE = "ref_eventsize";
-	public static final String	STRATEGY					= "ref_strategy";
-	public static final String	CONNECTOR_FORM_FACTOR		= "ref_conn_fall_params";
-	public static final String	MIN_EVENT_LEVEL				= "ref_min_level";
-	public static final String	MAX_NOISE_LEVEL				= "ref_max_level_noise";
-	public static final String	MIN_END_LEVEL				= "ref_min_level_to_find_end";
-	public static final String	MIN_SPLICE					= "ref_min_weld";
-	public static final String	MIN_CONNECTOR				= "ref_min_connector";
+	//	 dadara etalon and thresholds
+	public static final String	DADARA_MTAE					= "dadara_mtae";			// raw, ModelTraceAndEvents for analysis results
+	public static final String	DADARA_ETALON_MTM			= "dadara_etalon_mtm";		// raw, ModeltraceMananger for etalon+thresholds
+	public static final String	DADARA_MIN_TRACE_LEVEL		= "dadara_min_trace_level"; // double
+
+	// dadara analysis params
+	public static final String	DADARA_NOISE_FACTOR			= "dadara_noise_factor";	// double
+	public static final String	MIN_EVENT					= "dadara_min_event";		// double
+	public static final String	MIN_SPLICE					= "dadara_min_splice";		// double
+	public static final String	MIN_CONNECTOR				= "dadara_min_connector";	// double
 
 	public static final String ALARM_STATUS = "alarm_status";
 
