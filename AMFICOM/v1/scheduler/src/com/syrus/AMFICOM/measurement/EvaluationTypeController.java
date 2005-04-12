@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeController.java,v 1.1 2004/12/20 15:45:14 arseniy Exp $
+ * $Id: EvaluationTypeController.java,v 1.2 2005/04/12 06:53:14 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,11 +16,11 @@ import java.util.List;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/12/20 15:45:14 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2005/04/12 06:53:14 $
+ * @author $Author: bob $
  * @module module
  */
-public class EvaluationTypeController implements ObjectResourceController {
+public class EvaluationTypeController extends ObjectResourceController {
 
 	public static final String		KEY_NAME	= "name";
 

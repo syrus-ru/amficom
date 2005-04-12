@@ -1,5 +1,5 @@
 /*
- * $Id: TestController.java,v 1.6 2005/04/07 16:02:55 bob Exp $
+ * $Id: TestController.java,v 1.7 2005/04/12 06:53:14 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,11 +30,11 @@ import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/04/07 16:02:55 $
+ * @version $Revision: 1.7 $, $Date: 2005/04/12 06:53:14 $
  * @author $Author: bob $
  * @module module
  */
-public class TestController implements ObjectResourceController {
+public class TestController extends ObjectResourceController {
 
 	public static final String		KEY_TEMPORAL_TYPE		= "TemporalType";
 	public static final String		KEY_KIS					= "RTU";

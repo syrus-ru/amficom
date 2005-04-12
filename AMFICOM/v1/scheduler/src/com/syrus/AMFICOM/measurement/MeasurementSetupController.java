@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupController.java,v 1.2 2005/02/25 09:18:38 bob Exp $
+ * $Id: MeasurementSetupController.java,v 1.3 2005/04/12 06:53:14 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,11 +15,11 @@ import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/02/25 09:18:38 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/12 06:53:14 $
  * @author $Author: bob $
  * @module module
  */
-public class MeasurementSetupController implements ObjectResourceController {
+public class MeasurementSetupController extends ObjectResourceController {
 
 	public static final String		KEY_NAME		= "NAME";
 
