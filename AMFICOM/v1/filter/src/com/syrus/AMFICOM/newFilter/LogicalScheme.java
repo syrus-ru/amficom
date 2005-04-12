@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalScheme.java,v 1.5 2005/04/06 12:36:26 max Exp $
+ * $Id: LogicalScheme.java,v 1.6 2005/04/12 13:05:54 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 package com.syrus.AMFICOM.newFilter;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -21,7 +22,7 @@ import com.syrus.AMFICOM.logic.LogicalItem;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/04/06 12:36:26 $
+ * @version $Revision: 1.6 $, $Date: 2005/04/12 13:05:54 $
  * @author $Author: max $
  * @module filter_v1
  */
@@ -30,10 +31,8 @@ public class LogicalScheme {
 	private LogicalItem rootItem;
 	private LogicalItem savedRootItem;
 	
-	public LogicalScheme(String conditionName, StorableObjectCondition condition) {
-		this.rootItem = new LogicalItem(LogicalItem.ROOT);
-		LogicalItem conditionItem = new LogicalItem(conditionName, condition);
-		this.rootItem.addChild(conditionItem);		
+	public LogicalScheme() {
+		this.rootItem = new LogicalItem(LogicalItem.ROOT);				
 	}
 
 	private Set getResultConditions(LogicalItem parentItem) throws CreateObjectException, IllegalDataException {
@@ -84,7 +83,9 @@ public class LogicalScheme {
 	}
 	
 	private boolean isDefault() {
-		for (Iterator it = this.rootItem.getChildren().iterator(); it.hasNext();) {
+		if (this.rootItem.getChildren() == Collections.EMPTY_LIST)
+			return true;
+	 	for (Iterator it = this.rootItem.getChildren().iterator(); it.hasNext();) {
 			LogicalItem rootChilde = (LogicalItem) it.next();
 			String type = rootChilde.getType();
 			if(type.equals(LogicalItem.CONDITION))
@@ -114,8 +115,12 @@ public class LogicalScheme {
 			return;
 		} 
 		if(isDefault()) {
+			if(this.rootItem.getChildren() == Collections.EMPTY_LIST) {
+				LogicalItem conditionItem = new LogicalItem(keyName, condition);
+				this.rootItem.addChild(conditionItem);
+				return;
+			}
 			LogicalItem rootChild = (LogicalItem) this.rootItem.getChildren().iterator().next();
-			//LogicalItem rootChild = (LogicalItem) it.next();
 			if (rootChild.getType().equals(LogicalItem.CONDITION)) {
 				//this.rootItem.removeChild(rootChild);
 				LogicalItem newOrItem = new LogicalItem(LogicalItem.OR);
