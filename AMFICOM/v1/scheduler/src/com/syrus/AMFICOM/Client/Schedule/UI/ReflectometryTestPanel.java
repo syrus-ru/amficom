@@ -11,7 +11,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -67,7 +66,7 @@ import com.syrus.AMFICOM.measurement.corba.SetSort;
 import com.syrus.util.ByteArray;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/04/08 16:46:46 $
+ * @version $Revision: 1.19 $, $Date: 2005/04/12 06:52:55 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
