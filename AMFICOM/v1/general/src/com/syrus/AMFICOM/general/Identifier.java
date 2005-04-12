@@ -1,5 +1,5 @@
 /*
- * $Id: Identifier.java,v 1.29 2005/04/12 08:11:43 bass Exp $
+ * $Id: Identifier.java,v 1.30 2005/04/12 16:03:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,15 +23,11 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
  * its respective <code>creatorId</code> and <code>modifierId</code>. But
  * there&apos;s a particular task of <code>id</code> handling.
  *
- * @version $Revision: 1.29 $, $Date: 2005/04/12 08:11:43 $
- * @author $Author: bass $
+ * @version $Revision: 1.30 $, $Date: 2005/04/12 16:03:01 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
-public class Identifier implements
-		Comparable,
-		TransferableObject,
-		Serializable,
-		Identifiable {
+public class Identifier implements Comparable, TransferableObject, Serializable, Identifiable {
 	public static final char SEPARATOR = '_';
 
 	public static final Identifier VOID_IDENTIFIER = new Identifier(ObjectEntities.UPDIKE_ENTITY_CODE, 0);
@@ -120,21 +116,15 @@ public class Identifier implements
 		return this.identifierString;
 	}
 
-	public static Identifier_Transferable[] createTransferables(Collection objects) throws IllegalDataException {
-		Identifier_Transferable[] idsT = new Identifier_Transferable[objects.size()];
+	public static Identifier_Transferable[] createTransferables(Collection identifiables) {
+		assert identifiables != null : "Collection of identifiables is null";
+
+		Identifier_Transferable[] idsT = new Identifier_Transferable[identifiables.size()];
 		int i = 0;
-		Object object;
-		Identifier id;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			object = it.next();
-			if (object instanceof Identifier)
-				id = (Identifier) object;
-			else
-				if (object instanceof Identifiable)
-					id = ((Identifiable) object).getId();
-				else
-					throw new IllegalDataException("Class '" + object.getClass().getName() + "' not 'Identifier' or 'Identifiable'");
-			idsT[i] = (Identifier_Transferable) id.getTransferable();
+		Identifiable identifiable;
+		for (Iterator it = identifiables.iterator(); it.hasNext(); i++) {
+			identifiable = (Identifiable) it.next();
+			idsT[i] = (Identifier_Transferable) identifiable.getId().getTransferable();
 		}
 		return idsT;
 	}
