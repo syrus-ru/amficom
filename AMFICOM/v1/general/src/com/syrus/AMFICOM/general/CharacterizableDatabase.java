@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacterizableDatabase.java,v 1.8 2005/04/12 16:30:29 arseniy Exp $
+ * $Id: CharacterizableDatabase.java,v 1.9 2005/04/12 18:33:19 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/04/12 16:30:29 $
+ * @version $Revision: 1.9 $, $Date: 2005/04/12 18:33:19 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -36,9 +36,7 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 	}
 
 	public void retrieve(StorableObject storableObject)
-			throws IllegalDataException,
-				ObjectNotFoundException,
-				RetrieveObjectException {
+			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		this.retrieveEntity(storableObject);
 
 		this.retrieveCharacteristics(this.fromStorableObject(storableObject));
