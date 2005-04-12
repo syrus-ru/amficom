@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractDatabaseLinkedIdsCondition.java,v 1.14 2005/04/02 17:33:48 arseniy Exp $
+ * $Id: AbstractDatabaseLinkedIdsCondition.java,v 1.15 2005/04/12 16:35:26 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.general;
 
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/04/02 17:33:48 $
+ * @version $Revision: 1.15 $, $Date: 2005/04/12 16:35:26 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -26,17 +26,16 @@ public abstract class AbstractDatabaseLinkedIdsCondition implements DatabaseStor
 		return this.condition.getEntityCode();
 	}
 
-	protected String getQuery(final String columnName) throws IllegalDataException {
+	protected String getQuery(final String columnName) {
+		assert (columnName == null) : "Column name is null -- maybe entity '"
+				+ ObjectEntities.codeToString(this.getEntityCode()) + " isn't supported";
 
-		if (columnName == null)
-			throw new IllegalDataException("AbstractDatabaseLinkedIdsCondition.getQuery | "
-					+ ObjectEntities.codeToString(this.getEntityCode()) + " isn't supported");
 		return StorableObjectDatabase.idsEnumerationString(this.condition.getLinkedIds(), columnName, true).toString();
 	}
 
 	protected String getLinkedQuery(final String linkedColumnIdName,
 									final String linkedColumnTargetName,
-									final String linkedTableName) throws IllegalDataException {
+									final String linkedTableName) {
 		return this.getLinkedQuery(StorableObjectWrapper.COLUMN_ID,
 				linkedColumnIdName,
 				linkedColumnTargetName,
@@ -47,7 +46,7 @@ public abstract class AbstractDatabaseLinkedIdsCondition implements DatabaseStor
 	protected String getLinkedQuery(final String columnName,
 									final String linkedColumnIdName,
 									final String linkedColumnTargetName,
-									final String linkedTableName) throws IllegalDataException {
+									final String linkedTableName) {
 		StringBuffer query = new StringBuffer();
 		query.append(columnName);
 		query.append(StorableObjectDatabase.SQL_IN);
