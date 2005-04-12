@@ -1,5 +1,5 @@
 /*
- * $Id: XMLGeneralObjectLoader.java,v 1.14 2005/04/12 08:11:43 bass Exp $
+ * $Id: XMLGeneralObjectLoader.java,v 1.15 2005/04/12 16:29:41 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/04/12 08:11:43 $
- * @author $Author: bass $
+ * @version $Revision: 1.15 $, $Date: 2005/04/12 16:29:41 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public final class XMLGeneralObjectLoader implements GeneralObjectLoader {
@@ -133,12 +133,12 @@ public final class XMLGeneralObjectLoader implements GeneralObjectLoader {
 		return Collections.EMPTY_SET;
 	}
 
-	public void delete(Identifier id) throws IllegalDataException {
+	public void delete(Identifier id) {
 		this.generalXML.delete(id);
 		this.generalXML.flush();
 	}
 
-	public void delete(final Set identifiables) throws IllegalDataException {
+	public void delete(final Set identifiables) {
 		for (Iterator it = identifiables.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			this.generalXML.delete(id);
