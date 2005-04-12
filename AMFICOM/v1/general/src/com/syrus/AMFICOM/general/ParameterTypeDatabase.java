@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeDatabase.java,v 1.22 2005/04/11 11:41:45 bob Exp $
+ * $Id: ParameterTypeDatabase.java,v 1.23 2005/04/12 18:33:00 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.general;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Set;
 
 import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.util.Log;
@@ -19,8 +18,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/04/11 11:41:45 $
- * @author $Author: bob $
+ * @version $Revision: 1.23 $, $Date: 2005/04/12 18:33:00 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -68,11 +67,6 @@ public class ParameterTypeDatabase extends CharacterizableDatabase  {
 		throw new IllegalDataException("ParameterTypeDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
-	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		ParameterType parameterType = this.fromStorableObject(storableObject);
-		this.retrieveEntity(parameterType);
-	}
-
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		ParameterType parameterType = (storableObject == null)
@@ -96,25 +90,6 @@ public class ParameterTypeDatabase extends CharacterizableDatabase  {
 		return parameterType;
 	}
 
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		ParameterType parameterType = this.fromStorableObject(storableObject);
-		switch (retrieveKind) {
-			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  parameterType.getId() + "'; argument: " + arg);
-				return null;
-		}
-	}	
-
-	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
-		ParameterType parameterType = this.fromStorableObject(storableObject);
-		this.insertEntity(parameterType);
-	}	
-
-
-	public void insert(Set storableObjects) throws IllegalDataException, CreateObjectException {
-		this.insertEntities(storableObjects);
-	}	
-
 	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
 			throws IllegalDataException, SQLException {
 		ParameterType parameterType = this.fromStorableObject(storableObject);
@@ -124,5 +99,14 @@ public class ParameterTypeDatabase extends CharacterizableDatabase  {
 		preparedStatement.setInt(++startParameterNumber, parameterType.getDataType().value());
 		return startParameterNumber;
 	}
-	
+
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+		ParameterType parameterType = this.fromStorableObject(storableObject);
+		switch (retrieveKind) {
+			default:
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  parameterType.getId() + "'; argument: " + arg);
+				return null;
+		}
+	}	
+
 }
