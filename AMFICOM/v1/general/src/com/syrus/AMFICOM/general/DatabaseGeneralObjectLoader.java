@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseGeneralObjectLoader.java,v 1.21 2005/04/12 08:11:43 bass Exp $
+ * $Id: DatabaseGeneralObjectLoader.java,v 1.22 2005/04/12 16:17:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,8 +16,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/04/12 08:11:43 $
- * @author $Author: bass $
+ * @version $Revision: 1.22 $, $Date: 2005/04/12 16:17:56 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -133,7 +133,7 @@ public class DatabaseGeneralObjectLoader extends AbstractObjectLoader implements
 
 
 
-	public void delete(Identifier id) throws IllegalDataException {
+	public void delete(final Identifier id) {
 		short entityCode = id.getMajor();
 		StorableObjectDatabase storableObjectDatabase = GeneralDatabaseContext.getDatabase(entityCode);
 		if (storableObjectDatabase != null)
@@ -144,7 +144,7 @@ public class DatabaseGeneralObjectLoader extends AbstractObjectLoader implements
 		if (identifiables == null || identifiables.isEmpty())
 			return;
 		/**
-		 * @todo: use Trove collection instead java.util.Map
+		 * @todo: use Trove collection instead of java.util.Map
 		 */
 		final Map map = new HashMap();
 
