@@ -1,5 +1,5 @@
 /*
- * $Id: AdministrationObjectLoader.java,v 1.10 2005/04/12 08:12:38 bass Exp $
+ * $Id: AdministrationObjectLoader.java,v 1.11 2005/04/12 16:19:35 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,12 +12,11 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/04/12 08:12:38 $
- * @author $Author: bass $
+ * @version $Revision: 1.11 $, $Date: 2005/04/12 16:19:35 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 
@@ -85,8 +84,8 @@ public interface AdministrationObjectLoader {
 	Set refresh(Set storableObjects) throws ApplicationException;
 
 
-	void delete(Identifier id) throws IllegalDataException;
+	void delete(Identifier id);
 
-	void delete(final Set identifiables) throws IllegalDataException;
+	void delete(final Set identifiables);
 
 }

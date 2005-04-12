@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseAdministrationObjectLoader.java,v 1.23 2005/04/12 08:12:38 bass Exp $
+ * $Id: DatabaseAdministrationObjectLoader.java,v 1.24 2005/04/12 16:19:36 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,15 +19,14 @@ import com.syrus.AMFICOM.general.AbstractObjectLoader;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.SessionContext;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/04/12 08:12:38 $
- * @author $Author: bass $
+ * @version $Revision: 1.24 $, $Date: 2005/04/12 16:19:36 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 
@@ -183,7 +182,7 @@ public class DatabaseAdministrationObjectLoader extends AbstractObjectLoader imp
 
 
 
-	public void delete(Identifier id) throws IllegalDataException {
+	public void delete(final Identifier id) {
 		short entityCode = id.getMajor();
 		StorableObjectDatabase storableObjectDatabase = AdministrationDatabaseContext.getDatabase(entityCode);
 		if (storableObjectDatabase != null)
@@ -203,7 +202,6 @@ public class DatabaseAdministrationObjectLoader extends AbstractObjectLoader imp
 		 */
 		for (final Iterator identifiableIterator = identifiables.iterator(); identifiableIterator.hasNext();) {
 			final Identifiable identifiable = (Identifiable) identifiableIterator.next();
-
 			final Short entityCode = new Short(identifiable.getId().getMajor());
 			Set entityObjects = (Set) map.get(entityCode);
 			if (entityObjects == null) {

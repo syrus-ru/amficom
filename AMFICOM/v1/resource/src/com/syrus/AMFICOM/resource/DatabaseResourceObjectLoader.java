@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseResourceObjectLoader.java,v 1.15 2005/04/12 08:14:28 bass Exp $
+ * $Id: DatabaseResourceObjectLoader.java,v 1.16 2005/04/12 16:22:40 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceDataPackage.ImageResourceSort;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/04/12 08:14:28 $
- * @author $Author: bass $
+ * @version $Revision: 1.16 $, $Date: 2005/04/12 16:22:40 $
+ * @author $Author: arseniy $
  * @module resource_v1
  */
 public class DatabaseResourceObjectLoader extends AbstractObjectLoader implements ResourceObjectLoader {
@@ -107,7 +107,7 @@ public class DatabaseResourceObjectLoader extends AbstractObjectLoader implement
 
 
 
-	public void delete(Identifier id) throws IllegalDataException {
+	public void delete(Identifier id) {
 		short entityCode = id.getMajor();
 		StorableObjectDatabase storableObjectDatabase = ResourceDatabaseContext.getDatabase(entityCode);
 		if (storableObjectDatabase != null)
@@ -127,7 +127,6 @@ public class DatabaseResourceObjectLoader extends AbstractObjectLoader implement
 		 */
 		for (final Iterator identifiableIterator = identifiables.iterator(); identifiableIterator.hasNext();) {
 			final Identifiable identifiable = (Identifiable) identifiableIterator.next();
-
 			final Short entityCode = new Short(identifiable.getId().getMajor());
 			Set entityObjects = (Set) map.get(entityCode);
 			if (entityObjects == null) {

@@ -1,5 +1,5 @@
 /*
- * $Id: MapObjectLoader.java,v 1.8 2005/04/12 08:13:31 bass Exp $
+ * $Id: MapObjectLoader.java,v 1.9 2005/04/12 16:23:33 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,19 +12,14 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/04/12 08:13:31 $
- * @author $Author: bass $
+ * @version $Revision: 1.9 $, $Date: 2005/04/12 16:23:33 $
+ * @author $Author: arseniy $
  * @module map_v1
  */
 public interface MapObjectLoader {
-
-	void delete(Identifier id) throws IllegalDataException;
-
-	void delete(final Set identifiables) throws IllegalDataException;
 
 	Collector loadCollector(Identifier id) throws ApplicationException;
 
@@ -144,5 +139,12 @@ public interface MapObjectLoader {
 
 	void saveTopologicalNodes(	Set list,
 								boolean force) throws ApplicationException;
+
+
+
+
+	void delete(Identifier id);
+
+	void delete(final Set identifiables);
 
 }

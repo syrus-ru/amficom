@@ -1,5 +1,5 @@
 /*
- * $Id: EventObjectLoader.java,v 1.9 2005/04/12 08:13:17 bass Exp $
+ * $Id: EventObjectLoader.java,v 1.10 2005/04/12 16:22:18 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,12 +12,11 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/04/12 08:13:17 $
- * @author $Author: bass $
+ * @version $Revision: 1.10 $, $Date: 2005/04/12 16:22:18 $
+ * @author $Author: arseniy $
  * @module event_v1
  */
 
@@ -81,7 +80,7 @@ public interface EventObjectLoader {
 	java.util.Set refresh(java.util.Set storableObjects) throws ApplicationException;
 
 
-	void delete(Identifier id) throws IllegalDataException;
+	void delete(Identifier id);
 
 	void delete(Set objects);
 }

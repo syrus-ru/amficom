@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementObjectLoader.java,v 1.26 2005/04/12 08:18:25 bass Exp $
+ * $Id: MeasurementObjectLoader.java,v 1.27 2005/04/12 16:21:31 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,12 +10,11 @@ package com.syrus.AMFICOM.measurement;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/04/12 08:18:25 $
- * @author $Author: bass $
+ * @version $Revision: 1.27 $, $Date: 2005/04/12 16:21:31 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -161,8 +160,8 @@ public interface MeasurementObjectLoader {
 
 
 
-	void delete(Identifier id) throws IllegalDataException;
+	void delete(Identifier id);
 
-	void delete(final java.util.Set identifiables) throws IllegalDataException;
+	void delete(final java.util.Set identifiables);
 
 }

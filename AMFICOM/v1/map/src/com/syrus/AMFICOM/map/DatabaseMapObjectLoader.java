@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseMapObjectLoader.java,v 1.16 2005/04/12 08:13:31 bass Exp $
+ * $Id: DatabaseMapObjectLoader.java,v 1.17 2005/04/12 16:23:33 arseniy Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Научно-технический центр.
@@ -18,15 +18,14 @@ import com.syrus.AMFICOM.general.AbstractObjectLoader;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.SessionContext;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/04/12 08:13:31 $
- * @author $Author: bass $
+ * @version $Revision: 1.17 $, $Date: 2005/04/12 16:23:33 $
+ * @author $Author: arseniy $
  * @module map_v1
  */
 public class DatabaseMapObjectLoader extends AbstractObjectLoader implements MapObjectLoader {
@@ -303,7 +302,7 @@ public class DatabaseMapObjectLoader extends AbstractObjectLoader implements Map
 
 
 
-	public void delete(Identifier id) throws IllegalDataException {
+	public void delete(Identifier id) {
 		short entityCode = id.getMajor();
 		StorableObjectDatabase storableObjectDatabase = MapDatabaseContext.getDatabase(entityCode);
 		if (storableObjectDatabase != null)
@@ -323,7 +322,6 @@ public class DatabaseMapObjectLoader extends AbstractObjectLoader implements Map
 		 */
 		for (final Iterator identifiableIterator = identifiables.iterator(); identifiableIterator.hasNext();) {
 			final Identifiable identifiable = (Identifiable) identifiableIterator.next();
-
 			final Short entityCode = new Short(identifiable.getId().getMajor());
 			Set entityObjects = (Set) map.get(entityCode);
 			if (entityObjects == null) {

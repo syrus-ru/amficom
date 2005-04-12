@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseEventObjectLoader.java,v 1.16 2005/04/12 08:13:17 bass Exp $
+ * $Id: DatabaseEventObjectLoader.java,v 1.17 2005/04/12 16:22:18 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,15 +18,14 @@ import com.syrus.AMFICOM.general.AbstractObjectLoader;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.SessionContext;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/04/12 08:13:17 $
- * @author $Author: bass $
+ * @version $Revision: 1.17 $, $Date: 2005/04/12 16:22:18 $
+ * @author $Author: arseniy $
  * @module event_v1
  */
 public class DatabaseEventObjectLoader extends AbstractObjectLoader implements EventObjectLoader {
@@ -134,7 +133,7 @@ public class DatabaseEventObjectLoader extends AbstractObjectLoader implements E
 
 
 
-	public void delete(Identifier id) throws IllegalDataException {
+	public void delete(Identifier id) {
 		short entityCode = id.getMajor();
 		StorableObjectDatabase storableObjectDatabase = EventDatabaseContext.getDatabase(entityCode);
 		if (storableObjectDatabase != null)

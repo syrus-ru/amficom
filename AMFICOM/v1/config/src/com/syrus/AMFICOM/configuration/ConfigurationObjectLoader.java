@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationObjectLoader.java,v 1.34 2005/04/12 08:12:52 bass Exp $
+ * $Id: ConfigurationObjectLoader.java,v 1.35 2005/04/12 16:20:23 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,12 +12,11 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/04/12 08:12:52 $
- * @author $Author: bass $
+ * @version $Revision: 1.35 $, $Date: 2005/04/12 16:20:23 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -183,8 +182,8 @@ public interface ConfigurationObjectLoader {
 	Set refresh(Set storableObjects) throws ApplicationException;
 
 
-	void delete(Identifier id) throws IllegalDataException;
+	void delete(Identifier id);
 
-	void delete(final Set identifiables) throws IllegalDataException;
+	void delete(final Set identifiables);
 
 }
