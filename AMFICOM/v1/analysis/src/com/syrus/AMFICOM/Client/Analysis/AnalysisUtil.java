@@ -10,6 +10,7 @@ import com.syrus.AMFICOM.analysis.dadara.DataStreamableUtil;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ParameterType;
@@ -48,14 +49,13 @@ public class AnalysisUtil
 	}
 
 	public static ParameterType getParameterType(Identifier userId, String codename, DataType dataType) throws ApplicationException {
-		
 		TypicalCondition pTypeCondition = new TypicalCondition(
 				codename,
 				OperationSort.OPERATION_EQUALS,
 				ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
 				StorableObjectWrapper.COLUMN_CODENAME);
 
-			java.util.Set parameterTypeSet = MeasurementStorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
+			java.util.Set parameterTypeSet = GeneralStorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
 			if (parameterTypeSet.isEmpty())
 				throw new RetrieveObjectException("AnalysisUtil.getParameterType | parameter type with codename " + pTypeCondition.getValue() + " not found");
 
