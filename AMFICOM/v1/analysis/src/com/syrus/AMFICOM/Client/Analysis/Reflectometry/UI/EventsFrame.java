@@ -44,13 +44,6 @@ import com.syrus.io.BellcoreStructure;
 public class EventsFrame extends ATableFrame
 implements OperationListener, bsHashChangeListener, EtalonMTMListener
 {
-	public static final String LINEAR = LangModelAnalyse.getString("eventTypeLinear");
-	public static final String CONNECTOR = LangModelAnalyse.getString("eventTypeReflective");
-	public static final String LOSS = LangModelAnalyse.getString("eventTypeLoss");
-	public static final String GAIN = LangModelAnalyse.getString("eventTypeGain");
-	public static final String INITIATE = LangModelAnalyse.getString("eventTypeInitiate");
-	public static final String TERMINATE = LangModelAnalyse.getString("eventTypeTerminate");
-	public static final String NO_ID = LangModelAnalyse.getString("eventTypeNonIdentified");
 	public static final String DASH = "-----";
 
 	private ComplexReflectogramEvent []data;
@@ -299,11 +292,13 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 
 		for (int i = 0; i < events.length; i++)
 		{
-			switch (events[i].getType())
+			int eventType = events[i].getType();
+			String eventTypeName = AnalysisUtil.getTraceEventNameByType(eventType);
+			switch (eventType)
 			{
 			case TraceEvent.INITIATE:
 				tModel.addRow(String.valueOf(i + 1), new Object[] {
-					 INITIATE,
+					 eventTypeName,
 					 Double.toString(MathRef.round_3(res_km * events[i].first_point)), //начало
 					 Double.toString(MathRef.round_3(res_km * (events[i].last_point - events[i].first_point))), //протяженность
 					 DASH, // отраж
@@ -314,7 +309,7 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 			case TraceEvent.LINEAR:
 			    // TODO: использовать только один параметр в data[] вместо трех
 				tModel.addRow(String.valueOf(i + 1), new Object[] {
-					 LINEAR,
+					 eventTypeName,
 					 Double.toString(MathRef.round_3(res_km * events[i].first_point)), //начало
 					 Double.toString(MathRef.round_3(res_km * (events[i].last_point - events[i].first_point))), //протяженность
 					 DASH, // отраж
@@ -325,7 +320,7 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 				break;
 			case TraceEvent.NON_IDENTIFIED:
 				tModel.addRow(String.valueOf(i + 1), new Object[] {
-					 NO_ID,
+					 eventTypeName,
 					 Double.toString(MathRef.round_3(res_km * events[i].first_point)), //начало
 					 Double.toString(MathRef.round_3(res_km * (events[i].last_point - events[i].first_point))), //протяженность
 					 DASH, // отраж
@@ -336,7 +331,7 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 				break;
 			case TraceEvent.CONNECTOR:
 				tModel.addRow(String.valueOf(i + 1), new Object[] {
-					 CONNECTOR,
+					 eventTypeName,
 					 Double.toString(MathRef.round_3(res_km * events[i].first_point)), //начало
 					 Double.toString(MathRef.round_3(res_km * (events[i].last_point - events[i].first_point))), //протяженность
 					 Double.toString(MathRef.round_2(MathRef.calcReflectance(sigma, events[i].connectorPeak()))), // отраж
@@ -347,7 +342,7 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 				break;
 			case TraceEvent.GAIN:
 				tModel.addRow(String.valueOf(i + 1), new Object[] {
-					 GAIN,
+					 eventTypeName,
 					 Double.toString(MathRef.round_3 (res_km * events[i].first_point)), //начало
 					 Double.toString(MathRef.round_3 (res_km * (events[i].last_point - events[i].first_point))), //протяженность
 					 DASH, // отраж
@@ -358,7 +353,7 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 				break;
 			case TraceEvent.LOSS:
 				tModel.addRow(String.valueOf(i + 1), new Object[] {
-					 LOSS,
+					 eventTypeName,
 					 Double.toString(MathRef.round_3 (res_km * events[i].first_point)), //начало
 					 Double.toString(MathRef.round_3 (res_km * (events[i].last_point - events[i].first_point))), //протяженность
 					 DASH, // отраж
@@ -369,7 +364,7 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 				break;
 			case TraceEvent.TERMINATE:
 				tModel.addRow(String.valueOf(i + 1), new Object[] {
-					 TERMINATE,
+					 eventTypeName,
 					 Double.toString(MathRef.round_3(res_km * events[i].first_point)), //начало
 					 Double.toString(MathRef.round_3(res_km * (events[i].last_point - events[i].first_point))), //протяженность
 					 Double.toString(MathRef.round_2(MathRef.calcReflectance(sigma, events[i].terminateReflection()))), // отраж
