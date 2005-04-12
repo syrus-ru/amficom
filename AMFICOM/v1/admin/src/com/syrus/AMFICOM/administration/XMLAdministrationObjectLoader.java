@@ -1,5 +1,5 @@
 /*
- * $Id: XMLAdministrationObjectLoader.java,v 1.10 2005/04/01 06:51:54 bob Exp $
+ * $Id: XMLAdministrationObjectLoader.java,v 1.11 2005/04/12 16:53:16 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,6 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -28,8 +27,8 @@ import com.syrus.AMFICOM.general.StorableObjectXMLDriver;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/04/01 06:51:54 $
- * @author $Author: bob $
+ * @version $Revision: 1.11 $, $Date: 2005/04/12 16:53:16 $
+ * @author $Author: arseniy $
  * @module admin_v1
  */
 public class XMLAdministrationObjectLoader implements AdministrationObjectLoader {
@@ -41,12 +40,12 @@ public class XMLAdministrationObjectLoader implements AdministrationObjectLoader
 		this.administrationXML = new StorableObjectXML(driver);
 	}
 
-	public void delete(Identifier id) throws IllegalDataException {
+	public void delete(Identifier id) {
 		this.administrationXML.delete(id);
 		this.administrationXML.flush();
 	}
 
-	public void delete(Set ids) throws IllegalDataException {
+	public void delete(Set ids) {
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			this.administrationXML.delete(id);
