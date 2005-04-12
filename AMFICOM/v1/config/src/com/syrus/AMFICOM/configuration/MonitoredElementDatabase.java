@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.63 2005/04/01 07:57:28 bob Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.64 2005/04/12 16:50:24 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,8 +40,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.63 $, $Date: 2005/04/01 07:57:28 $
- * @author $Author: bob $
+ * @version $Revision: 1.64 $, $Date: 2005/04/12 16:50:24 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -254,12 +254,10 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 			return;
 
 		Map mdmIdsMap = null;
-		try {
-			mdmIdsMap = this.retrieveLinkedEntityIds(monitoredElements, linkTable, MonitoredElementWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID, linkColumn);
-		}
-		catch (IllegalDataException e) {
-			throw new RetrieveObjectException(e);
-		}
+		mdmIdsMap = this.retrieveLinkedEntityIds(monitoredElements,
+				linkTable,
+				MonitoredElementWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID,
+				linkColumn);
 
 		Identifier meId;
 		Set mdmIds;
@@ -457,10 +455,9 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void delete(Identifier id) throws IllegalDataException {
-		if (id.getMajor() != ObjectEntities.ME_ENTITY_CODE)
-			throw new IllegalDataException("MonitoredElementDatabase.delete | Cannot delete object of code "
-					+ id.getMajor() + ", entity '" + ObjectEntities.codeToString(id.getMajor()) + "'");
+	public void delete(Identifier id) {
+		assert (id.getMajor() == ObjectEntities.ME_ENTITY_CODE) : "Illegal entity code: "
+				+ id.getMajor() + ", entity '" + ObjectEntities.codeToString(id.getMajor()) + "'";
 
 		try {
 			MonitoredElement monitoredElement = new MonitoredElement(id);
