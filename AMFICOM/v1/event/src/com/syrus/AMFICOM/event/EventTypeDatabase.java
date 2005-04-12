@@ -1,5 +1,5 @@
 /*
- * $Id: EventTypeDatabase.java,v 1.21 2005/04/01 09:00:59 bob Exp $
+ * $Id: EventTypeDatabase.java,v 1.22 2005/04/12 17:07:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,8 +37,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/04/01 09:00:59 $
- * @author $Author: bob $
+ * @version $Revision: 1.22 $, $Date: 2005/04/12 17:07:46 $
+ * @author $Author: arseniy $
  * @module event_v1
  */
 
@@ -166,15 +166,10 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 			return;
 
 		Map eventParamaterTypeIdsMap = null;
-		try {
-			eventParamaterTypeIdsMap = this.retrieveLinkedEntityIds(eventTypes,
-					ObjectEntities.EVENTTYPPARTYPLINK_ENTITY,
-					EventTypeWrapper.LINK_COLUMN_EVENT_TYPE_ID,
-					StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID);
-		}
-		catch (IllegalDataException e) {
-			throw new RetrieveObjectException(e);
-		}
+		eventParamaterTypeIdsMap = this.retrieveLinkedEntityIds(eventTypes,
+				ObjectEntities.EVENTTYPPARTYPLINK_ENTITY,
+				EventTypeWrapper.LINK_COLUMN_EVENT_TYPE_ID,
+				StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID);
 
 		EventType eventType;
 		Identifier eventTypeId;
@@ -273,10 +268,9 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void delete(Identifier id) throws IllegalDataException {
-		if (id.getMajor() != ObjectEntities.EVENTTYPE_ENTITY_CODE)
-			throw new IllegalDataException("EventTypeDatabase.delete | Cannot delete object of code "
-					+ id.getMajor() + ", entity '" + ObjectEntities.codeToString(id.getMajor()) + "'");
+	public void delete(Identifier id) {
+		assert (id.getMajor() == ObjectEntities.EVENTTYPE_ENTITY_CODE) : "Illegal entity code: "
+			+ id.getMajor() + ", entity '" + ObjectEntities.codeToString(id.getMajor()) + "'";
 
 		Statement statement = null;
 		Connection connection = DatabaseConnection.getConnection();
@@ -316,14 +310,8 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 		StringBuffer sql2 = new StringBuffer(SQL_DELETE_FROM
 				+ ObjectEntities.EVENTTYPE_ENTITY
 				+ SQL_WHERE);
-		try {
-			sql1.append(idsEnumerationString(objects, EventTypeWrapper.LINK_COLUMN_EVENT_TYPE_ID, true));
-			sql2.append(idsEnumerationString(objects, StorableObjectWrapper.COLUMN_ID, true));
-		}
-		catch (IllegalDataException ide) {
-			Log.errorException(ide);
-			return;
-		}
+		sql1.append(idsEnumerationString(objects, EventTypeWrapper.LINK_COLUMN_EVENT_TYPE_ID, true));
+		sql2.append(idsEnumerationString(objects, StorableObjectWrapper.COLUMN_ID, true));
 
 		Statement statement = null;
 		Connection connection = DatabaseConnection.getConnection();
