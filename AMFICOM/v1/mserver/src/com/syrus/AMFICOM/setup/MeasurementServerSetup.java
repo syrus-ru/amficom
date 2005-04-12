@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServerSetup.java,v 1.33 2005/04/11 12:38:35 arseniy Exp $
+ * $Id: MeasurementServerSetup.java,v 1.34 2005/04/12 17:23:48 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -69,7 +69,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/04/11 12:38:35 $
+ * @version $Revision: 1.34 $, $Date: 2005/04/12 17:23:48 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -423,36 +423,6 @@ public final class MeasurementServerSetup {
 		inParTyps.add(parTypRefl);
 		criParTyps = new HashSet(10);
 		criParTyps.add(createParameterType(creatorId,
-				ParameterTypeCodenames.WAVELET_TYPE,
-				"For DADARA analysis",
-				"Tactic",
-				DataType.DATA_TYPE_INTEGER));
-		criParTyps.add(createParameterType(creatorId,
-				ParameterTypeCodenames.EVENT_SIZE,
-				"For DADARA analysis",
-				"Event size",
-				DataType.DATA_TYPE_DOUBLE));
-		criParTyps.add(createParameterType(creatorId,
-				ParameterTypeCodenames.CONNECTOR_FORM_FACTOR,
-				"For DADARA analysis",
-				"Connector fall",
-				DataType.DATA_TYPE_DOUBLE));
-		criParTyps.add(createParameterType(creatorId,
-				ParameterTypeCodenames.MIN_EVENT_LEVEL,
-				"For DADARA analysis",
-				"Min level",
-				DataType.DATA_TYPE_DOUBLE));
-		criParTyps.add(createParameterType(creatorId,
-				ParameterTypeCodenames.MAX_NOISE_LEVEL,
-				"For DADARA analysis",
-				"Max level noise",
-				DataType.DATA_TYPE_DOUBLE));
-		criParTyps.add(createParameterType(creatorId,
-				ParameterTypeCodenames.MIN_END_LEVEL,
-				"For DADARA analysis",
-				"Min level to find end",
-				DataType.DATA_TYPE_DOUBLE));
-		criParTyps.add(createParameterType(creatorId,
 				ParameterTypeCodenames.MIN_SPLICE,
 				"For DADARA analysis",
 				"Min weld",
@@ -462,25 +432,8 @@ public final class MeasurementServerSetup {
 				"For DADARA analysis",
 				"Min connector",
 				DataType.DATA_TYPE_DOUBLE));
-		criParTyps.add(createParameterType(creatorId,
-				ParameterTypeCodenames.STRATEGY,
-				"For DADARA analysis",
-				"strategy",
-				DataType.DATA_TYPE_INTEGER));
 		etaParTyps = new HashSet(1);
-		ParameterType parTypEtalonEventArr = createParameterType(creatorId,
-				ParameterTypeCodenames.DADARA_ETALON_EVENTS,
-				"For DADARA analysis",
-				"Etalon event array",
-				DataType.DATA_TYPE_RAW);
-		etaParTyps.add(parTypEtalonEventArr);
 		outParTyps = new HashSet(1);
-		ParameterType parTypEventArr = createParameterType(creatorId,
-				ParameterTypeCodenames.DADARA_EVENTS,
-				"For DADARA analysis",
-				"Event array",
-				DataType.DATA_TYPE_RAW);
-		outParTyps.add(parTypEventArr);
 		createAnalysisType(creatorId,
 				AnalysisType.CODENAME_DADARA,
 				"DADARA",
@@ -493,13 +446,7 @@ public final class MeasurementServerSetup {
 		inParTyps = new HashSet(1);
 		inParTyps.add(parTypRefl);
 		thrParTyps = new HashSet(1);
-		thrParTyps.add(createParameterType(creatorId,
-				ParameterTypeCodenames.DADARA_THRESHOLDS,
-				"For DADARA analysis",
-				"Thresholds",
-				DataType.DATA_TYPE_RAW));
 		etaParTyps = new HashSet(1);
-		etaParTyps.add(parTypEtalonEventArr);
 		outParTyps = new HashSet(1);
 		outParTyps.add(createParameterType(creatorId,
 				ParameterTypeCodenames.DADARA_ALARMS,
@@ -720,43 +667,7 @@ public final class MeasurementServerSetup {
 	private static Set createCriteriaSet(Identifier creatorId, java.util.Set monitoredElementIds) {
 		ParameterTypeDatabase parameterTypeDatabase = GeneralDatabaseContext.getParameterTypeDatabase();
 		try {
-			TypicalCondition tc = new TypicalCondition(ParameterTypeCodenames.WAVELET_TYPE,
-					OperationSort.OPERATION_EQUALS,
-					ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
-					StorableObjectWrapper.COLUMN_CODENAME);
-			ParameterType tacticParam = (ParameterType) parameterTypeDatabase.retrieveButIdsByCondition(null, tc).iterator().next();
-
-			tc = new TypicalCondition(ParameterTypeCodenames.EVENT_SIZE,
-					OperationSort.OPERATION_EQUALS,
-					ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
-					StorableObjectWrapper.COLUMN_CODENAME);
-			ParameterType eventsizeParam = (ParameterType) parameterTypeDatabase.retrieveButIdsByCondition(null, tc).iterator().next();
-
-			tc = new TypicalCondition(ParameterTypeCodenames.CONNECTOR_FORM_FACTOR,
-					OperationSort.OPERATION_EQUALS,
-					ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
-					StorableObjectWrapper.COLUMN_CODENAME);
-			ParameterType connfallParam = (ParameterType) parameterTypeDatabase.retrieveButIdsByCondition(null, tc).iterator().next();
-
-			tc = new TypicalCondition(ParameterTypeCodenames.MIN_EVENT_LEVEL,
-					OperationSort.OPERATION_EQUALS,
-					ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
-					StorableObjectWrapper.COLUMN_CODENAME);
-			ParameterType minlevelParam = (ParameterType) parameterTypeDatabase.retrieveButIdsByCondition(null, tc).iterator().next();
-
-			tc = new TypicalCondition(ParameterTypeCodenames.MAX_NOISE_LEVEL,
-					OperationSort.OPERATION_EQUALS,
-					ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
-					StorableObjectWrapper.COLUMN_CODENAME);
-			ParameterType maxlevelnoiseParam = (ParameterType) parameterTypeDatabase.retrieveButIdsByCondition(null, tc).iterator().next();
-
-			tc = new TypicalCondition(ParameterTypeCodenames.MIN_END_LEVEL,
-					OperationSort.OPERATION_EQUALS,
-					ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
-					StorableObjectWrapper.COLUMN_CODENAME);
-			ParameterType minlevelendParam = (ParameterType) parameterTypeDatabase.retrieveButIdsByCondition(null, tc).iterator().next();
-
-			tc = new TypicalCondition(ParameterTypeCodenames.MIN_SPLICE,
+			TypicalCondition tc = new TypicalCondition(ParameterTypeCodenames.MIN_SPLICE,
 					OperationSort.OPERATION_EQUALS,
 					ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
 					StorableObjectWrapper.COLUMN_CODENAME);
@@ -767,25 +678,9 @@ public final class MeasurementServerSetup {
 					ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
 					StorableObjectWrapper.COLUMN_CODENAME);
 			ParameterType minconnectorParam = (ParameterType) parameterTypeDatabase.retrieveButIdsByCondition(null, tc).iterator().next();
-
-			tc = new TypicalCondition(ParameterTypeCodenames.STRATEGY,
-					OperationSort.OPERATION_EQUALS,
-					ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
-					StorableObjectWrapper.COLUMN_CODENAME);
 			ParameterType strategyParam = (ParameterType) parameterTypeDatabase.retrieveButIdsByCondition(null, tc).iterator().next();
 
 			SetParameter[] params = new SetParameter[9];
-			params[0] = SetParameter.createInstance(tacticParam, new ByteArray((int) 1).getBytes());
-
-			params[1] = SetParameter.createInstance(eventsizeParam, new ByteArray((int) 2).getBytes());
-
-			params[2] = SetParameter.createInstance(connfallParam, new ByteArray((double) 5.0).getBytes());
-
-			params[3] = SetParameter.createInstance(minlevelParam, new ByteArray((double) 0.5).getBytes());
-
-			params[4] = SetParameter.createInstance(maxlevelnoiseParam, new ByteArray((double) 1.0).getBytes());
-
-			params[5] = SetParameter.createInstance(minlevelendParam, new ByteArray((double) 3.0).getBytes());
 
 			params[6] = SetParameter.createInstance(minweldParam, new ByteArray((double) 0.2).getBytes());
 
