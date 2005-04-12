@@ -1,5 +1,5 @@
 /*
- * $Id: FilterController.java,v 1.8 2005/04/12 13:19:52 max Exp $
+ * $Id: FilterController.java,v 1.9 2005/04/12 13:32:52 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import javax.swing.event.PopupMenuListener;
 
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/04/12 13:19:52 $
+ * @version $Revision: 1.9 $, $Date: 2005/04/12 13:32:52 $
  * @author $Author: max $
  * @module filter_v1
  */
@@ -324,7 +324,7 @@ public class FilterController implements ActionListener, PopupMenuListener {
 			this.view.showErrorMessage(Filter.NO_CONDITIONS_CREATED);
 			return;
 		}
-		this.view.createLogicalSchemeView(this.model.logicalScheme, this.model);	
+		this.view.createLogicalSchemeView(this.model.logicalScheme);	
 	}
 	
 //	private boolean noConditionsCreated() {

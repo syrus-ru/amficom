@@ -1,5 +1,5 @@
 /*-
- * $Id: ConditionKey.java,v 1.1 2005/04/12 12:45:48 max Exp $
+ * $Id: ConditionKey.java,v 1.2 2005/04/12 13:31:58 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,21 +7,20 @@
  */
 package com.syrus.AMFICOM.newFilter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.syrus.AMFICOM.general.ConditionWrapper;
 import com.syrus.AMFICOM.general.ObjectEntities;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/12 12:45:48 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/12 13:31:58 $
  * @author $Author: max $
  * @module filterclient_v1
  */
 
 /**
  * The <code>ConditionKey</code> is used to create criteria for {@link com.syrus.AMFICOM.newFilter.Filter Filter}
- * @version $Revision: 1.1 $, $Date: 2005/04/12 12:45:48 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/12 13:31:58 $
  * @author $Author: max $
  * @module filterclient_v1
  */
