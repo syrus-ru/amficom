@@ -1,5 +1,5 @@
 /*
- * $Id: FilterView.java,v 1.3 2005/04/01 08:37:09 max Exp $
+ * $Id: FilterView.java,v 1.4 2005/04/12 13:04:07 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,7 @@
 package com.syrus.AMFICOM.newFilter;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/04/01 08:37:09 $
+ * @version $Revision: 1.4 $, $Date: 2005/04/12 13:04:07 $
  * @author $Author: max $
  * @module filter_v1
  */
@@ -32,12 +32,12 @@ public interface FilterView {
 	
 	int getSelectedKeyIndex();
 	
+	String[] getSelectedConditionNames();
+	
 	Object changeKeyRef();
 	Object removeConditionRef();
 	Object addConditionRef();
 	Object createLogicalSchemeRef();
-	
-	Object[] getSelectedConditionNames();
 	
 	void setNumberCondition(NumberCondition intCondition);
 	void setStringCondition(StringCondition stringCondition);

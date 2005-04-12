@@ -1,5 +1,5 @@
 /*
- * $Id: FilterGUI.java,v 1.6 2005/04/06 12:36:26 max Exp $
+ * $Id: FilterGUI.java,v 1.7 2005/04/12 13:02:57 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/04/06 12:36:26 $
+ * @version $Revision: 1.7 $, $Date: 2005/04/12 13:02:57 $
  * @author $Author: max $
  * @module misc
  */
@@ -143,7 +143,7 @@ public class FilterGUI extends JFrame implements FilterView {
 		
 		this.keysCombo = 				new JComboBox(this.filter.getKeyNames());
 		
-		this.filteredList = 			new JList(this.filter.getFilteredNames());
+		this.filteredList = 			new JList();
 		this.conditions = 				new JList();
 		this.linkedConditionList = 		new JList();
 		
@@ -283,6 +283,7 @@ public class FilterGUI extends JFrame implements FilterView {
 		this.removeButton.addActionListener(this.controller);
 		
 		this.getContentPane().add(this.mainPanel);
+		//this.setSize(600,600);
 		this.pack();
 		this.mainPanel.setMinimumSize(this.getSize());
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -309,7 +310,7 @@ public class FilterGUI extends JFrame implements FilterView {
 	
 	public void drawLinkedCondition(ListCondition listCondition) {
 		this.linkedConditionList.setListData(listCondition.getSelectedNames());
-		this.linkedConditionList.setSelectedIndices(listCondition.getLinkedIndex());
+		this.linkedConditionList.setSelectedIndices(listCondition.getSelectedIndices());
 		
 		CardLayout cardLayout = (CardLayout) this.conditionPanel.getLayout();
 		cardLayout.show(this.conditionPanel, LIST_CARD);
@@ -351,8 +352,14 @@ public class FilterGUI extends JFrame implements FilterView {
 		return this.keysCombo.getSelectedIndex();		
 	}
 
-	public Object[] getSelectedConditionNames() {
-		return this.conditions.getSelectedValues();
+	public String[] getSelectedConditionNames() {
+		Object[] objectNames = this.conditions.getSelectedValues();
+		String[] stringNames = new String[objectNames.length];
+		for (int i = 0; i < objectNames.length; i++) {
+			stringNames[i] = (String) objectNames[i];
+			
+		}
+		return stringNames;
 	}
 	
 	public void createLogicalSchemeView(LogicalScheme logicalScheme, Filter filter) {
