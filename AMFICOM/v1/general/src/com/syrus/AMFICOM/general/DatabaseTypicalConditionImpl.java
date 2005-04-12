@@ -1,5 +1,5 @@
 /*
-* $Id: DatabaseTypicalConditionImpl.java,v 1.3 2005/02/08 12:04:50 arseniy Exp $
+* $Id: DatabaseTypicalConditionImpl.java,v 1.4 2005/04/12 16:39:23 arseniy Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/02/08 12:04:50 $
+ * @version $Revision: 1.4 $, $Date: 2005/04/12 16:39:23 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -25,7 +25,7 @@ class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
 		super(typicalCondition);
 	}
 
-	protected String getColumnName() throws IllegalDataException {
+	protected String getColumnName() throws IllegalObjectEntityException {
 		/* check key support */
 		switch(super.condition.getEntityCode().shortValue()) {
 			case ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE:
@@ -37,8 +37,9 @@ class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
 					return StorableObjectWrapper.COLUMN_CODENAME;
 				break;
 			default:
-				throw new IllegalDataException("DatabaseTypicalConditionImpl.getColumnName | entity "
-					+ ObjectEntities.codeToString(this.condition.getEntityCode()) + " is not supported.");
+				throw new IllegalObjectEntityException("DatabaseTypicalConditionImpl.getColumnName | entity "
+						+ ObjectEntities.codeToString(this.condition.getEntityCode())
+						+ " is not supported.", IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 		}
 		return null;
 	}

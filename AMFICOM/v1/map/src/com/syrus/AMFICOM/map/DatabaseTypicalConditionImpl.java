@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseTypicalConditionImpl.java,v 1.1 2005/02/07 10:33:29 bob Exp $
+ * $Id: DatabaseTypicalConditionImpl.java,v 1.2 2005/04/12 16:41:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,13 +10,14 @@ package com.syrus.AMFICOM.map;
 
 import com.syrus.AMFICOM.general.AbstractDatabaseTypicalCondition;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/02/07 10:33:29 $
- * @author $Author: bob $
+ * @version $Revision: 1.2 $, $Date: 2005/04/12 16:41:57 $
+ * @author $Author: arseniy $
  * @module map_v1
  */
 public class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
@@ -25,7 +26,7 @@ public class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalConditi
 		super(typicalCondition);
 	}
 
-	protected String getColumnName() throws IllegalDataException {
+	protected String getColumnName() throws IllegalObjectEntityException {
 		String columnName = null;
 		/* check key support */
 		switch (super.condition.getEntityCode().shortValue()) {
@@ -40,8 +41,9 @@ public class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalConditi
 					}
 				break;
 			default:
-				throw new IllegalDataException("DatabaseTypicalConditionImpl.getColumnName | entity "
-						+ ObjectEntities.codeToString(this.condition.getEntityCode()) + " is not supported.");
+				throw new IllegalObjectEntityException("DatabaseTypicalConditionImpl.getColumnName | entity "
+						+ ObjectEntities.codeToString(this.condition.getEntityCode())
+						+ " is not supported.", IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 		}
 		return columnName;
 	}
