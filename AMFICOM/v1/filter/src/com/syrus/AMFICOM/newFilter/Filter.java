@@ -1,5 +1,5 @@
 /*
- * $Id: Filter.java,v 1.7 2005/04/01 10:42:34 max Exp $
+ * $Id: Filter.java,v 1.8 2005/04/12 13:00:23 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,17 +11,15 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import com.syrus.AMFICOM.general.ConditionWrapper;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.LinkedConditionLoader;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/04/01 10:42:34 $
+ * @version $Revision: 1.8 $, $Date: 2005/04/12 13:00:23 $
  * @author $Author: max $
  * @module misc
  */
@@ -35,30 +33,29 @@ public class Filter {
 	public static final String	NO_CONDITIONS_CREATED	= "You have to create condition(s) first";
 	public static final String	WRONG_DATE_MESSAGE	= "Please, set the date";
 
-	
-	private Map	keyNameCondition = new HashMap();
-	private Collection filterViews;
-	private String[] keys;
+	private Map nameCondition = new HashMap();
+	private List keys;
 	private String[] keyNames;
-	private byte[] keyTypes;
-	private Collection initialEntities;
-	private Collection filteredEntities;
-	private ConditionWrapper wrapper;
-	private short entityCode;
-	private LogicalScheme logicalScheme;
-					
-	public Filter(ConditionWrapper wrapper) {
+	
+	private Collection filterViews;
+	
+	private short	entityCode;
+	
+	LogicalScheme logicalScheme;
+	LinkedConditionLoader linkedConditionLoader;
 		
-		this.wrapper 			= wrapper;
-		this.keys 				= wrapper.getKeys();
-		this.keyNames 			= wrapper.getKeyNames();
-		this.keyTypes 			= wrapper.getTypes();
-		this.entityCode 		= wrapper.getEntityCode();
-		this.initialEntities	= wrapper.getInitialEntities();
-		this.filteredEntities	= new LinkedList(this.initialEntities);
-		
+	public Filter(ConditionWrapper wrapper, LinkedConditionLoader linkedConditionLoader) {
+		this.keys = wrapper.getKeys();
+		this.entityCode = wrapper.getEntityCode(); 
 		this.filterViews = new LinkedList();
-		
+		this.linkedConditionLoader = linkedConditionLoader;
+		this.keyNames = new String[this.keys.size()];
+		int i = 0;
+		for (Iterator it = this.keys.iterator(); it.hasNext();i++) {
+			ConditionKey conditionKey = (ConditionKey) it.next();
+			this.keyNames[i] = conditionKey.getName();
+		}
+		this.logicalScheme = new LogicalScheme();
 	}
 	
 	public void addView (FilterView view) {
@@ -69,147 +66,40 @@ public class Filter {
 		this.filterViews.remove(view);
 	}
 	
-	public String[] getKeys() {
-		return this.keys;
+	public void addCondition(StorableObjectCondition condition, ConditionKey key) {
+		String conditionName = "Condition " + this.keys.indexOf(key) + " : " + key.getName();
+		this.nameCondition.put(conditionName, condition);
+		this.logicalScheme.addCondition(conditionName, condition);
+		refreshCreatedConditions();
 	}
 	
-	public String getKeyName(int index) {
-		return this.keyNames[index];
-	}
-	
-	public String[] getLinkedNames(String key) {
-		try {
-			return this.wrapper.getLinkedNames(key);
-		} catch (IllegalDataException e) {
-			Log.errorMessage(e.getMessage());
-		}
-		return new String[0];
-	}
-	
-	/*public String getKeyName(String key) {
-		return this.keyNames[getIndex(key)];
-	}*/
-	
-	/*public String getKey(String keyName) {
-		return this.keys[getIndex(keyName)];
-	}*/
-	
-	public byte getKeyType(int index) {
-		return this.keyTypes[index];
-	}
-	
-	/*private int getIndex(String key) {
-		for (int i = 0; i < this.keys.length; i++) {
-			String tempKey = this.keys[i];
-			if(tempKey.equals(key))
-				return i;
-		}
-		return -1;
-	}*/
-	
-	public String getKey(int index) {
-		return this.keys[index];
+	public void removeCondition(String name) {
+		this.nameCondition.remove(name);
+		this.logicalScheme.removeCondition(name);
+		refreshCreatedConditions();
 	}
 
-	public void addCondition(String keyName, StorableObjectCondition condition) {
-		this.keyNameCondition.put(keyName, condition);
-		if (this.logicalScheme == null)
-			this.logicalScheme = new LogicalScheme(keyName, condition);
-		else
-			this.logicalScheme.addCondition(keyName, condition);
-		refreshCreatedConditions();
-		refreshFilteredEntities();		
-	}
-	
-	public void refreshFilteredEntities() {
-		if (this.logicalScheme == null)
-			this.filteredEntities = new LinkedList(this.initialEntities);
-		else {
-			StorableObjectCondition resultCondition = this.logicalScheme.getResultCondition();
-			this.filteredEntities = new LinkedList();
-			for (Iterator it = this.initialEntities.iterator(); it.hasNext();) {
-				StorableObject storableObject = (StorableObject) it.next();
-				try {
-					if (resultCondition.isConditionTrue(storableObject)) {
-						this.filteredEntities.add(storableObject);
-					}
-				} catch (ApplicationException e) {
-					Log.errorMessage(e.getMessage());
-				}
-			}
-		}		
-		String[] filteredNames = getFilteredNames();
+	public void refreshCreatedConditions() {
 		for (Iterator it = this.filterViews.iterator(); it.hasNext();) {
 			FilterView view = (FilterView) it.next();
-			view.refreshFilteredEntities(filteredNames);
+			view.refreshCreatedConditions(this.nameCondition.keySet().toArray());
 		}
 	}
 	
-	/*public void removeCondition(StorableObjectCondition condition) {
-		this.conditions.remove(condition);
-	}*/
+	public String[] getKeyNames() {
+		return this.keyNames;
+	}
 
 	public short getEntityCode() {
 		return this.entityCode;
 	}
-	
-	public Object getLinkedObject(String key, int i) {
-		try {
-			return this.wrapper.getLinkedObject(key, i);
-		} catch (IllegalDataException e) {
-			Log.errorMessage(e.getMessage());
-			e.printStackTrace();
-		}
-		return null;
+	public List getKeys() {
+		return this.keys;
 	}
 
-	public void removeCondition(String keyName) {
-		this.keyNameCondition.remove(keyName);
-		if (this.keyNameCondition == null || this.keyNameCondition.size() == 0)
-			this.logicalScheme = null;
-		else
-			this.logicalScheme.removeCondition(keyName);
-		refreshCreatedConditions();
-		refreshFilteredEntities();
-	}
-
-	public Map getKeyNameCondition() {
-		return this.keyNameCondition;
-	}
-	
-	public void refreshCreatedConditions() {
-		for (Iterator it = this.filterViews.iterator(); it.hasNext();) {
-			FilterView view = (FilterView) it.next();
-			view.refreshCreatedConditions(this.keyNameCondition.keySet().toArray());
-		}
-	}
-	
-//	public void refreshFilteredList() {
-//		for (Iterator it = this.filterViews.iterator(); it.hasNext();) {
-//			FilterView view = (FilterView) it.next();
-//			view.refreshFilteredList(getFilteredNames());
-//		}
-//	}
-	
-	public String[] getFilteredNames() {
-		int i=0;
-		String[] filteredNames = new String[this.filteredEntities.size()];
-		for (Iterator iter = this.filteredEntities.iterator(); iter.hasNext();i++) {
-			StorableObject storableObject = (StorableObject) iter.next();
-			filteredNames[i] = this.wrapper.getInitialName(storableObject);			
-		}
-		return filteredNames;
-	}
-
-	public Object[] getKeyNames() {
-		return this.keyNames;
-	}
-
-	public StorableObjectCondition getCondition(String keyName) {
-		return (StorableObjectCondition) this.keyNameCondition.get(keyName);
-	}
-
-	public LogicalScheme getLogicalScheme() {
-		return this.logicalScheme;
-	}
+	public boolean hasCondition() {
+		if (this.nameCondition.size() == 0)
+			return false;
+		return true;
+	}	
 }

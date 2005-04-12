@@ -1,5 +1,5 @@
 /*
- * $Id: FilterController.java,v 1.6 2005/04/08 09:06:41 bass Exp $
+ * $Id: FilterController.java,v 1.7 2005/04/12 13:01:13 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,8 +11,11 @@ package com.syrus.AMFICOM.newFilter;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.ConditionWrapper;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.CompoundConditionSort;
@@ -20,18 +23,25 @@ import com.syrus.util.Log;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 
+
+
+
+
 /**
- * @version $Revision: 1.6 $, $Date: 2005/04/08 09:06:41 $
- * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2005/04/12 13:01:13 $
+ * @author $Author: max $
  * @module filter_v1
  */
 public class FilterController implements ActionListener, PopupMenuListener {
@@ -45,27 +55,27 @@ public class FilterController implements ActionListener, PopupMenuListener {
 		
 		this.model = filter;
 		this.view = filterView;
-		
 		this.model.addView(this.view);
-		
-		for (int i = 0; i < this.model.getKeys().length; i++) {
-			String key = this.model.getKey(i);
-			byte type = this.model.getKeyType(i);
+		for (Iterator it = this.model.getKeys().iterator(); it.hasNext();) {
+			ConditionKey conditionKey = (ConditionKey) it.next();
+			byte type = conditionKey.getType();
 			switch (type) {
 			case ConditionWrapper.INT:
 			case ConditionWrapper.FLOAT:
 			case ConditionWrapper.DOUBLE:
-				this.keyTempCondition.put(key, new NumberCondition());
+				this.keyTempCondition.put(conditionKey, new NumberCondition());
 				break;
 			case ConditionWrapper.STRING:
-				this.keyTempCondition.put(key, new StringCondition());
+				this.keyTempCondition.put(conditionKey, new StringCondition());
 				break;
 			case ConditionWrapper.CONSTRAINT:
+				this.keyTempCondition.put(conditionKey, new ListCondition(conditionKey.getConstraintNames()));
+				break;
 			case ConditionWrapper.LIST:
-				this.keyTempCondition.put(key, new ListCondition(this.model.getLinkedNames(key)));
+				this.keyTempCondition.put(conditionKey, new ListCondition());
 				break;
 			case ConditionWrapper.DATE:
-				this.keyTempCondition.put(key, new DateCondition());
+				this.keyTempCondition.put(conditionKey, new DateCondition());
 				break;
 			default:
 				Log.errorMessage("FilterCondition.<init> | Unsupported condition type");
@@ -88,8 +98,8 @@ public class FilterController implements ActionListener, PopupMenuListener {
 	
 	private void changeKey() {
 		int keyIndex = this.view.getSelectedKeyIndex();
-		String key = this.model.getKey(keyIndex);
-		byte type = this.model.getKeyType(keyIndex);
+		ConditionKey key = (ConditionKey) this.model.getKeys().get(keyIndex);
+		byte type = key.getType();
 		Object tempCondition = getTempCondition(key);
 		switch (type) {
 		case ConditionWrapper.INT:
@@ -102,9 +112,36 @@ public class FilterController implements ActionListener, PopupMenuListener {
 			StringCondition stringCondition = (StringCondition) tempCondition;
 			this.view.drawStringCondition(stringCondition);
 			break;
-		case ConditionWrapper.CONSTRAINT:
+		case ConditionWrapper.CONSTRAINT: {
+			ListCondition listCondition = (ListCondition) tempCondition;
+			this.view.drawLinkedCondition(listCondition);
+			break;
+		}
 		case ConditionWrapper.LIST:
 			ListCondition listCondition = (ListCondition) tempCondition;
+			List linkedObjects = key.getLinkedObjects();
+			if(linkedObjects == null) {
+				try {
+					List linkedStorableObjects = this.model.linkedConditionLoader.loadLinkedCondition(key.getLinkedEntityCode());
+					key.setLinkedObjects(linkedStorableObjects);
+				} catch (IllegalDataException e1) {
+					e1.printStackTrace();
+				}
+				linkedObjects = key.getLinkedObjects();
+				String[] linkedNames = new String[linkedObjects.size()]; 
+				for (int i = 0; i < linkedObjects.size(); i++) {
+					StorableObject linkedObject = (StorableObject) linkedObjects.get(i);
+					StorableObjectWrapper wrapper;
+					try {
+						wrapper = StorableObjectWrapper.getWrapper(key.getLinkedEntityCode());
+					} catch (IllegalDataException e) {
+						Log.errorMessage(e.getMessage());
+						return;
+					}
+					linkedNames[i] = (String) wrapper.getValue(linkedObject, StorableObjectWrapper.VIEW_NAME);
+				}
+				listCondition.setLinkedNames(linkedNames);
+			}
 			this.view.drawLinkedCondition(listCondition);
 			break;
 		case ConditionWrapper.DATE:
@@ -119,10 +156,11 @@ public class FilterController implements ActionListener, PopupMenuListener {
 	private void addConditionToModel() {
 		saveTempConditions();
 		int index = this.view.getSelectedKeyIndex();
-		String key = this.model.getKey(index);
-		String keyName = this.model.getKeyName(index);
-		byte type = this.model.getKeyType(index);
-		Object tempCondition = getTempCondition(key);
+		ConditionKey conditionKey = (ConditionKey) this.model.getKeys().get(index);
+		String key = conditionKey.getKey();
+		byte type = conditionKey.getType();
+		Object tempCondition = getTempCondition(conditionKey);
+		short entityCode = this.model.getEntityCode();
 		switch (type) {
 		case ConditionWrapper.INT:
 			NumberCondition numberCondition = (NumberCondition) tempCondition;
@@ -140,7 +178,7 @@ public class FilterController implements ActionListener, PopupMenuListener {
 					this.view.showErrorMessage(Filter.WRONG_NUMBER_MESSAGE);
 					return;
 				}
-				this.model.addCondition(keyName, new TypicalCondition(equalsInt, equalsInt, OperationSort.OPERATION_EQUALS, this.model.getEntityCode(), key));
+				this.model.addCondition(new TypicalCondition(equalsInt, equalsInt, OperationSort.OPERATION_EQUALS, entityCode, key), conditionKey);
 				return;
 			}
 			if (equals.equals("") && !from.equals("") && !to.equals("")) {
@@ -160,7 +198,7 @@ public class FilterController implements ActionListener, PopupMenuListener {
 					this.view.showErrorMessage(Filter.WRONG_NUMBER_MESSAGE);
 					return;
 				}
-				this.model.addCondition(keyName, new TypicalCondition(fromInt, toInt, OperationSort.OPERATION_IN_RANGE, this.model.getEntityCode(), key));
+				this.model.addCondition(new TypicalCondition(fromInt, toInt, OperationSort.OPERATION_IN_RANGE, entityCode, key), conditionKey);
 				return;
 			}
 			if (equals.equals("") && !from.equals("") && to.equals("")) {
@@ -176,7 +214,7 @@ public class FilterController implements ActionListener, PopupMenuListener {
 					sort = OperationSort.OPERATION_GREAT_EQUALS;
 				else
 					sort = OperationSort.OPERATION_GREAT;
-				this.model.addCondition(keyName, new TypicalCondition(fromInt, fromInt, sort, this.model.getEntityCode(), key));
+				this.model.addCondition(new TypicalCondition(fromInt, fromInt, sort, entityCode, key), conditionKey);
 				return;
 			}
 			if (equals.equals("") && from.equals("") && !to.equals("")) {
@@ -192,7 +230,7 @@ public class FilterController implements ActionListener, PopupMenuListener {
 					sort = OperationSort.OPERATION_LESS_EQUALS;
 				else
 					sort = OperationSort.OPERATION_LESS;
-				this.model.addCondition(keyName, new TypicalCondition(toInt, toInt, sort, this.model.getEntityCode(), key));
+				this.model.addCondition(new TypicalCondition(toInt, toInt, sort, entityCode, key), conditionKey);
 				return;
 			}			
 			if (!equals.equals("") && !to.equals("")) {
@@ -215,25 +253,25 @@ public class FilterController implements ActionListener, PopupMenuListener {
 				this.view.showErrorMessage(Filter.WRONG_STRING_MESSAGE);
 				return;
 			}
-			this.model.addCondition(keyName, new TypicalCondition(conditionString, OperationSort.OPERATION_EQUALS, this.model.getEntityCode(), key));
+			this.model.addCondition(new TypicalCondition(conditionString, OperationSort.OPERATION_EQUALS, entityCode, key), conditionKey);
 			break;
 		case ConditionWrapper.CONSTRAINT:
 			ListCondition listCondition2 = (ListCondition) tempCondition;
 			Set conditions = new HashSet();
-			int[] linkedIndex2 = listCondition2.getLinkedIndex();
-			if(linkedIndex2.length == 0) {
+			int[] selectedIndices = listCondition2.getSelectedIndices();
+			if(selectedIndices.length == 0) {
 				this.view.showErrorMessage(Filter.WRONG_LIST_MESSAGE);
 				return;
 			}
-			for (int i = 0; i < linkedIndex2.length; i++) {
-				TypicalCondition condition = new TypicalCondition(linkedIndex2[i], linkedIndex2[i], OperationSort.OPERATION_EQUALS, this.model.getEntityCode(), key);
+			for (int i = 0; i < selectedIndices.length; i++) {
+				TypicalCondition condition = new TypicalCondition(selectedIndices[i], selectedIndices[i], OperationSort.OPERATION_EQUALS, entityCode, key);
 				conditions.add(condition);					
 			}
 			if (conditions.size() == 1) 
-				this.model.addCondition(keyName, (StorableObjectCondition)conditions.iterator().next());
+				this.model.addCondition((StorableObjectCondition)conditions.iterator().next(), conditionKey);
 			else {
 				try {
-					this.model.addCondition(keyName, new CompoundCondition(conditions, CompoundConditionSort.OR));
+					this.model.addCondition(new CompoundCondition(conditions, CompoundConditionSort.OR), conditionKey);
 				} catch (CreateObjectException e) {
 					//never will happen;
 					Log.errorMessage(e.getMessage());
@@ -242,16 +280,17 @@ public class FilterController implements ActionListener, PopupMenuListener {
 			break;
 		case ConditionWrapper.LIST:
 			ListCondition listCondition = (ListCondition) tempCondition;
-			Set linkedObjects = new HashSet(); 
-			int[] linkedIndex = listCondition.getLinkedIndex();
+			List linkedObjects = conditionKey.getLinkedObjects(); 
+			int[] linkedIndex = listCondition.getSelectedIndices();
 			if(linkedIndex.length == 0) {
 				this.view.showErrorMessage(Filter.WRONG_LIST_MESSAGE);
 				return;
 			}
+			ArrayList selectedObjectIds = new ArrayList(linkedIndex.length);
 			for (int i = 0; i < linkedIndex.length; i++) {
-				linkedObjects.add(this.model.getLinkedObject(key, linkedIndex[i]));					
+				selectedObjectIds.add(((StorableObject)linkedObjects.get(linkedIndex[i])).getId());									
 			}
-			this.model.addCondition(keyName, new LinkedIdsCondition(linkedObjects, this.model.getEntityCode()));
+			this.model.addCondition(new LinkedIdsCondition(new HashSet(selectedObjectIds), entityCode), conditionKey);
 			break;
 		case ConditionWrapper.DATE:
 			DateCondition dateCondition = (DateCondition) tempCondition;
@@ -266,7 +305,7 @@ public class FilterController implements ActionListener, PopupMenuListener {
 				sort2 = OperationSort.OPERATION_LESS_EQUALS;
 			if (sort2 == null)
 				return;
-			this.model.addCondition(keyName, new TypicalCondition(start, end, sort2, this.model.getEntityCode(), key));
+			this.model.addCondition(new TypicalCondition(start, end, sort2, entityCode, key), conditionKey);
 			break;
 		default:
 			Log.errorMessage("FilterController.addConditionToModel | Unsupported condition type");
@@ -274,28 +313,27 @@ public class FilterController implements ActionListener, PopupMenuListener {
 	}
 	
 	private void removeConditionInModelAndInScheme() {
-		Object[] keyNames = this.view.getSelectedConditionNames();
-		for (int i = 0; i < keyNames.length; i++) {
-			String keyName = (String) keyNames[i];
-			this.model.removeCondition(keyName);			
+		String[] selectedConditionNames = this.view.getSelectedConditionNames();
+		for (int i = 0; i < selectedConditionNames.length; i++) {
+			this.model.removeCondition(selectedConditionNames[i]);			
 		}
 	}
 	
 	public void createLogicalScheme() {
-		if (noConditionsCreated()) {
+		if (!this.model.hasCondition()) {
 			this.view.showErrorMessage(Filter.NO_CONDITIONS_CREATED);
 			return;
 		}
-		this.view.createLogicalSchemeView(this.model.getLogicalScheme(), this.model);	
+		this.view.createLogicalSchemeView(this.model.logicalScheme, this.model);	
 	}
 	
-	private boolean noConditionsCreated() {
-		if (this.model.getKeyNameCondition().keySet() == null
-				|| this.model.getKeyNameCondition().keySet().size() == 0) {
-			return true;
-		}
-		return false;
-	}
+//	private boolean noConditionsCreated() {
+//		if (this.model.getKeyNameCondition().keySet() == null
+//				|| this.model.getKeyNameCondition().keySet().size() == 0) {
+//			return true;
+//		}
+//		return false;
+//	}
 		
 	public void popupMenuCanceled(PopupMenuEvent e) {
 		// Nothing to do		
@@ -310,15 +348,15 @@ public class FilterController implements ActionListener, PopupMenuListener {
 		saveTempConditions();
 	}
 	
-	private Object getTempCondition(String key) {
+	private Object getTempCondition(ConditionKey key) {
 		return this.keyTempCondition.get(key);
 	}
 	
 	private void saveTempConditions() {
 		int index = this.view.getSelectedKeyIndex();
-		String key = this.model.getKey(index);
-		byte type = this.model.getKeyType(index);
-		Object tempCondition = getTempCondition(key);
+		ConditionKey conditionKey = (ConditionKey) this.model.getKeys().get(index);
+		byte type = conditionKey.getType();
+		Object tempCondition = getTempCondition(conditionKey);
 		switch (type) {
 		case ConditionWrapper.INT:
 		case ConditionWrapper.FLOAT:
