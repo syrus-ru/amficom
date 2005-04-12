@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacterizableDatabase.java,v 1.7 2005/04/01 10:27:37 bass Exp $
+ * $Id: CharacterizableDatabase.java,v 1.8 2005/04/12 16:30:29 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/04/01 10:27:37 $
- * @author $Author: bass $
+ * @version $Revision: 1.8 $, $Date: 2005/04/12 16:30:29 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public abstract class CharacterizableDatabase extends StorableObjectDatabase {
@@ -234,12 +234,7 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 		Characteristic characteristic;
 
 		StringBuffer stringBuffer = new StringBuffer(CharacteristicWrapper.COLUMN_SORT + EQUALS + Integer.toString(sort.value()) + SQL_AND);
-		try {
-			stringBuffer.append(idsEnumerationString(storableObjects, CharacteristicWrapper.COLUMN_CHARACTERIZABLE_ID, true));
-		}
-		catch (IllegalDataException ide) {
-			throw new UpdateObjectException(ide);
-		}
+		stringBuffer.append(idsEnumerationString(storableObjects, CharacteristicWrapper.COLUMN_CHARACTERIZABLE_ID, true));
 
 		CharacteristicDatabase characteristicDatabase = GeneralDatabaseContext.getCharacteristicDatabase();
 		try {
