@@ -201,7 +201,8 @@ public class AnalysisFrame extends ScalableFrame implements bsHashChangeListener
 	public void removeEtalon(String etId)
 	{
 		SimpleGraphPanel epPanel = (SimpleGraphPanel)traces.get(etId);
-		panel.removeGraphPanel(epPanel);
+		if (epPanel != null)
+			panel.removeGraphPanel(epPanel);
 	}
 
 	public void bsHashAdded(String key, BellcoreStructure bs)
