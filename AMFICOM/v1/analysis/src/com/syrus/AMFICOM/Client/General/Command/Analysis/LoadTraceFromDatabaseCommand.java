@@ -102,7 +102,7 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 				bs = new BellcoreReader().getData(param.getValue());
 		}
 		if (bs == null)
-			return;
+			return; // FIXME: выдавать собщение об ошибке
 
 		if (!Heap.hasEmptyAllBSMap())
 		{
@@ -120,9 +120,9 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 			bs.measurementId = m.getId().getIdentifierString();
 			MeasurementSetup ms = m.getSetup();
 			Heap.setContextMeasurementSetup(ms);
-	
+
 			AnalysisUtil.load_CriteriaSet(userId, ms);
-	
+
 			if (ms.getEtalon() != null)
 				AnalysisUtil.load_Etalon(ms);
 			else
@@ -130,24 +130,8 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 				Heap.setBSEtalonTrace(null);
 				Heap.setMTMEtalon(null);
 			}
-	
-			//AnalysisUtil.load_Thresholds(userId, ms);
-	
+
 			new InitialAnalysisCommand().execute();
-	
-			ModelTraceManager mtmEtalon = Heap.getMTMEtalon();
-			ModelTraceAndEvents mtmEvents = Heap.getMTAEPrimary();
-	
-			if (mtmEtalon != null && mtmEvents != null)
-			{
-				int delta = 5;
-				// correct end of trace
-				// XXX: removed by saa because had no effect due to mistake
-	
-				// correct event types
-				// FIXME: (is necessary?? if not, remove this stupid code)
-				//mtmEvents.fixEventTypes(mtmEtalon, delta);
-			}
 
 			Heap.primaryTraceOpened(bs);
 			Heap.setCurrentTracePrimary();
