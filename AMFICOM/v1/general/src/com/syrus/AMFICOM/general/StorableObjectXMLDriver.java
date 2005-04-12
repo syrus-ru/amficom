@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXMLDriver.java,v 1.18 2005/04/01 06:34:57 bob Exp $
+ * $Id: StorableObjectXMLDriver.java,v 1.19 2005/04/12 16:28:11 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,8 +48,8 @@ import com.syrus.util.Log;
 /**
  * XML Driver for storable object package, one per package.
  * 
- * @version $Revision: 1.18 $, $Date: 2005/04/01 06:34:57 $
- * @author $Author: bob $
+ * @version $Revision: 1.19 $, $Date: 2005/04/12 16:28:11 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public class StorableObjectXMLDriver {
@@ -367,22 +367,22 @@ public class StorableObjectXMLDriver {
 		}
 	}
 
-	public void deleteObject(final Identifier identifier) throws IllegalDataException {
+	public void deleteObject(final Identifier identifier) {
 		try {
-			NodeList sizeList = XPathAPI.selectNodeList(this.doc, "//" + this.packageName + "/"
-					+ identifier.getIdentifierString());
-			if (sizeList.getLength() > 1)
-				throw new IllegalDataException("StorableObjectXMLDriver.deleteObject | more that one entity with id "
+			NodeList sizeList = XPathAPI.selectNodeList(this.doc, "//" + this.packageName + "/" + identifier.getIdentifierString());
+			if (sizeList.getLength() > 1) {
+				Log.errorMessage("StorableObjectXMLDriver.deleteObject | more that one entity with id "
 						+ identifier.getIdentifierString());
+				return;
+			}
 
 			for (int i = 0; i < sizeList.getLength(); i++) {
 				Node children = sizeList.item(i);
 				this.root.removeChild(children);
 			}
-		} catch (TransformerException te) {
-			String msg = "StorableObjectXMLDriver.deleteObject | Caught " + te.getMessage();
-			Log.errorMessage(msg);
-			throw new IllegalDataException(msg, te);
+		}
+		catch (TransformerException te) {
+			Log.errorException(te);
 		}
 	}
 
