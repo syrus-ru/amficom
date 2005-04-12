@@ -11,27 +11,13 @@ import com.syrus.io.BellcoreStructure;
 
 public class LoadEtalonCommand extends VoidCommand
 {
-	private ApplicationContext aContext;
-
-	public LoadEtalonCommand(ApplicationContext aContext)
-	{
-		this.aContext = aContext;
-	}
-
-	public void setParameter(String field, Object value)
-	{
-		if(field.equals("aContext"))
-			setApplicationContext((ApplicationContext )value);
-	}
-
-	public void setApplicationContext(ApplicationContext aContext)
-	{
-		this.aContext = aContext;
+	public LoadEtalonCommand()
+	{ // empty
 	}
 
 	public Object clone()
 	{
-		return new LoadEtalonCommand(aContext);
+		return new LoadEtalonCommand();
 	}
 
 	public void execute()

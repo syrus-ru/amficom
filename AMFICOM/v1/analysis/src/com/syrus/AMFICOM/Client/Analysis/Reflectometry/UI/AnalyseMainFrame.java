@@ -485,8 +485,7 @@ public class AnalyseMainFrame extends JFrame implements bsHashChangeListener,
 
 		aModel.setCommand("menuTraceDownload",
 			new LoadTraceFromDatabaseCommand(internalDispatcher, aContext));
-		aModel.setCommand("menuTraceDownloadEtalon", new LoadEtalonCommand(
-				aContext));
+		aModel.setCommand("menuTraceDownloadEtalon", new LoadEtalonCommand());
 		aModel.setCommand("menuTraceAddCompare",
 			new AddTraceFromDatabaseCommand(internalDispatcher, aContext));
 		aModel.setCommand("menuTraceRemoveCompare", new FileRemoveCommand(

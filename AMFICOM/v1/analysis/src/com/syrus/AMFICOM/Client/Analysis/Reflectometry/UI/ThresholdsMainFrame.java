@@ -265,7 +265,7 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener, CurrentTr
 		aModel.setCommand("menuLoadTestSetup", new LoadTestSetupCommand(aContext));
 
 		aModel.setCommand("menuTraceDownload", new LoadTraceFromDatabaseCommand(internal_dispatcher, aContext));
-		aModel.setCommand("menuTraceDownloadEtalon", new LoadEtalonCommand(aContext));
+		aModel.setCommand("menuTraceDownloadEtalon", new LoadEtalonCommand());
 		aModel.setCommand("menuTraceAddCompare", new AddTraceFromDatabaseCommand(internal_dispatcher, aContext));
 		aModel.setCommand("menuTraceRemoveCompare", new FileRemoveCommand(internal_dispatcher, null, aContext));
 		aModel.setCommand("menuTraceClose", new FileCloseCommand(internal_dispatcher, aContext));
