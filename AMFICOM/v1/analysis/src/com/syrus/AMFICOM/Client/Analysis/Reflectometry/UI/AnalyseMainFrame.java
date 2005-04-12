@@ -1,29 +1,91 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.SystemColor;
+import java.awt.Toolkit;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.JDesktopPane;
+import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JViewport;
+import javax.swing.UIDefaults;
+import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
-import com.syrus.AMFICOM.Client.General.*;
+import com.syrus.AMFICOM.Client.General.Checker;
+import com.syrus.AMFICOM.Client.General.ConnectionInterface;
+import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
+import com.syrus.AMFICOM.Client.General.SessionInterface;
+import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.ExitCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.*;
-import com.syrus.AMFICOM.Client.General.Command.Scheme.*;
-import com.syrus.AMFICOM.Client.General.Command.Session.*;
-import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Lang.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.AddTraceFromDatabaseCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.CreateAnalysisReportCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.CreateTestSetupCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.FileAddCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.FileCloseCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.FileOpenAsBellcoreCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.FileOpenAsWavetekCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.FileOpenCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.FileRemoveCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.FileSaveAsTextCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.FileSaveCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.LoadEtalonCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.LoadTestSetupCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.LoadTraceFromDatabaseCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.NetStudyCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.OptionsSetColorsCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.RemoveEtalonCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.SaveAnalysisCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.SaveTestSetupAsCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.SaveTestSetupCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.TraceMakeCurrentCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.TraceOpenReferenceCommand;
+import com.syrus.AMFICOM.Client.General.Command.Scheme.ArrangeWindowCommand;
+import com.syrus.AMFICOM.Client.General.Command.Scheme.ShowFrameCommand;
+import com.syrus.AMFICOM.Client.General.Command.Session.SessionChangePasswordCommand;
+import com.syrus.AMFICOM.Client.General.Command.Session.SessionCloseCommand;
+import com.syrus.AMFICOM.Client.General.Command.Session.SessionConnectionCommand;
+import com.syrus.AMFICOM.Client.General.Command.Session.SessionDomainCommand;
+import com.syrus.AMFICOM.Client.General.Command.Session.SessionOpenCommand;
+import com.syrus.AMFICOM.Client.General.Command.Session.SessionOptionsCommand;
+import com.syrus.AMFICOM.Client.General.Event.ContextChangeEvent;
+import com.syrus.AMFICOM.Client.General.Event.CurrentTraceChangeListener;
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
+import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
+import com.syrus.AMFICOM.Client.General.Event.OperationListener;
+import com.syrus.AMFICOM.Client.General.Event.PrimaryMTMListener;
+import com.syrus.AMFICOM.Client.General.Event.PrimaryTraceListener;
+import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
+import com.syrus.AMFICOM.Client.General.Event.bsHashChangeListener;
+import com.syrus.AMFICOM.Client.General.Lang.LangModel;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Report.ReportTemplate;
-import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.General.UI.StatusBarModel;
+import com.syrus.AMFICOM.Client.General.UI.WindowArranger;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
+import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.analysis.ClientAnalysisManager;
-import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
-import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.io.BellcoreStructure;
+import com.syrus.util.Log;
 
 public class AnalyseMainFrame extends JFrame implements bsHashChangeListener,
 		PrimaryTraceListener, PrimaryMTMListener, OperationListener,
@@ -31,7 +93,7 @@ public class AnalyseMainFrame extends JFrame implements bsHashChangeListener,
 {
 	public ApplicationContext aContext;
 
-	private Dispatcher internal_dispatcher = new Dispatcher();
+	Dispatcher internalDispatcher = new Dispatcher();
 
 	ClientAnalysisManager aManager = new ClientAnalysisManager();
 
@@ -51,58 +113,50 @@ public class AnalyseMainFrame extends JFrame implements bsHashChangeListener,
 
 	AnalyseMainMenuBar menuBar = new AnalyseMainMenuBar();
 
-	ScalableFrame noiseFrame;
+	public static final String NOISE_FRAME = "noiseFrame";
 
-	ScalableFrame filteredFrame;
+	public static final String FILTERED_FRAME = "filteredFrame";
 
-	TraceSelectorFrame selectFrame;
+	public static final String SELECTOR_FRAME = "selectFrame";
 
-	PrimaryParametersFrame paramFrame;
+	public static final String PRIMARY_PARAMETERS_FRAME = "paramFrame";
 
-	OverallStatsFrame statsFrame;
+	public static final String STATS_FRAME = "statsFrame";
 
-	EventsFrame eventsFrame;
+	public static final String EVENTS_FRAME = "eventsFrame";
 
-	MarkersInfoFrame mInfoFrame;
+	public static final String MARKERS_INFO_FRAME = "MarkersInfoFrame";
 
-	PathElementsFrame analysisFrame;
+	public static final String ANALYSIS_FRAME = "analysisFrame";
 
-	AnalysisSelectionFrame anaSelectFrame;
+	public static final String ANALYSIS_SELECTION_FRAME = "AnalysisSelectionFrame";
 
-	DetailedEventsFrame detailedEvFrame;
+	public static final String DETAILED_EVENTS_FRAME = "DetailedEventsFrame";
 
-	HistogrammFrame dhf;
+	public static final String HISTOGRAMM_FRAME = "HistogrammFrame";
+	
+	public static final String WINDOW_ARRANGER = "analysisExtWindowArranger";
+	
+	UIDefaults frames;
+	
+	CreateAnalysisReportCommand analysisReportCommand;
 
-	ArrayList tables = new ArrayList();
-
-	ArrayList graphs = new ArrayList();
-
-	public AnalyseMainFrame(ApplicationContext aContext)// ApplicationModel
+	public AnalyseMainFrame(final ApplicationContext aContext)// ApplicationModel
 														// aModel)
 	{
 		super();
 		setContext(aContext);
 
-		try
-		{
-			jbInit();
-		} catch (Exception e)
-		{
-			e.printStackTrace();
+
+		this.addComponentListener(new ComponentAdapter() {
+			public void componentShown(ComponentEvent e) {
+				initModule();
+				desktopPane.setPreferredSize(desktopPane.getSize());			
+				arrange();
+			}
 		}
-		Environment.addWindow(this);
-	}
-
-	public AnalyseMainFrame()
-	{
-		this(new ApplicationContext());
-	}
-
-	private void jbInit() throws Exception
-	{
-		this.addComponentListener(new AnalyseMainFrame_this_componentAdapter(
-				this));
-		this.addWindowListener(new java.awt.event.WindowAdapter()
+			);
+		this.addWindowListener(new WindowAdapter()
 		{
 			public void windowClosing(WindowEvent e)
 			{
@@ -137,53 +191,202 @@ public class AnalyseMainFrame extends JFrame implements bsHashChangeListener,
 		mainPanel.add(statusBarPanel, BorderLayout.SOUTH);
 		mainPanel.add(scrollPane, BorderLayout.CENTER);
 
-		selectFrame = new TraceSelectorFrame(internal_dispatcher);
-		desktopPane.add(selectFrame);
+		this.frames = new UIDefaults();
+		this.frames.put(SELECTOR_FRAME, new UIDefaults.LazyValue() {
 
-		paramFrame = new PrimaryParametersFrame(internal_dispatcher);
-		desktopPane.add(paramFrame);
-		tables.add(paramFrame);
+			public Object createValue(UIDefaults table) {
+				Log.debugMessage(".createValue | SELECTOR_FRAME", Log.FINEST);
+				TraceSelectorFrame selectFrame = new TraceSelectorFrame(internalDispatcher);
+				desktopPane.add(selectFrame);
+				return selectFrame;
+			}
+		});
 
-		statsFrame = new OverallStatsFrame(internal_dispatcher);
-		desktopPane.add(statsFrame);
-		tables.add(statsFrame);
+		this.frames.put(PRIMARY_PARAMETERS_FRAME, new UIDefaults.LazyValue() {
 
-		noiseFrame = new ScalableFrame(new ScalableLayeredPanel());
-		noiseFrame.setTitle(LangModelAnalyse.getString("Noise level"));
-		desktopPane.add(noiseFrame);
-		graphs.add(noiseFrame);
+			public Object createValue(UIDefaults table) {
+				Log.debugMessage(".createValue | PRIMARY_PARAMETERS_FRAME", Log.FINEST);
+				PrimaryParametersFrame paramFrame = new PrimaryParametersFrame(internalDispatcher);
+				desktopPane.add(paramFrame);
+				analysisReportCommand.setParameter(CreateAnalysisReportCommand.TABLE, paramFrame);
+				return paramFrame;
+			}
+		});
+		
+		this.frames.put(STATS_FRAME, new UIDefaults.LazyValue() {
 
-		filteredFrame = new ScalableFrame(new ScalableLayeredPanel());
-		filteredFrame.setTitle(LangModelAnalyse.getString("filteredTitle"));
-		desktopPane.add(filteredFrame);
-		graphs.add(filteredFrame);
+			public Object createValue(UIDefaults table) {
+				Log.debugMessage(".createValue | STATS_FRAME", Log.FINEST);
+				OverallStatsFrame statsFrame = new OverallStatsFrame(internalDispatcher);
+				desktopPane.add(statsFrame);
+				analysisReportCommand.setParameter(CreateAnalysisReportCommand.TABLE, statsFrame);
+				return statsFrame;
+			}
+		});
+		
+		this.frames.put(NOISE_FRAME, new UIDefaults.LazyValue() {
+
+			public Object createValue(UIDefaults table) {
+				Log.debugMessage(".createValue | NOISE_FRAME", Log.FINEST);
+				ScalableFrame noiseFrame = new ScalableFrame(new ScalableLayeredPanel());
+				noiseFrame.setTitle(LangModelAnalyse.getString("Noise level"));
+				desktopPane.add(noiseFrame);
+				analysisReportCommand.setParameter(CreateAnalysisReportCommand.PANEL, noiseFrame);
+				return noiseFrame;
+			}
+		});
+
+		this.frames.put(FILTERED_FRAME, new UIDefaults.LazyValue() {
+
+			public Object createValue(UIDefaults table) {
+				Log.debugMessage(".createValue | FILTERED_FRAME", Log.FINEST);
+				ScalableFrame filteredFrame = new ScalableFrame(new ScalableLayeredPanel());
+				filteredFrame.setTitle(LangModelAnalyse.getString("filteredTitle"));
+				desktopPane.add(filteredFrame);
+				analysisReportCommand.setParameter(CreateAnalysisReportCommand.PANEL, filteredFrame);
+				return filteredFrame;
+			}
+		});
+
+		this.frames.put(WINDOW_ARRANGER, new UIDefaults.LazyValue() {
+	
+			public Object createValue(UIDefaults table) {
+				Log.debugMessage(".createValue | WINDOW_ARRANGER", Log.FINEST);
+				return new WindowArranger(AnalyseMainFrame.this) {
+
+					public void arrange() {
+						AnalyseMainFrame f = (AnalyseMainFrame) mainframe;
+
+						int w = f.desktopPane.getSize().width;
+						int h = f.desktopPane.getSize().height;
+						int minh = Math.min(205, h / 4);
+
+						JInternalFrame selectFrame = (JInternalFrame) f.frames.get(AnalyseMainFrame.SELECTOR_FRAME);
+						JInternalFrame paramFrame = (JInternalFrame) f.frames
+								.get(AnalyseMainFrame.PRIMARY_PARAMETERS_FRAME);
+						JInternalFrame statsFrame = (JInternalFrame) f.frames.get(AnalyseMainFrame.STATS_FRAME);
+						JInternalFrame noiseFrame = (JInternalFrame) f.frames.get(AnalyseMainFrame.NOISE_FRAME);
+						JInternalFrame filteredFrame = (JInternalFrame) f.frames.get(AnalyseMainFrame.FILTERED_FRAME);
+						JInternalFrame eventsFrame = (JInternalFrame) f.frames.get(AnalyseMainFrame.EVENTS_FRAME);
+						JInternalFrame detailedEvFrame = (JInternalFrame) f.frames
+								.get(AnalyseMainFrame.DETAILED_EVENTS_FRAME);
+						JInternalFrame analysisFrame = (JInternalFrame) f.frames.get(AnalyseMainFrame.ANALYSIS_FRAME);
+						JInternalFrame mInfoFrame = (JInternalFrame) f.frames.get(AnalyseMainFrame.MARKERS_INFO_FRAME);
+						JInternalFrame anaSelectFrame = (JInternalFrame) f.frames
+								.get(AnalyseMainFrame.ANALYSIS_SELECTION_FRAME);
+						JInternalFrame dhf = (JInternalFrame) f.frames.get(AnalyseMainFrame.HISTOGRAMM_FRAME);
+						
+						normalize(paramFrame);
+						normalize(selectFrame);
+						normalize(statsFrame);
+						normalize(mInfoFrame);
+						normalize(analysisFrame);
+						normalize(eventsFrame);
+						normalize(detailedEvFrame);
+						normalize(anaSelectFrame);
+						normalize(dhf);
+						normalize(noiseFrame);
+						normalize(filteredFrame);
+
+						paramFrame.setSize(w / 6, minh);
+						selectFrame.setSize(w / 6, minh);
+						statsFrame.setSize(w / 6, minh);
+						mInfoFrame.setSize(w / 6, minh);
+						analysisFrame.setSize(2 * w / 3, h - 2 * minh);
+						eventsFrame.setSize(w / 2, minh);
+						detailedEvFrame.setSize(w / 6, minh);
+						anaSelectFrame.setSize(w / 3, minh);
+						dhf.setSize(w / 3, minh);
+						noiseFrame.setSize(w / 3, (h - 2 * minh) / 2);
+						filteredFrame.setSize(w / 3, (h - 2 * minh) / 2);
+
+						paramFrame.setLocation(w / 6, 0);
+						selectFrame.setLocation(0, 0);
+						statsFrame.setLocation(w / 3, 0);
+						mInfoFrame.setLocation(w / 2, 0);
+						analysisFrame.setLocation(0, minh);
+						anaSelectFrame.setLocation(2 * w / 3, 0);
+						filteredFrame.setLocation(2 * w / 3, minh);
+						noiseFrame.setLocation(2 * w / 3, minh + filteredFrame.getHeight());
+						eventsFrame.setLocation(0, minh + analysisFrame.getHeight());
+						detailedEvFrame.setLocation(eventsFrame.getWidth(), minh + analysisFrame.getHeight());
+						dhf.setLocation(eventsFrame.getWidth() + detailedEvFrame.getWidth(), minh
+								+ analysisFrame.getHeight());
+					}
+
+				};
+			}
+		});
 
 		// ConcavitiesFrame concFrame = new
 		// ConcavitiesFrame(internal_dispatcher);
 		// desktopPane.add(concFrame);
 
-		eventsFrame = new EventsFrame(internal_dispatcher);
-		desktopPane.add(eventsFrame);
-		tables.add(eventsFrame);
+		this.frames.put(EVENTS_FRAME, new UIDefaults.LazyValue() {
 
-		detailedEvFrame = new DetailedEventsFrame(internal_dispatcher);
-		desktopPane.add(detailedEvFrame);
+			public Object createValue(UIDefaults table) {
+				Log.debugMessage(".createValue | EVENTS_FRAME", Log.FINEST);
+				EventsFrame eventsFrame = new EventsFrame(internalDispatcher);
+				desktopPane.add(eventsFrame);
+				analysisReportCommand.setParameter(CreateAnalysisReportCommand.TABLE, eventsFrame);
+				return eventsFrame;
+			}
+		});
 
-		analysisFrame = new PathElementsFrame(aContext, internal_dispatcher);
-		desktopPane.add(analysisFrame);
-		graphs.add(analysisFrame);
+		this.frames.put(DETAILED_EVENTS_FRAME, new UIDefaults.LazyValue() {
 
-		mInfoFrame = new MarkersInfoFrame(internal_dispatcher);
-		desktopPane.add(mInfoFrame);
+			public Object createValue(UIDefaults table) {
+				Log.debugMessage(".createValue | DETAILED_EVENTS_FRAME", Log.FINEST);
+				DetailedEventsFrame detailedEvFrame = new DetailedEventsFrame(internalDispatcher);
+				desktopPane.add(detailedEvFrame);
+				return detailedEvFrame;
+			}
+		});
+		
+		this.frames.put(ANALYSIS_FRAME, new UIDefaults.LazyValue() {
 
-		anaSelectFrame = new AnalysisSelectionFrame(aContext);
-		desktopPane.add(anaSelectFrame);
-		tables.add(anaSelectFrame);
+			public Object createValue(UIDefaults table) {
+				Log.debugMessage(".createValue | ANALYSIS_FRAME", Log.FINEST);
+				PathElementsFrame analysisFrame = new PathElementsFrame(aContext, internalDispatcher);
+				desktopPane.add(analysisFrame);
+				analysisReportCommand.setParameter(CreateAnalysisReportCommand.PANEL, analysisFrame);
+				return analysisFrame;
+			}
+		});		
+		
+		this.frames.put(MARKERS_INFO_FRAME, new UIDefaults.LazyValue() {
+
+			public Object createValue(UIDefaults table) {
+				Log.debugMessage(".createValue | MARKERS_INFO_FRAME", Log.FINEST);
+				MarkersInfoFrame mInfoFrame = new MarkersInfoFrame(internalDispatcher);
+				desktopPane.add(mInfoFrame);
+				return mInfoFrame;
+			}
+		});		
+
+		this.frames.put(ANALYSIS_SELECTION_FRAME, new UIDefaults.LazyValue() {
+
+			public Object createValue(UIDefaults table) {
+				Log.debugMessage(".createValue | ANALYSIS_SELECTION_FRAME", Log.FINEST);
+				AnalysisSelectionFrame analysisSelectionFrame = new AnalysisSelectionFrame(aContext);
+				desktopPane.add(analysisSelectionFrame);
+				analysisReportCommand.setParameter(CreateAnalysisReportCommand.TABLE, analysisSelectionFrame);
+				return analysisSelectionFrame;				
+			}
+		});		
+
+		this.frames.put(HISTOGRAMM_FRAME, new UIDefaults.LazyValue() {
+
+			public Object createValue(UIDefaults table) {
+				Log.debugMessage(".createValue | HISTOGRAMM_FRAME", Log.FINEST);
+				HistogrammFrame histogrammFrame = new HistogrammFrame(internalDispatcher);
+				desktopPane.add(histogrammFrame);
+				analysisReportCommand.setParameter(CreateAnalysisReportCommand.PANEL, histogrammFrame);
+				return histogrammFrame;				
+			}
+		});	
 
 		// dhf = new DerivHistoFrame(internal_dispatcher);
-		dhf = new HistogrammFrame(internal_dispatcher);
-		desktopPane.add(dhf);
-		graphs.add(dhf);
 
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		Dimension frameSize = new Dimension(screenSize.width,
@@ -191,9 +394,17 @@ public class AnalyseMainFrame extends JFrame implements bsHashChangeListener,
 
 		setSize(frameSize);
 		setLocation(0, 0);
+	
+		Environment.addWindow(this);
 	}
 
-	public void init_module()
+	public AnalyseMainFrame()
+	{
+		this(new ApplicationContext());
+	}
+
+
+	public void initModule()
 	{
 		ApplicationModel aModel = aContext.getApplicationModel();
 
@@ -212,9 +423,9 @@ public class AnalyseMainFrame extends JFrame implements bsHashChangeListener,
 		statusBar.setText("time", " ");
 		statusBar.organize();
 
-		aContext.setDispatcher(internal_dispatcher);
-		internal_dispatcher.register(this, RefUpdateEvent.typ);
-		internal_dispatcher.register(this, "contextchange");
+		aContext.setDispatcher(internalDispatcher);
+		internalDispatcher.register(this, RefUpdateEvent.typ);
+		internalDispatcher.register(this, "contextchange");
 		Heap.addBsHashListener(this);
 		Heap.addPrimaryMTMListener(this);
 		Heap.addPrimaryTraceListener(this);
@@ -238,21 +449,21 @@ public class AnalyseMainFrame extends JFrame implements bsHashChangeListener,
 		aModel.setCommand("menuExit", new ExitCommand(this));
 
 		aModel.setCommand("menuFileOpen", new FileOpenCommand(
-				internal_dispatcher, aContext));
+				internalDispatcher, aContext));
 		aModel.setCommand("menuFileOpenAsBellcore",
-			new FileOpenAsBellcoreCommand(internal_dispatcher, aContext));
+			new FileOpenAsBellcoreCommand(internalDispatcher, aContext));
 		aModel.setCommand("menuFileOpenAsWavetek",
-			new FileOpenAsWavetekCommand(internal_dispatcher, aContext));
+			new FileOpenAsWavetekCommand(internalDispatcher, aContext));
 		aModel.setCommand("menuFileSave", new FileSaveCommand(
-				internal_dispatcher, aContext));
+				internalDispatcher, aContext));
 		aModel.setCommand("menuFileSaveAsText", new FileSaveAsTextCommand(
-				internal_dispatcher, aContext));
+				internalDispatcher, aContext));
 		aModel.setCommand("menuFileClose", new FileCloseCommand(
-				internal_dispatcher, aContext));
+				internalDispatcher, aContext));
 		aModel.setCommand("menuFileAddCompare", new FileAddCommand(
-				internal_dispatcher, aContext));
+				internalDispatcher, aContext));
 		aModel.setCommand("menuFileRemoveCompare", new FileRemoveCommand(
-				internal_dispatcher, null, aContext));
+				internalDispatcher, null, aContext));
 
 		aModel.setCommand("menuAnalyseUpload",
 			new SaveAnalysisCommand(aContext));
@@ -269,58 +480,52 @@ public class AnalyseMainFrame extends JFrame implements bsHashChangeListener,
 		aModel.setCommand("menuNetStudy", new NetStudyCommand());
 
 		aModel.setCommand("menuTraceDownload",
-			new LoadTraceFromDatabaseCommand(internal_dispatcher, aContext));
+			new LoadTraceFromDatabaseCommand(internalDispatcher, aContext));
 		aModel.setCommand("menuTraceDownloadEtalon", new LoadEtalonCommand(
 				aContext));
 		aModel.setCommand("menuTraceAddCompare",
-			new AddTraceFromDatabaseCommand(internal_dispatcher, aContext));
+			new AddTraceFromDatabaseCommand(internalDispatcher, aContext));
 		aModel.setCommand("menuTraceRemoveCompare", new FileRemoveCommand(
-				internal_dispatcher, null, aContext));
+				internalDispatcher, null, aContext));
 		aModel.setCommand("menuTraceClose", new FileCloseCommand(
-				internal_dispatcher, aContext));
+				internalDispatcher, aContext));
 		aModel.setCommand("menuTraceCloseEtalon", new RemoveEtalonCommand(
 				aContext));
 		aModel.setCommand("menuTraceReferenceSet",
-			new TraceOpenReferenceCommand(internal_dispatcher, aContext));
+			new TraceOpenReferenceCommand(internalDispatcher, aContext));
 		aModel.setCommand("menuTraceReferenceMakeCurrent",
-			new TraceMakeCurrentCommand(internal_dispatcher, aContext));
+			new TraceMakeCurrentCommand(internalDispatcher, aContext));
 		aModel.setCommand("menuOptionsColor", new OptionsSetColorsCommand(
-				internal_dispatcher, aContext));
+				internalDispatcher, aContext));
 
-		CreateAnalysisReportCommand rc = new CreateAnalysisReportCommand(
-				aContext);
-		for (Iterator it = tables.iterator(); it.hasNext();)
-			rc.setParameter(CreateAnalysisReportCommand.TABLE, it.next());
-		for (Iterator it = graphs.iterator(); it.hasNext();)
-			rc.setParameter(CreateAnalysisReportCommand.PANEL, it.next());
-		rc.setParameter(CreateAnalysisReportCommand.TYPE,
+		this.analysisReportCommand = new CreateAnalysisReportCommand(
+				aContext);			
+		analysisReportCommand.setParameter(CreateAnalysisReportCommand.TYPE,
 			ReportTemplate.rtt_Survey);
-		aModel.setCommand("menuReportCreate", rc);
+		aModel.setCommand("menuReportCreate", analysisReportCommand);
 
-		aModel.setCommand("menuWindowArrange", new ArrangeWindowCommand(
-				new AnalysisExtWindowArranger(this)));
-		aModel.setCommand("menuWindowTraceSelector", new ShowFrameCommand(
-				desktopPane, selectFrame));
-		aModel.setCommand("menuWindowPrimaryParameters", new ShowFrameCommand(
-				desktopPane, paramFrame));
-		aModel.setCommand("menuWindowOverallStats", new ShowFrameCommand(
-				desktopPane, statsFrame));
-		aModel.setCommand("menuWindowNoiseFrame", new ShowFrameCommand(
-				desktopPane, noiseFrame));
-		aModel.setCommand("menuWindowFilteredFrame", new ShowFrameCommand(
-				desktopPane, filteredFrame));
-		aModel.setCommand("menuWindowEvents", new ShowFrameCommand(desktopPane,
-				eventsFrame));
-		aModel.setCommand("menuWindowDetailedEvents", new ShowFrameCommand(
-				desktopPane, detailedEvFrame));
-		aModel.setCommand("menuWindowAnalysis", new ShowFrameCommand(
-				desktopPane, analysisFrame));
-		aModel.setCommand("menuWindowMarkersInfo", new ShowFrameCommand(
-				desktopPane, mInfoFrame));
-		aModel.setCommand("menuWindowAnalysisSelection", new ShowFrameCommand(
-				desktopPane, anaSelectFrame));
-		aModel.setCommand("menuWindowDerivHistoFrame", new ShowFrameCommand(
-				desktopPane, dhf));
+		aModel.setCommand("menuWindowArrange", new ArrangeWindowCommand(new WindowArranger(this) {
+
+			private WindowArranger	windowArranger;
+
+			public void arrange() {
+				if (windowArranger == null)
+					windowArranger = (WindowArranger) frames.get(WINDOW_ARRANGER);
+				windowArranger.arrange();
+			}
+		}));
+		
+		aModel.setCommand("menuWindowTraceSelector", this.getLazyCommand(SELECTOR_FRAME));
+		aModel.setCommand("menuWindowPrimaryParameters", this.getLazyCommand(PRIMARY_PARAMETERS_FRAME));
+		aModel.setCommand("menuWindowOverallStats", this.getLazyCommand(STATS_FRAME));
+		aModel.setCommand("menuWindowNoiseFrame", this.getLazyCommand(NOISE_FRAME));
+		aModel.setCommand("menuWindowFilteredFrame", this.getLazyCommand(FILTERED_FRAME));
+		aModel.setCommand("menuWindowEvents", this.getLazyCommand(EVENTS_FRAME));
+		aModel.setCommand("menuWindowDetailedEvents", this.getLazyCommand(DETAILED_EVENTS_FRAME));
+		aModel.setCommand("menuWindowAnalysis", this.getLazyCommand(ANALYSIS_FRAME));
+		aModel.setCommand("menuWindowMarkersInfo", this.getLazyCommand(MARKERS_INFO_FRAME));
+		aModel.setCommand("menuWindowAnalysisSelection", this.getLazyCommand(ANALYSIS_SELECTION_FRAME));
+		aModel.setCommand("menuWindowDerivHistoFrame", this.getLazyCommand(HISTOGRAMM_FRAME));
 
 		setDefaultModel(aModel);
 
@@ -329,7 +534,7 @@ public class AnalyseMainFrame extends JFrame implements bsHashChangeListener,
 		if (ConnectionInterface.getInstance() != null)
 		{
 			if (ConnectionInterface.getInstance().isConnected())
-				internal_dispatcher.notify(new ContextChangeEvent(
+				internalDispatcher.notify(new ContextChangeEvent(
 						ConnectionInterface.getInstance(),
 						ContextChangeEvent.CONNECTION_OPENED_EVENT));
 		}
@@ -337,7 +542,7 @@ public class AnalyseMainFrame extends JFrame implements bsHashChangeListener,
 		{
 			aContext.setSessionInterface(SessionInterface.getActiveSession());
 			if (aContext.getSessionInterface().isOpened())
-				internal_dispatcher.notify(new ContextChangeEvent(
+				internalDispatcher.notify(new ContextChangeEvent(
 						aContext.getSessionInterface(),
 						ContextChangeEvent.SESSION_OPENED_EVENT));
 		} else
@@ -347,6 +552,31 @@ public class AnalyseMainFrame extends JFrame implements bsHashChangeListener,
 		}
 	}
 
+	private VoidCommand getLazyCommand(final Object key) {
+		return new VoidCommand() {
+			private Command command;
+			private Command getLazyCommand() {
+				if (this.command == null) {
+				Object object = frames.get(key);
+				if (object instanceof JInternalFrame) {
+					System.out.println("init getLazyCommand for " + key);
+					this.command = new ShowFrameCommand(
+						desktopPane, (JInternalFrame)object);
+				}
+				}
+				return command;
+			}
+			
+			public Object clone() {
+				return this.getLazyCommand().clone();
+			}
+			
+			public void execute() {
+				this.getLazyCommand().execute();
+			}
+		};
+	}
+	
 	void setDefaultModel(ApplicationModel aModel)
 	{
 		aModel.setAllItemsEnabled(false);
@@ -369,13 +599,20 @@ public class AnalyseMainFrame extends JFrame implements bsHashChangeListener,
 		aModel.setVisible("menuSaveEtalon", false);
 		aModel.setVisible("menuSaveThresholds", false);
 		aModel.setVisible("menuWindowThresholdsSelection", false);
-		aModel.setVisible("menuWindowThresholds", false);
+		aModel.setVisible("menuWindowThresholds", false);	
+	}
+	
+	void arrange() {
+		WindowArranger analysisExtWindowArranger = (WindowArranger)frames.get(WINDOW_ARRANGER);
+		analysisExtWindowArranger.arrange();
+		AnalysisFrame analysisFrame = (AnalysisFrame)frames.get(ANALYSIS_FRAME);
+		analysisFrame.grabFocus();
 	}
 
 	public void setContext(ApplicationContext aContext)
 	{
 		this.aContext = aContext;
-		aContext.setDispatcher(internal_dispatcher);
+		aContext.setDispatcher(internalDispatcher);
 		if (aContext.getApplicationModel() == null)
 			aContext.setApplicationModel(ApplicationModel.getInstance());
 		setModel(aContext.getApplicationModel());
@@ -402,7 +639,7 @@ public class AnalyseMainFrame extends JFrame implements bsHashChangeListener,
 
 	public Dispatcher getInternalDispatcher()
 	{
-		return internal_dispatcher;
+		return internalDispatcher;
 	}
 
 	/*
@@ -411,104 +648,74 @@ public class AnalyseMainFrame extends JFrame implements bsHashChangeListener,
 	 * toolBar.setVisible(aModel.isVisible("toolBar"));
 	 * statusBar.setVisible(aModel.isVisible("statusBar")); }
 	 */
-	public void operationPerformed(OperationEvent ae)
-	{
-		if (ae.getActionCommand().equals("contextchange"))
-		{
-			ContextChangeEvent cce = (ContextChangeEvent )ae;
-			System.out.println("perform context change \""
-					+ Long.toHexString(cce.change_type) + "\" at "
+	public void operationPerformed(OperationEvent ae)	{
+		String actionCommand = ae.getActionCommand();
+		Log.debugMessage("AnalyseMainFrame.operationPerformed | actionCommand " + actionCommand, Log.FINEST);
+		if (actionCommand.equals("contextchange")) {
+			ContextChangeEvent cce = (ContextChangeEvent) ae;
+			System.out.println("perform context change \"" + Long.toHexString(cce.change_type) + "\" at "
 					+ this.getTitle());
-			if (cce.SESSION_OPENED)
-			{
-				SessionInterface ssi = (SessionInterface )cce.getSource();
-				if (aContext.getSessionInterface().equals(ssi))
-				{
+			if (cce.SESSION_OPENED) {
+				SessionInterface ssi = (SessionInterface) cce.getSource();
+				if (aContext.getSessionInterface().equals(ssi)) {
 					// aContext.setSessionInterface(ssi);
 					// aContext.setDataSourceInterface(Environment.getDefaultDataSourceInterface(aContext.getSessionInterface()));
 
 					setSessionOpened();
 
-					statusBar.setText("status",
-						LangModel.getString("statusReady"));
-					SimpleDateFormat sdf = (SimpleDateFormat )UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
-					statusBar.setText("session", sdf.format(new Date(
-							aContext.getSessionInterface().getLogonTime())));
-					statusBar.setText("user",
-						aContext.getSessionInterface().getUser());
+					statusBar.setText("status", LangModel.getString("statusReady"));
+					SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
+					statusBar.setText("session", sdf.format(new Date(aContext.getSessionInterface().getLogonTime())));
+					statusBar.setText("user", aContext.getSessionInterface().getUser());
 				}
 			}
-			if (cce.SESSION_CLOSED)
-			{
-				SessionInterface ssi = (SessionInterface )cce.getSource();
-				if (aContext.getSessionInterface().equals(ssi))
-				{
+			if (cce.SESSION_CLOSED) {
+				SessionInterface ssi = (SessionInterface) cce.getSource();
+				if (aContext.getSessionInterface().equals(ssi)) {
 					setSessionClosed();
 
-					statusBar.setText("status",
-						LangModel.getString("statusReady"));
-					statusBar.setText("session",
-						LangModel.getString("statusNoSession"));
-					statusBar.setText("user",
-						LangModel.getString("statusNoUser"));
+					statusBar.setText("status", LangModel.getString("statusReady"));
+					statusBar.setText("session", LangModel.getString("statusNoSession"));
+					statusBar.setText("user", LangModel.getString("statusNoUser"));
 				}
 			}
-			if (cce.CONNECTION_OPENED)
-			{
-				ConnectionInterface cci = (ConnectionInterface )cce.getSource();
-				if (ConnectionInterface.getInstance().equals(cci))
-				{
+			if (cce.CONNECTION_OPENED) {
+				ConnectionInterface cci = (ConnectionInterface) cce.getSource();
+				if (ConnectionInterface.getInstance().equals(cci)) {
 					setConnectionOpened();
 
-					statusBar.setText("status",
-						LangModel.getString("statusReady"));
-					statusBar.setText("server",
-						ConnectionInterface.getInstance().getServerName());
+					statusBar.setText("status", LangModel.getString("statusReady"));
+					statusBar.setText("server", ConnectionInterface.getInstance().getServerName());
 				}
 			}
-			if (cce.CONNECTION_CLOSED)
-			{
-				ConnectionInterface cci = (ConnectionInterface )cce.getSource();
-				if (ConnectionInterface.getInstance().equals(cci))
-				{
-					statusBar.setText("status",
-						LangModel.getString("statusError"));
-					statusBar.setText("server",
-						LangModel.getString("statusConnectionError"));
+			if (cce.CONNECTION_CLOSED) {
+				ConnectionInterface cci = (ConnectionInterface) cce.getSource();
+				if (ConnectionInterface.getInstance().equals(cci)) {
+					statusBar.setText("status", LangModel.getString("statusError"));
+					statusBar.setText("server", LangModel.getString("statusConnectionError"));
 
-					statusBar.setText("status",
-						LangModel.getString("statusDisconnected"));
-					statusBar.setText("server",
-						LangModel.getString("statusNoConnection"));
+					statusBar.setText("status", LangModel.getString("statusDisconnected"));
+					statusBar.setText("server", LangModel.getString("statusNoConnection"));
 
 					setConnectionClosed();
 				}
 			}
-			if (cce.CONNECTION_FAILED)
-			{
-				ConnectionInterface cci = (ConnectionInterface )cce.getSource();
-				if (ConnectionInterface.getInstance().equals(cci))
-				{
-					statusBar.setText("status",
-						LangModel.getString("statusError"));
-					statusBar.setText("server",
-						LangModel.getString("statusConnectionError"));
+			if (cce.CONNECTION_FAILED) {
+				ConnectionInterface cci = (ConnectionInterface) cce.getSource();
+				if (ConnectionInterface.getInstance().equals(cci)) {
+					statusBar.setText("status", LangModel.getString("statusError"));
+					statusBar.setText("server", LangModel.getString("statusConnectionError"));
 
 					setConnectionFailed();
 				}
 			}
-			if (cce.DOMAIN_SELECTED)
-			{
+			if (cce.DOMAIN_SELECTED) {
 				setDomainSelected();
 			}
-		}
+		} else if (actionCommand.equals(RefUpdateEvent.typ)) {
+			RefUpdateEvent rue = (RefUpdateEvent) ae;
 
-		if (ae.getActionCommand().equals(RefUpdateEvent.typ))
-		{
-			RefUpdateEvent rue = (RefUpdateEvent )ae;
-
-			if (rue.analysisPerformed())
-			{
+			if (rue.analysisPerformed()) {
 				updFrames(Heap.PRIMARY_TRACE_KEY);
 			}
 		}
@@ -521,6 +728,7 @@ public class AnalyseMainFrame extends JFrame implements bsHashChangeListener,
 		aModel.setEnabled("menuSessionClose", false);
 		aModel.setEnabled("menuSessionConnection", true);
 		aModel.setEnabled("menuSessionChangePassword", false);
+//		this.arrange();
 		aModel.fireModelChanged("");
 	}
 
@@ -566,15 +774,15 @@ public class AnalyseMainFrame extends JFrame implements bsHashChangeListener,
 
 		try
 		{
-			Identifier domain_id = new Identifier(
-					((RISDSessionInfo )aContext.getSessionInterface()).getAccessIdentifier().domain_id);
+			Identifier domainId = ((RISDSessionInfo )aContext.getSessionInterface()).getDomainIdentifier();
 			Domain domain = (Domain )AdministrationStorableObjectPool.getStorableObject(
-				domain_id, true);
+				domainId, true);
 			statusBar.setText("domain", domain.getName());
 		} catch (ApplicationException ex)
 		{
 			ex.printStackTrace();
 		}
+		
 	}
 
 	public void setSessionOpened()
@@ -600,7 +808,7 @@ public class AnalyseMainFrame extends JFrame implements bsHashChangeListener,
 		aModel.fireModelChanged("");
 		Identifier domain_id = new Identifier(
 				((RISDSessionInfo )aContext.getSessionInterface()).getAccessIdentifier().domain_id);
-		internal_dispatcher.notify(new ContextChangeEvent(domain_id,
+		internalDispatcher.notify(new ContextChangeEvent(domain_id,
 				ContextChangeEvent.DOMAIN_SELECTED_EVENT));
 	}
 
@@ -642,6 +850,9 @@ public class AnalyseMainFrame extends JFrame implements bsHashChangeListener,
 
 		double[] filtered = Heap.getRefAnalysisByKey(id).filtered;
 		double[] noise = Heap.getRefAnalysisByKey(id).noise;
+		
+		ScalableFrame noiseFrame = (ScalableFrame) this.frames.get(NOISE_FRAME);
+		ScalableFrame filteredFrame = (ScalableFrame) this.frames.get(FILTERED_FRAME);
 
 		noiseFrame.setGraph(noise, deltaX, false, id);
 		noiseFrame.updScales();
@@ -649,15 +860,6 @@ public class AnalyseMainFrame extends JFrame implements bsHashChangeListener,
 		filteredFrame.setGraph(filtered, deltaX, true, id);
 		filteredFrame.updScales();
 		filteredFrame.setVisible(true);
-	}
-
-	void this_componentShown(ComponentEvent e)
-	{
-		init_module();
-
-		desktopPane.setPreferredSize(desktopPane.getSize());
-		new AnalysisExtWindowArranger(this).arrange();
-		analysisFrame.grabFocus();
 	}
 
 	void setActiveRefId(String id)
@@ -671,7 +873,7 @@ public class AnalyseMainFrame extends JFrame implements bsHashChangeListener,
 
 	void this_windowClosing(WindowEvent e)
 	{
-		internal_dispatcher.unregister(this, "contextchange");
+		internalDispatcher.unregister(this, "contextchange");
 		Environment.getDispatcher().unregister(this, "contextchange");
 		aContext.getApplicationModel().getCommand("menuExit").execute();
 	}
@@ -688,7 +890,7 @@ public class AnalyseMainFrame extends JFrame implements bsHashChangeListener,
 		{
 //			ColorManager.saveIni();
 			aManager.saveIni();
-			internal_dispatcher.unregister(this, "contextchange");
+			internalDispatcher.unregister(this, "contextchange");
 			Environment.getDispatcher().unregister(this, "contextchange");
 			aContext.getApplicationModel().getCommand("menuExit").execute();
 			return;
@@ -716,11 +918,6 @@ public class AnalyseMainFrame extends JFrame implements bsHashChangeListener,
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.syrus.AMFICOM.Client.General.Event.bsHashChangeListener#bsHashRemoved(java.lang.String)
-	 */
 	public void bsHashRemoved(String key)
 	{
 		ApplicationModel aModel = aContext.getApplicationModel();
@@ -786,7 +983,9 @@ public class AnalyseMainFrame extends JFrame implements bsHashChangeListener,
 		aModel.setEnabled("menuWindowThresholds", false);
 
 		aModel.fireModelChanged("");
+		ScalableFrame noiseFrame = (ScalableFrame) this.frames.get(NOISE_FRAME);
 		noiseFrame.setVisible(false);
+		ScalableFrame filteredFrame = (ScalableFrame) this.frames.get(FILTERED_FRAME);
 		filteredFrame.setVisible(false);
 
 		setTitle(LangModelAnalyse.getString("AnalyseExtTitle"));
@@ -905,77 +1104,5 @@ public class AnalyseMainFrame extends JFrame implements bsHashChangeListener,
 					"menuTraceRemoveCompare" });
 			setActiveRefId(id);
 		}
-	}
-}
-
-class AnalysisExtWindowArranger extends WindowArranger
-{
-	public AnalysisExtWindowArranger(AnalyseMainFrame mainframe)
-	{
-		super(mainframe);
-	}
-
-	public void arrange()
-	{
-		AnalyseMainFrame f = (AnalyseMainFrame )mainframe;
-
-		int w = f.desktopPane.getSize().width;
-		int h = f.desktopPane.getSize().height;
-		int minh = Math.min(205, h / 4);
-
-		normalize(f.paramFrame);
-		normalize(f.selectFrame);
-		normalize(f.statsFrame);
-		normalize(f.mInfoFrame);
-		normalize(f.analysisFrame);
-		normalize(f.eventsFrame);
-		normalize(f.detailedEvFrame);
-		normalize(f.anaSelectFrame);
-		normalize(f.dhf);
-		normalize(f.noiseFrame);
-		normalize(f.filteredFrame);
-
-		f.paramFrame.setSize(w / 6, minh);
-		f.selectFrame.setSize(w / 6, minh);
-		f.statsFrame.setSize(w / 6, minh);
-		f.mInfoFrame.setSize(w / 6, minh);
-		f.analysisFrame.setSize(2 * w / 3, h - 2 * minh);
-		f.eventsFrame.setSize(w / 2, minh);
-		f.detailedEvFrame.setSize(w / 6, minh);
-		f.anaSelectFrame.setSize(w / 3, minh);
-		f.dhf.setSize(w / 3, minh);
-		f.noiseFrame.setSize(w / 3, (h - 2 * minh) / 2);
-		f.filteredFrame.setSize(w / 3, (h - 2 * minh) / 2);
-
-		f.paramFrame.setLocation(w / 6, 0);
-		f.selectFrame.setLocation(0, 0);
-		f.statsFrame.setLocation(w / 3, 0);
-		f.mInfoFrame.setLocation(w / 2, 0);
-		f.analysisFrame.setLocation(0, minh);
-		f.anaSelectFrame.setLocation(2 * w / 3, 0);
-		f.filteredFrame.setLocation(2 * w / 3, minh);
-		f.noiseFrame.setLocation(2 * w / 3, minh + f.filteredFrame.getHeight());
-		f.eventsFrame.setLocation(0, minh + f.analysisFrame.getHeight());
-		f.detailedEvFrame.setLocation(f.eventsFrame.getWidth(), minh
-				+ f.analysisFrame.getHeight());
-		f.dhf.setLocation(f.eventsFrame.getWidth()
-				+ f.detailedEvFrame.getWidth(), minh
-				+ f.analysisFrame.getHeight());
-	}
-}
-
-class AnalyseMainFrame_this_componentAdapter extends
-		java.awt.event.ComponentAdapter
-{
-	AnalyseMainFrame adaptee;
-
-	AnalyseMainFrame_this_componentAdapter(AnalyseMainFrame adaptee)
-	{
-		this.adaptee = adaptee;
-	}
-
-	public void componentShown(ComponentEvent e)
-	{
-		adaptee.this_componentShown(e);
 	}
 }
