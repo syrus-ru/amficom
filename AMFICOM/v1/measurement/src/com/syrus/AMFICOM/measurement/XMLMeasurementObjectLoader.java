@@ -1,5 +1,5 @@
 /*
- * $Id: XMLMeasurementObjectLoader.java,v 1.10 2005/04/01 08:43:33 bob Exp $
+ * $Id: XMLMeasurementObjectLoader.java,v 1.11 2005/04/12 08:18:25 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,8 +23,8 @@ import com.syrus.AMFICOM.general.StorableObjectXML;
 import com.syrus.AMFICOM.general.StorableObjectXMLDriver;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/04/01 08:43:33 $
- * @author $Author: bob $
+ * @version $Revision: 1.11 $, $Date: 2005/04/12 08:18:25 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 public class XMLMeasurementObjectLoader implements MeasurementObjectLoader {
@@ -41,8 +41,8 @@ public class XMLMeasurementObjectLoader implements MeasurementObjectLoader {
 		this.measurementXML.flush();
 	}
 
-	public void delete(java.util.Set ids) throws IllegalDataException {
-		for (Iterator it = ids.iterator(); it.hasNext();) {
+	public void delete(final java.util.Set identifiables) throws IllegalDataException {
+		for (Iterator it = identifiables.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			this.measurementXML.delete(id);
 		}

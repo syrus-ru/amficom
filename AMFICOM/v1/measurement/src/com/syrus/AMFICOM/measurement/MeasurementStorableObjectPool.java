@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.78 2005/04/12 08:15:14 bass Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.79 2005/04/12 08:18:25 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.78 $, $Date: 2005/04/12 08:15:14 $
+ * @version $Revision: 1.79 $, $Date: 2005/04/12 08:18:25 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -410,7 +410,7 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 		mObjectLoader.delete(id);
 	}
 
-	protected void deleteStorableObjects(final java.util.Set identifiables) {
+	protected void deleteStorableObjects(final java.util.Set identifiables) throws IllegalDataException {
 		mObjectLoader.delete(identifiables);
 	}
 

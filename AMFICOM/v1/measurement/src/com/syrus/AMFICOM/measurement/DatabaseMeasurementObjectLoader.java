@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseMeasurementObjectLoader.java,v 1.50 2005/04/12 08:15:14 bass Exp $
+ * $Id: DatabaseMeasurementObjectLoader.java,v 1.51 2005/04/12 08:18:25 bass Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 import com.syrus.AMFICOM.general.AbstractObjectLoader;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -26,7 +25,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.50 $, $Date: 2005/04/12 08:15:14 $
+ * @version $Revision: 1.51 $, $Date: 2005/04/12 08:18:25 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -420,7 +419,7 @@ public class DatabaseMeasurementObjectLoader extends AbstractObjectLoader implem
 			final Identifiable identifiable = (Identifiable) identifiableIterator.next();
 
 			final Short entityCode = new Short(identifiable.getId().getMajor());
-			Set entityObjects = (Set) map.get(entityCode);
+			java.util.Set entityObjects = (java.util.Set) map.get(entityCode);
 			if (entityObjects == null) {
 				entityObjects = new HashSet();
 				map.put(entityCode, entityObjects);
@@ -430,7 +429,7 @@ public class DatabaseMeasurementObjectLoader extends AbstractObjectLoader implem
 
 		for (final Iterator entityCodeIterator = map.keySet().iterator(); entityCodeIterator.hasNext();) {
 			final Short entityCode = (Short) entityCodeIterator.next();
-			final Set entityObjects = (Set) map.get(entityCode);
+			final java.util.Set entityObjects = (java.util.Set) map.get(entityCode);
 			final StorableObjectDatabase storableObjectDatabase = MeasurementDatabaseContext.getDatabase(entityCode);
 			if (storableObjectDatabase != null)
 				storableObjectDatabase.delete(entityObjects);
