@@ -153,11 +153,11 @@ void extendThreshToCover(THX *thXOrig, THY *thY, int thXc, int thYc, int isUpper
 	// Чтобы не заходить ниже начальных DX/DY, надо сохранить
 	// начальное DX, но не обязательно помнить начальное DY
 
-	THX *thXT = new THX[thXc ? thXc : 1];
-	int *thXA = new int[thXc ? thXc : 1];
-	double *yPrev = new double[len];
+	THX *thXT = new THX[thXc ? thXc : 1]; // место для текущих пробных DX-порогов
+	int *thXA = new int[thXc ? thXc : 1]; // текущие оптимальные ширины DX-порогов
+	double *yPrev = new double[len]; // текущая оптимальная пороговая кривая
 	double *yTemp = new double[len];
-	double *thAdd = new double[thYc ? thYc : 1];
+	double *thAdd = new double[thYc ? thYc : 1]; // поправки для DY-порогов
 	TTDX *ttdx = new TTDX[len];
 	TTDY *ttdy = new TTDY[len];
 	assert(thXA);
@@ -186,7 +186,7 @@ void extendThreshToCover(THX *thXOrig, THY *thY, int thXc, int thYc, int isUpper
 		extendTHX(thXOrig[i], thXT[i], maxDX); // устанавливаем нач. DX
 	}
 
-	// формируем нач. пороги (в две итерации, чтобы поточнее)
+	// формируем нач. пороги thY по начальным thXA (в две итерации, чтобы поточнее)
 	makeThCurve(thXT, thY, thXc, thYc, isUpper, xMin, xMax, ttdx, ttdy, yBase, yTemp);
 	calcThAddByThCurve(thYc, isUpper, xMin, xMax, ttdy, yTemp, yTgt, thAdd, 0x1);
 	addThAddToThY(thY, thYc, thAdd);
@@ -194,7 +194,7 @@ void extendThreshToCover(THX *thXOrig, THY *thY, int thXc, int thYc, int isUpper
 	calcThAddByThCurve(thYc, isUpper, xMin, xMax, ttdy, yTemp, yTgt, thAdd, 0x0);
 	addThAddToThY(thY, thYc, thAdd);
 
-	// строим текущую пороговую кривую
+	// строим текущую пороговую кривую yPrev
 	makeThCurve(thXT, thY, thXc, thYc, isUpper, xMin, xMax, ttdx, ttdy, yBase, yPrev);
 
 	prf_b("extendThreshToCover: starting curDX loop");
@@ -282,7 +282,7 @@ void extendThreshToCover(THX *thXOrig, THY *thY, int thXc, int thYc, int isUpper
 	for (i = 0; i < thXc; i++)
 		extendTHX(thXOrig[i], thXOrig[i], thXA[i]);
 
-	// формируем окончательные DY пороги (в две итерации)
+	// формируем окончательные DY-пороги thY по окончательным thXOrig (в две итерации)
 	makeThCurve(thXOrig, thY, thXc, thYc, isUpper, xMin, xMax, ttdx, ttdy, yBase, yTemp);
 	calcThAddByThCurve(thYc, isUpper, xMin, xMax, ttdy, yTemp, yTgt, thAdd, 0x1);
 	addThAddToThY(thY, thYc, thAdd);
@@ -305,83 +305,3 @@ void extendThreshToCover(THX *thXOrig, THY *thY, int thXc, int thYc, int isUpper
 	delete[] ttdxMin;
 	delete[] ttdxMax;
 }
-/*
-
-	THX *thXTemp = new THX[thXc ? thXc : 1]; // рабочие копии DX-порогов (будут уменьшаться)
-	double *thAdd = new double[thYc ? thYc : 1]; // массив с добавками для DY
-	double *yCurr = new double[len]; // буфер для текущей пороговой кривой
-	double *yPrev = new double[len]; // буфер для предыдущей пороговой кривой
-	TTDX *ttdx = new TTDX[len]; // номера соотв. каждой точке DX-порогов (м.б. -1)
-	TTDY *ttdy = new TTDY[len]; // номера соотв. каждой точке DY-порогов (в принципе, не д б -1)
-	assert(thXTemp);
-	assert(thAdd);
-	assert(yCurr);
-	assert(yPrev);
-	assert(ttdx);
-	assert(ttdy);
-
-	const int maxDX = 10; // макс. / начальная ширина DX
-
-	extendTHX(thXOrig, thXTemp, thXc, maxMX); // устанавливаем нач. DX
-
-	calcThAdd(thXTemp, thY, thXc, thYc, isUpper, xMin, xMax, ttdy, // рассчитываем нач. DY (сразу по всем участкам)
-		yBase, yCurr, yTgt, thAdd, 0);
-	addThAddToThY(thY, thYc, thAdd); // устанавливаем нач. DY
-
-	// формируем пороговую кривую для нач. (DX,DY)
-	makeThCurve(thXTemp, thY, thXc, thYc, isUpper, xMin, xMax, ttdx, ttdy, yBase, yPrev);
-
-	// пробуем уменьшать DX
-	int curDX;
-	for (curDX = maxDX - 1; curDX >= 0; curDX--)
-	{
-		extendTHX(thXOrig, thXTemp, thXc, maxMX); // формируем DX пороги шириной max(orig,cur)
-		makeThCurve(thXTemp, thY, thXc, thYc, isUpper, xMin, xMax, ttdx, ttdy, yBase, yCurr);
-		...
-	}
-	// корректируем пороги согласно превышению на участках с однозначно определенным DY-порогом
-	// (похоже, это не столь уж и необходимо)
-	calcThAdd(thX, thY, thXc, thYc, isUpper, xMin, xMax, ttdy,
-		yBase, yTemp, yTgt, thAdd, 1);
-	addThAddToThY(thY, thYc, thAdd);
-
-	// корректируем пороги согласно превышению на всех участках
-	calcThAdd(thX, thY, thXc, thYc, isUpper, xMin, xMax, ttdy,
-		yBase, yTemp, yTgt, thAdd, 0);
-	addThAddToThY(thY, thYc, thAdd);
-
-	makeThCurve(thX, thY, thXc, thYc, isUpper, xMin, xMax, ttdx, ttdy, yBase, yTemp);
-
-	delete[] thXTemp;
-	delete[] thAdd;
-	delete[] yCurr;
-	delete[] yPrev;
-	delete[] ttdx;
-	delete[] ttdy;
-}
-/*
-
-  DXi, DY.
-
-  DXc = min(DXi, 10); DY = auto-by-DXc;
-  defP = by-DXc,DY; // отклонение; вероятно, сейчас нули
-
-  while (delta = 9; delta >= 0; delta--)
-  {
-     // ? - assert(defP[each i] == 0)
-     DXt = min(DXi, delta);
-	 defT = by-DXt,DY; // отклонение - возможно, больше нуля
-	 foreach(i) if (defT[i] > defP[i])
-	 {
-	    nDX = ttdx_by_DXc[i];
-		if (nDX == -1)
-		{
-		 assert(0); // не знаем что это значит
-		 continue;
-		}
-	 }
-
-
-
-  }
-*/
