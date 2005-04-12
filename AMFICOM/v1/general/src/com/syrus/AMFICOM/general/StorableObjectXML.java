@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXML.java,v 1.22 2005/04/11 11:48:18 bob Exp $
+ * $Id: StorableObjectXML.java,v 1.23 2005/04/12 16:27:53 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import java.util.Set;
  * {@link com.syrus.AMFICOM.general.Characteristic}) which must have static
  * getInstance method.
  * 
- * @version $Revision: 1.22 $, $Date: 2005/04/11 11:48:18 $
- * @author $Author: bob $
+ * @version $Revision: 1.23 $, $Date: 2005/04/12 16:27:53 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public class StorableObjectXML {
@@ -225,7 +225,7 @@ public class StorableObjectXML {
 		this.driver.writeXmlFile();
 	}
 
-	public void delete(final Identifier id) throws IllegalDataException {
+	public void delete(final Identifier id) {
 		this.driver.deleteObject(id);
 	}
 }
