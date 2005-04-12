@@ -1,5 +1,5 @@
 /*
- * $Id: SetDatabase.java,v 1.81 2005/04/05 16:01:28 arseniy Exp $
+ * $Id: SetDatabase.java,v 1.82 2005/04/12 17:03:29 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,7 +41,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.81 $, $Date: 2005/04/05 16:01:28 $
+ * @version $Revision: 1.82 $, $Date: 2005/04/12 17:03:29 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -186,12 +186,7 @@ public class SetDatabase extends StorableObjectDatabase {
 				+ SetWrapper.LINK_COLUMN_SET_ID
 				+ SQL_FROM + ObjectEntities.SETPARAMETER_ENTITY
 				+ SQL_WHERE);
-		try {
-			sql.append(idsEnumerationString(sets, SetWrapper.LINK_COLUMN_SET_ID, true));
-		}
-		catch (IllegalDataException e) {
-			throw new RetrieveObjectException(e);
-		}
+		sql.append(idsEnumerationString(sets, SetWrapper.LINK_COLUMN_SET_ID, true));
 
 		Map setParametersMap = new HashMap();
 		Identifier setId;
@@ -267,15 +262,10 @@ public class SetDatabase extends StorableObjectDatabase {
 			return;
 
 		Map meIdsMap = null;
-		try {
-			meIdsMap = this.retrieveLinkedEntityIds(sets,
-					ObjectEntities.SETMELINK_ENTITY,
-					SetWrapper.LINK_COLUMN_SET_ID,
-					SetWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID);
-		}
-		catch (IllegalDataException e) {
-			throw new RetrieveObjectException(e);
-		}
+		meIdsMap = this.retrieveLinkedEntityIds(sets,
+				ObjectEntities.SETMELINK_ENTITY,
+				SetWrapper.LINK_COLUMN_SET_ID,
+				SetWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID);
 
 		Set set;
 		Identifier setId;
@@ -430,10 +420,9 @@ public class SetDatabase extends StorableObjectDatabase {
 				SetWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID);
 	}
 
-	public void delete(Identifier id) throws IllegalDataException {
-		if (id.getMajor() != ObjectEntities.SET_ENTITY_CODE)
-			throw new IllegalDataException("SetDatabase.delete | Cannot delete object of code "
-					+ id.getMajor() + ", entity '" + ObjectEntities.codeToString(id.getMajor()) + "'");
+	public void delete(Identifier id) {
+		assert (id.getMajor() == ObjectEntities.SET_ENTITY_CODE) : "Illegal entity code: "
+			+ id.getMajor() + ", entity '" + ObjectEntities.codeToString(id.getMajor()) + "'";
 
 		String setIdStr = DatabaseIdentifier.toSQLString(id);
 		Statement statement = null;

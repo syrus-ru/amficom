@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeDatabase.java,v 1.75 2005/04/05 07:50:31 arseniy Exp $
+ * $Id: EvaluationTypeDatabase.java,v 1.76 2005/04/12 17:03:29 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.75 $, $Date: 2005/04/05 07:50:31 $
+ * @version $Revision: 1.76 $, $Date: 2005/04/12 17:03:29 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -195,12 +195,7 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 				+ EvaluationTypeWrapper.LINK_COLUMN_EVALUATION_TYPE_ID
 				+ SQL_FROM + ObjectEntities.EVATYPPARTYPLINK_ENTITY
 				+ SQL_WHERE);
-    try {
-			sql.append(idsEnumerationString(evaluationTypes, EvaluationTypeWrapper.LINK_COLUMN_EVALUATION_TYPE_ID, true));
-		}
-		catch (IllegalDataException e) {
-			throw new RetrieveObjectException(e);
-		}
+    sql.append(idsEnumerationString(evaluationTypes, EvaluationTypeWrapper.LINK_COLUMN_EVALUATION_TYPE_ID, true));
 
     Statement statement = null;
 		ResultSet resultSet = null;
@@ -316,12 +311,7 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 				+ MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID
 				+ SQL_FROM + ObjectEntities.MNTTYPANATYPEVATYP_ENTITY
 				+ SQL_WHERE);
-		try {
-			sql.append(idsEnumerationString(evaluationTypes, EvaluationTypeWrapper.LINK_COLUMN_EVALUATION_TYPE_ID, true));
-		}
-		catch (IllegalDataException e) {
-			throw new RetrieveObjectException(e);
-		}
+		sql.append(idsEnumerationString(evaluationTypes, EvaluationTypeWrapper.LINK_COLUMN_EVALUATION_TYPE_ID, true));
 
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -501,10 +491,9 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void delete(Identifier id) throws IllegalDataException {
-		if (id.getMajor() != ObjectEntities.EVALUATIONTYPE_ENTITY_CODE)
-			throw new IllegalDataException("EvaluationTypeDatabase.delete | Cannot delete object of code "
-					+ id.getMajor() + ", entity '" + ObjectEntities.codeToString(id.getMajor()) + "'");
+	public void delete(Identifier id) {
+		assert (id.getMajor() != ObjectEntities.EVALUATIONTYPE_ENTITY_CODE) : "Illegal entity code: "
+			+ id.getMajor() + ", entity '" + ObjectEntities.codeToString(id.getMajor()) + "'";
 
 		String evaluationTypeIdStr = DatabaseIdentifier.toSQLString(id);
 		Statement statement = null;

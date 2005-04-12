@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.88 2005/04/07 13:57:33 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.89 2005/04/12 17:03:29 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,7 +45,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.88 $, $Date: 2005/04/07 13:57:33 $
+ * @version $Revision: 1.89 $, $Date: 2005/04/12 17:03:29 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -246,15 +246,10 @@ public class TestDatabase extends StorableObjectDatabase {
 			return;
 
 		Map msIdsMap = null;
-		try {
-			msIdsMap = this.retrieveLinkedEntityIds(tests,
-					ObjectEntities.MSTESTLINK_ENTITY,
-					LINK_COLMN_TEST_ID,
-					TestWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID);
-		}
-		catch (IllegalDataException e) {
-			throw new RetrieveObjectException(e);
-		}
+		msIdsMap = this.retrieveLinkedEntityIds(tests,
+				ObjectEntities.MSTESTLINK_ENTITY,
+				LINK_COLMN_TEST_ID,
+				TestWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID);
 
 		Test test;
 		Identifier testId;
@@ -504,7 +499,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		return collection;
 	}
 
-	public void delete(Identifier id) throws IllegalDataException {
+	public void delete(Identifier id) {
 		throw new UnsupportedOperationException("Deleting tests is incorrect -- test '" + id + "'");
 	}
 	

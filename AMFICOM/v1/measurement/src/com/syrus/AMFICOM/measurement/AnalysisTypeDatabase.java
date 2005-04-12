@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeDatabase.java,v 1.80 2005/04/05 07:50:31 arseniy Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.81 2005/04/12 17:03:29 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.80 $, $Date: 2005/04/05 07:50:31 $
+ * @version $Revision: 1.81 $, $Date: 2005/04/12 17:03:29 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -182,12 +182,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 				+ AnalysisTypeWrapper.LINK_COLUMN_ANALYSIS_TYPE_ID
 				+ SQL_FROM + ObjectEntities.ANATYPPARTYPLINK_ENTITY
 				+ SQL_WHERE);
-    try {
-			sql.append(idsEnumerationString(analysisTypes, AnalysisTypeWrapper.LINK_COLUMN_ANALYSIS_TYPE_ID, true));
-		}
-		catch (IllegalDataException e) {
-			throw new RetrieveObjectException(e);
-		}
+    sql.append(idsEnumerationString(analysisTypes, AnalysisTypeWrapper.LINK_COLUMN_ANALYSIS_TYPE_ID, true));
 
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -301,12 +296,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 				+ MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID
 				+ SQL_FROM + ObjectEntities.MNTTYPANATYPEVATYP_ENTITY
 				+ SQL_WHERE);
-		try {
-			sql.append(idsEnumerationString(analysisTypes, AnalysisTypeWrapper.LINK_COLUMN_ANALYSIS_TYPE_ID, true));
-		}
-		catch (IllegalDataException e) {
-			throw new RetrieveObjectException(e);
-		}
+		sql.append(idsEnumerationString(analysisTypes, AnalysisTypeWrapper.LINK_COLUMN_ANALYSIS_TYPE_ID, true));
 
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -485,10 +475,9 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void delete(Identifier id) throws IllegalDataException {
-		if (id.getMajor() != ObjectEntities.ANALYSISTYPE_ENTITY_CODE)
-			throw new IllegalDataException("AnalysisTypeDatabase.delete | Cannot delete object of code "
-					+ id.getMajor() + ", entity '" + ObjectEntities.codeToString(id.getMajor()) + "'");
+	public void delete(Identifier id) {
+		assert (id.getMajor() != ObjectEntities.ANALYSISTYPE_ENTITY_CODE) : "Illegal entity code: "
+			+ id.getMajor() + ", entity '" + ObjectEntities.codeToString(id.getMajor()) + "'";
 
 		String analysisTypeIdStr = DatabaseIdentifier.toSQLString(id);
 		Statement statement = null;

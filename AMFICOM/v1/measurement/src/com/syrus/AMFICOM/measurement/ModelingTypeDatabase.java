@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingTypeDatabase.java,v 1.29 2005/04/01 08:43:32 bob Exp $
+ * $Id: ModelingTypeDatabase.java,v 1.30 2005/04/12 17:03:29 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,8 +37,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/04/01 08:43:32 $
- * @author $Author: bob $
+ * @version $Revision: 1.30 $, $Date: 2005/04/12 17:03:29 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -185,12 +185,7 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 				+ ModelingTypeWrapper.LINK_COLUMN_MODELING_TYPE_ID
 				+ SQL_FROM + ObjectEntities.MODTYPPARTYPLINK_ENTITY
 				+ SQL_WHERE);
-    try {
-			sql.append(idsEnumerationString(modelingTypes, ModelingTypeWrapper.LINK_COLUMN_MODELING_TYPE_ID, true));
-		}
-		catch (IllegalDataException e) {
-			throw new RetrieveObjectException(e);
-		}
+    sql.append(idsEnumerationString(modelingTypes, ModelingTypeWrapper.LINK_COLUMN_MODELING_TYPE_ID, true));
 
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -365,10 +360,9 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void delete(Identifier id) throws IllegalDataException {
-		if (id.getMajor() != ObjectEntities.MODELINGTYPE_ENTITY_CODE)
-			throw new IllegalDataException("ModelingTypeDatabase.delete | Cannot delete object of code "
-					+ id.getMajor() + ", entity '" + ObjectEntities.codeToString(id.getMajor()) + "'");
+	public void delete(Identifier id) {
+		assert (id.getMajor() != ObjectEntities.MODELINGTYPE_ENTITY_CODE) : "Illegal entity code: "
+			+ id.getMajor() + ", entity '" + ObjectEntities.codeToString(id.getMajor()) + "'";
 
 		String modelingTypeIdStr = DatabaseIdentifier.toSQLString(id);
 		Statement statement = null;

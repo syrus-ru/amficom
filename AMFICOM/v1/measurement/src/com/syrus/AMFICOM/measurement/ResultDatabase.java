@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.84 2005/04/01 08:43:32 bob Exp $
+ * $Id: ResultDatabase.java,v 1.85 2005/04/12 17:03:29 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,8 +39,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.84 $, $Date: 2005/04/01 08:43:32 $
- * @author $Author: bob $
+ * @version $Revision: 1.85 $, $Date: 2005/04/12 17:03:29 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -310,12 +310,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 				+ ResultWrapper.LINK_COLUMN_RESULT_ID 
 				+ SQL_FROM + ObjectEntities.RESULTPARAMETER_ENTITY
 				+ SQL_WHERE);
-		try {
-			sql.append(idsEnumerationString(results, ResultWrapper.LINK_COLUMN_RESULT_ID, true));
-		}
-		catch (IllegalDataException e) {
-			throw new RetrieveObjectException(e);
-		}
+		sql.append(idsEnumerationString(results, ResultWrapper.LINK_COLUMN_RESULT_ID, true));
 
 		Map resultParametersMap = new HashMap();
 		Identifier resultId;
@@ -475,10 +470,9 @@ public class ResultDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void delete(Identifier id) throws IllegalDataException {
-		if (id.getMajor() != ObjectEntities.RESULT_ENTITY_CODE)
-			throw new IllegalDataException("ResultDatabase.delete | Cannot delete object of code "
-					+ id.getMajor() + ", entity '" + ObjectEntities.codeToString(id.getMajor()) + "'");
+	public void delete(Identifier id) {
+		assert (id.getMajor() != ObjectEntities.RESULT_ENTITY_CODE) : "Illegal entity code: "
+			+ id.getMajor() + ", entity '" + ObjectEntities.codeToString(id.getMajor()) + "'";
 
 		String resultIdStr = DatabaseIdentifier.toSQLString(id);
 		Statement statement = null;
