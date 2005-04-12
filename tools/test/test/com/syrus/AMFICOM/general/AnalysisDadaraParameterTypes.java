@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisDadaraParameterTypes.java,v 1.1 2005/04/12 12:37:46 bob Exp $
+ * $Id: AnalysisDadaraParameterTypes.java,v 1.2 2005/04/12 13:02:58 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.general.ParameterTypeCodenames;
 import com.syrus.AMFICOM.general.corba.DataType;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/12 12:37:46 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/12 13:02:58 $
  * @author $Author: bob $
  * @module tools
  */
@@ -79,6 +79,18 @@ public class AnalysisDadaraParameterTypes extends GeneralTestCase {
 		{
 			ParameterType parameterType = ParameterType.createInstance(creatorId, ParameterTypeCodenames.MIN_CONNECTOR,
 				"Analysis connector detection threshold", "Connector threshold", DataType.DATA_TYPE_DOUBLE);
+			GeneralStorableObjectPool.putStorableObject(parameterType);
+		}
+		
+		{
+			ParameterType parameterType = ParameterType.createInstance(creatorId, ParameterTypeCodenames.DADARA,
+				"Dadara analysis", "Dadara analysis", DataType.DATA_TYPE_RAW);
+			GeneralStorableObjectPool.putStorableObject(parameterType);
+		}
+		
+		{
+			ParameterType parameterType = ParameterType.createInstance(creatorId, ParameterTypeCodenames.DADARA_ALARMS,
+				"Dadara alarms", "Dadara alarms", DataType.DATA_TYPE_RAW);
 			GeneralStorableObjectPool.putStorableObject(parameterType);
 		}
 	}
