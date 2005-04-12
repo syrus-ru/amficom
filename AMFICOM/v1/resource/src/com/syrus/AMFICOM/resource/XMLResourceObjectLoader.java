@@ -1,5 +1,5 @@
 /*
- * $Id: XMLResourceObjectLoader.java,v 1.6 2005/04/12 08:14:28 bass Exp $
+ * $Id: XMLResourceObjectLoader.java,v 1.7 2005/04/12 16:58:45 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,6 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.SessionContext;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
@@ -25,8 +24,8 @@ import com.syrus.AMFICOM.general.StorableObjectXML;
 import com.syrus.AMFICOM.general.StorableObjectXMLDriver;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/04/12 08:14:28 $
- * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2005/04/12 16:58:45 $
+ * @author $Author: arseniy $
  * @module resource_v1
  */
 public class XMLResourceObjectLoader implements ResourceObjectLoader {
@@ -38,12 +37,12 @@ public class XMLResourceObjectLoader implements ResourceObjectLoader {
 		this.resourceXML = new StorableObjectXML(driver);
 	}
 
-	public void delete(Identifier id) throws IllegalDataException {
+	public void delete(Identifier id) {
 		this.resourceXML.delete(id);
 		this.resourceXML.flush();
 	}
 
-	public void delete(final Set identifiables) throws IllegalDataException {
+	public void delete(final Set identifiables) {
 		for (Iterator it = identifiables.iterator(); it.hasNext();) {
 				Identifier id = (Identifier) it.next();
 				this.resourceXML.delete(id);

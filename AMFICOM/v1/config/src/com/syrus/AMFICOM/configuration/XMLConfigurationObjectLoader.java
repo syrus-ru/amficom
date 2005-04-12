@@ -1,5 +1,5 @@
 /*
- * $Id: XMLConfigurationObjectLoader.java,v 1.12 2005/04/12 08:12:52 bass Exp $
+ * $Id: XMLConfigurationObjectLoader.java,v 1.13 2005/04/12 16:54:37 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,6 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.SessionContext;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
@@ -24,8 +23,8 @@ import com.syrus.AMFICOM.general.StorableObjectXML;
 import com.syrus.AMFICOM.general.StorableObjectXMLDriver;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/04/12 08:12:52 $
- * @author $Author: bass $
+ * @version $Revision: 1.13 $, $Date: 2005/04/12 16:54:37 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -38,12 +37,12 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		this.configurationXML = new StorableObjectXML(driver);
 	}
 
-	public void delete(Identifier id) throws IllegalDataException {
+	public void delete(Identifier id) {
 		this.configurationXML.delete(id);
 		this.configurationXML.flush();
 	}
 
-	public void delete(final Set identifiables) throws IllegalDataException {
+	public void delete(final Set identifiables) {
 		for (Iterator it = identifiables.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			this.configurationXML.delete(id);

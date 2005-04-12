@@ -1,5 +1,5 @@
 /*
- * $Id: XMLMeasurementObjectLoader.java,v 1.11 2005/04/12 08:18:25 bass Exp $
+ * $Id: XMLMeasurementObjectLoader.java,v 1.12 2005/04/12 16:57:41 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,6 @@ import java.util.Iterator;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.SessionContext;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
@@ -23,8 +22,8 @@ import com.syrus.AMFICOM.general.StorableObjectXML;
 import com.syrus.AMFICOM.general.StorableObjectXMLDriver;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/04/12 08:18:25 $
- * @author $Author: bass $
+ * @version $Revision: 1.12 $, $Date: 2005/04/12 16:57:41 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 public class XMLMeasurementObjectLoader implements MeasurementObjectLoader {
@@ -36,12 +35,12 @@ public class XMLMeasurementObjectLoader implements MeasurementObjectLoader {
 		this.measurementXML = new StorableObjectXML(driver);
 	}
 
-	public void delete(Identifier id) throws IllegalDataException {
+	public void delete(Identifier id) {
 		this.measurementXML.delete(id);
 		this.measurementXML.flush();
 	}
 
-	public void delete(final java.util.Set identifiables) throws IllegalDataException {
+	public void delete(final java.util.Set identifiables) {
 		for (Iterator it = identifiables.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			this.measurementXML.delete(id);

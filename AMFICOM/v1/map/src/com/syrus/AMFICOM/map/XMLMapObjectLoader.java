@@ -1,5 +1,5 @@
 /*
- * $Id: XMLMapObjectLoader.java,v 1.9 2005/04/12 08:13:31 bass Exp $
+ * $Id: XMLMapObjectLoader.java,v 1.10 2005/04/12 16:59:17 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,6 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.SessionContext;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
@@ -24,8 +23,8 @@ import com.syrus.AMFICOM.general.StorableObjectXML;
 import com.syrus.AMFICOM.general.StorableObjectXMLDriver;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/04/12 08:13:31 $
- * @author $Author: bass $
+ * @version $Revision: 1.10 $, $Date: 2005/04/12 16:59:17 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -38,12 +37,12 @@ public final class XMLMapObjectLoader implements MapObjectLoader {
 		this.mapXML = new StorableObjectXML(driver);
 	}
 
-	public void delete(Identifier id) throws IllegalDataException {
+	public void delete(Identifier id) {
 		this.mapXML.delete(id);
 		this.mapXML.flush();
 	}
 
-	public void delete(final Set identifiables) throws IllegalDataException {
+	public void delete(final Set identifiables) {
 		for (Iterator it = identifiables.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			this.mapXML.delete(id);
