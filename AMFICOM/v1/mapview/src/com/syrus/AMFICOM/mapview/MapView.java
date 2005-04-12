@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.21 2005/04/08 11:09:48 krupenn Exp $
+* $Id: MapView.java,v 1.22 2005/04/12 08:35:15 bass Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -50,8 +50,8 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
  * канализационную
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
- * @author $Author: krupenn $
- * @version $Revision: 1.21 $, $Date: 2005/04/08 11:09:48 $
+ * @author $Author: bass $
+ * @version $Revision: 1.22 $, $Date: 2005/04/12 08:35:15 $
  * @module mapview_v1
  * @todo use getCenter, setCenter instead of pair longitude, latitude
  */
@@ -99,7 +99,11 @@ public class MapView extends DomainMember {
 	}
 
 	public MapView(MapView_Transferable mvt) throws CreateObjectException {
-		fromTransferable(mvt);
+		try {
+			fromTransferable(mvt);
+		} catch (final ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}
 
 	protected MapView(final Identifier id, 
@@ -167,7 +171,7 @@ public class MapView extends DomainMember {
 	}
 	
 	protected void fromTransferable(IDLEntity transferable)
-			throws CreateObjectException {
+			throws ApplicationException {
 		
 		MapView_Transferable mvt = (MapView_Transferable) transferable;
 		super.fromTransferable(mvt.header, new Identifier(mvt.domain_id));
