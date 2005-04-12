@@ -113,30 +113,24 @@ public final class SchemeElementController extends ObjectResourceController
 			else if (key.equals(COLUMN_SITE_NODE_ID))
 				result = element.getSiteNode().getId().getIdentifierString();
 			else if (key.equals(COLUMN_SCHEME_DEVICE_IDS)) {
-				SchemeDevice[] devices = element.getSchemeDevicesAsArray();
-				List res = new ArrayList(devices.length);
-				for (int i = 0; i < devices.length; i++) {
-					res.add(devices[i].getId().getIdentifierString());
-				}
-				result = res;
-			}
-			else if (key.equals(COLUMN_SCHEME_ELEMENT_IDS)) {
-				SchemeElement[] elements = element.getSchemeElementsAsArray();
-				List res = new ArrayList(elements.length);
-				for (int i = 0; i < elements.length; i++) {
-					res.add(elements[i].getId().getIdentifierString());
-				}
-				result = res;
-			}
-			else if (key.equals(COLUMN_SCHEME_LINK_IDS)) {
-				SchemeLink[] links = element.getSchemeLinksAsArray();
-				List res = new ArrayList(links.length);
-				for (int i = 0; i < links.length; i++) {
-					res.add(links[i].getId().getIdentifierString());
-				}
-				result = res;
-			}
-			else if (key.equals(COLUMN_SCHEME_CELL_ID))
+				final Set schemeDevices = element.getSchemeDevices();
+				final Set schemeDeviceIds = new HashSet(schemeDevices.size());
+				for (final Iterator schemeDeviceIterator = schemeDevices.iterator(); schemeDeviceIterator.hasNext();)
+					schemeDeviceIds.add(((SchemeDevice) schemeDeviceIterator.next()).getId().getIdentifierString());
+				result = schemeDeviceIds;
+			} else if (key.equals(COLUMN_SCHEME_ELEMENT_IDS)) {
+				final Set schemeElements = element.getSchemeElements();
+				final Set schemeElementIds = new HashSet(schemeElements.size());
+				for (final Iterator schemeElementIterator = schemeElements.iterator(); schemeElementIterator.hasNext();)
+					schemeElementIds.add(((SchemeElement) schemeElementIterator.next()).getId().getIdentifierString());
+				result = schemeElementIds;
+			} else if (key.equals(COLUMN_SCHEME_LINK_IDS)) {
+				final Set schemeLinks = element.getSchemeElements();
+				final Set schemeLinkIds = new HashSet(schemeLinks.size());
+				for (final Iterator schemeLinkIterator = schemeLinks.iterator(); schemeLinkIterator.hasNext();)
+					schemeLinkIds.add(((SchemeLink) schemeLinkIterator.next()).getId().getIdentifierString());
+				result = schemeLinkIds;
+			} else if (key.equals(COLUMN_SCHEME_CELL_ID))
 				result = element.getSchemeCell().getId().getIdentifierString();
 			else if (key.equals(COLUMN_UGO_CELL_ID))
 				result = element.getUgoCell().getId().getIdentifierString();

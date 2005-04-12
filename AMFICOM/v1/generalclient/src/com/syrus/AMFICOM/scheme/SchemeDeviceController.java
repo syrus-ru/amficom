@@ -75,22 +75,18 @@ public final class SchemeDeviceController extends ObjectResourceController
 			else if (key.equals(COLUMN_NAME))
 				result = device.getName();
 			else if (key.equals(COLUMN_SCHEME_PORT_IDS)) {
-				SchemePort[] ports = device.getSchemePortsAsArray();
-				List res = new ArrayList(ports.length);
-				for (int i = 0; i < ports.length; i++) {
-					res.add(ports[i].getId().getIdentifierString());
-				}
-				result = res;
-			}
-			else if (key.equals(COLUMN_SCHEME_CABLEPORT_IDS)) {
-				SchemeCablePort[] ports = device.getSchemeCablePortsAsArray();
-				List res = new ArrayList(ports.length);
-				for (int i = 0; i < ports.length; i++) {
-					res.add(ports[i].getId().getIdentifierString());
-				}
-				result = res;
-			}
-			else if (key.equals(COLUMN_CHARACTERISTICS)) {
+				final Set schemePorts = device.getSchemePorts();
+				final Set schemePortIds = new HashSet(schemePorts.size());
+				for (final Iterator schemePortIterator = schemePorts.iterator(); schemePortIterator.hasNext();)
+					schemePortIds.add(((SchemePort) schemePortIterator.next()).getId().getIdentifierString());
+				result = schemePortIds;
+			} else if (key.equals(COLUMN_SCHEME_CABLEPORT_IDS)) {
+				final Set schemeCablePorts = device.getSchemeCablePorts();
+				final Set schemeCablePortIds = new HashSet(schemeCablePorts.size());
+				for (final Iterator schemeCablePortIterator = schemeCablePorts.iterator(); schemeCablePortIterator.hasNext();)
+					schemeCablePortIds.add(((SchemeCablePort) schemeCablePortIterator.next()).getId().getIdentifierString());
+				result = schemeCablePortIds;
+			} else if (key.equals(COLUMN_CHARACTERISTICS)) {
 				List res = new ArrayList(device.getCharacteristics().size());
 				for (Iterator it = device.getCharacteristics().iterator(); it.hasNext(); ) {
 					Characteristic ch = (Characteristic)it.next();
