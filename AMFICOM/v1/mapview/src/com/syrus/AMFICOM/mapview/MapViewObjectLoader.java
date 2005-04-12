@@ -1,5 +1,5 @@
 /*
-* $Id: MapViewObjectLoader.java,v 1.5 2005/04/01 13:08:48 bob Exp $
+* $Id: MapViewObjectLoader.java,v 1.6 2005/04/12 08:15:02 bass Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -16,15 +16,15 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/04/01 13:08:48 $
- * @author $Author: bob $
+ * @version $Revision: 1.6 $, $Date: 2005/04/12 08:15:02 $
+ * @author $Author: bass $
  * @module mapview_v1
  */
 public interface MapViewObjectLoader {
 
 	void delete(Identifier id) throws IllegalDataException;
 
-	void delete(Set ids) throws IllegalDataException;
+	void delete(final Set identifiables);
 
 	MapView loadMapView(Identifier id) throws ApplicationException;
 

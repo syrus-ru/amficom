@@ -1,5 +1,5 @@
 /*-
- * $Id: MSHServerImpl.java,v 1.7 2005/04/12 08:15:34 bass Exp $
+ * $Id: MSHServerImpl.java,v 1.8 2005/04/12 08:19:47 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -65,7 +65,7 @@ import java.util.Set;
 import org.omg.CORBA.portable.IDLEntity;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/04/12 08:15:34 $
+ * @version $Revision: 1.8 $, $Date: 2005/04/12 08:19:47 $
  * @author $Author: bass $
  * @module mshserver_1
  */
@@ -158,15 +158,8 @@ public final class MSHServerImpl extends MSHServerSchemeTransmit {
 			else
 				Log.errorMessage("MSHServerImpl.deleteList | Wrong entity code: " + entityCode); //$NON-NLS-1$
 		}
-		try {
-			MapStorableObjectPool.delete(mapIds);
-			SchemeStorableObjectPool.delete(schemeIds);
-		} catch (final IllegalDataException ide) {
-			/*
-			 * Never.
-			 */
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_DELETE, CompletionStatus.COMPLETED_NO, ide.getMessage());
-		} 
+		MapStorableObjectPool.delete(mapIds);
+		SchemeStorableObjectPool.delete(schemeIds);
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*
- * $Id: MapViewStorableObjectPool.java,v 1.9 2005/04/08 09:26:53 bass Exp $
+ * $Id: MapViewStorableObjectPool.java,v 1.10 2005/04/12 08:15:02 bass Exp $
  *
  * Copyright ? 2004 Syrus Systems.
  * ѕвиапр-жейпкаехмкл зепжф.
@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/04/08 09:26:53 $
+ * @version $Revision: 1.10 $, $Date: 2005/04/12 08:15:02 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -133,17 +133,16 @@ public final class MapViewStorableObjectPool extends StorableObjectPool {
 		return storableObject;
 	}
 
-	protected Set loadStorableObjects(Short entityCode, Set ids) throws ApplicationException {
-		Set storableObjects;
-		switch (entityCode.shortValue()) {
+	protected Set loadStorableObjects(final Set ids) throws ApplicationException {
+		assert StorableObject.hasSingleTypeEntities(ids);
+		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
+		switch (entityCode) {
 			case ObjectEntities.MAPVIEW_ENTITY_CODE:
-				storableObjects = mvObjectLoader.loadMapViews(ids);
-				break;
+				return mvObjectLoader.loadMapViews(ids);
 			default:
 				Log.errorMessage("MapViewStorableObjectPool.loadStorableObjects | Unknown entityCode : " + entityCode);
-				storableObjects = null;
+				return Collections.EMPTY_SET;
 		}
-		return storableObjects;
 	}
 
 	protected Set loadStorableObjectsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
@@ -161,22 +160,24 @@ public final class MapViewStorableObjectPool extends StorableObjectPool {
 		return loadedCollection;
 	}
 
-	protected void saveStorableObjects(short code, Set collection, boolean force) throws ApplicationException {
-		if (!collection.isEmpty()) {
-			boolean alone = (collection.size() == 1);
-
-			switch (code) {
-				case ObjectEntities.MAPVIEW_ENTITY_CODE:
-					if (alone)
-						mvObjectLoader.saveMapView((MapView)collection.iterator().next(), force);
-					else
-						mvObjectLoader.saveMapViews(collection, force);
-					break;
-				default:
-					Log.errorMessage("MapViewStorableObjectPool.saveStorableObjects | Unknown Unknown entity : '"
-							+ ObjectEntities.codeToString(code) + "'");
-			}
-
+	protected void saveStorableObjects(final Set storableObjects,
+			final boolean force)
+			throws ApplicationException {
+		if (storableObjects.isEmpty())
+			return;
+		assert StorableObject.hasSingleTypeEntities(storableObjects);
+		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(storableObjects);
+		final boolean singleton = storableObjects.size() == 1;
+		switch (entityCode) {
+			case ObjectEntities.MAPVIEW_ENTITY_CODE:
+				if (singleton)
+					mvObjectLoader.saveMapView((MapView)storableObjects.iterator().next(), force);
+				else
+					mvObjectLoader.saveMapViews(storableObjects, force);
+				break;
+			default:
+				Log.errorMessage("MapViewStorableObjectPool.saveStorableObjects | Unknown Unknown entity : '"
+						+ ObjectEntities.codeToString(entityCode) + "'");
 		}
 	}
 
@@ -200,16 +201,16 @@ public final class MapViewStorableObjectPool extends StorableObjectPool {
 	 	mvObjectLoader.delete(id);
 	}
 
-	protected void deleteStorableObjects(Set ids) throws IllegalDataException {
-		mvObjectLoader.delete(ids);
+	protected void deleteStorableObjects(final Set identifiables) {
+		mvObjectLoader.delete(identifiables);
 	}
 
 	public static void delete(Identifier id) {
 		instance.deleteImpl(id);
 	}
 
-	public static void delete(Set ids) throws IllegalDataException {
-		instance.deleteImpl(ids);
+	public static void delete(final Set identifiables) {
+		instance.deleteImpl(identifiables);
 	}
 
 	public static void serializePool() {
