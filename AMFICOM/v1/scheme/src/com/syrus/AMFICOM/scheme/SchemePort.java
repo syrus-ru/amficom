@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePort.java,v 1.9 2005/04/08 09:26:11 bass Exp $
+ * $Id: SchemePort.java,v 1.10 2005/04/12 18:12:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,18 +10,32 @@ package com.syrus.AMFICOM.scheme;
 
 import com.syrus.AMFICOM.configuration.Port;
 import com.syrus.AMFICOM.configuration.corba.PortSort;
-import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Characterizable;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.TransferableObject;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.scheme.corba.SchemePort_Transferable;
 
-import java.util.*;
+import java.util.Date;
+import java.util.Set;
+
 import org.omg.CORBA.portable.IDLEntity;
 
 /**
  * #08 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/04/08 09:26:11 $
+ * @version $Revision: 1.10 $, $Date: 2005/04/12 18:12:19 $
  * @module scheme_v1
  */
 public final class SchemePort extends AbstractSchemePort {
@@ -64,15 +78,12 @@ public final class SchemePort extends AbstractSchemePort {
 	 * @throws CreateObjectException
 	 */
 	SchemePort(final SchemePort_Transferable transferable) throws CreateObjectException {
-		this.schemePortDatabase = SchemeDatabaseContext.getSchemePortDatabase();
-		fromTransferable(transferable);
-	}
-
-	/**
-	 * @deprecated Use {@link #createInstance(Identifier)}instead.
-	 */
-	public static SchemePort createInstance() {
-		throw new UnsupportedOperationException();
+		try {
+			this.schemePortDatabase = SchemeDatabaseContext.getSchemePortDatabase();
+			fromTransferable(transferable);
+		} catch (final ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}
 
 	public static SchemePort createInstance(final Identifier creatorId)
@@ -147,20 +158,6 @@ public final class SchemePort extends AbstractSchemePort {
 	}
 
 	/**
-	 * @param abstractSchemeLink
-	 * @see AbstractSchemePort#setAbstractSchemeLink(AbstractSchemeLink)
-	 * @deprecated Use one of:
-	 *             <ul><li>{@link AbstractSchemeLink#setSourceAbstractSchemePort(AbstractSchemePort)};</li>
-	 *             <li>{@link AbstractSchemeLink#setTargetAbstractSchemePort(AbstractSchemePort)};</li>
-	 *             <li>{@link SchemeLink#setSourceSchemePort(SchemePort)};</li>
-	 *             <li>{@link SchemeLink#setTargetSchemePort(SchemePort)}</li></ul>
-	 *             -- instead.
-	 */
-	public void setAbstractSchemeLink(final AbstractSchemeLink abstractSchemeLink) {
-		setSchemeLink((SchemeLink) abstractSchemeLink);
-	}
-
-	/**
 	 * @param port
 	 * @see AbstractSchemePort#setPort(Port)
 	 */
@@ -170,33 +167,11 @@ public final class SchemePort extends AbstractSchemePort {
 	}
 
 	/**
-	 * @param schemeCableThread
-	 * @deprecated Use one of:
-	 *             <ul><li>{@link SchemeCableThread#setSourceSchemePort(SchemePort)};</li>
-	 *             <li>{@link SchemeCableThread#setTargetSchemePort(SchemePort)}</li></ul>
-	 *             -- instead.
-	 */
-	public void setSchemeCableThread(final SchemeCableThread schemeCableThread) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param schemeLink
-	 * @deprecated Use one of:
-	 *             <ul><li>{@link SchemeLink#setSourceSchemePort(SchemePort)};</li>
-	 *             <li>{@link SchemeLink#setTargetSchemePort(SchemePort)}</li></ul>
-	 *             -- instead.
-	 */
-	public void setSchemeLink(final SchemeLink schemeLink) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
 	 * @param transferable
-	 * @throws CreateObjectException
+	 * @throws ApplicationException
 	 * @see StorableObject#fromTransferable(IDLEntity)
 	 */
-	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
+	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 }

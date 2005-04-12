@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.11 2005/04/08 09:26:11 bass Exp $
+ * $Id: SchemeElement.java,v 1.12 2005/04/12 18:12:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,21 +8,43 @@
 
 package com.syrus.AMFICOM.scheme;
 
-import com.syrus.AMFICOM.configuration.*;
-import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.configuration.Equipment;
+import com.syrus.AMFICOM.configuration.EquipmentType;
+import com.syrus.AMFICOM.configuration.KIS;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Characterizable;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.TransferableObject;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.resource.*;
+import com.syrus.AMFICOM.resource.BitmapImageResource;
+import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.corba.SchemeElement_Transferable;
+import com.syrus.util.Log;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
 import org.omg.CORBA.portable.IDLEntity;
 
 /**
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2005/04/08 09:26:11 $
+ * @version $Revision: 1.12 $, $Date: 2005/04/12 18:12:19 $
  * @module scheme_v1
  */
 public final class SchemeElement extends AbstractSchemeElement implements
@@ -88,15 +110,12 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 * @throws CreateObjectException
 	 */
 	SchemeElement(final SchemeElement_Transferable transferable) throws CreateObjectException {
-		this.schemeElementDatabase = SchemeDatabaseContext.getSchemeElementDatabase();
-		fromTransferable(transferable);
-	}
-
-	/**
-	 * @deprecated Use {@link #createInstance(Identifier)}instead.
-	 */
-	public static SchemeElement createInstance() {
-		throw new UnsupportedOperationException();
+		try {
+			this.schemeElementDatabase = SchemeDatabaseContext.getSchemeElementDatabase();
+			fromTransferable(transferable);
+		} catch (final ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}
 
 	public static SchemeElement createInstance(final Identifier creatorId)
@@ -118,26 +137,37 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	}
 
 	/**
-	 * @deprecated Use {@link #createInstance(Identifier)}instead.
+	 * @param scheme cannot be <code>null</code>.
 	 */
-	public static SchemeElement createInstance(final SchemeProtoElement schemeProtoElement) {
-		throw new UnsupportedOperationException();
+	public void addScheme(final Scheme scheme) {
+		assert scheme != null: ErrorMessages.NON_NULL_EXPECTED;
+		scheme.setParentSchemeElement(this);
 	}
 
-	public void addScheme(final Scheme innerScheme) {
-		throw new UnsupportedOperationException();
-	}
-
+	/**
+	 * @param schemeDevice cannot be <code>null</code>.
+	 */
 	public void addSchemeDevice(final SchemeDevice schemeDevice) {
-		throw new UnsupportedOperationException();
+		assert schemeDevice != null: ErrorMessages.NON_NULL_EXPECTED;
+		schemeDevice.setParentSchemeElement(this);
 	}
 
+	/**
+	 * @param schemeElement can be neither <code>null</code> nor
+	 *        <code>this</code>.
+	 */
 	public void addSchemeElement(final SchemeElement schemeElement) {
-		throw new UnsupportedOperationException();
+		assert schemeElement != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert schemeElement != this: ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
+		schemeElement.setParentSchemeElement(this);
 	}
 
+	/**
+	 * @param schemeLink cannot be <code>null</code>.
+	 */
 	public void addSchemeLink(final SchemeLink schemeLink) {
-		throw new UnsupportedOperationException();
+		assert schemeLink != null: ErrorMessages.NON_NULL_EXPECTED;
+		schemeLink.setParentSchemeElement(this);
 	}
 
 	public Object clone() {
@@ -147,14 +177,6 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		 * @todo Update the newly created object.
 		 */
 		return schemeElement;
-	}
-
-	public SchemePath getAlarmedPath() {
-		throw new UnsupportedOperationException();
-	}
-
-	public PathElement getAlarmedPathElement() {
-		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -210,41 +232,52 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @return an immutable set.
+	 */
 	public Set getSchemeDevices() {
-		throw new UnsupportedOperationException();
+		try {
+			return Collections.unmodifiableSet(SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_DEVICE_ENTITY_CODE), true));
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return Collections.EMPTY_SET;
+		}
 	}
 
 	/**
-	 * @deprecated
+	 * @return an immutable set.
 	 */
-	public SchemeDevice[] getSchemeDevicesAsArray() {
-		throw new UnsupportedOperationException();
-	}
-
 	public Set getSchemeElements() {
-		throw new UnsupportedOperationException();
+		try {
+			return Collections.unmodifiableSet(SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE), true));
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return Collections.EMPTY_SET;
+		}
 	}
 
 	/**
-	 * @deprecated
+	 * @return an immutable set.
 	 */
-	public SchemeElement[] getSchemeElementsAsArray() {
-		throw new UnsupportedOperationException();
-	}
-
 	public Set getSchemeLinks() {
-		throw new UnsupportedOperationException();
+		try {
+			return Collections.unmodifiableSet(SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_LINK_ENTITY_CODE), true));
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return Collections.EMPTY_SET;
+		}
 	}
 
 	/**
-	 * @deprecated
+	 * @return an immutable set.
 	 */
-	public SchemeLink[] getSchemeLinksAsArray() {
-		throw new UnsupportedOperationException();
-	}
-
 	public Set getSchemes() {
-		throw new UnsupportedOperationException();
+		try {
+			return Collections.unmodifiableSet(SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_ENTITY_CODE), true));
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return Collections.EMPTY_SET;
+		}
 	}
 
 	public SiteNode getSiteNode() {
@@ -259,7 +292,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
+	 * @see TransferableObject#getTransferable()
 	 */
 	public IDLEntity getTransferable() {
 		throw new UnsupportedOperationException();
@@ -272,28 +305,52 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * The <code>Scheme</code> must belong to this
+	 * <code>SchemeElement</code>, or crap will meet the fan.
+	 *
+	 * @param scheme
+	 */
 	public void removeScheme(final Scheme scheme) {
-		throw new UnsupportedOperationException();
+		assert scheme != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert getSchemes().contains(scheme): ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		scheme.setParentSchemeElement(null);
 	}
 
+	/**
+	 * The <code>SchemeDevice</code> must belong to this
+	 * <code>SchemeElement</code>, or crap will meet the fan.
+	 *
+	 * @param schemeDevice
+	 */
 	public void removeSchemeDevice(final SchemeDevice schemeDevice) {
-		throw new UnsupportedOperationException();
+		assert schemeDevice != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert getSchemeDevices().contains(schemeDevice): ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		schemeDevice.setParentSchemeElement(null);
 	}
 
+	/**
+	 * The <code>SchemeElement</code> must belong to this
+	 * <code>SchemeElement</code>, or crap will meet the fan.
+	 *
+	 * @param schemeElement
+	 */
 	public void removeSchemeElement(final SchemeElement schemeElement) {
-		throw new UnsupportedOperationException();
+		assert schemeElement != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert getSchemeElements().contains(schemeElement): ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		schemeElement.setParentSchemeElement(null);
 	}
 
+	/**
+	 * The <code>SchemeLink</code> must belong to this
+	 * <code>SchemeElement</code>, or crap will meet the fan.
+	 *
+	 * @param schemeLink
+	 */
 	public void removeSchemeLink(final SchemeLink schemeLink) {
-		throw new UnsupportedOperationException();
-	}
-
-	public void setAlarmedPath(SchemePath alarmedPath) {
-		throw new UnsupportedOperationException();
-	}
-
-	public void setAlarmedPathElement(PathElement alarmedPathElement) {
-		throw new UnsupportedOperationException();
+		assert schemeLink != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert getSchemeLinks().contains(schemeLink): ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		schemeLink.setParentSchemeElement(null);
 	}
 
 	/**
@@ -380,14 +437,14 @@ public final class SchemeElement extends AbstractSchemeElement implements
 
 	/**
 	 * @param transferable
-	 * @throws CreateObjectException
+	 * @throws ApplicationException
 	 * @see StorableObject#fromTransferable(IDLEntity)
 	 */
-	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
+	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
-	/* ********************************************************************
+	/*-********************************************************************
 	 * Non-model methods.                                                 *
 	 **********************************************************************/
 
@@ -403,5 +460,21 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		for (final Iterator schemeDeviceIterator = getSchemeDevices().iterator(); schemeDeviceIterator.hasNext();)
 			schemePorts.addAll(((SchemeDevice) schemeDeviceIterator.next()).getSchemePorts());
 		return Collections.unmodifiableSet(schemePorts);
+	}
+
+	public SchemePath getAlarmedPath() {
+		throw new UnsupportedOperationException();
+	}
+
+	public PathElement getAlarmedPathElement() {
+		throw new UnsupportedOperationException();
+	}
+
+	public void setAlarmedPath(final SchemePath alarmedPath) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void setAlarmedPathElement(final PathElement alarmedPathElement) {
+		throw new UnsupportedOperationException();
 	}
 }

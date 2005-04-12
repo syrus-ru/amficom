@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.9 2005/04/08 09:26:11 bass Exp $
+ * $Id: SchemeDevice.java,v 1.10 2005/04/12 18:12:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,11 +8,31 @@
 
 package com.syrus.AMFICOM.scheme;
 
-import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.Characterizable;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Describable;
+import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.Namable;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.scheme.corba.SchemeDevice_Transferable;
+import com.syrus.util.Log;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
 
@@ -20,7 +40,7 @@ import org.omg.CORBA.portable.IDLEntity;
  * #07 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/04/08 09:26:11 $
+ * @version $Revision: 1.10 $, $Date: 2005/04/12 18:12:19 $
  * @module scheme_v1
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -75,17 +95,14 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 * @throws CreateObjectException
 	 */
 	SchemeDevice(final SchemeDevice_Transferable transferable) throws CreateObjectException {
-		this.schemeDeviceDatabase = SchemeDatabaseContext.getSchemeDeviceDatabase();
-		fromTransferable(transferable);
+		try {
+			this.schemeDeviceDatabase = SchemeDatabaseContext.getSchemeDeviceDatabase();
+			fromTransferable(transferable);
+		} catch (final ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}
 	
-	/**
-	 * @deprecated Use {@link #createInstance(Identifier)}instead.
-	 */
-	public static SchemeDevice createInstance() {
-		throw new UnsupportedOperationException();
-	}
-
 	public static SchemeDevice createInstance(final Identifier creatorId)
 			throws CreateObjectException {
 		assert creatorId != null;
@@ -112,12 +129,20 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @param schemeCablePort cannot be <code>null</code>.
+	 */
 	public void addSchemeCablePort(final SchemeCablePort schemeCablePort) {
-		throw new UnsupportedOperationException();
+		assert schemeCablePort != null: ErrorMessages.NON_NULL_EXPECTED;
+		schemeCablePort.setParentSchemeDevice(this);
 	}
 
+	/**
+	 * @param schemePort cannot be <code>null</code>.
+	 */
 	public void addSchemePort(final SchemePort schemePort) {
-		throw new UnsupportedOperationException();
+		assert schemePort != null: ErrorMessages.NON_NULL_EXPECTED;
+		schemePort.setParentSchemeDevice(this);
 	}
 
 	public Object clone() {
@@ -173,26 +198,28 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @return an immutable set.
+	 */
 	public Set getSchemeCablePorts() {
-		throw new UnsupportedOperationException();
+		try {
+			return Collections.unmodifiableSet(SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_CABLE_PORT_ENTITY_CODE), true));
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return Collections.EMPTY_SET;
+		}
 	}
 
 	/**
-	 * @deprecated
+	 * @return an immutable set.
 	 */
-	public SchemeCablePort[] getSchemeCablePortsAsArray() {
-		throw new UnsupportedOperationException();
-	}
-
 	public Set getSchemePorts() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public SchemePort[] getSchemePortsAsArray() {
-		throw new UnsupportedOperationException();
+		try {
+			return Collections.unmodifiableSet(SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_PORT_ENTITY_CODE), true));
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return Collections.EMPTY_SET;
+		}
 	}
 
 	/**
@@ -210,12 +237,28 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * The <code>SchemeCablePort</code> must belong to this
+	 * <code>SchemeDevice</code>, or crap will meet the fan.
+	 *
+	 * @param schemeCablePort
+	 */
 	public void removeSchemeCablePort(final SchemeCablePort schemeCablePort) {
-		throw new UnsupportedOperationException();
+		assert schemeCablePort != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert getSchemeCablePorts().contains(schemeCablePort): ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		schemeCablePort.setParentSchemeDevice(null);
 	}
 
+	/**
+	 * The <code>SchemePort</code> must belong to this
+	 * <code>SchemeDevice</code>, or crap will meet the fan.
+	 *
+	 * @param schemePort
+	 */
 	public void removeSchemePort(final SchemePort schemePort) {
-		throw new UnsupportedOperationException();
+		assert schemePort != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert getSchemePorts().contains(schemePort): ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		schemePort.setParentSchemeDevice(null);
 	}
 
 	/**
@@ -270,30 +313,16 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 		throw new UnsupportedOperationException();
 	}
 
-	/**
-	 * @deprecated
-	 */
-	public void setSchemeCablePortsAsArray(final SchemeCablePort schemeCablePorts[]) {
-		throw new UnsupportedOperationException();
-	}
-
 	public void setSchemePorts(final Set schemePorts) {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * @deprecated
-	 */
-	public void setSchemePortsAsArray(final SchemePort schemePorts[]) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
 	 * @param transferable
-	 * @throws CreateObjectException
+	 * @throws ApplicationException
 	 * @see StorableObject#fromTransferable(IDLEntity)
 	 */
-	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
+	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 }

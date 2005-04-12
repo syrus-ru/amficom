@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.12 2005/04/12 08:14:17 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.13 2005/04/12 18:12:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,7 +48,7 @@ import org.omg.CORBA.portable.IDLEntity;
  * #01 in hierarchy.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2005/04/12 08:14:17 $
+ * @version $Revision: 1.13 $, $Date: 2005/04/12 18:12:19 $
  * @module scheme_v1
  */
 public final class SchemeProtoGroup extends AbstractCloneableStorableObject
@@ -355,7 +355,7 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * @return an immutable collection.
+	 * @return an immutable set.
 	 */
 	public Set getSchemeProtoElements() {
 		try {
@@ -367,7 +367,7 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * @return an immutable collection.
+	 * @return an immutable set.
 	 */
 	public Set getSchemeProtoGroups() {
 		try {
@@ -423,8 +423,8 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * The <code>schemeProtoElement</code> must belong to this
-	 * <code>schemeProtoGroup</code>, or crap will meet the fan.
+	 * The <code>SchemeProtoElement</code> must belong to this
+	 * <code>SchemeProtoGroup</code>, or crap will meet the fan.
 	 *
 	 * @param schemeProtoElement
 	 * @todo Decide how removal should be interpreted: setting a parent of
@@ -439,8 +439,8 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * The <code>schemeProtoGroup</code> must belong to this
-	 * <code>schemeProtoGroup</code>, or crap will meet the fan.
+	 * The <code>SchemeProtoGroup</code> must belong to this
+	 * <code>SchemeProtoGroup</code>, or crap will meet the fan.
 	 * 
 	 * @param schemeProtoGroup
 	 * @todo Decide whether it's good to have more than one top-level

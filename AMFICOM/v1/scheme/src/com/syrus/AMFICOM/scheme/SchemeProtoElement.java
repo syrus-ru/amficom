@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.15 2005/04/12 08:14:17 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.16 2005/04/12 18:12:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,6 +22,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -53,7 +54,7 @@ import org.omg.CORBA.portable.IDLEntity;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.15 $, $Date: 2005/04/12 08:14:17 $
+ * @version $Revision: 1.16 $, $Date: 2005/04/12 18:12:19 $
  * @module scheme_v1
  */
 public final class SchemeProtoElement extends AbstractCloneableStorableObject
@@ -172,17 +173,6 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		} catch (final ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
-	}
-
-	/**
-	 * @deprecated Use one of
-	 *             {@link #createInstance(Identifier, String, String, String, EquipmentType, BitmapImageResource, SchemeImageResource, SchemeImageResource)},
-	 *             {@link #createInstance(Identifier, String, String, String, EquipmentType, BitmapImageResource, SchemeImageResource, SchemeImageResource, SchemeProtoGroup)},
-	 *             {@link #createInstance(Identifier, String, String, String, EquipmentType, BitmapImageResource, SchemeImageResource, SchemeImageResource, SchemeProtoElement)}
-	 *             instead.
-	 */
-	public static SchemeProtoElement createInstance() {
-		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -352,14 +342,26 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		throw new UnsupportedOperationException(ErrorMessages.CHILDREN_PROHIBITED);
 	}
 
+	/**
+	 * @param schemeDevice cannot be <code>null</code>.
+	 */
 	public void addSchemeDevice(final SchemeDevice schemeDevice) {
-		throw new UnsupportedOperationException();
+		assert schemeDevice != null: ErrorMessages.NON_NULL_EXPECTED;
+		schemeDevice.setParentSchemeProtoElement(this);
 	}
 
+	/**
+	 * @param schemeLink cannot be <code>null</code>.
+	 */
 	public void addSchemeLink(final SchemeLink schemeLink) {
-		throw new UnsupportedOperationException();
+		assert schemeLink != null: ErrorMessages.NON_NULL_EXPECTED;
+		schemeLink.setParentSchemeProtoElement(this);
 	}
 
+	/**
+	 * @param schemeProtoElement can be neither <code>null</code> nor
+	 *        <code>this</code>.
+	 */
 	public void addSchemeProtoElement(final SchemeProtoElement schemeProtoElement) {
 		assert schemeProtoElement != null: ErrorMessages.NON_NULL_EXPECTED;
 		assert schemeProtoElement != this: ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
@@ -525,21 +527,6 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * Returns <code>schemeCablePort</code> s (as an unmodifiable
-	 * collection) for this <code>schemeProtoElement</code>, recursively.
-	 */
-	public Set getSchemeCablePortsRecursively() {
-		final Set schemeDevices = getSchemeDevices();
-		final Iterator schemeDeviceIterator = schemeDevices.iterator();
-		if (schemeDevices.size() == 1)
-			return ((SchemeDevice) schemeDeviceIterator.next()).getSchemeCablePorts();
-		final Set schemeCablePorts = new HashSet();
-		for (; schemeDeviceIterator.hasNext();)
-			schemeCablePorts.addAll(((SchemeDevice) schemeDeviceIterator.next()).getSchemeCablePorts());
-		return Collections.unmodifiableSet(schemeCablePorts);
-	}
-
-	/**
 	 * @see SchemeCellContainer#getSchemeCell()
 	 */
 	public SchemeImageResource getSchemeCell() {
@@ -555,31 +542,40 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		}
 	}
 
+	/**
+	 * @return an immutable set.
+	 */
 	public Set getSchemeDevices() {
-		throw new UnsupportedOperationException();
-	}
-
-	public Set getSchemeLinks() {
-		throw new UnsupportedOperationException();
+		try {
+			return Collections.unmodifiableSet(SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_DEVICE_ENTITY_CODE), true));
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return Collections.EMPTY_SET;
+		}
 	}
 
 	/**
-	 * Returns <code>schemePort</code> s (as an unmodifiable collection)
-	 * for this <code>schemeProtoElement</code>, recursively.
+	 * @return an immutable set.
 	 */
-	public Set getSchemePortsRecursively() {
-		final Set schemeDevices = getSchemeDevices();
-		final Iterator schemeDeviceIterator = schemeDevices.iterator();
-		if (schemeDevices.size() == 1)
-			return ((SchemeDevice) schemeDeviceIterator.next()).getSchemePorts();
-		final Set schemePorts = new HashSet();
-		for (; schemeDeviceIterator.hasNext();)
-			schemePorts.addAll(((SchemeDevice) schemeDeviceIterator.next()).getSchemePorts());
-		return Collections.unmodifiableSet(schemePorts);
+	public Set getSchemeLinks() {
+		try {
+			return Collections.unmodifiableSet(SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_LINK_ENTITY_CODE), true));
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return Collections.EMPTY_SET;
+		}
 	}
 
+	/**
+	 * @return an immutable set.
+	 */
 	public Set getSchemeProtoElements() {
-		throw new UnsupportedOperationException();
+		try {
+			return Collections.unmodifiableSet(SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE), true));
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return Collections.EMPTY_SET;
+		}
 	}
 
 	/**
@@ -648,16 +644,40 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		this.changed = true;
 	}
 
+	/**
+	 * The <code>SchemeDevice</code> must belong to this
+	 * <code>SchemeElement</code>, or crap will meet the fan.
+	 *
+	 * @param schemeDevice
+	 */
 	public void removeSchemeDevice(final SchemeDevice schemeDevice) {
-		throw new UnsupportedOperationException();
+		assert schemeDevice != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert getSchemeDevices().contains(schemeDevice): ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		schemeDevice.setParentSchemeProtoElement(null);
 	}
 
+	/**
+	 * The <code>SchemeLink</code> must belong to this
+	 * <code>SchemeElement</code>, or crap will meet the fan.
+	 *
+	 * @param schemeLink
+	 */
 	public void removeSchemeLink(final SchemeLink schemeLink) {
-		throw new UnsupportedOperationException();
+		assert schemeLink != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert getSchemeLinks().contains(schemeLink): ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		schemeLink.setParentSchemeProtoElement(null);
 	}
 
+	/**
+	 * The <code>SchemeProtoElement</code> must belong to this
+	 * <code>SchemeElement</code>, or crap will meet the fan.
+	 *
+	 * @param schemeProtoElement
+	 */
 	public void removeSchemeProtoElement(final SchemeProtoElement schemeProtoElement) {
-		throw new UnsupportedOperationException();
+		assert schemeProtoElement != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert getSchemeProtoElements().contains(schemeProtoElement): ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		schemeProtoElement.setParentSchemeProtoElement(null);
 	}
 
 	/**
@@ -866,14 +886,17 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	}
 
 	public void setSchemeDevices(final Set schemeDevices) {
+		assert schemeDevices != null: ErrorMessages.NON_NULL_EXPECTED;
 		throw new UnsupportedOperationException();
 	}
 
 	public void setSchemeLinks(final Set schemeLinks) {
+		assert schemeLinks != null: ErrorMessages.NON_NULL_EXPECTED;
 		throw new UnsupportedOperationException();
 	}
 
 	public void setSchemeProtoElements(final Set schemeProtoElements) {
+		assert schemeProtoElements != null: ErrorMessages.NON_NULL_EXPECTED;
 		throw new UnsupportedOperationException();
 	}
 
@@ -936,5 +959,39 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		} catch (final ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
+	}
+
+	/*-********************************************************************
+	 * Non-model members.                                                 *
+	 **********************************************************************/
+
+	/**
+	 * Returns <code>SchemeCablePort</code>s (as an unmodifiable set) for
+	 * this <code>schemeProtoElement</code>, recursively.
+	 */
+	public Set getSchemeCablePortsRecursively() {
+		final Set schemeDevices = getSchemeDevices();
+		final Iterator schemeDeviceIterator = schemeDevices.iterator();
+		if (schemeDevices.size() == 1)
+			return ((SchemeDevice) schemeDeviceIterator.next()).getSchemeCablePorts();
+		final Set schemeCablePorts = new HashSet();
+		for (; schemeDeviceIterator.hasNext();)
+			schemeCablePorts.addAll(((SchemeDevice) schemeDeviceIterator.next()).getSchemeCablePorts());
+		return Collections.unmodifiableSet(schemeCablePorts);
+	}
+
+	/**
+	 * Returns <code>SchemePort</code>s (as an unmodifiable set) for this
+	 * <code>SchemeProtoElement</code>, recursively.
+	 */
+	public Set getSchemePortsRecursively() {
+		final Set schemeDevices = getSchemeDevices();
+		final Iterator schemeDeviceIterator = schemeDevices.iterator();
+		if (schemeDevices.size() == 1)
+			return ((SchemeDevice) schemeDeviceIterator.next()).getSchemePorts();
+		final Set schemePorts = new HashSet();
+		for (; schemeDeviceIterator.hasNext();)
+			schemePorts.addAll(((SchemeDevice) schemeDeviceIterator.next()).getSchemePorts());
+		return Collections.unmodifiableSet(schemePorts);
 	}
 }

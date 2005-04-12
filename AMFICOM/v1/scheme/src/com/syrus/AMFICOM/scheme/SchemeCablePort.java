@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePort.java,v 1.9 2005/04/08 09:26:11 bass Exp $
+ * $Id: SchemeCablePort.java,v 1.10 2005/04/12 18:12:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,18 +10,32 @@ package com.syrus.AMFICOM.scheme;
 
 import com.syrus.AMFICOM.configuration.Port;
 import com.syrus.AMFICOM.configuration.corba.PortSort;
-import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Characterizable;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.TransferableObject;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.scheme.corba.SchemeCablePort_Transferable;
 
-import java.util.*;
+import java.util.Date;
+import java.util.Set;
+
 import org.omg.CORBA.portable.IDLEntity;
 
 /**
  * #09 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/04/08 09:26:11 $
+ * @version $Revision: 1.10 $, $Date: 2005/04/12 18:12:19 $
  * @module scheme_v1
  */
 public final class SchemeCablePort extends AbstractSchemePort {
@@ -64,20 +78,17 @@ public final class SchemeCablePort extends AbstractSchemePort {
 	 * @throws CreateObjectException
 	 */
 	SchemeCablePort(final SchemeCablePort_Transferable transferable) throws CreateObjectException {
-		this.schemeCablePortDatabase = SchemeDatabaseContext.getSchemeCablePortDatabase();
-		fromTransferable(transferable);
-	}
-
-	/**
-	 * @deprecated Use {@link #createInstance(Identifier)}instead.
-	 */
-	public static SchemeCablePort createInstance() {
-		throw new UnsupportedOperationException();
+		try {
+			this.schemeCablePortDatabase = SchemeDatabaseContext.getSchemeCablePortDatabase();
+			fromTransferable(transferable);
+		} catch (final ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}
 
 	public static SchemeCablePort createInstance(
 			final Identifier creatorId)
-			throws CreateObjectException {
+			throws ApplicationException {
 		assert creatorId != null;
 		try {
 			final Date created = new Date();
@@ -89,7 +100,7 @@ public final class SchemeCablePort extends AbstractSchemePort {
 			schemeCablePort.changed = true;
 			return schemeCablePort;
 		} catch (final IllegalObjectEntityException ioee) {
-			throw new CreateObjectException(
+			throw new ApplicationException(
 					"SchemeCablePort.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
 		}
 	}
@@ -145,20 +156,6 @@ public final class SchemeCablePort extends AbstractSchemePort {
 	}
 
 	/**
-	 * @param abstractSchemeLink
-	 * @see AbstractSchemePort#setAbstractSchemeLink(AbstractSchemeLink)
-	 * @deprecated Use one of:
-	 *             <ul><li>{@link AbstractSchemeLink#setSourceAbstractSchemePort(AbstractSchemePort)};</li>
-	 *             <li>{@link AbstractSchemeLink#setTargetAbstractSchemePort(AbstractSchemePort)};</li>
-	 *             <li>{@link SchemeCableLink#setSourceSchemeCablePort(SchemeCablePort)};</li>
-	 *             <li>{@link SchemeCableLink#setTargetSchemeCablePort(SchemeCablePort)}</li></ul>
-	 *             -- instead.
-	 */
-	public void setAbstractSchemeLink(final AbstractSchemeLink abstractSchemeLink) {
-		setSchemeCableLink((SchemeCableLink) abstractSchemeLink);
-	}
-
-	/**
 	 * @param port
 	 * @see AbstractSchemePort#setPort(Port)
 	 */
@@ -168,22 +165,11 @@ public final class SchemeCablePort extends AbstractSchemePort {
 	}
 
 	/**
-	 * @param schemeCableLink
-	 * @deprecated Use one of:
-	 *             <ul><li>{@link SchemeCableLink#setSourceSchemeCablePort(SchemeCablePort)};</li>
-	 *             <li>{@link SchemeCableLink#setTargetSchemeCablePort(SchemeCablePort)}</li></ul>
-	 *             -- instead.
-	 */
-	public void setSchemeCableLink(final SchemeCableLink schemeCableLink) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
 	 * @param transferable
-	 * @throws CreateObjectException
+	 * @throws ApplicationException
 	 * @see StorableObject#fromTransferable(IDLEntity)
 	 */
-	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
+	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 }

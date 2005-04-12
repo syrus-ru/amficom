@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.8 2005/04/08 09:26:11 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.9 2005/04/12 18:12:19 bass Exp $
  * 
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,10 +8,23 @@
 
 package com.syrus.AMFICOM.scheme;
 
-import com.syrus.AMFICOM.configuration.*;
-import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.configuration.MeasurementPort;
+import com.syrus.AMFICOM.configuration.MeasurementPortType;
+import com.syrus.AMFICOM.configuration.Port;
+import com.syrus.AMFICOM.configuration.PortType;
+import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
+import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.Characterizable;
+import com.syrus.AMFICOM.general.Describable;
+import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.Namable;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
-import java.util.*;
+
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * This class is never used directly, it was provided just in order for source
@@ -19,7 +32,7 @@ import java.util.*;
  * {@link AbstractSchemePort}instead.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/04/08 09:26:11 $
+ * @version $Revision: 1.9 $, $Date: 2005/04/12 18:12:19 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemePort extends
@@ -142,18 +155,6 @@ public abstract class AbstractSchemePort extends
 	public final void removeCharacteristic(final Characteristic characteristic) {
 		throw new UnsupportedOperationException();
 	}
-
-	/**
-	 * @deprecated Use one of:
-	 *             <ul><li>{@link AbstractSchemeLink#setSourceAbstractSchemePort(AbstractSchemePort)};</li>
-	 *             <li>{@link AbstractSchemeLink#setTargetAbstractSchemePort(AbstractSchemePort)};</li>
-	 *             <li>{@link SchemeLink#setSourceSchemePort(SchemePort)};</li>
-	 *             <li>{@link SchemeLink#setTargetSchemePort(SchemePort)};</li>
-	 *             <li>{@link SchemeCableLink#setSourceSchemeCablePort(SchemeCablePort)};</li>
-	 *             <li>{@link SchemeCableLink#setTargetSchemeCablePort(SchemeCablePort)}</li></ul>
-	 *             -- instead.
-	 */
-	public abstract void setAbstractSchemeLink(final AbstractSchemeLink abstractSchemeLink);
 
 	public final void setAbstractSchemePortDirectionType(final AbstractSchemePortDirectionType abstractSchemePortDirectionType) {
 		throw new UnsupportedOperationException();
