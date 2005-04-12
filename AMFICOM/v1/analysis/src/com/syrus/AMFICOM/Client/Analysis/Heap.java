@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.19 2005/04/12 16:51:29 saa Exp $
+ * $Id: Heap.java,v 1.20 2005/04/12 17:35:49 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.io.BellcoreStructure;
  * использование остальных методов работы с BS
  * 
  * @author $Author: saa $
- * @version $Revision: 1.19 $, $Date: 2005/04/12 16:51:29 $
+ * @version $Revision: 1.20 $, $Date: 2005/04/12 17:35:49 $
  * @module
  */
 public class Heap
@@ -304,7 +304,7 @@ public class Heap
 	}
 	private static void notifyEtalonMTMRemoved()
 	{
-		for (Iterator it = primaryMTMListeners.iterator(); it.hasNext(); )
+		for (Iterator it = etalonMTMListeners.iterator(); it.hasNext(); )
 				((EtalonMTMListener)it.next()).etalonMTMRemoved();
 	}
 	private static void notifyCurrentTraceChanged()
