@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.34 2005/04/08 14:51:00 arseniy Exp $
+ * $Id: Collector.java,v 1.35 2005/04/12 17:11:34 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,16 @@
  */
 
 package com.syrus.AMFICOM.map;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
+import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -23,24 +33,13 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.Collector_Transferable;
-import com.syrus.util.Log;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-
-import org.omg.CORBA.portable.IDLEntity;
 
 /**
  * Коллектор на топологической схеме, который характеризуется набором входящих
  * в него линий. Линии не обязаны быть связными.
  * 
  * @author $Author: arseniy $
- * @version $Revision: 1.34 $, $Date: 2005/04/08 14:51:00 $
+ * @version $Revision: 1.35 $, $Date: 2005/04/12 17:11:34 $
  * @module map_v1
  */
 public class Collector extends StorableObject implements MapElement {
@@ -156,17 +155,8 @@ public class Collector extends StorableObject implements MapElement {
 	}
 
 	public IDLEntity getTransferable() {
-		Identifier_Transferable[] physicalLinkIds = null;
-		Identifier_Transferable[] charIds = null;
-		try {
-			physicalLinkIds = Identifier.createTransferables(this.physicalLinks);
-			charIds = Identifier.createTransferables(this.characteristics);
-		}
-		catch (IllegalDataException ide) {
-			// Never
-			Log.errorException(ide);
-		}
-
+		Identifier_Transferable[] physicalLinkIds = Identifier.createTransferables(this.physicalLinks);
+		Identifier_Transferable[] charIds = Identifier.createTransferables(this.characteristics);
 		return new Collector_Transferable(super.getHeaderTransferable(), this.name, this.description, physicalLinkIds, charIds);
 	}
 

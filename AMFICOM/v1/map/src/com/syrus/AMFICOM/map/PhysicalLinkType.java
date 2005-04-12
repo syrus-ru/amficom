@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.29 2005/04/08 14:51:00 arseniy Exp $
+ * $Id: PhysicalLinkType.java,v 1.30 2005/04/12 17:11:34 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,6 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.PhysicalLinkType_Transferable;
-import com.syrus.util.Log;
 
 /**
  * Тип линии топологической схемы. Существует несколько предустановленных 
@@ -39,7 +38,7 @@ import com.syrus.util.Log;
  * какому-либо значению {@link #TUNNEL}, {@link #COLLECTOR}, {@link #INDOOR}, 
  * {@link #SUBMARINE}, {@link #OVERHEAD}, {@link #UNBOUND}
  * @author $Author: arseniy $
- * @version $Revision: 1.29 $, $Date: 2005/04/08 14:51:00 $
+ * @version $Revision: 1.30 $, $Date: 2005/04/12 17:11:34 $
  * @module map_v1
  */
 public class PhysicalLinkType extends StorableObjectType implements Characterizable {
@@ -159,15 +158,7 @@ public class PhysicalLinkType extends StorableObjectType implements Characteriza
 	}
 
 	public IDLEntity getTransferable() {
-		Identifier_Transferable[] charIds = null;
-		try {
-			charIds = Identifier.createTransferables(this.characteristics);
-		}
-		catch (IllegalDataException ide) {
-			// Never
-			Log.errorException(ide);
-		}
-
+		Identifier_Transferable[] charIds = Identifier.createTransferables(this.characteristics);
 		return new PhysicalLinkType_Transferable(super.getHeaderTransferable(),
 				this.codename,
 				this.name,

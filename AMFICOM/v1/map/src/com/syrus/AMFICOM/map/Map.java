@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.33 2005/04/08 14:51:00 arseniy Exp $
+ * $Id: Map.java,v 1.34 2005/04/12 17:11:34 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,6 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.Map_Transferable;
-import com.syrus.util.Log;
 
 /**
  * Топологическая схема, которая содержит в себе набор связанных друг с другом
@@ -40,7 +39,7 @@ import com.syrus.util.Log;
  * линиях, коллекторов (объединяющих в себе линии).
  * 
  * @author $Author: arseniy $
- * @version $Revision: 1.33 $, $Date: 2005/04/08 14:51:00 $
+ * @version $Revision: 1.34 $, $Date: 2005/04/12 17:11:34 $
  * @module map_v1
  * @todo make maps persistent 
  */
@@ -217,25 +216,12 @@ public class Map extends DomainMember {
 	}
 
 	public IDLEntity getTransferable() {
-		Identifier_Transferable[] siteNodeIds = null;
-		Identifier_Transferable[] topologicalNodeIds = null;
-		Identifier_Transferable[] nodeLinkIds = null;
-		Identifier_Transferable[] physicalNodeLinkIds	= null;
-		Identifier_Transferable[] markIds = null;
-		Identifier_Transferable[] collectorIds = null;
-		try {
-			siteNodeIds = Identifier.createTransferables(this.siteNodes);
-			topologicalNodeIds = Identifier.createTransferables(this.topologicalNodes);
-			nodeLinkIds = Identifier.createTransferables(this.nodeLinks);
-			physicalNodeLinkIds = Identifier.createTransferables(this.physicalLinks);
-			markIds = Identifier.createTransferables(this.marks);
-			collectorIds = Identifier.createTransferables(this.collectors);
-		}
-		catch (IllegalDataException ide) {
-			// Never
-			Log.errorException(ide);
-		}
-
+		Identifier_Transferable[] siteNodeIds = Identifier.createTransferables(this.siteNodes);
+		Identifier_Transferable[] topologicalNodeIds = Identifier.createTransferables(this.topologicalNodes);
+		Identifier_Transferable[] nodeLinkIds = Identifier.createTransferables(this.nodeLinks);
+		Identifier_Transferable[] physicalNodeLinkIds = Identifier.createTransferables(this.physicalLinks);
+		Identifier_Transferable[] markIds = Identifier.createTransferables(this.marks);
+		Identifier_Transferable[] collectorIds = Identifier.createTransferables(this.collectors);
 		return new Map_Transferable(super.getHeaderTransferable(),
 				(Identifier_Transferable) this.getDomainId().getTransferable(),
 				this.name,

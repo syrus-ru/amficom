@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.34 2005/04/08 14:51:00 arseniy Exp $
+ * $Id: NodeLink.java,v 1.35 2005/04/12 17:11:34 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,6 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.NodeLink_Transferable;
-import com.syrus.util.Log;
 
 /**
  * Фрагмент линии на топологической схеме. Фрагмент представляет собой линейный
@@ -39,7 +38,7 @@ import com.syrus.util.Log;
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
  * @author $Author: arseniy $
- * @version $Revision: 1.34 $, $Date: 2005/04/08 14:51:00 $
+ * @version $Revision: 1.35 $, $Date: 2005/04/12 17:11:34 $
  * @module map_v1
  */
 public class NodeLink extends StorableObject implements MapElement {
@@ -176,16 +175,7 @@ public class NodeLink extends StorableObject implements MapElement {
 	}
 
 	public IDLEntity getTransferable() {
-		int i = 0;
-		Identifier_Transferable[] charIds = null;
-		try {
-			charIds = Identifier.createTransferables(this.characteristics);
-		}
-		catch (IllegalDataException ide) {
-			// Never
-			Log.errorException(ide);
-		}
-
+		Identifier_Transferable[] charIds = Identifier.createTransferables(this.characteristics);
 		return new NodeLink_Transferable(super.getHeaderTransferable(),
 				this.name,
 				(Identifier_Transferable) this.physicalLink.getId().getTransferable(),

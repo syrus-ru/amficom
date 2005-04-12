@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.25 2005/04/08 14:51:00 arseniy Exp $
+ * $Id: SiteNodeType.java,v 1.26 2005/04/12 17:11:34 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,6 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.SiteNodeType_Transferable;
-import com.syrus.util.Log;
 
 /**
  * Тип сетевого узла топологической схемы. Существует несколько 
@@ -40,7 +39,7 @@ import com.syrus.util.Log;
  * {@link #PIQUET}, {@link #ATS}, {@link #BUILDING}, {@link #UNBOUND}, 
  * {@link #CABLE_INLET}, {@link #TOWER}
  * @author $Author: arseniy $
- * @version $Revision: 1.25 $, $Date: 2005/04/08 14:51:00 $
+ * @version $Revision: 1.26 $, $Date: 2005/04/12 17:11:34 $
  * @module map_v1
  */
 public class SiteNodeType extends StorableObjectType implements Characterizable {
@@ -172,15 +171,7 @@ public class SiteNodeType extends StorableObjectType implements Characterizable 
 	}
 
 	public IDLEntity getTransferable() {
-		Identifier_Transferable[] charIds = null;
-		try {
-			charIds = Identifier.createTransferables(this.characteristics);
-		}
-		catch (IllegalDataException ide) {
-			// Never
-			Log.errorException(ide);
-		}
-
+		Identifier_Transferable[] charIds = Identifier.createTransferables(this.characteristics);
 		return new SiteNodeType_Transferable(super.getHeaderTransferable(),
 				this.codename,
 				this.name,

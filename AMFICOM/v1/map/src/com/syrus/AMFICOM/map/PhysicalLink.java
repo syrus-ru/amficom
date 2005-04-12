@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.47 2005/04/08 14:51:00 arseniy Exp $
+ * $Id: PhysicalLink.java,v 1.48 2005/04/12 17:11:34 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,19 @@
  */
 
 package com.syrus.AMFICOM.map;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+
+import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -28,20 +41,6 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.map.corba.PhysicalLink_Transferable;
-import com.syrus.util.Log;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-
-import org.omg.CORBA.portable.IDLEntity;
 
 /**
  * Линия топологический схемы. Линия имеет начальный и конечный узлы, 
@@ -52,7 +51,7 @@ import org.omg.CORBA.portable.IDLEntity;
  * тоннель (<code>{@link PhysicalLinkType#TUNNEL}</code>) 
  * и коллектор (<code>{@link PhysicalLinkType#COLLECTOR}</code>).
  * @author $Author: arseniy $
- * @version $Revision: 1.47 $, $Date: 2005/04/08 14:51:00 $
+ * @version $Revision: 1.48 $, $Date: 2005/04/12 17:11:34 $
  * @module map_v1
  * @todo make binding.dimension persistent (just as bindingDimension for PhysicalLinkType)
  * @todo nodeLinks should be transient
@@ -279,14 +278,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	}
 
 	public IDLEntity getTransferable() {
-		Identifier_Transferable[] charIds = null;
-		try {
-			charIds = Identifier.createTransferables(this.characteristics);
-		}
-		catch (IllegalDataException ide) {
-			// Never
-			Log.errorException(ide);
-		}
+		Identifier_Transferable[] charIds = Identifier.createTransferables(this.characteristics);
 		Identifier_Transferable[] nodeLinkIds = new Identifier_Transferable[0];
 
 		return new PhysicalLink_Transferable(super.getHeaderTransferable(),
