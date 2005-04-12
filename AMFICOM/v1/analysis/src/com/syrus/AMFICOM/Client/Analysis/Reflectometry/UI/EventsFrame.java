@@ -320,7 +320,7 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 					 DASH, // отраж
 					 //Double.toString(MathRef.round_3(events[i].data[1] - events[i].data[0])), // потери
 					 Double.toString(MathRef.round_3(events[i].getLoss())), // потери
-					 Double.toString(MathRef.round_4(events[i].data[2] / res_km)) //затух
+					 Double.toString(MathRef.round_4(events[i].linearAsympLoss() / res_km)) //затух
 				});
 				break;
 			case TraceEvent.NON_IDENTIFIED:
@@ -339,7 +339,7 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 					 CONNECTOR,
 					 Double.toString(MathRef.round_3(res_km * events[i].first_point)), //начало
 					 Double.toString(MathRef.round_3(res_km * (events[i].last_point - events[i].first_point))), //протяженность
-					 Double.toString(MathRef.round_2(MathRef.calcReflectance(sigma, events[i].data[0] - events[i].data[2]))), // отраж
+					 Double.toString(MathRef.round_2(MathRef.calcReflectance(sigma, events[i].connectorPeak()))), // отраж
 					 //Double.toString(MathRef.round_3(events[i].data[1] - events[i].data[0])), // потери
 					 Double.toString(MathRef.round_3(events[i].getLoss())), // потери
 					 DASH  // затух
@@ -372,7 +372,7 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 					 TERMINATE,
 					 Double.toString(MathRef.round_3(res_km * events[i].first_point)), //начало
 					 Double.toString(MathRef.round_3(res_km * (events[i].last_point - events[i].first_point))), //протяженность
-					 Double.toString(MathRef.round_2(MathRef.calcReflectance(sigma, events[i].data[0]-events[i].data[1]))), // отраж
+					 Double.toString(MathRef.round_2(MathRef.calcReflectance(sigma, events[i].terminateReflection()))), // отраж
 					 DASH, // потери
 					 DASH  // затух
 				});

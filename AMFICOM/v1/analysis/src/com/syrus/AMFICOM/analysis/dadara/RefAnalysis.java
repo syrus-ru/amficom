@@ -74,36 +74,40 @@ public class RefAnalysis
 			if (type == TraceEvent.LINEAR) {
 			    // TODO: использовать mloss вместо asympB,asympE,
 			    // т.к. (нынешние) asympB,asympE зависят от смежных участков.
-				events[i].data = new double[5];
-				events[i].data[0] = top - asympB;
-				events[i].data[1] = top - asympE;
-				events[i].data[2] = -(asympE - asympB)
+				double[] data = new double[5];
+				data[0] = top - asympB;
+				data[1] = top - asympE;
+				data[2] = -(asympE - asympB)
 						/ (re[i].getEnd() - re[i].getBegin());
 				ModelTrace yMT = new ArrayModelTrace(y); 
-				events[i].data[3] = ReflectogramComparer.getRMSDeviation(mtm.getModelTrace(), yMT, re[i]);
-				events[i].data[4] = ReflectogramComparer.getMaxDeviation(mtm.getModelTrace(), yMT, re[i]);
+				data[3] = ReflectogramComparer.getRMSDeviation(mtm.getModelTrace(), yMT, re[i]);
+				data[4] = ReflectogramComparer.getMaxDeviation(mtm.getModelTrace(), yMT, re[i]);
 				events[i].setLoss(re[i].getMLoss()); 
+				events[i].setData(data);
 			} else if (type == TraceEvent.CONNECTOR) {
-				events[i].data = new double[4];
-				events[i].data[0] = top - asympB;
-				events[i].data[1] = top - asympE;
-				events[i].data[2] = events[i].data[0]
+				double[] data = new double[4];
+				data[0] = top - asympB;
+				data[1] = top - asympE;
+				data[2] = data[0]
 						- re[i].getALet(); // XXX
-				events[i].data[3] = 0; // FIXIT: больше не используется, убрать
+				data[3] = 0; // FIXIT: больше не используется, убрать
 				events[i].setLoss(re[i].getMLoss()); 
+				events[i].setData(data);
 			} else if (type == TraceEvent.LOSS || type == TraceEvent.GAIN) {
-				events[i].data = new double[3];
-				events[i].data[0] = top - asympB;
-				events[i].data[1] = top - asympE;
-				events[i].data[2] = re[i].getMLoss();
+				double[] data = new double[3];
+				data[0] = top - asympB;
+				data[1] = top - asympE;
+				data[2] = re[i].getMLoss();
 				events[i].setLoss(re[i].getMLoss()); 
+				events[i].setData(data);
 			} else if (type == TraceEvent.TERMINATE) {
-				events[i].data = new double[3];
-				events[i].data[0] = top - asympB;
-				events[i].data[1] = events[i].data[0]
+				double[] data = new double[3];
+				data[0] = top - asympB;
+				data[1] = data[0]
 						- re[i].getALet(); // XXX
-				events[i].data[2] = 0; // FIXIT: больше не используется, убрать
+				data[2] = 0; // FIXIT: больше не используется, убрать
 				events[i].setLoss(0); 
+				events[i].setData(data);
 			} else if (type == TraceEvent.INITIATE) {
 				// extrapolate first linear event to x = 0
 				for (int j = 1; j < re.length; j++)
@@ -141,20 +145,20 @@ public class RefAnalysis
 						adz++;
 				}
 
-				events[i].data = new double[4];
-				//events[i].data[0] = top - (Po + re[i].a2_connector) / 2;
-				// //amplitude --- ??? -- XXX
-				events[i].data[0] = top - vmax; // changed by saa
-				events[i].data[1] = top - Po; // Po
-				events[i].data[2] = edz;
-				events[i].data[3] = adz;
+				double[] data = new double[4];
+				data[0] = top - vmax; // changed by saa
+				data[1] = top - Po; // Po
+				data[2] = edz;
+				data[3] = adz;
 				events[i].setLoss(0); 
+				events[i].setData(data);
 			} else if (type == TraceEvent.NON_IDENTIFIED) {
-				events[i].data = new double[3];
-				events[i].data[0] = top - asympB;
-				events[i].data[1] = top - asympE;
-				events[i].data[2] = events[i].data[1] - events[i].data[0]; //eventMaxDeviation
+				double[] data = new double[3];
+				data[0] = top - asympB;
+				data[1] = top - asympE;
+				data[2] = data[1] - data[0]; //eventMaxDeviation
 				events[i].setLoss(re[i].getMLoss()); 
+				events[i].setData(data);
 			}
 		}
 
@@ -168,12 +172,13 @@ public class RefAnalysis
 				maxNoise = y[i];
 		}
 		overallStats = new TraceEvent(TraceEvent.OVERALL_STATS, 0, re[re.length-1].getBegin());
-		overallStats.data = new double[5];
-		overallStats.data[0] = maxY - Po;
-		overallStats.data[1] = maxY - y[lastPoint];
-		overallStats.data[2] = (maxY - maxNoise * 0.98);
-		overallStats.data[3] = (maxY - Po);
-		overallStats.data[4] = re.length;
+		double[] data = new double[5];
+		data[0] = maxY - Po;
+		data[1] = maxY - y[lastPoint];
+		data[2] = (maxY - maxNoise * 0.98);
+		data[3] = (maxY - Po);
+		data[4] = re.length;
+		overallStats.setData(data);
 
 		filtered = new double[y.length];
 		noise = new double[y.length];

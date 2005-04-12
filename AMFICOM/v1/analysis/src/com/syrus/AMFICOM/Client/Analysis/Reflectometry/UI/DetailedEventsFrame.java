@@ -407,10 +407,10 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 						String.valueOf(num + 1),
 						MathRef.round_3((ev.last_point - ev.first_point) * res_km) + " "
 								+ LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_KM),
-						MathRef.round_2(ev.data[0]) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
-						MathRef.round_2(ev.data[1]) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
-						MathRef.round_3(ev.data[3]) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
-						MathRef.round_3(ev.data[4]) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB)},
+						MathRef.round_2(ev.linearData0()) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
+						MathRef.round_2(ev.linearData1()) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
+						MathRef.round_3(ev.linearData3()) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
+						MathRef.round_3(ev.linearData4()) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB)},
 					1);
 				break;
 			case TraceEvent.INITIATE:
@@ -420,11 +420,11 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 						String.valueOf(num + 1),
 						MathRef.round_3((ev.last_point - ev.first_point) * res_km) + " "
 								+ LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_KM),
-						MathRef.round_2(ev.data[0]) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
-						MathRef.round_2(ev.data[1]) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
-						Math.round(ev.data[2] * res_km * 1000d) + " "
+						MathRef.round_2(ev.initialData0()) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
+						MathRef.round_2(ev.initialData1()) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
+						Math.round(ev.initialData2() * res_km * 1000d) + " "
 								+ LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_MT),
-						Math.round(ev.data[3] * res_km * 1000d) + " "
+						Math.round(ev.initialData3() * res_km * 1000d) + " "
 								+ LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_MT)}, 1);
 				break;
 			case TraceEvent.NON_IDENTIFIED:
@@ -434,9 +434,9 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 						String.valueOf(num + 1),
 						MathRef.round_3((ev.last_point - ev.first_point) * res_km) + " "
 								+ LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_KM),
-						MathRef.round_3(ev.data[0]) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
-						MathRef.round_3(ev.data[1]) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
-						MathRef.round_3(ev.data[2]) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB)},
+						MathRef.round_3(ev.nonidData0()) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
+						MathRef.round_3(ev.nonidData1()) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
+						MathRef.round_3(ev.nonidData2()) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB)},
 					1);
 				break;
 			case TraceEvent.CONNECTOR:
@@ -446,10 +446,9 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 						String.valueOf(num + 1),
 						MathRef.round_3((ev.last_point - ev.first_point) * res_km) + " "
 								+ LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_KM),
-						MathRef.round_2(ev.data[0]) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
-						MathRef.round_2(ev.data[1]) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
-						MathRef.round_2(ev.data[2]) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB)
-				// String.valueOf(MathRef.round_3(ev.data[3])) // removed by saa
+						MathRef.round_2(ev.connectorData0()) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
+						MathRef.round_2(ev.connectorData1()) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
+						MathRef.round_2(ev.connectorData2()) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB)
 					}, 1);
 				break;
 			case TraceEvent.LOSS:
@@ -459,8 +458,8 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 						String.valueOf(num + 1),
 						MathRef.round_3((ev.last_point - ev.first_point) * res_km) + " "
 								+ LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_KM),
-						MathRef.round_2(ev.data[0]) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
-						MathRef.round_2(ev.data[1]) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB)},
+						MathRef.round_2(ev.spliceData0()) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
+						MathRef.round_2(ev.spliceData1()) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB)},
 					1);
 				break;
 			case TraceEvent.GAIN:
@@ -470,8 +469,8 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 						String.valueOf(num + 1),
 						MathRef.round_3((ev.last_point - ev.first_point) * res_km) + " "
 								+ LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_KM),
-						MathRef.round_2(ev.data[0]) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
-						MathRef.round_2(ev.data[1]) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB)},
+						MathRef.round_2(ev.spliceData0()) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
+						MathRef.round_2(ev.spliceData1()) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB)},
 					1);
 				break;
 			case TraceEvent.TERMINATE:
@@ -481,9 +480,8 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 						String.valueOf(num + 1),
 						MathRef.round_3((ev.last_point - ev.first_point) * res_km) + " "
 								+ LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_KM),
-						MathRef.round_2(ev.data[0]) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
-						MathRef.round_2(ev.data[1]) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB)
-				// String.valueOf(MathRef.round_3(ev.data[2])) // removed by saa
+						MathRef.round_2(ev.terminateData0()) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
+						MathRef.round_2(ev.terminateData1()) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB)
 					}, 1);
 				break;
 			}

@@ -23,28 +23,24 @@ public class TraceEvent
 	public int type;
 	public int first_point;
 	public int last_point;
-	public double[] data;
+	private double[] data;
 
-	public double loss = 0; // свойство определено для лин.уч., коннекторов, сварок и н/ид; не определено для начала и конца волокна 
+	private double loss = 0; // свойство определено для лин.уч., коннекторов, сварок и н/ид; не определено для начала и конца волокна // FIXME: save/restore 
 
-	public double getLoss()
-	{
+	public double getLoss() {
 		return loss;
 	}
-	public void setLoss(double v)
-	{
+	public void setLoss(double v) {
 		loss = v;
 	}
 
-	public TraceEvent (int type, int first_point, int last_point)
-	{
+	public TraceEvent(int type, int first_point, int last_point) {
 		this.type = type;
 		this.first_point = first_point;
 		this.last_point = last_point;
 	}
 
-	public TraceEvent (byte[] bytearray)
-	{
+	public TraceEvent(byte[] bytearray) {
 		ByteArrayInputStream bais = new ByteArrayInputStream(bytearray);
 		DataInputStream dis = new DataInputStream(bais);
 
@@ -53,6 +49,7 @@ public class TraceEvent
 			type = dis.readInt();
 			first_point = dis.readInt();
 			last_point = dis.readInt();
+			loss = dis.readDouble();
 			int data_length = dis.readInt();
 			data = new double[data_length];
 			for (int i = 0; i < data_length; i++)
@@ -64,13 +61,11 @@ public class TraceEvent
 		}
 	}
 
-	public int getType ()
-	{
+	public int getType() {
 		return type;
 	}
 
-	public byte[] toByteArray()
-	{
+	public byte[] toByteArray() {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		DataOutputStream dos = new DataOutputStream(baos);
 
@@ -79,6 +74,7 @@ public class TraceEvent
 			dos.writeInt(type);
 			dos.writeInt(first_point);
 			dos.writeInt(last_point);
+			dos.writeDouble(loss);
 			dos.writeInt(data.length);
 			for (int i = 0; i < data.length; i++)
 				dos.writeDouble(data[i]);
@@ -90,5 +86,107 @@ public class TraceEvent
 			return null;
 		}
 		return (baos.toByteArray());
+	}
+	
+	// overallStats methods
+	public double overallStatsNoiseLevel() {
+		return data[2];
+	}
+	public double overallStatsLoss() {
+		return Math.abs(data[0] -  data[1]);
+	}
+	public double overallStatsY0() {
+		return data[0];
+	}
+	public double overallStatsY1() {
+		return data[1];
+	}
+	public double overallStatsDD() {
+		return data[2] - data[3];
+	}
+	public int overallStatsEvNum() {
+		return (int) data[4];
+	}
+	
+	// linear methods
+	public double linearData0() {
+		return data[0];
+	}
+	public double linearData1() {
+		return data[1];
+	}
+	public double linearAsympLoss() {
+		return data[2];
+	}
+	public double linearData3() {
+		return data[3];
+	}
+	public double linearData4() {
+		return data[4];
+	}
+	
+	public double spliceData0() {
+		return data[0];
+	}
+	public double spliceData1() {
+		return data[1];
+	}
+
+	// initial event methods
+	public double initialData0() {
+		return data[0];
+	}
+	public double initialData1() {
+		return data[1];
+	}
+	public double initialData2() {
+		return data[2];
+	}
+	public double initialData3() {
+		return data[3];
+	}
+
+	// connector methods
+	public double connectorData0() {
+		return data[0];
+	}
+	public double connectorData1() {
+		return data[1];
+	}
+	public double connectorData2() {
+		return data[2];
+	}
+	public double connectorPeak() {
+		return data[0] - data[2];
+	}
+
+	// terminate event smethods
+	public double terminateData0() {
+		return data[0];
+	}
+	public double terminateData1() {
+		return data[1];
+	}
+	public double terminateReflection() {
+		return data[0] - data[1];
+	}
+
+	// non-identified event methods
+	public double nonidData0() {
+		return data[0];
+	}
+	public double nonidData1() {
+		return data[1];
+	}
+	public double nonidData2() {
+		return data[2];
+	}
+	/**
+	 * sets all data
+	 * @param data2
+	 */
+	public void setData(double[] data2)
+	{
+		data = (double[])data2.clone();
 	}
 }

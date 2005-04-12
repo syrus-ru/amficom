@@ -70,7 +70,7 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 		{
 			TraceEvent ev = ana.overallStats;
 			if (ev != null)
-				noise_level = ev.data[2];
+				noise_level = ev.overallStatsNoiseLevel();
 		}
 
 		min_trace_level = Heap.getMinTraceLevel();
