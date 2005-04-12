@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseCompoundCondition.java,v 1.5 2005/04/02 15:38:17 arseniy Exp $
+ * $Id: DatabaseCompoundCondition.java,v 1.6 2005/04/12 16:48:32 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,9 +13,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 
 import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.CompoundConditionSort;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/04/02 15:38:17 $
+ * @version $Revision: 1.6 $, $Date: 2005/04/12 16:48:32 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -31,40 +32,36 @@ public final class DatabaseCompoundCondition implements DatabaseStorableObjectCo
 		return this.delegate.getEntityCode();
 	}
 
-	private DatabaseStorableObjectCondition reflectDatabaseCondition(StorableObjectCondition condition)
-			throws IllegalDataException {
+	private DatabaseStorableObjectCondition reflectDatabaseCondition(StorableObjectCondition condition) {
 		DatabaseStorableObjectCondition databaseStorableObjectCondition = null;
 		String className = condition.getClass().getName();
 		int lastPoint = className.lastIndexOf('.');
 		String dbClassName = className.substring(0, lastPoint + 1) + "Database" + className.substring(lastPoint + 1);
 		try {
 			Class clazz = Class.forName(dbClassName);
-			Constructor constructor = clazz.getConstructor(new Class[] { condition.getClass()});
+			Constructor constructor = clazz.getConstructor(new Class[] {condition.getClass()});
 			constructor.setAccessible(true);
-			databaseStorableObjectCondition = (DatabaseStorableObjectCondition) constructor
-					.newInstance(new Object[] { condition});
-		} catch (ClassNotFoundException e) {
-			String msg = "DatabaseStorableObjectCondition.reflectDatabaseCondition | Class " + dbClassName //$NON-NLS-1$
-					+ " not found on the classpath";
-			throw new IllegalDataException(msg, e);
-		} catch (SecurityException e) {
-			String msg = "DatabaseStorableObjectCondition.reflectDatabaseCondition | Caught " + e.getMessage();
-			throw new IllegalDataException(msg, e);
-		} catch (NoSuchMethodException e) {
-			String msg = "DatabaseStorableObjectCondition.reflectDatabaseCondition | Class  " + dbClassName
-					+ " haven't constructor (" + className + ")";
-			throw new IllegalDataException(msg, e);
-		} catch (IllegalArgumentException e) {
-			String msg = "DatabaseStorableObjectCondition.reflectDatabaseCondition | Class  " + dbClassName
-					+ " haven't constructor (" + className + ")";
-			throw new IllegalDataException(msg, e);
-		} catch (InstantiationException e) {
-			String msg = "DatabaseStorableObjectCondition.reflectDatabaseCondition | Caught " + e.getMessage();
-			throw new IllegalDataException(msg, e);
-		} catch (IllegalAccessException e) {
-			String msg = "DatabaseStorableObjectCondition.reflectDatabaseCondition | Caught " + e.getMessage();
-			throw new IllegalDataException(msg, e);
-		} catch (InvocationTargetException e) {
+			databaseStorableObjectCondition = (DatabaseStorableObjectCondition) constructor.newInstance(new Object[] {condition});
+		}
+		catch (ClassNotFoundException e) {
+			Log.errorException(e);
+		}
+		catch (SecurityException e) {
+			Log.errorException(e);
+		}
+		catch (NoSuchMethodException e) {
+			Log.errorException(e);
+		}
+		catch (IllegalArgumentException e) {
+			Log.errorException(e);
+		}
+		catch (InstantiationException e) {
+			Log.errorException(e);
+		}
+		catch (IllegalAccessException e) {
+			Log.errorException(e);
+		}
+		catch (InvocationTargetException e) {
 			final Throwable cause = e.getCause();
 			if (cause instanceof AssertionError) {
 				final String message = cause.getMessage();
@@ -72,26 +69,31 @@ public final class DatabaseCompoundCondition implements DatabaseStorableObjectCo
 					assert false;
 				else
 					assert false : message;
-			} else {
-				String msg = "DatabaseStorableObjectCondition.reflectDatabaseCondition | Caught " + e.getMessage();
-				throw new IllegalDataException(msg, e);
+			}
+			else {
+				Log.errorException(e);
 			}
 		}
 		return databaseStorableObjectCondition;
 	}
 
-	public String getSQLQuery() throws IllegalDataException {
-		boolean firstCondition = true;
+	public String getSQLQuery() throws IllegalObjectEntityException {
+		boolean firstStep = true;
 		StringBuffer buffer = new StringBuffer();
 		for (Iterator it = this.delegate.getConditions().iterator(); it.hasNext();) {
-			StorableObjectCondition condition = (StorableObjectCondition) it.next();
-			String query = this.reflectDatabaseCondition(condition).getSQLQuery();
-			if (firstCondition) {
-				firstCondition = false;
+			final StorableObjectCondition condition = (StorableObjectCondition) it.next();
+			final DatabaseStorableObjectCondition databaseStorableObjectCondition = this.reflectDatabaseCondition(condition);
+			if (databaseStorableObjectCondition == null)
+				return TRUE_CONDITION;
+
+			final String query = databaseStorableObjectCondition.getSQLQuery();
+			if (firstStep) {
+				firstStep = false;
 				buffer.append(StorableObjectDatabase.OPEN_BRACKET);
 				buffer.append(query);
 				buffer.append(StorableObjectDatabase.CLOSE_BRACKET);
-			} else {
+			}
+			else {
 				switch (this.delegate.getOperation()) {
 					case CompoundConditionSort._AND:
 						buffer.append(StorableObjectDatabase.SQL_AND);
@@ -106,8 +108,7 @@ public final class DatabaseCompoundCondition implements DatabaseStorableObjectCo
 						buffer.append(StorableObjectDatabase.CLOSE_BRACKET);
 						break;
 					default:
-						throw new IllegalDataException(
-														"DatabaseCompoundCondition.getSQLQuery | Unsupported condition sort");
+						Log.errorMessage("DatabaseCompoundCondition.getSQLQuery | Unsupported condition sort");
 
 				}
 			}
