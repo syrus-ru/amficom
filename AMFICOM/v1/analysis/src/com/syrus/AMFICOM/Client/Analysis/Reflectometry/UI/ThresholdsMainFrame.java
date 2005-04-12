@@ -2,6 +2,8 @@ package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.GraphicsEnvironment;
+import java.awt.Rectangle;
 import java.awt.SystemColor;
 import java.awt.Toolkit;
 import java.awt.event.ComponentEvent;
@@ -205,10 +207,10 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener, CurrentTr
 		desktopPane.add(analysisFrame);
 		graphs.add(analysisFrame);
 
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		Dimension frameSize = new Dimension (screenSize.width, screenSize.height - 24);
-		setSize(frameSize);
-		setLocation(0, 0);
+		GraphicsEnvironment localGraphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		Rectangle maximumWindowBounds = localGraphicsEnvironment.getMaximumWindowBounds();
+		this.setSize(new Dimension(maximumWindowBounds.width, maximumWindowBounds.height));
+		this.setLocation(maximumWindowBounds.x, maximumWindowBounds.y);
 	}
 
 	public void init_module()

@@ -394,12 +394,9 @@ public class AnalyseMainFrame extends JFrame implements bsHashChangeListener,
 
 		// dhf = new DerivHistoFrame(internal_dispatcher);
 
-//		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-//		Dimension frameSize = new Dimension(screenSize.width, screenSize.height - 24);
-
 		GraphicsEnvironment localGraphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		Rectangle maximumWindowBounds = localGraphicsEnvironment.getMaximumWindowBounds();
-		this.setSize(new Dimension(maximumWindowBounds.width - maximumWindowBounds.x, maximumWindowBounds.height - maximumWindowBounds.y));
+		this.setSize(new Dimension(maximumWindowBounds.width, maximumWindowBounds.height));
 		this.setLocation(maximumWindowBounds.x, maximumWindowBounds.y);
 
 		Environment.addWindow(this);

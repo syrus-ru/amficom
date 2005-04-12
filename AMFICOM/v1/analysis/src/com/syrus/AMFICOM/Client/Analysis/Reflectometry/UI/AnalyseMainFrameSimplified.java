@@ -138,10 +138,10 @@ implements bsHashChangeListener, OperationListener, EtalonMTMListener, CurrentTr
 		desktopPane.add(anaSelectFrame);
 		tables.add(anaSelectFrame);
 
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		Dimension frameSize = new Dimension (screenSize.width, screenSize.height - 24);
-		setSize(frameSize);
-		setLocation(0, 0);
+		GraphicsEnvironment localGraphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		Rectangle maximumWindowBounds = localGraphicsEnvironment.getMaximumWindowBounds();
+		this.setSize(new Dimension(maximumWindowBounds.width, maximumWindowBounds.height));
+		this.setLocation(maximumWindowBounds.x, maximumWindowBounds.y);
 	}
 
 	public void init_module()
