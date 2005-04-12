@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.66 2005/04/12 08:11:43 bass Exp $
+ * $Id: StorableObjectPool.java,v 1.67 2005/04/12 16:16:11 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,8 +25,8 @@ import java.util.Set;
 import org.omg.CORBA.portable.IDLEntity;
 
 /**
- * @version $Revision: 1.66 $, $Date: 2005/04/12 08:11:43 $
- * @author $Author: bass $
+ * @version $Revision: 1.67 $, $Date: 2005/04/12 16:16:11 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public abstract class StorableObjectPool {
@@ -247,7 +247,8 @@ public abstract class StorableObjectPool {
 								+ ", dependency level " + (-dependencyKey.intValue())); //$NON-NLS-1$
 
 				}
-			} else
+			}
+			else
 				Log.errorMessage("Cannot find levelSavingMap for dependency level " + (-dependencyKey.intValue())); //$NON-NLS-1$
 
 		}
@@ -268,7 +269,7 @@ public abstract class StorableObjectPool {
 			// if (object == null)
 			// continue;
 			if (object instanceof Identifier)
-				dependencyObject = this.getStorableObjectExt((Identifier) object);
+				dependencyObject = this.getStorableObjectExt((Identifier) object, false);
 			else if (object instanceof StorableObject)
 				dependencyObject = (StorableObject) object;
 			else
@@ -296,12 +297,12 @@ public abstract class StorableObjectPool {
 		}
 	}
 
-	private StorableObject getStorableObjectExt(Identifier id) throws ApplicationException {
+	private StorableObject getStorableObjectExt(Identifier id, boolean useLoader) throws ApplicationException {
 		short groupCode = ObjectGroupEntities.getGroupCode(id.getMajor());
 		if (groupCode == this.selfGroupCode)
-			return this.getStorableObjectImpl(id, false);
+			return this.getStorableObjectImpl(id, useLoader);
 
-		return getStorableObjectOfGroup(id, false, groupCode);
+		return getStorableObjectOfGroup(id, useLoader, groupCode);
 	}
 
 	protected static StorableObject getStorableObjectOfGroup(Identifier id, boolean useLoader, short groupCode)
