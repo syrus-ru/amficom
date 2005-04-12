@@ -1,5 +1,5 @@
 /*
- * $Id: MCMMeasurementObjectLoader.java,v 1.28 2005/04/11 12:42:38 arseniy Exp $
+ * $Id: MCMMeasurementObjectLoader.java,v 1.29 2005/04/12 08:29:16 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -52,8 +52,8 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/04/11 12:42:38 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.29 $, $Date: 2005/04/12 08:29:16 $
+ * @author $Author: bass $
  * @module mcm_v1
  */
 final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
@@ -775,8 +775,8 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 
 
 
-	public void delete(java.util.Set objects) throws IllegalDataException {
-		throw new UnsupportedOperationException("Method not implemented, objects: " + objects);
+	public void delete(final java.util.Set identifiables) {
+		throw new UnsupportedOperationException("Method not implemented, objects: " + identifiables);
 	}
 	public void delete(Identifier id) throws IllegalDataException {
 		throw new UnsupportedOperationException("Method not implemented, id: " + id);

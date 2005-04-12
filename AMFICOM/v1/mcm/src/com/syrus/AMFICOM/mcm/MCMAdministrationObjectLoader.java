@@ -1,5 +1,5 @@
 /*
-* $Id: MCMAdministrationObjectLoader.java,v 1.13 2005/04/04 14:12:11 arseniy Exp $
+* $Id: MCMAdministrationObjectLoader.java,v 1.14 2005/04/12 08:29:16 bass Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -37,8 +37,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/04/04 14:12:11 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2005/04/12 08:29:16 $
+ * @author $Author: bass $
  * @module mcm_v1
  */
 final class MCMAdministrationObjectLoader extends DatabaseAdministrationObjectLoader {
@@ -303,8 +303,8 @@ final class MCMAdministrationObjectLoader extends DatabaseAdministrationObjectLo
 
 
 
-	public void delete(Set objects) throws IllegalDataException {
-		throw new UnsupportedOperationException("Method not implemented, objects: " + objects);
+	public void delete(final Set identifiables) {
+		throw new UnsupportedOperationException("Method not implemented, objects: " + identifiables);
 	}
 
 	public void delete(Identifier id) throws IllegalDataException {

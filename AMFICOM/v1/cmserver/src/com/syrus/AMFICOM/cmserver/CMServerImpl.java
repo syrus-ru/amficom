@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.96 2005/04/08 09:30:59 bass Exp $
+ * $Id: CMServerImpl.java,v 1.97 2005/04/12 08:29:16 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.96 $, $Date: 2005/04/08 09:30:59 $
+ * @version $Revision: 1.97 $, $Date: 2005/04/12 08:29:16 $
  * @author $Author: bass $
  * @module cmserver_v1
  */
@@ -235,16 +235,10 @@ public class CMServerImpl extends CMMeasurementTransmit {
 			else
 				Log.errorMessage("CMServerImpl.deleteList | Wrong entity code: " + entityCode); //$NON-NLS-1$
 		}
-		try {
-			GeneralStorableObjectPool.delete(generalList);
-			AdministrationStorableObjectPool.delete(administrationList);
-			ConfigurationStorableObjectPool.delete(configurationList);
-			MeasurementStorableObjectPool.delete(measurementList);
-		}
-		catch (IllegalDataException ide) {
-			Log.errorException(ide);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_DELETE, CompletionStatus.COMPLETED_NO, ide.getMessage());
-		}
+		GeneralStorableObjectPool.delete(generalList);
+		AdministrationStorableObjectPool.delete(administrationList);
+		ConfigurationStorableObjectPool.delete(configurationList);
+		MeasurementStorableObjectPool.delete(measurementList);
 	}
 
 ///////////////////////////////////////// Identifier Generator 	//////////////////////////////////////////////////

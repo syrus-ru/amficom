@@ -1,5 +1,5 @@
 /*
- * $Id: ARServerImpl.java,v 1.10 2005/04/08 09:09:26 bass Exp $
+ * $Id: ARServerImpl.java,v 1.11 2005/04/12 08:29:16 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -51,7 +51,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/04/08 09:09:26 $
+ * @version $Revision: 1.11 $, $Date: 2005/04/12 08:29:16 $
  * @author $Author: bass $
  * @module arserver_v1
  */
@@ -77,13 +77,7 @@ public final class ARServerImpl extends ARServerPOA {
 			throws AMFICOMRemoteException {
 		Log.debugMessage("ARServerImpl.deleteList | Trying to delete... ", Log.DEBUGLEVEL03); //$NON-NLS-1$
 		final Set idList = Identifier.fromTransferables(id_Transferables);
-		try {
-			ResourceStorableObjectPool.delete(idList);
-		} catch (IllegalDataException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_DELETE, CompletionStatus.COMPLETED_NO, e
-					.getMessage());
-		}
+		ResourceStorableObjectPool.delete(idList);
 	}
 	
 	// receive methods

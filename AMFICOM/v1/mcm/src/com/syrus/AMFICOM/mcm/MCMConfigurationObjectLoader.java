@@ -1,5 +1,5 @@
 /*
- * $Id: MCMConfigurationObjectLoader.java,v 1.28 2005/04/11 12:40:45 arseniy Exp $
+ * $Id: MCMConfigurationObjectLoader.java,v 1.29 2005/04/12 08:29:16 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -61,8 +61,8 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/04/11 12:40:45 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.29 $, $Date: 2005/04/12 08:29:16 $
+ * @author $Author: bass $
  * @module mcm_v1
  */
 
@@ -1081,8 +1081,8 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 
 
 
-	public void delete(Set objects) throws IllegalDataException {
-		throw new UnsupportedOperationException("Method not implemented, objects: " + objects);
+	public void delete(final Set identifiables) {
+		throw new UnsupportedOperationException("Method not implemented, objects: " + identifiables);
 	}
 
 	public void delete(Identifier id) throws IllegalDataException {
