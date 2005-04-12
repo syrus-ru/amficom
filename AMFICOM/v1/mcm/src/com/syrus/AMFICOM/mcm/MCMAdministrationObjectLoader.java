@@ -1,5 +1,5 @@
 /*
-* $Id: MCMAdministrationObjectLoader.java,v 1.14 2005/04/12 08:29:16 bass Exp $
+* $Id: MCMAdministrationObjectLoader.java,v 1.15 2005/04/12 17:26:17 arseniy Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -25,7 +25,6 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
@@ -37,8 +36,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/04/12 08:29:16 $
- * @author $Author: bass $
+ * @version $Revision: 1.15 $, $Date: 2005/04/12 17:26:17 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 final class MCMAdministrationObjectLoader extends DatabaseAdministrationObjectLoader {
@@ -307,7 +306,7 @@ final class MCMAdministrationObjectLoader extends DatabaseAdministrationObjectLo
 		throw new UnsupportedOperationException("Method not implemented, objects: " + identifiables);
 	}
 
-	public void delete(Identifier id) throws IllegalDataException {
+	public void delete(Identifier id) {
 		throw new UnsupportedOperationException("Method not implemented, id: " + id);
 	}
 

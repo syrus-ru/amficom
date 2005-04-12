@@ -1,5 +1,5 @@
 /*
- * $Id: MCMMeasurementObjectLoader.java,v 1.29 2005/04/12 08:29:16 bass Exp $
+ * $Id: MCMMeasurementObjectLoader.java,v 1.30 2005/04/12 17:26:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,6 @@ import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.SessionContext;
@@ -52,8 +51,8 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/04/12 08:29:16 $
- * @author $Author: bass $
+ * @version $Revision: 1.30 $, $Date: 2005/04/12 17:26:46 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
@@ -299,14 +298,7 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 	public java.util.Set loadMeasurementTypes(java.util.Set ids) throws RetrieveObjectException {
 		MeasurementTypeDatabase database = MeasurementDatabaseContext.getMeasurementTypeDatabase();
 		java.util.Set objects = super.retrieveFromDatabase(database, ids);
-		Identifier_Transferable[] loadIdsT = null;
-		try {
-			loadIdsT = super.createLoadIdsTransferable(ids, objects);
-		}
-		catch (IllegalDataException ide) {
-			// Never
-			Log.errorException(ide);
-		}
+		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
 		if (loadIdsT.length == 0)
 			return objects;
 
@@ -351,14 +343,7 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 	public java.util.Set loadAnalysisTypes(java.util.Set ids) throws RetrieveObjectException {
 		AnalysisTypeDatabase database = MeasurementDatabaseContext.getAnalysisTypeDatabase();
 		java.util.Set objects = super.retrieveFromDatabase(database, ids);
-		Identifier_Transferable[] loadIdsT = null;
-		try {
-			loadIdsT = super.createLoadIdsTransferable(ids, objects);
-		}
-		catch (IllegalDataException ide) {
-			// Never
-			Log.errorException(ide);
-		}
+		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
 		if (loadIdsT.length == 0)
 			return objects;
 
@@ -403,14 +388,7 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 	public java.util.Set loadEvaluationTypes(java.util.Set ids) throws RetrieveObjectException {
 		EvaluationTypeDatabase database = MeasurementDatabaseContext.getEvaluationTypeDatabase();
 		java.util.Set objects = super.retrieveFromDatabase(database, ids);
-		Identifier_Transferable[] loadIdsT = null;
-		try {
-			loadIdsT = super.createLoadIdsTransferable(ids, objects);
-		}
-		catch (IllegalDataException ide) {
-			// Never
-			Log.errorException(ide);
-		}
+		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
 		if (loadIdsT.length == 0)
 			return objects;
 
@@ -455,14 +433,7 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 	public java.util.Set loadMeasurementSetups(java.util.Set ids) throws RetrieveObjectException {
 		MeasurementSetupDatabase database = MeasurementDatabaseContext.getMeasurementSetupDatabase();
 		java.util.Set objects = super.retrieveFromDatabase(database, ids);
-		Identifier_Transferable[] loadIdsT = null;
-		try {
-			loadIdsT = super.createLoadIdsTransferable(ids, objects);
-		}
-		catch (IllegalDataException ide) {
-			// Never
-			Log.errorException(ide);
-		}
+		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
 		if (loadIdsT.length == 0)
 			return objects;
 
@@ -507,14 +478,7 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 	public java.util.Set loadSets(java.util.Set ids) throws RetrieveObjectException {
 		SetDatabase database = MeasurementDatabaseContext.getSetDatabase();
 		java.util.Set objects = super.retrieveFromDatabase(database, ids);
-		Identifier_Transferable[] loadIdsT = null;
-		try {
-			loadIdsT = super.createLoadIdsTransferable(ids, objects);
-		}
-		catch (IllegalDataException ide) {
-			// Never
-			Log.errorException(ide);
-		}
+		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
 		if (loadIdsT.length == 0)
 			return objects;
 
@@ -559,14 +523,7 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 	public java.util.Set loadTemporalPatterns(java.util.Set ids) throws RetrieveObjectException {
 		TemporalPatternDatabase database = MeasurementDatabaseContext.getTemporalPatternDatabase();
 		java.util.Set objects = super.retrieveFromDatabase(database, ids);
-		Identifier_Transferable[] loadIdsT = null;
-		try {
-			loadIdsT = super.createLoadIdsTransferable(ids, objects);
-		}
-		catch (IllegalDataException ide) {
-			// Never
-			Log.errorException(ide);
-		}
+		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
 		if (loadIdsT.length == 0)
 			return objects;
 
@@ -778,7 +735,7 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 	public void delete(final java.util.Set identifiables) {
 		throw new UnsupportedOperationException("Method not implemented, objects: " + identifiables);
 	}
-	public void delete(Identifier id) throws IllegalDataException {
+	public void delete(Identifier id) {
 		throw new UnsupportedOperationException("Method not implemented, id: " + id);
 	}
 

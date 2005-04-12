@@ -1,5 +1,5 @@
 /*
-* $Id: MCMGeneralObjectLoader.java,v 1.12 2005/04/12 08:29:16 bass Exp $
+* $Id: MCMGeneralObjectLoader.java,v 1.13 2005/04/12 17:26:17 arseniy Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -21,7 +21,6 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseGeneralObjectLoader;
 import com.syrus.AMFICOM.general.GeneralDatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.ParameterTypeDatabase;
@@ -38,8 +37,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/04/12 08:29:16 $
- * @author $Author: bass $
+ * @version $Revision: 1.13 $, $Date: 2005/04/12 17:26:17 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
@@ -168,14 +167,7 @@ final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
 	public Set loadParameterTypes(Set ids) throws RetrieveObjectException {
 		ParameterTypeDatabase database = GeneralDatabaseContext.getParameterTypeDatabase();
 		Set objects = super.retrieveFromDatabase(database, ids);
-		Identifier_Transferable[] loadIdsT = null;
-		try {
-			loadIdsT = super.createLoadIdsTransferable(ids, objects);
-		}
-		catch (IllegalDataException ide) {
-			// Never
-			Log.errorException(ide);
-		}
+		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
 		if (loadIdsT.length == 0)
 			return objects;
 
@@ -214,14 +206,7 @@ final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
 	public Set loadCharacteristicTypes(Set ids) throws RetrieveObjectException {
 		CharacteristicTypeDatabase database = GeneralDatabaseContext.getCharacteristicTypeDatabase();
 		Set objects = super.retrieveFromDatabase(database, ids);
-		Identifier_Transferable[] loadIdsT = null;
-		try {
-			loadIdsT = super.createLoadIdsTransferable(ids, objects);
-		}
-		catch (IllegalDataException ide) {
-			// Never
-			Log.errorException(ide);
-		}
+		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
 		if (loadIdsT.length == 0)
 			return objects;
 
@@ -260,14 +245,7 @@ final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
 	public Set loadCharacteristics(Set ids) throws RetrieveObjectException {
 		CharacteristicDatabase database = GeneralDatabaseContext.getCharacteristicDatabase();
 		Set objects = super.retrieveFromDatabase(database, ids);
-		Identifier_Transferable[] loadIdsT = null;
-		try {
-			loadIdsT = super.createLoadIdsTransferable(ids, objects);
-		}
-		catch (IllegalDataException ide) {
-			// Never
-			Log.errorException(ide);
-		}
+		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
 		if (loadIdsT.length == 0)
 			return objects;
 
@@ -364,7 +342,7 @@ final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
 		throw new UnsupportedOperationException("Method not implemented, objects: " + identifiables);
 	}
 
-	public void delete(Identifier id) throws IllegalDataException {
+	public void delete(Identifier id) {
 		throw new UnsupportedOperationException("Method not implemented, id: " + id);
 	}
 }
