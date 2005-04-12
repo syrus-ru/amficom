@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.18 2005/04/12 16:40:32 saa Exp $
+ * $Id: Heap.java,v 1.19 2005/04/12 16:51:29 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.io.BellcoreStructure;
  * использование остальных методов работы с BS
  * 
  * @author $Author: saa $
- * @version $Revision: 1.18 $, $Date: 2005/04/12 16:40:32 $
+ * @version $Revision: 1.19 $, $Date: 2005/04/12 16:51:29 $
  * @module
  */
 public class Heap
@@ -404,7 +404,8 @@ public class Heap
 		currentTrace = PRIMARY_TRACE_KEY;
 		notifyCurrentTraceChanged();
 	}
-	public static void setMTMEtalon(ModelTraceManager mtm) {
+	public static void setMTMEtalon(ModelTraceManager mtm)
+	{
 		etalonMTM = mtm;
 		if (mtm == null)
 			notifyEtalonMTMRemoved();
