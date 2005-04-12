@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.65 2005/04/08 14:11:01 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.66 2005/04/12 08:11:43 bass Exp $
  *
  * Copyright ø 2004 Syrus Systems.
  * Ó¡’ﬁŒœ-‘≈»Œ…ﬁ≈”À…  √≈Œ‘“.
@@ -7,6 +7,10 @@
  */
 
 package com.syrus.AMFICOM.general;
+
+import com.syrus.io.LRUMapSaver;
+import com.syrus.util.LRUMap;
+import com.syrus.util.Log;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -20,13 +24,9 @@ import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
 
-import com.syrus.io.LRUMapSaver;
-import com.syrus.util.LRUMap;
-import com.syrus.util.Log;
-
 /**
- * @version $Revision: 1.65 $, $Date: 2005/04/08 14:11:01 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.66 $, $Date: 2005/04/12 08:11:43 $
+ * @author $Author: bass $
  * @module general_v1
  */
 public abstract class StorableObjectPool {
@@ -34,7 +34,7 @@ public abstract class StorableObjectPool {
 	/**
 	 * ‚·Í·Ó-symbol {@value}
 	 */
-	public static final String ‚·Í·Ó = "[:]/\\/\\/\\/\\/|||||||||||||||||||||||||||[:]";
+	public static final String ‚·Í·Ó = "[:]/\\/\\/\\/\\/|||||||||||||||||||||||||||[:]"; //$NON-NLS-1$
 
 	protected Class cacheMapClass;
 
@@ -54,7 +54,7 @@ public abstract class StorableObjectPool {
 
 	public StorableObjectPool(short selfGroupCode, final Class cacheMapClass) {
 		this.selfGroupCode = selfGroupCode;
-		this.selfGroupName = ObjectGroupEntities.codeToString(this.selfGroupCode).replaceAll("Group$", "");
+		this.selfGroupName = ObjectGroupEntities.codeToString(this.selfGroupCode).replaceAll("Group$", ""); //$NON-NLS-1$ //$NON-NLS-2$
 		this.cacheMapClass = cacheMapClass;
 	}
 
@@ -72,28 +72,28 @@ public abstract class StorableObjectPool {
 //						+ "/" + short1 + "(" + objectEntityCode + ") size " + poolSize + "added", Log.DEBUGLEVEL07);
 			}
 			else
-				throw new UnsupportedOperationException(this.selfGroupName + "StorableObjectPool.addObjectPool | CacheMapClass "
-						+ this.cacheMapClass.getName() + " must extend LRUMap");
+				throw new UnsupportedOperationException(this.selfGroupName + "StorableObjectPool.addObjectPool | CacheMapClass " //$NON-NLS-1$
+						+ this.cacheMapClass.getName() + " must extend LRUMap"); //$NON-NLS-1$
 		}
 		catch (SecurityException e) {
-			throw new UnsupportedOperationException(this.selfGroupName + "StorableObjectPool.addObjectPool | CacheMapClass "
-					+ this.cacheMapClass.getName() + " SecurityException " + e.getMessage());
+			throw new UnsupportedOperationException(this.selfGroupName + "StorableObjectPool.addObjectPool | CacheMapClass " //$NON-NLS-1$
+					+ this.cacheMapClass.getName() + " SecurityException " + e.getMessage()); //$NON-NLS-1$
 		}
 		catch (IllegalArgumentException e) {
-			throw new UnsupportedOperationException(this.selfGroupName + "StorableObjectPool.addObjectPool | CacheMapClass "
-					+ this.cacheMapClass.getName() + " IllegalArgumentException " + e.getMessage());
+			throw new UnsupportedOperationException(this.selfGroupName + "StorableObjectPool.addObjectPool | CacheMapClass " //$NON-NLS-1$
+					+ this.cacheMapClass.getName() + " IllegalArgumentException " + e.getMessage()); //$NON-NLS-1$
 		}
 		catch (NoSuchMethodException e) {
-			throw new UnsupportedOperationException(this.selfGroupName + "StorableObjectPool.addObjectPool | CacheMapClass "
-					+ this.cacheMapClass.getName() + " NoSuchMethodException " + e.getMessage());
+			throw new UnsupportedOperationException(this.selfGroupName + "StorableObjectPool.addObjectPool | CacheMapClass " //$NON-NLS-1$
+					+ this.cacheMapClass.getName() + " NoSuchMethodException " + e.getMessage()); //$NON-NLS-1$
 		}
 		catch (InstantiationException e) {
-			throw new UnsupportedOperationException(this.selfGroupName + "StorableObjectPool.addObjectPool | CacheMapClass "
-					+ this.cacheMapClass.getName() + " InstantiationException " + e.getMessage());
+			throw new UnsupportedOperationException(this.selfGroupName + "StorableObjectPool.addObjectPool | CacheMapClass " //$NON-NLS-1$
+					+ this.cacheMapClass.getName() + " InstantiationException " + e.getMessage()); //$NON-NLS-1$
 		}
 		catch (IllegalAccessException e) {
-			throw new UnsupportedOperationException(this.selfGroupName + "StorableObjectPool.addObjectPool | CacheMapClass "
-					+ this.cacheMapClass.getName() + " IllegalAccessException " + e.getMessage());
+			throw new UnsupportedOperationException(this.selfGroupName + "StorableObjectPool.addObjectPool | CacheMapClass " //$NON-NLS-1$
+					+ this.cacheMapClass.getName() + " IllegalAccessException " + e.getMessage()); //$NON-NLS-1$
 		}
 		catch (InvocationTargetException e) {
 			final Throwable cause = e.getCause();
@@ -105,8 +105,8 @@ public abstract class StorableObjectPool {
 					assert false : message;
 			}
 			else
-				throw new UnsupportedOperationException(this.selfGroupName + "StorableObjectPool.addObjectPool | CacheMapClass "
-						+ this.cacheMapClass.getName() + " InvocationTargetException " + e.getMessage());
+				throw new UnsupportedOperationException(this.selfGroupName + "StorableObjectPool.addObjectPool | CacheMapClass " //$NON-NLS-1$
+						+ this.cacheMapClass.getName() + " InvocationTargetException " + e.getMessage()); //$NON-NLS-1$
 		}
 
 	}
@@ -144,8 +144,8 @@ public abstract class StorableObjectPool {
 			lruMap.remove(id);
 		else
 			Log.errorMessage(this.selfGroupName
-					+ "StorableObjectPool.deleteImpl | Cannot find object pool for entity '"
-					+ ObjectEntities.codeToString(entityCode.shortValue()) + "' entity code: " + entityCode);
+					+ "StorableObjectPool.deleteImpl | Cannot find object pool for entity '" //$NON-NLS-1$
+					+ ObjectEntities.codeToString(entityCode.shortValue()) + "' entity code: " + entityCode); //$NON-NLS-1$
 
 		if (this.deletedIds == null)
 			this.deletedIds = Collections.synchronizedSet(new HashSet());
@@ -155,18 +155,9 @@ public abstract class StorableObjectPool {
 		// this.deleteStorableObject(id);
 	}
 
-	protected final synchronized void deleteImpl(final Set objects) throws IllegalDataException {
-		Object object;
-		Identifier id;
-		for (Iterator it = objects.iterator(); it.hasNext();) {
-			object = it.next();
-			if (object instanceof Identifier)
-				id = (Identifier) object;
-			else if (object instanceof Identifiable)
-				id = ((Identifiable) object).getId();
-			else
-				throw new IllegalDataException(this.selfGroupName + "StorableObjectPool.deleteImpl | Object "
-						+ object.getClass().getName() + " isn't Identifier or Identifiable");
+	protected final synchronized void deleteImpl(final Set identifiables) {
+		for (final Iterator identifiableIterator = identifiables.iterator(); identifiableIterator.hasNext();) {
+			final Identifier id = ((Identifiable) identifiableIterator.next()).getId();
 
 			if (this.deletedIds == null)
 				this.deletedIds = Collections.synchronizedSet(new HashSet());
@@ -179,8 +170,8 @@ public abstract class StorableObjectPool {
 				lruMap.remove(id);
 			else
 				Log.errorMessage(this.selfGroupName
-						+ "StorableObjectPool.deleteImpl | Cannot find object pool for entity '"
-						+ ObjectEntities.codeToString(entityCode.shortValue()) + "' entity code: " + entityCode);
+						+ "StorableObjectPool.deleteImpl | Cannot find object pool for entity '" //$NON-NLS-1$
+						+ ObjectEntities.codeToString(entityCode.shortValue()) + "' entity code: " + entityCode); //$NON-NLS-1$
 		}
 
 		/* do not delete object immediatly, delete during flushing */
@@ -189,7 +180,7 @@ public abstract class StorableObjectPool {
 
 	protected abstract void deleteStorableObject(final Identifier id) throws IllegalDataException;
 
-	protected abstract void deleteStorableObjects(final Set objects) throws IllegalDataException;
+	protected abstract void deleteStorableObjects(final Set identifiables) throws IllegalDataException;
 
 	/**
 	 * This method is only invoked by this class' descendants, using their
@@ -232,13 +223,12 @@ public abstract class StorableObjectPool {
 					this.saveWithDependencies((StorableObject) poolIterator.next(), 0);
 			} else
 				Log.errorMessage(this.selfGroupName
-						+ "StorableObjectPool.flushImpl | Cannot find object pool for entity code: '"
-						+ ObjectEntities.codeToString(entityCode) + "'");
+						+ "StorableObjectPool.flushImpl | Cannot find object pool for entity code: '" //$NON-NLS-1$
+						+ ObjectEntities.codeToString(entityCode) + "'"); //$NON-NLS-1$
 		}
 
 		/* Save objects in order from savingObjectsMap */
 		Integer dependencyKey;
-		Short entityKey;
 		Map levelSavingObjectsMap;
 		Set levelEntitySavingObjects;
 		for (Iterator levelIt = this.savingObjectsMap.keySet().iterator(); levelIt.hasNext();) {
@@ -247,18 +237,18 @@ public abstract class StorableObjectPool {
 
 			if (levelSavingObjectsMap != null) {
 				for (Iterator entityIt = levelSavingObjectsMap.keySet().iterator(); entityIt.hasNext();) {
-					entityKey = (Short) entityIt.next();
-					levelEntitySavingObjects = (Set) levelSavingObjectsMap.get(entityKey);
+					final Short entityCode = (Short) entityIt.next();
+					levelEntitySavingObjects = (Set) levelSavingObjectsMap.get(entityCode);
 
 					if (levelEntitySavingObjects != null)
-						this.saveStorableObjects(entityKey.shortValue(), levelEntitySavingObjects, force);
+						this.saveStorableObjects(levelEntitySavingObjects, force);
 					else
-						Log.errorMessage("Cannot find levelEntitySavingObjects for entity code " + entityKey
-								+ ", dependency level " + (-dependencyKey.intValue()));
+						Log.errorMessage("Cannot find levelEntitySavingObjects for entity code " + entityCode //$NON-NLS-1$
+								+ ", dependency level " + (-dependencyKey.intValue())); //$NON-NLS-1$
 
 				}
 			} else
-				Log.errorMessage("Cannot find levelSavingMap for dependency level " + (-dependencyKey.intValue()));
+				Log.errorMessage("Cannot find levelSavingMap for dependency level " + (-dependencyKey.intValue())); //$NON-NLS-1$
 
 		}
 	}
@@ -282,8 +272,8 @@ public abstract class StorableObjectPool {
 			else if (object instanceof StorableObject)
 				dependencyObject = (StorableObject) object;
 			else
-				throw new IllegalDataException("dependency for object '" + id
-						+ "' neither Identifier nor StorableObject");
+				throw new IllegalDataException("dependency for object '" + id //$NON-NLS-1$
+						+ "' neither Identifier nor StorableObject"); //$NON-NLS-1$
 
 			if (dependencyObject != null)
 				this.saveWithDependencies(dependencyObject, dependencyLevel + 1);
@@ -316,14 +306,14 @@ public abstract class StorableObjectPool {
 
 	protected static StorableObject getStorableObjectOfGroup(Identifier id, boolean useLoader, short groupCode)
 			throws ApplicationException {
-		final String groupName = ObjectGroupEntities.codeToString(groupCode).replaceAll("Group$", "");
-		String className = "com.syrus.AMFICOM." + groupName.toLowerCase() + "." + groupName + "StorableObjectPool";
+		final String groupName = ObjectGroupEntities.codeToString(groupCode).replaceAll("Group$", ""); //$NON-NLS-1$ //$NON-NLS-2$
+		String className = "com.syrus.AMFICOM." + groupName.toLowerCase() + "." + groupName + "StorableObjectPool"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		Class clazz;
 
 		StorableObject storableObject = null;
 		try {
 			clazz = Class.forName(className);
-			Method getStorableObjectMethod = clazz.getDeclaredMethod("getStorableObject", new Class[] {Identifier.class, boolean.class});
+			Method getStorableObjectMethod = clazz.getDeclaredMethod("getStorableObject", new Class[] {Identifier.class, boolean.class}); //$NON-NLS-1$
 			storableObject = (StorableObject) getStorableObjectMethod.invoke(null, new Object[] {id,
 					useLoader ? Boolean.TRUE : Boolean.FALSE});
 		}
@@ -353,7 +343,7 @@ public abstract class StorableObjectPool {
 	}
 
 	protected final StorableObject getStorableObjectImpl(final Identifier objectId, final boolean useLoader) throws ApplicationException {
-		assert objectId != null : "Null identifier supplied";
+		assert objectId != null : "Null identifier supplied"; //$NON-NLS-1$
 
 		if (objectId != null) {
 			/* do not load deleted objects */
@@ -378,16 +368,16 @@ public abstract class StorableObjectPool {
 				return storableObject;
 			}
 
-			Log.errorMessage(this.selfGroupName + "StorableObjectPool.getStorableObjectImpl | Cannot find object pool for objectId: '"
-					+ objectId.toString() + "' entity code: '" + ObjectEntities.codeToString(objectEntityCode) + "'");
+			Log.errorMessage(this.selfGroupName + "StorableObjectPool.getStorableObjectImpl | Cannot find object pool for objectId: '" //$NON-NLS-1$
+					+ objectId.toString() + "' entity code: '" + ObjectEntities.codeToString(objectEntityCode) + "'"); //$NON-NLS-1$ //$NON-NLS-2$
 			for (Iterator it = this.objectPoolMap.keySet().iterator(); it.hasNext();) {
 				final Short entityCode = (Short) it.next();
-				Log.debugMessage(this.selfGroupName + "StorableObjectPool.getStorableObjectImpl | available "
-						+ ObjectEntities.codeToString(entityCode) + " / " + entityCode, Log.DEBUGLEVEL05);
+				Log.debugMessage(this.selfGroupName + "StorableObjectPool.getStorableObjectImpl | available " //$NON-NLS-1$
+						+ ObjectEntities.codeToString(entityCode) + " / " + entityCode, Log.DEBUGLEVEL05); //$NON-NLS-1$
 			}
 		}
 		else {
-			Log.errorMessage(this.selfGroupName + "StorableObjectPool.getStorableObjectImpl | NULL identifier supplied");
+			Log.errorMessage(this.selfGroupName + "StorableObjectPool.getStorableObjectImpl | NULL identifier supplied"); //$NON-NLS-1$
 		}
 		return null;
 	}
@@ -403,15 +393,15 @@ public abstract class StorableObjectPool {
 	protected final Set getStorableObjectsByConditionButIdsImpl(final Set ids,
 			final StorableObjectCondition condition,
 			final boolean useLoader) throws ApplicationException {
-		assert ids != null : "Supply an empty set instead";
-		assert condition != null : "Supply EquivalentCondition instead";
+		assert ids != null : "Supply an empty set instead"; //$NON-NLS-1$
+		assert condition != null : "Supply EquivalentCondition instead"; //$NON-NLS-1$
 
 		Set soSet = null;
 		Short entityCode = condition.getEntityCode();
 		LRUMap objectPool = (LRUMap) this.objectPoolMap.get(entityCode);
 
-		assert objectPool != null : "Cannot find object pool for entity code " + condition.getEntityCode()
-				+ ", entity: '" + ObjectEntities.codeToString(entityCode) + " , condition class:" + condition.getClass().getName();
+		assert objectPool != null : "Cannot find object pool for entity code " + condition.getEntityCode() //$NON-NLS-1$
+				+ ", entity: '" + ObjectEntities.codeToString(entityCode) + " , condition class:" + condition.getClass().getName(); //$NON-NLS-1$ //$NON-NLS-2$
 
 		soSet = new HashSet();
 		for (Iterator it = objectPool.iterator(); it.hasNext();) {
@@ -451,11 +441,11 @@ public abstract class StorableObjectPool {
 				for (Iterator it = idsSet.iterator(); it.hasNext();) {
 					Identifier identifier = (Identifier) it.next();
 					if (buffer.length() != 0)
-						buffer.append(", ");
+						buffer.append(", "); //$NON-NLS-1$
 					buffer.append(identifier.getIdentifierString());
 				}
 				Log.debugMessage(
-					"StorableObjectPool.getStorableObjectsByConditionButIdsImpl | before loadStorableObjectsButIds : " + buffer.toString(),
+					"StorableObjectPool.getStorableObjectsByConditionButIdsImpl | before loadStorableObjectsButIds : " + buffer.toString(), //$NON-NLS-1$
 					Log.DEBUGLEVEL10);
 			}
 
@@ -467,11 +457,11 @@ public abstract class StorableObjectPool {
 				for (Iterator it = loadedSet.iterator(); it.hasNext();) {
 					StorableObject storableObject = (StorableObject) it.next();
 					if (buffer.length() != 0)
-						buffer.append(", ");
+						buffer.append(", "); //$NON-NLS-1$
 					buffer.append(storableObject.getId().getIdentifierString());
 				}
 				Log.debugMessage(
-					"StorableObjectPool.getStorableObjectsByConditionButIdsImpl | loaded : " + buffer.toString(),
+					"StorableObjectPool.getStorableObjectsByConditionButIdsImpl | loaded : " + buffer.toString(), //$NON-NLS-1$
 					Log.DEBUGLEVEL10);
 			}
 		}
@@ -543,32 +533,31 @@ public abstract class StorableObjectPool {
 				}
 				else {
 					Log.errorMessage(this.selfGroupName
-							+ "StorableObjectPool.getStorableObjectsImpl | Cannot find object pool for objectId: '"
-							+ objectId.toString() + "', entity code: '" + ObjectEntities.codeToString(entityCode) + "'");
+							+ "StorableObjectPool.getStorableObjectsImpl | Cannot find object pool for objectId: '" //$NON-NLS-1$
+							+ objectId.toString() + "', entity code: '" + ObjectEntities.codeToString(entityCode) + "'"); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			}
 
 		}
 		else {
-			Log.errorMessage(this.selfGroupName + "StorableObjectPool.getStorableObjectsImpl | NULL set of identifiers supplied");
+			Log.errorMessage(this.selfGroupName + "StorableObjectPool.getStorableObjectsImpl | NULL set of identifiers supplied"); //$NON-NLS-1$
 		}
 
 		if (objectQueueMap != null) {
 			if (set == null)
 				set = new HashSet();
 			for (Iterator it = objectQueueMap.keySet().iterator(); it.hasNext();) {
-				Short entityCode = (Short) it.next();
-				short code = entityCode.shortValue();
+				final Short entityCode = (Short) it.next();
 				Set objectQueue = (Set) objectQueueMap.get(entityCode);
 				if (this.deletedIds != null) {
 					/* do not load deleted object with entityCode */
 					for (Iterator iter = this.deletedIds.iterator(); iter.hasNext();) {
 						Identifier id = (Identifier) iter.next();
-						if (id.getMajor() == code)
+						if (id.getMajor() == entityCode.shortValue())
 							objectQueue.add(id);
 					}
 				}
-				Set storableObjects = this.loadStorableObjects(entityCode, objectQueue);
+				Set storableObjects = this.loadStorableObjects(objectQueue);
 				if (storableObjects != null) {
 					try {
 						for (Iterator iter = storableObjects.iterator(); iter.hasNext();) {
@@ -589,7 +578,7 @@ public abstract class StorableObjectPool {
 
 	protected abstract StorableObject loadStorableObject(final Identifier objectId) throws ApplicationException;
 
-	protected abstract Set loadStorableObjects(final Short entityCode, final Set ids) throws ApplicationException;
+	protected abstract Set loadStorableObjects(final Set ids) throws ApplicationException;
 
 	protected abstract Set loadStorableObjectsButIds(final StorableObjectCondition condition, final Set ids)
 			throws ApplicationException;
@@ -604,7 +593,7 @@ public abstract class StorableObjectPool {
 			}
 		} catch (ApplicationException ae) {
 			Log.errorException(ae);
-			Log.errorMessage(this.selfGroupName + "StorableObjectPool.populatePools | Error: " + ae.getMessage());
+			Log.errorMessage(this.selfGroupName + "StorableObjectPool.populatePools | Error: " + ae.getMessage()); //$NON-NLS-1$
 		}
 	}
 
@@ -628,9 +617,9 @@ public abstract class StorableObjectPool {
 			return (StorableObject) objectPool.put(objectId, storableObject);
 		}
 		throw new IllegalObjectEntityException(this.selfGroupName
-				+ "StorableObjectPool.putStorableObject | Illegal object entity: '"
+				+ "StorableObjectPool.putStorableObject | Illegal object entity: '" //$NON-NLS-1$
 				+ ObjectEntities.codeToString(entityCode)
-				+ "'", IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+				+ "'", IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE); //$NON-NLS-1$
 	}
 
 	/**
@@ -640,7 +629,6 @@ public abstract class StorableObjectPool {
 	 * If not found in pool -- return null
 	 * @param id
 	 * @param transferable
-	 * @return
 	 * @throws ApplicationException
 	 */
 	protected final StorableObject fromTransferableImpl(Identifier id, IDLEntity transferable) throws ApplicationException {
@@ -665,7 +653,7 @@ public abstract class StorableObjectPool {
 	 * @throws CommunicationException
 	 */
 	protected final void refreshImpl() throws ApplicationException {
-		Log.debugMessage(this.selfGroupName + "StorableObjectPool.refreshImpl | trying to refresh Pool...", Log.DEBUGLEVEL03);
+		Log.debugMessage(this.selfGroupName + "StorableObjectPool.refreshImpl | trying to refresh Pool...", Log.DEBUGLEVEL03); //$NON-NLS-1$
 		final Set storableObjects = new HashSet();
 		final Set entityCodes = this.objectPoolMap.keySet();
 
@@ -682,19 +670,19 @@ public abstract class StorableObjectPool {
 			}
 			if (storableObjects.isEmpty()) {
 				Log.debugMessage(this.selfGroupName
-						+ "StorableObjectPool.refreshImpl | LRUMap for '"
-						+ ObjectEntities.codeToString(entityCode) + "' entity has no elements", Log.DEBUGLEVEL08);
+						+ "StorableObjectPool.refreshImpl | LRUMap for '" //$NON-NLS-1$
+						+ ObjectEntities.codeToString(entityCode) + "' entity has no elements", Log.DEBUGLEVEL08); //$NON-NLS-1$
 				continue;
 			}
 			Log.debugMessage(this.selfGroupName
-					+ "StorableObjectPool.refreshImpl | try refresh LRUMap for '"
-					+ ObjectEntities.codeToString(entityCode) + "' entity", Log.DEBUGLEVEL08);
+					+ "StorableObjectPool.refreshImpl | try refresh LRUMap for '" //$NON-NLS-1$
+					+ ObjectEntities.codeToString(entityCode) + "' entity", Log.DEBUGLEVEL08); //$NON-NLS-1$
 
 			final Set returnedStorableObjectsIds = this.refreshStorableObjects(storableObjects);
 			if (returnedStorableObjectsIds.isEmpty())
 				continue;
 
-			Set loadedRefreshedObjects = this.loadStorableObjects(entityCode, returnedStorableObjectsIds);
+			Set loadedRefreshedObjects = this.loadStorableObjects(returnedStorableObjectsIds);
 			for (Iterator iter = loadedRefreshedObjects.iterator(); iter.hasNext();) {
 				try {
 					this.putStorableObjectImpl((StorableObject) iter.next());
@@ -710,20 +698,13 @@ public abstract class StorableObjectPool {
 	protected abstract Set refreshStorableObjects(final Set storableObjects) throws ApplicationException;
 
 	/**
-	 * @param entityCode
 	 * @param storableObjects
 	 * @param force
-	 * @throws VersionCollisionException
-	 * @throws DatabaseException
-	 * @throws CommunicationException
-	 * @throws IllegalDataException
-	 * @todo Change signature of this method to the one without
-	 *       <code>entityCode</code>, rewrite overriding classes in order for
-	 *       them to use {@link StorableObject#getEntityCodeOfStorableObjects(Set)}.
+	 * @throws ApplicationException
 	 */
-	protected abstract void saveStorableObjects(final short entityCode,
-												final Set storableObjects,
-												final boolean force) throws ApplicationException;
+	protected abstract void saveStorableObjects(final Set storableObjects,
+			final boolean force)
+			throws ApplicationException;
 
 	protected final void serializePoolImpl() {
 		final Set entityCodeSet = this.objectPoolMap.keySet();
@@ -738,8 +719,7 @@ public abstract class StorableObjectPool {
 		if (objectPool instanceof StorableObjectResizableLRUMap)
 			((StorableObjectResizableLRUMap) objectPool).truncate(true);
 		else
-			Log.errorMessage("StorableObjectPool.truncateObjectPoolImpl | ERROR: Object pool class '" + objectPool.getClass().getName()
-					+ "' not 'StorableObjectResizableLRUMap' -- cannot truncate pool"); 
+			Log.errorMessage("StorableObjectPool.truncateObjectPoolImpl | ERROR: Object pool class '" + objectPool.getClass().getName() //$NON-NLS-1$
+					+ "' not 'StorableObjectResizableLRUMap' -- cannot truncate pool");  //$NON-NLS-1$
 	}
-
 }

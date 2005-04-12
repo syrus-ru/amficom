@@ -1,5 +1,5 @@
 /*-
- * $Id: MSHServerImpl.java,v 1.6 2005/04/08 09:32:27 bass Exp $
+ * $Id: MSHServerImpl.java,v 1.7 2005/04/12 08:15:34 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -65,7 +65,7 @@ import java.util.Set;
 import org.omg.CORBA.portable.IDLEntity;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/04/08 09:32:27 $
+ * @version $Revision: 1.7 $, $Date: 2005/04/12 08:15:34 $
  * @author $Author: bass $
  * @module mshserver_1
  */
@@ -234,7 +234,7 @@ public final class MSHServerImpl extends MSHServerSchemeTransmit {
 			if (storableObjects.isEmpty())
 				return new StorableObject_Transferable[0];
 			assert StorableObject.hasSingleTypeEntities(storableObjects);
-			final short entityCode = StorableObject.getEntityCodeOfStorableObjects(storableObjects);
+			final short entityCode = StorableObject.getEntityCodeOfIdentifiables(storableObjects);
 			final Identifier userId = (new AccessIdentity(accessIdentifier)).getUserId();
 			Log.debugMessage("MSHServerImpl.receiveStorableObjects | Receiving " //$NON-NLS-1$
 					+ storableObjects.size() + ' '

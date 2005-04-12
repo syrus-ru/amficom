@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.52 2005/04/11 15:15:49 bob Exp $
+ * $Id: StorableObject.java,v 1.53 2005/04/12 08:11:43 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,8 +27,8 @@ import org.omg.CORBA.portable.IDLEntity;
  * there can only be a single inctance of <code>StorableObject</code> with the
  * same identifier, comparison of object references (in Java terms) is enough.
  *
- * @author $Author: bob $
- * @version $Revision: 1.52 $, $Date: 2005/04/11 15:15:49 $
+ * @author $Author: bass $
+ * @version $Revision: 1.53 $, $Date: 2005/04/12 08:11:43 $
  * @module general_v1
  */
 public abstract class StorableObject implements Identifiable, TransferableObject, Serializable {
@@ -286,45 +286,45 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	 * This method should only be invoked during assertion evaluation, and
 	 * never in a release system.
 	 * 
-	 * @param storableObjects non-null set of storable objects (empty set is
+	 * @param identifiables non-null set of identifiables (empty set is
 	 *        ok).
 	 * @return <code>true</code> if all entities within this set are of
 	 *         the same type, <code>false</code> otherwise.
 	 */
-	public static boolean hasSingleTypeEntities(final Set storableObjects) {
+	public static boolean hasSingleTypeEntities(final Set identifiables) {
 		/*
 		 * Nested assertions are ok.
 		 */
-		assert storableObjects != null;
+		assert identifiables != null;
 
-		if (storableObjects.isEmpty())
+		if (identifiables.isEmpty())
 			return true;
 
-		final Iterator storableObjectIterator = storableObjects.iterator();
-		final short entityCode = ((StorableObject) storableObjectIterator.next()).getId().getMajor();
-		while (storableObjectIterator.hasNext())
-			if (entityCode != ((StorableObject) storableObjectIterator.next()).getId().getMajor())
+		final Iterator identifiableIterator = identifiables.iterator();
+		final short entityCode = ((Identifiable) identifiableIterator.next()).getId().getMajor();
+		while (identifiableIterator.hasNext())
+			if (entityCode != ((Identifiable) identifiableIterator.next()).getId().getMajor())
 				return false;
 		return true;
 	}
 
 	/**
 	 * Code that invokes this method, should preliminarily call
-	 * {@link #hasSingleTypeEntities(Set)}with the same parameter and
+	 * {@link #hasSingleTypeEntities(Set)} with the same parameter and
 	 * ensure that return value is <code>true</code>, e.g.:
 	 * 
 	 * <pre>
 	 * assert hasSingleTypeEntities(storableObjects) : &quot;Storable objects of different type should be treated separately...&quot;;
 	 * </pre>
 	 * 
-	 * @param storableObjects non-null, non-empty set of storable objects of
-	 *        the same type.
+	 * @param identifiables non-null, non-empty set of storable objects or
+	 *        identifiers of the same type.
 	 * @return common type of storable objects supplied as
 	 *         <code>short</code>.
 	 */
-	public static short getEntityCodeOfStorableObjects(final Set storableObjects) {
-		assert storableObjects != null && !storableObjects.isEmpty();
+	public static short getEntityCodeOfIdentifiables(final Set identifiables) {
+		assert identifiables != null && !identifiables.isEmpty();
 
-		return ((StorableObject) storableObjects.iterator().next()).getId().getMajor();
+		return ((Identifiable) identifiables.iterator().next()).getId().getMajor();
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: MapStorableObjectPool.java,v 1.12 2005/04/08 14:16:03 arseniy Exp $
+ * $Id: MapStorableObjectPool.java,v 1.13 2005/04/12 08:13:31 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,67 +26,56 @@ import java.util.Set;
 import org.omg.CORBA.portable.IDLEntity;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/04/08 14:16:03 $
- * @author $Author: arseniy $
- * @module measurement_v1
+ * @version $Revision: 1.13 $, $Date: 2005/04/12 08:13:31 $
+ * @author $Author: bass $
+ * @module map_v1
  */
-
 public final class MapStorableObjectPool extends StorableObjectPool {
+	/**
+	 * Number of entities.
+	 */
+	private static final int OBJECT_POOL_MAP_SIZE = 9;
 
-	private static final int				OBJECT_POOL_MAP_SIZE				= 50;		/*
-																							 * Number
-																							 * of
-																							 * entities
-																							 */
 
-	private static final int				SITE_NODE_OBJECT_POOL_SIZE			= 200;
-	private static final int				TOPOLOGICAL_NODE_OBJECT_POOL_SIZE	= 200;
-	private static final int				NODE_LINK_OBJECT_POOL_SIZE			= 100;
-	private static final int				MARK_OBJECT_POOL_SIZE				= 50;
-	private static final int				PHYSICAL_LINK_OBJECT_POOL_SIZE		= 100;
-	private static final int				COLLECTOR_OBJECT_POOL_SIZE			= 50;
-	private static final int				MAP_OBJECT_POOL_SIZE				= 3;
+	private static final int SITE_NODE_OBJECT_POOL_SIZE = 10;
 
-	private static final short				SITE_NODE_TYPE_OBJECT_POOL_SIZE			= 10;
-	private static final short				PHYSICAL_LINK_TYPE_OBJECT_POOL_SIZE		= 10;
+	private static final int TOPOLOGICAL_NODE_OBJECT_POOL_SIZE = 10;
 
-	private static MapObjectLoader			mObjectLoader;
-	private static MapStorableObjectPool	instance;
+	private static final int NODE_LINK_OBJECT_POOL_SIZE = 10;
+
+	private static final int MARK_OBJECT_POOL_SIZE = 10;
+
+	private static final int PHYSICAL_LINK_OBJECT_POOL_SIZE = 10;
+
+	private static final int COLLECTOR_OBJECT_POOL_SIZE = 10;
+
+	private static final int MAP_OBJECT_POOL_SIZE = 10;
+
+
+	private static final int SITE_NODE_TYPE_OBJECT_POOL_SIZE = 10;
+
+	private static final int PHYSICAL_LINK_TYPE_OBJECT_POOL_SIZE = 10;
+
+
+	private static MapObjectLoader mapObjectLoader;
+
+	
+	private static MapStorableObjectPool instance;
 
 	private MapStorableObjectPool() {
 		super(ObjectGroupEntities.MAP_GROUP_CODE);
 	}
 
-	private MapStorableObjectPool(Class cacheMapClass) {
+	private MapStorableObjectPool(final Class cacheMapClass) {
 		super(ObjectGroupEntities.MAP_GROUP_CODE, cacheMapClass);
 	}
 
-	/**
-	 * 
-	 * @param mObjectLoader1
-	 * @param cacheClass
-	 *            class must extend LRUMap
-	 * @param size
-	 */
-	public static void init(MapObjectLoader mObjectLoader1, Class cacheClass, final int size) {
-		Class clazz = null;
-		try {
-			clazz = Class.forName(cacheClass.getName());
-			instance = new MapStorableObjectPool(clazz);
-		} catch (final ClassNotFoundException cnfe) {
-			Log.errorMessage("Cache class '" + cacheClass.getName() //$NON-NLS-1$
-					+ "' cannot be found, using default"); //$NON-NLS-1$
-			instance = new MapStorableObjectPool();
-		}
-		init(mObjectLoader1, size);
-	}
-
-	public static void init(MapObjectLoader mObjectLoader1, final int size) {
+	public static void init(final MapObjectLoader mapObjectLoader1, final int size) {
 		if (instance == null)
 			instance = new MapStorableObjectPool();
-		instance.objectPoolMap = Collections.synchronizedMap(new HashMap(size));
+		instance.objectPoolMap = Collections.synchronizedMap(new HashMap(OBJECT_POOL_MAP_SIZE));
 
-		mObjectLoader = mObjectLoader1;
+		mapObjectLoader = mapObjectLoader1;
 
 		instance.addObjectPool(ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE, size);
@@ -101,12 +90,13 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 		instance.populatePools();
 	}
 
-	public static void init(MapObjectLoader mObjectLoader1) {
+	public static void init(final MapObjectLoader mapObjectLoader1) {
 		if (instance == null)
 			instance = new MapStorableObjectPool();
 
 		instance.objectPoolMap = Collections.synchronizedMap(new HashMap(OBJECT_POOL_MAP_SIZE));
-		mObjectLoader = mObjectLoader1;
+
+		mapObjectLoader = mapObjectLoader1;
 
 		instance.addObjectPool(ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE, SITE_NODE_TYPE_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE, PHYSICAL_LINK_TYPE_OBJECT_POOL_SIZE);
@@ -121,227 +111,241 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 		instance.populatePools();
 	}
 
+	/**
+	 * 
+	 * @param mapObjectLoader1
+	 * @param cacheClass
+	 *            class must extend LRUMap
+	 * @param size
+	 */
+	public static void init(final MapObjectLoader mapObjectLoader1, final Class cacheClass, final int size) {
+		final String cacheClassName = cacheClass.getName();
+		try {
+			instance = new MapStorableObjectPool(Class.forName(cacheClassName));
+		} catch (final ClassNotFoundException cnfe) {
+			Log.errorMessage("Cache class '" + cacheClassName //$NON-NLS-1$
+					+ "' cannot be found, using default"); //$NON-NLS-1$
+			instance = new MapStorableObjectPool();
+		}
+		init(mapObjectLoader1, size);
+	}
+
+	public static void init(final MapObjectLoader mapObjectLoader1, final Class cacheClass) {
+		final String cacheClassName = cacheClass.getName();
+		try {
+			instance = new MapStorableObjectPool(Class.forName(cacheClassName));
+		} catch (final ClassNotFoundException cnfe) {
+			Log.errorMessage("Cache class '" + cacheClassName //$NON-NLS-1$
+					+ "' cannot be found, using default"); //$NON-NLS-1$
+			instance = new MapStorableObjectPool();
+		}
+		init(mapObjectLoader1);
+	}
+
 	public static void refresh() throws ApplicationException {
 		instance.refreshImpl();
 	}
 
-	protected java.util.Set refreshStorableObjects(java.util.Set storableObjects) throws ApplicationException {
-		return mObjectLoader.refresh(storableObjects);
+	protected Set refreshStorableObjects(final Set storableObjects) throws ApplicationException {
+		return mapObjectLoader.refresh(storableObjects);
 	}
 
-	public static StorableObject getStorableObject(Identifier objectId, boolean useLoader) throws ApplicationException {
-		return instance.getStorableObjectImpl(objectId, useLoader);
+	public static StorableObject getStorableObject(final Identifier id, final boolean useLoader) throws ApplicationException {
+		return instance.getStorableObjectImpl(id, useLoader);
 	}
 
-	public static Set getStorableObjects(Set objectIds, boolean useLoader) throws ApplicationException {
-		return instance.getStorableObjectsImpl(objectIds, useLoader);
+	public static Set getStorableObjects(final Set ids, boolean useLoader) throws ApplicationException {
+		return instance.getStorableObjectsImpl(ids, useLoader);
 	}
 
-	public static Set getStorableObjectsByCondition(StorableObjectCondition condition, boolean useLoader)
+	public static Set getStorableObjectsByCondition(
+			final StorableObjectCondition storableObjectCondition,
+			final boolean useLoader)
 			throws ApplicationException {
-		return instance.getStorableObjectsByConditionImpl(condition, useLoader);
+		return instance.getStorableObjectsByConditionImpl(storableObjectCondition, useLoader);
 	}
 
-	public static Set getStorableObjectsByConditionButIds(	Set ids,
-															StorableObjectCondition condition,
-															boolean useLoader) throws ApplicationException {
-		return instance.getStorableObjectsByConditionButIdsImpl(ids, condition, useLoader);
+	public static Set getStorableObjectsByConditionButIds(final Set ids,
+			final StorableObjectCondition storableObjectCondition,
+			final boolean useLoader)
+			throws ApplicationException {
+		return instance.getStorableObjectsByConditionButIdsImpl(ids, storableObjectCondition, useLoader);
 	}
 
-	protected StorableObject loadStorableObject(Identifier objectId) throws ApplicationException {
-		StorableObject storableObject;
-		switch (objectId.getMajor()) {
+	protected StorableObject loadStorableObject(final Identifier id) throws ApplicationException {
+		switch (id.getMajor()) {
 			case ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE:
-				storableObject = mObjectLoader.loadSiteNodeType(objectId);
-				break;
+				return mapObjectLoader.loadSiteNodeType(id);
 			case ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE:
-				storableObject = mObjectLoader.loadPhysicalLinkType(objectId);
-				break;
+				return mapObjectLoader.loadPhysicalLinkType(id);
 			case ObjectEntities.SITE_NODE_ENTITY_CODE:
-				storableObject = mObjectLoader.loadSiteNode(objectId);
-				break;
+				return mapObjectLoader.loadSiteNode(id);
 			case ObjectEntities.TOPOLOGICAL_NODE_ENTITY_CODE:
-				storableObject = mObjectLoader.loadTopologicalNode(objectId);
-				break;
+				return mapObjectLoader.loadTopologicalNode(id);
 			case ObjectEntities.NODE_LINK_ENTITY_CODE:
-				storableObject = mObjectLoader.loadNodeLink(objectId);
-				break;
+				return mapObjectLoader.loadNodeLink(id);
 			case ObjectEntities.MARK_ENTITY_CODE:
-				storableObject = mObjectLoader.loadMark(objectId);
-				break;
+				return mapObjectLoader.loadMark(id);
 			case ObjectEntities.PHYSICAL_LINK_ENTITY_CODE:
-				storableObject = mObjectLoader.loadPhysicalLink(objectId);
-				break;
+				return mapObjectLoader.loadPhysicalLink(id);
 			case ObjectEntities.COLLECTOR_ENTITY_CODE:
-				storableObject = mObjectLoader.loadCollector(objectId);
-				break;
+				return mapObjectLoader.loadCollector(id);
 			case ObjectEntities.MAP_ENTITY_CODE:
-				storableObject = mObjectLoader.loadMap(objectId);
-				break;		
+				return mapObjectLoader.loadMap(id);
 			default:
-				Log.errorMessage("MapStorableObjectPool.loadStorableObject | Unknown entity: "
-						+ ObjectEntities.codeToString(objectId.getMajor()));
-				storableObject = null;
+				final short entityCode = id.getMajor();
+				Log.errorMessage("MapStorableObjectPool.loadStorableObject | Unknown entity: " //$NON-NLS-1$
+						+ ObjectEntities.codeToString(entityCode)
+						+ " (" + entityCode + ')'); //$NON-NLS-1$
+				return null;
 		}
-		return storableObject;
 	}
 
-	protected Set loadStorableObjects(Short entityCode, Set ids) throws ApplicationException {
-		Set storableObjects;
-		switch (entityCode.shortValue()) {
-			case ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE:
-				storableObjects = mObjectLoader.loadSiteNodeTypes(ids);
-				break;
-			case ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE:
-				storableObjects = mObjectLoader.loadPhysicalLinkTypes(ids);
-				break;
-			case ObjectEntities.SITE_NODE_ENTITY_CODE:
-				storableObjects = mObjectLoader.loadSiteNodes(ids);
-				break;
-			case ObjectEntities.TOPOLOGICAL_NODE_ENTITY_CODE:
-				storableObjects = mObjectLoader.loadTopologicalNodes(ids);
-				break;
-			case ObjectEntities.NODE_LINK_ENTITY_CODE:
-				storableObjects = mObjectLoader.loadNodeLinks(ids);
-				break;
-			case ObjectEntities.MARK_ENTITY_CODE:
-				storableObjects = mObjectLoader.loadMarks(ids);
-				break;
-			case ObjectEntities.PHYSICAL_LINK_ENTITY_CODE:
-				storableObjects = mObjectLoader.loadPhysicalLinks(ids);
-				break;
-			case ObjectEntities.COLLECTOR_ENTITY_CODE:
-				storableObjects = mObjectLoader.loadCollectors(ids);
-				break;
-			case ObjectEntities.MAP_ENTITY_CODE:
-				storableObjects = mObjectLoader.loadMaps(ids);
-				break;
-			default:
-				Log.errorMessage("MapStorableObjectPool.loadStorableObjects | Unknown entityCode : " + entityCode);
-				storableObjects = null;
-		}
-		return storableObjects;
-	}
-
-	protected Set loadStorableObjectsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		Set loadedCollection = null;
-		short entityCode = condition.getEntityCode().shortValue();
+	protected Set loadStorableObjects(final Set ids) throws ApplicationException {
+		assert StorableObject.hasSingleTypeEntities(ids);
+		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
 		switch (entityCode) {
 			case ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE:
-				loadedCollection  = mObjectLoader.loadSiteNodeTypesButIds(condition, ids);
+				return mapObjectLoader.loadSiteNodeTypes(ids);
+			case ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE:
+				return mapObjectLoader.loadPhysicalLinkTypes(ids);
+			case ObjectEntities.SITE_NODE_ENTITY_CODE:
+				return mapObjectLoader.loadSiteNodes(ids);
+			case ObjectEntities.TOPOLOGICAL_NODE_ENTITY_CODE:
+				return mapObjectLoader.loadTopologicalNodes(ids);
+			case ObjectEntities.NODE_LINK_ENTITY_CODE:
+				return mapObjectLoader.loadNodeLinks(ids);
+			case ObjectEntities.MARK_ENTITY_CODE:
+				return mapObjectLoader.loadMarks(ids);
+			case ObjectEntities.PHYSICAL_LINK_ENTITY_CODE:
+				return mapObjectLoader.loadPhysicalLinks(ids);
+			case ObjectEntities.COLLECTOR_ENTITY_CODE:
+				return mapObjectLoader.loadCollectors(ids);
+			case ObjectEntities.MAP_ENTITY_CODE:
+				return mapObjectLoader.loadMaps(ids);
+			default:
+				Log.errorMessage("MapStorableObjectPool.loadStorableObjects | Unknown entity: " //$NON-NLS-1$
+						+ ObjectEntities.codeToString(entityCode)
+						+ " (" + entityCode + ')'); //$NON-NLS-1$
+				return Collections.EMPTY_SET;
+		}
+	}
+
+	protected Set loadStorableObjectsButIds(
+			final StorableObjectCondition storableObjectCondition,
+			final Set ids)
+			throws ApplicationException {
+		final short entityCode = storableObjectCondition.getEntityCode().shortValue();
+		switch (entityCode) {
+			case ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE:
+				return mapObjectLoader.loadSiteNodeTypesButIds(storableObjectCondition, ids);
+			case ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE:
+				return mapObjectLoader.loadPhysicalLinkTypesButIds(storableObjectCondition, ids);
+			case ObjectEntities.SITE_NODE_ENTITY_CODE:
+				return mapObjectLoader.loadSiteNodesButIds(storableObjectCondition, ids);
+			case ObjectEntities.TOPOLOGICAL_NODE_ENTITY_CODE:
+				return mapObjectLoader.loadTopologicalNodesButIds(storableObjectCondition, ids);
+			case ObjectEntities.NODE_LINK_ENTITY_CODE:
+				return mapObjectLoader.loadNodeLinksButIds(storableObjectCondition, ids);
+			case ObjectEntities.MARK_ENTITY_CODE:
+				return mapObjectLoader.loadMarksButIds(storableObjectCondition, ids);
+			case ObjectEntities.PHYSICAL_LINK_ENTITY_CODE:
+				return mapObjectLoader.loadPhysicalLinksButIds(storableObjectCondition, ids);
+			case ObjectEntities.COLLECTOR_ENTITY_CODE:
+				return mapObjectLoader.loadCollectorsButIds(storableObjectCondition, ids);
+			case ObjectEntities.MAP_ENTITY_CODE:
+				return mapObjectLoader.loadMapsButIds(storableObjectCondition, ids);
+			default:
+				Log.errorMessage("MapStorableObjectPool.loadStorableObjectsButIds | Unknown entity: " //$NON-NLS-1$
+						+ ObjectEntities.codeToString(entityCode)
+						+ " (" + entityCode + ')'); //$NON-NLS-1$
+				return Collections.EMPTY_SET;
+		}
+	}
+
+	protected void saveStorableObjects(final Set storableObjects,
+			final boolean force)
+			throws ApplicationException {
+		if (storableObjects.isEmpty())
+			return;
+		assert StorableObject.hasSingleTypeEntities(storableObjects);
+		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(storableObjects);
+		final boolean singleton = storableObjects.size() == 1;
+		switch (entityCode) {				
+			case ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE:
+				if (singleton)
+					mapObjectLoader.saveSiteNodeType((SiteNodeType)storableObjects.iterator().next(), force);
+				else
+					mapObjectLoader.saveSiteNodeTypes(storableObjects, force);
 				break;
 			case ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE:
-				loadedCollection  = mObjectLoader.loadPhysicalLinkTypesButIds(condition, ids);
+				if (singleton)
+					mapObjectLoader.savePhysicalLinkType((PhysicalLinkType) storableObjects.iterator().next(), force);
+				else
+					mapObjectLoader.savePhysicalLinkTypes(storableObjects, force);
 				break;
 			case ObjectEntities.SITE_NODE_ENTITY_CODE:
-				loadedCollection  = mObjectLoader.loadSiteNodesButIds(condition, ids);
+				if (singleton)
+					mapObjectLoader.saveSiteNode((SiteNode)storableObjects.iterator().next(), force);
+				else
+					mapObjectLoader.saveSiteNodes(storableObjects, force);
 				break;
 			case ObjectEntities.TOPOLOGICAL_NODE_ENTITY_CODE:
-				loadedCollection  = mObjectLoader.loadTopologicalNodesButIds(condition, ids);
+				if (singleton)
+					mapObjectLoader.saveTopologicalNode((TopologicalNode) storableObjects.iterator().next(), force);
+				else
+					mapObjectLoader.saveTopologicalNodes(storableObjects, force);
 				break;
 			case ObjectEntities.NODE_LINK_ENTITY_CODE:
-				loadedCollection  = mObjectLoader.loadNodeLinksButIds(condition, ids);
+				if (singleton)
+					mapObjectLoader.saveNodeLink((NodeLink)storableObjects.iterator().next(), force);
+				else
+					mapObjectLoader.saveNodeLinks(storableObjects, force);
 				break;
 			case ObjectEntities.MARK_ENTITY_CODE:
-				loadedCollection  = mObjectLoader.loadMarksButIds(condition, ids);
+				if (singleton)
+					mapObjectLoader.saveMark((Mark)storableObjects.iterator().next(), force);
+				else
+					mapObjectLoader.saveMarks(storableObjects, force);
 				break;
 			case ObjectEntities.PHYSICAL_LINK_ENTITY_CODE:
-				loadedCollection  = mObjectLoader.loadPhysicalLinksButIds(condition, ids);
+				if (singleton)
+					mapObjectLoader.savePhysicalLink((PhysicalLink)storableObjects.iterator().next(), force);
+				else
+					mapObjectLoader.savePhysicalLinks(storableObjects, force);
 				break;
 			case ObjectEntities.COLLECTOR_ENTITY_CODE:
-				loadedCollection  = mObjectLoader.loadCollectorsButIds(condition, ids);
+				if (singleton)
+					mapObjectLoader.saveCollector((Collector)storableObjects.iterator().next(), force);
+				else
+					mapObjectLoader.saveCollectors(storableObjects, force);
 				break;
 			case ObjectEntities.MAP_ENTITY_CODE:
-				loadedCollection  = mObjectLoader.loadMapsButIds(condition, ids);
+				if (singleton)
+					mapObjectLoader.saveMap((Map)storableObjects.iterator().next(), force);
+				else
+					mapObjectLoader.saveMaps(storableObjects, force);
 				break;
 			default:
-				Log.errorMessage("MapStorableObjectPool.loadStorableObjectsButIds | Unknown entity: "
-						+ ObjectEntities.codeToString(entityCode));
-				loadedCollection = null;
-		}
-		return loadedCollection;
-	}
-
-	protected void saveStorableObjects(short code, Set list, boolean force) throws ApplicationException {
-		if (!list.isEmpty()) {
-			boolean alone = (list.size() == 1);
-
-			switch (code) {				
-				case ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE:
-					if (alone)
-						mObjectLoader.saveSiteNodeType((SiteNodeType)list.iterator().next(), force);
-					else
-						mObjectLoader.saveSiteNodeTypes(list, force);
-					break;
-				case ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE:
-					if (alone)
-						mObjectLoader.savePhysicalLinkType((PhysicalLinkType) list.iterator().next(), force);
-					else
-						mObjectLoader.savePhysicalLinkTypes(list, force);
-					break;
-				case ObjectEntities.SITE_NODE_ENTITY_CODE:
-					if (alone)
-						mObjectLoader.saveSiteNode((SiteNode)list.iterator().next(), force);
-					else
-						mObjectLoader.saveSiteNodes(list, force);
-					break;
-				case ObjectEntities.TOPOLOGICAL_NODE_ENTITY_CODE:
-					if (alone)
-						mObjectLoader.saveTopologicalNode((TopologicalNode) list.iterator().next(), force);
-					else
-						mObjectLoader.saveTopologicalNodes(list, force);
-					break;
-				case ObjectEntities.NODE_LINK_ENTITY_CODE:
-					if (alone)
-						mObjectLoader.saveNodeLink((NodeLink)list.iterator().next(), force);
-					else
-						mObjectLoader.saveNodeLinks(list, force);
-					break;
-				case ObjectEntities.MARK_ENTITY_CODE:
-					if (alone)
-						mObjectLoader.saveMark((Mark)list.iterator().next(), force);
-					else
-						mObjectLoader.saveMarks(list, force);
-					break;
-				case ObjectEntities.PHYSICAL_LINK_ENTITY_CODE:
-					if (alone)
-						mObjectLoader.savePhysicalLink((PhysicalLink)list.iterator().next(), force);
-					else
-						mObjectLoader.savePhysicalLinks(list, force);
-					break;
-				case ObjectEntities.COLLECTOR_ENTITY_CODE:
-					if (alone)
-						mObjectLoader.saveCollector((Collector)list.iterator().next(), force);
-					else
-						mObjectLoader.saveCollectors(list, force);
-					break;
-				case ObjectEntities.MAP_ENTITY_CODE:
-					if (alone)
-						mObjectLoader.saveMap((Map)list.iterator().next(), force);
-					else
-						mObjectLoader.saveMaps(list, force);
-					break;
-				default:
-					Log.errorMessage("MapStorableObjectPool.saveStorableObjects | Unknown Unknown entity : '"
-							+ ObjectEntities.codeToString(code) + "'");
-			}
-
+				Log.errorMessage("MapStorableObjectPool.saveStorableObjects | Unknown entity: " //$NON-NLS-1$
+						+ ObjectEntities.codeToString(entityCode)
+						+ " (" + entityCode + ')'); //$NON-NLS-1$
 		}
 	}
 
-	public static StorableObject putStorableObject(StorableObject storableObject) throws IllegalObjectEntityException {
+	public static StorableObject putStorableObject(final StorableObject storableObject) throws IllegalObjectEntityException {
 		return instance.putStorableObjectImpl(storableObject);
 	}
 
-	public static StorableObject fromTransferable(Identifier id, IDLEntity transferable) throws ApplicationException {
+	public static StorableObject fromTransferable(final Identifier id, final IDLEntity transferable) throws ApplicationException {
 		return instance.fromTransferableImpl(id, transferable);
 	}
 
-	public static void flush(boolean force) throws ApplicationException {
+	public static void flush(final boolean force) throws ApplicationException {
 		instance.flushImpl(force);
 	}
 
-	public static void cleanChangedStorableObject(Short entityCode) {
+	public static void cleanChangedStorableObject(final Short entityCode) {
 		instance.cleanChangedStorableObjectImpl(entityCode);
 	}
 
@@ -349,23 +353,27 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 		instance.cleanChangedStorableObjectsImpl();
 	}
 
-	protected void deleteStorableObject(Identifier id) throws IllegalDataException {
-	 	mObjectLoader.delete(id);
-	}
-
-	protected void deleteStorableObjects(Set ids) throws IllegalDataException {
-		mObjectLoader.delete(ids);
-	}
-
-	public static void delete(Identifier id) {
+	public static void delete(final Identifier id) {
 		instance.deleteImpl(id);
 	}
 
-	public static void delete(Set ids) throws IllegalDataException {
-		instance.deleteImpl(ids);
+	public static void delete(final Set identifiables) {
+		instance.deleteImpl(identifiables);
+	}
+
+	protected void deleteStorableObject(final Identifier id) throws IllegalDataException {
+	 	mapObjectLoader.delete(id);
+	}
+
+	protected void deleteStorableObjects(final Set identifiables) throws IllegalDataException {
+		mapObjectLoader.delete(identifiables);
 	}
 
 	public static void serializePool() {
 		instance.serializePoolImpl();
+	}
+
+	public static void truncateObjectPool(final short entityCode) {
+		instance.truncateObjectPoolImpl(entityCode);
 	}
 }

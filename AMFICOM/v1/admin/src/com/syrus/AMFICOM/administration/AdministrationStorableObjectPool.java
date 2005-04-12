@@ -1,5 +1,5 @@
 /*
- * $Id: AdministrationStorableObjectPool.java,v 1.16 2005/04/08 14:12:09 arseniy Exp $
+ * $Id: AdministrationStorableObjectPool.java,v 1.17 2005/04/12 08:12:38 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import java.util.Set;
 import org.omg.CORBA.portable.IDLEntity;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/04/08 14:12:09 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.17 $, $Date: 2005/04/12 08:12:38 $
+ * @author $Author: bass $
  * @module administration_v1
  */
 
@@ -165,29 +165,24 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 		return storableObject;
 	}
 
-	protected Set loadStorableObjects(Short entityCode, Set ids) throws ApplicationException {
-		Set loadedObjects = null;
-		switch (entityCode.shortValue()) {
+	protected Set loadStorableObjects(final Set ids) throws ApplicationException {
+		assert StorableObject.hasSingleTypeEntities(ids);
+		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
+		switch (entityCode) {
 			case ObjectEntities.USER_ENTITY_CODE:
-				loadedObjects = aObjectLoader.loadUsers(ids);
-				break;
+				return aObjectLoader.loadUsers(ids);
 			case ObjectEntities.DOMAIN_ENTITY_CODE:
-				loadedObjects = aObjectLoader.loadDomains(ids);
-				break;
+				return aObjectLoader.loadDomains(ids);
 			case ObjectEntities.SERVER_ENTITY_CODE:
-				loadedObjects = aObjectLoader.loadServers(ids);
-				break;
+				return aObjectLoader.loadServers(ids);
 			case ObjectEntities.MCM_ENTITY_CODE:
-				loadedObjects = aObjectLoader.loadMCMs(ids);
-				break;
+				return aObjectLoader.loadMCMs(ids);
 //			case ObjectEntities.PERMATTR_ENTITY_CODE:
-//				loadedList = aObjectLoader.loadPermissionAttributes(ids);
-//				break;
+//				return aObjectLoader.loadPermissionAttributes(ids);
 			default:
-				Log.errorMessage("AdministrationStorableObjectPool.loadStorableObjects | Unknown entity: '" + ObjectEntities.codeToString(entityCode.shortValue()) + "', entity code: " + entityCode);
-				loadedObjects = null;
+				Log.errorMessage("AdministrationStorableObjectPool.loadStorableObjects | Unknown entity: '" + ObjectEntities.codeToString(entityCode) + "', entity code: " + entityCode);
+				return Collections.EMPTY_SET;
 		}
-		return loadedObjects;
 	}
 
 	protected Set loadStorableObjectsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
@@ -218,38 +213,41 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 
 	//public static void save()
 
-	protected void saveStorableObjects(short code, Set collection, boolean force) throws ApplicationException {
-		if (!collection.isEmpty()) {
-			boolean alone = (collection.size() == 1);
-			switch (code) {
-				case ObjectEntities.USER_ENTITY_CODE:
-					if (alone)
-						aObjectLoader.saveUser((User) collection.iterator().next(), force);
-					else
-						aObjectLoader.saveUsers(collection, force);
-					break;
-				case ObjectEntities.DOMAIN_ENTITY_CODE:
-					if (alone)
-						aObjectLoader.saveDomain((Domain) collection.iterator().next(), force);
-					else
-						aObjectLoader.saveDomains(collection, force);
-					break;
-				case ObjectEntities.SERVER_ENTITY_CODE:
-					if (alone)
-						aObjectLoader.saveServer((Server) collection.iterator().next(), force);
-					else
-						aObjectLoader.saveServers(collection, force);
-					break;
-				case ObjectEntities.MCM_ENTITY_CODE:
-					if (alone)
-						aObjectLoader.saveMCM((MCM) collection.iterator().next(), force);
-					else
-						aObjectLoader.saveMCMs(collection, force);
-					break;
-				default:
-					Log.errorMessage("AdministrationStorableObjectPool.saveStorableObjects | Unknown entity: '" + ObjectEntities.codeToString(code) + "', entity code: " + code);
-			}
-
+	protected void saveStorableObjects(final Set storableObjects,
+			final boolean force)
+			throws ApplicationException {
+		if (storableObjects.isEmpty())
+			return;
+		assert StorableObject.hasSingleTypeEntities(storableObjects);
+		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(storableObjects);
+		final boolean singleton = storableObjects.size() == 1;
+		switch (entityCode) {
+			case ObjectEntities.USER_ENTITY_CODE:
+				if (singleton)
+					aObjectLoader.saveUser((User) storableObjects.iterator().next(), force);
+				else
+					aObjectLoader.saveUsers(storableObjects, force);
+				break;
+			case ObjectEntities.DOMAIN_ENTITY_CODE:
+				if (singleton)
+					aObjectLoader.saveDomain((Domain) storableObjects.iterator().next(), force);
+				else
+					aObjectLoader.saveDomains(storableObjects, force);
+				break;
+			case ObjectEntities.SERVER_ENTITY_CODE:
+				if (singleton)
+					aObjectLoader.saveServer((Server) storableObjects.iterator().next(), force);
+				else
+					aObjectLoader.saveServers(storableObjects, force);
+				break;
+			case ObjectEntities.MCM_ENTITY_CODE:
+				if (singleton)
+					aObjectLoader.saveMCM((MCM) storableObjects.iterator().next(), force);
+				else
+					aObjectLoader.saveMCMs(storableObjects, force);
+				break;
+			default:
+				Log.errorMessage("AdministrationStorableObjectPool.saveStorableObjects | Unknown entity: '" + ObjectEntities.codeToString(entityCode) + "', entity code: " + entityCode);
 		}
 	}
 
@@ -277,16 +275,16 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 		instance.deleteImpl(id);
 	}
 
-	public static void delete(Set objects) throws IllegalDataException {
-		instance.deleteImpl(objects);
+	public static void delete(final Set identifiables) {
+		instance.deleteImpl(identifiables);
 	}
 
 	protected void deleteStorableObject(Identifier id) throws IllegalDataException {
 		aObjectLoader.delete(id);
 	}
 	
-	protected void deleteStorableObjects(Set objects) throws IllegalDataException {
-		aObjectLoader.delete(objects);
+	protected void deleteStorableObjects(final Set identifiables) throws IllegalDataException {
+		aObjectLoader.delete(identifiables);
 	}
 
 	public static void serializePool() {

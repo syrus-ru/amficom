@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.77 2005/04/08 14:12:24 arseniy Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.78 2005/04/12 08:15:14 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,8 +25,8 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.77 $, $Date: 2005/04/08 14:12:24 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.78 $, $Date: 2005/04/12 08:15:14 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -212,53 +212,40 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 		return storableObject;
 	}
 
-	protected java.util.Set loadStorableObjects(Short entityCode, java.util.Set ids) throws ApplicationException {
-		java.util.Set storableObjects;
-		switch (entityCode.shortValue()) {
+	protected java.util.Set loadStorableObjects(final java.util.Set ids) throws ApplicationException {
+		assert StorableObject.hasSingleTypeEntities(ids);
+		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
+		switch (entityCode) {
 			case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
-				storableObjects = mObjectLoader.loadMeasurementTypes(ids);
-				break;
+				return mObjectLoader.loadMeasurementTypes(ids);
 			case ObjectEntities.ANALYSISTYPE_ENTITY_CODE:
-				storableObjects = mObjectLoader.loadAnalysisTypes(ids);
-				break;
+				return mObjectLoader.loadAnalysisTypes(ids);
 			case ObjectEntities.EVALUATIONTYPE_ENTITY_CODE:
-				storableObjects = mObjectLoader.loadEvaluationTypes(ids);
-				break;
+				return mObjectLoader.loadEvaluationTypes(ids);
 			case ObjectEntities.MODELINGTYPE_ENTITY_CODE:
-				storableObjects = mObjectLoader.loadModelingTypes(ids);
-				break;
+				return mObjectLoader.loadModelingTypes(ids);
 			case ObjectEntities.SET_ENTITY_CODE:
-				storableObjects = mObjectLoader.loadSets(ids);
-				break;
+				return mObjectLoader.loadSets(ids);
 			case ObjectEntities.MODELING_ENTITY_CODE:
-				storableObjects = mObjectLoader.loadModelings(ids);
-				break;
+				return mObjectLoader.loadModelings(ids);
 			case ObjectEntities.MS_ENTITY_CODE:
-				storableObjects = mObjectLoader.loadMeasurementSetups(ids);
-				break;
+				return mObjectLoader.loadMeasurementSetups(ids);
 			case ObjectEntities.ANALYSIS_ENTITY_CODE:
-				storableObjects = mObjectLoader.loadAnalyses(ids);
-				break;
+				return mObjectLoader.loadAnalyses(ids);
 			case ObjectEntities.EVALUATION_ENTITY_CODE:
-				storableObjects = mObjectLoader.loadEvaluations(ids);
-				break;
+				return mObjectLoader.loadEvaluations(ids);
 			case ObjectEntities.MEASUREMENT_ENTITY_CODE:
-				storableObjects = mObjectLoader.loadMeasurements(ids);
-				break;
+				return mObjectLoader.loadMeasurements(ids);
 			case ObjectEntities.TEST_ENTITY_CODE:
-				storableObjects = mObjectLoader.loadTests(ids);
-				break;
+				return mObjectLoader.loadTests(ids);
 			case ObjectEntities.RESULT_ENTITY_CODE:
-				storableObjects = mObjectLoader.loadResults(ids);
-				break;
+				return mObjectLoader.loadResults(ids);
 			case ObjectEntities.TEMPORALPATTERN_ENTITY_CODE:
-				storableObjects = mObjectLoader.loadTemporalPatterns(ids);
-				break;
+				return mObjectLoader.loadTemporalPatterns(ids);
 			default:
-				Log.errorMessage("MeasurementStorableObjectPool.loadStorableObjects | Unknown entity: '" + ObjectEntities.codeToString(entityCode.shortValue()) + "', entity code: " + entityCode);
-				storableObjects = null;
+				Log.errorMessage("MeasurementStorableObjectPool.loadStorableObjects | Unknown entity: '" + ObjectEntities.codeToString(entityCode) + "', entity code: " + entityCode);
+				return Collections.EMPTY_SET;
 		}
-		return storableObjects;
 	}
 
 	protected java.util.Set loadStorableObjectsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
@@ -311,81 +298,83 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 		return loadedCollection;
 	}
 
-	protected void saveStorableObjects(short code, java.util.Set list, boolean force) throws ApplicationException {
-		if (!list.isEmpty()) {
-			boolean alone = (list.size() == 1);			
-
-			switch (code) {
-				case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
-					if (alone)
-						mObjectLoader.saveMeasurementType((MeasurementType)list.iterator().next(), force);
-					else 
-						mObjectLoader.saveMeasurementTypes(list, force);
-					break;
-				case ObjectEntities.ANALYSISTYPE_ENTITY_CODE:
-					if (alone)
-						mObjectLoader.saveAnalysisType((AnalysisType)list.iterator().next(), force);
-					else 
-						mObjectLoader.saveAnalysisTypes(list, force);
-					break;
-				case ObjectEntities.EVALUATIONTYPE_ENTITY_CODE:
-					if (alone)
-						mObjectLoader.saveEvaluationType((EvaluationType)list.iterator().next(), force);
-					else 
-						mObjectLoader.saveEvaluationTypes(list, force);
-					break;
-				case ObjectEntities.SET_ENTITY_CODE:
-					if (alone)
-						mObjectLoader.saveSet((Set)list.iterator().next(), force);
-					else 
-						mObjectLoader.saveSets(list, force);
-					break;
-				case ObjectEntities.MS_ENTITY_CODE:
-					if (alone)
-						mObjectLoader.saveMeasurementSetup((MeasurementSetup)list.iterator().next(), force);
-					else 
-						mObjectLoader.saveMeasurementSetups(list, force);
-					break;
-				case ObjectEntities.ANALYSIS_ENTITY_CODE:
-					if (alone)
-						mObjectLoader.saveAnalysis((Analysis)list.iterator().next(), force);
-					else 
-						mObjectLoader.saveAnalyses(list, force);
-					break;
-				case ObjectEntities.EVALUATION_ENTITY_CODE:
-					if (alone)
-						mObjectLoader.saveEvaluation((Evaluation)list.iterator().next(), force);
-					else 
-						mObjectLoader.saveEvaluations(list, force);
-					break;
-				case ObjectEntities.MEASUREMENT_ENTITY_CODE:
-					if (alone)
-						mObjectLoader.saveMeasurement((Measurement)list.iterator().next(), force);
-					else 
-						mObjectLoader.saveMeasurements(list, force);
-					break;
-				case ObjectEntities.TEST_ENTITY_CODE:
-					if (alone)
-						mObjectLoader.saveTest((Test)list.iterator().next(), force);
-					else 
-						mObjectLoader.saveTests(list, force);
-					break;
-				case ObjectEntities.RESULT_ENTITY_CODE:
-					if (alone)
-						mObjectLoader.saveResult((Result)list.iterator().next(), force);
-					else 
-						mObjectLoader.saveResults(list, force);
-					break;
-				case ObjectEntities.TEMPORALPATTERN_ENTITY_CODE:
-					if (alone)
-						mObjectLoader.saveTemporalPattern((TemporalPattern)list.iterator().next(), force);
-					else 
-						mObjectLoader.saveTemporalPatterns(list, force);
-					break;
-				default:
-					Log.errorMessage("MeasurementStorableObjectPool.saveStorableObjects | Unknown entity: '" + ObjectEntities.codeToString(code) + "', entity code: " + code);
-			}
-
+	protected void saveStorableObjects(final java.util.Set storableObjects,
+			final boolean force)
+			throws ApplicationException {
+		if (storableObjects.isEmpty())
+			return;
+		assert StorableObject.hasSingleTypeEntities(storableObjects);
+		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(storableObjects);
+		final boolean singleton = storableObjects.size() == 1;
+		switch (entityCode) {
+			case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
+				if (singleton)
+					mObjectLoader.saveMeasurementType((MeasurementType)storableObjects.iterator().next(), force);
+				else 
+					mObjectLoader.saveMeasurementTypes(storableObjects, force);
+				break;
+			case ObjectEntities.ANALYSISTYPE_ENTITY_CODE:
+				if (singleton)
+					mObjectLoader.saveAnalysisType((AnalysisType)storableObjects.iterator().next(), force);
+				else 
+					mObjectLoader.saveAnalysisTypes(storableObjects, force);
+				break;
+			case ObjectEntities.EVALUATIONTYPE_ENTITY_CODE:
+				if (singleton)
+					mObjectLoader.saveEvaluationType((EvaluationType)storableObjects.iterator().next(), force);
+				else 
+					mObjectLoader.saveEvaluationTypes(storableObjects, force);
+				break;
+			case ObjectEntities.SET_ENTITY_CODE:
+				if (singleton)
+					mObjectLoader.saveSet((Set)storableObjects.iterator().next(), force);
+				else 
+					mObjectLoader.saveSets(storableObjects, force);
+				break;
+			case ObjectEntities.MS_ENTITY_CODE:
+				if (singleton)
+					mObjectLoader.saveMeasurementSetup((MeasurementSetup)storableObjects.iterator().next(), force);
+				else 
+					mObjectLoader.saveMeasurementSetups(storableObjects, force);
+				break;
+			case ObjectEntities.ANALYSIS_ENTITY_CODE:
+				if (singleton)
+					mObjectLoader.saveAnalysis((Analysis)storableObjects.iterator().next(), force);
+				else 
+					mObjectLoader.saveAnalyses(storableObjects, force);
+				break;
+			case ObjectEntities.EVALUATION_ENTITY_CODE:
+				if (singleton)
+					mObjectLoader.saveEvaluation((Evaluation)storableObjects.iterator().next(), force);
+				else 
+					mObjectLoader.saveEvaluations(storableObjects, force);
+				break;
+			case ObjectEntities.MEASUREMENT_ENTITY_CODE:
+				if (singleton)
+					mObjectLoader.saveMeasurement((Measurement)storableObjects.iterator().next(), force);
+				else 
+					mObjectLoader.saveMeasurements(storableObjects, force);
+				break;
+			case ObjectEntities.TEST_ENTITY_CODE:
+				if (singleton)
+					mObjectLoader.saveTest((Test)storableObjects.iterator().next(), force);
+				else 
+					mObjectLoader.saveTests(storableObjects, force);
+				break;
+			case ObjectEntities.RESULT_ENTITY_CODE:
+				if (singleton)
+					mObjectLoader.saveResult((Result)storableObjects.iterator().next(), force);
+				else 
+					mObjectLoader.saveResults(storableObjects, force);
+				break;
+			case ObjectEntities.TEMPORALPATTERN_ENTITY_CODE:
+				if (singleton)
+					mObjectLoader.saveTemporalPattern((TemporalPattern)storableObjects.iterator().next(), force);
+				else 
+					mObjectLoader.saveTemporalPatterns(storableObjects, force);
+				break;
+			default:
+				Log.errorMessage("MeasurementStorableObjectPool.saveStorableObjects | Unknown entity: '" + ObjectEntities.codeToString(entityCode) + "', entity code: " + entityCode);
 		}
 	}
 
@@ -413,16 +402,16 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 		instance.deleteImpl(id);
 	}
 
-	public static void delete(java.util.Set objects) throws IllegalDataException {
-		instance.deleteImpl(objects);
+	public static void delete(final java.util.Set identifiables) {
+		instance.deleteImpl(identifiables);
 	}
 
 	protected void deleteStorableObject(Identifier id) throws IllegalDataException {
 		mObjectLoader.delete(id);
 	}
 
-	protected void deleteStorableObjects(java.util.Set objects) throws IllegalDataException {
-		mObjectLoader.delete(objects);
+	protected void deleteStorableObjects(final java.util.Set identifiables) {
+		mObjectLoader.delete(identifiables);
 	}
 
 	public static void serializePool() {

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.14 2005/04/08 09:26:11 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.15 2005/04/12 08:14:17 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,7 +53,7 @@ import org.omg.CORBA.portable.IDLEntity;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2005/04/08 09:26:11 $
+ * @version $Revision: 1.15 $, $Date: 2005/04/12 08:14:17 $
  * @module scheme_v1
  */
 public final class SchemeProtoElement extends AbstractCloneableStorableObject
@@ -166,8 +166,12 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * @throws CreateObjectException
 	 */
 	SchemeProtoElement(final SchemeProtoElement_Transferable transferable) throws CreateObjectException {
-		this.schemeProtoElementDatabase = SchemeDatabaseContext.getSchemeProtoElementDatabase();
-		fromTransferable(transferable);
+		try {
+			this.schemeProtoElementDatabase = SchemeDatabaseContext.getSchemeProtoElementDatabase();
+			fromTransferable(transferable);
+		} catch (final ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}
 
 	/**
@@ -905,10 +909,10 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 
 	/**
 	 * @param transferable
-	 * @throws CreateObjectException
+	 * @throws ApplicationException 
 	 * @see StorableObject#fromTransferable(IDLEntity)
 	 */
-	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
+	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		final SchemeProtoElement_Transferable schemeProtoElement = (SchemeProtoElement_Transferable) transferable;
 		super.fromTransferable(schemeProtoElement.header);
 		this.name = schemeProtoElement.name;

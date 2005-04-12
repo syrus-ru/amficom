@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseSchemeObjectLoader.java,v 1.2 2005/04/08 09:26:11 bass Exp $
+ * $Id: DatabaseSchemeObjectLoader.java,v 1.3 2005/04/12 08:14:17 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,17 +15,44 @@ import java.util.*;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/04/08 09:26:11 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/12 08:14:17 $
  * @module scheme_v1
  */
 public class DatabaseSchemeObjectLoader implements SchemeObjectLoader {
 	/**
-	 * @param ids
-	 * @throws IllegalDataException
+	 * @param identifiables
 	 * @see SchemeObjectLoader#delete(Set)
 	 */
-	public void delete(final Set ids) throws IllegalDataException {
-		delete(null, ids);
+	public void delete(final Set identifiables) {
+		if (identifiables == null || identifiables.isEmpty())
+			return;
+		/**
+		 * @todo: use Trove collection instead java.util.Map
+		 */
+		final Map map = new HashMap();
+
+		/**
+		 * separate objects by kind of entity
+		 */
+		for (final Iterator identifiableIterator = identifiables.iterator(); identifiableIterator.hasNext();) {
+			final Identifiable identifiable = (Identifiable) identifiableIterator.next();
+
+			final Short entityCode = new Short(identifiable.getId().getMajor());
+			Set entityObjects = (Set) map.get(entityCode);
+			if (entityObjects == null) {
+				entityObjects = new HashSet();
+				map.put(entityCode, entityObjects);
+			}
+			entityObjects.add(identifiable);
+		}
+
+		for (final Iterator entityCodeIterator = map.keySet().iterator(); entityCodeIterator.hasNext();) {
+			final Short entityCode = (Short) entityCodeIterator.next();
+			final Set entityObjects = (Set) map.get(entityCode);
+			final StorableObjectDatabase storableObjectDatabase = SchemeDatabaseContext.getDatabase(entityCode);
+			if (storableObjectDatabase != null)
+				storableObjectDatabase.delete(entityObjects);
+		}
 	}
 
 	/**

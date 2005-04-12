@@ -1,5 +1,5 @@
 /*
- * $Id: GeneralStorableObjectPool.java,v 1.16 2005/04/08 14:12:03 arseniy Exp $
+ * $Id: GeneralStorableObjectPool.java,v 1.17 2005/04/12 08:11:43 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,8 +17,8 @@ import java.util.Set;
 import org.omg.CORBA.portable.IDLEntity;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/04/08 14:12:03 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.17 $, $Date: 2005/04/12 08:11:43 $
+ * @author $Author: bass $
  * @module general_v1
  */
 
@@ -144,23 +144,20 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 		return storableObject;
 	}
 
-	protected Set loadStorableObjects(Short entityCode, Set ids) throws ApplicationException {
-		Set loadedObjects = null;
-		switch (entityCode.shortValue()) {
+	protected Set loadStorableObjects(final Set ids) throws ApplicationException {
+		assert StorableObject.hasSingleTypeEntities(ids);
+		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
+		switch (entityCode) {
 			case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
-				loadedObjects = gObjectLoader.loadParameterTypes(ids);
-				break;
+				return gObjectLoader.loadParameterTypes(ids);
 			case ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE:
-				loadedObjects = gObjectLoader.loadCharacteristicTypes(ids);
-				break;
+				return gObjectLoader.loadCharacteristicTypes(ids);
 			case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
-				loadedObjects = gObjectLoader.loadCharacteristics(ids);
-				break;
+				return gObjectLoader.loadCharacteristics(ids);
 			default:
-				Log.errorMessage("GeneralStorableObjectPool.loadStorableObjects | Unknown entity: '" + ObjectEntities.codeToString(entityCode.shortValue()) + "', entity code: " + entityCode);
-				loadedObjects = null;
+				Log.errorMessage("GeneralStorableObjectPool.loadStorableObjects | Unknown entity: '" + ObjectEntities.codeToString(entityCode) + "', entity code: " + entityCode); //$NON-NLS-1$ //$NON-NLS-2$
+				return Collections.EMPTY_SET;
 		}
-		return loadedObjects;
 	}
 
 	protected Set loadStorableObjectsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
@@ -185,32 +182,35 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 
 	//public static void save()
 
-	protected void saveStorableObjects(short code, Set objects, boolean force) throws ApplicationException {
-		if (!objects.isEmpty()) {
-			boolean alone = (objects.size() == 1);
-			switch (code) {
-				case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
-					if (alone)
-						gObjectLoader.saveParameterType((ParameterType)objects.iterator().next(), force);
-					else 
-						gObjectLoader.saveParameterTypes(objects, force);
-					break;
-				case ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE:
-					if (alone)
-						gObjectLoader.saveCharacteristicType((CharacteristicType) objects.iterator().next(), force);
-					else
-						gObjectLoader.saveCharacteristicTypes(objects, force);
-					break;
-				case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
-					if (alone)
-						gObjectLoader.saveCharacteristic((Characteristic) objects.iterator().next(), force);
-					else
-						gObjectLoader.saveCharacteristics(objects, force);
-					break;
-				default:
-					Log.errorMessage("GeneralStorableObjectPool.saveStorableObjects | Unknown entity: '" + ObjectEntities.codeToString(code) + "', entity code: " + code);
-			}
-
+	protected void saveStorableObjects(final Set storableObjects,
+			final boolean force)
+			throws ApplicationException {
+		if (storableObjects.isEmpty())
+			return;
+		assert StorableObject.hasSingleTypeEntities(storableObjects);
+		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(storableObjects);
+		final boolean singleton = storableObjects.size() == 1;
+		switch (entityCode) {
+			case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
+				if (singleton)
+					gObjectLoader.saveParameterType((ParameterType)storableObjects.iterator().next(), force);
+				else 
+					gObjectLoader.saveParameterTypes(storableObjects, force);
+				break;
+			case ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE:
+				if (singleton)
+					gObjectLoader.saveCharacteristicType((CharacteristicType) storableObjects.iterator().next(), force);
+				else
+					gObjectLoader.saveCharacteristicTypes(storableObjects, force);
+				break;
+			case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
+				if (singleton)
+					gObjectLoader.saveCharacteristic((Characteristic) storableObjects.iterator().next(), force);
+				else
+					gObjectLoader.saveCharacteristics(storableObjects, force);
+				break;
+			default:
+				Log.errorMessage("GeneralStorableObjectPool.saveStorableObjects | Unknown entity: '" + ObjectEntities.codeToString(entityCode) + "', entity code: " + entityCode);
 		}
 	}
 
@@ -238,16 +238,16 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 		instance.deleteImpl(id);
 	}
 
-	public static void delete(Set objects) throws IllegalDataException {
-		instance.deleteImpl(objects);
+	public static void delete(final Set identifiables) {
+		instance.deleteImpl(identifiables);
 	}
 
 	protected void deleteStorableObject(Identifier id) throws IllegalDataException {
 		gObjectLoader.delete(id);
 	}
 	
-	protected void deleteStorableObjects(Set objects) throws IllegalDataException {
-		gObjectLoader.delete(objects);
+	protected void deleteStorableObjects(final Set identifiables) throws IllegalDataException {
+		gObjectLoader.delete(identifiables);
 	}
 
 	public static void serializePool() {

@@ -1,5 +1,5 @@
 /*
-* $Id: ResourceObjectLoader.java,v 1.9 2005/04/01 09:07:54 bob Exp $
+* $Id: ResourceObjectLoader.java,v 1.10 2005/04/12 08:14:28 bass Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/04/01 09:07:54 $
- * @author $Author: bob $
+ * @version $Revision: 1.10 $, $Date: 2005/04/12 08:14:28 $
+ * @author $Author: bass $
  * @module resource_v1
  */
 public interface ResourceObjectLoader {
@@ -38,6 +38,6 @@ public interface ResourceObjectLoader {
 	
 	void delete(Identifier id) throws IllegalDataException;
 
-	void delete(Set ids) throws IllegalDataException;
+	void delete(final Set identifiables) throws IllegalDataException;
 
 }

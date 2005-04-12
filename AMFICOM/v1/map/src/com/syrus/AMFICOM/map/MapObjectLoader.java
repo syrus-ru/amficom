@@ -1,5 +1,5 @@
 /*
- * $Id: MapObjectLoader.java,v 1.7 2005/04/01 11:11:05 bob Exp $
+ * $Id: MapObjectLoader.java,v 1.8 2005/04/12 08:13:31 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,15 +16,15 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/04/01 11:11:05 $
- * @author $Author: bob $
+ * @version $Revision: 1.8 $, $Date: 2005/04/12 08:13:31 $
+ * @author $Author: bass $
  * @module map_v1
  */
 public interface MapObjectLoader {
 
 	void delete(Identifier id) throws IllegalDataException;
 
-	void delete(Set ids) throws IllegalDataException;
+	void delete(final Set identifiables) throws IllegalDataException;
 
 	Collector loadCollector(Identifier id) throws ApplicationException;
 

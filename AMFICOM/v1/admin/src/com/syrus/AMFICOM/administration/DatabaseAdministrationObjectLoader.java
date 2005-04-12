@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseAdministrationObjectLoader.java,v 1.22 2005/04/05 10:32:31 arseniy Exp $
+ * $Id: DatabaseAdministrationObjectLoader.java,v 1.23 2005/04/12 08:12:38 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/04/05 10:32:31 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.23 $, $Date: 2005/04/12 08:12:38 $
+ * @author $Author: bass $
  * @module administration_v1
  */
 
@@ -190,45 +190,33 @@ public class DatabaseAdministrationObjectLoader extends AbstractObjectLoader imp
 			storableObjectDatabase.delete(id);
 	}
 
-	public void delete(Set objects) throws IllegalDataException {
-		if (objects == null || objects.isEmpty())
+	public void delete(final Set identifiables) {
+		if (identifiables == null || identifiables.isEmpty())
 			return;
 		/**
-		 * TODO: use Trove collection instead java.util.Map
+		 * @todo: use Trove collection instead java.util.Map
 		 */
-		Map map = new HashMap();
+		final Map map = new HashMap();
 
 		/**
 		 * separate objects by kind of entity
 		 */
-		Set entityObjects;
-		Short entityCode;
-		for (Iterator it = objects.iterator(); it.hasNext();) {
-			Object object = it.next();
-			Identifier identifier = null;
-			if (object instanceof Identifier)
-				identifier = (Identifier) object;
-			else
-				if (object instanceof Identifiable)
-					identifier = ((Identifiable) object).getId();
-				else
-					throw new IllegalDataException("DatabaseAdministrationObjectLoader.delete | Object "
-							+ object.getClass().getName() + " isn't Identifier or Identifiable");
+		for (final Iterator identifiableIterator = identifiables.iterator(); identifiableIterator.hasNext();) {
+			final Identifiable identifiable = (Identifiable) identifiableIterator.next();
 
-			entityCode = new Short(identifier.getMajor());
-			entityObjects = (Set) map.get(entityCode);
+			final Short entityCode = new Short(identifiable.getId().getMajor());
+			Set entityObjects = (Set) map.get(entityCode);
 			if (entityObjects == null) {
 				entityObjects = new HashSet();
 				map.put(entityCode, entityObjects);
 			}
-			entityObjects.add(object);
+			entityObjects.add(identifiable);
 		}
 
-		StorableObjectDatabase storableObjectDatabase;
-		for (Iterator it = map.keySet().iterator(); it.hasNext();) {
-			entityCode = (Short) it.next();
-			entityObjects = (Set) map.get(entityCode);
-			storableObjectDatabase = AdministrationDatabaseContext.getDatabase(entityCode);
+		for (final Iterator entityCodeIterator = map.keySet().iterator(); entityCodeIterator.hasNext();) {
+			final Short entityCode = (Short) entityCodeIterator.next();
+			final Set entityObjects = (Set) map.get(entityCode);
+			final StorableObjectDatabase storableObjectDatabase = AdministrationDatabaseContext.getDatabase(entityCode);
 			if (storableObjectDatabase != null)
 				storableObjectDatabase.delete(entityObjects);
 		}

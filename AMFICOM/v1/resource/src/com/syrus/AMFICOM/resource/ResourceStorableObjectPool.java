@@ -1,5 +1,5 @@
 /*
- * $Id: ResourceStorableObjectPool.java,v 1.14 2005/04/08 14:12:37 arseniy Exp $
+ * $Id: ResourceStorableObjectPool.java,v 1.15 2005/04/12 08:14:28 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,8 +26,8 @@ import java.util.Set;
 import org.omg.CORBA.portable.IDLEntity;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.14 $, $Date: 2005/04/08 14:12:37 $
+ * @author $Author: bass $
+ * @version $Revision: 1.15 $, $Date: 2005/04/12 08:14:28 $
  * @module resource_v1
  */
 public final class ResourceStorableObjectPool extends StorableObjectPool {
@@ -125,18 +125,16 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 		return storableObject;
 	}
 	
-	protected Set loadStorableObjects(Short entityCode, Set ids)
-			throws ApplicationException {
-		Set storableObjects;
-		switch (entityCode.shortValue()) {
-		case ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE:
-			storableObjects = rObjectLoader.loadImageResources(ids);
-			break;
-		default:
-			Log.errorMessage("ResourceStorableObjectPool.loadStorableObjects | Unknown entityCode : " + entityCode); //$NON-NLS-1$
-			storableObjects = null;
+	protected Set loadStorableObjects(final Set ids) throws ApplicationException {
+		assert StorableObject.hasSingleTypeEntities(ids);
+		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
+		switch (entityCode) {
+			case ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE:
+				return rObjectLoader.loadImageResources(ids);
+			default:
+				Log.errorMessage("ResourceStorableObjectPool.loadStorableObjects | Unknown entityCode : " + entityCode); //$NON-NLS-1$
+				return Collections.EMPTY_SET;
 		}
-		return storableObjects;
 	}
 	
 	protected Set loadStorableObjectsButIds(StorableObjectCondition condition, Set ids)
@@ -154,19 +152,23 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 		return loadedList;
 	}
 	
-	protected void saveStorableObjects(short code, Set list, boolean force) throws ApplicationException{
-		if (!list.isEmpty()) {
-			boolean alone = (list.size()==1);			
-			switch (code) {
-				case ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE:
-					if (alone)
-						rObjectLoader.saveImageResource((AbstractImageResource)list.iterator().next(), force);
-					else 
-						rObjectLoader.saveImageResources(list, force);
-					break;
-				default:
-					Log.errorMessage("ResourceStorableObjectPool.saveStorableObjects | Unknown Unknown entity : '" + ObjectEntities.codeToString(code) + "'");  //$NON-NLS-1$//$NON-NLS-2$
-			}
+	protected void saveStorableObjects(final Set storableObjects,
+			final boolean force)
+			throws ApplicationException {
+		if (storableObjects.isEmpty())
+			return;
+		assert StorableObject.hasSingleTypeEntities(storableObjects);
+		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(storableObjects);
+		final boolean singleton = storableObjects.size() == 1;
+		switch (entityCode) {
+			case ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE:
+				if (singleton)
+					rObjectLoader.saveImageResource((AbstractImageResource)storableObjects.iterator().next(), force);
+				else 
+					rObjectLoader.saveImageResources(storableObjects, force);
+				break;
+			default:
+				Log.errorMessage("ResourceStorableObjectPool.saveStorableObjects | Unknown Unknown entity : '" + ObjectEntities.codeToString(entityCode) + "'");  //$NON-NLS-1$//$NON-NLS-2$
 		}
 	}
 
@@ -194,16 +196,16 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 		rObjectLoader.delete(id);
 	}
 	
-	protected void deleteStorableObjects(Set ids) throws IllegalDataException {
-		rObjectLoader.delete(ids);
+	protected void deleteStorableObjects(final Set identifiables) throws IllegalDataException {
+		rObjectLoader.delete(identifiables);
 	}
 
 	public static void delete(Identifier id) {
 		instance.deleteImpl(id);
 	}
 
-	public static void delete(Set ids) throws IllegalDataException {
-		instance.deleteImpl(ids);
+	public static void delete(final Set identifiables) {
+		instance.deleteImpl(identifiables);
 	}
 
 	public static void serializePool(){

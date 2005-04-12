@@ -1,5 +1,5 @@
 /*
- * $Id: XMLConfigurationObjectLoader.java,v 1.11 2005/04/01 11:02:30 bass Exp $
+ * $Id: XMLConfigurationObjectLoader.java,v 1.12 2005/04/12 08:12:52 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.general.StorableObjectXML;
 import com.syrus.AMFICOM.general.StorableObjectXMLDriver;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/04/01 11:02:30 $
+ * @version $Revision: 1.12 $, $Date: 2005/04/12 08:12:52 $
  * @author $Author: bass $
  * @module configuration_v1
  */
@@ -43,8 +43,8 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		this.configurationXML.flush();
 	}
 
-	public void delete(Set ids) throws IllegalDataException {
-		for (Iterator it = ids.iterator(); it.hasNext();) {
+	public void delete(final Set identifiables) throws IllegalDataException {
+		for (Iterator it = identifiables.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			this.configurationXML.delete(id);
 		}

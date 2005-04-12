@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.8 2005/04/08 09:26:11 bass Exp $
+ * $Id: Scheme.java,v 1.9 2005/04/12 08:14:17 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.scheme;
 
 import com.syrus.AMFICOM.administration.AbstractCloneableDomainMember;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.ErrorMessages;
@@ -37,7 +38,7 @@ import org.omg.CORBA.portable.IDLEntity;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/04/08 09:26:11 $
+ * @version $Revision: 1.9 $, $Date: 2005/04/12 08:14:17 $
  * @module scheme_v1
  */
 public final class Scheme extends AbstractCloneableDomainMember implements Describable, SchemeCellContainer {
@@ -105,8 +106,12 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 * @throws CreateObjectException
 	 */
 	Scheme(final Scheme_Transferable transferable) throws CreateObjectException {
-		this.schemeDatabase = SchemeDatabaseContext.getSchemeDatabase();
-		fromTransferable(transferable);
+		try {
+			this.schemeDatabase = SchemeDatabaseContext.getSchemeDatabase();
+			fromTransferable(transferable);
+		} catch (final ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}
 
 	/**
@@ -407,10 +412,10 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 
 	/**
 	 * @param transferable
-	 * @throws CreateObjectException
+	 * @throws ApplicationException 
 	 * @see StorableObject#fromTransferable(IDLEntity)
 	 */
-	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
+	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		final Scheme_Transferable scheme = (Scheme_Transferable) transferable;
 		super.fromTransferable(scheme.header, new Identifier(scheme.domainId));
 		this.name = scheme.name;

@@ -1,5 +1,5 @@
 /*
- * $Id: XMLMapObjectLoader.java,v 1.8 2005/04/01 11:27:33 bass Exp $
+ * $Id: XMLMapObjectLoader.java,v 1.9 2005/04/12 08:13:31 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.general.StorableObjectXML;
 import com.syrus.AMFICOM.general.StorableObjectXMLDriver;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/04/01 11:27:33 $
+ * @version $Revision: 1.9 $, $Date: 2005/04/12 08:13:31 $
  * @author $Author: bass $
  * @module configuration_v1
  */
@@ -43,8 +43,8 @@ public final class XMLMapObjectLoader implements MapObjectLoader {
 		this.mapXML.flush();
 	}
 
-	public void delete(Set ids) throws IllegalDataException {
-		for (Iterator it = ids.iterator(); it.hasNext();) {
+	public void delete(final Set identifiables) throws IllegalDataException {
+		for (Iterator it = identifiables.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			this.mapXML.delete(id);
 		}
