@@ -1,5 +1,5 @@
 /*
- * $Id: EventType.java,v 1.16 2005/04/12 14:53:31 bob Exp $
+ * $Id: EventType.java,v 1.17 2005/04/12 17:08:08 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/04/12 14:53:31 $
- * @author $Author: bob $
+ * @version $Revision: 1.17 $, $Date: 2005/04/12 17:08:08 $
+ * @author $Author: arseniy $
  * @module event_v1
  */
 
@@ -139,13 +139,7 @@ public final class EventType extends StorableObjectType {
 
 	public IDLEntity getTransferable() {
 		Identifier_Transferable[] parTypeIds = null;
-		try {
-			parTypeIds = Identifier.createTransferables(this.parameterTypes);
-		}
-		catch (IllegalDataException ide) {
-			// Never
-			Log.errorException(ide);
-		}
+		parTypeIds = Identifier.createTransferables(this.parameterTypes);
 
 		return new EventType_Transferable(super.getHeaderTransferable(),
 										super.codename,

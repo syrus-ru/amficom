@@ -1,5 +1,5 @@
 /*
- * $Id: Set.java,v 1.59 2005/04/08 13:01:51 arseniy Exp $
+ * $Id: Set.java,v 1.60 2005/04/12 17:04:43 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,10 +30,9 @@ import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.AMFICOM.measurement.corba.SetSort;
 import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
 import com.syrus.util.HashCodeGenerator;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.59 $, $Date: 2005/04/08 13:01:51 $
+ * @version $Revision: 1.60 $, $Date: 2005/04/12 17:04:43 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -152,15 +151,7 @@ public final class Set extends StorableObject {
 		for (int i = 0; i < pts.length; i++)
 			pts[i] = (Parameter_Transferable) this.parameters[i].getTransferable();
 
-		Identifier_Transferable[] meIds = null;
-		try {
-			meIds = Identifier.createTransferables(this.monitoredElementIds);
-		}
-		catch (IllegalDataException ide) {
-			// Never
-			Log.errorException(ide);
-		}
-
+		Identifier_Transferable[] meIds = Identifier.createTransferables(this.monitoredElementIds);
 		return new Set_Transferable(super.getHeaderTransferable(),
 				SetSort.from_int(this.sort),
 				this.description,

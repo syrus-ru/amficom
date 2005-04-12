@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.59 2005/04/08 13:01:51 arseniy Exp $
+ * $Id: MeasurementSetup.java,v 1.60 2005/04/12 17:04:43 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,10 +26,9 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.59 $, $Date: 2005/04/08 13:01:51 $
+ * @version $Revision: 1.60 $, $Date: 2005/04/12 17:04:43 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -172,15 +171,7 @@ public final class MeasurementSetup extends StorableObject {
 	}
 
 	public IDLEntity getTransferable() {
-		Identifier_Transferable[] meIds = null;
-		try {
-			meIds = Identifier.createTransferables(this.monitoredElementIds);
-		}
-		catch (IllegalDataException ide) {
-			// Never
-			Log.errorException(ide);
-		}
-
+		Identifier_Transferable[] meIds = Identifier.createTransferables(this.monitoredElementIds);
 		return new MeasurementSetup_Transferable(super.getHeaderTransferable(),
 												 (Identifier_Transferable) this.parameterSet.getId().getTransferable(),
 												 (this.criteriaSet != null) ? (Identifier_Transferable) this.criteriaSet.getId().getTransferable() : (new Identifier_Transferable("")),

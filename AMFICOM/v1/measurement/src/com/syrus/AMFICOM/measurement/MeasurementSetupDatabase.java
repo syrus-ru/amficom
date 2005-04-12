@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.81 2005/04/05 16:00:44 arseniy Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.82 2005/04/12 17:03:52 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.81 $, $Date: 2005/04/05 16:00:44 $
+ * @version $Revision: 1.82 $, $Date: 2005/04/12 17:03:52 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -161,15 +161,10 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 			return;
 
 		Map meIdsMap = null;
-		try {
-			meIdsMap = this.retrieveLinkedEntityIds(measurementSetups,
-					ObjectEntities.MSMELINK_ENTITY,
-					MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID,
-					MeasurementSetupWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID);
-		}
-		catch (IllegalDataException e) {
-			throw new RetrieveObjectException(e);
-		}
+		meIdsMap = this.retrieveLinkedEntityIds(measurementSetups,
+				ObjectEntities.MSMELINK_ENTITY,
+				MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID,
+				MeasurementSetupWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID);
 
 		MeasurementSetup measurementSetup;
 		Identifier msId;
