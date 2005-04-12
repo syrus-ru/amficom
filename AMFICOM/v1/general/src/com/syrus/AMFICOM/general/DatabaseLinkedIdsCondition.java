@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseLinkedIdsCondition.java,v 1.6 2005/03/21 09:05:10 bob Exp $
+ * $Id: DatabaseLinkedIdsCondition.java,v 1.7 2005/04/12 16:43:00 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,8 +26,8 @@ import com.syrus.util.Log;
  *	}
  * </pre> 
  * 
- * @version $Revision: 1.6 $, $Date: 2005/03/21 09:05:10 $
- * @author $Author: bob $
+ * @version $Revision: 1.7 $, $Date: 2005/04/12 16:43:00 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public class DatabaseLinkedIdsCondition extends AbstractDatabaseLinkedIdsCondition {
@@ -100,7 +100,7 @@ public class DatabaseLinkedIdsCondition extends AbstractDatabaseLinkedIdsConditi
 		}
 	}	
 
-	public String getSQLQuery() throws IllegalDataException {
+	public String getSQLQuery() throws IllegalObjectEntityException {
 		return this.delegate.getSQLQuery();
 	}
 
