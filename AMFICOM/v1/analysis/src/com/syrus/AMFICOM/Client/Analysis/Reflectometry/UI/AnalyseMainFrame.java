@@ -2,8 +2,9 @@ package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.GraphicsEnvironment;
+import java.awt.Rectangle;
 import java.awt.SystemColor;
-import java.awt.Toolkit;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
@@ -19,6 +20,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JViewport;
+import javax.swing.SwingUtilities;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 
@@ -141,26 +143,30 @@ public class AnalyseMainFrame extends JFrame implements bsHashChangeListener,
 	
 	CreateAnalysisReportCommand analysisReportCommand;
 
-	public AnalyseMainFrame(final ApplicationContext aContext)// ApplicationModel
-														// aModel)
-	{
+	public AnalyseMainFrame(final ApplicationContext aContext)	{
 		super();
 		setContext(aContext);
 
-
 		this.addComponentListener(new ComponentAdapter() {
+
 			public void componentShown(ComponentEvent e) {
 				initModule();
-				desktopPane.setPreferredSize(desktopPane.getSize());			
-				arrange();
+				desktopPane.setPreferredSize(desktopPane.getSize());
+				SwingUtilities.invokeLater(new Runnable() {
+
+					public void run() {
+						arrange();
+					}
+				});
+
 			}
-		}
-			);
-		this.addWindowListener(new WindowAdapter()
-		{
-			public void windowClosing(WindowEvent e)
-			{
-				this_windowClosing(e);
+		});
+		this.addWindowListener(new WindowAdapter() {
+
+			public void windowClosing(WindowEvent e) {
+				internalDispatcher.unregister(AnalyseMainFrame.this, "contextchange");
+				Environment.getDispatcher().unregister(AnalyseMainFrame.this, "contextchange");
+				aContext.getApplicationModel().getCommand("menuExit").execute();
 			}
 		});
 
@@ -212,7 +218,7 @@ public class AnalyseMainFrame extends JFrame implements bsHashChangeListener,
 				return paramFrame;
 			}
 		});
-		
+
 		this.frames.put(STATS_FRAME, new UIDefaults.LazyValue() {
 
 			public Object createValue(UIDefaults table) {
@@ -223,7 +229,7 @@ public class AnalyseMainFrame extends JFrame implements bsHashChangeListener,
 				return statsFrame;
 			}
 		});
-		
+
 		this.frames.put(NOISE_FRAME, new UIDefaults.LazyValue() {
 
 			public Object createValue(UIDefaults table) {
@@ -249,7 +255,7 @@ public class AnalyseMainFrame extends JFrame implements bsHashChangeListener,
 		});
 
 		this.frames.put(WINDOW_ARRANGER, new UIDefaults.LazyValue() {
-	
+
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | WINDOW_ARRANGER", Log.FINEST);
 				return new WindowArranger(AnalyseMainFrame.this) {
@@ -275,7 +281,7 @@ public class AnalyseMainFrame extends JFrame implements bsHashChangeListener,
 						JInternalFrame anaSelectFrame = (JInternalFrame) f.frames
 								.get(AnalyseMainFrame.ANALYSIS_SELECTION_FRAME);
 						JInternalFrame dhf = (JInternalFrame) f.frames.get(AnalyseMainFrame.HISTOGRAMM_FRAME);
-						
+
 						normalize(paramFrame);
 						normalize(selectFrame);
 						normalize(statsFrame);
@@ -342,7 +348,7 @@ public class AnalyseMainFrame extends JFrame implements bsHashChangeListener,
 				return detailedEvFrame;
 			}
 		});
-		
+
 		this.frames.put(ANALYSIS_FRAME, new UIDefaults.LazyValue() {
 
 			public Object createValue(UIDefaults table) {
@@ -352,8 +358,8 @@ public class AnalyseMainFrame extends JFrame implements bsHashChangeListener,
 				analysisReportCommand.setParameter(CreateAnalysisReportCommand.PANEL, analysisFrame);
 				return analysisFrame;
 			}
-		});		
-		
+		});
+
 		this.frames.put(MARKERS_INFO_FRAME, new UIDefaults.LazyValue() {
 
 			public Object createValue(UIDefaults table) {
@@ -362,7 +368,7 @@ public class AnalyseMainFrame extends JFrame implements bsHashChangeListener,
 				desktopPane.add(mInfoFrame);
 				return mInfoFrame;
 			}
-		});		
+		});
 
 		this.frames.put(ANALYSIS_SELECTION_FRAME, new UIDefaults.LazyValue() {
 
@@ -371,9 +377,9 @@ public class AnalyseMainFrame extends JFrame implements bsHashChangeListener,
 				AnalysisSelectionFrame analysisSelectionFrame = new AnalysisSelectionFrame(aContext);
 				desktopPane.add(analysisSelectionFrame);
 				analysisReportCommand.setParameter(CreateAnalysisReportCommand.TABLE, analysisSelectionFrame);
-				return analysisSelectionFrame;				
+				return analysisSelectionFrame;
 			}
-		});		
+		});
 
 		this.frames.put(HISTOGRAMM_FRAME, new UIDefaults.LazyValue() {
 
@@ -382,19 +388,20 @@ public class AnalyseMainFrame extends JFrame implements bsHashChangeListener,
 				HistogrammFrame histogrammFrame = new HistogrammFrame(internalDispatcher);
 				desktopPane.add(histogrammFrame);
 				analysisReportCommand.setParameter(CreateAnalysisReportCommand.PANEL, histogrammFrame);
-				return histogrammFrame;				
+				return histogrammFrame;
 			}
-		});	
+		});
 
 		// dhf = new DerivHistoFrame(internal_dispatcher);
 
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		Dimension frameSize = new Dimension(screenSize.width,
-				screenSize.height - 24);
+//		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+//		Dimension frameSize = new Dimension(screenSize.width, screenSize.height - 24);
 
-		setSize(frameSize);
-		setLocation(0, 0);
-	
+		GraphicsEnvironment localGraphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		Rectangle maximumWindowBounds = localGraphicsEnvironment.getMaximumWindowBounds();
+		this.setSize(new Dimension(maximumWindowBounds.width - maximumWindowBounds.x, maximumWindowBounds.height - maximumWindowBounds.y));
+		this.setLocation(maximumWindowBounds.x, maximumWindowBounds.y);
+
 		Environment.addWindow(this);
 	}
 
@@ -650,7 +657,6 @@ public class AnalyseMainFrame extends JFrame implements bsHashChangeListener,
 	 */
 	public void operationPerformed(OperationEvent ae)	{
 		String actionCommand = ae.getActionCommand();
-		Log.debugMessage("AnalyseMainFrame.operationPerformed | actionCommand " + actionCommand, Log.FINEST);
 		if (actionCommand.equals("contextchange")) {
 			ContextChangeEvent cce = (ContextChangeEvent) ae;
 			System.out.println("perform context change \"" + Long.toHexString(cce.change_type) + "\" at "
@@ -869,14 +875,7 @@ public class AnalyseMainFrame extends JFrame implements bsHashChangeListener,
 			id);
 		aModel.getCommand("menuTraceRemoveCompare").setParameter("activeRefId",
 			id);
-	}
-
-	void this_windowClosing(WindowEvent e)
-	{
-		internalDispatcher.unregister(this, "contextchange");
-		Environment.getDispatcher().unregister(this, "contextchange");
-		aContext.getApplicationModel().getCommand("menuExit").execute();
-	}
+	}	
 
 	protected void processWindowEvent(WindowEvent e)
 	{
