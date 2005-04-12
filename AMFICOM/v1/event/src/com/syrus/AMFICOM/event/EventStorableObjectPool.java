@@ -1,5 +1,5 @@
 /*
- * $Id: EventStorableObjectPool.java,v 1.17 2005/04/12 08:13:17 bass Exp $
+ * $Id: EventStorableObjectPool.java,v 1.18 2005/04/12 16:25:52 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,9 +8,14 @@
 
 package com.syrus.AMFICOM.event;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Set;
+
+import org.omg.CORBA.portable.IDLEntity;
+
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectGroupEntities;
@@ -19,15 +24,9 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Set;
-
-import org.omg.CORBA.portable.IDLEntity;
-
 /**
- * @version $Revision: 1.17 $, $Date: 2005/04/12 08:13:17 $
- * @author $Author: bass $
+ * @version $Revision: 1.18 $, $Date: 2005/04/12 16:25:52 $
+ * @author $Author: arseniy $
  * @module event_v1
  */
 
@@ -242,7 +241,7 @@ public class EventStorableObjectPool extends StorableObjectPool {
 		instance.deleteImpl(identifiables);
 	}
 
-	protected void deleteStorableObject(Identifier id) throws IllegalDataException {
+	protected void deleteStorableObject(Identifier id) {
 		eObjectLoader.delete(id);
 	}
 

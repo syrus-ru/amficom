@@ -1,5 +1,5 @@
 /*
- * $Id: GeneralStorableObjectPool.java,v 1.17 2005/04/12 08:11:43 bass Exp $
+ * $Id: GeneralStorableObjectPool.java,v 1.18 2005/04/12 16:24:48 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,17 +8,17 @@
 
 package com.syrus.AMFICOM.general;
 
-import com.syrus.util.Log;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
 
+import com.syrus.util.Log;
+
 /**
- * @version $Revision: 1.17 $, $Date: 2005/04/12 08:11:43 $
- * @author $Author: bass $
+ * @version $Revision: 1.18 $, $Date: 2005/04/12 16:24:48 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -242,11 +242,11 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 		instance.deleteImpl(identifiables);
 	}
 
-	protected void deleteStorableObject(Identifier id) throws IllegalDataException {
+	protected void deleteStorableObject(Identifier id) {
 		gObjectLoader.delete(id);
 	}
 	
-	protected void deleteStorableObjects(final Set identifiables) throws IllegalDataException {
+	protected void deleteStorableObjects(final Set identifiables) {
 		gObjectLoader.delete(identifiables);
 	}
 

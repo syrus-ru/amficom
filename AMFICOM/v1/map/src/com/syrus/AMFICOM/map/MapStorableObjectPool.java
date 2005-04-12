@@ -1,5 +1,5 @@
 /*
- * $Id: MapStorableObjectPool.java,v 1.13 2005/04/12 08:13:31 bass Exp $
+ * $Id: MapStorableObjectPool.java,v 1.14 2005/04/12 16:26:27 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,9 +8,14 @@
 
 package com.syrus.AMFICOM.map;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Set;
+
+import org.omg.CORBA.portable.IDLEntity;
+
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectGroupEntities;
@@ -19,15 +24,9 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Set;
-
-import org.omg.CORBA.portable.IDLEntity;
-
 /**
- * @version $Revision: 1.13 $, $Date: 2005/04/12 08:13:31 $
- * @author $Author: bass $
+ * @version $Revision: 1.14 $, $Date: 2005/04/12 16:26:27 $
+ * @author $Author: arseniy $
  * @module map_v1
  */
 public final class MapStorableObjectPool extends StorableObjectPool {
@@ -361,11 +360,11 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 		instance.deleteImpl(identifiables);
 	}
 
-	protected void deleteStorableObject(final Identifier id) throws IllegalDataException {
+	protected void deleteStorableObject(final Identifier id) {
 	 	mapObjectLoader.delete(id);
 	}
 
-	protected void deleteStorableObjects(final Set identifiables) throws IllegalDataException {
+	protected void deleteStorableObjects(final Set identifiables) {
 		mapObjectLoader.delete(identifiables);
 	}
 

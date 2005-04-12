@@ -1,5 +1,5 @@
 /*
- * $Id: ResourceStorableObjectPool.java,v 1.15 2005/04/12 08:14:28 bass Exp $
+ * $Id: ResourceStorableObjectPool.java,v 1.16 2005/04/12 16:26:20 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,9 +8,14 @@
 
 package com.syrus.AMFICOM.resource;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Set;
+
+import org.omg.CORBA.portable.IDLEntity;
+
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectGroupEntities;
@@ -19,15 +24,9 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Set;
-
-import org.omg.CORBA.portable.IDLEntity;
-
 /**
- * @author $Author: bass $
- * @version $Revision: 1.15 $, $Date: 2005/04/12 08:14:28 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.16 $, $Date: 2005/04/12 16:26:20 $
  * @module resource_v1
  */
 public final class ResourceStorableObjectPool extends StorableObjectPool {
@@ -192,11 +191,11 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 		instance.cleanChangedStorableObjectsImpl();
 	}
 	
-	protected void deleteStorableObject(Identifier id) throws IllegalDataException {
+	protected void deleteStorableObject(Identifier id) {
 		rObjectLoader.delete(id);
 	}
 	
-	protected void deleteStorableObjects(final Set identifiables) throws IllegalDataException {
+	protected void deleteStorableObjects(final Set identifiables) {
 		rObjectLoader.delete(identifiables);
 	}
 

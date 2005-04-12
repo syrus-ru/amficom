@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.79 2005/04/12 08:18:25 bass Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.80 2005/04/12 16:25:42 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,6 @@ import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectGroupEntities;
@@ -25,8 +24,8 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.79 $, $Date: 2005/04/12 08:18:25 $
- * @author $Author: bass $
+ * @version $Revision: 1.80 $, $Date: 2005/04/12 16:25:42 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -406,11 +405,11 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 		instance.deleteImpl(identifiables);
 	}
 
-	protected void deleteStorableObject(Identifier id) throws IllegalDataException {
+	protected void deleteStorableObject(Identifier id) {
 		mObjectLoader.delete(id);
 	}
 
-	protected void deleteStorableObjects(final java.util.Set identifiables) throws IllegalDataException {
+	protected void deleteStorableObjects(final java.util.Set identifiables) {
 		mObjectLoader.delete(identifiables);
 	}
 
