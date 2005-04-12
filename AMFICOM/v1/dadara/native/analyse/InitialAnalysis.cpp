@@ -141,42 +141,17 @@ void InitialAnalysis::performAnalysis()
 void InitialAnalysis::findEventsBySplashes(ArrList& splashes)
 {//* мёртвую зону ищём  чуть иначе
     int shift = 0;
-    int begin = -1;
-    int end = -1;
     if( splashes.getLength() <=2 )
 return;
 	Splash* sp1 = (Splash*)splashes[0];
     Splash* sp2;
-    if(sp1->sign<0)
-    { begin = 0;
-      end  = sp1->end_thr;
-    }
-    else
-    { for(;;)
-      {	sp1 = (Splash*)splashes[shift];
-        sp2 = (Splash*)splashes[shift+1];
-        shift++;
-        if(sp2->sign<0)
-        { begin = sp1->begin_thr;
-          end = sp2->end_thr;
-      break;
-        }
-      }
-    }
-    if(end !=-1 )
-    { EventParams *ep = new EventParams;
-      ep->type = EventParams::DEADZONE;
-      ep->begin = begin; ep->end = end;
-      if(ep->end > lastNonZeroPoint){ ep->end = lastNonZeroPoint;}
-      //ep->gain = 0;  ep->gain_thr = 0;
-      events->add(ep);
-    }
-// ищем остальные коннекторы  и сварки
-   for(int i = shift+1; i<splashes.getLength()-1; i++)
-   {  int len = processIfIsConnector(i, splashes);
+    shift = processDeadZone(splashes);// ищем мёртвую зону 
+	// ищем остальные коннекторы  и сварки
+    for(int i = shift+1; i<splashes.getLength()-1; i++)
+    { int len = processIfIsConnector(i, splashes);
       if(len !=0)// если коннектор был найден
       { i+= len;
-   continue;
+    continue;
       }
       sp1 = (Splash*)splashes[i];
       sp2 = (Splash*)splashes[i+1];
@@ -190,16 +165,61 @@ return;
           setUnrecognizedParamsBySplashes((EventParams&)*ep, (Splash&)*sp1, (Splash&)*sp2 );
           events->add(ep);
           i++;// потому что состоит из двух всплесков
-   continue;
+	continue;
       }
       // сварка
       if( sp1->begin_weld_n != -1 && fabs(sp1->end_weld_n-sp1->begin_weld_n)>1) //сварка
       {	EventParams *ep = new EventParams;
         setSpliceParamsBySplash( (EventParams&)*ep, (Splash&)*sp1 );
         events->add(ep);
-   continue;
+	continue;
       }
     }
+}
+// -------------------------------------------------------------------------------------------------
+int InitialAnalysis::processDeadZone(ArrList& splashes)
+{   int i, shift = 0;
+	int begin = 0, end = -1;
+    int n_max = 0, n_min =0;
+    double f_max = 0, f_min =0;
+	Splash* sp1 = (Splash*)splashes[0];
+    Splash* sp2 = (Splash*)splashes[1];
+    if(sp1->sign<0)
+    { begin = 0;
+      end  = sp1->end_thr;
+    }
+    else
+    { for(i = 0; sp2->begin_thr<reflectiveSize && i+1<splashes.getLength(); i++)
+      { sp1 = (Splash*)splashes[i];
+        sp2 = (Splash*)splashes[i+1];
+        if(sp1->sign>0 && f_max<sp1->f_extr )
+        { f_max = sp1->f_extr;
+          begin = sp1->begin_thr;
+        }
+        if(sp2->sign<0 && f_min>sp2->f_extr && sp2->end_thr>begin)
+        { f_min = sp2->f_extr;
+          end = sp2->end_thr;
+          shift = i+1;
+        }
+      }
+    }
+    if(end == -1)// если не нашли в пределах reflectiveSize , то ищем первый вниз
+    { for( ; i<splashes.getLength(); i++)
+      { sp1 = (Splash*)splashes[i];
+        if(sp1->sign<0)
+        { end = sp1->end_thr;
+          shift = i;
+        }
+      }
+    }
+    if(end !=-1 )
+    { EventParams *ep = new EventParams;
+      ep->type = EventParams::DEADZONE;
+      ep->begin = begin; ep->end = end;
+      if(ep->end > lastNonZeroPoint){ ep->end = lastNonZeroPoint;}
+      events->add(ep);
+    }
+    return shift;
 }
 // -------------------------------------------------------------------------------------------------
 // Посмотреть, есть ли что-то похожее на коннектор , если начать с i-го всплеска, и если есть - обработать и
