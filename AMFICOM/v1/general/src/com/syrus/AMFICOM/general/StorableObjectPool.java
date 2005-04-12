@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.67 2005/04/12 16:16:11 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.68 2005/04/12 19:27:38 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import java.util.Set;
 import org.omg.CORBA.portable.IDLEntity;
 
 /**
- * @version $Revision: 1.67 $, $Date: 2005/04/12 16:16:11 $
+ * @version $Revision: 1.68 $, $Date: 2005/04/12 19:27:38 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -281,6 +281,8 @@ public abstract class StorableObjectPool {
 		}
 
 		if (storableObject.isChanged()) {
+			Log.debugMessage("StorableObjectPool.saveWithDependencies | Object '" + storableObject.getId() + "' is changed",
+					Log.DEBUGLEVEL10);
 			Integer dependencyKey = new Integer(-dependencyLevel);
 			Map levelSavingObjectsMap = (Map) this.savingObjectsMap.get(dependencyKey);
 			if (levelSavingObjectsMap == null) {
