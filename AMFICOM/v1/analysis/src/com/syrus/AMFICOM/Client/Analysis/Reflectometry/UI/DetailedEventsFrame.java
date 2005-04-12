@@ -49,13 +49,14 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 	JViewport viewportComp = new JViewport();
 	private JTabbedPane tabbedPane = new JTabbedPane();
 
-	private static String linear = EventsFrame.LINEAR;
-	private static String connector = EventsFrame.CONNECTOR; 
-	private static String gain = EventsFrame.GAIN;
-	private static String loss = EventsFrame.LOSS;
-	private static String initiate = EventsFrame.INITIATE;
-	private static String terminate = EventsFrame.TERMINATE;
-	private static String noid = EventsFrame.NO_ID;
+	// these are just internally-used keys
+	private static final String tmLinear = "linear";
+	private static final String tmInitiate = "initiate";
+	private static final String tmNoid = "noid";
+	private static final String tmConnector = "connector";
+	private static final String tmLoss = "loss";
+	private static final String tmGain = "gain";
+	private static final String tmTerminate = "terminate";
 
 	public DetailedEventsFrame()
 	{
@@ -145,7 +146,7 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 						LangModelAnalyse.getString("eventMaxDeviation")
 				},
 				null);
-		tModels.put(linear, linearModel);
+		tModels.put(tmLinear, linearModel);
 
 		FixedSizeEditableTableModel initialModel = new FixedSizeEditableTableModel(
 				new String[] {LangModelAnalyse.getString("eventDetailedParam"),
@@ -160,7 +161,7 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 						LangModelAnalyse.getString("eventADZ")
 				},
 				null);
-		tModels.put(initiate, initialModel);
+		tModels.put(tmInitiate, initialModel);
 
 		FixedSizeEditableTableModel noidModel = new FixedSizeEditableTableModel(
 				new String[] {LangModelAnalyse.getString("eventDetailedParam"),
@@ -174,7 +175,7 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 						LangModelAnalyse.getString("eventMaxDeviation")
 				},
 				null);
-		tModels.put(noid, noidModel);
+		tModels.put(tmNoid, noidModel);
 
 		FixedSizeEditableTableModel connectorModel = new FixedSizeEditableTableModel(
 				new String[] {LangModelAnalyse.getString("eventDetailedParam"),
@@ -189,7 +190,7 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 						//LangModelAnalyse.getString("eventFormFactor") // removed by saa 
 				},
 				null);
-		tModels.put(connector, connectorModel);
+		tModels.put(tmConnector, connectorModel);
 
 		FixedSizeEditableTableModel spliceModel = new FixedSizeEditableTableModel(
 				new String[] {LangModelAnalyse.getString("eventDetailedParam"),
@@ -202,8 +203,8 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 						LangModelAnalyse.getString("eventEndLevel")
 				},
 				null);
-		tModels.put(loss, spliceModel);
-		tModels.put(gain, spliceModel);
+		tModels.put(tmLoss, spliceModel);
+		tModels.put(tmGain, spliceModel);
 
 		FixedSizeEditableTableModel terminateModel = new FixedSizeEditableTableModel(
 				new String[] {LangModelAnalyse.getString("eventDetailedParam"),
@@ -217,7 +218,7 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 						//LangModelAnalyse.getString("eventFormFactor") // removed by saa
 				},
 				null);
-		tModels.put(terminate, terminateModel);
+		tModels.put(tmTerminate, terminateModel);
 
 		jTable = new ATable();
 
@@ -303,41 +304,8 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 		((CompareTableRenderer)jTableComp.getDefaultRenderer(Object.class))
 			.setSameType(dataType == etalonType);
 
-		String dataT;
-		switch(dataType)
-		{
-		case SimpleReflectogramEvent.REFLECTIVE:
-		    dataT = LangModelAnalyse.getString("eventType4");
-			break;
-		case SimpleReflectogramEvent.GAIN:
-			// fall through
-		case SimpleReflectogramEvent.LOSS:
-		    dataT = LangModelAnalyse.getString("eventType3");
-			break;
-		case SimpleReflectogramEvent.LINEAR:
-		    dataT = LangModelAnalyse.getString("eventType0");
-			break;
-		default:
-		    dataT = LangModelAnalyse.getString("eventTypeUnk");
-		}
-
-		String etalonT;
-		switch(etalonType)
-		{
-		case SimpleReflectogramEvent.REFLECTIVE:
-		    etalonT = LangModelAnalyse.getString("eventType4");
-			break;
-		case SimpleReflectogramEvent.GAIN:
-			// fall through
-		case SimpleReflectogramEvent.LOSS:
-		    etalonT = LangModelAnalyse.getString("eventType3");
-			break;
-		case SimpleReflectogramEvent.LINEAR:
-		    etalonT = LangModelAnalyse.getString("eventType0");
-			break;
-		default:
-		    etalonT = LangModelAnalyse.getString("eventTypeUnk");
-		}
+		String dataT = AnalysisUtil.getSimpleEventNameByType(dataType);
+		String etalonT = AnalysisUtil.getSimpleEventNameByType(etalonType);
 
 		ctModel.setValueAt(dataT, 0, 1);
 		ctModel.setValueAt(etalonT, 1, 1);
@@ -398,11 +366,13 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 		TraceEvent ev = a.events[num];
 
 		FixedSizeEditableTableModel tModel = null;
-		switch (ev.getType())
+		int eventType = ev.getType();
+		String eventTypeName = AnalysisUtil.getTraceEventNameByType(eventType);
+		switch (eventType)
 		{
 			case TraceEvent.LINEAR:
-				tModel = (FixedSizeEditableTableModel) tModels.get(linear);
-				tModel.setValueAt(linear, 0, 0);
+				tModel = (FixedSizeEditableTableModel) tModels.get(tmLinear);
+				tModel.setValueAt(eventTypeName, 0, 0);
 				tModel.updateColumn(new Object[] {
 						String.valueOf(num + 1),
 						MathRef.round_3((ev.last_point - ev.first_point) * res_km) + " "
@@ -414,8 +384,8 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 					1);
 				break;
 			case TraceEvent.INITIATE:
-				tModel = (FixedSizeEditableTableModel) tModels.get(initiate);
-				tModel.setValueAt(initiate, 0, 0);
+				tModel = (FixedSizeEditableTableModel) tModels.get(tmInitiate);
+				tModel.setValueAt(eventTypeName, 0, 0);
 				tModel.updateColumn(new Object[] {
 						String.valueOf(num + 1),
 						MathRef.round_3((ev.last_point - ev.first_point) * res_km) + " "
@@ -428,8 +398,8 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 								+ LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_MT)}, 1);
 				break;
 			case TraceEvent.NON_IDENTIFIED:
-				tModel = (FixedSizeEditableTableModel) tModels.get(noid);
-				tModel.setValueAt(noid, 0, 0);
+				tModel = (FixedSizeEditableTableModel) tModels.get(tmNoid);
+				tModel.setValueAt(eventTypeName, 0, 0);
 				tModel.updateColumn(new Object[] {
 						String.valueOf(num + 1),
 						MathRef.round_3((ev.last_point - ev.first_point) * res_km) + " "
@@ -440,8 +410,8 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 					1);
 				break;
 			case TraceEvent.CONNECTOR:
-				tModel = (FixedSizeEditableTableModel) tModels.get(connector);
-				tModel.setValueAt(connector, 0, 0);
+				tModel = (FixedSizeEditableTableModel) tModels.get(tmConnector);
+				tModel.setValueAt(eventTypeName, 0, 0);
 				tModel.updateColumn(new Object[] {
 						String.valueOf(num + 1),
 						MathRef.round_3((ev.last_point - ev.first_point) * res_km) + " "
@@ -452,8 +422,8 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 					}, 1);
 				break;
 			case TraceEvent.LOSS:
-				tModel = (FixedSizeEditableTableModel) tModels.get(loss);
-				tModel.setValueAt(loss, 0, 0);
+				tModel = (FixedSizeEditableTableModel) tModels.get(tmLoss);
+				tModel.setValueAt(eventTypeName, 0, 0);
 				tModel.updateColumn(new Object[] {
 						String.valueOf(num + 1),
 						MathRef.round_3((ev.last_point - ev.first_point) * res_km) + " "
@@ -463,8 +433,8 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 					1);
 				break;
 			case TraceEvent.GAIN:
-				tModel = (FixedSizeEditableTableModel) tModels.get(gain);
-				tModel.setValueAt(gain, 0, 0);
+				tModel = (FixedSizeEditableTableModel) tModels.get(tmGain);
+				tModel.setValueAt(eventTypeName, 0, 0);
 				tModel.updateColumn(new Object[] {
 						String.valueOf(num + 1),
 						MathRef.round_3((ev.last_point - ev.first_point) * res_km) + " "
@@ -474,8 +444,8 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 					1);
 				break;
 			case TraceEvent.TERMINATE:
-				tModel = (FixedSizeEditableTableModel) tModels.get(terminate);
-				tModel.setValueAt(terminate, 0, 0);
+				tModel = (FixedSizeEditableTableModel) tModels.get(tmTerminate);
+				tModel.setValueAt(eventTypeName, 0, 0);
 				tModel.updateColumn(new Object[] {
 						String.valueOf(num + 1),
 						MathRef.round_3((ev.last_point - ev.first_point) * res_km) + " "
