@@ -1,5 +1,5 @@
 /*
- * $Id: SetDatabase.java,v 1.82 2005/04/12 17:03:29 arseniy Exp $
+ * $Id: SetDatabase.java,v 1.83 2005/04/12 19:40:36 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,7 +41,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.82 $, $Date: 2005/04/12 17:03:29 $
+ * @version $Revision: 1.83 $, $Date: 2005/04/12 19:40:36 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -94,13 +94,6 @@ public class SetDatabase extends StorableObjectDatabase {
 		throw new IllegalDataException("SetDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
-	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		Set set = this.fromStorableObject(storableObject);
-		this.retrieveEntity(set);
-		this.retrieveSetParameters(set);
-		this.retrieveSetMELinksByOneQuery(Collections.singleton(set));
-	}
-
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		Set set = (storableObject == null) ?
@@ -117,62 +110,11 @@ public class SetDatabase extends StorableObjectDatabase {
 		return set;
 	}
 
-	private void retrieveSetParameters(Set set) throws RetrieveObjectException {
-		java.util.Set parameters = new HashSet();
-
-		String setIdStr = DatabaseIdentifier.toSQLString(set.getId());
-		String sql = SQL_SELECT
-			+ StorableObjectWrapper.COLUMN_ID + COMMA			
-			+ StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
-			+ SetWrapper.LINK_COLUMN_PARAMETER_VALUE
-			+ SQL_FROM
-			+ ObjectEntities.SETPARAMETER_ENTITY
-			+ SQL_WHERE
-			+ SetWrapper.LINK_COLUMN_SET_ID +EQUALS
-			+ setIdStr;
-		Statement statement = null;
-		ResultSet resultSet = null;
-		Connection connection = DatabaseConnection.getConnection();
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("SetDatabase.retrieveSetParameters | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql);
-			SetParameter parameter;
-			ParameterType parameterType;
-			while (resultSet.next()) {
-				try {
-					parameterType = (ParameterType) GeneralStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_TYPE_ID), true);
-				}
-				catch (ApplicationException ae) {
-					throw new RetrieveObjectException(ae);
-				}
-				parameter = new SetParameter(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
-											 parameterType,
-											 ByteArrayDatabase.toByteArray(resultSet.getBlob(SetWrapper.LINK_COLUMN_PARAMETER_VALUE)));
-				parameters.add(parameter);
-			}
-		}
-		catch (SQLException sqle) {
-			String mesg = "SetDatabase.retrieveSetParameters | Cannot retrieve parameters for set '" + setIdStr + "' -- " + sqle.getMessage();
-			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-			finally {
-				DatabaseConnection.releaseConnection(connection);
-			}
-		}
-		set.setParameters0((SetParameter[]) parameters.toArray(new SetParameter[parameters.size()]));
+	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+		Set set = this.fromStorableObject(storableObject);
+		this.retrieveEntity(set);
+		this.retrieveSetParametersByOneQuery(Collections.singleton(set));
+		this.retrieveSetMELinksByOneQuery(Collections.singleton(set));
 	}
 
 	private void retrieveSetParametersByOneQuery(java.util.Set sets) throws RetrieveObjectException {
