@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractObjectLoader.java,v 1.3 2005/04/08 08:51:01 bass Exp $
+ * $Id: AbstractObjectLoader.java,v 1.4 2005/04/12 16:31:40 arseniy Exp $
  * 
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/04/08 08:51:01 $
- * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2005/04/12 16:31:40 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public abstract class AbstractObjectLoader {
@@ -44,7 +44,7 @@ public abstract class AbstractObjectLoader {
 		}
 	}
 
-	protected final Identifier_Transferable[] createLoadIdsTransferable(final Set ids, final Set butObjects) throws IllegalDataException {
+	protected final Identifier_Transferable[] createLoadIdsTransferable(final Set ids, final Set butObjects) {
 		Identifier id;
 		Set loadIds = new HashSet(ids);
 		for (Iterator it = butObjects.iterator(); it.hasNext();) {
@@ -55,8 +55,7 @@ public abstract class AbstractObjectLoader {
 		return Identifier.createTransferables(loadIds);
 	}
 
-	protected final Identifier_Transferable[] createLoadButIdsTransferable(final Set ids, final Set alsoButObjects)
-			throws IllegalDataException {
+	protected final Identifier_Transferable[] createLoadButIdsTransferable(final Set ids, final Set alsoButObjects) {
 		Identifier id;
 		Set loadButIds = new HashSet(ids);
 		for (Iterator it = alsoButObjects.iterator(); it.hasNext();) {
