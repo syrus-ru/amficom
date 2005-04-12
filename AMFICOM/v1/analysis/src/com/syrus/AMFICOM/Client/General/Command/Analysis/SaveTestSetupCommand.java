@@ -101,20 +101,17 @@ public class SaveTestSetupCommand extends VoidCommand
 						LangModelAnalyse.getString("error"), JOptionPane.OK_OPTION);
 				return;
 			}
-			if ((type & ETALON) != 0)
+			try
 			{
-				try
-				{
-					ms.setEtalon(AnalysisUtil.createEtalon(user_id, ms.getMonitoredElementIds(), mtm));
-				} catch (ApplicationException e1)
-				{
-					System.err.println("SaveTestSetupCommand: ApplicationException (etalon)");
-					JOptionPane.showMessageDialog(
-						Environment.getActiveWindow(),
-						LangModelAnalyse.getString("createObjectProblem"),
-						LangModelAnalyse.getString("error"), JOptionPane.OK_OPTION);
-					return;
-				}
+				ms.setEtalon(AnalysisUtil.createEtalon(user_id, ms.getMonitoredElementIds(), mtm));
+			} catch (ApplicationException e1)
+			{
+				System.err.println("SaveTestSetupCommand: ApplicationException (etalon)");
+				JOptionPane.showMessageDialog(
+					Environment.getActiveWindow(),
+					LangModelAnalyse.getString("createObjectProblem"),
+					LangModelAnalyse.getString("error"), JOptionPane.OK_OPTION);
+				return;
 			}
 		}
 
@@ -139,10 +136,10 @@ public class SaveTestSetupCommand extends VoidCommand
 			MeasurementStorableObjectPool.flush(true);
 		}
 		catch(VersionCollisionException ex)
-		{
+		{ // FIXME: process exception
 		}
 		catch(ApplicationException ex)
-		{
+		{ // FIXME: process exception
 		}
 
 	}
