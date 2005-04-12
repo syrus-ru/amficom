@@ -1,5 +1,5 @@
 /*
-* $Id: DatabaseStorableObjectCondition.java,v 1.1 2005/02/03 14:56:10 bob Exp $
+* $Id: DatabaseStorableObjectCondition.java,v 1.2 2005/04/12 16:33:30 arseniy Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -10,14 +10,16 @@ package com.syrus.AMFICOM.general;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/02/03 14:56:10 $
- * @author $Author: bob $
+ * @version $Revision: 1.2 $, $Date: 2005/04/12 16:33:30 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public interface DatabaseStorableObjectCondition {
+	String TRUE_CONDITION = "1=1";
+	String FALSE_CONDITION = "1=0";
 	
 	Short getEntityCode();
 	
-	String getSQLQuery() throws IllegalDataException;
+	String getSQLQuery() throws IllegalObjectEntityException;
 	
 }
