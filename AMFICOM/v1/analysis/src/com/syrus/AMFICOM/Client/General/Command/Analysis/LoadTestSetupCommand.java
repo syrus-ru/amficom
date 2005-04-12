@@ -70,7 +70,7 @@ public class LoadTestSetupCommand extends VoidCommand
 
 		aContext.getDispatcher().notify(new RefUpdateEvent(this,
 				RefUpdateEvent.THRESHOLDS_UPDATED_EVENT));
-		Heap.notifyEtalonMTMCUpdated();
+		//Heap.notifyEtalonMTMCUpdated();
 		Heap.notifyPrimaryTraceClosed();
 		Heap.notifyPrimaryTraceOpened();
 		Heap.setCurrentTracePrimary();

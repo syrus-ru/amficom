@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.17 2005/04/12 14:15:41 saa Exp $
+ * $Id: Heap.java,v 1.18 2005/04/12 16:40:32 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.io.BellcoreStructure;
  * использование остальных методов работы с BS
  * 
  * @author $Author: saa $
- * @version $Revision: 1.17 $, $Date: 2005/04/12 14:15:41 $
+ * @version $Revision: 1.18 $, $Date: 2005/04/12 16:40:32 $
  * @module
  */
 public class Heap
@@ -81,9 +81,6 @@ public class Heap
 	}
 	public static void setMTAEPrimary(ModelTraceAndEventsImpl mtae) {
 		primaryMTAE = mtae;
-	}
-	public static void setMTMEtalon(ModelTraceManager mtm) {
-		etalonMTM = mtm;
 	}
 	public static RefAnalysis getRefAnalysisByKey(String key) {
 		return (RefAnalysis)refAnalysisHash.get(key);
@@ -295,17 +292,17 @@ public class Heap
 		for (Iterator it = primaryMTMListeners.iterator(); it.hasNext(); )
 				((PrimaryMTMListener)it.next()).primaryMTMCUpdated();
 	}
-	public static void notifyPrimaryMTMRemoved()
+	private static void notifyPrimaryMTMRemoved()
 	{
 		for (Iterator it = primaryMTMListeners.iterator(); it.hasNext(); )
 				((PrimaryMTMListener)it.next()).primaryMTMRemoved();
 	}
-	public static void notifyEtalonMTMCUpdated()
+	private static void notifyEtalonMTMCUpdated()
 	{
 		for (Iterator it = etalonMTMListeners.iterator(); it.hasNext(); )
 				((EtalonMTMListener)it.next()).etalonMTMCUpdated();
 	}
-	public static void notifyEtalonMTMRemoved()
+	private static void notifyEtalonMTMRemoved()
 	{
 		for (Iterator it = primaryMTMListeners.iterator(); it.hasNext(); )
 				((EtalonMTMListener)it.next()).etalonMTMRemoved();
@@ -389,14 +386,14 @@ public class Heap
 		if (key.equals(PRIMARY_TRACE_KEY))
 			notifyPrimaryTraceOpened();
 	}
-	public static void etalonMTMCUpdated()
+	/*public static void etalonMTMCUpdated()
 	{
 		notifyEtalonMTMCUpdated();
 	}
 	public static void etalonMTMRemoved()
 	{
 		notifyEtalonMTMCUpdated();
-	}
+	}*/
 	public static void setCurrentTrace(String id)
 	{
 		currentTrace = id;
@@ -406,5 +403,12 @@ public class Heap
 	{
 		currentTrace = PRIMARY_TRACE_KEY;
 		notifyCurrentTraceChanged();
+	}
+	public static void setMTMEtalon(ModelTraceManager mtm) {
+		etalonMTM = mtm;
+		if (mtm == null)
+			notifyEtalonMTMRemoved();
+		else
+			notifyEtalonMTMCUpdated();
 	}
 }

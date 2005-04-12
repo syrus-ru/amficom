@@ -58,6 +58,6 @@ public class LoadEtalonCommand extends VoidCommand
 			return;
 		}
 
-		Heap.etalonMTMCUpdated();
+		//Heap.etalonMTMCUpdated();
 	}
 }
