@@ -6,8 +6,11 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.analysis.dadara.DataStreamableUtil;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
+import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
+import com.syrus.AMFICOM.analysis.dadara.TraceEvent;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
@@ -310,5 +313,63 @@ public class AnalysisUtil
 		{
 			ex.printStackTrace();
 		}
+	}
+	
+	public static String getTraceEventNameByType(int eventType)
+	{
+		String eventTypeName;
+		switch(eventType)
+		{
+		case TraceEvent.CONNECTOR:
+		    eventTypeName = LangModelAnalyse.getString("eventTypeReflective");
+			break;
+		case TraceEvent.GAIN:
+			eventTypeName = LangModelAnalyse.getString("eventTypeGain");
+			break;
+		case TraceEvent.LOSS:
+			eventTypeName = LangModelAnalyse.getString("eventTypeLoss");
+			break;
+		case TraceEvent.LINEAR:
+		    eventTypeName = LangModelAnalyse.getString("eventTypeLinear");
+			break;
+		case TraceEvent.NON_IDENTIFIED:
+		    eventTypeName = LangModelAnalyse.getString("eventTypeNonIdentified");
+			break;
+		case TraceEvent.INITIATE:
+		    eventTypeName = LangModelAnalyse.getString("eventTypeInitiate");
+			break;
+		case TraceEvent.TERMINATE:
+			eventTypeName = LangModelAnalyse.getString("eventTypeTerminate");
+			break;
+		default:
+		    eventTypeName = LangModelAnalyse.getString("eventTypeUnk"); // @todo: отличать от eventTypeNonIdentified или нет?
+		}
+		return eventTypeName;
+	}
+
+	public static String getSimpleEventNameByType(int eventType)
+	{
+		String eventTypeName;
+		switch(eventType)
+		{
+		case SimpleReflectogramEvent.REFLECTIVE:
+		    eventTypeName = LangModelAnalyse.getString("eventTypeReflective");
+			break;
+		case SimpleReflectogramEvent.GAIN:
+			eventTypeName = LangModelAnalyse.getString("eventTypeGain");
+			break;
+		case SimpleReflectogramEvent.LOSS:
+			eventTypeName = LangModelAnalyse.getString("eventTypeLoss");
+			break;
+		case SimpleReflectogramEvent.LINEAR:
+		    eventTypeName = LangModelAnalyse.getString("eventTypeLinear");
+			break;
+		case SimpleReflectogramEvent.NOTIDENTIFIED:
+		    eventTypeName = LangModelAnalyse.getString("eventTypeNonIdentified");
+			break;
+		default:
+		    eventTypeName = LangModelAnalyse.getString("eventTypeUnk"); // @todo: отличать от eventTypeNonIdentified или нет?
+		}
+		return eventTypeName;
 	}
 }
