@@ -4,8 +4,9 @@ package com.syrus.AMFICOM.Client.Schedule;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.GraphicsEnvironment;
+import java.awt.Rectangle;
 import java.awt.SystemColor;
-import java.awt.Toolkit;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.WindowEvent;
@@ -63,29 +64,29 @@ import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 public class ScheduleMainFrame extends JFrame implements OperationListener {
 
 	ApplicationContext			aContext;
-	JDesktopPane				desktopPane		= new JDesktopPane();
+	JDesktopPane				desktopPane				= new JDesktopPane();
 
 	Dispatcher					dispatcher;
 
-	JPanel						mainPanel		= new JPanel();
-	ScheduleMainMenuBar			menuBar			= new ScheduleMainMenuBar();
-	
-	public static final String PARAMETERS_FRAME = "parametersFrame"; 
-	public static final String PLAN_FRAME = "planFrame";
-	public static final String PROPERTIES_FRAME = "propertiesFrame";
-	public static final String SAVE_PARAMETERS_FRAME = "saveParametersFrame";
-	public static final String TABLE_FRAME = "tableFrame";
-	public static final String TIME_PARAMETERS_FRAME = "timeParametersFrame";
-	public static final String TREE_FRAME = "treeFrame";
-	
-	UIDefaults frames;
-	
-	JScrollPane					scrollPane		= new JScrollPane();
-	StatusBarModel				statusBar		= new StatusBarModel(0);
-	JPanel						statusBarPanel	= new JPanel();
-	ScheduleMainToolBar			toolBar			= new ScheduleMainToolBar();
-	JViewport					viewport		= new JViewport();
-	WindowArranger scheduleWindowArranger;
+	JPanel						mainPanel				= new JPanel();
+	ScheduleMainMenuBar			menuBar					= new ScheduleMainMenuBar();
+
+	public static final String	PARAMETERS_FRAME		= "parametersFrame";
+	public static final String	PLAN_FRAME				= "planFrame";
+	public static final String	PROPERTIES_FRAME		= "propertiesFrame";
+	public static final String	SAVE_PARAMETERS_FRAME	= "saveParametersFrame";
+	public static final String	TABLE_FRAME				= "tableFrame";
+	public static final String	TIME_PARAMETERS_FRAME	= "timeParametersFrame";
+	public static final String	TREE_FRAME				= "treeFrame";
+
+	UIDefaults					frames;
+
+	JScrollPane					scrollPane				= new JScrollPane();
+	StatusBarModel				statusBar				= new StatusBarModel(0);
+	JPanel						statusBarPanel			= new JPanel();
+	ScheduleMainToolBar			toolBar					= new ScheduleMainToolBar();
+	JViewport					viewport				= new JViewport();
+	WindowArranger				scheduleWindowArranger;
 
 	public ScheduleMainFrame() {
 		this(new ApplicationContext());
@@ -94,53 +95,11 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 	public ScheduleMainFrame(final ApplicationContext aContext) {
 		this.aContext = aContext;
 		this.dispatcher = aContext.getDispatcher();
-		this.scheduleWindowArranger = new WindowArranger(this) {
-			public void arrange() {
-				ScheduleMainFrame f = (ScheduleMainFrame) this.mainframe;
 
-				int w = f.desktopPane.getSize().width;
-				int h = f.desktopPane.getSize().height;
-
-				int minWidth = Math.max(250, w / 5);
-
-				JInternalFrame paramsFrame = ((JInternalFrame)f.frames.get(ScheduleMainFrame.PARAMETERS_FRAME));
-				JInternalFrame propsFrame = ((JInternalFrame)f.frames.get(ScheduleMainFrame.PROPERTIES_FRAME));
-				JInternalFrame treeFrame = ((JInternalFrame)f.frames.get(ScheduleMainFrame.TREE_FRAME));
-				JInternalFrame timeFrame = ((JInternalFrame)f.frames.get(ScheduleMainFrame.TIME_PARAMETERS_FRAME));
-				JInternalFrame planFrame = ((JInternalFrame)f.frames.get(ScheduleMainFrame.PLAN_FRAME));
-				JInternalFrame saveFrame = ((JInternalFrame)f.frames.get(ScheduleMainFrame.SAVE_PARAMETERS_FRAME));
-				JInternalFrame tableFrame = ((JInternalFrame)f.frames.get(ScheduleMainFrame.TABLE_FRAME));
-				
-				normalize(planFrame);
-				normalize(paramsFrame);
-				normalize(propsFrame);
-				normalize(treeFrame);
-				normalize(timeFrame);
-				normalize(saveFrame);
-				normalize(tableFrame);
-
-				treeFrame.setSize(minWidth, h / 2);
-				propsFrame.setSize(minWidth, h / 4);
-				timeFrame.setSize(minWidth, Math.max(230, 2 * h / 5));
-				saveFrame.setSize(minWidth, 3 * h / 4 - timeFrame.getHeight());
-				paramsFrame.setSize(minWidth, h / 2);
-				planFrame.setSize(w - 2 * minWidth, h / 4 + timeFrame.getHeight());
-				tableFrame.setSize(w - 2 * minWidth, h - planFrame.getHeight());
-
-				treeFrame.setLocation(0, 0);
-				planFrame.setLocation(minWidth, 0);
-				propsFrame.setLocation(w - minWidth, 0);
-				timeFrame.setLocation(w - minWidth, h / 4);
-				saveFrame.setLocation(w - minWidth, h / 4 + timeFrame.getHeight());
-				paramsFrame.setLocation(0, treeFrame.getHeight());
-				tableFrame.setLocation(minWidth, planFrame.getHeight());
-
-			}
-		};
 		this.addComponentListener(new ComponentAdapter() {
 
 			public void componentShown(ComponentEvent e) {
-				ScheduleMainFrame.this.desktopPane.setPreferredSize(ScheduleMainFrame.this.desktopPane.getSize());				
+				ScheduleMainFrame.this.desktopPane.setPreferredSize(ScheduleMainFrame.this.desktopPane.getSize());
 			}
 		});
 		this.addWindowListener(new java.awt.event.WindowAdapter() {
@@ -180,7 +139,7 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		this.mainPanel.add(this.statusBarPanel, BorderLayout.SOUTH);
 		this.mainPanel.add(this.scrollPane, BorderLayout.CENTER);
 
-		//		PlanLayeredPanel panel = new PlanLayeredPanel();
+		// PlanLayeredPanel panel = new PlanLayeredPanel();
 		this.frames = new UIDefaults();
 		this.frames.put(PLAN_FRAME, new UIDefaults.LazyValue() {
 
@@ -245,14 +204,13 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 			}
 		});
 
-		//		this.testFilterFrame = new TestFilterFrame(aContext);
-		//		this.desktopPane.add(this.testFilterFrame);
+		// this.testFilterFrame = new TestFilterFrame(aContext);
+		// this.desktopPane.add(this.testFilterFrame);
 
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		Dimension frameSize = new Dimension(screenSize.width, screenSize.height - 24);
-
-		setSize(frameSize);
-		setLocation(0, 0);
+		GraphicsEnvironment localGraphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        Rectangle maximumWindowBounds = localGraphicsEnvironment.getMaximumWindowBounds();
+        this.setSize(new Dimension(maximumWindowBounds.width, maximumWindowBounds.height));
+        this.setLocation(maximumWindowBounds.x, maximumWindowBounds.y);
 
 		Environment.addWindow(this);
 		initModule();
@@ -277,7 +235,7 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		Environment.log(Environment.LOG_LEVEL_INFO, "commandName:" + commandName, getClass().getName());
 		if (commandName.equals(SchedulerModel.COMMAND_CHANGE_STATUSBAR_STATE)) {
 			boolean value = ((Boolean) obj).booleanValue();
-			//Environment.log(Environment.LOG_LEVEL_INFO,
+			// Environment.log(Environment.LOG_LEVEL_INFO,
 			// "progressBar:" +
 			// value);
 			this.statusBar.setProgressBarEnable(value);
@@ -298,8 +256,8 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 
 					this.statusBar.setText("status", LangModel.getString("statusReady"));
 					SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
-					this.statusBar.setText("session", sdf.format(new Date(this.aContext
-							.getSessionInterface().getLogonTime())));
+					this.statusBar.setText("session", sdf.format(new Date(this.aContext.getSessionInterface()
+							.getLogonTime())));
 					this.statusBar.setText("user", this.aContext.getSessionInterface().getUser());
 				}
 			}
@@ -407,8 +365,8 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 	}
 
 	public void setDomainSelected() {
-		//DataSourceInterface dataSource = this.aContext.getDataSource();
-		//new ConfigDataSourceImage(dataSource).LoadISM();
+		// DataSourceInterface dataSource = this.aContext.getDataSource();
+		// new ConfigDataSourceImage(dataSource).LoadISM();
 
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_SESSION_CLOSE, true);
@@ -417,7 +375,6 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 
 		aModel.fireModelChanged("");
 
-		
 		try {
 			RISDSessionInfo sessionInterface = (RISDSessionInfo) this.aContext.getSessionInterface();
 			Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(sessionInterface
@@ -426,23 +383,68 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		} catch (ApplicationException e) {
 			SchedulerModel.showErrorMessage(this, e);
 		}
-		
-		scheduleWindowArranger.arrange();
-		ElementsTreeFrame treeFrame = (ElementsTreeFrame)this.frames.get(TREE_FRAME);
+		if (this.scheduleWindowArranger == null) {
+			this.scheduleWindowArranger = new WindowArranger(this) {
+
+				public void arrange() {
+					ScheduleMainFrame f = (ScheduleMainFrame) this.mainframe;
+
+					int w = f.desktopPane.getSize().width;
+					int h = f.desktopPane.getSize().height;
+
+					int minWidth = Math.max(250, w / 5);
+
+					JInternalFrame paramsFrame = ((JInternalFrame) f.frames.get(ScheduleMainFrame.PARAMETERS_FRAME));
+					JInternalFrame propsFrame = ((JInternalFrame) f.frames.get(ScheduleMainFrame.PROPERTIES_FRAME));
+					JInternalFrame treeFrame = ((JInternalFrame) f.frames.get(ScheduleMainFrame.TREE_FRAME));
+					JInternalFrame timeFrame = ((JInternalFrame) f.frames.get(ScheduleMainFrame.TIME_PARAMETERS_FRAME));
+					JInternalFrame planFrame = ((JInternalFrame) f.frames.get(ScheduleMainFrame.PLAN_FRAME));
+					JInternalFrame saveFrame = ((JInternalFrame) f.frames.get(ScheduleMainFrame.SAVE_PARAMETERS_FRAME));
+					JInternalFrame tableFrame = ((JInternalFrame) f.frames.get(ScheduleMainFrame.TABLE_FRAME));
+
+					normalize(planFrame);
+					normalize(paramsFrame);
+					normalize(propsFrame);
+					normalize(treeFrame);
+					normalize(timeFrame);
+					normalize(saveFrame);
+					normalize(tableFrame);
+
+					treeFrame.setSize(minWidth, h / 2);
+					propsFrame.setSize(minWidth, h / 4);
+					timeFrame.setSize(minWidth, Math.max(230, 2 * h / 5));
+					saveFrame.setSize(minWidth, 3 * h / 4 - timeFrame.getHeight());
+					paramsFrame.setSize(minWidth, h / 2);
+					planFrame.setSize(w - 2 * minWidth, h / 4 + timeFrame.getHeight());
+					tableFrame.setSize(w - 2 * minWidth, h - planFrame.getHeight());
+
+					treeFrame.setLocation(0, 0);
+					planFrame.setLocation(minWidth, 0);
+					propsFrame.setLocation(w - minWidth, 0);
+					timeFrame.setLocation(w - minWidth, h / 4);
+					saveFrame.setLocation(w - minWidth, h / 4 + timeFrame.getHeight());
+					paramsFrame.setLocation(0, treeFrame.getHeight());
+					tableFrame.setLocation(minWidth, planFrame.getHeight());
+
+				}
+			};
+		}
+		this.scheduleWindowArranger.arrange();
+		ElementsTreeFrame treeFrame = (ElementsTreeFrame) this.frames.get(TREE_FRAME);
 		treeFrame.init();
 
 		MeasurementStorableObjectPool.cleanChangedStorableObjects();
 
 		this.dispatcher.notify(new OperationEvent(this, 0, SchedulerModel.COMMAND_CLEAN));
 
-		((Component)this.frames.get(PARAMETERS_FRAME)).setVisible(true);
-		((Component)this.frames.get(PROPERTIES_FRAME)).setVisible(true);
+		((Component) this.frames.get(PARAMETERS_FRAME)).setVisible(true);
+		((Component) this.frames.get(PROPERTIES_FRAME)).setVisible(true);
 		treeFrame.setVisible(true);
-		((Component)this.frames.get(TIME_PARAMETERS_FRAME)).setVisible(true);
-		((Component)this.frames.get(PLAN_FRAME)).setVisible(true);
-		((Component)this.frames.get(SAVE_PARAMETERS_FRAME)).setVisible(true);
-		((Component)this.frames.get(TABLE_FRAME)).setVisible(true);
-		//		testFilterFrame.setVisible(true);
+		((Component) this.frames.get(TIME_PARAMETERS_FRAME)).setVisible(true);
+		((Component) this.frames.get(PLAN_FRAME)).setVisible(true);
+		((Component) this.frames.get(SAVE_PARAMETERS_FRAME)).setVisible(true);
+		((Component) this.frames.get(TABLE_FRAME)).setVisible(true);
+		// testFilterFrame.setVisible(true);
 	}
 
 	public void setModel(ApplicationModel aModel) {
@@ -467,31 +469,30 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 	}
 
 	public void setSessionOpened() {
-		//this.checker = new
+		// this.checker = new
 		// Checker(aContext.getDataSourceInterface());
 
 		DataSourceInterface dataSource = this.aContext.getDataSource();
 
 		this.aContext.getDispatcher().notify(
-												new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE,
-																		LangModelSchedule.getString("Loading_DB")));
-		//		new SurveyDataSourceImage(dataSource).LoadParameterTypes();
-		//		new SurveyDataSourceImage(dataSource).LoadTestTypes();
-		//		new SurveyDataSourceImage(dataSource).LoadAnalysisTypes();
-		//		new SurveyDataSourceImage(dataSource).LoadEvaluationTypes();
-		//		new SurveyDataSourceImage(dataSource).LoadModelingTypes();
-		//		new SchemeDataSourceImage(dataSource).LoadAttributeTypes();
+			new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, LangModelSchedule.getString("Loading_DB")));
+		// new SurveyDataSourceImage(dataSource).LoadParameterTypes();
+		// new SurveyDataSourceImage(dataSource).LoadTestTypes();
+		// new SurveyDataSourceImage(dataSource).LoadAnalysisTypes();
+		// new SurveyDataSourceImage(dataSource).LoadEvaluationTypes();
+		// new SurveyDataSourceImage(dataSource).LoadModelingTypes();
+		// new SchemeDataSourceImage(dataSource).LoadAttributeTypes();
 
-		//		new SchemeDataSourceImage(dataSource).LoadISMDirectory();
-		//		SurveyDataSourceImage sdsi = new SurveyDataSourceImage(dataSource);
-		//		sdsi.LoadTestTypes();
-		//		sdsi.LoadAnalysisTypes();
-		//		sdsi.LoadEvaluationTypes();
+		// new SchemeDataSourceImage(dataSource).LoadISMDirectory();
+		// SurveyDataSourceImage sdsi = new SurveyDataSourceImage(dataSource);
+		// sdsi.LoadTestTypes();
+		// sdsi.LoadAnalysisTypes();
+		// sdsi.LoadEvaluationTypes();
 
-		this.aContext.getDispatcher().notify(
-												new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE,
-																		LangModelSchedule
-																				.getString("Loding_DB_finished")));
+		this.aContext.getDispatcher()
+				.notify(
+					new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, LangModelSchedule
+							.getString("Loding_DB_finished")));
 
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_SESSION_DOMAIN, true);
@@ -507,7 +508,7 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 			Environment.setActiveWindow(this);
 		}
 		if (e.getID() == WindowEvent.WINDOW_CLOSING) {
-			//cManager.saveIni();
+			// cManager.saveIni();
 			this.dispatcher.unregister(this, ContextChangeEvent.type);
 			Environment.getDispatcher().unregister(this, ContextChangeEvent.type);
 			this.aContext.getApplicationModel().getCommand(ScheduleMainMenuBar.MENU_EXIT).execute();
@@ -520,11 +521,11 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 
 		this.statusBar.distribute();
-		//		statusBar.setWidth("status", 100);
-		//		statusBar.setWidth("server", 250);
-		//		statusBar.setWidth("session", 200);
-		//		statusBar.setWidth("user", 100);
-		//		statusBar.setWidth("time", 50);
+		// statusBar.setWidth("status", 100);
+		// statusBar.setWidth("server", 250);
+		// statusBar.setWidth("session", 200);
+		// statusBar.setWidth("user", 100);
+		// statusBar.setWidth("time", 50);
 		this.statusBar.setWidth("status", 300);
 		this.statusBar.setWidth("server", 250);
 		this.statusBar.setWidth("session", 200);
@@ -542,8 +543,8 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 
 		this.aContext.setDispatcher(this.dispatcher);
 		this.dispatcher.register(this, StatusMessageEvent.STATUS_MESSAGE);
-//		this.dispatcher.register(this, RefChangeEvent.typ);
-//		this.dispatcher.register(this, RefUpdateEvent.typ);
+		// this.dispatcher.register(this, RefChangeEvent.typ);
+		// this.dispatcher.register(this, RefUpdateEvent.typ);
 		this.dispatcher.register(this, SchedulerModel.COMMAND_CHANGE_STATUSBAR_STATE);
 
 		this.dispatcher.register(this, ContextChangeEvent.type);
@@ -556,7 +557,7 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		aModel.setCommand(ScheduleMainMenuBar.MENU_SESSION_CONNECTION, new SessionConnectionCommand(dispatcher,
 																									this.aContext));
 		aModel.setCommand(ScheduleMainMenuBar.MENU_SESSION_CHANGE_PASSWORD,
-							new SessionChangePasswordCommand(dispatcher, this.aContext));
+			new SessionChangePasswordCommand(dispatcher, this.aContext));
 		aModel.setCommand(ScheduleMainMenuBar.MENU_SESSION_DOMAIN, new SessionDomainCommand(dispatcher, this.aContext));
 		aModel.setCommand(ScheduleMainMenuBar.MENU_EXIT, new ExitCommand(this));
 
@@ -572,10 +573,10 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		/**
 		 * TODO remove when all ok
 		 */
-		//CreateScheduleReportCommand csrCommand = new
+		// CreateScheduleReportCommand csrCommand = new
 		// CreateScheduleReportCommand(aContext);
-		//csrCommand.setParameter(this);
-		//aModel.setCommand(ScheduleMainMenuBar.MENU_TEMPLATE_REPORT,
+		// csrCommand.setParameter(this);
+		// aModel.setCommand(ScheduleMainMenuBar.MENU_TEMPLATE_REPORT,
 		// csrCommand);
 		aModel.setCommand(ScheduleMainMenuBar.MENU_HELP_ABOUT, new HelpAboutCommand(this));
 
@@ -599,7 +600,7 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 			SessionInterface.setActiveSession(this.aContext.getSessionInterface());
 		}
 	}
-	
+
 	private Command getLazyCommand(final Object key) {
 		return new Command() {
 
@@ -667,7 +668,7 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 				this.getLazyCommand().undo();
 
 			}
-		};		
+		};
 	}
 
 	void setDefaultModel(ApplicationModel aModel) {
@@ -691,6 +692,6 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 	}
 
 	public PlanFrame getPlanFrame() {
-		return ((PlanFrame)this.frames.get(PLAN_FRAME));
+		return ((PlanFrame) this.frames.get(PLAN_FRAME));
 	}
 }
