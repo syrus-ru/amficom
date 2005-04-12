@@ -1,5 +1,5 @@
 /*
- * $Id: FilterGUI.java,v 1.7 2005/04/12 13:02:57 max Exp $
+ * $Id: FilterGUI.java,v 1.8 2005/04/12 13:31:04 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/04/12 13:02:57 $
+ * @version $Revision: 1.8 $, $Date: 2005/04/12 13:31:04 $
  * @author $Author: max $
  * @module misc
  */
@@ -362,8 +362,8 @@ public class FilterGUI extends JFrame implements FilterView {
 		return stringNames;
 	}
 	
-	public void createLogicalSchemeView(LogicalScheme logicalScheme, Filter filter) {
-		new LogicalSchemeGUI(logicalScheme, this, filter);
+	public void createLogicalSchemeView(LogicalScheme logicalScheme) {
+		new LogicalSchemeGUI(logicalScheme, this);
 	}
 	
 	public void setNumberCondition(NumberCondition intCondition) {

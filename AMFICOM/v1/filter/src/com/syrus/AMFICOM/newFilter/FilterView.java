@@ -1,5 +1,5 @@
 /*
- * $Id: FilterView.java,v 1.4 2005/04/12 13:04:07 max Exp $
+ * $Id: FilterView.java,v 1.5 2005/04/12 13:31:04 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,7 @@
 package com.syrus.AMFICOM.newFilter;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/04/12 13:04:07 $
+ * @version $Revision: 1.5 $, $Date: 2005/04/12 13:31:04 $
  * @author $Author: max $
  * @module filter_v1
  */
@@ -23,7 +23,7 @@ public interface FilterView {
 	String	WRONG_DATE_MESSAGE	= "Please, set the date";
 
 	void showErrorMessage(String message);
-	void createLogicalSchemeView(LogicalScheme logicalScheme, Filter filter);
+	void createLogicalSchemeView(LogicalScheme logicalScheme);
 	
 	void drawLinkedCondition(ListCondition listCondition);
 	void drawStringCondition(StringCondition stringCondition);

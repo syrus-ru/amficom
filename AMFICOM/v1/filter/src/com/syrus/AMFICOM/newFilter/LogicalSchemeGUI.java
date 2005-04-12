@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalSchemeGUI.java,v 1.2 2005/03/31 08:03:52 max Exp $
+ * $Id: LogicalSchemeGUI.java,v 1.3 2005/04/12 13:31:04 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/03/31 08:03:52 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/12 13:31:04 $
  * @author $Author: max $
  * @module filter_v1
  */
@@ -33,8 +33,8 @@ public class LogicalSchemeGUI implements LogicalSchemeView {
 	
 	LogicalSchemeController controller;
 
-	public LogicalSchemeGUI(LogicalScheme logicalScheme, JFrame parentFrame, Filter filter) {
-		this.controller = new LogicalSchemeController(logicalScheme, this, filter); 
+	public LogicalSchemeGUI(LogicalScheme logicalScheme, JFrame parentFrame) {
+		this.controller = new LogicalSchemeController(logicalScheme, this); 
 		this.frame = new JDialog(parentFrame, true);
 		logicalScheme.save();
 		createFrame();		

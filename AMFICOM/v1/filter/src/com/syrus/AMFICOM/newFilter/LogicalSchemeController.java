@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalSchemeController.java,v 1.2 2005/04/12 13:06:34 max Exp $
+ * $Id: LogicalSchemeController.java,v 1.3 2005/04/12 13:31:04 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.logic.LogicalItem;
 import com.syrus.AMFICOM.logic.LogicalSchemeUI;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/12 13:06:34 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/12 13:31:04 $
  * @author $Author: max $
  * @module filter_v1
  */
@@ -25,20 +25,16 @@ public class LogicalSchemeController {
 	private LogicalSchemeView view;
 	private LogicalSchemeUI logicalSchemeUI;
 	
-	private Filter filter;
-	
 	private static final String	CONDITION_DELETE_ERROR	= "Can't delete condition";
-
 	private static final String	ROOT_DELETE_ERROR		= "Can't delete root element";
 	private static final String	NOT_LINKED_CONDITION	= "One or more conditions are not linked";
 	private static final String	TO_BIG_NUMBER_OF_CHILDREN	= "To big number of children in the element ";
 	private static final String	TO_SMALL_NUMBER_OF_CHILDREN	= "To small number of children in the element ";
 	
-	LogicalSchemeController(LogicalScheme scheme, LogicalSchemeView schemeView, Filter filter) {
+	LogicalSchemeController(LogicalScheme scheme, LogicalSchemeView schemeView) {
 		this.model = scheme;
 		this.view = schemeView;
 		this.logicalSchemeUI = new LogicalSchemeUI(this.model.getRootItem());
-		this.filter = filter;
 	}
 
 	public void addAndItem() {
@@ -64,8 +60,7 @@ public class LogicalSchemeController {
 	}
 	public void confirm() {
 		if(getValidation()) {
-			this.view.dispose();
-			//this.filter.refreshFilteredEntities();
+			this.view.dispose();			
 		}		
 	}
 	public void cancel() {
