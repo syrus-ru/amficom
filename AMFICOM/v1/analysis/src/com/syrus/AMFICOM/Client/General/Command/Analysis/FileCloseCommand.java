@@ -45,8 +45,6 @@ public class FileCloseCommand extends VoidCommand
 			System.out.println("Application context and/or user are not defined");
 			return;
 		}
-
-		Heap.removeAllBS();
-		Heap.notifyBsHashRemoveAll();
+        Heap.closeAll();
 	}
 }

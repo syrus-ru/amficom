@@ -91,7 +91,7 @@ public class TraceOpenReferenceCommand extends VoidCommand
 			String activeRefId = chooser.getSelectedFile().getAbsolutePath().toLowerCase();
 			bs.title = activeRefId;
 			Heap.setBSReferenceTrace(bs);
-			Heap.traceOpened(activeRefId, bs);
+			//Heap.referenceTraceOpened(activeRefId, bs);
 			try
 			{
 				properties.setProperty("lastdir", chooser.getSelectedFile().getParent().toLowerCase());

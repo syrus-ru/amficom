@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.23 2005/04/12 18:08:30 saa Exp $
+ * $Id: Heap.java,v 1.24 2005/04/12 18:36:18 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.io.BellcoreStructure;
  * использование остальных методов работы с BS
  * 
  * @author $Author: saa $
- * @version $Revision: 1.23 $, $Date: 2005/04/12 18:08:30 $
+ * @version $Revision: 1.24 $, $Date: 2005/04/12 18:36:18 $
  * @module
  */
 public class Heap
@@ -111,10 +111,6 @@ public class Heap
 
     public static BellcoreStructure getBSReferenceTrace() {
         return (BellcoreStructure) bsHash.get(REFERENCE_TRACE_KEY);
-    }
-
-    public static void setBSReferenceTrace(BellcoreStructure primaryTrace) {
-        bsHash.put(REFERENCE_TRACE_KEY, primaryTrace);
     }
 
     public static boolean hasSecondaryBSKey(String id) {
@@ -234,7 +230,7 @@ public class Heap
         Heap.minTraceLevel = minTraceLevel;
     }
 
-    public static void removeAllBS() {
+    private static void removeAllBS() {
         bsHash = new HashMap();
     }
 
@@ -293,7 +289,7 @@ public class Heap
     }
 
     // закрыть и primary trace, и все остальные
-    public static void notifyBsHashRemoveAll() {
+    private static void notifyBsHashRemoveAll() {
         for (Iterator it = bsHashChangedListeners.iterator(); it.hasNext();)
             ((bsHashChangeListener) it.next()).bsHashRemovedAll();
     }
@@ -406,12 +402,6 @@ public class Heap
             notifyPrimaryTraceClosed();
     }
 
-    public static void traceOpened(String key, BellcoreStructure bs) {
-        notifyBsHashAdd(key, bs);
-        if (key.equals(PRIMARY_TRACE_KEY))
-            notifyPrimaryTraceOpened();
-    }
-
     /*
      * methods that both make changed and notify appropriate listeners 
      */
@@ -425,14 +415,18 @@ public class Heap
         notifyCurrentTraceChanged();
     }
 
+    /**
+     * @param mtae  must not be null
+     */
     public static void setMTAEPrimary(ModelTraceAndEventsImpl mtae) {
         primaryMTAE = mtae;
-        if (mtae == null)
-            notifyPrimaryMTMCUpdated();
-        else
-            notifyPrimaryMTMRemoved();
+        notifyPrimaryMTMCUpdated();
     }
 
+    /**
+     * 
+     * @param mtm may be null
+     */
     public static void setMTMEtalon(ModelTraceManager mtm) {
         etalonMTM = mtm;
         if (mtm == null)
@@ -444,5 +438,27 @@ public class Heap
     public static void putSecondaryTraceByKey(String key, BellcoreStructure bs) {
         bsHash.put(key, bs);
         notifyBsHashAdd(key, bs);
+    }
+
+    public static void setBSReferenceTrace(BellcoreStructure bs) {
+        bsHash.put(REFERENCE_TRACE_KEY, bs);
+        notifyBsHashAdd(REFERENCE_TRACE_KEY, bs);
+    }
+
+    /**
+     * closes all BS traces, primary MTAE and etalon MTM 
+     */
+    public static void closeAll() {
+        // close all BS
+        removeAllBS();
+        notifyBsHashRemoveAll();
+        
+        // close Primary MTM
+        primaryMTAE = null;
+        notifyPrimaryMTMRemoved();
+
+        // close Etalon MTM
+        etalonMTM = null;
+        notifyEtalonMTMRemoved();
     }
 }
