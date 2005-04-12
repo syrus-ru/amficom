@@ -1,5 +1,5 @@
 /*
- * $Id: CollectorDatabase.java,v 1.25 2005/04/01 11:11:05 bob Exp $
+ * $Id: CollectorDatabase.java,v 1.26 2005/04/12 17:10:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,8 +38,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/04/01 11:11:05 $
- * @author $Author: bob $
+ * @version $Revision: 1.26 $, $Date: 2005/04/12 17:10:04 $
+ * @author $Author: arseniy $
  * @module map_v1
  */
 public class CollectorDatabase extends CharacterizableDatabase {
@@ -223,18 +223,13 @@ public class CollectorDatabase extends CharacterizableDatabase {
 				CollectorWrapper.LINK_COLUMN_PHYSICAL_LINK_ID);
 	}
 
-	public void delete(Identifier id) throws IllegalDataException {
+	public void delete(Identifier id) {
 		this.delete(Collections.singleton(id));
 	}
 
 	public void delete(Set ids) {
 		StringBuffer stringBuffer = new StringBuffer(SQL_DELETE_FROM + COLLECTOR_PHYSICAL_LINK + SQL_WHERE);
-		try {
-			stringBuffer.append(idsEnumerationString(ids, CollectorWrapper.LINK_COLUMN_COLLECTOR_ID, true));
-		}
-		catch (IllegalDataException ide) {
-			Log.errorException(ide);
-		}
+		stringBuffer.append(idsEnumerationString(ids, CollectorWrapper.LINK_COLUMN_COLLECTOR_ID, true));
 
 		Statement statement = null;
 		Connection connection = DatabaseConnection.getConnection();
@@ -264,11 +259,6 @@ public class CollectorDatabase extends CharacterizableDatabase {
 		super.delete(ids);
 	}	
 
-	public void delete(StorableObject storableObject) throws IllegalDataException {
-		Collector collector = this.fromStorableObject(storableObject);		
-		this.delete(Collections.singleton(collector.getId()));		
-	}
-	
 	protected Set retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
 		Set collection = super.retrieveByCondition(conditionQuery);
 		this.retrievePhysicalLinks(collection);

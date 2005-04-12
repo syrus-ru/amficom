@@ -1,5 +1,5 @@
 /*
- * $Id: MapDatabase.java,v 1.24 2005/04/01 11:11:05 bob Exp $
+ * $Id: MapDatabase.java,v 1.25 2005/04/12 17:10:26 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,8 +38,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/04/01 11:11:05 $
- * @author $Author: bob $
+ * @version $Revision: 1.25 $, $Date: 2005/04/12 17:10:26 $
+ * @author $Author: arseniy $
  * @module map_v1
  */
 public class MapDatabase extends CharacterizableDatabase {
@@ -416,7 +416,7 @@ public class MapDatabase extends CharacterizableDatabase {
 		super.updateLinkedEntityIds(mapIdLinkedObjectIds, tableName, MapWrapper.LINK_COLUMN_MAP_ID, columnName);
 	}
 
-	public void delete(Identifier id) throws IllegalDataException {
+	public void delete(Identifier id) {
 		this.delete(Collections.singleton(id));
 	}
 
@@ -486,11 +486,6 @@ public class MapDatabase extends CharacterizableDatabase {
 		this.deleteLinkedObjectIds(linkedObjectIds, _MAP_TOPOLOGICAL_NODE);
 	}	
 
-	public void delete(StorableObject storableObject) throws IllegalDataException {
-		Map map = fromStorableObject(storableObject);
-		this.delete(Collections.singleton(map.getId()));
-	}
-
 	private void deleteLinkedObjectIds(java.util.Map linkedObjectIds, int linkedTable) {
 
 		String tableName;
@@ -505,12 +500,7 @@ public class MapDatabase extends CharacterizableDatabase {
 		String columnName = (String) dbTableColumnName.get(tableName);
 
 		StringBuffer linkBuffer = new StringBuffer(SQL_DELETE_FROM + tableName + SQL_WHERE);
-		try {
-			linkBuffer.append(idsEnumerationString(linkedObjectIds.keySet(), columnName, true));
-		}
-		catch (IllegalDataException ide) {
-			Log.errorException(ide);
-		}
+		linkBuffer.append(idsEnumerationString(linkedObjectIds.keySet(), columnName, true));
 
 		Statement statement = null;
 		Connection connection = DatabaseConnection.getConnection();
