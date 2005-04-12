@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.5 2005/03/10 19:34:22 arseniy Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.6 2005/04/12 16:44:25 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,12 +9,12 @@
 package com.syrus.AMFICOM.administration;
 
 import com.syrus.AMFICOM.general.AbstractDatabaseLinkedIdsCondition;
-import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/03/10 19:34:22 $
+ * @version $Revision: 1.6 $, $Date: 2005/04/12 16:44:25 $
  * @author $Author: arseniy $
  * @module admin_v1
  */
@@ -24,29 +24,35 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 		super(condition);
 	}
 
-	public String getSQLQuery() throws IllegalDataException {
-		String query = null;
+	public String getSQLQuery() throws IllegalObjectEntityException {
 		switch (super.condition.getEntityCode().shortValue()) {
 			case ObjectEntities.MCM_ENTITY_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
 					case ObjectEntities.SERVER_ENTITY_CODE:
-						query = super.getQuery(MCMWrapper.COLUMN_SERVER_ID);
-						break;
+						return super.getQuery(MCMWrapper.COLUMN_SERVER_ID);
 					case ObjectEntities.DOMAIN_ENTITY_CODE:
-						query = super.getQuery(DomainMember.COLUMN_DOMAIN_ID);
-						break;
-				}
-				break; 				
+						return super.getQuery(DomainMember.COLUMN_DOMAIN_ID);
+					default:
+						throw new IllegalObjectEntityException("Unsupported linked entity type -- "
+								+ super.condition.getLinkedEntityCode()
+								+ " for entity type " + super.condition.getEntityCode(),
+								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+				} 				
 			case ObjectEntities.DOMAIN_ENTITY_CODE:
 			case ObjectEntities.SERVER_ENTITY_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
 					case ObjectEntities.DOMAIN_ENTITY_CODE:
-						query = super.getQuery(DomainMember.COLUMN_DOMAIN_ID);
-						break;
+						return super.getQuery(DomainMember.COLUMN_DOMAIN_ID);
+					default:
+						throw new IllegalObjectEntityException("Unsupported linked entity type -- "
+								+ super.condition.getLinkedEntityCode()
+								+ " for entity type " + super.condition.getEntityCode(),
+								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 				}
-				break;
+			default:
+				throw new IllegalObjectEntityException("Unsupported entity type -- "
+						+ super.condition.getEntityCode(), IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 		}
-		return query;
 	}
 
 }

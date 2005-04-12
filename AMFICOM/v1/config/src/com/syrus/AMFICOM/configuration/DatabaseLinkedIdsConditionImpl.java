@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.9 2005/03/23 20:09:54 arseniy Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.10 2005/04/12 16:44:38 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,14 +10,14 @@ package com.syrus.AMFICOM.configuration;
 
 import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.general.AbstractDatabaseLinkedIdsCondition;
-import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/03/23 20:09:54 $
+ * @version $Revision: 1.10 $, $Date: 2005/04/12 16:44:38 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -27,72 +27,61 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 		super(condition);
 	}
 
-	public String getSQLQuery() throws IllegalDataException {
-		String query = null;
+	public String getSQLQuery() throws IllegalObjectEntityException {
 		switch (super.condition.getEntityCode().shortValue()) {
 			case ObjectEntities.CABLETHREADTYPE_ENTITY_CODE:
-				query = super.getQuery(CableThreadTypeWrapper.COLUMN_LINK_TYPE_ID);
-				break;
+				return super.getQuery(CableThreadTypeWrapper.COLUMN_LINK_TYPE_ID);
 			case ObjectEntities.EQUIPMENT_ENTITY_CODE:
-				query = super.getQuery(DomainMember.COLUMN_DOMAIN_ID);
-				break;
+				return super.getQuery(DomainMember.COLUMN_DOMAIN_ID);
 			case ObjectEntities.TRANSPATH_ENTITY_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
 					case ObjectEntities.PORT_ENTITY_CODE:
-						query = StorableObjectDatabase.OPEN_BRACKET
+						return StorableObjectDatabase.OPEN_BRACKET
 								+ super.getQuery(TransmissionPathWrapper.COLUMN_START_PORT_ID)
 								+ StorableObjectDatabase.SQL_OR
 								+ super.getQuery(TransmissionPathWrapper.COLUMN_FINISH_PORT_ID)
 								+ StorableObjectDatabase.CLOSE_BRACKET;
-						break;
 					default:
-						query = super.getQuery(DomainMember.COLUMN_DOMAIN_ID);
+						return super.getQuery(DomainMember.COLUMN_DOMAIN_ID);
 				}
-				break;
 			case ObjectEntities.KIS_ENTITY_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
 					case ObjectEntities.MCM_ENTITY_CODE:
-						query = super.getQuery(KISWrapper.COLUMN_MCM_ID);
-						break;
+						return super.getQuery(KISWrapper.COLUMN_MCM_ID);
 					default:
-						query = super.getQuery(DomainMember.COLUMN_DOMAIN_ID);
+						return super.getQuery(DomainMember.COLUMN_DOMAIN_ID);
 				}
-				break;
 			case ObjectEntities.ME_ENTITY_CODE:
-				query = super.getQuery(DomainMember.COLUMN_DOMAIN_ID);
-				break;
+				return super.getQuery(DomainMember.COLUMN_DOMAIN_ID);
 			case ObjectEntities.PORT_ENTITY_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
 					case ObjectEntities.EQUIPMENT_ENTITY_CODE:
-						query = super.getQuery(PortWrapper.COLUMN_EQUIPMENT_ID);
-						break;
+						return super.getQuery(PortWrapper.COLUMN_EQUIPMENT_ID);
 					default:
-						query = super.getLinkedQuery(PortWrapper.COLUMN_EQUIPMENT_ID,
+						return super.getLinkedQuery(PortWrapper.COLUMN_EQUIPMENT_ID,
 								StorableObjectWrapper.COLUMN_ID,
 								DomainMember.COLUMN_DOMAIN_ID,
 								ObjectEntities.EQUIPMENT_ENTITY);
 				}
-				break;
 			case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
 					case ObjectEntities.KIS_ENTITY_CODE:
-						query = super.getQuery(MeasurementPortWrapper.COLUMN_KIS_ID);
-						break;
+						return super.getQuery(MeasurementPortWrapper.COLUMN_KIS_ID);
 					case ObjectEntities.MCM_ENTITY_CODE:
-						query = super.getLinkedQuery(MeasurementPortWrapper.COLUMN_KIS_ID,
+						return super.getLinkedQuery(MeasurementPortWrapper.COLUMN_KIS_ID,
 								StorableObjectWrapper.COLUMN_ID,
 								KISWrapper.COLUMN_MCM_ID,
 								ObjectEntities.KIS_ENTITY);
-						break;
 					default:
-						query = super.getLinkedQuery(MeasurementPortWrapper.COLUMN_KIS_ID,
+						return super.getLinkedQuery(MeasurementPortWrapper.COLUMN_KIS_ID,
 								StorableObjectWrapper.COLUMN_ID,
 								DomainMember.COLUMN_DOMAIN_ID,
 								ObjectEntities.KIS_ENTITY);
 				}
-				break;
+			default:
+				throw new IllegalObjectEntityException("Unsupported entity type -- "
+						+ super.condition.getEntityCode(), IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 		}
-		return query;
 	}
 
 }
