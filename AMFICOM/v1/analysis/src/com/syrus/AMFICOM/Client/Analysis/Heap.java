@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.21 2005/04/12 17:51:06 saa Exp $
+ * $Id: Heap.java,v 1.22 2005/04/12 18:05:31 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.io.BellcoreStructure;
  * использование остальных методов работы с BS
  * 
  * @author $Author: saa $
- * @version $Revision: 1.21 $, $Date: 2005/04/12 17:51:06 $
+ * @version $Revision: 1.22 $, $Date: 2005/04/12 18:05:31 $
  * @module
  */
 public class Heap
@@ -79,9 +79,6 @@ public class Heap
 	public static ModelTraceManager getMTMEtalon() {
 		return etalonMTM;
 	}
-	public static void setMTAEPrimary(ModelTraceAndEventsImpl mtae) {
-		primaryMTAE = mtae;
-	}
 	public static RefAnalysis getRefAnalysisByKey(String key) {
 		return (RefAnalysis)refAnalysisHash.get(key);
 	}
@@ -90,9 +87,6 @@ public class Heap
 	}
 	public static BellcoreStructure getAnyBSTraceByKey(String key) {
 		return (BellcoreStructure )bsHash.get(key);
-	}
-	public static void putSecondaryTraceByKey(String key, BellcoreStructure bs) {
-		bsHash.put(key, bs);
 	}
 	public static BellcoreStructure getBSPrimaryTrace() {
 		return (BellcoreStructure )bsHash.get(PRIMARY_TRACE_KEY);
@@ -287,7 +281,7 @@ public class Heap
 		for (Iterator it = primaryTraceListeners.iterator(); it.hasNext(); )
 			((PrimaryTraceListener)it.next()).primaryTraceRemoved();
 	}
-	public static void notifyPrimaryMTMCUpdated()
+	private static void notifyPrimaryMTMCUpdated()
 	{
 		for (Iterator it = primaryMTMListeners.iterator(); it.hasNext(); )
 				((PrimaryMTMListener)it.next()).primaryMTMCUpdated();
@@ -370,10 +364,6 @@ public class Heap
 		notifyBsHashAdd(PRIMARY_TRACE_KEY, bs);
 		notifyPrimaryTraceOpened();
 	}
-	public static void secondaryTraceOpened(String key, BellcoreStructure bs)
-	{
-		notifyBsHashAdd(key, bs);
-	}
 	public static void traceClosed(String key)
 	{
 		notifyBsHashRemove(key);
@@ -386,6 +376,9 @@ public class Heap
 		if (key.equals(PRIMARY_TRACE_KEY))
 			notifyPrimaryTraceOpened();
 	}
+    /*
+     * methods that both make changed and notify appropriate listeners 
+     */
 	public static void setCurrentTrace(String id)
 	{
 		currentTrace = id;
@@ -396,6 +389,13 @@ public class Heap
 		currentTrace = PRIMARY_TRACE_KEY;
 		notifyCurrentTraceChanged();
 	}
+	public static void setMTAEPrimary(ModelTraceAndEventsImpl mtae) {
+		primaryMTAE = mtae;
+		if (mtae == null)
+			notifyPrimaryMTMCUpdated();
+		else
+			notifyPrimaryMTMRemoved();
+	}
 	public static void setMTMEtalon(ModelTraceManager mtm)
 	{
 		etalonMTM = mtm;
@@ -404,4 +404,8 @@ public class Heap
 		else
 			notifyEtalonMTMCUpdated();
 	}
+    public static void putSecondaryTraceByKey(String key, BellcoreStructure bs) {
+        bsHash.put(key, bs);
+        notifyBsHashAdd(key, bs);
+    }
 }

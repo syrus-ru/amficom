@@ -111,7 +111,7 @@ public class FileAddCommand extends VoidCommand
 			}
 			bs.title = chooser.getSelectedFile().getName();
 			Heap.putSecondaryTraceByKey(id, bs);
-			Heap.secondaryTraceOpened(id, bs);
+			// Heap.secondaryTraceOpened(id, bs);
 			Heap.setCurrentTrace(id);
 			try
 			{
