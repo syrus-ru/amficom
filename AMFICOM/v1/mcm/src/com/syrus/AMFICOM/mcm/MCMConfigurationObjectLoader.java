@@ -1,5 +1,5 @@
 /*
- * $Id: MCMConfigurationObjectLoader.java,v 1.29 2005/04/12 08:29:16 bass Exp $
+ * $Id: MCMConfigurationObjectLoader.java,v 1.30 2005/04/12 17:33:41 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -48,7 +48,6 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
@@ -61,8 +60,8 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/04/12 08:29:16 $
- * @author $Author: bass $
+ * @version $Revision: 1.30 $, $Date: 2005/04/12 17:33:41 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 
@@ -559,14 +558,7 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 	public Set loadMeasurementPortTypes(Set ids) throws RetrieveObjectException {
 		MeasurementPortTypeDatabase database = ConfigurationDatabaseContext.getMeasurementPortTypeDatabase();
 		Set objects = super.retrieveFromDatabase(database, ids);
-		Identifier_Transferable[] loadIdsT = null;
-		try {
-			loadIdsT = super.createLoadIdsTransferable(ids, objects);
-		}
-		catch (IllegalDataException ide) {
-			// Never
-			Log.errorException(ide);
-		}
+		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
 		if (loadIdsT.length == 0)
 			return objects;
 
@@ -611,14 +603,7 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 	public Set loadKISs(Set ids) throws RetrieveObjectException {
 		KISDatabase database = ConfigurationDatabaseContext.getKISDatabase();
 		Set objects = super.retrieveFromDatabase(database, ids);
-		Identifier_Transferable[] loadIdsT = null;
-		try {
-			loadIdsT = super.createLoadIdsTransferable(ids, objects);
-		}
-		catch (IllegalDataException ide) {
-			// Never
-			Log.errorException(ide);
-		}
+		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
 		if (loadIdsT.length == 0)
 			return objects;
 
@@ -663,14 +648,7 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 	public Set loadMeasurementPorts(Set ids) throws RetrieveObjectException {
 		MeasurementPortDatabase database = ConfigurationDatabaseContext.getMeasurementPortDatabase();
 		Set objects = super.retrieveFromDatabase(database, ids);
-		Identifier_Transferable[] loadIdsT = null;
-		try {
-			loadIdsT = super.createLoadIdsTransferable(ids, objects);
-		}
-		catch (IllegalDataException ide) {
-			// Never
-			Log.errorException(ide);
-		}
+		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
 		if (loadIdsT.length == 0)
 			return objects;
 
@@ -715,14 +693,7 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 	public Set loadMonitoredElements(Set ids) throws RetrieveObjectException {
 		MonitoredElementDatabase database = ConfigurationDatabaseContext.getMonitoredElementDatabase();
 		Set objects = super.retrieveFromDatabase(database, ids);
-		Identifier_Transferable[] loadIdsT = null;
-		try {
-			loadIdsT = super.createLoadIdsTransferable(ids, objects);
-		}
-		catch (IllegalDataException ide) {
-			// Never
-			Log.errorException(ide);
-		}
+		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
 		if (loadIdsT.length == 0)
 			return objects;
 
@@ -772,14 +743,7 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 	public Set loadKISsButIds(StorableObjectCondition condition, Set ids) throws RetrieveObjectException {
 		KISDatabase database = ConfigurationDatabaseContext.getKISDatabase();
 		Set objects = super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
-		Identifier_Transferable[] loadButIdsT = null;
-		try {
-			loadButIdsT = super.createLoadButIdsTransferable(ids, objects);
-		}
-		catch (IllegalDataException ide) {
-			// Never
-			Log.errorException(ide);
-		}
+		Identifier_Transferable[] loadButIdsT = super.createLoadButIdsTransferable(ids, objects);
 		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
 
 		Set loadedObjects = new HashSet();
@@ -1085,7 +1049,7 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 		throw new UnsupportedOperationException("Method not implemented, objects: " + identifiables);
 	}
 
-	public void delete(Identifier id) throws IllegalDataException {
+	public void delete(Identifier id) {
 		throw new UnsupportedOperationException("Method not implemented, id: " + id);
 	}
 
