@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.20 2005/04/12 17:35:49 saa Exp $
+ * $Id: Heap.java,v 1.21 2005/04/12 17:51:06 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.io.BellcoreStructure;
  * использование остальных методов работы с BS
  * 
  * @author $Author: saa $
- * @version $Revision: 1.20 $, $Date: 2005/04/12 17:35:49 $
+ * @version $Revision: 1.21 $, $Date: 2005/04/12 17:51:06 $
  * @module
  */
 public class Heap
@@ -158,7 +158,7 @@ public class Heap
 	}
 	
 	private static String getFirstSecondaryBSKey() {
-		Iterator it = bsHash.entrySet().iterator();
+		Iterator it = bsHash.keySet().iterator();
 		while (it.hasNext())
 		{
 			String key = (String)it.next();
@@ -386,14 +386,6 @@ public class Heap
 		if (key.equals(PRIMARY_TRACE_KEY))
 			notifyPrimaryTraceOpened();
 	}
-	/*public static void etalonMTMCUpdated()
-	{
-		notifyEtalonMTMCUpdated();
-	}
-	public static void etalonMTMRemoved()
-	{
-		notifyEtalonMTMCUpdated();
-	}*/
 	public static void setCurrentTrace(String id)
 	{
 		currentTrace = id;
