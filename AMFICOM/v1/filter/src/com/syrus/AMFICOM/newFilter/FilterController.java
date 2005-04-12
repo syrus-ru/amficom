@@ -1,5 +1,5 @@
 /*
- * $Id: FilterController.java,v 1.7 2005/04/12 13:01:13 max Exp $
+ * $Id: FilterController.java,v 1.8 2005/04/12 13:19:52 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import javax.swing.event.PopupMenuListener;
 
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/04/12 13:01:13 $
+ * @version $Revision: 1.8 $, $Date: 2005/04/12 13:19:52 $
  * @author $Author: max $
  * @module filter_v1
  */
@@ -122,7 +122,7 @@ public class FilterController implements ActionListener, PopupMenuListener {
 			List linkedObjects = key.getLinkedObjects();
 			if(linkedObjects == null) {
 				try {
-					List linkedStorableObjects = this.model.linkedConditionLoader.loadLinkedCondition(key.getLinkedEntityCode());
+					List linkedStorableObjects = new ArrayList(this.model.linkedConditionLoader.loadLinkedCondition(key.getLinkedEntityCode()));
 					key.setLinkedObjects(linkedStorableObjects);
 				} catch (IllegalDataException e1) {
 					e1.printStackTrace();

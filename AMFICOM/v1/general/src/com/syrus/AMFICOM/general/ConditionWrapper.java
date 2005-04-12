@@ -1,5 +1,5 @@
 /*
- * $Id: ConditionWrapper.java,v 1.6 2005/04/01 09:45:29 max Exp $
+ * $Id: ConditionWrapper.java,v 1.7 2005/04/12 13:19:12 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,7 @@ import java.util.Collection;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/04/01 09:45:29 $
+ * @version $Revision: 1.7 $, $Date: 2005/04/12 13:19:12 $
  * @author $Author: max $
  * @module general_v1
  */
@@ -26,19 +26,6 @@ public interface ConditionWrapper {
 	byte CONSTRAINT = 5;
 	byte DATE	= 6;
 
-	Object getLinkedObject(String key, int indexNumber) throws IllegalDataException;
-
-	byte[] getTypes();
-
-	String[] getKeys();
-
-	String[] getKeyNames();
-
-	String[] getLinkedNames(String key) throws IllegalDataException;
-
-	String getInitialName(StorableObject storableObject);
-
-	Collection getInitialEntities();
-
+	Collection getKeys();
 	short getEntityCode();
 }

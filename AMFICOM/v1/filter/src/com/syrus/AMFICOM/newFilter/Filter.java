@@ -1,5 +1,5 @@
 /*
- * $Id: Filter.java,v 1.8 2005/04/12 13:00:23 max Exp $
+ * $Id: Filter.java,v 1.9 2005/04/12 13:19:52 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,6 +7,7 @@
  */
 package com.syrus.AMFICOM.newFilter;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -19,7 +20,7 @@ import com.syrus.AMFICOM.general.LinkedConditionLoader;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/04/12 13:00:23 $
+ * @version $Revision: 1.9 $, $Date: 2005/04/12 13:19:52 $
  * @author $Author: max $
  * @module misc
  */
@@ -45,7 +46,7 @@ public class Filter {
 	LinkedConditionLoader linkedConditionLoader;
 		
 	public Filter(ConditionWrapper wrapper, LinkedConditionLoader linkedConditionLoader) {
-		this.keys = wrapper.getKeys();
+		this.keys = new ArrayList(wrapper.getKeys());
 		this.entityCode = wrapper.getEntityCode(); 
 		this.filterViews = new LinkedList();
 		this.linkedConditionLoader = linkedConditionLoader;
