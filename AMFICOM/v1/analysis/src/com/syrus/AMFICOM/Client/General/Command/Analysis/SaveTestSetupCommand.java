@@ -77,9 +77,20 @@ public class SaveTestSetupCommand extends VoidCommand
 
 		Identifier user_id = new Identifier(((RISDSessionInfo)aContext
 				.getSessionInterface()).getAccessIdentifier().user_id);
-		ms.setCriteriaSet(AnalysisUtil.createCriteriaSetFromParams(user_id, ms.getMonitoredElementIds()));
+		try
+		{
+			ms.setCriteriaSet(AnalysisUtil.createCriteriaSetFromParams(user_id, ms.getMonitoredElementIds()));
+		} catch (ApplicationException e)
+		{
+			System.err.println("SaveTestSetupCommand: ApplicationException (criterias)");
+			JOptionPane.showMessageDialog(
+				Environment.getActiveWindow(),
+				LangModelAnalyse.getString("createObjectProblem"),
+				LangModelAnalyse.getString("error"), JOptionPane.OK_OPTION);
+			return;
+		}
 
-		if ((type & ETALON) != 0)// || (type & THRESHOLDS) != 0)
+		if ((type & ETALON) != 0)
 		{
 			ModelTraceManager mtm = Heap.getMTMEtalon();
 			if (mtm == null)
@@ -91,9 +102,20 @@ public class SaveTestSetupCommand extends VoidCommand
 				return;
 			}
 			if ((type & ETALON) != 0)
-				ms.setEtalon(AnalysisUtil.createEtalon(user_id, ms.getMonitoredElementIds(), mtm));
-//			if ((type & THRESHOLDS) != 0)
-//				ms.setThresholdSet(AnalysisUtil.createThresholdSet(user_id, ms.getMonitoredElementIds(), mtm));
+			{
+				try
+				{
+					ms.setEtalon(AnalysisUtil.createEtalon(user_id, ms.getMonitoredElementIds(), mtm));
+				} catch (ApplicationException e1)
+				{
+					System.err.println("SaveTestSetupCommand: ApplicationException (etalon)");
+					JOptionPane.showMessageDialog(
+						Environment.getActiveWindow(),
+						LangModelAnalyse.getString("createObjectProblem"),
+						LangModelAnalyse.getString("error"), JOptionPane.OK_OPTION);
+					return;
+				}
+			}
 		}
 
 		if (ms.getDescription().equals(""))

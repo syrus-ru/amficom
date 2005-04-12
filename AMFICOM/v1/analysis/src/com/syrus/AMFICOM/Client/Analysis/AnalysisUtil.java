@@ -14,6 +14,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.ParameterTypeCodenames;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
@@ -46,50 +47,22 @@ public class AnalysisUtil
 	{ // empty
 	}
 
-	public static ParameterType getParameterType(Identifier userId, String codename, DataType dataType){
-		StorableObjectCondition pTypeCondition = new TypicalCondition(
+	public static ParameterType getParameterType(Identifier userId, String codename, DataType dataType) throws ApplicationException {
+		
+		TypicalCondition pTypeCondition = new TypicalCondition(
 				codename,
 				OperationSort.OPERATION_EQUALS,
 				ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
 				StorableObjectWrapper.COLUMN_CODENAME);
 
-		ParameterType parameterType = null;
-		try	{
-				try{
-			Collection pTypes = MeasurementStorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
-			for (Iterator it = pTypes.iterator(); it.hasNext();){
-				ParameterType type = (ParameterType)it.next();
-				if (type.getCodename().equals(codename)){
-						parameterType = type;
-						break;
-				}
-			}
-				}catch(ApplicationException roe){
-				// ...
-					System.err.println("Exception searching ParameterType. Creating new one.");
-				roe.printStackTrace();
-				}
+			java.util.Set parameterTypeSet = MeasurementStorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
+			if (parameterTypeSet.isEmpty())
+				throw new RetrieveObjectException("AnalysisUtil.getParameterType | parameter type with codename " + pTypeCondition.getValue() + " not found");
 
-			if (parameterType == null){
-					parameterType = ParameterType.createInstance(
-					userId,
-					codename,
-					codename + "_Description",
-					codename + "_Name", // by saa after a talk with bob
-					dataType); 
-					MeasurementStorableObjectPool.putStorableObject(parameterType);
-			}
-		}
-		catch(ApplicationException ex)
-		{
-			// ...
-				System.err.println("Exception handling ParameterType. Giving up.");
-			ex.printStackTrace();
-		}
-		return parameterType;
+			return (ParameterType) parameterTypeSet.iterator().next();						
 	}
 
-	public static AnalysisType getAnalysisType(Identifier userId, String codename)
+	public static AnalysisType getAnalysisType(Identifier userId, String codename) throws ApplicationException
 	{
 		StorableObjectCondition aTypeCondition =
 			new TypicalCondition(
@@ -205,7 +178,7 @@ public class AnalysisUtil
 		}
 	}
 
-	public static Set createCriteriaSetFromParams(Identifier userId, java.util.Set meIds)
+	public static Set createCriteriaSetFromParams(Identifier userId, java.util.Set meIds) throws ApplicationException
 	{
 		SetParameter[] params = new SetParameter[8];
 
@@ -232,14 +205,14 @@ public class AnalysisUtil
 		}
 		catch (CreateObjectException e)
 		{
-				// FIXME
-				System.err.println("AnalysisUtil.createCriteriaSetFromParams: CreateObjectException...");
+			// FIXME
+			System.err.println("AnalysisUtil.createCriteriaSetFromParams: CreateObjectException...");
 			e.printStackTrace();
 		}
 
 		try
 		{
-				Set criteriaSet = Set.createInstance(
+			Set criteriaSet = Set.createInstance(
 				userId,
 				SetSort.SET_SORT_ANALYSIS_CRITERIA,
 				"",
@@ -250,15 +223,14 @@ public class AnalysisUtil
 		}
 		catch (CreateObjectException e)
 		{
-				// FIXME
-				System.err.println("AnalysisUtil.createCriteriaSetFromParams: CreateObjectException -- wanna die.");
+			// FIXME
+			System.err.println("AnalysisUtil.createCriteriaSetFromParams: CreateObjectException -- wanna die.");
 			e.printStackTrace();
 			return null;
 		}
-
 	}
 
-	public static Set createEtalon(Identifier userId, java.util.Set meIds, ModelTraceManager mtm)
+	public static Set createEtalon(Identifier userId, java.util.Set meIds, ModelTraceManager mtm) throws ApplicationException
 	{
 		try
 		{

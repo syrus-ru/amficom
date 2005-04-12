@@ -67,28 +67,44 @@ public class SaveAnalysisCommand extends VoidCommand
 		Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
 
 		Analysis a = null;
+		AnalysisType type;
+		ParameterType ptype0 = null;
+		ParameterType ptype1 = null;
+		ParameterType ptype2 = null;
 		try
 		{
-			AnalysisType type = AnalysisUtil.getAnalysisType(userId, ParameterTypeCodenames.DADARA);
-			Analysis.createInstance(
-					userId,
-					type,
-					new Identifier(bs.monitoredElementId),
-					m,
-					"DADARA Analysis", // @todo: give a better name
-					m.getSetup().getCriteriaSet());
+			type = AnalysisUtil.getAnalysisType(userId, ParameterTypeCodenames.DADARA);
+			ptype0 = AnalysisUtil.getParameterType(userId, ParameterTypeCodenames.REFLECTOGRAMMA, DataType.DATA_TYPE_RAW);
+			ptype1 = AnalysisUtil.getParameterType(userId, ParameterTypeCodenames.TRACE_EVENTS, DataType.DATA_TYPE_RAW);
+			ptype2 = AnalysisUtil.getParameterType(userId, ParameterTypeCodenames.DADARA_MTAE, DataType.DATA_TYPE_RAW);
+		} catch (ApplicationException e) {
+			// FIXME: add a better error processing
+			System.err.println("SaveAnalysisCommand: Application exception while getAnalysisType");
+			e.printStackTrace();
+			return;
 		}
-		catch(CreateObjectException ex)
+
+		try
 		{
-			ex.printStackTrace();
+			a = Analysis.createInstance( // FIXME: does this code has any effect?
+				userId,
+				type,
+				new Identifier(bs.monitoredElementId),
+				m,
+				"DADARA Analysis", // @todo: give a better name
+				m.getSetup().getCriteriaSet());
+		} catch (CreateObjectException e1) {
+			JOptionPane.showMessageDialog(
+				Environment.getActiveWindow(),
+				LangModelAnalyse.getString("createObjectProblem"), // FIXME: add this string
+				LangModelAnalyse.getString("error"), JOptionPane.OK_OPTION);
 			return;
 		}
 
 		SetParameter[] params = new SetParameter[3];
 		try
 		{
-			ParameterType ptype = AnalysisUtil.getParameterType(userId, ParameterTypeCodenames.REFLECTOGRAMMA, DataType.DATA_TYPE_RAW);
-			params[0] = SetParameter.createInstance(ptype,
+			params[0] = SetParameter.createInstance(ptype0,
 					new BellcoreWriter().write(bs));
 
 			ByteArrayCollector bac = new ByteArrayCollector();
@@ -97,21 +113,21 @@ public class SaveAnalysisCommand extends VoidCommand
 				byte[] b = refanalysis.events[i].toByteArray();
 				bac.add(b);
 			}
-			ptype = AnalysisUtil.getParameterType(userId, ParameterTypeCodenames.TRACE_EVENTS, DataType.DATA_TYPE_RAW);
-			params[1] = SetParameter.createInstance(ptype,
+			params[1] = SetParameter.createInstance(ptype1,
 					bac.encode());
 
-			ptype = AnalysisUtil.getParameterType(userId, ParameterTypeCodenames.DADARA_MTAE, DataType.DATA_TYPE_RAW);
-			params[2] = SetParameter.createInstance(ptype,
+			params[2] = SetParameter.createInstance(ptype2,
 				DataStreamableUtil.writeDataStreamableToBA(mtae));
 		}
-			catch (CreateObjectException e)
-			{
-				// FIXME
-				System.err.println("SaveAnalysisCommand: CreateObjectException.");
-			e.printStackTrace();
+		catch (CreateObjectException e)
+		{
+			System.err.println("SaveAnalysisCommand: CreateObjectException.");
+			JOptionPane.showMessageDialog(
+				Environment.getActiveWindow(),
+				LangModelAnalyse.getString("createObjectProblem"),
+				LangModelAnalyse.getString("error"), JOptionPane.OK_OPTION);
 			return;
-			}
+		}
 
 // FIXME: should be uncommented and fixed; hidden by saa because of modified module measurement_v1
 //		try

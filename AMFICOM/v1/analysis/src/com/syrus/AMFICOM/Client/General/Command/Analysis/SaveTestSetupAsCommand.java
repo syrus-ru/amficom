@@ -10,6 +10,7 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEvents;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.io.BellcoreStructure;
@@ -61,7 +62,6 @@ public class SaveTestSetupAsCommand extends VoidCommand
 		}
 
 		if (((type & SaveTestSetupCommand.ETALON) != 0
-			//	|| (type & SaveTestSetupCommand.THRESHOLDS) != 0
 			)
 			&& !Heap.hasEventParamsForPrimaryTrace())
 		{
@@ -80,26 +80,25 @@ public class SaveTestSetupAsCommand extends VoidCommand
 
 		Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
 		ModelTraceManager mtm = Heap.getMTMEtalon();
-		newms.setCriteriaSet(AnalysisUtil.createCriteriaSetFromParams(
-				userId,
-				newms.getMonitoredElementIds()));
-		newms.setEtalon(AnalysisUtil.createEtalon(
+		try
+		{
+			newms.setCriteriaSet(AnalysisUtil.createCriteriaSetFromParams(
+					userId,
+					newms.getMonitoredElementIds()));
+			newms.setEtalon(AnalysisUtil.createEtalon(
 				userId,
 				newms.getMonitoredElementIds(),
 				mtm));
-
-//		if ((type & SaveTestSetupCommand.THRESHOLDS) != 0)
-//		{
-//			newms.setThresholdSet(AnalysisUtil.createThresholdSet(
-//					userId,
-//					newms.getMonitoredElementIds(),
-//					mtm));
-//		}
+		} catch (ApplicationException e)
+		{
+			System.err.println("SaveTestSetupAsCommand: ApplicationException.");
+			JOptionPane.showMessageDialog(
+				Environment.getActiveWindow(),
+				LangModelAnalyse.getString("createObjectProblem"),
+				LangModelAnalyse.getString("error"), JOptionPane.OK_OPTION);
+			return;
+		}
 
 		new SaveTestSetupCommand(aContext, type).execute();
-
-		// FIXME: зачем тут было это событие?
-//		aContext.getDispatcher().notify(new RefChangeEvent(RefUpdateEvent.PRIMARY_TRACE,
-//				RefChangeEvent.THRESHOLDS_CALC_EVENT));
 	}
 }
