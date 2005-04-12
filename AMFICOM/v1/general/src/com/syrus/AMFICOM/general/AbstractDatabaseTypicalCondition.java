@@ -1,5 +1,5 @@
 /*
-* $Id: AbstractDatabaseTypicalCondition.java,v 1.3 2005/02/07 09:58:20 bob Exp $
+* $Id: AbstractDatabaseTypicalCondition.java,v 1.4 2005/04/12 16:37:41 arseniy Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/02/07 09:58:20 $
- * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2005/04/12 16:37:41 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorableObjectCondition {
@@ -30,13 +30,13 @@ public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorab
 		this.condition = delegate;
 	}
 
-	protected abstract String getColumnName() throws IllegalDataException;
+	protected abstract String getColumnName() throws IllegalObjectEntityException;
 	
 	public Short getEntityCode() {
 		return this.condition.getEntityCode();
 	}
 	
-	public String getSQLQuery() throws IllegalDataException{
+	public String getSQLQuery() throws IllegalObjectEntityException {
 		StringBuffer buffer = new StringBuffer();
 		switch (this.condition.getType().value()) {
 			case TypicalSort._TYPE_NUMBER_INT:
