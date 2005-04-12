@@ -14,6 +14,7 @@ import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
+import com.syrus.AMFICOM.Client.Schedule.Commandable;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Schedule.WindowCommand;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
@@ -23,7 +24,7 @@ import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 
-public class TestParametersFrame extends JInternalFrame implements OperationListener {
+public class TestParametersFrame extends JInternalFrame implements OperationListener, Commandable {
 
 	private ApplicationContext	aContext;
 	private SchedulerModel		schedulerModel;

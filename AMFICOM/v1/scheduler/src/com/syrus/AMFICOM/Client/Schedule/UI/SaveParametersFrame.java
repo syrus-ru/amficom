@@ -25,6 +25,7 @@ import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
+import com.syrus.AMFICOM.Client.Schedule.Commandable;
 import com.syrus.AMFICOM.Client.Schedule.ReturnTypeEditor;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Schedule.WindowCommand;
@@ -33,7 +34,7 @@ import com.syrus.AMFICOM.measurement.corba.TestReturnType;
 /**
  * @author Vladimir Dolzhenko
  */
-public class SaveParametersFrame extends JInternalFrame implements ReturnTypeEditor {
+public class SaveParametersFrame extends JInternalFrame implements ReturnTypeEditor, Commandable {
 
 	private JPanel			panel;
 

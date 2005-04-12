@@ -39,6 +39,9 @@ public class WindowCommand implements Command {
 		if (this.source instanceof JInternalFrame) {
 			//System.out.println("exec JInternalFrame");
 			JInternalFrame frame = (JInternalFrame) this.source;
+			if (!frame.isVisible()) {
+				frame.setVisible(true);
+			}
 			try {
 				frame.setSelected(true);
 			} catch (PropertyVetoException pve) {

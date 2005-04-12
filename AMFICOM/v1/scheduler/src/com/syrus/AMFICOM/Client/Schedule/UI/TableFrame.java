@@ -36,6 +36,7 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
+import com.syrus.AMFICOM.Client.Schedule.Commandable;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Schedule.TestEditor;
 import com.syrus.AMFICOM.Client.Schedule.TestsEditor;
@@ -49,7 +50,7 @@ import com.syrus.AMFICOM.measurement.TestController;
 /**
  * @author Vladimir Dolzhenko
  */
-public class TableFrame extends JInternalFrame implements TestsEditor, TestEditor {
+public class TableFrame extends JInternalFrame implements TestsEditor, TestEditor , Commandable {
 
 	Dispatcher			dispatcher;
 	SchedulerModel		schedulerModel;

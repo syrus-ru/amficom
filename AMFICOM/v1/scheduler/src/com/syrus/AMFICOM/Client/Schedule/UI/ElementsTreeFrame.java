@@ -21,6 +21,7 @@ import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
+import com.syrus.AMFICOM.Client.Schedule.Commandable;
 import com.syrus.AMFICOM.Client.Schedule.ElementsViewer;
 import com.syrus.AMFICOM.Client.Schedule.KISEditor;
 import com.syrus.AMFICOM.Client.Schedule.MeasurementTypeEditor;
@@ -42,7 +43,7 @@ import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 
 public class ElementsTreeFrame extends JInternalFrame implements KISEditor, MonitoredElementEditor,
-		MeasurementTypeEditor, ElementsViewer {
+		MeasurementTypeEditor, ElementsViewer, Commandable {
 
 	private Command				command;
 

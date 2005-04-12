@@ -10,9 +10,10 @@ import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
+import com.syrus.AMFICOM.Client.Schedule.Commandable;
 import com.syrus.AMFICOM.Client.Schedule.WindowCommand;
 
-public class TestRequestFrame extends JInternalFrame {
+public class TestRequestFrame extends JInternalFrame  implements Commandable {
 
 	private TestRequestPanel	panel;
 	private Command				command;
