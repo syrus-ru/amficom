@@ -1,5 +1,5 @@
 /*
- * $Id: RISDSessionInfo.java,v 1.32 2005/04/08 15:47:27 bob Exp $
+ * $Id: RISDSessionInfo.java,v 1.33 2005/04/12 06:33:56 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.Client.General;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.Date;
 
 import org.omg.CORBA.ORB;
 import org.omg.CORBA.SystemException;
@@ -69,12 +70,13 @@ import com.syrus.AMFICOM.measurement.XMLMeasurementObjectLoader;
 import com.syrus.AMFICOM.resource.EmptyClientResourceObjectLoader;
 import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
 import com.syrus.io.Rewriter;
+import com.syrus.util.Log;
 import com.syrus.util.corba.JavaSoftORBUtil;
 import com.syrus.util.prefs.IIOPConnectionManager;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.32 $, $Date: 2005/04/08 15:47:27 $
+ * @version $Revision: 1.33 $, $Date: 2005/04/12 06:33:56 $
  * @module generalclient_v1
  */
 public final class RISDSessionInfo extends SessionInterface {
@@ -209,7 +211,6 @@ public final class RISDSessionInfo extends SessionInterface {
 			 */
 			try {
 				ecode = ci.getServer().Logon(getUser(), Rewriter.write(getPassword()), ior, accessIdentityHolder);
-				System.out.println("ecode is " + ecode);
 			} catch (NullPointerException npe) {
 				npe.printStackTrace();
 			}
@@ -441,11 +442,14 @@ public final class RISDSessionInfo extends SessionInterface {
 					GeneralStorableObjectPool.flush(true);
 				}
 
- 
-			System.err.println("domainId: " + this.accessIdentifier.domain_id.identifier_string);
-			System.err.println("sessionId: " + this.accessIdentifier.session_code);
-			System.err.println("started: " + new java.util.Date(this.accessIdentifier.started));
-			System.err.println("userId: " + this.accessIdentifier.user_id.identifier_string);
+			Log.debugMessage("RISDSessionInfo.openLocalSession | domainId: "
+				+ this.accessIdentifier.domain_id.identifier_string, Log.FINEST);
+			Log.debugMessage("RISDSessionInfo.openLocalSession | sessionId: " + this.accessIdentifier.session_code,
+				Log.FINEST);
+			Log.debugMessage("RISDSessionInfo.openLocalSession | started: " + new Date(this.accessIdentifier.started),
+				Log.FINEST);
+			Log.debugMessage("RISDSessionInfo.openLocalSession | userId: "
+					+ this.accessIdentifier.user_id.identifier_string, Log.FINEST);
 			
 			add(this);
 			setActiveSession(this);
