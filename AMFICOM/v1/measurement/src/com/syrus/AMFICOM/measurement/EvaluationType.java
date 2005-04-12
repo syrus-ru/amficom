@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationType.java,v 1.56 2005/04/08 12:33:24 arseniy Exp $
+ * $Id: EvaluationType.java,v 1.57 2005/04/12 14:58:27 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,8 +31,8 @@ import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.56 $, $Date: 2005/04/08 12:33:24 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.57 $, $Date: 2005/04/12 14:58:27 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -179,16 +179,20 @@ public class EvaluationType extends ActionType {
 		java.util.Set parTypIds;
 
 		parTypIds = Identifier.fromTransferables(ett.in_parameter_type_ids);
-		this.inParameterTypes = GeneralStorableObjectPool.getStorableObjects(parTypIds, true);
+		this.inParameterTypes = new HashSet(ett.in_parameter_type_ids.length);
+		this.setInParameterTypes0(GeneralStorableObjectPool.getStorableObjects(parTypIds, true));
 
 		parTypIds = Identifier.fromTransferables(ett.threshold_parameter_type_ids);
-		this.thresholdParameterTypes = GeneralStorableObjectPool.getStorableObjects(parTypIds, true);
+		this.thresholdParameterTypes = new HashSet(ett.threshold_parameter_type_ids.length);
+		this.setThresholdParameterTypes0(GeneralStorableObjectPool.getStorableObjects(parTypIds, true));
 
 		parTypIds = Identifier.fromTransferables(ett.etalon_parameter_type_ids);
-		this.etalonParameterTypes = GeneralStorableObjectPool.getStorableObjects(parTypIds, true);
+		this.etalonParameterTypes = new HashSet(ett.etalon_parameter_type_ids.length);
+		this.setEtalonParameterTypes0(GeneralStorableObjectPool.getStorableObjects(parTypIds, true));
 
 		parTypIds = Identifier.fromTransferables(ett.out_parameter_type_ids);
-		this.outParameterTypes = GeneralStorableObjectPool.getStorableObjects(parTypIds, true);
+		this.outParameterTypes = new HashSet(ett.out_parameter_type_ids.length);
+		this.setOutParameterTypes0(GeneralStorableObjectPool.getStorableObjects(parTypIds, true));		
 
 		this.measurementTypeIds = Identifier.fromTransferables(ett.measurement_type_ids);
 	}

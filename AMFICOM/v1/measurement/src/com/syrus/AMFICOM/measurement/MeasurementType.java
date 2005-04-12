@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementType.java,v 1.61 2005/04/08 12:33:24 arseniy Exp $
+ * $Id: MeasurementType.java,v 1.62 2005/04/12 14:58:27 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.61 $, $Date: 2005/04/08 12:33:24 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.62 $, $Date: 2005/04/12 14:58:27 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -156,13 +156,16 @@ public class MeasurementType extends ActionType {
 		java.util.Set typeIds;
 
 		typeIds = Identifier.fromTransferables(mtt.in_parameter_type_ids);
-		this.inParameterTypes = GeneralStorableObjectPool.getStorableObjects(typeIds, true);
+		this.inParameterTypes = new HashSet(mtt.in_parameter_type_ids.length);
+		this.setInParameterTypes0(GeneralStorableObjectPool.getStorableObjects(typeIds, true));
 
 		typeIds = Identifier.fromTransferables(mtt.out_parameter_type_ids);
-		this.outParameterTypes = GeneralStorableObjectPool.getStorableObjects(typeIds, true);
+		this.outParameterTypes = new HashSet(mtt.out_parameter_type_ids.length);
+		this.setOutParameterTypes0(GeneralStorableObjectPool.getStorableObjects(typeIds, true));
 
 		typeIds = Identifier.fromTransferables(mtt.measurement_port_type_ids);
-		this.measurementPortTypes = ConfigurationStorableObjectPool.getStorableObjects(typeIds, true);
+		this.measurementPortTypes = new HashSet(mtt.measurement_port_type_ids.length);
+		this.setMeasurementPortTypes0(ConfigurationStorableObjectPool.getStorableObjects(typeIds, true));
 	}
 
 	public IDLEntity getTransferable() {

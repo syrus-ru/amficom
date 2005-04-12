@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisType.java,v 1.60 2005/04/08 12:33:24 arseniy Exp $
+ * $Id: AnalysisType.java,v 1.61 2005/04/12 14:58:27 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,8 +31,8 @@ import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.60 $, $Date: 2005/04/08 12:33:24 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.61 $, $Date: 2005/04/12 14:58:27 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -178,20 +178,23 @@ public class AnalysisType extends ActionType {
 		java.util.Set parTypIds;
 
 		parTypIds = Identifier.fromTransferables(att.in_parameter_type_ids);
-		this.inParameterTypes = GeneralStorableObjectPool.getStorableObjects(parTypIds, true);
+		this.inParameterTypes = new HashSet(att.in_parameter_type_ids.length);
+		this.setInParameterTypes0(GeneralStorableObjectPool.getStorableObjects(parTypIds, true));
 
 		parTypIds = Identifier.fromTransferables(att.criteria_parameter_type_ids);
-		this.criteriaParameterTypes = GeneralStorableObjectPool.getStorableObjects(parTypIds, true);
+		this.criteriaParameterTypes =  new HashSet(att.criteria_parameter_type_ids.length); 
+		this.setCriteriaParameterTypes0(GeneralStorableObjectPool.getStorableObjects(parTypIds, true));
 
 		parTypIds = Identifier.fromTransferables(att.etalon_parameter_type_ids);
-		this.etalonParameterTypes = GeneralStorableObjectPool.getStorableObjects(parTypIds, true);
+		this.etalonParameterTypes = new HashSet(att.etalon_parameter_type_ids.length);
+		this.setEtalonParameterTypes0(GeneralStorableObjectPool.getStorableObjects(parTypIds, true));
+
 
 		parTypIds = Identifier.fromTransferables(att.out_parameter_type_ids);
-		this.outParameterTypes = GeneralStorableObjectPool.getStorableObjects(parTypIds, true);
+		this.outParameterTypes = new HashSet(att.out_parameter_type_ids.length);
+		this.setOutParameterTypes0(GeneralStorableObjectPool.getStorableObjects(parTypIds, true));	
 
-		this.measurementTypeIds = new HashSet(att.measurement_type_ids.length);
-		for (int i = 0; i < att.measurement_type_ids.length; i++)
-			this.measurementTypeIds.add(new Identifier(att.measurement_type_ids[i]));
+		this.measurementTypeIds = Identifier.fromTransferables(att.measurement_type_ids);
 	}
 
 	public IDLEntity getTransferable() {
