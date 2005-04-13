@@ -1,5 +1,5 @@
 /*
- * $Id: ExportCommand.java,v 1.4 2005/02/07 16:10:17 krupenn Exp $
+ * $Id: ExportCommand.java,v 1.5 2005/04/13 11:37:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,28 +10,26 @@
 
 package com.syrus.AMFICOM.Client.General.Command;
 
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.UI.ChoosableFileFilter;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.util.Collection;
+import java.util.Iterator;
 
-import java.util.List;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import java.util.Iterator;
+
+import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.General.UI.ChoosableFileFilter;
 
 /**
  * Класс $RCSfile: ExportCommand.java,v $ 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2005/02/07 16:10:17 $
+ * @version $Revision: 1.5 $, $Date: 2005/04/13 11:37:33 $
  * @module map_v2
  * @author $Author: krupenn $
- * @see
  */
 public abstract class ExportCommand extends VoidCommand
 {
@@ -41,33 +39,33 @@ public abstract class ExportCommand extends VoidCommand
 
 	protected void startObject(String type)
 	{
-		pw.println ("@@" + type);
+		this.pw.println ("@@" + type);
 	}
 
 	protected void put(Object field, Object value)
 	{
-		if(value instanceof List)
+		if(value instanceof Collection)
 		{
-			List list = (List )value;
-			pw.println ("@[" + field);
-			for(Iterator it = list.iterator(); it.hasNext();)
+			Collection objects = (Collection )value;
+			this.pw.println ("@[" + field);
+			for(Iterator it = objects.iterator(); it.hasNext();)
 			{
-				pw.println (it.next().toString());
+				this.pw.println (it.next().toString());
 			}
-			pw.println ("@]" + field);
+			this.pw.println ("@]" + field);
 		}
 		else
-			pw.println ("@" + field + " " + value);
+			this.pw.println ("@" + field + " " + value);
 	}
 	
 	protected void endObject()
 	{
-		pw.println();
+		this.pw.println();
 	}
 	
 	protected void breakLine()
 	{
-		pw.println();
+		this.pw.println();
 	}
 	
 	protected void open(String fileName)
@@ -80,9 +78,9 @@ public abstract class ExportCommand extends VoidCommand
 		}
 		try
 		{
-			fos = new FileOutputStream (fileName);
-			osw = new OutputStreamWriter(fos, "UTF-16");
-			pw = new PrintWriter(osw, true);
+			this.fos = new FileOutputStream (fileName);
+			this.osw = new OutputStreamWriter(this.fos, "UTF-16");
+			this.pw = new PrintWriter(this.osw, true);
 		}
 		catch(Exception e)
 		{
@@ -94,9 +92,9 @@ public abstract class ExportCommand extends VoidCommand
 	{
 		try
 		{
-			pw.close();
-			osw.close();
-			fos.close();
+			this.pw.close();
+			this.osw.close();
+			this.fos.close();
 		}
 		catch(Exception e)
 		{
