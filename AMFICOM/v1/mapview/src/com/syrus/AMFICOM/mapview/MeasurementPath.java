@@ -1,5 +1,5 @@
 /**
- * $Id: MeasurementPath.java,v 1.18 2005/04/06 16:06:35 krupenn Exp $
+ * $Id: MeasurementPath.java,v 1.19 2005/04/13 10:02:23 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,7 +28,6 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
-import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.MapElementState;
 import com.syrus.AMFICOM.map.NodeLink;
@@ -46,7 +45,7 @@ import com.syrus.AMFICOM.scheme.corba.PathElementKind;
  * Элемент пути.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.18 $, $Date: 2005/04/06 16:06:35 $
+ * @version $Revision: 1.19 $, $Date: 2005/04/13 10:02:23 $
  * @module mapviewclient_v1
  */
 public class MeasurementPath implements MapElement
@@ -82,11 +81,6 @@ public class MeasurementPath implements MapElement
 	protected transient boolean removed = false;
 
 	/**
-	 * Топологическая схема.
-	 */
-	protected transient Map map = null;
-
-	/**
 	 * Схемный путь.
 	 */
 	protected SchemePath schemePath;
@@ -116,10 +110,6 @@ public class MeasurementPath implements MapElement
 		this.id = id;
 		this.schemePath = schemePath;
 		this.name = schemePath.getName();
-		if(mapView != null)
-		{
-			this.map = mapView.getMap();
-		}
 	}
 
 	/**
@@ -234,22 +224,6 @@ public class MeasurementPath implements MapElement
 	/**
 	 * {@inheritDoc}
 	 */
-	public Map getMap()
-	{
-		return this.map;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setMap(Map map)
-	{
-		this.map = map;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public boolean isSelected()
 	{
 		return this.selected;
@@ -261,7 +235,6 @@ public class MeasurementPath implements MapElement
 	public void setSelected(boolean selected)
 	{
 		this.selected = selected;
-		getMap().setSelected(this, selected);
 	}
 
 	/**

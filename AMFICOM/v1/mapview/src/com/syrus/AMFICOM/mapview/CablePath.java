@@ -1,5 +1,5 @@
 /**
- * $Id: CablePath.java,v 1.13 2005/04/06 17:40:07 krupenn Exp $
+ * $Id: CablePath.java,v 1.14 2005/04/13 10:02:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,7 +30,6 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.IntPoint;
-import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.MapElementState;
 import com.syrus.AMFICOM.map.PhysicalLink;
@@ -41,7 +40,7 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
 /**
  * Элемент кабельного пути. Описывает привязку кабеля к топологическим линиям.
  * @author $Author: krupenn $
- * @version $Revision: 1.13 $, $Date: 2005/04/06 17:40:07 $
+ * @version $Revision: 1.14 $, $Date: 2005/04/13 10:02:00 $
  * @module mapviewclient_v1
  */
 public class CablePath implements MapElement
@@ -75,11 +74,6 @@ public class CablePath implements MapElement
 	 * Флаг удаления.
 	 */
 	protected transient boolean removed = false;
-
-	/**
-	 * Топологическая схема.
-	 */
-	protected transient Map map = null;
 
 	/**
 	 * Узел карты, к которому привязан начальный узел кабеля.
@@ -151,11 +145,6 @@ public class CablePath implements MapElement
 
 		this.schemeCableLink = schemeCableLink;
 		this.name = schemeCableLink.getName();
-
-		if(mapView != null)
-		{
-			this.map = mapView.getMap();
-		}
 
 		this.startNode = stNode;
 		this.endNode = eNode;
@@ -325,22 +314,6 @@ public class CablePath implements MapElement
 	/**
 	 * {@inheritDoc}
 	 */
-	public Map getMap()
-	{
-		return this.map;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setMap(Map map)
-	{
-		this.map = map;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public boolean isSelected()
 	{
 		return this.selected;
@@ -352,7 +325,6 @@ public class CablePath implements MapElement
 	public void setSelected(boolean selected)
 	{
 		this.selected = selected;
-		getMap().setSelected(this, selected);
 	}
 
 	/**
