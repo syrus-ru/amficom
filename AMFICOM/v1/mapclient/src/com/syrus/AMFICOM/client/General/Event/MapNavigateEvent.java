@@ -1,5 +1,5 @@
 /**
- * $Id: MapNavigateEvent.java,v 1.17 2005/03/30 10:28:23 bass Exp $
+ * $Id: MapNavigateEvent.java,v 1.18 2005/04/13 10:23:51 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,15 +17,15 @@ import com.syrus.AMFICOM.general.Identifier;
  *
  *
  *
- * @version $Revision: 1.17 $, $Date: 2005/03/30 10:28:23 $
+ * @version $Revision: 1.18 $, $Date: 2005/04/13 10:23:51 $
  * @module mapclient_v2
- * @author $Author: bass $
+ * @author $Author: krupenn $
  */
 public class MapNavigateEvent extends MapEvent
 {
 	/**
 	 * Пользователь создал маркер.
-	 * Используются поля {@link #markerId}, {@link #distance}, {@link #spd}
+	 * Используются поля {@link #markerId}, {@link #distance}
 	 */
 	public static final int MAP_MARKER_CREATED_EVENT = 1;
 	/**
