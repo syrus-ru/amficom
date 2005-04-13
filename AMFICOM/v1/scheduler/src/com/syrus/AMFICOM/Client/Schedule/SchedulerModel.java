@@ -271,8 +271,8 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 			Collection measurementTypeItems = new ArrayList(measurementTypes.size());
 
 			for (Iterator iter = measurementTypes.iterator(); iter.hasNext();) {
-				MeasurementType measurementType = (MeasurementType) iter.next();
-				MeasurementTypeItem measurementTypeItem = new MeasurementTypeItem(measurementType.getId());
+				MeasurementType measurementType1 = (MeasurementType) iter.next();
+				MeasurementTypeItem measurementTypeItem = new MeasurementTypeItem(measurementType1.getId());
 				measurementTypeItems.add(measurementTypeItem);
 				measurementTypeItem.setChildrenFactory(new MeasurementTypeChildrenFactory(sessionInterface
 						.getDomainIdentifier()));
@@ -303,12 +303,12 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		if (this.selectedTest != null) {
 			this.measurementTypeEditor.setMeasurementType((MeasurementType) MeasurementStorableObjectPool
 					.getStorableObject(this.selectedTest.getMeasurementTypeId(), true));
-			MonitoredElement monitoredElement = this.selectedTest.getMonitoredElement();
+			MonitoredElement monitoredElement1 = this.selectedTest.getMonitoredElement();
 			MeasurementPort measurementPort = (MeasurementPort) ConfigurationStorableObjectPool.getStorableObject(
-				monitoredElement.getMeasurementPortId(), true);
+				monitoredElement1.getMeasurementPortId(), true);
 			this.kisEditor.setKIS((KIS) ConfigurationStorableObjectPool.getStorableObject(measurementPort.getKISId(),
 				true));
-			this.monitoredElementEditor.setMonitoredElement(monitoredElement);
+			this.monitoredElementEditor.setMonitoredElement(monitoredElement1);
 
 			Identifier analysisTypeId = this.selectedTest.getAnalysisTypeId();
 			if (analysisTypeId != null)
@@ -322,10 +322,10 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 			Collection measurementSetupIds = this.selectedTest.getMeasurementSetupIds();
 			if (!measurementSetupIds.isEmpty()) {
 				Identifier mainMeasurementSetupId = (Identifier) measurementSetupIds.iterator().next();
-				MeasurementSetup measurementSetup = (MeasurementSetup) MeasurementStorableObjectPool.getStorableObject(
+				MeasurementSetup measurementSetup1 = (MeasurementSetup) MeasurementStorableObjectPool.getStorableObject(
 					mainMeasurementSetupId, true);
-				this.setEditor.setSet(measurementSetup.getParameterSet());
-				this.measurementSetupEditor.setMeasurementSetup(measurementSetup);
+				this.setEditor.setSet(measurementSetup1.getParameterSet());
+				this.measurementSetupEditor.setMeasurementSetup(measurementSetup1);
 			}
 
 			this.returnTypeEditor.setReturnType(this.selectedTest.getReturnType());
@@ -495,8 +495,14 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 				RISDSessionInfo sessionInterface = (RISDSessionInfo) this.aContext.getSessionInterface();
 				try {
 					this.measurementSetup = MeasurementSetup.createInstance(sessionInterface.getUserIdentifier(),
-						this.set, null, null, null, "created by Scheduler /" + sdf.format(new Date()) + "/" , 1000 * 60 * 10, Collections
-								.singleton(this.monitoredElement.getId()));
+							this.set,
+							null,
+							null,
+							null,
+							"created by Scheduler /" + sdf.format(new Date()) + "/",
+							1000 * 60 * 10,
+							Collections.singleton(this.monitoredElement.getId()),
+							Collections.singleton(this.measurementType.getId())); //@todo link to measurement type -- temporal fix
 					MeasurementStorableObjectPool.putStorableObject(this.measurementSetup);
 				} catch (IllegalObjectEntityException e) {
 					Log.debugException(e, Log.DEBUGLEVEL05);
@@ -576,10 +582,10 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 	}
 
 	public void addTestsEditor(TestsEditor testsEditor) {
-		TestsEditor[] testEditors = new TestsEditor[this.testsEditors.length + 1];
-		System.arraycopy(this.testsEditors, 0, testEditors, 1, this.testsEditors.length);
-		testEditors[0] = testsEditor;
-		this.testsEditors = testEditors;
+		TestsEditor[] testEditors1 = new TestsEditor[this.testsEditors.length + 1];
+		System.arraycopy(this.testsEditors, 0, testEditors1, 1, this.testsEditors.length);
+		testEditors1[0] = testsEditor;
+		this.testsEditors = testEditors1;
 	}
 
 	public void removeTestsEditor(TestsEditor testsEditor) {
@@ -592,18 +598,18 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		}
 
 		if (index >= 0) {
-			TestsEditor[] testEditors = new TestsEditor[this.testsEditors.length - 1];
-			System.arraycopy(this.testsEditors, 0, testEditors, 0, index + 1);
-			System.arraycopy(this.testsEditors, index + 1, testEditors, index, this.testsEditors.length - index - 1);
-			this.testsEditors = testEditors;
+			TestsEditor[] testEditors1 = new TestsEditor[this.testsEditors.length - 1];
+			System.arraycopy(this.testsEditors, 0, testEditors1, 0, index + 1);
+			System.arraycopy(this.testsEditors, index + 1, testEditors1, index, this.testsEditors.length - index - 1);
+			this.testsEditors = testEditors1;
 		}
 	}
 
 	public void addTestEditor(TestEditor testEditor) {
-		TestEditor[] testEditors = new TestEditor[this.testEditors.length + 1];
-		System.arraycopy(this.testEditors, 0, testEditors, 1, this.testEditors.length);
-		testEditors[0] = testEditor;
-		this.testEditors = testEditors;
+		TestEditor[] testEditors1 = new TestEditor[this.testEditors.length + 1];
+		System.arraycopy(this.testEditors, 0, testEditors1, 1, this.testEditors.length);
+		testEditors1[0] = testEditor;
+		this.testEditors = testEditors1;
 	}
 
 	public void removeTestEditor(TestEditor testEditor) {
@@ -616,10 +622,10 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		}
 
 		if (index >= 0) {
-			TestEditor[] testEditors = new TestEditor[this.testEditors.length - 1];
-			System.arraycopy(this.testEditors, 0, testEditors, 0, index + 1);
-			System.arraycopy(this.testEditors, index + 1, testEditors, index, this.testEditors.length - index - 1);
-			this.testEditors = testEditors;
+			TestEditor[] testEditors1 = new TestEditor[this.testEditors.length - 1];
+			System.arraycopy(this.testEditors, 0, testEditors1, 0, index + 1);
+			System.arraycopy(this.testEditors, index + 1, testEditors1, index, this.testEditors.length - index - 1);
+			this.testEditors = testEditors1;
 		}
 	}
 
