@@ -15,7 +15,7 @@ include ../tools/Makefile.inc
 
 SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/mshserver/*.java)
 
-APPCLASSPATH = $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/map.jar
+APPCLASSPATH = $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/map.jar:$(LIBDIR)/scheme.jar
 
 
 $(call checkenve,JAVA_HOME)
