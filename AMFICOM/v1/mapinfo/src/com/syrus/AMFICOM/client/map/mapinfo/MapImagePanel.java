@@ -6,8 +6,6 @@ import java.awt.Image;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.awt.image.BufferedImage;
-import java.util.Date;
 
 import javax.swing.JPanel;
 

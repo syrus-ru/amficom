@@ -70,6 +70,8 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 					height));
 
 			this.imageCache.sizeChanged();
+			this.setCenter(this.convertScreenToMap(new Point(width / 2,height / 2)));			
+			
 			repaint(true);
 		}
 	}
