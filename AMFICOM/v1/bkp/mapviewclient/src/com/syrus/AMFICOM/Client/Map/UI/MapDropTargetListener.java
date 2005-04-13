@@ -1,5 +1,5 @@
 /**
- * $Id: MapDropTargetListener.java,v 1.19 2005/03/16 13:48:18 bass Exp $
+ * $Id: MapDropTargetListener.java,v 1.20 2005/04/13 11:30:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,9 +32,11 @@ import com.syrus.AMFICOM.Client.Map.Command.Action.CreateSiteCommandAtomic;
 import com.syrus.AMFICOM.Client.Map.Command.Action.MoveSelectionCommandBundle;
 import com.syrus.AMFICOM.Client.Map.Command.Action.PlaceSchemeCableLinkCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.PlaceSchemeElementCommand;
+import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.mapview.CablePath;
+import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.UnboundNode;
 import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
@@ -44,8 +46,8 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
  * 
  * 
  * 
- * @version $Revision: 1.19 $, $Date: 2005/03/16 13:48:18 $
- * @author $Author: bass $
+ * @version $Revision: 1.20 $, $Date: 2005/04/13 11:30:40 $
+ * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
 public final class MapDropTargetListener implements DropTargetListener
@@ -126,14 +128,16 @@ public final class MapDropTargetListener implements DropTargetListener
 
 	protected void schemeElementDropped(SchemeElement schemeElement, Point point)
 	{
-		SiteNode site = this.logicalNetLayer.getMapView().findElement(schemeElement);
+		MapView mapView = this.logicalNetLayer.getMapView();
+		Map map = mapView.getMap();
+		SiteNode site = mapView.findElement(schemeElement);
 		if(site != null)
 		{
 			if(site instanceof UnboundNode)
 			{
 				try {
 					this.logicalNetLayer.deselectAll();
-					site.setSelected(true);
+					map.setSelected(site, true);
 					Point pt = this.logicalNetLayer.convertMapToScreen(site.getLocation());
 					MoveSelectionCommandBundle cmd = new MoveSelectionCommandBundle(pt);
 					cmd.setLogicalNetLayer(this.logicalNetLayer);
@@ -150,7 +154,7 @@ public final class MapDropTargetListener implements DropTargetListener
 			}
 			else
 			{
-				site.setSelected(true);
+				map.setSelected(site, true);
 			}
 		}
 		else
@@ -164,10 +168,12 @@ public final class MapDropTargetListener implements DropTargetListener
 
 	protected void schemeCableLinkDropped(SchemeCableLink schemeCableLink)
 	{
-		CablePath cp = this.logicalNetLayer.getMapView().findCablePath(schemeCableLink);
-		if(cp != null)
+		MapView mapView = this.logicalNetLayer.getMapView();
+		Map map = mapView.getMap();
+		CablePath cablePath = mapView.findCablePath(schemeCableLink);
+		if(cablePath != null)
 		{
-			cp.setSelected(true);
+			map.setSelected(cablePath, true);
 		}
 		else
 		{

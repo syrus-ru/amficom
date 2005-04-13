@@ -1,5 +1,5 @@
 /**
- * $Id: MapVoidElementStrategy.java,v 1.23 2005/03/17 12:29:50 peskovsky Exp $
+ * $Id: MapVoidElementStrategy.java,v 1.24 2005/04/13 11:28:11 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,8 +32,8 @@ import java.util.Set;
 
 /**
  * Стратегия управления элементами, когда нет выбранных элементов.
- * @author $Author: peskovsky $
- * @version $Revision: 1.23 $, $Date: 2005/03/17 12:29:50 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.24 $, $Date: 2005/04/13 11:28:11 $
  * @module mapviewclient_v1
  */
 public final class MapVoidElementStrategy extends AbstractMapStrategy 
@@ -74,7 +74,7 @@ public final class MapVoidElementStrategy extends AbstractMapStrategy
 	public void setMapElement(MapElement me)
 	{
 		this.mapView = ((VoidElement)me).getMapView();
-		this.map = ((VoidElement)me).getMap();
+		this.map = this.mapView.getMap();
 	}
 
 	/**
@@ -153,12 +153,12 @@ public final class MapVoidElementStrategy extends AbstractMapStrategy
 
 			if (selectionRect.contains(p))
 			{
-				node.setSelected(true);
+				this.map.setSelected(node, true);
 				super.logicalNetLayer.sendMapEvent(new MapNavigateEvent(node, MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
 			}
 			else
 			{
-				node.setSelected(false);
+				this.map.setSelected(node, false);
 			}
 		}
 
@@ -178,12 +178,12 @@ public final class MapVoidElementStrategy extends AbstractMapStrategy
 						super.logicalNetLayer.convertMapToScreen(
 							nodeLink.getEndNode().getLocation())))
 				{
-					nodeLink.setSelected(true);
+					this.map.setSelected(nodeLink, true);
 					super.logicalNetLayer.sendMapEvent(new MapNavigateEvent(nodeLink, MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));					
 				}
 				else
 				{
-					nodeLink.setSelected(false);
+					this.map.setSelected(nodeLink, false);
 				}
 			}
 		}
@@ -208,7 +208,7 @@ public final class MapVoidElementStrategy extends AbstractMapStrategy
 						select = false;
 					}
 				}
-				link.setSelected(select);
+				this.map.setSelected(link, select);
 				if (select)
 					super.logicalNetLayer.sendMapEvent(new MapNavigateEvent(link, MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));				
 			}

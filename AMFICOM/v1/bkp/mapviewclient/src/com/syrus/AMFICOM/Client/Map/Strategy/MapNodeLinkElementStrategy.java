@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeLinkElementStrategy.java,v 1.14 2005/03/02 12:35:40 krupenn Exp $
+ * $Id: MapNodeLinkElementStrategy.java,v 1.15 2005/04/13 11:28:11 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,7 +24,7 @@ import java.awt.Point;
 /**
  * Стратегия управления фрагментом линии.
  * @author $Author: krupenn $
- * @version $Revision: 1.14 $, $Date: 2005/03/02 12:35:40 $
+ * @version $Revision: 1.15 $, $Date: 2005/04/13 11:28:11 $
  * @module mapviewclient_v1
  */
 public final class MapNodeLinkElementStrategy extends AbstractMapStrategy 
@@ -76,7 +76,7 @@ public final class MapNodeLinkElementStrategy extends AbstractMapStrategy
 	{
 		int actionMode = mapState.getActionMode();
 
-		this.nodeLink.setSelected(true);
+		super.logicalNetLayer.getMapView().getMap().setSelected(this.nodeLink, true);
 		if ((actionMode == MapState.SELECT_ACTION_MODE))
 		{
 			MapElement mel = super.logicalNetLayer.getCurrentMapElement();
@@ -102,7 +102,7 @@ public final class MapNodeLinkElementStrategy extends AbstractMapStrategy
 		else if (actionMode != MapState.MOVE_ACTION_MODE)
 		{
 			super.logicalNetLayer.deselectAll();
-			this.nodeLink.setSelected(true);
+			super.logicalNetLayer.getMapView().getMap().setSelected(this.nodeLink, true);
 		}//MapState.MOVE_ACTION_MODE
 	}
 }

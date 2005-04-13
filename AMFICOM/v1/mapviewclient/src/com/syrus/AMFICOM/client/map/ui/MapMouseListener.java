@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseListener.java,v 1.24 2005/02/22 11:00:15 krupenn Exp $
+ * $Id: MapMouseListener.java,v 1.25 2005/04/13 11:31:16 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -38,6 +38,7 @@ import com.syrus.AMFICOM.Client.Map.Strategy.MapStrategy;
 import com.syrus.AMFICOM.Client.Map.Strategy.MapStrategyManager;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
+import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.mapview.Selection;
@@ -48,7 +49,7 @@ import com.syrus.AMFICOM.mapview.VoidElement;
  * логического сетевого слоя operationMode. Если режим нулевой (NO_OPERATION),
  * то обработка события передается текущему активному элементу карты
  * (посредством объекта MapStrategy)
- * @version $Revision: 1.24 $, $Date: 2005/02/22 11:00:15 $
+ * @version $Revision: 1.25 $, $Date: 2005/04/13 11:31:16 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -280,12 +281,13 @@ public final class MapMouseListener implements MouseListener
 	 */
 	private void moveFixedDistance(Point point) throws MapConnectionException, MapDataException {
 		this.logicalNetLayer.deselectAll();
-		this.logicalNetLayer.getFixedNode().setSelected(true);
-		MapElement mel = this.logicalNetLayer.getMapElementAtPoint(point);
-		if(this.logicalNetLayer.getFixedNodeList().contains(mel))
+		Map map = this.logicalNetLayer.getMapView().getMap();
+		map.setSelected(this.logicalNetLayer.getFixedNode(), true);
+		MapElement mapElement = this.logicalNetLayer.getMapElementAtPoint(point);
+		if(this.logicalNetLayer.getFixedNodeList().contains(mapElement))
 		{
-			mel.setSelected(true);
-			this.logicalNetLayer.setCurrentMapElement(mel);
+			map.setSelected(mapElement, true);
+			this.logicalNetLayer.setCurrentMapElement(mapElement);
 		}
 		else
 		{
