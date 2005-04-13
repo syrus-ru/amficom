@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterType.java,v 1.22 2005/04/13 15:27:42 bob Exp $
+ * $Id: ParameterType.java,v 1.23 2005/04/13 17:10:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,8 +23,8 @@ import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/04/13 15:27:42 $
- * @author $Author: bob $
+ * @version $Revision: 1.23 $, $Date: 2005/04/13 17:10:53 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -58,8 +58,13 @@ public final class ParameterType extends StorableObjectType implements Character
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public ParameterType(ParameterType_Transferable ptt) throws ApplicationException {
-		this.fromTransferable(ptt);
+	public ParameterType(ParameterType_Transferable ptt) throws CreateObjectException {
+		try {
+			this.fromTransferable(ptt);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}
 
 	/**
