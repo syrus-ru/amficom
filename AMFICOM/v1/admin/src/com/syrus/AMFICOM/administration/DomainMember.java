@@ -1,5 +1,5 @@
 /*
- * $Id: DomainMember.java,v 1.12 2005/04/13 13:39:38 arseniy Exp $
+ * $Id: DomainMember.java,v 1.13 2005/04/13 13:51:59 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/04/13 13:39:38 $
+ * @version $Revision: 1.13 $, $Date: 2005/04/13 13:51:59 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -74,8 +74,8 @@ public abstract class DomainMember extends StorableObject {
 	 */
 	protected boolean isValid() {
 		/* XXX : fix checking domainId w/o check id for concrete impementation as domain
-		 * Domain entity can have null domain id what's why its doesnt must check domainId for null */		
-		return super.isValid() && (this.id.getMajor() != ObjectEntities.DOMAIN_ENTITY_CODE || this.domainId != null);
+		 * Domain entity can have null domain id what's why its doesnt must check domainId for null */
+		return super.isValid() && (this.id.getMajor() == ObjectEntities.DOMAIN_ENTITY_CODE || this.domainId != null);
 	}
 
 	public final Identifier getDomainId() {
