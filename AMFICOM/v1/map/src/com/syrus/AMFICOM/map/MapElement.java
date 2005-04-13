@@ -1,5 +1,5 @@
 /**
- * $Id: MapElement.java,v 1.10 2005/04/06 16:02:08 krupenn Exp $
+ * $Id: MapElement.java,v 1.11 2005/04/13 09:43:38 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.Namable;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.10 $, $Date: 2005/04/06 16:02:08 $
+ * @version $Revision: 1.11 $, $Date: 2005/04/13 09:43:38 $
  * @module map_v1
  */
 public interface MapElement extends Characterizable, Namable
@@ -34,19 +34,6 @@ public interface MapElement extends Characterizable, Namable
 	Identifier getId();
 
 	/**
-	 * Поулчить ссылку на топологическую схему, на которую нанесен данный элемент.
-	 * @return Ссылка на топологическую схему
-	 */
-	Map getMap();
-	
-	/**
-	 * Установить объект карты. Используется при создании нового элемента, при
-	 * подргузке элемента из базы данных и при 
-	 * @param map ссылка на объект карты
-	 */
-	void setMap(final Map map);
-
-	/**
 	 * Получить флаг выделения элемента.
 	 * @return флаг выделения элемента
 	 */
@@ -54,7 +41,11 @@ public interface MapElement extends Characterizable, Namable
 	
 	/**
 	 * Установить значения флага выделения элемента.
+	 * Для функционального выделения элемента в пользовательском приложении
+	 * следует использовать метод {@link Map#setSelected(MapElement, boolean)},
+	 * который и устанавливает флаг для данного элемента
 	 * @param selected новое значение флага выделения элемента
+	 * @see Map#setSelected(MapElement, boolean)
 	 */
 	void setSelected(final boolean selected);
 
