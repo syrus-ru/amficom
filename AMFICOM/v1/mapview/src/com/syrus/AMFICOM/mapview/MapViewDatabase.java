@@ -1,5 +1,5 @@
 /*
-* $Id: MapViewDatabase.java,v 1.19 2005/04/13 10:00:55 krupenn Exp $
+* $Id: MapViewDatabase.java,v 1.20 2005/04/13 20:14:22 arseniy Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -21,9 +21,7 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CharacterizableDatabase;
-import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -35,7 +33,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.map.MapStorableObjectPool;
-import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
@@ -44,8 +42,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/04/13 10:00:55 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.20 $, $Date: 2005/04/13 20:14:22 $
+ * @author $Author: arseniy $
  * @module mapview_v1
  */
 public class MapViewDatabase extends CharacterizableDatabase {
@@ -98,10 +96,8 @@ public class MapViewDatabase extends CharacterizableDatabase {
 			if (id.equals(mapView.getId())){
 				try{
 				mapView.setSchemes0(SchemeStorableObjectPool.getStorableObjects(schemeIds, true));
-				}catch(DatabaseException de){
-					throw new RetrieveObjectException(this.getEnityName() + "Database.retrieve | cannot retrieve schemes" ,  de);
-				} catch (CommunicationException ce) {
-					throw new RetrieveObjectException(this.getEnityName() + "Database.retrieve | cannot retrieve schemes" ,  ce);
+				}catch(ApplicationException ae){
+					throw new RetrieveObjectException(this.getEnityName() + "Database.retrieve | cannot retrieve schemes" ,  ae);
 				}
 			}
 		}		
@@ -373,10 +369,8 @@ public class MapViewDatabase extends CharacterizableDatabase {
 			if (id.equals(map.getId())){
 				try {
 					map.setSchemes0(SchemeStorableObjectPool.getStorableObjects(schemeIds, true));
-				} catch (DatabaseException de) {
-					throw new RetrieveObjectException(this.getEnityName() + "Database.updateEntityFromResultSet | cannot retrieve schemes" ,  de);
-				} catch (CommunicationException ce) {
-					throw new RetrieveObjectException(this.getEnityName() + "Database.updateEntityFromResultSet | cannot retrieve schemes" ,  ce);
+				} catch (ApplicationException ae) {
+					throw new RetrieveObjectException(this.getEnityName() + "Database.updateEntityFromResultSet | cannot retrieve schemes" ,  ae);
 				}
 			}
 		}
