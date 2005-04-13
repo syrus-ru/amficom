@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.5 2005/04/13 20:40:58 arseniy Exp $
+# $Id: Makefile,v 1.6 2005/04/13 20:44:03 arseniy Exp $
 #
 # vim:ft=make:
 #
@@ -20,6 +20,7 @@ idl: .idl
 
 .idl:
 	$(IDLJ) $(IDLJFLAGS) $(IDLDIR_EXTRA)/alarm.idl
+	$(IDLJ) $(IDLJFLAGS) $(IDLDIR_EXTRA)/constants.idl
 	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/alarm.idl
 	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/client.idl
 	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/common.idl
