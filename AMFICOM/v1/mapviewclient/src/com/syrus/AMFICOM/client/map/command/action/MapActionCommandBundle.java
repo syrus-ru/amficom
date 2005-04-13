@@ -1,5 +1,5 @@
 /**
- * $Id: MapActionCommandBundle.java,v 1.18 2005/03/16 12:54:57 bass Exp $
+ * $Id: MapActionCommandBundle.java,v 1.19 2005/04/13 11:10:49 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,6 +21,7 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
+import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.MapElementState;
 import com.syrus.AMFICOM.map.NodeLink;
@@ -37,8 +38,8 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
 
 /**
  * 
- * @author $Author: bass $
- * @version $Revision: 1.18 $, $Date: 2005/03/16 12:54:57 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.19 $, $Date: 2005/04/13 11:10:49 $
  * @module maviewclient_v1
  */
 public class MapActionCommandBundle extends CommandBundle
@@ -386,6 +387,7 @@ public class MapActionCommandBundle extends CommandBundle
 	 * @return узел
 	 */
 	protected AbstractNode moveNodeLinks(
+			Map map,
 			PhysicalLink link, 
 			PhysicalLink newLink,
 			boolean registerStateChange,
@@ -439,7 +441,7 @@ public class MapActionCommandBundle extends CommandBundle
 				break;
 			}
 
-			startNodeLink = startNode.getOtherNodeLink(startNodeLink);
+			startNodeLink = map.getOtherNodeLink(startNode, startNodeLink);
 		}//for(;;)
 		
 		return foundNode;

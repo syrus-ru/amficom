@@ -1,5 +1,5 @@
 /**
- * $Id: InsertSiteCommandBundle.java,v 1.12 2005/02/18 12:19:44 krupenn Exp $
+ * $Id: InsertSiteCommandBundle.java,v 1.13 2005/04/13 11:10:49 krupenn Exp $
  * Syrus Systems Научно-технический центр Проект: АМФИКОМ Платформа: java 1.4.1
  */
 
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.mapview.UnboundLink;
  * вставить сетевой узел вместо топологического узла
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.12 $, $Date: 2005/02/18 12:19:44 $
+ * @version $Revision: 1.13 $, $Date: 2005/04/13 11:10:49 $
  * @module mapviewclient_v1
  */
 public class InsertSiteCommandBundle extends MapActionCommandBundle {
@@ -85,7 +85,7 @@ public class InsertSiteCommandBundle extends MapActionCommandBundle {
 					.getMapViewController().getController(this.site);
 			snc.updateScaleCoefficient(this.site);
 			// обновить концевые узлы фрагментов
-			for(Iterator it = this.node.getNodeLinks().iterator(); it.hasNext();) {
+			for(Iterator it = this.map.getNodeLinks(this.node).iterator(); it.hasNext();) {
 				NodeLink mnle = (NodeLink )it.next();
 
 				MapElementState nls = mnle.getState();
@@ -122,6 +122,7 @@ public class InsertSiteCommandBundle extends MapActionCommandBundle {
 					collector.addPhysicalLink(this.newLink);
 
 				super.moveNodeLinks(
+						this.map,
 						this.link,
 						this.newLink,
 						true,

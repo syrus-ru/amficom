@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteNodeLinkCommandBundle.java,v 1.17 2005/03/01 15:37:03 krupenn Exp $
+ * $Id: DeleteNodeLinkCommandBundle.java,v 1.18 2005/04/13 11:10:49 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -34,7 +34,7 @@ import java.util.Iterator;
  * фрагментов линий, линий, узлов  (и путей). Команда
  * состоит из последовательности атомарных действий
  * @author $Author: krupenn $
- * @version $Revision: 1.17 $, $Date: 2005/03/01 15:37:03 $
+ * @version $Revision: 1.18 $, $Date: 2005/04/13 11:10:49 $
  * @module mapviewclient_v1
  */
 public class DeleteNodeLinkCommandBundle extends MapActionCommandBundle
@@ -128,6 +128,7 @@ public class DeleteNodeLinkCommandBundle extends MapActionCommandBundle
 			// переносим фрагменты в новую линию пока не наткнемся на
 			// один из концевых узлов удаленного фрагмента
 			AbstractNode foundNode = super.moveNodeLinks(
+					this.map,
 					physicalLink,
 					newPhysicalLink,
 					false,

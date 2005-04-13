@@ -1,5 +1,5 @@
 /**
- * $Id: MarkerController.java,v 1.18 2005/04/06 17:41:11 krupenn Exp $
+ * $Id: MarkerController.java,v 1.19 2005/04/13 11:15:06 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -34,6 +34,7 @@ import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
+import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.mapview.CablePath;
@@ -46,7 +47,7 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
 /**
  * Контроллер маркера.
  * @author $Author: krupenn $
- * @version $Revision: 1.18 $, $Date: 2005/04/06 17:41:11 $
+ * @version $Revision: 1.19 $, $Date: 2005/04/13 11:15:06 $
  * @module mapviewclient_v1
  */
 public class MarkerController extends AbstractNodeController
@@ -420,13 +421,14 @@ public class MarkerController extends AbstractNodeController
 	public void setRelativeToNode(Marker marker, AbstractNode node)
 		throws MapConnectionException, MapDataException
 	{
+		Map map = marker.getMapView().getMap();
 		marker.setStartNode(node);
 
 		MeasurementPath measurementPath = marker.getMeasurementPath();
 		
 		NodeLink nodeLink = null;
 		
-		for(Iterator it = node.getNodeLinks().iterator(); it.hasNext();)
+		for(Iterator it = map.getNodeLinks(node).iterator(); it.hasNext();)
 		{
 			NodeLink nlink = (NodeLink)it.next();
 			if(nodeLink == null 
