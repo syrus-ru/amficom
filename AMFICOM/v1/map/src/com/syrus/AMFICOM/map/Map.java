@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.35 2005/04/13 09:58:59 krupenn Exp $
+ * $Id: Map.java,v 1.36 2005/04/13 15:42:21 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,7 +40,7 @@ import com.syrus.AMFICOM.map.corba.Map_Transferable;
  * линиях, коллекторов (объединяющих в себе линии).
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.35 $, $Date: 2005/04/13 09:58:59 $
+ * @version $Revision: 1.36 $, $Date: 2005/04/13 15:42:21 $
  * @module map_v1
  * @todo make maps persistent 
  */
@@ -352,6 +352,21 @@ public class Map extends DomainMember implements Namable {
 		this.changed = true;
 	}
 
+	public Set getExternalNodes() {
+		return Collections.unmodifiableSet(this.externalNodes);
+	}
+
+	protected void setExternalNodes0(Set externalNodes) {
+		this.externalNodes.clear();
+		if (externalNodes != null)
+			this.externalNodes.addAll(externalNodes);
+	}
+
+	public void setExternalNodes(Set externalNodes) {
+		this.setExternalNodes0(externalNodes);
+		this.changed = true;
+	}
+
 	protected synchronized void setAttributes(Date created,
 			Date modified,
 			Identifier creatorId,
@@ -555,6 +570,16 @@ public class Map extends DomainMember implements Namable {
 
 	public void removeMap(Map map) {
 		this.maps.remove(map);
+		this.changed = true;
+	}
+
+	public void addExternalNode(AbstractNode externalNode) {
+		this.externalNodes.add(externalNode);
+		this.changed = true;
+	}
+
+	public void removeExternalNode(AbstractNode externalNode) {
+		this.externalNodes.remove(externalNode);
 		this.changed = true;
 	}
 
