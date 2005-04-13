@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.13 2005/04/12 18:12:19 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.14 2005/04/13 12:27:25 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,8 +48,9 @@ import org.omg.CORBA.portable.IDLEntity;
  * #01 in hierarchy.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.13 $, $Date: 2005/04/12 18:12:19 $
+ * @version $Revision: 1.14 $, $Date: 2005/04/13 12:27:25 $
  * @module scheme_v1
+ * @todo Implement fireParentChanged() and call it on any setParent*() invocation. 
  */
 public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 		implements Describable, SchemeSymbolContainer, Library {
@@ -344,8 +345,10 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	 */
 	public SchemeProtoGroup getParentSchemeProtoGroup() {
 		assert this.parentSchemeProtoGroupId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+
 		if (this.parentSchemeProtoGroupId.equals(Identifier.VOID_IDENTIFIER))
 			return null;
+
 		try {
 			return (SchemeProtoGroup) SchemeStorableObjectPool.getStorableObject(this.parentSchemeProtoGroupId, true);
 		} catch (final ApplicationException ae) {
@@ -559,6 +562,10 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 		assert schemeProtoElements != null: ErrorMessages.NON_NULL_EXPECTED;
 		for (final Iterator oldSchemeProtoElementIterator = getSchemeProtoElements().iterator(); oldSchemeProtoElementIterator.hasNext();) {
 			final SchemeProtoElement oldSchemeProtoElement = (SchemeProtoElement) oldSchemeProtoElementIterator.next();
+			/*
+			 * Check is made to prevent SchemeProtoElements from
+			 * permanently losing their parents.
+			 */
 			assert !schemeProtoElements.contains(oldSchemeProtoElement);
 			removeSchemeProtoElement(oldSchemeProtoElement);
 		}

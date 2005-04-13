@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.16 2005/04/12 18:12:19 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.17 2005/04/13 12:27:25 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,6 +41,7 @@ import com.syrus.AMFICOM.scheme.logic.Library;
 import com.syrus.AMFICOM.scheme.logic.LibraryEntry;
 import com.syrus.util.Log;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -54,8 +55,9 @@ import org.omg.CORBA.portable.IDLEntity;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.16 $, $Date: 2005/04/12 18:12:19 $
+ * @version $Revision: 1.17 $, $Date: 2005/04/13 12:27:25 $
  * @module scheme_v1
+ * @todo Implement fireParentChanged() and call it on any setParent*() invocation. 
  */
 public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		implements Describable, SchemeCellContainer, Characterizable,
@@ -83,6 +85,8 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	private SchemeProtoElementDatabase schemeProtoElementDatabase; 
 
 	private Set characteristics;
+
+	private ArrayList itemListeners = new ArrayList();
 
 	/**
 	 * @param id
@@ -320,7 +324,8 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * @see Item#addChangeListener(ItemListener)
 	 */
 	public void addChangeListener(final ItemListener itemListener) {
-		throw new UnsupportedOperationException();
+		assert !this.itemListeners.contains(itemListener);
+		this.itemListeners.add(0, itemListener);
 	}
 
 	/**
@@ -365,7 +370,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	public void addSchemeProtoElement(final SchemeProtoElement schemeProtoElement) {
 		assert schemeProtoElement != null: ErrorMessages.NON_NULL_EXPECTED;
 		assert schemeProtoElement != this: ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
-		throw new UnsupportedOperationException();
+		schemeProtoElement.setParentSchemeProtoElement(this);
 	}
 
 	/**
@@ -519,11 +524,41 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	}
 
 	public SchemeProtoElement getParentSchemeProtoElement() {
-		throw new UnsupportedOperationException();
+		assert this.parentSchemeProtoElementId != null && this.parentSchemeProtoGroupId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+
+		if (this.parentSchemeProtoElementId.equals(Identifier.VOID_IDENTIFIER)) {
+			assert !this.parentSchemeProtoGroupId.equals(Identifier.VOID_IDENTIFIER): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
+			Log.debugMessage("SchemeProtoElement.getParentSchemeProtoElement() | Parent SchemeProtoElement was requested, while parent is a SchemeProtoGroup; returning null.", //$NON-NLS-1$
+					Log.FINE);
+			return null;
+		}
+
+		try {
+			assert this.parentSchemeProtoGroupId.equals(Identifier.VOID_IDENTIFIER): ErrorMessages.MULTIPLE_PARENTS_PROHIBITED;
+			return (SchemeProtoElement) SchemeStorableObjectPool.getStorableObject(this.parentSchemeProtoElementId, true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return null;
+		}
 	}
 
 	public SchemeProtoGroup getParentSchemeProtoGroup() {
-		throw new UnsupportedOperationException();
+		assert this.parentSchemeProtoElementId != null && this.parentSchemeProtoGroupId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		
+		if (this.parentSchemeProtoGroupId.equals(Identifier.VOID_IDENTIFIER)) {
+			assert !this.parentSchemeProtoElementId.equals(Identifier.VOID_IDENTIFIER): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
+			Log.debugMessage("SchemeProtoElement.getParentSchemeProtoGroup() | Parent SchemeProtoGroup was requested, while parent is a SchemeProtoElement; returnning null", //$NON-NLS-1$
+					Log.FINE);
+			return null;
+		}
+
+		try {
+			assert this.parentSchemeProtoElementId.equals(Identifier.VOID_IDENTIFIER): ErrorMessages.MULTIPLE_PARENTS_PROHIBITED;
+			return (SchemeProtoGroup) SchemeStorableObjectPool.getStorableObject(this.parentSchemeProtoGroupId, true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return null;
+		}
 	}
 
 	/**
@@ -596,10 +631,20 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 
 	/**
 	 * @see TransferableObject#getTransferable()
-	 * @todo Implement.
 	 */
 	public IDLEntity getTransferable() {
-		throw new UnsupportedOperationException();
+		return new SchemeProtoElement_Transferable(
+				getHeaderTransferable(),
+				this.name,
+				this.description,
+				this.label,
+				(Identifier_Transferable) this.equipmentTypeId.getTransferable(),
+				(Identifier_Transferable) this.symbolId.getTransferable(),
+				(Identifier_Transferable) this.ugoCellId.getTransferable(),
+				(Identifier_Transferable) this.schemeCellId.getTransferable(),
+				(Identifier_Transferable) this.parentSchemeProtoGroupId.getTransferable(),
+				(Identifier_Transferable) this.parentSchemeProtoElementId.getTransferable(),
+				Identifier.getTransferables(this.characteristics));
 	}
 
 	/**
@@ -630,7 +675,8 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * @see Item#removeChangeListener(ItemListener)
 	 */
 	public void removeChangeListener(final ItemListener itemListener) {
-		throw new UnsupportedOperationException();
+		assert this.itemListeners.contains(itemListener);
+		this.itemListeners.remove(itemListener);
 	}
 
 	/**
@@ -885,19 +931,44 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		this.changed = true;
 	}
 
+	/**
+	 * @param schemeDevices
+	 */
 	public void setSchemeDevices(final Set schemeDevices) {
 		assert schemeDevices != null: ErrorMessages.NON_NULL_EXPECTED;
-		throw new UnsupportedOperationException();
+		for (final Iterator oldSchemeDeviceIterator = getSchemeDevices().iterator(); oldSchemeDeviceIterator.hasNext();)
+			removeSchemeDevice((SchemeDevice) oldSchemeDeviceIterator.next());
+		for (final Iterator schemeDeviceIterator = schemeDevices.iterator(); schemeDeviceIterator.hasNext();)
+			addSchemeDevice((SchemeDevice) schemeDeviceIterator.next());
 	}
 
+	/**
+	 * @param schemeLinks
+	 */
 	public void setSchemeLinks(final Set schemeLinks) {
 		assert schemeLinks != null: ErrorMessages.NON_NULL_EXPECTED;
-		throw new UnsupportedOperationException();
+		for (final Iterator oldSchemeLinkIterator = getSchemeLinks().iterator(); oldSchemeLinkIterator.hasNext();)
+			removeSchemeLink((SchemeLink) oldSchemeLinkIterator.next());
+		for (final Iterator schemeLinkIterator = schemeLinks.iterator(); schemeLinkIterator.hasNext();)
+			addSchemeLink((SchemeLink) schemeLinkIterator.next());
 	}
 
+	/**
+	 * @param schemeProtoElements
+	 */
 	public void setSchemeProtoElements(final Set schemeProtoElements) {
 		assert schemeProtoElements != null: ErrorMessages.NON_NULL_EXPECTED;
-		throw new UnsupportedOperationException();
+		for (final Iterator oldSchemeProtoElementIterator = getSchemeProtoElements().iterator(); oldSchemeProtoElementIterator.hasNext();) {
+			final SchemeProtoElement oldSchemeProtoElement = (SchemeProtoElement) oldSchemeProtoElementIterator.next();
+			/*
+			 * Check is made to prevent SchemeProtoElements from
+			 * permanently losing their parents.
+			 */
+			assert !schemeProtoElements.contains(oldSchemeProtoElement);
+			removeSchemeProtoElement(oldSchemeProtoElement);
+		}
+		for (final Iterator schemeProtoElementIterator = schemeProtoElements.iterator(); schemeProtoElementIterator.hasNext();)
+			addSchemeProtoElement((SchemeProtoElement) schemeProtoElementIterator.next());
 	}
 
 	/**
