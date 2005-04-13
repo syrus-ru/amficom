@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.48 2005/04/12 17:11:34 arseniy Exp $
+ * $Id: PhysicalLink.java,v 1.49 2005/04/13 09:50:54 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,10 +29,12 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypedObject;
@@ -50,8 +52,8 @@ import com.syrus.AMFICOM.map.corba.PhysicalLink_Transferable;
  * Предуствновленными являются  два типа - 
  * тоннель (<code>{@link PhysicalLinkType#TUNNEL}</code>) 
  * и коллектор (<code>{@link PhysicalLinkType#COLLECTOR}</code>).
- * @author $Author: arseniy $
- * @version $Revision: 1.48 $, $Date: 2005/04/12 17:11:34 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.49 $, $Date: 2005/04/13 09:50:54 $
  * @module map_v1
  * @todo make binding.dimension persistent (just as bindingDimension for PhysicalLinkType)
  * @todo nodeLinks should be transient
@@ -100,7 +102,6 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	private Set characteristics;
 
 	private transient List nodeLinks = null;
-	protected transient Map map = null;
 	protected transient boolean selected = false;
 	protected transient boolean selectionVisible = false;
 	protected transient boolean removed = false;
@@ -415,6 +416,23 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		if (this.nodeLinks == null || this.nodeLinks.isEmpty())
 			this.nodeLinks = findNodeLinks();
 		return Collections.unmodifiableList(this.nodeLinks);
+	}
+
+	private List findNodeLinks() {
+		try {
+			StorableObjectCondition condition = new LinkedIdsCondition(this.getId(), ObjectEntities.NODE_LINK_ENTITY_CODE);
+			Set nlinks;
+			nlinks = MapStorableObjectPool.getStorableObjectsByCondition(condition, false);
+			List nlinkslist = new ArrayList(nlinks.size());
+			for(Iterator iter = nlinks.iterator(); iter.hasNext();) {
+				nlinkslist.add(iter.next());
+			}
+			return nlinkslist;
+		} catch(ApplicationException e) {
+			// TODO how to work it over?!
+			e.printStackTrace();
+		}
+		return new LinkedList();
 	}
 
 	public void setNodeLinks(final List nodeLinks) {
@@ -755,21 +773,6 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	 */
 	public void setSelected(boolean selected) {
 		this.selected = selected;
-		getMap().setSelected(this, selected);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public Map getMap() {
-		return this.map;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setMap(Map map) {
-		this.map = map;
 	}
 
 	/**
@@ -941,10 +944,6 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		catch (ApplicationException e) {
 			throw new CreateObjectException("PhysicalLink.createInstance |  ", e);
 		}
-	}
-
-	private List findNodeLinks() {
-		return this.map.getNodeLinks(this);
 	}
 
 	public Set getCharacteristics() {
