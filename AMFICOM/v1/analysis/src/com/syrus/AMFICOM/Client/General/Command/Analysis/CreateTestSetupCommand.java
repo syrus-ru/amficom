@@ -64,7 +64,8 @@ public class CreateTestSetupCommand extends VoidCommand
 					ms.getEtalon(),
 					name,
 					ms.getMeasurementDuration(),
-					ms.getMonitoredElementIds());
+					ms.getMonitoredElementIds(),
+                    ms.getMeasurementTypeIds());
 			MeasurementStorableObjectPool.putStorableObject(measurementSetup);
 		}
 		catch (CreateObjectException e)
