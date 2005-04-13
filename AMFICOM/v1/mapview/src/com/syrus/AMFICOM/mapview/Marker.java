@@ -1,5 +1,5 @@
 /*-
- * $Id: Marker.java,v 1.12 2005/04/08 09:26:53 bass Exp $
+ * $Id: Marker.java,v 1.13 2005/04/13 10:03:01 krupenn Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,9 +51,9 @@ import org.omg.CORBA.portable.IDLEntity;
  * 
  * 
  * 
- * @version $Revision: 1.12 $, $Date: 2005/04/08 09:26:53 $
+ * @version $Revision: 1.13 $, $Date: 2005/04/13 10:03:01 $
  * @module mapview_v1
- * @author $Author: bass $
+ * @author $Author: krupenn $
  */
 
 public class Marker extends AbstractNode
@@ -221,12 +221,6 @@ public class Marker extends AbstractNode
 
 		this.mapView = mapView;
 		this.monitoredElementId = monitoredElementId;
-		if(mapView != null)
-		{
-			this.map = mapView.getMap();
-			setMap(this.map);
-		}
-
 		this.measurementPath = path;
 		this.startNode = this.measurementPath.getStartNode();
 	}
