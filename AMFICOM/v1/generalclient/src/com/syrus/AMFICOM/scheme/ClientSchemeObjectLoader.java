@@ -1,5 +1,5 @@
 /*-
- * $Id: ClientSchemeObjectLoader.java,v 1.1 2005/04/01 14:49:34 bass Exp $
+ * $Id: ClientSchemeObjectLoader.java,v 1.2 2005/04/13 21:14:06 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import java.util.*;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/04/01 14:49:34 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2005/04/13 21:14:06 $
  * @module generalclient_v1
  */
 public final class ClientSchemeObjectLoader implements SchemeObjectLoader {
@@ -28,19 +28,17 @@ public final class ClientSchemeObjectLoader implements SchemeObjectLoader {
 
 	/**
 	 * @param ids
-	 * @throws IllegalDataException
 	 * @see SchemeObjectLoader#delete(Set)
 	 */
-	public void delete(final Set ids) throws IllegalDataException {
+	public void delete(final Set ids) {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * @param id
-	 * @throws IllegalDataException
 	 * @see SchemeObjectLoader#delete(Identifier)
 	 */
-	public void delete(final Identifier id) throws IllegalDataException {
+	public void delete(final Identifier id) {
 		throw new UnsupportedOperationException();
 	}
 
