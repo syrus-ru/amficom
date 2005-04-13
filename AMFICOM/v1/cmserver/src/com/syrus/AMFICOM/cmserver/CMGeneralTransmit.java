@@ -1,5 +1,5 @@
 /*
- * $Id: CMGeneralTransmit.java,v 1.16 2005/04/01 17:38:41 arseniy Exp $
+ * $Id: CMGeneralTransmit.java,v 1.17 2005/04/13 17:03:08 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,7 +43,7 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/04/01 17:38:41 $
+ * @version $Revision: 1.17 $, $Date: 2005/04/13 17:03:08 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -160,16 +160,7 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 		Log.debugMessage("CMGeneralTransmit.transmitParameterTypes | requiered " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Set ids = Identifier.fromTransferables(identifier_Transferables);
-
-		Set objects = null;
-		try {
-			objects = GeneralStorableObjectPool.getStorableObjects(ids, true);
-		}
-		catch (ApplicationException ae) {
-			Log.errorException(ae);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
-		}
+		Set objects = this.getObjects(identifier_Transferables);
 
 		ParameterType_Transferable[] transferables = new ParameterType_Transferable[objects.size()];
 		int i = 0;
@@ -188,16 +179,7 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 		Log.debugMessage("CMGeneralTransmit.transmitCharacteristicTypes | requiered " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Set ids = Identifier.fromTransferables(identifier_Transferables);
-
-		Set objects = null;
-		try {
-			objects = GeneralStorableObjectPool.getStorableObjects(ids, true);
-		}
-		catch (ApplicationException ae) {
-			Log.errorException(ae);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
-		}
+		Set objects = this.getObjects(identifier_Transferables);
 
 		CharacteristicType_Transferable[] transferables = new CharacteristicType_Transferable[objects.size()];
 		int i = 0;
@@ -216,16 +198,7 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 		Log.debugMessage("CMGeneralTransmit.transmitCharacteristics | requiered " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Set ids = Identifier.fromTransferables(identifier_Transferables);
-
-		Set objects = null;
-		try {
-			objects = GeneralStorableObjectPool.getStorableObjects(ids, true);
-		}
-		catch (ApplicationException ae) {
-			Log.errorException(ae);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
-		}
+		Set objects = this.getObjects(identifier_Transferables);
 
 		Characteristic_Transferable[] transferables = new Characteristic_Transferable[objects.size()];
 		int i = 0;
@@ -235,6 +208,23 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 			transferables[i] = (Characteristic_Transferable) characteristic.getTransferable();
 		}
 		return transferables;
+	}
+
+
+	private Set getObjects(Identifier_Transferable[] identifier_Transferables) throws AMFICOMRemoteException {
+		try {
+			Set ids = Identifier.fromTransferables(identifier_Transferables);
+			Set objects = GeneralStorableObjectPool.getStorableObjects(ids, true);
+			return objects;
+		}
+		catch (ApplicationException ae) {
+			Log.errorException(ae);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
+		}
+		catch (Throwable throwable) {
+			Log.errorException(throwable);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, throwable.getMessage());
+		}
 	}
 
 
@@ -248,18 +238,7 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 		Log.debugMessage("CMGeneralTransmit.transmitParameterTypesButIds | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Set ids = Identifier.fromTransferables(identifier_Transferables);
-
-		Set objects = null;
-		try {
-			objects = GeneralStorableObjectPool.getStorableObjectsByConditionButIds(ids,
-					new EquivalentCondition(ObjectEntities.PARAMETERTYPE_ENTITY_CODE),
-					true);
-		}
-		catch (ApplicationException ae) {
-			Log.errorException(ae);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
-		}
+		Set objects = this.getObjectsButIds(identifier_Transferables, ObjectEntities.PARAMETERTYPE_ENTITY_CODE);
 
 		ParameterType_Transferable[] transferables = new ParameterType_Transferable[objects.size()];
 		int i = 0;
@@ -277,18 +256,7 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 		Log.debugMessage("CMGeneralTransmit.transmitCharacteristicTypesButIds | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Set ids = Identifier.fromTransferables(identifier_Transferables);
-
-		Set objects = null;
-		try {
-			objects = GeneralStorableObjectPool.getStorableObjectsByConditionButIds(ids,
-					new EquivalentCondition(ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE),
-					true);
-		}
-		catch (ApplicationException ae) {
-			Log.errorException(ae);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
-		}
+		Set objects = this.getObjectsButIds(identifier_Transferables, ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE);
 
 		CharacteristicType_Transferable[] transferables = new CharacteristicType_Transferable[objects.size()];
 		int i = 0;
@@ -306,18 +274,7 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 		Log.debugMessage("CMGeneralTransmit.transmitCharacteristicsButIds | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Set ids = Identifier.fromTransferables(identifier_Transferables);
-
-		Set objects = null;
-		try {
-			objects = GeneralStorableObjectPool.getStorableObjectsByConditionButIds(ids,
-					new EquivalentCondition(ObjectEntities.CHARACTERISTIC_ENTITY_CODE),
-					true);
-		}
-		catch (ApplicationException ae) {
-			Log.errorException(ae);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
-		}
+		Set objects = this.getObjectsButIds(identifier_Transferables, ObjectEntities.CHARACTERISTIC_ENTITY_CODE);
 
 		Characteristic_Transferable[] transferables = new Characteristic_Transferable[objects.size()];
 		int i = 0;
@@ -327,6 +284,25 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 			transferables[i] = (Characteristic_Transferable) characteristic.getTransferable();
 		}
 		return transferables;
+	}
+
+
+	private Set getObjectsButIds(Identifier_Transferable[] identifier_Transferables, short entityCode) throws AMFICOMRemoteException {
+		try {
+			Set ids = Identifier.fromTransferables(identifier_Transferables);
+			Set objects = GeneralStorableObjectPool.getStorableObjectsByConditionButIds(ids,
+					new EquivalentCondition(entityCode),
+					true);
+			return objects;
+		}
+		catch (ApplicationException ae) {
+			Log.errorException(ae);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
+		}
+		catch (Throwable throwable) {
+			Log.errorException(throwable);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, throwable.getMessage());
+		}
 	}
 
 
@@ -392,7 +368,6 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 
 	private Set getObjectsButIdsCondition(Identifier_Transferable[] identifier_Transferables,
 			StorableObjectCondition_Transferable condition_Transferable) throws AMFICOMRemoteException {
-		Set ids = Identifier.fromTransferables(identifier_Transferables);
 
 		StorableObjectCondition condition = null;
 		try {
@@ -404,15 +379,15 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 					"Cannot restore condition -- " + ide.getMessage());
 		}
 
-		Set objects = null;
 		try {
-			objects = GeneralStorableObjectPool.getStorableObjectsByConditionButIds(ids, condition, true);
+			Set ids = Identifier.fromTransferables(identifier_Transferables);
+			Set objects = GeneralStorableObjectPool.getStorableObjectsByConditionButIds(ids, condition, true);
+			return objects;
 		}
 		catch (ApplicationException ae) {
 			Log.errorException(ae);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
 		}
-		return objects;
 	}
 
 
