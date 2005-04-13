@@ -1,5 +1,5 @@
 /*
- * $Id: ClientAdministrationObjectLoader.java,v 1.14 2005/04/13 14:02:14 bob Exp $
+ * $Id: ClientAdministrationObjectLoader.java,v 1.15 2005/04/13 21:18:44 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,6 @@ import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.SessionContext;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -40,8 +39,8 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/04/13 14:02:14 $
- * @author $Author: bob $
+ * @version $Revision: 1.15 $, $Date: 2005/04/13 21:18:44 $
+ * @author $Author: arseniy $
  * @module generalclient_v1
  */
 public class ClientAdministrationObjectLoader extends AbstractClientObjectLoader implements AdministrationObjectLoader {

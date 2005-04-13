@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeSampleData.java,v 1.1 2005/04/13 13:16:58 krupenn Exp $
+ * $Id: SchemeSampleData.java,v 1.2 2005/04/13 21:18:44 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,9 +8,7 @@
 
 package com.syrus.AMFICOM.scheme;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -26,8 +24,8 @@ import com.syrus.AMFICOM.scheme.corba.SchemeKind;
 /**
  * this class is used to create two sample instances
  * of Scheme whithout graphical components
- * @author $Author: krupenn $
- * @version $Revision: 1.1 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.2 $
  * @module generalclient_v1
  */
 public final class SchemeSampleData {
