@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeDatabase.java,v 1.88 2005/04/13 10:01:20 arseniy Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.89 2005/04/13 14:40:55 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.88 $, $Date: 2005/04/13 10:01:20 $
+ * @version $Revision: 1.89 $, $Date: 2005/04/13 14:40:55 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -483,10 +483,10 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 	}
 
 	protected java.util.Set retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
-		java.util.Set collection = super.retrieveByCondition(conditionQuery);
-		this.retrieveParameterTypesByOneQuery(collection);
-		this.retrieveMeasurementPortTypesByOneQuery(collection);
-		return collection;
+		java.util.Set set = super.retrieveByCondition(conditionQuery);
+		this.retrieveParameterTypesByOneQuery(set);
+		this.retrieveMeasurementPortTypesByOneQuery(set);
+		return set;
 	}
 
 	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject,
