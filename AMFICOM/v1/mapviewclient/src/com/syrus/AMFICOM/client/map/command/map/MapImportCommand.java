@@ -1,5 +1,5 @@
 /*
- * $Id: MapImportCommand.java,v 1.22 2005/02/18 12:19:45 krupenn Exp $
+ * $Id: MapImportCommand.java,v 1.23 2005/04/13 11:12:28 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -55,7 +55,7 @@ import javax.swing.JDesktopPane;
  * что активной карты нет, и карта центрируется по умолчанию
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.22 $, $Date: 2005/02/18 12:19:45 $
+ * @version $Revision: 1.23 $, $Date: 2005/04/13 11:12:28 $
  * @module mapviewclient_v1
  */
 public class MapImportCommand extends ImportCommand
@@ -247,13 +247,11 @@ public class MapImportCommand extends ImportCommand
 			else
 				return null;
 
-			me.setMap(map);
-
 			MapStorableObjectPool.putStorableObject((StorableObject )me);
 		}
 
 		super.close();
-
+		
 		return map;
 	}
 
