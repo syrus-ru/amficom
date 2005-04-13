@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalImageCache.java,v 1.3 2005/04/13 11:52:45 peskovsky Exp $
+ * $Id: TopologicalImageCache.java,v 1.4 2005/04/13 15:40:04 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.Client.Map.MapDataException;
 
 /**
  * @author $Author: peskovsky $
- * @version $Revision: 1.3 $, $Date: 2005/04/13 11:52:45 $
+ * @version $Revision: 1.4 $, $Date: 2005/04/13 15:40:04 $
  * @module mapinfo_v1
  */
 public class TopologicalImageCache
@@ -53,7 +53,7 @@ public class TopologicalImageCache
 	 * кэширования этих изображений самый низкий. Для SCALE_CACHE_SIZE = 1 будет
 	 * подгружено одно изображение с большим и одно с меньшим масштабом.
 	 */
-	private static final int SCALE_CACHE_SIZE = 3;
+	private static final int SCALE_CACHE_SIZE = 2;
 	
 	/**
 	 * "Рекомендуемое" количество сегментов в кэше
@@ -79,11 +79,16 @@ public class TopologicalImageCache
 	private static final int MODE_SCALE_CHANGING = 2;	
 	
 	/**
-	 * Список уже подгруженных для текущего массштаба изображений,
+	 * Список уже подгруженных для текущего массштаба сегментов,
 	 * которые могут быть использованы для отрисовки нового
 	 */
-	private List cacheOfImages = new ArrayList();
+	private List cacheOfImages = Collections.synchronizedList(new ArrayList());
 
+	/**
+	 * Список сегментов, которые должны быть отображены на текущем изображении
+	 */
+	private List imagesToPaint = Collections.synchronizedList(new ArrayList());
+	
 	/**
 	 * Отображаемое изображение. На нём отрисовываются все подгруженные
 	 * сегменты.
@@ -94,7 +99,7 @@ public class TopologicalImageCache
 	 * Ссылка на экземпляр потока, осуществляющего подгрузку данных по запросам
 	 * к серверу из очереди 
 	 */
-	private TopologicalCacheThread loadingThread = null;
+	private LoadingThread loadingThread = null;
 	
 	private MapInfoLogicalNetLayer miLayer = null;
 	
@@ -117,11 +122,8 @@ public class TopologicalImageCache
 		this.center = this.miLayer.getCenter();		
 
 		this.sizeChanged();
-		this.loadingThread = new TopologicalCacheThread(miLayer);
+		this.loadingThread = new LoadingThread(miLayer);
 		this.loadingThread.start();
-		
-//		this.scaleChanged();		
-//		this.centerChanged();		
 	}
 	
 	public void sizeChanged()
@@ -138,17 +140,9 @@ public class TopologicalImageCache
 					newSize.height,
 					BufferedImage.TYPE_USHORT_565_RGB);
 	
-			this.loadingThread.setImage(this.visibleImage);
-			
 			this.imageSize = newSize;			
 			System.out.println(this.miLayer.sdFormat.format(new Date(System.currentTimeMillis())) +
 				" TIC - setSize - new visible image is created");
-
-//			centerChanged();			
-//			setECRegionBorders();
-			
-//			// Отрисовываем с тем же масштабом
-//			this.createMovingRequests();			
 		}
 	}
 	
@@ -169,9 +163,10 @@ public class TopologicalImageCache
 			//подгружающего потока, меняем режим работы, очищаем кэш
 			if (this.mode == TopologicalImageCache.MODE_SCALE_CHANGING)
 			{
-				this.loadingThread.clearQueue();
 				this.mode = TopologicalImageCache.MODE_CENTER_CHANGING;
-				this.cacheOfImages.clear();				
+				this.imagesToPaint.clear();				
+				this.cacheOfImages.clear();
+				this.loadingThread.clearQueue();
 			}
 			
 			this.center = newCenter;
@@ -197,12 +192,12 @@ public class TopologicalImageCache
 			//подгружающего потока, меняем режим работы, очищаем кэш
 			if (this.mode == TopologicalImageCache.MODE_CENTER_CHANGING)
 			{
-				this.loadingThread.clearQueue();
 				this.mode = TopologicalImageCache.MODE_SCALE_CHANGING;
-				this.cacheOfImages.clear();				
+				this.imagesToPaint.clear();				
+				this.cacheOfImages.clear();
+				this.loadingThread.clearQueue();				
 			}
 			
-//			this.createMovingRequests();			
 			this.createScaleRequests();
 			
 			this.scale = newScale;			
@@ -214,9 +209,28 @@ public class TopologicalImageCache
 		if (this.visibleImage == null)
 			return null;
 
-		//Ждём пока изображение дорисуется
-		while (!this.loadingThread.expressRequestsRealized())
+		while (this.imagesToPaint.size() > 0)
 		{
+			for (ListIterator it = this.imagesToPaint.listIterator(); it.hasNext();)
+			{
+				TopologicalRequest request = (TopologicalRequest)it.next();
+				if (request.priority != TopologicalRequest.PRIORITY_ALREADY_LOADED)
+					continue;
+				
+				System.out.println(this.miLayer.sdFormat.format(new Date(System.currentTimeMillis())) +
+						" TIC - getImage - painting request: " + request);
+				
+				this.visibleImage.getGraphics().drawImage(
+						request.image.getImage(),
+						request.start.x - 1,
+						request.start.y - 1,
+						this.miLayer.getMapViewer().getVisualComponent());
+
+				System.out.println(this.miLayer.sdFormat.format(new Date(System.currentTimeMillis())) +
+					" TIC - getImage - request image painted");
+				
+				it.remove();
+			}
 			try
 			{
 				Thread.sleep(20);
@@ -425,6 +439,7 @@ public class TopologicalImageCache
 			result.isUsedForCurrentImage = false;			
 		}
 
+		result.isUsedForCurrentImage = false;
 		result.lastUsed = System.currentTimeMillis();
 		
 		return result;
@@ -483,9 +498,9 @@ public class TopologicalImageCache
 		
 		//Удаляем из имеющегося списка запросы - ненарисованные и не входящие в текущую
 		//кэш область
-		List removedRequests =
-			this.loadingThread.removeOutOfCacheRequests(this.cacheAreaSphBorders);
-		this.cacheOfImages.removeAll(removedRequests);
+		List unusedReports = this.loadingThread.removeOutOfCacheRequests(this.cacheAreaSphBorders);
+		this.imagesToPaint.removeAll(unusedReports);
+		this.cacheOfImages.removeAll(unusedReports);		
 		
 		//Ищем линии разбиения области на участки
 		List xs = new ArrayList();
@@ -632,16 +647,22 @@ public class TopologicalImageCache
 				
 				//Если новый запрос - кладём в список отрисованных областей
 				if (requestToSend.priority != TopologicalRequest.PRIORITY_ALREADY_LOADED)
+				{
 					this.cacheOfImages.add(requestToSend);
+					this.loadingThread.addRequest(requestToSend);
+				}
 
-				//Если в кэше слишком много сегментов удаляем самые старые				
-				if (this.cacheOfImages.size() > TopologicalImageCache.CACHE_ELEMENTS_COUNT + 
-						TopologicalImageCache.MAX_EXCEEDING_COUNT)
-					this.clearOldSegments();
-				
-				//Кладём в очередь на отрисовку
-				this.loadingThread.addRequest(requestToSend);
+				//Если запрос из EXPRESS области - ставим на отрисовку перерисовываем
+				if (requestToSend.priority != TopologicalRequest.PRIORITY_BACKGROUND)
+				{
+					this.imagesToPaint.add(requestToSend);
+				}
 			}
+
+		//Если в кэше слишком много сегментов удаляем самые старые				
+		if (this.cacheOfImages.size() > TopologicalImageCache.CACHE_ELEMENTS_COUNT + 
+				TopologicalImageCache.MAX_EXCEEDING_COUNT)
+			this.clearOldSegments();
 		
 		System.out.println(this.miLayer.sdFormat.format(new Date(System.currentTimeMillis())) +
 			" TIC - createRequests - exiting. Reports created and queued.");
@@ -675,18 +696,14 @@ public class TopologicalImageCache
 			" TIC - clearOldSegments - Old elements removed. Exiting.");
 	}
 	
+	//////////////////////////////////////Функции для кэша по масштабу
+	
 	/**
 	 * Подгружает изображения с большим и меньшим масштабами для текущего
 	 * масштаба
 	 */
 	private void createScaleRequests()
 	{
-//		if (true)
-//		{
-//			renewScaleImages();
-//			return;
-//		}
-		
 		if (	(this.cacheOfImages.size() == 0)
 				||(		(!TopologicalImageCache.compare(this.scale,this.miLayer.getScale() * MapInfoLogicalNetLayer.ZOOM_FACTOR))
 						&&(!TopologicalImageCache.compare(this.scale * MapInfoLogicalNetLayer.ZOOM_FACTOR,this.miLayer.getScale()))))
@@ -703,13 +720,8 @@ public class TopologicalImageCache
 			TopologicalRequest curRequest = (TopologicalRequest)it.next();
 			if (TopologicalImageCache.compare(curRequest.topoScale,this.miLayer.getScale()))
 			{
-				//Кладём сегмент в очередь на загрузку и отрисовку
-				curRequest.isUsedForCurrentImage = true;
-				
-				if (curRequest.priority != TopologicalRequest.PRIORITY_ALREADY_LOADED)
-					curRequest.priority = TopologicalRequest.PRIORITY_EXPRESS;
-				
-				this.loadingThread.addRequest(curRequest);
+				//Кладём сегмент в очередь на отрисовку
+				this.imagesToPaint.add(curRequest);
 				break;
 			}
 		}
@@ -741,7 +753,6 @@ public class TopologicalImageCache
 			this.createRequestForScaledExpressArea(scaleToCheck,TopologicalRequest.PRIORITY_BACKGROUND);
 		
 		this.cacheOfImages.add(newImageRequest);
-
 		//Кладём сегмент на загрузку
 		this.loadingThread.addRequest(newImageRequest);
 	}
@@ -765,13 +776,11 @@ public class TopologicalImageCache
 				this.miLayer.getScale(),
 				TopologicalRequest.PRIORITY_EXPRESS);
 
-		//его отрисовывать
-		currImageRequest.isUsedForCurrentImage = true;
-		
 		//кладём в кэш
 		this.cacheOfImages.add(currImageRequest);
-		
 		//Кладём в очередь на отрисовку
+		this.imagesToPaint.add(currImageRequest);		
+		//Кладём в очередь на загрузку		
 		this.loadingThread.addRequest(currImageRequest);
 		
 		//Делаем изображения большего и меньшего изображения
@@ -784,7 +793,7 @@ public class TopologicalImageCache
 
 			this.cacheOfImages.add(smallScaledImage);
 			
-			//Кладём в очередь на отрисовку
+			//Кладём в очередь на загрузку
 			this.loadingThread.addRequest(smallScaledImage);
 			
 			//Большое
@@ -794,7 +803,7 @@ public class TopologicalImageCache
 
 			this.cacheOfImages.add(bigScaledImage);
 			
-			//Кладём в очередь на отрисовку
+			//Кладём в очередь на загрузку
 			this.loadingThread.addRequest(bigScaledImage);
 		}
 	}
@@ -817,22 +826,21 @@ public class TopologicalImageCache
 	}
 }
 
-class TopologicalCacheThread extends Thread
+class LoadingThread extends Thread
 {
 	private MapInfoLogicalNetLayer miLayer = null;
 	private String uriString = null;
-	private Image imageToPaintAt = null;
-	
 	/**
 	 * Очередь запросов на получение изображений с сервера
 	 */
-	private List requestQueue = new LinkedList();	
+	private List requestQueue =
+		Collections.synchronizedList(new LinkedList());	
 	
 	private boolean toBreak = false;
 	
 	private byte[] imageBuffer = null;
 	
-	public TopologicalCacheThread(
+	public LoadingThread(
 			MapInfoLogicalNetLayer miLayer)
 	{
 		this.miLayer = miLayer;
@@ -850,11 +858,6 @@ class TopologicalCacheThread extends Thread
 				" TIC - loadingthread - setImage - memory allocated");
 	}
 	
-	public void setImage (Image newImage)
-	{
-		this.imageToPaintAt = newImage;
-	}
-	
 	public void run()
 	{
 		while (!this.toBreak)
@@ -866,14 +869,15 @@ class TopologicalCacheThread extends Thread
 				if (!this.requestQueue.isEmpty())
 				{
 					request = (TopologicalRequest)this.requestQueue.get(0);
+					this.requestQueue.remove(request);
 				}
 			}
 			
 			if (request == null)
 			{
+				//Запросов к серверу нет
 				try
 				{
-					///Посылка запросов
 					Thread.sleep(50);
 					continue;
 				} catch (InterruptedException e)
@@ -884,47 +888,26 @@ class TopologicalCacheThread extends Thread
 			}
 			
 			System.out.println(this.miLayer.sdFormat.format(new Date(System.currentTimeMillis())) +
-				" TIC - loadingThread - run - realizing request: " + request);
+				" TIC - loadingThread - run - loading request: " + request);
 			
 			//Формируем строку HTTP запроса
 			String requestString = new String(this.uriString);
 			
-			if (request.priority != TopologicalRequest.PRIORITY_ALREADY_LOADED)
-				try
-				{
-					requestString += this.createRenderCommandString(request);
-	
-					//Получили изображение
-					request.image = this.getServerMapImage(requestString);
-					request.priority = TopologicalRequest.PRIORITY_ALREADY_LOADED;
-
-					System.out.println(this.miLayer.sdFormat.format(new Date(System.currentTimeMillis())) +
-						" TIC - loadingThread - run - request image loaded");
-					
-				} catch (MapDataException e)
-				{
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			
-			//Если новый запрос из cache области или старое изображение оттуда же,
-			//то отрисовываем его
-			if (request.isUsedForCurrentImage)
+			try
 			{
-				this.imageToPaintAt.getGraphics().drawImage(
-						request.image.getImage(),
-						request.start.x - 1,
-						request.start.y - 1,
-						this.miLayer.getMapViewer().getVisualComponent());
+				requestString += this.createRenderCommandString(request);
 
-				request.isUsedForCurrentImage = false;
-				
+				//Получили изображение
+				request.image = this.getServerMapImage(requestString);
+				request.priority = TopologicalRequest.PRIORITY_ALREADY_LOADED;
+
 				System.out.println(this.miLayer.sdFormat.format(new Date(System.currentTimeMillis())) +
-					" TIC - loadingThread - run - request image painted");
-			}
-			synchronized (this.requestQueue)
+					" TIC - loadingThread - run - request image loaded");
+				
+			} catch (MapDataException e)
 			{
-				this.requestQueue.remove(request);
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 	}
@@ -940,24 +923,21 @@ class TopologicalCacheThread extends Thread
 	 */
 	public void addRequest(TopologicalRequest request)
 	{
-		synchronized (this.requestQueue)
+		//Ищем первый запрос с приоритетом ниже, чем у нового запроса
+		//К сожалению нельзя воспользоваться итератором
+		for (int i = 0; i < this.requestQueue.size(); i++)
 		{
-			//Ищем первый запрос с приоритетом ниже, чем у нового запроса
-			//К сожалению нельзя воспользоваться итератором
-			for (int i = 0; i < this.requestQueue.size(); i++)
+			TopologicalRequest curRequest = 
+				(TopologicalRequest) this.requestQueue.get(i);
+			if (request.priority < curRequest.priority)
 			{
-				TopologicalRequest curRequest = 
-					(TopologicalRequest) this.requestQueue.get(i);
-				if (request.priority < curRequest.priority)
-				{
-					//Нашли
-					this.requestQueue.add(i,request);
-					return;
-				}
+				//Нашли
+				this.requestQueue.add(i,request);
+				return;
 			}
-			//Не нашли
-			this.requestQueue.add(request);			
 		}
+		//Не нашли
+		this.requestQueue.add(request);			
 	}
 
 	/**
@@ -967,81 +947,43 @@ class TopologicalCacheThread extends Thread
 	 */
 	public void changeRequestPriority(TopologicalRequest request, int newPriority)
 	{
-		synchronized (this.requestQueue)
-		{
-			//Удаляем запрос из очереди
-			this.requestQueue.remove(request);
-			
-			//Задаём ему новый приоритет
-			request.priority = newPriority;
-			
-			//Снова ставим запрос в очередь
-			this.addRequest(request);
-		}
+		//Удаляем запрос из очереди
+		this.requestQueue.remove(request);
+		
+		//Задаём ему новый приоритет
+		request.priority = newPriority;
+		
+		//Снова ставим запрос в очередь
+		this.addRequest(request);
 	}
 
 	/**
-	 * Удаляем запросы, вышедшие за границу cache области.
-	 * @param cacheBorders Границы cache области
-	 * @return Список удалённых из очереди НЕНАРИСОВАННЫХ сегментов
+	 * Удаляем ненарисованные запросы, вышедшие за границу cache области.
+	 * @param cacheArea Область кэш отрисовки
+	 * @return Список ненарисованных запросов, которые не входят в кэш
 	 */
-	public List removeOutOfCacheRequests(Rectangle2D.Double cacheBorders)
+	public List removeOutOfCacheRequests(Rectangle2D.Double cacheArea)
 	{
-		List resultList = new ArrayList();
-		synchronized (this.requestQueue)
+		List unusedRequests = new ArrayList();
+		for (ListIterator it = this.requestQueue.listIterator(); it.hasNext();)
 		{
-			for (ListIterator it = this.requestQueue.listIterator(); it.hasNext();)
+			TopologicalRequest request = (TopologicalRequest)it.next();
+			if (!request.topoBounds.intersects(cacheArea))
 			{
-				TopologicalRequest request = (TopologicalRequest)it.next();
-				if (!request.topoBounds.intersects(cacheBorders))
-				{
-					//Если кэш область и сегмент не пересекаются -
-					//удаляем запрос из очереди
-					
-					if (request.priority != TopologicalRequest.PRIORITY_ALREADY_LOADED)
-						//Если он ещё и ненарисован - удаляем его из кэша
-						resultList.add(request);
-					
-					it.remove();
-				}
-			}
-		}
-		return resultList;
-	}
-	
-	/**
-	 * Для проверки состояния подгрузки/перерисовки
-	 * @return true, если все запросы для express области выполнены - изображение готово.
-	 */
-	public boolean expressRequestsRealized()
-	{
-		synchronized (this.requestQueue)
-		{
-			//Если запросы только для кэш области
-			for (Iterator it = this.requestQueue.iterator(); it.hasNext();)
-			{
-				TopologicalRequest request = (TopologicalRequest)it.next();
-				if (request.priority !=	TopologicalRequest.PRIORITY_BACKGROUND)
-					return false;
+				//Если кэш область и сегмент не пересекаются -
+				//удаляем запрос из очереди
+				unusedRequests.add(request);
+				it.remove();
 			}
 		}
 		
-		return true;
+		return unusedRequests;
 	}
 	
-	/**
-	 * Очищает очередь запросов
-	 *
-	 */
 	public void clearQueue()
 	{
-		synchronized (this.requestQueue)
-		{
-			//Если запросы только для кэш области
-			this.requestQueue.clear();
-		}
+		this.requestQueue.clear();
 	}
-	
 	/**
 	 * Подгружает изображение с сервера по HTTP-запросу
 	 * @param requestURIString Строка запроса
@@ -1152,7 +1094,7 @@ class TopologicalCacheThread extends Thread
 /**
  * Структура запроса изображения с сервера
  * @author $Author: peskovsky $
- * @version $Revision: 1.3 $, $Date: 2005/04/13 11:52:45 $
+ * @version $Revision: 1.4 $, $Date: 2005/04/13 15:40:04 $
  * @module mapinfo_v1
  */
 class TopologicalRequest implements Comparable
