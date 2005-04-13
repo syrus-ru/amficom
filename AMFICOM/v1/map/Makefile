@@ -33,6 +33,7 @@ $(call checkenve,ORACLE_HOME)
 $(LIBNAME): .mach
 	$(JAR) -cf $@ \
 		-C $(CLASSDIR) com/syrus/AMFICOM/map
+		
 
 .mach:	.corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
