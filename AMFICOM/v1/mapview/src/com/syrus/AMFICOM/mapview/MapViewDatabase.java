@@ -1,5 +1,5 @@
 /*
-* $Id: MapViewDatabase.java,v 1.18 2005/04/05 12:47:05 max Exp $
+* $Id: MapViewDatabase.java,v 1.19 2005/04/13 10:00:55 krupenn Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -44,8 +44,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/04/05 12:47:05 $
- * @author $Author: max $
+ * @version $Revision: 1.19 $, $Date: 2005/04/13 10:00:55 $
+ * @author $Author: krupenn $
  * @module mapview_v1
  */
 public class MapViewDatabase extends CharacterizableDatabase {
@@ -272,7 +272,7 @@ public class MapViewDatabase extends CharacterizableDatabase {
 		super.updateLinkedEntityIds(mapIdLinkedObjectIds, MAPVIEW_SCHEME, LINK_COLUMN_MAPVIEW_ID, LINK_COLUMN_SCHEME_ID);
 	}
 	
-	public void delete(Identifier id) throws IllegalDataException {
+	public void delete(Identifier id) {
 		this.delete(Collections.singleton(id));
 	}
 	
@@ -302,11 +302,6 @@ public class MapViewDatabase extends CharacterizableDatabase {
 		
 	}	
 
-	public void delete(StorableObject storableObject) throws IllegalDataException {
-		MapView map = fromStorableObject(storableObject);
-		this.delete(Collections.singleton(map.getId()));
-	}
-	
 	private void deleteSchemeIds(java.util.Map linkedObjectIds) {
 		StringBuffer linkBuffer = new StringBuffer(LINK_COLUMN_SCHEME_ID);
 		
