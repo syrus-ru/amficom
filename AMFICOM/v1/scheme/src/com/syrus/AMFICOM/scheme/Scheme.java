@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.9 2005/04/12 08:14:17 bass Exp $
+ * $Id: Scheme.java,v 1.10 2005/04/13 19:07:46 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,8 +37,8 @@ import org.omg.CORBA.portable.IDLEntity;
 /**
  * #03 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/04/12 08:14:17 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.10 $, $Date: 2005/04/13 19:07:46 $
  * @module scheme_v1
  */
 public final class Scheme extends AbstractCloneableDomainMember implements Describable, SchemeCellContainer {
