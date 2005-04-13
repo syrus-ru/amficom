@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingTypeDatabase.java,v 1.30 2005/04/12 17:03:29 arseniy Exp $
+ * $Id: ModelingTypeDatabase.java,v 1.31 2005/04/13 10:03:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -37,7 +38,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/04/12 17:03:29 $
+ * @version $Revision: 1.31 $, $Date: 2005/04/13 10:03:39 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -89,12 +90,6 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 		return values;
 	}
 
-	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		ModelingType modelingType = this.fromStorableObject(storableObject);
-		this.retrieveEntity(modelingType);
-		this.retrieveParameterTypes(modelingType);
-	}
-
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 		throws IllegalDataException, RetrieveObjectException, SQLException {
 		ModelingType modelingType = (storableObject == null) ?
@@ -116,63 +111,10 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 		return modelingType;
 	}
 
-	private void retrieveParameterTypes(ModelingType modelingType) throws RetrieveObjectException {	
-		java.util.Set inParTyps = new HashSet();
-		java.util.Set outParTyps = new HashSet();
-
-		String modelingTypeIdStr = DatabaseIdentifier.toSQLString(modelingType.getId());
-		String sql = SQL_SELECT
-			+ StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID + COMMA
-			+ StorableObjectWrapper.LINK_COLUMN_PARAMETER_MODE
-			+ SQL_FROM + ObjectEntities.MODTYPPARTYPLINK_ENTITY
-			+ SQL_WHERE + ModelingTypeWrapper.LINK_COLUMN_MODELING_TYPE_ID + EQUALS + modelingTypeIdStr;
-		Statement statement = null;
-		ResultSet resultSet = null;
-		Connection connection = DatabaseConnection.getConnection();
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("ModelingTypeDatabase.retrieveParameterTypes | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql);
-			String parameterMode;			
-			Identifier parameterTypeId;
-			while (resultSet.next()) {
-				parameterMode = resultSet.getString(StorableObjectWrapper.LINK_COLUMN_PARAMETER_MODE);
-				parameterTypeId = DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID);
-				if (parameterMode.equals(ModelingTypeWrapper.MODE_IN))
-					inParTyps.add(GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
-				else
-					if (parameterMode.equals(ModelingTypeWrapper.MODE_OUT))
-						outParTyps.add(GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
-					else
-						Log.errorMessage("ModelingTypeDatabase.retrieveParameterTypes | ERROR: Unknown parameter mode '" + parameterMode + "' for parameterTypeId " + parameterTypeId);
-			}
-		}
-		catch (SQLException sqle) {
-			String mesg = "ModelingTypeDatabase.retrieveParameterTypes | Cannot retrieve parameter type ids for modeling type '" + modelingTypeIdStr + "' -- " + sqle.getMessage();
-			throw new RetrieveObjectException(mesg, sqle);
-		}
-		catch (ApplicationException ae) {
-			throw new RetrieveObjectException(ae);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-			finally {
-				DatabaseConnection.releaseConnection(connection);
-			}
-		}
-
-		modelingType.setParameterTypes(inParTyps,
-																	 outParTyps);
+	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+		ModelingType modelingType = this.fromStorableObject(storableObject);
+		this.retrieveEntity(modelingType);
+		this.retrieveParameterTypesByOneQuery(Collections.singleton(modelingType));
 	}
 
 	private void retrieveParameterTypesByOneQuery(java.util.Set modelingTypes) throws RetrieveObjectException {
@@ -196,47 +138,50 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 			Log.debugMessage("ModelingTypeDatabase.retrieveParameterTypesByOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
 
-			Map inParameterTypesMap = new HashMap();
-			Map outParameterTypesMap = new HashMap();
+			Map inParameterTypeIdsMap = new HashMap();
+			Map outParameterTypeIdsMap = new HashMap();
 			String parameterMode;
 			Identifier parameterTypeId;
 			Identifier modelingTypeId;
-			java.util.Set inParameterTypes;
-			java.util.Set outParameterTypes;
+			java.util.Set inParameterTypeIds;
+			java.util.Set outParameterTypeIds;
 			while (resultSet.next()) {
 				parameterMode = resultSet.getString(StorableObjectWrapper.LINK_COLUMN_PARAMETER_MODE);
 				parameterTypeId = DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID);
 				modelingTypeId = DatabaseIdentifier.getIdentifier(resultSet, ModelingTypeWrapper.LINK_COLUMN_MODELING_TYPE_ID);
 
 				if (parameterMode.equals(ModelingTypeWrapper.MODE_IN)) {
-					inParameterTypes = (java.util.Set)inParameterTypesMap.get(modelingTypeId);
-					if (inParameterTypes == null) {
-						inParameterTypes = new HashSet();
-						inParameterTypesMap.put(modelingTypeId, inParameterTypes);
+					inParameterTypeIds = (java.util.Set) inParameterTypeIdsMap.get(modelingTypeId);
+					if (inParameterTypeIds == null) {
+						inParameterTypeIds = new HashSet();
+						inParameterTypeIdsMap.put(modelingTypeId, inParameterTypeIds);
 					}
-					inParameterTypes.add(GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
+					inParameterTypeIds.add(parameterTypeId);
 				}
 				else
 					if (parameterMode.equals(ModelingTypeWrapper.MODE_OUT)) {
-						outParameterTypes = (java.util.Set)outParameterTypesMap.get(modelingTypeId);
-						if (outParameterTypes == null) {
-							outParameterTypes = new HashSet();
-							outParameterTypesMap.put(modelingTypeId, outParameterTypes);
+						outParameterTypeIds = (java.util.Set) outParameterTypeIdsMap.get(modelingTypeId);
+						if (outParameterTypeIds == null) {
+							outParameterTypeIds = new HashSet();
+							outParameterTypeIdsMap.put(modelingTypeId, outParameterTypeIds);
 						}
-						outParameterTypes.add(GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
+						outParameterTypeIds.add(parameterTypeId);
 					}
 					else
-						Log.errorMessage("ModelingTypeDatabase.retrieveParameterTypes | ERROR: Unknown parameter mode '" + parameterMode + "' for parameterTypeId '" + parameterTypeId + "' of modeling type '" + modelingTypeId + "'");
+						Log.errorMessage("ModelingTypeDatabase.retrieveParameterTypes | ERROR: Unknown parameter mode '"
+								+ parameterMode + "' for parameterTypeId '" + parameterTypeId
+								+ "' of modeling type '" + modelingTypeId + "'");
 			}
 
 			ModelingType modelingType;
 			for (Iterator it = modelingTypes.iterator(); it.hasNext();) {
-				modelingType = (ModelingType)it.next();
+				modelingType = (ModelingType) it.next();
 				modelingTypeId = modelingType.getId();
-				inParameterTypes = (java.util.Set)inParameterTypesMap.get(modelingTypeId);
-				outParameterTypes = (java.util.Set)outParameterTypesMap.get(modelingTypeId);
+				inParameterTypeIds = (java.util.Set) inParameterTypeIdsMap.get(modelingTypeId);
+				outParameterTypeIds = (java.util.Set) outParameterTypeIdsMap.get(modelingTypeId);
 
-				modelingType.setParameterTypes(inParameterTypes, outParameterTypes);
+				modelingType.setParameterTypes(GeneralStorableObjectPool.getStorableObjects(inParameterTypeIds, true),
+						GeneralStorableObjectPool.getStorableObjects(outParameterTypeIds, true));
 			}
 
 		}
