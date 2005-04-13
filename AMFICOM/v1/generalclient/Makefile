@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.12 2005/04/13 19:54:26 arseniy Exp $
+# $Id: Makefile,v 1.13 2005/04/13 19:55:06 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -56,6 +56,7 @@ cleanmach:
 .PHONY:	cleancorba
 cleancorba:
 	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/CORBA
+	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/event
 	$(RM) .corba
 
 

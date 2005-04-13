@@ -2,6 +2,8 @@ bak
 classes
 classes_test
 docs
+.mach
+.corba
 *.deploy
 *.jpr
 *.jar
