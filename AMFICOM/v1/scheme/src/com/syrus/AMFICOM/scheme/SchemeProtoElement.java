@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.17 2005/04/13 12:27:25 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.18 2005/04/13 19:07:41 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,8 +54,8 @@ import org.omg.CORBA.portable.IDLEntity;
 /**
  * #02 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.17 $, $Date: 2005/04/13 12:27:25 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.18 $, $Date: 2005/04/13 19:07:41 $
  * @module scheme_v1
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation. 
  */
@@ -644,7 +644,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 				(Identifier_Transferable) this.schemeCellId.getTransferable(),
 				(Identifier_Transferable) this.parentSchemeProtoGroupId.getTransferable(),
 				(Identifier_Transferable) this.parentSchemeProtoElementId.getTransferable(),
-				Identifier.getTransferables(this.characteristics));
+				Identifier.createTransferables(this.characteristics));
 	}
 
 	/**
