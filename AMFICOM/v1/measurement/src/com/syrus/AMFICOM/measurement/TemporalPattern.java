@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPattern.java,v 1.70 2005/04/08 12:33:24 arseniy Exp $
+ * $Id: TemporalPattern.java,v 1.71 2005/04/13 09:36:22 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,6 +15,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -35,8 +37,8 @@ import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.70 $, $Date: 2005/04/08 12:33:24 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.71 $, $Date: 2005/04/13 09:36:22 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -64,7 +66,7 @@ public class TemporalPattern extends StorableObject {
 		private static final long	DAY_LONG	= 24 * HOUR_LONG;
 		private static final long	MONTH_LONG	= 31 * DAY_LONG;
 
-		protected java.util.Set			dateList;
+		protected SortedSet		dateList;
 		private TimeValue		dayOfMonth;
 		private TimeValue		dayOfWeek;
 
@@ -104,7 +106,7 @@ public class TemporalPattern extends StorableObject {
 		/**
 		 * @return Returns the dateList.
 		 */
-		public java.util.Set getDateList() {
+		public SortedSet getDateList() {
 			return this.dateList;
 		}
 
@@ -398,7 +400,7 @@ public class TemporalPattern extends StorableObject {
 												if ((this.startPeriod <= mTime)
 														&& (mTime <= this.endPeriod)) {
 													if (this.dateList == null)
-														this.dateList = new HashSet();
+														this.dateList = new TreeSet();
 													this.dateList
 															.add(c
 																	.getTime());
@@ -784,7 +786,7 @@ public class TemporalPattern extends StorableObject {
 	 * Map of <{@link TimeLine},{@link TimeLine}>
 	 */
 	private java.util.Set			templates;
-	private java.util.Set			times;
+	private SortedSet			times;
 
 	private long			startTime		= 0;
 	private long			endTime			= 0;
@@ -974,9 +976,9 @@ public class TemporalPattern extends StorableObject {
 	 *                Date
 	 * @param end
 	 *                Date
-	 * @return List of java.util.Data
+	 * @return SortedSet of java.util.Data
 	 */
-	public java.util.Set getTimes(Date start, Date end) {
+	public SortedSet getTimes(Date start, Date end) {
 		return this.getTimes(start.getTime(), end.getTime());	
 	}
 
@@ -988,11 +990,11 @@ public class TemporalPattern extends StorableObject {
 	 *                long
 	 * @param end
 	 *                long
-	 * @return java.util.Set of java.util.Data
+	 * @return SortedSet of java.util.Data
 	 */
-	public java.util.Set getTimes(long start, long end) {
+	public SortedSet getTimes(long start, long end) {
 		if (this.times == null)
-			this.times = new HashSet();
+			this.times = new TreeSet();
 		if (this.startTime != start)
 			this.times.clear();
 		this.startTime = start;
@@ -1034,7 +1036,7 @@ public class TemporalPattern extends StorableObject {
 	public void addTemplate(String template) {
 		super.changed = true;		
 		if (this.times == null)
-			this.times = new HashSet();
+			this.times = new TreeSet();
 		else
 			this.times.clear();
 		if (this.templates == null)
