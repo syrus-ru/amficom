@@ -87,6 +87,7 @@ public final class MapSiteBindPanel
 	public void setLogicalNetLayer(LogicalNetLayer lnl)
 	{
 		this.lnl = lnl;
+		this.crossingPanel.setLogicalNetLayer(lnl);
 	}
 
 	public LogicalNetLayer getLogicalNetLayer()
@@ -237,7 +238,7 @@ public final class MapSiteBindPanel
 		}
 
 		cablePath.removeLink(linkRight);
-		
+
 		if(linkRight instanceof UnboundLink)
 		{
 			RemoveUnboundLinkCommandBundle command = 
