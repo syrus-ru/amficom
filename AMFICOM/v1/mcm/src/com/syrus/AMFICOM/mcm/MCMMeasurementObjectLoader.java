@@ -1,5 +1,5 @@
 /*
- * $Id: MCMMeasurementObjectLoader.java,v 1.30 2005/04/12 17:26:46 arseniy Exp $
+ * $Id: MCMMeasurementObjectLoader.java,v 1.31 2005/04/13 10:06:42 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -51,7 +51,7 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/04/12 17:26:46 $
+ * @version $Revision: 1.31 $, $Date: 2005/04/13 10:06:42 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -612,10 +612,6 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 		}
 	}
 
-	public void saveTests(java.util.Set collection, boolean force) throws ApplicationException {
-		throw new UnsupportedOperationException("May be not need this? " + collection + ", " + force);
-	}
-
 
 
 
@@ -670,7 +666,7 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 	public void saveMeasurementType(MeasurementType measurementType, boolean force) throws ApplicationException {
 		throw new UnsupportedOperationException("Method not implemented, measurementType: " + measurementType + ", force: " + force);
 	}
-	
+
 	public void saveModelingType(ModelingType modelingType, boolean force) throws ApplicationException {
 		throw new UnsupportedOperationException("Method not implemented, modelingType: " + modelingType + ", force: " + force);
 	}
@@ -678,15 +674,15 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 	public void saveMeasurementSetup(MeasurementSetup measurementSetup, boolean force) throws ApplicationException {
 		throw new UnsupportedOperationException("Method not implemented, measurementSetup: " + measurementSetup + ", force: " + force);
 	}
-	
+
 	public void saveSet(Set set, boolean force) throws ApplicationException {
 		throw new UnsupportedOperationException("Method not implemented, set: " + set + ", force: " + force);
 	}
-	
+
 	public void saveModeling(Modeling modeling, boolean force) throws ApplicationException {
 		throw new UnsupportedOperationException("Method not implemented, modeling: " + modeling + ", force: " + force);
 	}
-	
+
 	public void saveTemporalPattern(TemporalPattern temporalPattern, boolean force) throws ApplicationException {
 		throw new UnsupportedOperationException("Method not implemented, temporalPattern: " + temporalPattern + ", force: " + force);
 	}
@@ -697,29 +693,33 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 	public void saveAnalysisTypes(java.util.Set objects, boolean force) throws ApplicationException {
 		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
 	}
-	
+
 	public void saveEvaluationTypes(java.util.Set objects, boolean force) throws ApplicationException {
 		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
 	}
-	
+
 	public void saveMeasurementSetups(java.util.Set objects, boolean force) throws ApplicationException {
 		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
 	}
-	
+
 	public void saveMeasurementTypes(java.util.Set objects, boolean force) throws ApplicationException {
 		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
 	}
-	
+
 	public void saveModelings(java.util.Set objects, boolean force) throws ApplicationException {
 		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
 	}
-	
+
 	public void saveSets(java.util.Set objects, boolean force) throws ApplicationException {
 		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
 	}
-	
+
 	public void saveTemporalPatterns(java.util.Set objects, boolean force) throws ApplicationException {
 		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
+	}
+
+	public void saveTests(java.util.Set collection, boolean force) throws ApplicationException {
+		throw new UnsupportedOperationException("May be not need this? " + collection + ", " + force);
 	}
 
 
@@ -735,6 +735,7 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 	public void delete(final java.util.Set identifiables) {
 		throw new UnsupportedOperationException("Method not implemented, objects: " + identifiables);
 	}
+
 	public void delete(Identifier id) {
 		throw new UnsupportedOperationException("Method not implemented, id: " + id);
 	}
