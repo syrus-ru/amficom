@@ -1,5 +1,5 @@
 /*
- * $Id: MServerImplementation.java,v 1.44 2005/04/11 12:37:27 arseniy Exp $
+ * $Id: MServerImplementation.java,v 1.45 2005/04/13 12:22:11 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -100,7 +100,7 @@ import com.syrus.AMFICOM.mserver.corba.MServerPOA;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2005/04/11 12:37:27 $
+ * @version $Revision: 1.45 $, $Date: 2005/04/13 12:22:11 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -1404,24 +1404,6 @@ public class MServerImplementation extends MServerPOA {
 			}
   	}
   }
-
-//	public void updateTestStatus(Identifier_Transferable testIdT, TestStatus status, Identifier_Transferable mcmIdT) {
-//		Identifier testId = new Identifier(testIdT);
-//		Identifier mcmId = new Identifier(mcmIdT);
-//		try {
-//			MCM mcm = (MCM) AdministrationStorableObjectPool.getStorableObject(mcmId, true);
-//			Test test = (Test) MeasurementStorableObjectPool.getStorableObject(testId, true);
-//
-//			Log.debugMessage("Updating status of test '" + testId + "' on MCM '" + mcmId
-//					+ "' from " + test.getStatus().value() + " to " + status.value(), Log.DEBUGLEVEL07);
-//			test.setStatus(status);
-//			TestDatabase testDatabase = MeasurementDatabaseContext.getTestDatabase();
-//			testDatabase.update(test, mcm.getUserId(), StorableObjectDatabase.UPDATE_FORCE);
-//		}
-//		catch (ApplicationException ae) {
-//			Log.errorMessage("updateTestStatus | Cannot update status of test '" + testId + "' -- " + ae.getMessage());
-//		}
-//	}
 
 
 
