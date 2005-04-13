@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceComparer.java,v 1.2 2005/03/15 17:02:35 saa Exp $
+ * $Id: ModelTraceComparer.java,v 1.3 2005/04/13 12:46:59 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,8 +8,9 @@
 package com.syrus.AMFICOM.analysis.dadara;
 
 /**
+ * Performs ModelTrace comparison to MTM and MinTraceLevel
  * @author $Author: saa $
- * @version $Revision: 1.2 $, $Date: 2005/03/15 17:02:35 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/13 12:46:59 $
  * @module
  */
 public class ModelTraceComparer
