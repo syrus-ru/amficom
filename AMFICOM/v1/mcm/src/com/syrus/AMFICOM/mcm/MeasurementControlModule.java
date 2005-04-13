@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.72 2005/04/11 12:39:33 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.73 2005/04/13 10:08:55 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,6 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.SessionContext;
@@ -58,7 +57,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.72 $, $Date: 2005/04/11 12:39:33 $
+ * @version $Revision: 1.73 $, $Date: 2005/04/13 10:08:55 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -458,36 +457,41 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 	protected static void addTests(List newTests) {
 		sortTestsByStartTime(newTests);
 
-		ListIterator testIt = testList.listIterator();
-		ListIterator newTestIt = newTests.listIterator();
-		Test test = testIt.hasNext() ? (Test) testIt.next() : null;
-		Test newTest = newTestIt.hasNext() ? (Test) newTestIt.next() : null;
-		while (newTest != null) {
-			while (test != null && test.getStartTime().before(newTest.getStartTime()))
-				test = testIt.hasNext() ? (Test) testIt.next() : null;
+		synchronized (testList) {
+			ListIterator testIt = testList.listIterator();
+			ListIterator newTestIt = newTests.listIterator();
+			Test test = testIt.hasNext() ? (Test) testIt.next() : null;
+			Test newTest = newTestIt.hasNext() ? (Test) newTestIt.next() : null;
+			while (newTest != null) {
+				while (test != null && test.getStartTime().before(newTest.getStartTime()))
+					test = testIt.hasNext() ? (Test) testIt.next() : null;
 
-			if (test != null)
-				testIt.previous();
-			testIt.add(newTest);
+				if (test != null)
+					testIt.previous();
+				testIt.add(newTest);
 
-			newTest.setStatus(TestStatus.TEST_STATUS_SCHEDULED);
+				newTest.setStatus(TestStatus.TEST_STATUS_SCHEDULED);
+				try {
+					MeasurementStorableObjectPool.putStorableObject(newTest);
+
+					if (newTest.getTemporalType().value() == TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL)
+						MeasurementStorableObjectPool.getStorableObject(newTest.getTemporalPatternId(), true);
+				}
+				catch (ApplicationException ae) {
+					Log.errorException(ae);
+				}
+
+				newTest = newTestIt.hasNext() ? (Test) newTestIt.next() : null;
+			}
+
 			try {
-				MeasurementStorableObjectPool.putStorableObject(newTest);
+				MeasurementStorableObjectPool.flush(true);
 			}
-			catch (IllegalObjectEntityException ioee) {
-				// Never
-				Log.errorException(ioee);
+			catch (ApplicationException ae) {
+				Log.errorException(ae);
 			}
 
-			newTest = newTestIt.hasNext() ? (Test) newTestIt.next() : null;
-		}
-
-		try {
-			MeasurementStorableObjectPool.flush(true);
-		}
-		catch (ApplicationException ae) {
-			Log.errorException(ae);
-		}
+		}	//synchronized (testList)
 	}
 
 	protected static void abortTest(Test test) {
