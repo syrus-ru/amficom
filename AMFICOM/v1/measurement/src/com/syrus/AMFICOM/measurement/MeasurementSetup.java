@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.60 2005/04/12 17:04:43 arseniy Exp $
+ * $Id: MeasurementSetup.java,v 1.61 2005/04/13 10:01:20 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 
 /**
- * @version $Revision: 1.60 $, $Date: 2005/04/12 17:04:43 $
+ * @version $Revision: 1.61 $, $Date: 2005/04/13 10:01:20 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -48,11 +48,13 @@ public final class MeasurementSetup extends StorableObject {
 	private long measurementDuration;
 
 	private java.util.Set monitoredElementIds;
+	private java.util.Set measurementTypeIds;
 
 	public MeasurementSetup(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
 		this.monitoredElementIds = new HashSet();
+		this.measurementTypeIds = new HashSet();
 
 		MeasurementSetupDatabase database = MeasurementDatabaseContext.getMeasurementSetupDatabase();
 		try {
@@ -81,7 +83,8 @@ public final class MeasurementSetup extends StorableObject {
 							   Set etalon,
 							   String description,
 							   long measurementDuration,
-							   java.util.Set monitoredElementIds) {
+							   java.util.Set monitoredElementIds,
+							   java.util.Set measurementTypeIds) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -94,8 +97,12 @@ public final class MeasurementSetup extends StorableObject {
 		this.etalon = etalon;
 		this.description = description;
 		this.measurementDuration = measurementDuration;
+
 		this.monitoredElementIds = new HashSet();
 		this.setMonitoredElementIds0(monitoredElementIds);
+
+		this.measurementTypeIds = new HashSet();
+		this.setMeasurementTypeIds0(measurementTypeIds);
 	}
 	
 	/**
@@ -117,14 +124,16 @@ public final class MeasurementSetup extends StorableObject {
 												  Set etalon,
 												  String description,
 												  long measurementDuration,
-												  java.util.Set monitoredElementIds) throws CreateObjectException {
+												  java.util.Set monitoredElementIds,
+												  java.util.Set measurementTypeIds) throws CreateObjectException {
 		
 		if (creatorId == null
 				|| description == null
 				|| parameterSet == null
-				|| monitoredElementIds == null || monitoredElementIds.isEmpty() || monitoredElementIds.contains(null))
+				|| monitoredElementIds == null || monitoredElementIds.isEmpty() || monitoredElementIds.contains(null)
+				|| measurementTypeIds == null || measurementTypeIds.isEmpty() || measurementTypeIds.contains(null))
 			throw new IllegalArgumentException("Argument is 'null'");
-	
+
 		try {
 			MeasurementSetup measurementSetup = new MeasurementSetup(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MS_ENTITY_CODE),
 				creatorId,
@@ -135,10 +144,12 @@ public final class MeasurementSetup extends StorableObject {
 				etalon,
 				description,
 				measurementDuration,
-				monitoredElementIds);
+				monitoredElementIds,
+				measurementTypeIds);
 			measurementSetup.changed = true;
 			return measurementSetup;
-		} catch (IllegalObjectEntityException e) {
+		}
+		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("MeasurementSetup.createInstance | cannot generate identifier ", e);
 		}
 	}
@@ -168,10 +179,12 @@ public final class MeasurementSetup extends StorableObject {
 		this.measurementDuration = mst.measurement_duration;
 
 		this.monitoredElementIds = Identifier.fromTransferables(mst.monitored_element_ids);
+		this.measurementTypeIds = Identifier.fromTransferables(mst.measurement_type_ids);
 	}
 
 	public IDLEntity getTransferable() {
 		Identifier_Transferable[] meIds = Identifier.createTransferables(this.monitoredElementIds);
+		Identifier_Transferable[] mtIds = Identifier.createTransferables(this.measurementTypeIds);
 		return new MeasurementSetup_Transferable(super.getHeaderTransferable(),
 												 (Identifier_Transferable) this.parameterSet.getId().getTransferable(),
 												 (this.criteriaSet != null) ? (Identifier_Transferable) this.criteriaSet.getId().getTransferable() : (new Identifier_Transferable("")),
@@ -179,7 +192,8 @@ public final class MeasurementSetup extends StorableObject {
 												 (this.etalon != null) ? (Identifier_Transferable) this.etalon.getId().getTransferable() : (new Identifier_Transferable("")),
 												 this.description,
 												 this.measurementDuration,
-												 meIds);
+												 meIds,
+												 mtIds);
 	}
 
     public short getEntityCode() {
@@ -212,6 +226,10 @@ public final class MeasurementSetup extends StorableObject {
 
 	public java.util.Set getMonitoredElementIds() {
 		return Collections.unmodifiableSet(this.monitoredElementIds);
+	}
+
+	public java.util.Set getMeasurementTypeIds() {
+		return Collections.unmodifiableSet(this.measurementTypeIds);
 	}
 
 	public String[] getParameterTypeCodenames() {
@@ -272,15 +290,34 @@ public final class MeasurementSetup extends StorableObject {
 		super.changed = true;
 	}
 
+	/**
+	 * Clent setter for monitored element ids
+	 * @param monitoredElementIds
+	 */
+	public void setMonitoredElementIds(java.util.Set monitoredElementIds) {
+		this.setMonitoredElementIds0(monitoredElementIds);
+		super.changed = true;
+	}
+
 	protected synchronized void setMonitoredElementIds0(java.util.Set monitoredElementIds) {
 		this.monitoredElementIds.clear();
 		if (monitoredElementIds != null)
 			this.monitoredElementIds.addAll(monitoredElementIds);
 	}
 
-	public void setMonitoredElementIds(java.util.Set monitoredElementIds) {
-		this.setMonitoredElementIds0(monitoredElementIds);
+	/**
+	 * Client setter for measurement type ids
+	 * @param measurementTypeIds
+	 */
+	public void setMeasurementTypeIds(java.util.Set measurementTypeIds) {
+		this.setMeasurementTypeIds0(measurementTypeIds);
 		super.changed = true;
+	}
+
+	protected synchronized void setMeasurementTypeIds0(java.util.Set measurementTypeIds) {
+		this.measurementTypeIds.clear();
+		if (measurementTypeIds != null)
+			this.measurementTypeIds.addAll(measurementTypeIds);
 	}
 
 	/**

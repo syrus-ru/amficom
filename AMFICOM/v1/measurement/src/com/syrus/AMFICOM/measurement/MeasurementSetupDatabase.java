@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.82 2005/04/12 17:03:52 arseniy Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.83 2005/04/13 10:01:20 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.82 $, $Date: 2005/04/12 17:03:52 $
+ * @version $Revision: 1.83 $, $Date: 2005/04/13 10:01:20 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -107,10 +107,18 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
-		MeasurementSetup measurementSetup = (storableObject == null) ? 
-				new MeasurementSetup(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, 
-									   null, null, null, 0, null) : 
-					this.fromStorableObject(storableObject);	
+		MeasurementSetup measurementSetup = (storableObject == null)
+				? new MeasurementSetup(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
+						null,
+						0L,
+						null,
+						null,
+						null,
+						null,
+						null,
+						0,
+						null,
+						null) : this.fromStorableObject(storableObject);	
 		Set parameterSet;
 		Set criteriaSet;
 		Set thresholdSet;
@@ -154,14 +162,14 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		MeasurementSetup measurementSetup = this.fromStorableObject(storableObject);
 		this.retrieveEntity(measurementSetup);
 		this.retrieveMeasurementSetupMELinksByOneQuery(Collections.singleton(measurementSetup));
+		this.retrieveMeasurementTypeIdsByOneQuery(Collections.singleton(measurementSetup));
 	}
 
 	private void retrieveMeasurementSetupMELinksByOneQuery(java.util.Set measurementSetups) throws RetrieveObjectException {
 		if ((measurementSetups == null) || (measurementSetups.isEmpty()))
 			return;
 
-		Map meIdsMap = null;
-		meIdsMap = this.retrieveLinkedEntityIds(measurementSetups,
+		Map meIdsMap = this.retrieveLinkedEntityIds(measurementSetups,
 				ObjectEntities.MSMELINK_ENTITY,
 				MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID,
 				MeasurementSetupWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID);
@@ -175,6 +183,27 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 			monitoredElementIds = (java.util.Set) meIdsMap.get(msId);
 
 			measurementSetup.setMonitoredElementIds0(monitoredElementIds);
+		}
+	}
+
+	private void retrieveMeasurementTypeIdsByOneQuery(java.util.Set measurementSetups) throws RetrieveObjectException {
+		if ((measurementSetups == null) || (measurementSetups.isEmpty()))
+			return;
+
+		Map mtIdsMap = this.retrieveLinkedEntityIds(measurementSetups,
+				ObjectEntities.MSMTLINK_ENTITY,
+				MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID,
+				MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID);
+
+		MeasurementSetup measurementSetup;
+		Identifier msId;
+		java.util.Set measurementTypeIds;
+		for (Iterator it = measurementSetups.iterator(); it.hasNext();) {
+			measurementSetup = (MeasurementSetup) it.next();
+			msId = measurementSetup.getId();
+			measurementTypeIds = (java.util.Set) mtIdsMap.get(msId);
+
+			measurementSetup.setMeasurementTypeIds0(measurementTypeIds);
 		}
 	}
 
@@ -192,6 +221,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		this.insertEntity(measurementSetup);
 		try {
 			this.updateMeasurementSetupMELinks(Collections.singleton(measurementSetup));
+			this.updateMeasurementTypeIds(Collections.singleton(measurementSetup));
 		}
 		catch (UpdateObjectException uoe) {
 			throw new CreateObjectException(uoe);
@@ -202,6 +232,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		this.insertEntities(storableObjects);
 		try {
 			this.updateMeasurementSetupMELinks(storableObjects);
+			this.updateMeasurementTypeIds(storableObjects);
 		}
 		catch (UpdateObjectException uoe) {
 			throw new CreateObjectException(uoe);
@@ -213,6 +244,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		super.update(storableObject, modifierId, updateKind);
 		try {
 			this.updateMeasurementSetupMELinks(Collections.singleton(storableObject));
+			this.updateMeasurementTypeIds(Collections.singleton(storableObject));
 		}
 		catch (IllegalDataException ide) {
 			Log.errorException(ide);
@@ -224,6 +256,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		super.update(storableObjects, modifierId, updateKind);
 		try {
 			this.updateMeasurementSetupMELinks(storableObjects);
+			this.updateMeasurementTypeIds(storableObjects);
 		}
 		catch (IllegalDataException ide) {
 			Log.errorException(ide);
@@ -249,10 +282,30 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 				MeasurementSetupWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID);
 	}
 
+	private void updateMeasurementTypeIds(java.util.Set measurementSetups) throws IllegalDataException, UpdateObjectException {
+		if (measurementSetups == null || measurementSetups.isEmpty())
+			return;
+
+		Map mtIdsMap = new HashMap();
+		MeasurementSetup measurementSetup;
+		java.util.Set mtIds;
+		for (Iterator it = measurementSetups.iterator(); it.hasNext();) {
+			measurementSetup = this.fromStorableObject((StorableObject) it.next());
+			mtIds = measurementSetup.getMeasurementTypeIds();
+			mtIdsMap.put(measurementSetup.getId(), mtIds);
+		}
+
+		this.updateLinkedEntityIds(mtIdsMap,
+				ObjectEntities.MSMTLINK_ENTITY,
+				MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID,
+				MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID);
+	}
+
 	protected java.util.Set retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
-		java.util.Set collection = super.retrieveByCondition(conditionQuery);
-		this.retrieveMeasurementSetupMELinksByOneQuery(collection);
-		return collection;
+		java.util.Set set = super.retrieveByCondition(conditionQuery);
+		this.retrieveMeasurementSetupMELinksByOneQuery(set);
+		this.retrieveMeasurementTypeIdsByOneQuery(set);
+		return set;
 	}
 
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: measurement.idl,v 1.57 2005/04/07 13:50:30 arseniy Exp $
+ * $Id: measurement.idl,v 1.58 2005/04/13 10:01:59 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -133,6 +133,7 @@ module corba {
 		general::corba::WString256 description;
 		long long measurement_duration;
 		general::corba::IdentifierSeq_Transferable monitored_element_ids;
+		general::corba::IdentifierSeq_Transferable measurement_type_ids;
 	};
 
 	typedef sequence <MeasurementSetup_Transferable> MeasurementSetupSeq_Transferable;

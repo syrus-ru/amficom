@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupWrapper.java,v 1.9 2005/04/11 13:02:15 bob Exp $
+ * $Id: MeasurementSetupWrapper.java,v 1.10 2005/04/13 10:02:44 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,29 +20,36 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/04/11 13:02:15 $
- * @author $Author: bob $
+ * @version $Revision: 1.10 $, $Date: 2005/04/13 10:02:44 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 public class MeasurementSetupWrapper extends StorableObjectWrapper {
 
-	public static final String				COLUMN_CRITERIA_SET_ID				= "criteria_set_id";
-	public static final String				COLUMN_ETALON_ID					= "etalon_id";
-	public static final String				COLUMN_MEASUREMENT_DURAION			= "measurement_duration";
-	public static final String				COLUMN_PARAMETER_SET_ID				= "parameter_set_id";
-	public static final String				COLUMN_THRESHOLD_SET_ID				= "threshold_set_id";
-	public static final String 				SUMMARY_INFO						= "summary_info";
-	public static final String				LINK_COLUMN_MONITORED_ELEMENT_ID					= "monitored_element_id";
-	public static final String				LINK_COLUMN_MEASUREMENT_SETUP_ID	= "measurement_setup_id";
+	public static final String COLUMN_CRITERIA_SET_ID = "criteria_set_id";
+	public static final String COLUMN_ETALON_ID = "etalon_id";
+	public static final String COLUMN_MEASUREMENT_DURAION = "measurement_duration";
+	public static final String COLUMN_PARAMETER_SET_ID = "parameter_set_id";
+	public static final String COLUMN_THRESHOLD_SET_ID = "threshold_set_id";
+	public static final String SUMMARY_INFO = "summary_info";
+	public static final String LINK_COLUMN_MONITORED_ELEMENT_ID = "monitored_element_id";
+	public static final String LINK_COLUMN_MEASUREMENT_TYPE_ID = "measurement_type_id";
+	public static final String LINK_COLUMN_MEASUREMENT_SETUP_ID = "measurement_setup_id";
 
-	private static MeasurementSetupWrapper	instance;
+	private static MeasurementSetupWrapper instance;
 
-	private List							keys;
+	private List keys;
 
 	private MeasurementSetupWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { COLUMN_PARAMETER_SET_ID, COLUMN_CRITERIA_SET_ID, COLUMN_THRESHOLD_SET_ID,
-				COLUMN_ETALON_ID, COLUMN_DESCRIPTION, COLUMN_MEASUREMENT_DURAION, LINK_COLUMN_MONITORED_ELEMENT_ID};
+		String[] keysArray = new String[] {COLUMN_PARAMETER_SET_ID,
+				COLUMN_CRITERIA_SET_ID,
+				COLUMN_THRESHOLD_SET_ID,
+				COLUMN_ETALON_ID,
+				COLUMN_DESCRIPTION,
+				COLUMN_MEASUREMENT_DURAION,
+				LINK_COLUMN_MONITORED_ELEMENT_ID,
+				LINK_COLUMN_MEASUREMENT_TYPE_ID};
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
@@ -79,6 +86,8 @@ public class MeasurementSetupWrapper extends StorableObjectWrapper {
 				return new Long(measurementSetup.getMeasurementDuration());
 			if (key.equals(LINK_COLUMN_MONITORED_ELEMENT_ID))
 				return measurementSetup.getMonitoredElementIds();
+			if (key.equals(LINK_COLUMN_MEASUREMENT_TYPE_ID))
+				return measurementSetup.getMeasurementTypeIds();
 			if (key.equals(SUMMARY_INFO)) {
 				return this.getMeasurementSetupInfo(measurementSetup);
 			}
@@ -155,6 +164,8 @@ public class MeasurementSetupWrapper extends StorableObjectWrapper {
 				measurementSetup.setMeasurementDuration(((Long) value).longValue());
 			if (key.equals(LINK_COLUMN_MONITORED_ELEMENT_ID))
 				measurementSetup.setMonitoredElementIds((java.util.Set) value);
+			if (key.equals(LINK_COLUMN_MEASUREMENT_TYPE_ID))
+				measurementSetup.setMeasurementTypeIds((java.util.Set) value);
 		}
 	}
 
@@ -172,7 +183,7 @@ public class MeasurementSetupWrapper extends StorableObjectWrapper {
 	}
 
 	public Class getPropertyClass(String key) {
-		if (key.equals(LINK_COLUMN_MONITORED_ELEMENT_ID))
+		if (key.equals(LINK_COLUMN_MONITORED_ELEMENT_ID) || key.equals(LINK_COLUMN_MEASUREMENT_TYPE_ID))
 			return java.util.Set.class;
 		return String.class;
 	}
