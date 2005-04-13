@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServerSetup.java,v 1.34 2005/04/12 17:23:48 arseniy Exp $
+ * $Id: MeasurementServerSetup.java,v 1.35 2005/04/13 10:11:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -69,7 +69,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/04/12 17:23:48 $
+ * @version $Revision: 1.35 $, $Date: 2005/04/13 10:11:39 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -716,7 +716,8 @@ public final class MeasurementServerSetup {
 					etalon,
 					"created by MeasurementSetupTestCase",
 					1000 * 60 * 10,
-					monitoredElementIds);
+					monitoredElementIds,
+					new HashSet());
 			MeasurementDatabaseContext.getMeasurementSetupDatabase().insert(mSetup);
 			return mSetup;
 		}
