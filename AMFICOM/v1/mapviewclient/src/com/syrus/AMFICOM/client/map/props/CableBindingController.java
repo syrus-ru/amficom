@@ -14,13 +14,12 @@ import java.util.List;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.map.AbstractNode;
-import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.scheme.CableChannelingItem;
 
-public final class CableBindingController implements ObjectResourceController 
+public final class CableBindingController extends ObjectResourceController 
 {
 	public static final String KEY_START_NODE = "startnode";
 	public static final String KEY_START_SPARE = "startspare";
@@ -33,7 +32,6 @@ public final class CableBindingController implements ObjectResourceController
 	private List keys;
 	
 	CablePath cablePath;
-	Map map;
 
 	private CableBindingController() 
 	{
@@ -176,7 +174,6 @@ public final class CableBindingController implements ObjectResourceController
 	public void setCablePath(CablePath cablePath)
 	{
 		this.cablePath = cablePath;
-		this.map = cablePath.getMap();
 	}
 
 	public CablePath getCablePath()

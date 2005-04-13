@@ -7,7 +7,7 @@ import java.util.List;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesController;
 
 public class MapElementPropertiesController
-	implements ObjectResourcePropertiesController
+		extends ObjectResourcePropertiesController
 {
 	public static final String PROPERTY_ID = "Id";
 	public static final String PROPERTY_NAME = "Name";
