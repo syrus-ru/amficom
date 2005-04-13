@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeObjectLoader.java,v 1.2 2005/04/12 08:14:17 bass Exp $
+ * $Id: SchemeObjectLoader.java,v 1.3 2005/04/13 19:07:22 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,14 +13,15 @@ import java.util.*;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/04/12 08:14:17 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/04/13 19:07:22 $
  * @module scheme_v1
  */
 public interface SchemeObjectLoader {
-	void delete(final Set identifiables) throws IllegalDataException;
 
-	void delete(final Identifier id) throws IllegalDataException;
+	void delete(final Set identifiables);
+
+	void delete(final Identifier id);
 
 	StorableObject loadCableChannelingItem(final Identifier id) throws ApplicationException;
 

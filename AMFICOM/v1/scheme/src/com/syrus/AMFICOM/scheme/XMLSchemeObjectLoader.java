@@ -1,5 +1,5 @@
 /*-
- * $Id: XMLSchemeObjectLoader.java,v 1.1 2005/04/01 13:59:07 bass Exp $
+ * $Id: XMLSchemeObjectLoader.java,v 1.2 2005/04/13 19:07:22 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,27 +13,25 @@ import java.util.*;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/04/01 13:59:07 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2005/04/13 19:07:22 $
  * @module scheme_v1
  */
 public final class XMLSchemeObjectLoader implements SchemeObjectLoader {
 
 	/**
 	 * @param ids
-	 * @throws IllegalDataException
 	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#delete(java.util.Set)
 	 */
-	public void delete(Set ids) throws IllegalDataException {
+	public void delete(Set ids) {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * @param id
-	 * @throws IllegalDataException
 	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#delete(com.syrus.AMFICOM.general.Identifier)
 	 */
-	public void delete(Identifier id) throws IllegalDataException {
+	public void delete(Identifier id) {
 		throw new UnsupportedOperationException();
 	}
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: EmptyClientMapObjectLoader.java,v 1.6 2005/04/04 14:05:37 bob Exp $
+ * $Id: EmptyClientMapObjectLoader.java,v 1.7 2005/04/13 19:11:51 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,24 +17,23 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/04/04 14:05:37 $
- * @author $Author: bob $
+ * @version $Revision: 1.7 $, $Date: 2005/04/13 19:11:51 $
+ * @author $Author: arseniy $
  * @module generalclient_v1
  */
 public class EmptyClientMapObjectLoader implements MapObjectLoader {
 
 	private java.util.Map	localHash	= new HashMap();
 
-	public void delete(Identifier id) throws IllegalDataException {
+	public void delete(Identifier id) {
 		this.localHash.remove(id);
 	}
 
-	public void delete(Set ids) throws IllegalDataException {
+	public void delete(Set ids) {
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			this.localHash.remove(it.next());
 		}

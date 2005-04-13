@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseSchemeObjectLoader.java,v 1.3 2005/04/12 08:14:17 bass Exp $
+ * $Id: DatabaseSchemeObjectLoader.java,v 1.4 2005/04/13 19:07:22 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,14 +8,28 @@
 
 package com.syrus.AMFICOM.scheme;
 
-import com.syrus.AMFICOM.general.*;
-import com.syrus.util.Log;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.Identifiable;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/04/12 08:14:17 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.4 $, $Date: 2005/04/13 19:07:22 $
  * @module scheme_v1
  */
 public class DatabaseSchemeObjectLoader implements SchemeObjectLoader {
@@ -36,7 +50,6 @@ public class DatabaseSchemeObjectLoader implements SchemeObjectLoader {
 		 */
 		for (final Iterator identifiableIterator = identifiables.iterator(); identifiableIterator.hasNext();) {
 			final Identifiable identifiable = (Identifiable) identifiableIterator.next();
-
 			final Short entityCode = new Short(identifiable.getId().getMajor());
 			Set entityObjects = (Set) map.get(entityCode);
 			if (entityObjects == null) {
@@ -57,11 +70,13 @@ public class DatabaseSchemeObjectLoader implements SchemeObjectLoader {
 
 	/**
 	 * @param id
-	 * @throws IllegalDataException
 	 * @see SchemeObjectLoader#delete(Identifier)
 	 */
-	public void delete(final Identifier id) throws IllegalDataException {
-		delete(id, Collections.EMPTY_SET);
+	public void delete(final Identifier id) {
+		short entityCode = id.getMajor();
+		StorableObjectDatabase storableObjectDatabase = SchemeDatabaseContext.getDatabase(entityCode);
+		if (storableObjectDatabase != null)
+			storableObjectDatabase.delete(id);
 	}
 
 	/**
@@ -891,34 +906,6 @@ public class DatabaseSchemeObjectLoader implements SchemeObjectLoader {
 	public void saveSchemes(Set schemes, boolean force)
 			throws ApplicationException {
 		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @deprecated
-	 */
-	private void delete(final Identifier id, final Set ids) throws IllegalDataException {
-		short entityCode = (id != null) ? id.getMajor() : 0;
-		if (id == null) {
-			if (ids.isEmpty())
-				return;
-			final Object obj = ids.iterator().next();
-			if (obj instanceof Identifier)
-				entityCode = ((Identifier) obj).getMajor();
-			else if (obj instanceof Identifiable)
-				entityCode = ((Identifiable) obj).getId().getMajor();
-		}
-		try {
-			final StorableObjectDatabase database = this.getDatabase(entityCode);
-			if (database != null) {
-				if (id != null)
-					database.delete(id);
-				else if (ids != null && !ids.isEmpty())
-					database.delete(ids);
-			}
-		} catch (final IllegalDataException ide) {
-			Log.errorMessage("DatabaseSchemeObjectLoader.delete | IllegalDataException: " + ide.getMessage()); //$NON-NLS-1$
-			throw new IllegalDataException("DatabaseSchemeObjectLoader.delete | IllegalDataException: " + ide.getMessage()); //$NON-NLS-1$
-		}
 	}
 
 	private StorableObjectDatabase getDatabase(final short entityCode) {
