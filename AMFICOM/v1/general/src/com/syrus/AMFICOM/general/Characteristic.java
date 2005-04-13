@@ -1,5 +1,5 @@
 /*
- * $Id: Characteristic.java,v 1.23 2005/04/11 14:16:18 arseniy Exp $
+ * $Id: Characteristic.java,v 1.24 2005/04/13 10:45:50 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,8 +19,8 @@ import com.syrus.AMFICOM.general.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/04/11 14:16:18 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.24 $, $Date: 2005/04/13 10:45:50 $
+ * @author $Author: bob $
  * @module general_v1
  */
 
@@ -36,6 +36,12 @@ public class Characteristic extends StorableObject implements TypedObject {
 	private boolean editable;
 	private boolean visible;
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 * @param id
+	 * @throws ObjectNotFoundException
+	 * @throws RetrieveObjectException
+	 */
 	public Characteristic(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
@@ -48,10 +54,18 @@ public class Characteristic extends StorableObject implements TypedObject {
 		}
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 * @param ct
+	 * @throws ApplicationException
+	 */
 	public Characteristic(Characteristic_Transferable ct) throws ApplicationException {
-		this.fromTransferable(ct);
+		this.fromTransferable(ct);		
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected Characteristic(Identifier id,
 						Identifier creatorId,
 						long version,
@@ -79,6 +93,17 @@ public class Characteristic extends StorableObject implements TypedObject {
 				this.editable = editable;
 				this.visible = visible;
 	}
+	
+	/* (non-Javadoc)
+	 * @see com.syrus.AMFICOM.general.StorableObject#isValid()
+	 */
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	protected boolean isValid() {
+		return super.isValid() && !(this.type == null || this.name == null || this.description == null ||
+				this.value == null || this.characterizableId == null);		
+	}
 
 	/**
 	 * create new instance for client
@@ -95,15 +120,11 @@ public class Characteristic extends StorableObject implements TypedObject {
 												 CharacteristicType type,
 												 String name,
 												 String description,
-												 int sort,
+												 CharacteristicSort sort,
 												 String value,
 												 Identifier characterizableId,
 												 boolean editable,
-												 boolean visible) throws CreateObjectException {
-
-		if (creatorId == null || type == null || name == null || description == null ||
-				value == null || characterizableId == null)
-			throw new IllegalArgumentException("Argument is 'null'");
+												 boolean visible) throws CreateObjectException {		
 
 		try {
 			Characteristic characteristic = new Characteristic(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CHARACTERISTIC_ENTITY_CODE),
@@ -112,11 +133,14 @@ public class Characteristic extends StorableObject implements TypedObject {
 										type,
 										name,
 										description,
-										sort,
+										sort.value(),
 										value,
 										characterizableId,
 										editable,
 										visible);
+			
+			assert characteristic.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			
 			characteristic.changed = true;
 			return characteristic;
 		}
@@ -125,6 +149,9 @@ public class Characteristic extends StorableObject implements TypedObject {
 		}
 	}	
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
 		Characteristic_Transferable ct = (Characteristic_Transferable) transferable;
 		
@@ -139,9 +166,15 @@ public class Characteristic extends StorableObject implements TypedObject {
 		this.editable = ct.is_editable;
 		this.visible = ct.is_visible;
 		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public IDLEntity getTransferable() {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		
 		return new Characteristic_Transferable(super.getHeaderTransferable(),
 												 (Identifier_Transferable)this.type.getId().getTransferable(),
 												 this.name,
@@ -161,10 +194,16 @@ public class Characteristic extends StorableObject implements TypedObject {
 		return this.visible;
 	}
 	
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected void setEditable0(boolean editable) {
 		this.editable = editable;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected void setVisible0(boolean visible) {
 		this.visible = visible;
 	}
@@ -183,6 +222,9 @@ public class Characteristic extends StorableObject implements TypedObject {
 		return this.type;
 	}
 	
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected void setType0(CharacteristicType type) {
 		this.type = type;
 	}
@@ -196,6 +238,9 @@ public class Characteristic extends StorableObject implements TypedObject {
 		return this.name;
 	}
 	
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected void setName0(String name) {
 		this.name = name;
 	}
@@ -210,6 +255,9 @@ public class Characteristic extends StorableObject implements TypedObject {
 		return this.description;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected void setDescription0(String description){
 		this.description = description;
 	}
@@ -223,6 +271,9 @@ public class Characteristic extends StorableObject implements TypedObject {
 		return CharacteristicSort.from_int(this.sort);
 	}
 	
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected void setSort0(CharacteristicSort sort) {
 		this.sort = sort.value(); 
 	}
@@ -242,6 +293,9 @@ public class Characteristic extends StorableObject implements TypedObject {
 		return this.characterizableId;
 	}
 	
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected void setCharacterizableId0(Identifier characterizableId) {
 		this.characterizableId = characterizableId;
 	}
@@ -251,6 +305,9 @@ public class Characteristic extends StorableObject implements TypedObject {
 		super.changed = true;
 	}
 	
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected synchronized void setAttributes(Date created,
 												Date modified,
 												Identifier creatorId,
@@ -277,6 +334,8 @@ public class Characteristic extends StorableObject implements TypedObject {
 		this.characterizableId = characterizableId;
 		this.editable = editable;
 		this.visible = visible;
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
 	public void setValue(String value){
@@ -339,7 +398,11 @@ public class Characteristic extends StorableObject implements TypedObject {
 		return csort;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public Set getDependencies() {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		Set dependencies = new HashSet(2);
 		dependencies.add(this.characterizableId);
 		dependencies.add(this.type);

@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectType.java,v 1.17 2005/04/08 12:01:56 arseniy Exp $
+ * $Id: StorableObjectType.java,v 1.18 2005/04/13 10:45:50 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,8 +13,8 @@ import java.util.Date;
 import org.omg.CORBA.portable.IDLEntity;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/04/08 12:01:56 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.18 $, $Date: 2005/04/13 10:45:50 $
+ * @author $Author: bob $
  * @module general_v1
  */
 
@@ -24,10 +24,16 @@ public abstract class StorableObjectType extends StorableObject {
 	protected String codename;
 	protected String description;
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public StorableObjectType(Identifier id) {
 		super(id);
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public StorableObjectType(Identifier id,
 			Date created,
 			Date modified,
@@ -41,10 +47,16 @@ public abstract class StorableObjectType extends StorableObject {
 		this.description = description;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected StorableObjectType() {
 		// empty
 	}
 	
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected void fromTransferable(final IDLEntity transferable, final String codename1, final String description1)
 			throws ApplicationException {
 		super.fromTransferable(transferable);
@@ -52,10 +64,23 @@ public abstract class StorableObjectType extends StorableObject {
 		this.description = description1;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.syrus.AMFICOM.general.StorableObject#isValid()
+	 */
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	protected boolean isValid() {
+		return super.isValid() && this.codename != null && this.codename.length() != 0 && this.description != null;
+	}
+	
 	public String getCodename() {
 		return this.codename;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected void setCodename0(String codename) {
 		this.codename = codename;
 	}
@@ -69,6 +94,9 @@ public abstract class StorableObjectType extends StorableObject {
 		return this.description;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected void setDescription0(String description) {
 		this.description = description;
 	}
@@ -78,6 +106,9 @@ public abstract class StorableObjectType extends StorableObject {
 		super.changed = true;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected synchronized void setAttributes(Date created,
 			Date modified,
 			Identifier creator_id,

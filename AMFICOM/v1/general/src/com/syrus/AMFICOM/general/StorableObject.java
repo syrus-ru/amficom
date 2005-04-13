@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.53 2005/04/12 08:11:43 bass Exp $
+ * $Id: StorableObject.java,v 1.54 2005/04/13 10:45:50 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,8 +27,8 @@ import org.omg.CORBA.portable.IDLEntity;
  * there can only be a single inctance of <code>StorableObject</code> with the
  * same identifier, comparison of object references (in Java terms) is enough.
  *
- * @author $Author: bass $
- * @version $Revision: 1.53 $, $Date: 2005/04/12 08:11:43 $
+ * @author $Author: bob $
+ * @version $Revision: 1.54 $, $Date: 2005/04/13 10:45:50 $
  * @module general_v1
  */
 public abstract class StorableObject implements Identifiable, TransferableObject, Serializable {
@@ -49,12 +49,15 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	private Identifier savedModifierId;
 	private long savedVersion;
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected StorableObject() {
 		// empty constructor
 	}
 	/**
 	 * Server-side constructor.
-	 *
+	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 * @param id
 	 */
 	protected StorableObject(final Identifier id) {
@@ -93,8 +96,11 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 		this.savedVersion = 0;
 	}
 	
-	/**
+	/** 
+	 * 
 	 * Will be overridden by descendants.
+	 * 
+	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 * @throws CreateObjectException 
 	 * @throws ApplicationException 
 	 */
@@ -113,6 +119,14 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 		this.savedModifierId = null;
 		this.savedVersion = 0;		
 	}
+	
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 * @return <code>true</code> if storable object is valid, <code>false</code> otherwise
+	 */
+	protected boolean isValid() {
+		return !(this.id == null || this.created == null || this.modified == null || this.creatorId == null || this.modifierId == null);
+	}
 
 	public final Date getCreated() {
 		return this.created;
@@ -124,6 +138,8 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 
 	/**
 	 * Will be overridden by descendants.
+	 * 
+	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	public abstract Set getDependencies();
 
@@ -131,6 +147,8 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	 * Returns structure to be transmitted via CORBA. Should be declared
 	 * final as soon as <code>Marker</code>, <code>UnboundLink</code> and
 	 * <code>UnboundNode</code> stop overriding it.
+	 * 
+	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	public StorableObject_Transferable getHeaderTransferable() {
 		return new StorableObject_Transferable((Identifier_Transferable) this.id.getTransferable(),
@@ -143,6 +161,8 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 
 	/**
 	 * This method called only when client succesfully updated object
+	 * 
+	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 * @param sot
 	 */
 	public final void updateFromHeaderTransferable(StorableObject_Transferable sot) {
@@ -191,12 +211,18 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 		this.changed = false;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected final void cleanupUpdate() {
 		this.savedModified = null;
 		this.savedModifierId = null;
 		this.savedVersion = VERSION_ILLEGAL;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected final void rollbackUpdate() {
 		if (this.savedModified == null || this.savedModifierId == null || this.savedVersion == VERSION_ILLEGAL) {
 			Log.errorMessage("Cannot rollback update of object: '" + this.id + "', entity: '" + ObjectEntities.codeToString(this.id.getMajor())  //$NON-NLS-1$//$NON-NLS-2$
@@ -212,6 +238,9 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 		this.cleanupUpdate();
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	private final void incrementVersion() {
 		if (this.version < Long.MAX_VALUE) {
 			this.version++;
@@ -222,6 +251,9 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 			this.version = Long.MIN_VALUE;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public final boolean hasNewerVersion(long version1) {
 		/* due to operate with long we cannot exceed max interval */
 		if (Math.abs(this.version - version1) < (Long.MAX_VALUE >> 1 - Long.MIN_VALUE >> 1))
@@ -229,6 +261,9 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 		return (this.version < version1);
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public final boolean hasOlderVersion(long version1) {
 		/* due to operate with long we cannot exceed max interval */
 		if (Math.abs(this.version - version1) < (Long.MAX_VALUE >> 1 - Long.MIN_VALUE >> 1))
@@ -237,6 +272,8 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	}
 
 	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 * 
 	 * @param created
 	 * @param modified
 	 * @param creatorId

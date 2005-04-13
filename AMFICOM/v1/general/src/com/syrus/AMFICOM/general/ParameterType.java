@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterType.java,v 1.20 2005/04/12 14:48:32 bob Exp $
+ * $Id: ParameterType.java,v 1.21 2005/04/13 10:45:50 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/04/12 14:48:32 $
+ * @version $Revision: 1.21 $, $Date: 2005/04/13 10:45:50 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -36,6 +36,9 @@ public final class ParameterType extends StorableObjectType implements Character
 	
 	private Set characteristics; 
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public ParameterType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 		
@@ -48,12 +51,20 @@ public final class ParameterType extends StorableObjectType implements Character
 		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public ParameterType(ParameterType_Transferable ptt) throws ApplicationException {
 		this.fromTransferable(ptt);
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected ParameterType(Identifier id,
 							Identifier creatorId,
 							long version,
@@ -89,15 +100,6 @@ public final class ParameterType extends StorableObjectType implements Character
 											   String description,
 											   String name,
 											   DataType dataType) throws CreateObjectException {
-		if (creatorId == null
-				|| codename == null
-				|| codename.length() == 0
-				|| description == null
-				|| name == null
-				|| name.length() == 0
-				|| dataType == null)
-			throw new IllegalArgumentException("Argument is 'null'");		
-
 		try {
 			ParameterType parameterType = new ParameterType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PARAMETERTYPE_ENTITY_CODE),
 					creatorId,
@@ -106,6 +108,9 @@ public final class ParameterType extends StorableObjectType implements Character
 					description,
 					name,
 					dataType.value());
+			
+			assert parameterType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			
 			parameterType.changed = true;
 			return parameterType;
 		}
@@ -114,6 +119,19 @@ public final class ParameterType extends StorableObjectType implements Character
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see com.syrus.AMFICOM.general.StorableObject#isValid()
+	 */
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	protected boolean isValid() {
+		return super.isValid() && this.name != null && this.characteristics != null && this.characteristics != Collections.EMPTY_SET;
+	}
+
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
 		ParameterType_Transferable ptt = (ParameterType_Transferable) transferable;
 		try {
@@ -129,9 +147,16 @@ public final class ParameterType extends StorableObjectType implements Character
 		Set characteristicIds = Identifier.fromTransferables(ptt.characteristic_ids);
 		this.characteristics = new HashSet(ptt.characteristic_ids.length);
 		this.setCharacteristics0(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 	
-  public IDLEntity getTransferable() {
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	public IDLEntity getTransferable() {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		
 	  	int i = 0;
 		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
 		for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)
@@ -149,6 +174,9 @@ public final class ParameterType extends StorableObjectType implements Character
 		return this.name;
 	}
 	
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected void setName0(String name) {
 		this.name = name;
 	}
@@ -166,6 +194,9 @@ public final class ParameterType extends StorableObjectType implements Character
 		return DataType.from_int(this.dataType);
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected void setDataType0(DataType dataType) {
 		this.dataType = dataType.value();
 	}
@@ -175,6 +206,9 @@ public final class ParameterType extends StorableObjectType implements Character
 		super.changed = true;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected synchronized void setAttributes(Date created,
 											  Date modified,
 											  Identifier creatorId,
@@ -193,6 +227,8 @@ public final class ParameterType extends StorableObjectType implements Character
 			description);
 		this.name = name;
 		this.dataType = dataType;
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
 	public void addCharacteristic(Characteristic characteristic) {
@@ -213,6 +249,9 @@ public final class ParameterType extends StorableObjectType implements Character
 		return Collections.unmodifiableSet(this.characteristics);
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public void setCharacteristics0(final Set characteristics) {
 		this.characteristics.clear();
 		if (characteristics != null)
@@ -228,6 +267,9 @@ public final class ParameterType extends StorableObjectType implements Character
 		return CharacteristicSort.CHARACTERISTIC_SORT_PARAMETER_TYPE;
 	}
 	
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public Set getDependencies() {
 		return Collections.EMPTY_SET;
 	}

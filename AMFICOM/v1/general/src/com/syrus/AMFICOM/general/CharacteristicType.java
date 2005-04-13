@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicType.java,v 1.20 2005/04/08 12:59:32 arseniy Exp $
+ * $Id: CharacteristicType.java,v 1.21 2005/04/13 10:45:50 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,8 +20,8 @@ import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/04/08 12:59:32 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.21 $, $Date: 2005/04/13 10:45:50 $
+ * @author $Author: bob $
  * @module general_v1
  */
 
@@ -31,6 +31,9 @@ public final class CharacteristicType extends StorableObjectType {
 	private int dataType;
 	private int sort;
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public CharacteristicType(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
@@ -43,10 +46,16 @@ public final class CharacteristicType extends StorableObjectType {
 		}
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public CharacteristicType(CharacteristicType_Transferable ctt) {
 		this.fromTransferable(ctt);
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected CharacteristicType(Identifier id,
 							Identifier creatorId,
 							long version,
@@ -66,6 +75,9 @@ public final class CharacteristicType extends StorableObjectType {
 		this.sort = sort;
 	}
 	
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected void fromTransferable(IDLEntity transferable) {
 		CharacteristicType_Transferable ctt = (CharacteristicType_Transferable) transferable;
 		try {
@@ -77,6 +89,8 @@ public final class CharacteristicType extends StorableObjectType {
 		}
 		this.dataType = ctt.data_type.value();
 		this.sort = ctt.sort.value();
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
 	/**
@@ -92,20 +106,17 @@ public final class CharacteristicType extends StorableObjectType {
 	public static CharacteristicType createInstance(Identifier creatorId,
 							String codename,
 							String description,
-							int dataType,
+							DataType dataType,
 							CharacteristicTypeSort sort) throws CreateObjectException{
-		if (creatorId == null || codename == null || description == null ||
-				sort == null)
-			throw new IllegalArgumentException("Argument is 'null'");
-
 		try {
 			CharacteristicType characteristicType = new CharacteristicType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE),
 											creatorId,
 											0L,
 											codename,
 											description,
-											dataType,
+											dataType.value(),
 											sort.value());
+			assert characteristicType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			characteristicType.changed = true;
 			return characteristicType;
 		}
@@ -114,18 +125,25 @@ public final class CharacteristicType extends StorableObjectType {
 		}
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public IDLEntity getTransferable() {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		return new CharacteristicType_Transferable(super.getHeaderTransferable(),
 													 super.codename,
 													 super.description != null ? super.description : "",
 													 DataType.from_int(this.dataType),
 													 CharacteristicTypeSort.from_int(this.sort));
-	}
+	}	
 
 	public DataType getDataType() {
 		return DataType.from_int(this.dataType);
 	}
 	
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected void setDataType0(DataType dataType) {
 		this.dataType = dataType.value();
 	}
@@ -134,6 +152,9 @@ public final class CharacteristicType extends StorableObjectType {
 		return CharacteristicTypeSort.from_int(this.sort);
 	}
 	
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected void setSort0(CharacteristicTypeSort sort) {
 		this.sort = sort.value();
 	}
@@ -143,6 +164,9 @@ public final class CharacteristicType extends StorableObjectType {
 		this.changed = true;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected synchronized void setAttributes(Date created,
 												Date modified,
 												Identifier creatorId,
@@ -163,6 +187,9 @@ public final class CharacteristicType extends StorableObjectType {
 		this.sort = sort;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public Set getDependencies() {
 		return Collections.EMPTY_SET;
 	}	
