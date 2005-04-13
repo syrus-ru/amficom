@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.106 2005/04/13 12:49:41 arseniy Exp $
+ * $Id: Test.java,v 1.107 2005/04/13 13:10:39 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -43,8 +44,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.106 $, $Date: 2005/04/13 12:49:41 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.107 $, $Date: 2005/04/13 13:10:39 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -80,6 +81,9 @@ public class Test extends StorableObject {
 	private Identifier kisId;
 	private Identifier mcmId;
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public Test(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 		this.measurementSetupIds = new HashSet();
@@ -91,8 +95,12 @@ public class Test extends StorableObject {
 		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public Measurement createMeasurement(Identifier measurementCreatorId, Date startTime) throws CreateObjectException {
 		if (this.status != TestStatus._TEST_STATUS_PROCESSING)
 			throw new CreateObjectException("Status of test '" + this.id + "' is " + this.status
@@ -120,6 +128,9 @@ public class Test extends StorableObject {
 		return measurement;
 	}	
 	
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected Test(Identifier id,
 					 Identifier creatorId,
 					 long version,
@@ -187,20 +198,6 @@ public class Test extends StorableObject {
 			TestReturnType returnType,
 			String description,
 			java.util.Set measurementSetupIds) throws CreateObjectException {
-		if (creatorId == null
-				|| startTime == null
-				|| temporalType == null
-				|| (temporalType.equals(TestTemporalType.TEST_TEMPORAL_TYPE_PERIODICAL) && (temporalPatternId == null || endTime == null))
-				|| (temporalType.equals(TestTemporalType.TEST_TEMPORAL_TYPE_CONTINUOUS) && endTime == null)
-				|| measurementTypeId == null
-				|| monitoredElement == null
-				|| returnType == null
-				|| description == null
-				|| (measurementSetupIds == null || measurementSetupIds.isEmpty()))
-			throw new IllegalArgumentException("Argument is 'null'");
-		if (measurementSetupIds.isEmpty())
-			throw new IllegalArgumentException("No measurement setups");
-
 		try {
 			Test test = new Test(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TEST_ENTITY_CODE),
 					creatorId,
@@ -216,6 +213,9 @@ public class Test extends StorableObject {
 					returnType.value(),
 					description,
 					measurementSetupIds);
+			
+			assert test.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			
 			test.changed = true;
 			return test;
 		}
@@ -225,6 +225,9 @@ public class Test extends StorableObject {
 
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public Test(Test_Transferable tt) throws CreateObjectException {
 		try {
 			this.fromTransferable(tt);
@@ -234,6 +237,9 @@ public class Test extends StorableObject {
 		}
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public void fromTransferable(IDLEntity transferable) throws ApplicationException {
 		Test_Transferable tt = (Test_Transferable)transferable;
 		super.fromTransferable(tt.header);
@@ -267,8 +273,22 @@ public class Test extends StorableObject {
 		}
 		else
 			throw new IllegalDataException("Cannot find measurement setup for test '" + this.id + '\'');
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.syrus.AMFICOM.general.StorableObject#isValid()
+	 */
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	protected boolean isValid() {
+		return super.isValid() && this.timeStamps != null && this.timeStamps.isValid() && this.measurementTypeId != null && this.monitoredElement != null
+			&& this.description != null && this.measurementSetupIds != null && !this.measurementSetupIds.isEmpty() && this.mainMeasurementSetup != null
+			&& this.kisId != null && this.mcmId != null;
+	}
+	
 	public short getEntityCode() {
 		return ObjectEntities.TEST_ENTITY_CODE;
 	}
@@ -332,6 +352,8 @@ public class Test extends StorableObject {
 	}
 
 	public IDLEntity getTransferable() {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		
 		Identifier_Transferable[] msIdsT = Identifier.createTransferables(this.measurementSetupIds);
 		return new Test_Transferable(super.getHeaderTransferable(),
 				TestTemporalType.from_int(this.temporalType),
@@ -452,6 +474,9 @@ public class Test extends StorableObject {
 		return this.numberOfMeasurements;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public synchronized void setAttributes(Date created,
 										   Date modified,
 										   Identifier creatorId,
@@ -488,8 +513,13 @@ public class Test extends StorableObject {
 		this.returnType = returnType;
 		this.description = description;
 		this.numberOfMeasurements = numberOfMeasurements;
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected synchronized void setMeasurementSetupIds0(java.util.Set measurementSetupIds) {
 		this.measurementSetupIds.clear();
 		if (measurementSetupIds != null)
@@ -536,7 +566,12 @@ public class Test extends StorableObject {
 		return this.mcmId;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public java.util.Set getDependencies() {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		
 		java.util.Set dependencies = new HashSet();
 		if (this.timeStamps.temporalPatternId != null)
 			dependencies.add(this.timeStamps.temporalPatternId);
@@ -595,6 +630,7 @@ public class Test extends StorableObject {
 				default:
 					Log.errorMessage("TestTimeStamps | Illegal temporal type: " + temporalType + " of test");
 			}
+			assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		}
 
 		TestTimeStamps(TestTimeStamps_Transferable ttst) throws CreateObjectException {
@@ -620,9 +656,12 @@ public class Test extends StorableObject {
 				default:
 					Log.errorMessage("TestTimeStamps | Illegal discriminator: " + this.discriminator);
 			}
+			
+			assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		}
 
 		TestTimeStamps_Transferable getTransferable() {
+			assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			TestTimeStamps_Transferable ttst = new TestTimeStamps_Transferable();
 			switch (this.discriminator) {
 				case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
@@ -630,12 +669,12 @@ public class Test extends StorableObject {
 					break;
 				case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
 					ttst.ptts(new PeriodicalTestTimeStamps(this.startTime.getTime(),
-																								 this.endTime.getTime(),
-																								 (this.temporalPatternId != null) ? (Identifier_Transferable)this.temporalPatternId.getTransferable() : (new Identifier_Transferable("")) ));
+						this.endTime.getTime(),
+						(Identifier_Transferable)this.temporalPatternId.getTransferable()));
 					break;
 				case TestTemporalType._TEST_TEMPORAL_TYPE_CONTINUOUS:
 					ttst.ctts(new ContinuousTestTimeStamps(this.startTime.getTime(),
-																								 this.endTime.getTime()));
+						this.endTime.getTime()));
 					break;
 				default:
 					Log.errorMessage("TestTimeStamps | Illegal discriminator: " + this.discriminator);
@@ -643,6 +682,18 @@ public class Test extends StorableObject {
 			return ttst;
 		}
 		
+		protected boolean isValid() {
+			switch (this.discriminator) {
+				case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
+					return this.startTime != null;
+				case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
+					return this.startTime != null && this.endTime != null && this.temporalPatternId != null && this.startTime.getTime() < this.endTime.getTime();
+				case TestTemporalType._TEST_TEMPORAL_TYPE_CONTINUOUS:
+					return this.startTime != null && this.endTime != null && this.startTime.getTime() < this.endTime.getTime();
+				default:
+					return false;
+			}
+		}
 		
 		public int hashCode() {
 			HashCodeGenerator hashCodeGenerator = new HashCodeGenerator();

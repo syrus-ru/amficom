@@ -1,5 +1,5 @@
 /*
- * $Id: SetParameter.java,v 1.27 2005/04/08 13:03:53 arseniy Exp $
+ * $Id: SetParameter.java,v 1.28 2005/04/13 13:10:39 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,7 @@ import java.io.IOException;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
@@ -33,8 +34,8 @@ import com.syrus.util.Log;
 import org.omg.CORBA.portable.IDLEntity;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/04/08 13:03:53 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.28 $, $Date: 2005/04/13 13:10:39 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -45,14 +46,22 @@ public class SetParameter implements TransferableObject, TypedObject, Identifiab
 	
 	public static final String ID_TYPE = "type";
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public SetParameter(Parameter_Transferable pt) throws ApplicationException {
 		this.id = new Identifier(pt.id);
 		this.type = (ParameterType) GeneralStorableObjectPool.getStorableObject(new Identifier(pt.type_id), true);
 		this.value = new byte[pt.value.length];
 		for (int i = 0; i < this.value.length; i++)
 			this.value[i] = pt.value[i];
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected SetParameter(Identifier id,
 								ParameterType type,
 								byte[] value) {
@@ -62,32 +71,35 @@ public class SetParameter implements TransferableObject, TypedObject, Identifiab
 	}
 
 	public static SetParameter createInstance(ParameterType type, byte[] value) throws CreateObjectException {
-		if (type == null || value == null)
-			throw new IllegalArgumentException("Argument is 'null'");
-
 		try {
-			return new SetParameter(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SETPARAMETER_ENTITY_CODE), type, value);
+			SetParameter setParameter = new SetParameter(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SETPARAMETER_ENTITY_CODE), type, value);
+			assert setParameter.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			return setParameter;
 		}
 		catch (IllegalObjectEntityException ioee) {
 			throw new CreateObjectException("SetParameter.createInstance | Cannot generate identifier", ioee);
 		}
 	}
 
-//	public SetParameter(Identifier id,
-//											String codename,
-//											byte[] value) throws RetrieveObjectException, ObjectNotFoundException {
-//		this.id = id;
-//		this.type = ParameterTypeDatabase.retrieveForCodename(codename);
-//		this.value = value;
-//	}
-
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public IDLEntity getTransferable() {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		
 		byte[] ptValue = new byte[this.value.length];
 		for (int i = 0; i < ptValue.length; i++)
 			ptValue[i] = this.value[i];
 		return new Parameter_Transferable((Identifier_Transferable) this.id.getTransferable(),
 				(Identifier_Transferable) this.type.getId().getTransferable(),
 				ptValue);
+	}
+	
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	protected boolean isValid() {
+		return this.id != null && this.type != null && this.value != null;
 	}
 
 	public Identifier getId() {

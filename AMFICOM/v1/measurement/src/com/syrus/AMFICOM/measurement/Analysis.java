@@ -1,5 +1,5 @@
 /*
- * $Id: Analysis.java,v 1.52 2005/04/08 12:33:24 arseniy Exp $
+ * $Id: Analysis.java,v 1.53 2005/04/13 13:10:39 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,6 +15,7 @@ import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -27,8 +28,8 @@ import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.52 $, $Date: 2005/04/08 12:33:24 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.53 $, $Date: 2005/04/13 13:10:39 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -41,6 +42,9 @@ public class Analysis extends Action {
 	private String name;
 	private Set criteriaSet;
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public Analysis(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
@@ -51,17 +55,23 @@ public class Analysis extends Action {
 		catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
-  public Analysis(Analysis_Transferable at) throws CreateObjectException {
-  	try {
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	public Analysis(Analysis_Transferable at) throws CreateObjectException {
+		try {
 			this.fromTransferable(at);
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected Analysis(Identifier id,
 					   Identifier creatorId,
 					   long version,
@@ -84,6 +94,9 @@ public class Analysis extends Action {
 		this.criteriaSet = criteriaSet;
 	}
 	
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
 		Analysis_Transferable at = (Analysis_Transferable) transferable;
 		super.fromTransferable(at.header, null, new Identifier(at.monitored_element_id), null);
@@ -93,9 +106,17 @@ public class Analysis extends Action {
 				? (Measurement) MeasurementStorableObjectPool.getStorableObject(new Identifier(at.measurement_id), true) : null;
 
 		this.criteriaSet = (Set) MeasurementStorableObjectPool.getStorableObject(new Identifier(at.criteria_set_id), true);
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public IDLEntity getTransferable() {
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		
 		return new Analysis_Transferable(super.getHeaderTransferable(),
 				(Identifier_Transferable) super.type.getId().getTransferable(),
 				(Identifier_Transferable) super.monitoredElementId.getTransferable(),
@@ -103,6 +124,13 @@ public class Analysis extends Action {
 						: new Identifier_Transferable(""),
 				this.name != null ? this.name : "",
 				(Identifier_Transferable) this.criteriaSet.getId().getTransferable());
+	}
+	
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	protected boolean isValid() {
+		return super.isValid() && this.name != null && this.criteriaSet != null;
 	}
 
 	public short getEntityCode() {
@@ -136,6 +164,9 @@ public class Analysis extends Action {
 		return this.criteriaSet;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected synchronized void setAttributes(Date created,
 			Date modified,
 			Identifier creatorId,
@@ -156,6 +187,8 @@ public class Analysis extends Action {
 				measurement);
 		this.name = name;
 		this.criteriaSet = criteriaSet;
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
 	/**
@@ -175,9 +208,6 @@ public class Analysis extends Action {
 										  Measurement measurement,
 										  String name,
 										  Set criteriaSet) throws CreateObjectException {
-		if (creatorId == null || type == null || monitoredElementId == null || criteriaSet == null)
-			throw new IllegalArgumentException("Argument is 'null'");		
-
 		try {
 			Analysis analysis = new Analysis(IdentifierPool.getGeneratedIdentifier(ObjectEntities.ANALYSIS_ENTITY_CODE),
 				creatorId,
@@ -187,6 +217,9 @@ public class Analysis extends Action {
 				measurement,
 				name,
 				criteriaSet);
+			
+			assert analysis.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			
 			analysis.changed = true;
 			return analysis;
 		}
@@ -202,7 +235,13 @@ public class Analysis extends Action {
 				resultParameters);
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public java.util.Set getDependencies() {
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		
 		java.util.Set dependencies = new HashSet();
 		//	Measurement, if exists
 		if (super.parentAction != null)

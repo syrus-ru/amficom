@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.34 2005/04/08 12:33:24 arseniy Exp $
+ * $Id: Modeling.java,v 1.35 2005/04/13 13:10:39 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,6 +15,7 @@ import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -27,8 +28,8 @@ import com.syrus.AMFICOM.measurement.corba.Modeling_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/04/08 12:33:24 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.35 $, $Date: 2005/04/13 13:10:39 $
+ * @author $Author: bob $
  * @author arseniy
  * @module measurement_v1
  */
@@ -42,6 +43,9 @@ public class Modeling extends Action {
 	private String name;
 	private Set argumentSet;
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public Modeling(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
@@ -52,8 +56,13 @@ public class Modeling extends Action {
 		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public Modeling(Modeling_Transferable mt) throws CreateObjectException {
 		try {
 			this.fromTransferable(mt);
@@ -63,6 +72,9 @@ public class Modeling extends Action {
 		}
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected Modeling(Identifier id,
 					   Identifier creatorId,
 					   long version,
@@ -83,6 +95,9 @@ public class Modeling extends Action {
 		this.argumentSet = argumentSet;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
 		Modeling_Transferable mt = (Modeling_Transferable) transferable;
 		super.fromTransferable(mt.header, null, new Identifier(mt.monitored_element_id), null);
@@ -92,9 +107,16 @@ public class Modeling extends Action {
 		this.argumentSet = (Set) MeasurementStorableObjectPool.getStorableObject(new Identifier(mt.argument_set_id), true);
 
 		this.name = mt.name;
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public IDLEntity getTransferable() {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		
 		return new Modeling_Transferable(super.getHeaderTransferable(),
 				(Identifier_Transferable) super.type.getId().getTransferable(),
 				(Identifier_Transferable) super.monitoredElementId.getTransferable(),
@@ -102,7 +124,7 @@ public class Modeling extends Action {
 				(Identifier_Transferable) this.argumentSet.getId().getTransferable());
 	}
 
-  public short getEntityCode() {
+	public short getEntityCode() {
 		return ObjectEntities.MODELING_ENTITY_CODE;
 	}
 
@@ -110,10 +132,13 @@ public class Modeling extends Action {
 		return this.name;
 	}
 
-  public Set getArgumentSet() {
+	public Set getArgumentSet() {
 		return this.argumentSet;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected synchronized void setAttributes(Date created,
 												Date modified,
 												Identifier creatorId,
@@ -133,6 +158,8 @@ public class Modeling extends Action {
 							null);
 		this.name = name;
 		this.argumentSet = argumentSet;
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
 	/**
@@ -150,10 +177,6 @@ public class Modeling extends Action {
 															Identifier monitoredElementId,
 															String name,
 															Set argumentSet) throws CreateObjectException{
-		if (creatorId == null || type == null || monitoredElementId == null || 
-				name == null || argumentSet == null)
-			throw new IllegalArgumentException("Argument is null'");
-
 		try {
 			Modeling modeling = new Modeling(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MODELING_ENTITY_CODE),
 										creatorId,
@@ -162,6 +185,8 @@ public class Modeling extends Action {
 										monitoredElementId,
 										name,
 										argumentSet);
+			assert modeling.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			
 			modeling.changed = true;
 			return modeling;
 		}
@@ -177,9 +202,24 @@ public class Modeling extends Action {
 				resultParameters);
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public java.util.Set getDependencies() {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		return Collections.singleton(this.argumentSet);
 	}
+	
+	/* (non-Javadoc)
+	 * @see com.syrus.AMFICOM.measurement.Action#isValid()
+	 */
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	protected boolean isValid() {
+		return super.isValid() && this.name != null && this.argumentSet != null;
+	}
+	
 	
 	/**
 	 * @param argumentSet The argumentSet to set.

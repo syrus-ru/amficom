@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.61 2005/04/08 12:33:24 arseniy Exp $
+ * $Id: Measurement.java,v 1.62 2005/04/13 13:10:39 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,6 +15,7 @@ import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -30,8 +31,8 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.61 $, $Date: 2005/04/08 12:33:24 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.62 $, $Date: 2005/04/13 13:10:39 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -53,6 +54,9 @@ public class Measurement extends Action {
 	private String localAddress;
 	private Identifier testId;
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public Measurement(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
@@ -63,8 +67,13 @@ public class Measurement extends Action {
 		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public Measurement(Measurement_Transferable mt) throws CreateObjectException {
 		try {
 			this.fromTransferable(mt);
@@ -74,6 +83,9 @@ public class Measurement extends Action {
 		}
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected Measurement(Identifier id,
 							Identifier creatorId,
 							long version,
@@ -103,6 +115,9 @@ public class Measurement extends Action {
 		this.testId = testId;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
 		Measurement_Transferable mt = (Measurement_Transferable) transferable;
 		super.fromTransferable(mt.header, null, new Identifier(mt.monitored_element_id), null);
@@ -119,9 +134,17 @@ public class Measurement extends Action {
 		this.status = mt.status.value();
 		this.localAddress = mt.local_address;
 		this.testId = new Identifier(mt.test_id);
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public IDLEntity getTransferable() {
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		
 		return new Measurement_Transferable(super.getHeaderTransferable(),
 				(Identifier_Transferable) super.type.getId().getTransferable(),
 				(Identifier_Transferable) super.monitoredElementId.getTransferable(),
@@ -134,6 +157,13 @@ public class Measurement extends Action {
 				(Identifier_Transferable) this.testId.getTransferable());
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	protected boolean isValid() {
+		return super.isValid() && this.name != null && this.setup != null && this.startTime != null && this.localAddress != null && this.testId != null;
+	}
+	
 	public short getEntityCode() {
 		return ObjectEntities.MEASUREMENT_ENTITY_CODE;
 	}
@@ -172,6 +202,9 @@ public class Measurement extends Action {
 		return this.testId;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected synchronized void setAttributes(Date created,
 											  Date modified,
 											  Identifier creatorId,
@@ -201,6 +234,8 @@ public class Measurement extends Action {
 		this.status = status;
 		this.localAddress = localAddress;
 		this.testId = testId;
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
 	/**
@@ -224,9 +259,6 @@ public class Measurement extends Action {
 												Date startTime,
 												String localAddress,
 												Identifier testId) throws CreateObjectException {
-		if (creatorId == null || type == null || name == null ||
-				monitoredElementId == null || setup == null || startTime == null || localAddress == null || testId == null)
-			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
 			Measurement measurement = new Measurement(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENT_ENTITY_CODE),
@@ -239,6 +271,9 @@ public class Measurement extends Action {
 										startTime,
 										localAddress,
 										testId);
+			
+			assert measurement.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			
 			measurement.changed = true;
 			return measurement;
 		}
@@ -275,7 +310,12 @@ public class Measurement extends Action {
 		return results;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public java.util.Set getDependencies() {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		
 		java.util.Set dependencies = new HashSet();
 		dependencies.add(this.testId);
 		dependencies.add(this.setup);

@@ -1,5 +1,5 @@
 /*
- * $Id: Set.java,v 1.60 2005/04/12 17:04:43 arseniy Exp $
+ * $Id: Set.java,v 1.61 2005/04/13 13:10:39 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,6 +17,7 @@ import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -32,8 +33,8 @@ import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.60 $, $Date: 2005/04/12 17:04:43 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.61 $, $Date: 2005/04/13 13:10:39 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -53,6 +54,9 @@ public final class Set extends StorableObject {
 	protected static final String ID_SORT = "sort"+KEY_VALUE_SEPERATOR;
 	protected static final String ID_PARAMETERS = "parameter"+KEY_VALUE_SEPERATOR;
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public Set(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
@@ -65,8 +69,12 @@ public final class Set extends StorableObject {
 		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public Set(Set_Transferable st) throws CreateObjectException {
 		try {
 			this.fromTransferable(st);
@@ -74,8 +82,12 @@ public final class Set extends StorableObject {
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}	
 	
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected Set(Identifier id,
 				  Identifier creatorId,
 				  long version,
@@ -111,12 +123,6 @@ public final class Set extends StorableObject {
 									 String description,
 									 SetParameter[] parameters,
 									 java.util.Set monitoredElementIds) throws CreateObjectException {
-		if (creatorId == null
-				|| sort == null
-				|| description == null
-				|| parameters == null
-				|| monitoredElementIds == null || monitoredElementIds.isEmpty() || monitoredElementIds.contains(null))
-			throw new IllegalArgumentException("Argument is 'null'");
 		
 		try {
 			Set set =  new Set(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SET_ENTITY_CODE),
@@ -126,6 +132,9 @@ public final class Set extends StorableObject {
 				description,
 				parameters,
 				monitoredElementIds);
+			
+			assert set.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			
 			set.changed = true;
 			return set;
 		} catch (IllegalObjectEntityException e) {
@@ -133,6 +142,9 @@ public final class Set extends StorableObject {
 		}
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
 		Set_Transferable st = (Set_Transferable)transferable;
 		super.fromTransferable(st.header);
@@ -144,9 +156,16 @@ public final class Set extends StorableObject {
 			this.parameters[i] = new SetParameter(st.parameters[i]);
 
 		this.monitoredElementIds = Identifier.fromTransferables(st.monitored_element_ids);
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public IDLEntity getTransferable() {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		
 		Parameter_Transferable[] pts = new Parameter_Transferable[this.parameters.length];
 		for (int i = 0; i < pts.length; i++)
 			pts[i] = (Parameter_Transferable) this.parameters[i].getTransferable();
@@ -157,6 +176,25 @@ public final class Set extends StorableObject {
 				this.description,
 				pts,
 				meIds);
+	}
+	
+	/* (non-Javadoc)
+	 * @see com.syrus.AMFICOM.general.StorableObject#isValid()
+	 */
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	protected boolean isValid() {
+		boolean valid = super.isValid() && this.description != null && this.parameters != null && this.monitoredElementIds != null && !this.monitoredElementIds.isEmpty();
+		if (!valid)
+			return valid;
+		
+		for(int i=0;i<this.parameters.length;i++) {
+			valid &= this.parameters[i] != null && this.parameters[i].isValid();
+			if (!valid)
+				break;
+		}		
+		return valid;
 	}
 
 	public short getEntityCode() {
@@ -179,6 +217,9 @@ public final class Set extends StorableObject {
 		return Collections.unmodifiableSet(this.monitoredElementIds);
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected synchronized void setAttributes(Date created,
 											  Date modified,
 											  Identifier creatorId,
@@ -193,8 +234,13 @@ public final class Set extends StorableObject {
 			version);
 		this.sort = sort;
 		this.description = description;
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected synchronized void setParameters0(SetParameter[] parameters) {
 		this.parameters = parameters;
 	}
@@ -324,7 +370,12 @@ public final class Set extends StorableObject {
 		return buffer.toString();
 	}	
 	
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public java.util.Set getDependencies() {		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		
 		java.util.Set dependencies = new HashSet();
 
 		if (this.monitoredElementIds != null)

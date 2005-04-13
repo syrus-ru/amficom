@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisType.java,v 1.61 2005/04/12 14:58:27 bob Exp $
+ * $Id: AnalysisType.java,v 1.62 2005/04/13 13:10:39 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,6 +17,7 @@ import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -31,7 +32,7 @@ import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.61 $, $Date: 2005/04/12 14:58:27 $
+ * @version $Revision: 1.62 $, $Date: 2005/04/13 13:10:39 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -51,6 +52,9 @@ public class AnalysisType extends ActionType {
 
 	private java.util.Set measurementTypeIds;
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public AnalysisType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
@@ -82,8 +86,13 @@ public class AnalysisType extends ActionType {
 		catch (IllegalObjectEntityException ioee) {
 			Log.errorException(ioee);
 		}
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public AnalysisType(AnalysisType_Transferable att) throws CreateObjectException {
 		try {
 			this.fromTransferable(att);
@@ -93,6 +102,9 @@ public class AnalysisType extends ActionType {
 		}
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected AnalysisType(Identifier id,
 						   Identifier creatorId,
 						   long version,
@@ -148,9 +160,7 @@ public class AnalysisType extends ActionType {
 			java.util.Set criteriaParameterTypes,
 			java.util.Set etalonParameterTypes,
 			java.util.Set outParameterTypes,
-			java.util.Set measurementTypeIds) throws CreateObjectException {
-		if (creatorId == null || codename == null || codename.length() == 0 || description == null)
-			throw new IllegalArgumentException("Argument is 'null'");
+			java.util.Set measurementTypeIds) throws CreateObjectException {		
 
 		try {
 			AnalysisType analysisType = new AnalysisType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.ANALYSISTYPE_ENTITY_CODE),
@@ -164,6 +174,7 @@ public class AnalysisType extends ActionType {
 					outParameterTypes,
 					measurementTypeIds);
 			analysisType.changed = true;
+			assert analysisType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			return analysisType;
 		}
 		catch (IllegalObjectEntityException e) {
@@ -171,6 +182,9 @@ public class AnalysisType extends ActionType {
 		}
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
 		AnalysisType_Transferable att = (AnalysisType_Transferable) transferable;
 		super.fromTransferable(att.header, att.codename, att.description);
@@ -195,9 +209,16 @@ public class AnalysisType extends ActionType {
 		this.setOutParameterTypes0(GeneralStorableObjectPool.getStorableObjects(parTypIds, true));	
 
 		this.measurementTypeIds = Identifier.fromTransferables(att.measurement_type_ids);
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public IDLEntity getTransferable() {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		
 		int i;
 
 		Identifier_Transferable[] inParTypeIds = new Identifier_Transferable[this.inParameterTypes.size()];
@@ -236,6 +257,14 @@ public class AnalysisType extends ActionType {
 											 measTypIds);
 	}
 
+	protected boolean isValid() {
+		return super.isValid() && this.inParameterTypes != null && this.inParameterTypes != Collections.EMPTY_SET && 
+			this.criteriaParameterTypes != null && this.criteriaParameterTypes != Collections.EMPTY_SET && 
+			this.etalonParameterTypes != null && this.etalonParameterTypes != Collections.EMPTY_SET &&
+			this.outParameterTypes != null && this.outParameterTypes != Collections.EMPTY_SET &&
+			this.measurementTypeIds != null && this.measurementTypeIds != Collections.EMPTY_SET;
+	}
+	
 	public java.util.Set getInParameterTypes() {
 		return Collections.unmodifiableSet(this.inParameterTypes);
 	}
@@ -256,6 +285,9 @@ public class AnalysisType extends ActionType {
 		return Collections.unmodifiableSet(this.measurementTypeIds);
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected synchronized void setAttributes(Date created,
 											  Date modified,
 											  Identifier creatorId,
@@ -272,6 +304,9 @@ public class AnalysisType extends ActionType {
 			description);
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected synchronized void setParameterTypes(java.util.Set inParameterTypes,
 			java.util.Set criteriaParameterTypes,
 			java.util.Set etalonParameterTypes,
@@ -280,8 +315,13 @@ public class AnalysisType extends ActionType {
 		this.setCriteriaParameterTypes0(criteriaParameterTypes);
 		this.setEtalonParameterTypes0(etalonParameterTypes);
 		this.setOutParameterTypes0(outParameterTypes);
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected void setInParameterTypes0(java.util.Set inParameterTypes) {
 		this.inParameterTypes.clear();
 		if (inParameterTypes != null)
@@ -299,6 +339,9 @@ public class AnalysisType extends ActionType {
 		super.changed = true;		
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected void setCriteriaParameterTypes0(java.util.Set criteriaParameterTypes) {
 		this.criteriaParameterTypes.clear();
 		if (criteriaParameterTypes != null)
@@ -315,6 +358,9 @@ public class AnalysisType extends ActionType {
 		super.changed = true;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected void setEtalonParameterTypes0(java.util.Set etalonParameterTypes) {
 		this.etalonParameterTypes.clear();
 		if (etalonParameterTypes != null)
@@ -331,6 +377,9 @@ public class AnalysisType extends ActionType {
 		super.changed = true;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected void setOutParameterTypes0(java.util.Set outParameterTypes) {
 		this.outParameterTypes.clear();
 		if (outParameterTypes != null)
@@ -348,6 +397,9 @@ public class AnalysisType extends ActionType {
 		super.changed = true;
 	}	
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected void setMeasurementTypeIds0(java.util.Set measurementTypeIds) {
 		this.measurementTypeIds.clear();
 		if (measurementTypeIds != null)
@@ -363,7 +415,12 @@ public class AnalysisType extends ActionType {
 		super.changed = true;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public java.util.Set getDependencies() {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		
 		java.util.Set dependencies = new HashSet();
 		if (this.inParameterTypes != null)
 			dependencies.addAll(this.inParameterTypes);

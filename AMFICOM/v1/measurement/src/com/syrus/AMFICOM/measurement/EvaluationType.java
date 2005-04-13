@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationType.java,v 1.57 2005/04/12 14:58:27 bob Exp $
+ * $Id: EvaluationType.java,v 1.58 2005/04/13 13:10:39 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,6 +17,7 @@ import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -31,7 +32,7 @@ import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.57 $, $Date: 2005/04/12 14:58:27 $
+ * @version $Revision: 1.58 $, $Date: 2005/04/13 13:10:39 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -51,6 +52,9 @@ public class EvaluationType extends ActionType {
 
 	private java.util.Set measurementTypeIds;
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public EvaluationType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
@@ -82,8 +86,13 @@ public class EvaluationType extends ActionType {
 		catch (IllegalObjectEntityException ioee) {
 			Log.errorException(ioee);
 		}
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public EvaluationType(EvaluationType_Transferable ett) throws CreateObjectException {
 		try {
 			this.fromTransferable(ett);
@@ -93,6 +102,9 @@ public class EvaluationType extends ActionType {
 		}
 	}	
 	
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected EvaluationType(Identifier id,
 							 Identifier creatorId,
 							 long version,
@@ -150,9 +162,6 @@ public class EvaluationType extends ActionType {
 			java.util.Set etalonParameterTypes,
 			java.util.Set outParameterTypes,
 			java.util.Set measurementTypeIds) throws CreateObjectException {
-		if (creatorId == null || codename == null || codename.length() == 0 || description == null)
-			throw new IllegalArgumentException("Argument is 'null'");
-
 		try {
 			EvaluationType evaluationType = new EvaluationType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE),
 					creatorId,
@@ -164,6 +173,7 @@ public class EvaluationType extends ActionType {
 					etalonParameterTypes,
 					outParameterTypes,
 					measurementTypeIds);
+			assert evaluationType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			evaluationType.changed = true;
 			return evaluationType;
 		}
@@ -172,6 +182,9 @@ public class EvaluationType extends ActionType {
 		}
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
 		EvaluationType_Transferable ett = (EvaluationType_Transferable)transferable;
 		super.fromTransferable(ett.header, ett.codename, ett.description);
@@ -195,9 +208,17 @@ public class EvaluationType extends ActionType {
 		this.setOutParameterTypes0(GeneralStorableObjectPool.getStorableObjects(parTypIds, true));		
 
 		this.measurementTypeIds = Identifier.fromTransferables(ett.measurement_type_ids);
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public IDLEntity getTransferable() {
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		
 		int i;
 
 		Identifier_Transferable[] inParTypeIds = new Identifier_Transferable[this.inParameterTypes.size()];
@@ -235,8 +256,22 @@ public class EvaluationType extends ActionType {
 											   outParTypeIds,
 											   measTypIds);
 	}
+	
+	/* (non-Javadoc)
+	 * @see com.syrus.AMFICOM.general.StorableObjectType#isValid()
+	 */
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	protected boolean isValid() {
+		return super.isValid() && this.inParameterTypes != null && this.inParameterTypes != Collections.EMPTY_SET
+				&& this.thresholdParameterTypes != null && this.thresholdParameterTypes != Collections.EMPTY_SET
+				&& this.etalonParameterTypes != null && this.etalonParameterTypes != Collections.EMPTY_SET
+				&& this.outParameterTypes != null && this.outParameterTypes != Collections.EMPTY_SET
+				&& this.measurementTypeIds != null && this.measurementTypeIds != Collections.EMPTY_SET;
+	}
 
-  public java.util.Set getInParameterTypes() {
+	public java.util.Set getInParameterTypes() {
 		return Collections.unmodifiableSet(this.inParameterTypes);
 	}
 
@@ -256,6 +291,9 @@ public class EvaluationType extends ActionType {
 		return Collections.unmodifiableSet(this.measurementTypeIds);
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected synchronized void setAttributes(Date created,
 											  Date modified,
 											  Identifier creatorId,
@@ -272,6 +310,9 @@ public class EvaluationType extends ActionType {
 			description);
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected synchronized void setParameterTypes(java.util.Set inParameterTypes,
 			java.util.Set thresholdParameterTypes,
 			java.util.Set etalonParameterTypes,
@@ -280,8 +321,13 @@ public class EvaluationType extends ActionType {
 		this.setThresholdParameterTypes0(thresholdParameterTypes);
 		this.setEtalonParameterTypes0(etalonParameterTypes);
 		this.setOutParameterTypes0(outParameterTypes);
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected void setInParameterTypes0(java.util.Set inParameterTypes) {
 		this.inParameterTypes.clear();
 		if (inParameterTypes != null)
@@ -299,6 +345,9 @@ public class EvaluationType extends ActionType {
 		super.changed = true;		
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected void setThresholdParameterTypes0(java.util.Set thresholdParameterTypes) {
 		this.thresholdParameterTypes.clear();
 		if (thresholdParameterTypes != null)
@@ -316,6 +365,9 @@ public class EvaluationType extends ActionType {
 		super.changed = true;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected void setEtalonParameterTypes0(java.util.Set etalonParameterTypes) {
 		this.etalonParameterTypes.clear();
 		if (etalonParameterTypes != null)
@@ -333,6 +385,9 @@ public class EvaluationType extends ActionType {
 		super.changed = true;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected void setOutParameterTypes0(java.util.Set outParameterTypes) {
 		this.outParameterTypes.clear();
 		if (outParameterTypes != null)
@@ -350,6 +405,9 @@ public class EvaluationType extends ActionType {
 		super.changed = true;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected void setMeasurementTypeIds0(java.util.Set measurementTypeIds) {
 		this.measurementTypeIds.clear();
 		if (measurementTypeIds != null)
@@ -365,7 +423,12 @@ public class EvaluationType extends ActionType {
 		super.changed = true;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public java.util.Set getDependencies() {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		
 		java.util.Set dependencies = new HashSet();
 		if (this.inParameterTypes != null)
 			dependencies.addAll(this.inParameterTypes);

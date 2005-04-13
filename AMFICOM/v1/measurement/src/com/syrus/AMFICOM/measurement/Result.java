@@ -1,5 +1,5 @@
 /*
- * $Id: Result.java,v 1.49 2005/04/08 12:33:24 arseniy Exp $
+ * $Id: Result.java,v 1.50 2005/04/13 13:10:39 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,6 +15,7 @@ import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -30,8 +31,8 @@ import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.49 $, $Date: 2005/04/08 12:33:24 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.50 $, $Date: 2005/04/13 13:10:39 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -44,6 +45,9 @@ public class Result extends StorableObject {
 	private int sort;
 	private SetParameter[] parameters;
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public Result(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
@@ -54,8 +58,13 @@ public class Result extends StorableObject {
 		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public Result(Result_Transferable rt) throws CreateObjectException {
 		try {
 			this.fromTransferable(rt);
@@ -65,6 +74,9 @@ public class Result extends StorableObject {
 		}
 	}	
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected Result(Identifier id,
 					 Identifier creatorId,
 					 long version,
@@ -82,6 +94,9 @@ public class Result extends StorableObject {
 		this.parameters = parameters;
 	}
 	
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
 		Result_Transferable rt = (Result_Transferable) transferable;
 		super.fromTransferable(rt.header);
@@ -107,9 +122,16 @@ public class Result extends StorableObject {
 		this.parameters = new SetParameter[rt.parameters.length];
 		for (int i = 0; i < this.parameters.length; i++)
 			this.parameters[i] = new SetParameter(rt.parameters[i]);
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 	
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public IDLEntity getTransferable() {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		
 		Parameter_Transferable[] pts = new Parameter_Transferable[this.parameters.length];
 		for (int i = 0; i < pts.length; i++)
 			pts[i] = (Parameter_Transferable) this.parameters[i].getTransferable();
@@ -124,6 +146,25 @@ public class Result extends StorableObject {
 						: (new Identifier_Transferable("")),
 				ResultSort.from_int(this.sort),
 				pts);
+	}
+	
+	/* (non-Javadoc)
+	 * @see com.syrus.AMFICOM.general.StorableObject#isValid()
+	 */
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	protected boolean isValid() {
+		boolean valid = super.isValid() && this.action != null && this.parameters != null;
+		if (!valid)
+			return valid;
+		
+		for(int i=0;i<this.parameters.length;i++) {
+			valid &= this.parameters[i] != null && this.parameters[i].isValid();
+			if (!valid)
+				break;
+		}		
+		return valid;
 	}
 
 	public short getEntityCode() {
@@ -152,6 +193,9 @@ public class Result extends StorableObject {
 		return this.parameters;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected synchronized void setAttributes(Date created,
 											  Date modified,
 											  Identifier creatorId,
@@ -166,16 +210,17 @@ public class Result extends StorableObject {
 			version);
 		this.action = action;
 		this.sort = sort;
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected static Result createInstance(Identifier creatorId,
 										   Action action,
 										   ResultSort sort,
 										   SetParameter[] parameters) throws CreateObjectException {
-		if (creatorId == null || action == null || sort == null ||
-				parameters == null || parameters.length == 0)
-			throw new IllegalArgumentException("Argument is 'null'");
-
 		try {
 			Result result = new Result(IdentifierPool.getGeneratedIdentifier(ObjectEntities.RESULT_ENTITY_CODE),
 				creatorId,
@@ -183,6 +228,9 @@ public class Result extends StorableObject {
 				action,
 				sort.value(),
 				parameters);
+			
+			assert result.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			
 			result.changed = true;
 			return result;
 		}
@@ -191,6 +239,9 @@ public class Result extends StorableObject {
 		}
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected synchronized void setParameters0(SetParameter[] parameters) {
 		this.parameters = parameters;
 	}
@@ -200,7 +251,13 @@ public class Result extends StorableObject {
 		super.changed = true;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public java.util.Set getDependencies() {
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		
 		java.util.Set dependencies = new HashSet();
 
 		for (int i = 0; i < this.parameters.length; i++)

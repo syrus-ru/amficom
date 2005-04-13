@@ -1,5 +1,5 @@
 /*
- * $Id: Action.java,v 1.24 2005/04/08 12:33:24 arseniy Exp $
+ * $Id: Action.java,v 1.25 2005/04/13 13:10:39 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,13 +14,14 @@ import org.omg.CORBA.portable.IDLEntity;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/04/08 12:33:24 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.25 $, $Date: 2005/04/13 13:10:39 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -32,14 +33,24 @@ public abstract class Action extends StorableObject implements TypedObject {
 
 	Action parentAction;
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 * @param id
+	 */	
 	Action(Identifier id) {
 		super(id);
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	Action() {
 		super();
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	Action(Identifier id,
 			  Date created,
 			  Date modified,
@@ -61,6 +72,9 @@ public abstract class Action extends StorableObject implements TypedObject {
 		this.parentAction = parentAction;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected void fromTransferable(IDLEntity transferable, ActionType type1, Identifier monitoredElementId1, Action parentAction1)
 			throws ApplicationException {
 		super.fromTransferable(transferable);
@@ -68,6 +82,17 @@ public abstract class Action extends StorableObject implements TypedObject {
 		this.monitoredElementId = monitoredElementId1;
 
 		this.parentAction = parentAction1;
+	}
+	
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	protected boolean isValid() {
+		/* XXX : fix checking parentAction w/o check id for concrete impementation as measurement or modeling
+		 * which have null parent action */	
+		short major = this.id.getMajor();
+		return super.isValid() && this.type != null && this.monitoredElementId != null && 
+			((major != ObjectEntities.MEASUREMENT_ENTITY_CODE || major != ObjectEntities.MODELING_ENTITY_CODE) && this.parentAction != null);
 	}
 
 	public StorableObjectType getType() {
@@ -88,6 +113,9 @@ public abstract class Action extends StorableObject implements TypedObject {
 		super.changed = true;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected synchronized void setAttributes(Date created,
 											  Date modified,
 											  Identifier creatorId,

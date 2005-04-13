@@ -1,5 +1,5 @@
 /*
- * $Id: Evaluation.java,v 1.50 2005/04/08 12:33:24 arseniy Exp $
+ * $Id: Evaluation.java,v 1.51 2005/04/13 13:10:39 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,6 +15,7 @@ import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -27,8 +28,8 @@ import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.50 $, $Date: 2005/04/08 12:33:24 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.51 $, $Date: 2005/04/13 13:10:39 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -40,6 +41,9 @@ public class Evaluation extends Action {
 
 	private Set thresholdSet;
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public Evaluation(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
@@ -50,8 +54,13 @@ public class Evaluation extends Action {
 		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public Evaluation(Evaluation_Transferable et) throws CreateObjectException {
 		try {
 			this.fromTransferable(et);
@@ -61,6 +70,9 @@ public class Evaluation extends Action {
 		}
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected Evaluation(Identifier id,
 						 Identifier creatorId,
 						 long version,
@@ -81,6 +93,9 @@ public class Evaluation extends Action {
 		this.thresholdSet = thresholdSet;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
 		Evaluation_Transferable et = (Evaluation_Transferable) transferable;
 		super.fromTransferable(et.header, null, new Identifier(et.monitored_element_id), null);
@@ -90,15 +105,33 @@ public class Evaluation extends Action {
 				? (Measurement) MeasurementStorableObjectPool.getStorableObject(new Identifier(et.measurement_id), true) : null;
 
 		this.thresholdSet = (Set) MeasurementStorableObjectPool.getStorableObject(new Identifier(et.threshold_set_id), true);
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public IDLEntity getTransferable() {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		
 		return new Evaluation_Transferable(super.getHeaderTransferable(),
 										   (Identifier_Transferable)super.type.getId().getTransferable(),
 										   (Identifier_Transferable)super.monitoredElementId.getTransferable(),
 										   (super.parentAction != null) ? (Identifier_Transferable) super.parentAction.getId().getTransferable() : new Identifier_Transferable(""),
 										   (Identifier_Transferable)this.thresholdSet.getId().getTransferable());
 	}
+	
+	/* (non-Javadoc)
+	 * @see com.syrus.AMFICOM.measurement.Action#isValid()
+	 */
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	protected boolean isValid() {
+		return super.isValid() && this.thresholdSet != null;
+	}
+	
 
 	public short getEntityCode() {
 		return ObjectEntities.EVALUATION_ENTITY_CODE;
@@ -122,6 +155,9 @@ public class Evaluation extends Action {
 		super.changed = true;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected synchronized void setAttributes(Date created,
 											  Date modified,
 											  Identifier creatorId,
@@ -140,6 +176,8 @@ public class Evaluation extends Action {
 			monitoredElementId,
 			measurement);
 		this.thresholdSet = thresholdSet;
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
 	/**
@@ -157,9 +195,6 @@ public class Evaluation extends Action {
 											Identifier monitoredElementId,
 											Measurement measurement,
 											Set thresholdSet) throws CreateObjectException {
-		if (creatorId == null || type == null || monitoredElementId == null || thresholdSet == null)
-			throw new IllegalArgumentException("Argument is 'null'");		
-
 		try {
 			Evaluation evaluation = new Evaluation(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EVALUATION_ENTITY_CODE),
 				creatorId,
@@ -168,6 +203,7 @@ public class Evaluation extends Action {
 				monitoredElementId,
 				measurement,
 				thresholdSet);
+			assert evaluation.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			evaluation.changed = true;
 			return evaluation;
 		}
@@ -183,7 +219,12 @@ public class Evaluation extends Action {
 				resultParameters);
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public java.util.Set getDependencies() {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		
 		java.util.Set dependencies = new HashSet();
 		//	Measurement if exists
 		if (super.parentAction != null)

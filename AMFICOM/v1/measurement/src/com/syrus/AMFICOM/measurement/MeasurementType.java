@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementType.java,v 1.62 2005/04/12 14:58:27 bob Exp $
+ * $Id: MeasurementType.java,v 1.63 2005/04/13 13:10:39 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,6 +19,7 @@ import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.MeasurementPortType;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -33,7 +34,7 @@ import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.62 $, $Date: 2005/04/12 14:58:27 $
+ * @version $Revision: 1.63 $, $Date: 2005/04/13 13:10:39 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -50,6 +51,9 @@ public class MeasurementType extends ActionType {
 	private java.util.Set outParameterTypes;
 	private java.util.Set measurementPortTypes;
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public MeasurementType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
@@ -76,8 +80,13 @@ public class MeasurementType extends ActionType {
 		catch (IllegalObjectEntityException ioee) {
 			Log.errorException(ioee);
 		}
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public MeasurementType(MeasurementType_Transferable mtt) throws CreateObjectException {
 		try {
 			this.fromTransferable(mtt);
@@ -87,6 +96,9 @@ public class MeasurementType extends ActionType {
 		}
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected MeasurementType(Identifier id,
 							  Identifier creatorId,
 							  long version,
@@ -129,9 +141,6 @@ public class MeasurementType extends ActionType {
 												 java.util.Set inParameterTypes,
 												 java.util.Set outParameterTypes,
 												 java.util.Set measurementPortTypes) throws CreateObjectException {
-		if (creatorId == null || codename == null || codename.length() == 0  || description == null)
-			throw new IllegalArgumentException("Argument is 'null'");		
-
 		try {
 			MeasurementType measurementType = new MeasurementType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE),
 										creatorId,
@@ -141,6 +150,9 @@ public class MeasurementType extends ActionType {
 										inParameterTypes,
 										outParameterTypes,
 										measurementPortTypes);
+			
+			assert measurementType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			
 			measurementType.changed = true;
 			return measurementType;
 		}
@@ -149,6 +161,9 @@ public class MeasurementType extends ActionType {
 		}
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
 		MeasurementType_Transferable mtt = (MeasurementType_Transferable) transferable;
 		super.fromTransferable(mtt.header, mtt.codename, mtt.description);
@@ -166,9 +181,16 @@ public class MeasurementType extends ActionType {
 		typeIds = Identifier.fromTransferables(mtt.measurement_port_type_ids);
 		this.measurementPortTypes = new HashSet(mtt.measurement_port_type_ids.length);
 		this.setMeasurementPortTypes0(ConfigurationStorableObjectPool.getStorableObjects(typeIds, true));
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public IDLEntity getTransferable() {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		
 		int i;
 
 		Identifier_Transferable[] inParTypeIds = new Identifier_Transferable[this.inParameterTypes.size()];
@@ -197,7 +219,19 @@ public class MeasurementType extends ActionType {
 												measurementPortTypeIds);
 	}
 
-  public java.util.Set getInParameterTypes() {
+	/* (non-Javadoc)
+	 * @see com.syrus.AMFICOM.general.StorableObjectType#isValid()
+	 */
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	protected boolean isValid() {
+		return super.isValid() && this.inParameterTypes != null && this.inParameterTypes != Collections.EMPTY_SET &&
+			this.outParameterTypes != null && this.outParameterTypes != Collections.EMPTY_SET &&
+			this.measurementPortTypes != null && !this.measurementPortTypes.isEmpty();
+	}
+	
+	public java.util.Set getInParameterTypes() {
 		return Collections.unmodifiableSet(this.inParameterTypes);
 	}
 
@@ -205,6 +239,9 @@ public class MeasurementType extends ActionType {
 		return Collections.unmodifiableSet(this.outParameterTypes);
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected synchronized void setAttributes(Date created,
 											  Date modified,
 											  Identifier creatorId,
@@ -221,11 +258,19 @@ public class MeasurementType extends ActionType {
 			description);
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected synchronized void setParameterTypes(java.util.Set inParameterTypes, java.util.Set outParameterTypes) {
 		this.setInParameterTypes0(inParameterTypes);
 		this.setOutParameterTypes0(outParameterTypes);
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected void setInParameterTypes0(java.util.Set inParameterTypes) {
 		this.inParameterTypes.clear();
 		if (inParameterTypes != null)
@@ -243,6 +288,9 @@ public class MeasurementType extends ActionType {
 		super.changed = true;		
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected void setOutParameterTypes0(java.util.Set outParameterTypes) {
 		this.outParameterTypes.clear();
 		if (outParameterTypes != null)
@@ -260,6 +308,9 @@ public class MeasurementType extends ActionType {
 		super.changed = true;		
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected void setMeasurementPortTypes0(java.util.Set measurementPortTypes) {
 		this.measurementPortTypes.clear();
 		if (measurementPortTypes != null)
@@ -280,7 +331,13 @@ public class MeasurementType extends ActionType {
 		return Collections.unmodifiableSet(this.measurementPortTypes);
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public java.util.Set getDependencies() {
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		
 		java.util.Set dependencies = new HashSet();
 
 		if (this.inParameterTypes != null)

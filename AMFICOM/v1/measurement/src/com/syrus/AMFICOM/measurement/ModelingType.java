@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingType.java,v 1.19 2005/04/12 14:58:27 bob Exp $
+ * $Id: ModelingType.java,v 1.20 2005/04/13 13:10:39 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,6 +17,7 @@ import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -31,7 +32,7 @@ import com.syrus.AMFICOM.measurement.corba.ModelingType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/04/12 14:58:27 $
+ * @version $Revision: 1.20 $, $Date: 2005/04/13 13:10:39 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -47,6 +48,9 @@ public class ModelingType extends ActionType {
 	private java.util.Set inParameterTypes;
 	private java.util.Set outParameterTypes;
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public ModelingType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
@@ -70,8 +74,13 @@ public class ModelingType extends ActionType {
 		catch (IllegalObjectEntityException ioee) {
 			Log.errorException(ioee);
 		}
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public ModelingType(ModelingType_Transferable mtt) throws CreateObjectException {
 		try {
 			this.fromTransferable(mtt);
@@ -81,6 +90,9 @@ public class ModelingType extends ActionType {
 		}
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected ModelingType(Identifier id,
 							 Identifier creatorId,
 							 long version,
@@ -129,6 +141,8 @@ public class ModelingType extends ActionType {
 										description,
 										inParameterTypes,
 										outParameterTypes);
+			assert modelingType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			
 			modelingType.changed = true;
 			return modelingType;
 		}
@@ -137,6 +151,9 @@ public class ModelingType extends ActionType {
 		}
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
 		ModelingType_Transferable mtt = (ModelingType_Transferable) transferable;
 		super.fromTransferable(mtt.header, mtt.codename, mtt.description);
@@ -150,9 +167,16 @@ public class ModelingType extends ActionType {
 		parTypeIds = Identifier.fromTransferables(mtt.out_parameter_type_ids);
 		this.outParameterTypes = new HashSet(mtt.out_parameter_type_ids.length);
 		this.setOutParameterTypes0(GeneralStorableObjectPool.getStorableObjects(parTypeIds, true));
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public IDLEntity getTransferable() {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		
 		int i;
 
 		Identifier_Transferable[] inParTypeIds = new Identifier_Transferable[this.inParameterTypes.size()];
@@ -172,7 +196,18 @@ public class ModelingType extends ActionType {
 											outParTypeIds);
 	}
 
-  public java.util.Set getInParameterTypes() {
+	/* (non-Javadoc)
+	 * @see com.syrus.AMFICOM.general.StorableObjectType#isValid()
+	 */
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	protected boolean isValid() {
+		return super.isValid() && this.inParameterTypes != null && this.inParameterTypes != Collections.EMPTY_SET
+			&& this.outParameterTypes != null && this.outParameterTypes != Collections.EMPTY_SET;
+	}
+	
+	public java.util.Set getInParameterTypes() {
 		return Collections.unmodifiableSet(this.inParameterTypes);
 	}
 
@@ -180,6 +215,9 @@ public class ModelingType extends ActionType {
 		return Collections.unmodifiableSet(this.outParameterTypes);
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected synchronized void setAttributes(Date created,
 											  Date modified,
 											  Identifier creatorId,
@@ -196,12 +234,20 @@ public class ModelingType extends ActionType {
 			description);
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected synchronized void setParameterTypes(java.util.Set inParameterTypes,
 			java.util.Set outParameterTypes) {
 		this.setInParameterTypes0(inParameterTypes);
 		this.setOutParameterTypes0(outParameterTypes);
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected void setInParameterTypes0(java.util.Set inParameterTypes) {
 		this.inParameterTypes.clear();
 		if (inParameterTypes != null)
@@ -219,6 +265,9 @@ public class ModelingType extends ActionType {
 		super.changed = true;		
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected void setOutParameterTypes0(java.util.Set outParameterTypes) {
 		this.outParameterTypes.clear();
 		if (outParameterTypes != null)
@@ -236,7 +285,12 @@ public class ModelingType extends ActionType {
 		super.changed = true;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public java.util.Set getDependencies() {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		
 		java.util.Set dependencies = new HashSet();
 		if (this.inParameterTypes != null)
 			dependencies.addAll(this.inParameterTypes);

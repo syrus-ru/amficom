@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.61 2005/04/13 10:01:20 arseniy Exp $
+ * $Id: MeasurementSetup.java,v 1.62 2005/04/13 13:10:39 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,6 +16,7 @@ import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -28,8 +29,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 
 /**
- * @version $Revision: 1.61 $, $Date: 2005/04/13 10:01:20 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.62 $, $Date: 2005/04/13 13:10:39 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -50,6 +51,9 @@ public final class MeasurementSetup extends StorableObject {
 	private java.util.Set monitoredElementIds;
 	private java.util.Set measurementTypeIds;
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public MeasurementSetup(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
@@ -63,8 +67,13 @@ public final class MeasurementSetup extends StorableObject {
 		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public MeasurementSetup(MeasurementSetup_Transferable mst) throws CreateObjectException {
 		try {
 			this.fromTransferable(mst);
@@ -74,6 +83,9 @@ public final class MeasurementSetup extends StorableObject {
 		}
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected MeasurementSetup(Identifier id,
 							   Identifier creatorId,
 							   long version,
@@ -126,13 +138,6 @@ public final class MeasurementSetup extends StorableObject {
 												  long measurementDuration,
 												  java.util.Set monitoredElementIds,
 												  java.util.Set measurementTypeIds) throws CreateObjectException {
-		
-		if (creatorId == null
-				|| description == null
-				|| parameterSet == null
-				|| monitoredElementIds == null || monitoredElementIds.isEmpty() || monitoredElementIds.contains(null)
-				|| measurementTypeIds == null || measurementTypeIds.isEmpty() || measurementTypeIds.contains(null))
-			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
 			MeasurementSetup measurementSetup = new MeasurementSetup(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MS_ENTITY_CODE),
@@ -146,6 +151,9 @@ public final class MeasurementSetup extends StorableObject {
 				measurementDuration,
 				monitoredElementIds,
 				measurementTypeIds);
+			
+			assert measurementSetup.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			
 			measurementSetup.changed = true;
 			return measurementSetup;
 		}
@@ -154,6 +162,9 @@ public final class MeasurementSetup extends StorableObject {
 		}
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
 		MeasurementSetup_Transferable mst = (MeasurementSetup_Transferable)transferable;
 		super.fromTransferable(mst.header);
@@ -180,9 +191,16 @@ public final class MeasurementSetup extends StorableObject {
 
 		this.monitoredElementIds = Identifier.fromTransferables(mst.monitored_element_ids);
 		this.measurementTypeIds = Identifier.fromTransferables(mst.measurement_type_ids);
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public IDLEntity getTransferable() {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		
 		Identifier_Transferable[] meIds = Identifier.createTransferables(this.monitoredElementIds);
 		Identifier_Transferable[] mtIds = Identifier.createTransferables(this.measurementTypeIds);
 		return new MeasurementSetup_Transferable(super.getHeaderTransferable(),
@@ -194,6 +212,14 @@ public final class MeasurementSetup extends StorableObject {
 												 this.measurementDuration,
 												 meIds,
 												 mtIds);
+	}
+	
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	protected boolean isValid() {
+		return super.isValid() && this.parameterSet != null && this.description != null && this.monitoredElementIds != null && !this.monitoredElementIds.isEmpty() && 
+			this.measurementTypeIds != null && !this.measurementTypeIds.isEmpty();
 	}
 
     public short getEntityCode() {
@@ -248,6 +274,9 @@ public final class MeasurementSetup extends StorableObject {
 		return parameterValues;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected synchronized void setAttributes(Date created,
 											  Date modified,
 											  Identifier creatorId,
@@ -270,6 +299,8 @@ public final class MeasurementSetup extends StorableObject {
 		this.etalon = etalon;
 		this.description = description;
 		this.measurementDuration = measurementDuration;
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
 	public boolean isAttachedToMonitoredElement(Identifier monitoredElementId) {
@@ -299,6 +330,9 @@ public final class MeasurementSetup extends StorableObject {
 		super.changed = true;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected synchronized void setMonitoredElementIds0(java.util.Set monitoredElementIds) {
 		this.monitoredElementIds.clear();
 		if (monitoredElementIds != null)
@@ -314,6 +348,9 @@ public final class MeasurementSetup extends StorableObject {
 		super.changed = true;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected synchronized void setMeasurementTypeIds0(java.util.Set measurementTypeIds) {
 		this.measurementTypeIds.clear();
 		if (measurementTypeIds != null)
@@ -386,7 +423,13 @@ public final class MeasurementSetup extends StorableObject {
 		this.thresholdSet = thresholdSet;
 	}
 	
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public java.util.Set getDependencies() {
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		
 		java.util.Set dependencies = new HashSet();
 		if (this.parameterSet != null)
 			dependencies.add(this.parameterSet);
