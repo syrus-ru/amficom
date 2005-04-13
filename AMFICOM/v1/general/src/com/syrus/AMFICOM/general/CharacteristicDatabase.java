@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.30 2005/04/01 06:34:57 bob Exp $
+ * $Id: CharacteristicDatabase.java,v 1.31 2005/04/13 15:00:29 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,8 +18,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/04/01 06:34:57 $
- * @author $Author: bob $
+ * @version $Revision: 1.31 $, $Date: 2005/04/13 15:00:29 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -125,11 +125,16 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 
 		CharacteristicType characteristicType;
 		try {
-			characteristicType = (CharacteristicType)GeneralStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_TYPE_ID), true);
+			characteristicType = (CharacteristicType) GeneralStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
+					StorableObjectWrapper.COLUMN_TYPE_ID),
+					true);
 		}
 		catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
 		}
+
+		String value = DatabaseString.fromQuerySubString(resultSet.getString(CharacteristicWrapper.COLUMN_VALUE));
+
 		characteristic.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 									 DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 									 DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
@@ -139,7 +144,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 									 DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
 									 DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
 									 sort,
-									 DatabaseString.fromQuerySubString(resultSet.getString(CharacteristicWrapper.COLUMN_VALUE)),
+									 value != null ? value : "",
 									 characterizableId,
 									 (resultSet.getInt(CharacteristicWrapper.COLUMN_EDITABLE) == 0) ? false : true,
 									 (resultSet.getInt(CharacteristicWrapper.COLUMN_VISIBLE) == 0) ? false : true);
