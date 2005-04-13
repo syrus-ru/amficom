@@ -1,5 +1,5 @@
 /*
-* $Id: DatabaseEquivalentCondition.java,v 1.2 2005/02/07 12:59:33 arseniy Exp $
+* $Id: DatabaseEquivalentCondition.java,v 1.3 2005/04/13 12:20:24 arseniy Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.general;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/02/07 12:59:33 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/13 12:20:24 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -27,7 +27,7 @@ class DatabaseEquivalentCondition implements DatabaseStorableObjectCondition {
 	}
 
 	public String getSQLQuery() {
-		return "1=1";
+		return TRUE_CONDITION;
 	}
 
 }
