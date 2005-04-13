@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMenuBar.java,v 1.11 2005/03/04 14:34:53 krupenn Exp $
+ * $Id: MapEditorMenuBar.java,v 1.12 2005/04/13 15:45:37 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,7 +28,7 @@ import javax.swing.JMenuItem;
 
 /**
  * Панель меню модуля "Редактор топологических схем".
- * @version $Revision: 1.11 $, $Date: 2005/03/04 14:34:53 $
+ * @version $Revision: 1.12 $, $Date: 2005/04/13 15:45:37 $
  * @module mapviewclient_v1
  * @author $Author: krupenn $
  */
@@ -53,6 +53,7 @@ public class MapEditorMenuBar extends JMenuBar
 	JMenuItem menuMapSaveAs = new JMenuItem();
 	JMenuItem menuMapAddMap = new JMenuItem();
 	JMenuItem menuMapRemoveMap = new JMenuItem();
+	JMenuItem menuMapAddExternal = new JMenuItem();
 	JMenuItem menuMapExport = new JMenuItem();
 	JMenuItem menuMapImport = new JMenuItem();
 
@@ -194,6 +195,9 @@ public class MapEditorMenuBar extends JMenuBar
 		this.menuMapRemoveMap.setText(LangModelMap.getString("menuMapRemoveMap"));
 		this.menuMapRemoveMap.setName("menuMapRemoveMap");
 		this.menuMapRemoveMap.addActionListener(actionAdapter);
+		this.menuMapAddExternal.setText(LangModelMap.getString("menuMapAddExternal"));
+		this.menuMapAddExternal.setName("menuMapAddExternal");
+		this.menuMapAddExternal.addActionListener(actionAdapter);
 		this.menuMapExport.setText(LangModelMap.getString("menuMapExport"));
 		this.menuMapExport.setName("menuMapExport");
 		this.menuMapExport.addActionListener(actionAdapter);
@@ -291,6 +295,8 @@ public class MapEditorMenuBar extends JMenuBar
 		this.menuMap.addSeparator();
 		this.menuMap.add(this.menuMapAddMap);
 		this.menuMap.add(this.menuMapRemoveMap);
+		this.menuMap.addSeparator();
+		this.menuMap.add(this.menuMapAddExternal);
 		this.menuMap.addSeparator();
 		this.menuMap.add(this.menuMapExport);
 		this.menuMap.add(this.menuMapImport);
@@ -410,6 +416,9 @@ public class MapEditorMenuBar extends JMenuBar
 
 		this.menuMapRemoveMap.setVisible(this.aModel.isVisible("menuMapRemoveMap"));
 		this.menuMapRemoveMap.setEnabled(this.aModel.isEnabled("menuMapRemoveMap"));
+
+		this.menuMapAddExternal.setVisible(this.aModel.isVisible("menuMapAddExternal"));
+		this.menuMapAddExternal.setEnabled(this.aModel.isEnabled("menuMapAddExternal"));
 
 		this.menuMapExport.setVisible(this.aModel.isVisible("menuMapExport"));
 		this.menuMapExport.setEnabled(this.aModel.isEnabled("menuMapExport"));

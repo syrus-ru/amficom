@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorApplicationModel.java,v 1.11 2005/03/04 14:34:14 krupenn Exp $
+ * $Id: MapEditorApplicationModel.java,v 1.12 2005/04/13 15:45:37 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
  * 
  * 
  * 
- * @version $Revision: 1.11 $, $Date: 2005/03/04 14:34:14 $
+ * @version $Revision: 1.12 $, $Date: 2005/04/13 15:45:37 $
  * @module mapviewclient_v1
  * @author $Author: krupenn $
  */
@@ -45,6 +45,7 @@ public class MapEditorApplicationModel extends ApplicationModel
 		add("menuMapSaveAs");
 		add("menuMapAddMap");
 		add("menuMapRemoveMap");
+		add("menuMapAddExternal");
 		add("menuMapExport");
 		add("menuMapImport");
 

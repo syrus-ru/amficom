@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMainFrame.java,v 1.29 2005/03/18 10:37:35 peskovsky Exp $
+ * $Id: MapEditorMainFrame.java,v 1.30 2005/04/13 15:45:37 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,6 +17,8 @@ import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.GraphicsEnvironment;
+import java.awt.Rectangle;
 import java.awt.SystemColor;
 import java.awt.Toolkit;
 import java.awt.event.ComponentAdapter;
@@ -75,6 +77,7 @@ import com.syrus.AMFICOM.Client.Map.Command.Editor.ViewMapPropertiesCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Editor.ViewMapSetupCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Editor.ViewMapWindowCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Map.CreateMapReportCommand;
+import com.syrus.AMFICOM.Client.Map.Command.Map.MapAddExternalNodeCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapExportCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapImportCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewAddSchemeCommand;
@@ -94,9 +97,9 @@ import com.syrus.AMFICOM.mapview.MapView;
  * 
  * 
  * 
- * @version $Revision: 1.29 $, $Date: 2005/03/18 10:37:35 $
+ * @version $Revision: 1.30 $, $Date: 2005/04/13 15:45:37 $
  * @module mapviewclient_v1
- * @author $Author: peskovsky $
+ * @author $Author: krupenn $
  */
 public class MapEditorMainFrame extends JFrame 
 	implements OperationListener, Module
@@ -160,6 +163,15 @@ public class MapEditorMainFrame extends JFrame
 		setContentPane(this.mainPanel);
 
 		//Center the window
+		GraphicsEnvironment localGraphicsEnvironment = 
+			GraphicsEnvironment.getLocalGraphicsEnvironment();
+		Rectangle maximumWindowBounds = 
+			localGraphicsEnvironment.getMaximumWindowBounds();
+		this.setSize(new Dimension(
+				maximumWindowBounds.width - maximumWindowBounds.x, 
+				maximumWindowBounds.height - maximumWindowBounds.y));
+		this.setLocation(maximumWindowBounds.x, maximumWindowBounds.y);
+
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		Dimension frameSize = new Dimension (screenSize.width, screenSize.height - 24);
 		setSize(frameSize);
@@ -361,6 +373,10 @@ public class MapEditorMainFrame extends JFrame
 				new MapRemoveMapCommand(
 					this.desktopPane, 
 					this.aContext));
+		aModel.setCommand("menuMapAddExternal", 
+				new MapAddExternalNodeCommand(
+						this.desktopPane, 
+						this.aContext));
 		aModel.setCommand("menuMapExport", 
 				new MapExportCommand(
 						this.desktopPane, 

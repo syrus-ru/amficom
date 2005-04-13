@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorToolBar.java,v 1.10 2005/03/04 14:34:53 krupenn Exp $
+ * $Id: MapEditorToolBar.java,v 1.11 2005/04/13 15:45:37 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,7 +31,7 @@ import java.awt.event.ActionListener;
 /**
  * Панель инструментов модуля "Редактор топологических схем". 
  * @author $Author: krupenn $
- * @version $Revision: 1.10 $, $Date: 2005/03/04 14:34:53 $
+ * @version $Revision: 1.11 $, $Date: 2005/04/13 15:45:37 $
  * @module mapviewclient_v1
  */
 public class MapEditorToolBar extends JToolBar implements ApplicationModelListener
@@ -70,6 +70,10 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 	 * <img src="images/removemap.gif">.
 	 */
 	JButton menuMapRemoveMap = new JButton();
+	/**
+	 * <img src="images/addExternal.gif">.
+	 */
+	JButton menuMapAddExternal = new JButton();
 	/**
 	 * <img src="images/newview.gif">.
 	 */
@@ -190,6 +194,14 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 		this.menuMapRemoveMap.setName("menuMapRemoveMap");
 		this.menuMapRemoveMap.addActionListener(actionAdapter);
 
+		this.menuMapAddExternal.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/addexternal.gif").
+				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
+		this.menuMapAddExternal.setMaximumSize(buttonSize);
+		this.menuMapAddExternal.setPreferredSize(buttonSize);
+		this.menuMapAddExternal.setToolTipText(LangModelMap.getString("menuMapAddExternal"));
+		this.menuMapAddExternal.setName("menuMapAddExternal");
+		this.menuMapAddExternal.addActionListener(actionAdapter);
+
 		this.menuMapViewNew.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/newview.gif").
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		this.menuMapViewNew.setMaximumSize(buttonSize);
@@ -250,6 +262,8 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 		add(this.menuMapAddMap);
 		add(this.menuMapRemoveMap);
 		addSeparator();
+		add(this.menuMapAddExternal);
+		addSeparator();
 		add(this.menuMapViewNew);
 		add(this.menuMapViewNew);
 		add(this.menuMapViewSave);
@@ -290,6 +304,8 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 		this.menuMapAddMap.setEnabled(this.aModel.isEnabled("menuMapAddMap"));
 		this.menuMapRemoveMap.setVisible(this.aModel.isVisible("menuMapRemoveMap"));
 		this.menuMapRemoveMap.setEnabled(this.aModel.isEnabled("menuMapRemoveMap"));
+		this.menuMapAddExternal.setVisible(this.aModel.isVisible("menuMapAddExternal"));
+		this.menuMapAddExternal.setEnabled(this.aModel.isEnabled("menuMapAddExternal"));
 
 		this.menuMapViewNew.setVisible(this.aModel.isVisible("menuMapViewNew"));
 		this.menuMapViewNew.setEnabled(this.aModel.isEnabled("menuMapViewNew"));
