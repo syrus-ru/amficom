@@ -249,7 +249,7 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 
 	protected void paint_reflectogram_events(Graphics g)
 	{
-		if (mtae == null)
+		if (mtae == null || mtae.getNEvents() == 0)
 		{
 			paint_events(g); // метод суперкласса....
 			return;
