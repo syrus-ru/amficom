@@ -153,7 +153,7 @@ class MarkerInfoReportTableModel extends DividableTableModel {
 					report.getName(),
 					CreateReportException.poolObjNotExists);
 
-		Map map = physicalLink.getMap(); // Возможно лажа!!
+		Map map = marker.getMapView().getMap(); // Возможно лажа!!
 		Collector pipePath = map.getCollector(physicalLink);
 		if(pipePath != null) {
 			this.tableData[0][curCCI] = LangModelMap.getString("Collector");

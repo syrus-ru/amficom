@@ -54,7 +54,7 @@ public final class MapCablePathBindPanel
 
 	private CablePath path;
 
-	private LogicalNetLayer lnl;
+	LogicalNetLayer lnl;
 	
 	/**
 	 * таблица
@@ -195,12 +195,14 @@ public final class MapCablePathBindPanel
 					if(mle instanceof SiteNode)
 					{
 						SiteNode s = (SiteNode)mle;
-						MapCablePathBindPanel.this.startLinkComboBox.setSelectedItem(s.getMap().getPhysicalLink(MapCablePathBindPanel.this.startNode, s));
+						MapCablePathBindPanel.this.startLinkComboBox.setSelectedItem(
+								MapCablePathBindPanel.this.lnl.getMapView().getMap().getPhysicalLink(MapCablePathBindPanel.this.startNode, s));
 					}
 					if(mle2 instanceof SiteNode)
 					{
 						SiteNode s = (SiteNode)mle2;
-						MapCablePathBindPanel.this.endLinkComboBox.setSelectedItem(s.getMap().getPhysicalLink(MapCablePathBindPanel.this.endNode, s));
+						MapCablePathBindPanel.this.endLinkComboBox.setSelectedItem(
+								MapCablePathBindPanel.this.lnl.getMapView().getMap().getPhysicalLink(MapCablePathBindPanel.this.endNode, s));
 					}
 					MapCablePathBindPanel.this.doChanges = true;
 				}
@@ -359,7 +361,7 @@ public final class MapCablePathBindPanel
 		this.startLastBound = this.path.getStartLastBoundLink();
 		this.endLastBound = this.path.getEndLastBoundLink();
 		
-		Collection smnelinks = this.path.getMap().getPhysicalLinksAt(this.startNode);
+		Collection smnelinks = this.lnl.getMapView().getMap().getPhysicalLinksAt(this.startNode);
 		if(this.startLastBound != null)
 			smnelinks.remove(this.startLastBound);
 
@@ -384,7 +386,7 @@ public final class MapCablePathBindPanel
 			}
 		}
 
-		Collection emnelinks = this.path.getMap().getPhysicalLinksAt(this.endNode);
+		Collection emnelinks = this.lnl.getMapView().getMap().getPhysicalLinksAt(this.endNode);
 		if(this.endLastBound != null)
 			emnelinks.remove(this.endLastBound);
 

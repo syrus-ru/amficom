@@ -85,7 +85,9 @@ class TunnelCableListReportTableModel extends DividableTableModel
 		for(int i = 0; i < 2; i++)
 			this.tableData[i] = new String[this.length];
 
-		Map map = physicalLink.getMap(); // Возможно лажа!!
+		//TODO retreive Map from somewhere
+		Map map = null;
+//		Map map = physicalLink.getMap(); // Возможно лажа!!
 
 		String fullLinkName = "";
 		Collector pipePath = map.getCollector(physicalLink);
