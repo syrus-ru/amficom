@@ -104,15 +104,18 @@ implements OperationListener, bsHashChangeListener
 			SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
 			if (panel instanceof ThresholdsPanel)
 			{
-				if (((ThresholdsPanel)panel).c_event > ((ThresholdsPanel)panel).events.length)
-					((ThresholdsPanel)panel).c_event = ((ThresholdsPanel)panel).events.length - 1;
-				int start = ((ThresholdsPanel)panel).events[((ThresholdsPanel)panel).c_event].first_point;
-				if (((ThresholdsPanel)panel).c_event == 0)
-					start = 2;
-				int end = ((ThresholdsPanel)panel).events[((ThresholdsPanel)panel).c_event].last_point;
-				updScale2fit(start, end, indent_x, iy);
-				jLayeredPane.repaint();
-				return;
+                if (((ThresholdsPanel)panel).events.length > 0)
+                {
+    				if (((ThresholdsPanel)panel).c_event >= ((ThresholdsPanel)panel).events.length)
+    					((ThresholdsPanel)panel).c_event = ((ThresholdsPanel)panel).events.length - 1;
+    				int start = ((ThresholdsPanel)panel).events[((ThresholdsPanel)panel).c_event].first_point;
+    				if (((ThresholdsPanel)panel).c_event == 0)
+    					start = 2;
+    				int end = ((ThresholdsPanel)panel).events[((ThresholdsPanel)panel).c_event].last_point;
+    				updScale2fit(start, end, indent_x, iy);
+    				jLayeredPane.repaint();
+                }
+   				return;
 			}
 		}
 	}
