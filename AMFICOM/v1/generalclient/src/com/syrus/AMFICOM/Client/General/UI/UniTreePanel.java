@@ -1,5 +1,5 @@
 /*
- * $Id: UniTreePanel.java,v 1.13 2005/03/16 13:40:57 bass Exp $
+ * $Id: UniTreePanel.java,v 1.14 2005/04/13 21:07:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,8 +45,8 @@ registerSearchableNode(String criteria, ObjectResourceTreeNode tn).
 Таким образом, послав в дерево ListSelectionEvent с указанием OperatorGroup.typ
 зарегистрированная ветвь станет выделенной.
  *
- * @author $Author: bass $
- * @version $Revision: 1.13 $, $Date: 2005/03/16 13:40:57 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2005/04/13 21:07:04 $
  * @module generalclient_v1
  */
 public class UniTreePanel extends JPanel
@@ -425,10 +425,10 @@ public class UniTreePanel extends JPanel
 
 			ObjectResourceTreeNode parent = (ObjectResourceTreeNode)node.getParent();
 
-			Enumeration enum = parent.children();
-			for(; enum.hasMoreElements();)
+			Enumeration enumeration = parent.children();
+			for(; enumeration.hasMoreElements();)
 			{
-				Object oo = enum.nextElement();
+				Object oo = enumeration.nextElement();
 				if (((ObjectResourceTreeNode)oo).getObject() instanceof ObjectResource)
 				{
 					res.add( ((ObjectResourceTreeNode)oo).getObject() );

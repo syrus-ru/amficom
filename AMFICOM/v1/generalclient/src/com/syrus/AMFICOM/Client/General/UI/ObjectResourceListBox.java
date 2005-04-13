@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourceListBox.java,v 1.7 2004/09/27 08:05:09 bass Exp $
+ * $Id: ObjectResourceListBox.java,v 1.8 2005/04/13 21:07:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,8 +15,8 @@ import java.util.List;
 import javax.swing.*;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2004/09/27 08:05:09 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/04/13 21:07:04 $
  * @module generalclient_v1
  */
 public class ObjectResourceListBox extends JList
@@ -176,12 +176,12 @@ public class ObjectResourceListBox extends JList
 		this(type, _DEFAULT_COL_ID);
 	}
 
-	public void setContents(Collection enum)
+	public void setContents(Collection collection)
 	{
 		vec = new ArrayList();
-		if(enum != null)
+		if(collection != null)
 		{
-			Iterator it = enum.iterator();
+			Iterator it = collection.iterator();
 			for(;it.hasNext();)
 			{
 				ObjectResource or = (ObjectResource )it.next();

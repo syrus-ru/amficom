@@ -47,7 +47,7 @@ public class MiscUtil
 					userId,
 					codename,
 					"",
-					dataType.value(),
+					dataType,
 					sort);
 		}
 		catch (CreateObjectException e) {
