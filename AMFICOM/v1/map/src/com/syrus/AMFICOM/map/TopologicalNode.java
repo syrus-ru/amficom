@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalNode.java,v 1.28 2005/04/08 09:24:34 bass Exp $
+ * $Id: TopologicalNode.java,v 1.29 2005/04/13 09:52:27 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,22 +7,6 @@
  */
 
 package com.syrus.AMFICOM.map;
-
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Characteristic;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.general.corba.CharacteristicSort;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.map.corba.TopologicalNode_Transferable;
 
 import java.util.Collections;
 import java.util.Date;
@@ -33,13 +17,31 @@ import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
 
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.general.corba.CharacteristicSort;
+import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.map.corba.TopologicalNode_Transferable;
+
 /**
  * Топологический узел нв топологической схеме. Топологический узел может
  * быть концевым для линии и для фрагмента линии. В физическом смысле
  * топологический узел соответствует точке изгиба линии и не требует 
  * дополнительной описательной информации.
- * @author $Author: bass $
- * @version $Revision: 1.28 $, $Date: 2005/04/08 09:24:34 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.29 $, $Date: 2005/04/13 09:52:27 $
  * @module map_v1
  * @todo physicalLink should be transient
  */
@@ -272,11 +274,29 @@ public class TopologicalNode extends AbstractNode {
 		this.changed = true;
 	}
 
+	/**
+	 * @todo initial physicalLink
+	 */
 	public PhysicalLink getPhysicalLink() {
 		if (this.physicalLink == null)
 			this.physicalLink = findPhysicalLink();
 		return this.physicalLink;
 	}
+
+	private PhysicalLink findPhysicalLink() {
+		try {
+			StorableObjectCondition condition = new LinkedIdsCondition(this.getId(), ObjectEntities.NODE_LINK_ENTITY_CODE);
+			Set nlinks;
+			nlinks = MapStorableObjectPool.getStorableObjectsByCondition(condition, false);
+			NodeLink nodeLink = (NodeLink )nlinks.iterator().next();
+			return nodeLink.getPhysicalLink();
+		} catch(ApplicationException e) {
+			// TODO how to work it over?!
+			e.printStackTrace();
+		}
+		return null;
+//	return this.map.getNodeLink(this).getPhysicalLink();
+}
 
 	public void setPhysicalLink(PhysicalLink physicalLink) {
 		this.physicalLink = physicalLink;
@@ -393,10 +413,6 @@ public class TopologicalNode extends AbstractNode {
 		catch (ApplicationException e) {
 			throw new CreateObjectException("Mark.createInstance |  ", e);
 		}
-	}
-
-	private PhysicalLink findPhysicalLink() {
-		return this.map.getNodeLink(this).getPhysicalLink();
 	}
 
 	/**
