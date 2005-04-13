@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractNode.java,v 1.20 2005/04/08 14:51:00 arseniy Exp $
+ * $Id: AbstractNode.java,v 1.21 2005/04/13 09:46:51 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,6 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
@@ -28,8 +27,8 @@ import org.omg.CORBA.portable.IDLEntity;
  * ({@link Map}). Узловой объект характеризуется наличием координат
  * ({@link #location}) и изображением ({@link #imageId}).
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.20 $, $Date: 2005/04/08 14:51:00 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.21 $, $Date: 2005/04/13 09:46:51 $
  * @module map_v1
  * @see SiteNode
  * @see TopologicalNode
@@ -74,8 +73,6 @@ public abstract class AbstractNode
 	protected transient boolean alarmState = false;
 
 	protected transient boolean removed = false;
-
-	protected transient Map map = null;
 
 	protected AbstractNode(Identifier id) {
 		super(id);
@@ -209,119 +206,6 @@ public abstract class AbstractNode
 	}
 
 	/**
-	 * Получить список NodeLinks, содержащих заданный Node.
-	 * @return Список фрагментов
-	 */
-	public Set getNodeLinks()
-	{
-		Set returnNodeLinks = new HashSet();
-		for(Iterator it = getMap().getNodeLinks().iterator(); it.hasNext();)
-		{
-			NodeLink nodeLink = (NodeLink )it.next();
-			
-			if ( (nodeLink.getEndNode().equals(this)) 
-				|| (nodeLink.getStartNode().equals(this)))
-			{
-				returnNodeLinks.add(nodeLink);
-			}
-		}
-
-		return returnNodeLinks;
-	}
-
-	/**
-	 * Возвращает фрагмент линии, включающий данный узел, по не равный 
-	 * переданному в параметре. Если фрагмент А и фрагмент Б имеют общую 
-	 * точку Т, то вызов метода <code>Т.getOtherNodeLink(А)</code> вернет Б, а вызов
-	 * <code>Т.getOtherNodeLink(Б)</code> вернет А. Таким образом, для топологического 
-	 * узла возвращает единственный противоположный,
-	 * для сетевого узла их может быть несколько, по этой причине метод
-	 * не должен использоваться и возвращает null
-	 * @param nodeLink фрагмент линии
-	 * @return другой фрагмент линии
-	 */
-	public NodeLink getOtherNodeLink(NodeLink nodeLink)
-	{
-		if(!this.getClass().equals(TopologicalNode.class))
-		{
-			return null;
-		}
-
-		NodeLink startNodeLink = null;
-		for(Iterator it = getNodeLinks().iterator(); it.hasNext();)
-			{
-				NodeLink nl = (NodeLink )it.next();
-				if(nodeLink != nl)
-				{
-					startNodeLink = nl;
-					break;
-				}
-			}
-			
-		return startNodeLink;
-	}
-
-	/**
-	 * Получить список линий, начинающихся или заканчивающихся
-	 * на данном узле.
-	 * @return список линий
-	 */
-	public Set getPhysicalLinks()
-	{
-		Set returnLinks = new HashSet();
-
-		for(Iterator it = getMap().getPhysicalLinks().iterator(); it.hasNext();)
-		{
-			PhysicalLink physicalLink = (PhysicalLink )it.next();
-			
-			if ( (physicalLink.getEndNode().equals(this)) 
-					|| (physicalLink.getStartNode().equals(this)) )
-				returnLinks.add(physicalLink);
-		}
-
-		return returnLinks;
-	}
-
-	/**
-	 * Получить вектор узлов на противоположных концах всех фрагментов линий 
-	 * данного элемента.
-	 * @return список узлов
-	 */
-	public Set getOppositeNodes()
-	{
-		Iterator e = getNodeLinks().iterator();
-		Set returnNodes = new HashSet();
-
-		while (e.hasNext())
-		{
-			NodeLink nodeLink = (NodeLink )e.next();
-
-			if ( nodeLink.getEndNode().equals(this) )
-				returnNodes.add(nodeLink.getStartNode());
-			else
-				returnNodes.add(nodeLink.getEndNode());
-		}
-
-		return returnNodes;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public Map getMap()
-	{
-		return this.map;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setMap(Map map)
-	{
-		this.map = map;
-	}
-
-	/**
 	 * {@inheritDoc}
 	 */
 	public boolean isSelected()
@@ -335,7 +219,6 @@ public abstract class AbstractNode
 	public void setSelected(boolean selected)
 	{
 		this.selected = selected;
-		getMap().setSelected(this, selected);
 	}
 
 	/**
