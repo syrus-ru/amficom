@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePort.java,v 1.11 2005/04/13 19:34:10 arseniy Exp $
+ * $Id: SchemeCablePort.java,v 1.12 2005/04/13 21:19:49 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.scheme.corba.SchemeCablePort_Transferable;
  * #09 in hierarchy.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.11 $, $Date: 2005/04/13 19:34:10 $
+ * @version $Revision: 1.12 $, $Date: 2005/04/13 21:19:49 $
  * @module scheme_v1
  */
 public final class SchemeCablePort extends AbstractSchemePort {
@@ -83,7 +83,7 @@ public final class SchemeCablePort extends AbstractSchemePort {
 		}
 	}
 
-	public static SchemeCablePort createInstance(final Identifier creatorId) throws ApplicationException {
+	public static SchemeCablePort createInstance(final Identifier creatorId) throws CreateObjectException {
 		assert creatorId != null;
 		try {
 			final Date created1 = new Date();
@@ -97,7 +97,7 @@ public final class SchemeCablePort extends AbstractSchemePort {
 			return schemeCablePort;
 		}
 		catch (final IllegalObjectEntityException ioee) {
-			throw new ApplicationException("SchemeCablePort.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
+			throw new CreateObjectException("SchemeCablePort.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
 		}
 	}
 
