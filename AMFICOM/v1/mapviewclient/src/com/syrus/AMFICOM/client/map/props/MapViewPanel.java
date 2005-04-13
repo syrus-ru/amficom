@@ -59,7 +59,7 @@ public class MapViewPanel
 	private JLabel descLabel = new JLabel();
 	private JTextArea descTextArea = new JTextArea();
 
-	MapView view;
+	MapView mapView;
 
 	private static MapViewPanel instance = new MapViewPanel();
 
@@ -148,15 +148,15 @@ public class MapViewPanel
 	{
 		if(objectResource instanceof VoidElement)
 		{
-			this.view = ((VoidElement)objectResource).getMapView();
+			this.mapView = ((VoidElement)objectResource).getMapView();
 		}
 		else
-			this.view = (MapView )objectResource;
+			this.mapView = (MapView )objectResource;
 
 		this.domainComboBox.removeAllItems();
 		this.mapComboBox.removeAllItems();
 
-		if(this.view == null)
+		if(this.mapView == null)
 		{
 			this.nameTextField.setEnabled(false);
 			this.nameTextField.setText("");
@@ -176,7 +176,7 @@ public class MapViewPanel
 		else
 		{
 			this.nameTextField.setEnabled(true);
-			this.nameTextField.setText(this.view.getName());
+			this.nameTextField.setText(this.mapView.getName());
 
 			Domain domain = null;
 			Collection domains = null;
@@ -197,7 +197,7 @@ public class MapViewPanel
 			try
 			{
 				domain = (Domain )AdministrationStorableObjectPool.getStorableObject(
-						this.view.getDomainId(),
+						this.mapView.getDomainId(),
 						false);
 			} catch(ApplicationException e) {
 				e.printStackTrace();
@@ -221,20 +221,20 @@ public class MapViewPanel
 				e.printStackTrace();
 			}
 			this.mapComboBox.addElements(maps);
-			this.mapComboBox.setSelectedItem(this.view.getMap());
+			this.mapComboBox.setSelectedItem(this.mapView.getMap());
 
 			this.descTextArea.setEnabled(true);
-			this.descTextArea.setText(this.view.getDescription());
+			this.descTextArea.setText(this.mapView.getDescription());
 
 			this.longTextField.setEnabled(true);
-			this.longTextField.setText(MapPropertiesManager.getCoordinatesFormat().format(this.view.getCenter().getX()));
+			this.longTextField.setText(MapPropertiesManager.getCoordinatesFormat().format(this.mapView.getCenter().getX()));
 			this.latTextField.setEnabled(true);
-			this.latTextField.setText(MapPropertiesManager.getCoordinatesFormat().format(this.view.getCenter().getY()));
+			this.latTextField.setText(MapPropertiesManager.getCoordinatesFormat().format(this.mapView.getCenter().getY()));
 
 			this.scaleTextField.setEnabled(true);
-			this.scaleTextField.setText(String.valueOf(this.view.getScale()));
+			this.scaleTextField.setText(String.valueOf(this.mapView.getScale()));
 			
-			this.schemesList.setContents(this.view.getSchemes());
+			this.schemesList.setContents(this.mapView.getSchemes());
 		}
 	}
 
@@ -246,19 +246,19 @@ public class MapViewPanel
 	{
 		try 
 		{
-			this.view.setName(this.nameTextField.getText());
-			this.view.setDescription(this.descTextArea.getText());
+			this.mapView.setName(this.nameTextField.getText());
+			this.mapView.setDescription(this.descTextArea.getText());
 
 			try 
 			{
 				double x = Double.parseDouble(this.longTextField.getText());
 				double y = Double.parseDouble(this.longTextField.getText());
 				
-				this.view.setCenter(new DoublePoint(x, y));
+				this.mapView.setCenter(new DoublePoint(x, y));
 
 				double s = Double.parseDouble(this.scaleTextField.getText());
 				
-				this.view.setScale(s);
+				this.mapView.setScale(s);
 			} 
 			catch (NumberFormatException ex) 
 			{
