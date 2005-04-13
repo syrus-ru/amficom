@@ -1,5 +1,5 @@
 /*
- * $Id: PeriodicalTestProcessor.java,v 1.36 2005/04/02 15:40:19 arseniy Exp $
+ * $Id: PeriodicalTestProcessor.java,v 1.37 2005/04/13 17:32:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,15 +17,13 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
-import com.syrus.AMFICOM.general.SessionContext;
-import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.TemporalPattern;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/04/02 15:40:19 $
+ * @version $Revision: 1.37 $, $Date: 2005/04/13 17:32:58 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -87,7 +85,6 @@ public class PeriodicalTestProcessor extends TestProcessor {
 	}
 
 	public void run() {
-		Measurement measurement = null;
 		while (super.running) {
 			if (! super.lastMeasurementAcquisition) {
 				if (this.currentTimeStamp == null) {
@@ -98,7 +95,8 @@ public class PeriodicalTestProcessor extends TestProcessor {
 					if (this.currentTimeStamp.getTime() <= System.currentTimeMillis()) {
 
 						try {
-							measurement = super.test.createMeasurement(SessionContext.getAccessIdentity().getUserId(), this.currentTimeStamp);
+							super.newMeasurementCreation(this.currentTimeStamp);
+							this.currentTimeStamp = null;
 							super.clearFalls();
 						}
 						catch (CreateObjectException coe) {
@@ -110,29 +108,12 @@ public class PeriodicalTestProcessor extends TestProcessor {
 							super.sleepCauseOfFall();
 						}
 
-						if (measurement != null) {
-							super.transceiver.addMeasurement(measurement, this);
-							super.numberOfScheduledMeasurements ++;
-							this.currentTimeStamp = null;
-						}
-
 					}	//if (this.currentTimeStamp.getTime() <= System.currentTimeMillis())
 				}	//if (this.currentTimeStamp == null)
 			}	//if (! super.lastMeasurementAcquisition)
 
 			super.processMeasurementResult();
-			Log.debugMessage('\'' + super.test.getId().getIdentifierString() 
-							 + "' numberOfReceivedMResults: " + super.numberOfReceivedMResults 
-							 + ", numberOfScheduledMeasurements: " + super.numberOfScheduledMeasurements 
-							 + ", lastMeasurementAcquisition: " + super.lastMeasurementAcquisition, Log.DEBUGLEVEL07);
-			if (super.numberOfReceivedMResults == super.numberOfScheduledMeasurements && super.lastMeasurementAcquisition)
-				this.complete();
-			else
-				if (super.lastMeasurementAcquisition && (this.endTime + super.forgetFrame < System.currentTimeMillis())) {
-					Log.debugMessage("Passed " + (super.forgetFrame/1000) + " sec since last measurement,"
-									 + " forget acquire results for '" + super.test.getId().getIdentifierString() + "'", Log.DEBUGLEVEL03);
-					this.abort();
-				}
+			super.checkIfCompletedOrAborted();
 
 			try {
 				sleep(super.initialTimeToSleep);

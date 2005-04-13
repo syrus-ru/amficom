@@ -1,5 +1,5 @@
 /*
- * $Id: OnetimeTestProcessor.java,v 1.24 2005/04/01 21:58:32 arseniy Exp $
+ * $Id: OnetimeTestProcessor.java,v 1.25 2005/04/13 17:32:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,15 +9,14 @@
 package com.syrus.AMFICOM.mcm;
 
 import java.util.Date;
+
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
-import com.syrus.AMFICOM.general.SessionContext;
 import com.syrus.AMFICOM.measurement.Test;
-import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/04/01 21:58:32 $
+ * @version $Revision: 1.25 $, $Date: 2005/04/13 17:32:58 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -31,23 +30,20 @@ public class OnetimeTestProcessor extends TestProcessor {
 
 	public OnetimeTestProcessor(Test test) {
 		super(test);
-		super.lastMeasurementAcquisition = (super.numberOfScheduledMeasurements > 0);
+		super.lastMeasurementAcquisition = (super.test.getNumberOfMeasurements() > 0);
 
 		this.startTime = test.getStartTime();
 		Log.debugMessage("Set lastMeasurementAcquisition: " + this.lastMeasurementAcquisition + "; startTime: " + this.startTime + ", current: " + (new Date(System.currentTimeMillis())), Log.DEBUGLEVEL08);
 	}
 
 	public void run() {
-		Measurement measurement;
-		long currentMeasurementStartTime = this.startTime.getTime();
 		while (super.running) {
 			if (!super.lastMeasurementAcquisition) {
 				if (this.startTime.getTime() <= System.currentTimeMillis()) {
 
-					measurement = null;
 					try {
-						measurement = super.test.createMeasurement(SessionContext.getAccessIdentity().getUserId(), this.startTime);
-//						currentMeasurementStartTime = this.startTime.getTime();
+						super.newMeasurementCreation(this.startTime);
+						super.lastMeasurementAcquisition = true;
 						super.clearFalls();
 					}
 					catch (CreateObjectException coe) {
@@ -59,29 +55,11 @@ public class OnetimeTestProcessor extends TestProcessor {
 						super.sleepCauseOfFall();
 					}
 
-					if (measurement != null) {
-						this.transceiver.addMeasurement(measurement, this);
-						super.numberOfScheduledMeasurements ++;
-						super.lastMeasurementAcquisition = true;
-					}
-
 				}
 			}
 
-			this.processMeasurementResult();
-			Log.debugMessage('\'' + super.test.getId().getIdentifierString() 
-					 + "' numberOfReceivedMResults: " + super.numberOfReceivedMResults 
-					 + ", numberOfScheduledMeasurements: " + super.numberOfScheduledMeasurements 
-					 + ", lastMeasurementAcquisition: " + super.lastMeasurementAcquisition, Log.DEBUGLEVEL07);
-			if (super.numberOfReceivedMResults == super.numberOfScheduledMeasurements && this.lastMeasurementAcquisition)
-				this.complete();
-			else {
-				if (System.currentTimeMillis() - currentMeasurementStartTime > super.forgetFrame) {
-					Log.debugMessage("Passed " + super.forgetFrame / 1000 + " sec from last measurement creation. Aborting test '"
-							+ super.test.getId() + "'", Log.DEBUGLEVEL03);
-					this.abort();
-				}
-			}
+			super.processMeasurementResult();
+			super.checkIfCompletedOrAborted();
 
 			try {
 				sleep(super.initialTimeToSleep);
