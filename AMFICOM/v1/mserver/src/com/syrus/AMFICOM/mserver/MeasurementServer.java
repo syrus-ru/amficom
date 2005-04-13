@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServer.java,v 1.30 2005/04/11 12:38:28 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.31 2005/04/13 10:10:12 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -46,7 +46,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/04/11 12:38:28 $
+ * @version $Revision: 1.31 $, $Date: 2005/04/13 10:10:12 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -233,7 +233,6 @@ public class MeasurementServer extends SleepButWorkThread {
 							continue;
 						}
 
-						updateTestsStatus(testQueue, TestStatus.TEST_STATUS_SCHEDULED);
 						testsT = createTransferables(testQueue);
 						try {
 							Log.debugMessage(testsT.length + " tests to send to MCM '" + mcmId + "'", Log.DEBUGLEVEL08);
