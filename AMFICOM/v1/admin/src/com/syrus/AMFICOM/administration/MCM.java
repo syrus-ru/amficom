@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.19 2005/04/13 11:44:55 bob Exp $
+ * $Id: MCM.java,v 1.20 2005/04/13 15:31:35 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/04/13 11:44:55 $
+ * @version $Revision: 1.20 $, $Date: 2005/04/13 15:31:35 $
  * @author $Author: bob $
  * @module administration_v1
  */
@@ -270,8 +270,6 @@ public class MCM extends DomainMember implements Characterizable {
 		this.hostname = hostname;
 		this.userId = userId;
 		this.serverId = serverId;
-		
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 	
 	/**

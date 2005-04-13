@@ -1,5 +1,5 @@
 /*
- * $Id: User.java,v 1.16 2005/04/13 11:44:55 bob Exp $
+ * $Id: User.java,v 1.17 2005/04/13 15:31:35 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/04/13 11:44:55 $
+ * @version $Revision: 1.17 $, $Date: 2005/04/13 15:31:35 $
  * @author $Author: bob $
  * @module administration_v1
  */
@@ -206,8 +206,6 @@ public final class User extends StorableObject {
 		this.sort = sort;
 		this.name = name;
 		this.description = description;
-		
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
 	/**

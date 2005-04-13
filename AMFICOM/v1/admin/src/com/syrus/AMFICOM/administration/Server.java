@@ -1,5 +1,5 @@
 /*
- * $Id: Server.java,v 1.20 2005/04/13 11:44:55 bob Exp $
+ * $Id: Server.java,v 1.21 2005/04/13 15:31:35 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/04/13 11:44:55 $
+ * @version $Revision: 1.21 $, $Date: 2005/04/13 15:31:35 $
  * @author $Author: bob $
  * @module administration_v1
  */
@@ -273,8 +273,6 @@ public class Server extends DomainMember implements Characterizable {
 		this.description = description;
 		this.hostname = hostname;
 		this.userId = userId;
-		
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
 	/**

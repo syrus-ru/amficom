@@ -1,5 +1,5 @@
 /*
- * $Id: Result.java,v 1.50 2005/04/13 13:10:39 bob Exp $
+ * $Id: Result.java,v 1.51 2005/04/13 15:30:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.50 $, $Date: 2005/04/13 13:10:39 $
+ * @version $Revision: 1.51 $, $Date: 2005/04/13 15:30:43 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -210,8 +210,6 @@ public class Result extends StorableObject {
 			version);
 		this.action = action;
 		this.sort = sort;
-		
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
 	/**

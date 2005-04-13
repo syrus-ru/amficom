@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.35 2005/04/13 13:10:39 bob Exp $
+ * $Id: Modeling.java,v 1.36 2005/04/13 15:30:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.measurement.corba.Modeling_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/04/13 13:10:39 $
+ * @version $Revision: 1.36 $, $Date: 2005/04/13 15:30:43 $
  * @author $Author: bob $
  * @author arseniy
  * @module measurement_v1
@@ -158,8 +158,6 @@ public class Modeling extends Action {
 							null);
 		this.name = name;
 		this.argumentSet = argumentSet;
-		
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
 	/**

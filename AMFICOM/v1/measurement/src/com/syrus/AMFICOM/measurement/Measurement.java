@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.62 2005/04/13 13:10:39 bob Exp $
+ * $Id: Measurement.java,v 1.63 2005/04/13 15:30:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.62 $, $Date: 2005/04/13 13:10:39 $
+ * @version $Revision: 1.63 $, $Date: 2005/04/13 15:30:43 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -234,8 +234,6 @@ public class Measurement extends Action {
 		this.status = status;
 		this.localAddress = localAddress;
 		this.testId = testId;
-		
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
 	/**

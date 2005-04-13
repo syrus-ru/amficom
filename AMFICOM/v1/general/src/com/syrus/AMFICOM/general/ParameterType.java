@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterType.java,v 1.21 2005/04/13 10:45:50 bob Exp $
+ * $Id: ParameterType.java,v 1.22 2005/04/13 15:27:42 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/04/13 10:45:50 $
+ * @version $Revision: 1.22 $, $Date: 2005/04/13 15:27:42 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -227,8 +227,6 @@ public final class ParameterType extends StorableObjectType implements Character
 			description);
 		this.name = name;
 		this.dataType = dataType;
-		
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
 	public void addCharacteristic(Characteristic characteristic) {

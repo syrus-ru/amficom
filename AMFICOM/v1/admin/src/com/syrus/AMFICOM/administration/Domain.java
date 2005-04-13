@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.21 2005/04/13 13:39:22 arseniy Exp $
+ * $Id: Domain.java,v 1.22 2005/04/13 15:31:35 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.administration;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/04/13 13:39:22 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.22 $, $Date: 2005/04/13 15:31:35 $
+ * @author $Author: bob $
  * @module administration_v1
  */
 
@@ -236,8 +236,6 @@ public class Domain extends DomainMember implements Characterizable {
 		super.setAttributes(created, modified, creatorId, modifierId, version, domainId);
 		this.name = name;
 		this.description = description;
-		
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 	
 	/**

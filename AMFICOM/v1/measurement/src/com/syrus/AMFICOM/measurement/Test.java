@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.107 2005/04/13 13:10:39 bob Exp $
+ * $Id: Test.java,v 1.108 2005/04/13 15:30:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,7 +44,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.107 $, $Date: 2005/04/13 13:10:39 $
+ * @version $Revision: 1.108 $, $Date: 2005/04/13 15:30:43 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -513,8 +513,6 @@ public class Test extends StorableObject {
 		this.returnType = returnType;
 		this.description = description;
 		this.numberOfMeasurements = numberOfMeasurements;
-		
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
 	/**
