@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourceSorter.java,v 1.10 2004/08/31 12:32:07 krupenn Exp $
+ * $Id: ObjectResourceSorter.java,v 1.11 2005/04/13 20:20:33 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,8 +10,8 @@ package com.syrus.AMFICOM.Client.Resource;
 import java.util.*;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/08/31 12:32:07 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.11 $, $Date: 2005/04/13 20:20:33 $
+ * @author $Author: arseniy $
  * @module generalclient_v1
  */
 public abstract class ObjectResourceSorter {
