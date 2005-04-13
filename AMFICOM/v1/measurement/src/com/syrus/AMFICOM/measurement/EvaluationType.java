@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationType.java,v 1.59 2005/04/13 15:03:10 arseniy Exp $
+ * $Id: EvaluationType.java,v 1.60 2005/04/13 15:26:00 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.59 $, $Date: 2005/04/13 15:03:10 $
+ * @version $Revision: 1.60 $, $Date: 2005/04/13 15:26:00 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -410,8 +410,6 @@ public class EvaluationType extends ActionType {
 		this.measurementTypeIds.clear();
 		if (measurementTypeIds != null)
 			this.measurementTypeIds.addAll(measurementTypeIds);
-
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
 	/**

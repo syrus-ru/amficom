@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisType.java,v 1.63 2005/04/13 15:03:10 arseniy Exp $
+ * $Id: AnalysisType.java,v 1.64 2005/04/13 15:26:00 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.63 $, $Date: 2005/04/13 15:03:10 $
+ * @version $Revision: 1.64 $, $Date: 2005/04/13 15:26:00 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -402,8 +402,6 @@ public class AnalysisType extends ActionType {
 		this.measurementTypeIds.clear();
 		if (measurementTypeIds != null)
 			this.measurementTypeIds.addAll(measurementTypeIds);
-
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
 	/**
