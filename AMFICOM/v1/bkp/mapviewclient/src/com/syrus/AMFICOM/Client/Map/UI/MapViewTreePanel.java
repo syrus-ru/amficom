@@ -156,7 +156,7 @@ public final class MapViewTreePanel extends JPanel
 			}
 		}
 	}
-	
+
 	public void updateTree(MapView mapView) {
 		this.mapView = mapView;
 		this.model.setMapView(mapView);
