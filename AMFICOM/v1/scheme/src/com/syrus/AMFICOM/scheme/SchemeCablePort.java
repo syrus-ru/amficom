@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePort.java,v 1.10 2005/04/12 18:12:19 bass Exp $
+ * $Id: SchemeCablePort.java,v 1.11 2005/04/13 19:34:10 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,10 +8,14 @@
 
 package com.syrus.AMFICOM.scheme;
 
+import java.util.Date;
+import java.util.Set;
+
+import org.omg.CORBA.portable.IDLEntity;
+
 import com.syrus.AMFICOM.configuration.Port;
 import com.syrus.AMFICOM.configuration.corba.PortSort;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
@@ -21,21 +25,14 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.TransferableObject;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.scheme.corba.SchemeCablePort_Transferable;
-
-import java.util.Date;
-import java.util.Set;
-
-import org.omg.CORBA.portable.IDLEntity;
 
 /**
  * #09 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2005/04/12 18:12:19 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2005/04/13 19:34:10 $
  * @module scheme_v1
  */
 public final class SchemeCablePort extends AbstractSchemePort {
@@ -86,22 +83,21 @@ public final class SchemeCablePort extends AbstractSchemePort {
 		}
 	}
 
-	public static SchemeCablePort createInstance(
-			final Identifier creatorId)
-			throws ApplicationException {
+	public static SchemeCablePort createInstance(final Identifier creatorId) throws ApplicationException {
 		assert creatorId != null;
 		try {
-			final Date created = new Date();
-			final SchemeCablePort schemeCablePort = new SchemeCablePort(
-					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.SCHEME_CABLE_PORT_ENTITY_CODE),
-					created, created, creatorId, creatorId,
+			final Date created1 = new Date();
+			final SchemeCablePort schemeCablePort = new SchemeCablePort(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SCHEME_CABLE_PORT_ENTITY_CODE),
+					created1,
+					created1,
+					creatorId,
+					creatorId,
 					0L);
 			schemeCablePort.changed = true;
 			return schemeCablePort;
-		} catch (final IllegalObjectEntityException ioee) {
-			throw new ApplicationException(
-					"SchemeCablePort.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
+		}
+		catch (final IllegalObjectEntityException ioee) {
+			throw new ApplicationException("SchemeCablePort.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
 		}
 	}
 

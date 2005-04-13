@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.8 2005/04/08 09:26:11 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.9 2005/04/13 19:34:10 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import org.omg.CORBA.portable.IDLEntity;
 /**
  * #13 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/04/08 09:26:11 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.9 $, $Date: 2005/04/13 19:34:10 $
  * @module scheme_v1
  */
 public final class CableChannelingItem extends AbstractCloneableStorableObject
@@ -96,22 +96,21 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject
 		throw new UnsupportedOperationException();
 	}
 
-	public static CableChannelingItem createInstance(
-			final Identifier creatorId)
-			throws CreateObjectException {
+	public static CableChannelingItem createInstance(final Identifier creatorId) throws CreateObjectException {
 		assert creatorId != null;
 		try {
-			final Date created = new Date();
-			final CableChannelingItem cableChannelingItem = new CableChannelingItem(
-					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.CABLE_CHANNELING_ITEM_ENTITY_CODE),
-					created, created, creatorId, creatorId,
+			final Date created1 = new Date();
+			final CableChannelingItem cableChannelingItem = new CableChannelingItem(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CABLE_CHANNELING_ITEM_ENTITY_CODE),
+					created1,
+					created1,
+					creatorId,
+					creatorId,
 					0L);
 			cableChannelingItem.changed = true;
 			return cableChannelingItem;
-		} catch (final IllegalObjectEntityException ioee) {
-			throw new CreateObjectException(
-					"CableChanelingItem.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
+		}
+		catch (final IllegalObjectEntityException ioee) {
+			throw new CreateObjectException("CableChanelingItem.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
 		}
 	}
 

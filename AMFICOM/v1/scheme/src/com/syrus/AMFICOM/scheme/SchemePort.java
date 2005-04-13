@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePort.java,v 1.10 2005/04/12 18:12:19 bass Exp $
+ * $Id: SchemePort.java,v 1.11 2005/04/13 19:34:11 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.scheme;
 import com.syrus.AMFICOM.configuration.Port;
 import com.syrus.AMFICOM.configuration.corba.PortSort;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
@@ -21,8 +20,6 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.TransferableObject;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.scheme.corba.SchemePort_Transferable;
 
@@ -34,8 +31,8 @@ import org.omg.CORBA.portable.IDLEntity;
 /**
  * #08 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2005/04/12 18:12:19 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2005/04/13 19:34:11 $
  * @module scheme_v1
  */
 public final class SchemePort extends AbstractSchemePort {
@@ -86,21 +83,21 @@ public final class SchemePort extends AbstractSchemePort {
 		}
 	}
 
-	public static SchemePort createInstance(final Identifier creatorId)
-			throws CreateObjectException {
+	public static SchemePort createInstance(final Identifier creatorId) throws CreateObjectException {
 		assert creatorId != null;
 		try {
-			final Date created = new Date();
-			final SchemePort schemePort = new SchemePort(
-					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.SCHEME_PORT_ENTITY_CODE),
-					created, created, creatorId, creatorId,
+			final Date created1 = new Date();
+			final SchemePort schemePort = new SchemePort(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SCHEME_PORT_ENTITY_CODE),
+					created1,
+					created1,
+					creatorId,
+					creatorId,
 					0L);
 			schemePort.changed = true;
 			return schemePort;
-		} catch (final IllegalObjectEntityException ioee) {
-			throw new CreateObjectException(
-					"SchemePort.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
+		}
+		catch (final IllegalObjectEntityException ioee) {
+			throw new CreateObjectException("SchemePort.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
 		}
 	}
 

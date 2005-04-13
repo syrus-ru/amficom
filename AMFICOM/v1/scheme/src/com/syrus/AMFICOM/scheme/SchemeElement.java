@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.12 2005/04/12 18:12:19 bass Exp $
+ * $Id: SchemeElement.java,v 1.13 2005/04/13 19:34:10 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,6 @@ import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
@@ -23,8 +22,6 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.TransferableObject;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
@@ -43,8 +40,8 @@ import org.omg.CORBA.portable.IDLEntity;
 /**
  * #04 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2005/04/12 18:12:19 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.13 $, $Date: 2005/04/13 19:34:10 $
  * @module scheme_v1
  */
 public final class SchemeElement extends AbstractSchemeElement implements
@@ -118,26 +115,27 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		}
 	}
 
-	public static SchemeElement createInstance(final Identifier creatorId)
-			throws CreateObjectException {
+	public static SchemeElement createInstance(final Identifier creatorId) throws CreateObjectException {
 		assert creatorId != null;
 		try {
-			final Date created = new Date();
-			final SchemeElement schemeElement = new SchemeElement(
-					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE),
-					created, created, creatorId, creatorId,
+			final Date created1 = new Date();
+			final SchemeElement schemeElement = new SchemeElement(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE),
+					created1,
+					created1,
+					creatorId,
+					creatorId,
 					0L);
 			schemeElement.changed = true;
 			return schemeElement;
-		} catch (final IllegalObjectEntityException ioee) {
-			throw new CreateObjectException(
-					"SchemeElement.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
+		}
+		catch (final IllegalObjectEntityException ioee) {
+			throw new CreateObjectException("SchemeElement.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
 		}
 	}
 
 	/**
-	 * @param scheme cannot be <code>null</code>.
+	 * @param scheme
+	 *          cannot be <code>null</code>.
 	 */
 	public void addScheme(final Scheme scheme) {
 		assert scheme != null: ErrorMessages.NON_NULL_EXPECTED;

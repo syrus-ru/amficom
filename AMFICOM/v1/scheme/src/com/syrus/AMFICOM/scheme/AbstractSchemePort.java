@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.9 2005/04/12 18:12:19 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.10 2005/04/13 19:34:10 arseniy Exp $
  * 
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,10 @@
  */
 
 package com.syrus.AMFICOM.scheme;
+
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.configuration.MeasurementPortType;
@@ -18,21 +22,15 @@ import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.Namable;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
-
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * This class is never used directly, it was provided just in order for source
  * generated from IDL files to compile cleanly. Use other implementations of
  * {@link AbstractSchemePort}instead.
  * 
- * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/04/12 18:12:19 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.10 $, $Date: 2005/04/13 19:34:10 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemePort extends

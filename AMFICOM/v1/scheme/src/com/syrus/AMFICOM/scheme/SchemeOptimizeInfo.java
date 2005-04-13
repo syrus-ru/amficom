@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.8 2005/04/08 09:26:11 bass Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.9 2005/04/13 19:34:10 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,17 +8,29 @@
 
 package com.syrus.AMFICOM.scheme;
 
-import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfo_Transferable;
+import java.util.Date;
+import java.util.Set;
 
-import java.util.*;
 import org.omg.CORBA.portable.IDLEntity;
+
+import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Describable;
+import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfo_Transferable;
 
 /**
  * #05 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/04/08 09:26:11 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.9 $, $Date: 2005/04/13 19:34:10 $
  * @module scheme_v1
  */
 public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
@@ -96,22 +108,21 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 		fromTransferable(transferable);
 	}
 
-	public static SchemeOptimizeInfo createInstance(
-			final Identifier creatorId)
-			throws CreateObjectException {
+	public static SchemeOptimizeInfo createInstance(final Identifier creatorId) throws CreateObjectException {
 		assert creatorId != null;
 		try {
-			final Date created = new Date();
-			final SchemeOptimizeInfo schemeOptimizeInfo = new SchemeOptimizeInfo(
-					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.SCHEME_OPTIMIZE_INFO_ENTITY_CODE),
-					created, created, creatorId, creatorId,
+			final Date created1 = new Date();
+			final SchemeOptimizeInfo schemeOptimizeInfo = new SchemeOptimizeInfo(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SCHEME_OPTIMIZE_INFO_ENTITY_CODE),
+					created1,
+					created1,
+					creatorId,
+					creatorId,
 					0L);
 			schemeOptimizeInfo.changed = true;
 			return schemeOptimizeInfo;
-		} catch (final IllegalObjectEntityException ioee) {
-			throw new CreateObjectException(
-					"SchemeOptimizeInfo.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
+		}
+		catch (final IllegalObjectEntityException ioee) {
+			throw new CreateObjectException("SchemeOptimizeInfo.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
 		}
 	}
 

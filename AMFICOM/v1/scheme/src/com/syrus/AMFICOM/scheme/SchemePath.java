@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.12 2005/04/08 09:26:11 bass Exp $
+ * $Id: SchemePath.java,v 1.13 2005/04/13 19:34:10 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,21 +8,37 @@
 
 package com.syrus.AMFICOM.scheme;
 
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.SortedSet;
+
+import org.omg.CORBA.portable.IDLEntity;
+
 import com.syrus.AMFICOM.configuration.TransmissionPath;
-import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
+import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.Characterizable;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Describable;
+import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.scheme.corba.PathElementKind;
 import com.syrus.AMFICOM.scheme.corba.SchemePath_Transferable;
 
-import java.util.*;
-
-import org.omg.CORBA.portable.IDLEntity;
-
 /**
  * #14 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2005/04/08 09:26:11 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.13 $, $Date: 2005/04/13 19:34:10 $
  * @module scheme_v1
  */
 public final class SchemePath extends AbstractCloneableStorableObject implements
@@ -92,21 +108,21 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 		throw new UnsupportedOperationException();
 	}
 
-	public static SchemePath createInstance(final Identifier creatorId)
-			throws CreateObjectException {
+	public static SchemePath createInstance(final Identifier creatorId) throws CreateObjectException {
 		assert creatorId != null;
 		try {
-			final Date created = new Date();
-			final SchemePath schemePath = new SchemePath(
-					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.SCHEME_PATH_ENTITY_CODE),
-					created, created, creatorId, creatorId,
+			final Date created1 = new Date();
+			final SchemePath schemePath = new SchemePath(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SCHEME_PATH_ENTITY_CODE),
+					created1,
+					created1,
+					creatorId,
+					creatorId,
 					0L);
 			schemePath.changed = true;
 			return schemePath;
-		} catch (final IllegalObjectEntityException ioee) {
-			throw new CreateObjectException(
-					"SchemePath.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
+		}
+		catch (final IllegalObjectEntityException ioee) {
+			throw new CreateObjectException("SchemePath.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
 		}
 	}
 

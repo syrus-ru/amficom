@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.12 2005/04/08 09:26:11 bass Exp $
+ * $Id: PathElement.java,v 1.13 2005/04/13 19:34:10 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,8 +23,8 @@ import org.omg.CORBA.portable.IDLEntity;
  * its {@link PathElement#getName() getName()} method actually returns
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  * 
- * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2005/04/08 09:26:11 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.13 $, $Date: 2005/04/13 19:34:10 $
  * @module scheme_v1
  */
 public final class PathElement extends AbstractCloneableStorableObject implements Describable, Comparable {
@@ -113,17 +113,18 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 			throws CreateObjectException {
 		assert creatorId != null;
 		try {
-			final Date created = new Date();
-			final PathElement pathElement = new PathElement(
-					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.PATH_ELEMENT_ENTITY_CODE),
-					created, created, creatorId, creatorId,
+			final Date created1 = new Date();
+			final PathElement pathElement = new PathElement(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PATH_ELEMENT_ENTITY_CODE),
+					created1,
+					created1,
+					creatorId,
+					creatorId,
 					0L);
 			pathElement.changed = true;
 			return pathElement;
-		} catch (final IllegalObjectEntityException ioee) {
-			throw new CreateObjectException(
-					"PathElement.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
+		}
+		catch (final IllegalObjectEntityException ioee) {
+			throw new CreateObjectException("PathElement.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
 		}
 	}
 

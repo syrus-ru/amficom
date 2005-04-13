@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.10 2005/04/08 09:26:11 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.11 2005/04/13 19:34:10 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,8 +20,8 @@ import org.omg.CORBA.portable.IDLEntity;
 /**
  * #11 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2005/04/08 09:26:11 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2005/04/13 19:34:10 $
  * @module scheme_v1
  */
 public final class SchemeCableLink extends AbstractSchemeLink {
@@ -75,21 +75,21 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 		throw new UnsupportedOperationException();
 	}
 
-	public static SchemeCableLink createInstance(final Identifier creatorId)
-			throws CreateObjectException {
+	public static SchemeCableLink createInstance(final Identifier creatorId) throws CreateObjectException {
 		assert creatorId != null;
 		try {
-			final Date created = new Date();
-			final SchemeCableLink schemeCableLink = new SchemeCableLink(
-					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE),
-					created, created, creatorId, creatorId,
+			final Date created1 = new Date();
+			final SchemeCableLink schemeCableLink = new SchemeCableLink(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE),
+					created1,
+					created1,
+					creatorId,
+					creatorId,
 					0L);
 			schemeCableLink.changed = true;
 			return schemeCableLink;
-		} catch (final IllegalObjectEntityException ioee) {
-			throw new CreateObjectException(
-					"SchemeCableLink.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
+		}
+		catch (final IllegalObjectEntityException ioee) {
+			throw new CreateObjectException("SchemeCableLink.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
 		}
 	}
 

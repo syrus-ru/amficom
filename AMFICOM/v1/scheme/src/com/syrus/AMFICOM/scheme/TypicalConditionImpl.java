@@ -1,5 +1,5 @@
 /*-
- * $Id: TypicalConditionImpl.java,v 1.1 2005/04/04 13:17:21 bass Exp $
+ * $Id: TypicalConditionImpl.java,v 1.2 2005/04/13 19:34:11 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,19 +8,19 @@
 
 package com.syrus.AMFICOM.scheme;
 
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
-import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectCondition;
-import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.OperationSort;
-import com.syrus.AMFICOM.general.corba.TypicalSort;
 import java.util.Date;
 import java.util.Set;
 
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.TypicalCondition;
+import com.syrus.AMFICOM.general.corba.OperationSort;
+import com.syrus.AMFICOM.general.corba.TypicalSort;
+
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/04/04 13:17:21 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2005/04/13 19:34:11 $
  * @module scheme_v1
  */
 final class TypicalConditionImpl extends TypicalCondition {
@@ -89,7 +89,6 @@ final class TypicalConditionImpl extends TypicalCondition {
 
 	/**
 	 * @param storableObjects
-	 * @see StorableObjectCondition#isNeedMore(Set)
 	 */
 	public boolean isNeedMore(final Set storableObjects) {
 		return this.type != TypicalSort._TYPE_STRING
@@ -101,7 +100,6 @@ final class TypicalConditionImpl extends TypicalCondition {
 	/**
 	 * @param storableObject
 	 * @throws IllegalObjectEntityException
-	 * @see StorableObjectCondition#isConditionTrue(StorableObject)
 	 */
 	public boolean isConditionTrue(final StorableObject storableObject) throws IllegalObjectEntityException {
 		throw new UnsupportedOperationException();
