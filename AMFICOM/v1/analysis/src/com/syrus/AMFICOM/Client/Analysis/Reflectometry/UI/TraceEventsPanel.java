@@ -101,10 +101,11 @@ public class TraceEventsPanel extends ScaledGraphPanel
 //				}
 			}
 		}
-		g.setColor(noiseColor);
-		if (events[events.length-1].last_point < end)
+        g.setColor(noiseColor);
+        int lastPoint = events.length > 0 ? events[events.length - 1].last_point : 0; 
+		if (lastPoint < end)
 		{
-			int iFrom = events[events.length-1].last_point - start;
+			int iFrom = lastPoint - start;
 			int iTo = Math.min (end, y.length - start - 1);
 			draw_y_curve(g, y, iFrom + start, iFrom, iTo - iFrom);
 //			for (int i = events[events.length-1].last_point - start; i< Math.min (end, y.length - start - 1); i++)
