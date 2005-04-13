@@ -1,5 +1,5 @@
 /*
- * $Id: TestProcessor.java,v 1.45 2005/04/07 14:04:32 arseniy Exp $
+ * $Id: TestProcessor.java,v 1.46 2005/04/13 17:29:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,15 +10,17 @@ package com.syrus.AMFICOM.mcm;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.SessionContext;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
@@ -31,7 +33,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2005/04/07 14:04:32 $
+ * @version $Revision: 1.46 $, $Date: 2005/04/13 17:29:53 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -39,10 +41,9 @@ import com.syrus.util.Log;
 public abstract class TestProcessor extends SleepButWorkThread {
 	Test test;
 	Transceiver transceiver;
-	int numberOfScheduledMeasurements;
-	int numberOfReceivedMResults;
+	private int numberOfReceivedMResults;
 	boolean lastMeasurementAcquisition;
-//	boolean startedWithProcessingTest;
+	private long currentMeasurementStartTime;
 	long forgetFrame;
 	private List measurementResultList;	//List <Result measurementResult>
 	boolean running;
@@ -54,8 +55,9 @@ public abstract class TestProcessor extends SleepButWorkThread {
 
 		this.test = test;
 
-		this.numberOfScheduledMeasurements = this.numberOfReceivedMResults = 0;
+		this.numberOfReceivedMResults = 0;
 		this.lastMeasurementAcquisition = false;
+		this.currentMeasurementStartTime = this.test.getStartTime().getTime();
 		this.forgetFrame = ApplicationProperties.getInt(MeasurementControlModule.KEY_FORGET_FRAME, MeasurementControlModule.FORGET_FRAME) * 1000;
 		this.measurementResultList = Collections.synchronizedList(new LinkedList());
 		this.running = true;
@@ -69,12 +71,12 @@ public abstract class TestProcessor extends SleepButWorkThread {
 		}
 
 		if (this.running) {
-			// Проверить правильность КИС.
+			// Проверить правильность КИС. Найти приёмопередатчик.
 			Identifier kisId = test.getKISId();
 			this.transceiver = (Transceiver) MeasurementControlModule.transceivers.get(kisId);
 			if (this.transceiver == null) {
 				Log.errorMessage("TestProcessor<init> | Cannot find transceiver for kis '" + kisId + "'");
-				this.abort();// this.stopInit();
+				this.abort();
 			}
 		}
 
@@ -91,49 +93,34 @@ public abstract class TestProcessor extends SleepButWorkThread {
 					break;
 				default:
 					Log.errorMessage("Unappropriate status " + this.test.getStatus().value() + " of test '" + this.test.getId() + "'");
-					this.abort();// this.stopInit();
+					this.abort();
 			}
 		}
 	}
-//
-//	private final void stopInit() {
-//		this.updateMyTestStatus(TestStatus.TEST_STATUS_ABORTED);
-//		this.running = false;
-//		this.measurementResultList.clear();
-//		MeasurementControlModule.testProcessors.remove(this.test.getId());
-//		this.test = null;
-//	}
 
 	private void startWithScheduledTest() {
 		this.updateMyTestStatus(TestStatus.TEST_STATUS_PROCESSING);
-
-		try {
-			MeasurementStorableObjectPool.putStorableObject(this.test);
-		}
-		catch (IllegalObjectEntityException ioee) {
-			Log.errorException(ioee);
-		}
 	}
 
 	private void startWithProcessingTest() {
 		Measurement lastMeasurement = null;
 		try {
 			lastMeasurement = this.test.retrieveLastMeasurement();
+			MeasurementStorableObjectPool.putStorableObject(lastMeasurement);
 		}
-		catch (DatabaseException de) {
-			if (de instanceof ObjectNotFoundException) {
-				startWithScheduledTest();
+		catch (ApplicationException ae) {
+			if (ae instanceof ObjectNotFoundException) {
+				this.startWithScheduledTest();
 				return;
 			}
-			Log.errorException(de);
-			this.abort();//this.stopInit();
+			Log.errorException(ae);
+			this.abort();
 		}
 
 		Collection results;
 		Result measurementResult = null;
 		if (lastMeasurement != null) {
 			try{
-				this.numberOfScheduledMeasurements = this.test.getNumberOfMeasurements();
 				this.numberOfReceivedMResults = this.test.retrieveNumberOfResults(ResultSort.RESULT_SORT_MEASUREMENT);
 				switch (lastMeasurement.getStatus().value()) {
 					case MeasurementStatus._MEASUREMENT_STATUS_SCHEDULED:
@@ -202,7 +189,7 @@ public abstract class TestProcessor extends SleepButWorkThread {
 			}
 			catch (DatabaseException de) {
 				Log.errorException(de);
-				this.abort();//this.stopInit();
+				this.abort();
 			}
 		}
 	}
@@ -210,6 +197,37 @@ public abstract class TestProcessor extends SleepButWorkThread {
 	protected final void addMeasurementResult(Result result) {
 		if (! this.measurementResultList.contains(result))
 			this.measurementResultList.add(result);
+	}
+
+	final void newMeasurementCreation(Date startTime) throws CreateObjectException {
+		Measurement measurement = this.test.createMeasurement(SessionContext.getAccessIdentity().getUserId(), startTime);
+		this.transceiver.addMeasurement(measurement, this);
+		this.currentMeasurementStartTime = startTime.getTime();
+		try {
+			MeasurementStorableObjectPool.putStorableObject(this.test);
+			MeasurementStorableObjectPool.putStorableObject(measurement);
+			MeasurementStorableObjectPool.flush(true);
+		}
+		catch (ApplicationException ae) {
+			Log.errorException(ae);
+		}
+	}
+
+	final void checkIfCompletedOrAborted() {
+		final int numberOfScheduledMeasurements = this.test.getNumberOfMeasurements();
+		Log.debugMessage('\'' + this.test.getId().getIdentifierString() 
+				 + "' numberOfReceivedMResults: " + this.numberOfReceivedMResults 
+				 + ", numberOfScheduledMeasurements: " + numberOfScheduledMeasurements 
+				 + ", lastMeasurementAcquisition: " + this.lastMeasurementAcquisition, Log.DEBUGLEVEL07);
+		if (this.numberOfReceivedMResults == numberOfScheduledMeasurements && this.lastMeasurementAcquisition)
+			this.complete();
+		else {
+			if (System.currentTimeMillis() - this.currentMeasurementStartTime > this.forgetFrame) {
+				Log.debugMessage("Passed " + this.forgetFrame / 1000 + " sec from last measurement creation. Aborting test '"
+						+ this.test.getId() + "'", Log.DEBUGLEVEL03);
+				this.abort();
+			}
+		}
 	}
 
 	final void processMeasurementResult() {
@@ -260,16 +278,6 @@ public abstract class TestProcessor extends SleepButWorkThread {
 		catch (ApplicationException ae) {
 			Log.errorException(ae);
 		}
-
-//		TestStatusVerifier tsv = new TestStatusVerifier(this.test.getId(), status);
-//		tsv.start();
-//
-//		try {
-//			this.test.updateStatus(status, MeasurementControlModule.iAm.getUserId());
-//		}
-//		catch (UpdateObjectException uoe) {
-//			Log.errorException(uoe);
-//		}
 	}
 
 	protected void complete() {
@@ -299,50 +307,4 @@ public abstract class TestProcessor extends SleepButWorkThread {
 		return this.test.getId();
 	}
 
-
-//	private class TestStatusVerifier extends SleepButWorkThread {
-//		private Identifier testId;
-//		private TestStatus testStatus;
-//		private boolean running;
-//
-//		TestStatusVerifier (Identifier testId, TestStatus testStatus) {
-//			super(ApplicationProperties.getInt(MeasurementControlModule.KEY_TICK_TIME, MeasurementControlModule.TICK_TIME) * 1000,
-//						ApplicationProperties.getInt(MeasurementControlModule.KEY_MAX_FALLS, SleepButWorkThread.MAX_FALLS));
-//
-//			this.testId = testId;
-//			this.testStatus = testStatus;
-//
-//			this.running = true;
-//		}
-//
-//		public void run() {
-//			while (this.running) {
-//				try {
-//					Log.debugMessage("Updating on server status of test '" + this.testId + "' to " + this.testStatus.value(), Log.DEBUGLEVEL07);
-//					if (MeasurementControlModule.mServerRef != null) {
-//						MeasurementControlModule.mServerRef.updateTestStatus((Identifier_Transferable)this.testId.getTransferable(), this.testStatus);
-//						super.clearFalls();
-//						this.shutdown();
-//					}
-//					else {
-//						MeasurementControlModule.resetMServerConnection();
-//						super.sleepCauseOfFall();
-//					}
-//				}
-//				catch (org.omg.CORBA.SystemException se) {
-//					Log.errorException(se);
-//					MeasurementControlModule.resetMServerConnection();
-//					super.sleepCauseOfFall();
-//				}
-//			}	//while
-//		}
-//
-//		protected void processFall() {
-//			this.shutdown();
-//		}
-//
-//		private void shutdown() {
-//			this.running = false;
-//		}
-//	}
 }
