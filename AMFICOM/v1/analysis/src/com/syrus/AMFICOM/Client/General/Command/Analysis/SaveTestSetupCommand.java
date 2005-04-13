@@ -75,11 +75,11 @@ public class SaveTestSetupCommand extends VoidCommand
 			return;
 		}
 
-		Identifier user_id = new Identifier(((RISDSessionInfo)aContext
+		Identifier userId = new Identifier(((RISDSessionInfo)aContext
 				.getSessionInterface()).getAccessIdentifier().user_id);
 		try
 		{
-			ms.setCriteriaSet(AnalysisUtil.createCriteriaSetFromParams(user_id, ms.getMonitoredElementIds()));
+			ms.setCriteriaSet(AnalysisUtil.createCriteriaSetFromParams(userId, ms.getMonitoredElementIds()));
 		} catch (ApplicationException e)
 		{
 			System.err.println("SaveTestSetupCommand: ApplicationException (criterias)");
@@ -103,7 +103,7 @@ public class SaveTestSetupCommand extends VoidCommand
 			}
 			try
 			{
-				ms.setEtalon(AnalysisUtil.createEtalon(user_id, ms.getMonitoredElementIds(), mtm));
+				ms.setEtalon(AnalysisUtil.createEtalon(userId, ms.getMonitoredElementIds(), mtm));
 			} catch (ApplicationException e1)
 			{
 				System.err.println("SaveTestSetupCommand: ApplicationException (etalon)");
