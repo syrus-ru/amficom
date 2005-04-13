@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.Client.General.UI.AComboBox;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/10/07 12:20:22 $
- * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2005/04/13 21:40:46 $
+ * @author $Author: arseniy $
  * @module generalclient_v1
  */
 public class ObjPropertyTable extends JTable {

@@ -8,8 +8,8 @@ import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
  * Simple stub of AbstractLabelCellRenderer. see
  * {@link com.syrus.AMFICOM.client_.general.ui_.AbstractLabelCellRenderer}
  * 
- * @version $Revision: 1.5 $, $Date: 2005/03/22 10:40:04 $
- * @author $Author: bob $
+ * @version $Revision: 1.6 $, $Date: 2005/04/13 21:40:47 $
+ * @author $Author: arseniy $
  * @module generalclient_v1
  */
 public class StubLabelCellRenderer extends AbstractLabelCellRenderer {

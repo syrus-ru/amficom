@@ -1,5 +1,5 @@
 /*
- * $Id: ColorListCellRenderer.java,v 1.2 2005/03/05 15:23:50 stas Exp $
+ * $Id: ColorListCellRenderer.java,v 1.3 2005/04/13 21:40:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.client_.general.ui_;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/03/05 15:23:50 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/04/13 21:40:46 $
  * @module generalclient_v1
  */
 
@@ -24,8 +24,8 @@ import javax.swing.ListCellRenderer;
 
 /**
  * Renderer for java.awt.Color cell at JList.
- * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/03/05 15:23:50 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/04/13 21:40:46 $
  * @module generalclient_v1
  */
 

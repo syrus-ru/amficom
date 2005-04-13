@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourcePropertiesDialog.java,v 1.9 2004/11/12 15:39:41 krupenn Exp $
+ * $Id: ObjectResourcePropertiesDialog.java,v 1.10 2005/04/13 21:40:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,8 +16,8 @@ import java.awt.event.ActionEvent;
 import javax.swing.*;
 
 /**
- * @author $Author: krupenn $
- * @version $Revision: 1.9 $, $Date: 2004/11/12 15:39:41 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.10 $, $Date: 2005/04/13 21:40:46 $
  * @module generalclient_v1
  */
 public class ObjectResourcePropertiesDialog extends JDialog

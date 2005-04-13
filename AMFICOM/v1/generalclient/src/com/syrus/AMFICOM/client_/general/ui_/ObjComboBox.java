@@ -1,5 +1,5 @@
 /*
- * $Id: ObjComboBox.java,v 1.7 2005/01/14 11:04:09 bob Exp $
+ * $Id: ObjComboBox.java,v 1.8 2005/04/13 21:40:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.Client.General.UI.AComboBox;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.7 $, $Date: 2005/01/14 11:04:09 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/04/13 21:40:46 $
  * @module generalclient_v1
  */
 public class ObjComboBox extends AComboBox {

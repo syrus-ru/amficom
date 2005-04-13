@@ -14,8 +14,8 @@ import javax.swing.table.AbstractTableModel;
 import java.util.Iterator;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/04/07 14:31:06 $
- * @author $Author: bob $
+ * @version $Revision: 1.8 $, $Date: 2005/04/13 21:40:47 $
+ * @author $Author: arseniy $
  * @module generalclient_v1
  */
 public class ObjectResourceTableModel extends AbstractTableModel {

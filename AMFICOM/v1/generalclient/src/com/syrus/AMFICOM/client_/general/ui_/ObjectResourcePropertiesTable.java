@@ -7,8 +7,8 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/10/05 13:19:42 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.2 $, $Date: 2005/04/13 21:40:47 $
+ * @author $Author: arseniy $
  * @module generalclient_v1
  */
 public class ObjectResourcePropertiesTable extends ATable 

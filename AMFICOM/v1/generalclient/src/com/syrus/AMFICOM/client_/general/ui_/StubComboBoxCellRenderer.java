@@ -8,8 +8,8 @@ import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
  * Simple stub of AbstractComboBoxCellRenderer.
  * see {@link com.syrus.AMFICOM.client.general.ui_.AbstractComboBoxCellRenderer}
  * 
- * @version $Revision: 1.4 $, $Date: 2004/10/12 14:39:26 $
- * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2005/04/13 21:40:47 $
+ * @author $Author: arseniy $
  * @module generalclient_v1
  */
 public class StubComboBoxCellRenderer extends AbstractComboBoxCellRenderer {

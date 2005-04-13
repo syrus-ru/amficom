@@ -15,8 +15,8 @@ import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.general.StorableObject;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/01/14 11:04:09 $
- * @author $Author: bob $
+ * @version $Revision: 1.9 $, $Date: 2005/04/13 21:40:46 $
+ * @author $Author: arseniy $
  * @module generalclient_v1
  */
 public class ObjListModel extends AbstractListModel implements MutableComboBoxModel, Serializable {

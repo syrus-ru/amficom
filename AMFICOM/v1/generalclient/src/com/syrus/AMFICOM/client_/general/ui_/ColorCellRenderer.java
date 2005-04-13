@@ -18,8 +18,8 @@ import javax.swing.table.TableCellRenderer;
 /**
  * Renderer for java.awt.Color cell at JTable.
  * see {@link java.awt.Color}
- * @version $Revision: 1.1 $, $Date: 2004/08/26 10:21:39 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.2 $, $Date: 2005/04/13 21:40:46 $
+ * @author $Author: arseniy $
  * @module generalclient_v1
  */
 public class ColorCellRenderer extends JComponent implements TableCellRenderer {

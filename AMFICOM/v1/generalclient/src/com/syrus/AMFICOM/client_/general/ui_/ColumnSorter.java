@@ -8,8 +8,8 @@ import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
  * ColumnSorter used for sorting elements with aid of Collections i.g.
  * <code>Collections.sort(list, new ColumnSorter(controller, key, ascending))</code>
  * 
- * @version $Revision: 1.4 $, $Date: 2005/03/16 13:40:57 $
- * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2005/04/13 21:40:46 $
+ * @author $Author: arseniy $
  * @module generalclient_v1
  */
 public class ColumnSorter implements Comparator {

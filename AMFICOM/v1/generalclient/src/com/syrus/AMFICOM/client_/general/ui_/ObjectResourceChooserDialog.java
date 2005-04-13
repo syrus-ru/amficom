@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourceChooserDialog.java,v 1.3 2005/03/01 15:45:12 krupenn Exp $
+ * $Id: ObjectResourceChooserDialog.java,v 1.4 2005/04/13 21:40:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,8 +43,8 @@ import javax.swing.event.ListSelectionListener;
  * чтобы включить эту возможность, необходимо вызвать метод 
  * setCanDelete(boolean bool)
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.3 $, $Date: 2005/03/01 15:45:12 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.4 $, $Date: 2005/04/13 21:40:46 $
  * @module generalclient_v1
  */
 public class ObjectResourceChooserDialog extends JDialog 

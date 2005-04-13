@@ -10,8 +10,8 @@ import java.util.Map;
 import javax.swing.table.AbstractTableModel;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/01/11 16:39:52 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.5 $, $Date: 2005/04/13 21:40:46 $
+ * @author $Author: arseniy $
  * @module generalclient_v1
  */
 public class ObjPropertyTableModel extends AbstractTableModel {

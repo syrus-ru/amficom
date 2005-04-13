@@ -1,5 +1,5 @@
 /*
- * $Id: SelectReportsPanel.java,v 1.10 2004/09/27 09:02:12 bass Exp $
+ * $Id: SelectReportsPanel.java,v 1.11 2005/04/13 21:40:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,8 +24,8 @@ import oracle.jdeveloper.layout.XYLayout;
 /**
  * Панель для отображения дерева доступных отчётов.
  * 
- * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2004/09/27 09:02:12 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2005/04/13 21:40:46 $
  * @module generalclient_v1
  */
 public class SelectReportsPanel extends JInternalFrame implements

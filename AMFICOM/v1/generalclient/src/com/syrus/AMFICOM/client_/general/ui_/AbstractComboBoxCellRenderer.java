@@ -15,8 +15,8 @@ import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 /**
  * Abstract class for JComboBox rendering at JTable
  * 
- * @version $Revision: 1.4 $, $Date: 2004/10/12 14:39:26 $
- * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2005/04/13 21:40:46 $
+ * @author $Author: arseniy $
  * @module generalclient_v1
  */
 public abstract class AbstractComboBoxCellRenderer extends JComboBox implements TableCellRenderer {

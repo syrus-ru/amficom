@@ -19,8 +19,8 @@ import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
  * Abstract class for JLabel and simple Component (witch extends JLabel)
  * rendering at JTable
  * 
- * @version $Revision: 1.11 $, $Date: 2005/04/07 14:31:28 $
- * @author $Author: bob $
+ * @version $Revision: 1.12 $, $Date: 2005/04/13 21:40:46 $
+ * @author $Author: arseniy $
  * @module generalclient_v1
  */
 public abstract class AbstractLabelCellRenderer extends JLabel implements TableCellRenderer {
