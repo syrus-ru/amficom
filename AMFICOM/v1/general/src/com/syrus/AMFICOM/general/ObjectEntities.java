@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectEntities.java,v 1.53 2005/04/08 13:00:07 arseniy Exp $
+ * $Id: ObjectEntities.java,v 1.54 2005/04/13 10:00:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.53 $, $Date: 2005/04/08 13:00:07 $
+ * @version $Revision: 1.54 $, $Date: 2005/04/13 10:00:06 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -80,6 +80,7 @@ public final class ObjectEntities {
 	public static final String SETMELINK_ENTITY = "SetMELink";
 	public static final String MS_ENTITY = "MeasurementSetup";
 	public static final String MSMELINK_ENTITY = "MeasurementSetupMELink";
+	public static final String MSMTLINK_ENTITY = "MeasurementSetupMTLink";
 	public static final String MEASUREMENT_ENTITY = "Measurement";
 	public static final String ANALYSIS_ENTITY = "Analysis";
 	public static final String EVALUATION_ENTITY = "Evaluation";
