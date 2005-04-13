@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.35 2005/04/12 17:11:34 arseniy Exp $
+ * $Id: Collector.java,v 1.36 2005/04/13 09:44:32 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,8 +38,8 @@ import com.syrus.AMFICOM.map.corba.Collector_Transferable;
  * Коллектор на топологической схеме, который характеризуется набором входящих
  * в него линий. Линии не обязаны быть связными.
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.35 $, $Date: 2005/04/12 17:11:34 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.36 $, $Date: 2005/04/13 09:44:32 $
  * @module map_v1
  */
 public class Collector extends StorableObject implements MapElement {
@@ -66,7 +66,6 @@ public class Collector extends StorableObject implements MapElement {
 	private Set physicalLinks;
 	private Set characteristics;
 
-	protected transient Map map;
 	protected transient boolean selected = false;
 	protected transient boolean removed = false;
 	protected transient boolean alarmState = false;
@@ -297,21 +296,6 @@ public class Collector extends StorableObject implements MapElement {
 	 */
 	public void setSelected(boolean selected) {
 		this.selected = selected;
-		getMap().setSelected(this, selected);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public Map getMap() {
-		return this.map;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setMap(Map map) {
-		this.map = map;
 	}
 
 	/**

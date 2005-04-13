@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.35 2005/04/12 17:11:34 arseniy Exp $
+ * $Id: NodeLink.java,v 1.36 2005/04/13 09:49:14 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,8 +37,8 @@ import com.syrus.AMFICOM.map.corba.NodeLink_Transferable;
  * отрезок, соединяющий два концевых узла ({@link AbstractNode}). Фрагменты 
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
- * @author $Author: arseniy $
- * @version $Revision: 1.35 $, $Date: 2005/04/12 17:11:34 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.36 $, $Date: 2005/04/13 09:49:14 $
  * @module map_v1
  */
 public class NodeLink extends StorableObject implements MapElement {
@@ -69,7 +69,6 @@ public class NodeLink extends StorableObject implements MapElement {
 
 	private Set characteristics;
 
-	protected transient Map map;
 	protected transient boolean selected = false;
 	protected transient boolean removed = false;
 	protected transient boolean alarmState = false;
@@ -291,20 +290,6 @@ public class NodeLink extends StorableObject implements MapElement {
 	/**
 	 * {@inheritDoc}
 	 */
-	public Map getMap() {
-		return this.map;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setMap(Map map) {
-		this.map = map;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public boolean isSelected() {
 		return this.selected;
 	}
@@ -314,7 +299,6 @@ public class NodeLink extends StorableObject implements MapElement {
 	 */
 	public void setSelected(boolean selected) {
 		this.selected = selected;
-		getMap().setSelected(this, selected);
 	}
 
 	/**
