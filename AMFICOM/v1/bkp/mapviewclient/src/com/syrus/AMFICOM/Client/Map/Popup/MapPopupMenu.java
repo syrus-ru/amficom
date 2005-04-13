@@ -1,5 +1,5 @@
 /**
- * $Id: MapPopupMenu.java,v 1.32 2005/04/05 15:48:07 krupenn Exp $
+ * $Id: MapPopupMenu.java,v 1.33 2005/04/13 11:16:29 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -63,7 +63,7 @@ import com.syrus.AMFICOM.mapview.UnboundNode;
 /**
  * Контекстное меню элемента карты
  * @author $Author: krupenn $
- * @version $Revision: 1.32 $, $Date: 2005/04/05 15:48:07 $
+ * @version $Revision: 1.33 $, $Date: 2005/04/13 11:16:29 $
  * @module mapviewclient_v1
  */
 public abstract class MapPopupMenu extends JPopupMenu
@@ -353,7 +353,7 @@ public abstract class MapPopupMenu extends JPopupMenu
 	protected void removeMapElement(MapElement me)
 	{
 		getLogicalNetLayer().deselectAll();
-		me.setSelected(true);
+		getLogicalNetLayer().getMapView().getMap().setSelected(me, true);
 		DeleteSelectionCommand command = new DeleteSelectionCommand();
 		command.setLogicalNetLayer(this.logicalNetLayer);
 		getLogicalNetLayer().getCommandList().add(command);
