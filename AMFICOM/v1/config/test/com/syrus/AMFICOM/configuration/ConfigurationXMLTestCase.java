@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationXMLTestCase.java,v 1.5 2005/02/25 07:01:41 bob Exp $
+ * $Id: ConfigurationXMLTestCase.java,v 1.6 2005/04/13 17:48:43 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.general.XMLIdentifierGeneratorServer;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/02/25 07:01:41 $
- * @author $Author: bob $
+ * @version $Revision: 1.6 $, $Date: 2005/04/13 17:48:43 $
+ * @author $Author: arseniy $
  * @module tools
  */
 public class ConfigurationXMLTestCase extends TestCase {
@@ -89,9 +89,15 @@ public class ConfigurationXMLTestCase extends TestCase {
 			new Identifier("LinkType_1107771596853"), true);
 		CharacteristicType characteristicType = (CharacteristicType) GeneralStorableObjectPool.getStorableObject(
 			new Identifier("CharacteristicType_0"), true);
-		Characteristic characteristic = Characteristic.createInstance(new Identifier("User_0"), characteristicType,
-			"testCharacteristic", "test", CharacteristicSort._CHARACTERISTIC_SORT_LINKTYPE, "t e s t",
-			linkType.getId(), false, false);
+		Characteristic characteristic = Characteristic.createInstance(new Identifier("User_0"),
+				characteristicType,
+				"testCharacteristic",
+				"test",
+				CharacteristicSort.CHARACTERISTIC_SORT_LINKTYPE,
+				"t e s t",
+				linkType.getId(),
+				false,
+				false);
 		GeneralStorableObjectPool.putStorableObject(characteristic);		
 		linkType.addCharacteristic(characteristic);
 	}
