@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.18 2005/04/12 14:49:38 bob Exp $
+ * $Id: MCM.java,v 1.19 2005/04/13 11:44:55 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,6 +21,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -33,7 +34,7 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/04/12 14:49:38 $
+ * @version $Revision: 1.19 $, $Date: 2005/04/13 11:44:55 $
  * @author $Author: bob $
  * @module administration_v1
  */
@@ -49,6 +50,9 @@ public class MCM extends DomainMember implements Characterizable {
 
 	private Set characteristics;
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public MCM(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
@@ -61,8 +65,13 @@ public class MCM extends DomainMember implements Characterizable {
 		catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public MCM(MCM_Transferable mt) throws CreateObjectException {
 		try {
 			this.fromTransferable(mt);
@@ -72,6 +81,9 @@ public class MCM extends DomainMember implements Characterizable {
 		}		
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected MCM(Identifier id,
 					Identifier creatorId,
 					long version,
@@ -97,6 +109,9 @@ public class MCM extends DomainMember implements Characterizable {
 		this.characteristics = new HashSet();
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
 		MCM_Transferable mt = (MCM_Transferable)transferable;
 		super.fromTransferable(mt.header, new Identifier(mt.domain_id));
@@ -109,10 +124,16 @@ public class MCM extends DomainMember implements Characterizable {
 		Set characteristicIds = Identifier.fromTransferables(mt.characteristic_ids);
 		this.characteristics = new HashSet(mt.characteristic_ids.length);
 		this.setCharacteristics0(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
-
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 	
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public IDLEntity getTransferable() {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		
 		int i = 0;
 		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
 		for (Iterator it = this.characteristics.iterator(); it.hasNext();)
@@ -126,6 +147,17 @@ public class MCM extends DomainMember implements Characterizable {
 									(Identifier_Transferable)this.userId.getTransferable(),
 									(Identifier_Transferable)this.serverId.getTransferable(),
 									charIds);
+	}
+	
+	/* (non-Javadoc)
+	 * @see com.syrus.AMFICOM.general.StorableObject#isValid()
+	 */
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	protected boolean isValid() {
+		return super.isValid() && this.name != null && this.name.length() != 0 && this.description != null && this.hostname != null && this.userId != null
+			&& this.characteristics != null && this.characteristics != Collections.EMPTY_SET;
 	}
 
 	public String getName() {
@@ -171,6 +203,9 @@ public class MCM extends DomainMember implements Characterizable {
 		return Collections.unmodifiableSet(this.characteristics);
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public void setCharacteristics0(final Set characteristics) {
 		this.characteristics.clear();
 		if (characteristics != null)
@@ -189,10 +224,6 @@ public class MCM extends DomainMember implements Characterizable {
 									 String hostname,
 									 Identifier userId,
 									 Identifier serverId) throws CreateObjectException {
-		if (creatorId == null || domainId == null || name == null || description == null || hostname == null || 
-				userId == null || serverId == null)
-			throw new IllegalArgumentException("Argument is 'null'");
-
 		try {
 			MCM mcm = new MCM(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MCM_ENTITY_CODE),
 								creatorId,
@@ -203,6 +234,9 @@ public class MCM extends DomainMember implements Characterizable {
 								hostname,
 								userId,
 								serverId);
+			
+			assert mcm.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			
 			mcm.changed = true;
 			return mcm;
 		}
@@ -211,6 +245,9 @@ public class MCM extends DomainMember implements Characterizable {
 		}
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected synchronized void setAttributes(Date created,
 											  Date modified,
 											  Identifier creatorId,
@@ -233,9 +270,16 @@ public class MCM extends DomainMember implements Characterizable {
 		this.hostname = hostname;
 		this.userId = userId;
 		this.serverId = serverId;
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 	
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public Set getDependencies() {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		
 		Set dependencies = new HashSet();
 		dependencies.add(this.userId);
 		dependencies.add(this.serverId);

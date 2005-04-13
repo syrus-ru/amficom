@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.19 2005/04/12 14:49:38 bob Exp $
+ * $Id: Domain.java,v 1.20 2005/04/13 11:44:55 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.administration;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/04/12 14:49:38 $
+ * @version $Revision: 1.20 $, $Date: 2005/04/13 11:44:55 $
  * @author $Author: bob $
  * @module administration_v1
  */
@@ -27,6 +27,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -46,6 +47,9 @@ public class Domain extends DomainMember implements Characterizable {
 
 	private Set characteristics;
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public Domain(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);	
 
@@ -58,8 +62,13 @@ public class Domain extends DomainMember implements Characterizable {
 		catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public Domain(Domain_Transferable dt) throws CreateObjectException {
 		try {
 			this.fromTransferable(dt);
@@ -69,6 +78,9 @@ public class Domain extends DomainMember implements Characterizable {
 		}
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected Domain(Identifier id,
 					 Identifier creatorId,
 					 long version,
@@ -88,6 +100,9 @@ public class Domain extends DomainMember implements Characterizable {
 		this.characteristics = new HashSet();
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
 		Domain_Transferable dt = (Domain_Transferable)transferable;
 		super.fromTransferable(dt.header, (dt.domain_id.identifier_string.length() != 0) ? (new Identifier(dt.domain_id)) : null);
@@ -97,9 +112,16 @@ public class Domain extends DomainMember implements Characterizable {
 		Set characteristicIds = Identifier.fromTransferables(dt.characteristic_ids);
 		this.characteristics = new HashSet(dt.characteristic_ids.length);
 		this.setCharacteristics0(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 	
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public IDLEntity getTransferable() {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		
 		int i = 0;
 
 		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
@@ -113,6 +135,9 @@ public class Domain extends DomainMember implements Characterizable {
 									   charIds);
 	}	
 	
+	protected boolean isValid() {
+		return super.isValid() && this.name != null && this.description != null && this.characteristics != null && this.characteristics != Collections.EMPTY_SET;
+	}
 
 	public String getName() {
 		return this.name;
@@ -150,6 +175,9 @@ public class Domain extends DomainMember implements Characterizable {
 		return Collections.unmodifiableSet(this.characteristics);
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public void setCharacteristics0(Set characteristics) {
 		this.characteristics.clear();
 		if (characteristics != null)
@@ -173,10 +201,6 @@ public class Domain extends DomainMember implements Characterizable {
 										Identifier domainId,
 										String name,
 										String description) throws CreateObjectException {
-		if (creatorId == null || name == null || 
-				description == null)
-			throw new IllegalArgumentException("Argument is 'null'");
-		
 		try {
 			Domain domain = new Domain(IdentifierPool.getGeneratedIdentifier(ObjectEntities.DOMAIN_ENTITY_CODE),
 						creatorId,
@@ -184,6 +208,9 @@ public class Domain extends DomainMember implements Characterizable {
 						domainId,
 						name,
 						description);
+			
+			assert domain.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			
 			domain.changed = true;
 			return domain;
 		} catch (IllegalObjectEntityException e) {
@@ -191,6 +218,9 @@ public class Domain extends DomainMember implements Characterizable {
 		}
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected synchronized void setAttributes(	Date created,
 												Date modified,
 												Identifier creatorId,
@@ -202,6 +232,8 @@ public class Domain extends DomainMember implements Characterizable {
 		super.setAttributes(created, modified, creatorId, modifierId, version, domainId);
 		this.name = name;
 		this.description = description;
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 	
 	/**
@@ -220,6 +252,9 @@ public class Domain extends DomainMember implements Characterizable {
 		return super.domainId;
 	}
 	
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public Set getDependencies() {
 		return Collections.EMPTY_SET;
 	}

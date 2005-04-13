@@ -1,5 +1,5 @@
 /*
- * $Id: Server.java,v 1.19 2005/04/12 14:49:38 bob Exp $
+ * $Id: Server.java,v 1.20 2005/04/13 11:44:55 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,6 +22,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -34,7 +35,7 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/04/12 14:49:38 $
+ * @version $Revision: 1.20 $, $Date: 2005/04/13 11:44:55 $
  * @author $Author: bob $
  * @module administration_v1
  */
@@ -51,6 +52,9 @@ public class Server extends DomainMember implements Characterizable {
 
 	private Set characteristics;
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public Server(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 		this.characteristics = new LinkedHashSet();
@@ -62,8 +66,13 @@ public class Server extends DomainMember implements Characterizable {
 		catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public Server(Server_Transferable st) throws CreateObjectException {
 		try {
 			this.fromTransferable(st);
@@ -73,6 +82,9 @@ public class Server extends DomainMember implements Characterizable {
 		}	
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected Server(Identifier id,
 								 Identifier creatorId,
 								 long version,
@@ -96,6 +108,9 @@ public class Server extends DomainMember implements Characterizable {
 		this.characteristics = new HashSet();
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
 		Server_Transferable st = (Server_Transferable) transferable;
 		super.fromTransferable(st.header, new Identifier(st.domain_id));
@@ -107,9 +122,16 @@ public class Server extends DomainMember implements Characterizable {
 		Set characteristicIds = Identifier.fromTransferables(st.characteristic_ids);
 		this.characteristics = new HashSet(st.characteristic_ids.length);
 		this.setCharacteristics0(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 	
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public IDLEntity getTransferable() {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		
 		int i = 0;
 
 		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
@@ -124,7 +146,21 @@ public class Server extends DomainMember implements Characterizable {
 									   (Identifier_Transferable)this.userId.getTransferable(),
 									   charIds);
 	}
+	
+	/* (non-Javadoc)
+	 * @see com.syrus.AMFICOM.general.StorableObject#isValid()
+	 */
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	protected boolean isValid() {
+		return super.isValid() && this.name != null && this.name.length() != 0 && this.description != null && this.hostname != null && this.userId != null
+			&& this.characteristics != null && this.characteristics != Collections.EMPTY_SET;
+	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public Set retrieveMCMIds() throws ObjectNotFoundException, RetrieveObjectException {
 		ServerDatabase database = AdministrationDatabaseContext.getServerDatabase();
 		try {
@@ -174,6 +210,9 @@ public class Server extends DomainMember implements Characterizable {
 		return Collections.unmodifiableSet(this.characteristics);
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public void setCharacteristics0(Set characteristics) {
 		this.characteristics.clear();
 		if (characteristics != null)
@@ -191,10 +230,6 @@ public class Server extends DomainMember implements Characterizable {
 										String description,
 										String hostname,
 										Identifier userId) throws CreateObjectException {
-		if (creatorId == null || domainId == null || name == null || description == null || hostname == null || 
-				userId == null)
-			throw new IllegalArgumentException("Argument is 'null'");
-
 		try {
 			Server server = new Server(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SERVER_ENTITY_CODE),
 						creatorId,
@@ -204,6 +239,9 @@ public class Server extends DomainMember implements Characterizable {
 						description,
 						hostname,
 						userId);
+			
+			assert server.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			
 			server.changed = true;
 			return server;
 		}
@@ -212,6 +250,9 @@ public class Server extends DomainMember implements Characterizable {
 		}
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected synchronized void setAttributes(Date created,
 											  Date modified,
 											  Identifier creatorId,
@@ -232,9 +273,16 @@ public class Server extends DomainMember implements Characterizable {
 		this.description = description;
 		this.hostname = hostname;
 		this.userId = userId;
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public Set getDependencies() {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		
 		return Collections.singleton(this.userId);
 	}
 	

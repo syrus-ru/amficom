@@ -1,5 +1,5 @@
 /*
- * $Id: User.java,v 1.15 2005/04/08 13:00:15 arseniy Exp $
+ * $Id: User.java,v 1.16 2005/04/13 11:44:55 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,6 +18,7 @@ import com.syrus.AMFICOM.administration.corba.UserSort;
 import com.syrus.AMFICOM.administration.corba.User_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -29,8 +30,8 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/04/08 13:00:15 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.16 $, $Date: 2005/04/13 11:44:55 $
+ * @author $Author: bob $
  * @module administration_v1
  */
 
@@ -42,6 +43,9 @@ public final class User extends StorableObject {
 	private String name;
 	private String description;
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public User(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
@@ -52,12 +56,20 @@ public final class User extends StorableObject {
 		catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public User(User_Transferable ut) {
 		this.fromTransferable(ut);
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected User(Identifier id,
 					 Identifier creatorId,
 					 long version,
@@ -77,6 +89,9 @@ public final class User extends StorableObject {
 		this.description = description;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected void fromTransferable(IDLEntity transferable) {
 		User_Transferable ut = (User_Transferable) transferable;
 		try {
@@ -90,9 +105,15 @@ public final class User extends StorableObject {
 		this.sort = ut.sort.value();
 		this.name = ut.name;
 		this.description = ut.description;
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 	
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public IDLEntity getTransferable() {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		return new User_Transferable(super.getHeaderTransferable(),
 									 this.login,
 									 UserSort.from_int(this.sort),
@@ -100,6 +121,16 @@ public final class User extends StorableObject {
 									 this.description);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.syrus.AMFICOM.general.StorableObject#isValid()
+	 */
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	protected boolean isValid() {
+		return super.isValid() && this.login != null && this.login.length() != 0 && this.name != null && this.name.length() != 0 && this.description != null ;
+	}
+	
 	public String getLogin() {
 		return this.login;
 	}
@@ -135,9 +166,6 @@ public final class User extends StorableObject {
 									  UserSort sort,
 									  String name,
 									  String description) throws CreateObjectException {
-		if (creatorId == null || login == null || name == null || 
-				description == null || sort == null)
-			throw new IllegalArgumentException("Argument is 'null'");
 		
 		try {
 			User user = new User(IdentifierPool.getGeneratedIdentifier(ObjectEntities.USER_ENTITY_CODE),
@@ -147,6 +175,9 @@ public final class User extends StorableObject {
 							sort.value(),
 							name,
 							description);
+			
+			assert user.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			
 			user.changed = true;
 			return user;
 		} catch (IllegalObjectEntityException e) {
@@ -154,6 +185,9 @@ public final class User extends StorableObject {
 		}
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected synchronized void setAttributes(Date created,
 												Date modified,
 												Identifier creatorId,
@@ -172,19 +206,27 @@ public final class User extends StorableObject {
 		this.sort = sort;
 		this.name = name;
 		this.description = description;
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	public Set getDependencies() {		
 		return Collections.EMPTY_SET;
 	}
+	
 	public void setLogin(String login) {
 		this.login = login;
 		super.changed = true;
 	}
+	
 	public void setName(String name) {
 		this.name = name;
 		super.changed = true;
 	}
+	
 	public void setSort(UserSort sort) {
 		this.sort = sort.value();
 		super.changed = true;

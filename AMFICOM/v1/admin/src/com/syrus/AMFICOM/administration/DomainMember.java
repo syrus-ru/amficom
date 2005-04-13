@@ -1,5 +1,5 @@
 /*
- * $Id: DomainMember.java,v 1.10 2005/04/08 12:02:07 arseniy Exp $
+ * $Id: DomainMember.java,v 1.11 2005/04/13 11:44:55 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,8 +18,8 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/04/08 12:02:07 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2005/04/13 11:44:55 $
+ * @author $Author: bob $
  * @module administration_v1
  */
 
@@ -30,14 +30,23 @@ public abstract class DomainMember extends StorableObject {
 
 	Identifier domainId;
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected DomainMember(Identifier id) {
 		super(id);
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected DomainMember() {
 		super();
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected DomainMember(final Identifier id,
 			final Date created,
 			final Date modified,
@@ -49,15 +58,33 @@ public abstract class DomainMember extends StorableObject {
 		this.domainId = domainId;
 	}	
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected void fromTransferable(IDLEntity transferable, Identifier domainId1) throws ApplicationException {
 		super.fromTransferable(transferable);
 		this.domainId = domainId1;
+	}
+	
+	/* (non-Javadoc)
+	 * @see com.syrus.AMFICOM.general.StorableObject#isValid()
+	 */
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	protected boolean isValid() {
+		/* XXX : fix checking domainId w/o check id for concrete impementation as domain
+		 * Domain entity can have null domain id what's why its doesnt must check domainId for null */		
+		return super.isValid() && (this.id.getMajor() != ObjectEntities.DOMAIN_ENTITY_CODE && this.domainId != null);
 	}
 
 	public final Identifier getDomainId() {
 		return this.domainId;
 	}
 	
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected final void setDomainId0(final Identifier domainId) {
 		assert domainId.getMajor() == ObjectEntities.DOMAIN_ENTITY_CODE;
 		this.domainId = domainId;
@@ -68,6 +95,9 @@ public abstract class DomainMember extends StorableObject {
 		super.changed = true;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	protected final synchronized void setAttributes(final Date created,
 			final Date modified,
 			final Identifier creatorId,
