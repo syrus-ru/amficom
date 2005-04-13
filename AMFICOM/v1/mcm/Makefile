@@ -44,11 +44,9 @@ SOURCES := com/syrus/util/KISConnectionLRUMap.java \
 	com/syrus/AMFICOM/mcm/KISConnectionManager.java \
 	com/syrus/AMFICOM/mcm/TCPKISConnection.java \
 	com/syrus/AMFICOM/mcm/AnalysisException.java \
-	com/syrus/AMFICOM/mcm/EvaluationException.java \
 	com/syrus/AMFICOM/mcm/MeasurementException.java \
 	com/syrus/AMFICOM/mcm/TestProcessingException.java \
 	com/syrus/AMFICOM/mcm/AnalysisManager.java \
-	com/syrus/AMFICOM/mcm/EvaluationManager.java \
 	com/syrus/AMFICOM/mcm/AnalysisEvaluationProcessor.java \
 	com/syrus/AMFICOM/mcm/MeasurementControlModuleSetup.java
 
