@@ -1,5 +1,5 @@
 /*
- * $Id: DadaraAnalysisManager.java,v 1.29 2005/04/11 15:24:55 saa Exp $
+ * $Id: DadaraAnalysisManager.java,v 1.30 2005/04/13 12:00:29 saa Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.mcm;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/04/11 15:24:55 $
+ * @version $Revision: 1.30 $, $Date: 2005/04/13 12:00:29 $
  * @author $Author: saa $
  * @module mcm_v1
  */
@@ -35,11 +35,11 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ParameterType;
+import com.syrus.AMFICOM.general.ParameterTypeCodenames;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.measurement.Analysis;
-import com.syrus.AMFICOM.measurement.Evaluation;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.Set;
 import com.syrus.AMFICOM.measurement.SetParameter;
@@ -47,31 +47,28 @@ import com.syrus.io.BellcoreReader;
 import com.syrus.io.BellcoreStructure;
 import com.syrus.util.ByteArray;
 
-public class DadaraAnalysisManager implements AnalysisManager, EvaluationManager
+public class DadaraAnalysisManager implements AnalysisManager
 {
 	// input SetParameters codenames
-	public static final String CODENAME_REFLECTOGRAMMA = "reflectogramma";
-	public static final String CODENAME_DADARA_ETALON_MTM_MT_SE = "dadara_etalon_mtm_mt_se";
-	//public static final String CODENAME_DADARA_ETALON_MTM_THRESH = "dadara_etalon_mtm_thresh"; // etalon thresholds are stored together with etalon itself
-	public static final String CODENAME_DADARA_ETALON_BREAK_THRESH = "dadara_etalon_break_thresh";
+	public static final String CODENAME_REFLECTOGRAMMA = ParameterTypeCodenames.REFLECTOGRAMMA;
+	public static final String CODENAME_DADARA_ETALON_MTM = ParameterTypeCodenames.DADARA_ETALON_MTM;
+	public static final String CODENAME_DADARA_ETALON_BREAK_THRESH = ParameterTypeCodenames.DADARA_MIN_TRACE_LEVEL;
 
 	// output SetParameters codenames
-	public static final String CODENAME_DADARA_TRACELENGTH = "tracelength";
-	public static final String CODENAME_DARARA_MODELFUNCTION = "modelfunction";
-	public static final String CODENAME_DARARA_SIMPLEEVENTS = "simpleevents";
-	public static final String CODENAME_ALARMS = "alarms";
+//	public static final String CODENAME_DADARA_TRACELENGTH = "tracelength";
+//	public static final String CODENAME_DARARA_MODELFUNCTION = "modelfunction";
+//	public static final String CODENAME_DARARA_SIMPLEEVENTS = "simpleevents";
+	public static final String CODENAME_ALARMS = ParameterTypeCodenames.DADARA_ALARMS;
 
 	private Map parameters;	//Map <String codename, SetParameter parameter>
 
 	public DadaraAnalysisManager(Result measurementResult,
-			Analysis analysis, // ?
-			Evaluation evaluation, // ?
+			Analysis analysis,
 			Set etalon) throws AnalysisException
 	{
 		this.parameters = new HashMap();
 		this.addSetParameters(measurementResult.getParameters());
 		this.addSetParameters(analysis.getCriteriaSet().getParameters());
-		this.addSetParameters(evaluation.getThresholdSet().getParameters());
 		this.addSetParameters(etalon.getParameters());
 	}
 
@@ -110,10 +107,7 @@ public class DadaraAnalysisManager implements AnalysisManager, EvaluationManager
 		throws AnalysisException
 	{
 		// read etalon r/g and its thresholds
-		byte[] etalonData = getParameter(CODENAME_DADARA_ETALON_MTM_MT_SE);
-//		byte[] threshData = getParameter(CODENAME_DADARA_ETALON_MTM_THRESH);
-//		ModelTraceManager mtm = ModelTraceManager.eventsAndTraceFromByteArray(etalonData);
-//		mtm.setThresholdsFromByteArray(threshData);
+		byte[] etalonData = getParameter(CODENAME_DADARA_ETALON_MTM);
 		ModelTraceManager mtm = (ModelTraceManager)DataStreamableUtil.
 			readDataStreamableFromBA(etalonData, ModelTraceManager.getReader());
 		return mtm;
@@ -146,16 +140,16 @@ public class DadaraAnalysisManager implements AnalysisManager, EvaluationManager
 
 		// Получаем эталонный MTM (пороговые кривые и события)
 		ModelTraceManager etMTM = obtainEtalonMTM();
-		int etMinLength = etMTM.getSimpleEvent(etMTM.getNEvents() - 1).getBegin(); // начало конца волокна
+		int etMinLength = etMTM.getMTAE().getSimpleEvent(etMTM.getMTAE().getNEvents() - 1).getBegin(); // начало конца волокна
 
 		// в любом случае - определение шума и фитировка
 		double[] noise = CoreAnalysisManager.calcNoiseArray(y, traceLength);
 		ModelFunction mf = CoreAnalysisManager.fitTrace(y, traceLength, noise);
 		ModelTrace mt = new ModelTraceImplMF(mf, traceLength);
 
-		// добавляем к результатам анализа найденную длину р/г и фитированную кривую
-		outParameters.put(CODENAME_DADARA_TRACELENGTH, ByteArray.toByteArray(traceLength));
-		outParameters.put(CODENAME_DARARA_MODELFUNCTION, mf.toByteArray());
+		// НЕ добавляем к результатам анализа найденную длину р/г и фитированную кривую - это пока не нужно
+//		outParameters.put(CODENAME_DADARA_TRACELENGTH, ByteArray.toByteArray(traceLength));
+//		outParameters.put(CODENAME_DARARA_MODELFUNCTION, mf.toByteArray());
 
 		// пытаемся обнаружить обрыв волокна:
 		// (1) на участке до ухода в шум (x < traceLength) - по уходу м.ф. ниже уровня breakThresh  
@@ -229,12 +223,6 @@ public class DadaraAnalysisManager implements AnalysisManager, EvaluationManager
 			}
 		}
 		return ret;
-	}
-
-	public SetParameter[] evaluate() throws EvaluationException
-	{
-		// do nothing
-		return new SetParameter[0];
 	}
 }
 
