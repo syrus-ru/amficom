@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisEvaluationProcessor.java,v 1.24 2005/04/13 12:00:43 saa Exp $
+ * $Id: AnalysisEvaluationProcessor.java,v 1.25 2005/04/13 12:02:46 saa Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,14 +28,13 @@ import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/04/13 12:00:43 $
+ * @version $Revision: 1.25 $, $Date: 2005/04/13 12:02:46 $
  * @author $Author: saa $
  * @module mcm_v1
  */
 
 public class AnalysisEvaluationProcessor {
 	private static final String CODENAME_ANALYSIS_TYPE_DADARA = "dadara";
-	private static final String CODENAME_EVALUATION_TYPE_DADARA = "dadara";
 
 	private static final String CLASS_NAME_ANALYSIS_MANAGER_DADARA = "DadaraAnalysisManager";
 
