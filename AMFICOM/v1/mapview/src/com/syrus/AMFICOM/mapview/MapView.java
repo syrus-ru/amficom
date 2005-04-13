@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.22 2005/04/12 08:35:15 bass Exp $
+* $Id: MapView.java,v 1.23 2005/04/13 10:07:51 krupenn Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.mapview;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -16,6 +15,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.administration.DomainMember;
@@ -39,7 +39,10 @@ import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.corba.MapView_Transferable;
-import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.scheme.Scheme;
+import com.syrus.AMFICOM.scheme.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.SchemeElement;
+import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
 
@@ -50,8 +53,8 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
  * канализационную
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
- * @author $Author: bass $
- * @version $Revision: 1.22 $, $Date: 2005/04/12 08:35:15 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.23 $, $Date: 2005/04/13 10:07:51 $
  * @module mapview_v1
  * @todo use getCenter, setCenter instead of pair longitude, latitude
  */
@@ -634,7 +637,7 @@ public class MapView extends DomainMember {
 	public void removeCablePath(CablePath cable)
 	{
 		this.cablePaths.remove(cable);
-		cable.setSelected(false);
+		this.map.setSelected(cable, false);
 	}
 
 	/**
@@ -717,7 +720,7 @@ public class MapView extends DomainMember {
 	public void removeMeasurementPath(MeasurementPath path)
 	{
 		this.measurementPaths.remove(path);
-		path.setSelected(false);
+		this.map.setSelected(path, false);
 	}
 
 	/**
@@ -829,8 +832,8 @@ public class MapView extends DomainMember {
 	public void removeMarker(Marker marker)
 	{
 		this.markers.remove(marker);
-		getMap().removeNode(marker);
-		marker.setSelected(false);
+		this.map.removeNode(marker);
+		this.map.setSelected(marker, false);
 	}
 
 	/**
@@ -901,20 +904,6 @@ public class MapView extends DomainMember {
 		}
 
 		return returnedElements;
-	}
-
-	/**
-	 * Отменить выбор всем элементам.
-	 */
-	public void deselectAll()
-	{
-		Iterator e = getAllElements().iterator();
-		while ( e.hasNext())
-		{
-			MapElement mapElement = (MapElement)e.next();
-			mapElement.setSelected(false);
-		}
-		getMap().clearSelection();
 	}
 
 	/**
