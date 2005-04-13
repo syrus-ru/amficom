@@ -197,9 +197,9 @@ public class MapLinkGeneralPanel
 			this.descTextArea.setEnabled(true);
 			this.descTextArea.setText(this.link.getDescription());
 
-			this.startComboBox.addElements(this.lnl.getMapView().getMap().getAllSiteNodes());
+			this.startComboBox.addItem(this.link.getStartNode());
 			this.startComboBox.setSelectedItem(this.link.getStartNode());
-			this.endComboBox.addElements(this.lnl.getMapView().getMap().getAllSiteNodes());
+			this.endComboBox.addItem(this.link.getStartNode());
 			this.endComboBox.setSelectedItem(this.link.getEndNode());
 
 			this.mTextField.setText(String.valueOf(this.link.getBinding().getDimension().getWidth()));
