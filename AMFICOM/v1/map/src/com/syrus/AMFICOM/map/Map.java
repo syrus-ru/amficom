@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.34 2005/04/12 17:11:34 arseniy Exp $
+ * $Id: Map.java,v 1.35 2005/04/13 09:58:59 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,6 +27,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -38,12 +39,12 @@ import com.syrus.AMFICOM.map.corba.Map_Transferable;
  * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на 
  * линиях, коллекторов (объединяющих в себе линии).
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.34 $, $Date: 2005/04/12 17:11:34 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.35 $, $Date: 2005/04/13 09:58:59 $
  * @module map_v1
  * @todo make maps persistent 
  */
-public class Map extends DomainMember {
+public class Map extends DomainMember implements Namable {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -81,6 +82,8 @@ public class Map extends DomainMember {
 	 */
 	protected transient List allElements;
 	protected transient Set nodeElements;
+
+	protected transient Set externalNodes;
 
 	Map(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
@@ -130,6 +133,7 @@ public class Map extends DomainMember {
 		this.selectedElements = new HashSet();
 		this.allElements = new LinkedList();
 		this.nodeElements = new HashSet();
+		this.externalNodes = new HashSet();
 	}
 
 	public static Map createInstance(Identifier creatorId, Identifier domainId, String name, String description)
@@ -164,44 +168,20 @@ public class Map extends DomainMember {
 		ids = Identifier.fromTransferables(mt.siteNodeIds);
 		this.siteNodes = MapStorableObjectPool.getStorableObjects(ids, true);
 
-		for (Iterator it = this.siteNodes.iterator(); it.hasNext();) {
-			((SiteNode) it.next()).setMap(this);
-		}
-
 		ids = Identifier.fromTransferables(mt.topologicalNodeIds);
 		this.topologicalNodes = MapStorableObjectPool.getStorableObjects(ids, true);
-
-		for (Iterator it = this.topologicalNodes.iterator(); it.hasNext();) {
-			((TopologicalNode) it.next()).setMap(this);
-		}
 
 		ids = Identifier.fromTransferables(mt.nodeLinkIds);
 		this.nodeLinks = MapStorableObjectPool.getStorableObjects(ids, true);
 
-		for (Iterator it = this.nodeLinks.iterator(); it.hasNext();) {
-			((NodeLink) it.next()).setMap(this);
-		}
-
 		ids = Identifier.fromTransferables(mt.physicalLinkIds);
 		this.physicalLinks = MapStorableObjectPool.getStorableObjects(ids, true);
-
-		for (Iterator it = this.physicalLinks.iterator(); it.hasNext();) {
-			((PhysicalLink) it.next()).setMap(this);
-		}
 
 		ids = Identifier.fromTransferables(mt.markIds);
 		this.marks = MapStorableObjectPool.getStorableObjects(ids, true);
 
-		for (Iterator it = this.marks.iterator(); it.hasNext();) {
-			((Mark) it.next()).setMap(this);
-		}
-
 		ids = Identifier.fromTransferables(mt.collectorIds);
 		this.collectors = MapStorableObjectPool.getStorableObjects(ids, true);
-
-		for (Iterator it = this.collectors.iterator(); it.hasNext();) {
-			((Collector) it.next()).setMap(this);
-		}
 	}
 
 	public Set getDependencies() {
@@ -241,10 +221,6 @@ public class Map extends DomainMember {
 	protected void setCollectors0(Set collectors) {
 		this.collectors.clear();
 		if (collectors != null) {
-			for (Iterator it = collectors.iterator(); it.hasNext();) {
-				Collector collector = (Collector) it.next();
-				collector.setMap(this);
-			}
 			this.collectors.addAll(collectors);
 		}
 	}
@@ -274,10 +250,6 @@ public class Map extends DomainMember {
 	protected void setMarks0(Set marks) {
 		this.marks.clear();
 		if (marks != null) {
-			for (Iterator it = marks.iterator(); it.hasNext();) {
-				Mark mark = (Mark) it.next();
-				mark.setMap(this);
-			}
 			this.marks.addAll(marks);
 		}
 	}
@@ -307,10 +279,6 @@ public class Map extends DomainMember {
 	protected void setNodeLinks0(Set nodeLinks) {
 		this.nodeLinks.clear();
 		if (nodeLinks != null) {
-			for (Iterator it = nodeLinks.iterator(); it.hasNext();) {
-				NodeLink nodeLink = (NodeLink) it.next();
-				nodeLink.setMap(this);
-			}
 			this.nodeLinks.addAll(nodeLinks);
 		}
 	}
@@ -327,10 +295,6 @@ public class Map extends DomainMember {
 	protected void setPhysicalLinks0(Set physicalLinks) {
 		this.physicalLinks.clear();
 		if (physicalLinks != null) {
-			for (Iterator it = physicalLinks.iterator(); it.hasNext();) {
-				PhysicalLink physicalLink = (PhysicalLink) it.next();
-				physicalLink.setMap(this);
-			}
 			this.physicalLinks.addAll(physicalLinks);
 		}
 		this.changed = true;
@@ -348,10 +312,6 @@ public class Map extends DomainMember {
 	protected void setSiteNodes0(Set siteNodes) {
 		this.siteNodes.clear();
 		if (siteNodes != null) {
-			for (Iterator it = siteNodes.iterator(); it.hasNext();) {
-				SiteNode siteNode = (SiteNode) it.next();
-				siteNode.setMap(this);
-			}
 			this.siteNodes.addAll(siteNodes);
 		}
 	}
@@ -368,10 +328,6 @@ public class Map extends DomainMember {
 	protected void setTopologicalNodes0(Set topologicalNodes) {
 		this.topologicalNodes.clear();
 		if (topologicalNodes != null) {
-			for (Iterator it = topologicalNodes.iterator(); it.hasNext();) {
-				TopologicalNode topologicalNode = (TopologicalNode) it.next();
-				topologicalNode.setMap(this);
-			}
 			this.topologicalNodes.addAll(topologicalNodes);
 		}
 	}
@@ -497,7 +453,6 @@ public class Map extends DomainMember {
 			else
 				if (node instanceof Mark)
 					this.marks.add(node);
-		node.setMap(this);
 		node.setRemoved(false);
 		this.changed = true;
 	}
@@ -510,6 +465,7 @@ public class Map extends DomainMember {
 	 */
 	public void removeNode(AbstractNode node) {
 		node.setSelected(false);
+		this.selectedElements.remove(node);
 		if (node instanceof SiteNode)
 			this.siteNodes.remove(node);
 		else
@@ -610,7 +566,6 @@ public class Map extends DomainMember {
 	 */
 	public void addCollector(Collector collector) {
 		this.collectors.add(collector);
-		collector.setMap(this);
 		collector.setRemoved(false);
 		this.changed = true;
 	}
@@ -623,6 +578,7 @@ public class Map extends DomainMember {
 	 */
 	public void removeCollector(Collector collector) {
 		collector.setSelected(false);
+		this.selectedElements.remove(collector);
 		this.collectors.remove(collector);
 		collector.setRemoved(true);
 		this.changed = true;
@@ -652,15 +608,15 @@ public class Map extends DomainMember {
 	 * @return список линий
 	 */
 	public Set getPhysicalLinksAt(AbstractNode node) {
-		HashSet returnNodeLink = new HashSet();
+		HashSet returnLinks = new HashSet();
 		Iterator e = this.getAllPhysicalLinks().iterator();
 
 		while (e.hasNext()) {
 			PhysicalLink link = (PhysicalLink) e.next();
 			if ((link.getEndNode().equals(node)) || (link.getStartNode().equals(node)))
-				returnNodeLink.add(link);
+				returnLinks.add(link);
 		}
-		return returnNodeLink;
+		return returnLinks;
 	}
 
 	/**
@@ -672,7 +628,6 @@ public class Map extends DomainMember {
 	public void addPhysicalLink(PhysicalLink physicalLink) {
 
 		this.physicalLinks.add(physicalLink);
-		physicalLink.setMap(this);
 		physicalLink.setRemoved(false);
 		this.changed = true;
 	}
@@ -686,6 +641,7 @@ public class Map extends DomainMember {
 	public void removePhysicalLink(PhysicalLink physicalLink) {
 
 		physicalLink.setSelected(false);
+		this.selectedElements.remove(physicalLink);
 		this.physicalLinks.remove(physicalLink);
 		physicalLink.setRemoved(true);
 
@@ -741,7 +697,6 @@ public class Map extends DomainMember {
 	 */
 	public void addNodeLink(NodeLink nodeLink) {
 		this.nodeLinks.add(nodeLink);
-		nodeLink.setMap(this);
 		nodeLink.setRemoved(false);
 		this.changed = true;
 	}
@@ -754,6 +709,7 @@ public class Map extends DomainMember {
 	 */
 	public void removeNodeLink(NodeLink nodeLink) {
 		nodeLink.setSelected(false);
+		this.selectedElements.remove(nodeLink);
 		this.nodeLinks.remove(nodeLink);
 		nodeLink.setRemoved(true);
 		this.changed = true;
@@ -870,6 +826,7 @@ public class Map extends DomainMember {
 	 *          флаг выделения
 	 */
 	public void setSelected(MapElement me, boolean selected) {
+		me.setSelected(selected);
 		if (selected)
 			this.selectedElements.add(me);
 		else
@@ -911,6 +868,106 @@ public class Map extends DomainMember {
 		catch (Exception e) {
 			throw new CreateObjectException("Map.createInstance |  ", e);
 		}
+	}
+
+	/**
+	 * Получить список фрагментов линий, содержащих заданный узел.
+	 * @param node узел
+	 * @return Список фрагментов
+	 */
+	public Set getNodeLinks(AbstractNode node)
+	{
+		Set returnNodeLinks = new HashSet();
+		for(Iterator it = getNodeLinks().iterator(); it.hasNext();)
+		{
+			NodeLink nodeLink = (NodeLink )it.next();
+			
+			if ( (nodeLink.getEndNode().equals(node)) 
+				|| (nodeLink.getStartNode().equals(node)))
+			{
+				returnNodeLinks.add(nodeLink);
+			}
+		}
+	
+		return returnNodeLinks;
+	}
+
+	/**
+	 * Возвращает фрагмент линии, включающий данный узел, по не равный 
+	 * переданному в параметре. Если фрагмент А и фрагмент Б имеют общую 
+	 * точку Т, то вызов метода <code>Т.getOtherNodeLink(А)</code> вернет Б, а вызов
+	 * <code>Т.getOtherNodeLink(Б)</code> вернет А. Таким образом, для топологического 
+	 * узла возвращает единственный противоположный,
+	 * для сетевого узла их может быть несколько, по этой причине метод
+	 * не должен использоваться и возвращает null
+	 * @param node узел
+	 * @param nodeLink фрагмент линии
+	 * @return другой фрагмент линии
+	 */
+	public NodeLink getOtherNodeLink(AbstractNode node, NodeLink nodeLink)
+	{
+		if(!node.getClass().equals(TopologicalNode.class))
+		{
+			return null;
+		}
+	
+		NodeLink startNodeLink = null;
+		for(Iterator it = getNodeLinks(node).iterator(); it.hasNext();)
+			{
+				NodeLink nl = (NodeLink )it.next();
+				if(nodeLink != nl)
+				{
+					startNodeLink = nl;
+					break;
+				}
+			}
+			
+		return startNodeLink;
+	}
+
+	/**
+	 * Получить вектор узлов на противоположных концах всех фрагментов линий 
+	 * данного элемента.
+	 * @param node узел
+	 * @return список узлов
+	 */
+	public Set getOppositeNodes(AbstractNode node)
+	{
+		Iterator e = getNodeLinks(node).iterator();
+		Set returnNodes = new HashSet();
+	
+		while (e.hasNext())
+		{
+			NodeLink nodeLink = (NodeLink )e.next();
+	
+			if ( nodeLink.getEndNode().equals(node) )
+				returnNodes.add(nodeLink.getStartNode());
+			else
+				returnNodes.add(nodeLink.getEndNode());
+		}
+	
+		return returnNodes;
+	}
+
+	/**
+	 * Получить список линий, начинающихся или заканчивающихся
+	 * на данном узле.
+	 * @return список линий
+	 */
+	public Set getPhysicalLinks(AbstractNode node)
+	{
+		Set returnLinks = new HashSet();
+
+		for(Iterator it = getPhysicalLinks().iterator(); it.hasNext();)
+		{
+			PhysicalLink physicalLink = (PhysicalLink )it.next();
+			
+			if ( (physicalLink.getEndNode().equals(node)) 
+					|| (physicalLink.getStartNode().equals(node)) )
+				returnLinks.add(physicalLink);
+		}
+
+		return returnLinks;
 	}
 
 }
