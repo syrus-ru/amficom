@@ -47,7 +47,6 @@ static void calcThAddByThCurve(int thYc, int isUpper,
 	int i;
 	int len = xMax - xMin + 1;
 	int sign = isUpper ? 1 : -1;
-
 	if (iMax < 0)
 		iMax = len - 1;
 
@@ -129,9 +128,15 @@ static void extendTHX(THX *src, THX *dest, int N, int widthMin)
 	for (i = 0; i < N; i++)
 		extendTHX(src[i], dest[i], widthMin);
 }
+// если thYc == 0, то ничего не делает (иначе возможно 
 void extendThreshToCover(THX *thXOrig, THY *thY, int thXc, int thYc, int isUpper,
 		double *yBase, int xMin, int xMax, double *yTgt)
 {
+	if (thYc == 0)
+	{
+		prf_b("extendThreshToCover: nothing to do");
+		return;
+	}
 	prf_b("extendThreshToCover: enter");
 	int len = xMax - xMin + 1;
 	int sign = isUpper ? 1 : -1;
@@ -159,7 +164,7 @@ void extendThreshToCover(THX *thXOrig, THY *thY, int thXc, int thYc, int isUpper
 	double *yTemp = new double[len];
 	double *thAdd = new double[thYc ? thYc : 1]; // поправки для DY-порогов
 	TTDX *ttdx = new TTDX[len];
-	TTDY *ttdy = new TTDY[len];
+	TTDY *ttdy = new TTDY[len]; // ttdy[i] было не нельзя использовать, если бы могло быть thYc == 0
 	assert(thXA);
 	assert(thXT);
 	assert(yPrev);

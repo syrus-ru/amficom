@@ -242,7 +242,7 @@ JNIEXPORT void JNICALL Java_com_syrus_AMFICOM_analysis_dadara_ModelFunction_nCha
 	int key_ = key;
 	int xID = 0;
 	int wannaID = 0;
-	void *args[5] = { &taDX, &taDY, &key, &xID, &wannaID};
+	void *args[5] = { &taDX, &taDY, &key_, &xID, &wannaID};
 	mf.execCmd(MF_CMD_CHANGE_BY_THRESH_AND_FIND_DXDYID, args);
 	ModelF_C2J_update(env, mf, obj);
 	prf_e();

@@ -291,6 +291,7 @@ void ChangeArrayByThreshEx (double *yArr, THX *thX, THY *thY, int thNpX, int thN
 	prf_b("BreakL_ChangeByThresh: process AL threshs");
 
 	// process A and L threshs
+	if (thNpY)
 	{
 		int curLTn = -1; // номер текущего порога либо левого из текущих
 
@@ -361,10 +362,21 @@ void ChangeArrayByThreshEx (double *yArr, THX *thX, THY *thY, int thNpX, int thN
 #endif
 		}
 	}
+	else
+	{ // no DY-thresholds defined at all
+		if (ttdyOut)
+		{
+#if CANTTDXDY
+			for (j = 0; j < Nx; j++)
+				ttdyOut[j].thId = -1; // XXX
+#endif
+		}
+	}
 
 	prf_b("BreakL_ChangeByThresh: process DXLR threshs");
 
 	// apply dx-thresholds
+	if (thNpX)
 	{
 		ArrList updateRegions;
 		int curT;
