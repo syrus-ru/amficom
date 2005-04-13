@@ -1,5 +1,7 @@
 // EventP.h
 
+// unused since event has no modelfunctions
+
 // Declares Event Parameters structure EventP
 
 #ifndef _EventP_H
