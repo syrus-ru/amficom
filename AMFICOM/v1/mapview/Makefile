@@ -5,11 +5,11 @@ ARCHFILE = $(subst _v1,,$(MODULE_NAME)).tar.gz
 
 IDLDIR=../idl_v1/idl
 
-APPCLASSPATH = $(LIBDIR)/scheme.jar:$(LIBDIR)/resource.jar:$(LIBDIR)/map.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/util.jar
+APPCLASSPATH = $(LIBDIR)/resource.jar:$(LIBDIR)/scheme.jar:$(LIBDIR)/map.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/util.jar
 
-JAVACFLAGS = -source 1.3
-SUNJAVACFLAGS = -target 1.2
-JIKESFLAGS = -target 1.2
+JAVACFLAGS = -source 1.4
+SUNJAVACFLAGS = -target 1.4
+JIKESFLAGS = -target 1.4.2
 
 
 include ../tools/Makefile.inc
@@ -21,25 +21,17 @@ $(LIBNAME): .mach
 		-C $(CLASSDIR) com/syrus/AMFICOM/map \
 		-C $(CLASSDIR) com/syrus/AMFICOM/mapview
 
-.mach:	.corba $(CLASSDIR)
+.mach:	$(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH):$(CLASSDIR) \
 		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/mapview/*.java)
-	touch $@
-
-.corba:	$(CLASSDIR)
-	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/map.idl
-	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
-		-classpath $(APPCLASSPATH) \
-		-sourcepath $(SRCDIR) \
-		$(SRCDIR)/com/syrus/AMFICOM/map/corba/*.java 
 	touch $@
 
 $(CLASSDIR):
 	mkdir -p $@
 
 .PHONY:	clean
-clean:	cleanmach cleancorba
+clean:	cleanmach
 	$(RM) $(LIBNAME)
 
 .PHONY:	cleanmach
@@ -47,11 +39,6 @@ cleanmach:
 	$(RM) $(wildcard $(CLASSDIR)/com/syrus/AMFICOM/map/*.class)
 	$(RM) .mach
 
-.PHONY:	cleancorba
-cleancorba:
-	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/map/corba
-	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/map/corba
-	$(RM) .corba
 
 #### Install ####
 .PHONY:	install
@@ -63,8 +50,7 @@ install: $(LIBNAME) $(LIBDIR)
 arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
-		$(IDLDIR)/li\'lmapletty.idl \
-		$(SRCDIR)/com/syrus/AMFICOM/map/*.java
+		$(SRCDIR)/com/syrus/AMFICOM/mapview/*.java
 		
 .PHONY: pmd
 pmd:
