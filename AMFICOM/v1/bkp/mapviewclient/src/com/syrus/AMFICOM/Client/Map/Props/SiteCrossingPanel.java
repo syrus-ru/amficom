@@ -1,5 +1,6 @@
 package com.syrus.AMFICOM.Client.Map.Props;
 
+import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.map.AbstractNode;
@@ -27,7 +28,9 @@ import javax.swing.JPanel;
 public class SiteCrossingPanel extends JPanel 
 {
 	SiteNode site;
-	
+
+	private LogicalNetLayer lnl;
+
 	public static final int WELL_RADIUS = 50;
 	public static final int ARROW_LENGTH = 20;
 	public static final int SPIKE_LENGTH = 8;
@@ -53,6 +56,11 @@ public class SiteCrossingPanel extends JPanel
 	{//empty
 	}
 
+	public void setLogicalNetLayer(LogicalNetLayer lnl)
+	{
+		this.lnl = lnl;
+	}
+
 	public void setSite(SiteNode site)
 	{
 		this.site = site;
@@ -62,7 +70,7 @@ public class SiteCrossingPanel extends JPanel
 		this.tunnels.clear();
 		if(site != null)
 		{
-			for(Iterator it = site.getMap().getPhysicalLinksAt(site).iterator(); it.hasNext();)
+			for(Iterator it = this.lnl.getMapView().getMap().getPhysicalLinksAt(site).iterator(); it.hasNext();)
 			{
 				Object tunnel = it.next();
 				if(!(tunnel instanceof UnboundLink))
