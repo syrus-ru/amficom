@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.mapview.MapView;
 
-public final class MapViewTableController implements ObjectResourceController 
+public final class MapViewTableController extends ObjectResourceController 
 {
 	public static final String KEY_NAME = "Name";
 	public static final String KEY_DOMAIN = "Domain";

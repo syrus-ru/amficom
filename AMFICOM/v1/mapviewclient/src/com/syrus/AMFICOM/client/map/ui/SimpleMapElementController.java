@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.map.PhysicalLinkType;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.SiteNodeType;
 
-public final class SimpleMapElementController implements ObjectResourceController 
+public final class SimpleMapElementController extends ObjectResourceController 
 {
 
 	public static final String KEY_NAME = "name";

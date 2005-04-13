@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.scheme.Scheme;
 
-public final class SchemeController implements ObjectResourceController 
+public final class SchemeController extends ObjectResourceController 
 {
 	public static final String KEY_NAME = "Name";
 	public static final String KEY_DOMAIN = "Domain";
