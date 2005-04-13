@@ -1,5 +1,5 @@
 /*
- * $Id: FilterExpressionBase.java,v 1.3 2004/08/24 12:52:08 peskovsky Exp $
+ * $Id: FilterExpressionBase.java,v 1.4 2005/04/13 19:09:41 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,98 +8,92 @@
 
 package com.syrus.AMFICOM.filter;
 
-import java.io.*;
-import java.util.List;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/08/24 12:52:08 $
+ * @version $Revision: 1.4 $, $Date: 2005/04/13 19:09:41 $
  * @module filter_v1
  */
 public class FilterExpressionBase implements FilterExpressionInterface
 {
-	private static final long serialVersionUID = 01L;
 
 	/**
 	 * Value: {@value}
 	 */
 	public static final String TYP = "filterexpression";
 
-	/**
-	 * Value: {@value}
-	 * @deprecated Use {@link #TYP} instead.
-	 */
-
-	public static final String typ = TYP;
-
-	protected String col_name = "";
-	protected String col_id = "";
+	protected String colName = "";
+	protected String colId = "";
 
 	protected String visualName = "";
 
 	protected List vec = new ArrayList();
-	protected boolean is_template = false;
+	protected boolean isTemplate = false;
 
 	protected int listID = 0;
 
 	public String getName()
 	{
-		return visualName;
+		return this.visualName;
 	}
 
 	public String getId()
 	{
-		return col_id;
+		return this.colId;
 	}
 
 	public List getVec()
 	{
-		return vec;
+		return this.vec;
 	}
 
 	public int getListID()
 	{
-		return listID;
+		return this.listID;
 	}
 
 	public boolean isTemplate()
 	{
-		return is_template;
+		return this.isTemplate;
 	}
 
 	public void setName(String n)
 	{
-		visualName = n;
+		this.visualName = n;
 	}
 
 	public void setColumnName(String n)
 	{
-		col_name = n;
+		this.colName = n;
 	}
 
 	public String getColumnName()
 	{
-		return col_name;
+		return this.colName;
 	}
 
 	public void setId(String i)
 	{
-		col_id = i;
+		this.colId = i;
 	}
 
 	public void setVec(List v)
 	{
-		vec = v;
+		this.vec = v;
 	}
 
 	public void setListID(int l)
 	{
-		listID = l;
+		this.listID = l;
 	}
 
 	public void setTemplate(boolean ifT)
 	{
-		is_template = ifT;
+		this.isTemplate = ifT;
 	}
 
 	public void writeObject(ObjectOutputStream out) throws IOException
@@ -109,9 +103,9 @@ public class FilterExpressionBase implements FilterExpressionInterface
 		 *      before serialization?
 		 */
 
-		out.writeObject(visualName);
-		out.writeObject(col_name);
-		out.writeObject(col_id);
+		out.writeObject(this.visualName);
+		out.writeObject(this.colName);
+		out.writeObject(this.colId);
 //		Vector vec1 = vec;
 //		String type = (String )vec.get(0);
 //		if (type.equals(LIST_EXPRESSION))
@@ -120,17 +114,17 @@ public class FilterExpressionBase implements FilterExpressionInterface
 //			vec1.setElementAt(tree.getHash(), 1);
 //		}
 //		out.writeObject(vec1);
-		out.writeObject(vec);
+		out.writeObject(this.vec);
 
-		out.writeInt(listID);
+		out.writeInt(this.listID);
 	}
 
 	public void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
 	{
-		visualName = (String) in.readObject();
-		col_name = (String )in.readObject();
-		col_id = (String )in.readObject();
-		vec = (List) in.readObject();
+		this.visualName = (String) in.readObject();
+		this.colName = (String )in.readObject();
+		this.colId = (String )in.readObject();
+		this.vec = (List) in.readObject();
 //		Vector vec1 = (Vector )in.readObject();
 //		String type = (String )vec1.get(0);
 //		if (type.equals(LIST_EXPRESSION))
@@ -143,7 +137,7 @@ public class FilterExpressionBase implements FilterExpressionInterface
 		 */
 //		vec = vec1;
 
-		listID = in.readInt();
+		this.listID = in.readInt();
 	}
 
 	public Object clone()

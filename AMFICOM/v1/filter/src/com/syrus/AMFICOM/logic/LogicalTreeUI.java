@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalTreeUI.java,v 1.14 2005/04/08 09:06:41 bass Exp $
+ * $Id: LogicalTreeUI.java,v 1.15 2005/04/13 19:09:41 arseniy Exp $
  *
  * Copyright ? 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,6 +21,7 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EventObject;
@@ -57,12 +58,14 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/04/08 09:06:41 $
- * @author $Author: bass $
+ * @version $Revision: 1.15 $, $Date: 2005/04/13 19:09:41 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module filter_v1
  */
-public class LogicalTreeUI implements SelectionListener, AddDeleteItems {
+public class LogicalTreeUI implements SelectionListener, AddDeleteItems, Serializable {
+
+	private static final long serialVersionUID = 3258688823297849655L;
 
 	protected static Map	renderers;
 

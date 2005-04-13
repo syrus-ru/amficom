@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.6 2005/04/01 08:37:09 max Exp $
+# $Id: Makefile,v 1.7 2005/04/13 19:09:40 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -8,12 +8,12 @@ MODULE_NAME = filter_v1
 
 LIBNAME = $(subst _v1,,$(MODULE_NAME)).jar
 
-JAVACFLAGS = -source 1.3
-SUNJAVACFLAGS = -target 1.2
-JIKESFLAGS = -target 1.2
+JAVACFLAGS = -source 1.4
+SUNJAVACFLAGS = -target 1.4
+JIKESFLAGS = -target 1.4.2
 LIBDIR = ../lib
 
-APPCLASSPATH := $(LIBDIR)/general.jar:$(LIBDIR)/util.jar:$(LIBDIR)/filterclient.jar
+APPCLASSPATH := $(LIBDIR)/general.jar:$(LIBDIR)/util.jar
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)

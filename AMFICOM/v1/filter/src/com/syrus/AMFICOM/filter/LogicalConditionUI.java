@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalConditionUI.java,v 1.14 2005/04/07 10:49:04 bob Exp $
+ * $Id: LogicalConditionUI.java,v 1.15 2005/04/13 19:09:41 arseniy Exp $
  *
  * Copyright ? 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,8 +34,8 @@ import com.syrus.AMFICOM.logic.Populatable;
 import com.syrus.AMFICOM.logic.ServiceItem;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/04/07 10:49:04 $
- * @author $Author: bob $
+ * @version $Revision: 1.15 $, $Date: 2005/04/13 19:09:41 $
+ * @author $Author: arseniy $
  * @module filter_v1
  */
 public class LogicalConditionUI {
@@ -50,8 +50,8 @@ public class LogicalConditionUI {
 
 	public static void main(String[] args) {
 		JFrame frame = new JFrame("Filter");
-		LogicalConditionUI logicalSchemeUI = new LogicalConditionUI();
-		frame.getContentPane().add(logicalSchemeUI.getSplitPane());
+		LogicalConditionUI lsUI = new LogicalConditionUI();
+		frame.getContentPane().add(lsUI.getSplitPane());
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.pack();
 		frame.setVisible(false);
@@ -69,7 +69,7 @@ public class LogicalConditionUI {
 		final Item rootItem2 = this.getRootItem();
 		this.logicalSchemeUI = new LogicalSchemeUI(rootItem2);
 
-		final LogicalSchemeUI logicalSchemeUI = this.logicalSchemeUI;
+		final LogicalSchemeUI logicalSchemeUI1 = this.logicalSchemeUI;
 
 		final JScrollPane jScrollPane = new JScrollPane(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
 														ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -80,7 +80,7 @@ public class LogicalConditionUI {
 		andButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				logicalSchemeUI.addItem(new LogicalItem(LogicalItem.AND));
+				logicalSchemeUI1.addItem(new LogicalItem(LogicalItem.AND));
 			}
 		});
 
@@ -88,7 +88,7 @@ public class LogicalConditionUI {
 		orButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				logicalSchemeUI.addItem(new LogicalItem(LogicalItem.OR));
+				logicalSchemeUI1.addItem(new LogicalItem(LogicalItem.OR));
 			}
 		});
 		
@@ -109,7 +109,7 @@ public class LogicalConditionUI {
 		deleteButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				logicalSchemeUI.deleteSelectedItems();
+				logicalSchemeUI1.deleteSelectedItems();
 			}
 		});
 
@@ -117,8 +117,8 @@ public class LogicalConditionUI {
 		arrangeButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				logicalSchemeUI.setSize(jScrollPane.getWidth(), jScrollPane.getHeight());
-				logicalSchemeUI.arrange();
+				logicalSchemeUI1.setSize(jScrollPane.getWidth(), jScrollPane.getHeight());
+				logicalSchemeUI1.arrange();
 			}
 		});
 

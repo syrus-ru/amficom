@@ -1,5 +1,5 @@
 /*-
- * $Id: ItemTreeModel.java,v 1.9 2005/04/07 10:55:40 bob Exp $
+ * $Id: ItemTreeModel.java,v 1.10 2005/04/13 19:09:41 arseniy Exp $
  *
  * Copyright ? 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,15 +16,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.event.EventListenerList;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/04/07 10:55:40 $
- * @author $Author: bob $
+ * @version $Revision: 1.10 $, $Date: 2005/04/13 19:09:41 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module filter_v1
  */
@@ -251,7 +250,6 @@ public class ItemTreeModel implements TreeModel, ItemListener {
 	 *            the indices of the changed elements
 	 * @param children
 	 *            the changed elements
-	 * @see EventListenerList
 	 */
 	protected void fireTreeNodesChanged(Object source, Object[] path, int[] childIndices, Object[] children) {
 		TreeModelEvent e = null;
@@ -321,7 +319,6 @@ public class ItemTreeModel implements TreeModel, ItemListener {
 	 *            the indices of the new elements
 	 * @param children
 	 *            the new elements
-	 * @see EventListenerList
 	 */
 	protected void fireTreeNodesInserted(Object source, Object[] path, int[] childIndices, Object[] children) {
 		TreeModelEvent e = null;
@@ -359,7 +356,6 @@ public class ItemTreeModel implements TreeModel, ItemListener {
 	 *            the indices of the removed elements
 	 * @param children
 	 *            the removed elements
-	 * @see EventListenerList
 	 */
 	protected void fireTreeNodesRemoved(Object source, Object[] path, int[] childIndices, Object[] children) {
 		TreeModelEvent e = null;

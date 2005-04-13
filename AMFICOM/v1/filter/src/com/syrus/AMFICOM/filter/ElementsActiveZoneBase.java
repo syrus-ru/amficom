@@ -1,5 +1,5 @@
 /*
- * $Id: ElementsActiveZoneBase.java,v 1.2 2004/08/24 12:52:08 peskovsky Exp $
+ * $Id: ElementsActiveZoneBase.java,v 1.3 2005/04/13 19:09:40 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/08/24 12:52:08 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/13 19:09:40 $
  * @module filter_v1
  */
 public class ElementsActiveZoneBase extends ProSchemeElementBase
@@ -22,14 +22,8 @@ public class ElementsActiveZoneBase extends ProSchemeElementBase
 	 */
 	public static final String TYP = "Filter sensor zone";
 
-	/**
-	 * Value: {@value}
-	 * @deprecated Use {@link #TYP} instead.
-	 */
-	public static final String typ = TYP;
-
-	public static String zt_in = "in";
-	public static String zt_out = "out";
+	public static String ztIn = "in";
+	public static String ztOut = "out";
 
 	public LogicSchemeElementBase owner = null;
 	private List links = new ArrayList();
@@ -59,16 +53,16 @@ public class ElementsActiveZoneBase extends ProSchemeElementBase
 
 	public void addLink(FinishedLinkBase fl)
 	{
-		links.add(fl);
+		this.links.add(fl);
 	}
 
 	public void removeLink(FinishedLinkBase fl)
 	{
-		links.remove(fl);
+		this.links.remove(fl);
 	}
 
 	public List getLinks()
 	{
-		return links;
+		return this.links;
 	}
 }

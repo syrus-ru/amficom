@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalItem.java,v 1.12 2005/04/07 10:54:27 bob Exp $
+ * $Id: LogicalItem.java,v 1.13 2005/04/13 19:09:41 arseniy Exp $
  *
  * Copyright ? 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,8 +13,8 @@ import java.util.Iterator;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/04/07 10:54:27 $
- * @author $Author: bob $
+ * @version $Revision: 1.13 $, $Date: 2005/04/13 19:09:41 $
+ * @author $Author: arseniy $
  * @module filter_v1
  */
 public class LogicalItem extends AbstractItem {
@@ -121,8 +121,8 @@ public class LogicalItem extends AbstractItem {
 	}
 
 	public Object clone() {
-		String type = this.getType();
-		if(type.equals(CONDITION))
+		String type1 = this.getType();
+		if(type1.equals(CONDITION))
 			return new LogicalItem(this.getName(),this.getCondition());
 		LogicalItem newItem = new LogicalItem(this.getType());
 		childClone(this, newItem);
