@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.105 2005/04/12 17:04:43 arseniy Exp $
+ * $Id: Test.java,v 1.106 2005/04/13 12:49:41 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,6 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
@@ -44,7 +43,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.105 $, $Date: 2005/04/12 17:04:43 $
+ * @version $Revision: 1.106 $, $Date: 2005/04/13 12:49:41 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -109,7 +108,6 @@ public class Test extends StorableObject {
 					startTime,
 					this.monitoredElement.getLocalAddress(),
 					this.id);
-			MeasurementDatabaseContext.getMeasurementDatabase().update(measurement, measurementCreatorId, StorableObjectDatabase.UPDATE_FORCE);
 		}
 		catch (ApplicationException ae) {
 			throw new CreateObjectException("Cannot create measurement for test '" + this.id + "' -- " + ae.getMessage(), ae);
@@ -119,13 +117,6 @@ public class Test extends StorableObject {
 		this.numberOfMeasurements++;
 		super.changed = true;
 
-		TestDatabase database = MeasurementDatabaseContext.getTestDatabase();
-		try {
-			database.update(this, measurementCreatorId, StorableObjectDatabase.UPDATE_FORCE);
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae.getMessage(), ae);
-		}
 		return measurement;
 	}	
 	
