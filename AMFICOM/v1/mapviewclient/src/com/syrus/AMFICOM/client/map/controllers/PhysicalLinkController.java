@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLinkController.java,v 1.10 2005/04/06 17:41:12 krupenn Exp $
+ * $Id: PhysicalLinkController.java,v 1.11 2005/04/13 11:15:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -36,12 +36,11 @@ import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
-import com.syrus.AMFICOM.map.PhysicalLinkWrapper;
 
 /**
  * Контроллер линейного элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.10 $, $Date: 2005/04/06 17:41:12 $
+ * @version $Revision: 1.11 $, $Date: 2005/04/13 11:15:32 $
  * @module mapviewclient_v1
  */
 public class PhysicalLinkController extends AbstractLinkController

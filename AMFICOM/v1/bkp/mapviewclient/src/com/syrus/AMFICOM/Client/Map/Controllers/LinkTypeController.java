@@ -1,5 +1,5 @@
 /**
- * $Id: LinkTypeController.java,v 1.13 2005/04/06 17:41:11 krupenn Exp $
+ * $Id: LinkTypeController.java,v 1.14 2005/04/13 11:13:47 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -48,12 +48,11 @@ import com.syrus.AMFICOM.map.IntDimension;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.MapStorableObjectPool;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
-import com.syrus.AMFICOM.map.PhysicalLinkTypeWrapper;
 
 /**
  * Контроллер типа линейного элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.13 $, $Date: 2005/04/06 17:41:11 $
+ * @version $Revision: 1.14 $, $Date: 2005/04/13 11:13:47 $
  * @module mapviewclient_v1
  */
 public final class LinkTypeController extends AbstractLinkController
