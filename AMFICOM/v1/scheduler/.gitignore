@@ -6,6 +6,7 @@ language.properties_
 sort.pl
 Configure.properties
 images
+.mach
 *.jar
 *.swp
 *.tar
