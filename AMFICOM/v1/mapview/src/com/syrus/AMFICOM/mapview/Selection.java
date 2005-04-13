@@ -1,5 +1,5 @@
 /**
- * $Id: Selection.java,v 1.6 2005/04/01 13:16:07 bob Exp $
+ * $Id: Selection.java,v 1.7 2005/04/13 10:05:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,8 +29,8 @@ import java.util.Set;
 /**
  * Набор выбранных элементов.
  * 
- * @author $Author: bob $
- * @version $Revision: 1.6 $, $Date: 2005/04/01 13:16:07 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.7 $, $Date: 2005/04/13 10:05:56 $
  * @module mapviewclient_v1
  * @todo copy/paste, properties
  */
@@ -46,11 +46,6 @@ public final class Selection
 	 * Общий центр выбранных элементов.
 	 */
 	protected DoublePoint location = new DoublePoint(0, 0);
-	
-	/**
-	 * Топологическая схема.
-	 */
-	protected Map map;
 	
 	/** 
 	 * Выбраны только топологические узлы. Используется для
@@ -88,7 +83,6 @@ public final class Selection
 	 */
 	public Selection(Map map)
 	{
-		this.map = map;
 	}
 
 	/**
@@ -257,9 +251,11 @@ public final class Selection
 
 	/**
 	 * {@inheritDoc}
+	 * cannnot be selected
 	 */
 	public void setSelected(boolean selected)
-	{// cannnot be selected
+	{
+		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -313,22 +309,6 @@ public final class Selection
 	public void removeCharacteristic(Characteristic ch)
 	{
 		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public Map getMap()
-	{
-		return this.map;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setMap(Map map)
-	{
-		this.map = map;
 	}
 
 	/**
