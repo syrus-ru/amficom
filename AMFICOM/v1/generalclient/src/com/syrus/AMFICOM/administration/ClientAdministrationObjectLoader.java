@@ -1,5 +1,5 @@
 /*
- * $Id: ClientAdministrationObjectLoader.java,v 1.13 2005/04/08 15:47:27 bob Exp $
+ * $Id: ClientAdministrationObjectLoader.java,v 1.14 2005/04/13 14:02:14 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,9 +37,10 @@ import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/04/08 15:47:27 $
+ * @version $Revision: 1.14 $, $Date: 2005/04/13 14:02:14 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -67,17 +68,16 @@ public class ClientAdministrationObjectLoader extends AbstractClientObjectLoader
 		return so;
 	}
 	
-	public void delete(Identifier id) throws IllegalDataException {
+	public void delete(Identifier id) {
 		Identifier_Transferable identifier_Transferable = (Identifier_Transferable) id.getTransferable();
 		try {
 			this.cmserver.delete(identifier_Transferable, getAccessIdentifierTransferable());
 		} catch (AMFICOMRemoteException e) {
-			String msg = "ClientAdministrationObjectLoader.delete | Couldn't delete id =" + id.toString() + ")";
-			throw new IllegalDataException(msg, e);
+			Log.errorException(e);
 		}
 	}
 
-	public void delete(Set ids) throws IllegalDataException {
+	public void delete(Set ids) {
 		Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
 		int i = 0;
 		for (Iterator it = ids.iterator(); it.hasNext(); i++) {
@@ -87,8 +87,7 @@ public class ClientAdministrationObjectLoader extends AbstractClientObjectLoader
 		try {
 			this.cmserver.deleteList(identifier_Transferables, getAccessIdentifierTransferable());
 		} catch (AMFICOMRemoteException e) {
-			String msg = "ClientAdministrationObjectLoader.delete | AMFICOMRemoteException ";
-			throw new IllegalDataException(msg, e);
+			Log.errorException(e);
 		}
 	}
 

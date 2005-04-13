@@ -42,6 +42,7 @@ public class MiscUtil
 		}
 
 		try {
+			/* remove it Õ¿’”…!!! */
 			return CharacteristicType.createInstance(
 					userId,
 					codename,

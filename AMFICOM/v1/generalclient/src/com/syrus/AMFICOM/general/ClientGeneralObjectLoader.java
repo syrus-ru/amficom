@@ -1,5 +1,5 @@
 /*
- * $Id: ClientGeneralObjectLoader.java,v 1.14 2005/04/11 11:55:53 bob Exp $
+ * $Id: ClientGeneralObjectLoader.java,v 1.15 2005/04/13 14:02:15 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,9 +23,10 @@ import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/04/11 11:55:53 $
+ * @version $Revision: 1.15 $, $Date: 2005/04/13 14:02:15 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -386,17 +387,16 @@ public class ClientGeneralObjectLoader extends AbstractClientObjectLoader implem
 		}
 	}
 
-	public void delete(Identifier id) throws IllegalDataException {
+	public void delete(Identifier id) {
 		Identifier_Transferable identifier_Transferable = (Identifier_Transferable) id.getTransferable();
 		try {
 			this.server.delete(identifier_Transferable, getAccessIdentifierTransferable());
 		} catch (AMFICOMRemoteException e) {
-			String msg = "ClientGeneralObjectLoader.delete | Couldn't delete id =" + id.toString() + ")";
-			throw new IllegalDataException(msg, e);
+			Log.errorException(e);
 		}
 	}
 
-	public void delete(Set ids) throws IllegalDataException {
+	public void delete(Set ids) {
 		Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
 		int i = 0;
 		for (Iterator it = ids.iterator(); it.hasNext(); i++) {
@@ -406,8 +406,7 @@ public class ClientGeneralObjectLoader extends AbstractClientObjectLoader implem
 		try {
 			this.server.deleteList(identifier_Transferables, getAccessIdentifierTransferable());
 		} catch (AMFICOMRemoteException e) {
-			String msg = "ClientGeneralObjectLoader.delete | AMFICOMRemoteException ";
-			throw new IllegalDataException(msg, e);
+			Log.errorException(e);
 		}
 	}
 

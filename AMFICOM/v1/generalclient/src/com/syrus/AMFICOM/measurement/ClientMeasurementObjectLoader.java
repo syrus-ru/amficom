@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementObjectLoader.java,v 1.30 2005/04/08 15:47:27 bob Exp $
+ * $Id: ClientMeasurementObjectLoader.java,v 1.31 2005/04/13 14:02:15 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,6 @@ import com.syrus.AMFICOM.cmserver.corba.CMServer;
 import com.syrus.AMFICOM.general.AbstractClientObjectLoader;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.SessionContext;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
@@ -42,9 +41,10 @@ import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
 import com.syrus.AMFICOM.measurement.corba.TemporalPattern_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/04/08 15:47:27 $
+ * @version $Revision: 1.31 $, $Date: 2005/04/13 14:02:15 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -61,19 +61,18 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 		return  (AccessIdentifier_Transferable) SessionContext.getAccessIdentity().getTransferable();
 	}
 	
-	public void delete(Identifier id) throws IllegalDataException {
+	public void delete(Identifier id) {
 		Identifier_Transferable identifier_Transferable = (Identifier_Transferable) id.getTransferable();
 		try {
 			this.server.delete(identifier_Transferable, getAccessIdentifierTransferable());
 		} catch (AMFICOMRemoteException e) {
-			String msg = "ClientMeasurementObjectLoader.delete | Couldn't delete id =" + id.toString() + ")";
-			throw new IllegalDataException(msg, e);
+			Log.errorException(e);
 		} catch (SystemException e) {
-			throw new IllegalDataException("System corba exception:" + e.getMessage(), e);
+			Log.errorException(e);
 		}
 	}
 
-	public void delete(java.util.Set ids) throws IllegalDataException {
+	public void delete(java.util.Set ids) {
 		Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
 		int i = 0;
 		for (Iterator it = ids.iterator(); it.hasNext(); i++) {
@@ -83,10 +82,9 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 		try {
 			this.server.deleteList(identifier_Transferables, getAccessIdentifierTransferable());
 		} catch (AMFICOMRemoteException e) {
-			String msg = "ClientMeasurementObjectLoader.delete | AMFICOMRemoteException ";
-			throw new IllegalDataException(msg, e);
+			Log.errorException(e);
 		} catch (SystemException e) {
-			throw new IllegalDataException("System corba exception:" + e.getMessage(), e);
+			Log.errorException(e);
 		}
 	}
 	

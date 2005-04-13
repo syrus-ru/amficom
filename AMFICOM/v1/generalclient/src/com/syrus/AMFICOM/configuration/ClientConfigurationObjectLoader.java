@@ -1,5 +1,5 @@
 /*
- * $Id: ClientConfigurationObjectLoader.java,v 1.26 2005/04/08 15:47:27 bob Exp $
+ * $Id: ClientConfigurationObjectLoader.java,v 1.27 2005/04/13 14:02:14 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,6 @@ import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.SessionContext;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -50,9 +49,10 @@ import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/04/08 15:47:27 $
+ * @version $Revision: 1.27 $, $Date: 2005/04/13 14:02:14 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -69,17 +69,16 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 		this.server = server;
 	}
 
-	public void delete(Identifier id) throws IllegalDataException {
+	public void delete(Identifier id) {
 		Identifier_Transferable identifier_Transferable = (Identifier_Transferable) id.getTransferable();
 		try {
 			this.server.delete(identifier_Transferable, getAccessIdentifierTransferable());
 		} catch (AMFICOMRemoteException e) {
-			String msg = "ClientConfigurationObjectLoader.delete | Couldn't delete id =" + id.toString() + ")";
-			throw new IllegalDataException(msg, e);
+			Log.errorException(e);
 		}
 	}
 
-	public void delete(Set ids) throws IllegalDataException {
+	public void delete(Set ids) {
 		Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
 		int i = 0;
 		for (Iterator it = ids.iterator(); it.hasNext(); i++) {
@@ -89,8 +88,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 		try {
 			this.server.deleteList(identifier_Transferables, getAccessIdentifierTransferable());
 		} catch (AMFICOMRemoteException e) {
-			String msg = "ClientConfigurationObjectLoader.delete | AMFICOMRemoteException ";
-			throw new IllegalDataException(msg, e);
+			Log.errorException(e);
 		}
 	}
 	
