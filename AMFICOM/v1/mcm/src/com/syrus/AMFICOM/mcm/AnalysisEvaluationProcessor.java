@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisEvaluationProcessor.java,v 1.23 2005/04/11 12:43:36 arseniy Exp $
+ * $Id: AnalysisEvaluationProcessor.java,v 1.24 2005/04/13 12:00:43 saa Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,8 +17,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.SessionContext;
 import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.AMFICOM.measurement.AnalysisType;
-import com.syrus.AMFICOM.measurement.Evaluation;
-import com.syrus.AMFICOM.measurement.EvaluationType;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
@@ -30,8 +28,8 @@ import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/04/11 12:43:36 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.24 $, $Date: 2005/04/13 12:00:43 $
+ * @author $Author: saa $
  * @module mcm_v1
  */
 
@@ -40,19 +38,17 @@ public class AnalysisEvaluationProcessor {
 	private static final String CODENAME_EVALUATION_TYPE_DADARA = "dadara";
 
 	private static final String CLASS_NAME_ANALYSIS_MANAGER_DADARA = "DadaraAnalysisManager";
-	private static final String CLASS_NAME_EVALUATION_MANAGER_DADARA = "DadaraEvaluationManager";
 
 	private static final String ANALYSIS_NAME = "Analysis of measurement";
 
 	private static AnalysisManager analysisManager;
-	private static EvaluationManager evaluationManager;
 
 	private AnalysisEvaluationProcessor() {
 		//singleton
 		assert false;
 	}
 
-	public static Result[] analyseEvaluate(Result measurementResult) throws AnalysisException, EvaluationException {
+	public static Result[] analyseEvaluate(Result measurementResult) throws AnalysisException {
 		Measurement measurement = (Measurement) measurementResult.getAction();
 		Test test = null;
 		try {
@@ -74,38 +70,12 @@ public class AnalysisEvaluationProcessor {
 			throw new AnalysisException("Cannot load analysis type '" + analysisTypeId
 					+ "' for test '" + test.getId() + "' -- " + ae.getMessage(), ae);
 		}
-		Identifier evaluationTypeId = test.getEvaluationTypeId();
-		EvaluationType evaluationType = null;
-		try {
-			if (evaluationTypeId != null)
-				evaluationType = (EvaluationType) MeasurementStorableObjectPool.getStorableObject(evaluationTypeId, true);
-		}
-		catch (ApplicationException ae) {
-			throw new AnalysisException("Cannot load evaluation type '" + evaluationTypeId
-					+ "' for test '" + test.getId() + "' -- " + ae.getMessage(), ae);
-		}
 		if (analysisType != null) {
 			Analysis analysis = createAnalysis(analysisType, monitoredElementId, measurement, measurementSetup.getCriteriaSet());
-			if (evaluationType != null) {
-				Evaluation evaluation = createEvaluation(evaluationType,
-						monitoredElementId,
-						measurement,
-						measurementSetup.getThresholdSet());
-				return analyseAndEvaluate(measurementResult, analysis, evaluation, measurementSetup.getEtalon());
-
-			}
-			return new Result[1];// return analyse(measurementResult, analysis,
-														// measurementSetup.getEtalon());
+			return new Result[] { analyseAndEvaluate(measurementResult, analysis, measurementSetup.getEtalon()) };
 		}
-		if (evaluationType != null) {
-			Evaluation evaluation = createEvaluation(evaluationType,
-					monitoredElementId,
-					measurement,
-					measurementSetup.getThresholdSet());
-			return new Result[1];// return evaluate(measurementResult, evaluation,
-														// measurementSetup.getEtalon());
-		}
-		return new Result[0];
+        else
+            return new Result[0];
 	}
 
 	private static Analysis createAnalysis(AnalysisType analysisType,
@@ -130,32 +100,10 @@ public class AnalysisEvaluationProcessor {
 		}
 	}
 
-	private static Evaluation createEvaluation(EvaluationType evaluationType,
-			Identifier monitoredElementId,
-			Measurement measurement,
-			Set thresholdSet) throws EvaluationException {
-		if (thresholdSet == null)
-			throw new EvaluationException("Threshold set is NULL");
-
-		try {
-			Evaluation evaluation = Evaluation.createInstance(SessionContext.getAccessIdentity().getUserId(),
-					evaluationType,
-					monitoredElementId,
-					measurement,
-					thresholdSet);
-			MeasurementDatabaseContext.getEvaluationDatabase().insert(evaluation);
-			return evaluation;
-		}
-		catch (ApplicationException ae) {
-			throw new EvaluationException("Cannot create evaluation", ae);
-		}
-	}
-
+    // @todo: rename to loadAnalysisManager
 	private static void loadAnalysisAndEvaluationManager(String analysisCodename,
-			String evaluationCodename,
 			Result measurementResult,
 			Analysis analysis,
-			Evaluation evaluation,
 			Set etalon) throws AnalysisException {
 		String className = null;
 		Constructor constructor = null;
@@ -168,10 +116,9 @@ public class AnalysisEvaluationProcessor {
 		try {
 			constructor = Class.forName(className).getDeclaredConstructor(new Class[] {Result.class,
 					Analysis.class,
-					Evaluation.class,
 					Set.class});
 			constructor.setAccessible(true);
-			analysisManager = (AnalysisManager) constructor.newInstance(new Object[] {measurementResult, analysis, evaluation, etalon});
+			analysisManager = (AnalysisManager) constructor.newInstance(new Object[] {measurementResult, analysis, etalon});
 		}
 		catch (SecurityException e) {
 			throw new AnalysisException("Cannot get constructor -- " + e.getMessage(), e);
@@ -194,19 +141,14 @@ public class AnalysisEvaluationProcessor {
 		catch (InvocationTargetException e) {
 			throw new AnalysisException("Cannot get constructor -- " + e.getMessage(), e);
 		}
-
-		if (evaluationCodename.equals(CODENAME_EVALUATION_TYPE_DADARA))
-			evaluationManager = (EvaluationManager) analysisManager;
 	}
 
-	private static Result[] analyseAndEvaluate(Result measurementResult, Analysis analysis, Evaluation evaluation, Set etalon)
-			throws AnalysisException,
-				EvaluationException {
+	private static Result analyseAndEvaluate(Result measurementResult, Analysis analysis, Set etalon)
+			throws AnalysisException {
 
 		String analysisCodename = analysis.getType().getCodename();
-		String evaluationCodename = evaluation.getType().getCodename();
 
-		loadAnalysisAndEvaluationManager(analysisCodename, evaluationCodename, measurementResult, analysis, evaluation, etalon);
+		loadAnalysisAndEvaluationManager(analysisCodename, measurementResult, analysis, etalon);
 
 		SetParameter[] arParameters = analysisManager.analyse();
 		Result analysisResult;
@@ -218,37 +160,6 @@ public class AnalysisEvaluationProcessor {
 			analysisResult = null;
 		}
 
-		SetParameter[] erParameters = evaluationManager.evaluate();
-		Result evaluationResult;
-		try {
-			evaluationResult = evaluation.createResult(SessionContext.getAccessIdentity().getUserId(), erParameters);
-		}
-		catch (CreateObjectException coe) {
-			Log.errorException(coe);
-			evaluationResult = null;
-		}
-
-		Result[] results = new Result[2];
-		results[0] = analysisResult;
-		results[1] = evaluationResult;
-		return results;
+		return analysisResult;
 	}
-
-// public static Result analyse(Result measurementResult,
-// Analysis analysis,
-// Set etalon) throws AnalysisException {
-//		
-// }
-//
-// public static Result evaluate(Result measurementResult,
-// Result analysisResult,
-// Evaluation evaluation,
-// Set etalon) throws EvaluationException {
-// }
-//
-// public static Result evaluate(Result measurementResult,
-// Evaluation evaluation,
-//																Set etalon) throws EvaluationException {
-//	}
-
 }
