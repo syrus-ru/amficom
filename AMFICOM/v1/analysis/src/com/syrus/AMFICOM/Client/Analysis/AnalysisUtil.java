@@ -183,23 +183,23 @@ public class AnalysisUtil
 
 	public static Set createCriteriaSetFromParams(Identifier userId, java.util.Set meIds) throws ApplicationException
 	{
-		SetParameter[] params = new SetParameter[8];
-
 		double[] defaultMinuitParams;
 		defaultMinuitParams = Heap.getMinuitAnalysisParams();
 		if (defaultMinuitParams == null)
 			defaultMinuitParams = Heap.getMinuitDefaultParams();
 
 		String[] parameterCodenames = new String[] {
-				ParameterTypeCodenames.MIN_EVENT,//0
-				ParameterTypeCodenames.MIN_SPLICE,//1
-				ParameterTypeCodenames.MIN_CONNECTOR,//2
-				ParameterTypeCodenames.DADARA_NOISE_FACTOR //3
+				ParameterTypeCodenames.MIN_EVENT,
+				ParameterTypeCodenames.MIN_SPLICE,
+				ParameterTypeCodenames.MIN_CONNECTOR,
+				ParameterTypeCodenames.DADARA_NOISE_FACTOR
 		};
 
-		try
+        SetParameter[] params = new SetParameter[parameterCodenames.length];
+
+        try
 		{
-			for (int i = 0; i < 4; i++)
+			for (int i = 0; i < parameterCodenames.length; i++)
 			{
 				ParameterType ptype = getParameterType(userId, parameterCodenames[i], DataType.DATA_TYPE_DOUBLE);
 				params[i] = SetParameter.createInstance(ptype,
