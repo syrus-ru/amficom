@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.18 2005/03/17 13:08:15 bass Exp $
+# $Id: Makefile,v 1.19 2005/04/13 19:08:09 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -25,7 +25,7 @@ DIRS_TO_SCRUB = \
 	com/syrus/AMFICOM/scheme/corba
 
 SRCDIRS_TO_SCRUB = $(foreach dir,$(DIRS_TO_SCRUB),$(SRCDIR)/$(dir))
-_CLASSPATH = $(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/corba.jar:$(LIBDIR)/general.jar:$(LIBDIR)/map.jar:$(LIBDIR)/resource.jar:$(LIBDIR)/util.jar
+APPCLASSPATH = $(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/general.jar:$(LIBDIR)/map.jar:$(LIBDIR)/resource.jar:$(LIBDIR)/filter.jar:$(LIBDIR)/util.jar
 
 $(LIBNAME): .mach
 	$(JAR) -cf $@ \
@@ -34,8 +34,7 @@ $(LIBNAME): .mach
 
 .mach:	.corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
-		-sourcepath $(SRCDIR) \
-		-classpath $(_CLASSPATH):$(CLASSDIR) \
+		-classpath $(APPCLASSPATH):$(CLASSDIR) \
 		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/scheme/*.java)
 	touch $@
 
@@ -44,12 +43,7 @@ idl: .idl
 
 # Just idl-to-java compilation
 .idl: $(SRCDIR)
-#	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/scheme-administration.idl
-#	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/scheme-configuration.idl
-#	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/scheme-general.idl
-#	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/scheme-map.idl
-#	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/scheme-resource.idl
-#	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/scheme-vt.idl
+	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/scheme.idl
 	touch $@
 
 
@@ -60,11 +54,8 @@ corba: .corba
 .corba:	$(CLASSDIR) .idl
 	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
 		-sourcepath $(SRCDIR) \
-		-classpath $(_CLASSPATH):$(CLASSES) \
-		$(SRCDIR)/com/syrus/AMFICOM/scheme/corba/AbstractSchemePortPackage/*.java \
-		$(SRCDIR)/com/syrus/AMFICOM/scheme/corba/PathElementPackage/*.java \
-		$(SRCDIR)/com/syrus/AMFICOM/scheme/corba/SchemeOptimizeInfoPackage/*.java \
-		$(SRCDIR)/com/syrus/AMFICOM/scheme/corba/SchemePackage/*.java
+		-classpath $(APPCLASSPATH) \
+		$(SRCDIR)/com/syrus/AMFICOM/scheme/corba/*.java
 	touch $@
 
 $(SRCDIR):
