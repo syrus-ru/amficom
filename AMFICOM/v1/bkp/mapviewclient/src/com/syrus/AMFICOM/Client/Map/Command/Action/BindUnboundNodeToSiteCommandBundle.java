@@ -1,5 +1,5 @@
 /**
- * $Id: BindUnboundNodeToSiteCommandBundle.java,v 1.15 2005/03/16 12:54:57 bass Exp $
+ * $Id: BindUnboundNodeToSiteCommandBundle.java,v 1.16 2005/04/13 11:09:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,8 +29,8 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
 
 /**
  *  Команда привязывания непривязанного элемента к узлу.
- * @author $Author: bass $
- * @version $Revision: 1.15 $, $Date: 2005/03/16 12:54:57 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.16 $, $Date: 2005/04/13 11:09:10 $
  * @module mapviewclient_v1
  */
 public class BindUnboundNodeToSiteCommandBundle extends MapActionCommandBundle
@@ -82,7 +82,7 @@ public class BindUnboundNodeToSiteCommandBundle extends MapActionCommandBundle
 					cp.setStartNode(this.site);
 			}
 			//При привязывании меняются концевые узлы линий и фрагментов линий
-			for(Iterator it = this.unbound.getNodeLinks().iterator(); it.hasNext();)
+			for(Iterator it = this.map.getNodeLinks(this.unbound).iterator(); it.hasNext();)
 			{
 				NodeLink nodeLink = (NodeLink)it.next();
 				PhysicalLink physicalLink = nodeLink.getPhysicalLink();

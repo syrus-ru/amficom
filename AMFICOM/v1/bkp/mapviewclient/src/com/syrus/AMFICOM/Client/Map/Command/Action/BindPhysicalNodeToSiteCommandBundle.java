@@ -1,5 +1,5 @@
 /**
- * $Id: BindPhysicalNodeToSiteCommandBundle.java,v 1.16 2005/02/18 12:19:44 krupenn Exp $
+ * $Id: BindPhysicalNodeToSiteCommandBundle.java,v 1.17 2005/04/13 11:08:45 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -32,7 +32,7 @@ import java.util.Iterator;
  *  неприв€занному кабелю, к элементу узла. ѕри этом лини€, которой 
  *  принадлежит данный узел, делитс€ на 2 части
  * @author $Author: krupenn $
- * @version $Revision: 1.16 $, $Date: 2005/02/18 12:19:44 $
+ * @version $Revision: 1.17 $, $Date: 2005/04/13 11:08:45 $
  * @module mapclient_v1
  */
 public class BindPhysicalNodeToSiteCommandBundle extends MapActionCommandBundle
@@ -90,7 +90,7 @@ public class BindPhysicalNodeToSiteCommandBundle extends MapActionCommandBundle
 			PhysicalLink link = this.node.getPhysicalLink();
 			// находим "ливый" и "правый" узлы, одновременно обновл€ем
 			// концевые узлы фрагментов
-			for(Iterator it = this.node.getNodeLinks().iterator(); it.hasNext();)
+			for(Iterator it = this.map.getNodeLinks(this.node).iterator(); it.hasNext();)
 			{
 				NodeLink mnle = (NodeLink)it.next();
 
@@ -123,6 +123,7 @@ public class BindPhysicalNodeToSiteCommandBundle extends MapActionCommandBundle
 			// переносим фрагменты в новую линию пока не наткнемс€ на
 			// созданный узел
 			super.moveNodeLinks(
+					this.map,
 					link,
 					newLink,
 					false,

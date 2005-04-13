@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteNodeCommandBundle.java,v 1.20 2005/04/06 17:41:11 krupenn Exp $
+ * $Id: DeleteNodeCommandBundle.java,v 1.21 2005/04/13 11:09:42 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,35 +11,34 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.Map.Controllers.CableController;
+import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElementState;
 import com.syrus.AMFICOM.map.Mark;
-import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.map.SiteNode;
+import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.mapview.CablePath;
+import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.Marker;
 import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.mapview.UnboundNode;
-import com.syrus.AMFICOM.mapview.MapView;
-
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
 
 /**
  *  Команда удаления элемента наследника класса MapNodeElement. Команда
  * состоит из  последовательности атомарных действий
  * @author $Author: krupenn $
- * @version $Revision: 1.20 $, $Date: 2005/04/06 17:41:11 $
+ * @version $Revision: 1.21 $, $Date: 2005/04/13 11:09:42 $
  * @module mapviewclient_v1
  */
 public class DeleteNodeCommandBundle extends MapActionCommandBundle
@@ -137,7 +136,7 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 		}
 
 		//При удалении узла удаляются все фрагменты линий, исходящие из него
-		java.util.Set nodeLinksToDelete = site.getNodeLinks();
+		java.util.Set nodeLinksToDelete = this.map.getNodeLinks(site);
 		Iterator iter = nodeLinksToDelete.iterator();
 
 		// бежим по списку удаляемых фрагментов
@@ -216,7 +215,7 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 		if ( !topologicalNode.isActive() )
 		{
 			//При удалении узла удаляются все фрагменты линий, исходящие из него
-			java.util.Set nodeLinksToDelete = topologicalNode.getNodeLinks();
+			java.util.Set nodeLinksToDelete = this.map.getNodeLinks(topologicalNode);
 			Iterator iter = nodeLinksToDelete.iterator();
 	
 			// бежим по списку удаляемых фрагментов (фактически там только 
@@ -280,7 +279,7 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 		if ( topologicalNode.isActive() )
 		{
 			// получить смежные фрагменты линии
-			Iterator nodeLinksIterator = topologicalNode.getNodeLinks().iterator();
+			Iterator nodeLinksIterator = this.map.getNodeLinks(topologicalNode).iterator();
 			NodeLink nodeLinkLeft = 
 					(NodeLink)nodeLinksIterator.next();
 			NodeLink nodeLinkRight = 
