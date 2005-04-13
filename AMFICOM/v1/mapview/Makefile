@@ -3,8 +3,6 @@ MODULE_NAME = map_v1
 LIBNAME = $(subst _v1,,$(MODULE_NAME)).jar
 ARCHFILE = $(subst _v1,,$(MODULE_NAME)).tar.gz
 
-IDLDIR=../idl_v1/idl
-
 APPCLASSPATH = $(LIBDIR)/resource.jar:$(LIBDIR)/scheme.jar:$(LIBDIR)/map.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/util.jar
 
 JAVACFLAGS = -source 1.4
@@ -18,7 +16,6 @@ $(call checkenve,JAVA_HOME)
 
 $(LIBNAME): .mach
 	$(JAR) -cf $@ \
-		-C $(CLASSDIR) com/syrus/AMFICOM/map \
 		-C $(CLASSDIR) com/syrus/AMFICOM/mapview
 
 .mach:	$(CLASSDIR)
@@ -36,7 +33,7 @@ clean:	cleanmach
 
 .PHONY:	cleanmach
 cleanmach:
-	$(RM) $(wildcard $(CLASSDIR)/com/syrus/AMFICOM/map/*.class)
+	$(RM) $(wildcard $(CLASSDIR)/com/syrus/AMFICOM/mapview/*.class)
 	$(RM) .mach
 
 
