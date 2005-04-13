@@ -1,5 +1,5 @@
 /*-
- * $Id: Mark.java,v 1.30 2005/04/08 09:24:33 bass Exp $
+ * $Id: Mark.java,v 1.31 2005/04/13 09:48:51 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,8 +41,8 @@ import org.omg.CORBA.portable.IDLEntity;
  * в связи с чем методы класса {@link AbstractNode}, работающие с линиями и 
  * фрагментами линий, переопределены и бросают 
  * <code>{@link UnsupportedOperationException}</code>.
- * @author $Author: bass $
- * @version $Revision: 1.30 $, $Date: 2005/04/08 09:24:33 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.31 $, $Date: 2005/04/13 09:48:51 $
  * @module map_v1
  */
 public class Mark extends AbstractNode {
@@ -440,38 +440,6 @@ public class Mark extends AbstractNode {
 	 */
 	public double getSizeInDoubleLt() {
 		return this.sizeInDoubleLt;
-	}
-
-	/**
-	 * {@inheritDoc}<br>
-	 * Suppress since mark cannot be an end node
-	 */
-	public Set getNodeLinks() {
-		throw new UnsupportedOperationException("Not implemented");
-	}
-
-	/**
-	 * {@inheritDoc}<br>
-	 * Suppress since mark cannot be an end node
-	 */
-	public NodeLink getOtherNodeLink(NodeLink nl) {
-		throw new UnsupportedOperationException("Not implemented; NodeLink: " + nl);
-	}
-
-	/**
-	 * {@inheritDoc}<br>
-	 * Suppress since mark cannot be an end node
-	 */
-	public Set getPhysicalLinks() {
-		throw new UnsupportedOperationException("Not implemented");
-	}
-
-	/**
-	 * {@inheritDoc}<br>
-	 * Suppress since mark cannot be an end node
-	 */
-	public Set getOppositeNodes() {
-		throw new UnsupportedOperationException("Not implemented");
 	}
 
 	/**
