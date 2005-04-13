@@ -45,7 +45,7 @@ public class LogicScheme extends LogicSchemeBase
 		for (ListIterator lIt = ls.schemeElements.listIterator();lIt.hasNext();)
 		{
 			LogicSchemeElement curLSE = (LogicSchemeElement) lIt.next();
-			if (curLSE.type.equals(LogicSchemeElement.t_result))
+			if (curLSE.type.equals(LogicSchemeElement.tResult))
 			{
 				ls.treeResult = curLSE;
 				break;
@@ -110,8 +110,8 @@ public class LogicScheme extends LogicSchemeBase
 
 	private String getTextFor(LogicSchemeElement top)
 	{
-		if (top.type.equals(LogicSchemeElement.t_condition))
-			return "\"" + LangModel.getString(LogicSchemeElement.t_condition) + " " + top.filterExpression.getListID() + "\"";
+		if (top.type.equals(LogicSchemeElement.tCondition))
+			return "\"" + LangModel.getString(LogicSchemeElement.tCondition) + " " + top.filterExpression.getListID() + "\"";
 
 		List allTopLinks = top.input.getLinks();
 
@@ -122,9 +122,9 @@ public class LogicScheme extends LogicSchemeBase
 			FinishedLink fl = (FinishedLink )allTopLinks.get(i);
 
 			LogicSchemeElement curInputElement = null;
-			if (fl.az1.zoneType.equals(ElementsActiveZone.zt_out))
+			if (fl.az1.zoneType.equals(ElementsActiveZone.ztOut))
 				curInputElement = (LogicSchemeElement )fl.az1.owner;
-			if (fl.az1.zoneType.equals(ElementsActiveZone.zt_in))
+			if (fl.az1.zoneType.equals(ElementsActiveZone.ztIn))
 				curInputElement = (LogicSchemeElement )fl.az2.owner;
 
 			if (i == 0)
@@ -190,7 +190,7 @@ public class LogicScheme extends LogicSchemeBase
 		for (int i = 0; i < this.schemeElements.size(); i++)
 		{
 			LogicSchemeElement curLSE = (LogicSchemeElement) this.schemeElements.get(i);
-			if (curLSE.type.equals(LogicSchemeElementBase.t_condition))
+			if (curLSE.type.equals(LogicSchemeElementBase.tCondition))
 			{
 				FilterExpressionInterface fe = curLSE.filterExpression;
 				if (fe.isTemplate())

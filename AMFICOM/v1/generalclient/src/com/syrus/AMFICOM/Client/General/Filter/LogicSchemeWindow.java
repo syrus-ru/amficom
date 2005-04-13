@@ -202,7 +202,7 @@ public class LogicSchemeWindow extends JDialog//JInternalFrame
 	{
 		if (andToggleButton.isSelected())
 		{
-			lsWindowButtonPressed = LogicSchemeElement.ot_and;
+			lsWindowButtonPressed = LogicSchemeElement.otAnd;
 			orToggleButton.setSelected(false);
 		}
 		else
@@ -213,7 +213,7 @@ public class LogicSchemeWindow extends JDialog//JInternalFrame
 	{
 		if (orToggleButton.isSelected())
 		{
-			lsWindowButtonPressed = LogicSchemeElement.ot_or;
+			lsWindowButtonPressed = LogicSchemeElement.otOr;
 			andToggleButton.setSelected(false);
 		}
 		else

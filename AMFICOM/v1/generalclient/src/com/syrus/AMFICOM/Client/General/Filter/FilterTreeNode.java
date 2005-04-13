@@ -29,9 +29,9 @@ public class FilterTreeNode extends DefaultMutableTreeNode
 
 	public void setChildrenState(int st)
 	{
-		for(Enumeration enum = this.children(); enum.hasMoreElements();)
+		for(Enumeration enumeration = this.children(); enumeration.hasMoreElements();)
 		{
-			FilterTreeNode down_mte = (FilterTreeNode)enum.nextElement();
+			FilterTreeNode down_mte = (FilterTreeNode)enumeration.nextElement();
 			if (st == 0)
 			{
 				down_mte.state = 2;
@@ -46,9 +46,9 @@ public class FilterTreeNode extends DefaultMutableTreeNode
 
 	public int[] CheckChildrenState(FilterTreeNode mte, int[] count)
 	{
-		for(Enumeration enum = this.children(); enum.hasMoreElements();)
+		for(Enumeration enumeration = this.children(); enumeration.hasMoreElements();)
 		{
-			FilterTreeNode down_mte = (FilterTreeNode)enum.nextElement();
+			FilterTreeNode down_mte = (FilterTreeNode)enumeration.nextElement();
 			if (down_mte.state == 0)
 			{
 				count[0]++;

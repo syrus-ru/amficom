@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourceFilterPane.java,v 1.14 2004/09/27 10:34:21 bass Exp $
+ * $Id: ObjectResourceFilterPane.java,v 1.15 2005/04/13 20:29:08 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,8 +22,8 @@ import javax.swing.border.EtchedBorder;
 import oracle.jdeveloper.layout.VerticalFlowLayout;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2004/09/27 10:34:21 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.15 $, $Date: 2005/04/13 20:29:08 $
  * @module generalclient_v1
  */
 public class ObjectResourceFilterPane extends JScrollPane
@@ -238,7 +238,7 @@ repaint();
 		for (int i = 0; i < schemeEls.size(); i++)
 		{
 			LogicSchemeElement se = (LogicSchemeElement) schemeEls.get(i);
-			if (se.type.equals(LogicSchemeElement.t_condition))
+			if (se.type.equals(LogicSchemeElement.tCondition))
 			{
 				int thisID = Integer.parseInt(se.operandType);
 				if (thisID > removedIndex)

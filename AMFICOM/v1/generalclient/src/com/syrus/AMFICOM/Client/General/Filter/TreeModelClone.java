@@ -43,9 +43,9 @@ public class TreeModelClone extends DefaultTreeModel
 					portnode_new.add(vol_tt_new);
 					if ( vol_tt_new.getName().equals(LangModel.getString("ORMones")) )
 					{
-						for(Enumeration enum = vol_tt_old.children(); enum.hasMoreElements();)
+						for(Enumeration enumeration = vol_tt_old.children(); enumeration.hasMoreElements();)
 						{
-							FilterTreeNode pathnode_old = (FilterTreeNode)enum.nextElement();
+							FilterTreeNode pathnode_old = (FilterTreeNode)enumeration.nextElement();
 							FilterTreeNode pathnode_new = new FilterTreeNode(pathnode_old.getName(),pathnode_old.id);
 							pathnode_new.state = pathnode_old.state;
 							vol_tt_new.add(pathnode_new);
@@ -53,9 +53,9 @@ public class TreeModelClone extends DefaultTreeModel
 					}
 					if ( vol_tt_new.getName().equals(LangModel.getString("ORTestTypes")) )
 					{
-						for(Enumeration enum = vol_tt_old.children(); enum.hasMoreElements();)
+						for(Enumeration enumeration = vol_tt_old.children(); enumeration.hasMoreElements();)
 						{
-							FilterTreeNode ttnode_old = (FilterTreeNode)enum.nextElement();
+							FilterTreeNode ttnode_old = (FilterTreeNode)enumeration.nextElement();
 							FilterTreeNode ttnode_new = new FilterTreeNode(ttnode_old.getName(),ttnode_old.id);
 							ttnode_new.state = ttnode_old.state;
 							vol_tt_new.add(ttnode_new);
@@ -98,9 +98,9 @@ public class TreeModelClone extends DefaultTreeModel
 
 		volume.put(node.id, trans);
 
-		for(Enumeration enum = node.children(); enum.hasMoreElements();)
+		for(Enumeration enumeration = node.children(); enumeration.hasMoreElements();)
 		{
-			FilterTreeNode curElem = (FilterTreeNode )enum.nextElement();
+			FilterTreeNode curElem = (FilterTreeNode )enumeration.nextElement();
 
 			getTreeHash(curElem, volume);
 /*

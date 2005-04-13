@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.13 2005/04/13 19:55:06 arseniy Exp $
+# $Id: Makefile,v 1.14 2005/04/13 20:29:08 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -13,7 +13,7 @@ IDLDIR = ../idl_v1/idl
 
 include ../tools/Makefile.inc
 
-APPCLASSPATH=$(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/resource.jar:$(LIBDIR)/filter.jar:$(LIBDIR)/corbaportable.jar:$(LIBDIR)/scheme.jar:$(LIBDIR)/map.jar:$(LIBDIR)/event.jar
+APPCLASSPATH=$(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/resource.jar:$(LIBDIR)/filter.jar:$(LIBDIR)/corbaportable.jar:$(LIBDIR)/scheme.jar:$(LIBDIR)/map.jar:$(LIBDIR)/mapview.jar:$(LIBDIR)/event.jar:$(LIBDIR)/cmserver_interface.jar
 
 $(call checkenve,JAVA_HOME)
 
@@ -35,6 +35,7 @@ $(LIBNAME): .mach
 	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/client.idl
 	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/report.idl
 	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/alarm.idl
+	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/constants.idl
 	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
 		-classpath $(APPCLASSPATH) \
 		-sourcepath $(SRCDIR) \
