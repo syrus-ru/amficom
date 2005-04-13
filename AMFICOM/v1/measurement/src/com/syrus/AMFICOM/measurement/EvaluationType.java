@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationType.java,v 1.58 2005/04/13 13:10:39 bob Exp $
+ * $Id: EvaluationType.java,v 1.59 2005/04/13 15:03:10 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.58 $, $Date: 2005/04/13 13:10:39 $
- * @author $Author: bob $
+ * @version $Revision: 1.59 $, $Date: 2005/04/13 15:03:10 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -321,8 +321,6 @@ public class EvaluationType extends ActionType {
 		this.setThresholdParameterTypes0(thresholdParameterTypes);
 		this.setEtalonParameterTypes0(etalonParameterTypes);
 		this.setOutParameterTypes0(outParameterTypes);
-		
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
 	/**
@@ -412,6 +410,8 @@ public class EvaluationType extends ActionType {
 		this.measurementTypeIds.clear();
 		if (measurementTypeIds != null)
 			this.measurementTypeIds.addAll(measurementTypeIds);
+
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
 	/**

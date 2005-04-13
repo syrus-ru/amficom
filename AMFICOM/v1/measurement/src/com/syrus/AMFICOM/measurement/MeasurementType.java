@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementType.java,v 1.63 2005/04/13 13:10:39 bob Exp $
+ * $Id: MeasurementType.java,v 1.64 2005/04/13 15:03:10 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.63 $, $Date: 2005/04/13 13:10:39 $
- * @author $Author: bob $
+ * @version $Revision: 1.64 $, $Date: 2005/04/13 15:03:10 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -264,8 +264,6 @@ public class MeasurementType extends ActionType {
 	protected synchronized void setParameterTypes(java.util.Set inParameterTypes, java.util.Set outParameterTypes) {
 		this.setInParameterTypes0(inParameterTypes);
 		this.setOutParameterTypes0(outParameterTypes);
-		
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
 	/**
@@ -315,6 +313,8 @@ public class MeasurementType extends ActionType {
 		this.measurementPortTypes.clear();
 		if (measurementPortTypes != null)
 	     	this.measurementPortTypes.addAll(measurementPortTypes);
+
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
 	/**
