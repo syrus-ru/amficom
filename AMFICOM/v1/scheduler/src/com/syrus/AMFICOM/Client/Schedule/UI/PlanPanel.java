@@ -298,6 +298,7 @@ public class PlanPanel extends JList implements TestsEditor, ActionListener {
 		 * TestLine testLine = (TestLine)it.next(); testLine.paint(g); }
 		 */
 		paintScaleDigits(g, diff, delta, subDelta);
+//		super.paintComponent(g);
 
 	}
 	

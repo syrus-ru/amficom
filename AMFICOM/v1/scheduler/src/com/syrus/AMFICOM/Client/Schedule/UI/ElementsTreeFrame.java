@@ -47,7 +47,7 @@ public class ElementsTreeFrame extends JInternalFrame implements KISEditor, Moni
 
 	private Command				command;
 
-	private SchedulerModel		schedulerModel;
+	SchedulerModel				schedulerModel;
 
 	private Map					paramMap						= new HashMap();
 
@@ -208,9 +208,30 @@ public class ElementsTreeFrame extends JInternalFrame implements KISEditor, Moni
 						Object object = item.getObject();
 						if (object instanceof Identifier) {
 							Identifier identifier = (Identifier) object;
-							if (identifier.getMajor() == ObjectEntities.ME_ENTITY_CODE) {
-								dispatcher.notify(new OperationEvent(identifier, 0,
-																		SchedulerModel.COMMAND_CHANGE_ME_TYPE));
+							short major = identifier.getMajor();
+							switch (major) {
+								case ObjectEntities.ME_ENTITY_CODE: {
+									dispatcher.notify(new OperationEvent(identifier, 0,
+																			SchedulerModel.COMMAND_CHANGE_ME_TYPE));
+									try {
+										ElementsTreeFrame.this.schedulerModel
+												.setSelectedMonitoredElement((MonitoredElement) ConfigurationStorableObjectPool
+														.getStorableObject(identifier, true));
+									} catch (ApplicationException e) {
+										SchedulerModel.showErrorMessage(ElementsTreeFrame.this, e);
+									}
+								}
+									break;
+								case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE: {
+									try {
+										ElementsTreeFrame.this.schedulerModel
+												.setSelectedMeasurementType((MeasurementType) MeasurementStorableObjectPool
+														.getStorableObject(identifier, true));
+									} catch (ApplicationException e) {
+										SchedulerModel.showErrorMessage(ElementsTreeFrame.this, e);
+									}
+								}
+									break;
 							}
 						}
 					}

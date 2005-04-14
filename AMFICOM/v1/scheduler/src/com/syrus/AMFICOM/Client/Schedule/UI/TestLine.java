@@ -8,7 +8,6 @@ import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -24,7 +23,6 @@ import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Schedule.TestEditor;
 import com.syrus.AMFICOM.Client.Schedule.TestsEditor;
@@ -39,7 +37,6 @@ import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.TemporalPattern;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
-import com.syrus.util.Log;
 
 public class TestLine extends JLabel implements TestsEditor, TestEditor {
 
@@ -82,6 +79,8 @@ public class TestLine extends JLabel implements TestsEditor, TestEditor {
 	
 	int minimalWidth = 0;
 	
+	private static final long ONE_MINUTE = 60L * 1000L;
+	
 	private MouseListener testLineMouseListener;
 
 	public TestLine(ApplicationContext aContext,
@@ -117,12 +116,12 @@ public class TestLine extends JLabel implements TestsEditor, TestEditor {
 									TestTimeLine testTimeLine = (TestTimeLine) it.next();
 								
 								
-								System.out.println("test: "
-										+ test.getId()
-										+ " ( "
-										+ test.getStartTime()
-										+ ", "
-										+ test.getEndTime());
+//								System.out.println("test: "
+//										+ test.getId()
+//										+ " ( "
+//										+ test.getStartTime()
+//										+ ", "
+//										+ test.getEndTime());
 								
 								int st = PlanPanel.MARGIN / 2 + (int) (TestLine.this.scale * (testTimeLine.startTime - TestLine.this.start));
 								int en = PlanPanel.MARGIN / 2 + (int) (TestLine.this.scale * (testTimeLine.startTime + testTimeLine.duration - TestLine.this.start));
@@ -156,7 +155,7 @@ public class TestLine extends JLabel implements TestsEditor, TestEditor {
 										}
 										break;
 									default:
-										System.out.println("search at (" + st + " .. " + en + ", " + TestLine.this.titleHeight / 2 + 4 + ") yours (" + x + ", " + y + ")");
+//										System.out.println("search at (" + st + " .. " + en + ", " + TestLine.this.titleHeight / 2 + 4 + ") yours (" + x + ", " + y + ")");
 										if ((x >= st) && (x <= en) && (y >= TestLine.this.titleHeight / 2 + 4)) {
 											condition = true;
 										}
@@ -264,7 +263,6 @@ public class TestLine extends JLabel implements TestsEditor, TestEditor {
 	 */
 	public void setStart(long start) {
 		this.start = start;
-		Log.debugMessage("TestLine.setStart | " + ((SimpleDateFormat)(UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT))).format(new Date(start)), Log.FINEST);
 	}
 
 	// public void unregisterDispatcher() {
@@ -302,10 +300,10 @@ public class TestLine extends JLabel implements TestsEditor, TestEditor {
 																					test.getId(),
 																					ObjectEntities.MEASUREMENT_ENTITY_CODE);
 					try {
-						Collection testMeasurements = MeasurementStorableObjectPool.getStorableObjectsByCondition(
+						Set testMeasurements = MeasurementStorableObjectPool.getStorableObjectsByCondition(
 							linkedIdsCondition, true);
 						List measurementTestList = new LinkedList();
-						if (testMeasurements.isEmpty()) {
+						if (!testMeasurements.isEmpty()) {
 							for (Iterator iter = testMeasurements.iterator(); iter.hasNext();) {
 								Measurement measurement = (Measurement) iter.next();
 								TestTimeLine testTimeLine = new TestTimeLine();
@@ -338,8 +336,7 @@ public class TestLine extends JLabel implements TestsEditor, TestEditor {
 					testTimeLine.haveMeasurement = false;
 					measurementTestList.add(testTimeLine);
 					this.measurements.put(test.getId(), measurementTestList);
-				}
-
+				}				
 				try {
 					MeasurementSetup measurementSetup = (MeasurementSetup) MeasurementStorableObjectPool
 							.getStorableObject((Identifier) test.getMeasurementSetupIds().iterator().next(), true);
@@ -354,7 +351,7 @@ public class TestLine extends JLabel implements TestsEditor, TestEditor {
 								boolean found = false;
 								for (Iterator iter = measurementTestList.iterator(); iter.hasNext();) {
 									TestTimeLine testTimeLine = (TestTimeLine) iter.next();
-									if (testTimeLine.startTime == time) {
+									if (Math.abs(testTimeLine.startTime - time) < ONE_MINUTE) {
 										found = true;
 										break;
 									}

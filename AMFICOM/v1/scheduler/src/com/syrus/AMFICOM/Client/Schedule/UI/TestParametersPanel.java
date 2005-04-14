@@ -160,7 +160,7 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 		this.usePatternsWithAnalysisBox.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				setMeasurementSetups(TestParametersPanel.this.msList);
+				updateMeasurementSetups();
 			}
 		});
 		patternPanel.add(this.usePatternsWithAnalysisBox, gbc);
@@ -185,7 +185,7 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 					final JMenuItem deleteTestMenuItem = new JMenuItem("Show Measurement setup summary info");
 					final JPopupMenu popup = new JPopupMenu();
 					popup.add(deleteTestMenuItem);
-					popup.show(objList, e.getX(), e.getY());				
+					popup.show(objList, e.getX(), e.getY());
 
 					deleteTestMenuItem.addActionListener(new ActionListener() {
 
@@ -380,7 +380,7 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 	public void setMeasurementSetup(MeasurementSetup measurementSetup) {
 		if (!this.msList.contains(measurementSetup)) {
 			this.msList.add(measurementSetup);
-			this.setMeasurementSetups(this.msList);
+			this.updateMeasurementSetups();
 		}
 		this.testSetups.setSelectedValue(measurementSetup, true);
 		if (this.usePatternsWithAnalysisBox.isSelected() && this.testSetups.getSelectedValue() == null) {
@@ -390,7 +390,7 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 		this.patternRadioButton.doClick();
 	}
 
-	public void setMeasurementSetups(Collection measurementSetups) {
+	public void setMeasurementSetups(java.util.Set measurementSetups) {
 		if (this.msList == null)
 			this.msList = new LinkedList();
 		else {
@@ -401,6 +401,16 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 		// year! really equals links to the same object
 		if (this.msList != measurementSetups)
 			this.msList.addAll(measurementSetups);
+
+		this.updateMeasurementSetups();
+	}
+
+	public void updateMeasurementSetups() {
+		if (this.msList == null) {
+			this.schedulerModel.refreshMeasurementSetups();
+			return;
+		}
+		
 		Collections.sort(this.msList, new ColumnSorter(MeasurementSetupController.getInstance(),
 														MeasurementSetupController.KEY_NAME, true));
 		this.testSetups.removeAll();
@@ -410,7 +420,6 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 					|| measurementSetup.getThresholdSet() != null || measurementSetup.getEtalon() != null)
 				((ObjListModel) this.testSetups.getModel()).addElement(measurementSetup);
 		}
-
 	}
 
 	public void setSet(Set set) {

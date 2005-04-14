@@ -48,6 +48,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.CompoundConditionSort;
@@ -280,21 +281,22 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 
 			this.elementsViewer.setElements(measurementTypeItems);
 
-			if (!monitoredElements.isEmpty()) {
-				LinkedIdsCondition linkedIdsCondition;
-				{
-					java.util.Set meIdList = new HashSet(monitoredElements.size());
-					for (Iterator it = monitoredElements.iterator(); it.hasNext();) {
-						MonitoredElement me = (MonitoredElement) it.next();
-						meIdList.add(me.getId());
-					}
-					linkedIdsCondition = new LinkedIdsCondition(meIdList, ObjectEntities.MS_ENTITY_CODE);
-				}
-				Collection measurementSetups = MeasurementStorableObjectPool.getStorableObjectsByCondition(
-					linkedIdsCondition, true);
-
-				this.measurementSetupEditor.setMeasurementSetups(measurementSetups);
-			}
+//			if (!monitoredElements.isEmpty()) {
+//				LinkedIdsCondition linkedIdsCondition;
+//				{
+//					java.util.Set meIdList = new HashSet(monitoredElements.size());
+//					for (Iterator it = monitoredElements.iterator(); it.hasNext();) {
+//						MonitoredElement me = (MonitoredElement) it.next();
+//						meIdList.add(me.getId());
+//					}
+//					linkedIdsCondition = new LinkedIdsCondition(meIdList, ObjectEntities.MS_ENTITY_CODE);
+//				}
+//				java.util.Set measurementSetups = MeasurementStorableObjectPool.getStorableObjectsByCondition(
+//					linkedIdsCondition, true);
+//
+//				this.measurementSetupEditor.setMeasurementSetups(measurementSetups);
+//			}
+			this.refreshMeasurementSetups();
 		}
 
 	}
@@ -303,12 +305,12 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		if (this.selectedTest != null) {
 			this.measurementTypeEditor.setMeasurementType((MeasurementType) MeasurementStorableObjectPool
 					.getStorableObject(this.selectedTest.getMeasurementTypeId(), true));
-			MonitoredElement monitoredElement1 = this.selectedTest.getMonitoredElement();
+			MonitoredElement monitoredElement = this.selectedTest.getMonitoredElement();
 			MeasurementPort measurementPort = (MeasurementPort) ConfigurationStorableObjectPool.getStorableObject(
-				monitoredElement1.getMeasurementPortId(), true);
+				monitoredElement.getMeasurementPortId(), true);
 			this.kisEditor.setKIS((KIS) ConfigurationStorableObjectPool.getStorableObject(measurementPort.getKISId(),
 				true));
-			this.monitoredElementEditor.setMonitoredElement(monitoredElement1);
+			this.monitoredElementEditor.setMonitoredElement(monitoredElement);
 
 			Identifier analysisTypeId = this.selectedTest.getAnalysisTypeId();
 			if (analysisTypeId != null)
@@ -324,8 +326,8 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 				Identifier mainMeasurementSetupId = (Identifier) measurementSetupIds.iterator().next();
 				MeasurementSetup measurementSetup1 = (MeasurementSetup) MeasurementStorableObjectPool.getStorableObject(
 					mainMeasurementSetupId, true);
-				this.setEditor.setSet(measurementSetup1.getParameterSet());
-				this.measurementSetupEditor.setMeasurementSetup(measurementSetup1);
+				this.setEditor.setSet(measurementSetup.getParameterSet());
+				this.measurementSetupEditor.setMeasurementSetup(measurementSetup);
 			}
 
 			this.returnTypeEditor.setReturnType(this.selectedTest.getReturnType());
@@ -476,6 +478,52 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 			this.refreshTest();
 		}
 	}
+	
+	public void setSelectedMeasurementType(MeasurementType measurementType) {
+		if (this.measurementType == null || measurementType == null 
+				|| !this.measurementType.getId().equals(measurementType.getId())) {
+			this.measurementType = measurementType;
+			this.refreshMeasurementSetups();
+		}
+	}
+	
+	public void setSelectedMonitoredElement(MonitoredElement monitoredElement) {
+		if (this.monitoredElement == null || monitoredElement == null 
+				|| !this.monitoredElement.getId().equals(monitoredElement.getId())) {
+			this.monitoredElement = monitoredElement;
+			this.refreshMeasurementSetups();
+		}
+	}
+	
+	public void refreshMeasurementSetups() {
+		StorableObjectCondition condition = null;
+		
+		LinkedIdsCondition measurementTypeCondition = null;
+		if (this.measurementType != null)
+			measurementTypeCondition = new LinkedIdsCondition(this.measurementType.getId(), ObjectEntities.MS_ENTITY_CODE);
+		
+		if (this.monitoredElement != null) {
+			LinkedIdsCondition linkedIdsCondition2 = new LinkedIdsCondition(this.monitoredElement.getId(), ObjectEntities.MS_ENTITY_CODE);
+			try {
+				if (measurementTypeCondition != null)
+				condition = new CompoundCondition(measurementTypeCondition, CompoundConditionSort.OR, linkedIdsCondition2);
+				else 
+					condition = linkedIdsCondition2;
+			} catch (CreateObjectException e) {
+				// never !
+				e.printStackTrace();
+			}
+		} else 
+			condition = measurementTypeCondition;
+			
+		try {
+			if (condition != null)
+				this.measurementSetupEditor.setMeasurementSetups(MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true));
+		} catch (ApplicationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 	public void commitChanges() throws ApplicationException {
 		MeasurementStorableObjectPool.flush(true);
@@ -495,6 +543,8 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 				RISDSessionInfo sessionInterface = (RISDSessionInfo) this.aContext.getSessionInterface();
 				try {
 					this.measurementSetup = MeasurementSetup.createInstance(sessionInterface.getUserIdentifier(),
+						this.set, null, null, null, "created by Scheduler /" + sdf.format(new Date()) + "/" , 1000 * 60 * 10, Collections
+								.singleton(this.monitoredElement.getId()), Collections.singleton(this.measurementType));
 							this.set,
 							null,
 							null,
@@ -606,10 +656,10 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 	}
 
 	public void addTestEditor(TestEditor testEditor) {
-		TestEditor[] testEditors1 = new TestEditor[this.testEditors.length + 1];
-		System.arraycopy(this.testEditors, 0, testEditors1, 1, this.testEditors.length);
-		testEditors1[0] = testEditor;
-		this.testEditors = testEditors1;
+		TestEditor[] testEditors = new TestEditor[this.testEditors.length + 1];
+		System.arraycopy(this.testEditors, 0, testEditors, 1, this.testEditors.length);
+		testEditors[0] = testEditor;
+		this.testEditors = testEditors;
 	}
 
 	public void removeTestEditor(TestEditor testEditor) {
