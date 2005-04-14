@@ -26,7 +26,21 @@ impl:
 		-d $(CLASSES) \
 		-classpath $(CLASSPATH) \
 		-sourcepath $(SRC) \
-		@$(TARGET_CLASS_LIST)
+		src\com\syrus\AMFICOM\Client\General\Model\*.java \
+		src\com\syrus\AMFICOM\Client\Map\*.java \
+		src\com\syrus\AMFICOM\Client\Map\Command\*.java \
+		src\com\syrus\AMFICOM\Client\Map\Command\Action\*.java \
+		src\com\syrus\AMFICOM\Client\Map\Command\Editor\*.java \
+		src\com\syrus\AMFICOM\Client\Map\Command\Map\*.java \
+		src\com\syrus\AMFICOM\Client\Map\Command\Navigate\*.java \
+		src\com\syrus\AMFICOM\Client\Map\Controllers\*.java \
+		src\com\syrus\AMFICOM\Client\Map\Editor\*.java \
+		src\com\syrus\AMFICOM\Client\Map\Operations\*.java \
+		src\com\syrus\AMFICOM\Client\Map\Popup\*.java \
+		src\com\syrus\AMFICOM\Client\Map\Props\*.java \
+		src\com\syrus\AMFICOM\Client\Map\Report\*.java \
+		src\com\syrus\AMFICOM\Client\Map\Strategy\*.java \
+		src\com\syrus\AMFICOM\Client\Map\UI\*.java
 
 javadoc:
 	$(JAVADOCGENERATOR) com
