@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPattern.java,v 1.72 2005/04/14 14:41:10 arseniy Exp $
+ * $Id: TemporalPattern.java,v 1.73 2005/04/14 14:49:57 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,8 +37,8 @@ import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.72 $, $Date: 2005/04/14 14:41:10 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.73 $, $Date: 2005/04/14 14:49:57 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -70,7 +70,7 @@ public class TemporalPattern extends StorableObject {
 		private TimeValue		dayOfMonth;
 		private TimeValue		dayOfWeek;
 
-		private String			description;
+		private String			timeLineDescription;
 
 		private List			divisorList	= new LinkedList();
 		private long			endPeriod;
@@ -125,7 +125,7 @@ public class TemporalPattern extends StorableObject {
 		}
 
 		public String getDescription() {
-			if (this.description == null) {
+			if (this.timeLineDescription == null) {
 				if (this.hours == null)
 					parseTemplate();
 				StringBuffer desc = new StringBuffer();
@@ -173,9 +173,9 @@ public class TemporalPattern extends StorableObject {
 					desc.append("; "); //$NON-NLS-1$
 					desc.append(this.month.toString());
 				}
-				this.description = desc.toString();
+				this.timeLineDescription = desc.toString();
 			}
-			return this.description;
+			return this.timeLineDescription;
 		}
 
 		/**
@@ -461,7 +461,7 @@ public class TemporalPattern extends StorableObject {
 		 */
 		public void setTemplate(String template) {
 			removeAll();
-			this.description = null;
+			this.timeLineDescription = null;
 			this.template = template;
 		}
 
@@ -622,7 +622,7 @@ public class TemporalPattern extends StorableObject {
 			hashCodeGenerator.addObject(this.dayOfMonth);
 			hashCodeGenerator.addObject(this.month);
 			hashCodeGenerator.addObject(this.dayOfWeek);
-			hashCodeGenerator.addObject(this.description);
+			hashCodeGenerator.addObject(this.timeLineDescription);
 			hashCodeGenerator.addObject(this.startsList);
 			hashCodeGenerator.addObject(this.endsList);
 			hashCodeGenerator.addObject(this.divisorList);
@@ -822,11 +822,7 @@ public class TemporalPattern extends StorableObject {
 
 		this.description = description;
 		this.cronStrings = cronStrings;
-		if (cronStrings != null) {
-			this.removeAll();
-			for (int i = 0; i < cronStrings.length; i++)
-				this.addTemplate(cronStrings[i]);
-		}
+		this.setTemplates0(cronStrings);
 		this.changed = false;
 	}
 
@@ -837,12 +833,8 @@ public class TemporalPattern extends StorableObject {
 			creatorId,
 			creatorId,
 			version);
-		this.description = description;
-		for (Iterator it = cronString.iterator(); it.hasNext();) {
-			String str = (String) it.next();
-			this.addTemplate(str);
-		}
-
+		this.description = description;		
+		this.setTemplates0((String[]) cronString.toArray(new String[cronString.size()]));
 		this.changed = false;
 	}
 
@@ -918,10 +910,7 @@ public class TemporalPattern extends StorableObject {
 		super.fromTransferable(tpt.header);
 
 		this.description = tpt.description;
-
-		this.removeAll();
-		for (int i = 0; i < tpt.cron_strings.length; i++)
-			this.addTemplate(tpt.cron_strings[i]);
+		this.setTemplates0(tpt.cron_strings);
 
 		this.changed = false;
 	}
@@ -1030,11 +1019,13 @@ public class TemporalPattern extends StorableObject {
 		else
 			this.templates.clear();
 
-		synchronized (this.templates) {
-			for (int i = 0; i < cronStringArray.length; i++) {
-				TimeLine timeLine = new TimeLine();
-				timeLine.setTemplate(cronStringArray[i]);
-				this.templates.add(timeLine);
+		if (cronStringArray != null) {
+			synchronized (this.templates) {
+				for (int i = 0; i < cronStringArray.length; i++) {
+					TimeLine timeLine = new TimeLine();
+					timeLine.setTemplate(cronStringArray[i]);
+					this.templates.add(timeLine);
+				}
 			}
 		}
 	}
