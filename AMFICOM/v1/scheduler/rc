@@ -12,7 +12,10 @@ $LIB/general.jar:\
 $LIB/administration.jar:\
 $LIB/configuration.jar:\
 $LIB/measurement.jar:\
+$LIB/map.jar:\
+$LIB/mapview.jar:\
 $LIB/filter.jar:\
+$LIB/resource.jar:\
 $LIB/generalclient.jar:\
 $LIB/corbaportable.jar:\
 $LIB/cmserver_interface.jar:\
