@@ -1,5 +1,5 @@
 /*
- * $Id: Identifier.java,v 1.30 2005/04/12 16:03:01 arseniy Exp $
+ * $Id: Identifier.java,v 1.31 2005/04/14 09:31:59 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,8 +23,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
  * its respective <code>creatorId</code> and <code>modifierId</code>. But
  * there&apos;s a particular task of <code>id</code> handling.
  *
- * @version $Revision: 1.30 $, $Date: 2005/04/12 16:03:01 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.31 $, $Date: 2005/04/14 09:31:59 $
+ * @author $Author: bass $
  * @module general_v1
  */
 public class Identifier implements Comparable, TransferableObject, Serializable, Identifiable {
@@ -129,7 +129,12 @@ public class Identifier implements Comparable, TransferableObject, Serializable,
 		return idsT;
 	}
 
-	public static Set fromTransferables(Identifier_Transferable[] transferables) {
+	/**
+	 * @param transferables <code>Identifier_Transferable[]</code>
+	 * @return a newly created <code>Set&lt;Identifier&gt;</code>.
+	 * @see #getTransferables(Set)
+	 */
+	public static Set fromTransferables(final Identifier_Transferable[] transferables) {
 		final Set set = new HashSet(transferables.length);
 		for (int i = 0; i < transferables.length; i++)
 			set.add(new Identifier(transferables[i]));
@@ -137,9 +142,42 @@ public class Identifier implements Comparable, TransferableObject, Serializable,
 	}
 
 	/**
+	 * @param identifiables <code>Set&lt;Identifiable&gt;</code>
+	 * @return a newly created <code>Identifier_Transferable[]</code>.
+	 * @see #fromTransferables(Identifier_Transferable[])  
+	 */
+	public static Identifier_Transferable[] getTransferables(final Set identifiables) {
+		int i = 0;
+		Identifier_Transferable ids[] = new Identifier_Transferable[identifiables.size()];
+		for (final Iterator identifiableIterator = identifiables.iterator(); identifiableIterator.hasNext();)
+			ids[i++] = (Identifier_Transferable) ((Identifiable) identifiableIterator.next()).getId().getTransferable();
+		return ids;
+	}
+
+	/**
+	 * <p>This method is of no use for <code>Identifier</code>s, so formal
+	 * parameter of type <code>StorableObject</code> is ok.</p>
+	 *
+	 * <p><em>Shouldn&apos;t be invoked by clients &amp; mousebusters as
+	 * they should never mess with <code>Identifier</code>s directly.</em></p>
+	 * 
+	 * @param storableObject a <code>StorableObject</code> whose
+	 *        identifier is to be determined; can be <code>null</code>.
+	 * @return an <code>Identifier</code> of the object supplied, or
+	 *         {@link #VOID_IDENTIFIER} if the object is <code>null</code>.
+	 */
+	public static Identifier possiblyVoid(final StorableObject storableObject) {
+		return storableObject == null ? VOID_IDENTIFIER : storableObject.getId();
+	}
+
+	/**
 	 * @see Identifiable#getId()
 	 */
 	public Identifier getId() {
 		return this;
+	}
+
+	public boolean isVoid() {
+		return equals(VOID_IDENTIFIER);
 	}
 }
