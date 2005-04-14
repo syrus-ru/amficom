@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPattern.java,v 1.71 2005/04/13 09:36:22 bob Exp $
+ * $Id: TemporalPattern.java,v 1.72 2005/04/14 14:41:10 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,8 +37,8 @@ import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.71 $, $Date: 2005/04/13 09:36:22 $
- * @author $Author: bob $
+ * @version $Revision: 1.72 $, $Date: 2005/04/14 14:41:10 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -941,12 +941,7 @@ public class TemporalPattern extends StorableObject {
 		super.setAttributes(created, modified, creatorId, modifierId, version);
 		this.description = description;
 		this.cronStrings = cronStrings;
-		long ver = this.version;
-		removeAll();
-		for (int i = 0; i < cronStrings.length; i++)
-			addTemplate(cronStrings[i]);
-		this.version = ver;
-
+		this.setTemplates0(cronStrings);
 	}
 
 	public int getTemplateCount() {
@@ -1023,6 +1018,25 @@ public class TemporalPattern extends StorableObject {
 		}
 
 		return this.times;
+	}
+
+	private void setTemplates0(String[] cronStringArray) {
+		if (this.times == null)
+			this.times = new TreeSet();
+		else
+			this.times.clear();
+		if (this.templates == null)
+			this.templates = new HashSet();
+		else
+			this.templates.clear();
+
+		synchronized (this.templates) {
+			for (int i = 0; i < cronStringArray.length; i++) {
+				TimeLine timeLine = new TimeLine();
+				timeLine.setTemplate(cronStringArray[i]);
+				this.templates.add(timeLine);
+			}
+		}
 	}
 
 	public void removeAll() {
