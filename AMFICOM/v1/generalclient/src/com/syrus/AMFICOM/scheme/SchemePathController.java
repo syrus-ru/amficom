@@ -91,14 +91,12 @@ public final class SchemePathController extends ObjectResourceController
 			else if (key.equals(COLUMN_SCHEME_ID))
 				result = path.getScheme().getId().getIdentifierString();
 			else if (key.equals(COLUMN_LINK_IDS)) {
-				PathElement[] pes = path.getPathElementsAsArray();
-				List res = new ArrayList(pes.length);
-				for (int i = 0; i < pes.length; i++) {
-					res.add(pes[i].getId().getIdentifierString());
-				}
-				result = res;
-			}
-			else if (key.equals(COLUMN_CHARACTERISTICS)) {
+				final Set pathElements = path.getPathElements();
+				final Set pathElementIds = new HashSet(pathElements.size());
+				for (final Iterator pathElementIterator = pathElements.iterator(); pathElementIterator.hasNext();)
+					pathElementIds.add(((PathElement) pathElementIterator.next()).getId().getIdentifierString());
+				result = pathElementIds;
+			} else if (key.equals(COLUMN_CHARACTERISTICS)) {
 				List res = new ArrayList(path.getCharacteristics().size());
 				for (Iterator it = path.getCharacteristics().iterator(); it.hasNext(); ) {
 					Characteristic ch = (Characteristic)it.next();

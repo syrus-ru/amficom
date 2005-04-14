@@ -81,19 +81,17 @@ public final class SchemeCableLinkController extends ObjectResourceController {
 			else if (key.equals(COLUMN_SCHEME_ID))
 				result = link.getParentScheme().getId().getIdentifierString();
 			else if (key.equals(COLUMN_SCHEME_CABLE_THREADS)) {
-				SchemeCableThread[] threads = link.getSchemeCableThreadsAsArray();
-				List res = new ArrayList(threads.length);
-				for (int i = 0; i < threads.length; i++) {
-					res.add(threads[i].getId().getIdentifierString());
-				}
-				result = res;
+				final Set schemeCableThreads = link.getSchemeCableThreads();
+				final Set schemeCableThreadIds = new HashSet(schemeCableThreads.size());
+				for (final Iterator schemeCableThreadIterator = schemeCableThreads.iterator(); schemeCableThreadIterator.hasNext();)
+					schemeCableThreadIds.add(((SchemeCableThread) schemeCableThreadIterator.next()).getId().getIdentifierString());
+				result = schemeCableThreadIds;
 			} else if (key.equals(COLUMN_CABLE_CHANNELING_ITEMS)) {
-				CableChannelingItem[] items = link.getCableChannelingItemsAsArray();
-				List res = new ArrayList(items.length);
-				for (int i = 0; i < items.length; i++) {
-					res.add(items[i].getId().getIdentifierString());
-				}
-				result = res;
+				final Set cableChannelingItems = link.getCableChannelingItems();
+				final Set cableChannelingItemIds = new HashSet(cableChannelingItems.size());
+				for (final Iterator cableChannelingItemIterator = cableChannelingItems.iterator(); cableChannelingItemIterator.hasNext();)
+					cableChannelingItemIds.add(((CableChannelingItem) cableChannelingItemIterator.next()).getId().getIdentifierString());
+				result = cableChannelingItemIds;
 			} else if (key.equals(COLUMN_CHARACTERISTICS)) {
 				List res = new ArrayList(link.getCharacteristics().size());
 				for (Iterator it = link.getCharacteristics().iterator(); it.hasNext();) {
