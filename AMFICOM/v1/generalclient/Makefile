@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.15 2005/04/13 21:44:18 arseniy Exp $
+# $Id: Makefile,v 1.16 2005/04/14 12:38:17 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -20,8 +20,12 @@ $(call checkenve,JAVA_HOME)
 
 
 $(LIBNAME): .mach
+	$(CP) \
+		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/Client/General/Lang/*.properties) \
+		$(CLASSDIR)/com/syrus/AMFICOM/Client/General/Lang/
 	$(JAR) cf $@ \
-		-C $(CLASSDIR) com
+		-C $(CLASSDIR) com \
+		-C $(CLASSDIR) oracle
 
 .mach:	.corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
