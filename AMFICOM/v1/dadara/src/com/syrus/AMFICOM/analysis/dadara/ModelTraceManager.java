@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.46 2005/04/11 14:46:07 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.47 2005/04/14 15:57:30 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
  * генерацией пороговых кривых и сохранением/восстановлением порогов.
  *
  * @author $Author: saa $
- * @version $Revision: 1.46 $, $Date: 2005/04/11 14:46:07 $
+ * @version $Revision: 1.47 $, $Date: 2005/04/14 15:57:30 $
  * @module
  */
 public class ModelTraceManager
@@ -162,19 +162,6 @@ implements DataStreamable
 	{
 		this.mtae = mtae;
 		createTH();
-	}
-	/**
-	 * Создает MTM на основе модельной кривой mf и списка событий se.
-	 * Не изменяет полученные mf, se; также предполагает что они
-	 * не будут изменяться извне.
-	 * <br> unused??
-	 * @param se список событий
-	 * @param mf модельная кривая
-	 * @param deltaX разрешение (метры на отсчет)
-	 */
-	public ModelTraceManager(SimpleReflectogramEventImpl[] se, ModelFunction mf, double deltaX)
-	{
-		this(new ModelTraceAndEventsImpl(se, mf, deltaX));
 	}
 
 	/**
