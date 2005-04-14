@@ -470,6 +470,35 @@ static double f_LIN0(double *pars, int, double x, double *, int)
 	return pars[0] + x * pars[1];
 }
 
+static double fc_LIN0(double *pars, ModelF &, int command, void *extra)
+{
+	if (command == MF_CMD_ACXL_CHANGE)
+		pars[0] += ((ACXL_data *)extra)->dA;
+
+	if (command == MF_CMD_LIN_SET_BY_X1Y1X2Y2)
+	{
+		double *args = (double *)extra;
+		double x1 = args[0];
+		double y1 = args[1];
+		double x2 = args[2];
+		double y2 = args[3];
+		if (x1 == x2)
+		{
+			pars[0] = (y1 + y2) / 2.0;
+			pars[1] = 0.0;
+		}
+		else
+		{
+			pars[1] = (y2 - y1) / (x2 - x1);
+			pars[0] = y1 - x1 * pars[1];
+		}
+	}
+
+	return 0;
+}
+
+#ifdef MF_USE_SPL_AND_CON
+
 static double f_SPL1(double *pars, int, double x, double *, int)
 {
 	double a = pars[0];
@@ -931,33 +960,6 @@ static double fc_CON1e(double *pars, ModelF &, int command, void *extra)
 	}
 }
 
-static double fc_LIN0(double *pars, ModelF &, int command, void *extra)
-{
-	if (command == MF_CMD_ACXL_CHANGE)
-		pars[0] += ((ACXL_data *)extra)->dA;
-
-	if (command == MF_CMD_LIN_SET_BY_X1Y1X2Y2)
-	{
-		double *args = (double *)extra;
-		double x1 = args[0];
-		double y1 = args[1];
-		double x2 = args[2];
-		double y2 = args[3];
-		if (x1 == x2)
-		{
-			pars[0] = (y1 + y2) / 2.0;
-			pars[1] = 0.0;
-		}
-		else
-		{
-			pars[1] = (y2 - y1) / (x2 - x1);
-			pars[0] = y1 - x1 * pars[1];
-		}
-	}
-
-	return 0;
-}
-
 static double fc_SPL1(double *pars, ModelF &, int command, void *extra)
 {
 	if (command == MF_CMD_ACXL_CHANGE)
@@ -990,6 +992,13 @@ static double a_fheight_CON1cde(double *p, int)
 {	return p[1]; // XXX: not a front height but aLet that sometimes may be much bigger
 }
 
+static const char *an_fPos =		"fPos";
+static const char *an_width =		"width";
+static const char *an_weldStep =	"weldStep";
+static const char *an_fHeight =		"fHeight";
+
+#endif // MF_USE_SPL_AND_CON
+
 static double a_canLeftLink_true(double *, int)
 {
 	return 1.0;
@@ -1006,10 +1015,6 @@ static double f_GAUSS(double *pars, int, double x, double *, int)
 	return A * exp(-0.5 * frac * frac);
 }
 
-static const char *an_fPos =		"fPos";
-static const char *an_width =		"width";
-static const char *an_weldStep =	"weldStep";
-static const char *an_fHeight =		"fHeight";
 static const char *an_noiseSuppressionLength = "noiseSuppressionLength";
 static const char *an_canLeftLink = "canLeftLink";
 
@@ -1029,6 +1034,8 @@ MF_MD funcs[] =
 		f_LIN0, 0,
 		fc_LIN0
 	},
+
+#ifdef MF_USE_SPL_AND_CON
 
 	{
 		MF_ID_SPL1,
@@ -1081,6 +1088,8 @@ MF_MD funcs[] =
 			{ an_fHeight, a_fheight_CON1cde }
 		}
 	},
+
+#endif
 
 	{
 		MF_ID_BREAKL,

@@ -34,6 +34,9 @@
 // в настоящей версии его вызывать не обязательно
 //void MF_init();
 
+// определить этот define, если нужна поддержка старых м.ф. сварки и коннектора
+//#define MF_USE_SPL_AND_CON
+
 // идентификаторы (ID) используемых модельных функций
 
 const int MF_ID_INVALID = 0;
@@ -41,11 +44,13 @@ const int MF_ID_INVALID = 0;
 // линейная функция
 const int MF_ID_LIN		= 21;
 
+#ifdef MF_USE_SPL_AND_CON
 // старые м.ф. сварки и коннектора
 const int MF_ID_SPL1	= 12;
 const int MF_ID_CON1c	= 13;
 const int MF_ID_CON1d	= 14;
 const int MF_ID_CON1e	= 15;
+#endif
 
 // ломаная BREAKL
 const int MF_ID_BREAKL	= 22;
@@ -84,7 +89,7 @@ const int MF_PAR_FLAG_L = 4;
 // отбработать преобразование согласно ThreshDX, ThreshDY-порогам
 // и одновременно проследить соответствие X-порогов
 // Определено только для ломаной, BREAKL
-#define MF_CMD_CHANGE_BY_THRESH_AND_FIND_TTDXDY 8
+#define MF_CMD_CHANGE_BY_THRESH_AND_FIND_TTDXDY 8 /* BREAKL only */
 
 // создать линейную м.ф.
 #define MF_CMD_LIN_SET_BY_X1Y1X2Y2 2101
