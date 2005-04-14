@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeCableLinkCommand.java,v 1.17 2005/03/28 08:25:11 bass Exp $
+ * $Id: PlaceSchemeCableLinkCommand.java,v 1.18 2005/04/14 14:39:19 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -9,6 +9,8 @@
 */
 
 package com.syrus.AMFICOM.Client.Map.Command.Action;
+
+import java.util.Iterator;
 
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
@@ -27,8 +29,8 @@ import com.syrus.AMFICOM.scheme.CableChannelingItem;
 /**
  * –азместить кабель на карте.
  * 
- * @author $Author: bass $
- * @version $Revision: 1.17 $, $Date: 2005/03/28 08:25:11 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.18 $, $Date: 2005/04/14 14:39:19 $
  * @module mapviewclient_v1
  */
 public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
@@ -88,9 +90,8 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
 			// идем по всем узлам кабельного пути от начального
 			SiteNode bufferStartSite = this.startNode;
 			// цикл по элементам прив€зки кабел€.
-			for(int i = 0; i < this.scl.getCableChannelingItemsAsArray().length; i++)
-			{
-				CableChannelingItem cci = this.scl.getCableChannelingItemsAsArray()[i];
+			for(Iterator iter = this.scl.getCableChannelingItems().iterator(); iter.hasNext();) {
+				CableChannelingItem cci = (CableChannelingItem )iter.next();
 				SiteNode smsne = cci.getStartSiteNode();
 				SiteNode emsne = cci.getEndSiteNode();
 

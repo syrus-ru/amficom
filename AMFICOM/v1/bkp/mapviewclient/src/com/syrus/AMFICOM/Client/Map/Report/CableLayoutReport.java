@@ -1,5 +1,7 @@
 package com.syrus.AMFICOM.Client.Map.Report;
 
+import java.util.Iterator;
+
 import javax.swing.table.TableColumn;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
@@ -96,15 +98,15 @@ class CableLayoutReportTableModel extends DividableTableModel
 					report.getName(),
 					CreateReportException.poolObjNotExists);
 
-		this.length = scLink.getCableChannelingItemsAsArray().length + 1;
+		this.length = scLink.getCableChannelingItems().size() + 1;
 
 		this.tableData = new String[this.getBaseColumnCount()][];
 		for(int i = 0; i < this.getBaseColumnCount(); i++)
 			this.tableData[i] = new String[this.length];
 
-		for(int curCCI = 0; curCCI < scLink.getCableChannelingItemsAsArray().length; curCCI++)
-		{
-			CableChannelingItem chanellingItem = scLink.getCableChannelingItemsAsArray()[curCCI];
+		int curCCI = 0;
+		for(Iterator iter = scLink.getCableChannelingItems().iterator(); iter.hasNext();) {
+			CableChannelingItem chanellingItem = (CableChannelingItem )iter.next();
 
 			String fullName = this.getSiteFullName(map, chanellingItem
 					.getStartSiteNode());
@@ -164,7 +166,7 @@ class CableLayoutReportTableModel extends DividableTableModel
 			}
 
 			// Информация о замыкающем узле - имя + запас на входе
-			if(curCCI == scLink.getCableChannelingItemsAsArray().length - 1)
+			if(!iter.hasNext())
 			{
 				fullName = this.getSiteFullName(map, chanellingItem
 						.getEndSiteNode());
@@ -176,6 +178,8 @@ class CableLayoutReportTableModel extends DividableTableModel
 				// Имя колодца/узла
 				this.tableData[0][curCCI] = fullName;
 			}
+
+			curCCI++;
 		}
 	}
 

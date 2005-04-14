@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemePathCommand.java,v 1.16 2005/03/28 08:25:11 bass Exp $
+ * $Id: PlaceSchemePathCommand.java,v 1.17 2005/04/14 14:39:19 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -11,6 +11,7 @@
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import java.awt.Point;
+import java.util.Iterator;
 
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
@@ -31,8 +32,8 @@ import com.syrus.AMFICOM.scheme.corba.PathElementKind;
  * –азместить элемент типа mpe на карте. используетс€ при переносе 
  * (drag/drop), в точке point (в экранных координатах)
  * 
- * @author $Author: bass $
- * @version $Revision: 1.16 $, $Date: 2005/03/28 08:25:11 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.17 $, $Date: 2005/04/14 14:39:19 $
  * @module mapviewclient_v1
  */
 public class PlaceSchemePathCommand extends MapActionCommandBundle
@@ -83,9 +84,8 @@ public class PlaceSchemePathCommand extends MapActionCommandBundle
 			else
 			// если путь уже есть, все его составл€ющие нанос€тс€ заново
 				super.removeMeasurementPathCables(this.measurementPath);
-			for(int i = 0; i < this.path.getPathElementsAsArray().length; i++)
-			{
-				PathElement pe = this.path.getPathElementsAsArray()[i];
+			for(Iterator iter = this.path.getPathElements().iterator(); iter.hasNext();) {
+				PathElement pe = (PathElement )iter.next();
 				switch(pe.getPathElementKind().value())
 				{
 					case PathElementKind._SCHEME_ELEMENT:

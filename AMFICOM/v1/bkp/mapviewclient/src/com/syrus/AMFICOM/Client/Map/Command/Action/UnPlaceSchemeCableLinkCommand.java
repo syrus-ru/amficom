@@ -1,5 +1,5 @@
 /**
- * $Id: UnPlaceSchemeCableLinkCommand.java,v 1.11 2005/03/28 08:25:11 bass Exp $
+ * $Id: UnPlaceSchemeCableLinkCommand.java,v 1.12 2005/04/14 14:39:19 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,6 +10,7 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -20,14 +21,14 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.UnboundLink;
-import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.CableChannelingItem;
+import com.syrus.AMFICOM.scheme.SchemeCableLink;
 
 /**
  * убрать кабельный путь с привязкой из карты
  * 
- * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2005/03/28 08:25:11 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.12 $, $Date: 2005/04/14 14:39:19 $
  * @module mapviewclient_v1
  */
 public class UnPlaceSchemeCableLinkCommand extends MapActionCommandBundle
@@ -50,7 +51,7 @@ public class UnPlaceSchemeCableLinkCommand extends MapActionCommandBundle
 
 		try {
 			SchemeCableLink scl = this.cablePath.getSchemeCableLink();
-			scl.setCableChannelingItemsAsArray(null);//.clear();
+			scl.setCableChannelingItems(Collections.EMPTY_SET);
 			List ccis = new LinkedList();
 			for(Iterator it = this.cablePath.getLinks().iterator(); it.hasNext();)
 			{
@@ -60,7 +61,6 @@ public class UnPlaceSchemeCableLinkCommand extends MapActionCommandBundle
 				ccis.add(this.cablePath.getBinding().getCCI(link));
 //			scl.channelingItems.add(cablePath.getBinding().getCCI(link));
 			}
-			scl.setCableChannelingItemsAsArray((CableChannelingItem [])ccis.toArray(new CableChannelingItem [0]));
 			super.removeCablePathLinks(this.cablePath);
 			super.removeCablePath(this.cablePath);
 			// операция закончена - оповестить слушателей
