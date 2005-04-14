@@ -1,5 +1,5 @@
 /**
- * $Id: MeasurementPath.java,v 1.19 2005/04/13 10:02:23 krupenn Exp $
+ * $Id: MeasurementPath.java,v 1.20 2005/04/14 13:12:15 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -45,7 +45,7 @@ import com.syrus.AMFICOM.scheme.corba.PathElementKind;
  * Элемент пути.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.19 $, $Date: 2005/04/13 10:02:23 $
+ * @version $Revision: 1.20 $, $Date: 2005/04/14 13:12:15 $
  * @module mapviewclient_v1
  */
 public class MeasurementPath implements MapElement
@@ -391,9 +391,8 @@ public class MeasurementPath implements MapElement
 		synchronized(this.unsortedCablePaths)
 		{
 			this.unsortedCablePaths.clear();
-			for(int i = 0; i < this.schemePath.getPathElementsAsArray().length; i++)
-			{
-				PathElement pe = this.schemePath.getPathElementsAsArray()[i];
+			for(Iterator iter = this.schemePath.getPathElements().iterator(); iter.hasNext();) {
+				PathElement pe = (PathElement )iter.next();
 				switch(pe.getPathElementKind().value())
 				{
 					case PathElementKind._SCHEME_ELEMENT:
