@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.35 2005/04/14 12:03:17 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.36 2005/04/14 16:21:29 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.35 $, $Date: 2005/04/14 12:03:17 $
+ * @version $Revision: 1.36 $, $Date: 2005/04/14 16:21:29 $
  * @module
  */
 
@@ -108,7 +108,7 @@ public class CoreAnalysisManager
 	private static native int nCalcTraceLength(double[] y);
 
 	/**
-	 * testing...
+	 * @todo: supply a javadoc
 	 */
 	public static native void nExtendThreshToCoverCurve( // XXX: public native?
 			double[] yBase,
@@ -252,10 +252,11 @@ public class CoreAnalysisManager
 				pulseWidth,
 				bs.getIOR(),
 				deltaX);
-		if (nReflSize > 3 * reflSize / 5) // @todo: remove?
-			nReflSize = 3 * reflSize / 5;
 
-		reflSize *= 5; // XXX -- ?
+        // FIXME: привести reflSize и nReflSize в порядок
+		if (nReflSize > 3 * reflSize / 5)
+			nReflSize = 3 * reflSize / 5;
+		reflSize *= 5;
 
 		System.out.println("reflSize="+reflSize+"; nReflSize="+nReflSize);
 
@@ -302,10 +303,6 @@ public class CoreAnalysisManager
 		ModelFunction mf = fitTrace(y, traceLength, noiseArray);
 
 		long t4 = System.currentTimeMillis();
-
-		// теперь еще и формируем пороги -- FIXME - сделать(?)
-//		for (int i = 0; i < ep.length; i++)
-//			ep[i].setDefaultThreshold(bs, bellcoreTraces);
 
 		ModelTraceAndEventsImpl mtae = new ModelTraceAndEventsImpl(rse, mf, deltaX);
 

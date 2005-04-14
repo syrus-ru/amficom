@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.47 2005/04/14 15:57:30 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.48 2005/04/14 16:21:29 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
  * генерацией пороговых кривых и сохранением/восстановлением порогов.
  *
  * @author $Author: saa $
- * @version $Revision: 1.47 $, $Date: 2005/04/14 15:57:30 $
+ * @version $Revision: 1.48 $, $Date: 2005/04/14 16:21:29 $
  * @module
  */
 public class ModelTraceManager
@@ -291,10 +291,6 @@ implements DataStreamable
 		}
 		else
 		{
-			// FIXME - remove
-			//for (int i = 0; i < 500; i++)
-			//	mf.copy().changeByThresh(tDX, tDY, key);
-
 			ModelFunction tmp = getMF().copy();
 			tmp.changeByThresh(tDX, tDY, key);
 			thMt = new ModelTraceImplMF(tmp, getTraceLength());
@@ -322,7 +318,7 @@ implements DataStreamable
 	 */
 	public ModelTrace getEventThresholdMT(int key, int nEvent)
 	{
-		return getThresholdMT(key); // FIXME
+		return getThresholdMT(key);
 	}
 
 	public void updateUpperThreshToContain(double[] yTop)
@@ -343,54 +339,6 @@ implements DataStreamable
 		//invalidateThMFCache();
 		//re[nEvent].setThreshold(new Threshold());
 	}
-
-	/*public byte[] toThresholdsByteArray()
-	{
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		DataOutputStream dos = new DataOutputStream(baos);
-		try
-		{
-			dos.writeLong(SIGNATURE_THRESH);
-			Thresh.writeArrayToDOS(tL, dos);
-			return baos.toByteArray();
-		} catch (IOException e)
-		{
-			System.out.println("IOException caught: " + e);
-			e.printStackTrace();
-			return new byte[0]; //null // XXX
-		}
-	}
-
-	public void setThresholdsFromByteArray(byte[] bar)
-	{
-		// XXX: что происходит в MTM в случае замены tl посторонним tl?
-		// XXX: exception handling
-		invalidateThMTCache();
-		try
-		{
-			ByteArrayInputStream bais = new ByteArrayInputStream(bar);
-			DataInputStream dis = new DataInputStream(bais);
-			long signature = dis.readLong();
-			if (signature != SIGNATURE_THRESH)
-				throw new SignatureMismatchException();
-			Thresh[] tl2 = Thresh.readArrayFromDIS(dis);
-			if (this.tL.length != tl2.length) 
-				throw new SignatureMismatchException();
-			setTL(tl2); 
-		}
-		catch (IOException e)
-		{
-			// FIXME: what to do?
-			// we should not catch exceptions here?
-			System.out.println("IOException caught: " + e);
-			e.printStackTrace();
-		}
-		catch (SignatureMismatchException e)
-		{
-			System.out.println("SignatureMismatchException caught: " + e);
-			e.printStackTrace();
-		}
-	}*/
 
 	/**
 	 * Интерфейс для управления порогами мышью

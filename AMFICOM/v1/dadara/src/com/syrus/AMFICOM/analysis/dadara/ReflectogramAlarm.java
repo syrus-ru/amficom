@@ -37,7 +37,7 @@ public class ReflectogramAlarm {
 */
 	// create 'no alarm' alarm
 	public ReflectogramAlarm()
-	{
+	{ // all initialization is already done
 	}
 
 	public static ReflectogramAlarm createFromDIS(DataInputStream dis)
@@ -79,10 +79,9 @@ public class ReflectogramAlarm {
 			return baos.toByteArray();
 		}
 		catch (IOException ioe) {
-			// XXX
 			System.out.println("Something very unexpected while getting byte array from alarm: " + ioe.getMessage());
 			ioe.printStackTrace();
-			return new byte[0]; //null
+			return new byte[0]; //null // @todo: throw runtimeException
 		}
 	}
 
@@ -98,9 +97,8 @@ public class ReflectogramAlarm {
 			}
 		}
 		catch (IOException ioe) {
-			// XXX
 			System.out.println("Something very unexpected while getting byte array from alarms: " + ioe.getMessage());
-			ioe.printStackTrace();
+			ioe.printStackTrace(); // @todo: throw runtimeException
 		}
 		return baos.toByteArray();
 	}

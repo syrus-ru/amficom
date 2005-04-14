@@ -1,5 +1,5 @@
 /*-
- * $Id: DataStreamableUtil.java,v 1.1 2005/04/11 14:46:07 saa Exp $
+ * $Id: DataStreamableUtil.java,v 1.2 2005/04/14 16:21:29 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.1 $, $Date: 2005/04/11 14:46:07 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/14 16:21:29 $
  * @module
  */
 public class DataStreamableUtil
@@ -31,18 +31,19 @@ public class DataStreamableUtil
 		}
 		catch (IOException e)
 		{
-			// FIXME: what to do?
+			// FIXME: IOException - what to do?
 			// we should not catch exceptions here?
 			System.out.println("IOException caught, wanna die: " + e);
 			e.printStackTrace();
-			return null; // FIXME
+			return null;
 		}
 		catch (SignatureMismatchException e)
 		{
+            // FIXME: SignatureMismatchException - what to do?
 			System.out.println("SignatureMismatchException caught, wanna die: " + e);
 			e.printStackTrace();
-			return null; // FIXME
-			//return new ModelTraceManager(new ReflectogramEvent[0]); // FIXME
+			return null;
+            //return new ModelTraceManager(new ReflectogramEvent[0]); // ???
 		}
 	}
 	public static byte[] writeDataStreamableToBA(DataStreamable obj)
@@ -58,7 +59,7 @@ public class DataStreamableUtil
 		{
 			System.out.println("IOException caught: " + e);
 			e.printStackTrace();
-			return new byte[0]; //null // XXX
+			return new byte[0]; //null // @todo: throw runtimeException instead
 		}
 	}
 }

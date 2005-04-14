@@ -1,5 +1,5 @@
 /*
- * $Id: Thresh.java,v 1.10 2005/03/30 12:49:26 saa Exp $
+ * $Id: Thresh.java,v 1.11 2005/04/14 16:21:29 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.10 $, $Date: 2005/03/30 12:49:26 $
+ * @version $Revision: 1.11 $, $Date: 2005/04/14 16:21:29 $
  * @module
  */
 
@@ -59,7 +59,6 @@ public abstract class Thresh
 			ret = new ThreshDY();
 			break;
 		default:
-			// XXX: это вообще не очено здорово, что такие эксепшны нигде не ловятся 
 			throw new SignatureMismatchException("Thresh: readFromDIS: Unrecognized format");
 		}
 		ret.eventId0 = dis.readInt();

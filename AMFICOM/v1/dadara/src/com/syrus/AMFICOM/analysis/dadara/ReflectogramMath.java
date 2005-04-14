@@ -1,11 +1,10 @@
 package com.syrus.AMFICOM.analysis.dadara;
 
-import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 import com.syrus.AMFICOM.analysis.dadara.MathRef;
 
 public class ReflectogramMath
 {
-	private ReflectogramMath() {
+	private ReflectogramMath() { // static-only class
 	}
 
 	public static int getArrayMaxIndex(double[] yArr, int x0, int x1)

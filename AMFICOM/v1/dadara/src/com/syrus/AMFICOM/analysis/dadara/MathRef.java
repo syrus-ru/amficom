@@ -228,13 +228,13 @@ public class MathRef
 			//default: sigma = 51d;
 			case 1310: sigma0 = 42d; break;
 			case 1550: sigma0 = 45d; break;
-			case 1625: sigma0 = 46d; break; // 46: XXX
+			case 1625: sigma0 = 46d; break; // XXX: 1625 nm: sigma0 = ?
 			default:
 				sigma0 = 46d;
 				System.out.println("calcSigma: warning: unknown wavelength " + wavelength);
 		}
 		if (pulsewidth == 0)
-			pulsewidth = 1000; // XXX
+			pulsewidth = 1000; // XXX: default pulsewidth
 		//return sigma + Math.log(1000d/(double)pulsewidth) / Math.log(10d);
 		return sigma0 + Math.log(vG / (double)pulsewidth) / Math.log(10d);
 	}

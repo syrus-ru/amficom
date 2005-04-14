@@ -1,5 +1,5 @@
 /*
- * $Id: ThreshDY.java,v 1.12 2005/03/21 18:49:53 saa Exp $
+ * $Id: ThreshDY.java,v 1.13 2005/04/14 16:21:29 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.12 $, $Date: 2005/03/21 18:49:53 $
+ * @version $Revision: 1.13 $, $Date: 2005/04/14 16:21:29 $
  * @module
  */
 public class ThreshDY extends Thresh
@@ -31,7 +31,7 @@ public class ThreshDY extends Thresh
 		super(eventId, eventId, xMin, xMax);
 		this.typeL = typeL;
 		//this.values = new double[] { 0.1, 0.2, -0.1, -0.2 }; // defaults -- XXX
-		this.values = new double[] { 0.0, 0.0, -0.0, -0.0 }; // FIXME: return defaults
+		this.values = new double[] { 0.0, 0.0, -0.0, -0.0 }; // FIXME: put default values of thresholds back
 	}
 
 	protected void readSpecificFromDIS(DataInputStream dis) throws IOException
