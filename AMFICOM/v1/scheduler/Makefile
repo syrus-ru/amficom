@@ -22,6 +22,9 @@ APPCLASSPATH := $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administratio
 $(call checkenve,JAVA_HOME)
 
 $(LIBNAME): .mach
+	$(CP) \
+		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/Client/General/lang/*.properties) \
+		$(CLASSDIR)/com/syrus/AMFICOM/Client/General/lang
 	$(JAR) -cf $@ \
 		-C $(CLASSDIR) com
 
@@ -43,7 +46,7 @@ cleanmach:
 #		$(shell find . -name *java)
 .mach:	$(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
-		-classpath $(APPCLASSPATH):$(DEPRECATEDCLASSPATH) \
+		-classpath $(APPCLASSPATH) \
 		$(shell find . -name *java)
 	touch $@
 
