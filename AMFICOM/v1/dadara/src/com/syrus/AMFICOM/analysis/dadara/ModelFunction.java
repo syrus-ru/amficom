@@ -20,7 +20,7 @@ import java.io.*;
  * <p>Should be constructed as one of three AMFICOM-specific simple functions.
  * The modelling function will probably change when fit() will be called.</p>
  *
- * @version $Revision: 1.16 $, $Date: 2005/03/30 14:37:39 $
+ * @version $Revision: 1.17 $, $Date: 2005/04/14 16:20:29 $
  * @author $Author: saa $
  * @module analysis_v1
  */
@@ -50,7 +50,7 @@ public class ModelFunction {
 	private static final int FITMODE_VARY_LIN = 2; // фитируем кривую, варьиру€ только линейные параметры
 	private static final int FITMODE_SET_LINEAR = 3; // замен€ем пр€мой
 	private static final int FITMODE_SET_BREAKL = 4; // замен€ем ломаной
-	private static final int FITMODE_SET_SMOOTH = 5; // замен€ем сглаживающей кривой -- пока не реализовано
+	//private static final int FITMODE_SET_SMOOTH = 5; // замен€ем сглаживающей кривой -- пока не реализовано
 	
 	public static final int LINK_FIXLEFT = 0x1; // зафиксировать левую точку
 	
@@ -447,7 +447,7 @@ public class ModelFunction {
 		{
 			System.out.println("IOException caught: " + e);
 			e.printStackTrace();
-			return new byte[0]; //null // XXX
+			return new byte[0]; //null // @todo: throw runtimeException
 		}
 	}
 
