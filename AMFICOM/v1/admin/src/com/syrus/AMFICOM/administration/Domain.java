@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.23 2005/04/14 09:34:34 bass Exp $
+ * $Id: Domain.java,v 1.24 2005/04/14 10:43:57 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.administration;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/04/14 09:34:34 $
+ * @version $Revision: 1.24 $, $Date: 2005/04/14 10:43:57 $
  * @author $Author: bass $
  * @module administration_v1
  */
@@ -125,7 +125,7 @@ public class Domain extends DomainMember implements Characterizable {
 				(super.domainId != null) ? (Identifier_Transferable) super.domainId.getTransferable() : (new Identifier_Transferable("")),
 				this.name,
 				this.description,
-				Identifier.getTransferables(this.characteristics));
+				Identifier.createTransferables(this.characteristics));
 	}	
 	
 	protected boolean isValid() {
