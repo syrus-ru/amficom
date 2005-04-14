@@ -5,7 +5,6 @@ import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
 import java.awt.SystemColor;
-import java.awt.Toolkit;
 import java.awt.event.ComponentEvent;
 import java.awt.event.WindowEvent;
 import java.text.SimpleDateFormat;
