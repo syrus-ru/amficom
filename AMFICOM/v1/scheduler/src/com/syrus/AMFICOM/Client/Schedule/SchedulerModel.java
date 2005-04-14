@@ -333,7 +333,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 					if (this.setEditor != null) {
 						this.setEditor.setSet(measurementSetup1.getParameterSet());
 					}
-					this.measurementSetupEditor.setMeasurementSetup(measurementSetup1);
+					//this.measurementSetupEditor.setMeasurementSetup(measurementSetup1);
 				}
 			}
 
@@ -352,7 +352,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 
 			for (int i = 0; i < this.testEditors.length; i++) {
 				this.testEditors[i].updateTest();
-			}
+			}			
 		}
 	}
 
@@ -552,6 +552,22 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 			if (condition != null)
 				this.measurementSetupEditor.setMeasurementSetups(MeasurementStorableObjectPool
 						.getStorableObjectsByCondition(condition, true));
+
+			if (this.selectedTest != null) {
+				Collection measurementSetupIds = this.selectedTest.getMeasurementSetupIds();
+				if (!measurementSetupIds.isEmpty()) {
+					Identifier mainMeasurementSetupId = (Identifier) measurementSetupIds.iterator().next();
+					MeasurementSetup measurementSetup1 = (MeasurementSetup) MeasurementStorableObjectPool
+							.getStorableObject(mainMeasurementSetupId, true);
+					if (measurementSetup1 != null) {
+						if (this.setEditor != null) {
+							this.setEditor.setSet(measurementSetup1.getParameterSet());
+						}
+						this.measurementSetupEditor.setMeasurementSetup(measurementSetup1);
+					}
+				}
+			}
+
 		} catch (ApplicationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

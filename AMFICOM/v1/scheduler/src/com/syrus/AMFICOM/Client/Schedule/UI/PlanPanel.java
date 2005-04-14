@@ -7,6 +7,7 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -25,6 +26,7 @@ import javax.swing.JComponent;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.ListCellRenderer;
+import javax.swing.ListModel;
 import javax.swing.Timer;
 import javax.swing.UIManager;
 
@@ -32,12 +34,13 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
+import com.syrus.AMFICOM.Client.Schedule.TestEditor;
 import com.syrus.AMFICOM.Client.Schedule.TestsEditor;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.measurement.Test;
 
-public class PlanPanel extends JList implements TestsEditor, ActionListener {
+public class PlanPanel extends JList implements TestsEditor, TestEditor, ActionListener {
 	
 	public static final int		TIME_OUT					= 500;
 
@@ -142,6 +145,7 @@ public class PlanPanel extends JList implements TestsEditor, ActionListener {
 		this.toolBar = new PlanToolBar(aContext, this);
 		this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();
 		this.schedulerModel.addTestsEditor(this);
+		this.schedulerModel.addTestEditor(this);
 		this.setModel(this.defaultListModel);
 		this.setCellRenderer(new TestLinesCellRenderer());
 		this.timer.start();
@@ -227,7 +231,7 @@ public class PlanPanel extends JList implements TestsEditor, ActionListener {
 	public int getScale() {
 		return this.scale;
 	}
-
+	
 	public Date getStartDate() {
 		return this.startDate;
 	}
@@ -535,6 +539,18 @@ public class PlanPanel extends JList implements TestsEditor, ActionListener {
 		super.revalidate();
 		this.parent.repaint();
 	}
+	
+	public void updateTest() {
+		for (Iterator it = this.testLines.keySet().iterator(); it.hasNext();) {
+			Object key = it.next();
+			TestLine line = (TestLine) this.testLines.get(key);
+			Rectangle visibleRectangle = line.getVisibleRectangle();
+			if (visibleRectangle != null) {
+				this.scrollRectToVisible(visibleRectangle);
+			}
+			
+		}		
+	}
 
 	protected void updateTestLines() {
 		Collection tests = ((SchedulerModel) this.aContext.getApplicationModel()).getTests();
@@ -546,7 +562,6 @@ public class PlanPanel extends JList implements TestsEditor, ActionListener {
 			if (!this.defaultListModel.contains(monitoredElement))
 				this.defaultListModel.addElement(monitoredElement);
 		}
-
 		super.setPreferredSize(new Dimension(getPreferredSize().width, 30 + 25 * this.testLines.values().size()));
 		this.updateRealScale();
 	}

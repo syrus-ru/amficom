@@ -216,14 +216,13 @@ public class ElementsTreeFrame extends JInternalFrame implements KISEditor, Moni
 							switch (major) {
 								case ObjectEntities.ME_ENTITY_CODE: {
 									Item parent = item;
-									
 									while(true) {
-										System.out.println("parent is " + parent);
+										if (!parent.canHaveParent())
+											break;
 										parent = parent.getParent();
 										if (parent == null)
 											break;
 										Object object2 = parent.getObject();
-										System.out.println("object is " + object2 + " class:" + object2.getClass().getName());
 										if (object2 instanceof Identifier) {
 											Identifier identifier2 = (Identifier) object2;
 											if (identifier2.getMajor() == ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE)

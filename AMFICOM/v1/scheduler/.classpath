@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/external/activation.jar"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/external/mail.jar"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/external/aurora_client_orbdep.jar"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/external/aurora_client_orbindep.jar"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/external/vbjorb.jar"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/external/vbjapp.jar"/>
 	<classpathentry kind="src" path="/generalclient_v1"/>
 	<classpathentry kind="src" path="/filter_v1"/>
 	<classpathentry kind="src" path="/general_v1"/>

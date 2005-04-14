@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupEditor.java,v 1.3 2005/04/14 06:38:05 bob Exp $
+ * $Id: MeasurementSetupEditor.java,v 1.4 2005/04/14 17:44:21 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,12 +8,12 @@
 
 package com.syrus.AMFICOM.Client.Schedule;
 
-import java.util.Set;
+import java.util.Collection;
 
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/04/14 06:38:05 $
+ * @version $Revision: 1.4 $, $Date: 2005/04/14 17:44:21 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -22,7 +22,7 @@ public interface MeasurementSetupEditor {
 
 	void setMeasurementSetup(MeasurementSetup measurementSetup);
 	
-	void setMeasurementSetups(Set measurementSetups);
+	void setMeasurementSetups(Collection measurementSetups);
 
 	MeasurementSetup getMeasurementSetup();
 }

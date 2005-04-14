@@ -161,6 +161,7 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 
 			public void actionPerformed(ActionEvent e) {
 				updateMeasurementSetups();
+				setMeasurementSetups(TestParametersPanel.this.msList);
 			}
 		});
 		patternPanel.add(this.usePatternsWithAnalysisBox, gbc);
@@ -378,12 +379,10 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 	}
 
 	public void setMeasurementSetup(MeasurementSetup measurementSetup) {
-		if (this.msList == null) {
-			this.schedulerModel.refreshMeasurementSetups();
-		}
+		this.updateMeasurementSetups();
+			
 		if (!this.msList.contains(measurementSetup)) {
-			this.msList.add(measurementSetup);
-			this.updateMeasurementSetups();
+			this.msList.add(measurementSetup);			
 		}
 		this.testSetups.setSelectedValue(measurementSetup, true);
 		if (this.usePatternsWithAnalysisBox.isSelected() && this.testSetups.getSelectedValue() == null) {
@@ -393,7 +392,7 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 		this.patternRadioButton.doClick();
 	}
 
-	public void setMeasurementSetups(java.util.Set measurementSetups) {
+	public void setMeasurementSetups(Collection measurementSetups) {
 		if (this.msList == null)
 			this.msList = new LinkedList();
 		else {
@@ -405,15 +404,6 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 		if (this.msList != measurementSetups)
 			this.msList.addAll(measurementSetups);
 
-		this.updateMeasurementSetups();
-	}
-
-	public void updateMeasurementSetups() {
-		if (this.msList == null) {
-			this.schedulerModel.refreshMeasurementSetups();
-			return;
-		}
-		
 		Collections.sort(this.msList, new ColumnSorter(MeasurementSetupController.getInstance(),
 														MeasurementSetupController.KEY_NAME, true));
 		this.testSetups.removeAll();
@@ -423,6 +413,13 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 					|| measurementSetup.getThresholdSet() != null || measurementSetup.getEtalon() != null)
 				((ObjListModel) this.testSetups.getModel()).addElement(measurementSetup);
 		}
+	}
+
+	public void updateMeasurementSetups() {
+		if (this.msList == null) {
+			this.schedulerModel.refreshMeasurementSetups();
+			return;
+		}	
 	}
 
 	public void setSet(Set set) {

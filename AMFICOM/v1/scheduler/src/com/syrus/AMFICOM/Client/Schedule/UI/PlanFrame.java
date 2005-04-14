@@ -36,6 +36,7 @@ public class PlanFrame extends JInternalFrame implements Commandable {
 		this.mainPanel = new PlanPanel(scroll, aContext);
 		this.toolBar = this.mainPanel.getToolBar().getToolBar();
 		scroll.getViewport().add(this.mainPanel);
+		scroll.setAutoscrolls(true);
 
 		getContentPane().setBackground(SystemColor.window);
 		getContentPane().setLayout(new BorderLayout());

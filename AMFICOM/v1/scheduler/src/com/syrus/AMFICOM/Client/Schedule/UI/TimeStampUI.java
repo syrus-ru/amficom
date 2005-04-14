@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.measurement.TemporalPattern;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/04/14 11:22:46 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2005/04/14 17:44:21 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
  */
@@ -110,7 +110,7 @@ public class TimeStampUI {
 				try {
 					description = TemporalPattern.getCronStringsDescription(new String[] { getTemplate()});
 				} catch (IllegalArgumentException iae) {
-					description = LangModelSchedule.getString("Some paremeters are not set.");
+					description = LangModelSchedule.getString("Some paremeters are not set");
 					type = JOptionPane.ERROR_MESSAGE;
 				}
 

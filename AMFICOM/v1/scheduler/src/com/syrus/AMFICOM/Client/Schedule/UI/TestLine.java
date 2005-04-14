@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -180,6 +181,18 @@ public class TestLine extends JLabel implements TestsEditor, TestEditor {
 		return this.testLineMouseListener;
 
 	}
+	
+	public Rectangle getVisibleRectangle() {
+		Rectangle rectangle = null;
+		if (this.selectedTest != null) {
+			List testTimeLineList = (List) this.measurements.get(this.selectedTest.getId());
+			TestTimeLine testTimeLine = (TestTimeLine)testTimeLineList.get(0);
+			int x = PlanPanel.MARGIN / 2 + (int) (this.scale * (testTimeLine.startTime - this.start));
+			int en = PlanPanel.MARGIN / 2 + (int) (this.scale * (testTimeLine.startTime + testTimeLine.duration - this.start));
+			rectangle = new Rectangle(x - PlanPanel.MARGIN / 2, 0, en - x, this.height - (this.titleHeight / 2 + 4) - 2);
+		}
+		return rectangle;
+	}
 
 	private void paintFlash(Graphics g) {
 		if (g != null) {
@@ -236,11 +249,6 @@ public class TestLine extends JLabel implements TestsEditor, TestEditor {
 					Test test = (Test) it.next();
 					if (test.isChanged())
 						continue;
-					Color color = SchedulerModel.getColor(test.getStatus());
-					if ((this.selectedTest == null) || (!this.selectedTest.getId().equals(test.getId()))) {
-						color = color.darker();
-					} 
-					g.setColor(color);
 					drawTestRect(g, test);
 				}
 				
@@ -389,31 +397,24 @@ public class TestLine extends JLabel implements TestsEditor, TestEditor {
 
 	private void drawTestRect(	Graphics g,
 								Test test) {
-		// System.out.println("drawTestRect:"+selectedTest.getId());
 		int y = this.titleHeight / 2 + 4;
 		int h = this.height - (this.titleHeight / 2 + 4) - 2;
-		// System.out.println(">>"+timeStamp.getType());
-
-		/**
-		 * TODO remove when will enable again
-		 */
-		// ElementaryTestAlarm[] testAlarms =
-		// selectedTest.getElementaryTestAlarms();
-		/**
-		 * TODO remove when ok
-		 */
-		// ElementaryTestAlarm[] testAlarms = new ElementaryTestAlarm[0];
-		// switch (temporalType.value()) {
-		// case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
+	
 		int i = 0;
-
-		// List times =
-		// selectedTest.getTemporalPattern().getTimes(selectedTest.getStartTime(),selectedTest.getEndTime());
-		// for (Iterator timeIt = times.iterator(); timeIt.hasNext();i++) {
-		// Date time = (Date) timeIt.next();
+		
+		Color color = SchedulerModel.getColor(test.getStatus());
+		if ((this.selectedTest == null) || (!this.selectedTest.getId().equals(test.getId()))) {
+			color = color.darker();
+		} 
+		
 		List testTimeLineList = (List) this.measurements.get(test.getId());
 		if (testTimeLineList == null)
 			return;
+		
+		int x1 = 0;
+		int w1 = 0;
+		Color color1 = null;
+		boolean painted = false;
 		for (Iterator it = testTimeLineList.iterator(); it.hasNext(); i++) {
 			TestTimeLine testTimeLine = (TestTimeLine) it.next();
 
@@ -425,71 +426,52 @@ public class TestLine extends JLabel implements TestsEditor, TestEditor {
 				w = (w > minimalWidth) ? w : minimalWidth;
 			else
 				w = minimalWidth;
-
-			/**
-			 * TODO remove when ok
-			 */
-
-			// if (testAlarms.length > 0) {
-			// for (int j = 0; j < testAlarms.length; j++) {
-			// if (Math.abs(testAlarms[j].elementary_start_time -
-			// testTimeLine.startTime) < 1000 * 30) {
-			// Alarm alarm = (Alarm) Pool.get(Alarm.typ,
-			// testAlarms[j].alarm_id);
-			// if (alarm != null) {
-			// // System.out.println("alarm.type_id:" +
-			// // alarm.type_id);
-			// if (alarm.type_id.equals(AlarmTypeConstants.ID_RTU_TEST_ALARM)) {
-			// // System.out.println("ID_RTU_TEST_ALARM");
-			// if ((this.selectedTest != null) &&
-			// (this.selectedTest.getId().equals(test.getId())))
-			// g.setColor(TestLine.COLOR_ALARM_SELECTED);
-			// else
-			// g.setColor(TestLine.COLOR_ALARM);
-			// } else if
-			// (alarm.type_id.equals(AlarmTypeConstants.ID_RTU_TEST_WARNING)) {
-			// // System.out.println("ID_RTU_TEST_WARNING");
-			// if ((this.selectedTest != null) &&
-			// (this.selectedTest.getId().equals(test.getId())))
-			// g.setColor(TestLine.COLOR_WARNING_SELECTED);
-			// else
-			// g.setColor(TestLine.COLOR_WARNING);
-			// }
-			// }
-			//
-			// }
-			// // System.out.println(
-			// // (testAlarms[j].elementary_start_time-times[i]));
-			//
-			// // alarm.
-			// }
-			// }	
 			
-			Color mColor = g.getColor();
 			if (testTimeLine.haveMeasurement) {
-				g.setColor(SchedulerModel.COLOR_COMPLETED);
+				if ((this.selectedTest == null) || (!this.selectedTest.getId().equals(test.getId()))) {
+					color1 = SchedulerModel.COLOR_COMPLETED.darker();
+					g.setColor(color1);
+				} else {
+					g.setColor(SchedulerModel.COLOR_COMPLETED);
+					color1 = SchedulerModel.COLOR_COMPLETED;
+				}
+			} else {
+				g.setColor(color);
+				color1 = color;
 			}
-			g.fillRect(x + 2, y + 2, w - 3, h - 3);
-			g.draw3DRect(x, y, w, h, true);
+			
 			if (i == 0) {
+				g.fillRect(x + 2, y + 2, w - 3, h - 3);
+				g.draw3DRect(x, y, w, h, true);
+				
 				Color c = g.getColor();
 				g.setColor(new Color(0, 255 - c.getGreen(), 255 - c.getBlue()));
 				g.drawRect(x + 1, y + 1, w - 2, h - 2);
-				// g.drawLine(x + 2, y + h / 4, x + w - 4, y + h / 4);
 				g.drawRect(x + w / 2, y + 1, 1, h - 2);
-				// g.drawString("T", x, y);
-				g.setColor(c);
+				
+				x1 = x;
+				w1 = w;
+				painted = true;
+			} else {			
+				if (x1 + w1 < x) {
+					g.fillRect(x1 + 2, y + 2, w1 - 3, h - 3);
+					g.draw3DRect(x1, y, w1, h, true);					
+					x1 = x;
+					w1 = w;
+					painted = false;
+				} else {
+					w1 = x + w - x1;
+					painted = false;
+				}
 			}
-			if (testTimeLine.haveMeasurement) {
-				g.setColor(mColor);
-			}
+			
+		}
+		
+		if (!painted) {
+			g.setColor(color1);
+			g.fillRect(x1 + 2, y + 2, w1 - 3, h - 3);
+			g.draw3DRect(x1, y, w1, h, true);	
 		}
 
-	}
-
-	// private void initModule(Dispatcher dispatcher) {
-	// this.dispatcher = dispatcher;
-	// this.dispatcher.register(this, SchedulerModel.COMMAND_REFRESH_TEST);
-	// this.dispatcher.register(this, SchedulerModel.COMMAND_REFRESH_TESTS);
-	// }
+	}	
 }

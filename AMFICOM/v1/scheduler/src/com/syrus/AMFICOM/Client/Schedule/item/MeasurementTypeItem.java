@@ -1,5 +1,5 @@
 /*
-* $Id: MeasurementTypeItem.java,v 1.6 2005/03/30 14:26:20 bob Exp $
+* $Id: MeasurementTypeItem.java,v 1.7 2005/04/14 17:44:21 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.measurement.MeasurementType;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/03/30 14:26:20 $
+ * @version $Revision: 1.7 $, $Date: 2005/04/14 17:44:21 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -63,6 +63,10 @@ public class MeasurementTypeItem extends ElementItem implements Populatable {
 			this.childrenFactory.populate(this);
 			this.populatedChildren = true;
 		}
+	}
+	
+	public boolean isPopulated() {
+		return this.populatedChildren;
 	}
 	
 	public List getChildren() {		
