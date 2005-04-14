@@ -76,9 +76,8 @@ SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/measurement/*.java) \
 		com/syrus/AMFICOM/measurement/ActionCondition.java
 
 $(LIBNAME): .mach
-	cp \
-		$(SRCDIR)/com/syrus/AMFICOM/resource/measurement.properties \
-		$(SRCDIR)/com/syrus/AMFICOM/resource/measurement_ru.properties \
+	$(CP) \
+		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/resource/*.properties) \
 		$(CLASSDIR)/com/syrus/AMFICOM/resource/
 	$(JAR) -cf $@ \
 		-C $(CLASSDIR) com/syrus/AMFICOM/measurement \

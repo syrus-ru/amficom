@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.24 2005/04/14 10:43:57 bass Exp $
+ * $Id: Domain.java,v 1.25 2005/04/14 12:04:15 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,15 +9,14 @@
 package com.syrus.AMFICOM.administration;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/04/14 10:43:57 $
- * @author $Author: bass $
+ * @version $Revision: 1.25 $, $Date: 2005/04/14 12:04:15 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
