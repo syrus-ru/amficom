@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.26 2005/04/12 17:11:34 arseniy Exp $
+ * $Id: SiteNodeType.java,v 1.27 2005/04/14 16:00:33 bass Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,6 +24,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -38,11 +39,11 @@ import com.syrus.AMFICOM.map.corba.SiteNodeType_Transferable;
  * {@link #codename}, соответствующим какому-либо значению {@link #WELL}, 
  * {@link #PIQUET}, {@link #ATS}, {@link #BUILDING}, {@link #UNBOUND}, 
  * {@link #CABLE_INLET}, {@link #TOWER}
- * @author $Author: arseniy $
- * @version $Revision: 1.26 $, $Date: 2005/04/12 17:11:34 $
+ * @author $Author: bass $
+ * @version $Revision: 1.27 $, $Date: 2005/04/14 16:00:33 $
  * @module map_v1
  */
-public class SiteNodeType extends StorableObjectType implements Characterizable {
+public class SiteNodeType extends StorableObjectType implements Characterizable, Namable {
 
 	public static final String WELL = "well";
 	public static final String PIQUET = "piquet";

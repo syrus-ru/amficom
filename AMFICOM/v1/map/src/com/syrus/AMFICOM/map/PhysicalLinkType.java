@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.30 2005/04/12 17:11:34 arseniy Exp $
+ * $Id: PhysicalLinkType.java,v 1.31 2005/04/14 16:00:33 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,6 +24,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -37,11 +38,11 @@ import com.syrus.AMFICOM.map.corba.PhysicalLinkType_Transferable;
  * типов линий, которые определяются полем {@link #codename}, соответствующим
  * какому-либо значению {@link #TUNNEL}, {@link #COLLECTOR}, {@link #INDOOR}, 
  * {@link #SUBMARINE}, {@link #OVERHEAD}, {@link #UNBOUND}
- * @author $Author: arseniy $
- * @version $Revision: 1.30 $, $Date: 2005/04/12 17:11:34 $
+ * @author $Author: bass $
+ * @version $Revision: 1.31 $, $Date: 2005/04/14 16:00:33 $
  * @module map_v1
  */
-public class PhysicalLinkType extends StorableObjectType implements Characterizable {
+public class PhysicalLinkType extends StorableObjectType implements Characterizable, Namable {
 
 	/** тоннель */
 	public static final String TUNNEL = "tunnel";

@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentType.java,v 1.55 2005/04/12 14:52:46 bob Exp $
+ * $Id: EquipmentType.java,v 1.56 2005/04/14 16:00:32 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,6 +26,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -34,12 +35,12 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.55 $, $Date: 2005/04/12 14:52:46 $
- * @author $Author: bob $
+ * @version $Revision: 1.56 $, $Date: 2005/04/14 16:00:32 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
-public class EquipmentType extends StorableObjectType implements Characterizable {
+public class EquipmentType extends StorableObjectType implements Characterizable, Namable {
 	private static final long serialVersionUID = 9157517478787463967L;
 
 	private String name;
