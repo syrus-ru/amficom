@@ -1,5 +1,5 @@
 /*
- * $Id: Identifier.java,v 1.31 2005/04/14 09:31:59 bass Exp $
+ * $Id: Identifier.java,v 1.32 2005/04/14 10:19:45 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
  * its respective <code>creatorId</code> and <code>modifierId</code>. But
  * there&apos;s a particular task of <code>id</code> handling.
  *
- * @version $Revision: 1.31 $, $Date: 2005/04/14 09:31:59 $
+ * @version $Revision: 1.32 $, $Date: 2005/04/14 10:19:45 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -116,42 +116,32 @@ public class Identifier implements Comparable, TransferableObject, Serializable,
 		return this.identifierString;
 	}
 
-	public static Identifier_Transferable[] createTransferables(Collection identifiables) {
-		assert identifiables != null : "Collection of identifiables is null";
+	/**
+	 * @param identifiables <code>Collection&lt;Identifiable&gt;</code>
+	 * @return a newly created <code>Identifier_Transferable[]</code> with
+	 *         elements ordered in the same way as returned by the iterator.
+	 * @see #fromTransferables(Identifier_Transferable[])
+	 */
+	public static Identifier_Transferable[] createTransferables(final Collection identifiables) {
+		assert identifiables != null: ErrorMessages.NON_NULL_EXPECTED;
 
-		Identifier_Transferable[] idsT = new Identifier_Transferable[identifiables.size()];
 		int i = 0;
-		Identifiable identifiable;
-		for (Iterator it = identifiables.iterator(); it.hasNext(); i++) {
-			identifiable = (Identifiable) it.next();
-			idsT[i] = (Identifier_Transferable) identifiable.getId().getTransferable();
-		}
-		return idsT;
+		Identifier_Transferable ids[] = new Identifier_Transferable[identifiables.size()];
+		for (final Iterator identifiableIterator = identifiables.iterator(); identifiableIterator.hasNext(); i++)
+			ids[i] = (Identifier_Transferable) ((Identifiable) identifiableIterator.next()).getId().getTransferable();
+		return ids;
 	}
 
 	/**
 	 * @param transferables <code>Identifier_Transferable[]</code>
 	 * @return a newly created <code>Set&lt;Identifier&gt;</code>.
-	 * @see #getTransferables(Set)
+	 * @see #createTransferables(Collection)
 	 */
 	public static Set fromTransferables(final Identifier_Transferable[] transferables) {
 		final Set set = new HashSet(transferables.length);
 		for (int i = 0; i < transferables.length; i++)
 			set.add(new Identifier(transferables[i]));
 		return set;
-	}
-
-	/**
-	 * @param identifiables <code>Set&lt;Identifiable&gt;</code>
-	 * @return a newly created <code>Identifier_Transferable[]</code>.
-	 * @see #fromTransferables(Identifier_Transferable[])  
-	 */
-	public static Identifier_Transferable[] getTransferables(final Set identifiables) {
-		int i = 0;
-		Identifier_Transferable ids[] = new Identifier_Transferable[identifiables.size()];
-		for (final Iterator identifiableIterator = identifiables.iterator(); identifiableIterator.hasNext();)
-			ids[i++] = (Identifier_Transferable) ((Identifiable) identifiableIterator.next()).getId().getTransferable();
-		return ids;
 	}
 
 	/**
