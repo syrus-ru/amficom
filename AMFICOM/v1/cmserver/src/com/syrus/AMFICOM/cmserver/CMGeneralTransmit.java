@@ -1,5 +1,5 @@
 /*
- * $Id: CMGeneralTransmit.java,v 1.17 2005/04/13 17:03:08 arseniy Exp $
+ * $Id: CMGeneralTransmit.java,v 1.18 2005/04/14 07:31:53 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,8 +43,8 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/04/13 17:03:08 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.18 $, $Date: 2005/04/14 07:31:53 $
+ * @author $Author: bob $
  * @module cmserver_v1
  */
 
@@ -156,58 +156,77 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 	public ParameterType_Transferable[] transmitParameterTypes(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
-		Log.debugMessage("CMGeneralTransmit.transmitParameterTypes | requiered " + identifier_Transferables.length
-				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+		try {
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			Log.debugMessage("CMGeneralTransmit.transmitParameterTypes | requiered " + identifier_Transferables.length
+					+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Set objects = this.getObjects(identifier_Transferables);
+			Set objects = this.getObjects(identifier_Transferables);
 
-		ParameterType_Transferable[] transferables = new ParameterType_Transferable[objects.size()];
-		int i = 0;
-		ParameterType parameterType;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			parameterType = (ParameterType) it.next();
-			transferables[i] = (ParameterType_Transferable) parameterType.getTransferable();
+			ParameterType_Transferable[] transferables = new ParameterType_Transferable[objects.size()];
+			int i = 0;
+			ParameterType parameterType;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				parameterType = (ParameterType) it.next();
+				transferables[i] = (ParameterType_Transferable) parameterType.getTransferable();
+			}
+			return transferables;
 		}
-		return transferables;
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 
 	public CharacteristicType_Transferable[] transmitCharacteristicTypes(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
-		Log.debugMessage("CMGeneralTransmit.transmitCharacteristicTypes | requiered " + identifier_Transferables.length
-				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+		try {
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			Log.debugMessage("CMGeneralTransmit.transmitCharacteristicTypes | requiered "
+					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
+				Log.DEBUGLEVEL07);
 
-		Set objects = this.getObjects(identifier_Transferables);
+			Set objects = this.getObjects(identifier_Transferables);
 
-		CharacteristicType_Transferable[] transferables = new CharacteristicType_Transferable[objects.size()];
-		int i = 0;
-		CharacteristicType characteristicType;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			characteristicType = (CharacteristicType) it.next();
-			transferables[i] = (CharacteristicType_Transferable) characteristicType.getTransferable();
+			CharacteristicType_Transferable[] transferables = new CharacteristicType_Transferable[objects.size()];
+			int i = 0;
+			CharacteristicType characteristicType;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				characteristicType = (CharacteristicType) it.next();
+				transferables[i] = (CharacteristicType_Transferable) characteristicType.getTransferable();
+			}
+			return transferables;
 		}
-		return transferables;
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 
 	public Characteristic_Transferable[] transmitCharacteristics(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
-		Log.debugMessage("CMGeneralTransmit.transmitCharacteristics | requiered " + identifier_Transferables.length
-				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+		try {
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			Log.debugMessage("CMGeneralTransmit.transmitCharacteristics | requiered " + identifier_Transferables.length
+					+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Set objects = this.getObjects(identifier_Transferables);
+			Set objects = this.getObjects(identifier_Transferables);
 
-		Characteristic_Transferable[] transferables = new Characteristic_Transferable[objects.size()];
-		int i = 0;
-		Characteristic characteristic;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			characteristic = (Characteristic) it.next();
-			transferables[i] = (Characteristic_Transferable) characteristic.getTransferable();
+			Characteristic_Transferable[] transferables = new Characteristic_Transferable[objects.size()];
+			int i = 0;
+			Characteristic characteristic;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				characteristic = (Characteristic) it.next();
+				transferables[i] = (Characteristic_Transferable) characteristic.getTransferable();
+			}
+			return transferables;
 		}
-		return transferables;
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 
 
@@ -234,56 +253,78 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 
 	public ParameterType_Transferable[] transmitParameterTypesButIds(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
-		Log.debugMessage("CMGeneralTransmit.transmitParameterTypesButIds | All, but " + identifier_Transferables.length
-				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+		try {
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			Log.debugMessage("CMGeneralTransmit.transmitParameterTypesButIds | All, but "
+					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
+				Log.DEBUGLEVEL07);
 
-		Set objects = this.getObjectsButIds(identifier_Transferables, ObjectEntities.PARAMETERTYPE_ENTITY_CODE);
+			Set objects = this.getObjectsButIds(identifier_Transferables, ObjectEntities.PARAMETERTYPE_ENTITY_CODE);
 
-		ParameterType_Transferable[] transferables = new ParameterType_Transferable[objects.size()];
-		int i = 0;
-		ParameterType parameterType;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			parameterType = (ParameterType) it.next();
-			transferables[i] = (ParameterType_Transferable) parameterType.getTransferable();
+			ParameterType_Transferable[] transferables = new ParameterType_Transferable[objects.size()];
+			int i = 0;
+			ParameterType parameterType;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				parameterType = (ParameterType) it.next();
+				transferables[i] = (ParameterType_Transferable) parameterType.getTransferable();
+			}
+			return transferables;
 		}
-		return transferables;
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 
 	public CharacteristicType_Transferable[] transmitCharacteristicTypesButIds(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
-		Log.debugMessage("CMGeneralTransmit.transmitCharacteristicTypesButIds | All, but " + identifier_Transferables.length
-				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+		try {
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			Log.debugMessage("CMGeneralTransmit.transmitCharacteristicTypesButIds | All, but "
+					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
+				Log.DEBUGLEVEL07);
 
-		Set objects = this.getObjectsButIds(identifier_Transferables, ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE);
+			Set objects = this
+					.getObjectsButIds(identifier_Transferables, ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE);
 
-		CharacteristicType_Transferable[] transferables = new CharacteristicType_Transferable[objects.size()];
-		int i = 0;
-		CharacteristicType characteristicType;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			characteristicType = (CharacteristicType) it.next();
-			transferables[i] = (CharacteristicType_Transferable) characteristicType.getTransferable();
+			CharacteristicType_Transferable[] transferables = new CharacteristicType_Transferable[objects.size()];
+			int i = 0;
+			CharacteristicType characteristicType;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				characteristicType = (CharacteristicType) it.next();
+				transferables[i] = (CharacteristicType_Transferable) characteristicType.getTransferable();
+			}
+			return transferables;
 		}
-		return transferables;
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 
 	public Characteristic_Transferable[] transmitCharacteristicsButIds(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
-		Log.debugMessage("CMGeneralTransmit.transmitCharacteristicsButIds | All, but " + identifier_Transferables.length
-				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+		try {
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			Log.debugMessage("CMGeneralTransmit.transmitCharacteristicsButIds | All, but "
+					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
+				Log.DEBUGLEVEL07);
 
-		Set objects = this.getObjectsButIds(identifier_Transferables, ObjectEntities.CHARACTERISTIC_ENTITY_CODE);
+			Set objects = this.getObjectsButIds(identifier_Transferables, ObjectEntities.CHARACTERISTIC_ENTITY_CODE);
 
-		Characteristic_Transferable[] transferables = new Characteristic_Transferable[objects.size()];
-		int i = 0;
-		Characteristic characteristic;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			characteristic = (Characteristic) it.next();
-			transferables[i] = (Characteristic_Transferable) characteristic.getTransferable();
+			Characteristic_Transferable[] transferables = new Characteristic_Transferable[objects.size()];
+			int i = 0;
+			Characteristic characteristic;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				characteristic = (Characteristic) it.next();
+				transferables[i] = (Characteristic_Transferable) characteristic.getTransferable();
+			}
+			return transferables;
 		}
-		return transferables;
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 
 
@@ -312,81 +353,106 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 	public ParameterType_Transferable[] transmitParameterTypesButIdsCondition(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier,
 			StorableObjectCondition_Transferable condition_Transferable) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
-		Log.debugMessage("CMGeneralTransmit.transmitParameterTypesButIdsCondition | All, but " + identifier_Transferables.length
-				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+		try {
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			Log.debugMessage("CMGeneralTransmit.transmitParameterTypesButIdsCondition | All, but "
+					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
+				Log.DEBUGLEVEL07);
 
-		Set objects = this.getObjectsButIdsCondition(identifier_Transferables, condition_Transferable);
+			Set objects = this.getObjectsButIdsCondition(identifier_Transferables, condition_Transferable);
 
-		ParameterType_Transferable[] transferables = new ParameterType_Transferable[objects.size()];
-		int i = 0;
-		ParameterType parameterType;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			parameterType = (ParameterType) it.next();
-			transferables[i] = (ParameterType_Transferable) parameterType.getTransferable();
+			ParameterType_Transferable[] transferables = new ParameterType_Transferable[objects.size()];
+			int i = 0;
+			ParameterType parameterType;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				parameterType = (ParameterType) it.next();
+				transferables[i] = (ParameterType_Transferable) parameterType.getTransferable();
+			}
+			return transferables;
 		}
-		return transferables;
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 
 	public CharacteristicType_Transferable[] transmitCharacteristicTypesButIdsCondition(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier,
 			StorableObjectCondition_Transferable condition_Transferable) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
-		Log.debugMessage("CMGeneralTransmit.transmitCharacteristicTypesButIdsCondition | All, but " + identifier_Transferables.length
-				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+		try {
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			Log.debugMessage("CMGeneralTransmit.transmitCharacteristicTypesButIdsCondition | All, but "
+					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
+				Log.DEBUGLEVEL07);
 
-		Set objects = this.getObjectsButIdsCondition(identifier_Transferables, condition_Transferable);
+			Set objects = this.getObjectsButIdsCondition(identifier_Transferables, condition_Transferable);
 
-		CharacteristicType_Transferable[] transferables = new CharacteristicType_Transferable[objects.size()];
-		int i = 0;
-		CharacteristicType characteristicType;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			characteristicType = (CharacteristicType) it.next();
-			transferables[i] = (CharacteristicType_Transferable) characteristicType.getTransferable();
+			CharacteristicType_Transferable[] transferables = new CharacteristicType_Transferable[objects.size()];
+			int i = 0;
+			CharacteristicType characteristicType;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				characteristicType = (CharacteristicType) it.next();
+				transferables[i] = (CharacteristicType_Transferable) characteristicType.getTransferable();
+			}
+			return transferables;
 		}
-		return transferables;
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 
 	public Characteristic_Transferable[] transmitCharacteristicsButIdsCondition(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier,
 			StorableObjectCondition_Transferable condition_Transferable) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
-		Log.debugMessage("CMGeneralTransmit.transmitCharacteristicsButIdsCondition | All, but " + identifier_Transferables.length
-				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+		try {
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			Log.debugMessage("CMGeneralTransmit.transmitCharacteristicsButIdsCondition | All, but "
+					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
+				Log.DEBUGLEVEL07);
 
-		Set objects = this.getObjectsButIdsCondition(identifier_Transferables, condition_Transferable);
+			Set objects = this.getObjectsButIdsCondition(identifier_Transferables, condition_Transferable);
 
-		Characteristic_Transferable[] transferables = new Characteristic_Transferable[objects.size()];
-		int i = 0;
-		Characteristic characteristic;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			characteristic = (Characteristic) it.next();
-			transferables[i] = (Characteristic_Transferable) characteristic.getTransferable();
+			Characteristic_Transferable[] transferables = new Characteristic_Transferable[objects.size()];
+			int i = 0;
+			Characteristic characteristic;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				characteristic = (Characteristic) it.next();
+				transferables[i] = (Characteristic_Transferable) characteristic.getTransferable();
+			}
+			return transferables;
 		}
-		return transferables;
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 
 	private Set getObjectsButIdsCondition(Identifier_Transferable[] identifier_Transferables,
 			StorableObjectCondition_Transferable condition_Transferable) throws AMFICOMRemoteException {
-
-		StorableObjectCondition condition = null;
 		try {
-			condition = StorableObjectConditionBuilder.restoreCondition(condition_Transferable);
-		}
-		catch (IllegalDataException ide) {
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_DATA,
-					CompletionStatus.COMPLETED_NO,
-					"Cannot restore condition -- " + ide.getMessage());
-		}
 
-		try {
-			Set ids = Identifier.fromTransferables(identifier_Transferables);
-			Set objects = GeneralStorableObjectPool.getStorableObjectsByConditionButIds(ids, condition, true);
-			return objects;
+			StorableObjectCondition condition = null;
+			try {
+				condition = StorableObjectConditionBuilder.restoreCondition(condition_Transferable);
+			} catch (IllegalDataException ide) {
+				throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_DATA, CompletionStatus.COMPLETED_NO,
+													"Cannot restore condition -- " + ide.getMessage());
+			}
+
+			try {
+				Set ids = Identifier.fromTransferables(identifier_Transferables);
+				Set objects = GeneralStorableObjectPool.getStorableObjectsByConditionButIds(ids, condition, true);
+				return objects;
+			} catch (ApplicationException ae) {
+				Log.errorException(ae);
+				throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae
+						.getMessage());
+			}
 		}
-		catch (ApplicationException ae) {
-			Log.errorException(ae);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
 		}
 	}
 

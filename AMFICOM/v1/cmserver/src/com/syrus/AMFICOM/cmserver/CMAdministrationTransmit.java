@@ -1,5 +1,5 @@
 /*
- * $Id: CMAdministrationTransmit.java,v 1.14 2005/04/13 17:03:08 arseniy Exp $
+ * $Id: CMAdministrationTransmit.java,v 1.15 2005/04/14 07:31:53 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,8 +45,8 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/04/13 17:03:08 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.15 $, $Date: 2005/04/14 07:31:53 $
+ * @author $Author: bob $
  * @module cmserver_v1
  */
 
@@ -194,16 +194,21 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 		Log.debugMessage("CMAdministrationTransmit.transmitUsers | requiered " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Set objects = this.getObjects(identifier_Transferables);
+		try {
+			Set objects = this.getObjects(identifier_Transferables);
 
-		User_Transferable[] transferables = new User_Transferable[objects.size()];
-		int i = 0;
-		User user;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			user = (User) it.next();
-			transferables[i] = (User_Transferable) user.getTransferable();
+			User_Transferable[] transferables = new User_Transferable[objects.size()];
+			int i = 0;
+			User user;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				user = (User) it.next();
+				transferables[i] = (User_Transferable) user.getTransferable();
+			}
+			return transferables;
+		} catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
 		}
-		return transferables;
 	}
 
 	public Domain_Transferable[] transmitDomains(Identifier_Transferable[] identifier_Transferables,
@@ -213,16 +218,21 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 		Log.debugMessage("CMAdministrationTransmit.transmitDomains | requiered " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Set objects = this.getObjects(identifier_Transferables);
+		try {
+			Set objects = this.getObjects(identifier_Transferables);
 
-		Domain_Transferable[] transferables = new Domain_Transferable[objects.size()];
-		int i = 0;
-		Domain domain;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			domain = (Domain) it.next();
-			transferables[i] = (Domain_Transferable) domain.getTransferable();
+			Domain_Transferable[] transferables = new Domain_Transferable[objects.size()];
+			int i = 0;
+			Domain domain;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				domain = (Domain) it.next();
+				transferables[i] = (Domain_Transferable) domain.getTransferable();
+			}
+			return transferables;
+		} catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
 		}
-		return transferables;
 	}
 
 	public Server_Transferable[] transmitServers(Identifier_Transferable[] identifier_Transferables,
@@ -232,16 +242,21 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 		Log.debugMessage("CMAdministrationTransmit.transmitServers | requiered " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Set objects = this.getObjects(identifier_Transferables);
+		try {
+			Set objects = this.getObjects(identifier_Transferables);
 
-		Server_Transferable[] transferables = new Server_Transferable[objects.size()];
-		int i = 0;
-		Server server;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			server = (Server) it.next();
-			transferables[i] = (Server_Transferable) server.getTransferable();
+			Server_Transferable[] transferables = new Server_Transferable[objects.size()];
+			int i = 0;
+			Server server;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				server = (Server) it.next();
+				transferables[i] = (Server_Transferable) server.getTransferable();
+			}
+			return transferables;
+		} catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
 		}
-		return transferables;
 	}
 
 	public MCM_Transferable[] transmitMCMs(Identifier_Transferable[] identifier_Transferables,
@@ -251,16 +266,21 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 		Log.debugMessage("CMAdministrationTransmit.transmitMCMs | requiered " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Set objects = this.getObjects(identifier_Transferables);
+		try {
+			Set objects = this.getObjects(identifier_Transferables);
 
-		MCM_Transferable[] transferables = new MCM_Transferable[objects.size()];
-		int i = 0;
-		MCM mcm;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			mcm = (MCM) it.next();
-			transferables[i] = (MCM_Transferable) mcm.getTransferable();
+			MCM_Transferable[] transferables = new MCM_Transferable[objects.size()];
+			int i = 0;
+			MCM mcm;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				mcm = (MCM) it.next();
+				transferables[i] = (MCM_Transferable) mcm.getTransferable();
+			}
+			return transferables;
+		} catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
 		}
-		return transferables;
 	}
 
 
@@ -285,21 +305,27 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 
 
 	public User_Transferable[] transmitUsersButIds(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+			AccessIdentifier_Transferable accessIdentifier)
+			throws AMFICOMRemoteException {
 		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
 		Log.debugMessage("CMAdministrationTransmit.transmitUsersButIds | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Set objects = this.getObjectsButIds(identifier_Transferables, ObjectEntities.USER_ENTITY_CODE);
+		try {
+			Set objects = this.getObjectsButIds(identifier_Transferables, ObjectEntities.USER_ENTITY_CODE);
 
-		User_Transferable[] transferables = new User_Transferable[objects.size()];
-		int i = 0;
-		User user;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			user = (User) it.next();
-			transferables[i] = (User_Transferable) user.getTransferable();
+			User_Transferable[] transferables = new User_Transferable[objects.size()];
+			int i = 0;
+			User user;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				user = (User) it.next();
+				transferables[i] = (User_Transferable) user.getTransferable();
+			}
+			return transferables;
+		} catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
 		}
-		return transferables;
 	}
 
 	public Domain_Transferable[] transmitDomainsButIds(Identifier_Transferable[] identifier_Transferables,
@@ -308,16 +334,21 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 		Log.debugMessage("CMAdministrationTransmit.transmitDomainsButIds | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Set objects = this.getObjectsButIds(identifier_Transferables, ObjectEntities.DOMAIN_ENTITY_CODE);
+		try {
+			Set objects = this.getObjectsButIds(identifier_Transferables, ObjectEntities.DOMAIN_ENTITY_CODE);
 
-		Domain_Transferable[] transferables = new Domain_Transferable[objects.size()];
-		int i = 0;
-		Domain domain;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			domain = (Domain) it.next();
-			transferables[i] = (Domain_Transferable) domain.getTransferable();
+			Domain_Transferable[] transferables = new Domain_Transferable[objects.size()];
+			int i = 0;
+			Domain domain;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				domain = (Domain) it.next();
+				transferables[i] = (Domain_Transferable) domain.getTransferable();
+			}
+			return transferables;
+		} catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
 		}
-		return transferables;
 	}
 
 	public Server_Transferable[] transmitServersButIds(Identifier_Transferable[] identifier_Transferables,
@@ -326,16 +357,21 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 		Log.debugMessage("CMAdministrationTransmit.transmitServersButIds | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Set objects = this.getObjectsButIds(identifier_Transferables, ObjectEntities.SERVER_ENTITY_CODE);
+		try {
+			Set objects = this.getObjectsButIds(identifier_Transferables, ObjectEntities.SERVER_ENTITY_CODE);
 
-		Server_Transferable[] transferables = new Server_Transferable[objects.size()];
-		int i = 0;
-		Server server;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			server = (Server) it.next();
-			transferables[i] = (Server_Transferable) server.getTransferable();
+			Server_Transferable[] transferables = new Server_Transferable[objects.size()];
+			int i = 0;
+			Server server;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				server = (Server) it.next();
+				transferables[i] = (Server_Transferable) server.getTransferable();
+			}
+			return transferables;
+		} catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
 		}
-		return transferables;
 	}
 
 	public MCM_Transferable[] transmitMCMsButIds(Identifier_Transferable[] identifier_Transferables,
@@ -344,16 +380,21 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 		Log.debugMessage("CMAdministrationTransmit.transmitMCMsButIds | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Set objects = this.getObjectsButIds(identifier_Transferables, ObjectEntities.MCM_ENTITY_CODE);
+		try {
+			Set objects = this.getObjectsButIds(identifier_Transferables, ObjectEntities.MCM_ENTITY_CODE);
 
-		MCM_Transferable[] transferables = new MCM_Transferable[objects.size()];
-		int i = 0;
-		MCM mcm;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			mcm = (MCM) it.next();
-			transferables[i] = (MCM_Transferable) mcm.getTransferable();
+			MCM_Transferable[] transferables = new MCM_Transferable[objects.size()];
+			int i = 0;
+			MCM mcm;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				mcm = (MCM) it.next();
+				transferables[i] = (MCM_Transferable) mcm.getTransferable();
+			}
+			return transferables;
+		} catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
 		}
-		return transferables;
 	}
 
 
@@ -386,16 +427,21 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 		Log.debugMessage("CMAdministrationTransmit.transmitUsersButIdsCondition | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Set objects = this.getObjectsButIdsCondition(identifier_Transferables, condition_Transferable);
+		try {
+			Set objects = this.getObjectsButIdsCondition(identifier_Transferables, condition_Transferable);
 
-		User_Transferable[] transferables = new User_Transferable[objects.size()];
-		int i = 0;
-		User user;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			user = (User) it.next();
-			transferables[i] = (User_Transferable) user.getTransferable();
+			User_Transferable[] transferables = new User_Transferable[objects.size()];
+			int i = 0;
+			User user;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				user = (User) it.next();
+				transferables[i] = (User_Transferable) user.getTransferable();
+			}
+			return transferables;
+		} catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
 		}
-		return transferables;
 	}
 
 	public Domain_Transferable[] transmitDomainsButIdsCondition(Identifier_Transferable[] identifier_Transferables,
@@ -405,16 +451,21 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 		Log.debugMessage("CMAdministrationTransmit.transmitDomainsButIdsCondition | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Set objects = this.getObjectsButIdsCondition(identifier_Transferables, condition_Transferable);
+		try {
+			Set objects = this.getObjectsButIdsCondition(identifier_Transferables, condition_Transferable);
 
-		Domain_Transferable[] transferables = new Domain_Transferable[objects.size()];
-		int i = 0;
-		Domain domain;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			domain = (Domain) it.next();
-			transferables[i] = (Domain_Transferable) domain.getTransferable();
+			Domain_Transferable[] transferables = new Domain_Transferable[objects.size()];
+			int i = 0;
+			Domain domain;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				domain = (Domain) it.next();
+				transferables[i] = (Domain_Transferable) domain.getTransferable();
+			}
+			return transferables;
+		} catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
 		}
-		return transferables;
 	}
 
 	public Server_Transferable[] transmitServersButIdsCondition(Identifier_Transferable[] identifier_Transferables,
@@ -424,16 +475,21 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 		Log.debugMessage("CMAdministrationTransmit.transmitServersButIdsCondition | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Set objects = this.getObjectsButIdsCondition(identifier_Transferables, condition_Transferable);
+		try {
+			Set objects = this.getObjectsButIdsCondition(identifier_Transferables, condition_Transferable);
 
-		Server_Transferable[] transferables = new Server_Transferable[objects.size()];
-		int i = 0;
-		Server server;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			server = (Server) it.next();
-			transferables[i] = (Server_Transferable) server.getTransferable();
+			Server_Transferable[] transferables = new Server_Transferable[objects.size()];
+			int i = 0;
+			Server server;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				server = (Server) it.next();
+				transferables[i] = (Server_Transferable) server.getTransferable();
+			}
+			return transferables;
+		} catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
 		}
-		return transferables;
 	}
 
 	public MCM_Transferable[] transmitMCMsButIdsCondition(Identifier_Transferable[] identifier_Transferables,
@@ -443,16 +499,21 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 		Log.debugMessage("CMAdministrationTransmit.transmitMCMsButIdsCondition | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Set objects = this.getObjectsButIdsCondition(identifier_Transferables, condition_Transferable);
+		try {
+			Set objects = this.getObjectsButIdsCondition(identifier_Transferables, condition_Transferable);
 
-		MCM_Transferable[] transferables = new MCM_Transferable[objects.size()];
-		int i = 0;
-		MCM mcm;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			mcm = (MCM) it.next();
-			transferables[i] = (MCM_Transferable) mcm.getTransferable();
+			MCM_Transferable[] transferables = new MCM_Transferable[objects.size()];
+			int i = 0;
+			MCM mcm;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				mcm = (MCM) it.next();
+				transferables[i] = (MCM_Transferable) mcm.getTransferable();
+			}
+			return transferables;
+		} catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
 		}
-		return transferables;
 	}
 
 

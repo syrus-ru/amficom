@@ -1,5 +1,5 @@
 /*
- * $Id: CMMeasurementTransmit.java,v 1.20 2005/04/13 17:03:08 arseniy Exp $
+ * $Id: CMMeasurementTransmit.java,v 1.21 2005/04/14 07:31:53 bob Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -62,8 +62,8 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/04/13 17:03:08 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.21 $, $Date: 2005/04/14 07:31:53 $
+ * @author $Author: bob $
  * @module cmserver_v1
  */
 public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
@@ -496,77 +496,105 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 	public AnalysisType_Transferable[] transmitAnalysisTypes(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
-		Log.debugMessage("CMMeasurementTransmit.transmitAnalysisTypes | requiered " + identifier_Transferables.length
-				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+		try {
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			Log.debugMessage("CMMeasurementTransmit.transmitAnalysisTypes | requiered "
+					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
+				Log.DEBUGLEVEL07);
 
-		java.util.Set objects = this.getObjects(identifier_Transferables);
+			java.util.Set objects = this.getObjects(identifier_Transferables);
 
-		AnalysisType_Transferable[] transferables = new AnalysisType_Transferable[objects.size()];
-		int i = 0;
-		AnalysisType analysisType;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			analysisType = (AnalysisType) it.next();
-			transferables[i] = (AnalysisType_Transferable) analysisType.getTransferable();
+			AnalysisType_Transferable[] transferables = new AnalysisType_Transferable[objects.size()];
+			int i = 0;
+			AnalysisType analysisType;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				analysisType = (AnalysisType) it.next();
+				transferables[i] = (AnalysisType_Transferable) analysisType.getTransferable();
+			}
+			return transferables;
 		}
-		return transferables;
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 
 	public EvaluationType_Transferable[] transmitEvaluationTypes(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
-		Log.debugMessage("CMMeasurementTransmit.transmitEvaluationTypes | requiered " + identifier_Transferables.length
-				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+		try {
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			Log.debugMessage("CMMeasurementTransmit.transmitEvaluationTypes | requiered "
+					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
+				Log.DEBUGLEVEL07);
 
-		java.util.Set objects = this.getObjects(identifier_Transferables);
+			java.util.Set objects = this.getObjects(identifier_Transferables);
 
-		EvaluationType_Transferable[] transferables = new EvaluationType_Transferable[objects.size()];
-		int i = 0;
-		EvaluationType evaluationType;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			evaluationType = (EvaluationType) it.next();
-			transferables[i] = (EvaluationType_Transferable) evaluationType.getTransferable();
+			EvaluationType_Transferable[] transferables = new EvaluationType_Transferable[objects.size()];
+			int i = 0;
+			EvaluationType evaluationType;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				evaluationType = (EvaluationType) it.next();
+				transferables[i] = (EvaluationType_Transferable) evaluationType.getTransferable();
+			}
+			return transferables;
 		}
-		return transferables;
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 
 	public MeasurementType_Transferable[] transmitMeasurementTypes(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
-		Log.debugMessage("CMMeasurementTransmit.transmitMeasurementTypes | requiered " + identifier_Transferables.length
-				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+		try {
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			Log.debugMessage("CMMeasurementTransmit.transmitMeasurementTypes | requiered "
+					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
+				Log.DEBUGLEVEL07);
 
-		java.util.Set objects = this.getObjects(identifier_Transferables);
+			java.util.Set objects = this.getObjects(identifier_Transferables);
 
-		MeasurementType_Transferable[] transferables = new MeasurementType_Transferable[objects.size()];
-		int i = 0;
-		MeasurementType measurementType;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			measurementType = (MeasurementType) it.next();
-			transferables[i] = (MeasurementType_Transferable) measurementType.getTransferable();
+			MeasurementType_Transferable[] transferables = new MeasurementType_Transferable[objects.size()];
+			int i = 0;
+			MeasurementType measurementType;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				measurementType = (MeasurementType) it.next();
+				transferables[i] = (MeasurementType_Transferable) measurementType.getTransferable();
+			}
+			return transferables;
 		}
-		return transferables;
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 
 	public ModelingType_Transferable[] transmitModelingTypes(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
-		Log.debugMessage("CMMeasurementTransmit.transmitModelingTypes | requiered " + identifier_Transferables.length
-				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+		try {
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			Log.debugMessage("CMMeasurementTransmit.transmitModelingTypes | requiered "
+					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
+				Log.DEBUGLEVEL07);
 
-		java.util.Set objects = this.getObjects(identifier_Transferables);
+			java.util.Set objects = this.getObjects(identifier_Transferables);
 
-		ModelingType_Transferable[] transferables = new ModelingType_Transferable[objects.size()];
-		int i = 0;
-		ModelingType modelingType;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			modelingType = (ModelingType) it.next();
-			transferables[i] = (ModelingType_Transferable) modelingType.getTransferable();
+			ModelingType_Transferable[] transferables = new ModelingType_Transferable[objects.size()];
+			int i = 0;
+			ModelingType modelingType;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				modelingType = (ModelingType) it.next();
+				transferables[i] = (ModelingType_Transferable) modelingType.getTransferable();
+			}
+			return transferables;
 		}
-		return transferables;
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 
 
@@ -577,172 +605,229 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 	public Analysis_Transferable[] transmitAnalyses(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
-		Log.debugMessage("CMMeasurementTransmit.transmitAnalyses | requiered " + identifier_Transferables.length
-				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+		try {
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			Log.debugMessage("CMMeasurementTransmit.transmitAnalyses | requiered " + identifier_Transferables.length
+					+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		java.util.Set objects = this.getObjects(identifier_Transferables);
+			java.util.Set objects = this.getObjects(identifier_Transferables);
 
-		Analysis_Transferable[] transferables = new Analysis_Transferable[objects.size()];
-		int i = 0;
-		Analysis analysis;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			analysis = (Analysis) it.next();
-			transferables[i] = (Analysis_Transferable) analysis.getTransferable();
+			Analysis_Transferable[] transferables = new Analysis_Transferable[objects.size()];
+			int i = 0;
+			Analysis analysis;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				analysis = (Analysis) it.next();
+				transferables[i] = (Analysis_Transferable) analysis.getTransferable();
+			}
+			return transferables;
 		}
-		return transferables;
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 
 	public Evaluation_Transferable[] transmitEvaluations(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
-		Log.debugMessage("CMMeasurementTransmit.transmitEvaluations | requiered " + identifier_Transferables.length
-				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+		try {
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			Log.debugMessage("CMMeasurementTransmit.transmitEvaluations | requiered " + identifier_Transferables.length
+					+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		java.util.Set objects = this.getObjects(identifier_Transferables);
+			java.util.Set objects = this.getObjects(identifier_Transferables);
 
-		Evaluation_Transferable[] transferables = new Evaluation_Transferable[objects.size()];
-		int i = 0;
-		Evaluation evaluation;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			evaluation = (Evaluation) it.next();
-			transferables[i] = (Evaluation_Transferable) evaluation.getTransferable();
+			Evaluation_Transferable[] transferables = new Evaluation_Transferable[objects.size()];
+			int i = 0;
+			Evaluation evaluation;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				evaluation = (Evaluation) it.next();
+				transferables[i] = (Evaluation_Transferable) evaluation.getTransferable();
+			}
+			return transferables;
 		}
-		return transferables;
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 
 	public Measurement_Transferable[] transmitMeasurements(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
-		Log.debugMessage("CMMeasurementTransmit.transmitMeasurements | requiered " + identifier_Transferables.length
-				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+		try {
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			Log.debugMessage("CMMeasurementTransmit.transmitMeasurements | requiered "
+					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
+				Log.DEBUGLEVEL07);
 
-		java.util.Set objects = this.getObjects(identifier_Transferables);
+			java.util.Set objects = this.getObjects(identifier_Transferables);
 
-		Measurement_Transferable[] transferables = new Measurement_Transferable[objects.size()];
-		int i = 0;
-		Measurement measurement;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			measurement = (Measurement) it.next();
-			transferables[i] = (Measurement_Transferable) measurement.getTransferable();
+			Measurement_Transferable[] transferables = new Measurement_Transferable[objects.size()];
+			int i = 0;
+			Measurement measurement;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				measurement = (Measurement) it.next();
+				transferables[i] = (Measurement_Transferable) measurement.getTransferable();
+			}
+			return transferables;
 		}
-		return transferables;
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 
 	public MeasurementSetup_Transferable[] transmitMeasurementSetups(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
-		Log.debugMessage("CMMeasurementTransmit.transmitMeasurementSetups | requiered " + identifier_Transferables.length
-				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+		try {
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			Log.debugMessage("CMMeasurementTransmit.transmitMeasurementSetups | requiered "
+					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
+				Log.DEBUGLEVEL07);
 
-		java.util.Set objects = this.getObjects(identifier_Transferables);
+			java.util.Set objects = this.getObjects(identifier_Transferables);
 
-		MeasurementSetup_Transferable[] transferables = new MeasurementSetup_Transferable[objects.size()];
-		int i = 0;
-		MeasurementSetup measurementSetup;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			measurementSetup = (MeasurementSetup) it.next();
-			transferables[i] = (MeasurementSetup_Transferable) measurementSetup.getTransferable();
+			MeasurementSetup_Transferable[] transferables = new MeasurementSetup_Transferable[objects.size()];
+			int i = 0;
+			MeasurementSetup measurementSetup;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				measurementSetup = (MeasurementSetup) it.next();
+				transferables[i] = (MeasurementSetup_Transferable) measurementSetup.getTransferable();
+			}
+			return transferables;
 		}
-		return transferables;
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 
 	public Modeling_Transferable[] transmitModelings(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
-		Log.debugMessage("CMMeasurementTransmit.transmitModelings | requiered " + identifier_Transferables.length
-				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+		try {
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			Log.debugMessage("CMMeasurementTransmit.transmitModelings | requiered " + identifier_Transferables.length
+					+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		java.util.Set objects = this.getObjects(identifier_Transferables);
+			java.util.Set objects = this.getObjects(identifier_Transferables);
 
-		Modeling_Transferable[] transferables = new Modeling_Transferable[objects.size()];
-		int i = 0;
-		Modeling modeling;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			modeling = (Modeling) it.next();
-			transferables[i] = (Modeling_Transferable) modeling.getTransferable();
+			Modeling_Transferable[] transferables = new Modeling_Transferable[objects.size()];
+			int i = 0;
+			Modeling modeling;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				modeling = (Modeling) it.next();
+				transferables[i] = (Modeling_Transferable) modeling.getTransferable();
+			}
+			return transferables;
 		}
-		return transferables;
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 
 	public Result_Transferable[] transmitResults(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
-		Log.debugMessage("CMMeasurementTransmit.transmitResults | requiered " + identifier_Transferables.length
-				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+		try {
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			Log.debugMessage("CMMeasurementTransmit.transmitResults | requiered " + identifier_Transferables.length
+					+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		java.util.Set objects = this.getObjects(identifier_Transferables);
+			java.util.Set objects = this.getObjects(identifier_Transferables);
 
-		Result_Transferable[] transferables = new Result_Transferable[objects.size()];
-		int i = 0;
-		Result result;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			result = (Result) it.next();
-			transferables[i] = (Result_Transferable) result.getTransferable();
+			Result_Transferable[] transferables = new Result_Transferable[objects.size()];
+			int i = 0;
+			Result result;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				result = (Result) it.next();
+				transferables[i] = (Result_Transferable) result.getTransferable();
+			}
+			return transferables;
 		}
-		return transferables;
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 
 	public Set_Transferable[] transmitSets(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
-		Log.debugMessage("CMMeasurementTransmit.transmitSets | requiered " + identifier_Transferables.length
-				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+		try {
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			Log.debugMessage("CMMeasurementTransmit.transmitSets | requiered " + identifier_Transferables.length
+					+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		java.util.Set objects = this.getObjects(identifier_Transferables);
+			java.util.Set objects = this.getObjects(identifier_Transferables);
 
-		Set_Transferable[] transferables = new Set_Transferable[objects.size()];
-		int i = 0;
-		Set set;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			set = (Set) it.next();
-			transferables[i] = (Set_Transferable) set.getTransferable();
+			Set_Transferable[] transferables = new Set_Transferable[objects.size()];
+			int i = 0;
+			Set set;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				set = (Set) it.next();
+				transferables[i] = (Set_Transferable) set.getTransferable();
+			}
+			return transferables;
 		}
-		return transferables;
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 
 	public TemporalPattern_Transferable[] transmitTemporalPatterns(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
-		Log.debugMessage("CMMeasurementTransmit.transmitTemporalPatterns | requiered " + identifier_Transferables.length
-				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+		try {
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			Log.debugMessage("CMMeasurementTransmit.transmitTemporalPatterns | requiered "
+					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
+				Log.DEBUGLEVEL07);
 
-		java.util.Set objects = this.getObjects(identifier_Transferables);
+			java.util.Set objects = this.getObjects(identifier_Transferables);
 
-		TemporalPattern_Transferable[] transferables = new TemporalPattern_Transferable[objects.size()];
-		int i = 0;
-		TemporalPattern temporalPattern;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			temporalPattern = (TemporalPattern) it.next();
-			transferables[i] = (TemporalPattern_Transferable) temporalPattern.getTransferable();
+			TemporalPattern_Transferable[] transferables = new TemporalPattern_Transferable[objects.size()];
+			int i = 0;
+			TemporalPattern temporalPattern;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				temporalPattern = (TemporalPattern) it.next();
+				transferables[i] = (TemporalPattern_Transferable) temporalPattern.getTransferable();
+			}
+			return transferables;
 		}
-		return transferables;
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 
 	public Test_Transferable[] transmitTests(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
-		Log.debugMessage("CMMeasurementTransmit.transmitTests | requiered " + identifier_Transferables.length
-				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+		try {
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			Log.debugMessage("CMMeasurementTransmit.transmitTests | requiered " + identifier_Transferables.length
+					+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		java.util.Set objects = this.getObjects(identifier_Transferables);
+			java.util.Set objects = this.getObjects(identifier_Transferables);
 
-		Test_Transferable[] transferables = new Test_Transferable[objects.size()];
-		int i = 0;
-		Test test;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			test = (Test) it.next();
-			transferables[i] = (Test_Transferable) test.getTransferable();
+			Test_Transferable[] transferables = new Test_Transferable[objects.size()];
+			int i = 0;
+			Test test;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				test = (Test) it.next();
+				transferables[i] = (Test_Transferable) test.getTransferable();
+			}
+			return transferables;
 		}
-		return transferables;
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 
 
@@ -768,56 +853,80 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 
 	public AnalysisType_Transferable[] transmitAnalysisTypesButIds(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
-		Log.debugMessage("CMMeasurementTransmit.transmitAnalysisTypesButIds | All, but " + identifier_Transferables.length
-				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+		try {
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			Log.debugMessage("CMMeasurementTransmit.transmitAnalysisTypesButIds | All, but "
+					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
+				Log.DEBUGLEVEL07);
 
-		java.util.Set objects = this.getObjectsButIds(identifier_Transferables, ObjectEntities.ANALYSISTYPE_ENTITY_CODE);
+			java.util.Set objects = this.getObjectsButIds(identifier_Transferables,
+				ObjectEntities.ANALYSISTYPE_ENTITY_CODE);
 
-		AnalysisType_Transferable[] transferables = new AnalysisType_Transferable[objects.size()];
-		int i = 0;
-		AnalysisType analysisType;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			analysisType = (AnalysisType) it.next();
-			transferables[i] = (AnalysisType_Transferable) analysisType.getTransferable();
+			AnalysisType_Transferable[] transferables = new AnalysisType_Transferable[objects.size()];
+			int i = 0;
+			AnalysisType analysisType;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				analysisType = (AnalysisType) it.next();
+				transferables[i] = (AnalysisType_Transferable) analysisType.getTransferable();
+			}
+			return transferables;
 		}
-		return transferables;
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 
 	public EvaluationType_Transferable[] transmitEvaluationTypesButIds(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
-		Log.debugMessage("CMMeasurementTransmit.transmitEvaluationTypesButIds | All, but " + identifier_Transferables.length
-				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+		try {
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			Log.debugMessage("CMMeasurementTransmit.transmitEvaluationTypesButIds | All, but "
+					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
+				Log.DEBUGLEVEL07);
 
-		java.util.Set objects = this.getObjectsButIds(identifier_Transferables, ObjectEntities.EVALUATIONTYPE_ENTITY_CODE);
+			java.util.Set objects = this.getObjectsButIds(identifier_Transferables,
+				ObjectEntities.EVALUATIONTYPE_ENTITY_CODE);
 
-		EvaluationType_Transferable[] transferables = new EvaluationType_Transferable[objects.size()];
-		int i = 0;
-		EvaluationType evaluationType;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			evaluationType = (EvaluationType) it.next();
-			transferables[i] = (EvaluationType_Transferable) evaluationType.getTransferable();
+			EvaluationType_Transferable[] transferables = new EvaluationType_Transferable[objects.size()];
+			int i = 0;
+			EvaluationType evaluationType;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				evaluationType = (EvaluationType) it.next();
+				transferables[i] = (EvaluationType_Transferable) evaluationType.getTransferable();
+			}
+			return transferables;
 		}
-		return transferables;
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 
 	public MeasurementType_Transferable[] transmitMeasurementTypesButIds(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
-		Log.debugMessage("CMMeasurementTransmit.transmitMeasurementTypesButIds | All, but " + identifier_Transferables.length
-				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+		try {
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			Log.debugMessage("CMMeasurementTransmit.transmitMeasurementTypesButIds | All, but "
+					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
+				Log.DEBUGLEVEL07);
 
-		java.util.Set objects = this.getObjectsButIds(identifier_Transferables, ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
+			java.util.Set objects = this.getObjectsButIds(identifier_Transferables,
+				ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
 
-		MeasurementType_Transferable[] transferables = new MeasurementType_Transferable[objects.size()];
-		int i = 0;
-		MeasurementType measurementType;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			measurementType = (MeasurementType) it.next();
-			transferables[i] = (MeasurementType_Transferable) measurementType.getTransferable();
+			MeasurementType_Transferable[] transferables = new MeasurementType_Transferable[objects.size()];
+			int i = 0;
+			MeasurementType measurementType;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				measurementType = (MeasurementType) it.next();
+				transferables[i] = (MeasurementType_Transferable) measurementType.getTransferable();
+			}
+			return transferables;
 		}
-		return transferables;
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 
 
@@ -827,164 +936,230 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 
 	public Analysis_Transferable[] transmitAnalysesButIds(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
-		Log.debugMessage("CMMeasurementTransmit.transmitAnalysesButIds | All, but " + identifier_Transferables.length
-				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+		try {
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			Log.debugMessage("CMMeasurementTransmit.transmitAnalysesButIds | All, but "
+					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
+				Log.DEBUGLEVEL07);
 
-		java.util.Set objects = this.getObjectsButIds(identifier_Transferables, ObjectEntities.ANALYSIS_ENTITY_CODE);
+			java.util.Set objects = this
+					.getObjectsButIds(identifier_Transferables, ObjectEntities.ANALYSIS_ENTITY_CODE);
 
-		Analysis_Transferable[] transferables = new Analysis_Transferable[objects.size()];
-		int i = 0;
-		Analysis analysis;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			analysis = (Analysis) it.next();
-			transferables[i] = (Analysis_Transferable) analysis.getTransferable();
+			Analysis_Transferable[] transferables = new Analysis_Transferable[objects.size()];
+			int i = 0;
+			Analysis analysis;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				analysis = (Analysis) it.next();
+				transferables[i] = (Analysis_Transferable) analysis.getTransferable();
+			}
+			return transferables;
 		}
-		return transferables;
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 
 	public Evaluation_Transferable[] transmitEvaluationsButIds(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
-		Log.debugMessage("CMMeasurementTransmit.transmitEvaluationsButIds | All, but " + identifier_Transferables.length
-				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+		try {
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			Log.debugMessage("CMMeasurementTransmit.transmitEvaluationsButIds | All, but "
+					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
+				Log.DEBUGLEVEL07);
 
-		java.util.Set objects = this.getObjectsButIds(identifier_Transferables, ObjectEntities.EVALUATION_ENTITY_CODE);
+			java.util.Set objects = this.getObjectsButIds(identifier_Transferables,
+				ObjectEntities.EVALUATION_ENTITY_CODE);
 
-		Evaluation_Transferable[] transferables = new Evaluation_Transferable[objects.size()];
-		int i = 0;
-		Evaluation evaluation;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			evaluation = (Evaluation) it.next();
-			transferables[i] = (Evaluation_Transferable) evaluation.getTransferable();
+			Evaluation_Transferable[] transferables = new Evaluation_Transferable[objects.size()];
+			int i = 0;
+			Evaluation evaluation;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				evaluation = (Evaluation) it.next();
+				transferables[i] = (Evaluation_Transferable) evaluation.getTransferable();
+			}
+			return transferables;
 		}
-		return transferables;
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 
 	public Measurement_Transferable[] transmitMeasurementsButIds(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
-		Log.debugMessage("CMMeasurementTransmit.transmitMeasurementsButIds | All, but " + identifier_Transferables.length
-				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+		try {
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			Log.debugMessage("CMMeasurementTransmit.transmitMeasurementsButIds | All, but "
+					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
+				Log.DEBUGLEVEL07);
 
-		java.util.Set objects = this.getObjectsButIds(identifier_Transferables, ObjectEntities.MEASUREMENT_ENTITY_CODE);
+			java.util.Set objects = this.getObjectsButIds(identifier_Transferables,
+				ObjectEntities.MEASUREMENT_ENTITY_CODE);
 
-		Measurement_Transferable[] transferables = new Measurement_Transferable[objects.size()];
-		int i = 0;
-		Measurement measurement;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			measurement = (Measurement) it.next();
-			transferables[i] = (Measurement_Transferable) measurement.getTransferable();
+			Measurement_Transferable[] transferables = new Measurement_Transferable[objects.size()];
+			int i = 0;
+			Measurement measurement;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				measurement = (Measurement) it.next();
+				transferables[i] = (Measurement_Transferable) measurement.getTransferable();
+			}
+			return transferables;
 		}
-		return transferables;
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 
 	public Modeling_Transferable[] transmitModelingsButIds(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
-		Log.debugMessage("CMMeasurementTransmit.transmitModelingsButIds | All, but " + identifier_Transferables.length
-				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+		try {
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			Log.debugMessage("CMMeasurementTransmit.transmitModelingsButIds | All, but "
+					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
+				Log.DEBUGLEVEL07);
 
-		java.util.Set objects = this.getObjectsButIds(identifier_Transferables, ObjectEntities.MODELING_ENTITY_CODE);
+			java.util.Set objects = this
+					.getObjectsButIds(identifier_Transferables, ObjectEntities.MODELING_ENTITY_CODE);
 
-		Modeling_Transferable[] transferables = new Modeling_Transferable[objects.size()];
-		int i = 0;
-		Modeling modeling;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			modeling = (Modeling) it.next();
-			transferables[i] = (Modeling_Transferable) modeling.getTransferable();
+			Modeling_Transferable[] transferables = new Modeling_Transferable[objects.size()];
+			int i = 0;
+			Modeling modeling;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				modeling = (Modeling) it.next();
+				transferables[i] = (Modeling_Transferable) modeling.getTransferable();
+			}
+			return transferables;
 		}
-		return transferables;
+			catch (Throwable t) {
+				Log.errorException(t);
+				throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+			}
 	}
 
 	public MeasurementSetup_Transferable[] transmitMeasurementSetupsButIds(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
-		Log.debugMessage("CMMeasurementTransmit.transmitMeasurementSetupsButIds | All, but " + identifier_Transferables.length
-				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+		try {
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			Log.debugMessage("CMMeasurementTransmit.transmitMeasurementSetupsButIds | All, but "
+					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
+				Log.DEBUGLEVEL07);
 
-		java.util.Set objects = this.getObjectsButIds(identifier_Transferables, ObjectEntities.MS_ENTITY_CODE);
+			java.util.Set objects = this.getObjectsButIds(identifier_Transferables, ObjectEntities.MS_ENTITY_CODE);
 
-		MeasurementSetup_Transferable[] transferables = new MeasurementSetup_Transferable[objects.size()];
-		int i = 0;
-		MeasurementSetup measurementSetup;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			measurementSetup = (MeasurementSetup) it.next();
-			transferables[i] = (MeasurementSetup_Transferable) measurementSetup.getTransferable();
+			MeasurementSetup_Transferable[] transferables = new MeasurementSetup_Transferable[objects.size()];
+			int i = 0;
+			MeasurementSetup measurementSetup;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				measurementSetup = (MeasurementSetup) it.next();
+				transferables[i] = (MeasurementSetup_Transferable) measurementSetup.getTransferable();
+			}
+			return transferables;
 		}
-		return transferables;
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 
 	public Result_Transferable[] transmitResultsButIds(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
-		Log.debugMessage("CMMeasurementTransmit.transmitResultsButIds | All, but " + identifier_Transferables.length
-				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+		try {
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			Log.debugMessage("CMMeasurementTransmit.transmitResultsButIds | All, but "
+					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
+				Log.DEBUGLEVEL07);
 
-		java.util.Set objects = this.getObjectsButIds(identifier_Transferables, ObjectEntities.RESULT_ENTITY_CODE);
+			java.util.Set objects = this.getObjectsButIds(identifier_Transferables, ObjectEntities.RESULT_ENTITY_CODE);
 
-		Result_Transferable[] transferables = new Result_Transferable[objects.size()];
-		int i = 0;
-		Result result;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			result = (Result) it.next();
-			transferables[i] = (Result_Transferable) result.getTransferable();
+			Result_Transferable[] transferables = new Result_Transferable[objects.size()];
+			int i = 0;
+			Result result;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				result = (Result) it.next();
+				transferables[i] = (Result_Transferable) result.getTransferable();
+			}
+			return transferables;
 		}
-		return transferables;
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 
 	public Set_Transferable[] transmitSetsButIds(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
-		Log.debugMessage("CMMeasurementTransmit.transmitSetsButIds | All, but " + identifier_Transferables.length
-				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+		try {
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			Log.debugMessage("CMMeasurementTransmit.transmitSetsButIds | All, but " + identifier_Transferables.length
+					+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		java.util.Set objects = this.getObjectsButIds(identifier_Transferables, ObjectEntities.SET_ENTITY_CODE);
+			java.util.Set objects = this.getObjectsButIds(identifier_Transferables, ObjectEntities.SET_ENTITY_CODE);
 
-		Set_Transferable[] transferables = new Set_Transferable[objects.size()];
-		int i = 0;
-		Set set;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			set = (Set) it.next();
-			transferables[i] = (Set_Transferable) set.getTransferable();
+			Set_Transferable[] transferables = new Set_Transferable[objects.size()];
+			int i = 0;
+			Set set;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				set = (Set) it.next();
+				transferables[i] = (Set_Transferable) set.getTransferable();
+			}
+			return transferables;
 		}
-		return transferables;
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 
 	public TemporalPattern_Transferable[] transmitTemporalPatternsButIds(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
-		Log.debugMessage("CMMeasurementTransmit.transmitTemporalPatternsButIds | All, but " + identifier_Transferables.length
-				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+		try {
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			Log.debugMessage("CMMeasurementTransmit.transmitTemporalPatternsButIds | All, but "
+					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
+				Log.DEBUGLEVEL07);
 
-		java.util.Set objects = this.getObjectsButIds(identifier_Transferables, ObjectEntities.TEMPORALPATTERN_ENTITY_CODE);
+			java.util.Set objects = this.getObjectsButIds(identifier_Transferables,
+				ObjectEntities.TEMPORALPATTERN_ENTITY_CODE);
 
-		TemporalPattern_Transferable[] transferables = new TemporalPattern_Transferable[objects.size()];
-		int i = 0;
-		TemporalPattern temporalPattern;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			temporalPattern = (TemporalPattern) it.next();
-			transferables[i] = (TemporalPattern_Transferable) temporalPattern.getTransferable();
+			TemporalPattern_Transferable[] transferables = new TemporalPattern_Transferable[objects.size()];
+			int i = 0;
+			TemporalPattern temporalPattern;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				temporalPattern = (TemporalPattern) it.next();
+				transferables[i] = (TemporalPattern_Transferable) temporalPattern.getTransferable();
+			}
+			return transferables;
 		}
-		return transferables;
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 
 	public Test_Transferable[] transmitTestsButIds(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
-		Log.debugMessage("CMMeasurementTransmit.transmitTestsButIds | All, but " + identifier_Transferables.length
-				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+		try {
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			Log.debugMessage("CMMeasurementTransmit.transmitTestsButIds | All, but " + identifier_Transferables.length
+					+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		java.util.Set objects = this.getObjectsButIds(identifier_Transferables, ObjectEntities.TEST_ENTITY_CODE);
+			java.util.Set objects = this.getObjectsButIds(identifier_Transferables, ObjectEntities.TEST_ENTITY_CODE);
 
-		Test_Transferable[] transferables = new Test_Transferable[objects.size()];
-		int i = 0;
-		Test test;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			test = (Test) it.next();
-			transferables[i] = (Test_Transferable) test.getTransferable();
+			Test_Transferable[] transferables = new Test_Transferable[objects.size()];
+			int i = 0;
+			Test test;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				test = (Test) it.next();
+				transferables[i] = (Test_Transferable) test.getTransferable();
+			}
+			return transferables;
 		}
-		return transferables;
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 
 
@@ -1013,77 +1188,105 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 	public AnalysisType_Transferable[] transmitAnalysisTypesButIdsCondition(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier,
 			StorableObjectCondition_Transferable condition_Transferable) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
-		Log.debugMessage("CMMeasurementTransmit.transmitAnalysisTypesButIdsCondition | All, but " + identifier_Transferables.length
-				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+		try {
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			Log.debugMessage("CMMeasurementTransmit.transmitAnalysisTypesButIdsCondition | All, but "
+					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
+				Log.DEBUGLEVEL07);
 
-		java.util.Set objects = this.getObjectsButIdsCondition(identifier_Transferables, condition_Transferable);
+			java.util.Set objects = this.getObjectsButIdsCondition(identifier_Transferables, condition_Transferable);
 
-		AnalysisType_Transferable[] transferables = new AnalysisType_Transferable[objects.size()];
-		int i = 0;
-		AnalysisType analysisType;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			analysisType = (AnalysisType) it.next();
-			transferables[i] = (AnalysisType_Transferable) analysisType.getTransferable();
+			AnalysisType_Transferable[] transferables = new AnalysisType_Transferable[objects.size()];
+			int i = 0;
+			AnalysisType analysisType;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				analysisType = (AnalysisType) it.next();
+				transferables[i] = (AnalysisType_Transferable) analysisType.getTransferable();
+			}
+			return transferables;
 		}
-		return transferables;
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 
 	public EvaluationType_Transferable[] transmitEvaluationTypesButIdsCondition(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier,
 			StorableObjectCondition_Transferable condition_Transferable) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
-		Log.debugMessage("CMMeasurementTransmit.transmitEvaluationTypesButIdsCondition | All, but " + identifier_Transferables.length
-				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+		try {
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			Log.debugMessage("CMMeasurementTransmit.transmitEvaluationTypesButIdsCondition | All, but "
+					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
+				Log.DEBUGLEVEL07);
 
-		java.util.Set objects = this.getObjectsButIdsCondition(identifier_Transferables, condition_Transferable);
+			java.util.Set objects = this.getObjectsButIdsCondition(identifier_Transferables, condition_Transferable);
 
-		EvaluationType_Transferable[] transferables = new EvaluationType_Transferable[objects.size()];
-		int i = 0;
-		EvaluationType evaluationType;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			evaluationType = (EvaluationType) it.next();
-			transferables[i] = (EvaluationType_Transferable) evaluationType.getTransferable();
+			EvaluationType_Transferable[] transferables = new EvaluationType_Transferable[objects.size()];
+			int i = 0;
+			EvaluationType evaluationType;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				evaluationType = (EvaluationType) it.next();
+				transferables[i] = (EvaluationType_Transferable) evaluationType.getTransferable();
+			}
+			return transferables;
 		}
-		return transferables;
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 
 	public MeasurementType_Transferable[] transmitMeasurementTypesButIdsCondition(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier,
 			StorableObjectCondition_Transferable condition_Transferable) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
-		Log.debugMessage("CMMeasurementTransmit.transmitMeasurementTypesButIdsCondition | All, but " + identifier_Transferables.length
-				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+		try {
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			Log.debugMessage("CMMeasurementTransmit.transmitMeasurementTypesButIdsCondition | All, but "
+					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
+				Log.DEBUGLEVEL07);
 
-		java.util.Set objects = this.getObjectsButIdsCondition(identifier_Transferables, condition_Transferable);
+			java.util.Set objects = this.getObjectsButIdsCondition(identifier_Transferables, condition_Transferable);
 
-		MeasurementType_Transferable[] transferables = new MeasurementType_Transferable[objects.size()];
-		int i = 0;
-		MeasurementType measurementType;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			measurementType = (MeasurementType) it.next();
-			transferables[i] = (MeasurementType_Transferable) measurementType.getTransferable();
+			MeasurementType_Transferable[] transferables = new MeasurementType_Transferable[objects.size()];
+			int i = 0;
+			MeasurementType measurementType;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				measurementType = (MeasurementType) it.next();
+				transferables[i] = (MeasurementType_Transferable) measurementType.getTransferable();
+			}
+			return transferables;
 		}
-		return transferables;
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 
 	public ModelingType_Transferable[] transmitModelingTypesButIdsCondition(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier,
 			StorableObjectCondition_Transferable condition_Transferable) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
-		Log.debugMessage("CMMeasurementTransmit.transmitModelingTypesButIdsCondition | All, but " + identifier_Transferables.length
-				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+		try {
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			Log.debugMessage("CMMeasurementTransmit.transmitModelingTypesButIdsCondition | All, but "
+					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
+				Log.DEBUGLEVEL07);
 
-		java.util.Set objects = this.getObjectsButIdsCondition(identifier_Transferables, condition_Transferable);
+			java.util.Set objects = this.getObjectsButIdsCondition(identifier_Transferables, condition_Transferable);
 
-		ModelingType_Transferable[] transferables = new ModelingType_Transferable[objects.size()];
-		int i = 0;
-		ModelingType modelingType;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			modelingType = (ModelingType) it.next();
-			transferables[i] = (ModelingType_Transferable) modelingType.getTransferable();
+			ModelingType_Transferable[] transferables = new ModelingType_Transferable[objects.size()];
+			int i = 0;
+			ModelingType modelingType;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				modelingType = (ModelingType) it.next();
+				transferables[i] = (ModelingType_Transferable) modelingType.getTransferable();
+			}
+			return transferables;
 		}
-		return transferables;
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 
 
@@ -1093,153 +1296,209 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 	public Analysis_Transferable[] transmitAnalysesButIdsCondition(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier,
 			StorableObjectCondition_Transferable condition_Transferable) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
-		Log.debugMessage("CMMeasurementTransmit.transmitAnalysesButIdsCondition | All, but " + identifier_Transferables.length
-				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+		try {
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			Log.debugMessage("CMMeasurementTransmit.transmitAnalysesButIdsCondition | All, but "
+					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
+				Log.DEBUGLEVEL07);
 
-		java.util.Set objects = this.getObjectsButIdsCondition(identifier_Transferables, condition_Transferable);
+			java.util.Set objects = this.getObjectsButIdsCondition(identifier_Transferables, condition_Transferable);
 
-		Analysis_Transferable[] transferables = new Analysis_Transferable[objects.size()];
-		int i = 0;
-		Analysis analysis;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			analysis = (Analysis) it.next();
-			transferables[i] = (Analysis_Transferable) analysis.getTransferable();
+			Analysis_Transferable[] transferables = new Analysis_Transferable[objects.size()];
+			int i = 0;
+			Analysis analysis;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				analysis = (Analysis) it.next();
+				transferables[i] = (Analysis_Transferable) analysis.getTransferable();
+			}
+			return transferables;
 		}
-		return transferables;
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 
 	public Evaluation_Transferable[] transmitEvaluationsButIdsCondition(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier,
 			StorableObjectCondition_Transferable condition_Transferable) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
-		Log.debugMessage("CMMeasurementTransmit.transmitEvaluationsButIdsCondition | All, but " + identifier_Transferables.length
-				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+		try {
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			Log.debugMessage("CMMeasurementTransmit.transmitEvaluationsButIdsCondition | All, but "
+					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
+				Log.DEBUGLEVEL07);
 
-		java.util.Set objects = this.getObjectsButIdsCondition(identifier_Transferables, condition_Transferable);
+			java.util.Set objects = this.getObjectsButIdsCondition(identifier_Transferables, condition_Transferable);
 
-		Evaluation_Transferable[] transferables = new Evaluation_Transferable[objects.size()];
-		int i = 0;
-		Evaluation evaluation;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			evaluation = (Evaluation) it.next();
-			transferables[i] = (Evaluation_Transferable) evaluation.getTransferable();
+			Evaluation_Transferable[] transferables = new Evaluation_Transferable[objects.size()];
+			int i = 0;
+			Evaluation evaluation;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				evaluation = (Evaluation) it.next();
+				transferables[i] = (Evaluation_Transferable) evaluation.getTransferable();
+			}
+			return transferables;
 		}
-		return transferables;
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 
 	public Modeling_Transferable[] transmitModelingsButIdsCondition(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier,
 			StorableObjectCondition_Transferable condition_Transferable) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
-		Log.debugMessage("CMMeasurementTransmit.transmitModelingsButIdsCondition | All, but " + identifier_Transferables.length
-				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+		try {
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			Log.debugMessage("CMMeasurementTransmit.transmitModelingsButIdsCondition | All, but "
+					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
+				Log.DEBUGLEVEL07);
 
-		java.util.Set objects = this.getObjectsButIdsCondition(identifier_Transferables, condition_Transferable);
+			java.util.Set objects = this.getObjectsButIdsCondition(identifier_Transferables, condition_Transferable);
 
-		Modeling_Transferable[] transferables = new Modeling_Transferable[objects.size()];
-		int i = 0;
-		Modeling modeling;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			modeling = (Modeling) it.next();
-			transferables[i] = (Modeling_Transferable) modeling.getTransferable();
+			Modeling_Transferable[] transferables = new Modeling_Transferable[objects.size()];
+			int i = 0;
+			Modeling modeling;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				modeling = (Modeling) it.next();
+				transferables[i] = (Modeling_Transferable) modeling.getTransferable();
+			}
+			return transferables;
 		}
-		return transferables;
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 
 	public Measurement_Transferable[] transmitMeasurementsButIdsCondition(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier,
 			StorableObjectCondition_Transferable condition_Transferable) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
-		Log.debugMessage("CMMeasurementTransmit.transmitMeasurementsButIdsCondition | All, but " + identifier_Transferables.length
-				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+		try {
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			Log.debugMessage("CMMeasurementTransmit.transmitMeasurementsButIdsCondition | All, but "
+					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
+				Log.DEBUGLEVEL07);
 
-		java.util.Set objects = this.getObjectsButIdsCondition(identifier_Transferables, condition_Transferable);
+			java.util.Set objects = this.getObjectsButIdsCondition(identifier_Transferables, condition_Transferable);
 
-		Measurement_Transferable[] transferables = new Measurement_Transferable[objects.size()];
-		int i = 0;
-		Measurement measurement;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			measurement = (Measurement) it.next();
-			transferables[i] = (Measurement_Transferable) measurement.getTransferable();
+			Measurement_Transferable[] transferables = new Measurement_Transferable[objects.size()];
+			int i = 0;
+			Measurement measurement;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				measurement = (Measurement) it.next();
+				transferables[i] = (Measurement_Transferable) measurement.getTransferable();
+			}
+			return transferables;
 		}
-		return transferables;
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 
 	public MeasurementSetup_Transferable[] transmitMeasurementSetupsButIdsCondition(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier,
 			StorableObjectCondition_Transferable condition_Transferable) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
-		Log.debugMessage("CMMeasurementTransmit.transmitMeasurementSetupsButIdsCondition | All, but " + identifier_Transferables.length
-				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+		try {
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			Log.debugMessage("CMMeasurementTransmit.transmitMeasurementSetupsButIdsCondition | All, but "
+					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
+				Log.DEBUGLEVEL07);
 
-		java.util.Set objects = this.getObjectsButIdsCondition(identifier_Transferables, condition_Transferable);
+			java.util.Set objects = this.getObjectsButIdsCondition(identifier_Transferables, condition_Transferable);
 
-		MeasurementSetup_Transferable[] transferables = new MeasurementSetup_Transferable[objects.size()];
-		int i = 0;
-		MeasurementSetup measurementSetup;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			measurementSetup = (MeasurementSetup) it.next();
-			transferables[i] = (MeasurementSetup_Transferable) measurementSetup.getTransferable();
+			MeasurementSetup_Transferable[] transferables = new MeasurementSetup_Transferable[objects.size()];
+			int i = 0;
+			MeasurementSetup measurementSetup;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				measurementSetup = (MeasurementSetup) it.next();
+				transferables[i] = (MeasurementSetup_Transferable) measurementSetup.getTransferable();
+			}
+			return transferables;
 		}
-		return transferables;
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 
 	public Result_Transferable[] transmitResultsButIdsCondition(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier,
 			StorableObjectCondition_Transferable condition_Transferable) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
-		Log.debugMessage("CMMeasurementTransmit.transmitResultsButIdsCondition | All, but " + identifier_Transferables.length
-				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+		try {
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			Log.debugMessage("CMMeasurementTransmit.transmitResultsButIdsCondition | All, but "
+					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
+				Log.DEBUGLEVEL07);
 
-		java.util.Set objects = this.getObjectsButIdsCondition(identifier_Transferables, condition_Transferable);
+			java.util.Set objects = this.getObjectsButIdsCondition(identifier_Transferables, condition_Transferable);
 
-		Result_Transferable[] transferables = new Result_Transferable[objects.size()];
-		int i = 0;
-		Result result;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			result = (Result) it.next();
-			transferables[i] = (Result_Transferable) result.getTransferable();
+			Result_Transferable[] transferables = new Result_Transferable[objects.size()];
+			int i = 0;
+			Result result;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				result = (Result) it.next();
+				transferables[i] = (Result_Transferable) result.getTransferable();
+			}
+			return transferables;
 		}
-		return transferables;
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 
 	public Set_Transferable[] transmitSetsButIdsCondition(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier,
 			StorableObjectCondition_Transferable condition_Transferable) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
-		Log.debugMessage("CMMeasurementTransmit.transmitSetsButIdsCondition | All, but " + identifier_Transferables.length
-				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+		try {
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			Log.debugMessage("CMMeasurementTransmit.transmitSetsButIdsCondition | All, but "
+					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
+				Log.DEBUGLEVEL07);
 
-		java.util.Set objects = this.getObjectsButIdsCondition(identifier_Transferables, condition_Transferable);
+			java.util.Set objects = this.getObjectsButIdsCondition(identifier_Transferables, condition_Transferable);
 
-		Set_Transferable[] transferables = new Set_Transferable[objects.size()];
-		int i = 0;
-		Set set;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			set = (Set) it.next();
-			transferables[i] = (Set_Transferable) set.getTransferable();
+			Set_Transferable[] transferables = new Set_Transferable[objects.size()];
+			int i = 0;
+			Set set;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				set = (Set) it.next();
+				transferables[i] = (Set_Transferable) set.getTransferable();
+			}
+			return transferables;
 		}
-		return transferables;
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 
 	public Test_Transferable[] transmitTestsButIdsCondition(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier,
 			StorableObjectCondition_Transferable condition_Transferable) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
-		Log.debugMessage("CMMeasurementTransmit.transmitTestsButIdsCondition | All, but " + identifier_Transferables.length
-				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+		try {
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			Log.debugMessage("CMMeasurementTransmit.transmitTestsButIdsCondition | All, but "
+					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
+				Log.DEBUGLEVEL07);
 
-		java.util.Set objects = this.getObjectsButIdsCondition(identifier_Transferables, condition_Transferable);
+			java.util.Set objects = this.getObjectsButIdsCondition(identifier_Transferables, condition_Transferable);
 
-		Test_Transferable[] transferables = new Test_Transferable[objects.size()];
-		int i = 0;
-		Test test;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			test = (Test) it.next();
-			transferables[i] = (Test_Transferable) test.getTransferable();
+			Test_Transferable[] transferables = new Test_Transferable[objects.size()];
+			int i = 0;
+			Test test;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				test = (Test) it.next();
+				transferables[i] = (Test_Transferable) test.getTransferable();
+			}
+			return transferables;
 		}
-		return transferables;
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 
 	private java.util.Set getObjectsButIdsCondition(Identifier_Transferable[] identifier_Transferables,
