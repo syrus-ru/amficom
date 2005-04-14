@@ -66,8 +66,8 @@ import com.syrus.AMFICOM.measurement.corba.SetSort;
 import com.syrus.util.ByteArray;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/04/12 06:52:55 $
- * @author $Author: bob $
+ * @version $Revision: 1.20 $, $Date: 2005/04/14 11:22:45 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
  */
