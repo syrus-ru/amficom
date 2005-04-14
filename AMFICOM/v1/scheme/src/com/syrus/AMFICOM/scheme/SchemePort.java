@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePort.java,v 1.11 2005/04/13 19:34:11 arseniy Exp $
+ * $Id: SchemePort.java,v 1.12 2005/04/14 11:15:52 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,8 +31,8 @@ import org.omg.CORBA.portable.IDLEntity;
 /**
  * #08 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.11 $, $Date: 2005/04/13 19:34:11 $
+ * @author $Author: bass $
+ * @version $Revision: 1.12 $, $Date: 2005/04/14 11:15:52 $
  * @module scheme_v1
  */
 public final class SchemePort extends AbstractSchemePort {
@@ -83,21 +83,21 @@ public final class SchemePort extends AbstractSchemePort {
 		}
 	}
 
-	public static SchemePort createInstance(final Identifier creatorId) throws CreateObjectException {
+	public static SchemePort createInstance(final Identifier creatorId)
+			throws CreateObjectException {
 		assert creatorId != null;
 		try {
-			final Date created1 = new Date();
-			final SchemePort schemePort = new SchemePort(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SCHEME_PORT_ENTITY_CODE),
-					created1,
-					created1,
-					creatorId,
-					creatorId,
+			final Date created = new Date();
+			final SchemePort schemePort = new SchemePort(
+					IdentifierPool
+							.getGeneratedIdentifier(ObjectEntities.SCHEME_PORT_ENTITY_CODE),
+					created, created, creatorId, creatorId,
 					0L);
 			schemePort.changed = true;
 			return schemePort;
-		}
-		catch (final IllegalObjectEntityException ioee) {
-			throw new CreateObjectException("SchemePort.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
+		} catch (final IllegalObjectEntityException ioee) {
+			throw new CreateObjectException(
+					"SchemePort.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
 		}
 	}
 
@@ -117,14 +117,14 @@ public final class SchemePort extends AbstractSchemePort {
 	}
 
 	/**
-	 * @see Characterizable#getCharacteristicSort()
+	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicSort()
 	 */
 	public CharacteristicSort getCharacteristicSort() {
 		return CharacteristicSort.CHARACTERISTIC_SORT_SCHEMEPORT;
 	}
 
 	/**
-	 * @see StorableObject#getDependencies()
+	 * @see com.syrus.AMFICOM.general.StorableObject#getDependencies()
 	 */
 	public Set getDependencies() {
 		throw new UnsupportedOperationException();
@@ -148,7 +148,7 @@ public final class SchemePort extends AbstractSchemePort {
 	}
 
 	/**
-	 * @see TransferableObject#getTransferable()
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
 	 */
 	public IDLEntity getTransferable() {
 		throw new UnsupportedOperationException();

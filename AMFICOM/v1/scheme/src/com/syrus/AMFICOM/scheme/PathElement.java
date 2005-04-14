@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.13 2005/04/13 19:34:10 arseniy Exp $
+ * $Id: PathElement.java,v 1.14 2005/04/14 11:15:52 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,8 +23,8 @@ import org.omg.CORBA.portable.IDLEntity;
  * its {@link PathElement#getName() getName()} method actually returns
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.13 $, $Date: 2005/04/13 19:34:10 $
+ * @author $Author: bass $
+ * @version $Revision: 1.14 $, $Date: 2005/04/14 11:15:52 $
  * @module scheme_v1
  */
 public final class PathElement extends AbstractCloneableStorableObject implements Describable, Comparable {
@@ -102,29 +102,21 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 		fromTransferable(transferable);
 	}
 
-	/**
-	 * @deprecated Use {@link #createInstance(Identifier, PathElementKind)} instead.
-	 */
-	public static PathElement createInstance() {
-		throw new UnsupportedOperationException();
-	}
-
 	public static PathElement createInstance(final Identifier creatorId, final PathElementKind pathElementKind)
 			throws CreateObjectException {
 		assert creatorId != null;
 		try {
-			final Date created1 = new Date();
-			final PathElement pathElement = new PathElement(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PATH_ELEMENT_ENTITY_CODE),
-					created1,
-					created1,
-					creatorId,
-					creatorId,
+			final Date created = new Date();
+			final PathElement pathElement = new PathElement(
+					IdentifierPool
+							.getGeneratedIdentifier(ObjectEntities.PATH_ELEMENT_ENTITY_CODE),
+					created, created, creatorId, creatorId,
 					0L);
 			pathElement.changed = true;
 			return pathElement;
-		}
-		catch (final IllegalObjectEntityException ioee) {
-			throw new CreateObjectException("PathElement.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
+		} catch (final IllegalObjectEntityException ioee) {
+			throw new CreateObjectException(
+					"PathElement.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
 		}
 	}
 
@@ -183,7 +175,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 		if (this.pathElementKind.value() != PathElementKind._SCHEME_ELEMENT)
 			throw new UnsupportedOperationException(ErrorMessages.OBJECT_STATE_ILLEGAL);
 		assert this.endAbstractSchemePortId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert !this.endAbstractSchemePortId.equals(Identifier.VOID_IDENTIFIER): ErrorMessages.OBJECT_BADLY_INITIALIZED;
+		assert !this.endAbstractSchemePortId.isVoid(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
 		try {
 			return (AbstractSchemePort) SchemeStorableObjectPool.getStorableObject(this.endAbstractSchemePortId, true);
 		} catch (final ApplicationException ae) {
@@ -223,7 +215,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 		if (this.pathElementKind.value() != PathElementKind._SCHEME_CABLE_LINK)
 			throw new UnsupportedOperationException(ErrorMessages.OBJECT_STATE_ILLEGAL);
 		assert this.schemeCableThreadId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert !this.schemeCableThreadId.equals(Identifier.VOID_IDENTIFIER): ErrorMessages.OBJECT_BADLY_INITIALIZED;
+		assert !this.schemeCableThreadId.isVoid(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
 		try {
 			return (SchemeCableThread) SchemeStorableObjectPool.getStorableObject(this.schemeCableThreadId, true);
 		} catch (final ApplicationException ae) {
@@ -246,7 +238,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 		if (this.pathElementKind.value() != PathElementKind._SCHEME_LINK)
 			throw new UnsupportedOperationException(ErrorMessages.OBJECT_STATE_ILLEGAL);
 		assert this.schemeLinkId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert !this.schemeLinkId.equals(Identifier.VOID_IDENTIFIER): ErrorMessages.OBJECT_BADLY_INITIALIZED;
+		assert !this.schemeLinkId.isVoid(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
 		try {
 			return (SchemeLink) SchemeStorableObjectPool.getStorableObject(this.schemeLinkId, true);
 		} catch (final ApplicationException ae) {
@@ -267,7 +259,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 		if (this.pathElementKind.value() != PathElementKind._SCHEME_ELEMENT)
 			throw new UnsupportedOperationException(ErrorMessages.OBJECT_STATE_ILLEGAL);
 		assert this.startAbstractSchemePortId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert !this.startAbstractSchemePortId.equals(Identifier.VOID_IDENTIFIER): ErrorMessages.OBJECT_BADLY_INITIALIZED;
+		assert !this.startAbstractSchemePortId.isVoid(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
 		try {
 			return (AbstractSchemePort) SchemeStorableObjectPool.getStorableObject(this.startAbstractSchemePortId, true);
 		} catch (final ApplicationException ae) {
@@ -319,7 +311,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 		 * (scheme ports and scheme cable ports will have NO parent
 		 * device).
 		 */
-		assert (this.startAbstractSchemePortId.equals(Identifier.VOID_IDENTIFIER)) 
+		assert (this.startAbstractSchemePortId.isVoid()) 
 				|| getStartAbstractSchemePort().getParentSchemeDevice()
 				== endAbstractSchemePort.getParentSchemeDevice(): ErrorMessages.NO_COMMON_PARENT;
 		final Identifier newEndAbstractSchemePortId = endAbstractSchemePort.getId();
@@ -395,7 +387,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 		 * (scheme ports and scheme cable ports will have NO parent
 		 * device).
 		 */
-		assert (this.endAbstractSchemePortId.equals(Identifier.VOID_IDENTIFIER)) 
+		assert (this.endAbstractSchemePortId.isVoid()) 
 				|| getEndAbstractSchemePort().getParentSchemeDevice()
 				== startAbstractSchemePort.getParentSchemeDevice(): ErrorMessages.NO_COMMON_PARENT;
 		final Identifier newStartAbstractSchemePortId = startAbstractSchemePort.getId();
@@ -415,7 +407,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 	}
 
 	/*-********************************************************************
-	 * Non-model methods.                                                 *
+	 * Non-model members.                                                 *
 	 **********************************************************************/
 
 	boolean hasOpticalPort() {

@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.10 2005/04/13 19:34:10 arseniy Exp $
+ * $Id: AbstractSchemePort.java,v 1.11 2005/04/14 11:15:52 bass Exp $
  * 
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,10 +7,6 @@
  */
 
 package com.syrus.AMFICOM.scheme;
-
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.configuration.MeasurementPortType;
@@ -24,13 +20,17 @@ import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
 
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * This class is never used directly, it was provided just in order for source
  * generated from IDL files to compile cleanly. Use other implementations of
  * {@link AbstractSchemePort}instead.
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.10 $, $Date: 2005/04/13 19:34:10 $
+ * @author $Author: bass $
+ * @version $Revision: 1.11 $, $Date: 2005/04/14 11:15:52 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemePort extends
@@ -105,7 +105,7 @@ public abstract class AbstractSchemePort extends
 	}
 
 	/**
-	 * @see StorableObject#getDependencies()
+	 * @see com.syrus.AMFICOM.general.StorableObject#getDependencies()
 	 */
 	public Set getDependencies() {
 		throw new UnsupportedOperationException();
@@ -128,7 +128,7 @@ public abstract class AbstractSchemePort extends
 	}
 
 	/**
-	 * @see Namable#getName()
+	 * @see com.syrus.AMFICOM.general.Namable#getName()
 	 */
 	public final String getName() {
 		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
@@ -172,7 +172,7 @@ public abstract class AbstractSchemePort extends
 	public final void setDescription(final String description) {
 		assert this.description != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
 		assert description != null : ErrorMessages.NON_NULL_EXPECTED;
-		if (description.equals(this.description))
+		if (this.description.equals(description))
 			return;
 		this.description = description;
 		this.changed = true;
@@ -187,12 +187,12 @@ public abstract class AbstractSchemePort extends
 	}
 
 	/**
-	 * @see Namable#setName(String)
+	 * @see com.syrus.AMFICOM.general.Namable#setName(String)
 	 */
 	public final void setName(final String name) {
 		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
 		assert name != null && name.length() != 0 : ErrorMessages.NON_EMPTY_EXPECTED;
-		if (name.equals(this.name))
+		if (this.name.equals(name))
 			return;
 		this.name = name;
 		this.changed = true;

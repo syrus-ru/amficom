@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.13 2005/04/13 19:34:10 arseniy Exp $
+ * $Id: SchemeCableThread.java,v 1.14 2005/04/14 11:15:52 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,8 +20,8 @@ import org.omg.CORBA.portable.IDLEntity;
 /**
  * #12 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.13 $, $Date: 2005/04/13 19:34:10 $
+ * @author $Author: bass $
+ * @version $Revision: 1.14 $, $Date: 2005/04/14 11:15:52 $
  * @module scheme_v1
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
@@ -86,28 +86,22 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		fromTransferable(transferable);
 	}
 
-	/**
-	 * @deprecated Use {@link #createInstance(Identifier)}instead.
-	 */
-	public static SchemeCableThread createInstance() {
-		throw new UnsupportedOperationException();
-	}
-
-	public static SchemeCableThread createInstance(final Identifier creatorId) throws CreateObjectException {
+	public static SchemeCableThread createInstance(
+			final Identifier creatorId)
+			throws CreateObjectException {
 		assert creatorId != null;
 		try {
-			final Date created1 = new Date();
-			final SchemeCableThread schemeCableThread = new SchemeCableThread(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SCHEME_CABLE_THREAD_ENTITY_CODE),
-					created1,
-					created1,
-					creatorId,
-					creatorId,
+			final Date created = new Date();
+			final SchemeCableThread schemeCableThread = new SchemeCableThread(
+					IdentifierPool
+							.getGeneratedIdentifier(ObjectEntities.SCHEME_CABLE_THREAD_ENTITY_CODE),
+					created, created, creatorId, creatorId,
 					0L);
 			schemeCableThread.changed = true;
 			return schemeCableThread;
-		}
-		catch (final IllegalObjectEntityException ioee) {
-			throw new CreateObjectException("SchemeCableThread.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
+		} catch (final IllegalObjectEntityException ioee) {
+			throw new CreateObjectException(
+					"SchemeCableThread.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
 		}
 	}
 
@@ -250,7 +244,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	public void setDescription(final String description) {
 		assert this.description != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
 		assert description != null : ErrorMessages.NON_NULL_EXPECTED;
-		if (description.equals(this.description))
+		if (this.description.equals(description))
 			return;
 		this.description = description;
 		this.changed = true;
@@ -266,7 +260,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	public void setName(final String name) {
 		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
 		assert name != null && name.length() != 0 : ErrorMessages.NON_EMPTY_EXPECTED;
-		if (name.equals(this.name))
+		if (this.name.equals(name))
 			return;
 		this.name = name;
 		this.changed = true;

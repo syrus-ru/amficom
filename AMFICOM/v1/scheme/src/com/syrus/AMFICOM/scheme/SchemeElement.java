@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.13 2005/04/13 19:34:10 arseniy Exp $
+ * $Id: SchemeElement.java,v 1.14 2005/04/14 11:15:52 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,8 +40,8 @@ import org.omg.CORBA.portable.IDLEntity;
 /**
  * #04 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.13 $, $Date: 2005/04/13 19:34:10 $
+ * @author $Author: bass $
+ * @version $Revision: 1.14 $, $Date: 2005/04/14 11:15:52 $
  * @module scheme_v1
  */
 public final class SchemeElement extends AbstractSchemeElement implements
@@ -55,6 +55,8 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	private Identifier kisId;
 
 	private String label;
+
+	private Identifier parentSchemeElementId;
 
 	/**
 	 * Takes non-null value at pack time.
@@ -115,27 +117,26 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		}
 	}
 
-	public static SchemeElement createInstance(final Identifier creatorId) throws CreateObjectException {
+	public static SchemeElement createInstance(final Identifier creatorId)
+			throws CreateObjectException {
 		assert creatorId != null;
 		try {
-			final Date created1 = new Date();
-			final SchemeElement schemeElement = new SchemeElement(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE),
-					created1,
-					created1,
-					creatorId,
-					creatorId,
+			final Date created = new Date();
+			final SchemeElement schemeElement = new SchemeElement(
+					IdentifierPool
+							.getGeneratedIdentifier(ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE),
+					created, created, creatorId, creatorId,
 					0L);
 			schemeElement.changed = true;
 			return schemeElement;
-		}
-		catch (final IllegalObjectEntityException ioee) {
-			throw new CreateObjectException("SchemeElement.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
+		} catch (final IllegalObjectEntityException ioee) {
+			throw new CreateObjectException(
+					"SchemeElement.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
 		}
 	}
 
 	/**
-	 * @param scheme
-	 *          cannot be <code>null</code>.
+	 * @param scheme cannot be <code>null</code>.
 	 */
 	public void addScheme(final Scheme scheme) {
 		assert scheme != null: ErrorMessages.NON_NULL_EXPECTED;
@@ -178,20 +179,42 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	}
 
 	/**
-	 * @see Characterizable#getCharacteristicSort()
+	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicSort()
 	 */
 	public CharacteristicSort getCharacteristicSort() {
 		return CharacteristicSort.CHARACTERISTIC_SORT_SCHEMEELEMENT;
 	}
 
 	/**
-	 * @see StorableObject#getDependencies()
+	 * @see com.syrus.AMFICOM.general.StorableObject#getDependencies()
 	 */
 	public Set getDependencies() {
-		throw new UnsupportedOperationException();
+		assert this.equipmentId != null && this.equipmentTypeId != null
+				&& this.kisId != null
+				&& this.parentSchemeElementId != null
+				&& this.schemeCellId != null
+				&& this.siteId != null && this.symbolId != null
+				&& this.ugoCellId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		final Set dependencies = new HashSet();
+		dependencies.addAll(super.getDependencies());
+		dependencies.add(this.equipmentId);
+		dependencies.add(this.equipmentTypeId);
+		dependencies.add(this.kisId);
+		dependencies.add(this.parentSchemeElementId);
+		dependencies.add(this.schemeCellId);
+		dependencies.add(this.siteId);
+		dependencies.add(this.symbolId);
+		dependencies.add(this.ugoCellId);
+		dependencies.remove(null);
+		dependencies.remove(Identifier.VOID_IDENTIFIER);
+		return Collections.unmodifiableSet(dependencies);
 	}
 
 	public Equipment getEquipment() {
+		assert this.equipmentId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		if (this.equipmentId.isVoid()) {
+//			assert this.equipmentTypeId.equals(clone())
+		}
 		throw new UnsupportedOperationException();
 	}
 
@@ -290,7 +313,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	}
 
 	/**
-	 * @see TransferableObject#getTransferable()
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
 	 */
 	public IDLEntity getTransferable() {
 		throw new UnsupportedOperationException();
@@ -436,14 +459,14 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	/**
 	 * @param transferable
 	 * @throws ApplicationException
-	 * @see StorableObject#fromTransferable(IDLEntity)
+	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IDLEntity)
 	 */
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
 	/*-********************************************************************
-	 * Non-model methods.                                                 *
+	 * Non-model members.                                                 *
 	 **********************************************************************/
 
 	public Set getSchemeCablePorts() {

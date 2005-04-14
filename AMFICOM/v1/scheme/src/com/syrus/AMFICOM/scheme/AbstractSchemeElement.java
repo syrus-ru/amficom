@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractSchemeElement.java,v 1.8 2005/04/08 09:26:11 bass Exp $
+ * $Id: AbstractSchemeElement.java,v 1.9 2005/04/14 11:15:52 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.scheme;
 
 import com.syrus.AMFICOM.general.*;
+
 import java.util.*;
 
 /**
@@ -17,18 +18,13 @@ import java.util.*;
  * {@link AbstractSchemeElement}instead.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/04/08 09:26:11 $
+ * @version $Revision: 1.9 $, $Date: 2005/04/14 11:15:52 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemeElement extends
 		AbstractCloneableStorableObject implements Describable,
 		Characterizable {
 	static final long serialVersionUID = 4644766113809681630L;
-
-	/**
-	 * @todo Check whether this attribute is necessary.
-	 */
-	private transient boolean alarmed;
 
 	private Set characteristics;
 
@@ -88,6 +84,18 @@ public abstract class AbstractSchemeElement extends
 	}
 
 	/**
+	 * @see StorableObject#getDependencies()
+	 */
+	public Set getDependencies() {
+		assert this.parentSchemeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		final Set dependencies = new HashSet();
+		dependencies.add(this.parentSchemeId);
+		dependencies.remove(null);
+		dependencies.remove(Identifier.VOID_IDENTIFIER);
+		return Collections.unmodifiableSet(dependencies);
+	}
+
+	/**
 	 * @see Describable#getDescription()
 	 */
 	public final String getDescription() {
@@ -114,13 +122,6 @@ public abstract class AbstractSchemeElement extends
 	}
 
 	/**
-	 * Transient attribute
-	 */
-	public final boolean isAlarmed() {
-		return this.alarmed;
-	}
-
-	/**
 	 * @param characteristic
 	 * @see Characterizable#removeCharacteristic(Characteristic)
 	 */
@@ -129,13 +130,6 @@ public abstract class AbstractSchemeElement extends
 		assert getCharacteristics().contains(characteristic): ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		this.characteristics.remove(characteristic);
 		this.changed = true;
-	}
-
-	/**
-	 * Transient attribute
-	 */
-	public final void setAlarmed(boolean alarmed) {
-		this.alarmed = alarmed;
 	}
 
 	/**
@@ -163,7 +157,7 @@ public abstract class AbstractSchemeElement extends
 	public final void setDescription(final String description) {
 		assert this.description != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
 		assert description != null : ErrorMessages.NON_NULL_EXPECTED;
-		if (description.equals(this.description))
+		if (this.description.equals(description))
 			return;
 		this.description = description;
 		this.changed = true;
@@ -175,7 +169,7 @@ public abstract class AbstractSchemeElement extends
 	public final void setName(final String name) {
 		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
 		assert name != null && name.length() != 0 : ErrorMessages.NON_EMPTY_EXPECTED;
-		if (name.equals(this.name))
+		if (this.name.equals(name))
 			return;
 		this.name = name;
 		this.changed = true;
@@ -189,5 +183,28 @@ public abstract class AbstractSchemeElement extends
 	 */
 	public final void setParentScheme(final Scheme parentScheme) {
 		throw new UnsupportedOperationException();
+	}
+
+	/*-********************************************************************
+	 * Non-model members.                                                 *
+	 **********************************************************************/
+
+	/**
+	 * @todo Check whether this attribute is necessary.
+	 */
+	private transient boolean alarmed;
+
+	/**
+	 * Transient attribute
+	 */
+	public final boolean isAlarmed() {
+		return this.alarmed;
+	}
+
+	/**
+	 * Transient attribute
+	 */
+	public final void setAlarmed(boolean alarmed) {
+		this.alarmed = alarmed;
 	}
 }

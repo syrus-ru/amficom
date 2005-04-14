@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePort.java,v 1.12 2005/04/13 21:19:49 arseniy Exp $
+ * $Id: SchemeCablePort.java,v 1.13 2005/04/14 11:15:51 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,11 +7,6 @@
  */
 
 package com.syrus.AMFICOM.scheme;
-
-import java.util.Date;
-import java.util.Set;
-
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.configuration.Port;
 import com.syrus.AMFICOM.configuration.corba.PortSort;
@@ -28,11 +23,16 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.scheme.corba.SchemeCablePort_Transferable;
 
+import java.util.Date;
+import java.util.Set;
+
+import org.omg.CORBA.portable.IDLEntity;
+
 /**
  * #09 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.12 $, $Date: 2005/04/13 21:19:49 $
+ * @author $Author: bass $
+ * @version $Revision: 1.13 $, $Date: 2005/04/14 11:15:51 $
  * @module scheme_v1
  */
 public final class SchemeCablePort extends AbstractSchemePort {
@@ -83,21 +83,22 @@ public final class SchemeCablePort extends AbstractSchemePort {
 		}
 	}
 
-	public static SchemeCablePort createInstance(final Identifier creatorId) throws CreateObjectException {
+	public static SchemeCablePort createInstance(
+			final Identifier creatorId)
+			throws ApplicationException {
 		assert creatorId != null;
 		try {
-			final Date created1 = new Date();
-			final SchemeCablePort schemeCablePort = new SchemeCablePort(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SCHEME_CABLE_PORT_ENTITY_CODE),
-					created1,
-					created1,
-					creatorId,
-					creatorId,
+			final Date created = new Date();
+			final SchemeCablePort schemeCablePort = new SchemeCablePort(
+					IdentifierPool
+							.getGeneratedIdentifier(ObjectEntities.SCHEME_CABLE_PORT_ENTITY_CODE),
+					created, created, creatorId, creatorId,
 					0L);
 			schemeCablePort.changed = true;
 			return schemeCablePort;
-		}
-		catch (final IllegalObjectEntityException ioee) {
-			throw new CreateObjectException("SchemeCablePort.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
+		} catch (final IllegalObjectEntityException ioee) {
+			throw new ApplicationException(
+					"SchemeCablePort.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
 		}
 	}
 
@@ -118,14 +119,14 @@ public final class SchemeCablePort extends AbstractSchemePort {
 	}
 
 	/**
-	 * @see Characterizable#getCharacteristicSort()
+	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicSort()
 	 */
 	public CharacteristicSort getCharacteristicSort() {
 		return CharacteristicSort.CHARACTERISTIC_SORT_SCHEMECABLEPORT;
 	}
 
 	/**
-	 * @see StorableObject#getDependencies()
+	 * @see com.syrus.AMFICOM.general.StorableObject#getDependencies()
 	 */
 	public Set getDependencies() {
 		throw new UnsupportedOperationException();
@@ -145,7 +146,7 @@ public final class SchemeCablePort extends AbstractSchemePort {
 	}
 
 	/**
-	 * @see TransferableObject#getTransferable()
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
 	 */
 	public IDLEntity getTransferable() {
 		throw new UnsupportedOperationException();
@@ -163,7 +164,7 @@ public final class SchemeCablePort extends AbstractSchemePort {
 	/**
 	 * @param transferable
 	 * @throws ApplicationException
-	 * @see StorableObject#fromTransferable(IDLEntity)
+	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IDLEntity)
 	 */
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		throw new UnsupportedOperationException();

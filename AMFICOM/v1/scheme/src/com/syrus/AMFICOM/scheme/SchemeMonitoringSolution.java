@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.12 2005/04/13 19:34:10 arseniy Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.13 2005/04/14 11:15:52 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,11 +7,6 @@
  */
 
 package com.syrus.AMFICOM.scheme;
-
-import java.util.Date;
-import java.util.Set;
-
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -26,11 +21,16 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.scheme.corba.SchemeMonitoringSolution_Transferable;
 
+import java.util.Date;
+import java.util.Set;
+
+import org.omg.CORBA.portable.IDLEntity;
+
 /**
  * #06 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.12 $, $Date: 2005/04/13 19:34:10 $
+ * @author $Author: bass $
+ * @version $Revision: 1.13 $, $Date: 2005/04/14 11:15:52 $
  * @module scheme_v1
  */
 public final class SchemeMonitoringSolution extends
@@ -86,21 +86,22 @@ public final class SchemeMonitoringSolution extends
 		fromTransferable(transferable);
 	}
 
-	public static SchemeMonitoringSolution createInstance(final Identifier creatorId) throws CreateObjectException {
+	public static SchemeMonitoringSolution createInstance(
+			final Identifier creatorId)
+			throws CreateObjectException {
 		assert creatorId != null;
 		try {
-			final Date created1 = new Date();
-			final SchemeMonitoringSolution schemeMonitoringSolution = new SchemeMonitoringSolution(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SCHEME_MONITORING_SOLUTION_ENTITY_CODE),
-					created1,
-					created1,
-					creatorId,
-					creatorId,
+			final Date created = new Date();
+			final SchemeMonitoringSolution schemeMonitoringSolution = new SchemeMonitoringSolution(
+					IdentifierPool
+							.getGeneratedIdentifier(ObjectEntities.SCHEME_MONITORING_SOLUTION_ENTITY_CODE),
+					created, created, creatorId, creatorId,
 					0L);
 			schemeMonitoringSolution.changed = true;
 			return schemeMonitoringSolution;
-		}
-		catch (final IllegalObjectEntityException ioee) {
-			throw new CreateObjectException("SchemeMonitoringSolution.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
+		} catch (final IllegalObjectEntityException ioee) {
+			throw new CreateObjectException(
+					"SchemeMonitoringSolution.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
 		}
 	}
 
@@ -118,7 +119,7 @@ public final class SchemeMonitoringSolution extends
 	}
 
 	/**
-	 * @see StorableObject#getDependencies()
+	 * @see com.syrus.AMFICOM.general.StorableObject#getDependencies()
 	 */
 	public Set getDependencies() {
 		throw new UnsupportedOperationException();
@@ -133,7 +134,7 @@ public final class SchemeMonitoringSolution extends
 	}
 
 	/**
-	 * @see Namable#getName()
+	 * @see com.syrus.AMFICOM.general.Namable#getName()
 	 */
 	public String getName() {
 		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
@@ -153,14 +154,7 @@ public final class SchemeMonitoringSolution extends
 	}
 
 	/**
-	 * @deprecated
-	 */
-	public SchemePath[] getSchemePathsAsArray() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see TransferableObject#getTransferable()
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
 	 */
 	public IDLEntity getTransferable() {
 		throw new UnsupportedOperationException();
@@ -176,19 +170,19 @@ public final class SchemeMonitoringSolution extends
 	public void setDescription(final String description) {
 		assert this.description != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
 		assert description != null : ErrorMessages.NON_NULL_EXPECTED;
-		if (description.equals(this.description))
+		if (this.description.equals(description))
 			return;
 		this.description = description;
 		this.changed = true;
 	}
 
 	/**
-	 * @see Namable#setName(String)
+	 * @see com.syrus.AMFICOM.general.Namable#setName(String)
 	 */
 	public void setName(final String name) {
 		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
 		assert name != null && name.length() != 0 : ErrorMessages.NON_EMPTY_EXPECTED;
-		if (name.equals(this.name))
+		if (this.name.equals(name))
 			return;
 		this.name = name;
 		this.changed = true;
@@ -207,16 +201,9 @@ public final class SchemeMonitoringSolution extends
 	}
 
 	/**
-	 * @deprecated
-	 */
-	public void setSchemePathsAsArray(final SchemePath schemePaths[]) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
 	 * @param transferable
 	 * @throws CreateObjectException
-	 * @see StorableObject#fromTransferable(IDLEntity)
+	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IDLEntity)
 	 */
 	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
 		throw new UnsupportedOperationException();

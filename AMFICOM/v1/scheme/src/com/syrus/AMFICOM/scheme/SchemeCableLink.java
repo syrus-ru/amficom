@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.11 2005/04/13 19:34:10 arseniy Exp $
+ * $Id: SchemeCableLink.java,v 1.12 2005/04/14 11:15:52 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,8 +20,8 @@ import org.omg.CORBA.portable.IDLEntity;
 /**
  * #11 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.11 $, $Date: 2005/04/13 19:34:10 $
+ * @author $Author: bass $
+ * @version $Revision: 1.12 $, $Date: 2005/04/14 11:15:52 $
  * @module scheme_v1
  */
 public final class SchemeCableLink extends AbstractSchemeLink {
@@ -68,28 +68,21 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 		fromTransferable(transferable);
 	}
 
-	/**
-	 * @deprecated Use {@link #createInstance(Identifier)}instead.
-	 */
-	public static SchemeCableLink createInstance() {
-		throw new UnsupportedOperationException();
-	}
-
-	public static SchemeCableLink createInstance(final Identifier creatorId) throws CreateObjectException {
+	public static SchemeCableLink createInstance(final Identifier creatorId)
+			throws CreateObjectException {
 		assert creatorId != null;
 		try {
-			final Date created1 = new Date();
-			final SchemeCableLink schemeCableLink = new SchemeCableLink(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE),
-					created1,
-					created1,
-					creatorId,
-					creatorId,
+			final Date created = new Date();
+			final SchemeCableLink schemeCableLink = new SchemeCableLink(
+					IdentifierPool
+							.getGeneratedIdentifier(ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE),
+					created, created, creatorId, creatorId,
 					0L);
 			schemeCableLink.changed = true;
 			return schemeCableLink;
-		}
-		catch (final IllegalObjectEntityException ioee) {
-			throw new CreateObjectException("SchemeCableLink.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
+		} catch (final IllegalObjectEntityException ioee) {
+			throw new CreateObjectException(
+					"SchemeCableLink.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
 		}
 	}
 
@@ -121,13 +114,6 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 		throw new UnsupportedOperationException();
 	}
 
-	/**
-	 * @deprecated
-	 */
-	public CableChannelingItem[] getCableChannelingItemsAsArray() {
-		throw new UnsupportedOperationException();
-	}
-
 	public CableLinkType getCableLinkType() {
 		throw new UnsupportedOperationException();
 	}
@@ -156,13 +142,6 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	}
 
 	public Set getSchemeCableThreads() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public SchemeCableThread[] getSchemeCableThreadsAsArray() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -215,13 +194,6 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 		throw new UnsupportedOperationException();
 	}
 
-	/**
-	 * @deprecated
-	 */
-	public void setCableChannelingItemsAsArray(final CableChannelingItem cableChannelingItems[]) {
-		throw new UnsupportedOperationException();
-	}
-
 	public void setCableLinkType(final CableLinkType cableLinkType) {
 		throw new UnsupportedOperationException();
 	}
@@ -236,13 +208,6 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	}
 
 	public void setSchemeCableThreads(final Set schemeCableThreads) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public void setSchemeCableThreadsAsArray(final SchemeCableThread schemeCableThreads[]) {
 		throw new UnsupportedOperationException();
 	}
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.11 2005/04/13 19:34:10 arseniy Exp $
+ * $Id: SchemeDevice.java,v 1.12 2005/04/14 11:15:52 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,8 +37,8 @@ import org.omg.CORBA.portable.IDLEntity;
 /**
  * #07 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.11 $, $Date: 2005/04/13 19:34:10 $
+ * @author $Author: bass $
+ * @version $Revision: 1.12 $, $Date: 2005/04/14 11:15:52 $
  * @module scheme_v1
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -101,21 +101,21 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 		}
 	}
 	
-	public static SchemeDevice createInstance(final Identifier creatorId) throws CreateObjectException {
+	public static SchemeDevice createInstance(final Identifier creatorId)
+			throws CreateObjectException {
 		assert creatorId != null;
 		try {
-			final Date created1 = new Date();
-			final SchemeDevice schemeDevice = new SchemeDevice(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SCHEME_DEVICE_ENTITY_CODE),
-					created1,
-					created1,
-					creatorId,
-					creatorId,
+			final Date created = new Date();
+			final SchemeDevice schemeDevice = new SchemeDevice(
+					IdentifierPool
+							.getGeneratedIdentifier(ObjectEntities.SCHEME_DEVICE_ENTITY_CODE),
+					created, created, creatorId, creatorId,
 					0L);
 			schemeDevice.changed = true;
 			return schemeDevice;
-		}
-		catch (final IllegalObjectEntityException ioee) {
-			throw new CreateObjectException("SchemeDevice.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
+		} catch (final IllegalObjectEntityException ioee) {
+			throw new CreateObjectException(
+					"SchemeDevice.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
 		}
 	}
 
@@ -166,7 +166,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * @see StorableObject#getDependencies()
+	 * @see com.syrus.AMFICOM.general.StorableObject#getDependencies()
 	 */
 	public Set getDependencies() {
 		throw new UnsupportedOperationException();
@@ -181,7 +181,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * @see Namable#getName()
+	 * @see com.syrus.AMFICOM.general.Namable#getName()
 	 */
 	public String getName() {
 		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
@@ -281,19 +281,19 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	public void setDescription(final String description) {
 		assert this.description != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
 		assert description != null : ErrorMessages.NON_NULL_EXPECTED;
-		if (description.equals(this.description))
+		if (this.description.equals(description))
 			return;
 		this.description = description;
 		this.changed = true;
 	}
 
 	/**
-	 * @see Namable#setName(String)
+	 * @see com.syrus.AMFICOM.general.Namable#setName(String)
 	 */
 	public void setName(final String name) {
 		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
 		assert name != null && name.length() != 0 : ErrorMessages.NON_EMPTY_EXPECTED;
-		if (name.equals(this.name))
+		if (this.name.equals(name))
 			return;
 		this.name = name;
 		this.changed = true;
@@ -318,7 +318,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	/**
 	 * @param transferable
 	 * @throws ApplicationException
-	 * @see StorableObject#fromTransferable(IDLEntity)
+	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IDLEntity)
 	 */
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		throw new UnsupportedOperationException();

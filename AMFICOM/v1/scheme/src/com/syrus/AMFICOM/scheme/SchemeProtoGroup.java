@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.15 2005/04/13 19:34:11 arseniy Exp $
+ * $Id: SchemeProtoGroup.java,v 1.16 2005/04/14 11:15:52 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,8 +44,8 @@ import org.omg.CORBA.portable.IDLEntity;
 /**
  * #01 in hierarchy.
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.15 $, $Date: 2005/04/13 19:34:11 $
+ * @author $Author: bass $
+ * @version $Revision: 1.16 $, $Date: 2005/04/14 11:15:52 $
  * @module scheme_v1
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation. 
  */
@@ -103,14 +103,8 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 		super(id, created, modified, creatorId, modifierId, version);
 		this.name = name;
 		this.description = description;
-		this.symbolId
-				= symbol == null
-				? Identifier.VOID_IDENTIFIER
-				: symbol.getId();
-		this.parentSchemeProtoGroupId
-				= parentSchemeProtoGroup == null
-				? Identifier.VOID_IDENTIFIER
-				: parentSchemeProtoGroup.id;
+		this.symbolId = Identifier.possiblyVoid(symbol);
+		this.parentSchemeProtoGroupId = Identifier.possiblyVoid(parentSchemeProtoGroup);
 
 		this.schemeProtoGroupDatabase = SchemeDatabaseContext.getSchemeProtoGroupDatabase();
 	}
@@ -136,32 +130,29 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	 * @param parentSchemeProtoGroup may be <code>null</code> (for a top-level group).
 	 * @throws CreateObjectException
 	 */
-	public static SchemeProtoGroup createInstance(final Identifier creatorId,
-			final String name,
+	public static SchemeProtoGroup createInstance(
+			final Identifier creatorId, final String name,
 			final String description,
 			final BitmapImageResource symbol,
-			final SchemeProtoGroup parentSchemeProtoGroup) throws CreateObjectException {
-		assert creatorId != null && !creatorId.equals(Identifier.VOID_IDENTIFIER) : ErrorMessages.NON_VOID_EXPECTED;
-		assert name != null && name.length() != 0 : ErrorMessages.NON_EMPTY_EXPECTED;
-		assert description != null : ErrorMessages.NON_NULL_EXPECTED;
-
+			final SchemeProtoGroup parentSchemeProtoGroup)
+			throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid(): ErrorMessages.NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
+		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
+		
 		try {
-			final Date created1 = new Date();
-			final SchemeProtoGroup schemeProtoGroup = new SchemeProtoGroup(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE),
-					created1,
-					created1,
-					creatorId,
-					creatorId,
-					0L,
-					name,
-					description,
-					symbol,
+			final Date created = new Date();
+			final SchemeProtoGroup schemeProtoGroup = new SchemeProtoGroup(
+					IdentifierPool
+							.getGeneratedIdentifier(ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE),
+					created, created, creatorId, creatorId,
+					0L, name, description, symbol,
 					parentSchemeProtoGroup);
 			schemeProtoGroup.changed = true;
 			return schemeProtoGroup;
-		}
-		catch (final IllegalObjectEntityException ioee) {
-			throw new CreateObjectException("SchemeProtoGroup.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
+		} catch (final IllegalObjectEntityException ioee) {
+			throw new CreateObjectException(
+					"SchemeProtoGroup.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
 		}
 	}
 
@@ -279,24 +270,16 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * @see StorableObject#getDependencies()
+	 * @see com.syrus.AMFICOM.general.StorableObject#getDependencies()
 	 */
 	public Set getDependencies() {
 		assert this.symbolId != null
-				&& this.parentSchemeProtoGroupId != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
-		if (this.symbolId.equals(Identifier.VOID_IDENTIFIER)) {
-			if (this.parentSchemeProtoGroupId
-					.equals(Identifier.VOID_IDENTIFIER))
-				return Collections.EMPTY_SET;
-			return Collections
-					.singleton(this.parentSchemeProtoGroupId);
-		}
-		if (this.parentSchemeProtoGroupId
-				.equals(Identifier.VOID_IDENTIFIER))
-			return Collections.singleton(this.symbolId);
-		final Set dependencies = new HashSet(2);
+				&& this.parentSchemeProtoGroupId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		final Set dependencies = new HashSet();
 		dependencies.add(this.symbolId);
 		dependencies.add(this.parentSchemeProtoGroupId);
+		dependencies.remove(null);
+		dependencies.remove(Identifier.VOID_IDENTIFIER);
 		return Collections.unmodifiableSet(dependencies);
 	}
 
@@ -316,7 +299,7 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * @see Namable#getName()
+	 * @see com.syrus.AMFICOM.general.Namable#getName()
 	 */
 	public String getName() {
 		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
@@ -346,7 +329,7 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	public SchemeProtoGroup getParentSchemeProtoGroup() {
 		assert this.parentSchemeProtoGroupId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
 
-		if (this.parentSchemeProtoGroupId.equals(Identifier.VOID_IDENTIFIER))
+		if (this.parentSchemeProtoGroupId.isVoid())
 			return null;
 
 		try {
@@ -386,7 +369,7 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	 */
 	public BitmapImageResource getSymbol() {
 		assert this.symbolId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		if (this.symbolId.equals(Identifier.VOID_IDENTIFIER))
+		if (this.symbolId.isVoid())
 			return null;
 		try {
 			return (BitmapImageResource) ResourceStorableObjectPool
@@ -398,7 +381,7 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * @see TransferableObject#getTransferable()
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
 	 */
 	public IDLEntity getTransferable() {
 		return new SchemeProtoGroup_Transferable(
@@ -499,7 +482,7 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * @see Namable#setName(String)
+	 * @see com.syrus.AMFICOM.general.Namable#setName(String)
 	 */
 	public void setName(final String name) {
 		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
@@ -533,11 +516,7 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	 */
 	public void setParentSchemeProtoGroup(final SchemeProtoGroup parentSchemeProtoGroup) {
 		assert parentSchemeProtoGroup != this: ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
-		Identifier newParentSchemeProtoGroupId;
-		if (parentSchemeProtoGroup == null)
-			newParentSchemeProtoGroupId = Identifier.VOID_IDENTIFIER;
-		else
-			newParentSchemeProtoGroupId = parentSchemeProtoGroup.id;
+		final Identifier newParentSchemeProtoGroupId = Identifier.possiblyVoid(parentSchemeProtoGroup);
 		if (this.parentSchemeProtoGroupId.equals(newParentSchemeProtoGroupId))
 			return;
 		this.parentSchemeProtoGroupId = newParentSchemeProtoGroupId;
@@ -595,11 +574,7 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	 * @see SchemeSymbolContainer#setSymbol(BitmapImageResource)
 	 */
 	public void setSymbol(final BitmapImageResource symbol) {
-		Identifier newSymbolId;
-		if (symbol == null)
-			newSymbolId = Identifier.VOID_IDENTIFIER;
-		else
-			newSymbolId = symbol.getId();
+		final Identifier newSymbolId = Identifier.possiblyVoid(symbol);
 		if (this.symbolId.equals(newSymbolId))
 			return;
 		this.symbolId = newSymbolId;
@@ -609,7 +584,7 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	/**
 	 * @param transferable
 	 * @throws ApplicationException 
-	 * @see StorableObject#fromTransferable(IDLEntity)
+	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IDLEntity)
 	 */
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		final SchemeProtoGroup_Transferable schemeProtoGroup = (SchemeProtoGroup_Transferable) transferable;

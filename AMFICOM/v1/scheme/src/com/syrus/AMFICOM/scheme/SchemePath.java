@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.13 2005/04/13 19:34:10 arseniy Exp $
+ * $Id: SchemePath.java,v 1.14 2005/04/14 11:15:51 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,14 +7,6 @@
  */
 
 package com.syrus.AMFICOM.scheme;
-
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.SortedSet;
-
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.configuration.TransmissionPath;
 import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
@@ -34,11 +26,19 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.scheme.corba.PathElementKind;
 import com.syrus.AMFICOM.scheme.corba.SchemePath_Transferable;
 
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.SortedSet;
+
+import org.omg.CORBA.portable.IDLEntity;
+
 /**
  * #14 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.13 $, $Date: 2005/04/13 19:34:10 $
+ * @author $Author: bass $
+ * @version $Revision: 1.14 $, $Date: 2005/04/14 11:15:51 $
  * @module scheme_v1
  */
 public final class SchemePath extends AbstractCloneableStorableObject implements
@@ -101,28 +101,21 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 		fromTransferable(transferable);
 	}
 
-	/**
-	 * @deprecated Use {@link #createInstance(Identifier)}instead.
-	 */
-	public static SchemePath createInstance() {
-		throw new UnsupportedOperationException();
-	}
-
-	public static SchemePath createInstance(final Identifier creatorId) throws CreateObjectException {
+	public static SchemePath createInstance(final Identifier creatorId)
+			throws CreateObjectException {
 		assert creatorId != null;
 		try {
-			final Date created1 = new Date();
-			final SchemePath schemePath = new SchemePath(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SCHEME_PATH_ENTITY_CODE),
-					created1,
-					created1,
-					creatorId,
-					creatorId,
+			final Date created = new Date();
+			final SchemePath schemePath = new SchemePath(
+					IdentifierPool
+							.getGeneratedIdentifier(ObjectEntities.SCHEME_PATH_ENTITY_CODE),
+					created, created, creatorId, creatorId,
 					0L);
 			schemePath.changed = true;
 			return schemePath;
-		}
-		catch (final IllegalObjectEntityException ioee) {
-			throw new CreateObjectException("SchemePath.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
+		} catch (final IllegalObjectEntityException ioee) {
+			throw new CreateObjectException(
+					"SchemePath.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
 		}
 	}
 
@@ -168,7 +161,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	}
 
 	/**
-	 * @see StorableObject#getDependencies()
+	 * @see com.syrus.AMFICOM.general.StorableObject#getDependencies()
 	 */
 	public Set getDependencies() {
 		throw new UnsupportedOperationException();
@@ -187,7 +180,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	}
 
 	/**
-	 * @see Namable#getName()
+	 * @see com.syrus.AMFICOM.general.Namable#getName()
 	 */
 	public String getName() {
 		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
@@ -199,13 +192,6 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	}
 
 	public SortedSet getPathElements() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public PathElement[] getPathElementsAsArray() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -273,7 +259,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	public void setDescription(final String description) {
 		assert this.description != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
 		assert description != null : ErrorMessages.NON_NULL_EXPECTED;
-		if (description.equals(this.description))
+		if (this.description.equals(description))
 			return;
 		this.description = description;
 		this.changed = true;
@@ -284,12 +270,12 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	}
 
 	/**
-	 * @see Namable#setName(String)
+	 * @see com.syrus.AMFICOM.general.Namable#setName(String)
 	 */
 	public void setName(final String name) {
 		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
 		assert name != null && name.length() != 0 : ErrorMessages.NON_EMPTY_EXPECTED;
-		if (name.equals(this.name))
+		if (this.name.equals(name))
 			return;
 		this.name = name;
 		this.changed = true;
@@ -324,14 +310,14 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	/**
 	 * @param transferable
 	 * @throws CreateObjectException
-	 * @see StorableObject#fromTransferable(IDLEntity)
+	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IDLEntity)
 	 */
 	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
 		throw new UnsupportedOperationException();
 	}
 
 	/*-********************************************************************
-	 * Non-model methods.                                                 *
+	 * Non-model members.                                                 *
 	 **********************************************************************/
 
 	/**
