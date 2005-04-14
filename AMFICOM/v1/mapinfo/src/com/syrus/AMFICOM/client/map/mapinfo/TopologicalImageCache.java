@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalImageCache.java,v 1.4 2005/04/13 15:40:04 peskovsky Exp $
+ * $Id: TopologicalImageCache.java,v 1.5 2005/04/14 07:10:47 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.Client.Map.MapDataException;
 
 /**
  * @author $Author: peskovsky $
- * @version $Revision: 1.4 $, $Date: 2005/04/13 15:40:04 $
+ * @version $Revision: 1.5 $, $Date: 2005/04/14 07:10:47 $
  * @module mapinfo_v1
  */
 public class TopologicalImageCache
@@ -413,10 +413,10 @@ public class TopologicalImageCache
 				if (	(curRequest.priority == TopologicalRequest.PRIORITY_BACKGROUND)
 						&&this.expressAreaSphBorders.contains(segmentBorders))
 				{
-					//Изменим приоритет запроса и поставит его вперёди очереди
-					this.loadingThread.changeRequestPriority(
-							curRequest,
-							TopologicalRequest.PRIORITY_EXPRESS);
+					//Изменим приоритет запроса
+					this.loadingThread.removeRequest(curRequest);
+					this.cacheOfImages.remove(curRequest);
+					curRequest.priority = TopologicalRequest.PRIORITY_EXPRESS;
 				}
 					
 				break;
@@ -940,6 +940,11 @@ class LoadingThread extends Thread
 		this.requestQueue.add(request);			
 	}
 
+	public void removeRequest(TopologicalRequest request)
+	{
+		this.requestQueue.remove(request);			
+	}
+	
 	/**
 	 * Меняет приоритет невыполненного запроса в очереди
 	 * @param request Запрос
@@ -1094,7 +1099,7 @@ class LoadingThread extends Thread
 /**
  * Структура запроса изображения с сервера
  * @author $Author: peskovsky $
- * @version $Revision: 1.4 $, $Date: 2005/04/13 15:40:04 $
+ * @version $Revision: 1.5 $, $Date: 2005/04/14 07:10:47 $
  * @module mapinfo_v1
  */
 class TopologicalRequest implements Comparable
