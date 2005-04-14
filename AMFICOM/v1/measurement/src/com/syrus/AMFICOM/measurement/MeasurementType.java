@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementType.java,v 1.65 2005/04/13 15:26:00 arseniy Exp $
+ * $Id: MeasurementType.java,v 1.66 2005/04/14 16:05:37 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,6 +25,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.ParameterType;
@@ -34,12 +35,12 @@ import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.65 $, $Date: 2005/04/13 15:26:00 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.66 $, $Date: 2005/04/14 16:05:37 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
-public class MeasurementType extends ActionType {
+public class MeasurementType extends ActionType implements Namable {
 	/**
 	 * Comment for <code>serialVersionUID</code>
 	 */
@@ -348,5 +349,13 @@ public class MeasurementType extends ActionType {
 			dependencies.addAll(this.measurementPortTypes);
 
 		return dependencies;
+	}
+
+	public String getName() {
+		return getDescription();
+	}
+
+	public void setName(final String name) {
+		setDescription(name);
 	}
 }
