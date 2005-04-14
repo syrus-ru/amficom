@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseSchemeObjectLoader.java,v 1.4 2005/04/13 19:07:22 arseniy Exp $
+ * $Id: DatabaseSchemeObjectLoader.java,v 1.5 2005/04/14 09:27:09 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,12 +7,6 @@
  */
 
 package com.syrus.AMFICOM.scheme;
-
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
@@ -26,10 +20,16 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.4 $, $Date: 2005/04/13 19:07:22 $
+ * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2005/04/14 09:27:09 $
  * @module scheme_v1
  */
 public class DatabaseSchemeObjectLoader implements SchemeObjectLoader {
@@ -50,6 +50,7 @@ public class DatabaseSchemeObjectLoader implements SchemeObjectLoader {
 		 */
 		for (final Iterator identifiableIterator = identifiables.iterator(); identifiableIterator.hasNext();) {
 			final Identifiable identifiable = (Identifiable) identifiableIterator.next();
+
 			final Short entityCode = new Short(identifiable.getId().getMajor());
 			Set entityObjects = (Set) map.get(entityCode);
 			if (entityObjects == null) {
@@ -73,8 +74,7 @@ public class DatabaseSchemeObjectLoader implements SchemeObjectLoader {
 	 * @see SchemeObjectLoader#delete(Identifier)
 	 */
 	public void delete(final Identifier id) {
-		short entityCode = id.getMajor();
-		StorableObjectDatabase storableObjectDatabase = SchemeDatabaseContext.getDatabase(entityCode);
+		final StorableObjectDatabase storableObjectDatabase = SchemeDatabaseContext.getDatabase(id.getMajor());
 		if (storableObjectDatabase != null)
 			storableObjectDatabase.delete(id);
 	}
@@ -906,9 +906,5 @@ public class DatabaseSchemeObjectLoader implements SchemeObjectLoader {
 	public void saveSchemes(Set schemes, boolean force)
 			throws ApplicationException {
 		throw new UnsupportedOperationException();
-	}
-
-	private StorableObjectDatabase getDatabase(final short entityCode) {
-		return SchemeDatabaseContext.getDatabase(entityCode);
 	}
 }

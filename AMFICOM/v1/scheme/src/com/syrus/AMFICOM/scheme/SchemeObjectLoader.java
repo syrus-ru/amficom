@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeObjectLoader.java,v 1.3 2005/04/13 19:07:22 arseniy Exp $
+ * $Id: SchemeObjectLoader.java,v 1.4 2005/04/14 09:27:09 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,12 +13,11 @@ import java.util.*;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.3 $, $Date: 2005/04/13 19:07:22 $
+ * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2005/04/14 09:27:09 $
  * @module scheme_v1
  */
 public interface SchemeObjectLoader {
-
 	void delete(final Set identifiables);
 
 	void delete(final Identifier id);

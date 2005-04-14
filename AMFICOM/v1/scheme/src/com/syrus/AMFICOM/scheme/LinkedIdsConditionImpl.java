@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.2 2005/04/13 19:34:10 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.3 2005/04/14 09:27:09 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,9 +7,6 @@
  */
 
 package com.syrus.AMFICOM.scheme;
-
-import java.util.Iterator;
-import java.util.Set;
 
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.Domain;
@@ -22,10 +19,13 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.util.Log;
 
+import java.util.Iterator;
+import java.util.Set;
+
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.2 $, $Date: 2005/04/13 19:34:10 $
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/04/14 09:27:09 $
  * @module scheme_v1
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -53,6 +53,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 	/**
 	 * @param storableObject
 	 * @throws IllegalObjectEntityException
+	 * @see com.syrus.AMFICOM.general.StorableObjectCondition#isConditionTrue(StorableObject)
 	 */
 	public boolean isConditionTrue(final StorableObject storableObject) throws IllegalObjectEntityException {
 		throw new UnsupportedOperationException();
@@ -61,6 +62,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 	/**
 	 * @param entityCode
 	 * @throws IllegalObjectEntityException
+	 * @see com.syrus.AMFICOM.general.StorableObjectCondition#setEntityCode(Short)
 	 */
 	public void setEntityCode(final Short entityCode) throws IllegalObjectEntityException {
 		throw new UnsupportedOperationException();
@@ -68,6 +70,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 
 	/**
 	 * @param storableObjects
+	 * @see com.syrus.AMFICOM.general.StorableObjectCondition#isNeedMore(Set)
 	 */
 	public boolean isNeedMore(final Set storableObjects) {
 		return true;
