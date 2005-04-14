@@ -219,14 +219,14 @@ public final class MapSchemeTreePanel extends JPanel
 	protected void initTree()
 	{
 		this.model = new MapSchemeTreeModel(null);
-		setPanel(new UniTreePanel(this.aContext.getDispatcher(), this.aContext, this.model));
+//		setPanel(new UniTreePanel(this.aContext.getDispatcher(), this.aContext, this.model));
 	}
 
 	public void updateTree(MapView mv)
 	{
 		this.mapView = mv;
-		this.model.setMapView(mv);
-		this.treePanel.setModel(this.model);
+//		this.model.setMapView(mv);
+//		this.treePanel.setModel(this.model);
 
 		this.menuSchemeRemoveFromView.setEnabled(false);
 	}

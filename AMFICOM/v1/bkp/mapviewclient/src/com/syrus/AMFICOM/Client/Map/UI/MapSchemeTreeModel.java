@@ -1,5 +1,5 @@
 /**
- * $Id: MapSchemeTreeModel.java,v 1.14 2005/04/05 15:48:07 krupenn Exp $
+ * $Id: MapSchemeTreeModel.java,v 1.15 2005/04/14 14:11:29 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,7 +11,6 @@
 
 package com.syrus.AMFICOM.Client.Map.UI;
 
-import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.util.Iterator;
@@ -21,10 +20,15 @@ import java.util.Set;
 
 import javax.swing.ImageIcon;
 
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeModel;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeNode;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.client_.general.ui_.tree_.IconedNode;
+import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.mapview.MapView;
-import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.scheme.Scheme;
+import com.syrus.AMFICOM.scheme.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.SchemeElement;
+import com.syrus.AMFICOM.scheme.SchemeLink;
+import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
 import com.syrus.AMFICOM.scheme.corba.SchemeKind;
 
@@ -77,473 +81,354 @@ import com.syrus.AMFICOM.scheme.corba.SchemeKind;
  *             		|____ (*) "path1"
  *             		|____ (*) "path2"
  * </pre>
- * @version $Revision: 1.14 $, $Date: 2005/04/05 15:48:07 $
+ * @version $Revision: 1.15 $, $Date: 2005/04/14 14:11:29 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
-public class MapSchemeTreeModel extends ObjectResourceTreeModel
-{
-	public static final String SCHEME_BRANCH = "scheme";
-	public static final String ELEMENT_BRANCH = "schemeelement";
-	public static final String LINK_BRANCH = "schemelink";
-	public static final String CABLE_BRANCH = "schemecablelink";
-	public static final String PATH_BRANCH = "schemepath";
+public class MapSchemeTreeModel {
+	public static final String SCHEME_BRANCH = "innerschemes";
+	public static final String ELEMENT_BRANCH = "schemeelements";
+	public static final String LINK_BRANCH = "schemelinks";
+	public static final String CABLE_BRANCH = "schemecablelinks";
+	public static final String PATH_BRANCH = "schemepaths";
+	public static final String NONAME_BRANCH = "noname";
 
 	MapView mapView;
 
-	public MapSchemeTreeModel(MapView mapView)
+	Item root;
+
+	static final int IMG_SIZE = 16;
+
+	static ImageIcon placedSchemeIcon = new ImageIcon(Toolkit.getDefaultToolkit()
+			.getImage("images/placedscheme.gif").getScaledInstance(
+					IMG_SIZE,
+					IMG_SIZE,
+					Image.SCALE_SMOOTH));
+
+	static ImageIcon schemeIcon = new ImageIcon(Toolkit.getDefaultToolkit()
+			.getImage("images/scheme.gif").getScaledInstance(
+					IMG_SIZE,
+					IMG_SIZE,
+					Image.SCALE_SMOOTH));
+
+	static ImageIcon placedElementIcon = new ImageIcon(Toolkit.getDefaultToolkit()
+			.getImage("images/placedelement.gif").getScaledInstance(
+					IMG_SIZE,
+					IMG_SIZE,
+					Image.SCALE_SMOOTH));
+
+	static ImageIcon elementIcon = new ImageIcon(Toolkit.getDefaultToolkit()
+			.getImage("images/device.gif").getScaledInstance(
+					IMG_SIZE,
+					IMG_SIZE,
+					Image.SCALE_SMOOTH));
+
+	static ImageIcon cableIcon = new ImageIcon(Toolkit.getDefaultToolkit()
+			.getImage("images/linkmode.gif").getScaledInstance(
+					IMG_SIZE,
+					IMG_SIZE,
+					Image.SCALE_SMOOTH));
+
+	static ImageIcon pathIcon = new ImageIcon(Toolkit.getDefaultToolkit()
+			.getImage("images/pathmode.gif").getScaledInstance(
+					IMG_SIZE,
+					IMG_SIZE,
+					Image.SCALE_SMOOTH));
+
+	public MapSchemeTreeModel(Item root)
 	{
-		this.mapView = mapView;
+		this.root = root;
 	}
 	
 	public void setMapView(MapView mapView)
 	{
 		this.mapView = mapView;
+		buildTree(mapView);
 	}
 
-	public ObjectResourceTreeNode getRoot()
-	{
-		MapSchemeTreeNode root;
-		if(this.mapView == null)
-			root =  new MapSchemeTreeNode(
-				"root", 
-				"Без названия", 
-				true);
+	public Item getRoot() {
+		return this.root;
+	}
+
+	public String getObjectName(Object object) {
+		if(object instanceof String)
+			return LangModelMap.getString((String )object);
 		else
-			root =  new MapSchemeTreeNode(
-				this.mapView, 
-				"Вид - " + this.mapView.getName(), 
-				true);
-		root.setTopological(true);
-		return root;
-	}
-
-
-	public Color getNodeTextColor(ObjectResourceTreeNode node) { return Color.BLACK; }
-	public void nodeAfterSelected(ObjectResourceTreeNode node) {/*empty*/ }
-	public void nodeBeforeExpanded(ObjectResourceTreeNode node) {/*empty*/ }
-
-
-	public Class getNodeChildClass(ObjectResourceTreeNode node)
-	{
-		if(node.getObject() instanceof String)
-		{
-			String branchString = (String )node.getObject();
-			if(branchString.equals(SCHEME_BRANCH))
-				return Scheme.class;
-			if(branchString.equals(ELEMENT_BRANCH))
-				return SchemeElement.class;
-			if(branchString.equals(LINK_BRANCH))
-				return SchemeLink.class;
-			if(branchString.equals(CABLE_BRANCH))
-				return SchemeCableLink.class;
-			if(branchString.equals(PATH_BRANCH))
-				return SchemePath.class;
+		if(object instanceof Scheme) {
+			Scheme scheme = (Scheme )object;
+			return scheme.getName();
 		}
-		else if (node.getObject() instanceof Scheme)
-			return Scheme.class;
-		else if (node.getObject() instanceof SchemeElement)
-			return SchemeElement.class;
-		return null;
+		else
+		if(object instanceof SchemeElement) {
+			SchemeElement schemeElement = (SchemeElement )object;
+			return schemeElement.getName();
+		}
+		else
+		if(object instanceof SchemeLink) {
+			SchemeLink schemeLink = (SchemeLink )object;
+			return schemeLink.getName();
+		}
+		else
+		if(object instanceof SchemeCableLink) {
+			SchemeCableLink schemeCableLink = (SchemeCableLink )object;
+			return schemeCableLink.getName();
+		}
+		else
+			if(object instanceof SchemePath) {
+				SchemePath schemePath = (SchemePath )object;
+				return schemePath.getName();
+			}
+		return LangModelMap.getString(NONAME_BRANCH);
 	}
 
-	public List getChildNodes(ObjectResourceTreeNode objectResourceTreeNode)
+	public void buildTree(MapView mapView)
 	{
-		MapSchemeTreeNode treeNode = null;
-		MapSchemeTreeNode parentNode = (MapSchemeTreeNode )objectResourceTreeNode.getParent();
+		this.mapView = mapView;
+
+		Item root = getRoot();
+		root.getChildren().clear();
+
+		Set schemes = this.mapView.getSchemes();
+
+		for(Iterator it = schemes.iterator(); it.hasNext();)
+		{
+			Scheme scheme = (Scheme )it.next();
+			
+			root.addChild(buildSchemeTree(scheme, false, true));
+		}
+	}
+	
+	Item buildSchemeTree(Scheme scheme, boolean isDragDropEnabled, boolean isTopological) {
 		
-		List childNodes = new LinkedList();
-		if(objectResourceTreeNode.getObject() instanceof String)
+		MapSchemeTreeNode treeNode = new MapSchemeTreeNode(
+					scheme, 
+					scheme.getName(), 
+					(isDragDropEnabled) 
+						? placedSchemeIcon 
+						: schemeIcon,
+					true);
+		treeNode.setTopological(isTopological);
+
+		treeNode.addChild(buildInternalSchemesTree(scheme, isTopological));
+		treeNode.addChild(buildElementsTree(scheme, isTopological));
+		treeNode.addChild(buildLinksTree(scheme, isTopological));
+		treeNode.addChild(buildCablesTree(scheme, isTopological));
+		treeNode.addChild(buildPathsTree(scheme, isTopological));
+
+		return treeNode;
+	}
+
+	Item buildInternalSchemesTree(Scheme parentScheme, boolean isTopological) {
+		
+		MapSchemeTreeNode treeNode = new MapSchemeTreeNode(SCHEME_BRANCH, getObjectName(SCHEME_BRANCH), true);
+		MapSchemeTreeNode childNode;
+		treeNode.setTopological(isTopological);
+
+		List compoundElements = new LinkedList();
+		for (final Iterator schemeElementIterator = parentScheme.getSchemeElements().iterator(); schemeElementIterator.hasNext();)
 		{
-			String branchString = (String )objectResourceTreeNode.getObject();
-			if (branchString.equals(SCHEME_BRANCH))
+			final SchemeElement schemeElement = (SchemeElement) schemeElementIterator.next();
+			if (schemeElement.getScheme() != null)
+				compoundElements.add(schemeElement);
+		}
+		
+		if (compoundElements.size() > 0)
+		{
+			for(Iterator it = compoundElements.iterator(); it.hasNext();)
 			{
-				Scheme parentScheme = (Scheme )parentNode.getObject();
-				List compoundElements = new LinkedList();
-				for (final Iterator schemeElementIterator = parentScheme.getSchemeElements().iterator(); schemeElementIterator.hasNext();)
-				{
-					final SchemeElement schemeElement = (SchemeElement) schemeElementIterator.next();
-					if (schemeElement.getScheme() != null)
-						compoundElements.add(schemeElement);
-				}
-				
-				if (compoundElements.size() > 0)
-				{
-					for(Iterator it = compoundElements.iterator(); it.hasNext();)
-					{
-						SchemeElement schemeElement = (SchemeElement )it.next();
-						Scheme internalScheme = schemeElement.getScheme();
+				SchemeElement schemeElement = (SchemeElement )it.next();
+				Scheme internalScheme = schemeElement.getScheme();
 
-						if(	internalScheme.getSchemeKind().value() != SchemeKind._CABLE_SUBNETWORK)
-						{
-							if(parentNode.isTopological())
-							{
-								treeNode = new MapSchemeTreeNode(
-									schemeElement,
-									internalScheme.getName(), 
-									true,
-									new ImageIcon(Toolkit
-										.getDefaultToolkit()
-										.getImage("images/placedscheme.gif")
-										.getScaledInstance(
-											16, 
-											16, 
-											Image.SCALE_SMOOTH)));
-								treeNode.setDragDropEnabled(true);
-							}
-							else
-							{
-								treeNode = new MapSchemeTreeNode(
-									schemeElement,
-									internalScheme.getName(), 
-									true,
-									new ImageIcon(Toolkit
-										.getDefaultToolkit()
-										.getImage("images/scheme.gif")
-										.getScaledInstance(
-											16, 
-											16, 
-											Image.SCALE_SMOOTH)));
-							}
-						}
-						else
-						{
-							ImageIcon ii = 
-								new ImageIcon(
-									Toolkit.getDefaultToolkit()
-									.getImage("images/scheme.gif")
-									.getScaledInstance(
-										16, 
-										16, 
-										Image.SCALE_SMOOTH));
-							treeNode = new MapSchemeTreeNode(
-									schemeElement,
-									internalScheme.getName(), 
-									true,
-									ii);
-							treeNode.setTopological(parentNode.isTopological());
-						}
-						childNodes.add(treeNode);
-					}
-				}
-			}
-			else 
-			if (branchString.equals(ELEMENT_BRANCH))
-			{
-				Object parentObject = parentNode.getObject();
-				List compoundElements = new LinkedList();
-				if (parentObject instanceof Scheme
-					|| (parentObject instanceof SchemeElement
-						&& ((SchemeElement )parentObject).getScheme() != null)
-					)
-				{
-					Scheme scheme;
-					if(parentObject instanceof Scheme)
-						scheme = (Scheme )parentObject;
+				if(	internalScheme.getSchemeKind().value() != SchemeKind._CABLE_SUBNETWORK) {
+					if(isTopological)
+						childNode = (MapSchemeTreeNode )buildSchemeTree(internalScheme, true, false);
 					else
-					{
-						SchemeElement schemeElement = (SchemeElement )parentObject;
-						scheme = schemeElement.getScheme();
-					}
-					
-					for (int i = 0; i < scheme.getSchemeElementsAsArray().length; i++)
-					{
-						SchemeElement element = scheme.getSchemeElementsAsArray()[i];
-						if (element.getScheme() == null)
-							compoundElements.add(element);
-					}
+						childNode = (MapSchemeTreeNode )buildSchemeTree(internalScheme, false, false);
 				}
-				else if (parentObject instanceof SchemeElement)
-				{
-					SchemeElement schemeElement = (SchemeElement )parentObject;
-					for (int i = 0; i < schemeElement.getSchemeElementsAsArray().length; i++)
-					{
-						SchemeElement element = schemeElement.getSchemeElementsAsArray()[i];
-						if (element != null)
-							compoundElements.add(element);
-					}
-				}
-				
-				if (compoundElements.size() > 0)
-				{
-					for(Iterator it = compoundElements.iterator(); it.hasNext();)
-					{
-						SchemeElement element = (SchemeElement)it.next();
-						boolean isFinal = (element.getSchemeLinksAsArray().length == 0 || element.getSchemeElementsAsArray().length == 0);
-
-						if (element.getScheme() == null
-							&& parentNode.isTopological())
-						{
-							treeNode = new MapSchemeTreeNode(
-									element, 
-									element.getName(), 
-									true, 
-									new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/placedelement.gif")),
-									isFinal);
-							treeNode.setDragDropEnabled(true);
-						}
-						else
-							treeNode = new MapSchemeTreeNode(
-									element, 
-									element.getName(), 
-									true, 
-									new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/device.gif")),
-									isFinal);
-						childNodes.add(treeNode);
-					}
-				}
-			}
-			else if (branchString.equals(LINK_BRANCH))
-			{
-				Object parentObject = parentNode.getObject();
-				if (parentObject instanceof Scheme
-					|| (parentObject instanceof SchemeElement
-						&& ((SchemeElement )parentObject).getScheme() != null)
-					)
-				{
-					Scheme scheme;
-					if(parentObject instanceof Scheme)
-						scheme = (Scheme )parentObject;
-					else
-					{
-						SchemeElement schemeElement = (SchemeElement )parentObject;
-						scheme = schemeElement.getScheme();
-					}
-					
-					for(int i = 0 ; i < scheme.getSchemeLinksAsArray().length; i++)
-					{
-						SchemeLink schemeLink = scheme.getSchemeLinksAsArray()[i];
-						childNodes.add(new MapSchemeTreeNode(schemeLink, schemeLink.getName(), true, true));
-					}
-				}
-				else if (parentObject instanceof SchemeElement)
-				{
-					SchemeElement schemeElement = (SchemeElement )parentObject;
-					for(int i = 0; i < schemeElement.getSchemeLinksAsArray().length; i++)
-					{
-						SchemeLink schemeLink = schemeElement.getSchemeLinksAsArray()[i];
-						childNodes.add(new MapSchemeTreeNode(schemeLink, schemeLink.getName(), true, true));
-					}
-				}
-			}
-			else if (branchString.equals(CABLE_BRANCH))
-			{
-				Scheme parentScheme;
-
-				if(parentNode.getObject() instanceof Scheme)
-					parentScheme = (Scheme )parentNode.getObject();
 				else
-				{
-					SchemeElement schemeElement = (SchemeElement )parentNode.getObject();
-					parentScheme = schemeElement.getScheme();
-				}
-					
-				for (final Iterator schemeCableLinkIterator = parentScheme.getSchemeCableLinks().iterator(); schemeCableLinkIterator.hasNext();)
-				{
-					final SchemeCableLink schemeCableLink = (SchemeCableLink) schemeCableLinkIterator.next();
-					if(parentNode.isTopological())
-					{
-						treeNode = new MapSchemeTreeNode(
-								schemeCableLink, 
-								schemeCableLink.getName(), 
-								true, 
-								new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/linkmode.gif")),
-								true);
-						treeNode.setDragDropEnabled(true);
-					}
-					else
-					{
-						treeNode = new MapSchemeTreeNode(
-								schemeCableLink, 
-								schemeCableLink.getName(), 
-								true,
-								true);
-					}
-					childNodes.add(treeNode);
-				}
-			}
-			else if (branchString.equals(PATH_BRANCH))
-			{
-				Scheme parentScheme;
-
-				if(parentNode.getObject() instanceof Scheme)
-					parentScheme = (Scheme )parentNode.getObject();
-				else
-				{
-					SchemeElement schemeElement = (SchemeElement )parentNode.getObject();
-					parentScheme = schemeElement.getScheme();
-				}
-					
-				for(Iterator it = SchemeUtils.getTopologicalPaths(parentScheme).iterator(); it.hasNext();)
-				{
-					SchemePath schemePath = (SchemePath )it.next();
-					if(parentNode.isTopological())
-					{
-						treeNode = new MapSchemeTreeNode(
-								schemePath, 
-								schemePath.getName(), 
-								true, 
-								new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/pathmode.gif")),
-								true);
-						treeNode.setDragDropEnabled(true);
-					}
-					else
-					{
-						treeNode = new MapSchemeTreeNode(
-								schemePath, 
-								schemePath.getName(), 
-								true, 
-								true);
-					}
-					childNodes.add(treeNode);
-				}
+					childNode = (MapSchemeTreeNode )buildSchemeTree(internalScheme, false, isTopological);
+				treeNode.addChild(childNode);
 			}
 		}
-		else
+		
+		return treeNode;
+	}
+
+	Item buildElementsTree(Scheme scheme, boolean isTopological) {
+		
+		MapSchemeTreeNode treeNode = new MapSchemeTreeNode(ELEMENT_BRANCH, getObjectName(ELEMENT_BRANCH), true);
+		MapSchemeTreeNode childNode;
+		treeNode.setTopological(isTopological);
+
+		Set compoundElements = scheme.getSchemeElements();
+
+		if (compoundElements.size() > 0)
 		{
-			if(objectResourceTreeNode.getObject() instanceof MapView)
+			for(Iterator it = compoundElements.iterator(); it.hasNext();)
 			{
-				Set schemes = this.mapView.getSchemes();
+				SchemeElement element = (SchemeElement)it.next();
+				boolean allowsChildren = (element.getSchemeLinks().size() != 0 || element.getSchemeElements().size() != 0);
 
-				for(Iterator it = schemes.iterator(); it.hasNext();)
+				Scheme internalScheme = element.getScheme();
+				
+				if (internalScheme != null)
 				{
-					Scheme scheme = (Scheme )it.next();
-
-					treeNode = new MapSchemeTreeNode(
-							scheme, 
-							scheme.getName(), 
-							true,
-							new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/scheme.gif")));
-/*
-						nod = new MapSchemeTreeNode(
-								sc, 
-								sc.getName(), 
-								false,
-								new ImageIcon(Toolkit.getDefaultToolkit()
-									.getImage("images/placedscheme.gif")
-									.getScaledInstance(
-										16, 
-										16, 
-										Image.SCALE_SMOOTH)));
-*/
-					treeNode.setTopological(true);
-					childNodes.add(treeNode);
+					childNode = (MapSchemeTreeNode )buildSchemeTree(internalScheme, internalScheme.getSchemeKind().equals(SchemeKind.CABLE_SUBNETWORK), isTopological); 
 				}
+				else
+				if (element.getScheme() == null && isTopological)
+				{
+					childNode = (MapSchemeTreeNode )buildElementTree(element, true, isTopological, allowsChildren); 
+				}
+				else
+					childNode = (MapSchemeTreeNode )buildElementTree(element, false, isTopological, allowsChildren); 
+				treeNode.addChild(childNode);
+			}
+		}
+
+		return treeNode;
+	}
+	
+	Item buildElementTree(SchemeElement element, boolean isDragDropEnabled, boolean isTopological, boolean allowsChildren) {
+		MapSchemeTreeNode treeNode = new MapSchemeTreeNode(
+				element, 
+				getObjectName(element), 
+				(isDragDropEnabled) 
+					? placedElementIcon 
+					: elementIcon,
+				allowsChildren);
+		treeNode.setTopological(isTopological);
+
+		treeNode.addChild(buildElementsTree(element, isTopological));//new MapSchemeTreeNode(ELEMENT_BRANCH, "Вложенные элементы", true));
+		treeNode.addChild(buildLinksTree(element, isTopological));//new MapSchemeTreeNode(LINK_BRANCH, "Линии", true));
+
+		return treeNode;
+	}
+
+	Item buildElementsTree(SchemeElement schemeElement, boolean isTopological) {
+		
+		MapSchemeTreeNode treeNode = new MapSchemeTreeNode(ELEMENT_BRANCH, getObjectName(ELEMENT_BRANCH), true);
+		MapSchemeTreeNode childNode;
+		treeNode.setTopological(isTopological);
+
+		Set compoundElements = schemeElement.getSchemeElements();
+
+		if (compoundElements.size() > 0)
+		{
+			for(Iterator it = compoundElements.iterator(); it.hasNext();)
+			{
+				SchemeElement element = (SchemeElement)it.next();
+				boolean allowsChildren = (element.getSchemeLinks().size() != 0 || element.getSchemeElements().size() != 0);
+
+				if (element.getScheme() == null && isTopological)
+				{
+					childNode = (MapSchemeTreeNode )buildElementTree(element, true, isTopological, allowsChildren); 
+				}
+				else
+					childNode = (MapSchemeTreeNode )buildElementTree(element, false, isTopological, allowsChildren); 
+				treeNode.addChild(childNode);
+			}
+		}
+
+		return treeNode;
+	}
+
+	Item buildLinksTree(SchemeElement schemeElement, boolean isTopological) {
+		
+		MapSchemeTreeNode treeNode = new MapSchemeTreeNode(LINK_BRANCH, getObjectName(LINK_BRANCH), true);
+		MapSchemeTreeNode childNode;
+		treeNode.setTopological(isTopological);
+
+		for(Iterator iter = schemeElement.getSchemeLinks().iterator(); iter.hasNext();) {
+			SchemeLink schemeLink = (SchemeLink )iter.next();
+			childNode = new MapSchemeTreeNode(schemeLink, getObjectName(schemeLink), false);
+			treeNode.addChild(childNode);
+		}
+		
+		return treeNode;
+	}
+
+	Item buildLinksTree(Scheme scheme, boolean isTopological) {
+		
+		MapSchemeTreeNode treeNode = new MapSchemeTreeNode(LINK_BRANCH, getObjectName(LINK_BRANCH), true);
+		MapSchemeTreeNode childNode;
+		treeNode.setTopological(isTopological);
+
+		for(Iterator iter = scheme.getSchemeLinks().iterator(); iter.hasNext();) {
+			SchemeLink schemeLink = (SchemeLink )iter.next();
+			childNode = new MapSchemeTreeNode(schemeLink, getObjectName(schemeLink), false);
+			treeNode.addChild(childNode);
+		}
+		
+		return treeNode;
+	}
+
+	Item buildCablesTree(Scheme parentScheme, boolean isTopological) {
+		
+		MapSchemeTreeNode treeNode = new MapSchemeTreeNode(CABLE_BRANCH, getObjectName(CABLE_BRANCH), true);
+		MapSchemeTreeNode childNode;
+		treeNode.setTopological(isTopological);
+
+		for (final Iterator schemeCableLinkIterator = parentScheme.getSchemeCableLinks().iterator(); schemeCableLinkIterator.hasNext();)
+		{
+			final SchemeCableLink schemeCableLink = (SchemeCableLink) schemeCableLinkIterator.next();
+			if(isTopological)
+			{
+				childNode = new MapSchemeTreeNode(schemeCableLink, getObjectName(schemeCableLink), cableIcon, false);
+				childNode.setDragDropEnabled(true);
 			}
 			else
-			if(objectResourceTreeNode.getObject() instanceof Scheme
-				|| (objectResourceTreeNode.getObject() instanceof SchemeElement
-					&& ((SchemeElement )(objectResourceTreeNode.getObject())).getScheme() != null)
-				)
-			{
-				Scheme scheme;
-				if(objectResourceTreeNode.getObject() instanceof Scheme)
-					scheme = (Scheme )objectResourceTreeNode.getObject();
-				else
-				{
-					SchemeElement schemeElement = (SchemeElement )objectResourceTreeNode.getObject();
-					scheme = schemeElement.getScheme();
-				}
-
-				if (scheme.getSchemeElementsAsArray().length != 0)
-				{
-					boolean hasSchemes = false;
-					boolean hasElements = false;
-					for (int i = 0; i < scheme.getSchemeElementsAsArray().length; i++)
-					{
-						SchemeElement schemeElement = scheme.getSchemeElementsAsArray()[i];
-						if (schemeElement.getScheme() == null)
-						{
-							hasElements = true;
-							break;
-						}
-					}
-					
-					for (int i = 0; i < scheme.getSchemeElementsAsArray().length; i++)
-					{
-						SchemeElement schemeElement = scheme.getSchemeElementsAsArray()[i];
-						if (schemeElement.getScheme() != null)
-						{
-							hasSchemes = true;
-							break;
-						}
-					}
-					
-					if (hasSchemes)
-						childNodes.add(new MapSchemeTreeNode(SCHEME_BRANCH, "Вложенные схемы", true));
-					if (hasElements)
-						childNodes.add(new MapSchemeTreeNode(ELEMENT_BRANCH, "Вложенные элементы", true));
-				}
-				if (!scheme.getSchemeLinks().isEmpty())
-					childNodes.add(new MapSchemeTreeNode(LINK_BRANCH, "Линии", true));
-				if (!scheme.getSchemeCableLinks().isEmpty())
-					childNodes.add(new MapSchemeTreeNode(CABLE_BRANCH, "Кабели", true));
-				if (!SchemeUtils.getTopologicalPaths(scheme).isEmpty())
-					childNodes.add(new MapSchemeTreeNode(PATH_BRANCH, "Пути", true));
-			}
-			else if(objectResourceTreeNode.getObject() instanceof SchemeElement)
-			{
-				SchemeElement schemeElement = (SchemeElement )objectResourceTreeNode.getObject();
-				if (schemeElement.getScheme() != null)
-				{
-					Scheme scheme = schemeElement.getScheme();
-					for (int i = 0 ; i < scheme.getSchemeElementsAsArray().length; i++)
-					{
-						SchemeElement internalElement = scheme.getSchemeElementsAsArray()[i];
-						if (internalElement.getScheme() == null)
-						{
-							childNodes.add(new MapSchemeTreeNode(
-									internalElement, 
-									internalElement.getName(), 
-									true, 
-									new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/device.gif")), 
-									true));
-						}
-						else
-						{
-							childNodes.add(new MapSchemeTreeNode(
-									internalElement, 
-									internalElement.getName(), 
-									true,
-									new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/scheme.gif")), 
-									true));
-						}
-					}
-				}
-				else
-				{
-					if (schemeElement.getSchemeElementsAsArray().length != 0)
-						childNodes.add(new MapSchemeTreeNode(ELEMENT_BRANCH, "Вложенные элементы", true));
-				 if (schemeElement.getSchemeLinksAsArray().length != 0)
-						childNodes.add(new MapSchemeTreeNode(LINK_BRANCH, "Линии", true));
-				}
-			}
+				childNode = new MapSchemeTreeNode(schemeCableLink, getObjectName(schemeCableLink), false);
+			treeNode.addChild(childNode);
 		}
-		return childNodes;
+		return treeNode;
 	}
 
-	private class MapSchemeTreeNode extends ObjectResourceTreeNode
+	Item buildPathsTree(Scheme parentScheme, boolean isTopological) {
+		
+		MapSchemeTreeNode treeNode = new MapSchemeTreeNode(PATH_BRANCH, getObjectName(PATH_BRANCH), true);
+		MapSchemeTreeNode childNode;
+		treeNode.setTopological(isTopological);
+
+		for(Iterator it = SchemeUtils.getTopologicalPaths(parentScheme).iterator(); it.hasNext();)
+		{
+			SchemePath schemePath = (SchemePath )it.next();
+			if(isTopological)
+			{
+				childNode = new MapSchemeTreeNode(schemePath, getObjectName(schemePath), pathIcon, false);
+				childNode.setDragDropEnabled(true);
+			}
+			else
+				childNode = new MapSchemeTreeNode(schemePath, getObjectName(schemePath), false);
+			treeNode.addChild(childNode);
+		}
+		
+		return treeNode;
+	}
+
+	private class MapSchemeTreeNode extends IconedNode
 	{
 		boolean topological = false;
+		boolean dragDropEnabled = false;
 		
-		public MapSchemeTreeNode(Object obj, String name, boolean enable)
+		public MapSchemeTreeNode(Object obj, String name)
 		{
-			super (obj, name, enable);
+			super (obj, name);
 		}
 	
-		public MapSchemeTreeNode(Object obj, String name, boolean enable, boolean isFinal)
+		public MapSchemeTreeNode(Object obj, String name, boolean allowsChildren)
 		{
-			super(obj, name, enable, isFinal);
+			super(obj, name, allowsChildren);
 		}
 	
-		public MapSchemeTreeNode(Object obj, String name, boolean enable, ImageIcon ii)
+		public MapSchemeTreeNode(Object obj, String name, ImageIcon ii)
 		{
-			super (obj, name, enable, ii);
+			super(obj, name, ii);
 		}
 	
-		public MapSchemeTreeNode(Object obj, String name, boolean enable, ImageIcon ii, boolean isFinal)
+		public MapSchemeTreeNode(Object obj, String name, ImageIcon ii, boolean allowsChildren)
 		{
-			super(obj, name, enable, ii, isFinal);
+			super(obj, name, ii, allowsChildren);
 		}
 	
 		public void setTopological(boolean t)
@@ -554,6 +439,14 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 		public boolean isTopological()
 		{
 			return this.topological;
+		}
+
+		public boolean isDragDropEnabled() {
+			return this.dragDropEnabled;
+		}
+
+		public void setDragDropEnabled(boolean dragDropEnabled) {
+			this.dragDropEnabled = dragDropEnabled;
 		}
 	}
 }

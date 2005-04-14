@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewTreeModel.java,v 1.9 2005/04/07 14:13:52 krupenn Exp $ Syrus
+ * $Id: MapViewTreeModel.java,v 1.10 2005/04/14 14:11:29 krupenn Exp $ Syrus
  * Systems Научно-технический центр Проект: АМФИКОМ Автоматизированный
  * МногоФункциональный Интеллектуальный Комплекс Объектного Мониторинга
  * Платформа: java 1.4.1
@@ -34,12 +34,14 @@ import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.mapview.MapView;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/04/07 14:13:52 $
+ * @version $Revision: 1.10 $, $Date: 2005/04/14 14:11:29 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
 public class MapViewTreeModel {
 	public static final String MAP_BRANCH = "Map";
+
+	public static final String SCHEMES_BRANCH = "schemes";
 
 	public static final String MAPS_BRANCH = "innermaps";
 
@@ -95,6 +97,8 @@ public class MapViewTreeModel {
 					IMG_SIZE,
 					Image.SCALE_SMOOTH));
 
+	MapSchemeTreeModel schemeTreeModel;
+	
 	public MapViewTreeModel(Item root) {
 		this.root = root;
 	}
@@ -198,12 +202,22 @@ public class MapViewTreeModel {
 						getObjectName(mapView),
 						mapViewIcon);
 				root.addChild(this.topLevelItem);
+
 				Item mapNode = new IconedNode(
 						MapViewTreeModel.MAP_BRANCH,
 						getObjectName(MapViewTreeModel.MAP_BRANCH),
 						folderIcon);
 				this.topLevelItem.addChild(mapNode);
 				mapNode.addChild(buildMapTree(mapView.getMap()));
+
+				Item schemesNode = new IconedNode(
+						MapViewTreeModel.SCHEMES_BRANCH,
+						getObjectName(MapViewTreeModel.SCHEMES_BRANCH),
+						folderIcon);
+				this.topLevelItem.addChild(schemesNode);
+				
+				this.schemeTreeModel = new MapSchemeTreeModel(schemesNode);
+				this.schemeTreeModel.setMapView(mapView);
 			}
 		}
 		this.mapView = mapView;
