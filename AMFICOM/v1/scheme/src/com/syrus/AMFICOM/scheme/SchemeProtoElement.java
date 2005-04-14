@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.20 2005/04/14 11:15:52 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.21 2005/04/14 18:20:27 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,7 +52,7 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.20 $, $Date: 2005/04/14 11:15:52 $
+ * @version $Revision: 1.21 $, $Date: 2005/04/14 18:20:27 $
  * @module scheme_v1
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation. 
  */
@@ -449,7 +449,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * @return this <code>schemeProtoElement</code>&apos;s label, or
+	 * @return this <code>SchemeProtoElement</code>&apos;s label, or
 	 *         empty string if none. Never returns <code>null</code>s.
 	 */
 	public String getLabel() {
@@ -904,8 +904,15 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 */
 	public void setSchemeDevices(final Set schemeDevices) {
 		assert schemeDevices != null: ErrorMessages.NON_NULL_EXPECTED;
-		for (final Iterator oldSchemeDeviceIterator = getSchemeDevices().iterator(); oldSchemeDeviceIterator.hasNext();)
-			removeSchemeDevice((SchemeDevice) oldSchemeDeviceIterator.next());
+		for (final Iterator oldSchemeDeviceIterator = getSchemeDevices().iterator(); oldSchemeDeviceIterator.hasNext();) {
+			final SchemeDevice oldSchemeDevice = (SchemeDevice) oldSchemeDeviceIterator.next();
+			/*
+			 * Check is made to prevent SchemeDevices from
+			 * permanently losing their parents.
+			 */
+			assert !schemeDevices.contains(oldSchemeDevice);
+			removeSchemeDevice(oldSchemeDevice);
+		}
 		for (final Iterator schemeDeviceIterator = schemeDevices.iterator(); schemeDeviceIterator.hasNext();)
 			addSchemeDevice((SchemeDevice) schemeDeviceIterator.next());
 	}
@@ -915,8 +922,15 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 */
 	public void setSchemeLinks(final Set schemeLinks) {
 		assert schemeLinks != null: ErrorMessages.NON_NULL_EXPECTED;
-		for (final Iterator oldSchemeLinkIterator = getSchemeLinks().iterator(); oldSchemeLinkIterator.hasNext();)
-			removeSchemeLink((SchemeLink) oldSchemeLinkIterator.next());
+		for (final Iterator oldSchemeLinkIterator = getSchemeLinks().iterator(); oldSchemeLinkIterator.hasNext();) {
+			final SchemeLink oldSchemeLink = (SchemeLink) oldSchemeLinkIterator.next();
+			/*
+			 * Check is made to prevent SchemeLinks from
+			 * permanently losing their parents.
+			 */
+			assert !schemeLinks.contains(oldSchemeLink);
+			removeSchemeLink(oldSchemeLink);
+		}
 		for (final Iterator schemeLinkIterator = schemeLinks.iterator(); schemeLinkIterator.hasNext();)
 			addSchemeLink((SchemeLink) schemeLinkIterator.next());
 	}
@@ -940,6 +954,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	}
 
 	/**
+	 * @param symbol
 	 * @see SchemeSymbolContainer#setSymbol(BitmapImageResource)
 	 */
 	public void setSymbol(final BitmapImageResource symbol) {
@@ -951,6 +966,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	}
 
 	/**
+	 * @param ugoCell
 	 * @see SchemeCellContainer#setUgoCell(SchemeImageResource)
 	 */
 	public void setUgoCell(final SchemeImageResource ugoCell) {

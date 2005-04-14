@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractSchemeElement.java,v 1.9 2005/04/14 11:15:52 bass Exp $
+ * $Id: AbstractSchemeElement.java,v 1.10 2005/04/14 18:20:27 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,9 +8,21 @@
 
 package com.syrus.AMFICOM.scheme;
 
-import com.syrus.AMFICOM.general.*;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
-import java.util.*;
+import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.Characterizable;
+import com.syrus.AMFICOM.general.Describable;
+import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.Namable;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.util.Log;
 
 /**
  * This class is never used directly, it was provided just in order for source
@@ -18,7 +30,7 @@ import java.util.*;
  * {@link AbstractSchemeElement}instead.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/04/14 11:15:52 $
+ * @version $Revision: 1.10 $, $Date: 2005/04/14 18:20:27 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemeElement extends
@@ -37,7 +49,7 @@ public abstract class AbstractSchemeElement extends
 	 *       overridden by descendants to add extra checks as SchemeElement
 	 *       and SchemeLink may be enclosed not by Scheme only.
 	 */
-	private Identifier parentSchemeId;
+	Identifier parentSchemeId;
 
 	/**
 	 * @param id
@@ -99,7 +111,7 @@ public abstract class AbstractSchemeElement extends
 	 * @see Describable#getDescription()
 	 */
 	public final String getDescription() {
-		assert this.description != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.description != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
 		return this.description;
 	}
 
@@ -112,13 +124,19 @@ public abstract class AbstractSchemeElement extends
 	}
 
 	/**
-	 * Getter returns scheme parent to this scheme link or scheme cable link
-	 * or scheme element.
+	 * Returns <code>Scheme</code> parent to this <code>SchemeLink</code>
+	 * or <code>SchemeCableLlink</code> or <code>SchemeElement</code>.
+	 * Descendants almost always need to override this.
 	 * 
 	 * @see #parentSchemeId
 	 */
-	public final Scheme getParentScheme() {
-		throw new UnsupportedOperationException();
+	public Scheme getParentScheme() {
+		try {
+			return (Scheme) SchemeStorableObjectPool.getStorableObject(this.parentSchemeId, true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return null;
+		}
 	}
 
 	/**

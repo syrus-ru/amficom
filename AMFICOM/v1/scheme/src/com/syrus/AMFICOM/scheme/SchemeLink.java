@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.12 2005/04/14 11:15:52 bass Exp $
+ * $Id: SchemeLink.java,v 1.13 2005/04/14 18:20:27 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,6 +14,7 @@ import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.scheme.corba.SchemeLink_Transferable;
+import com.syrus.util.Log;
 
 import java.util.*;
 import org.omg.CORBA.portable.IDLEntity;
@@ -22,7 +23,7 @@ import org.omg.CORBA.portable.IDLEntity;
  * #10 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2005/04/14 11:15:52 $
+ * @version $Revision: 1.13 $, $Date: 2005/04/14 18:20:27 $
  * @module scheme_v1
  */
 public final class SchemeLink extends AbstractSchemeLink {
@@ -135,12 +136,59 @@ public final class SchemeLink extends AbstractSchemeLink {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @see AbstractSchemeElement#getParentScheme()
+	 */
+	public Scheme getParentScheme() {
+		assert this.parentSchemeId != null && this.parentSchemeElementId != null && this.parentSchemeProtoElementId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+
+		if (this.parentSchemeId.isVoid()) {
+			assert !this.parentSchemeElementId.isVoid() || !this.parentSchemeProtoElementId.isVoid(): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
+			Log.debugMessage("SchemeLink.getParentScheme() | Parent Scheme was requested, while parent is either a SchemeElement or a SchemeProtoElement; returning null", //$NON-NLS-1$
+					Log.FINE);
+			return null;
+		}
+
+		assert this.parentSchemeElementId.isVoid() && this.parentSchemeProtoElementId.isVoid(): ErrorMessages.MULTIPLE_PARENTS_PROHIBITED;
+		return super.getParentScheme();
+	}
+
 	public SchemeElement getParentSchemeElement() {
-		throw new UnsupportedOperationException();
+		assert this.parentSchemeId != null && this.parentSchemeElementId != null && this.parentSchemeProtoElementId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+
+		if (this.parentSchemeElementId.isVoid()) {
+			assert !this.parentSchemeId.isVoid() || !this.parentSchemeProtoElementId.isVoid(): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
+			Log.debugMessage("SchemeLink.getParentSchemeElement() | Parent SchemeElement was requested, while parent is either a Scheme or a SchemeProtoElement; returning null", //$NON-NLS-1$
+					Log.FINE);
+			return null;
+		}
+
+		try {
+			assert this.parentSchemeId.isVoid() && this.parentSchemeProtoElementId.isVoid(): ErrorMessages.MULTIPLE_PARENTS_PROHIBITED;
+			return (SchemeElement) SchemeStorableObjectPool.getStorableObject(this.parentSchemeElementId, true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return null;
+		}
 	}
 
 	public SchemeProtoElement getParentSchemeProtoElement() {
-		throw new UnsupportedOperationException();
+		assert this.parentSchemeId != null && this.parentSchemeElementId != null && this.parentSchemeProtoElementId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+
+		if (this.parentSchemeProtoElementId.isVoid()) {
+			assert !this.parentSchemeId.isVoid() || !this.parentSchemeElementId.isVoid(): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
+			Log.debugMessage("SchemeLink.getParentSchemeProtoElement() | Parent SchemeProtoElement was requested, while parent is either a Scheme or a SchemeElement; returning null", //$NON-NLS-1$
+					Log.FINE);
+			return null;
+		}
+
+		try {
+			assert this.parentSchemeId.isVoid() && this.parentSchemeElementId.isVoid(): ErrorMessages.MULTIPLE_PARENTS_PROHIBITED;
+			return (SchemeProtoElement) SchemeStorableObjectPool.getStorableObject(this.parentSchemeProtoElementId, true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return null;
+		}
 	}
 
 	public SiteNode getSiteNode() {

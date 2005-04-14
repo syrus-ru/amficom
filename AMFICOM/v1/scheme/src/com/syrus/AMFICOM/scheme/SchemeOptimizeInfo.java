@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.10 2005/04/14 11:15:52 bass Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.11 2005/04/14 18:20:27 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,6 +22,7 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfo_Transferable;
 
 import java.util.Date;
+import java.util.Iterator;
 import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
@@ -30,7 +31,7 @@ import org.omg.CORBA.portable.IDLEntity;
  * #05 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2005/04/14 11:15:52 $
+ * @version $Revision: 1.11 $, $Date: 2005/04/14 18:20:27 $
  * @module scheme_v1
  */
 public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
@@ -356,15 +357,48 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 	}
 
 	public void setSchemeMonitoringSolutions(final Set schemeMonitoringSolutions) {
-		throw new UnsupportedOperationException();
+		assert schemeMonitoringSolutions != null: ErrorMessages.NON_NULL_EXPECTED;
+		for (final Iterator oldSchemeMonitoringSolutionIterator = getSchemeMonitoringSolutions().iterator(); oldSchemeMonitoringSolutionIterator.hasNext();) {
+			final SchemeMonitoringSolution oldSchemeMonitoringSolution = (SchemeMonitoringSolution) oldSchemeMonitoringSolutionIterator.next();
+			/*
+			 * Check is made to prevent SchemeMonitoringSolutions from
+			 * permanently losing their parents.
+			 */
+			assert !schemeMonitoringSolutions.contains(oldSchemeMonitoringSolution);
+			removeSchemeMonitoringSolution(oldSchemeMonitoringSolution);
+		}
+		for (final Iterator schemeMonitoringSolutionIterator = schemeMonitoringSolutions.iterator(); schemeMonitoringSolutionIterator.hasNext();)
+			addSchemeMonitoringSolution((SchemeMonitoringSolution) schemeMonitoringSolutionIterator.next());
 	}
 
 	public void setSchemeOptimizeInfoRtus(final Set schemeOptimizeInfoRtus) {
-		throw new UnsupportedOperationException();
+		assert schemeOptimizeInfoRtus != null: ErrorMessages.NON_NULL_EXPECTED;
+		for (final Iterator oldSchemeOptimizeInfoRtuIterator = getSchemeOptimizeInfoRtus().iterator(); oldSchemeOptimizeInfoRtuIterator.hasNext();) {
+			final SchemeOptimizeInfoRtu oldSchemeOptimizeInfoRtu = (SchemeOptimizeInfoRtu) oldSchemeOptimizeInfoRtuIterator.next();
+			/*
+			 * Check is made to prevent SchemeOptimizeInfoRtus from
+			 * permanently losing their parents.
+			 */
+			assert !schemeOptimizeInfoRtus.contains(oldSchemeOptimizeInfoRtu);
+			removeSchemeOptimizeInfoRtu(oldSchemeOptimizeInfoRtu);
+		}
+		for (final Iterator schemeOptimizeInfoRtuIterator = schemeOptimizeInfoRtus.iterator(); schemeOptimizeInfoRtuIterator.hasNext();)
+			addSchemeOptimizeInfoRtu((SchemeOptimizeInfoRtu) schemeOptimizeInfoRtuIterator.next());
 	}
 
 	public void setSchemeOptimizeInfoSwitches(final Set schemeOptimizeInfoSwitches) {
-		throw new UnsupportedOperationException();
+		assert schemeOptimizeInfoSwitches != null: ErrorMessages.NON_NULL_EXPECTED;
+		for (final Iterator oldSchemeOptimizeInfoSwitchIterator = getSchemeOptimizeInfoSwitches().iterator(); oldSchemeOptimizeInfoSwitchIterator.hasNext();) {
+			final SchemeOptimizeInfoSwitch oldSchemeOptimizeInfoSwitch = (SchemeOptimizeInfoSwitch) oldSchemeOptimizeInfoSwitchIterator.next();
+			/*
+			 * Check is made to prevent SchemeOptimizeInfoSwitches from
+			 * permanently losing their parents.
+			 */
+			assert !schemeOptimizeInfoSwitches.contains(oldSchemeOptimizeInfoSwitch);
+			removeSchemeOptimizeInfoSwitch(oldSchemeOptimizeInfoSwitch);
+		}
+		for (final Iterator schemeOptimizeInfoSwitchIterator = schemeOptimizeInfoSwitches.iterator(); schemeOptimizeInfoSwitchIterator.hasNext();)
+			addSchemeOptimizeInfoSwitch((SchemeOptimizeInfoSwitch) schemeOptimizeInfoSwitchIterator.next());
 	}
 
 	public void setSurvivorRate(final double survivorRate) {

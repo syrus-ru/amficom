@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.13 2005/04/14 11:15:52 bass Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.14 2005/04/14 18:20:27 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,6 +22,7 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.scheme.corba.SchemeMonitoringSolution_Transferable;
 
 import java.util.Date;
+import java.util.Iterator;
 import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
@@ -30,7 +31,7 @@ import org.omg.CORBA.portable.IDLEntity;
  * #06 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.13 $, $Date: 2005/04/14 11:15:52 $
+ * @version $Revision: 1.14 $, $Date: 2005/04/14 18:20:27 $
  * @module scheme_v1
  */
 public final class SchemeMonitoringSolution extends
@@ -197,7 +198,18 @@ public final class SchemeMonitoringSolution extends
 	}
 
 	public void setSchemePaths(final Set schemePaths) {
-		throw new UnsupportedOperationException();
+		assert schemePaths != null: ErrorMessages.NON_NULL_EXPECTED;
+		for (final Iterator oldSchemePathIterator = getSchemePaths().iterator(); oldSchemePathIterator.hasNext();) {
+			final SchemePath oldSchemePath = (SchemePath) oldSchemePathIterator.next();
+			/*
+			 * Check is made to prevent SchemePaths from
+			 * permanently losing their parents.
+			 */
+			assert !schemePaths.contains(oldSchemePath);
+			removeSchemePath(oldSchemePath);
+		}
+		for (final Iterator schemePathIterator = schemePaths.iterator(); schemePathIterator.hasNext();)
+			addSchemePath((SchemePath) schemePathIterator.next());
 	}
 
 	/**

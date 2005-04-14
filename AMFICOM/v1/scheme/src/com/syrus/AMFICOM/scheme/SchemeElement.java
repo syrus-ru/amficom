@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.14 2005/04/14 11:15:52 bass Exp $
+ * $Id: SchemeElement.java,v 1.15 2005/04/14 18:20:27 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,15 @@
 
 package com.syrus.AMFICOM.scheme;
 
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
+import org.omg.CORBA.portable.IDLEntity;
+
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.KIS;
@@ -25,23 +34,16 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
+import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.corba.SchemeElement_Transferable;
 import com.syrus.util.Log;
-
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-
-import org.omg.CORBA.portable.IDLEntity;
 
 /**
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2005/04/14 11:15:52 $
+ * @version $Revision: 1.15 $, $Date: 2005/04/14 18:20:27 $
  * @module scheme_v1
  */
 public final class SchemeElement extends AbstractSchemeElement implements
@@ -211,27 +213,92 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	}
 
 	public Equipment getEquipment() {
-		assert this.equipmentId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.equipmentId != null && this.equipmentTypeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
 		if (this.equipmentId.isVoid()) {
-//			assert this.equipmentTypeId.equals(clone())
+			assert !this.equipmentTypeId.isVoid(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
+			return null;
 		}
-		throw new UnsupportedOperationException();
+
+		try {
+			assert this.equipmentTypeId.isVoid(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
+			return (Equipment) ConfigurationStorableObjectPool.getStorableObject(this.equipmentId, true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return null;
+		}
 	}
 
 	public EquipmentType getEquipmentType() {
-		throw new UnsupportedOperationException();
+		assert this.equipmentId != null && this.equipmentTypeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		if (this.equipmentTypeId.isVoid()) {
+			assert !this.equipmentId.isVoid(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
+			return (EquipmentType) getEquipment().getType();
+		}
+
+		try {
+			assert this.equipmentId.isVoid(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
+			return (EquipmentType) ConfigurationStorableObjectPool.getStorableObject(this.equipmentTypeId, true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return null;
+		}
 	}
 
 	public KIS getKis() {
-		throw new UnsupportedOperationException();
+		assert this.kisId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		if (this.kisId.isVoid())
+			return null;
+		try {
+			return (KIS) ConfigurationStorableObjectPool.getStorableObject(this.kisId, true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return null;
+		}
 	}
 
+	/**
+	 * @return this <code>SchemeElement</code>&apos;s label, or
+	 *         empty string if none. Never returns <code>null</code>s.
+	 */
 	public String getLabel() {
-		throw new UnsupportedOperationException();
+		assert this.label != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		return this.label;
+	}
+
+	/**
+	 * @see AbstractSchemeElement#getParentScheme()
+	 */
+	public Scheme getParentScheme() {
+		assert this.parentSchemeId != null && this.parentSchemeElementId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+
+		if (this.parentSchemeId.isVoid()) {
+			assert !this.parentSchemeElementId.isVoid(): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
+			Log.debugMessage("SchemeElement.getParentScheme() | Parent Scheme was requested, while parent is a SchemeElement; returning null", //$NON-NLS-1$
+					Log.FINE);
+			return null;
+		}
+
+		assert this.parentSchemeElementId.isVoid(): ErrorMessages.MULTIPLE_PARENTS_PROHIBITED;
+		return super.getParentScheme();
 	}
 
 	public SchemeElement getParentSchemeElement() {
-		throw new UnsupportedOperationException();
+		assert this.parentSchemeId != null && this.parentSchemeElementId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+
+		if (this.parentSchemeElementId.isVoid()) {
+			assert !this.parentSchemeId.isVoid(): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
+			Log.debugMessage("SchemeElement.getParentSchemeElement() | Parent SchemeElement was requested, while parent is a Scheme; returnung null", //$NON-NLS-1$
+					Log.FINE);
+			return null;
+		}
+		
+		try {
+			assert this.parentSchemeId.isVoid(): ErrorMessages.MULTIPLE_PARENTS_PROHIBITED;
+			return (SchemeElement) SchemeStorableObjectPool.getStorableObject(this.parentSchemeElementId, true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return null;
+		}
 	}
 
 	/**
@@ -247,10 +314,19 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.scheme.SchemeCellContainer#getSchemeCell()
+	 * @see SchemeCellContainer#getSchemeCell()
 	 */
 	public SchemeImageResource getSchemeCell() {
-		throw new UnsupportedOperationException();
+		assert this.schemeCellId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		if (this.schemeCellId.isVoid())
+			return null;
+		try {
+			return (SchemeImageResource) ResourceStorableObjectPool
+					.getStorableObject(this.schemeCellId, true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return null;
+		}
 	}
 
 	/**
@@ -309,7 +385,16 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 * @see SchemeSymbolContainer#getSymbol()
 	 */
 	public BitmapImageResource getSymbol() {
-		throw new UnsupportedOperationException();
+		assert this.symbolId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		if (this.symbolId.isVoid())
+			return null;
+		try {
+			return (BitmapImageResource) ResourceStorableObjectPool
+					.getStorableObject(this.symbolId, true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return null;
+		}
 	}
 
 	/**
@@ -320,10 +405,19 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.scheme.SchemeCellContainer#getUgoCell()
+	 * @see SchemeCellContainer#getUgoCell()
 	 */
 	public SchemeImageResource getUgoCell() {
-		throw new UnsupportedOperationException();
+		assert this.ugoCellId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		if (this.ugoCellId.isVoid())
+			return null;
+		try {
+			return (SchemeImageResource) ResourceStorableObjectPool
+					.getStorableObject(this.ugoCellId, true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return null;
+		}
 	}
 
 	/**
@@ -395,8 +489,17 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @param label cannot be <code>null</code>. For this purpose, supply
+	 *        an empty string as an argument.
+	 */
 	public void setLabel(final String label) {
-		throw new UnsupportedOperationException();
+		assert this.label != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert label != null: ErrorMessages.NON_NULL_EXPECTED;
+		if (this.label.equals(label))
+			return;
+		this.label = label;
+		this.changed = true;
 	}
 
 	public void setParentSchemeElement(final SchemeElement parentSchemeElement) {
@@ -410,30 +513,73 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	}
 
 	/**
-	 * @param schemeCellImpl
-	 * @see com.syrus.AMFICOM.scheme.SchemeCellContainer#setSchemeCell(SchemeImageResource)
+	 * @param schemeCell
+	 * @see SchemeCellContainer#setSchemeCell(SchemeImageResource)
 	 */
-	public void setSchemeCell(SchemeImageResource schemeCellImpl) {
-		throw new UnsupportedOperationException();
+	public void setSchemeCell(final SchemeImageResource schemeCell) {
+		final Identifier newSchemeCellId = Identifier.possiblyVoid(schemeCell);
+		if (this.schemeCellId.equals(newSchemeCellId))
+			return;
+		this.schemeCellId = newSchemeCellId;
+		this.changed = true;
 	}
 
 	public void setSchemeDevices(final Set schemeDevices) {
-		throw new UnsupportedOperationException();
+		assert schemeDevices != null: ErrorMessages.NON_NULL_EXPECTED;
+		for (final Iterator oldSchemeDeviceIterator = getSchemeDevices().iterator(); oldSchemeDeviceIterator.hasNext();) {
+			final SchemeDevice oldSchemeDevice = (SchemeDevice) oldSchemeDeviceIterator.next();
+			/*
+			 * Check is made to prevent SchemeDevices from
+			 * permanently losing their parents.
+			 */
+			assert !schemeDevices.contains(oldSchemeDevice);
+			removeSchemeDevice(oldSchemeDevice);
+		}
+		for (final Iterator schemeDeviceIterator = schemeDevices.iterator(); schemeDeviceIterator.hasNext();)
+			addSchemeDevice((SchemeDevice) schemeDeviceIterator.next());
 	}
 
 	public void setSchemeElements(final Set schemeElements) {
-		throw new UnsupportedOperationException();
+		assert schemeElements != null: ErrorMessages.NON_NULL_EXPECTED;
+		for (final Iterator oldSchemeElementIterator = getSchemeElements().iterator(); oldSchemeElementIterator.hasNext();) {
+			final SchemeElement oldSchemeElement = (SchemeElement) oldSchemeElementIterator.next();
+			/*
+			 * Check is made to prevent SchemeElements from
+			 * permanently losing their parents.
+			 */
+			assert !schemeElements.contains(oldSchemeElement);
+			removeSchemeElement(oldSchemeElement);
+		}
+		for (final Iterator schemeElementIterator = schemeElements.iterator(); schemeElementIterator.hasNext();)
+			addSchemeElement((SchemeElement) schemeElementIterator.next());
 	}
 
 	public void setSchemeLinks(final Set schemeLinks) {
-		throw new UnsupportedOperationException();
+		assert schemeLinks != null: ErrorMessages.NON_NULL_EXPECTED;
+		for (final Iterator oldSchemeLinkIterator = getSchemeLinks().iterator(); oldSchemeLinkIterator.hasNext();) {
+			final SchemeLink oldSchemeLink = (SchemeLink) oldSchemeLinkIterator.next();
+			/*
+			 * Check is made to prevent SchemeLinks from
+			 * permanently losing their parents.
+			 */
+			assert !schemeLinks.contains(oldSchemeLink);
+			removeSchemeLink(oldSchemeLink);
+		}
+		for (final Iterator schemeLinkIterator = schemeLinks.iterator(); schemeLinkIterator.hasNext();)
+			addSchemeLink((SchemeLink) schemeLinkIterator.next());
 	}
 
+	/**
+	 * @param schemes
+	 * @see Scheme#setSchemeElements(Set)
+	 * @todo Check for circular depsendencies.
+	 */
 	public void setSchemes(final Set schemes) {
-		/**
-		 * @todo Check for circualr deps.
-		 */
-		throw new UnsupportedOperationException();
+		assert schemes != null: ErrorMessages.NON_NULL_EXPECTED;
+		for (final Iterator oldSchemeIterator = getSchemes().iterator(); oldSchemeIterator.hasNext();)
+			removeScheme((Scheme) oldSchemeIterator.next());
+		for (final Iterator schemeIterator = schemes.iterator(); schemeIterator.hasNext();)
+			addScheme((Scheme) schemeIterator.next());
 	}
 
 	public void setSiteNode(final SiteNode siteNode) {
@@ -441,19 +587,27 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	}
 
 	/**
-	 * @param symbolImpl
-	 * @see com.syrus.AMFICOM.scheme.SchemeSymbolContainer#setSymbol(BitmapImageResource)
+	 * @param symbol
+	 * @see SchemeSymbolContainer#setSymbol(BitmapImageResource)
 	 */
-	public void setSymbol(BitmapImageResource symbolImpl) {
-		throw new UnsupportedOperationException();
+	public void setSymbol(final BitmapImageResource symbol) {
+		final Identifier newSymbolId = Identifier.possiblyVoid(symbol);
+		if (this.symbolId.equals(newSymbolId))
+			return;
+		this.symbolId = newSymbolId;
+		this.changed = true;
 	}
 
 	/**
-	 * @param ugoCellImpl
-	 * @see com.syrus.AMFICOM.scheme.SchemeCellContainer#setUgoCell(SchemeImageResource)
+	 * @param ugoCell
+	 * @see SchemeCellContainer#setUgoCell(SchemeImageResource)
 	 */
-	public void setUgoCell(final SchemeImageResource ugoCellImpl) {
-		throw new UnsupportedOperationException();
+	public void setUgoCell(final SchemeImageResource ugoCell) {
+		final Identifier newUgoCellId = Identifier.possiblyVoid(ugoCell);
+		if (this.ugoCellId.equals(newUgoCellId))
+			return;
+		this.ugoCellId = newUgoCellId;
+		this.changed = true;
 	}
 
 	/**
@@ -484,18 +638,18 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	}
 
 	public SchemePath getAlarmedPath() {
-		throw new UnsupportedOperationException();
+		throw new UnsupportedOperationException("Method not implemented"); //$NON-NLS-1$
 	}
 
 	public PathElement getAlarmedPathElement() {
-		throw new UnsupportedOperationException();
+		throw new UnsupportedOperationException("Method not implemented"); //$NON-NLS-1$
 	}
 
 	public void setAlarmedPath(final SchemePath alarmedPath) {
-		throw new UnsupportedOperationException();
+		throw new UnsupportedOperationException("Method not implemented"); //$NON-NLS-1$
 	}
 
 	public void setAlarmedPathElement(final PathElement alarmedPathElement) {
-		throw new UnsupportedOperationException();
+		throw new UnsupportedOperationException("Method not implemented"); //$NON-NLS-1$
 	}
 }

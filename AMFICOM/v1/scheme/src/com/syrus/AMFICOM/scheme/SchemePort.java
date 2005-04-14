@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePort.java,v 1.12 2005/04/14 11:15:52 bass Exp $
+ * $Id: SchemePort.java,v 1.13 2005/04/14 18:20:27 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import org.omg.CORBA.portable.IDLEntity;
  * #08 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2005/04/14 11:15:52 $
+ * @version $Revision: 1.13 $, $Date: 2005/04/14 18:20:27 $
  * @module scheme_v1
  */
 public final class SchemePort extends AbstractSchemePort {
@@ -166,7 +166,7 @@ public final class SchemePort extends AbstractSchemePort {
 	/**
 	 * @param transferable
 	 * @throws ApplicationException
-	 * @see StorableObject#fromTransferable(IDLEntity)
+	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IDLEntity)
 	 */
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		throw new UnsupportedOperationException();

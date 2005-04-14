@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.16 2005/04/14 11:15:52 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.17 2005/04/14 18:20:27 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import org.omg.CORBA.portable.IDLEntity;
  * #01 in hierarchy.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.16 $, $Date: 2005/04/14 11:15:52 $
+ * @version $Revision: 1.17 $, $Date: 2005/04/14 18:20:27 $
  * @module scheme_v1
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation. 
  */
@@ -571,6 +571,7 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	}
 
 	/**
+	 * @param symbol
 	 * @see SchemeSymbolContainer#setSymbol(BitmapImageResource)
 	 */
 	public void setSymbol(final BitmapImageResource symbol) {

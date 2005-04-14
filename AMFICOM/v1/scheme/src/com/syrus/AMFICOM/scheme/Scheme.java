@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.12 2005/04/14 11:15:52 bass Exp $
+ * $Id: Scheme.java,v 1.13 2005/04/14 18:20:27 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,11 +22,14 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
+import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.corba.SchemeKind;
 import com.syrus.AMFICOM.scheme.corba.Scheme_Transferable;
+import com.syrus.util.Log;
 
 import java.util.Date;
+import java.util.Iterator;
 import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
@@ -35,7 +38,7 @@ import org.omg.CORBA.portable.IDLEntity;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2005/04/14 11:15:52 $
+ * @version $Revision: 1.13 $, $Date: 2005/04/14 18:20:27 $
  * @module scheme_v1
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -198,8 +201,13 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @return this <code>Scheme</code>&apos;s label, or
+	 *         empty string if none. Never returns <code>null</code>s.
+	 */
 	public String getLabel() {
-		throw new UnsupportedOperationException();
+		assert this.label != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		return this.label;
 	}
 
 	public Map getMap() {
@@ -226,7 +234,16 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 * @see SchemeCellContainer#getSchemeCell()
 	 */
 	public SchemeImageResource getSchemeCell() {
-		throw new UnsupportedOperationException();
+		assert this.schemeCellId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		if (this.schemeCellId.isVoid())
+			return null;
+		try {
+			return (SchemeImageResource) ResourceStorableObjectPool
+					.getStorableObject(this.schemeCellId, true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return null;
+		}
 	}
 
 	public Set getSchemeElements() {
@@ -249,7 +266,16 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 * @see SchemeSymbolContainer#getSymbol()
 	 */
 	public BitmapImageResource getSymbol() {
-		throw new UnsupportedOperationException();
+		assert this.symbolId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		if (this.symbolId.isVoid())
+			return null;
+		try {
+			return (BitmapImageResource) ResourceStorableObjectPool
+					.getStorableObject(this.symbolId, true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return null;
+		}
 	}
 
 	/**
@@ -263,7 +289,16 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 * @see SchemeCellContainer#getUgoCell()
 	 */
 	public SchemeImageResource getUgoCell() {
-		throw new UnsupportedOperationException();
+		assert this.ugoCellId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		if (this.ugoCellId.isVoid())
+			return null;
+		try {
+			return (SchemeImageResource) ResourceStorableObjectPool
+					.getStorableObject(this.ugoCellId, true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return null;
+		}
 	}
 
 	public int getWidth() {
@@ -338,8 +373,17 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @param label cannot be <code>null</code>. For this purpose, supply
+	 *        an empty string as an argument.
+	 */
 	public void setLabel(final String label) {
-		throw new UnsupportedOperationException();
+		assert this.label != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert label != null: ErrorMessages.NON_NULL_EXPECTED;
+		if (this.label.equals(label))
+			return;
+		this.label = label;
+		this.changed = true;
 	}
 
 	public void setMap(final Map map) {
@@ -363,18 +407,45 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	}
 
 	public void setSchemeCableLinks(final Set schemeCableLinks) {
-		throw new UnsupportedOperationException();
+		assert schemeCableLinks != null: ErrorMessages.NON_NULL_EXPECTED;
+		for (final Iterator oldSchemeCableLinkIterator = getSchemeCableLinks().iterator(); oldSchemeCableLinkIterator.hasNext();) {
+			final SchemeCableLink oldSchemeCableLink = (SchemeCableLink) oldSchemeCableLinkIterator.next();
+			/*
+			 * Check is made to prevent SchemeCableLinks from
+			 * permanently losing their parents.
+			 */
+			assert !schemeCableLinks.contains(oldSchemeCableLink);
+			removeSchemeCableLink(oldSchemeCableLink);
+		}
+		for (final Iterator schemeCableLinkIterator = schemeCableLinks.iterator(); schemeCableLinkIterator.hasNext();)
+			addSchemeCableLink((SchemeCableLink) schemeCableLinkIterator.next());
 	}
 
 	/**
+	 * @param schemeCell
 	 * @see SchemeCellContainer#setSchemeCell(SchemeImageResource)
 	 */
-	public void setSchemeCell(SchemeImageResource schemeCellImpl) {
-		throw new UnsupportedOperationException();
+	public void setSchemeCell(final SchemeImageResource schemeCell) {
+		final Identifier newSchemeCellId = Identifier.possiblyVoid(schemeCell);
+		if (this.schemeCellId.equals(newSchemeCellId))
+			return;
+		this.schemeCellId = newSchemeCellId;
+		this.changed = true;
 	}
 
 	public void setSchemeElements(final Set schemeElements) {
-		throw new UnsupportedOperationException();
+		assert schemeElements != null: ErrorMessages.NON_NULL_EXPECTED;
+		for (final Iterator oldSchemeElementIterator = getSchemeElements().iterator(); oldSchemeElementIterator.hasNext();) {
+			final SchemeElement oldSchemeElement = (SchemeElement) oldSchemeElementIterator.next();
+			/*
+			 * Check is made to prevent SchemeElements from
+			 * permanently losing their parents.
+			 */
+			assert !schemeElements.contains(oldSchemeElement);
+			removeSchemeElement(oldSchemeElement);
+		}
+		for (final Iterator schemeElementIterator = schemeElements.iterator(); schemeElementIterator.hasNext();)
+			addSchemeElement((SchemeElement) schemeElementIterator.next());
 	}
 
 	public void setSchemeKind(final SchemeKind schemeKind) {
@@ -382,25 +453,57 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	}
 
 	public void setSchemeLinks(final Set schemeLinks) {
-		throw new UnsupportedOperationException();
+		assert schemeLinks != null: ErrorMessages.NON_NULL_EXPECTED;
+		for (final Iterator oldSchemeLinkIterator = getSchemeLinks().iterator(); oldSchemeLinkIterator.hasNext();) {
+			final SchemeLink oldSchemeLink = (SchemeLink) oldSchemeLinkIterator.next();
+			/*
+			 * Check is made to prevent SchemeLinks from
+			 * permanently losing their parents.
+			 */
+			assert !schemeLinks.contains(oldSchemeLink);
+			removeSchemeLink(oldSchemeLink);
+		}
+		for (final Iterator schemeLinkIterator = schemeLinks.iterator(); schemeLinkIterator.hasNext();)
+			addSchemeLink((SchemeLink) schemeLinkIterator.next());
 	}
 
 	public void setSchemeOptimizeInfos(final Set schemeOptimizeInfos) {
-		throw new UnsupportedOperationException();
+		assert schemeOptimizeInfos != null: ErrorMessages.NON_NULL_EXPECTED;
+		for (final Iterator oldSchemeOptimizeInfoIterator = getSchemeOptimizeInfos().iterator(); oldSchemeOptimizeInfoIterator.hasNext();) {
+			final SchemeOptimizeInfo oldSchemeOptimizeInfo = (SchemeOptimizeInfo) oldSchemeOptimizeInfoIterator.next();
+			/*
+			 * Check is made to prevent SchemeOptimizeInfos from
+			 * permanently losing their parents.
+			 */
+			assert !schemeOptimizeInfos.contains(oldSchemeOptimizeInfo);
+			removeSchemeOptimizeInfo(oldSchemeOptimizeInfo);
+		}
+		for (final Iterator schemeOptimizeInfoIterator = schemeOptimizeInfos.iterator(); schemeOptimizeInfoIterator.hasNext();)
+			addSchemeOptimizeInfo((SchemeOptimizeInfo) schemeOptimizeInfoIterator.next());
 	}
 
 	/**
+	 * @param symbol
 	 * @see SchemeSymbolContainer#setSymbol(BitmapImageResource)
 	 */
-	public void setSymbol(BitmapImageResource symbolImpl) {
-		throw new UnsupportedOperationException();
+	public void setSymbol(final BitmapImageResource symbol) {
+		final Identifier newSymbolId = Identifier.possiblyVoid(symbol);
+		if (this.symbolId.equals(newSymbolId))
+			return;
+		this.symbolId = newSymbolId;
+		this.changed = true;
 	}
 
 	/**
+	 * @param ugoCell
 	 * @see SchemeCellContainer#setUgoCell(SchemeImageResource)
 	 */
-	public void setUgoCell(SchemeImageResource ugoCellImpl) {
-		throw new UnsupportedOperationException();
+	public void setUgoCell(final SchemeImageResource ugoCell) {
+		final Identifier newUgoCellId = Identifier.possiblyVoid(ugoCell);
+		if (this.ugoCellId.equals(newUgoCellId))
+			return;
+		this.ugoCellId = newUgoCellId;
+		this.changed = true;
 	}
 
 	public void setWidth(final int width) {

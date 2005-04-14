@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.12 2005/04/14 11:15:52 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.13 2005/04/14 18:20:27 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import com.syrus.AMFICOM.configuration.corba.LinkSort;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.scheme.corba.SchemeCableLink_Transferable;
+import com.syrus.util.Log;
 
 import java.util.*;
 import org.omg.CORBA.portable.IDLEntity;
@@ -21,7 +22,7 @@ import org.omg.CORBA.portable.IDLEntity;
  * #11 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2005/04/14 11:15:52 $
+ * @version $Revision: 1.13 $, $Date: 2005/04/14 18:20:27 $
  * @module scheme_v1
  */
 public final class SchemeCableLink extends AbstractSchemeLink {
@@ -141,6 +142,16 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 		return link;
 	}
 
+	/**
+	 * @see AbstractSchemeElement#getParentScheme()
+	 */
+	public Scheme getParentScheme() {
+		assert this.parentSchemeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert !this.parentSchemeId.isVoid(): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
+
+		return super.getParentScheme();
+	}
+
 	public Set getSchemeCableThreads() {
 		throw new UnsupportedOperationException();
 	}
@@ -191,7 +202,18 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	}
 
 	public void setCableChannelingItems(final Set cableChannelingItems) {
-		throw new UnsupportedOperationException();
+		assert cableChannelingItems != null: ErrorMessages.NON_NULL_EXPECTED;
+		for (final Iterator oldCableChannelingItemIterator = getCableChannelingItems().iterator(); oldCableChannelingItemIterator.hasNext();) {
+			final CableChannelingItem oldCableChannelingItem = (CableChannelingItem) oldCableChannelingItemIterator.next();
+			/*
+			 * Check is made to prevent CableChannelingItems from
+			 * permanently losing their parents.
+			 */
+			assert !cableChannelingItems.contains(oldCableChannelingItem);
+			removeCableChannelingItem(oldCableChannelingItem);
+		}
+		for (final Iterator cableChannelingItemIterator = cableChannelingItems.iterator(); cableChannelingItemIterator.hasNext();)
+			addCableChannelingItem((CableChannelingItem) cableChannelingItemIterator.next());
 	}
 
 	public void setCableLinkType(final CableLinkType cableLinkType) {
@@ -208,7 +230,18 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	}
 
 	public void setSchemeCableThreads(final Set schemeCableThreads) {
-		throw new UnsupportedOperationException();
+		assert schemeCableThreads != null: ErrorMessages.NON_NULL_EXPECTED;
+		for (final Iterator oldSchemeCableThreadIterator = getSchemeCableThreads().iterator(); oldSchemeCableThreadIterator.hasNext();) {
+			final SchemeCableThread oldSchemeCableThread = (SchemeCableThread) oldSchemeCableThreadIterator.next();
+			/*
+			 * Check is made to prevent SchemeCableThreads from
+			 * permanently losing their parents.
+			 */
+			assert !schemeCableThreads.contains(oldSchemeCableThread);
+			removeSchemeCableThread(oldSchemeCableThread);
+		}
+		for (final Iterator schemeCableThreadIterator = schemeCableThreads.iterator(); schemeCableThreadIterator.hasNext();)
+			addSchemeCableThread((SchemeCableThread) schemeCableThreadIterator.next());
 	}
 
 	/**
