@@ -26,11 +26,11 @@
 
 /*
  * Class:     com_syrus_AMFICOM_analysis_CoreAnalysisManager
- * Method:    analyse3
- * Signature: ([DDDDDDIII[D)[Lcom/syrus/AMFICOM/analysis/dadara/SimpleReflectogramEventImpl;
+ * Method:    analyse4
+ * Signature: ([DDDDDDIII[D)[Lcom/syrus/AMFICOM/analysis/dadara/ReliabilitySimpleReflectogramEventImpl;
  */
 JNIEXPORT jobjectArray JNICALL
-Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_analyse3(
+Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_analyse4(
 	JNIEnv* env,
 	jclass obj,
 	jdoubleArray y,
@@ -44,7 +44,7 @@ Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_analyse3(
 	jint traceLength,
 	jdoubleArray noiseObj)
 {
-	prf_b("analyse3() - enter");
+	prf_b("analyse() - enter");
 
 	// берем в JNI массив y-значений (его надо будет потом освободить)
 	double* data    = (double*)env->GetDoubleArrayElements(y, NULL);
@@ -74,7 +74,7 @@ Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_analyse3(
 	if (min_connector < min_weld)
 		min_connector = min_weld;
 
-	prf_b("analyse3() - starting IA");
+	prf_b("analyse() - starting IA");
 
 	// FIXIT: InitialAnalysis changes input array.
 	// The original analyse() code both changed input array and used JNI_ABORT, so the result is undeterminable.
@@ -92,14 +92,14 @@ Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_analyse3(
 		traceLength,
 		noiseData);
 
-	prf_b("analyse3() - processing IA results");
+	prf_b("analyse() - processing IA results");
 
 	ArrList& ev = ia->getEvents();
 
 	int nEvents = ev.getLength();
 
-	// convert EventParams to SimpleEvent
-	SimpleEvent *se = new SimpleEvent[nEvents];
+	// convert EventParams to ReliabilityEvent
+	ReliabilityEvent *se = new ReliabilityEvent[nEvents];
 	assert (se);
 	int i;
 
@@ -125,7 +125,7 @@ Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_analyse3(
 		}
 		fprintf(stderr, "\n");
 #endif
-		EPold2SE(&ep, se[i]);
+		EPold2RE(&ep, se[i]);
 		assert(se[i].begin >= 0);
 		assert(se[i].end < sz);
 		assert(se[i].end >= se[i].begin);
@@ -140,8 +140,8 @@ Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_analyse3(
 	fflush(stderr);
 #endif
 
-	prf_b("analyse3() - sending to JNI");
-	jobjectArray ret_obj = SimpleEvent_C2J_arr(env, se, nEvents);
+	prf_b("analyse() - sending to JNI");
+	jobjectArray ret_obj = ReliabilityEvent_C2J_arr(env, se, nEvents);
 
 	delete[] se;
 	delete ia;

@@ -11,6 +11,8 @@ const char *CL_ep		= "com/syrus/AMFICOM/analysis/dadara/ReflectogramEvent";
 const char *S_ep		= "Lcom/syrus/AMFICOM/analysis/dadara/ReflectogramEvent;";
 const char *CL_se		= "com/syrus/AMFICOM/analysis/dadara/SimpleReflectogramEventImpl";
 const char *S_se		= "Lcom/syrus/AMFICOM/analysis/dadara/SimpleReflectogramEventImpl;";
+const char *CL_re		= "com/syrus/AMFICOM/analysis/dadara/ReliabilitySimpleReflectogramEventImpl";
+const char *S_re		= "Lcom/syrus/AMFICOM/analysis/dadara/ReliabilitySimpleReflectogramEventImpl;";
 const char *CL_Thresh	= "com/syrus/AMFICOM/analysis/dadara/Thresh";
 const char *CL_ThreshDX	= "com/syrus/AMFICOM/analysis/dadara/ThreshDX";
 const char *CL_ThreshDY	= "com/syrus/AMFICOM/analysis/dadara/ThreshDY";
@@ -41,6 +43,9 @@ const char *N_SE_end			= "end";
 const char *S_SE_end			= "I";
 const char *N_SE_type			= "eventType";
 const char *S_SE_type			= "I";
+
+const char *N_RE_reliability	= "reliability";
+const char *S_RE_reliability	= "D";
 
 const char *N_Thresh_SOFT_UP	= "SOFT_UP";
 const char *S_Thresh_SOFT_UP	= "I";

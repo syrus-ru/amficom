@@ -13,6 +13,8 @@ extern const char *S_ep;
 
 extern const char *CL_se;
 extern const char *S_se;
+extern const char *CL_re;
+extern const char *S_re;
 
 extern const char *CL_Thresh;
 extern const char *N_Thresh_x0;
@@ -52,5 +54,7 @@ extern const char *N_SE_end;
 extern const char *S_SE_end;
 extern const char *N_SE_type;
 extern const char *S_SE_type;
+extern const char *N_RE_reliability;
+extern const char *S_RE_reliability;
 
 #endif

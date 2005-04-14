@@ -11,6 +11,7 @@
 #include "../common/ModelF.h"
 #include "../common/EventP.h"
 #include "../common/SimpleEvent.h"
+#include "../common/ReliabilityEvent.h"
 
 // J ModelFunction -> C ModelF
 // returns 0 if ok, returns not 0 if error, assertion fails if JNI problem
@@ -42,13 +43,13 @@ jobject EventP_C2J(JNIEnv *env, EventP &ep);
 // assertion fails if not success
 jobjectArray EventP_C2J_arr(JNIEnv *env, EventP *ep, int number, FILE *logf);
 
-// C SimpleEvent -> J SimpleReflectogramEventImpl
-// assertion fails if not success
-jobject SimpleEvent_C2J(JNIEnv *env, SimpleEvent &se);
-
 // C SimpleEvent[] -> J SimpleReflectogramEventImpl[]
 // assertion fails if not success
 jobjectArray SimpleEvent_C2J_arr(JNIEnv *env, SimpleEvent *se, int number);
+
+// C ReliabilityEvent[] -> J ReliabilitySimpleReflectogramEventImpl[]
+// assertion fails if not success
+jobjectArray ReliabilityEvent_C2J_arr(JNIEnv *env, ReliabilityEvent *se, int number);
 
 #endif
 

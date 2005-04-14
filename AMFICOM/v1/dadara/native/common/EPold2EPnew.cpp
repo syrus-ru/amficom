@@ -5,6 +5,15 @@
 #include "com_syrus_AMFICOM_analysis_dadara_SimpleReflectogramEvent.h"
 #include "../common/assert1.h"
 
+double fmin(double a, double b, double c)
+{
+	if (b < a)
+		a = b;
+	if (c < a)
+		a = c;
+	return a;
+}
+
 void EPold2EPnew(EventParams* epo, EventP &epn, double delta_x)
 {
 	// fill ep
@@ -88,4 +97,30 @@ void EPold2SE(EventParams* epo, SimpleEvent &epn)
 		assert(0);
 	}
 
+}
+
+void EPold2RE(EventParams* epo, ReliabilityEvent &epn)
+{
+	EPold2SE(epo, epn);
+	double R = -1;
+	switch (epo->type)
+	{
+	case EventParams_LOSS:
+	case EventParams_GAIN:
+		R = epo->R;
+		break;
+
+	case EventParams_REFLECTIVE:
+		R = fmin(epo->R1, epo->R2, epo->R3);
+		break;
+
+	default:
+		R = -1;
+	}
+	// convert R sigma presentation ( R = 0 .. + inf )
+	// to probability-like presentation ( rel = 0 .. 1 )
+	if (R < 0)
+		epn.reliability = -1;
+	else
+		epn.reliability = 1.0 - exp(-R * R / 2);
 }

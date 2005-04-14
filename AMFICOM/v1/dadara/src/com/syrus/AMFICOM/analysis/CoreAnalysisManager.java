@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.34 2005/04/11 14:45:40 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.35 2005/04/14 12:03:17 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.34 $, $Date: 2005/04/11 14:45:40 $
+ * @version $Revision: 1.35 $, $Date: 2005/04/14 12:03:17 $
  * @module
  */
 
@@ -21,6 +21,7 @@ import com.syrus.AMFICOM.analysis.dadara.ModelFunction;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEventsImpl;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
+import com.syrus.AMFICOM.analysis.dadara.ReliabilitySimpleReflectogramEventImpl;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEventImpl;
 import com.syrus.AMFICOM.analysis.dadara.ThreshDX;
 import com.syrus.AMFICOM.analysis.dadara.ThreshDY;
@@ -51,7 +52,7 @@ public class CoreAnalysisManager
 	 * может быть null - тогда будет найден автоматически
 	 * @return массив событий
 	 */
-	private static native SimpleReflectogramEventImpl[] analyse3(
+	private static native ReliabilitySimpleReflectogramEventImpl[] analyse4(
 			double[] y,
 			double dX, 
 			double minLevel,
@@ -186,7 +187,7 @@ public class CoreAnalysisManager
 		return threshold;
 	}
 
-	public static SimpleReflectogramEventImpl[] createSimpleEvents(
+	public static ReliabilitySimpleReflectogramEventImpl[] createSimpleEvents(
 			double[] y,
 			double deltaX,
 			double minLevel,
@@ -198,7 +199,7 @@ public class CoreAnalysisManager
 			int traceLength,
 			double[] noiseArray)
 	{
-		return analyse3(y, deltaX,
+		return analyse4(y, deltaX,
 			minLevel, minWeld, minConnector, noiseFactor,
 			reflSize, nReflSize, traceLength, noiseArray);
 	}
@@ -269,17 +270,32 @@ public class CoreAnalysisManager
 		long t2 = System.currentTimeMillis();
 
 		// формирование событий
-		SimpleReflectogramEventImpl[] se = createSimpleEvents(
+		ReliabilitySimpleReflectogramEventImpl[] rse = createSimpleEvents(
 				y, deltaX,
 				pars[0], pars[1], pars[2], pars[3],
 				reflSize, nReflSize,
 				0, null); // FIXME: ошибка в native: IA - импорт шума
 				//traceLength, noiseArray);
 
+        // debug code
+//        {
+//            for (int i = 0; i < rse.length; i++)
+//                System.out.println("makeAnalysis:"
+//                        + " event " + i
+//                        + " type " + rse[i].getEventType()
+//                        + " reliability "
+//                        + (rse[i].hasReliability()
+//                                ? String.valueOf(
+//                                        (int)(rse[i].getReliability() * 100.0 * 1e4) / 1e4
+//                                        ) + "%"
+//                                : "<undefined>"));
+//            
+//        }
+
 		// теперь уточняем длину рефлектограммы по концу последнего события
 		// (длина может уменьшиться)
-		traceLength = se.length > 0
-			? se[se.length - 1].getEnd() + 1
+		traceLength = rse.length > 0
+			? rse[rse.length - 1].getEnd() + 1
 			: 0;
 
 		long t3 = System.currentTimeMillis();
@@ -291,7 +307,7 @@ public class CoreAnalysisManager
 //		for (int i = 0; i < ep.length; i++)
 //			ep[i].setDefaultThreshold(bs, bellcoreTraces);
 
-		ModelTraceAndEventsImpl mtae = new ModelTraceAndEventsImpl(se, mf, deltaX);
+		ModelTraceAndEventsImpl mtae = new ModelTraceAndEventsImpl(rse, mf, deltaX);
 
 		long t5 = System.currentTimeMillis();
 

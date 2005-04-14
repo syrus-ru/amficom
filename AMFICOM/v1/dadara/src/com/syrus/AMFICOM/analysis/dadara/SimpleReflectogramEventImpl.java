@@ -1,5 +1,5 @@
 /*
- * $Id: SimpleReflectogramEventImpl.java,v 1.6 2005/04/14 08:10:56 saa Exp $
+ * $Id: SimpleReflectogramEventImpl.java,v 1.7 2005/04/14 12:03:17 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.6 $, $Date: 2005/04/14 08:10:56 $
+ * @version $Revision: 1.7 $, $Date: 2005/04/14 12:03:17 $
  * @module
  */
 public class SimpleReflectogramEventImpl implements SimpleReflectogramEvent
@@ -22,8 +22,8 @@ public class SimpleReflectogramEventImpl implements SimpleReflectogramEvent
 	private int end;
 	private int eventType;
 
-	private SimpleReflectogramEventImpl()
-	{ // empty and very private
+	protected SimpleReflectogramEventImpl()
+	{ // for native use
 	}
 
 	public SimpleReflectogramEventImpl(int begin, int end, int eventType)

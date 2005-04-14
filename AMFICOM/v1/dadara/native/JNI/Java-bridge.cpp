@@ -677,25 +677,29 @@ EventP *EventP_J2Cnew_arr(JNIEnv *env, jobjectArray array)
 }
 */
 
-/*
- * SimpleEvent part
- */
-jobject SimpleEvent_C2J(JNIEnv *env, SimpleEvent &se)
+jobject createObject(JNIEnv *env, jclass clazz)
 {
-	// create SimpleReflectogramEventImpl object
-	jclass clazz = env->FindClass(CL_se);
 	assert (clazz);
 	jmethodID initID = env->GetMethodID(clazz, "<init>", "()V");
 	assert (initID);
 	jobject obj = env->NewObject(clazz, initID);
 	assert (obj);
+	return obj;
+}
+
+/*
+ * SimpleEvent part
+ */
+jobject SimpleEvent_C2J(JNIEnv *env, SimpleEvent &se, jclass clazz) // clazz is a desired target class name
+{
+	// create object
+	jobject obj = createObject(env, clazz);
 
 	// fill fields
 	env->SetIntField(obj, env->GetFieldID(clazz, N_SE_type, S_SE_type), se.type);
 	env->SetIntField(obj, env->GetFieldID(clazz, N_SE_begin, S_SE_begin), se.begin);
 	env->SetIntField(obj, env->GetFieldID(clazz, N_SE_end, S_SE_end), se.end);
 
-	// return resulting SimpleReflectogramEventImpl object
 	return obj;
 }
 
@@ -703,7 +707,7 @@ jobjectArray SimpleEvent_C2J_arr(JNIEnv *env, SimpleEvent *se, int number)
 {
 	assert(number >= 0);
 
-	// create template SimpleEvent object
+	// create SimpleEvent array
 	jclass clazz = env->FindClass(CL_se);
 	assert(clazz);
 	jobjectArray oa = env->NewObjectArray(number, clazz, 0);
@@ -713,7 +717,48 @@ jobjectArray SimpleEvent_C2J_arr(JNIEnv *env, SimpleEvent *se, int number)
 	int i;
 	for (i = 0; i < number; i++)
 	{
-		jobject obj = SimpleEvent_C2J(env, se[i]);
+		jobject obj = SimpleEvent_C2J(env, se[i], clazz);
+		assert (obj);
+		env->SetObjectArrayElement(oa, i, obj);
+	}
+
+	return oa;
+}
+
+/*
+ * ReliabilityEvent part
+ */
+
+// C ReliabilityEvent -> J ReliabilitySimpleReflectogramEventImpl
+// assertion fails if not success
+jobject ReliabilityEvent_C2J(JNIEnv *env, ReliabilityEvent &re, jclass clazz)
+{
+	// create object and fill SimpleReflectogramEventImpl fields
+	jobject obj = SimpleEvent_C2J(env, re, clazz);
+
+	// fill ReliabilitySimpleReflectogramEventImpl fields
+	env->SetDoubleField(obj, env->GetFieldID(clazz, N_RE_reliability, S_RE_reliability), re.reliability);
+
+	return obj;
+}
+
+// C ReliabilityEvent[] -> J ReliabilitySimpleReflectogramEventImpl[]
+// assertion fails if not success
+jobjectArray ReliabilityEvent_C2J_arr(JNIEnv *env, ReliabilityEvent *re, int number)
+{
+	assert(number >= 0);
+
+	// create ReliabilityEvent array
+	jclass clazz = env->FindClass(CL_re);
+	assert(clazz);
+	jobjectArray oa = env->NewObjectArray(number, clazz, 0);
+	assert (oa);
+
+	// set objects
+	int i;
+	for (i = 0; i < number; i++)
+	{
+		jobject obj = ReliabilityEvent_C2J(env, re[i], clazz);
 		assert (obj);
 		env->SetObjectArrayElement(oa, i, obj);
 	}
