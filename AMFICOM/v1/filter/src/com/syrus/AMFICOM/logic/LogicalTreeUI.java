@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalTreeUI.java,v 1.15 2005/04/13 19:09:41 arseniy Exp $
+ * $Id: LogicalTreeUI.java,v 1.16 2005/04/14 13:23:05 bob Exp $
  *
  * Copyright ? 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -58,8 +58,8 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/04/13 19:09:41 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.16 $, $Date: 2005/04/14 13:23:05 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module filter_v1
  */
@@ -491,7 +491,10 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems, Seriali
 					TreePath path = event.getPath();
 					Object lastPathComponent = path.getLastPathComponent();
 					if (lastPathComponent instanceof Populatable) {
-						((Populatable) lastPathComponent).populate();
+						Populatable populatableItem = (Populatable) lastPathComponent;
+						if (!populatableItem.isPopulated()) {
+							populatableItem.populate();
+						}
 					}					
 				}
 			});
@@ -605,7 +608,10 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems, Seriali
 			return;
 		}
 		if (node instanceof Populatable) {
-			((Populatable)(node)).populate();
+			Populatable populatableNode = ((Populatable)(node));
+			if (!populatableNode.isPopulated()) {
+				populatableNode.populate();
+			}
 		}
 		List children = node.getChildren();
 		for (Iterator it = children.iterator(); it.hasNext();) {

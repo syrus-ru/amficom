@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalConditionUI.java,v 1.15 2005/04/13 19:09:41 arseniy Exp $
+ * $Id: LogicalConditionUI.java,v 1.16 2005/04/14 13:23:05 bob Exp $
  *
  * Copyright ? 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,8 +34,8 @@ import com.syrus.AMFICOM.logic.Populatable;
 import com.syrus.AMFICOM.logic.ServiceItem;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/04/13 19:09:41 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.16 $, $Date: 2005/04/14 13:23:05 $
+ * @author $Author: bob $
  * @module filter_v1
  */
 public class LogicalConditionUI {
@@ -99,7 +99,9 @@ public class LogicalConditionUI {
 			public void actionPerformed(ActionEvent e) {
 				if (rootItem2 instanceof Populatable) {
 					Populatable populatable = (Populatable) rootItem2;
-					populatable.populate();
+					if (!populatable.isPopulated()) {
+						populatable.populate();
+					}
 				}
 			}
 		});

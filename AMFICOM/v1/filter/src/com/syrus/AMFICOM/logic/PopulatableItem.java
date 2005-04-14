@@ -1,5 +1,5 @@
 /*-
- * $Id: PopulatableItem.java,v 1.2 2005/04/11 15:53:31 bob Exp $
+ * $Id: PopulatableItem.java,v 1.3 2005/04/14 13:23:05 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * Populatable item with default properties
  * 
- * @version $Revision: 1.2 $, $Date: 2005/04/11 15:53:31 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/14 13:23:05 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module filter_v1
@@ -65,6 +65,10 @@ public class PopulatableItem extends AbstractItem implements Populatable {
 			this.populated = true;
 		}
 
+	}
+
+	public boolean isPopulated() {
+		return this.populated;
 	}
 	
 	public void removeAllChildren() {

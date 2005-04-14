@@ -60,6 +60,7 @@ public class ServiceItem extends AbstractItem implements Populatable {
 	}
 
 	
+	
 	/**
 	 * @param childrenFactory The childrenFactory to set.
 	 */
@@ -75,5 +76,8 @@ public class ServiceItem extends AbstractItem implements Populatable {
 			this.populated = true;
 		}
 	}
-
+	
+	public boolean isPopulated() {
+		return this.populated;
+	}
 }
