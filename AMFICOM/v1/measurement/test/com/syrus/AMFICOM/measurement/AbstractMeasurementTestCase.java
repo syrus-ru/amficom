@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractMesurementTestCase.java,v 1.5 2005/04/14 11:07:41 bob Exp $
+ * $Id: AbstractMeasurementTestCase.java,v 1.1 2005/04/14 12:53:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,11 +31,11 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/04/14 11:07:41 $
- * @author $Author: bob $
+ * @version $Revision: 1.1 $, $Date: 2005/04/14 12:53:53 $
+ * @author $Author: arseniy $
  * @module tools
  */
-public abstract class AbstractMesurementTestCase extends TestCase {
+public abstract class AbstractMeasurementTestCase extends TestCase {
 
 	public static final int		DB_CONNECTION_TIMEOUT	= 120;
 
@@ -45,7 +45,7 @@ public abstract class AbstractMesurementTestCase extends TestCase {
 
 	protected static Identifier	creatorId;
 
-	public AbstractMesurementTestCase(String name) {
+	public AbstractMeasurementTestCase(String name) {
 		super(name);
 	}
 
@@ -89,11 +89,11 @@ public abstract class AbstractMesurementTestCase extends TestCase {
 		if ((domainCollection == null) || (domainCollection.isEmpty()))
 			fail("must be at less one domain at db");
 
-		//AbstractMesurementTestCase.creatorId = new
+		//AbstractMeasurementTestCase.creatorId = new
 		// Identifier("Users_1");
-		AbstractMesurementTestCase.creatorId = ((User) userCollection.iterator().next()).getId();
-		//AbstractMesurementTestCase.domainId = new Identifier("Domain_1");
-		AbstractMesurementTestCase.domainId = ((Domain) domainCollection.iterator().next()).getId();
+		AbstractMeasurementTestCase.creatorId = ((User) userCollection.iterator().next()).getId();
+		//AbstractMeasurementTestCase.domainId = new Identifier("Domain_1");
+		AbstractMeasurementTestCase.domainId = ((Domain) domainCollection.iterator().next()).getId();
 		
 		 IdentifierPool.init(new DefaultIdentifierGeneratorServer());
 //		IdentifierPool.init(new XMLIdentifierGeneratorServer());

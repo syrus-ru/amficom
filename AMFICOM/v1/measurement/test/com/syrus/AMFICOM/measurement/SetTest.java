@@ -1,12 +1,12 @@
 /*-
- * $Id: SetTest.java,v 1.3 2005/04/14 11:58:59 bob Exp $
+ * $Id: SetTest.java,v 1.4 2005/04/14 12:54:06 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 
-package test.com.syrus.AMFICOM.measurement;
+package com.syrus.AMFICOM.measurement;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -14,7 +14,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 import junit.framework.Test;
-import test.com.syrus.AMFICOM.general.QP1643ACharacteristrics;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CompoundCondition;
@@ -28,16 +27,13 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.CompoundConditionSort;
-import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
-import com.syrus.AMFICOM.measurement.Set;
-import com.syrus.AMFICOM.measurement.SetParameter;
 import com.syrus.AMFICOM.measurement.corba.SetSort;
 import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/04/14 11:58:59 $
- * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2005/04/14 12:54:06 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module measurement_v1
  */

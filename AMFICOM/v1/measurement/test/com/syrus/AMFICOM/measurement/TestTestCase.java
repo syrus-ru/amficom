@@ -1,5 +1,5 @@
 /*
- * $Id: TestTestCase.java,v 1.7 2005/04/04 13:13:46 bass Exp $
+ * $Id: TestTestCase.java,v 1.8 2005/04/14 12:54:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,11 +32,11 @@ import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/04/04 13:13:46 $
- * @author $Author: bass $
+ * @version $Revision: 1.8 $, $Date: 2005/04/14 12:54:06 $
+ * @author $Author: arseniy $
  * @module tools
  */
-public class TestTestCase extends AbstractMesurementTestCase {
+public class TestTestCase extends AbstractMeasurementTestCase {
 
 	public TestTestCase(String name) {
 		super(name);
