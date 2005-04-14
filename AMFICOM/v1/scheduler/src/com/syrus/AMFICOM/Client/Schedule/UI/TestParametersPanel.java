@@ -378,6 +378,9 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 	}
 
 	public void setMeasurementSetup(MeasurementSetup measurementSetup) {
+		if (this.msList == null) {
+			this.schedulerModel.refreshMeasurementSetups();
+		}
 		if (!this.msList.contains(measurementSetup)) {
 			this.msList.add(measurementSetup);
 			this.updateMeasurementSetups();

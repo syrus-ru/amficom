@@ -121,8 +121,12 @@ public class ElementsTreeFrame extends JInternalFrame implements KISEditor, Moni
 
 	public MonitoredElement getMonitoredElement() {
 		try {
-			return (MonitoredElement) ConfigurationStorableObjectPool.getStorableObject(this
-					.getObject(ObjectEntities.ME_ENTITY_CODE), true);
+			Identifier meId = this.getObject(ObjectEntities.ME_ENTITY_CODE);
+
+			MonitoredElement me = null;
+			if (meId != null)
+				me = (MonitoredElement) ConfigurationStorableObjectPool.getStorableObject(meId, true);
+			return me;
 		} catch (ApplicationException e) {
 			//
 		}
@@ -211,12 +215,30 @@ public class ElementsTreeFrame extends JInternalFrame implements KISEditor, Moni
 							short major = identifier.getMajor();
 							switch (major) {
 								case ObjectEntities.ME_ENTITY_CODE: {
+									Item parent = item;
+									
+									while(true) {
+										System.out.println("parent is " + parent);
+										parent = parent.getParent();
+										if (parent == null)
+											break;
+										Object object2 = parent.getObject();
+										System.out.println("object is " + object2 + " class:" + object2.getClass().getName());
+										if (object2 instanceof Identifier) {
+											Identifier identifier2 = (Identifier) object2;
+											if (identifier2.getMajor() == ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE)
+												break;
+										}
+									}
+									
 									dispatcher.notify(new OperationEvent(identifier, 0,
 																			SchedulerModel.COMMAND_CHANGE_ME_TYPE));
 									try {
 										ElementsTreeFrame.this.schedulerModel
 												.setSelectedMonitoredElement((MonitoredElement) ConfigurationStorableObjectPool
-														.getStorableObject(identifier, true));
+														.getStorableObject(identifier, true),
+														parent != null ? (MeasurementType) MeasurementStorableObjectPool
+														.getStorableObject((Identifier) parent.getObject(), true)  : null);
 									} catch (ApplicationException e) {
 										SchedulerModel.showErrorMessage(ElementsTreeFrame.this, e);
 									}

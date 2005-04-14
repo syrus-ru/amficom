@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -123,31 +122,31 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 	/**
 	 * @TODO recast using alpha
 	 */
-	public static final Color	COLOR_ABORDED				= Color.RED;
+	public static final Color			COLOR_ABORDED					= Color.RED;
 
-	public static final Color	COLOR_ABORDED_SELECTED		= Color.RED.darker();
+	public static final Color			COLOR_ABORDED_SELECTED			= Color.RED.darker();
 
-	public static final Color	COLOR_ALARM					= Color.ORANGE.darker();
+	public static final Color			COLOR_ALARM						= Color.ORANGE.darker();
 
-	public static final Color	COLOR_ALARM_SELECTED		= Color.ORANGE;
+	public static final Color			COLOR_ALARM_SELECTED			= Color.ORANGE;
 
-	public static final Color	COLOR_COMPLETED				= Color.GREEN.darker();
+	public static final Color			COLOR_COMPLETED					= Color.GREEN.darker();
 
-	public static final Color	COLOR_COMPLETED_SELECTED	= Color.GREEN;
+	public static final Color			COLOR_COMPLETED_SELECTED		= Color.GREEN;
 
-	public static final Color	COLOR_PROCCESSING			= Color.CYAN.darker();
+	public static final Color			COLOR_PROCCESSING				= Color.CYAN.darker();
 
-	public static final Color	COLOR_PROCCESSING_SELECTED	= Color.CYAN;
+	public static final Color			COLOR_PROCCESSING_SELECTED		= Color.CYAN;
 
-	public static final Color	COLOR_SCHEDULED				= Color.WHITE.darker();
+	public static final Color			COLOR_SCHEDULED					= Color.WHITE.darker();
 
-	public static final Color	COLOR_SCHEDULED_SELECTED	= Color.WHITE;
+	public static final Color			COLOR_SCHEDULED_SELECTED		= Color.WHITE;
 
-	public static final Color	COLOR_UNRECOGNIZED			= new Color(20, 20, 60);
+	public static final Color			COLOR_UNRECOGNIZED				= new Color(20, 20, 60);
 
-	public static final Color	COLOR_WARNING				= Color.YELLOW.darker();
+	public static final Color			COLOR_WARNING					= Color.YELLOW.darker();
 
-	public static final Color	COLOR_WARNING_SELECTED		= Color.YELLOW;
+	public static final Color			COLOR_WARNING_SELECTED			= Color.YELLOW;
 
 	public SchedulerModel(ApplicationContext aContext) {
 		this.aContext = aContext;
@@ -263,11 +262,13 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 			Collection measurementTypes = MeasurementStorableObjectPool.getStorableObjectsByCondition(
 				new EquivalentCondition(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE), true);
 
-			LinkedIdsCondition domainCondition = new LinkedIdsCondition(sessionInterface.getDomainIdentifier(),
-																		ObjectEntities.ME_ENTITY_CODE);
-
-			Collection monitoredElements = ConfigurationStorableObjectPool.getStorableObjectsByCondition(
-				domainCondition, true);
+			// LinkedIdsCondition domainCondition = new
+			// LinkedIdsCondition(sessionInterface.getDomainIdentifier(),
+			// ObjectEntities.ME_ENTITY_CODE);
+			//
+			// Collection monitoredElements =
+			// ConfigurationStorableObjectPool.getStorableObjectsByCondition(
+			// domainCondition, true);
 
 			Collection measurementTypeItems = new ArrayList(measurementTypes.size());
 
@@ -281,21 +282,23 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 
 			this.elementsViewer.setElements(measurementTypeItems);
 
-//			if (!monitoredElements.isEmpty()) {
-//				LinkedIdsCondition linkedIdsCondition;
-//				{
-//					java.util.Set meIdList = new HashSet(monitoredElements.size());
-//					for (Iterator it = monitoredElements.iterator(); it.hasNext();) {
-//						MonitoredElement me = (MonitoredElement) it.next();
-//						meIdList.add(me.getId());
-//					}
-//					linkedIdsCondition = new LinkedIdsCondition(meIdList, ObjectEntities.MS_ENTITY_CODE);
-//				}
-//				java.util.Set measurementSetups = MeasurementStorableObjectPool.getStorableObjectsByCondition(
-//					linkedIdsCondition, true);
-//
-//				this.measurementSetupEditor.setMeasurementSetups(measurementSetups);
-//			}
+			// if (!monitoredElements.isEmpty()) {
+			// LinkedIdsCondition linkedIdsCondition;
+			// {
+			// java.util.Set meIdList = new HashSet(monitoredElements.size());
+			// for (Iterator it = monitoredElements.iterator(); it.hasNext();) {
+			// MonitoredElement me = (MonitoredElement) it.next();
+			// meIdList.add(me.getId());
+			// }
+			// linkedIdsCondition = new LinkedIdsCondition(meIdList,
+			// ObjectEntities.MS_ENTITY_CODE);
+			// }
+			// java.util.Set measurementSetups =
+			// MeasurementStorableObjectPool.getStorableObjectsByCondition(
+			// linkedIdsCondition, true);
+			//
+			// this.measurementSetupEditor.setMeasurementSetups(measurementSetups);
+			// }
 			this.refreshMeasurementSetups();
 		}
 
@@ -324,10 +327,14 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 			Collection measurementSetupIds = this.selectedTest.getMeasurementSetupIds();
 			if (!measurementSetupIds.isEmpty()) {
 				Identifier mainMeasurementSetupId = (Identifier) measurementSetupIds.iterator().next();
-				MeasurementSetup measurementSetup1 = (MeasurementSetup) MeasurementStorableObjectPool.getStorableObject(
-					mainMeasurementSetupId, true);
-				this.setEditor.setSet(measurementSetup.getParameterSet());
-				this.measurementSetupEditor.setMeasurementSetup(measurementSetup);
+				MeasurementSetup measurementSetup1 = (MeasurementSetup) MeasurementStorableObjectPool
+						.getStorableObject(mainMeasurementSetupId, true);
+				if (measurementSetup1 != null) {
+					if (this.setEditor != null) {
+						this.setEditor.setSet(measurementSetup1.getParameterSet());
+					}
+					this.measurementSetupEditor.setMeasurementSetup(measurementSetup1);
+				}
 			}
 
 			this.returnTypeEditor.setReturnType(this.selectedTest.getReturnType());
@@ -478,47 +485,73 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 			this.refreshTest();
 		}
 	}
-	
+
 	public void setSelectedMeasurementType(MeasurementType measurementType) {
-		if (this.measurementType == null || measurementType == null 
+		if (this.measurementType == null || measurementType == null
 				|| !this.measurementType.getId().equals(measurementType.getId())) {
 			this.measurementType = measurementType;
 			this.refreshMeasurementSetups();
 		}
 	}
-	
+
 	public void setSelectedMonitoredElement(MonitoredElement monitoredElement) {
-		if (this.monitoredElement == null || monitoredElement == null 
+		if (this.monitoredElement == null || monitoredElement == null
 				|| !this.monitoredElement.getId().equals(monitoredElement.getId())) {
 			this.monitoredElement = monitoredElement;
 			this.refreshMeasurementSetups();
 		}
 	}
 	
+	public void setSelectedMonitoredElement(MonitoredElement monitoredElement,
+											MeasurementType measurementType) {
+		boolean changed = false;
+		if (this.monitoredElement == null || monitoredElement == null
+				|| !this.monitoredElement.getId().equals(monitoredElement.getId())) {
+			changed = true;
+			this.monitoredElement = monitoredElement;			
+		}
+		
+		if (this.measurementType == null || measurementType == null
+				|| !this.measurementType.getId().equals(measurementType.getId())) {
+			changed = true;
+			this.measurementType = measurementType;
+			this.refreshMeasurementSetups();
+		}
+		
+		if (changed) {
+			this.refreshMeasurementSetups();
+		}
+	}
+
+
 	public void refreshMeasurementSetups() {
 		StorableObjectCondition condition = null;
-		
+
 		LinkedIdsCondition measurementTypeCondition = null;
 		if (this.measurementType != null)
-			measurementTypeCondition = new LinkedIdsCondition(this.measurementType.getId(), ObjectEntities.MS_ENTITY_CODE);
-		
+			measurementTypeCondition = new LinkedIdsCondition(this.measurementType.getId(),
+																ObjectEntities.MS_ENTITY_CODE);
+
 		if (this.monitoredElement != null) {
-			LinkedIdsCondition linkedIdsCondition2 = new LinkedIdsCondition(this.monitoredElement.getId(), ObjectEntities.MS_ENTITY_CODE);
+			LinkedIdsCondition linkedIdsCondition2 = new LinkedIdsCondition(this.monitoredElement.getId(),
+																			ObjectEntities.MS_ENTITY_CODE);
 			try {
 				if (measurementTypeCondition != null)
-				condition = new CompoundCondition(measurementTypeCondition, CompoundConditionSort.OR, linkedIdsCondition2);
-				else 
+					condition = new CompoundCondition(measurementTypeCondition, CompoundConditionSort.OR,
+														linkedIdsCondition2);
+				else
 					condition = linkedIdsCondition2;
 			} catch (CreateObjectException e) {
 				// never !
 				e.printStackTrace();
 			}
-		} else 
+		} else
 			condition = measurementTypeCondition;
-			
+
 		try {
 			if (condition != null)
-				this.measurementSetupEditor.setMeasurementSetups(MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true));
+				this.measurementSetupEditor.setMeasurementSetups(MeasurementStorableObjectPool
+						.getStorableObjectsByCondition(condition, true));
 		} catch (ApplicationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -543,16 +576,16 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 				RISDSessionInfo sessionInterface = (RISDSessionInfo) this.aContext.getSessionInterface();
 				try {
 					this.measurementSetup = MeasurementSetup.createInstance(sessionInterface.getUserIdentifier(),
-						this.set, null, null, null, "created by Scheduler /" + sdf.format(new Date()) + "/" , 1000 * 60 * 10, Collections
-								.singleton(this.monitoredElement.getId()), Collections.singleton(this.measurementType));
-							this.set,
-							null,
-							null,
-							null,
-							"created by Scheduler /" + sdf.format(new Date()) + "/",
-							1000 * 60 * 10,
-							Collections.singleton(this.monitoredElement.getId()),
-							Collections.singleton(this.measurementType.getId())); //@todo link to measurement type -- temporal fix
+						this.set, null, null, null, "created by Scheduler /" + sdf.format(new Date()) + "/",
+						1000 * 60 * 10, Collections.singleton(this.monitoredElement.getId()), Collections
+								.singleton(this.measurementType.getId())); // @todo
+																			// link
+																			// to
+																			// measurement
+																			// type
+																			// --
+																			// temporal
+																			// fix
 					MeasurementStorableObjectPool.putStorableObject(this.measurementSetup);
 				} catch (IllegalObjectEntityException e) {
 					Log.debugException(e, Log.DEBUGLEVEL05);
@@ -566,7 +599,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 			Date startTime = this.testTimeStamps.getStartTime();
 			Date endTime = this.testTimeStamps.getEndTime();
 			TestTemporalType temporalType = this.testTimeStamps.getTestTemporalType();
-			TemporalPattern temporalPattern = this.testTimeStamps.getTemporalPattern();			
+			TemporalPattern temporalPattern = this.testTimeStamps.getTemporalPattern();
 			if (test == null) {
 				try {
 					test = Test.createInstance(modifierId, startTime, endTime, temporalPattern == null ? null
@@ -607,7 +640,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		JOptionPane.showMessageDialog(component, exception.getMessage(), LangModelSchedule.getString("Error"),
 			JOptionPane.OK_OPTION);
 	}
-	
+
 	public static Color getColor(TestStatus testStatus) {
 		Color color;
 		switch (testStatus.value()) {
@@ -719,4 +752,5 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		this.testTemporalStampsEditor = testTemporalStampsEditor;
 	}
 
+	
 }
