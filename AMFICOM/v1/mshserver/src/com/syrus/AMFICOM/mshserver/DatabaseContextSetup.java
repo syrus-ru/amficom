@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.5 2005/04/08 09:32:27 bass Exp $
+ * $Id: DatabaseContextSetup.java,v 1.6 2005/04/14 11:38:12 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -51,22 +51,6 @@ import com.syrus.AMFICOM.map.PhysicalLinkTypeDatabase;
 import com.syrus.AMFICOM.map.SiteNodeDatabase;
 import com.syrus.AMFICOM.map.SiteNodeTypeDatabase;
 import com.syrus.AMFICOM.map.TopologicalNodeDatabase;
-import com.syrus.AMFICOM.measurement.AnalysisDatabase;
-import com.syrus.AMFICOM.measurement.AnalysisTypeDatabase;
-import com.syrus.AMFICOM.measurement.DatabaseMeasurementObjectLoader;
-import com.syrus.AMFICOM.measurement.EvaluationDatabase;
-import com.syrus.AMFICOM.measurement.EvaluationTypeDatabase;
-import com.syrus.AMFICOM.measurement.MeasurementDatabase;
-import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
-import com.syrus.AMFICOM.measurement.MeasurementSetupDatabase;
-import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
-import com.syrus.AMFICOM.measurement.MeasurementTypeDatabase;
-import com.syrus.AMFICOM.measurement.ModelingDatabase;
-import com.syrus.AMFICOM.measurement.ModelingTypeDatabase;
-import com.syrus.AMFICOM.measurement.ResultDatabase;
-import com.syrus.AMFICOM.measurement.SetDatabase;
-import com.syrus.AMFICOM.measurement.TemporalPatternDatabase;
-import com.syrus.AMFICOM.measurement.TestDatabase;
 import com.syrus.AMFICOM.scheme.CableChannelingItemDatabase;
 import com.syrus.AMFICOM.scheme.DatabaseSchemeObjectLoader;
 import com.syrus.AMFICOM.scheme.PathElementDatabase;
@@ -89,7 +73,7 @@ import com.syrus.util.ApplicationProperties;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/04/08 09:32:27 $
+ * @version $Revision: 1.6 $, $Date: 2005/04/14 11:38:12 $
  * @module msherver_v1
  */
 class DatabaseContextSetup {
@@ -142,20 +126,6 @@ class DatabaseContextSetup {
 				new LinkDatabase(),
 				new CableThreadDatabase());
 
-		MeasurementDatabaseContext.init(new MeasurementTypeDatabase(),
-				new AnalysisTypeDatabase(),
-				new EvaluationTypeDatabase(),
-				new ModelingTypeDatabase(),
-				new SetDatabase(),
-				new ModelingDatabase(),
-				new MeasurementSetupDatabase(),
-				new MeasurementDatabase(),
-				new AnalysisDatabase(),
-				new EvaluationDatabase(),
-				new TestDatabase(),
-				new ResultDatabase(),
-				new TemporalPatternDatabase());
-	
 		MapDatabaseContext.init(new SiteNodeTypeDatabase(),
 				new PhysicalLinkTypeDatabase(),
 				new CollectorDatabase(),
@@ -187,14 +157,12 @@ class DatabaseContextSetup {
 		final int generalPoolSize = ApplicationProperties.getInt(KEY_GENERAL_POOL_SIZE, DEFAULT_GENERAL_POOL_SIZE);
 		final int administrationPoolSize = ApplicationProperties.getInt(KEY_ADMINISTRATION_POOL_SIZE, DEFAULT_ADMINISTRATION_POOL_SIZE);
 		final int configurationPoolSize = ApplicationProperties.getInt(KEY_CONFIGURATION_POOL_SIZE, DEFAULT_CONFIGURATION_POOL_SIZE);
-		final int measurementPoolSize = ApplicationProperties.getInt(KEY_MEASUREMENT_POOL_SIZE, DEFAULT_MEASUREMENT_POOL_SIZE);
 		final int mapPoolSize = ApplicationProperties.getInt(KEY_MAP_POOL_SIZE, DEFAULT_MAP_POOL_SIZE);
 		final int schemePoolSize = ApplicationProperties.getInt(KEY_SCHEME_POOL_SIZE, DEFAULT_SCHEME_POOL_SIZE); 
 
 		GeneralStorableObjectPool.init(new DatabaseGeneralObjectLoader(), generalPoolSize);
 		AdministrationStorableObjectPool.init(new DatabaseAdministrationObjectLoader(), administrationPoolSize);
 		ConfigurationStorableObjectPool.init(new DatabaseConfigurationObjectLoader(), configurationPoolSize);
-		MeasurementStorableObjectPool.init(new DatabaseMeasurementObjectLoader(), measurementPoolSize);
 		MapStorableObjectPool.init(new DatabaseMapObjectLoader(), mapPoolSize);
 		SchemeStorableObjectPool.init(new DatabaseSchemeObjectLoader(), schemePoolSize);
 	}
