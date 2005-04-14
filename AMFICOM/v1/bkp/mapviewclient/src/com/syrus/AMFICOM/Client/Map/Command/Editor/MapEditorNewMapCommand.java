@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorNewMapCommand.java,v 1.12 2005/03/16 13:48:18 bass Exp $
+ * $Id: MapEditorNewMapCommand.java,v 1.13 2005/04/14 15:44:50 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,6 +14,7 @@ import javax.swing.JDesktopPane;
 
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
+import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.MapMapEditorApplicationModelFactory;
 import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
@@ -28,9 +29,9 @@ import com.syrus.AMFICOM.mapview.MapView;
  * модуле "Редактор топологических схем". При этом в модуле открываются все
  * окна (команда ViewMapAllCommand) и вызывается команда MapNewCommand
  * 
- * @version $Revision: 1.12 $, $Date: 2005/03/16 13:48:18 $
+ * @version $Revision: 1.13 $, $Date: 2005/04/14 15:44:50 $
  * @module
- * @author $Author: bass $
+ * @author $Author: krupenn $
  * @see MapNewCommand
  * @see ViewMapAllCommand
  */
@@ -73,6 +74,9 @@ public class MapEditorNewMapCommand extends VoidCommand
 		MapView mapView = mapFrame.getMapView();
 
 		mapView.setMap(map);
+
+		this.aContext.getDispatcher().notify(
+				new MapEvent(mapView, MapEvent.MAP_VIEW_CHANGED));
 
 		setResult(Command.RESULT_OK);
 	}
