@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.22 2005/04/13 15:31:35 bob Exp $
+ * $Id: Domain.java,v 1.23 2005/04/14 09:34:34 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.administration;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/04/13 15:31:35 $
- * @author $Author: bob $
+ * @version $Revision: 1.23 $, $Date: 2005/04/14 09:34:34 $
+ * @author $Author: bass $
  * @module administration_v1
  */
 
@@ -120,19 +120,12 @@ public class Domain extends DomainMember implements Characterizable {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	public IDLEntity getTransferable() {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-		
-		int i = 0;
-
-		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
-		for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)
-			charIds[i++] = (Identifier_Transferable)((Characteristic)iterator.next()).getId().getTransferable();
-
+		assert this.isValid(): ErrorMessages.OBJECT_STATE_ILLEGAL;
 		return new Domain_Transferable(super.getHeaderTransferable(),
-									   (super.domainId != null) ? (Identifier_Transferable)super.domainId.getTransferable() : (new Identifier_Transferable("")),
-									   this.name,
-									   this.description,
-									   charIds);
+				(super.domainId != null) ? (Identifier_Transferable) super.domainId.getTransferable() : (new Identifier_Transferable("")),
+				this.name,
+				this.description,
+				Identifier.getTransferables(this.characteristics));
 	}	
 	
 	protected boolean isValid() {
