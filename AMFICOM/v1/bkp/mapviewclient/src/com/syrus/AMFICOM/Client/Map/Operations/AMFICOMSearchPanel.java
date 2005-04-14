@@ -1,5 +1,5 @@
 /*
- * Название: $Id: AMFICOMSearchPanel.java,v 1.5 2005/04/13 11:16:02 krupenn Exp $
+ * Название: $Id: AMFICOMSearchPanel.java,v 1.6 2005/04/14 14:10:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -46,7 +46,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 
 /**
  * Панель поиска элементов карты АМФИКОМ
- * @version $Revision: 1.5 $, $Date: 2005/04/13 11:16:02 $
+ * @version $Revision: 1.6 $, $Date: 2005/04/14 14:10:01 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -225,7 +225,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 	{
 		String loweredSearchText = this.searchText.toLowerCase();
 		this.searchButton.setEnabled(false);
-		List vec = new LinkedList();
+		List foundElements = new LinkedList();
 		
 		Map map = this.mapView.getMap();
 		try
@@ -236,14 +236,14 @@ import com.syrus.AMFICOM.mapview.MapView;
 				MapElement me = (MapElement )it.next();
 				
 				if(me.getName().toLowerCase().indexOf(loweredSearchText) != -1)
-					vec.add(me);
+					foundElements.add(me);
 				else if(me instanceof SiteNode)
 				{
 					SiteNode site = (SiteNode )me;
 					if(site.getCity().toLowerCase().indexOf(loweredSearchText) != -1
 						|| site.getStreet().toLowerCase().indexOf(loweredSearchText) != -1
 						|| site.getBuilding().toLowerCase().indexOf(loweredSearchText) != -1)
-							vec.add(me);
+							foundElements.add(me);
 				}
 			}
 			
@@ -254,7 +254,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 					|| link.getCity().toLowerCase().indexOf(loweredSearchText) != -1
 					|| link.getStreet().toLowerCase().indexOf(loweredSearchText) != -1
 					|| link.getBuilding().toLowerCase().indexOf(loweredSearchText) != -1)
-						vec.add(link);
+						foundElements.add(link);
 			}
 		}
 		catch(Exception ex)
@@ -262,7 +262,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 			ex.printStackTrace();
 		}
 
-		this.model.setContents(vec);
+		this.model.setContents(foundElements);
 
 		this.searchButton.setEnabled(true);
 		this.searching = false;
