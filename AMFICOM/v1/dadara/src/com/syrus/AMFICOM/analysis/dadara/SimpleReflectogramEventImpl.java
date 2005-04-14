@@ -1,5 +1,5 @@
 /*
- * $Id: SimpleReflectogramEventImpl.java,v 1.5 2005/03/21 18:05:00 saa Exp $
+ * $Id: SimpleReflectogramEventImpl.java,v 1.6 2005/04/14 08:10:56 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.5 $, $Date: 2005/03/21 18:05:00 $
+ * @version $Revision: 1.6 $, $Date: 2005/04/14 08:10:56 $
  * @module
  */
 public class SimpleReflectogramEventImpl implements SimpleReflectogramEvent
@@ -30,7 +30,7 @@ public class SimpleReflectogramEventImpl implements SimpleReflectogramEvent
 	{
 		this.begin = begin;
 		this.end = end;
-		this.eventType = eventType; // FIXME: надо отличать типы LOSS и GAIN !
+		this.eventType = eventType;
 	}
 
 	public int getBegin()
