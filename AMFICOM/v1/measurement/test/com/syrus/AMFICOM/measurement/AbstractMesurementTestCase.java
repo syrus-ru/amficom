@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractMesurementTestCase.java,v 1.4 2005/04/04 13:13:46 bass Exp $
+ * $Id: AbstractMesurementTestCase.java,v 1.5 2005/04/14 11:07:41 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.DomainDatabase;
 import com.syrus.AMFICOM.administration.User;
 import com.syrus.AMFICOM.administration.UserDatabase;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DefaultIdentifierGeneratorServer;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -30,8 +31,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/04/04 13:13:46 $
- * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2005/04/14 11:07:41 $
+ * @author $Author: bob $
  * @module tools
  */
 public abstract class AbstractMesurementTestCase extends TestCase {
@@ -56,7 +57,7 @@ public abstract class AbstractMesurementTestCase extends TestCase {
 				oneTimeSetUp();
 			}
 
-			protected void tearDown() {
+			protected void tearDown() throws ApplicationException {
 				oneTimeTearDown();
 			}
 		};
@@ -98,8 +99,8 @@ public abstract class AbstractMesurementTestCase extends TestCase {
 //		IdentifierPool.init(new XMLIdentifierGeneratorServer());
 	}
 
-	static void oneTimeTearDown() {
-
+	static void oneTimeTearDown() throws ApplicationException {
+		MeasurementStorableObjectPool.flush(true);
 		DatabaseConnection.closeConnection();
 	}
 
