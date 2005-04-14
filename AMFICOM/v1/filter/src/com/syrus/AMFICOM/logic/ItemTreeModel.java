@@ -1,5 +1,5 @@
 /*-
- * $Id: ItemTreeModel.java,v 1.10 2005/04/13 19:09:41 arseniy Exp $
+ * $Id: ItemTreeModel.java,v 1.11 2005/04/14 14:08:57 bob Exp $
  *
  * Copyright ? 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,8 +22,8 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/04/13 19:09:41 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2005/04/14 14:08:57 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module filter_v1
  */
@@ -366,7 +366,7 @@ public class ItemTreeModel implements TreeModel, ItemListener {
 		}
 	}
 
-	protected Item[] getPathToRoot(Item aNode) {
+	public Item[] getPathToRoot(Item aNode) {
 		return getPathToRoot(aNode, 0);
 	}
 
