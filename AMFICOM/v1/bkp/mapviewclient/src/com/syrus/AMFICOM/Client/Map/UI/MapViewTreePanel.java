@@ -36,6 +36,7 @@ public final class MapViewTreePanel extends JPanel
 
 	LogicalTreeUI treeUI;
 	JTree tree;
+	ItemTreeModel treeModel;
 	MapViewTreeModel model;
 
 	ApplicationContext aContext;
@@ -76,8 +77,8 @@ public final class MapViewTreePanel extends JPanel
 
 		this.treeUI = new LogicalTreeUI(rootItem, false);
 		this.tree = this.treeUI.getTree();
-		ItemTreeModel treeModel = (ItemTreeModel )this.tree.getModel();
-		treeModel.setAllwaysSort(false);
+		this.treeModel = (ItemTreeModel )this.tree.getModel();
+		this.treeModel.setAllwaysSort(false);
 
 		this.scroll.getViewport().add(this.tree);
 		this.tree.addTreeSelectionListener(this);
@@ -139,9 +140,8 @@ public final class MapViewTreePanel extends JPanel
 					MapElement mapElement = (MapElement )mne.getSource();
 					Item node = this.model.findNode(mapElement);
 					if(node != null) {
-						TreePath path = new TreePath(node);
+						TreePath path = new TreePath(this.treeModel.getPathToRoot(node));
 						this.tree.getSelectionModel().addSelectionPath(path);
-						this.tree.getSelectionModel().setSelectionPath(path);
 						this.tree.scrollPathToVisible(path);
 					}
 				}
@@ -149,7 +149,7 @@ public final class MapViewTreePanel extends JPanel
 					MapElement mapElement = (MapElement )mne.getSource();
 					Item node = this.model.findNode(mapElement);
 					if(node != null) {
-						TreePath path = new TreePath(node);
+						TreePath path = new TreePath(this.treeModel.getPathToRoot(node));
 						this.tree.getSelectionModel().removeSelectionPath(path);
 					}
 				}
