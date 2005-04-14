@@ -1,5 +1,5 @@
 /*-
- * $Id: ModelTraceAndEventsImpl.java,v 1.2 2005/04/11 14:46:07 saa Exp $
+ * $Id: ModelTraceAndEventsImpl.java,v 1.3 2005/04/14 16:01:28 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.2 $, $Date: 2005/04/11 14:46:07 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/14 16:01:28 $
  * @module
  */
 public class ModelTraceAndEventsImpl
@@ -23,7 +23,7 @@ implements ModelTraceAndEvents, DataStreamable
 {
 	protected static final long SIGNATURE_EVENTS = 3353520050119193102L;
 
-	private SimpleReflectogramEventImpl[] se; // not null
+	private ReliabilitySimpleReflectogramEventImpl[] se; // not null
 	private ModelFunction mf; // not null
 	private int traceLength;
 	private double deltaX = 1; // XXX
@@ -31,71 +31,7 @@ implements ModelTraceAndEvents, DataStreamable
 
 	private static DataStreamable.Reader dsReader = null; // DIS reader singleton-style object
 
-	/*
-	public static ModelTraceAndEventsImpl readFromDIS(DataInputStream dis)
-	throws IOException, SignatureMismatchException
-	{
-		long signature = dis.readLong();
-		if (signature != SIGNATURE_EVENTS)
-			throw new SignatureMismatchException();
-		ModelFunction mf = ModelFunction.createFromDIS(dis);
-		double deltaX = dis.readDouble();
-		int len = dis.readInt();
-		SimpleReflectogramEventImpl[] se = new SimpleReflectogramEventImpl[len];
-		for (int i = 0; i < len; i++)
-			se[i] = SimpleReflectogramEventImpl.createFromDIS(dis);
-		return new ModelTraceAndEventsImpl(se, mf, deltaX);
-	}*/
-
-	/*
-	public static ModelTraceAndEventsImpl eventsAndTraceFromByteArray(byte[] bar)
-	{
-		try
-		{
-			ByteArrayInputStream bais = new ByteArrayInputStream(bar);
-			DataInputStream dis = new DataInputStream(bais);
-			return readFromDIS(dis);
-		}
-		catch (IOException e)
-		{
-			// FIXME: what to do?
-			// we should not catch exceptions here?
-			System.out.println("IOException caught, wanna die: " + e);
-			e.printStackTrace();
-			return null; // FIXME
-		}
-		catch (SignatureMismatchException e)
-		{
-			System.out.println("SignatureMismatchException caught, wanna die: " + e);
-			e.printStackTrace();
-			return null; // FIXME
-			//return new ModelTraceManager(new ReflectogramEvent[0]); // FIXME
-		}
-	}*/
-
-	/*
-	public byte[] eventsAndTraceToByteArray()
-	{
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		DataOutputStream dos = new DataOutputStream(baos);
-		try
-		{
-			dos.writeLong(SIGNATURE_EVENTS);
-			getMF().writeToDOS(dos);
-			dos.writeDouble(getDeltaX());
-			dos.writeInt(getSE().length);
-			for (int i = 0; i < getSE().length; i++)
-				getSE()[i].writeToDOS(dos);
-			return baos.toByteArray();
-		} catch (IOException e)
-		{
-			System.out.println("IOException caught: " + e);
-			e.printStackTrace();
-			return new byte[0]; //null // XXX
-		}
-	}*/
-
-	public ModelTraceAndEventsImpl(SimpleReflectogramEventImpl[] se,
+	public ModelTraceAndEventsImpl(ReliabilitySimpleReflectogramEventImpl[] se,
 			ModelFunction mf, double deltaX)
 	{
 		this.se = se;
@@ -118,7 +54,7 @@ implements ModelTraceAndEvents, DataStreamable
 		return mt;
 	}
 
-	protected SimpleReflectogramEventImpl[] getSE()
+	protected ReliabilitySimpleReflectogramEventImpl[] getSE()
 	{
 		return se;
 	}
@@ -189,33 +125,30 @@ implements ModelTraceAndEvents, DataStreamable
 		dos.writeLong(SIGNATURE_EVENTS);
 		getMF().writeToDOS(dos);
 		dos.writeDouble(getDeltaX());
-		dos.writeInt(getSE().length);
-		for (int i = 0; i < getSE().length; i++)
-			getSE()[i].writeToDOS(dos);
-	}
-
-	private static class DSReader implements DataStreamable.Reader
-	{
-		public DataStreamable readFromDIS(DataInputStream dis)
-		throws IOException, SignatureMismatchException
-		{
-			long signature = dis.readLong();
-			if (signature != SIGNATURE_EVENTS)
-				throw new SignatureMismatchException();
-			ModelFunction mf = ModelFunction.createFromDIS(dis);
-			double deltaX = dis.readDouble();
-			int len = dis.readInt();
-			SimpleReflectogramEventImpl[] se = new SimpleReflectogramEventImpl[len];
-			for (int i = 0; i < len; i++)
-				se[i] = SimpleReflectogramEventImpl.createFromDIS(dis);
-			return new ModelTraceAndEventsImpl(se, mf, deltaX);
-		}
+		dos.writeInt(se.length);
+		for (int i = 0; i < se.length; i++)
+			se[i].writeToDOS(dos);
 	}
 
 	public static DataStreamable.Reader getReader()
 	{
 		if (dsReader == null)
-			dsReader = new DSReader();
+			dsReader = new DataStreamable.Reader() {
+            public DataStreamable readFromDIS(DataInputStream dis)
+            throws IOException, SignatureMismatchException
+            {
+                long signature = dis.readLong();
+                if (signature != SIGNATURE_EVENTS)
+                    throw new SignatureMismatchException();
+                ModelFunction mf = ModelFunction.createFromDIS(dis);
+                double deltaX = dis.readDouble();
+                int len = dis.readInt();
+                ReliabilitySimpleReflectogramEventImpl[] se = new ReliabilitySimpleReflectogramEventImpl[len];
+                for (int i = 0; i < len; i++)
+                    se[i] = new ReliabilitySimpleReflectogramEventImpl(dis);
+                return new ModelTraceAndEventsImpl(se, mf, deltaX);
+            }
+        };
 		return dsReader;
 	}
 }

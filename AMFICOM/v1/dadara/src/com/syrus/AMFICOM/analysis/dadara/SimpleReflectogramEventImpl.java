@@ -1,5 +1,5 @@
 /*
- * $Id: SimpleReflectogramEventImpl.java,v 1.7 2005/04/14 12:03:17 saa Exp $
+ * $Id: SimpleReflectogramEventImpl.java,v 1.8 2005/04/14 16:01:28 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,10 +13,11 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.7 $, $Date: 2005/04/14 12:03:17 $
+ * @version $Revision: 1.8 $, $Date: 2005/04/14 16:01:28 $
  * @module
  */
-public class SimpleReflectogramEventImpl implements SimpleReflectogramEvent
+public class SimpleReflectogramEventImpl
+implements SimpleReflectogramEvent
 {
 	private int begin;
 	private int end;
@@ -56,14 +57,18 @@ public class SimpleReflectogramEventImpl implements SimpleReflectogramEvent
 		dos.writeInt(eventType);
 	}
 
+    public SimpleReflectogramEventImpl(DataInputStream dis)
+    throws IOException
+    {
+        this.begin = dis.readInt();
+        this.end = dis.readInt();
+        this.eventType = dis.readInt();
+    }
+/*
 	public static SimpleReflectogramEventImpl createFromDIS(DataInputStream dis)
 	throws IOException
 	{
-		SimpleReflectogramEventImpl ret = new SimpleReflectogramEventImpl();
-		ret.begin = dis.readInt();
-		ret.end = dis.readInt();
-		ret.eventType = dis.readInt();
-		return ret;
+        return new SimpleReflectogramEventImpl(dis);
 	}
-
+*/
 }

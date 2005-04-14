@@ -1,5 +1,5 @@
 /*-
- * $Id: ReliabilitySimpleReflectogramEventImpl.java,v 1.1 2005/04/14 12:03:17 saa Exp $
+ * $Id: ReliabilitySimpleReflectogramEventImpl.java,v 1.2 2005/04/14 16:01:28 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,9 +8,13 @@
 
 package com.syrus.AMFICOM.analysis.dadara;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 /**
  * @author $Author: saa $
- * @version $Revision: 1.1 $, $Date: 2005/04/14 12:03:17 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/14 16:01:28 $
  * @module
  */
 public class ReliabilitySimpleReflectogramEventImpl
@@ -35,6 +39,20 @@ implements ReliabilitySimpleReflectogramEvents {
         this.reliability = reliability;
     }
 
+    public ReliabilitySimpleReflectogramEventImpl(DataInputStream dis)
+    throws IOException{
+        super(dis);
+        this.reliability = dis.readBoolean() ? dis.readDouble() : -1;
+    }
+
+    public void writeToDOS(DataOutputStream dos)
+    throws IOException {
+        super.writeToDOS(dos);
+        dos.writeBoolean(hasReliability());
+        if (hasReliability())
+            dos.writeDouble(getReliability());
+    }
+
     public double getReliability() {
         if (hasReliability())
             return reliability;
@@ -45,5 +63,4 @@ implements ReliabilitySimpleReflectogramEvents {
     public boolean hasReliability() {
         return reliability >= 0;
     }
-
 }
