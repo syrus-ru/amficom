@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementServer.java,v 1.34 2005/04/11 12:34:38 arseniy Exp $
+ * $Id: ClientMeasurementServer.java,v 1.35 2005/04/15 22:14:36 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/04/11 12:34:38 $
+ * @version $Revision: 1.35 $, $Date: 2005/04/15 22:14:36 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -188,7 +188,7 @@ public class ClientMeasurementServer extends SleepButWorkThread {
 				resetMServerConnection();
 			else {
 				try {
-					mServerRef.ping((byte) 1);
+					mServerRef.verify((byte) 1);
 				}
 				catch (SystemException se) {
 					resetMServerConnection();
@@ -213,7 +213,7 @@ public class ClientMeasurementServer extends SleepButWorkThread {
 			synchronized (lock) {
 				if (mServerRef != null) {
 					try {
-						mServerRef.ping((byte) 0);
+						mServerRef.verify((byte) 0);
 					}
 					catch (SystemException se) {
 						Log.errorException(se);
