@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.36 2005/04/14 16:21:29 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.37 2005/04/15 11:32:39 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.36 $, $Date: 2005/04/14 16:21:29 $
+ * @version $Revision: 1.37 $, $Date: 2005/04/15 11:32:39 $
  * @module
  */
 
@@ -22,7 +22,6 @@ import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEventsImpl;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
 import com.syrus.AMFICOM.analysis.dadara.ReliabilitySimpleReflectogramEventImpl;
-import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEventImpl;
 import com.syrus.AMFICOM.analysis.dadara.ThreshDX;
 import com.syrus.AMFICOM.analysis.dadara.ThreshDY;
 
