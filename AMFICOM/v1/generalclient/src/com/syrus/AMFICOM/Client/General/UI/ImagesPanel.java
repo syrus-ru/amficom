@@ -25,6 +25,7 @@ import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -198,7 +199,7 @@ public class ImagesPanel extends JPanel
 				e.printStackTrace();
 				return;
 			}
-			catch (IllegalObjectEntityException e)
+			catch (IdentifierGenerationException e)
 			{
 				e.printStackTrace();
 				return;
