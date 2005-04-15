@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalScheme.java,v 1.6 2005/04/12 13:05:54 max Exp $
+ * $Id: LogicalScheme.java,v 1.7 2005/04/15 16:43:26 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,6 +11,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.CompoundCondition;
@@ -22,15 +24,18 @@ import com.syrus.AMFICOM.logic.LogicalItem;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/04/12 13:05:54 $
+ * @version $Revision: 1.7 $, $Date: 2005/04/15 16:43:26 $
  * @author $Author: max $
  * @module filter_v1
  */
 public class LogicalScheme {
 
-	private LogicalItem rootItem;
-	private LogicalItem savedRootItem;
+	private static final String CONDITION = "Condition ";
 	
+	private LogicalItem rootItem;	
+	private LogicalItem savedRootItem;
+	private List keyNames = new LinkedList();
+		
 	public LogicalScheme() {
 		this.rootItem = new LogicalItem(LogicalItem.ROOT);				
 	}
@@ -108,15 +113,17 @@ public class LogicalScheme {
 	}
 
 	public void addCondition(String keyName, StorableObjectCondition condition) {
-		LogicalItem newItem = new LogicalItem(keyName, condition);
-		LogicalItem oldItem = findConditionItem(keyName, this.rootItem);
+		String name = CONDITION + (this.keyNames.size()+1);
+		this.keyNames.add(keyName);
+		LogicalItem newItem = new LogicalItem(name, condition);
+		LogicalItem oldItem = findConditionItem(name, this.rootItem);
 		if (oldItem != null) {
 			oldItem.setCondition(condition);
 			return;
 		} 
 		if(isDefault()) {
 			if(this.rootItem.getChildren() == Collections.EMPTY_LIST) {
-				LogicalItem conditionItem = new LogicalItem(keyName, condition);
+				LogicalItem conditionItem = new LogicalItem(name, condition);
 				this.rootItem.addChild(conditionItem);
 				return;
 			}
@@ -163,7 +170,10 @@ public class LogicalScheme {
 	}
 
 	public void removeCondition(String keyName) {
-		LogicalItem conditionItem = findConditionItem(keyName, this.rootItem);
+		int index = this.keyNames.indexOf(keyName);
+		this.keyNames.remove(index);
+		String name = CONDITION + (index+1); 
+		LogicalItem conditionItem = findConditionItem(name, this.rootItem);
 		LogicalItem parent = (LogicalItem) conditionItem.getParent();
 		conditionItem.setParent(null);
 		//parent.removeChild(conditionItem);
@@ -180,5 +190,41 @@ public class LogicalScheme {
 		}
 		LogicalItem newRootItem = (LogicalItem)this.rootItem.clone();
 		this.rootItem = newRootItem;
-	}	
+		renameConditions(index);
+	}
+
+	private void renameConditions(int index) {
+		for (int i = index; i < this.keyNames.size(); i++) {
+			String name = CONDITION + (i+2);
+			LogicalItem conditionItem = findConditionItem(name, this.rootItem);
+			conditionItem.setName(CONDITION + (i+1));
+		}		
+	}
+	
+	public String getStringCondition() {
+		StringBuffer condition = createStringCondition(rootItem, new StringBuffer());
+		return condition.toString();
+	}
+	
+	private StringBuffer createStringCondition(LogicalItem parentItem, StringBuffer conditionBuff) {
+		
+		if(parentItem.getChildren().size() > 1)
+			conditionBuff.append("(");
+		for (Iterator it = parentItem.getChildren().iterator(); it.hasNext();) {
+			LogicalItem item = (LogicalItem) it.next();
+			if(item.getChildren() == Collections.EMPTY_LIST) {
+				conditionBuff.append(" \"");
+				conditionBuff.append(item.getName());
+				conditionBuff.append("\" ");
+			} else
+				createStringCondition(item, conditionBuff);
+			if(it.hasNext())
+				conditionBuff.append(parentItem.getName());
+		}
+		if(parentItem.getChildren().size() > 1)
+			conditionBuff.append(")");
+		return conditionBuff;
+	}
+	
+	
 }
