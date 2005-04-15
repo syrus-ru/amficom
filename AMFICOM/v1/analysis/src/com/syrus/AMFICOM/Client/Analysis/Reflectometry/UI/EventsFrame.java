@@ -35,6 +35,7 @@ import com.syrus.AMFICOM.Client.General.UI.UIGeneralStorage;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.ComplexReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.MathRef;
+import com.syrus.AMFICOM.analysis.dadara.ModelTraceComparer;
 import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramComparer;
 import com.syrus.AMFICOM.analysis.dadara.TraceEvent;
@@ -173,6 +174,9 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 		rend.setLossChangedEventsList(lossChengedEvents);
 		this.jTable.revalidate();
 		this.jTable.repaint();
+        
+        // FIXME: development-time console code
+        ModelTraceComparer.compareMTAEToMTM(Heap.getMTAEPrimary(), Heap.getMTMEtalon()); // XXX: will crush if no etalon will be at this moment
 	}
 
 	public void setNoComparedWithEtalonColor()
