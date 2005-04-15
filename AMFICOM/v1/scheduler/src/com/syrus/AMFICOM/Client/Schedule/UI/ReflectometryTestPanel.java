@@ -49,6 +49,7 @@ import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.ParameterTypeCodenames;
 import com.syrus.AMFICOM.general.StorableObjectType;
@@ -66,7 +67,7 @@ import com.syrus.AMFICOM.measurement.corba.SetSort;
 import com.syrus.util.ByteArray;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/04/15 10:25:02 $
+ * @version $Revision: 1.22 $, $Date: 2005/04/15 17:07:34 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -575,7 +576,8 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 				System.out.println("wavelength is " + wavelength);
 				{
 					String value = (String) this.traceLength.get(wavelength);
-					System.out.println(value);
+					if (value == null)
+						throw new ObjectNotFoundException("Trace length value not found");
 					String[] values = value.split("\\s+");
 					Arrays.sort(values, this.comparator);
 					this.maxDistanceComboBox.removeAllItems();
