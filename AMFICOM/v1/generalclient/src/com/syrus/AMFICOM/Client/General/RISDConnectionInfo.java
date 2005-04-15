@@ -1,5 +1,5 @@
 /*
- * $Id: RISDConnectionInfo.java,v 1.5 2004/10/19 13:45:52 bass Exp $
+ * $Id: RISDConnectionInfo.java,v 1.6 2005/04/15 22:17:26 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,6 +10,9 @@ package com.syrus.AMFICOM.Client.General;
 
 import com.syrus.AMFICOM.CORBA.*;
 import com.syrus.AMFICOM.cmserver.corba.*;
+import com.syrus.AMFICOM.general.CMServerConnectionManager;
+import com.syrus.AMFICOM.general.CORBAServer;
+import com.syrus.AMFICOM.general.VerifiedReferenceSource;
 import com.syrus.util.corba.JavaSoftORBUtil;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -18,8 +21,8 @@ import org.omg.CORBA.*;
 import org.omg.CosNaming.*;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2004/10/19 13:45:52 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/04/15 22:17:26 $
  * @module generalclient_v1
  */
 public final class RISDConnectionInfo extends ConnectionInterface {
@@ -38,9 +41,11 @@ public final class RISDConnectionInfo extends ConnectionInterface {
 	public AMFICOM server;
 
 	/**
+	 * @deprecated
 	 * Server reference.
 	 */
 	private CMServer cmServer;
+	private CMServerConnectionManager cmServerConnectionManager;
 
 	/**
 	 * Server group name.
@@ -113,7 +118,10 @@ public final class RISDConnectionInfo extends ConnectionInterface {
 						String serverName = (String) (serverIterator.next());
 						Map featureMap = (Map) (serverMap.get(serverName));
 						AMFICOM server = AMFICOMHelper.narrow((org.omg.CORBA.Object) featureMap.get("Amficom"));
+
 						CMServer cmServer = CMServerHelper.narrow((org.omg.CORBA.Object) featureMap.get("CMServer"));
+						CORBAServer corbaServer = new CORBAServer(serverName);
+						CMServerConnectionManager cmServerConnectionManager = new CMServerConnectionManager(corbaServer, "CMServer");
 
 						System.err.println(serverName);
 						for (Iterator featureIterator = featureMap.keySet().iterator(); featureIterator.hasNext();)
@@ -126,6 +134,8 @@ public final class RISDConnectionInfo extends ConnectionInterface {
 							this.server = server;
 						if (this.cmServer == null)
 							this.cmServer = cmServer;
+						if (this.cmServerConnectionManager == null)
+							this.cmServerConnectionManager = cmServerConnectionManager;
 						if (this.serverName == null)
 							this.serverName = serverName;
 					}
@@ -171,12 +181,17 @@ public final class RISDConnectionInfo extends ConnectionInterface {
 	}
 
 	/**
+	 * @deprecated Use getCMServerConnectionManager instead
 	 * @return a binding named "CMServer". This can also be obtained
 	 *         directly from the feature map for a certain
 	 *         <i>server group</i>. 
 	 */
 	public CMServer getCmServer() {
 		return cmServer;
+	}
+
+	public CMServerConnectionManager getCMServerConnectionManager() {
+		return this.cmServerConnectionManager;
 	}
 
 	/**
