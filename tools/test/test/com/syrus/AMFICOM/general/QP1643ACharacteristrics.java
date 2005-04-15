@@ -1,5 +1,5 @@
 /*
- * $Id: QP1643ACharacteristrics.java,v 1.5 2005/04/11 12:42:07 bob Exp $
+ * $Id: QP1643ACharacteristrics.java,v 1.6 2005/04/15 17:34:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,8 +29,8 @@ import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/04/11 12:42:07 $
- * @author $Author: bob $
+ * @version $Revision: 1.6 $, $Date: 2005/04/15 17:34:16 $
+ * @author $Author: arseniy $
  * @module tools
  */
 public class QP1643ACharacteristrics extends GeneralTestCase {
@@ -70,14 +70,14 @@ public class QP1643ACharacteristrics extends GeneralTestCase {
 			if (storableObjects.isEmpty()) {
 				waveLengthType = CharacteristicType.createInstance(creatorId,
 					CharacteristicTypeCodenames.TRACE_WAVELENGTH, "reflectometer wavelength",
-					DataType._DATA_TYPE_INTEGER, CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL);
+					DataType.DATA_TYPE_INTEGER, CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL);
 				GeneralStorableObjectPool.putStorableObject(waveLengthType);
 			} else
 				waveLengthType = (CharacteristicType) storableObjects.iterator().next();
 
 			Characteristic wlCharacteristic = Characteristic.createInstance(creatorId, waveLengthType,
 				CharacteristicTypeCodenames.TRACE_WAVELENGTH, "QP1643A wavelength",
-				CharacteristicSort._CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE, wavelength, measurementPortTypeId, false,
+				CharacteristicSort.CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE, wavelength, measurementPortTypeId, false,
 				true);
 			GeneralStorableObjectPool.putStorableObject(wlCharacteristic);
 		}
@@ -91,15 +91,16 @@ public class QP1643ACharacteristrics extends GeneralTestCase {
 			storableObjects = GeneralStorableObjectPool.getStorableObjectsByCondition(typicalCondition, true);
 			if (storableObjects.isEmpty()) {
 				traceLengthType = CharacteristicType.createInstance(creatorId, codename, "reflectometer trace length",
-					DataType._DATA_TYPE_DOUBLE, CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL);
+					DataType.DATA_TYPE_DOUBLE, CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL);
 				GeneralStorableObjectPool.putStorableObject(traceLengthType);
 			} else
 				traceLengthType = (CharacteristicType) storableObjects.iterator().next();
 
 			Characteristic traceLengthCharacteristic = Characteristic.createInstance(creatorId, traceLengthType,
 				codename, "QP1643A trace length at wavelength 1625.00 nm",
-				CharacteristicSort._CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE,
-				"5.00 20.00 50.00 75.00 125.00 250.00 300.00", measurementPortTypeId, false, true);
+				CharacteristicSort.CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE,
+				"5.00 20.00 50.00 75.00 125.00 250.00 300.00",
+				measurementPortTypeId, false, true);
 
 			GeneralStorableObjectPool.putStorableObject(traceLengthCharacteristic);
 		}
@@ -114,7 +115,7 @@ public class QP1643ACharacteristrics extends GeneralTestCase {
 			storableObjects = GeneralStorableObjectPool.getStorableObjectsByCondition(typicalCondition, true);
 			if (storableObjects.isEmpty()) {
 				pulseWidthType = CharacteristicType.createInstance(creatorId, codename, "reflectometer pulse width",
-					DataType._DATA_TYPE_LONG, CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL);
+					DataType.DATA_TYPE_LONG, CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL);
 				GeneralStorableObjectPool.putStorableObject(pulseWidthType);
 			} else
 				pulseWidthType = (CharacteristicType) storableObjects.iterator().next();
@@ -125,8 +126,8 @@ public class QP1643ACharacteristrics extends GeneralTestCase {
 						pulseWidthType,
 						codename,
 						"QP1643A pulse width at wavelength 1625.00 nm",
-						CharacteristicSort._CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE,
-						"327680 655360 1310720 3276800 6553606 13107206 32768006 65536006 131072006 327680006 655360007 1310720007 1966080007",
+						CharacteristicSort.CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE,
+						"5 10 20 50 100 200 500 1000 2000 5000 10000 20000 30000",
 						measurementPortTypeId, false, true);
 
 			GeneralStorableObjectPool.putStorableObject(pulseWidthCharacteristic);
@@ -142,7 +143,7 @@ public class QP1643ACharacteristrics extends GeneralTestCase {
 			storableObjects = GeneralStorableObjectPool.getStorableObjectsByCondition(typicalCondition, true);
 			if (storableObjects.isEmpty()) {
 				indexOfRefractionType = CharacteristicType.createInstance(creatorId, codename,
-					"reflectometer index of refraction", DataType._DATA_TYPE_DOUBLE,
+					"reflectometer index of refraction", DataType.DATA_TYPE_DOUBLE,
 					CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL);
 				GeneralStorableObjectPool.putStorableObject(indexOfRefractionType);
 			} else
@@ -150,7 +151,7 @@ public class QP1643ACharacteristrics extends GeneralTestCase {
 
 			Characteristic indexOfRefractionCharacteristic = Characteristic.createInstance(creatorId,
 				indexOfRefractionType, codename, "QP1643A index of refraction at wavelength 1625.00 nm",
-				CharacteristicSort._CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE, "1.468200", measurementPortTypeId, false,
+				CharacteristicSort.CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE, "1.468200", measurementPortTypeId, false,
 				true);
 			GeneralStorableObjectPool.putStorableObject(indexOfRefractionCharacteristic);
 		}
@@ -163,7 +164,7 @@ public class QP1643ACharacteristrics extends GeneralTestCase {
 			storableObjects = GeneralStorableObjectPool.getStorableObjectsByCondition(typicalCondition, true);
 			if (storableObjects.isEmpty()) {
 				averageCountType = CharacteristicType.createInstance(creatorId, codename,
-					"reflectometer average count", DataType._DATA_TYPE_DOUBLE,
+					"reflectometer average count", DataType.DATA_TYPE_DOUBLE,
 					CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL);
 				GeneralStorableObjectPool.putStorableObject(averageCountType);
 			} else
@@ -171,7 +172,7 @@ public class QP1643ACharacteristrics extends GeneralTestCase {
 
 			Characteristic averageCountCharacteristic = Characteristic.createInstance(creatorId, averageCountType,
 				codename, "QP1643A average count at wavelength 1625.00 nm",
-				CharacteristicSort._CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE, "4096 45312 262144",
+				CharacteristicSort.CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE, "4096 45312 262144",
 				measurementPortTypeId, false, true);
 			GeneralStorableObjectPool.putStorableObject(averageCountCharacteristic);
 		}
@@ -183,14 +184,15 @@ public class QP1643ACharacteristrics extends GeneralTestCase {
 			if (storableObjects.isEmpty()) {
 				resoulutionType = CharacteristicType.createInstance(creatorId,
 					CharacteristicTypeCodenames.TRACE_RESOLUTION, "reflectometer resolution",
-					DataType._DATA_TYPE_DOUBLE, CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL);
+					DataType.DATA_TYPE_DOUBLE, CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL);
 				GeneralStorableObjectPool.putStorableObject(resoulutionType);
 			} else
 				resoulutionType = (CharacteristicType) storableObjects.iterator().next();
 
 			Characteristic resolutionCharacteristic = Characteristic.createInstance(creatorId, resoulutionType,
 				CharacteristicTypeCodenames.TRACE_RESOLUTION, "QP1643A resolution",
-				CharacteristicSort._CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE, "16.00 8.00 4.00 2.00 1.00 0.50 0.25",
+				CharacteristicSort.CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE,
+				"16.000 8.000 4.000 2.000 1.000 0.500 0.250 0.125",
 				measurementPortTypeId, false, true);
 			GeneralStorableObjectPool.putStorableObject(resolutionCharacteristic);
 
@@ -203,14 +205,14 @@ public class QP1643ACharacteristrics extends GeneralTestCase {
 			if (storableObjects.isEmpty()) {
 				maxPointsType = CharacteristicType.createInstance(creatorId,
 					CharacteristicTypeCodenames.TRACE_MAXPOINTS, "reflectometer max points",
-					DataType._DATA_TYPE_INTEGER, CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL);
+					DataType.DATA_TYPE_INTEGER, CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL);
 				GeneralStorableObjectPool.putStorableObject(maxPointsType);
 			} else
 				maxPointsType = (CharacteristicType) storableObjects.iterator().next();
 
 			Characteristic maxPointsCharacteristic = Characteristic.createInstance(creatorId, maxPointsType,
 				CharacteristicTypeCodenames.TRACE_MAXPOINTS, "QP1643A maxpoints",
-				CharacteristicSort._CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE, "262144", measurementPortTypeId, false,
+				CharacteristicSort.CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE, "262144", measurementPortTypeId, false,
 				true);
 			GeneralStorableObjectPool.putStorableObject(maxPointsCharacteristic);
 
@@ -219,63 +221,63 @@ public class QP1643ACharacteristrics extends GeneralTestCase {
 		/* TODO units characteristic to parameter type*/
 //		{
 //			CharacteristicType resolutionType = CharacteristicType.createInstance(creatorId,
-//				CharacteristicTypeCodenames.UNITS_RESOLUTION, "resolution unit type", DataType._DATA_TYPE_STRING,
+//				CharacteristicTypeCodenames.UNITS_RESOLUTION, "resolution unit type", DataType.DATA_TYPE_STRING,
 //				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL);
 //
 //			GeneralStorableObjectPool.putStorableObject(resolutionType);
 //
 //			Characteristic resolutionCharacteristic = Characteristic.createInstance(creatorId, resolutionType,
-//				"resolution unit", "resolution unit", CharacteristicSort._CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE, "м",
+//				"resolution unit", "resolution unit", CharacteristicSort.CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE, "м",
 //				measurementPortTypeId, false, true);
 //			GeneralStorableObjectPool.putStorableObject(resolutionCharacteristic);
 //		}
 //
 //		{
 //			CharacteristicType waveLengthType = CharacteristicType.createInstance(creatorId,
-//				CharacteristicTypeCodenames.UNITS_WAVELENGTH, "wave length unit type", DataType._DATA_TYPE_STRING,
+//				CharacteristicTypeCodenames.UNITS_WAVELENGTH, "wave length unit type", DataType.DATA_TYPE_STRING,
 //				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL);
 //
 //			GeneralStorableObjectPool.putStorableObject(waveLengthType);
 //
 //			Characteristic characteristic = Characteristic.createInstance(creatorId, waveLengthType, "wavelength unit",
-//				"wavelength unit", CharacteristicSort._CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE, "нм",
+//				"wavelength unit", CharacteristicSort.CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE, "нм",
 //				measurementPortTypeId, false, true);
 //			GeneralStorableObjectPool.putStorableObject(characteristic);
 //		}
 //
 //		{
 //			CharacteristicType averageCountType = CharacteristicType.createInstance(creatorId,
-//				CharacteristicTypeCodenames.UNITS_AVERAGE_COUNT, "average count unit type", DataType._DATA_TYPE_STRING,
+//				CharacteristicTypeCodenames.UNITS_AVERAGE_COUNT, "average count unit type", DataType.DATA_TYPE_STRING,
 //				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL);
 //
 //			GeneralStorableObjectPool.putStorableObject(averageCountType);
 //			Characteristic characteristic = Characteristic.createInstance(creatorId, averageCountType,
 //				"average count unit", "average count unit",
-//				CharacteristicSort._CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE, "точек", measurementPortTypeId, false,
+//				CharacteristicSort.CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE, "точек", measurementPortTypeId, false,
 //				true);
 //			GeneralStorableObjectPool.putStorableObject(characteristic);
 //		}
 //
 //		{
 //			CharacteristicType traceLengthType = CharacteristicType.createInstance(creatorId,
-//				CharacteristicTypeCodenames.UNITS_TRACE_LENGTH, "trace length unit type", DataType._DATA_TYPE_STRING,
+//				CharacteristicTypeCodenames.UNITS_TRACE_LENGTH, "trace length unit type", DataType.DATA_TYPE_STRING,
 //				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL);
 //
 //			GeneralStorableObjectPool.putStorableObject(traceLengthType);
 //			Characteristic characteristic = Characteristic.createInstance(creatorId, traceLengthType,
-//				"trace length unit", "trace length unit", CharacteristicSort._CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE,
+//				"trace length unit", "trace length unit", CharacteristicSort.CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE,
 //				"км", measurementPortTypeId, false, true);
 //			GeneralStorableObjectPool.putStorableObject(characteristic);
 //		}
 //
 //		{
 //			CharacteristicType pulseWidthType = CharacteristicType.createInstance(creatorId,
-//				CharacteristicTypeCodenames.UNITS_PULSE_WIDTH, "average count unit type", DataType._DATA_TYPE_STRING,
+//				CharacteristicTypeCodenames.UNITS_PULSE_WIDTH, "average count unit type", DataType.DATA_TYPE_STRING,
 //				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL);
 //
 //			GeneralStorableObjectPool.putStorableObject(pulseWidthType);
 //			Characteristic characteristic = Characteristic.createInstance(creatorId, pulseWidthType,
-//				"pulse width unit", "pulse width unit", CharacteristicSort._CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE,
+//				"pulse width unit", "pulse width unit", CharacteristicSort.CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE,
 //				"нс", measurementPortTypeId, false, true);
 //			GeneralStorableObjectPool.putStorableObject(characteristic);
 //		}
