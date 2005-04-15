@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.109 2005/04/14 08:16:09 bob Exp $
+ * $Id: Test.java,v 1.110 2005/04/15 13:26:14 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,12 +39,13 @@ import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.ContinuousTestTimeStamps;
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.PeriodicalTestTimeStamps;
+import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.HashCodeGenerator;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.109 $, $Date: 2005/04/14 08:16:09 $
+ * @version $Revision: 1.110 $, $Date: 2005/04/15 13:26:14 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -111,7 +112,10 @@ public class Test extends StorableObject {
 			measurement = Measurement.createInstance(measurementCreatorId,
 					(MeasurementType) MeasurementStorableObjectPool.getStorableObject(this.measurementTypeId, true),
 					this.monitoredElement.getId(),
-					"created by Test:'" + this.getDescription() + "' at " + DatabaseDate.SDF.format(new Date(System.currentTimeMillis())),
+					LangModelMeasurement.getString("created by Test") + ":'" 
+					+ this.getDescription() + "' " 
+					+ LangModelMeasurement.getString("at") 
+					+ " " + DatabaseDate.SDF.format(new Date(System.currentTimeMillis())),
 					this.mainMeasurementSetup,
 					startTime,
 					this.monitoredElement.getLocalAddress(),
