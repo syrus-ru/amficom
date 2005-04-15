@@ -197,7 +197,7 @@ implements bsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener
 
 		traces.add(id);
 
-		if (bs != null)
+		if (bs != null) // XXX: I guess this is not a good idea to set window name to last loaded trace name
 			title = bs.title;
 		Log.debugMessage("TraceSelectorFrame.bsHashAdded | id is '" + id + '\'', Log.FINEST);
 		tModel.addRow(title, new Color[] {Heap.getColor(id)});
@@ -229,12 +229,10 @@ implements bsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener
 
 		traces.add(id);
 
-		BellcoreStructure bs = Heap.getAnyBSTraceByKey(id);
-		if (bs != null)
-			title = bs.title;
+        String name = "etalon"; // @todo: externalize string
 
-		Log.debugMessage("TraceSelectorFrame.etalonMTMCUpdated | id is '" + id + '\'', Log.FINEST);
-		tModel.addRow(title, new Color[] {Heap.getColor(id)});
+		Log.debugMessage("TraceSelectorFrame.etalonMTMCUpdated | id is '" + id + "'; name = '" + name + "'", Log.FINEST);
+		tModel.addRow(name, new Color[] {Heap.getColor(id)});
 		setVisible(true);
 	}
 
