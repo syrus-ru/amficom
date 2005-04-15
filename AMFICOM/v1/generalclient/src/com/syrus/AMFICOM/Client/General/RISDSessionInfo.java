@@ -1,5 +1,5 @@
 /*
- * $Id: RISDSessionInfo.java,v 1.34 2005/04/13 14:02:14 bob Exp $
+ * $Id: RISDSessionInfo.java,v 1.35 2005/04/15 10:04:34 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -51,14 +51,11 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.LocalIdentifierGeneratorServer;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ParameterType;
-import com.syrus.AMFICOM.general.ParameterTypeCodenames;
 import com.syrus.AMFICOM.general.SessionContext;
 import com.syrus.AMFICOM.general.StorableObjectResizableLRUMap;
 import com.syrus.AMFICOM.general.XMLGeneralObjectLoader;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
-import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.EmptyClientMapObjectLoader;
 import com.syrus.AMFICOM.map.MapStorableObjectPool;
@@ -75,8 +72,8 @@ import com.syrus.util.corba.JavaSoftORBUtil;
 import com.syrus.util.prefs.IIOPConnectionManager;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.34 $, $Date: 2005/04/13 14:02:14 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.35 $, $Date: 2005/04/15 10:04:34 $
  * @module generalclient_v1
  */
 public final class RISDSessionInfo extends SessionInterface {
