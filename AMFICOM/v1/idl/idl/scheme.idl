@@ -1,5 +1,5 @@
 /*-
- * $Id: scheme.idl,v 1.17 2005/04/08 08:42:24 bass Exp $
+ * $Id: scheme.idl,v 1.18 2005/04/15 17:55:02 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -196,6 +196,23 @@ module com {
 
 					struct PathElement_Transferable {
 						general::corba::StorableObject_Transferable header;
+
+						general::corba::Identifier_Transferable parentSchemePathId;
+						long sequentialNumber;
+						union Data switch (enum Kind{
+								SCHEME_ELEMENT,
+								SCHEME_CABLE_LINK,
+								SCHEME_LINK}) {
+							case SCHEME_ELEMENT:
+								struct SchemeElementData {
+									general::corba::Identifier_Transferable startAbstractSchemePortId;
+									general::corba::Identifier_Transferable endAbstractSchemePortId;
+								} schemeElementData;
+							case SCHEME_CABLE_LINK:
+								general::corba::Identifier_Transferable schemeCableThreadId;
+							case SCHEME_LINK:
+								general::corba::Identifier_Transferable schemeLinkId;
+						} data;
 					};
 
 					typedef sequence<PathElement_Transferable> PathElementSeq_Transferable;
