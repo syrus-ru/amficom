@@ -201,7 +201,7 @@ public class TestLine extends JLabel implements TestsEditor, TestEditor {
 				Test test = (Test) it.next();
 				g.setColor(this.flash ? (((this.selectedTest == null) || (!this.selectedTest.getId().equals(
 					test.getId()))) ? SchedulerModel.COLOR_SCHEDULED : SchedulerModel.COLOR_SCHEDULED_SELECTED) : SchedulerModel.COLOR_UNRECOGNIZED);
-				this.drawTestRect(g, test);
+				this.drawTestRect(g, test, this.flash);
 			}
 		}
 	}
@@ -249,7 +249,7 @@ public class TestLine extends JLabel implements TestsEditor, TestEditor {
 					Test test = (Test) it.next();
 					if (test.isChanged())
 						continue;
-					drawTestRect(g, test);
+					drawTestRect(g, test, false);
 				}
 				
 				this.paintFlash(g);
@@ -396,7 +396,8 @@ public class TestLine extends JLabel implements TestsEditor, TestEditor {
 	}
 
 	private void drawTestRect(	Graphics g,
-								Test test) {
+								Test test,
+								boolean flash) {
 		int y = this.titleHeight / 2 + 4;
 		int h = this.height - (this.titleHeight / 2 + 4) - 2;
 	
@@ -406,6 +407,9 @@ public class TestLine extends JLabel implements TestsEditor, TestEditor {
 		if ((this.selectedTest == null) || (!this.selectedTest.getId().equals(test.getId()))) {
 			color = color.darker();
 		} 
+		
+		if (flash)
+			color = color.brighter().brighter(); 
 		
 		List testTimeLineList = (List) this.measurements.get(test.getId());
 		if (testTimeLineList == null)

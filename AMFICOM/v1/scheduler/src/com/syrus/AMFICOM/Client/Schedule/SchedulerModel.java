@@ -592,7 +592,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 				RISDSessionInfo sessionInterface = (RISDSessionInfo) this.aContext.getSessionInterface();
 				try {
 					this.measurementSetup = MeasurementSetup.createInstance(sessionInterface.getUserIdentifier(),
-						this.set, null, null, null, "created by Scheduler /" + sdf.format(new Date()) + "/",
+						this.set, null, null, null, LangModelSchedule.getString("created by Scheduler")+ " /" + sdf.format(new Date()) + "/",
 						1000 * 60 * 10, Collections.singleton(this.monitoredElement.getId()), Collections
 								.singleton(this.measurementType.getId())); // @todo
 																			// link

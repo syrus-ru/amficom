@@ -96,12 +96,15 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 
 	JCheckBox					useAnalysisBox;
 
+	private JRadioButton		useAnalysisSetups;
+	private JRadioButton		useWOAnalysisSetups;
+
 	private Dispatcher			dispatcher;
 
 	private JRadioButton		patternRadioButton;
 
 	// private Test test;
-	private JCheckBox			usePatternsWithAnalysisBox;
+//	private JCheckBox			usePatternsWithAnalysisBox;
 
 	public TestParametersPanel(final ApplicationContext aContext) {
 		this.aContext = aContext;
@@ -156,18 +159,67 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
 		patternPanel.setBorder(BorderFactory.createEtchedBorder());
 
-		this.usePatternsWithAnalysisBox = new JCheckBox(LangModelSchedule.getString("Use patterns with analisys"), true); //$NON-NLS-1$
-		this.usePatternsWithAnalysisBox.addActionListener(new ActionListener() {
+//		this.usePatternsWithAnalysisBox = new JCheckBox(LangModelSchedule.getString("Use patterns with analisys"), true); //$NON-NLS-1$
+//		this.usePatternsWithAnalysisBox.addActionListener(new ActionListener() {
+//
+//			public void actionPerformed(ActionEvent e) {
+//				updateMeasurementSetups();
+//				setMeasurementSetups(TestParametersPanel.this.msList);
+//			}
+//		});
+		final ActionListener listener = new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
 				updateMeasurementSetups();
 				setMeasurementSetups(TestParametersPanel.this.msList);
 			}
-		});
-		patternPanel.add(this.usePatternsWithAnalysisBox, gbc);
+		};
 
-		this.useAnalysisBox = new JCheckBox(LangModelSchedule.getString("Perform analisys"), true); //$NON-NLS-1$
-		patternPanel.add(this.useAnalysisBox, gbc);
+//		patternPanel.add(this.usePatternsWithAnalysisBox, gbc);
+
+		{
+			this.useAnalysisSetups = new JRadioButton(LangModelSchedule.getString("with analysis parameters"));
+			this.useAnalysisSetups.addActionListener(new ActionListener() {
+
+				public void actionPerformed(ActionEvent e) {
+					listener.actionPerformed(e);
+					useAnalysisBox.setEnabled(true);
+				}
+			});
+			this.useWOAnalysisSetups = new JRadioButton(LangModelSchedule.getString("without analysis parameters"));
+			this.useWOAnalysisSetups.addActionListener(new ActionListener() {
+
+				public void actionPerformed(ActionEvent e) {
+					listener.actionPerformed(e);
+					if(TestParametersPanel.this.useAnalysisBox.isSelected()) {
+						TestParametersPanel.this.useAnalysisBox.doClick();
+					} else {
+						TestParametersPanel.this.useAnalysisBox.doClick();
+						TestParametersPanel.this.useAnalysisBox.doClick();
+					}
+					
+					useAnalysisBox.setEnabled(false);
+				}
+			});
+			
+			patternPanel.add(new JLabel(LangModelSchedule.getString("Use setup") + ':'), gbc);
+			patternPanel.add(this.useAnalysisSetups, gbc);
+			patternPanel.add(this.useWOAnalysisSetups, gbc);
+			
+			this.useWOAnalysisSetups.setSelected(true);
+			this.useAnalysisSetups.setEnabled(false);
+			this.useWOAnalysisSetups.setEnabled(false);
+			
+			this.useAnalysisBox = new JCheckBox(LangModelSchedule.getString("Perform analisys"), false); //$NON-NLS-1$
+			patternPanel.add(this.useAnalysisBox, gbc);
+			this.useAnalysisBox.setEnabled(false);
+
+			
+			ButtonGroup buttonGroup = new ButtonGroup();
+			buttonGroup.add(this.useAnalysisSetups);
+			buttonGroup.add(this.useWOAnalysisSetups);
+		}
+
 		final JLabel analysisLabel = new JLabel(LangModelSchedule.getString("Analysis")); //$NON-NLS-1$
 		patternPanel.add(analysisLabel, gbc);
 		patternPanel.add(this.analysisComboBox, gbc);
@@ -203,6 +255,8 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 				}
 			}
 		});
+		
+		this.testSetups.setEnabled(false);
 		this.testSetups.addListSelectionListener(new ListSelectionListener() {
 
 			public void valueChanged(ListSelectionEvent e) {
@@ -223,16 +277,18 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 								java.util.Set set = new HashSet(setParameters.length);
 								for (int i = 0; i < setParameters.length; i++)
 									set.add(setParameters[i].getId());
-								linkedIdsCondition = new LinkedIdsCondition(set,
-																			ObjectEntities.ANALYSISTYPE_ENTITY_CODE);
+								if (!set.isEmpty()) {
+									linkedIdsCondition = new LinkedIdsCondition(set,
+																				ObjectEntities.ANALYSISTYPE_ENTITY_CODE);
 
-								Collection analysisTypes = MeasurementStorableObjectPool.getStorableObjectsByCondition(
-									linkedIdsCondition, true);
+									Collection analysisTypes = MeasurementStorableObjectPool
+											.getStorableObjectsByCondition(linkedIdsCondition, true);
 
-								for (Iterator it = analysisTypes.iterator(); it.hasNext();) {
-									AnalysisType analysisType = (AnalysisType) it.next();
-									((ObjListModel) TestParametersPanel.this.analysisComboBox.getModel())
-											.addElement(analysisType);
+									for (Iterator it = analysisTypes.iterator(); it.hasNext();) {
+										AnalysisType analysisType = (AnalysisType) it.next();
+										((ObjListModel) TestParametersPanel.this.analysisComboBox.getModel())
+												.addElement(analysisType);
+									}
 								}
 							}
 						}
@@ -245,22 +301,24 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 								java.util.Set set = new HashSet(setParameters.length);
 								for (int i = 0; i < setParameters.length; i++)
 									set.add(setParameters[i].getId());
-								if (linkedIdsCondition == null) {
-									linkedIdsCondition = new LinkedIdsCondition(
-																				set,
-																				ObjectEntities.EVALUATIONTYPE_ENTITY_CODE);
-								}
+								if (!set.isEmpty()) {
+									if (linkedIdsCondition == null) {
+										linkedIdsCondition = new LinkedIdsCondition(
+																					set,
+																					ObjectEntities.EVALUATIONTYPE_ENTITY_CODE);
+									}
 
-								else {
-									linkedIdsCondition.setEntityCode(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE);
-									linkedIdsCondition.setLinkedIds(set);
-								}
-								Collection evaluationTypes = MeasurementStorableObjectPool
-										.getStorableObjectsByCondition(linkedIdsCondition, true);
-								for (Iterator it = evaluationTypes.iterator(); it.hasNext();) {
-									EvaluationType evaluationType = (EvaluationType) it.next();
-									((ObjListModel) TestParametersPanel.this.evaluationComboBox.getModel())
-											.addElement(evaluationType);
+									else {
+										linkedIdsCondition.setEntityCode(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE);
+										linkedIdsCondition.setLinkedIds(set);
+									}
+									Collection evaluationTypes = MeasurementStorableObjectPool
+											.getStorableObjectsByCondition(linkedIdsCondition, true);
+									for (Iterator it = evaluationTypes.iterator(); it.hasNext();) {
+										EvaluationType evaluationType = (EvaluationType) it.next();
+										((ObjListModel) TestParametersPanel.this.evaluationComboBox.getModel())
+												.addElement(evaluationType);
+									}
 								}
 							}
 						}
@@ -299,9 +357,11 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 		});
 		// it's for set enabled status for analysisComboBox &
 		// evaluationComboBox
-		this.useAnalysisBox.doClick();
-		this.useAnalysisBox.setEnabled(this.testSetups.getModel().getSize() > 0);
 
+		this.analysisComboBox.setEnabled(false);
+		this.evaluationComboBox.setEnabled(false);
+
+		
 		this.switchPanel.add(patternPanel, PATTERN_PANEL_NAME);
 		add(this.switchPanel, BorderLayout.CENTER);
 
@@ -380,13 +440,13 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 
 	public void setMeasurementSetup(MeasurementSetup measurementSetup) {
 		this.updateMeasurementSetups();
-			
+
 		if (!this.msList.contains(measurementSetup)) {
-			this.msList.add(measurementSetup);			
+			this.msList.add(measurementSetup);
 		}
 		this.testSetups.setSelectedValue(measurementSetup, true);
-		if (this.usePatternsWithAnalysisBox.isSelected() && this.testSetups.getSelectedValue() == null) {
-			this.usePatternsWithAnalysisBox.doClick();
+		if (this.useAnalysisSetups.isSelected() && this.testSetups.getSelectedValue() == null) {
+//			this.usePatternsWithAnalysisBox.doClick();
 			this.testSetups.setSelectedValue(measurementSetup, true);
 		}
 		this.patternRadioButton.doClick();
@@ -409,17 +469,22 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 		this.testSetups.removeAll();
 		for (Iterator it = this.msList.iterator(); it.hasNext();) {
 			MeasurementSetup measurementSetup = (MeasurementSetup) it.next();
-			if (!this.usePatternsWithAnalysisBox.isSelected() || measurementSetup.getCriteriaSet() != null
+			if (!this.useAnalysisSetups.isSelected() || measurementSetup.getCriteriaSet() != null
 					|| measurementSetup.getThresholdSet() != null || measurementSetup.getEtalon() != null)
 				((ObjListModel) this.testSetups.getModel()).addElement(measurementSetup);
 		}
+		
+		this.testSetups.setEnabled(true);
+		this.useAnalysisSetups.setEnabled(true);
+		this.useWOAnalysisSetups.setEnabled(true);
+
 	}
 
 	public void updateMeasurementSetups() {
 		if (this.msList == null) {
 			this.schedulerModel.refreshMeasurementSetups();
 			return;
-		}	
+		}
 	}
 
 	public void setSet(Set set) {

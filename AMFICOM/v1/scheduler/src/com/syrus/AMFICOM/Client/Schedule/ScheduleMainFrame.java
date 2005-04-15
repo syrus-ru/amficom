@@ -208,9 +208,9 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		// this.desktopPane.add(this.testFilterFrame);
 
 		GraphicsEnvironment localGraphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        Rectangle maximumWindowBounds = localGraphicsEnvironment.getMaximumWindowBounds();
-        this.setSize(new Dimension(maximumWindowBounds.width, maximumWindowBounds.height));
-        this.setLocation(maximumWindowBounds.x, maximumWindowBounds.y);
+		Rectangle maximumWindowBounds = localGraphicsEnvironment.getMaximumWindowBounds();
+		this.setSize(new Dimension(maximumWindowBounds.width, maximumWindowBounds.height));
+		this.setLocation(maximumWindowBounds.x, maximumWindowBounds.y);
 
 		Environment.addWindow(this);
 		initModule();
@@ -392,7 +392,7 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 					int w = f.desktopPane.getSize().width;
 					int h = f.desktopPane.getSize().height;
 
-					int minWidth = Math.max(250, w / 5);
+					// int minWidth = w / 5;
 
 					JInternalFrame paramsFrame = ((JInternalFrame) f.frames.get(ScheduleMainFrame.PARAMETERS_FRAME));
 					JInternalFrame propsFrame = ((JInternalFrame) f.frames.get(ScheduleMainFrame.PROPERTIES_FRAME));
@@ -410,21 +410,27 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 					normalize(saveFrame);
 					normalize(tableFrame);
 
-					treeFrame.setSize(minWidth, h / 2);
-					propsFrame.setSize(minWidth, h / 4);
-					timeFrame.setSize(minWidth, Math.max(230, 2 * h / 5));
-					saveFrame.setSize(minWidth, 3 * h / 4 - timeFrame.getHeight());
-					paramsFrame.setSize(minWidth, h / 2);
-					planFrame.setSize(w - 2 * minWidth, h / 4 + timeFrame.getHeight());
-					tableFrame.setSize(w - 2 * minWidth, h - planFrame.getHeight());
+					treeFrame.setSize(w / 5, h / 2);
+					paramsFrame.setSize(w / 5, h / 2);
+
+					propsFrame.pack();
+					propsFrame.setSize(w / 5, propsFrame.getHeight());
+					saveFrame.pack();
+					saveFrame.setSize(w / 5, saveFrame.getHeight());
+
+					timeFrame.setSize(w / 5, h - propsFrame.getHeight() - saveFrame.getHeight());
+
+					tableFrame.setSize(w - propsFrame.getWidth() - treeFrame.getWidth(), h / 3);
+					planFrame.setSize(w - propsFrame.getWidth() - treeFrame.getWidth(), h - tableFrame.getHeight());
 
 					treeFrame.setLocation(0, 0);
-					planFrame.setLocation(minWidth, 0);
-					propsFrame.setLocation(w - minWidth, 0);
-					timeFrame.setLocation(w - minWidth, h / 4);
-					saveFrame.setLocation(w - minWidth, h / 4 + timeFrame.getHeight());
+					planFrame.setLocation(treeFrame.getX() + treeFrame.getWidth(), 0);
+					propsFrame.setLocation(w - propsFrame.getWidth(), 0);
+					saveFrame.setLocation(w - saveFrame.getWidth(), propsFrame.getY() + propsFrame.getHeight());
+					timeFrame.setLocation(w - timeFrame.getWidth(), saveFrame.getY() + saveFrame.getHeight());
+
 					paramsFrame.setLocation(0, treeFrame.getHeight());
-					tableFrame.setLocation(minWidth, planFrame.getHeight());
+					tableFrame.setLocation(treeFrame.getX() + treeFrame.getWidth(), planFrame.getHeight());
 
 				}
 			};

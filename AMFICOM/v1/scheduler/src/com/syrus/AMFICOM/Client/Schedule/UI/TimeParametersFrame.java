@@ -9,6 +9,8 @@ import java.awt.Insets;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
@@ -602,12 +604,13 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 			Date date = (Date) this.startDateSpinner.getModel().getValue();
 			cal.setTime(date);
 
-			JDialog calendarDialog = CalendarUI.createDialogInstance(Environment.getActiveWindow(), cal, true, true);
+			final JDialog calendarDialog = CalendarUI.createDialogInstance(Environment.getActiveWindow(), cal, true, true);
 			calendarDialog.setSize(new Dimension(200, 200));
 			calendarDialog.setResizable(false);
 			calendarDialog.setLocation(new Point(this.startDateSpinner.getLocationOnScreen().x - 35,
 													this.startDateSpinner.getLocationOnScreen().y + 22));
-			calendarDialog.setVisible(true);
+			calendarDialog.setVisible(true);			
+			
 			if (((CalendarUI) calendarDialog.getContentPane()).getStatus() == CalendarUI.STATUS_OK)
 				this.startDateSpinner.getModel().setValue(cal.getTime());
 		}

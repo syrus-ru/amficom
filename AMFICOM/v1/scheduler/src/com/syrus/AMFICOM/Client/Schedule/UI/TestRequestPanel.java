@@ -3,12 +3,12 @@ package com.syrus.AMFICOM.Client.Schedule.UI;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 
-import javax.swing.DefaultListModel;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
@@ -36,67 +36,40 @@ public class TestRequestPanel extends JPanel implements TestEditor {
 
 	private JTextField	typeTextField	= new JTextField();
 	
-	private DefaultListModel defaultListModel = new DefaultListModel();
-	private JList testList = new JList(this.defaultListModel);
-
+	private JTextField	portTextField	= new JTextField();
+	
 	private SchedulerModel		schedulerModel;
-
-	boolean				skip			= false;
 
 	public TestRequestPanel(ApplicationContext aContext) {
 		this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();
 		this.schedulerModel.addTestEditor(this);
-		this.setLayout(new GridBagLayout());
-		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.fill = GridBagConstraints.BOTH;
-		// this.setLayout(new GridLayout(0,2));
+		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		JPanel panel = new JPanel(new GridLayout(0, 2));
 		JLabel titleLabel = new JLabel(LangModelSchedule.getString("Title") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
-		gbc.weightx = 0.0;
-		gbc.gridheight = 1;
-		gbc.gridwidth = GridBagConstraints.RELATIVE;
-		add(titleLabel, gbc);
-		// add(titleLabel);
-		gbc.weightx = 4.0;
-		gbc.gridwidth = GridBagConstraints.REMAINDER;
-		add(this.nameTextField, gbc);
+		panel.add(titleLabel);
+		panel.add(this.nameTextField);
 		this.nameTextField.setEditable(false);
 		// add(nameTextField);
 
 		JLabel ownerLabel = new JLabel(LangModelSchedule.getString("Owner") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
-		gbc.weightx = 0.0;
-		gbc.gridwidth = GridBagConstraints.RELATIVE;
-		add(ownerLabel, gbc);
+		panel.add(ownerLabel);
 		// add(ownerLabel);
-		gbc.weightx = 4.0;
-		gbc.gridwidth = GridBagConstraints.REMAINDER;
-		this.add(this.ownerTextField, gbc);
+		panel.add(this.ownerTextField);
 		this.ownerTextField.setEditable(false);
 		// add(ownerTextField);
 
 		JLabel typeLabel = new JLabel(LangModelSchedule.getString("Type") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
-		gbc.gridwidth = GridBagConstraints.RELATIVE;
-		gbc.gridheight = GridBagConstraints.RELATIVE;
-		gbc.weightx = 0.0;
-		this.add(typeLabel, gbc);
+		panel.add(typeLabel);
 		// add(typeLabel);
-		gbc.weightx = 4.0;
-		gbc.gridwidth = GridBagConstraints.REMAINDER;
-		this.add(this.typeTextField, gbc);
+		panel.add(this.typeTextField);
 		this.typeTextField.setEditable(false);
 		// add(typeTextField);
 
-		JLabel objectLabel = new JLabel(LangModelSchedule.getString("TestObject") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
-		gbc.gridwidth = GridBagConstraints.RELATIVE;
-		gbc.gridheight = GridBagConstraints.REMAINDER;
-		gbc.weightx = 0.0;
-		this.add(objectLabel, gbc);
-		// add(objectLabel);
-		gbc.weightx = 4.0;
-		gbc.weighty = 2.0;
-		gbc.gridwidth = GridBagConstraints.REMAINDER;
-//		JScrollPane listPanel = new JScrollPane(this.testList);
-		JScrollPane listPanel = new JScrollPane(this.testList);
-		this.add(listPanel, gbc);
+		JLabel objectLabel = new JLabel(LangModelSchedule.getString("Port") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
+		panel.add(objectLabel);
+		panel.add(this.portTextField);
+		this.add(panel);
+		this.add(Box.createVerticalGlue());
 
 	}
 
@@ -104,7 +77,7 @@ public class TestRequestPanel extends JPanel implements TestEditor {
 		this.nameTextField.setText("");
 		this.typeTextField.setText("");
 		this.ownerTextField.setText("");
-		this.testList.removeAll();
+		this.portTextField.setText("");
 	}
 
 	
@@ -116,18 +89,16 @@ public class TestRequestPanel extends JPanel implements TestEditor {
 		if (test != null) {			
 			try {
 				this.nameTextField.setText(test.getDescription());
+				
 				MeasurementType measurementType = (MeasurementType) MeasurementStorableObjectPool.getStorableObject(
 					test.getMeasurementTypeId(), true);
 				this.typeTextField.setText(measurementType.getDescription());
+				
 				User user = (User)AdministrationStorableObjectPool.getStorableObject(test.getCreatorId(), true);
 				this.ownerTextField.setText(user.getName());
-
+				
 				MonitoredElement me = test.getMonitoredElement();
-
-				this.defaultListModel.removeAllElements();
-				String meName = me.getName();
-				this.defaultListModel.addElement(meName);
-				this.testList.setSelectedValue(meName, true);
+				this.portTextField.setText(me.getName());
 			} catch (ApplicationException ae) {
 				SchedulerModel.showErrorMessage(this, ae);
 			}			

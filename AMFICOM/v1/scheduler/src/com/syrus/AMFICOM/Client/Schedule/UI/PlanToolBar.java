@@ -196,14 +196,15 @@ class PlanToolBar {
 				Date date = (Date) PlanToolBar.this.dateSpinner.getModel().getValue();
 				cal.setTime(date);
 
-				JDialog calendarDialog = CalendarUI
+				final JDialog calendarDialog = CalendarUI
 						.createDialogInstance(Environment.getActiveWindow(), cal, true, true);
-				calendarDialog.setSize(new Dimension(200, 200));
+				calendarDialog.pack();
 				calendarDialog.setResizable(false);
 				calendarDialog.setLocation(new Point(PlanToolBar.this.dateSpinner.getLocationOnScreen().x - 35,
 														PlanToolBar.this.dateSpinner.getLocationOnScreen().y
 																+ PlanToolBar.this.h));
-				calendarDialog.setVisible(true);
+				calendarDialog.setVisible(true);				
+				
 				if (((CalendarUI) calendarDialog.getContentPane()).getStatus() == CalendarUI.STATUS_OK)
 					PlanToolBar.this.dateSpinner.getModel().setValue(cal.getTime());
 			}
@@ -365,7 +366,7 @@ class PlanToolBar {
 					dialog.setLocationRelativeTo(button);
 					Point l = dialog.getLocation();
 					dialog.setLocation(l.x + dialog.getWidth() / 2, l.y + dialog.getHeight() / 2);
-					dialog.setVisible(!dialog.isVisible());
+					dialog.setVisible(true);
 				}
 			});
 		}
@@ -394,7 +395,7 @@ class PlanToolBar {
 		});
 
 		this.applyButton.setFocusable(false);
-		this.applyButton.setToolTipText(LangModelSchedule.getString("Apply")); //$NON-NLS-1$
+		this.applyButton.setToolTipText(LangModelSchedule.getString("Save test to DB, update tests from DB")); //$NON-NLS-1$
 		this.applyButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
@@ -421,7 +422,7 @@ class PlanToolBar {
 								.notify(new OperationEvent(new Boolean(false), 0,
 															SchedulerModel.COMMAND_CHANGE_STATUSBAR_STATE));
 					}
-				}, LangModelSchedule.getString("Updating_tests_from_BD"));
+				}, LangModelSchedule.getString("Updating_tests_from_DB"));
 			}
 		});
 
