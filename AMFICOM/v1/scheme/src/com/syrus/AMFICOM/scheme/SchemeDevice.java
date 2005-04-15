@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.13 2005/04/14 18:20:27 bass Exp $
+ * $Id: SchemeDevice.java,v 1.14 2005/04/15 19:22:55 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,25 +7,6 @@
  */
 
 package com.syrus.AMFICOM.scheme;
-
-import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Characteristic;
-import com.syrus.AMFICOM.general.Characterizable;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.Describable;
-import com.syrus.AMFICOM.general.ErrorMessages;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
-import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.corba.CharacteristicSort;
-import com.syrus.AMFICOM.scheme.corba.SchemeDevice_Transferable;
-import com.syrus.util.Log;
 
 import java.util.Collections;
 import java.util.Date;
@@ -35,11 +16,30 @@ import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
 
+import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.Characterizable;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Describable;
+import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
+import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.corba.CharacteristicSort;
+import com.syrus.AMFICOM.scheme.corba.SchemeDevice_Transferable;
+import com.syrus.util.Log;
+
 /**
  * #07 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.13 $, $Date: 2005/04/14 18:20:27 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2005/04/15 19:22:55 $
  * @module scheme_v1
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -102,21 +102,21 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 		}
 	}
 	
-	public static SchemeDevice createInstance(final Identifier creatorId)
-			throws CreateObjectException {
+	public static SchemeDevice createInstance(final Identifier creatorId) throws CreateObjectException {
 		assert creatorId != null;
 		try {
 			final Date created = new Date();
-			final SchemeDevice schemeDevice = new SchemeDevice(
-					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.SCHEME_DEVICE_ENTITY_CODE),
-					created, created, creatorId, creatorId,
+			final SchemeDevice schemeDevice = new SchemeDevice(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SCHEME_DEVICE_ENTITY_CODE),
+					created,
+					created,
+					creatorId,
+					creatorId,
 					0L);
 			schemeDevice.changed = true;
 			return schemeDevice;
-		} catch (final IllegalObjectEntityException ioee) {
-			throw new CreateObjectException(
-					"SchemeDevice.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
+		}
+		catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
 

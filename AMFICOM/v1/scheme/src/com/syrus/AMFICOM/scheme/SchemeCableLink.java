@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.14 2005/04/15 17:47:38 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.15 2005/04/15 19:22:55 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,25 +18,23 @@ import com.syrus.AMFICOM.configuration.AbstractLinkType;
 import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.configuration.Link;
 import com.syrus.AMFICOM.configuration.corba.LinkSort;
-import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.scheme.corba.SchemeCableLink_Transferable;
 
 /**
  * #11 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2005/04/15 17:47:38 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.15 $, $Date: 2005/04/15 19:22:55 $
  * @module scheme_v1
  */
 public final class SchemeCableLink extends AbstractSchemeLink {
@@ -83,21 +81,21 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 		fromTransferable(transferable);
 	}
 
-	public static SchemeCableLink createInstance(final Identifier creatorId)
-			throws CreateObjectException {
+	public static SchemeCableLink createInstance(final Identifier creatorId) throws CreateObjectException {
 		assert creatorId != null;
 		try {
 			final Date created = new Date();
-			final SchemeCableLink schemeCableLink = new SchemeCableLink(
-					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE),
-					created, created, creatorId, creatorId,
+			final SchemeCableLink schemeCableLink = new SchemeCableLink(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE),
+					created,
+					created,
+					creatorId,
+					creatorId,
 					0L);
 			schemeCableLink.changed = true;
 			return schemeCableLink;
-		} catch (final IllegalObjectEntityException ioee) {
-			throw new CreateObjectException(
-					"SchemeCableLink.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
+		}
+		catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: Mark.java,v 1.31 2005/04/13 09:48:51 krupenn Exp $
+ * $Id: Mark.java,v 1.32 2005/04/15 19:22:38 arseniy Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,21 +7,6 @@
  */
 
 package com.syrus.AMFICOM.map;
-
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Characteristic;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.corba.CharacteristicSort;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.map.corba.Mark_Transferable;
 
 import java.util.Collections;
 import java.util.Date;
@@ -34,6 +19,21 @@ import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
 
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
+import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.corba.CharacteristicSort;
+import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.map.corba.Mark_Transferable;
+
 /**
  * ћетка на линии на топологической схеме. ћетка частично характеризуетс€ 
  * абстрактным узлом, одн€ко прив€зан к некоторой дистанции на линии и, 
@@ -41,8 +41,8 @@ import org.omg.CORBA.portable.IDLEntity;
  * в св€зи с чем методы класса {@link AbstractNode}, работающие с лини€ми и 
  * фрагментами линий, переопределены и бросают 
  * <code>{@link UnsupportedOperationException}</code>.
- * @author $Author: krupenn $
- * @version $Revision: 1.31 $, $Date: 2005/04/13 09:48:51 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.32 $, $Date: 2005/04/15 19:22:38 $
  * @module map_v1
  */
 public class Mark extends AbstractNode {
@@ -202,8 +202,8 @@ public class Mark extends AbstractNode {
 			mark.changed = true;
 			return mark;
 		}
-		catch (IllegalObjectEntityException e) {
-			throw new CreateObjectException("Mark.createInstance | cannot generate identifier ", e);
+		catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
 

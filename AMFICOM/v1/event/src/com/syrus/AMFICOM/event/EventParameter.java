@@ -1,5 +1,5 @@
 /*
- * $Id: EventParameter.java,v 1.10 2005/04/04 16:03:20 bass Exp $
+ * $Id: EventParameter.java,v 1.11 2005/04/15 19:22:24 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,14 +7,16 @@
  */
 package com.syrus.AMFICOM.event;
 
+import org.omg.CORBA.portable.IDLEntity;
+
 import com.syrus.AMFICOM.event.corba.EventParameter_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObjectType;
@@ -22,11 +24,10 @@ import com.syrus.AMFICOM.general.TransferableObject;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.HashCodeGenerator;
-import org.omg.CORBA.portable.IDLEntity;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/04/04 16:03:20 $
- * @author $Author: bass $
+ * @version $Revision: 1.11 $, $Date: 2005/04/15 19:22:24 $
+ * @author $Author: arseniy $
  * @module event_v1
  */
 public class EventParameter implements Identifiable, TransferableObject, TypedObject {
@@ -57,8 +58,8 @@ public class EventParameter implements Identifiable, TransferableObject, TypedOb
 					value);
 			return eventParameter;
 		}
-		catch (IllegalObjectEntityException ioee) {
-			throw new CreateObjectException("EventParameter.createInstance | Cannot generate identifier", ioee);
+		catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.36 2005/04/13 09:49:14 krupenn Exp $
+ * $Id: NodeLink.java,v 1.37 2005/04/15 19:22:38 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,9 +21,9 @@ import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -37,8 +37,8 @@ import com.syrus.AMFICOM.map.corba.NodeLink_Transferable;
  * отрезок, соединяющий два концевых узла ({@link AbstractNode}). Фрагменты 
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
- * @author $Author: krupenn $
- * @version $Revision: 1.36 $, $Date: 2005/04/13 09:49:14 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.37 $, $Date: 2005/04/15 19:22:38 $
  * @module map_v1
  */
 public class NodeLink extends StorableObject implements MapElement {
@@ -152,8 +152,8 @@ public class NodeLink extends StorableObject implements MapElement {
 			nodeLink.changed = true;
 			return nodeLink;
 		}
-		catch (IllegalObjectEntityException e) {
-			throw new CreateObjectException("NodeLink.createInstance | cannot generate identifier ", e);
+		catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
 

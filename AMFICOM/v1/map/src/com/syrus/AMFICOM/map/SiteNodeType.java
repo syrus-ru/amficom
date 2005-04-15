@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.27 2005/04/14 16:00:33 bass Exp $
+ * $Id: SiteNodeType.java,v 1.28 2005/04/15 19:22:39 arseniy Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,9 +21,9 @@ import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -39,8 +39,8 @@ import com.syrus.AMFICOM.map.corba.SiteNodeType_Transferable;
  * {@link #codename}, соответствующим какому-либо значению {@link #WELL}, 
  * {@link #PIQUET}, {@link #ATS}, {@link #BUILDING}, {@link #UNBOUND}, 
  * {@link #CABLE_INLET}, {@link #TOWER}
- * @author $Author: bass $
- * @version $Revision: 1.27 $, $Date: 2005/04/14 16:00:33 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.28 $, $Date: 2005/04/15 19:22:39 $
  * @module map_v1
  */
 public class SiteNodeType extends StorableObjectType implements Characterizable, Namable {
@@ -138,8 +138,8 @@ public class SiteNodeType extends StorableObjectType implements Characterizable,
 			siteNodeType.changed = true;
 			return siteNodeType;
 		}
-		catch (IllegalObjectEntityException e) {
-			throw new CreateObjectException("SiteNodeType.createInstance | cannot generate identifier ", e);
+		catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
 

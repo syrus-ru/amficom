@@ -1,5 +1,5 @@
 /*
- * $Id: Server.java,v 1.21 2005/04/13 15:31:35 bob Exp $
+ * $Id: Server.java,v 1.22 2005/04/15 19:22:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,9 +25,9 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/04/13 15:31:35 $
- * @author $Author: bob $
+ * @version $Revision: 1.22 $, $Date: 2005/04/15 19:22:06 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 
@@ -245,8 +245,8 @@ public class Server extends DomainMember implements Characterizable {
 			server.changed = true;
 			return server;
 		}
-		catch (IllegalObjectEntityException e) {
-			throw new CreateObjectException("Server.createInstance | cannot generate identifier ", e);
+		catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
 

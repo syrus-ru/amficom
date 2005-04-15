@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingType.java,v 1.22 2005/04/13 15:26:00 arseniy Exp $
+ * $Id: ModelingType.java,v 1.23 2005/04/15 19:22:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,19 +20,18 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ModelingType_Transferable;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/04/13 15:26:00 $
+ * @version $Revision: 1.23 $, $Date: 2005/04/15 19:22:19 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -65,16 +64,6 @@ public class ModelingType extends ActionType {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
 
-		try {
-			for (Iterator it = this.inParameterTypes.iterator(); it.hasNext();)
-				GeneralStorableObjectPool.putStorableObject((ParameterType) it.next());
-			for (Iterator it = this.outParameterTypes.iterator(); it.hasNext();)
-				GeneralStorableObjectPool.putStorableObject((ParameterType) it.next());
-		}
-		catch (IllegalObjectEntityException ioee) {
-			Log.errorException(ioee);
-		}
-		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
@@ -146,8 +135,8 @@ public class ModelingType extends ActionType {
 			modelingType.changed = true;
 			return modelingType;
 		}
-		catch (IllegalObjectEntityException e) {
-			throw new CreateObjectException("ModelingType.createInstance | cannot generate identifier ", e);
+		catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
 

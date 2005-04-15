@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.111 2005/04/15 13:41:11 arseniy Exp $
+ * $Id: Test.java,v 1.112 2005/04/15 19:22:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,9 +22,9 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -45,7 +45,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.111 $, $Date: 2005/04/15 13:41:11 $
+ * @version $Revision: 1.112 $, $Date: 2005/04/15 19:22:19 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -223,8 +223,8 @@ public class Test extends StorableObject {
 			test.changed = true;
 			return test;
 		}
-		catch (IllegalObjectEntityException e) {
-			throw new CreateObjectException("Test.createInstance | cannot generate identifier ", e);
+		catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 
 	}

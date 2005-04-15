@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.36 2005/04/13 09:44:32 krupenn Exp $
+ * $Id: Collector.java,v 1.37 2005/04/15 19:22:38 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,9 +23,9 @@ import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -38,8 +38,8 @@ import com.syrus.AMFICOM.map.corba.Collector_Transferable;
  * Коллектор на топологической схеме, который характеризуется набором входящих
  * в него линий. Линии не обязаны быть связными.
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.36 $, $Date: 2005/04/13 09:44:32 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.37 $, $Date: 2005/04/15 19:22:38 $
  * @module map_v1
  */
 public class Collector extends StorableObject implements MapElement {
@@ -126,8 +126,8 @@ public class Collector extends StorableObject implements MapElement {
 			collector.changed = true;
 			return collector;
 		}
-		catch (IllegalObjectEntityException e) {
-			throw new CreateObjectException("Collector.createInstance | cannot generate identifier ", e);
+		catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
 

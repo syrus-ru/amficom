@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.10 2005/04/14 11:15:52 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.11 2005/04/15 19:22:55 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,18 +8,31 @@
 
 package com.syrus.AMFICOM.scheme;
 
-import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.map.*;
-import com.syrus.AMFICOM.scheme.corba.CableChannelingItem_Transferable;
+import java.util.Date;
+import java.util.Set;
 
-import java.util.*;
 import org.omg.CORBA.portable.IDLEntity;
+
+import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Describable;
+import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
+import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.SiteNode;
+import com.syrus.AMFICOM.scheme.corba.CableChannelingItem_Transferable;
 
 /**
  * #13 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2005/04/14 11:15:52 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2005/04/15 19:22:55 $
  * @module scheme_v1
  */
 public final class CableChannelingItem extends AbstractCloneableStorableObject
@@ -89,22 +102,21 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject
 		fromTransferable(transferable);
 	}
 
-	public static CableChannelingItem createInstance(
-			final Identifier creatorId)
-			throws CreateObjectException {
+	public static CableChannelingItem createInstance(final Identifier creatorId) throws CreateObjectException {
 		assert creatorId != null;
 		try {
 			final Date created = new Date();
-			final CableChannelingItem cableChannelingItem = new CableChannelingItem(
-					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.CABLE_CHANNELING_ITEM_ENTITY_CODE),
-					created, created, creatorId, creatorId,
+			final CableChannelingItem cableChannelingItem = new CableChannelingItem(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CABLE_CHANNELING_ITEM_ENTITY_CODE),
+					created,
+					created,
+					creatorId,
+					creatorId,
 					0L);
 			cableChannelingItem.changed = true;
 			return cableChannelingItem;
-		} catch (final IllegalObjectEntityException ioee) {
-			throw new CreateObjectException(
-					"CableChanelingItem.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
+		}
+		catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
 

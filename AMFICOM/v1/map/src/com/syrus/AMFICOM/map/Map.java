@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.36 2005/04/13 15:42:21 krupenn Exp $
+ * $Id: Map.java,v 1.37 2005/04/15 19:22:38 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,9 +24,9 @@ import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -39,8 +39,8 @@ import com.syrus.AMFICOM.map.corba.Map_Transferable;
  * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на 
  * линиях, коллекторов (объединяющих в себе линии).
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.36 $, $Date: 2005/04/13 15:42:21 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.37 $, $Date: 2005/04/15 19:22:38 $
  * @module map_v1
  * @todo make maps persistent 
  */
@@ -151,8 +151,8 @@ public class Map extends DomainMember implements Namable {
 			map.changed = true;
 			return map;
 		}
-		catch (IllegalObjectEntityException e) {
-			throw new CreateObjectException("Map.createInstance | cannot generate identifier ", e);
+		catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
 

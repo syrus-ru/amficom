@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.15 2005/04/15 17:47:38 bass Exp $
+ * $Id: PathElement.java,v 1.16 2005/04/15 19:22:55 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,9 +22,9 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -42,8 +42,8 @@ import com.syrus.util.Log;
  * its {@link PathElement#getName() getName()} method actually returns
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  * 
- * @author $Author: bass $
- * @version $Revision: 1.15 $, $Date: 2005/04/15 17:47:38 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.16 $, $Date: 2005/04/15 19:22:55 $
  * @module scheme_v1
  * @todo <code>setAttributes()</code> should contain, among others,
  *       kind and sequentialNumber paremeters.
@@ -275,26 +275,25 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 	public static PathElement createInstance(final Identifier creatorId,
 			final SchemePath parentSchemePath,
 			final AbstractSchemePort startAbstractSchemePort,
-			final AbstractSchemePort endAbstractSchemePort)
-			throws CreateObjectException {
-		assert creatorId != null && !creatorId.isVoid(): ErrorMessages.NON_VOID_EXPECTED;
-		assert parentSchemePath != null
-				&& startAbstractSchemePort != null
-				&& endAbstractSchemePort != null: ErrorMessages.NON_NULL_EXPECTED;
+			final AbstractSchemePort endAbstractSchemePort) throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid() : ErrorMessages.NON_VOID_EXPECTED;
+		assert parentSchemePath != null && startAbstractSchemePort != null && endAbstractSchemePort != null : ErrorMessages.NON_NULL_EXPECTED;
 		try {
 			final Date created = new Date();
-			final PathElement pathElement = new PathElement(
-					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.PATH_ELEMENT_ENTITY_CODE),
-					created, created, creatorId, creatorId,
-					0L, parentSchemePath,
+			final PathElement pathElement = new PathElement(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PATH_ELEMENT_ENTITY_CODE),
+					created,
+					created,
+					creatorId,
+					creatorId,
+					0L,
+					parentSchemePath,
 					startAbstractSchemePort,
 					endAbstractSchemePort);
 			pathElement.changed = true;
 			return pathElement;
-		} catch (final IllegalObjectEntityException ioee) {
-			throw new CreateObjectException(
-					"PathElement.createInstance() | cannot generate identifier ", ioee); //$NON-NLS-1$
+		}
+		catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
 
@@ -302,28 +301,29 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 	 * @param creatorId
 	 * @param parentSchemePath
 	 * @param schemeCableThread
-	 * @return a newly-created instance of type
-	 *         {@link Kind#SCHEME_CABLE_LINK}.
+	 * @return a newly-created instance of type {@link Kind#SCHEME_CABLE_LINK}.
 	 * @throws CreateObjectException
 	 */
 	public static PathElement createInstance(final Identifier creatorId,
 			final SchemePath parentSchemePath,
-			final SchemeCableThread schemeCableThread)
-			throws CreateObjectException {
-		assert creatorId != null && !creatorId.isVoid(): ErrorMessages.NON_VOID_EXPECTED;
-		assert parentSchemePath != null && schemeCableThread != null: ErrorMessages.NON_NULL_EXPECTED;
+			final SchemeCableThread schemeCableThread) throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid() : ErrorMessages.NON_VOID_EXPECTED;
+		assert parentSchemePath != null && schemeCableThread != null : ErrorMessages.NON_NULL_EXPECTED;
 		try {
 			final Date created = new Date();
-			final PathElement pathElement = new PathElement(
-					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.PATH_ELEMENT_ENTITY_CODE),
-					created, created, creatorId, creatorId,
-					0L, parentSchemePath, schemeCableThread);
+			final PathElement pathElement = new PathElement(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PATH_ELEMENT_ENTITY_CODE),
+					created,
+					created,
+					creatorId,
+					creatorId,
+					0L,
+					parentSchemePath,
+					schemeCableThread);
 			pathElement.changed = true;
 			return pathElement;
-		} catch (final IllegalObjectEntityException ioee) {
-			throw new CreateObjectException(
-					"PathElement.createInstance() | cannot generate identifier ", ioee); //$NON-NLS-1$
+		}
+		catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
 
@@ -337,22 +337,24 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 	 */
 	public static PathElement createInstance(final Identifier creatorId,
 			final SchemePath parentSchemePath,
-			final SchemeLink schemeLink)
-			throws CreateObjectException {
-		assert creatorId != null && !creatorId.isVoid(): ErrorMessages.NON_VOID_EXPECTED;
-		assert parentSchemePath != null && schemeLink != null: ErrorMessages.NON_NULL_EXPECTED;
+			final SchemeLink schemeLink) throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid() : ErrorMessages.NON_VOID_EXPECTED;
+		assert parentSchemePath != null && schemeLink != null : ErrorMessages.NON_NULL_EXPECTED;
 		try {
 			final Date created = new Date();
-			final PathElement pathElement = new PathElement(
-					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.PATH_ELEMENT_ENTITY_CODE),
-					created, created, creatorId, creatorId,
-					0L, parentSchemePath, schemeLink);
+			final PathElement pathElement = new PathElement(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PATH_ELEMENT_ENTITY_CODE),
+					created,
+					created,
+					creatorId,
+					creatorId,
+					0L,
+					parentSchemePath,
+					schemeLink);
 			pathElement.changed = true;
 			return pathElement;
-		} catch (final IllegalObjectEntityException ioee) {
-			throw new CreateObjectException(
-					"PathElement.createInstance() | cannot generate identifier ", ioee); //$NON-NLS-1$
+		}
+		catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPort.java,v 1.48 2005/04/12 14:52:46 bob Exp $
+ * $Id: MeasurementPort.java,v 1.49 2005/04/15 19:22:12 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,9 +23,9 @@ import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -36,8 +36,8 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2005/04/12 14:52:46 $
- * @author $Author: bob $
+ * @version $Revision: 1.49 $, $Date: 2005/04/15 19:22:12 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 public class MeasurementPort extends StorableObject implements Characterizable, TypedObject {
@@ -130,8 +130,8 @@ public class MeasurementPort extends StorableObject implements Characterizable, 
 			measurementPort.changed = true;
 			return measurementPort;
 		}
-		catch (IllegalObjectEntityException e) {
-			throw new CreateObjectException("MeasurementPort.createInstance | cannot generate identifier ", e);
+		catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
 

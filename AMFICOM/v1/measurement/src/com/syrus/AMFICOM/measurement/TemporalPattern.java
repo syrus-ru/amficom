@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPattern.java,v 1.73 2005/04/14 14:49:57 bob Exp $
+ * $Id: TemporalPattern.java,v 1.74 2005/04/15 19:22:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,9 +25,9 @@ import org.omg.CORBA.portable.IDLEntity;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -37,8 +37,8 @@ import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.73 $, $Date: 2005/04/14 14:49:57 $
- * @author $Author: bob $
+ * @version $Revision: 1.74 $, $Date: 2005/04/15 19:22:19 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -845,34 +845,41 @@ public class TemporalPattern extends StorableObject {
 	 * @param cronString
 	 * @throws CreateObjectException
 	 */
-	public static TemporalPattern createInstance(Identifier creatorId,
-							String description,
-							java.util.Set cronString) throws CreateObjectException {
-		if (creatorId == null || description == null || cronString == null )
+	public static TemporalPattern createInstance(Identifier creatorId, String description, java.util.Set cronString)
+			throws CreateObjectException {
+		if (creatorId == null || description == null || cronString == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
 			TemporalPattern temporalPattern = new TemporalPattern(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TEMPORALPATTERN_ENTITY_CODE),
-				creatorId, 0L, description, cronString);
+					creatorId,
+					0L,
+					description,
+					cronString);
 			temporalPattern.changed = true;
 			return temporalPattern;
-		} catch (IllegalObjectEntityException e) {
-			throw new CreateObjectException("TemporalPattern.createInstance | cannot generate identifier ", e);
+		}
+		catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
 
-	public static TemporalPattern createInstance(Identifier creatorId,
-							String description,
-							String[] cronStrings) throws CreateObjectException {
-		if (creatorId == null || description == null || cronStrings == null )
+	public static TemporalPattern createInstance(Identifier creatorId, String description, String[] cronStrings)
+			throws CreateObjectException {
+		if (creatorId == null || description == null || cronStrings == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			TemporalPattern temporalPattern = new TemporalPattern(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TEMPORALPATTERN_ENTITY_CODE), creatorId, 0L, description, cronStrings);
+			TemporalPattern temporalPattern = new TemporalPattern(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TEMPORALPATTERN_ENTITY_CODE),
+					creatorId,
+					0L,
+					description,
+					cronStrings);
 			temporalPattern.changed = true;
 			return temporalPattern;
-		} catch (IllegalObjectEntityException e) {
-			throw new CreateObjectException("TemporalPattern.createInstance | cannot generate identifier ", e);
+		}
+		catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
 	

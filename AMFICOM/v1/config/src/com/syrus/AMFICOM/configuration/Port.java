@@ -1,5 +1,5 @@
 /*
- * $Id: Port.java,v 1.54 2005/04/12 14:52:46 bob Exp $
+ * $Id: Port.java,v 1.55 2005/04/15 19:22:12 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,9 +24,9 @@ import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -37,8 +37,8 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.54 $, $Date: 2005/04/12 14:52:46 $
- * @author $Author: bob $
+ * @version $Revision: 1.55 $, $Date: 2005/04/15 19:22:12 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 public class Port extends StorableObject implements Characterizable, TypedObject {
@@ -124,8 +124,8 @@ public class Port extends StorableObject implements Characterizable, TypedObject
 			port.changed = true;
 			return port;
 		}
-		catch (IllegalObjectEntityException e) {
-			throw new CreateObjectException("Port.createInstance | cannot generate identifier ", e);
+		catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
 

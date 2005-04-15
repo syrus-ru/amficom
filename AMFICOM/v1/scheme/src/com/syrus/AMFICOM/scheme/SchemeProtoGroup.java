@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.17 2005/04/14 18:20:27 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.18 2005/04/15 19:22:55 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,15 +8,25 @@
 
 package com.syrus.AMFICOM.scheme;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
+import org.omg.CORBA.portable.IDLEntity;
+
 import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -31,21 +41,11 @@ import com.syrus.AMFICOM.scheme.logic.Library;
 import com.syrus.AMFICOM.scheme.logic.LibraryEntry;
 import com.syrus.util.Log;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
-import org.omg.CORBA.portable.IDLEntity;
-
 /**
  * #01 in hierarchy.
  * 
- * @author $Author: bass $
- * @version $Revision: 1.17 $, $Date: 2005/04/14 18:20:27 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.18 $, $Date: 2005/04/15 19:22:55 $
  * @module scheme_v1
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation. 
  */
@@ -130,29 +130,32 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	 * @param parentSchemeProtoGroup may be <code>null</code> (for a top-level group).
 	 * @throws CreateObjectException
 	 */
-	public static SchemeProtoGroup createInstance(
-			final Identifier creatorId, final String name,
+	public static SchemeProtoGroup createInstance(final Identifier creatorId,
+			final String name,
 			final String description,
 			final BitmapImageResource symbol,
-			final SchemeProtoGroup parentSchemeProtoGroup)
-			throws CreateObjectException {
-		assert creatorId != null && !creatorId.isVoid(): ErrorMessages.NON_VOID_EXPECTED;
-		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
-		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
-		
+			final SchemeProtoGroup parentSchemeProtoGroup) throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid() : ErrorMessages.NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0 : ErrorMessages.NON_EMPTY_EXPECTED;
+		assert description != null : ErrorMessages.NON_NULL_EXPECTED;
+
 		try {
 			final Date created = new Date();
-			final SchemeProtoGroup schemeProtoGroup = new SchemeProtoGroup(
-					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE),
-					created, created, creatorId, creatorId,
-					0L, name, description, symbol,
+			final SchemeProtoGroup schemeProtoGroup = new SchemeProtoGroup(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE),
+					created,
+					created,
+					creatorId,
+					creatorId,
+					0L,
+					name,
+					description,
+					symbol,
 					parentSchemeProtoGroup);
 			schemeProtoGroup.changed = true;
 			return schemeProtoGroup;
-		} catch (final IllegalObjectEntityException ioee) {
-			throw new CreateObjectException(
-					"SchemeProtoGroup.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
+		}
+		catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
 

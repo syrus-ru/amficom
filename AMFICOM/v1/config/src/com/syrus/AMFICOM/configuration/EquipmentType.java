@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentType.java,v 1.56 2005/04/14 16:00:32 bass Exp $
+ * $Id: EquipmentType.java,v 1.57 2005/04/15 19:22:12 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,9 +23,9 @@ import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.56 $, $Date: 2005/04/14 16:00:32 $
- * @author $Author: bass $
+ * @version $Revision: 1.57 $, $Date: 2005/04/15 19:22:12 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -124,8 +124,8 @@ public class EquipmentType extends StorableObjectType implements Characterizable
 			equipmentType.changed = true;
 			return equipmentType;
 		}
-		catch (IllegalObjectEntityException ioee) {
-			throw new CreateObjectException("EquipmentType.createInstance | cannot generate identifier ", ioee);
+		catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
 

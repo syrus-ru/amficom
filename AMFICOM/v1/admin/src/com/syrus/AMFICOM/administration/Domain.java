@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.25 2005/04/14 12:04:15 arseniy Exp $
+ * $Id: Domain.java,v 1.26 2005/04/15 19:22:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.administration;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/04/14 12:04:15 $
+ * @version $Revision: 1.26 $, $Date: 2005/04/15 19:22:06 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -29,9 +29,9 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -193,29 +193,30 @@ public class Domain extends DomainMember implements Characterizable {
 	 * @param description
 	 * @throws CreateObjectException
 	 */
-	public static Domain createInstance(Identifier creatorId,
-										Identifier domainId,
-										String name,
-										String description) throws CreateObjectException {
+	public static Domain createInstance(Identifier creatorId, Identifier domainId, String name, String description)
+			throws CreateObjectException {
 		try {
 			Domain domain = new Domain(IdentifierPool.getGeneratedIdentifier(ObjectEntities.DOMAIN_ENTITY_CODE),
-						creatorId,
-						0L,
-						domainId,
-						name,
-						description);
-			
+					creatorId,
+					0L,
+					domainId,
+					name,
+					description);
+
 			assert domain.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			
+
 			domain.changed = true;
 			return domain;
-		} catch (IllegalObjectEntityException e) {
-			throw new CreateObjectException("Domain.createInstance | cannot generate identifier ", e);
+		}
+		catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
 
 	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 * <p>
+	 * <b>Clients must never explicitly call this method. </b>
+	 * </p>
 	 */
 	protected synchronized void setAttributes(	Date created,
 												Date modified,

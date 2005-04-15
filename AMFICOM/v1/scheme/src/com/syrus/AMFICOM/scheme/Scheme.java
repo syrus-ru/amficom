@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.13 2005/04/14 18:20:27 bass Exp $
+ * $Id: Scheme.java,v 1.14 2005/04/15 19:22:55 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,15 +8,21 @@
 
 package com.syrus.AMFICOM.scheme;
 
+import java.util.Date;
+import java.util.Iterator;
+import java.util.Set;
+
+import org.omg.CORBA.portable.IDLEntity;
+
 import com.syrus.AMFICOM.administration.AbstractCloneableDomainMember;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -28,17 +34,11 @@ import com.syrus.AMFICOM.scheme.corba.SchemeKind;
 import com.syrus.AMFICOM.scheme.corba.Scheme_Transferable;
 import com.syrus.util.Log;
 
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Set;
-
-import org.omg.CORBA.portable.IDLEntity;
-
 /**
  * #03 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.13 $, $Date: 2005/04/14 18:20:27 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2005/04/15 19:22:55 $
  * @module scheme_v1
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -121,20 +121,23 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	public static Scheme createInstance(final Identifier creatorId,
 			final Identifier domainId,
 			final String name,
-			final String description)
-			throws CreateObjectException {
+			final String description) throws CreateObjectException {
 		try {
 			final Date created = new Date();
-			final Scheme scheme = new Scheme(
-					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.SCHEME_ENTITY_CODE),
-					created, created, creatorId, creatorId,
-					0L, domainId, name, description);
+			final Scheme scheme = new Scheme(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SCHEME_ENTITY_CODE),
+					created,
+					created,
+					creatorId,
+					creatorId,
+					0L,
+					domainId,
+					name,
+					description);
 			scheme.changed = true;
 			return scheme;
-		} catch (final IllegalObjectEntityException ioee) {
-			throw new CreateObjectException(
-					"Scheme.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
+		}
+		catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
 

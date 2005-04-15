@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.63 2005/04/13 15:26:00 arseniy Exp $
+ * $Id: MeasurementSetup.java,v 1.64 2005/04/15 19:22:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,9 +18,9 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 
 /**
- * @version $Revision: 1.63 $, $Date: 2005/04/13 15:26:00 $
+ * @version $Revision: 1.64 $, $Date: 2005/04/15 19:22:19 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -157,8 +157,8 @@ public final class MeasurementSetup extends StorableObject {
 			measurementSetup.changed = true;
 			return measurementSetup;
 		}
-		catch (IllegalObjectEntityException e) {
-			throw new CreateObjectException("MeasurementSetup.createInstance | cannot generate identifier ", e);
+		catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
 

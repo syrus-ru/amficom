@@ -1,5 +1,5 @@
 /*
- * $Id: FileImageResource.java,v 1.13 2005/04/08 12:58:23 arseniy Exp $
+ * $Id: FileImageResource.java,v 1.14 2005/04/15 19:22:31 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,16 +8,24 @@
 
 package com.syrus.AMFICOM.resource;
 
-import com.syrus.AMFICOM.general.*;
+import java.util.Date;
+
+import org.omg.CORBA.portable.IDLEntity;
+
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
+import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.resource.corba.ImageResource_Transferable;
 import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceData;
 import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceDataPackage.ImageResourceSort;
-import java.util.Date;
-import org.omg.CORBA.portable.IDLEntity;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.13 $, $Date: 2005/04/08 12:58:23 $
+ * @version $Revision: 1.14 $, $Date: 2005/04/15 19:22:31 $
  * @module resource_v1
  */
 public final class FileImageResource extends AbstractBitmapImageResource {
@@ -54,19 +62,17 @@ public final class FileImageResource extends AbstractBitmapImageResource {
 		this.fileName = fileName;
 	}
 
-	public static FileImageResource createInstance(final Identifier creatorId,
-			final String fileName) throws CreateObjectException {
+	public static FileImageResource createInstance(final Identifier creatorId, final String fileName) throws CreateObjectException {
 		try {
-			FileImageResource fileImageResource = new FileImageResource(
-				IdentifierPool.getGeneratedIdentifier(
-					ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE),
-				creatorId,
-				0L,
-				fileName);
+			FileImageResource fileImageResource = new FileImageResource(IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE),
+					creatorId,
+					0L,
+					fileName);
 			fileImageResource.changed = true;
 			return fileImageResource;
-		} catch (IllegalObjectEntityException ioee) {
-			throw new CreateObjectException("FileImageResource.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
+		}
+		catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
 

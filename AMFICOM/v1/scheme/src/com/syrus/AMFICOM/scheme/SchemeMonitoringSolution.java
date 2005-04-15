@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.15 2005/04/15 17:47:38 bass Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.16 2005/04/15 19:22:55 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,30 +8,30 @@
 
 package com.syrus.AMFICOM.scheme;
 
-import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.Describable;
-import com.syrus.AMFICOM.general.ErrorMessages;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.scheme.corba.SchemeMonitoringSolution_Transferable;
-
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
 
+import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Describable;
+import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
+import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.scheme.corba.SchemeMonitoringSolution_Transferable;
+
 /**
  * #06 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.15 $, $Date: 2005/04/15 17:47:38 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.16 $, $Date: 2005/04/15 19:22:55 $
  * @module scheme_v1
  */
 public final class SchemeMonitoringSolution extends
@@ -87,22 +87,21 @@ public final class SchemeMonitoringSolution extends
 		fromTransferable(transferable);
 	}
 
-	public static SchemeMonitoringSolution createInstance(
-			final Identifier creatorId)
-			throws CreateObjectException {
+	public static SchemeMonitoringSolution createInstance(final Identifier creatorId) throws CreateObjectException {
 		assert creatorId != null;
 		try {
 			final Date created = new Date();
-			final SchemeMonitoringSolution schemeMonitoringSolution = new SchemeMonitoringSolution(
-					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.SCHEME_MONITORING_SOLUTION_ENTITY_CODE),
-					created, created, creatorId, creatorId,
+			final SchemeMonitoringSolution schemeMonitoringSolution = new SchemeMonitoringSolution(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SCHEME_MONITORING_SOLUTION_ENTITY_CODE),
+					created,
+					created,
+					creatorId,
+					creatorId,
 					0L);
 			schemeMonitoringSolution.changed = true;
 			return schemeMonitoringSolution;
-		} catch (final IllegalObjectEntityException ioee) {
-			throw new CreateObjectException(
-					"SchemeMonitoringSolution.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
+		}
+		catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
 

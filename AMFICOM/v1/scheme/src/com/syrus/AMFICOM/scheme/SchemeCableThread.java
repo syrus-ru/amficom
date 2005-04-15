@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.14 2005/04/14 11:15:52 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.15 2005/04/15 19:22:55 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,20 +8,35 @@
 
 package com.syrus.AMFICOM.scheme;
 
-import com.syrus.AMFICOM.configuration.*;
-import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.general.corba.CharacteristicSort;
-import com.syrus.AMFICOM.scheme.corba.SchemeCableThread_Transferable;
-
-import java.util.*;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
+
+import com.syrus.AMFICOM.configuration.CableThreadType;
+import com.syrus.AMFICOM.configuration.Link;
+import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
+import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.Characterizable;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Describable;
+import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
+import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.corba.CharacteristicSort;
+import com.syrus.AMFICOM.scheme.corba.SchemeCableThread_Transferable;
 
 /**
  * #12 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2005/04/14 11:15:52 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.15 $, $Date: 2005/04/15 19:22:55 $
  * @module scheme_v1
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
@@ -86,22 +101,21 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		fromTransferable(transferable);
 	}
 
-	public static SchemeCableThread createInstance(
-			final Identifier creatorId)
-			throws CreateObjectException {
+	public static SchemeCableThread createInstance(final Identifier creatorId) throws CreateObjectException {
 		assert creatorId != null;
 		try {
 			final Date created = new Date();
-			final SchemeCableThread schemeCableThread = new SchemeCableThread(
-					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.SCHEME_CABLE_THREAD_ENTITY_CODE),
-					created, created, creatorId, creatorId,
+			final SchemeCableThread schemeCableThread = new SchemeCableThread(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SCHEME_CABLE_THREAD_ENTITY_CODE),
+					created,
+					created,
+					creatorId,
+					creatorId,
 					0L);
 			schemeCableThread.changed = true;
 			return schemeCableThread;
-		} catch (final IllegalObjectEntityException ioee) {
-			throw new CreateObjectException(
-					"SchemeCableThread.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
+		}
+		catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
 

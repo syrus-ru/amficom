@@ -1,5 +1,5 @@
 /*
- * $Id: SetParameter.java,v 1.28 2005/04/13 13:10:39 bob Exp $
+ * $Id: SetParameter.java,v 1.29 2005/04/15 19:22:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,14 +11,16 @@ package com.syrus.AMFICOM.measurement;
 
 import java.io.IOException;
 
+import org.omg.CORBA.portable.IDLEntity;
+
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.ParameterType;
@@ -31,11 +33,9 @@ import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
-import org.omg.CORBA.portable.IDLEntity;
-
 /**
- * @version $Revision: 1.28 $, $Date: 2005/04/13 13:10:39 $
- * @author $Author: bob $
+ * @version $Revision: 1.29 $, $Date: 2005/04/15 19:22:19 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -76,8 +76,8 @@ public class SetParameter implements TransferableObject, TypedObject, Identifiab
 			assert setParameter.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			return setParameter;
 		}
-		catch (IllegalObjectEntityException ioee) {
-			throw new CreateObjectException("SetParameter.createInstance | Cannot generate identifier", ioee);
+		catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
 

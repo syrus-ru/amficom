@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathType.java,v 1.42 2005/04/14 16:00:32 bass Exp $
+ * $Id: TransmissionPathType.java,v 1.43 2005/04/15 19:22:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,9 +23,9 @@ import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2005/04/14 16:00:32 $
- * @author $Author: bass $
+ * @version $Revision: 1.43 $, $Date: 2005/04/15 19:22:13 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -91,21 +91,23 @@ public class TransmissionPathType extends StorableObjectType implements Characte
 	 * @param description
 	 * @throws CreateObjectException
 	 */
-	public static TransmissionPathType createInstance(	Identifier creatorId,
-														String codename,
-														String description,
-														String name) throws CreateObjectException {
+	public static TransmissionPathType createInstance(Identifier creatorId, String codename, String description, String name)
+			throws CreateObjectException {
 		if (creatorId == null || codename == null || name == null || description == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			TransmissionPathType transmissionPathType = new TransmissionPathType(IdentifierPool
-					.getGeneratedIdentifier(ObjectEntities.TRANSPATHTYPE_ENTITY_CODE), creatorId, 0L, codename,
-																					description, name);
+			TransmissionPathType transmissionPathType = new TransmissionPathType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TRANSPATHTYPE_ENTITY_CODE),
+					creatorId,
+					0L,
+					codename,
+					description,
+					name);
 			transmissionPathType.changed = true;
 			return transmissionPathType;
-		} catch (IllegalObjectEntityException e) {
-			throw new CreateObjectException("TransmissionPathType.createInstance | cannot generate identifier ", e);
+		}
+		catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
 

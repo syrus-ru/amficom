@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.13 2005/04/14 18:20:27 bass Exp $
+ * $Id: SchemeLink.java,v 1.14 2005/04/15 19:22:55 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,22 +8,35 @@
 
 package com.syrus.AMFICOM.scheme;
 
-import com.syrus.AMFICOM.configuration.*;
+import java.util.Date;
+import java.util.Set;
+
+import org.omg.CORBA.portable.IDLEntity;
+
+import com.syrus.AMFICOM.configuration.AbstractLinkType;
+import com.syrus.AMFICOM.configuration.Link;
+import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.configuration.corba.LinkSort;
-import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
+import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.scheme.corba.SchemeLink_Transferable;
 import com.syrus.util.Log;
 
-import java.util.*;
-import org.omg.CORBA.portable.IDLEntity;
-
 /**
  * #10 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.13 $, $Date: 2005/04/14 18:20:27 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2005/04/15 19:22:55 $
  * @module scheme_v1
  */
 public final class SchemeLink extends AbstractSchemeLink {
@@ -76,21 +89,21 @@ public final class SchemeLink extends AbstractSchemeLink {
 		fromTransferable(transferable);
 	}
 
-	public static SchemeLink createInstance(final Identifier creatorId)
-			throws CreateObjectException {
+	public static SchemeLink createInstance(final Identifier creatorId) throws CreateObjectException {
 		assert creatorId != null;
 		try {
 			final Date created = new Date();
-			final SchemeLink schemeLink = new SchemeLink(
-					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.SCHEME_LINK_ENTITY_CODE),
-					created, created, creatorId, creatorId,
+			final SchemeLink schemeLink = new SchemeLink(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SCHEME_LINK_ENTITY_CODE),
+					created,
+					created,
+					creatorId,
+					creatorId,
 					0L);
 			schemeLink.changed = true;
 			return schemeLink;
-		} catch (final IllegalObjectEntityException ioee) {
-			throw new CreateObjectException(
-					"SchemeLink.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
+		}
+		catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
 

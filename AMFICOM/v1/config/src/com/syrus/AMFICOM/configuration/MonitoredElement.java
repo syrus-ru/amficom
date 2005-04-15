@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.46 2005/04/08 12:02:20 arseniy Exp $
+ * $Id: MonitoredElement.java,v 1.47 2005/04/15 19:22:12 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,16 +22,16 @@ import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2005/04/08 12:02:20 $
+ * @version $Revision: 1.47 $, $Date: 2005/04/15 19:22:12 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -127,8 +127,8 @@ public class MonitoredElement extends DomainMember {
 			monitoredElement.changed = true;
 			return monitoredElement;
 		}
-		catch (IllegalObjectEntityException e) {
-			throw new CreateObjectException("MonitoredElement.createInstance | cannot generate identifier ", e);
+		catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
 

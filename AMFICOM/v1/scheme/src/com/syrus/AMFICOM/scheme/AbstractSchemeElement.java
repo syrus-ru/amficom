@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractSchemeElement.java,v 1.10 2005/04/14 18:20:27 bass Exp $
+ * $Id: AbstractSchemeElement.java,v 1.11 2005/04/15 19:22:55 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,8 +20,6 @@ import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.Namable;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.util.Log;
 
 /**
@@ -29,8 +27,8 @@ import com.syrus.util.Log;
  * generated from IDL files to compile cleanly. Use other implementations of
  * {@link AbstractSchemeElement}instead.
  * 
- * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2005/04/14 18:20:27 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2005/04/15 19:22:55 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemeElement extends

@@ -1,5 +1,5 @@
 /*
- * $Id: Link.java,v 1.46 2005/04/12 14:52:46 bob Exp $
+ * $Id: Link.java,v 1.47 2005/04/15 19:22:12 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,9 +24,9 @@ import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -36,8 +36,8 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2005/04/12 14:52:46 $
- * @author $Author: bob $
+ * @version $Revision: 1.47 $, $Date: 2005/04/15 19:22:12 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 public class Link extends DomainMember implements Characterizable, TypedObject {
@@ -120,19 +120,26 @@ public class Link extends DomainMember implements Characterizable, TypedObject {
 	 */
 
 	public static Link createInstance(Identifier creatorId,
-										Identifier domainId,
-										String name,
-										String description,
-										AbstractLinkType type,
-										String inventoryNo,
-										String supplier,
-										String supplierCode,
-										LinkSort sort,
-										int color,
-										String mark) throws CreateObjectException{
-		if (creatorId == null || domainId == null || name == null || description == null ||
-				type == null || inventoryNo == null || supplier == null || supplierCode == null ||
-				sort == null || mark == null)
+			Identifier domainId,
+			String name,
+			String description,
+			AbstractLinkType type,
+			String inventoryNo,
+			String supplier,
+			String supplierCode,
+			LinkSort sort,
+			int color,
+			String mark) throws CreateObjectException {
+		if (creatorId == null
+				|| domainId == null
+				|| name == null
+				|| description == null
+				|| type == null
+				|| inventoryNo == null
+				|| supplier == null
+				|| supplierCode == null
+				|| sort == null
+				|| mark == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
@@ -151,8 +158,9 @@ public class Link extends DomainMember implements Characterizable, TypedObject {
 					mark);
 			link.changed = true;
 			return link;
-		} catch (IllegalObjectEntityException e) {
-			throw new CreateObjectException("Link.createInstance | cannot generate identifier ", e);
+		}
+		catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
 

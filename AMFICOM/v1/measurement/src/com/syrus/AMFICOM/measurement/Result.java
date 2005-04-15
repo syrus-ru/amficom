@@ -1,5 +1,5 @@
 /*
- * $Id: Result.java,v 1.51 2005/04/13 15:30:43 bob Exp $
+ * $Id: Result.java,v 1.52 2005/04/15 19:22:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,9 +17,9 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -31,8 +31,8 @@ import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2005/04/13 15:30:43 $
- * @author $Author: bob $
+ * @version $Revision: 1.52 $, $Date: 2005/04/15 19:22:19 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -232,8 +232,8 @@ public class Result extends StorableObject {
 			result.changed = true;
 			return result;
 		}
-		catch (IllegalObjectEntityException e) {
-			throw new CreateObjectException("Result.createInstance | cannot generate identifier ", e);
+		catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
 

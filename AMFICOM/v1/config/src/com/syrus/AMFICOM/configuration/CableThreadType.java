@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadType.java,v 1.30 2005/04/14 16:00:32 bass Exp $
+ * $Id: CableThreadType.java,v 1.31 2005/04/15 19:22:12 arseniy Exp $
  *
  * Copyright ø 2004 Syrus Systems.
  * Ó¡’ﬁŒœ-‘≈»Œ…ﬁ≈”À…  √≈Œ‘“.
@@ -19,9 +19,9 @@ import com.syrus.AMFICOM.configuration.corba.CableThreadType_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
  * optical fiber (or an <i>abstract </i> optical fiber), the latter is a type of
  * cable (or an <i>abstract </i> cable containing this thread).
  *
- * @version $Revision: 1.30 $, $Date: 2005/04/14 16:00:32 $
- * @author $Author: bass $
+ * @version $Revision: 1.31 $, $Date: 2005/04/15 19:22:12 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -109,26 +109,27 @@ public final class CableThreadType extends StorableObjectType implements Namable
 			final int color,
 			final LinkType linkType,
 			final CableLinkType cableLinkType) throws CreateObjectException {
-		assert creatorId != null && codename != null
-				&& description != null && name != null
-				&& linkType != null && cableLinkType != null;
-//		assert color != java.awt.Color.ÛÂÚÔ_‚ıÚÔ_Ì·ÏÈÓÔ˜˘Í;
+		assert creatorId != null
+				&& codename != null
+				&& description != null
+				&& name != null
+				&& linkType != null
+				&& cableLinkType != null;
 		try {
-			CableThreadType cableThreadType = new CableThreadType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CABLETHREADTYPE_ENTITY_CODE), 
-					creatorId, 
+			CableThreadType cableThreadType = new CableThreadType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CABLETHREADTYPE_ENTITY_CODE),
+					creatorId,
 					0L,
-					codename, 
-					description, 
-					name, 
-					color, 
+					codename,
+					description,
+					name,
+					color,
 					linkType,
 					cableLinkType);
 			cableThreadType.changed = true;
 			return cableThreadType;
-		} catch (final IllegalObjectEntityException ioee) {
-			throw new CreateObjectException(
-					"CableThreadType.createInstance | cannot generate identifier ",
-					ioee);
+		}
+		catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
 

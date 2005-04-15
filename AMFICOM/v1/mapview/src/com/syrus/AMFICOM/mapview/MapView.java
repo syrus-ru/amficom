@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.23 2005/04/13 10:07:51 krupenn Exp $
+* $Id: MapView.java,v 1.24 2005/04/15 19:22:46 arseniy Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -22,9 +22,9 @@ import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -53,8 +53,8 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
  * канализационную
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
- * @author $Author: krupenn $
- * @version $Revision: 1.23 $, $Date: 2005/04/13 10:07:51 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.24 $, $Date: 2005/04/15 19:22:46 $
  * @module mapview_v1
  * @todo use getCenter, setCenter instead of pair longitude, latitude
  */
@@ -140,8 +140,7 @@ public class MapView extends DomainMember {
 		this.mapViewDatabase = MapViewDatabaseContext.getMapViewDatabase();
 	}	
 	
-	public static MapView createInstance(
-			final Identifier creatorId,
+	public static MapView createInstance(final Identifier creatorId,
 			final Identifier domainId,
 			final String name,
 			final String description,
@@ -149,13 +148,11 @@ public class MapView extends DomainMember {
 			final double latitude,
 			final double scale,
 			final double defaultScale,
-			final Map map) 
-		throws CreateObjectException {
+			final Map map) throws CreateObjectException {
 		if (domainId == null || name == null || description == null || map == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		try {
-			MapView mapView = new MapView(
-				IdentifierPool.getGeneratedIdentifier(ObjectEntities.MAPVIEW_ENTITY_CODE),
+			MapView mapView = new MapView(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MAPVIEW_ENTITY_CODE),
 					creatorId,
 					0L,
 					domainId,
@@ -168,8 +165,9 @@ public class MapView extends DomainMember {
 					map);
 			mapView.changed = true;
 			return mapView;
-		} catch (IllegalObjectEntityException e) {
-			throw new CreateObjectException("MapView.createInstance | cannot generate identifier ", e);
+		}
+		catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
 	

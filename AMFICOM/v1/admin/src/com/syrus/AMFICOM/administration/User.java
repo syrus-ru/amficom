@@ -1,5 +1,5 @@
 /*
- * $Id: User.java,v 1.17 2005/04/13 15:31:35 bob Exp $
+ * $Id: User.java,v 1.18 2005/04/15 19:22:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,9 +20,9 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/04/13 15:31:35 $
- * @author $Author: bob $
+ * @version $Revision: 1.18 $, $Date: 2005/04/15 19:22:06 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 
@@ -161,32 +161,32 @@ public final class User extends StorableObject {
 	 * @param description
 	 * @throws CreateObjectException
 	 */
-	public static User createInstance(Identifier creatorId,
-									  String login,
-									  UserSort sort,
-									  String name,
-									  String description) throws CreateObjectException {
-		
+	public static User createInstance(Identifier creatorId, String login, UserSort sort, String name, String description)
+			throws CreateObjectException {
+
 		try {
 			User user = new User(IdentifierPool.getGeneratedIdentifier(ObjectEntities.USER_ENTITY_CODE),
-							creatorId,
-							0L,
-							login,
-							sort.value(),
-							name,
-							description);
-			
+					creatorId,
+					0L,
+					login,
+					sort.value(),
+					name,
+					description);
+
 			assert user.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			
+
 			user.changed = true;
 			return user;
-		} catch (IllegalObjectEntityException e) {
-			throw new CreateObjectException("User.createInstance | cannot generate identifier ", e);
+		}
+		catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
 
 	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 * <p>
+	 * <b>Clients must never explicitly call this method. </b>
+	 * </p>
 	 */
 	protected synchronized void setAttributes(Date created,
 												Date modified,

@@ -1,5 +1,5 @@
 /*
- * $Id: EventSource.java,v 1.12 2005/04/08 12:39:01 arseniy Exp $
+ * $Id: EventSource.java,v 1.13 2005/04/15 19:22:24 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,9 +18,9 @@ import com.syrus.AMFICOM.event.corba.EventSource_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/04/08 12:39:01 $
+ * @version $Revision: 1.13 $, $Date: 2005/04/15 19:22:24 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -80,8 +80,8 @@ public final class EventSource extends StorableObject {
 			eventSource.changed = true;
 			return eventSource;
 		}
-		catch (IllegalObjectEntityException e) {
-			throw new CreateObjectException("EventSource.createInstance | cannot generate identifier ", e);
+		catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.30 2005/04/08 09:24:33 bass Exp $
+ * $Id: SiteNode.java,v 1.31 2005/04/15 19:22:38 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,14 +8,23 @@
 
 package com.syrus.AMFICOM.map;
 
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
+import org.omg.CORBA.portable.IDLEntity;
+
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -31,15 +40,6 @@ import com.syrus.AMFICOM.resource.AbstractBitmapImageResource;
 import com.syrus.AMFICOM.resource.AbstractImageResource;
 import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-
-import org.omg.CORBA.portable.IDLEntity;
-
 /**
  * Сетевой узел на топологической схеме. Характеризуется типом 
  * (<code>{@link SiteNodeType}</code>). 
@@ -52,8 +52,8 @@ import org.omg.CORBA.portable.IDLEntity;
  * Дополнительно описывается полями
  * {@link #city}, {@link #street}, {@link #building} для поиска по 
  * географическим параметрам. 
- * @author $Author: bass $
- * @version $Revision: 1.30 $, $Date: 2005/04/08 09:24:33 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.31 $, $Date: 2005/04/15 19:22:38 $
  * @module map_v1
  */
 public class SiteNode extends AbstractNode implements TypedObject {
@@ -191,8 +191,8 @@ public class SiteNode extends AbstractNode implements TypedObject {
 			siteNode.changed = true;
 			return siteNode;
 		}
-		catch (IllegalObjectEntityException e) {
-			throw new CreateObjectException("SiteNode.createInstance | cannot generate identifier ", e);
+		catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
 

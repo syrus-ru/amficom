@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.21 2005/04/14 18:20:27 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.22 2005/04/15 19:22:55 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,9 +29,9 @@ import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -51,8 +51,8 @@ import com.syrus.util.Log;
 /**
  * #02 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.21 $, $Date: 2005/04/14 18:20:27 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.22 $, $Date: 2005/04/15 19:22:55 $
  * @module scheme_v1
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation. 
  */
@@ -178,33 +178,41 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * @param schemeCell may be <code>null</code>.
 	 * @throws CreateObjectException
 	 */
-	public static SchemeProtoElement createInstance(
-			final Identifier creatorId, final String name,
-			final String description, final String label,
+	public static SchemeProtoElement createInstance(final Identifier creatorId,
+			final String name,
+			final String description,
+			final String label,
 			final EquipmentType equipmentType,
 			final BitmapImageResource symbol,
 			final SchemeImageResource ugoCell,
-			final SchemeImageResource schemeCell)
-			throws CreateObjectException {
-		assert creatorId != null && !creatorId.isVoid(): ErrorMessages.NON_VOID_EXPECTED;
-		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
-		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert label != null: ErrorMessages.NON_NULL_EXPECTED;
+			final SchemeImageResource schemeCell) throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid() : ErrorMessages.NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0 : ErrorMessages.NON_EMPTY_EXPECTED;
+		assert description != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert label != null : ErrorMessages.NON_NULL_EXPECTED;
 
 		try {
 			final Date created = new Date();
-			final SchemeProtoElement schemeProtoElement = new SchemeProtoElement(
-					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE),
-					created, created, creatorId, creatorId,
-					0L, name, description, label,
-					equipmentType, symbol, ugoCell,
-					schemeCell, null, null);
+			final SchemeProtoElement schemeProtoElement = new SchemeProtoElement(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE),
+					created,
+					created,
+					creatorId,
+					creatorId,
+					0L,
+					name,
+					description,
+					label,
+					equipmentType,
+					symbol,
+					ugoCell,
+					schemeCell,
+					null,
+					null);
 			schemeProtoElement.changed = true;
 			return schemeProtoElement;
-		} catch (final IllegalObjectEntityException ioee) {
-			throw new CreateObjectException(
-					"SchemeProtoElement.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
+		}
+		catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
 
@@ -220,36 +228,43 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * @param parentSchemeProtoElement cannot be <code>null</code>.
 	 * @throws CreateObjectException
 	 */
-	public static SchemeProtoElement createInstance(
-			final Identifier creatorId, final String name,
-			final String description, final String label,
+	public static SchemeProtoElement createInstance(final Identifier creatorId,
+			final String name,
+			final String description,
+			final String label,
 			final EquipmentType equipmentType,
 			final BitmapImageResource symbol,
 			final SchemeImageResource ugoCell,
 			final SchemeImageResource schemeCell,
-			final SchemeProtoElement parentSchemeProtoElement)
-			throws CreateObjectException {
-		assert creatorId != null && !creatorId.isVoid(): ErrorMessages.NON_VOID_EXPECTED;
-		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
-		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert label != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert parentSchemeProtoElement != null: ErrorMessages.NON_NULL_EXPECTED;
+			final SchemeProtoElement parentSchemeProtoElement) throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid() : ErrorMessages.NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0 : ErrorMessages.NON_EMPTY_EXPECTED;
+		assert description != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert label != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert parentSchemeProtoElement != null : ErrorMessages.NON_NULL_EXPECTED;
 
 		try {
 			final Date created = new Date();
-			final SchemeProtoElement schemeProtoElement = new SchemeProtoElement(
-					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE),
-					created, created, creatorId, creatorId,
-					0L, name, description, label,
-					equipmentType, symbol, ugoCell,
-					schemeCell, null,
+			final SchemeProtoElement schemeProtoElement = new SchemeProtoElement(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE),
+					created,
+					created,
+					creatorId,
+					creatorId,
+					0L,
+					name,
+					description,
+					label,
+					equipmentType,
+					symbol,
+					ugoCell,
+					schemeCell,
+					null,
 					parentSchemeProtoElement);
 			schemeProtoElement.changed = true;
 			return schemeProtoElement;
-		} catch (final IllegalObjectEntityException ioee) {
-			throw new CreateObjectException(
-					"SchemeProtoElement.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
+		}
+		catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
 
@@ -265,36 +280,43 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * @param parentSchemeProtoGroup cannot be <code>null</code>.
 	 * @throws CreateObjectException
 	 */
-	public static SchemeProtoElement createInstance(
-			final Identifier creatorId, final String name,
-			final String description, final String label,
+	public static SchemeProtoElement createInstance(final Identifier creatorId,
+			final String name,
+			final String description,
+			final String label,
 			final EquipmentType equipmentType,
 			final BitmapImageResource symbol,
 			final SchemeImageResource ugoCell,
 			final SchemeImageResource schemeCell,
-			final SchemeProtoGroup parentSchemeProtoGroup)
-			throws CreateObjectException {
-		assert creatorId != null && !creatorId.isVoid(): ErrorMessages.NON_VOID_EXPECTED;
-		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
-		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert label != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert parentSchemeProtoGroup != null: ErrorMessages.NON_NULL_EXPECTED;
+			final SchemeProtoGroup parentSchemeProtoGroup) throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid() : ErrorMessages.NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0 : ErrorMessages.NON_EMPTY_EXPECTED;
+		assert description != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert label != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert parentSchemeProtoGroup != null : ErrorMessages.NON_NULL_EXPECTED;
 
 		try {
 			final Date created = new Date();
-			final SchemeProtoElement schemeProtoElement = new SchemeProtoElement(
-					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE),
-					created, created, creatorId, creatorId,
-					0L, name, description, label,
-					equipmentType, symbol, ugoCell,
-					schemeCell, parentSchemeProtoGroup,
+			final SchemeProtoElement schemeProtoElement = new SchemeProtoElement(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE),
+					created,
+					created,
+					creatorId,
+					creatorId,
+					0L,
+					name,
+					description,
+					label,
+					equipmentType,
+					symbol,
+					ugoCell,
+					schemeCell,
+					parentSchemeProtoGroup,
 					null);
 			schemeProtoElement.changed = true;
 			return schemeProtoElement;
-		} catch (final IllegalObjectEntityException ioee) {
-			throw new CreateObjectException(
-					"SchemeProtoElement.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
+		}
+		catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
 

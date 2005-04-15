@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementType.java,v 1.66 2005/04/14 16:05:37 bass Exp $
+ * $Id: MeasurementType.java,v 1.67 2005/04/15 19:22:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,9 +22,9 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -32,11 +32,10 @@ import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.66 $, $Date: 2005/04/14 16:05:37 $
- * @author $Author: bass $
+ * @version $Revision: 1.67 $, $Date: 2005/04/15 19:22:19 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -70,18 +69,6 @@ public class MeasurementType extends ActionType implements Namable {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
 
-		try {
-			for (Iterator it = this.inParameterTypes.iterator(); it.hasNext();)
-				GeneralStorableObjectPool.putStorableObject((ParameterType) it.next());
-			for (Iterator it = this.outParameterTypes.iterator(); it.hasNext();)
-				GeneralStorableObjectPool.putStorableObject((ParameterType) it.next());
-			for (Iterator it = this.measurementPortTypes.iterator(); it.hasNext();)
-				ConfigurationStorableObjectPool.putStorableObject((MeasurementPortType) it.next());
-		}
-		catch (IllegalObjectEntityException ioee) {
-			Log.errorException(ioee);
-		}
-		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
@@ -157,8 +144,8 @@ public class MeasurementType extends ActionType implements Namable {
 			measurementType.changed = true;
 			return measurementType;
 		}
-		catch (IllegalObjectEntityException e) {
-			throw new CreateObjectException("MeasurementType.createInstance | cannot generate identifier ", e);
+		catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
 

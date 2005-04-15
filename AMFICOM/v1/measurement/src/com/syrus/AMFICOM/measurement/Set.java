@@ -1,5 +1,5 @@
 /*
- * $Id: Set.java,v 1.62 2005/04/13 15:26:00 arseniy Exp $
+ * $Id: Set.java,v 1.63 2005/04/15 19:22:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,9 +19,9 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.62 $, $Date: 2005/04/13 15:26:00 $
+ * @version $Revision: 1.63 $, $Date: 2005/04/15 19:22:19 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -119,31 +119,34 @@ public final class Set extends StorableObject {
 	 * @throws CreateObjectException
 	 */
 	public static Set createInstance(Identifier creatorId,
-									 SetSort sort,
-									 String description,
-									 SetParameter[] parameters,
-									 java.util.Set monitoredElementIds) throws CreateObjectException {
-		
+			SetSort sort,
+			String description,
+			SetParameter[] parameters,
+			java.util.Set monitoredElementIds) throws CreateObjectException {
+
 		try {
-			Set set =  new Set(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SET_ENTITY_CODE),
-				creatorId,
-				0L,
-				sort.value(),
-				description,
-				parameters,
-				monitoredElementIds);
-			
+			Set set = new Set(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SET_ENTITY_CODE),
+					creatorId,
+					0L,
+					sort.value(),
+					description,
+					parameters,
+					monitoredElementIds);
+
 			assert set.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			
+
 			set.changed = true;
 			return set;
-		} catch (IllegalObjectEntityException e) {
-			throw new CreateObjectException("Set.createInstance | cannot generate identifier ", e);
+		}
+		catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
 
 	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 * <p>
+	 * <b>Clients must never explicitly call this method. </b>
+	 * </p>
 	 */
 	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
 		Set_Transferable st = (Set_Transferable)transferable;

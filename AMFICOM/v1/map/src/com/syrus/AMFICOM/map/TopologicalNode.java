@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalNode.java,v 1.29 2005/04/13 09:52:27 krupenn Exp $
+ * $Id: TopologicalNode.java,v 1.30 2005/04/15 19:22:39 arseniy Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,9 +22,9 @@ import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -40,8 +40,8 @@ import com.syrus.AMFICOM.map.corba.TopologicalNode_Transferable;
  * быть концевым дл€ линии и дл€ фрагмента линии. ¬ физическом смысле
  * топологический узел соответствует точке изгиба линии и не требует 
  * дополнительной описательной информации.
- * @author $Author: krupenn $
- * @version $Revision: 1.29 $, $Date: 2005/04/13 09:52:27 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.30 $, $Date: 2005/04/15 19:22:39 $
  * @module map_v1
  * @todo physicalLink should be transient
  */
@@ -192,8 +192,8 @@ public class TopologicalNode extends AbstractNode {
 			return topologicalNode;
 
 		}
-		catch (IllegalObjectEntityException e) {
-			throw new CreateObjectException("TopologicalNode.createInstance | cannot generate identifier ", e);
+		catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
 

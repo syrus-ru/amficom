@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeImageResource.java,v 1.14 2005/04/08 12:58:23 arseniy Exp $
+ * $Id: SchemeImageResource.java,v 1.15 2005/04/15 19:22:31 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,19 +8,35 @@
 
 package com.syrus.AMFICOM.resource;
 
-import com.syrus.AMFICOM.general.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
+
+import org.omg.CORBA.portable.IDLEntity;
+
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
+import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.resource.corba.ImageResource_Transferable;
 import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceData;
 import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceDataPackage.ImageResourceSort;
 import com.syrus.util.Log;
-import java.io.*;
-import java.util.*;
-import java.util.zip.*;
-import org.omg.CORBA.portable.IDLEntity;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.14 $, $Date: 2005/04/08 12:58:23 $
+ * @version $Revision: 1.15 $, $Date: 2005/04/15 19:22:31 $
  * @module resource_v1
  */
 public final class SchemeImageResource extends AbstractImageResource {
@@ -68,15 +84,14 @@ public final class SchemeImageResource extends AbstractImageResource {
 	 */
 	public static SchemeImageResource createInstance(final Identifier creatorId) throws CreateObjectException {
 		try {
-			SchemeImageResource schemeImageResource = new SchemeImageResource(
-				IdentifierPool.getGeneratedIdentifier(
-					ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE),
-				creatorId,
-				0L);
+			SchemeImageResource schemeImageResource = new SchemeImageResource(IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE),
+					creatorId,
+					0L);
 			schemeImageResource.changed = true;
 			return schemeImageResource;
-		} catch (IllegalObjectEntityException ioee) {
-			throw new CreateObjectException("SchemeImageResource.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
+		}
+		catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
 
@@ -153,7 +168,8 @@ public final class SchemeImageResource extends AbstractImageResource {
 			out = new ObjectOutputStream(new GZIPOutputStream(subOut));
 			out.writeObject(data1);
 			out.flush();
-		} finally {
+		}
+		finally {
 			if (out != null)
 				out.close();
 		}
@@ -166,7 +182,8 @@ public final class SchemeImageResource extends AbstractImageResource {
 	private byte[] safePack(final List data1) {
 		try {
 			return pack(data1);
-		} catch (IOException ioe) {
+		}
+		catch (IOException ioe) {
 			Log.errorException(ioe);
 		}
 		return new byte[0];
@@ -178,9 +195,11 @@ public final class SchemeImageResource extends AbstractImageResource {
 	private List safeUnpack(final byte packedData[]) {
 		try {
 			return unpack(packedData);
-		} catch (IOException ioe) {
+		}
+		catch (IOException ioe) {
 			Log.errorException(ioe);
-		} catch (ClassNotFoundException cnfe) {
+		}
+		catch (ClassNotFoundException cnfe) {
 			Log.errorException(cnfe);
 		}
 		return Collections.EMPTY_LIST;
@@ -191,7 +210,8 @@ public final class SchemeImageResource extends AbstractImageResource {
 		try {
 			in = new ObjectInputStream(new GZIPInputStream(new ByteArrayInputStream(packedData)));
 			return (List) in.readObject();
-		} finally {
+		}
+		finally {
 			if (in != null)
 				in.close();
 		}
