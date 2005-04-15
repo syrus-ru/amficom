@@ -1,5 +1,5 @@
 /*
- * $Id: FilterView.java,v 1.5 2005/04/12 13:31:04 max Exp $
+ * $Id: FilterView.java,v 1.6 2005/04/15 16:41:57 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,7 @@
 package com.syrus.AMFICOM.newFilter;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/04/12 13:31:04 $
+ * @version $Revision: 1.6 $, $Date: 2005/04/15 16:41:57 $
  * @author $Author: max $
  * @module filter_v1
  */
@@ -44,6 +44,10 @@ public interface FilterView {
 	void setListCondition(ListCondition listCondition);
 	void setDateCondition(DateCondition dateCondition);
 	
-	void refreshCreatedConditions(Object[] conditionNames);
 	void refreshFilteredEntities(String[] filteredNames);
+	void refreshCreatedConditions(Object[] conditionNames);
+	void refreshResultConditionString(String stringCondition);
+	void enableChangeDisableAdd(boolean b);
+	
+	
 }
