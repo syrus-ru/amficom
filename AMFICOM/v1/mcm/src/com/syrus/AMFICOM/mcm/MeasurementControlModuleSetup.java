@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModuleSetup.java,v 1.6 2005/04/01 22:01:44 arseniy Exp $
+ * $Id: MeasurementControlModuleSetup.java,v 1.7 2005/04/15 22:15:09 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -47,7 +47,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/04/01 22:01:44 $
+ * @version $Revision: 1.7 $, $Date: 2005/04/15 22:15:09 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -142,7 +142,7 @@ public class MeasurementControlModuleSetup {
 		MeasurementControlModule.mServerConnectionManager = new MServerConnectionManager(corbaServer,
 				mServerServantName,
 				mServerCheckTimeout);
-		MeasurementControlModule.mServerConnectionManager.start();
+		(new Thread(MeasurementControlModule.mServerConnectionManager)).start();
 	}
 
 	private static void setup() {

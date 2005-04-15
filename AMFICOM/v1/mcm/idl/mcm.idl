@@ -10,7 +10,7 @@ module AMFICOM {
 module mcm {
 module corba {
 
-	interface MCM {
+	interface MCM : general::corba::Verifiable {
 
 		void receiveTests(in measurement::corba::TestSeq_Transferable tests)
 			raises (general::corba::AMFICOMRemoteException);
@@ -51,7 +51,6 @@ module corba {
 				in general::corba::StorableObjectCondition_Transferable storableObjectCondition_Transferable)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void ping(in octet i);
 	};
 
 };

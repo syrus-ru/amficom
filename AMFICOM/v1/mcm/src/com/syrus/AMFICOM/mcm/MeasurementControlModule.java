@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.74 2005/04/13 12:51:51 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.75 2005/04/15 22:15:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -57,7 +57,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.74 $, $Date: 2005/04/13 12:51:51 $
+ * @version $Revision: 1.75 $, $Date: 2005/04/15 22:15:09 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -198,16 +198,10 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		long mServerCheckTimeout = ApplicationProperties.getInt(KEY_MSERVER_CHECK_TIMEOUT, MSERVER_CHECK_TIMEOUT) * 60 * 1000;
 		String mServerServantName = ApplicationProperties.getString(KEY_MSERVER_SERVANT_NAME, MSERVER_SERVANT_NAME);
 		mServerConnectionManager = new MServerConnectionManager(corbaServer, mServerServantName, mServerCheckTimeout);
-		mServerConnectionManager.start();
+		(new Thread(mServerConnectionManager)).start();
 
 		/*	Initialize Identifier Pool*/
-		try {
-			MServer mServerRef = mServerConnectionManager.getVerifiedMServerReference();
-			IdentifierPool.init(mServerRef);
-		}
-		catch (CommunicationException ce) {
-			Log.errorException(ce);
-		}
+		IdentifierPool.init(mServerConnectionManager);
 
 		/*	Create map of test processors*/
 		testProcessors = Collections.synchronizedMap(new HashMap());

@@ -1,5 +1,5 @@
 /*
- * $Id: MServerConnectionManager.java,v 1.1 2005/04/01 21:51:15 arseniy Exp $
+ * $Id: MServerConnectionManager.java,v 1.2 2005/04/15 22:15:09 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,63 +7,50 @@
  */
 package com.syrus.AMFICOM.mcm;
 
-import org.omg.CORBA.SystemException;
-
 import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.IGServerReferenceSource;
+import com.syrus.AMFICOM.general.VerifiedReferenceSource;
+import com.syrus.AMFICOM.general.corba.IdentifierGeneratorServer;
+import com.syrus.AMFICOM.general.corba.Verifiable;
 import com.syrus.AMFICOM.mserver.corba.MServer;
-import com.syrus.AMFICOM.mserver.corba.MServerHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/01 21:51:15 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/15 22:15:09 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
-public class MServerConnectionManager extends Thread {
-	public static final String KEY_MSERVER_SERVANT_NAME = "MServerServantName";
-	public static final String MSERVER_SERVANT_NAME = "MServer";
-
-	private CORBAServer corbaServer;
-	private String mServerServantName;
+public class MServerConnectionManager extends VerifiedReferenceSource implements Runnable, IGServerReferenceSource {
 	private long mServerCheckTimeout;
 
-	private MServer mServerRef;
-	private Object lock;
+	private boolean connectionLost;
 
 	public MServerConnectionManager(CORBAServer corbaServer, String mServerServantName, long mServerCheckTimeout) {
-		assert corbaServer != null : "corbaServer is NULL";
-		assert mServerServantName != null : "Measurement Server servant name is NULL";
+		super(corbaServer, mServerServantName);
 		assert mServerCheckTimeout >= 10 * 60 * 1000 : "Too low timeToSleep"; //not less then 10 min
 
-		this.corbaServer = corbaServer;
-		this.mServerServantName = mServerServantName;
 		this.mServerCheckTimeout = mServerCheckTimeout;
 
-		this.lock = new Object();
+		this.connectionLost = false;
 	}
 
 	public void run() {
 		while (true) {
-			synchronized (this.lock) {
-
-				if (this.mServerRef != null) {
-					try {
-						this.mServerRef.ping((byte) 0);
-					}
-					catch (SystemException se) {
-						Log.errorException(se);
-						this.resetMServerConnection();
-					}
-				}
-				else
-					this.resetMServerConnection();
-
-			}	//synchronized (this.lock)
 
 			try {
-				sleep(this.mServerCheckTimeout);
+				Verifiable reference = super.getVerifiedReference();
+				Log.debugMessage("MServerConnectionManager.run | Verified reference to Measurement Server", Log.DEBUGLEVEL08);
+				Log.debugMessage(reference.toString(), Log.DEBUGLEVEL08);
+				this.checkIfConnectionRestored();
+			}
+			catch (CommunicationException ce) {
+				this.connectionLost = true;
+				//@todo Generate event "Cannot resolve Measurement Server"
+			}
+
+			try {
+				Thread.sleep(this.mServerCheckTimeout);
 			}
 			catch (InterruptedException ie) {
 				Log.errorException(ie);
@@ -72,41 +59,37 @@ public class MServerConnectionManager extends Thread {
 		}
 	}
 
-	protected MServer getVerifiedMServerReference() throws CommunicationException {
-		synchronized (this.lock) {
-
-			if (this.mServerRef == null)
-				this.resetMServerConnection();
-			else {
-				try {
-					this.mServerRef.ping((byte) 1);
-				}
-				catch (SystemException se) {
-					this.resetMServerConnection();
-				}
-			}
-
-			if (this.mServerRef != null)
-				return this.mServerRef;
-			throw new CommunicationException("Cannot establish connection with Measurement Server");
-
-		}	//synchronized (this.lock)
-	}
-
-	private void resetMServerConnection() {
+	public IdentifierGeneratorServer getVerifiedIGServerReference() throws CommunicationException {
 		try {
-			boolean notConnectedBefore = (this.mServerRef == null);
-			this.mServerRef = MServerHelper.narrow(this.corbaServer.resolveReference(this.mServerServantName));
-			IdentifierPool.setIdentifierGeneratorServer(this.mServerRef);
-			if (notConnectedBefore) {
-				//@todo Generate event "Connection with Measurement Server mServerServantName restored"
-			}
+			Verifiable reference = super.getVerifiedReference();
+			this.checkIfConnectionRestored();
+			return (IdentifierGeneratorServer) reference;
 		}
 		catch (CommunicationException ce) {
-			Log.errorException(ce);
-			Log.errorMessage("Cannot resolve Measurement Server '" + this.mServerServantName + "'");
+			this.connectionLost = true;
 			//@todo Generate event "Cannot resolve Measurement Server"
-			this.mServerRef = null;
+			throw ce;
 		}
 	}
+
+	protected MServer getVerifiedMServerReference() throws CommunicationException {
+		try {
+			Verifiable reference = super.getVerifiedReference();
+			this.checkIfConnectionRestored();
+			return (MServer) reference;
+		}
+		catch (CommunicationException ce) {
+			this.connectionLost = true;
+			//@todo Generate event "Cannot resolve Measurement Server"
+			throw ce;
+		}
+	}
+
+	private void checkIfConnectionRestored() {
+		if (this.connectionLost) {
+			this.connectionLost = false;
+			//@todo Generate event "Connection with Measurement Server restored"
+		}
+	}
+
 }
