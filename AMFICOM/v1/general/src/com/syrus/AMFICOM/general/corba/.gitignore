@@ -15,6 +15,7 @@ IIdentifier.java
 Identifiable.java
 Identifier.java
 IdentifierGeneratorServer.java
+Verifiable.java
 NameResolver.java
 ElementAttribute.java
 StringFieldSort.java
@@ -25,3 +26,4 @@ OperationSort.java
 StorableObjectCondition_TransferablePackage
 TypicalCondition.java
 TypicalSort.java
+*.swp
