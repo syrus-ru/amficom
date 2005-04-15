@@ -1,5 +1,5 @@
 /*
- * $Id: CommonMeasurementTest.java,v 1.3 2005/04/08 15:31:35 arseniy Exp $
+ * $Id: CommonMeasurementTest.java,v 1.4 2005/04/15 19:20:58 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,6 +38,7 @@ import com.syrus.AMFICOM.general.AccessIdentity;
 import com.syrus.AMFICOM.general.CharacteristicDatabase;
 import com.syrus.AMFICOM.general.CharacteristicTypeDatabase;
 import com.syrus.AMFICOM.general.DatabaseGeneralObjectLoader;
+import com.syrus.AMFICOM.general.DefaultIGServerReferenceSource;
 import com.syrus.AMFICOM.general.DefaultIdentifierGeneratorServer;
 import com.syrus.AMFICOM.general.GeneralDatabaseContext;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
@@ -56,7 +57,7 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/04/08 15:31:35 $
+ * @version $Revision: 1.4 $, $Date: 2005/04/15 19:20:58 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -168,7 +169,7 @@ public class CommonMeasurementTest extends TestCase {
 	}
 
 	private static void initIdentifierPool() {
-		IdentifierPool.init(new DefaultIdentifierGeneratorServer(), 1);
+		IdentifierPool.init(new DefaultIGServerReferenceSource(new DefaultIdentifierGeneratorServer()), 1);
 	}
 
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: CommonEventTest.java,v 1.9 2005/04/08 15:31:41 arseniy Exp $
+ * $Id: CommonEventTest.java,v 1.10 2005/04/15 19:21:11 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,6 +43,7 @@ import com.syrus.AMFICOM.general.AccessIdentity;
 import com.syrus.AMFICOM.general.CharacteristicDatabase;
 import com.syrus.AMFICOM.general.CharacteristicTypeDatabase;
 import com.syrus.AMFICOM.general.DatabaseGeneralObjectLoader;
+import com.syrus.AMFICOM.general.DefaultIGServerReferenceSource;
 import com.syrus.AMFICOM.general.DefaultIdentifierGeneratorServer;
 import com.syrus.AMFICOM.general.GeneralDatabaseContext;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
@@ -56,7 +57,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/04/08 15:31:41 $
+ * @version $Revision: 1.10 $, $Date: 2005/04/15 19:21:11 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -159,7 +160,7 @@ public abstract class CommonEventTest extends TestCase {
 	}
 
 	private static void initIdentifierPool() {
-		IdentifierPool.init(new DefaultIdentifierGeneratorServer(), 1);
+		IdentifierPool.init(new DefaultIGServerReferenceSource(new DefaultIdentifierGeneratorServer()), 1);
 	}
 }
 
