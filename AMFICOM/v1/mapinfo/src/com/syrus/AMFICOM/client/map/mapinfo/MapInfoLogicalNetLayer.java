@@ -59,6 +59,11 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 		this.imageCache = new TopologicalImageCache(this);		
 	}
 	
+	public void refreshLayers()
+	{
+		this.imageCache.refreshLayers();		
+	}
+	
 	public void setMapImageSize(int width, int height)
 	{
 		if((width > 0) && (height > 0))

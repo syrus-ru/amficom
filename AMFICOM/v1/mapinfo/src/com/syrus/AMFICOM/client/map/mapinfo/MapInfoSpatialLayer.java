@@ -7,6 +7,9 @@ import com.syrus.AMFICOM.Client.Map.SpatialLayer;
 
 public class MapInfoSpatialLayer implements SpatialLayer
 {
+	private boolean visible = true;
+	private boolean labelsVisible = true;	
+	
 	private FeatureLayer mapLayer = null;
 
 	private MapInfoLogicalNetLayer layerToRepaint = null;
@@ -25,6 +28,16 @@ public class MapInfoSpatialLayer implements SpatialLayer
 
 	public boolean isVisible()
 	{
+		return this.visible;
+	}
+
+	public boolean isLabelVisible()
+	{
+		return true;
+	}
+
+	public boolean isVisibleAtCurrentScale()
+	{
 		boolean returnValue = false;
 		try
 		{
@@ -37,46 +50,19 @@ public class MapInfoSpatialLayer implements SpatialLayer
 
 		return returnValue;
 	}
-
-	public boolean isLabelVisible()
-	{
-		boolean returnValue = false;
-		try
-		{
-			returnValue = this.mapLayer.isAutoLabel();
-		}
-		catch(Exception exc)
-		{
-			exc.printStackTrace();
-		}
-
-		return returnValue;
-	}
-
+	
 	public void setVisible(boolean visible)
 	{
-		try
+		this.visible = visible;
+		this.layerToRepaint.refreshLayers();		
+		if (this.isVisibleAtCurrentScale())
 		{
-			this.mapLayer.setEnabled(visible);
-			this.layerToRepaint.repaint(true);
-		}
-		catch(Exception exc)
-		{
-			exc.printStackTrace();
+			this.layerToRepaint.repaint(true);			
 		}
 	}
 
 	public void setLabelVisible(boolean visible)
 	{
-		try
-		{
-			this.mapLayer.setAutoLabel(visible);
-			this.layerToRepaint.repaint(true);
-		}
-		catch(Exception exc)
-		{
-			exc.printStackTrace();
-		}
 	}
 
 	public Component getLayerImage()

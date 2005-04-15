@@ -2,6 +2,7 @@ package com.syrus.AMFICOM.Client.Map.Mapinfo;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import com.mapinfo.mapj.MapJ;

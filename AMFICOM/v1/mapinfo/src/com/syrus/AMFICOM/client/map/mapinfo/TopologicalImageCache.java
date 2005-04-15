@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalImageCache.java,v 1.5 2005/04/14 07:10:47 peskovsky Exp $
+ * $Id: TopologicalImageCache.java,v 1.6 2005/04/15 11:25:15 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.Client.Map.MapDataException;
 
 /**
  * @author $Author: peskovsky $
- * @version $Revision: 1.5 $, $Date: 2005/04/14 07:10:47 $
+ * @version $Revision: 1.6 $, $Date: 2005/04/15 11:25:15 $
  * @module mapinfo_v1
  */
 public class TopologicalImageCache
@@ -115,6 +115,8 @@ public class TopologicalImageCache
 	private Rectangle2D.Double expressAreaSphBorders = new Rectangle2D.Double();
 	private Rectangle2D.Double cacheAreaSphBorders = new Rectangle2D.Double();	
 	
+//	private boolean isRepainting = false;
+	
 	public TopologicalImageCache(MapInfoLogicalNetLayer miLayer)
 	{
 		this.miLayer = miLayer;
@@ -155,6 +157,19 @@ public class TopologicalImageCache
 		if (this.visibleImage == null)
 			return;
 		
+//		//Во время репэйнта EXPRESS области нельзя менять параметры
+//		while (this.isRepainting)
+//		{
+//			try
+//			{
+//				Thread.sleep(20);
+//			} catch (InterruptedException e)
+//			{
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}
+		
 		DoublePoint newCenter = this.miLayer.getCenter();  
 		if (	(this.center == null)
 				||(!this.center.equals(newCenter)))
@@ -185,6 +200,19 @@ public class TopologicalImageCache
 		if (this.visibleImage == null)
 			return;
 		
+//		//Во время репэйнта EXPRESS области нельзя менять параметры
+//		while (this.isRepainting)
+//		{
+//			try
+//			{
+//				Thread.sleep(20);
+//			} catch (InterruptedException e)
+//			{
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}
+		
 		double newScale = this.miLayer.getScale();  
 		if (this.scale != newScale)
 		{
@@ -197,11 +225,26 @@ public class TopologicalImageCache
 				this.cacheOfImages.clear();
 				this.loadingThread.clearQueue();				
 			}
-			
+
+			//Здесь должно быть известно предыдущее значение масштаба,
+			//чтобы отследить динамику
 			this.createScaleRequests();
-			
+
 			this.scale = newScale;			
 		}
+	}
+	
+	public void refreshLayers()
+	{
+		//TODO Здесь по-хорошему надо перерисовывать отдельные слои,
+		//но такого механизма пока нет.
+		this.imagesToPaint.clear();				
+		this.cacheOfImages.clear();
+		this.loadingThread.clearQueue();
+
+		this.mode = TopologicalImageCache.MODE_CENTER_CHANGING;
+		setECRegionBorders();		
+		this.createMovingRequests();		
 	}
 	
 	public Image getImage()
@@ -209,6 +252,7 @@ public class TopologicalImageCache
 		if (this.visibleImage == null)
 			return null;
 
+//		this.isRepainting = true;
 		while (this.imagesToPaint.size() > 0)
 		{
 			for (ListIterator it = this.imagesToPaint.listIterator(); it.hasNext();)
@@ -241,6 +285,8 @@ public class TopologicalImageCache
 			}
 		}
 
+//		this.isRepainting = false;
+		
 		System.out.println(this.miLayer.sdFormat.format(new Date(System.currentTimeMillis())) +
 			" TIC - getImage - returning image");
 		
@@ -403,21 +449,22 @@ public class TopologicalImageCache
 		{
 			TopologicalRequest curRequest = (TopologicalRequest)requestIt.next();
 
-			if (curRequest.topoBounds.contains(segmentBorders))
+			if (	curRequest.topoBounds.contains(segmentBorders)
+					&&(curRequest.priority == TopologicalRequest.PRIORITY_ALREADY_LOADED))
 			{
 				//Наш запрос уже содержится в одном из реализованных
 				result = curRequest;
 				
-				//Если он задавался с приоритетом BACKGROUND, а теперь относится к экспресс 
-				//области - меняем приоритет
-				if (	(curRequest.priority == TopologicalRequest.PRIORITY_BACKGROUND)
-						&&this.expressAreaSphBorders.contains(segmentBorders))
-				{
-					//Изменим приоритет запроса
-					this.loadingThread.removeRequest(curRequest);
-					this.cacheOfImages.remove(curRequest);
-					curRequest.priority = TopologicalRequest.PRIORITY_EXPRESS;
-				}
+//				//Если он задавался с приоритетом BACKGROUND, а теперь относится к экспресс 
+//				//области - меняем приоритет
+//				if (	(curRequest.priority == TopologicalRequest.PRIORITY_BACKGROUND)
+//						&&this.expressAreaSphBorders.contains(segmentBorders))
+//				{
+//					//Изменим приоритет запроса
+//					this.loadingThread.removeRequest(curRequest);
+//					this.cacheOfImages.remove(curRequest);
+//					curRequest.priority = TopologicalRequest.PRIORITY_EXPRESS;
+//				}
 					
 				break;
 			}
@@ -1099,7 +1146,7 @@ class LoadingThread extends Thread
 /**
  * Структура запроса изображения с сервера
  * @author $Author: peskovsky $
- * @version $Revision: 1.5 $, $Date: 2005/04/14 07:10:47 $
+ * @version $Revision: 1.6 $, $Date: 2005/04/15 11:25:15 $
  * @module mapinfo_v1
  */
 class TopologicalRequest implements Comparable

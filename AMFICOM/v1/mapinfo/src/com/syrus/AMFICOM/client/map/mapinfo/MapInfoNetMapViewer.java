@@ -51,6 +51,12 @@ public class MapInfoNetMapViewer extends NetMapViewer
 	
 	protected MapInfoConnection mapConnection = null;
 	
+	/**
+	 * Список слоёв. Подгружается один раз при инциализации модуля.
+	 * Следует обновлять при изменении файла проекта во время работы (это опция пока нереализована)
+	 */
+	private List layersList = null;
+	
 	public void init() throws MapDataException
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass()
@@ -175,18 +181,21 @@ public class MapInfoNetMapViewer extends NetMapViewer
 
 	public List getLayers()
 	{
-		List returnList = new ArrayList();
-
-		Iterator layersIt = this.mapConnection.getLocalMapJ().getLayers().iterator(
-				LayerType.FEATURE);
-		for(; layersIt.hasNext();)
+		if (this.layersList == null)
 		{
-			FeatureLayer currLayer = (FeatureLayer) layersIt.next();
-			SpatialLayer spL = new MapInfoSpatialLayer(currLayer, this.lnl);
-			returnList.add(spL);
+			this.layersList = new ArrayList();
+
+			Iterator layersIt = this.mapConnection.getLocalMapJ().getLayers().iterator(
+					LayerType.FEATURE);
+			for(; layersIt.hasNext();)
+			{
+				FeatureLayer currLayer = (FeatureLayer) layersIt.next();
+				SpatialLayer spL = new MapInfoSpatialLayer(currLayer, this.lnl);
+				this.layersList.add(spL);
+			}
 		}
 
-		return returnList;
+		return this.layersList;
 	}
 
 }
