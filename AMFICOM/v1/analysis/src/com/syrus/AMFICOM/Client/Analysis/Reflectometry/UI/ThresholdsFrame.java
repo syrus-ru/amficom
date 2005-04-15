@@ -11,7 +11,6 @@ import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Event.bsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEvents;
-import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.io.BellcoreStructure;
 
 public class ThresholdsFrame extends SimpleResizableFrame
@@ -122,9 +121,9 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 		}*/
 	}
 
-	void removeEtalon(String etId)
+	void removeEtalon()
 	{
-		SimpleGraphPanel epPanel = (SimpleGraphPanel)traces.get(etId);
+		SimpleGraphPanel epPanel = (SimpleGraphPanel)traces.get(Heap.ETALON_TRACE_KEY);
 		if (epPanel != null)
 			panel.removeGraphPanel(epPanel);
 	}
@@ -140,7 +139,7 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 		double deltaX = bs.getResolution();
 		double[] y = bs.getTraceData();
 
-	    // MODELED_TRACE_KEY check removed by saa: XXX: we don't know now how to handle MODELED_TRACE_KEY, so take a BS only 
+	    // XXX: MODELED_TRACE_KEY case check removed by saa: we don't know now how to handle MODELED_TRACE_KEY, so take a BS only 
 		if (id.equals(Heap.PRIMARY_TRACE_KEY))
 		{
 			p = new ThresholdsPanel(panel, dispatcher, y, deltaX);
@@ -217,6 +216,6 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 
 	public void etalonMTMRemoved()
 	{
-		removeEtalon(Heap.ETALON_TRACE_KEY);
+		removeEtalon();
 	}
 }
