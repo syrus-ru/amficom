@@ -27,7 +27,7 @@ package com.syrus.AMFICOM.analysis.dadara;
  * по ModelTrace - MaxDeviation и пр.
  * 
  * @author $Author: saa $
- * @version $Revision: 1.10 $, $Date: 2005/04/15 13:58:26 $
+ * @version $Revision: 1.11 $, $Date: 2005/04/15 18:25:06 $
  * @module analysis_v1
  */
 public class ReflectogramComparer
@@ -126,7 +126,7 @@ public class ReflectogramComparer
     public boolean isEtalonEventReliablyLost(int etalonId)
     {
         int probeId = etalon2probe[etalonId];
-        return probeId < RELIABLY_UNPAIRED;
+        return probeId == RELIABLY_UNPAIRED;
     }
 
     // XXX: нужен ли такой метод?
