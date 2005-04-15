@@ -1,5 +1,5 @@
 /*
- * $Id: IdentifierPool.java,v 1.14 2005/03/18 19:19:49 bass Exp $
+ * $Id: IdentifierPool.java,v 1.15 2005/04/15 19:19:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,8 +18,8 @@ import com.syrus.util.Fifo;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/03/18 19:19:49 $
- * @author $Author: bass $
+ * @version $Revision: 1.15 $, $Date: 2005/04/15 19:19:16 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public class IdentifierPool {
@@ -28,8 +28,8 @@ public class IdentifierPool {
 	private static final long TIME_TO_SLEEP = 500;
 	private static final double MIN_FILL_FACTOR = 0.2;
 
-	static IdentifierGeneratorServer igServer;
-	static int capacity;
+	private static IGServerReferenceSource igServerReferenceSource;
+	private static int capacity;
 
 	/* Map <Short objectEntity, LRUMap idPool> */
 	private static Map idPoolMap;
@@ -38,34 +38,18 @@ public class IdentifierPool {
 		// empty private construcor
 	}
 
-	public static void init(IdentifierGeneratorServer igServer1, int capacity1) {
-		igServer = igServer1;
+	public static void init(IGServerReferenceSource igServerReferenceSource1, int capacity1) {
+		igServerReferenceSource = igServerReferenceSource1;
 		capacity = (capacity1 <= MAX_CAPACITY) ? capacity1 : MAX_CAPACITY;
 		idPoolMap = Collections.synchronizedMap(new HashMap());
 	}
 
-	public static void init(IdentifierGeneratorServer igServer1) {
-		init(igServer1, DEFAULT_CAPACITY);
+	public static void init(IGServerReferenceSource igServerReferenceSource1) {
+		init(igServerReferenceSource1, DEFAULT_CAPACITY);
 	}
 
-	public static synchronized void setIdentifierGeneratorServer(IdentifierGeneratorServer igServer1) {
-		igServer = igServer1;
-	}
-
-	public static Identifier getGeneratedIdentifier(final short entityCode) throws IllegalObjectEntityException {
-		if (ObjectEntities.codeIsValid(entityCode))
-			return getGeneratedIdentifier0(entityCode);
-		throw new IllegalObjectEntityException("Illegal or unknown entity code supplied: " + entityCode, IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE); //$NON-NLS-1$
-	}
-
-	/**
-	 * Package-private method used in {@link #getGeneratedIdentifier(short)}
-	 * and {@link StorableObject#clone()}.
-	 *
-	 * @param entityCode
-	 */
-	static synchronized Identifier getGeneratedIdentifier0(final short entityCode) {
-		assert ObjectEntities.codeIsValid(entityCode);
+	public static Identifier getGeneratedIdentifier(final short entityCode) throws IdentifierGenerationException {
+		assert ObjectEntities.codeIsValid(entityCode) : "Illegal or unknown entity code supplied: " + entityCode;
 
 		final Short entityCodeShort = new Short(entityCode);
 		Fifo fifo = (Fifo) idPoolMap.get(entityCodeShort);
@@ -84,16 +68,25 @@ public class IdentifierPool {
 		// Wait if fifo is empty yet
 		while (fifo.getNumber() < 1)
 			try {
-				Log.debugMessage("IdentifierPool.generateId | Wait for fetching ids", Log.DEBUGLEVEL10); //$NON-NLS-1$
+				Log.debugMessage("IdentifierPool.getGeneratedIdentifier | Wait for fetching ids", Log.DEBUGLEVEL10); //$NON-NLS-1$
 				Thread.sleep(TIME_TO_SLEEP);
-			} catch (final InterruptedException ie) {
+			}
+			catch (final InterruptedException ie) {
 				Log.errorException(ie);
 			}
 
-		return (Identifier)fifo.remove();
+		return (Identifier) fifo.remove();
 	}
 
-	private static void fillFifo(Fifo fifo, final short entityCode) {
+	private static void fillFifo(Fifo fifo, final short entityCode) throws IdentifierGenerationException {
+		IdentifierGeneratorServer igServer = null;
+		try {
+			igServer = igServerReferenceSource.getVerifiedIGServerReference();
+		}
+		catch (CommunicationException ce) {
+			throw new IdentifierGenerationException("Cannot obtain reference on identifier generator server", ce);
+		}
+
 		IdentifierLoader il = new IdentifierLoader(igServer, fifo, entityCode);
 		il.start();
 		try {
