@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTrace.java,v 1.4 2005/02/15 14:19:18 saa Exp $
+ * $Id: ModelTrace.java,v 1.5 2005/04/15 18:07:18 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis.dadara;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.4 $, $Date: 2005/02/15 14:19:18 $
+ * @version $Revision: 1.5 $, $Date: 2005/04/15 18:07:18 $
  * @module
  */
 public abstract class ModelTrace
@@ -52,6 +52,8 @@ public abstract class ModelTrace
 	 */
 	public double[] getYArrayZeroPad(int x0, int N)
 	{
+		if (N <= 0) // на случай отрицательного N, возвращаем пустой массив
+			return new double[0];
 		int toEnd = getLength() - x0;
 		if (toEnd < 0)
 			toEnd = 0;
