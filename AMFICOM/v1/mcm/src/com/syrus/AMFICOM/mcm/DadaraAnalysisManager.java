@@ -1,5 +1,5 @@
 /*
- * $Id: DadaraAnalysisManager.java,v 1.30 2005/04/13 12:00:29 saa Exp $
+ * $Id: DadaraAnalysisManager.java,v 1.31 2005/04/15 11:39:23 saa Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.mcm;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/04/13 12:00:29 $
+ * @version $Revision: 1.31 $, $Date: 2005/04/15 11:39:23 $
  * @author $Author: saa $
  * @module mcm_v1
  */
@@ -176,7 +176,7 @@ public class DadaraAnalysisManager implements AnalysisManager
 		else // обрыв не обнаружен
 		{
 			// проверяем, если ли выход за пределы масок
-			ReflectogramAlarm alarm = ModelTraceComparer.compareToMTM(mt, etMTM);
+			ReflectogramAlarm alarm = ModelTraceComparer.compareTraceToMTM(mt, etMTM);
 
 			// @todo: IA - пока не делаем
 //			getParBA(ParameterTypeCodenames.MIN_EVENT_LEVEL).toDouble();
