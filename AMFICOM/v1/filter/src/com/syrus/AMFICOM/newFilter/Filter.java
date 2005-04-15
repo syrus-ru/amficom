@@ -1,5 +1,5 @@
 /*
- * $Id: Filter.java,v 1.9 2005/04/12 13:19:52 max Exp $
+ * $Id: Filter.java,v 1.10 2005/04/15 16:36:23 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,18 +9,16 @@ package com.syrus.AMFICOM.newFilter;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import com.syrus.AMFICOM.general.ConditionWrapper;
 import com.syrus.AMFICOM.general.LinkedConditionLoader;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/04/12 13:19:52 $
+ * @version $Revision: 1.10 $, $Date: 2005/04/15 16:36:23 $
  * @author $Author: max $
  * @module misc
  */
@@ -34,7 +32,7 @@ public class Filter {
 	public static final String	NO_CONDITIONS_CREATED	= "You have to create condition(s) first";
 	public static final String	WRONG_DATE_MESSAGE	= "Please, set the date";
 
-	private Map nameCondition = new HashMap();
+	private List conditionNames = new LinkedList();
 	private List keys;
 	private String[] keyNames;
 	
@@ -68,14 +66,14 @@ public class Filter {
 	}
 	
 	public void addCondition(StorableObjectCondition condition, ConditionKey key) {
-		String conditionName = "Condition " + this.keys.indexOf(key) + " : " + key.getName();
-		this.nameCondition.put(conditionName, condition);
+		String conditionName = key.getName();
+		this.conditionNames.add(conditionName);
 		this.logicalScheme.addCondition(conditionName, condition);
-		refreshCreatedConditions();
+		refreshCreatedConditions();		
 	}
 	
 	public void removeCondition(String name) {
-		this.nameCondition.remove(name);
+		this.conditionNames.remove(name);
 		this.logicalScheme.removeCondition(name);
 		refreshCreatedConditions();
 	}
@@ -83,7 +81,8 @@ public class Filter {
 	public void refreshCreatedConditions() {
 		for (Iterator it = this.filterViews.iterator(); it.hasNext();) {
 			FilterView view = (FilterView) it.next();
-			view.refreshCreatedConditions(this.nameCondition.keySet().toArray());
+			view.refreshCreatedConditions(conditionNames.toArray());
+			view.refreshResultConditionString(this.logicalScheme.getStringCondition());
 		}
 	}
 	
@@ -99,8 +98,11 @@ public class Filter {
 	}
 
 	public boolean hasCondition() {
-		if (this.nameCondition.size() == 0)
+		if (this.conditionNames.size() == 0)
 			return false;
 		return true;
 	}	
+	public List getConditionNames() {
+		return this.conditionNames;
+	}
 }
