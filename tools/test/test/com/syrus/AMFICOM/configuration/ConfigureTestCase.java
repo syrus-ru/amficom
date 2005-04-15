@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigureTestCase.java,v 1.8 2005/04/08 14:43:56 bob Exp $
+ * $Id: ConfigureTestCase.java,v 1.9 2005/04/15 17:34:36 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/04/08 14:43:56 $
- * @author $Author: bob $
+ * @version $Revision: 1.9 $, $Date: 2005/04/15 17:34:36 $
+ * @author $Author: arseniy $
  * @module tools
  */
 public class ConfigureTestCase extends TestCase {
@@ -61,6 +61,10 @@ public class ConfigureTestCase extends TestCase {
 			}
 		};
 		return wrapper;
+	}
+
+	public static Test suite() {
+		return suiteWrapper(ConfigureTestCase.class);
 	}
 
 	static void oneTimeSetUp() {
