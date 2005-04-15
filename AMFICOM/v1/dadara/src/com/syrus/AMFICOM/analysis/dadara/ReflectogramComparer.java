@@ -27,7 +27,7 @@ package com.syrus.AMFICOM.analysis.dadara;
  * по ModelTrace - MaxDeviation и пр.
  * 
  * @author $Author: saa $
- * @version $Revision: 1.9 $, $Date: 2005/04/15 11:36:47 $
+ * @version $Revision: 1.10 $, $Date: 2005/04/15 13:58:26 $
  * @module analysis_v1
  */
 public class ReflectogramComparer
@@ -85,14 +85,24 @@ public class ReflectogramComparer
 		}
 	}
 	
+    /**
+     * Find corresponding etalon event for the specified probe event
+     * @param probeId probe event #
+     * @return >=0: etalon event #; -1: no etalon event for this probe
+     */
 	public int getEtalonIdByProbeId(int probeId)
 	{
-	    return probe2etalon[probeId];
+	    return probe2etalon[probeId] >= 0 ? probe2etalon[probeId] : -1;
 	}
 	
+    /**
+     * Find corresponding probe event for the specified etalon event
+     * @param etalonId etalon event #
+     * @return >=0: probe event #; -1: no probe event for this etalon
+     */
 	public int getProbeIdByEtalonId(int etalonId)
 	{
-	    return etalon2probe[etalonId];
+	    return etalon2probe[etalonId] >= 0 ? etalon2probe[etalonId] : -1;
 	}
 
     public boolean isProbeEventNew(int probeId)
