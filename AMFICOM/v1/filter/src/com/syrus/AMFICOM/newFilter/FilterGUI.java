@@ -1,5 +1,5 @@
 /*
- * $Id: FilterGUI.java,v 1.8 2005/04/12 13:31:04 max Exp $
+ * $Id: FilterGUI.java,v 1.9 2005/04/15 16:46:24 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,9 +28,10 @@ import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/04/12 13:31:04 $
+ * @version $Revision: 1.9 $, $Date: 2005/04/15 16:46:24 $
  * @author $Author: max $
  * @module misc
+ * @deprecated use {@link com.syrus.AMFICOM.newFilter.FilterPanel}
  */
 public class FilterGUI extends JFrame implements FilterView {
 	
@@ -398,5 +399,21 @@ public class FilterGUI extends JFrame implements FilterView {
 
 	public void refreshFilteredEntities(String[] filteredNames) {
 		this.filteredList.setListData(filteredNames);		
+	}
+
+	/* (non-Javadoc)
+	 * @see com.syrus.AMFICOM.newFilter.FilterView#refreshResultConditionString(java.lang.String)
+	 */
+	public void refreshResultConditionString(String stringCondition) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see com.syrus.AMFICOM.newFilter.FilterView#enableChangeDisableAdd(boolean)
+	 */
+	public void enableChangeDisableAdd(boolean b) {
+		// TODO Auto-generated method stub
+		
 	}
 }
