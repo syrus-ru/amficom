@@ -124,5 +124,33 @@ public class ReflectogramAlarm {
 			return null;
 		}
 	}
-}
 
+    /**
+     * Если аларм that более приоритетен, чем this,
+     * загружает параметры that в this.
+     * <p>Приоритет определяется в таком порядке:
+     * <ol>
+     * <li> бОльший level
+     * <li> меньший pointCoord
+     * <li> сравнение остальных параметров пока не определено 
+     * </ol>
+     * 
+     * @param that
+     */
+    public void toHardest(ReflectogramAlarm that)
+    {
+        if (that.level > this.level
+                || that.level == this.level && that.pointCoord < this.pointCoord)
+        {
+            this.level = that.level;
+            this.pointCoord = that.pointCoord;
+            this.endPointCoord = that.endPointCoord;
+            this.alarmType = that.alarmType;
+        }
+    }
+    
+    public String toString()
+    {
+        return "ReflectogramAlarm(level=" + level + ",type=" + alarmType + ",begin=" + pointCoord + ",end=" + endPointCoord + ")";
+    }
+}
