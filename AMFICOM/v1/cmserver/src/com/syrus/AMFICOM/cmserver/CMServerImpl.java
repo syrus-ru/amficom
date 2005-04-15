@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.98 2005/04/12 17:16:21 arseniy Exp $
+ * $Id: CMServerImpl.java,v 1.99 2005/04/15 22:14:11 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,7 +41,7 @@ import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.98 $, $Date: 2005/04/12 17:16:21 $
+ * @version $Revision: 1.99 $, $Date: 2005/04/15 22:14:11 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -290,6 +290,12 @@ public class CMServerImpl extends CMMeasurementTransmit {
 					"Cannot create major/minor entries of identifier for entity: '"
 							+ ObjectEntities.codeToString(entityCode) + "' -- " + ige.getMessage());
 		}
+	}
+
+	
+///////////////////////////////////////// Verifiable 	//////////////////////////////////////////////////
+	public void verify(byte i) {
+		Log.debugMessage("Verify value: " + i, Log.DEBUGLEVEL10);
 	}
 
 }
