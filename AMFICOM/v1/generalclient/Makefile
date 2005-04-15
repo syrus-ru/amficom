@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.16 2005/04/14 12:38:17 arseniy Exp $
+# $Id: Makefile,v 1.17 2005/04/15 10:04:48 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -19,6 +19,22 @@ EXTCLASSPATH=$(EXTLIBDIR)/kunststoff.jar:$(EXTLIBDIR)/jfreechartK.jar
 $(call checkenve,JAVA_HOME)
 
 
+JAVACFLAGS := \
+	-O \
+	-bootclasspath $(JAVA_HOME)/jre/lib/rt.jar \
+	-d $(CLASSDIR) \
+	-encoding $(ENCODING) \
+	-extdirs $(JAVA_HOME)/jre/lib/ext \
+	-g
+JIKESFLAGS := \
+	+E \
+	+P \
+	+Pall \
+	+Pno-switchcheck \
+	+T=2 \
+	-nowarn
+JAVACFLAGS := $(JAVACFLAGS) $(JIKESFLAGS)
+
 $(LIBNAME): .mach
 	$(CP) \
 		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/Client/General/Lang/*.properties) \
@@ -28,7 +44,7 @@ $(LIBNAME): .mach
 		-C $(CLASSDIR) oracle
 
 .mach:	.corba $(CLASSDIR)
-	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
+	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH):$(EXTCLASSPATH) \
 		-sourcepath $(SRCDIR) \
 		$(shell find $(SRCDIR) -name '*.java')
