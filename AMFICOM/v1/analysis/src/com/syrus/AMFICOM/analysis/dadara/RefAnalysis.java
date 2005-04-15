@@ -19,8 +19,7 @@ public class RefAnalysis
 		ModelTrace mt = mtm.getModelTrace();
 		events = new TraceEvent[re.length];
 
-		if(re.length == 0)
-			return;
+		// if re.length == 0, we should anyway make processing related to noise etc
 
 		double maxY = 0; // XXX: saa: is 0 good for min/max? shall we use y[0] instead?
 		double minY = 0;
@@ -36,6 +35,10 @@ public class RefAnalysis
 		int type;
 		int lastPoint = re.length > 0
 			? re[re.length - 1].getBegin() // getBegin: changed acc. to Stas-2004-10 (was: getEnd)
+			: 0;
+
+		int veryLastPoint = re.length > 0
+			? re[re.length - 1].getEnd()
 			: 0;
 
 		double Po = 0;
@@ -164,14 +167,14 @@ public class RefAnalysis
 
 		double maxNoise = 0.;
 		boolean b = false;
-		for(int i = re[re.length - 1].getEnd(); i < y.length; i++)
+		for(int i = veryLastPoint; i < y.length; i++)
 		{
 			if (y[i] == minY)
 				b = true;
 			if(b && maxNoise < y[i])
 				maxNoise = y[i];
 		}
-		overallStats = new TraceEvent(TraceEvent.OVERALL_STATS, 0, re[re.length-1].getBegin());
+		overallStats = new TraceEvent(TraceEvent.OVERALL_STATS, 0, lastPoint);
 		double[] data = new double[5];
 		data[0] = maxY - Po;
 		data[1] = maxY - y[lastPoint];
@@ -184,29 +187,30 @@ public class RefAnalysis
 		noise = new double[y.length];
 		maxNoise = 0;
 
-		//long t0 = System.currentTimeMillis();
-  for(int i = 0; i < re.length; i++)
+		// long t0 = System.currentTimeMillis();
+		for (int i = 0; i < re.length; i++)
 		{
-			// for(int j = re[i].getBegin(); j < y.length; j++) -- changed just because was too slow -- saa
-	int posFrom = re[i].getBegin();
-	int posTo = re[i].getEnd();
-	double[] yArrMT = mt.getYArrayZeroPad(posFrom, posTo - posFrom);
-	for(int j = posFrom; j < posTo; j++)
+			// for(int j = re[i].getBegin(); j < y.length; j++) -- changed just
+			// because was too slow -- saa
+			int posFrom = re[i].getBegin();
+			int posTo = re[i].getEnd();
+			double[] yArrMT = mt.getYArrayZeroPad(posFrom, posTo - posFrom);
+			for (int j = posFrom; j < posTo; j++)
 			{
-				if(j < lastPoint) // XXX: saa: I think there should be '<='
+				if (j < lastPoint) // XXX: saa: I think there should be '<='
 				{
 					filtered[j] = Math.max(0, yArrMT[j - posFrom]);
 					noise[j] = Math.abs(y[j] - filtered[j]);
 					if (noise[j] > maxNoise)
 						maxNoise = noise[j];
-				}
-				else
+				} else
 				{
 					filtered[j] = y[j];
 					noise[j] = maxNoise;
 				}
 			}
 		}
-  //System.out.println("decode: after-processing (for/for) dt/ms " + (System.currentTimeMillis()-t0));
+  // System.out.println("decode: after-processing (for/for) dt/ms " +
+	// (System.currentTimeMillis()-t0));
 	}
 }
