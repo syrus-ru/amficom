@@ -1,5 +1,5 @@
 /*
- * $Id: MServerImplementation.java,v 1.45 2005/04/13 12:22:11 arseniy Exp $
+ * $Id: MServerImplementation.java,v 1.46 2005/04/15 15:53:20 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -100,7 +100,7 @@ import com.syrus.AMFICOM.mserver.corba.MServerPOA;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2005/04/13 12:22:11 $
+ * @version $Revision: 1.46 $, $Date: 2005/04/15 15:53:20 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -153,38 +153,40 @@ public class MServerImplementation extends MServerPOA {
 
 ////////////////////////////////////////////	Receive ///////////////////////////////////////////////////
 	public void receiveResults(Result_Transferable[] resultsT, Identifier_Transferable mcmIdT) throws AMFICOMRemoteException {
-		Identifier mcmId = new Identifier(mcmIdT);
-		Log.debugMessage("Received " + resultsT.length + " results from MCM '" + mcmId + "'", Log.DEBUGLEVEL03);
-		synchronized (MServerMeasurementObjectLoader.lock) {
-			MServerMeasurementObjectLoader.preferredMCMId = mcmId;
-			Result result;
-			java.util.Set results = new HashSet(resultsT.length);
-			for (int i = 0; i < resultsT.length; i++) {
+		try {
+			Identifier mcmId = new Identifier(mcmIdT);
+			Log.debugMessage("Received " + resultsT.length + " results from MCM '" + mcmId + "'", Log.DEBUGLEVEL03);
+			synchronized (MServerMeasurementObjectLoader.lock) {
+				MServerMeasurementObjectLoader.preferredMCMId = mcmId;
+				Result result;
+				java.util.Set results = new HashSet(resultsT.length);
+				for (int i = 0; i < resultsT.length; i++) {
+					try {
+						result = new Result(resultsT[i]);
+						results.add(result);
+					}
+					catch (CreateObjectException coe) {
+						Log.errorException(coe);
+						throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
+					}
+				}
+				ResultDatabase resultDatabase = MeasurementDatabaseContext.getResultDatabase();
 				try {
-					result = new Result(resultsT[i]);
-					results.add(result);
+					resultDatabase.insert(results);
 				}
-				catch (CreateObjectException coe) {
-					Log.errorException(coe);
-					throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
+				catch (CreateObjectException e) {
+					Log.errorException(e);
+					throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e.getMessage());
 				}
-				catch (Throwable t) {
-					Log.errorException(t);
-					throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+				catch (IllegalDataException e) {
+					Log.errorException(e);
+					throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e.getMessage());
 				}
 			}
-			ResultDatabase resultDatabase = MeasurementDatabaseContext.getResultDatabase();
-			try {
-				resultDatabase.insert(results);
-			}
-			catch (CreateObjectException e) {
-				Log.errorException(e);
-				throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-			}
-			catch (IllegalDataException e) {
-				Log.errorException(e);
-				throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-			}
+		}
+		catch (Throwable throwable) {
+			Log.errorException(throwable);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, throwable.getMessage());
 		}
 	}
 
