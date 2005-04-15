@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.11 2005/04/14 18:20:27 bass Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.12 2005/04/15 17:47:38 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import org.omg.CORBA.portable.IDLEntity;
  * #05 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2005/04/14 18:20:27 $
+ * @version $Revision: 1.12 $, $Date: 2005/04/15 17:47:38 $
  * @module scheme_v1
  */
 public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
@@ -129,15 +129,18 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 	}
 
 	public void addSchemeMonitoringSolution(final SchemeMonitoringSolution schemeMonitoringSolution) {
-		throw new UnsupportedOperationException();
+		assert schemeMonitoringSolution != null: ErrorMessages.NON_NULL_EXPECTED;
+		schemeMonitoringSolution.setParentSchemeOptimizeInfo(this);
 	}
 
 	public void addSchemeOptimizeInfoRtu(final SchemeOptimizeInfoRtu schemeOptimizeInfoRtu) {
-		throw new UnsupportedOperationException();
+		assert schemeOptimizeInfoRtu != null: ErrorMessages.NON_NULL_EXPECTED;
+		schemeOptimizeInfoRtu.setParentSchemeOptimizeInfo(this);
 	}
 
 	public void addSchemeOptimizeInfoSwitch(final SchemeOptimizeInfoSwitch schemeOptimizeInfoSwitch) {
-		throw new UnsupportedOperationException();
+		assert schemeOptimizeInfoSwitch != null: ErrorMessages.NON_NULL_EXPECTED;
+		schemeOptimizeInfoSwitch.setParentSchemeOptimizeInfo(this);
 	}
 
 	public Object clone() {

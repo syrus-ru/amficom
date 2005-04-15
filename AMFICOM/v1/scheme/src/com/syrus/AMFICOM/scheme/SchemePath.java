@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.14 2005/04/14 11:15:51 bass Exp $
+ * $Id: SchemePath.java,v 1.15 2005/04/15 17:47:38 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,8 +23,8 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
-import com.syrus.AMFICOM.scheme.corba.PathElementKind;
 import com.syrus.AMFICOM.scheme.corba.SchemePath_Transferable;
+import com.syrus.AMFICOM.scheme.corba.PathElement_TransferablePackage.DataPackage.Kind;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -38,7 +38,7 @@ import org.omg.CORBA.portable.IDLEntity;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2005/04/14 11:15:51 $
+ * @version $Revision: 1.15 $, $Date: 2005/04/15 17:47:38 $
  * @module scheme_v1
  */
 public final class SchemePath extends AbstractCloneableStorableObject implements
@@ -135,6 +135,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 * @param pathElement
 	 */
 	public void addPathElement(final PathElement pathElement) {
+		assert pathElement != null: ErrorMessages.NON_NULL_EXPECTED;
 		throw new UnsupportedOperationException();
 	}
 
@@ -329,7 +330,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 
 		for (final Iterator pathElementIterator = getPathElements().tailSet(pathElement) .iterator(); pathElementIterator.hasNext();) {
 			final PathElement pathElement1 = (PathElement) pathElementIterator.next();
-			if (pathElement1.getPathElementKind().value() == PathElementKind._SCHEME_ELEMENT && pathElement1.hasOpticalPort())
+			if (pathElement1.getKind().value() == Kind._SCHEME_ELEMENT && pathElement1.hasOpticalPort())
 				return pathElement1;
 		}
 		return null;
@@ -475,13 +476,13 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	public PathElement getPreviousNode(final PathElement pathElement) {
 		assert assertContains(pathElement): ErrorMessages.CHILDREN_ALIEN;
 
-		if (pathElement.getPathElementKind().value() == PathElementKind._SCHEME_ELEMENT && pathElement.hasOpticalPort())
+		if (pathElement.getKind().value() == Kind._SCHEME_ELEMENT && pathElement.hasOpticalPort())
 			return pathElement;
 
 		PathElement previousNode = null;
 		for (final Iterator pathElementIterator = getPathElements().headSet(pathElement).iterator(); pathElementIterator.hasNext();) {
 			final PathElement pathElement1 = (PathElement) pathElementIterator.next();
-			if (pathElement1.getPathElementKind().value() == PathElementKind._SCHEME_ELEMENT && pathElement1.hasOpticalPort())
+			if (pathElement1.getKind().value() == Kind._SCHEME_ELEMENT && pathElement1.hasOpticalPort())
 				previousNode = pathElement1;
 		}
 		return previousNode;
@@ -526,7 +527,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	/**
 	 * @param pathElement
 	 */
-	private boolean assertContains(final PathElement pathElement) {
+	boolean assertContains(final PathElement pathElement) {
 		final SortedSet pathElements = getPathElements();
 		return pathElements.contains(pathElement)
 				&& pathElements.headSet(pathElement).size() == pathElement.getSequentialNumber();

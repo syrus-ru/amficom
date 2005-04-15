@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.13 2005/04/14 18:20:27 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.14 2005/04/15 17:47:38 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,21 +8,35 @@
 
 package com.syrus.AMFICOM.scheme;
 
-import com.syrus.AMFICOM.configuration.*;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.Set;
+
+import org.omg.CORBA.portable.IDLEntity;
+
+import com.syrus.AMFICOM.configuration.AbstractLinkType;
+import com.syrus.AMFICOM.configuration.CableLinkType;
+import com.syrus.AMFICOM.configuration.Link;
 import com.syrus.AMFICOM.configuration.corba.LinkSort;
-import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.general.Characterizable;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.scheme.corba.SchemeCableLink_Transferable;
-import com.syrus.util.Log;
-
-import java.util.*;
-import org.omg.CORBA.portable.IDLEntity;
 
 /**
  * #11 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.13 $, $Date: 2005/04/14 18:20:27 $
+ * @version $Revision: 1.14 $, $Date: 2005/04/15 17:47:38 $
  * @module scheme_v1
  */
 public final class SchemeCableLink extends AbstractSchemeLink {
@@ -88,11 +102,13 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	}
 
 	public void addCableChannelingItem(final CableChannelingItem cableChannelingItem) {
-		throw new UnsupportedOperationException();
+		assert cableChannelingItem != null: ErrorMessages.NON_NULL_EXPECTED;
+		cableChannelingItem.setParentSchemeCableLink(this);
 	}
 
 	public void addSchemeCableThread(final SchemeCableThread schemeCableThread) {
-		throw new UnsupportedOperationException();
+		assert schemeCableThread != null: ErrorMessages.NON_NULL_EXPECTED;
+		schemeCableThread.setParentSchemeCableLink(this);
 	}
 
 	public Object clone() {

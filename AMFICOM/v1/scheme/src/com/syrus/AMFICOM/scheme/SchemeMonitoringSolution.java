@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.14 2005/04/14 18:20:27 bass Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.15 2005/04/15 17:47:38 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import org.omg.CORBA.portable.IDLEntity;
  * #06 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2005/04/14 18:20:27 $
+ * @version $Revision: 1.15 $, $Date: 2005/04/15 17:47:38 $
  * @module scheme_v1
  */
 public final class SchemeMonitoringSolution extends
@@ -107,7 +107,8 @@ public final class SchemeMonitoringSolution extends
 	}
 
 	public void addSchemePath(final SchemePath schemePath) {
-		throw new UnsupportedOperationException();
+		assert schemePath != null: ErrorMessages.NON_NULL_EXPECTED;
+		schemePath.setParentSchemeMonitoringSolution(this);
 	}
 
 	public Object clone() {
