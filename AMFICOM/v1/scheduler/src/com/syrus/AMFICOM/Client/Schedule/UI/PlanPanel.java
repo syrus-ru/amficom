@@ -26,9 +26,9 @@ import javax.swing.JComponent;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.ListCellRenderer;
-import javax.swing.ListModel;
 import javax.swing.Timer;
 import javax.swing.UIManager;
+import javax.swing.plaf.basic.BasicListUI;
 
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
@@ -140,6 +140,7 @@ public class PlanPanel extends JList implements TestsEditor, TestEditor, ActionL
 	// private ArrayList unsavedTests;
 
 	public PlanPanel(JScrollPane parent, ApplicationContext aContext) {
+		this.setUI(new ListUI());
 		this.aContext = aContext;
 		this.parent = parent;
 		this.toolBar = new PlanToolBar(aContext, this);
@@ -285,26 +286,27 @@ public class PlanPanel extends JList implements TestsEditor, TestEditor, ActionL
 		this.updateTestLinesTimeRegion();
 	}
 
-	protected void paintComponent(Graphics g) {
-		// for paint testlines
-
-		super.paintComponent(g);
-		this.cal.setTimeInMillis(0);
-		this.cal.add(STEPS[this.actualScale].scale, STEPS[this.actualScale].one);
-		long diff = this.cal.getTimeInMillis();
-		double delta = (getWidth() - 2 * PlanPanel.MARGIN)
-				/ ((double) (this.scaleEnd.getTime() - this.scaleStart.getTime()) / (double) diff);
-		double subDelta = delta / STEPS[this.actualScale].subscales;
-
-		paintScales(g, diff, delta, subDelta);
-		/*
-		 * for (Iterator it = testLines.values().iterator(); it.hasNext();) {
-		 * TestLine testLine = (TestLine)it.next(); testLine.paint(g); }
-		 */
-		paintScaleDigits(g, diff, delta, subDelta);
+//	protected void paintComponent(Graphics g) {
+//		// for paint testlines
+////		super.paint(g);
+////		super.paintComponent(g);
+////		g.clearRect(0,0, this.getWidth(), this.getHeight());
 //		super.paintComponent(g);
-
-	}
+//		
+//		this.cal.setTimeInMillis(0);
+//		this.cal.add(STEPS[this.actualScale].scale, STEPS[this.actualScale].one);
+//		long diff = this.cal.getTimeInMillis();
+//		double delta = (getWidth() - 2 * PlanPanel.MARGIN)
+//				/ ((double) (this.scaleEnd.getTime() - this.scaleStart.getTime()) / (double) diff);
+//		double subDelta = delta / STEPS[this.actualScale].subscales;
+//
+//		paintScales(g, diff, delta, subDelta);
+//		paintScaleDigits(g, diff, delta, subDelta);
+//
+//		
+////		this.paintChildren(g);
+//
+//	}
 	
 	
 	public void actionPerformed(ActionEvent e) {		
@@ -564,5 +566,22 @@ public class PlanPanel extends JList implements TestsEditor, TestEditor, ActionL
 		}
 		super.setPreferredSize(new Dimension(getPreferredSize().width, 30 + 25 * this.testLines.values().size()));
 		this.updateRealScale();
+	}
+	
+	private class ListUI extends BasicListUI {
+		public void paint(	Graphics g,
+							JComponent c) {
+			cal.setTimeInMillis(0);
+			cal.add(STEPS[actualScale].scale, STEPS[actualScale].one);
+			long diff = cal.getTimeInMillis();
+			double delta = (getWidth() - 2 * PlanPanel.MARGIN)
+					/ ((double) (scaleEnd.getTime() - scaleStart.getTime()) / (double) diff);
+			double subDelta = delta / STEPS[actualScale].subscales;
+	
+			paintScales(g, diff, delta, subDelta);
+			paintScaleDigits(g, diff, delta, subDelta);
+			
+			super.paint(g, c);
+		}
 	}
 }

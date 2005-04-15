@@ -417,7 +417,7 @@ public class TestLine extends JLabel implements TestsEditor, TestEditor {
 		boolean painted = false;
 		for (Iterator it = testTimeLineList.iterator(); it.hasNext(); i++) {
 			TestTimeLine testTimeLine = (TestTimeLine) it.next();
-
+			
 			int x = PlanPanel.MARGIN / 2 + (int) (this.scale * (testTimeLine.startTime - this.start));
 			int en = PlanPanel.MARGIN / 2 + (int) (this.scale * (testTimeLine.startTime + testTimeLine.duration - this.start));
 			int w = en - x + 1;
@@ -450,21 +450,19 @@ public class TestLine extends JLabel implements TestsEditor, TestEditor {
 				g.drawRect(x + w / 2, y + 1, 1, h - 2);
 				
 				x1 = x;
-				w1 = w;
+				w1 = 0;
 				painted = true;
-			} else {			
+			} else {		
+				painted = false;
 				if (x1 + w1 < x) {
 					g.fillRect(x1 + 2, y + 2, w1 - 3, h - 3);
 					g.draw3DRect(x1, y, w1, h, true);					
 					x1 = x;
-					w1 = w;
-					painted = false;
+					w1 = w;					
 				} else {
 					w1 = x + w - x1;
-					painted = false;
 				}
-			}
-			
+			}			
 		}
 		
 		if (!painted) {

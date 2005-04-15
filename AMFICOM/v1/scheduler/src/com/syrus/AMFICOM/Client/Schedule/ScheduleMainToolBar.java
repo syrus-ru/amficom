@@ -30,14 +30,18 @@ public class ScheduleMainToolBar extends JToolBar implements ApplicationModelLis
 		this.sessionOpen.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 		this.sessionOpen.addActionListener(new ActionListener() {
 
+			private boolean executed = false;
+			
 			public void actionPerformed(ActionEvent e) {
-				if (ScheduleMainToolBar.this.aModel == null)
+				if (this.executed || ScheduleMainToolBar.this.aModel == null)
 					return;
+				this.executed = true;
 				AbstractButton jb = (AbstractButton) e.getSource();
 				String s = jb.getName();
 				Command command = ScheduleMainToolBar.this.aModel.getCommand(s);
 				command = (Command) command.clone();
 				command.execute();
+				this.executed = false;
 			}
 		});
 
