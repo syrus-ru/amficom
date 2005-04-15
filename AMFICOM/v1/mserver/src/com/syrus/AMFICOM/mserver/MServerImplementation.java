@@ -1,5 +1,5 @@
 /*
- * $Id: MServerImplementation.java,v 1.46 2005/04/15 15:53:20 arseniy Exp $
+ * $Id: MServerImplementation.java,v 1.47 2005/04/15 22:12:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -100,7 +100,7 @@ import com.syrus.AMFICOM.mserver.corba.MServerPOA;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2005/04/15 15:53:20 $
+ * @version $Revision: 1.47 $, $Date: 2005/04/15 22:12:56 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -1409,7 +1409,7 @@ public class MServerImplementation extends MServerPOA {
 
 
 
-	public void ping(byte i) {
-		Log.debugMessage("Ping value: " + i, Log.DEBUGLEVEL10);
+	public void verify(byte i) {
+		Log.debugMessage("Verify value: " + i, Log.DEBUGLEVEL10);
 	}
 }
