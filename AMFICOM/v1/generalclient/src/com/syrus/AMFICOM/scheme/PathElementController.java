@@ -93,7 +93,7 @@ public final class PathElementController extends ObjectResourceController
 			else if (key.equals(COLUMN_SCHEME_CABLE_THREAD_ID))
 				result = pe.getSchemeCableThread().getId().getIdentifierString();
 			else if (key.equals(COLUMN_TYPE))
-				result = Integer.toString(pe.getPathElementKind().value());
+				result = Integer.toString(pe.getKind().value());
 			else if (key.equals(COLUMN_START_ABSTRACT_PORT_ID))
 				result = pe.getStartAbstractSchemePort().getId().getIdentifierString();
 			else if (key.equals(COLUMN_END_ABSTRACT_PORT_ID))

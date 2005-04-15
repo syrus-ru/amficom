@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeSampleData.java,v 1.2 2005/04/13 21:18:44 arseniy Exp $
+ * $Id: SchemeSampleData.java,v 1.3 2005/04/15 18:04:08 bass Exp $
  *
  * Copyright ø 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,14 +18,14 @@ import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
-import com.syrus.AMFICOM.scheme.corba.PathElementKind;
 import com.syrus.AMFICOM.scheme.corba.SchemeKind;
+import com.syrus.AMFICOM.scheme.corba.PathElement_TransferablePackage.DataPackage.Kind;
 
 /**
  * this class is used to create two sample instances
  * of Scheme whithout graphical components
- * @author $Author: arseniy $
- * @version $Revision: 1.2 $
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $
  * @module generalclient_v1
  */
 public final class SchemeSampleData {
@@ -121,19 +121,19 @@ public final class SchemeSampleData {
 		SchemePath path0 = SchemePath.createInstance(userId);
 		path.add(path0);
 		SortedSet pel = new TreeSet();
-		PathElement pel0 = PathElement.createInstance(userId, PathElementKind.SCHEME_LINK);
+		PathElement pel0 = PathElement.createInstance(userId, Kind.SCHEME_LINK);
 		pel.add(pel0);
-		PathElement pel1 = PathElement.createInstance(userId, PathElementKind.SCHEME_ELEMENT);
+		PathElement pel1 = PathElement.createInstance(userId, Kind.SCHEME_ELEMENT);
 		pel.add(pel1);
-		PathElement pel2 = PathElement.createInstance(userId, PathElementKind.SCHEME_CABLE_LINK);
+		PathElement pel2 = PathElement.createInstance(userId, Kind.SCHEME_CABLE_LINK);
 		pel.add(pel2);
-		PathElement pel3 = PathElement.createInstance(userId, PathElementKind.SCHEME_ELEMENT);
+		PathElement pel3 = PathElement.createInstance(userId, Kind.SCHEME_ELEMENT);
 		pel.add(pel3);
-		PathElement pel4 = PathElement.createInstance(userId, PathElementKind.SCHEME_CABLE_LINK);
+		PathElement pel4 = PathElement.createInstance(userId, Kind.SCHEME_CABLE_LINK);
 		pel.add(pel4);
-		PathElement pel5 = PathElement.createInstance(userId, PathElementKind.SCHEME_ELEMENT);
+		PathElement pel5 = PathElement.createInstance(userId, Kind.SCHEME_ELEMENT);
 		pel.add(pel5);
-		PathElement pel6 = PathElement.createInstance(userId, PathElementKind.SCHEME_CABLE_LINK);
+		PathElement pel6 = PathElement.createInstance(userId, Kind.SCHEME_CABLE_LINK);
 		pel.add(pel6);
 
 		Scheme scheme = Scheme.createInstance(userId, domainId, "—ıÂÏÍ‡", "");
@@ -282,43 +282,36 @@ public final class SchemeSampleData {
 
 		pel0.setStartAbstractSchemePort(port01);
 		pel0.setEndAbstractSchemePort(port00);
-		pel0.setSequentialNumber(0);
 //		pel0.setScheme(scheme);
 		pel0.setAbstractSchemeElement(link0);
 		SchemeUtils.setOpticalLength(pel0, 3.0);
 		SchemeUtils.setPhysicalLength(pel0, 3.0);
 		
-		pel1.setSequentialNumber(1);
 //		pel1.setScheme(scheme);
 		pel1.setAbstractSchemeElement(el0);
 		
 		pel2.setStartAbstractSchemePort(cport00);
 		pel2.setEndAbstractSchemePort(cport10);
-		pel2.setSequentialNumber(2);
 //		pel2.setScheme(scheme);
 		pel2.setAbstractSchemeElement(clink0);
 		SchemeUtils.setOpticalLength(pel2, 1000.0);
 		SchemeUtils.setPhysicalLength(pel2, 1000.0);
 		
-		pel3.setSequentialNumber(3);
 //		pel3.setScheme(scheme);
 		pel3.setAbstractSchemeElement(el1);
 		
 		pel4.setStartAbstractSchemePort(cport11);
 		pel4.setEndAbstractSchemePort(cport20);
-		pel4.setSequentialNumber(4);
 //		pel4.setScheme(scheme);
 		pel4.setAbstractSchemeElement(clink1);
 		SchemeUtils.setOpticalLength(pel4, 1000.0);
 		SchemeUtils.setPhysicalLength(pel4, 1000.0);
 		
-		pel5.setSequentialNumber(5);
 //		pel5.setScheme(scheme);
 		pel5.setAbstractSchemeElement(el2);
 		
 		pel6.setStartAbstractSchemePort(cport21);
 		pel6.setEndAbstractSchemePort(cport30);
-		pel6.setSequentialNumber(6);
 //		pel6.setScheme(scheme);
 		pel6.setAbstractSchemeElement(clink2);
 		SchemeUtils.setOpticalLength(pel6, 1000.0);
@@ -379,11 +372,11 @@ public final class SchemeSampleData {
 		SchemePath path0 = SchemePath.createInstance(userId);
 		path.add(path0);
 		SortedSet pel = new TreeSet();
-		PathElement pel0 = PathElement.createInstance(userId, PathElementKind.SCHEME_LINK);
+		PathElement pel0 = PathElement.createInstance(userId, Kind.SCHEME_LINK);
 		pel.add(pel0);
-		PathElement pel1 = PathElement.createInstance(userId, PathElementKind.SCHEME_ELEMENT);
+		PathElement pel1 = PathElement.createInstance(userId, Kind.SCHEME_ELEMENT);
 		pel.add(pel1);
-		PathElement pel2 = PathElement.createInstance(userId, PathElementKind.SCHEME_CABLE_LINK);
+		PathElement pel2 = PathElement.createInstance(userId, Kind.SCHEME_CABLE_LINK);
 		pel.add(pel2);
 
 //		port00.setSchemeDevice(dev00);
@@ -439,17 +432,14 @@ public final class SchemeSampleData {
 //		clink0.setScheme(scheme);
 
 		pel0.setEndAbstractSchemePort(port10);
-		pel0.setSequentialNumber(0);
 //		pel0.setScheme(scheme);
 		pel0.setAbstractSchemeElement(link0);
 		pel0.setStartAbstractSchemePort(port00);
 		
-		pel1.setSequentialNumber(2);
 //		pel1.setScheme(scheme);
 		pel1.setAbstractSchemeElement(el1);
 		
 		pel2.setEndAbstractSchemePort(cport00);
-		pel2.setSequentialNumber(2);
 //		pel2.setScheme(scheme);
 		pel2.setAbstractSchemeElement(clink0);
 		pel2.setStartAbstractSchemePort(cport10);

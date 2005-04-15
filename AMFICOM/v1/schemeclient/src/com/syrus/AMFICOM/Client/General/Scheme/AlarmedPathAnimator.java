@@ -9,7 +9,7 @@ import com.jgraph.graph.DefaultEdge;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
-import com.syrus.AMFICOM.scheme.corba.PathElementKind;
+import com.syrus.AMFICOM.scheme.corba.PathElement_TransferablePackage.DataPackage.Kind;
 
 public class AlarmedPathAnimator// extends Thread implements Runnable
 {
@@ -128,7 +128,7 @@ public class AlarmedPathAnimator// extends Thread implements Runnable
 		Object[] cells = panel.getGraph().getAll();
 		List edges_to_paint = new LinkedList();
 
-		if (alarmedPE.getPathElementKind().equals(PathElementKind.SCHEME_CABLE_LINK))
+		if (alarmedPE.getKind().equals(Kind.SCHEME_CABLE_LINK))
 		{
 				for (int i = 0; i < cells.length; i++) {
 					if (cells[i] instanceof DefaultCableLink) {
@@ -157,7 +157,7 @@ public class AlarmedPathAnimator// extends Thread implements Runnable
 					}
 				}
 		}
-		else if (alarmedPE.getPathElementKind().equals(PathElementKind.SCHEME_LINK))
+		else if (alarmedPE.getKind().equals(Kind.SCHEME_LINK))
 		{
 				for (int i = 0; i < cells.length; i++) {
 					if (cells[i] instanceof DefaultLink) {
@@ -196,7 +196,7 @@ public class AlarmedPathAnimator// extends Thread implements Runnable
 					}
 				}
 		}
-		else if (alarmedPE.getPathElementKind().equals(PathElementKind.SCHEME_ELEMENT))
+		else if (alarmedPE.getKind().equals(Kind.SCHEME_ELEMENT))
 		{
 				for (int i = 0; i < cells.length; i++) {
 					if (cells[i] instanceof DeviceGroup) {

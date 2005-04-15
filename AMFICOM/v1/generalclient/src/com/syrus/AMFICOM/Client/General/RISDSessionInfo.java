@@ -1,5 +1,5 @@
 /*
- * $Id: RISDSessionInfo.java,v 1.35 2005/04/15 10:04:34 arseniy Exp $
+ * $Id: RISDSessionInfo.java,v 1.36 2005/04/15 18:04:08 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -66,14 +66,16 @@ import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.XMLMeasurementObjectLoader;
 import com.syrus.AMFICOM.resource.EmptyClientResourceObjectLoader;
 import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
+import com.syrus.AMFICOM.scheme.EmptyClientSchemeObjectLoader;
+import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.io.Rewriter;
 import com.syrus.util.Log;
 import com.syrus.util.corba.JavaSoftORBUtil;
 import com.syrus.util.prefs.IIOPConnectionManager;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.35 $, $Date: 2005/04/15 10:04:34 $
+ * @author $Author: bass $
+ * @version $Revision: 1.36 $, $Date: 2005/04/15 18:04:08 $
  * @module generalclient_v1
  */
 public final class RISDSessionInfo extends SessionInterface {
@@ -291,6 +293,7 @@ public final class RISDSessionInfo extends SessionInterface {
 			//			ClientGeneralObjectLoader.setAccessIdentifierTransferable(this.accessIdentifier);
 			GeneralStorableObjectPool.init(new ClientGeneralObjectLoader(cmServer), clazz, size);
 			MapStorableObjectPool.init(new EmptyClientMapObjectLoader(), clazz, size);
+			SchemeStorableObjectPool.init(new EmptyClientSchemeObjectLoader(), clazz, size);
 			MapViewStorableObjectPool.init(new EmptyClientMapViewObjectLoader(), clazz, size);
 			ResourceStorableObjectPool.init(new EmptyClientResourceObjectLoader(), clazz, size);
 			IdentifierPool.init(cmServer);
@@ -332,6 +335,8 @@ public final class RISDSessionInfo extends SessionInterface {
 			GeneralStorableObjectPool.init(new XMLGeneralObjectLoader(configPath), clazz, size);
 
 			MapStorableObjectPool.init(new EmptyClientMapObjectLoader(), clazz, size);
+
+			SchemeStorableObjectPool.init(new EmptyClientSchemeObjectLoader(), clazz, size);
 
 			MapViewStorableObjectPool.init(new EmptyClientMapViewObjectLoader(), clazz, size);
 

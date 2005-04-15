@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemePathCommand.java,v 1.17 2005/04/14 14:39:19 krupenn Exp $
+ * $Id: PlaceSchemePathCommand.java,v 1.18 2005/04/15 18:04:07 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,14 +26,14 @@ import com.syrus.AMFICOM.mapview.MeasurementPath;
 import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
-import com.syrus.AMFICOM.scheme.corba.PathElementKind;
+import com.syrus.AMFICOM.scheme.corba.PathElement_TransferablePackage.DataPackage.Kind;
 
 /**
  * Разместить элемент типа mpe на карте. используется при переносе 
  * (drag/drop), в точке point (в экранных координатах)
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.17 $, $Date: 2005/04/14 14:39:19 $
+ * @author $Author: bass $
+ * @version $Revision: 1.18 $, $Date: 2005/04/15 18:04:07 $
  * @module mapviewclient_v1
  */
 public class PlaceSchemePathCommand extends MapActionCommandBundle
@@ -86,9 +86,9 @@ public class PlaceSchemePathCommand extends MapActionCommandBundle
 				super.removeMeasurementPathCables(this.measurementPath);
 			for(Iterator iter = this.path.getPathElements().iterator(); iter.hasNext();) {
 				PathElement pe = (PathElement )iter.next();
-				switch(pe.getPathElementKind().value())
+				switch(pe.getKind().value())
 				{
-					case PathElementKind._SCHEME_ELEMENT:
+					case Kind._SCHEME_ELEMENT:
 						SchemeElement schemeElement = (SchemeElement )pe.getAbstractSchemeElement();
 					SiteNode site = this.mapView.findElement(schemeElement);
 					if(site != null)
@@ -96,7 +96,7 @@ public class PlaceSchemePathCommand extends MapActionCommandBundle
 //					mPath.addCablePath(site);
 					}
 						break;
-					case PathElementKind._SCHEME_LINK:
+					case Kind._SCHEME_LINK:
 						SchemeLink schemeLink = (SchemeLink )pe.getAbstractSchemeElement();
 						SchemeElement startSchemeElement = SchemeUtils.getSchemeElementByDevice(scheme, schemeLink.getSourceSchemePort().getParentSchemeDevice());
 						SchemeElement endSchemeElement = SchemeUtils.getSchemeElementByDevice(scheme, schemeLink.getTargetSchemePort().getParentSchemeDevice());
@@ -107,7 +107,7 @@ public class PlaceSchemePathCommand extends MapActionCommandBundle
 //					mPath.addCablePath(ssite);
 						}
 						break;
-					case PathElementKind._SCHEME_CABLE_LINK:
+					case Kind._SCHEME_CABLE_LINK:
 						SchemeCableLink schemeCableLink = (SchemeCableLink )pe.getAbstractSchemeElement();
 						CablePath cablePath = this.mapView.findCablePath(schemeCableLink);
 						if(cablePath != null)
