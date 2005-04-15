@@ -324,7 +324,7 @@ public final class MapLinkBindPanel
 		UnboundLink unbound = command.getUnbound();
 		unbound.setCablePath(cablePath);
 
-		cablePath.addLink(unbound, CableController.generateCCI(unbound));
+		cablePath.addLink(unbound, CableController.generateCCI(unbound, this.lnl.getUserId()));
 		this.link.getBinding().remove(cablePath);
 		
 		((ObjListModel )this.cableList.getModel()).removeElement(cablePath);

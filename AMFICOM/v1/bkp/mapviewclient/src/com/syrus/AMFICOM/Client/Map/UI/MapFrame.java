@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.32 2005/04/08 14:24:21 peskovsky Exp $
+ * $Id: MapFrame.java,v 1.33 2005/04/15 11:12:33 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -80,7 +80,7 @@ import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
  * 
  * 
  * 
- * @version $Revision: 1.32 $, $Date: 2005/04/08 14:24:21 $
+ * @version $Revision: 1.33 $, $Date: 2005/04/15 11:12:33 $
  * @author $Author: peskovsky $
  * @module mapviewclient_v1
  */
@@ -524,6 +524,10 @@ public class MapFrame extends JInternalFrame
 						catch (DatabaseException e)
 						{
 							e.printStackTrace();
+						}
+						catch(ApplicationException aExc)
+						{
+							aExc.printStackTrace();
 						}
 				}
 				canClose = true;

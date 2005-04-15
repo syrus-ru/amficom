@@ -1,5 +1,5 @@
 /*
- * Название: $Id: ControlsFrame.java,v 1.1 2005/03/02 12:30:40 krupenn Exp $
+ * Название: $Id: ControlsFrame.java,v 1.2 2005/04/15 11:12:33 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,8 +32,8 @@ import javax.swing.JTabbedPane;
  * <li> Поиск элементов АМФИКОМ
  * <lI> Поиск географических объектов
  * <li> Управление отображением слоев
- * @version $Revision: 1.1 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.2 $
+ * @author $Author: peskovsky $
  * @module mapviewclient_v1
  */
  public class ControlsFrame extends JInternalFrame 
@@ -59,7 +59,7 @@ import javax.swing.JTabbedPane;
 	/**
 	 * панель управления отображением слоев
 	 */
-	LayersPanel layersPanel = new LayersPanel();
+	LayersPanel layersPanel = null;
 	
 	/**
 	 * панель закладок
@@ -76,6 +76,8 @@ import javax.swing.JTabbedPane;
 	 */
 	public ControlsFrame(MapFrame mapFrame, ApplicationContext aContext)
 	{
+		setContext(aContext);
+		
 		try
 		{
 			jbInit();
@@ -84,7 +86,7 @@ import javax.swing.JTabbedPane;
 		{
 			e.printStackTrace();
 		}
-		setContext(aContext);
+
 		setMapFrame(mapFrame);
 	}
 
@@ -163,6 +165,8 @@ import javax.swing.JTabbedPane;
 				new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/map_search.gif")
 					.getScaledInstance(16, 16, Image.SCALE_SMOOTH)),
 					this.mapSearchPanel);
+		
+		this.layersPanel = new LayersPanel(this.aContext);
 		this.tabbedPane.addTab(
 				"", 
 				new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/map_layers.gif")

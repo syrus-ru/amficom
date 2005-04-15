@@ -10,6 +10,7 @@ import com.syrus.AMFICOM.Client.General.Report.DividableTableColumnModel;
 import com.syrus.AMFICOM.Client.General.Report.DividableTableModel;
 import com.syrus.AMFICOM.Client.General.Report.ObjectsReport;
 import com.syrus.AMFICOM.Client.General.Report.ReportData;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.map.Collector;
@@ -79,6 +80,10 @@ class CableLayoutReportTableModel extends DividableTableModel
 		catch(CommunicationException cExc)
 		{
 			cExc.printStackTrace();
+		}
+		catch(ApplicationException aExc)
+		{
+			aExc.printStackTrace();
 		}
 
 		if(scLink == null)

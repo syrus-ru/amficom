@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteNodeLinkCommandBundle.java,v 1.18 2005/04/13 11:10:49 krupenn Exp $
+ * $Id: DeleteNodeLinkCommandBundle.java,v 1.19 2005/04/15 11:12:32 peskovsky Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -33,8 +33,8 @@ import java.util.Iterator;
  * от того, какие конечные точки на концах происходит операци€ удалени€ 
  * фрагментов линий, линий, узлов  (и путей).  оманда
  * состоит из последовательности атомарных действий
- * @author $Author: krupenn $
- * @version $Revision: 1.18 $, $Date: 2005/04/13 11:10:49 $
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.19 $, $Date: 2005/04/15 11:12:32 $
  * @module mapviewclient_v1
  */
 public class DeleteNodeLinkCommandBundle extends MapActionCommandBundle
@@ -350,7 +350,7 @@ public class DeleteNodeLinkCommandBundle extends MapActionCommandBundle
 							physicalLink.getStartNode(),
 							physicalLink.getEndNode());
 					unbound.setCablePath(cpath);
-					cpath.addLink(unbound, CableController.generateCCI(unbound));
+					cpath.addLink(unbound, CableController.generateCCI(unbound, this.logicalNetLayer.getUserId()));
 				}
 			}
 			this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));

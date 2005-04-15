@@ -1,5 +1,5 @@
 /*
- * Ќазвание: $Id: LayersPanel.java,v 1.1 2005/03/02 12:30:40 krupenn Exp $
+ * Ќазвание: $Id: LayersPanel.java,v 1.2 2005/04/15 11:12:33 peskovsky Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -10,16 +10,22 @@
 
 package com.syrus.AMFICOM.Client.Map.Operations;
 
+import com.syrus.AMFICOM.Client.General.Event.MapEvent;
+import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
+import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.SpatialLayer;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.SystemColor;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -38,11 +44,12 @@ import javax.swing.JSeparator;
 
 /**
  * панель управлени€ отображением слоев
- * @version $Revision: 1.1 $, $Date: 2005/03/02 12:30:40 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.2 $, $Date: 2005/04/15 11:12:33 $
+ * @author $Author: peskovsky $
  * @module mapviewclient_v1
  */
 public class LayersPanel extends JPanel
+	implements OperationListener
 {
 	GridBagLayout gridBagLayout1 = new GridBagLayout();
 
@@ -60,11 +67,16 @@ public class LayersPanel extends JPanel
 	 * окно карты
 	 */
 	private MapFrame mapFrame;
+
+	/**
+	 * контекст приложени€
+	 */
+	private ApplicationContext aContext;
 	
 	/**
-	 * список слоев
+	 * список CheckBox'ов дл€ слоЄв
 	 */
-	private List tableData = new LinkedList();
+	private List checkBoxesList = new LinkedList();
 
 	/**
 	 * обработчик изменени€ видимости сло€
@@ -82,8 +94,9 @@ public class LayersPanel extends JPanel
 	/**
 	 * ѕо умолчанию
 	 */
-	public LayersPanel()
+	public LayersPanel(ApplicationContext aContext)
 	{
+		this.aContext = aContext;
 		try
 		{
 			jbInit();
@@ -161,6 +174,8 @@ public class LayersPanel extends JPanel
 
 		this.add(this.titlePanel, BorderLayout.NORTH);
 		this.add(new JScrollPane(this.layersPanel), BorderLayout.CENTER);
+		
+		this.aContext.getDispatcher().register(this,MapEvent.MAP_VIEW_SCALE_CHANGED);
 	}
 
 	/**
@@ -184,7 +199,7 @@ public class LayersPanel extends JPanel
 	 */
 	public void clearList()
 	{
-		this.tableData.clear();
+		this.checkBoxesList.clear();
 		this.layersPanel.removeAll();
 	}
 	
@@ -193,14 +208,60 @@ public class LayersPanel extends JPanel
 	 */
 	public void updateList()
 	{
-		this.tableData.clear();
+		this.checkBoxesList.clear();
+		this.layersPanel.removeAll();		
 		
 		try
 		{
+			GridBagConstraints gridbagconstraints = new GridBagConstraints();
+			Component imageLabel = null;
+		
+			int i = 0;
 			for(Iterator it = this.mapFrame.getMapViewer().getLayers().iterator(); it.hasNext();)
 			{
 				SpatialLayer sl = (SpatialLayer )it.next();
-				this.tableData.add(sl);
+				
+				LayerVisibilityCheckBox lvCheckBox = new LayerVisibilityCheckBox(sl);
+				lvCheckBox.addActionListener(this.actionListener);
+				lvCheckBox.setBackground(this.layersPanel.getBackground());
+				lvCheckBox.setAlignmentY(0.5F);
+				lvCheckBox.setAlignmentX(0.8F);
+				
+				gridbagconstraints.gridx = 0;
+				gridbagconstraints.gridy = i;
+				gridbagconstraints.weightx = 0.0D;
+				gridbagconstraints.weighty = 0.0D;
+				gridbagconstraints.gridwidth = 1;
+				gridbagconstraints.gridheight = 1;
+				gridbagconstraints.fill = 0;
+				this.layersPanel.add(lvCheckBox, gridbagconstraints);
+				this.checkBoxesList.add(lvCheckBox);				
+
+				if(imageLabel != null)
+				{
+					imageLabel.setBackground(this.layersPanel.getBackground());
+					gridbagconstraints.gridx = 1;
+					gridbagconstraints.gridy = i;
+					gridbagconstraints.weightx = 0.0D;
+					gridbagconstraints.weighty = 0.0D;
+					gridbagconstraints.gridwidth = 1;
+					gridbagconstraints.gridheight = 1;
+					gridbagconstraints.fill = 0;
+					this.layersPanel.add(imageLabel, gridbagconstraints);
+					lvCheckBox.setImageLabel(imageLabel);
+				}
+
+				JLabel nameLabel = new JLabel(" " + sl.getName());
+				gridbagconstraints.gridx = 2;
+				gridbagconstraints.gridy = i;
+				gridbagconstraints.weightx = 1.0D;
+				gridbagconstraints.weighty = 1.0D;
+				gridbagconstraints.gridwidth = 1;
+				gridbagconstraints.gridheight = 1;
+				gridbagconstraints.fill = 2;
+				this.layersPanel.add(nameLabel, gridbagconstraints);
+				lvCheckBox.setNameLabel(nameLabel);
+				i++;
 			}
 		}
 		catch(MapDataException e)
@@ -209,68 +270,26 @@ public class LayersPanel extends JPanel
 			e.printStackTrace();
 		}
 		
-		layoutLayerRows();
+		setVisibility();
 	}
 	
 	/**
 	 * разместить графические элемента управлени€ отображением слоев на панели 
 	 * списка слоев
 	 */
-	public void layoutLayerRows()
+	public void setVisibility()
 	{
-		this.layersPanel.removeAll();
-
-		GridBagConstraints gridbagconstraints = new GridBagConstraints();
-		Component imageLabel;
-		SpatialLayer sl;
-
-		int i = 0;
-		
-		for(Iterator it = this.tableData.iterator(); it.hasNext();)
+		for(Iterator it = this.checkBoxesList.iterator(); it.hasNext();)
 		{
-			sl = (SpatialLayer )it.next();
-		
-			imageLabel = sl.getLayerImage();
-
-			LayerVisibilityCheckBox jcheckbox = new LayerVisibilityCheckBox(sl);
-			jcheckbox.setSelected(sl.isVisible());
-			jcheckbox.addActionListener(this.actionListener);
-
-			jcheckbox.setBackground(this.layersPanel.getBackground());
-			jcheckbox.setAlignmentY(0.5F);
-			jcheckbox.setAlignmentX(0.8F);
-			gridbagconstraints.gridx = 0;
-			gridbagconstraints.gridy = i;
-			gridbagconstraints.weightx = 0.0D;
-			gridbagconstraints.weighty = 0.0D;
-			gridbagconstraints.gridwidth = 1;
-			gridbagconstraints.gridheight = 1;
-			gridbagconstraints.fill = 0;
-			this.layersPanel.add(jcheckbox, gridbagconstraints);
-
-			if(imageLabel != null)
-			{
-				imageLabel.setBackground(this.layersPanel.getBackground());
-				gridbagconstraints.gridx = 1;
-				gridbagconstraints.gridy = i;
-				gridbagconstraints.weightx = 0.0D;
-				gridbagconstraints.weighty = 0.0D;
-				gridbagconstraints.gridwidth = 1;
-				gridbagconstraints.gridheight = 1;
-				gridbagconstraints.fill = 0;
-				this.layersPanel.add(imageLabel, gridbagconstraints);
-			}
-
-			JLabel nameLabel = new JLabel(" " + sl.getName());
-			gridbagconstraints.gridx = 2;
-			gridbagconstraints.gridy = i;
-			gridbagconstraints.weightx = 1.0D;
-			gridbagconstraints.weighty = 1.0D;
-			gridbagconstraints.gridwidth = 1;
-			gridbagconstraints.gridheight = 1;
-			gridbagconstraints.fill = 2;
-			this.layersPanel.add(nameLabel, gridbagconstraints);
-			i++;
+			LayerVisibilityCheckBox curBox = (LayerVisibilityCheckBox)it.next();
+			SpatialLayer boxSL = curBox.getSpatialLayer();
+			
+			curBox.setSelected(boxSL.isVisible());
+			
+			if (boxSL.isVisibleAtCurrentScale())
+				curBox.getNameLabel().setForeground(SystemColor.textText);				
+			else
+				curBox.getNameLabel().setForeground(SystemColor.textInactiveText);				
 		}
 		
 		this.revalidate();
@@ -287,6 +306,8 @@ public class LayersPanel extends JPanel
 	private class LayerVisibilityCheckBox extends JCheckBox
 	{
 		SpatialLayer sl;
+		private Component imageLabel = null;
+		private JLabel nameLabel = null;		
 		
 		public LayerVisibilityCheckBox(SpatialLayer sl)
 		{
@@ -298,6 +319,39 @@ public class LayersPanel extends JPanel
 		{
 			return this.sl;
 		}
+		/**
+		 * @return Returns the imageLabel.
+		 */
+		public Component getImageLabel()
+		{
+			return imageLabel;
+		}
+		/**
+		 * @param imageLabel The imageLabel to set.
+		 */
+		public void setImageLabel(Component imageLabel)
+		{
+			this.imageLabel = imageLabel;
+		}
+		/**
+		 * @return Returns the nameLabel.
+		 */
+		public JLabel getNameLabel()
+		{
+			return nameLabel;
+		}
+		/**
+		 * @param nameLabel The nameLabel to set.
+		 */
+		public void setNameLabel(JLabel nameLabel)
+		{
+			this.nameLabel = nameLabel;
+		}
+	}
+
+	public void operationPerformed(OperationEvent e)
+	{
+		this.setVisibility();
 	}
 }
 

@@ -1,5 +1,5 @@
 /**
- * $Id: InsertSiteCommandBundle.java,v 1.13 2005/04/13 11:10:49 krupenn Exp $
+ * $Id: InsertSiteCommandBundle.java,v 1.14 2005/04/15 11:12:33 peskovsky Exp $
  * Syrus Systems Научно-технический центр Проект: АМФИКОМ Платформа: java 1.4.1
  */
 
@@ -29,8 +29,8 @@ import com.syrus.AMFICOM.mapview.UnboundLink;
 /**
  * вставить сетевой узел вместо топологического узла
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.13 $, $Date: 2005/04/13 11:10:49 $
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.14 $, $Date: 2005/04/15 11:12:33 $
  * @module mapviewclient_v1
  */
 public class InsertSiteCommandBundle extends MapActionCommandBundle {
@@ -142,7 +142,7 @@ public class InsertSiteCommandBundle extends MapActionCommandBundle {
 
 					cablePath.addLink(
 							this.newLink, 
-							CableController.generateCCI(this.newLink));
+							CableController.generateCCI(this.newLink, this.logicalNetLayer.getUserId()));
 					if(this.newLink instanceof UnboundLink)
 						((UnboundLink )this.newLink).setCablePath(cablePath);
 					else

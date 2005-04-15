@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractLinkController.java,v 1.13 2005/03/04 14:36:09 krupenn Exp $
+ * $Id: AbstractLinkController.java,v 1.14 2005/04/15 11:12:33 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,6 +29,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
+import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.AMFICOM.general.corba.OperationSort;
@@ -36,8 +37,8 @@ import com.syrus.AMFICOM.map.MapElement;
 
 /**
  * Контроллер линейного элемента карты.
- * @author $Author: krupenn $
- * @version $Revision: 1.13 $, $Date: 2005/03/04 14:36:09 $
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.14 $, $Date: 2005/04/15 11:12:33 $
  * @module mapviewclient_v1
  */
 public abstract class AbstractLinkController extends AbstractMapElementController
@@ -102,7 +103,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 					userId,
 					codename,
 					"",
-					dataType.value(),
+					dataType,
 					sort);
 			GeneralStorableObjectPool.putStorableObject(type);
 			GeneralStorableObjectPool.flush(true);
@@ -158,7 +159,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 						cType,
 						"",
 						"",
-						CharacteristicTypeSort._CHARACTERISTICTYPESORT_VISUAL,
+						CharacteristicSort.CHARACTERISTIC_SORT_LINK,
 						"",
 						mapElement.getId(),
 						true,
@@ -225,7 +226,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 						cType,
 						"",
 						"",
-						CharacteristicTypeSort._CHARACTERISTICTYPESORT_VISUAL,
+						CharacteristicSort.CHARACTERISTIC_SORT_LINK,
 						"",
 						mapElement.getId(),
 						true,
@@ -313,7 +314,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 						cType,
 						"",
 						"",
-						CharacteristicTypeSort._CHARACTERISTICTYPESORT_VISUAL,
+						CharacteristicSort.CHARACTERISTIC_SORT_LINK,
 						"",
 						mapElement.getId(),
 						true,
@@ -380,7 +381,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 						cType,
 						"",
 						"",
-						CharacteristicTypeSort._CHARACTERISTICTYPESORT_VISUAL,
+						CharacteristicSort.CHARACTERISTIC_SORT_LINK,
 						"",
 						mapElement.getId(),
 						true,
@@ -447,7 +448,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 						cType,
 						"",
 						"",
-						CharacteristicTypeSort._CHARACTERISTICTYPESORT_VISUAL,
+						CharacteristicSort.CHARACTERISTIC_SORT_LINK,
 						"",
 						mapElement.getId(),
 						true,

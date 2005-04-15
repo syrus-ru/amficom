@@ -273,7 +273,7 @@ public final class MapSiteBindPanel
 			UnboundLink unbound = command.getUnbound();
 			unbound.setCablePath(cablePath);
 
-			cablePath.addLink(unbound, CableController.generateCCI(unbound));
+			cablePath.addLink(unbound, CableController.generateCCI(unbound, this.lnl.getUserId()));
 		}
 		
 		this.elementsTree.updateUI();

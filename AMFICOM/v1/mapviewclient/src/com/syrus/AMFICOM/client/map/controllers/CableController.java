@@ -1,5 +1,5 @@
 /**
- * $Id: CableController.java,v 1.12 2005/04/06 17:41:11 krupenn Exp $
+ * $Id: CableController.java,v 1.13 2005/04/15 11:12:33 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,12 +21,15 @@ import java.util.Iterator;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapConnectionException;
 import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.client_.general.ui_.StorableObjectEditor;
 import com.syrus.AMFICOM.client_.general.ui_.VisualManager;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
@@ -43,8 +46,8 @@ import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 /**
  * Контроллер кабеля.
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.12 $, $Date: 2005/04/06 17:41:11 $
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.13 $, $Date: 2005/04/15 11:12:33 $
  * @module mapviewclient_v1
  */
 public final class CableController extends AbstractLinkController
@@ -273,22 +276,24 @@ public final class CableController extends AbstractLinkController
 	/**
 	 * Создать новый объект привязки к линии.
 	 * @param link лниия
+	 * @param creatorId TODO
 	 * @return объект привязки, или <code>null</code> при возникновении ошибки
 	 */
-	public static CableChannelingItem generateCCI(PhysicalLink link)
+	public static CableChannelingItem generateCCI(PhysicalLink link, Identifier creatorId)//, Identifier creatorId)
 	{
-		CableChannelingItem cci = CableChannelingItem.createInstance();
-		cci.setStartSiteNode((SiteNode )link.getStartNode());
-		if(! (link instanceof UnboundLink))
-		{
-			cci.setStartSpare(MapPropertiesManager.getSpareLength());
-			cci.setPhysicalLink(link);
-			cci.setEndSpare(MapPropertiesManager.getSpareLength());
-		}
-		cci.setEndSiteNode((SiteNode )link.getEndNode());
-		
+		CableChannelingItem cci = null;
 		try
 		{
+			cci = CableChannelingItem.createInstance(creatorId);
+			cci.setStartSiteNode((SiteNode )link.getStartNode());
+			if(! (link instanceof UnboundLink))
+			{
+				cci.setStartSpare(MapPropertiesManager.getSpareLength());
+				cci.setPhysicalLink(link);
+				cci.setEndSpare(MapPropertiesManager.getSpareLength());
+			}
+			cci.setEndSiteNode((SiteNode )link.getEndNode());
+		
 			SchemeStorableObjectPool.putStorableObject(cci);
 		}
 		catch (IllegalObjectEntityException e)
@@ -296,6 +301,12 @@ public final class CableController extends AbstractLinkController
 			e.printStackTrace();
 			cci = null;
 		}
+		catch (CreateObjectException e)
+		{
+			e.printStackTrace();
+			cci = null;
+		}
+		
 
 		return cci;
 	}

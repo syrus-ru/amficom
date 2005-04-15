@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteNodeCommandBundle.java,v 1.21 2005/04/13 11:09:42 krupenn Exp $
+ * $Id: DeleteNodeCommandBundle.java,v 1.22 2005/04/15 11:12:32 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -37,8 +37,8 @@ import com.syrus.AMFICOM.mapview.UnboundNode;
 /**
  *  Команда удаления элемента наследника класса MapNodeElement. Команда
  * состоит из  последовательности атомарных действий
- * @author $Author: krupenn $
- * @version $Revision: 1.21 $, $Date: 2005/04/13 11:09:42 $
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.22 $, $Date: 2005/04/15 11:12:32 $
  * @module mapviewclient_v1
  */
 public class DeleteNodeCommandBundle extends MapActionCommandBundle
@@ -118,7 +118,7 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 						left.getOtherNode(site),
 						right.getOtherNode(site));
 				unbound.setCablePath(cablePath);
-				cablePath.addLink(unbound, CableController.generateCCI(unbound));
+				cablePath.addLink(unbound, CableController.generateCCI(unbound, this.logicalNetLayer.getUserId()));
 
 				// если "левая" была непмривязанной, она удаляется (вместе 
 				// со своими фрагментами

@@ -1,5 +1,5 @@
 /**
- * $Id: GenerateCablePathCablingCommandBundle.java,v 1.16 2005/02/18 12:19:44 krupenn Exp $
+ * $Id: GenerateCablePathCablingCommandBundle.java,v 1.17 2005/04/15 11:12:33 peskovsky Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -34,8 +34,8 @@ import com.syrus.AMFICOM.mapview.UnboundNode;
  *  из непроложенных линий генерируютс€ тоннели и кабель прив€зываетс€ к ним.
  *  ”же существующа€ прив€зка сохран€етс€. ѕо неприв€занным элементам 
  *  генерируютс€ сетевые узла и схемные элементы прив€зываютс€ к ним.
- * @author $Author: krupenn $
- * @version $Revision: 1.16 $, $Date: 2005/02/18 12:19:44 $
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.17 $, $Date: 2005/04/15 11:12:33 $
  * @module mapviewclient_v1
  */
 public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundle
@@ -118,7 +118,7 @@ public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundl
 						mnle.setPhysicalLink(link);
 						link.addNodeLink(mnle);
 					}
-					this.path.addLink(link, CableController.generateCCI(link));
+					this.path.addLink(link, CableController.generateCCI(link, this.logicalNetLayer.getUserId()));
 					link.getBinding().add(this.path);
 				}
 

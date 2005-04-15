@@ -1,5 +1,5 @@
 /**
- * $Id: SpatialLayer.java,v 1.4 2005/03/02 12:37:45 krupenn Exp $
+ * $Id: SpatialLayer.java,v 1.5 2005/04/15 11:12:32 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,15 +15,15 @@ import java.awt.Component;
 /**
  * Слой географической карты. Реализация пренадлежит используемой системе ГИС.
  * Текущее использование - управление отображением слоев
- * @author $Author: krupenn $
- * @version $Revision: 1.4 $, $Date: 2005/03/02 12:37:45 $
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.5 $, $Date: 2005/04/15 11:12:32 $
  * @module mapviewclient_v1
  * @see com.syrus.AMFICOM.Client.Map.Operations.LayersPanel
  */
 public interface SpatialLayer 
 {
 	/**
-	 * Возвращает флаг видимости слоя на карте.
+	 * Возвращает флаг видимости слоя на карте при текущих настройках клиента.
 	 * @return флаг видимости
 	 */
 	boolean isVisible();
@@ -33,9 +33,15 @@ public interface SpatialLayer
 	 * @return влаг видимости метки
 	 */
 	boolean isLabelVisible();
-	
+
 	/**
-	 * Устанавливает флаг видимости слоя на карте.
+	 * Возвращает флаг видимости слоя на карте при текущем масштабе.
+	 * @return флаг видимости
+	 */
+	boolean isVisibleAtCurrentScale();
+
+	/**
+	 * Устанавливает флаг видимости слоя на карте при текущих настройках клиента.
 	 * @param visible флаг видимости
 	 */
 	void setVisible(boolean visible);

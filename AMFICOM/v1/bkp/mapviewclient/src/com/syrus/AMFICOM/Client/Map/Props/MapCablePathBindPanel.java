@@ -501,7 +501,7 @@ public final class MapCablePathBindPanel
 
 			UnboundLink unbound = command.getUnbound();
 			unbound.setCablePath(this.path);
-			this.path.addLink(unbound, CableController.generateCCI(unbound));
+			this.path.addLink(unbound, CableController.generateCCI(unbound, this.lnl.getUserId()));
 			link.getBinding().remove(this.path);
 		}
 		this.model.setContents(this.path.getLinks());
@@ -519,7 +519,7 @@ public final class MapCablePathBindPanel
 		command.execute();
 
 		UnboundLink unbound = command.getUnbound();
-		this.path.addLink(unbound, CableController.generateCCI(unbound));
+		this.path.addLink(unbound, CableController.generateCCI(unbound, this.lnl.getUserId()));
 		unbound.setCablePath(this.path);
 
 		this.model.fireTableDataChanged();
@@ -562,7 +562,7 @@ public final class MapCablePathBindPanel
 					nl.setEndNode(link.getOtherNode(fromSite));
 			}
 		}
-		this.path.addLink(link, CableController.generateCCI(link));
+		this.path.addLink(link, CableController.generateCCI(link, this.lnl.getUserId()));
 		link.getBinding().add(this.path);
 	}
 
