@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractMeasurementTestCase.java,v 1.1 2005/04/14 12:53:53 arseniy Exp $
+ * $Id: AbstractMeasurementTestCase.java,v 1.2 2005/04/15 22:10:29 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,6 +21,7 @@ import com.syrus.AMFICOM.administration.DomainDatabase;
 import com.syrus.AMFICOM.administration.User;
 import com.syrus.AMFICOM.administration.UserDatabase;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.DefaultIGServerReferenceSource;
 import com.syrus.AMFICOM.general.DefaultIdentifierGeneratorServer;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -31,7 +32,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/14 12:53:53 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/15 22:10:29 $
  * @author $Author: arseniy $
  * @module tools
  */
@@ -95,7 +96,7 @@ public abstract class AbstractMeasurementTestCase extends TestCase {
 		//AbstractMeasurementTestCase.domainId = new Identifier("Domain_1");
 		AbstractMeasurementTestCase.domainId = ((Domain) domainCollection.iterator().next()).getId();
 		
-		 IdentifierPool.init(new DefaultIdentifierGeneratorServer());
+		 IdentifierPool.init(new DefaultIGServerReferenceSource(new DefaultIdentifierGeneratorServer()));
 //		IdentifierPool.init(new XMLIdentifierGeneratorServer());
 	}
 
