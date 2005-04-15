@@ -24,7 +24,8 @@ CREATE TABLE Characteristic (
   REFERENCES "User" (id) ON DELETE CASCADE,
 --
  CONSTRAINT chc_chctype_fk FOREIGN KEY (type_id)
-  REFERENCES CharacteristicType (id) ON DELETE CASCADE
+  REFERENCES CharacteristicType (id) ON DELETE CASCADE,
+ CONSTRAINT chc_uniq UNIQUE (type_id, characterizable_id)
 -- 
 );
 
