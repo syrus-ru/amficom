@@ -1,5 +1,5 @@
 /*
- * $Id: MCMConnectionManager.java,v 1.4 2005/04/05 12:17:40 arseniy Exp $
+ * $Id: MCMConnectionManager.java,v 1.5 2005/04/15 22:13:26 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.mcm.corba.MCMHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/04/05 12:17:40 $
+ * @version $Revision: 1.5 $, $Date: 2005/04/15 22:13:26 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -60,7 +60,7 @@ public class MCMConnectionManager extends Thread {
 				
 				if (mcmRef != null) {
 					try {
-						mcmRef.ping((byte) 0);
+						mcmRef.verify((byte) 0);
 					}
 					catch (SystemException se) {
 						Log.errorException(se);
@@ -90,7 +90,7 @@ public class MCMConnectionManager extends Thread {
 			mcmRef = this.activateAndGet(mcmId);
 		else {
 			try {
-				mcmRef.ping((byte) 1);
+				mcmRef.verify((byte) 1);
 			}
 			catch (SystemException se) {
 				mcmRef = this.activateAndGet(mcmId);
