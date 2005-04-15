@@ -54,4 +54,8 @@ public class LocalIdentifierGeneratorServer implements IdentifierGeneratorServer
 																			 "Cannot create major/minor entries of identifier for entity: '" + ObjectEntities.codeToString(entityCode) + "' -- " + ige.getMessage());
 		}
 	}
+
+	public void verify(byte i) {
+		throw new UnsupportedOperationException("It is dumb to call this method -- " + i);
+	}
 }
