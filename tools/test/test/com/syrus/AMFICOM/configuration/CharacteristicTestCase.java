@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicTestCase.java,v 1.3 2004/09/10 14:49:01 max Exp $
+ * $Id: CharacteristicTestCase.java,v 1.4 2005/04/15 17:33:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/09/10 14:49:01 $
- * @author $Author: max $
+ * @version $Revision: 1.4 $, $Date: 2005/04/15 17:33:02 $
+ * @author $Author: arseniy $
  * @module tools
  */
 public class CharacteristicTestCase extends ConfigureTestCase {
@@ -129,3 +129,4 @@ public class CharacteristicTestCase extends ConfigureTestCase {
 	}
 
 }
+
