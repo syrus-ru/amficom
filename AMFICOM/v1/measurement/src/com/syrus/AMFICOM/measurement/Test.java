@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.110 2005/04/15 13:26:14 bob Exp $
+ * $Id: Test.java,v 1.111 2005/04/15 13:41:11 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,8 +45,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.110 $, $Date: 2005/04/15 13:26:14 $
- * @author $Author: bob $
+ * @version $Revision: 1.111 $, $Date: 2005/04/15 13:41:11 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -114,7 +114,7 @@ public class Test extends StorableObject {
 					this.monitoredElement.getId(),
 					LangModelMeasurement.getString("created by Test") + ":'" 
 					+ this.getDescription() + "' " 
-					+ LangModelMeasurement.getString("at") 
+					+ LangModelMeasurement.getString("at.time") 
 					+ " " + DatabaseDate.SDF.format(new Date(System.currentTimeMillis())),
 					this.mainMeasurementSetup,
 					startTime,
