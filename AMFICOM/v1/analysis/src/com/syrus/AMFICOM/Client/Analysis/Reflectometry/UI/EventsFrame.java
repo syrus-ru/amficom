@@ -16,6 +16,7 @@ import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableModel;
 
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
@@ -380,7 +381,7 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 		}
 	}
 	
-	private class EventTableRenderer extends ADefaultTableCellRenderer
+	private class EventTableRenderer extends DefaultTableCellRenderer
 	{
 		int []newEventsList;
 		int []amplitudeChangedEventsList;
