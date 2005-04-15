@@ -11,29 +11,37 @@ package com.syrus.AMFICOM.analysis.dadara;
  * 
  * (1) нестатическая часть - пользователь создает объект
  * класса ReflectogramComparer, дав на входе два массива
- * ComplexReflectogramEvent[] - один - пробные события, второй - эталонные.
- * (Сама рефлектограмма пока не используется).
+ * ReflectogramEvent[] - один - пробные события, второй - эталонные.
+ * Сама рефлектограмма пока(?) не используется.
  * Созданный объект находит соответствия событий, и после этого
  * умеет отвечать на вопросы об изменении состава и параметров событий.
+ * Допускает полиморфизм - некоторые вопросы применимы для любых SimpleReflectogramEvent,
+ * некоторые - только для ComplexReflectogramEvent,
+ * а некоторые - только для ReliabilitySimpleReflectogramEvent
+ * <br>
+ * NB: результат сравнения может зависеть от того, являются ли входные события
+ * instanceof ReliabilitySimpleReflectogramEvent.
  * 
+ * <p>
  * (2) статическая часть - сравнивает модельные кривые, построенные
  * по ModelTrace - MaxDeviation и пр.
  * 
  * @author $Author: saa $
- * @version $Revision: 1.8 $, $Date: 2005/04/11 10:35:31 $
+ * @version $Revision: 1.9 $, $Date: 2005/04/15 11:36:47 $
  * @module analysis_v1
  */
 public class ReflectogramComparer
 {
-	//private ReflectogramEvent[] hardAlarms;
-	//private ReflectogramEvent[] softAlarms;
-	//double[] probeTrace;
-	private ComplexReflectogramEvent[] probeEvents = null;
-	private ComplexReflectogramEvent[] etalonEvents;
+	private SimpleReflectogramEvent[] probeEvents;
+	private SimpleReflectogramEvent[] etalonEvents;
+    
+    private static final int UNPAIRED = -1;
+    private static final int RELIABLY_UNPAIRED = -2;
 
 	// Отображение событий пробной р/г на события эталонной
 	// и наоборот.
-	// значение -1 - соотв. события не найдено.
+	// значения < 0 - соотв. события не найдено.
+    // причем UNPAIRED: пара не найдена, а RELIABLY_UNPAIRED: событие достоверно новое
 	// По мере обработки, достигается взаимная однозначность отображений
 	// probe2etalon и etalon2probe.
 	// NB: входные списки событий должны быть отсортированы заранее.
@@ -44,14 +52,11 @@ public class ReflectogramComparer
 	//public static long COMPARE_EVALUATE = 0x2;
 
 	public ReflectogramComparer(
-			//double[] _probeTrace, // may be null if evaluation not desires
-			ComplexReflectogramEvent[] _probeEvents, // may be null if analysis not performed
-			ComplexReflectogramEvent[] _etalonEvents // not null
-			//Threshold[] etalonThresholds // may be null if evaluation not desired
+			SimpleReflectogramEvent[] _probeEvents, // may be null if analysis not performed
+			SimpleReflectogramEvent[] _etalonEvents // not null
 			)
 	{
 		probeEvents = _probeEvents;
-		//probeTrace = _probeTrace;
 
 		// Формируем эталон с заданными порогами.
 		// XXX: Порогов пока нет. Когда появятся - вспомнить что тут есть такое ветвление.
@@ -90,60 +95,90 @@ public class ReflectogramComparer
 	    return etalon2probe[etalonId];
 	}
 
-	public boolean isProbeEventNew(int probeId)
-	{
-		int etalonId = probe2etalon[probeId];
-		return etalonId == -1;
-	}
+    public boolean isProbeEventNew(int probeId)
+    {
+        int etalonId = probe2etalon[probeId];
+        return etalonId < 0;
+    }
 
-	public boolean isEtalonEventLost(int etalonId)
-	{
-	    int probeId = etalon2probe[etalonId];
-	    return probeId == -1;
-	}
+    public boolean isEtalonEventLost(int etalonId)
+    {
+        int probeId = etalon2probe[etalonId];
+        return probeId < 0;
+    }
 
-	public int[] getNewEventsList()
-	{
-		// считаем число новых событий
-		int count = 0;
-		for (int i = 0; i < probe2etalon.length; i++)
-			if (isProbeEventNew(i))
-				count++;
-		// создаем и заполняем массив новых событий
-		int[] ret = new int[count];
-		count = 0;
-		for (int i = 0; i < probe2etalon.length; i++)
-			if (isEtalonEventLost(i))
-				ret[count++] = i;
+    public boolean isProbeEventReliablyNew(int probeId)
+    {
+        int etalonId = probe2etalon[probeId];
+        return etalonId == RELIABLY_UNPAIRED;
+    }
 
-		return ret;
-	}
+    public boolean isEtalonEventReliablyLost(int etalonId)
+    {
+        int probeId = etalon2probe[etalonId];
+        return probeId < RELIABLY_UNPAIRED;
+    }
+
+    // XXX: нужен ли такой метод?
+    public int[] getNewEventsList()
+    {
+        // считаем число новых событий
+        int count = 0;
+        for (int i = 0; i < probe2etalon.length; i++)
+            if (isProbeEventNew(i))
+                count++;
+        // создаем и заполняем массив новых событий
+        int[] ret = new int[count];
+        count = 0;
+        for (int i = 0; i < probe2etalon.length; i++)
+            if (isProbeEventNew(i))
+                ret[count++] = i;
+
+        return ret;
+    }
+
+    /* Comparison results table ('+' is true, '-' is false)
+     * AMPL LOSS TYPE NOL REL_NOL Check type / change type
+     *   -    -    -   -     -       no significant change
+     *   +    -    -   -     -       changed amplitude
+     *   -    +    -   -     -       changed loss
+     *   -    -    +   -     -       changed type
+     *   +    +    +   +     -       non-reliably new or lost
+     *   +    +    +   +     +       reliably new or lost
+     */
+
+	public static final int CHANGETYPE_AMPL = 0x1; // requires ComplexReflectogramEvents
+	public static final int CHANGETYPE_LOSS = 0x2; // requires ComplexReflectogramEvents
+	public static final int CHANGETYPE_TYPE = 0x4; // requires SimpleReflectogramEvents
+    public static final int CHANGETYPE_NEW_OR_LOST = 0x8;  // requires ComplexReflectogramEvents
+    public static final int CHANGETYPE_RELIABLY_NEW_OR_LOST = 0x10;  // requires ReliabilityReflectogramEvents
 	
-	public static final int CHANGETYPE_AMPL = 0x1;
-	public static final int CHANGETYPE_LOSS = 0x2;
-	public static final int CHANGETYPE_TYPE = 0x4;
-	public static final int CHANGETYPE_NEW_OR_LOST = 0x10;
-	
+    /**
+     * @throws ClassCastException if comparison type is not supported by input events type
+     */
 	public static boolean eventsAreDifferent(
-			ComplexReflectogramEvent a, // not null
-			ComplexReflectogramEvent b, // not null
-			int changeType, // one of CHANGETYPE...
-			double changeThreshold) // may be zero
+			SimpleReflectogramEvent a, // not null
+			SimpleReflectogramEvent b, // not null
+			int changeType, // one of CHANGETYPE's
+			double changeThreshold) // may be zero; may be unused
 	{
 		switch(changeType)
 		{
 		case CHANGETYPE_AMPL:
-			return Math.abs(a.getALet() - b.getALet()) > changeThreshold;
+			return Math.abs(((ComplexReflectogramEvent)a).getALet() - ((ComplexReflectogramEvent)b).getALet()) > changeThreshold;
 
 		case CHANGETYPE_LOSS:
-			return Math.abs(a.getMLoss() - b.getMLoss()) > changeThreshold;
+			return Math.abs(((ComplexReflectogramEvent)a).getMLoss() - ((ComplexReflectogramEvent)b).getMLoss()) > changeThreshold;
 
 		case CHANGETYPE_TYPE:
 			// при changeThreshold == 0 и 1 работать должно одинаково хорошо
 			return a.getEventType() != b.getEventType();
 
-		case CHANGETYPE_NEW_OR_LOST:
-			return false; // пара событий уже дана - значит изменения нет
+        case CHANGETYPE_NEW_OR_LOST:
+            // fall through
+        case CHANGETYPE_RELIABLY_NEW_OR_LOST:
+            return false; // пара событий уже дана - значит изменения нет
+
 		}
 		// unknown criterion
 		return false;
@@ -155,7 +190,11 @@ public class ReflectogramComparer
 	public boolean isEtalonEventChanged(int etalonId, int changeType, double changeThreshold)
 	{
 		int probeId = etalon2probe[etalonId];
-		if (probeId == -1) // событие исчезло
+
+        if (changeType == CHANGETYPE_RELIABLY_NEW_OR_LOST)
+            return probeId == RELIABLY_UNPAIRED;
+
+		if (probeId < 0) // событие исчезло
 			return true;
 
 		return eventsAreDifferent(
@@ -171,7 +210,11 @@ public class ReflectogramComparer
 	public boolean isProbeEventChanged(int probeId, int changeType, double changeThreshold)
 	{
 		int etalonId = probe2etalon[probeId];
-		if (etalonId == -1) // событие появилось
+
+        if (changeType == CHANGETYPE_RELIABLY_NEW_OR_LOST)
+            return etalonId == RELIABLY_UNPAIRED;
+
+		if (etalonId < 0) // событие появилось
 			return true;
 
 		return eventsAreDifferent(
@@ -193,23 +236,29 @@ public class ReflectogramComparer
 		return Math.abs(x.getBegin() - y.getBegin()) + Math.abs(x.getEnd() - y.getEnd());
 	}
 
-	private void removeNonPaired(int[] fwd, int[] backwd)
-	{
-		for (int i = 0; i < fwd.length; i++)
-		{
-			int j = fwd[i];
-			if (j >= 0 && backwd[j] != i)
-				fwd[i] = -1;
-		}
-	}
+    private void removeNonPaired(int[] fwd, int[] backwd)
+    {
+        for (int i = 0; i < fwd.length; i++)
+        {
+            int j = fwd[i];
+            if (j >= 0 && backwd[j] != i)
+                fwd[i] = -1;
+        }
+    }
 
 	private int[] findNearestOverlappingEvent(SimpleReflectogramEvent[] X, SimpleReflectogramEvent[] Y)
 	{
 		int[] ret = new int[X.length];
 		for (int i = 0; i < X.length; i++)
 		{
-			double bestDistance = -1.0; // Stands for +inf
+            // наилучшее по нашей метрике парное событие
+			double bestDistance = UNPAIRED; // Stands for +inf
 			int bestJ = -1;
+            // значимые нелин. события - потенциальные кандидаты в новые/потерянные
+            boolean reliablyNewOrLost = X[i].getEventType() != SimpleReflectogramEvent.LINEAR
+                && (X[i] instanceof ReliabilitySimpleReflectogramEvents)
+                && ((ReliabilitySimpleReflectogramEvents)X[i]).hasReliability()
+                && ((ReliabilitySimpleReflectogramEvents)X[i]).getReliability() > ReliabilitySimpleReflectogramEvents.RELIABLE; 
 			for (int j = 0; j < Y.length; j++)
 			{
 				if (eventsOverlaps(X[i], Y[j]))
@@ -220,9 +269,15 @@ public class ReflectogramComparer
 	                    bestJ = j;
 	                    bestDistance = distance;
 	                }
+                    // у значимого нел. соб. нашли хоть какую-то пару -- оно не "значимо новое/потерянное"
+                    if (Y[j].getEventType() != SimpleReflectogramEvent.LINEAR)
+                        reliablyNewOrLost = false;
 				}
 			}
-			ret[i] = bestJ;
+            if (reliablyNewOrLost)
+                ret[i] = RELIABLY_UNPAIRED;
+            else
+                ret[i] = bestJ;
 		}
 		return ret;
 	}

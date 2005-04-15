@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceComparer.java,v 1.3 2005/04/13 12:46:59 saa Exp $
+ * $Id: ModelTraceComparer.java,v 1.4 2005/04/15 11:36:47 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,12 +10,67 @@ package com.syrus.AMFICOM.analysis.dadara;
 /**
  * Performs ModelTrace comparison to MTM and MinTraceLevel
  * @author $Author: saa $
- * @version $Revision: 1.3 $, $Date: 2005/04/13 12:46:59 $
+ * @version $Revision: 1.4 $, $Date: 2005/04/15 11:36:47 $
  * @module
  */
 public class ModelTraceComparer
 {
-	public static ReflectogramAlarm compareToMTM(ModelTrace mt, ModelTraceManager mtm)
+    // @todo: extend MTAE iface to ReliabilitySimpleReflectogramEvent, then change contract of thos method from MTAEImpl to MTAE
+    public static ReflectogramAlarm compareMTAEToMTM(ModelTraceAndEventsImpl mtae, ModelTraceManager mtm)
+    {
+        System.out.println("ModelTraceComparer.compareToMTM: comparing mtae to mtm:");
+        ReflectogramAlarm alarmTrace = compareTraceToMTM(mtae.getModelTrace(), mtm);
+        ReflectogramAlarm alarmEvents = compareEventsToMTM(mtae.getSE(), mtm);
+        System.out.println("ModelTraceComparer.compareToMTM: alarmTrace: " + alarmTrace);
+        System.out.println("ModelTraceComparer.compareToMTM: alarmTrace: " + alarmEvents);
+        if (alarmTrace != null)
+            return
+            alarmTrace;
+        else
+            return alarmEvents;
+    }
+    /**
+     * Сравнивает события ReliabilitySimpleReflectogramEvent[] с эталоном.
+     * @param events сравниваемый список событий
+     * @param mtm эталон
+     * @return soft type ReflectogramAlarm, если найдены значимые отличия в списке событий,
+     * либо null, если значимых различий не найдено.
+     */
+    public static ReflectogramAlarm compareEventsToMTM(ReliabilitySimpleReflectogramEvents[] events, ModelTraceManager mtm)
+    {
+        ReliabilitySimpleReflectogramEvents[] etEvents = mtm.getRSE();
+        ReflectogramComparer rc = new ReflectogramComparer(events, etEvents);
+        ReflectogramAlarm out = new ReflectogramAlarm(); // create 'no alarm' alarm
+        ReflectogramAlarm cur = new ReflectogramAlarm(); // create 'no alarm' alarm
+        cur.alarmType = ReflectogramAlarm.TYPE_EVENTLISTCHANGED;
+        cur.level = ReflectogramAlarm.LEVEL_SOFT; // XXX: default alarm level for event list change
+        int i;
+        for (i = 0; i < etEvents.length; i++)
+        {
+            if (rc.isEtalonEventReliablyLost(i))
+            {
+                cur.pointCoord = etEvents[i].getBegin();
+                cur.endPointCoord = etEvents[i].getEnd();
+                System.out.println("MTC: compareEventsToMTM: etalon event #" + i + " ( " + cur.pointCoord + " .. " + cur.endPointCoord + ") is reliably lost");
+                out.toHardest(cur);
+            }
+        }
+        for (i = 0; i < events.length; i++)
+        {
+            if (rc.isProbeEventReliablyNew(i))
+            {
+                cur.pointCoord = events[i].getBegin();
+                cur.endPointCoord = events[i].getEnd();
+                System.out.println("MTC: compareEventsToMTM: probe event #" + i + " ( " + cur.pointCoord + " .. " + cur.endPointCoord + ") is reliably new");
+                out.toHardest(cur);
+            }
+        }
+        return out.alarmType > ReflectogramAlarm.LEVEL_NONE
+            ? out
+            : null;
+    }
+
+    public static ReflectogramAlarm compareTraceToMTM(ModelTrace mt, ModelTraceManager mtm)
 	{
 		ReflectogramAlarm alarm = new ReflectogramAlarm(); // create 'no alarm' alarm
 		double[] y = mt.getYArray();
