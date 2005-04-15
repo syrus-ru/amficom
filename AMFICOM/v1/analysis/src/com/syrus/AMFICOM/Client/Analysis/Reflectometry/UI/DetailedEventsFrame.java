@@ -325,12 +325,12 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 		if(etalonEvent != null) // из равенства следует, что эталонное событие найдено
 		{
 			double lossDiff  = dataEvent.getMLoss() - etalonEvent.getMLoss();
-			double widthDiff = dataEvent.getLength() - etalonEvent.getLength();
-			double locationDiff = (dataEvent.getBegin() - etalonEvent.getBegin()) * deltaX; // изменено с середины события на начало
+			double widthDiff = (dataEvent.getLength() - etalonEvent.getLength()) * deltaX;
+			double locationDiff = (dataEvent.getBegin() - etalonEvent.getBegin()) * deltaX;
 
 			lossDiff        = ((int)(lossDiff*1000.))/1000.;
-			widthDiff       = ((int)(widthDiff*1.))/1.;	// точность 1 м
-			locationDiff    = ((int)(locationDiff*1.))/1.;
+			widthDiff       = ((int)(widthDiff*10.))/10.;	// точность 0.1 м
+			locationDiff    = ((int)(locationDiff*10.))/10.;
 
 			ctModel.setValueAt(lossDiff + " " + LangModelAnalyse.getString("dB"), 4, 1);
 			ctModel.setValueAt(String.valueOf(widthDiff) + " " + LangModelAnalyse.getString("m"), 5, 1);
