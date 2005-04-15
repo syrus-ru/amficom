@@ -1,5 +1,5 @@
 /*
- * $Id: FilterController.java,v 1.9 2005/04/12 13:32:52 max Exp $
+ * $Id: FilterController.java,v 1.10 2005/04/15 16:39:33 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import javax.swing.event.PopupMenuListener;
 
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/04/12 13:32:52 $
+ * @version $Revision: 1.10 $, $Date: 2005/04/15 16:39:33 $
  * @author $Author: max $
  * @module filter_v1
  */
@@ -99,6 +99,7 @@ public class FilterController implements ActionListener, PopupMenuListener {
 	private void changeKey() {
 		int keyIndex = this.view.getSelectedKeyIndex();
 		ConditionKey key = (ConditionKey) this.model.getKeys().get(keyIndex);
+		setActiveButton(key.getName());
 		byte type = key.getType();
 		Object tempCondition = getTempCondition(key);
 		switch (type) {
@@ -151,6 +152,13 @@ public class FilterController implements ActionListener, PopupMenuListener {
 		default:
 			Log.errorMessage("FilterCondition.changeKey | Unsupported condition type");			
 		}
+	}
+
+	private void setActiveButton(String name) {
+		if(this.model.getConditionNames().contains(name))
+			this.view.enableChangeDisableAdd(true);
+		else
+			this.view.enableChangeDisableAdd(false);
 	}
 
 	private void addConditionToModel() {
@@ -309,7 +317,8 @@ public class FilterController implements ActionListener, PopupMenuListener {
 			break;
 		default:
 			Log.errorMessage("FilterController.addConditionToModel | Unsupported condition type");
-		}		
+		}
+		setActiveButton(conditionKey.getName());
 	}
 	
 	private void removeConditionInModelAndInScheme() {
@@ -317,6 +326,9 @@ public class FilterController implements ActionListener, PopupMenuListener {
 		for (int i = 0; i < selectedConditionNames.length; i++) {
 			this.model.removeCondition(selectedConditionNames[i]);			
 		}
+		int index = this.view.getSelectedKeyIndex();
+		ConditionKey conditionKey = (ConditionKey) this.model.getKeys().get(index);
+		setActiveButton(conditionKey.getName());
 	}
 	
 	public void createLogicalScheme() {
