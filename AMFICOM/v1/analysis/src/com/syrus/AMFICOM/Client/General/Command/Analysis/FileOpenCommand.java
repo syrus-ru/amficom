@@ -9,6 +9,7 @@ import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.AnalyseMainFrameSimplified;
+import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.AnalysisFrame;
 import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.*;
@@ -146,9 +147,10 @@ public class FileOpenCommand extends VoidCommand
 					}
 				}
 			}
+            boolean testBehaviour = true && AnalyseMainFrameSimplified.DEBUG; // FIXME: debug only: for local comparison
 			if (!Heap.hasEmptyAllBSMap())
 			{
-				if (Heap.getBSPrimaryTrace() != null)
+				if (Heap.getBSPrimaryTrace() != null && !testBehaviour)
 					new FileCloseCommand(dispatcher, aContext).execute();
 			}
 
@@ -163,6 +165,10 @@ public class FileOpenCommand extends VoidCommand
 
 			Heap.setCurrentTracePrimary();
 			dispatcher.notify(new RefUpdateEvent(RefUpdateEvent.PRIMARY_TRACE, RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));
+
+            if (testBehaviour && Heap.getMTMEtalon() != null)
+                Heap.setMTMEtalon(Heap.getMTMEtalon());
+
 			try
 			{
 				properties.setProperty("lastdir", chooser.getSelectedFile().getParent().toLowerCase());
@@ -176,4 +182,3 @@ public class FileOpenCommand extends VoidCommand
 		}
 	}
 }
-
