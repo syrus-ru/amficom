@@ -1,5 +1,5 @@
 /*
- * $Id: RISDSessionInfo.java,v 1.36 2005/04/15 18:04:08 bass Exp $
+ * $Id: RISDSessionInfo.java,v 1.37 2005/04/15 22:19:10 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -49,6 +49,7 @@ import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.LocalIGServerReferenceSource;
 import com.syrus.AMFICOM.general.LocalIdentifierGeneratorServer;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.SessionContext;
@@ -74,8 +75,8 @@ import com.syrus.util.corba.JavaSoftORBUtil;
 import com.syrus.util.prefs.IIOPConnectionManager;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.36 $, $Date: 2005/04/15 18:04:08 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.37 $, $Date: 2005/04/15 22:19:10 $
  * @module generalclient_v1
  */
 public final class RISDSessionInfo extends SessionInterface {
@@ -296,8 +297,12 @@ public final class RISDSessionInfo extends SessionInterface {
 			SchemeStorableObjectPool.init(new EmptyClientSchemeObjectLoader(), clazz, size);
 			MapViewStorableObjectPool.init(new EmptyClientMapViewObjectLoader(), clazz, size);
 			ResourceStorableObjectPool.init(new EmptyClientResourceObjectLoader(), clazz, size);
-			IdentifierPool.init(cmServer);
+
+
+			// Vse po umu
+			IdentifierPool.init(this.ci.getCMServerConnectionManager());
 //			IdentifierPool.init(new LocalIdentifierGeneratorServer());
+
 			System.err.println("domainId: " + this.accessIdentifier.domain_id.identifier_string);
 			System.err.println("sessionId: " + this.accessIdentifier.session_code);
 			System.err.println("started: " + new java.util.Date(this.accessIdentifier.started));
@@ -342,7 +347,7 @@ public final class RISDSessionInfo extends SessionInterface {
 
 			ResourceStorableObjectPool.init(new EmptyClientResourceObjectLoader(), clazz, size);
 
-			IdentifierPool.init(new LocalIdentifierGeneratorServer());
+			IdentifierPool.init(new LocalIGServerReferenceSource(new LocalIdentifierGeneratorServer()));
 
 			try {
 				EquivalentCondition condition = new EquivalentCondition(ObjectEntities.USER_ENTITY_CODE);
