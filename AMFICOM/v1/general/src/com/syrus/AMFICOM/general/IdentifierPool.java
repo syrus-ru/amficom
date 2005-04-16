@@ -1,5 +1,5 @@
 /*
- * $Id: IdentifierPool.java,v 1.15 2005/04/15 19:19:16 arseniy Exp $
+ * $Id: IdentifierPool.java,v 1.16 2005/04/16 21:04:31 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,7 @@ import com.syrus.util.Fifo;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/04/15 19:19:16 $
+ * @version $Revision: 1.16 $, $Date: 2005/04/16 21:04:31 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -28,7 +28,7 @@ public class IdentifierPool {
 	private static final long TIME_TO_SLEEP = 500;
 	private static final double MIN_FILL_FACTOR = 0.2;
 
-	private static IGServerReferenceSource igServerReferenceSource;
+	private static IGSConnectionManager igsConnectionMananger;
 	private static int capacity;
 
 	/* Map <Short objectEntity, LRUMap idPool> */
@@ -38,14 +38,14 @@ public class IdentifierPool {
 		// empty private construcor
 	}
 
-	public static void init(IGServerReferenceSource igServerReferenceSource1, int capacity1) {
-		igServerReferenceSource = igServerReferenceSource1;
+	public static void init(IGSConnectionManager igsConnectionMananger1, int capacity1) {
+		igsConnectionMananger = igsConnectionMananger1;
 		capacity = (capacity1 <= MAX_CAPACITY) ? capacity1 : MAX_CAPACITY;
 		idPoolMap = Collections.synchronizedMap(new HashMap());
 	}
 
-	public static void init(IGServerReferenceSource igServerReferenceSource1) {
-		init(igServerReferenceSource1, DEFAULT_CAPACITY);
+	public static void init(IGSConnectionManager igsConnectionMananger1) {
+		init(igsConnectionMananger1, DEFAULT_CAPACITY);
 	}
 
 	public static Identifier getGeneratedIdentifier(final short entityCode) throws IdentifierGenerationException {
@@ -81,7 +81,7 @@ public class IdentifierPool {
 	private static void fillFifo(Fifo fifo, final short entityCode) throws IdentifierGenerationException {
 		IdentifierGeneratorServer igServer = null;
 		try {
-			igServer = igServerReferenceSource.getVerifiedIGServerReference();
+			igServer = igsConnectionMananger.getVerifiedIGSReference();
 		}
 		catch (CommunicationException ce) {
 			throw new IdentifierGenerationException("Cannot obtain reference on identifier generator server", ce);
