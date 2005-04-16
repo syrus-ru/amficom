@@ -1,5 +1,5 @@
 /*-
- * $Id: FilterPanel.java,v 1.1 2005/04/15 16:38:25 max Exp $
+ * $Id: FilterPanel.java,v 1.2 2005/04/16 21:36:20 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,6 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Toolkit;
-import java.io.File;
 import java.util.Date;
 
 import javax.swing.BorderFactory;
@@ -38,8 +37,8 @@ import javax.swing.border.EtchedBorder;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/15 16:38:25 $
- * @author $Author: max $
+ * @version $Revision: 1.2 $, $Date: 2005/04/16 21:36:20 $
+ * @author $Author: arseniy $
  * @module filter_v1
  */
 public class FilterPanel extends JScrollPane implements FilterView {
