@@ -34,7 +34,6 @@ SOURCES := com/syrus/util/KISConnectionLRUMap.java \
 	com/syrus/AMFICOM/mcm/TestProcessor.java \
 	com/syrus/AMFICOM/mcm/OnetimeTestProcessor.java \
 	com/syrus/AMFICOM/mcm/PeriodicalTestProcessor.java \
-	com/syrus/AMFICOM/mcm/ContinuousTestProcessor.java \
 	com/syrus/AMFICOM/mcm/MeasurementControlModule.java \
 	com/syrus/AMFICOM/mcm/MCMImplementation.java \
 	com/syrus/AMFICOM/mcm/MServerConnectionManager.java \

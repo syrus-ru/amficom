@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.75 2005/04/15 22:15:09 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.76 2005/04/16 21:48:30 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -57,7 +57,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.75 $, $Date: 2005/04/15 22:15:09 $
+ * @version $Revision: 1.76 $, $Date: 2005/04/16 21:48:30 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -415,9 +415,6 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 				break;
 			case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
 				testProcessor = new PeriodicalTestProcessor(test);
-				break;
-			case TestTemporalType._TEST_TEMPORAL_TYPE_CONTINUOUS:
-				testProcessor = new ContinuousTestProcessor(test);
 				break;
 			default:
 				Log.errorMessage("Incorrect temporal type " + test.getTemporalType().value() + " of test '" + test.getId().toString() + "'");
