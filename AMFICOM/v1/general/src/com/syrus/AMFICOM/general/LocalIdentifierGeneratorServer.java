@@ -1,14 +1,14 @@
 package com.syrus.AMFICOM.general;
 
+import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
+import com.syrus.AMFICOM.general.corba.CompletionStatus;
+import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.IdentifierGeneratorServer;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.ErrorCode;
-import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.util.Log;
 
-public class LocalIdentifierGeneratorServer implements IdentifierGeneratorServer {
-	private static final long serialVersionUID = -2532203077213374260L;
+public class LocalIdentifierGeneratorServer implements IdentifierGeneratorServer, IGSConnectionManager {
+	private static final long serialVersionUID = 4417075411484576241L;
 
 	public LocalIdentifierGeneratorServer() {
 		//nothing
@@ -57,5 +57,9 @@ public class LocalIdentifierGeneratorServer implements IdentifierGeneratorServer
 
 	public void verify(byte i) {
 		throw new UnsupportedOperationException("It is dumb to call this method -- " + i);
+	}
+
+	public IdentifierGeneratorServer getVerifiedIGSReference() throws CommunicationException {
+		return this;
 	}
 }
