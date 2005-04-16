@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServer.java,v 1.31 2005/04/13 10:10:12 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.32 2005/04/16 21:19:15 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -46,7 +46,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/04/13 10:10:12 $
+ * @version $Revision: 1.32 $, $Date: 2005/04/16 21:19:15 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -153,9 +153,10 @@ public class MeasurementServer extends SleepButWorkThread {
 			mcmTestQueueMap.put(it.next(), Collections.synchronizedSet(new HashSet()));
 
 		/*	Activate MCM connection manager*/
+		Set mcmIdStrings = Identifier.createStrings(mcmIds);
 		long mcmCheckTimeout = ApplicationProperties.getInt(KEY_MCM_CHECK_TIMEOUT, MCM_CHECK_TIMEOUT) * 60 * 1000;
-		mcmConnectionManager = new MCMConnectionManager(corbaServer, mcmCheckTimeout);
-		mcmConnectionManager.start();
+		mcmConnectionManager = new MCMConnectionManager(corbaServer, mcmIdStrings, mcmCheckTimeout);
+		(new Thread(mcmConnectionManager)).start();
 
 		/*	Create collection of MCM identifiers for aborting tests*/
 		mcmIdsToAbortTests = Collections.synchronizedSet(new HashSet());
