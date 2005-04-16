@@ -1,5 +1,5 @@
 /*
- * $Id: RISDConnectionInfo.java,v 1.6 2005/04/15 22:17:26 arseniy Exp $
+ * $Id: RISDConnectionInfo.java,v 1.7 2005/04/16 21:30:51 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,6 @@ import com.syrus.AMFICOM.CORBA.*;
 import com.syrus.AMFICOM.cmserver.corba.*;
 import com.syrus.AMFICOM.general.CMServerConnectionManager;
 import com.syrus.AMFICOM.general.CORBAServer;
-import com.syrus.AMFICOM.general.VerifiedReferenceSource;
 import com.syrus.util.corba.JavaSoftORBUtil;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -22,7 +21,7 @@ import org.omg.CosNaming.*;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.6 $, $Date: 2005/04/15 22:17:26 $
+ * @version $Revision: 1.7 $, $Date: 2005/04/16 21:30:51 $
  * @module generalclient_v1
  */
 public final class RISDConnectionInfo extends ConnectionInterface {
