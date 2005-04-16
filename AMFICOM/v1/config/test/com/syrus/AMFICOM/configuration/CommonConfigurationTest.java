@@ -1,5 +1,5 @@
 /*
- * $Id: CommonConfigurationTest.java,v 1.4 2005/04/15 19:20:47 arseniy Exp $
+ * $Id: CommonConfigurationTest.java,v 1.5 2005/04/16 21:11:41 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,11 @@
 package com.syrus.AMFICOM.configuration;
 
 import java.util.Date;
+
+import junit.extensions.TestSetup;
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
 
 import com.syrus.AMFICOM.administration.AdministrationDatabaseContext;
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
@@ -20,8 +25,7 @@ import com.syrus.AMFICOM.general.AccessIdentity;
 import com.syrus.AMFICOM.general.CharacteristicDatabase;
 import com.syrus.AMFICOM.general.CharacteristicTypeDatabase;
 import com.syrus.AMFICOM.general.DatabaseGeneralObjectLoader;
-import com.syrus.AMFICOM.general.DefaultIGServerReferenceSource;
-import com.syrus.AMFICOM.general.DefaultIdentifierGeneratorServer;
+import com.syrus.AMFICOM.general.DatabaseIdentifierGeneratorServer;
 import com.syrus.AMFICOM.general.GeneralDatabaseContext;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
@@ -33,13 +37,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
-import junit.extensions.TestSetup;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
 /**
- * @version $Revision: 1.4 $, $Date: 2005/04/15 19:20:47 $
+ * @version $Revision: 1.5 $, $Date: 2005/04/16 21:11:41 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -138,7 +137,7 @@ public abstract class CommonConfigurationTest extends TestCase {
 	}
 
 	private static void initIdentifierPool() {
-		IdentifierPool.init(new DefaultIGServerReferenceSource(new DefaultIdentifierGeneratorServer()), 1);
+		IdentifierPool.init(new DatabaseIdentifierGeneratorServer(), 1);
 	}
 
 }
