@@ -1,5 +1,5 @@
 /*
- * $Id: Identifier.java,v 1.32 2005/04/14 10:19:45 bass Exp $
+ * $Id: Identifier.java,v 1.33 2005/04/16 21:03:10 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,8 +23,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
  * its respective <code>creatorId</code> and <code>modifierId</code>. But
  * there&apos;s a particular task of <code>id</code> handling.
  *
- * @version $Revision: 1.32 $, $Date: 2005/04/14 10:19:45 $
- * @author $Author: bass $
+ * @version $Revision: 1.33 $, $Date: 2005/04/16 21:03:10 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public class Identifier implements Comparable, TransferableObject, Serializable, Identifiable {
@@ -116,6 +116,14 @@ public class Identifier implements Comparable, TransferableObject, Serializable,
 		return this.identifierString;
 	}
 
+	public static Set createStrings(final Collection identifiables) {
+		assert identifiables != null: ErrorMessages.NON_NULL_EXPECTED;
+
+		Set idStrings = new HashSet(identifiables.size());
+		for (final Iterator identifiableIterator = identifiables.iterator(); identifiableIterator.hasNext();)
+			idStrings.add(((Identifiable) identifiableIterator.next()).getId().toString());
+		return idStrings;
+	}
 	/**
 	 * @param identifiables <code>Collection&lt;Identifiable&gt;</code>
 	 * @return a newly created <code>Identifier_Transferable[]</code> with
