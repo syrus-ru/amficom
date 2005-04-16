@@ -1,5 +1,5 @@
 /*
- * $Id: RISDSessionInfo.java,v 1.37 2005/04/15 22:19:10 arseniy Exp $
+ * $Id: RISDSessionInfo.java,v 1.38 2005/04/16 21:30:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -49,7 +49,6 @@ import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.LocalIGServerReferenceSource;
 import com.syrus.AMFICOM.general.LocalIdentifierGeneratorServer;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.SessionContext;
@@ -76,7 +75,7 @@ import com.syrus.util.prefs.IIOPConnectionManager;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.37 $, $Date: 2005/04/15 22:19:10 $
+ * @version $Revision: 1.38 $, $Date: 2005/04/16 21:30:16 $
  * @module generalclient_v1
  */
 public final class RISDSessionInfo extends SessionInterface {
@@ -347,7 +346,7 @@ public final class RISDSessionInfo extends SessionInterface {
 
 			ResourceStorableObjectPool.init(new EmptyClientResourceObjectLoader(), clazz, size);
 
-			IdentifierPool.init(new LocalIGServerReferenceSource(new LocalIdentifierGeneratorServer()));
+			IdentifierPool.init(new LocalIdentifierGeneratorServer());
 
 			try {
 				EquivalentCondition condition = new EquivalentCondition(ObjectEntities.USER_ENTITY_CODE);
