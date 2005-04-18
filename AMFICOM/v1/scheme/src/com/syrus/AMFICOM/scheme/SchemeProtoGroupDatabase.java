@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroupDatabase.java,v 1.1 2005/04/01 13:59:07 bass Exp $
+ * $Id: SchemeProtoGroupDatabase.java,v 1.2 2005/04/18 15:26:06 max Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,36 +9,50 @@
 package com.syrus.AMFICOM.scheme;
 
 import com.syrus.AMFICOM.general.*;
+import com.syrus.util.Log;
+import com.syrus.util.database.DatabaseDate;
+import com.syrus.util.database.DatabaseString;
+
 import java.sql.*;
+import java.util.Date;
 import java.util.Set;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/04/01 13:59:07 $
+ * @author $Author: max $
+ * @version $Revision: 1.2 $, $Date: 2005/04/18 15:26:06 $
  * @module scheme_v1
  */
 public final class SchemeProtoGroupDatabase extends StorableObjectDatabase {
+	
+	private static String columns;
+	private static String updateMultipleSQLValues;
+	
+	private SchemeProtoGroup fromStorableObject(StorableObject storableObject) throws IllegalDataException {
+		if (storableObject instanceof SchemeProtoGroup)
+			return (SchemeProtoGroup) storableObject;
+		throw new IllegalDataException("SchemeProtoGroupDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
+	}
+	
 	/**
 	 * @param storableObjects
 	 * @throws IllegalDataException
 	 * @throws CreateObjectException
-	 * @see StorableObjectDatabase#insert(Set)
 	 */
 	public void insert(final Set storableObjects)
 			throws IllegalDataException, CreateObjectException {
-		throw new UnsupportedOperationException();
+		super.insertEntities(storableObjects);
 	}
 
 	/**
 	 * @param storableObject
 	 * @throws IllegalDataException
 	 * @throws CreateObjectException
-	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#insert(com.syrus.AMFICOM.general.StorableObject)
 	 */
 	public void insert(StorableObject storableObject)
 			throws IllegalDataException, CreateObjectException {
-		throw new UnsupportedOperationException();
+		SchemeProtoGroup spg = fromStorableObject(storableObject);
+		super.insertEntity(spg);
 	}
 
 	/**
@@ -46,12 +60,11 @@ public final class SchemeProtoGroupDatabase extends StorableObjectDatabase {
 	 * @throws IllegalDataException
 	 * @throws ObjectNotFoundException
 	 * @throws RetrieveObjectException
-	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#retrieve(com.syrus.AMFICOM.general.StorableObject)
 	 */
 	public void retrieve(StorableObject storableObject)
-			throws IllegalDataException, ObjectNotFoundException,
-			RetrieveObjectException {
-		throw new UnsupportedOperationException();
+			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+		SchemeProtoGroup spg = fromStorableObject(storableObject);
+		super.retrieveEntity(spg);
 	}
 
 	/**
@@ -61,45 +74,54 @@ public final class SchemeProtoGroupDatabase extends StorableObjectDatabase {
 	 * @throws IllegalDataException
 	 * @throws ObjectNotFoundException
 	 * @throws RetrieveObjectException
-	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#retrieveObject(com.syrus.AMFICOM.general.StorableObject, int, java.lang.Object)
 	 */
-	public Object retrieveObject(StorableObject storableObject,
-			int retrieveKind, Object arg)
-			throws IllegalDataException, ObjectNotFoundException,
-			RetrieveObjectException {
-		throw new UnsupportedOperationException();
+	public Object retrieveObject(StorableObject storableObject,	int retrieveKind, Object arg)
+			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+		SchemeProtoGroup spg = fromStorableObject(storableObject);
+		switch (retrieveKind) {
+			default:
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName()
+						+ " '" + spg.getId() + "'; argument: " + arg);
+				return null;
+		}
 	}
 
-	/**
-	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#getColumnsTmpl()
-	 */
 	protected String getColumnsTmpl() {
-		throw new UnsupportedOperationException();
+		if (columns == null) {
+			columns = SchemeProtoElementWrapper.COLUMN_NAME + COMMA
+					+ SchemeProtoElementWrapper.COLUMN_DESCRIPTION + COMMA
+					+ SchemeProtoElementWrapper.COLUMN_SYMBOL_ID + COMMA
+					+ SchemeProtoElementWrapper.COLUMN_PARENT_SCHEME_PROTO_GROUP_ID;
+		}
+		return columns;
 	}
 
-	/**
-	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#getEnityName()
-	 */
 	protected String getEnityName() {
-		throw new UnsupportedOperationException();
+		return ObjectEntities.SCHEME_PROTO_GROUP_ENTITY;
 	}
 
-	/**
-	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#getUpdateMultipleSQLValuesTmpl()
-	 */
 	protected String getUpdateMultipleSQLValuesTmpl() {
-		throw new UnsupportedOperationException();
+		if (updateMultipleSQLValues == null) {
+			updateMultipleSQLValues = QUESTION + COMMA
+					+ QUESTION + COMMA
+					+ QUESTION + COMMA
+					+ QUESTION;
+		}
+		return updateMultipleSQLValues;
 	}
 
 	/**
 	 * @param storableObject
 	 * @throws IllegalDataException
-	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#getUpdateSingleSQLValuesTmpl(com.syrus.AMFICOM.general.StorableObject)
 	 */
-	protected String getUpdateSingleSQLValuesTmpl(
-			StorableObject storableObject)
+	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject)
 			throws IllegalDataException {
-		throw new UnsupportedOperationException();
+		SchemeProtoGroup spg = fromStorableObject(storableObject);
+		String sql = APOSTOPHE + DatabaseString.toQuerySubString(spg.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
+		+ APOSTOPHE + DatabaseString.toQuerySubString(spg.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
+		+ DatabaseIdentifier.toSQLString(spg.getSymbol().getId()) + COMMA
+		+ DatabaseIdentifier.toSQLString(spg.getParentSchemeProtoGroup().getId());
+		return sql;
 	}
 
 	/**
@@ -108,14 +130,16 @@ public final class SchemeProtoGroupDatabase extends StorableObjectDatabase {
 	 * @param startParameterNumber
 	 * @throws IllegalDataException
 	 * @throws SQLException
-	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#setEntityForPreparedStatementTmpl(com.syrus.AMFICOM.general.StorableObject, java.sql.PreparedStatement, int)
 	 */
-	protected int setEntityForPreparedStatementTmpl(
-			StorableObject storableObject,
-			PreparedStatement preparedStatement,
-			int startParameterNumber) throws IllegalDataException,
-			SQLException {
-		throw new UnsupportedOperationException();
+	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject,
+			PreparedStatement preparedStatement, int startParameterNumber) 
+			throws IllegalDataException, SQLException {
+		SchemeProtoGroup spg = fromStorableObject(storableObject);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, spg.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, spg.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, spg.getSymbol().getId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, spg.getParentSchemeProtoGroup().getId());
+		return startParameterNumber;
 	}
 
 	/**
@@ -124,12 +148,26 @@ public final class SchemeProtoGroupDatabase extends StorableObjectDatabase {
 	 * @throws IllegalDataException
 	 * @throws RetrieveObjectException
 	 * @throws SQLException
-	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#updateEntityFromResultSet(com.syrus.AMFICOM.general.StorableObject, java.sql.ResultSet)
 	 */
-	protected StorableObject updateEntityFromResultSet(
-			StorableObject storableObject, ResultSet resultSet)
-			throws IllegalDataException, RetrieveObjectException,
-			SQLException {
-		throw new UnsupportedOperationException();
+	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
+			throws IllegalDataException, RetrieveObjectException, SQLException {
+		SchemeProtoGroup spg;
+		if (storableObject == null) {
+			Date created = new Date(); 
+			spg = new SchemeProtoGroup(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
+					created, created, null, null, 0L, null, null, null, null);
+		} else {
+			spg = fromStorableObject(storableObject);
+		}
+		spg.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
+				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
+				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+				resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
+				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
+				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
+				DatabaseIdentifier.getIdentifier(resultSet, SchemeProtoGroupWrapper.COLUMN_SYMBOL_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, SchemeProtoGroupWrapper.COLUMN_PARENT_SCHEME_PROTO_GROUP_ID));
+		return spg;
 	}
 }
