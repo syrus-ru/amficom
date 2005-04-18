@@ -135,7 +135,7 @@ public class SchemeSaveAsCommand extends VoidCommand {
 					new TreeListSelectionEvent("", TreeListSelectionEvent.SELECT_EVENT
 							+ TreeListSelectionEvent.REFRESH_EVENT));
 			aContext.getDispatcher().notify(
-				new SchemeEvent(this, scheme, null, SchemeEvent.OPEN_SCHEME));
+				new SchemeEvent(this, scheme, SchemeEvent.OPEN_SCHEME));
 			Pool.removeMap("clonedids");
 			ret_code = OK;
 		} 
