@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalImageCache.java,v 1.7 2005/04/18 09:22:13 peskovsky Exp $
+ * $Id: TopologicalImageCache.java,v 1.8 2005/04/18 10:08:09 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.Client.Map.MapDataException;
 
 /**
  * @author $Author: peskovsky $
- * @version $Revision: 1.7 $, $Date: 2005/04/18 09:22:13 $
+ * @version $Revision: 1.8 $, $Date: 2005/04/18 10:08:09 $
  * @module mapinfo_v1
  */
 public class TopologicalImageCache
@@ -1134,9 +1134,9 @@ class LoadingThread extends Thread
 		{
 			SpatialLayer spL = (SpatialLayer )layersIt.next();
 			result += "&" + ServletCommandNames.PAR_LAYER_VISIBLE + index + "="
-					+ (spL.isVisible() ? 1 : 0);
+					+ (spL.isVisible() && spL.isVisibleAtScale(request.topoScale) ? 1 : 0);
 			result += "&" + ServletCommandNames.PAR_LAYER_LABELS_VISIBLE + index
-					+ "=" + (spL.isLabelVisible() ? 1 : 0);
+					+ "=" + (spL.isLabelVisible() && spL.isVisibleAtScale(request.topoScale) ? 1 : 0);
 			index++;
 		}
 
@@ -1146,7 +1146,7 @@ class LoadingThread extends Thread
 /**
  * Структура запроса изображения с сервера
  * @author $Author: peskovsky $
- * @version $Revision: 1.7 $, $Date: 2005/04/18 09:22:13 $
+ * @version $Revision: 1.8 $, $Date: 2005/04/18 10:08:09 $
  * @module mapinfo_v1
  */
 class TopologicalRequest implements Comparable

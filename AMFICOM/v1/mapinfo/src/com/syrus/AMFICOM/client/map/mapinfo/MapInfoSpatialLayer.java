@@ -3,6 +3,7 @@ package com.syrus.AMFICOM.Client.Map.Mapinfo;
 import java.awt.Component;
 
 import com.mapinfo.mapj.FeatureLayer;
+import com.mapinfo.unit.Distance;
 import com.syrus.AMFICOM.Client.Map.SpatialLayer;
 
 public class MapInfoSpatialLayer implements SpatialLayer
@@ -49,12 +50,21 @@ public class MapInfoSpatialLayer implements SpatialLayer
 		return returnValue;
 	}
 
-	public boolean isVisibleAtCurrentScale()
+	public boolean isVisibleAtScale(double scale)
 	{
 		boolean returnValue = false;
 		try
 		{
-			returnValue = this.mapLayer.isVisibleAtCurrentZoom();
+			if (this.mapLayer.isZoomLayer())
+			{
+				Distance minZoom = this.mapLayer.getMinZoom();
+				Distance maxZoom = this.mapLayer.getMaxZoom();
+				if ((minZoom.getScalarValue() < scale) && (scale < maxZoom.getScalarValue()))
+					returnValue = true;
+			}
+			else
+				returnValue = true;
+//			returnValue = this.mapLayer.isVisibleAtCurrentZoom();
 		}
 		catch(Exception exc)
 		{
@@ -63,12 +73,17 @@ public class MapInfoSpatialLayer implements SpatialLayer
 
 		return returnValue;
 	}
+
+	public boolean isVisibleAtCurrentScale()
+	{
+		return isVisibleAtScale(this.layerToRepaint.getScale());
+	}
 	
 	public void setVisible(boolean visible)
 	{
 		this.visible = visible;
 		this.layerToRepaint.refreshLayers();		
-		if (this.isVisibleAtCurrentScale())
+		if (this.isVisibleAtScale(this.layerToRepaint.getScale()))
 		{
 			this.layerToRepaint.repaint(true);			
 		}
