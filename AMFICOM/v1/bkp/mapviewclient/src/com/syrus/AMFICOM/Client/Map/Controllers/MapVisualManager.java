@@ -1,5 +1,5 @@
 /**
- * $Id: MapVisualManager.java,v 1.1 2005/04/07 14:14:29 krupenn Exp $
+ * $Id: MapVisualManager.java,v 1.2 2005/04/18 11:14:34 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -7,18 +7,37 @@
  */
 package com.syrus.AMFICOM.Client.Map.Controllers;
 
+import java.util.HashMap;
+
+import com.syrus.AMFICOM.Client.Map.Props.CablePathVisualManager;
+import com.syrus.AMFICOM.Client.Map.Props.PhysicalLinkVisualManager;
 import com.syrus.AMFICOM.client_.general.ui_.StorableObjectEditor;
 import com.syrus.AMFICOM.client_.general.ui_.VisualManager;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
+import com.syrus.AMFICOM.map.MapElement;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/07 14:14:29 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/18 11:14:34 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
 public class MapVisualManager implements VisualManager {
 
 	static MapVisualManager instance;
+	
+	private static java.util.Map vmMap = new HashMap();
+
+	static
+	{
+		vmMap.put(com.syrus.AMFICOM.mapview.CablePath.class,
+			CablePathVisualManager.getInstance());
+		vmMap.put(com.syrus.AMFICOM.map.PhysicalLink.class,
+			PhysicalLinkVisualManager.getInstance());
+	}
+
+	public static VisualManager getVisualManager(MapElement mapElement) {
+		return (VisualManager) vmMap.get(mapElement.getClass());
+	}
 	
 	protected MapVisualManager() {
 		// empty
