@@ -73,10 +73,10 @@ public class SaveAnalysisCommand extends VoidCommand
 		ParameterType ptype2 = null;
 		try
 		{
-			type = AnalysisUtil.getAnalysisType(userId, ParameterTypeCodenames.DADARA);
-			ptype0 = AnalysisUtil.getParameterType(userId, ParameterTypeCodenames.REFLECTOGRAMMA, DataType.DATA_TYPE_RAW);
-			ptype1 = AnalysisUtil.getParameterType(userId, ParameterTypeCodenames.TRACE_EVENTS, DataType.DATA_TYPE_RAW);
-			ptype2 = AnalysisUtil.getParameterType(userId, ParameterTypeCodenames.DADARA_MTAE, DataType.DATA_TYPE_RAW);
+			type = AnalysisUtil.getAnalysisType(ParameterTypeCodenames.DADARA);
+			ptype0 = AnalysisUtil.getParameterType(ParameterTypeCodenames.REFLECTOGRAMMA, DataType.DATA_TYPE_RAW);
+			ptype1 = AnalysisUtil.getParameterType(ParameterTypeCodenames.TRACE_EVENTS, DataType.DATA_TYPE_RAW);
+			ptype2 = AnalysisUtil.getParameterType(ParameterTypeCodenames.DADARA_MTAE, DataType.DATA_TYPE_RAW);
 		} catch (ApplicationException e) {
 			// FIXME: add a better error processing
 			System.err.println("SaveAnalysisCommand: Application exception while getAnalysisType");

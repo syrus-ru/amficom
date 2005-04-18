@@ -51,7 +51,7 @@ public class AnalysisUtil
 	{ // empty
 	}
 
-	public static ParameterType getParameterType(Identifier userId, String codename, DataType dataType) throws ApplicationException {
+	public static ParameterType getParameterType(String codename, DataType dataType) throws ApplicationException {
 		TypicalCondition pTypeCondition = new TypicalCondition(
 				codename,
 				OperationSort.OPERATION_EQUALS,
@@ -62,10 +62,14 @@ public class AnalysisUtil
 			if (parameterTypeSet.isEmpty())
 				throw new RetrieveObjectException("AnalysisUtil.getParameterType | parameter type with codename " + pTypeCondition.getValue() + " not found");
 
-			return (ParameterType) parameterTypeSet.iterator().next();						
+			//return (ParameterType) parameterTypeSet.iterator().next();
+			ParameterType ret = (ParameterType) parameterTypeSet.iterator().next();
+			if (ret.getDataType() != dataType)
+				throw new ApplicationException("unexpected dataType");
+			return ret;
 	}
 
-	public static AnalysisType getAnalysisType(Identifier userId, String codename) throws ApplicationException
+	public static AnalysisType getAnalysisType(String codename) throws ApplicationException
 	{
 		StorableObjectCondition aTypeCondition =
 			new TypicalCondition(
@@ -74,49 +78,14 @@ public class AnalysisUtil
 				ObjectEntities.ANALYSISTYPE_ENTITY_CODE,
 				StorableObjectWrapper.COLUMN_CODENAME);			
 
-		try
+		Collection aTypes = MeasurementStorableObjectPool.getStorableObjectsByCondition(aTypeCondition, true);
+		for (Iterator it = aTypes.iterator(); it.hasNext();)
 		{
-			Collection aTypes = MeasurementStorableObjectPool.getStorableObjectsByCondition(aTypeCondition, true);
-			for (Iterator it = aTypes.iterator(); it.hasNext();)
-			{
-				AnalysisType type = (AnalysisType)it.next();
-				if (type.getCodename().equals(codename))
-					return type;
-			}
+			AnalysisType type = (AnalysisType)it.next();
+			if (type.getCodename().equals(codename))
+				return type;
 		}
-		catch(ApplicationException ex)
-		{
-			System.err.println("Exception searching ParameterType. Creating new one.");
-			ex.printStackTrace();
-		}
-
-		java.util.Set inParameterTypes = new HashSet();
-		ParameterType ptype = getParameterType(userId, ParameterTypeCodenames.REFLECTOGRAMMA, DataType.DATA_TYPE_RAW);
-		inParameterTypes.add(ptype);
-
-		java.util.Set outParameterTypes = new HashSet();
-		ptype = getParameterType(userId, ParameterTypeCodenames.TRACE_EVENTS, DataType.DATA_TYPE_RAW);
-		outParameterTypes.add(ptype);
-
-		try
-		{
-				return AnalysisType.createInstance(
-				userId,
-				codename,
-				"",
-				inParameterTypes,
-				Collections.EMPTY_SET,
-				Collections.EMPTY_SET,
-				outParameterTypes,
-				Collections.EMPTY_SET); //@todo: Temporal fix
-		}
-		catch(CreateObjectException e)
-		{
-				// FIXME
-				System.err.println("AnalysisUtil.getAnalysisType: Exception in createInstance. Wanna die.");
-				e.printStackTrace();
-				return null;
-		}
+		throw new ApplicationException("getAnalysisType parametertype not found");
 	}
 
 	/**
@@ -201,7 +170,7 @@ public class AnalysisUtil
 		{
 			for (int i = 0; i < parameterCodenames.length; i++)
 			{
-				ParameterType ptype = getParameterType(userId, parameterCodenames[i], DataType.DATA_TYPE_DOUBLE);
+				ParameterType ptype = getParameterType(parameterCodenames[i], DataType.DATA_TYPE_DOUBLE);
 				params[i] = SetParameter.createInstance(ptype,
 						ByteArray.toByteArray(defaultMinuitParams[i]));
 			}
@@ -240,13 +209,13 @@ public class AnalysisUtil
 			SetParameter[] params = new SetParameter[2];
 
 			// FIXME: save both events and thresholds
-			ParameterType ptype = getParameterType(userId, ParameterTypeCodenames.DADARA_ETALON_MTM, DataType.DATA_TYPE_RAW);
+			ParameterType ptype = getParameterType(ParameterTypeCodenames.DADARA_ETALON_MTM, DataType.DATA_TYPE_RAW);
 			params[0] = SetParameter.createInstance(ptype,
 					DataStreamableUtil.writeDataStreamableToBA(mtm));
 
 			BellcoreStructure bs = Heap.getBSPrimaryTrace();
 
-			ptype = getParameterType(userId, ParameterTypeCodenames.REFLECTOGRAMMA, DataType.DATA_TYPE_RAW);
+			ptype = getParameterType(ParameterTypeCodenames.REFLECTOGRAMMA, DataType.DATA_TYPE_RAW);
 			params[1] = SetParameter.createInstance(ptype,
 					new BellcoreWriter().write(bs));
 
