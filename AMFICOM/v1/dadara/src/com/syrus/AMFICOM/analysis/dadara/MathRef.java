@@ -3,6 +3,7 @@ package com.syrus.AMFICOM.analysis.dadara;
 public class MathRef
 {
 	private MathRef() {
+		// no instantiation possible
 	}
 
 	public static double[] correctReflectogramm(double []data)
@@ -53,8 +54,8 @@ public class MathRef
 	public static double[] linearize2point (double[] y, int begin, int end)
 	{
 		double res[] = new double[2];
-		res[0] = (y[end] - y[begin]) / (double)(end - begin);
-		res[1] = y[begin] - res[0] * (double)begin;
+		res[0] = (y[end] - y[begin]) / (end - begin);
+		res[1] = y[begin] - res[0] * begin;
 		return res;
 	}
 
@@ -182,13 +183,13 @@ public class MathRef
 
 		for(int i = begin; i<=end; i++)
 		{
-			d = (double)(i - shift);
+			d = i - shift;
 			beta = beta - y[i] * d;
 			alfa = alfa + d * d;
 			gamma = gamma + d;
 			dzeta = dzeta - y[i];
 		}
-		double n = (double)(end - begin + 1);
+		double n = end - begin + 1;
 		double res[] = new double[2];
 		res[0] = (n*beta/gamma - dzeta)/(gamma - n*alfa/gamma);
 		res[1] = -(alfa*res[0] + beta)/gamma;
@@ -236,7 +237,7 @@ public class MathRef
 		if (pulsewidth == 0)
 			pulsewidth = 1000; // XXX: default pulsewidth
 		//return sigma + Math.log(1000d/(double)pulsewidth) / Math.log(10d);
-		return sigma0 + Math.log(vG / (double)pulsewidth) / Math.log(10d);
+		return sigma0 + Math.log(vG / pulsewidth) / Math.log(10d);
 	}
 
 	// вычислить отражение
@@ -251,22 +252,22 @@ public class MathRef
 
 	public static double round_4 (double d)
 	{
-		return ((double)Math.round(d * 10000d)) / 10000d;
+		return Math.round(d * 10000.0) / 10000.0;
 	}
 
 	public static double round_3 (double d)
 	{
-		return ((double)Math.round(d * 1000d)) / 1000d;
-	}
-
-	public static double round_1 (double d)
-	{
-		return ((double)Math.round(d * 10d)) / 10d;
+		return Math.round(d * 1000.0) / 1000.0;
 	}
 
 	public static double round_2 (double d)
 	{
-		return ((double)Math.round(d * 100d)) / 100d;
+		return Math.round(d * 100.0) / 100.0;
+	}
+
+	public static double round_1 (double d)
+	{
+		return Math.round(d * 10.0) / 10.0;
 	}
 
 	/*
