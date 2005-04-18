@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.59 2005/04/13 15:44:25 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.60 2005/04/18 11:26:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -78,7 +78,7 @@ import com.syrus.AMFICOM.scheme.*;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.59 $, $Date: 2005/04/13 15:44:25 $
+ * @version $Revision: 1.60 $, $Date: 2005/04/18 11:26:32 $
  * @module mapviewclient_v2
  */
 public abstract class LogicalNetLayer implements MapCoordinatesConverter
@@ -123,7 +123,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	protected List fixedNodeList = new LinkedList();
 
 	/** Текущий тип создаваемых физических линий. */
-	protected PhysicalLinkType currentPen = null;
+	protected PhysicalLinkType currentPhysicalLinkType = null;
 
 	/** Тип непривязанного схемного элемента. */
 	protected SiteNodeType unboundProto = null;
@@ -349,6 +349,9 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		this.aContext = aContext;
 
 		this.userId = new Identifier(this.aContext.getSessionInterface().getAccessIdentifier().user_id);
+		
+		LinkTypeController.createDefaults(this.userId);
+		NodeTypeController.createDefaults(this.userId);
 	}
 
 	/**
@@ -1725,13 +1728,13 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	 * Получить выбранный тип для создания новых линий.
 	 * @return тип линии
 	 */
-	public PhysicalLinkType getPen()
+	public PhysicalLinkType getCurrentPhysicalLinkType()
 	{
-		if(this.currentPen == null)
+		if(this.currentPhysicalLinkType == null)
 		{
-			this.currentPen = LinkTypeController.getDefaultPen(getUserId());
+			this.currentPhysicalLinkType = LinkTypeController.getDefaultPhysicalLinkType();
 		}
-		return this.currentPen;
+		return this.currentPhysicalLinkType;
 	}
 	
 	/**
@@ -1742,7 +1745,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	{
 		if(this.unboundProto == null)
 		{
-			this.unboundProto = NodeTypeController.getDefaultUnboundProto(getUserId());
+			this.unboundProto = NodeTypeController.getUnboundNodeType();
 		}
 		return this.unboundProto;
 	}
@@ -1756,7 +1759,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		if(this.unboundLinkProto == null)
 		{
 
-			this.unboundLinkProto = LinkTypeController.getDefaultUnboundPen(getUserId());
+			this.unboundLinkProto = LinkTypeController.getUnboundPhysicalLinkType();
 		}
 		return this.unboundLinkProto;
 	}
@@ -1767,7 +1770,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	 */
 	public void setPen(PhysicalLinkType pen)
 	{
-		this.currentPen = pen;
+		this.currentPhysicalLinkType = pen;
 	}
 
 	/**

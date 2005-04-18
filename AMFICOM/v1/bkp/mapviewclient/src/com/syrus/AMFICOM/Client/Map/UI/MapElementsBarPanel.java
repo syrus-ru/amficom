@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementsBarPanel.java,v 1.11 2005/04/08 14:19:21 peskovsky Exp $
+ * $Id: MapElementsBarPanel.java,v 1.12 2005/04/18 11:23:45 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,8 +29,8 @@ import javax.swing.JPanel;
  * 
  * 
  * 
- * @version $Revision: 1.11 $, $Date: 2005/04/08 14:19:21 $
- * @author $Author: peskovsky $
+ * @version $Revision: 1.12 $, $Date: 2005/04/18 11:23:45 $
+ * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
 public final class MapElementsBarPanel extends JPanel 
@@ -90,7 +90,7 @@ public final class MapElementsBarPanel extends JPanel
 
 	private Collection getMapProtoElements()
 	{
-		return NodeTypeController.getTopologicalProtos(this.aContext);
+		return NodeTypeController.getTopologicalNodeTypes();
 	}
 }
 
