@@ -8,7 +8,6 @@ import com.syrus.AMFICOM.Client.Map.SpatialLayer;
 public class MapInfoSpatialLayer implements SpatialLayer
 {
 	private boolean visible = true;
-	private boolean labelsVisible = true;	
 	
 	private FeatureLayer mapLayer = null;
 
@@ -33,7 +32,21 @@ public class MapInfoSpatialLayer implements SpatialLayer
 
 	public boolean isLabelVisible()
 	{
-		return true;
+		boolean returnValue = false;
+		try
+		{
+			//Проверяем видны ли надписи на текущем масштабе на сервере
+			returnValue = this.mapLayer.isAutoLabel();
+		}
+		catch(Exception exc)
+		{
+			exc.printStackTrace();
+		}
+		
+		//надписи видны когда виден слой.
+		returnValue &= this.visible;
+		
+		return returnValue;
 	}
 
 	public boolean isVisibleAtCurrentScale()
@@ -63,6 +76,7 @@ public class MapInfoSpatialLayer implements SpatialLayer
 
 	public void setLabelVisible(boolean visible)
 	{
+		throw new UnsupportedOperationException();
 	}
 
 	public Component getLayerImage()

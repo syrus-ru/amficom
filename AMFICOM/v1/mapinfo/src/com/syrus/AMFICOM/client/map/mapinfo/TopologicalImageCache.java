@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalImageCache.java,v 1.6 2005/04/15 11:25:15 peskovsky Exp $
+ * $Id: TopologicalImageCache.java,v 1.7 2005/04/18 09:22:13 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.Client.Map.MapDataException;
 
 /**
  * @author $Author: peskovsky $
- * @version $Revision: 1.6 $, $Date: 2005/04/15 11:25:15 $
+ * @version $Revision: 1.7 $, $Date: 2005/04/18 09:22:13 $
  * @module mapinfo_v1
  */
 public class TopologicalImageCache
@@ -668,8 +668,8 @@ public class TopologicalImageCache
 					
 					//Выставляем экранный размер
 					requestToSend.size = new Dimension(
-						(int)Math.round(Math.abs(this.miLayer.convertMapToScreen(newWidth))) + 2,
-						(int)Math.round(Math.abs(this.miLayer.convertMapToScreen(newHeight))) + 2);
+						(int)Math.round(Math.abs(this.miLayer.convertMapToScreen(new DoublePoint(0,0),new DoublePoint(newWidth,0)))) + 2,
+						(int)Math.round(Math.abs(this.miLayer.convertMapToScreen(new DoublePoint(0,0),new DoublePoint(0,newHeight)))) + 2);
 					
 					if ((requestToSend.size.width <= 0) || (requestToSend.size.height <= 0))
 					{
@@ -1146,7 +1146,7 @@ class LoadingThread extends Thread
 /**
  * Структура запроса изображения с сервера
  * @author $Author: peskovsky $
- * @version $Revision: 1.6 $, $Date: 2005/04/15 11:25:15 $
+ * @version $Revision: 1.7 $, $Date: 2005/04/18 09:22:13 $
  * @module mapinfo_v1
  */
 class TopologicalRequest implements Comparable

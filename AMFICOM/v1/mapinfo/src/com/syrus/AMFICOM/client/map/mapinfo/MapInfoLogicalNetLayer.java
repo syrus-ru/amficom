@@ -133,6 +133,9 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 		return d;
 	}
 
+	/**
+	 * Это не работает в силу того, что масштабы могут разниться по разным координатным осям.
+	 */
 	public double convertMapToScreen(double topologicalDistance)
 	{
 		Point p1 = convertMapToScreen(new DoublePoint(0, 0));
@@ -142,6 +145,21 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 		return returnValue;
 	}
 
+	/**
+	 * Считает экранное расстояние между двумя точками в сферических координатах
+	 * @param sphP1 
+	 * @param sphP2
+	 * @return Расстояние
+	 */
+	public double convertMapToScreen(DoublePoint sphP1, DoublePoint sphP2)
+	{
+		Point p1 = convertMapToScreen(sphP1);
+		Point p2 = convertMapToScreen(sphP2);		
+		
+		double returnValue = Math.pow((Math.pow(p2.x - p1.x,2) + Math.pow(p2.y - p1.y,2)),0.5);
+		return returnValue;
+	}
+	
 	public DoublePoint pointAtDistance(
 			DoublePoint startPoint,
 			DoublePoint endPoint,
