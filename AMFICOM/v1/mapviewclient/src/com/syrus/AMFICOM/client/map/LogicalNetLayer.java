@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.60 2005/04/18 11:26:32 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.61 2005/04/18 12:12:07 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -31,8 +31,8 @@ import com.syrus.AMFICOM.Client.General.Command.CommandList;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
+import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.SchemeNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Event.TreeDataSelectionEvent;
 import com.syrus.AMFICOM.Client.General.Event.TreeListSelectionEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
@@ -70,7 +70,9 @@ import com.syrus.AMFICOM.mapview.Marker;
 import com.syrus.AMFICOM.mapview.MeasurementPath;
 import com.syrus.AMFICOM.mapview.Selection;
 import com.syrus.AMFICOM.mapview.VoidElement;
-import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.scheme.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.SchemeElement;
+import com.syrus.AMFICOM.scheme.SchemePath;
 
 /**
  * ”правл€ет отображением логической структуры сети.
@@ -78,7 +80,7 @@ import com.syrus.AMFICOM.scheme.*;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.60 $, $Date: 2005/04/18 11:26:32 $
+ * @version $Revision: 1.61 $, $Date: 2005/04/18 12:12:07 $
  * @module mapviewclient_v2
  */
 public abstract class LogicalNetLayer implements MapCoordinatesConverter
@@ -1203,45 +1205,37 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 				} 
 			}
 			else
-			if(ae.getActionCommand().equals(SchemeNavigateEvent.type))
+			if(ae.getActionCommand().equals(ObjectSelectedEvent.TYPE))
 			{
 				if(this.performProcessing)
 				{
-				SchemeNavigateEvent sne = (SchemeNavigateEvent )ae;
-					if(sne.SCHEME_ELEMENT_SELECTED)
+					ObjectSelectedEvent selectEvent = (ObjectSelectedEvent )ae;
+					if(selectEvent.isSelected(ObjectSelectedEvent.SCHEME_ELEMENT))
 					{
-						SchemeElement[] ses = (SchemeElement[] )sne.getSource();
+						SchemeElement schemeElement = (SchemeElement )selectEvent.getSelectedObject();
 
-						for(int i = 0; i < ses.length; i++)
-						{
-							SiteNode site = this.mapView.findElement(ses[i]);
-							if(site != null)
-								this.mapView.getMap().setSelected(site, true);
-						}
+						SiteNode site = this.mapView.findElement(schemeElement);
+						if(site != null)
+							this.mapView.getMap().setSelected(site, true);
 					}
 					else
-					if(sne.SCHEME_PATH_SELECTED)
+					if(selectEvent.isSelected(ObjectSelectedEvent.SCHEME_PATH))
 					{
-						SchemePath[] sps = (SchemePath[] )sne.getSource();
+						SchemePath schemePath = (SchemePath )selectEvent.getSelectedObject();
 						
-						for(int i = 0; i < sps.length; i++)
-						{
-							MeasurementPath measurementPath = this.mapView.findMeasurementPath(sps[i]);
-							if(measurementPath != null)
-								this.mapView.getMap().setSelected(measurementPath, true);
-						}
+						MeasurementPath measurementPath = this.mapView.findMeasurementPath(schemePath);
+						if(measurementPath != null)
+							this.mapView.getMap().setSelected(measurementPath, true);
 					}
 					else
-					if(sne.SCHEME_CABLE_LINK_SELECTED)
+					if(selectEvent.isSelected(ObjectSelectedEvent.SCHEME_CABLELINK))
 					{
-						SchemeCableLink[] scs = (SchemeCableLink[] )sne.getSource();
-						for(int i = 0; i < scs.length; i++)
-						{
-							CablePath cablePath = this.mapView.findCablePath(scs[i]);
-							if(cablePath != null)
-								this.mapView.getMap().setSelected(cablePath, true);
-						}
+						SchemeCableLink schemeCableLink = (SchemeCableLink )selectEvent.getSelectedObject();
+						CablePath cablePath = this.mapView.findCablePath(schemeCableLink);
+						if(cablePath != null)
+							this.mapView.getMap().setSelected(cablePath, true);
 					}
+/*
 					else
 					if(sne.SCHEME_ELEMENT_DESELECTED)
 					{
@@ -1277,7 +1271,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 								this.mapView.getMap().setSelected(cablePath, false);
 						}
 					}
-
+*/
 					repaint(false);
 				}
 			}
