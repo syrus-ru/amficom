@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.35 2005/04/18 11:25:10 krupenn Exp $
+ * $Id: MapFrame.java,v 1.36 2005/04/18 12:11:24 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -27,9 +27,9 @@ import com.syrus.AMFICOM.Client.General.Event.CatalogNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Event.ContextChangeEvent;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
+import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Event.SchemeNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Event.TreeDataSelectionEvent;
 import com.syrus.AMFICOM.Client.General.Event.TreeListSelectionEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
@@ -80,7 +80,7 @@ import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
  * 
  * 
  * 
- * @version $Revision: 1.35 $, $Date: 2005/04/18 11:25:10 $
+ * @version $Revision: 1.36 $, $Date: 2005/04/18 12:11:24 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -272,7 +272,7 @@ public class MapFrame extends JInternalFrame
 				this.aContext.getDispatcher().unregister(this, MapEvent.NEED_FULL_REPAINT);
 				this.aContext.getDispatcher().unregister(this, MapEvent.NEED_REPAINT);
 				this.aContext.getDispatcher().unregister(this, MapEvent.DESELECT_ALL);
-				this.aContext.getDispatcher().unregister(this, SchemeNavigateEvent.type);
+				this.aContext.getDispatcher().unregister(this, ObjectSelectedEvent.TYPE);
 				this.aContext.getDispatcher().unregister(this, CatalogNavigateEvent.type);
 				this.aContext.getDispatcher().unregister(this, TreeListSelectionEvent.typ);
 				this.aContext.getDispatcher().unregister(this, TreeDataSelectionEvent.type);
@@ -294,7 +294,7 @@ public class MapFrame extends JInternalFrame
 			aContext.getDispatcher().register(this, MapEvent.NEED_FULL_REPAINT);
 			aContext.getDispatcher().register(this, MapEvent.NEED_REPAINT);
 			aContext.getDispatcher().register(this, MapEvent.DESELECT_ALL);
-			aContext.getDispatcher().register(this, SchemeNavigateEvent.type);
+			aContext.getDispatcher().register(this, ObjectSelectedEvent.TYPE);
 			aContext.getDispatcher().register(this, CatalogNavigateEvent.type);
 			aContext.getDispatcher().register(this, TreeListSelectionEvent.typ);
 			aContext.getDispatcher().register(this, TreeDataSelectionEvent.type);
