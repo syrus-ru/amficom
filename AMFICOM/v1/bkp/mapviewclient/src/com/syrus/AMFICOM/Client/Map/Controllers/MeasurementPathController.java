@@ -1,5 +1,5 @@
 /**
- * $Id: MeasurementPathController.java,v 1.16 2005/04/15 18:04:07 bass Exp $
+ * $Id: MeasurementPathController.java,v 1.17 2005/04/18 11:15:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -38,14 +38,17 @@ import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.MeasurementPath;
-import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.scheme.PathElement;
+import com.syrus.AMFICOM.scheme.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.SchemeElement;
+import com.syrus.AMFICOM.scheme.SchemeLink;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
 import com.syrus.AMFICOM.scheme.corba.PathElement_TransferablePackage.DataPackage.Kind;
 
 /**
  * Контроллер топологическиго пути.
- * @author $Author: bass $
- * @version $Revision: 1.16 $, $Date: 2005/04/15 18:04:07 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.17 $, $Date: 2005/04/18 11:15:02 $
  * @module mapviewclient_v1
  */
 public final class MeasurementPathController extends AbstractLinkController
