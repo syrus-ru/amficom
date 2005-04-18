@@ -20,6 +20,12 @@ import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.mapview.CablePath;
 
+/**
+ * @deprecated use CablePathEditor
+ * @version $Revision: 1.12 $, $Date: 2005/04/18 11:21:52 $
+ * @author $Author: krupenn $
+ * @module mapviewclient
+ */
 public class MapCablePathGeneralPanel
 		extends JPanel 
 		implements ObjectResourcePropertiesPane, MapPropertiesPane

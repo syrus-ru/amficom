@@ -17,14 +17,11 @@ public class MapCablePathPane
 {
 	public ApplicationContext aContext;
 	
-	MapCablePathGeneralPanel gPanel = new MapCablePathGeneralPanel();
 	MapCablePathBindPanel bPanel = new MapCablePathBindPanel();
 
 	CablePath path;
 
 	private LogicalNetLayer lnl;
-
-	public JTabbedPane tabbedPane = new JTabbedPane();
 
 	private static MapCablePathPane instance = new MapCablePathPane();
 
@@ -55,7 +52,6 @@ public class MapCablePathPane
 	public void setLogicalNetLayer(LogicalNetLayer lnl)
 	{
 		this.lnl = lnl;
-		this.gPanel.setLogicalNetLayer(lnl);
 		this.bPanel.setLogicalNetLayer(lnl);
 	}
 
@@ -67,12 +63,8 @@ public class MapCablePathPane
 	private void jbInit()
 	{
 		this.setLayout(new BorderLayout());
-		this.add(this.tabbedPane, BorderLayout.CENTER);
+		this.add(this.bPanel, BorderLayout.CENTER);
 
-		this.tabbedPane.setTabPlacement(SwingConstants.TOP);
-
-		this.tabbedPane.add(this.gPanel.getName(), this.gPanel);
-		this.tabbedPane.add(this.bPanel.getName(), this.bPanel);
 	}
 
 	public Object getObject()
@@ -84,26 +76,22 @@ public class MapCablePathPane
 	{
 		this.path = (CablePath)or;
 
-		this.gPanel.setObject(this.path);
 		this.bPanel.setObject(this.path);
 	}
 
 	public void setContext(ApplicationContext aContext)
 	{
 		this.aContext = aContext;
-		this.gPanel.setContext(aContext);
 		this.bPanel.setContext(aContext);
 	}
 
 	public void showBindPanel()
 	{
-		this.tabbedPane.setSelectedComponent(this.bPanel);
 	}
 
 	public boolean modify()
 	{
-		if(this.gPanel.modify()
-			&& this.bPanel.modify())
+		if(this.bPanel.modify())
 		{
 			return true;
 		}
@@ -112,7 +100,6 @@ public class MapCablePathPane
 
 	public boolean cancel()
 	{
-		this.gPanel.cancel();
 		this.bPanel.cancel();
 		return true;
 	}

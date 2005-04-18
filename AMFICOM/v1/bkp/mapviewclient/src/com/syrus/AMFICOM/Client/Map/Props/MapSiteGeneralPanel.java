@@ -166,7 +166,7 @@ public class MapSiteGeneralPanel
 			this.nameTextField.setEnabled(true);
 			this.nameTextField.setText(this.site.getName());
 
-			Collection protos = NodeTypeController.getTopologicalProtos(getLogicalNetLayer().getContext());
+			Collection protos = NodeTypeController.getTopologicalNodeTypes();
 
 			this.typeComboBox.setEnabled(true);
 			this.typeComboBox.addElements(protos);

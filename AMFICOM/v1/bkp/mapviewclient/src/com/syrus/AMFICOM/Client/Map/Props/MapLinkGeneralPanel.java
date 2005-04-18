@@ -188,7 +188,7 @@ public class MapLinkGeneralPanel
 			this.nameTextField.setEnabled(true);
 			this.nameTextField.setText(this.link.getName());
 
-			Collection protos = LinkTypeController.getPens(getLogicalNetLayer().getContext());
+			Collection protos = LinkTypeController.getTopologicalLinkTypes();
 			
 			this.typeComboBox.setEnabled(true);
 			this.typeComboBox.addElements(protos);
