@@ -1,5 +1,5 @@
 package com.syrus.AMFICOM.Client.General.Lang;
-
+ 
 import java.util.*;
 
 public class LangModelAnalyse

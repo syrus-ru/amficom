@@ -1,6 +1,5 @@
 package com.syrus.AMFICOM.analysis.dadara;
 
-
 public class RefAnalysis
 {
 	public TraceEvent[] events;

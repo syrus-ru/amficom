@@ -1,11 +1,11 @@
 /*-
- * $Id: Heap.java,v 1.25 2005/04/18 10:35:19 saa Exp $
+ * $Id: Heap.java,v 1.26 2005/04/18 10:38:16 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
-
+ 
 package com.syrus.AMFICOM.Client.Analysis;
 
 import java.awt.Color;
@@ -38,7 +38,7 @@ import com.syrus.io.BellcoreStructure;
  * использование остальных методов работы с BS
  * 
  * @author $Author: saa $
- * @version $Revision: 1.25 $, $Date: 2005/04/18 10:35:19 $
+ * @version $Revision: 1.26 $, $Date: 2005/04/18 10:38:16 $
  * @module
  */
 public class Heap
