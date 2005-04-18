@@ -213,20 +213,15 @@ public class TestLine extends JLabel implements TestsEditor, TestEditor {
 		} else if (((this.selectedTest != null && !this.selectedTest.getId().equals(test.getId())) || this.selectedTest == null)
 				&& (this.tests.contains(test) || this.unsavedTests.contains(test))) {
 			this.selectedTest = test;
-			this.repaint();
+		} else {
+			this.selectedTest = null;
 		}
+		this.repaint();
 	}
 
 	public void updateTests() {
 		this.acquireTests();
-		Test test = this.schedulerModel.getSelectedTest();
-		if (test == null) {
-			this.selectedTest = test;
-		} else if (((this.selectedTest != null && !this.selectedTest.getId().equals(test.getId())) || this.selectedTest == null)
-				&& (this.tests.contains(test) || this.unsavedTests.contains(test))) {
-			this.selectedTest = test;
-			this.repaint();
-		}
+		this.updateTest();
 	}
 
 	public void paintComponent(Graphics g) {
