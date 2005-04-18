@@ -5,14 +5,19 @@ import java.util.HashSet;
 import java.util.Map;
 import java.awt.Cursor;
 
+import javax.swing.JOptionPane;
+
+import com.syrus.AMFICOM.Client.Analysis.GUIUtil;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 
 import com.syrus.AMFICOM.analysis.ClientAnalysisManager;
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
+import com.syrus.AMFICOM.analysis.dadara.IncompatibleTracesException;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEventsImpl;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
@@ -77,6 +82,7 @@ public class MinuitAnalyseCommand extends VoidCommand
 			
 			// создаем анализ дл€ primary trace
 			// XXX: если InitialAnalysisCommand уже выполнен, то в принципе не нужно (если кнопки "IA" и "MA" будут отдельно)
+
 			ModelTraceAndEventsImpl mtaePri = CoreAnalysisManager.makeAnalysis(bs, params);
 
 			RefAnalysis a = new RefAnalysis();
@@ -86,13 +92,22 @@ public class MinuitAnalyseCommand extends VoidCommand
 			Heap.setMTAEPrimary(mtaePri);
 
 			// проводим анализ дл€ всего набора р/г
+
 			Collection bsColl = Heap.getBsBellCoreMap().values();
 			if (bsColl == null) // случитс€ только в странной ситуаци€ - bsBellCoreMap пуст. ¬еро€тно, это будет значить ошибку в коде
 			{
 				bsColl = new HashSet(1);
 				bsColl.add(bs);
 			}
-			ModelTraceAndEventsImpl mtaeEt = CoreAnalysisManager.makeAnalysis(bsColl, params);
+
+			ModelTraceAndEventsImpl mtaeEt;
+			try {
+				mtaeEt = CoreAnalysisManager.makeAnalysis(bsColl, params);
+			} catch (IncompatibleTracesException e){
+				GUIUtil.showErrorMessage("incompatibleTraces");
+				return;
+			}
+
 			Map tracesMap = Heap.getBsBellCoreMap();
 			ModelTraceManager mtm = CoreAnalysisManager.makeThresholds(mtaeEt,
 				tracesMap.values());
