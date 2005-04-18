@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.2 2005/04/18 09:40:29 saa Exp $
+# $Id: Makefile,v 1.3 2005/04/18 09:44:40 saa Exp $
 #
 # vim:set ft=make:
 #
@@ -27,7 +27,7 @@ SOURCES := $(shell find $(SRCDIR) -name *.java)
 
 $(LIBNAME): .mach
 	$(JAR) -cf $@ \
-		-C $(CLASSDIR) com rulesets
+		-C $(CLASSDIR) com
 
 $(CLASSDIR):	
 	mkdir -p $@
@@ -35,6 +35,7 @@ $(CLASSDIR):
 .PHONY:	clean
 clean:
 	rm -f $(LIBNAME)
+	rm -rf $(CLASSDIR)
 
 .mach:	$(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
