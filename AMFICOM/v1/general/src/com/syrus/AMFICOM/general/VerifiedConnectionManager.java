@@ -1,5 +1,5 @@
 /*
- * $Id: VerifiedConnectionManager.java,v 1.1 2005/04/16 21:07:35 arseniy Exp $
+ * $Id: VerifiedConnectionManager.java,v 1.2 2005/04/18 08:56:34 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,11 +22,11 @@ import com.syrus.AMFICOM.general.corba.VerifiableHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/16 21:07:35 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/18 08:56:34 $
  * @author $Author: arseniy $
  * @module general_v1
  */
-public abstract class VerifiedConnectionManager {
+public class VerifiedConnectionManager {
 	private CORBAServer corbaServer;
 
 	Map referencesMap; //Map <String servantName, Verifiable reference>
@@ -108,8 +108,13 @@ public abstract class VerifiedConnectionManager {
 		}
 	}
 
-	protected abstract void onLoseConnection(String servantName);
+	protected void onLoseConnection(String servantName) {
+		Log.debugMessage("VerifiedConnectionManager.onLoseConnection | Connection with '" + servantName + "' lost", Log.DEBUGLEVEL08);
+	}
 
-	protected abstract void onRestoreConnection(String servantName);
+	protected void onRestoreConnection(String servantName) {
+		Log.debugMessage("VerifiedConnectionManager.onRestoreConnection | Connection with '" + servantName + "' restored",
+				Log.DEBUGLEVEL08);
+	}
 
 }

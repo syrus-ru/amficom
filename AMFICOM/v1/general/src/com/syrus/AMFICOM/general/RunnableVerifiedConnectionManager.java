@@ -1,5 +1,5 @@
 /*
- * $Id: RunnableVerifiedConnectionManager.java,v 1.1 2005/04/16 21:07:56 arseniy Exp $
+ * $Id: RunnableVerifiedConnectionManager.java,v 1.2 2005/04/18 08:56:34 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,11 +16,11 @@ import com.syrus.AMFICOM.general.corba.Verifiable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/16 21:07:56 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/18 08:56:34 $
  * @author $Author: arseniy $
  * @module general_v1
  */
-public abstract class RunnableVerifiedConnectionManager extends VerifiedConnectionManager implements Runnable {
+public class RunnableVerifiedConnectionManager extends VerifiedConnectionManager implements Runnable {
 	private long timeout;
 
 
