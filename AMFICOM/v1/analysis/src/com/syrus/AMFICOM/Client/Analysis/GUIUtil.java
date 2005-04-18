@@ -1,5 +1,5 @@
 /*-
- * $Id: GUIUtil.java,v 1.1 2005/04/18 16:31:20 saa Exp $
+ * $Id: GUIUtil.java,v 1.2 2005/04/18 16:33:37 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,13 +15,13 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.1 $, $Date: 2005/04/18 16:31:20 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/18 16:33:37 $
  * @module
  */
 public class GUIUtil
 {
 	private GUIUtil () {
-		// non-istantiable
+		// non-instantiable
 	}
 	public static void showErrorMessage(String codestring)
 	{
