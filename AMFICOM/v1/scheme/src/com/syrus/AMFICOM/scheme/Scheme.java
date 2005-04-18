@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.14 2005/04/15 19:22:55 arseniy Exp $
+ * $Id: Scheme.java,v 1.15 2005/04/18 13:00:50 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,8 +37,8 @@ import com.syrus.util.Log;
 /**
  * #03 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.14 $, $Date: 2005/04/15 19:22:55 $
+ * @author $Author: bass $
+ * @version $Revision: 1.15 $, $Date: 2005/04/18 13:00:50 $
  * @module scheme_v1
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -121,23 +121,20 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	public static Scheme createInstance(final Identifier creatorId,
 			final Identifier domainId,
 			final String name,
-			final String description) throws CreateObjectException {
+			final String description)
+			throws CreateObjectException {
 		try {
 			final Date created = new Date();
-			final Scheme scheme = new Scheme(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SCHEME_ENTITY_CODE),
-					created,
-					created,
-					creatorId,
-					creatorId,
-					0L,
-					domainId,
-					name,
-					description);
+			final Scheme scheme = new Scheme(
+					IdentifierPool
+							.getGeneratedIdentifier(ObjectEntities.SCHEME_ENTITY_CODE),
+					created, created, creatorId, creatorId,
+					0L, domainId, name, description);
 			scheme.changed = true;
 			return scheme;
-		}
-		catch (IdentifierGenerationException ige) {
-			throw new CreateObjectException("Cannot generate identifier ", ige);
+		} catch (final IdentifierGenerationException ige) {
+			throw new CreateObjectException(
+					"Scheme.createInstance | cannot generate identifier ", ige); //$NON-NLS-1$
 		}
 	}
 

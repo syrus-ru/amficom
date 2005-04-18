@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePort.java,v 1.14 2005/04/15 19:22:55 arseniy Exp $
+ * $Id: SchemePort.java,v 1.15 2005/04/18 13:00:50 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,8 +31,8 @@ import com.syrus.AMFICOM.scheme.corba.SchemePort_Transferable;
 /**
  * #08 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.14 $, $Date: 2005/04/15 19:22:55 $
+ * @author $Author: bass $
+ * @version $Revision: 1.15 $, $Date: 2005/04/18 13:00:50 $
  * @module scheme_v1
  */
 public final class SchemePort extends AbstractSchemePort {
@@ -83,21 +83,21 @@ public final class SchemePort extends AbstractSchemePort {
 		}
 	}
 
-	public static SchemePort createInstance(final Identifier creatorId) throws CreateObjectException {
+	public static SchemePort createInstance(final Identifier creatorId)
+			throws CreateObjectException {
 		assert creatorId != null;
 		try {
 			final Date created = new Date();
-			final SchemePort schemePort = new SchemePort(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SCHEME_PORT_ENTITY_CODE),
-					created,
-					created,
-					creatorId,
-					creatorId,
+			final SchemePort schemePort = new SchemePort(
+					IdentifierPool
+							.getGeneratedIdentifier(ObjectEntities.SCHEME_PORT_ENTITY_CODE),
+					created, created, creatorId, creatorId,
 					0L);
 			schemePort.changed = true;
 			return schemePort;
-		}
-		catch (IdentifierGenerationException ige) {
-			throw new CreateObjectException("Cannot generate identifier ", ige);
+		} catch (final IdentifierGenerationException ige) {
+			throw new CreateObjectException(
+					"SchemePort.createInstance | cannot generate identifier ", ige); //$NON-NLS-1$
 		}
 	}
 
