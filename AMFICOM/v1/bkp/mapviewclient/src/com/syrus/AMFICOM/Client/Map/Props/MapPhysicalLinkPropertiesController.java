@@ -28,11 +28,11 @@ public final class MapPhysicalLinkPropertiesController
 	private MapPhysicalLinkPropertiesController() 
 	{
 		String[] keysArray = new String[] { 
-				PROPERTY_NAME,
-				PROPERTY_PROTO_ID,
-				PROPERTY_TOPOLOGICAL_LENGTH,
-				PROPERTY_START_NODE_ID,
-				PROPERTY_END_NODE_ID,
+					PROPERTY_NAME,
+					PROPERTY_PROTO_ID,
+					PROPERTY_TOPOLOGICAL_LENGTH,
+					PROPERTY_START_NODE_ID,
+					PROPERTY_END_NODE_ID,
 				PROPERTY_COLOR,
 				PROPERTY_STYLE,
 				PROPERTY_THICKNESS};

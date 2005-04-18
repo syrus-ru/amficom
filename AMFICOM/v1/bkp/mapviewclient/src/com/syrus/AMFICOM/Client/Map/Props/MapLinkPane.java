@@ -17,15 +17,12 @@ public final class MapLinkPane
 {
 	public ApplicationContext aContext;
 	
-	MapLinkGeneralPanel gPanel = new MapLinkGeneralPanel();
 	MapLinkBindPanel bPanel = new MapLinkBindPanel();
 
 	PhysicalLink maplink;
 
 	private LogicalNetLayer lnl;
 
-	public JTabbedPane tabbedPane = new JTabbedPane();
-	
 	private static MapLinkPane instance = new MapLinkPane();
 
 	private MapLinkPane()
@@ -55,7 +52,6 @@ public final class MapLinkPane
 	public void setLogicalNetLayer(LogicalNetLayer lnl)
 	{
 		this.lnl = lnl;
-		this.gPanel.setLogicalNetLayer(lnl);
 		this.bPanel.setLogicalNetLayer(lnl);
 	}
 
@@ -67,12 +63,7 @@ public final class MapLinkPane
 	private void jbInit()
 	{
 		this.setLayout(new BorderLayout());
-		this.add(this.tabbedPane, BorderLayout.CENTER);
-
-		this.tabbedPane.setTabPlacement(SwingConstants.TOP);
-
-		this.tabbedPane.add(this.gPanel.getName(), this.gPanel);
-		this.tabbedPane.add(this.bPanel.getName(), this.bPanel);
+		this.add(this.bPanel, BorderLayout.CENTER);
 	}
 
 	public Object getObject()
@@ -84,21 +75,18 @@ public final class MapLinkPane
 	{
 		this.maplink = (PhysicalLink)or;
 
-		this.gPanel.setObject(this.maplink);
 		this.bPanel.setObject(this.maplink);
 	}
 
 	public void setContext(ApplicationContext aContext)
 	{
 		this.aContext = aContext;
-		this.gPanel.setContext(aContext);
 		this.bPanel.setContext(aContext);
 	}
 
 	public boolean modify()
 	{
-		if(this.gPanel.modify()
-			&& this.bPanel.modify())
+		if(this.bPanel.modify())
 		{
 //			Dispatcher disp  = aContext.getDispatcher();
 //			if(disp != null)
@@ -114,7 +102,6 @@ public final class MapLinkPane
 
 	public boolean cancel()
 	{
-		this.gPanel.cancel();
 		this.bPanel.cancel();
 		return true;
 	}

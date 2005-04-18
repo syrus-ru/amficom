@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementPropertiesFrame.java,v 1.1 2005/04/18 11:23:13 krupenn Exp $
+ * $Id: MapElementPropertiesFrame.java,v 1.2 2005/04/18 16:16:26 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.map.MapElement;
 
 /**
  *  Окно отображения свойств элемента карты
- * @version $Revision: 1.1 $, $Date: 2005/04/18 11:23:13 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/18 16:16:26 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -48,10 +48,11 @@ public final class MapElementPropertiesFrame extends GeneralPropertiesFrame
 			if(event.isMapElementSelected()) {
 				MapElement mapElement = (MapElement )event.getSource();
 				VisualManager vm = MapVisualManager.getVisualManager(mapElement);
-				setVisualManager(vm);				
+				super.setVisualManager(vm);				
 				if (this.editor != null)
 					this.editor.setObject(mapElement);
 			}
 		}
 	}
+	
 }

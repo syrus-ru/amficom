@@ -1,5 +1,5 @@
 /*
- * $Id: MapElementCharacteristicsEditor.java,v 1.2 2005/04/18 12:10:38 krupenn Exp $
+ * $Id: MapElementCharacteristicsEditor.java,v 1.3 2005/04/18 16:14:38 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.map.TopologicalNode;
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.2 $, $Date: 2005/04/18 12:10:38 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/18 16:14:38 $
  * @module schemeclient_v1
  */
 
@@ -80,7 +80,7 @@ public class MapElementCharacteristicsEditor extends CharacteristicsPanel {
 						true);
 			super.addCharacteristics(this.mapElement.getCharacteristics(), this.mapElement.getId());
 		}
-//		else
-//			super.showNoSelection();
+		else
+			super.showNoSelection();
 	}
 }

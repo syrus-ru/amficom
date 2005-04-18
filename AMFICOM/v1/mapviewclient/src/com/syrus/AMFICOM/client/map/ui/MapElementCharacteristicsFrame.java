@@ -16,12 +16,13 @@ public class MapElementCharacteristicsFrame extends CharacteristicPropertiesFram
 	}
 	
 	public void setContext(ApplicationContext aContext) {
-//		if (this.dispatcher != null) {
-//			this.dispatcher.unregister(this, MapEvent.MAP_NAVIGATE);
-//		}
+		if (this.aContext != null)
+			if (this.aContext.getDispatcher() != null) {
+				this.aContext.getDispatcher().unregister(this, MapEvent.MAP_NAVIGATE);
+			}
 		super.setContext(aContext);
-//		if(aContext.getDispatcher() != null)
-//			aContext.getDispatcher().register(this, MapEvent.MAP_NAVIGATE);
+		if(aContext.getDispatcher() != null)
+			aContext.getDispatcher().register(this, MapEvent.MAP_NAVIGATE);
 	}
 	
 	public void operationPerformed(OperationEvent e) {

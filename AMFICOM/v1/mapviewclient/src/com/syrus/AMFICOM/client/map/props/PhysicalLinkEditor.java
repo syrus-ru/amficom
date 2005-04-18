@@ -18,23 +18,25 @@ import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
 import com.syrus.AMFICOM.Client.Map.Controllers.LinkTypeController;
 import com.syrus.AMFICOM.Client.Map.UI.SimpleMapElementController;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
+import com.syrus.AMFICOM.client_.general.ui_.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
-import com.syrus.AMFICOM.client_.general.ui_.StorableObjectEditor;
 import com.syrus.AMFICOM.map.IntDimension;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
 
-public class PhysicalLinkEditor
-		implements StorableObjectEditor
+public class PhysicalLinkEditor extends DefaultStorableObjectEditor
 {
 	PhysicalLink link;
 
 	private JPanel jPanel = new JPanel();
-	private JLabel nameLabel = new JLabel();
 	private GridBagLayout gridBagLayout1 = new GridBagLayout();
+
+	private JLabel nameLabel = new JLabel();
 	private JTextField nameTextField = new JTextField();
 	private JLabel typeLabel = new JLabel();
 	private ObjComboBox typeComboBox = null;
+	private JLabel topologicalLengthLabel = new JLabel();
+	private JTextField topologicalLengthTextField = new JTextField();
 	private JLabel descLabel = new JLabel();
 	private JTextArea descTextArea = new JTextArea();
 
@@ -96,6 +98,9 @@ public class PhysicalLinkEditor
 		this.endLabel.setText(LangModelMap.getString("EndNode"));
 //		this.endLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
+		this.topologicalLengthLabel.setText(LangModelMap.getString("TopologicalLength"));
+//		this.topologicalLengthLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
+
 		this.addressLabel.setText(LangModelMap.getString("Address"));
 //		this.addressLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
@@ -119,10 +124,10 @@ public class PhysicalLinkEditor
 
 		this.addressPanel.add(this.cityLabel, ReusedGridBagConstraints.get(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 5), 0, 0));
 		this.addressPanel.add(this.cityTextField, ReusedGridBagConstraints.get(1, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		this.addressPanel.add(this.streetLabel, ReusedGridBagConstraints.get(2, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 5, 0, 5), 0, 0));
-		this.addressPanel.add(this.streetTextField, ReusedGridBagConstraints.get(3, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		this.addressPanel.add(this.buildingLabel, ReusedGridBagConstraints.get(4, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 5, 0, 5), 0, 0));
-		this.addressPanel.add(this.buildingTextField, ReusedGridBagConstraints.get(5, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.addressPanel.add(this.streetLabel, ReusedGridBagConstraints.get(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 5, 0, 5), 0, 0));
+		this.addressPanel.add(this.streetTextField, ReusedGridBagConstraints.get(1, 1, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.addressPanel.add(this.buildingLabel, ReusedGridBagConstraints.get(0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 5, 0, 5), 0, 0));
+		this.addressPanel.add(this.buildingTextField, ReusedGridBagConstraints.get(1, 2, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
 
 		this.jPanel.add(this.nameLabel, ReusedGridBagConstraints.get(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
 		this.jPanel.add(this.nameTextField, ReusedGridBagConstraints.get(1, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
@@ -132,15 +137,27 @@ public class PhysicalLinkEditor
 		this.jPanel.add(this.startComboBox, ReusedGridBagConstraints.get(1, 2, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
 		this.jPanel.add(this.endLabel, ReusedGridBagConstraints.get(0, 3, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
 		this.jPanel.add(this.endComboBox, ReusedGridBagConstraints.get(1, 3, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		this.jPanel.add(this.addressLabel, ReusedGridBagConstraints.get(0, 4, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
-		this.jPanel.add(this.addressPanel, ReusedGridBagConstraints.get(1, 4, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		this.jPanel.add(this.dimensionLabel, ReusedGridBagConstraints.get(0, 5, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
-		this.jPanel.add(this.dimensionPanel, ReusedGridBagConstraints.get(1, 5, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 0, 0));
-		this.jPanel.add(this.descLabel, ReusedGridBagConstraints.get(0, 6, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, null, 0, 0));
-		this.jPanel.add(this.descTextArea, ReusedGridBagConstraints.get(1, 6, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, null, 0, 0));
+		this.jPanel.add(this.topologicalLengthLabel, ReusedGridBagConstraints.get(0, 4, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
+		this.jPanel.add(this.topologicalLengthTextField, ReusedGridBagConstraints.get(1, 4, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.jPanel.add(this.addressLabel, ReusedGridBagConstraints.get(0, 5, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, null, 0, 0));
+		this.jPanel.add(this.addressPanel, ReusedGridBagConstraints.get(1, 5, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.jPanel.add(this.dimensionLabel, ReusedGridBagConstraints.get(0, 6, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
+		this.jPanel.add(this.dimensionPanel, ReusedGridBagConstraints.get(1, 6, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 0, 0));
+		this.jPanel.add(this.descLabel, ReusedGridBagConstraints.get(0, 7, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, null, 0, 0));
+		this.jPanel.add(this.descTextArea, ReusedGridBagConstraints.get(1, 7, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, null, 0, 0));
 
+		super.addToUndoableListener(this.nameTextField);
+		super.addToUndoableListener(this.typeComboBox);
+		super.addToUndoableListener(this.cityTextField);
+		super.addToUndoableListener(this.streetTextField);
+		super.addToUndoableListener(this.buildingTextField);
+		super.addToUndoableListener(this.mTextField);
+		super.addToUndoableListener(this.nTextField);
+		super.addToUndoableListener(this.descTextArea);
+		
 		this.startComboBox.setEnabled(false);
 		this.endComboBox.setEnabled(false);
+		this.topologicalLengthTextField.setEnabled(false);
 	}
 
 	public Object getObject()
@@ -160,6 +177,7 @@ public class PhysicalLinkEditor
 		{
 			this.nameTextField.setEnabled(false);
 			this.nameTextField.setText("");
+			this.topologicalLengthTextField.setText("");
 			this.typeComboBox.setEnabled(false);
 			this.descTextArea.setEnabled(false);
 			this.descTextArea.setText("");
@@ -175,11 +193,13 @@ public class PhysicalLinkEditor
 		{
 			this.nameTextField.setEnabled(true);
 			this.nameTextField.setText(this.link.getName());
+			
+			this.topologicalLengthTextField.setText(String.valueOf(this.link.getLengthLt()));
 
-			Collection protos = LinkTypeController.getTopologicalLinkTypes();
+			Collection types = LinkTypeController.getTopologicalLinkTypes();
 			
 			this.typeComboBox.setEnabled(true);
-			this.typeComboBox.addElements(protos);
+			this.typeComboBox.addElements(types);
 			this.typeComboBox.setSelectedItem(this.link.getType());
 
 			this.descTextArea.setEnabled(true);
@@ -187,7 +207,7 @@ public class PhysicalLinkEditor
 
 			this.startComboBox.addItem(this.link.getStartNode());
 			this.startComboBox.setSelectedItem(this.link.getStartNode());
-			this.endComboBox.addItem(this.link.getStartNode());
+			this.endComboBox.addItem(this.link.getEndNode());
 			this.endComboBox.setSelectedItem(this.link.getEndNode());
 
 			this.mTextField.setText(String.valueOf(this.link.getBinding().getDimension().getWidth()));
