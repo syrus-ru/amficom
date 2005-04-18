@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.1 2005/04/05 14:07:53 stas Exp $
+ * $Id: SchemeActions.java,v 1.2 2005/04/18 09:55:03 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/04/05 14:07:53 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/18 09:55:03 $
  * @module schemeclient_v1
  */
 
@@ -151,7 +151,7 @@ public class SchemeActions {
 	public static SchemeCableLink createCableLink(SchemeGraph graph, PortView firstPort,
 			PortView port, Point p, Point p2) {
 		try {
-			SchemeCableLink link = SchemeObjectsFactory.createCableLink();
+			SchemeCableLink link = SchemeObjectsFactory.createSchemeCableLink();
 			
 			ConnectionSet cs = new ConnectionSet();
 			Map viewMap = new HashMap();
@@ -194,7 +194,7 @@ public class SchemeActions {
 	public static SchemeLink createLink(SchemeGraph graph, PortView firstPort, 
 			PortView port, Point p, Point p2) {
 		try {
-			SchemeLink link = SchemeObjectsFactory.createLink();
+			SchemeLink link = SchemeObjectsFactory.createSchemeLink();
 			
 			ConnectionSet cs = new ConnectionSet();
 			Map viewMap = new HashMap();
@@ -294,17 +294,27 @@ public class SchemeActions {
 			Log.errorMessage("can't create PortCell out of vertical bounds of DeviceCell");
 			return null;
 		}
+		AbstractSchemePortDirectionType directionType;
+		if (dev_bounds.x > p.x)
+			directionType = AbstractSchemePortDirectionType._IN;
+		else if (dev_bounds.x + dev_bounds.width < p.x)
+			directionType = AbstractSchemePortDirectionType._OUT;
+		else {
+			Log.errorMessage("can't create PortCell in of horizontal bounds of DeviceCell");
+			return null;
+		}
 		
 		AbstractSchemePort schemePort;
 		try {
-			schemePort = isCable ? SchemeObjectsFactory.createCablePort()
-					: SchemeObjectsFactory.createPort();
+			schemePort = isCable ? SchemeObjectsFactory.createSchemeCablePort()
+					: SchemeObjectsFactory.createSchemePort();
 		} catch (CreateObjectException e) {
 			Log.errorException(e);
 			return null;
 		}
 		String name = String.valueOf(((DeviceCell) cells[0]).getChildCount());
-		schemePort.setName(name);	
+		schemePort.setName(name);
+		schemePort.setAbstractSchemePortDirectionType(directionType);
 		
 		return createAbstractPort(graph, deviceCell, p, schemePort);
 	}
@@ -324,7 +334,7 @@ public class SchemeActions {
 
 					if (se != null && se.isAlarmed())
 						aContext.getDispatcher().notify(
-								new SchemeEvent(this, se, se.getAlarmedPathElement(),
+								new SchemeEvent(this, se,
 										SchemeEvent.CREATE_ALARMED_LINK));
 				}
 			});
@@ -344,7 +354,7 @@ public class SchemeActions {
 
 						if (se.isAlarmed())
 							aContext.getDispatcher().notify(
-									new SchemeEvent(this, se, se.getAlarmedPathElement(),
+									new SchemeEvent(this, se,
 											SchemeEvent.CREATE_ALARMED_LINK));
 					}
 				});
@@ -355,32 +365,35 @@ public class SchemeActions {
 		return pop;
 	}
 
-	public static DeviceGroup findSchemeElementById(SchemeGraph graph,
-			Identifier scheme_elementId) {
+	public static DeviceGroup findGroupById(SchemeGraph graph,
+			Identifier id) {
 		Object[] cells = graph.getAll();
 		for (int i = 0; i < cells.length; i++)
 			if (cells[i] instanceof DeviceGroup)
-				if (((DeviceGroup) cells[i]).getSchemeElementId().equals(
-						scheme_elementId))
+				if (id.equals(((DeviceGroup)cells[i]).getSchemeElementId()) ||
+					id.equals(((DeviceGroup)cells[i]).getProtoElementId()))
 					return (DeviceGroup) cells[i];
 		return null;
 	}
 
-	public static DeviceGroup findProtoElementById(SchemeGraph graph, Identifier protoId) {
-		Object[] cells = graph.getAll();
-		for (int i = 0; i < cells.length; i++)
-			if (cells[i] instanceof DeviceGroup)
-				if (((DeviceGroup) cells[i]).getProtoElementId().equals(protoId))
-					return (DeviceGroup) cells[i];
-		return null;
-	}
-
-	public static PortCell findSchemePortById(SchemeGraph graph, Identifier schemePortId) {
+	public static PortCell findPortCellById(SchemeGraph graph, Identifier schemePortId) {
 		Object[] cells = graph.getAll();
 		for (int i = 0; i < cells.length; i++)
 			if (cells[i] instanceof PortCell)
 				if (((PortCell) cells[i]).getSchemePortId().equals(schemePortId))
 					return (PortCell) cells[i];
+		return null;
+	}
+	
+	public static BlockPortCell findBlockPortCellById(SchemeGraph graph, Identifier id) {
+		Object[] cells = graph.getAll();
+		for (int i = 0; i < cells.length; i++)
+			if (cells[i] instanceof BlockPortCell) {
+				BlockPortCell bpc = (BlockPortCell)cells[i];
+				if (id.equals(bpc.getSchemeCablePortId()) ||
+						id.equals(bpc.getSchemePortId())) 
+					return (BlockPortCell) cells[i];
+			}
 		return null;
 	}
 
@@ -396,7 +409,7 @@ public class SchemeActions {
 		return null;
 	}
 
-	public static CablePortCell findSchemeCablePortById(SchemeGraph graph,
+	public static CablePortCell findCablePortCellById(SchemeGraph graph,
 			Identifier scheme_cablePortId) {
 		Object[] cells = graph.getAll();
 		for (int i = 0; i < cells.length; i++)

@@ -1,5 +1,5 @@
 /*
- * $Id: UgoTabbedPane.java,v 1.1 2005/04/05 14:07:53 stas Exp $
+ * $Id: UgoTabbedPane.java,v 1.2 2005/04/18 09:55:03 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,15 +21,15 @@ import com.syrus.AMFICOM.scheme.*;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/04/05 14:07:53 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/18 09:55:03 $
  * @module schemeclient_v1
  */
 
 public class UgoTabbedPane extends JPanel implements OperationListener {
 	
 	protected ApplicationContext aContext;
-	protected Dispatcher dispatcher;
-	protected ShemeMarqueeHandler marqueeHandler;
+//	protected Dispatcher dispatcher;
+	protected SchemeMarqueeHandler marqueeHandler;
 	protected UgoPanel panel;
 	
 	public UgoTabbedPane(ApplicationContext aContext) {
@@ -60,21 +60,24 @@ public class UgoTabbedPane extends JPanel implements OperationListener {
 		return aContext;
 	}
 	private void jbInit() throws Exception {
-		marqueeHandler =  new ShemeMarqueeHandler(this);
+		marqueeHandler =  new SchemeMarqueeHandler(this);
 		setLayout(new BorderLayout());
-		panel = createPanel();
-		JScrollPane graphView = new JScrollPane(panel.getGraph());
-		add(graphView, BorderLayout.CENTER);
+		add(createPanel(), BorderLayout.CENTER);
 	}
 	
 	public void setToolBar (JComponent toolBar) {
 		add(toolBar, BorderLayout.NORTH);
 	}
 		
-	protected UgoPanel createPanel() {
+	protected JComponent createPanel() {
 		panel = new UgoPanel(aContext);
 		panel.getGraph().setMarqueeHandler(marqueeHandler);
-		return panel;
+		JScrollPane graphView = new JScrollPane(panel.getGraph());
+		return graphView;
+	}
+	
+	public SchemeMarqueeHandler getMarqueeHandler() {
+		return marqueeHandler;
 	}
 
 	/**
@@ -95,7 +98,10 @@ public class UgoTabbedPane extends JPanel implements OperationListener {
 	 * @return selected SchemeGraph
 	 */
 	public SchemeGraph getGraph() {
-		return getCurrentPanel().getGraph();
+		UgoPanel p = getCurrentPanel();
+		if (p != null)
+			return p.getGraph();
+		return null;
 	}
 
 	public boolean removePanel(UgoPanel p) {
@@ -149,8 +155,8 @@ public class UgoTabbedPane extends JPanel implements OperationListener {
 		p.getSchemeResource().setScheme(sch);
 		p.getSchemeResource().setSchemeElement(null);
 		GraphActions.clearGraph(p.getGraph());
-		if (sch.getUgoCell() != null)
-			p.insertCell(sch.getUgoCell().getData(), new Point(0, 0), true);
+//		if (sch.getUgoCell() != null)
+//			p.insertCell(sch.getUgoCell().getData(), new Point(0, 0), true);
 	}
 	
 	public void openSchemeElement(SchemeElement se) {

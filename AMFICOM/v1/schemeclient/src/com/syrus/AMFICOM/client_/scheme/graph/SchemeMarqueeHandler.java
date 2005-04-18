@@ -1,5 +1,5 @@
 /*-
- * $Id: ShemeMarqueeHandler.java,v 1.1 2005/04/05 14:07:53 stas Exp $
+ * $Id: SchemeMarqueeHandler.java,v 1.1 2005/04/18 09:55:03 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,17 +20,18 @@ import com.jgraph.plaf.GraphUI;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.*;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.*;
 import com.syrus.AMFICOM.scheme.*;
+import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/04/05 14:07:53 $
+ * @version $Revision: 1.1 $, $Date: 2005/04/18 09:55:03 $
  * @module schemeclient_v1
  */
 
-public class ShemeMarqueeHandler extends BasicMarqueeHandler {
+public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 	UgoTabbedPane pane;
 	
-	public ShemeMarqueeHandler (UgoTabbedPane pane) {
+	public SchemeMarqueeHandler (UgoTabbedPane pane) {
 		this.pane = pane;
 	}
 	
@@ -200,7 +201,7 @@ public class ShemeMarqueeHandler extends BasicMarqueeHandler {
 			Color fg = Color.black;
 			g.setColor(fg);
 			g.setXORMode(bg);
-			overlay(g);
+			overlay(graph, g);
 			current = graph.snap(event.getPoint());
 			if (e.isSelected() || l.isSelected() || ce.isSelected()) {
 				port = getPortViewAt(graph, event.getX(), event.getY(), !event.isShiftDown());
@@ -217,7 +218,7 @@ public class ShemeMarqueeHandler extends BasicMarqueeHandler {
 			bounds = new Rectangle(start).union(new Rectangle(current));
 			g.setColor(bg);
 			g.setXORMode(fg);
-			overlay(g);
+			overlay(graph, g);
 			event.consume();
 		}
 		super.mouseDragged(event);
@@ -249,11 +250,16 @@ public class ShemeMarqueeHandler extends BasicMarqueeHandler {
 			if (event != null && !event.isConsumed() && bounds != null && !s.isSelected()) {
 				if (dev.isSelected()) {
 					graph.fromScreen(bounds);
-					bounds.width += 2;
-					bounds.height += 2;
+//					bounds.width += 2;
+//					bounds.height += 2;
+					bounds.width ++;
+					bounds.height ++;
 					SchemeActions.createDevice(graph, "", bounds);
-					event.consume();
-				} 
+				}
+				else if (r.isSelected())
+					graph.addVertex("", bounds, false, Color.black);
+				else if (c.isSelected())
+					graph.addEllipse("", bounds);
 				else if (ce.isSelected()) {
 					if (start == null || current == null) {
 						event.consume();
@@ -268,7 +274,6 @@ public class ShemeMarqueeHandler extends BasicMarqueeHandler {
 							link.setParentScheme(scheme);
 						}
 					}
-					event.consume();
 				}
 				else if (e.isSelected()) {
 					if (start == null || current == null) {
@@ -279,6 +284,9 @@ public class ShemeMarqueeHandler extends BasicMarqueeHandler {
 						if (scheme != null) {
 							SchemeLink link = SchemeActions.createLink(graph, firstPort, port,
 									graph.fromScreen(new Point(start)), graph.fromScreen(new Point(current)));
+							
+							Notifier.notify(graph, pane.aContext, link);
+							
 							scheme.addSchemeLink(link);
 							link.setParentScheme(scheme);
 						}
@@ -290,9 +298,11 @@ public class ShemeMarqueeHandler extends BasicMarqueeHandler {
 								schemeElement.addSchemeLink(link);
 								link.setParentSchemeElement(schemeElement);
 							}
+							else {
+								Log.debugMessage("neither Scheme nor SchemeElement is opened", Log.SEVERE);
+							}
 						}
 					}
-					event.consume();
 				} 
 				else if (l.isSelected()) {
 					List list = new ArrayList();
@@ -312,16 +322,15 @@ public class ShemeMarqueeHandler extends BasicMarqueeHandler {
 					if (port != null)
 						cs.connect(cell, port.getCell(), false);
 					graph.getModel().insert(insert, viewMap, cs, null, null);
-					event.consume();
 				} 
 				else if (t.isSelected()) {
 					DefaultGraphCell cell = GraphActions.addVertex(graph,
 							"Текст", bounds, true, false, false, null);
 					graph.startEditingAtCell(cell);
-					event.consume();
 				}
+				event.consume();
 			}
-		} 
+		}
 		else { // right mouse button pressed
 			if (!graph.isSelectionEmpty()) {
 				Object cell = graph.getSelectionCell();
@@ -340,9 +349,17 @@ public class ShemeMarqueeHandler extends BasicMarqueeHandler {
 				}
 			}
 		}
+		if (!s.isSelected())
+			s.doClick();
+		firstPort = null;
+		port = null;
+		start = null;
+		current = null;
+		bounds = null;
 		super.mouseReleased(event);
+		
 		graph.repaint();
-		graph.selectionNotify();
+//		graph.selectionNotify();
 	}
 
 	public void mouseMoved(MouseEvent event) {
@@ -364,23 +381,22 @@ public class ShemeMarqueeHandler extends BasicMarqueeHandler {
 					Color fg = graph.getMarqueeColor();
 					g.setColor(fg);
 					g.setXORMode(bg);
-					overlay(g);
+					overlay(graph, g);
 					port = newPort;
 					g.setColor(bg);
 					g.setXORMode(fg);
-					overlay(g);
+					overlay(graph, g);
 				}
 			}
 		}
 		super.mouseMoved(event);
 	}
 
-	public void overlay(SchemeGraph graph) {
-		Graphics g = graph.getGraphics();
+	public void overlay(SchemeGraph graph, Graphics g) {
 		if (marqueeBounds != null)
 			g.drawRect(marqueeBounds.x, marqueeBounds.y, marqueeBounds.width,
 					marqueeBounds.height);
-		paintPort(graph);//getGraphics()
+		paintPort(graph, graph.getGraphics());
 		if (bounds != null && start != null) {
 			if (i.isSelected() || z.isSelected())
 				((Graphics2D) g).setStroke(GraphConstants.SELECTION_STROKE);
@@ -394,7 +410,7 @@ public class ShemeMarqueeHandler extends BasicMarqueeHandler {
 		}
 	}
 	
-	protected void paintPort(SchemeGraph graph) {
+	protected void paintPort(SchemeGraph graph, Graphics g) {
 		if (port != null) {
 			boolean offset =
 				(GraphConstants.getOffset(port.getAllAttributes()) != null);
@@ -407,7 +423,7 @@ public class ShemeMarqueeHandler extends BasicMarqueeHandler {
 			rect.translate(-s1, -s1);
 			rect.setSize(rect.width + 2 * s1, rect.height + 2 * s1);
 			GraphUI ui = graph.getUI();
-			ui.paintCell(graph.getGraphics(), port, rect, true);
+			ui.paintCell(g, port, rect, true);
 		}
 	}
 }

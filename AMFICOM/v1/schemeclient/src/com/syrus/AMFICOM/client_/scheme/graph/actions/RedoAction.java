@@ -1,5 +1,5 @@
 /*
- * $Id: RedoAction.java,v 1.1 2005/04/05 14:07:53 stas Exp $
+ * $Id: RedoAction.java,v 1.2 2005/04/18 09:55:03 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.*;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/04/05 14:07:53 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/18 09:55:03 $
  * @module schemeclient_v1
  */
 
@@ -40,7 +40,7 @@ public class RedoAction extends AbstractAction {
 			ex.printStackTrace();
 		} 
 		finally {
-			((ShemeMarqueeHandler)graph.getMarqueeHandler()).updateHistoryButtons(undoManager);
+			((SchemeMarqueeHandler)graph.getMarqueeHandler()).updateHistoryButtons(undoManager);
 		}
 	}
 }

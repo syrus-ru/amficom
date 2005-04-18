@@ -1,5 +1,5 @@
 /*
- * $Id: SetBackgroundSizeAction.java,v 1.1 2005/04/05 14:07:53 stas Exp $
+ * $Id: SetBackgroundSizeAction.java,v 1.2 2005/04/18 09:55:03 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.scheme.Scheme;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/04/05 14:07:53 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/18 09:55:03 $
  * @module schemeclient_v1
  */
 
@@ -44,7 +44,7 @@ public class SetBackgroundSizeAction extends AbstractAction {
 				scheme.setHeight(f.newsize.height);
 				SchemeGraph graph = pane.getGraph();
 				pane.getContext().getDispatcher().notify(
-						new SchemeEvent(this, graph, null, SchemeEvent.SCHEME_CHANGED));
+						new SchemeEvent(this, graph, SchemeEvent.SCHEME_CHANGED));
 				graph.setActualSize(f.newsize);
 				graph.updateUI();
 			}

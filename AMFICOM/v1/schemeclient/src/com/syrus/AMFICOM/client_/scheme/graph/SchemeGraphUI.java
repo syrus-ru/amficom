@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeGraphUI.java,v 1.1 2005/04/05 14:07:53 stas Exp $
+ * $Id: SchemeGraphUI.java,v 1.2 2005/04/18 09:55:03 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/04/05 14:07:53 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/18 09:55:03 $
  * @module schemeclient_v1
  */
 
@@ -65,7 +65,7 @@ public class SchemeGraphUI extends GPGraphUI {
 					e.acceptDrop(DnDConstants.ACTION_MOVE);
 					e.getDropTargetContext().dropComplete(true);
 					((SchemeGraph) graph).aContext.getDispatcher().notify(
-							new SchemeEvent(this, proto, null, SchemeEvent.OPEN_PROTOELEMENT));
+							new SchemeEvent(this, proto, SchemeEvent.OPEN_PROTOELEMENT));
 				} catch (UnsupportedFlavorException ex) {
 					e.getDropTargetContext().dropComplete(false);
 				} catch (IOException ex) {
@@ -145,6 +145,11 @@ public class SchemeGraphUI extends GPGraphUI {
 		public void mouseDragged(MouseEvent e) {
 			if (graph.isEditable())
 				super.mouseDragged(e);
+		}
+		
+		public void mouseReleased(MouseEvent e) {
+			super.mouseReleased(e);
+			((SchemeGraph)graph).selectionNotify();
 		}
 	}
 

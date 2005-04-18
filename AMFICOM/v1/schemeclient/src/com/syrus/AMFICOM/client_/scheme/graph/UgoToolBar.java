@@ -1,5 +1,5 @@
 /*-
- * $Id: UgoToolBar.java,v 1.1 2005/04/05 14:07:53 stas Exp $
+ * $Id: UgoToolBar.java,v 1.2 2005/04/18 09:55:03 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.actions.MarqeeAction;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/04/05 14:07:53 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/18 09:55:03 $
  * @module schemeclient_v1
  */
 
@@ -35,7 +35,7 @@ public class UgoToolBar extends JToolBar {
 		this.pane = pane;
 	}
 	
-	protected void createToolBar() {
+	public void createToolBar() {
 		commands.putAll(createGraphButtons());
 
 		for (int i = 0; i < buttons.length; i++) {
@@ -49,16 +49,15 @@ public class UgoToolBar extends JToolBar {
 	protected Map createGraphButtons() {
 		Map bttns = new HashMap();
 
-		if (pane.getGraph().getMarqueeHandler() instanceof ShemeMarqueeHandler) {
-			ShemeMarqueeHandler mh = (ShemeMarqueeHandler)pane.getGraph().getMarqueeHandler();
+		SchemeMarqueeHandler mh = pane.getMarqueeHandler();
 
-			bttns.put(Constants.marqueeTool, createToolButton(mh.s, btn_size, null,
-					null, Constants.ICON_MARQUEE, new MarqeeAction(pane.getGraph()), true));
-			ButtonGroup group = new ButtonGroup();
-			for (Iterator it = bttns.values().iterator(); it.hasNext();)
-				group.add((AbstractButton) it.next());
-			mh.s.doClick();
-		}
+		bttns.put(Constants.marqueeTool, createToolButton(mh.s, btn_size, null,
+				null, Constants.ICON_MARQUEE, new MarqeeAction(pane), true));
+		ButtonGroup group = new ButtonGroup();
+		for (Iterator it = bttns.values().iterator(); it.hasNext();)
+			group.add((AbstractButton) it.next());
+		mh.s.doClick();
+
 		return bttns;
 	}
 
@@ -96,7 +95,8 @@ public class UgoToolBar extends JToolBar {
 
 		public void actionPerformed(ActionEvent e) {
 			JComponent source = pane.getGraph();
-			e = new ActionEvent(source, e.getID(), e.getActionCommand(), e.getModifiers());
+			if (source != null)
+				e = new ActionEvent(source, e.getID(), e.getActionCommand(), e.getModifiers());
 			action.actionPerformed(e);
 		}
 	}

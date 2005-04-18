@@ -1,5 +1,5 @@
 /*
- * $Id: ElementsPanel.java,v 1.1 2005/04/05 14:07:53 stas Exp $
+ * $Id: ElementsPanel.java,v 1.2 2005/04/18 09:55:03 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.scheme.*;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/04/05 14:07:53 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/18 09:55:03 $
  * @module schemeclient_v1
  */
 
@@ -75,19 +75,19 @@ public class ElementsPanel extends UgoPanel {
 //			} 
 			if (ev.isSelected(ObjectSelectedEvent.SCHEME_ELEMENT)) {
 				SchemeElement element = (SchemeElement)ev.getSelectedObject();
-				graph.setSelectionCell(SchemeActions.findSchemeElementById(graph, element.getId()));
+				graph.setSelectionCell(SchemeActions.findGroupById(graph, element.getId()));
 			} 
 			else if (ev.isSelected(ObjectSelectedEvent.SCHEME_PROTOELEMENT)) {
 				SchemeProtoElement proto = (SchemeProtoElement)ev.getSelectedObject();
-				graph.setSelectionCell(SchemeActions.findProtoElementById(graph, proto.getId()));
+				graph.setSelectionCell(SchemeActions.findGroupById(graph, proto.getId()));
 			} 
 			else if (ev.isSelected(ObjectSelectedEvent.SCHEME_PORT)) {
 				SchemePort port = (SchemePort)ev.getSelectedObject();
-				graph.setSelectionCell(SchemeActions.findSchemePortById(graph, port.getId()));
+				graph.setSelectionCell(SchemeActions.findPortCellById(graph, port.getId()));
 			} 
 			else if (ev.isSelected(ObjectSelectedEvent.SCHEME_CABLEPORT)) {
 				SchemeCablePort port = (SchemeCablePort)ev.getSelectedObject();
-				graph.setSelectionCell(SchemeActions.findSchemeCablePortById(graph, port.getId()));
+				graph.setSelectionCell(SchemeActions.findCablePortCellById(graph, port.getId()));
 			}
 			else if (ev.isSelected(ObjectSelectedEvent.SCHEME_LINK)) {
 				SchemeLink link = (SchemeLink)ev.getSelectedObject();

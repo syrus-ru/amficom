@@ -1,5 +1,5 @@
 /*
- * $Id: UgoPanel.java,v 1.1 2005/04/05 14:07:53 stas Exp $
+ * $Id: UgoPanel.java,v 1.2 2005/04/18 09:55:03 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,15 +21,15 @@ import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.*;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.*;
-import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.corba.PortTypeSort;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.scheme.*;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/04/05 14:07:53 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/18 09:55:03 $
  * @module schemeclient_v1
  */
 
@@ -41,8 +41,8 @@ public class UgoPanel implements Printable, OperationListener {
 	protected GraphUndoManager undoManager = new GraphUndoManager() {
 		public void undoableEditHappened(UndoableEditEvent e) {
 			super.undoableEditHappened(e);
-			((ShemeMarqueeHandler)graph.getMarqueeHandler()).updateHistoryButtons(this);
-			aContext.getDispatcher().notify(new SchemeEvent(this, graph, null, 
+			((SchemeMarqueeHandler)graph.getMarqueeHandler()).updateHistoryButtons(this);
+			aContext.getDispatcher().notify(new SchemeEvent(this, graph, 
 					SchemeEvent.SCHEME_CHANGED));
 		}
 	};
@@ -101,250 +101,90 @@ public class UgoPanel implements Printable, OperationListener {
 		return undoManager;
 	}
 	
+	
+	void updateGroup(DeviceGroup group, String text, ImageIcon icon) {
+		if (group.getChildCount() > 0) {
+			for (Enumeration en = group.children(); en.hasMoreElements();) {
+				Object child = en.nextElement();
+				if (child instanceof DeviceCell) {
+					GraphActions.setText(this.graph, child, text);
+					GraphActions.setImage(this.graph, ((DeviceCell) child), icon);
+					break;
+				}
+			}
+		} 
+		else {
+			GraphActions.setText(this.graph, group, text);
+			GraphActions.setImage(this.graph, group, icon);
+		}
+	}
+	
 	public void operationPerformed(OperationEvent ae) {
 		if (ae.getActionCommand().equals(SchemeEvent.TYPE)) {
 			SchemeEvent see = (SchemeEvent) ae;
-			if (see.isType(SchemeEvent.UGO_TEXT_UPDATE)) {
-				Identifier id = (Identifier) see.getObject();
-				String text = (String)see.getValue();
-				DeviceGroup[] groups = GraphActions.findTopLevelGroups(this.graph,
-						this.graph.getSelectionCells());
-				if (groups.length == 1) {
-					DeviceGroup cell = groups[0];
-					if (id.equals(cell.getProtoElementId()) || id.equals(cell.getSchemeElementId())) {
-						if (cell.getChildCount() > 0) {
-							for (Enumeration en = cell.children(); en.hasMoreElements();) {
-								Object child = en.nextElement();
-								if (child instanceof DeviceCell) {
-									GraphActions.setText(this.graph, child, text);
-									break;
-								}
-							}
-						} 
+			if (see.isType(SchemeEvent.UPDATE_OBJECT)) {
+				Object obj = see.getObject();
+				if (obj instanceof SchemeElement) {
+					SchemeElement se = (SchemeElement)obj;
+					DeviceGroup group = SchemeActions.findGroupById(this.graph, se.getId());
+					if (group != null)
+						updateGroup(group, se.getLabel(), new ImageIcon(se.getSymbol().getImage()));
+				}
+				else if (obj instanceof SchemeProtoElement) {
+					SchemeProtoElement proto = (SchemeProtoElement)obj;
+					DeviceGroup group = SchemeActions.findGroupById(this.graph, proto.getId());
+					if (group != null)
+						updateGroup(group, proto.getLabel(), new ImageIcon(proto.getSymbol().getImage()));
+				}
+				else if (obj instanceof SchemeCableLink) {
+					SchemeCableLink link = (SchemeCableLink)obj;
+					DefaultGraphCell cell = SchemeActions.findSchemeCableLinkById(this.graph, link.getId());
+					if (cell != null) {
+						GraphActions.setText(this.graph, cell, link.getName());
+					}
+				}
+				else if (obj instanceof SchemeLink) {
+					SchemeLink link = (SchemeLink)obj;
+					DefaultGraphCell cell = SchemeActions.findSchemeLinkById(this.graph, link.getId());
+					if (cell != null) {
+						GraphActions.setText(this.graph, cell, link.getName());
+					}
+				}
+				else if (obj instanceof SchemePort) {
+					SchemePort port = (SchemePort)obj;
+					DefaultGraphCell cell = SchemeActions.findPortCellById(this.graph, port.getId());
+					if (cell != null) {
+						GraphActions.setText(this.graph, cell, port.getName());
+						
+						Color color = Color.WHITE;
+						if (port.getPortType().getSort().equals(PortTypeSort.PORTTYPESORT_THERMAL))
+							color = Color.BLACK;
+						if (port.getAbstractSchemeLink() != null)
+							GraphActions.setObjectBackColor(this.graph, cell, color);
 						else
-							GraphActions.setText(this.graph, cell, text);
+							GraphActions.setObjectBackColor(this.graph, cell, Color.YELLOW);
+					}
+					cell = SchemeActions.findBlockPortCellById(this.graph, port.getId());
+					if (cell != null) {
+						GraphActions.setText(this.graph, cell, port.getName());
 					}
 				}
-			}
-			if (see.isType(SchemeEvent.UGO_ICON_UPDATE)) {
-				Identifier id = (Identifier)see.getObject();
-				ImageIcon icon = (ImageIcon)see.getValue();
-				DeviceGroup[] groups = GraphActions.findTopLevelGroups(this.graph,
-						this.graph.getSelectionCells());
-				if (groups.length == 1) {
-					DeviceGroup cell = groups[0];
-					if (cell.getProtoElementId().equals(id)
-							|| cell.getSchemeElementId().equals(id)) {
-						if (cell.getChildCount() > 0) {
-							for (Enumeration en = cell.children(); en.hasMoreElements();) {
-								Object child = en.nextElement();
-								if (child instanceof DeviceCell) {
-									GraphActions.setImage(this.graph, ((DeviceCell) child), icon);
-									break;
-								}
-							}
-						} else
-							GraphActions.setImage(this.graph, cell, icon);
+				else if (obj instanceof SchemeCablePort) {
+					SchemeCablePort port = (SchemeCablePort)obj;
+					DefaultGraphCell cell = SchemeActions.findCablePortCellById(this.graph, port.getId());
+					if (cell != null) {
+						GraphActions.setText(this.graph, cell, port.getName());
+						
+						if (port.getAbstractSchemeLink() != null)
+							GraphActions.setObjectBackColor(this.graph, cell, Color.WHITE);
+						else
+							GraphActions.setObjectBackColor(this.graph, cell, Color.YELLOW);
+					}
+					cell = SchemeActions.findBlockPortCellById(this.graph, port.getId());
+					if (cell != null) {
+						GraphActions.setText(this.graph, cell, port.getName());
 					}
 				}
-			}
-			if (see.isType(SchemeEvent.CABLE_PORT_NAME_UPDATE)) {
-				Identifier id = (Identifier)see.getObject();
-				String text = (String)see.getValue();
-
-				Object[] cells = this.graph.getAll();
-				for (int i = 0; i < cells.length; i++) {
-					if (cells[i] instanceof CablePortCell
-							&& ((CablePortCell) cells[i]).getSchemeCablePortId().equals(id))
-						GraphActions.setText(this.graph, cells[i], text);
-					else if (cells[i] instanceof BlockPortCell
-							&& ((BlockPortCell) cells[i]).getSchemeCablePortId().equals(id))
-						GraphActions.setText(this.graph, cells[i], text);
-				}
-			}
-			if (see.isType(SchemeEvent.PORT_NAME_UPDATE)) {
-				Identifier id = (Identifier)see.getObject();
-				String text = (String)see.getValue();
-
-				Object[] cells = this.graph.getAll();
-				for (int i = 0; i < cells.length; i++) {
-					if (cells[i] instanceof PortCell
-							&& ((PortCell) cells[i]).getSchemePortId().equals(id))
-						GraphActions.setText(this.graph, cells[i], text);
-					else if (cells[i] instanceof BlockPortCell
-							&& ((BlockPortCell) cells[i]).getSchemePortId().equals(id))
-						GraphActions.setText(this.graph, cells[i], text);
-				}
-			}
-			if (see.isType(SchemeEvent.CABLE_LINK_NAME_UPDATE)) {
-				Identifier id = (Identifier)see.getObject();
-				String text = (String)see.getValue();
-
-				Object[] cells = this.graph.getAll();
-				for (int i = 0; i < cells.length; i++) {
-					if (cells[i] instanceof DefaultCableLink
-							&& ((DefaultCableLink) cells[i]).getSchemeCableLinkId()
-									.equals(id)) {
-						GraphActions.setText(this.graph, cells[i], text);
-						break;
-					}
-				}
-			}
-			if (see.isType(SchemeEvent.LINK_NAME_UPDATE)) {
-				Identifier id = (Identifier)see.getObject();
-				String text = (String)see.getValue();
-
-				Object[] cells = this.graph.getAll();
-				for (int i = 0; i < cells.length; i++) {
-					if (cells[i] instanceof DefaultLink
-							&& ((DefaultLink) cells[i]).getSchemeLinkId().equals(id)) {
-						GraphActions.setText(this.graph, cells[i], text);
-						break;
-					}
-				}
-			}
-			if (see.isType(SchemeEvent.PORT_TYPE_UPDATE)) {
-				Collection portIds = (Collection)see.getObject();
-				PortType type = (PortType)see.getValue();
-				
-				Object[] cells = this.graph.getAll();
-				List connected_ports = new LinkedList();
-				List non_connected_ports = new LinkedList();
-				for (int i = 0; i < cells.length; i++)
-					if (cells[i] instanceof PortCell) {
-						PortCell cell = (PortCell)cells[i];
-						Identifier portId = cell.getSchemePortId();
-						if (portIds.contains(portId)) {
-							if (cell.getSchemePort().getAbstractSchemeLink() == null)
-								non_connected_ports.add(cells[i]);
-							else
-								connected_ports.add(cells[i]);
-						}
-					}
-				Color color = Color.white;
-				if (type.getSort().equals(PortTypeSort.PORTTYPESORT_THERMAL))
-					color = Color.black;
-
-				GraphActions.setObjectsBackColor(this.graph, connected_ports
-						.toArray(new PortCell[connected_ports.size()]), color);
-				GraphActions.setObjectsBackColor(this.graph, non_connected_ports
-						.toArray(new PortCell[non_connected_ports.size()]), Color.yellow);
-			}
-			if (see.isType(SchemeEvent.CABLE_PORT_TYPE_UPDATE)) {
-				Collection portIds = (Collection)see.getObject();
-				
-				Object[] cells = this.graph.getAll();
-				List connected_ports = new LinkedList();
-				List non_connected_ports = new LinkedList();
-				for (int i = 0; i < cells.length; i++)
-					if (cells[i] instanceof CablePortCell) {
-						CablePortCell cell = (CablePortCell)cells[i];
-						Identifier portId = cell.getSchemeCablePortId();
-						if (portIds.contains(portId)) {
-							if (cell.getSchemeCablePort().getAbstractSchemeLink() == null)
-								non_connected_ports.add(cells[i]);
-							else
-								connected_ports.add(cells[i]);
-						}
-					}
-				GraphActions.setObjectsBackColor(this.graph, connected_ports
-						.toArray(new CablePortCell[connected_ports.size()]), Color.white);
-				GraphActions.setObjectsBackColor(this.graph, non_connected_ports
-						.toArray(new CablePortCell[non_connected_ports.size()]),
-						Color.yellow);
-			}
-
-			if (see.isType(SchemeEvent.OBJECT_TYPE_UPDATE)) {
-				/*
-				Object res = ae.getSource();
-
-				Object[] cells = this.graph.getSelectionCells();
-				ArrayList new_cells = new ArrayList(cells.length);
-				for (int i = 0; i < cells.length; i++)
-					if (!(cells[i] instanceof DefaultEdge)
-							|| cells[i] instanceof DefaultLink
-							|| cells[i] instanceof DefaultCableLink)
-						new_cells.add(cells[i]);
-				Object[] ncells = new_cells.toArray();
-
-				if (ncells.length == 0)
-					return;
-				Object obj = ncells[0];
-
-				if (obj instanceof DeviceGroup) {
-					if (ncells.length != 1)
-						return;
-					EquipmentTypeImpl new_eqt;
-					if (res instanceof SchemeProtoElement) {
-						SchemeProtoElement proto = (SchemeProtoElement) res;
-						new_eqt = proto.equipmentTypeImpl();
-					} else
-						new_eqt = (EquipmentType) res;
-
-					SchemeProtoElement p = ((DeviceGroup) obj).getProtoElement();
-					p.equipmentType() = new_eqt.getId();
-				}
-				if (obj instanceof PortCell) {
-					int counter = 0;
-					for (int i = 0; i < ncells.length; i++)
-						if (ncells[i] instanceof PortCell)
-							counter++;
-					if (counter == ncells.length) {
-						Color color = Color.white;
-						if (res instanceof PortType)
-							if (((PortType) res).pClass.equals("splice"))
-								color = Color.black;
-
-						ArrayList connected_ports = new ArrayList();
-						ArrayList non_connected_ports = new ArrayList();
-						for (int i = 0; i < ncells.length; i++)
-							if (((PortCell) ncells[i]).getSchemePort().linkId.equals(""))
-								non_connected_ports.add(ncells[i]);
-							else
-								connected_ports.add(ncells[i]);
-
-						GraphActions.setObjectsBackColor(this.graph, connected_ports
-								.toArray(new PortCell[connected_ports.size()]), color);
-						GraphActions.setObjectsBackColor(this.graph, non_connected_ports
-								.toArray(new PortCell[non_connected_ports.size()]),
-								Color.yellow);
-						for (int i = 0; i < ncells.length; i++)
-							((PortCell) ncells[i]).getSchemePort().portTypeId = res.getId();
-					}
-				}
-				if (obj instanceof CablePortCell) {
-					int counter = 0;
-					for (int i = 0; i < ncells.length; i++)
-						if (ncells[i] instanceof CablePortCell)
-							counter++;
-					if (counter == ncells.length)
-						GraphActions.setObjectsBackColor(this.graph, ncells, Color.white);
-					for (int i = 0; i < ncells.length; i++)
-						((CablePortCell) ncells[i]).getSchemeCablePort().cablePortTypeId = res
-								.getId();
-				}
-				if (obj instanceof DefaultLink) {
-					int counter = 0;
-					for (int i = 0; i < ncells.length; i++)
-						if (ncells[i] instanceof DefaultLink)
-							counter++;
-					if (counter == ncells.length) {
-						for (int i = 0; i < ncells.length; i++)
-							((DefaultLink) ncells[i]).getSchemeLink().linkTypeId = res
-									.getId();
-					}
-				}
-				if (obj instanceof DefaultCableLink) {
-					int counter = 0;
-					for (int i = 0; i < ncells.length; i++)
-						if (ncells[i] instanceof DefaultCableLink)
-							counter++;
-					if (counter == ncells.length) {
-						for (int i = 0; i < ncells.length; i++)
-							((DefaultCableLink) ncells[i]).getSchemeCableLink().cableLinkTypeId = res
-									.getId();
-					}
-				}*/
 			}
 		}
 	}
