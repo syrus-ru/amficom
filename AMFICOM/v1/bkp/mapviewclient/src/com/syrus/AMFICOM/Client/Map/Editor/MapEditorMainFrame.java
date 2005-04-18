@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMainFrame.java,v 1.30 2005/04/13 15:45:37 krupenn Exp $
+ * $Id: MapEditorMainFrame.java,v 1.31 2005/04/18 11:16:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -85,7 +85,7 @@ import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewRemoveSchemeCommand;
 import com.syrus.AMFICOM.Client.Map.UI.MapElementsFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapPropertyFrame;
-import com.syrus.AMFICOM.Client.Map.UI.MapSchemeTreeFrame;
+import com.syrus.AMFICOM.Client.Map.UI.MapElementCharacteristicsFrame;
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -97,7 +97,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * 
  * 
  * 
- * @version $Revision: 1.30 $, $Date: 2005/04/13 15:45:37 $
+ * @version $Revision: 1.31 $, $Date: 2005/04/18 11:16:10 $
  * @module mapviewclient_v1
  * @author $Author: krupenn $
  */
@@ -582,8 +582,8 @@ public class MapEditorMainFrame extends JFrame
 					((MapPropertyFrame)comp).setVisible(false);
 				else if (comp instanceof MapElementsFrame)
 					((MapElementsFrame)comp).setVisible(false);
-				else if (comp instanceof MapSchemeTreeFrame)
-					((MapSchemeTreeFrame)comp).setVisible(false);
+				else if (comp instanceof MapElementCharacteristicsFrame)
+					((MapElementCharacteristicsFrame)comp).setVisible(false);
 			}
 			ApplicationModel aModel = this.aContext.getApplicationModel();
 			aModel.setEnabled("menuMapSave", false);
