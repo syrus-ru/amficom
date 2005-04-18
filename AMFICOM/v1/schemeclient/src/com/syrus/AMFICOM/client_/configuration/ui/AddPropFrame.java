@@ -1,5 +1,5 @@
 /*
- * $Id: AddPropFrame.java,v 1.2 2005/03/30 13:33:39 stas Exp $
+ * $Id: AddPropFrame.java,v 1.3 2005/04/18 10:45:17 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,7 +35,6 @@ import javax.swing.JTextField;
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
-import com.syrus.AMFICOM.client_.scheme.ui.Constants;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CharacteristicType;
 import com.syrus.AMFICOM.general.CharacteristicTypeController;
@@ -47,33 +46,35 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.corba.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.corba.DataType;
+import com.syrus.AMFICOM.resource.*;
+import com.syrus.AMFICOM.resource.Constants;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/03/30 13:33:39 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/18 10:45:17 $
  * @module schemeclient_v1
  */
 
 public class AddPropFrame extends JDialog {
 	private ApplicationContext aContext;
 
-	protected int res = Constants.CANCEL;
+	protected int res = Constants._CANCEL;
 	protected CharacteristicTypeSort sort;
 	
 	private CharacteristicType selectedType;
 	ObjComboBox characteristicTypeComboBox = new ObjComboBox(CharacteristicTypeController
 			.getInstance(), StorableObjectWrapper.COLUMN_DESCRIPTION);
-	JRadioButton existingRadioButton = new JRadioButton(Constants.TEXT_EXISTING_TYPE);
-	JRadioButton newRadioButton = new JRadioButton(Constants.TEXT_NEW_TYPE);
+	JRadioButton existingRadioButton = new JRadioButton(LangModelScheme.getString(Constants.EXISTING_TYPE));
+	JRadioButton newRadioButton = new JRadioButton(LangModelScheme.getString(Constants.NEW_TYPE));
 	ButtonGroup buttonGroup = new ButtonGroup();
 	JPanel panel = new JPanel();
 	JPanel buttonPanel = new JPanel();
 	JTextField nameField = new JTextField();
 	JTextArea descrArea = new JTextArea();
-	JLabel name = new JLabel(Constants.TEXT_NAME);
-	JLabel descr = new JLabel(Constants.TEXT_DESCRIPTION);
-	JButton okButton = new JButton(Constants.TEXT_OK);
-	JButton cancelButton = new JButton(Constants.TEXT_CANCEL);
+	JLabel name = new JLabel(LangModelScheme.getString(Constants.NAME));
+	JLabel descr = new JLabel(LangModelScheme.getString(Constants.DESCRIPTION));
+	JButton okButton = new JButton(LangModelScheme.getString(Constants.OK));
+	JButton cancelButton = new JButton(LangModelScheme.getString(Constants.CANCEL));
 
 	public AddPropFrame(Frame parent, String title, ApplicationContext aContext) {
 		super(parent, title);
@@ -106,7 +107,7 @@ public class AddPropFrame extends JDialog {
 		setLocation((screenSize.width - frameSize.width) / 2,
 				(screenSize.height - frameSize.height) / 2);
 		setSize(frameSize);
-		setTitle(Constants.TEXT_CHARACTERISTIC);
+		setTitle(LangModelScheme.getString(Constants.CHARACTERISTIC));
 
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.getViewport().add(descrArea);
@@ -186,7 +187,7 @@ public class AddPropFrame extends JDialog {
 							.getSessionInterface()).getAccessIdentifier().user_id);
 					selectedType = CharacteristicType
 							.createInstance(userId, nameField.getText(), nameField.getText(),
-									DataType._DATA_TYPE_STRING, sort);
+									DataType.DATA_TYPE_STRING, sort);
 				} catch (CreateObjectException ex) {
 					ex.printStackTrace();
 					return;
@@ -195,7 +196,7 @@ public class AddPropFrame extends JDialog {
 			else
 				return;
 		}
-		res = Constants.OK;
+		res = Constants._OK;
 		dispose();
 	}
 

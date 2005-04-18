@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypePropertiesManager.java,v 1.3 2005/03/30 13:33:39 stas Exp $
+ * $Id: MeasurementPortTypePropertiesManager.java,v 1.4 2005/04/18 10:45:17 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,45 +8,55 @@
 
 package com.syrus.AMFICOM.client_.configuration.ui;
 
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.client_.general.ui_.*;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.configuration.MeasurementPortTypeController;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/03/30 13:33:39 $
+ * @version $Revision: 1.4 $, $Date: 2005/04/18 10:45:17 $
  * @module schemeclient_v1
  */
 
 public class MeasurementPortTypePropertiesManager implements VisualManager {
-
 	private static MeasurementPortTypePropertiesManager instance;
-	private static MeasurementPortTypeGeneralPanel generalPanel;
-	private static MeasurementPortTypeCharacteristicsPanel charPanel;
+	private MeasurementPortTypeGeneralPanel generalPanel;
+	private MeasurementPortTypeCharacteristicsPanel charPanel;
 	
-	public static MeasurementPortTypePropertiesManager getInstance() {
+	private MeasurementPortTypePropertiesManager() {
+		// empty
+	}
+	
+	public static MeasurementPortTypePropertiesManager getInstance(ApplicationContext aContext) {
 		if (instance == null) 
 			instance = new MeasurementPortTypePropertiesManager();
+		instance.setContext(aContext);
 		return instance;
+	}
+	
+	public void setContext(ApplicationContext aContext) {
+		if (generalPanel == null)
+			generalPanel = new MeasurementPortTypeGeneralPanel();
+		generalPanel.setContext(aContext);
+		if (charPanel == null)
+			charPanel = new MeasurementPortTypeCharacteristicsPanel();
+		charPanel.setContext(aContext);
 	}
 	
 	/**
 	 * @return AbstractLinkTypeGeneralPanel
-	 * @see com.syrus.AMFICOM.client_.scheme.ui.PropertiesMananager#getGeneralPropertiesPanel()
+	 * @see VisualManager#getGeneralPropertiesPanel()
 	 */
 	public StorableObjectEditor getGeneralPropertiesPanel() {
-		if (generalPanel == null)
-			generalPanel = new MeasurementPortTypeGeneralPanel();
 		return generalPanel;
 	}
 
 	/**
 	 * @return LinkTypeCharacteristicsPanel
-	 * @see com.syrus.AMFICOM.client_.scheme.ui.PropertiesMananager#getCharacteristicPropertiesPanel()
+	 * @see VisualManager#getCharacteristicPropertiesPanel()
 	 */
 	public StorableObjectEditor getCharacteristicPropertiesPanel() {
-		if (charPanel == null)
-			charPanel = new MeasurementPortTypeCharacteristicsPanel();
 		return charPanel;
 	}
 

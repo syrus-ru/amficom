@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeViewerFrame.java,v 1.1 2005/04/05 14:10:46 stas Exp $
+ * $Id: SchemeViewerFrame.java,v 1.2 2005/04/18 10:45:17 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,18 +13,18 @@ import java.beans.PropertyVetoException;
 
 import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.client_.scheme.graph.*;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/04/05 14:10:46 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/18 10:45:17 $
  * @module schemeclient_v1
  */
 
-public class SchemeViewerFrame extends JInternalFrame implements
-		OperationListener {
+public class SchemeViewerFrame extends JInternalFrame 
+//implements	OperationListener 
+{
 	ApplicationContext aContext;
 	UgoTabbedPane pane;
 
@@ -38,27 +38,27 @@ public class SchemeViewerFrame extends JInternalFrame implements
 	}
 
 	public void setContext(ApplicationContext aContext) {
-		if (this.aContext != null)
-			this.aContext.getDispatcher().unregister(this, SchemeEvent.TYPE);
+//		if (this.aContext != null)
+//			this.aContext.getDispatcher().unregister(this, SchemeEvent.TYPE);
 		this.aContext = aContext;
-		this.aContext.getDispatcher().register(this, SchemeEvent.TYPE);
+//		this.aContext.getDispatcher().register(this, SchemeEvent.TYPE);
 	}
 
-	public void operationPerformed(OperationEvent ae) {
-		if (ae.getActionCommand().equals(SchemeEvent.TYPE)) {
-			SchemeEvent see = (SchemeEvent) ae;
-			if (see.isType(SchemeEvent.CLOSE_SCHEME)) {
-				closeFrame();
-			}
-		}
-	}
+//	public void operationPerformed(OperationEvent ae) {
+//		if (ae.getActionCommand().equals(SchemeEvent.TYPE)) {
+//			SchemeEvent see = (SchemeEvent) ae;
+//			if (see.isType(SchemeEvent.CLOSE_SCHEME)) {
+//				closeFrame();
+//			}
+//		}
+//	}
 
-	protected void closeFrame() {
-		if (isClosable()) {
-			aContext.getDispatcher().unregister(this, SchemeEvent.TYPE);
-			doDefaultCloseAction();
-		}
-	}
+//	protected void closeFrame() {
+//		if (isClosable()) {
+//			aContext.getDispatcher().unregister(this, SchemeEvent.TYPE);
+//			doDefaultCloseAction();
+//		}
+//	}
 
 	private void jbInit() throws Exception {
 		setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(

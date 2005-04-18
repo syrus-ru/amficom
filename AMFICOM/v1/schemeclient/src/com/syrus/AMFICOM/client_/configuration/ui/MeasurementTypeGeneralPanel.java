@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeGeneralPanel.java,v 1.4 2005/04/05 10:01:05 stas Exp $
+ * $Id: MeasurementTypeGeneralPanel.java,v 1.5 2005/04/18 10:45:17 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,32 +14,37 @@ import java.util.List;
 
 import javax.swing.*;
 
+import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
-import com.syrus.AMFICOM.client_.general.ui_.StorableObjectEditor;
+import com.syrus.AMFICOM.client_.general.ui_.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client_.general.ui_.tree_.*;
-import com.syrus.AMFICOM.client_.scheme.ui.Constants;
+import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.measurement.MeasurementType;
+import com.syrus.AMFICOM.resource.*;
+import com.syrus.AMFICOM.resource.Constants;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.4 $, $Date: 2005/04/05 10:01:05 $
+ * @version $Revision: 1.5 $, $Date: 2005/04/18 10:45:17 $
  * @module schemeclient_v1
  */
 
-public class MeasurementTypeGeneralPanel implements StorableObjectEditor {
+public class MeasurementTypeGeneralPanel extends DefaultStorableObjectEditor {
+	ApplicationContext aContext;
 	protected MeasurementType type;
 	
 	JPanel pnPanel0 = new JPanel();
-	JLabel lbNameLabel = new JLabel(Constants.TEXT_NAME);
+	JLabel lbNameLabel = new JLabel(LangModelScheme.getString(Constants.NAME));
 	JTextField tfNameText = new JTextField();
-	JLabel lbParametersLabel = new JLabel(Constants.TEXT_PARAMETERS);
+	JLabel lbParametersLabel = new JLabel(LangModelScheme.getString(Constants.PARAMETERS));
 	Item parametersRoot;
 	JTree trParametersTree;
-	JLabel lbPortTypesLabel = new JLabel(Constants.TEXT_MEASUREMENT_PORT_TYPES);
+	JLabel lbPortTypesLabel = new JLabel(LangModelScheme.getString(Constants.MEASUREMENT_PORT_TYPES));
 	Item portsRoot;
 	JTree trPortTypesTree;
 	JPanel pnGeneralPanel = new JPanel();
@@ -54,6 +59,10 @@ public class MeasurementTypeGeneralPanel implements StorableObjectEditor {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void setContext(ApplicationContext aContext) {
+		this.aContext = aContext;
 	}
 
 	protected MeasurementTypeGeneralPanel(MeasurementType type) {
@@ -132,7 +141,6 @@ public class MeasurementTypeGeneralPanel implements StorableObjectEditor {
 		gbPanel0.setConstraints( scpPortTypesTree, gbcPanel0 );
 		pnPanel0.add( scpPortTypesTree );
 
-		pnGeneralPanel.setBorder( BorderFactory.createTitledBorder( "" ) );
 		GridBagLayout gbGeneralPanel = new GridBagLayout();
 		GridBagConstraints gbcGeneralPanel = new GridBagConstraints();
 		pnGeneralPanel.setLayout( gbGeneralPanel );
@@ -173,10 +181,15 @@ public class MeasurementTypeGeneralPanel implements StorableObjectEditor {
 		gbPanel0.setConstraints( pnGeneralPanel, gbcPanel0 );
 		pnPanel0.add( pnGeneralPanel );
 
-		pnGeneralPanel.setBackground(Color.WHITE);
-		pnPanel0.setBackground(Color.WHITE);
+		pnGeneralPanel.setBorder( BorderFactory.createTitledBorder( LangModelScheme.getString(Constants.EMPTY )));
+//		pnGeneralPanel.setBackground(Color.WHITE);
+//		pnPanel0.setBackground(Color.WHITE);
 		scpParametersTree.setPreferredSize(Constants.DIMENSION_TEXTAREA);
 		scpPortTypesTree.setPreferredSize(Constants.DIMENSION_TEXTAREA);
+		
+		addToUndoableListener(tfNameText);
+		addToUndoableListener(trPortTypesTree);
+		addToUndoableListener(trParametersTree);
 	}
 	
 	public JComponent getGUI() {
@@ -214,7 +227,7 @@ public class MeasurementTypeGeneralPanel implements StorableObjectEditor {
 			trPortTypesTree.updateUI();
 		}
 		else {
-			tfNameText.setText(Constants.TEXT_EMPTY);
+			tfNameText.setText(LangModelScheme.getString(Constants.EMPTY));
 			for (Iterator it = allInPTypeNodes.iterator(); it.hasNext();) {
 				CheckableNode node = (CheckableNode)it.next();
 				node.setChecked(false);
@@ -234,37 +247,45 @@ public class MeasurementTypeGeneralPanel implements StorableObjectEditor {
 	
 	public void commitChanges() {
 		if (MiscUtil.validName(tfNameText.getText())) {
-			type.setDescription(tfNameText.getText());
+			if (type == null) {
+				try {
+					type = SchemeObjectsFactory.createMeasurementType(tfNameText.getText());
+					aContext.getDispatcher().notify(new SchemeEvent(this, type, SchemeEvent.CREATE_OBJECT));
+				} catch (CreateObjectException e) {
+					Log.errorException(e);
+					return;
+				}
+			}
+			
+			if (!type.getDescription().equals(tfNameText.getText()))
+				type.setDescription(tfNameText.getText());
 
-			Set inPTypes = new HashSet(this.type.getInParameterTypes());
-			Set outPTypes = new HashSet(this.type.getOutParameterTypes());
-
+			Set inPTypes = new HashSet();
+			Set outPTypes = new HashSet();
 			for (Iterator it = allInPTypeNodes.iterator(); it.hasNext();) {
 				CheckableNode node = (CheckableNode) it.next();
-				if (node.isChecked() && !inPTypes.contains(node.getObject()))
+				if (node.isChecked())
 					inPTypes.add(node.getObject());
-				if (!node.isChecked() && inPTypes.contains(node.getObject()))
-					inPTypes.remove(node.getObject());
 			}
-			type.setInParameterTypes(inPTypes);
+			if (!type.getInParameterTypes().equals(inPTypes))
+				type.setInParameterTypes(inPTypes);
 			for (Iterator it = allOutPTypeNodes.iterator(); it.hasNext();) {
 				CheckableNode node = (CheckableNode) it.next();
-				if (node.isChecked() && !outPTypes.contains(node.getObject()))
+				if (node.isChecked())
 					outPTypes.add(node.getObject());
-				if (!node.isChecked() && outPTypes.contains(node.getObject()))
-					outPTypes.remove(node.getObject());
 			}
-			type.setOutParameterTypes(outPTypes);
+			if (!type.getOutParameterTypes().equals(outPTypes))
+				type.setOutParameterTypes(outPTypes);
 
-			Set mPTypes = new HashSet(this.type.getMeasurementPortTypes());
+			Set mPTypes = new HashSet();
 			for (Iterator it = allMPTypeNodes.iterator(); it.hasNext();) {
 				CheckableNode node = (CheckableNode) it.next();
-				if (node.isChecked() && !mPTypes.contains(node.getObject()))
+				if (node.isChecked())
 					mPTypes.add(node.getObject());
-				if (!node.isChecked() && mPTypes.contains(node.getObject()))
-					mPTypes.remove(node.getObject());
 			}
-			type.setMeasurementPortTypes(mPTypes);
+			if (!type.getMeasurementPortTypes().equals(mPTypes))
+				type.setMeasurementPortTypes(mPTypes);
+			aContext.getDispatcher().notify(new SchemeEvent(this, type, SchemeEvent.UPDATE_OBJECT));
 		}
 	}
 	
@@ -283,9 +304,9 @@ public class MeasurementTypeGeneralPanel implements StorableObjectEditor {
 	}
 	
 	Item createParametersRoot() {
-		Item root = new IconedNode(Constants.ROOT, Constants.TEXT_ROOT);
-		Item input = new IconedNode(Constants.INPUT, Constants.TEXT_INPUT);
-		Item output = new IconedNode(Constants.OUTPUT, Constants.TEXT_OUTPUT);
+		Item root = new IconedNode(Constants.ROOT, LangModelScheme.getString(Constants.ROOT));
+		Item input = new IconedNode(Constants.INPUT, LangModelScheme.getString(Constants.INPUT));
+		Item output = new IconedNode(Constants.OUTPUT, LangModelScheme.getString(Constants.OUTPUT));
 		root.addChild(input);
 		root.addChild(output);
 		
@@ -295,8 +316,8 @@ public class MeasurementTypeGeneralPanel implements StorableObjectEditor {
 			Collection pTypes = GeneralStorableObjectPool.getStorableObjectsByCondition(condition, true);
 			for (Iterator it = pTypes.iterator(); it.hasNext();) {
 				ParameterType t = (ParameterType) it.next();
-				input.addChild(new CheckableNode(t, t.getName(), false));
-				output.addChild(new CheckableNode(t, t.getName(), false));
+				input.addChild(new CheckableNode(t, false));
+				output.addChild(new CheckableNode(t, false));
 			}
 		} 
 		catch (ApplicationException e) {
@@ -312,7 +333,7 @@ public class MeasurementTypeGeneralPanel implements StorableObjectEditor {
 			Collection mpTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
 			for (Iterator it = mpTypes.iterator(); it.hasNext();) {
 				MeasurementPortType t = (MeasurementPortType) it.next();
-					root.addChild(new CheckableNode(t, t.getName(), false));
+					root.addChild(new CheckableNode(t, false));
 			}
 		} catch (ApplicationException e) {
 			Log.errorException(e);

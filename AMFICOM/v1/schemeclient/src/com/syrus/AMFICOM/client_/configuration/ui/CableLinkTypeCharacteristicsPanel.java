@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeCharacteristicsPanel.java,v 1.1 2005/03/10 08:09:08 stas Exp $
+ * $Id: CableLinkTypeCharacteristicsPanel.java,v 1.2 2005/04/18 10:45:17 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,24 +8,19 @@
 
 package com.syrus.AMFICOM.client_.configuration.ui;
 
+import com.syrus.AMFICOM.client_.general.ui_.CharacteristicsPanel;
 import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
-import com.syrus.AMFICOM.general.corba.CharacteristicTypeSort;
+
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/03/10 08:09:08 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/18 10:45:17 $
  * @module schemeclient_v1
  */
 
 public class CableLinkTypeCharacteristicsPanel extends CharacteristicsPanel {
 	protected CableLinkType type;
-	private static CharacteristicTypeSort[] sorts = new CharacteristicTypeSort[] {
-			CharacteristicTypeSort.CHARACTERISTICTYPESORT_ELECTRICAL,
-			CharacteristicTypeSort.CHARACTERISTICTYPESORT_INTERFACE,
-			CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPERATIONAL,
-			CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL
-	};
 
 	protected CableLinkTypeCharacteristicsPanel() {
 		super();

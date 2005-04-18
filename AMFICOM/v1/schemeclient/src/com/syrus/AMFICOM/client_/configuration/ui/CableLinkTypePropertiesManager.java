@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypePropertiesManager.java,v 1.3 2005/03/30 13:33:39 stas Exp $
+ * $Id: CableLinkTypePropertiesManager.java,v 1.4 2005/04/18 10:45:17 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,45 +8,55 @@
 
 package com.syrus.AMFICOM.client_.configuration.ui;
 
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.client_.general.ui_.*;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.configuration.CableLinkTypeController;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/03/30 13:33:39 $
+ * @version $Revision: 1.4 $, $Date: 2005/04/18 10:45:17 $
  * @module schemeclient_v1
  */
 
 public class CableLinkTypePropertiesManager implements VisualManager {
-
 	private static CableLinkTypePropertiesManager instance;
-	private static AbstractLinkTypeGeneralPanel generalPanel;
-	private static CableLinkTypeCharacteristicsPanel charPanel;
+	private AbstractLinkTypeGeneralPanel generalPanel;
+	private CableLinkTypeCharacteristicsPanel charPanel;
 	
-	public static CableLinkTypePropertiesManager getInstance() {
+	private CableLinkTypePropertiesManager() {
+		// empty
+	}
+	
+	public static CableLinkTypePropertiesManager getInstance(ApplicationContext aContext) {
 		if (instance == null) 
 			instance = new CableLinkTypePropertiesManager();
+		instance.setContext(aContext);
 		return instance;
+	}
+	
+	public void setContext(ApplicationContext aContext) {
+		if (generalPanel == null)
+			generalPanel = new CableLinkTypeGeneralPanel();
+		generalPanel.setContext(aContext);
+		if (charPanel == null)
+			charPanel = new CableLinkTypeCharacteristicsPanel();
+		charPanel.setContext(aContext);
 	}
 	
 	/**
 	 * @return AbstractLinkTypeGeneralPanel
-	 * @see com.syrus.AMFICOM.client_.scheme.ui.PropertiesMananager#getGeneralPropertiesPanel()
+	 * @see VisualManager#getGeneralPropertiesPanel()
 	 */
 	public StorableObjectEditor getGeneralPropertiesPanel() {
-		if (generalPanel == null)
-			generalPanel = new AbstractLinkTypeGeneralPanel();
 		return generalPanel;
 	}
 
 	/**
 	 * @return LinkTypeCharacteristicsPanel
-	 * @see com.syrus.AMFICOM.client_.scheme.ui.PropertiesMananager#getCharacteristicPropertiesPanel()
+	 * @see VisualManager#getCharacteristicPropertiesPanel()
 	 */
 	public StorableObjectEditor getCharacteristicPropertiesPanel() {
-		if (charPanel == null)
-			charPanel = new CableLinkTypeCharacteristicsPanel();
 		return charPanel;
 	}
 

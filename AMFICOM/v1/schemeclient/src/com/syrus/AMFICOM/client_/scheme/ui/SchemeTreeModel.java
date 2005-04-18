@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeTreeModel.java,v 1.14 2005/04/05 10:01:05 stas Exp $
+ * $Id: SchemeTreeModel.java,v 1.15 2005/04/18 10:45:18 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,28 +10,21 @@ package com.syrus.AMFICOM.client_.scheme.ui;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.14 $, $Date: 2005/04/05 10:01:05 $
+ * @version $Revision: 1.15 $, $Date: 2005/04/18 10:45:18 $
  * @module schemeclient_v1
  */
 
-import java.awt.*;
 import java.util.*;
-import java.util.List;
-import java.util.Set;
 
-import javax.swing.ImageIcon;
-
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.client_.configuration.ui.*;
 import com.syrus.AMFICOM.client_.general.ui_.VisualManager;
 import com.syrus.AMFICOM.client_.general.ui_.tree_.*;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.logic.*;
 import com.syrus.AMFICOM.measurement.*;
-import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.resource.*;
 import com.syrus.AMFICOM.scheme.corba.SchemeKind;
 
 public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
@@ -40,8 +33,8 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 	private static SchemeKind[] schemeTypes = new SchemeKind[] { SchemeKind.NETWORK, SchemeKind.BUILDING,
 			SchemeKind.CABLE_SUBNETWORK };
 	private static String[] schemeTypeNames = new String[] {
-			Constants.TEXT_SCHEME_TYPE_NETWORK, Constants.TEXT_SCHEME_TYPE_BUILDING,
-			Constants.TEXT_SCHEME_TYPE_CABLE };
+			LangModelScheme.getString(Constants.SCHEME_TYPE_NETWORK), LangModelScheme.getString(Constants.SCHEME_TYPE_BUILDING),
+			LangModelScheme.getString(Constants.SCHEME_TYPE_CABLE) };
 
 	public SchemeTreeModel(ApplicationContext aContext) {
 		this.aContext = aContext;
@@ -68,30 +61,34 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 			 *       SchemeProtoGroupController.getInstance();
 			 */
 			if (s.equals(Constants.LINK_TYPE))
-				return LinkTypePropertiesManager.getInstance();
+				return LinkTypePropertiesManager.getInstance(aContext);
 			if (s.equals(Constants.CABLE_LINK_TYPE))
-				return CableLinkTypePropertiesManager.getInstance();
+				return CableLinkTypePropertiesManager.getInstance(aContext);
 			if (s.equals(Constants.PORT_TYPE))
-				return PortTypePropertiesManager.getInstance();
+				return PortTypePropertiesManager.getInstance(aContext);
+			if (s.equals(Constants.EQUIPMENT_TYPE))
+				return EquipmentTypePropertiesManager.getInstance(aContext);
 			if (s.equals(Constants.MEASUREMENTPORT_TYPE))
-				return MeasurementPortTypePropertiesManager.getInstance();
+				return MeasurementPortTypePropertiesManager.getInstance(aContext);
 			if (s.equals(Constants.MEASUREMENT_TYPE))
-				return MeasurementTypePropertiesManager.getInstance();
+				return MeasurementTypePropertiesManager.getInstance(aContext);
 			if (s.equals(Constants.SCHEME_TYPE))
 				return null;
 			// for any other strings return null Manager
 			return null;
 		}
+		if (object instanceof EquipmentType)
+			return EquipmentTypePropertiesManager.getInstance(aContext);
 		if (object instanceof LinkType)
-			return LinkTypePropertiesManager.getInstance();
+			return LinkTypePropertiesManager.getInstance(aContext);
 		if (object instanceof CableLinkType)
-			return CableLinkTypePropertiesManager.getInstance();
+			return CableLinkTypePropertiesManager.getInstance(aContext);
 		if (object instanceof PortType)
-			return PortTypePropertiesManager.getInstance();
+			return PortTypePropertiesManager.getInstance(aContext);
 		if (object instanceof MeasurementPortType)
-			return MeasurementPortTypePropertiesManager.getInstance();
+			return MeasurementPortTypePropertiesManager.getInstance(aContext);
 		if (object instanceof MeasurementType)
-			return MeasurementTypePropertiesManager.getInstance();
+			return MeasurementTypePropertiesManager.getInstance(aContext);
 		if (object instanceof SchemeKind)
 				return null;
 //		if (object instanceof SchemeKind)
@@ -116,39 +113,59 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 //			return SchemeElementController.getInstance();
 		throw new UnsupportedOperationException("Unknown object " + object);
 	}
+	
+	Collection getChildObjects(Item node) {
+		Collection childObjects = new ArrayList(node.getChildren().size());
+		for (Iterator it = node.getChildren().iterator(); it.hasNext();)
+			childObjects.add(((Item)it.next()).getObject());
+		return childObjects;
+	}
+	
+	Collection getDifference(Collection minuend, Collection subtrahend) {
+		Collection difference = new LinkedList();
+		for (Iterator it = minuend.iterator(); it.hasNext();) {
+			Object obj = it.next();
+			if (!subtrahend.contains(obj))
+				difference.add(obj);
+		}
+		return difference;
+	}
+	
 
 	public void populate(Item node) {
-		List contents = node.getChildren();
+		Collection contents = getChildObjects(node);
 		
 		if (node.getObject() instanceof String) {
 			String s = (String) node.getObject();
 			if (s.equals(Constants.ROOT)) {
 				if (!contents.contains(Constants.CONFIGURATION))
-					node.addChild(new PopulatableIconedNode(this, Constants.CONFIGURATION, Constants.TEXT_CONFIGURATION, Constants.ICON_CATALOG));
+					node.addChild(new PopulatableIconedNode(this, Constants.CONFIGURATION, LangModelScheme.getString(Constants.CONFIGURATION), Constants.ICON_CATALOG));
 				if (!contents.contains(Constants.SCHEME_TYPE))
-					node.addChild(new PopulatableIconedNode(this, Constants.SCHEME_TYPE, Constants.TEXT_SCHEME_TYPE, Constants.ICON_CATALOG));
+					node.addChild(new PopulatableIconedNode(this, Constants.SCHEME_TYPE, LangModelScheme.getString(Constants.SCHEME_TYPE), Constants.ICON_CATALOG));
 				if (!contents.contains(Constants.SCHEME_PROTO_GROUP))
-					node.addChild(new PopulatableIconedNode(this, Constants.SCHEME_PROTO_GROUP, Constants.TEXT_SCHEME_PROTO_GROUP, Constants.ICON_CATALOG));
+					node.addChild(new PopulatableIconedNode(this, Constants.SCHEME_PROTO_GROUP, LangModelScheme.getString(Constants.SCHEME_PROTO_GROUP), Constants.ICON_CATALOG));
 			} 
 			else if (s.equals(Constants.CONFIGURATION)) {
 				if (!contents.contains(Constants.NETWORK_DIRECTORY))
-					node.addChild(new PopulatableIconedNode(this, Constants.NETWORK_DIRECTORY, Constants.TEXT_NETWORK_DIRECTORY, Constants.ICON_CATALOG));
+					node.addChild(new PopulatableIconedNode(this, Constants.NETWORK_DIRECTORY, LangModelScheme.getString(Constants.NETWORK_DIRECTORY), Constants.ICON_CATALOG));
 				if (!contents.contains(Constants.MONITORING_DIRECTORY))
-					node.addChild(new PopulatableIconedNode(this, Constants.MONITORING_DIRECTORY, Constants.TEXT_MONITORING_DIRECTORY, Constants.ICON_CATALOG));
+					node.addChild(new PopulatableIconedNode(this, Constants.MONITORING_DIRECTORY, LangModelScheme.getString(Constants.MONITORING_DIRECTORY), Constants.ICON_CATALOG));
 			} 
 			else if (s.equals(Constants.NETWORK_DIRECTORY)) {
 				if (!contents.contains(Constants.LINK_TYPE))
-					node.addChild(new PopulatableIconedNode(this, Constants.LINK_TYPE, Constants.TEXT_LINK_TYPE, Constants.ICON_CATALOG));
+					node.addChild(new PopulatableIconedNode(this, Constants.LINK_TYPE, LangModelScheme.getString(Constants.LINK_TYPE), Constants.ICON_CATALOG));
 				if (!contents.contains(Constants.CABLE_LINK_TYPE))
-					node.addChild(new PopulatableIconedNode(this, Constants.CABLE_LINK_TYPE, Constants.TEXT_CABLE_LINK_TYPE, Constants.ICON_CATALOG));
+					node.addChild(new PopulatableIconedNode(this, Constants.CABLE_LINK_TYPE, LangModelScheme.getString(Constants.CABLE_LINK_TYPE), Constants.ICON_CATALOG));
 				if (!contents.contains(Constants.PORT_TYPE))
-					node.addChild(new PopulatableIconedNode(this, Constants.PORT_TYPE, Constants.TEXT_PORT_TYPE, Constants.ICON_CATALOG));
+					node.addChild(new PopulatableIconedNode(this, Constants.PORT_TYPE, LangModelScheme.getString(Constants.PORT_TYPE), Constants.ICON_CATALOG));
+				if (!contents.contains(Constants.EQUIPMENT_TYPE))
+					node.addChild(new PopulatableIconedNode(this, Constants.EQUIPMENT_TYPE, LangModelScheme.getString(Constants.EQUIPMENT_TYPE), Constants.ICON_CATALOG));
 			} 
 			else if (s.equals(Constants.MONITORING_DIRECTORY)) {
 				if (!contents.contains(Constants.MEASUREMENT_TYPE))
-					node.addChild(new PopulatableIconedNode(this, Constants.MEASUREMENT_TYPE, Constants.TEXT_MEASUREMENT_TYPE, Constants.ICON_CATALOG));
+					node.addChild(new PopulatableIconedNode(this, Constants.MEASUREMENT_TYPE, LangModelScheme.getString(Constants.MEASUREMENT_TYPE), Constants.ICON_CATALOG));
 				if (!contents.contains(Constants.MEASUREMENTPORT_TYPE))
-					node.addChild(new PopulatableIconedNode(this, Constants.MEASUREMENTPORT_TYPE, Constants.TEXT_MEASUREMENTPORT_TYPE, Constants.ICON_CATALOG));
+					node.addChild(new PopulatableIconedNode(this, Constants.MEASUREMENTPORT_TYPE, LangModelScheme.getString(Constants.MEASUREMENTPORT_TYPE), Constants.ICON_CATALOG));
 				// vec.add(new PopulatableIconedNode(this, "TransmissionPathType",
 				// LangModelConfig.getString("menuJDirPathText"), true));
 			} 
@@ -160,14 +177,19 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 			} 
 			else if (s.equals(Constants.LINK_TYPE)) {
 				try {
-					EquivalentCondition condition = new EquivalentCondition(
-							ObjectEntities.LINKTYPE_ENTITY_CODE);
-
+					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.LINKTYPE_ENTITY_CODE);
 					Collection linkTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
-					for (Iterator it = linkTypes.iterator(); it.hasNext();) {
+					
+					Collection toAdd = getDifference(linkTypes, contents);
+					Collection toRemove = getDifference(contents, linkTypes);
+					for (Iterator it = node.getChildren().iterator(); it.hasNext();) {
+						Item child = (Item)it.next();
+						if (toRemove.contains(child.getObject()))
+							child.setParent(null);
+					}
+					for (Iterator it = toAdd.iterator(); it.hasNext();) {
 						LinkType type = (LinkType) it.next();
-						if (!contents.contains(type))
-							node.addChild(new PopulatableIconedNode(this, type, type.getName(), false));
+						node.addChild(new PopulatableIconedNode(this, type, false));
 					}
 				} 
 				catch (ApplicationException ex) {
@@ -176,14 +198,19 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 			} 
 			else if (s.equals(Constants.CABLE_LINK_TYPE)) {
 				try {
-					EquivalentCondition condition = new EquivalentCondition(
-							ObjectEntities.CABLELINKTYPE_ENTITY_CODE);
-
+					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.CABLELINKTYPE_ENTITY_CODE);
 					Collection linkTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
-					for (Iterator it = linkTypes.iterator(); it.hasNext();) {
+
+					Collection toAdd = getDifference(linkTypes, contents);
+					Collection toRemove = getDifference(contents, linkTypes);
+					for (Iterator it = node.getChildren().iterator(); it.hasNext();) {
+						Item child = (Item)it.next();
+						if (toRemove.contains(child.getObject()))
+							child.setParent(null);
+					}
+					for (Iterator it = toAdd.iterator(); it.hasNext();) {
 						CableLinkType type = (CableLinkType) it.next();
-						if (!contents.contains(type))
-							node.addChild(new PopulatableIconedNode(this, type, type.getName(), false));
+						node.addChild(new PopulatableIconedNode(this, type, false));
 					}
 				} 
 				catch (ApplicationException ex) {
@@ -194,10 +221,38 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 				try {
 					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.PORTTYPE_ENTITY_CODE);
 					Collection portTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
-					for (Iterator it = portTypes.iterator(); it.hasNext();) {
+					
+					Collection toAdd = getDifference(portTypes, contents);
+					Collection toRemove = getDifference(contents, portTypes);
+					for (Iterator it = node.getChildren().iterator(); it.hasNext();) {
+						Item child = (Item)it.next();
+						if (toRemove.contains(child.getObject()))
+							child.setParent(null);
+					}
+					for (Iterator it = toAdd.iterator(); it.hasNext();) {
 						PortType type = (PortType) it.next();
-						if (!contents.contains(type))
-							node.addChild(new PopulatableIconedNode(this, type, type.getName(), false));
+						node.addChild(new PopulatableIconedNode(this, type, false));
+					}
+				} 
+				catch (ApplicationException ex) {
+					ex.printStackTrace();
+				}
+			}
+			else if (s.equals(Constants.EQUIPMENT_TYPE)) {
+				try {
+					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE);
+					Collection equipmentTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
+					
+					Collection toAdd = getDifference(equipmentTypes, contents);
+					Collection toRemove = getDifference(contents, equipmentTypes);
+					for (Iterator it = node.getChildren().iterator(); it.hasNext();) {
+						Item child = (Item)it.next();
+						if (toRemove.contains(child.getObject()))
+							child.setParent(null);
+					}
+					for (Iterator it = toAdd.iterator(); it.hasNext();) {
+						EquipmentType type = (EquipmentType)it.next();
+						node.addChild(new PopulatableIconedNode(this, type, false));
 					}
 				} 
 				catch (ApplicationException ex) {
@@ -225,13 +280,19 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 				try {
 					EquivalentCondition condition = new EquivalentCondition(
 							ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE);
-					Collection pathTypes = ConfigurationStorableObjectPool
+					Collection mpTypes = ConfigurationStorableObjectPool
 							.getStorableObjectsByCondition(condition, true);
 
-					for (Iterator it = pathTypes.iterator(); it.hasNext();) {
-						MeasurementPortType type = (MeasurementPortType) it.next();
-						if (!contents.contains(type))
-							node.addChild(new PopulatableIconedNode(this, type, type.getName(), false));
+					Collection toAdd = getDifference(mpTypes, contents);
+					Collection toRemove = getDifference(contents, mpTypes);
+					for (Iterator it = node.getChildren().iterator(); it.hasNext();) {
+						Item child = (Item)it.next();
+						if (toRemove.contains(child.getObject()))
+							child.setParent(null);
+					}
+					for (Iterator it = toAdd.iterator(); it.hasNext();) {
+						MeasurementPortType type = (MeasurementPortType)it.next();
+						node.addChild(new PopulatableIconedNode(this, type, false));
 					}
 				} catch (ApplicationException ex) {
 					ex.printStackTrace();
@@ -244,17 +305,23 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 					Collection measurementTypes = MeasurementStorableObjectPool
 							.getStorableObjectsByCondition(condition, true);
 
-					for (Iterator it = measurementTypes.iterator(); it.hasNext();) {
-						MeasurementType type = (MeasurementType) it.next();
-						if (!contents.contains(type))
-							node.addChild(new PopulatableIconedNode(this, type, type.getDescription(), false));
+					Collection toAdd = getDifference(measurementTypes, contents);
+					Collection toRemove = getDifference(contents, measurementTypes);
+					for (Iterator it = node.getChildren().iterator(); it.hasNext();) {
+						Item child = (Item)it.next();
+						if (toRemove.contains(child.getObject()))
+							child.setParent(null);
+					}
+					for (Iterator it = toAdd.iterator(); it.hasNext();) {
+						MeasurementType type = (MeasurementType)it.next();
+						node.addChild(new PopulatableIconedNode(this, type, type.getDescription(), false));
 					}
 				} 
 				catch (ApplicationException ex) {
 					ex.printStackTrace();
 				}
 			} 
-			else if (s.equals(Constants.SCHEME_PROTO_GROUP)) {
+			/*else if (s.equals(Constants.SCHEME_PROTO_GROUP)) {
 				try {
 					Identifier domainId = new Identifier(((RISDSessionInfo) aContext
 							.getSessionInterface()).getAccessIdentifier().domain_id);
@@ -467,7 +534,7 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 							node.addChild(new PopulatableIconedNode(this, Constants.SCHEME_LINK));
 					}
 				}
-			}
+			}*/
 		}
 	}
 }

@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+<jpanel name="panel0" title="" class="0" bordered="0" scrollbars="0" x="0" y="0" dx="0" dy="0" wx="0" wy="0" fill="0" anchor="0" insets="0,0,0,0" maxx="20" maxy="20">
+   <jpanel name="generalPanel" title="" class="0" bordered="1" scrollbars="0" x="0" y="0" dx="8" dy="7" wx="1" wy="0" fill="1" anchor="11" insets="0,0,0,0" maxx="7" maxy="17">
+      <jlabel name="nameLabel" title="" scrollbars="0" x="0" y="0" dx="2" dy="1" wx="0" wy="0" fill="1" anchor="11" insets="0,0,0,0">
+         <property name="focusable">false</property>
+      </jlabel>
+      <jtextfield name="nameText" x="2" y="0" dx="5" dy="1" wx="1" wy="0" fill="1" anchor="11" insets="0,0,0,0">
+      </jtextfield>
+      <jlabel name="symbolLabel" title="" scrollbars="0" x="0" y="1" dx="2" dy="1" wx="0" wy="0" fill="1" anchor="11" insets="0,0,0,0">
+         <property name="focusable">false</property>
+      </jlabel>
+      <jtextfield name="labelText" x="2" y="1" dx="4" dy="1" wx="1" wy="0" fill="1" anchor="11" insets="0,0,0,0">
+      </jtextfield>
+      <jbutton name="symbolBut" title="" x="6" y="1" dx="1" dy="1" wx="0" wy="0" fill="1" anchor="11" insets="0,0,0,0">
+      </jbutton>
+      <jcheckbox name="typeBox" title="" x="0" y="2" dx="4" dy="1" wx="1" wy="0" fill="1" anchor="11" insets="0,0,0,0">
+      </jcheckbox>
+      <jlabel name="typeLabel" title="" scrollbars="0" x="0" y="3" dx="2" dy="1" wx="0" wy="0" fill="1" anchor="11" insets="0,0,0,0">
+         <property name="focusable">false</property>
+      </jlabel>
+      <jcombobox name="typeCombo" x="2" y="3" dx="5" dy="1" wx="1" wy="0" fill="1" anchor="11" insets="0,0,0,0">
+         <complists>
+            <complist>
+               <complistitem>Chocolate</complistitem>
+               <complistitem>Ice Cream</complistitem>
+               <complistitem>Apple Pie</complistitem>
+            </complist>
+         </complists>
+      </jcombobox>
+      <jlabel name="manufacturerLabel" title="" scrollbars="0" x="0" y="4" dx="2" dy="1" wx="0" wy="0" fill="1" anchor="11" insets="0,0,0,0">
+         <property name="focusable">false</property>
+      </jlabel>
+      <jtextfield name="manufacturerText" x="2" y="4" dx="5" dy="1" wx="1" wy="0" fill="1" anchor="11" insets="0,0,0,0">
+      </jtextfield>
+      <jlabel name="manufacturerCodeLabel" title="" scrollbars="0" x="0" y="5" dx="2" dy="1" wx="0" wy="0" fill="1" anchor="11" insets="0,0,0,0">
+         <property name="focusable">false</property>
+      </jlabel>
+      <jtextfield name="manufacturerCodeText" x="2" y="5" dx="5" dy="1" wx="1" wy="0" fill="1" anchor="11" insets="0,0,0,0">
+      </jtextfield>
+      <jcheckbox name="equipmentBox" title="" x="0" y="6" dx="4" dy="1" wx="1" wy="0" fill="1" anchor="11" insets="0,0,0,0">
+      </jcheckbox>
+      <jlabel name="supplierLabel" title="" scrollbars="0" x="0" y="7" dx="2" dy="1" wx="0" wy="0" fill="1" anchor="11" insets="0,0,0,0">
+         <property name="focusable">false</property>
+      </jlabel>
+      <jtextfield name="supplierText" x="2" y="7" dx="5" dy="1" wx="1" wy="0" fill="1" anchor="11" insets="0,0,0,0">
+      </jtextfield>
+      <jlabel name="supplierCodeLabel" title="" scrollbars="0" x="0" y="8" dx="2" dy="1" wx="0" wy="0" fill="1" anchor="11" insets="0,0,0,0">
+         <property name="focusable">false</property>
+      </jlabel>
+      <jtextfield name="supplierCodeText" x="2" y="8" dx="5" dy="1" wx="1" wy="0" fill="1" anchor="11" insets="0,0,0,0">
+      </jtextfield>
+      <jlabel name="hwLabel" title="" scrollbars="0" x="0" y="10" dx="4" dy="1" wx="1" wy="0" fill="1" anchor="11" insets="0,0,0,0">
+         <property name="focusable">false</property>
+      </jlabel>
+      <jlabel name="hwsnLabel" title="" scrollbars="0" x="0" y="11" dx="2" dy="1" wx="0" wy="0" fill="1" anchor="11" insets="0,0,0,0">
+         <property name="focusable">false</property>
+      </jlabel>
+      <jtextfield name="hwsnText" x="2" y="11" dx="2" dy="1" wx="1" wy="0" fill="1" anchor="11" insets="0,0,0,0">
+      </jtextfield>
+      <jlabel name="hwvLabel" title="" scrollbars="0" x="4" y="11" dx="2" dy="1" wx="0" wy="0" fill="1" anchor="11" insets="0,0,0,0">
+         <property name="focusable">false</property>
+      </jlabel>
+      <jtextfield name="hwvText" x="6" y="11" dx="1" dy="1" wx="0" wy="0" fill="1" anchor="11" insets="0,0,0,0">
+      </jtextfield>
+      <jlabel name="swLabel" title="" scrollbars="0" x="0" y="12" dx="4" dy="1" wx="0" wy="0" fill="1" anchor="11" insets="0,0,0,0">
+         <property name="focusable">false</property>
+      </jlabel>
+      <jlabel name="swsnLabel" title="" scrollbars="0" x="0" y="13" dx="2" dy="1" wx="0" wy="0" fill="1" anchor="11" insets="0,0,0,0">
+         <property name="focusable">false</property>
+      </jlabel>
+      <jtextfield name="swsnText" x="2" y="13" dx="2" dy="1" wx="1" wy="0" fill="1" anchor="11" insets="0,0,0,0">
+      </jtextfield>
+      <jlabel name="swvLabel" title="" scrollbars="0" x="4" y="13" dx="2" dy="1" wx="0" wy="0" fill="1" anchor="11" insets="0,0,0,0">
+         <property name="focusable">false</property>
+      </jlabel>
+      <jtextfield name="swvText" x="6" y="13" dx="1" dy="1" wx="0" wy="0" fill="1" anchor="11" insets="0,0,0,0">
+      </jtextfield>
+      <jlabel name="longLabel" title="" scrollbars="0" x="0" y="9" dx="2" dy="1" wx="0" wy="0" fill="1" anchor="11" insets="0,0,0,0">
+         <property name="focusable">false</property>
+      </jlabel>
+      <jtextfield name="longText" x="2" y="9" dx="1" dy="1" wx="1" wy="0" fill="1" anchor="11" insets="0,0,0,0">
+      </jtextfield>
+      <jlabel name="latLabel" title="" scrollbars="0" x="3" y="9" dx="2" dy="1" wx="0" wy="0" fill="1" anchor="11" insets="0,0,0,0">
+         <property name="focusable">false</property>
+      </jlabel>
+      <jtextfield name="latText" x="5" y="9" dx="2" dy="1" wx="1" wy="0" fill="1" anchor="11" insets="0,0,0,0">
+      </jtextfield>
+      <jcheckbox name="kisBox" title="" x="0" y="14" dx="4" dy="1" wx="0" wy="0" fill="1" anchor="11" insets="0,0,0,0">
+      </jcheckbox>
+      <jlabel name="kisLabel" title="" scrollbars="0" x="0" y="15" dx="2" dy="1" wx="0" wy="0" fill="1" anchor="11" insets="0,0,0,0">
+         <property name="focusable">false</property>
+      </jlabel>
+      <jcombobox name="kisCombo" x="2" y="15" dx="5" dy="1" wx="1" wy="0" fill="1" anchor="11" insets="0,0,0,0">
+         <complists>
+            <complist>
+               <complistitem>Chocolate</complistitem>
+               <complistitem>Ice Cream</complistitem>
+               <complistitem>Apple Pie</complistitem>
+            </complist>
+         </complists>
+      </jcombobox>
+      <jlabel name="kisAddrLabel" title="" scrollbars="0" x="0" y="16" dx="2" dy="1" wx="0" wy="0" fill="1" anchor="11" insets="0,0,0,0">
+         <property name="focusable">false</property>
+      </jlabel>
+      <jtextfield name="kisAddrText" x="2" y="16" dx="2" dy="1" wx="1" wy="0" fill="1" anchor="11" insets="0,0,0,0">
+      </jtextfield>
+      <jlabel name="kisPortLabel" title="" scrollbars="0" x="4" y="16" dx="2" dy="1" wx="0" wy="0" fill="1" anchor="11" insets="0,0,0,0">
+         <property name="focusable">false</property>
+      </jlabel>
+      <jtextfield name="kisPortText" x="6" y="16" dx="1" dy="1" wx="0" wy="0" fill="1" anchor="11" insets="0,0,0,0">
+      </jtextfield>
+   </jpanel>
+   <jlabel name="descrLabel" title="" scrollbars="0" x="0" y="7" dx="3" dy="1" wx="0" wy="0" fill="1" anchor="11" insets="0,0,0,0">
+      <property name="focusable">false</property>
+   </jlabel>
+   <jtextarea name="descrArea" scrollbars="1" x="0" y="8" dx="8" dy="3" wx="1" wy="1" fill="1" anchor="11" insets="0,0,0,0">
+   </jtextarea>
+</jpanel>

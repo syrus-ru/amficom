@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypeGeneralPanel.java,v 1.7 2005/04/05 10:01:05 stas Exp $
+ * $Id: MeasurementPortTypeGeneralPanel.java,v 1.8 2005/04/18 10:45:17 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,52 +10,57 @@ package com.syrus.AMFICOM.client_.configuration.ui;
 
 import java.awt.*;
 import java.util.*;
-import java.util.Set;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.*;
 
+import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
-import com.syrus.AMFICOM.client_.general.ui_.StorableObjectEditor;
+import com.syrus.AMFICOM.client_.general.ui_.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client_.general.ui_.tree_.*;
-import com.syrus.AMFICOM.client_.scheme.ui.Constants;
+import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.configuration.MeasurementPortType;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.measurement.*;
+import com.syrus.AMFICOM.resource.*;
+import com.syrus.AMFICOM.resource.Constants;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.7 $, $Date: 2005/04/05 10:01:05 $
+ * @version $Revision: 1.8 $, $Date: 2005/04/18 10:45:17 $
  * @module schemeclient_v1
  */
 
-public class MeasurementPortTypeGeneralPanel implements StorableObjectEditor {
+public class MeasurementPortTypeGeneralPanel extends DefaultStorableObjectEditor {
+	ApplicationContext aContext;
 	protected MeasurementPortType type;
 
 	JPanel pnPanel0 = new JPanel();
-	JLabel lbNameLabel = new JLabel(Constants.TEXT_NAME);
+	JLabel lbNameLabel = new JLabel(LangModelScheme.getString(Constants.NAME));
 	JTextField tfNameText = new JTextField();
-	JLabel lbDescriptionLabel = new JLabel(Constants.TEXT_DESCRIPTION);
+	JLabel lbDescriptionLabel = new JLabel(LangModelScheme.getString(Constants.DESCRIPTION));
 	JTextArea taDescriptionArea = new JTextArea(2,10);
-	JLabel lbTestTypeLabel = new JLabel(Constants.TEXT_MEASUREMENT_TYPES);
+	JLabel lbTestTypeLabel = new JLabel(LangModelScheme.getString(Constants.MEASUREMENT_TYPES));
 	JPanel pnGeneralPanel = new JPanel();
 	JTree trTestTypeTree;
 	List measurementTypeNodes;
 	Item root;
 		
-	protected MeasurementPortTypeGeneralPanel()
-	{
+	protected MeasurementPortTypeGeneralPanel() {
 		super();
-		try
-		{
+		try {
 			jbInit();
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void setContext(ApplicationContext aContext) {
+		this.aContext = aContext;
 	}
 
 	protected MeasurementPortTypeGeneralPanel(MeasurementPortType apt) {
@@ -126,7 +131,6 @@ public class MeasurementPortTypeGeneralPanel implements StorableObjectEditor {
 		gbPanel0.setConstraints( scpTestTypeTree, gbcPanel0 );
 		pnPanel0.add( scpTestTypeTree );
 
-		pnGeneralPanel.setBorder( BorderFactory.createTitledBorder( "" ) );
 		GridBagLayout gbGeneralPanel = new GridBagLayout();
 		GridBagConstraints gbcGeneralPanel = new GridBagConstraints();
 		pnGeneralPanel.setLayout( gbGeneralPanel );
@@ -167,10 +171,15 @@ public class MeasurementPortTypeGeneralPanel implements StorableObjectEditor {
 		gbPanel0.setConstraints( pnGeneralPanel, gbcPanel0 );
 		pnPanel0.add( pnGeneralPanel );
 		
-		pnPanel0.setBackground(Color.WHITE);
-		pnGeneralPanel.setBackground(Color.WHITE);
+		pnGeneralPanel.setBorder( BorderFactory.createTitledBorder( LangModelScheme.getString(Constants.EMPTY )));
+//		pnPanel0.setBackground(Color.WHITE);
+//		pnGeneralPanel.setBackground(Color.WHITE);
 		scpDescriptionArea.setPreferredSize(Constants.DIMENSION_TEXTAREA);
 		scpTestTypeTree.setPreferredSize(Constants.DIMENSION_TEXTAREA);
+		
+		addToUndoableListener(tfNameText);
+		addToUndoableListener(taDescriptionArea);
+		addToUndoableListener(trTestTypeTree);
 	}
 
 	public JComponent getGUI() {
@@ -205,8 +214,8 @@ public class MeasurementPortTypeGeneralPanel implements StorableObjectEditor {
 			}
 		}
 		else {
-			this.tfNameText.setText(Constants.TEXT_EMPTY);
-			this.taDescriptionArea.setText(Constants.TEXT_EMPTY);
+			this.tfNameText.setText(LangModelScheme.getString(Constants.EMPTY));
+			this.taDescriptionArea.setText(LangModelScheme.getString(Constants.EMPTY));
 			for (Iterator it = measurementTypeNodes.iterator(); it.hasNext();) {
 				CheckableNode node = (CheckableNode)it.next();
 				node.setChecked(false);
@@ -221,6 +230,17 @@ public class MeasurementPortTypeGeneralPanel implements StorableObjectEditor {
 
 	public void commitChanges() {
 		if (MiscUtil.validName(tfNameText.getText())) {
+			if (type == null) {
+				try {
+					type = SchemeObjectsFactory.createMeasurementPortType(tfNameText.getText());
+					aContext.getDispatcher().notify(new SchemeEvent(this, type, SchemeEvent.CREATE_OBJECT));
+				} 
+				catch (CreateObjectException e) {
+					Log.errorException(e);
+					return;
+				}
+			}
+
 			this.type.setName(tfNameText.getText());
 			this.type.setDescription(this.taDescriptionArea.getText());
 
@@ -244,17 +264,12 @@ public class MeasurementPortTypeGeneralPanel implements StorableObjectEditor {
 					}
 				}
 			}
-			try {
-				MeasurementStorableObjectPool.flush(true);
-			} 
-			catch (ApplicationException e) {
-				Log.errorException(e);
-			}
+			aContext.getDispatcher().notify(new SchemeEvent(this, type, SchemeEvent.UPDATE_OBJECT));
 		}
 	}
 	
 	Item createRoot() {
-		Item root1 = new IconedNode(Constants.ROOT, Constants.TEXT_ROOT);
+		Item root1 = new IconedNode(Constants.ROOT, LangModelScheme.getString(Constants.ROOT));
 		
 		EquivalentCondition condition = new EquivalentCondition(
 				ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
@@ -262,7 +277,7 @@ public class MeasurementPortTypeGeneralPanel implements StorableObjectEditor {
 			Collection allMPTypes = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
 			for (Iterator it = allMPTypes.iterator(); it.hasNext();) {
 				MeasurementType t = (MeasurementType) it.next();
-					root1.addChild(new CheckableNode(t, t.getDescription(), false));
+					root1.addChild(new CheckableNode(t, false));
 			}
 		} 
 		catch (ApplicationException e) {

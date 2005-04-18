@@ -1,5 +1,5 @@
 /*
- * $Id: LinkTypePropertiesManager.java,v 1.3 2005/03/30 13:33:39 stas Exp $
+ * $Id: LinkTypePropertiesManager.java,v 1.4 2005/04/18 10:45:17 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,44 +8,55 @@
 
 package com.syrus.AMFICOM.client_.configuration.ui;
 
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.client_.general.ui_.*;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.configuration.LinkTypeController;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/03/30 13:33:39 $
+ * @version $Revision: 1.4 $, $Date: 2005/04/18 10:45:17 $
  * @module schemeclient_v1
  */
 
 public class LinkTypePropertiesManager implements VisualManager {
 	private static LinkTypePropertiesManager instance;
-	private static AbstractLinkTypeGeneralPanel generalPanel;
-	private static LinkTypeCharacteristicsPanel charPanel;
+	private AbstractLinkTypeGeneralPanel generalPanel;
+	private LinkTypeCharacteristicsPanel charPanel;
 	
-	public static LinkTypePropertiesManager getInstance() {
+	private LinkTypePropertiesManager() {
+		// empty
+	}
+	
+	public static LinkTypePropertiesManager getInstance(ApplicationContext aContext) {
 		if (instance == null) 
 			instance = new LinkTypePropertiesManager();
+		instance.setContext(aContext);
 		return instance;
+	}
+	
+	public void setContext(ApplicationContext aContext) {
+		if (generalPanel == null)
+			generalPanel = new LinkTypeGeneralPanel();
+		generalPanel.setContext(aContext);
+		if (charPanel == null)
+			charPanel = new LinkTypeCharacteristicsPanel();
+		charPanel.setContext(aContext);
 	}
 	
 	/**
 	 * @return AbstractLinkTypeGeneralPanel
-	 * @see com.syrus.AMFICOM.client_.scheme.ui.PropertiesMananager#getGeneralPropertiesPanel()
+	 * @see VisualManager#getGeneralPropertiesPanel()
 	 */
 	public StorableObjectEditor getGeneralPropertiesPanel() {
-		if (generalPanel == null)
-			generalPanel = new AbstractLinkTypeGeneralPanel();
 		return generalPanel;
 	}
 
 	/**
 	 * @return LinkTypeCharacteristicsPanel
-	 * @see com.syrus.AMFICOM.client_.scheme.ui.PropertiesMananager#getCharacteristicPropertiesPanel()
+	 * @see VisualManager#getCharacteristicPropertiesPanel()
 	 */
 	public StorableObjectEditor getCharacteristicPropertiesPanel() {
-		if (charPanel == null)
-			charPanel = new LinkTypeCharacteristicsPanel();
 		return charPanel;
 	}
 
@@ -56,5 +67,4 @@ public class LinkTypePropertiesManager implements VisualManager {
 	public ObjectResourceController getController() {
 		return LinkTypeController.getInstance();
 	}
-
 }

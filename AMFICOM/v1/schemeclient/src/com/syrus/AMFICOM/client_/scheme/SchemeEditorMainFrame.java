@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeEditorMainFrame.java,v 1.1 2005/04/05 14:10:45 stas Exp $
+ * $Id: SchemeEditorMainFrame.java,v 1.2 2005/04/18 10:45:17 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.client_.scheme;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/04/05 14:10:45 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/18 10:45:17 $
  * @module schemeclient_v1
  */
 
@@ -127,10 +127,11 @@ public class SchemeEditorMainFrame extends JFrame implements OperationListener {
 		// epanel = new SchemePanelNoEdition(aContext);
 
 		schemeTab = new SchemeTabbedPane(aContext);
-
+		
 		editorFrame = new SchemeViewerFrame(aContext, schemeTab);
 		editorFrame.setClosable(false);
 		editorFrame.setTitle(LangModelSchematics.getString("schemeMainTitle"));
+		
 		desktopPane.add(editorFrame);
 		// graphs.add(panel);
 
@@ -144,6 +145,10 @@ public class SchemeEditorMainFrame extends JFrame implements OperationListener {
 		desktopPane.add(ugoFrame);
 		// graphs.add(upanel);
 
+		SchemeToolBar schemeToolBar = new SchemeToolBar(schemeTab, ugoPane, aContext);
+		schemeToolBar.createToolBar();
+		schemeTab.setToolBar(schemeToolBar);
+				
 		// scheme_graph = epanel.getGraph();
 
 		generalFrame = new GeneralPropertiesFrame("Title", aContext);
@@ -633,10 +638,8 @@ public class SchemeEditorMainFrame extends JFrame implements OperationListener {
 	}
 
 	void this_windowClosing(WindowEvent e) {
-		Set panels = schemeTab.getAllPanels();
-		for (Iterator it = panels.iterator(); it.hasNext();) {
-			UgoPanel p = (UgoPanel) it.next();
-			schemeTab.selectPanel(p);
+		UgoPanel p = schemeTab.getCurrentPanel();
+		while (p != null) {
 			/*
 			 * if (p[i].getGraph().getSchemeElement() != null &&
 			 * p[i].getGraph().isGraphChanged()) { schemeTab.selectPanel(p[i]); int
@@ -650,6 +653,7 @@ public class SchemeEditorMainFrame extends JFrame implements OperationListener {
 			 */
 			if (!schemeTab.removePanel(p))
 				return;
+			p = schemeTab.getCurrentPanel();
 		}
 
 		/*

@@ -1,7 +1,7 @@
-/*
- * $Id: AbstractLinkTypeGeneralPanel.java,v 1.5 2005/04/18 10:45:16 stas Exp $
+/*-
+ * $Id: EquipmentTypeGeneralPanel.java,v 1.1 2005/04/18 10:45:17 stas Exp $
  *
- * Copyright © 2004 Syrus Systems.
+ * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -14,25 +14,45 @@ import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.UI.AComboBox;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.client_.general.ui_.DefaultStorableObjectEditor;
-import com.syrus.AMFICOM.configuration.AbstractLinkType;
+import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
+import com.syrus.AMFICOM.configuration.EquipmentType;
+import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.general.EquipmentTypeCodenames;
 import com.syrus.AMFICOM.resource.*;
 import com.syrus.AMFICOM.resource.Constants;
+import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.5 $, $Date: 2005/04/18 10:45:16 $
+ * @version $Revision: 1.1 $, $Date: 2005/04/18 10:45:17 $
  * @module schemeclient_v1
  */
 
-public abstract class AbstractLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
+public class EquipmentTypeGeneralPanel extends DefaultStorableObjectEditor {
 	ApplicationContext aContext;
-	protected AbstractLinkType linkType;
+	protected EquipmentType eqt;
 
+	private String[] eqtCodenames = new String[] {
+			EquipmentTypeCodenames.OTHER,
+			EquipmentTypeCodenames.REFLECTOMETER,
+			EquipmentTypeCodenames.SWITCH,
+			EquipmentTypeCodenames.FILTER,
+			EquipmentTypeCodenames.CABLE_PANEL,
+			EquipmentTypeCodenames.CROSS,
+			EquipmentTypeCodenames.MUFF,
+			EquipmentTypeCodenames.MULTIPLEXOR,
+			EquipmentTypeCodenames.RECEIVER,
+			EquipmentTypeCodenames.TRANSMITTER
+		};
+	
 	JPanel pnPanel0 = new JPanel();
 	JLabel lbNameLabel = new JLabel(LangModelScheme.getString(Constants.NAME));
 	JTextField tfNameText = new JTextField();
+	JLabel lbCodenameLabel = new JLabel(LangModelScheme.getString(Constants.CODENAME));
+	JComboBox tfCodenameCombo = new AComboBox();
 	JLabel lbManufacturerLabel = new JLabel(LangModelScheme.getString(Constants.MANUFACTURER));
 	JTextField tfManufacturerText = new JTextField();
 	JLabel lbManufacturerCodeLabel = new JLabel(LangModelScheme.getString(Constants.MANUFACTURER_CODE));
@@ -41,23 +61,22 @@ public abstract class AbstractLinkTypeGeneralPanel extends DefaultStorableObject
 	JTextArea taDescriptionArea = new JTextArea(2,10);
 	JPanel pnGeneralPanel = new JPanel();
 	
-	protected AbstractLinkTypeGeneralPanel() {
+	protected EquipmentTypeGeneralPanel() {
 		super();
 		try {
 			jbInit();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		setContext(aContext);
 	}
 	
 	public void setContext(ApplicationContext aContext) {
 		this.aContext = aContext;
 	}
 
-	protected AbstractLinkTypeGeneralPanel(AbstractLinkType linkType) {
+	protected EquipmentTypeGeneralPanel(EquipmentType equipmentType) {
 		this();
-		setObject(linkType);
+		setObject(equipmentType);
 	}
 
 	private void jbInit() throws Exception {
@@ -94,6 +113,31 @@ public abstract class AbstractLinkTypeGeneralPanel extends DefaultStorableObject
 		gbGeneralPanel.setConstraints(tfNameText, gbcGeneralPanel);
 		pnGeneralPanel.add(tfNameText);
 
+		lbCodenameLabel.setFocusable(false);
+		gbcGeneralPanel.gridx = 0;
+		gbcGeneralPanel.gridy = 1;
+		gbcGeneralPanel.gridwidth = 2;
+		gbcGeneralPanel.gridheight = 1;
+		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
+		gbcGeneralPanel.weightx = 0;
+		gbcGeneralPanel.weighty = 0;
+		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
+		gbcGeneralPanel.insets = new Insets(0, 0, 0, 2);
+		gbGeneralPanel.setConstraints(lbCodenameLabel, gbcGeneralPanel);
+		pnGeneralPanel.add(lbCodenameLabel);
+
+		gbcGeneralPanel.gridx = 2;
+		gbcGeneralPanel.gridy = 1;
+		gbcGeneralPanel.gridwidth = 4;
+		gbcGeneralPanel.gridheight = 1;
+		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
+		gbcGeneralPanel.weightx = 1;
+		gbcGeneralPanel.weighty = 0;
+		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
+		gbcPanel0.insets = new Insets(0, 0, 0, 0);
+		gbGeneralPanel.setConstraints(tfCodenameCombo, gbcGeneralPanel);
+		pnGeneralPanel.add(tfCodenameCombo);
+		
 		lbManufacturerLabel.setFocusable(false);
 		gbcGeneralPanel.gridx = 0;
 		gbcGeneralPanel.gridy = 2;
@@ -182,11 +226,13 @@ public abstract class AbstractLinkTypeGeneralPanel extends DefaultStorableObject
 		pnPanel0.add(scpDescriptionArea);
 
 		pnGeneralPanel.setBorder( BorderFactory.createTitledBorder( LangModelScheme.getString(Constants.EMPTY )));
-//		pnGeneralPanel.setBackground(Color.WHITE);
-//		pnPanel0.setBackground(Color.WHITE);
 		scpDescriptionArea.setPreferredSize(Constants.DIMENSION_TEXTAREA);
+		for (int i = 0; i < eqtCodenames.length; i++) {
+			tfCodenameCombo.addItem(EquipmentTypeCodenames.getName(eqtCodenames[i]));			
+		} 
 		
 		addToUndoableListener(tfNameText);
+		addToUndoableListener(tfCodenameCombo);
 		addToUndoableListener(tfManufacturerText);
 		addToUndoableListener(tfManufacturerCodeText);
 		addToUndoableListener(taDescriptionArea);
@@ -197,17 +243,18 @@ public abstract class AbstractLinkTypeGeneralPanel extends DefaultStorableObject
 	}
 
 	public Object getObject() {
-		return linkType;
+		return eqt;
 	}
 
 	public void setObject(Object or) {
-		this.linkType = (AbstractLinkType) or;
+		this.eqt = (EquipmentType) or;
 
-		if (linkType != null) {
-			this.tfNameText.setText(linkType.getName());
-			this.taDescriptionArea.setText(linkType.getDescription());
-			this.tfManufacturerText.setText(linkType.getManufacturer());
-			this.tfManufacturerCodeText.setText(linkType.getManufacturerCode());
+		if (eqt != null) {
+			this.tfNameText.setText(eqt.getName());
+			this.taDescriptionArea.setText(eqt.getDescription());
+			this.tfManufacturerText.setText(eqt.getManufacturer());
+			this.tfManufacturerCodeText.setText(eqt.getManufacturerCode());
+			this.tfCodenameCombo.setSelectedItem(EquipmentTypeCodenames.getName(eqt.getCodename()));
 		} 
 		else {
 			this.tfNameText.setText(LangModelScheme.getString(Constants.EMPTY));
@@ -218,13 +265,24 @@ public abstract class AbstractLinkTypeGeneralPanel extends DefaultStorableObject
 	}
 
 	public void commitChanges() {
-		if(MiscUtil.validName(this.tfNameText.getText())) {
-			linkType.setName(this.tfNameText.getText());
-			linkType.setDescription(this.taDescriptionArea.getText());
-			linkType.setManufacturer(this.tfManufacturerText.getText());
-			linkType.setManufacturerCode(this.tfManufacturerCodeText.getText());
+		if (MiscUtil.validName(tfNameText.getText())) {
+			if (eqt == null) {
+				try {
+					eqt = SchemeObjectsFactory.createEquipmentType();
+					aContext.getDispatcher().notify(new SchemeEvent(this, eqt, SchemeEvent.CREATE_OBJECT));
+				} catch (CreateObjectException e) {
+					Log.errorException(e);
+					return;
+				}
+			}
+
+			eqt.setName(this.tfNameText.getText());
+			eqt.setDescription(this.taDescriptionArea.getText());
+			eqt.setManufacturer(this.tfManufacturerText.getText());
+			eqt.setManufacturerCode(this.tfManufacturerCodeText.getText());
+			eqt.setCodename(eqtCodenames[tfCodenameCombo.getSelectedIndex()]);
 			
-			aContext.getDispatcher().notify(new SchemeEvent(this, linkType, SchemeEvent.UPDATE_OBJECT));
+			aContext.getDispatcher().notify(new SchemeEvent(this, eqt, SchemeEvent.UPDATE_OBJECT));
 		}
 	}
 }
