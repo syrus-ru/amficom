@@ -1,7 +1,6 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.text.SimpleDateFormat;
 
 import javax.swing.BorderFactory;
