@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPattern.java,v 1.74 2005/04/15 19:22:19 arseniy Exp $
+ * $Id: TemporalPattern.java,v 1.75 2005/04/18 15:14:06 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,18 +31,17 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.measurement.corba.TemporalPattern_Transferable;
 import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.74 $, $Date: 2005/04/15 19:22:19 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.75 $, $Date: 2005/04/18 15:14:06 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
-public class TemporalPattern extends StorableObject {
+public class TemporalPattern extends AbstractTemporalPattern {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -786,10 +785,6 @@ public class TemporalPattern extends StorableObject {
 	 * Map of <{@link TimeLine},{@link TimeLine}>
 	 */
 	private java.util.Set			templates;
-	private SortedSet			times;
-
-	private long			startTime		= 0;
-	private long			endTime			= 0;
 
 	public TemporalPattern(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
@@ -960,60 +955,27 @@ public class TemporalPattern extends StorableObject {
 	}
 
 	/**
-	 * get times in ms that describes by temporal patterns and between start
+	 * fill times in ms that describes by temporal patterns and between start
 	 * and end
-	 * 
-	 * @param start
-	 *                Date
-	 * @param end
-	 *                Date
-	 * @return SortedSet of java.util.Data
 	 */
-	public SortedSet getTimes(Date start, Date end) {
-		return this.getTimes(start.getTime(), end.getTime());	
-	}
-
-	/**
-	 * get times in ms that describes by temporal patterns and between start
-	 * and end
-	 * 
-	 * @param start
-	 *                long
-	 * @param end
-	 *                long
-	 * @return SortedSet of java.util.Data
-	 */
-	public SortedSet getTimes(long start, long end) {
-		if (this.times == null)
-			this.times = new TreeSet();
-		if (this.startTime != start)
-			this.times.clear();
-		this.startTime = start;
-		if (this.endTime != end)
-			this.times.clear();
-		this.endTime = end;
-
-		if (this.times.isEmpty()) {
-			//int count = 0;
-			java.util.Set list = this.templates;
-			for (Iterator it = list.iterator(); it.hasNext();) {
-				TimeLine timeLine = (TimeLine) it.next();
-				timeLine.setStartPeriod(start);
-				timeLine.setEndPeriod(end);
-				timeLine.parseTemplate();
-				if (timeLine.dateList != null) {
-					for (Iterator it2 = timeLine.dateList.iterator(); it2.hasNext();) {
-						Object obj = it2.next();
-						if (!this.times.contains(obj))
-							this.times.add(obj);
-					}
-
+	protected void fillTimes() {
+		java.util.Set list = this.templates;
+		for (Iterator it = list.iterator(); it.hasNext();) {
+			TimeLine timeLine = (TimeLine) it.next();
+			timeLine.setStartPeriod(this.startTime);
+			timeLine.setEndPeriod(this.endTime);
+			timeLine.parseTemplate();
+			if (timeLine.dateList != null) {
+				for (Iterator it2 = timeLine.dateList.iterator(); it2.hasNext();) {
+					Object obj = it2.next();
+					if (!this.times.contains(obj))
+						this.times.add(obj);
 				}
 
 			}
-		}
 
-		return this.times;
+		}
+	
 	}
 
 	private void setTemplates0(String[] cronStringArray) {
