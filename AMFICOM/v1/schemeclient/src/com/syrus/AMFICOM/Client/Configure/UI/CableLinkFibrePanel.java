@@ -140,7 +140,7 @@ public class CableLinkFibrePanel extends GeneralPanel
 		linksMarkField.setText("");
 
 		threadsList.removeAll();
-		threadsList.addElements(Arrays.asList(link.getSchemeCableThreadsAsArray()));
+		threadsList.addElements(link.getSchemeCableThreads());
 	}
 
 	public boolean modify()

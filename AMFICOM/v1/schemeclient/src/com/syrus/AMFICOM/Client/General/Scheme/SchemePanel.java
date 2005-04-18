@@ -33,7 +33,7 @@ public class SchemePanel extends ElementsPanel
 		Constants.separator,
 		Constants.blockPortKey,
 		Constants.createTopLevelElementKey,
-		Constants.groupSEKey,
+		Constants.groupKey,
 		Constants.ungroupKey,
 		Constants.separator,
 		Constants.deleteKey,
@@ -384,7 +384,7 @@ public class SchemePanel extends ElementsPanel
 			{
 				SchemeGraph.ShemeMarqueeHandler mh = (SchemeGraph.ShemeMarqueeHandler) getGraph().getMarqueeHandler();
 
-				bttns.put(Constants.groupSEKey,
+				bttns.put(Constants.groupKey,
 										createToolButton(mh.gr2, btn_size, null, "создать компонент",
 										new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/group.gif")),
 										new GroupSEAction(getGraph()), false));

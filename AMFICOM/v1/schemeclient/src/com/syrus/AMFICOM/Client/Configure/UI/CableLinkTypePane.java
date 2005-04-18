@@ -163,11 +163,11 @@ public class CableLinkTypePane extends JPanel implements ObjectResourcePropertie
 				setObject(new_type);
 				return true;
 			}
-			catch (IllegalObjectEntityException ex) {
-				ex.printStackTrace();
-			}
 			catch (CreateObjectException ex) {
 				ex.printStackTrace();
+			} catch (IdentifierGenerationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 		return false;

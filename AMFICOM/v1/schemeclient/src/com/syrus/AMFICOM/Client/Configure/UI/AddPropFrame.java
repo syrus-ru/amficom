@@ -183,7 +183,7 @@ public class AddPropFrame extends JDialog {
 							.getSessionInterface()).getAccessIdentifier().user_id);
 					selectedType = CharacteristicType
 							.createInstance(userId, nameField.getText(), nameField.getText(),
-									DataType._DATA_TYPE_STRING, sort);
+									DataType.DATA_TYPE_STRING, sort);
 				} catch (CreateObjectException ex) {
 					ex.printStackTrace();
 					return;

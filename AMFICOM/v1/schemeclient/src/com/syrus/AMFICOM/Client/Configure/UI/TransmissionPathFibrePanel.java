@@ -59,7 +59,7 @@ public class TransmissionPathFibrePanel extends GeneralPanel
 		path = (SchemePath)or;
 
 		ObjectResourceTableModel model = (ObjectResourceTableModel)linksTable.getModel();
-		model.setContents(Arrays.asList(path.getPathElementsAsArray()));
+//		model.setContents(Arrays.asList(path.getPathElementsAsArray()));
 	}
 
 	public boolean modify()

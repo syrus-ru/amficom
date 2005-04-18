@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectSelectedEvent.java,v 1.1 2005/04/05 14:24:05 stas Exp $
+ * $Id: ObjectSelectedEvent.java,v 1.2 2005/04/18 10:48:09 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import com.syrus.AMFICOM.client_.general.ui_.VisualManager;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/04/05 14:24:05 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/18 10:48:09 $
  * @module schemeclient_v1
  */
 
@@ -22,6 +22,7 @@ public class ObjectSelectedEvent extends OperationEvent {
 	public static final long MEASUREMENT_TYPE = 		0x00000004;
 	public static final long LINK_TYPE = 						0x00000008;
 	public static final long CABLELINK_TYPE = 			0x00000010;
+	public static final long EQUIPMENT_TYPE = 			0x00000020;
 	
 	public static final long SCHEME_PROTOELEMENT =	0x00000100;
 	public static final long SCHEME_PROTOGROUP =		0x00000200;
@@ -35,6 +36,7 @@ public class ObjectSelectedEvent extends OperationEvent {
 	public static final long SCHEME_PATH =					0x00020000;
 	
 	public static final long OTHER_OBJECT =					0x00100000;
+	public static final long ALL_DESELECTED =				0x10000000;
 	
 	public static final String TYPE = "objectselected";
 	private long type;

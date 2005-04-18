@@ -343,12 +343,7 @@ public class CableLinkTypeFibrePanel extends GeneralPanel {
 						CableThreadType ctt = (CableThreadType)it.next(); 
 						toDelete.add(ctt.getId());
 					}
-					try {
-						ConfigurationStorableObjectPool.delete(toDelete);
-					} 
-					catch (ApplicationException ex) {
-						ex.printStackTrace();
-					}
+					ConfigurationStorableObjectPool.delete(toDelete);
 				} 
 				else
 					modify();

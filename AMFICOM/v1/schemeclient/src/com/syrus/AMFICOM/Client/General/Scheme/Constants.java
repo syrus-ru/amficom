@@ -30,7 +30,6 @@ public class Constants
 	// list of button keys
 	public static final String deleteKey = "deleteKey";
 	public static final String groupKey = "groupKey";
-	public static final String groupSEKey = "groupSEKey";
 	public static final String ungroupKey = "ungroupKey";
 	public static final String hierarchyUpKey = "hierarchyUpKey";
 	//public static final String insertIntoLibraryKey = "insertIntoLibraryKey";

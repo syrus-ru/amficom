@@ -437,7 +437,7 @@ public class CharacteristicsPanel extends GeneralPanel implements
 
 					try {
 						Characteristic ch = Characteristic.createInstance(userId, type,
-								type.getDescription(), "", sort.value(), "", characterizedId,
+								type.getDescription(), "", sort, "", characterizedId,
 								true, true);
 						List added = (List) addedCharacteristics.get(obj);
 						if (added == null) {
