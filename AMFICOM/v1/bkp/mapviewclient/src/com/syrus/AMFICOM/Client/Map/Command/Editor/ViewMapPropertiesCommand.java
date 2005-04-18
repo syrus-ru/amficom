@@ -1,5 +1,5 @@
 /**
- * $Id: ViewMapPropertiesCommand.java,v 1.6 2005/02/08 15:11:10 krupenn Exp $
+ * $Id: ViewMapPropertiesCommand.java,v 1.7 2005/04/18 11:09:09 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,27 +11,27 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Editor;
 
-import com.syrus.AMFICOM.Client.General.Command.Command;
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
-import com.syrus.AMFICOM.Client.Map.UI.MapPropertyFrame;
-
 import java.awt.Dimension;
 
 import javax.swing.JDesktopPane;
 
+import com.syrus.AMFICOM.Client.General.Command.Command;
+import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
+import com.syrus.AMFICOM.Client.Map.UI.MapElementPropertiesFrame;
+
 /**
  * Команда отображает окно свойств элемента карты 
  * @author $Author: krupenn $
- * @version $Revision: 1.6 $, $Date: 2005/02/08 15:11:10 $
+ * @version $Revision: 1.7 $, $Date: 2005/04/18 11:09:09 $
  * @module mapviewclient_v1
  */
 public class ViewMapPropertiesCommand extends VoidCommand
 {
 	ApplicationContext aContext;
 	JDesktopPane desktop;
-	public MapPropertyFrame frame;
+	public MapElementPropertiesFrame frame;
 
 	public ViewMapPropertiesCommand(JDesktopPane desktop, ApplicationContext aContext)
 	{
@@ -45,11 +45,15 @@ public class ViewMapPropertiesCommand extends VoidCommand
 
 		if(this.frame == null)
 		{
-			this.frame = new MapPropertyFrame("", this.aContext);
+			this.frame = new MapElementPropertiesFrame("", this.aContext);
+			this.frame.setClosable(true);
+			this.frame.setResizable(true);
+			this.frame.setMaximizable(false);
+			this.frame.setIconifiable(false);
 
 			this.desktop.add(this.frame);
 
-			Dimension dim = new Dimension(this.desktop.getWidth(), this.desktop.getHeight());
+			Dimension dim = this.desktop.getSize();
 			this.frame.setLocation(dim.width * 4 / 5, dim.height / 4);
 			this.frame.setSize(dim.width / 5, dim.height / 4);
 		}

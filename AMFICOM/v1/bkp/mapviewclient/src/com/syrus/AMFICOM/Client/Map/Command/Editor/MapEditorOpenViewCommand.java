@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorOpenViewCommand.java,v 1.16 2005/04/13 11:11:28 krupenn Exp $
+ * $Id: MapEditorOpenViewCommand.java,v 1.17 2005/04/18 11:09:09 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,9 +20,9 @@ import com.syrus.AMFICOM.Client.Map.MapConnectionException;
 import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewOpenCommand;
+import com.syrus.AMFICOM.Client.Map.UI.MapElementPropertiesFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapElementsFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
-import com.syrus.AMFICOM.Client.Map.UI.MapPropertyFrame;
 import com.syrus.AMFICOM.mapview.MapView;
 
 /**
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * пользователь выбрал MapContext, открывается окно карты и сопутствующие окна
  * и MapContext передается в окно карты
  * 
- * @version $Revision: 1.16 $, $Date: 2005/04/13 11:11:28 $
+ * @version $Revision: 1.17 $, $Date: 2005/04/18 11:09:09 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see com.syrus.AMFICOM.Client.Map.Command.Map.MapOpenCommand
@@ -42,7 +42,7 @@ public class MapEditorOpenViewCommand extends VoidCommand
 	protected JDesktopPane desktop;
 	
 	protected MapFrame mapFrame = null;
-	protected MapPropertyFrame propFrame = null;
+	protected MapElementPropertiesFrame propFrame = null;
 	protected MapElementsFrame elementsFrame = null;
 	
 	protected MapView mapView = null;
@@ -125,7 +125,7 @@ public class MapEditorOpenViewCommand extends VoidCommand
 		return this.mapFrame;
 	}
 
-	public MapPropertyFrame getPropertiesFrame()
+	public MapElementPropertiesFrame getPropertiesFrame()
 	{
 		return this.propFrame;
 	}
