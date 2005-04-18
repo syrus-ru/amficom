@@ -6,7 +6,7 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.io.BellcoreStructure;
 
 public class HistogrammFrame extends ScalableFrame
-implements bsHashChangeListener
+implements BsHashChangeListener
 {
 	Dispatcher dispatcher;
 	public HistogrammFrame(Dispatcher dispatcher)

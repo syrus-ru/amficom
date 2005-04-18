@@ -6,14 +6,14 @@ import java.util.HashMap;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
-import com.syrus.AMFICOM.Client.General.Event.bsHashChangeListener;
+import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.io.BellcoreStructure;
 
-public class AnalysisFrame extends ScalableFrame implements bsHashChangeListener, EtalonMTMListener
+public class AnalysisFrame extends ScalableFrame implements BsHashChangeListener, EtalonMTMListener
 {
 	Dispatcher dispatcher;
 	public HashMap traces = new HashMap();

@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryMTMListener;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
-import com.syrus.AMFICOM.Client.General.Event.bsHashChangeListener;
+import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
@@ -45,7 +45,7 @@ import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.io.BellcoreStructure;
 
 public class AnalysisSelectionFrame extends ATableFrame
-implements OperationListener, bsHashChangeListener, PrimaryMTMListener
+implements OperationListener, BsHashChangeListener, PrimaryMTMListener
 {
 	static final Double[] nf =
 	 {

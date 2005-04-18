@@ -63,7 +63,7 @@ import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
-import com.syrus.AMFICOM.Client.General.Event.bsHashChangeListener;
+import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
@@ -81,7 +81,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.io.BellcoreStructure;
 
 public class ThresholdsMainFrame extends JFrame
-implements OperationListener, bsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener
+implements OperationListener, BsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener
 {
 	public ApplicationContext aContext;
 	private Dispatcher internal_dispatcher = new Dispatcher();

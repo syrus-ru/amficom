@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.general.*;
 import com.syrus.io.BellcoreStructure;
 
 public class AnalyseMainFrameSimplified extends JFrame
-implements bsHashChangeListener, OperationListener, EtalonMTMListener, CurrentTraceChangeListener
+implements BsHashChangeListener, OperationListener, EtalonMTMListener, CurrentTraceChangeListener
 {
 	public static final boolean DEBUG = System.getProperty("amficom.debug.nonstrict", "false").equals("true");
 

@@ -12,7 +12,7 @@ import com.syrus.AMFICOM.analysis.dadara.MathRef;
 import com.syrus.io.BellcoreStructure;
 
 public class MarkersInfoFrame extends JInternalFrame
-implements OperationListener, bsHashChangeListener
+implements OperationListener, BsHashChangeListener
 {
 //	private static StringBuffer km = new StringBuffer(" ").append(LangModelAnalyse.getString("km"));
 	private static StringBuffer mt = new StringBuffer(" ").append(LangModelAnalyse.getString("mt"));

@@ -8,13 +8,13 @@ import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Event.bsHashChangeListener;
+import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEvents;
 import com.syrus.io.BellcoreStructure;
 
 public class ThresholdsFrame extends SimpleResizableFrame
-implements OperationListener, bsHashChangeListener, EtalonMTMListener
+implements OperationListener, BsHashChangeListener, EtalonMTMListener
 {
 	private Dispatcher dispatcher;
 	Map traces = new HashMap();

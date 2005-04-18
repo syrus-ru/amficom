@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.26 2005/04/18 10:38:16 saa Exp $
+ * $Id: Heap.java,v 1.27 2005/04/18 12:40:01 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.Client.Analysis.UI.ReflectogrammLoadDialog;
 import com.syrus.AMFICOM.Client.General.Event.CurrentTraceChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryMTMListener;
-import com.syrus.AMFICOM.Client.General.Event.bsHashChangeListener;
+import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryTraceListener;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEventsImpl;
@@ -38,7 +38,7 @@ import com.syrus.io.BellcoreStructure;
  * использование остальных методов работы с BS
  * 
  * @author $Author: saa $
- * @version $Revision: 1.26 $, $Date: 2005/04/18 10:38:16 $
+ * @version $Revision: 1.27 $, $Date: 2005/04/18 12:40:01 $
  * @module
  */
 public class Heap
@@ -279,19 +279,19 @@ public class Heap
     // notifyPrimaryTraceChanged -> primaryTraceCUpdated()
     public static void notifyBsHashAdd(String key, BellcoreStructure bs) {
         for (Iterator it = bsHashChangedListeners.iterator(); it.hasNext();)
-            ((bsHashChangeListener) it.next()).bsHashAdded(key, bs);
+            ((BsHashChangeListener) it.next()).bsHashAdded(key, bs);
     }
 
     //  primary trace всегда останется
     public static void notifyBsHashRemove(String key) {
         for (Iterator it = bsHashChangedListeners.iterator(); it.hasNext();)
-            ((bsHashChangeListener) it.next()).bsHashRemoved(key);
+            ((BsHashChangeListener) it.next()).bsHashRemoved(key);
     }
 
     // закрыть и primary trace, и все остальные
     private static void notifyBsHashRemoveAll() {
         for (Iterator it = bsHashChangedListeners.iterator(); it.hasNext();)
-            ((bsHashChangeListener) it.next()).bsHashRemovedAll();
+            ((BsHashChangeListener) it.next()).bsHashRemovedAll();
     }
 
     public static void notifyPrimaryTraceChanged() {
@@ -349,11 +349,11 @@ public class Heap
             c.remove(listener);
     }
 
-    public static void addBsHashListener(bsHashChangeListener listener) {
+    public static void addBsHashListener(BsHashChangeListener listener) {
         addListener(bsHashChangedListeners, listener);
     }
 
-    public static void removeBsHashListener(bsHashChangeListener listener) {
+    public static void removeBsHashListener(BsHashChangeListener listener) {
         removeListener(bsHashChangedListeners, listener);
     }
 

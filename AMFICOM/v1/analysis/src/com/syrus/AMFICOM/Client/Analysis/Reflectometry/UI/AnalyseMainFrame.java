@@ -71,7 +71,7 @@ import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryMTMListener;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryTraceListener;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
-import com.syrus.AMFICOM.Client.General.Event.bsHashChangeListener;
+import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
@@ -89,7 +89,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.io.BellcoreStructure;
 import com.syrus.util.Log;
 
-public class AnalyseMainFrame extends JFrame implements bsHashChangeListener,
+public class AnalyseMainFrame extends JFrame implements BsHashChangeListener,
 		PrimaryTraceListener, PrimaryMTMListener, OperationListener,
 		EtalonMTMListener, CurrentTraceChangeListener
 {

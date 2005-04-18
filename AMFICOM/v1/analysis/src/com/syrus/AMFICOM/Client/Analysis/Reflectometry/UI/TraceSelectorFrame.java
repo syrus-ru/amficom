@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.CurrentTraceChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
-import com.syrus.AMFICOM.Client.General.Event.bsHashChangeListener;
+import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.UI.FixedSizeEditableTableModel;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
@@ -31,7 +31,7 @@ import com.syrus.io.BellcoreStructure;
 import com.syrus.util.Log;
 
 public class TraceSelectorFrame extends JInternalFrame
-implements bsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener
+implements BsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener
 {
 	protected static List traces = new ArrayList();
 	private FixedSizeEditableTableModel tModel; //DefaultTableModel
