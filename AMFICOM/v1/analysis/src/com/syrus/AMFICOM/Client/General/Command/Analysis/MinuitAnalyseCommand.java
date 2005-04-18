@@ -80,7 +80,7 @@ public class MinuitAnalyseCommand extends VoidCommand
 			Heap.setMTAEPrimary(mtae);
 			Map tracesMap = Heap.getBsBellCoreMap();
 			ModelTraceManager mtm = CoreAnalysisManager.makeThresholds(mtae,
-				tracesMap);
+				tracesMap.values());
 			Heap.setMTMEtalon(mtm);
 
 			Environment.getActiveWindow().setCursor(
