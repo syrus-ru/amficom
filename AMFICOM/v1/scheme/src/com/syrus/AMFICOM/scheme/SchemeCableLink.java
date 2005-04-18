@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.15 2005/04/15 19:22:55 arseniy Exp $
+ * $Id: SchemeCableLink.java,v 1.16 2005/04/18 13:19:01 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,8 +33,8 @@ import com.syrus.AMFICOM.scheme.corba.SchemeCableLink_Transferable;
 /**
  * #11 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.15 $, $Date: 2005/04/15 19:22:55 $
+ * @author $Author: bass $
+ * @version $Revision: 1.16 $, $Date: 2005/04/18 13:19:01 $
  * @module scheme_v1
  */
 public final class SchemeCableLink extends AbstractSchemeLink {
@@ -81,21 +81,21 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 		fromTransferable(transferable);
 	}
 
-	public static SchemeCableLink createInstance(final Identifier creatorId) throws CreateObjectException {
+	public static SchemeCableLink createInstance(final Identifier creatorId)
+			throws CreateObjectException {
 		assert creatorId != null;
 		try {
 			final Date created = new Date();
-			final SchemeCableLink schemeCableLink = new SchemeCableLink(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE),
-					created,
-					created,
-					creatorId,
-					creatorId,
+			final SchemeCableLink schemeCableLink = new SchemeCableLink(
+					IdentifierPool
+							.getGeneratedIdentifier(ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE),
+					created, created, creatorId, creatorId,
 					0L);
 			schemeCableLink.changed = true;
 			return schemeCableLink;
-		}
-		catch (IdentifierGenerationException ige) {
-			throw new CreateObjectException("Cannot generate identifier ", ige);
+		} catch (final IdentifierGenerationException ige) {
+			throw new CreateObjectException(
+					"SchemeCableLink.createInstance | cannot generate identifier ", ige); //$NON-NLS-1$
 		}
 	}
 
@@ -134,14 +134,14 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	}
 
 	/**
-	 * @see Characterizable#getCharacteristicSort()
+	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicSort()
 	 */
 	public CharacteristicSort getCharacteristicSort() {
 		return CharacteristicSort.CHARACTERISTIC_SORT_SCHEMECABLELINK;
 	}
 
 	/**
-	 * @see StorableObject#getDependencies()
+	 * @see com.syrus.AMFICOM.general.StorableObject#getDependencies()
 	 */
 	public Set getDependencies() {
 		throw new UnsupportedOperationException();
@@ -285,7 +285,7 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	/**
 	 * @param transferable
 	 * @throws CreateObjectException
-	 * @see StorableObject#fromTransferable(IDLEntity)
+	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IDLEntity)
 	 */
 	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
 		throw new UnsupportedOperationException();

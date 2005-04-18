@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.13 2005/04/15 19:22:55 arseniy Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.14 2005/04/18 13:19:01 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfo_Transferable;
 /**
  * #05 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.13 $, $Date: 2005/04/15 19:22:55 $
+ * @author $Author: bass $
+ * @version $Revision: 1.14 $, $Date: 2005/04/18 13:19:01 $
  * @module scheme_v1
  */
 public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
@@ -109,21 +109,22 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 		fromTransferable(transferable);
 	}
 
-	public static SchemeOptimizeInfo createInstance(final Identifier creatorId) throws CreateObjectException {
+	public static SchemeOptimizeInfo createInstance(
+			final Identifier creatorId)
+			throws CreateObjectException {
 		assert creatorId != null;
 		try {
 			final Date created = new Date();
-			final SchemeOptimizeInfo schemeOptimizeInfo = new SchemeOptimizeInfo(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SCHEME_OPTIMIZE_INFO_ENTITY_CODE),
-					created,
-					created,
-					creatorId,
-					creatorId,
+			final SchemeOptimizeInfo schemeOptimizeInfo = new SchemeOptimizeInfo(
+					IdentifierPool
+							.getGeneratedIdentifier(ObjectEntities.SCHEME_OPTIMIZE_INFO_ENTITY_CODE),
+					created, created, creatorId, creatorId,
 					0L);
 			schemeOptimizeInfo.changed = true;
 			return schemeOptimizeInfo;
-		}
-		catch (IdentifierGenerationException ige) {
-			throw new CreateObjectException("Cannot generate identifier ", ige);
+		} catch (final IdentifierGenerationException ige) {
+			throw new CreateObjectException(
+					"SchemeOptimizeInfo.createInstance | cannot generate identifier ", ige); //$NON-NLS-1$
 		}
 	}
 
