@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicsPanel.java,v 1.1 2005/04/18 08:55:31 stas Exp $
+ * $Id: CharacteristicsPanel.java,v 1.2 2005/04/18 15:30:58 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,11 +30,11 @@ import com.syrus.AMFICOM.resource.*;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/04/18 08:55:31 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/18 15:30:58 $
  * @module generalclient_v1
  */
 
-public abstract class CharacteristicsPanel implements StorableObjectEditor {
+public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 	protected static CharacteristicTypeSort[] sorts = new CharacteristicTypeSort[] {
 			CharacteristicTypeSort.CHARACTERISTICTYPESORT_ELECTRICAL,
 			CharacteristicTypeSort.CHARACTERISTICTYPESORT_INTERFACE,
