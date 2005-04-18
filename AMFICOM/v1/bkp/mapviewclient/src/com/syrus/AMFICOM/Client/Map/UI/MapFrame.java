@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.33 2005/04/15 11:12:33 peskovsky Exp $
+ * $Id: MapFrame.java,v 1.34 2005/04/18 09:23:26 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -80,7 +80,7 @@ import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
  * 
  * 
  * 
- * @version $Revision: 1.33 $, $Date: 2005/04/15 11:12:33 $
+ * @version $Revision: 1.34 $, $Date: 2005/04/18 09:23:26 $
  * @author $Author: peskovsky $
  * @module mapviewclient_v1
  */
@@ -360,7 +360,7 @@ public class MapFrame extends JInternalFrame
 		if(ae.getActionCommand().equals(MapEvent.MAP_VIEW_CENTER_CHANGED))
 		{
 			DoublePoint p = (DoublePoint )ae.getSource();
-			this.mapStatusbar.showLatLong(p.getX(), p.getY());
+			this.mapStatusbar.showLatLong(p.getY(), p.getX());
 		}
 		else
 		if(ae.getActionCommand().equals(MapEvent.MAP_VIEW_SCALE_CHANGED))

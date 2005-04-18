@@ -1,5 +1,5 @@
 /*
- * $Id: MapStatusBar.java,v 1.1 2005/04/08 14:24:21 peskovsky Exp $
+ * $Id: MapStatusBar.java,v 1.2 2005/04/18 09:23:26 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.map.DoublePoint;
 
 /**
  * @author $Author: peskovsky $
- * @version $Revision: 1.1 $, $Date: 2005/04/08 14:24:21 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/18 09:23:26 $
  * @module mapviewclient_v1
  */
 public final class MapStatusBar extends JPanel 
@@ -159,7 +159,7 @@ public final class MapStatusBar extends JPanel
 							double lon = Double.parseDouble(MapStatusBar.this.longitudeField.getText());
 							double lat = Double.parseDouble(MapStatusBar.this.latitudeTextField.getText());
 							getLogicalNetLayer().setCenter(
-								new DoublePoint(lat, lon));
+								new DoublePoint(lon, lat));
 							getLogicalNetLayer().repaint(true);
 						}
 						catch(Exception ex)
@@ -174,13 +174,13 @@ public final class MapStatusBar extends JPanel
 		this.latitudeTextField.addKeyListener(longlatKeyListener);
 		this.longitudeField.addKeyListener(longlatKeyListener);
 
-		this.add(this.latitudeLabel,
-				new GridBagConstraints(0,0,1,1,0,0,GridBagConstraints.WEST,GridBagConstraints.HORIZONTAL,new Insets(1,0,1,0),0,0));
-		this.add(this.latitudeTextField,
-				new GridBagConstraints(1,0,1,1,1,0,GridBagConstraints.WEST,GridBagConstraints.BOTH,new Insets(1,5,1,0),0,0));
 		this.add(this.longitudeLabel,
-				new GridBagConstraints(2,0,1,1,0,0,GridBagConstraints.WEST,GridBagConstraints.HORIZONTAL,new Insets(1,10,1,0),0,0));
+				new GridBagConstraints(0,0,1,1,0,0,GridBagConstraints.WEST,GridBagConstraints.HORIZONTAL,new Insets(1,0,1,0),0,0));
 		this.add(this.longitudeField,
+				new GridBagConstraints(1,0,1,1,1,0,GridBagConstraints.WEST,GridBagConstraints.BOTH,new Insets(1,5,1,0),0,0));
+		this.add(this.latitudeLabel,
+				new GridBagConstraints(2,0,1,1,0,0,GridBagConstraints.WEST,GridBagConstraints.HORIZONTAL,new Insets(1,10,1,0),0,0));
+		this.add(this.latitudeTextField,
 				new GridBagConstraints(3,0,1,1,1,0,GridBagConstraints.WEST,GridBagConstraints.BOTH,new Insets(1,5,1,0),0,0));
 
 		this.add(this.scaleLabel,
