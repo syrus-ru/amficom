@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeLinkGeneralPanel.java,v 1.2 2005/04/18 10:53:40 stas Exp $
+ * $Id: AbstractSchemeLinkGeneralPanel.java,v 1.3 2005/04/18 10:57:46 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.scheme.AbstractSchemeLink;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/04/18 10:53:40 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/18 10:57:46 $
  * @module schemeclient_v1
  */
 
@@ -385,7 +385,7 @@ public abstract class AbstractSchemeLinkGeneralPanel extends DefaultStorableObje
 			}
 		});
 		
-		generalPanel.setBorder( BorderFactory.createTitledBorder( LangModelScheme.getString(Constants.EMPTY )));
+		generalPanel.setBorder( BorderFactory.createTitledBorder( Constants.EMPTY ));
 		descrArea.setPreferredSize(Constants.DIMENSION_TEXTAREA);
 		
 		addToUndoableListener(nameText);

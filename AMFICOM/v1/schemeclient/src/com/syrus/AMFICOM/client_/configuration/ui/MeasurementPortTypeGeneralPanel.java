@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypeGeneralPanel.java,v 1.9 2005/04/18 10:53:40 stas Exp $
+ * $Id: MeasurementPortTypeGeneralPanel.java,v 1.10 2005/04/18 10:57:46 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.9 $, $Date: 2005/04/18 10:53:40 $
+ * @version $Revision: 1.10 $, $Date: 2005/04/18 10:57:46 $
  * @module schemeclient_v1
  */
 
@@ -171,7 +171,7 @@ public class MeasurementPortTypeGeneralPanel extends DefaultStorableObjectEditor
 		gbPanel0.setConstraints( pnGeneralPanel, gbcPanel0 );
 		pnPanel0.add( pnGeneralPanel );
 		
-		pnGeneralPanel.setBorder( BorderFactory.createTitledBorder( LangModelScheme.getString(Constants.EMPTY )));
+		pnGeneralPanel.setBorder( BorderFactory.createTitledBorder( Constants.EMPTY ));
 //		pnPanel0.setBackground(Color.WHITE);
 //		pnGeneralPanel.setBackground(Color.WHITE);
 		scpDescriptionArea.setPreferredSize(Constants.DIMENSION_TEXTAREA);

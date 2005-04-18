@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeGeneralPanel.java,v 1.5 2005/04/18 10:45:17 stas Exp $
+ * $Id: PortTypeGeneralPanel.java,v 1.6 2005/04/18 10:53:40 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.5 $, $Date: 2005/04/18 10:45:17 $
+ * @version $Revision: 1.6 $, $Date: 2005/04/18 10:53:40 $
  * @module schemeclient_v1
  */
 
@@ -163,7 +163,7 @@ public class PortTypeGeneralPanel extends DefaultStorableObjectEditor {
 		gbPanel0.setConstraints( pnGeneralPanel, gbcPanel0 );
 		pnPanel0.add( pnGeneralPanel );
 
-		pnGeneralPanel.setBorder( BorderFactory.createTitledBorder(LangModelScheme.getString(Constants.EMPTY)));
+		pnGeneralPanel.setBorder( BorderFactory.createTitledBorder(Constants.EMPTY));
 //		pnGeneralPanel.setBackground(Color.WHITE);
 //		pnPanel0.setBackground(Color.WHITE);
 		scpDescriptionArea.setPreferredSize(Constants.DIMENSION_TEXTAREA);
@@ -200,8 +200,8 @@ public class PortTypeGeneralPanel extends DefaultStorableObjectEditor {
 			}
 		} 
 		else {
-			this.tfNameText.setText(LangModelScheme.getString(Constants.EMPTY));
-			this.taDescriptionArea.setText(LangModelScheme.getString(Constants.EMPTY));
+			this.tfNameText.setText(Constants.EMPTY);
+			this.taDescriptionArea.setText(Constants.EMPTY);
 		}
 	}
 

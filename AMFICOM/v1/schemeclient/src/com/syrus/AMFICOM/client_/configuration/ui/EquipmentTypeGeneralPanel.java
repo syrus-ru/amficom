@@ -1,5 +1,5 @@
 /*-
- * $Id: EquipmentTypeGeneralPanel.java,v 1.2 2005/04/18 10:53:40 stas Exp $
+ * $Id: EquipmentTypeGeneralPanel.java,v 1.3 2005/04/18 10:57:46 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/04/18 10:53:40 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/18 10:57:46 $
  * @module schemeclient_v1
  */
 
@@ -225,7 +225,7 @@ public class EquipmentTypeGeneralPanel extends DefaultStorableObjectEditor {
 		gbPanel0.setConstraints(scpDescriptionArea, gbcPanel0);
 		pnPanel0.add(scpDescriptionArea);
 
-		pnGeneralPanel.setBorder( BorderFactory.createTitledBorder( LangModelScheme.getString(Constants.EMPTY )));
+		pnGeneralPanel.setBorder( BorderFactory.createTitledBorder( Constants.EMPTY ));
 		scpDescriptionArea.setPreferredSize(Constants.DIMENSION_TEXTAREA);
 		for (int i = 0; i < eqtCodenames.length; i++) {
 			tfCodenameCombo.addItem(EquipmentTypeCodenames.getName(eqtCodenames[i]));			

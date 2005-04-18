@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePortGeneralPanel.java,v 1.1 2005/04/18 10:45:17 stas Exp $
+ * $Id: SchemeCablePortGeneralPanel.java,v 1.2 2005/04/18 10:57:46 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/04/18 10:45:17 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/18 10:57:46 $
  * @module schemeclient_v1
  */
 
@@ -254,7 +254,7 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 			}
 		});
 		
-		generalPanel.setBorder( BorderFactory.createTitledBorder( LangModelScheme.getString(Constants.EMPTY )));
+		generalPanel.setBorder( BorderFactory.createTitledBorder( Constants.EMPTY ));
 		descrArea.setPreferredSize(Constants.DIMENSION_TEXTAREA);
 		
 		addToUndoableListener(nameText);
