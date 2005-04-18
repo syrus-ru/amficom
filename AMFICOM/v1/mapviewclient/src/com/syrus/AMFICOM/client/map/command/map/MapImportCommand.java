@@ -1,5 +1,5 @@
 /*
- * $Id: MapImportCommand.java,v 1.23 2005/04/13 11:12:28 krupenn Exp $
+ * $Id: MapImportCommand.java,v 1.24 2005/04/18 11:10:08 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -25,6 +25,7 @@ import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -55,7 +56,7 @@ import javax.swing.JDesktopPane;
  * что активной карты нет, и карта центрируется по умолчанию
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.23 $, $Date: 2005/04/13 11:12:28 $
+ * @version $Revision: 1.24 $, $Date: 2005/04/18 11:10:08 $
  * @module mapviewclient_v1
  */
 public class MapImportCommand extends ImportCommand
@@ -158,6 +159,11 @@ public class MapImportCommand extends ImportCommand
 			e.printStackTrace();
 			setResult(Command.RESULT_NO);
 		}
+		catch (IdentifierGenerationException e)
+		{
+			e.printStackTrace();
+			setResult(Command.RESULT_NO);
+		}
 	}
 
 	protected Map loadXML(File file)
@@ -166,7 +172,7 @@ public class MapImportCommand extends ImportCommand
 	}
 
 	protected Map loadESF(String fileName)
-		throws DatabaseException,IllegalObjectEntityException
+		throws DatabaseException,IllegalObjectEntityException, IdentifierGenerationException
 	{
 		Map map;
 		MapElement me;
@@ -175,8 +181,8 @@ public class MapImportCommand extends ImportCommand
 		java.util.Map exportColumns;
 
 		// make sure default types loaded
-		LinkTypeController.getPens(this.aContext);
-		NodeTypeController.getTopologicalProtos(this.aContext);
+		LinkTypeController.getTopologicalLinkTypes();
+		NodeTypeController.getTopologicalNodeTypes();
 
 		super.open(fileName);
 
@@ -256,7 +262,7 @@ public class MapImportCommand extends ImportCommand
 	}
 
 	private void correctCrossLinks(String type, java.util.Map exportColumns)
-		throws IllegalObjectEntityException
+		throws IdentifierGenerationException
 	{
 		Object field;
 		Object value;
