@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.39 2005/04/18 15:04:34 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.40 2005/04/18 16:30:08 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.39 $, $Date: 2005/04/18 15:04:34 $
+ * @version $Revision: 1.40 $, $Date: 2005/04/18 16:30:08 $
  * @module
  */
 
@@ -19,6 +19,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import com.syrus.io.BellcoreStructure;
+import com.syrus.AMFICOM.analysis.dadara.IncompatibleTracesException;
 import com.syrus.AMFICOM.analysis.dadara.ModelFunction;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEventsImpl;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
@@ -245,18 +246,22 @@ public class CoreAnalysisManager
 	 *   Должна быть непуста, а р/г должны иметь одинаковую длину.
 	 * @param pars (параметры анализа)
 	 * @return результат анализа в виде mtae
-	 * @throws IllegalArgumentException если bsColl пуст или длина р/г разная
+	 * @throws IllegalArgumentException если bsColl пуст
+	 * @throws IncompatibleTracesException если bsColl содержит р/г
+	 *   с разными длинами, разрешением, длительностью импульса или
+	 *   показателем преломления.
 	 * @todo: бросать что-то типа IllegalDataException при разных длинах р/г
 	 */
 	public static ModelTraceAndEventsImpl makeAnalysis(
 			Collection bsColl,
 			double[] pars)
+	throws IncompatibleTracesException
 	{
 		// определяем число входных р/г
 		final int N_TRACES = bsColl.size(); 
 
 		if (N_TRACES == 0)
-			throw new IllegalArgumentException("Input trace size is zero");
+			throw new IllegalArgumentException("No traces to analyse");
 
 		long t0 = System.currentTimeMillis();
 
@@ -268,15 +273,14 @@ public class CoreAnalysisManager
 		double ior = 0;
 		double[] yAverage = null;
 		double[] noiseArrayNonAveraged = null;
-		int traceLength = 0;
+		int traceLength = 0; // здесь будет мин. длина до нулевой точки
 		for (Iterator it = bsColl.iterator(); it.hasNext();)
 		{
 			BellcoreStructure bs = (BellcoreStructure)it.next();
 
-			//@todo: make additional checks that all of these pars do not change over the bsHash
-		    deltaX = bs.getResolution(); // метры
-		    pulseWidth = bs.getPulsewidth(); // нс
-		    ior = bs.getIOR();
+			double deltaXCur = bs.getResolution(); // метры
+		    double pulseWidthCur = bs.getPulsewidth(); // нс
+		    double iorCur = bs.getIOR();
 
 		    double[] yCur = bs.getTraceData();
 		    int curLength = calcTraceLength(yCur);
@@ -286,12 +290,21 @@ public class CoreAnalysisManager
 				noiseArrayNonAveraged = calcNoiseArray(yCur, traceLength); // XXX: noiseArray берем только по первой р/г. Надо бы усреднить
 				traceLength = curLength;
 				yAverage = (double[])yCur.clone(); // double[] array copying
+				deltaX = deltaXCur;
+				pulseWidth = pulseWidthCur;
+				ior = iorCur;
 			}
 			else
 			{
 				double[] traceData = bs.getTraceData();
 				if (traceData.length != yAverage.length)
-					throw new IllegalArgumentException("input trace lengths are different");
+					throw new IncompatibleTracesException("different trace length");
+				if (deltaXCur != deltaX)
+					throw new IncompatibleTracesException("different deltaX");
+				if (pulseWidthCur != pulseWidth)
+					throw new IncompatibleTracesException("different pulse width");
+				if (iorCur != ior)
+					throw new IncompatibleTracesException("different IOR");
 				addDoubleArray(yAverage, traceData);
 				traceLength = Math.min(traceLength, curLength);
 			}
@@ -384,7 +397,11 @@ public class CoreAnalysisManager
 	{
 		Set bsSet = new HashSet(1);
 		bsSet.add(bs);
-		return makeAnalysis(bsSet, pars);
+		try	{
+			return makeAnalysis(bsSet, pars);
+		} catch (IncompatibleTracesException e) {
+			throw new InternalError("Unexpected exception: " + e);
+		}
 	}
 
 	public static ModelTraceManager makeThresholds(ModelTraceAndEventsImpl mtae,
