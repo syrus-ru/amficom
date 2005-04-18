@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.41 2005/04/18 16:57:49 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.42 2005/04/18 17:27:03 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.41 $, $Date: 2005/04/18 16:57:49 $
+ * @version $Revision: 1.42 $, $Date: 2005/04/18 17:27:03 $
  * @module
  */
 
@@ -226,7 +226,6 @@ public class CoreAnalysisManager
 	 * @throws IncompatibleTracesException если bsColl содержит р/г
 	 *   с разными длинами, разрешением, длительностью импульса или
 	 *   показателем преломления.
-	 * @todo: бросать что-то типа IllegalDataException при разных длинах р/г
 	 */
 	public static ModelTraceAndEventsImpl makeAnalysis(
 			Collection bsColl,
@@ -248,7 +247,7 @@ public class CoreAnalysisManager
 		double pulseWidth = 0;
 		double ior = 0;
 		double[] yAverage = null;
-		double[] noiseArrayNonAveraged = null;
+		double[] averagedNoiseOfTrace = null;
 		int traceLength = 0; // здесь будет мин. длина до нулевой точки
 		for (Iterator it = bsColl.iterator(); it.hasNext();)
 		{
@@ -260,10 +259,14 @@ public class CoreAnalysisManager
 
 		    double[] yCur = bs.getTraceData();
 		    int curLength = calcTraceLength(yCur);
+		    // NB: noiseData может немного зависеть от traceLength, поэтому
+		    // при расчете noiseArray используем curLength, а не traceLength,
+		    // которое могло бы быть немного быстрее
+		    double[] noiseData = calcNoiseArray(yCur, curLength);
 
 			if (yAverage == null) // the first trace in our iterations
 			{
-				noiseArrayNonAveraged = calcNoiseArray(yCur, traceLength); // XXX: noiseArray берем только по первой р/г. Надо бы усреднить
+				averagedNoiseOfTrace = noiseData;
 				traceLength = curLength;
 				yAverage = (double[])yCur.clone(); // double[] array copying
 				deltaX = deltaXCur;
@@ -281,12 +284,15 @@ public class CoreAnalysisManager
 					throw new IncompatibleTracesException("different pulse width");
 				if (iorCur != ior)
 					throw new IncompatibleTracesException("different IOR");
-				addDoubleArray(yAverage, traceData);
+				addDoubleArray(yAverage, traceData, yAverage.length);
 				traceLength = Math.min(traceLength, curLength);
+				addDoubleArray(averagedNoiseOfTrace, noiseData, traceLength);
 			}
 		}
 		for (int i = 0; i < yAverage.length; i++)
 			yAverage[i] /= N_TRACES;
+		for (int i = 0; i < traceLength; i++)
+			averagedNoiseOfTrace[i] /= N_TRACES;
 
 		// определяем reflSize и nReflSize
         // FIXME: привести reflSize и nReflSize в порядок
@@ -312,7 +318,7 @@ public class CoreAnalysisManager
 				yAverage, deltaX,
 				pars[0], pars[1], pars[2], pars[3],
 				reflSize, nReflSize,
-				traceLength, noiseArrayNonAveraged);
+				traceLength, averagedNoiseOfTrace);
 
 		// теперь уточняем длину рефлектограммы по концу последнего события
 		// (длина может уменьшиться)
@@ -323,15 +329,16 @@ public class CoreAnalysisManager
 
 		long t2 = System.currentTimeMillis();
 
-		// определяем уровень шума усредненной кривой (только если это нужно)
+		// определяем (на длине traceLength) уровень шума усредненной кривой
+		// (если он не совпадает с averageNoiseOfTrace)
 
-		double[] noiseArrayAveraged = N_TRACES == 1
-			? noiseArrayNonAveraged
+		double[] noiseOfAveragedTrace = N_TRACES == 1
+			? averagedNoiseOfTrace
 			: calcNoiseArray(yAverage, traceLength);
 
 		// фитируем
 
-		ModelFunction mf = fitTrace(yAverage, traceLength, noiseArrayAveraged);
+		ModelFunction mf = fitTrace(yAverage, traceLength, noiseOfAveragedTrace);
 
 		long t3 = System.currentTimeMillis();
 
@@ -349,12 +356,11 @@ public class CoreAnalysisManager
 	}
 
 	/**
-	 *  later it may be turned to native for performance
-	 *  @throws IndexOutOfBoundsException if input.length < acc.length
+	 *  note: later it may be turned to native for performance
 	 */
-	private static void addDoubleArray(double[] acc, double[] input)
+	private static void addDoubleArray(double[] acc, double[] input, int length)
 	{
-		for (int i = 0; i < acc.length; i++)
+		for (int i = 0; i < length; i++)
 			acc[i] += input[i]; 
 	}
 
