@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.38 2005/04/18 14:51:51 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.39 2005/04/18 15:04:34 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,13 +9,13 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.38 $, $Date: 2005/04/18 14:51:51 $
+ * @version $Revision: 1.39 $, $Date: 2005/04/18 15:04:34 $
  * @module
  */
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 
 import com.syrus.io.BellcoreStructure;
@@ -241,19 +241,19 @@ public class CoreAnalysisManager
 	 * точность фитировки определяется флуктуациями усредненной р/г,
 	 * а точность определения событий - усредненными флуктуациями исходных
 	 * р/г.
-	 * @param bsSet множество входных р/г.
-	 *   Должно быть непусто, а р/г должны иметь одинаковую длину.
+	 * @param bsColl коллекция входных р/г.
+	 *   Должна быть непуста, а р/г должны иметь одинаковую длину.
 	 * @param pars (параметры анализа)
 	 * @return результат анализа в виде mtae
-	 * @throws IllegalArgumentException если bsHash пуст или длина р/г разная
+	 * @throws IllegalArgumentException если bsColl пуст или длина р/г разная
 	 * @todo: бросать что-то типа IllegalDataException при разных длинах р/г
 	 */
 	public static ModelTraceAndEventsImpl makeAnalysis(
-			Set bsSet,
+			Collection bsColl,
 			double[] pars)
 	{
 		// определяем число входных р/г
-		final int N_TRACES = bsSet.size(); 
+		final int N_TRACES = bsColl.size(); 
 
 		if (N_TRACES == 0)
 			throw new IllegalArgumentException("Input trace size is zero");
@@ -269,7 +269,7 @@ public class CoreAnalysisManager
 		double[] yAverage = null;
 		double[] noiseArrayNonAveraged = null;
 		int traceLength = 0;
-		for (Iterator it = bsSet.iterator(); it.hasNext();)
+		for (Iterator it = bsColl.iterator(); it.hasNext();)
 		{
 			BellcoreStructure bs = (BellcoreStructure)it.next();
 
@@ -388,7 +388,7 @@ public class CoreAnalysisManager
 	}
 
 	public static ModelTraceManager makeThresholds(ModelTraceAndEventsImpl mtae,
-			Map bellcoreTraces)
+			Collection bellcoreTraces)
 	{
 		long t5 = System.currentTimeMillis();
 		ModelTraceManager mtm = new ModelTraceManager(mtae);
@@ -408,7 +408,7 @@ public class CoreAnalysisManager
 	 * @param mtm
 	 * @param bellcoreTraces набор р/г
 	 */
-	private static void updateMTMThresholdsByBSMap(ModelTraceManager mtm, Map bellcoreTraces)
+	private static void updateMTMThresholdsByBSMap(ModelTraceManager mtm, Collection bellcoreTraces)
 	{
 		// определяем верхнюю и нижнюю границы
 		double[] yBase = mtm.getMTAE().getModelTrace().getYArray();
@@ -416,9 +416,9 @@ public class CoreAnalysisManager
 		double[] yMin = new double[yBase.length];
 		System.arraycopy(yBase, 0, yMax, 0, yBase.length);
 		System.arraycopy(yBase, 0, yMin, 0, yBase.length);
-		for (Iterator it = bellcoreTraces.keySet().iterator(); it.hasNext(); )
+		for (Iterator it = bellcoreTraces.iterator(); it.hasNext(); )
 		{
-			BellcoreStructure bs = (BellcoreStructure )(bellcoreTraces.get(it.next()));
+			BellcoreStructure bs = (BellcoreStructure)it.next();
 			double[] y = bs.getTraceData();
 			ReflectogramMath.updateMaxArray(yMax, y);
 			ReflectogramMath.updateMinArray(yMin, y);
