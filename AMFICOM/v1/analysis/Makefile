@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.5 2005/04/18 12:51:04 saa Exp $
+# $Id: Makefile,v 1.6 2005/04/18 13:15:52 saa Exp $
 #
 # vim:set ft=make:
 #
@@ -16,12 +16,14 @@ SUNJAVACFLAGS = -target 1.4
 JIKESFLAGS = -target 1.4.2
 
 #JAVAC = $(call pathsearch,jikes$(exesuffix))
-JAVAC = jikes
-
+JIKES ?= jikes
+JAVAC = $(JIKES)
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 
-JAVACFLAGS := $(JAVACFLAGS) $(JIKESFLAGS) -classpath $(CLASSPATH) -sourcepath $(SRCDIR)
+JAVACCHECK = $(JIKES)
+JAVACFLAGS :=      $(JAVACFLAGS) $(JIKESFLAGS) -classpath $(CLASSPATH) -sourcepath $(SRCDIR)
+JAVACCHECKFLAGS := $(JAVACFLAGS) $(JIKESFLAGS) -classpath $(CLASSPATH) -sourcepath $(SRCDIR) +B
 
 SOURCES := $(shell find $(SRCDIR) -name *.java)
 
@@ -39,4 +41,9 @@ clean:
 
 .mach:	$(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
+		$(SOURCES)
+
+.PHONY: check
+check:
+	$(JAVACCHECK) $(JAVACCHECKFLAGS) \
 		$(SOURCES)
