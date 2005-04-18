@@ -22,7 +22,7 @@
 	FILE* dbg_stream;
 #endif
 
-#define ANALYSE_SIMPLE_DEBUG
+//#define ANALYSE_SIMPLE_DEBUG
 
 /*
  * Class:     com_syrus_AMFICOM_analysis_CoreAnalysisManager
