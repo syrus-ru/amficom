@@ -1,5 +1,5 @@
 /**
- * $Id: UnPlaceSchemeCableLinkCommand.java,v 1.12 2005/04/14 14:39:19 krupenn Exp $
+ * $Id: UnPlaceSchemeCableLinkCommand.java,v 1.13 2005/04/18 12:08:34 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,14 +21,13 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.UnboundLink;
-import com.syrus.AMFICOM.scheme.CableChannelingItem;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 
 /**
  * убрать кабельный путь с привязкой из карты
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.12 $, $Date: 2005/04/14 14:39:19 $
+ * @version $Revision: 1.13 $, $Date: 2005/04/18 12:08:34 $
  * @module mapviewclient_v1
  */
 public class UnPlaceSchemeCableLinkCommand extends MapActionCommandBundle
