@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.3 2005/04/18 09:44:40 saa Exp $
+# $Id: Makefile,v 1.4 2005/04/18 10:35:19 saa Exp $
 #
 # vim:set ft=make:
 #
@@ -30,7 +30,7 @@ $(LIBNAME): .mach
 		-C $(CLASSDIR) com
 
 $(CLASSDIR):	
-	mkdir -p $@
+	mkdir @
 
 .PHONY:	clean
 clean:

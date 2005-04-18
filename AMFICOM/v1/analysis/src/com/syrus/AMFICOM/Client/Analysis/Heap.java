@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.24 2005/04/12 18:36:18 saa Exp $
+ * $Id: Heap.java,v 1.25 2005/04/18 10:35:19 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.io.BellcoreStructure;
  * использование остальных методов работы с BS
  * 
  * @author $Author: saa $
- * @version $Revision: 1.24 $, $Date: 2005/04/12 18:36:18 $
+ * @version $Revision: 1.25 $, $Date: 2005/04/18 10:35:19 $
  * @module
  */
 public class Heap
@@ -268,7 +268,7 @@ public class Heap
 
     private static LinkedList etalonMTMListeners = new LinkedList();
 
-    private static LinkedList CurrentTraceChangeListeners = new LinkedList();
+    private static LinkedList currentTraceChangeListeners = new LinkedList();
 
     // XXX: change each notify method to private as soon as bsHash will become
     // private
@@ -334,7 +334,7 @@ public class Heap
     }
 
     private static void notifyCurrentTraceChanged() {
-        for (Iterator it = CurrentTraceChangeListeners.iterator(); it.hasNext();)
+        for (Iterator it = currentTraceChangeListeners.iterator(); it.hasNext();)
             ((CurrentTraceChangeListener) it.next())
                     .currentTraceChanged(currentTrace);
     }
@@ -383,12 +383,12 @@ public class Heap
 
     public static void addCurrentTraceChangeListener(
             CurrentTraceChangeListener listener) {
-        addListener(CurrentTraceChangeListeners, listener);
+        addListener(currentTraceChangeListeners, listener);
     }
 
     public static void removeCurrentTraceChangeListener(
             CurrentTraceChangeListener listener) {
-        removeListener(CurrentTraceChangeListeners, listener);
+        removeListener(currentTraceChangeListeners, listener);
     }
 
     public static void primaryTraceOpened(BellcoreStructure bs) {

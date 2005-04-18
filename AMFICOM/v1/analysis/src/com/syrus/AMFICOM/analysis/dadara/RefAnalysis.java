@@ -41,7 +41,7 @@ public class RefAnalysis
 			? re[re.length - 1].getEnd()
 			: 0;
 
-		double Po = 0;
+		double po = 0;
 
 		for (int i = 0; i < re.length; i++)
 		{
@@ -119,23 +119,23 @@ public class RefAnalysis
 						int x2 = re[j].getEnd() - 1;
 						if (x1 >= x2)
 						{
-							Po = mt.getY(x1);
+							po = mt.getY(x1);
 						}
 						else
 						{
 							double y1 = mt.getY(x1);
 							double y2 = mt.getY(x2);
-							Po = (x1 * y2 - x2 * y1) / (x1 - x2);
+							po = (x1 * y2 - x2 * y1) / (x1 - x2);
 						}
 						break;
 					}
 
 				int adz = 0;
 				int edz = 0;
-				int N = re[i].getEnd() - re[i].getBegin();
+				final int N = re[i].getEnd() - re[i].getBegin();
 				double[] yarr = mt.getYArrayZeroPad(re[i].getBegin(), N);
 				// find max
-				double vmax = Po;
+				double vmax = po;
 				for (int k = 0; k < N; k++) {
 					if (vmax < yarr[k])
 						vmax = yarr[k];
@@ -144,13 +144,13 @@ public class RefAnalysis
 				for (int k = 0; k < N; k++) {
 					if (yarr[k] > vmax - 1.5)
 						edz++;
-					if (yarr[k] > Po + .5)
+					if (yarr[k] > po + .5)
 						adz++;
 				}
 
 				double[] data = new double[4];
 				data[0] = top - vmax; // changed by saa
-				data[1] = top - Po; // Po
+				data[1] = top - po; // Po
 				data[2] = edz;
 				data[3] = adz;
 				events[i].setLoss(0); 
@@ -176,10 +176,10 @@ public class RefAnalysis
 		}
 		overallStats = new TraceEvent(TraceEvent.OVERALL_STATS, 0, lastPoint);
 		double[] data = new double[5];
-		data[0] = maxY - Po;
+		data[0] = maxY - po;
 		data[1] = maxY - y[lastPoint];
 		data[2] = (maxY - maxNoise * 0.98);
-		data[3] = (maxY - Po);
+		data[3] = (maxY - po);
 		data[4] = re.length;
 		overallStats.setData(data);
 
