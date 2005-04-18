@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.34 2005/04/18 09:23:26 peskovsky Exp $
+ * $Id: MapFrame.java,v 1.35 2005/04/18 11:25:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -80,8 +80,8 @@ import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
  * 
  * 
  * 
- * @version $Revision: 1.34 $, $Date: 2005/04/18 09:23:26 $
- * @author $Author: peskovsky $
+ * @version $Revision: 1.35 $, $Date: 2005/04/18 11:25:10 $
+ * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
 public class MapFrame extends JInternalFrame 
@@ -277,6 +277,9 @@ public class MapFrame extends JInternalFrame
 				this.aContext.getDispatcher().unregister(this, TreeListSelectionEvent.typ);
 				this.aContext.getDispatcher().unregister(this, TreeDataSelectionEvent.type);
 			}
+
+		this.getMapViewer().getLogicalNetLayer().setContext(aContext);
+
 		if(aContext != null)
 		{
 			this.aContext = aContext;
@@ -300,7 +303,6 @@ public class MapFrame extends JInternalFrame
 			this.mapElementsPanel.setEnableDisablePanel(true);
 		}
 		
-		this.getMapViewer().getLogicalNetLayer().setContext(aContext);
 	}
 
 	/**
