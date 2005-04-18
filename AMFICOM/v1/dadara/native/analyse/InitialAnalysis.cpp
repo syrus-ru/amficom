@@ -78,7 +78,7 @@ InitialAnalysis::InitialAnalysis(
 	else
 	{	int i;
 		for (i = 0; i < lastNonZeroPoint; i++)
-		{	noise[i] = externalNoise[i];// FIXME - не учитывает THRESHOLD_TO_NOISE_RATIO
+		{	noise[i] = externalNoise[i] * noiseFactor;
         }
 	}
 	prf_b("IA: analyse");
