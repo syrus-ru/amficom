@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.16 2005/04/18 13:19:01 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.17 2005/04/18 16:00:30 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,12 +29,13 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.scheme.corba.SchemeCableLink_Transferable;
+import com.syrus.util.Log;
 
 /**
  * #11 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.16 $, $Date: 2005/04/18 13:19:01 $
+ * @version $Revision: 1.17 $, $Date: 2005/04/18 16:00:30 $
  * @module scheme_v1
  */
 public final class SchemeCableLink extends AbstractSchemeLink {
@@ -241,6 +242,16 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	public void setLink(final Link link) {
 		assert link == null || link.getSort().value() == LinkSort._LINKSORT_CABLELINK: ErrorMessages.NATURE_INVALID;
 		super.setLink(link);
+	}
+
+	/**
+	 * @param parentScheme
+	 * @see AbstractSchemeElement#setParentScheme(Scheme)
+	 */
+	public void setParentScheme(final Scheme parentScheme) {
+		assert this.parentSchemeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert !this.parentSchemeId.isVoid(): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
+		super.setParentScheme(parentScheme);
 	}
 
 	public void setSchemeCableThreads(final Set schemeCableThreads) {

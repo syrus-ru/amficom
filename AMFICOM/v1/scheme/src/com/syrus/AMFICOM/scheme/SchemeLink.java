@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.15 2005/04/18 13:19:01 bass Exp $
+ * $Id: SchemeLink.java,v 1.16 2005/04/18 16:00:30 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,7 +36,7 @@ import com.syrus.util.Log;
  * #10 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.15 $, $Date: 2005/04/18 13:19:01 $
+ * @version $Revision: 1.16 $, $Date: 2005/04/18 16:00:30 $
  * @module scheme_v1
  */
 public final class SchemeLink extends AbstractSchemeLink {
@@ -261,12 +261,138 @@ public final class SchemeLink extends AbstractSchemeLink {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @param parentScheme
+	 * @see AbstractSchemeElement#setParentScheme(Scheme)
+	 */
+	public void setParentScheme(final Scheme parentScheme) {
+		assert this.parentSchemeId != null
+				&& this.parentSchemeElementId != null
+				&& this.parentSchemeProtoElementId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		if (!this.parentSchemeId.isVoid()) {
+			/*
+			 * Moving from a scheme to another scheme.
+			 */
+			assert this.parentSchemeElementId.isVoid()
+					&& this.parentSchemeProtoElementId.isVoid(): ErrorMessages.MULTIPLE_PARENTS_PROHIBITED;
+			super.setParentScheme(parentScheme);
+		} else {
+			if (!this.parentSchemeElementId.isVoid()) {
+				/*
+				 * Moving from a scheme element to a scheme. 
+				 */
+				assert this.parentSchemeProtoElementId.isVoid(): ErrorMessages.MULTIPLE_PARENTS_PROHIBITED;
+				if (parentScheme == null) {
+					Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Log.INFO);
+					return;
+				}
+				this.parentSchemeElementId = Identifier.VOID_IDENTIFIER;
+			} else {
+				/*
+				 * Moving from a scheme protoelement to a scheme.
+				 */
+				assert !this.parentSchemeProtoElementId.isVoid(): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
+				if (parentScheme == null) {
+					Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Log.INFO);
+					return;
+				}
+				this.parentSchemeProtoElementId = Identifier.VOID_IDENTIFIER;
+			}
+			this.parentSchemeId = parentScheme.getId();
+			this.changed = true;
+		}
+	}
+
 	public void setParentSchemeElement(final SchemeElement parentSchemeElement) {
-		throw new UnsupportedOperationException();
+		assert this.parentSchemeId != null
+				&& this.parentSchemeElementId != null
+				&& this.parentSchemeProtoElementId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		Identifier newParentSchemeElementId;
+		if (!this.parentSchemeId.isVoid()) {
+			/*
+			 * Moving from a scheme to a scheme element.
+			 */
+			assert this.parentSchemeElementId.isVoid()
+					&& this.parentSchemeProtoElementId.isVoid(): ErrorMessages.MULTIPLE_PARENTS_PROHIBITED;
+			if (parentSchemeElement == null) {
+				Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Log.INFO);
+				return;
+			}
+			newParentSchemeElementId = parentSchemeElement.getId();
+			this.parentSchemeId = Identifier.VOID_IDENTIFIER;
+		} else if (!this.parentSchemeElementId.isVoid()) {
+			/*
+			 * Moving from a scheme element to another scheme element. 
+			 */
+			assert this.parentSchemeProtoElementId.isVoid(): ErrorMessages.MULTIPLE_PARENTS_PROHIBITED;
+			if (parentSchemeElement == null) {
+				Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Log.WARNING);
+				SchemeStorableObjectPool.delete(this.id);
+				return;
+			}
+			newParentSchemeElementId = parentSchemeElement.getId();
+			if (this.parentSchemeElementId.equals(newParentSchemeElementId))
+				return;
+		} else {
+			/*
+			 * Moving from a scheme protoelement to a scheme element.
+			 */
+			assert !this.parentSchemeProtoElementId.isVoid(): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
+			if (parentSchemeElement == null) {
+				Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Log.INFO);
+				return;
+			}
+			newParentSchemeElementId = parentSchemeElement.getId();
+			this.parentSchemeProtoElementId = Identifier.VOID_IDENTIFIER;
+		}
+		this.parentSchemeElementId = newParentSchemeElementId;
+		this.changed = true;
 	}
 
 	public void setParentSchemeProtoElement(final SchemeProtoElement parentSchemeProtoElement) {
-		throw new UnsupportedOperationException();
+		assert this.parentSchemeId != null
+				&& this.parentSchemeElementId != null
+				&& this.parentSchemeProtoElementId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		Identifier newParentSchemeProtoElementId;
+		if (!this.parentSchemeId.isVoid()) {
+			/*
+			 * Moving from a scheme to a scheme protoelement.
+			 */
+			assert this.parentSchemeElementId.isVoid()
+					&& this.parentSchemeProtoElementId.isVoid(): ErrorMessages.MULTIPLE_PARENTS_PROHIBITED;
+			if (parentSchemeProtoElement == null) {
+				Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Log.INFO);
+				return;
+			}
+			newParentSchemeProtoElementId = parentSchemeProtoElement.getId();
+			this.parentSchemeId = Identifier.VOID_IDENTIFIER;
+		} else if (!this.parentSchemeElementId.isVoid()) {
+			/*
+			 * Moving from a scheme element to a scheme protoelement. 
+			 */
+			assert this.parentSchemeProtoElementId.isVoid(): ErrorMessages.MULTIPLE_PARENTS_PROHIBITED;
+			if (parentSchemeProtoElement == null) {
+				Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Log.INFO);
+				return;
+			}
+			newParentSchemeProtoElementId = parentSchemeProtoElement.getId();
+			this.parentSchemeElementId = Identifier.VOID_IDENTIFIER;
+		} else {
+			/*
+			 * Moving from a scheme protoelement to another scheme protoelement.
+			 */
+			assert !this.parentSchemeProtoElementId.isVoid(): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
+			if (parentSchemeProtoElement == null) {
+				Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Log.WARNING);
+				SchemeStorableObjectPool.delete(this.id);
+				return;
+			}
+			newParentSchemeProtoElementId = parentSchemeProtoElement.getId();
+			if (this.parentSchemeProtoElementId.equals(newParentSchemeProtoElementId))
+				return;
+		}
+		this.parentSchemeProtoElementId = newParentSchemeProtoElementId;
+		this.changed = true;
 	}
 
 	public void setSiteNode(final SiteNode siteNode) {

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.17 2005/04/18 13:19:01 bass Exp $
+ * $Id: SchemeElement.java,v 1.18 2005/04/18 16:00:30 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,6 +32,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
+import com.syrus.AMFICOM.map.MapStorableObjectPool;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
@@ -43,7 +44,7 @@ import com.syrus.util.Log;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.17 $, $Date: 2005/04/18 13:19:01 $
+ * @version $Revision: 1.18 $, $Date: 2005/04/18 16:00:30 $
  * @module scheme_v1
  */
 public final class SchemeElement extends AbstractSchemeElement implements
@@ -65,7 +66,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 */
 	private Identifier schemeCellId;
 
-	private Identifier siteId;
+	private Identifier siteNodeId;
 
 	private Identifier symbolId;
 
@@ -195,7 +196,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 				&& this.kisId != null
 				&& this.parentSchemeElementId != null
 				&& this.schemeCellId != null
-				&& this.siteId != null && this.symbolId != null
+				&& this.siteNodeId != null && this.symbolId != null
 				&& this.ugoCellId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
 		final Set dependencies = new HashSet();
 		dependencies.addAll(super.getDependencies());
@@ -204,7 +205,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		dependencies.add(this.kisId);
 		dependencies.add(this.parentSchemeElementId);
 		dependencies.add(this.schemeCellId);
-		dependencies.add(this.siteId);
+		dependencies.add(this.siteNodeId);
 		dependencies.add(this.symbolId);
 		dependencies.add(this.ugoCellId);
 		dependencies.remove(null);
@@ -378,7 +379,15 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	}
 
 	public SiteNode getSiteNode() {
-		throw new UnsupportedOperationException();
+		assert this.siteNodeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		if (this.siteNodeId.isVoid())
+			return null;
+		try {
+			return (SiteNode) MapStorableObjectPool.getStorableObject(this.siteNodeId, true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return null;
+		}
 	}
 
 	/**
@@ -469,24 +478,33 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	}
 
 	/**
-	 * @param newEquipmentImpl
+	 * @param equipment
 	 */
-	public void setEquipment(Equipment newEquipmentImpl) {
+	public void setEquipment(final Equipment equipment) {
+		assert this.equipmentId != null && this.equipmentTypeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+//		if (this.equipmentId.isVoid()) {
+//			
+//		}
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * @param newEquipmentTypeImpl
+	 * @param equipmentType
 	 */
-	public void setEquipmentType(EquipmentType newEquipmentTypeImpl) {
+	public void setEquipmentType(final EquipmentType equipmentType) {
+		assert this.equipmentId != null && this.equipmentTypeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * @param newRtuImpl
+	 * @param kis
 	 */
-	public void setKis(KIS newRtuImpl) {
-		throw new UnsupportedOperationException();
+	public void setKis(final KIS kis) {
+		final Identifier newKisId = Identifier.possiblyVoid(kis);
+		if (this.kisId.equals(newKisId))
+			return;
+		this.kisId = newKisId;
+		this.changed = true;
 	}
 
 	/**
@@ -502,8 +520,63 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		this.changed = true;
 	}
 
+	/**
+	 * @param parentScheme
+	 * @see AbstractSchemeElement#setParentScheme(Scheme)
+	 */
+	public void setParentScheme(final Scheme parentScheme) {
+		assert this.parentSchemeId != null && this.parentSchemeElementId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		if (!this.parentSchemeId.isVoid()) {
+			/*
+			 * Moving from a scheme to another scheme.
+			 */
+			assert this.parentSchemeElementId.isVoid(): ErrorMessages.MULTIPLE_PARENTS_PROHIBITED;
+			super.setParentScheme(parentScheme);
+		} else {
+			/*
+			 * Moving from a scheme element to a scheme.
+			 */
+			assert !this.parentSchemeElementId.isVoid(): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
+			if (parentScheme == null) {
+				Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Log.INFO);
+				return;
+			}
+			this.parentSchemeId = parentScheme.getId();
+			this.parentSchemeElementId = Identifier.VOID_IDENTIFIER;
+			this.changed = true;
+		}
+	}
+
 	public void setParentSchemeElement(final SchemeElement parentSchemeElement) {
-		throw new UnsupportedOperationException();
+		assert this.parentSchemeId != null && this.parentSchemeElementId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		Identifier newParentSchemeElementId;
+		if (!this.parentSchemeId.isVoid()) {
+			/*
+			 * Moving from a scheme to a scheme element.
+			 */
+			assert this.parentSchemeElementId.isVoid(): ErrorMessages.MULTIPLE_PARENTS_PROHIBITED;
+			if (parentSchemeElement == null) {
+				Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Log.INFO);
+				return;
+			}
+			newParentSchemeElementId = parentSchemeElement.getId();
+			this.parentSchemeId = Identifier.VOID_IDENTIFIER;
+		} else {
+			/*
+			 * Moving from a scheme element to another scheme element.
+			 */
+			assert !this.parentSchemeElementId.isVoid(): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
+			if (parentSchemeElement == null) {
+				Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Log.WARNING);
+				SchemeStorableObjectPool.delete(this.id);
+				return;
+			}
+			newParentSchemeElementId = parentSchemeElement.getId();
+			if (this.parentSchemeElementId.equals(newParentSchemeElementId))
+				return;
+		}
+		this.parentSchemeElementId = newParentSchemeElementId;
+		this.changed = true;
 	}
 
 	public void setScheme(final Scheme scheme) {
@@ -583,7 +656,11 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	}
 
 	public void setSiteNode(final SiteNode siteNode) {
-		throw new UnsupportedOperationException();
+		final Identifier newSiteNodeId = Identifier.possiblyVoid(siteNode);
+		if (this.siteNodeId.equals(newSiteNodeId))
+			return;
+		this.siteNodeId = newSiteNodeId;
+		this.changed = true;
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractSchemeElement.java,v 1.12 2005/04/18 12:38:37 bass Exp $
+ * $Id: AbstractSchemeElement.java,v 1.13 2005/04/18 16:00:30 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeElement}instead.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2005/04/18 12:38:37 $
+ * @version $Revision: 1.13 $, $Date: 2005/04/18 16:00:30 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemeElement extends
@@ -192,13 +192,21 @@ public abstract class AbstractSchemeElement extends
 	}
 
 	/**
-	 * Getter returns scheme parent to this scheme link or scheme cable link
-	 * or scheme element.
+	 * Descendants almost always need to override this.
 	 * 
 	 * @see #parentSchemeId
 	 */
-	public final void setParentScheme(final Scheme parentScheme) {
-		throw new UnsupportedOperationException();
+	public void setParentScheme(final Scheme parentScheme) {
+		if (parentScheme == null) {
+			Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Log.WARNING);
+			SchemeStorableObjectPool.delete(this.id);
+			return;
+		}
+		final Identifier newParentSchemeId = parentScheme.getId();
+		if (this.parentSchemeId.equals(newParentSchemeId))
+			return;
+		this.parentSchemeId = newParentSchemeId;
+		this.changed = true;
 	}
 
 	/*-********************************************************************
