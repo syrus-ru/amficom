@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalImageCache.java,v 1.8 2005/04/18 10:08:09 peskovsky Exp $
+ * $Id: TopologicalImageCache.java,v 1.9 2005/04/18 15:07:07 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,7 @@
  */
 package com.syrus.AMFICOM.Client.Map.Mapinfo;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Point;
@@ -36,7 +37,7 @@ import com.syrus.AMFICOM.Client.Map.MapDataException;
 
 /**
  * @author $Author: peskovsky $
- * @version $Revision: 1.8 $, $Date: 2005/04/18 10:08:09 $
+ * @version $Revision: 1.9 $, $Date: 2005/04/18 15:07:07 $
  * @module mapinfo_v1
  */
 public class TopologicalImageCache
@@ -115,8 +116,6 @@ public class TopologicalImageCache
 	private Rectangle2D.Double expressAreaSphBorders = new Rectangle2D.Double();
 	private Rectangle2D.Double cacheAreaSphBorders = new Rectangle2D.Double();	
 	
-//	private boolean isRepainting = false;
-	
 	public TopologicalImageCache(MapInfoLogicalNetLayer miLayer)
 	{
 		this.miLayer = miLayer;
@@ -157,19 +156,6 @@ public class TopologicalImageCache
 		if (this.visibleImage == null)
 			return;
 		
-//		//Во время репэйнта EXPRESS области нельзя менять параметры
-//		while (this.isRepainting)
-//		{
-//			try
-//			{
-//				Thread.sleep(20);
-//			} catch (InterruptedException e)
-//			{
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//		}
-		
 		DoublePoint newCenter = this.miLayer.getCenter();  
 		if (	(this.center == null)
 				||(!this.center.equals(newCenter)))
@@ -199,19 +185,6 @@ public class TopologicalImageCache
 	{
 		if (this.visibleImage == null)
 			return;
-		
-//		//Во время репэйнта EXPRESS области нельзя менять параметры
-//		while (this.isRepainting)
-//		{
-//			try
-//			{
-//				Thread.sleep(20);
-//			} catch (InterruptedException e)
-//			{
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//		}
 		
 		double newScale = this.miLayer.getScale();  
 		if (this.scale != newScale)
@@ -252,7 +225,6 @@ public class TopologicalImageCache
 		if (this.visibleImage == null)
 			return null;
 
-//		this.isRepainting = true;
 		while (this.imagesToPaint.size() > 0)
 		{
 			for (ListIterator it = this.imagesToPaint.listIterator(); it.hasNext();)
@@ -260,18 +232,31 @@ public class TopologicalImageCache
 				TopologicalRequest request = (TopologicalRequest)it.next();
 				if (request.priority != TopologicalRequest.PRIORITY_ALREADY_LOADED)
 					continue;
-				
+
 				System.out.println(this.miLayer.sdFormat.format(new Date(System.currentTimeMillis())) +
 						" TIC - getImage - painting request: " + request);
 				
-				this.visibleImage.getGraphics().drawImage(
-						request.image.getImage(),
-						request.start.x - 1,
-						request.start.y - 1,
-						this.miLayer.getMapViewer().getVisualComponent());
+				//Изображение с надписями отрисовываем последним
+				if ((this.imagesToPaint.size() == 1) && (request.targetToDraw == TopologicalRequest.DRAW_LABELS_ONLY))
+				{
+					this.visibleImage.getGraphics().drawImage(
+							request.image.getImage(),
+							request.start.x,
+							request.start.y,
+							Color.WHITE,
+							this.miLayer.getMapViewer().getVisualComponent());
+				}
+				else
+				{
+					this.visibleImage.getGraphics().drawImage(
+							request.image.getImage(),
+							request.start.x - 1,
+							request.start.y - 1,
+							this.miLayer.getMapViewer().getVisualComponent());
+				}
 
 				System.out.println(this.miLayer.sdFormat.format(new Date(System.currentTimeMillis())) +
-					" TIC - getImage - request image painted");
+				" TIC - getImage - request image painted");
 				
 				it.remove();
 			}
@@ -285,8 +270,6 @@ public class TopologicalImageCache
 			}
 		}
 
-//		this.isRepainting = false;
-		
 		System.out.println(this.miLayer.sdFormat.format(new Date(System.currentTimeMillis())) +
 			" TIC - getImage - returning image");
 		
@@ -482,6 +465,9 @@ public class TopologicalImageCache
 				result.priority = TopologicalRequest.PRIORITY_EXPRESS;
 			else
 				result.priority = TopologicalRequest.PRIORITY_BACKGROUND;
+			
+//			result.targetToDraw = TopologicalRequest.DRAW_OBJECTS_ONLY;
+			result.targetToDraw = TopologicalRequest.DRAW_ALL;
 			
 			result.isUsedForCurrentImage = false;			
 		}
@@ -706,6 +692,9 @@ public class TopologicalImageCache
 				}
 			}
 
+		//рисуем надписи
+//		createLabelsRedrawRequest();
+		
 		//Если в кэше слишком много сегментов удаляем самые старые				
 		if (this.cacheOfImages.size() > TopologicalImageCache.CACHE_ELEMENTS_COUNT + 
 				TopologicalImageCache.MAX_EXCEEDING_COUNT)
@@ -715,6 +704,22 @@ public class TopologicalImageCache
 			" TIC - createRequests - exiting. Reports created and queued.");
 	}
 	
+	
+	private void createLabelsRedrawRequest()
+	{
+		TopologicalRequest request = new TopologicalRequest();
+		request.priority = TopologicalRequest.PRIORITY_EXPRESS;
+		request.targetToDraw = TopologicalRequest.DRAW_LABELS_ONLY;
+		
+		request.topoScale = this.miLayer.getScale();
+		request.topoCenter = this.miLayer.getCenter();
+		
+		request.size = new Dimension(this.imageSize);
+		request.start = new Point(0,0);
+		
+		this.loadingThread.addRequest(request);
+		this.imagesToPaint.add(request);
+	}
 	/**
 	 * Чистит список подгруженных изображений
 	 *
@@ -861,6 +866,7 @@ public class TopologicalImageCache
 	{
 		TopologicalRequest result = new TopologicalRequest();
 		result.priority = asPriority;
+		result.targetToDraw = TopologicalRequest.DRAW_ALL;
 		result.isUsedForCurrentImage = false;
 
 		result.topoCenter = this.miLayer.getCenter();
@@ -1107,7 +1113,7 @@ class LoadingThread extends Thread
 	
 	/**
 	 * Создаёт по текущему запросу строку параметров для HTTP запроса к серверу
-	 * топографии
+	 * топографии для получения графических данных
 	 * @param request Запрос
 	 * @return Строка параметров для HTTP запроса к серверу
 	 * топографии 
@@ -1133,10 +1139,21 @@ class LoadingThread extends Thread
 		for(; layersIt.hasNext();)
 		{
 			SpatialLayer spL = (SpatialLayer )layersIt.next();
-			result += "&" + ServletCommandNames.PAR_LAYER_VISIBLE + index + "="
-					+ (spL.isVisible() && spL.isVisibleAtScale(request.topoScale) ? 1 : 0);
-			result += "&" + ServletCommandNames.PAR_LAYER_LABELS_VISIBLE + index
-					+ "=" + (spL.isLabelVisible() && spL.isVisibleAtScale(request.topoScale) ? 1 : 0);
+			
+			//Видимость слоя зависит от того, хочет ли его видеть клиент, виден ли он при текущем масштабе на сервере
+			//и надо ли отображать объекты для текущего запроса
+			boolean toShowLayerObjects =	spL.isVisible()
+				&& spL.isVisibleAtScale(this.miLayer.getScale())
+				&& (request.targetToDraw != TopologicalRequest.DRAW_LABELS_ONLY);
+
+			//то же самое для надписей
+			boolean toShowLayerLabels =	spL.isLabelVisible()
+				&& spL.isVisibleAtScale(this.miLayer.getScale())
+				&& (request.targetToDraw != TopologicalRequest.DRAW_OBJECTS_ONLY);
+			
+			result += "&" + ServletCommandNames.PAR_LAYER_VISIBLE + index + "="	+ (toShowLayerObjects ? 1 : 0);
+			result += "&" + ServletCommandNames.PAR_LAYER_LABELS_VISIBLE + index + "=" + (toShowLayerLabels ? 1 : 0);
+
 			index++;
 		}
 
@@ -1146,7 +1163,7 @@ class LoadingThread extends Thread
 /**
  * Структура запроса изображения с сервера
  * @author $Author: peskovsky $
- * @version $Revision: 1.8 $, $Date: 2005/04/18 10:08:09 $
+ * @version $Revision: 1.9 $, $Date: 2005/04/18 15:07:07 $
  * @module mapinfo_v1
  */
 class TopologicalRequest implements Comparable
@@ -1156,6 +1173,24 @@ class TopologicalRequest implements Comparable
 	 * для текущего изображения - их будут отрисовывать
 	 */
 	public boolean isUsedForCurrentImage = false;
+	
+	/**
+	 * Рисовать и надписи и объекты
+	 */
+	public static final int DRAW_ALL = 2;	
+	/**
+	 * Рисовать только объекты
+	 */
+	public static final int DRAW_OBJECTS_ONLY = 1;
+	/**
+	 * Рисовать только надписи
+	 */
+	public static final int DRAW_LABELS_ONLY = 0;
+	
+	/**
+	 * Рисовать ли надписи запросу
+	 */
+	protected int targetToDraw = 0;
 	
 	/**
 	 * Для участков изображения, добавляемых в кэш "на всякий случай",
