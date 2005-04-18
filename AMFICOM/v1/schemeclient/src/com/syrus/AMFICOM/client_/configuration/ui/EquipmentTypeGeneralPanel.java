@@ -1,5 +1,5 @@
 /*-
- * $Id: EquipmentTypeGeneralPanel.java,v 1.1 2005/04/18 10:45:17 stas Exp $
+ * $Id: EquipmentTypeGeneralPanel.java,v 1.2 2005/04/18 10:53:40 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/04/18 10:45:17 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/18 10:53:40 $
  * @module schemeclient_v1
  */
 
@@ -257,10 +257,10 @@ public class EquipmentTypeGeneralPanel extends DefaultStorableObjectEditor {
 			this.tfCodenameCombo.setSelectedItem(EquipmentTypeCodenames.getName(eqt.getCodename()));
 		} 
 		else {
-			this.tfNameText.setText(LangModelScheme.getString(Constants.EMPTY));
-			this.taDescriptionArea.setText(LangModelScheme.getString(Constants.EMPTY));
-			this.tfManufacturerText.setText(LangModelScheme.getString(Constants.EMPTY));
-			this.tfManufacturerCodeText.setText(LangModelScheme.getString(Constants.EMPTY));
+			this.tfNameText.setText(Constants.EMPTY);
+			this.taDescriptionArea.setText(Constants.EMPTY);
+			this.tfManufacturerText.setText(Constants.EMPTY);
+			this.tfManufacturerCodeText.setText(Constants.EMPTY);
 		}
 	}
 

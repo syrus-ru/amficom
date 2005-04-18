@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractLinkTypeGeneralPanel.java,v 1.5 2005/04/18 10:45:16 stas Exp $
+ * $Id: AbstractLinkTypeGeneralPanel.java,v 1.6 2005/04/18 10:53:40 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.resource.Constants;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.5 $, $Date: 2005/04/18 10:45:16 $
+ * @version $Revision: 1.6 $, $Date: 2005/04/18 10:53:40 $
  * @module schemeclient_v1
  */
 
@@ -210,10 +210,10 @@ public abstract class AbstractLinkTypeGeneralPanel extends DefaultStorableObject
 			this.tfManufacturerCodeText.setText(linkType.getManufacturerCode());
 		} 
 		else {
-			this.tfNameText.setText(LangModelScheme.getString(Constants.EMPTY));
-			this.taDescriptionArea.setText(LangModelScheme.getString(Constants.EMPTY));
-			this.tfManufacturerText.setText(LangModelScheme.getString(Constants.EMPTY));
-			this.tfManufacturerCodeText.setText(LangModelScheme.getString(Constants.EMPTY));
+			this.tfNameText.setText(Constants.EMPTY);
+			this.taDescriptionArea.setText(Constants.EMPTY);
+			this.tfManufacturerText.setText(Constants.EMPTY);
+			this.tfManufacturerCodeText.setText(Constants.EMPTY);
 		}
 	}
 

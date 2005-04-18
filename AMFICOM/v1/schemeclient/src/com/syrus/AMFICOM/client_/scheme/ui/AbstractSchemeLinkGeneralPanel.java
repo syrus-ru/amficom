@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeLinkGeneralPanel.java,v 1.1 2005/04/18 10:45:17 stas Exp $
+ * $Id: AbstractSchemeLinkGeneralPanel.java,v 1.2 2005/04/18 10:53:40 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.scheme.AbstractSchemeLink;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/04/18 10:45:17 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/18 10:53:40 $
  * @module schemeclient_v1
  */
 
@@ -420,10 +420,10 @@ public abstract class AbstractSchemeLinkGeneralPanel extends DefaultStorableObje
 			link = schemeLink.getLink();
 		}
 		else {
-			this.nameText.setText(LangModelScheme.getString(Constants.EMPTY));
-			this.descrArea.setText(LangModelScheme.getString(Constants.EMPTY));
-			this.opticalText.setText(LangModelScheme.getString(Constants.EMPTY));
-			this.physicalText.setText(LangModelScheme.getString(Constants.EMPTY));
+			this.nameText.setText(Constants.EMPTY);
+			this.descrArea.setText(Constants.EMPTY);
+			this.opticalText.setText(Constants.EMPTY);
+			this.physicalText.setText(Constants.EMPTY);
 		}
 		if (link != null) {
 			linkBox.setSelected(true);
@@ -438,10 +438,10 @@ public abstract class AbstractSchemeLinkGeneralPanel extends DefaultStorableObje
 		}
 		else {
 			linkBox.setSelected(false);
-			invNumberText.setText(LangModelScheme.getString(Constants.EMPTY));
-			supplierText.setText(LangModelScheme.getString(Constants.EMPTY));
-			supplierCodeText.setText(LangModelScheme.getString(Constants.EMPTY));
-			markText.setText(LangModelScheme.getString(Constants.EMPTY));
+			invNumberText.setText(Constants.EMPTY);
+			supplierText.setText(Constants.EMPTY);
+			supplierCodeText.setText(Constants.EMPTY);
+			markText.setText(Constants.EMPTY);
 		}
 	}
 

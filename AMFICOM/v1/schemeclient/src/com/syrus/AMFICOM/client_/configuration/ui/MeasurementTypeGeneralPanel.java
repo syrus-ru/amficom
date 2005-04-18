@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeGeneralPanel.java,v 1.5 2005/04/18 10:45:17 stas Exp $
+ * $Id: MeasurementTypeGeneralPanel.java,v 1.6 2005/04/18 10:53:40 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.5 $, $Date: 2005/04/18 10:45:17 $
+ * @version $Revision: 1.6 $, $Date: 2005/04/18 10:53:40 $
  * @module schemeclient_v1
  */
 
@@ -227,7 +227,7 @@ public class MeasurementTypeGeneralPanel extends DefaultStorableObjectEditor {
 			trPortTypesTree.updateUI();
 		}
 		else {
-			tfNameText.setText(LangModelScheme.getString(Constants.EMPTY));
+			tfNameText.setText(Constants.EMPTY);
 			for (Iterator it = allInPTypeNodes.iterator(); it.hasNext();) {
 				CheckableNode node = (CheckableNode)it.next();
 				node.setChecked(false);
