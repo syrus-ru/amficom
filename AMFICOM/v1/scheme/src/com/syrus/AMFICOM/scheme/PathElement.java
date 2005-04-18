@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.17 2005/04/18 12:38:37 bass Exp $
+ * $Id: PathElement.java,v 1.18 2005/04/18 13:45:25 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,7 +44,7 @@ import com.syrus.util.Log;
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.17 $, $Date: 2005/04/18 12:38:37 $
+ * @version $Revision: 1.18 $, $Date: 2005/04/18 13:45:25 $
  * @module scheme_v1
  * @todo <code>setAttributes()</code> should contain, among others,
  *       kind and sequentialNumber paremeters.
@@ -421,10 +421,10 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 				&& this.schemeLinkId != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
 		switch (this.kind.value()) {
 			case Kind._SCHEME_ELEMENT:
-				assert !this.startAbstractSchemePortId.isVoid()
-						&& !this.endAbstractSchemePortId.isVoid()
+				assert (isFirst() || !this.startAbstractSchemePortId.isVoid())
+						&& (isLast() || !this.endAbstractSchemePortId.isVoid())
 						&& this.schemeCableThreadId.isVoid()
-						&& this.schemeLinkId.isVoid() : ErrorMessages.OBJECT_BADLY_INITIALIZED; 
+						&& this.schemeLinkId.isVoid(): ErrorMessages.OBJECT_BADLY_INITIALIZED; 
 				break;
 			case Kind._SCHEME_CABLE_LINK:
 				assert this.startAbstractSchemePortId.isVoid()
@@ -614,6 +614,66 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 			default:
 				throw new UnsupportedOperationException(ErrorMessages.OBJECT_STATE_ILLEGAL);
 		}
+	}
+
+	/**
+	 * @param created
+	 * @param modified
+	 * @param creatorId
+	 * @param modifierId
+	 * @param version
+	 * @param parentSchemePathId
+	 * @param sequentialNumber
+	 * @param kind
+	 * @param startAbstractSchemePortId
+	 * @param endAbstractSchemePortId
+	 * @param schemeCableThreadId
+	 * @param schemeLinkId
+	 */
+	public void setAttributes(final Date created, final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId, final long version,
+			final Identifier parentSchemePathId,
+			final int sequentialNumber, final Kind kind,
+			final Identifier startAbstractSchemePortId,
+			final Identifier endAbstractSchemePortId,
+			final Identifier schemeCableThreadId,
+			final Identifier schemeLinkId) {
+		assert parentSchemePathId != null && !parentSchemePathId.isVoid(): ErrorMessages.NON_VOID_EXPECTED;
+		assert sequentialNumber != -1;
+		assert kind != null && startAbstractSchemePortId != null
+				&& endAbstractSchemePortId != null
+				&& schemeCableThreadId != null
+				&& schemeLinkId != null : ErrorMessages.NON_NULL_EXPECTED;
+		switch (kind.value()) {
+			case Kind._SCHEME_ELEMENT:
+				assert (sequentialNumber == 0 || !startAbstractSchemePortId.isVoid())
+						&& schemeCableThreadId.isVoid()
+						&& schemeLinkId.isVoid();
+				break;
+			case Kind._SCHEME_CABLE_LINK:
+				assert startAbstractSchemePortId.isVoid()
+						&& endAbstractSchemePortId.isVoid()
+						&& !schemeCableThreadId.isVoid()
+						&& schemeLinkId.isVoid();
+				break;
+			case Kind._SCHEME_LINK:
+				assert startAbstractSchemePortId.isVoid()
+						&& endAbstractSchemePortId.isVoid()
+						&& schemeCableThreadId.isVoid()
+						&& !schemeLinkId.isVoid();
+				break;
+			default:
+				assert false;
+		}
+		super.setAttributes(created, modified, creatorId, modifierId, version);
+		this.parentSchemePathId = parentSchemePathId;
+		this.sequentialNumber = sequentialNumber;
+		this.kind = kind;
+		this.startAbstractSchemePortId = startAbstractSchemePortId;
+		this.endAbstractSchemePortId = endAbstractSchemePortId;
+		this.schemeCableThreadId = schemeCableThreadId;
+		this.schemeLinkId = schemeLinkId;
 	}
 
 	/**
