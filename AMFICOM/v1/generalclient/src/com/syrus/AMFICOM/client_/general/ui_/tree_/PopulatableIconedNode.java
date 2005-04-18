@@ -1,5 +1,5 @@
 /*
- * $Id: PopulatableIconedNode.java,v 1.1 2005/03/30 13:27:20 stas Exp $
+ * $Id: PopulatableIconedNode.java,v 1.2 2005/04/18 08:54:35 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.logic.*;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/03/30 13:27:20 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/18 08:54:35 $
  * @module generalclient_v1
  */
 
@@ -24,16 +24,28 @@ public class PopulatableIconedNode extends IconedNode implements Populatable, Vi
 	private ChildrenFactory factory;
 	private boolean populated = false;
 	
-	public PopulatableIconedNode(ChildrenFactory factory, Object object) {
-		this(factory, object, object instanceof Namable ? ((Namable)object).getName() : object.toString());
+	public PopulatableIconedNode(ChildrenFactory factory, Namable object) {
+		this(factory, object, true);
+	}
+	
+	public PopulatableIconedNode(ChildrenFactory factory, Namable object, boolean allowsChildren) {
+		this(factory, object, (Icon)null, allowsChildren);
+	}
+	
+	public PopulatableIconedNode(ChildrenFactory factory, Namable object, Icon icon) {
+		this(factory, object, icon, true);
+	}
+	
+	public PopulatableIconedNode(ChildrenFactory factory, Namable object, Icon icon, boolean allowsChildren) {
+		this(factory, object, object.getName(), icon, allowsChildren);
+	}
+
+	public PopulatableIconedNode(ChildrenFactory factory, Object object, String name) {
+		this(factory, object, name, null, true);
 	}
 	
 	public PopulatableIconedNode(ChildrenFactory factory, Object object, String name, boolean allowsChildren) {
 		this(factory, object, name, null, allowsChildren);
-	}
-	
-	public PopulatableIconedNode(ChildrenFactory factory, Object object, String name) {
-		this(factory, object, name, null, true);
 	}
 	
 	public PopulatableIconedNode(ChildrenFactory factory, Object object, String name, Icon icon) {
@@ -46,10 +58,8 @@ public class PopulatableIconedNode extends IconedNode implements Populatable, Vi
 	}
 
 	public void populate() {
-		if (!populated) {
-			this.factory.populate(this);
-			this.populated = true;
-		}
+		this.factory.populate(this);
+		this.populated = true;
 	}
 	
 	public VisualManager getVisualManager() {

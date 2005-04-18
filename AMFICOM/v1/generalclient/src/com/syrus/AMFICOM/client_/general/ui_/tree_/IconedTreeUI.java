@@ -1,5 +1,5 @@
 /*
- * $Id: IconedTreeUI.java,v 1.1 2005/03/30 13:27:20 stas Exp $
+ * $Id: IconedTreeUI.java,v 1.2 2005/04/18 08:54:35 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,8 @@
 
 package com.syrus.AMFICOM.client_.general.ui_.tree_;
 
+import java.util.Iterator;
+
 import javax.swing.*;
 import javax.swing.tree.*;
 
@@ -15,7 +17,7 @@ import com.syrus.AMFICOM.logic.*;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/03/30 13:27:20 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/18 08:54:35 $
  * @module generalclient_v1
  */
 
@@ -47,5 +49,24 @@ public class IconedTreeUI {
 			scrollPane = new JScrollPane(getTree());
 		}
 		return scrollPane;
+	}
+	
+	public Item findNode(Item item, Object object, boolean usePopulate) {
+		if (item.getObject().equals(object))
+			return item;
+		for (Iterator it = item.getChildren().iterator(); it.hasNext();) {
+			Item child = (Item)it.next();
+			if (child.getObject().equals(object))
+				return child;
+		}
+		for (Iterator it = item.getChildren().iterator(); it.hasNext();) {
+			Item child = (Item)it.next();
+			if (usePopulate && child instanceof Populatable)
+				((Populatable)child).populate();
+			Item found = findNode(child, object, usePopulate);
+			if (found != null)
+				return found;
+		}
+		return null;
 	}
 }

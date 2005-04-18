@@ -1,5 +1,5 @@
 /*-
- * $Id: CheckableNode.java,v 1.1 2005/03/30 13:27:20 stas Exp $
+ * $Id: CheckableNode.java,v 1.2 2005/04/18 08:54:35 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,11 +10,12 @@ package com.syrus.AMFICOM.client_.general.ui_.tree_;
 
 import java.util.Iterator;
 
+import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.logic.*;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/03/30 13:27:20 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/18 08:54:35 $
  * @module generalclient_v1
  */
 
@@ -28,8 +29,16 @@ public class CheckableNode extends AbstractItem {
 		this(object, name, true);
 	}
 	
+	public CheckableNode(Namable object, boolean allowsChildren) {
+		this(object, object.getName(), allowsChildren);
+	}
+	
 	public CheckableNode(Object object, String name, boolean allowsChildren) {
 		this(object, name, allowsChildren, false);
+	}
+	
+	public CheckableNode(Namable object, boolean allowsChildren, boolean isChecked) {
+		this(object, object.getName(), allowsChildren, isChecked);
 	}
 	
 	public CheckableNode(Object object, String name, boolean allowsChildren, boolean isChecked) {
@@ -65,6 +74,8 @@ public class CheckableNode extends AbstractItem {
 	}
 
 	public String getName() {
+		if (object instanceof Namable)
+			return ((Namable)object).getName();
 		return name;
 	}
 

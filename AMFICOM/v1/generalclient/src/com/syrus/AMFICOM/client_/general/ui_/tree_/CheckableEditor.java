@@ -1,5 +1,5 @@
 /*-
- * $Id: CheckableEditor.java,v 1.1 2005/03/30 13:27:20 stas Exp $
+ * $Id: CheckableEditor.java,v 1.2 2005/04/18 08:54:35 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.logic.Item;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/03/30 13:27:20 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/18 08:54:35 $
  * @module generalclient_v1
  */
 
@@ -67,10 +67,14 @@ public class CheckableEditor extends DefaultCellEditor {
 	}
 	
 	public Object getCellEditorValue() {
+		node = null;
+		return super.getCellEditorValue();
+	}
+	
+	public void fireEditingStopped() {
 		if (node instanceof CheckableNode) {
 			((CheckableNode)node).setChecked(box.isSelected());
 		}
-		node = null;
-		return super.getCellEditorValue();
+		super.fireEditingStopped();
 	}
 }
