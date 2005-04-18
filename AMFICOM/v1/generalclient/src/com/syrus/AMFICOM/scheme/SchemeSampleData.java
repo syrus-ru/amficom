@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeSampleData.java,v 1.3 2005/04/15 18:04:08 bass Exp $
+ * $Id: SchemeSampleData.java,v 1.4 2005/04/18 10:53:53 krupenn Exp $
  *
  * Copyright ї 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.scheme;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.SortedSet;
@@ -19,13 +20,12 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
 import com.syrus.AMFICOM.scheme.corba.SchemeKind;
-import com.syrus.AMFICOM.scheme.corba.PathElement_TransferablePackage.DataPackage.Kind;
 
 /**
  * this class is used to create two sample instances
  * of Scheme whithout graphical components
- * @author $Author: bass $
- * @version $Revision: 1.3 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.4 $
  * @module generalclient_v1
  */
 public final class SchemeSampleData {
@@ -102,6 +102,11 @@ public final class SchemeSampleData {
 		clink.add(clink3);
 		SchemeCableLink clink4 = SchemeCableLink.createInstance(userId);
 		clink.add(clink4);
+		SchemeCableThread clink0th = SchemeCableThread.createInstance(userId);
+		SchemeCableThread clink1th = SchemeCableThread.createInstance(userId);
+		SchemeCableThread clink2th = SchemeCableThread.createInstance(userId);
+		SchemeCableThread clink3th = SchemeCableThread.createInstance(userId);
+		SchemeCableThread clink4th = SchemeCableThread.createInstance(userId);
 		Set dev0 = new HashSet();
 		SchemeDevice dev00 = SchemeDevice.createInstance(userId);
 		dev0.add(dev00);
@@ -121,20 +126,6 @@ public final class SchemeSampleData {
 		SchemePath path0 = SchemePath.createInstance(userId);
 		path.add(path0);
 		SortedSet pel = new TreeSet();
-		PathElement pel0 = PathElement.createInstance(userId, Kind.SCHEME_LINK);
-		pel.add(pel0);
-		PathElement pel1 = PathElement.createInstance(userId, Kind.SCHEME_ELEMENT);
-		pel.add(pel1);
-		PathElement pel2 = PathElement.createInstance(userId, Kind.SCHEME_CABLE_LINK);
-		pel.add(pel2);
-		PathElement pel3 = PathElement.createInstance(userId, Kind.SCHEME_ELEMENT);
-		pel.add(pel3);
-		PathElement pel4 = PathElement.createInstance(userId, Kind.SCHEME_CABLE_LINK);
-		pel.add(pel4);
-		PathElement pel5 = PathElement.createInstance(userId, Kind.SCHEME_ELEMENT);
-		pel.add(pel5);
-		PathElement pel6 = PathElement.createInstance(userId, Kind.SCHEME_CABLE_LINK);
-		pel.add(pel6);
 
 		Scheme scheme = Scheme.createInstance(userId, domainId, "Схемка", "");
 		dev00.setSchemePorts(port0);
@@ -250,73 +241,81 @@ public final class SchemeSampleData {
 		clink0.setPhysicalLength(1000.0D);
 		clink0.setSourceSchemeCablePort(cport10);
 		clink0.setTargetSchemeCablePort(cport00);
-//		clink0.setScheme(scheme);
+		clink0.setSchemeCableThreads(Collections.singleton(clink0th));
 
 		clink1.setName("Кабелёк2");
 		clink1.setOpticalLength(1000.0D);
 		clink1.setPhysicalLength(1000.0D);
 		clink1.setSourceSchemeCablePort(cport11);
 		clink1.setTargetSchemeCablePort(cport20);
-//		clink1.setScheme(scheme);
+		clink1.setSchemeCableThreads(Collections.singleton(clink1th));
 
 		clink2.setName("Кабелёк3");
 		clink2.setOpticalLength(1000.0D);
 		clink2.setPhysicalLength(1000.0D);
 		clink2.setSourceSchemeCablePort(cport21);
 		clink2.setTargetSchemeCablePort(cport30);
-//		clink2.setScheme(scheme);
+		clink2.setSchemeCableThreads(Collections.singleton(clink2th));
 
 		clink3.setName("Кабелёк4");
 		clink3.setOpticalLength(1000.0D);
 		clink3.setPhysicalLength(1000.0D);
 		clink3.setSourceSchemeCablePort(cport31);
 		clink3.setTargetSchemeCablePort(cport40);
-//		clink3.setScheme(scheme);
+		clink3.setSchemeCableThreads(Collections.singleton(clink3th));
 
 		clink4.setName("Кабелёк5");
 		clink4.setOpticalLength(1000.0D);
 		clink4.setPhysicalLength(1000.0D);
 		clink4.setSourceSchemeCablePort(cport41);
 		clink4.setTargetSchemeCablePort(cport22);
-//		clink4.setScheme(scheme);
+		clink4.setSchemeCableThreads(Collections.singleton(clink4th));
 
+		PathElement pel0 = PathElement.createInstance(userId, path0, link0);
 		pel0.setStartAbstractSchemePort(port01);
 		pel0.setEndAbstractSchemePort(port00);
-//		pel0.setScheme(scheme);
 		pel0.setAbstractSchemeElement(link0);
 		SchemeUtils.setOpticalLength(pel0, 3.0);
 		SchemeUtils.setPhysicalLength(pel0, 3.0);
 		
-//		pel1.setScheme(scheme);
+		PathElement pel1 = PathElement.createInstance(userId, path0, port00, cport00);
 		pel1.setAbstractSchemeElement(el0);
 		
+		PathElement pel2 = PathElement.createInstance(userId, path0, clink0th);
 		pel2.setStartAbstractSchemePort(cport00);
 		pel2.setEndAbstractSchemePort(cport10);
-//		pel2.setScheme(scheme);
 		pel2.setAbstractSchemeElement(clink0);
 		SchemeUtils.setOpticalLength(pel2, 1000.0);
 		SchemeUtils.setPhysicalLength(pel2, 1000.0);
 		
-//		pel3.setScheme(scheme);
+		PathElement pel3 = PathElement.createInstance(userId, path0, cport10, cport11);
 		pel3.setAbstractSchemeElement(el1);
 		
+		PathElement pel4 = PathElement.createInstance(userId, path0, clink1th);
 		pel4.setStartAbstractSchemePort(cport11);
 		pel4.setEndAbstractSchemePort(cport20);
-//		pel4.setScheme(scheme);
 		pel4.setAbstractSchemeElement(clink1);
 		SchemeUtils.setOpticalLength(pel4, 1000.0);
 		SchemeUtils.setPhysicalLength(pel4, 1000.0);
 		
-//		pel5.setScheme(scheme);
+		PathElement pel5 = PathElement.createInstance(userId, path0, cport20, cport21);
 		pel5.setAbstractSchemeElement(el2);
 		
+		PathElement pel6 = PathElement.createInstance(userId, path0, clink2th);
 		pel6.setStartAbstractSchemePort(cport21);
 		pel6.setEndAbstractSchemePort(cport30);
-//		pel6.setScheme(scheme);
 		pel6.setAbstractSchemeElement(clink2);
 		SchemeUtils.setOpticalLength(pel6, 1000.0);
 		SchemeUtils.setPhysicalLength(pel6, 1000.0);
-		
+
+		pel.add(pel0);
+		pel.add(pel1);
+		pel.add(pel2);
+		pel.add(pel3);
+		pel.add(pel4);
+		pel.add(pel5);
+		pel.add(pel6);
+
 		path0.setStartSchemeElement(el0);
 		path0.setEndSchemeElement(el3);
 		path0.setPathElements(pel);
@@ -362,6 +361,7 @@ public final class SchemeSampleData {
 		Set clink = new HashSet();
 		SchemeCableLink clink0 = SchemeCableLink.createInstance(userId);
 		clink.add(clink0);
+		SchemeCableThread clink0th = SchemeCableThread.createInstance(userId);
 		Set dev0 = new HashSet();
 		SchemeDevice dev00 = SchemeDevice.createInstance(userId);
 		dev0.add(dev00);
@@ -372,12 +372,6 @@ public final class SchemeSampleData {
 		SchemePath path0 = SchemePath.createInstance(userId);
 		path.add(path0);
 		SortedSet pel = new TreeSet();
-		PathElement pel0 = PathElement.createInstance(userId, Kind.SCHEME_LINK);
-		pel.add(pel0);
-		PathElement pel1 = PathElement.createInstance(userId, Kind.SCHEME_ELEMENT);
-		pel.add(pel1);
-		PathElement pel2 = PathElement.createInstance(userId, Kind.SCHEME_CABLE_LINK);
-		pel.add(pel2);
 
 //		port00.setSchemeDevice(dev00);
 		port00.setAbstractSchemePortDirectionType(AbstractSchemePortDirectionType._OUT);
@@ -422,28 +416,31 @@ public final class SchemeSampleData {
 		link0.setPhysicalLength(1000.0D);
 		link0.setSourceSchemePort(port10);
 		link0.setTargetSchemePort(port00);
-//		link0.setScheme(scheme);
 
 		clink0.setName("Кабелёк");
 		clink0.setOpticalLength(1000.0D);
 		clink0.setPhysicalLength(1000.0D);
 		clink0.setSourceSchemeCablePort(cport10);
 		clink0.setTargetSchemeCablePort(cport00);
-//		clink0.setScheme(scheme);
+		clink0.setSchemeCableThreads(Collections.singleton(clink0th));
 
-		pel0.setEndAbstractSchemePort(port10);
-//		pel0.setScheme(scheme);
-		pel0.setAbstractSchemeElement(link0);
+		PathElement pel0 = PathElement.createInstance(userId, path0, link0);
 		pel0.setStartAbstractSchemePort(port00);
+		pel0.setEndAbstractSchemePort(port10);
+		pel0.setAbstractSchemeElement(link0);
 		
-//		pel1.setScheme(scheme);
+		PathElement pel1 = PathElement.createInstance(userId, path0, port10, cport10);
 		pel1.setAbstractSchemeElement(el1);
 		
-		pel2.setEndAbstractSchemePort(cport00);
-//		pel2.setScheme(scheme);
-		pel2.setAbstractSchemeElement(clink0);
+		PathElement pel2 = PathElement.createInstance(userId, path0, clink0th);
 		pel2.setStartAbstractSchemePort(cport10);
-		
+		pel2.setEndAbstractSchemePort(cport00);
+		pel2.setAbstractSchemeElement(clink0);
+
+		pel.add(pel0);
+		pel.add(pel1);
+		pel.add(pel2);
+
 		path0.setEndSchemeElement(el0);
 		path0.setPathElements(pel);
 		path0.setName("Путяра измерений");
