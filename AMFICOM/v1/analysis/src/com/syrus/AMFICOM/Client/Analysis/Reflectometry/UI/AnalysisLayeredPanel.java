@@ -18,7 +18,6 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEvents;
-import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 
 public class AnalysisLayeredPanel extends TraceEventsLayeredPanel implements OperationListener
 {

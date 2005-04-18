@@ -9,7 +9,6 @@ import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.AnalyseMainFrameSimplified;
-import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.AnalysisFrame;
 import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.*;
@@ -120,7 +119,7 @@ public class FileOpenCommand extends VoidCommand
 							String s;
 							while ((s = dis.readLine()) != null)
 								al.add(s);
-							int N = al.size();
+							final int N = al.size();
 							System.out.println("reading file: N=" + N);
 							double[] dl = new double[N];
 							for (int i = 0; i < N; i++)

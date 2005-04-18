@@ -7,7 +7,7 @@ import java.awt.Color;
 
 /**
  * @deprecated нахЪ
- * @version $Revision: 1.8 $, $Date: 2005/03/29 17:49:51 $
+ * @version $Revision: 1.9 $, $Date: 2005/04/18 13:17:41 $
  * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module analysis_v1

@@ -1,5 +1,5 @@
 /*
- * $Id: BellcoreCreator.java,v 1.3 2005/03/17 08:49:04 saa Exp $
+ * $Id: BellcoreCreator.java,v 1.4 2005/04/18 13:17:42 saa Exp $
  * Very poor bellcore creator for development purposes
  * 
  * Copyright © Syrus Systems.
@@ -10,7 +10,7 @@ package com.syrus.io;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.3 $, $Date: 2005/03/17 08:49:04 $
+ * @version $Revision: 1.4 $, $Date: 2005/04/18 13:17:42 $
  * @module
  */
 public class BellcoreCreator
@@ -19,7 +19,7 @@ public class BellcoreCreator
 
 	public BellcoreCreator(double []yarr)
 	{
-		int N = yarr.length;
+		final int N = yarr.length;
 		int[] y = new int[N];
 		for (int i = 0; i < N; i++)
 			y[i] = 65535 - (int )(yarr[i] * 1000);
