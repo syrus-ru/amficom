@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.40 2005/04/18 16:30:08 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.41 2005/04/18 16:57:49 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.40 $, $Date: 2005/04/18 16:30:08 $
+ * @version $Revision: 1.41 $, $Date: 2005/04/18 16:57:49 $
  * @module
  */
 
@@ -67,30 +67,6 @@ public class CoreAnalysisManager
 			double[] noiseDB);
 
 	/**
-	 * Метод вычисляет уровень шума на рефлектограмме по уровню 3 sigma,
-	 * предполагая природу шума, независимую от величины измеряемого сигнала.
-	 * Шум определяется на основе гистограммы распределения величины
-	 * fabs(2*data[n] - data[n-8] - data[n+8]) для троек n-8,n,n+8, где
-	 * нет монотонности data[], а data = 10^(y/5) - линейная
-	 * (не логарифмическая) величина сигнала. Также исключаются участки
-	 * низкого шума и сильного квантования уровней y[]. Шаг 8 выбран
-	 * на основе специфики NetTest(tm) как ноль автокорреляционной функции
-	 * фильтра BC.
-	 * 
-	 * Вычисляемая sigma предназначена для использования в алгоритмах 
-	 * аппроксимации и обнаружения событий на фоне шума.
-	 * 
-	 * В случае претензий "в рефлектометрии уровнем шума принято
-	 * называть другую величину", изменять код этого метода не следует,
-	 * а сделать для своих целей другую величину.
-	 *      
-	 * @param y входная рефлектограмма
-	 * @return 3*sigma гауссового шума, выраженное
-	 * в единицах рефлектометрических децибелл
-	 */
-	private static native double nCalcNoise3s(double[] y);
-
-	/**
 	 * Вычисляет уровень шума в виде "ожидаемая амплитуда флуктуаций по
 	 * уровню 1 сигма". 
 	 * @param y входная рефлектограмма
@@ -99,7 +75,7 @@ public class CoreAnalysisManager
 	 * @return массив [length > 0 ? length : y.length]
 	 */
 	private static native double[] nCalcNoiseArray(double[] y, int lenght);
-	
+
 	/**
 	 * Метод определяет длину рефлектограммы "до конца волокна".
 	 * Алгоритм определения довольно прост, тип поиска "первого нуля",
@@ -443,15 +419,6 @@ public class CoreAnalysisManager
 		// корректируем пороги по этим границам
 		mtm.updateUpperThreshToContain(yMax);
 		mtm.updateLowerThreshToContain(yMin);
-	}
-
-	/**
-	 * @deprecated
-	 */
-	// Определяет уровень шума в р/г -- старый метод
-	public static double calcNoise3s(double[] y)
-	{
-		return nCalcNoise3s(y);
 	}
 
 	public static double getMedian(double[] y, int pos)

@@ -766,25 +766,6 @@ jobjectArray ReliabilityEvent_C2J_arr(JNIEnv *env, ReliabilityEvent *re, int num
 	return oa;
 }
 
-/*
- * various CoreAnalysisManager methods
- */
-
-JNIEXPORT jdouble JNICALL Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_nCalcNoise3s
-  (JNIEnv *env, jclass cls, jdoubleArray arr)
-{
-	prf_b("JNI: nCalcNoise3s");
-	double *yy;
-	int size  = get_arr(env, arr, &yy);
-
-	double ret = findNoise3s(yy, size);
-
-	release_arr(env, arr, yy);
-	prf_e();
-
-	return ret;
-}
-
 JNIEXPORT jdoubleArray JNICALL Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_nCalcNoiseArray
   (JNIEnv *env, jclass cls, jdoubleArray inArr, jint length)
 {
