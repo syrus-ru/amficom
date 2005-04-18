@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractPropertiesFrame.java,v 1.1 2005/04/18 15:30:58 stas Exp $
+ * $Id: AbstractPropertiesFrame.java,v 1.2 2005/04/18 15:32:01 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,15 +13,13 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.event.*;
 
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/04/18 15:30:58 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/18 15:32:01 $
  * @module schemeclient_v1
  */
 
-public abstract class AbstractPropertiesFrame extends JInternalFrame implements ChangeListener, OperationListener {
+public abstract class AbstractPropertiesFrame extends JInternalFrame implements ChangeListener {
 	protected JScrollPane scrollPane;
 	protected StorableObjectEditor editor;
 	protected JComponent emptyPane;
