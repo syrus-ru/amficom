@@ -1,5 +1,5 @@
 /*
- * Название: $Id: LayersPanel.java,v 1.2 2005/04/15 11:12:33 peskovsky Exp $
+ * Название: $Id: LayersPanel.java,v 1.3 2005/04/18 12:09:43 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,17 +10,7 @@
 
 package com.syrus.AMFICOM.Client.Map.Operations;
 
-import com.syrus.AMFICOM.Client.General.Event.MapEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.Map.MapDataException;
-import com.syrus.AMFICOM.Client.Map.SpatialLayer;
-import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
-
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -29,7 +19,6 @@ import java.awt.SystemColor;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -42,10 +31,19 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 
+import com.syrus.AMFICOM.Client.General.Event.MapEvent;
+import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
+import com.syrus.AMFICOM.Client.General.Event.OperationListener;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.Map.MapDataException;
+import com.syrus.AMFICOM.Client.Map.SpatialLayer;
+import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
+
 /**
  * панель управления отображением слоев
- * @version $Revision: 1.2 $, $Date: 2005/04/15 11:12:33 $
- * @author $Author: peskovsky $
+ * @version $Revision: 1.3 $, $Date: 2005/04/18 12:09:43 $
+ * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
 public class LayersPanel extends JPanel
@@ -324,7 +322,7 @@ public class LayersPanel extends JPanel
 		 */
 		public Component getImageLabel()
 		{
-			return imageLabel;
+			return this.imageLabel;
 		}
 		/**
 		 * @param imageLabel The imageLabel to set.
@@ -338,7 +336,7 @@ public class LayersPanel extends JPanel
 		 */
 		public JLabel getNameLabel()
 		{
-			return nameLabel;
+			return this.nameLabel;
 		}
 		/**
 		 * @param nameLabel The nameLabel to set.
