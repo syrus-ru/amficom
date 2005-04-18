@@ -1,5 +1,5 @@
 /**
- * $Id: LinkTypeController.java,v 1.15 2005/04/15 11:12:33 peskovsky Exp $
+ * $Id: LinkTypeController.java,v 1.16 2005/04/18 11:12:33 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -22,7 +22,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.LineComboBox;
 import com.syrus.AMFICOM.Client.Map.MapConnectionException;
 import com.syrus.AMFICOM.Client.Map.MapDataException;
@@ -43,7 +42,6 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
-import com.syrus.AMFICOM.general.corba.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.map.IntDimension;
 import com.syrus.AMFICOM.map.MapElement;
@@ -52,8 +50,8 @@ import com.syrus.AMFICOM.map.PhysicalLinkType;
 
 /**
  *  онтроллер типа линейного элемента карты.
- * @author $Author: peskovsky $
- * @version $Revision: 1.15 $, $Date: 2005/04/15 11:12:33 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.16 $, $Date: 2005/04/18 11:12:33 $
  * @module mapviewclient_v1
  */
 public final class LinkTypeController extends AbstractLinkController
@@ -660,21 +658,22 @@ public final class LinkTypeController extends AbstractLinkController
 		}
 	}
 
-	/**
-	 * ѕолучить список всех типов линий.
-	 * @param aContext контекст приложени€
-	 * @return список типов линий &lt;{@link PhysicalLinkType}&gt;
-	 */
-	public static Collection getPens(ApplicationContext aContext)
+	public static void createDefaults(Identifier creatorId)
 	{
-		Identifier creatorId = new Identifier(
-			aContext.getSessionInterface().getAccessIdentifier().user_id);
-
 		// make sure PhysicalLinkType.TUNNEL is created
 		LinkTypeController.getPhysicalLinkType(creatorId, PhysicalLinkType.TUNNEL);
 		// make sure PhysicalLinkType.COLLECTOR is created
 		LinkTypeController.getPhysicalLinkType(creatorId, PhysicalLinkType.COLLECTOR);
+		// make sure PhysicalLinkType.UNBOUND is created
+		LinkTypeController.getPhysicalLinkType(creatorId, PhysicalLinkType.UNBOUND);
+	}
 
+	/**
+	 * ѕолучить список всех типов линий.
+	 * @return список типов линий &lt;{@link PhysicalLinkType}&gt;
+	 */
+	public static Collection getTopologicalLinkTypes()
+	{
 		StorableObjectCondition pTypeCondition = new EquivalentCondition(
 				ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE);
 
@@ -684,7 +683,7 @@ public final class LinkTypeController extends AbstractLinkController
 			list =
 				MapStorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
 
-			list.remove(getDefaultUnboundPen(creatorId));
+			list.remove(getUnboundPhysicalLinkType());
 		}
 		catch(Exception e)
 		{
@@ -696,21 +695,19 @@ public final class LinkTypeController extends AbstractLinkController
 	
 	/**
 	 * ѕолучить тип линии по умолчанию ({@link PhysicalLinkType#TUNNEL}).
-	 * @param creatorId пользователь
 	 * @return тип линии
 	 */
-	public static PhysicalLinkType getDefaultPen(Identifier creatorId)
+	public static PhysicalLinkType getDefaultPhysicalLinkType()
 	{
-		return LinkTypeController.getPhysicalLinkType(creatorId, PhysicalLinkType.TUNNEL);
+		return LinkTypeController.getPhysicalLinkType(null, PhysicalLinkType.TUNNEL);
 	}
 
 	/**
 	 * ѕолучить тип неприв€занной линии ({@link PhysicalLinkType#UNBOUND}).
-	 * @param creatorId пользователь
 	 * @return тип линии
 	 */
-	public static PhysicalLinkType getDefaultUnboundPen(Identifier creatorId)
+	public static PhysicalLinkType getUnboundPhysicalLinkType()
 	{
-		return LinkTypeController.getPhysicalLinkType(creatorId, PhysicalLinkType.UNBOUND);
+		return LinkTypeController.getPhysicalLinkType(null, PhysicalLinkType.UNBOUND);
 	}
 }
