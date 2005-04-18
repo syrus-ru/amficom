@@ -1,5 +1,7 @@
 package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
 import java.awt.Cursor;
 
@@ -71,15 +73,28 @@ public class MinuitAnalyseCommand extends VoidCommand
 				params = Heap.getMinuitAnalysisParams();
 			}
 
-			ModelTraceAndEventsImpl mtae = CoreAnalysisManager.makeAnalysis(bs, params);
+			// XXX: сначала проводим анализ для одной primary trace, а потом, независимо от этого, по всему набору р/г - для создания эталона
+			
+			// создаем анализ для primary trace
+			// XXX: если InitialAnalysisCommand уже выполнен, то в принципе не нужно (если кнопки "IA" и "MA" будут отдельно)
+			ModelTraceAndEventsImpl mtaePri = CoreAnalysisManager.makeAnalysis(bs, params);
 
 			RefAnalysis a = new RefAnalysis();
-			a.decode(y, mtae);
+			a.decode(y, mtaePri);
 
 			Heap.setRefAnalysisByKey(Heap.PRIMARY_TRACE_KEY, a);
-			Heap.setMTAEPrimary(mtae);
+			Heap.setMTAEPrimary(mtaePri);
+
+			// проводим анализ для всего набора р/г
+			Collection bsColl = Heap.getBsBellCoreMap().values();
+			if (bsColl == null) // случится только в странной ситуация - bsBellCoreMap пуст. Вероятно, это будет значить ошибку в коде
+			{
+				bsColl = new HashSet(1);
+				bsColl.add(bs);
+			}
+			ModelTraceAndEventsImpl mtaeEt = CoreAnalysisManager.makeAnalysis(bsColl, params);
 			Map tracesMap = Heap.getBsBellCoreMap();
-			ModelTraceManager mtm = CoreAnalysisManager.makeThresholds(mtae,
+			ModelTraceManager mtm = CoreAnalysisManager.makeThresholds(mtaeEt,
 				tracesMap.values());
 			Heap.setMTMEtalon(mtm);
 
