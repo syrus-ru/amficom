@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.37 2005/04/15 11:32:39 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.38 2005/04/18 14:51:51 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,12 +9,14 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.37 $, $Date: 2005/04/15 11:32:39 $
+ * @version $Revision: 1.38 $, $Date: 2005/04/18 14:51:51 $
  * @module
  */
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import com.syrus.io.BellcoreStructure;
 import com.syrus.AMFICOM.analysis.dadara.ModelFunction;
@@ -202,7 +204,14 @@ public class CoreAnalysisManager
 			minLevel, minWeld, minConnector, noiseFactor,
 			reflSize, nReflSize, traceLength, noiseArray);
 	}
-	
+
+	/**
+	 * ‘итирует р/г
+	 * @param y крива€
+	 * @param traceLength длина, которую надо профитировать
+	 * @param noiseArray шум (1 sigma?), заданный на длине traceLength (not null)
+	 * @return mf фитированной кривой
+	 */
 	public static ModelFunction fitTrace(double[] y, int traceLength, double[] noiseArray)
 	{
 		return ModelFunction.CreateFitedAsBreakL(y, 0, traceLength, noiseArray);
@@ -227,6 +236,140 @@ public class CoreAnalysisManager
 	}
 
 	/**
+	 * ”средн€ет рефлектограммы и проводит анализ.
+	 * ¬ качестве базовой кривой беретс€ усредненна€ р/г,
+	 * точность фитировки определ€етс€ флуктуаци€ми усредненной р/г,
+	 * а точность определени€ событий - усредненными флуктуаци€ми исходных
+	 * р/г.
+	 * @param bsSet множество входных р/г.
+	 *   ƒолжно быть непусто, а р/г должны иметь одинаковую длину.
+	 * @param pars (параметры анализа)
+	 * @return результат анализа в виде mtae
+	 * @throws IllegalArgumentException если bsHash пуст или длина р/г разна€
+	 * @todo: бросать что-то типа IllegalDataException при разных длинах р/г
+	 */
+	public static ModelTraceAndEventsImpl makeAnalysis(
+			Set bsSet,
+			double[] pars)
+	{
+		// определ€ем число входных р/г
+		final int N_TRACES = bsSet.size(); 
+
+		if (N_TRACES == 0)
+			throw new IllegalArgumentException("Input trace size is zero");
+
+		long t0 = System.currentTimeMillis();
+
+		// усредн€ем входные р/г,
+		// определ€ем мин. длину и типичный шум.
+
+		double deltaX = 0;
+		double pulseWidth = 0;
+		double ior = 0;
+		double[] yAverage = null;
+		double[] noiseArrayNonAveraged = null;
+		int traceLength = 0;
+		for (Iterator it = bsSet.iterator(); it.hasNext();)
+		{
+			BellcoreStructure bs = (BellcoreStructure)it.next();
+
+			//@todo: make additional checks that all of these pars do not change over the bsHash
+		    deltaX = bs.getResolution(); // метры
+		    pulseWidth = bs.getPulsewidth(); // нс
+		    ior = bs.getIOR();
+
+		    double[] yCur = bs.getTraceData();
+		    int curLength = calcTraceLength(yCur);
+
+			if (yAverage == null) // the first trace in our iterations
+			{
+				noiseArrayNonAveraged = calcNoiseArray(yCur, traceLength); // XXX: noiseArray берем только по первой р/г. Ќадо бы усреднить
+				traceLength = curLength;
+				yAverage = (double[])yCur.clone(); // double[] array copying
+			}
+			else
+			{
+				double[] traceData = bs.getTraceData();
+				if (traceData.length != yAverage.length)
+					throw new IllegalArgumentException("input trace lengths are different");
+				addDoubleArray(yAverage, traceData);
+				traceLength = Math.min(traceLength, curLength);
+			}
+		}
+		for (int i = 0; i < yAverage.length; i++)
+			yAverage[i] /= N_TRACES;
+
+		// определ€ем reflSize и nReflSize
+        // FIXME: привести reflSize и nReflSize в пор€док
+
+		int reflSize = ReflectogramMath.getReflectiveEventSize(yAverage, 0.5);
+		int nReflSize = ReflectogramMath.getNonReflectiveEventSize(
+				yAverage,
+				pulseWidth,
+				ior,
+				deltaX);
+
+		if (nReflSize > 3 * reflSize / 5)
+			nReflSize = 3 * reflSize / 5;
+		reflSize *= 5;
+
+		System.out.println("reflSize="+reflSize+"; nReflSize="+nReflSize);
+
+		long t1 = System.currentTimeMillis();
+
+		// формирование событий по усредненной кривой
+
+		ReliabilitySimpleReflectogramEventImpl[] rse = createSimpleEvents(
+				yAverage, deltaX,
+				pars[0], pars[1], pars[2], pars[3],
+				reflSize, nReflSize,
+				traceLength, noiseArrayNonAveraged);
+
+		// теперь уточн€ем длину рефлектограммы по концу последнего событи€
+		// (длина может уменьшитьс€)
+
+		traceLength = rse.length > 0
+			? rse[rse.length - 1].getEnd() + 1
+			: 0;
+
+		long t2 = System.currentTimeMillis();
+
+		// определ€ем уровень шума усредненной кривой (только если это нужно)
+
+		double[] noiseArrayAveraged = N_TRACES == 1
+			? noiseArrayNonAveraged
+			: calcNoiseArray(yAverage, traceLength);
+
+		// фитируем
+
+		ModelFunction mf = fitTrace(yAverage, traceLength, noiseArrayAveraged);
+
+		long t3 = System.currentTimeMillis();
+
+		ModelTraceAndEventsImpl mtae = new ModelTraceAndEventsImpl(rse, mf, deltaX);
+
+		long t4 = System.currentTimeMillis();
+
+		System.out.println("makeAnalysis: "
+			+ "getDataAndLengthAndNoise: " + (t1-t0)
+			+ "; IA: " + (t2-t1) + "; fit: " + (t3-t2)
+			+ "; makeMTM: " + (t4-t3)
+			);
+
+		return mtae;
+	}
+
+	/**
+	 *  later it may be turned to native for performance
+	 *  @throws IndexOutOfBoundsException if input.length < acc.length
+	 */
+	private static void addDoubleArray(double[] acc, double[] input)
+	{
+		for (int i = 0; i < acc.length; i++)
+			acc[i] += input[i]; 
+	}
+
+	/**
 	 * ƒелает анализ. —крывает сложности, св€занные с правильным
 	 * пор€дком вызова IA, fit, calcMutualParameters и выставлением нач. порогов.
 	 * @todo: declare to throw "invalid parameters exception"
@@ -239,80 +382,9 @@ public class CoreAnalysisManager
 			BellcoreStructure bs,
 			double[] pars)
 	{
-		long t0 = System.currentTimeMillis();
-	    // достаем данные
-	    double y[] = bs.getTraceData();
-	    double deltaX = bs.getResolution(); // метры
-	    double pulseWidth = bs.getPulsewidth(); // нс
-
-		int reflSize = ReflectogramMath.getReflectiveEventSize(y, 0.5);
-		int nReflSize = ReflectogramMath.getNonReflectiveEventSize(
-				y,
-				pulseWidth,
-				bs.getIOR(),
-				deltaX);
-
-        // FIXME: привести reflSize и nReflSize в пор€док
-		if (nReflSize > 3 * reflSize / 5)
-			nReflSize = 3 * reflSize / 5;
-		reflSize *= 5;
-
-		System.out.println("reflSize="+reflSize+"; nReflSize="+nReflSize);
-
-		// определ€ем рабочую длину до конца волокна
-		int traceLength = calcTraceLength(y);
-
-		long t1 = System.currentTimeMillis();
-
-		// определ€ем уровень шума дл€ фитировки
-		double[] noiseArray = calcNoiseArray(y, traceLength);
-
-		long t2 = System.currentTimeMillis();
-
-		// формирование событий
-		ReliabilitySimpleReflectogramEventImpl[] rse = createSimpleEvents(
-				y, deltaX,
-				pars[0], pars[1], pars[2], pars[3],
-				reflSize, nReflSize,
-				0, null); // FIXME: ошибка в native: IA - импорт шума
-				//traceLength, noiseArray);
-
-        // debug code
-//        {
-//            for (int i = 0; i < rse.length; i++)
-//                System.out.println("makeAnalysis:"
-//                        + " event " + i
-//                        + " type " + rse[i].getEventType()
-//                        + " reliability "
-//                        + (rse[i].hasReliability()
-//                                ? String.valueOf(
-//                                        (int)(rse[i].getReliability() * 100.0 * 1e4) / 1e4
-//                                        ) + "%"
-//                                : "<undefined>"));
-//            
-//        }
-
-		// теперь уточн€ем длину рефлектограммы по концу последнего событи€
-		// (длина может уменьшитьс€)
-		traceLength = rse.length > 0
-			? rse[rse.length - 1].getEnd() + 1
-			: 0;
-
-		long t3 = System.currentTimeMillis();
-		ModelFunction mf = fitTrace(y, traceLength, noiseArray);
-
-		long t4 = System.currentTimeMillis();
-
-		ModelTraceAndEventsImpl mtae = new ModelTraceAndEventsImpl(rse, mf, deltaX);
-
-		long t5 = System.currentTimeMillis();
-
-		System.out.println("makeAnalysis: getDataAndLength: " + (t1-t0) + "; noiseArray:" + (t2-t1)
-			+ "; IA: " + (t3-t2) + "; fit: " + (t4-t3)
-			+ "; makeMTM: " + (t5-t4)
-			);
-
-		return mtae;
+		Set bsSet = new HashSet(1);
+		bsSet.add(bs);
+		return makeAnalysis(bsSet, pars);
 	}
 
 	public static ModelTraceManager makeThresholds(ModelTraceAndEventsImpl mtae,
