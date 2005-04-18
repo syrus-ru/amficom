@@ -1,5 +1,5 @@
 /*
- * $Id: ClientAnalysisManager.java,v 1.5 2005/04/07 15:22:54 saa Exp $
+ * $Id: ClientAnalysisManager.java,v 1.6 2005/04/18 12:52:53 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,12 +17,12 @@ import com.syrus.AMFICOM.Client.Analysis.Heap;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.5 $, $Date: 2005/04/07 15:22:54 $
+ * @version $Revision: 1.6 $, $Date: 2005/04/18 12:52:53 $
  * @module
  */
 public class ClientAnalysisManager extends CoreAnalysisManager
 {
-	private final String propertiesFileName = "analysis.properties";
+	private static final String PROPERTIES_FILE_NAME = "analysis.properties";
 
 	double[] defaultMinuitParams = {
 			0.05, //минимальный уровень события
@@ -37,7 +37,7 @@ public class ClientAnalysisManager extends CoreAnalysisManager
 
 		Properties properties = new Properties();
 		try {
-			properties.load(new FileInputStream(propertiesFileName));
+			properties.load(new FileInputStream(PROPERTIES_FILE_NAME));
 			String temp = properties.getProperty("parameters");
 			minuitParams = decompose(temp, defaultMinuitParams);
 		} catch (IOException ex) {
@@ -55,10 +55,11 @@ public class ClientAnalysisManager extends CoreAnalysisManager
 	    double[] minuitParams = Heap.getMinuitAnalysisParams();
 		Properties properties = new Properties();
 		try {
-			properties.load(new FileInputStream(propertiesFileName));
+			properties.load(new FileInputStream(PROPERTIES_FILE_NAME));
 			properties.setProperty("parameters", compose(minuitParams));
-			properties.store(new FileOutputStream(propertiesFileName), null);
+			properties.store(new FileOutputStream(PROPERTIES_FILE_NAME), null);
 		} catch (IOException ex) {
+			// @todo: add an IOException handler
 		}
 	}
 
