@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.11 2005/04/15 19:22:55 arseniy Exp $
+ * $Id: CableChannelingItem.java,v 1.12 2005/04/18 12:38:37 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,8 +31,8 @@ import com.syrus.AMFICOM.scheme.corba.CableChannelingItem_Transferable;
 /**
  * #13 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.11 $, $Date: 2005/04/15 19:22:55 $
+ * @author $Author: bass $
+ * @version $Revision: 1.12 $, $Date: 2005/04/18 12:38:37 $
  * @module scheme_v1
  */
 public final class CableChannelingItem extends AbstractCloneableStorableObject
@@ -102,21 +102,22 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject
 		fromTransferable(transferable);
 	}
 
-	public static CableChannelingItem createInstance(final Identifier creatorId) throws CreateObjectException {
+	public static CableChannelingItem createInstance(
+			final Identifier creatorId)
+			throws CreateObjectException {
 		assert creatorId != null;
 		try {
 			final Date created = new Date();
-			final CableChannelingItem cableChannelingItem = new CableChannelingItem(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CABLE_CHANNELING_ITEM_ENTITY_CODE),
-					created,
-					created,
-					creatorId,
-					creatorId,
+			final CableChannelingItem cableChannelingItem = new CableChannelingItem(
+					IdentifierPool
+							.getGeneratedIdentifier(ObjectEntities.CABLE_CHANNELING_ITEM_ENTITY_CODE),
+					created, created, creatorId, creatorId,
 					0L);
 			cableChannelingItem.changed = true;
 			return cableChannelingItem;
-		}
-		catch (IdentifierGenerationException ige) {
-			throw new CreateObjectException("Cannot generate identifier ", ige);
+		} catch (final IdentifierGenerationException ige) {
+			throw new CreateObjectException(
+					"CableChanelingItem.createInstance | cannot generate identifier ", ige); //$NON-NLS-1$
 		}
 	}
 
@@ -130,7 +131,7 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * @see StorableObject#getDependencies()
+	 * @see com.syrus.AMFICOM.general.StorableObject#getDependencies()
 	 */
 	public Set getDependencies() {
 		throw new UnsupportedOperationException();
@@ -153,7 +154,7 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * @see Namable#getName()
+	 * @see com.syrus.AMFICOM.general.Namable#getName()
 	 */
 	public String getName() {
 		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
@@ -189,7 +190,7 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * @see TransferableObject#getTransferable()
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
 	 */
 	public IDLEntity getTransferable() {
 		throw new UnsupportedOperationException();
@@ -219,7 +220,7 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * @see Namable#setName(String)
+	 * @see com.syrus.AMFICOM.general.Namable#setName(String)
 	 */
 	public void setName(final String name) {
 		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
@@ -267,7 +268,7 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject
 	/**
 	 * @param transferable
 	 * @throws CreateObjectException
-	 * @see StorableObject#fromTransferable(IDLEntity)
+	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IDLEntity)
 	 */
 	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
 		throw new UnsupportedOperationException();

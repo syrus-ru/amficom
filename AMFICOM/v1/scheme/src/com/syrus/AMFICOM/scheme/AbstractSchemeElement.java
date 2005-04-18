@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractSchemeElement.java,v 1.11 2005/04/15 19:22:55 arseniy Exp $
+ * $Id: AbstractSchemeElement.java,v 1.12 2005/04/18 12:38:37 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,8 +27,8 @@ import com.syrus.util.Log;
  * generated from IDL files to compile cleanly. Use other implementations of
  * {@link AbstractSchemeElement}instead.
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.11 $, $Date: 2005/04/15 19:22:55 $
+ * @author $Author: bass $
+ * @version $Revision: 1.12 $, $Date: 2005/04/18 12:38:37 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemeElement extends
@@ -94,7 +94,7 @@ public abstract class AbstractSchemeElement extends
 	}
 
 	/**
-	 * @see StorableObject#getDependencies()
+	 * @see com.syrus.AMFICOM.general.StorableObject#getDependencies()
 	 */
 	public Set getDependencies() {
 		assert this.parentSchemeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
@@ -114,7 +114,7 @@ public abstract class AbstractSchemeElement extends
 	}
 
 	/**
-	 * @see Namable#getName()
+	 * @see com.syrus.AMFICOM.general.Namable#getName()
 	 */
 	public final String getName() {
 		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
@@ -180,7 +180,7 @@ public abstract class AbstractSchemeElement extends
 	}
 
 	/**
-	 * @see Namable#setName(String)
+	 * @see com.syrus.AMFICOM.general.Namable#setName(String)
 	 */
 	public final void setName(final String name) {
 		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;

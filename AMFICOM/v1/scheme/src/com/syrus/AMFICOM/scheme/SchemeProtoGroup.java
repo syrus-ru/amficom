@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.18 2005/04/15 19:22:55 arseniy Exp $
+ * $Id: SchemeProtoGroup.java,v 1.19 2005/04/18 12:34:45 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,8 +44,8 @@ import com.syrus.util.Log;
 /**
  * #01 in hierarchy.
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.18 $, $Date: 2005/04/15 19:22:55 $
+ * @author $Author: bass $
+ * @version $Revision: 1.19 $, $Date: 2005/04/18 12:34:45 $
  * @module scheme_v1
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation. 
  */
@@ -130,32 +130,29 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	 * @param parentSchemeProtoGroup may be <code>null</code> (for a top-level group).
 	 * @throws CreateObjectException
 	 */
-	public static SchemeProtoGroup createInstance(final Identifier creatorId,
-			final String name,
+	public static SchemeProtoGroup createInstance(
+			final Identifier creatorId, final String name,
 			final String description,
 			final BitmapImageResource symbol,
-			final SchemeProtoGroup parentSchemeProtoGroup) throws CreateObjectException {
-		assert creatorId != null && !creatorId.isVoid() : ErrorMessages.NON_VOID_EXPECTED;
-		assert name != null && name.length() != 0 : ErrorMessages.NON_EMPTY_EXPECTED;
-		assert description != null : ErrorMessages.NON_NULL_EXPECTED;
-
+			final SchemeProtoGroup parentSchemeProtoGroup)
+			throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid(): ErrorMessages.NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
+		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
+		
 		try {
 			final Date created = new Date();
-			final SchemeProtoGroup schemeProtoGroup = new SchemeProtoGroup(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE),
-					created,
-					created,
-					creatorId,
-					creatorId,
-					0L,
-					name,
-					description,
-					symbol,
+			final SchemeProtoGroup schemeProtoGroup = new SchemeProtoGroup(
+					IdentifierPool
+							.getGeneratedIdentifier(ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE),
+					created, created, creatorId, creatorId,
+					0L, name, description, symbol,
 					parentSchemeProtoGroup);
 			schemeProtoGroup.changed = true;
 			return schemeProtoGroup;
-		}
-		catch (IdentifierGenerationException ige) {
-			throw new CreateObjectException("Cannot generate identifier ", ige);
+		} catch (final IdentifierGenerationException ige) {
+			throw new CreateObjectException(
+					"SchemeProtoGroup.createInstance | cannot generate identifier ", ige); //$NON-NLS-1$
 		}
 	}
 
