@@ -8,13 +8,13 @@ import java.util.Map;
 import com.jgraph.graph.GraphConstants;
 import com.jgraph.pad.EllipseCell;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Event.SchemeNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Scheme.GraphActions;
-import com.syrus.AMFICOM.Client.General.Scheme.SchemeGraph;
-import com.syrus.AMFICOM.Client.General.Scheme.UgoPanel;
+import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
+import com.syrus.AMFICOM.client_.scheme.graph.UgoPanel;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 import com.syrus.AMFICOM.map.IntPoint;
 import com.syrus.AMFICOM.map.PhysicalLinkBinding;
 
@@ -43,7 +43,7 @@ public class TunnelLayout implements OperationListener
 		this.panel = new UgoPanel(this.internalContext);
 		this.panel.getGraph().setGraphEditable(false);
 
-		this.internalContext.getDispatcher().register(this, SchemeNavigateEvent.type);
+		this.internalContext.getDispatcher().register(this, ObjectSelectedEvent.TYPE);
 	}
 
 	public UgoPanel getPanel()
@@ -53,7 +53,7 @@ public class TunnelLayout implements OperationListener
 
 	protected void removeSelection()
 	{
-		this.panel.getGraph().removeSelectionCells();
+		this.panel.getGraph().clearSelection();
 
 		for (int i = 0; i < this.m; i++) 
 		{
@@ -66,40 +66,39 @@ public class TunnelLayout implements OperationListener
 
 	public void operationPerformed(OperationEvent oe)
 	{
-		if (oe.getActionCommand().equals(SchemeNavigateEvent.type))
+		if (oe.getActionCommand().equals(ObjectSelectedEvent.TYPE))
 		{
-			SchemeNavigateEvent ev = (SchemeNavigateEvent )oe;
-			if (ev.OTHER_OBJECT_SELECTED)
+			ObjectSelectedEvent ev = (ObjectSelectedEvent )oe;
+			if (ev.isSelected(ObjectSelectedEvent.OTHER_OBJECT))
 			{
-				Object[] objs = (Object[])ev.getSource();
+				Object obj = ev.getSelectedObject();
+
 				removeSelection();
 
-				for (int k = 0; k < objs.length; k++)
+				if (obj instanceof EllipseCell)
 				{
-					if (objs[k] instanceof EllipseCell)
+					EllipseCell cell = (EllipseCell )obj;
+					GraphActions.setObjectBackColor(this.panel.getGraph(), cell, Color.YELLOW);
+					this.panel.getGraph().setSelectionCell(cell);
+					
+					boolean found = false;
+					for (int i = 0; i < this.m && !found; i++) 
 					{
-						EllipseCell cell = (EllipseCell )objs[k];
-						GraphActions.setObjectBackColor(this.panel.getGraph(), cell, Color.YELLOW);
-						this.panel.getGraph().setSelectionCell(cell);
-						
-						boolean found = false;
-						for (int i = 0; i < this.m && !found; i++) 
-						{
-							for (int j = 0; j < this.n && !found; j++) 
-								if(this.cells[i][j].equals(cell))
-								{
-									this.activeCoordinates = new IntPoint(i, j);
-									found = true;
-									this.parent.cableBindingSelected(i, j);
-								}
-						}
-						
+						for (int j = 0; j < this.n && !found; j++) 
+							if(this.cells[i][j].equals(cell))
+							{
+								this.activeCoordinates = new IntPoint(i, j);
+								found = true;
+								this.parent.cableBindingSelected(i, j);
+							}
 					}
+					
 				}
-				this.panel.getGraph().setGraphChanged(true);
+				// TODO нужна ли эта ботва?
+//				this.panel.getGraph().setGraphChanged(true);
 			}
 			else
-			if(ev.SCHEME_ALL_DESELECTED)
+			if(ev.isSelected(ObjectSelectedEvent.ALL_DESELECTED))
 			{
 				this.activeCoordinates = null;
 			}

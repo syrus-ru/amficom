@@ -2,7 +2,7 @@ package com.syrus.AMFICOM.Client.Map.Props;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Scheme.UgoPanel;
+import com.syrus.AMFICOM.client_.scheme.graph.UgoPanel;
 import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
 import com.syrus.AMFICOM.Client.Map.Command.Action.CreateUnboundLinkCommandBundle;
 import com.syrus.AMFICOM.Client.Map.Command.Action.RemoveUnboundLinkCommandBundle;
@@ -152,12 +152,12 @@ public final class MapSiteBindPanel
 		this.add(this.titleLabel, ReusedGridBagConstraints.get(0, 0, 3, 1, 0.0, 0.0, GridBagConstraints.NORTH, GridBagConstraints.NONE, null, 0, 0));
 		this.add(treeView, ReusedGridBagConstraints.get(0, 1, 1, 1, 0.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.VERTICAL, null, 150, 150));
 		this.add(Box.createVerticalGlue(), ReusedGridBagConstraints.get(1, 1, 1, 1, 0.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.VERTICAL, null, 10, 150));
-		this.add(this.schemePanel, ReusedGridBagConstraints.get(2, 1, 1, 1, 1.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.BOTH, null, 0, 0));
+		this.add(this.schemePanel.getGraph(), ReusedGridBagConstraints.get(2, 1, 1, 1, 1.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.BOTH, null, 0, 0));
 		this.add(this.crossingScrollPane, ReusedGridBagConstraints.get(2, 1, 1, 1, 1.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.BOTH, null, 0, 0));
 //		this.add(Box.createVerticalGlue(), ReusedGridBagConstraints.get(2, 1, 1, 1, 1.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.BOTH, null, 0, 0));
 		this.add(this.buttonsPanel, ReusedGridBagConstraints.get(0, 2, 3, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
 		
-		this.schemePanel.setVisible(false);
+		this.schemePanel.getGraph().setVisible(false);
 		this.crossingScrollPane.setVisible(true);
 	}
 
@@ -302,9 +302,9 @@ public final class MapSiteBindPanel
 			if(element instanceof SchemeElement)
 			{
 				SchemeElement schemeElement = (SchemeElement )element;
-				this.schemePanel.getGraph().setSchemeElement(schemeElement);
+				this.schemePanel.getSchemeResource().setSchemeElement(schemeElement);
 				this.crossingScrollPane.setVisible(false);
-				this.schemePanel.setVisible(true);
+				this.schemePanel.getGraph().setVisible(true);
 				sen = true;
 			}
 			else
@@ -312,7 +312,7 @@ public final class MapSiteBindPanel
 			{
 				SchemeCableLink scl = (SchemeCableLink )element;
 
-				this.schemePanel.setVisible(false);
+				this.schemePanel.getGraph().setVisible(false);
 				this.crossingScrollPane.setVisible(true);
 				
 				MapView mapView = getLogicalNetLayer().getMapView();
@@ -325,14 +325,14 @@ public final class MapSiteBindPanel
 			}
 			else
 			{
-				this.schemePanel.setVisible(false);
+				this.schemePanel.getGraph().setVisible(false);
 				this.crossingPanel.setCable(null);
 				this.crossingScrollPane.setVisible(true);
 			}
 		}
 		else
 		{
-			this.schemePanel.setVisible(false);
+			this.schemePanel.getGraph().setVisible(false);
 			this.crossingPanel.setCable(null);
 			this.crossingScrollPane.setVisible(true);
 		}
@@ -346,7 +346,7 @@ public final class MapSiteBindPanel
 		this.schemePanel.getGraph().removeAll();
 		this.crossingPanel.setSite(this.site);
 
-		this.schemePanel.setVisible(false);
+		this.schemePanel.getGraph().setVisible(false);
 		this.crossingPanel.setCable(null);
 		this.crossingScrollPane.setVisible(true);
 
