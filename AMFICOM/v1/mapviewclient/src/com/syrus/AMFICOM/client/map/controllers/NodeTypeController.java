@@ -1,5 +1,5 @@
 /**
- * $Id: NodeTypeController.java,v 1.13 2005/04/06 17:41:12 krupenn Exp $
+ * $Id: NodeTypeController.java,v 1.14 2005/04/18 11:12:58 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,7 +22,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Map.MapConnectionException;
 import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.client_.general.ui_.StorableObjectEditor;
@@ -49,7 +48,7 @@ import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageR
 /**
  * контроллер типа сетевого узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.13 $, $Date: 2005/04/06 17:41:12 $
+ * @version $Revision: 1.14 $, $Date: 2005/04/18 11:12:58 $
  * @module mapviewclient_v1
  */
 public class NodeTypeController extends AbstractNodeController
@@ -284,18 +283,8 @@ public class NodeTypeController extends AbstractNodeController
 		}
 	}
 
-	/**
-	 * Получить список всех типов сетевых узлов.
-	 * @param aContext контекст приложения
-	 * @return список типов сетевых узлов &lt;{@link SiteNodeType}&gt;
-	 */
-	public static Collection getTopologicalProtos(ApplicationContext aContext)
+	public static void createDefaults(Identifier creatorId)
 	{
-		Collection topologicalProtos = Collections.EMPTY_LIST;
-
-		Identifier creatorId = new Identifier(
-			aContext.getSessionInterface().getAccessIdentifier().user_id);
-
 		// make sure SiteNodeType.ATS is created
 		NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.ATS);
 		// make sure SiteNodeType.BUILDING is created
@@ -306,6 +295,17 @@ public class NodeTypeController extends AbstractNodeController
 		NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.WELL);
 		// make sure SiteNodeType.CABLE_INLET is created
 		NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.CABLE_INLET);
+		// make sure SiteNodeType.UNBOUND is created
+		NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.UNBOUND);
+	}
+
+	/**
+	 * Получить список всех типов сетевых узлов.
+	 * @return список типов сетевых узлов &lt;{@link SiteNodeType}&gt;
+	 */
+	public static Collection getTopologicalNodeTypes()
+	{
+		Collection topologicalProtos = Collections.EMPTY_LIST;
 
 		StorableObjectCondition pTypeCondition = new EquivalentCondition(ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE);
 
@@ -314,7 +314,7 @@ public class NodeTypeController extends AbstractNodeController
 			topologicalProtos =
 				MapStorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
 
-			topologicalProtos.remove(getDefaultUnboundProto(creatorId));
+			topologicalProtos.remove(getUnboundNodeType());
 
 			for(Iterator it = topologicalProtos.iterator(); it.hasNext();)
 			{
@@ -333,12 +333,11 @@ public class NodeTypeController extends AbstractNodeController
 
 	/**
 	 * Получить тип непривязанного сетевого узла ({@link SiteNodeType#UNBOUND}).
-	 * @param creatorId пользователь
 	 * @return тип сетевого узла
 	 */
-	public static SiteNodeType getDefaultUnboundProto(Identifier creatorId)
+	public static SiteNodeType getUnboundNodeType()
 	{
-		return NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.UNBOUND);
+		return NodeTypeController.getSiteNodeType(null, SiteNodeType.UNBOUND);
 	}
 
 
