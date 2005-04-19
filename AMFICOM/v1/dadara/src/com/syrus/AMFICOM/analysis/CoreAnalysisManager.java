@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.46 2005/04/19 16:48:59 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.47 2005/04/19 16:49:58 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.46 $, $Date: 2005/04/19 16:48:59 $
+ * @version $Revision: 1.47 $, $Date: 2005/04/19 16:49:58 $
  * @module
  */
 
@@ -509,7 +509,7 @@ public class CoreAnalysisManager
 //			+ " yMax.length = " + yMax.length
 //			+ " yMin.length = " + yMin.length
 //			);
-		mtm.updateThreshToContain(yMax, yMin, 0.03, 1.2); // @todo: externalize parameters: 0.01, 1.1
+		mtm.updateThreshToContain(yMax, yMin, 0.03, 1.2); // @todo: externalize parameters: 0.03, 1.2
 	}
 
 	public static double getMedian(double[] y, int pos)
