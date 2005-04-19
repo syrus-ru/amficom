@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.19 2005/04/19 10:47:43 bass Exp $
+ * $Id: SchemeElement.java,v 1.20 2005/04/19 11:37:14 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,6 @@ import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -46,7 +45,7 @@ import com.syrus.util.Log;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.19 $, $Date: 2005/04/19 10:47:43 $
+ * @version $Revision: 1.20 $, $Date: 2005/04/19 11:37:14 $
  * @module scheme_v1
  */
 public final class SchemeElement extends AbstractSchemeElement implements
@@ -102,11 +101,48 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 * @param creatorId
 	 * @param modifierId
 	 * @param version
+	 * @param name
+	 * @param description
+	 * @param label
+	 * @param equipmentTypeId
+	 * @param equipmentId
+	 * @param kisId
+	 * @param siteNodeId
+	 * @param symbolId
+	 * @param ugoCellId
+	 * @param schemeCellId
+	 * @param parentSchemeId
+	 * @param parentSchemeElementId
 	 */
-	SchemeElement(Identifier id, Date created, Date modified,
-			Identifier creatorId, Identifier modifierId,
-			long version) {
+	SchemeElement(final Identifier id, final Date created,
+			final Date modified, final Identifier creatorId,
+			final Identifier modifierId, final long version,
+			final String name, final String description,
+			final String label, final Identifier equipmentTypeId,
+			final Identifier equipmentId, final Identifier kisId,
+			final Identifier siteNodeId, final Identifier symbolId,
+			final Identifier ugoCellId,
+			final Identifier schemeCellId,
+			final Identifier parentSchemeId,
+			final Identifier parentSchemeElementId) {
 		super(id, created, modified, creatorId, modifierId, version);
+		this.name = name;
+		this.description = description;
+		this.label = label;
+		this.equipmentTypeId = equipmentTypeId;
+		this.equipmentId = equipmentId;
+		this.kisId = kisId;
+		this.siteNodeId = siteNodeId;
+		this.symbolId = symbolId;
+		this.ugoCellId = ugoCellId;
+		this.schemeCellId = schemeCellId;
+
+		assert parentSchemeId == null || parentSchemeElementId == null: ErrorMessages.MULTIPLE_PARENTS_PROHIBITED;
+		this.parentSchemeId = parentSchemeId;
+		this.parentSchemeElementId = parentSchemeElementId;
+
+		this.characteristics = new HashSet();
+		this.schemeElementDatabase = SchemeDatabaseContext.getSchemeElementDatabase();
 	}
 
 	/**
@@ -126,14 +162,17 @@ public final class SchemeElement extends AbstractSchemeElement implements
 			throws CreateObjectException {
 		assert creatorId != null;
 		try {
-			final Date created = new Date();
-			final SchemeElement schemeElement = new SchemeElement(
-					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE),
-					created, created, creatorId, creatorId,
-					0L);
-			schemeElement.changed = true;
-			return schemeElement;
+			if (false)
+				throw new IdentifierGenerationException(null);
+			throw new UnsupportedOperationException();
+//			final Date created = new Date();
+//			final SchemeElement schemeElement = new SchemeElement(
+//					IdentifierPool
+//							.getGeneratedIdentifier(ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE),
+//					created, created, creatorId, creatorId,
+//					0L);
+//			schemeElement.changed = true;
+//			return schemeElement;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(
 					"SchemeElement.createInstance | cannot generate identifier ", ige); //$NON-NLS-1$
@@ -490,6 +529,64 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		assert schemeLink != null: ErrorMessages.NON_NULL_EXPECTED;
 		assert getSchemeLinks().contains(schemeLink): ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		schemeLink.setParentSchemeElement(null);
+	}
+
+	/**
+	 * @param created
+	 * @param modified
+	 * @param creatorId
+	 * @param modifierId
+	 * @param version
+	 * @param name
+	 * @param description
+	 * @param label
+	 * @param equipmentTypeId
+	 * @param equipmentId
+	 * @param kisId
+	 * @param siteNodeId
+	 * @param symbolId
+	 * @param ugoCellId
+	 * @param schemeCellId
+	 * @param parentSchemeId
+	 * @param parentSchemeElementId
+	 */
+	public void setAttrinutes(final Date created, final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId, final long version,
+			final String name, final String description,
+			final String label, final Identifier equipmentTypeId,
+			final Identifier equipmentId, final Identifier kisId,
+			final Identifier siteNodeId, 
+			final Identifier symbolId, final Identifier ugoCellId,
+			final Identifier schemeCellId,
+			final Identifier parentSchemeId,
+			final Identifier parentSchemeElementId) {
+		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
+		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert label != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert equipmentTypeId != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert equipmentId != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert kisId != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert siteNodeId != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert symbolId != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert ugoCellId != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert schemeCellId != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert parentSchemeId != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert parentSchemeElementId != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert parentSchemeId.isVoid() ^ parentSchemeElementId.isVoid();
+		super.setAttributes(created, modified, creatorId, modifierId, version);
+		this.name = name;
+		this.description = description;
+		this.label = label;
+		this.equipmentTypeId = equipmentTypeId;
+		this.equipmentId = equipmentId;
+		this.kisId = kisId;
+		this.siteNodeId = siteNodeId;
+		this.symbolId = symbolId;
+		this.ugoCellId = ugoCellId;
+		this.schemeCellId = schemeCellId;
+		this.parentSchemeId = parentSchemeId;
+		this.parentSchemeElementId = parentSchemeElementId;
 	}
 
 	/**
