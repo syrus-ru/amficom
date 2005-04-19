@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElementWrapper.java,v 1.1 2005/04/19 12:51:56 max Exp $
+ * $Id: SchemeElementWrapper.java,v 1.2 2005/04/19 16:05:17 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/19 12:51:56 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/19 16:05:17 $
  * @author $Author: max $
  * @module scheme_v1
  */
@@ -43,8 +43,8 @@ public class SchemeElementWrapper extends StorableObjectWrapper {
 	public static final String COLUMN_SYMBOL_ID = "symbol_id";
 	public static final String COLUMN_UGO_CELL_ID = "ugo_cell_id";
 	public static final String COLUMN_SCHEME_CELL_ID = "scheme_cell_id";
-	public static final String COLUMN_PARENT_SCHEME_ID = "parent_scheme_proto_group_id";
-	public static final String COLUMN_PARENT_SCHEME_ELEMENT_ID = "parent_scheme_proto_element_id";
+	public static final String COLUMN_PARENT_SCHEME_ID = "parent_scheme_id";
+	public static final String COLUMN_PARENT_SCHEME_ELEMENT_ID = "parent_scheme_element_id";
 
 	public String getKey(int index) {
 		throw new UnsupportedOperationException("SchemeElementWrapper | not implemented yet");
