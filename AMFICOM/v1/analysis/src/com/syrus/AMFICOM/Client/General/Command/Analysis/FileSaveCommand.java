@@ -26,11 +26,6 @@ public class FileSaveCommand extends VoidCommand
 		this.aContext = aContext;
 	}
 
-	public void setDispatcher(Dispatcher dispatcher)
-	{
-		this.dispatcher = dispatcher;
-	}
-
 	public Object clone()
 	{
 		return new FileSaveCommand(dispatcher, aContext);

@@ -27,11 +27,6 @@ public class FileOpenAsBellcoreCommand extends VoidCommand
 		this.aContext = aContext;
 	}
 
-	public void setDispatcher(Dispatcher dispatcher)
-	{
-		this.dispatcher = dispatcher;
-	}
-
 	public Object clone()
 	{
 		return new FileOpenAsBellcoreCommand(dispatcher, aContext);

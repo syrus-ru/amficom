@@ -16,11 +16,6 @@ public class OptionsSetColorsCommand extends VoidCommand
 		this.aContext = aContext;
 	}
 
-	public void setDispatcher(Dispatcher dispatcher)
-	{
-		this.dispatcher = dispatcher;
-	}
-
 	public Object clone()
 	{
 		return new OptionsSetColorsCommand(dispatcher, aContext);

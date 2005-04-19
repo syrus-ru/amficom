@@ -29,10 +29,6 @@ public class FileRemoveCommand extends VoidCommand
 			activeRefId = (String)value;
 		}
 	}
-	public void setDispatcher(Dispatcher dispatcher)
-	{
-		this.dispatcher = dispatcher;
-	}
 
 	public Object clone()
 	{

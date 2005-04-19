@@ -33,11 +33,6 @@ public class AddTraceFromDatabaseCommand extends VoidCommand
 			setApplicationContext((ApplicationContext )value);
 	}
 
-	public void setDispatcher(Dispatcher dispatcher)
-	{
-		this.dispatcher = dispatcher;
-	}
-
 	public void setApplicationContext(ApplicationContext aContext)
 	{
 		this.aContext = aContext;

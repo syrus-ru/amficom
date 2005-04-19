@@ -17,11 +17,6 @@ public class FileCloseCommand extends VoidCommand
 		this.aContext = aContext;
 	}
 
-	public void setDispatcher(Dispatcher dispatcher)
-	{
-		this.dispatcher = dispatcher;
-	}
-
 	public Object clone()
 	{
 		return new FileCloseCommand(dispatcher, aContext);

@@ -18,11 +18,6 @@ public class TraceMakeCurrentCommand extends VoidCommand
 		this.aContext = aContext;
 	}
 
-	public void setDispatcher(Dispatcher dispatcher)
-	{
-		this.dispatcher = dispatcher;
-	}
-
 	public Object clone()
 	{
 		return new TraceMakeCurrentCommand(dispatcher, aContext);
