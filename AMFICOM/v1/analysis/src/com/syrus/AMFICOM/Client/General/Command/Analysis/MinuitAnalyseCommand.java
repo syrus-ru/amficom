@@ -2,16 +2,12 @@ package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Map;
 import java.awt.Cursor;
-
-import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.Client.Analysis.GUIUtil;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 
@@ -100,17 +96,14 @@ public class MinuitAnalyseCommand extends VoidCommand
 				bsColl.add(bs);
 			}
 
-			ModelTraceAndEventsImpl mtaeEt;
+			ModelTraceManager mtm;
 			try {
-				mtaeEt = CoreAnalysisManager.makeAnalysis(bsColl, params);
+				mtm = CoreAnalysisManager.makeEtalon(bsColl, params);
 			} catch (IncompatibleTracesException e){
 				GUIUtil.showErrorMessage("incompatibleTraces");
 				return;
 			}
 
-			Map tracesMap = Heap.getBsBellCoreMap();
-			ModelTraceManager mtm = CoreAnalysisManager.makeThresholds(mtaeEt,
-				tracesMap.values());
 			Heap.setMTMEtalon(mtm);
 
 			Environment.getActiveWindow().setCursor(
