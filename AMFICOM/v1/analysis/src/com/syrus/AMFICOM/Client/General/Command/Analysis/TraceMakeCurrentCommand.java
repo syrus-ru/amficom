@@ -9,18 +9,16 @@ import com.syrus.io.BellcoreStructure;
 
 public class TraceMakeCurrentCommand extends VoidCommand
 {
-	private Dispatcher dispatcher;
 	private ApplicationContext aContext;
 
-	public TraceMakeCurrentCommand(Dispatcher dispatcher, ApplicationContext aContext)
+	public TraceMakeCurrentCommand(ApplicationContext aContext)
 	{
-		this.dispatcher = dispatcher;
 		this.aContext = aContext;
 	}
 
 	public Object clone()
 	{
-		return new TraceMakeCurrentCommand(dispatcher, aContext);
+		return new TraceMakeCurrentCommand(aContext);
 	}
 
 	public void execute()

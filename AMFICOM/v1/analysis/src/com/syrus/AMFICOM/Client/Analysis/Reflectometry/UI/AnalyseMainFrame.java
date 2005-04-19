@@ -494,9 +494,9 @@ public class AnalyseMainFrame extends JFrame implements BsHashChangeListener,
 		aModel.setCommand("menuTraceCloseEtalon", new RemoveEtalonCommand(
 				aContext));
 		aModel.setCommand("menuTraceReferenceSet",
-			new TraceOpenReferenceCommand(internalDispatcher, aContext));
+			new TraceOpenReferenceCommand(aContext));
 		aModel.setCommand("menuTraceReferenceMakeCurrent",
-			new TraceMakeCurrentCommand(internalDispatcher, aContext));
+			new TraceMakeCurrentCommand(aContext));
 		aModel.setCommand("menuOptionsColor", new OptionsSetColorsCommand(
 				aContext));
 

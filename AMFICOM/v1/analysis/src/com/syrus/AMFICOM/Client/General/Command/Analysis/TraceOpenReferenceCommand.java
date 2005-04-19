@@ -8,26 +8,23 @@ import javax.swing.JFileChooser;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ChoosableFileFilter;
 import com.syrus.io.*;
 
 public class TraceOpenReferenceCommand extends VoidCommand
 {
-	private Dispatcher dispatcher;
 	private ApplicationContext aContext;
 	private String propertiesFileName = "analysis.properties";
 
-	public TraceOpenReferenceCommand(Dispatcher dispatcher, ApplicationContext aContext)
+	public TraceOpenReferenceCommand(ApplicationContext aContext)
 	{
-		this.dispatcher = dispatcher;
 		this.aContext = aContext;
 	}
 
 	public Object clone()
 	{
-		return new TraceOpenReferenceCommand(dispatcher, aContext);
+		return new TraceOpenReferenceCommand(aContext);
 	}
 
 	public void execute()
