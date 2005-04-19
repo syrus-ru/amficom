@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElementWrapper.java,v 1.1 2005/04/19 11:23:45 max Exp $
+ * $Id: PathElementWrapper.java,v 1.2 2005/04/19 12:52:17 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,11 +12,21 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/19 11:23:45 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/19 12:52:17 $
  * @author $Author: max $
  * @module scheme_v1
  */
 public class PathElementWrapper extends StorableObjectWrapper {
+	
+//	pathelement.sql
+//	
+//	parent_scheme_path_id VARCHAR2(32 CHAR),
+//	sequential_number NUMBER(10),
+//	kind NUMBER(1); NOT NULL,
+//	start_abstract_scheme_port_id VARCHAR(32 CHAR),
+//        end_abstract_scheme_port_id VARCHAR(32 CHAR),
+//	scheme_cable_thread_id VARCHAR(32 CHAR),
+//	scheme_link_id VARCHAR(32 CHAR),
 	
 	public static final String COLUMN_PARENT_SCHEME_PATH_ID = "parent_scheme_path_id";
 	public static final String COLUMN_SEQUENTIAL_NUMBER = "sequential_number";
