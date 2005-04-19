@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDatabase.java,v 1.2 2005/04/19 16:02:21 max Exp $
+ * $Id: SchemeDatabase.java,v 1.3 2005/04/19 16:12:33 max Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.scheme;
 
 import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.scheme.corba.Scheme_TransferablePackage.Kind;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
@@ -20,7 +21,7 @@ import java.util.Set;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: max $
- * @version $Revision: 1.2 $, $Date: 2005/04/19 16:02:21 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/19 16:12:33 $
  * @module scheme_v1
  */
 public final class SchemeDatabase extends StorableObjectDatabase {
@@ -199,7 +200,7 @@ public final class SchemeDatabase extends StorableObjectDatabase {
 		if (storableObject == null) {
 			Date created = new Date(); 
 			scheme = new Scheme(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
-					created, created, null, null, 0L, null, null,null, null, null, null, null, null, null, null, null, null, null, null);
+					created, created, null, null, 0L, null,null, null, 0, 0, null, null, null, null, null, null, null, null);
 		} else {
 			scheme = fromStorableObject(storableObject);
 		}
@@ -210,16 +211,17 @@ public final class SchemeDatabase extends StorableObjectDatabase {
 				resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
-				DatabaseString.fromQuerySubString(resultSet.getString(schemeWrapper.COLUMN_LABEL)),
-				DatabaseIdentifier.getIdentifier(resultSet, schemeWrapper.COLUMN_EQUIPMENT_TYPE_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, schemeWrapper.COLUMN_EQUIPMENT_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, schemeWrapper.COLUMN_KIS_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, schemeWrapper.COLUMN_SITE_NODE_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, schemeWrapper.COLUMN_SYMBOL_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, schemeWrapper.COLUMN_UGO_CELL_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, schemeWrapper.COLUMN_SCHEME_CELL_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, schemeWrapper.COLUMN_PARENT_SCHEME_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, schemeWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID));
+				DatabaseString.fromQuerySubString(resultSet.getString(SchemeWrapper.COLUMN_LABEL)),
+				resultSet.getInt(SchemeWrapper.COLUMN_WIDTH),
+				resultSet.getInt(SchemeWrapper.COLUMN_HEIGHT),
+				Kind.from_int(resultSet.getInt(SchemeWrapper.COLUMN_KIND)),
+				DatabaseIdentifier.getIdentifier(resultSet, SchemeWrapper.COLUMN_DOMAIN_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, SchemeWrapper.COLUMN_MAP_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, SchemeWrapper.COLUMN_SYMBOL_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, SchemeWrapper.COLUMN_UGO_CELL_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, SchemeWrapper.COLUMN_SCHEME_CELL_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, SchemeWrapper.COLUMN_SCHEME_MONITORING_SOLUTION_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, SchemeWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID));
 		return scheme;
 	}
 }
