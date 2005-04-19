@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.50 2005/04/19 07:59:55 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.51 2005/04/19 14:20:46 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
  * генерацией пороговых кривых и сохранением/восстановлением порогов.
  *
  * @author $Author: saa $
- * @version $Revision: 1.50 $, $Date: 2005/04/19 07:59:55 $
+ * @version $Revision: 1.51 $, $Date: 2005/04/19 14:20:46 $
  * @module
  */
 public class ModelTraceManager
@@ -332,16 +332,25 @@ implements DataStreamable
 		return getThresholdMT(key);
 	}
 
-	public void updateUpperThreshToContain(double[] yTop)
+	/**
+	 * Расширяет пороги так, чтобы покрыть указанные кривые с указанным
+	 * запасом. Верхняя кривая должна быть нигде не ниже нижней.
+	 * Запас должен быть строго положителен, иначе из-за ошибок округления
+	 * покрытие может оказаться неточным (и, как следствие, пойдут алармы).
+	 * @param yTop верхняя покрываемая кривая
+	 * @param yBottom нижняя покрываемая кривая
+	 * @param margin строго положительный запас
+	 */
+	public void updateThreshToContain(double[] yTop, double[] yBottom, double margin)
 	{
+		for (int i = 0; i < tDY.length; i++)
+			tDY[i].changeAllBy(-margin);
 		CoreAnalysisManager.extendThreshToCoverCurve(mtae.getModelTrace().getYArray(), yTop,
 			tDX, tDY, Thresh.SOFT_UP, Thresh.HARD_UP);
-	}
-
-	public void updateLowerThreshToContain(double[] yTop)
-	{
-		CoreAnalysisManager.extendThreshToCoverCurve(mtae.getModelTrace().getYArray(), yTop,
+		CoreAnalysisManager.extendThreshToCoverCurve(mtae.getModelTrace().getYArray(), yBottom,
 			tDX, tDY, Thresh.SOFT_DOWN, Thresh.HARD_DOWN);
+		for (int i = 0; i < tDY.length; i++)
+			tDY[i].changeAllBy(margin);
 	}
 
 	public void setDefaultThreshold(int nEvent)

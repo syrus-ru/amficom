@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.44 2005/04/19 13:38:03 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.45 2005/04/19 14:20:46 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.44 $, $Date: 2005/04/19 13:38:03 $
+ * @version $Revision: 1.45 $, $Date: 2005/04/19 14:20:46 $
  * @module
  */
 
@@ -499,9 +499,7 @@ public class CoreAnalysisManager
 			+ " yMax.length = " + yMax.length
 			+ " yMin.length = " + yMin.length
 			);
-		// FIXME: из-за ошибок округления, результирующий порог может все же чуть-чуть "не доставать" до yMax/yMin
-		mtm.updateUpperThreshToContain(yMax);
-		mtm.updateLowerThreshToContain(yMin);
+		mtm.updateThreshToContain(yMax, yMin, 0.01); // @todo: externalize parameter: 0.01
 	}
 
 	public static double getMedian(double[] y, int pos)
