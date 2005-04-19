@@ -1,5 +1,5 @@
 /*
- * $Id: GraphActions.java,v 1.1 2005/04/05 14:07:53 stas Exp $
+ * $Id: GraphActions.java,v 1.2 2005/04/19 09:01:50 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,8 +22,8 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.*;
 import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/04/05 14:07:53 $
+ * @author $Author: bass $
+ * @version $Revision: 1.2 $, $Date: 2005/04/19 09:01:50 $
  * @module schemeclient_v1
  */
 
@@ -287,7 +287,7 @@ public class GraphActions {
 					bounds.x = (bounds.x / grid) * grid;
 					bounds.y = ((bounds.y / grid) + 1) * grid - 5;
 				} else if (cells[i] instanceof PortCell) {
-					if (((PortCell) cells[i]).getSchemePort().getAbstractSchemePortDirectionType().equals(
+					if (((PortCell) cells[i]).getSchemePort().getDirectionType().equals(
 							AbstractSchemePortDirectionType._OUT)) {
 						bounds.x = ((bounds.x / grid) + 1) * grid - 6;
 						bounds.y = ((bounds.y / grid) + 1) * grid - 3;
@@ -296,7 +296,7 @@ public class GraphActions {
 						bounds.y = ((bounds.y / grid) + 1) * grid - 3;
 					}
 				} else if (cells[i] instanceof CablePortCell) {
-					if (((CablePortCell) cells[i]).getSchemeCablePort().getAbstractSchemePortDirectionType()
+					if (((CablePortCell) cells[i]).getSchemeCablePort().getDirectionType()
 							.equals(AbstractSchemePortDirectionType._OUT)) {
 						bounds.x = ((bounds.x / grid) + 1) * grid - 6;
 						bounds.y = ((bounds.y / grid) + 1) * grid - 3;

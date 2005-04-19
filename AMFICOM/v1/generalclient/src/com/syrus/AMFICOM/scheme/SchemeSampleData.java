@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeSampleData.java,v 1.4 2005/04/18 10:53:53 krupenn Exp $
+ * $Id: SchemeSampleData.java,v 1.5 2005/04/19 09:01:50 bass Exp $
  *
  * Copyright ї 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,13 +19,13 @@ import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
-import com.syrus.AMFICOM.scheme.corba.SchemeKind;
+import com.syrus.AMFICOM.scheme.corba.Scheme_TransferablePackage.Kind;
 
 /**
  * this class is used to create two sample instances
  * of Scheme whithout graphical components
- * @author $Author: krupenn $
- * @version $Revision: 1.4 $
+ * @author $Author: bass $
+ * @version $Revision: 1.5 $
  * @module generalclient_v1
  */
 public final class SchemeSampleData {
@@ -145,63 +145,63 @@ public final class SchemeSampleData {
 		dev40.setName("Девайс5");
 		
 //		port00.setSchemeDevice(dev00);
-		port00.setAbstractSchemePortDirectionType(AbstractSchemePortDirectionType._OUT);
+		port00.setDirectionType(AbstractSchemePortDirectionType._OUT);
 		port00.setName("Порт раз");
 //		port00.setSchemeLink(link0);
 
 //		port01.setSchemeDevice(dev00);
-		port01.setAbstractSchemePortDirectionType(AbstractSchemePortDirectionType._IN);
+		port01.setDirectionType(AbstractSchemePortDirectionType._IN);
 		port01.setName("Порт два");
 //		port01.setSchemeLink(link0);
 
 //		cport00.setSchemeCableLink(clink0);
 //		cport00.setSchemeDevice(dev00);
-		cport00.setAbstractSchemePortDirectionType(AbstractSchemePortDirectionType._IN);
+		cport00.setDirectionType(AbstractSchemePortDirectionType._IN);
 		cport00.setName("Каборт раз");
 
 //		cport10.setSchemeCableLink(clink0);
 //		cport10.setSchemeDevice(dev10);
-		cport10.setAbstractSchemePortDirectionType(AbstractSchemePortDirectionType._OUT);
+		cport10.setDirectionType(AbstractSchemePortDirectionType._OUT);
 		cport10.setName("Каборт два");
 
 //		cport11.setSchemeCableLink(clink1);
 //		cport11.setSchemeDevice(dev10);
-		cport11.setAbstractSchemePortDirectionType(AbstractSchemePortDirectionType._OUT);
+		cport11.setDirectionType(AbstractSchemePortDirectionType._OUT);
 		cport11.setName("Каборт три");
 
 //		cport20.setSchemeCableLink(clink1);
 //		cport20.setSchemeDevice(dev20);
-		cport20.setAbstractSchemePortDirectionType(AbstractSchemePortDirectionType._OUT);
+		cport20.setDirectionType(AbstractSchemePortDirectionType._OUT);
 		cport20.setName("Каборт четыре");
 
 //		cport21.setSchemeCableLink(clink2);
 //		cport21.setSchemeDevice(dev20);
-		cport21.setAbstractSchemePortDirectionType(AbstractSchemePortDirectionType._OUT);
+		cport21.setDirectionType(AbstractSchemePortDirectionType._OUT);
 		cport21.setName("Каборт пять");
 
 //		cport22.setSchemeCableLink(clink4);
 //		cport22.setSchemeDevice(dev20);
-		cport22.setAbstractSchemePortDirectionType(AbstractSchemePortDirectionType._OUT);
+		cport22.setDirectionType(AbstractSchemePortDirectionType._OUT);
 		cport22.setName("Каборт шесть");
 
 //		cport30.setSchemeCableLink(clink2);
 //		cport30.setSchemeDevice(dev30);
-		cport30.setAbstractSchemePortDirectionType(AbstractSchemePortDirectionType._OUT);
+		cport30.setDirectionType(AbstractSchemePortDirectionType._OUT);
 		cport30.setName("Каборт сем");
 
 //		cport31.setSchemeCableLink(clink3);
 //		cport31.setSchemeDevice(dev30);
-		cport31.setAbstractSchemePortDirectionType(AbstractSchemePortDirectionType._OUT);
+		cport31.setDirectionType(AbstractSchemePortDirectionType._OUT);
 		cport31.setName("Каборт восем");
 
 //		cport40.setSchemeCableLink(clink3);
 //		cport40.setSchemeDevice(dev40);
-		cport40.setAbstractSchemePortDirectionType(AbstractSchemePortDirectionType._OUT);
+		cport40.setDirectionType(AbstractSchemePortDirectionType._OUT);
 		cport40.setName("Каборт дэвят");
 
 //		cport41.setSchemeCableLink(clink4);
 //		cport41.setSchemeDevice(dev40);
-		cport41.setAbstractSchemePortDirectionType(AbstractSchemePortDirectionType._OUT);
+		cport41.setDirectionType(AbstractSchemePortDirectionType._OUT);
 		cport41.setName("Каборт дэсят");
 
 		el0.setDescription("Описалово");
@@ -328,7 +328,7 @@ public final class SchemeSampleData {
 		scheme.setSchemeElements(el);
 		scheme.setHeight(100);
 		scheme.setLabel("lab1");
-		scheme.setSchemeKind(SchemeKind.NETWORK);
+		scheme.setKind(Kind.NETWORK);
 		scheme.setWidth(100);
 		scheme.setDomainId(domainId);
 
@@ -374,23 +374,23 @@ public final class SchemeSampleData {
 		SortedSet pel = new TreeSet();
 
 //		port00.setSchemeDevice(dev00);
-		port00.setAbstractSchemePortDirectionType(AbstractSchemePortDirectionType._OUT);
+		port00.setDirectionType(AbstractSchemePortDirectionType._OUT);
 		port00.setName("Порт раз");
 //		port00.setSchemeLink(link0);
 
 //		port10.setSchemeDevice(dev10);
-		port10.setAbstractSchemePortDirectionType(AbstractSchemePortDirectionType._IN);
+		port10.setDirectionType(AbstractSchemePortDirectionType._IN);
 		port10.setName("Порт два");
 //		port10.setSchemeLink(link0);
 
 //		cport00.setSchemeCableLink(clink0);
 //		cport00.setSchemeDevice(dev00);
-		cport00.setAbstractSchemePortDirectionType(AbstractSchemePortDirectionType._IN);
+		cport00.setDirectionType(AbstractSchemePortDirectionType._IN);
 		cport00.setName("Каборт раз");
 
 //		cport10.setSchemeCableLink(clink0);
 //		cport10.setSchemeDevice(dev10);
-		cport10.setAbstractSchemePortDirectionType(AbstractSchemePortDirectionType._OUT);
+		cport10.setDirectionType(AbstractSchemePortDirectionType._OUT);
 		cport10.setName("Каборт два");
 
 		dev00.setSchemePorts(port0);
@@ -453,7 +453,7 @@ public final class SchemeSampleData {
 		scheme.setSchemeElements(el);
 		scheme.setHeight(100);
 		scheme.setLabel("lab1");
-		scheme.setSchemeKind(SchemeKind.NETWORK);
+		scheme.setKind(Kind.NETWORK);
 		scheme.setWidth(100);
 		scheme.setDomainId(domainId);
 

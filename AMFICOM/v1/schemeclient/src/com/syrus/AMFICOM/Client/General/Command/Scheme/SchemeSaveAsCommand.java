@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.scheme.*;
-import com.syrus.AMFICOM.scheme.corba.SchemeKind;
+import com.syrus.AMFICOM.scheme.corba.Scheme_TransferablePackage.Kind;
 import com.syrus.util.Log;
 
 public class SchemeSaveAsCommand extends VoidCommand {
@@ -119,7 +119,7 @@ public class SchemeSaveAsCommand extends VoidCommand {
 
 			scheme.setName(sd.name);
 			scheme.setDescription(sd.description);
-			scheme.setSchemeKind(sd.type);
+			scheme.setKind(sd.type);
 
 			final Identifier domainId = new Identifier(((RISDSessionInfo) aContext
 					.getSessionInterface()).getAccessIdentifier().domain_id);
@@ -156,7 +156,7 @@ class SaveDialog extends JDialog {
 
 	public String description = "";
 
-	public SchemeKind type = SchemeKind.NETWORK;
+	public Kind type = Kind.NETWORK;
 
 	public int retCode = 0;
 
@@ -191,7 +191,7 @@ class SaveDialog extends JDialog {
 		panel = new SchemePropsPanel(aContext, dispatcher, show_ugo);
 		panel.setSchemeName(initialName);
 		panel.setSchemeDescription(scheme.getDescription());
-		panel.setSchemeType(scheme.getSchemeKind());
+		panel.setSchemeType(scheme.getKind());
 		// panel.init(graph.scheme, aContext.getDataSourceInterface());
 		getContentPane().setLayout(new BorderLayout());
 		getContentPane().add(panel, BorderLayout.CENTER);

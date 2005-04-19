@@ -119,7 +119,7 @@ public class SchemeSaveCommand extends VoidCommand {
 
 		scheme.setName(sd.name);
 		scheme.setDescription(sd.description);
-		scheme.setSchemeKind(sd.type);
+		scheme.setKind(sd.type);
 
 		try {
 

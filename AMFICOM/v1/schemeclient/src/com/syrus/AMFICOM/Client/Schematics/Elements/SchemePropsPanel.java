@@ -10,7 +10,7 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.client_.general.ui_.*;
 import com.syrus.AMFICOM.Client.General.UI.AComboBox;
 import com.syrus.AMFICOM.scheme.Scheme;
-import com.syrus.AMFICOM.scheme.corba.SchemeKind;
+import com.syrus.AMFICOM.scheme.corba.Scheme_TransferablePackage.Kind;
 import com.syrus.AMFICOM.resource.*;
 
 public class SchemePropsPanel extends JPanel
@@ -38,11 +38,11 @@ public class SchemePropsPanel extends JPanel
 //		Scheme.CARDCAGE
 	};
 
-	static SchemeKind[] schemeTypes = new SchemeKind[]
+	static Kind[] schemeTypes = new Kind[]
 	{
-		SchemeKind.NETWORK,
-		SchemeKind.CABLE_SUBNETWORK,
-		SchemeKind.BUILDING,
+		Kind.NETWORK,
+		Kind.CABLE_SUBNETWORK,
+		Kind.BUILDING,
 //		Scheme.FLOOR,
 //		Scheme.ROOM,
 //		Scheme.RACK,
@@ -174,7 +174,7 @@ public class SchemePropsPanel extends JPanel
 					return;
 				if (e.getStateChange() == ItemEvent.SELECTED)
 				{
-					scheme.setSchemeKind(schemeTypes[schemeTypeComboBox.getSelectedIndex()]);
+					scheme.setKind(schemeTypes[schemeTypeComboBox.getSelectedIndex()]);
 				}
 			}
 		});
@@ -191,7 +191,7 @@ public class SchemePropsPanel extends JPanel
 
 		for (int i = 0; i < schemeTypes.length; i++)
 		{
-			if (schemeTypes[i].equals(scheme.getSchemeKind()))
+			if (schemeTypes[i].equals(scheme.getKind()))
 			{
 				schemeTypeComboBox.setSelectedIndex(i);
 				break;
@@ -271,20 +271,20 @@ public class SchemePropsPanel extends JPanel
 		schemeDescrTextArea.setText(description);
 	}
 	
-	public SchemeKind getSchemeType()
+	public Kind getSchemeType()
 	{
 		return schemeTypes[schemeTypeComboBox.getSelectedIndex()];
 	}
 	
-	public void setSchemeType(SchemeKind type)
+	public void setSchemeType(Kind type)
 	{
 		String typeString;
 		switch (type.value())
 		{
-			case SchemeKind._NETWORK:
+			case Kind._NETWORK:
 				typeString = LangModelSchematics.getString("NETWORK");
 				break;
-			case SchemeKind._CABLE_SUBNETWORK:
+			case Kind._CABLE_SUBNETWORK:
 				typeString = LangModelSchematics.getString("CABLE_SUBNETWORK");
 				break;
 			default:

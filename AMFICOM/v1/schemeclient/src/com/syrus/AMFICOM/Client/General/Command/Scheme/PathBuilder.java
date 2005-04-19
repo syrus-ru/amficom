@@ -257,7 +257,7 @@ public class PathBuilder
 				List ports;
 				List cports;
 				SchemeDevice dev = startPort.getParentSchemeDevice();
-				if (startPort.getAbstractSchemePortDirectionType().equals(AbstractSchemePortDirectionType._IN))
+				if (startPort.getDirectionType().equals(AbstractSchemePortDirectionType._IN))
 				{
 					cports = findCablePorts(dev, AbstractSchemePortDirectionType._OUT);
 					ports = findPorts(dev, AbstractSchemePortDirectionType._OUT);
@@ -299,7 +299,7 @@ public class PathBuilder
 				List ports;
 				List cports;
 				SchemeDevice dev = startPort.getParentSchemeDevice();
-				if (startPort.getAbstractSchemePortDirectionType().equals(AbstractSchemePortDirectionType._IN))
+				if (startPort.getDirectionType().equals(AbstractSchemePortDirectionType._IN))
 				{
 					cports = findCablePorts(dev, AbstractSchemePortDirectionType._OUT);
 					ports = findPorts(dev, AbstractSchemePortDirectionType._OUT);
@@ -531,7 +531,7 @@ public class PathBuilder
 		for (Iterator it = dev.getSchemePorts().iterator(); it.hasNext();)
 		{
 			SchemePort p = (SchemePort)it.next();
-			if (p.getAbstractSchemePortDirectionType().equals(direction))
+			if (p.getDirectionType().equals(direction))
 				ports.add(p);
 		}
 		return ports;
@@ -543,7 +543,7 @@ public class PathBuilder
 		for (Iterator it = dev.getSchemePorts().iterator(); it.hasNext();)
 		{
 			SchemeCablePort p = (SchemeCablePort)it.next();
-			if (p.getAbstractSchemePortDirectionType().equals(direction))
+			if (p.getDirectionType().equals(direction))
 				ports.add(p);
 		}
 		return ports;

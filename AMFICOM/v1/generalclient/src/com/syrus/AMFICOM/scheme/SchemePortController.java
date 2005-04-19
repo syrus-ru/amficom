@@ -87,7 +87,7 @@ public final class SchemePortController extends ObjectResourceController
 			else if (key.equals(COLUMN_NAME))
 				result = port.getName();
 			else if (key.equals(COLUMN_DIRECTION))
-				result = Integer.toString(port.getAbstractSchemePortDirectionType().value());
+				result = Integer.toString(port.getDirectionType().value());
 			else if (key.equals(COLUMN_MEASUREMENT_PORT_ID))
 				result = port.getMeasurementPort().getId().getIdentifierString();
 			else if (key.equals(COLUMN_MEASUREMENT_PORT_TYPE_ID))

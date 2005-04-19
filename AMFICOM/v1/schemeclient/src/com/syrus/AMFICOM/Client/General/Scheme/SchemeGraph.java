@@ -14,7 +14,7 @@ import com.jgraph.graph.Port;
 import com.jgraph.plaf.GraphUI;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.scheme.corba.SchemeKind;
+import com.syrus.AMFICOM.scheme.corba.Scheme_TransferablePackage.Kind;
 import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
 
@@ -212,7 +212,7 @@ public class SchemeGraph extends GPGraph
 	{
 		if (group.getScheme() == null)
 			return false;
-		if (group.getScheme().getSchemeKind().equals(SchemeKind.CABLE_SUBNETWORK))
+		if (group.getScheme().getKind().equals(Kind.CABLE_SUBNETWORK))
 			return true;
 		return false;
 	}
@@ -853,7 +853,7 @@ public class SchemeGraph extends GPGraph
 
 						boolean inserted = false;
 						Arrays.asList(getScheme().getSchemeCableLinksAsArray()).add(link);
-						if (!getScheme().getSchemeKind().equals(SchemeKind.CABLE_SUBNETWORK))
+						if (!getScheme().getKind().equals(Kind.CABLE_SUBNETWORK))
 						{
 							if (link.getSourceSchemeCablePort() != null)
 							{
@@ -862,7 +862,7 @@ public class SchemeGraph extends GPGraph
 								if (se.getScheme() != null)
 								{
 									Scheme source_scheme = se.getScheme();
-									if (source_scheme.getSchemeKind().equals(SchemeKind.CABLE_SUBNETWORK))
+									if (source_scheme.getKind().equals(Kind.CABLE_SUBNETWORK))
 									{
 										link.setParentScheme(source_scheme);
 //										source_scheme.cablelinks.add(link);
@@ -877,7 +877,7 @@ public class SchemeGraph extends GPGraph
 								if (se.getScheme() != null)
 								{
 									Scheme target_scheme = se.getScheme();
-									if (target_scheme.getSchemeKind().equals(SchemeKind.CABLE_SUBNETWORK))
+									if (target_scheme.getKind().equals(Kind.CABLE_SUBNETWORK))
 									{
 										link.setParentScheme(target_scheme);
 //										target_scheme.cablelinks.add(link);

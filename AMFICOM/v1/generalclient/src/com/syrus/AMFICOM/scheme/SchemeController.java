@@ -104,7 +104,7 @@ public final class SchemeController extends ObjectResourceController
 			else if (key.equals(COLUMN_LABEL))
 				result = scheme.getLabel();
 			else if (key.equals(COLUMN_TYPE))
-				result = Integer.toString(scheme.getSchemeKind().value());
+				result = Integer.toString(scheme.getKind().value());
 			else if (key.equals(COLUMN_SYMBOL_ID))
 				result = scheme.getSymbol().getId().getIdentifierString();
 			else if (key.equals(COLUMN_WIDTH))

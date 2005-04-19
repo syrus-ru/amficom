@@ -1,5 +1,5 @@
 /*
- * $Id: CreateTopLevelElementAction.java,v 1.1 2005/04/05 14:07:53 stas Exp $
+ * $Id: CreateTopLevelElementAction.java,v 1.2 2005/04/19 09:01:50 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/04/05 14:07:53 $
+ * @author $Author: bass $
+ * @version $Revision: 1.2 $, $Date: 2005/04/19 09:01:50 $
  * @module schemeclient_v1
  */
 
@@ -60,13 +60,13 @@ public class CreateTopLevelElementAction extends AbstractAction {
 		for (int i = 0; i < bpcs.length; i++) {
 			if (bpcs[i].isCablePort()) {
 				SchemeCablePort port = bpcs[i].getSchemeCablePort();
-				if (port.getAbstractSchemePortDirectionType().equals(AbstractSchemePortDirectionType._IN))
+				if (port.getDirectionType().equals(AbstractSchemePortDirectionType._IN))
 					blockports_in.add(bpcs[i]);
 				else
 					blockports_out.add(bpcs[i]);
 			} else {
 				SchemePort port = bpcs[i].getSchemePort();
-				if (port.getAbstractSchemePortDirectionType().equals(AbstractSchemePortDirectionType._IN))
+				if (port.getDirectionType().equals(AbstractSchemePortDirectionType._IN))
 					blockports_in.add(bpcs[i]);
 				else
 					blockports_out.add(bpcs[i]);

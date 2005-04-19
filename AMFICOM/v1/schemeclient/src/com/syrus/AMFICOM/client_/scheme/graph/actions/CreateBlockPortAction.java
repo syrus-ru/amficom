@@ -1,5 +1,5 @@
 /*
- * $Id: CreateBlockPortAction.java,v 1.1 2005/04/05 14:07:53 stas Exp $
+ * $Id: CreateBlockPortAction.java,v 1.2 2005/04/19 09:01:49 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.scheme.AbstractSchemePort;
 import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/04/05 14:07:53 $
+ * @author $Author: bass $
+ * @version $Revision: 1.2 $, $Date: 2005/04/19 09:01:49 $
  * @module schemeclient_v1
  */
 
@@ -63,7 +63,7 @@ public class CreateBlockPortAction extends AbstractAction {
 				return;
 
 			
-			if (abstractSchemePort.getAbstractSchemePortDirectionType().equals(AbstractSchemePortDirectionType._IN))
+			if (abstractSchemePort.getDirectionType().equals(AbstractSchemePortDirectionType._IN))
 				bounds = new Rectangle(new Point(_bounds.x - 6 * grid, _bounds.y - 2),
 						new Dimension(grid * 3, _bounds.height + 4));
 			else
@@ -83,7 +83,7 @@ public class CreateBlockPortAction extends AbstractAction {
 			if (vport == null)
 				return;
 
-			if (abstractSchemePort.getAbstractSchemePortDirectionType().equals(AbstractSchemePortDirectionType._IN))
+			if (abstractSchemePort.getDirectionType().equals(AbstractSchemePortDirectionType._IN))
 				bounds = new Rectangle(new Point(_bounds.x - 6 * grid, _bounds.y - 2),
 						new Dimension(grid * 3, _bounds.height + 4));
 			else
@@ -96,7 +96,7 @@ public class CreateBlockPortAction extends AbstractAction {
 		graph.getGraphLayoutCache().insert(new Object[] { blockport }, viewMap, null, null, null);
 		
 		int u = GraphConstants.PERCENT;
-		Point p = new Point((abstractSchemePort.getAbstractSchemePortDirectionType().equals(AbstractSchemePortDirectionType._IN)) ? u : 0, u / 2);
+		Point p = new Point((abstractSchemePort.getDirectionType().equals(AbstractSchemePortDirectionType._IN)) ? u : 0, u / 2);
 		DefaultPort bpcPort = GraphActions.addPort(graph, "", blockport, p);
 		
 		DefaultPort dp = GraphActions.addPort(graph, "", (DefaultGraphCell)cell, p);

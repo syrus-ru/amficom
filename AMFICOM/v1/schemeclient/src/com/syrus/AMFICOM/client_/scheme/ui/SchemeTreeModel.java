@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeTreeModel.java,v 1.15 2005/04/18 10:45:18 stas Exp $
+ * $Id: SchemeTreeModel.java,v 1.16 2005/04/19 09:01:50 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.client_.scheme.ui;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.15 $, $Date: 2005/04/18 10:45:18 $
+ * @author $Author: bass $
+ * @version $Revision: 1.16 $, $Date: 2005/04/19 09:01:50 $
  * @module schemeclient_v1
  */
 
@@ -25,13 +25,13 @@ import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.logic.*;
 import com.syrus.AMFICOM.measurement.*;
 import com.syrus.AMFICOM.resource.*;
-import com.syrus.AMFICOM.scheme.corba.SchemeKind;
+import com.syrus.AMFICOM.scheme.corba.Scheme_TransferablePackage.Kind;
 
 public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 	ApplicationContext aContext;
 
-	private static SchemeKind[] schemeTypes = new SchemeKind[] { SchemeKind.NETWORK, SchemeKind.BUILDING,
-			SchemeKind.CABLE_SUBNETWORK };
+	private static Kind[] schemeTypes = new Kind[] { Kind.NETWORK, Kind.BUILDING,
+			Kind.CABLE_SUBNETWORK };
 	private static String[] schemeTypeNames = new String[] {
 			LangModelScheme.getString(Constants.SCHEME_TYPE_NETWORK), LangModelScheme.getString(Constants.SCHEME_TYPE_BUILDING),
 			LangModelScheme.getString(Constants.SCHEME_TYPE_CABLE) };
@@ -89,9 +89,9 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 			return MeasurementPortTypePropertiesManager.getInstance(aContext);
 		if (object instanceof MeasurementType)
 			return MeasurementTypePropertiesManager.getInstance(aContext);
-		if (object instanceof SchemeKind)
+		if (object instanceof Kind)
 				return null;
-//		if (object instanceof SchemeKind)
+//		if (object instanceof Kind)
 //			return SchemeController.getInstance();
 //		if (object instanceof SchemeProtoGroup) {
 //			if (!((SchemeProtoGroup) object).getSchemeProtoGroups().isEmpty())
@@ -422,8 +422,8 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 			}
 		} 
 		else {
-			if (node.getObject() instanceof SchemeKind) {
-				SchemeKind type = (SchemeKind) node.getObject();
+			if (node.getObject() instanceof Kind) {
+				Kind type = (Kind) node.getObject();
 				TypicalCondition condition = new TypicalCondition(String.valueOf(type
 						.value()), OperationSort.OPERATION_EQUALS,
 						ObjectEntities.SCHEME_ENTITY_CODE,

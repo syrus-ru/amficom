@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.2 2005/04/18 09:55:03 stas Exp $
+ * $Id: SchemeActions.java,v 1.3 2005/04/19 09:01:50 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,11 +26,12 @@ import com.syrus.AMFICOM.configuration.corba.PortTypeSort;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.corba.*;
+import com.syrus.AMFICOM.scheme.corba.Scheme_TransferablePackage.Kind;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/04/18 09:55:03 $
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/04/19 09:01:50 $
  * @module schemeclient_v1
  */
 
@@ -143,7 +144,7 @@ public class SchemeActions {
 	{
 		if (group.getScheme() == null)
 			return false;
-		if (group.getScheme().getSchemeKind().equals(SchemeKind.CABLE_SUBNETWORK))
+		if (group.getScheme().getKind().equals(Kind.CABLE_SUBNETWORK))
 			return true;
 		return false;
 	}
@@ -226,19 +227,19 @@ public class SchemeActions {
 		Rectangle dev_bounds = GraphConstants.getBounds(m);
 		
 		int u = GraphConstants.PERCENT;
-		int distance = (schemePort.getAbstractSchemePortDirectionType().equals(AbstractSchemePortDirectionType._OUT) ?
+		int distance = (schemePort.getDirectionType().equals(AbstractSchemePortDirectionType._OUT) ?
 				(p.x - (dev_bounds.x + dev_bounds.width)) / graph.getGridSize() + 1 :
 				(dev_bounds.x - p.x) / graph.getGridSize());
-		Point labelPosition = (schemePort.getAbstractSchemePortDirectionType().equals(AbstractSchemePortDirectionType._OUT) ? 
+		Point labelPosition = (schemePort.getDirectionType().equals(AbstractSchemePortDirectionType._OUT) ? 
 				new Point (-u / distance, 0) : 
 				new Point (u + (u / distance), 0));
-		Rectangle portCellBounds = (schemePort.getAbstractSchemePortDirectionType().equals(AbstractSchemePortDirectionType._OUT) ? 
+		Rectangle portCellBounds = (schemePort.getDirectionType().equals(AbstractSchemePortDirectionType._OUT) ? 
 				new Rectangle(p.x - 6, p.y - 3, 7, 7) : 
 				new Rectangle(p.x, p.y - 3, 7, 7));
-		Point devportPos = (schemePort.getAbstractSchemePortDirectionType().equals(AbstractSchemePortDirectionType._OUT) ?
+		Point devportPos = (schemePort.getDirectionType().equals(AbstractSchemePortDirectionType._OUT) ?
 				new Point(u, (int)(u * ( (double)(p.y + 1 - dev_bounds.y) / (double)dev_bounds.height))) :		
 				new Point(0, (int)(u * ( (double)(p.y + 1 - dev_bounds.y) / (double)dev_bounds.height))));
-		Point ellipseportPos = (schemePort.getAbstractSchemePortDirectionType().equals(AbstractSchemePortDirectionType._OUT) ?
+		Point ellipseportPos = (schemePort.getDirectionType().equals(AbstractSchemePortDirectionType._OUT) ?
 				new Point(0, u / 2) :
 				new Point(u, u / 2));
 		
@@ -246,7 +247,7 @@ public class SchemeActions {
 	
 		if (schemePort instanceof SchemePort) { // port
 			visualPort = PortCell.createInstance("", portCellBounds, 
-					viewMap, schemePort.getAbstractSchemePortDirectionType(), (SchemePort)schemePort);
+					viewMap, schemePort.getDirectionType(), (SchemePort)schemePort);
 		}
 		else { // cableport
 			visualPort = CablePortCell.createInstance("", portCellBounds, 
@@ -314,7 +315,7 @@ public class SchemeActions {
 		}
 		String name = String.valueOf(((DeviceCell) cells[0]).getChildCount());
 		schemePort.setName(name);
-		schemePort.setAbstractSchemePortDirectionType(directionType);
+		schemePort.setDirectionType(directionType);
 		
 		return createAbstractPort(graph, deviceCell, p, schemePort);
 	}

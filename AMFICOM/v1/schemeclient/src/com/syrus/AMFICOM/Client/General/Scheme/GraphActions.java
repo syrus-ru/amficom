@@ -419,7 +419,7 @@ public class GraphActions
 		// Create Vertex
 		PortCell cell = new PortCell(userObject);
 		SchemePort sp = SchemePort.createInstance();
-		sp.setAbstractSchemePortDirectionType(direction);
+		sp.setDirectionType(direction);
 		sp.setParentSchemeDevice(dev.getSchemeDevice());
 		cell.setSchemePortId(sp.getId());
 
@@ -455,7 +455,7 @@ public class GraphActions
 		CablePortCell cell = new CablePortCell(userObject);
 		SchemeCablePort scp = SchemeCablePort.createInstance();
 		scp.setParentSchemeDevice(dev.getSchemeDevice());
-		scp.setAbstractSchemePortDirectionType(direction);
+		scp.setDirectionType(direction);
 		cell.setSchemeCablePortId(scp.getId());
 
 		map = GraphConstants.createMap();
@@ -788,7 +788,7 @@ public class GraphActions
 				}
 				else if (cells[i] instanceof PortCell)
 				{
-					if (((PortCell)cells[i]).getSchemePort().getAbstractSchemePortDirectionType().equals(AbstractSchemePortDirectionType._OUT))
+					if (((PortCell)cells[i]).getSchemePort().getDirectionType().equals(AbstractSchemePortDirectionType._OUT))
 					{
 						bounds.x = ((bounds.x / grid) + 1) * grid - 6;
 						bounds.y = ((bounds.y / grid) + 1) * grid - 3;
@@ -801,7 +801,7 @@ public class GraphActions
 				}
 				else if (cells[i] instanceof CablePortCell)
 				{
-					if (((CablePortCell)cells[i]).getSchemeCablePort().getAbstractSchemePortDirectionType().equals(AbstractSchemePortDirectionType._OUT))
+					if (((CablePortCell)cells[i]).getSchemeCablePort().getDirectionType().equals(AbstractSchemePortDirectionType._OUT))
 					{
 						bounds.x = ((bounds.x / grid) + 1) * grid - 6;
 						bounds.y = ((bounds.y / grid) + 1) * grid - 3;
