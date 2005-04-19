@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.20 2005/04/19 11:37:14 bass Exp $
+ * $Id: SchemeElement.java,v 1.21 2005/04/19 12:30:20 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.util.Log;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.20 $, $Date: 2005/04/19 11:37:14 $
+ * @version $Revision: 1.21 $, $Date: 2005/04/19 12:30:20 $
  * @module scheme_v1
  */
 public final class SchemeElement extends AbstractSchemeElement implements
@@ -550,7 +550,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 * @param parentSchemeId
 	 * @param parentSchemeElementId
 	 */
-	public void setAttrinutes(final Date created, final Date modified,
+	public void setAttributes(final Date created, final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId, final long version,
 			final String name, final String description,
