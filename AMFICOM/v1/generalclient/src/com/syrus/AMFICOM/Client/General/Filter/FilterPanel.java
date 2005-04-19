@@ -1,14 +1,12 @@
 package com.syrus.AMFICOM.Client.General.Filter;
 
-import oracle.jdeveloper.layout.*;
-
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
-//import com.syrus.AMFICOM.Client.General.Filter.FilterExpression;
-
-import com.syrus.AMFICOM.filter.FilterExpressionInterface;
-
 import javax.swing.JPanel;
+
+import oracle.jdeveloper.layout.XYLayout;
+
+import com.syrus.AMFICOM.Client.General.Lang.LangModel;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.filter.FilterExpressionInterface;
 
 public class FilterPanel extends JPanel
 {
