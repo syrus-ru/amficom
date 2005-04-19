@@ -17,7 +17,6 @@ import com.syrus.io.TraceReader;
 
 public class FileAddCommand extends VoidCommand
 {
-	private BellcoreStructure bs;
 	private ApplicationContext aContext;
 	private String propertiesFileName = "analysis.properties";
 
@@ -25,7 +24,6 @@ public class FileAddCommand extends VoidCommand
 	{
 		this.aContext = aContext;
 	}
-
 
 	public Object clone()
 	{
@@ -83,7 +81,7 @@ public class FileAddCommand extends VoidCommand
 					 new FileRemoveCommand(id, aContext).execute();
 			}
 			TraceReader tr = new TraceReader();
-			bs = tr.getData(chooser.getSelectedFile());
+			BellcoreStructure bs = tr.getData(chooser.getSelectedFile());
 			if (bs == null)
 			{
 				bs = tr.getData(chooser.getSelectedFile());

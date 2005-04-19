@@ -16,7 +16,6 @@ import com.syrus.io.*;
 public class AddTraceFromDatabaseCommand extends VoidCommand
 {
 	private ApplicationContext aContext;
-	private Checker checker;
 
 	public AddTraceFromDatabaseCommand(ApplicationContext aContext)
 	{
@@ -44,7 +43,7 @@ public class AddTraceFromDatabaseCommand extends VoidCommand
 
 		try
 		{
-			this.checker = new Checker(this.aContext.getSessionInterface());
+			Checker checker = new Checker(this.aContext.getSessionInterface());
 			if(!checker.checkCommand(Checker.loadReflectogrammFromDB))
 			{
 				return;
