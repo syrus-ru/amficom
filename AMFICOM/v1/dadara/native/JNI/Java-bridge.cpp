@@ -892,11 +892,12 @@ JNIEXPORT jint JNICALL Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_nCalc
 /*
  * Class:     com_syrus_AMFICOM_analysis_CoreAnalysisManager
  * Method:    nExtendThreshToCoverCurve
- * Signature: ([D[D[Lcom/syrus/AMFICOM/analysis/dadara/ThreshDX;[Lcom/syrus/AMFICOM/analysis/dadara/ThreshDY;II)V
+ * Signature: ([D[D[Lcom/syrus/AMFICOM/analysis/dadara/ThreshDX;[Lcom/syrus/AMFICOM/analysis/dadara/ThreshDY;IID)V
  */
 JNIEXPORT void JNICALL Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_nExtendThreshToCoverCurve
   (JNIEnv *env, jclass cls, jdoubleArray jdayBase, jdoubleArray jdayCover,
-  jobjectArray thDX, jobjectArray thDY, jint keySoft, jint keyHard)
+  jobjectArray thDX, jobjectArray thDY, jint keySoft, jint keyHard,
+  jdouble dyFactor)
 {
 	prf_b("JNI: nExtendThreshToCoverCurve - enter");
 	prf_b("JNI: nExtendThreshToCoverCurve - get from java");
@@ -927,7 +928,7 @@ JNIEXPORT void JNICALL Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_nExte
 	int xMax = imin(baseSize, coverSize) - 1;
 
 	extendThreshToCover(thx, thy, thxSize, thySize, THDXA.isUpper(keySoft),
-		yBase, xMin, xMax, yCover);
+		yBase, xMin, xMax, yCover, dyFactor);
 
 	prf_b("JNI: nExtendThreshToCoverCurve - convert soft thresholds back");
 	ThreshDXUpdateFromTHXArray(THDXA, keySoft, thx);

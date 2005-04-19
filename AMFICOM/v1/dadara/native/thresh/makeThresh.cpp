@@ -1,4 +1,5 @@
 #include <memory.h> // memcpy
+#include <math.h>
 #include <assert.h>
 #include "../BreakL/BreakL-enh.h"
 #include "makeThresh.h"
@@ -26,12 +27,48 @@ double wei2koeff(double w)
 	return k;
 }
 
+/*
+ * Уменьшает thY (делая копию) в dyFactor раз,
+ * а затем строит по thX и уменьшенному thY пороговую кривую.
+ *
+ * Хранящиеся в THY пороги (DY_истинное) связаны с действующими здесь
+ * (DY_уменьшенное) так:
+ * DY_истинное = DY_уменьшенное * dyFactor
+ * При "нормальной" же генерации пороговой кривой такое уменьшение не
+ * производится, а значит, "нормальные" пороги окажутся шире здешних
+ * уменьшенных.
+ *
+ * Вычитание параметров запаса нужно, чтобы обеспечить запас в ширине порогов.
+ * Зачем? Это важная процедура в генерации порогов.
+ * Почему это сделано именно здесь? Для того, чтобы можно было многократно
+ * корректировать пороги по все новым и новым кривым, и при этом не
+ * накапливались ошибки округления (Так было бы, если бы мы перед каждой
+ * коррекцией порогов их уменьшали бы, а затем снова увеличивали).
+ *
+ * Разумные значения dyFactor = 1.0 .. 1.1 .. 1.5
+ */
 static void makeThCurve(THX *thX, THY *thY, int thXc, int thYc, int isUpper,
-		int xMin, int xMax, TTDX *ttdx, TTDY *ttdy, double *yBase, double *yTemp)
+		int xMin, int xMax, TTDX *ttdx, TTDY *ttdy, double *yBase, double *yTemp,
+		double dyFactor)
 {
 	int len = xMax - xMin + 1;
+
+	// prepare i/o curve
 	memcpy(yTemp, yBase, sizeof(double) * len); // copy yBase to yTemp
-	ChangeArrayByThreshEx (yTemp, thX, thY, thXc, thYc, isUpper, xMin, xMax, 1, ttdx, ttdy);
+
+	// apply margins/factors
+	THY *thYt = new THY[thYc ? thYc : 1];
+	assert(thYt);
+	int i;
+	for (i = 0; i < thYc; i++)
+	{
+		thYt[i] = thY[i]; // structure copying
+		thYt[i].dy = thYt[i].dy / dyFactor;
+	}
+
+	ChangeArrayByThreshEx (yTemp, thX, thYt, thXc, thYc, isUpper, xMin, xMax, 1, ttdx, ttdy);
+
+	delete[] thYt;
 }
 
 // определяем расчетную поправку *thAdd для порогов по участкам, определяемых flags,
@@ -100,17 +137,19 @@ static void calcThAddByThCurve(int thYc, int isUpper,
 
 static void calcThAdd(THX *thX, THY *thY, int thXc, int thYc, int isUpper,
 		int xMin, int xMax, TTDY *ttdyTemp,
-		double *yBase, double *yTemp, double *yTgt, double *thAdd, int flags)
+		double *yBase, double *yTemp, double *yTgt, double *thAdd, int flags,
+		double dyFactor)
 {
-	makeThCurve(thX, thY, thXc, thYc, isUpper, xMin, xMax, 0, ttdyTemp, yBase, yTemp);
+	makeThCurve(thX, thY, thXc, thYc, isUpper, xMin, xMax, 0, ttdyTemp, yBase, yTemp, dyFactor);
 	calcThAddByThCurve(thYc, isUpper, xMin, xMax, ttdyTemp, yTemp, yTgt, thAdd, flags);
 }
 
-static void addThAddToThY(THY *thY, int thYc, double *thAdd)
+static void addThAddToThY(THY *thY, int thYc, double *thAdd, double dyFactor)
 {
 	int i;
+	// поправка для порога должна быть в dyFactor раз больше
 	for (i = 0; i < thYc; i++)
-		thY[i].dy += thAdd[i];
+		thY[i].dy += thAdd[i] * dyFactor;
 }
 
 static void extendTHX(THX &src, THX &dest, int widthMin)
@@ -130,7 +169,7 @@ static void extendTHX(THX *src, THX *dest, int N, int widthMin)
 }
 // если thYc == 0, то ничего не делает (иначе возможно 
 void extendThreshToCover(THX *thXOrig, THY *thY, int thXc, int thYc, int isUpper,
-		double *yBase, int xMin, int xMax, double *yTgt)
+		double *yBase, int xMin, int xMax, double *yTgt, double dyFactor)
 {
 	if (thYc == 0)
 	{
@@ -192,15 +231,15 @@ void extendThreshToCover(THX *thXOrig, THY *thY, int thXc, int thYc, int isUpper
 	}
 
 	// формируем нач. пороги thY по начальным thXA (в две итерации, чтобы поточнее)
-	makeThCurve(thXT, thY, thXc, thYc, isUpper, xMin, xMax, ttdx, ttdy, yBase, yTemp);
+	makeThCurve(thXT, thY, thXc, thYc, isUpper, xMin, xMax, ttdx, ttdy, yBase, yTemp, dyFactor);
 	calcThAddByThCurve(thYc, isUpper, xMin, xMax, ttdy, yTemp, yTgt, thAdd, 0x1);
-	addThAddToThY(thY, thYc, thAdd);
-	makeThCurve(thXT, thY, thXc, thYc, isUpper, xMin, xMax, ttdx, ttdy, yBase, yTemp);
+	addThAddToThY(thY, thYc, thAdd, dyFactor);
+	makeThCurve(thXT, thY, thXc, thYc, isUpper, xMin, xMax, ttdx, ttdy, yBase, yTemp, dyFactor);
 	calcThAddByThCurve(thYc, isUpper, xMin, xMax, ttdy, yTemp, yTgt, thAdd, 0x0);
-	addThAddToThY(thY, thYc, thAdd);
+	addThAddToThY(thY, thYc, thAdd, dyFactor);
 
 	// строим текущую пороговую кривую yPrev
-	makeThCurve(thXT, thY, thXc, thYc, isUpper, xMin, xMax, ttdx, ttdy, yBase, yPrev);
+	makeThCurve(thXT, thY, thXc, thYc, isUpper, xMin, xMax, ttdx, ttdy, yBase, yPrev, dyFactor);
 
 	prf_b("extendThreshToCover: starting curDX loop");
 
@@ -213,7 +252,7 @@ void extendThreshToCover(THX *thXOrig, THY *thY, int thXc, int thYc, int isUpper
 
 		// формируем пороговую кривую
 		// (ttdx не сохраняем, т.к. нам как раз нужны те ttdx, которые соотв. предыдущему порогу)
-		makeThCurve(thXT, thY, thXc, thYc, isUpper, xMin, xMax, 0, ttdy, yBase, yTemp);
+		makeThCurve(thXT, thY, thXc, thYc, isUpper, xMin, xMax, 0, ttdy, yBase, yTemp, dyFactor);
 		// рассчитываем ориентировочные поправки к DY
 		calcThAddByThCurve(thYc, isUpper, xMin, xMax, ttdy, yTemp, yTgt, thAdd, 0x0);
 		int k;
@@ -276,7 +315,7 @@ void extendThreshToCover(THX *thXOrig, THY *thY, int thXc, int thYc, int isUpper
 		// обновляем пороговую кривую и ttdx
 		for (i = 0; i < thXc; i++)
 			extendTHX(thXOrig[i], thXT[i], thXA[i]);
-		makeThCurve(thXT, thY, thXc, thYc, isUpper, xMin, xMax, ttdx, ttdy, yBase, yPrev);
+		makeThCurve(thXT, thY, thXc, thYc, isUpper, xMin, xMax, ttdx, ttdy, yBase, yPrev, dyFactor);
 	}
 
 	prf_b("extendThreshToCover: processing final DX");
@@ -288,12 +327,12 @@ void extendThreshToCover(THX *thXOrig, THY *thY, int thXc, int thYc, int isUpper
 		extendTHX(thXOrig[i], thXOrig[i], thXA[i]);
 
 	// формируем окончательные DY-пороги thY по окончательным thXOrig (в две итерации)
-	makeThCurve(thXOrig, thY, thXc, thYc, isUpper, xMin, xMax, ttdx, ttdy, yBase, yTemp);
+	makeThCurve(thXOrig, thY, thXc, thYc, isUpper, xMin, xMax, ttdx, ttdy, yBase, yTemp, dyFactor);
 	calcThAddByThCurve(thYc, isUpper, xMin, xMax, ttdy, yTemp, yTgt, thAdd, 0x1);
-	addThAddToThY(thY, thYc, thAdd);
-	makeThCurve(thXOrig, thY, thXc, thYc, isUpper, xMin, xMax, ttdx, ttdy, yBase, yTemp);
+	addThAddToThY(thY, thYc, thAdd, dyFactor);
+	makeThCurve(thXOrig, thY, thXc, thYc, isUpper, xMin, xMax, ttdx, ttdy, yBase, yTemp, dyFactor);
 	calcThAddByThCurve(thYc, isUpper, xMin, xMax, ttdy, yTemp, yTgt, thAdd, 0x0);
-	addThAddToThY(thY, thYc, thAdd);
+	addThAddToThY(thY, thYc, thAdd, dyFactor);
 
 	//fprintf (stderr, "extendThreshToCover: done\n");
 	//fflush(stderr);

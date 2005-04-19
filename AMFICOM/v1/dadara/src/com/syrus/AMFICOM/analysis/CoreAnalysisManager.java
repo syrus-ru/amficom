@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.45 2005/04/19 14:20:46 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.46 2005/04/19 16:48:59 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.45 $, $Date: 2005/04/19 14:20:46 $
+ * @version $Revision: 1.46 $, $Date: 2005/04/19 16:48:59 $
  * @module
  */
 
@@ -102,6 +102,7 @@ public class CoreAnalysisManager
 	 * @param thDY массив изменяемых DY-порогов эталога
 	 * @param softKeyToUpdate Thresh.SOFT_UP для расширения верхней кривой, Thresh.SOFT_DOWN - для нижней
 	 * @param hardKeyToUpdate Thresh.HARD_UP для расширения верхней кривой, Thresh.HARD_DOWN - для нижней
+	 * @param dyFactor Коэффициент запаса DY, не менее 1.0
 	 */
 	private static native void nExtendThreshToCoverCurve(
 			double[] yBase,
@@ -109,7 +110,8 @@ public class CoreAnalysisManager
 			ThreshDX[] thDX,
 			ThreshDY[] thDY,
 			int softKeyToUpdate,
-			int hardKeyToUpdate);
+			int hardKeyToUpdate,
+			double dyFactor);
 
 	/**
 	 * Оценка уровня шума по кривой рефлектограммы.
@@ -195,8 +197,7 @@ public class CoreAnalysisManager
 		return analyse4(y, deltaX,
 			minLevel, minWeld, minConnector, noiseFactor,
 			reflSize, nReflSize,
-			0, null); // FIXME
-		//traceLength, noiseArray);
+			traceLength, noiseArray);
 	}
 
 	/**
@@ -388,6 +389,15 @@ public class CoreAnalysisManager
 				reflSize, nReflSize,
 				av.minTraceLength, av.avNoise);
 
+		for (int i = 0; i < rse.length; i++)
+			System.out.println("rse[" + i + "]:"
+				+ " begin=" + rse[i].getBegin()
+				+ " end=" + rse[i].getEnd()
+				+ " type=" + rse[i].getEventType()
+				+ " r=" + (rse[i].hasReliability() ?
+					String.valueOf(rse[i].getReliability()) : "<undefined>")
+				);
+
 		// теперь уточняем длину рефлектограммы по концу последнего события
 		// (длина может уменьшиться)
 
@@ -494,12 +504,12 @@ public class CoreAnalysisManager
 			double[] yMax,
 			double[] yMin)
 	{
-		System.err.println("updateMTMThresholdsByRange:"
-			+ " mtm.length = " + mtm.getMTAE().getModelTrace().getLength()
-			+ " yMax.length = " + yMax.length
-			+ " yMin.length = " + yMin.length
-			);
-		mtm.updateThreshToContain(yMax, yMin, 0.01); // @todo: externalize parameter: 0.01
+//		System.err.println("updateMTMThresholdsByRange:"
+//			+ " mtm.length = " + mtm.getMTAE().getModelTrace().getLength()
+//			+ " yMax.length = " + yMax.length
+//			+ " yMin.length = " + yMin.length
+//			);
+		mtm.updateThreshToContain(yMax, yMin, 0.03, 1.2); // @todo: externalize parameters: 0.01, 1.1
 	}
 
 	public static double getMedian(double[] y, int pos)
@@ -550,13 +560,15 @@ public class CoreAnalysisManager
 			ThreshDX[] thDX,
 			ThreshDY[] thDY,
 			int softKeyToUpdate,
-			int hardKeyToUpdate)
+			int hardKeyToUpdate,
+			double dyFactor)
 	{
 		nExtendThreshToCoverCurve(yBase,
 			yCover,
 			thDX,
 			thDY,
 			softKeyToUpdate,
-			hardKeyToUpdate);
+			hardKeyToUpdate,
+			dyFactor);
 	}
 }
