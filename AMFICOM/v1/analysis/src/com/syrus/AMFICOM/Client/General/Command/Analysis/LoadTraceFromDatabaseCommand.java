@@ -99,7 +99,7 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 		if (!Heap.hasEmptyAllBSMap())
 		{
 			if (Heap.getBSPrimaryTrace() != null)
-				new FileCloseCommand(dispatcher, aContext).execute();
+				new FileCloseCommand(aContext).execute();
 		}
 		Heap.setBSPrimaryTrace(bs);
 

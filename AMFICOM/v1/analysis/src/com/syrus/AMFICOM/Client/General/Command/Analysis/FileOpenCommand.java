@@ -139,7 +139,7 @@ public class FileOpenCommand extends VoidCommand
 			if (!Heap.hasEmptyAllBSMap())
 			{
 				if (Heap.getBSPrimaryTrace() != null && !testBehaviour)
-					new FileCloseCommand(dispatcher, aContext).execute();
+					new FileCloseCommand(aContext).execute();
 			}
 
 			String activeRefId = chooser.getSelectedFile().getName();

@@ -7,7 +7,6 @@ import java.awt.Cursor;
 import com.syrus.AMFICOM.Client.Analysis.GUIUtil;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 
@@ -21,20 +20,16 @@ import com.syrus.io.BellcoreStructure;
 
 public class MinuitAnalyseCommand extends VoidCommand
 {
-	private Dispatcher dispatcher;
-
 	private ApplicationContext aContext;
 
-	public MinuitAnalyseCommand(Dispatcher dispatcher,
-			ApplicationContext aContext)
+	public MinuitAnalyseCommand(ApplicationContext aContext)
 	{
-		this.dispatcher = dispatcher;
 		this.aContext = aContext;
 	}
 
 	public Object clone()
 	{
-		return new MinuitAnalyseCommand(dispatcher, aContext);
+		return new MinuitAnalyseCommand(aContext);
 	}
 
 	public void execute()

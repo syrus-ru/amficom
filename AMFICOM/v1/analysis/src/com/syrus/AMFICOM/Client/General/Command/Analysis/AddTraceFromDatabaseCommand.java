@@ -7,7 +7,6 @@ import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.Analysis.UI.ReflectogrammLoadDialog;
 import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.measurement.*;
@@ -16,14 +15,11 @@ import com.syrus.io.*;
 
 public class AddTraceFromDatabaseCommand extends VoidCommand
 {
-	private Dispatcher dispatcher;
 	private ApplicationContext aContext;
 	private Checker checker;
 
-
-	public AddTraceFromDatabaseCommand(Dispatcher dispatcher, ApplicationContext aContext)
+	public AddTraceFromDatabaseCommand(ApplicationContext aContext)
 	{
-		this.dispatcher = dispatcher;
 		this.aContext = aContext;
 	}
 
@@ -40,7 +36,7 @@ public class AddTraceFromDatabaseCommand extends VoidCommand
 
 	public Object clone()
 	{
-		return new AddTraceFromDatabaseCommand(dispatcher, aContext);
+		return new AddTraceFromDatabaseCommand(aContext);
 	}
 
 	public void execute()

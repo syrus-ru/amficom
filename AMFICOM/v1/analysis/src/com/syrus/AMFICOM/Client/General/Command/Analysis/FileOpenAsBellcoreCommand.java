@@ -80,7 +80,7 @@ public class FileOpenAsBellcoreCommand extends VoidCommand
 			if (!Heap.hasEmptyAllBSMap())
 			{
 				if (Heap.getBSPrimaryTrace() != null)
-					new FileCloseCommand(dispatcher, aContext).execute();
+					new FileCloseCommand(aContext).execute();
 			}
 
 			bs.title = chooser.getSelectedFile().getName();

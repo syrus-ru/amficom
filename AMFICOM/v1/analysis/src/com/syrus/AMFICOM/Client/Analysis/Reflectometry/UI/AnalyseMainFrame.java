@@ -459,15 +459,14 @@ public class AnalyseMainFrame extends JFrame implements BsHashChangeListener,
 		aModel.setCommand("menuFileOpenAsWavetek",
 			new FileOpenAsWavetekCommand(internalDispatcher, aContext));
 		aModel.setCommand("menuFileSave", new FileSaveCommand(
-				internalDispatcher, aContext));
-		aModel.setCommand("menuFileSaveAsText", new FileSaveAsTextCommand(
-				internalDispatcher, aContext));
+				aContext));
+		aModel.setCommand("menuFileSaveAsText", new FileSaveAsTextCommand(aContext));
 		aModel.setCommand("menuFileClose", new FileCloseCommand(
-				internalDispatcher, aContext));
+				aContext));
 		aModel.setCommand("menuFileAddCompare", new FileAddCommand(
-				internalDispatcher, aContext));
+				aContext));
 		aModel.setCommand("menuFileRemoveCompare", new FileRemoveCommand(
-				internalDispatcher, null, aContext));
+				null, aContext));
 
 		aModel.setCommand("menuAnalyseUpload",
 			new SaveAnalysisCommand(aContext));
@@ -487,11 +486,11 @@ public class AnalyseMainFrame extends JFrame implements BsHashChangeListener,
 			new LoadTraceFromDatabaseCommand(internalDispatcher, aContext));
 		aModel.setCommand("menuTraceDownloadEtalon", new LoadEtalonCommand());
 		aModel.setCommand("menuTraceAddCompare",
-			new AddTraceFromDatabaseCommand(internalDispatcher, aContext));
+			new AddTraceFromDatabaseCommand(aContext));
 		aModel.setCommand("menuTraceRemoveCompare", new FileRemoveCommand(
-				internalDispatcher, null, aContext));
+				null, aContext));
 		aModel.setCommand("menuTraceClose", new FileCloseCommand(
-				internalDispatcher, aContext));
+				aContext));
 		aModel.setCommand("menuTraceCloseEtalon", new RemoveEtalonCommand(
 				aContext));
 		aModel.setCommand("menuTraceReferenceSet",
@@ -499,7 +498,7 @@ public class AnalyseMainFrame extends JFrame implements BsHashChangeListener,
 		aModel.setCommand("menuTraceReferenceMakeCurrent",
 			new TraceMakeCurrentCommand(internalDispatcher, aContext));
 		aModel.setCommand("menuOptionsColor", new OptionsSetColorsCommand(
-				internalDispatcher, aContext));
+				aContext));
 
 		this.analysisReportCommand = new CreateAnalysisReportCommand(
 				aContext);			

@@ -9,26 +9,23 @@ import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.AnalyseMainFrameSimplified;
 import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ChoosableFileFilter;
 import com.syrus.io.*;
 
 public class FileSaveAsTextCommand extends VoidCommand
 {
-	private Dispatcher dispatcher;
 	private ApplicationContext aContext;
 	private String propertiesFileName = "analysis.properties";
 
-	public FileSaveAsTextCommand(Dispatcher dispatcher, ApplicationContext aContext)
+	public FileSaveAsTextCommand(ApplicationContext aContext)
 	{
-		this.dispatcher = dispatcher;
 		this.aContext = aContext;
 	}
 
 	public Object clone()
 	{
-		return new FileSaveAsTextCommand(dispatcher, aContext);
+		return new FileSaveAsTextCommand(aContext);
 	}
 
 	public void execute()

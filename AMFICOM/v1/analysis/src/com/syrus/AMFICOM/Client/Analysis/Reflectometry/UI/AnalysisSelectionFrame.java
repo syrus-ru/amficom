@@ -216,7 +216,7 @@ implements OperationListener, BsHashChangeListener, PrimaryMTMListener
 		minuitParams[3] = ((Double)jTable.getValueAt(3, 1)).doubleValue();
 
 		Heap.setMinuitAnalysisParams(minuitParams);
-		new MinuitAnalyseCommand(dispatcher, aContext).execute();
+		new MinuitAnalyseCommand(aContext).execute();
 		dispatcher.notify(new RefUpdateEvent(RefUpdateEvent.PRIMARY_TRACE, RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));
 		dispatcher.notify(new RefUpdateEvent(this, RefUpdateEvent.THRESHOLDS_UPDATED_EVENT));
 		if (this.selectedEventId != null) {

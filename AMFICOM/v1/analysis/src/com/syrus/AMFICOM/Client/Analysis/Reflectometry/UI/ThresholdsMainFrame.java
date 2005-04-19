@@ -249,11 +249,11 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener, CurrentTr
 		aModel.setCommand("menuFileOpen", new FileOpenCommand(internal_dispatcher, aContext));
 		aModel.setCommand("menuFileOpenAsBellcore", new FileOpenAsBellcoreCommand(internal_dispatcher, aContext));
 		aModel.setCommand("menuFileOpenAsWavetek", new FileOpenAsWavetekCommand(internal_dispatcher, aContext));
-		aModel.setCommand("menuFileSave", new FileSaveCommand(internal_dispatcher, aContext));
-		aModel.setCommand("menuFileSaveAsText", new FileSaveAsTextCommand(internal_dispatcher, aContext));
-		aModel.setCommand("menuFileClose", new FileCloseCommand(internal_dispatcher, aContext));
-		aModel.setCommand("menuFileAddCompare",new FileAddCommand(internal_dispatcher, aContext));
-		aModel.setCommand("menuFileRemoveCompare", new FileRemoveCommand(internal_dispatcher, null, aContext));
+		aModel.setCommand("menuFileSave", new FileSaveCommand(aContext));
+		aModel.setCommand("menuFileSaveAsText", new FileSaveAsTextCommand(aContext));
+		aModel.setCommand("menuFileClose", new FileCloseCommand(aContext));
+		aModel.setCommand("menuFileAddCompare",new FileAddCommand(aContext));
+		aModel.setCommand("menuFileRemoveCompare", new FileRemoveCommand(null, aContext));
 
 		aModel.setCommand("menuAnalyseUpload", new SaveAnalysisCommand(aContext));
 		aModel.setCommand("menuSaveTestSetup", new SaveTestSetupCommand(aContext,
@@ -265,13 +265,13 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener, CurrentTr
 
 		aModel.setCommand("menuTraceDownload", new LoadTraceFromDatabaseCommand(internal_dispatcher, aContext));
 		aModel.setCommand("menuTraceDownloadEtalon", new LoadEtalonCommand());
-		aModel.setCommand("menuTraceAddCompare", new AddTraceFromDatabaseCommand(internal_dispatcher, aContext));
-		aModel.setCommand("menuTraceRemoveCompare", new FileRemoveCommand(internal_dispatcher, null, aContext));
-		aModel.setCommand("menuTraceClose", new FileCloseCommand(internal_dispatcher, aContext));
+		aModel.setCommand("menuTraceAddCompare", new AddTraceFromDatabaseCommand(aContext));
+		aModel.setCommand("menuTraceRemoveCompare", new FileRemoveCommand(null, aContext));
+		aModel.setCommand("menuTraceClose", new FileCloseCommand(aContext));
 		aModel.setCommand("menuTraceCloseEtalon", new RemoveEtalonCommand(aContext));
 		aModel.setCommand("menuTraceReferenceSet", new TraceOpenReferenceCommand(internal_dispatcher, aContext));
 		aModel.setCommand("menuTraceReferenceMakeCurrent", new TraceMakeCurrentCommand(internal_dispatcher, aContext));
-		aModel.setCommand("menuOptionsColor", new OptionsSetColorsCommand(internal_dispatcher, aContext));
+		aModel.setCommand("menuOptionsColor", new OptionsSetColorsCommand(aContext));
 
 		CreateAnalysisReportCommand rc = new CreateAnalysisReportCommand(aContext);
 		for (Iterator it = tables.iterator(); it.hasNext();)

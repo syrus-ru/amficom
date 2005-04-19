@@ -37,8 +37,8 @@ public class TraceMakeCurrentCommand extends VoidCommand
 
         // FIXME: ерунда?
 		BellcoreStructure bs = Heap.getBSReferenceTrace();
-		new FileRemoveCommand(dispatcher, Heap.REFERENCE_TRACE_KEY, aContext).execute();
-		new FileRemoveCommand(dispatcher, RefUpdateEvent.PRIMARY_TRACE, aContext).execute();
+		new FileRemoveCommand(Heap.REFERENCE_TRACE_KEY, aContext).execute();
+		new FileRemoveCommand(RefUpdateEvent.PRIMARY_TRACE, aContext).execute();
 		Heap.setBSPrimaryTrace(bs);
 
 		new InitialAnalysisCommand().execute();
