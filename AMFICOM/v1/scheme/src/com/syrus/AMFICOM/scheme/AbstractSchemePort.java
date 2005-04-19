@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.11 2005/04/14 11:15:52 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.12 2005/04/19 08:58:26 bass Exp $
  * 
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import java.util.Set;
  * {@link AbstractSchemePort}instead.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2005/04/14 11:15:52 $
+ * @version $Revision: 1.12 $, $Date: 2005/04/19 08:58:26 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemePort extends
@@ -38,7 +38,7 @@ public abstract class AbstractSchemePort extends
 		Characterizable {
 	private static final long serialVersionUID = 6943625949984422779L;
 
-	private AbstractSchemePortDirectionType abstractSchemePortDirectionType;
+	private AbstractSchemePortDirectionType directionType;
 
 	private Set characteristics;
 
@@ -96,7 +96,7 @@ public abstract class AbstractSchemePort extends
 
 	public abstract AbstractSchemeLink getAbstractSchemeLink();
 
-	public final AbstractSchemePortDirectionType getAbstractSchemePortDirectionType() {
+	public final AbstractSchemePortDirectionType getDirectionType() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -154,7 +154,7 @@ public abstract class AbstractSchemePort extends
 		throw new UnsupportedOperationException();
 	}
 
-	public final void setAbstractSchemePortDirectionType(final AbstractSchemePortDirectionType abstractSchemePortDirectionType) {
+	public final void setDirectionType(final AbstractSchemePortDirectionType abstractSchemePortDirectionType) {
 		throw new UnsupportedOperationException();
 	}
 

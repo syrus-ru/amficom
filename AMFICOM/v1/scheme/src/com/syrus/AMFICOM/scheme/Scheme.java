@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.15 2005/04/18 13:00:50 bass Exp $
+ * $Id: Scheme.java,v 1.16 2005/04/19 08:58:26 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,15 +30,15 @@ import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
-import com.syrus.AMFICOM.scheme.corba.SchemeKind;
 import com.syrus.AMFICOM.scheme.corba.Scheme_Transferable;
+import com.syrus.AMFICOM.scheme.corba.Scheme_TransferablePackage.Kind;
 import com.syrus.util.Log;
 
 /**
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.15 $, $Date: 2005/04/18 13:00:50 $
+ * @version $Revision: 1.16 $, $Date: 2005/04/19 08:58:26 $
  * @module scheme_v1
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -55,7 +55,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 
 	private int height;
 
-	private SchemeKind schemeKind;
+	private Kind kind;
 
 	private Identifier mapId;
 
@@ -250,7 +250,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		throw new UnsupportedOperationException();
 	}
 
-	public SchemeKind getSchemeKind() {
+	public Kind getKind() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -448,7 +448,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 			addSchemeElement((SchemeElement) schemeElementIterator.next());
 	}
 
-	public void setSchemeKind(final SchemeKind schemeKind) {
+	public void setKind(final Kind schemeKind) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -540,7 +540,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		this.label = scheme.label;
 		this.width = scheme.width;
 		this.height = scheme.height;
-		this.schemeKind = scheme.schemeKind;
+		this.kind = scheme.schemeKind;
 		this.mapId = new Identifier(scheme.mapId);
 		this.symbolId = new Identifier(scheme.symbolId);
 		this.ugoCellId = new Identifier(scheme.ugoCellId);
