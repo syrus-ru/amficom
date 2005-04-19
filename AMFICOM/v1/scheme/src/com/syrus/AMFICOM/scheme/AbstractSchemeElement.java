@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractSchemeElement.java,v 1.13 2005/04/18 16:00:30 bass Exp $
+ * $Id: AbstractSchemeElement.java,v 1.14 2005/04/19 10:47:44 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,13 +13,19 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.omg.CORBA.portable.IDLEntity;
+
 import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.util.Log;
 
 /**
@@ -28,7 +34,7 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeElement}instead.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.13 $, $Date: 2005/04/18 16:00:30 $
+ * @version $Revision: 1.14 $, $Date: 2005/04/19 10:47:44 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemeElement extends
@@ -36,11 +42,11 @@ public abstract class AbstractSchemeElement extends
 		Characterizable {
 	static final long serialVersionUID = 4644766113809681630L;
 
-	private Set characteristics;
+	Set characteristics;
 
-	private String description;
+	String description;
 
-	private String name;
+	String name;
 
 	/**
 	 * @todo It may be necessary to allow accessor and modifier be
@@ -81,7 +87,6 @@ public abstract class AbstractSchemeElement extends
 	 */
 	public final void addCharacteristic(final Characteristic characteristic) {
 		assert characteristic != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert !getCharacteristics().contains(characteristic): ErrorMessages.COLLECTION_IS_A_SET;
 		this.characteristics.add(characteristic);
 		this.changed = true;
 	}
@@ -163,7 +168,10 @@ public abstract class AbstractSchemeElement extends
 	 */
 	public final void setCharacteristics0(final Set characteristics) {
 		assert characteristics != null: ErrorMessages.NON_NULL_EXPECTED;
-		this.characteristics.clear();
+		if (this.characteristics == null)
+			this.characteristics = new HashSet(characteristics.size());
+		else
+			this.characteristics.clear();
 		this.characteristics.addAll(characteristics);
 	}
 
@@ -207,6 +215,30 @@ public abstract class AbstractSchemeElement extends
 			return;
 		this.parentSchemeId = newParentSchemeId;
 		this.changed = true;
+	}
+
+	/**
+	 * @param header
+	 * @param name1
+	 * @param description1
+	 * @param parentSchemeId1
+	 * @param characteristicIds
+	 * @throws CreateObjectException
+	 */
+	void fromTransferable(final StorableObject_Transferable header,
+			final String name1, final String description1,
+			final Identifier_Transferable parentSchemeId1,
+			final Identifier_Transferable characteristicIds[])
+			throws CreateObjectException {
+		try {
+			super.fromTransferable(header);
+			setCharacteristics0(GeneralStorableObjectPool.getStorableObjects(Identifier.fromTransferables(characteristicIds), true));
+		} catch (final ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
+		this.name = name1;
+		this.description = description1;
+		this.parentSchemeId = new Identifier(parentSchemeId1);
 	}
 
 	/*-********************************************************************

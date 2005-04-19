@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.19 2005/04/18 12:34:45 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.20 2005/04/19 10:47:43 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.util.Log;
  * #01 in hierarchy.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.19 $, $Date: 2005/04/18 12:34:45 $
+ * @version $Revision: 1.20 $, $Date: 2005/04/19 10:47:43 $
  * @module scheme_v1
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation. 
  */
@@ -114,12 +114,8 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	 * @throws CreateObjectException 
 	 */
 	SchemeProtoGroup(final SchemeProtoGroup_Transferable transferable) throws CreateObjectException {
-		try {
-			this.schemeProtoGroupDatabase = SchemeDatabaseContext.getSchemeProtoGroupDatabase();
-			fromTransferable(transferable);
-		} catch (final ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
+		this.schemeProtoGroupDatabase = SchemeDatabaseContext.getSchemeProtoGroupDatabase();
+		fromTransferable(transferable);
 	}
 
 	/**
@@ -584,12 +580,17 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 
 	/**
 	 * @param transferable
-	 * @throws ApplicationException 
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IDLEntity)
 	 */
-	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IDLEntity transferable) {
 		final SchemeProtoGroup_Transferable schemeProtoGroup = (SchemeProtoGroup_Transferable) transferable;
-		super.fromTransferable(schemeProtoGroup.header);
+		try {
+			super.fromTransferable(schemeProtoGroup.header);
+		} catch (final ApplicationException ae) {
+			/*
+			 * Never.
+			 */
+		}
 		this.name = schemeProtoGroup.name;
 		this.description = schemeProtoGroup.description;
 		this.symbolId = new Identifier(schemeProtoGroup.symbolId);

@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.16 2005/04/19 08:58:26 bass Exp $
+ * $Id: Scheme.java,v 1.17 2005/04/19 10:47:43 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.util.Log;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.16 $, $Date: 2005/04/19 08:58:26 $
+ * @version $Revision: 1.17 $, $Date: 2005/04/19 10:47:43 $
  * @module scheme_v1
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -540,7 +540,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		this.label = scheme.label;
 		this.width = scheme.width;
 		this.height = scheme.height;
-		this.kind = scheme.schemeKind;
+		this.kind = scheme.kind;
 		this.mapId = new Identifier(scheme.mapId);
 		this.symbolId = new Identifier(scheme.symbolId);
 		this.ugoCellId = new Identifier(scheme.ugoCellId);

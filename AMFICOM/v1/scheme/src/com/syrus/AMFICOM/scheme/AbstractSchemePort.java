@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.12 2005/04/19 08:58:26 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.13 2005/04/19 10:47:44 bass Exp $
  * 
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -30,7 +31,7 @@ import java.util.Set;
  * {@link AbstractSchemePort}instead.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2005/04/19 08:58:26 $
+ * @version $Revision: 1.13 $, $Date: 2005/04/19 10:47:44 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemePort extends
@@ -91,7 +92,9 @@ public abstract class AbstractSchemePort extends
 	}
 
 	public final void addCharacteristic(final Characteristic characteristic) {
-		throw new UnsupportedOperationException();
+		assert characteristic != null: ErrorMessages.NON_NULL_EXPECTED;
+		this.characteristics.add(characteristic);
+		this.changed = true;
 	}
 
 	public abstract AbstractSchemeLink getAbstractSchemeLink();
@@ -101,7 +104,7 @@ public abstract class AbstractSchemePort extends
 	}
 
 	public final Set getCharacteristics() {
-		throw new UnsupportedOperationException();
+		return Collections.unmodifiableSet(this.characteristics);
 	}
 
 	/**
@@ -151,19 +154,32 @@ public abstract class AbstractSchemePort extends
 	}
 
 	public final void removeCharacteristic(final Characteristic characteristic) {
-		throw new UnsupportedOperationException();
+		assert characteristic != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert getCharacteristics().contains(characteristic): ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		this.characteristics.remove(characteristic);
+		this.changed = true;
 	}
 
-	public final void setDirectionType(final AbstractSchemePortDirectionType abstractSchemePortDirectionType) {
+	public final void setDirectionType(final AbstractSchemePortDirectionType directionType) {
 		throw new UnsupportedOperationException();
 	}
 
 	public final void setCharacteristics(final Set characteristics) {
-		throw new UnsupportedOperationException();
+		setCharacteristics0(characteristics);
+		this.changed = true;
 	}
 
+	/**
+	 * @param characteristics
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(java.util.Set)
+	 */
 	public final void setCharacteristics0(final Set characteristics) {
-		throw new UnsupportedOperationException();
+		assert characteristics != null: ErrorMessages.NON_NULL_EXPECTED;
+		if (this.characteristics == null)
+			this.characteristics = new HashSet(characteristics.size());
+		else
+			this.characteristics.clear();
+		this.characteristics.addAll(characteristics);
 	}
 
 	/**

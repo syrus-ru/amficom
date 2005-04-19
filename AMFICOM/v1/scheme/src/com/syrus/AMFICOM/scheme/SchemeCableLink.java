@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.18 2005/04/19 08:58:26 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.19 2005/04/19 10:47:43 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,12 +29,13 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.scheme.corba.SchemeCableLink_Transferable;
+import com.syrus.AMFICOM.scheme.corba.SchemeElement_Transferable;
 
 /**
  * #11 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.18 $, $Date: 2005/04/19 08:58:26 $
+ * @version $Revision: 1.19 $, $Date: 2005/04/19 10:47:43 $
  * @module scheme_v1
  */
 public final class SchemeCableLink extends AbstractSchemeLink {
@@ -298,6 +299,8 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IDLEntity)
 	 */
 	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
+		final SchemeCableLink_Transferable schemeCableLink = (SchemeCableLink_Transferable) transferable;
+		fromTransferable(schemeCableLink.header, schemeCableLink.name, schemeCableLink.description, schemeCableLink.parentSchemeId, schemeCableLink.characteristicIds);
 		throw new UnsupportedOperationException();
 	}
 }

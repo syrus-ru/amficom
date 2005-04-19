@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.18 2005/04/18 16:00:30 bass Exp $
+ * $Id: SchemeElement.java,v 1.19 2005/04/19 10:47:43 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,6 +23,7 @@ import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -32,6 +33,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
+import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.MapStorableObjectPool;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
@@ -44,7 +46,7 @@ import com.syrus.util.Log;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.18 $, $Date: 2005/04/18 16:00:30 $
+ * @version $Revision: 1.19 $, $Date: 2005/04/19 10:47:43 $
  * @module scheme_v1
  */
 public final class SchemeElement extends AbstractSchemeElement implements
@@ -410,7 +412,20 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
 	 */
 	public IDLEntity getTransferable() {
-		throw new UnsupportedOperationException();
+		return new SchemeElement_Transferable(getHeaderTransferable(),
+				this.name,
+				this.description,
+				this.label,
+				(Identifier_Transferable) this.equipmentTypeId.getTransferable(),
+				(Identifier_Transferable) this.equipmentId.getTransferable(),
+				(Identifier_Transferable) this.kisId.getTransferable(),
+				(Identifier_Transferable) this.siteNodeId.getTransferable(),
+				(Identifier_Transferable) this.symbolId.getTransferable(),
+				(Identifier_Transferable) this.ugoCellId.getTransferable(),
+				(Identifier_Transferable) this.schemeCellId.getTransferable(),
+				(Identifier_Transferable) this.parentSchemeId.getTransferable(),
+				(Identifier_Transferable) this.parentSchemeElementId.getTransferable(),
+				Identifier.createTransferables(this.characteristics));
 	}
 
 	/**
@@ -689,11 +704,21 @@ public final class SchemeElement extends AbstractSchemeElement implements
 
 	/**
 	 * @param transferable
-	 * @throws ApplicationException
+	 * @throws CreateObjectException
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IDLEntity)
 	 */
-	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		throw new UnsupportedOperationException();
+	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
+		final SchemeElement_Transferable schemeElement = (SchemeElement_Transferable) transferable;
+		fromTransferable(schemeElement.header, schemeElement.name, schemeElement.description, schemeElement.parentSchemeId, schemeElement.characteristicIds);
+		this.label = schemeElement.label;
+		this.equipmentTypeId = new Identifier(schemeElement.equipmentTypeId);
+		this.equipmentId = new Identifier(schemeElement.equipmentId);
+		this.kisId = new Identifier(schemeElement.kisId);
+		this.siteNodeId = new Identifier(schemeElement.siteNodeId);
+		this.symbolId = new Identifier(schemeElement.symbolId);
+		this.ugoCellId = new Identifier(schemeElement.ugoCellId);
+		this.schemeCellId = new Identifier(schemeElement.schemeCellId);
+		this.parentSchemeElementId = new Identifier(schemeElement.parentSchemeElementId);
 	}
 
 	/*-********************************************************************

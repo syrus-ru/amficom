@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.15 2005/04/18 13:19:01 bass Exp $
+ * $Id: SchemeDevice.java,v 1.16 2005/04/19 10:47:43 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ import com.syrus.util.Log;
  * #07 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.15 $, $Date: 2005/04/18 13:19:01 $
+ * @version $Revision: 1.16 $, $Date: 2005/04/19 10:47:43 $
  * @module scheme_v1
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -125,7 +125,9 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 * @see com.syrus.AMFICOM.general.Characterizable#addCharacteristic(Characteristic)
 	 */
 	public void addCharacteristic(final Characteristic characteristic) {
-		throw new UnsupportedOperationException();
+		assert characteristic != null: ErrorMessages.NON_NULL_EXPECTED;
+		this.characteristics.add(characteristic);
+		this.changed = true;
 	}
 
 	/**
@@ -156,7 +158,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics()
 	 */
 	public Set getCharacteristics() {
-		throw new UnsupportedOperationException();
+		return Collections.unmodifiableSet(this.characteristics);
 	}
 
 	/**
@@ -233,7 +235,10 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 * @see com.syrus.AMFICOM.general.Characterizable#removeCharacteristic(Characteristic)
 	 */
 	public void removeCharacteristic(final Characteristic characteristic) {
-		throw new UnsupportedOperationException();
+		assert characteristic != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert getCharacteristics().contains(characteristic): ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		this.characteristics.remove(characteristic);
+		this.changed = true;
 	}
 
 	/**
@@ -265,7 +270,8 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set)
 	 */
 	public void setCharacteristics(final Set characteristics) {
-		throw new UnsupportedOperationException();
+		setCharacteristics0(characteristics);
+		this.changed = true;
 	}
 
 	/**
@@ -273,7 +279,12 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(Set)
 	 */
 	public void setCharacteristics0(final Set characteristics) {
-		throw new UnsupportedOperationException();
+		assert characteristics != null: ErrorMessages.NON_NULL_EXPECTED;
+		if (this.characteristics == null)
+			this.characteristics = new HashSet(characteristics.size());
+		else
+			this.characteristics.clear();
+		this.characteristics.addAll(characteristics);
 	}
 
 	/**

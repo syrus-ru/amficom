@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.23 2005/04/18 12:34:45 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.24 2005/04/19 10:47:43 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,7 +52,7 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.23 $, $Date: 2005/04/18 12:34:45 $
+ * @version $Revision: 1.24 $, $Date: 2005/04/19 10:47:43 $
  * @module scheme_v1
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation. 
  */
@@ -150,12 +150,8 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * @throws CreateObjectException
 	 */
 	SchemeProtoElement(final SchemeProtoElement_Transferable transferable) throws CreateObjectException {
-		try {
-			this.schemeProtoElementDatabase = SchemeDatabaseContext.getSchemeProtoElementDatabase();
-			fromTransferable(transferable);
-		} catch (final ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
+		this.schemeProtoElementDatabase = SchemeDatabaseContext.getSchemeProtoElementDatabase();
+		fromTransferable(transferable);
 	}
 
 	/**
@@ -313,7 +309,6 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 */
 	public void addCharacteristic(final Characteristic characteristic) {
 		assert characteristic != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert !getCharacteristics().contains(characteristic): ErrorMessages.COLLECTION_IS_A_SET;
 		this.characteristics.add(characteristic);
 		this.changed = true;
 	}
@@ -766,7 +761,10 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 */
 	public void setCharacteristics0(final Set characteristics) {
 		assert characteristics != null: ErrorMessages.NON_NULL_EXPECTED;
-		this.characteristics.clear();
+		if (this.characteristics == null)
+			this.characteristics = new HashSet(characteristics.size());
+		else
+			this.characteristics.clear();
 		this.characteristics.addAll(characteristics);
 	}
 
@@ -1028,12 +1026,17 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 
 	/**
 	 * @param transferable
-	 * @throws ApplicationException 
+	 * @throws CreateObjectException 
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IDLEntity)
 	 */
-	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
 		final SchemeProtoElement_Transferable schemeProtoElement = (SchemeProtoElement_Transferable) transferable;
-		super.fromTransferable(schemeProtoElement.header);
+		try {
+			super.fromTransferable(schemeProtoElement.header);
+			setCharacteristics0(GeneralStorableObjectPool.getStorableObjects(Identifier.fromTransferables(schemeProtoElement.characteristicIds), true));
+		} catch (final ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 		this.name = schemeProtoElement.name;
 		this.description = schemeProtoElement.description;
 		this.label = schemeProtoElement.label;
@@ -1043,18 +1046,6 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		this.schemeCellId = new Identifier(schemeProtoElement.schemeCellId);
 		this.parentSchemeProtoGroupId = new Identifier(schemeProtoElement.parentSchemeProtoGroupId);
 		this.parentSchemeProtoElementId = new Identifier(schemeProtoElement.parentSchemeProtoElementId);
-		try {
-			final Identifier_Transferable characteristicIds[] = schemeProtoElement.characteristicIds;
-			final int length = characteristicIds.length;
-			if (this.characteristics == null)
-				this.characteristics = new HashSet(length);
-			else
-				this.characteristics.clear();
-			for (int i = 0; i < length; i++)
-				this.characteristics.add(GeneralStorableObjectPool.getStorableObject(new Identifier(characteristicIds[i]), true));
-		} catch (final ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
 	}
 
 	/*-********************************************************************
