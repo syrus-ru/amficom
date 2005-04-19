@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewVisualManagerFactory.java,v 1.1 2005/04/07 14:14:08 krupenn Exp $
+ * $Id: MapViewVisualManagerFactory.java,v 1.2 2005/04/19 15:50:48 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,13 +12,13 @@
 package com.syrus.AMFICOM.Client.Map.UI;
 
 import com.syrus.AMFICOM.Client.Map.Controllers.CollectorController;
-import com.syrus.AMFICOM.Client.Map.Controllers.MapVisualManager;
 import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
-import com.syrus.AMFICOM.Client.Map.Controllers.MapViewVisualManager;
 import com.syrus.AMFICOM.Client.Map.Controllers.NodeTypeController;
 import com.syrus.AMFICOM.Client.Map.Controllers.PhysicalLinkController;
 import com.syrus.AMFICOM.Client.Map.Controllers.SiteNodeController;
 import com.syrus.AMFICOM.Client.Map.Controllers.TopologicalNodeController;
+import com.syrus.AMFICOM.Client.Map.Props.MapViewVisualManager;
+import com.syrus.AMFICOM.Client.Map.Props.MapVisualManager;
 import com.syrus.AMFICOM.client_.general.ui_.VisualManager;
 import com.syrus.AMFICOM.client_.general.ui_.tree_.VisualManagerFactory;
 import com.syrus.AMFICOM.logic.Item;
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.mapview.MapView;
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/07 14:14:08 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/19 15:50:48 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
