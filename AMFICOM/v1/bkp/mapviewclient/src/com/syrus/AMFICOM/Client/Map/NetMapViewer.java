@@ -1,5 +1,5 @@
 /**
- * $Id: NetMapViewer.java,v 1.10 2005/03/02 12:37:35 krupenn Exp $
+ * $Id: NetMapViewer.java,v 1.11 2005/04/19 15:39:44 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,8 +10,11 @@
 
 package com.syrus.AMFICOM.Client.Map;
 
+import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.swing.JComponent;
@@ -28,12 +31,15 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
  * картографии, следует вызвать метод {@link #getVisualComponent()}
  * <br> реализация com.syrus.AMFICOM.Client.Map.ObjectFX.OfxNetMapViewer 
  * <br> реализация com.syrus.AMFICOM.Client.Map.Mapinfo.MapInfoNetMapViewer
- * @author $Author: krupenn $
- * @version $Revision: 1.10 $, $Date: 2005/03/02 12:37:35 $
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.11 $, $Date: 2005/04/19 15:39:44 $
  * @module mapviewclient_v1
  */
 public abstract class NetMapViewer 
 {
+	private Dimension lastVisCompSize = null;
+	private Image mapShotImage = null;
+	
 	/**
 	 * Установить соединение с хранилищем топографической информации.
 	 * @param conn соежинение
@@ -62,10 +68,17 @@ public abstract class NetMapViewer
 		JComponent component = getVisualComponent();
 		int width = component.getWidth();
 		int height = component.getHeight();
-		BufferedImage bim = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
-		component.paint(bim.getGraphics());
+		if (this.lastVisCompSize == null)
+		{
+			this.lastVisCompSize = component.getSize();
+			this.mapShotImage = new BufferedImage(width, height, BufferedImage.TYPE_USHORT_565_RGB);
+		}
+		else if (!this.lastVisCompSize.equals(component.getSize()))
+			this.mapShotImage = new BufferedImage(width, height, BufferedImage.TYPE_USHORT_565_RGB);
 		
-		return bim;
+		component.paint(this.mapShotImage.getGraphics());
+		
+		return this.mapShotImage;
 	}
 
 	/**
