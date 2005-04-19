@@ -1,5 +1,5 @@
 /*-
-* $Id: IntervalsTemporalPattern.java,v 1.1 2005/04/18 15:14:27 bob Exp $
+* $Id: IntervalsTemporalPattern.java,v 1.2 2005/04/19 08:51:58 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/18 15:14:27 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/19 08:51:58 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module measurement_v1
@@ -87,36 +87,49 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern {
 	}
 	
 	protected void fillTimes() {
-		if (this.intervalsAbstractTemporalPatternMap != null) {
-			Date previousDate = new Date(this.startTime);
-			Date startDate = previousDate;
-			for (Iterator it = this.intervalsAbstractTemporalPatternMap.keySet().iterator(); it.hasNext();) {
-				Long seconds = (Long) it.next();
-				Identifier abstractTemporalPatternId = (Identifier)this.intervalsAbstractTemporalPatternMap.get(seconds);
-				AbstractTemporalPattern temporalPattern = null;
-				if (abstractTemporalPatternId != null && !abstractTemporalPatternId.isVoid()) {
-					try {
-						temporalPattern = (AbstractTemporalPattern) MeasurementStorableObjectPool.getStorableObject(
-							abstractTemporalPatternId, true);
-					} catch (ApplicationException e) {
-						// nothing do, just ignore temporal pattern
-						Log.errorException(e);
-					}
-				}
-				
-				Date localEndTime = new Date(startDate.getTime() + seconds.longValue() * 1000L);
-				
-				if (temporalPattern == null) {
-					super.times.add(previousDate);
-				} else {
-					super.times.add(temporalPattern.getTimes(previousDate, localEndTime));
-				}
-				
-				previousDate = localEndTime;
+		AbstractTemporalPattern previousTemporalPattern = null;
 
+		Date previousDate = null;
+		Date startDate = new Date(this.startTime);
+
+		java.util.Set keys = this.intervalsAbstractTemporalPatternMap.keySet();
+		for (Iterator it = keys.iterator(); it.hasNext();) {
+			Long seconds = (Long) it.next();
+			Identifier abstractTemporalPatternId = (Identifier) this.intervalsAbstractTemporalPatternMap.get(seconds);
+			AbstractTemporalPattern temporalPattern = null;
+			if (abstractTemporalPatternId != null && !abstractTemporalPatternId.isVoid()) {
+				try {
+					temporalPattern = (AbstractTemporalPattern) MeasurementStorableObjectPool.getStorableObject(
+						abstractTemporalPatternId, true);
+				} catch (ApplicationException e) {
+					// nothing do, just ignore temporal pattern
+					Log.errorException(e);
+				}
+			}
+
+			long localStartTime = startDate.getTime() + seconds.longValue() * 1000L;
+
+			Date localStartDate = new Date(localStartTime);
+
+			/* add not added last (previous item) */
+			this.addTimeItem(previousDate, localStartDate, previousTemporalPattern);
+			
+			previousDate = localStartDate;
+			previousTemporalPattern = temporalPattern;
+		}
+
+		/* add not added last (previous item) */
+		this.addTimeItem(previousDate, new Date(this.endTime), previousTemporalPattern);
+	}
+	
+	private void addTimeItem(Date startDate, Date endDate, AbstractTemporalPattern temporalPattern) {
+		if (startDate != null) {
+			if (temporalPattern == null) {
+				super.times.add(startDate);
+			} else {
+				super.times.add(temporalPattern.getTimes(startDate, endDate));
 			}
 		}
-		
 	}
 
 	/**
