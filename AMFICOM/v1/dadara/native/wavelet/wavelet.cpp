@@ -9,17 +9,18 @@
 inline int imin(int a, int b) { return a < b ? a : b; }
 inline int imax(int a, int b) { return a > b ? a : b; }
 
-//
+//===========================================================================
 // generic wavelet methods
 //
-
+//---------------------------------------------------------------------------
 void Wavelet::fArr(int s, double *out)
 {
 	int i;
 	for (i = -s; i <= s; i++)
 		out[i + s] = f(s, i);
 }
-
+//---------------------------------------------------------------------------
+// норма вейвлета 
 double Wavelet::normStep(int s)
 {
 	int i;
@@ -28,7 +29,7 @@ double Wavelet::normStep(int s)
 		sum += fabs(f(s, i));
 	return sum / 2;
 }
-
+//---------------------------------------------------------------------------
 double Wavelet::normIntCheck(int s)
 {
 	int i;
@@ -37,7 +38,7 @@ double Wavelet::normIntCheck(int s)
 		sum += f(s, i);
 	return sum;
 }
-
+//---------------------------------------------------------------------------
 double Wavelet::normIntInt(int s)
 {
 	int i;
@@ -47,7 +48,7 @@ double Wavelet::normIntInt(int s)
 		sum2 += sum1 += f(s, i);
 	return sum2;
 }
-
+//---------------------------------------------------------------------------
 double Wavelet::normMx(int s)
 {
 	int i;
@@ -56,7 +57,7 @@ double Wavelet::normMx(int s)
 		sum += f(s, i) * i;
 	return sum;
 }
-
+//---------------------------------------------------------------------------
 // input range = [0..inLen-1]; out range = [0..iTo-iFrom]
 void Wavelet::transform(int s, double *in, int inLen, int iFrom, int iTo, double *out, double norma)
 {
@@ -88,37 +89,36 @@ void Wavelet::transform(int s, double *in, int inLen, int iFrom, int iTo, double
 	}
 	delete[] wData;
 }
-
-//
+//===========================================================================
+//---------------------------------------------------------------------------
 // basic Haar methods
 //
-
 int HaarWavelet::getMinScale()
 {
 	return 1;
 }
+//----------------------------------
 double HaarWavelet::f(int s, int x)
 {
 	return x <= 0 ? x < 0 ? -1 : 0 : 1;
 }
-
-//
+//===========================================================================
+//---------------------------------------------------------------------------
 // basic Sine methods
 //
-
 int SineWavelet::getMinScale()
 {
 	return 2;
 }
+//----------------------------------
 double SineWavelet::f(int s, int x)
 {
 	return sin(M_PI * x / s);
 }
-
+//===========================================================================
+//---------------------------------------------------------------------------
 // quick Haar methods
-
 // NB: not tested yet
-
 // input range = [0..inLen-1]; out range = [0..iTo-iFrom]
 void HaarWavelet::transform(int s, double *in, int inLen, int iFrom, int iTo, double *out, double norma)
 {
@@ -147,10 +147,9 @@ void HaarWavelet::transform(int s, double *in, int inLen, int iFrom, int iTo, do
 
 	delete[] sum;
 }
-
-
+//===========================================================================
+//---------------------------------------------------------------------------
 // quick Sine methods
-
 // input range = [0..inLen-1]; out range = [0..iTo-iFrom]
 void SineWavelet::transform(int s, double *in, int inLen, int iFrom, int iTo, double *out, double norma)
 {
@@ -227,19 +226,20 @@ void SineWavelet::transform(int s, double *in, int inLen, int iFrom, int iTo, do
 	delete[] sine;
 	delete[] cosine;
 }
-
-//
+//===========================================================================
+//---------------------------------------------------------------------------
 // class UserWavelet
 //
-
 int UserWavelet::getMinScale()
 {
 	return minScale;
 }
+//---------------------------------------------------------------------------
 double UserWavelet::f(int s, int x)
 {
 	return (*fPtr)(s, x);
 }
+//---------------------------------------------------------------------------
 UserWavelet::UserWavelet(int minScale, double(*fPtr)(int, int))
 {
 	this->minScale = minScale;
