@@ -87,28 +87,13 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor
 		this.jPanel.setName(LangModel.getString("Properties"));
 
 		this.nameLabel.setText(LangModelMap.getString("Name"));
-//		this.nameLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-
 		this.typeLabel.setText(LangModelMap.getString("Type"));
-//		this.typeLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-
 		this.startLabel.setText(LangModelMap.getString("StartNode"));
-//		this.startLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-
 		this.endLabel.setText(LangModelMap.getString("EndNode"));
-//		this.endLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-
 		this.topologicalLengthLabel.setText(LangModelMap.getString("TopologicalLength"));
-//		this.topologicalLengthLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-
 		this.addressLabel.setText(LangModelMap.getString("Address"));
-//		this.addressLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-
 		this.dimensionLabel.setText(LangModelMap.getString("Dimension"));
-//		this.dimensionLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-
 		this.descLabel.setText(LangModelMap.getString("Description"));
-//		this.descLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
 		this.addressPanel.setLayout(this.gridBagLayout2);
 		this.cityLabel.setText(LangModelMap.getString("City"));

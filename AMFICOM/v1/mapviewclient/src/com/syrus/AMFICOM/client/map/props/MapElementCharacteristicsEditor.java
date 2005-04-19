@@ -1,5 +1,5 @@
 /*
- * $Id: MapElementCharacteristicsEditor.java,v 1.3 2005/04/18 16:14:38 krupenn Exp $
+ * $Id: MapElementCharacteristicsEditor.java,v 1.4 2005/04/19 15:48:32 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,10 +18,11 @@ import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.TopologicalNode;
+import com.syrus.AMFICOM.mapview.Selection;
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.3 $, $Date: 2005/04/18 16:14:38 $
+ * @version $Revision: 1.4 $, $Date: 2005/04/19 15:48:32 $
  * @module schemeclient_v1
  */
 
@@ -71,7 +72,8 @@ public class MapElementCharacteristicsEditor extends CharacteristicsPanel {
 		this.mapElement = (MapElement) or;
 		super.clear();
 		
-		if (this.mapElement != null) {
+		if (this.mapElement != null
+				&& !(this.mapElement instanceof Selection)) {
 				super.setTypeSortMapping(
 						CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL,
 						getCharacteristicSort(this.mapElement),

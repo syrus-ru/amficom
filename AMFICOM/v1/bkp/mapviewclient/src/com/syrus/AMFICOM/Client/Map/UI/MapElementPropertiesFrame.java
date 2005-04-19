@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementPropertiesFrame.java,v 1.2 2005/04/18 16:16:26 krupenn Exp $
+ * $Id: MapElementPropertiesFrame.java,v 1.3 2005/04/19 15:50:12 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,31 +11,40 @@
 
 package com.syrus.AMFICOM.Client.Map.UI;
 
+import javax.swing.event.ChangeEvent;
+
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.Map.Controllers.MapVisualManager;
+import com.syrus.AMFICOM.Client.Map.Props.MapVisualManager;
 import com.syrus.AMFICOM.client_.general.ui_.VisualManager;
 import com.syrus.AMFICOM.client_.scheme.ui.GeneralPropertiesFrame;
 import com.syrus.AMFICOM.map.MapElement;
 
 /**
  *  Окно отображения свойств элемента карты
- * @version $Revision: 1.2 $, $Date: 2005/04/18 16:16:26 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/19 15:50:12 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
 public final class MapElementPropertiesFrame extends GeneralPropertiesFrame
 {
+	public void stateChanged(ChangeEvent e) {
+		super.stateChanged(e);
+		if(this.aContext.getDispatcher() != null)
+			this.aContext.getDispatcher().notify(new MapEvent(this, MapEvent.MAP_CHANGED));
+	}
+
 	public MapElementPropertiesFrame(String title, ApplicationContext aContext) {
 		super(title, aContext);
 	}
 	
 	public void setContext(ApplicationContext aContext) {
-//		if (this.dispatcher != null) {
-//			this.dispatcher.unregister(this, MapEvent.MAP_NAVIGATE);
-//		}
+		if(this.aContext != null)
+			if(this.aContext.getDispatcher() != null) {
+				this.aContext.getDispatcher().unregister(this, MapEvent.MAP_NAVIGATE);
+			}
 		super.setContext(aContext);
 		if(aContext.getDispatcher() != null)
 			aContext.getDispatcher().register(this, MapEvent.MAP_NAVIGATE);

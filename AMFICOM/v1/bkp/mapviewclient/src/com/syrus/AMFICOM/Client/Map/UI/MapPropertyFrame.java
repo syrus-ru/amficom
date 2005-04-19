@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertyFrame.java,v 1.13 2005/02/10 11:48:39 krupenn Exp $
+ * $Id: MapPropertyFrame.java,v 1.14 2005/04/19 15:50:12 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -38,8 +38,9 @@ import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.mapview.MapView;
 
 /**
+ * @deprecated
  *  Окно отображения свойств элемента карты
- * @version $Revision: 1.13 $, $Date: 2005/02/10 11:48:39 $
+ * @version $Revision: 1.14 $, $Date: 2005/04/19 15:50:12 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */

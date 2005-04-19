@@ -4,7 +4,7 @@ import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.Map.Controllers.MapVisualManager;
+import com.syrus.AMFICOM.Client.Map.Props.MapVisualManager;
 import com.syrus.AMFICOM.client_.general.ui_.VisualManager;
 import com.syrus.AMFICOM.client_.scheme.ui.CharacteristicPropertiesFrame;
 import com.syrus.AMFICOM.map.MapElement;

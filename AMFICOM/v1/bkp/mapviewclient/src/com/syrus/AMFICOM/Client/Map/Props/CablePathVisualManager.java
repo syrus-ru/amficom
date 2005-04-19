@@ -1,5 +1,5 @@
 /**
- * $Id: CablePathVisualManager.java,v 1.1 2005/04/18 11:21:24 krupenn Exp $
+ * $Id: CablePathVisualManager.java,v 1.2 2005/04/19 15:48:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -37,6 +37,21 @@ public class CablePathVisualManager implements VisualManager {
 	}
 
 	public ObjectResourceController getController() {
+//		CableController cc = (CableController)com.syrus.AMFICOM.Client.Map.Controllers.CableController.getInstance();
+//		if (key.equals(PROPERTY_COLOR))
+//		{
+//			result = cc.getColor(path);
+//		}
+//		else
+//		if (key.equals(PROPERTY_STYLE))
+//		{
+//			result = cc.getStyle(path);
+//		}
+//		else
+//		if (key.equals(PROPERTY_THICKNESS))
+//		{
+//			result = String.valueOf(cc.getLineSize(path));
+//		}
 		return null;
 	}
 

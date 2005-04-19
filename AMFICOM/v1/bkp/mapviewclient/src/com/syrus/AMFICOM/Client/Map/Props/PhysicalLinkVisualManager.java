@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLinkVisualManager.java,v 1.1 2005/04/18 11:21:24 krupenn Exp $
+ * $Id: PhysicalLinkVisualManager.java,v 1.2 2005/04/19 15:48:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -37,6 +37,21 @@ public class PhysicalLinkVisualManager implements VisualManager {
 	}
 
 	public ObjectResourceController getController() {
+//		PhysicalLinkController plc = (PhysicalLinkController)com.syrus.AMFICOM.Client.Map.Controllers.PhysicalLinkController.getInstance();
+//		if (key.equals(PROPERTY_COLOR))
+//		{
+//			result = plc.getColor(link);
+//		}
+//		else
+//		if (key.equals(PROPERTY_STYLE))
+//		{
+//			result = plc.getStyle(link);
+//		}
+//		else
+//		if (key.equals(PROPERTY_THICKNESS))
+//		{
+//			result = String.valueOf(plc.getLineSize(link));
+//		}
 		return null;
 	}
 

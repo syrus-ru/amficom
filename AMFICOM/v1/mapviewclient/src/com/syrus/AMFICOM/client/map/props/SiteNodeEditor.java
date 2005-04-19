@@ -78,26 +78,16 @@ public class SiteNodeEditor extends DefaultStorableObjectEditor
 		this.jPanel.setName(LangModel.getString("Properties"));
 
 		this.nameLabel.setText(LangModelMap.getString("Name"));
-//		this.nameLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-
 		this.typeLabel.setText(LangModelMap.getString("Type"));
-//		this.typeLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-
 		this.longLabel.setText(LangModelMap.getString("Longitude"));
-//		this.longLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-
 		this.latLabel.setText(LangModelMap.getString("Latitude"));
-//		this.latLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-
 		this.descLabel.setText(LangModelMap.getString("Description"));
-//		this.descLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-
-		this.addressPanel.setLayout(this.gridBagLayout2);
 		this.cityLabel.setText(LangModelMap.getString("City"));
 		this.streetLabel.setText(LangModelMap.getString("Street"));
 		this.buildingLabel.setText(LangModelMap.getString("Building"));
 		this.addressLabel.setText(LangModelMap.getString("Address"));
 
+		this.addressPanel.setLayout(this.gridBagLayout2);
 		this.addressPanel.add(this.cityLabel, ReusedGridBagConstraints.get(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 5), 0, 0));
 		this.addressPanel.add(this.cityTextField, ReusedGridBagConstraints.get(1, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
 		this.addressPanel.add(this.streetLabel, ReusedGridBagConstraints.get(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 5, 0, 5), 0, 0));
