@@ -1,5 +1,5 @@
 /*-
- * $Id: scheme.idl,v 1.18 2005/04/15 17:55:02 bass Exp $
+ * $Id: scheme.idl,v 1.19 2005/04/19 08:55:26 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,17 +47,6 @@ module com {
 
 					typedef sequence<SchemeProtoElement_Transferable> SchemeProtoElementSeq_Transferable;
 
-					enum SchemeKind {
-						BUILDING,
-						CABLE_SUBNETWORK,
-						NETWORK,
-						FLOOR,
-						ROOM,
-						RACK,
-						BAY,
-						CARDCAGE
-					};
-
 					struct Scheme_Transferable {
 						general::corba::StorableObject_Transferable header;
 
@@ -66,7 +55,16 @@ module com {
 						general::corba::WString64 label;
 						long width;
 						long height;
-						SchemeKind schemeKind;
+						enum Kind {
+							BUILDING,
+							CABLE_SUBNETWORK,
+							NETWORK,
+							FLOOR,
+							ROOM,
+							RACK,
+							BAY,
+							CARDCAGE
+						} kind;
 
 						general::corba::Identifier_Transferable domainId;
 						general::corba::Identifier_Transferable mapId;
@@ -84,6 +82,17 @@ module com {
 
 						general::corba::WString32 name;
 						general::corba::WString256 description;
+						general::corba::WString64 label;
+
+						general::corba::Identifier_Transferable equipmentTypeId;
+						general::corba::Identifier_Transferable equipmentId;
+						general::corba::Identifier_Transferable kisId;
+						general::corba::Identifier_Transferable siteNodeId;
+						general::corba::Identifier_Transferable symbolId;
+						general::corba::Identifier_Transferable ugoCellId;
+						general::corba::Identifier_Transferable schemeCellId;
+						general::corba::Identifier_Transferable parentSchemeId;
+						general::corba::Identifier_Transferable parentSchemeElementId;
 
 						general::corba::IdentifierSeq_Transferable characteristicIds;
 					};
@@ -95,6 +104,20 @@ module com {
 
 						general::corba::WString32 name;
 						general::corba::WString256 description;
+						long optimizationMode;
+						long iterations;
+						double price;
+						double waveLength;
+						double lenMargin;
+						double mutationRate;
+						double mutationDegree;
+						double rtuDeleteProb;
+						double rtuCreateProb;
+						double nodesSpliceProb;
+						double nodesCutProb;
+						double survivorRate;
+
+						general::corba::Identifier_Transferable parentSchemeId;
 					};
 
 					typedef sequence<SchemeOptimizeInfo_Transferable> SchemeOptimizeInfoSeq_Transferable;
@@ -104,6 +127,9 @@ module com {
 
 						general::corba::WString32 name;
 						general::corba::WString256 description;
+						long priceUsd;
+
+						general::corba::Identifier_Transferable parentSchemeOptimizeInfoId;
 					};
 
 					typedef sequence<SchemeMonitoringSolution_Transferable> SchemeMonitoringSolutionSeq_Transferable;
@@ -114,16 +140,31 @@ module com {
 						general::corba::WString32 name;
 						general::corba::WString256 description;
 
+						general::corba::Identifier_Transferable parentSchemeProtoElementId;
+						general::corba::Identifier_Transferable parentSchemeElementId;
+
 						general::corba::IdentifierSeq_Transferable characteristicIds;
 					};
 
-					typedef sequence<SchemeDevice_Transferable> SchemeDeviceSeq_Transferable;
+					typedef sequence<SchemeDevice_Transferable> SchemeDeviceSeq_Transferable;					
+
+					enum AbstractSchemePortDirectionType {
+						_IN,
+						_OUT
+					};
 
 					struct SchemePort_Transferable {
 						general::corba::StorableObject_Transferable header;
 
 						general::corba::WString32 name;
 						general::corba::WString256 description;
+						AbstractSchemePortDirectionType directionType;
+
+						general::corba::Identifier_Transferable portTypeId;
+						general::corba::Identifier_Transferable portId;
+						general::corba::Identifier_Transferable measurementPortTypeId;
+						general::corba::Identifier_Transferable measurementPortId;
+						general::corba::Identifier_Transferable parentSchemeDeviceId;
 
 						general::corba::IdentifierSeq_Transferable characteristicIds;
 					};
@@ -135,6 +176,13 @@ module com {
 
 						general::corba::WString32 name;
 						general::corba::WString256 description;
+						AbstractSchemePortDirectionType directionType;
+
+						general::corba::Identifier_Transferable cablePortTypeId;
+						general::corba::Identifier_Transferable cablePortId;
+						general::corba::Identifier_Transferable measurementPortTypeId;
+						general::corba::Identifier_Transferable measurementPortId;
+						general::corba::Identifier_Transferable parentSchemeDeviceId;
 
 						general::corba::IdentifierSeq_Transferable characteristicIds;
 					};
