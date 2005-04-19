@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.14 2005/04/18 13:19:01 bass Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.15 2005/04/19 17:45:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.scheme;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
@@ -15,6 +16,7 @@ import java.util.Set;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.ErrorMessages;
@@ -22,16 +24,18 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfo_Transferable;
+import com.syrus.util.Log;
 
 /**
  * #05 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2005/04/18 13:19:01 $
+ * @version $Revision: 1.15 $, $Date: 2005/04/19 17:45:16 $
  * @module scheme_v1
  */
 public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
@@ -220,7 +224,12 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 	}
 
 	public Set getSchemeMonitoringSolutions() {
-		throw new UnsupportedOperationException();
+		try {
+			return Collections.unmodifiableSet(SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_MONITORING_SOLUTION_ENTITY_CODE), true));
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return Collections.EMPTY_SET;
+		}
 	}
 
 	public Set getSchemeOptimizeInfoRtus() {
@@ -247,15 +256,21 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 	}
 
 	public void removeSchemeMonitoringSolution(final SchemeMonitoringSolution schemeMonitoringSolution) {
-		throw new UnsupportedOperationException();
+		assert schemeMonitoringSolution != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert getSchemeMonitoringSolutions().contains(schemeMonitoringSolution): ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		schemeMonitoringSolution.setParentSchemeOptimizeInfo(null);
 	}
 
 	public void removeSchemeOptimizeInfoRtu(final SchemeOptimizeInfoRtu schemeOptimizeInfoRtu) {
-		throw new UnsupportedOperationException();
+		assert schemeOptimizeInfoRtu != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert getSchemeOptimizeInfoRtus().contains(schemeOptimizeInfoRtu): ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		schemeOptimizeInfoRtu.setParentSchemeOptimizeInfo(null);
 	}
 
 	public void removeSchemeOptimizeInfoSwitch(final SchemeOptimizeInfoSwitch schemeOptimizeInfoSwitch) {
-		throw new UnsupportedOperationException();
+		assert schemeOptimizeInfoSwitch != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert getSchemeOptimizeInfoSwitches().contains(schemeOptimizeInfoSwitch): ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		schemeOptimizeInfoSwitch.setParentSchemeOptimizeInfo(null);
 	}
 
 	/**

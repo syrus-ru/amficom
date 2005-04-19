@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.18 2005/04/19 10:47:43 bass Exp $
+ * $Id: SchemePath.java,v 1.19 2005/04/19 17:45:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,11 +14,13 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.configuration.TransmissionPath;
 import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -28,18 +30,20 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.scheme.corba.SchemePath_Transferable;
 import com.syrus.AMFICOM.scheme.corba.PathElement_TransferablePackage.DataPackage.Kind;
+import com.syrus.util.Log;
 
 /**
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.18 $, $Date: 2005/04/19 10:47:43 $
+ * @version $Revision: 1.19 $, $Date: 2005/04/19 17:45:16 $
  * @module scheme_v1
  */
 public final class SchemePath extends AbstractCloneableStorableObject implements
@@ -139,7 +143,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 */
 	public void addPathElement(final PathElement pathElement) {
 		assert pathElement != null: ErrorMessages.NON_NULL_EXPECTED;
-		throw new UnsupportedOperationException();
+		pathElement.setParentSchemePath(this);
 	}
 
 	public Object clone() {
@@ -196,7 +200,19 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	}
 
 	public SortedSet getPathElements() {
-		throw new UnsupportedOperationException();
+		return Collections.unmodifiableSortedSet(new TreeSet(getPathElements0()));
+	}
+
+	/**
+	 * @return child <code>PathElement</code>s in an unsorted manner.
+	 */
+	private Set getPathElements0() {
+		try {
+			return SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.PATH_ELEMENT_ENTITY_CODE), true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return Collections.EMPTY_SET;
+		}
 	}
 
 	/**
@@ -241,7 +257,9 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 * @param pathElement
 	 */
 	public void removePathElement(final PathElement pathElement) {
-		throw new UnsupportedOperationException();
+		assert pathElement != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert getPathElements().contains(pathElement): ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		pathElement.setParentSchemePath(null);
 	}
 
 	/**

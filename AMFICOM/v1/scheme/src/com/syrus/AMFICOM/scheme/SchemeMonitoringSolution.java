@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.17 2005/04/18 13:19:01 bass Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.18 2005/04/19 17:45:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.scheme;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
@@ -15,6 +16,7 @@ import java.util.Set;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.ErrorMessages;
@@ -22,16 +24,18 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.scheme.corba.SchemeMonitoringSolution_Transferable;
+import com.syrus.util.Log;
 
 /**
  * #06 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.17 $, $Date: 2005/04/18 13:19:01 $
+ * @version $Revision: 1.18 $, $Date: 2005/04/19 17:45:16 $
  * @module scheme_v1
  */
 public final class SchemeMonitoringSolution extends
@@ -152,7 +156,12 @@ public final class SchemeMonitoringSolution extends
 	}
 
 	public Set getSchemePaths() {
-		throw new UnsupportedOperationException();
+		try {
+			return Collections.unmodifiableSet(SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_PATH_ENTITY_CODE), true));
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return Collections.EMPTY_SET;
+		}
 	}
 
 	/**
@@ -163,7 +172,9 @@ public final class SchemeMonitoringSolution extends
 	}
 
 	public void removeSchemePath(final SchemePath schemePath) {
-		throw new UnsupportedOperationException();
+		assert schemePath != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert getSchemePaths().contains(schemePath): ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		schemePath.setParentSchemeMonitoringSolution(null);
 	}
 
 	/**

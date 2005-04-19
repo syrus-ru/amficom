@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.19 2005/04/19 10:26:48 bass Exp $
+ * $Id: PathElement.java,v 1.20 2005/04/19 17:45:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,7 +44,7 @@ import com.syrus.util.Log;
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.19 $, $Date: 2005/04/19 10:26:48 $
+ * @version $Revision: 1.20 $, $Date: 2005/04/19 17:45:16 $
  * @module scheme_v1
  * @todo <code>setAttributes()</code> should contain, among others,
  *       kind and sequentialNumber paremeters.
@@ -111,14 +111,14 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 	 * @param creatorId
 	 * @param modifierId
 	 * @param version
-	 * @param parentSchemePathId
+	 * @param parentSchemePath
 	 */
 	private PathElement(final Identifier id, final Date created,
 			final Date modified, final Identifier creatorId,
 			final Identifier modifierId, final long version,
-			final Identifier parentSchemePathId) {
+			final SchemePath parentSchemePath) {
 		super(id, created, modified, creatorId, modifierId, version);
-		this.parentSchemePathId = parentSchemePathId;
+		this.parentSchemePathId = Identifier.possiblyVoid(parentSchemePath);
 	}
 
 	/**
@@ -145,7 +145,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 			final SchemePath parentSchemePath,
 			final AbstractSchemePort startAbstractSchemePort,
 			final AbstractSchemePort endSbstractSchemePort) {
-		this(id, created, modified, creatorId, modifierId, version, Identifier.possiblyVoid(parentSchemePath));
+		this(id, created, modified, creatorId, modifierId, version, parentSchemePath);
 		/*
 		 * Here and below: this will work since current object is not
 		 * yet put to the pool.
@@ -182,7 +182,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 			final Identifier modifierId, final long version,
 			final SchemePath parentSchemePath,
 			final SchemeCableThread schemeCableThread) {
-		this(id, created, modified, creatorId, modifierId, version, Identifier.possiblyVoid(parentSchemePath));
+		this(id, created, modified, creatorId, modifierId, version, parentSchemePath);
 		this.sequentialNumber = parentSchemePath == null
 				? -1
 				: parentSchemePath.getPathElements().size();
@@ -215,7 +215,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 			final Identifier modifierId, final long version,
 			final SchemePath parentSchemePath,
 			final SchemeLink schemeLink) {
-		this(id, created, modified, creatorId, modifierId, version, Identifier.possiblyVoid(parentSchemePath));
+		this(id, created, modified, creatorId, modifierId, version, parentSchemePath);
 		this.sequentialNumber = parentSchemePath == null
 				? -1
 				: parentSchemePath.getPathElements().size();
@@ -235,31 +235,33 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 	 * @param creatorId
 	 * @param modifierId
 	 * @param version
-	 * @param parentSchemePathId
+	 * @param parentSchemePath
 	 * @param sequentialNumber
 	 * @param kind
-	 * @param startAbstractSchemePortId
-	 * @param endAbstractSchemePortId
-	 * @param schemeCableThreadId
-	 * @param schemeLinkId
+	 * @param startAbstractSchemePort
+	 * @param endAbstractSchemePort
+	 * @param schemeCableThread
+	 * @param schemeLink
 	 */
 	PathElement(final Identifier id, final Date created,
 			final Date modified, final Identifier creatorId,
 			final Identifier modifierId, final long version,
-			final Identifier parentSchemePathId,
+			final SchemePath parentSchemePath,
 			final int sequentialNumber,
 			final Kind kind,
-			final Identifier startAbstractSchemePortId,
-			final Identifier endAbstractSchemePortId,
-			final Identifier schemeCableThreadId,
-			final Identifier schemeLinkId) {
-		this(id, created, modified, creatorId, modifierId, version, parentSchemePathId);
+			final AbstractSchemePort startAbstractSchemePort,
+			final AbstractSchemePort endAbstractSchemePort,
+			final SchemeCableThread schemeCableThread,
+			final SchemeLink schemeLink) {
+		this(id, created, modified, creatorId, modifierId, version, parentSchemePath);
 		this.sequentialNumber = sequentialNumber;
 		this.kind = kind;
-		this.startAbstractSchemePortId = startAbstractSchemePortId;
-		this.endAbstractSchemePortId = endAbstractSchemePortId;
-		this.schemeCableThreadId = schemeCableThreadId;
-		this.schemeLinkId = schemeLinkId;
+		this.startAbstractSchemePortId = Identifier.possiblyVoid(startAbstractSchemePort);
+		this.endAbstractSchemePortId = Identifier.possiblyVoid(endAbstractSchemePort);
+		this.schemeCableThreadId = Identifier.possiblyVoid(schemeCableThread);
+		this.schemeLinkId = Identifier.possiblyVoid(schemeLink);
+
+		this.pathElementDatabase = SchemeDatabaseContext.getPathElementDatabase();
 	}
 
 	/**
@@ -630,7 +632,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 	 * @param schemeCableThreadId
 	 * @param schemeLinkId
 	 */
-	public void setAttributes(final Date created, final Date modified,
+	synchronized void setAttributes(final Date created, final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId, final long version,
 			final Identifier parentSchemePathId,

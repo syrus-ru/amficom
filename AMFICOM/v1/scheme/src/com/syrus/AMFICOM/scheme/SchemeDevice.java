@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.16 2005/04/19 10:47:43 bass Exp $
+ * $Id: SchemeDevice.java,v 1.17 2005/04/19 17:45:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ import com.syrus.util.Log;
  * #07 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.16 $, $Date: 2005/04/19 10:47:43 $
+ * @version $Revision: 1.17 $, $Date: 2005/04/19 17:45:16 $
  * @module scheme_v1
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -82,11 +82,27 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 * @param creatorId
 	 * @param modifierId
 	 * @param version
+	 * @param name
+	 * @param description
+	 * @param parentSchemeProtoElement
+	 * @param parentSchemeElement
 	 */
-	SchemeDevice(Identifier id, Date created, Date modified,
-			Identifier creatorId, Identifier modifierId,
-			long version) {
+	SchemeDevice(final Identifier id, final Date created,
+			final Date modified, final Identifier creatorId,
+			final Identifier modifierId, final long version,
+			final String name, final String description,
+			final SchemeProtoElement parentSchemeProtoElement,
+			final SchemeElement parentSchemeElement) {
 		super(id, created, modified, creatorId, modifierId, version);
+		this.name = name;
+		this.description = description;
+
+		assert parentSchemeProtoElement == null || parentSchemeElement == null: ErrorMessages.MULTIPLE_PARENTS_PROHIBITED;		
+		this.parentSchemeProtoElementId = Identifier.possiblyVoid(parentSchemeProtoElement);
+		this.parentSchemeElementId = Identifier.possiblyVoid(parentSchemeElement);
+
+		this.characteristics = new HashSet();
+		this.schemeDeviceDatabase = SchemeDatabaseContext.getSchemeDeviceDatabase();
 	}
 
 	/**
@@ -94,24 +110,144 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 * @throws CreateObjectException
 	 */
 	SchemeDevice(final SchemeDevice_Transferable transferable) throws CreateObjectException {
-		try {
-			this.schemeDeviceDatabase = SchemeDatabaseContext.getSchemeDeviceDatabase();
-			fromTransferable(transferable);
-		} catch (final ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
+		this.schemeDeviceDatabase = SchemeDatabaseContext.getSchemeDeviceDatabase();
+		fromTransferable(transferable);
 	}
-	
-	public static SchemeDevice createInstance(final Identifier creatorId)
+
+	/**
+	 * A shorthand for
+	 * {@link #createInstance(Identifier, String, String)}.
+	 *
+	 * @param creatorId
+	 * @param name
+	 * @throws CreateObjectException
+	 */
+	public static SchemeDevice createInstance(final Identifier creatorId,
+			final String name) throws CreateObjectException {
+		return createInstance(creatorId, name, ""); //$NON-NLS-1$
+	}
+
+	/**
+	 * A shorthand for
+	 * {@link #createInstance(Identifier, String, String, SchemeProtoElement)}.
+	 *
+	 * @param creatorId
+	 * @param name
+	 * @param parentSchemeProtoElement
+	 * @throws CreateObjectException
+	 */
+	public static SchemeDevice createInstance(final Identifier creatorId,
+			final String name,
+			final SchemeProtoElement parentSchemeProtoElement)
 			throws CreateObjectException {
-		assert creatorId != null;
+		return createInstance(creatorId, name, "", parentSchemeProtoElement); //$NON-NLS-1$
+		
+	}
+
+	/**
+	 * A shorthand for
+	 * {@link #createInstance(Identifier, String, String, SchemeElement)}
+	 *
+	 * @param creatorId
+	 * @param name
+	 * @param parentSchemeElement
+	 * @throws CreateObjectException
+	 */
+	public static SchemeDevice createInstance(final Identifier creatorId,
+			final String name,
+			final SchemeElement parentSchemeElement)
+			throws CreateObjectException {
+		return createInstance(creatorId, name, "", parentSchemeElement); //$NON-NLS-1$
+	}
+
+	/**
+	 * This method breaks some assertions, so clients should consider using
+	 * other ones to create a new instance.
+	 *
+	 * @param creatorId
+	 * @param name can be neither <code>null</code> nor empty.
+	 * @param description cannot be <code>null</code>, but can be empty.
+	 * @throws CreateObjectException
+	 */
+	public static SchemeDevice createInstance(final Identifier creatorId,
+			final String name, final String description)
+			throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid(): ErrorMessages.NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
+		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
+
 		try {
 			final Date created = new Date();
 			final SchemeDevice schemeDevice = new SchemeDevice(
 					IdentifierPool
 							.getGeneratedIdentifier(ObjectEntities.SCHEME_DEVICE_ENTITY_CODE),
 					created, created, creatorId, creatorId,
-					0L);
+					0L, name, description,
+					null, null);
+			schemeDevice.changed = true;
+			return schemeDevice;
+		} catch (final IdentifierGenerationException ige) {
+			throw new CreateObjectException(
+					"SchemeDevice.createInstance | cannot generate identifier ", ige); //$NON-NLS-1$
+		}
+	}
+
+	/**
+	 * @param creatorId
+	 * @param name can be neither <code>null</code> nor empty.
+	 * @param description cannot be <code>null</code>, but can be empty.
+	 * @param parentSchemeProtoElement
+	 * @throws CreateObjectException
+	 */
+	public static SchemeDevice createInstance(final Identifier creatorId,
+			final String name, final String description,
+			final SchemeProtoElement parentSchemeProtoElement)
+			throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid(): ErrorMessages.NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
+		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert parentSchemeProtoElement != null: ErrorMessages.NON_NULL_EXPECTED;
+
+		try {
+			final Date created = new Date();
+			final SchemeDevice schemeDevice = new SchemeDevice(
+					IdentifierPool
+							.getGeneratedIdentifier(ObjectEntities.SCHEME_DEVICE_ENTITY_CODE),
+					created, created, creatorId, creatorId,
+					0L, name, description,
+					parentSchemeProtoElement, null);
+			schemeDevice.changed = true;
+			return schemeDevice;
+		} catch (final IdentifierGenerationException ige) {
+			throw new CreateObjectException(
+					"SchemeDevice.createInstance | cannot generate identifier ", ige); //$NON-NLS-1$
+		}
+	}
+
+	/**
+	 * @param creatorId
+	 * @param name can be neither <code>null</code> nor empty.
+	 * @param description cannot be <code>null</code>, but can be empty.
+	 * @param parentSchemeElement
+	 * @throws CreateObjectException
+	 */
+	public static SchemeDevice createInstance(final Identifier creatorId,
+			final String name, final String description,
+			final SchemeElement parentSchemeElement)
+			throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid(): ErrorMessages.NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
+		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert parentSchemeElement != null: ErrorMessages.NON_NULL_EXPECTED;
+
+		try {
+			final Date created = new Date();
+			final SchemeDevice schemeDevice = new SchemeDevice(
+					IdentifierPool
+							.getGeneratedIdentifier(ObjectEntities.SCHEME_DEVICE_ENTITY_CODE),
+					created, created, creatorId, creatorId,
+					0L, name, description,
+					null, parentSchemeElement);
 			schemeDevice.changed = true;
 			return schemeDevice;
 		} catch (final IdentifierGenerationException ige) {
@@ -266,6 +402,35 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	}
 
 	/**
+	 * @param created
+	 * @param modified
+	 * @param creatorId
+	 * @param modifierId
+	 * @param version
+	 * @param name
+	 * @param description
+	 * @param parentSchemeProtoElementId
+	 * @param parentSchemeElementId
+	 */
+	synchronized void setAttributes(final Date created, final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId, final long version,
+			final String name, final String description,
+			final Identifier parentSchemeProtoElementId,
+			final Identifier parentSchemeElementId) {
+		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
+		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert parentSchemeProtoElementId != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert parentSchemeElementId != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert parentSchemeProtoElementId.isVoid() ^ parentSchemeElementId.isVoid();
+		super.setAttributes(created, modified, creatorId, modifierId, version);
+		this.name = name;
+		this.description = description;
+		this.parentSchemeProtoElementId = parentSchemeProtoElementId;
+		this.parentSchemeElementId = parentSchemeElementId;
+	}
+
+	/**
 	 * @param characteristics
 	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set)
 	 */
@@ -311,10 +476,16 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 		this.changed = true;
 	}
 
+	/**
+	 * @todo skip check if parentless.
+	 */
 	public void setParentSchemeElement(final SchemeElement parentSchemeElement) {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @todo skip check if parentless.
+	 */
 	public void setParentSchemeProtoElement(final SchemeProtoElement parentSchemeProtoElement) {
 		throw new UnsupportedOperationException();
 	}
@@ -351,10 +522,10 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 
 	/**
 	 * @param transferable
-	 * @throws ApplicationException
+	 * @throws CreateObjectException
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IDLEntity)
 	 */
-	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
 		throw new UnsupportedOperationException();
 	}
 }

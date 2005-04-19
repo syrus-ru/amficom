@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDatabase.java,v 1.3 2005/04/19 16:12:33 max Exp $
+ * $Id: SchemeDatabase.java,v 1.4 2005/04/19 17:45:16 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,8 +20,8 @@ import java.util.Set;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: max $
- * @version $Revision: 1.3 $, $Date: 2005/04/19 16:12:33 $
+ * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2005/04/19 17:45:16 $
  * @module scheme_v1
  */
 public final class SchemeDatabase extends StorableObjectDatabase {
@@ -200,7 +200,7 @@ public final class SchemeDatabase extends StorableObjectDatabase {
 		if (storableObject == null) {
 			Date created = new Date(); 
 			scheme = new Scheme(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
-					created, created, null, null, 0L, null,null, null, 0, 0, null, null, null, null, null, null, null, null);
+					created, created, null, null, 0L, null, null, null, null, 0, 0, null, null, null, null, null, null, null);
 		} else {
 			scheme = fromStorableObject(storableObject);
 		}

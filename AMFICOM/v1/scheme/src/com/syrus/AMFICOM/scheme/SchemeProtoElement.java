@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.24 2005/04/19 10:47:43 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.25 2005/04/19 17:45:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,7 +52,7 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.24 $, $Date: 2005/04/19 10:47:43 $
+ * @version $Revision: 1.25 $, $Date: 2005/04/19 17:45:16 $
  * @module scheme_v1
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation. 
  */
@@ -137,6 +137,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		this.symbolId = Identifier.possiblyVoid(symbol);
 		this.ugoCellId = Identifier.possiblyVoid(ugoCell);
 		this.schemeCellId = Identifier.possiblyVoid(schemeCell);
+
 		assert parentSchemeProtoGroup == null || parentSchemeProtoElement == null: ErrorMessages.MULTIPLE_PARENTS_PROHIBITED;
 		this.parentSchemeProtoGroupId = Identifier.possiblyVoid(parentSchemeProtoGroup);
 		this.parentSchemeProtoElementId = Identifier.possiblyVoid(parentSchemeProtoElement);
@@ -155,17 +156,60 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	}
 
 	/**
+	 * A shorthand for
+	 * {@link #createInstance(Identifier, String, String, String, EquipmentType, BitmapImageResource, SchemeImageResource, SchemeImageResource)}.
+	 * 
 	 * @param creatorId cannot be <code>null</code>.
 	 * @param name cannot be <code>null</code>.
 	 * @throws CreateObjectException
 	 */
-	public static SchemeProtoElement createInstance(final Identifier creatorId, final String name) throws CreateObjectException {
-		return createInstance(creatorId, name, "", "", null, null, null, null);  //$NON-NLS-1$//$NON-NLS-2$
+	public static SchemeProtoElement createInstance(
+			final Identifier creatorId, final String name)
+			throws CreateObjectException {
+		return createInstance(creatorId, name, "", "", null, null, null, //$NON-NLS-1$//$NON-NLS-2$
+				null);
 	}
 
 	/**
+	 * A shorthand for
+	 * {@link #createInstance(Identifier, String, String, String, EquipmentType, BitmapImageResource, SchemeImageResource, SchemeImageResource, SchemeProtoElement)}.
+	 *
+	 * @param creatorId
+	 * @param name
+	 * @param parentSchemeProtoElement
+	 * @throws CreateObjectException
+	 */
+	public static SchemeProtoElement createInstance(
+			final Identifier creatorId, final String name,
+			final SchemeProtoElement parentSchemeProtoElement)
+			throws CreateObjectException {
+		return createInstance(creatorId, name, "", "", null, null, null, //$NON-NLS-1$ //$NON-NLS-2$
+				null, parentSchemeProtoElement);
+	}
+
+	/**
+	 * A shorthand for
+	 * {@link #createInstance(Identifier, String, String, String, EquipmentType, BitmapImageResource, SchemeImageResource, SchemeImageResource, SchemeProtoGroup)}.
+	 *
+	 * @param creatorId
+	 * @param name
+	 * @param parentSchemeProtoGroup
+	 * @throws CreateObjectException
+	 */
+	public static SchemeProtoElement createInstance(
+			final Identifier creatorId, final String name,
+			final SchemeProtoGroup parentSchemeProtoGroup)
+			throws CreateObjectException {
+		return createInstance(creatorId, name, "", "", null, null, null, //$NON-NLS-1$ //$NON-NLS-2$
+				null, parentSchemeProtoGroup);
+	}
+
+	/**
+	 * This method breaks some assertions, so clients should consider using
+	 * other ones to create a new instance.
+	 *
 	 * @param creatorId cannot be <code>null</code>.
-	 * @param name cannot be <code>null</code>.
+	 * @param name can be neither <code>null</code> nor empty.
 	 * @param description cannot be <code>null</code>, but can be empty.
 	 * @param label cannot be <code>null</code>, but can be empty.
 	 * @param equipmentType may be <code>null</code>.
@@ -715,7 +759,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * @param parentSchemeProtoGroupId
 	 * @param parentSchemeProtoElementId
 	 */
-	public void setAttributes(final Date created, final Date modified,
+	synchronized void setAttributes(final Date created, final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId, final long version,
 			final String name, final String description,
@@ -864,7 +908,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 			/*
 			 * Moving from an element to another element.
 			 */
-			assert !this.parentSchemeProtoElementId.isVoid(): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
+//			assert !this.parentSchemeProtoElementId.isVoid(): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
 			if (parentSchemeProtoElement == null) {
 				Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Log.WARNING);
 				SchemeStorableObjectPool.delete(this.id);
@@ -910,7 +954,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 			/*
 			 * Moving from a group to another group.
 			 */
-			assert !this.parentSchemeProtoGroupId.isVoid(): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
+//			assert !this.parentSchemeProtoGroupId.isVoid(): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
 			if (parentSchemeProtoGroup == null) {
 				Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Log.WARNING);
 				SchemeStorableObjectPool.delete(this.id);

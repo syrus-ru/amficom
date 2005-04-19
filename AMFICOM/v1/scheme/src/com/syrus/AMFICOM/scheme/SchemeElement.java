@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.21 2005/04/19 12:30:20 bass Exp $
+ * $Id: SchemeElement.java,v 1.22 2005/04/19 17:45:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.util.Log;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.21 $, $Date: 2005/04/19 12:30:20 $
+ * @version $Revision: 1.22 $, $Date: 2005/04/19 17:45:16 $
  * @module scheme_v1
  */
 public final class SchemeElement extends AbstractSchemeElement implements
@@ -104,42 +104,42 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 * @param name
 	 * @param description
 	 * @param label
-	 * @param equipmentTypeId
-	 * @param equipmentId
-	 * @param kisId
-	 * @param siteNodeId
-	 * @param symbolId
-	 * @param ugoCellId
-	 * @param schemeCellId
-	 * @param parentSchemeId
-	 * @param parentSchemeElementId
+	 * @param equipmentType
+	 * @param equipment
+	 * @param kis
+	 * @param siteNode
+	 * @param symbol
+	 * @param ugoCell
+	 * @param schemeCell
+	 * @param parentScheme
+	 * @param parentSchemeElement
 	 */
 	SchemeElement(final Identifier id, final Date created,
 			final Date modified, final Identifier creatorId,
 			final Identifier modifierId, final long version,
 			final String name, final String description,
-			final String label, final Identifier equipmentTypeId,
-			final Identifier equipmentId, final Identifier kisId,
-			final Identifier siteNodeId, final Identifier symbolId,
-			final Identifier ugoCellId,
-			final Identifier schemeCellId,
-			final Identifier parentSchemeId,
-			final Identifier parentSchemeElementId) {
+			final String label, final EquipmentType equipmentType,
+			final Equipment equipment, final KIS kis,
+			final SiteNode siteNode, final BitmapImageResource symbol,
+			final SchemeImageResource ugoCell,
+			final SchemeImageResource schemeCell,
+			final Scheme parentScheme,
+			final SchemeElement parentSchemeElement) {
 		super(id, created, modified, creatorId, modifierId, version);
 		this.name = name;
 		this.description = description;
 		this.label = label;
-		this.equipmentTypeId = equipmentTypeId;
-		this.equipmentId = equipmentId;
-		this.kisId = kisId;
-		this.siteNodeId = siteNodeId;
-		this.symbolId = symbolId;
-		this.ugoCellId = ugoCellId;
-		this.schemeCellId = schemeCellId;
+		this.equipmentTypeId = Identifier.possiblyVoid(equipmentType);
+		this.equipmentId = Identifier.possiblyVoid(equipment);
+		this.kisId = Identifier.possiblyVoid(kis);
+		this.siteNodeId = Identifier.possiblyVoid(siteNode);
+		this.symbolId = Identifier.possiblyVoid(symbol);
+		this.ugoCellId = Identifier.possiblyVoid(ugoCell);
+		this.schemeCellId = Identifier.possiblyVoid(schemeCell);
 
-		assert parentSchemeId == null || parentSchemeElementId == null: ErrorMessages.MULTIPLE_PARENTS_PROHIBITED;
-		this.parentSchemeId = parentSchemeId;
-		this.parentSchemeElementId = parentSchemeElementId;
+		assert parentScheme == null || parentSchemeElement == null: ErrorMessages.MULTIPLE_PARENTS_PROHIBITED;
+		this.parentSchemeId = Identifier.possiblyVoid(parentScheme);
+		this.parentSchemeElementId = Identifier.possiblyVoid(parentSchemeElement);
 
 		this.characteristics = new HashSet();
 		this.schemeElementDatabase = SchemeDatabaseContext.getSchemeElementDatabase();
@@ -150,29 +150,130 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 * @throws CreateObjectException
 	 */
 	SchemeElement(final SchemeElement_Transferable transferable) throws CreateObjectException {
+		this.schemeElementDatabase = SchemeDatabaseContext.getSchemeElementDatabase();
+		fromTransferable(transferable);
+	}
+
+	/**
+	 * A shorthand for
+	 * {@link #createInstance(Identifier, String, String, String, EquipmentType, Equipment, KIS, SiteNode, BitmapImageResource, SchemeImageResource, SchemeImageResource, Scheme)}.
+	 *
+	 * @param creatorId
+	 * @param name
+	 * @param parentScheme
+	 * @throws CreateObjectException
+	 */
+	public static SchemeElement createInstance(final Identifier creatorId,
+			final String name, final Scheme parentScheme)
+			throws CreateObjectException {
+		return createInstance(creatorId, name, "", "", null, null, //$NON-NLS-1$ //$NON-NLS-2$
+				null, null, null, null, null, parentScheme);
+	}
+
+	/**
+	 * A shorthand for
+	 * {@link #createInstance(Identifier, String, String, String, EquipmentType, Equipment, KIS, SiteNode, BitmapImageResource, SchemeImageResource, SchemeImageResource, SchemeElement)}.
+	 *
+	 * @param creatorId
+	 * @param name
+	 * @param parentSchemeElement
+	 * @throws CreateObjectException
+	 */
+	public static SchemeElement createInstance(final Identifier creatorId,
+			final String name,
+			final SchemeElement parentSchemeElement)
+			throws CreateObjectException {
+		return createInstance(creatorId, name, "", "", null, null, //$NON-NLS-1$ //$NON-NLS-2$
+				null, null, null, null, null, parentSchemeElement);
+	}
+
+	/**
+	 * @param creatorId
+	 * @param name can be neither <code>null</code> nor empty.
+	 * @param description cannot be <code>null</code>, but can be empty.
+	 * @param label cannot be <code>null</code>, but can be empty.
+	 * @param equipmentType
+	 * @param equipment
+	 * @param kis
+	 * @param siteNode
+	 * @param symbol
+	 * @param ugoCell
+	 * @param schemeCell
+	 * @param parentScheme
+	 * @throws CreateObjectException
+	 */
+	public static SchemeElement createInstance(final Identifier creatorId, final String name,
+			final String description, final String label,
+			final EquipmentType equipmentType,
+			final Equipment equipment,
+			final KIS kis,
+			final SiteNode siteNode,
+			final BitmapImageResource symbol,
+			final SchemeImageResource ugoCell,
+			final SchemeImageResource schemeCell,
+			final Scheme parentScheme)
+			throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid(): ErrorMessages.NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
+		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert label != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert parentScheme != null: ErrorMessages.NON_NULL_EXPECTED;
+
 		try {
-			this.schemeElementDatabase = SchemeDatabaseContext.getSchemeElementDatabase();
-			fromTransferable(transferable);
-		} catch (final ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			final Date created = new Date();
+			final SchemeElement schemeElement = new SchemeElement(
+					IdentifierPool
+							.getGeneratedIdentifier(ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE),
+					created, created, creatorId, creatorId,
+					0L, name, description, label, equipmentType, equipment, kis, siteNode, symbol, ugoCell, schemeCell, parentScheme, null);
+			schemeElement.changed = true;
+			return schemeElement;
+		} catch (final IdentifierGenerationException ige) {
+			throw new CreateObjectException(
+					"SchemeElement.createInstance | cannot generate identifier ", ige); //$NON-NLS-1$
 		}
 	}
 
-	public static SchemeElement createInstance(final Identifier creatorId)
+	/**
+	 * @param creatorId
+	 * @param name can be neither <code>null</code> nor empty.
+	 * @param description cannot be <code>null</code>, but can be empty.
+	 * @param label cannot be <code>null</code>, but can be empty.
+	 * @param equipmentType
+	 * @param equipment
+	 * @param kis
+	 * @param siteNode
+	 * @param symbol
+	 * @param ugoCell
+	 * @param schemeCell
+	 * @param parentSchemeElement
+	 * @throws CreateObjectException
+	 */
+	public static SchemeElement createInstance(final Identifier creatorId,
+			final String name, final String description,
+			final String label, final EquipmentType equipmentType,
+			final Equipment equipment, final KIS kis,
+			final SiteNode siteNode,
+			final BitmapImageResource symbol,
+			final SchemeImageResource ugoCell,
+			final SchemeImageResource schemeCell,
+			final SchemeElement parentSchemeElement)
 			throws CreateObjectException {
-		assert creatorId != null;
+		assert creatorId != null && !creatorId.isVoid(): ErrorMessages.NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
+		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert label != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert parentSchemeElement != null: ErrorMessages.NON_NULL_EXPECTED;
+
 		try {
-			if (false)
-				throw new IdentifierGenerationException(null);
-			throw new UnsupportedOperationException();
-//			final Date created = new Date();
-//			final SchemeElement schemeElement = new SchemeElement(
-//					IdentifierPool
-//							.getGeneratedIdentifier(ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE),
-//					created, created, creatorId, creatorId,
-//					0L);
-//			schemeElement.changed = true;
-//			return schemeElement;
+			final Date created = new Date();
+			final SchemeElement schemeElement = new SchemeElement(
+					IdentifierPool
+							.getGeneratedIdentifier(ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE),
+					created, created, creatorId, creatorId,
+					0L, name, description, label, equipmentType, equipment, kis, siteNode, symbol, ugoCell, schemeCell, null, parentSchemeElement);
+			schemeElement.changed = true;
+			return schemeElement;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(
 					"SchemeElement.createInstance | cannot generate identifier ", ige); //$NON-NLS-1$
@@ -550,7 +651,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 * @param parentSchemeId
 	 * @param parentSchemeElementId
 	 */
-	public void setAttributes(final Date created, final Date modified,
+	synchronized void setAttributes(final Date created, final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId, final long version,
 			final String name, final String description,
@@ -594,9 +695,6 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 */
 	public void setEquipment(final Equipment equipment) {
 		assert this.equipmentId != null && this.equipmentTypeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-//		if (this.equipmentId.isVoid()) {
-//			
-//		}
 		throw new UnsupportedOperationException();
 	}
 

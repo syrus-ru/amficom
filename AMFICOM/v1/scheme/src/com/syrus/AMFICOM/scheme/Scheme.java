@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.18 2005/04/19 12:59:13 bass Exp $
+ * $Id: Scheme.java,v 1.19 2005/04/19 17:45:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.scheme;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
@@ -23,6 +24,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -38,12 +40,16 @@ import com.syrus.util.Log;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.18 $, $Date: 2005/04/19 12:59:13 $
+ * @version $Revision: 1.19 $, $Date: 2005/04/19 17:45:16 $
  * @module scheme_v1
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
 public final class Scheme extends AbstractCloneableDomainMember implements Describable, SchemeCellContainer {
 	private static final long serialVersionUID = 3257289136389173298L;
+
+	private static final int DEFAULT_WIDTH = 840;
+
+	private static final int DEFAULT_HEIGHT = 1190;
 
 	private String name;
 
@@ -94,31 +100,31 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 * @param creatorId
 	 * @param modifierId
 	 * @param version
+	 * @param domainId
 	 * @param name
 	 * @param description
 	 * @param label
 	 * @param width
 	 * @param height
 	 * @param kind
-	 * @param domainId
-	 * @param mapId
-	 * @param symbolId
-	 * @param ugoCellId
-	 * @param schemeCellId
-	 * @param currentSchemeMonitoringSolutionId
-	 * @param parentSchemeElementId
+	 * @param map
+	 * @param symbol
+	 * @param ugoCell
+	 * @param schemeCell
+	 * @param currentSchemeMonitoringSolution
+	 * @param parentSchemeElement
 	 */
 	Scheme(final Identifier id, final Date created, final Date modified,
-			final Identifier creatorId,
-			final Identifier modifierId, final long version,
+			final Identifier creatorId, final Identifier modifierId,
+			final long version, final Identifier domainId,
 			final String name, final String description,
 			final String label, final int width, final int height,
-			final Kind kind, final Identifier domainId,
-			final Identifier mapId, final Identifier symbolId,
-			final Identifier ugoCellId,
-			final Identifier schemeCellId,
-			final Identifier currentSchemeMonitoringSolutionId,
-			final Identifier parentSchemeElementId) {
+			final Kind kind, final Map map,
+			final BitmapImageResource symbol,
+			final SchemeImageResource ugoCell,
+			final SchemeImageResource schemeCell,
+			final SchemeMonitoringSolution currentSchemeMonitoringSolution,
+			final SchemeElement parentSchemeElement) {
 		super(id, created, modified, creatorId, modifierId, version, domainId);
 		this.name = name;
 		this.description = description;
@@ -126,13 +132,13 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		this.width = width;
 		this.height = height;
 		this.kind = kind;
-		this.mapId = mapId;
-		this.symbolId = symbolId;
-		this.ugoCellId = ugoCellId;
-		this.schemeCellId = schemeCellId;
-		this.currentSchemeMonitoringSolutionId = currentSchemeMonitoringSolutionId;
-		this.parentSchemeElementId = parentSchemeElementId;
-		
+		this.mapId = Identifier.possiblyVoid(map);
+		this.symbolId = Identifier.possiblyVoid(symbol);
+		this.ugoCellId = Identifier.possiblyVoid(ugoCell);
+		this.schemeCellId = Identifier.possiblyVoid(schemeCell);
+		this.currentSchemeMonitoringSolutionId = Identifier.possiblyVoid(currentSchemeMonitoringSolution);
+		this.parentSchemeElementId = Identifier.possiblyVoid(parentSchemeElement);
+
 		this.schemeDatabase = SchemeDatabaseContext.getSchemeDatabase();
 	}
 
@@ -141,34 +147,76 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 * @throws CreateObjectException
 	 */
 	Scheme(final Scheme_Transferable transferable) throws CreateObjectException {
-		try {
-			this.schemeDatabase = SchemeDatabaseContext.getSchemeDatabase();
-			fromTransferable(transferable);
-		} catch (final ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
+		this.schemeDatabase = SchemeDatabaseContext.getSchemeDatabase();
+		fromTransferable(transferable);
 	}
 
 	/**
-	 * @param description can be null.
+	 * A shorthand for
+	 * {@link #createInstance(Identifier, String, String, String, int, int, Kind, Identifier, Map, BitmapImageResource, SchemeImageResource, SchemeImageResource, SchemeMonitoringSolution, SchemeElement)}.
+	 *
+	 * @param creatorId
+	 * @param name
+	 * @param kind
+	 * @param domainId
+	 * @throws CreateObjectException
 	 */
 	public static Scheme createInstance(final Identifier creatorId,
-			final Identifier domainId,
-			final String name,
-			final String description)
+			final String name, final Kind kind,
+			final Identifier domainId)
 			throws CreateObjectException {
+		return createInstance(creatorId, name, "", "", DEFAULT_WIDTH, //$NON-NLS-1$ //$NON-NLS-2$
+				DEFAULT_HEIGHT, kind, domainId, null, null,
+				null, null, null, null);
+	}
+
+	/**
+	 * @param creatorId
+	 * @param name can be neither <code>null</code> nor empty.
+	 * @param description cannot be <code>null</code>, but can be empty.
+	 * @param label cannot be <code>null</code>, but can be empty.
+	 * @param width
+	 * @param height
+	 * @param kind
+	 * @param domainId
+	 * @param map
+	 * @param symbol
+	 * @param ugoCell
+	 * @param schemeCell
+	 * @param currentSchemeMonitoringSolution
+	 * @param parentSchemeElement
+	 * @throws CreateObjectException
+	 */
+	public static Scheme createInstance(final Identifier creatorId,
+			final String name, final String description,
+			final String label, final int width, final int height,
+			final Kind kind, final Identifier domainId,
+			final Map map, final BitmapImageResource symbol,
+			final SchemeImageResource ugoCell,
+			final SchemeImageResource schemeCell,
+			final SchemeMonitoringSolution currentSchemeMonitoringSolution,
+			final SchemeElement parentSchemeElement)
+			throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid(): ErrorMessages.NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
+		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert label != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert domainId != null && !domainId.isVoid(): ErrorMessages.NON_VOID_EXPECTED;
+		assert kind != null: ErrorMessages.NON_NULL_EXPECTED;
+
 		try {
-			if (false)
-				throw new IdentifierGenerationException(null);
-			throw new UnsupportedOperationException();
-//			final Date created = new Date();
-//			final Scheme scheme = new Scheme(
-//					IdentifierPool
-//							.getGeneratedIdentifier(ObjectEntities.SCHEME_ENTITY_CODE),
-//					created, created, creatorId, creatorId,
-//					0L, domainId, name, description);
-//			scheme.changed = true;
-//			return scheme;
+			final Date created = new Date();
+			final Scheme scheme = new Scheme(
+					IdentifierPool
+							.getGeneratedIdentifier(ObjectEntities.SCHEME_ENTITY_CODE),
+					created, created, creatorId, creatorId,
+					0L, domainId, name, description, label, width,
+					height, kind, map, symbol,
+					ugoCell, schemeCell,
+					currentSchemeMonitoringSolution,
+					parentSchemeElement);
+			scheme.changed = true;
+			return scheme;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(
 					"Scheme.createInstance | cannot generate identifier ", ige); //$NON-NLS-1$
@@ -264,7 +312,12 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	}
 
 	public Set getSchemeCableLinks() {
-		throw new UnsupportedOperationException();
+		try {
+			return Collections.unmodifiableSet(SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE), true));
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return Collections.EMPTY_SET;
+		}
 	}
 
 	/**
@@ -284,7 +337,12 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	}
 
 	public Set getSchemeElements() {
-		throw new UnsupportedOperationException();
+		try {
+			return Collections.unmodifiableSet(SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE), true));
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return Collections.EMPTY_SET;
+		}
 	}
 
 	public Kind getKind() {
@@ -292,11 +350,21 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	}
 
 	public Set getSchemeLinks() {
-		throw new UnsupportedOperationException();
+		try {
+			return Collections.unmodifiableSet(SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_LINK_ENTITY_CODE), true));
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return Collections.EMPTY_SET;
+		}
 	}
 
 	public Set getSchemeOptimizeInfos() {
-		throw new UnsupportedOperationException();
+		try {
+			return Collections.unmodifiableSet(SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_OPTIMIZE_INFO_ENTITY_CODE), true));
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return Collections.EMPTY_SET;
+		}
 	}
 
 	/**
@@ -410,7 +478,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 * @param currentSchemeMonitoringSolutionId
 	 * @param parentSchemeElementId
 	 */
-	public void setAttributes(final Date created, final Date modified,
+	synchronized void setAttributes(final Date created, final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId, final long version,
 			final String name, final String description,
@@ -604,30 +672,17 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	}
 
 	/**
-	 * @param description can be null.
-	 */
-	protected synchronized void setAttributes(final Date created,
-			  final Date modified,
-			  final Identifier creatorId,
-			  final Identifier modifierId,
-			  final long version,
-			  final Identifier domainId,
-			  final String name,
-			  final String description) {
-		assert name != null;
-		super.setAttributes(created, modified, creatorId, modifierId, version, domainId);
-		this.name = name;
-		this.description = description;
-	}
-
-	/**
 	 * @param transferable
-	 * @throws ApplicationException 
+	 * @throws CreateObjectException 
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IDLEntity)
 	 */
-	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
 		final Scheme_Transferable scheme = (Scheme_Transferable) transferable;
-		super.fromTransferable(scheme.header, new Identifier(scheme.domainId));
+		try {
+			super.fromTransferable(scheme.header, new Identifier(scheme.domainId));
+		} catch (final ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 		this.name = scheme.name;
 		this.description = scheme.description;
 		this.label = scheme.label;

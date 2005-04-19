@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.20 2005/04/19 10:47:43 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.21 2005/04/19 17:45:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.util.Log;
  * #01 in hierarchy.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.20 $, $Date: 2005/04/19 10:47:43 $
+ * @version $Revision: 1.21 $, $Date: 2005/04/19 17:45:16 $
  * @module scheme_v1
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation. 
  */
@@ -111,16 +111,29 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 
 	/**
 	 * @param transferable
-	 * @throws CreateObjectException 
 	 */
-	SchemeProtoGroup(final SchemeProtoGroup_Transferable transferable) throws CreateObjectException {
+	SchemeProtoGroup(final SchemeProtoGroup_Transferable transferable) {
 		this.schemeProtoGroupDatabase = SchemeDatabaseContext.getSchemeProtoGroupDatabase();
 		fromTransferable(transferable);
 	}
 
 	/**
+	 * A shorthand for
+	 * {@link #createInstance(Identifier, String, String, BitmapImageResource, SchemeProtoGroup)}.
+	 *
+	 * @param creatorId
+	 * @param name
+	 * @throws CreateObjectException
+	 */
+	public static SchemeProtoGroup createInstance(
+			final Identifier creatorId, final String name)
+			throws CreateObjectException {
+		return createInstance(creatorId, name, "", null, null); //$NON-NLS-1$
+	}
+
+	/**
 	 * @param creatorId cannot be <code>null</code>.
-	 * @param name cannot be <code>null</code>.
+	 * @param name can be neither <code>null</code> nor empty.
 	 * @param description cannot be <code>null</code>, but can be empty.
 	 * @param symbol may be <code>null</code>.
 	 * @param parentSchemeProtoGroup may be <code>null</code> (for a top-level group).
@@ -447,7 +460,7 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	 *        supply {@link Identifier#VOID_IDENTIFIER} as an argument.
 	 * @param parentSchemeProtoGroupId
 	 */
-	public void setAttributes(final Date created, final Date modified,
+	synchronized void setAttributes(final Date created, final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId, final long version,
 			final String name, final String description,
@@ -469,8 +482,8 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	 * @see Describable#setDescription(String)
 	 */
 	public void setDescription(final String description) {
-		assert this.description != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert description != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert this.description != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
 		if (this.description.equals(description))
 			return;
 		this.description = description;
@@ -481,8 +494,8 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	 * @see com.syrus.AMFICOM.general.Namable#setName(String)
 	 */
 	public void setName(final String name) {
-		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert name != null && name.length() != 0 : ErrorMessages.NON_EMPTY_EXPECTED;
+		assert this.name != null && this.name.length() != 0: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
 		if (this.name.equals(name))
 			return;
 		this.name = name;

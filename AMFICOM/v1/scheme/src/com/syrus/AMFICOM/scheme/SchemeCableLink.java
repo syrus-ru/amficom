@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.20 2005/04/19 11:37:31 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.21 2005/04/19 17:45:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.scheme;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
@@ -18,23 +19,26 @@ import com.syrus.AMFICOM.configuration.AbstractLinkType;
 import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.configuration.Link;
 import com.syrus.AMFICOM.configuration.corba.LinkSort;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.scheme.corba.SchemeCableLink_Transferable;
+import com.syrus.util.Log;
 
 /**
  * #11 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.20 $, $Date: 2005/04/19 11:37:31 $
+ * @version $Revision: 1.21 $, $Date: 2005/04/19 17:45:16 $
  * @module scheme_v1
  */
 public final class SchemeCableLink extends AbstractSchemeLink {
@@ -126,7 +130,12 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	}
 
 	public Set getCableChannelingItems() {
-		throw new UnsupportedOperationException();
+		try {
+			return Collections.unmodifiableSet(SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.CABLE_CHANNELING_ITEM_ENTITY_CODE), true));
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return Collections.EMPTY_SET;
+		}
 	}
 
 	public CableLinkType getCableLinkType() {
@@ -200,11 +209,15 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	}
 
 	public void removeCableChannelingItem(final CableChannelingItem cableChannelingItem) {
-		throw new UnsupportedOperationException();
+		assert cableChannelingItem != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert getCableChannelingItems().contains(cableChannelingItem): ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		cableChannelingItem.setParentSchemeCableLink(null);
 	}
 
 	public void removeSchemeCableThread(final SchemeCableThread schemeCableThread) {
-		throw new UnsupportedOperationException();
+		assert schemeCableThread != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert getSchemeCableThreads().contains(schemeCableThread): ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		schemeCableThread.setParentSchemeCableLink(null);
 	}
 
 	/**
