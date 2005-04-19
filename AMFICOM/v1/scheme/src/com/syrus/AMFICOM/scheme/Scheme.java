@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.17 2005/04/19 10:47:43 bass Exp $
+ * $Id: Scheme.java,v 1.18 2005/04/19 12:59:13 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.util.Log;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.17 $, $Date: 2005/04/19 10:47:43 $
+ * @version $Revision: 1.18 $, $Date: 2005/04/19 12:59:13 $
  * @module scheme_v1
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -88,18 +88,52 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	}
 
 	/**
-	 * @param description can be null.
+	 * @param id
+	 * @param created
+	 * @param modified
+	 * @param creatorId
+	 * @param modifierId
+	 * @param version
+	 * @param name
+	 * @param description
+	 * @param label
+	 * @param width
+	 * @param height
+	 * @param kind
+	 * @param domainId
+	 * @param mapId
+	 * @param symbolId
+	 * @param ugoCellId
+	 * @param schemeCellId
+	 * @param currentSchemeMonitoringSolutionId
+	 * @param parentSchemeElementId
 	 */
 	Scheme(final Identifier id, final Date created, final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId, final long version,
-			final Identifier domainId, final String name,
-			final String description) {
-		super(id, created, modified, creatorId, modifierId, version,
-				domainId);
-		assert name != null;
+			final String name, final String description,
+			final String label, final int width, final int height,
+			final Kind kind, final Identifier domainId,
+			final Identifier mapId, final Identifier symbolId,
+			final Identifier ugoCellId,
+			final Identifier schemeCellId,
+			final Identifier currentSchemeMonitoringSolutionId,
+			final Identifier parentSchemeElementId) {
+		super(id, created, modified, creatorId, modifierId, version, domainId);
 		this.name = name;
 		this.description = description;
+		this.label = label;
+		this.width = width;
+		this.height = height;
+		this.kind = kind;
+		this.mapId = mapId;
+		this.symbolId = symbolId;
+		this.ugoCellId = ugoCellId;
+		this.schemeCellId = schemeCellId;
+		this.currentSchemeMonitoringSolutionId = currentSchemeMonitoringSolutionId;
+		this.parentSchemeElementId = parentSchemeElementId;
+		
+		this.schemeDatabase = SchemeDatabaseContext.getSchemeDatabase();
 	}
 
 	/**
@@ -124,14 +158,17 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 			final String description)
 			throws CreateObjectException {
 		try {
-			final Date created = new Date();
-			final Scheme scheme = new Scheme(
-					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.SCHEME_ENTITY_CODE),
-					created, created, creatorId, creatorId,
-					0L, domainId, name, description);
-			scheme.changed = true;
-			return scheme;
+			if (false)
+				throw new IdentifierGenerationException(null);
+			throw new UnsupportedOperationException();
+//			final Date created = new Date();
+//			final Scheme scheme = new Scheme(
+//					IdentifierPool
+//							.getGeneratedIdentifier(ObjectEntities.SCHEME_ENTITY_CODE),
+//					created, created, creatorId, creatorId,
+//					0L, domainId, name, description);
+//			scheme.changed = true;
+//			return scheme;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(
 					"Scheme.createInstance | cannot generate identifier ", ige); //$NON-NLS-1$
@@ -351,6 +388,62 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		assert schemeOptimizeInfo != null: ErrorMessages.NON_NULL_EXPECTED;
 		assert getSchemeOptimizeInfos().contains(schemeOptimizeInfo): ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		schemeOptimizeInfo.setParentScheme(null);
+	}
+
+	/**
+	 * @param created
+	 * @param modified
+	 * @param creatorId
+	 * @param modifierId
+	 * @param version
+	 * @param name
+	 * @param description
+	 * @param label
+	 * @param width
+	 * @param height
+	 * @param kind
+	 * @param domainId
+	 * @param mapId
+	 * @param symbolId
+	 * @param ugoCellId
+	 * @param schemeCellId
+	 * @param currentSchemeMonitoringSolutionId
+	 * @param parentSchemeElementId
+	 */
+	public void setAttributes(final Date created, final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId, final long version,
+			final String name, final String description,
+			final String label, final int width, final int height,
+			final Kind kind, final Identifier domainId,
+			final Identifier mapId, final Identifier symbolId,
+			final Identifier ugoCellId,
+			final Identifier schemeCellId,
+			final Identifier currentSchemeMonitoringSolutionId,
+			final Identifier parentSchemeElementId) {
+		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
+		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert label != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert kind != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert mapId != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert symbolId != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert ugoCellId != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert schemeCellId != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert currentSchemeMonitoringSolutionId != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert parentSchemeElementId != null: ErrorMessages.NON_NULL_EXPECTED;
+		super.setAttributes(created, modified, creatorId, modifierId, version, domainId);
+		this.name = name;
+		this.description = description;
+		this.label = label;
+		this.width = width;
+		this.height = height;
+		this.kind = kind;
+		this.mapId = mapId;
+		this.symbolId = symbolId;
+		this.ugoCellId = ugoCellId;
+		this.schemeCellId = schemeCellId;
+		this.currentSchemeMonitoringSolutionId = currentSchemeMonitoringSolutionId;
+		this.parentSchemeElementId = parentSchemeElementId;
 	}
 
 	public void setCurrentSchemeMonitoringSolution(final SchemeMonitoringSolution currentSchemeMonitoringSolution) {
