@@ -15,6 +15,7 @@ import com.syrus.AMFICOM.Client.Map.MapDataException;
 public class MapImagePanel extends JPanel
 {
 	private Image mapImage = null;
+	private boolean imageIsMoving = false;
 
 	MapInfoLogicalNetLayer layerToPaint = null;
 
@@ -55,6 +56,7 @@ public class MapImagePanel extends JPanel
 	public void setImage(Image newImage)
 	{
 		this.mapImage = newImage;
+		this.imageIsMoving = false;
 //		if (newImage != null)
 //			this.mapImage.getGraphics().drawImage(newImage,0,0,this);
 	}
@@ -90,6 +92,23 @@ public class MapImagePanel extends JPanel
 	
 	public void repaint(Graphics g, int shiftX, int shiftY)
 	{
+		if (this.imageIsMoving == false)
+		{
+			try
+			{
+				this.layerToPaint.paint(this.mapImage.getGraphics());
+			} catch (MapConnectionException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (MapDataException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			this.imageIsMoving = true;
+		}
+		
 		g.setColor(Color.GRAY);
 
 		if(shiftX > 0)
@@ -111,9 +130,5 @@ public class MapImagePanel extends JPanel
 
 		if(this.mapImage != null && g != null)
 			g.drawImage(this.mapImage, shiftX, shiftY, this);
-
-		/*
-		 * if (this.layerToPaint != null) layerToPaint.paint(g);
-		 */
 	}
 }
