@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.19 2005/04/19 10:47:43 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.20 2005/04/19 11:37:31 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,13 +29,12 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.scheme.corba.SchemeCableLink_Transferable;
-import com.syrus.AMFICOM.scheme.corba.SchemeElement_Transferable;
 
 /**
  * #11 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.19 $, $Date: 2005/04/19 10:47:43 $
+ * @version $Revision: 1.20 $, $Date: 2005/04/19 11:37:31 $
  * @module scheme_v1
  */
 public final class SchemeCableLink extends AbstractSchemeLink {

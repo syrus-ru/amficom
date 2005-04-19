@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractSchemeElement.java,v 1.14 2005/04/19 10:47:44 bass Exp $
+ * $Id: AbstractSchemeElement.java,v 1.15 2005/04/19 11:37:31 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,8 +12,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -34,7 +32,7 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeElement}instead.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2005/04/19 10:47:44 $
+ * @version $Revision: 1.15 $, $Date: 2005/04/19 11:37:31 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemeElement extends

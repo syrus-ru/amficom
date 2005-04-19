@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.17 2005/04/19 10:47:43 bass Exp $
+ * $Id: SchemeLink.java,v 1.18 2005/04/19 11:37:31 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,6 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.scheme.corba.SchemeElement_Transferable;
 import com.syrus.AMFICOM.scheme.corba.SchemeLink_Transferable;
 import com.syrus.util.Log;
 
@@ -37,7 +36,7 @@ import com.syrus.util.Log;
  * #10 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.17 $, $Date: 2005/04/19 10:47:43 $
+ * @version $Revision: 1.18 $, $Date: 2005/04/19 11:37:31 $
  * @module scheme_v1
  */
 public final class SchemeLink extends AbstractSchemeLink {
