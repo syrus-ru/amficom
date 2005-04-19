@@ -31,10 +31,11 @@ InitialAnalysis::InitialAnalysis(
 	logf = fopen(DEBUG_INITIAL_WIN_LOGF, "a");
 	assert(logf);
 	fprintf(logf, "=== IA invoked\n"
-		"len %d deltaX %g minTh %g minWeld %g minConn %g\n",
-		data_length, delta_x, minimalThreshold, minimalWeld, minimalConnector);
+		"len %d deltaX %g minTh %g minWeld %g minConn %g noiseFactor %g\n",
+		data_length, delta_x, minimalThreshold, minimalWeld, minimalConnector, noiseFactor);
 	fprintf(logf, "refSize %d nRefSize %d lTZ %d extNoise %s\n",
 		reflectiveSize, nonReflectiveSize, lengthTillZero, externalNoise ? "present" : "absent");
+	fflush(logf);
 #endif
 
 #ifdef debug_lines
