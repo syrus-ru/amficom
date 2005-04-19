@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.42 2005/04/18 17:27:03 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.43 2005/04/19 07:59:55 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.42 $, $Date: 2005/04/18 17:27:03 $
+ * @version $Revision: 1.43 $, $Date: 2005/04/19 07:59:55 $
  * @module
  */
 
@@ -79,16 +79,30 @@ public class CoreAnalysisManager
 	/**
 	 * Метод определяет длину рефлектограммы "до конца волокна".
 	 * Алгоритм определения довольно прост, тип поиска "первого нуля",
-	 * но его все равно имеет смысл вынести в native-код
+	 * но его все равно имеет смысл вынести в native-код.
 	 * @param y Входная рефлектограмма
 	 * @return длина до "первого нуля" или по другому критерию
 	 */
 	private static native int nCalcTraceLength(double[] y);
 
 	/**
-	 * @todo: supply a javadoc
+	 * Расширяет верхние (или нижние) DX- и DY-пороги эталона, так,
+	 * чтобы указанная кривая оказалась под (или над) пороговой кривой.
+	 * Расширение нижних порогов может зависеть от состояние верхнего
+	 * порога, и наоборот. Это вызвано связью верхнего и нижнего порога:
+	 * в некоторых случаях верхние DX-параметры влияют на генерацию нижней
+	 * кривой, и наоборот. Кроме того, расширение нижних порогов может
+	 * дополнительно расширить верхние пороги, и наоборот. Это допускается
+	 * просто для упрощения кода расширения порогов. (Текущая реализация
+	 * расширяет парные верхние и нижние DX вместе).
+	 * @param yBase базовая кривая расширяемого эталона
+	 * @param yCover целевая кривая, которая должна оказаться внутри порогов
+	 * @param thDX массив изменяемых DX-порогов эталога
+	 * @param thDY массив изменяемых DY-порогов эталога
+	 * @param softKeyToUpdate Thresh.SOFT_UP для расширения верхней кривой, Thresh.SOFT_DOWN - для нижней
+	 * @param hardKeyToUpdate Thresh.HARD_UP для расширения верхней кривой, Thresh.HARD_DOWN - для нижней
 	 */
-	public static native void nExtendThreshToCoverCurve( // XXX: public native?
+	private static native void nExtendThreshToCoverCurve(
 			double[] yBase,
 			double[] yCover,
 			ThreshDX[] thDX,
@@ -464,5 +478,24 @@ public class CoreAnalysisManager
 	public static int calcTraceLength(double[] y)
 	{
 		return nCalcTraceLength(y);
+	}
+
+	/**
+	 * See specification of {@link #nExtendThreshToCoverCurve(double[], double[], ThreshDX[], ThreshDY[], int, int)}
+	 */
+	public static void extendThreshToCoverCurve(
+			double[] yBase,
+			double[] yCover,
+			ThreshDX[] thDX,
+			ThreshDY[] thDY,
+			int softKeyToUpdate,
+			int hardKeyToUpdate)
+	{
+		nExtendThreshToCoverCurve(yBase,
+			yCover,
+			thDX,
+			thDY,
+			softKeyToUpdate,
+			hardKeyToUpdate);
 	}
 }

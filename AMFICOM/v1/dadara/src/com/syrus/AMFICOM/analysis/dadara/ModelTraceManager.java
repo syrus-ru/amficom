@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.49 2005/04/15 11:36:08 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.50 2005/04/19 07:59:55 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
  * генерацией пороговых кривых и сохранением/восстановлением порогов.
  *
  * @author $Author: saa $
- * @version $Revision: 1.49 $, $Date: 2005/04/15 11:36:08 $
+ * @version $Revision: 1.50 $, $Date: 2005/04/19 07:59:55 $
  * @module
  */
 public class ModelTraceManager
@@ -334,13 +334,13 @@ implements DataStreamable
 
 	public void updateUpperThreshToContain(double[] yTop)
 	{
-		CoreAnalysisManager.nExtendThreshToCoverCurve(mtae.getModelTrace().getYArray(), yTop,
+		CoreAnalysisManager.extendThreshToCoverCurve(mtae.getModelTrace().getYArray(), yTop,
 			tDX, tDY, Thresh.SOFT_UP, Thresh.HARD_UP);
 	}
 
 	public void updateLowerThreshToContain(double[] yTop)
 	{
-		CoreAnalysisManager.nExtendThreshToCoverCurve(mtae.getModelTrace().getYArray(), yTop,
+		CoreAnalysisManager.extendThreshToCoverCurve(mtae.getModelTrace().getYArray(), yTop,
 			tDX, tDY, Thresh.SOFT_DOWN, Thresh.HARD_DOWN);
 	}
 
