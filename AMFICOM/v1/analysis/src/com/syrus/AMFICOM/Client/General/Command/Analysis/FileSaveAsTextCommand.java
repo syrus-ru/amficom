@@ -31,12 +31,6 @@ public class FileSaveAsTextCommand extends VoidCommand
 		this.dispatcher = dispatcher;
 	}
 
-	public void setParameter(String field, Object value)
-	{
-		if(field.equals("dispatcher"))
-			setDispatcher((Dispatcher )value);
-	}
-
 	public Object clone()
 	{
 		return new FileSaveAsTextCommand(dispatcher, aContext);

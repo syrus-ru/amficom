@@ -32,15 +32,6 @@ public class MinuitAnalyseCommand extends VoidCommand
 		this.aContext = aContext;
 	}
 
-	public void setParameter(String field, Object value)
-	{
-		if (field.equals("dispatcher"))
-			setDispatcher((Dispatcher )value);
-		// strange code:
-		// if(field.equals("id"))
-		// this.id = id;
-	}
-
 	public void setDispatcher(Dispatcher dispatcher)
 	{
 		this.dispatcher = dispatcher;

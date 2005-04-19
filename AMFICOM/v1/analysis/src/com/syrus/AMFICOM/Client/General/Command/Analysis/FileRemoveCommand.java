@@ -24,8 +24,6 @@ public class FileRemoveCommand extends VoidCommand
 
 	public void setParameter(String field, Object value)
 	{
-		if(field.equals("dispatcher"))
-			setDispatcher((Dispatcher )value);
 		if(field.equals("activeRefId"))
 		{
 			activeRefId = (String)value;

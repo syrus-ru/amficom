@@ -29,9 +29,6 @@ public class AddTraceFromDatabaseCommand extends VoidCommand
 
 	public void setParameter(String field, Object value)
 	{
-		if(field.equals("dispatcher"))
-			setDispatcher((Dispatcher)value);
-		else
 		if(field.equals("aContext"))
 			setApplicationContext((ApplicationContext )value);
 	}

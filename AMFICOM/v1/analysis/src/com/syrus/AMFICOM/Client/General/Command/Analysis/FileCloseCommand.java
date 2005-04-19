@@ -17,12 +17,6 @@ public class FileCloseCommand extends VoidCommand
 		this.aContext = aContext;
 	}
 
-	public void setParameter(String field, Object value)
-	{
-		if(field.equals("dispatcher"))
-			setDispatcher((Dispatcher )value);
-	}
-
 	public void setDispatcher(Dispatcher dispatcher)
 	{
 		this.dispatcher = dispatcher;
