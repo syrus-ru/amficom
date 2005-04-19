@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElementWrapper.java,v 1.1 2005/04/18 15:26:50 max Exp $
+ * $Id: SchemeProtoElementWrapper.java,v 1.2 2005/04/19 11:30:22 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/18 15:26:50 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/19 11:30:22 $
  * @author $Author: max $
  * @module scheme_v1
  */
@@ -31,8 +31,6 @@ public class SchemeProtoElementWrapper extends StorableObjectWrapper {
 //	parent_scheme_proto_group_id VARCHAR2(32 CHAR),
 //	parent_scheme_proto_element_id VARCHAR2(32 CHAR),
 
-	public static final String COLUMN_NAME = "name";
-	public static final String COLUMN_DESCRIPTION = "description";
 	public static final String COLUMN_LABEL = "label";
 	public static final int	SIZE_LABEL_COLUMN	= 64;
 	public static final String COLUMN_EQUIPMENT_TYPE_ID = "equipment_type_id";

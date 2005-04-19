@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroupWrapper.java,v 1.1 2005/04/18 15:26:50 max Exp $
+ * $Id: SchemeProtoGroupWrapper.java,v 1.2 2005/04/19 11:30:22 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/18 15:26:50 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/19 11:30:22 $
  * @author $Author: max $
  * @module scheme_v1
  */
@@ -26,8 +26,6 @@ public class SchemeProtoGroupWrapper extends StorableObjectWrapper {
 //	symbol_id VARCHAR2(32 CHAR),
 //	parent_scheme_proto_group_id VARCHAR2(32 CHAR),
 
-	public static final String COLUMN_NAME = "name";
-	public static final String COLUMN_DESCRIPTION = "description";
 	public static final String COLUMN_SYMBOL_ID = "symbol_id";
 	public static final String COLUMN_PARENT_SCHEME_PROTO_GROUP_ID  = "parent_scheme_proto_group_id";
 

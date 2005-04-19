@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElementDatabase.java,v 1.2 2005/04/18 15:26:06 max Exp $
+ * $Id: SchemeProtoElementDatabase.java,v 1.3 2005/04/19 11:30:22 max Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import java.util.Date;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: max $
- * @version $Revision: 1.2 $, $Date: 2005/04/18 15:26:06 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/19 11:30:22 $
  * @module scheme_v1
  */
 public final class SchemeProtoElementDatabase extends CharacterizableDatabase {
@@ -54,8 +54,8 @@ public final class SchemeProtoElementDatabase extends CharacterizableDatabase {
 
 	protected String getColumnsTmpl() {
 		if (columns == null) {
-			columns = SchemeProtoElementWrapper.COLUMN_NAME + COMMA
-					+ SchemeProtoElementWrapper.COLUMN_DESCRIPTION + COMMA
+			columns = StorableObjectWrapper.COLUMN_NAME + COMMA
+					+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
 					+ SchemeProtoElementWrapper.COLUMN_LABEL + COMMA
 					+ SchemeProtoElementWrapper.COLUMN_EQUIPMENT_TYPE_ID + COMMA
 					+ SchemeProtoElementWrapper.COLUMN_SYMBOL_ID + COMMA
