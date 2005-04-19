@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroupDatabase.java,v 1.2 2005/04/18 15:26:06 max Exp $
+ * $Id: SchemeProtoGroupDatabase.java,v 1.3 2005/04/19 11:23:09 max Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import java.util.Set;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: max $
- * @version $Revision: 1.2 $, $Date: 2005/04/18 15:26:06 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/19 11:23:09 $
  * @module scheme_v1
  */
 public final class SchemeProtoGroupDatabase extends StorableObjectDatabase {
@@ -88,10 +88,10 @@ public final class SchemeProtoGroupDatabase extends StorableObjectDatabase {
 
 	protected String getColumnsTmpl() {
 		if (columns == null) {
-			columns = SchemeProtoElementWrapper.COLUMN_NAME + COMMA
-					+ SchemeProtoElementWrapper.COLUMN_DESCRIPTION + COMMA
-					+ SchemeProtoElementWrapper.COLUMN_SYMBOL_ID + COMMA
-					+ SchemeProtoElementWrapper.COLUMN_PARENT_SCHEME_PROTO_GROUP_ID;
+			columns = SchemeProtoGroupWrapper.COLUMN_NAME + COMMA
+					+ SchemeProtoGroupWrapper.COLUMN_DESCRIPTION + COMMA
+					+ SchemeProtoGroupWrapper.COLUMN_SYMBOL_ID + COMMA
+					+ SchemeProtoGroupWrapper.COLUMN_PARENT_SCHEME_PROTO_GROUP_ID;
 		}
 		return columns;
 	}
