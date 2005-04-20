@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementsPanel.java,v 1.19 2005/03/04 14:39:08 krupenn Exp $
+ * $Id: MapElementsPanel.java,v 1.20 2005/04/20 16:17:22 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -53,7 +53,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * видов элементов и талица элементов с полями "Идентификатор" и "Название"
  * 
  * 
- * @version $Revision: 1.19 $, $Date: 2005/03/04 14:39:08 $
+ * @version $Revision: 1.20 $, $Date: 2005/04/20 16:17:22 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -252,10 +252,8 @@ public final class MapElementsPanel extends JPanel
 
 		if(this.map != null && this.logicalNetLayer != null)
 		{
-			Identifier creatorId = this.logicalNetLayer.getUserId();
-
-			SiteNodeType well = NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.WELL);
-			SiteNodeType piquet = NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.PIQUET);
+			SiteNodeType well = NodeTypeController.getSiteNodeType(SiteNodeType.WELL);
+			SiteNodeType piquet = NodeTypeController.getSiteNodeType(SiteNodeType.PIQUET);
 //			SiteNodeType cableinlet = NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.CABLE_INLET);
 
 			if(selection.equals(MapViewController.ELEMENT_SITENODE))
