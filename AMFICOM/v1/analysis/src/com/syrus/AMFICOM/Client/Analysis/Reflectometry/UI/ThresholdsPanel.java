@@ -6,6 +6,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
+import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.*;
@@ -203,9 +204,7 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 	    int evId = et_mtm != null ? et_mtm.getMTAE().getEventByCoord(pos) : -1;
 		if (evId != -1 && evId != c_event)
 		{
-		    dispatcher.notify(new RefUpdateEvent(
-		    	String.valueOf(evId), RefUpdateEvent.EVENT_SELECTED_EVENT
-		    ));
+	    	Heap.setCurrentEvent(evId);
 		    return;
 		}
 	}

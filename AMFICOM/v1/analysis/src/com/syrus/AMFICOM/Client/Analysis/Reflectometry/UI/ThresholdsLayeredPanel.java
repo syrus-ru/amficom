@@ -9,6 +9,7 @@ import javax.swing.JToggleButton;
 import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
+import com.syrus.AMFICOM.Client.General.Event.CurrentEventChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
@@ -22,7 +23,7 @@ import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.io.BellcoreStructure;
 
 public class ThresholdsLayeredPanel extends TraceEventsLayeredPanel
-implements OperationListener, BsHashChangeListener
+implements OperationListener, BsHashChangeListener, CurrentEventChangeListener
 {
 	public ThresholdsLayeredPanel(Dispatcher dispatcher)
 	{
@@ -53,6 +54,7 @@ implements OperationListener, BsHashChangeListener
 		super.init_module(dispatcher);
 		// на RefUpdateEvent подписывается суперкласс - нам подписываться не надо
 		Heap.addBsHashListener(this);
+		Heap.addCurrentEventChangeListener(this);
 	}
 
 	public void operationPerformed(OperationEvent ae)
@@ -80,12 +82,6 @@ implements OperationListener, BsHashChangeListener
 
 						updScale2fitCurrentEv(.2, 1.);
 						jLayeredPane.repaint();
-					}
-					if(rue.eventSelected())
-					{
-						int num = Integer.parseInt((String)rue.getSource());
-						((ThresholdsPanel)panel).showEvent(num);
-						updScale2fitCurrentEv (.2, 1.);
 					}
 					if(rue.thresholdChanged())
 					{
@@ -141,6 +137,18 @@ implements OperationListener, BsHashChangeListener
 			if (panel instanceof ThresholdsPanel)
 				((ThresholdsPanel)panel).mtae = null;
 		}
+	}
+
+	public void currentEventChanged()
+	{
+		int num = Heap.getCurrentEvent();
+		for(int i=0; i<jLayeredPane.getComponentCount(); i++)
+		{
+			SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
+			if (panel instanceof ThresholdsPanel)
+				((ThresholdsPanel)panel).showEvent(num);
+		}
+		updScale2fitCurrentEv (.2, 1.);
 	}
 }
 

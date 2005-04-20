@@ -25,6 +25,7 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
+import com.syrus.AMFICOM.Client.General.Event.CurrentEventChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
@@ -41,7 +42,7 @@ import com.syrus.AMFICOM.client_.general.ui_.ADefaultTableCellRenderer;
 import com.syrus.io.BellcoreStructure;
 
 public class ThresholdsSelectionFrame extends ATableFrame
-implements OperationListener, BsHashChangeListener
+implements OperationListener, BsHashChangeListener, CurrentEventChangeListener
 {
 	protected Dispatcher dispatcher;
 	JTable jTable;
@@ -308,6 +309,7 @@ implements OperationListener, BsHashChangeListener
 		dispatcher.register(this, RefUpdateEvent.typ);
 		//dispatcher.register(this, RefChangeEvent.typ);
 		Heap.addBsHashListener(this);
+		Heap.addCurrentEventChangeListener(this);
 	}
 
 	public void operationPerformed(OperationEvent ae) {
@@ -323,16 +325,6 @@ implements OperationListener, BsHashChangeListener
 				//mtm = Heap.getMTMByKey(id); // FIXME: what is MTM here?  
 				//bs = Heap.getAnyBSTraceByKey(id); // bs was never read locally
 				updateThresholds();
-			}
-			if (rue.eventSelected()) {
-				if (et_mtm != null) {
-					current_ev = Integer.parseInt((String) rue.getSource());
-					if (current_ev < 0 || current_ev >= et_mtm.getMTAE().getNEvents()) {
-						System.out.println("Warning: current_ev out of range");
-						current_ev = 0;
-					}
-					updateThresholds();
-				}
 			}
 			if (rue.thresholdChanged()) {
 				updateThresholds();
@@ -478,5 +470,17 @@ implements OperationListener, BsHashChangeListener
 	{
 			this.et_mtm = null;
 			this.jTable.setModel(this.tModelEmpty);
+	}
+
+	public void currentEventChanged()
+	{
+		if (et_mtm != null) {
+			current_ev = Heap.getCurrentEvent();
+			if (current_ev < 0 || current_ev >= et_mtm.getMTAE().getNEvents()) {
+				System.out.println("Warning: current_ev out of range");
+				current_ev = 0;
+			}
+			updateThresholds();
+		}
 	}
 }

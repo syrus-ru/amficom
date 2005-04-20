@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.client_.general.ui_.ADefaultTableCellRenderer;
 import com.syrus.io.BellcoreStructure;
 
 public class DetailedEventsFrame extends JInternalFrame
-implements OperationListener, BsHashChangeListener, EtalonMTMListener
+implements OperationListener, BsHashChangeListener, EtalonMTMListener, CurrentEventChangeListener
 {
 	private ModelTraceManager etalonMTM;
 	private ModelTraceAndEvents dataMTAE;
@@ -83,6 +83,7 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener
 		dispatcher.register(this, RefUpdateEvent.typ);
 		Heap.addBsHashListener(this);
 		Heap.addEtalonMTMListener(this);
+		Heap.addCurrentEventChangeListener(this);
 	}
 
 	private void makeAlignedDataMT()
@@ -118,12 +119,6 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener
 					analysis_performed = true;
 				if(etalon_loaded)
 					tabbedPane.setEnabledAt(1, true);
-			}
-			if (rue.eventSelected())
-			{
-				selected = Integer.parseInt((String)rue.getSource());
-				updateTableModel (selected);
-				setData(selected);
 			}
 		}
 	}
@@ -521,9 +516,14 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener
 		etalon_loaded = false;
 		tabbedPane.setEnabledAt(1, false);
 	}
+
+	public void currentEventChanged()
+	{
+		selected = Heap.getCurrentEvent();
+		updateTableModel (selected);
+		setData(selected);
+	}
 }
-
-
 
 class CompareTableModel extends AbstractTableModel
 {

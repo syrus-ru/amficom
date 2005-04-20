@@ -21,6 +21,7 @@ import javax.swing.table.TableModel;
 
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
+import com.syrus.AMFICOM.Client.General.Event.CurrentEventChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
@@ -43,7 +44,7 @@ import com.syrus.AMFICOM.analysis.dadara.TraceEvent;
 import com.syrus.io.BellcoreStructure;
 
 public class EventsFrame extends ATableFrame
-implements OperationListener, BsHashChangeListener, EtalonMTMListener
+implements OperationListener, BsHashChangeListener, EtalonMTMListener, CurrentEventChangeListener
 {
 	public static final String DASH = "-----";
 
@@ -91,6 +92,7 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener
 		this.dispatcher.register(this, AnalyseApplicationModel.SELECT_PREVIOUS_EVENT);
 		Heap.addBsHashListener(this);
 		Heap.addEtalonMTMListener(this);
+		Heap.addCurrentEventChangeListener(this);
 	}
 
 	public void operationPerformed(OperationEvent ae)
@@ -112,17 +114,6 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener
 				}
 				setVisible(true);
 			}
-
-			if (rue.eventSelected())
-			{
-				updateTableModel (Integer.parseInt((String)rue.getSource()));
-			}
-
-//			if (rue.CONCAVITY_SELECTED)
-//			{
-//				if (jTable.getSelectedRow() != -1)
-//					jTable.removeRowSelectionInterval(jTable.getSelectedRow(), jTable.getSelectedRow());
-//			}
 		} else if (actionCommand.equals(AnalyseApplicationModel.SELECT_PREVIOUS_EVENT)) {
 			int selectedRow = this.jTable.getSelectedRow();
 			if (selectedRow > 0) {
@@ -250,7 +241,7 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener
 			else
 			{
 				selected = lsm.getMinSelectionIndex();
-				dispatcher.notify(new RefUpdateEvent(String.valueOf(selected), RefUpdateEvent.EVENT_SELECTED_EVENT));
+				Heap.setCurrentEvent(selected);
 			}
 		}
 		});
@@ -504,6 +495,9 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener
 		etalon = null;
 		setNoComparedWithEtalonColor();
 	}
-	
-	
+
+	public void currentEventChanged()
+	{
+		updateTableModel(Heap.getCurrentEvent());
+	}
 }

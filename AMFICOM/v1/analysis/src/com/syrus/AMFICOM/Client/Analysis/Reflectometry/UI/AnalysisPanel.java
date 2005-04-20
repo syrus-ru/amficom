@@ -5,6 +5,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
+import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
@@ -324,7 +325,7 @@ public class AnalysisPanel extends MapMarkersPanel
 			{
 				_activeEvent = activeEvent;
 				moved_here = true;
-				dispatcher.notify(new RefUpdateEvent(String.valueOf(activeEvent), RefUpdateEvent.EVENT_SELECTED_EVENT));
+				Heap.setCurrentEvent(activeEvent);
 				moved_here = false;
 				return;
 			}
@@ -350,14 +351,12 @@ public class AnalysisPanel extends MapMarkersPanel
 					{
 						moveMarker (markerB, coord2index(currpos.x));
 						updAnalysisMarkerInfo();
-//					if (markers_pair_moving)
-//							move_marker_B (db);
 						activeEvent = marker_to_event();
 						if (_activeEvent != activeEvent)
 						{
 							_activeEvent = activeEvent;
 							moved_here = true;
-							dispatcher.notify(new RefUpdateEvent(String.valueOf(activeEvent), RefUpdateEvent.EVENT_SELECTED_EVENT));
+							Heap.setCurrentEvent(activeEvent);
 							moved_here = false;
 							return;
 						}
@@ -461,7 +460,6 @@ public class AnalysisPanel extends MapMarkersPanel
 			activeEvent = event;
 			moveMarker(markerB, (events[event].first_point + events[event].last_point)/2);
 		}
-//		scrollToMarkerVisible(markerB);
 		parent.repaint();
 	}
 

@@ -10,6 +10,7 @@ import javax.swing.JToggleButton;
 import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
+import com.syrus.AMFICOM.Client.General.Event.CurrentEventChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
@@ -19,7 +20,9 @@ import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEvents;
 
-public class AnalysisLayeredPanel extends TraceEventsLayeredPanel implements OperationListener
+public class AnalysisLayeredPanel
+extends TraceEventsLayeredPanel
+implements OperationListener, CurrentEventChangeListener
 {
 	public static final long LOSS_ANALYSIS = 0x00000001;
 	public static final long REFLECTION_ANALYSIS = 0x00000010;
@@ -28,6 +31,7 @@ public class AnalysisLayeredPanel extends TraceEventsLayeredPanel implements Ope
 	public AnalysisLayeredPanel(Dispatcher dispatcher)
 	{
 		super(dispatcher);
+		Heap.addCurrentEventChangeListener(this);
 	}
 
 	protected ToolBarPanel createToolBar()
@@ -54,12 +58,6 @@ public class AnalysisLayeredPanel extends TraceEventsLayeredPanel implements Ope
 						((AnalysisPanel)panel).updateTrace(mtae); // FIXME: нужно UpdateMTM или UpdateTrace?
 						((AnalysisPanel)panel).updMarkers();
 						jLayeredPane.repaint();
-					}
-					if(rue.eventSelected())
-					{
-						int num = Integer.parseInt((String)rue.getSource());
-						((AnalysisPanel)panel).move_marker_to_ev(num);
-						((AnalysisPanel)panel).updAnalysisMarkerInfo();
 					}
 				}
 			}
@@ -133,6 +131,20 @@ public class AnalysisLayeredPanel extends TraceEventsLayeredPanel implements Ope
 				((AnalysisPanel)panel).updAnalysisMarkerInfo();
 				jLayeredPane.repaint();
 				return;
+			}
+		}
+	}
+
+	public void currentEventChanged()
+	{
+		int num = Heap.getCurrentEvent();
+		for(int i=0; i<jLayeredPane.getComponentCount(); i++)
+		{
+			SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
+			if (panel instanceof AnalysisPanel)
+			{
+				((AnalysisPanel)panel).move_marker_to_ev(num);
+				((AnalysisPanel)panel).updAnalysisMarkerInfo();
 			}
 		}
 	}

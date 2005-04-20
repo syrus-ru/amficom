@@ -27,8 +27,6 @@ import javax.swing.table.TableModel;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.MinuitAnalyseCommand;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryMTMListener;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
@@ -44,7 +42,7 @@ import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.io.BellcoreStructure;
 
 public class AnalysisSelectionFrame extends ATableFrame
-implements OperationListener, BsHashChangeListener, PrimaryMTMListener
+implements BsHashChangeListener, PrimaryMTMListener
 {
 	static final Double[] nf =
 	 {
@@ -61,8 +59,6 @@ implements OperationListener, BsHashChangeListener, PrimaryMTMListener
 	JScrollPane scrollPane = new JScrollPane();
 	JViewport viewport = new JViewport();
 	ApplicationContext aContext;
-	
-	private Object selectedEventId;
 	
 	public AnalysisSelectionFrame(ApplicationContext aContext)
 	{
@@ -84,20 +80,8 @@ implements OperationListener, BsHashChangeListener, PrimaryMTMListener
 	void init_module(Dispatcher dispatcher)
 	{
 		this.dispatcher = dispatcher;
-		dispatcher.register(this, RefUpdateEvent.typ);
 		Heap.addBsHashListener(this);
 		Heap.addPrimaryMTMListener(this);
-	}
-
-	public void operationPerformed(OperationEvent ae)
-	{
-		String actionCommand = ae.getActionCommand();
-		if (actionCommand.equals(RefUpdateEvent.typ)) {
-			RefUpdateEvent refUpdateEvent = (RefUpdateEvent)ae;
-			if (refUpdateEvent.eventSelected()) {
-				this.selectedEventId = refUpdateEvent.getSource();
-			}
-		}
 	}
 
 	public String getReportTitle()
@@ -219,9 +203,6 @@ implements OperationListener, BsHashChangeListener, PrimaryMTMListener
 		new MinuitAnalyseCommand(aContext).execute();
 		dispatcher.notify(new RefUpdateEvent(RefUpdateEvent.PRIMARY_TRACE, RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));
 		dispatcher.notify(new RefUpdateEvent(this, RefUpdateEvent.THRESHOLDS_UPDATED_EVENT));
-		if (this.selectedEventId != null) {
-			dispatcher.notify(new RefUpdateEvent(this.selectedEventId, RefUpdateEvent.EVENT_SELECTED_EVENT));
-		}
 
 		setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}
@@ -466,5 +447,4 @@ implements OperationListener, BsHashChangeListener, PrimaryMTMListener
 		// @todo Auto-generated method stub
 		
 	}
-
 }

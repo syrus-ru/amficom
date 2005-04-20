@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.27 2005/04/18 12:40:01 saa Exp $
+ * $Id: Heap.java,v 1.28 2005/04/20 12:21:45 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,6 +19,7 @@ import java.util.Random;
 import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.Analysis.UI.ReflectogrammLoadDialog;
+import com.syrus.AMFICOM.Client.General.Event.CurrentEventChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.CurrentTraceChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryMTMListener;
@@ -28,6 +29,7 @@ import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEventsImpl;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
+import com.syrus.AMFICOM.analysis.dadara.ReflectogramComparer;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.Set;
 import com.syrus.io.BellcoreStructure;
@@ -38,7 +40,7 @@ import com.syrus.io.BellcoreStructure;
  * использование остальных методов работы с BS
  * 
  * @author $Author: saa $
- * @version $Revision: 1.27 $, $Date: 2005/04/18 12:40:01 $
+ * @version $Revision: 1.28 $, $Date: 2005/04/20 12:21:45 $
  * @module
  */
 public class Heap
@@ -63,6 +65,7 @@ public class Heap
 	private static Map idColorMap = new HashMap();
 
 	private static String currentTrace = ""; // XXX: initialize to avoid crushes
+	private static int currentEv = -1; // XXX: is this initialization good?
 
 	public static ReflectogrammLoadDialog getRLDialogByKey(String key) {
         return (ReflectogrammLoadDialog) dialogHash.get(key);
@@ -75,6 +78,10 @@ public class Heap
 
     public static ModelTraceAndEventsImpl getMTAEPrimary() {
         return primaryMTAE;
+    }
+
+    private static int getNumberOfEvents() {
+    	return primaryMTAE == null ? 0 : primaryMTAE.getNEvents();
     }
 
     public static ModelTraceManager getMTMEtalon() {
@@ -115,6 +122,21 @@ public class Heap
 
     public static boolean hasSecondaryBSKey(String id) {
         return bsHash.containsKey(id);
+    }
+
+    public static int getCurrentEvent() {
+    	return currentEv;
+    }
+
+	// XXX: rather slow...
+    public static int getCurrentEtalonEvent() {
+    	if (primaryMTAE == null || etalonMTM == null || currentEv < 0 || currentEv >= primaryMTAE.getNEvents())
+    		return -1;
+    	// reliability comparison is actually performed
+    	// @todo: ModelTraceAndEventsImpl: add getReliabilitySimpleEvents()
+    	ReflectogramComparer rcomp = new ReflectogramComparer(primaryMTAE.getSimpleEvents(),
+    		etalonMTM.getRSE());
+    	return rcomp.getEtalonIdByProbeId(currentEv);
     }
 
     public static boolean hasEmptyAllBSMap() {
@@ -270,6 +292,8 @@ public class Heap
 
     private static LinkedList currentTraceChangeListeners = new LinkedList();
 
+    private static LinkedList currentEventChangeListeners = new LinkedList();
+
     // XXX: change each notify method to private as soon as bsHash will become
     // private
 
@@ -339,6 +363,12 @@ public class Heap
                     .currentTraceChanged(currentTrace);
     }
 
+    private static void notifyCurrentEventChanged() {
+        for (Iterator it = currentEventChangeListeners.iterator(); it.hasNext();)
+            ((CurrentEventChangeListener) it.next())
+                    .currentEventChanged();
+    }
+
     private static void addListener(Collection c, Object listener) {
         if (!c.contains(listener))
             c.add(listener);
@@ -391,6 +421,16 @@ public class Heap
         removeListener(currentTraceChangeListeners, listener);
     }
 
+    public static void addCurrentEventChangeListener(
+            CurrentEventChangeListener listener) {
+        addListener(currentEventChangeListeners, listener);
+    }
+
+    public static void removeCurrentEventChangeListener(
+            CurrentEventChangeListener listener) {
+        removeListener(currentEventChangeListeners, listener);
+    }
+
     public static void primaryTraceOpened(BellcoreStructure bs) {
         notifyBsHashAdd(PRIMARY_TRACE_KEY, bs);
         notifyPrimaryTraceOpened();
@@ -415,11 +455,29 @@ public class Heap
         notifyCurrentTraceChanged();
     }
 
+    // value of -1 means 'no event selected'
+    public static void setCurrentEvent(int nEvent) {
+    	if (nEvent < -1 || nEvent >= getNumberOfEvents())
+    		return;
+    	currentEv = nEvent;
+    	notifyCurrentEventChanged();
+    }
+
+    // @todo: invoke this automatically
+    private static void fixCurrentEvent() {
+    	if (currentEv >= getNumberOfEvents())
+    	{
+    		currentEv = -1;
+    		notifyCurrentEventChanged();
+    	}
+    }
+
     /**
      * @param mtae  must not be null
      */
     public static void setMTAEPrimary(ModelTraceAndEventsImpl mtae) {
         primaryMTAE = mtae;
+        fixCurrentEvent();
         notifyPrimaryMTMCUpdated();
     }
 
@@ -455,6 +513,7 @@ public class Heap
         
         // close Primary MTM
         primaryMTAE = null;
+        fixCurrentEvent();
         notifyPrimaryMTMRemoved();
 
         // close Etalon MTM
