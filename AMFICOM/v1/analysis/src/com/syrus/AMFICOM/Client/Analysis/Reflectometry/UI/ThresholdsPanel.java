@@ -20,7 +20,7 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 	protected boolean paint_thresholds = true;
 	protected boolean edit_thresholds = true;
 
-	private ModelTraceManager et_mtm;
+	private ModelTraceManager etalon;
 
 	private int c_event = 0;
 	private ModelTraceManager.ThresholdHandle c_TH = null;
@@ -30,52 +30,62 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 		super (panel, dispatcher, y, deltaX);		
 	}
 
-	public void updateThresholds(ModelTraceManager mtm)
+	// we rely upon being up-to-date informed on MTMEtalon modification
+	// Otherwise, our comunication with Heap.etalonEvent may not be accurate
+	public void updateEtalon()
 	{
-//		updateTrace(mtm); // XXX: на что влияет? нужно ли?
+		etalon = Heap.getMTMEtalon();
 
-		if (mtm == null)
+		if (etalon == null)
+		{
+			c_event = 0;
+			c_TH = null;
 			return;
+		}
 
-		this.et_mtm = mtm;
-
-		if (c_event >= mtm.getMTAE().getNEvents())
-			c_event = mtm.getMTAE().getNEvents() - 1;
+		if (c_event >= etalon.getMTAE().getNEvents())
+			c_event = etalon.getMTAE().getNEvents() - 1;
 	}
 
 	// XXX: transient code (slow refactoring);
 	// to be used in ThresholdsLayeredPanel.
 	// Performance Note: creates an int[2] object
+	// Design Note: uses TraceEventsPanel.events
 	public int[] getStartAndEndOfCurrentEvent()
 	{
-		if (c_event >= events.length)
-			c_event = events.length - 1;
-		int start1 = events[c_event].first_point;
-		if (c_event == 0)
-			start1 = 2;
-		int end1 = events[c_event].last_point;
+		int num = Heap.getCurrentEvent();
+		if (num < 0)
+			return new int[] {0, events[events.length-1].last_point};
+		if (num >= events.length)
+			num = events.length - 1;
+		int start1 = num > 0 ? events[num].first_point : 2;
+		int end1 = events[num].last_point;
 		return new int[] {start1, end1};
 	}
 
-	public void showEvent (int num)
+	public void updateCurrentEvent()
 	{
+		// Design Note: uses TraceEventsPanel.events
 		if (events == null)
 			return;
-		if (num == -1)
-			return;
 
-		c_event = num; // FIXME: перевести в нумерацию эталона
+		c_event = Heap.getCurrentEtalonEvent();
 
-		if (et_mtm != null && c_event >= et_mtm.getMTAE().getNEvents())
-			c_event = et_mtm.getMTAE().getNEvents() - 1;
+		if (etalon != null && c_event >= etalon.getMTAE().getNEvents())
+			c_event = etalon.getMTAE().getNEvents() - 1;
 
-		start = events[num].first_point;
-		end = events[num].last_point;
+		int num = Heap.getCurrentEvent();
+
+		if (num >= 0) // XXX
+		{
+			start = events[num].first_point;
+			end = events[num].last_point;
+		}
 	}
 	
 	protected void this_mousePressed(MouseEvent mev)
 	{
-		if (!edit_thresholds || et_mtm == null)
+		if (!edit_thresholds || etalon == null)
 		{
 			super.this_mousePressed(mev);
 			return;
@@ -93,7 +103,7 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 			// проверяем, попадает ли X мыши в область текущего события
 			if (this.c_event >= 0)
 			{
-				SimpleReflectogramEvent simpleEvent = this.et_mtm.getMTAE().getSimpleEvent(this.c_event);
+				SimpleReflectogramEvent simpleEvent = this.etalon.getMTAE().getSimpleEvent(this.c_event);
 				double currposF = coord2indexF(this.currpos.x);
 				double mouseCouplingF = MOUSE_COUPLING / this.scaleX;
 				if (!(currposF >= simpleEvent.getBegin() - mouseCouplingF
@@ -107,7 +117,7 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 		// если не isOutside, то пытаемся "ухватить" (drag) порог
 		this.c_TH = isOutside
 			? null
-			: this.et_mtm.getThresholdHandle(
+			: this.etalon.getThresholdHandle(
 			coord2indexF(this.currpos.x), // we need float value, without rounding
 			coord2value(this.currpos.y),
 			MOUSE_COUPLING / this.scaleX,
@@ -169,7 +179,7 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 
 	protected void this_mouseDragged(MouseEvent e)
 	{
-		if (!edit_thresholds || et_mtm == null)
+		if (!edit_thresholds || etalon == null)
 		{
 			super.this_mouseDragged(e);
 			return;
@@ -193,7 +203,7 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 
 	protected void this_mouseReleased(MouseEvent e)
 	{
-		if (!edit_thresholds || et_mtm == null || c_TH == null)
+		if (!edit_thresholds || etalon == null || c_TH == null)
 		{
 			super.this_mouseReleased(e);
 		}
@@ -215,10 +225,10 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 	{
 	    // если кликнули, но не на текущее событие, переходим к новому событию
 	    int pos = coord2index(e.getPoint().x);
-	    int evId = et_mtm != null ? et_mtm.getMTAE().getEventByCoord(pos) : -1;
+	    int evId = etalon != null ? etalon.getMTAE().getEventByCoord(pos) : -1;
 		if (evId != -1 && evId != c_event)
 		{
-	    	Heap.setCurrentEvent(evId);
+	    	Heap.setCurrentEtalonEvent(evId);
 		    return;
 		}
 	}
@@ -269,7 +279,7 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 	 */
 	private void paintThresholdsEx(Graphics g, int nEvent)
 	{
-		if (et_mtm == null)
+		if (etalon == null)
 			return;
 
 		for (int key = 0; key < 4; key++)
@@ -278,12 +288,12 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 			     ? AnalysisResourceKeys.COLOR_ALARM_THRESHOLD
 			     : AnalysisResourceKeys.COLOR_WARNING_THRESHOLD));
 			// Note: нет draw_joint_of_two_model_curves
-			ModelTrace thresholdMT = et_mtm.getThresholdMT(key);
+			ModelTrace thresholdMT = etalon.getThresholdMT(key);
 			// FIXME: debug code
 			SimpleReflectogramEvent sre = null;
 			if (nEvent >= 0)
 			{
-				sre = et_mtm.getEventRangeOnThresholdCurve(nEvent, key);
+				sre = etalon.getEventRangeOnThresholdCurve(nEvent, key);
 				if (sre == null)
 					continue;
 			}
