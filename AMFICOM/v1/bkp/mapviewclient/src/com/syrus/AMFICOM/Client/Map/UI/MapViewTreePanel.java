@@ -28,6 +28,7 @@ import com.syrus.AMFICOM.client_.general.ui_.tree_.IconedNode;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.logic.ItemTreeModel;
 import com.syrus.AMFICOM.logic.LogicalTreeUI;
+import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.mapview.MapView;
 
@@ -177,6 +178,16 @@ public final class MapViewTreePanel extends JPanel
 						dispatcher.notify(new MapNavigateEvent(mapElement, MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
 					else
 						dispatcher.notify(new MapNavigateEvent(mapElement, MapNavigateEvent.MAP_ELEMENT_DESELECTED_EVENT));
+				}
+				else if(node.getObject() instanceof Map) {
+					Map map = (Map )node.getObject();
+					if(e.isAddedPath(paths[i]))
+						dispatcher.notify(new MapEvent(map, MapEvent.MAP_SELECTED));
+				}
+				else if(node.getObject() instanceof MapView) {
+					MapView mapView = (MapView )node.getObject();
+					if(e.isAddedPath(paths[i]))
+						dispatcher.notify(new MapEvent(mapView, MapEvent.MAP_VIEW_SELECTED));
 				}
 			}
 			dispatcher.notify(new MapEvent(this, MapEvent.SELECTION_CHANGED));
