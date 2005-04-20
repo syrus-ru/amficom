@@ -40,7 +40,6 @@ import com.syrus.AMFICOM.analysis.dadara.ModelTraceComparer;
 import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramComparer;
 import com.syrus.AMFICOM.analysis.dadara.TraceEvent;
-import com.syrus.AMFICOM.client_.general.ui_.ADefaultTableCellRenderer;
 import com.syrus.io.BellcoreStructure;
 
 public class EventsFrame extends ATableFrame
