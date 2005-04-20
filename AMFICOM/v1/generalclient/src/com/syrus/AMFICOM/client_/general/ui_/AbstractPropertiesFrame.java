@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractPropertiesFrame.java,v 1.3 2005/04/20 12:00:11 stas Exp $
+ * $Id: AbstractPropertiesFrame.java,v 1.4 2005/04/20 16:30:46 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import javax.swing.event.*;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/04/20 12:00:11 $
+ * @version $Revision: 1.4 $, $Date: 2005/04/20 16:30:46 $
  * @module generalclient_v1
  */
 
@@ -78,7 +78,12 @@ public abstract class AbstractPropertiesFrame extends JInternalFrame implements 
 	protected void setPropertiesPane(JComponent propertiesPane) {
 		this.getContentPane().removeAll();
 		this.getContentPane().add(propertiesPane, BorderLayout.CENTER);
-		this.updateUI();
+		SwingUtilities.invokeLater(new Runnable(){
+			public void run() {
+				AbstractPropertiesFrame.this.updateUI();
+			}
+		});
+		
 	}
 	
 	public void stateChanged(ChangeEvent e) { 
