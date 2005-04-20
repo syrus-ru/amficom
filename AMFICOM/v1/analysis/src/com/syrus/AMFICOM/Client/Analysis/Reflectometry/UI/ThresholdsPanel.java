@@ -43,6 +43,20 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 			c_event = mtm.getMTAE().getNEvents() - 1;
 	}
 
+	// XXX: transient code (slow refactoring);
+	// to be used in ThresholdsLayeredPanel.
+	// Note: creates an int[2] object
+	public int[] getStartAndEndOfCurrentEvent()
+	{
+		if (c_event >= events.length)
+			c_event = events.length - 1;
+		int start1 = events[c_event].first_point;
+		if (c_event == 0)
+			start1 = 2;
+		int end1 = events[c_event].last_point;
+		return new int[] {start1, end1};
+	}
+
 	public void showEvent (int num)
 	{
 		if (events == null)

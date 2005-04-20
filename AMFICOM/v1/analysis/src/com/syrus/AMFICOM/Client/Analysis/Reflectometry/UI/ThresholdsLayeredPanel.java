@@ -102,12 +102,9 @@ implements OperationListener, BsHashChangeListener, CurrentEventChangeListener
 			{
                 if (((ThresholdsPanel)panel).events.length > 0)
                 {
-    				if (((ThresholdsPanel)panel).c_event >= ((ThresholdsPanel)panel).events.length)
-    					((ThresholdsPanel)panel).c_event = ((ThresholdsPanel)panel).events.length - 1;
-    				int start = ((ThresholdsPanel)panel).events[((ThresholdsPanel)panel).c_event].first_point;
-    				if (((ThresholdsPanel)panel).c_event == 0)
-    					start = 2;
-    				int end = ((ThresholdsPanel)panel).events[((ThresholdsPanel)panel).c_event].last_point;
+                	int[] startAndEnd = ((ThresholdsPanel)panel).getStartAndEndOfCurrentEvent();
+    				int start = startAndEnd[0];
+    				int end = startAndEnd[1];
     				updScale2fit(start, end, indent_x, iy);
     				jLayeredPane.repaint();
                 }
