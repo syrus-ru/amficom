@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalNode.java,v 1.31 2005/04/20 07:53:47 bass Exp $
+ * $Id: TopologicalNode.java,v 1.32 2005/04/20 10:50:39 krupenn Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,8 +40,8 @@ import com.syrus.AMFICOM.map.corba.TopologicalNode_Transferable;
  * быть концевым дл€ линии и дл€ фрагмента линии. ¬ физическом смысле
  * топологический узел соответствует точке изгиба линии и не требует 
  * дополнительной описательной информации.
- * @author $Author: bass $
- * @version $Revision: 1.31 $, $Date: 2005/04/20 07:53:47 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.32 $, $Date: 2005/04/20 10:50:39 $
  * @module map_v1
  * @todo physicalLink should be transient
  */
@@ -162,20 +162,7 @@ public class TopologicalNode extends AbstractNode {
 			DoublePoint location)
 		throws CreateObjectException {
 
-		// IMPORTANT!!
-		// physicalLink validation should NOT be performad
-		// as long as a known case of creation with null PhysicalLink exists.
-		// It is programmer's responsibility to make sure that call to
-		// 
-		// topologicalNode.setPhysicalLink(PhysicalLink physicalLink)
-		// 
-		// is performed after creation of TopologicalNode with physicalLink
-		// set to null.
-		// 
-		// Where needed physicalLink validation is performed in corresponding
-		// public createInstance methods
-
-		if (creatorId == null || name == null || description == null || location == null)
+		if (creatorId == null || name == null || description == null || location == null || physicalLink == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
@@ -205,12 +192,6 @@ public class TopologicalNode extends AbstractNode {
 			DoublePoint location)
 		throws CreateObjectException {
 
-		// validate physicalLink as long as validation is not performad
-		// in createInstance0
-
-		if (physicalLink == null)
-			throw new IllegalArgumentException("Argument is 'null'");
-
 		return TopologicalNode.createInstance0(
 				creatorId,
 				name,
@@ -223,19 +204,7 @@ public class TopologicalNode extends AbstractNode {
 			final PhysicalLink physicalLink,
 			final DoublePoint location) throws CreateObjectException {
 
-		// validate physicalLink as long as validation is not performad
-		// in createInstance0
-
-		if (physicalLink == null)
-			throw new IllegalArgumentException("Argument is 'null'");
-
 		return TopologicalNode.createInstance0(creatorId, "", "", physicalLink, location);
-	}
-
-	public static TopologicalNode createInstance(final Identifier creatorId, final DoublePoint location)
-			throws CreateObjectException {
-
-		return TopologicalNode.createInstance0(creatorId, "", "", null, location);
 	}
 
 	public Set getDependencies() {
