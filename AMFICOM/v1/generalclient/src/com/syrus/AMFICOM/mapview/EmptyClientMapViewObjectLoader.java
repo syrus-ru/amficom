@@ -1,14 +1,13 @@
 
 package com.syrus.AMFICOM.mapview;
 
-import com.syrus.AMFICOM.general.Identifier;
+import java.util.Collections;
+import java.util.Set;
+
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
-import com.syrus.AMFICOM.general.IllegalDataException;
-
-import java.util.Collections;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
-import java.util.Set;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 public class EmptyClientMapViewObjectLoader implements MapViewObjectLoader {
@@ -17,7 +16,7 @@ public class EmptyClientMapViewObjectLoader implements MapViewObjectLoader {
 		// nothing to do
 	}
 
-	public void delete(Identifier id) throws IllegalDataException {
+	public void delete(Identifier id) {
 		// nothing to do
 	}
 
