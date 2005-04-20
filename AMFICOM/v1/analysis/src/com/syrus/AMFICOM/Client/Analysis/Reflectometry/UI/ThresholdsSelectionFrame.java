@@ -41,6 +41,14 @@ import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager.ThreshEditor;
 import com.syrus.AMFICOM.client_.general.ui_.ADefaultTableCellRenderer;
 import com.syrus.io.BellcoreStructure;
 
+/**
+ * Отображает:
+ * <ol>
+ * <li> таблицу с численными значениями порогов, которые можно редактировать;
+ * <li> кнопки для управления порогами - переход к пред/след событию,
+ *    увеличить/уменьшить пороги, и, вроде как, загрузить начальные пороги(?)
+ * </ol>
+ */
 public class ThresholdsSelectionFrame extends ATableFrame
 implements OperationListener, BsHashChangeListener, CurrentEventChangeListener
 {
