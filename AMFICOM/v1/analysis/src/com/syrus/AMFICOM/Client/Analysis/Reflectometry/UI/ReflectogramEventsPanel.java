@@ -115,7 +115,7 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 			updateMinTraceLevel(min_trace_level);
 			return;
 		}
-		super.this_mouseReleased(e);
+		super.this_mouseReleased();
 	}
 
 	protected void this_mouseDragged(MouseEvent e)

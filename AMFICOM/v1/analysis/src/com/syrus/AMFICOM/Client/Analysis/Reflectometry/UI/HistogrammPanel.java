@@ -192,7 +192,7 @@ public class HistogrammPanel extends ScaledGraphPanel
 			parent.repaint();
 			return;
 		}
-		super.this_mouseReleased(e);
+		super.this_mouseReleased();
 	}
 
 	public void updateHistogrammData(int start, int end)
