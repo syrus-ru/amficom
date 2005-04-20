@@ -1,5 +1,5 @@
 /*
- * $Id: CollectorDatabase.java,v 1.26 2005/04/12 17:10:04 arseniy Exp $
+ * $Id: CollectorDatabase.java,v 1.27 2005/04/20 07:53:47 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,8 +38,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/04/12 17:10:04 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.27 $, $Date: 2005/04/20 07:53:47 $
+ * @author $Author: bass $
  * @module map_v1
  */
 public class CollectorDatabase extends CharacterizableDatabase {
@@ -63,7 +63,7 @@ public class CollectorDatabase extends CharacterizableDatabase {
 		this.retrievePhysicalLinks(Collections.singleton(collector));
 	}
 
-	private void retrievePhysicalLinks(Set collectors) throws RetrieveObjectException, IllegalDataException {
+	private void retrievePhysicalLinks(Set collectors) throws RetrieveObjectException {
 		if (collectors == null || collectors.isEmpty())
 			return;
 		java.util.Map map = super.retrieveLinkedEntityIds(collectors,

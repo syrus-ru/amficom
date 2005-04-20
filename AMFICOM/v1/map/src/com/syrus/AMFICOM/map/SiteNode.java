@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.31 2005/04/15 19:22:38 arseniy Exp $
+ * $Id: SiteNode.java,v 1.32 2005/04/20 07:53:47 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,8 +52,8 @@ import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
  * Дополнительно описывается полями
  * {@link #city}, {@link #street}, {@link #building} для поиска по 
  * географическим параметрам. 
- * @author $Author: arseniy $
- * @version $Revision: 1.31 $, $Date: 2005/04/15 19:22:38 $
+ * @author $Author: bass $
+ * @version $Revision: 1.32 $, $Date: 2005/04/20 07:53:47 $
  * @module map_v1
  */
 public class SiteNode extends AbstractNode implements TypedObject {
@@ -272,7 +272,7 @@ public class SiteNode extends AbstractNode implements TypedObject {
 		this.changed = true;
 	}
 
-	protected synchronized void setAttributes(Date created,
+	synchronized void setAttributes(Date created,
 			Date modified,
 			Identifier creatorId,
 			Identifier modifierId,

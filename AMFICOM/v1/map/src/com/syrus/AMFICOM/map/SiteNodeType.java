@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.28 2005/04/15 19:22:39 arseniy Exp $
+ * $Id: SiteNodeType.java,v 1.29 2005/04/20 07:53:47 bass Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,8 +39,8 @@ import com.syrus.AMFICOM.map.corba.SiteNodeType_Transferable;
  * {@link #codename}, соответствующим какому-либо значению {@link #WELL}, 
  * {@link #PIQUET}, {@link #ATS}, {@link #BUILDING}, {@link #UNBOUND}, 
  * {@link #CABLE_INLET}, {@link #TOWER}
- * @author $Author: arseniy $
- * @version $Revision: 1.28 $, $Date: 2005/04/15 19:22:39 $
+ * @author $Author: bass $
+ * @version $Revision: 1.29 $, $Date: 2005/04/20 07:53:47 $
  * @module map_v1
  */
 public class SiteNodeType extends StorableObjectType implements Characterizable, Namable {
@@ -206,7 +206,7 @@ public class SiteNodeType extends StorableObjectType implements Characterizable,
 		this.changed = true;
 	}
 
-	protected synchronized void setAttributes(Date created,
+	synchronized void setAttributes(Date created,
 			Date modified,
 			Identifier creatorId,
 			Identifier modifierId,

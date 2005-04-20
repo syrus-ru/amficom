@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.37 2005/04/15 19:22:38 arseniy Exp $
+ * $Id: Map.java,v 1.38 2005/04/20 07:53:47 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,8 +39,8 @@ import com.syrus.AMFICOM.map.corba.Map_Transferable;
  * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на 
  * линиях, коллекторов (объединяющих в себе линии).
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.37 $, $Date: 2005/04/15 19:22:38 $
+ * @author $Author: bass $
+ * @version $Revision: 1.38 $, $Date: 2005/04/20 07:53:47 $
  * @module map_v1
  * @todo make maps persistent 
  */
@@ -367,7 +367,7 @@ public class Map extends DomainMember implements Namable {
 		this.changed = true;
 	}
 
-	protected synchronized void setAttributes(Date created,
+	synchronized void setAttributes(Date created,
 			Date modified,
 			Identifier creatorId,
 			Identifier modifierId,
