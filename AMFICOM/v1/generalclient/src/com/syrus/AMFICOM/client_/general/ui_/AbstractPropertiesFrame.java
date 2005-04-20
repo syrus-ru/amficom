@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractPropertiesFrame.java,v 1.2 2005/04/18 15:32:01 stas Exp $
+ * $Id: AbstractPropertiesFrame.java,v 1.3 2005/04/20 12:00:11 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,12 +15,11 @@ import javax.swing.event.*;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/04/18 15:32:01 $
- * @module schemeclient_v1
+ * @version $Revision: 1.3 $, $Date: 2005/04/20 12:00:11 $
+ * @module generalclient_v1
  */
 
 public abstract class AbstractPropertiesFrame extends JInternalFrame implements ChangeListener {
-	protected JScrollPane scrollPane;
 	protected StorableObjectEditor editor;
 	protected JComponent emptyPane;
 	
@@ -43,9 +42,7 @@ public abstract class AbstractPropertiesFrame extends JInternalFrame implements 
 		this.setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
 				"images/general.gif")));
 
-		this.scrollPane = new JScrollPane();
 		this.getContentPane().setLayout(new BorderLayout());
-		this.getContentPane().add(scrollPane, BorderLayout.CENTER);
 		
 		this.emptyPane = new JPanel();
 		emptyPane.setBackground(Color.WHITE);
@@ -79,8 +76,9 @@ public abstract class AbstractPropertiesFrame extends JInternalFrame implements 
 	}
 	
 	protected void setPropertiesPane(JComponent propertiesPane) {
-		scrollPane.getViewport().removeAll();
-		scrollPane.getViewport().add(propertiesPane);
+		this.getContentPane().removeAll();
+		this.getContentPane().add(propertiesPane, BorderLayout.CENTER);
+		this.updateUI();
 	}
 	
 	public void stateChanged(ChangeEvent e) { 
