@@ -1,5 +1,5 @@
 /*
- * $Id: PortWrapper.java,v 1.8 2005/04/11 11:48:36 bob Exp $
+ * $Id: PortWrapper.java,v 1.9 2005/04/20 16:37:28 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/04/11 11:48:36 $
- * @author $Author: bob $
+ * @version $Revision: 1.9 $, $Date: 2005/04/20 16:37:28 $
+ * @author $Author: bass $
  * @module configuration_v1
  */
 public final class PortWrapper extends StorableObjectWrapper {
@@ -67,7 +67,7 @@ public final class PortWrapper extends StorableObjectWrapper {
 			if (key.equals(COLUMN_TYPE_ID))
 				return port.getType();
 			if (key.equals(COLUMN_SORT))
-				return new Integer(port.getSort());
+				return new Integer(port.getSort().value());
 			if (key.equals(COLUMN_EQUIPMENT_ID))
 				return port.getEquipmentId();
 			if (key.equals(COLUMN_CHARACTERISTICS))

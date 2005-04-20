@@ -1,5 +1,5 @@
 /*
- * $Id: PortDatabase.java,v 1.54 2005/03/11 10:17:12 bob Exp $
+ * $Id: PortDatabase.java,v 1.55 2005/04/20 16:37:29 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.54 $, $Date: 2005/03/11 10:17:12 $
- * @author $Author: bob $
+ * @version $Revision: 1.55 $, $Date: 2005/04/20 16:37:29 $
+ * @author $Author: bass $
  * @module config_v1
  */
 public class PortDatabase extends CharacterizableDatabase {
@@ -75,7 +75,7 @@ public class PortDatabase extends CharacterizableDatabase {
 		return DatabaseIdentifier.toSQLString(typeId) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(port.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE	+ COMMA
 			+ DatabaseIdentifier.toSQLString(equipmentId) + COMMA 
-			+ port.getSort();
+			+ port.getSort().value();
 	}
 
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
@@ -127,7 +127,7 @@ public class PortDatabase extends CharacterizableDatabase {
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, typeId);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, port.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, equipmentId);
-		preparedStatement.setInt(++startParameterNumber, port.getSort());
+		preparedStatement.setInt(++startParameterNumber, port.getSort().value());
 		return startParameterNumber;
 	}
 

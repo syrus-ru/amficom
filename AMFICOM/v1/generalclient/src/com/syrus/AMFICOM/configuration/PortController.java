@@ -75,7 +75,7 @@ public final class PortController extends ObjectResourceController
 			else if (key.equals(COLUMN_TYPE_ID))
 				result = port.getType().getId().getIdentifierString();
 			else if (key.equals(COLUMN_SORT))
-				result = Integer.toString(port.getSort());
+				result = Integer.toString(port.getSort().value());
 			else if (key.equals(COLUMN_EQUIPMENT_ID))
 				result = port.getEquipmentId().getIdentifierString();
 			else if (key.equals(COLUMN_CHARACTERISTICS)) {
