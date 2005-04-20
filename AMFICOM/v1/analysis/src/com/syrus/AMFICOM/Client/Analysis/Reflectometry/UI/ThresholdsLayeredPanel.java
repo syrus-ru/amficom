@@ -78,7 +78,7 @@ implements OperationListener, BsHashChangeListener, CurrentEventChangeListener
 					}
 					if(rue.thresholdsUpdated())
 					{
-						((ThresholdsPanel)panel).updateThresholds(Heap.getMTMEtalon());
+						((ThresholdsPanel)panel).updateEtalon();
 
 						updScale2fitCurrentEv(.2, 1.);
 						jLayeredPane.repaint();
@@ -143,7 +143,7 @@ implements OperationListener, BsHashChangeListener, CurrentEventChangeListener
 		{
 			SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
 			if (panel instanceof ThresholdsPanel)
-				((ThresholdsPanel)panel).showEvent(num);
+				((ThresholdsPanel)panel).updateCurrentEvent();
 		}
 		updScale2fitCurrentEv (.2, 1.);
 	}
