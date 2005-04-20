@@ -9,6 +9,7 @@ import javax.swing.Box;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
@@ -29,6 +30,7 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.map.DoublePoint;
+import com.syrus.AMFICOM.map.MapStorableObjectPool;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.MapViewStorableObjectPool;
 import com.syrus.AMFICOM.mapview.VoidElement;
@@ -53,6 +55,7 @@ public class MapViewEditor extends DefaultStorableObjectEditor
 	private JTextField scaleTextField = new JTextField();
 
 	private JLabel schemesLabel = new JLabel();
+	private JScrollPane schemesScrollPane = new JScrollPane();
 	private ObjectResourceListBox schemesList = new ObjectResourceListBox();
 
 	private JLabel descLabel = new JLabel();
@@ -91,7 +94,10 @@ public class MapViewEditor extends DefaultStorableObjectEditor
 		this.latLabel.setText(LangModelMap.getString("Latitude"));
 		this.scaleLabel.setText(LangModelMap.getString("Scale"));
 		this.schemesLabel.setText(LangModelMap.getString("Schemes"));
-		this.schemesList.setPreferredSize(new Dimension(MapVisualManager.DEF_WIDTH, MapVisualManager.DEF_HEIGHT * 4));
+		this.schemesScrollPane.setPreferredSize(new Dimension(MapVisualManager.DEF_WIDTH, MapVisualManager.DEF_HEIGHT * 4));
+		this.schemesScrollPane.setMinimumSize(new Dimension(MapVisualManager.DEF_WIDTH, MapVisualManager.DEF_HEIGHT * 4));
+		this.schemesScrollPane.setMaximumSize(new Dimension(MapVisualManager.DEF_WIDTH, MapVisualManager.DEF_HEIGHT * 4));
+		this.schemesScrollPane.getViewport().add(this.schemesList);
 
 		this.descLabel.setText(LangModelMap.getString("Description"));
 
@@ -108,10 +114,10 @@ public class MapViewEditor extends DefaultStorableObjectEditor
 		this.jPanel.add(this.scaleLabel, ReusedGridBagConstraints.get(0, 5, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
 		this.jPanel.add(this.scaleTextField, ReusedGridBagConstraints.get(1, 5, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
 		this.jPanel.add(this.schemesLabel, ReusedGridBagConstraints.get(0, 6, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, null, 0, 0));
-		this.jPanel.add(this.schemesList, ReusedGridBagConstraints.get(1, 6, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		this.jPanel.add(Box.createHorizontalStrut(5), ReusedGridBagConstraints.get(1, 7, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		this.jPanel.add(this.descLabel, ReusedGridBagConstraints.get(0, 8, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, null, 0, 0));
-		this.jPanel.add(this.descTextArea, ReusedGridBagConstraints.get(1, 8, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, null, 0, 0));
+		this.jPanel.add(this.schemesScrollPane, ReusedGridBagConstraints.get(0, 7, 2, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.jPanel.add(Box.createHorizontalStrut(5), ReusedGridBagConstraints.get(1, 8, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.jPanel.add(this.descLabel, ReusedGridBagConstraints.get(0, 9, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, null, 0, 0));
+		this.jPanel.add(new JScrollPane(this.descTextArea), ReusedGridBagConstraints.get(0, 10, 2, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, null, 0, 0));
 
 		this.mapComboBox.setEnabled(false);
 		this.domainComboBox.setEnabled(false);
@@ -190,21 +196,22 @@ public class MapViewEditor extends DefaultStorableObjectEditor
 			this.domainComboBox.addElements(domains);
 			this.domainComboBox.setSelectedItem(domain);
 
-			Collection maps = null;
-
-			StorableObjectCondition domainCondition = 
-				new LinkedIdsCondition(domain.getId(), ObjectEntities.MAP_ENTITY_CODE);
-			try
-			{
-				maps = MapViewStorableObjectPool.getStorableObjectsByCondition(
-						domainCondition,
-						true);
-			}
-			catch (ApplicationException e)
-			{
-				e.printStackTrace();
-			}
-			this.mapComboBox.addElements(maps);
+//			Collection maps = null;
+//
+//			StorableObjectCondition domainCondition = 
+//				new LinkedIdsCondition(domain.getId(), ObjectEntities.MAP_ENTITY_CODE);
+//			try
+//			{
+//				maps = MapStorableObjectPool.getStorableObjectsByCondition(
+//						domainCondition,
+//						true);
+//			}
+//			catch (ApplicationException e)
+//			{
+//				e.printStackTrace();
+//			}
+//			this.mapComboBox.addElements(maps);
+			this.mapComboBox.addItem(this.mapView.getMap());
 			this.mapComboBox.setSelectedItem(this.mapView.getMap());
 
 			this.descTextArea.setEnabled(true);

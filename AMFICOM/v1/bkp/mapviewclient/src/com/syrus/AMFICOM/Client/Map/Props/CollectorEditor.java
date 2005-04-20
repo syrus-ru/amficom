@@ -3,11 +3,14 @@ package com.syrus.AMFICOM.Client.Map.Props;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
-import javax.swing.Box;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -16,11 +19,15 @@ import javax.swing.SwingConstants;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
+import com.syrus.AMFICOM.Client.Map.Controllers.NodeTypeController;
 import com.syrus.AMFICOM.Client.Map.UI.SimpleMapElementController;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.client_.general.ui_.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client_.general.ui_.ObjList;
 import com.syrus.AMFICOM.map.Collector;
+import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.SiteNode;
+import com.syrus.AMFICOM.map.SiteNodeType;
 
 public class CollectorEditor extends DefaultStorableObjectEditor
 {
@@ -33,8 +40,9 @@ public class CollectorEditor extends DefaultStorableObjectEditor
 	private JTextField nameTextField = new JTextField();
 	private JLabel topologicalLengthLabel = new JLabel();
 	private JTextField topologicalLengthTextField = new JTextField();
-	private JLabel tunnelsLabel = new JLabel();
-	private ObjList tunnelsList = null;
+	private JLabel piquetsLabel = new JLabel();
+	private ObjList piquetsList = null;
+	private JScrollPane piquetsScrollPane = new JScrollPane();
 	private JLabel descLabel = new JLabel();
 	private JTextArea descTextArea = new JTextArea();
 
@@ -56,31 +64,36 @@ public class CollectorEditor extends DefaultStorableObjectEditor
 		SimpleMapElementController controller = 
 				SimpleMapElementController.getInstance();
 
-		this.tunnelsList = new ObjList(controller, SimpleMapElementController.KEY_NAME);
+		this.piquetsList = new ObjList(controller, SimpleMapElementController.KEY_NAME);
 
 		this.jPanel.setLayout(this.gridBagLayout1);
 		this.jPanel.setName(LangModel.getString("Properties"));
 
 		this.nameLabel.setText(LangModelMap.getString("Name"));
 		this.topologicalLengthLabel.setText(LangModelMap.getString("TopologicalLength"));
-		this.tunnelsLabel.setText(LangModelMap.getString("StartNode"));
+		this.piquetsLabel.setText(LangModelMap.getString("piquet"));
 		this.descLabel.setText(LangModelMap.getString("Description"));
-		this.tunnelsList.setPreferredSize(new Dimension(MapVisualManager.DEF_WIDTH, MapVisualManager.DEF_HEIGHT * 4));
+
+		this.piquetsScrollPane.setPreferredSize(new Dimension(MapVisualManager.DEF_WIDTH, MapVisualManager.DEF_HEIGHT * 4));
+		this.piquetsScrollPane.setMinimumSize(new Dimension(MapVisualManager.DEF_WIDTH, MapVisualManager.DEF_HEIGHT * 4));
+		this.piquetsScrollPane.setMaximumSize(new Dimension(MapVisualManager.DEF_WIDTH, MapVisualManager.DEF_HEIGHT * 4));
+		this.piquetsScrollPane.getViewport().add(this.piquetsList);
 
 		this.jPanel.add(this.nameLabel, ReusedGridBagConstraints.get(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
 		this.jPanel.add(this.nameTextField, ReusedGridBagConstraints.get(1, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
 		this.jPanel.add(this.topologicalLengthLabel, ReusedGridBagConstraints.get(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
 		this.jPanel.add(this.topologicalLengthTextField, ReusedGridBagConstraints.get(1, 1, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		this.jPanel.add(this.tunnelsLabel, ReusedGridBagConstraints.get(0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, null, 0, 0));
-		this.jPanel.add(this.tunnelsList, ReusedGridBagConstraints.get(1, 2, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		this.jPanel.add(new JSeparator(SwingConstants.HORIZONTAL), ReusedGridBagConstraints.get(1, 3, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		this.jPanel.add(this.descLabel, ReusedGridBagConstraints.get(0, 4, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, null, 0, 0));
-		this.jPanel.add(this.descTextArea, ReusedGridBagConstraints.get(1, 4, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, null, 0, 0));
+		this.jPanel.add(this.piquetsLabel, ReusedGridBagConstraints.get(0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, null, 0, 0));
+		this.jPanel.add(this.piquetsScrollPane, ReusedGridBagConstraints.get(0, 3, 2, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.jPanel.add(new JSeparator(SwingConstants.HORIZONTAL), ReusedGridBagConstraints.get(0, 4, 2, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
+
+		this.jPanel.add(this.descLabel, ReusedGridBagConstraints.get(0, 5, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, null, 0, 0));
+		this.jPanel.add(new JScrollPane(this.descTextArea), ReusedGridBagConstraints.get(0, 6, 2, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, null, 0, 0));
 
 		super.addToUndoableListener(this.nameTextField);
 		super.addToUndoableListener(this.descTextArea);
 		
-		this.tunnelsList.setEnabled(false);
+		this.piquetsList.setEnabled(false);
 		this.topologicalLengthTextField.setEnabled(false);
 	}
 
@@ -93,7 +106,7 @@ public class CollectorEditor extends DefaultStorableObjectEditor
 	{
 		this.collector = (Collector)object;
 
-		this.tunnelsList.removeAll();
+		this.piquetsList.removeAll();
 
 		if(this.collector == null)
 		{
@@ -105,6 +118,8 @@ public class CollectorEditor extends DefaultStorableObjectEditor
 		}
 		else
 		{
+			SiteNodeType piquetType = NodeTypeController.getSiteNodeType(SiteNodeType.PIQUET);
+			
 			this.nameTextField.setEnabled(true);
 			this.nameTextField.setText(this.collector.getName());
 			
@@ -113,7 +128,20 @@ public class CollectorEditor extends DefaultStorableObjectEditor
 			this.descTextArea.setEnabled(true);
 			this.descTextArea.setText(this.collector.getDescription());
 
-			this.tunnelsList.addElements(this.collector.getPhysicalLinks());
+			Set piquets = new HashSet();
+			
+			for(Iterator iter = this.collector.getPhysicalLinks().iterator(); iter.hasNext();) {
+				PhysicalLink link = (PhysicalLink )iter.next();
+				
+				if(link.getStartNode() instanceof SiteNode
+						&& ((SiteNode )link.getStartNode()).getType().equals(piquetType))
+					piquets.add(link.getStartNode());
+				if(link.getEndNode() instanceof SiteNode
+						&& ((SiteNode )link.getEndNode()).getType().equals(piquetType))
+					piquets.add(link.getEndNode());
+			}
+
+			this.piquetsList.addElements(piquets);
 		}
 	}
 

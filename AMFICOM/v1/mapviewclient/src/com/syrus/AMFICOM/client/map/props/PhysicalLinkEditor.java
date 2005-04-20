@@ -1,6 +1,5 @@
 package com.syrus.AMFICOM.Client.Map.Props;
 
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -9,6 +8,7 @@ import java.util.Collection;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
@@ -45,7 +45,7 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor
 	private JLabel endLabel = new JLabel();
 	private ObjComboBox endComboBox = null;
 
-	private JPanel addressPanel = new JPanel();
+	private JPanel streetPanel = new JPanel();
 	private JLabel cityLabel = new JLabel();
 	private JLabel streetLabel = new JLabel();
 	private JLabel buildingLabel = new JLabel();
@@ -53,13 +53,14 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor
 	private JTextField streetTextField = new JTextField();
 	private JTextField buildingTextField = new JTextField();
 	private JLabel addressLabel = new JLabel();
-	private GridBagLayout gridBagLayout2 = new GridBagLayout();
+	private GridBagLayout gridBagLayout3 = new GridBagLayout();
 
 	private JLabel dimensionLabel = new JLabel();
 	private JPanel dimensionPanel = new JPanel();
 	private JLabel xLabel = new JLabel();
 	private JTextField mTextField = new JTextField();
 	private JTextField nTextField = new JTextField();
+	private GridBagLayout gridBagLayout2 = new GridBagLayout();
 
 	public PhysicalLinkEditor()
 	{
@@ -94,42 +95,46 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor
 		this.addressLabel.setText(LangModelMap.getString("Address"));
 		this.dimensionLabel.setText(LangModelMap.getString("Dimension"));
 		this.descLabel.setText(LangModelMap.getString("Description"));
-
-		this.addressPanel.setLayout(this.gridBagLayout2);
-		this.cityLabel.setText(LangModelMap.getString("City"));
-		this.streetLabel.setText(LangModelMap.getString("Street"));
-		this.buildingLabel.setText(LangModelMap.getString("building"));
+		this.cityLabel.setText(LangModelMap.getString("CityKurz"));
+		this.streetLabel.setText(LangModelMap.getString("StreetKurz"));
+		this.buildingLabel.setText(LangModelMap.getString("BuildingKurz"));
+		this.addressLabel.setText(LangModelMap.getString("Address"));
 
 		this.xLabel.setText("X");
-		this.mTextField.setPreferredSize(new Dimension(60, 23));
-		this.nTextField.setPreferredSize(new Dimension(60, 23));
-		this.dimensionPanel.add(this.mTextField, null);
-		this.dimensionPanel.add(this.xLabel, null);
-		this.dimensionPanel.add(this.nTextField, null);
+//		this.mTextField.setPreferredSize(new Dimension(60, 23));
+//		this.nTextField.setPreferredSize(new Dimension(60, 23));
+		this.dimensionPanel.setLayout(this.gridBagLayout2);
+		this.dimensionPanel.add(this.mTextField, ReusedGridBagConstraints.get(0, 0, 1, 1, 0.5, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.dimensionPanel.add(this.xLabel, ReusedGridBagConstraints.get(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 5, 0, 5), 0, 0));
+		this.dimensionPanel.add(this.nTextField, ReusedGridBagConstraints.get(2, 0, 1, 1, 0.5, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
 
-		this.addressPanel.add(this.cityLabel, ReusedGridBagConstraints.get(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 5), 0, 0));
-		this.addressPanel.add(this.cityTextField, ReusedGridBagConstraints.get(1, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		this.addressPanel.add(this.streetLabel, ReusedGridBagConstraints.get(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 5, 0, 5), 0, 0));
-		this.addressPanel.add(this.streetTextField, ReusedGridBagConstraints.get(1, 1, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		this.addressPanel.add(this.buildingLabel, ReusedGridBagConstraints.get(0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 5, 0, 5), 0, 0));
-		this.addressPanel.add(this.buildingTextField, ReusedGridBagConstraints.get(1, 2, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.streetPanel.setLayout(this.gridBagLayout3);
+		this.streetPanel.add(this.streetTextField, ReusedGridBagConstraints.get(0, 0, 1, 1, 0.8, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.streetPanel.add(this.buildingLabel, ReusedGridBagConstraints.get(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0, 15, 0, 5), 0, 0));
+		this.streetPanel.add(this.buildingTextField, ReusedGridBagConstraints.get(2, 0, 1, 1, 0.2, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
 
-		this.jPanel.add(this.nameLabel, ReusedGridBagConstraints.get(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
-		this.jPanel.add(this.nameTextField, ReusedGridBagConstraints.get(1, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		this.jPanel.add(this.typeLabel, ReusedGridBagConstraints.get(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
-		this.jPanel.add(this.typeComboBox, ReusedGridBagConstraints.get(1, 1, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		this.jPanel.add(this.startLabel, ReusedGridBagConstraints.get(0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
-		this.jPanel.add(this.startComboBox, ReusedGridBagConstraints.get(1, 2, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		this.jPanel.add(this.endLabel, ReusedGridBagConstraints.get(0, 3, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
-		this.jPanel.add(this.endComboBox, ReusedGridBagConstraints.get(1, 3, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		this.jPanel.add(this.topologicalLengthLabel, ReusedGridBagConstraints.get(0, 4, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
-		this.jPanel.add(this.topologicalLengthTextField, ReusedGridBagConstraints.get(1, 4, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.jPanel.add(this.nameLabel, ReusedGridBagConstraints.get(0, 0, 2, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
+		this.jPanel.add(this.nameTextField, ReusedGridBagConstraints.get(2, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.jPanel.add(this.typeLabel, ReusedGridBagConstraints.get(0, 1, 2, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
+		this.jPanel.add(this.typeComboBox, ReusedGridBagConstraints.get(2, 1, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.jPanel.add(this.startLabel, ReusedGridBagConstraints.get(0, 2, 2, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
+		this.jPanel.add(this.startComboBox, ReusedGridBagConstraints.get(2, 2, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.jPanel.add(this.endLabel, ReusedGridBagConstraints.get(0, 3, 2, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
+		this.jPanel.add(this.endComboBox, ReusedGridBagConstraints.get(2, 3, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.jPanel.add(this.topologicalLengthLabel, ReusedGridBagConstraints.get(0, 4, 2, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
+		this.jPanel.add(this.topologicalLengthTextField, ReusedGridBagConstraints.get(2, 4, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
 		this.jPanel.add(this.addressLabel, ReusedGridBagConstraints.get(0, 5, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, null, 0, 0));
-		this.jPanel.add(this.addressPanel, ReusedGridBagConstraints.get(1, 5, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		this.jPanel.add(this.dimensionLabel, ReusedGridBagConstraints.get(0, 6, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
-		this.jPanel.add(this.dimensionPanel, ReusedGridBagConstraints.get(1, 6, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 0, 0));
-		this.jPanel.add(this.descLabel, ReusedGridBagConstraints.get(0, 7, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, null, 0, 0));
-		this.jPanel.add(this.descTextArea, ReusedGridBagConstraints.get(1, 7, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, null, 0, 0));
+		this.jPanel.add(this.cityLabel, ReusedGridBagConstraints.get(1, 5, 1, 1, 0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0, 5, 0, 5), 0, 0));
+		this.jPanel.add(this.cityTextField, ReusedGridBagConstraints.get(2, 5, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.jPanel.add(this.streetLabel, ReusedGridBagConstraints.get(1, 6, 1, 1, 0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0, 5, 0, 5), 0, 0));
+		this.jPanel.add(this.streetPanel, ReusedGridBagConstraints.get(2, 6, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
+//		this.jPanel.add(this.streetTextField, ReusedGridBagConstraints.get(2, 6, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
+//		this.jPanel.add(this.buildingLabel, ReusedGridBagConstraints.get(1, 7, 1, 1, 0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0, 5, 0, 5), 0, 0));
+//		this.jPanel.add(this.buildingTextField, ReusedGridBagConstraints.get(2, 7, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.jPanel.add(this.dimensionLabel, ReusedGridBagConstraints.get(0, 8, 2, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
+		this.jPanel.add(this.dimensionPanel, ReusedGridBagConstraints.get(2, 8, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.jPanel.add(this.descLabel, ReusedGridBagConstraints.get(0, 9, 2, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, null, 0, 0));
+		this.jPanel.add(new JScrollPane(this.descTextArea), ReusedGridBagConstraints.get(0, 10, 3, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, null, 0, 0));
 
 		super.addToUndoableListener(this.nameTextField);
 		super.addToUndoableListener(this.typeComboBox);
@@ -221,7 +226,7 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor
 			this.link.setCity(this.cityTextField.getText());
 			this.link.setStreet(this.streetTextField.getText());
 			this.link.setBuilding(this.buildingTextField.getText());
-			
+
 			int m = Integer.parseInt(this.mTextField.getText());
 			int n = Integer.parseInt(this.nTextField.getText());
 			if(!this.link.getBinding().getDimension().equals(new IntDimension(m, n)))
