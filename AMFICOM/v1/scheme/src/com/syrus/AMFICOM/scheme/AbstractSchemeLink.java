@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeLink.java,v 1.5 2005/04/08 09:26:11 bass Exp $
+ * $Id: AbstractSchemeLink.java,v 1.6 2005/04/20 12:26:16 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,9 +8,14 @@
 
 package com.syrus.AMFICOM.scheme;
 
-import com.syrus.AMFICOM.configuration.*;
-import com.syrus.AMFICOM.general.Identifier;
 import java.util.Date;
+
+import com.syrus.AMFICOM.configuration.AbstractLinkType;
+import com.syrus.AMFICOM.configuration.CableLinkType;
+import com.syrus.AMFICOM.configuration.Link;
+import com.syrus.AMFICOM.configuration.LinkType;
+import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifier;
 
 /**
  * This class is never used directly, it was provided just in order for source
@@ -18,17 +23,37 @@ import java.util.Date;
  * {@link AbstractSchemeLink}instead.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/04/08 09:26:11 $
+ * @version $Revision: 1.6 $, $Date: 2005/04/20 12:26:16 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	private static final long serialVersionUID = 1423195997939538835L;
 
 	/**
+	 * 0 means either zero or unspecified length.
+	 * 
+	 * @see #getPhysicalLength()
+	 */
+	private double physicalLength;
+
+	/**
+	 * 0 means either zero or unspecified length.
+	 * 
+	 * @see #getOpticalLength()
+	 */
+	private double opticalLength;
+
+	/**
 	 * Depending on implementation, may reference either {@link LinkType} or
 	 * {@link CableLinkType}.
 	 */
 	protected Identifier abstractLinkTypeId;
+
+	/**
+	 * Depending on implementation, may reference either {@link Link link}
+	 * or {@link Link cable link}.
+	 */
+	private Identifier linkId;
 
 	/**
 	 * Depending on implementation, may reference either {@link SchemePort}
@@ -43,29 +68,9 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	protected Identifier targetAbstractSchemePortId;
 
 	/**
-	 * Depending on implementation, may reference either {@link Link link}
-	 * or {@link Link cable link}.
-	 */
-	private Identifier linkId;
-
-	/**
-	 * 0 means either zero or unspecified length.
-	 * 
-	 * @see #getOpticalLength()
-	 */
-	private double opticalLength;
-
-	/**
-	 * 0 means either zero or unspecified length.
-	 * 
-	 * @see #getPhysicalLength()
-	 */
-	private double physicalLength;
-
-	/**
 	 * @param id
 	 */
-	protected AbstractSchemeLink(Identifier id) {
+	AbstractSchemeLink(Identifier id) {
 		super(id);
 	}
 
@@ -76,14 +81,45 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	 * @param creatorId
 	 * @param modifierId
 	 * @param version
+	 * @param name
+	 * @param description
+	 * @param physicalLength
+	 * @param opticalLength
+	 * @param abstractLinkType
+	 * @param link
+	 * @param sourceAbstractSchemePort
+	 * @param targetAbstractSchemePort
+	 * @param parentScheme
 	 */
-	protected AbstractSchemeLink(Identifier id, Date created,
-			Date modified, Identifier creatorId,
-			Identifier modifierId, long version) {
-		super(id, created, modified, creatorId, modifierId, version);
+	AbstractSchemeLink(final Identifier id, final Date created,
+			final Date modified, final Identifier creatorId,
+			final Identifier modifierId, final long version,
+			final String name, final String description,
+			final double physicalLength,
+			final double opticalLength,
+			final AbstractLinkType abstractLinkType,
+			final Link link,
+			final AbstractSchemePort sourceAbstractSchemePort,
+			final AbstractSchemePort targetAbstractSchemePort,
+			final Scheme parentScheme) {
+		super(id, created, modified, creatorId, modifierId, version,
+				name, description, parentScheme);
+		this.physicalLength = physicalLength;
+		this.opticalLength = opticalLength;
+
+		assert abstractLinkType == null || link == null;
+		this.abstractLinkTypeId = Identifier.possiblyVoid(abstractLinkType);
+		this.linkId = Identifier.possiblyVoid(link);
+
+		this.sourceAbstractSchemePortId = Identifier.possiblyVoid(sourceAbstractSchemePort);
+		this.targetAbstractSchemePortId = Identifier.possiblyVoid(targetAbstractSchemePort);
 	}
 
-	protected AbstractSchemeLink() {
+	/**
+	 * Will transmute to the constructor from the corresponding
+	 * transferable. 
+	 */
+	AbstractSchemeLink() {
 		// super();
 	}
 
@@ -154,4 +190,32 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	public abstract void setSourceAbstractSchemePort(final AbstractSchemePort sourceAbstractSchemePort);
 
 	public abstract void setTargetAbstractSchemePort(final AbstractSchemePort targetAbstractSchemePort);
+
+	synchronized void setAttributes(final Date created, final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId, final long version,
+			final String name, final String description,
+			final double physicalLength,
+			final double opticalLength,
+			final Identifier abstractLinkTypeId,
+			final Identifier linkId,
+			final Identifier sourceAbstractSchemePortId,
+			final Identifier targetAbstractSchemePortId,			
+			final Identifier parentSchemeId) {
+		super.setAttributes(created, modified, creatorId, modifierId, version, name, description, parentSchemeId);
+
+		assert abstractLinkTypeId != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert linkId != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert abstractLinkTypeId.isVoid() ^ linkId.isVoid();
+
+		assert sourceAbstractSchemePortId != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert targetAbstractSchemePortId != null: ErrorMessages.NON_NULL_EXPECTED;
+
+		this.physicalLength = physicalLength;
+		this.opticalLength = opticalLength;
+		this.abstractLinkTypeId = abstractLinkTypeId;
+		this.linkId = linkId;
+		this.sourceAbstractSchemePortId = sourceAbstractSchemePortId;
+		this.targetAbstractSchemePortId = targetAbstractSchemePortId;
+	}
 }

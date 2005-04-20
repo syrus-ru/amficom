@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.13 2005/04/19 10:47:44 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.14 2005/04/20 12:26:16 bass Exp $
  * 
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import java.util.Set;
  * {@link AbstractSchemePort}instead.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.13 $, $Date: 2005/04/19 10:47:44 $
+ * @version $Revision: 1.14 $, $Date: 2005/04/20 12:26:16 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemePort extends
@@ -68,7 +68,7 @@ public abstract class AbstractSchemePort extends
 	/**
 	 * @param id
 	 */
-	protected AbstractSchemePort(final Identifier id) {
+	AbstractSchemePort(final Identifier id) {
 		super(id);
 		this.characteristics = new HashSet();
 	}
@@ -81,13 +81,13 @@ public abstract class AbstractSchemePort extends
 	 * @param modifierId
 	 * @param version
 	 */
-	protected AbstractSchemePort(Identifier id, Date created,
+	AbstractSchemePort(Identifier id, Date created,
 			Date modified, Identifier creatorId,
 			Identifier modifierId, long version) {
 		super(id, created, modified, creatorId, modifierId, version);
 	}
 
-	protected AbstractSchemePort() {
+	AbstractSchemePort() {
 		// super();
 	}
 

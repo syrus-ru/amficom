@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.21 2005/04/19 17:45:16 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.22 2005/04/20 12:26:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.util.Log;
  * #01 in hierarchy.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.21 $, $Date: 2005/04/19 17:45:16 $
+ * @version $Revision: 1.22 $, $Date: 2005/04/20 12:26:16 $
  * @module scheme_v1
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation. 
  */
@@ -466,12 +466,14 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 			final String name, final String description,
 			final Identifier symbolId,
 			final Identifier parentSchemeProtoGroupId) {
+		super.setAttributes(created, modified, creatorId, modifierId,
+				version);
+
 		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
 		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
 		assert symbolId != null: ErrorMessages.NON_NULL_EXPECTED;
 		assert parentSchemeProtoGroupId != null: ErrorMessages.NON_NULL_EXPECTED;
-		super.setAttributes(created, modified, creatorId, modifierId,
-				version);
+
 		this.name = name;
 		this.description = description;
 		this.symbolId = symbolId;

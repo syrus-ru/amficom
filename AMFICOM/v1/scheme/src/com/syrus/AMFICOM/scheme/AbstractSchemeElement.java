@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractSchemeElement.java,v 1.15 2005/04/19 11:37:31 bass Exp $
+ * $Id: AbstractSchemeElement.java,v 1.16 2005/04/20 12:26:16 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeElement}instead.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.15 $, $Date: 2005/04/19 11:37:31 $
+ * @version $Revision: 1.16 $, $Date: 2005/04/20 12:26:16 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemeElement extends
@@ -40,11 +40,9 @@ public abstract class AbstractSchemeElement extends
 		Characterizable {
 	static final long serialVersionUID = 4644766113809681630L;
 
-	Set characteristics;
+	private String name;
 
-	String description;
-
-	String name;
+	private String description;
 
 	/**
 	 * @todo It may be necessary to allow accessor and modifier be
@@ -53,29 +51,32 @@ public abstract class AbstractSchemeElement extends
 	 */
 	Identifier parentSchemeId;
 
+	private Set characteristics;
+
 	/**
 	 * @param id
 	 */
-	protected AbstractSchemeElement(final Identifier id) {
+	AbstractSchemeElement(final Identifier id) {
 		super(id);
 		this.characteristics = new HashSet();
 	}
 
-	/**
-	 * @param id
-	 * @param created
-	 * @param modified
-	 * @param creatorId
-	 * @param modifierId
-	 * @param version
-	 */
-	protected AbstractSchemeElement(Identifier id, Date created,
-			Date modified, Identifier creatorId,
-			Identifier modifierId, long version) {
+	AbstractSchemeElement(final Identifier id, final Date created,
+			final Date modified, final Identifier creatorId,
+			final Identifier modifierId, final long version, final String name, final String description, final Scheme parentScheme) {
 		super(id, created, modified, creatorId, modifierId, version);
+		this.name = name;
+		this.description = description;
+		this.parentSchemeId = Identifier.possiblyVoid(parentScheme);
+
+		this.characteristics = new HashSet();
 	}
 
-	protected AbstractSchemeElement() {
+	/**
+	 * Will transmute to the constructor from the corresponding
+	 * transferable. 
+	 */
+	AbstractSchemeElement() {
 		// super();
 	}
 
@@ -237,6 +238,21 @@ public abstract class AbstractSchemeElement extends
 		this.name = name1;
 		this.description = description1;
 		this.parentSchemeId = new Identifier(parentSchemeId1);
+	}
+
+	final synchronized void setAttributes(final Date created, final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId, final long version,
+			final String name, final String description, final Identifier parentSchemeId) {
+		super.setAttributes(created, modified, creatorId, modifierId, version);
+
+		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
+		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert parentSchemeId != null: ErrorMessages.NON_NULL_EXPECTED;
+
+		this.name = name;
+		this.description = description;
+		this.parentSchemeId = parentSchemeId;
 	}
 
 	/*-********************************************************************

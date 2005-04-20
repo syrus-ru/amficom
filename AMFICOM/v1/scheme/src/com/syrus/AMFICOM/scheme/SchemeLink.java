@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.18 2005/04/19 11:37:31 bass Exp $
+ * $Id: SchemeLink.java,v 1.19 2005/04/20 12:26:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,17 +36,17 @@ import com.syrus.util.Log;
  * #10 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.18 $, $Date: 2005/04/19 11:37:31 $
+ * @version $Revision: 1.19 $, $Date: 2005/04/20 12:26:16 $
  * @module scheme_v1
  */
 public final class SchemeLink extends AbstractSchemeLink {
 	private static final long serialVersionUID = 3834587703751947064L;
 
+	private Identifier siteNodeId;
+
 	private Identifier parentSchemeElementId;
 
 	private Identifier parentSchemeProtoElementId;
-
-	private Identifier siteNodeId;
 
 	private SchemeLinkDatabase schemeLinkDatabase;
 
@@ -73,11 +73,45 @@ public final class SchemeLink extends AbstractSchemeLink {
 	 * @param creatorId
 	 * @param modifierId
 	 * @param version
+	 * @param name
+	 * @param description
+	 * @param physicalLength
+	 * @param opticalLength
+	 * @param linkType
+	 * @param link
+	 * @param siteNode
+	 * @param sourceSchemePort
+	 * @param targetSchemePort
+	 * @param parentScheme
+	 * @param parentSchemeElement
+	 * @param parentSchemeProtoElement
 	 */
-	SchemeLink(Identifier id, Date created, Date modified,
-			Identifier creatorId, Identifier modifierId,
-			long version) {
-		super(id, created, modified, creatorId, modifierId, version);
+	SchemeLink(final Identifier id, final Date created,
+			final Date modified, final Identifier creatorId,
+			final Identifier modifierId, final long version,
+			final String name, final String description,
+			final double physicalLength,
+			final double opticalLength, final LinkType linkType,
+			final Link link, final SiteNode siteNode,
+			final SchemePort sourceSchemePort,
+			final SchemePort targetSchemePort,
+			final Scheme parentScheme,
+			final SchemeElement parentSchemeElement,
+			final SchemeProtoElement parentSchemeProtoElement) {
+		super(id, created, modified, creatorId, modifierId, version,
+				name, description, physicalLength,
+				opticalLength, linkType, link,
+				sourceSchemePort, targetSchemePort,
+				parentScheme);
+		this.siteNodeId = Identifier.possiblyVoid(siteNode);
+
+		assert (parentScheme == null ? 0 : 1)
+				+ (parentSchemeElement == null ? 0 : 1)
+				+ (parentSchemeProtoElement == null ? 0 : 1) <= 1: ErrorMessages.MULTIPLE_PARENTS_PROHIBITED;
+		this.parentSchemeElementId = Identifier.possiblyVoid(parentSchemeElement);
+		this.parentSchemeProtoElementId = Identifier.possiblyVoid(parentSchemeProtoElement);
+
+		this.schemeLinkDatabase = SchemeDatabaseContext.getSchemeLinkDatabase();
 	}
 
 	/**
@@ -89,16 +123,249 @@ public final class SchemeLink extends AbstractSchemeLink {
 		fromTransferable(transferable);
 	}
 
-	public static SchemeLink createInstance(final Identifier creatorId)
+	/**
+	 * A shorthand for
+	 * {@link #createInstance(Identifier, String, String, double, double, LinkType, Link, SiteNode, SchemePort, SchemePort)}.
+	 *
+	 * @param creatorId
+	 * @param name
+	 * @throws CreateObjectException
+	 */
+	public static SchemeLink createInstance(final Identifier creatorId,
+			final String name) throws CreateObjectException {
+		return createInstance(creatorId, name, "", 0, 0, null, null, //$NON-NLS-1$
+				null, null, null);
+	}
+
+	/**
+	 * A shorthand for
+	 * {@link #createInstance(Identifier, String, String, double, double, LinkType, Link, SiteNode, SchemePort, SchemePort, Scheme)}.
+	 *
+	 * @param creatorId
+	 * @param name
+	 * @param parentScheme
+	 * @throws CreateObjectException
+	 */
+	public static SchemeLink createInstance(final Identifier creatorId,
+			final String name, final Scheme parentScheme)
 			throws CreateObjectException {
-		assert creatorId != null;
+		return createInstance(creatorId, name, "", 0, 0, null, null, //$NON-NLS-1$
+				null, null, null, parentScheme);
+	}
+
+	/**
+	 * A shorthand for
+	 * {@link #createInstance(Identifier, String, String, double, double, LinkType, Link, SiteNode, SchemePort, SchemePort, SchemeElement)}.
+	 *
+	 * @param creatorId
+	 * @param name
+	 * @param parentSchemeElement
+	 * @throws CreateObjectException
+	 */
+	public static SchemeLink createInstance(final Identifier creatorId,
+			final String name,
+			final SchemeElement parentSchemeElement)
+			throws CreateObjectException {
+		return createInstance(creatorId, name, "", 0, 0, null, null, //$NON-NLS-1$
+				null, null, null, parentSchemeElement);
+	}
+
+	/**
+	 * A shorthand for
+	 * {@link #createInstance(Identifier, String, String, double, double, LinkType, Link, SiteNode, SchemePort, SchemePort, SchemeProtoElement)}.
+	 *
+	 * @param creatorId
+	 * @param name
+	 * @param parentSchemeProtoElement
+	 * @throws CreateObjectException
+	 */
+	public static SchemeLink createInstance(final Identifier creatorId,
+			final String name,
+			final SchemeProtoElement parentSchemeProtoElement)
+			throws CreateObjectException {
+		return createInstance(creatorId, name, "", 0, 0, null, null, //$NON-NLS-1$
+				null, null, null, parentSchemeProtoElement);
+	}
+
+        /**
+         * This method breaks some assertions, so clients should consider using                           
+         * other ones to create a new instance.
+         *
+         * @param creatorId
+         * @param name
+         * @param description
+         * @param physicalLength
+         * @param opticalLength
+         * @param linkType
+         * @param link
+         * @param siteNode
+         * @param sourceSchemePort
+         * @param targetSchemePort
+         * @throws CreateObjectException
+         */
+	public static SchemeLink createInstance(final Identifier creatorId,
+			final String name, final String description,
+			final double physicalLength,
+			final double opticalLength, final LinkType linkType,
+			final Link link, final SiteNode siteNode,
+			final SchemePort sourceSchemePort,
+			final SchemePort targetSchemePort)
+			throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid(): ErrorMessages.NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
+		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
+
 		try {
 			final Date created = new Date();
 			final SchemeLink schemeLink = new SchemeLink(
 					IdentifierPool
 							.getGeneratedIdentifier(ObjectEntities.SCHEME_LINK_ENTITY_CODE),
 					created, created, creatorId, creatorId,
-					0L);
+					0L, name, description, physicalLength,
+					opticalLength, linkType, link,
+					siteNode, sourceSchemePort,
+					targetSchemePort, null, null, null);
+			schemeLink.changed = true;
+			return schemeLink;
+		} catch (final IdentifierGenerationException ige) {
+			throw new CreateObjectException(
+					"SchemeLink.createInstance | cannot generate identifier ", ige); //$NON-NLS-1$
+		}
+	}
+
+	/**
+	 * @param creatorId
+	 * @param name
+	 * @param description
+	 * @param physicalLength
+	 * @param opticalLength
+	 * @param linkType
+	 * @param link
+	 * @param siteNode
+	 * @param sourceSchemePort
+	 * @param targetSchemePort
+	 * @param parentScheme
+	 * @throws CreateObjectException
+	 */
+	public static SchemeLink createInstance(final Identifier creatorId,
+			final String name, final String description,
+			final double physicalLength,
+			final double opticalLength, final LinkType linkType,
+			final Link link, final SiteNode siteNode,
+			final SchemePort sourceSchemePort,
+			final SchemePort targetSchemePort,
+			final Scheme parentScheme)
+			throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid(): ErrorMessages.NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
+		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert parentScheme != null: ErrorMessages.NON_NULL_EXPECTED;
+
+		try {
+			final Date created = new Date();
+			final SchemeLink schemeLink = new SchemeLink(
+					IdentifierPool
+							.getGeneratedIdentifier(ObjectEntities.SCHEME_LINK_ENTITY_CODE),
+					created, created, creatorId, creatorId,
+					0L, name, description, physicalLength,
+					opticalLength, linkType, link,
+					siteNode, sourceSchemePort,
+					targetSchemePort, parentScheme, null,
+					null);
+			schemeLink.changed = true;
+			return schemeLink;
+		} catch (final IdentifierGenerationException ige) {
+			throw new CreateObjectException(
+					"SchemeLink.createInstance | cannot generate identifier ", ige); //$NON-NLS-1$
+		}
+	}
+
+	/**
+	 * @param creatorId
+	 * @param name
+	 * @param description
+	 * @param physicalLength
+	 * @param opticalLength
+	 * @param linkType
+	 * @param link
+	 * @param siteNode
+	 * @param sourceSchemePort
+	 * @param targetSchemePort
+	 * @param parentSchemeElement
+	 * @throws CreateObjectException
+	 */
+	public static SchemeLink createInstance(final Identifier creatorId,
+			final String name, final String description,
+			final double physicalLength,
+			final double opticalLength, final LinkType linkType,
+			final Link link, final SiteNode siteNode,
+			final SchemePort sourceSchemePort,
+			final SchemePort targetSchemePort,
+			final SchemeElement parentSchemeElement)
+			throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid(): ErrorMessages.NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
+		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert parentSchemeElement != null: ErrorMessages.NON_NULL_EXPECTED;
+
+		try {
+			final Date created = new Date();
+			final SchemeLink schemeLink = new SchemeLink(
+					IdentifierPool
+							.getGeneratedIdentifier(ObjectEntities.SCHEME_LINK_ENTITY_CODE),
+					created, created, creatorId, creatorId,
+					0L, name, description, physicalLength,
+					opticalLength, linkType, link,
+					siteNode, sourceSchemePort,
+					targetSchemePort, null, parentSchemeElement,
+					null);
+			schemeLink.changed = true;
+			return schemeLink;
+		} catch (final IdentifierGenerationException ige) {
+			throw new CreateObjectException(
+					"SchemeLink.createInstance | cannot generate identifier ", ige); //$NON-NLS-1$
+		}
+	}
+
+	/**
+	 * @param creatorId
+	 * @param name
+	 * @param description
+	 * @param physicalLength
+	 * @param opticalLength
+	 * @param linkType
+	 * @param link
+	 * @param siteNode
+	 * @param sourceSchemePort
+	 * @param targetSchemePort
+	 * @param parentSchemeProtoElement
+	 * @throws CreateObjectException
+	 */
+	public static SchemeLink createInstance(final Identifier creatorId,
+			final String name, final String description,
+			final double physicalLength,
+			final double opticalLength, final LinkType linkType,
+			final Link link, final SiteNode siteNode,
+			final SchemePort sourceSchemePort,
+			final SchemePort targetSchemePort,
+			final SchemeProtoElement parentSchemeProtoElement)
+			throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid(): ErrorMessages.NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
+		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert parentSchemeProtoElement != null: ErrorMessages.NON_NULL_EXPECTED;
+
+		try {
+			final Date created = new Date();
+			final SchemeLink schemeLink = new SchemeLink(
+					IdentifierPool
+							.getGeneratedIdentifier(ObjectEntities.SCHEME_LINK_ENTITY_CODE),
+					created, created, creatorId, creatorId,
+					0L, name, description, physicalLength,
+					opticalLength, linkType, link,
+					siteNode, sourceSchemePort,
+					targetSchemePort, null, null,
+					parentSchemeProtoElement);
 			schemeLink.changed = true;
 			return schemeLink;
 		} catch (final IdentifierGenerationException ige) {
@@ -153,9 +420,9 @@ public final class SchemeLink extends AbstractSchemeLink {
 	 * @see AbstractSchemeElement#getParentScheme()
 	 */
 	public Scheme getParentScheme() {
-		assert this.parentSchemeId != null && this.parentSchemeElementId != null && this.parentSchemeProtoElementId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert super.parentSchemeId != null && this.parentSchemeElementId != null && this.parentSchemeProtoElementId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
 
-		if (this.parentSchemeId.isVoid()) {
+		if (super.parentSchemeId.isVoid()) {
 			assert !this.parentSchemeElementId.isVoid() || !this.parentSchemeProtoElementId.isVoid(): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
 			Log.debugMessage("SchemeLink.getParentScheme() | Parent Scheme was requested, while parent is either a SchemeElement or a SchemeProtoElement; returning null", //$NON-NLS-1$
 					Log.FINE);
@@ -167,17 +434,17 @@ public final class SchemeLink extends AbstractSchemeLink {
 	}
 
 	public SchemeElement getParentSchemeElement() {
-		assert this.parentSchemeId != null && this.parentSchemeElementId != null && this.parentSchemeProtoElementId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert super.parentSchemeId != null && this.parentSchemeElementId != null && this.parentSchemeProtoElementId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
 
 		if (this.parentSchemeElementId.isVoid()) {
-			assert !this.parentSchemeId.isVoid() || !this.parentSchemeProtoElementId.isVoid(): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
+			assert !super.parentSchemeId.isVoid() || !this.parentSchemeProtoElementId.isVoid(): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
 			Log.debugMessage("SchemeLink.getParentSchemeElement() | Parent SchemeElement was requested, while parent is either a Scheme or a SchemeProtoElement; returning null", //$NON-NLS-1$
 					Log.FINE);
 			return null;
 		}
 
 		try {
-			assert this.parentSchemeId.isVoid() && this.parentSchemeProtoElementId.isVoid(): ErrorMessages.MULTIPLE_PARENTS_PROHIBITED;
+			assert super.parentSchemeId.isVoid() && this.parentSchemeProtoElementId.isVoid(): ErrorMessages.MULTIPLE_PARENTS_PROHIBITED;
 			return (SchemeElement) SchemeStorableObjectPool.getStorableObject(this.parentSchemeElementId, true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
@@ -186,17 +453,17 @@ public final class SchemeLink extends AbstractSchemeLink {
 	}
 
 	public SchemeProtoElement getParentSchemeProtoElement() {
-		assert this.parentSchemeId != null && this.parentSchemeElementId != null && this.parentSchemeProtoElementId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert super.parentSchemeId != null && this.parentSchemeElementId != null && this.parentSchemeProtoElementId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
 
 		if (this.parentSchemeProtoElementId.isVoid()) {
-			assert !this.parentSchemeId.isVoid() || !this.parentSchemeElementId.isVoid(): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
+			assert !super.parentSchemeId.isVoid() || !this.parentSchemeElementId.isVoid(): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
 			Log.debugMessage("SchemeLink.getParentSchemeProtoElement() | Parent SchemeProtoElement was requested, while parent is either a Scheme or a SchemeElement; returning null", //$NON-NLS-1$
 					Log.FINE);
 			return null;
 		}
 
 		try {
-			assert this.parentSchemeId.isVoid() && this.parentSchemeElementId.isVoid(): ErrorMessages.MULTIPLE_PARENTS_PROHIBITED;
+			assert super.parentSchemeId.isVoid() && this.parentSchemeElementId.isVoid(): ErrorMessages.MULTIPLE_PARENTS_PROHIBITED;
 			return (SchemeProtoElement) SchemeStorableObjectPool.getStorableObject(this.parentSchemeProtoElementId, true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
@@ -245,9 +512,42 @@ public final class SchemeLink extends AbstractSchemeLink {
 		setLinkType((LinkType) abstractLinkType);
 	}
 
+	synchronized void setAttributes(final Date created,
+			final Date modified, final Identifier creatorId,
+			final Identifier modifierId, final long version,
+			final String name, final String description,
+			final double physicalLength,
+			final double opticalLength,
+			final Identifier linkTypeId,
+			final Identifier linkId, final Identifier siteNodeId,
+			final Identifier sourceSchemePortId,
+			final Identifier targetSchemePortId,
+			final Identifier parentSchemeId,
+			final Identifier parentSchemeElementId,
+			final Identifier parentSchemeProtoElementId) {
+		super.setAttributes(created, modified, creatorId, modifierId,
+				version, name, description, physicalLength,
+				opticalLength, linkTypeId, linkId,
+				sourceSchemePortId,
+				targetSchemePortId, parentSchemeId);
+
+		assert siteNodeId != null: ErrorMessages.NON_NULL_EXPECTED;
+
+		assert parentSchemeElementId != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert parentSchemeProtoElementId != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert (parentSchemeId.isVoid() ? 0 : 1)
+				+ (parentSchemeElementId.isVoid() ? 0 : 1)
+				+ (parentSchemeProtoElementId.isVoid() ? 0 : 1) == 1;
+
+		this.siteNodeId = siteNodeId;
+		this.parentSchemeElementId = parentSchemeElementId;
+		this.parentSchemeProtoElementId = parentSchemeProtoElementId;
+	}
+
 	/**
 	 * @param link
 	 * @see AbstractSchemeLink#setLink(Link)
+	 * @todo skip invariance checks.
 	 */
 	public void setLink(final Link link) {
 		assert link == null || link.getSort().value() == LinkSort._LINKSORT_LINK: ErrorMessages.NATURE_INVALID;
@@ -255,9 +555,10 @@ public final class SchemeLink extends AbstractSchemeLink {
 	}
 
 	/**
-	 * @param newLinkTypeImpl
+	 * @param linkType
+	 * @todo skip invariance checks.
 	 */
-	public void setLinkType(LinkType newLinkTypeImpl) {
+	public void setLinkType(final LinkType linkType) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -266,10 +567,10 @@ public final class SchemeLink extends AbstractSchemeLink {
 	 * @see AbstractSchemeElement#setParentScheme(Scheme)
 	 */
 	public void setParentScheme(final Scheme parentScheme) {
-		assert this.parentSchemeId != null
+		assert super.parentSchemeId != null
 				&& this.parentSchemeElementId != null
 				&& this.parentSchemeProtoElementId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		if (!this.parentSchemeId.isVoid()) {
+		if (!super.parentSchemeId.isVoid()) {
 			/*
 			 * Moving from a scheme to another scheme.
 			 */
@@ -291,24 +592,24 @@ public final class SchemeLink extends AbstractSchemeLink {
 				/*
 				 * Moving from a scheme protoelement to a scheme.
 				 */
-				assert !this.parentSchemeProtoElementId.isVoid(): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
+//				assert !this.parentSchemeProtoElementId.isVoid(): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
 				if (parentScheme == null) {
 					Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Log.INFO);
 					return;
 				}
 				this.parentSchemeProtoElementId = Identifier.VOID_IDENTIFIER;
 			}
-			this.parentSchemeId = parentScheme.getId();
+			super.parentSchemeId = parentScheme.getId();
 			this.changed = true;
 		}
 	}
 
 	public void setParentSchemeElement(final SchemeElement parentSchemeElement) {
-		assert this.parentSchemeId != null
+		assert super.parentSchemeId != null
 				&& this.parentSchemeElementId != null
 				&& this.parentSchemeProtoElementId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
 		Identifier newParentSchemeElementId;
-		if (!this.parentSchemeId.isVoid()) {
+		if (!super.parentSchemeId.isVoid()) {
 			/*
 			 * Moving from a scheme to a scheme element.
 			 */
@@ -319,7 +620,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 				return;
 			}
 			newParentSchemeElementId = parentSchemeElement.getId();
-			this.parentSchemeId = Identifier.VOID_IDENTIFIER;
+			super.parentSchemeId = Identifier.VOID_IDENTIFIER;
 		} else if (!this.parentSchemeElementId.isVoid()) {
 			/*
 			 * Moving from a scheme element to another scheme element. 
@@ -337,7 +638,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 			/*
 			 * Moving from a scheme protoelement to a scheme element.
 			 */
-			assert !this.parentSchemeProtoElementId.isVoid(): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
+//			assert !this.parentSchemeProtoElementId.isVoid(): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
 			if (parentSchemeElement == null) {
 				Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Log.INFO);
 				return;
@@ -350,11 +651,11 @@ public final class SchemeLink extends AbstractSchemeLink {
 	}
 
 	public void setParentSchemeProtoElement(final SchemeProtoElement parentSchemeProtoElement) {
-		assert this.parentSchemeId != null
+		assert super.parentSchemeId != null
 				&& this.parentSchemeElementId != null
 				&& this.parentSchemeProtoElementId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
 		Identifier newParentSchemeProtoElementId;
-		if (!this.parentSchemeId.isVoid()) {
+		if (!super.parentSchemeId.isVoid()) {
 			/*
 			 * Moving from a scheme to a scheme protoelement.
 			 */
@@ -365,7 +666,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 				return;
 			}
 			newParentSchemeProtoElementId = parentSchemeProtoElement.getId();
-			this.parentSchemeId = Identifier.VOID_IDENTIFIER;
+			super.parentSchemeId = Identifier.VOID_IDENTIFIER;
 		} else if (!this.parentSchemeElementId.isVoid()) {
 			/*
 			 * Moving from a scheme element to a scheme protoelement. 
@@ -381,7 +682,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 			/*
 			 * Moving from a scheme protoelement to another scheme protoelement.
 			 */
-			assert !this.parentSchemeProtoElementId.isVoid(): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
+//			assert !this.parentSchemeProtoElementId.isVoid(): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
 			if (parentSchemeProtoElement == null) {
 				Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Log.WARNING);
 				SchemeStorableObjectPool.delete(this.id);

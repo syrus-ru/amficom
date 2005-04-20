@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.22 2005/04/19 17:45:16 bass Exp $
+ * $Id: SchemeElement.java,v 1.23 2005/04/20 12:26:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.util.Log;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.22 $, $Date: 2005/04/19 17:45:16 $
+ * @version $Revision: 1.23 $, $Date: 2005/04/20 12:26:16 $
  * @module scheme_v1
  */
 public final class SchemeElement extends AbstractSchemeElement implements
@@ -125,12 +125,14 @@ public final class SchemeElement extends AbstractSchemeElement implements
 			final SchemeImageResource schemeCell,
 			final Scheme parentScheme,
 			final SchemeElement parentSchemeElement) {
-		super(id, created, modified, creatorId, modifierId, version);
-		this.name = name;
-		this.description = description;
+		super(id, created, modified, creatorId, modifierId, version,
+				name, description, parentScheme);
 		this.label = label;
+
+		assert equipmentType == null || equipment == null;
 		this.equipmentTypeId = Identifier.possiblyVoid(equipmentType);
 		this.equipmentId = Identifier.possiblyVoid(equipment);
+
 		this.kisId = Identifier.possiblyVoid(kis);
 		this.siteNodeId = Identifier.possiblyVoid(siteNode);
 		this.symbolId = Identifier.possiblyVoid(symbol);
@@ -138,10 +140,8 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		this.schemeCellId = Identifier.possiblyVoid(schemeCell);
 
 		assert parentScheme == null || parentSchemeElement == null: ErrorMessages.MULTIPLE_PARENTS_PROHIBITED;
-		this.parentSchemeId = Identifier.possiblyVoid(parentScheme);
 		this.parentSchemeElementId = Identifier.possiblyVoid(parentSchemeElement);
 
-		this.characteristics = new HashSet();
 		this.schemeElementDatabase = SchemeDatabaseContext.getSchemeElementDatabase();
 	}
 
@@ -412,9 +412,9 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 * @see AbstractSchemeElement#getParentScheme()
 	 */
 	public Scheme getParentScheme() {
-		assert this.parentSchemeId != null && this.parentSchemeElementId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert super.parentSchemeId != null && this.parentSchemeElementId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
 
-		if (this.parentSchemeId.isVoid()) {
+		if (super.parentSchemeId.isVoid()) {
 			assert !this.parentSchemeElementId.isVoid(): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
 			Log.debugMessage("SchemeElement.getParentScheme() | Parent Scheme was requested, while parent is a SchemeElement; returning null", //$NON-NLS-1$
 					Log.FINE);
@@ -426,17 +426,17 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	}
 
 	public SchemeElement getParentSchemeElement() {
-		assert this.parentSchemeId != null && this.parentSchemeElementId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert super.parentSchemeId != null && this.parentSchemeElementId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
 
 		if (this.parentSchemeElementId.isVoid()) {
-			assert !this.parentSchemeId.isVoid(): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
+			assert !super.parentSchemeId.isVoid(): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
 			Log.debugMessage("SchemeElement.getParentSchemeElement() | Parent SchemeElement was requested, while parent is a Scheme; returnung null", //$NON-NLS-1$
 					Log.FINE);
 			return null;
 		}
 		
 		try {
-			assert this.parentSchemeId.isVoid(): ErrorMessages.MULTIPLE_PARENTS_PROHIBITED;
+			assert super.parentSchemeId.isVoid(): ErrorMessages.MULTIPLE_PARENTS_PROHIBITED;
 			return (SchemeElement) SchemeStorableObjectPool.getStorableObject(this.parentSchemeElementId, true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
@@ -553,8 +553,8 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 */
 	public IDLEntity getTransferable() {
 		return new SchemeElement_Transferable(getHeaderTransferable(),
-				this.name,
-				this.description,
+				super.getName(),
+				super.getDescription(),
 				this.label,
 				(Identifier_Transferable) this.equipmentTypeId.getTransferable(),
 				(Identifier_Transferable) this.equipmentId.getTransferable(),
@@ -563,9 +563,9 @@ public final class SchemeElement extends AbstractSchemeElement implements
 				(Identifier_Transferable) this.symbolId.getTransferable(),
 				(Identifier_Transferable) this.ugoCellId.getTransferable(),
 				(Identifier_Transferable) this.schemeCellId.getTransferable(),
-				(Identifier_Transferable) this.parentSchemeId.getTransferable(),
+				(Identifier_Transferable) super.parentSchemeId.getTransferable(),
 				(Identifier_Transferable) this.parentSchemeElementId.getTransferable(),
-				Identifier.createTransferables(this.characteristics));
+				Identifier.createTransferables(super.getCharacteristics()));
 	}
 
 	/**
@@ -662,22 +662,23 @@ public final class SchemeElement extends AbstractSchemeElement implements
 			final Identifier schemeCellId,
 			final Identifier parentSchemeId,
 			final Identifier parentSchemeElementId) {
-		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
-		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
+		super.setAttributes(created, modified, creatorId, modifierId, version, name, description, parentSchemeId);
+
 		assert label != null: ErrorMessages.NON_NULL_EXPECTED;
+
 		assert equipmentTypeId != null: ErrorMessages.NON_NULL_EXPECTED;
 		assert equipmentId != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert equipmentTypeId.isVoid() ^ equipmentId.isVoid();
+
 		assert kisId != null: ErrorMessages.NON_NULL_EXPECTED;
 		assert siteNodeId != null: ErrorMessages.NON_NULL_EXPECTED;
 		assert symbolId != null: ErrorMessages.NON_NULL_EXPECTED;
 		assert ugoCellId != null: ErrorMessages.NON_NULL_EXPECTED;
 		assert schemeCellId != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert parentSchemeId != null: ErrorMessages.NON_NULL_EXPECTED;
+		
 		assert parentSchemeElementId != null: ErrorMessages.NON_NULL_EXPECTED;
 		assert parentSchemeId.isVoid() ^ parentSchemeElementId.isVoid();
-		super.setAttributes(created, modified, creatorId, modifierId, version);
-		this.name = name;
-		this.description = description;
+		
 		this.label = label;
 		this.equipmentTypeId = equipmentTypeId;
 		this.equipmentId = equipmentId;
@@ -686,12 +687,12 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		this.symbolId = symbolId;
 		this.ugoCellId = ugoCellId;
 		this.schemeCellId = schemeCellId;
-		this.parentSchemeId = parentSchemeId;
 		this.parentSchemeElementId = parentSchemeElementId;
 	}
 
 	/**
 	 * @param equipment
+	 * @todo skip invariance checks
 	 */
 	public void setEquipment(final Equipment equipment) {
 		assert this.equipmentId != null && this.equipmentTypeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
@@ -700,6 +701,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 
 	/**
 	 * @param equipmentType
+	 * @todo skip invariance checks
 	 */
 	public void setEquipmentType(final EquipmentType equipmentType) {
 		assert this.equipmentId != null && this.equipmentTypeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
@@ -735,8 +737,8 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 * @see AbstractSchemeElement#setParentScheme(Scheme)
 	 */
 	public void setParentScheme(final Scheme parentScheme) {
-		assert this.parentSchemeId != null && this.parentSchemeElementId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		if (!this.parentSchemeId.isVoid()) {
+		assert super.parentSchemeId != null && this.parentSchemeElementId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		if (!super.parentSchemeId.isVoid()) {
 			/*
 			 * Moving from a scheme to another scheme.
 			 */
@@ -751,16 +753,16 @@ public final class SchemeElement extends AbstractSchemeElement implements
 				Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Log.INFO);
 				return;
 			}
-			this.parentSchemeId = parentScheme.getId();
+			super.parentSchemeId = parentScheme.getId();
 			this.parentSchemeElementId = Identifier.VOID_IDENTIFIER;
 			this.changed = true;
 		}
 	}
 
 	public void setParentSchemeElement(final SchemeElement parentSchemeElement) {
-		assert this.parentSchemeId != null && this.parentSchemeElementId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert super.parentSchemeId != null && this.parentSchemeElementId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
 		Identifier newParentSchemeElementId;
-		if (!this.parentSchemeId.isVoid()) {
+		if (!super.parentSchemeId.isVoid()) {
 			/*
 			 * Moving from a scheme to a scheme element.
 			 */
@@ -770,7 +772,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 				return;
 			}
 			newParentSchemeElementId = parentSchemeElement.getId();
-			this.parentSchemeId = Identifier.VOID_IDENTIFIER;
+			super.parentSchemeId = Identifier.VOID_IDENTIFIER;
 		} else {
 			/*
 			 * Moving from a scheme element to another scheme element.
