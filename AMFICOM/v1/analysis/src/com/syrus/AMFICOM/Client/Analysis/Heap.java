@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.28 2005/04/20 12:21:45 saa Exp $
+ * $Id: Heap.java,v 1.29 2005/04/20 14:31:34 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,7 +40,7 @@ import com.syrus.io.BellcoreStructure;
  * использование остальных методов работы с BS
  * 
  * @author $Author: saa $
- * @version $Revision: 1.28 $, $Date: 2005/04/20 12:21:45 $
+ * @version $Revision: 1.29 $, $Date: 2005/04/20 14:31:34 $
  * @module
  */
 public class Heap
@@ -461,6 +461,19 @@ public class Heap
     		return;
     	currentEv = nEvent;
     	notifyCurrentEventChanged();
+    }
+
+    public static void setCurrentEtalonEvent(int nEtEvent) {
+    	// @todo: store a pair {currentEvent, currentEtalonEvent} instead of lossy converting etalonEvent to event 
+    	if (primaryMTAE == null || etalonMTM == null || nEtEvent < 0 || nEtEvent >= etalonMTM.getMTAE().getNEvents()) {
+    		setCurrentEvent(-1);
+    		return;
+    	}
+    	else {
+        	ReflectogramComparer rcomp = new ReflectogramComparer(primaryMTAE.getSimpleEvents(),
+        		etalonMTM.getRSE());
+        	setCurrentEvent(rcomp.getProbeIdByEtalonId(nEtEvent));
+    	}
     }
 
     // @todo: invoke this automatically
