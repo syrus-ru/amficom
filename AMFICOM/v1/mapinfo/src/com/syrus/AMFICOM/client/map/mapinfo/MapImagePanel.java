@@ -21,8 +21,6 @@ public class MapImagePanel extends JPanel
 
 	public MapImagePanel()
 	{
-		this.setDoubleBuffered(true);
-		
 		ComponentListener[] listeners = this.getComponentListeners();
 		for (int i = 0; i < listeners.length; i++)
 			this.removeComponentListener(listeners[i]);
