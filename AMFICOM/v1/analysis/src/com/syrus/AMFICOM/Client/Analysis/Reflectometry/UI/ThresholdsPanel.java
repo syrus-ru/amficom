@@ -24,7 +24,6 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 
 	private int c_event = 0;
 	private ModelTraceManager.ThresholdHandle c_TH = null;
-	private boolean isRbutton = false;
 
 	public ThresholdsPanel(ResizableLayeredPanel panel, Dispatcher dispatcher, double y[], double deltaX)
 	{
@@ -46,7 +45,7 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 
 	// XXX: transient code (slow refactoring);
 	// to be used in ThresholdsLayeredPanel.
-	// Note: creates an int[2] object
+	// Performance Note: creates an int[2] object
 	public int[] getStartAndEndOfCurrentEvent()
 	{
 		if (c_event >= events.length)
@@ -84,7 +83,7 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 
 		startpos = mev.getPoint();
 		currpos = mev.getPoint();
-		isRbutton = SwingUtilities.isRightMouseButton(mev);
+		boolean isRbutton = SwingUtilities.isRightMouseButton(mev);
 
 		boolean allThresholds = this.isToPaintAllThresholds(); // режим "все пороги"
 		boolean isOutside = false; // true если клик вне x-пределов текущего события
