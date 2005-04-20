@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeStorableObjectPool.java,v 1.13 2005/04/12 08:14:17 bass Exp $
+ * $Id: SchemeStorableObjectPool.java,v 1.14 2005/04/20 14:41:40 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,9 +8,14 @@
 
 package com.syrus.AMFICOM.scheme;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Set;
+
+import org.omg.CORBA.portable.IDLEntity;
+
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectGroupEntities;
@@ -19,15 +24,9 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Set;
-
-import org.omg.CORBA.portable.IDLEntity;
-
 /**
- * @author $Author: bass $
- * @version $Revision: 1.13 $, $Date: 2005/04/12 08:14:17 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2005/04/20 14:41:40 $
  * @module scheme_v1
  */
 public final class SchemeStorableObjectPool extends StorableObjectPool {
@@ -458,6 +457,14 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 		return instance.fromTransferableImpl(id, transferable);
 	}
 
+	public static void flushStorableObject(final Identifier id, final boolean force) throws ApplicationException {
+		instance.flushStorableObjectImpl(id, force);
+	}
+
+	public static void flushEntities(final Short entityCode, final boolean force) throws ApplicationException {		 
+		instance.flushEntitiesImpl(entityCode, force);
+	}
+
 	public static void flush(final boolean force) throws ApplicationException {		 
 		instance.flushImpl(force);
 	}
@@ -480,9 +487,8 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 
 	/**
 	 * @param id
-	 * @throws IllegalDataException 
 	 */
-	protected void deleteStorableObject(final Identifier id) throws IllegalDataException {
+	protected void deleteStorableObject(final Identifier id) {
 		schemeObjectLoader.delete(id);
 	}
 
@@ -490,7 +496,7 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 	 * @param identifiables
 	 * @see StorableObjectPool#deleteStorableObjects(Set)
 	 */
-	protected void deleteStorableObjects(final Set identifiables) throws IllegalDataException {
+	protected void deleteStorableObjects(final Set identifiables) {
 		schemeObjectLoader.delete(identifiables);
 	}
 

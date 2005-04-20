@@ -1,5 +1,5 @@
 /*
- * $Id: GeneralStorableObjectPool.java,v 1.18 2005/04/12 16:24:48 arseniy Exp $
+ * $Id: GeneralStorableObjectPool.java,v 1.19 2005/04/20 14:39:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,7 @@ import org.omg.CORBA.portable.IDLEntity;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/04/12 16:24:48 $
+ * @version $Revision: 1.19 $, $Date: 2005/04/20 14:39:53 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -220,6 +220,14 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 
 	public static StorableObject fromTransferable(Identifier id, IDLEntity transferable) throws ApplicationException {
 		return instance.fromTransferableImpl(id, transferable);
+	}
+
+	public static void flushStorableObject(final Identifier id, final boolean force) throws ApplicationException {
+		instance.flushStorableObjectImpl(id, force);
+	}
+
+	public static void flushEntities(final Short entityCode, final boolean force) throws ApplicationException {		 
+		instance.flushEntitiesImpl(entityCode, force);
 	}
 
 	public static void flush(boolean force) throws ApplicationException {		 

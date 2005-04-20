@@ -1,5 +1,5 @@
 /*
- * $Id: MapViewStorableObjectPool.java,v 1.10 2005/04/12 08:15:02 bass Exp $
+ * $Id: MapViewStorableObjectPool.java,v 1.11 2005/04/20 14:41:27 arseniy Exp $
  *
  * Copyright ? 2004 Syrus Systems.
  * ѕвиапр-жейпкаехмкл зепжф.
@@ -8,9 +8,12 @@
 
 package com.syrus.AMFICOM.mapview;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Set;
+
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectGroupEntities;
@@ -19,13 +22,9 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Set;
-
 /**
- * @version $Revision: 1.10 $, $Date: 2005/04/12 08:15:02 $
- * @author $Author: bass $
+ * @version $Revision: 1.11 $, $Date: 2005/04/20 14:41:27 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -185,6 +184,14 @@ public final class MapViewStorableObjectPool extends StorableObjectPool {
 		return instance.putStorableObjectImpl(storableObject);
 	}
 
+	public static void flushStorableObject(final Identifier id, final boolean force) throws ApplicationException {
+		instance.flushStorableObjectImpl(id, force);
+	}
+
+	public static void flushEntities(final Short entityCode, final boolean force) throws ApplicationException {		 
+		instance.flushEntitiesImpl(entityCode, force);
+	}
+
 	public static void flush(boolean force) throws ApplicationException {
 		instance.flushImpl(force);
 	}
@@ -197,7 +204,7 @@ public final class MapViewStorableObjectPool extends StorableObjectPool {
 		instance.cleanChangedStorableObjectsImpl();
 	}
 
-	protected void deleteStorableObject(Identifier id) throws IllegalDataException {
+	protected void deleteStorableObject(Identifier id) {
 	 	mvObjectLoader.delete(id);
 	}
 

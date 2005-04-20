@@ -1,5 +1,5 @@
 /*
- * $Id: MapStorableObjectPool.java,v 1.14 2005/04/12 16:26:27 arseniy Exp $
+ * $Id: MapStorableObjectPool.java,v 1.15 2005/04/20 14:40:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/04/12 16:26:27 $
+ * @version $Revision: 1.15 $, $Date: 2005/04/20 14:40:39 $
  * @author $Author: arseniy $
  * @module map_v1
  */
@@ -338,6 +338,14 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 
 	public static StorableObject fromTransferable(final Identifier id, final IDLEntity transferable) throws ApplicationException {
 		return instance.fromTransferableImpl(id, transferable);
+	}
+
+	public static void flushStorableObject(final Identifier id, final boolean force) throws ApplicationException {
+		instance.flushStorableObjectImpl(id, force);
+	}
+
+	public static void flushEntities(final Short entityCode, final boolean force) throws ApplicationException {		 
+		instance.flushEntitiesImpl(entityCode, force);
 	}
 
 	public static void flush(final boolean force) throws ApplicationException {

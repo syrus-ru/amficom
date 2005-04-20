@@ -1,5 +1,5 @@
 /*
- * $Id: ResourceStorableObjectPool.java,v 1.16 2005/04/12 16:26:20 arseniy Exp $
+ * $Id: ResourceStorableObjectPool.java,v 1.17 2005/04/20 14:40:33 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.16 $, $Date: 2005/04/12 16:26:20 $
+ * @version $Revision: 1.17 $, $Date: 2005/04/20 14:40:33 $
  * @module resource_v1
  */
 public final class ResourceStorableObjectPool extends StorableObjectPool {
@@ -177,6 +177,14 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 
 	public static StorableObject fromTransferable(Identifier id, IDLEntity transferable) throws ApplicationException {
 		return instance.fromTransferableImpl(id, transferable);
+	}
+
+	public static void flushStorableObject(final Identifier id, final boolean force) throws ApplicationException {
+		instance.flushStorableObjectImpl(id, force);
+	}
+
+	public static void flushEntities(final Short entityCode, final boolean force) throws ApplicationException {		 
+		instance.flushEntitiesImpl(entityCode, force);
 	}
 
 	public static void flush(boolean force) throws ApplicationException{		 

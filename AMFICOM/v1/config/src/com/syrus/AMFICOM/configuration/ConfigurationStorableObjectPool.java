@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.75 2005/04/12 16:25:09 arseniy Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.76 2005/04/20 14:40:03 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.75 $, $Date: 2005/04/12 16:25:09 $
+ * @version $Revision: 1.76 $, $Date: 2005/04/20 14:40:03 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -420,6 +420,14 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 
 	public static StorableObject fromTransferable(Identifier id, IDLEntity transferable) throws ApplicationException {
 		return instance.fromTransferableImpl(id, transferable);
+	}
+
+	public static void flushStorableObject(final Identifier id, final boolean force) throws ApplicationException {
+		instance.flushStorableObjectImpl(id, force);
+	}
+
+	public static void flushEntities(final Short entityCode, final boolean force) throws ApplicationException {		 
+		instance.flushEntitiesImpl(entityCode, force);
 	}
 
 	public static void flush(boolean force) throws ApplicationException {		 
