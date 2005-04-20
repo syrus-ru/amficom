@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.62 2005/04/20 09:25:28 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.63 2005/04/20 16:18:50 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -82,7 +82,7 @@ import com.syrus.AMFICOM.scheme.SchemePath;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.62 $, $Date: 2005/04/20 09:25:28 $
+ * @version $Revision: 1.63 $, $Date: 2005/04/20 16:18:50 $
  * @module mapviewclient_v2
  */
 public abstract class LogicalNetLayer implements MapCoordinatesConverter
@@ -648,6 +648,13 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		long f;
 		long d;
 
+//		System.out.println("------------------ paint called ----------------------");
+//		try {
+//			throw new Exception("stacktrace");
+//		}
+//		catch (Exception e) {
+//			e.printStackTrace();
+//		}
 		System.out.println("--------------------------------------");
 		f = System.currentTimeMillis();
 		drawLines(p);
