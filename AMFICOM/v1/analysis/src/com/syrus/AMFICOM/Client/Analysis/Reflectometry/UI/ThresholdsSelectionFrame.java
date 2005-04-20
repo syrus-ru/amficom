@@ -236,16 +236,16 @@ implements OperationListener, BsHashChangeListener, CurrentEventChangeListener
 			// (2) suppress visualization of selection of 1st column
 			public Component getTableCellRendererComponent(	JTable table,
 															Object value,
-															boolean isSelected,
+															boolean isSelected1,
 															boolean hasFocus,
 															int rowIndex,
 															int vColIndex) {
 				int mColIndex = table.convertColumnIndexToModel(vColIndex);
 
 				if (mColIndex == 0)
-					isSelected = false;
+					isSelected1 = false;
 				hasFocus = false;
-				return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, rowIndex, vColIndex);
+				return super.getTableCellRendererComponent(table, value, isSelected1, hasFocus, rowIndex, vColIndex);
 			}
 		});
 		
@@ -303,11 +303,10 @@ implements OperationListener, BsHashChangeListener, CurrentEventChangeListener
 		return null;
 	}
 
-	void init_module(Dispatcher dispatcher)
+	void init_module(Dispatcher dispatcher1)
 	{
-		this.dispatcher = dispatcher;
-		dispatcher.register(this, RefUpdateEvent.typ);
-		//dispatcher.register(this, RefChangeEvent.typ);
+		this.dispatcher = dispatcher1;
+		dispatcher1.register(this, RefUpdateEvent.typ);
 		Heap.addBsHashListener(this);
 		Heap.addCurrentEventChangeListener(this);
 	}
