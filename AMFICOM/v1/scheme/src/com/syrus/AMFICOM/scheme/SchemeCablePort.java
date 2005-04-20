@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePort.java,v 1.16 2005/04/18 13:19:01 bass Exp $
+ * $Id: SchemeCablePort.java,v 1.17 2005/04/20 16:38:07 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,9 +13,11 @@ import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
 
+import com.syrus.AMFICOM.configuration.MeasurementPort;
+import com.syrus.AMFICOM.configuration.MeasurementPortType;
 import com.syrus.AMFICOM.configuration.Port;
+import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.corba.PortSort;
-import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
@@ -26,13 +28,14 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
+import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
 import com.syrus.AMFICOM.scheme.corba.SchemeCablePort_Transferable;
 
 /**
  * #09 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.16 $, $Date: 2005/04/18 13:19:01 $
+ * @version $Revision: 1.17 $, $Date: 2005/04/20 16:38:07 $
  * @module scheme_v1
  */
 public final class SchemeCablePort extends AbstractSchemePort {
@@ -63,11 +66,32 @@ public final class SchemeCablePort extends AbstractSchemePort {
 	 * @param creatorId
 	 * @param modifierId
 	 * @param version
+	 * @param name
+	 * @param description
+	 * @param directionType
+	 * @param portType
+	 * @param port
+	 * @param measurementPortType
+	 * @param measurementPort
+	 * @param parentSchemeDevice
 	 */
-	SchemeCablePort(Identifier id, Date created, Date modified,
-			Identifier creatorId, Identifier modifierId,
-			long version) {
-		super(id, created, modified, creatorId, modifierId, version);
+	SchemeCablePort(final Identifier id, final Date created,
+			final Date modified, final Identifier creatorId,
+			final Identifier modifierId, final long version,
+			final String name, final String description,
+			final AbstractSchemePortDirectionType directionType,
+			final PortType portType, final Port port,
+			final MeasurementPortType measurementPortType,
+			final MeasurementPort measurementPort,
+			final SchemeDevice parentSchemeDevice) {
+		super(id, created, modified, creatorId, modifierId, version,
+				name, description, directionType, portType, port,
+				measurementPortType, measurementPort,
+				parentSchemeDevice);
+
+		assert port == null || port.getSort().value() == PortSort._PORT_SORT_CABLE_PORT;
+
+		this.schemeCablePortDatabase = SchemeDatabaseContext.getSchemeCablePortDatabase();
 	}
 
 	/**
@@ -75,25 +99,64 @@ public final class SchemeCablePort extends AbstractSchemePort {
 	 * @throws CreateObjectException
 	 */
 	SchemeCablePort(final SchemeCablePort_Transferable transferable) throws CreateObjectException {
-		try {
-			this.schemeCablePortDatabase = SchemeDatabaseContext.getSchemeCablePortDatabase();
-			fromTransferable(transferable);
-		} catch (final ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
+		this.schemeCablePortDatabase = SchemeDatabaseContext.getSchemeCablePortDatabase();
+		fromTransferable(transferable);
 	}
 
-	public static SchemeCablePort createInstance(
-			final Identifier creatorId)
+	/**
+	 * A shorthand for
+	 * {@link #createInstance(Identifier, String, String, AbstractSchemePortDirectionType, PortType, Port, MeasurementPortType, MeasurementPort, SchemeDevice)}.
+	 *
+	 * @param creatorId
+	 * @param name
+	 * @param directionType
+	 * @param parentSchemeDevice
+	 * @throws CreateObjectException
+	 */
+	public static SchemeCablePort createInstance(final Identifier creatorId,
+			final String name,
+			final AbstractSchemePortDirectionType directionType,
+			final SchemeDevice parentSchemeDevice)
 			throws CreateObjectException {
-		assert creatorId != null;
+		return createInstance(creatorId, name, "", directionType, null, //$NON-NLS-1$
+				null, null, null, parentSchemeDevice);
+	}
+
+	/**
+	 * @param creatorId
+	 * @param name
+	 * @param description
+	 * @param directionType
+	 * @param portType
+	 * @param port
+	 * @param measurementPortType
+	 * @param measurementPort
+	 * @param parentSchemeDevice
+	 * @throws CreateObjectException
+	 */
+	public static SchemeCablePort createInstance(final Identifier creatorId,
+			final String name, final String description,
+			final AbstractSchemePortDirectionType directionType,
+			final PortType portType, final Port port,
+			final MeasurementPortType measurementPortType,
+			final MeasurementPort measurementPort,
+			final SchemeDevice parentSchemeDevice)
+			throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid(): ErrorMessages.NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
+		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert directionType != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert parentSchemeDevice != null: ErrorMessages.NON_NULL_EXPECTED;
+
 		try {
 			final Date created = new Date();
 			final SchemeCablePort schemeCablePort = new SchemeCablePort(
 					IdentifierPool
 							.getGeneratedIdentifier(ObjectEntities.SCHEME_CABLE_PORT_ENTITY_CODE),
 					created, created, creatorId, creatorId,
-					0L);
+					0L, name, description, directionType,
+					portType, port, measurementPortType,
+					measurementPort, parentSchemeDevice);
 			schemeCablePort.changed = true;
 			return schemeCablePort;
 		} catch (final IdentifierGenerationException ige) {
@@ -137,7 +200,7 @@ public final class SchemeCablePort extends AbstractSchemePort {
 	 */
 	public Port getPort() {
 		final Port port = super.getPort();
-		assert port == null || port.getSort() == PortSort._PORT_SORT_CABLE_PORT: ErrorMessages.OBJECT_BADLY_INITIALIZED;
+		assert port == null || port.getSort().value() == PortSort._PORT_SORT_CABLE_PORT: ErrorMessages.OBJECT_BADLY_INITIALIZED;
 		return port;
 	}
 
@@ -155,18 +218,19 @@ public final class SchemeCablePort extends AbstractSchemePort {
 	/**
 	 * @param port
 	 * @see AbstractSchemePort#setPort(Port)
+	 * @todo skip invariance checks.
 	 */
 	public void setPort(final Port port) {
-		assert port == null || port.getSort() == PortSort._PORT_SORT_CABLE_PORT: ErrorMessages.NATURE_INVALID;
+		assert port == null || port.getSort().value() == PortSort._PORT_SORT_CABLE_PORT: ErrorMessages.NATURE_INVALID;
 		super.setPort(port);
 	}
 
 	/**
 	 * @param transferable
-	 * @throws ApplicationException
+	 * @throws CreateObjectException
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IDLEntity)
 	 */
-	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
 		throw new UnsupportedOperationException();
 	}
 }

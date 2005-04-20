@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractSchemeElement.java,v 1.16 2005/04/20 12:26:16 bass Exp $
+ * $Id: AbstractSchemeElement.java,v 1.17 2005/04/20 16:38:07 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeElement}instead.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.16 $, $Date: 2005/04/20 12:26:16 $
+ * @version $Revision: 1.17 $, $Date: 2005/04/20 16:38:07 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemeElement extends
@@ -61,9 +61,22 @@ public abstract class AbstractSchemeElement extends
 		this.characteristics = new HashSet();
 	}
 
+	/**
+	 * @param id
+	 * @param created
+	 * @param modified
+	 * @param creatorId
+	 * @param modifierId
+	 * @param version
+	 * @param name
+	 * @param description
+	 * @param parentScheme
+	 */
 	AbstractSchemeElement(final Identifier id, final Date created,
 			final Date modified, final Identifier creatorId,
-			final Identifier modifierId, final long version, final String name, final String description, final Scheme parentScheme) {
+			final Identifier modifierId, final long version,
+			final String name, final String description,
+			final Scheme parentScheme) {
 		super(id, created, modified, creatorId, modifierId, version);
 		this.name = name;
 		this.description = description;

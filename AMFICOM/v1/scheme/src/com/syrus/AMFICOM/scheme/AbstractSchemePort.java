@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.14 2005/04/20 12:26:16 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.15 2005/04/20 16:38:07 bass Exp $
  * 
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,11 @@
  */
 
 package com.syrus.AMFICOM.scheme;
+
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.configuration.MeasurementPortType;
@@ -20,18 +25,13 @@ import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-
 /**
  * This class is never used directly, it was provided just in order for source
  * generated from IDL files to compile cleanly. Use other implementations of
  * {@link AbstractSchemePort}instead.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2005/04/20 12:26:16 $
+ * @version $Revision: 1.15 $, $Date: 2005/04/20 16:38:07 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemePort extends
@@ -39,19 +39,17 @@ public abstract class AbstractSchemePort extends
 		Characterizable {
 	private static final long serialVersionUID = 6943625949984422779L;
 
-	private AbstractSchemePortDirectionType directionType;
-
-	private Set characteristics;
+	private String name;
 
 	private String description;
 
-	private Identifier measurementPortId;
+	private AbstractSchemePortDirectionType directionType;
 
-	private Identifier measurementPortTypeId;
-
-	private String name;
-
-	private Identifier parentSchemeDeviceId;
+	/**
+	 * Depending on implementation, may reference either
+	 * {@link PortType PortType} or {@link PortType CablePortType}.
+	 */
+	private Identifier portTypeId;
 
 	/**
 	 * Depending on implementation, may reference either {@link Port Port}
@@ -59,11 +57,13 @@ public abstract class AbstractSchemePort extends
 	 */
 	private Identifier portId;
 
-	/**
-	 * Depending on implementation, may reference either
-	 * {@link PortType PortType} or {@link PortType CablePortType}.
-	 */
-	private Identifier portTypeId;
+	private Identifier measurementPortTypeId;
+
+	private Identifier measurementPortId;
+
+	private Identifier parentSchemeDeviceId;
+
+	private Set characteristics;
 
 	/**
 	 * @param id
@@ -80,13 +80,46 @@ public abstract class AbstractSchemePort extends
 	 * @param creatorId
 	 * @param modifierId
 	 * @param version
+	 * @param name
+	 * @param description
+	 * @param directionType
+	 * @param portType
+	 * @param port
+	 * @param measurementPortType
+	 * @param measurementPort
+	 * @param parentSchemeDevice
 	 */
-	AbstractSchemePort(Identifier id, Date created,
-			Date modified, Identifier creatorId,
-			Identifier modifierId, long version) {
+	AbstractSchemePort(final Identifier id, final Date created,
+			final Date modified, final Identifier creatorId,
+			final Identifier modifierId, final long version,
+			final String name, final String description,
+			final AbstractSchemePortDirectionType directionType,
+			final PortType portType, final Port port,
+			final MeasurementPortType measurementPortType,
+			final MeasurementPort measurementPort,
+			final SchemeDevice parentSchemeDevice) {
 		super(id, created, modified, creatorId, modifierId, version);
+		this.name = name;
+		this.description = description;
+		this.directionType = directionType;
+
+		assert portType == null || port == null;
+		this.portTypeId = Identifier.possiblyVoid(portType);
+		this.portId = Identifier.possiblyVoid(port);
+
+		assert measurementPortType == null || measurementPort == null;
+		this.measurementPortTypeId = Identifier.possiblyVoid(measurementPortType);
+		this.measurementPortId = Identifier.possiblyVoid(measurementPort);
+
+		this.parentSchemeDeviceId = Identifier.possiblyVoid(parentSchemeDevice);
+
+		this.characteristics = new HashSet();
 	}
 
+	/**
+	 * Will transmute to the constructor from the corresponding
+	 * transferable. 
+	 */
 	AbstractSchemePort() {
 		// super();
 	}
@@ -194,10 +227,18 @@ public abstract class AbstractSchemePort extends
 		this.changed = true;
 	}
 
+	/**
+	 * @param measurementPort
+	 * @todo skip invariance checks.
+	 */
 	public final void setMeasurementPort(final MeasurementPort measurementPort) {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @param measurementPortType
+	 * @todo skip invariance checks.
+	 */
 	public final void setMeasurementPortType(final MeasurementPortType measurementPortType) {
 		throw new UnsupportedOperationException();
 	}
@@ -222,11 +263,16 @@ public abstract class AbstractSchemePort extends
 	 * Overridden by descendants to add extra checks.
 	 *
 	 * @param port
+	 * @todo skip invariance checks.
 	 */
 	public void setPort(final Port port) {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @param portType
+	 * @todo skip invariance checks.
+	 */
 	public final void setPortType(final PortType portType) {
 		throw new UnsupportedOperationException();
 	}
