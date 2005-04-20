@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.61 2005/04/18 12:12:07 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.62 2005/04/20 09:25:28 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,7 +20,9 @@ import java.awt.Point;
 import java.awt.Stroke;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -80,11 +82,14 @@ import com.syrus.AMFICOM.scheme.SchemePath;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.61 $, $Date: 2005/04/18 12:12:07 $
+ * @version $Revision: 1.62 $, $Date: 2005/04/20 09:25:28 $
  * @module mapviewclient_v2
  */
 public abstract class LogicalNetLayer implements MapCoordinatesConverter
 {
+	public static SimpleDateFormat detailedDateFormat = 
+		new SimpleDateFormat("E M d H:m:s:S");
+	
 	protected CommandList commandList = new CommandList(20);
 	
 	/** Нить, управляющая анимацией на слое. */
@@ -640,10 +645,28 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		Font font = p.getFont();
 		Color background = p.getBackground();
 
+		long f;
+		long d;
+
+		System.out.println("--------------------------------------");
+		f = System.currentTimeMillis();
 		drawLines(p);
+		d = System.currentTimeMillis();
+//		detailedDateFormat.format(new Date(System.currentTimeMillis()))
+		System.out.println("draw lines in " + String.valueOf(d - f) + " ms");
+		f = System.currentTimeMillis();
 		drawNodes(p);
+		d = System.currentTimeMillis();
+		System.out.println("draw nodes in " + String.valueOf(d - f) + " ms");
+		f = System.currentTimeMillis();
 		drawSelection(p);
+		d = System.currentTimeMillis();
+		System.out.println("draw selection in " + String.valueOf(d - f) + " ms");
+		f = System.currentTimeMillis();
 		drawTempLines(p);
+		d = System.currentTimeMillis();
+		System.out.println("draw temp lines in " + String.valueOf(d - f) + " ms");
+		System.out.println("--------------------------------------");
 		
 		// revert graphics to previous settings
 		p.setColor(color);
