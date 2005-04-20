@@ -94,6 +94,7 @@ public final class MapViewTreePanel extends JPanel
 			if(this.aContext.getDispatcher() != null) {
 				Dispatcher disp = this.aContext.getDispatcher();
 				disp.unregister(this, MapEvent.MAP_NAVIGATE);
+				disp.unregister(this, MapEvent.MAP_SELECTED);
 				disp.unregister(this, MapEvent.MAP_CHANGED);
 				disp.unregister(this, MapEvent.MAP_VIEW_CHANGED);
 				disp.unregister(this, MapEvent.MAP_VIEW_SELECTED);
@@ -107,6 +108,7 @@ public final class MapViewTreePanel extends JPanel
 		if(disp == null)
 			return;
 		disp.register(this, MapEvent.MAP_NAVIGATE);
+		disp.register(this, MapEvent.MAP_SELECTED);
 		disp.register(this, MapEvent.MAP_CHANGED);
 		disp.register(this, MapEvent.MAP_VIEW_CHANGED);
 		disp.register(this, MapEvent.MAP_VIEW_SELECTED);
@@ -129,6 +131,9 @@ public final class MapViewTreePanel extends JPanel
 				}
 			}
 			if(	operationEvent.getActionCommand().equals(MapEvent.MAP_CHANGED)) {
+				updateTree(this.mapView);
+			}
+			if(	operationEvent.getActionCommand().equals(MapEvent.MAP_SELECTED)) {
 				updateTree(this.mapView);
 			}
 			if(	operationEvent.getActionCommand().equals(MapEvent.MAP_VIEW_CHANGED)) {

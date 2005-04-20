@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementPropertiesFrame.java,v 1.4 2005/04/20 16:16:37 krupenn Exp $
+ * $Id: MapElementPropertiesFrame.java,v 1.5 2005/04/20 16:56:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -27,22 +27,26 @@ import com.syrus.AMFICOM.mapview.MapView;
 
 /**
  *  Окно отображения свойств элемента карты
- * @version $Revision: 1.4 $, $Date: 2005/04/20 16:16:37 $
+ * @version $Revision: 1.5 $, $Date: 2005/04/20 16:56:40 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
 public final class MapElementPropertiesFrame extends GeneralPropertiesFrame
 {
+	private boolean performProcessing = true;
+	
 	public void stateChanged(ChangeEvent e) {
 		super.stateChanged(e);
 		if(this.aContext.getDispatcher() != null) {
 			Object object = e.getSource();
+			this.performProcessing = false;
 			if(object instanceof MapElement)
-				this.aContext.getDispatcher().notify(new MapEvent(this, MapEvent.MAP_CHANGED));
+				this.aContext.getDispatcher().notify(new MapEvent(object, MapEvent.MAP_CHANGED));
 			else if(object instanceof Map)
-				this.aContext.getDispatcher().notify(new MapEvent(this, MapEvent.MAP_SELECTED));
+				this.aContext.getDispatcher().notify(new MapEvent(object, MapEvent.MAP_SELECTED));
 			else if(object instanceof MapView)
-				this.aContext.getDispatcher().notify(new MapEvent(this, MapEvent.MAP_VIEW_CHANGED));
+				this.aContext.getDispatcher().notify(new MapEvent(object, MapEvent.MAP_VIEW_CHANGED));
+			this.performProcessing = true;
 		}
 	}
 
@@ -67,6 +71,8 @@ public final class MapElementPropertiesFrame extends GeneralPropertiesFrame
 	
 	public void operationPerformed(OperationEvent e) {
 		super.operationPerformed(e);
+		if(!this.performProcessing)
+			return;
 		if (e.getActionCommand().equals(MapEvent.MAP_NAVIGATE)) {
 			MapNavigateEvent event = (MapNavigateEvent) e;
 			if(event.isMapElementSelected()) {
