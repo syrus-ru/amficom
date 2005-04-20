@@ -17,16 +17,14 @@ import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager.ThresholdHandle;
  */
 public class ThresholdsPanel extends ReflectogramEventsPanel
 {
-	//public boolean paint_all_thresholds = false;
-	public boolean paint_thresholds = true;
-
+	protected boolean paint_thresholds = true;
 	protected boolean edit_thresholds = true;
 
-	protected ModelTraceManager et_mtm;
+	private ModelTraceManager et_mtm;
 
-	protected int c_event = 0;
-	protected ModelTraceManager.ThresholdHandle c_TH = null;
-	protected boolean isRbutton = false;
+	private int c_event = 0;
+	private ModelTraceManager.ThresholdHandle c_TH = null;
+	private boolean isRbutton = false;
 
 	public ThresholdsPanel(ResizableLayeredPanel panel, Dispatcher dispatcher, double y[], double deltaX)
 	{
