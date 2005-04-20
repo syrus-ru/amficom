@@ -12,6 +12,9 @@ import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.*;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager.ThresholdHandle;
 
+/**
+ * Отображает пороги
+ */
 public class ThresholdsPanel extends ReflectogramEventsPanel
 {
 	//public boolean paint_all_thresholds = false;
@@ -145,11 +148,11 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 			{
 				Robot r = new Robot();
 				Point p = getLocationOnScreen();
-				int x = index2coord(c_TH.getX());
-				int y = value2coord(c_TH.getY());
+				int x1 = index2coord(c_TH.getX());
+				int y1 = value2coord(c_TH.getY());
 
 				// не допускаем выхода на пределы окна
-				currpos = new Point(x, y);
+				currpos = new Point(x1, y1);
 				limit_currpos();
 
 				// перемещаем курсор
