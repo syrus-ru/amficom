@@ -1,5 +1,5 @@
 /**
- * $Id: LinkTypeController.java,v 1.16 2005/04/18 11:12:33 krupenn Exp $
+ * $Id: LinkTypeController.java,v 1.17 2005/04/20 16:15:53 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -51,7 +51,7 @@ import com.syrus.AMFICOM.map.PhysicalLinkType;
 /**
  *  онтроллер типа линейного элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.16 $, $Date: 2005/04/18 11:12:33 $
+ * @version $Revision: 1.17 $, $Date: 2005/04/20 16:15:53 $
  * @module mapviewclient_v1
  */
 public final class LinkTypeController extends AbstractLinkController
@@ -600,14 +600,11 @@ public final class LinkTypeController extends AbstractLinkController
 	}
 
 	/**
-	 * ѕолучить тип линии по кодовому имени. ¬ случае, если такого типа нет,
-	 * создаетс€ новый.
-	 * @param userId пользователь
+	 * ѕолучить тип линии по кодовому имени.
 	 * @param codename кодовое им€
 	 * @return тип линии
 	 */
 	public static PhysicalLinkType getPhysicalLinkType(
-			Identifier userId,
 			String codename)
 	{
 		StorableObjectCondition pTypeCondition = new TypicalCondition(
@@ -633,29 +630,45 @@ public final class LinkTypeController extends AbstractLinkController
 			ex.printStackTrace();
 		}
 
+		return null;
+	}
+
+	/**
+	 * ѕолучить тип линии по кодовому имени. ¬ случае, если такого типа нет,
+	 * создаетс€ новый.
+	 * @param userId пользователь
+	 * @param codename кодовое им€
+	 * @return тип линии
+	 */
+	public static PhysicalLinkType getPhysicalLinkType(
+			Identifier userId,
+			String codename)
+	{
+		PhysicalLinkType type = getPhysicalLinkType(codename);
+		if(type == null)
 		try
 		{
 			LinkTypeController ltc = (LinkTypeController )LinkTypeController.getInstance();
 
-			PhysicalLinkType pType = PhysicalLinkType.createInstance(
+			type = PhysicalLinkType.createInstance(
 				userId,
 				codename,
 				LangModelMap.getString(codename),
 				"",
 				LinkTypeController.getBindDimension(codename));
 
-			ltc.setLineSize(userId, pType, LinkTypeController.getLineThickness(codename));
-			ltc.setColor(userId, pType, LinkTypeController.getLineColor(codename));
+			ltc.setLineSize(userId, type, LinkTypeController.getLineThickness(codename));
+			ltc.setColor(userId, type, LinkTypeController.getLineColor(codename));
 
-			MapStorableObjectPool.putStorableObject(pType);
+			MapStorableObjectPool.putStorableObject(type);
 			MapStorableObjectPool.flush(true);
-			return pType;
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
-			return null;
+			type = null;
 		}
+		return type;
 	}
 
 	public static void createDefaults(Identifier creatorId)
@@ -699,7 +712,7 @@ public final class LinkTypeController extends AbstractLinkController
 	 */
 	public static PhysicalLinkType getDefaultPhysicalLinkType()
 	{
-		return LinkTypeController.getPhysicalLinkType(null, PhysicalLinkType.TUNNEL);
+		return LinkTypeController.getPhysicalLinkType(PhysicalLinkType.TUNNEL);
 	}
 
 	/**
@@ -708,6 +721,6 @@ public final class LinkTypeController extends AbstractLinkController
 	 */
 	public static PhysicalLinkType getUnboundPhysicalLinkType()
 	{
-		return LinkTypeController.getPhysicalLinkType(null, PhysicalLinkType.UNBOUND);
+		return LinkTypeController.getPhysicalLinkType(PhysicalLinkType.UNBOUND);
 	}
 }

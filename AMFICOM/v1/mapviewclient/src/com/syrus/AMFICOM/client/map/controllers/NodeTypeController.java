@@ -1,5 +1,5 @@
 /**
- * $Id: NodeTypeController.java,v 1.14 2005/04/18 11:12:58 krupenn Exp $
+ * $Id: NodeTypeController.java,v 1.15 2005/04/20 16:15:53 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -48,7 +48,7 @@ import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageR
 /**
  * контроллер типа сетевого узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.14 $, $Date: 2005/04/18 11:12:58 $
+ * @version $Revision: 1.15 $, $Date: 2005/04/20 16:15:53 $
  * @module mapviewclient_v1
  */
 public class NodeTypeController extends AbstractNodeController
@@ -227,14 +227,11 @@ public class NodeTypeController extends AbstractNodeController
 	}
 
 	/**
-	 * Получить тип сетевого узла по кодовому имени. В случае, если такого 
-	 * типа нет, создается новый.
-	 * @param userId пользователь
+	 * Получить тип сетевого узла по кодовому имени.
 	 * @param codename кодовое имя
 	 * @return тип сетевого узла
 	 */
 	public static SiteNodeType getSiteNodeType(
-			Identifier userId,
 			String codename)
 	{
 		StorableObjectCondition pTypeCondition = new TypicalCondition(
@@ -258,10 +255,25 @@ public class NodeTypeController extends AbstractNodeController
 		{
 			ex.printStackTrace();
 		}
+		return null;
+	}
 
+	/**
+	 * Получить тип сетевого узла по кодовому имени. В случае, если такого 
+	 * типа нет, создается новый.
+	 * @param userId пользователь
+	 * @param codename кодовое имя
+	 * @return тип сетевого узла
+	 */
+	public static SiteNodeType getSiteNodeType(
+			Identifier userId,
+			String codename)
+	{
+		SiteNodeType type = getSiteNodeType(codename);
+		if(type == null)
 		try
 		{
-			SiteNodeType snt = SiteNodeType.createInstance(
+			type = SiteNodeType.createInstance(
 				userId,
 				codename,
 				LangModelMap.getString(codename),
@@ -272,15 +284,15 @@ public class NodeTypeController extends AbstractNodeController
 						NodeTypeController.getImageFileName(codename)),
 				true);
 				
-			MapStorableObjectPool.putStorableObject(snt);
+			MapStorableObjectPool.putStorableObject(type);
 			MapStorableObjectPool.flush(true);
-			return snt;
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
-			return null;
+			type = null;
 		}
+		return type;
 	}
 
 	public static void createDefaults(Identifier creatorId)
@@ -337,7 +349,7 @@ public class NodeTypeController extends AbstractNodeController
 	 */
 	public static SiteNodeType getUnboundNodeType()
 	{
-		return NodeTypeController.getSiteNodeType(null, SiteNodeType.UNBOUND);
+		return NodeTypeController.getSiteNodeType(SiteNodeType.UNBOUND);
 	}
 
 
