@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultStorableObjectEditor.java,v 1.3 2005/04/20 16:30:46 stas Exp $
+ * $Id: DefaultStorableObjectEditor.java,v 1.4 2005/04/20 16:34:20 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import javax.swing.event.ChangeListener;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/04/20 16:30:46 $
+ * @version $Revision: 1.4 $, $Date: 2005/04/20 16:34:20 $
  * @module generalclient_v1
  */
 
@@ -52,8 +52,10 @@ public abstract class DefaultStorableObjectEditor implements StorableObjectEdito
 		public void keyPressed(KeyEvent e) {
 			if(e.getKeyCode() == KeyEvent.VK_ENTER) {
 				editor.commitChanges();
-				for (Iterator it = changeListeners.iterator(); it.hasNext();)
-					((ChangeListener)it.next()).stateChanged(new ChangeEvent(editor.getObject()));
+				Object obj = editor.getObject();
+				if (obj != null)
+					for (Iterator it = changeListeners.iterator(); it.hasNext();)
+						((ChangeListener)it.next()).stateChanged(new ChangeEvent(obj));
 			}
 			if(e.getKeyCode() == KeyEvent.VK_ESCAPE)
 				editor.setObject(editor.getObject());
