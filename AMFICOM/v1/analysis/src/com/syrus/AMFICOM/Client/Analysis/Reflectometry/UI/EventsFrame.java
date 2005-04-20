@@ -82,13 +82,13 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener
 		this.initModule(dispatcher);
 	}
 
-	private void initModule(Dispatcher dispatcher)
+	private void initModule(Dispatcher dispatcher1)
 	{
-		this.dispatcher = dispatcher;
+		this.dispatcher = dispatcher1;
 		//dispatcher.register(this, RefChangeEvent.typ);
-		dispatcher.register(this, RefUpdateEvent.typ);
-		dispatcher.register(this, AnalyseApplicationModel.SELECT_NEXT_EVENT);
-		dispatcher.register(this, AnalyseApplicationModel.SELECT_PREVIOUS_EVENT);
+		this.dispatcher.register(this, RefUpdateEvent.typ);
+		this.dispatcher.register(this, AnalyseApplicationModel.SELECT_NEXT_EVENT);
+		this.dispatcher.register(this, AnalyseApplicationModel.SELECT_PREVIOUS_EVENT);
 		Heap.addBsHashListener(this);
 		Heap.addEtalonMTMListener(this);
 	}
@@ -408,29 +408,26 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener
 			this.table = table;
 		}
 
-
-
-
-		public Component getTableCellRendererComponent(	JTable table,
+		public Component getTableCellRendererComponent(	JTable table1,
 														Object value,
-														boolean isSelected,
+														boolean isSelected1,
 														boolean hasFocus,
 														int row,
 														int column) {
-			Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+			Component c = super.getTableCellRendererComponent(table1, value, isSelected1, hasFocus, row, column);
 
 			Color color = null;
 			if (containsRow(row, newEventsList))
-				color = isSelected ? UIManager.getColor(AnalysisResourceKeys.COLOR_EVENTS_NEW_SELECTED) : UIManager
+				color = isSelected1 ? UIManager.getColor(AnalysisResourceKeys.COLOR_EVENTS_NEW_SELECTED) : UIManager
 						.getColor(AnalysisResourceKeys.COLOR_EVENTS_NEW);
 			else if (containsRow(row, lossChangedEventsList))
-				color = isSelected ? UIManager.getColor(AnalysisResourceKeys.COLOR_EVENTS_LOSS_CHANGED_SELECTED)
+				color = isSelected1 ? UIManager.getColor(AnalysisResourceKeys.COLOR_EVENTS_LOSS_CHANGED_SELECTED)
 						: UIManager.getColor(AnalysisResourceKeys.COLOR_EVENTS_LOSS_CHANGED);
 			else if (containsRow(row, amplitudeChangedEventsList))
-				color = isSelected ? UIManager.getColor(AnalysisResourceKeys.COLOR_EVENTS_AMPLITUDE_CHANGED_SELECTED)
+				color = isSelected1 ? UIManager.getColor(AnalysisResourceKeys.COLOR_EVENTS_AMPLITUDE_CHANGED_SELECTED)
 						: UIManager.getColor(AnalysisResourceKeys.COLOR_EVENTS_AMPLITUDE_CHANGED);
 			else
-				color = isSelected ? UIManager.getColor(AnalysisResourceKeys.COLOR_EVENTS_SELECTED) : UIManager
+				color = isSelected1 ? UIManager.getColor(AnalysisResourceKeys.COLOR_EVENTS_SELECTED) : UIManager
 						.getColor(AnalysisResourceKeys.COLOR_EVENTS);
 
 			if (color != null) {
