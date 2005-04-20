@@ -63,9 +63,9 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 			return;
 		if (num == -1)
 			return;
-		
+
 		c_event = num; // FIXME: перевести в нумерацию эталона
-		
+
 		if (et_mtm != null && c_event >= et_mtm.getMTAE().getNEvents())
 			c_event = et_mtm.getMTAE().getNEvents() - 1;
 
@@ -256,9 +256,9 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 		if (paint_thresholds)
 		{
 			if(isToPaintAllThresholds())
-				paint_all_thresholds(g);
+				paintAllThresholds(g);
 			else
-				paint_one_threshold(g);
+				paintOneThreshold(g);
 		}
 	}
 
@@ -277,7 +277,7 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 			g.setColor(UIManager.getColor(Thresh.IS_KEY_HARD[key]
 			     ? AnalysisResourceKeys.COLOR_ALARM_THRESHOLD
 			     : AnalysisResourceKeys.COLOR_WARNING_THRESHOLD));
-			// XXX: нет draw_joint_of_two_model_curves
+			// Note: нет draw_joint_of_two_model_curves
 			ModelTrace thresholdMT = et_mtm.getThresholdMT(key);
 			// FIXME: debug code
 			SimpleReflectogramEvent sre = null;
@@ -291,84 +291,15 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 		}
 	}
 
-	private void paint_one_threshold(Graphics g)
+	private void paintOneThreshold(Graphics g)
 	{
 		if (c_event >= 0)
 			paintThresholdsEx(g, c_event);
 	}
-	private void paint_all_thresholds(Graphics g)
+	private void paintAllThresholds(Graphics g)
 	{
 		paintThresholdsEx(g, -1);
 	}
-
-	/*
-	void paint_all_thresholds(Graphics g)
-	{
-		if(et_ep == null)
-			return;
-
-		ReflectogramEvent []up1   = ReflectogramMath.getThreshold(et_ep, 0);
-		ReflectogramEvent []up2   = ReflectogramMath.getThreshold(et_ep, 1);
-		ReflectogramEvent []down1 = ReflectogramMath.getThreshold(et_ep, 2);
-		ReflectogramEvent []down2 = ReflectogramMath.getThreshold(et_ep, 3);
-		
-		ReflectogramEvent[][] p_curves = { up1, down1, up2, down2 };
-		Color[] p_colors = {warningThresholdColor, warningThresholdColor, alarmThresholdColor, alarmThresholdColor };
-		
-		for (int key = 0; key < 4; key++)
-		{
-			g.setColor(p_colors[key]);
-			for(int j=0; j<et_ep.length; j++)
-			{
-				((Graphics2D) g).setStroke(DASHED_STROKE);
-				if (j != 0)
-					draw_joint_of_two_model_curves(g, p_curves[key][j-1], p_curves[key][j]);
-				((Graphics2D) g).setStroke(j == c_event ? DEFAULT_STROKE : DASHED_STROKE);
-				draw_one_model_curve(g, p_curves[key][j]);
-			}
-		}
-		((Graphics2D) g).setStroke(DEFAULT_STROKE);
-	}
-
-	void paint_threshold (Graphics g)
-	{
-		if (et_ep == null)
-			return;
-
-		ReflectogramEvent up1   = et_ep[c_event].getThresholdReflectogramEvent(0);
-		ReflectogramEvent up2   = et_ep[c_event].getThresholdReflectogramEvent(1);
-		ReflectogramEvent down1 = et_ep[c_event].getThresholdReflectogramEvent(2);
-		ReflectogramEvent down2 = et_ep[c_event].getThresholdReflectogramEvent(3);
-
-		g.setColor(warningThresholdColor);
-		draw_one_model_curve(g, up1);
-		draw_one_model_curve(g, down1);
-		g.setColor(alarmThresholdColor);
-		draw_one_model_curve(g, up2);
-		draw_one_model_curve(g, down2);
-	}
-	*/
-
-	/*
-	private double getShift(ReflectogramEvent []etalon, double []data)
-	{
-		if(data == null || etalon == null || etalon.length<1)
-			return 0.;
-
-		double maxEtalon = -1000.;
-		double maxData   = -1000.;
-
-		for(int i=etalon[0].getBegin(); i<=etalon[0].getEnd() && i<data.length; i++)
-		{
-			if(maxEtalon<etalon[0].refAmplitude(i))
-				maxEtalon=etalon[0].refAmplitude(i);
-			if(maxData<data[i])
-				maxData = data[i];
-		}
-
-		return (maxData - maxEtalon);
-	}
-	*/
 
 	private boolean isToPaintAllThresholds()
 	{
