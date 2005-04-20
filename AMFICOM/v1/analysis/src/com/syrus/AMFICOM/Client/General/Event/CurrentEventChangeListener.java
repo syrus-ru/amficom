@@ -1,5 +1,5 @@
 /*-
- * $Id: CurrentEventChangeListener.java,v 1.1 2005/04/20 12:24:14 saa Exp $
+ * $Id: CurrentEventChangeListener.java,v 1.2 2005/04/20 13:14:08 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,11 +10,13 @@ package com.syrus.AMFICOM.Client.General.Event;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.1 $, $Date: 2005/04/20 12:24:14 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/20 13:14:08 $
  * @module
  */
 public interface CurrentEventChangeListener
 {
 	// Уведомляет, что выбрано новое событие или выбор отменен.
+	// Рассылается при любом измении пары currentEvent, currentEtalonEvent,
+	// в т.ч. если изменилось только currentEtalonEvent
 	void currentEventChanged();
 }
