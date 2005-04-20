@@ -63,11 +63,11 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 			return;
 		if (num == -1)
 			return;
-
+		
+		c_event = num; // FIXME: перевести в нумерацию эталона
+		
 		if (et_mtm != null && c_event >= et_mtm.getMTAE().getNEvents())
 			c_event = et_mtm.getMTAE().getNEvents() - 1;
-		else
-			c_event = num;
 
 		start = events[num].first_point;
 		end = events[num].last_point;
