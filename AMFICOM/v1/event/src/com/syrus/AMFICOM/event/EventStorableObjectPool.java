@@ -1,5 +1,5 @@
 /*
- * $Id: EventStorableObjectPool.java,v 1.19 2005/04/20 14:40:18 arseniy Exp $
+ * $Id: EventStorableObjectPool.java,v 1.20 2005/04/21 11:01:25 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/04/20 14:40:18 $
+ * @version $Revision: 1.20 $, $Date: 2005/04/21 11:01:25 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -221,15 +221,19 @@ public class EventStorableObjectPool extends StorableObjectPool {
 		return instance.fromTransferableImpl(id, transferable);
 	}
 
-	public static void flushStorableObject(final Identifier id, final boolean force) throws ApplicationException {
-		instance.flushStorableObjectImpl(id, force);
+	public static void flush(final Identifier id, final boolean force) throws ApplicationException {
+		instance.flushImpl(id, force);
 	}
 
-	public static void flushEntities(final Short entityCode, final boolean force) throws ApplicationException {		 
-		instance.flushEntitiesImpl(entityCode, force);
+	public static void flush(final short entityCode, final boolean force) throws ApplicationException {		 
+		instance.flushImpl(entityCode, force);
 	}
 
-	public static void flush(boolean force) throws ApplicationException{		 
+	public static void flush(final Short entityCode, final boolean force) throws ApplicationException {		 
+		instance.flushImpl(entityCode, force);
+	}
+
+	public static void flush(boolean force) throws ApplicationException {		 
 		instance.flushImpl(force);
 	}
 

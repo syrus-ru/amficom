@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.81 2005/04/20 14:40:08 arseniy Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.82 2005/04/21 10:58:23 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.81 $, $Date: 2005/04/20 14:40:08 $
+ * @version $Revision: 1.82 $, $Date: 2005/04/21 10:58:23 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -385,12 +385,16 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 		return instance.fromTransferableImpl(id, transferable);
 	}
 
-	public static void flushStorableObject(final Identifier id, final boolean force) throws ApplicationException {
-		instance.flushStorableObjectImpl(id, force);
+	public static void flush(final Identifier id, final boolean force) throws ApplicationException {
+		instance.flushImpl(id, force);
 	}
 
-	public static void flushEntities(final Short entityCode, final boolean force) throws ApplicationException {		 
-		instance.flushEntitiesImpl(entityCode, force);
+	public static void flush(final short entityCode, final boolean force) throws ApplicationException {		 
+		instance.flushImpl(entityCode, force);
+	}
+
+	public static void flush(final Short entityCode, final boolean force) throws ApplicationException {		 
+		instance.flushImpl(entityCode, force);
 	}
 
 	public static void flush(boolean force) throws ApplicationException {		 

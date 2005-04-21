@@ -1,5 +1,5 @@
 /*
- * $Id: MapViewStorableObjectPool.java,v 1.11 2005/04/20 14:41:27 arseniy Exp $
+ * $Id: MapViewStorableObjectPool.java,v 1.12 2005/04/21 10:58:50 arseniy Exp $
  *
  * Copyright ? 2004 Syrus Systems.
  * ѕвиапр-жейпкаехмкл зепжф.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/04/20 14:41:27 $
+ * @version $Revision: 1.12 $, $Date: 2005/04/21 10:58:50 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -184,12 +184,16 @@ public final class MapViewStorableObjectPool extends StorableObjectPool {
 		return instance.putStorableObjectImpl(storableObject);
 	}
 
-	public static void flushStorableObject(final Identifier id, final boolean force) throws ApplicationException {
-		instance.flushStorableObjectImpl(id, force);
+	public static void flush(final Identifier id, final boolean force) throws ApplicationException {
+		instance.flushImpl(id, force);
 	}
 
-	public static void flushEntities(final Short entityCode, final boolean force) throws ApplicationException {		 
-		instance.flushEntitiesImpl(entityCode, force);
+	public static void flush(final short entityCode, final boolean force) throws ApplicationException {		 
+		instance.flushImpl(entityCode, force);
+	}
+
+	public static void flush(final Short entityCode, final boolean force) throws ApplicationException {		 
+		instance.flushImpl(entityCode, force);
 	}
 
 	public static void flush(boolean force) throws ApplicationException {
