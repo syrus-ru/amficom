@@ -2,6 +2,7 @@ package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
 import javax.swing.JOptionPane;
 
+import com.syrus.AMFICOM.Client.Analysis.GUIUtil;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
@@ -32,11 +33,7 @@ public class CreateTestSetupCommand extends VoidCommand
 		}
 
 		if (bs.monitoredElementId == null) {
-			JOptionPane.showMessageDialog (
-					Environment.getActiveWindow(),
-					LangModelAnalyse.getString("noMonitoredElementError"),
-					LangModelAnalyse.getString("error"),
-					JOptionPane.OK_OPTION);
+			GUIUtil.showErrorMessage("noMonitoredElementError");
 			return null;
 		}
 

@@ -3,6 +3,7 @@ package com.syrus.AMFICOM.Client.General.Command.Analysis;
 import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
+import com.syrus.AMFICOM.Client.Analysis.GUIUtil;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
@@ -40,10 +41,7 @@ public class SaveTestSetupCommand extends VoidCommand
 		// XXX: нужна ли здесь эта проверка?
 		if (msTest.getParameterSet() == null)
 		{
-			JOptionPane.showMessageDialog(
-					Environment.getActiveWindow(),
-					LangModelAnalyse.getString("noTestArgumentsError"),
-					LangModelAnalyse.getString("error"), JOptionPane.OK_OPTION);
+			GUIUtil.showErrorMessage("noTestArgumentsError");
 			return false;
 		}
 
@@ -74,10 +72,7 @@ public class SaveTestSetupCommand extends VoidCommand
 		} catch (ApplicationException e)
 		{
 			System.err.println("SaveTestSetupCommand: ApplicationException (criterias)");
-			JOptionPane.showMessageDialog(
-				Environment.getActiveWindow(),
-				LangModelAnalyse.getString("createObjectProblem"),
-				LangModelAnalyse.getString("error"), JOptionPane.OK_OPTION);
+			GUIUtil.showErrorMessage("createObjectProblem");
 			return false;
 		}
 
@@ -90,10 +85,7 @@ public class SaveTestSetupCommand extends VoidCommand
 				if (mtm == null)
 				{
 					// @todo: в этом случае (а тж в сл. ApplicationException) надо бы удалить созданный бесхозный criteriaSet)
-					JOptionPane.showMessageDialog(
-							Environment.getActiveWindow(),
-							LangModelAnalyse.getString("noEtalonError"),
-							LangModelAnalyse.getString("error"), JOptionPane.OK_OPTION);
+					GUIUtil.showErrorMessage("noEtalonError");
 					return false;
 				}
 				etalonSet = AnalysisUtil.createEtalon(userId, msTest.getMonitoredElementIds(), mtm);
@@ -103,10 +95,7 @@ public class SaveTestSetupCommand extends VoidCommand
 		} catch (ApplicationException e1)
 		{
 			System.err.println("SaveTestSetupCommand: ApplicationException (etalon)");
-			JOptionPane.showMessageDialog(
-				Environment.getActiveWindow(),
-				LangModelAnalyse.getString("createObjectProblem"),
-				LangModelAnalyse.getString("error"), JOptionPane.OK_OPTION);
+			GUIUtil.showErrorMessage("createObjectProblem");
 			return false;
 		}
 
@@ -169,28 +158,19 @@ public class SaveTestSetupCommand extends VoidCommand
 		BellcoreStructure bs = Heap.getBSPrimaryTrace();
 		if (bs == null)
 		{
-			JOptionPane.showMessageDialog(
-					Environment.getActiveWindow(),
-					LangModelAnalyse.getString("unkError"),
-					LangModelAnalyse.getString("error"), JOptionPane.OK_OPTION);
+			GUIUtil.showErrorMessage("unkError");
 			return false;
 		}
 
 		if (bs.monitoredElementId == null)
 		{
-			JOptionPane.showMessageDialog(
-					Environment.getActiveWindow(),
-					LangModelAnalyse.getString("noMonitoredElementError"),
-					LangModelAnalyse.getString("error"), JOptionPane.OK_OPTION);
+			GUIUtil.showErrorMessage("noMonitoredElementError");
 			return false;
 		}
 
 		if (bs.measurementId == null)
 		{
-			JOptionPane.showMessageDialog(
-					Environment.getActiveWindow(),
-					LangModelAnalyse.getString("noTestSetupError"),
-					LangModelAnalyse.getString("error"), JOptionPane.OK_OPTION);
+			GUIUtil.showErrorMessage("noTestSetupError");
 			return false;
 		}
 		return true;
