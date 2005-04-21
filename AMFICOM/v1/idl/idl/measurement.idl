@@ -1,5 +1,5 @@
 /*
- * $Id: measurement.idl,v 1.59 2005/04/18 15:15:24 bob Exp $
+ * $Id: measurement.idl,v 1.60 2005/04/21 15:33:10 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -179,7 +179,13 @@ module corba {
 	struct IntervalsTemporalPattern_Transferable {
 		general::corba::StorableObject_Transferable header;
 		
-		sequence <long long> seconds;
+		long long period;
+		sequence <long> hole_positions;
+		
+		sequence <long> displacement_period_number;
+		sequence <long long> displacement_value;
+		
+		sequence <long> temporal_pattern_period_number;
 		general::corba::IdentifierSeq_Transferable temporal_patterns_ids;
 	};
 	
