@@ -1,5 +1,5 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
-
+ 
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Rectangle;
