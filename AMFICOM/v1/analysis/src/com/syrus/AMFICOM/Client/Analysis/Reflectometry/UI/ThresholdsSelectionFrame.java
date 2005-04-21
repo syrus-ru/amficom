@@ -343,14 +343,19 @@ implements OperationListener, BsHashChangeListener, CurrentEventChangeListener, 
 
 	void updateThresholds()
 	{
-		if (et_mtm == null)
-			return;
-		if (currentEtEv == -1)
-			return;
-		if (currentEtEv >= et_mtm.getMTAE().getNEvents())
-			currentEtEv = et_mtm.getMTAE().getNEvents() - 1;
+		// default values: no thresholds
+		ModelTraceManager.ThreshEditor[] te = null;
 
-		ModelTraceManager.ThreshEditor[] te = et_mtm.getThreshEditors(currentEtEv);
+		// if current event is present, select it
+		if (et_mtm != null && currentEtEv >= 0)
+		{
+			if (currentEtEv >= et_mtm.getMTAE().getNEvents()) // XXX: should never happen?
+				currentEtEv = et_mtm.getMTAE().getNEvents() - 1;
+			te = et_mtm.getThreshEditors(currentEtEv);
+		}
+		else
+			te = new ModelTraceManager.ThreshEditor[0];
+
 		String[] pColumns = new String[te.length + 1];
 		pColumns[0] = LangModelAnalyse.getString("thresholdsKey");
 		for (int i = 1; i < pColumns.length; i++)
@@ -485,12 +490,13 @@ implements OperationListener, BsHashChangeListener, CurrentEventChangeListener, 
 	{
 		if (et_mtm != null) {
 			currentEtEv = Heap.getCurrentEtalonEvent();
-			if (currentEtEv < 0 || currentEtEv >= et_mtm.getMTAE().getNEvents()) {
+			if (currentEtEv < -1 || currentEtEv >= et_mtm.getMTAE().getNEvents()) {
+				// XXX: debug sysout
 				System.out.println("ThresholdsSelectionFrame: Warning: current_ev out of range:"
 					+ " currentEtEv=" + currentEtEv
-					+ " et_mtm.getMTAE().getNEvents()=" + et_mtm.getMTAE().getNEvents()
-					+ " Heap.getMTMEtalon().getMTAE().getNEvents()" + Heap.getMTMEtalon().getMTAE().getNEvents());
-				currentEtEv = 0;
+					+ " et_mtm.MTAE.NEvents=" + et_mtm.getMTAE().getNEvents()
+					+ " Heap.MTMEtalon.MTAE.NEvents=" + Heap.getMTMEtalon().getMTAE().getNEvents());
+				currentEtEv = -1;
 			}
 			updateThresholds();
 		}
