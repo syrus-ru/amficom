@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeSampleData.java,v 1.1 2005/04/20 16:14:35 krupenn Exp $
+ * $Id: SchemeSampleData.java,v 1.2 2005/04/21 11:43:35 krupenn Exp $
  *
  * Copyright ї 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.scheme.corba.Scheme_TransferablePackage.Kind;
  * this class is used to create two sample instances
  * of Scheme whithout graphical components
  * @author $Author: krupenn $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  * @module generalclient_v1
  */
 public final class SchemeSampleData {
@@ -50,133 +50,96 @@ public final class SchemeSampleData {
 		Set el = new HashSet();
 		Set link = new HashSet();
 		Set port0 = new HashSet();
-		SchemePort port00 = SchemePort.createInstance(userId);
-		port0.add(port00);
-		SchemePort port01 = SchemePort.createInstance(userId);
-		port0.add(port01);
 		Set cport0 = new HashSet();
-		SchemeCablePort cport00 = SchemeCablePort.createInstance(userId);
-		cport0.add(cport00);
 		Set cport1 = new HashSet();
-		SchemeCablePort cport10 = SchemeCablePort.createInstance(userId);
-		cport1.add(cport10);
-		SchemeCablePort cport11 = SchemeCablePort.createInstance(userId);
-		cport1.add(cport11);
 		Set cport2 = new HashSet();
-		SchemeCablePort cport20 = SchemeCablePort.createInstance(userId);
-		cport2.add(cport20);
-		SchemeCablePort cport21 = SchemeCablePort.createInstance(userId);
-		cport2.add(cport21);
-		SchemeCablePort cport22 = SchemeCablePort.createInstance(userId);
-		cport2.add(cport22);
 		Set cport3 = new HashSet();
-		SchemeCablePort cport30 = SchemeCablePort.createInstance(userId);
-		cport3.add(cport30);
-		SchemeCablePort cport31 = SchemeCablePort.createInstance(userId);
-		cport3.add(cport31);
 		Set cport4 = new HashSet();
-		SchemeCablePort cport40 = SchemeCablePort.createInstance(userId);
-		cport4.add(cport40);
-		SchemeCablePort cport41 = SchemeCablePort.createInstance(userId);
-		cport4.add(cport41);
 		Set clink = new HashSet();
-		SchemeCableThread clink0th = SchemeCableThread.createInstance(userId);
-		SchemeCableThread clink1th = SchemeCableThread.createInstance(userId);
-		SchemeCableThread clink2th = SchemeCableThread.createInstance(userId);
-		SchemeCableThread clink3th = SchemeCableThread.createInstance(userId);
-		SchemeCableThread clink4th = SchemeCableThread.createInstance(userId);
 		Set dev0 = new HashSet();
 		Set dev1 = new HashSet();
 		Set dev2 = new HashSet();
 		Set dev3 = new HashSet();
 		Set dev4 = new HashSet();
 		Set path = new HashSet();
-		SchemePath path0 = SchemePath.createInstance(userId);
-		path.add(path0);
 		SortedSet pel = new TreeSet();
 
 		Scheme scheme = Scheme.createInstance(userId, "Схемка", Kind.NETWORK, domainId);
 
 		SchemeDevice dev00 = SchemeDevice.createInstance(userId, "Девайс1");
 		dev0.add(dev00);
-		dev00.setSchemePorts(port0);
-		dev00.setSchemeCablePorts(cport0);
 
 		SchemeDevice dev10 = SchemeDevice.createInstance(userId, "Девайс2");
 		dev1.add(dev10);
-		dev10.setSchemeCablePorts(cport1);
 		
 		SchemeDevice dev20 = SchemeDevice.createInstance(userId, "Девайс3");
 		dev2.add(dev20);
-		dev20.setSchemeCablePorts(cport2);
 		
 		SchemeDevice dev30 = SchemeDevice.createInstance(userId, "Девайс4");
 		dev3.add(dev30);
-		dev30.setSchemeCablePorts(cport3);
 		
 		SchemeDevice dev40 = SchemeDevice.createInstance(userId, "Девайс5");
 		dev4.add(dev40);
-		dev40.setSchemeCablePorts(cport4);
 		
-//		port00.setSchemeDevice(dev00);
-		port00.setDirectionType(AbstractSchemePortDirectionType._OUT);
-		port00.setName("Порт раз");
+		SchemePort port00 = SchemePort.createInstance(userId, "Порт раз", AbstractSchemePortDirectionType._OUT, dev00);
 //		port00.setSchemeLink(link0);
 
-//		port01.setSchemeDevice(dev00);
-		port01.setDirectionType(AbstractSchemePortDirectionType._IN);
-		port01.setName("Порт два");
+		SchemePort port01 = SchemePort.createInstance(userId, "Порт два", AbstractSchemePortDirectionType._IN, dev00);
 //		port01.setSchemeLink(link0);
 
+		port0.add(port00);
+		port0.add(port01);
+
 //		cport00.setSchemeCableLink(clink0);
-//		cport00.setSchemeDevice(dev00);
-		cport00.setDirectionType(AbstractSchemePortDirectionType._IN);
-		cport00.setName("Каборт раз");
+		SchemeCablePort cport00 = SchemeCablePort.createInstance(userId, "Каборт раз", AbstractSchemePortDirectionType._IN, dev00);
+		cport0.add(cport00);
 
 //		cport10.setSchemeCableLink(clink0);
-//		cport10.setSchemeDevice(dev10);
-		cport10.setDirectionType(AbstractSchemePortDirectionType._OUT);
-		cport10.setName("Каборт два");
+		SchemeCablePort cport10 = SchemeCablePort.createInstance(userId, "Каборт два", AbstractSchemePortDirectionType._OUT, dev10);
 
 //		cport11.setSchemeCableLink(clink1);
-//		cport11.setSchemeDevice(dev10);
-		cport11.setDirectionType(AbstractSchemePortDirectionType._OUT);
-		cport11.setName("Каборт три");
+		SchemeCablePort cport11 = SchemeCablePort.createInstance(userId, "Каборт три", AbstractSchemePortDirectionType._OUT, dev10);
+
+		cport1.add(cport10);
+		cport1.add(cport11);
 
 //		cport20.setSchemeCableLink(clink1);
-//		cport20.setSchemeDevice(dev20);
-		cport20.setDirectionType(AbstractSchemePortDirectionType._OUT);
-		cport20.setName("Каборт четыре");
+		SchemeCablePort cport20 = SchemeCablePort.createInstance(userId, "Каборт четыре", AbstractSchemePortDirectionType._OUT, dev20);
 
 //		cport21.setSchemeCableLink(clink2);
-//		cport21.setSchemeDevice(dev20);
-		cport21.setDirectionType(AbstractSchemePortDirectionType._OUT);
-		cport21.setName("Каборт пять");
+		SchemeCablePort cport21 = SchemeCablePort.createInstance(userId, "Каборт пять", AbstractSchemePortDirectionType._OUT, dev20);
 
 //		cport22.setSchemeCableLink(clink4);
-//		cport22.setSchemeDevice(dev20);
-		cport22.setDirectionType(AbstractSchemePortDirectionType._OUT);
-		cport22.setName("Каборт шесть");
+		SchemeCablePort cport22 = SchemeCablePort.createInstance(userId, "Каборт шесть", AbstractSchemePortDirectionType._OUT, dev20);
+
+		cport2.add(cport20);
+		cport2.add(cport21);
+		cport2.add(cport22);
 
 //		cport30.setSchemeCableLink(clink2);
-//		cport30.setSchemeDevice(dev30);
-		cport30.setDirectionType(AbstractSchemePortDirectionType._OUT);
-		cport30.setName("Каборт сем");
+		SchemeCablePort cport30 = SchemeCablePort.createInstance(userId, "Каборт сем", AbstractSchemePortDirectionType._OUT, dev30);
 
 //		cport31.setSchemeCableLink(clink3);
-//		cport31.setSchemeDevice(dev30);
-		cport31.setDirectionType(AbstractSchemePortDirectionType._OUT);
-		cport31.setName("Каборт восем");
+		SchemeCablePort cport31 = SchemeCablePort.createInstance(userId, "Каборт восем", AbstractSchemePortDirectionType._OUT, dev30);
+
+		cport3.add(cport30);
+		cport3.add(cport31);
 
 //		cport40.setSchemeCableLink(clink3);
-//		cport40.setSchemeDevice(dev40);
-		cport40.setDirectionType(AbstractSchemePortDirectionType._OUT);
-		cport40.setName("Каборт дэвят");
+		SchemeCablePort cport40 = SchemeCablePort.createInstance(userId, "Каборт дэвят", AbstractSchemePortDirectionType._OUT, dev40);
 
 //		cport41.setSchemeCableLink(clink4);
-//		cport41.setSchemeDevice(dev40);
-		cport41.setDirectionType(AbstractSchemePortDirectionType._OUT);
-		cport41.setName("Каборт дэсят");
+		SchemeCablePort cport41 = SchemeCablePort.createInstance(userId, "Каборт дэсят", AbstractSchemePortDirectionType._OUT, dev40);
+
+		cport4.add(cport40);
+		cport4.add(cport41);
+
+		dev00.setSchemePorts(port0);
+		dev00.setSchemeCablePorts(cport0);
+		dev10.setSchemeCablePorts(cport1);
+		dev20.setSchemeCablePorts(cport2);
+		dev30.setSchemeCablePorts(cport3);
+		dev40.setSchemeCablePorts(cport4);
 
 		SchemeElement el0 = SchemeElement.createInstance(userId, "Один элемент", scheme);
 		el0.setDescription("Описалово");
@@ -211,6 +174,12 @@ public final class SchemeSampleData {
 		link0.setTargetSchemePort(port00);
 
 		link.add(link0);
+
+		SchemeCableThread clink0th = SchemeCableThread.createInstance(userId);
+		SchemeCableThread clink1th = SchemeCableThread.createInstance(userId);
+		SchemeCableThread clink2th = SchemeCableThread.createInstance(userId);
+		SchemeCableThread clink3th = SchemeCableThread.createInstance(userId);
+		SchemeCableThread clink4th = SchemeCableThread.createInstance(userId);
 
 		SchemeCableLink clink0 = SchemeCableLink.createInstance(userId, "Кабелёк1", scheme);
 		clink0.setOpticalLength(1000.0D);
@@ -252,6 +221,8 @@ public final class SchemeSampleData {
 		clink.add(clink2);
 		clink.add(clink3);
 		clink.add(clink4);
+
+		SchemePath path0 = SchemePath.createInstance(userId);
 
 		PathElement pel0 = PathElement.createInstance(userId, path0, link0);
 		pel0.setStartAbstractSchemePort(port01);
@@ -304,6 +275,8 @@ public final class SchemeSampleData {
 		path0.setName("Путяра измерений");
 		path0.setScheme(scheme);
 
+		path.add(path0);
+
 		scheme.setSchemeCableLinks(clink);
 		scheme.setSchemeLinks(link);
 		scheme.getCurrentSchemeMonitoringSolution().setSchemePaths(path);
@@ -318,57 +291,46 @@ public final class SchemeSampleData {
 
 	private static void scheme2(Identifier userId, Identifier domainId) throws CreateObjectException, IllegalObjectEntityException
 	{
-		Scheme scheme = Scheme.createInstance(userId, "Схемочка", Kind.NETWORK, domainId);
 		Set el = new HashSet();
 		Set link = new HashSet();
 		Set port0 = new HashSet();
-		SchemePort port00 = SchemePort.createInstance(userId);
-		port0.add(port00);
 		Set port1 = new HashSet();
-		SchemePort port10 = SchemePort.createInstance(userId);
-		port1.add(port10);
 		Set cport0 = new HashSet();
-		SchemeCablePort cport00 = SchemeCablePort.createInstance(userId);
-		cport0.add(cport00);
 		Set cport1 = new HashSet();
-		SchemeCablePort cport10 = SchemeCablePort.createInstance(userId);
-		cport1.add(cport10);
 		Set clink = new HashSet();
-		SchemeCableThread clink0th = SchemeCableThread.createInstance(userId);
 		Set dev0 = new HashSet();
 		Set dev1 = new HashSet();
 		Set path = new HashSet();
-		SchemePath path0 = SchemePath.createInstance(userId);
-		path.add(path0);
 		SortedSet pel = new TreeSet();
 
-//		port00.setSchemeDevice(dev00);
-		port00.setDirectionType(AbstractSchemePortDirectionType._OUT);
-		port00.setName("Порт раз");
-//		port00.setSchemeLink(link0);
-
-//		port10.setSchemeDevice(dev10);
-		port10.setDirectionType(AbstractSchemePortDirectionType._IN);
-		port10.setName("Порт два");
-//		port10.setSchemeLink(link0);
-
-//		cport00.setSchemeCableLink(clink0);
-//		cport00.setSchemeDevice(dev00);
-		cport00.setDirectionType(AbstractSchemePortDirectionType._IN);
-		cport00.setName("Каборт раз");
-
-//		cport10.setSchemeCableLink(clink0);
-//		cport10.setSchemeDevice(dev10);
-		cport10.setDirectionType(AbstractSchemePortDirectionType._OUT);
-		cport10.setName("Каборт два");
+		Scheme scheme = Scheme.createInstance(userId, "Схемочка", Kind.NETWORK, domainId);
 
 		SchemeDevice dev00 = SchemeDevice.createInstance(userId, "Девайс1");
 		dev0.add(dev00);
-		dev00.setSchemePorts(port0);
-		dev00.setSchemeCablePorts(cport0);
 
 		SchemeDevice dev10 = SchemeDevice.createInstance(userId, "Девайс2");
 		dev1.add(dev10);
+
+//		port00.setSchemeLink(link0);
+		SchemePort port00 = SchemePort.createInstance(userId, "Порт раз", AbstractSchemePortDirectionType._OUT, dev00);
+
+		port0.add(port00);
+
+//		port10.setSchemeLink(link0);
+		SchemePort port10 = SchemePort.createInstance(userId, "Порт два", AbstractSchemePortDirectionType._IN, dev10);
+
+		port1.add(port10);
+
+//		cport00.setSchemeCableLink(clink0);
+		SchemeCablePort cport00 = SchemeCablePort.createInstance(userId, "Каборт раз", AbstractSchemePortDirectionType._IN, dev00);
+		cport0.add(cport00);
+
+//		cport10.setSchemeCableLink(clink0);
+		SchemeCablePort cport10 = SchemeCablePort.createInstance(userId, "Каборт два", AbstractSchemePortDirectionType._OUT, dev10);
+		cport1.add(cport10);
+
+		dev00.setSchemePorts(port0);
+		dev00.setSchemeCablePorts(cport0);
 		dev10.setSchemePorts(port1);
 		dev10.setSchemeCablePorts(cport1);
 		
@@ -390,6 +352,8 @@ public final class SchemeSampleData {
 		link0.setSourceSchemePort(port10);
 		link0.setTargetSchemePort(port00);
 
+		SchemeCableThread clink0th = SchemeCableThread.createInstance(userId);
+
 		SchemeCableLink clink0 = SchemeCableLink.createInstance(userId, "Кабелёк", scheme);
 		clink.add(clink0);
 		clink0.setOpticalLength(1000.0D);
@@ -397,6 +361,8 @@ public final class SchemeSampleData {
 		clink0.setSourceSchemeCablePort(cport10);
 		clink0.setTargetSchemeCablePort(cport00);
 		clink0.setSchemeCableThreads(Collections.singleton(clink0th));
+
+		SchemePath path0 = SchemePath.createInstance(userId);
 
 		PathElement pel0 = PathElement.createInstance(userId, path0, link0);
 		pel0.setStartAbstractSchemePort(port00);
@@ -420,6 +386,8 @@ public final class SchemeSampleData {
 		path0.setName("Путяра измерений");
 		path0.setStartSchemeElement(el1);
 		path0.setScheme(scheme);
+
+		path.add(path0);
 
 		scheme.setSchemeCableLinks(clink);
 		scheme.setSchemeLinks(link);
