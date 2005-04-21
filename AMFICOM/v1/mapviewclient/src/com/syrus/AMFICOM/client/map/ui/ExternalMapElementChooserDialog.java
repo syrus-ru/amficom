@@ -1,5 +1,5 @@
 /**
- * $Id: ExternalMapElementChooserDialog.java,v 1.1 2005/04/21 11:50:12 krupenn Exp $
+ * $Id: ExternalMapElementChooserDialog.java,v 1.2 2005/04/21 11:55:03 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,9 +10,7 @@ package com.syrus.AMFICOM.Client.Map.UI;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Frame;
 import java.awt.HeadlessException;
-import java.awt.SystemColor;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,20 +21,13 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
-import javax.swing.ListSelectionModel;
 import javax.swing.border.BevelBorder;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.MapEvent;
-import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.client_.general.ui_.tree_.IconedNode;
@@ -44,9 +35,7 @@ import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.logic.ItemTreeModel;
 import com.syrus.AMFICOM.logic.LogicalTreeUI;
 import com.syrus.AMFICOM.map.Map;
-import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.mapview.MapView;
 
 public class ExternalMapElementChooserDialog extends JDialog 
 		implements TreeSelectionListener {
