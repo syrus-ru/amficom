@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMainFrame.java,v 1.31 2005/04/18 11:16:10 krupenn Exp $
+ * $Id: MapEditorMainFrame.java,v 1.32 2005/04/21 11:53:59 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -89,15 +89,18 @@ import com.syrus.AMFICOM.Client.Map.UI.MapElementCharacteristicsFrame;
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.mapview.MapView;
+import com.syrus.AMFICOM.scheme.SchemeSampleData;
 
 /**
  * Основное окно модуля Редактор топологической схемы
  * 
  * 
  * 
- * @version $Revision: 1.31 $, $Date: 2005/04/18 11:16:10 $
+ * @version $Revision: 1.32 $, $Date: 2005/04/21 11:53:59 $
  * @module mapviewclient_v1
  * @author $Author: krupenn $
  */
@@ -796,6 +799,16 @@ public class MapEditorMainFrame extends JFrame
 		catch(ApplicationException ex)
 		{
 			ex.printStackTrace();
+		}
+
+		try {
+			SchemeSampleData.populate(
+					new Identifier(this.aContext.getSessionInterface().getAccessIdentifier().user_id),
+					new Identifier(this.aContext.getSessionInterface().getAccessIdentifier().domain_id));
+		} catch(DatabaseException e) {
+			e.printStackTrace();
+		} catch(IllegalObjectEntityException e) {
+			e.printStackTrace();
 		}
 	}
 
