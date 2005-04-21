@@ -1,5 +1,5 @@
 /**
- * $Id: ViewMapViewNavigatorCommand.java,v 1.2 2005/03/16 13:48:18 bass Exp $
+ * $Id: ViewMapViewNavigatorCommand.java,v 1.3 2005/04/21 11:51:27 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,7 +12,7 @@
 package com.syrus.AMFICOM.Client.Map.Command.Editor;
 
 import com.syrus.AMFICOM.Client.General.Command.Command;
-import com.syrus.AMFICOM.Client.General.Command.ViewNavigatorCommand;
+import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
 import com.syrus.AMFICOM.Client.Map.UI.MapViewTreeFrame;
@@ -26,20 +26,22 @@ import javax.swing.JDesktopPane;
 
 /**
  * отобразить окно привязки схем к карте 
- * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/03/16 13:48:18 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.3 $, $Date: 2005/04/21 11:51:27 $
  * @module mapviewclient_v1
  */
-public class ViewMapViewNavigatorCommand extends ViewNavigatorCommand
+public class ViewMapViewNavigatorCommand extends VoidCommand
 {
+	public ApplicationContext aContext;
+	public JDesktopPane desktop;
+	public String title = "Навигатор объектов";
+
 	public MapViewTreeFrame treeFrame;
 	
 	public ViewMapViewNavigatorCommand(JDesktopPane desktop, ApplicationContext aContext)
 	{
-		super(aContext.getDispatcher(), desktop, "Навигатор объектов");
-
-		super.desktop = desktop;
-		super.aContext = aContext;
+		this.desktop = desktop;
+		this.aContext = aContext;
 	}
 
 	public void execute()
