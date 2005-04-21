@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.70 2005/04/21 10:55:13 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.71 2005/04/21 13:50:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import java.util.Set;
 import org.omg.CORBA.portable.IDLEntity;
 
 /**
- * @version $Revision: 1.70 $, $Date: 2005/04/21 10:55:13 $
+ * @version $Revision: 1.71 $, $Date: 2005/04/21 13:50:06 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -36,26 +36,30 @@ public abstract class StorableObjectPool {
 	 */
 	public static final String БАЙАН = "[:]/\\/\\/\\/\\/|||||||||||||||||||||||||||[:]"; //$NON-NLS-1$
 
-	protected Class cacheMapClass;
-
 	protected Map objectPoolMap;
 
 	private short selfGroupCode;
 	private String selfGroupName;
+
+	protected Class cacheMapClass;
 
 	private Map savingObjectsMap; // Map <Integer dependencyLevel, Map <Short entityCode, Set <StorableObject> levelEntitySavingObjects > >
 	private HashSet savingObjectIds; // HashSet <Identifier>
 
 	private Set deletedIds; // Set <Identifier>
 
-	public StorableObjectPool(short selfGroupCode) {
-		this(selfGroupCode, LRUMap.class);
+	public StorableObjectPool(final int objectPoolMapSize, final short selfGroupCode) {
+		this(objectPoolMapSize, selfGroupCode, LRUMap.class);
 	}
 
-	public StorableObjectPool(short selfGroupCode, final Class cacheMapClass) {
+	public StorableObjectPool(final int objectPoolMapSize, final short selfGroupCode, final Class cacheMapClass) {
+		this.objectPoolMap = Collections.synchronizedMap(new HashMap(objectPoolMapSize));
+
 		this.selfGroupCode = selfGroupCode;
 		this.selfGroupName = ObjectGroupEntities.codeToString(this.selfGroupCode).replaceAll("Group$", ""); //$NON-NLS-1$ //$NON-NLS-2$
+
 		this.cacheMapClass = cacheMapClass;
+
 		this.deletedIds = Collections.synchronizedSet(new HashSet());
 	}
 
@@ -190,8 +194,10 @@ public abstract class StorableObjectPool {
 		synchronized (this.deletedIds) {
 			for (Iterator it = this.deletedIds.iterator(); it.hasNext();) {
 				final Identifier id = (Identifier) it.next();
-				if (id.getMajor() == entityCode)
+				if (id.getMajor() == entityCode) {
 					entityDeletedIds.add(id);
+					it.remove();
+				}
 			}
 		}
 
@@ -211,10 +217,20 @@ public abstract class StorableObjectPool {
 	 * Actually delete objects, scheduled for deletion
 	 */
 	private final void flushDeleted() {
-		if (this.deletedIds.size() == 1)
-			this.deleteStorableObject((Identifier) this.deletedIds.iterator().next());
-		else
-			this.deleteStorableObjects(this.deletedIds);
+		Log.debugMessage("StorableObjectPool.flushDeleted | ########### deleted objects: " + this.deletedIds.size(), Log.DEBUGLEVEL09);
+		for (Iterator it = this.deletedIds.iterator(); it.hasNext();)
+			Log.debugMessage("StorableObjectPool.flushDeleted | " + it.next(), Log.DEBUGLEVEL09);
+
+		final int size = this.deletedIds.size();
+		switch (size) {
+			case 0:
+				return;
+			case 1:
+				this.deleteStorableObject((Identifier) this.deletedIds.iterator().next());
+				break;
+			default:
+				this.deleteStorableObjects(this.deletedIds);
+		}
 
 		this.deletedIds.clear();
 	}
@@ -405,7 +421,7 @@ public abstract class StorableObjectPool {
 		}
 
 		if (storableObject.isChanged()) {
-			Log.debugMessage("StorableObjectPool.saveWithDependencies | Object '" + storableObject.getId() + "' is changed",
+			Log.debugMessage("StorableObjectPool.checkChangedWithDependencies | Object '" + storableObject.getId() + "' is changed",
 					Log.DEBUGLEVEL10);
 			Integer dependencyKey = new Integer(-dependencyLevel);
 			Map levelSavingObjectsMap = (Map) this.savingObjectsMap.get(dependencyKey);
