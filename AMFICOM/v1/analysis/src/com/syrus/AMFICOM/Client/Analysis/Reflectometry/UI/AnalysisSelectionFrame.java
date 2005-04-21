@@ -202,7 +202,6 @@ implements BsHashChangeListener, PrimaryMTMListener
 		Heap.setMinuitAnalysisParams(minuitParams);
 		new MinuitAnalyseCommand(aContext).execute();
 		dispatcher.notify(new RefUpdateEvent(RefUpdateEvent.PRIMARY_TRACE, RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));
-		dispatcher.notify(new RefUpdateEvent(this, RefUpdateEvent.THRESHOLDS_UPDATED_EVENT));
 
 		setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}

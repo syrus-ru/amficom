@@ -68,8 +68,6 @@ public class LoadTestSetupCommand extends VoidCommand
 //		if (ms.getThresholdSet() != null)
 //			AnalysisUtil.load_Thresholds(userId, ms);
 
-		aContext.getDispatcher().notify(new RefUpdateEvent(this,
-				RefUpdateEvent.THRESHOLDS_UPDATED_EVENT));
 		// Heap.notifyEtalonMTMCUpdated();
 		Heap.notifyPrimaryTraceClosed();
 		Heap.notifyPrimaryTraceOpened();

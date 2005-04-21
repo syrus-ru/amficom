@@ -11,6 +11,7 @@ import javax.swing.UIManager;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.CurrentEventChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
@@ -19,11 +20,10 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEvents;
-import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.io.BellcoreStructure;
 
 public class ThresholdsLayeredPanel extends TraceEventsLayeredPanel
-implements OperationListener, BsHashChangeListener, CurrentEventChangeListener
+implements OperationListener, BsHashChangeListener, CurrentEventChangeListener, EtalonMTMListener
 {
 	public ThresholdsLayeredPanel(Dispatcher dispatcher)
 	{
@@ -55,6 +55,7 @@ implements OperationListener, BsHashChangeListener, CurrentEventChangeListener
 		// на RefUpdateEvent подписывается суперкласс - нам подписываться не надо
 		Heap.addBsHashListener(this);
 		Heap.addCurrentEventChangeListener(this);
+		Heap.addEtalonMTMListener(this);
 	}
 
 	public void operationPerformed(OperationEvent ae)
@@ -76,13 +77,13 @@ implements OperationListener, BsHashChangeListener, CurrentEventChangeListener
 						updScale2fitCurrentEv(.2, 1.);
 						jLayeredPane.repaint();
 					}
-					if(rue.thresholdsUpdated())
-					{
-						((ThresholdsPanel)panel).updateEtalon();
-
-						updScale2fitCurrentEv(.2, 1.);
-						jLayeredPane.repaint();
-					}
+//					if(rue.thresholdsUpdated())
+//					{
+//						((ThresholdsPanel)panel).updateEtalon();
+//
+//						updScale2fitCurrentEv(.2, 1.);
+//						jLayeredPane.repaint();
+//					}
 					if(rue.thresholdChanged())
 					{
 						jLayeredPane.repaint();
@@ -146,6 +147,30 @@ implements OperationListener, BsHashChangeListener, CurrentEventChangeListener
 				((ThresholdsPanel)panel).updateCurrentEvent();
 		}
 		updScale2fitCurrentEv (.2, 1.);
+	}
+
+	private void etalonUpdated()
+	{
+		for(int i=0; i<jLayeredPane.getComponentCount(); i++)
+		{
+			SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
+			if (panel instanceof ThresholdsPanel)
+			{
+					((ThresholdsPanel)panel).updateEtalon();
+
+					updScale2fitCurrentEv(.2, 1.);
+					jLayeredPane.repaint();
+			}
+		}
+	}
+	public void etalonMTMCUpdated()
+	{
+		etalonUpdated();
+	}
+
+	public void etalonMTMRemoved()
+	{
+		etalonUpdated();
 	}
 }
 

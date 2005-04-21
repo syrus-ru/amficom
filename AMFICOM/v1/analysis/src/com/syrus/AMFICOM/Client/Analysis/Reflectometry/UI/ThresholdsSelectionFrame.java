@@ -27,6 +27,7 @@ import javax.swing.table.TableModel;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.CurrentEventChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
@@ -50,7 +51,7 @@ import com.syrus.io.BellcoreStructure;
  * </ol>
  */
 public class ThresholdsSelectionFrame extends ATableFrame
-implements OperationListener, BsHashChangeListener, CurrentEventChangeListener
+implements OperationListener, BsHashChangeListener, CurrentEventChangeListener, EtalonMTMListener
 {
 	protected Dispatcher dispatcher;
 	JTable jTable;
@@ -317,17 +318,18 @@ implements OperationListener, BsHashChangeListener, CurrentEventChangeListener
 		dispatcher1.register(this, RefUpdateEvent.typ);
 		Heap.addBsHashListener(this);
 		Heap.addCurrentEventChangeListener(this);
+		Heap.addEtalonMTMListener(this);
 	}
 
 	public void operationPerformed(OperationEvent ae) {
 		if (ae.getActionCommand().equals(RefUpdateEvent.typ)) {
 			RefUpdateEvent rue = (RefUpdateEvent) ae;
-			if (rue.thresholdsUpdated()) {
-				{
-					et_mtm = Heap.getMTMEtalon();
-					updateThresholds();
-				}
-			}
+//			if (rue.thresholdsUpdated()) {
+//				{
+//					et_mtm = Heap.getMTMEtalon();
+//					updateThresholds();
+//				}
+//			}
 			if (rue.analysisPerformed()) {
 				//mtm = Heap.getMTMByKey(id); // FIXME: what is MTM here?  
 				//bs = Heap.getAnyBSTraceByKey(id); // bs was never read locally
@@ -484,10 +486,25 @@ implements OperationListener, BsHashChangeListener, CurrentEventChangeListener
 		if (et_mtm != null) {
 			currentEtEv = Heap.getCurrentEtalonEvent();
 			if (currentEtEv < 0 || currentEtEv >= et_mtm.getMTAE().getNEvents()) {
-				System.out.println("ThresholdsSelectionFrame: Warning: current_ev out of range");
+				System.out.println("ThresholdsSelectionFrame: Warning: current_ev out of range:"
+					+ " currentEtEv=" + currentEtEv
+					+ " et_mtm.getMTAE().getNEvents()=" + et_mtm.getMTAE().getNEvents()
+					+ " Heap.getMTMEtalon().getMTAE().getNEvents()" + Heap.getMTMEtalon().getMTAE().getNEvents());
 				currentEtEv = 0;
 			}
 			updateThresholds();
 		}
+	}
+
+	public void etalonMTMCUpdated()
+	{
+		et_mtm = Heap.getMTMEtalon();
+		updateThresholds();
+	}
+
+	public void etalonMTMRemoved()
+	{
+		et_mtm = Heap.getMTMEtalon();
+		updateThresholds();
 	}
 }
