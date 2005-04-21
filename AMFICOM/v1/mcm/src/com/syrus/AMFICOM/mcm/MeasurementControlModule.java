@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.77 2005/04/21 11:18:40 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.78 2005/04/21 14:44:17 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -57,7 +57,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.77 $, $Date: 2005/04/21 11:18:40 $
+ * @version $Revision: 1.78 $, $Date: 2005/04/21 14:44:17 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -213,8 +213,8 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		activateKISTransceivers();
 
 		/*	Create and fill lists: testList - sheduled tests ordered by start_time;	*/
-		prepareTestList();
 		prepareResultList();
+		prepareTestList();
 
 	}
 
