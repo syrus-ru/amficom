@@ -293,7 +293,7 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener, CurrentEv
 		int dataType = dataEvent.getEventType();
 		int etalonType = etalonEvent != null
 			        ? etalonEvent.getEventType()
-					: SimpleReflectogramEvent.RESERVED;
+					: SimpleReflectogramEvent.RESERVED; // 'no event'
 
 		((CompareTableRenderer)jTableComp.getDefaultRenderer(Object.class))
 			.setSameType(dataType == etalonType);
