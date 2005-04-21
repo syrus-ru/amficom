@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementsBarPanel.java,v 1.12 2005/04/18 11:23:45 krupenn Exp $
+ * $Id: MapElementsBarPanel.java,v 1.13 2005/04/21 11:44:13 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,7 +19,10 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
@@ -29,7 +32,7 @@ import javax.swing.JPanel;
  * 
  * 
  * 
- * @version $Revision: 1.12 $, $Date: 2005/04/18 11:23:45 $
+ * @version $Revision: 1.13 $, $Date: 2005/04/21 11:44:13 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -70,8 +73,7 @@ public final class MapElementsBarPanel extends JPanel
 
 		this.removeAll();
 		
-		Collection elements = getMapProtoElements();
-		
+		List elements = getMapProtoElements();
 		for(Iterator it = elements.iterator(); it.hasNext();)
 		{
 			mpe = (SiteNodeType )it.next();
@@ -88,9 +90,12 @@ public final class MapElementsBarPanel extends JPanel
 			((MapElementLabel)this.getComponent(i)).setEnabled(b);
 	}
 
-	private Collection getMapProtoElements()
+	private List getMapProtoElements()
 	{
-		return NodeTypeController.getTopologicalNodeTypes();
+		Collection types = NodeTypeController.getTopologicalNodeTypes();
+		List returnTypes = new LinkedList(types);
+		Collections.sort(returnTypes, MapViewTreeModel.siteNodeTypeComparator);
+		return returnTypes;
 	}
 }
 
