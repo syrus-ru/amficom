@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorOpenMapCommand.java,v 1.13 2005/04/18 11:09:09 krupenn Exp $
+ * $Id: MapEditorOpenMapCommand.java,v 1.14 2005/04/21 11:52:59 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,6 +24,7 @@ import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewNewCommand;
 import com.syrus.AMFICOM.Client.Map.UI.MapElementPropertiesFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapElementsFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
+import com.syrus.AMFICOM.Client.Map.UI.MapViewTreeFrame;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.mapview.MapView;
 
@@ -33,7 +34,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * пользователь выбрал MapContext, открывается окно карты и сопутствующие окна
  * и MapContext передается в окно карты
  * 
- * @version $Revision: 1.13 $, $Date: 2005/04/18 11:09:09 $
+ * @version $Revision: 1.14 $, $Date: 2005/04/21 11:52:59 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see MapOpenCommand
@@ -45,7 +46,7 @@ public class MapEditorOpenMapCommand extends VoidCommand
 
 	MapFrame mapFrame = null;
 	MapElementPropertiesFrame propFrame = null;
-	MapElementsFrame elementsFrame = null;
+	MapViewTreeFrame treeFrame = null;
 	
 	Map map = null;
 	MapView mapView = null;
@@ -109,9 +110,9 @@ public class MapEditorOpenMapCommand extends VoidCommand
 				ViewMapPropertiesCommand propCommand = new ViewMapPropertiesCommand(this.desktop, this.aContext);
 				propCommand.execute();
 				this.propFrame = propCommand.frame;
-				ViewMapElementsCommand elementsCommand = new ViewMapElementsCommand(this.desktop, this.aContext);
+				ViewMapViewNavigatorCommand elementsCommand = new ViewMapViewNavigatorCommand(this.desktop, this.aContext);
 				elementsCommand.execute();
-				this.elementsFrame = elementsCommand.frame;
+				this.treeFrame = elementsCommand.treeFrame;
 			} catch(MapConnectionException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -132,9 +133,9 @@ public class MapEditorOpenMapCommand extends VoidCommand
 		return this.propFrame;
 	}
 
-	public MapElementsFrame getElementsFrame()
+	public MapViewTreeFrame getTreeFrame()
 	{
-		return this.elementsFrame;
+		return this.treeFrame;
 	}
 
 }
