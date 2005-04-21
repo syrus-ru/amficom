@@ -1,5 +1,5 @@
 /*-
- * $Id: GUIUtil.java,v 1.2 2005/04/18 16:33:37 saa Exp $
+ * $Id: GUIUtil.java,v 1.3 2005/04/21 11:11:38 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.2 $, $Date: 2005/04/18 16:33:37 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/21 11:11:38 $
  * @module
  */
 public class GUIUtil
@@ -31,6 +31,4 @@ public class GUIUtil
 			LangModelAnalyse.getString("error"),
 			JOptionPane.OK_OPTION);
 	}
-
 }
-
