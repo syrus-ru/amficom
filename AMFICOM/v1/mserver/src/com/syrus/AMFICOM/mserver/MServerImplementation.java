@@ -1,5 +1,5 @@
 /*
- * $Id: MServerImplementation.java,v 1.47 2005/04/15 22:12:56 arseniy Exp $
+ * $Id: MServerImplementation.java,v 1.48 2005/04/21 15:08:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -100,7 +100,7 @@ import com.syrus.AMFICOM.mserver.corba.MServerPOA;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.47 $, $Date: 2005/04/15 22:12:56 $
+ * @version $Revision: 1.48 $, $Date: 2005/04/21 15:08:39 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -1359,27 +1359,33 @@ public class MServerImplementation extends MServerPOA {
 
   private java.util.Set getMeasurementObjectsButIdsCondition(Identifier_Transferable[] identifier_Transferables,
 			StorableObjectCondition_Transferable storableObjectCondition_Transferable) throws AMFICOMRemoteException {
-  	java.util.Set ids = Identifier.fromTransferables(identifier_Transferables);
+  	try {
+			java.util.Set ids = Identifier.fromTransferables(identifier_Transferables);
 
-		StorableObjectCondition condition = null;
-		try {
-			condition = StorableObjectConditionBuilder.restoreCondition(storableObjectCondition_Transferable);
-		}
-		catch (IllegalDataException ide) {
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_DATA,
-					CompletionStatus.COMPLETED_NO,
-					"Cannot restore condition -- " + ide.getMessage());
-		}
+			StorableObjectCondition condition = null;
+			try {
+				condition = StorableObjectConditionBuilder.restoreCondition(storableObjectCondition_Transferable);
+			}
+			catch (IllegalDataException ide) {
+				throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_DATA,
+						CompletionStatus.COMPLETED_NO,
+						"Cannot restore condition -- " + ide.getMessage());
+			}
 
-		java.util.Set objects = null;
-		try {
-			objects = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(ids, condition, true);
+			java.util.Set objects = null;
+			try {
+				objects = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(ids, condition, true);
+			}
+			catch (ApplicationException ae) {
+				Log.errorException(ae);
+				throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
+			}
+			return objects;
 		}
-		catch (ApplicationException ae) {
-			Log.errorException(ae);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
+		catch (Throwable throwable) {
+			Log.errorException(throwable);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, throwable.getMessage());
 		}
-		return objects;
 	}
 
 
