@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.69 2005/04/20 14:39:31 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.70 2005/04/21 10:55:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import java.util.Set;
 import org.omg.CORBA.portable.IDLEntity;
 
 /**
- * @version $Revision: 1.69 $, $Date: 2005/04/20 14:39:31 $
+ * @version $Revision: 1.70 $, $Date: 2005/04/21 10:55:13 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -222,12 +222,12 @@ public abstract class StorableObjectPool {
 	/**
 	 * This method is invoked only by this class' descendants
 	 * from their
-	 * <code>public static void flushStorableObject</code>
+	 * <code>public static void flush</code>
 	 * @param id
 	 * @param force
 	 * @throws ApplicationException
 	 */
-	protected final void flushStorableObjectImpl(final Identifier id, final boolean force) throws ApplicationException {
+	protected final void flushImpl(final Identifier id, final boolean force) throws ApplicationException {
 		if (this.deletedIds.contains(id))
 			this.deleteStorableObject(id);
 		else {
@@ -240,13 +240,26 @@ public abstract class StorableObjectPool {
 	/**
 	 * This method is invoked only by this class' descendants
 	 * from their
-	 * <code>public static void flushEntities</code>
+	 * <code>public static void flush</code>
 	 * 
 	 * @param entityCode
 	 * @param force
 	 * @throws ApplicationException
 	 */
-	protected final void flushEntitiesImpl(final Short entityCode, final boolean force) throws ApplicationException {
+	protected final void flushImpl(final short entityCode, final boolean force) throws ApplicationException {
+		this.flushImpl(new Short(entityCode), force);
+	}
+
+	/**
+	 * This method is invoked only by this class' descendants
+	 * from their
+	 * <code>public static void flush</code>
+	 * 
+	 * @param entityCode
+	 * @param force
+	 * @throws ApplicationException
+	 */
+	protected final void flushImpl(final Short entityCode, final boolean force) throws ApplicationException {
 		/* delete objects ! */
 		this.flushDeleted(entityCode.shortValue());
 
