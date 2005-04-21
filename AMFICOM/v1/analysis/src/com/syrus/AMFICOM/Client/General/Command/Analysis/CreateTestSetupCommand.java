@@ -3,12 +3,10 @@ package com.syrus.AMFICOM.Client.General.Command.Analysis;
 import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.measurement.*;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.io.BellcoreStructure;
 
 public class CreateTestSetupCommand extends VoidCommand
@@ -25,66 +23,54 @@ public class CreateTestSetupCommand extends VoidCommand
 		return new CreateTestSetupCommand(aContext);
 	}
 
-	public void execute()
+	public static String getNewMSNameFromDialog()
 	{
 		BellcoreStructure bs = Heap.getBSPrimaryTrace();
-		if (bs == null)
-			return;
+		if (bs == null) {
+			// странная ситуация - нет primarytrace
+			return null;
+		}
 
-		if (bs.monitoredElementId == null)
-		{
+		if (bs.monitoredElementId == null) {
 			JOptionPane.showMessageDialog (
 					Environment.getActiveWindow(),
 					LangModelAnalyse.getString("noMonitoredElementError"),
 					LangModelAnalyse.getString("error"),
 					JOptionPane.OK_OPTION);
-			return;
+			return null;
 		}
 
-		MeasurementSetup ms = Heap.getContextMeasurementSetup();
+		if (Heap.getContextMeasurementSetup() == null) {
+			// FIXME: вывести сообщение, что-де нет исходного шаблона; а сообщение по bs.monitoredElementId == null, наверное, можно и не выводить(?)
+			System.err.println("no testSetup");
+			return null;
+		}
 
 		String name = JOptionPane.showInputDialog(
 				Environment.getActiveWindow(),
 				LangModelAnalyse.getString("newname"),
 				LangModelAnalyse.getString("testsetup"),
 				JOptionPane.QUESTION_MESSAGE);
-		if (name == null || name.equals(""))
-			return;
 
-		Heap.setContextMeasurementSetup(null);
+		// если введен пустое имя
+		if (name.equals("")) {
+			// @todo: вывести сообщение об ошибке, что введено пустое имя
+			return null; // и в любом случае ничего не делаем
+		}
 
-		MeasurementSetup measurementSetup;
-		try
-		{
-			measurementSetup = MeasurementSetup.createInstance(
-					((RISDSessionInfo)aContext.getSessionInterface()).getUserIdentifier(),
-					ms.getParameterSet(),
-					ms.getCriteriaSet(),
-					ms.getThresholdSet(),
-					ms.getEtalon(),
-					name,
-					ms.getMeasurementDuration(),
-					ms.getMonitoredElementIds(),
-                    ms.getMeasurementTypeIds());
-			MeasurementStorableObjectPool.putStorableObject(measurementSetup);
-		}
-		catch (CreateObjectException e)
-		{
-			// FIXME
-			System.err.println("CreateTestSetupCommand: CreateObjectException.");
-			e.printStackTrace();
-			return;
-		}
-		catch(IllegalObjectEntityException e)
-		{
-			// FIXME
-			System.err.println("CreateTestSetupCommand: IllegalObjectEntityException.");
-			e.printStackTrace();
-			return;
-		}
-		// будем считать status == OK, если в Heap.ContextMeasurementSetup != null
-		Heap.setContextMeasurementSetup(measurementSetup);
-		//Heap.notifyPrimaryMTMCUpdated();
+		// если ввод отменен
+		if (name == null)
+			return null;
+
+		// если введено непустое имя - задаем имя для нового шаблона
+		return name;
+
+	}
+
+	public void execute()
+	{
+		String name = getNewMSNameFromDialog();
+		if (name != null)
+			Heap.setNewMSName(name);
 	}
 }
-

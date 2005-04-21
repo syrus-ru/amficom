@@ -18,11 +18,10 @@ public class SaveTestSetupCommand extends VoidCommand
 {
 	public static final long CRITERIA = 0x00000001;
 	public static final long ETALON = 0x00000002;
-	//public static final long THRESHOLDS = 0x00000004;
 
 	private ApplicationContext aContext;
 
-	private long type;
+	private long type; 
 
 	public SaveTestSetupCommand(ApplicationContext aContext, long type)
 	{
@@ -35,51 +34,43 @@ public class SaveTestSetupCommand extends VoidCommand
 		return new SaveTestSetupCommand(aContext, type);
 	}
 
-	public void execute()
-	{
-		BellcoreStructure bs = Heap.getBSPrimaryTrace();
-		if (bs == null)
-		{
-			JOptionPane.showMessageDialog(
-					Environment.getActiveWindow(),
-					LangModelAnalyse.getString("unkError"),
-					LangModelAnalyse.getString("error"), JOptionPane.OK_OPTION);
-			return;
-		}
+	public static boolean createNewMSAndSave(String name, ApplicationContext aContext, long type) {
+		MeasurementSetup msTest = Heap.getContextMeasurementSetup();
 
-		if (bs.monitoredElementId == null)
-		{
-			JOptionPane.showMessageDialog(
-					Environment.getActiveWindow(),
-					LangModelAnalyse.getString("noMonitoredElementError"),
-					LangModelAnalyse.getString("error"), JOptionPane.OK_OPTION);
-			return;
-		}
-
-		if (bs.measurementId == null)
-		{
-			JOptionPane.showMessageDialog(
-					Environment.getActiveWindow(),
-					LangModelAnalyse.getString("noTestSetupError"),
-					LangModelAnalyse.getString("error"), JOptionPane.OK_OPTION);
-			return;
-		}
-
-		MeasurementSetup ms = Heap.getContextMeasurementSetup();
-		if (ms.getParameterSet() == null)
+		// XXX: нужна ли здесь эта проверка?
+		if (msTest.getParameterSet() == null)
 		{
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
 					LangModelAnalyse.getString("noTestArgumentsError"),
 					LangModelAnalyse.getString("error"), JOptionPane.OK_OPTION);
-			return;
+			return false;
 		}
+
+		// XXX: вижу непонятный мне код -- saa
+		if (msTest.getDescription().equals(""))
+		{
+			String s = JOptionPane.showInputDialog(
+					Environment.getActiveWindow(),
+					LangModelAnalyse.getString("testsetup"),
+					LangModelAnalyse.getString("newname"), JOptionPane.OK_CANCEL_OPTION);
+			if (!MiscUtil.validName(s))
+				return false;
+			msTest.setDescription(s); // FIXME: этак делать не велено(?)
+		}
+
+		// создаем новый MS
 
 		Identifier userId = new Identifier(((RISDSessionInfo)aContext
 				.getSessionInterface()).getAccessIdentifier().user_id);
+
+		Set criteriaSet = null;
 		try
 		{
-			ms.setCriteriaSet(AnalysisUtil.createCriteriaSetFromParams(userId, ms.getMonitoredElementIds()));
+			if ((type & CRITERIA) != 0)
+				criteriaSet = AnalysisUtil.createCriteriaSetFromParams(userId, msTest.getMonitoredElementIds());
+			else
+				criteriaSet = msTest.getCriteriaSet();
 		} catch (ApplicationException e)
 		{
 			System.err.println("SaveTestSetupCommand: ApplicationException (criterias)");
@@ -87,46 +78,74 @@ public class SaveTestSetupCommand extends VoidCommand
 				Environment.getActiveWindow(),
 				LangModelAnalyse.getString("createObjectProblem"),
 				LangModelAnalyse.getString("error"), JOptionPane.OK_OPTION);
-			return;
+			return false;
 		}
 
-		if ((type & ETALON) != 0)
+		Set etalonSet = null;
+		try
 		{
-			ModelTraceManager mtm = Heap.getMTMEtalon();
-			if (mtm == null)
+			if ((type & ETALON) != 0)
 			{
-				JOptionPane.showMessageDialog(
-						Environment.getActiveWindow(),
-						LangModelAnalyse.getString("noAnalysisError"),
-						LangModelAnalyse.getString("error"), JOptionPane.OK_OPTION);
-				return;
+				ModelTraceManager mtm = Heap.getMTMEtalon();
+				if (mtm == null)
+				{
+					JOptionPane.showMessageDialog(
+							Environment.getActiveWindow(),
+							LangModelAnalyse.getString("noAnalysisError"),
+							LangModelAnalyse.getString("error"), JOptionPane.OK_OPTION);
+					return false;
+				}
+				etalonSet = AnalysisUtil.createEtalon(userId, msTest.getMonitoredElementIds(), mtm);
 			}
-			try
-			{
-				ms.setEtalon(AnalysisUtil.createEtalon(userId, ms.getMonitoredElementIds(), mtm));
-			} catch (ApplicationException e1)
-			{
-				System.err.println("SaveTestSetupCommand: ApplicationException (etalon)");
-				JOptionPane.showMessageDialog(
-					Environment.getActiveWindow(),
-					LangModelAnalyse.getString("createObjectProblem"),
-					LangModelAnalyse.getString("error"), JOptionPane.OK_OPTION);
-				return;
-			}
-		}
-
-		if (ms.getDescription().equals(""))
+			else
+				etalonSet = msTest.getEtalon();
+		} catch (ApplicationException e1)
 		{
-			String s = JOptionPane.showInputDialog(
-					Environment.getActiveWindow(),
-					LangModelAnalyse.getString("testsetup"),
-					LangModelAnalyse.getString("newname"), JOptionPane.OK_CANCEL_OPTION);
-			if (!MiscUtil.validName(s))
-				return;
-			ms.setDescription(s);
+			System.err.println("SaveTestSetupCommand: ApplicationException (etalon)");
+			JOptionPane.showMessageDialog(
+				Environment.getActiveWindow(),
+				LangModelAnalyse.getString("createObjectProblem"),
+				LangModelAnalyse.getString("error"), JOptionPane.OK_OPTION);
+			return false;
 		}
 
-		ms.attachToMonitoredElement(new Identifier(bs.monitoredElementId));
+		MeasurementSetup measurementSetup;
+		try
+		{
+			measurementSetup = MeasurementSetup.createInstance(
+					((RISDSessionInfo)aContext.getSessionInterface()).getUserIdentifier(),
+					msTest.getParameterSet(),
+					criteriaSet,
+					msTest.getThresholdSet(),
+					etalonSet,
+					name,
+					msTest.getMeasurementDuration(),
+					msTest.getMonitoredElementIds(),
+                    msTest.getMeasurementTypeIds());
+			MeasurementStorableObjectPool.putStorableObject(measurementSetup);
+		}
+		catch (CreateObjectException e)
+		{
+			// FIXME: CreateObjectException
+			System.err.println("CreateTestSetupCommand: CreateObjectException.");
+			e.printStackTrace();
+			return false;
+		}
+		catch(IllegalObjectEntityException e)
+		{
+			// FIXME: IllegalObjectEntityException
+			System.err.println("CreateTestSetupCommand: IllegalObjectEntityException.");
+			e.printStackTrace();
+			return false;
+		}
+
+		BellcoreStructure bs = Heap.getBSPrimaryTrace();
+
+		if (bs != null)
+		{
+			// XXX: вижу непонятный мне код -- saa
+			measurementSetup.attachToMonitoredElement(new Identifier(bs.monitoredElementId));
+		}
 
 		/**
 		 * @todo use flush(false) to non forced saving
@@ -142,6 +161,54 @@ public class SaveTestSetupCommand extends VoidCommand
 		{ // FIXME: process exception
 		}
 
+		return true;
 	}
 
+	public static boolean checkStrangeConditions() {
+		BellcoreStructure bs = Heap.getBSPrimaryTrace();
+		if (bs == null)
+		{
+			JOptionPane.showMessageDialog(
+					Environment.getActiveWindow(),
+					LangModelAnalyse.getString("unkError"),
+					LangModelAnalyse.getString("error"), JOptionPane.OK_OPTION);
+			return false;
+		}
+
+		if (bs.monitoredElementId == null)
+		{
+			JOptionPane.showMessageDialog(
+					Environment.getActiveWindow(),
+					LangModelAnalyse.getString("noMonitoredElementError"),
+					LangModelAnalyse.getString("error"), JOptionPane.OK_OPTION);
+			return false;
+		}
+
+		if (bs.measurementId == null)
+		{
+			JOptionPane.showMessageDialog(
+					Environment.getActiveWindow(),
+					LangModelAnalyse.getString("noTestSetupError"),
+					LangModelAnalyse.getString("error"), JOptionPane.OK_OPTION);
+			return false;
+		}
+		return true;
+	}
+
+	public void execute()
+	{
+		if (checkStrangeConditions() == false)
+			return;
+
+		String name = Heap.getNewMSName();
+		if (name == null)
+		{
+			System.err.println("no name for creating new TestSetup");
+			// @todo: process newMSName == null -- saa
+			return;
+		}
+
+		if (createNewMSAndSave(name, aContext, type))
+			Heap.setNewMSName(null); // success
+	}
 }
