@@ -89,9 +89,10 @@ public class SaveTestSetupCommand extends VoidCommand
 				ModelTraceManager mtm = Heap.getMTMEtalon();
 				if (mtm == null)
 				{
+					// @todo: в этом случае (а тж в сл. ApplicationException) надо бы удалить созданный бесхозный criteriaSet)
 					JOptionPane.showMessageDialog(
 							Environment.getActiveWindow(),
-							LangModelAnalyse.getString("noAnalysisError"),
+							LangModelAnalyse.getString("noEtalonError"),
 							LangModelAnalyse.getString("error"), JOptionPane.OK_OPTION);
 					return false;
 				}
