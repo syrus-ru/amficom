@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.15 2005/04/20 16:38:07 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.16 2005/04/21 11:25:09 bass Exp $
  * 
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
  * {@link AbstractSchemePort}instead.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.15 $, $Date: 2005/04/20 16:38:07 $
+ * @version $Revision: 1.16 $, $Date: 2005/04/21 11:25:09 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemePort extends
@@ -191,6 +191,56 @@ public abstract class AbstractSchemePort extends
 		assert getCharacteristics().contains(characteristic): ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		this.characteristics.remove(characteristic);
 		this.changed = true;
+	}
+
+	/**
+	 * @param created
+	 * @param modified
+	 * @param creatorId
+	 * @param modifierId
+	 * @param version
+	 * @param name
+	 * @param description
+	 * @param directionType
+	 * @param portTypeId
+	 * @param portId
+	 * @param measurementPortTypeId
+	 * @param measurementPortId
+	 * @param parentSchemeDeviceId
+	 */
+	final synchronized void setAttributes(final Date created,
+			final Date modified, final Identifier creatorId,
+			final Identifier modifierId, final long version,
+			final String name, final String description,
+			final AbstractSchemePortDirectionType directionType,
+			final Identifier portTypeId, final Identifier portId,
+			final Identifier measurementPortTypeId,
+			final Identifier measurementPortId,
+			final Identifier parentSchemeDeviceId) {
+		super.setAttributes(created, modified, creatorId, modifierId, version);
+
+		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
+		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert directionType != null: ErrorMessages.NON_NULL_EXPECTED;
+
+		assert portTypeId != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert portId != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert portTypeId.isVoid() ^ portId.isVoid();
+
+		assert measurementPortTypeId != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert measurementPortId != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert measurementPortTypeId.isVoid() ^ measurementPortId.isVoid();
+
+		assert parentSchemeDeviceId != null && !parentSchemeDeviceId.isVoid(): ErrorMessages.NON_VOID_EXPECTED;
+
+		this.name = name;
+		this.description = description;
+		this.directionType = directionType;
+		this.portTypeId = portTypeId;
+		this.portId = portId;
+		this.measurementPortTypeId = measurementPortTypeId;
+		this.measurementPortId = measurementPortId;
+		this.parentSchemeDeviceId = parentSchemeDeviceId;
 	}
 
 	public final void setDirectionType(final AbstractSchemePortDirectionType directionType) {
