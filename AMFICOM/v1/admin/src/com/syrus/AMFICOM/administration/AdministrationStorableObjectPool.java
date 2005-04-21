@@ -1,5 +1,5 @@
 /*
- * $Id: AdministrationStorableObjectPool.java,v 1.19 2005/04/20 14:39:58 arseniy Exp $
+ * $Id: AdministrationStorableObjectPool.java,v 1.20 2005/04/21 10:56:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/04/20 14:39:58 $
+ * @version $Revision: 1.20 $, $Date: 2005/04/21 10:56:09 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -258,12 +258,16 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 		return instance.fromTransferableImpl(id, transferable);
 	}
 
-	public static void flushStorableObject(final Identifier id, final boolean force) throws ApplicationException {
-		instance.flushStorableObjectImpl(id, force);
+	public static void flush(final Identifier id, final boolean force) throws ApplicationException {
+		instance.flushImpl(id, force);
 	}
 
-	public static void flushEntities(final Short entityCode, final boolean force) throws ApplicationException {		 
-		instance.flushEntitiesImpl(entityCode, force);
+	public static void flush(final short entityCode, final boolean force) throws ApplicationException {		 
+		instance.flushImpl(entityCode, force);
+	}
+
+	public static void flush(final Short entityCode, final boolean force) throws ApplicationException {		 
+		instance.flushImpl(entityCode, force);
 	}
 
 	public static void flush(boolean force) throws ApplicationException {		 
