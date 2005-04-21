@@ -1,5 +1,5 @@
 /**
- * $Id: MapAddExternalNodeCommand.java,v 1.1 2005/04/13 15:43:09 krupenn Exp $
+ * $Id: MapAddExternalNodeCommand.java,v 1.2 2005/04/21 11:53:26 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,6 +18,7 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
+import com.syrus.AMFICOM.Client.Map.UI.ExternalMapElementChooserDialog;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapTableController;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceChooserDialog;
@@ -28,6 +29,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapStorableObjectPool;
+import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.mapview.MapView;
 import java.util.Collection;
 import javax.swing.JDesktopPane;
@@ -35,7 +37,7 @@ import javax.swing.JDesktopPane;
 /**
  * добавить в вид схему из списка
  * @author $Author: krupenn $
- * @version $Revision: 1.1 $, $Date: 2005/04/13 15:43:09 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/21 11:53:26 $
  * @module mapviewclient_v1
  */
 public class MapAddExternalNodeCommand extends VoidCommand
@@ -44,6 +46,7 @@ public class MapAddExternalNodeCommand extends VoidCommand
 	ApplicationContext aContext;
 
 	protected Map map;
+	protected SiteNode node;
 
 	public MapAddExternalNodeCommand(JDesktopPane desktop, ApplicationContext aContext)
 	{
@@ -72,7 +75,7 @@ public class MapAddExternalNodeCommand extends VoidCommand
 				StatusMessageEvent.STATUS_MESSAGE,
 				LangModelMap.getString("MapOpening")));
 
-		ObjectResourceChooserDialog mcd = new ObjectResourceChooserDialog(
+		ObjectResourceChooserDialog mapChooserDialog = new ObjectResourceChooserDialog(
 				LangModelMap.getString("Map"),
 				MapTableController.getInstance());
 
@@ -87,7 +90,7 @@ public class MapAddExternalNodeCommand extends VoidCommand
 			StorableObjectCondition condition = new LinkedIdsCondition(domainId, ObjectEntities.MAP_ENTITY_CODE);
 			Collection ss = MapStorableObjectPool.getStorableObjectsByCondition(condition, true);
 			ss.remove(mapView.getMap());
-			mcd.setContents(ss);
+			mapChooserDialog.setContents(ss);
 		}
 		catch (ApplicationException e)
 		{
@@ -95,9 +98,9 @@ public class MapAddExternalNodeCommand extends VoidCommand
 			return;
 		}
 
-		mcd.setModal(true);
-		mcd.setVisible(true);
-		if(mcd.getReturnCode() == ObjectResourceChooserDialog.RET_CANCEL)
+		mapChooserDialog.setModal(true);
+		mapChooserDialog.setVisible(true);
+		if(mapChooserDialog.getReturnCode() == ObjectResourceChooserDialog.RET_CANCEL)
 		{
 			this.aContext.getDispatcher().notify(new StatusMessageEvent(
 					StatusMessageEvent.STATUS_MESSAGE,
@@ -105,24 +108,41 @@ public class MapAddExternalNodeCommand extends VoidCommand
 			return;
 		}
 
-		if(mcd.getReturnCode() == ObjectResourceChooserDialog.RET_OK)
-		{
-			this.map = (Map )mcd.getReturnObject();
+		if(mapChooserDialog.getReturnCode() != ObjectResourceChooserDialog.RET_OK)
+			return;
 
-			if(!mapView.getMap().getMaps().contains(this.map))
-			{
-				mapView.getMap().addMap(this.map);
-				this.aContext.getDispatcher().notify(new MapEvent(
-						mapView,
-						MapEvent.MAP_VIEW_CHANGED));
-				this.aContext.getDispatcher().notify(new MapEvent(
-						mapView,
-						MapEvent.NEED_REPAINT));
-			}
+		this.map = (Map )mapChooserDialog.getReturnObject();
+
+		ExternalMapElementChooserDialog elemengChooserDialog = 
+			new ExternalMapElementChooserDialog(this.map, LangModelMap.getString("SiteNode"));
+
+		elemengChooserDialog.setModal(true);
+		elemengChooserDialog.setVisible(true);
+		if(elemengChooserDialog.getReturnCode() == ObjectResourceChooserDialog.RET_CANCEL)
+		{
 			this.aContext.getDispatcher().notify(new StatusMessageEvent(
 					StatusMessageEvent.STATUS_MESSAGE,
-					LangModel.getString("Finished")));
+					LangModel.getString("Aborted")));
+			return;
 		}
+
+		if(elemengChooserDialog.getReturnCode() != ObjectResourceChooserDialog.RET_OK)
+			return;
+
+		this.node = elemengChooserDialog.getReturnObject();
+		
+		mapView.getMap().addExternalNode(this.node);
+		
+		this.aContext.getDispatcher().notify(new MapEvent(
+				mapView,
+				MapEvent.MAP_CHANGED));
+		this.aContext.getDispatcher().notify(new MapEvent(
+				mapView,
+				MapEvent.NEED_REPAINT));
+
+		this.aContext.getDispatcher().notify(new StatusMessageEvent(
+				StatusMessageEvent.STATUS_MESSAGE,
+				LangModel.getString("Finished")));
 	}
 
 }
