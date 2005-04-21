@@ -1,4 +1,4 @@
--- $Id: schemeelement.sql,v 1.6 2005/03/22 13:36:03 bass Exp $
+-- $Id: schemeelement.sql,v 1.7 2005/04/21 10:42:52 bass Exp $
 
 CREATE TABLE "SchemeElement" (
 	id VARCHAR2(32 CHAR) NOT NULL,
@@ -16,7 +16,7 @@ CREATE TABLE "SchemeElement" (
 	equipment_type_id VARCHAR2(32 CHAR),
 	equipment_id VARCHAR2(32 CHAR),
 	rtu_id VARCHAR2(32 CHAR),
-	site_id VARCHAR2(32 CHAR),
+	site_node_id VARCHAR2(32 CHAR),
 	symbol_id VARCHAR2(32 CHAR),
 	ugo_cell_id VARCHAR2(32 CHAR),
 	scheme_cell_id VARCHAR2(32 CHAR),
@@ -36,7 +36,7 @@ CREATE TABLE "SchemeElement" (
 		REFERENCES Equipment(id) ON DELETE CASCADE,
 	CONSTRAINT schemeelement_rtu_fk FOREIGN KEY(rtu_id)
 		REFERENCES Kis(id) ON DELETE CASCADE,
-	CONSTRAINT schemeelement_sitenode_fk FOREIGN KEY(site_id)
+	CONSTRAINT schemeelement_sitenode_fk FOREIGN KEY(site_node_id)
 		REFERENCES SiteNode(id) ON DELETE CASCADE,
 	CONSTRAINT schemeelement_symbol_fk FOREIGN KEY(symbol_id)
 		REFERENCES "ImageResource"(id) ON DELETE CASCADE,
@@ -62,7 +62,7 @@ CREATE TABLE "SchemeElement" (
 		AND parent_scheme_element_id IS NULL))
 );
 
-COMMENT ON TABLE "SchemeElement" IS '$Id: schemeelement.sql,v 1.6 2005/03/22 13:36:03 bass Exp $';
+COMMENT ON TABLE "SchemeElement" IS '$Id: schemeelement.sql,v 1.7 2005/04/21 10:42:52 bass Exp $';
 
 ALTER TABLE "Scheme" ADD (
 	CONSTRAINT scheme_prnt_scheme_element_fk FOREIGN KEY(parent_scheme_element_id)
