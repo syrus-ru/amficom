@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePort.java,v 1.17 2005/04/20 16:38:07 bass Exp $
+ * $Id: SchemeCablePort.java,v 1.18 2005/04/21 16:27:08 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.scheme.corba.SchemeCablePort_Transferable;
  * #09 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.17 $, $Date: 2005/04/20 16:38:07 $
+ * @version $Revision: 1.18 $, $Date: 2005/04/21 16:27:08 $
  * @module scheme_v1
  */
 public final class SchemeCablePort extends AbstractSchemePort {
@@ -186,13 +186,6 @@ public final class SchemeCablePort extends AbstractSchemePort {
 	 */
 	public CharacteristicSort getCharacteristicSort() {
 		return CharacteristicSort.CHARACTERISTIC_SORT_SCHEMECABLEPORT;
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.general.StorableObject#getDependencies()
-	 */
-	public Set getDependencies() {
-		throw new UnsupportedOperationException();
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.20 2005/04/20 12:26:16 bass Exp $
+ * $Id: Scheme.java,v 1.21 2005/04/21 16:27:08 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,7 +40,7 @@ import com.syrus.util.Log;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.20 $, $Date: 2005/04/20 12:26:16 $
+ * @version $Revision: 1.21 $, $Date: 2005/04/21 16:27:08 $
  * @module scheme_v1
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -346,7 +346,8 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	}
 
 	public Kind getKind() {
-		throw new UnsupportedOperationException();
+		assert this.kind != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		return this.kind;
 	}
 
 	public Set getSchemeLinks() {
@@ -611,8 +612,16 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 			addSchemeElement((SchemeElement) schemeElementIterator.next());
 	}
 
-	public void setKind(final Kind schemeKind) {
-		throw new UnsupportedOperationException();
+	/**
+	 * @param kind
+	 */
+	public void setKind(final Kind kind) {
+		assert this.kind != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert kind != null: ErrorMessages.NON_NULL_EXPECTED;
+		if (this.kind.value() == kind.value())
+			return;
+		this.kind = kind;
+		this.changed = true;
 	}
 
 	public void setSchemeLinks(final Set schemeLinks) {

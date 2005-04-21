@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.16 2005/04/21 11:25:09 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.17 2005/04/21 16:27:08 bass Exp $
  * 
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,25 +13,24 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.configuration.MeasurementPortType;
 import com.syrus.AMFICOM.configuration.Port;
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
+import com.syrus.util.Log;
 
 /**
- * This class is never used directly, it was provided just in order for source
- * generated from IDL files to compile cleanly. Use other implementations of
- * {@link AbstractSchemePort}instead.
- * 
  * @author $Author: bass $
- * @version $Revision: 1.16 $, $Date: 2005/04/21 11:25:09 $
+ * @version $Revision: 1.17 $, $Date: 2005/04/21 16:27:08 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemePort extends
@@ -133,7 +132,8 @@ public abstract class AbstractSchemePort extends
 	public abstract AbstractSchemeLink getAbstractSchemeLink();
 
 	public final AbstractSchemePortDirectionType getDirectionType() {
-		throw new UnsupportedOperationException();
+		assert this.directionType != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		return this.directionType;
 	}
 
 	public final Set getCharacteristics() {
@@ -143,47 +143,117 @@ public abstract class AbstractSchemePort extends
 	/**
 	 * @see com.syrus.AMFICOM.general.StorableObject#getDependencies()
 	 */
-	public Set getDependencies() {
-		throw new UnsupportedOperationException();
+	public final Set getDependencies() {
+		assert this.portTypeId != null && this.portId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.portTypeId.isVoid() ^ this.portId.isVoid(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
+		assert this.measurementPortTypeId != null && this.measurementPortId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.measurementPortTypeId.isVoid() ^ this.measurementPortId.isVoid(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
+		assert this.parentSchemeDeviceId != null && !this.parentSchemeDeviceId.isVoid(): ErrorMessages.OBJECT_NOT_INITIALIZED;
+
+		final Set dependencies = new HashSet();
+		dependencies.add(this.portTypeId);
+		dependencies.add(this.portId);
+		dependencies.add(this.measurementPortTypeId);
+		dependencies.add(this.measurementPortId);
+		dependencies.add(this.parentSchemeDeviceId);
+		dependencies.remove(null);
+		dependencies.remove(Identifier.VOID_IDENTIFIER);
+		return Collections.unmodifiableSet(dependencies);
 	}
 
 	/**
 	 * @see Describable#getDescription()
 	 */
 	public final String getDescription() {
-		assert this.description != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.description != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
 		return this.description;
 	}
 
 	public final MeasurementPort getMeasurementPort() {
-		throw new UnsupportedOperationException();
+		assert this.measurementPortId != null && this.measurementPortTypeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		if (this.measurementPortId.isVoid()) {
+			assert !this.measurementPortTypeId.isVoid(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
+			return null;
+		}
+
+		try {
+			assert this.measurementPortTypeId.isVoid(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
+			return (MeasurementPort) ConfigurationStorableObjectPool.getStorableObject(this.measurementPortId, true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return null;
+		}
 	}
 
 	public final MeasurementPortType getMeasurementPortType() {
-		throw new UnsupportedOperationException();
+		assert this.measurementPortId != null && this.measurementPortTypeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		if (this.measurementPortTypeId.isVoid()) {
+			assert !this.measurementPortId.isVoid(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
+			return (MeasurementPortType) getMeasurementPort().getType();
+		}
+
+		try {
+			assert this.measurementPortId.isVoid(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
+			return (MeasurementPortType) ConfigurationStorableObjectPool.getStorableObject(this.measurementPortTypeId, true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return null;
+		}
 	}
 
 	/**
 	 * @see com.syrus.AMFICOM.general.Namable#getName()
 	 */
 	public final String getName() {
-		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.name != null && this.name.length() != 0: ErrorMessages.OBJECT_NOT_INITIALIZED;
 		return this.name;
 	}
 
 	public final SchemeDevice getParentSchemeDevice() {
-		throw new UnsupportedOperationException();
+		assert this.parentSchemeDeviceId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert !this.parentSchemeDeviceId.isVoid(): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
+		
+		try {
+			return (SchemeDevice) SchemeStorableObjectPool.getStorableObject(this.parentSchemeDeviceId, true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return null;
+		}
 	}
 
 	/**
 	 * Overridden by descendants to add extra checks.
 	 */
 	public Port getPort() {
-		throw new UnsupportedOperationException();
+		assert this.portId != null && this.portTypeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		if (this.portId.isVoid()) {
+			assert !this.portTypeId.isVoid(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
+			return null;
+		}
+
+		try {
+			assert this.portTypeId.isVoid(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
+			return (Port) ConfigurationStorableObjectPool.getStorableObject(this.portId, true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return null;
+		}
 	}
 
 	public final PortType getPortType() {
-		throw new UnsupportedOperationException();
+		assert this.portId != null && this.portTypeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		if (this.portTypeId.isVoid()) {
+			assert !this.portId.isVoid(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
+			return (PortType) getPort().getType();
+		}
+
+		try {
+			assert this.portId.isVoid(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
+			return (PortType) ConfigurationStorableObjectPool.getStorableObject(this.portTypeId, true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return null;
+		}
 	}
 
 	public final void removeCharacteristic(final Characteristic characteristic) {
@@ -243,8 +313,16 @@ public abstract class AbstractSchemePort extends
 		this.parentSchemeDeviceId = parentSchemeDeviceId;
 	}
 
+	/**
+	 * @param directionType
+	 */
 	public final void setDirectionType(final AbstractSchemePortDirectionType directionType) {
-		throw new UnsupportedOperationException();
+		assert this.directionType != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert directionType != null: ErrorMessages.NON_NULL_EXPECTED;
+		if (this.directionType.value() == directionType.value())
+			return;
+		this.directionType = directionType;
+		this.changed = true;
 	}
 
 	public final void setCharacteristics(final Set characteristics) {
@@ -269,8 +347,8 @@ public abstract class AbstractSchemePort extends
 	 * @see Describable#setDescription(String)
 	 */
 	public final void setDescription(final String description) {
-		assert this.description != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert description != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert this.description != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
 		if (this.description.equals(description))
 			return;
 		this.description = description;
@@ -305,8 +383,22 @@ public abstract class AbstractSchemePort extends
 		this.changed = true;
 	}
 
+	/**
+	 * @param parentSchemeDevice
+	 */
 	public final void setParentSchemeDevice(final SchemeDevice parentSchemeDevice) {
-		throw new UnsupportedOperationException();
+		assert this.parentSchemeDeviceId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert !this.parentSchemeDeviceId.isVoid(): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
+		if (parentSchemeDevice == null) {
+			Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Log.WARNING);
+			SchemeStorableObjectPool.delete(this.id);
+			return;
+		}
+		final Identifier newParentSchemeDeviceId = parentSchemeDevice.getId();
+		if (this.parentSchemeDeviceId.equals(newParentSchemeDeviceId))
+			return;
+		this.parentSchemeDeviceId = newParentSchemeDeviceId;
+		this.changed = true;
 	}
 
 	/**

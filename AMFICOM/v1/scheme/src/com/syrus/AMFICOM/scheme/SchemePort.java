@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePort.java,v 1.16 2005/04/20 16:38:07 bass Exp $
+ * $Id: SchemePort.java,v 1.17 2005/04/21 16:27:08 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.scheme.corba.SchemePort_Transferable;
  * #08 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.16 $, $Date: 2005/04/20 16:38:07 $
+ * @version $Revision: 1.17 $, $Date: 2005/04/21 16:27:08 $
  * @module scheme_v1
  */
 public final class SchemePort extends AbstractSchemePort {
@@ -185,13 +185,6 @@ public final class SchemePort extends AbstractSchemePort {
 	 */
 	public CharacteristicSort getCharacteristicSort() {
 		return CharacteristicSort.CHARACTERISTIC_SORT_SCHEMEPORT;
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.general.StorableObject#getDependencies()
-	 */
-	public Set getDependencies() {
-		throw new UnsupportedOperationException();
 	}
 
 	/**
