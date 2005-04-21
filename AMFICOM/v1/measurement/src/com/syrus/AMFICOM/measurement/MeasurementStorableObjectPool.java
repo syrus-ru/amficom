@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.82 2005/04/21 10:58:23 arseniy Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.83 2005/04/21 13:52:03 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,6 @@
 package com.syrus.AMFICOM.measurement;
 
 import java.util.Collections;
-import java.util.HashMap;
 
 import org.omg.CORBA.portable.IDLEntity;
 
@@ -24,7 +23,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.82 $, $Date: 2005/04/21 10:58:23 $
+ * @version $Revision: 1.83 $, $Date: 2005/04/21 13:52:03 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -53,18 +52,16 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 
 	private MeasurementStorableObjectPool() {
 		// singleton
-		super(ObjectGroupEntities.MEASUREMENT_GROUP_CODE);
+		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.MEASUREMENT_GROUP_CODE);
 	}
 
 	private MeasurementStorableObjectPool(Class cacheMapClass) {
-		super(ObjectGroupEntities.MEASUREMENT_GROUP_CODE, cacheMapClass);
+		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.MEASUREMENT_GROUP_CODE, cacheMapClass);
 	}
 
-	public static void init(MeasurementObjectLoader mObjectLoader1, final int size) {
+	public static void init(final MeasurementObjectLoader mObjectLoader1, final int size) {
 		if (instance == null)
 			instance = new MeasurementStorableObjectPool();
-
-		instance.objectPoolMap = Collections.synchronizedMap(new HashMap(OBJECT_POOL_MAP_SIZE));
 
 		mObjectLoader = mObjectLoader1;
 
@@ -89,8 +86,6 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 	public static void init(MeasurementObjectLoader mObjectLoader1) {
 		if (instance == null)
 			instance = new MeasurementStorableObjectPool();
-
-		instance.objectPoolMap = Collections.synchronizedMap(new HashMap(OBJECT_POOL_MAP_SIZE));
 
 		mObjectLoader = mObjectLoader1;
 
@@ -119,7 +114,7 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 			instance = new MeasurementStorableObjectPool(clazz);
 		}
 		catch (ClassNotFoundException e) {
-			Log.errorMessage("Cache class '" + cacheClass.getName() + "' cannot be found, use default");
+			Log.errorMessage("Cache class '" + cacheClass.getName() + "' cannot be found, using default");
 			instance = new MeasurementStorableObjectPool();
 		}
 		init(mObjectLoader1, size);
@@ -132,7 +127,7 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 			instance = new MeasurementStorableObjectPool(clazz);
 		}
 		catch (ClassNotFoundException e) {
-			Log.errorMessage("Cache class '" + cacheClass.getName() + "' cannot be found, use default");
+			Log.errorMessage("Cache class '" + cacheClass.getName() + "' cannot be found, using default");
 			instance = new MeasurementStorableObjectPool();
 		}
 		init(mObjectLoader1);

@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.77 2005/04/21 10:56:20 arseniy Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.78 2005/04/21 13:51:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,6 @@
 package com.syrus.AMFICOM.configuration;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
@@ -25,7 +24,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.77 $, $Date: 2005/04/21 10:56:20 $
+ * @version $Revision: 1.78 $, $Date: 2005/04/21 13:51:58 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -56,18 +55,16 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 
 	private ConfigurationStorableObjectPool() {
 		// singleton
-		super(ObjectGroupEntities.CONFIGURATION_GROUP_CODE);
+		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.CONFIGURATION_GROUP_CODE);
 	}
 
 	private ConfigurationStorableObjectPool(Class cacheMapClass) {
-		super(ObjectGroupEntities.CONFIGURATION_GROUP_CODE, cacheMapClass);
+		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.CONFIGURATION_GROUP_CODE, cacheMapClass);
 	}
 
 	public static void init(ConfigurationObjectLoader cObjectLoader1, final int size) {
 		if (instance == null)
 			instance = new ConfigurationStorableObjectPool();
-
-		instance.objectPoolMap = Collections.synchronizedMap(new HashMap(OBJECT_POOL_MAP_SIZE));
 
 		cObjectLoader = cObjectLoader1;
 
@@ -93,8 +90,6 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 	public static void init(ConfigurationObjectLoader cObjectLoader1) {
 		if (instance == null)
 			instance = new ConfigurationStorableObjectPool();
-
-		instance.objectPoolMap = Collections.synchronizedMap(new HashMap(OBJECT_POOL_MAP_SIZE));
 
 		cObjectLoader = cObjectLoader1;
 
@@ -124,7 +119,7 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 			instance = new ConfigurationStorableObjectPool(clazz);
 		}
 		catch (ClassNotFoundException e) {
-			Log.errorMessage("Cache class '" + cacheClass.getName() +"' cannot be found, use default");
+			Log.errorMessage("Cache class '" + cacheClass.getName() +"' cannot be found, using default");
 			instance = new ConfigurationStorableObjectPool();
 		}
 		init(cObjectLoader1, size);
@@ -137,7 +132,7 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 			instance = new ConfigurationStorableObjectPool(clazz);
 		}
 		catch (ClassNotFoundException e) {
-			Log.errorMessage("Cache class '" + cacheClass.getName() +"' cannot be found, use default");
+			Log.errorMessage("Cache class '" + cacheClass.getName() +"' cannot be found, using default");
 			instance = new ConfigurationStorableObjectPool();
 		}
 		init(cObjectLoader1);
@@ -147,7 +142,7 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 		instance.refreshImpl();
 	}
 
-  protected Set refreshStorableObjects(Set storableObjects) throws ApplicationException{
+  protected Set refreshStorableObjects(Set storableObjects) throws ApplicationException {
 		return cObjectLoader.refresh(storableObjects);
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: MapViewStorableObjectPool.java,v 1.12 2005/04/21 10:58:50 arseniy Exp $
+ * $Id: MapViewStorableObjectPool.java,v 1.13 2005/04/21 13:52:51 arseniy Exp $
  *
  * Copyright ? 2004 Syrus Systems.
  * ѕвиапр-жейпкаехмкл зепжф.
@@ -9,7 +9,6 @@
 package com.syrus.AMFICOM.mapview;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -23,7 +22,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/04/21 10:58:50 $
+ * @version $Revision: 1.13 $, $Date: 2005/04/21 13:52:51 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -42,36 +41,16 @@ public final class MapViewStorableObjectPool extends StorableObjectPool {
 	private static MapViewStorableObjectPool	instance;
 
 	private MapViewStorableObjectPool() {
-		super(ObjectGroupEntities.MAPVIEW_GROUP_CODE);
+		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.MAPVIEW_GROUP_CODE);
 	}
 
 	private MapViewStorableObjectPool(Class cacheMapClass) {
-		super(ObjectGroupEntities.MAPVIEW_GROUP_CODE, cacheMapClass);
-	}
-
-	/**
-	 * 
-	 * @param mvObjectLoader1
-	 * @param cacheClass
-	 *            class must extend LRUMap
-	 * @param size
-	 */
-	public static void init(MapViewObjectLoader mvObjectLoader1, Class cacheClass, final int size) {
-		Class clazz = null;
-		try {
-			clazz = Class.forName(cacheClass.getName());
-			instance = new MapViewStorableObjectPool(clazz);
-		} catch (ClassNotFoundException e) {
-			Log.errorMessage("Cache class '" + cacheClass.getName() + "' cannot be found, use default '"
-					+ ((clazz == null) ? "null" : clazz.getName()) + "'");
-		}
-		init(mvObjectLoader1, size);
+		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.MAPVIEW_GROUP_CODE, cacheMapClass);
 	}
 
 	public static void init(MapViewObjectLoader mvObjectLoader1, final int size) {
 		if (instance == null)
 			instance = new MapViewStorableObjectPool();
-		instance.objectPoolMap = Collections.synchronizedMap(new HashMap(size));
 
 		mvObjectLoader = mvObjectLoader1;
 
@@ -84,11 +63,36 @@ public final class MapViewStorableObjectPool extends StorableObjectPool {
 		if (instance == null)
 			instance = new MapViewStorableObjectPool();
 
-		instance.objectPoolMap = Collections.synchronizedMap(new HashMap(OBJECT_POOL_MAP_SIZE));
 		mvObjectLoader = mvObjectLoader1;
 		instance.addObjectPool(ObjectEntities.MAPVIEW_ENTITY_CODE, MAPVIEW_OBJECT_POOL_SIZE);
 
 		instance.populatePools();
+	}
+
+	public static void init(MapViewObjectLoader mvObjectLoader1, Class cacheClass, final int size) {
+		Class clazz = null;
+		try {
+			clazz = Class.forName(cacheClass.getName());
+			instance = new MapViewStorableObjectPool(clazz);
+		}
+		catch (ClassNotFoundException e) {
+			Log.errorMessage("Cache class '" + cacheClass.getName() +"' cannot be found, use default");
+			instance = new MapViewStorableObjectPool();
+		}
+		init(mvObjectLoader1, size);
+	}
+
+	public static void init(MapViewObjectLoader mvObjectLoader1, Class cacheClass) {
+		Class clazz = null;
+		try {
+			clazz = Class.forName(cacheClass.getName());
+			instance = new MapViewStorableObjectPool(clazz);
+		}
+		catch (ClassNotFoundException e) {
+			Log.errorMessage("Cache class '" + cacheClass.getName() +"' cannot be found, use default");
+			instance = new MapViewStorableObjectPool();
+		}
+		init(mvObjectLoader1);
 	}
 
 	public static void refresh() throws ApplicationException {

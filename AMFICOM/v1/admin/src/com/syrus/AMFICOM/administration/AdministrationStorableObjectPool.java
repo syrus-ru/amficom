@@ -1,5 +1,5 @@
 /*
- * $Id: AdministrationStorableObjectPool.java,v 1.20 2005/04/21 10:56:09 arseniy Exp $
+ * $Id: AdministrationStorableObjectPool.java,v 1.21 2005/04/21 13:51:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,6 @@
 package com.syrus.AMFICOM.administration;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
@@ -25,7 +24,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/04/21 10:56:09 $
+ * @version $Revision: 1.21 $, $Date: 2005/04/21 13:51:53 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -45,18 +44,16 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 
 	private AdministrationStorableObjectPool() {
 		// singleton
-		super(ObjectGroupEntities.ADMINISTRATION_GROUP_CODE);
+		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.ADMINISTRATION_GROUP_CODE);
 	}
 
 	private AdministrationStorableObjectPool(Class cacheMapClass) {
-		super(ObjectGroupEntities.ADMINISTRATION_GROUP_CODE, cacheMapClass);
+		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.ADMINISTRATION_GROUP_CODE, cacheMapClass);
 	}
 
 	public static void init(AdministrationObjectLoader aObjectLoader1, final int size) {
 		if (instance == null)
 			instance = new AdministrationStorableObjectPool();
-
-		instance.objectPoolMap = Collections.synchronizedMap(new HashMap(OBJECT_POOL_MAP_SIZE));
 
 		aObjectLoader = aObjectLoader1;
 
@@ -72,8 +69,6 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 	public static void init(AdministrationObjectLoader aObjectLoader1) {
 		if (instance == null)
 			instance = new AdministrationStorableObjectPool();
-
-		instance.objectPoolMap = Collections.synchronizedMap(new HashMap(OBJECT_POOL_MAP_SIZE));
 
 		aObjectLoader = aObjectLoader1;
 
@@ -93,7 +88,7 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 			instance = new AdministrationStorableObjectPool(clazz);
 		}
 		catch (ClassNotFoundException e) {
-			Log.errorMessage("Cache class '" + cacheClass.getName() + "' cannot be found, use default");
+			Log.errorMessage("Cache class '" + cacheClass.getName() + "' cannot be found, using default");
 			instance = new AdministrationStorableObjectPool();
 		}
 		init(aObjectLoader1, size);
@@ -106,7 +101,7 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 			instance = new AdministrationStorableObjectPool(clazz);
 		}
 		catch (ClassNotFoundException e) {
-			Log.errorMessage("Cache class '" + cacheClass.getName() + "' cannot be found, use default");
+			Log.errorMessage("Cache class '" + cacheClass.getName() + "' cannot be found, using default");
 			instance = new AdministrationStorableObjectPool();
 		}
 		init(aObjectLoader1);

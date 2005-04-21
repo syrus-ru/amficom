@@ -1,5 +1,5 @@
 /*
- * $Id: GeneralStorableObjectPool.java,v 1.20 2005/04/21 10:55:55 arseniy Exp $
+ * $Id: GeneralStorableObjectPool.java,v 1.21 2005/04/21 13:51:47 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,6 @@
 package com.syrus.AMFICOM.general;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
@@ -17,7 +16,7 @@ import org.omg.CORBA.portable.IDLEntity;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/04/21 10:55:55 $
+ * @version $Revision: 1.21 $, $Date: 2005/04/21 13:51:47 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -35,18 +34,16 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 
 	private GeneralStorableObjectPool() {
 		// singleton
-		super(ObjectGroupEntities.GENERAL_GROUP_CODE);
+		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.GENERAL_GROUP_CODE);
 	}
 
 	private GeneralStorableObjectPool(Class cacheMapClass) {
-		super(ObjectGroupEntities.GENERAL_GROUP_CODE, cacheMapClass);
+		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.GENERAL_GROUP_CODE, cacheMapClass);
 	}
 
 	public static void init(GeneralObjectLoader gObjectLoader1, final int size) {
 		if (instance == null)
 			instance = new GeneralStorableObjectPool();
-
-		instance.objectPoolMap = Collections.synchronizedMap(new HashMap(OBJECT_POOL_MAP_SIZE));
 
 		gObjectLoader = gObjectLoader1;
 
@@ -60,8 +57,6 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 	public static void init(GeneralObjectLoader gObjectLoader1) {
 		if (instance == null)
 			instance = new GeneralStorableObjectPool();
-
-		instance.objectPoolMap = Collections.synchronizedMap(new HashMap(OBJECT_POOL_MAP_SIZE));
 
 		gObjectLoader = gObjectLoader1;
 
@@ -79,7 +74,7 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 			instance = new GeneralStorableObjectPool(clazz);
 		}
 		catch (ClassNotFoundException e) {
-			Log.errorMessage("Cache class '" + cacheClass.getName() + "' cannot be found, use default");
+			Log.errorMessage("Cache class '" + cacheClass.getName() + "' cannot be found, using default");
 			instance = new GeneralStorableObjectPool();
 		}
 		init(gObjectLoader1, size);
@@ -92,7 +87,7 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 			instance = new GeneralStorableObjectPool(clazz);
 		}
 		catch (ClassNotFoundException e) {
-			Log.errorMessage("Cache class '" + cacheClass.getName() + "' cannot be found, use default");
+			Log.errorMessage("Cache class '" + cacheClass.getName() + "' cannot be found, using default");
 			instance = new GeneralStorableObjectPool();
 		}
 		init(gObjectLoader1);

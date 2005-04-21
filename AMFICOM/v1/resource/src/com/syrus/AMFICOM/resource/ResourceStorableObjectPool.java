@@ -1,5 +1,5 @@
 /*
- * $Id: ResourceStorableObjectPool.java,v 1.18 2005/04/21 10:58:30 arseniy Exp $
+ * $Id: ResourceStorableObjectPool.java,v 1.19 2005/04/21 13:52:20 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,6 @@
 package com.syrus.AMFICOM.resource;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
@@ -26,7 +25,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.18 $, $Date: 2005/04/21 10:58:30 $
+ * @version $Revision: 1.19 $, $Date: 2005/04/21 13:52:20 $
  * @module resource_v1
  */
 public final class ResourceStorableObjectPool extends StorableObjectPool {
@@ -39,50 +38,61 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 	private static ResourceStorableObjectPool instance;
 	
 	private ResourceStorableObjectPool() {
-		super(ObjectGroupEntities.RESOURCE_GROUP_CODE);
+		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.RESOURCE_GROUP_CODE);
 	}
 	
 	private ResourceStorableObjectPool(Class cacheMapClass){
-		super(ObjectGroupEntities.RESOURCE_GROUP_CODE, cacheMapClass);
+		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.RESOURCE_GROUP_CODE, cacheMapClass);
 	}
-	
+
+	public static void init(ResourceObjectLoader rObjectLoader1, final int size) {
+		if (instance == null)
+			instance = new ResourceStorableObjectPool();
+
+		rObjectLoader = rObjectLoader1;
+
+		instance.addObjectPool(ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE, size);
+
+		instance.populatePools();
+	}
+
+	public static void init(ResourceObjectLoader rObjectLoader1) {
+		if (instance == null)
+			instance = new ResourceStorableObjectPool();
+
+		rObjectLoader = rObjectLoader1;
+
+		instance.addObjectPool(ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE, IMAGERESOURCE_OBJECT_POOL_SIZE);
+
+		instance.populatePools();
+	}
+
 	public static void init(ResourceObjectLoader rObjectLoader1, Class cacheClass, final int size) {
 		Class clazz = null;
 		try {
 			clazz = Class.forName(cacheClass.getName());
 			instance = new ResourceStorableObjectPool(clazz);
-		} catch (ClassNotFoundException e) {
-			Log.errorMessage("Cache class '" + cacheClass.getName() +"' cannot be found, use default '"   //$NON-NLS-1$//$NON-NLS-2$
-							 + ((clazz == null) ? "null" : clazz.getName()) + "'");  //$NON-NLS-1$//$NON-NLS-2$
+		}
+		catch (ClassNotFoundException e) {
+			Log.errorMessage("Cache class '" + cacheClass.getName() +"' cannot be found, use default");
+			instance = new ResourceStorableObjectPool();
 		}
 		init(rObjectLoader1, size);
 	}
-	
-	public static void init(ResourceObjectLoader rObjectLoader1, final int size) {
-		if (instance == null)
+
+	public static void init(ResourceObjectLoader rObjectLoader1, Class cacheClass) {
+		Class clazz = null;
+		try {
+			clazz = Class.forName(cacheClass.getName());
+			instance = new ResourceStorableObjectPool(clazz);
+		}
+		catch (ClassNotFoundException e) {
+			Log.errorMessage("Cache class '" + cacheClass.getName() +"' cannot be found, use default");
 			instance = new ResourceStorableObjectPool();
-		instance.objectPoolMap = Collections.synchronizedMap(new HashMap(size));
-
-		rObjectLoader = rObjectLoader1;
-
-		instance.addObjectPool(ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE, size);
-				
-		instance.populatePools();
+		}
+		init(rObjectLoader1);
 	}
-	
-	public static void init(ResourceObjectLoader rObjectLoader1) {
-		if (instance == null)
-			instance = new ResourceStorableObjectPool();
-		
-		instance.objectPoolMap = Collections.synchronizedMap(new HashMap(OBJECT_POOL_MAP_SIZE));
 
-		rObjectLoader = rObjectLoader1;
-		
-		instance.addObjectPool(ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE, IMAGERESOURCE_OBJECT_POOL_SIZE);
-		
-		instance.populatePools();
-	}
-	
 	public static void refresh() throws ApplicationException {        
     	instance.refreshImpl();
     }

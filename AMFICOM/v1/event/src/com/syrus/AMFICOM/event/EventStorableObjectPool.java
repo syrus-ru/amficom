@@ -1,5 +1,5 @@
 /*
- * $Id: EventStorableObjectPool.java,v 1.20 2005/04/21 11:01:25 arseniy Exp $
+ * $Id: EventStorableObjectPool.java,v 1.21 2005/04/21 13:52:08 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,6 @@
 package com.syrus.AMFICOM.event;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
@@ -25,7 +24,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/04/21 11:01:25 $
+ * @version $Revision: 1.21 $, $Date: 2005/04/21 13:52:08 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -44,37 +43,16 @@ public class EventStorableObjectPool extends StorableObjectPool {
 
 	private EventStorableObjectPool() {
 		// empty
-		super(ObjectGroupEntities.EVENT_GROUP_CODE);
+		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.EVENT_GROUP_CODE);
 	}
 
 	private EventStorableObjectPool(Class cacheMapClass) {
-		super(ObjectGroupEntities.EVENT_GROUP_CODE, cacheMapClass);
-	}
-
-	/**
-	 * 
-	 * @param eObjectLoader1
-	 * @param cacheClass
-	 *                class must extend LRUMap
-	 * @param size
-	 */
-	public static void init(EventObjectLoader eObjectLoader1, Class cacheClass, final int size) {
-		Class clazz = null;
-		try {
-			clazz = Class.forName(cacheClass.getName());
-			instance = new EventStorableObjectPool(clazz);
-		}
-		catch (ClassNotFoundException e) {
-			Log.errorMessage("Cache class '" + cacheClass.getName() +"' cannot be found, use default");
-		}
-		init(eObjectLoader1, size);
+		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.EVENT_GROUP_CODE, cacheMapClass);
 	}
 
 	public static void init(EventObjectLoader eObjectLoader1, final int size) {
 		if (instance == null)
 			instance = new EventStorableObjectPool();
-
-		instance.objectPoolMap = Collections.synchronizedMap(new HashMap(OBJECT_POOL_MAP_SIZE));
 
 		eObjectLoader = eObjectLoader1;
 
@@ -89,8 +67,6 @@ public class EventStorableObjectPool extends StorableObjectPool {
 	public static void init(EventObjectLoader eObjectLoader1) {
 		if (instance == null)
 			instance = new EventStorableObjectPool();
-		
-		instance.objectPoolMap = Collections.synchronizedMap(new HashMap(OBJECT_POOL_MAP_SIZE));
 
 		eObjectLoader = eObjectLoader1;
 
@@ -100,6 +76,32 @@ public class EventStorableObjectPool extends StorableObjectPool {
 		instance.addObjectPool(ObjectEntities.EVENTSOURCE_ENTITY_CODE, EVENTSOURCE_OBJECT_POOL_SIZE);
 
 		instance.populatePools();
+	}
+
+	public static void init(EventObjectLoader eObjectLoader1, Class cacheClass, final int size) {
+		Class clazz = null;
+		try {
+			clazz = Class.forName(cacheClass.getName());
+			instance = new EventStorableObjectPool(clazz);
+		}
+		catch (ClassNotFoundException e) {
+			Log.errorMessage("Cache class '" + cacheClass.getName() +"' cannot be found, use default");
+			instance = new EventStorableObjectPool();
+		}
+		init(eObjectLoader1, size);
+	}
+
+	public static void init(EventObjectLoader eObjectLoader1, Class cacheClass) {
+		Class clazz = null;
+		try {
+			clazz = Class.forName(cacheClass.getName());
+			instance = new EventStorableObjectPool(clazz);
+		}
+		catch (ClassNotFoundException e) {
+			Log.errorMessage("Cache class '" + cacheClass.getName() +"' cannot be found, use default");
+			instance = new EventStorableObjectPool();
+		}
+		init(eObjectLoader1);
 	}
 
 	public static void refresh() throws ApplicationException {

@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeStorableObjectPool.java,v 1.15 2005/04/21 10:59:50 arseniy Exp $
+ * $Id: SchemeStorableObjectPool.java,v 1.16 2005/04/21 13:53:11 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,6 @@
 package com.syrus.AMFICOM.scheme;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
@@ -26,7 +25,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.15 $, $Date: 2005/04/21 10:59:50 $
+ * @version $Revision: 1.16 $, $Date: 2005/04/21 13:53:11 $
  * @module scheme_v1
  */
 public final class SchemeStorableObjectPool extends StorableObjectPool {
@@ -73,17 +72,16 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 	private static SchemeStorableObjectPool instance;
 
 	private SchemeStorableObjectPool() {
-		super(ObjectGroupEntities.SCHEME_GROUP_CODE);
+		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.SCHEME_GROUP_CODE);
 	}
 
 	private SchemeStorableObjectPool(final Class cacheMapClass) {
-		super(ObjectGroupEntities.SCHEME_GROUP_CODE, cacheMapClass);
+		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.SCHEME_GROUP_CODE, cacheMapClass);
 	}
 
 	public static void init(final SchemeObjectLoader schemeObjectLoader1, final int size) {
 		if (instance == null)
 			instance = new SchemeStorableObjectPool();
-		instance.objectPoolMap = Collections.synchronizedMap(new HashMap(OBJECT_POOL_MAP_SIZE));
 
 		schemeObjectLoader = schemeObjectLoader1;
 
@@ -109,8 +107,6 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 	public static void init(final SchemeObjectLoader schemeObjectLoader1) {
 		if (instance == null)
 			instance = new SchemeStorableObjectPool();
-
-		instance.objectPoolMap = Collections.synchronizedMap(new HashMap(OBJECT_POOL_MAP_SIZE));
 
 		schemeObjectLoader = schemeObjectLoader1;
 

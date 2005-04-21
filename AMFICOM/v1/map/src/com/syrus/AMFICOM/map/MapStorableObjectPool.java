@@ -1,5 +1,5 @@
 /*
- * $Id: MapStorableObjectPool.java,v 1.16 2005/04/21 10:58:36 arseniy Exp $
+ * $Id: MapStorableObjectPool.java,v 1.17 2005/04/21 13:52:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,6 @@
 package com.syrus.AMFICOM.map;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
@@ -25,7 +24,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/04/21 10:58:36 $
+ * @version $Revision: 1.17 $, $Date: 2005/04/21 13:52:32 $
  * @author $Author: arseniy $
  * @module map_v1
  */
@@ -62,17 +61,16 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 	private static MapStorableObjectPool instance;
 
 	private MapStorableObjectPool() {
-		super(ObjectGroupEntities.MAP_GROUP_CODE);
+		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.MAP_GROUP_CODE);
 	}
 
 	private MapStorableObjectPool(final Class cacheMapClass) {
-		super(ObjectGroupEntities.MAP_GROUP_CODE, cacheMapClass);
+		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.MAP_GROUP_CODE, cacheMapClass);
 	}
 
 	public static void init(final MapObjectLoader mapObjectLoader1, final int size) {
 		if (instance == null)
 			instance = new MapStorableObjectPool();
-		instance.objectPoolMap = Collections.synchronizedMap(new HashMap(OBJECT_POOL_MAP_SIZE));
 
 		mapObjectLoader = mapObjectLoader1;
 
@@ -93,8 +91,6 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 		if (instance == null)
 			instance = new MapStorableObjectPool();
 
-		instance.objectPoolMap = Collections.synchronizedMap(new HashMap(OBJECT_POOL_MAP_SIZE));
-
 		mapObjectLoader = mapObjectLoader1;
 
 		instance.addObjectPool(ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE, SITE_NODE_TYPE_OBJECT_POOL_SIZE);
@@ -111,19 +107,18 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 	}
 
 	/**
-	 * 
 	 * @param mapObjectLoader1
 	 * @param cacheClass
-	 *            class must extend LRUMap
+	 *          class must extend LRUMap
 	 * @param size
 	 */
 	public static void init(final MapObjectLoader mapObjectLoader1, final Class cacheClass, final int size) {
 		final String cacheClassName = cacheClass.getName();
 		try {
 			instance = new MapStorableObjectPool(Class.forName(cacheClassName));
-		} catch (final ClassNotFoundException cnfe) {
-			Log.errorMessage("Cache class '" + cacheClassName //$NON-NLS-1$
-					+ "' cannot be found, using default"); //$NON-NLS-1$
+		}
+		catch (final ClassNotFoundException cnfe) {
+			Log.errorMessage("Cache class '" + cacheClassName + "' cannot be found, using default"); //$NON-NLS-1$
 			instance = new MapStorableObjectPool();
 		}
 		init(mapObjectLoader1, size);
@@ -133,9 +128,9 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 		final String cacheClassName = cacheClass.getName();
 		try {
 			instance = new MapStorableObjectPool(Class.forName(cacheClassName));
-		} catch (final ClassNotFoundException cnfe) {
-			Log.errorMessage("Cache class '" + cacheClassName //$NON-NLS-1$
-					+ "' cannot be found, using default"); //$NON-NLS-1$
+		}
+		catch (final ClassNotFoundException cnfe) {
+			Log.errorMessage("Cache class '" + cacheClassName + "' cannot be found, using default"); //$NON-NLS-1$
 			instance = new MapStorableObjectPool();
 		}
 		init(mapObjectLoader1);
