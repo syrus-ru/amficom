@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewTreeModel.java,v 1.10 2005/04/14 14:11:29 krupenn Exp $ Syrus
+ * $Id: MapViewTreeModel.java,v 1.11 2005/04/21 11:44:41 krupenn Exp $ Syrus
  * Systems Научно-технический центр Проект: АМФИКОМ Автоматизированный
  * МногоФункциональный Интеллектуальный Комплекс Объектного Мониторинга
  * Платформа: java 1.4.1
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.mapview.MapView;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/04/14 14:11:29 $
+ * @version $Revision: 1.11 $, $Date: 2005/04/21 11:44:41 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -57,7 +57,7 @@ public class MapViewTreeModel {
 
 	static MapComparator mapComparator = new MapComparator();
 
-	static SiteNodeTypeComparator siteNodeTypeComparator = new SiteNodeTypeComparator();
+	public static SiteNodeTypeComparator siteNodeTypeComparator = new SiteNodeTypeComparator();
 
 	static final int IMG_SIZE = 16;
 
