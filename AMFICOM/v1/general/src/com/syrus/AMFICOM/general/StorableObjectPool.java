@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.71 2005/04/21 13:50:06 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.72 2005/04/21 14:48:50 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import java.util.Set;
 import org.omg.CORBA.portable.IDLEntity;
 
 /**
- * @version $Revision: 1.71 $, $Date: 2005/04/21 13:50:06 $
+ * @version $Revision: 1.72 $, $Date: 2005/04/21 14:48:50 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -44,7 +44,7 @@ public abstract class StorableObjectPool {
 	protected Class cacheMapClass;
 
 	private Map savingObjectsMap; // Map <Integer dependencyLevel, Map <Short entityCode, Set <StorableObject> levelEntitySavingObjects > >
-	private HashSet savingObjectIds; // HashSet <Identifier>
+	private Set savingObjectIds; // HashSet <Identifier>
 
 	private Set deletedIds; // Set <Identifier>
 
@@ -59,6 +59,9 @@ public abstract class StorableObjectPool {
 		this.selfGroupName = ObjectGroupEntities.codeToString(this.selfGroupCode).replaceAll("Group$", ""); //$NON-NLS-1$ //$NON-NLS-2$
 
 		this.cacheMapClass = cacheMapClass;
+
+		this.savingObjectsMap = Collections.synchronizedMap(new HashMap());
+		this.savingObjectIds = Collections.synchronizedSet(new HashSet());
 
 		this.deletedIds = Collections.synchronizedSet(new HashSet());
 	}
@@ -117,9 +120,11 @@ public abstract class StorableObjectPool {
 	}
 
 	protected final void cleanChangedStorableObjectsImpl() {
-		for (Iterator it = this.objectPoolMap.keySet().iterator(); it.hasNext();) {
-			Short entityCode = (Short) it.next();
-			this.cleanChangedStorableObjectImpl(entityCode);
+		synchronized (this.objectPoolMap) {
+			for (Iterator it = this.objectPoolMap.keySet().iterator(); it.hasNext();) {
+				Short entityCode = (Short) it.next();
+				this.cleanChangedStorableObjectImpl(entityCode);
+			}
 		}
 	}
 
@@ -146,7 +151,7 @@ public abstract class StorableObjectPool {
 		}
 	}
 
-	protected final synchronized void deleteImpl(final Identifier id) {
+	protected final void deleteImpl(final Identifier id) {
 		Short entityCode = new Short(id.getMajor());
 		LRUMap lruMap = (LRUMap) this.objectPoolMap.get(entityCode);
 		if (lruMap != null)
@@ -161,7 +166,7 @@ public abstract class StorableObjectPool {
 		// this.deleteStorableObject(id);
 	}
 
-	protected final synchronized void deleteImpl(final Set identifiables) {
+	protected final void deleteImpl(final Set identifiables) {
 		for (final Iterator identifiableIterator = identifiables.iterator(); identifiableIterator.hasNext();) {
 			final Identifier id = ((Identifiable) identifiableIterator.next()).getId();
 
@@ -247,9 +252,11 @@ public abstract class StorableObjectPool {
 		if (this.deletedIds.contains(id))
 			this.deleteStorableObject(id);
 		else {
-			this.prepareSavingObjectsMap(id);
-			if (!this.savingObjectsMap.isEmpty())
-				this.saveWithDependencies(force);
+			synchronized (this.savingObjectsMap) {
+				this.prepareSavingObjectsMap(id);
+				if (!this.savingObjectsMap.isEmpty())
+					this.saveWithDependencies(force);
+			}
 		}
 	}
 
@@ -279,9 +286,10 @@ public abstract class StorableObjectPool {
 		/* delete objects ! */
 		this.flushDeleted(entityCode.shortValue());
 
-		this.prepareSavingObjectsMap(entityCode);
-
-		this.saveWithDependencies(force);
+		synchronized (this.savingObjectsMap) {
+			this.prepareSavingObjectsMap(entityCode);
+			this.saveWithDependencies(force);
+		}
 	}
 
 	/**
@@ -298,9 +306,10 @@ public abstract class StorableObjectPool {
 		/* delete objects ! */
 		this.flushDeleted();
 
-		this.prepareSavingObjectsMap();
-
-		this.saveWithDependencies(force);
+		synchronized (this.savingObjectsMap) {
+			this.prepareSavingObjectsMap();
+			this.saveWithDependencies(force);
+		}
 	}
 
 	/**
@@ -310,16 +319,10 @@ public abstract class StorableObjectPool {
 	 */
 	private void prepareSavingObjectsMap(final Identifier id) throws ApplicationException {
 		/* Objects for which method  saveWithDependencies already invoked*/
-		if (this.savingObjectIds != null)
-			this.savingObjectIds.clear();
-		else
-			this.savingObjectIds = new HashSet();
+		this.savingObjectIds.clear();
 
 		/* Specially oredered objects to save with dependencies*/
-		if (this.savingObjectsMap != null)
-			this.savingObjectsMap.clear();
-		else
-			this.savingObjectsMap = new HashMap();
+		this.savingObjectsMap.clear();
 
 		StorableObject storableObject = this.getStorableObjectImpl(id, false);
 		if (storableObject != null)
@@ -333,16 +336,10 @@ public abstract class StorableObjectPool {
 	 */
 	private void prepareSavingObjectsMap(final Short entityCode) throws ApplicationException {
 		/* Objects for which method  saveWithDependencies already invoked*/
-		if (this.savingObjectIds != null)
-			this.savingObjectIds.clear();
-		else
-			this.savingObjectIds = new HashSet();
+		this.savingObjectIds.clear();
 
 		/* Specially oredered objects to save with dependencies*/
-		if (this.savingObjectsMap != null)
-			this.savingObjectsMap.clear();
-		else
-			this.savingObjectsMap = new HashMap();
+		this.savingObjectsMap.clear();
 
 		/* Prepare savingObjectsMap from objects of the given entity in pool */
 		this.checkChangedWithDependenciesEntity(entityCode);
@@ -354,21 +351,17 @@ public abstract class StorableObjectPool {
 	 */
 	private void prepareSavingObjectsMap() throws ApplicationException {
 		/* Objects for which method  saveWithDependencies already invoked*/
-		if (this.savingObjectIds != null)
-			this.savingObjectIds.clear();
-		else
-			this.savingObjectIds = new HashSet();
+		this.savingObjectIds.clear();
 
 		/* Specially oredered objects to save with dependencies*/
-		if (this.savingObjectsMap != null)
-			this.savingObjectsMap.clear();
-		else
-			this.savingObjectsMap = new HashMap();
+		this.savingObjectsMap.clear();
 
 		/* Prepare savingObjectsMap from all objects in pool */
-		for (final Iterator entityCodeIterator = this.objectPoolMap.keySet().iterator(); entityCodeIterator.hasNext();) {
-			final Short entityCode = (Short) entityCodeIterator.next();
-			this.checkChangedWithDependenciesEntity(entityCode);
+		synchronized (this.objectPoolMap) {
+			for (final Iterator entityCodeIterator = this.objectPoolMap.keySet().iterator(); entityCodeIterator.hasNext();) {
+				final Short entityCode = (Short) entityCodeIterator.next();
+				this.checkChangedWithDependenciesEntity(entityCode);
+			}
 		}
 	}
 
@@ -377,7 +370,7 @@ public abstract class StorableObjectPool {
 	 * @param entityCode
 	 * @throws ApplicationException
 	 */
-	private synchronized void checkChangedWithDependenciesEntity(final Short entityCode) throws ApplicationException {
+	private void checkChangedWithDependenciesEntity(final Short entityCode) throws ApplicationException {
 		LRUMap objectPool = (LRUMap) this.objectPoolMap.get(entityCode);
 		if (objectPool != null) {
 			for (Iterator poolIterator = objectPool.iterator(); poolIterator.hasNext();)
@@ -444,7 +437,7 @@ public abstract class StorableObjectPool {
 	 * @param force
 	 * @throws ApplicationException
 	 */
-	private synchronized void saveWithDependencies(final boolean force) throws ApplicationException {
+	private void saveWithDependencies(final boolean force) throws ApplicationException {
 		/* Save objects in order from savingObjectsMap */
 		Integer dependencyKey;
 		Map levelSavingObjectsMap;
