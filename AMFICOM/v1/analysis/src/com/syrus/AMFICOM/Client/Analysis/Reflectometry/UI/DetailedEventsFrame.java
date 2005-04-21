@@ -265,7 +265,6 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener, CurrentEv
 		updColorModel();
 	}
 
-
 	private void setData(int nEvent)
 	{
 		if(etalonMTM == null || alignedDataMT == null)
@@ -456,7 +455,7 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener, CurrentEv
 		jTable.updateUI();
 	}
 
-	public void bsHashAdded(String key, BellcoreStructure bs)
+	public void bsHashAdded(String key, BellcoreStructure bs1)
 	{
 		if (key.equals(Heap.PRIMARY_TRACE_KEY))
 		{
@@ -604,10 +603,8 @@ class CompareTableModel extends AbstractTableModel
 	}
 }
 
-
 class CompareTableRenderer extends ADefaultTableCellRenderer
 {
-
 	private boolean sameType = true;
 
 	public void setSameType(boolean key)
@@ -616,37 +613,14 @@ class CompareTableRenderer extends ADefaultTableCellRenderer
 	}
 
 	public Component getTableCellRendererComponent(JTable table, Object value,
-												boolean isSelected, boolean hasFocus, int row, int column)
+			boolean isSelected, boolean hasFocus, int row, int column)
 	{
 		Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
-		/*
-		if(!sameType && row == 0)
-			c.setForeground(Color.red);
-		else if(!sameType && row == 1) // XXX -- ?
-			c.setForeground(Color.red);
-		else
-			c.setForeground(Color.black);*/
-		
 		c.setForeground(sameType || row > 1
 		    		? Color.black
 		            : Color.red);
 
 		return c;
 	}
-
-	private boolean containsRow(int row, int []array)
-	{
-		if(array == null)
-			return false;
-
-		for(int i=0; i<array.length; i++)
-		{
-			if(array[i] == row)
-				return true;
-		}
-		return false;
-	}
 }
-
-
