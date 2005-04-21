@@ -11,8 +11,6 @@ import com.syrus.AMFICOM.Client.General.*;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEvents;
-import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.measurement.*;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
@@ -78,14 +76,14 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 		if(dialog.showDialog() == JOptionPane.CANCEL_OPTION)
 			return;
 		
-		Result result = dialog.getResult();
-		if (result == null)
+		Result result1 = dialog.getResult();
+		if (result1 == null)
 			return;
 
 		BellcoreStructure bs = null;
 		
 
-		SetParameter[] parameters = result.getParameters();
+		SetParameter[] parameters = result1.getParameters();
 		for (int i = 0; i < parameters.length; i++)
 		{
 			SetParameter param = parameters[i];
@@ -103,8 +101,8 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 		}
 		Heap.setBSPrimaryTrace(bs);
 
-		if (result.getSort().equals(ResultSort.RESULT_SORT_MEASUREMENT)) {
-			Measurement m = (Measurement)result.getAction();
+		if (result1.getSort().equals(ResultSort.RESULT_SORT_MEASUREMENT)) {
+			Measurement m = (Measurement)result1.getAction();
 			Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
 			bs.title = m.getName();
 			bs.monitoredElementId = m.getMonitoredElementId().getIdentifierString();

@@ -468,11 +468,11 @@ implements OperationListener, BsHashChangeListener, CurrentEventChangeListener, 
 	}
 
 	public void bsHashAdded(String key, BellcoreStructure bs)
-	{
+	{ // ignore (?)
 	}
 
 	public void bsHashRemoved(String key)
-	{
+	{ // ignore (?)
 	}
 
 	public void bsHashRemovedAll()
