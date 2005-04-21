@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.29 2005/04/20 14:31:34 saa Exp $
+ * $Id: Heap.java,v 1.30 2005/04/21 11:12:40 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,7 +40,7 @@ import com.syrus.io.BellcoreStructure;
  * использование остальных методов работы с BS
  * 
  * @author $Author: saa $
- * @version $Revision: 1.29 $, $Date: 2005/04/20 14:31:34 $
+ * @version $Revision: 1.30 $, $Date: 2005/04/21 11:12:40 $
  * @module
  */
 public class Heap
@@ -66,6 +66,8 @@ public class Heap
 
 	private static String currentTrace = ""; // XXX: initialize to avoid crushes
 	private static int currentEv = -1; // XXX: is this initialization good?
+
+	private static String newMSName = null; // the name for newly created (unsaved) MeasurementSetup; null if no new MS
 
 	public static ReflectogrammLoadDialog getRLDialogByKey(String key) {
         return (ReflectogrammLoadDialog) dialogHash.get(key);
@@ -138,6 +140,16 @@ public class Heap
     		etalonMTM.getRSE());
     	return rcomp.getEtalonIdByProbeId(currentEv);
     }
+
+	public static String getNewMSName() {
+		return newMSName;
+	}
+
+	public static void setNewMSName(String newMSName) {
+		Heap.newMSName = newMSName;
+	}
+
+    // --------
 
     public static boolean hasEmptyAllBSMap() {
         return bsHash.isEmpty();
