@@ -1,5 +1,5 @@
 /*-
-* $Id: IntervalsTemporalPattern.java,v 1.3 2005/04/21 15:32:36 bob Exp $
+* $Id: IntervalsTemporalPattern.java,v 1.4 2005/04/21 15:34:55 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -23,7 +23,6 @@ import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.IntervalsTemporalPattern_Transferable;
@@ -31,7 +30,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/04/21 15:32:36 $
+ * @version $Revision: 1.4 $, $Date: 2005/04/21 15:34:55 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module measurement_v1
