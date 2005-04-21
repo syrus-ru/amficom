@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.48 2005/04/21 13:50:13 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.49 2005/04/21 14:04:46 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.48 $, $Date: 2005/04/21 13:50:13 $
+ * @version $Revision: 1.49 $, $Date: 2005/04/21 14:04:46 $
  * @module
  */
 
@@ -241,6 +241,7 @@ public class CoreAnalysisManager
 	 * general Info и запрошенных дополнительны типов  
 	 * @throws IncompatibleTracesException если needBSInfo, но
 	 * соответствующие параметры входных bs различаются.
+	 * @throws IllegalArgumentException если входная совокупность р/г пуста
 	 */
 	public static TracesAverages findTracesAverages(Collection bsColl,
 			boolean needNoiseInfo,
@@ -461,7 +462,14 @@ public class CoreAnalysisManager
 	}
 
 	/**
-	 * Создает эталонный MTM по набору рефлектограмм и параметрам анализа
+	 * Создает эталонный MTM по непустому набору рефлектограмм и параметрам
+	 * анализа.
+	 * <ul>
+	 * <li> Если в наборе только одна р/г, строит пороги по ее bs,
+	 * <li> если несколько - по всем их mf,
+	 * <li> если ни одной - возникает IllegalArgumentException
+	 * (see {@link #findTracesAverages(Collection, boolean, boolean, boolean)}).
+	 * </ul>
 	 * @param bsColl коллекция входных р/г.
 	 *   Должна быть непуста, а р/г должны иметь одинаковую длину.
 	 * @param pars параметры анализа {@link #makeAnalysis(TracesAverages, double[])}
@@ -477,39 +485,15 @@ public class CoreAnalysisManager
 		TracesAverages av = findTracesAverages(bsColl, true, true, true);
 		ModelTraceAndEventsImpl mtae = makeAnalysis(av, pars);
 		ModelTraceManager mtm = new ModelTraceManager(mtae);
-		updateMTMThresholdsByBSColl(mtm, av);
+		if (bsColl.size() > 1) {
+			// extend to max dev of mf
+			mtm.updateThreshToContain(av.maxYMF, av.minYMF, 0.03, 1.2); 
+		}
+		else {
+			// extend to a single curve: original bs
+			mtm.updateThreshToContain(av.avY, av.avY, 0.03, 3.0);
+		}
 		return mtm;
-	}
-
-	/**
-	 * Расширяет пороги MTM соответственно кривым
-	 * макс. и мин. значений MF из TracesAverages
-	 * @param mtm ModelTraceManager, пороги которого надо расширить
-	 * @param av TracesAverages с заполненными полями MF
-	 */
-	private static void updateMTMThresholdsByBSColl(ModelTraceManager mtm, TracesAverages av)
-	{
-		updateMTMThresholdsByRange(mtm, av.maxYMF, av.minYMF);
-	}
-
-	/**
-	 * Расширяет пороги данного ModelTraceManager так, чтобы они охватили
-	 * указанную верхнюю и нижнюю кривые. Верхняя кривая должна
-	 * быть не ниже нижней всюду на их совместной области определения.
-	 * @param mtm
-	 * @param yMax верхняя кривая
-	 * @param yMin нижняя кривая
-	 */
-	private static void updateMTMThresholdsByRange(ModelTraceManager mtm,
-			double[] yMax,
-			double[] yMin)
-	{
-//		System.err.println("updateMTMThresholdsByRange:"
-//			+ " mtm.length = " + mtm.getMTAE().getModelTrace().getLength()
-//			+ " yMax.length = " + yMax.length
-//			+ " yMin.length = " + yMin.length
-//			);
-		mtm.updateThreshToContain(yMax, yMin, 0.03, 1.2); // @todo: externalize parameters: 0.03, 1.2
 	}
 
 	public static double getMedian(double[] y, int pos)
