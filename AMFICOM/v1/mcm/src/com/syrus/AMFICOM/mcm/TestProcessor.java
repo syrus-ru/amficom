@@ -1,5 +1,5 @@
 /*
- * $Id: TestProcessor.java,v 1.47 2005/04/21 11:18:40 arseniy Exp $
+ * $Id: TestProcessor.java,v 1.48 2005/04/21 14:44:35 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.47 $, $Date: 2005/04/21 11:18:40 $
+ * @version $Revision: 1.48 $, $Date: 2005/04/21 14:44:35 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -106,6 +106,8 @@ public abstract class TestProcessor extends SleepButWorkThread {
 		Measurement lastMeasurement = null;
 		try {
 			lastMeasurement = this.test.retrieveLastMeasurement();
+			Log.debugMessage("TestProcessor.startWithProcessingTest | Last measurement for test '" + this.test.getId()
+					+ "' -- '" + lastMeasurement.getId() + "'", Log.DEBUGLEVEL08);
 			MeasurementStorableObjectPool.putStorableObject(lastMeasurement);
 		}
 		catch (ApplicationException ae) {
