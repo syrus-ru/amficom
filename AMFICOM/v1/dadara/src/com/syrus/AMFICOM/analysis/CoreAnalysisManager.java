@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.47 2005/04/19 16:49:58 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.48 2005/04/21 13:50:13 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.47 $, $Date: 2005/04/19 16:49:58 $
+ * @version $Revision: 1.48 $, $Date: 2005/04/21 13:50:13 $
  * @module
  */
 
@@ -552,7 +552,7 @@ public class CoreAnalysisManager
 	}
 
 	/**
-	 * See specification of {@link #nExtendThreshToCoverCurve(double[], double[], ThreshDX[], ThreshDY[], int, int)}
+	 * See specification of {@link #nExtendThreshToCoverCurve(double[], double[], ThreshDX[], ThreshDY[], int, int, double)}
 	 */
 	public static void extendThreshToCoverCurve(
 			double[] yBase,
