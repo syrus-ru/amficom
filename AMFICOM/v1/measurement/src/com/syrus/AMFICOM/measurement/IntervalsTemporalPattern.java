@@ -1,5 +1,5 @@
 /*-
-* $Id: IntervalsTemporalPattern.java,v 1.4 2005/04/21 15:34:55 bob Exp $
+* $Id: IntervalsTemporalPattern.java,v 1.5 2005/04/21 16:17:28 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -25,13 +25,16 @@ import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.measurement.corba.InnerDisplacement;
+import com.syrus.AMFICOM.measurement.corba.InnerHole;
+import com.syrus.AMFICOM.measurement.corba.InnerTemporalPattern;
 import com.syrus.AMFICOM.measurement.corba.IntervalsTemporalPattern_Transferable;
 import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/04/21 15:34:55 $
- * @author $Author: bob $
+ * @version $Revision: 1.5 $, $Date: 2005/04/21 16:17:28 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module measurement_v1
  */
@@ -122,48 +125,34 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern {
 	 */
 	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
 		IntervalsTemporalPattern_Transferable itpt = (IntervalsTemporalPattern_Transferable) transferable;
-		
+
 		super.fromTransferable(itpt);
-		
+
 		this.period = itpt.period;
-		
-		if (this.holePositions == null) {
-			this.holePositions = new HashSet(itpt.hole_positions.length);
-		} else {
+
+		InnerHole[] ihs = itpt.inner_holes;
+		if (this.holePositions == null)
+			this.holePositions = new HashSet(ihs.length);
+		else
 			this.holePositions.clear();
-		}
-		
-		for(int i=0;i<itpt.hole_positions.length;i++) {
-			this.holePositions.add(new Integer(itpt.hole_positions[i]));
-		}
-		
-		assert itpt.displacement_period_number.length != itpt.displacement_value.length : ErrorMessages.OBJECT_STATE_ILLEGAL;
-		
-		if (this.displacements == null) {
-			this.displacements = new HashMap(itpt.displacement_period_number.length);
-		} else {
+		for (int i = 0; i < ihs.length; i++)
+			this.holePositions.add(new Integer(ihs[i].position));
+
+		InnerDisplacement[] ids = itpt.inner_displacements;
+		if (this.displacements == null)
+			this.displacements = new HashMap(ids.length);
+		else
 			this.displacements.clear();
-		}
-		
-		for(int i=0;i<itpt.displacement_period_number.length;i++) {
-			Integer periodNumber = new Integer(itpt.displacement_period_number[i]);
-			Long value = new Long(itpt.displacement_value[i]);
-			this.displacements.put(periodNumber, value);
-		}
-		
-		assert itpt.temporal_pattern_period_number.length != itpt.temporal_patterns_ids.length : ErrorMessages.OBJECT_STATE_ILLEGAL;
-		
-		if (this.temporalPatterns == null) {
-			this.temporalPatterns = new HashMap(itpt.temporal_pattern_period_number.length);
-		} else {
+		for (int i = 0; i < ids.length; i++)
+			this.displacements.put(new Integer(ids[i].position), new Long(ids[i].value));
+
+		InnerTemporalPattern[] itps = itpt.inner_temporal_patterns;
+		if (this.temporalPatterns == null)
+			this.temporalPatterns = new HashMap(itps.length);
+		else
 			this.temporalPatterns.clear();
-		}
-		
-		for(int i=0;i<itpt.temporal_pattern_period_number.length;i++) {
-			Integer periodNumber = new Integer(itpt.temporal_pattern_period_number[i]);
-			Identifier identifier = new Identifier(itpt.temporal_patterns_ids[i]);
-			this.temporalPatterns.put(periodNumber, identifier);
-		}
+		for (int i = 0; i < itps.length; i++)
+			this.temporalPatterns.put(new Integer(itps[i].position), new Identifier(itps[i].temporal_pattern_id));
 		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
@@ -238,69 +227,50 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern {
 	 */
 	public IDLEntity getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-		
-		int[] holePositionsT;
-		
+
+		InnerHole[] ihs;
 		if (this.holePositions != null && !this.holePositions.isEmpty()) {
-			holePositionsT = new int[this.holePositions.size()];
+			ihs = new InnerHole[this.holePositions.size()];
 			int i = 0;
-			for(Iterator it=this.holePositions.iterator();it.hasNext();i++) {
-				holePositionsT[i] = ((Integer)it.next()).intValue();
-			}
-		} else {
-			holePositionsT = new int[0];
+			for (Iterator it = this.holePositions.iterator(); it.hasNext(); i++)
+				ihs[i] = new InnerHole(((Integer) it.next()).intValue());
 		}
-		
-		int[] displacementPeriodNumber;
-		long[] displacementValue;
-		
+		else
+			ihs = new InnerHole[0];
+
+		InnerDisplacement[] ids;
 		if (this.displacements != null && !this.displacements.isEmpty()) {
-			displacementPeriodNumber = new int[this.displacements.size()];
-			displacementValue = new long[displacementPeriodNumber.length];			
-			
+			ids = new InnerDisplacement[this.displacements.size()];
 			int i = 0;
-			for (Iterator it = this.displacements.keySet().iterator(); it.hasNext();i++) {
-				Integer periodNumber = (Integer) it.next();
-				Long value = (Long)this.displacements.get(periodNumber);
-				displacementPeriodNumber[i] = periodNumber.intValue();
-				displacementValue[i] = value.longValue();
+			for (Iterator it = this.displacements.keySet().iterator(); it.hasNext(); i++) {
+				final Integer position = (Integer) it.next();
+				final Long value = (Long) this.displacements.get(position);
+				ids[i] = new InnerDisplacement(position.intValue(), value.longValue());
 			}
-		} else {
-			displacementPeriodNumber = new int[0];
-			displacementValue = new long[0];
 		}
-		
-		
-		int[] temporalPatternPeriodNumber;
-		Identifier_Transferable[] temporalPatternIds;
-		
+		else
+			ids = new InnerDisplacement[0];
+
+		InnerTemporalPattern[] itps;
 		if (this.temporalPatterns != null && !this.temporalPatterns.isEmpty()) {
-			temporalPatternPeriodNumber = new int[this.temporalPatterns.size()];
-			temporalPatternIds = new Identifier_Transferable[temporalPatternPeriodNumber.length];			
-			
+			itps = new InnerTemporalPattern[this.temporalPatterns.size()];
 			int i = 0;
-			for (Iterator it = this.temporalPatterns.keySet().iterator(); it.hasNext();i++) {
-				Integer periodNumber = (Integer) it.next();
-				Identifier id1 = (Identifier)this.temporalPatterns.get(periodNumber);
-				temporalPatternPeriodNumber[i] = periodNumber.intValue();
-				temporalPatternIds[i] = (Identifier_Transferable) id1.getTransferable();
+			for (Iterator it = this.temporalPatterns.keySet().iterator(); it.hasNext(); i++) {
+				final Integer position = (Integer) it.next();
+				final Identifier temporalPatternId = (Identifier) this.temporalPatterns.get(position);
+				itps[i] = new InnerTemporalPattern(position.intValue(), (Identifier_Transferable) temporalPatternId.getTransferable());
 			}
-		} else {
-			temporalPatternPeriodNumber = new int[0];
-			temporalPatternIds = new Identifier_Transferable[0];
 		}
-		
-		return new IntervalsTemporalPattern_Transferable(super.getHeaderTransferable(), 
-				this.period, 
-				holePositionsT,
-				displacementPeriodNumber,
-				displacementValue,
-				temporalPatternPeriodNumber,
-				temporalPatternIds);
+		else
+			itps = new InnerTemporalPattern[0];
+
+		return new IntervalsTemporalPattern_Transferable(super.getHeaderTransferable(), this.period, ihs, ids, itps);
 	}
 	
 	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 * <p>
+	 * <b>Clients must never explicitly call this method. </b>
+	 * </p>
 	 */
 	public java.util.Set getDependencies() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
