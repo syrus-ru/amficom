@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.76 2005/04/16 21:48:30 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.77 2005/04/21 11:18:40 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -57,7 +57,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.76 $, $Date: 2005/04/16 21:48:30 $
+ * @version $Revision: 1.77 $, $Date: 2005/04/21 11:18:40 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -467,7 +467,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 			}
 
 			try {
-				MeasurementStorableObjectPool.flush(true);
+				MeasurementStorableObjectPool.flush(ObjectEntities.TEST_ENTITY_CODE, true);
 			}
 			catch (ApplicationException ae) {
 				Log.errorException(ae);
@@ -497,7 +497,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 			test.setStatus(TestStatus.TEST_STATUS_ABORTED);
 			try {
 				MeasurementStorableObjectPool.putStorableObject(test);
-				MeasurementStorableObjectPool.flush(true);
+				MeasurementStorableObjectPool.flush(test.getId(), true);
 			}
 			catch (ApplicationException ae) {
 				Log.errorException(ae);

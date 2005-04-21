@@ -12,6 +12,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
@@ -107,7 +108,7 @@ public class Transceiver extends SleepButWorkThread {
 		}
 
 		try {
-			MeasurementStorableObjectPool.flush(true);
+			MeasurementStorableObjectPool.flush(ObjectEntities.MEASUREMENT_ENTITY_CODE, true);
 		}
 		catch (ApplicationException ae) {
 			Log.errorException(ae);
@@ -126,7 +127,7 @@ public class Transceiver extends SleepButWorkThread {
 				if (this.kisConnection.isEstablished()) {
 
 					if (! this.scheduledMeasurements.isEmpty()) {
-						measurement = (Measurement)this.scheduledMeasurements.get(0);
+						measurement = (Measurement) this.scheduledMeasurements.get(0);
 						measurementId = measurement.getId();
 						try {
 							this.kisConnection.transmitMeasurement(measurement, super.initialTimeToSleep);
@@ -135,7 +136,7 @@ public class Transceiver extends SleepButWorkThread {
 							this.scheduledMeasurements.remove(measurement);
 							measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ACQUIRING);
 							MeasurementStorableObjectPool.putStorableObject(measurement);
-							MeasurementStorableObjectPool.flush(true);
+							MeasurementStorableObjectPool.flush(measurementId, true);
 							super.clearFalls();
 						}
 						catch (CommunicationException ce) {
@@ -180,7 +181,7 @@ public class Transceiver extends SleepButWorkThread {
 								try {
 									result = this.kisReport.createResult();
 									measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ACQUIRED);
-									MeasurementStorableObjectPool.flush(true);
+									MeasurementStorableObjectPool.flush(measurementId, true);
 									super.clearFalls();
 								}
 								catch (MeasurementException me) {

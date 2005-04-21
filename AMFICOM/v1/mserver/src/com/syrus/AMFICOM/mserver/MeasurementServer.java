@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServer.java,v 1.32 2005/04/16 21:19:15 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.33 2005/04/21 11:19:45 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -46,7 +46,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/04/16 21:19:15 $
+ * @version $Revision: 1.33 $, $Date: 2005/04/21 11:19:45 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -354,7 +354,7 @@ public class MeasurementServer extends SleepButWorkThread {
 		}
 
 		try {
-			MeasurementStorableObjectPool.flush(true);
+			MeasurementStorableObjectPool.flush(ObjectEntities.TEST_ENTITY_CODE, true);
 		}
 		catch (ApplicationException ae) {
 			Log.errorException(ae);
