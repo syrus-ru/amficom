@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseSchemeObjectLoader.java,v 1.5 2005/04/14 09:27:09 bass Exp $
+ * $Id: DatabaseSchemeObjectLoader.java,v 1.6 2005/04/22 17:13:42 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.scheme;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.DatabaseObjectLoader;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -28,11 +29,11 @@ import java.util.Set;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/04/14 09:27:09 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/04/22 17:13:42 $
  * @module scheme_v1
  */
-public class DatabaseSchemeObjectLoader implements SchemeObjectLoader {
+public class DatabaseSchemeObjectLoader extends DatabaseObjectLoader implements SchemeObjectLoader {
 	/**
 	 * @param identifiables
 	 * @see SchemeObjectLoader#delete(Set)
