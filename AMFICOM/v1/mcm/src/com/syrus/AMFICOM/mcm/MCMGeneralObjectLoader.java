@@ -1,5 +1,5 @@
 /*
-* $Id: MCMGeneralObjectLoader.java,v 1.13 2005/04/12 17:26:17 arseniy Exp $
+* $Id: MCMGeneralObjectLoader.java,v 1.14 2005/04/22 13:55:43 arseniy Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/04/12 17:26:17 $
+ * @version $Revision: 1.14 $, $Date: 2005/04/22 13:55:43 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -176,8 +176,14 @@ final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
 		try {
 			MServer mServerRef = MeasurementControlModule.mServerConnectionManager.getVerifiedMServerReference();
 			ParameterType_Transferable[] transferables = mServerRef.transmitParameterTypes(loadIdsT);
-			for (int i = 0; i < transferables.length; i++)
-				loadedObjects.add(new ParameterType(transferables[i]));
+			for (int i = 0; i < transferables.length; i++) {
+				try {
+					loadedObjects.add(new ParameterType(transferables[i]));
+				}
+				catch (CreateObjectException coe) {
+					Log.errorException(coe);
+				}
+			}
 		}
 		catch (CommunicationException ce) {
 			Log.errorException(ce);
@@ -254,8 +260,14 @@ final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
 		try {
 			MServer mServerRef = MeasurementControlModule.mServerConnectionManager.getVerifiedMServerReference();
 			Characteristic_Transferable[] transferables = mServerRef.transmitCharacteristics(loadIdsT);
-			for (int i = 0; i < transferables.length; i++)
-				loadedObjects.add(new Characteristic(transferables[i]));
+			for (int i = 0; i < transferables.length; i++) {
+				try {
+					loadedObjects.add(new Characteristic(transferables[i]));
+				}
+				catch (CreateObjectException coe) {
+					Log.errorException(coe);
+				}
+			}
 		}
 		catch (CommunicationException ce) {
 			Log.errorException(ce);
