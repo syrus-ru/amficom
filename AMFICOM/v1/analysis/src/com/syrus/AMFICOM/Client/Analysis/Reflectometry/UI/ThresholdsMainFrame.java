@@ -172,7 +172,7 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener, CurrentTr
 		selectFrame = new TraceSelectorFrame(internal_dispatcher);
 		desktopPane.add(selectFrame);
 
-		paramFrame = new PrimaryParametersFrame(internal_dispatcher);
+		paramFrame = new PrimaryParametersFrame();
 		desktopPane.add(paramFrame);
 		tables.add(paramFrame);
 

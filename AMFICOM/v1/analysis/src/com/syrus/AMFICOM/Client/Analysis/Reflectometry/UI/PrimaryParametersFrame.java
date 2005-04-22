@@ -15,7 +15,6 @@ import javax.swing.table.TableModel;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.CurrentTraceChangeListener;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
@@ -39,11 +38,6 @@ implements BsHashChangeListener, CurrentTraceChangeListener
 
 	public PrimaryParametersFrame()
 	{
-		this(new Dispatcher());
-	}
-
-	public PrimaryParametersFrame(Dispatcher dispatcher)
-	{
 		super();
 
 		try
@@ -55,10 +49,10 @@ implements BsHashChangeListener, CurrentTraceChangeListener
 			e.printStackTrace();
 		}
 
-		init_module(dispatcher);
+		init_module();
 	}
 
-	void init_module(Dispatcher dispatcher)
+	void init_module()
 	{
 		Heap.addBsHashListener(this);
 		Heap.addCurrentTraceChangeListener(this);
@@ -149,7 +143,7 @@ implements BsHashChangeListener, CurrentTraceChangeListener
 			String.valueOf(bs.getAverages()),
 			Math.round(res) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_MT),
 			Math.round(range) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_KM),
-			date.substring(0, 9),
+			date.substring(0, 9), // FIXME: gives incorrect result
 			date.substring(9),
 			bs.getBackscatter() + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
 		}, 1);

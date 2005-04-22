@@ -212,7 +212,7 @@ public class AnalyseMainFrame extends JFrame implements BsHashChangeListener,
 
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | PRIMARY_PARAMETERS_FRAME", Log.FINEST);
-				PrimaryParametersFrame paramFrame = new PrimaryParametersFrame(internalDispatcher);
+				PrimaryParametersFrame paramFrame = new PrimaryParametersFrame();
 				desktopPane.add(paramFrame);
 				analysisReportCommand.setParameter(CreateAnalysisReportCommand.TABLE, paramFrame);
 				return paramFrame;
