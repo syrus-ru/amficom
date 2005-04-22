@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePortDatabase.java,v 1.1 2005/04/01 13:59:08 bass Exp $
+ * $Id: SchemePortDatabase.java,v 1.2 2005/04/22 16:21:44 max Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,15 +9,31 @@
 package com.syrus.AMFICOM.scheme;
 
 import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
+import com.syrus.util.Log;
+import com.syrus.util.database.DatabaseDate;
+import com.syrus.util.database.DatabaseString;
+
 import java.sql.*;
+import java.util.Date;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/04/01 13:59:08 $
+ * @author $Author: max $
+ * @version $Revision: 1.2 $, $Date: 2005/04/22 16:21:44 $
  * @module scheme_v1
  */
 public final class SchemePortDatabase extends CharacterizableDatabase {
+	
+	private static String columns;
+	private static String updateMultipleSQLValues;
+	
+	private SchemePort fromStorableObject(StorableObject storableObject) throws IllegalDataException {
+		if(storableObject instanceof SchemePort)
+			return (SchemePort) storableObject;
+		throw new IllegalDataException("SchemePortDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
+	}
+	
 	/**
 	 * @param storableObject
 	 * @param retrieveKind
@@ -25,45 +41,68 @@ public final class SchemePortDatabase extends CharacterizableDatabase {
 	 * @throws IllegalDataException
 	 * @throws ObjectNotFoundException
 	 * @throws RetrieveObjectException
-	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#retrieveObject(com.syrus.AMFICOM.general.StorableObject, int, java.lang.Object)
 	 */
 	public Object retrieveObject(StorableObject storableObject,
 			int retrieveKind, Object arg)
 			throws IllegalDataException, ObjectNotFoundException,
 			RetrieveObjectException {
-		throw new UnsupportedOperationException();
+		SchemePort schemePort = this.fromStorableObject(storableObject);
+		switch (retrieveKind) {
+			default:
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName()
+						+ " '" + schemePort.getId() + "'; argument: " + arg);
+				return null;
+		}
 	}
 
-	/**
-	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#getColumnsTmpl()
-	 */
 	protected String getColumnsTmpl() {
-		throw new UnsupportedOperationException();
+		if (columns == null) {
+			columns = StorableObjectWrapper.COLUMN_NAME + COMMA
+					+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
+					+ SchemePortWrapper.COLUMN_DIRECTION_TYPE + COMMA
+					+ SchemePortWrapper.COLUMN_PORT_TYPE_ID + COMMA
+					+ SchemePortWrapper.COLUMN_PORT_ID + COMMA
+					+ SchemePortWrapper.COLUMN_MEASUREMENT_PORT_TYPE_ID + COMMA
+					+ SchemePortWrapper.COLUMN_MEASUREMENT_PORT_ID + COMMA
+					+ SchemePortWrapper.COLUMN_PARENT_DEVICE_ID;
+		}
+		return columns;
 	}
 
-	/**
-	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#getEnityName()
-	 */
 	protected String getEnityName() {
-		throw new UnsupportedOperationException();
+		return ObjectEntities.SCHEME_PORT_ENTITY;
 	}
 
-	/**
-	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#getUpdateMultipleSQLValuesTmpl()
-	 */
 	protected String getUpdateMultipleSQLValuesTmpl() {
-		throw new UnsupportedOperationException();
+		if (updateMultipleSQLValues == null) {
+			updateMultipleSQLValues = QUESTION + COMMA
+					+ QUESTION + COMMA
+					+ QUESTION + COMMA
+					+ QUESTION + COMMA
+					+ QUESTION + COMMA
+					+ QUESTION + COMMA
+					+ QUESTION + COMMA
+					+ QUESTION;
+		}
+		return updateMultipleSQLValues;
 	}
 
 	/**
 	 * @param storableObject
 	 * @throws IllegalDataException
-	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#getUpdateSingleSQLValuesTmpl(com.syrus.AMFICOM.general.StorableObject)
 	 */
 	protected String getUpdateSingleSQLValuesTmpl(
 			StorableObject storableObject)
 			throws IllegalDataException {
-		throw new UnsupportedOperationException();
+		SchemePort schemePort = fromStorableObject(storableObject);
+		String sql = APOSTOPHE + DatabaseString.toQuerySubString(schemePort.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
+				+ APOSTOPHE + schemePort.getDirectionType().value() + APOSTOPHE + COMMA
+				+ DatabaseIdentifier.toSQLString(schemePort.getPortType().getId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemePort.getPort().getId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemePort.getMeasurementPortType().getId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemePort.getMeasurementPort().getId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemePort.getParentSchemeDevice().getId());
+		return sql;
 	}
 
 	/**
@@ -72,14 +111,22 @@ public final class SchemePortDatabase extends CharacterizableDatabase {
 	 * @param startParameterNumber
 	 * @throws IllegalDataException
 	 * @throws SQLException
-	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#setEntityForPreparedStatementTmpl(com.syrus.AMFICOM.general.StorableObject, java.sql.PreparedStatement, int)
 	 */
 	protected int setEntityForPreparedStatementTmpl(
 			StorableObject storableObject,
 			PreparedStatement preparedStatement,
 			int startParameterNumber) throws IllegalDataException,
 			SQLException {
-		throw new UnsupportedOperationException();
+		SchemePort schemePort = fromStorableObject(storableObject);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, schemePort.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, schemePort.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		preparedStatement.setInt(++startParameterNumber, schemePort.getDirectionType().value());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemePort.getPortType().getId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemePort.getPort().getId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemePort.getMeasurementPortType().getId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemePort.getMeasurementPort().getId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemePort.getParentSchemeDevice().getId());
+		return startParameterNumber;
 	}
 
 	/**
@@ -88,12 +135,32 @@ public final class SchemePortDatabase extends CharacterizableDatabase {
 	 * @throws IllegalDataException
 	 * @throws RetrieveObjectException
 	 * @throws SQLException
-	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#updateEntityFromResultSet(com.syrus.AMFICOM.general.StorableObject, java.sql.ResultSet)
 	 */
 	protected StorableObject updateEntityFromResultSet(
 			StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException,
 			SQLException {
-		throw new UnsupportedOperationException();
+		SchemePort schemePort;
+		if (storableObject == null) {
+			Date created = new Date(); 
+			schemePort = new SchemePort(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
+					created, created, null, null, 0L, null, null, null, null, null, null, null, null);
+		} else {
+			schemePort = fromStorableObject(storableObject);
+		}
+		schemePort.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
+				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
+				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+				resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
+				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
+				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
+				AbstractSchemePortDirectionType.from_int(resultSet.getInt(SchemePortWrapper.COLUMN_DIRECTION_TYPE)),
+				DatabaseIdentifier.getIdentifier(resultSet, SchemePortWrapper.COLUMN_PORT_TYPE_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, SchemePortWrapper.COLUMN_PORT_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, SchemePortWrapper.COLUMN_MEASUREMENT_PORT_TYPE_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, SchemePortWrapper.COLUMN_MEASUREMENT_PORT_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, SchemePortWrapper.COLUMN_PARENT_DEVICE_ID));
+		return schemePort;
 	}
 }

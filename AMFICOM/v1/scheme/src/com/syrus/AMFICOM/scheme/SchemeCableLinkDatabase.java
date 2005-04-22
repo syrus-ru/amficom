@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLinkDatabase.java,v 1.1 2005/04/01 13:59:07 bass Exp $
+ * $Id: SchemeCableLinkDatabase.java,v 1.2 2005/04/22 16:21:44 max Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,15 +9,30 @@
 package com.syrus.AMFICOM.scheme;
 
 import com.syrus.AMFICOM.general.*;
+import com.syrus.util.Log;
+import com.syrus.util.database.DatabaseDate;
+import com.syrus.util.database.DatabaseString;
+
 import java.sql.*;
+import java.util.Date;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/04/01 13:59:07 $
+ * @author $Author: max $
+ * @version $Revision: 1.2 $, $Date: 2005/04/22 16:21:44 $
  * @module scheme_v1
  */
 public final class SchemeCableLinkDatabase extends CharacterizableDatabase {
+	
+	private static String columns;
+	private static String updateMultipleSQLValues;
+	
+	private SchemeCableLink fromStorableObject(StorableObject storableObject) throws IllegalDataException {
+		if(storableObject instanceof SchemeCableLink)
+			return (SchemeCableLink) storableObject;
+		throw new IllegalDataException("SchemeCableLinkDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
+	}
+	
 	/**
 	 * @param storableObject
 	 * @param retrieveKind
@@ -25,45 +40,72 @@ public final class SchemeCableLinkDatabase extends CharacterizableDatabase {
 	 * @throws IllegalDataException
 	 * @throws ObjectNotFoundException
 	 * @throws RetrieveObjectException
-	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#retrieveObject(com.syrus.AMFICOM.general.StorableObject, int, java.lang.Object)
 	 */
 	public Object retrieveObject(StorableObject storableObject,
 			int retrieveKind, Object arg)
 			throws IllegalDataException, ObjectNotFoundException,
 			RetrieveObjectException {
-		throw new UnsupportedOperationException();
+		SchemeCableLink schemeCableLink = this.fromStorableObject(storableObject);
+		switch (retrieveKind) {
+			default:
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName()
+						+ " '" + schemeCableLink.getId() + "'; argument: " + arg);
+				return null;
+		}
 	}
 
-	/**
-	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#getColumnsTmpl()
-	 */
 	protected String getColumnsTmpl() {
-		throw new UnsupportedOperationException();
+		if (columns == null) {
+			columns = StorableObjectWrapper.COLUMN_NAME + COMMA
+					+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
+					+ SchemeCableLinkWrapper.COLUMN_PHYSICAL_LENGTH + COMMA
+					+ SchemeCableLinkWrapper.COLUMN_OPTICAL_LENGTH + COMMA
+					+ SchemeCableLinkWrapper.COLUMN_CABLE_LINK_TYPE_ID + COMMA
+					+ SchemeCableLinkWrapper.COLUMN_CABLE_LINK_ID + COMMA
+					+ SchemeCableLinkWrapper.COLUMN_SOURCE_SCHEME_CABLE_PORT_ID + COMMA
+					+ SchemeCableLinkWrapper.COLUMN_TARGET_SCHEME_CABLE_PORT_ID + COMMA
+					+ SchemeCableLinkWrapper.COLUMN_PARENT_SCHEME_ID;
+		}
+		return columns;
 	}
 
-	/**
-	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#getEnityName()
-	 */
 	protected String getEnityName() {
-		throw new UnsupportedOperationException();
+		return ObjectEntities.SCHEME_CABLE_LINK_ENTITY;
 	}
 
-	/**
-	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#getUpdateMultipleSQLValuesTmpl()
-	 */
 	protected String getUpdateMultipleSQLValuesTmpl() {
-		throw new UnsupportedOperationException();
+		if (updateMultipleSQLValues == null) {
+			updateMultipleSQLValues = QUESTION + COMMA
+					+ QUESTION + COMMA
+					+ QUESTION + COMMA
+					+ QUESTION + COMMA
+					+ QUESTION + COMMA
+					+ QUESTION + COMMA
+					+ QUESTION + COMMA
+					+ QUESTION + COMMA
+					+ QUESTION;
+		}
+		return updateMultipleSQLValues;
 	}
 
 	/**
 	 * @param storableObject
 	 * @throws IllegalDataException
-	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#getUpdateSingleSQLValuesTmpl(com.syrus.AMFICOM.general.StorableObject)
 	 */
 	protected String getUpdateSingleSQLValuesTmpl(
 			StorableObject storableObject)
 			throws IllegalDataException {
-		throw new UnsupportedOperationException();
+		SchemeCableLink schemeCableLink = fromStorableObject(storableObject);
+		String sql = APOSTOPHE + DatabaseString.toQuerySubString(schemeCableLink.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
+				+ APOSTOPHE + DatabaseString.toQuerySubString(schemeCableLink.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
+				+ APOSTOPHE + schemeCableLink.getPhysicalLength() + APOSTOPHE + COMMA
+				+ APOSTOPHE + schemeCableLink.getOpticalLength() + APOSTOPHE + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeCableLink.getCableLinkType().getId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeCableLink.getLink().getId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeCableLink.getSourceSchemeCablePort().getId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeCableLink.getTargetSchemeCablePort().getId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeCableLink.getParentScheme().getId());
+		return sql;
 	}
 
 	/**
@@ -72,14 +114,23 @@ public final class SchemeCableLinkDatabase extends CharacterizableDatabase {
 	 * @param startParameterNumber
 	 * @throws IllegalDataException
 	 * @throws SQLException
-	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#setEntityForPreparedStatementTmpl(com.syrus.AMFICOM.general.StorableObject, java.sql.PreparedStatement, int)
 	 */
 	protected int setEntityForPreparedStatementTmpl(
 			StorableObject storableObject,
 			PreparedStatement preparedStatement,
 			int startParameterNumber) throws IllegalDataException,
 			SQLException {
-		throw new UnsupportedOperationException();
+		SchemeCableLink schemeCableLink = fromStorableObject(storableObject);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, schemeCableLink.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, schemeCableLink.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		preparedStatement.setDouble(++startParameterNumber, schemeCableLink.getPhysicalLength());
+		preparedStatement.setDouble(++startParameterNumber, schemeCableLink.getOpticalLength());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeCableLink.getCableLinkType().getId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeCableLink.getLink().getId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeCableLink.getSourceSchemeCablePort().getId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeCableLink.getTargetSchemeCablePort().getId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeCableLink.getParentScheme().getId());
+		return startParameterNumber;
 	}
 
 	/**
@@ -88,12 +139,33 @@ public final class SchemeCableLinkDatabase extends CharacterizableDatabase {
 	 * @throws IllegalDataException
 	 * @throws RetrieveObjectException
 	 * @throws SQLException
-	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#updateEntityFromResultSet(com.syrus.AMFICOM.general.StorableObject, java.sql.ResultSet)
 	 */
 	protected StorableObject updateEntityFromResultSet(
 			StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException,
 			SQLException {
-		throw new UnsupportedOperationException();
+		SchemeCableLink schemeCableLink;
+		if (storableObject == null) {
+			Date created = new Date(); 
+			schemeCableLink = new SchemeCableLink(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
+					created, created, null, null, 0L, null, null, 0d, 0d, null, null, null, null, null);
+		} else {
+			schemeCableLink = fromStorableObject(storableObject);
+		}
+		schemeCableLink.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
+				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
+				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+				resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
+				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
+				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
+				resultSet.getDouble(SchemeCableLinkWrapper.COLUMN_PHYSICAL_LENGTH),
+				resultSet.getDouble(SchemeCableLinkWrapper.COLUMN_OPTICAL_LENGTH),
+				DatabaseIdentifier.getIdentifier(resultSet, SchemeCableLinkWrapper.COLUMN_CABLE_LINK_TYPE_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, SchemeCableLinkWrapper.COLUMN_CABLE_LINK_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, SchemeCableLinkWrapper.COLUMN_SOURCE_SCHEME_CABLE_PORT_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, SchemeCableLinkWrapper.COLUMN_TARGET_SCHEME_CABLE_PORT_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, SchemeCableLinkWrapper.COLUMN_PARENT_SCHEME_ID));
+		return schemeCableLink;
 	}
 }

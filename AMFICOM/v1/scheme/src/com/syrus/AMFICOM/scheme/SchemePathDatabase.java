@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathDatabase.java,v 1.1 2005/04/01 13:59:07 bass Exp $
+ * $Id: SchemePathDatabase.java,v 1.2 2005/04/22 16:21:44 max Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,15 +9,30 @@
 package com.syrus.AMFICOM.scheme;
 
 import com.syrus.AMFICOM.general.*;
+import com.syrus.util.Log;
+import com.syrus.util.database.DatabaseDate;
+import com.syrus.util.database.DatabaseString;
+
 import java.sql.*;
+import java.util.Date;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/04/01 13:59:07 $
+ * @author $Author: max $
+ * @version $Revision: 1.2 $, $Date: 2005/04/22 16:21:44 $
  * @module scheme_v1
  */
 public final class SchemePathDatabase extends CharacterizableDatabase {
+	
+	private static String columns;
+	private static String updateMultipleSQLValues;
+	
+	private SchemePath fromStorableObject(StorableObject storableObject) throws IllegalDataException {
+		if(storableObject instanceof SchemePath)
+			return (SchemePath) storableObject;
+		throw new IllegalDataException("SchemePathDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
+	}
+	
 	/**
 	 * @param storableObject
 	 * @param retrieveKind
@@ -31,39 +46,58 @@ public final class SchemePathDatabase extends CharacterizableDatabase {
 			int retrieveKind, Object arg)
 			throws IllegalDataException, ObjectNotFoundException,
 			RetrieveObjectException {
-		throw new UnsupportedOperationException();
+		SchemePath schemePath = this.fromStorableObject(storableObject);
+		switch (retrieveKind) {
+			default:
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName()
+						+ " '" + schemePath.getId() + "'; argument: " + arg);
+				return null;
+		}
 	}
 
-	/**
-	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#getColumnsTmpl()
-	 */
 	protected String getColumnsTmpl() {
-		throw new UnsupportedOperationException();
+		if (columns == null) {
+			columns = StorableObjectWrapper.COLUMN_NAME + COMMA
+					+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
+					+ SchemePathWrapper.COLUMN_START_SCHEME_ELEMENT_ID + COMMA
+					+ SchemePathWrapper.COLUMN_END_SCHEME_ELEMENT_ID + COMMA
+					+ SchemePathWrapper.COLUMN_PARENT_SCHEME_MONITORING_SOLUTION_ID + COMMA
+					+ SchemePathWrapper.COLUMN_TRANSMISSION_PATH_ID;
+		}
+		return columns;
 	}
 
-	/**
-	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#getEnityName()
-	 */
 	protected String getEnityName() {
-		throw new UnsupportedOperationException();
+		return ObjectEntities.SCHEME_PATH_ENTITY;
 	}
 
-	/**
-	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#getUpdateMultipleSQLValuesTmpl()
-	 */
 	protected String getUpdateMultipleSQLValuesTmpl() {
-		throw new UnsupportedOperationException();
+		if (updateMultipleSQLValues == null) {
+			updateMultipleSQLValues = QUESTION + COMMA
+					+ QUESTION + COMMA
+					+ QUESTION + COMMA
+					+ QUESTION + COMMA
+					+ QUESTION + COMMA
+					+ QUESTION;
+		}
+		return updateMultipleSQLValues;
 	}
 
 	/**
 	 * @param storableObject
 	 * @throws IllegalDataException
-	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#getUpdateSingleSQLValuesTmpl(com.syrus.AMFICOM.general.StorableObject)
 	 */
 	protected String getUpdateSingleSQLValuesTmpl(
 			StorableObject storableObject)
 			throws IllegalDataException {
-		throw new UnsupportedOperationException();
+		SchemePath schemePath = fromStorableObject(storableObject);
+		String sql = APOSTOPHE + DatabaseString.toQuerySubString(schemePath.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
+				+ APOSTOPHE + DatabaseString.toQuerySubString(schemePath.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
+				+ DatabaseIdentifier.toSQLString(schemePath.getStartSchemeElement().getId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemePath.getEndSchemeElement().getId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemePath.getParentSchemeMonitoringSolution().getId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemePath.getTransmissionPath().getId()) + COMMA;
+		return sql;
 	}
 
 	/**
@@ -72,14 +106,20 @@ public final class SchemePathDatabase extends CharacterizableDatabase {
 	 * @param startParameterNumber
 	 * @throws IllegalDataException
 	 * @throws SQLException
-	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#setEntityForPreparedStatementTmpl(com.syrus.AMFICOM.general.StorableObject, java.sql.PreparedStatement, int)
 	 */
 	protected int setEntityForPreparedStatementTmpl(
 			StorableObject storableObject,
 			PreparedStatement preparedStatement,
 			int startParameterNumber) throws IllegalDataException,
 			SQLException {
-		throw new UnsupportedOperationException();
+		SchemePath schemePath = fromStorableObject(storableObject);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, schemePath.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, schemePath.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemePath.getStartSchemeElement().getId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemePath.getEndSchemeElement().getId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemePath.getParentSchemeMonitoringSolution().getId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemePath.getTransmissionPath().getId());
+		return startParameterNumber;
 	}
 
 	/**
@@ -88,12 +128,30 @@ public final class SchemePathDatabase extends CharacterizableDatabase {
 	 * @throws IllegalDataException
 	 * @throws RetrieveObjectException
 	 * @throws SQLException
-	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#updateEntityFromResultSet(com.syrus.AMFICOM.general.StorableObject, java.sql.ResultSet)
 	 */
 	protected StorableObject updateEntityFromResultSet(
 			StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException,
 			SQLException {
-		throw new UnsupportedOperationException();
+		SchemePath schemePath;
+		if (storableObject == null) {
+			Date created = new Date(); 
+			schemePath = new SchemePath(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
+					created, created, null, null, 0L, null, null, null, null, null, null);
+		} else {
+			schemePath = fromStorableObject(storableObject);
+		}
+		schemePath.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
+				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
+				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+				resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
+				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
+				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
+				DatabaseIdentifier.getIdentifier(resultSet, SchemePathWrapper.COLUMN_START_SCHEME_ELEMENT_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, SchemePathWrapper.COLUMN_END_SCHEME_ELEMENT_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, SchemePathWrapper.COLUMN_PARENT_SCHEME_MONITORING_SOLUTION_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, SchemePathWrapper.COLUMN_TRANSMISSION_PATH_ID));
+		return schemePath;
 	}
 }
