@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.15 2005/04/19 17:45:16 bass Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.16 2005/04/22 14:38:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,42 +35,42 @@ import com.syrus.util.Log;
  * #05 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.15 $, $Date: 2005/04/19 17:45:16 $
+ * @version $Revision: 1.16 $, $Date: 2005/04/22 14:38:55 $
  * @module scheme_v1
  */
 public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 		implements Describable {
 	private static final long serialVersionUID = 3761127137155232822L;
 
-	private String description;
-
-	private int iterations;
-
-	private double lenMargin;
-
-	private double mutationDegree;
-
-	private double mutationRate;
-
 	private String name;
 
-	private double nodesCutProb;
-
-	private double nodesSpliceProb;
+	private String description;
 
 	private int optimizationMode;
 
-	private Identifier parentSchemeId;
+	private int iterations;
 
 	private double price;
 
-	private double rtuCreateProb;
+	private double waveLength;
+
+	private double lenMargin;
+
+	private double mutationRate;
+
+	private double mutationDegree;
 
 	private double rtuDeleteProb;
 
+	private double rtuCreateProb;
+
+	private double nodesSpliceProb;
+
+	private double nodesCutProb;
+
 	private double survivorRate;
 
-	private double waveLength;
+	private Identifier parentSchemeId;
 
 	private SchemeOptimizeInfoDatabase schemeOptimizeInfoDatabase;
 
@@ -97,11 +97,50 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 	 * @param creatorId
 	 * @param modifierId
 	 * @param version
+	 * @param name
+	 * @param description
+	 * @param optimizationMode
+	 * @param iterations
+	 * @param price
+	 * @param waveLength
+	 * @param lenMargin
+	 * @param mutationRate
+	 * @param mutationDegree
+	 * @param rtuDeleteProb
+	 * @param rtuCreateProb
+	 * @param nodesSpliceProb
+	 * @param nodesCutProb
+	 * @param survivorRate
+	 * @param parentScheme
 	 */
-	SchemeOptimizeInfo(Identifier id, Date created,
-			Date modified, Identifier creatorId,
-			Identifier modifierId, long version) {
+	SchemeOptimizeInfo(final Identifier id, final Date created,
+			final Date modified, final Identifier creatorId,
+			final Identifier modifierId, final long version,
+			final String name, final String description,
+			final int optimizationMode, final int iterations,
+			final double price, final double waveLength,
+			final double lenMargin, final double mutationRate,
+			final double mutationDegree,
+			final double rtuDeleteProb, final double rtuCreateProb,
+			final double nodesSpliceProb,
+			final double nodesCutProb, final double survivorRate,
+			final Scheme parentScheme) {
 		super(id, created, modified, creatorId, modifierId, version);
+		this.name = name;
+		this.description = description;
+		this.optimizationMode = optimizationMode;
+		this.iterations = iterations;
+		this.price = price;
+		this.waveLength = waveLength;
+		this.lenMargin = lenMargin;
+		this.mutationRate = mutationRate;
+		this.mutationDegree = mutationDegree;
+		this.rtuDeleteProb = rtuDeleteProb;
+		this.rtuCreateProb = rtuCreateProb;
+		this.nodesSpliceProb = nodesSpliceProb;
+		this.nodesCutProb = nodesCutProb;
+		this.survivorRate = survivorRate;
+		this.parentSchemeId = Identifier.possiblyVoid(parentScheme);
 	}
 
 	/**
@@ -113,17 +152,69 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 		fromTransferable(transferable);
 	}
 
+	/**
+	 * A shorthand for
+	 * {@link #createInstance(Identifier, String, String, int, int, double, double, double, double, double, double, double, double, double, double, Scheme)}.
+	 *
+	 * @param creatorId
+	 * @param name
+	 * @param parentScheme
+	 * @throws CreateObjectException
+	 */
 	public static SchemeOptimizeInfo createInstance(
-			final Identifier creatorId)
-			throws CreateObjectException {
-		assert creatorId != null;
+			final Identifier creatorId, final String name,
+			final Scheme parentScheme) throws CreateObjectException {
+		return createInstance(creatorId, name, "", 0, 0, 0, 0, 0, 0, 0, //$NON-NLS-1$
+				0, 0, 0, 0, 0, parentScheme);
+	}
+
+	/**
+	 * @param creatorId
+	 * @param name
+	 * @param description
+	 * @param optimizationMode
+	 * @param iterations
+	 * @param price
+	 * @param waveLength
+	 * @param lenMargin
+	 * @param mutationRate
+	 * @param mutationDegree
+	 * @param rtuDeleteProb
+	 * @param rtuCreateProb
+	 * @param nodesSpliceProb
+	 * @param nodesCutProb
+	 * @param survivorRate
+	 * @param parentScheme
+	 * @throws CreateObjectException
+	 */
+	public static SchemeOptimizeInfo createInstance(
+			final Identifier creatorId, final String name,
+			final String description, final int optimizationMode,
+			final int iterations, final double price,
+			final double waveLength, final double lenMargin,
+			final double mutationRate, final double mutationDegree,
+			final double rtuDeleteProb, final double rtuCreateProb,
+			final double nodesSpliceProb,
+			final double nodesCutProb, final double survivorRate,
+			final Scheme parentScheme) throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid(): ErrorMessages.NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
+		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert parentScheme != null: ErrorMessages.NON_NULL_EXPECTED;
+
 		try {
 			final Date created = new Date();
 			final SchemeOptimizeInfo schemeOptimizeInfo = new SchemeOptimizeInfo(
 					IdentifierPool
 							.getGeneratedIdentifier(ObjectEntities.SCHEME_OPTIMIZE_INFO_ENTITY_CODE),
 					created, created, creatorId, creatorId,
-					0L);
+					0L, name, description,
+					optimizationMode, iterations, price,
+					waveLength, lenMargin, mutationRate,
+					mutationDegree, rtuDeleteProb,
+					rtuCreateProb, nodesSpliceProb,
+					nodesCutProb, survivorRate,
+					parentScheme);
 			schemeOptimizeInfo.changed = true;
 			return schemeOptimizeInfo;
 		} catch (final IdentifierGenerationException ige) {
@@ -271,6 +362,63 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 		assert schemeOptimizeInfoSwitch != null: ErrorMessages.NON_NULL_EXPECTED;
 		assert getSchemeOptimizeInfoSwitches().contains(schemeOptimizeInfoSwitch): ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		schemeOptimizeInfoSwitch.setParentSchemeOptimizeInfo(null);
+	}
+
+	/**
+	 * @param created
+	 * @param modified
+	 * @param creatorId
+	 * @param modifierId
+	 * @param version
+	 * @param name
+	 * @param description
+	 * @param optimizationMode
+	 * @param iterations
+	 * @param price
+	 * @param waveLength
+	 * @param lenMargin
+	 * @param mutationRate
+	 * @param mutationDegree
+	 * @param rtuDeleteProb
+	 * @param rtuCreateProb
+	 * @param nodesSpliceProb
+	 * @param nodesCutProb
+	 * @param survivorRate
+	 * @param parentSchemeId
+	 */
+	synchronized void setAttributes(final Date created,
+			final Date modified, final Identifier creatorId,
+			final Identifier modifierId, final long version,
+			final String name, final String description,
+			final int optimizationMode, final int iterations,
+			final double price, final double waveLength,
+			final double lenMargin, final double mutationRate,
+			final double mutationDegree,
+			final double rtuDeleteProb, final double rtuCreateProb,
+			final double nodesSpliceProb,
+			final double nodesCutProb, final double survivorRate,
+			final Identifier parentSchemeId) {
+		super.setAttributes(created, modified, creatorId, modifierId, version);
+
+		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
+		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert parentSchemeId != null && !parentSchemeId.isVoid(): ErrorMessages.NON_VOID_EXPECTED;
+
+		this.name = name;
+		this.description = description;
+		this.optimizationMode = optimizationMode;
+		this.iterations = iterations;
+		this.price = price;
+		this.waveLength = waveLength;
+		this.lenMargin = lenMargin;
+		this.mutationRate = mutationRate;
+		this.mutationDegree = mutationDegree;
+		this.rtuDeleteProb = rtuDeleteProb;
+		this.rtuCreateProb = rtuCreateProb;
+		this.nodesSpliceProb = nodesSpliceProb;
+		this.nodesCutProb = nodesCutProb;
+		this.survivorRate = survivorRate;
+		this.parentSchemeId = parentSchemeId;
 	}
 
 	/**
