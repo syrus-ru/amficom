@@ -8,6 +8,7 @@ import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
 import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
+import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEvents;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.Identifier;
@@ -69,8 +70,8 @@ public class AnalysisFrame extends ScalableFrame implements BsHashChangeListener
 
 	protected void addTrace (String id)
 	{
-		if (traces.get(id) != null)
-			return;
+		removeOneTrace(id);
+
 		SimpleGraphPanel p;
 		BellcoreStructure bs = Heap.getAnyBSTraceByKey(id);
 		if (bs == null)
@@ -108,38 +109,44 @@ public class AnalysisFrame extends ScalableFrame implements BsHashChangeListener
 		setVisible(true);
 	}
 
-	private void removeTrace (String id) // @todo: split to removeOneTrace and removeAllTraces
+	private void removeOneTrace(String id)
 	{
-		if (id.equals("all"))
+		SimpleGraphPanel p = (SimpleGraphPanel)traces.get(id);
+		if (p != null)
 		{
-			((ScalableLayeredPanel)panel).removeAllGraphPanels();
-			traces = new HashMap();
+			panel.removeGraphPanel(p);
+			traces.remove(id);
+			((ScalableLayeredPanel)panel).updScale2fit();
 		}
-		else
-		{
-			SimpleGraphPanel p = (SimpleGraphPanel)traces.get(id);
-			if (p != null)
-			{
-				panel.removeGraphPanel(p);
-				traces.remove(id);
-				((ScalableLayeredPanel)panel).updScale2fit();
-			}
-		}
+	}
+
+	private void removeAllTraces()
+	{
+		((ScalableLayeredPanel)panel).removeAllGraphPanels();
+		traces = new HashMap();
 	}
 
 	private void addEtalon()
 	{
-		if (traces.get(Heap.ETALON_TRACE_KEY) != null)
-			return;
+		removeEtalon();
 
-		BellcoreStructure bs = Heap.getBSEtalonTrace();
-		if (bs != null)
-			addTrace (Heap.ETALON_TRACE_KEY);
+		SimpleGraphPanel p;
+
+		ModelTraceAndEvents mtae = Heap.getMTMEtalon().getMTAE();
+		p = new SimpleGraphPanel(mtae.getModelTrace().getYArray(), mtae.getDeltaX());
+		p.setColorModel(Heap.ETALON_TRACE_KEY);
+		((AnalysisLayeredPanel)panel).addGraphPanel(p);
+		((AnalysisLayeredPanel)panel).updPaintingMode();
+		panel.updScale2fit();
+
+		traces.put(Heap.ETALON_TRACE_KEY, p);
+
+		setVisible(true);
 	}
 
-	private void removeEtalon(String etId)
+	private void removeEtalon()
 	{
-		SimpleGraphPanel epPanel = (SimpleGraphPanel)traces.get(etId);
+		SimpleGraphPanel epPanel = (SimpleGraphPanel)traces.get(Heap.ETALON_TRACE_KEY);
 		if (epPanel != null)
 			panel.removeGraphPanel(epPanel);
 	}
@@ -152,22 +159,23 @@ public class AnalysisFrame extends ScalableFrame implements BsHashChangeListener
 
 	public void bsHashRemoved(String key)
 	{
-		removeTrace(key);
+		removeOneTrace(key);
 	}
 
 	public void bsHashRemovedAll()
 	{
-		removeTrace("all");
+		removeAllTraces();
 		setVisible (false);
 	}
 
 	public void etalonMTMCUpdated()
 	{
+		removeEtalon();
 		addEtalon();
 	}
 
 	public void etalonMTMRemoved()
 	{
-		removeEtalon(Heap.ETALON_TRACE_KEY);
+		removeEtalon();
 	}
 }
