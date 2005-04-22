@@ -20,15 +20,12 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 	public boolean draw_min_trace_level = false;
 	public boolean draw_noise_level = false;
 
-	//protected ReflectogramEvent[] ep;
 	protected ModelTraceAndEvents mtae; // используется только в методах, вызываемых из paint()
 	protected ReflectogramAlarm[] alarms;
 
 	protected Double min_trace_level;
 	protected double noise_level = 28; // ???!
 	protected boolean moving_level = false;
-
-	//protected double[] modeled_y;
 
 	public ReflectogramEventsPanel(ResizableLayeredPanel panel, Dispatcher dispatcher, double[] y, double deltaX)
 	{
