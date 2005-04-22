@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServerSetup.java,v 1.35 2005/04/13 10:11:39 arseniy Exp $
+ * $Id: MeasurementServerSetup.java,v 1.36 2005/04/22 16:05:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -47,6 +47,7 @@ import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.AnalysisTypeDatabase;
+import com.syrus.AMFICOM.measurement.CronTemporalPattern;
 import com.syrus.AMFICOM.measurement.EvaluationType;
 import com.syrus.AMFICOM.measurement.EvaluationTypeDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
@@ -55,10 +56,9 @@ import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.measurement.MeasurementTypeDatabase;
 import com.syrus.AMFICOM.measurement.Set;
 import com.syrus.AMFICOM.measurement.SetParameter;
-import com.syrus.AMFICOM.measurement.TemporalPattern;
 import com.syrus.AMFICOM.measurement.Test;
+import com.syrus.AMFICOM.measurement.corba.CronTemporalPattern_Transferable;
 import com.syrus.AMFICOM.measurement.corba.SetSort;
-import com.syrus.AMFICOM.measurement.corba.TemporalPattern_Transferable;
 import com.syrus.AMFICOM.measurement.corba.TestReturnType;
 import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 import com.syrus.AMFICOM.mserver.DatabaseContextSetup;
@@ -69,7 +69,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/04/13 10:11:39 $
+ * @version $Revision: 1.36 $, $Date: 2005/04/22 16:05:53 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -610,7 +610,7 @@ public final class MeasurementServerSetup {
 		msIds.add(measurementSetup.getId());
 		createOnetimeTest(creatorId, monitoredElement, msIds);
 
-		TemporalPattern temporalPattern = createTemporalPattern(creatorId);
+		CronTemporalPattern temporalPattern = createTemporalPattern(creatorId);
 
 		createPeriodicalTest(creatorId, temporalPattern, monitoredElement, msIds);
 	}
@@ -727,12 +727,12 @@ public final class MeasurementServerSetup {
 		}
 	}
 
-	private static TemporalPattern createTemporalPattern(Identifier creatorId) {
+	private static CronTemporalPattern createTemporalPattern(Identifier creatorId) {
 		try {
 			String[] strings = new String[1];
 			strings[0] = "*/10 * * * *";
-			TemporalPattern temporalPattern = TemporalPattern.createInstance(creatorId, "TemporalPattern", strings);
-			TemporalPattern temporalPattern1 = new TemporalPattern((TemporalPattern_Transferable) temporalPattern.getTransferable());
+			CronTemporalPattern temporalPattern = CronTemporalPattern.createInstance(creatorId, "CronTemporalPattern", strings);
+			CronTemporalPattern temporalPattern1 = new CronTemporalPattern((CronTemporalPattern_Transferable) temporalPattern.getTransferable());
 			return temporalPattern1;
 		}
 		catch (Exception e) {
@@ -777,7 +777,7 @@ public final class MeasurementServerSetup {
 	}
 
 	private static Test createPeriodicalTest(Identifier creatorId,
-			TemporalPattern temporalPattern,
+			CronTemporalPattern temporalPattern,
 			MonitoredElement monitoredElement,
 			java.util.Set measurementSetupIds) {
 		AnalysisTypeDatabase analysisTypeDatabase = MeasurementDatabaseContext.getAnalysisTypeDatabase();

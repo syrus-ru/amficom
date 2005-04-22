@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementObjectLoader.java,v 1.28 2005/04/22 14:23:44 arseniy Exp $
+ * $Id: MeasurementObjectLoader.java,v 1.29 2005/04/22 16:04:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/04/22 14:23:44 $
+ * @version $Revision: 1.29 $, $Date: 2005/04/22 16:04:39 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -48,7 +48,7 @@ public interface MeasurementObjectLoader {
 
 	Test loadTest(Identifier id) throws ApplicationException;
 
-	TemporalPattern loadTemporalPattern(Identifier id) throws ApplicationException;
+	CronTemporalPattern loadCronTemporalPattern(Identifier id) throws ApplicationException;
 
 
 
@@ -80,7 +80,7 @@ public interface MeasurementObjectLoader {
 
 	java.util.Set loadTests(java.util.Set ids) throws ApplicationException;
 
-	java.util.Set loadTemporalPatterns(java.util.Set ids) throws ApplicationException;
+	java.util.Set loadCronTemporalPatterns(java.util.Set ids) throws ApplicationException;
 
 
 
@@ -112,7 +112,7 @@ public interface MeasurementObjectLoader {
 
 	java.util.Set loadTestsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException;
 
-	java.util.Set loadTemporalPatternsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException;
+	java.util.Set loadCronTemporalPatternsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException;
 
 
 
@@ -144,7 +144,7 @@ public interface MeasurementObjectLoader {
 
 	void saveTest(Test test, boolean force) throws ApplicationException;
 
-	void saveTemporalPattern(TemporalPattern temporalPattern, boolean force) throws ApplicationException;
+	void saveCronTemporalPattern(CronTemporalPattern cronTemporalPattern, boolean force) throws ApplicationException;
 
 
 
@@ -176,7 +176,7 @@ public interface MeasurementObjectLoader {
 
 	void saveTests(java.util.Set objects, boolean force) throws ApplicationException;
 
-	void saveTemporalPatterns(java.util.Set objects, boolean force) throws ApplicationException;
+	void saveCronTemporalPatterns(java.util.Set objects, boolean force) throws ApplicationException;
 
 
 

@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPatternWrapper.java,v 1.5 2005/04/11 11:49:13 bob Exp $
+ * $Id: TemporalPatternWrapper.java,v 1.6 2005/04/22 16:04:39 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/04/11 11:49:13 $
- * @author $Author: bob $
+ * @version $Revision: 1.6 $, $Date: 2005/04/22 16:04:39 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 public class TemporalPatternWrapper extends StorableObjectWrapper {
@@ -51,8 +51,8 @@ public class TemporalPatternWrapper extends StorableObjectWrapper {
 	}
 
 	public Object getValue(final Object object, final String key) {
-		if (object instanceof TemporalPattern) {
-			TemporalPattern temporalPattern = (TemporalPattern) object;
+		if (object instanceof CronTemporalPattern) {
+			CronTemporalPattern temporalPattern = (CronTemporalPattern) object;
 			if (key.equals(COLUMN_DESCRIPTION))
 				return temporalPattern.getDescription();
 			if (key.equals(COLUMN_VALUE))
@@ -67,8 +67,8 @@ public class TemporalPatternWrapper extends StorableObjectWrapper {
 	}
 
 	public void setValue(Object object, final String key, final Object value) {
-		if (object instanceof TemporalPattern) {
-			TemporalPattern temporalPattern = (TemporalPattern) object;
+		if (object instanceof CronTemporalPattern) {
+			CronTemporalPattern temporalPattern = (CronTemporalPattern) object;
 			if (key.equals(COLUMN_DESCRIPTION))
 				temporalPattern.setDescription((String) value);
 			else if (key.equals(COLUMN_VALUE)) {

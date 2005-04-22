@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementDatabaseContext.java,v 1.25 2005/04/01 14:34:27 bass Exp $
+ * $Id: MeasurementDatabaseContext.java,v 1.26 2005/04/22 16:04:39 arseniy Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Научно-технический центр.
@@ -13,8 +13,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/04/01 14:34:27 $
- * @author $Author: bass $
+ * @version $Revision: 1.26 $, $Date: 2005/04/22 16:04:39 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 public final class MeasurementDatabaseContext {
@@ -107,7 +107,7 @@ public final class MeasurementDatabaseContext {
 				return getResultDatabase();
 			case ObjectEntities.SET_ENTITY_CODE:
 				return getSetDatabase();
-			case ObjectEntities.TEMPORALPATTERN_ENTITY_CODE:
+			case ObjectEntities.CRONTEMPORALPATTERN_ENTITY_CODE:
 				return getTemporalPatternDatabase();
 			case ObjectEntities.TEST_ENTITY_CODE:
 				return getTestDatabase();

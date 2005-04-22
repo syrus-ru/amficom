@@ -1,5 +1,5 @@
 /*
- * $Id: MServerImplementation.java,v 1.48 2005/04/21 15:08:39 arseniy Exp $
+ * $Id: MServerImplementation.java,v 1.49 2005/04/22 16:05:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -72,6 +72,7 @@ import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.AMFICOM.measurement.AnalysisType;
+import com.syrus.AMFICOM.measurement.CronTemporalPattern;
 import com.syrus.AMFICOM.measurement.Evaluation;
 import com.syrus.AMFICOM.measurement.EvaluationType;
 import com.syrus.AMFICOM.measurement.Measurement;
@@ -82,11 +83,11 @@ import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.ResultDatabase;
 import com.syrus.AMFICOM.measurement.Set;
-import com.syrus.AMFICOM.measurement.TemporalPattern;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestDatabase;
 import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
+import com.syrus.AMFICOM.measurement.corba.CronTemporalPattern_Transferable;
 import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
@@ -94,13 +95,12 @@ import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
-import com.syrus.AMFICOM.measurement.corba.TemporalPattern_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.AMFICOM.mserver.corba.MServerPOA;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2005/04/21 15:08:39 $
+ * @version $Revision: 1.49 $, $Date: 2005/04/22 16:05:53 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -1037,11 +1037,11 @@ public class MServerImplementation extends MServerPOA {
 		}
 	}
 
-	public TemporalPattern_Transferable transmitTemporalPattern(Identifier_Transferable idT) throws AMFICOMRemoteException {
+	public CronTemporalPattern_Transferable transmitCronTemporalPattern(Identifier_Transferable idT) throws AMFICOMRemoteException {
 		Identifier id = new Identifier(idT);
 		try {
-			TemporalPattern temporalPattern = new TemporalPattern(id);
-			return (TemporalPattern_Transferable) temporalPattern.getTransferable();
+			CronTemporalPattern cronTemporalPattern = new CronTemporalPattern(id);
+			return (CronTemporalPattern_Transferable) cronTemporalPattern.getTransferable();
 		}
 		catch (ObjectNotFoundException onfe) {
 			Log.errorException(onfe);
@@ -1242,7 +1242,7 @@ public class MServerImplementation extends MServerPOA {
 		return transferables;
 	}
 
-	public TemporalPattern_Transferable[] transmitTemporalPatterns(Identifier_Transferable[] identifier_Transferables)
+	public CronTemporalPattern_Transferable[] transmitCronTemporalPatterns(Identifier_Transferable[] identifier_Transferables)
 			throws AMFICOMRemoteException {
 		java.util.Set ids = Identifier.fromTransferables(identifier_Transferables);
 
@@ -1254,12 +1254,12 @@ public class MServerImplementation extends MServerPOA {
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
 		}
 
-		TemporalPattern_Transferable[] transferables = new TemporalPattern_Transferable[objects.size()];
+		CronTemporalPattern_Transferable[] transferables = new CronTemporalPattern_Transferable[objects.size()];
 		int i = 0;
-		TemporalPattern temporalPattern;
+		CronTemporalPattern cronTemporalPattern;
 		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			temporalPattern = (TemporalPattern) it.next();
-			transferables[i] = (TemporalPattern_Transferable) temporalPattern.getTransferable();
+			cronTemporalPattern = (CronTemporalPattern) it.next();
+			transferables[i] = (CronTemporalPattern_Transferable) cronTemporalPattern.getTransferable();
 		}
 		return transferables;
 	}

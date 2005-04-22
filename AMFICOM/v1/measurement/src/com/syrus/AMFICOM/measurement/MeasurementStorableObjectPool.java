@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.84 2005/04/22 14:32:06 bob Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.85 2005/04/22 16:04:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,8 +23,8 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.84 $, $Date: 2005/04/22 14:32:06 $
- * @author $Author: bob $
+ * @version $Revision: 1.85 $, $Date: 2005/04/22 16:04:39 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -79,7 +79,7 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 		instance.addObjectPool(ObjectEntities.ANALYSIS_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.EVALUATION_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.TEST_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.TEMPORALPATTERN_ENTITY_CODE, size);
+		instance.addObjectPool(ObjectEntities.CRONTEMPORALPATTERN_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.INTERVALS_TEMPORALPATTERN_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.PERIODICAL_TEMPORALPATTERN_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.RESULT_ENTITY_CODE, size);
@@ -105,7 +105,7 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 		instance.addObjectPool(ObjectEntities.ANALYSIS_ENTITY_CODE, ANALYSIS_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.EVALUATION_ENTITY_CODE, EVALUATION_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.TEST_ENTITY_CODE, TEST_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.TEMPORALPATTERN_ENTITY_CODE, TEMPORALPATTERN_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.CRONTEMPORALPATTERN_ENTITY_CODE, TEMPORALPATTERN_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.INTERVALS_TEMPORALPATTERN_ENTITY_CODE, INTERVALS_TEMPORALPATTERN_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.PERIODICAL_TEMPORALPATTERN_ENTITY_CODE, PERIODIC_TEMPORALPATTERN_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.RESULT_ENTITY_CODE, RESULT_OBJECT_POOL_SIZE);
@@ -202,8 +202,8 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 			case ObjectEntities.RESULT_ENTITY_CODE:
 				storableObject = mObjectLoader.loadResult(objectId);
 				break;
-			case ObjectEntities.TEMPORALPATTERN_ENTITY_CODE:
-				storableObject = mObjectLoader.loadTemporalPattern(objectId);
+			case ObjectEntities.CRONTEMPORALPATTERN_ENTITY_CODE:
+				storableObject = mObjectLoader.loadCronTemporalPattern(objectId);
 				break;
 			default:
 				Log.errorMessage("MeasurementStorableObjectPool.loadStorableObject | Unknown entity: '" + ObjectEntities.codeToString(objectId.getMajor()) + "', entity code: " + objectId.getMajor());
@@ -240,8 +240,8 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 				return mObjectLoader.loadTests(ids);
 			case ObjectEntities.RESULT_ENTITY_CODE:
 				return mObjectLoader.loadResults(ids);
-			case ObjectEntities.TEMPORALPATTERN_ENTITY_CODE:
-				return mObjectLoader.loadTemporalPatterns(ids);
+			case ObjectEntities.CRONTEMPORALPATTERN_ENTITY_CODE:
+				return mObjectLoader.loadCronTemporalPatterns(ids);
 			default:
 				Log.errorMessage("MeasurementStorableObjectPool.loadStorableObjects | Unknown entity: '" + ObjectEntities.codeToString(entityCode) + "', entity code: " + entityCode);
 				return Collections.EMPTY_SET;
@@ -288,8 +288,8 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 			case ObjectEntities.RESULT_ENTITY_CODE:
 				loadedCollection = mObjectLoader.loadResultsButIds(condition, ids);
 				break;
-			case ObjectEntities.TEMPORALPATTERN_ENTITY_CODE:
-				loadedCollection = mObjectLoader.loadTemporalPatternsButIds(condition, ids);
+			case ObjectEntities.CRONTEMPORALPATTERN_ENTITY_CODE:
+				loadedCollection = mObjectLoader.loadCronTemporalPatternsButIds(condition, ids);
 				break;
 			default:
 				Log.errorMessage("MeasurementStorableObjectPool.loadStorableObjectsButIds | Unknown entity: '" + ObjectEntities.codeToString(entityCode) + "', entity code: " + entityCode);
@@ -367,11 +367,11 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 				else 
 					mObjectLoader.saveResults(storableObjects, force);
 				break;
-			case ObjectEntities.TEMPORALPATTERN_ENTITY_CODE:
+			case ObjectEntities.CRONTEMPORALPATTERN_ENTITY_CODE:
 				if (singleton)
-					mObjectLoader.saveTemporalPattern((TemporalPattern)storableObjects.iterator().next(), force);
+					mObjectLoader.saveCronTemporalPattern((CronTemporalPattern)storableObjects.iterator().next(), force);
 				else 
-					mObjectLoader.saveTemporalPatterns(storableObjects, force);
+					mObjectLoader.saveCronTemporalPatterns(storableObjects, force);
 				break;
 			default:
 				Log.errorMessage("MeasurementStorableObjectPool.saveStorableObjects | Unknown entity: '" + ObjectEntities.codeToString(entityCode) + "', entity code: " + entityCode);

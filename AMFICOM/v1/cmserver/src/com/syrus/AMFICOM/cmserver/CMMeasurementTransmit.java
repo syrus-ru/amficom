@@ -1,5 +1,5 @@
 /*
- * $Id: CMMeasurementTransmit.java,v 1.21 2005/04/14 07:31:53 bob Exp $
+ * $Id: CMMeasurementTransmit.java,v 1.22 2005/04/22 16:06:03 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,7 +44,7 @@ import com.syrus.AMFICOM.measurement.Modeling;
 import com.syrus.AMFICOM.measurement.ModelingType;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.Set;
-import com.syrus.AMFICOM.measurement.TemporalPattern;
+import com.syrus.AMFICOM.measurement.CronTemporalPattern;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
@@ -57,13 +57,13 @@ import com.syrus.AMFICOM.measurement.corba.ModelingType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Modeling_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
-import com.syrus.AMFICOM.measurement.corba.TemporalPattern_Transferable;
+import com.syrus.AMFICOM.measurement.corba.CronTemporalPattern_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/04/14 07:31:53 $
- * @author $Author: bob $
+ * @version $Revision: 1.22 $, $Date: 2005/04/22 16:06:03 $
+ * @author $Author: arseniy $
  * @module cmserver_v1
  */
 public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
@@ -423,15 +423,15 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 		}
 	}
 
-	public TemporalPattern_Transferable transmitTemporalPattern(Identifier_Transferable identifier_Transferable,
+	public CronTemporalPattern_Transferable transmitCronTemporalPattern(Identifier_Transferable identifier_Transferable,
 			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		Identifier id = new Identifier(identifier_Transferable);
 		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
 		Log.debugMessage("CMMeasurementTransmit.transmitTest | require " + id.toString()
 				+ "' for user '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 		try {
-			TemporalPattern temporalPattern = (TemporalPattern) MeasurementStorableObjectPool.getStorableObject(id, true);
-			return (TemporalPattern_Transferable) temporalPattern.getTransferable();
+			CronTemporalPattern cronTemporalPattern = (CronTemporalPattern) MeasurementStorableObjectPool.getStorableObject(id, true);
+			return (CronTemporalPattern_Transferable) cronTemporalPattern.getTransferable();
 		}
 		catch (ObjectNotFoundException onfe) {
 			Log.errorException(onfe);
@@ -779,7 +779,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 		}
 	}
 
-	public TemporalPattern_Transferable[] transmitTemporalPatterns(Identifier_Transferable[] identifier_Transferables,
+	public CronTemporalPattern_Transferable[] transmitCronTemporalPatterns(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
 		try {
@@ -790,12 +790,12 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 
 			java.util.Set objects = this.getObjects(identifier_Transferables);
 
-			TemporalPattern_Transferable[] transferables = new TemporalPattern_Transferable[objects.size()];
+			CronTemporalPattern_Transferable[] transferables = new CronTemporalPattern_Transferable[objects.size()];
 			int i = 0;
-			TemporalPattern temporalPattern;
+			CronTemporalPattern cronTemporalPattern;
 			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-				temporalPattern = (TemporalPattern) it.next();
-				transferables[i] = (TemporalPattern_Transferable) temporalPattern.getTransferable();
+				cronTemporalPattern = (CronTemporalPattern) it.next();
+				transferables[i] = (CronTemporalPattern_Transferable) cronTemporalPattern.getTransferable();
 			}
 			return transferables;
 		}
@@ -1112,7 +1112,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 		}
 	}
 
-	public TemporalPattern_Transferable[] transmitTemporalPatternsButIds(Identifier_Transferable[] identifier_Transferables,
+	public CronTemporalPattern_Transferable[] transmitCronTemporalPatternsButIds(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		try {
 			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
@@ -1121,14 +1121,14 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 				Log.DEBUGLEVEL07);
 
 			java.util.Set objects = this.getObjectsButIds(identifier_Transferables,
-				ObjectEntities.TEMPORALPATTERN_ENTITY_CODE);
+				ObjectEntities.CRONTEMPORALPATTERN_ENTITY_CODE);
 
-			TemporalPattern_Transferable[] transferables = new TemporalPattern_Transferable[objects.size()];
+			CronTemporalPattern_Transferable[] transferables = new CronTemporalPattern_Transferable[objects.size()];
 			int i = 0;
-			TemporalPattern temporalPattern;
+			CronTemporalPattern cronTemporalPattern;
 			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-				temporalPattern = (TemporalPattern) it.next();
-				transferables[i] = (TemporalPattern_Transferable) temporalPattern.getTransferable();
+				cronTemporalPattern = (CronTemporalPattern) it.next();
+				transferables[i] = (CronTemporalPattern_Transferable) cronTemporalPattern.getTransferable();
 			}
 			return transferables;
 		}

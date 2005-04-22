@@ -1,5 +1,5 @@
 /*
- * $Id: MCMMeasurementObjectLoader.java,v 1.32 2005/04/22 14:14:47 arseniy Exp $
+ * $Id: MCMMeasurementObjectLoader.java,v 1.33 2005/04/22 16:05:41 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,6 +25,7 @@ import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.AnalysisTypeDatabase;
+import com.syrus.AMFICOM.measurement.CronTemporalPattern;
 import com.syrus.AMFICOM.measurement.DatabaseMeasurementObjectLoader;
 import com.syrus.AMFICOM.measurement.EvaluationType;
 import com.syrus.AMFICOM.measurement.EvaluationTypeDatabase;
@@ -37,21 +38,20 @@ import com.syrus.AMFICOM.measurement.Modeling;
 import com.syrus.AMFICOM.measurement.ModelingType;
 import com.syrus.AMFICOM.measurement.Set;
 import com.syrus.AMFICOM.measurement.SetDatabase;
-import com.syrus.AMFICOM.measurement.TemporalPattern;
 import com.syrus.AMFICOM.measurement.TemporalPatternDatabase;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
+import com.syrus.AMFICOM.measurement.corba.CronTemporalPattern_Transferable;
 import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
-import com.syrus.AMFICOM.measurement.corba.TemporalPattern_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/04/22 14:14:47 $
+ * @version $Revision: 1.33 $, $Date: 2005/04/22 16:05:41 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -256,42 +256,42 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 		}	//catch (ObjectNotFoundException e)
 	}
 
-	public TemporalPattern loadTemporalPattern(Identifier id)
+	public CronTemporalPattern loadCronTemporalPattern(Identifier id)
 			throws RetrieveObjectException, CommunicationException, ObjectNotFoundException, CreateObjectException {
 		try {
-			return new TemporalPattern(id);
+			return new CronTemporalPattern(id);
 		}
 		catch (ObjectNotFoundException e) {
-			Log.debugMessage("MCMMeasurementObjectLoader.loadTemporalPattern | TemporalPattern '" + id
+			Log.debugMessage("MCMMeasurementObjectLoader.loadCronTemporalPattern | CronTemporalPattern '" + id
 					+ "' not found in database; trying to load from Measurement Server", Log.DEBUGLEVEL08);
-			TemporalPattern temporalPattern = null;
+			CronTemporalPattern cronTemporalPattern = null;
 
 			MServer mServerRef = MeasurementControlModule.mServerConnectionManager.getVerifiedMServerReference();
 			try {
-				TemporalPattern_Transferable transferable = mServerRef.transmitTemporalPattern((Identifier_Transferable) id.getTransferable());
-				temporalPattern = new TemporalPattern(transferable);
-				Log.debugMessage("MCMMeasurementObjectLoader.loadTemporalPattern | TemporalPattern '" + id
+				CronTemporalPattern_Transferable transferable = mServerRef.transmitCronTemporalPattern((Identifier_Transferable) id.getTransferable());
+				cronTemporalPattern = new CronTemporalPattern(transferable);
+				Log.debugMessage("MCMMeasurementObjectLoader.loadCronTemporalPattern | CronTemporalPattern '" + id
 						+ "' loaded from MeasurementServer", Log.DEBUGLEVEL08);
 			}
 			catch (AMFICOMRemoteException are) {
 				if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
-					throw new ObjectNotFoundException("TemporalPattern '" + id + "' not found on Measurement Server -- " + are.message);
-				throw new RetrieveObjectException("Cannot retrieve TemporalPattern '" + id + "' from Measurement Server -- " + are.message);
+					throw new ObjectNotFoundException("CronTemporalPattern '" + id + "' not found on Measurement Server -- " + are.message);
+				throw new RetrieveObjectException("Cannot retrieve CronTemporalPattern '" + id + "' from Measurement Server -- " + are.message);
 			}
 			catch (Throwable throwable) {
 				Log.errorException(throwable);
 			}
 
-			if (temporalPattern != null) {
+			if (cronTemporalPattern != null) {
 				try {
-					MeasurementDatabaseContext.getTemporalPatternDatabase().insert(temporalPattern);
+					MeasurementDatabaseContext.getTemporalPatternDatabase().insert(cronTemporalPattern);
 				}
 				catch (ApplicationException ae) {
 					Log.errorException(ae);
 				}
-				return temporalPattern;
+				return cronTemporalPattern;
 			}
-			throw new ObjectNotFoundException("TemporalPattern '" + id + "' not found on Measurement Server");
+			throw new ObjectNotFoundException("CronTemporalPattern '" + id + "' not found on Measurement Server");
 		}	//catch (ObjectNotFoundException e)
 	}
 
@@ -537,10 +537,10 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 
 		try {
 			MServer mServerRef = MeasurementControlModule.mServerConnectionManager.getVerifiedMServerReference();
-			TemporalPattern_Transferable[] transferables = mServerRef.transmitTemporalPatterns(loadIdsT);
+			CronTemporalPattern_Transferable[] transferables = mServerRef.transmitCronTemporalPatterns(loadIdsT);
 			for (int i = 0; i < transferables.length; i++) {
 				try {
-					loadedObjects.add(new TemporalPattern(transferables[i]));
+					loadedObjects.add(new CronTemporalPattern(transferables[i]));
 				}
 				catch (CreateObjectException coe) {
 					Log.errorException(coe);
@@ -551,7 +551,7 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 			Log.errorException(ce);
 		}
 		catch (AMFICOMRemoteException are) {
-			Log.errorMessage("MCMMeasurementObjectLoader.loadTemporalPatterns | Cannot load objects from MeasurementServer");
+			Log.errorMessage("MCMMeasurementObjectLoader.loadCronTemporalPatterns | Cannot load objects from MeasurementServer");
 		}
 		catch (Throwable throwable) {
 			Log.errorException(throwable);
@@ -689,7 +689,7 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 		throw new UnsupportedOperationException("Method not implemented, modeling: " + modeling + ", force: " + force);
 	}
 
-	public void saveTemporalPattern(TemporalPattern temporalPattern, boolean force) throws ApplicationException {
+	public void saveTemporalPattern(CronTemporalPattern temporalPattern, boolean force) throws ApplicationException {
 		throw new UnsupportedOperationException("Method not implemented, temporalPattern: " + temporalPattern + ", force: " + force);
 	}
 

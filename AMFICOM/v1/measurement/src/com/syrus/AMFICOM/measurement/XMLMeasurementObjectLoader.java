@@ -1,5 +1,5 @@
 /*
- * $Id: XMLMeasurementObjectLoader.java,v 1.12 2005/04/12 16:57:41 arseniy Exp $
+ * $Id: XMLMeasurementObjectLoader.java,v 1.13 2005/04/22 16:04:39 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.StorableObjectXML;
 import com.syrus.AMFICOM.general.StorableObjectXMLDriver;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/04/12 16:57:41 $
+ * @version $Revision: 1.13 $, $Date: 2005/04/22 16:04:39 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -180,15 +180,15 @@ public class XMLMeasurementObjectLoader implements MeasurementObjectLoader {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
-	public TemporalPattern loadTemporalPattern(Identifier id) throws ApplicationException {
-		return (TemporalPattern) this.loadStorableObject(id);
+	public CronTemporalPattern loadCronTemporalPattern(Identifier id) throws ApplicationException {
+		return (CronTemporalPattern) this.loadStorableObject(id);
 	}
 
-	public java.util.Set loadTemporalPatterns(java.util.Set ids) throws ApplicationException {
+	public java.util.Set loadCronTemporalPatterns(java.util.Set ids) throws ApplicationException {
 		return this.loadStorableObjects(ids);
 	}
 
-	public java.util.Set loadTemporalPatternsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
+	public java.util.Set loadCronTemporalPatternsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
@@ -320,13 +320,13 @@ public class XMLMeasurementObjectLoader implements MeasurementObjectLoader {
 
 	}
 
-	public void saveTemporalPattern(TemporalPattern temporalPattern, boolean force) throws ApplicationException {
-		this.saveStorableObject(temporalPattern, force);
+	public void saveCronTemporalPattern(CronTemporalPattern cronTemporalPattern, boolean force) throws ApplicationException {
+		this.saveStorableObject(cronTemporalPattern, force);
 		this.measurementXML.flush();
 
 	}
 
-	public void saveTemporalPatterns(java.util.Set list, boolean force) throws ApplicationException {
+	public void saveCronTemporalPatterns(java.util.Set list, boolean force) throws ApplicationException {
 		this.saveStorableObjects(list, force);
 	}
 

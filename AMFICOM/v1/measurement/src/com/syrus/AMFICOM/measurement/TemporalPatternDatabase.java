@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPatternDatabase.java,v 1.50 2005/04/01 08:43:32 bob Exp $
+ * $Id: TemporalPatternDatabase.java,v 1.51 2005/04/22 16:04:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,17 +32,17 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.50 $, $Date: 2005/04/01 08:43:32 $
- * @author $Author: bob $
+ * @version $Revision: 1.51 $, $Date: 2005/04/22 16:04:39 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
 public class TemporalPatternDatabase extends StorableObjectDatabase {
 	private static final String CRONSTRINGARRAY_TYPE_NAME = "CronStringArray";
 
-	private TemporalPattern fromStorableObject(StorableObject storableObject) throws IllegalDataException {
-		if (storableObject instanceof TemporalPattern)
-			return (TemporalPattern)storableObject;
+	private CronTemporalPattern fromStorableObject(StorableObject storableObject) throws IllegalDataException {
+		if (storableObject instanceof CronTemporalPattern)
+			return (CronTemporalPattern)storableObject;
 		throw new IllegalDataException("TemporalPatternDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 	
@@ -50,7 +50,7 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 	private static String updateMultipleSQLValues;	
 	
 	protected String getEnityName() {		
-		return ObjectEntities.TEMPORALPATTERN_ENTITY;
+		return ObjectEntities.CRONTEMPORALPATTERN_ENTITY;
 	}
 	
 	protected String getColumnsTmpl() {
@@ -69,7 +69,7 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 		return updateMultipleSQLValues;
 	}
 
-	private StringBuffer getUpdateCronStringArray(TemporalPattern temporalPattern) {
+	private StringBuffer getUpdateCronStringArray(CronTemporalPattern temporalPattern) {
 		String[] cronStrings = temporalPattern.getCronStrings();
 		StringBuffer stringBuffer = new StringBuffer(CRONSTRINGARRAY_TYPE_NAME + OPEN_BRACKET);
 		for (int i = 0; i < cronStrings.length; i++) {
@@ -85,21 +85,21 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 	}
 
 	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
-		TemporalPattern temporalPattern = this.fromStorableObject(storableObject);
+		CronTemporalPattern temporalPattern = this.fromStorableObject(storableObject);
 		String sql = APOSTOPHE + DatabaseString.toQuerySubString(temporalPattern.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
 				+ this.getUpdateCronStringArray(temporalPattern);
 		return sql;
 	}	
 
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		TemporalPattern temporalPattern = this.fromStorableObject(storableObject);
+		CronTemporalPattern temporalPattern = this.fromStorableObject(storableObject);
 		this.retrieveEntity(temporalPattern);
 	}
 
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
-		TemporalPattern temporalPattern = (storableObject == null) ?
-				new TemporalPattern(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null):
+		CronTemporalPattern temporalPattern = (storableObject == null) ?
+				new CronTemporalPattern(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null):
 				this.fromStorableObject(storableObject);
 		String[] cronStrings = ((CronStringArray) (((OracleResultSet) resultSet).getORAData(TemporalPatternWrapper.COLUMN_VALUE,
 				CronStringArray.getORADataFactory()))).getArray();
@@ -114,7 +114,7 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws ObjectNotFoundException, RetrieveObjectException, IllegalDataException {
-		TemporalPattern temporalPattern = this.fromStorableObject(storableObject);
+		CronTemporalPattern temporalPattern = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
 				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  temporalPattern.getId() + "'; argument: " + arg);
@@ -123,7 +123,7 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 	}
 
 	public void insert(StorableObject storableObject) throws CreateObjectException , IllegalDataException {
-		TemporalPattern temporalPattern = this.fromStorableObject(storableObject);
+		CronTemporalPattern temporalPattern = this.fromStorableObject(storableObject);
 		this.insertTemporalPattern(temporalPattern);
 	}
 	
@@ -136,7 +136,7 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 		PreparedStatement preparedStatement = null;
 		Connection connection = DatabaseConnection.getConnection();
 		try{
-			String sql = SQL_INSERT_INTO + ObjectEntities.TEMPORALPATTERN_ENTITY 
+			String sql = SQL_INSERT_INTO + ObjectEntities.CRONTEMPORALPATTERN_ENTITY 
 			+ OPEN_BRACKET
 			+ this.getColumns(MODE_INSERT)
 			+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
@@ -152,13 +152,13 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 	
 	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
 			throws IllegalDataException, SQLException {
-		TemporalPattern temporalPattern = this.fromStorableObject(storableObject);
+		CronTemporalPattern temporalPattern = this.fromStorableObject(storableObject);
 		preparedStatement.setString(++startParameterNumber, temporalPattern.getDescription());
 		((OraclePreparedStatement) preparedStatement).setORAData(++startParameterNumber, new CronStringArray(temporalPattern.getCronStrings()));
 		return startParameterNumber;
 	}	
 
-	private void insertTemporalPattern(TemporalPattern temporalPattern) throws CreateObjectException {
+	private void insertTemporalPattern(CronTemporalPattern temporalPattern) throws CreateObjectException {
 		String tpIdCode = DatabaseIdentifier.toSQLString(temporalPattern.getId());
 		
 		PreparedStatement preparedStatement = null;

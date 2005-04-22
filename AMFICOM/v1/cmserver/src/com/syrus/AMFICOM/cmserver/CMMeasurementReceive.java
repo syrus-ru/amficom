@@ -1,5 +1,5 @@
 /*
- * $Id: CMMeasurementReceive.java,v 1.8 2005/04/01 17:38:28 arseniy Exp $
+ * $Id: CMMeasurementReceive.java,v 1.9 2005/04/22 16:06:03 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,7 +44,7 @@ import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.ResultDatabase;
 import com.syrus.AMFICOM.measurement.Set;
 import com.syrus.AMFICOM.measurement.SetDatabase;
-import com.syrus.AMFICOM.measurement.TemporalPattern;
+import com.syrus.AMFICOM.measurement.CronTemporalPattern;
 import com.syrus.AMFICOM.measurement.TemporalPatternDatabase;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestDatabase;
@@ -59,13 +59,13 @@ import com.syrus.AMFICOM.measurement.corba.ModelingType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Modeling_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
-import com.syrus.AMFICOM.measurement.corba.TemporalPattern_Transferable;
+import com.syrus.AMFICOM.measurement.corba.CronTemporalPattern_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/04/01 17:38:28 $
+ * @version $Revision: 1.9 $, $Date: 2005/04/22 16:06:03 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -947,7 +947,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		}
 	}
 
-	public StorableObject_Transferable receiveTemporalPattern(TemporalPattern_Transferable temporalPattern_Transferable,
+	public StorableObject_Transferable receiveCronTemporalPattern(CronTemporalPattern_Transferable cronTemporalPattern_Transferable,
 			boolean force,
 			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		/**
@@ -955,12 +955,12 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		 */
 		Log.debugMessage("CMMeasurementReceive.receiveTemporalPattern | Received " + " temporalPattern", Log.DEBUGLEVEL07);
 		try {
-			TemporalPattern temporalPattern = new TemporalPattern(temporalPattern_Transferable);
-			MeasurementStorableObjectPool.putStorableObject(temporalPattern);
+			CronTemporalPattern cronTemporalPattern = new CronTemporalPattern(cronTemporalPattern_Transferable);
+			MeasurementStorableObjectPool.putStorableObject(cronTemporalPattern);
 			TemporalPatternDatabase temporalPatternDatabase = MeasurementDatabaseContext.getTemporalPatternDatabase();
-			temporalPatternDatabase.update(temporalPattern, new Identifier(accessIdentifier.user_id), force
+			temporalPatternDatabase.update(cronTemporalPattern, new Identifier(accessIdentifier.user_id), force
 					? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
-			return temporalPattern.getHeaderTransferable();
+			return cronTemporalPattern.getHeaderTransferable();
 		}
 		catch (UpdateObjectException e) {
 			Log.errorException(e);
@@ -984,21 +984,21 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		}
 	}
 
-	public StorableObject_Transferable[] receiveTemporalPatterns(TemporalPattern_Transferable[] temporalPattern_Transferables,
+	public StorableObject_Transferable[] receiveCronTemporalPatterns(CronTemporalPattern_Transferable[] cronTemporalPattern_Transferables,
 			boolean force,
 			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		/**
 		 * TODO check user for access
 		 */
 		Log.debugMessage("CMMeasurementReceive.receiveTemporalPatterns | Received "
-				+ temporalPattern_Transferables.length
+				+ cronTemporalPattern_Transferables.length
 				+ " TemporalPatterns", Log.DEBUGLEVEL07);
-		java.util.Set temporalPatternList = new HashSet(temporalPattern_Transferables.length);
+		java.util.Set temporalPatternList = new HashSet(cronTemporalPattern_Transferables.length);
 		try {
-			for (int i = 0; i < temporalPattern_Transferables.length; i++) {
-				TemporalPattern temporalPattern = new TemporalPattern(temporalPattern_Transferables[i]);
-				MeasurementStorableObjectPool.putStorableObject(temporalPattern);
-				temporalPatternList.add(temporalPattern);
+			for (int i = 0; i < cronTemporalPattern_Transferables.length; i++) {
+				CronTemporalPattern cronTemporalPattern = new CronTemporalPattern(cronTemporalPattern_Transferables[i]);
+				MeasurementStorableObjectPool.putStorableObject(cronTemporalPattern);
+				temporalPatternList.add(cronTemporalPattern);
 			}
 			TemporalPatternDatabase temporalPatternDatabase = MeasurementDatabaseContext.getTemporalPatternDatabase();
 			temporalPatternDatabase.update(temporalPatternList, new Identifier(accessIdentifier.user_id), force

@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseMeasurementObjectLoader.java,v 1.53 2005/04/22 14:23:44 arseniy Exp $
+ * $Id: DatabaseMeasurementObjectLoader.java,v 1.54 2005/04/22 16:04:39 arseniy Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.53 $, $Date: 2005/04/22 14:23:44 $
+ * @version $Revision: 1.54 $, $Date: 2005/04/22 16:04:39 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -83,8 +83,8 @@ public class DatabaseMeasurementObjectLoader extends AbstractObjectLoader implem
 		return new Test(id);
 	}
 
-	public TemporalPattern loadTemporalPattern(Identifier id) throws ApplicationException {
-		return new TemporalPattern(id);
+	public CronTemporalPattern loadCronTemporalPattern(Identifier id) throws ApplicationException {
+		return new CronTemporalPattern(id);
 	}
 
 
@@ -153,7 +153,7 @@ public class DatabaseMeasurementObjectLoader extends AbstractObjectLoader implem
 		return super.retrieveFromDatabase(database, ids);
 	}
 
-	public java.util.Set loadTemporalPatterns(java.util.Set ids) throws ApplicationException {
+	public java.util.Set loadCronTemporalPatterns(java.util.Set ids) throws ApplicationException {
 		TemporalPatternDatabase database = MeasurementDatabaseContext.getTemporalPatternDatabase();
 		return super.retrieveFromDatabase(database, ids);
 	}
@@ -229,7 +229,7 @@ public class DatabaseMeasurementObjectLoader extends AbstractObjectLoader implem
 		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 	}
 
-	public java.util.Set loadTemporalPatternsButIds(StorableObjectCondition condition, java.util.Set ids)
+	public java.util.Set loadCronTemporalPatternsButIds(StorableObjectCondition condition, java.util.Set ids)
 			throws ApplicationException {
 		TemporalPatternDatabase database = MeasurementDatabaseContext.getTemporalPatternDatabase();
 		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
@@ -310,9 +310,9 @@ public class DatabaseMeasurementObjectLoader extends AbstractObjectLoader implem
 		database.update(test, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
-	public void saveTemporalPattern(TemporalPattern temporalPattern, boolean force) throws ApplicationException {
+	public void saveCronTemporalPattern(CronTemporalPattern cronTemporalPattern, boolean force) throws ApplicationException {
 		TemporalPatternDatabase database = MeasurementDatabaseContext.getTemporalPatternDatabase();
-		database.update(temporalPattern, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE
+		database.update(cronTemporalPattern, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE
 				: StorableObjectDatabase.UPDATE_CHECK);
 	}
 
@@ -382,7 +382,7 @@ public class DatabaseMeasurementObjectLoader extends AbstractObjectLoader implem
 		database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
-	public void saveTemporalPatterns(java.util.Set list, boolean force) throws ApplicationException {
+	public void saveCronTemporalPatterns(java.util.Set list, boolean force) throws ApplicationException {
 		TemporalPatternDatabase database = MeasurementDatabaseContext.getTemporalPatternDatabase();
 		database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}

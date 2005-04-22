@@ -1,5 +1,5 @@
 /*
- * $Id: TestTestCase.java,v 1.8 2005/04/14 12:54:06 arseniy Exp $
+ * $Id: TestTestCase.java,v 1.9 2005/04/22 16:04:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/04/14 12:54:06 $
+ * @version $Revision: 1.9 $, $Date: 2005/04/22 16:04:39 $
  * @author $Author: arseniy $
  * @module tools
  */
@@ -89,7 +89,7 @@ public class TestTestCase extends AbstractMeasurementTestCase {
 		if (temporalPatternList.isEmpty())
 			fail("must be at less one temporal pattern at db");
 
-		TemporalPattern temporalPettern = (TemporalPattern) temporalPatternList.iterator().next();
+		CronTemporalPattern temporalPettern = (CronTemporalPattern) temporalPatternList.iterator().next();
 
 		java.util.Set monitoredElementList = monitoredElementDatabase.retrieveAll();
 
@@ -162,7 +162,7 @@ public class TestTestCase extends AbstractMeasurementTestCase {
 		if (temporalPatternList.isEmpty())
 			fail("must be at less one temporal pattern at db");
 
-		TemporalPattern temporalPettern = (TemporalPattern) temporalPatternList.iterator().next();
+		CronTemporalPattern temporalPettern = (CronTemporalPattern) temporalPatternList.iterator().next();
 
 		java.util.Set monitoredElementList = monitoredElementDatabase.retrieveAll();
 
@@ -255,7 +255,7 @@ public class TestTestCase extends AbstractMeasurementTestCase {
 //
 //		EvaluationType evaluationType = null;
 //
-//		TemporalPattern temporalPettern = null;
+//		CronTemporalPattern temporalPettern = null;
 //
 //		Test test = Test.createInstance(creatorId,
 //				new Date(System.currentTimeMillis()),
@@ -325,7 +325,7 @@ public class TestTestCase extends AbstractMeasurementTestCase {
 
 		EvaluationType evaluationType = null;
 
-		TemporalPattern temporalPettern = null;
+		CronTemporalPattern temporalPettern = null;
 
 		Test test = Test.createInstance(creatorId,
 				new Date(System.currentTimeMillis()),
