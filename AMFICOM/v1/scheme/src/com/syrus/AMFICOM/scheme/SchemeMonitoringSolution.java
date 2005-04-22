@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.18 2005/04/19 17:45:16 bass Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.19 2005/04/22 13:36:35 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,7 +35,7 @@ import com.syrus.util.Log;
  * #06 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.18 $, $Date: 2005/04/19 17:45:16 $
+ * @version $Revision: 1.19 $, $Date: 2005/04/22 13:36:35 $
  * @module scheme_v1
  */
 public final class SchemeMonitoringSolution extends
@@ -48,7 +48,7 @@ public final class SchemeMonitoringSolution extends
 
 	private Identifier parentSchemeOptimizeInfoId;
 
-	private double price;
+	private int price;
 
 	private SchemeMonitoringSolutionDatabase schemeMonitoringSolutionDatabase; 
 
@@ -151,7 +151,7 @@ public final class SchemeMonitoringSolution extends
 		throw new UnsupportedOperationException();
 	}
 
-	public double getPrice() {
+	public int getPrice() {
 		return this.price;
 	}
 
@@ -205,7 +205,7 @@ public final class SchemeMonitoringSolution extends
 		throw new UnsupportedOperationException();
 	}
 
-	public void setPrice(double price) {
+	public void setPrice(final int price) {
 		throw new UnsupportedOperationException();
 	}
 
