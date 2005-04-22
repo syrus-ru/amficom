@@ -18,7 +18,7 @@ public class AnalysisFrame extends ScalableFrame implements BsHashChangeListener
 	protected Dispatcher dispatcher;
 	public HashMap traces = new HashMap();
 
-	public AnalysisFrame(Dispatcher dispatcher, AnalysisLayeredPanel panel)
+	protected AnalysisFrame(Dispatcher dispatcher, AnalysisLayeredPanel panel)
 	{
 		super (panel);
 
