@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.18 2005/04/20 12:26:16 bass Exp $
+ * $Id: SchemeDevice.java,v 1.19 2005/04/22 15:39:59 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,22 +39,22 @@ import com.syrus.util.Log;
  * #07 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.18 $, $Date: 2005/04/20 12:26:16 $
+ * @version $Revision: 1.19 $, $Date: 2005/04/22 15:39:59 $
  * @module scheme_v1
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
 		implements Describable, Characterizable {
 	private static final long serialVersionUID = 3762529027398644793L;
 
-	private Set characteristics;
+	private String name;
 
 	private String description;
-
-	private String name;
 
 	private Identifier parentSchemeElementId;
 	
 	private Identifier parentSchemeProtoElementId;
+
+	private Set characteristics;
 
 	private SchemeDeviceDatabase schemeDeviceDatabase;
 
