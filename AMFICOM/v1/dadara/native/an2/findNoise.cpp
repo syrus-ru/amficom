@@ -11,7 +11,7 @@
 #define prf_b(x) ((void)0)
 #define prf_e() ((void)0)
 
-// Для отбрасывания участков, где точность определяется 0.001дБ-представлением
+// Уровень шума квантования входной р/гs
 const double prec0 = 0.001 * 1.5;
 
 // начальный уровень шума по отношению к макс. уровню сигнала, дБ
@@ -89,7 +89,7 @@ inline double rdB2dy(double y0, double dB)
  * с учетом возможности уменьшения уровня шума на
  * р/г
  * вых. значение - в отн. дБ, по ур. ~1 сигма
- * len2 - интересующий пользователя интервал шума, д б <= size (д включать м.з.)
+ * len2 - интересующий пользователя интервал шума, д б <= size (кр. желательно чтобы включал м.з.)
  */
 void findNoiseArray(double *data, double *outNoise, int size, int len2)
 {
@@ -97,8 +97,6 @@ void findNoiseArray(double *data, double *outNoise, int size, int len2)
 		return;
 
 	assert(len2 <= size);
-	//if (len2 > size)
-	//	len2 = size;
 
 	prf_b("findNoiseArray: enter");
 
@@ -110,7 +108,20 @@ void findNoiseArray(double *data, double *outNoise, int size, int len2)
 	const int mofs = mlen / 2 - 1;
 	double gist[nsam];
 
-	assert(size > mlen); // XXX
+	int i;
+
+	if (size < mlen)
+	{
+		// Нештатная ситуация - р/г так коротка, что шум определить нельзя
+		// В таком случае в качестве уровня шума выдаем везде prec0 -- это
+		// не очень здорово, но достаточно просто.
+		for (i = 0; i < len2; i++)
+			outNoise[i] = prec0;
+		prf_b("findNoiseArray: done/ too short trace");
+		return;
+	}
+
+	assert(size > mlen);
 
 	// два временных массива
 	double *temp = new double[size];
@@ -120,8 +131,6 @@ void findNoiseArray(double *data, double *outNoise, int size, int len2)
 
 	double levelPrec0 = log2add(prec0) - 1;
 	const int effSize = size < len2 + mlen - mofs ? size : len2 + mlen - mofs;
-
-	int i;
 
 	prf_b("findNoiseArray: log2add");
 
