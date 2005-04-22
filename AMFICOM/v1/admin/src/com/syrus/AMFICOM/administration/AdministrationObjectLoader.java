@@ -1,5 +1,5 @@
 /*
- * $Id: AdministrationObjectLoader.java,v 1.12 2005/04/22 14:49:44 arseniy Exp $
+ * $Id: AdministrationObjectLoader.java,v 1.13 2005/04/22 17:07:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/04/22 14:49:44 $
+ * @version $Revision: 1.13 $, $Date: 2005/04/22 17:07:56 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -80,13 +80,13 @@ public interface AdministrationObjectLoader {
 
 	/* Save multiple object*/
 
-	void saveUsers(Set collection, boolean force) throws ApplicationException;
+	void saveUsers(Set objects, boolean force) throws ApplicationException;
 
-	void saveDomains(Set collection, boolean force) throws ApplicationException;
+	void saveDomains(Set objects, boolean force) throws ApplicationException;
 
-	void saveServers(Set collection, boolean force) throws ApplicationException;
+	void saveServers(Set objects, boolean force) throws ApplicationException;
 
-	void saveMCMs(Set collection, boolean force) throws ApplicationException;
+	void saveMCMs(Set objects, boolean force) throws ApplicationException;
 
 //	void savePermissionAttributes(PermissionAttributes permissionAttributes, boolean force) throws ApplicationException;
 
