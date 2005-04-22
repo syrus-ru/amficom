@@ -65,11 +65,11 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
-import com.syrus.AMFICOM.measurement.TemporalPattern;
+import com.syrus.AMFICOM.measurement.CronTemporalPattern;
 import com.syrus.AMFICOM.measurement.TemporalPatternController;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestTemporalStamps;
-import com.syrus.AMFICOM.measurement.TemporalPattern.TimeLine;
+import com.syrus.AMFICOM.measurement.CronTemporalPattern.TimeLine;
 import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 
 public class TimeParametersFrame extends JInternalFrame  implements Commandable {
@@ -232,7 +232,7 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 				public void mouseClicked(MouseEvent e) {
 					if (e.getClickCount() == 2) {
 						final JList jlist = (JList) e.getSource();
-						TemporalPattern temporalPattern = (TemporalPattern) jlist.getSelectedValue();
+						CronTemporalPattern temporalPattern = (CronTemporalPattern) jlist.getSelectedValue();
 						if (temporalPattern.isChanged()) {
 							// JFrame mainFrame = demo.getTimeLineEditor();
 							TimeLine timeLine = (TimeLine) temporalPattern.getTimeLines().iterator().next();
@@ -248,7 +248,7 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 								DefaultListModel model = (DefaultListModel) jlist.getModel();
 								model.removeAllElements();
 								for (Iterator it = TimeParametersPanel.this.temporalPatterns.iterator(); it.hasNext();) {
-									TemporalPattern pattern = (TemporalPattern) it.next();
+									CronTemporalPattern pattern = (CronTemporalPattern) it.next();
 									model.addElement(pattern);
 								}
 
@@ -278,7 +278,7 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 						try {
 							RISDSessionInfo sessionInterface = (RISDSessionInfo) TimeParametersPanel.this.aContext
 									.getSessionInterface();
-							TemporalPattern temporalPattern = TemporalPattern.createInstance(sessionInterface
+							CronTemporalPattern temporalPattern = CronTemporalPattern.createInstance(sessionInterface
 									.getUserIdentifier(), template, new HashSet());
 							temporalPattern.addTemplate(template);
 							TimeParametersPanel.this.temporalPatterns.add(temporalPattern);
@@ -287,7 +287,7 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 							ObjListModel model = (ObjListModel) TimeParametersPanel.this.timeStamps.getModel();
 							model.removeAllElements();
 							for (Iterator it = TimeParametersPanel.this.temporalPatterns.iterator(); it.hasNext();) {
-								TemporalPattern timeLine2 = (TemporalPattern) it.next();
+								CronTemporalPattern timeLine2 = (CronTemporalPattern) it.next();
 								model.addElement(timeLine2);
 							}
 
@@ -313,14 +313,14 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 			removeTemporalPatternButton.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
-					TemporalPattern temporalPattern = (TemporalPattern) TimeParametersPanel.this.timeStamps
+					CronTemporalPattern temporalPattern = (CronTemporalPattern) TimeParametersPanel.this.timeStamps
 							.getSelectedValue();
 					if (temporalPattern != null) {
 						TimeParametersPanel.this.temporalPatterns.remove(temporalPattern);
 						DefaultListModel model = (DefaultListModel) TimeParametersPanel.this.timeStamps.getModel();
 						model.removeAllElements();
 						for (Iterator it = TimeParametersPanel.this.temporalPatterns.iterator(); it.hasNext();) {
-							TemporalPattern timeLine2 = (TemporalPattern) it.next();
+							CronTemporalPattern timeLine2 = (CronTemporalPattern) it.next();
 							model.addElement(timeLine2);
 						}
 					}
@@ -331,7 +331,7 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 
 				public void valueChanged(ListSelectionEvent e) {
 					JList jlist = (JList) e.getSource();
-					TemporalPattern temporalPattern = (TemporalPattern) jlist.getSelectedValue();
+					CronTemporalPattern temporalPattern = (CronTemporalPattern) jlist.getSelectedValue();
 					removeTemporalPatternButton.setEnabled((temporalPattern == null) ? false : temporalPattern
 							.isChanged());
 				}
@@ -487,12 +487,12 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 		
 		public TestTemporalStamps getTestTemporalStamps() {
 			TestTemporalType temporalType = null;
-			TemporalPattern temporalPattern = null;
+			CronTemporalPattern temporalPattern = null;
 			if (this.oneRadioButton.isSelected()) {
 				temporalType = TestTemporalType.TEST_TEMPORAL_TYPE_ONETIME;
 			} else if (this.periodicalRadioButton.isSelected()) {
 				temporalType = TestTemporalType.TEST_TEMPORAL_TYPE_PERIODICAL;
-				temporalPattern = (TemporalPattern) TimeParametersPanel.this.timeStamps.getSelectedValue();
+				temporalPattern = (CronTemporalPattern) TimeParametersPanel.this.timeStamps.getSelectedValue();
 				if (temporalPattern == null) {
 					JOptionPane.showMessageDialog(this,
 						LangModelSchedule.getString("Have not choosen temporal pattern"), LangModelSchedule.getString("Error"), //$NON-NLS-1$ //$NON-NLS-2$
@@ -570,7 +570,7 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 			this.temporalPatterns = temporalPatterns;
 			ObjListModel model = (ObjListModel) this.timeStamps.getModel();
 			for (Iterator it = this.temporalPatterns.iterator(); it.hasNext();) {
-				TemporalPattern pattern = (TemporalPattern) it.next();
+				CronTemporalPattern pattern = (CronTemporalPattern) it.next();
 				model.addElement(pattern);
 			}
 			

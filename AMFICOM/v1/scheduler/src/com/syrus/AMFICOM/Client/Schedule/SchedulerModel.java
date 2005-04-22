@@ -57,7 +57,7 @@ import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.measurement.Set;
-import com.syrus.AMFICOM.measurement.TemporalPattern;
+import com.syrus.AMFICOM.measurement.CronTemporalPattern;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestTemporalStamps;
 import com.syrus.AMFICOM.measurement.TestWrapper;
@@ -255,7 +255,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		RISDSessionInfo sessionInterface = (RISDSessionInfo) this.aContext.getSessionInterface();
 
 		Collection temporalPatterns = MeasurementStorableObjectPool.getStorableObjectsByCondition(
-			new EquivalentCondition(ObjectEntities.TEMPORALPATTERN_ENTITY_CODE), true);
+			new EquivalentCondition(ObjectEntities.CRONTEMPORALPATTERN_ENTITY_CODE), true);
 		this.testTemporalStampsEditor.setTemporalPatterns(temporalPatterns);
 
 		{
@@ -340,9 +340,9 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 			this.returnTypeEditor.setReturnType(this.selectedTest.getReturnType());
 			{
 				Identifier temporalPatternId = this.selectedTest.getTemporalPatternId();
-				TemporalPattern temporalPattern = null;
+				CronTemporalPattern temporalPattern = null;
 				if (temporalPatternId != null)
-					temporalPattern = (TemporalPattern) MeasurementStorableObjectPool.getStorableObject(
+					temporalPattern = (CronTemporalPattern) MeasurementStorableObjectPool.getStorableObject(
 						temporalPatternId, true);
 				TestTemporalStamps timeStamps = new TestTemporalStamps(this.selectedTest.getTemporalType(),
 																		this.selectedTest.getStartTime(),
@@ -615,7 +615,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 			Date startTime = this.testTimeStamps.getStartTime();
 			Date endTime = this.testTimeStamps.getEndTime();
 			TestTemporalType temporalType = this.testTimeStamps.getTestTemporalType();
-			TemporalPattern temporalPattern = this.testTimeStamps.getTemporalPattern();
+			CronTemporalPattern temporalPattern = this.testTimeStamps.getTemporalPattern();
 			if (test == null) {
 				try {
 					test = Test.createInstance(modifierId, startTime, endTime, temporalPattern == null ? null

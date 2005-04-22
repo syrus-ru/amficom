@@ -23,11 +23,11 @@ import javax.swing.WindowConstants;
 
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
-import com.syrus.AMFICOM.measurement.TemporalPattern;
+import com.syrus.AMFICOM.measurement.CronTemporalPattern;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/04/14 17:44:21 $
- * @author $Author: bob $
+ * @version $Revision: 1.8 $, $Date: 2005/04/22 16:17:25 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
  */
@@ -47,7 +47,7 @@ public class TimeStampUI {
 
 	private static final String			MINPANEL_NORMAL			= "normal";												//$NON-NLS-1$
 
-	private TemporalPattern.TimeLine	timeLine;
+	private CronTemporalPattern.TimeLine	timeLine;
 
 	private JCheckBox					eachDayCheckBox;
 
@@ -108,7 +108,7 @@ public class TimeStampUI {
 				String description;
 				int type = JOptionPane.INFORMATION_MESSAGE;
 				try {
-					description = TemporalPattern.getCronStringsDescription(new String[] { getTemplate()});
+					description = CronTemporalPattern.getCronStringsDescription(new String[] { getTemplate()});
 				} catch (IllegalArgumentException iae) {
 					description = LangModelSchedule.getString("Some paremeters are not set");
 					type = JOptionPane.ERROR_MESSAGE;
@@ -415,7 +415,7 @@ public class TimeStampUI {
 	/**
 	 * @return Returns the timeLine.
 	 */
-	public TemporalPattern.TimeLine getTimeLine() {
+	public CronTemporalPattern.TimeLine getTimeLine() {
 		return this.timeLine;
 	}
 
@@ -629,17 +629,17 @@ public class TimeStampUI {
 	 * @param timeLine
 	 *            The timeLine to set.
 	 */
-	public void setTimeLine(TemporalPattern.TimeLine timeLine) {
+	public void setTimeLine(CronTemporalPattern.TimeLine timeLine) {
 		this.timeLine = timeLine;
 		if (timeLine.getDateList() == null)
 			timeLine.parseTemplate();
 //		String description = timeLine.getDescription();
 		//this.mainFrame.setTitle(description);
-		TemporalPattern.TimeValue minute = timeLine.getMinutes();
-		TemporalPattern.TimeValue hour = timeLine.getHours();
-		TemporalPattern.TimeValue dayOfMonth = timeLine.getDayOfMonth();
-		TemporalPattern.TimeValue dayOfWeek = timeLine.getDayOfWeek();
-		TemporalPattern.TimeValue month = timeLine.getMonth();
+		CronTemporalPattern.TimeValue minute = timeLine.getMinutes();
+		CronTemporalPattern.TimeValue hour = timeLine.getHours();
+		CronTemporalPattern.TimeValue dayOfMonth = timeLine.getDayOfMonth();
+		CronTemporalPattern.TimeValue dayOfWeek = timeLine.getDayOfWeek();
+		CronTemporalPattern.TimeValue month = timeLine.getMonth();
 		{
 			boolean moreThanOneDay = (timeLine.getEndPeriod() - timeLine.getStartPeriod() > 1000 * 60 * 60 * 24);
 			moreThanOneDay = true;

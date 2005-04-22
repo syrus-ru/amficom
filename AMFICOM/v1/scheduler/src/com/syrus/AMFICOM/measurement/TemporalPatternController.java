@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPatternController.java,v 1.3 2005/04/12 06:53:14 bob Exp $
+ * $Id: TemporalPatternController.java,v 1.4 2005/04/22 16:15:23 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,8 +15,8 @@ import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/04/12 06:53:14 $
- * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2005/04/22 16:15:23 $
+ * @author $Author: arseniy $
  * @module module
  */
 public class TemporalPatternController extends ObjectResourceController {
@@ -80,8 +80,8 @@ public class TemporalPatternController extends ObjectResourceController {
 
 	public Object getValue(Object object, String key) {
 		Object value = null;
-		if (object instanceof TemporalPattern) {
-			TemporalPattern temporalPattern = (TemporalPattern) object;
+		if (object instanceof CronTemporalPattern) {
+			CronTemporalPattern temporalPattern = (CronTemporalPattern) object;
 			if (key.equals(KEY_NAME))
 				value = temporalPattern.toString(); //$NON-NLS-1$			
 		}
@@ -93,8 +93,8 @@ public class TemporalPatternController extends ObjectResourceController {
 	}
 
 	public void setValue(Object object, String key, Object value) {
-		if (object instanceof TemporalPattern) {
-			TemporalPattern temporalPattern = (TemporalPattern) object;
+		if (object instanceof CronTemporalPattern) {
+			CronTemporalPattern temporalPattern = (CronTemporalPattern) object;
 		}
 	}
 

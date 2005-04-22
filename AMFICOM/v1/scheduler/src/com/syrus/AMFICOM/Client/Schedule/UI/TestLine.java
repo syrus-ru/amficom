@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
-import com.syrus.AMFICOM.measurement.TemporalPattern;
+import com.syrus.AMFICOM.measurement.CronTemporalPattern;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 
@@ -137,7 +137,7 @@ public class TestLine extends JLabel implements TestsEditor, TestEditor {
 								boolean condition = false;
 								switch (temporalType.value()) {
 									case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
-										Set times = ((TemporalPattern) MeasurementStorableObjectPool
+										Set times = ((CronTemporalPattern) MeasurementStorableObjectPool
 												.getStorableObject(test.getTemporalPatternId(), true)).getTimes(test
 												.getStartTime(), test.getEndTime());
 										for (Iterator timeIt = times.iterator(); timeIt.hasNext();) {
@@ -345,7 +345,7 @@ public class TestLine extends JLabel implements TestsEditor, TestEditor {
 							.getStorableObject((Identifier) test.getMeasurementSetupIds().iterator().next(), true);
 					switch (test.getTemporalType().value()) {
 						case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
-							Set times = ((TemporalPattern)MeasurementStorableObjectPool
+							Set times = ((CronTemporalPattern)MeasurementStorableObjectPool
 									.getStorableObject(test.getTemporalPatternId(), true)).getTimes(test.getStartTime(), test.getEndTime());
 							List addMeasurementTestList = new LinkedList();
 							for (Iterator timeIt = times.iterator(); timeIt.hasNext();) {
