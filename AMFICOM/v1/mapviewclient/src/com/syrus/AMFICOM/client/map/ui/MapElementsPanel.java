@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementsPanel.java,v 1.20 2005/04/20 16:17:22 krupenn Exp $
+ * $Id: MapElementsPanel.java,v 1.21 2005/04/22 11:37:27 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,7 +11,6 @@
 
 package com.syrus.AMFICOM.Client.Map.UI;
 
-import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.SystemColor;
@@ -37,11 +36,11 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.AComboBox;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
 import com.syrus.AMFICOM.Client.Map.Controllers.NodeTypeController;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTable;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTableModel;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.SiteNode;
@@ -53,7 +52,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * видов элементов и талица элементов с полями "Идентификатор" и "Название"
  * 
  * 
- * @version $Revision: 1.20 $, $Date: 2005/04/20 16:17:22 $
+ * @version $Revision: 1.21 $, $Date: 2005/04/22 11:37:27 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
