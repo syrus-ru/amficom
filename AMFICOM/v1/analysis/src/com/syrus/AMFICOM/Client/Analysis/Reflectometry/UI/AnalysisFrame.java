@@ -15,7 +15,7 @@ import com.syrus.io.BellcoreStructure;
 
 public class AnalysisFrame extends ScalableFrame implements BsHashChangeListener, EtalonMTMListener
 {
-	Dispatcher dispatcher;
+	protected Dispatcher dispatcher;
 	public HashMap traces = new HashMap();
 
 	public AnalysisFrame(Dispatcher dispatcher, AnalysisLayeredPanel panel)
@@ -45,7 +45,7 @@ public class AnalysisFrame extends ScalableFrame implements BsHashChangeListener
 		{
 			public void componentShown(ComponentEvent e)
 			{
-				this_componentShown(e);
+				this_componentShown();
 			}
 		});
 	}
@@ -55,24 +55,19 @@ public class AnalysisFrame extends ScalableFrame implements BsHashChangeListener
 		return LangModelAnalyse.getString("analysisTitle");
 	}
 
-	public Dispatcher getInternalDispatcher()
+	private void init_module(Dispatcher dispatcher1)
 	{
-		return dispatcher;
-	}
-
-	void init_module(Dispatcher dispatcher)
-	{
-		this.dispatcher = dispatcher;
+		this.dispatcher = dispatcher1;
 		Heap.addBsHashListener(this);
 		Heap.addEtalonMTMListener(this);
 	}
 
-	void this_componentShown(ComponentEvent e)
+	protected void this_componentShown()
 	{
 		((AnalysisLayeredPanel)panel).updMarkers();
 	}
 
-	public void addTrace (String id)
+	protected void addTrace (String id)
 	{
 		if (traces.get(id) != null)
 			return;
@@ -132,7 +127,7 @@ public class AnalysisFrame extends ScalableFrame implements BsHashChangeListener
 		}
 	}
 
-	public void addEtalon()
+	private void addEtalon()
 	{
 		if (traces.get(Heap.ETALON_TRACE_KEY) != null)
 			return;
@@ -140,65 +135,9 @@ public class AnalysisFrame extends ScalableFrame implements BsHashChangeListener
 		BellcoreStructure bs = Heap.getBSEtalonTrace();
 		if (bs != null)
 			addTrace (Heap.ETALON_TRACE_KEY);
-		/* XXX: remove it: Стас говорит что это неактуально
-		else
-		{
-			if (bs.measurementId == null)
-				return;
-
-			int n = 0;
-			double deltaX = 0;
-
-			MeasurementSetup ms = Heap.getContextMeasurementSetup();
-			if (ms == null)
-				return;
-			SetParameter[] params = ms.getParameterSet().getParameters();
-			double len = 0;
-			try
-			{
-				for (int i = 0; i < params.length; i++)
-				{
-					ParameterType type = (ParameterType)params[i].getType();
-					if (type.getCodename().equals(ParameterTypeCodenames.TRACE_RESOLUTION))
-					{
-						deltaX = new ByteArray(params[i].getValue()).toDouble();
-					}
-					if (type.getCodename().equals(ParameterTypeCodenames.TRACE_LENGTH))
-					{
-						len = new ByteArray(params[i].getValue()).toDouble();
-					}
-				}
-				if (deltaX == 0 || len == 0)
-					return;
-				n = (int)(len * 1000 / deltaX);
-
-				SimpleGraphPanel oldpanel = (SimpleGraphPanel)traces.get(Heap.ETALON_TRACE_KEY);
-				if (oldpanel != null)
-				{
-					((ScalableLayeredPanel)panel).removeGraphPanel(oldpanel);
-					traces.remove(Heap.ETALON_TRACE_KEY);
-				}
-
-				ModelTraceManager mtm = Heap.getMTMEtalon();
-				if (mtm != null)
-				{
-					double[] y = new double[n];
-					y = mtm.getModelTrace().getYArrayZeroPad(0, n);
-					SimpleGraphPanel epPanel = new SimpleGraphPanel(y, deltaX);
-					epPanel.setColorModel(AnalysisUtil.ETALON);
-					((ScalableLayeredPanel)panel).addGraphPanel(epPanel);
-					panel.updScale2fit();
-					traces.put(Heap.ETALON_TRACE_KEY, epPanel);
-				}
-			}
-			catch (IOException ex)
-			{
-				ex.printStackTrace();
-			}
-		}*/
 	}
 
-	public void removeEtalon(String etId)
+	private void removeEtalon(String etId)
 	{
 		SimpleGraphPanel epPanel = (SimpleGraphPanel)traces.get(etId);
 		if (epPanel != null)
