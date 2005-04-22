@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.2 2005/04/22 15:14:54 arseniy Exp $
+# $Id: Makefile,v 1.3 2005/04/22 19:25:05 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -21,12 +21,16 @@ $(call checkenve,JAVA_HOME)
 #corba.jar is deprecated!
 APPCLASSPATH := $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/map.jar:$(LIBDIR)/mapview.jar:$(LIBDIR)/scheme.jar:$(LIBDIR)/cmserver_interface.jar:$(LIBDIR)/mshserver_interface.jar:$(LIBDIR)/corba.jar
 
-SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/general/*.java)
+SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/general/*.java) \
+	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/administration/*.java) \
+	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/configuration/*.java)
 
 
 $(LIBNAME): .mach
 	$(JAR) cf $@ \
-		-C $(CLASSDIR) com/syrus/AMFICOM/general
+		-C $(CLASSDIR) com/syrus/AMFICOM/general \
+		-C $(CLASSDIR) com/syrus/AMFICOM/administration \
+		-C $(CLASSDIR) com/syrus/AMFICOM/configuration
 
 .mach:	.corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
