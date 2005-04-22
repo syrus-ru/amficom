@@ -218,7 +218,7 @@ public final class MapSchemeTreePanel extends JPanel
 
 	protected void initTree()
 	{
-		this.model = new MapSchemeTreeModel(null);
+//		this.model = new MapSchemeTreeModel(null);
 //		setPanel(new UniTreePanel(this.aContext.getDispatcher(), this.aContext, this.model));
 	}
 
