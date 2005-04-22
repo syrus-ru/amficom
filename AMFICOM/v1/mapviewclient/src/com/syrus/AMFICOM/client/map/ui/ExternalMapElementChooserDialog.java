@@ -1,5 +1,5 @@
 /**
- * $Id: ExternalMapElementChooserDialog.java,v 1.2 2005/04/21 11:55:03 krupenn Exp $
+ * $Id: ExternalMapElementChooserDialog.java,v 1.3 2005/04/22 11:40:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,6 +31,7 @@ import javax.swing.tree.TreeSelectionModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.client_.general.ui_.tree_.IconedNode;
+import com.syrus.AMFICOM.client_.general.ui_.tree_.PopulatableIconedNode;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.logic.ItemTreeModel;
 import com.syrus.AMFICOM.logic.LogicalTreeUI;
@@ -66,8 +67,9 @@ public class ExternalMapElementChooserDialog extends JDialog
 	LogicalTreeUI treeUI;
 	JTree tree;
 	ItemTreeModel treeModel;
-	MapViewTreeModel model;
+	MapTreeModel model;
 	TreeCellRenderer treeRenderer;
+	Item root;
 
 	Map map;
 
@@ -82,6 +84,13 @@ public class ExternalMapElementChooserDialog extends JDialog
 			e.printStackTrace();
 		}
 		this.map = map;
+		Item item = new PopulatableIconedNode(
+				this.model,
+				map,
+				MapTreeModel.mapIcon,
+				true);
+		this.model.populate(item);
+		this.root.addChild(item);
 	}
 
 	protected void jbInit() throws Exception
@@ -129,11 +138,10 @@ public class ExternalMapElementChooserDialog extends JDialog
 		this.getContentPane().add(this.bottomPanel, BorderLayout.SOUTH);
 		this.getContentPane().add(this.topPanel, BorderLayout.CENTER);
 
-		Item rootItem = new IconedNode("root", LangModel.getString("root"));
-		this.model = new MapViewTreeModel(rootItem);
-		this.treeRenderer = new MapViewTreeCellRenderer(this.model);
+		this.model = MapTreeModel.getInstance();
 
-		this.treeUI = new LogicalTreeUI(rootItem, false);
+		this.root = new IconedNode("root", LangModel.getString("root"));
+		this.treeUI = new LogicalTreeUI(this.root, false);
 		this.tree = this.treeUI.getTree();
 		this.treeModel = (ItemTreeModel )this.tree.getModel();
 		this.treeModel.setAllwaysSort(false);
@@ -141,9 +149,8 @@ public class ExternalMapElementChooserDialog extends JDialog
 		this.scrollPane.getViewport().add(this.tree);
 		this.tree.addTreeSelectionListener(this);
 		this.tree.getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
-		this.tree.setCellRenderer(this.treeRenderer);
-
-		this.tree.setRootVisible(false);
+//		this.treeRenderer = new MapViewTreeCellRenderer(this.model);
+//		this.tree.setCellRenderer(this.treeRenderer);
 
 		this.topPanel.add(this.scrollPane, BorderLayout.CENTER);
 	}
