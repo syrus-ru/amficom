@@ -6,6 +6,8 @@ language.properties_
 sort.pl
 Configure.properties
 images
+cache
+logs
 .mach
 *.jar
 *.swp

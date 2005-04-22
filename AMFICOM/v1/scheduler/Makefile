@@ -22,6 +22,7 @@ APPCLASSPATH := $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administratio
 $(call checkenve,JAVA_HOME)
 
 $(LIBNAME): .mach
+	mkdir -p $(CLASSDIR)/com/syrus/AMFICOM/Client/General/lang
 	$(CP) \
 		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/Client/General/lang/*.properties) \
 		$(CLASSDIR)/com/syrus/AMFICOM/Client/General/lang
