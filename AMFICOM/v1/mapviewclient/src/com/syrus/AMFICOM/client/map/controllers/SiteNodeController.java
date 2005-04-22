@@ -1,5 +1,5 @@
 /**
- * $Id: SiteNodeController.java,v 1.5 2005/04/06 17:41:12 krupenn Exp $
+ * $Id: SiteNodeController.java,v 1.6 2005/04/22 15:10:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,6 +21,8 @@ import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.SiteNode;
 
+import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.geom.Rectangle2D;
@@ -28,7 +30,7 @@ import java.awt.geom.Rectangle2D;
 /**
  * Контроллер сетевого узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.5 $, $Date: 2005/04/06 17:41:12 $
+ * @version $Revision: 1.6 $, $Date: 2005/04/22 15:10:39 $
  * @module mapviewclient_v1
  */
 public class SiteNodeController extends AbstractNodeController
@@ -98,6 +100,24 @@ public class SiteNodeController extends AbstractNodeController
 		
 		super.paint(site, g, visibleBounds);
 		
+		//Если внешний узел то рисовать рамку
+		if (getLogicalNetLayer().getMapView().getMap().getExternalNodes().contains(site))
+		{
+			MapCoordinatesConverter converter = getLogicalNetLayer();
+			
+			Point p = converter.convertMapToScreen(site.getLocation());
+	
+			int width = getBounds(site).width;
+			int height = getBounds(site).height;
+
+			g.setColor(Color.BLUE);
+			g.drawRect( 
+					p.x - width / 2,
+					p.y - height / 2,
+					width,
+					height);
+		}
+
 		if(MapPropertiesManager.isShowNodesNames())
 		{
 			MapCoordinatesConverter converter = getLogicalNetLayer();
