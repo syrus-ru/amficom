@@ -1,22 +1,17 @@
 package com.syrus.impexp.unicablemap;
-import com.mapinfo.coordsys.CoordSys;
-import com.mapinfo.coordsys.CoordSysFactory;
-import com.mapinfo.coordsys.Ellipsoid;
-import com.mapinfo.coordsys.Projection;
-import com.mapinfo.coordsys.proj.TransverseMercator;
-import com.mapinfo.unit.AngularUnit;
-import com.mapinfo.unit.LinearUnit;
-import com.syrus.AMFICOM.Client.General.Command.ExportCommand;
-import java.io.File;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import com.mapinfo.coordsys.CoordSys;
+import com.mapinfo.coordsys.Projection;
+import com.syrus.AMFICOM.Client.General.Command.ExportCommand;
+
 /**
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.1 $, $Date: 2005/03/31 11:44:51 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/22 09:42:50 $
  * @module mapviewclient_v1
  */
 public class UniCableMapExportCommand extends ExportCommand 
@@ -80,7 +75,7 @@ public class UniCableMapExportCommand extends ExportCommand
 
 			System.out.println(ucmObject.text);
 
-			for(Iterator it2 = ucmDatabase.getParents(ucmObject).iterator(); it2.hasNext();)
+			for(Iterator it2 = this.ucmDatabase.getParents(ucmObject).iterator(); it2.hasNext();)
 			{
 				UniCableMapLink ucmLink = (UniCableMapLink )it2.next();
 				System.out.println("Parent (" + ucmLink.mod.text + ") " + ucmLink.parent);
@@ -89,7 +84,7 @@ public class UniCableMapExportCommand extends ExportCommand
 					if(ucmLink.parent.typ.text.equals(UniCableMapType.UCM_STREET))
 					{
 						street = ucmLink.parent.text;
-						Collection streetParents = ucmDatabase.getParents(ucmLink.parent);
+						Collection streetParents = this.ucmDatabase.getParents(ucmLink.parent);
 						for(Iterator it3 = streetParents.iterator(); it3.hasNext();)
 						{
 							UniCableMapLink ucmLink1 = (UniCableMapLink )it3.next();
@@ -101,7 +96,7 @@ public class UniCableMapExportCommand extends ExportCommand
 					}
 			}
 
-			for(Iterator it2 = ucmDatabase.getChildren(ucmObject).iterator(); it2.hasNext();)
+			for(Iterator it2 = this.ucmDatabase.getChildren(ucmObject).iterator(); it2.hasNext();)
 			{
 				UniCableMapLink ucmLink = (UniCableMapLink )it2.next();
 				System.out.println("Child " + ucmLink.mod.text + ") " + ucmLink.child);
@@ -156,7 +151,7 @@ public class UniCableMapExportCommand extends ExportCommand
 
 			System.out.println(ucmObject.text);
 
-			for(Iterator it2 = ucmDatabase.getParents(ucmObject).iterator(); it2.hasNext();)
+			for(Iterator it2 = this.ucmDatabase.getParents(ucmObject).iterator(); it2.hasNext();)
 			{
 				UniCableMapLink ucmLink = (UniCableMapLink )it2.next();
 				System.out.println("Parent (" + ucmLink.mod.text + ") " + ucmLink.parent);
@@ -183,7 +178,7 @@ public class UniCableMapExportCommand extends ExportCommand
 //					}
 			}
 
-			for(Iterator it2 = ucmDatabase.getChildren(ucmObject).iterator(); it2.hasNext();)
+			for(Iterator it2 = this.ucmDatabase.getChildren(ucmObject).iterator(); it2.hasNext();)
 			{
 				UniCableMapLink ucmLink = (UniCableMapLink )it2.next();
 				System.out.println("Child " + ucmLink.mod.text + ") " + ucmLink.child);
@@ -247,7 +242,7 @@ public class UniCableMapExportCommand extends ExportCommand
 
 			System.out.println(ucmObject.text);
 
-			for(Iterator it2 = ucmDatabase.getParents(ucmObject).iterator(); it2.hasNext();)
+			for(Iterator it2 = this.ucmDatabase.getParents(ucmObject).iterator(); it2.hasNext();)
 			{
 				UniCableMapLink ucmLink = (UniCableMapLink )it2.next();
 				System.out.println("Parent (" + ucmLink.mod.text + ") " + ucmLink.parent);
@@ -259,7 +254,7 @@ public class UniCableMapExportCommand extends ExportCommand
 //					end_node_id = String.valueOf(ucmLink.parent.un);
 			}
 
-			for(Iterator it2 = ucmDatabase.getChildren(ucmObject).iterator(); it2.hasNext();)
+			for(Iterator it2 = this.ucmDatabase.getChildren(ucmObject).iterator(); it2.hasNext();)
 			{
 				UniCableMapLink ucmLink = (UniCableMapLink )it2.next();
 				System.out.println("Child " + ucmLink.mod.text + ") " + ucmLink.child);
@@ -300,9 +295,7 @@ public class UniCableMapExportCommand extends ExportCommand
 	public void execute()
 	{
 		try {
-			File file = new File(fileName);
-	
-			super.open(fileName);
+			super.open(this.fileName);
 	
 			super.startObject(MAP_TYPE);
 				super.put("description", "");
@@ -310,24 +303,24 @@ public class UniCableMapExportCommand extends ExportCommand
 				super.put("id", "1");
 			super.endObject();
 	
-			Collection wells = ucmDatabase.getObjects(
-				ucmDatabase.getType(UniCableMapType.UCM_WELL));
+			Collection wells = this.ucmDatabase.getObjects(
+				this.ucmDatabase.getType(UniCableMapType.UCM_WELL));
 			writeSites(wells, "well", "images/well.gif");
 
-			Collection piquets = ucmDatabase.getObjects(
-				ucmDatabase.getType(UniCableMapType.UCM_PIQUET));
+			Collection piquets = this.ucmDatabase.getObjects(
+				this.ucmDatabase.getType(UniCableMapType.UCM_PIQUET));
 			writeSites(piquets, "piquet", "images/piquet.gif");
 	
-			Collection cableinlets = ucmDatabase.getObjects(
-				ucmDatabase.getType(UniCableMapType.UCM_CABLE_INLET));
+			Collection cableinlets = this.ucmDatabase.getObjects(
+				this.ucmDatabase.getType(UniCableMapType.UCM_CABLE_INLET));
 			writeSites(cableinlets, "cableinlet", "images/cableinlet.gif");
 	
-			Collection tunnels = ucmDatabase.getObjects(
-				ucmDatabase.getType(UniCableMapType.UCM_TUNNEL));
+			Collection tunnels = this.ucmDatabase.getObjects(
+				this.ucmDatabase.getType(UniCableMapType.UCM_TUNNEL));
 			writeLinks(tunnels, "tunnel");
 	
-			Collection collectors = ucmDatabase.getObjects(
-				ucmDatabase.getType(UniCableMapType.UCM_COLLECTOR));
+			Collection collectors = this.ucmDatabase.getObjects(
+				this.ucmDatabase.getType(UniCableMapType.UCM_COLLECTOR));
 			writeCollectors(collectors, "collector");
 	
 			super.close();

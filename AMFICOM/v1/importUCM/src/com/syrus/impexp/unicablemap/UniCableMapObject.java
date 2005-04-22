@@ -18,8 +18,7 @@ public class UniCableMapObject {
 			"Y0, " +
 			"X1, " +
 			"Y1, " +
-			"STATE, " +
-			"ELID " +
+			"STATE " +
 		"from OBJECT";
 	public static PreparedStatement objectStatement;
 
@@ -36,8 +35,7 @@ public class UniCableMapObject {
 			"Y0, " +
 			"X1, " +
 			"Y1, " +
-			"STATE, " +
-			"ELID " +
+			"STATE " +
 		"from OBJECT " +
 		"where UN = ? ";
 	public static PreparedStatement unObjectStatement;
@@ -55,7 +53,6 @@ public class UniCableMapObject {
 	public double x1;
 	public double y1;
 	public int state;
-	public String elid;
 
 	public static void init(Connection connection) 
 			throws SQLException {
@@ -64,13 +61,14 @@ public class UniCableMapObject {
 	}
 
 	public UniCableMapObject() {
+		// empty
 	}
 
 	public String toString()
 	{
-		return text + " | [un]"
-			+ un + " | [typ]"
-			+ typ.un + " (" + typ.text + ") | ";/*
+		return this.text + " | [un]"
+			+ this.un + " | [typ]"
+			+ this.typ.un + " (" + this.typ.text + ") | ";/*
 			+ msk + " | "
 			+ ord + " | "
 			+ dx + " | "

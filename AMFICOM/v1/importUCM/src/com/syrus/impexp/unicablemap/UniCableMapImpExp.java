@@ -1,12 +1,11 @@
 package com.syrus.impexp.unicablemap;
 
 import com.syrus.impexp.ImportExportException;
-import java.sql.SQLException;
 
 /**
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.1 $, $Date: 2005/03/31 10:23:28 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/22 09:42:50 $
  * @module mapviewclient_v1
  */
 public class UniCableMapImpExp 
@@ -27,11 +26,11 @@ public class UniCableMapImpExp
 		try
 		{
 			UniCableMapDatabase ucmDatabase = new UniCableMapDatabase(
-				username,
-				password,
-				host,
-				database);
-			UniCableMapExportCommand command = new UniCableMapExportCommand(ucmDatabase, fileName);
+				this.username,
+				this.password,
+				this.host,
+				this.database);
+			UniCableMapExportCommand command = new UniCableMapExportCommand(ucmDatabase, this.fileName);
 			command.execute();
 			ucmDatabase.close();
 		}

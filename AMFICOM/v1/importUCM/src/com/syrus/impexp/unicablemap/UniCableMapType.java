@@ -21,8 +21,7 @@ public class UniCableMapType extends UniCableMapObject {
 			"Y0, " +
 			"X1, " +
 			"Y1, " +
-			"STATE, " +
-			"ELID " +
+			"STATE " +
 		"from OBJECT " + 
 		"where TYP = ? ";
 	public static PreparedStatement typedStatement;
@@ -372,6 +371,7 @@ public class UniCableMapType extends UniCableMapObject {
 	}
 
 	public UniCableMapType() {
+		// empty
 	}
 }
 

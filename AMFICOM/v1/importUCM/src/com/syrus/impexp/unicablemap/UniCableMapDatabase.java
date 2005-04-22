@@ -1,14 +1,22 @@
 package com.syrus.impexp.unicablemap;
 
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Properties;
+
 import com.syrus.impexp.ImportExportException;
-import java.sql.*;
-import java.util.*;
-import javax.naming.*;
 
 /**
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.1 $, $Date: 2005/03/30 07:31:39 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/22 09:42:50 $
  * @module mapviewclient_v1
  */
 public class UniCableMapDatabase {
@@ -38,9 +46,9 @@ public class UniCableMapDatabase {
 			String url = this.driverName + ":" + host + ":" + database;
 			this.connection = getDriverConnection(url, username, password);
 
-			checkForWarning (connection.getWarnings());
+			checkForWarning (this.connection.getWarnings());
 	
-			DatabaseMetaData dma = connection.getMetaData();
+			DatabaseMetaData dma = this.connection.getMetaData();
 	
 			System.out.println("\nConnected to " + dma.getURL());
 			System.out.println("Driver       " + 
@@ -96,7 +104,7 @@ public class UniCableMapDatabase {
 		}
 	}
 
-	public void scanObjects() throws SQLException
+	public void scanObjects()
 	{
 		if(this.connection == null)
 			return;
@@ -117,7 +125,7 @@ public class UniCableMapDatabase {
 				if(ucmType == null)
 					System.out.println("NULL! " + ucmObject);
 
-				IntTreeMap elements = (IntTreeMap )type_elements.get(ucmObject.typ.un);
+				IntTreeMap elements = (IntTreeMap )this.type_elements.get(ucmObject.typ.un);
 				elements.put(ucmObject.un, ucmObject);
 
 				more = resultSet.next();
@@ -131,12 +139,12 @@ public class UniCableMapDatabase {
 			printSQLException(e);
 		}
 
-		for(Iterator it = type_elements.keySet().iterator(); it.hasNext();)
+		for(Iterator it = this.type_elements.keySet().iterator(); it.hasNext();)
 		{
 			Integer key = (Integer )it.next();
 			UniCableMapType ucmType = (UniCableMapType )
-				objectTypes.get(key.intValue());
-			IntTreeMap elements = (IntTreeMap )type_elements.get(key.intValue());
+				this.objectTypes.get(key.intValue());
+			IntTreeMap elements = (IntTreeMap )this.type_elements.get(key.intValue());
 			if(ucmType.text != null 
 					&& UniCableMapType.map_objects.contains(ucmType.text)
 					&& elements.size() != 0) {
@@ -168,9 +176,9 @@ public class UniCableMapDatabase {
 				UniCableMapType ucmType = new UniCableMapType();
 				parseUniCableMapObject(resultSet, ucmType);
 
-				if(objectTypes.get(ucmType.un) == null) {
-					objectTypes.put(ucmType.un, ucmType);
-					type_elements.put(ucmType.un, new IntTreeMap());
+				if(this.objectTypes.get(ucmType.un) == null) {
+					this.objectTypes.put(ucmType.un, ucmType);
+					this.type_elements.put(ucmType.un, new IntTreeMap());
 //				System.out.println("	public static final String UCM_" + ucmType.text + " = \"" + ucmType.text + "\";");
 				}		
 				more = resultSet.next();
@@ -202,8 +210,8 @@ public class UniCableMapDatabase {
 				UniCableMapLinkType ucmLinkType = new UniCableMapLinkType();
 				parseUniCableMapObject(resultSet, ucmLinkType);
 
-				if(linkTypes.get(ucmLinkType.un) == null) {
-					linkTypes.put(ucmLinkType.un, ucmLinkType);
+				if(this.linkTypes.get(ucmLinkType.un) == null) {
+					this.linkTypes.put(ucmLinkType.un, ucmLinkType);
 				}		
 //				System.out.println("	public static final String UCM_" + ucmLinkType.text + " = \"" + ucmLinkType.text + "\";");
 				more = resultSet.next();
@@ -235,8 +243,8 @@ public class UniCableMapDatabase {
 				UniCableMapObject ucmParameterType = new UniCableMapObject();
 				parseUniCableMapObject(resultSet, ucmParameterType);
 
-				if(parameterTypes.get(ucmParameterType.un) == null) {
-					parameterTypes.put(ucmParameterType.un, ucmParameterType);
+				if(this.parameterTypes.get(ucmParameterType.un) == null) {
+					this.parameterTypes.put(ucmParameterType.un, ucmParameterType);
 				}		
 //				System.out.println("	public static final String UCM_" + ucmParameterType.text + " = \"" + ucmParameterType.text + "\"; //" + ucmParameterType.un);
 				more = resultSet.next();
@@ -318,7 +326,6 @@ public class UniCableMapDatabase {
 		ucmObject.x1 = resultSet.getDouble("X1");
 		ucmObject.y1 = resultSet.getDouble("Y1");
 		ucmObject.state = resultSet.getInt("STATE");
-		ucmObject.elid = resultSet.getString("ELID");
 	}
 
 	private void parseUniCableMapLink(ResultSet resultSet, UniCableMapLink ucmLink) 
@@ -335,10 +342,9 @@ public class UniCableMapDatabase {
 		ucmLink.mod = getLinkType(mod);
 	}
 
-	public Collection getObjects(UniCableMapType ucmType) 
-			throws SQLException {
+	public Collection getObjects(UniCableMapType ucmType) {
 		Collection objects = new LinkedList();
-		IntTreeMap elements = (IntTreeMap )type_elements.get(ucmType.un);
+		IntTreeMap elements = (IntTreeMap )this.type_elements.get(ucmType.un);
 		objects.addAll(elements.values());
 		return objects;
 	}
@@ -411,7 +417,7 @@ public class UniCableMapDatabase {
 
 	public UniCableMapObject getObject(int objectUn) 
 			throws SQLException {
-		UniCableMapObject ucmObject = (UniCableMapObject )objects.get(objectUn);
+		UniCableMapObject ucmObject = (UniCableMapObject )this.objects.get(objectUn);
 		if(ucmObject == null)
 			ucmObject = retreiveObject(objectUn);
 		return ucmObject;
@@ -426,15 +432,14 @@ public class UniCableMapDatabase {
 		if(resultSet.next())
 		{
 			ucmObject = new UniCableMapObject();
-			objects.put(objectUn, ucmObject);
+			this.objects.put(objectUn, ucmObject);
 			parseUniCableMapObject(resultSet, ucmObject);
 		}
 		return ucmObject;
 	}
 	
-	public UniCableMapLinkType getLinkType(String typeText)
-			throws SQLException {
-		for(Enumeration en = linkTypes.elements(); en.hasMoreElements();)
+	public UniCableMapLinkType getLinkType(String typeText) {
+		for(Enumeration en = this.linkTypes.elements(); en.hasMoreElements();)
 		{
 			UniCableMapLinkType ucmLinkType = (UniCableMapLinkType )en.nextElement();
 			if(ucmLinkType.text.equals(typeText))
@@ -445,7 +450,7 @@ public class UniCableMapDatabase {
 
 	public UniCableMapLinkType getLinkType(int typeUn) 
 			throws SQLException {
-		UniCableMapLinkType ucmType = (UniCableMapLinkType )linkTypes.get(typeUn);
+		UniCableMapLinkType ucmType = (UniCableMapLinkType )this.linkTypes.get(typeUn);
 		if(ucmType == null)
 			ucmType = retreiveLinkType(typeUn);
 		return ucmType;
@@ -460,15 +465,14 @@ public class UniCableMapDatabase {
 		if(resultSet.next())
 		{
 			ucmLinkType = new UniCableMapLinkType();
-			linkTypes.put(typeUn, ucmLinkType);
+			this.linkTypes.put(typeUn, ucmLinkType);
 			parseUniCableMapObject(resultSet, ucmLinkType);
 		}
 		return ucmLinkType;
 	}
 
-	public UniCableMapType getType(String typeText)
-			throws SQLException {
-		for(Enumeration en = objectTypes.elements(); en.hasMoreElements();)
+	public UniCableMapType getType(String typeText) {
+		for(Enumeration en = this.objectTypes.elements(); en.hasMoreElements();)
 		{
 			UniCableMapType ucmObjectType = (UniCableMapType )en.nextElement();
 			if(ucmObjectType.text.equals(typeText))
@@ -479,7 +483,7 @@ public class UniCableMapDatabase {
 
 	public UniCableMapType getType(int typeUn)
 			throws SQLException {
-		UniCableMapType ucmObjectType = (UniCableMapType )objectTypes.get(typeUn);
+		UniCableMapType ucmObjectType = (UniCableMapType )this.objectTypes.get(typeUn);
 		if(ucmObjectType == null)
 			ucmObjectType = retreiveType(typeUn);
 		return ucmObjectType;
@@ -494,8 +498,8 @@ public class UniCableMapDatabase {
 		if(resultSet.next())
 		{
 			ucmObjectType = new UniCableMapType();
-			objectTypes.put(typeUn, ucmObjectType);
-			type_elements.put(typeUn, new IntTreeMap());
+			this.objectTypes.put(typeUn, ucmObjectType);
+			this.type_elements.put(typeUn, new IntTreeMap());
 			parseUniCableMapObject(resultSet, ucmObjectType);
 		}
 		return ucmObjectType;
@@ -568,8 +572,7 @@ public class UniCableMapDatabase {
 		}
 	}
 	
-	private static boolean checkForWarning (java.sql.SQLWarning warn) 	
-			throws java.sql.SQLException  {
+	private static boolean checkForWarning (java.sql.SQLWarning warn)  {
 		boolean rc = false;
 	
 		// If a SQLWarning object was given, display the
