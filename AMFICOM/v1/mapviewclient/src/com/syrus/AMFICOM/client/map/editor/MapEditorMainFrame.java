@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMainFrame.java,v 1.32 2005/04/21 11:53:59 krupenn Exp $
+ * $Id: MapEditorMainFrame.java,v 1.33 2005/04/22 15:06:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -100,7 +100,7 @@ import com.syrus.AMFICOM.scheme.SchemeSampleData;
  * 
  * 
  * 
- * @version $Revision: 1.32 $, $Date: 2005/04/21 11:53:59 $
+ * @version $Revision: 1.33 $, $Date: 2005/04/22 15:06:33 $
  * @module mapviewclient_v1
  * @author $Author: krupenn $
  */
@@ -801,15 +801,15 @@ public class MapEditorMainFrame extends JFrame
 			ex.printStackTrace();
 		}
 
-		try {
-			SchemeSampleData.populate(
-					new Identifier(this.aContext.getSessionInterface().getAccessIdentifier().user_id),
-					new Identifier(this.aContext.getSessionInterface().getAccessIdentifier().domain_id));
-		} catch(DatabaseException e) {
-			e.printStackTrace();
-		} catch(IllegalObjectEntityException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			SchemeSampleData.populate(
+//					new Identifier(this.aContext.getSessionInterface().getAccessIdentifier().user_id),
+//					new Identifier(this.aContext.getSessionInterface().getAccessIdentifier().domain_id));
+//		} catch(DatabaseException e) {
+//			e.printStackTrace();
+//		} catch(IllegalObjectEntityException e) {
+//			e.printStackTrace();
+//		}
 	}
 
 	public void setSessionClosed()
