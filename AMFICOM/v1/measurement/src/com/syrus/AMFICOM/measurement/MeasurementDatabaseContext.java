@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementDatabaseContext.java,v 1.26 2005/04/22 16:04:39 arseniy Exp $
+ * $Id: MeasurementDatabaseContext.java,v 1.27 2005/04/22 16:12:48 arseniy Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,7 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/04/22 16:04:39 $
+ * @version $Revision: 1.27 $, $Date: 2005/04/22 16:12:48 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -31,7 +31,7 @@ public final class MeasurementDatabaseContext {
 	private static EvaluationDatabase	evaluationDatabase;
 	private static TestDatabase		testDatabase;
 	private static ResultDatabase		resultDatabase;
-	private static TemporalPatternDatabase	temporalPatternDatabase;
+	private static CronTemporalPatternDatabase	temporalPatternDatabase;
 
 	private MeasurementDatabaseContext() {
 		assert false;
@@ -50,7 +50,7 @@ public final class MeasurementDatabaseContext {
 			final EvaluationDatabase	evaluationDatabase1,
 			final TestDatabase		testDatabase1,
 			final ResultDatabase		resultDatabase1,
-			final TemporalPatternDatabase	temporalPatternDatabase1) {
+			final CronTemporalPatternDatabase	temporalPatternDatabase1) {
 		if (measurementTypeDatabase1 != null)
 			measurementTypeDatabase = measurementTypeDatabase1;
 		if (analysisTypeDatabase1 != null)
@@ -161,7 +161,7 @@ public final class MeasurementDatabaseContext {
 		return setDatabase;
 	}
 
-	public static TemporalPatternDatabase getTemporalPatternDatabase() {
+	public static CronTemporalPatternDatabase getTemporalPatternDatabase() {
 		return temporalPatternDatabase;
 	}
 

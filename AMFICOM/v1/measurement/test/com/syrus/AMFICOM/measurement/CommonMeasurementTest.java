@@ -1,5 +1,5 @@
 /*
- * $Id: CommonMeasurementTest.java,v 1.5 2005/04/16 21:14:03 arseniy Exp $
+ * $Id: CommonMeasurementTest.java,v 1.6 2005/04/22 16:12:48 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -56,7 +56,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/04/16 21:14:03 $
+ * @version $Revision: 1.6 $, $Date: 2005/04/22 16:12:48 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -150,7 +150,7 @@ public class CommonMeasurementTest extends TestCase {
 				new EvaluationDatabase(),
 				new TestDatabase(),
 				new ResultDatabase(),
-				new TemporalPatternDatabase());
+				new CronTemporalPatternDatabase());
 	}
 
 	private static void initSessionContext() {

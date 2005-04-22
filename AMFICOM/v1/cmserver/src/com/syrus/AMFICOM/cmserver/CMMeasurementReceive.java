@@ -1,5 +1,5 @@
 /*
- * $Id: CMMeasurementReceive.java,v 1.9 2005/04/22 16:06:03 arseniy Exp $
+ * $Id: CMMeasurementReceive.java,v 1.10 2005/04/22 16:14:07 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,7 +45,7 @@ import com.syrus.AMFICOM.measurement.ResultDatabase;
 import com.syrus.AMFICOM.measurement.Set;
 import com.syrus.AMFICOM.measurement.SetDatabase;
 import com.syrus.AMFICOM.measurement.CronTemporalPattern;
-import com.syrus.AMFICOM.measurement.TemporalPatternDatabase;
+import com.syrus.AMFICOM.measurement.CronTemporalPatternDatabase;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestDatabase;
 import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
@@ -65,7 +65,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/04/22 16:06:03 $
+ * @version $Revision: 1.10 $, $Date: 2005/04/22 16:14:07 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -957,7 +957,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		try {
 			CronTemporalPattern cronTemporalPattern = new CronTemporalPattern(cronTemporalPattern_Transferable);
 			MeasurementStorableObjectPool.putStorableObject(cronTemporalPattern);
-			TemporalPatternDatabase temporalPatternDatabase = MeasurementDatabaseContext.getTemporalPatternDatabase();
+			CronTemporalPatternDatabase temporalPatternDatabase = MeasurementDatabaseContext.getTemporalPatternDatabase();
 			temporalPatternDatabase.update(cronTemporalPattern, new Identifier(accessIdentifier.user_id), force
 					? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return cronTemporalPattern.getHeaderTransferable();
@@ -1000,7 +1000,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 				MeasurementStorableObjectPool.putStorableObject(cronTemporalPattern);
 				temporalPatternList.add(cronTemporalPattern);
 			}
-			TemporalPatternDatabase temporalPatternDatabase = MeasurementDatabaseContext.getTemporalPatternDatabase();
+			CronTemporalPatternDatabase temporalPatternDatabase = MeasurementDatabaseContext.getTemporalPatternDatabase();
 			temporalPatternDatabase.update(temporalPatternList, new Identifier(accessIdentifier.user_id), force
 					? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return super.getListHeaders(temporalPatternList);

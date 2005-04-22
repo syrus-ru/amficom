@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.3 2005/04/08 08:55:06 bass Exp $
+ * $Id: DatabaseContextSetup.java,v 1.4 2005/04/22 16:12:48 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -52,13 +52,13 @@ import com.syrus.AMFICOM.measurement.MeasurementTypeDatabase;
 import com.syrus.AMFICOM.measurement.ModelingDatabase;
 import com.syrus.AMFICOM.measurement.ResultDatabase;
 import com.syrus.AMFICOM.measurement.SetDatabase;
-import com.syrus.AMFICOM.measurement.TemporalPatternDatabase;
+import com.syrus.AMFICOM.measurement.CronTemporalPatternDatabase;
 import com.syrus.AMFICOM.measurement.TestDatabase;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/04/08 08:55:06 $
- * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2005/04/22 16:12:48 $
+ * @author $Author: arseniy $
  * @module cmserver_v1
  */
 
@@ -116,7 +116,7 @@ class DatabaseContextSetup {
 				new EvaluationDatabase(),
 				new TestDatabase(),
 				new ResultDatabase(),
-				new TemporalPatternDatabase());
+				new CronTemporalPatternDatabase());
 	}
 
 	public static void initObjectPools() {

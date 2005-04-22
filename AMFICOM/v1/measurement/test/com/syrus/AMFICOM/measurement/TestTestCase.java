@@ -1,5 +1,5 @@
 /*
- * $Id: TestTestCase.java,v 1.9 2005/04/22 16:04:39 arseniy Exp $
+ * $Id: TestTestCase.java,v 1.10 2005/04/22 16:12:48 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/04/22 16:04:39 $
+ * @version $Revision: 1.10 $, $Date: 2005/04/22 16:12:48 $
  * @author $Author: arseniy $
  * @module tools
  */
@@ -60,7 +60,7 @@ public class TestTestCase extends AbstractMeasurementTestCase {
 				.getMeasurementSetupDatabase();
 		MeasurementTypeDatabase measurementTypeDatabase = MeasurementDatabaseContext
 				.getMeasurementTypeDatabase();
-		TemporalPatternDatabase temporalPatternDatabase = MeasurementDatabaseContext
+		CronTemporalPatternDatabase temporalPatternDatabase = MeasurementDatabaseContext
 				.getTemporalPatternDatabase();
 		MonitoredElementDatabase monitoredElementDatabase = ConfigurationDatabaseContext
 				.getMonitoredElementDatabase();
@@ -134,7 +134,7 @@ public class TestTestCase extends AbstractMeasurementTestCase {
 				.getMeasurementSetupDatabase();
 		MeasurementTypeDatabase measurementTypeDatabase = MeasurementDatabaseContext
 				.getMeasurementTypeDatabase();
-		TemporalPatternDatabase temporalPatternDatabase = MeasurementDatabaseContext
+		CronTemporalPatternDatabase temporalPatternDatabase = MeasurementDatabaseContext
 				.getTemporalPatternDatabase();
 		MonitoredElementDatabase monitoredElementDatabase = ConfigurationDatabaseContext
 				.getMonitoredElementDatabase();

@@ -1,5 +1,5 @@
 /*
- * $Id: MCMMeasurementObjectLoader.java,v 1.33 2005/04/22 16:05:41 arseniy Exp $
+ * $Id: MCMMeasurementObjectLoader.java,v 1.34 2005/04/22 16:13:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.measurement.Modeling;
 import com.syrus.AMFICOM.measurement.ModelingType;
 import com.syrus.AMFICOM.measurement.Set;
 import com.syrus.AMFICOM.measurement.SetDatabase;
-import com.syrus.AMFICOM.measurement.TemporalPatternDatabase;
+import com.syrus.AMFICOM.measurement.CronTemporalPatternDatabase;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.CronTemporalPattern_Transferable;
@@ -51,7 +51,7 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/04/22 16:05:41 $
+ * @version $Revision: 1.34 $, $Date: 2005/04/22 16:13:32 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -527,7 +527,7 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 	}
 
 	public java.util.Set loadTemporalPatterns(java.util.Set ids) throws RetrieveObjectException {
-		TemporalPatternDatabase database = MeasurementDatabaseContext.getTemporalPatternDatabase();
+		CronTemporalPatternDatabase database = MeasurementDatabaseContext.getTemporalPatternDatabase();
 		java.util.Set objects = super.retrieveFromDatabase(database, ids);
 		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
 		if (loadIdsT.length == 0)

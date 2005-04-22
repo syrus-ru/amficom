@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPatternDatabase.java,v 1.51 2005/04/22 16:04:39 arseniy Exp $
+ * $Id: CronTemporalPatternDatabase.java,v 1.1 2005/04/22 16:12:27 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,23 +32,23 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2005/04/22 16:04:39 $
+ * @version $Revision: 1.1 $, $Date: 2005/04/22 16:12:27 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
 
-public class TemporalPatternDatabase extends StorableObjectDatabase {
+public class CronTemporalPatternDatabase extends StorableObjectDatabase {
 	private static final String CRONSTRINGARRAY_TYPE_NAME = "CronStringArray";
 
 	private CronTemporalPattern fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof CronTemporalPattern)
 			return (CronTemporalPattern)storableObject;
-		throw new IllegalDataException("TemporalPatternDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
+		throw new IllegalDataException("CronTemporalPatternDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 	
 	private static String columns;
 	private static String updateMultipleSQLValues;	
-	
+
 	protected String getEnityName() {		
 		return ObjectEntities.CRONTEMPORALPATTERN_ENTITY;
 	}
@@ -165,15 +165,15 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 		try {			
 			preparedStatement = this.insertTemporalPatternPreparedStatement();
 			this.setEntityForPreparedStatement(temporalPattern, preparedStatement, MODE_INSERT);
-			Log.debugMessage("TemporalPatternDatabase.insertTemporalPattern | Inserting temporal pattern " + tpIdCode, Log.DEBUGLEVEL09);
+			Log.debugMessage("CronTemporalPatternDatabase.insertTemporalPattern | Inserting temporal pattern " + tpIdCode, Log.DEBUGLEVEL09);
 			preparedStatement.executeUpdate();
 		}
 		catch (IllegalDataException ide){
-			String mesg = "TemporalPatternDatabase.insertTemporalPattern | Cannot insert temporal pattern '" + tpIdCode + "' -- " + ide.getMessage();
+			String mesg = "CronTemporalPatternDatabase.insertTemporalPattern | Cannot insert temporal pattern '" + tpIdCode + "' -- " + ide.getMessage();
 			throw new CreateObjectException(mesg, ide);
 		}
 		catch (SQLException sqle) {
-			String mesg = "TemporalPatternDatabase.insertTemporalPattern | Cannot insert temporal pattern '" + tpIdCode + "' -- " + sqle.getMessage();
+			String mesg = "CronTemporalPatternDatabase.insertTemporalPattern | Cannot insert temporal pattern '" + tpIdCode + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {
