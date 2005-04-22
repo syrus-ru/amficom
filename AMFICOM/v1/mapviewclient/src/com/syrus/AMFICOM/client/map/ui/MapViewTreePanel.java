@@ -1,12 +1,10 @@
 package com.syrus.AMFICOM.Client.Map.UI;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Graphics;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
-import javax.swing.Icon;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
@@ -22,9 +20,9 @@ import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.client_.general.ui_.tree_.IconedNode;
+import com.syrus.AMFICOM.client_.general.ui_.tree_.PopulatableIconedNode;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.logic.ItemTreeModel;
 import com.syrus.AMFICOM.logic.LogicalTreeUI;
@@ -39,6 +37,7 @@ public final class MapViewTreePanel extends JPanel
 	JTree tree;
 	ItemTreeModel treeModel;
 	MapViewTreeModel model;
+	Item root;
 
 	ApplicationContext aContext;
 
@@ -72,11 +71,11 @@ public final class MapViewTreePanel extends JPanel
 
 		this.add(this.scroll, BorderLayout.CENTER);
 
-		Item rootItem = new IconedNode("root", LangModel.getString("root"));
-		this.model = new MapViewTreeModel(rootItem);
+		this.model = MapViewTreeModel.getInstance();
 		this.treeRenderer = new MapViewTreeCellRenderer(this.model);
 
-		this.treeUI = new LogicalTreeUI(rootItem, false);
+		this.root = new IconedNode("root", LangModel.getString("root"));
+		this.treeUI = new LogicalTreeUI(this.root, false);
 		this.tree = this.treeUI.getTree();
 		this.treeModel = (ItemTreeModel )this.tree.getModel();
 		this.treeModel.setAllwaysSort(false);
@@ -85,8 +84,6 @@ public final class MapViewTreePanel extends JPanel
 		this.tree.addTreeSelectionListener(this);
 		this.tree.getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
 		this.tree.setCellRenderer(this.treeRenderer);
-
-		this.tree.setRootVisible(false);
 	}
 
 	public void setContext(ApplicationContext aContext) {
@@ -125,8 +122,8 @@ public final class MapViewTreePanel extends JPanel
 			if(	operationEvent.getActionCommand().equals(MapEvent.MAP_VIEW_SELECTED)) {
 				MapView mapView = (MapView )operationEvent.getSource();
 				if(this.model == null 
-						|| this.model.mapView == null 
-						|| !this.model.mapView.equals(mapView)) {
+						|| this.mapView == null 
+						|| !this.mapView.equals(mapView)) {
 					updateTree(mapView);
 				}
 			}
@@ -144,7 +141,7 @@ public final class MapViewTreePanel extends JPanel
 				MapNavigateEvent mne = (MapNavigateEvent )operationEvent;
 				if(mne.isMapElementSelected()) {
 					MapElement mapElement = (MapElement )mne.getSource();
-					Item node = this.model.findNode(mapElement);
+					Item node = this.model.findNode(this.root, mapElement);
 					if(node != null) {
 						TreePath path = new TreePath(this.treeModel.getPathToRoot(node));
 						this.tree.getSelectionModel().addSelectionPath(path);
@@ -153,7 +150,7 @@ public final class MapViewTreePanel extends JPanel
 				}
 				else if (mne.isMapElementDeselected()) {
 					MapElement mapElement = (MapElement )mne.getSource();
-					Item node = this.model.findNode(mapElement);
+					Item node = this.model.findNode(this.root, mapElement);
 					if(node != null) {
 						TreePath path = new TreePath(this.treeModel.getPathToRoot(node));
 						this.tree.getSelectionModel().removeSelectionPath(path);
@@ -164,8 +161,50 @@ public final class MapViewTreePanel extends JPanel
 	}
 
 	public void updateTree(MapView mapView) {
+		if(this.mapView != null) {
+			if(mapView == null) {
+				List children = new LinkedList(this.root.getChildren());
+				for(Iterator iter = children.iterator(); iter.hasNext();) {
+					Item item = (Item )iter.next();
+					item.setParent(null);
+				}
+			}
+			else if(mapView.equals(this.mapView)) {
+				for(Iterator iter = this.root.getChildren().iterator(); iter.hasNext();) {
+					Item item = (Item )iter.next();
+					this.model.populate(item);
+				}
+			}
+			else {
+				List children = new LinkedList(this.root.getChildren());
+				for(Iterator iter = children.iterator(); iter.hasNext();) {
+					Item item = (Item )iter.next();
+					item.setParent(null);
+				}
+				Item item = new PopulatableIconedNode(
+						this.model,
+						mapView,
+						MapViewTreeModel.mapViewIcon,
+						true);
+				this.model.populate(item);
+				this.root.addChild(item);
+			}
+		}
+		else {
+			if(mapView == null) {
+				// empty
+			}
+			else {
+				Item item = new PopulatableIconedNode(
+						this.model,
+						mapView,
+						MapViewTreeModel.mapViewIcon,
+						true);
+				this.model.populate(item);
+				this.root.addChild(item);
+			}
+		}
 		this.mapView = mapView;
-		this.model.setMapView(mapView);
 		this.tree.updateUI();
 	}
 
@@ -200,51 +239,8 @@ public final class MapViewTreePanel extends JPanel
 			this.performProcessing = true;
 		}
 	}
+
+	
 }
 
-class MapViewTreeCellRenderer extends JLabel implements TreeCellRenderer {
-	public static Color selectedBackground = Color.BLUE;
-	public static Color selectedForeground = Color.WHITE;
-	private boolean selected = false; 
-
-	MapViewTreeModel model;
-	
-	public MapViewTreeCellRenderer(MapViewTreeModel model) {
-		this.model = model;
-	}
-	
-	public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
-		this.selected = selected;
-		Item node = (Item )value; 
-//		String name = node.getName();
-		String name = this.model.getNodeName(node);
-		if(name == null || name.length() == 0)
-			name = LangModelMap.getString("noname");
-		setText(name);
-		if(node instanceof IconedNode) {
-			setIcon(((IconedNode )node).getIcon());
-		}
-
-		if (!selected) {
-			setForeground(tree.getForeground());
-		}
-		else {
-			setForeground(selectedForeground);
-		}
-		return this;
-	}
-	
-	protected void paintComponent (Graphics g) {
-		if (this.selected) {
-			int x = 0;
-			Icon icon = getIcon();
-			if (icon != null) {
-				x += icon.getIconWidth() + getIconTextGap(); 
-			}
-			g.setColor(selectedBackground);
-			g.fillRect(x - 1, 0, getWidth() - x + 2, getHeight());
-		}
-		super.paintComponent(g);
-	}
-}
 
