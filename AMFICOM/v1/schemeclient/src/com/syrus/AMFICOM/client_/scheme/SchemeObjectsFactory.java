@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeObjectsFactory.java,v 1.2 2005/04/18 10:45:17 stas Exp $
+ * $Id: SchemeObjectsFactory.java,v 1.3 2005/04/22 07:32:50 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,13 +22,13 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/04/18 10:45:17 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/22 07:32:50 $
  * @module schemeclient_v1
  */
 
 public class SchemeObjectsFactory {
 	private static ApplicationContext aContext;
-	private static int counter = 0;
+//	private static int counter = 0;
 
 	public static void setContext(ApplicationContext aContext1) {
 		aContext = aContext1;
@@ -189,11 +189,11 @@ public class SchemeObjectsFactory {
 		}
 		return ir;
 	}
-	
-	public static SchemeDevice createDevice() throws CreateObjectException {
+	/*
+	public static SchemeDevice createSchemeDevice(String name) throws CreateObjectException {
 		Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
 					getAccessIdentifier().user_id);
-		SchemeDevice schemeDevice = SchemeDevice.createInstance(userId);
+		SchemeDevice schemeDevice = SchemeDevice.createInstance(userId, name);
 		try {
 			SchemeStorableObjectPool.putStorableObject(schemeDevice);
 		} 
@@ -204,8 +204,8 @@ public class SchemeObjectsFactory {
 			System.err.println("Unsupported operation: SchemeStorableObjectPool.putStorableObject()");
 		}
 		return schemeDevice;
-	}
-	
+	}*/
+	/*
 	public static AbstractSchemePort createSchemePort() throws CreateObjectException {
 		Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
 				getAccessIdentifier().user_id);
@@ -220,7 +220,7 @@ public class SchemeObjectsFactory {
 			System.err.println("Unsupported operation: SchemeStorableObjectPool.putStorableObject()");
 		}
 		return schemePort;
-	}
+	}*/
 	
 	public static MeasurementPort createMeasurementPort() throws CreateObjectException {
 		Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
@@ -234,7 +234,7 @@ public class SchemeObjectsFactory {
 		}
 		return measurementPort;
 	}
-	
+	/*
 	public static AbstractSchemePort createSchemeCablePort() throws CreateObjectException {
 		Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
 				getAccessIdentifier().user_id);
@@ -249,8 +249,8 @@ public class SchemeObjectsFactory {
 			System.err.println("Unsupported operation: SchemeStorableObjectPool.putStorableObject()");
 		}
 		return schemeCablePort;
-	}
-	
+	}*/
+	/*
 	public static SchemeProtoElement createProtoElement() throws CreateObjectException {
 		Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
 				getAccessIdentifier().user_id);
@@ -265,8 +265,8 @@ public class SchemeObjectsFactory {
 			System.err.println("Unsupported operation: SchemeStorableObjectPool.putStorableObject()");
 		}
 		return protoElement;
-	}
-	
+	}*/
+	/*
 	public static SchemeElement createElement() throws CreateObjectException {
 		Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
 				getAccessIdentifier().user_id);
@@ -281,8 +281,8 @@ public class SchemeObjectsFactory {
 			System.err.println("Unsupported operation: SchemeStorableObjectPool.putStorableObject()");
 		}
 		return schemeElement;
-	}
-	
+	}*/
+	/*
 	public static SchemeLink createSchemeLink() throws CreateObjectException {
 		Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
 				getAccessIdentifier().user_id);
@@ -313,5 +313,5 @@ public class SchemeObjectsFactory {
 			System.err.println("Unsupported operation: SchemeStorableObjectPool.putStorableObject()");
 		}
 		return schemeCableLink;
-	}
+	}*/
 }

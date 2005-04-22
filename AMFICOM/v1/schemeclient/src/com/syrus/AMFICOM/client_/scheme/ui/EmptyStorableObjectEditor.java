@@ -1,5 +1,5 @@
 /*-
- * $Id: EmptyStorableObjectEditor.java,v 1.1 2005/04/18 10:45:17 stas Exp $
+ * $Id: EmptyStorableObjectEditor.java,v 1.2 2005/04/22 07:32:50 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,15 +12,15 @@ import java.awt.Color;
 
 import javax.swing.*;
 
-import com.syrus.AMFICOM.client_.general.ui_.StorableObjectEditor;
+import com.syrus.AMFICOM.client_.general.ui_.DefaultStorableObjectEditor;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/04/18 10:45:17 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/22 07:32:50 $
  * @module schemeclient_v1
  */
 
-public class EmptyStorableObjectEditor implements StorableObjectEditor {
+public class EmptyStorableObjectEditor extends DefaultStorableObjectEditor {
 	JPanel pnPanel0 = new JPanel();
 	
 	protected EmptyStorableObjectEditor() {

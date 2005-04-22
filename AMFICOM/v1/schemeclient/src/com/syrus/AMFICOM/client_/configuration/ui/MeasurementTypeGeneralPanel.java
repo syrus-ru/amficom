@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeGeneralPanel.java,v 1.7 2005/04/18 10:57:46 stas Exp $
+ * $Id: MeasurementTypeGeneralPanel.java,v 1.8 2005/04/22 07:32:50 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.7 $, $Date: 2005/04/18 10:57:46 $
+ * @version $Revision: 1.8 $, $Date: 2005/04/22 07:32:50 $
  * @module schemeclient_v1
  */
 
@@ -81,8 +81,8 @@ public class MeasurementTypeGeneralPanel extends DefaultStorableObjectEditor {
 		trPortTypesTree = portsTreeUI.getTree();
 		trPortTypesTree.setRootVisible(false);
 				
-		allInPTypeNodes = getParameterTypeNodes("input");
-		allOutPTypeNodes = getParameterTypeNodes("output");
+		allInPTypeNodes = getParameterTypeNodes(Constants.INPUT);
+		allOutPTypeNodes = getParameterTypeNodes(Constants.OUTPUT);
 		allMPTypeNodes = getMeasurementPortTypeNodes();
 
 		GridBagLayout gbPanel0 = new GridBagLayout();

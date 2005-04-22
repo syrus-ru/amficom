@@ -1,5 +1,5 @@
 /*
- * $Id: DefaultCableLink.java,v 1.1 2005/04/05 14:07:53 stas Exp $
+ * $Id: DefaultCableLink.java,v 1.2 2005/04/22 07:32:50 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/04/05 14:07:53 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/22 07:32:50 $
  * @module schemeclient_v1
  */
 
@@ -34,7 +34,7 @@ public class DefaultCableLink extends DefaultEdge {
 
 	public static DefaultCableLink createInstance(Object userObject,
 			PortView firstPort, PortView port, Point p, Point p2, Map viewMap,
-			ConnectionSet cs, SchemeCableLink link) {
+			ConnectionSet cs) {
 
 		// we can connect cable to CablePortCell or not connect at all
 		CablePortCell sourceCablePortCell = null;
@@ -52,7 +52,6 @@ public class DefaultCableLink extends DefaultEdge {
 		}
 		
 		DefaultCableLink cell = new DefaultCableLink(userObject);
-		cell.setSchemeCableLinkId(link.getId());
 
 		Map map = new HashMap();
 		GraphConstants.setRouting(map, cell.getRouting());

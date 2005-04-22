@@ -1,5 +1,5 @@
 /*
- * $Id: UgoTabbedPane.java,v 1.2 2005/04/18 09:55:03 stas Exp $
+ * $Id: UgoTabbedPane.java,v 1.3 2005/04/22 07:32:50 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,25 +21,21 @@ import com.syrus.AMFICOM.scheme.*;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/04/18 09:55:03 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/22 07:32:50 $
  * @module schemeclient_v1
  */
 
 public class UgoTabbedPane extends JPanel implements OperationListener {
-	
 	protected ApplicationContext aContext;
-//	protected Dispatcher dispatcher;
 	protected SchemeMarqueeHandler marqueeHandler;
 	protected UgoPanel panel;
 	
 	public UgoTabbedPane(ApplicationContext aContext) {
-
 		try {
 			jbInit();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 		setContext(aContext);
 	}
 

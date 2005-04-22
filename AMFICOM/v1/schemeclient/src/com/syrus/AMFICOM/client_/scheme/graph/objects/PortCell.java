@@ -1,5 +1,5 @@
 /*
- * $Id: PortCell.java,v 1.1 2005/04/05 14:07:54 stas Exp $
+ * $Id: PortCell.java,v 1.2 2005/04/22 07:32:50 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/04/05 14:07:54 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/22 07:32:50 $
  * @module schemeclient_v1
  */
 
@@ -29,9 +29,8 @@ public class PortCell extends EllipseCell {
 	private Identifier schemePortId;
 
 	public static PortCell createInstance(Object userObject,
-			Rectangle bounds, Map viewMap, AbstractSchemePortDirectionType direction, SchemePort port) {
+			Rectangle bounds, Map viewMap, AbstractSchemePortDirectionType direction) {
 		PortCell cell = new PortCell(userObject);
-		cell.setSchemePortId(port.getId());
 		
 		Map map = GraphConstants.createMap();
 		GraphConstants.setBounds(map, bounds);
@@ -43,10 +42,10 @@ public class PortCell extends EllipseCell {
 
 		// Create Ports
 		int u = GraphConstants.PERCENT;
-		DefaultPort dp = new DefaultPort("Center");
+		DefaultPort dp = new DefaultPort("Center"); //$NON-NLS-1$
 		map = GraphConstants.createMap();
 		GraphConstants.setOffset(map, new Point(direction.equals(AbstractSchemePortDirectionType._IN) ? 0 : u, u / 2));
-		viewMap.put(port, map);
+		viewMap.put(dp, map);
 		cell.add(dp);
 		
 		return cell;

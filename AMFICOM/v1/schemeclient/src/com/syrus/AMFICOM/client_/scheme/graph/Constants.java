@@ -1,5 +1,5 @@
 /*
- * $Id: Constants.java,v 1.1 2005/04/05 14:07:53 stas Exp $
+ * $Id: Constants.java,v 1.2 2005/04/22 07:32:50 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import javax.swing.ImageIcon;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/04/05 14:07:53 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/22 07:32:50 $
  * @module schemeclient_v1
  */
 
@@ -89,7 +89,12 @@ public interface Constants {
 	public static final String TEXT_DELETE = "Delete";
 	public static final String TEXT_CREATE_UGO = "Create symbolic notation";
 	public static final String TEXT_HIERARCHY_PORT = "Hierarchy port";
-	
+		
+	public static final String COMPONENT = "Component";
+	public static final String DEVICE = "device";
+	public static final String ERROR = "Error";
+	public static final String ERROR_COMPONENT_NOT_FOUND = "Не найдено ни одного компонента";
+	public static final String ERROR_HIERARCHY_PORT_NOT_FOUND = "Не найдено ни одного иерархического порта";
 	
 	// list of button keys
 	public static final String deleteKey = "deleteKey";

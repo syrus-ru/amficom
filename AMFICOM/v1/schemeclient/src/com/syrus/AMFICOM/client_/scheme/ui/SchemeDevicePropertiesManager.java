@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevicePropertiesManager.java,v 1.1 2005/04/18 10:45:17 stas Exp $
+ * $Id: SchemeDevicePropertiesManager.java,v 1.2 2005/04/22 07:32:50 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,13 +14,14 @@ import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/04/18 10:45:17 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/22 07:32:50 $
  * @module schemeclient_v1
  */
 
 public class SchemeDevicePropertiesManager implements VisualManager {
 	private static SchemeDevicePropertiesManager instance;
-	private EmptyStorableObjectEditor emptyEditor;
+	private EmptyStorableObjectEditor generalPane;
+	private EmptyStorableObjectEditor charPane;
 	
 	private SchemeDevicePropertiesManager() {
 		// empty
@@ -41,9 +42,9 @@ public class SchemeDevicePropertiesManager implements VisualManager {
 	 * @see VisualManager#getGeneralPropertiesPanel()
 	 */
 	public StorableObjectEditor getGeneralPropertiesPanel() {
-		if (emptyEditor == null)
-			emptyEditor = new EmptyStorableObjectEditor();
-		return emptyEditor;
+		if (generalPane == null)
+			generalPane = new EmptyStorableObjectEditor();
+		return generalPane;
 	}
 
 	/**
@@ -51,9 +52,9 @@ public class SchemeDevicePropertiesManager implements VisualManager {
 	 * @see VisualManager#getCharacteristicPropertiesPanel()
 	 */
 	public StorableObjectEditor getCharacteristicPropertiesPanel() {
-		if (emptyEditor == null)
-			emptyEditor = new EmptyStorableObjectEditor();
-		return emptyEditor;
+		if (charPane == null)
+			charPane = new EmptyStorableObjectEditor();
+		return charPane;
 	}
 
 	/**

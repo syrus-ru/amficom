@@ -1,5 +1,5 @@
 /*
- * $Id: BlockPortCell.java,v 1.1 2005/04/05 14:07:53 stas Exp $
+ * $Id: BlockPortCell.java,v 1.2 2005/04/22 07:32:50 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/04/05 14:07:53 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/22 07:32:50 $
  * @module schemeclient_v1
  */
 
@@ -33,13 +33,13 @@ public class BlockPortCell  extends DefaultGraphCell {
 			Rectangle bounds, Map viewMap, AbstractSchemePort port) {
 		
 		BlockPortCell cell = new BlockPortCell(userObject);
-		cell.setSchemePortId(port.getId());
+		cell.setAbstractSchemePortId(port.getId());
 		cell.isCablePort = port instanceof SchemeCablePort;
 		
 		UIDefaults defaults = UIManager.getDefaults();
-		Font f = defaults.getFont("Label.font");
+		Font f = defaults.getFont("Label.font"); //$NON-NLS-1$
 		if (f == null)
-			f = new Font("Dialog", Font.PLAIN, 12);
+			f = new Font("Dialog", Font.PLAIN, 12); //$NON-NLS-1$
 		
 		Map map = GraphConstants.createMap();
 		GraphConstants.setBounds(map, bounds);
@@ -63,51 +63,25 @@ public class BlockPortCell  extends DefaultGraphCell {
 		return isCablePort;
 	}
 
-	public SchemeCablePort getSchemeCablePort() {
-		if (isCablePort) {
-			try {
-				return (SchemeCablePort) SchemeStorableObjectPool.getStorableObject(
-						schemePortId, true);
-			} catch (ApplicationException e) {
-				Log.errorException(e);
-			}
+	public AbstractSchemePort getAbstractSchemePort() {
+		try {
+			return (AbstractSchemePort) SchemeStorableObjectPool.getStorableObject(
+					schemePortId, true);
+		} catch (ApplicationException e) {
+			Log.errorException(e);
 		}
 		return null;
 	}
 
-	public SchemePort getSchemePort() {
-		if (!isCablePort) {
-			try {
-				return (SchemePort) SchemeStorableObjectPool.getStorableObject(
-						schemePortId, true);
-			} catch (ApplicationException e) {
-				Log.errorException(e);
-			}
-		}
-		return null;
-	}
-
-	public Identifier getSchemePortId() {
+	public Identifier getAbstractSchemePortId() {
 		return schemePortId;
 	}
 
-	public Identifier getSchemeCablePortId() {
-		return schemePortId;
-	}
-	
 	/**
 	 * used for clone scheme
 	 * @param portId
 	 */
-	public void setSchemeCablePortId(Identifier portId) {
-		this.schemePortId = portId;
-	}
-	
-	/**
-	 * used for clone scheme
-	 * @param portId
-	 */
-	public void setSchemePortId(Identifier portId) {
+	public void setAbstractSchemePortId(Identifier portId) {
 		this.schemePortId = portId;
 	}
 }

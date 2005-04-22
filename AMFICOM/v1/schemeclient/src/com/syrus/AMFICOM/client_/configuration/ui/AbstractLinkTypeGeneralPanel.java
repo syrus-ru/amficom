@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractLinkTypeGeneralPanel.java,v 1.7 2005/04/18 10:57:46 stas Exp $
+ * $Id: AbstractLinkTypeGeneralPanel.java,v 1.8 2005/04/22 07:32:50 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.resource.Constants;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.7 $, $Date: 2005/04/18 10:57:46 $
+ * @version $Revision: 1.8 $, $Date: 2005/04/22 07:32:50 $
  * @module schemeclient_v1
  */
 
@@ -48,7 +48,6 @@ public abstract class AbstractLinkTypeGeneralPanel extends DefaultStorableObject
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		setContext(aContext);
 	}
 	
 	public void setContext(ApplicationContext aContext) {
@@ -193,21 +192,21 @@ public abstract class AbstractLinkTypeGeneralPanel extends DefaultStorableObject
 	}
 	
 	public JComponent getGUI() {
-		return pnPanel0; 
+		return this.pnPanel0; 
 	}
 
 	public Object getObject() {
-		return linkType;
+		return this.linkType;
 	}
 
 	public void setObject(Object or) {
 		this.linkType = (AbstractLinkType) or;
 
-		if (linkType != null) {
-			this.tfNameText.setText(linkType.getName());
-			this.taDescriptionArea.setText(linkType.getDescription());
-			this.tfManufacturerText.setText(linkType.getManufacturer());
-			this.tfManufacturerCodeText.setText(linkType.getManufacturerCode());
+		if (this.linkType != null) {
+			this.tfNameText.setText(this.linkType.getName());
+			this.taDescriptionArea.setText(this.linkType.getDescription());
+			this.tfManufacturerText.setText(this.linkType.getManufacturer());
+			this.tfManufacturerCodeText.setText(this.linkType.getManufacturerCode());
 		} 
 		else {
 			this.tfNameText.setText(Constants.EMPTY);
@@ -219,12 +218,12 @@ public abstract class AbstractLinkTypeGeneralPanel extends DefaultStorableObject
 
 	public void commitChanges() {
 		if(MiscUtil.validName(this.tfNameText.getText())) {
-			linkType.setName(this.tfNameText.getText());
-			linkType.setDescription(this.taDescriptionArea.getText());
-			linkType.setManufacturer(this.tfManufacturerText.getText());
-			linkType.setManufacturerCode(this.tfManufacturerCodeText.getText());
+			this.linkType.setName(this.tfNameText.getText());
+			this.linkType.setDescription(this.taDescriptionArea.getText());
+			this.linkType.setManufacturer(this.tfManufacturerText.getText());
+			this.linkType.setManufacturerCode(this.tfManufacturerCodeText.getText());
 			
-			aContext.getDispatcher().notify(new SchemeEvent(this, linkType, SchemeEvent.UPDATE_OBJECT));
+			this.aContext.getDispatcher().notify(new SchemeEvent(this, this.linkType, SchemeEvent.UPDATE_OBJECT));
 		}
 	}
 }

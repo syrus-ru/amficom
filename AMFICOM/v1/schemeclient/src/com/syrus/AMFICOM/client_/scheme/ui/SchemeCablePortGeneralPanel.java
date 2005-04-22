@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePortGeneralPanel.java,v 1.2 2005/04/18 10:57:46 stas Exp $
+ * $Id: SchemeCablePortGeneralPanel.java,v 1.3 2005/04/22 07:32:50 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/04/18 10:57:46 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/22 07:32:50 $
  * @module schemeclient_v1
  */
 
@@ -46,7 +46,7 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 	JTextField nameText = new JTextField();
 	JLabel typeLabel = new JLabel(LangModelScheme.getString(Constants.TYPE));
 	ObjComboBox typeCombo = new ObjComboBox(PortTypeController.getInstance(), StorableObjectWrapper.COLUMN_NAME);
-	JCheckBox portBox = new JCheckBox();
+	JCheckBox portBox = new JCheckBox(LangModelScheme.getString(Constants.INSTANCE));
 	JLabel markLabel = new JLabel(LangModelScheme.getString(Constants.LABEL));
 	JTextField markText = new JTextField();
 	JLabel colorLabel = new JLabel(LangModelScheme.getString(Constants.COLOR));
@@ -304,6 +304,10 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 //			if (!isConatainsColor(color))
 //				colorCombo.addItem(color);
 //			colorCombo.setSelectedItem(color);
+		}
+		else {
+			portBox.setSelected(false);
+			markText.setText(Constants.EMPTY);
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeTreeModel.java,v 1.16 2005/04/19 09:01:50 bass Exp $
+ * $Id: SchemeTreeModel.java,v 1.17 2005/04/22 07:32:50 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.client_.scheme.ui;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.16 $, $Date: 2005/04/19 09:01:50 $
+ * @author $Author: stas $
+ * @version $Revision: 1.17 $, $Date: 2005/04/22 07:32:50 $
  * @module schemeclient_v1
  */
 
@@ -68,7 +68,7 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 				return PortTypePropertiesManager.getInstance(aContext);
 			if (s.equals(Constants.EQUIPMENT_TYPE))
 				return EquipmentTypePropertiesManager.getInstance(aContext);
-			if (s.equals(Constants.MEASUREMENTPORT_TYPE))
+			if (s.equals(Constants.MEASUREMENT_PORT_TYPES))
 				return MeasurementPortTypePropertiesManager.getInstance(aContext);
 			if (s.equals(Constants.MEASUREMENT_TYPE))
 				return MeasurementTypePropertiesManager.getInstance(aContext);
@@ -164,8 +164,8 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 			else if (s.equals(Constants.MONITORING_DIRECTORY)) {
 				if (!contents.contains(Constants.MEASUREMENT_TYPE))
 					node.addChild(new PopulatableIconedNode(this, Constants.MEASUREMENT_TYPE, LangModelScheme.getString(Constants.MEASUREMENT_TYPE), Constants.ICON_CATALOG));
-				if (!contents.contains(Constants.MEASUREMENTPORT_TYPE))
-					node.addChild(new PopulatableIconedNode(this, Constants.MEASUREMENTPORT_TYPE, LangModelScheme.getString(Constants.MEASUREMENTPORT_TYPE), Constants.ICON_CATALOG));
+				if (!contents.contains(Constants.MEASUREMENT_PORT_TYPES))
+					node.addChild(new PopulatableIconedNode(this, Constants.MEASUREMENT_PORT_TYPES, LangModelScheme.getString(Constants.MEASUREMENTPORT_TYPE), Constants.ICON_CATALOG));
 				// vec.add(new PopulatableIconedNode(this, "TransmissionPathType",
 				// LangModelConfig.getString("menuJDirPathText"), true));
 			} 
@@ -276,7 +276,7 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 			// ex.printStackTrace();
 			// }
 			// }
-			else if (s.equals(Constants.MEASUREMENTPORT_TYPE)) {
+			else if (s.equals(Constants.MEASUREMENT_PORT_TYPES)) {
 				try {
 					EquivalentCondition condition = new EquivalentCondition(
 							ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE);

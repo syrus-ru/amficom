@@ -5,7 +5,10 @@ import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.resource.*;
+import com.syrus.AMFICOM.resource.Constants;
 import com.syrus.AMFICOM.scheme.Scheme;
+import com.syrus.AMFICOM.scheme.corba.Scheme_TransferablePackage.Kind;
 import com.syrus.util.Log;
 
 public class SchemeNewCommand extends VoidCommand {
@@ -27,10 +30,10 @@ public class SchemeNewCommand extends VoidCommand {
 				.getSessionInterface()).getAccessIdentifier().domain_id);
 		
 		try {
-			Scheme scheme = Scheme.createInstance(userId, domainId, "Новая схема" + (counter == 1 ? "" : "(" + counter + ")"), "");
+			Scheme scheme = Scheme.createInstance(userId, LangModelScheme.getString(Constants.NEW_SCHEME)
+					+ (counter == 1 ? "" : "(" + counter + ")"), Kind.NETWORK, domainId); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			counter++;
-			aContext.getDispatcher().notify(new SchemeEvent(this, scheme,
-					SchemeEvent.OPEN_SCHEME));
+			aContext.getDispatcher().notify(new SchemeEvent(this, scheme, SchemeEvent.OPEN_SCHEME));
 			result = RESULT_OK;
 		} 
 		catch (CreateObjectException e) {

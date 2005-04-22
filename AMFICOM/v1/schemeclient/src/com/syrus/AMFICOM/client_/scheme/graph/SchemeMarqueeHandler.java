@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMarqueeHandler.java,v 1.1 2005/04/18 09:55:03 stas Exp $
+ * $Id: SchemeMarqueeHandler.java,v 1.2 2005/04/22 07:32:50 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,14 +17,17 @@ import javax.swing.*;
 
 import com.jgraph.graph.*;
 import com.jgraph.plaf.GraphUI;
+import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.*;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.*;
+import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/04/18 09:55:03 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/22 07:32:50 $
  * @module schemeclient_v1
  */
 
@@ -155,10 +158,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 		SchemeGraph graph = (SchemeGraph)event.getSource();
 		if (graph.isEditable()) {
 			if (p1.isSelected() || p2.isSelected()) {
-				SchemeActions.createAbstractPort(graph,
-						graph.fromScreen(graph.snap(event.getPoint())), 
-						p1.isSelected());
-
+				createPort(graph, event.getPoint());
 				graph.repaint();
 				event.consume();
 			}
@@ -240,6 +240,71 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 		}
 		return portView;
 	}
+	
+	private Identifier getUserId() {
+		return new Identifier(((RISDSessionInfo)pane.aContext.getSessionInterface()).getAccessIdentifier().user_id);
+	}
+	
+	private void createPort(SchemeGraph graph, Point p) {
+		DeviceCell deviceCell = null;
+		Object[] cells = graph.getSelectionCells();
+
+		int counter = 0;
+		for (int j = 0; j < cells.length; j++)
+			if (cells[j] instanceof DeviceCell) {
+				deviceCell = (DeviceCell) cells[j];
+				counter++;
+			}
+		if (counter == 1) {
+			/**
+			 * @todo Message "device must be ungrouped"
+			 * and next possibility to add ports to grouped element
+			 */
+			if (GraphActions.hasGroupedParent(deviceCell)) {
+				Log.errorMessage("can't create PortCell as DeviceCell has parent group"); //$NON-NLS-1$
+				return;
+			}
+			if (deviceCell.getSchemeDeviceId() == null) {
+				Log.errorMessage("can't create PortCell as DeviceCell has null SchemeDevice"); //$NON-NLS-1$
+				return;
+			}
+			
+			Map m = graph.getModel().getAttributes(deviceCell);
+			Rectangle dev_bounds = GraphConstants.getBounds(m);	
+			if (dev_bounds.y > p.y || dev_bounds.y + dev_bounds.height < p.y) {
+				Log.errorMessage("can't create PortCell out of vertical bounds of DeviceCell"); //$NON-NLS-1$
+				return;
+			}
+			AbstractSchemePortDirectionType directionType;
+			if (dev_bounds.x > p.x)
+				directionType = AbstractSchemePortDirectionType._IN;
+			else if (dev_bounds.x + dev_bounds.width < p.x)
+				directionType = AbstractSchemePortDirectionType._OUT;
+			else {
+				Log.errorMessage("can't create PortCell in of horizontal bounds of DeviceCell"); //$NON-NLS-1$
+				return;
+			}
+						
+			String name = String.valueOf(deviceCell.getChildCount());
+			DefaultGraphCell cell = SchemeActions.createAbstractPort(graph, deviceCell, 
+					graph.fromScreen(graph.snap(p)), name, directionType, p1.isSelected());
+			
+			try {
+				AbstractSchemePort schemePort;
+				if (p1.isSelected()) { //port
+					schemePort = SchemePort.createInstance(getUserId(), name, directionType, deviceCell.getSchemeDevice());
+					((PortCell)cell).setSchemePortId(schemePort.getId());
+				}
+				else {
+					schemePort = SchemeCablePort.createInstance(getUserId(), name, directionType, deviceCell.getSchemeDevice());
+					((CablePortCell)cell).setSchemeCablePortId(schemePort.getId());
+				}
+				SchemeStorableObjectPool.putStorableObject(schemePort);
+			} catch (ApplicationException e1) {
+				Log.errorException(e1);
+			}
+		}
+	}
 
 	public void mouseReleased(MouseEvent event) {
 		SchemeGraph graph = (SchemeGraph)event.getSource();
@@ -252,14 +317,23 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 					graph.fromScreen(bounds);
 //					bounds.width += 2;
 //					bounds.height += 2;
-					bounds.width ++;
-					bounds.height ++;
-					SchemeActions.createDevice(graph, "", bounds);
+//					bounds.width ++;
+//					bounds.height ++;
+					Identifier userId = new Identifier(((RISDSessionInfo)pane.aContext.getSessionInterface()).getAccessIdentifier().user_id);
+					
+					try {
+						SchemeDevice device = SchemeDevice.createInstance(userId, Constants.DEVICE + System.currentTimeMillis());
+						SchemeStorableObjectPool.putStorableObject(device);
+						DeviceCell cell = SchemeActions.createDevice(graph, "", bounds);  //$NON-NLS-1$
+						cell.setSchemeDeviceId(device.getId());
+					} catch (ApplicationException e1) {
+						Log.errorException(e1);
+					}
 				}
 				else if (r.isSelected())
-					graph.addVertex("", bounds, false, Color.black);
+					graph.addVertex("", bounds, false, Color.black); //$NON-NLS-1$
 				else if (c.isSelected())
-					graph.addEllipse("", bounds);
+					graph.addEllipse("", bounds); //$NON-NLS-1$
 				else if (ce.isSelected()) {
 					if (start == null || current == null) {
 						event.consume();
@@ -267,11 +341,19 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 					else {
 						Scheme scheme = pane.getCurrentPanel().getSchemeResource().getScheme();
 						if (scheme != null) {
-							SchemeCableLink link = SchemeActions.createCableLink(graph,
+							Identifier userId = new Identifier(((RISDSessionInfo)pane.aContext.getSessionInterface()).getAccessIdentifier().user_id);
+							
+							DefaultCableLink cell = SchemeActions.createCableLink(graph,
 									firstPort, port, graph.fromScreen(new Point(start)), 
 									graph.fromScreen(new Point(current)));
-							scheme.addSchemeCableLink(link);
-							link.setParentScheme(scheme);
+							try {
+								SchemeCableLink link = SchemeCableLink.createInstance(userId, (String)cell.getUserObject(), scheme);
+								SchemeStorableObjectPool.putStorableObject(link);
+								cell.setSchemeCableLinkId(link.getId());
+								Notifier.notify(graph, pane.aContext, link);
+							} catch (ApplicationException e1) {
+								Log.errorException(e1);
+							}
 						}
 					}
 				}
@@ -282,24 +364,40 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 					else {
 						Scheme scheme = pane.getCurrentPanel().getSchemeResource().getScheme();
 						if (scheme != null) {
-							SchemeLink link = SchemeActions.createLink(graph, firstPort, port,
-									graph.fromScreen(new Point(start)), graph.fromScreen(new Point(current)));
+							Identifier userId = new Identifier(((RISDSessionInfo)pane.aContext.getSessionInterface()).getAccessIdentifier().user_id);
 							
-							Notifier.notify(graph, pane.aContext, link);
+							DefaultLink cell = SchemeActions.createLink(graph,
+									firstPort, port, graph.fromScreen(new Point(start)), 
+									graph.fromScreen(new Point(current)));
 							
-							scheme.addSchemeLink(link);
-							link.setParentScheme(scheme);
+							try {
+								SchemeLink link = SchemeLink.createInstance(userId, (String)cell.getUserObject(), scheme);
+								SchemeStorableObjectPool.putStorableObject(link);
+								cell.setSchemeLinkId(link.getId());
+								Notifier.notify(graph, pane.aContext, link);
+							} catch (ApplicationException e1) {
+								Log.errorException(e1);
+							}
 						}
 						else {
 							SchemeElement schemeElement = pane.getCurrentPanel().getSchemeResource().getSchemeElement();
 							if (schemeElement != null) {
-								SchemeLink link = SchemeActions.createLink(graph, firstPort, port,
-										graph.fromScreen(new Point(start)), graph.fromScreen(new Point(current)));
-								schemeElement.addSchemeLink(link);
-								link.setParentSchemeElement(schemeElement);
+								Identifier userId = new Identifier(((RISDSessionInfo)pane.aContext.getSessionInterface()).getAccessIdentifier().user_id);
+								DefaultLink cell = SchemeActions.createLink(graph,
+										firstPort, port, graph.fromScreen(new Point(start)), 
+										graph.fromScreen(new Point(current)));
+
+								try {
+									SchemeLink link = SchemeLink.createInstance(userId, (String)cell.getUserObject(), schemeElement);
+									SchemeStorableObjectPool.putStorableObject(link);
+									cell.setSchemeLinkId(link.getId());
+									Notifier.notify(graph, pane.aContext, link);
+								} catch (ApplicationException e1) {
+									Log.errorException(e1);
+								}
 							}
 							else {
-								Log.debugMessage("neither Scheme nor SchemeElement is opened", Log.SEVERE);
+								Log.debugMessage("neither Scheme nor SchemeElement is opened", Log.SEVERE); //$NON-NLS-1$
 							}
 						}
 					}
@@ -313,7 +411,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 					GraphConstants.setLineEnd(map, GraphConstants.ARROW_NONE);
 					GraphConstants.setEndFill(map, true);
 					Map viewMap = new HashMap();
-					DefaultEdge cell = new DefaultEdge("");
+					DefaultEdge cell = new DefaultEdge(""); //$NON-NLS-1$
 					viewMap.put(cell, map);
 					Object[] insert = new Object[] { cell };
 					ConnectionSet cs = new ConnectionSet();
@@ -324,8 +422,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 					graph.getModel().insert(insert, viewMap, cs, null, null);
 				} 
 				else if (t.isSelected()) {
-					DefaultGraphCell cell = GraphActions.addVertex(graph,
-							"Текст", bounds, true, false, false, null);
+					DefaultGraphCell cell = GraphActions.addVertex(graph, Constants.TEXT_TEXT, bounds, true, false, false, null);
 					graph.startEditingAtCell(cell);
 				}
 				event.consume();
@@ -400,7 +497,26 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 		if (bounds != null && start != null) {
 			if (i.isSelected() || z.isSelected())
 				((Graphics2D) g).setStroke(GraphConstants.SELECTION_STROKE);
-			if (c.isSelected())
+			else if (c.isSelected())
+				g.drawOval(bounds.x, bounds.y, bounds.width, bounds.height);
+			else if ((l.isSelected() || e.isSelected() || ce.isSelected())
+					&& current != null)
+				g.drawLine(start.x, start.y, current.x, current.y);
+			else if (!s.isSelected())
+				g.drawRect(bounds.x, bounds.y, bounds.width, bounds.height);
+		}
+	}
+	
+	public void overlay(Graphics g) {
+		if (marqueeBounds != null) {
+			
+			g.drawRect(marqueeBounds.x, marqueeBounds.y, marqueeBounds.width,
+					marqueeBounds.height);
+		}
+		if (bounds != null && start != null) {
+			if (i.isSelected() || z.isSelected())
+				((Graphics2D) g).setStroke(GraphConstants.SELECTION_STROKE);
+			else if (c.isSelected())
 				g.drawOval(bounds.x, bounds.y, bounds.width, bounds.height);
 			else if ((l.isSelected() || e.isSelected() || ce.isSelected())
 					&& current != null)

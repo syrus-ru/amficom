@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePortGeneralPanel.java,v 1.2 2005/04/18 10:57:46 stas Exp $
+ * $Id: SchemePortGeneralPanel.java,v 1.3 2005/04/22 07:32:50 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/04/18 10:57:46 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/22 07:32:50 $
  * @module schemeclient_v1
  */
 
@@ -46,13 +46,13 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 	JTextField nameText = new JTextField();
 	JLabel typeLabel = new JLabel(LangModelScheme.getString(Constants.TYPE));
 	ObjComboBox typeCombo = new ObjComboBox(PortTypeController.getInstance(), StorableObjectWrapper.COLUMN_NAME);
-	JCheckBox portBox = new JCheckBox();
+	JCheckBox portBox = new JCheckBox(LangModelScheme.getString(Constants.INSTANCE));
 	JLabel markLabel = new JLabel(LangModelScheme.getString(Constants.LABEL));
 	JTextField markText = new JTextField();
 	JLabel colorLabel = new JLabel(LangModelScheme.getString(Constants.COLOR));
 	JComboBox colorCombo = new JComboBox();
 	JButton colorBut = new JButton();
-	JCheckBox mpBox = new JCheckBox();
+	JCheckBox mpBox = new JCheckBox(LangModelScheme.getString(Constants.MEASUREMENTPORT_TYPE));
 	JLabel mpTypeLabel = new JLabel(LangModelScheme.getString(Constants.TYPE));
 	ObjComboBox mpTypeCombo = new ObjComboBox(MeasurementPortTypeController.getInstance(), StorableObjectWrapper.COLUMN_NAME);
 	JLabel descrLabel = new JLabel(LangModelScheme.getString(Constants.DESCRIPTION));
@@ -365,9 +365,16 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 //				colorCombo.addItem(color);
 //			colorCombo.setSelectedItem(color);
 		}
+		else {
+			portBox.setSelected(false);
+			markText.setText(Constants.EMPTY);
+		}
 		if (mPort != null) {
 			mpBox.setSelected(true);
 			mpTypeCombo.setSelectedItem(mPort.getType());
+		}
+		else {
+			mpBox.setSelected(false);
 		}
 	}
 
@@ -438,7 +445,7 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 			tcc.setColor((Color) colorCombo.getSelectedItem());
 
 		int res = JOptionPane.showOptionDialog(Environment.getActiveWindow(), tcc,
-				LangModelConfig.getString("label_chooseColor"),
+				LangModelConfig.getString("label_chooseColor"), //$NON-NLS-1$
 				JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, null,
 				null);
 		if (res == JOptionPane.OK_OPTION) {

@@ -1,5 +1,5 @@
 /*
- * $Id: UgoPanel.java,v 1.2 2005/04/18 09:55:03 stas Exp $
+ * $Id: UgoPanel.java,v 1.3 2005/04/22 07:32:50 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.scheme.*;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/04/18 09:55:03 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/22 07:32:50 $
  * @module schemeclient_v1
  */
 
@@ -278,13 +278,13 @@ public class UgoPanel implements Printable, OperationListener {
 			} else if (cloned_cell instanceof BlockPortCell) {
 				BlockPortCell bpc = (BlockPortCell) cloned_cell;
 				Identifier p_id = (Identifier) Pool.get("clonedids", bpc
-						.getSchemePortId().getIdentifierString());
+						.getAbstractSchemePortId().getIdentifierString());
 				if (bpc.isCablePort()) {
 					if (p_id != null)
-						bpc.setSchemeCablePortId(p_id);
+						bpc.setAbstractSchemePortId(p_id);
 				} else {
 					if (p_id != null)
-						bpc.setSchemePortId(p_id);
+						bpc.setAbstractSchemePortId(p_id);
 				}
 			}
 		}

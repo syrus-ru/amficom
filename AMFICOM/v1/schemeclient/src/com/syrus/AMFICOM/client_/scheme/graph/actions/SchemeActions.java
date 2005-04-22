@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.3 2005/04/19 09:01:50 bass Exp $
+ * $Id: SchemeActions.java,v 1.4 2005/04/22 07:32:50 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,20 +18,19 @@ import javax.swing.*;
 import com.jgraph.graph.*;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
-import com.syrus.AMFICOM.client_.scheme.graph.*;
+import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.*;
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.corba.PortTypeSort;
-import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.scheme.*;
-import com.syrus.AMFICOM.scheme.corba.*;
+import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
 import com.syrus.AMFICOM.scheme.corba.Scheme_TransferablePackage.Kind;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/04/19 09:01:50 $
+ * @author $Author: stas $
+ * @version $Revision: 1.4 $, $Date: 2005/04/22 07:32:50 $
  * @module schemeclient_v1
  */
 
@@ -149,76 +148,52 @@ public class SchemeActions {
 		return false;
 	}
 	
-	public static SchemeCableLink createCableLink(SchemeGraph graph, PortView firstPort,
+	public static DefaultCableLink createCableLink(SchemeGraph graph, PortView firstPort,
 			PortView port, Point p, Point p2) {
-		try {
-			SchemeCableLink link = SchemeObjectsFactory.createSchemeCableLink();
-			
-			ConnectionSet cs = new ConnectionSet();
-			Map viewMap = new HashMap();
-			
-			Object[] cells = graph.getAll();
-			int counter = 0;
-			for (int i = 0; i < cells.length; i++)
-				if (cells[i] instanceof DefaultCableLink)
-					counter++;
-			String name = "cl" + String.valueOf(counter+1);
-			
-			DefaultCableLink cell = DefaultCableLink.createInstance(name, firstPort, port, p, p2, viewMap, cs, link);
-			graph.getModel().insert(new Object[] { cell }, viewMap, cs, null, null);
-			graph.setSelectionCell(cell);
-			return link;
-		}
-		catch (ApplicationException e) {
-			Log.errorException(e);
-			return null;
-		}
+		ConnectionSet cs = new ConnectionSet();
+		Map viewMap = new HashMap();
+		
+		Object[] cells = graph.getAll();
+		int counter = 0;
+		for (int i = 0; i < cells.length; i++)
+			if (cells[i] instanceof DefaultCableLink)
+				counter++;
+		String name = "cl" + String.valueOf(counter+1);
+		
+		DefaultCableLink cell = DefaultCableLink.createInstance(name, firstPort, port, p, p2, viewMap, cs);
+		graph.getModel().insert(new Object[] { cell }, viewMap, cs, null, null);
+		graph.setSelectionCell(cell);
+		return cell;
 	}
 
 	public static DeviceCell createDevice(SchemeGraph graph, Object userObject, Rectangle bounds) {
-		try {
-			SchemeDevice device = SchemeObjectsFactory.createDevice();
-			
-			Map viewMap = new HashMap();
-			DeviceCell cell = DeviceCell.createInstance(userObject, bounds, viewMap, device);
-			Object[] insert = new Object[] { cell };
-			graph.getGraphLayoutCache().insert(insert, viewMap, null, null, null);
-			graph.setSelectionCells(insert);
-			return cell;
-		}
-		catch (ApplicationException e) {
-			Log.errorException(e);
-			return null;
-		}
+		Map viewMap = new HashMap();
+		DeviceCell cell = DeviceCell.createInstance(userObject, bounds, viewMap);
+		Object[] insert = new Object[] { cell };
+		graph.getGraphLayoutCache().insert(insert, viewMap, null, null, null);
+		graph.setSelectionCells(insert);
+		return cell;
 	}
 	
-	public static SchemeLink createLink(SchemeGraph graph, PortView firstPort, 
+	public static DefaultLink createLink(SchemeGraph graph, PortView firstPort, 
 			PortView port, Point p, Point p2) {
-		try {
-			SchemeLink link = SchemeObjectsFactory.createSchemeLink();
-			
-			ConnectionSet cs = new ConnectionSet();
-			Map viewMap = new HashMap();
-			
-			Object[] cells = graph.getAll();
-			int counter = 0;
-			for (int i = 0; i < cells.length; i++)
-				if (cells[i] instanceof DefaultLink)
-					counter++;
-			String name = "l" + String.valueOf(counter+1);
-			
-			DefaultLink cell = DefaultLink.createInstance(name, firstPort, port, p, p2, viewMap, cs, link);
-			graph.getModel().insert(new Object[] { cell }, viewMap, cs, null, null);
-			graph.setSelectionCell(cell);
-			return link;
-		}
-		catch (ApplicationException e) {
-			Log.errorException(e);
-			return null;
-		}
+		ConnectionSet cs = new ConnectionSet();
+		Map viewMap = new HashMap();
+		
+		Object[] cells = graph.getAll();
+		int counter = 0;
+		for (int i = 0; i < cells.length; i++)
+			if (cells[i] instanceof DefaultLink)
+				counter++;
+		String name = "l" + String.valueOf(counter+1);
+		
+		DefaultLink cell = DefaultLink.createInstance(name, firstPort, port, p, p2, viewMap, cs);
+		graph.getModel().insert(new Object[] { cell }, viewMap, cs, null, null);
+		graph.setSelectionCell(cell);
+		return cell;
 	}
 	
-	public static DefaultGraphCell createAbstractPort(SchemeGraph graph, DeviceCell deviceCell, Point p, AbstractSchemePort schemePort) {
+	public static DefaultGraphCell createAbstractPort(SchemeGraph graph, DeviceCell deviceCell, Point p, String name, AbstractSchemePortDirectionType direction, boolean isCable) {
 		DefaultGraphCell visualPort;
 		DefaultPort ellipsePort;
 		Port devPort;
@@ -227,38 +202,36 @@ public class SchemeActions {
 		Rectangle dev_bounds = GraphConstants.getBounds(m);
 		
 		int u = GraphConstants.PERCENT;
-		int distance = (schemePort.getDirectionType().equals(AbstractSchemePortDirectionType._OUT) ?
+		int distance = (direction.equals(AbstractSchemePortDirectionType._OUT) ?
 				(p.x - (dev_bounds.x + dev_bounds.width)) / graph.getGridSize() + 1 :
 				(dev_bounds.x - p.x) / graph.getGridSize());
-		Point labelPosition = (schemePort.getDirectionType().equals(AbstractSchemePortDirectionType._OUT) ? 
+		Point labelPosition = (direction.equals(AbstractSchemePortDirectionType._OUT) ? 
 				new Point (-u / distance, 0) : 
 				new Point (u + (u / distance), 0));
-		Rectangle portCellBounds = (schemePort.getDirectionType().equals(AbstractSchemePortDirectionType._OUT) ? 
+		Rectangle portCellBounds = (direction.equals(AbstractSchemePortDirectionType._OUT) ? 
 				new Rectangle(p.x - 6, p.y - 3, 7, 7) : 
 				new Rectangle(p.x, p.y - 3, 7, 7));
-		Point devportPos = (schemePort.getDirectionType().equals(AbstractSchemePortDirectionType._OUT) ?
+		Point devportPos = (direction.equals(AbstractSchemePortDirectionType._OUT) ?
 				new Point(u, (int)(u * ( (double)(p.y + 1 - dev_bounds.y) / (double)dev_bounds.height))) :		
 				new Point(0, (int)(u * ( (double)(p.y + 1 - dev_bounds.y) / (double)dev_bounds.height))));
-		Point ellipseportPos = (schemePort.getDirectionType().equals(AbstractSchemePortDirectionType._OUT) ?
+		Point ellipseportPos = (direction.equals(AbstractSchemePortDirectionType._OUT) ?
 				new Point(0, u / 2) :
 				new Point(u, u / 2));
 		
 		Map viewMap = new HashMap();
 	
-		if (schemePort instanceof SchemePort) { // port
-			visualPort = PortCell.createInstance("", portCellBounds, 
-					viewMap, schemePort.getDirectionType(), (SchemePort)schemePort);
+		if (isCable) {
+			visualPort = PortCell.createInstance("", portCellBounds, viewMap, direction);
 		}
 		else { // cableport
-			visualPort = CablePortCell.createInstance("", portCellBounds, 
-					viewMap, (SchemeCablePort)schemePort);
+			visualPort = CablePortCell.createInstance("", portCellBounds, viewMap, direction);
 		}
 		graph.getGraphLayoutCache().insert(new Object[] { visualPort }, viewMap, null, null, null);
-		devPort = GraphActions.addPort (graph, "", deviceCell, devportPos);
-		ellipsePort = GraphActions.addPort (graph, "", visualPort, ellipseportPos);
+		devPort = GraphActions.addPort (graph, "", deviceCell, devportPos); //$NON-NLS-1$
+		ellipsePort = GraphActions.addPort (graph, "", visualPort, ellipseportPos); //$NON-NLS-1$
 		
 		ConnectionSet cs = new ConnectionSet();
-		PortEdge edge = PortEdge.createInstance(schemePort.getName(), devPort, ellipsePort, p, new Point(dev_bounds.x
+		PortEdge edge = PortEdge.createInstance(name, devPort, ellipsePort, p, new Point(dev_bounds.x
 					+ dev_bounds.width, p.y), labelPosition, viewMap, cs);
 
 		graph.getModel().insert(new Object[] { edge }, viewMap, cs, null, null);
@@ -267,59 +240,6 @@ public class SchemeActions {
 		return visualPort;
 	}
 	
-	public static DefaultGraphCell createAbstractPort(SchemeGraph graph, Point p, boolean isCable) {
-		DeviceCell deviceCell = null;
-		Object[] cells = graph.getSelectionCells();
-
-		int counter = 0;
-		for (int i = 0; i < cells.length; i++)
-			if (cells[i] instanceof DeviceCell) {
-				deviceCell = (DeviceCell) cells[i];
-				counter++;
-			}
-		if (counter != 1) // TODO: Message "must be selected one device"
-			return null;
-		
-		/**
-		 * @todo Message "device must be ungrouped"
-		 * and next possibility to add ports to grouped element
-		 */
-		if (GraphActions.hasGroupedParent(deviceCell)) {
-			Log.errorMessage("can't create PortCell as DeviceCell has parent group");
-			return null;
-		}
-		
-		Map m = graph.getModel().getAttributes(deviceCell);
-		Rectangle dev_bounds = GraphConstants.getBounds(m);	
-		if (dev_bounds.y > p.y || dev_bounds.y + dev_bounds.height < p.y) {
-			Log.errorMessage("can't create PortCell out of vertical bounds of DeviceCell");
-			return null;
-		}
-		AbstractSchemePortDirectionType directionType;
-		if (dev_bounds.x > p.x)
-			directionType = AbstractSchemePortDirectionType._IN;
-		else if (dev_bounds.x + dev_bounds.width < p.x)
-			directionType = AbstractSchemePortDirectionType._OUT;
-		else {
-			Log.errorMessage("can't create PortCell in of horizontal bounds of DeviceCell");
-			return null;
-		}
-		
-		AbstractSchemePort schemePort;
-		try {
-			schemePort = isCable ? SchemeObjectsFactory.createSchemeCablePort()
-					: SchemeObjectsFactory.createSchemePort();
-		} catch (CreateObjectException e) {
-			Log.errorException(e);
-			return null;
-		}
-		String name = String.valueOf(((DeviceCell) cells[0]).getChildCount());
-		schemePort.setName(name);
-		schemePort.setDirectionType(directionType);
-		
-		return createAbstractPort(graph, deviceCell, p, schemePort);
-	}
-		
 	public static JPopupMenu createElementPopup(final ApplicationContext aContext,
 			final SchemeGraph graph, DeviceGroup group) {
 		final SchemeElement se = group.getSchemeElement();
@@ -391,8 +311,7 @@ public class SchemeActions {
 		for (int i = 0; i < cells.length; i++)
 			if (cells[i] instanceof BlockPortCell) {
 				BlockPortCell bpc = (BlockPortCell)cells[i];
-				if (id.equals(bpc.getSchemeCablePortId()) ||
-						id.equals(bpc.getSchemePortId())) 
+				if (id.equals(bpc.getAbstractSchemePortId()))
 					return (BlockPortCell) cells[i];
 			}
 		return null;

@@ -1,5 +1,5 @@
 /*
- * $Id: DeviceCell.java,v 1.1 2005/04/05 14:07:54 stas Exp $
+ * $Id: DeviceCell.java,v 1.2 2005/04/22 07:32:50 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.scheme.*;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/04/05 14:07:54 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/22 07:32:50 $
  * @module schemeclient_v1
  */
 
@@ -28,11 +28,10 @@ public class DeviceCell extends DefaultGraphCell {
 	private Identifier schemeDeviceId;
 
 	public static DeviceCell createInstance(Object userObject, Rectangle bounds,
-			Map viewMap, SchemeDevice device) {
+			Map viewMap) {
 
-		Object obj = (userObject instanceof String) ? userObject : "";
+		Object obj = (userObject instanceof String) ? userObject : ""; //$NON-NLS-1$
 		DeviceCell cell = new DeviceCell(obj);
-		cell.setSchemeDeviceId(device.getId());
 		
 		Map map = GraphConstants.createMap();
 		if (userObject instanceof ImageIcon)
@@ -44,7 +43,7 @@ public class DeviceCell extends DefaultGraphCell {
 		viewMap.put(cell, map);
 
 		// Create Ports
-		DefaultPort port = new DefaultPort("Center");
+		DefaultPort port = new DefaultPort("Center"); //$NON-NLS-1$
 		cell.add(port);
 		
 		return cell;

@@ -1,5 +1,5 @@
 /*
- * $Id: AddPropFrame.java,v 1.3 2005/04/18 10:45:17 stas Exp $
+ * $Id: AddPropFrame.java,v 1.4 2005/04/22 07:32:50 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,7 +51,7 @@ import com.syrus.AMFICOM.resource.Constants;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/04/18 10:45:17 $
+ * @version $Revision: 1.4 $, $Date: 2005/04/22 07:32:50 $
  * @module schemeclient_v1
  */
 
@@ -181,7 +181,7 @@ public class AddPropFrame extends JDialog {
 				return;
 		} 
 		else {
-			if (!nameField.getText().equals("")) {
+			if (!nameField.getText().equals(Constants.EMPTY)) {
 				try {
 					Identifier userId = new Identifier(((RISDSessionInfo) aContext
 							.getSessionInterface()).getAccessIdentifier().user_id);

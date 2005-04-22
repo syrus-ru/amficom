@@ -1,5 +1,5 @@
 /*-
- * $Id: ElementsToolBar.java,v 1.2 2005/04/18 09:55:03 stas Exp $
+ * $Id: ElementsToolBar.java,v 1.3 2005/04/22 07:32:50 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.actions.*;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/04/18 09:55:03 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/22 07:32:50 $
  * @module schemeclient_v1
  */
 
@@ -112,7 +112,7 @@ public class ElementsToolBar extends UgoToolBar {
 		// new HierarchyUpAction (getGraph()), true));
 		bttns.put(Constants.createTopLevelElementKey, createToolButton(mh.ugo,
 				btn_size, null, Constants.TEXT_CREATE_UGO, Constants.ICON_CREATE_UGO,
-				new CreateTopLevelElementAction(pane, targetPane, aContext), false));
+				new CreateTopLevelSchemeAction(pane, targetPane, aContext), false));
 		bttns.put(Constants.blockPortKey, createToolButton(mh.bp, btn_size, null,
 				Constants.TEXT_HIERARCHY_PORT, Constants.ICON_HIERARCHY_PORT,
 				new CreateBlockPortAction(pane), false));

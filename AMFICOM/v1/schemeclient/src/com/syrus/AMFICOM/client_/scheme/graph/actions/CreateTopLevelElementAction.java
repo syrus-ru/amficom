@@ -1,5 +1,5 @@
 /*
- * $Id: CreateTopLevelElementAction.java,v 1.2 2005/04/19 09:01:50 bass Exp $
+ * $Id: CreateTopLevelElementAction.java,v 1.3 2005/04/22 07:32:50 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,6 @@ import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.*;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.*;
 import com.syrus.AMFICOM.general.*;
@@ -26,18 +25,19 @@ import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/04/19 09:01:50 $
+ * @author $Author: stas $
+ * @version $Revision: 1.3 $, $Date: 2005/04/22 07:32:50 $
  * @module schemeclient_v1
  */
-
+/*
 public class CreateTopLevelElementAction extends AbstractAction {
-	UgoTabbedPane sourcePane; 
+	UgoTabbedPane sourcePane;
 	UgoTabbedPane targetPane;
 	ApplicationContext aContext;
+	private int counter = 1;
 
 	public CreateTopLevelElementAction(UgoTabbedPane sourcePane, UgoTabbedPane targetPane, ApplicationContext aContext) {
-		super(Constants.createTopLevelElementKey);
+		super(com.syrus.AMFICOM.client_.scheme.graph.Constants.createTopLevelElementKey);
 		this.sourcePane = sourcePane;
 		this.targetPane = targetPane;
 		this.aContext = aContext;
@@ -50,7 +50,7 @@ public class CreateTopLevelElementAction extends AbstractAction {
 
 		if (groups.length == 0) {
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
-					"Не найдено ни одного компонента", "Ошибка", JOptionPane.OK_OPTION);
+					Constants.ERROR_COMPONENT_NOT_FOUND, Constants.ERROR, JOptionPane.OK_OPTION);
 			return;
 		}
 		List blockports_in = new ArrayList();
@@ -74,7 +74,7 @@ public class CreateTopLevelElementAction extends AbstractAction {
 		}
 		if (blockports_in.size() == 0 && blockports_out.size() == 0) {
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
-					"Не найдено ни одного иерархического порта", "Ошибка",
+					Constants.ERROR_HIERARCHY_PORT_NOT_FOUND, Constants.ERROR,
 					JOptionPane.OK_OPTION);
 			return;
 		}
@@ -88,7 +88,7 @@ public class CreateTopLevelElementAction extends AbstractAction {
 			proto = targetPane.getCurrentPanel().getSchemeResource().getSchemeProtoElement();
 			if (proto == null) {
 				try {
-					proto = SchemeObjectsFactory.createProtoElement();
+					proto = SchemeProtoElement.createInstance(userId, Constants.COMPONENT + counter++);
 				} catch (CreateObjectException e1) {
 					Log.errorException(e1);
 					return;
@@ -98,7 +98,7 @@ public class CreateTopLevelElementAction extends AbstractAction {
 		SchemeDevice device;
 		if (proto.getSchemeDevices().isEmpty()) {
 			try {
-				device = SchemeDevice.createInstance(userId);
+				device = SchemeDevice.createInstance(userId, Constants.DEVICE + System.currentTimeMillis());
 			} catch (CreateObjectException e1) {
 				Log.errorException(e1);
 				return;
@@ -135,7 +135,7 @@ public class CreateTopLevelElementAction extends AbstractAction {
 							Image.SCALE_SMOOTH));
 			}
 		}
-		String label = (groups.length == 1) ? proto.getLabel() : "";
+		String label = (groups.length == 1) ? proto.getLabel() : ""; //$NON-NLS-1$
 		
 		CreateUgo.create(targetPane.getGraph(), icon, label, device, blockports_in, blockports_out);
 		CreateGroup action = new CreateGroup(targetPane);
@@ -145,3 +145,4 @@ public class CreateTopLevelElementAction extends AbstractAction {
 		device.setSchemeCablePorts(action.getChildSchemeCablePorts());
 	}
 }
+*/

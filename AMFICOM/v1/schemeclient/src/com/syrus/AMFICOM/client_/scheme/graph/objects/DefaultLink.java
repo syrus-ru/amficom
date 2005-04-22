@@ -1,5 +1,5 @@
 /*
- * $Id: DefaultLink.java,v 1.1 2005/04/05 14:07:54 stas Exp $
+ * $Id: DefaultLink.java,v 1.2 2005/04/22 07:32:50 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.scheme.*;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/04/05 14:07:54 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/22 07:32:50 $
  * @module schemeclient_v1
  */
 
@@ -33,7 +33,7 @@ public class DefaultLink extends DefaultEdge {
 
 	public static DefaultLink createInstance(Object userObject,
 			PortView firstPort, PortView port, Point p, Point p2, Map viewMap,
-			ConnectionSet cs, SchemeLink link) {
+			ConnectionSet cs) {
 
 		// we can connect cable to CablePortCell or not connect at all
 		PortCell sourceCablePortCell = null;
@@ -49,9 +49,7 @@ public class DefaultLink extends DefaultEdge {
 			if (o instanceof CablePortCell)
 				targetCablePortCell = (PortCell) o;
 		}
-		
 		DefaultLink cell = new DefaultLink(userObject);
-		cell.setSchemeLinkId(link.getId());
 
 		Map map = new HashMap();
 		GraphConstants.setRouting(map, cell.getRouting());

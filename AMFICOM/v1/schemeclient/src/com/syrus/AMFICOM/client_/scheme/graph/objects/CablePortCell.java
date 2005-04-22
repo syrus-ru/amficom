@@ -1,5 +1,5 @@
 /*
- * $Id: CablePortCell.java,v 1.1 2005/04/05 14:07:53 stas Exp $
+ * $Id: CablePortCell.java,v 1.2 2005/04/22 07:32:50 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,11 +15,12 @@ import com.jgraph.graph.*;
 import com.syrus.AMFICOM.client_.scheme.graph.Constants;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/04/05 14:07:53 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/22 07:32:50 $
  * @module schemeclient_v1
  */
 
@@ -27,9 +28,8 @@ public class CablePortCell extends DefaultGraphCell {
 	private Identifier schemeCableportId;
 
 	public static CablePortCell createInstance(Object userObject,
-			Rectangle bounds, Map viewMap, SchemeCablePort port) {
+			Rectangle bounds, Map viewMap, AbstractSchemePortDirectionType direction) {
 		CablePortCell cell = new CablePortCell(userObject);
-		cell.setSchemeCablePortId(port.getId());
 		
 		Map map = GraphConstants.createMap();
 		GraphConstants.setBounds(map, bounds);
@@ -41,10 +41,12 @@ public class CablePortCell extends DefaultGraphCell {
 
 		// Create Ports
 		int u = GraphConstants.PERCENT;
-		DefaultPort dp = new DefaultPort("Center");
+		DefaultPort dp = new DefaultPort("Center"); //$NON-NLS-1$
 		map = GraphConstants.createMap();
-		GraphConstants.setOffset(map, new Point(u / 2, u / 2));
-		viewMap.put(port, map);
+
+		GraphConstants.setOffset(map, new Point(direction.equals(AbstractSchemePortDirectionType._IN) ? 0 : u, u / 2));
+//		GraphConstants.setOffset(map, new Point(u / 2, u / 2));
+		viewMap.put(dp, map);
 		cell.add(dp);
 		
 		return cell;
