@@ -1,5 +1,5 @@
 /*
- * $Id: BellcoreCreator.java,v 1.4 2005/04/18 13:17:42 saa Exp $
+ * $Id: BellcoreCreator.java,v 1.5 2005/04/22 18:30:25 saa Exp $
  * Very poor bellcore creator for development purposes
  * 
  * Copyright © Syrus Systems.
@@ -10,7 +10,7 @@ package com.syrus.io;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.4 $, $Date: 2005/04/18 13:17:42 $
+ * @version $Revision: 1.5 $, $Date: 2005/04/22 18:30:25 $
  * @module
  */
 public class BellcoreCreator
@@ -35,7 +35,7 @@ public class BellcoreCreator
 		bs.fxdParams.pwu = new short[] { 0 };
 		bs.fxdParams.ds = new int[] { 0 };
 		bs.fxdParams.nppw = new int[] { y.length };
-		bs.fxdParams.ar = y.length * 1000 * bs.fxdParams.gi / 3;
+		bs.fxdParams.ar = (int)(1.0 * y.length * bs.fxdParams.gi / 3e6);
 		bs.supParams = bs.new SupParams();
 		bs.map = bs.new Map();
 		bs.map.nb = 4;
