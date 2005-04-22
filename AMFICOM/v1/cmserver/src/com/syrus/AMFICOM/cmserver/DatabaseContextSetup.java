@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.19 2005/04/22 16:14:07 arseniy Exp $
+ * $Id: DatabaseContextSetup.java,v 1.20 2005/04/22 21:11:54 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,6 +39,7 @@ import com.syrus.AMFICOM.general.CharacteristicTypeDatabase;
 import com.syrus.AMFICOM.general.DatabaseGeneralObjectLoader;
 import com.syrus.AMFICOM.general.GeneralDatabaseContext;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectResizableLRUMap;
 import com.syrus.AMFICOM.measurement.DatabaseMeasurementObjectLoader;
 import com.syrus.AMFICOM.measurement.AnalysisDatabase;
 import com.syrus.AMFICOM.measurement.AnalysisTypeDatabase;
@@ -58,7 +59,7 @@ import com.syrus.AMFICOM.measurement.TestDatabase;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/04/22 16:14:07 $
+ * @version $Revision: 1.20 $, $Date: 2005/04/22 21:11:54 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -133,17 +134,29 @@ public class DatabaseContextSetup {
 		int configurationPoolSize = ApplicationProperties.getInt(KEY_CONFIGURATION_POOL_SIZE, DEFAULT_CONFIGURATION_POOL_SIZE);
 		int measurementPoolSize = ApplicationProperties.getInt(KEY_MEASUREMENT_POOL_SIZE, DEFAULT_MEASUREMENT_POOL_SIZE);
 
-		GeneralStorableObjectPool.init(new DatabaseGeneralObjectLoader(), generalPoolSize);
-		AdministrationStorableObjectPool.init(new DatabaseAdministrationObjectLoader(), administrationPoolSize);		
+		GeneralStorableObjectPool.init(new DatabaseGeneralObjectLoader(),
+				StorableObjectResizableLRUMap.class,
+				generalPoolSize);
+		AdministrationStorableObjectPool.init(new DatabaseAdministrationObjectLoader(),
+				StorableObjectResizableLRUMap.class,
+				administrationPoolSize);		
 
-		if (! databaseLoaderOnly) {
+		if (!databaseLoaderOnly) {
 			long refreshTimeout = ApplicationProperties.getInt(KEY_REFRESH_TIMEOUT, DEFAULT_REFRESH_TIMEOUT) * 1000L * 60L;
-			ConfigurationStorableObjectPool.init(new CMServerConfigurationObjectLoader(refreshTimeout), configurationPoolSize);
-			MeasurementStorableObjectPool.init(new CMServerMeasurementObjectLoader(refreshTimeout), measurementPoolSize);
+			ConfigurationStorableObjectPool.init(new CMServerConfigurationObjectLoader(refreshTimeout),
+					StorableObjectResizableLRUMap.class,
+					configurationPoolSize);
+			MeasurementStorableObjectPool.init(new CMServerMeasurementObjectLoader(refreshTimeout),
+					StorableObjectResizableLRUMap.class,
+					measurementPoolSize);
 		}
 		else {
-			ConfigurationStorableObjectPool.init(new DatabaseConfigurationObjectLoader(), configurationPoolSize);
-			MeasurementStorableObjectPool.init(new DatabaseMeasurementObjectLoader(), measurementPoolSize);
+			ConfigurationStorableObjectPool.init(new DatabaseConfigurationObjectLoader(),
+					StorableObjectResizableLRUMap.class,
+					configurationPoolSize);
+			MeasurementStorableObjectPool.init(new DatabaseMeasurementObjectLoader(),
+					StorableObjectResizableLRUMap.class,
+					measurementPoolSize);
 		}
 	}
 }
