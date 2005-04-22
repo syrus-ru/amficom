@@ -1,7 +1,5 @@
 package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
-import java.util.Collection;
-import java.util.HashSet;
 import java.awt.Cursor;
 
 import com.syrus.AMFICOM.Client.Analysis.GUIUtil;
@@ -70,16 +68,9 @@ public class MinuitAnalyseCommand extends VoidCommand
 
 			// проводим анализ дл€ всего набора р/г
 
-			Collection bsColl = Heap.getBsBellCoreMap().values();
-			if (bsColl == null) // случитс€ только в странной ситуаци€ - bsBellCoreMap пуст. ¬еро€тно, это будет значить ошибку в коде
-			{
-				bsColl = new HashSet(1);
-				bsColl.add(bs);
-			}
-
 			ModelTraceManager mtm;
 			try {
-				mtm = CoreAnalysisManager.makeEtalon(bsColl, params);
+				mtm = CoreAnalysisManager.makeEtalon(Heap.getBSCollection(), params);
 			} catch (IncompatibleTracesException e){
 				GUIUtil.showErrorMessage("incompatibleTraces");
 				return;

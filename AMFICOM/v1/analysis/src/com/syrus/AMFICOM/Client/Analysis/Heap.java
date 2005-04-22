@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.30 2005/04/21 11:12:40 saa Exp $
+ * $Id: Heap.java,v 1.31 2005/04/22 11:44:39 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.Client.Analysis;
 
 import java.awt.Color;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -40,7 +41,7 @@ import com.syrus.io.BellcoreStructure;
  * использование остальных методов работы с BS
  * 
  * @author $Author: saa $
- * @version $Revision: 1.30 $, $Date: 2005/04/21 11:12:40 $
+ * @version $Revision: 1.31 $, $Date: 2005/04/22 11:44:39 $
  * @module
  */
 public class Heap
@@ -56,7 +57,6 @@ public class Heap
 	private static HashMap bsHash = new HashMap();	// "bellcorestructure", *
 	private static HashMap refAnalysisHash = new HashMap();		// "refanalysis", *
 	private static MeasurementSetup contextMeasurementSetup;	// AnalysisUtil.CONTEXT, "MeasurementSetup"
-	private static Map bsBellCoreMap;				// "bellcoremap", "current": GUI-level BS hash; do not confuse with bsHash
 	private static Double minTraceLevel;			// "min_trace_level", PRIMARY_TRACE_KEY
 	private static HashMap dialogHash = new HashMap();	// "dialog", "*"
 	private static ModelTraceAndEventsImpl primaryMTAE = null;
@@ -248,12 +248,8 @@ public class Heap
         Heap.contextMeasurementSetup = contextMeasurementSetup;
     }
 
-    public static Map getBsBellCoreMap() {
-        return bsBellCoreMap;
-    }
-
-    public static void setBsBellCoreMap(Map bsBellCoreMap) {
-        Heap.bsBellCoreMap = bsBellCoreMap;
+    public static Collection getBSCollection() {
+    	return Collections.unmodifiableCollection(bsHash.values());
     }
 
     public static Double getMinTraceLevel() {

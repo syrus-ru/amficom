@@ -18,7 +18,6 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener
 {
 	private Dispatcher dispatcher;
 	Map traces = new HashMap();
-	Map bellcoreTraces = null; // надо знать, какие р/г отображены
 
 	public ThresholdsFrame(Dispatcher dispatcher)
 	{
@@ -45,12 +44,9 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener
 		return dispatcher;
 	}
 
-	void init_module(Dispatcher dispatcher)
+	void init_module(Dispatcher dispatcher1)
 	{
-		this.dispatcher = dispatcher;
-		bellcoreTraces = new HashMap();
-		Heap.setBsBellCoreMap(bellcoreTraces);
-		//dispatcher.register(this, RefChangeEvent.typ);
+		this.dispatcher = dispatcher1;
 		Heap.addBsHashListener(this);
 		Heap.addEtalonMTMListener(this);
 	}
@@ -134,7 +130,6 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener
 			return;
 		SimpleGraphPanel p;
 		BellcoreStructure bs = Heap.getAnyBSTraceByKey(id);
-		bellcoreTraces.put(id, bs);
 
 		double deltaX = bs.getResolution();
 		double[] y = bs.getTraceData();
@@ -170,26 +165,17 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener
 		{
 			((ThresholdsLayeredPanel)panel).removeAllGraphPanels();
 			traces = new HashMap();
-			bellcoreTraces = new HashMap();
-			Heap.setBsBellCoreMap(bellcoreTraces);
 		}
 		else
 		{
 			SimpleGraphPanel p = (SimpleGraphPanel)traces.get(id);
 			if (p != null)
 			{
-//				p.removeColorModel(id);
 				panel.removeGraphPanel(p);
 				traces.remove(id);
-				bellcoreTraces.remove(id);
 				((ThresholdsLayeredPanel)panel).updScale2fitCurrentEv(.2, 1.);
 			}
 		}
-	}
-
-	public Map getBellcoreTraces()
-	{
-			return bellcoreTraces;
 	}
 
 	public void bsHashAdded(String key, BellcoreStructure bs)
