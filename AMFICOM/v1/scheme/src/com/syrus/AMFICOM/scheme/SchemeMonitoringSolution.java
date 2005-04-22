@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.19 2005/04/22 13:36:35 bass Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.20 2005/04/22 14:13:11 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,20 +35,20 @@ import com.syrus.util.Log;
  * #06 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.19 $, $Date: 2005/04/22 13:36:35 $
+ * @version $Revision: 1.20 $, $Date: 2005/04/22 14:13:11 $
  * @module scheme_v1
  */
 public final class SchemeMonitoringSolution extends
 		AbstractCloneableStorableObject implements Describable {
 	private static final long serialVersionUID = 3906364939487949361L;
 
-	private String description;
-
 	private String name;
 
-	private Identifier parentSchemeOptimizeInfoId;
+	private String description;
 
 	private int price;
+
+	private Identifier parentSchemeOptimizeInfoId;
 
 	private SchemeMonitoringSolutionDatabase schemeMonitoringSolutionDatabase; 
 
@@ -75,11 +75,22 @@ public final class SchemeMonitoringSolution extends
 	 * @param creatorId
 	 * @param modifierId
 	 * @param version
+	 * @param name
+	 * @param description
+	 * @param price
+	 * @param parentSchemeOptimizeInfo
 	 */
-	SchemeMonitoringSolution(Identifier id, Date created,
-			Date modified, Identifier creatorId,
-			Identifier modifierId, long version) {
+	SchemeMonitoringSolution(final Identifier id, final Date created,
+			final Date modified, final Identifier creatorId,
+			final Identifier modifierId, final long version,
+			final String name, final String description,
+			final int price,
+			final SchemeOptimizeInfo parentSchemeOptimizeInfo) {
 		super(id, created, modified, creatorId, modifierId, version);
+		this.name = name;
+		this.description = description;
+		this.price = price;
+		this.parentSchemeOptimizeInfoId = Identifier.possiblyVoid(parentSchemeOptimizeInfo);
 	}
 
 	/**
@@ -91,17 +102,44 @@ public final class SchemeMonitoringSolution extends
 		fromTransferable(transferable);
 	}
 
+	/**
+	 * A shorthand for
+	 * {@link #createInstance(Identifier, String, String, int, SchemeOptimizeInfo)}.
+	 *
+	 * @param creatorId
+	 * @param name
+	 * @throws CreateObjectException
+	 */
 	public static SchemeMonitoringSolution createInstance(
-			final Identifier creatorId)
+			final Identifier creatorId, final String name)
 			throws CreateObjectException {
-		assert creatorId != null;
+		return createInstance(creatorId, name, "", 0, null); //$NON-NLS-1$
+	}	
+
+	/**
+	 * @param creatorId
+	 * @param name
+	 * @param description
+	 * @param price
+	 * @param parentSchemeOptimizeInfo can be <code>null</code>.
+	 * @throws CreateObjectException
+	 */
+	public static SchemeMonitoringSolution createInstance(
+			final Identifier creatorId, final String name,
+			final String description, final int price,
+			final SchemeOptimizeInfo parentSchemeOptimizeInfo)
+			throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid(): ErrorMessages.NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
+		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
+
 		try {
 			final Date created = new Date();
 			final SchemeMonitoringSolution schemeMonitoringSolution = new SchemeMonitoringSolution(
 					IdentifierPool
 							.getGeneratedIdentifier(ObjectEntities.SCHEME_MONITORING_SOLUTION_ENTITY_CODE),
 					created, created, creatorId, creatorId,
-					0L);
+					0L, name, description, price, parentSchemeOptimizeInfo);
 			schemeMonitoringSolution.changed = true;
 			return schemeMonitoringSolution;
 		} catch (final IdentifierGenerationException ige) {
@@ -175,6 +213,35 @@ public final class SchemeMonitoringSolution extends
 		assert schemePath != null: ErrorMessages.NON_NULL_EXPECTED;
 		assert getSchemePaths().contains(schemePath): ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		schemePath.setParentSchemeMonitoringSolution(null);
+	}
+
+	/**
+	 * @param created
+	 * @param modified
+	 * @param creatorId
+	 * @param modifierId
+	 * @param version
+	 * @param name
+	 * @param description
+	 * @param price
+	 * @param parentSchemeOptimizeInfoId
+	 */
+	synchronized void setAttributes(final Date created,
+			final Date modified, final Identifier creatorId,
+			final Identifier modifierId, final long version,
+			final String name, final String description,
+			final int price,
+			final Identifier parentSchemeOptimizeInfoId) {
+		super.setAttributes(created, modified, creatorId, modifierId, version);
+
+		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
+		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert parentSchemeOptimizeInfoId != null: ErrorMessages.NON_NULL_EXPECTED;
+
+		this.name = name;
+		this.description = description;
+		this.price = price;
+		this.parentSchemeOptimizeInfoId = parentSchemeOptimizeInfoId;
 	}
 
 	/**
