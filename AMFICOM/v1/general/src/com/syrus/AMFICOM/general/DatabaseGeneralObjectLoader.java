@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseGeneralObjectLoader.java,v 1.22 2005/04/12 16:17:56 arseniy Exp $
+ * $Id: DatabaseGeneralObjectLoader.java,v 1.23 2005/04/22 17:06:50 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,12 +16,12 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/04/12 16:17:56 $
+ * @version $Revision: 1.23 $, $Date: 2005/04/22 17:06:50 $
  * @author $Author: arseniy $
  * @module general_v1
  */
 
-public class DatabaseGeneralObjectLoader extends AbstractObjectLoader implements GeneralObjectLoader {
+public class DatabaseGeneralObjectLoader extends DatabaseObjectLoader implements GeneralObjectLoader {
 
 	public ParameterType loadParameterType(Identifier id) throws ApplicationException {
 		return new ParameterType(id);

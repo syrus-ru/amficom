@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseAdministrationObjectLoader.java,v 1.24 2005/04/12 16:19:36 arseniy Exp $
+ * $Id: DatabaseAdministrationObjectLoader.java,v 1.25 2005/04/22 17:08:17 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import com.syrus.AMFICOM.general.AbstractObjectLoader;
+import com.syrus.AMFICOM.general.DatabaseObjectLoader;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
@@ -25,12 +25,12 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/04/12 16:19:36 $
+ * @version $Revision: 1.25 $, $Date: 2005/04/22 17:08:17 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
 
-public class DatabaseAdministrationObjectLoader extends AbstractObjectLoader implements AdministrationObjectLoader {
+public class DatabaseAdministrationObjectLoader extends DatabaseObjectLoader implements AdministrationObjectLoader {
 
 	public User loadUser(Identifier id) throws ApplicationException {
 		return new User(id);

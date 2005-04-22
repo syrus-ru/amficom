@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseResourceObjectLoader.java,v 1.16 2005/04/12 16:22:40 arseniy Exp $
+ * $Id: DatabaseResourceObjectLoader.java,v 1.17 2005/04/22 17:10:51 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import com.syrus.AMFICOM.general.AbstractObjectLoader;
+import com.syrus.AMFICOM.general.DatabaseObjectLoader;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
@@ -26,11 +26,11 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceDataPackage.ImageResourceSort;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/04/12 16:22:40 $
+ * @version $Revision: 1.17 $, $Date: 2005/04/22 17:10:51 $
  * @author $Author: arseniy $
  * @module resource_v1
  */
-public class DatabaseResourceObjectLoader extends AbstractObjectLoader implements ResourceObjectLoader {
+public class DatabaseResourceObjectLoader extends DatabaseObjectLoader implements ResourceObjectLoader {
 
 	public StorableObject loadImageResource(Identifier id) throws ApplicationException {
 		StorableObject storableObject;

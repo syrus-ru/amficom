@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseEventObjectLoader.java,v 1.17 2005/04/12 16:22:18 arseniy Exp $
+ * $Id: DatabaseEventObjectLoader.java,v 1.18 2005/04/22 17:09:33 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import com.syrus.AMFICOM.general.AbstractObjectLoader;
+import com.syrus.AMFICOM.general.DatabaseObjectLoader;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
@@ -24,11 +24,11 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/04/12 16:22:18 $
+ * @version $Revision: 1.18 $, $Date: 2005/04/22 17:09:33 $
  * @author $Author: arseniy $
  * @module event_v1
  */
-public class DatabaseEventObjectLoader extends AbstractObjectLoader implements EventObjectLoader {
+public class DatabaseEventObjectLoader extends DatabaseObjectLoader implements EventObjectLoader {
 
 	public EventType loadEventType(Identifier id) throws ApplicationException {
 		return new EventType(id);

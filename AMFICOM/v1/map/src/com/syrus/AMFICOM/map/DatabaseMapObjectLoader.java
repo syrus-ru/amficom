@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseMapObjectLoader.java,v 1.17 2005/04/12 16:23:33 arseniy Exp $
+ * $Id: DatabaseMapObjectLoader.java,v 1.18 2005/04/22 17:10:27 arseniy Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.syrus.AMFICOM.general.AbstractObjectLoader;
+import com.syrus.AMFICOM.general.DatabaseObjectLoader;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
@@ -24,11 +24,11 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/04/12 16:23:33 $
+ * @version $Revision: 1.18 $, $Date: 2005/04/22 17:10:27 $
  * @author $Author: arseniy $
  * @module map_v1
  */
-public class DatabaseMapObjectLoader extends AbstractObjectLoader implements MapObjectLoader {
+public class DatabaseMapObjectLoader extends DatabaseObjectLoader implements MapObjectLoader {
 
 	public Collector loadCollector(final Identifier id) throws ApplicationException {
 		return new Collector(id);

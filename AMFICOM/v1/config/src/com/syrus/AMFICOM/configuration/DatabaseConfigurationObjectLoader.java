@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseConfigurationObjectLoader.java,v 1.50 2005/04/22 13:46:48 arseniy Exp $
+ * $Id: DatabaseConfigurationObjectLoader.java,v 1.51 2005/04/22 17:08:43 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import com.syrus.AMFICOM.general.AbstractObjectLoader;
+import com.syrus.AMFICOM.general.DatabaseObjectLoader;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
@@ -25,12 +25,12 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.50 $, $Date: 2005/04/22 13:46:48 $
+ * @version $Revision: 1.51 $, $Date: 2005/04/22 17:08:43 $
  * @author $Author: arseniy $
  * @module config_v1
  */
 
-public class DatabaseConfigurationObjectLoader extends AbstractObjectLoader implements ConfigurationObjectLoader {
+public class DatabaseConfigurationObjectLoader extends DatabaseObjectLoader implements ConfigurationObjectLoader {
 
 	/* Load single object*/
 

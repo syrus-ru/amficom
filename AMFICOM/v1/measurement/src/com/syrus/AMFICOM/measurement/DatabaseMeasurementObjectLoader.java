@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseMeasurementObjectLoader.java,v 1.55 2005/04/22 16:12:48 arseniy Exp $
+ * $Id: DatabaseMeasurementObjectLoader.java,v 1.56 2005/04/22 17:09:00 arseniy Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 
-import com.syrus.AMFICOM.general.AbstractObjectLoader;
+import com.syrus.AMFICOM.general.DatabaseObjectLoader;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
@@ -24,12 +24,12 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.55 $, $Date: 2005/04/22 16:12:48 $
+ * @version $Revision: 1.56 $, $Date: 2005/04/22 17:09:00 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
 
-public class DatabaseMeasurementObjectLoader extends AbstractObjectLoader implements MeasurementObjectLoader {
+public class DatabaseMeasurementObjectLoader extends DatabaseObjectLoader implements MeasurementObjectLoader {
 
 	/* Load single object*/
 
