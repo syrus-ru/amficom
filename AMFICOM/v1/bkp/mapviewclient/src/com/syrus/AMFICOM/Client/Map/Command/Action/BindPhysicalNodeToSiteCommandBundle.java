@@ -1,5 +1,5 @@
 /**
- * $Id: BindPhysicalNodeToSiteCommandBundle.java,v 1.18 2005/04/15 11:12:32 peskovsky Exp $
+ * $Id: BindPhysicalNodeToSiteCommandBundle.java,v 1.19 2005/04/22 15:08:45 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -31,8 +31,8 @@ import java.util.Iterator;
  *   оманда прив€зывани€ топологического узла, принадлежащего
  *  неприв€занному кабелю, к элементу узла. ѕри этом лини€, которой 
  *  принадлежит данный узел, делитс€ на 2 части
- * @author $Author: peskovsky $
- * @version $Revision: 1.18 $, $Date: 2005/04/15 11:12:32 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.19 $, $Date: 2005/04/22 15:08:45 $
  * @module mapclient_v1
  */
 public class BindPhysicalNodeToSiteCommandBundle extends MapActionCommandBundle
@@ -118,7 +118,7 @@ public class BindPhysicalNodeToSiteCommandBundle extends MapActionCommandBundle
 			// single cpath, as long as link is UnboundLink
 			CablePath cpath = (CablePath)(this.mapView.getCablePaths(link).get(0));
 			// нова€ лини€ добавл€етс€ в кабельный путь
-			cpath.addLink(newLink, CableController.generateCCI(newLink, this.logicalNetLayer.getUserId()));
+			cpath.addLink(newLink, CableController.generateCCI(cpath, newLink, this.logicalNetLayer.getUserId()));
 			newLink.setCablePath(cpath);
 			// переносим фрагменты в новую линию пока не наткнемс€ на
 			// созданный узел

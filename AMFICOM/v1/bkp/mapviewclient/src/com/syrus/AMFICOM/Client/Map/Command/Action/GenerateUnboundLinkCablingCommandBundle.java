@@ -1,5 +1,5 @@
 /**
- * $Id: GenerateUnboundLinkCablingCommandBundle.java,v 1.12 2005/04/15 11:12:33 peskovsky Exp $
+ * $Id: GenerateUnboundLinkCablingCommandBundle.java,v 1.13 2005/04/22 15:08:45 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.mapview.UnboundLink;
 
 /**
  *  оманда генерации тоннел€ по неприв€занной линии.
- * @author $Author: peskovsky $
- * @version $Revision: 1.12 $, $Date: 2005/04/15 11:12:33 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.13 $, $Date: 2005/04/22 15:08:45 $
  * @module mapviewclient_v1
  */
 public class GenerateUnboundLinkCablingCommandBundle extends MapActionCommandBundle
@@ -84,7 +84,7 @@ public class GenerateUnboundLinkCablingCommandBundle extends MapActionCommandBun
 				mnle.setPhysicalLink(this.link);
 				this.link.addNodeLink(mnle);
 			}
-			this.path.addLink(this.link, CableController.generateCCI(this.link, this.logicalNetLayer.getUserId()));
+			this.path.addLink(this.link, CableController.generateCCI(this.path, this.link, this.logicalNetLayer.getUserId()));
 			this.link.getBinding().add(this.path);
 			this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
 		} catch(Throwable e) {
