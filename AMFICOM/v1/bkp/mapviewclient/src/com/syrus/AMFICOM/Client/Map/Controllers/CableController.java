@@ -1,5 +1,5 @@
 /**
- * $Id: CableController.java,v 1.14 2005/04/18 12:09:09 krupenn Exp $
+ * $Id: CableController.java,v 1.15 2005/04/22 15:10:07 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -40,13 +40,14 @@ import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.MeasurementPath;
 import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.scheme.CableChannelingItem;
+import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 
 /**
  * Контроллер кабеля.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.14 $, $Date: 2005/04/18 12:09:09 $
+ * @version $Revision: 1.15 $, $Date: 2005/04/22 15:10:07 $
  * @module mapviewclient_v1
  */
 public final class CableController extends AbstractLinkController
@@ -274,24 +275,48 @@ public final class CableController extends AbstractLinkController
 
 	/**
 	 * Создать новый объект привязки к линии.
+	 * @param cablePath TODO
 	 * @param link лниия
 	 * @param creatorId TODO
 	 * @return объект привязки, или <code>null</code> при возникновении ошибки
 	 */
-	public static CableChannelingItem generateCCI(PhysicalLink link, Identifier creatorId)//, Identifier creatorId)
+	public static CableChannelingItem generateCCI(CablePath cablePath, PhysicalLink link, Identifier creatorId)//, Identifier creatorId)
 	{
 		CableChannelingItem cci = null;
 		try
 		{
-			cci = CableChannelingItem.createInstance(creatorId);
-			cci.setStartSiteNode((SiteNode )link.getStartNode());
+			SiteNode startNode = (SiteNode )link.getStartNode();
+			SiteNode endNode = (SiteNode )link.getEndNode();
+			double startSpare = 0.0D;
+			double endSpare = 0.0D;
+			SchemeCableLink schemeCableLink = cablePath.getSchemeCableLink();
 			if(! (link instanceof UnboundLink))
 			{
-				cci.setStartSpare(MapPropertiesManager.getSpareLength());
-				cci.setPhysicalLink(link);
-				cci.setEndSpare(MapPropertiesManager.getSpareLength());
+				startSpare = MapPropertiesManager.getSpareLength();
+				endSpare = MapPropertiesManager.getSpareLength();
+
+				cci = CableChannelingItem.createInstance(
+						creatorId, 
+						"",//default
+						"",//default
+						startSpare,
+						endSpare,
+						0,//default
+						0,//default
+						0,//default
+						link,
+						startNode,
+						endNode,
+						schemeCableLink);
 			}
-			cci.setEndSiteNode((SiteNode )link.getEndNode());
+			else {
+				cci = CableChannelingItem.createInstance(
+						creatorId, 
+						"",//default 
+						startNode,
+						endNode,
+						schemeCableLink);
+			}
 		
 			SchemeStorableObjectPool.putStorableObject(cci);
 		}
