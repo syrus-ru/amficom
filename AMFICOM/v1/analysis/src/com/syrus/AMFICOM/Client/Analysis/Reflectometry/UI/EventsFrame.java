@@ -46,22 +46,21 @@ import com.syrus.io.BellcoreStructure;
 public class EventsFrame extends ATableFrame
 implements OperationListener, BsHashChangeListener, EtalonMTMListener, CurrentEventChangeListener
 {
-	public static final String DASH = "-----";
+	private static final String DASH = "-----";
 
-	protected Dispatcher dispatcher;
+	private Dispatcher dispatcher;
 	private FixedSizeEditableTableModel tModel;
 	private JTable jTable;
 
-	BorderLayout borderLayout = new BorderLayout();
-	JPanel mainPanel = new JPanel();
-	JScrollPane scrollPane = new JScrollPane();
-	JViewport viewport = new JViewport();
-	
+	private JPanel mainPanel = new JPanel();
+	private JScrollPane scrollPane = new JScrollPane();
+	private JViewport viewport = new JViewport();
+
 	public EventsFrame()
 	{
 		this(new Dispatcher());
 	}
-	
+
 	public EventsFrame(Dispatcher dispatcher)
 	{
 		super();
