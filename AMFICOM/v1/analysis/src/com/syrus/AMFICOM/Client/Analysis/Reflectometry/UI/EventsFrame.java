@@ -48,10 +48,6 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener, CurrentEv
 {
 	public static final String DASH = "-----";
 
-	private ComplexReflectogramEvent []data;
-	//private ComplexReflectogramEvent []data_; -- не требуется, т.к. сравниваются только относительные параметры 
-	private ComplexReflectogramEvent []etalon;
-
 	protected Dispatcher dispatcher;
 	private FixedSizeEditableTableModel tModel;
 	private JTable jTable;
@@ -148,16 +144,15 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener, CurrentEv
 
 	public void setComparedWithEtalonEventsColor()
 	{
-
-		if(etalon == null || data == null)
+		if(getEtalon() == null || getData() == null)
 		{
 			setNoComparedWithEtalonColor();
 			return;
 		}
 
-		int []newEvents = ReflectogramComparer.getNewEventsList(data, etalon);
-		int []amplChengedEvents = ReflectogramComparer.getChangedAmplitudeEventsList(data, etalon, .5);
-		int []lossChengedEvents = ReflectogramComparer.getChangedLossEventsList(data, etalon, .5);
+		int []newEvents = ReflectogramComparer.getNewEventsList(getData(), getEtalon());
+		int []amplChengedEvents = ReflectogramComparer.getChangedAmplitudeEventsList(getData(), getEtalon(), .5);
+		int []lossChengedEvents = ReflectogramComparer.getChangedLossEventsList(getData(), getEtalon(), .5);
 
 		EventTableRenderer rend = (EventTableRenderer)jTable.getDefaultRenderer(Object.class);
 		rend.setNewEventsList(newEvents);
@@ -444,13 +439,10 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener, CurrentEv
 		}
 	}
 
-
 	public void bsHashAdded(String key, BellcoreStructure bs)
 	{
 		if (key.equals(Heap.PRIMARY_TRACE_KEY))
 		{
-			this.data = Heap.getMTAEPrimary().getComplexEvents();
-			etalon = null;
 			setNoComparedWithEtalonColor();
 			if (Heap.getRefAnalysisByKey(Heap.PRIMARY_TRACE_KEY) != null)
 			{
@@ -467,8 +459,6 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener, CurrentEv
 	{
 		if(key.equals(AnalysisUtil.ETALON))
 		{
-			etalon = null;
-			data = null;
 			setNoComparedWithEtalonColor();
 		}
 	}
@@ -476,8 +466,6 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener, CurrentEv
 
 	public void bsHashRemovedAll()
 	{
-		etalon = null;
-		data = null;
 		tModel.clearTable();
 		setNoComparedWithEtalonColor();
 		setVisible(false);
@@ -485,14 +473,11 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener, CurrentEv
 
 	public void etalonMTMCUpdated()
 	{
-		etalon = Heap.getMTMEtalon().getMTAE().getComplexEvents();
 		setComparedWithEtalonEventsColor();
 	}
 
 	public void etalonMTMRemoved()
 	{
-		data = null;
-		etalon = null;
 		setNoComparedWithEtalonColor();
 	}
 
@@ -500,4 +485,12 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener, CurrentEv
 	{
 		updateTableModel(Heap.getCurrentEvent());
 	}
+
+	private ComplexReflectogramEvent []getData() {
+		return Heap.getMTAEPrimary().getComplexEvents();
+	}
+	private ComplexReflectogramEvent []getEtalon() {
+		return Heap.getMTMEtalon().getMTAE().getComplexEvents();
+	}
+
 }
