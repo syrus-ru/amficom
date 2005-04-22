@@ -51,7 +51,6 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener, CurrentEv
 	protected Dispatcher dispatcher;
 	private FixedSizeEditableTableModel tModel;
 	private JTable jTable;
-	protected int selected = 0;
 
 	BorderLayout borderLayout = new BorderLayout();
 	JPanel mainPanel = new JPanel();
@@ -104,9 +103,7 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener, CurrentEv
 					RefAnalysis a = Heap.getRefAnalysisByKey(Heap.PRIMARY_TRACE_KEY);
 					BellcoreStructure bs = Heap.getAnyBSTraceByKey(Heap.PRIMARY_TRACE_KEY);
 					setTableModel(bs, a.events);
-					if (selected >= a.events.length)
-						selected = a.events.length-1;
-					updateTableModel (selected);
+					updateTableModel ();
 				}
 				setVisible(true);
 			}
@@ -235,7 +232,7 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener, CurrentEv
 			}
 			else
 			{
-				selected = lsm.getMinSelectionIndex();
+				int selected = lsm.getMinSelectionIndex();
 				Heap.setCurrentEvent(selected);
 			}
 		}
@@ -260,14 +257,12 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener, CurrentEv
 //		repaint();
 	}
 
-	private void updateTableModel(int activeEvent)
+	private void updateTableModel()
 	{
-		if (activeEvent != -1 && activeEvent < this.jTable.getRowCount())
-//			if (selected != activeEvent)
+		int nEvent = Heap.getCurrentEvent();
+		if (nEvent != -1 && nEvent < this.jTable.getRowCount())
 			{
-				this.selected = activeEvent;
-			
-				this.jTable.setRowSelectionInterval(this.selected, this.selected);
+				this.jTable.setRowSelectionInterval(nEvent, nEvent);
 				this.jTable.scrollRectToVisible(this.jTable.getCellRect(this.jTable.getSelectedRow(), this.jTable.getSelectedColumn(), true));
 			}
 		UIGeneralStorage.arrangeTableColumns(this.jTable);
@@ -448,7 +443,7 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener, CurrentEv
 			{
 				RefAnalysis a = Heap.getRefAnalysisByKey(Heap.PRIMARY_TRACE_KEY);
 				setTableModel(bs, a.events);
-				this.updateTableModel(0);
+				this.updateTableModel();
 			}
 			setVisible(true);
 		}
@@ -483,7 +478,7 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener, CurrentEv
 
 	public void currentEventChanged()
 	{
-		updateTableModel(Heap.getCurrentEvent());
+		updateTableModel();
 	}
 
 	private ComplexReflectogramEvent []getData() {
