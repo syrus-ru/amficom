@@ -27,7 +27,6 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener, CurrentEv
 	private Map tModels = new HashMap(6);
 
 	private ATable jTable;
-	private int selected = 0;
 	private RefAnalysis a;
 	private BellcoreStructure bs;
 	private double res_km;
@@ -111,9 +110,7 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener, CurrentEv
 					if(dataMTAE != null && etalonMTM != null)
 						makeAlignedDataMT();
 					else alignedDataMT = null;
-					if (selected >= a.events.length)
-						selected = a.events.length - 1;
-					updateTableModel (selected);
+					updateTableModel();
 				}
 				if (Heap.hasEventParamsForPrimaryTrace())
 					analysis_performed = true;
@@ -265,8 +262,9 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener, CurrentEv
 		updColorModel();
 	}
 
-	private void setData(int nEvent)
+	private void setData()
 	{
+		int nEvent = Heap.getCurrentEvent();
 		if(etalonMTM == null || alignedDataMT == null)
 		{
 			tabbedPane.setSelectedIndex(0);
@@ -353,8 +351,9 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener, CurrentEv
 //		jTableComp.setGridColor(ColorManager.getColor("tableGridColor"));
 	}
 
-	private void updateTableModel(int num)
+	private void updateTableModel()
 	{
+		int num = Heap.getCurrentEvent();
 		if (num <0 || this.a == null || num >= a.events.length)
 			return;
 		TraceEvent ev = a.events[num];
@@ -518,9 +517,8 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener, CurrentEv
 
 	public void currentEventChanged()
 	{
-		selected = Heap.getCurrentEvent();
-		updateTableModel (selected);
-		setData(selected);
+		updateTableModel();
+		setData();
 	}
 }
 
