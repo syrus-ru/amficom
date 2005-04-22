@@ -1,5 +1,5 @@
 /*
- * $Id: measurement.idl,v 1.62 2005/04/22 14:30:53 bob Exp $
+ * $Id: measurement.idl,v 1.63 2005/04/22 16:00:05 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -167,14 +167,14 @@ module corba {
 
 /////////////////////// Temporal Pattern ////////////////////////
 
-	struct TemporalPattern_Transferable {
+	struct CronTemporalPattern_Transferable {
 		general::corba::StorableObject_Transferable header;
 
 		general::corba::WString256 description;
 		sequence <general::corba::WString64> cron_strings;
 	};
 
-	typedef sequence <TemporalPattern_Transferable> TemporalPatternSeq_Transferable;
+	typedef sequence <CronTemporalPattern_Transferable> CronTemporalPatternSeq_Transferable;
 
 
 
