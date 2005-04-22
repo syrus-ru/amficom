@@ -1,5 +1,5 @@
 /*
- * $Id: CMMeasurementTransmit.java,v 1.22 2005/04/22 16:06:03 arseniy Exp $
+ * $Id: CMMeasurementTransmit.java,v 1.23 2005/04/22 21:10:58 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -62,7 +62,7 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/04/22 16:06:03 $
+ * @version $Revision: 1.23 $, $Date: 2005/04/22 21:10:58 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -1466,6 +1466,32 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
 				set = (Set) it.next();
 				transferables[i] = (Set_Transferable) set.getTransferable();
+			}
+			return transferables;
+		}
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
+	}
+
+	public CronTemporalPattern_Transferable[] transmitCronTemporalPatternsButIdsCondition(Identifier_Transferable[] identifier_Transferables,
+			AccessIdentifier_Transferable accessIdentifier,
+			StorableObjectCondition_Transferable condition_Transferable) throws AMFICOMRemoteException {
+		try {
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			Log.debugMessage("CMMeasurementTransmit.transmitTestsButIdsCondition | All, but "
+					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
+				Log.DEBUGLEVEL07);
+
+			java.util.Set objects = this.getObjectsButIdsCondition(identifier_Transferables, condition_Transferable);
+
+			CronTemporalPattern_Transferable[] transferables = new CronTemporalPattern_Transferable[objects.size()];
+			int i = 0;
+			CronTemporalPattern cronTemporalPattern;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				cronTemporalPattern = (CronTemporalPattern) it.next();
+				transferables[i] = (CronTemporalPattern_Transferable) cronTemporalPattern.getTransferable();
 			}
 			return transferables;
 		}

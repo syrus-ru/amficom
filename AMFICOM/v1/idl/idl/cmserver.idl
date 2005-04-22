@@ -1116,6 +1116,12 @@ module corba {
 						in general::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);						
 
+		measurement::corba::CronTemporalPatternSeq_Transferable transmitCronTemporalPatternsButIdsCondition(
+						in general::corba::IdentifierSeq_Transferable ids,
+						in general::corba::AccessIdentifier_Transferable accessIdentifier,
+						in general::corba::StorableObjectCondition_Transferable condition_Transferable)
+			raises (general::corba::AMFICOMRemoteException);						
+
 		measurement::corba::TestSeq_Transferable transmitTests(
 						in general::corba::IdentifierSeq_Transferable ids,
 						in general::corba::AccessIdentifier_Transferable accessIdentifier)
