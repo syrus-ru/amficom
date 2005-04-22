@@ -1,5 +1,5 @@
 /*
- * $Id: CMConfigurationTransmit.java,v 1.18 2005/04/14 07:31:53 bob Exp $
+ * $Id: CMConfigurationTransmit.java,v 1.19 2005/04/22 18:50:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -69,8 +69,8 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/04/14 07:31:53 $
- * @author $Author: bob $
+ * @version $Revision: 1.19 $, $Date: 2005/04/22 18:50:02 $
+ * @author $Author: arseniy $
  * @module cmserver_v1
  */
 
@@ -1290,6 +1290,132 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 
 
 
+
+	public EquipmentType_Transferable[] transmitEquipmentTypesButIdsCondition(Identifier_Transferable[] identifier_Transferables,
+			AccessIdentifier_Transferable accessIdentifier,
+			StorableObjectCondition_Transferable condition_Transferable) throws AMFICOMRemoteException {
+		try {
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			Log.debugMessage("CMConfigurationTransmit.transmitEquipmentTypesButIdsCondition | All, but "
+					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
+				Log.DEBUGLEVEL07);
+
+			Set objects = this.getObjectsButIdsCondition(identifier_Transferables, condition_Transferable);
+
+			EquipmentType_Transferable[] transferables = new EquipmentType_Transferable[objects.size()];
+			int i = 0;
+			EquipmentType equipmentType;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				equipmentType = (EquipmentType) it.next();
+				transferables[i] = (EquipmentType_Transferable) equipmentType.getTransferable();
+			}
+			return transferables;
+		} catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
+	}
+
+	public PortType_Transferable[] transmitPortTypesButIdsCondition(Identifier_Transferable[] identifier_Transferables,
+			AccessIdentifier_Transferable accessIdentifier,
+			StorableObjectCondition_Transferable condition_Transferable) throws AMFICOMRemoteException {
+		try {
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			Log.debugMessage("CMConfigurationTransmit.transmitPortTypesButIdsCondition | All, but "
+					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
+				Log.DEBUGLEVEL07);
+
+			Set objects = this.getObjectsButIdsCondition(identifier_Transferables, condition_Transferable);
+
+			PortType_Transferable[] transferables = new PortType_Transferable[objects.size()];
+			int i = 0;
+			PortType portType;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				portType = (PortType) it.next();
+				transferables[i] = (PortType_Transferable) portType.getTransferable();
+			}
+			return transferables;
+		} catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
+	}
+
+	public MeasurementPortType_Transferable[] transmitMeasurementPortTypesButIdsCondition(Identifier_Transferable[] identifier_Transferables,
+			AccessIdentifier_Transferable accessIdentifier,
+			StorableObjectCondition_Transferable condition_Transferable) throws AMFICOMRemoteException {
+		try {
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			Log.debugMessage("CMConfigurationTransmit.transmitMeasurementPortTypesButIdsCondition | All, but "
+					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
+				Log.DEBUGLEVEL07);
+
+			Set objects = this.getObjectsButIdsCondition(identifier_Transferables, condition_Transferable);
+
+			MeasurementPortType_Transferable[] transferables = new MeasurementPortType_Transferable[objects.size()];
+			int i = 0;
+			MeasurementPortType measurementPortType;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				measurementPortType = (MeasurementPortType) it.next();
+				transferables[i] = (MeasurementPortType_Transferable) measurementPortType.getTransferable();
+			}
+			return transferables;
+		} catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
+	}
+
+	public TransmissionPathType_Transferable[] transmitTransmissionPathTypesButIdsCondition(Identifier_Transferable[] identifier_Transferables,
+			AccessIdentifier_Transferable accessIdentifier,
+			StorableObjectCondition_Transferable condition_Transferable) throws AMFICOMRemoteException {
+		try {
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			Log.debugMessage("CMConfigurationTransmit.transmitTransmissionPathTypesButIdsCondition | All, but "
+					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
+				Log.DEBUGLEVEL07);
+
+			Set objects = this.getObjectsButIdsCondition(identifier_Transferables, condition_Transferable);
+
+			TransmissionPathType_Transferable[] transferables = new TransmissionPathType_Transferable[objects.size()];
+			int i = 0;
+			TransmissionPathType transmissionPathType;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				transmissionPathType = (TransmissionPathType) it.next();
+				transferables[i] = (TransmissionPathType_Transferable) transmissionPathType.getTransferable();
+			}
+			return transferables;
+		} catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
+	}
+
+	public AbstractLinkType_Transferable[] transmitLinkTypesButIdsCondition(Identifier_Transferable[] identifier_Transferables,
+			AccessIdentifier_Transferable accessIdentifier,
+			StorableObjectCondition_Transferable condition_Transferable) throws AMFICOMRemoteException {
+		try {
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			Log.debugMessage("CMConfigurationTransmit.transmitLinkTypesButIdsCondition | All, but "
+					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
+				Log.DEBUGLEVEL07);
+
+			Set objects = this.getObjectsButIdsCondition(identifier_Transferables, condition_Transferable);
+
+			AbstractLinkType_Transferable[] transferables = new AbstractLinkType_Transferable[objects.size()];
+			int i = 0;
+			AbstractLinkType abstractLinkType;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				abstractLinkType = (AbstractLinkType) it.next();
+				transferables[i] = (AbstractLinkType_Transferable) abstractLinkType.getTransferable();
+			}
+			return transferables;
+		} catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
+	}
+
 	public CableLinkType_Transferable[] transmitCableLinkTypesButIdsCondition(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier,
 			StorableObjectCondition_Transferable condition_Transferable) throws AMFICOMRemoteException {
@@ -1344,6 +1470,31 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 
 
 
+
+	public Link_Transferable[] transmitLinksButIdsCondition(Identifier_Transferable[] identifier_Transferables,
+			AccessIdentifier_Transferable accessIdentifier,
+			StorableObjectCondition_Transferable condition_Transferable) throws AMFICOMRemoteException {
+		try {
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			Log.debugMessage("CMConfigurationTransmit.transmitLinksButIdsCondition | All, but "
+					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
+				Log.DEBUGLEVEL07);
+
+			Set objects = this.getObjectsButIdsCondition(identifier_Transferables, condition_Transferable);
+
+			Link_Transferable[] transferables = new Link_Transferable[objects.size()];
+			int i = 0;
+			Link link;
+			for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+				link = (Link) it.next();
+				transferables[i] = (Link_Transferable) link.getTransferable();
+			}
+			return transferables;
+		} catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
+	}
 
 	public CableThread_Transferable[] transmitCableThreadsButIdsCondition(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier,
