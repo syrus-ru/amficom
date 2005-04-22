@@ -1,4 +1,4 @@
--- $Id: schemeoptimizeinfo.sql,v 1.4 2005/03/22 13:36:03 bass Exp $
+-- $Id: schemeoptimizeinfo.sql,v 1.5 2005/04/22 14:46:31 bass Exp $
 
 CREATE TABLE "SchemeOptimizeInfo" (
 	id VARCHAR2(32 CHAR) NOT NULL,
@@ -24,20 +24,20 @@ CREATE TABLE "SchemeOptimizeInfo" (
 	nodes_splice_prob BINARY_DOUBLE NOT NULL,
 	nodes_cut_prob BINARY_DOUBLE NOT NULL,
 	survivor_rate BINARY_DOUBLE NOT NULL,
-	scheme_id VARCHAR2(32 CHAR) NOT NULL,
+	parent_scheme_id VARCHAR2(32 CHAR) NOT NULL,
 --
-	CONSTRAINT schemeoptimizeinfo_pk PRIMARY KEY(id),
+	CONSTRAINT schmoptimizeinfo_pk PRIMARY KEY(id),
 --
-	CONSTRAINT schemeoptimizeinfo_creator_fk FOREIGN KEY(creator_id)
+	CONSTRAINT schmoptimizeinfo_creator_fk FOREIGN KEY(creator_id)
 		REFERENCES "User"(id) ON DELETE CASCADE,
-	CONSTRAINT schemeoptimizeinfo_modifier_fk FOREIGN KEY(modifier_id)
+	CONSTRAINT schmoptimizeinfo_modifier_fk FOREIGN KEY(modifier_id)
 		REFERENCES "User"(id) ON DELETE CASCADE,
 --
-	CONSTRAINT schemeoptimizeinfo_scheme_fk FOREIGN KEY(scheme_id)
+	CONSTRAINT schmoptimizeinfo_prnt_schm_fk FOREIGN KEY(parent_scheme_id)
 		REFERENCES "Scheme"(id) ON DELETE CASCADE
 );
 
-COMMENT ON TABLE "SchemeOptimizeInfo" IS '$Id: schemeoptimizeinfo.sql,v 1.4 2005/03/22 13:36:03 bass Exp $';
+COMMENT ON TABLE "SchemeOptimizeInfo" IS '$Id: schemeoptimizeinfo.sql,v 1.5 2005/04/22 14:46:31 bass Exp $';
 
 CREATE SEQUENCE "SchemeOptimizeInfo_Seq" ORDER;
 
@@ -63,7 +63,7 @@ CREATE TABLE "SchemeOptimizeInfoRtu" (
 		REFERENCES "SchemeOptimizeInfo"(id) ON DELETE CASCADE
 );
 
-COMMENT ON TABLE "SchemeOptimizeInfoRtu" IS '$Id: schemeoptimizeinfo.sql,v 1.4 2005/03/22 13:36:03 bass Exp $';
+COMMENT ON TABLE "SchemeOptimizeInfoRtu" IS '$Id: schemeoptimizeinfo.sql,v 1.5 2005/04/22 14:46:31 bass Exp $';
 COMMENT ON COLUMN "SchemeOptimizeInfoRtu".price_usd IS 'RTU price in US dollars.';
 COMMENT ON COLUMN "SchemeOptimizeInfoRtu".range_db IS 'RTU range in decibels, from 0.00 to 128.00 db.';
 
@@ -91,7 +91,7 @@ CREATE TABLE "SchemeOptimizeInfoSwitch" (
 		REFERENCES "SchemeOptimizeInfo"(id) ON DELETE CASCADE
 );
 
-COMMENT ON TABLE "SchemeOptimizeInfoSwitch" IS '$Id: schemeoptimizeinfo.sql,v 1.4 2005/03/22 13:36:03 bass Exp $';
+COMMENT ON TABLE "SchemeOptimizeInfoSwitch" IS '$Id: schemeoptimizeinfo.sql,v 1.5 2005/04/22 14:46:31 bass Exp $';
 COMMENT ON COLUMN "SchemeOptimizeInfoSwitch".price_usd IS 'Optical switch price in US dollars.';
 COMMENT ON COLUMN "SchemeOptimizeInfoSwitch".no_of_ports IS 'Number of ports in this optical switch. Up to 256.';
 
