@@ -13,16 +13,16 @@ public class MapMarkersPanel extends ThresholdsPanel
 	protected Identifier monitored_element_id = null;
 	protected Identifier scheme_path_id = null;
 
-	protected boolean show_markers = true;
+	private boolean show_markers = true;
 	protected boolean creating_marker = false;
 
 	protected ArrayList markers = new ArrayList();
-	protected Marker active_marker;
-	protected boolean move_marker = false;
-	private static float marker_w = 1f; // width of marker in pixels
+	private Marker active_marker;
+	private boolean move_marker = false;
+	private static final float marker_w = 1f; // width of marker in pixels
 	public static Stroke MARKER_STROKE = new BasicStroke(marker_w);
 
-	public boolean useXORMode = true;
+	protected boolean useXORMode = true;
 	protected boolean paintMarkerXOR = false;
 
 	public MapMarkersPanel(ResizableLayeredPanel panel, Dispatcher dispatcher, double y[], double deltaX)
