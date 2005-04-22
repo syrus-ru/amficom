@@ -1,5 +1,5 @@
 /**
- * $Id: MoveSelectionCommandBundle.java,v 1.9 2005/04/07 14:16:07 krupenn Exp $
+ * $Id: MoveSelectionCommandBundle.java,v 1.10 2005/04/22 15:09:29 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.Client.Map.MapConnectionException;
 import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
+import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.Mark;
 
@@ -27,7 +28,7 @@ import com.syrus.AMFICOM.map.Mark;
  * Перемещение объектов по карте. Команда является пучком команд 
  * (CommandBundle), передвгающих отдельные элементы.
  * @author $Author: krupenn $
- * @version $Revision: 1.9 $, $Date: 2005/04/07 14:16:07 $
+ * @version $Revision: 1.10 $, $Date: 2005/04/22 15:09:29 $
  * @module mapviewclient_v1
  */
 public class MoveSelectionCommandBundle extends MapActionCommandBundle
@@ -148,7 +149,8 @@ public class MoveSelectionCommandBundle extends MapActionCommandBundle
 	 */
 	protected void setElements()
 	{
-		Iterator iter = this.logicalNetLayer.getMapView().getMap().getSelectedElements().iterator();
+		Map map = this.logicalNetLayer.getMapView().getMap();
+		Iterator iter = map.getSelectedElements().iterator();
 
 		while (iter.hasNext() )
 		{
@@ -159,7 +161,9 @@ public class MoveSelectionCommandBundle extends MapActionCommandBundle
 					Mark mme = (Mark)node;
 					super.add(new MoveMarkCommand(mme));
 				}
-				super.add(new MoveNodeCommand(node));
+				// do not move external nodes
+				else if(!map.getExternalNodes().contains(node))
+					super.add(new MoveNodeCommand(node));
 			}
 		}
 	}
