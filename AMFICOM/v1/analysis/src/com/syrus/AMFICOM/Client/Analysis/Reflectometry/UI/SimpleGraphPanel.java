@@ -12,11 +12,9 @@ public class SimpleGraphPanel extends JPanel
 {
 	public static final int MOUSE_COUPLING = 5;
 
-	protected String colorId;
+	private Color color; // color given externally for curve
+	protected Color traceColor; // color really used to paint graphic itself (shadowed color)
 
-	protected Color traceColor; // color, which used to paint graphic itself
-	private Color color;
-	
 	protected boolean weakColor;
 
 	protected double[] y; // array of graphic points
@@ -28,7 +26,7 @@ public class SimpleGraphPanel extends JPanel
 	protected int end = 0; // номер конечной точки
 	protected double top = 0; // столько находится за пределами экрана вверху (в единицах измерения - для рефлектограммы дБ)
 	protected double bottom = 0; // столько находится за пределами экрана внизу (в единицах измерения - для рефлектограммы дБ)
-	
+
 	public SimpleGraphPanel (double[] y, double deltaX, Color color)
 	{
 		init (y, deltaX);
@@ -47,22 +45,22 @@ public class SimpleGraphPanel extends JPanel
 	    this.weakColor = weakColors;
 	}
 	
-	public void init (double[] y, double deltaX)
+	public void init (double[] y1, double deltaX1)
 	{
-		this.deltaX = deltaX;
-		if (y == null)
-			y = new double[2];
+		this.deltaX = deltaX1;
+		if (y1 == null)
+			y1 = new double[2];
 		else
-			this.y = y;
+			this.y = y1;
 
-		minY = y[0];
-		maxY = y[0];
-		for (int i = 1; i < y.length; i++)
+		minY = y1[0];
+		maxY = y1[0];
+		for (int i = 1; i < y1.length; i++)
 		{
-			if (y[i] < minY)
-				minY = y[i];
-			else if (y[i] > maxY)
-				maxY = y[i];
+			if (y1[i] < minY)
+				minY = y1[i];
+			else if (y1[i] > maxY)
+				maxY = y1[i];
 		}
 	}
 
@@ -97,27 +95,26 @@ public class SimpleGraphPanel extends JPanel
 		this.color = Heap.getColor(id);
 		updColorModel();
 	}
-	
-	 
+
 	protected void updColorModel() {
 		this.traceColor = this.correctColor(this.color);
 	}
-	
-	protected Color correctColor(Color color)
+
+	protected Color correctColor(Color color1)
 	{
 	    double weight = 0.3; // XXX
 	    double a = weight;
 	    double b = 255 * (1.0 - weight);
 	    return weakColor ?
 			new Color(
-				(int )(color.getRed() * a + b),
-				(int )(color.getGreen() * a + b),
-				(int )(color.getBlue() * a + b))
-			: color;
+				(int )(color1.getRed() * a + b),
+				(int )(color1.getGreen() * a + b),
+				(int )(color1.getBlue() * a + b))
+			: color1;
 	}
 
 	// plots from y[i0] to y[i0+N] _inclusively_ at x=x0..x0+N
-	protected void draw_y_curve(Graphics g, double[] y, int i0, int x0, int N)
+	protected void draw_y_curve(Graphics g, double[] y1, int i0, int x0, int N)
 	{
 		if (N < 0)
 			return;
@@ -126,7 +123,7 @@ public class SimpleGraphPanel extends JPanel
 		for (int j = 0; j <= N; j++)
 		{
 			xArr[j] = (int )((j + x0) * scaleX + 1);
-			yArr[j] = (int )((maxY - y[j + i0] - top) * scaleY);
+			yArr[j] = (int )((maxY - y1[j + i0] - top) * scaleY);
 			// XXX: to avoid rounding errors, we could use smth like this:
 			//double vx = (j + x0) * scaleX + 1;
 			//double vy = (maxY - y[j + i0] - top) * scaleY;

@@ -159,10 +159,6 @@ public class ScaledGraphPanel extends SimpleGraphPanel
 	protected void updColorModel()
 	{
 		super.updColorModel();
-
-//		scaleColor = ColorManager.getColor("scaleColor");
-//		scaleDigitColor = ColorManager.getColor("scaleDigitColor");
-//		selectColor = ColorManager.getColor("selectColor");
 	}
 
 	public void paint(Graphics g)

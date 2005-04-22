@@ -463,12 +463,12 @@ public class AnalysisPanel extends MapMarkersPanel
 		parent.repaint();
 	}
 
-	void move_ana_point(int moving_point, int new_pos)
+	void move_ana_point(int movingPoint1, int newPos)
 	{
-		int i = (moving_point - 1) / 2;
-		int j = (moving_point - 1) - 2 * i;
+		int i = (movingPoint1 - 1) / 2;
+		int j = (movingPoint1 - 1) - 2 * i;
 
-		lines[i].move(j, new_pos);
+		lines[i].move(j, newPos);
 		lines[0].checkBounds(0, markerA.pos - 1, 1);
 		lines[1].checkBounds(markerA.pos + 1, y.length-1, 1);
 		lines[i].factor = MathRef.calcLSA(y, lines[i].point[0], lines[i].point[1]);

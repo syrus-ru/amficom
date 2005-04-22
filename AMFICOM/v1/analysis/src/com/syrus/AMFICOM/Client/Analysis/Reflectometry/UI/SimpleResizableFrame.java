@@ -50,7 +50,7 @@ public class SimpleResizableFrame extends JInternalFrame
 		{
 			public void mouseDragged(MouseEvent e)
 			{
-				this_mouseDragged(e);
+				this_mouseDragged();
 			}
 		});
 
@@ -66,12 +66,6 @@ public class SimpleResizableFrame extends JInternalFrame
 	public String getReportTitle()
 	{
 		return getTitle();
-	}
-
-	public void setGraph (double[] y, double deltaX, boolean isReversedY, double Kx, double Ky, String id)
-	{
-		setGraph (y, deltaX, isReversedY, id);
-		panel.setScalesCoeffs(Kx, Ky);
 	}
 
 	public void setGraph (double[] y, double deltaX, boolean isReversedY, String id)
@@ -97,7 +91,7 @@ public class SimpleResizableFrame extends JInternalFrame
 		panel.updScale2fit();
 	}
 
-	void this_mouseDragged(MouseEvent e)
+	void this_mouseDragged()
 	{
 		panel.resize();
 	}
