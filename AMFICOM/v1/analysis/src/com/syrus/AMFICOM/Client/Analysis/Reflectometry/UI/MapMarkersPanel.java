@@ -8,6 +8,7 @@ import java.awt.event.MouseEvent;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.general.*;
 
+// XXX: from analysis_v1's point of view, superclass for MapMarkersPanel need not extend ThresholdsPanel and can extend ReflectogramEventsPanel instead
 public class MapMarkersPanel extends ThresholdsPanel
 {
 	protected Identifier monitored_element_id = null;
