@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerConnectionManager.java,v 1.2 2005/04/16 21:29:09 arseniy Exp $
+ * $Id: CMServerConnectionManager.java,v 1.3 2005/04/22 21:14:06 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,8 @@ import com.syrus.AMFICOM.general.corba.Verifiable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/16 21:29:09 $
+ * @deprecated
+ * @version $Revision: 1.3 $, $Date: 2005/04/22 21:14:06 $
  * @author $Author: arseniy $
  * @module generalclient_v1
  */
