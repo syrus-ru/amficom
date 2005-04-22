@@ -1,5 +1,5 @@
 /*
- * $Id: ServerConnectionManager.java,v 1.1 2005/04/22 06:54:44 cvsadmin Exp $
+ * $Id: ServerConnectionManager.java,v 1.2 2005/04/22 17:18:16 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,9 +15,9 @@ import com.syrus.util.Application;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/22 06:54:44 $
- * @author $Author: cvsadmin $
- * @module generalclient_v1
+ * @version $Revision: 1.2 $, $Date: 2005/04/22 17:18:16 $
+ * @author $Author: arseniy $
+ * @module csbridge_v1
  */
 public class ServerConnectionManager  implements IGSConnectionManager, CMServerConnectionManager {
 	/** @deprecated*/
