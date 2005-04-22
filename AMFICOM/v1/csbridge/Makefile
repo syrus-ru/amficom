@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.3 2005/04/22 19:25:05 arseniy Exp $
+# $Id: Makefile,v 1.4 2005/04/22 20:13:09 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -23,14 +23,16 @@ APPCLASSPATH := $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administratio
 
 SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/general/*.java) \
 	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/administration/*.java) \
-	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/configuration/*.java)
+	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/configuration/*.java) \
+	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/measurement/*.java)
 
 
 $(LIBNAME): .mach
 	$(JAR) cf $@ \
 		-C $(CLASSDIR) com/syrus/AMFICOM/general \
 		-C $(CLASSDIR) com/syrus/AMFICOM/administration \
-		-C $(CLASSDIR) com/syrus/AMFICOM/configuration
+		-C $(CLASSDIR) com/syrus/AMFICOM/configuration \
+		-C $(CLASSDIR) com/syrus/AMFICOM/measurement
 
 .mach:	.corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
