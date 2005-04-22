@@ -1,5 +1,5 @@
 /**
- * $Id: MapAddExternalNodeCommand.java,v 1.2 2005/04/21 11:53:26 krupenn Exp $
+ * $Id: MapAddExternalNodeCommand.java,v 1.3 2005/04/22 15:07:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,6 +18,7 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
+import com.syrus.AMFICOM.Client.Map.Controllers.SiteNodeController;
 import com.syrus.AMFICOM.Client.Map.UI.ExternalMapElementChooserDialog;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapTableController;
@@ -37,7 +38,7 @@ import javax.swing.JDesktopPane;
 /**
  * добавить в вид схему из списка
  * @author $Author: krupenn $
- * @version $Revision: 1.2 $, $Date: 2005/04/21 11:53:26 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/22 15:07:17 $
  * @module mapviewclient_v1
  */
 public class MapAddExternalNodeCommand extends VoidCommand
@@ -131,6 +132,11 @@ public class MapAddExternalNodeCommand extends VoidCommand
 
 		this.node = elemengChooserDialog.getReturnObject();
 		
+		SiteNodeController siteNodeController = (SiteNodeController)
+			mapFrame.getMapViewer().getLogicalNetLayer()
+				.getMapViewController().getController(this.node);
+
+		siteNodeController.updateScaleCoefficient(this.node);
 		mapView.getMap().addExternalNode(this.node);
 		
 		this.aContext.getDispatcher().notify(new MapEvent(
