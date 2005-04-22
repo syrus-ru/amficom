@@ -358,12 +358,12 @@ module corba {
 						in general::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		general::corba::StorableObject_Transferable receiveTemporalPattern(in measurement::corba::TemporalPattern_Transferable temporalPattern_Transferable,
+		general::corba::StorableObject_Transferable receiveCronTemporalPattern(in measurement::corba::CronTemporalPattern_Transferable cronTemporalPattern_Transferable,
 						in boolean force,
 						in general::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 			
-		general::corba::StorableObjectSeq_Transferable receiveTemporalPatterns(in measurement::corba::TemporalPatternSeq_Transferable sets,
+		general::corba::StorableObjectSeq_Transferable receiveCronTemporalPatterns(in measurement::corba::CronTemporalPatternSeq_Transferable sets,
 						in boolean force,
 						in general::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
@@ -880,7 +880,7 @@ module corba {
 						in general::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);				
 
-		measurement::corba::TemporalPattern_Transferable transmitTemporalPattern(
+		measurement::corba::CronTemporalPattern_Transferable transmitCronTemporalPattern(
 						in general::corba::Identifier_Transferable id,
 						in general::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
@@ -1064,12 +1064,12 @@ module corba {
 						in general::corba::StorableObjectCondition_Transferable condition_Transferable)
 			raises (general::corba::AMFICOMRemoteException);
 
-		measurement::corba::TemporalPatternSeq_Transferable transmitTemporalPatterns(
+		measurement::corba::CronTemporalPatternSeq_Transferable transmitCronTemporalPatterns(
 						in general::corba::IdentifierSeq_Transferable ids,
 						in general::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		measurement::corba::TemporalPatternSeq_Transferable transmitTemporalPatternsButIds(
+		measurement::corba::CronTemporalPatternSeq_Transferable transmitCronTemporalPatternsButIds(
 						in general::corba::IdentifierSeq_Transferable ids,
 						in general::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);						
