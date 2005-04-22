@@ -35,46 +35,6 @@ SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/measurement/*.java) \
 		$(SRCDIR)/com/syrus/AMFICOM/resource/LangModelMeasurement.java 
 
 
-#SOURCES := com/syrus/AMFICOM/resource/LangModelMeasurement.java \
-		com/syrus/AMFICOM/measurement/DatabaseMeasurementObjectLoader.java \
-		com/syrus/AMFICOM/measurement/MeasurementObjectLoader.java \
-		com/syrus/AMFICOM/measurement/MeasurementStorableObjectPool.java \
-		com/syrus/AMFICOM/measurement/MeasurementDatabaseContext.java \
-		com/syrus/AMFICOM/measurement/ActionType.java \
-		com/syrus/AMFICOM/measurement/MeasurementType.java \
-		com/syrus/AMFICOM/measurement/MeasurementTypeDatabase.java \
-		com/syrus/AMFICOM/measurement/AnalysisType.java \
-		com/syrus/AMFICOM/measurement/AnalysisTypeDatabase.java \
-		com/syrus/AMFICOM/measurement/EvaluationType.java \
-		com/syrus/AMFICOM/measurement/EvaluationTypeDatabase.java \
-		com/syrus/AMFICOM/measurement/ModelingType.java \
-		com/syrus/AMFICOM/measurement/ModelingTypeDatabase.java \
-		com/syrus/AMFICOM/measurement/SetParameter.java \
-		com/syrus/AMFICOM/measurement/Set.java \
-		com/syrus/AMFICOM/measurement/SetDatabase.java \
-		com/syrus/AMFICOM/measurement/Result.java \
-		com/syrus/AMFICOM/measurement/ResultDatabase.java \
-		com/syrus/AMFICOM/measurement/Modeling.java \
-		com/syrus/AMFICOM/measurement/ModelingDatabase.java \
-		com/syrus/AMFICOM/measurement/MeasurementSetup.java \
-		com/syrus/AMFICOM/measurement/MeasurementSetupDatabase.java \
-		com/syrus/AMFICOM/measurement/Action.java \
-		com/syrus/AMFICOM/measurement/Measurement.java \
-		com/syrus/AMFICOM/measurement/MeasurementDatabase.java \
-		com/syrus/AMFICOM/measurement/Analysis.java \
-		com/syrus/AMFICOM/measurement/AnalysisDatabase.java \
-		com/syrus/AMFICOM/measurement/Evaluation.java \
-		com/syrus/AMFICOM/measurement/EvaluationDatabase.java \
-		com/syrus/AMFICOM/measurement/TemporalPattern.java \
-		com/syrus/AMFICOM/measurement/TemporalPatternDatabase.java \
-		com/syrus/AMFICOM/measurement/Test.java \
-		com/syrus/AMFICOM/measurement/TestDatabase.java \
-		com/syrus/AMFICOM/measurement/TemporalCondition.java \
-		com/syrus/AMFICOM/measurement/LinkedIdsConditionImpl.java \
-		com/syrus/AMFICOM/measurement/DomainCondition.java \
-		com/syrus/AMFICOM/measurement/StringFieldConditionImpl.java \
-		com/syrus/AMFICOM/measurement/ActionCondition.java
-
 $(LIBNAME): .mach
 	$(CP) \
 		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/resource/*.properties) \
