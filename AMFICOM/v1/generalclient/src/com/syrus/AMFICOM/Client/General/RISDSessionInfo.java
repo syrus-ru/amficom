@@ -1,5 +1,5 @@
 /*
- * $Id: RISDSessionInfo.java,v 1.38 2005/04/16 21:30:16 arseniy Exp $
+ * $Id: RISDSessionInfo.java,v 1.39 2005/04/22 14:53:17 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -75,7 +75,7 @@ import com.syrus.util.prefs.IIOPConnectionManager;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.38 $, $Date: 2005/04/16 21:30:16 $
+ * @version $Revision: 1.39 $, $Date: 2005/04/22 14:53:17 $
  * @module generalclient_v1
  */
 public final class RISDSessionInfo extends SessionInterface {
@@ -209,7 +209,7 @@ public final class RISDSessionInfo extends SessionInterface {
 			 * открыть сессию
 			 */
 			try {
-				ecode = ci.getServer().Logon(getUser(), Rewriter.write(getPassword()), ior, accessIdentityHolder);
+				ecode = this.ci.getServer().Logon(getUser(), Rewriter.write(getPassword()), ior, accessIdentityHolder);
 			} catch (NullPointerException npe) {
 				npe.printStackTrace();
 			}
