@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPattern.java,v 1.75 2005/04/18 15:14:06 bob Exp $
+ * $Id: CronTemporalPattern.java,v 1.1 2005/04/22 16:03:08 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,17 +31,17 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.measurement.corba.TemporalPattern_Transferable;
+import com.syrus.AMFICOM.measurement.corba.CronTemporalPattern_Transferable;
 import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.75 $, $Date: 2005/04/18 15:14:06 $
- * @author $Author: bob $
+ * @version $Revision: 1.1 $, $Date: 2005/04/22 16:03:08 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
-public class TemporalPattern extends AbstractTemporalPattern {
+public class CronTemporalPattern extends AbstractTemporalPattern {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -786,7 +786,7 @@ public class TemporalPattern extends AbstractTemporalPattern {
 	 */
 	private java.util.Set			templates;
 
-	public TemporalPattern(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
+	public CronTemporalPattern(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
 		TemporalPatternDatabase database = MeasurementDatabaseContext.getTemporalPatternDatabase();
@@ -798,16 +798,16 @@ public class TemporalPattern extends AbstractTemporalPattern {
 		}
 	}
 
-	public TemporalPattern(TemporalPattern_Transferable tpt) throws CreateObjectException {
+	public CronTemporalPattern(CronTemporalPattern_Transferable ctpt) throws CreateObjectException {
 		try {
-			this.fromTransferable(tpt);
+			this.fromTransferable(ctpt);
 		}
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
 	}
 
-	protected TemporalPattern(Identifier id, Identifier creatorId, long version, String description, String[] cronStrings) {
+	protected CronTemporalPattern(Identifier id, Identifier creatorId, long version, String description, String[] cronStrings) {
 		super(id,
 			new Date(System.currentTimeMillis()),
 			new Date(System.currentTimeMillis()),
@@ -821,7 +821,7 @@ public class TemporalPattern extends AbstractTemporalPattern {
 		this.changed = false;
 	}
 
-	private TemporalPattern(Identifier id, Identifier creatorId, long version, String description, java.util.Set cronString) {
+	private CronTemporalPattern(Identifier id, Identifier creatorId, long version, String description, java.util.Set cronString) {
 		super(id,
 			new Date(System.currentTimeMillis()),
 			new Date(System.currentTimeMillis()),
@@ -840,13 +840,13 @@ public class TemporalPattern extends AbstractTemporalPattern {
 	 * @param cronString
 	 * @throws CreateObjectException
 	 */
-	public static TemporalPattern createInstance(Identifier creatorId, String description, java.util.Set cronString)
+	public static CronTemporalPattern createInstance(Identifier creatorId, String description, java.util.Set cronString)
 			throws CreateObjectException {
 		if (creatorId == null || description == null || cronString == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			TemporalPattern temporalPattern = new TemporalPattern(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TEMPORALPATTERN_ENTITY_CODE),
+			CronTemporalPattern temporalPattern = new CronTemporalPattern(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CRONTEMPORALPATTERN_ENTITY_CODE),
 					creatorId,
 					0L,
 					description,
@@ -859,13 +859,13 @@ public class TemporalPattern extends AbstractTemporalPattern {
 		}
 	}
 
-	public static TemporalPattern createInstance(Identifier creatorId, String description, String[] cronStrings)
+	public static CronTemporalPattern createInstance(Identifier creatorId, String description, String[] cronStrings)
 			throws CreateObjectException {
 		if (creatorId == null || description == null || cronStrings == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			TemporalPattern temporalPattern = new TemporalPattern(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TEMPORALPATTERN_ENTITY_CODE),
+			CronTemporalPattern temporalPattern = new CronTemporalPattern(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CRONTEMPORALPATTERN_ENTITY_CODE),
 					creatorId,
 					0L,
 					description,
@@ -880,13 +880,13 @@ public class TemporalPattern extends AbstractTemporalPattern {
 	
 	public static String getCronStringsDescription(String[] cronStrings){
 		String desc = null;
-		TemporalPattern pattern = new TemporalPattern(null, null, 0L, null, cronStrings);
+		CronTemporalPattern pattern = new CronTemporalPattern(null, null, 0L, null, cronStrings);
 		desc = pattern.toString();
 		return desc;
 	}
 
 	public short getEntityCode() {
-		return ObjectEntities.TEMPORALPATTERN_ENTITY_CODE;
+		return ObjectEntities.CRONTEMPORALPATTERN_ENTITY_CODE;
 	}
 
 	public String[] getCronStrings() {
@@ -908,17 +908,17 @@ public class TemporalPattern extends AbstractTemporalPattern {
 
 	
 	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
-		TemporalPattern_Transferable tpt = (TemporalPattern_Transferable)transferable;
-		super.fromTransferable(tpt.header);
+		CronTemporalPattern_Transferable ctpt = (CronTemporalPattern_Transferable)transferable;
+		super.fromTransferable(ctpt.header);
 
-		this.description = tpt.description;
-		this.setTemplates0(tpt.cron_strings);
+		this.description = ctpt.description;
+		this.setTemplates0(ctpt.cron_strings);
 
 		this.changed = false;
 	}
 	
 	public IDLEntity getTransferable() {
-		return new TemporalPattern_Transferable(super.getHeaderTransferable(),
+		return new CronTemporalPattern_Transferable(super.getHeaderTransferable(),
 							this.description, getCronStrings());
 	}
 
@@ -1047,8 +1047,8 @@ public class TemporalPattern extends AbstractTemporalPattern {
 
 	public boolean equals(Object obj) {
 		boolean equals = (obj == this);
-		if ((!equals) && (obj instanceof TemporalPattern)) {
-			TemporalPattern pattern = (TemporalPattern) obj;
+		if ((!equals) && (obj instanceof CronTemporalPattern)) {
+			CronTemporalPattern pattern = (CronTemporalPattern) obj;
 			if ((pattern.id.equals(super.id))
 					&& HashCodeGenerator.equalsDate(this.created, pattern.created)
 					&& (this.creatorId.equals(pattern.creatorId))
