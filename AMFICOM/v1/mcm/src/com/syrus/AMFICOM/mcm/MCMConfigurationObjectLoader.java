@@ -1,5 +1,5 @@
 /*
- * $Id: MCMConfigurationObjectLoader.java,v 1.30 2005/04/12 17:33:41 arseniy Exp $
+ * $Id: MCMConfigurationObjectLoader.java,v 1.31 2005/04/22 13:55:49 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -60,12 +60,14 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/04/12 17:33:41 $
+ * @version $Revision: 1.31 $, $Date: 2005/04/22 13:55:49 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
 
 final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoader {
+
+	/* Load single object*/
 
 	public EquipmentType loadEquipmentType(Identifier id)
 			throws RetrieveObjectException, CommunicationException, ObjectNotFoundException, CreateObjectException {
@@ -103,6 +105,86 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 				return equipmentType;
 			}
 			throw new ObjectNotFoundException("EquipmentType '" + id + "' not found on Measurement Server");
+		}	//catch (ObjectNotFoundException e)
+	}
+
+	public PortType loadPortType(Identifier id)
+			throws RetrieveObjectException, CommunicationException, ObjectNotFoundException, CreateObjectException {
+		try {
+			return new PortType(id);
+		}
+		catch (ObjectNotFoundException e) {
+			Log.debugMessage("MCMConfigurationObjectLoader.loadPortType | PortType '" + id
+					+ "' not found in database; trying to load from Measurement Server", Log.DEBUGLEVEL08);
+			PortType portType = null;
+	
+			MServer mServerRef = MeasurementControlModule.mServerConnectionManager.getVerifiedMServerReference();
+			try {
+				PortType_Transferable transferable = mServerRef.transmitPortType((Identifier_Transferable) id.getTransferable());
+				portType = new PortType(transferable);
+				Log.debugMessage("MCMConfigurationObjectLoader.loadPortType | PortType '" + id
+						+ "' loaded from MeasurementServer", Log.DEBUGLEVEL08);
+			}
+			catch (AMFICOMRemoteException are) {
+				if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
+					throw new ObjectNotFoundException("PortType '" + id + "' not found on Measurement Server -- " + are.message);
+				throw new RetrieveObjectException("Cannot retrieve PortType '" + id
+						+ "' from Measurement Server -- " + are.message);
+			}
+			catch (Throwable throwable) {
+				Log.errorException(throwable);
+			}
+	
+			if (portType != null) {
+				try {
+					ConfigurationDatabaseContext.getPortTypeDatabase().insert(portType);
+				}
+				catch (ApplicationException ae) {
+					Log.errorException(ae);
+				}
+				return portType;
+			}
+			throw new ObjectNotFoundException("PortType '" + id + "' not found on Measurement Server");
+		}	//catch (ObjectNotFoundException e)
+	}
+
+	public MeasurementPortType loadMeasurementPortType(Identifier id)
+			throws RetrieveObjectException, CommunicationException, ObjectNotFoundException, CreateObjectException {
+		try {
+			return new MeasurementPortType(id);
+		}
+		catch (ObjectNotFoundException e) {
+			Log.debugMessage("MCMConfigurationObjectLoader.loadMeasurementPortType | MeasurementPortType '" + id
+					+ "' not found in database; trying to load from Measurement Server", Log.DEBUGLEVEL08);
+			MeasurementPortType measurementPortType = null;
+	
+			MServer mServerRef = MeasurementControlModule.mServerConnectionManager.getVerifiedMServerReference();
+			try {
+				MeasurementPortType_Transferable transferable = mServerRef.transmitMeasurementPortType((Identifier_Transferable) id.getTransferable());
+				measurementPortType = new MeasurementPortType(transferable);
+				Log.debugMessage("MCMConfigurationObjectLoader.loadMeasurementPortType | MeasurementPortType '" + id
+						+ "' loaded from MeasurementServer", Log.DEBUGLEVEL08);
+			}
+			catch (AMFICOMRemoteException are) {
+				if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
+					throw new ObjectNotFoundException("MeasurementPortType '" + id + "' not found on Measurement Server -- " + are.message);
+				throw new RetrieveObjectException("Cannot retrieve MeasurementPortType '" + id
+						+ "' from Measurement Server -- " + are.message);
+			}
+			catch (Throwable throwable) {
+				Log.errorException(throwable);
+			}
+	
+			if (measurementPortType != null) {
+				try {
+					ConfigurationDatabaseContext.getMeasurementPortTypeDatabase().insert(measurementPortType);
+				}
+				catch (ApplicationException ae) {
+					Log.errorException(ae);
+				}
+				return measurementPortType;
+			}
+			throw new ObjectNotFoundException("MeasurementPortType '" + id + "' not found on Measurement Server");
 		}	//catch (ObjectNotFoundException e)
 	}
 
@@ -186,89 +268,6 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 		}	//catch (ObjectNotFoundException e)
 	}
 
-	public PortType loadPortType(Identifier id)
-			throws RetrieveObjectException, CommunicationException, ObjectNotFoundException, CreateObjectException {
-		try {
-			return new PortType(id);
-		}
-		catch (ObjectNotFoundException e) {
-			Log.debugMessage("MCMConfigurationObjectLoader.loadPortType | PortType '" + id
-					+ "' not found in database; trying to load from Measurement Server", Log.DEBUGLEVEL08);
-			PortType portType = null;
-
-			MServer mServerRef = MeasurementControlModule.mServerConnectionManager.getVerifiedMServerReference();
-			try {
-				PortType_Transferable transferable = mServerRef.transmitPortType((Identifier_Transferable) id.getTransferable());
-				portType = new PortType(transferable);
-				Log.debugMessage("MCMConfigurationObjectLoader.loadPortType | PortType '" + id
-						+ "' loaded from MeasurementServer", Log.DEBUGLEVEL08);
-			}
-			catch (AMFICOMRemoteException are) {
-				if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
-					throw new ObjectNotFoundException("PortType '" + id + "' not found on Measurement Server -- " + are.message);
-				throw new RetrieveObjectException("Cannot retrieve PortType '" + id
-						+ "' from Measurement Server -- " + are.message);
-			}
-			catch (Throwable throwable) {
-				Log.errorException(throwable);
-			}
-
-			if (portType != null) {
-				try {
-					ConfigurationDatabaseContext.getPortTypeDatabase().insert(portType);
-				}
-				catch (ApplicationException ae) {
-					Log.errorException(ae);
-				}
-				return portType;
-			}
-			throw new ObjectNotFoundException("PortType '" + id + "' not found on Measurement Server");
-		}	//catch (ObjectNotFoundException e)
-	}
-
-	public MeasurementPortType loadMeasurementPortType(Identifier id)
-			throws RetrieveObjectException, CommunicationException, ObjectNotFoundException, CreateObjectException {
-		try {
-			return new MeasurementPortType(id);
-		}
-		catch (ObjectNotFoundException e) {
-			Log.debugMessage("MCMConfigurationObjectLoader.loadMeasurementPortType | MeasurementPortType '" + id
-					+ "' not found in database; trying to load from Measurement Server", Log.DEBUGLEVEL08);
-			MeasurementPortType measurementPortType = null;
-
-			MServer mServerRef = MeasurementControlModule.mServerConnectionManager.getVerifiedMServerReference();
-			try {
-				MeasurementPortType_Transferable transferable = mServerRef.transmitMeasurementPortType((Identifier_Transferable) id.getTransferable());
-				measurementPortType = new MeasurementPortType(transferable);
-				Log.debugMessage("MCMConfigurationObjectLoader.loadMeasurementPortType | MeasurementPortType '" + id
-						+ "' loaded from MeasurementServer", Log.DEBUGLEVEL08);
-			}
-			catch (AMFICOMRemoteException are) {
-				if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
-					throw new ObjectNotFoundException("MeasurementPortType '" + id + "' not found on Measurement Server -- " + are.message);
-				throw new RetrieveObjectException("Cannot retrieve MeasurementPortType '" + id
-						+ "' from Measurement Server -- " + are.message);
-			}
-			catch (Throwable throwable) {
-				Log.errorException(throwable);
-			}
-
-			if (measurementPortType != null) {
-				try {
-					ConfigurationDatabaseContext.getMeasurementPortTypeDatabase().insert(measurementPortType);
-				}
-				catch (ApplicationException ae) {
-					Log.errorException(ae);
-				}
-				return measurementPortType;
-			}
-			throw new ObjectNotFoundException("MeasurementPortType '" + id + "' not found on Measurement Server");
-		}	//catch (ObjectNotFoundException e)
-	}
-
-
-
-
 
 
 	public Equipment loadEquipment(Identifier id)
@@ -351,43 +350,43 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 		}	//catch (ObjectNotFoundException e)
 	}
 
-	public Link loadLink(Identifier id)
+	public MeasurementPort loadMeasurementPort(Identifier id)
 			throws RetrieveObjectException, CommunicationException, ObjectNotFoundException, CreateObjectException {
 		try {
-			return new Link(id);
+			return new MeasurementPort(id);
 		}
 		catch (ObjectNotFoundException e) {
-			Log.debugMessage("MCMConfigurationObjectLoader.loadLink | Link '" + id
+			Log.debugMessage("MCMConfigurationObjectLoader.loadMeasurementPort | MeasurementPort '" + id
 					+ "' not found in database; trying to load from Measurement Server", Log.DEBUGLEVEL08);
-			Link link = null;
-
+			MeasurementPort measurementPort = null;
+	
 			MServer mServerRef = MeasurementControlModule.mServerConnectionManager.getVerifiedMServerReference();
 			try {
-				Link_Transferable transferable = mServerRef.transmitLink((Identifier_Transferable) id.getTransferable());
-				link = new Link(transferable);
-				Log.debugMessage("MCMConfigurationObjectLoader.loadLink | Link '" + id
+				MeasurementPort_Transferable transferable = mServerRef.transmitMeasurementPort((Identifier_Transferable) id.getTransferable());
+				measurementPort = new MeasurementPort(transferable);
+				Log.debugMessage("MCMConfigurationObjectLoader.loadMeasurementPort | MeasurementPort '" + id
 						+ "' loaded from MeasurementServer", Log.DEBUGLEVEL08);
 			}
 			catch (AMFICOMRemoteException are) {
 				if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
-					throw new ObjectNotFoundException("Link '" + id + "' not found on Measurement Server -- " + are.message);
-				throw new RetrieveObjectException("Cannot retrieve Link '" + id
+					throw new ObjectNotFoundException("MeasurementPort '" + id + "' not found on Measurement Server -- " + are.message);
+				throw new RetrieveObjectException("Cannot retrieve MeasurementPort '" + id
 						+ "' from Measurement Server -- " + are.message);
 			}
 			catch (Throwable throwable) {
 				Log.errorException(throwable);
 			}
-
-			if (link != null) {
+	
+			if (measurementPort != null) {
 				try {
-					ConfigurationDatabaseContext.getLinkDatabase().insert(link);
+					ConfigurationDatabaseContext.getMeasurementPortDatabase().insert(measurementPort);
 				}
 				catch (ApplicationException ae) {
 					Log.errorException(ae);
 				}
-				return link;
+				return measurementPort;
 			}
-			throw new ObjectNotFoundException("Link '" + id + "' not found on Measurement Server");
+			throw new ObjectNotFoundException("MeasurementPort '" + id + "' not found on Measurement Server");
 		}	//catch (ObjectNotFoundException e)
 	}
 
@@ -400,7 +399,7 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 			Log.debugMessage("MCMConfigurationObjectLoader.loadTransmissionPath | TransmissionPath '" + id
 					+ "' not found in database; trying to load from Measurement Server", Log.DEBUGLEVEL08);
 			TransmissionPath transmissionPath = null;
-
+	
 			MServer mServerRef = MeasurementControlModule.mServerConnectionManager.getVerifiedMServerReference();
 			try {
 				TransmissionPath_Transferable transferable = mServerRef.transmitTransmissionPath((Identifier_Transferable) id.getTransferable());
@@ -417,7 +416,7 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 			catch (Throwable throwable) {
 				Log.errorException(throwable);
 			}
-
+	
 			if (transmissionPath != null) {
 				try {
 					ConfigurationDatabaseContext.getTransmissionPathDatabase().insert(transmissionPath);
@@ -471,46 +470,6 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 		}	//catch (ObjectNotFoundException e)
 	}
 
-	public MeasurementPort loadMeasurementPort(Identifier id)
-			throws RetrieveObjectException, CommunicationException, ObjectNotFoundException, CreateObjectException {
-		try {
-			return new MeasurementPort(id);
-		}
-		catch (ObjectNotFoundException e) {
-			Log.debugMessage("MCMConfigurationObjectLoader.loadMeasurementPort | MeasurementPort '" + id
-					+ "' not found in database; trying to load from Measurement Server", Log.DEBUGLEVEL08);
-			MeasurementPort measurementPort = null;
-
-			MServer mServerRef = MeasurementControlModule.mServerConnectionManager.getVerifiedMServerReference();
-			try {
-				MeasurementPort_Transferable transferable = mServerRef.transmitMeasurementPort((Identifier_Transferable) id.getTransferable());
-				measurementPort = new MeasurementPort(transferable);
-				Log.debugMessage("MCMConfigurationObjectLoader.loadMeasurementPort | MeasurementPort '" + id
-						+ "' loaded from MeasurementServer", Log.DEBUGLEVEL08);
-			}
-			catch (AMFICOMRemoteException are) {
-				if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
-					throw new ObjectNotFoundException("MeasurementPort '" + id + "' not found on Measurement Server -- " + are.message);
-				throw new RetrieveObjectException("Cannot retrieve MeasurementPort '" + id
-						+ "' from Measurement Server -- " + are.message);
-			}
-			catch (Throwable throwable) {
-				Log.errorException(throwable);
-			}
-
-			if (measurementPort != null) {
-				try {
-					ConfigurationDatabaseContext.getMeasurementPortDatabase().insert(measurementPort);
-				}
-				catch (ApplicationException ae) {
-					Log.errorException(ae);
-				}
-				return measurementPort;
-			}
-			throw new ObjectNotFoundException("MeasurementPort '" + id + "' not found on Measurement Server");
-		}	//catch (ObjectNotFoundException e)
-	}
-
 	public MonitoredElement loadMonitoredElement(Identifier id)
 			throws RetrieveObjectException, CommunicationException, ObjectNotFoundException, CreateObjectException {
 		try {
@@ -551,9 +510,49 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 		}	//catch (ObjectNotFoundException e)
 	}
 
+	public Link loadLink(Identifier id)
+			throws RetrieveObjectException, CommunicationException, ObjectNotFoundException, CreateObjectException {
+		try {
+			return new Link(id);
+		}
+		catch (ObjectNotFoundException e) {
+			Log.debugMessage("MCMConfigurationObjectLoader.loadLink | Link '" + id
+					+ "' not found in database; trying to load from Measurement Server", Log.DEBUGLEVEL08);
+			Link link = null;
+	
+			MServer mServerRef = MeasurementControlModule.mServerConnectionManager.getVerifiedMServerReference();
+			try {
+				Link_Transferable transferable = mServerRef.transmitLink((Identifier_Transferable) id.getTransferable());
+				link = new Link(transferable);
+				Log.debugMessage("MCMConfigurationObjectLoader.loadLink | Link '" + id
+						+ "' loaded from MeasurementServer", Log.DEBUGLEVEL08);
+			}
+			catch (AMFICOMRemoteException are) {
+				if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
+					throw new ObjectNotFoundException("Link '" + id + "' not found on Measurement Server -- " + are.message);
+				throw new RetrieveObjectException("Cannot retrieve Link '" + id
+						+ "' from Measurement Server -- " + are.message);
+			}
+			catch (Throwable throwable) {
+				Log.errorException(throwable);
+			}
+	
+			if (link != null) {
+				try {
+					ConfigurationDatabaseContext.getLinkDatabase().insert(link);
+				}
+				catch (ApplicationException ae) {
+					Log.errorException(ae);
+				}
+				return link;
+			}
+			throw new ObjectNotFoundException("Link '" + id + "' not found on Measurement Server");
+		}	//catch (ObjectNotFoundException e)
+	}
 
 
 
+	/* Load multiple objects*/
 
 	public Set loadMeasurementPortTypes(Set ids) throws RetrieveObjectException {
 		MeasurementPortTypeDatabase database = ConfigurationDatabaseContext.getMeasurementPortTypeDatabase();
@@ -600,50 +599,7 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 		return objects;
 	}
 
-	public Set loadKISs(Set ids) throws RetrieveObjectException {
-		KISDatabase database = ConfigurationDatabaseContext.getKISDatabase();
-		Set objects = super.retrieveFromDatabase(database, ids);
-		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
-		if (loadIdsT.length == 0)
-			return objects;
 
-		Set loadedObjects = new HashSet();
-
-		try {
-			MServer mServerRef = MeasurementControlModule.mServerConnectionManager.getVerifiedMServerReference();
-			KIS_Transferable[] transferables = mServerRef.transmitKISs(loadIdsT);
-			for (int i = 0; i < transferables.length; i++) {
-				try {
-					loadedObjects.add(new KIS(transferables[i]));
-				}
-				catch (CreateObjectException coe) {
-					Log.errorException(coe);
-				}
-			}
-		}
-		catch (CommunicationException ce) {
-			Log.errorException(ce);
-		}
-		catch (AMFICOMRemoteException are) {
-			Log.errorMessage("MCMConfigurationObjectLoader.loadKISs | Cannot load objects from MeasurementServer");
-		}
-		catch (Throwable throwable) {
-			Log.errorException(throwable);
-		}
-
-		if (!loadedObjects.isEmpty()) {
-			objects.addAll(loadedObjects);
-
-			try {
-				database.insert(loadedObjects);
-			}
-			catch (ApplicationException ae) {
-				Log.errorException(ae);
-			}
-		}
-
-		return objects;
-	}
 
 	public Set loadMeasurementPorts(Set ids) throws RetrieveObjectException {
 		MeasurementPortDatabase database = ConfigurationDatabaseContext.getMeasurementPortDatabase();
@@ -687,6 +643,51 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 			}
 		}
 
+		return objects;
+	}
+
+	public Set loadKISs(Set ids) throws RetrieveObjectException {
+		KISDatabase database = ConfigurationDatabaseContext.getKISDatabase();
+		Set objects = super.retrieveFromDatabase(database, ids);
+		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
+		if (loadIdsT.length == 0)
+			return objects;
+	
+		Set loadedObjects = new HashSet();
+	
+		try {
+			MServer mServerRef = MeasurementControlModule.mServerConnectionManager.getVerifiedMServerReference();
+			KIS_Transferable[] transferables = mServerRef.transmitKISs(loadIdsT);
+			for (int i = 0; i < transferables.length; i++) {
+				try {
+					loadedObjects.add(new KIS(transferables[i]));
+				}
+				catch (CreateObjectException coe) {
+					Log.errorException(coe);
+				}
+			}
+		}
+		catch (CommunicationException ce) {
+			Log.errorException(ce);
+		}
+		catch (AMFICOMRemoteException are) {
+			Log.errorMessage("MCMConfigurationObjectLoader.loadKISs | Cannot load objects from MeasurementServer");
+		}
+		catch (Throwable throwable) {
+			Log.errorException(throwable);
+		}
+	
+		if (!loadedObjects.isEmpty()) {
+			objects.addAll(loadedObjects);
+	
+			try {
+				database.insert(loadedObjects);
+			}
+			catch (ApplicationException ae) {
+				Log.errorException(ae);
+			}
+		}
+	
 		return objects;
 	}
 
@@ -738,7 +739,7 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 
 
 
-
+	/* Load multiple objects but ids*/
 
 	public Set loadKISsButIds(StorableObjectCondition condition, Set ids) throws RetrieveObjectException {
 		KISDatabase database = ConfigurationDatabaseContext.getKISDatabase();
