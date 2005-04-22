@@ -1,5 +1,5 @@
 /*
- * $Id: CORBAAdministrationObjectLoader.java,v 1.1 2005/04/22 17:15:16 arseniy Exp $
+ * $Id: CORBAAdministrationObjectLoader.java,v 1.2 2005/04/22 19:24:26 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/22 17:15:16 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/22 19:24:26 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
@@ -53,7 +53,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 	/* Load single object*/
 
 	public User loadUser(Identifier id) throws ApplicationException {
-		CMServer cmServer = this.cmServerConnectionManager.getCMServerReference();
+		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
 
 		try {
@@ -69,7 +69,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 	}
 
 	public Domain loadDomain(Identifier id) throws ApplicationException {
-		CMServer cmServer = this.cmServerConnectionManager.getCMServerReference();
+		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
 
 		try {
@@ -85,7 +85,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 	}
 
 	public Server loadServer(Identifier id) throws ApplicationException {
-		CMServer cmServer = this.cmServerConnectionManager.getCMServerReference();
+		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
 
 		try {
@@ -101,7 +101,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 	}
 
 	public MCM loadMCM(Identifier id) throws ApplicationException {
-		CMServer cmServer = this.cmServerConnectionManager.getCMServerReference();
+		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
 
 		try {
@@ -121,7 +121,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 	/* Load multiple objects*/
 
 	public Set loadUsers(Set ids) throws ApplicationException {
-		CMServer cmServer = this.cmServerConnectionManager.getCMServerReference();
+		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
 		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
 
@@ -139,7 +139,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 	}
 
 	public Set loadDomains(Set ids) throws ApplicationException {
-		CMServer cmServer = this.cmServerConnectionManager.getCMServerReference();
+		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
 		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
 
@@ -162,7 +162,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 	}
 
 	public Set loadServers(Set ids) throws ApplicationException {
-		CMServer cmServer = this.cmServerConnectionManager.getCMServerReference();
+		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
 		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
 
@@ -185,7 +185,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 	}
 
 	public Set loadMCMs(Set ids) throws ApplicationException {
-		CMServer cmServer = this.cmServerConnectionManager.getCMServerReference();
+		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
 		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
 
@@ -212,7 +212,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 	/* Load multiple objects but ids*/
 
 	public Set loadUsersButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		CMServer cmServer = this.cmServerConnectionManager.getCMServerReference();
+		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
 		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
 		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
@@ -231,7 +231,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 	}
 
 	public Set loadDomainsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		CMServer cmServer = this.cmServerConnectionManager.getCMServerReference();
+		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
 		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
 		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
@@ -255,7 +255,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 	}
 
 	public Set loadServersButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		CMServer cmServer = this.cmServerConnectionManager.getCMServerReference();
+		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
 		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
 		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
@@ -279,7 +279,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 	}
 
 	public Set loadMCMsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		CMServer cmServer = this.cmServerConnectionManager.getCMServerReference();
+		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
 		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
 		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
@@ -307,7 +307,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 	/* Save single object*/
 
 	public void saveUser(User user, boolean force) throws ApplicationException {
-		CMServer cmServer = this.cmServerConnectionManager.getCMServerReference();
+		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
 
 		User_Transferable transferable = (User_Transferable) user.getTransferable();
@@ -324,7 +324,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 	}
 
 	public void saveDomain(Domain domain, boolean force) throws ApplicationException {
-		CMServer cmServer = this.cmServerConnectionManager.getCMServerReference();
+		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
 
 		Domain_Transferable transferable = (Domain_Transferable) domain.getTransferable();
@@ -341,7 +341,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 	}
 
 	public void saveServer(Server server, boolean force) throws ApplicationException {
-		CMServer cmServer = this.cmServerConnectionManager.getCMServerReference();
+		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
 
 		Server_Transferable transferable = (Server_Transferable) server.getTransferable();
@@ -358,7 +358,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 	}
 
 	public void saveMCM(MCM mcm, boolean force) throws ApplicationException {
-		CMServer cmServer = this.cmServerConnectionManager.getCMServerReference();
+		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
 
 		MCM_Transferable transferable = (MCM_Transferable) mcm.getTransferable();
@@ -376,10 +376,10 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 
 
 
-	/* Save multiple object*/
+	/* Save multiple objects*/
 
 	public void saveUsers(Set objects, boolean force) throws ApplicationException {
-		CMServer cmServer = this.cmServerConnectionManager.getCMServerReference();
+		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
 
 		User_Transferable[] transferables = new User_Transferable[objects.size()];
@@ -400,7 +400,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 	}
 
 	public void saveDomains(Set objects, boolean force) throws ApplicationException {
-		CMServer cmServer = this.cmServerConnectionManager.getCMServerReference();
+		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
 
 		Domain_Transferable[] transferables = new Domain_Transferable[objects.size()];
@@ -421,7 +421,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 	}
 
 	public void saveServers(Set objects, boolean force) throws ApplicationException {
-		CMServer cmServer = this.cmServerConnectionManager.getCMServerReference();
+		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
 
 		Server_Transferable[] transferables = new Server_Transferable[objects.size()];
@@ -442,7 +442,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 	}
 
 	public void saveMCMs(Set objects, boolean force) throws ApplicationException {
-		CMServer cmServer = this.cmServerConnectionManager.getCMServerReference();
+		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
 
 		MCM_Transferable[] transferables = new MCM_Transferable[objects.size()];
@@ -465,7 +465,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 
 
 	public Set refresh(Set storableObjects) throws ApplicationException {
-		CMServer cmServer = this.cmServerConnectionManager.getCMServerReference();
+		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
 
 		StorableObject_Transferable[] headersT = StorableObject.createHeadersTransferable(storableObjects);
