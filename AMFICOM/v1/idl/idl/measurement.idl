@@ -1,5 +1,5 @@
 /*
- * $Id: measurement.idl,v 1.61 2005/04/21 16:17:23 arseniy Exp $
+ * $Id: measurement.idl,v 1.62 2005/04/22 14:30:53 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -178,30 +178,32 @@ module corba {
 
 
 
-	struct InnerHole {
-		long position;
-	};
-
-	struct InnerDisplacement {
-		long position;
-		long long value;
-	};
-
-	struct InnerTemporalPattern {
-		long position;
+	struct ITP_Interval_Temporal_Pattern_Id {
+		long long ms;
 		general::corba::Identifier_Transferable temporal_pattern_id;
+	};
+
+	struct ITP_Interval_Duration {
+		long long ms;
+		long long duration;
 	};
 
 	struct IntervalsTemporalPattern_Transferable {
 		general::corba::StorableObject_Transferable header;
 
-		long long period;
-		sequence <InnerHole> inner_holes;
-		sequence <InnerDisplacement> inner_displacements;
-		sequence <InnerTemporalPattern> inner_temporal_patterns;
+		sequence <ITP_Interval_Temporal_Pattern_Id> intervals_temporal_pattern_id;
+		sequence <ITP_Interval_Duration> intervals_duration;
 	};
 	
 	typedef sequence <IntervalsTemporalPattern_Transferable> IntervalsTemporalPatternSeq_Transferable;
+	
+	struct PeriodicalTemporalPattern_Transferable {
+		general::corba::StorableObject_Transferable header;
+
+		long long period;
+	};
+	
+	typedef sequence <PeriodicalTemporalPattern_Transferable> PeriodicalTemporalPatternSeq_Transferable;
 
 /////////////////////// Test ////////////////////////
 
