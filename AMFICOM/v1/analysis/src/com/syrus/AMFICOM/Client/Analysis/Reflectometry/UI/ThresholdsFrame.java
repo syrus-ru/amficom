@@ -6,15 +6,13 @@ import java.util.Map;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEvents;
 import com.syrus.io.BellcoreStructure;
 
 public class ThresholdsFrame extends SimpleResizableFrame
-implements OperationListener, BsHashChangeListener, EtalonMTMListener
+implements BsHashChangeListener, EtalonMTMListener
 {
 	private Dispatcher dispatcher;
 	Map traces = new HashMap();
@@ -39,20 +37,11 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener
 		setTitle(LangModelAnalyse.getString("thresholdsTitle"));
 	}
 
-	public Dispatcher getInternalDispatcher ()
-	{
-		return dispatcher;
-	}
-
 	void init_module(Dispatcher dispatcher1)
 	{
 		this.dispatcher = dispatcher1;
 		Heap.addBsHashListener(this);
 		Heap.addEtalonMTMListener(this);
-	}
-
-	public void operationPerformed(OperationEvent ae)
-	{
 	}
 
 	public void addEtalon()
@@ -63,58 +52,6 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener
 		BellcoreStructure bs = Heap.getBSEtalonTrace();
 		if (bs != null)
 			addTrace (Heap.ETALON_TRACE_KEY);
-		/* не нужно?
-		else
-		{
-			int n = 0;
-			double deltaX = 0;
-
-			MeasurementSetup ms = Heap.getContextMeasurementSetup();
-			if (ms == null)
-				return;
-			SetParameter[] params = ms.getParameterSet().getParameters();
-			double len = 0;
-			try
-			{
-				for (int i = 0; i < params.length; i++)
-				{
-					ParameterType type = (ParameterType)params[i].getType();
-					if (type.getCodename().equals(ParameterTypeCodenames.TRACE_RESOLUTION))
-					{
-						deltaX = new ByteArray(params[i].getValue()).toDouble();
-					}
-					if (type.getCodename().equals(ParameterTypeCodenames.TRACE_LENGTH)) // FIXME: подозреваю, нам больше подойдет длина из BS, а не из параметров теста
-					{
-						len = new ByteArray(params[i].getValue()).toDouble();
-					}
-				}
-				if (deltaX == 0 || len == 0)
-					return;
-				n = (int)(len * 1000 / deltaX);
-
-				SimpleGraphPanel oldpanel = (SimpleGraphPanel)traces.get(id);
-				if (oldpanel != null)
-				{
-					((ScalableLayeredPanel)panel).removeGraphPanel(oldpanel);
-					traces.remove(id);
-				}
-
-				ModelTraceManager mtm = Heap.getMTMByKey(id);
-				if (mtm != null)
-				{
-					double[] y = mtm.getModelTrace().getYArrayZeroPad(0, n);
-					SimpleGraphPanel epPanel = new SimpleGraphPanel(y, deltaX);
-					epPanel.setColorModel(AnalysisUtil.ETALON);
-					((ScalableLayeredPanel)panel).addGraphPanel(epPanel);
-					panel.updScale2fit();
-					traces.put(id, epPanel);
-				}
-			}
-			catch (IOException ex)
-			{
-				ex.printStackTrace();
-			}
-		}*/
 	}
 
 	void removeEtalon()
