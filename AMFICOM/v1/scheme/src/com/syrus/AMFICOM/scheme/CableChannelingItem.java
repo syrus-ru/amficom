@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.13 2005/04/21 15:02:48 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.14 2005/04/22 14:12:24 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,16 +32,11 @@ import com.syrus.AMFICOM.scheme.corba.CableChannelingItem_Transferable;
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.13 $, $Date: 2005/04/21 15:02:48 $
+ * @version $Revision: 1.14 $, $Date: 2005/04/22 14:12:24 $
  * @module scheme_v1
  */
-public final class CableChannelingItem extends AbstractCloneableStorableObject
-		implements Describable {
+public final class CableChannelingItem extends AbstractCloneableStorableObject {
 	private static final long serialVersionUID = 3256437027796038705L;
-
-	private String name;
-
-	private String description;
 
 	private double startSpare;
 
@@ -86,8 +81,6 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject
 	 * @param creatorId
 	 * @param modifierId
 	 * @param version
-	 * @param name
-	 * @param description
 	 * @param startSpare
 	 * @param endSpare
 	 * @param rowX
@@ -101,7 +94,6 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject
 	CableChannelingItem(final Identifier id, final Date created,
 			final Date modified, final Identifier creatorId,
 			final Identifier modifierId, final long version,
-			final String name, final String description,
 			final double startSpare, final double endSpare,
 			final int rowX, final int placeY,
 			final int sequentialNumber,
@@ -111,8 +103,6 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject
 			final SchemeCableLink parentSchemeCableLink) {
 		super(id, created, modified, creatorId, modifierId, version);
 
-		this.name = name;
-		this.description = description;
 		this.startSpare = startSpare;
 		this.endSpare = endSpare;
 		this.rowX = rowX;
@@ -135,30 +125,27 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject
 
 	/**
 	 * A shorthand for
-	 * {@link #createInstance(Identifier, String, String, double, double, int, int, int, PhysicalLink, SiteNode, SiteNode, SchemeCableLink)}.
+	 * {@link #createInstance(Identifier, double, double, int, int, int, PhysicalLink, SiteNode, SiteNode, SchemeCableLink)}.
 	 *
 	 * @param creatorId
-	 * @param name
 	 * @param startSiteNode
 	 * @param endSiteNode
 	 * @param parentSchemeCableLink
 	 * @throws CreateObjectException
 	 */
 	public static CableChannelingItem createInstance(
-			final Identifier creatorId, final String name,
+			final Identifier creatorId,
 			final SiteNode startSiteNode,
 			final SiteNode endSiteNode,
 			final SchemeCableLink parentSchemeCableLink)
 			throws CreateObjectException {
-		return createInstance(creatorId, name, "", 0, 0, 0, 0, 0, null, //$NON-NLS-1$
+		return createInstance(creatorId, 0, 0, 0, 0, 0, null,
 				startSiteNode, endSiteNode,
 				parentSchemeCableLink);
 	}
 
 	/**
 	 * @param creatorId
-	 * @param name
-	 * @param description
 	 * @param startSpare
 	 * @param endSpare
 	 * @param rowX
@@ -171,8 +158,7 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject
 	 * @throws CreateObjectException
 	 */
 	public static CableChannelingItem createInstance(
-			final Identifier creatorId, final String name,
-			final String description, final double startSpare,
+			final Identifier creatorId, final double startSpare,
 			final double endSpare, final int rowX,
 			final int placeY, final int sequentialNumber,
 			final PhysicalLink physicalLink,
@@ -181,8 +167,6 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject
 			final SchemeCableLink parentSchemeCableLink)
 			throws CreateObjectException {
 		assert creatorId != null && !creatorId.isVoid(): ErrorMessages.NON_VOID_EXPECTED;
-		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
-		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
 		assert startSiteNode != null: ErrorMessages.NON_NULL_EXPECTED;
 		assert endSiteNode != null: ErrorMessages.NON_NULL_EXPECTED;
 		assert parentSchemeCableLink != null: ErrorMessages.NON_NULL_EXPECTED;
@@ -193,8 +177,7 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject
 					IdentifierPool
 							.getGeneratedIdentifier(ObjectEntities.CABLE_CHANNELING_ITEM_ENTITY_CODE),
 					created, created, creatorId, creatorId,
-					0L, name, description, startSpare,
-					endSpare, rowX, placeY,
+					0L, startSpare, endSpare, rowX, placeY,
 					sequentialNumber, physicalLink,
 					startSiteNode, endSiteNode,
 					parentSchemeCableLink);
@@ -222,28 +205,12 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject
 		throw new UnsupportedOperationException();
 	}
 
-	/**
-	 * @see Describable#getDescription()
-	 */
-	public String getDescription() {
-		assert this.description != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
-		return this.description;
-	}
-
 	public SiteNode getEndSiteNode() {
 		throw new UnsupportedOperationException();
 	}
 
 	public double getEndSpare() {
 		return this.endSpare;
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.general.Namable#getName()
-	 */
-	public String getName() {
-		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
-		return this.name;
 	}
 
 	public SchemeCableLink getParentSchemeCableLink() {
@@ -287,8 +254,6 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject
 	 * @param creatorId
 	 * @param modifierId
 	 * @param version
-	 * @param name
-	 * @param description
 	 * @param startSpare
 	 * @param endSpare
 	 * @param rowX
@@ -302,7 +267,6 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject
 	synchronized void setAttributes(final Date created,
 			final Date modified, final Identifier creatorId,
 			final Identifier modifierId, final long version,
-			final String name, final String description,
 			final double startSpare, final double endSpare,
 			final int rowX, final int placeY,
 			final int sequentialNumber,
@@ -312,15 +276,11 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject
 			final Identifier parentSchemeCableLinkId) {
 		super.setAttributes(created, modified, creatorId, modifierId, version);
 
-		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
-		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
 		assert physicalLinkId != null: ErrorMessages.NON_NULL_EXPECTED;
 		assert startSiteNodeId != null && !startSiteNodeId.isVoid(): ErrorMessages.NON_VOID_EXPECTED;
 		assert endSiteNodeId != null && !endSiteNodeId.isVoid(): ErrorMessages.NON_VOID_EXPECTED;
 		assert parentSchemeCableLinkId != null && !parentSchemeCableLinkId.isVoid(): ErrorMessages.NON_VOID_EXPECTED;
 
-		this.name = name;
-		this.description = description;
 		this.startSpare = startSpare;
 		this.endSpare = endSpare;
 		this.rowX = rowX;
@@ -333,18 +293,6 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * @see Describable#setDescription(String)
-	 */
-	public void setDescription(final String description) {
-		assert this.description != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert description != null : ErrorMessages.NON_NULL_EXPECTED;
-		if (this.description.equals(description))
-			return;
-		this.description = description;
-		this.changed = true;
-	}
-
-	/**
 	 * @param endSiteNode
 	 */
 	public void setEndSiteNode(final SiteNode endSiteNode) {
@@ -353,18 +301,6 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject
 
 	public void setEndSpare(final double endSpare) {
 		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.general.Namable#setName(String)
-	 */
-	public void setName(final String name) {
-		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert name != null && name.length() != 0 : ErrorMessages.NON_EMPTY_EXPECTED;
-		if (this.name.equals(name))
-			return;
-		this.name = name;
-		this.changed = true;
 	}
 
 	public void setParentSchemeCableLink(final SchemeCableLink parentSchemeCableLink) {
