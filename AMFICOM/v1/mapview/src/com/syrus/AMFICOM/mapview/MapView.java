@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.24 2005/04/15 19:22:46 arseniy Exp $
+* $Id: MapView.java,v 1.25 2005/04/22 11:30:07 krupenn Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -25,6 +25,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -53,12 +54,12 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
  * канализационную
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
- * @author $Author: arseniy $
- * @version $Revision: 1.24 $, $Date: 2005/04/15 19:22:46 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.25 $, $Date: 2005/04/22 11:30:07 $
  * @module mapview_v1
  * @todo use getCenter, setCenter instead of pair longitude, latitude
  */
-public class MapView extends DomainMember {
+public class MapView extends DomainMember implements Namable {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
