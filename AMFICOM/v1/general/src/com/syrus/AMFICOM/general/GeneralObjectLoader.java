@@ -1,5 +1,5 @@
 /*
- * $Id: GeneralObjectLoader.java,v 1.13 2005/04/22 14:44:26 arseniy Exp $
+ * $Id: GeneralObjectLoader.java,v 1.14 2005/04/22 19:25:49 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.general;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/04/22 14:44:26 $
+ * @version $Revision: 1.14 $, $Date: 2005/04/22 19:25:49 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -58,7 +58,7 @@ public interface GeneralObjectLoader {
 
 
 
-	/* Save multiple object*/
+	/* Save multiple objects*/
 
 	void saveParameterTypes(Set objects, boolean force) throws ApplicationException;
 
