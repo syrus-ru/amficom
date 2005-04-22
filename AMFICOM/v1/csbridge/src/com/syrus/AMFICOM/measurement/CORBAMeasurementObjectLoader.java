@@ -1,5 +1,5 @@
 /*
- * $Id: CORBAMeasurementObjectLoader.java,v 1.1 2005/04/22 20:10:18 arseniy Exp $
+ * $Id: CORBAMeasurementObjectLoader.java,v 1.2 2005/04/22 20:11:59 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,6 @@ package com.syrus.AMFICOM.measurement;
 
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
 
 import com.syrus.AMFICOM.cmserver.corba.CMServer;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -47,7 +46,7 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/22 20:10:18 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/22 20:11:59 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
@@ -1417,7 +1416,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		try {
 			Identifier_Transferable[] idsT = cmServer.transmitRefreshedMeasurementObjects(headersT, ait);
 
-			Set refreshedIds = Identifier.fromTransferables(idsT);
+			java.util.Set refreshedIds = Identifier.fromTransferables(idsT);
 			return refreshedIds;
 		}
 		catch (AMFICOMRemoteException are) {
