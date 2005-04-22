@@ -154,7 +154,7 @@ class CableLayoutReportTableModel extends DividableTableModel
 							+ pipePath.getName();
 				else
 					tunnelInfo += LangModelMap.getString("Tunnel")
-							+ chanellingItem.getName();
+							+ physicalLink.getName();
 
 				int place = physicalLink.getBinding().getSequenceNumber(
 						chanellingItem.getRowX(),
