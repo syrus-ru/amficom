@@ -1,5 +1,5 @@
 /*
- * $Id: CORBAGeneralObjectLoader.java,v 1.1 2005/04/22 06:54:44 cvsadmin Exp $
+ * $Id: CORBAGeneralObjectLoader.java,v 1.2 2005/04/22 14:53:58 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,8 +24,8 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/22 06:54:44 $
- * @author $Author: cvsadmin $
+ * @version $Revision: 1.2 $, $Date: 2005/04/22 14:53:58 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public class CORBAGeneralObjectLoader extends AbstractObjectLoader implements GeneralObjectLoader {
@@ -291,41 +291,105 @@ public class CORBAGeneralObjectLoader extends AbstractObjectLoader implements Ge
 		}
 	}
 
-	public void saveCharacteristicTypes(Set list, boolean force) throws ApplicationException {
-		// TODO Auto-generated method stub
+	public void saveCharacteristicTypes(Set objects, boolean force) throws ApplicationException {
+		CMServer cmServer = this.cmServerConnectionManager.getCMServerReference();
+		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		CharacteristicType_Transferable[] transferables = new CharacteristicType_Transferable[objects.size()];
+		int i = 0;
+		for (Iterator it = objects.iterator(); it.hasNext(); i++)
+			transferables[i] = (CharacteristicType_Transferable) ((CharacteristicType) it.next()).getTransferable();
 
+		try {
+			StorableObject_Transferable[] headers = cmServer.receiveCharacteristicTypes(transferables, force, ait);
+			super.updateHeaders(objects, headers);
+		}
+		catch (AMFICOMRemoteException are) {
+			String mesg = "Cannot save objects -- ";
+			if (are.error_code.value() == ErrorCode._ERROR_VERSION_COLLISION)
+				throw new VersionCollisionException(mesg + are.message, 0L, 0L);
+			throw new UpdateObjectException(mesg + are.message);
+		}
 	}
 
-	/* (non-Javadoc)
-	 * @see com.syrus.AMFICOM.general.GeneralObjectLoader#saveCharacteristics(java.util.Set, boolean)
-	 */
-	public void saveCharacteristics(Set list, boolean force) throws ApplicationException {
-		// TODO Auto-generated method stub
+	public void saveCharacteristics(Set objects, boolean force) throws ApplicationException {
+		CMServer cmServer = this.cmServerConnectionManager.getCMServerReference();
+		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		Characteristic_Transferable[] transferables = new Characteristic_Transferable[objects.size()];
+		int i = 0;
+		for (Iterator it = objects.iterator(); it.hasNext(); i++)
+			transferables[i] = (Characteristic_Transferable) ((Characteristic) it.next()).getTransferable();
 
+		try {
+			StorableObject_Transferable[] headers = cmServer.receiveCharacteristics(transferables, force, ait);
+			super.updateHeaders(objects, headers);
+		}
+		catch (AMFICOMRemoteException are) {
+			String mesg = "Cannot save objects -- ";
+			if (are.error_code.value() == ErrorCode._ERROR_VERSION_COLLISION)
+				throw new VersionCollisionException(mesg + are.message, 0L, 0L);
+			throw new UpdateObjectException(mesg + are.message);
+		}
 	}
 
-	/* (non-Javadoc)
-	 * @see com.syrus.AMFICOM.general.GeneralObjectLoader#refresh(java.util.Set)
-	 */
+
+
+
 	public Set refresh(Set storableObjects) throws ApplicationException {
-		// TODO Auto-generated method stub
-		return null;
+		CMServer cmServer = this.cmServerConnectionManager.getCMServerReference();
+		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+
+		StorableObject_Transferable[] headersT = new StorableObject_Transferable[storableObjects.size()];
+		int i = 0;
+		for (Iterator it = storableObjects.iterator(); it.hasNext(); i++) {
+			final StorableObject storableObject = (StorableObject) it.next();
+			headersT[i] = storableObject.getHeaderTransferable();
+		}
+
+		try {
+			Identifier_Transferable[] idsT = cmServer.transmitRefreshedGeneralObjects(headersT, ait);
+
+			Set refreshedIds = new HashSet(idsT.length);
+			for (i = 0; i < idsT.length; i++) 
+				refreshedIds.add(new Identifier(idsT[i]));
+			return refreshedIds;
+		}
+		catch (AMFICOMRemoteException are) {
+			throw new ApplicationException(are);
+		}
 	}
 
-	/* (non-Javadoc)
-	 * @see com.syrus.AMFICOM.general.GeneralObjectLoader#delete(com.syrus.AMFICOM.general.Identifier)
-	 */
+
+
 	public void delete(Identifier id) {
-		// TODO Auto-generated method stub
+		try {
+			CMServer cmServer = this.cmServerConnectionManager.getCMServerReference();
+			AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
 
+			Identifier_Transferable idT = (Identifier_Transferable) id.getTransferable();
+			cmServer.delete(idT, ait);
+		}
+		catch (CommunicationException ce) {
+			Log.errorException(ce);
+		}
+		catch (AMFICOMRemoteException are) {
+			Log.errorMessage("CORBAGeneralObjectLoader.delete | Cannot delete object '" + id + "'" + are.message);
+		}
 	}
 
-	/* (non-Javadoc)
-	 * @see com.syrus.AMFICOM.general.GeneralObjectLoader#delete(java.util.Set)
-	 */
 	public void delete(Set identifiables) {
-		// TODO Auto-generated method stub
+		try {
+			CMServer cmServer = this.cmServerConnectionManager.getCMServerReference();
+			AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
 
+			Identifier_Transferable[] idsT = Identifier.createTransferables(identifiables);
+			cmServer.deleteList(idsT, ait);
+		}
+		catch (CommunicationException ce) {
+			Log.errorException(ce);
+		}
+		catch (AMFICOMRemoteException are) {
+			Log.errorMessage("CORBAGeneralObjectLoader.delete | Cannot delete objects '" + identifiables + "'" + are.message);
+		}
 	}
 
 }
