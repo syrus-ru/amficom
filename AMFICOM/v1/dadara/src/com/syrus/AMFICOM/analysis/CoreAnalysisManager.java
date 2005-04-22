@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.49 2005/04/21 14:04:46 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.50 2005/04/22 11:53:31 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.49 $, $Date: 2005/04/21 14:04:46 $
+ * @version $Revision: 1.50 $, $Date: 2005/04/22 11:53:31 $
  * @module
  */
 
@@ -235,12 +235,12 @@ public class CoreAnalysisManager
 	 * see {@link TracesAverages}
 	 * @param bsColl входная совокупность р/г
 	 * @param needNoiseInfo нужна ли информация о шуме
-	 * @param needMFInfo нужны ли кривые мин./макс. фитированных кривых 
+	 * @param needMFInfo нужны ли кривые мин./макс. фитированных кривых
 	 * @param needBSInfo нужна ли инф. о параметрах bs
 	 * @return структура типа TracesAverages с заполненными полями типа
-	 * general Info и запрошенных дополнительны типов  
+	 * general Info и запрошенных дополнительны типов
 	 * @throws IncompatibleTracesException если needBSInfo, но
-	 * соответствующие параметры входных bs различаются.
+	 * соответствующие параметры входных bs различаются
 	 * @throws IllegalArgumentException если входная совокупность р/г пуста
 	 */
 	public static TracesAverages findTracesAverages(Collection bsColl,
@@ -277,8 +277,8 @@ public class CoreAnalysisManager
 				res.avY = (double[])yCur.clone(); // double[] array copying
 		    }
 		    else {
-				addDoubleArray(res.avY, yCur, res.avY.length);
 				res.minTraceLength = Math.min(res.minTraceLength, curLength);
+				addDoubleArray(res.avY, yCur, res.minTraceLength);
 		    }
 
 		    // NB: noiseData может немного зависеть от traceLength, поэтому
