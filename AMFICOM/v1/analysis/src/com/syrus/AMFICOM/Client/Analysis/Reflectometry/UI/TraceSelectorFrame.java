@@ -36,16 +36,10 @@ implements BsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener
 	private FixedSizeEditableTableModel tModel; //DefaultTableModel
 	private ColorChooserTable jTable;
 
-	BorderLayout borderLayout = new BorderLayout();
-	JPanel mainPanel = new JPanel();
-	JScrollPane scrollPane = new JScrollPane();
-	JViewport viewport = new JViewport();
-	boolean here = false;
-
-	public TraceSelectorFrame()
-	{
-		this(new Dispatcher());
-	}
+	private JPanel mainPanel = new JPanel();
+	private JScrollPane scrollPane = new JScrollPane();
+	private JViewport viewport = new JViewport();
+	protected boolean here = false;
 
 	public TraceSelectorFrame(Dispatcher dispatcher)
 	{
@@ -60,10 +54,10 @@ implements BsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener
 			e.printStackTrace();
 		}
 
-		init_module(dispatcher);
+		init_module();
 	}
 
-	void init_module(Dispatcher dispatcher)
+	private void init_module()
 	{
 		Heap.addBsHashListener(this);
 		Heap.addEtalonMTMListener(this);
