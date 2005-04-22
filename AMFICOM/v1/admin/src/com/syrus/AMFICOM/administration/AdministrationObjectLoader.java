@@ -1,5 +1,5 @@
 /*
- * $Id: AdministrationObjectLoader.java,v 1.11 2005/04/12 16:19:35 arseniy Exp $
+ * $Id: AdministrationObjectLoader.java,v 1.12 2005/04/22 14:49:44 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,12 +15,14 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/04/12 16:19:35 $
+ * @version $Revision: 1.12 $, $Date: 2005/04/22 14:49:44 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
 
 public interface AdministrationObjectLoader {
+
+	/* Load single object*/
 
 	User loadUser(Identifier id) throws ApplicationException;
 
@@ -33,7 +35,8 @@ public interface AdministrationObjectLoader {
 //	PermissionAttributes loadPermissionAttributes(Identifier id) throws ApplicationException;
 
 
-    // this block for multiple objects
+
+	/* Load multiple objects*/
 
 	Set loadUsers(Set ids) throws ApplicationException;
 
@@ -46,7 +49,8 @@ public interface AdministrationObjectLoader {
 //  PermissionAttributes loadPermissionAttributes(Set ids) throws ApplicationException;
 
 
-    /* Load StorableObject but argument ids */
+
+	/* Load multiple objects but ids*/
 
 	Set loadUsersButIds(StorableObjectCondition condition, Set ids) throws ApplicationException;
 
@@ -59,6 +63,9 @@ public interface AdministrationObjectLoader {
 //  PermissionAttributes loadPermissionAttributesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException;
 
 
+
+	/* Save single object*/
+
 	void saveUser(User user, boolean force) throws ApplicationException;
 
 	void saveDomain(Domain domain, boolean force) throws ApplicationException;
@@ -69,6 +76,9 @@ public interface AdministrationObjectLoader {
 
 //	void savePermissionAttributes(PermissionAttributes permissionAttributes, boolean force) throws ApplicationException;
 
+
+
+	/* Save multiple object*/
 
 	void saveUsers(Set collection, boolean force) throws ApplicationException;
 
@@ -81,7 +91,9 @@ public interface AdministrationObjectLoader {
 //	void savePermissionAttributes(PermissionAttributes permissionAttributes, boolean force) throws ApplicationException;
 
 
+
 	Set refresh(Set storableObjects) throws ApplicationException;
+
 
 
 	void delete(Identifier id);
