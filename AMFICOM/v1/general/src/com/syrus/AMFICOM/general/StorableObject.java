@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.55 2005/04/15 19:22:02 arseniy Exp $
+ * $Id: StorableObject.java,v 1.56 2005/04/22 17:07:13 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.util.Log;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
@@ -28,7 +29,7 @@ import org.omg.CORBA.portable.IDLEntity;
  * same identifier, comparison of object references (in Java terms) is enough.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.55 $, $Date: 2005/04/15 19:22:02 $
+ * @version $Revision: 1.56 $, $Date: 2005/04/22 17:07:13 $
  * @module general_v1
  */
 public abstract class StorableObject implements Identifiable, TransferableObject, Serializable {
@@ -325,6 +326,18 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 		return clone;
 	}
 
+	public static StorableObject_Transferable[] createHeadersTransferable(final Collection storableObjects) {
+		assert storableObjects != null: ErrorMessages.NON_NULL_EXPECTED;
+
+		StorableObject_Transferable[] headersT = new StorableObject_Transferable[storableObjects.size()];
+		int i = 0;
+		for (Iterator it = storableObjects.iterator(); it.hasNext();i ++) {
+			final StorableObject storableObject = (StorableObject) it.next();
+			headersT[i] = storableObject.getHeaderTransferable();
+		}
+
+		return headersT;
+	}
 	/**
 	 * This method should only be invoked during assertion evaluation, and
 	 * never in a release system.
