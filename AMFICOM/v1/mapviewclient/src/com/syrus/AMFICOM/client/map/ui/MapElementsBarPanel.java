@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementsBarPanel.java,v 1.13 2005/04/21 11:44:13 krupenn Exp $
+ * $Id: MapElementsBarPanel.java,v 1.14 2005/04/22 11:37:58 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,7 +32,7 @@ import javax.swing.JPanel;
  * 
  * 
  * 
- * @version $Revision: 1.13 $, $Date: 2005/04/21 11:44:13 $
+ * @version $Revision: 1.14 $, $Date: 2005/04/22 11:37:58 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -94,7 +94,7 @@ public final class MapElementsBarPanel extends JPanel
 	{
 		Collection types = NodeTypeController.getTopologicalNodeTypes();
 		List returnTypes = new LinkedList(types);
-		Collections.sort(returnTypes, MapViewTreeModel.siteNodeTypeComparator);
+		Collections.sort(returnTypes, MapTreeModel.siteNodeTypeComparator);
 		return returnTypes;
 	}
 }
