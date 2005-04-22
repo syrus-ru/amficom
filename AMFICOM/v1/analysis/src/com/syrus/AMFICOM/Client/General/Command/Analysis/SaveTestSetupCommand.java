@@ -129,14 +129,6 @@ public class SaveTestSetupCommand extends VoidCommand
 			return false;
 		}
 
-		BellcoreStructure bs = Heap.getBSPrimaryTrace();
-
-		if (bs != null)
-		{
-			// XXX: вижу непонятный мне код -- saa
-			measurementSetup.attachToMonitoredElement(new Identifier(bs.monitoredElementId));
-		}
-
 		/**
 		 * @todo use flush(false) to non forced saving
 		 */
