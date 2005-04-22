@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewVisualManagerFactory.java,v 1.2 2005/04/19 15:50:48 krupenn Exp $
+ * $Id: MapViewVisualManagerFactory.java,v 1.3 2005/04/22 11:36:22 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.mapview.MapView;
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/19 15:50:48 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/22 11:36:22 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -42,7 +42,7 @@ public class MapViewVisualManagerFactory
 		if (object instanceof String) {
 			String s = (String)object;
 			if(s.equals(MapViewTreeModel.MAP_BRANCH)
-				|| s.equals(MapViewTreeModel.MAPS_BRANCH))
+				|| s.equals(MapTreeModel.MAPS_BRANCH))
 				return MapVisualManager.getInstance();
 			else if(s.equals(MapViewController.ELEMENT_SITENODE))
 				return (VisualManager )NodeTypeController.getInstance();
