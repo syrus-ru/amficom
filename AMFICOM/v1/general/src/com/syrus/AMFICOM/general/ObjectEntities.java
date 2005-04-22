@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectEntities.java,v 1.55 2005/04/18 15:13:28 bob Exp $
+ * $Id: ObjectEntities.java,v 1.56 2005/04/22 14:34:37 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.55 $, $Date: 2005/04/18 15:13:28 $
+ * @version $Revision: 1.56 $, $Date: 2005/04/22 14:34:37 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -90,6 +90,7 @@ public final class ObjectEntities {
 	public static final String RESULTPARAMETER_ENTITY = "ResultParameter";
 	public static final String TEMPORALPATTERN_ENTITY = "TemporalPattern";
 	public static final String INTERVALS_TEMPORALPATTERN_ENTITY = "IntervalsTemporalPattern";
+	public static final String PERIODICAL_TEMPORALPATTERN_ENTITY = "PeriodicTemporalPattern";
 	public static final String MODELING_ENTITY = "Modeling";
 
 	/*        Scheme        */
@@ -225,6 +226,7 @@ public final class ObjectEntities {
 	public static final short TEMPORALPATTERN_ENTITY_CODE = 0x020A;
 	public static final short MODELING_ENTITY_CODE = 0x020B;
 	public static final short INTERVALS_TEMPORALPATTERN_ENTITY_CODE = 0x020C;
+	public static final short PERIODICAL_TEMPORALPATTERN_ENTITY_CODE = 0x020D;
 
 	public static final short MEASUREMENTTYPE_ENTITY_CODE = 0x0241;
 	public static final short ANALYSISTYPE_ENTITY_CODE = 0x0242;
@@ -367,6 +369,7 @@ public final class ObjectEntities {
 		else if (entity.equals(RESULTPARAMETER_ENTITY)) return RESULTPARAMETER_ENTITY_CODE;
 		else if (entity.equals(TEMPORALPATTERN_ENTITY)) return TEMPORALPATTERN_ENTITY_CODE;
 		else if (entity.equals(INTERVALS_TEMPORALPATTERN_ENTITY)) return INTERVALS_TEMPORALPATTERN_ENTITY_CODE;
+		else if (entity.equals(PERIODICAL_TEMPORALPATTERN_ENTITY)) return PERIODICAL_TEMPORALPATTERN_ENTITY_CODE;
 		else if (entity.equals(MODELING_ENTITY)) return MODELING_ENTITY_CODE;
 
 		else if (entity.equals(CABLE_CHANNELING_ITEM_ENTITY)) return CABLE_CHANNELING_ITEM_ENTITY_CODE;
@@ -509,6 +512,8 @@ public final class ObjectEntities {
 				return TEMPORALPATTERN_ENTITY;
 			case INTERVALS_TEMPORALPATTERN_ENTITY_CODE:
 				return INTERVALS_TEMPORALPATTERN_ENTITY;
+			case PERIODICAL_TEMPORALPATTERN_ENTITY_CODE:
+				return PERIODICAL_TEMPORALPATTERN_ENTITY;
 			case MODELING_ENTITY_CODE:
 				return MODELING_ENTITY;
 

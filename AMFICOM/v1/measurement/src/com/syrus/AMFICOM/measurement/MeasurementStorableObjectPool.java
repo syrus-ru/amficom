@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.83 2005/04/21 13:52:03 arseniy Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.84 2005/04/22 14:32:06 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,8 +23,8 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.83 $, $Date: 2005/04/21 13:52:03 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.84 $, $Date: 2005/04/22 14:32:06 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -46,6 +46,8 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 	private static final int TEST_OBJECT_POOL_SIZE = 2;
 	private static final int RESULT_OBJECT_POOL_SIZE = 4;
 	private static final int TEMPORALPATTERN_OBJECT_POOL_SIZE = 2;
+	private static final int INTERVALS_TEMPORALPATTERN_OBJECT_POOL_SIZE = 2;
+	private static final int PERIODIC_TEMPORALPATTERN_OBJECT_POOL_SIZE = 2;
 
 	private static MeasurementObjectLoader mObjectLoader;
 	private static MeasurementStorableObjectPool instance;
@@ -78,6 +80,8 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 		instance.addObjectPool(ObjectEntities.EVALUATION_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.TEST_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.TEMPORALPATTERN_ENTITY_CODE, size);
+		instance.addObjectPool(ObjectEntities.INTERVALS_TEMPORALPATTERN_ENTITY_CODE, size);
+		instance.addObjectPool(ObjectEntities.PERIODICAL_TEMPORALPATTERN_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.RESULT_ENTITY_CODE, size);
 
 		instance.populatePools();
@@ -102,6 +106,8 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 		instance.addObjectPool(ObjectEntities.EVALUATION_ENTITY_CODE, EVALUATION_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.TEST_ENTITY_CODE, TEST_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.TEMPORALPATTERN_ENTITY_CODE, TEMPORALPATTERN_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.INTERVALS_TEMPORALPATTERN_ENTITY_CODE, INTERVALS_TEMPORALPATTERN_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.PERIODICAL_TEMPORALPATTERN_ENTITY_CODE, PERIODIC_TEMPORALPATTERN_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.RESULT_ENTITY_CODE, RESULT_OBJECT_POOL_SIZE);
 
 		instance.populatePools();
