@@ -1,5 +1,5 @@
 /**
- * $Id: VoidElement.java,v 1.6 2005/04/01 13:16:07 bob Exp $
+ * $Id: VoidElement.java,v 1.7 2005/04/22 11:30:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.mapview.MapView;
 /**
  * Пустой элемент.
  * 
- * @author $Author: bob $
- * @version $Revision: 1.6 $, $Date: 2005/04/01 13:16:07 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.7 $, $Date: 2005/04/22 11:30:32 $
  * @module mapviewclient_v1
  */
 public final class VoidElement implements MapElement 
@@ -61,7 +61,7 @@ public final class VoidElement implements MapElement
 	}
 
 	/**
-	 * {@inheritDoc} 
+	 * @deprecated use getMapView().getMap() 
 	 */
 	public Map getMap()
 	{
