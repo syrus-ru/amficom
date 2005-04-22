@@ -981,8 +981,6 @@ public class AnalyseMainFrame extends JFrame implements BsHashChangeListener,
 		noiseFrame.setVisible(false);
 		ScalableFrame filteredFrame = (ScalableFrame) this.frames.get(FILTERED_FRAME);
 		filteredFrame.setVisible(false);
-
-		setTitle(LangModelAnalyse.getString("AnalyseExtTitle"));
 	}
 
 	/*
@@ -1034,9 +1032,6 @@ public class AnalyseMainFrame extends JFrame implements BsHashChangeListener,
 		}
 
 		aModel.fireModelChanged("");
-
-		String name = Heap.getBSPrimaryTrace().title;
-		setTitle(LangModelAnalyse.getString("AnalyseExtTitle") + ": " + name);
 
 		updFrames(Heap.PRIMARY_TRACE_KEY);
 	}

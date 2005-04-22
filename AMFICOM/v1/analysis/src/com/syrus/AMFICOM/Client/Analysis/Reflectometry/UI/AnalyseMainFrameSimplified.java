@@ -556,9 +556,6 @@ implements BsHashChangeListener, OperationListener, EtalonMTMListener, CurrentTr
 			aModel.setEnabled("menuWindowAnalysisSelection", true);
 
 			aModel.fireModelChanged("");
-
-			String name = Heap.getBSPrimaryTrace().title;
-			setTitle(LangModelAnalyse.getString("AnalyseTitle") + ": " + name);
 		}
 		else if (id.equals(Heap.REFERENCE_TRACE_KEY))
 		{
@@ -629,7 +626,6 @@ implements BsHashChangeListener, OperationListener, EtalonMTMListener, CurrentTr
 		aModel.setEnabled("menuWindowAnalysisSelection", false);
 
 		aModel.fireModelChanged("");
-		setTitle(LangModelAnalyse.getString("AnalyseTitle"));
 	}
 
 	public void etalonMTMCUpdated()

@@ -652,9 +652,6 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener, CurrentTr
 
 			aModel.fireModelChanged("");
 
-			String name = Heap.getBSPrimaryTrace().title;
-			setTitle(LangModelAnalyse.getString("ThresholdsTitle") + ": " + name);
-
 			thresholdsSelectionFrame.setVisible(true);
 		}
 		else if (id.equals(Heap.REFERENCE_TRACE_KEY))
@@ -734,7 +731,6 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener, CurrentTr
 
 
 		aModel.fireModelChanged("");
-		setTitle(LangModelAnalyse.getString("ThresholdsTitle"));
 		//			thresholdsFrame.setVisible(false);
 		thresholdsSelectionFrame.setVisible(false);
 	}

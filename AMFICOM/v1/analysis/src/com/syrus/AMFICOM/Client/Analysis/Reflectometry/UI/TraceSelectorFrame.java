@@ -190,10 +190,8 @@ implements BsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener
 
 		traces.add(id);
 
-		if (bs != null) // XXX: I guess this is not a good idea to set window name to last loaded trace name
-			title = bs.title;
 		Log.debugMessage("TraceSelectorFrame.bsHashAdded | id is '" + id + '\'', Log.FINEST);
-		tModel.addRow(title, new Color[] {Heap.getColor(id)});
+		tModel.addRow(bs.title, new Color[] {Heap.getColor(id)});
 		setVisible(true);
 	}
 
@@ -216,6 +214,7 @@ implements BsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener
 
 	public void etalonMTMCUpdated()
 	{
+		// @todo: implement this idea correctly (here and in etalonMTMRemoved)
 		String id = Heap.ETALON_TRACE_KEY;
 		if (traces.contains(id))
 			return;
