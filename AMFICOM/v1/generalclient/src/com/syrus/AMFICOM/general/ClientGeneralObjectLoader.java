@@ -1,5 +1,5 @@
 /*
- * $Id: ClientGeneralObjectLoader.java,v 1.15 2005/04/13 14:02:15 bob Exp $
+ * $Id: ClientGeneralObjectLoader.java,v 1.16 2005/04/22 14:51:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/04/13 14:02:15 $
- * @author $Author: bob $
+ * @version $Revision: 1.16 $, $Date: 2005/04/22 14:51:06 $
+ * @author $Author: arseniy $
  * @module generalclient_v1
  */
 public class ClientGeneralObjectLoader extends AbstractClientObjectLoader implements GeneralObjectLoader {
@@ -374,7 +374,7 @@ public class ClientGeneralObjectLoader extends AbstractClientObjectLoader implem
 				StorableObject storableObject = (StorableObject) it.next();
 				storableObject_Transferables[i] = storableObject.getHeaderTransferable();
 			}
-			identifier_Transferables = this.server.transmitRefreshedMeasurementObjects(storableObject_Transferables,
+			identifier_Transferables = this.server.transmitRefreshedGeneralObjects(storableObject_Transferables,
 				getAccessIdentifierTransferable());
 
 			for (int j = 0; j < identifier_Transferables.length; j++) {

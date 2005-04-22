@@ -1,5 +1,5 @@
 /*
- * $Id: ClientAdministrationObjectLoader.java,v 1.15 2005/04/13 21:18:44 arseniy Exp $
+ * $Id: ClientAdministrationObjectLoader.java,v 1.16 2005/04/22 14:51:44 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/04/13 21:18:44 $
+ * @version $Revision: 1.16 $, $Date: 2005/04/22 14:51:44 $
  * @author $Author: arseniy $
  * @module generalclient_v1
  */
@@ -357,7 +357,7 @@ public class ClientAdministrationObjectLoader extends AbstractClientObjectLoader
 				StorableObject storableObject = (StorableObject) it.next();
 				storableObject_Transferables[i] = storableObject.getHeaderTransferable();
 			}
-			identifier_Transferables = this.cmserver.transmitRefreshedMeasurementObjects(storableObject_Transferables,
+			identifier_Transferables = this.cmserver.transmitRefreshedAdministrationObjects(storableObject_Transferables,
 				getAccessIdentifierTransferable());
 
 			for (int j = 0; j < identifier_Transferables.length; j++) {
