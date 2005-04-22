@@ -265,6 +265,7 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener, CurrentEv
 	private void setData()
 	{
 		int nEvent = Heap.getCurrentEvent();
+		int nEtalon = Heap.getCurrentEtalonEvent();
 		if(etalonMTM == null || alignedDataMT == null)
 		{
 			tabbedPane.setSelectedIndex(0);
@@ -277,16 +278,10 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener, CurrentEv
 		}
 		double deltaX = dataMTAE.getDeltaX();
 
-		// ищем парное событие
-		ComplexReflectogramEvent[] dataCRE = dataMTAE.getComplexEvents();
-		ComplexReflectogramEvent[] etalonCRE = etalonMTM.getMTAE().getComplexEvents(); 
-		ReflectogramComparer rComp = new ReflectogramComparer(
-			dataCRE,
-			etalonCRE);
-		int nEtalon = rComp.getEtalonIdByProbeId(nEvent); // может быть -1
-		ComplexReflectogramEvent dataEvent = dataCRE[nEvent];
+		ComplexReflectogramEvent dataEvent =
+			dataMTAE.getComplexEvents()[nEvent];
 		ComplexReflectogramEvent etalonEvent = nEtalon != -1
-				? etalonCRE[nEtalon]
+				? etalonMTM.getMTAE().getComplexEvents()[nEtalon]
 				: null;
 		int dataType = dataEvent.getEventType();
 		int etalonType = etalonEvent != null
