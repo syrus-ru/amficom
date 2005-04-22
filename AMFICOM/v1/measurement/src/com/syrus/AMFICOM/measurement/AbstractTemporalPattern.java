@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractTemporalPattern.java,v 1.1 2005/04/18 15:13:50 bob Exp $
+ * $Id: AbstractTemporalPattern.java,v 1.2 2005/04/22 14:33:11 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/18 15:13:50 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/22 14:33:11 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module measurement_v1
@@ -35,7 +35,7 @@ public abstract class AbstractTemporalPattern extends StorableObject {
 	 * <b>Clients must never explicitly call this method.</b>
 	 * </p>
 	 */
-	protected AbstractTemporalPattern(Identifier id) {
+	protected AbstractTemporalPattern(final Identifier id) {
 		super(id);
 	}
 
@@ -72,8 +72,8 @@ public abstract class AbstractTemporalPattern extends StorableObject {
 	 *            Date
 	 * @return SortedSet of java.util.Data
 	 */
-	public final SortedSet getTimes(Date start,
-									Date end) {
+	public final SortedSet getTimes(final Date start,
+	                                final Date end) {
 		return this.getTimes(start.getTime(), end.getTime());
 	}
 
@@ -87,8 +87,8 @@ public abstract class AbstractTemporalPattern extends StorableObject {
 	 *            long
 	 * @return SortedSet of java.util.Data
 	 */
-	public final SortedSet getTimes(long start,
-									long end) {
+	public final SortedSet getTimes(final long start,
+	                                final long end) {
 		if (this.times == null)
 			this.times = new TreeSet();
 		if (this.startTime != start)
