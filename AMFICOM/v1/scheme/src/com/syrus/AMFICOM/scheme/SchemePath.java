@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.19 2005/04/19 17:45:16 bass Exp $
+ * $Id: SchemePath.java,v 1.20 2005/04/22 15:36:23 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,26 +43,26 @@ import com.syrus.util.Log;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.19 $, $Date: 2005/04/19 17:45:16 $
+ * @version $Revision: 1.20 $, $Date: 2005/04/22 15:36:23 $
  * @module scheme_v1
  */
 public final class SchemePath extends AbstractCloneableStorableObject implements
 		Describable, Characterizable {
 	private static final long serialVersionUID = 3257567312831132469L;
 
-	private Set characteristics;
+	private String name;
 
 	private String description;
 
-	private Identifier endSchemeElementId;
-
-	private String name;
-
-	private Identifier parentSchemeMonitoringSolutionId;
+	private Identifier transmissionPathId;
 
 	private Identifier startSchemeElementId;
 
-	private Identifier transmissionPathId;
+	private Identifier endSchemeElementId;
+
+	private Identifier parentSchemeMonitoringSolutionId;
+
+	private Set characteristics;
 
 	private SchemePathDatabase schemePathDatabase;
 
@@ -90,11 +90,28 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 * @param creatorId
 	 * @param modifierId
 	 * @param version
+	 * @param name
+	 * @param description
+	 * @param transmissionPath
+	 * @param startSchemeElement
+	 * @param endSchemeElement
+	 * @param parentSchemeMonitoringSolution
 	 */
 	SchemePath(final Identifier id, final Date created,
 			final Date modified, final Identifier creatorId,
-			final Identifier modifierId, final long version) {
+			final Identifier modifierId, final long version,
+			final String name, final String description,
+			final TransmissionPath transmissionPath,
+			final SchemeElement startSchemeElement,
+			final SchemeElement endSchemeElement,
+			final SchemeMonitoringSolution parentSchemeMonitoringSolution) {
 		super(id, created, modified, creatorId, modifierId, version);
+		this.name = name;
+		this.description = description;
+		this.transmissionPathId = Identifier.possiblyVoid(transmissionPath);
+		this.startSchemeElementId = Identifier.possiblyVoid(startSchemeElement);
+		this.endSchemeElementId = Identifier.possiblyVoid(endSchemeElement);
+		this.parentSchemeMonitoringSolutionId = Identifier.possiblyVoid(parentSchemeMonitoringSolution);
 	}
 
 	/**
@@ -106,16 +123,31 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 		fromTransferable(transferable);
 	}
 
-	public static SchemePath createInstance(final Identifier creatorId)
+	public static SchemePath createInstance(final Identifier creatorId,
+			final String name, final String description,
+			final TransmissionPath transmissionPath,
+			final SchemeElement startSchemeElement,
+			final SchemeElement endSchemeElement,
+			final SchemeMonitoringSolution parentSchemeMonitoringSolution)
 			throws CreateObjectException {
-		assert creatorId != null;
+		assert creatorId != null && !creatorId.isVoid(): ErrorMessages.NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
+		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
+		/**
+		 * @todo Add additional assertions.
+		 * @todo Add a shorthand #createInstance()
+		 */
+
 		try {
 			final Date created = new Date();
 			final SchemePath schemePath = new SchemePath(
 					IdentifierPool
 							.getGeneratedIdentifier(ObjectEntities.SCHEME_PATH_ENTITY_CODE),
 					created, created, creatorId, creatorId,
-					0L);
+					0L, name, description,
+					transmissionPath, startSchemeElement,
+					endSchemeElement,
+					parentSchemeMonitoringSolution);
 			schemePath.changed = true;
 			return schemePath;
 		} catch (final IdentifierGenerationException ige) {
@@ -260,6 +292,47 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 		assert pathElement != null: ErrorMessages.NON_NULL_EXPECTED;
 		assert getPathElements().contains(pathElement): ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		pathElement.setParentSchemePath(null);
+	}
+
+	/**
+	 * @param created
+	 * @param modified
+	 * @param creatorId
+	 * @param modifierId
+	 * @param version
+	 * @param name
+	 * @param description
+	 * @param transmissionPathId
+	 * @param startSchemeElementId
+	 * @param endSchemeElementId
+	 * @param parentSchemeMonitoringSolutionId
+	 */
+	synchronized void setAttributes(final Date created,
+			final Date modified, final Identifier creatorId,
+			final Identifier modifierId, final long version,
+			final String name, final String description,
+			final Identifier transmissionPathId,
+			final Identifier startSchemeElementId,
+			final Identifier endSchemeElementId,
+			final Identifier parentSchemeMonitoringSolutionId) {
+		super.setAttributes(created, modified, creatorId, modifierId, version);
+		
+		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
+		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
+		/**
+		 * @todo Add additional assertions.
+		 */
+		assert transmissionPathId != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert startSchemeElementId != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert endSchemeElementId != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert parentSchemeMonitoringSolutionId != null: ErrorMessages.NON_NULL_EXPECTED;
+
+		this.name = name;
+		this.description = description;
+		this.transmissionPathId = transmissionPathId;
+		this.startSchemeElementId = startSchemeElementId;
+		this.endSchemeElementId = endSchemeElementId;
+		this.parentSchemeMonitoringSolutionId = parentSchemeMonitoringSolutionId;
 	}
 
 	/**

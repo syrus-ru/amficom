@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.17 2005/04/19 10:47:43 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.18 2005/04/22 15:39:26 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,28 +37,28 @@ import com.syrus.AMFICOM.scheme.corba.SchemeCableThread_Transferable;
  * #12 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.17 $, $Date: 2005/04/19 10:47:43 $
+ * @version $Revision: 1.18 $, $Date: 2005/04/22 15:39:26 $
  * @module scheme_v1
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
 		implements Describable, Characterizable {
 	private static final long serialVersionUID = 4050204133015171124L;
 
-	private Identifier cableThreadTypeId;
-
-	private Set characteristics;
+	private String name;
 
 	private String description;
 
+	private Identifier cableThreadTypeId;
+
 	private Identifier linkId;
-
-	private String name;
-
-	private Identifier parentSchemeCableLinkId;
 
 	private Identifier sourceSchemePortId;
 
 	private Identifier targetSchemePortId;
+
+	private Identifier parentSchemeCableLinkId;
+
+	private Set characteristics;
 
 	private SchemeCableThreadDatabase schemeCableThreadDatabase;
 
@@ -86,11 +86,30 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	 * @param creatorId
 	 * @param modifierId
 	 * @param version
+	 * @param name
+	 * @param description
+	 * @param cableThreadType
+	 * @param link
+	 * @param sourceSchemePort
+	 * @param targetSchemePort
+	 * @param parentSchemeCableLink
 	 */
-	SchemeCableThread(Identifier id, Date created, Date modified,
-			Identifier creatorId, Identifier modifierId,
-			long version) {
+	SchemeCableThread(final Identifier id, final Date created,
+			final Date modified, final Identifier creatorId,
+			final Identifier modifierId, final long version,
+			final String name, final String description,
+			final CableThreadType cableThreadType, final Link link,
+			final SchemePort sourceSchemePort,
+			final SchemePort targetSchemePort,
+			final SchemeCableLink parentSchemeCableLink) {
 		super(id, created, modified, creatorId, modifierId, version);
+		this.name = name;
+		this.description = description;
+		this.cableThreadTypeId = Identifier.possiblyVoid(cableThreadType);
+		this.linkId = Identifier.possiblyVoid(link);
+		this.sourceSchemePortId = Identifier.possiblyVoid(sourceSchemePort);
+		this.targetSchemePortId = Identifier.possiblyVoid(targetSchemePort);
+		this.parentSchemeCableLinkId = Identifier.possiblyVoid(parentSchemeCableLink);
 	}
 
 	/**
@@ -103,16 +122,30 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	}
 
 	public static SchemeCableThread createInstance(
-			final Identifier creatorId)
+			final Identifier creatorId, final String name,
+			final String description,
+			final CableThreadType cableThreadType, final Link link,
+			final SchemePort sourceSchemePort,
+			final SchemePort targetSchemePort,
+			final SchemeCableLink parentSchemeCableLink)
 			throws CreateObjectException {
-		assert creatorId != null;
+		assert creatorId != null && !creatorId.isVoid(): ErrorMessages.NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
+		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
+		/**
+		 * @todo Add additional assertions.
+		 * @todo Add a shorthand #createInstance()
+		 */
+
 		try {
 			final Date created = new Date();
 			final SchemeCableThread schemeCableThread = new SchemeCableThread(
 					IdentifierPool
 							.getGeneratedIdentifier(ObjectEntities.SCHEME_CABLE_THREAD_ENTITY_CODE),
 					created, created, creatorId, creatorId,
-					0L);
+					0L, name, description, cableThreadType,
+					link, sourceSchemePort,
+					targetSchemePort, parentSchemeCableLink);
 			schemeCableThread.changed = true;
 			return schemeCableThread;
 		} catch (final IdentifierGenerationException ioee) {
@@ -234,6 +267,51 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		assert getCharacteristics().contains(characteristic): ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		this.characteristics.remove(characteristic);
 		this.changed = true;
+	}
+
+	/**
+	 * @param created
+	 * @param modified
+	 * @param creatorId
+	 * @param modifierId
+	 * @param version
+	 * @param name
+	 * @param description
+	 * @param cableThreadTypeId
+	 * @param linkId
+	 * @param sourceSchemePortId
+	 * @param targetSchemePortId
+	 * @param parentSchemeCableLinkId
+	 */
+	synchronized void setAttributes(final Date created,
+			final Date modified, final Identifier creatorId,
+			final Identifier modifierId, final long version,
+			final String name, final String description,
+			final Identifier cableThreadTypeId,
+			final Identifier linkId,
+			final Identifier sourceSchemePortId,
+			final Identifier targetSchemePortId,
+			final Identifier parentSchemeCableLinkId) {
+		super.setAttributes(created, modified, creatorId, modifierId, version);
+		
+		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
+		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
+		/**
+		 * @todo Add additional assertions.
+		 */
+		assert cableThreadTypeId != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert linkId != null;
+		assert sourceSchemePortId != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert targetSchemePortId != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert parentSchemeCableLinkId != null: ErrorMessages.NON_NULL_EXPECTED;
+
+		this.name = name;
+		this.description = description;
+		this.cableThreadTypeId = cableThreadTypeId;
+		this.linkId = linkId;
+		this.sourceSchemePortId = sourceSchemePortId;
+		this.targetSchemePortId = targetSchemePortId;
+		this.parentSchemeCableLinkId = parentSchemeCableLinkId;
 	}
 
 	/**
