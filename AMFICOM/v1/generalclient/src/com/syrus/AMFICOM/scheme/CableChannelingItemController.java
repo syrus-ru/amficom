@@ -83,10 +83,6 @@ public final class CableChannelingItemController extends ObjectResourceControlle
 				result = Long.toString(item.getModified().getTime());
 			else if (key.equals(COLUMN_MODIFIER_ID))
 				result = item.getModifierId().getIdentifierString();
-			else if (key.equals(COLUMN_DESCRIPTION))
-				result = item.getDescription();
-			else if (key.equals(COLUMN_NAME))
-				result = item.getName();
 			else if (key.equals(COLUMN_SEQUENTIAL_NUMBER))
 				result = Integer.toString(item.getSequentialNumber());
 			else if (key.equals(COLUMN_START_SITE_NODE_ID))
