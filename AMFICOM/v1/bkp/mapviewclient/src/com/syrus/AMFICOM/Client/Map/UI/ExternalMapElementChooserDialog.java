@@ -1,5 +1,5 @@
 /**
- * $Id: ExternalMapElementChooserDialog.java,v 1.3 2005/04/22 11:40:00 krupenn Exp $
+ * $Id: ExternalMapElementChooserDialog.java,v 1.4 2005/04/22 15:11:13 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -181,19 +181,16 @@ public class ExternalMapElementChooserDialog extends JDialog
 	}
 
 	public void valueChanged(TreeSelectionEvent e) {
-		TreePath paths[] = e.getPaths();
+		this.buttonOpen.setEnabled(false);
+		this.retObject = null;
+		TreePath paths[] = this.tree.getSelectionPaths();
 		for (int i = 0; i < paths.length; i++) 
 		{
 			Item node = (Item )paths[i].getLastPathComponent();
 			if(node.getObject() instanceof SiteNode) {
-				if(e.isAddedPath(paths[i])) {
-					this.buttonOpen.setEnabled(true);
-					this.retObject = (SiteNode)node.getObject();
-				}
-				else {
-					this.buttonOpen.setEnabled(false);
-					this.retObject = null;
-				}
+				this.buttonOpen.setEnabled(true);
+				this.retObject = (SiteNode)node.getObject();
+				break;
 			}
 		}
 	}
