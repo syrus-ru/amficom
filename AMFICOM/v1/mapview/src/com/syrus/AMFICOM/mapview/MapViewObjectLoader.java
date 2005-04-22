@@ -1,5 +1,5 @@
 /*
-* $Id: MapViewObjectLoader.java,v 1.7 2005/04/20 14:41:23 arseniy Exp $
+* $Id: MapViewObjectLoader.java,v 1.8 2005/04/22 14:45:58 arseniy Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/04/20 14:41:23 $
+ * @version $Revision: 1.8 $, $Date: 2005/04/22 14:45:58 $
  * @author $Author: arseniy $
  * @module mapview_v1
  */
@@ -35,6 +35,6 @@ public interface MapViewObjectLoader {
 
 	void saveMapView(MapView map, boolean force) throws ApplicationException;	
 
-	void saveMapViews(Set list, boolean force) throws ApplicationException;
+	void saveMapViews(Set objects, boolean force) throws ApplicationException;
 
 }

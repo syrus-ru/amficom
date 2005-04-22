@@ -1,5 +1,5 @@
 /*
-* $Id: ResourceObjectLoader.java,v 1.11 2005/04/12 16:22:40 arseniy Exp $
+* $Id: ResourceObjectLoader.java,v 1.12 2005/04/22 14:45:28 arseniy Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/04/12 16:22:40 $
+ * @version $Revision: 1.12 $, $Date: 2005/04/22 14:45:28 $
  * @author $Author: arseniy $
  * @module resource_v1
  */
@@ -34,7 +34,7 @@ public interface ResourceObjectLoader {
 
 	void saveImageResource(AbstractImageResource abstractImageResource, boolean force) throws ApplicationException;
 
-	void saveImageResources(Set list, boolean force) throws ApplicationException;
+	void saveImageResources(Set objects, boolean force) throws ApplicationException;
 
 
 

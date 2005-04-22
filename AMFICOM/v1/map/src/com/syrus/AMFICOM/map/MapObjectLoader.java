@@ -1,5 +1,5 @@
 /*
- * $Id: MapObjectLoader.java,v 1.9 2005/04/12 16:23:33 arseniy Exp $
+ * $Id: MapObjectLoader.java,v 1.10 2005/04/22 14:45:41 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/04/12 16:23:33 $
+ * @version $Revision: 1.10 $, $Date: 2005/04/22 14:45:41 $
  * @author $Author: arseniy $
  * @module map_v1
  */
@@ -113,31 +113,31 @@ public interface MapObjectLoader {
 	void saveTopologicalNode(	TopologicalNode topologicalNode,
 								boolean force) throws ApplicationException;
 
-	void saveCollectors(Set list,
+	void saveCollectors(Set objects,
 						boolean force) throws ApplicationException;
 
-	void saveMaps(	Set list,
+	void saveMaps(	Set objects,
 					boolean force) throws ApplicationException;
 
-	void saveMarks(	Set list,
+	void saveMarks(	Set objects,
 					boolean force) throws ApplicationException;
 
-	void saveNodeLinks(	Set list,
+	void saveNodeLinks(	Set objects,
 						boolean force) throws ApplicationException;
 
-	void savePhysicalLinks(	Set list,
+	void savePhysicalLinks(	Set objects,
 							boolean force) throws ApplicationException;
 
-	void savePhysicalLinkTypes(	Set list,
+	void savePhysicalLinkTypes(	Set objects,
 								boolean force) throws ApplicationException;
 
-	void saveSiteNodes(	Set list,
+	void saveSiteNodes(	Set objects,
 						boolean force) throws ApplicationException;
 
-	void saveSiteNodeTypes(	Set list,
+	void saveSiteNodeTypes(	Set objects,
 							boolean force) throws ApplicationException;
 
-	void saveTopologicalNodes(	Set list,
+	void saveTopologicalNodes(	Set objects,
 								boolean force) throws ApplicationException;
 
 
