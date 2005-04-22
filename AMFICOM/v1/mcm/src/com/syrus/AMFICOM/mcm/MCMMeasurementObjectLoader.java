@@ -1,5 +1,5 @@
 /*
- * $Id: MCMMeasurementObjectLoader.java,v 1.31 2005/04/13 10:06:42 arseniy Exp $
+ * $Id: MCMMeasurementObjectLoader.java,v 1.32 2005/04/22 14:14:47 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -51,11 +51,13 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/04/13 10:06:42 $
+ * @version $Revision: 1.32 $, $Date: 2005/04/22 14:14:47 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
 final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
+
+	/* Load single object*/
 
 	public MeasurementType loadMeasurementType(Identifier id)
 			throws RetrieveObjectException, CommunicationException, ObjectNotFoundException, CreateObjectException {
@@ -174,6 +176,47 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 		}	//catch (ObjectNotFoundException e)
 	}
 
+
+
+	public MeasurementSetup loadMeasurementSetup(Identifier id)
+			throws RetrieveObjectException, CommunicationException, ObjectNotFoundException, CreateObjectException {
+		try {
+			return new MeasurementSetup(id);
+		}
+		catch (ObjectNotFoundException e) {
+			Log.debugMessage("MCMMeasurementObjectLoader.loadMeasurementSetup | MeasurementSetup '" + id
+					+ "' not found in database; trying to load from Measurement Server", Log.DEBUGLEVEL08);
+			MeasurementSetup measurementSetup = null;
+	
+			MServer mServerRef = MeasurementControlModule.mServerConnectionManager.getVerifiedMServerReference();
+			try {
+				MeasurementSetup_Transferable transferable = mServerRef.transmitMeasurementSetup((Identifier_Transferable) id.getTransferable());
+				measurementSetup = new MeasurementSetup(transferable);
+				Log.debugMessage("MCMMeasurementObjectLoader.loadMeasurementSetup | MeasurementSetup '" + id
+						+ "' loaded from MeasurementServer", Log.DEBUGLEVEL08);
+			}
+			catch (AMFICOMRemoteException are) {
+				if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
+					throw new ObjectNotFoundException("MeasurementSetup '" + id + "' not found on Measurement Server -- " + are.message);
+				throw new RetrieveObjectException("Cannot retrieve MeasurementSetup '" + id + "' from Measurement Server -- " + are.message);
+			}
+			catch (Throwable throwable) {
+				Log.errorException(throwable);
+			}
+	
+			if (measurementSetup != null) {
+				try {
+					MeasurementDatabaseContext.getMeasurementSetupDatabase().insert(measurementSetup);
+				}
+				catch (ApplicationException ae) {
+					Log.errorException(ae);
+				}
+				return measurementSetup;
+			}
+			throw new ObjectNotFoundException("MeasurementSetup '" + id + "' not found on Measurement Server");
+		}	//catch (ObjectNotFoundException e)
+	}
+
 	public Set loadSet(Identifier id)
 			throws RetrieveObjectException, CommunicationException, ObjectNotFoundException, CreateObjectException {
 		try {
@@ -210,45 +253,6 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 				return set;
 			}
 			throw new ObjectNotFoundException("Set '" + id + "' not found on Measurement Server");
-		}	//catch (ObjectNotFoundException e)
-	}
-
-	public MeasurementSetup loadMeasurementSetup(Identifier id)
-			throws RetrieveObjectException, CommunicationException, ObjectNotFoundException, CreateObjectException {
-		try {
-			return new MeasurementSetup(id);
-		}
-		catch (ObjectNotFoundException e) {
-			Log.debugMessage("MCMMeasurementObjectLoader.loadMeasurementSetup | MeasurementSetup '" + id
-					+ "' not found in database; trying to load from Measurement Server", Log.DEBUGLEVEL08);
-			MeasurementSetup measurementSetup = null;
-
-			MServer mServerRef = MeasurementControlModule.mServerConnectionManager.getVerifiedMServerReference();
-			try {
-				MeasurementSetup_Transferable transferable = mServerRef.transmitMeasurementSetup((Identifier_Transferable) id.getTransferable());
-				measurementSetup = new MeasurementSetup(transferable);
-				Log.debugMessage("MCMMeasurementObjectLoader.loadMeasurementSetup | MeasurementSetup '" + id
-						+ "' loaded from MeasurementServer", Log.DEBUGLEVEL08);
-			}
-			catch (AMFICOMRemoteException are) {
-				if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
-					throw new ObjectNotFoundException("MeasurementSetup '" + id + "' not found on Measurement Server -- " + are.message);
-				throw new RetrieveObjectException("Cannot retrieve MeasurementSetup '" + id + "' from Measurement Server -- " + are.message);
-			}
-			catch (Throwable throwable) {
-				Log.errorException(throwable);
-			}
-
-			if (measurementSetup != null) {
-				try {
-					MeasurementDatabaseContext.getMeasurementSetupDatabase().insert(measurementSetup);
-				}
-				catch (ApplicationException ae) {
-					Log.errorException(ae);
-				}
-				return measurementSetup;
-			}
-			throw new ObjectNotFoundException("MeasurementSetup '" + id + "' not found on Measurement Server");
 		}	//catch (ObjectNotFoundException e)
 	}
 
@@ -293,7 +297,7 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 
 
 
-
+	/* Load multiple objects*/
 
 	public java.util.Set loadMeasurementTypes(java.util.Set ids) throws RetrieveObjectException {
 		MeasurementTypeDatabase database = MeasurementDatabaseContext.getMeasurementTypeDatabase();
@@ -429,6 +433,8 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 
 		return objects;
 	}
+
+
 
 	public java.util.Set loadMeasurementSetups(java.util.Set ids) throws RetrieveObjectException {
 		MeasurementSetupDatabase database = MeasurementDatabaseContext.getMeasurementSetupDatabase();
