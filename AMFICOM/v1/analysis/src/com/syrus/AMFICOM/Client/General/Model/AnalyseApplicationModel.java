@@ -148,15 +148,16 @@ public class AnalyseApplicationModel extends ApplicationModel {
 
 		defaults.put(AnalysisResourceKeys.COLOR_EVENTS_NEW_SELECTED, Color.MAGENTA);
 		defaults.put(AnalysisResourceKeys.COLOR_EVENTS_NEW, Color.RED);
-		
-		defaults.put(AnalysisResourceKeys.COLOR_EVENTS_LOSS_CHANGED_SELECTED, Color.ORANGE);
-		defaults.put(AnalysisResourceKeys.COLOR_EVENTS_LOSS_CHANGED, Color.CYAN);		
-		// maybe yellow is better that cyan?
-		
-		defaults.put(AnalysisResourceKeys.COLOR_EVENTS_AMPLITUDE_CHANGED, Color.ORANGE);
-		defaults.put(AnalysisResourceKeys.COLOR_EVENTS_AMPLITUDE_CHANGED_SELECTED, Color.CYAN); 
-		// maybe yellow is better that cyan?
-		
+
+		Color lossChanged = new Color(224,120,40);
+		Color lossChangedSelection = new Color(160,96,0);
+
+		defaults.put(AnalysisResourceKeys.COLOR_EVENTS_LOSS_CHANGED, lossChanged);
+		defaults.put(AnalysisResourceKeys.COLOR_EVENTS_LOSS_CHANGED_SELECTED, lossChangedSelection);
+
+		defaults.put(AnalysisResourceKeys.COLOR_EVENTS_AMPLITUDE_CHANGED, lossChanged);
+		defaults.put(AnalysisResourceKeys.COLOR_EVENTS_AMPLITUDE_CHANGED_SELECTED, lossChangedSelection); 
+
 		defaults.put(AnalysisResourceKeys.COLOR_EVENTS, Color.BLACK);
 		defaults.put(AnalysisResourceKeys.COLOR_EVENTS_SELECTED, Color.BLACK);
 		
