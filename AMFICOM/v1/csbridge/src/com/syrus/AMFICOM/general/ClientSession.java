@@ -1,5 +1,5 @@
 /*
- * $Id: ClientSession.java,v 1.4 2005/04/23 14:08:42 arseniy Exp $
+ * $Id: ClientSession.java,v 1.5 2005/04/23 14:46:04 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,7 +20,7 @@ import com.syrus.util.Application;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/04/23 14:08:42 $
+ * @version $Revision: 1.5 $, $Date: 2005/04/23 14:46:04 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
@@ -35,10 +35,11 @@ public final class ClientSession {
 		//singleton
 	}
 
-	public static void init() throws CommunicationException {
+	public static void open(final String user, final String password) throws CommunicationException {
 		initServantConnection();
 		/*@todo here, before other operations, perform login*/
 		initSessionContext();
+		initIdentifierPool();
 		initObjectPools();
 	}
 
@@ -49,6 +50,10 @@ public final class ClientSession {
 
 	private static void initSessionContext() {
 //		SessionContext.init();
+	}
+
+	private static void initIdentifierPool() {
+		IdentifierPool.init(servantConnectionManager);
 	}
 
 	private static void initObjectPools() {
