@@ -1,5 +1,5 @@
 /*-
- * $Id: MSHServerSchemeReceive.java,v 1.1 2005/04/08 09:32:27 bass Exp $
+ * $Id: MSHServerSchemeReceive.java,v 1.2 2005/04/23 15:36:31 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,10 +8,13 @@
 
 package com.syrus.AMFICOM.mshserver;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
+import com.syrus.AMFICOM.general.corba.AccessIdentity_Transferable;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
@@ -49,13 +52,10 @@ import com.syrus.AMFICOM.scheme.corba.SchemeProtoGroup_Transferable;
 import com.syrus.AMFICOM.scheme.corba.Scheme_Transferable;
 import com.syrus.util.Log;
 
-import java.util.HashSet;
-import java.util.Set;
-
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/04/08 09:32:27 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2005/04/23 15:36:31 $
  * @module mshserver_v1
  */
 abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
@@ -66,17 +66,17 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 	/**
 	 * @param schemeProtoGroup
 	 * @param force
-	 * @param accessIdentifier
+	 * @param accessIdentityT
 	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receiveSchemeProtoGroup(SchemeProtoGroup_Transferable, boolean, AccessIdentifier_Transferable)
+	 * @see MSHServerOperations#receiveSchemeProtoGroup(SchemeProtoGroup_Transferable, boolean, AccessIdentity_Transferable)
 	 */
 	public final StorableObject_Transferable receiveSchemeProtoGroup(
 			final SchemeProtoGroup_Transferable schemeProtoGroup,
 			final boolean force,
-			final AccessIdentifier_Transferable accessIdentifier)
+			final AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
 		try {
-			return receiveStorableObject(newSchemeProtoGroup(schemeProtoGroup), accessIdentifier, force);
+			return receiveStorableObject(newSchemeProtoGroup(schemeProtoGroup), accessIdentityT, force);
 		} catch (final CreateObjectException coe) {
 			Log.errorException(coe);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
@@ -89,17 +89,17 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 	/**
 	 * @param schemeProtoElement
 	 * @param force
-	 * @param accessIdentifier
+	 * @param accessIdentityT
 	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receiveSchemeProtoElement(SchemeProtoElement_Transferable, boolean, AccessIdentifier_Transferable)
+	 * @see MSHServerOperations#receiveSchemeProtoElement(SchemeProtoElement_Transferable, boolean, AccessIdentity_Transferable)
 	 */
 	public final StorableObject_Transferable receiveSchemeProtoElement(
 			final SchemeProtoElement_Transferable schemeProtoElement,
 			final boolean force,
-			final AccessIdentifier_Transferable accessIdentifier)
+			final AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
 		try {
-			return receiveStorableObject(newSchemeProtoElement(schemeProtoElement), accessIdentifier, force);
+			return receiveStorableObject(newSchemeProtoElement(schemeProtoElement), accessIdentityT, force);
 		} catch (final CreateObjectException coe) {
 			Log.errorException(coe);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
@@ -112,17 +112,17 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 	/**
 	 * @param scheme
 	 * @param force
-	 * @param accessIdentifier
+	 * @param accessIdentityT
 	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receiveScheme(Scheme_Transferable, boolean, AccessIdentifier_Transferable)
+	 * @see MSHServerOperations#receiveScheme(Scheme_Transferable, boolean, AccessIdentity_Transferable)
 	 */
 	public final StorableObject_Transferable receiveScheme(
 			final Scheme_Transferable scheme,
 			final boolean force,
-			final AccessIdentifier_Transferable accessIdentifier)
+			final AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
 		try {
-			return receiveStorableObject(newScheme(scheme), accessIdentifier, force);
+			return receiveStorableObject(newScheme(scheme), accessIdentityT, force);
 		} catch (final CreateObjectException coe) {
 			Log.errorException(coe);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
@@ -135,17 +135,17 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 	/**
 	 * @param schemeElement
 	 * @param force
-	 * @param accessIdentifier
+	 * @param accessIdentityT
 	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receiveSchemeElement(SchemeElement_Transferable, boolean, AccessIdentifier_Transferable)
+	 * @see MSHServerOperations#receiveSchemeElement(SchemeElement_Transferable, boolean, AccessIdentity_Transferable)
 	 */
 	public final StorableObject_Transferable receiveSchemeElement(
 			final SchemeElement_Transferable schemeElement,
 			final boolean force,
-			final AccessIdentifier_Transferable accessIdentifier)
+			final AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
 		try {
-			return receiveStorableObject(newSchemeElement(schemeElement), accessIdentifier, force);
+			return receiveStorableObject(newSchemeElement(schemeElement), accessIdentityT, force);
 		} catch (final CreateObjectException coe) {
 			Log.errorException(coe);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
@@ -158,17 +158,17 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 	/**
 	 * @param schemeOptimizeInfo
 	 * @param force
-	 * @param accessIdentifier
+	 * @param accessIdentityT
 	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receiveSchemeOptimizeInfo(SchemeOptimizeInfo_Transferable, boolean, AccessIdentifier_Transferable)
+	 * @see MSHServerOperations#receiveSchemeOptimizeInfo(SchemeOptimizeInfo_Transferable, boolean, AccessIdentity_Transferable)
 	 */
 	public final StorableObject_Transferable receiveSchemeOptimizeInfo(
 			final SchemeOptimizeInfo_Transferable schemeOptimizeInfo,
 			final boolean force,
-			final AccessIdentifier_Transferable accessIdentifier)
+			final AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
 		try {
-			return receiveStorableObject(newSchemeOptimizeInfo(schemeOptimizeInfo), accessIdentifier, force);
+			return receiveStorableObject(newSchemeOptimizeInfo(schemeOptimizeInfo), accessIdentityT, force);
 		} catch (final CreateObjectException coe) {
 			Log.errorException(coe);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
@@ -181,17 +181,17 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 	/**
 	 * @param schemeMonitoringSolution
 	 * @param force
-	 * @param accessIdentifier
+	 * @param accessIdentityT
 	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receiveSchemeMonitoringSolution(SchemeMonitoringSolution_Transferable, boolean, AccessIdentifier_Transferable)
+	 * @see MSHServerOperations#receiveSchemeMonitoringSolution(SchemeMonitoringSolution_Transferable, boolean, AccessIdentity_Transferable)
 	 */
 	public final StorableObject_Transferable receiveSchemeMonitoringSolution(
 			final SchemeMonitoringSolution_Transferable schemeMonitoringSolution,
 			final boolean force,
-			final AccessIdentifier_Transferable accessIdentifier)
+			final AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
 		try {
-			return receiveStorableObject(newSchemeMonitoringSolution(schemeMonitoringSolution), accessIdentifier, force);
+			return receiveStorableObject(newSchemeMonitoringSolution(schemeMonitoringSolution), accessIdentityT, force);
 		} catch (final CreateObjectException coe) {
 			Log.errorException(coe);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
@@ -204,17 +204,17 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 	/**
 	 * @param schemeDevice
 	 * @param force
-	 * @param accessIdentifier
+	 * @param accessIdentityT
 	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receiveSchemeDevice(SchemeDevice_Transferable, boolean, AccessIdentifier_Transferable)
+	 * @see MSHServerOperations#receiveSchemeDevice(SchemeDevice_Transferable, boolean, AccessIdentity_Transferable)
 	 */
 	public final StorableObject_Transferable receiveSchemeDevice(
 			final SchemeDevice_Transferable schemeDevice,
 			final boolean force,
-			final AccessIdentifier_Transferable accessIdentifier)
+			final AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
 		try {
-			return receiveStorableObject(newSchemeDevice(schemeDevice), accessIdentifier, force);
+			return receiveStorableObject(newSchemeDevice(schemeDevice), accessIdentityT, force);
 		} catch (final CreateObjectException coe) {
 			Log.errorException(coe);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
@@ -227,17 +227,17 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 	/**
 	 * @param schemePort
 	 * @param force
-	 * @param accessIdentifier
+	 * @param accessIdentityT
 	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receiveSchemePort(SchemePort_Transferable, boolean, AccessIdentifier_Transferable)
+	 * @see MSHServerOperations#receiveSchemePort(SchemePort_Transferable, boolean, AccessIdentity_Transferable)
 	 */
 	public final StorableObject_Transferable receiveSchemePort(
 			final SchemePort_Transferable schemePort,
 			final boolean force,
-			final AccessIdentifier_Transferable accessIdentifier)
+			final AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
 		try {
-			return receiveStorableObject(newSchemePort(schemePort), accessIdentifier, force);
+			return receiveStorableObject(newSchemePort(schemePort), accessIdentityT, force);
 		} catch (final CreateObjectException coe) {
 			Log.errorException(coe);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
@@ -250,17 +250,17 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 	/**
 	 * @param schemeCablePort
 	 * @param force
-	 * @param accessIdentifier
+	 * @param accessIdentityT
 	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receiveSchemeCablePort(SchemeCablePort_Transferable, boolean, AccessIdentifier_Transferable)
+	 * @see MSHServerOperations#receiveSchemeCablePort(SchemeCablePort_Transferable, boolean, AccessIdentity_Transferable)
 	 */
 	public final StorableObject_Transferable receiveSchemeCablePort(
 			final SchemeCablePort_Transferable schemeCablePort,
 			final boolean force,
-			final AccessIdentifier_Transferable accessIdentifier)
+			final AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
 		try {
-			return receiveStorableObject(newSchemeCablePort(schemeCablePort), accessIdentifier, force);
+			return receiveStorableObject(newSchemeCablePort(schemeCablePort), accessIdentityT, force);
 		} catch (final CreateObjectException coe) {
 			Log.errorException(coe);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
@@ -273,17 +273,17 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 	/**
 	 * @param schemeLink
 	 * @param force
-	 * @param accessIdentifier
+	 * @param accessIdentityT
 	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receiveSchemeLink(SchemeLink_Transferable, boolean, AccessIdentifier_Transferable)
+	 * @see MSHServerOperations#receiveSchemeLink(SchemeLink_Transferable, boolean, AccessIdentity_Transferable)
 	 */
 	public final StorableObject_Transferable receiveSchemeLink(
 			final SchemeLink_Transferable schemeLink,
 			final boolean force,
-			final AccessIdentifier_Transferable accessIdentifier)
+			final AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
 		try {
-			return receiveStorableObject(newSchemeLink(schemeLink), accessIdentifier, force);
+			return receiveStorableObject(newSchemeLink(schemeLink), accessIdentityT, force);
 		} catch (final CreateObjectException coe) {
 			Log.errorException(coe);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
@@ -296,17 +296,17 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 	/**
 	 * @param schemeCableLink
 	 * @param force
-	 * @param accessIdentifier
+	 * @param accessIdentityT
 	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receiveSchemeCableLink(SchemeCableLink_Transferable, boolean, AccessIdentifier_Transferable)
+	 * @see MSHServerOperations#receiveSchemeCableLink(SchemeCableLink_Transferable, boolean, AccessIdentity_Transferable)
 	 */
 	public final StorableObject_Transferable receiveSchemeCableLink(
 			final SchemeCableLink_Transferable schemeCableLink,
 			final boolean force,
-			final AccessIdentifier_Transferable accessIdentifier)
+			final AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
 		try {
-			return receiveStorableObject(newSchemeCableLink(schemeCableLink), accessIdentifier, force);
+			return receiveStorableObject(newSchemeCableLink(schemeCableLink), accessIdentityT, force);
 		} catch (final CreateObjectException coe) {
 			Log.errorException(coe);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
@@ -319,17 +319,17 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 	/**
 	 * @param schemeCableThread
 	 * @param force
-	 * @param accessIdentifier
+	 * @param accessIdentityT
 	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receiveSchemeCableThread(SchemeCableThread_Transferable, boolean, AccessIdentifier_Transferable)
+	 * @see MSHServerOperations#receiveSchemeCableThread(SchemeCableThread_Transferable, boolean, AccessIdentity_Transferable)
 	 */
 	public final StorableObject_Transferable receiveSchemeCableThread(
 			final SchemeCableThread_Transferable schemeCableThread,
 			final boolean force,
-			final AccessIdentifier_Transferable accessIdentifier)
+			final AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
 		try {
-			return receiveStorableObject(newSchemeCableThread(schemeCableThread), accessIdentifier, force);
+			return receiveStorableObject(newSchemeCableThread(schemeCableThread), accessIdentityT, force);
 		} catch (final CreateObjectException coe) {
 			Log.errorException(coe);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
@@ -342,17 +342,17 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 	/**
 	 * @param cableChannelingItem
 	 * @param force
-	 * @param accessIdentifier
+	 * @param accessIdentityT
 	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receiveCableChannelingItem(CableChannelingItem_Transferable, boolean, AccessIdentifier_Transferable)
+	 * @see MSHServerOperations#receiveCableChannelingItem(CableChannelingItem_Transferable, boolean, AccessIdentity_Transferable)
 	 */
 	public final StorableObject_Transferable receiveCableChannelingItem(
 			final CableChannelingItem_Transferable cableChannelingItem,
 			final boolean force,
-			final AccessIdentifier_Transferable accessIdentifier)
+			final AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
 		try {
-			return receiveStorableObject(newCableChannelingItem(cableChannelingItem), accessIdentifier, force);
+			return receiveStorableObject(newCableChannelingItem(cableChannelingItem), accessIdentityT, force);
 		} catch (final CreateObjectException coe) {
 			Log.errorException(coe);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
@@ -365,17 +365,17 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 	/**
 	 * @param schemePath
 	 * @param force
-	 * @param accessIdentifier
+	 * @param accessIdentityT
 	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receiveSchemePath(SchemePath_Transferable, boolean, AccessIdentifier_Transferable)
+	 * @see MSHServerOperations#receiveSchemePath(SchemePath_Transferable, boolean, AccessIdentity_Transferable)
 	 */
 	public final StorableObject_Transferable receiveSchemePath(
 			final SchemePath_Transferable schemePath,
 			final boolean force,
-			final AccessIdentifier_Transferable accessIdentifier)
+			final AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
 		try {
-			return receiveStorableObject(newSchemePath(schemePath), accessIdentifier, force);
+			return receiveStorableObject(newSchemePath(schemePath), accessIdentityT, force);
 		} catch (final CreateObjectException coe) {
 			Log.errorException(coe);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
@@ -388,17 +388,17 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 	/**
 	 * @param pathElement
 	 * @param force
-	 * @param accessIdentifier
+	 * @param accessIdentityT
 	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receivePathElement(PathElement_Transferable, boolean, AccessIdentifier_Transferable)
+	 * @see MSHServerOperations#receivePathElement(PathElement_Transferable, boolean, AccessIdentity_Transferable)
 	 */
 	public final StorableObject_Transferable receivePathElement(
 			final PathElement_Transferable pathElement,
 			final boolean force,
-			final AccessIdentifier_Transferable accessIdentifier)
+			final AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
 		try {
-			return receiveStorableObject(newPathElement(pathElement), accessIdentifier, force);
+			return receiveStorableObject(newPathElement(pathElement), accessIdentityT, force);
 		} catch (final CreateObjectException coe) {
 			Log.errorException(coe);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
@@ -415,14 +415,14 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 	/**
 	 * @param schemeProtoGroups
 	 * @param force
-	 * @param accessIdentifier
+	 * @param accessIdentityT
 	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receiveSchemeProtoGroups(SchemeProtoGroup_Transferable[], boolean, AccessIdentifier_Transferable)
+	 * @see MSHServerOperations#receiveSchemeProtoGroups(SchemeProtoGroup_Transferable[], boolean, AccessIdentity_Transferable)
 	 */
 	public final StorableObject_Transferable[] receiveSchemeProtoGroups(
 			final SchemeProtoGroup_Transferable schemeProtoGroups[],
 			final boolean force,
-			final AccessIdentifier_Transferable accessIdentifier)
+			final AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
 		try {
 			final int length = schemeProtoGroups.length;
@@ -432,7 +432,7 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 				SchemeStorableObjectPool.putStorableObject(schemeProtoGroup);
 				schemeProtoGroups1.add(schemeProtoGroup);
 			}
-			return receiveStorableObjects(schemeProtoGroups1, accessIdentifier, force);
+			return receiveStorableObjects(schemeProtoGroups1, accessIdentityT, force);
 		} catch (final IllegalObjectEntityException ioee) {
 			Log.errorException(ioee);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, ioee.getMessage());
@@ -448,14 +448,14 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 	/**
 	 * @param schemeProtoElements
 	 * @param force
-	 * @param accessIdentifier
+	 * @param accessIdentityT
 	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receiveSchemeProtoElements(SchemeProtoElement_Transferable[], boolean, AccessIdentifier_Transferable)
+	 * @see MSHServerOperations#receiveSchemeProtoElements(SchemeProtoElement_Transferable[], boolean, AccessIdentity_Transferable)
 	 */
 	public final StorableObject_Transferable[] receiveSchemeProtoElements(
 			final SchemeProtoElement_Transferable schemeProtoElements[],
 			final boolean force,
-			final AccessIdentifier_Transferable accessIdentifier)
+			final AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
 		try {
 			final int length = schemeProtoElements.length;
@@ -465,7 +465,7 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 				SchemeStorableObjectPool.putStorableObject(schemeProtoElement);
 				schemeProtoElements1.add(schemeProtoElement);
 			}
-			return receiveStorableObjects(schemeProtoElements1, accessIdentifier, force);
+			return receiveStorableObjects(schemeProtoElements1, accessIdentityT, force);
 		} catch (final IllegalObjectEntityException ioee) {
 			Log.errorException(ioee);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, ioee.getMessage());
@@ -481,14 +481,14 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 	/**
 	 * @param schemes
 	 * @param force
-	 * @param accessIdentifier
+	 * @param accessIdentityT
 	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receiveSchemes(Scheme_Transferable[], boolean, AccessIdentifier_Transferable)
+	 * @see MSHServerOperations#receiveSchemes(Scheme_Transferable[], boolean, AccessIdentity_Transferable)
 	 */
 	public final StorableObject_Transferable[] receiveSchemes(
 			final Scheme_Transferable schemes[],
 			final boolean force,
-			final AccessIdentifier_Transferable accessIdentifier)
+			final AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
 		try {
 			final int length = schemes.length;
@@ -498,7 +498,7 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 				SchemeStorableObjectPool.putStorableObject(scheme);
 				schemes1.add(scheme);
 			}
-			return receiveStorableObjects(schemes1, accessIdentifier, force);
+			return receiveStorableObjects(schemes1, accessIdentityT, force);
 		} catch (final IllegalObjectEntityException ioee) {
 			Log.errorException(ioee);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, ioee.getMessage());
@@ -514,14 +514,14 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 	/**
 	 * @param schemeElements
 	 * @param force
-	 * @param accessIdentifier
+	 * @param accessIdentityT
 	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receiveSchemeElements(SchemeElement_Transferable[], boolean, AccessIdentifier_Transferable)
+	 * @see MSHServerOperations#receiveSchemeElements(SchemeElement_Transferable[], boolean, AccessIdentity_Transferable)
 	 */
 	public final StorableObject_Transferable[] receiveSchemeElements(
 			final SchemeElement_Transferable schemeElements[],
 			final boolean force,
-			final AccessIdentifier_Transferable accessIdentifier)
+			final AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
 		try {
 			final int length = schemeElements.length;
@@ -531,7 +531,7 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 				SchemeStorableObjectPool.putStorableObject(schemeElement);
 				schemeElements1.add(schemeElement);
 			}
-			return receiveStorableObjects(schemeElements1, accessIdentifier, force);
+			return receiveStorableObjects(schemeElements1, accessIdentityT, force);
 		} catch (final IllegalObjectEntityException ioee) {
 			Log.errorException(ioee);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, ioee.getMessage());
@@ -547,14 +547,14 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 	/**
 	 * @param schemeOptimizeInfos
 	 * @param force
-	 * @param accessIdentifier
+	 * @param accessIdentityT
 	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receiveSchemeOptimizeInfos(SchemeOptimizeInfo_Transferable[], boolean, AccessIdentifier_Transferable)
+	 * @see MSHServerOperations#receiveSchemeOptimizeInfos(SchemeOptimizeInfo_Transferable[], boolean, AccessIdentity_Transferable)
 	 */
 	public final StorableObject_Transferable[] receiveSchemeOptimizeInfos(
 			final SchemeOptimizeInfo_Transferable schemeOptimizeInfos[],
 			final boolean force,
-			final AccessIdentifier_Transferable accessIdentifier)
+			final AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
 		try {
 			final int length = schemeOptimizeInfos.length;
@@ -564,7 +564,7 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 				SchemeStorableObjectPool.putStorableObject(schemeOptimizeInfo);
 				schemeOptimizeInfos1.add(schemeOptimizeInfo);
 			}
-			return receiveStorableObjects(schemeOptimizeInfos1, accessIdentifier, force);
+			return receiveStorableObjects(schemeOptimizeInfos1, accessIdentityT, force);
 		} catch (final IllegalObjectEntityException ioee) {
 			Log.errorException(ioee);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, ioee.getMessage());
@@ -580,14 +580,14 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 	/**
 	 * @param schemeMonitoringSolutions
 	 * @param force
-	 * @param accessIdentifier
+	 * @param accessIdentityT
 	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receiveSchemeMonitoringSolutions(SchemeMonitoringSolution_Transferable[], boolean, AccessIdentifier_Transferable)
+	 * @see MSHServerOperations#receiveSchemeMonitoringSolutions(SchemeMonitoringSolution_Transferable[], boolean, AccessIdentity_Transferable)
 	 */
 	public final StorableObject_Transferable[] receiveSchemeMonitoringSolutions(
 			final SchemeMonitoringSolution_Transferable schemeMonitoringSolutions[],
 			final boolean force,
-			final AccessIdentifier_Transferable accessIdentifier)
+			final AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
 		try {
 			final int length = schemeMonitoringSolutions.length;
@@ -597,7 +597,7 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 				SchemeStorableObjectPool.putStorableObject(schemeMonitoringSolution);
 				schemeMonitoringSolutions1.add(schemeMonitoringSolution);
 			}
-			return receiveStorableObjects(schemeMonitoringSolutions1, accessIdentifier, force);
+			return receiveStorableObjects(schemeMonitoringSolutions1, accessIdentityT, force);
 		} catch (final IllegalObjectEntityException ioee) {
 			Log.errorException(ioee);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, ioee.getMessage());
@@ -613,14 +613,14 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 	/**
 	 * @param schemeDevices
 	 * @param force
-	 * @param accessIdentifier
+	 * @param accessIdentityT
 	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receiveSchemeDevices(SchemeDevice_Transferable[], boolean, AccessIdentifier_Transferable)
+	 * @see MSHServerOperations#receiveSchemeDevices(SchemeDevice_Transferable[], boolean, AccessIdentity_Transferable)
 	 */
 	public final StorableObject_Transferable[] receiveSchemeDevices(
 			final SchemeDevice_Transferable schemeDevices[],
 			final boolean force,
-			final AccessIdentifier_Transferable accessIdentifier)
+			final AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
 		try {
 			final int length = schemeDevices.length;
@@ -630,7 +630,7 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 				SchemeStorableObjectPool.putStorableObject(schemeDevice);
 				schemeDevices1.add(schemeDevice);
 			}
-			return receiveStorableObjects(schemeDevices1, accessIdentifier, force);
+			return receiveStorableObjects(schemeDevices1, accessIdentityT, force);
 		} catch (final IllegalObjectEntityException ioee) {
 			Log.errorException(ioee);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, ioee.getMessage());
@@ -646,14 +646,14 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 	/**
 	 * @param schemePorts
 	 * @param force
-	 * @param accessIdentifier
+	 * @param accessIdentityT
 	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receiveSchemePorts(SchemePort_Transferable[], boolean, AccessIdentifier_Transferable)
+	 * @see MSHServerOperations#receiveSchemePorts(SchemePort_Transferable[], boolean, AccessIdentity_Transferable)
 	 */
 	public final StorableObject_Transferable[] receiveSchemePorts(
 			final SchemePort_Transferable schemePorts[],
 			final boolean force,
-			final AccessIdentifier_Transferable accessIdentifier)
+			final AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
 		try {
 			final int length = schemePorts.length;
@@ -663,7 +663,7 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 				SchemeStorableObjectPool.putStorableObject(schemePort);
 				schemePorts1.add(schemePort);
 			}
-			return receiveStorableObjects(schemePorts1, accessIdentifier, force);
+			return receiveStorableObjects(schemePorts1, accessIdentityT, force);
 		} catch (final IllegalObjectEntityException ioee) {
 			Log.errorException(ioee);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, ioee.getMessage());
@@ -679,14 +679,14 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 	/**
 	 * @param schemeCablePorts
 	 * @param force
-	 * @param accessIdentifier
+	 * @param accessIdentityT
 	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receiveSchemeCablePorts(SchemeCablePort_Transferable[], boolean, AccessIdentifier_Transferable)
+	 * @see MSHServerOperations#receiveSchemeCablePorts(SchemeCablePort_Transferable[], boolean, AccessIdentity_Transferable)
 	 */
 	public final StorableObject_Transferable[] receiveSchemeCablePorts(
 			final SchemeCablePort_Transferable schemeCablePorts[],
 			final boolean force,
-			final AccessIdentifier_Transferable accessIdentifier)
+			final AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
 		try {
 			final int length = schemeCablePorts.length;
@@ -696,7 +696,7 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 				SchemeStorableObjectPool.putStorableObject(schemeCablePort);
 				schemeCablePorts1.add(schemeCablePort);
 			}
-			return receiveStorableObjects(schemeCablePorts1, accessIdentifier, force);
+			return receiveStorableObjects(schemeCablePorts1, accessIdentityT, force);
 		} catch (final IllegalObjectEntityException ioee) {
 			Log.errorException(ioee);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, ioee.getMessage());
@@ -712,14 +712,14 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 	/**
 	 * @param schemeLinks
 	 * @param force
-	 * @param accessIdentifier
+	 * @param accessIdentityT
 	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receiveSchemeLinks(SchemeLink_Transferable[], boolean, AccessIdentifier_Transferable)
+	 * @see MSHServerOperations#receiveSchemeLinks(SchemeLink_Transferable[], boolean, AccessIdentity_Transferable)
 	 */
 	public final StorableObject_Transferable[] receiveSchemeLinks(
 			final SchemeLink_Transferable schemeLinks[],
 			final boolean force,
-			final AccessIdentifier_Transferable accessIdentifier)
+			final AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
 		try {
 			final int length = schemeLinks.length;
@@ -729,7 +729,7 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 				SchemeStorableObjectPool.putStorableObject(schemeLink);
 				schemeLinks1.add(schemeLink);
 			}
-			return receiveStorableObjects(schemeLinks1, accessIdentifier, force);
+			return receiveStorableObjects(schemeLinks1, accessIdentityT, force);
 		} catch (final IllegalObjectEntityException ioee) {
 			Log.errorException(ioee);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, ioee.getMessage());
@@ -745,14 +745,14 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 	/**
 	 * @param schemeCableLinks
 	 * @param force
-	 * @param accessIdentifier
+	 * @param accessIdentityT
 	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receiveSchemeCableLinks(SchemeCableLink_Transferable[], boolean, AccessIdentifier_Transferable)
+	 * @see MSHServerOperations#receiveSchemeCableLinks(SchemeCableLink_Transferable[], boolean, AccessIdentity_Transferable)
 	 */
 	public final StorableObject_Transferable[] receiveSchemeCableLinks(
 			final SchemeCableLink_Transferable schemeCableLinks[],
 			final boolean force,
-			final AccessIdentifier_Transferable accessIdentifier)
+			final AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
 		try {
 			final int length = schemeCableLinks.length;
@@ -762,7 +762,7 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 				SchemeStorableObjectPool.putStorableObject(schemeCableLink);
 				schemeCableLinks1.add(schemeCableLink);
 			}
-			return receiveStorableObjects(schemeCableLinks1, accessIdentifier, force);
+			return receiveStorableObjects(schemeCableLinks1, accessIdentityT, force);
 		} catch (final IllegalObjectEntityException ioee) {
 			Log.errorException(ioee);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, ioee.getMessage());
@@ -778,14 +778,14 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 	/**
 	 * @param schemeCableThreads
 	 * @param force
-	 * @param accessIdentifier
+	 * @param accessIdentityT
 	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receiveSchemeCableThreads(SchemeCableThread_Transferable[], boolean, AccessIdentifier_Transferable)
+	 * @see MSHServerOperations#receiveSchemeCableThreads(SchemeCableThread_Transferable[], boolean, AccessIdentity_Transferable)
 	 */
 	public final StorableObject_Transferable[] receiveSchemeCableThreads(
 			final SchemeCableThread_Transferable schemeCableThreads[],
 			final boolean force,
-			final AccessIdentifier_Transferable accessIdentifier)
+			final AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
 		try {
 			final int length = schemeCableThreads.length;
@@ -795,7 +795,7 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 				SchemeStorableObjectPool.putStorableObject(schemeCableThread);
 				schemeCableThreads1.add(schemeCableThread);
 			}
-			return receiveStorableObjects(schemeCableThreads1, accessIdentifier, force);
+			return receiveStorableObjects(schemeCableThreads1, accessIdentityT, force);
 		} catch (final IllegalObjectEntityException ioee) {
 			Log.errorException(ioee);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, ioee.getMessage());
@@ -811,14 +811,14 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 	/**
 	 * @param cableChannelingItems
 	 * @param force
-	 * @param accessIdentifier
+	 * @param accessIdentityT
 	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receiveCableChannelingItems(CableChannelingItem_Transferable[], boolean, AccessIdentifier_Transferable)
+	 * @see MSHServerOperations#receiveCableChannelingItems(CableChannelingItem_Transferable[], boolean, AccessIdentity_Transferable)
 	 */
 	public final StorableObject_Transferable[] receiveCableChannelingItems(
 			final CableChannelingItem_Transferable cableChannelingItems[],
 			final boolean force,
-			final AccessIdentifier_Transferable accessIdentifier)
+			final AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
 		try {
 			final int length = cableChannelingItems.length;
@@ -828,7 +828,7 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 				SchemeStorableObjectPool.putStorableObject(cableChannelingItem);
 				cableChannelingItems1.add(cableChannelingItem);
 			}
-			return receiveStorableObjects(cableChannelingItems1, accessIdentifier, force);
+			return receiveStorableObjects(cableChannelingItems1, accessIdentityT, force);
 		} catch (final IllegalObjectEntityException ioee) {
 			Log.errorException(ioee);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, ioee.getMessage());
@@ -844,14 +844,14 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 	/**
 	 * @param schemePaths
 	 * @param force
-	 * @param accessIdentifier
+	 * @param accessIdentityT
 	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receiveSchemePaths(SchemePath_Transferable[], boolean, AccessIdentifier_Transferable)
+	 * @see MSHServerOperations#receiveSchemePaths(SchemePath_Transferable[], boolean, AccessIdentity_Transferable)
 	 */
 	public final StorableObject_Transferable[] receiveSchemePaths(
 			final SchemePath_Transferable schemePaths[],
 			final boolean force,
-			final AccessIdentifier_Transferable accessIdentifier)
+			final AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
 		try {
 			final int length = schemePaths.length;
@@ -861,7 +861,7 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 				SchemeStorableObjectPool.putStorableObject(schemePath);
 				schemePaths1.add(schemePath);
 			}
-			return receiveStorableObjects(schemePaths1, accessIdentifier, force);
+			return receiveStorableObjects(schemePaths1, accessIdentityT, force);
 		} catch (final IllegalObjectEntityException ioee) {
 			Log.errorException(ioee);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, ioee.getMessage());
@@ -877,14 +877,14 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 	/**
 	 * @param pathElements
 	 * @param force
-	 * @param accessIdentifier
+	 * @param accessIdentityT
 	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receivePathElements(PathElement_Transferable[], boolean, AccessIdentifier_Transferable)
+	 * @see MSHServerOperations#receivePathElements(PathElement_Transferable[], boolean, AccessIdentity_Transferable)
 	 */
 	public final StorableObject_Transferable[] receivePathElements(
 			final PathElement_Transferable pathElements[],
 			final boolean force,
-			final AccessIdentifier_Transferable accessIdentifier)
+			final AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
 		try {
 			final int length = pathElements.length;
@@ -894,7 +894,7 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 				SchemeStorableObjectPool.putStorableObject(pathElement);
 				pathElements1.add(pathElement);
 			}
-			return receiveStorableObjects(pathElements1, accessIdentifier, force);
+			return receiveStorableObjects(pathElements1, accessIdentityT, force);
 		} catch (final IllegalObjectEntityException ioee) {
 			Log.errorException(ioee);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, ioee.getMessage());

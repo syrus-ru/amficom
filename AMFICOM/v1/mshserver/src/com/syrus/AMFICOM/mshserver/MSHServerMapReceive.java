@@ -1,5 +1,5 @@
 /*-
- * $Id: MSHServerMapReceive.java,v 1.1 2005/04/08 09:32:27 bass Exp $
+ * $Id: MSHServerMapReceive.java,v 1.2 2005/04/23 15:36:31 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,11 +8,15 @@
 
 package com.syrus.AMFICOM.mshserver;
 
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
+import com.syrus.AMFICOM.general.corba.AccessIdentity_Transferable;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
@@ -39,14 +43,10 @@ import com.syrus.AMFICOM.mshserver.corba.MSHServerOperations;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectFactory;
 import com.syrus.util.Log;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/04/08 09:32:27 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2005/04/23 15:36:31 $
  * @module mshserver_v1
  */
 abstract class MSHServerMapReceive extends SchemeStorableObjectFactory implements MSHServerOperations {
@@ -60,13 +60,13 @@ abstract class MSHServerMapReceive extends SchemeStorableObjectFactory implement
 
 	abstract StorableObject_Transferable receiveStorableObject(
 			final StorableObject storableObject,
-			final AccessIdentifier_Transferable accessIdentifier, 
+			final AccessIdentity_Transferable accessIdentityT, 
 			final boolean force)
 			throws AMFICOMRemoteException;
 
 	abstract StorableObject_Transferable[] receiveStorableObjects(
 			final Set storableObjects,
-			final AccessIdentifier_Transferable accessIdentifier,
+			final AccessIdentity_Transferable accessIdentityT,
 			final boolean force)
 			throws AMFICOMRemoteException;
 
@@ -77,10 +77,10 @@ abstract class MSHServerMapReceive extends SchemeStorableObjectFactory implement
 	public final StorableObject_Transferable receiveSiteNode(
 			final SiteNode_Transferable siteNode,
 			final boolean force,
-			final AccessIdentifier_Transferable accessIdentifier)
+			final AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
 		try {
-			return receiveStorableObject(newSiteNode(siteNode), accessIdentifier, force);
+			return receiveStorableObject(newSiteNode(siteNode), accessIdentityT, force);
 		} catch (final CreateObjectException coe) {
 			Log.errorException(coe);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
@@ -93,10 +93,10 @@ abstract class MSHServerMapReceive extends SchemeStorableObjectFactory implement
 	public final StorableObject_Transferable receiveTopologicalNode(
 			final TopologicalNode_Transferable topologicalNode,
 			final boolean force,
-			final AccessIdentifier_Transferable accessIdentifier)
+			final AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
 		try {
-			return receiveStorableObject(newTopologicalNode(topologicalNode), accessIdentifier, force);
+			return receiveStorableObject(newTopologicalNode(topologicalNode), accessIdentityT, force);
 		} catch (final CreateObjectException coe) {
 			Log.errorException(coe);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
@@ -109,10 +109,10 @@ abstract class MSHServerMapReceive extends SchemeStorableObjectFactory implement
 	public final StorableObject_Transferable receiveNodeLink(
 			final NodeLink_Transferable nodeLink,
 			final boolean force,
-			final AccessIdentifier_Transferable accessIdentifier)
+			final AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
 		try {
-			return receiveStorableObject(newNodeLink(nodeLink), accessIdentifier, force);
+			return receiveStorableObject(newNodeLink(nodeLink), accessIdentityT, force);
 		} catch (final CreateObjectException coe) {
 			Log.errorException(coe);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
@@ -125,10 +125,10 @@ abstract class MSHServerMapReceive extends SchemeStorableObjectFactory implement
 	public final StorableObject_Transferable receiveMark(
 			final Mark_Transferable mark,
 			final boolean force,
-			final AccessIdentifier_Transferable accessIdentifier)
+			final AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
 		try {
-			return receiveStorableObject(newMark(mark), accessIdentifier, force);
+			return receiveStorableObject(newMark(mark), accessIdentityT, force);
 		} catch (final CreateObjectException coe) {
 			Log.errorException(coe);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
@@ -141,10 +141,10 @@ abstract class MSHServerMapReceive extends SchemeStorableObjectFactory implement
 	public final StorableObject_Transferable receivePhysicalLink(
 			final PhysicalLink_Transferable physicalLink,
 			final boolean force,
-			final AccessIdentifier_Transferable accessIdentifier)
+			final AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
 		try {
-			return receiveStorableObject(newPhysicalLink(physicalLink), accessIdentifier, force);
+			return receiveStorableObject(newPhysicalLink(physicalLink), accessIdentityT, force);
 		} catch (final CreateObjectException coe) {
 			Log.errorException(coe);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
@@ -157,10 +157,10 @@ abstract class MSHServerMapReceive extends SchemeStorableObjectFactory implement
 	public final StorableObject_Transferable receiveCollector(
 			final Collector_Transferable collector,
 			final boolean force,
-			final AccessIdentifier_Transferable accessIdentifier)
+			final AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
 		try {
-			return receiveStorableObject(newCollector(collector), accessIdentifier, force);
+			return receiveStorableObject(newCollector(collector), accessIdentityT, force);
 		} catch (final CreateObjectException coe) {
 			Log.errorException(coe);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
@@ -173,10 +173,10 @@ abstract class MSHServerMapReceive extends SchemeStorableObjectFactory implement
 	public final StorableObject_Transferable receiveMap(
 			final Map_Transferable map,
 			final boolean force,
-			final AccessIdentifier_Transferable accessIdentifier)
+			final AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
 		try {
-			return receiveStorableObject(newMap(map), accessIdentifier, force);
+			return receiveStorableObject(newMap(map), accessIdentityT, force);
 		} catch (final CreateObjectException coe) {
 			Log.errorException(coe);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
@@ -189,10 +189,10 @@ abstract class MSHServerMapReceive extends SchemeStorableObjectFactory implement
 	public final StorableObject_Transferable receiveSiteNodeType(
 			final SiteNodeType_Transferable siteNodeType,
 			final boolean force,
-			final AccessIdentifier_Transferable accessIdentifier)
+			final AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
 		try {
-			return receiveStorableObject(newSiteNodeType(siteNodeType), accessIdentifier, force);
+			return receiveStorableObject(newSiteNodeType(siteNodeType), accessIdentityT, force);
 		} catch (final CreateObjectException coe) {
 			Log.errorException(coe);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
@@ -205,10 +205,10 @@ abstract class MSHServerMapReceive extends SchemeStorableObjectFactory implement
 	public final StorableObject_Transferable receivePhysicalLinkType(
 			final PhysicalLinkType_Transferable physicalLinkType,
 			final boolean force,
-			final AccessIdentifier_Transferable accessIdentifier)
+			final AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
 		try {
-			return receiveStorableObject(newPhysicalLinkType(physicalLinkType), accessIdentifier, force);
+			return receiveStorableObject(newPhysicalLinkType(physicalLinkType), accessIdentityT, force);
 		} catch (final CreateObjectException coe) {
 			Log.errorException(coe);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
@@ -225,7 +225,7 @@ abstract class MSHServerMapReceive extends SchemeStorableObjectFactory implement
 	public final StorableObject_Transferable[] receiveSiteNodes(
 			final SiteNode_Transferable siteNodes[],
 			final boolean force,
-			final AccessIdentifier_Transferable accessIdentifier)
+			final AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
 		try {
 			final Set siteNodes1 = new HashSet(siteNodes.length);
@@ -234,7 +234,7 @@ abstract class MSHServerMapReceive extends SchemeStorableObjectFactory implement
 				MapStorableObjectPool.putStorableObject(siteNode);
 				siteNodes1.add(siteNode);
 			}
-			return receiveStorableObjects(siteNodes1, accessIdentifier, force);
+			return receiveStorableObjects(siteNodes1, accessIdentityT, force);
 		} catch (final IllegalObjectEntityException ioee) {
 			Log.errorException(ioee);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, ioee.getMessage());
@@ -250,7 +250,7 @@ abstract class MSHServerMapReceive extends SchemeStorableObjectFactory implement
 	public final StorableObject_Transferable[] receiveTopologicalNodes(
 			final TopologicalNode_Transferable topologicalNodes[],
 			final boolean force,
-			final AccessIdentifier_Transferable accessIdentifier)
+			final AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
 		try {
 			final Set topologicalNodes1 = new HashSet(topologicalNodes.length);
@@ -259,7 +259,7 @@ abstract class MSHServerMapReceive extends SchemeStorableObjectFactory implement
 				MapStorableObjectPool.putStorableObject(topologicalNode);
 				topologicalNodes1.add(topologicalNode);
 			}
-			return receiveStorableObjects(topologicalNodes1, accessIdentifier, force);
+			return receiveStorableObjects(topologicalNodes1, accessIdentityT, force);
 		} catch (final IllegalObjectEntityException ioee) {
 			Log.errorException(ioee);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, ioee.getMessage());
@@ -275,7 +275,7 @@ abstract class MSHServerMapReceive extends SchemeStorableObjectFactory implement
 	public final StorableObject_Transferable[] receiveNodeLinks(
 			final NodeLink_Transferable nodeLinks[],
 			final boolean force,
-			final AccessIdentifier_Transferable accessIdentifier)
+			final AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
 		try {
 			final Set nodeLinks1 = new HashSet(nodeLinks.length);
@@ -284,7 +284,7 @@ abstract class MSHServerMapReceive extends SchemeStorableObjectFactory implement
 				MapStorableObjectPool.putStorableObject(nodeLink);
 				nodeLinks1.add(nodeLink);
 			}
-			return receiveStorableObjects(nodeLinks1, accessIdentifier, force);
+			return receiveStorableObjects(nodeLinks1, accessIdentityT, force);
 		} catch (final IllegalObjectEntityException ioee) {
 			Log.errorException(ioee);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, ioee.getMessage());
@@ -300,7 +300,7 @@ abstract class MSHServerMapReceive extends SchemeStorableObjectFactory implement
 	public final StorableObject_Transferable[] receiveMarks(
 			final Mark_Transferable marks[],
 			final boolean force,
-			final AccessIdentifier_Transferable accessIdentifier)
+			final AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
 		try {
 			final Set marks1 = new HashSet(marks.length);
@@ -309,7 +309,7 @@ abstract class MSHServerMapReceive extends SchemeStorableObjectFactory implement
 				MapStorableObjectPool.putStorableObject(mark);
 				marks1.add(mark);
 			}
-			return receiveStorableObjects(marks1, accessIdentifier, force);
+			return receiveStorableObjects(marks1, accessIdentityT, force);
 		} catch (final IllegalObjectEntityException ioee) {
 			Log.errorException(ioee);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, ioee.getMessage());
@@ -325,7 +325,7 @@ abstract class MSHServerMapReceive extends SchemeStorableObjectFactory implement
 	public final StorableObject_Transferable[] receivePhysicalLinks(
 			final PhysicalLink_Transferable physicalLinks[],
 			final boolean force,
-			final AccessIdentifier_Transferable accessIdentifier)
+			final AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
 		try {
 			final Set physicalLinks1 = new HashSet(physicalLinks.length);
@@ -334,7 +334,7 @@ abstract class MSHServerMapReceive extends SchemeStorableObjectFactory implement
 				MapStorableObjectPool.putStorableObject(physicalLink);
 				physicalLinks1.add(physicalLink);
 			}
-			return receiveStorableObjects(physicalLinks1, accessIdentifier, force);
+			return receiveStorableObjects(physicalLinks1, accessIdentityT, force);
 		} catch (final IllegalObjectEntityException ioee) {
 			Log.errorException(ioee);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, ioee.getMessage());
@@ -350,7 +350,7 @@ abstract class MSHServerMapReceive extends SchemeStorableObjectFactory implement
 	public final StorableObject_Transferable[] receiveCollectors(
 			final Collector_Transferable collectors[],
 			final boolean force,
-			final AccessIdentifier_Transferable accessIdentifier)
+			final AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
 		try {
 			final Set collectors1 = new HashSet(collectors.length);
@@ -359,7 +359,7 @@ abstract class MSHServerMapReceive extends SchemeStorableObjectFactory implement
 				MapStorableObjectPool.putStorableObject(collector);
 				collectors1.add(collector);
 			}
-			return receiveStorableObjects(collectors1, accessIdentifier, force);
+			return receiveStorableObjects(collectors1, accessIdentityT, force);
 		} catch (final IllegalObjectEntityException ioee) {
 			Log.errorException(ioee);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, ioee.getMessage());
@@ -375,7 +375,7 @@ abstract class MSHServerMapReceive extends SchemeStorableObjectFactory implement
 	public final StorableObject_Transferable[] receiveMaps(
 			final Map_Transferable maps[],
 			final boolean force,
-			final AccessIdentifier_Transferable accessIdentifier)
+			final AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
 		try {
 			final Set maps1 = new HashSet(maps.length);
@@ -384,7 +384,7 @@ abstract class MSHServerMapReceive extends SchemeStorableObjectFactory implement
 				MapStorableObjectPool.putStorableObject(map);
 				maps1.add(map);
 			}
-			return receiveStorableObjects(maps1, accessIdentifier, force);
+			return receiveStorableObjects(maps1, accessIdentityT, force);
 		} catch (final IllegalObjectEntityException ioee) {
 			Log.errorException(ioee);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, ioee.getMessage());
@@ -400,7 +400,7 @@ abstract class MSHServerMapReceive extends SchemeStorableObjectFactory implement
 	public final StorableObject_Transferable[] receiveSiteNodeTypes(
 			final SiteNodeType_Transferable siteNodeTypes[],
 			final boolean force,
-			final AccessIdentifier_Transferable accessIdentifier)
+			final AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
 		try {
 			final Set siteNodeTypes1 = new HashSet(siteNodeTypes.length);
@@ -409,7 +409,7 @@ abstract class MSHServerMapReceive extends SchemeStorableObjectFactory implement
 				MapStorableObjectPool.putStorableObject(siteNodeType);
 				siteNodeTypes1.add(siteNodeType);
 			}
-			return receiveStorableObjects(siteNodeTypes1, accessIdentifier, force);
+			return receiveStorableObjects(siteNodeTypes1, accessIdentityT, force);
 		} catch (final IllegalObjectEntityException ioee) {
 			Log.errorException(ioee);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, ioee.getMessage());
@@ -425,7 +425,7 @@ abstract class MSHServerMapReceive extends SchemeStorableObjectFactory implement
 	public final StorableObject_Transferable[] receivePhysicalLinkTypes(
 			final PhysicalLinkType_Transferable physicalLinkTypes[],
 			final boolean force,
-			final AccessIdentifier_Transferable accessIdentifier)
+			final AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
 		try {
 			final Set physicalLinkTypes1 = new HashSet(physicalLinkTypes.length);
@@ -434,7 +434,7 @@ abstract class MSHServerMapReceive extends SchemeStorableObjectFactory implement
 				MapStorableObjectPool.putStorableObject(physicalLinkType);
 				physicalLinkTypes1.add(physicalLinkType);
 			}
-			return receiveStorableObjects(physicalLinkTypes1, accessIdentifier, force);
+			return receiveStorableObjects(physicalLinkTypes1, accessIdentityT, force);
 		} catch (final IllegalObjectEntityException ioee) {
 			Log.errorException(ioee);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, ioee.getMessage());
