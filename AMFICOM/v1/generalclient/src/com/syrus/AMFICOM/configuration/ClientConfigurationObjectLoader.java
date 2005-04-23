@@ -1,5 +1,5 @@
 /*
- * $Id: ClientConfigurationObjectLoader.java,v 1.27 2005/04/13 14:02:14 bob Exp $
+ * $Id: ClientConfigurationObjectLoader.java,v 1.28 2005/04/23 13:58:26 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,25 +45,20 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectConditionBuilder;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/04/13 14:02:14 $
- * @author $Author: bob $
+ * @version $Revision: 1.28 $, $Date: 2005/04/23 13:58:26 $
+ * @author $Author: arseniy $
  * @module generalclient_v1
  */
 
 public final class ClientConfigurationObjectLoader  extends AbstractClientObjectLoader implements ConfigurationObjectLoader {
 
 	private CMServer								server;
-	
-	private AccessIdentifier_Transferable getAccessIdentifierTransferable() {
-		return  (AccessIdentifier_Transferable) SessionContext.getAccessIdentity().getTransferable();
-	}
 	
 	public ClientConfigurationObjectLoader(CMServer server) {
 		this.server = server;
@@ -72,7 +67,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 	public void delete(Identifier id) {
 		Identifier_Transferable identifier_Transferable = (Identifier_Transferable) id.getTransferable();
 		try {
-			this.server.delete(identifier_Transferable, getAccessIdentifierTransferable());
+			this.server.delete(identifier_Transferable, SessionContext.getAccessIdentityTransferable());
 		} catch (AMFICOMRemoteException e) {
 			Log.errorException(e);
 		}
@@ -86,7 +81,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 			identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
 		}
 		try {
-			this.server.deleteList(identifier_Transferables, getAccessIdentifierTransferable());
+			this.server.deleteList(identifier_Transferables, SessionContext.getAccessIdentityTransferable());
 		} catch (AMFICOMRemoteException e) {
 			Log.errorException(e);
 		}
@@ -107,7 +102,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 	public CableLinkType loadCableLinkType(Identifier id) throws ApplicationException {
 		try {
 			CableLinkType_Transferable cltt = this.server.transmitCableLinkType((Identifier_Transferable) id.getTransferable(),
-				getAccessIdentifierTransferable());			
+				SessionContext.getAccessIdentityTransferable());			
 			CableLinkType cableLinkType = (CableLinkType) this.fromTransferable(id, cltt);
 			if (cableLinkType == null)
 				cableLinkType = new CableLinkType(cltt);
@@ -122,7 +117,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 	public CableThread loadCableThread(Identifier id) throws ApplicationException {
 		try {
 			CableThread_Transferable ctt = this.server.transmitCableThread((Identifier_Transferable) id.getTransferable(),
-				getAccessIdentifierTransferable());			
+				SessionContext.getAccessIdentityTransferable());			
 			CableThread cableThread = (CableThread) this.fromTransferable(id, ctt);
 			if (cableThread == null)
 				cableThread = new CableThread(ctt);
@@ -137,7 +132,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 	public CableThreadType loadCableThreadType(Identifier id) throws ApplicationException {
 		try {
 			CableThreadType_Transferable cttt = this.server.transmitCableThreadType((Identifier_Transferable) id
-				.getTransferable(), getAccessIdentifierTransferable());
+				.getTransferable(), SessionContext.getAccessIdentityTransferable());
 			CableThreadType cableThreadType = (CableThreadType) this.fromTransferable(id, cttt);
 			if (cableThreadType == null)
 				cableThreadType = new CableThreadType(cttt);
@@ -158,7 +153,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			CableLinkType_Transferable[] transferables = this.server.transmitCableLinkTypes(identifierTransferables,
-				getAccessIdentifierTransferable());
+				SessionContext.getAccessIdentityTransferable());
 			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {			
 				CableLinkType cableLinkType = (CableLinkType) this.fromTransferable(new Identifier(transferables[j].header.id), transferables[j]);
@@ -181,7 +176,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			CableThread_Transferable[] transferables = this.server.transmitCableThreads(identifierTransferables,
-				getAccessIdentifierTransferable());
+				SessionContext.getAccessIdentityTransferable());
 			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				CableThread cableThread = (CableThread) this.fromTransferable(new Identifier(transferables[j].header.id), transferables[j]);
@@ -204,7 +199,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			CableThreadType_Transferable[] transferables = this.server.transmitCableThreadTypes(
-				identifierTransferables, getAccessIdentifierTransferable());
+				identifierTransferables, SessionContext.getAccessIdentityTransferable());
 			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				CableThreadType cableThreadType = (CableThreadType) this.fromTransferable(new Identifier(transferables[j].header.id), transferables[j]);
@@ -228,7 +223,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			CableThreadType_Transferable[] transferables = this.server.transmitCableThreadTypesButIds(
-				identifierTransferables, getAccessIdentifierTransferable());
+				identifierTransferables, SessionContext.getAccessIdentityTransferable());
 			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				set.add(new CableThreadType(transferables[j]));
@@ -242,7 +237,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 	public Equipment loadEquipment(Identifier id) throws ApplicationException {
 		try {
 			Equipment_Transferable et = this.server.transmitEquipment((Identifier_Transferable) id.getTransferable(),
-				getAccessIdentifierTransferable());
+				SessionContext.getAccessIdentityTransferable());
 			Equipment equipment = (Equipment) this.fromTransferable(id, et);
 			if (equipment == null)
 				equipment = new Equipment(et);
@@ -266,7 +261,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			Equipment_Transferable[] transferables = this.server.transmitEquipments(identifierTransferables,
-				getAccessIdentifierTransferable());
+				SessionContext.getAccessIdentityTransferable());
 			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				Equipment equipment = (Equipment) this.fromTransferable(new Identifier(transferables[j].header.id), transferables[j]);
@@ -293,7 +288,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			transferables = this.server.transmitEquipmentsButIdsCondition(identifierTransferables,
-				getAccessIdentifierTransferable(), StorableObjectConditionBuilder.getConditionTransferable(condition));			
+				SessionContext.getAccessIdentityTransferable(), StorableObjectConditionBuilder.getConditionTransferable(condition));			
 			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				set.add(new Equipment(transferables[j]));
@@ -309,7 +304,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 	public EquipmentType loadEquipmentType(Identifier id) throws ApplicationException {
 		try {
 			EquipmentType_Transferable ett = this.server.transmitEquipmentType((Identifier_Transferable) id.getTransferable(),
-				getAccessIdentifierTransferable());
+				SessionContext.getAccessIdentityTransferable());
 			EquipmentType equipmentType = (EquipmentType) this.fromTransferable(id, ett);
 			if (equipmentType == null)
 				equipmentType = new EquipmentType(ett);
@@ -333,7 +328,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			EquipmentType_Transferable[] transferables = this.server.transmitEquipmentTypes(identifierTransferables,
-				getAccessIdentifierTransferable());
+				SessionContext.getAccessIdentityTransferable());
 			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				EquipmentType equipmentType = (EquipmentType) this.fromTransferable(new Identifier(transferables[j].header.id), transferables[j]);
@@ -359,7 +354,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			EquipmentType_Transferable[] transferables = this.server.transmitEquipmentTypesButIds(
-				identifierTransferables, getAccessIdentifierTransferable());
+				identifierTransferables, SessionContext.getAccessIdentityTransferable());
 			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				set.add(new EquipmentType(transferables[j]));
@@ -375,7 +370,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 	public KIS loadKIS(Identifier id) throws ApplicationException {
 		try {
 			KIS_Transferable kt = this.server.transmitKIS((Identifier_Transferable) id.getTransferable(),
-				getAccessIdentifierTransferable());
+				SessionContext.getAccessIdentityTransferable());
 			KIS kis = (KIS) this.fromTransferable(id, kt);
 			if (kis == null)
 				kis = new KIS(kt);
@@ -398,7 +393,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			KIS_Transferable[] transferables = this.server.transmitKISs(identifierTransferables,
-				getAccessIdentifierTransferable());
+				SessionContext.getAccessIdentityTransferable());
 			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				KIS kis = (KIS) this.fromTransferable(new Identifier(transferables[j].header.id), transferables[j]);
@@ -425,7 +420,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			transferables = this.server.transmitKISsButIdsCondition(identifierTransferables,
-				getAccessIdentifierTransferable(), StorableObjectConditionBuilder.getConditionTransferable(condition));
+				SessionContext.getAccessIdentityTransferable(), StorableObjectConditionBuilder.getConditionTransferable(condition));
 			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				set.add(new KIS(transferables[j]));
@@ -441,7 +436,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 	public Link loadLink(Identifier id) throws ApplicationException {
 		try {
 			Link_Transferable lt = this.server.transmitLink((Identifier_Transferable) id.getTransferable(),
-				getAccessIdentifierTransferable());
+				SessionContext.getAccessIdentityTransferable());
 			Link link = (Link) this.fromTransferable(id, lt);
 			if (link == null)
 				link = new Link(lt);
@@ -464,7 +459,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			Link_Transferable[] transferables = this.server.transmitLinks(identifierTransferables,
-				getAccessIdentifierTransferable());
+				SessionContext.getAccessIdentityTransferable());
 			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				Link link = (Link) this.fromTransferable(new Identifier(transferables[j].header.id), transferables[j]);
@@ -490,7 +485,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			Link_Transferable[] transferables = this.server.transmitLinksButIds(identifierTransferables,
-				getAccessIdentifierTransferable());
+				SessionContext.getAccessIdentityTransferable());
 			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				set.add(new Link(transferables[j]));
@@ -506,7 +501,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 	public LinkType loadLinkType(Identifier id) throws ApplicationException {
 		try {
 			LinkType_Transferable ltt = this.server.transmitLinkType((Identifier_Transferable) id.getTransferable(),
-				getAccessIdentifierTransferable());
+				SessionContext.getAccessIdentityTransferable());
 			LinkType linkType = (LinkType) this.fromTransferable(id, ltt);
 			if (linkType == null)
 				linkType = new LinkType(ltt);
@@ -529,7 +524,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			AbstractLinkType_Transferable[] transferables = this.server.transmitLinkTypes(identifierTransferables,
-				getAccessIdentifierTransferable());
+				SessionContext.getAccessIdentityTransferable());
 			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 
@@ -569,7 +564,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			AbstractLinkType_Transferable[] transferables = this.server.transmitLinkTypesButIds(
-				identifierTransferables, getAccessIdentifierTransferable());
+				identifierTransferables, SessionContext.getAccessIdentityTransferable());
 
 			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
@@ -606,7 +601,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 				Identifier id = (Identifier) it.next();
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
-			transferables = this.server.transmitCableLinkTypesButIdsCondition(identifierTransferables, getAccessIdentifierTransferable(),
+			transferables = this.server.transmitCableLinkTypesButIdsCondition(identifierTransferables, SessionContext.getAccessIdentityTransferable(),
 				StorableObjectConditionBuilder.getConditionTransferable(condition));
 			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
@@ -629,7 +624,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 				Identifier id = (Identifier) it.next();
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
-			transferables = this.server.transmitCableThreadsButIdsCondition(identifierTransferables, getAccessIdentifierTransferable(),
+			transferables = this.server.transmitCableThreadsButIdsCondition(identifierTransferables, SessionContext.getAccessIdentityTransferable(),
 				StorableObjectConditionBuilder.getConditionTransferable(condition));
 			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
@@ -646,7 +641,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 	public MeasurementPort loadMeasurementPort(Identifier id) throws ApplicationException {
 		try {
 			MeasurementPort_Transferable mpt = this.server.transmitMeasurementPort((Identifier_Transferable) id
-				.getTransferable(), getAccessIdentifierTransferable());
+				.getTransferable(), SessionContext.getAccessIdentityTransferable());
 			MeasurementPort measurementPort = (MeasurementPort) this.fromTransferable(id, mpt);
 			if (measurementPort == null)
 				measurementPort = new MeasurementPort(mpt);
@@ -671,7 +666,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			MeasurementPort_Transferable[] transferables = this.server.transmitMeasurementPorts(
-				identifierTransferables, getAccessIdentifierTransferable());
+				identifierTransferables, SessionContext.getAccessIdentityTransferable());
 			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				MeasurementPort measurementPort = (MeasurementPort) this.fromTransferable(new Identifier(transferables[j].header.id), transferables[j]);
@@ -698,7 +693,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			transferables = this.server.transmitMeasurementPortsButIdsCondition(identifierTransferables,
-				getAccessIdentifierTransferable(),
+				SessionContext.getAccessIdentityTransferable(),
 				StorableObjectConditionBuilder.getConditionTransferable(condition));
 			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
@@ -715,7 +710,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 	public MeasurementPortType loadMeasurementPortType(Identifier id) throws ApplicationException {
 		try {
 			MeasurementPortType_Transferable mptt = this.server.transmitMeasurementPortType((Identifier_Transferable) id
-				.getTransferable(), getAccessIdentifierTransferable());
+				.getTransferable(), SessionContext.getAccessIdentityTransferable());
 			MeasurementPortType measurementPortType = (MeasurementPortType) this.fromTransferable(id, mptt);
 			if (measurementPortType == null)
 				measurementPortType = new MeasurementPortType(mptt);
@@ -740,7 +735,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			MeasurementPortType_Transferable[] transferables = this.server.transmitMeasurementPortTypes(
-				identifierTransferables, getAccessIdentifierTransferable());
+				identifierTransferables, SessionContext.getAccessIdentityTransferable());
 			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				MeasurementPortType measurementPortType = (MeasurementPortType) this.fromTransferable(new Identifier(transferables[j].header.id), transferables[j]);
@@ -765,7 +760,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			MeasurementPortType_Transferable[] transferables = this.server.transmitMeasurementPortTypesButIds(
-				identifierTransferables, getAccessIdentifierTransferable());
+				identifierTransferables, SessionContext.getAccessIdentityTransferable());
 			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				set.add(new MeasurementPortType(transferables[j]));
@@ -781,7 +776,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 	public MonitoredElement loadMonitoredElement(Identifier id) throws ApplicationException {
 		try {
 			MonitoredElement_Transferable met = this.server.transmitMonitoredElement((Identifier_Transferable) id
-				.getTransferable(), getAccessIdentifierTransferable());
+				.getTransferable(), SessionContext.getAccessIdentityTransferable());
 			MonitoredElement measurementPortType = (MonitoredElement) this.fromTransferable(id, met);
 			if (measurementPortType == null)
 				measurementPortType = new MonitoredElement(met);
@@ -802,7 +797,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			MonitoredElement_Transferable[] transferables = this.server.transmitMonitoredElements(
-				identifierTransferables, getAccessIdentifierTransferable());
+				identifierTransferables, SessionContext.getAccessIdentityTransferable());
 			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				MonitoredElement monitoredElement = (MonitoredElement) this.fromTransferable(new Identifier(transferables[j].header.id), transferables[j]);
@@ -827,7 +822,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 			}
 			
 			transferables = this.server.transmitMonitoredElementsButIdsCondition(identifierTransferables,
-				getAccessIdentifierTransferable(), StorableObjectConditionBuilder.getConditionTransferable(condition));
+				SessionContext.getAccessIdentityTransferable(), StorableObjectConditionBuilder.getConditionTransferable(condition));
 			
 			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
@@ -842,7 +837,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 	public Port loadPort(Identifier id) throws ApplicationException {
 		try {
 			Port_Transferable pt = this.server.transmitPort((Identifier_Transferable) id.getTransferable(),
-				getAccessIdentifierTransferable());
+				SessionContext.getAccessIdentityTransferable());
 			Port port = (Port) this.fromTransferable(id, pt);
 			if (port == null)
 				port = new Port(pt);
@@ -865,7 +860,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			Port_Transferable[] transferables = this.server.transmitPorts(identifierTransferables,
-				getAccessIdentifierTransferable());
+				SessionContext.getAccessIdentityTransferable());
 			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				Port port = (Port) this.fromTransferable(new Identifier(transferables[j].header.id), transferables[j]);
@@ -891,7 +886,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			transferables = this.server.transmitPortsButIdsCondition(identifierTransferables,
-				getAccessIdentifierTransferable(), StorableObjectConditionBuilder.getConditionTransferable(condition));
+				SessionContext.getAccessIdentityTransferable(), StorableObjectConditionBuilder.getConditionTransferable(condition));
 			
 			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
@@ -908,7 +903,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 	public PortType loadPortType(Identifier id) throws ApplicationException {
 		try {
 			PortType_Transferable ptt = this.server.transmitPortType((Identifier_Transferable) id.getTransferable(),
-				getAccessIdentifierTransferable());
+				SessionContext.getAccessIdentityTransferable());
 			PortType portType = (PortType) this.fromTransferable(id, ptt);
 			if (portType == null)
 				portType = new PortType(ptt);
@@ -932,7 +927,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			PortType_Transferable[] transferables = this.server.transmitPortTypes(identifierTransferables,
-				getAccessIdentifierTransferable());
+				SessionContext.getAccessIdentityTransferable());
 			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				PortType portType = (PortType) this.fromTransferable(new Identifier(transferables[j].header.id), transferables[j]);
@@ -957,7 +952,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			PortType_Transferable[] transferables = this.server.transmitPortTypesButIds(identifierTransferables,
-				getAccessIdentifierTransferable());
+				SessionContext.getAccessIdentityTransferable());
 			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				set.add(new PortType(transferables[j]));
@@ -973,7 +968,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 	public TransmissionPath loadTransmissionPath(Identifier id) throws ApplicationException {
 		try {
 			TransmissionPath_Transferable tpt = this.server.transmitTransmissionPath((Identifier_Transferable) id
-				.getTransferable(), getAccessIdentifierTransferable());
+				.getTransferable(), SessionContext.getAccessIdentityTransferable());
 			TransmissionPath transmissionPath = (TransmissionPath) this.fromTransferable(id, tpt);
 			if (transmissionPath == null)
 				transmissionPath = new TransmissionPath(tpt);
@@ -998,7 +993,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			TransmissionPath_Transferable[] transferables = this.server.transmitTransmissionPaths(
-				identifierTransferables, getAccessIdentifierTransferable());
+				identifierTransferables, SessionContext.getAccessIdentityTransferable());
 			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				TransmissionPath transmissionPath = (TransmissionPath) this.fromTransferable(new Identifier(transferables[j].header.id), transferables[j]);
@@ -1024,7 +1019,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			transferables = this.server.transmitTransmissionPathsButIdsCondition(identifierTransferables,
-				getAccessIdentifierTransferable(), StorableObjectConditionBuilder.getConditionTransferable(condition));
+				SessionContext.getAccessIdentityTransferable(), StorableObjectConditionBuilder.getConditionTransferable(condition));
 			
 			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
@@ -1041,7 +1036,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 	public TransmissionPathType loadTransmissionPathType(Identifier id) throws ApplicationException {
 		try {
 			TransmissionPathType_Transferable tptt = this.server.transmitTransmissionPathType((Identifier_Transferable) id
-				.getTransferable(), getAccessIdentifierTransferable());
+				.getTransferable(), SessionContext.getAccessIdentityTransferable());
 			TransmissionPathType transmissionPathType = (TransmissionPathType) this.fromTransferable(id, tptt);
 			if (transmissionPathType == null)
 				transmissionPathType = new TransmissionPathType(tptt);
@@ -1066,7 +1061,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			TransmissionPathType_Transferable[] transferables = this.server.transmitTransmissionPathTypes(
-				identifierTransferables, getAccessIdentifierTransferable());
+				identifierTransferables, SessionContext.getAccessIdentityTransferable());
 			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				TransmissionPathType transmissionPathType = (TransmissionPathType) this.fromTransferable(new Identifier(transferables[j].header.id), transferables[j]);
@@ -1091,7 +1086,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			TransmissionPathType_Transferable[] transferables = this.server.transmitTransmissionPathTypesButIds(
-				identifierTransferables, getAccessIdentifierTransferable());
+				identifierTransferables, SessionContext.getAccessIdentityTransferable());
 			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				set.add(new TransmissionPathType(transferables[j]));
@@ -1122,7 +1117,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 				storableObject_Transferables[i] = storableObject.getHeaderTransferable();
 			}
 			identifier_Transferables = this.server.transmitRefreshedConfigurationObjects(storableObject_Transferables,
-				getAccessIdentifierTransferable());
+				SessionContext.getAccessIdentityTransferable());
 
 			for (int j = 0; j < identifier_Transferables.length; j++) {
 				refreshedIds.add(new Identifier(identifier_Transferables[j]));
@@ -1150,7 +1145,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 			DatabaseException, CommunicationException {
 		CableThread_Transferable transferables = (CableThread_Transferable) cableThread.getTransferable();
 		try {
-			cableThread.updateFromHeaderTransferable(this.server.receiveCableThread(transferables, force, getAccessIdentifierTransferable()));
+			cableThread.updateFromHeaderTransferable(this.server.receiveCableThread(transferables, force, SessionContext.getAccessIdentityTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.saveCableThread ";
 
@@ -1165,7 +1160,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 			DatabaseException, CommunicationException {
 		CableLinkType_Transferable transferables = (CableLinkType_Transferable) cableLinkType.getTransferable();
 		try {
-			cableLinkType.updateFromHeaderTransferable(this.server.receiveCableLinkType(transferables, force, getAccessIdentifierTransferable()));
+			cableLinkType.updateFromHeaderTransferable(this.server.receiveCableLinkType(transferables, force, SessionContext.getAccessIdentityTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.saveCableLinkType ";
 
@@ -1184,7 +1179,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 			transferables[i] = (CableLinkType_Transferable) ((CableLinkType) it.next()).getTransferable();
 		}
 		try {
-			this.updateStorableObjectHeader(list, this.server.receiveCableLinkTypes(transferables, force, getAccessIdentifierTransferable()));
+			this.updateStorableObjectHeader(list, this.server.receiveCableLinkTypes(transferables, force, SessionContext.getAccessIdentityTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.saveCableLinkTypes ";
 
@@ -1203,7 +1198,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 			transferables[i] = (CableThread_Transferable) ((CableThread) it.next()).getTransferable();
 		}
 		try {
-			this.updateStorableObjectHeader(list, this.server.receiveCableThreads(transferables, force, getAccessIdentifierTransferable()));
+			this.updateStorableObjectHeader(list, this.server.receiveCableThreads(transferables, force, SessionContext.getAccessIdentityTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.saveCableThreads ";
 
@@ -1218,7 +1213,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 			DatabaseException, CommunicationException {
 		CableThreadType_Transferable transferables = (CableThreadType_Transferable) cableThreadType.getTransferable();
 		try {
-			cableThreadType.updateFromHeaderTransferable(this.server.receiveCableThreadType(transferables, force, getAccessIdentifierTransferable()));
+			cableThreadType.updateFromHeaderTransferable(this.server.receiveCableThreadType(transferables, force, SessionContext.getAccessIdentityTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.saveCableThreadType ";
 
@@ -1237,7 +1232,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 			transferables[i] = (CableThreadType_Transferable) ((CableThreadType) it.next()).getTransferable();
 		}
 		try {
-			this.updateStorableObjectHeader(list, this.server.receiveCableThreadTypes(transferables, force, getAccessIdentifierTransferable()));
+			this.updateStorableObjectHeader(list, this.server.receiveCableThreadTypes(transferables, force, SessionContext.getAccessIdentityTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.saveCableThreadTypes ";
 
@@ -1258,7 +1253,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 			CommunicationException {
 		Equipment_Transferable transferables = (Equipment_Transferable) equipment.getTransferable();
 		try {
-			equipment.updateFromHeaderTransferable(this.server.receiveEquipment(transferables, force, getAccessIdentifierTransferable()));
+			equipment.updateFromHeaderTransferable(this.server.receiveEquipment(transferables, force, SessionContext.getAccessIdentityTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.saveEquipment ";
 
@@ -1277,7 +1272,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 			transferables[i] = (Equipment_Transferable) ((Equipment) it.next()).getTransferable();
 		}
 		try {
-			this.updateStorableObjectHeader(list, this.server.receiveEquipments(transferables, force, getAccessIdentifierTransferable()));
+			this.updateStorableObjectHeader(list, this.server.receiveEquipments(transferables, force, SessionContext.getAccessIdentityTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.saveEquipments ";
 
@@ -1292,7 +1287,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 			DatabaseException, CommunicationException {
 		EquipmentType_Transferable transferables = (EquipmentType_Transferable) equipmentType.getTransferable();
 		try {
-			equipmentType.updateFromHeaderTransferable(this.server.receiveEquipmentType(transferables, force, getAccessIdentifierTransferable()));
+			equipmentType.updateFromHeaderTransferable(this.server.receiveEquipmentType(transferables, force, SessionContext.getAccessIdentityTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.saveEquipmentType ";
 
@@ -1311,7 +1306,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 			transferables[i] = (EquipmentType_Transferable) ((EquipmentType) it.next()).getTransferable();
 		}
 		try {
-			this.updateStorableObjectHeader(list, this.server.receiveEquipmentTypes(transferables, force, getAccessIdentifierTransferable()));
+			this.updateStorableObjectHeader(list, this.server.receiveEquipmentTypes(transferables, force, SessionContext.getAccessIdentityTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.saveEquipmentTypes ";
 
@@ -1326,7 +1321,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 			CommunicationException {
 		KIS_Transferable transferables = (KIS_Transferable) kis.getTransferable();
 		try {
-			kis.updateFromHeaderTransferable(this.server.receiveKIS(transferables, force, getAccessIdentifierTransferable()));
+			kis.updateFromHeaderTransferable(this.server.receiveKIS(transferables, force, SessionContext.getAccessIdentityTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.saveKIS ";
 
@@ -1345,7 +1340,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 			transferables[i] = (KIS_Transferable) ((KIS) it.next()).getTransferable();
 		}
 		try {
-			this.updateStorableObjectHeader(list, this.server.receiveKISs(transferables, force, getAccessIdentifierTransferable()));
+			this.updateStorableObjectHeader(list, this.server.receiveKISs(transferables, force, SessionContext.getAccessIdentityTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.saveKISs ";
 
@@ -1360,7 +1355,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 			CommunicationException {
 		Link_Transferable transferables = (Link_Transferable) link.getTransferable();
 		try {
-			link.updateFromHeaderTransferable(this.server.receiveLink(transferables, force, getAccessIdentifierTransferable()));
+			link.updateFromHeaderTransferable(this.server.receiveLink(transferables, force, SessionContext.getAccessIdentityTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.saveLink ";
 
@@ -1379,7 +1374,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 			transferables[i] = (Link_Transferable) ((Link) it.next()).getTransferable();
 		}
 		try {
-			this.updateStorableObjectHeader(list, this.server.receiveLinks(transferables, force, getAccessIdentifierTransferable()));
+			this.updateStorableObjectHeader(list, this.server.receiveLinks(transferables, force, SessionContext.getAccessIdentityTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.saveLinks ";
 
@@ -1394,7 +1389,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 			CommunicationException {
 		LinkType_Transferable transferables = (LinkType_Transferable) linkType.getTransferable();
 		try {
-			linkType.updateFromHeaderTransferable(this.server.receiveLinkType(transferables, force, getAccessIdentifierTransferable()));
+			linkType.updateFromHeaderTransferable(this.server.receiveLinkType(transferables, force, SessionContext.getAccessIdentityTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.saveLinkType ";
 
@@ -1413,7 +1408,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 			transferables[i] = (AbstractLinkType_Transferable) ((LinkType) it.next()).getTransferable();
 		}
 		try {
-			this.updateStorableObjectHeader(list, this.server.receiveLinkTypes(transferables, force, getAccessIdentifierTransferable()));
+			this.updateStorableObjectHeader(list, this.server.receiveLinkTypes(transferables, force, SessionContext.getAccessIdentityTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.saveLinkTypes ";
 
@@ -1428,7 +1423,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 			DatabaseException, CommunicationException {
 		MeasurementPort_Transferable transferables = (MeasurementPort_Transferable) measurementPort.getTransferable();
 		try {
-			measurementPort.updateFromHeaderTransferable(this.server.receiveMeasurementPort(transferables, force, getAccessIdentifierTransferable()));
+			measurementPort.updateFromHeaderTransferable(this.server.receiveMeasurementPort(transferables, force, SessionContext.getAccessIdentityTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.saveMeasurementPort ";
 
@@ -1447,7 +1442,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 			transferables[i] = (MeasurementPort_Transferable) ((MeasurementPort) it.next()).getTransferable();
 		}
 		try {
-			this.updateStorableObjectHeader(list, this.server.receiveMeasurementPorts(transferables, force, getAccessIdentifierTransferable()));
+			this.updateStorableObjectHeader(list, this.server.receiveMeasurementPorts(transferables, force, SessionContext.getAccessIdentityTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.saveMeasurementPorts ";
 
@@ -1463,7 +1458,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 		MeasurementPortType_Transferable transferables = (MeasurementPortType_Transferable) measurementPortType
 				.getTransferable();
 		try {
-			measurementPortType.updateFromHeaderTransferable(this.server.receiveMeasurementPortType(transferables, force, getAccessIdentifierTransferable()));
+			measurementPortType.updateFromHeaderTransferable(this.server.receiveMeasurementPortType(transferables, force, SessionContext.getAccessIdentityTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.saveMeasurementPortType ";
 
@@ -1482,7 +1477,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 			transferables[i] = (MeasurementPortType_Transferable) ((MeasurementPortType) it.next()).getTransferable();
 		}
 		try {
-			this.updateStorableObjectHeader(list, this.server.receiveMeasurementPortTypes(transferables, force, getAccessIdentifierTransferable()));
+			this.updateStorableObjectHeader(list, this.server.receiveMeasurementPortTypes(transferables, force, SessionContext.getAccessIdentityTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.saveMeasurementPortTypes ";
 
@@ -1498,7 +1493,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 		MonitoredElement_Transferable transferables = (MonitoredElement_Transferable) monitoredElement
 				.getTransferable();
 		try {
-			monitoredElement.updateFromHeaderTransferable(this.server.receiveMonitoredElement(transferables, force, getAccessIdentifierTransferable()));
+			monitoredElement.updateFromHeaderTransferable(this.server.receiveMonitoredElement(transferables, force, SessionContext.getAccessIdentityTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.saveMonitoredElement ";
 
@@ -1517,7 +1512,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 			transferables[i] = (MonitoredElement_Transferable) ((MonitoredElement) it.next()).getTransferable();
 		}
 		try {
-			this.updateStorableObjectHeader(list, this.server.receiveMonitoredElements(transferables, force, getAccessIdentifierTransferable()));
+			this.updateStorableObjectHeader(list, this.server.receiveMonitoredElements(transferables, force, SessionContext.getAccessIdentityTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.saveMonitoredElements ";
 
@@ -1532,7 +1527,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 			CommunicationException {
 		Port_Transferable transferables = (Port_Transferable) port.getTransferable();
 		try {
-			port.updateFromHeaderTransferable(this.server.receivePort(transferables, force, getAccessIdentifierTransferable()));
+			port.updateFromHeaderTransferable(this.server.receivePort(transferables, force, SessionContext.getAccessIdentityTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.saveEquipment ";
 
@@ -1551,7 +1546,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 			transferables[i] = (Port_Transferable) ((Port) it.next()).getTransferable();
 		}
 		try {
-			this.updateStorableObjectHeader(list, this.server.receivePorts(transferables, force, getAccessIdentifierTransferable()));
+			this.updateStorableObjectHeader(list, this.server.receivePorts(transferables, force, SessionContext.getAccessIdentityTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.savePorts ";
 
@@ -1566,7 +1561,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 			CommunicationException {
 		PortType_Transferable transferables = (PortType_Transferable) portType.getTransferable();
 		try {
-			portType.updateFromHeaderTransferable(this.server.receivePortType(transferables, force, getAccessIdentifierTransferable()));
+			portType.updateFromHeaderTransferable(this.server.receivePortType(transferables, force, SessionContext.getAccessIdentityTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.savePortType ";
 
@@ -1585,7 +1580,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 			transferables[i] = (PortType_Transferable) ((PortType) it.next()).getTransferable();
 		}
 		try {
-			this.updateStorableObjectHeader(set, this.server.receivePortTypes(transferables, force, getAccessIdentifierTransferable()));
+			this.updateStorableObjectHeader(set, this.server.receivePortTypes(transferables, force, SessionContext.getAccessIdentityTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.savePortTypes ";
 
@@ -1601,7 +1596,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 		TransmissionPath_Transferable transferables = (TransmissionPath_Transferable) transmissionPath
 				.getTransferable();
 		try {
-			transmissionPath.updateFromHeaderTransferable(this.server.receiveTransmissionPath(transferables, force, getAccessIdentifierTransferable()));
+			transmissionPath.updateFromHeaderTransferable(this.server.receiveTransmissionPath(transferables, force, SessionContext.getAccessIdentityTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.saveTransmissionPath ";
 
@@ -1620,7 +1615,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 			transferables[i] = (TransmissionPath_Transferable) ((TransmissionPath) it.next()).getTransferable();
 		}
 		try {
-			this.updateStorableObjectHeader(set, this.server.receiveTransmissionPaths(transferables, force, getAccessIdentifierTransferable()));
+			this.updateStorableObjectHeader(set, this.server.receiveTransmissionPaths(transferables, force, SessionContext.getAccessIdentityTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.saveTransmissionPaths ";
 
@@ -1636,7 +1631,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 		TransmissionPathType_Transferable transferables = (TransmissionPathType_Transferable) transmissionPathType
 				.getTransferable();
 		try {
-			transmissionPathType.updateFromHeaderTransferable(this.server.receiveTransmissionPathType(transferables, force, getAccessIdentifierTransferable()));
+			transmissionPathType.updateFromHeaderTransferable(this.server.receiveTransmissionPathType(transferables, force, SessionContext.getAccessIdentityTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.saveTransmissionPathType ";
 
@@ -1655,7 +1650,7 @@ public final class ClientConfigurationObjectLoader  extends AbstractClientObject
 			transferables[i] = (TransmissionPathType_Transferable) ((TransmissionPathType) it.next()).getTransferable();
 		}
 		try {
-			this.updateStorableObjectHeader(set, this.server.receiveTransmissionPathTypes(transferables, force, getAccessIdentifierTransferable()));
+			this.updateStorableObjectHeader(set, this.server.receiveTransmissionPathTypes(transferables, force, SessionContext.getAccessIdentityTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.saveTransmissionPathTypes ";
 

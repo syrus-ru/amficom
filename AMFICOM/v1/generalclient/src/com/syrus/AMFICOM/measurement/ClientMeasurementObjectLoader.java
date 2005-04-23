@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementObjectLoader.java,v 1.32 2005/04/22 16:06:51 arseniy Exp $
+ * $Id: ClientMeasurementObjectLoader.java,v 1.33 2005/04/23 13:58:27 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,6 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectConditionBuilder;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
@@ -44,7 +43,7 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/04/22 16:06:51 $
+ * @version $Revision: 1.33 $, $Date: 2005/04/23 13:58:27 $
  * @author $Author: arseniy $
  * @module generalclient_v1
  */
@@ -56,15 +55,11 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 	public ClientMeasurementObjectLoader(CMServer server) {
 		this.server = server;
 	}
-	
-	private AccessIdentifier_Transferable getAccessIdentifierTransferable() {
-		return  (AccessIdentifier_Transferable) SessionContext.getAccessIdentity().getTransferable();
-	}
-	
+
 	public void delete(Identifier id) {
 		Identifier_Transferable identifier_Transferable = (Identifier_Transferable) id.getTransferable();
 		try {
-			this.server.delete(identifier_Transferable, getAccessIdentifierTransferable());
+			this.server.delete(identifier_Transferable, SessionContext.getAccessIdentityTransferable());
 		} catch (AMFICOMRemoteException e) {
 			Log.errorException(e);
 		} catch (SystemException e) {
@@ -80,7 +75,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 			identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
 		}
 		try {
-			this.server.deleteList(identifier_Transferables, getAccessIdentifierTransferable());
+			this.server.deleteList(identifier_Transferables, SessionContext.getAccessIdentityTransferable());
 		} catch (AMFICOMRemoteException e) {
 			Log.errorException(e);
 		} catch (SystemException e) {
@@ -103,7 +98,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 	public MeasurementType loadMeasurementType(Identifier id) throws ApplicationException {
 		try {
 			MeasurementType_Transferable mtt = this.server.transmitMeasurementType((Identifier_Transferable) id
-				.getTransferable(), getAccessIdentifierTransferable());
+				.getTransferable(), SessionContext.getAccessIdentityTransferable());
 			MeasurementType measurementType = (MeasurementType) this.fromTransferable(id, mtt);
 			if (measurementType == null)
 				measurementType = new MeasurementType(mtt);
@@ -120,7 +115,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 	public AnalysisType loadAnalysisType(Identifier id) throws ApplicationException {
 		try {
 			AnalysisType_Transferable att = this.server.transmitAnalysisType((Identifier_Transferable) id.getTransferable(),
-				getAccessIdentifierTransferable());
+				SessionContext.getAccessIdentityTransferable());
 			AnalysisType analysisType = (AnalysisType) this.fromTransferable(id, att);
 			if (analysisType == null)
 				analysisType = new AnalysisType(att);
@@ -137,7 +132,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 	public EvaluationType loadEvaluationType(Identifier id) throws ApplicationException {
 		try {
 			EvaluationType_Transferable ett = this.server.transmitEvaluationType(
-				(Identifier_Transferable) id.getTransferable(), getAccessIdentifierTransferable());
+				(Identifier_Transferable) id.getTransferable(), SessionContext.getAccessIdentityTransferable());
 			EvaluationType evaluationType = (EvaluationType) this.fromTransferable(id, ett);
 			if (evaluationType == null)
 				evaluationType = new EvaluationType(ett);
@@ -154,7 +149,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 	public Set loadSet(Identifier id) throws ApplicationException {
 		try {
 			Set_Transferable st = this.server.transmitSet((Identifier_Transferable) id.getTransferable(),
-				getAccessIdentifierTransferable());
+				SessionContext.getAccessIdentityTransferable());
 			Set set = (Set) this.fromTransferable(id, st);
 			if (set == null)
 				set = new Set(st);
@@ -170,7 +165,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 	public MeasurementSetup loadMeasurementSetup(Identifier id) throws ApplicationException {
 		try {
 			MeasurementSetup_Transferable mst = this.server.transmitMeasurementSetup((Identifier_Transferable) id
-				.getTransferable(), getAccessIdentifierTransferable());
+				.getTransferable(), SessionContext.getAccessIdentityTransferable());
 			MeasurementSetup measurementSetup = (MeasurementSetup) this.fromTransferable(id, mst);
 			if (measurementSetup == null)
 				measurementSetup = new MeasurementSetup(mst);
@@ -187,7 +182,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 	public Modeling loadModeling(Identifier id) throws ApplicationException {
 		try {
 			Modeling_Transferable mt = this.server.transmitModeling((Identifier_Transferable) id.getTransferable(),
-				getAccessIdentifierTransferable());
+				SessionContext.getAccessIdentityTransferable());
 			Modeling modeling = (Modeling) this.fromTransferable(id, mt);
 			if (modeling == null)
 				modeling = new Modeling(mt);
@@ -204,7 +199,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 	public ModelingType loadModelingType(Identifier id) throws ApplicationException {
 		try {
 			ModelingType_Transferable mtt = this.server.transmitModelingType((Identifier_Transferable) id.getTransferable(),
-				getAccessIdentifierTransferable());
+				SessionContext.getAccessIdentityTransferable());
 			ModelingType modelingType = (ModelingType) this.fromTransferable(id, mtt);
 			if (modelingType == null)
 				modelingType = new ModelingType(mtt);
@@ -221,7 +216,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 	public Measurement loadMeasurement(Identifier id) throws ApplicationException {
 		try {
 			Measurement_Transferable mt = this.server.transmitMeasurement((Identifier_Transferable) id.getTransferable(),
-				getAccessIdentifierTransferable());
+				SessionContext.getAccessIdentityTransferable());
 			Measurement measurement = (Measurement) this.fromTransferable(id, mt);
 			if (measurement == null)
 				measurement = new Measurement(mt);
@@ -238,7 +233,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 	public Analysis loadAnalysis(Identifier id) throws ApplicationException {
 		try {
 			Analysis_Transferable at = this.server.transmitAnalysis((Identifier_Transferable) id.getTransferable(),
-				getAccessIdentifierTransferable());
+				SessionContext.getAccessIdentityTransferable());
 			Analysis analysis = (Analysis) this.fromTransferable(id, at);
 			if (analysis == null)
 				analysis = new Analysis(at);
@@ -254,7 +249,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 	public Evaluation loadEvaluation(Identifier id) throws ApplicationException {
 		try {
 			Evaluation_Transferable et = this.server.transmitEvaluation((Identifier_Transferable) id.getTransferable(),
-				getAccessIdentifierTransferable());
+				SessionContext.getAccessIdentityTransferable());
 			Evaluation evaluation = (Evaluation) this.fromTransferable(id, et);
 			if (evaluation == null)
 				evaluation = new Evaluation(et);
@@ -271,7 +266,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 	public Test loadTest(Identifier id) throws ApplicationException {
 		try {
 			Test_Transferable tt = this.server.transmitTest((Identifier_Transferable) id.getTransferable(),
-				getAccessIdentifierTransferable());
+				SessionContext.getAccessIdentityTransferable());
 			Test test = (Test) this.fromTransferable(id, tt);
 			if (test == null)
 				test = new Test(tt);
@@ -287,7 +282,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 	public Result loadResult(Identifier id) throws ApplicationException {
 		try {
 			Result_Transferable rt = this.server.transmitResult((Identifier_Transferable) id.getTransferable(),
-				getAccessIdentifierTransferable());
+				SessionContext.getAccessIdentityTransferable());
 			Result result = (Result) this.fromTransferable(id, rt);
 			if (result == null)
 				result = new Result(rt);
@@ -303,7 +298,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 	public CronTemporalPattern loadCronTemporalPattern(Identifier id) throws ApplicationException {
 		try {
 			CronTemporalPattern_Transferable ctpt = this.server.transmitCronTemporalPattern((Identifier_Transferable) id.getTransferable(),
-					getAccessIdentifierTransferable());
+					SessionContext.getAccessIdentityTransferable());
 			CronTemporalPattern cronTemporalPattern = (CronTemporalPattern) this.fromTransferable(id, ctpt);
 			if (cronTemporalPattern == null)
 				cronTemporalPattern = new CronTemporalPattern(ctpt);
@@ -326,7 +321,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			Analysis_Transferable[] transferables = this.server.transmitAnalyses(identifierTransferables,
-				getAccessIdentifierTransferable());
+				SessionContext.getAccessIdentityTransferable());
 			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				Analysis analysis = (Analysis) this.fromTransferable(new Identifier(transferables[j].header.id), transferables[j]);
@@ -352,7 +347,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			transferables = this.server.transmitAnalysesButIdsCondition(identifierTransferables,
-				getAccessIdentifierTransferable(), StorableObjectConditionBuilder.getConditionTransferable(storableObjectCondition));
+				SessionContext.getAccessIdentityTransferable(), StorableObjectConditionBuilder.getConditionTransferable(storableObjectCondition));
 			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				set.add(new Analysis(transferables[j]));
@@ -374,7 +369,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			AnalysisType_Transferable[] transferables = this.server.transmitAnalysisTypes(identifierTransferables,
-				getAccessIdentifierTransferable());
+				SessionContext.getAccessIdentityTransferable());
 			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				AnalysisType analysisType = (AnalysisType) this.fromTransferable(new Identifier(transferables[j].header.id), transferables[j]);
@@ -401,7 +396,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			transferables = this.server.transmitAnalysisTypesButIdsCondition(identifierTransferables,
-				getAccessIdentifierTransferable(), StorableObjectConditionBuilder.getConditionTransferable(storableObjectCondition));
+				SessionContext.getAccessIdentityTransferable(), StorableObjectConditionBuilder.getConditionTransferable(storableObjectCondition));
 			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				set.add(new AnalysisType(transferables[j]));
@@ -423,7 +418,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			Evaluation_Transferable[] transferables = this.server.transmitEvaluations(identifierTransferables,
-				getAccessIdentifierTransferable());
+				SessionContext.getAccessIdentityTransferable());
 			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				Evaluation evaluation = (Evaluation) this.fromTransferable(new Identifier(transferables[j].header.id), transferables[j]);
@@ -450,7 +445,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			transferables = this.server.transmitEvaluationsButIdsCondition(identifierTransferables,
-				getAccessIdentifierTransferable(), StorableObjectConditionBuilder.getConditionTransferable(storableObjectCondition));
+				SessionContext.getAccessIdentityTransferable(), StorableObjectConditionBuilder.getConditionTransferable(storableObjectCondition));
 			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				set.add(new Evaluation(transferables[j]));
@@ -472,7 +467,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			EvaluationType_Transferable[] transferables = this.server.transmitEvaluationTypes(identifierTransferables,
-				getAccessIdentifierTransferable());
+				SessionContext.getAccessIdentityTransferable());
 			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				EvaluationType evaluationType = (EvaluationType) this.fromTransferable(new Identifier(transferables[j].header.id), transferables[j]);
@@ -499,7 +494,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			transferables = this.server.transmitEvaluationTypesButIdsCondition(identifierTransferables,
-				getAccessIdentifierTransferable(), StorableObjectConditionBuilder.getConditionTransferable(storableObjectCondition));
+				SessionContext.getAccessIdentityTransferable(), StorableObjectConditionBuilder.getConditionTransferable(storableObjectCondition));
 			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				set.add(new EvaluationType(transferables[j]));
@@ -522,7 +517,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 			}
 
 			Measurement_Transferable[] transferables = this.server.transmitMeasurements(identifierTransferables,
-				getAccessIdentifierTransferable());
+				SessionContext.getAccessIdentityTransferable());
 			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				Measurement measurement = (Measurement) this.fromTransferable(new Identifier(transferables[j].header.id), transferables[j]);
@@ -550,7 +545,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 			}
 
 			transferables = this.server.transmitMeasurementsButIdsCondition(identifierTransferables,
-				getAccessIdentifierTransferable(), StorableObjectConditionBuilder.getConditionTransferable(storableObjectCondition));
+				SessionContext.getAccessIdentityTransferable(), StorableObjectConditionBuilder.getConditionTransferable(storableObjectCondition));
 			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				set.add(new Measurement(transferables[j]));
@@ -572,7 +567,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			Modeling_Transferable[] transferables = this.server.transmitModelings(identifierTransferables,
-				getAccessIdentifierTransferable());
+				SessionContext.getAccessIdentityTransferable());
 			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				Modeling modeling = (Modeling) this.fromTransferable(new Identifier(transferables[j].header.id), transferables[j]);
@@ -597,7 +592,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			ModelingType_Transferable[] transferables = this.server.transmitModelingTypes(identifierTransferables,
-				getAccessIdentifierTransferable());
+				SessionContext.getAccessIdentityTransferable());
 			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				ModelingType modelingType = (ModelingType) this.fromTransferable(new Identifier(transferables[j].header.id), transferables[j]);
@@ -624,7 +619,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			transferables = this.server.transmitModelingsButIdsCondition(identifierTransferables,
-				getAccessIdentifierTransferable(), StorableObjectConditionBuilder.getConditionTransferable(storableObjectCondition));
+				SessionContext.getAccessIdentityTransferable(), StorableObjectConditionBuilder.getConditionTransferable(storableObjectCondition));
 
 			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
@@ -648,7 +643,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			transferables = this.server.transmitModelingTypesButIdsCondition(identifierTransferables,
-				getAccessIdentifierTransferable(), StorableObjectConditionBuilder.getConditionTransferable(condition));
+				SessionContext.getAccessIdentityTransferable(), StorableObjectConditionBuilder.getConditionTransferable(condition));
 
 			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
@@ -671,7 +666,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			MeasurementSetup_Transferable[] transferables = this.server.transmitMeasurementSetups(
-				identifierTransferables, getAccessIdentifierTransferable());
+				identifierTransferables, SessionContext.getAccessIdentityTransferable());
 			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				MeasurementSetup measurementSetup = (MeasurementSetup) this.fromTransferable(new Identifier(transferables[j].header.id), transferables[j]);
@@ -697,7 +692,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			transferables = this.server.transmitMeasurementSetupsButIdsCondition(identifierTransferables,
-				getAccessIdentifierTransferable(), StorableObjectConditionBuilder.getConditionTransferable(condition));
+				SessionContext.getAccessIdentityTransferable(), StorableObjectConditionBuilder.getConditionTransferable(condition));
 
 			java.util.Set set = null;
 			if (transferables != null) {
@@ -724,7 +719,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			MeasurementType_Transferable[] transferables = this.server.transmitMeasurementTypes(
-				identifierTransferables, getAccessIdentifierTransferable());
+				identifierTransferables, SessionContext.getAccessIdentityTransferable());
 			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				MeasurementType measurementType = (MeasurementType) this.fromTransferable(new Identifier(transferables[j].header.id), transferables[j]);
@@ -750,7 +745,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 			}
 			MeasurementType_Transferable[] transferables;
 			transferables = this.server.transmitMeasurementTypesButIdsCondition(identifierTransferables,
-				getAccessIdentifierTransferable(), StorableObjectConditionBuilder.getConditionTransferable(condition));
+				SessionContext.getAccessIdentityTransferable(), StorableObjectConditionBuilder.getConditionTransferable(condition));
 			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				set.add(new MeasurementType(transferables[j]));
@@ -772,7 +767,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			Result_Transferable[] transferables = this.server.transmitResults(identifierTransferables,
-				getAccessIdentifierTransferable());
+				SessionContext.getAccessIdentityTransferable());
 			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				Result result = (Result) this.fromTransferable(new Identifier(transferables[j].header.id), transferables[j]);
@@ -798,7 +793,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			transferables = this.server.transmitResultsButIdsCondition(identifierTransferables,
-				getAccessIdentifierTransferable(), StorableObjectConditionBuilder.getConditionTransferable(condition));
+				SessionContext.getAccessIdentityTransferable(), StorableObjectConditionBuilder.getConditionTransferable(condition));
 
 			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
@@ -821,7 +816,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			Set_Transferable[] transferables = this.server.transmitSets(identifierTransferables,
-				getAccessIdentifierTransferable());
+				SessionContext.getAccessIdentityTransferable());
 			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				Set set2 = (Set) this.fromTransferable(new Identifier(transferables[j].header.id), transferables[j]);
@@ -847,7 +842,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			transferables = this.server.transmitSetsButIdsCondition(identifierTransferables,
-				getAccessIdentifierTransferable(), StorableObjectConditionBuilder.getConditionTransferable(storableObjectCondition));
+				SessionContext.getAccessIdentityTransferable(), StorableObjectConditionBuilder.getConditionTransferable(storableObjectCondition));
 			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				set.add(new Set(transferables[j]));
@@ -869,7 +864,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			CronTemporalPattern_Transferable[] transferables = this.server.transmitCronTemporalPatterns(identifierTransferables,
-					getAccessIdentifierTransferable());
+					SessionContext.getAccessIdentityTransferable());
 			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				CronTemporalPattern cronTemporalPattern = (CronTemporalPattern) this.fromTransferable(new Identifier(transferables[j].header.id), transferables[j]);
@@ -895,7 +890,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			CronTemporalPattern_Transferable[] transferables = this.server.transmitCronTemporalPatternsButIds(
-				identifierTransferables, getAccessIdentifierTransferable());
+				identifierTransferables, SessionContext.getAccessIdentityTransferable());
 			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				set.add(new CronTemporalPattern(transferables[j]));
@@ -917,7 +912,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			Test_Transferable[] transferables = this.server.transmitTests(identifierTransferables,
-				getAccessIdentifierTransferable());
+				SessionContext.getAccessIdentityTransferable());
 			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				Test test = (Test) this.fromTransferable(new Identifier(transferables[j].header.id), transferables[j]);
@@ -943,7 +938,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			transferables = this.server.transmitTestsButIdsCondition(identifierTransferables,
-				getAccessIdentifierTransferable(), StorableObjectConditionBuilder.getConditionTransferable(condition));
+				SessionContext.getAccessIdentityTransferable(), StorableObjectConditionBuilder.getConditionTransferable(condition));
 			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				set.add(new Test(transferables[j]));
@@ -971,7 +966,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 	public void saveMeasurementType(MeasurementType measurementType, boolean force) throws ApplicationException {
 		MeasurementType_Transferable transferables = (MeasurementType_Transferable) measurementType.getTransferable();
 		try {
-			measurementType.updateFromHeaderTransferable(this.server.receiveMeasurementType(transferables, force, getAccessIdentifierTransferable()));
+			measurementType.updateFromHeaderTransferable(this.server.receiveMeasurementType(transferables, force, SessionContext.getAccessIdentityTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.saveMeasurementType| receiveMeasurementTypes";
 
@@ -990,7 +985,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 		AnalysisType_Transferable transferables = (AnalysisType_Transferable) analysisType.getTransferable();
 
 		try {
-			analysisType.updateFromHeaderTransferable(this.server.receiveAnalysisType(transferables, force, getAccessIdentifierTransferable()));
+			analysisType.updateFromHeaderTransferable(this.server.receiveAnalysisType(transferables, force, SessionContext.getAccessIdentityTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.saveAnalysisType | receiveAnalysisTypes";
 
@@ -1007,7 +1002,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 			ApplicationException {
 		EvaluationType_Transferable transferables = (EvaluationType_Transferable) evaluationType.getTransferable();
 		try {
-			evaluationType.updateFromHeaderTransferable(this.server.receiveEvaluationType(transferables, force, getAccessIdentifierTransferable()));
+			evaluationType.updateFromHeaderTransferable(this.server.receiveEvaluationType(transferables, force, SessionContext.getAccessIdentityTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.saveEvaluationType | receiveEvaluationTypes";
 
@@ -1023,7 +1018,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 	public void saveSet(Set set, boolean force) throws VersionCollisionException, ApplicationException {
 		Set_Transferable transferables = (Set_Transferable) set.getTransferable();
 		try {
-			set.updateFromHeaderTransferable(this.server.receiveSet(transferables, force, getAccessIdentifierTransferable()));
+			set.updateFromHeaderTransferable(this.server.receiveSet(transferables, force, SessionContext.getAccessIdentityTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.saveSet | receiveSets";
 
@@ -1041,7 +1036,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 		MeasurementSetup_Transferable transferables = (MeasurementSetup_Transferable) measurementSetup
 				.getTransferable();
 		try {
-			measurementSetup.updateFromHeaderTransferable(this.server.receiveMeasurementSetup(transferables, force, getAccessIdentifierTransferable()));
+			measurementSetup.updateFromHeaderTransferable(this.server.receiveMeasurementSetup(transferables, force, SessionContext.getAccessIdentityTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.saveMeasurementSetup | receiveMeasurementSetups";
 
@@ -1057,7 +1052,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 	public void saveModeling(Modeling modeling, boolean force) throws VersionCollisionException, ApplicationException {
 		Modeling_Transferable transferables = (Modeling_Transferable) modeling.getTransferable();
 		try {
-			modeling.updateFromHeaderTransferable(this.server.receiveModeling(transferables, force, getAccessIdentifierTransferable()));
+			modeling.updateFromHeaderTransferable(this.server.receiveModeling(transferables, force, SessionContext.getAccessIdentityTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.saveModeling | receiveModelings";
 
@@ -1074,7 +1069,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 			ApplicationException {
 		ModelingType_Transferable transferables = (ModelingType_Transferable) modelingType.getTransferable();
 		try {
-			modelingType.updateFromHeaderTransferable(this.server.receiveModelingType(transferables, force, getAccessIdentifierTransferable()));
+			modelingType.updateFromHeaderTransferable(this.server.receiveModelingType(transferables, force, SessionContext.getAccessIdentityTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.saveModelingType | receiveModelingTypes";
 
@@ -1091,7 +1086,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 			ApplicationException {
 		Measurement_Transferable transferables = (Measurement_Transferable) measurement.getTransferable();
 		try {
-			measurement.updateFromHeaderTransferable(this.server.receiveMeasurement(transferables, force, getAccessIdentifierTransferable()));
+			measurement.updateFromHeaderTransferable(this.server.receiveMeasurement(transferables, force, SessionContext.getAccessIdentityTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.saveMeasurement | receiveMeasurements";
 
@@ -1107,7 +1102,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 	public void saveAnalysis(Analysis analysis, boolean force) throws VersionCollisionException, ApplicationException {
 		Analysis_Transferable transferables = (Analysis_Transferable) analysis.getTransferable();
 		try {
-			analysis.updateFromHeaderTransferable(this.server.receiveAnalysis(transferables, force, getAccessIdentifierTransferable()));
+			analysis.updateFromHeaderTransferable(this.server.receiveAnalysis(transferables, force, SessionContext.getAccessIdentityTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.saveAnalysis | receiveAnalysiss";
 
@@ -1124,7 +1119,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 			ApplicationException {
 		Evaluation_Transferable transferables = (Evaluation_Transferable) evaluation.getTransferable();
 		try {
-			evaluation.updateFromHeaderTransferable(this.server.receiveEvaluation(transferables, force, getAccessIdentifierTransferable()));
+			evaluation.updateFromHeaderTransferable(this.server.receiveEvaluation(transferables, force, SessionContext.getAccessIdentityTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.saveEvaluation | receiveEvaluations";
 
@@ -1140,7 +1135,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 	public void saveTest(Test test, boolean force) throws VersionCollisionException, ApplicationException {
 		Test_Transferable transferables = (Test_Transferable) test.getTransferable();
 		try {
-			test.updateFromHeaderTransferable(this.server.receiveTest(transferables, force, getAccessIdentifierTransferable()));
+			test.updateFromHeaderTransferable(this.server.receiveTest(transferables, force, SessionContext.getAccessIdentityTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.saveTest | receiveTests";
 
@@ -1156,7 +1151,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 	public void saveResult(Result result, boolean force) throws VersionCollisionException, ApplicationException {
 		Result_Transferable transferables = (Result_Transferable) result.getTransferable();
 		try {
-			result.updateFromHeaderTransferable(this.server.receiveResult(transferables, force, getAccessIdentifierTransferable()));
+			result.updateFromHeaderTransferable(this.server.receiveResult(transferables, force, SessionContext.getAccessIdentityTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.saveResult | receiveResults";
 
@@ -1173,7 +1168,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 			ApplicationException {
 		CronTemporalPattern_Transferable transferables = (CronTemporalPattern_Transferable) cronTemporalPattern.getTransferable();
 		try {
-			cronTemporalPattern.updateFromHeaderTransferable(this.server.receiveCronTemporalPattern(transferables, force, getAccessIdentifierTransferable()));
+			cronTemporalPattern.updateFromHeaderTransferable(this.server.receiveCronTemporalPattern(transferables, force, SessionContext.getAccessIdentityTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.saveCronTemporalPattern | receiveCronTemporalPatterns";
 
@@ -1194,7 +1189,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 			transferables[i] = (MeasurementType_Transferable) ((MeasurementType) it.next()).getTransferable();
 		}
 		try {
-			this.updateStorableObjectHeader(measurementTypes, this.server.receiveMeasurementTypes(transferables, force, getAccessIdentifierTransferable()));
+			this.updateStorableObjectHeader(measurementTypes, this.server.receiveMeasurementTypes(transferables, force, SessionContext.getAccessIdentityTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.saveMeasurementType | receiveMeasurementTypes";
 
@@ -1216,7 +1211,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 			transferables[i] = (AnalysisType_Transferable) ((AnalysisType) it.next()).getTransferable();
 		}
 		try {
-			this.updateStorableObjectHeader(analysisTypes, this.server.receiveAnalysisTypes(transferables, force, getAccessIdentifierTransferable()));
+			this.updateStorableObjectHeader(analysisTypes, this.server.receiveAnalysisTypes(transferables, force, SessionContext.getAccessIdentityTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.saveAnalysisTypes | receiveAnalysisTypes";
 
@@ -1237,7 +1232,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 			transferables[i] = (EvaluationType_Transferable) ((EvaluationType) it.next()).getTransferable();
 		}
 		try {
-			this.updateStorableObjectHeader(evaluationTypes, this.server.receiveEvaluationTypes(transferables, force, getAccessIdentifierTransferable()));
+			this.updateStorableObjectHeader(evaluationTypes, this.server.receiveEvaluationTypes(transferables, force, SessionContext.getAccessIdentityTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.saveEvaluationType | receiveEvaluationTypes";
 
@@ -1258,7 +1253,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 			transferables[i] = (Set_Transferable) ((Set) it.next()).getTransferable();
 		}
 		try {
-			this.updateStorableObjectHeader(sets, this.server.receiveSets(transferables, force, getAccessIdentifierTransferable()));
+			this.updateStorableObjectHeader(sets, this.server.receiveSets(transferables, force, SessionContext.getAccessIdentityTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.saveSets | receiveSets";
 
@@ -1278,7 +1273,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 			transferables[i] = (Modeling_Transferable) ((Modeling) it.next()).getTransferable();
 		}
 		try {
-			this.updateStorableObjectHeader(modelings, this.server.receiveModelings(transferables, force, getAccessIdentifierTransferable()));
+			this.updateStorableObjectHeader(modelings, this.server.receiveModelings(transferables, force, SessionContext.getAccessIdentityTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientModelingObjectLoader.saveModelings | receiveModelings";
 
@@ -1298,7 +1293,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 			transferables[i] = (ModelingType_Transferable) ((ModelingType) it.next()).getTransferable();
 		}
 		try {
-			this.updateStorableObjectHeader(modelingTypes, this.server.receiveModelingTypes(transferables, force, getAccessIdentifierTransferable()));
+			this.updateStorableObjectHeader(modelingTypes, this.server.receiveModelingTypes(transferables, force, SessionContext.getAccessIdentityTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientModelingTypeObjectLoader.saveModelingTypes | receiveModelingTypes";
 
@@ -1319,7 +1314,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 			transferables[i] = (MeasurementSetup_Transferable) ((MeasurementSetup) it.next()).getTransferable();
 		}
 		try {
-			this.updateStorableObjectHeader(measurementSetups, this.server.receiveMeasurementSetups(transferables, force, getAccessIdentifierTransferable()));
+			this.updateStorableObjectHeader(measurementSetups, this.server.receiveMeasurementSetups(transferables, force, SessionContext.getAccessIdentityTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementSetupObjectLoader.saveMeasurementSetups | receiveMeasurementSetups";
 
@@ -1339,7 +1334,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 			transferables[i] = (Measurement_Transferable) ((Measurement) it.next()).getTransferable();
 		}
 		try {
-			this.updateStorableObjectHeader(measurements, this.server.receiveMeasurements(transferables, force, getAccessIdentifierTransferable()));
+			this.updateStorableObjectHeader(measurements, this.server.receiveMeasurements(transferables, force, SessionContext.getAccessIdentityTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.saveMeasurements | receiveMeasurements";
 
@@ -1359,7 +1354,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 			transferables[i] = (Analysis_Transferable) ((Analysis) it.next()).getTransferable();
 		}
 		try {
-			this.updateStorableObjectHeader(analyses, this.server.receiveAnalyses(transferables, force, getAccessIdentifierTransferable()));
+			this.updateStorableObjectHeader(analyses, this.server.receiveAnalyses(transferables, force, SessionContext.getAccessIdentityTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.receiveAnalyses | receiveAnalyses";
 
@@ -1379,7 +1374,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 			transferables[i] = (Evaluation_Transferable) ((Evaluation) it.next()).getTransferable();
 		}
 		try {
-			this.updateStorableObjectHeader(evaluations, this.server.receiveEvaluations(transferables, force, getAccessIdentifierTransferable()));
+			this.updateStorableObjectHeader(evaluations, this.server.receiveEvaluations(transferables, force, SessionContext.getAccessIdentityTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.saveEvaluations | receiveEvaluations";
 
@@ -1400,7 +1395,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 			transferables[i] = (Test_Transferable) ((Test) it.next()).getTransferable();
 		}
 		try {
-			this.updateStorableObjectHeader(tests, this.server.receiveTests(transferables, force, getAccessIdentifierTransferable()));
+			this.updateStorableObjectHeader(tests, this.server.receiveTests(transferables, force, SessionContext.getAccessIdentityTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.saveTests | receiveTests";
 
@@ -1420,7 +1415,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 			transferables[i] = (Result_Transferable) ((Result) it.next()).getTransferable();
 		}
 		try {
-			this.updateStorableObjectHeader(results, this.server.receiveResults(transferables, force, getAccessIdentifierTransferable()));
+			this.updateStorableObjectHeader(results, this.server.receiveResults(transferables, force, SessionContext.getAccessIdentityTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientResultObjectLoader.saveResults | receiveResults";
 
@@ -1441,7 +1436,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 			transferables[i] = (CronTemporalPattern_Transferable) ((CronTemporalPattern) it.next()).getTransferable();
 		}
 		try {
-			this.updateStorableObjectHeader(cronTemporalPatterns, this.server.receiveCronTemporalPatterns(transferables, force, getAccessIdentifierTransferable()));
+			this.updateStorableObjectHeader(cronTemporalPatterns, this.server.receiveCronTemporalPatterns(transferables, force, SessionContext.getAccessIdentityTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientTemporalPaternObjectLoader.saveCronTemporalPaterns | receiveCronTemporalPaterns";
 
@@ -1466,7 +1461,7 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 				storableObject_Transferables[i] = storableObject.getHeaderTransferable();
 			}
 			identifier_Transferables = this.server.transmitRefreshedMeasurementObjects(storableObject_Transferables,
-				getAccessIdentifierTransferable());
+				SessionContext.getAccessIdentityTransferable());
 
 			for (int j = 0; j < identifier_Transferables.length; j++) {
 				refreshedIds.add(new Identifier(identifier_Transferables[j]));

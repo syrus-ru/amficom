@@ -1,5 +1,5 @@
 /*-
- * $Id: ClientSchemeObjectLoader.java,v 1.2 2005/04/13 21:14:06 arseniy Exp $
+ * $Id: ClientSchemeObjectLoader.java,v 1.3 2005/04/23 13:58:27 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import java.util.*;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.2 $, $Date: 2005/04/13 21:14:06 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/23 13:58:27 $
  * @module generalclient_v1
  */
 public final class ClientSchemeObjectLoader implements SchemeObjectLoader {
@@ -771,10 +771,6 @@ public final class ClientSchemeObjectLoader implements SchemeObjectLoader {
 	 */
 	public void saveSchemes(final Set schemes, final boolean force) throws ApplicationException {
 		throw new UnsupportedOperationException();
-	}
-
-	private AccessIdentifier_Transferable getAccessIdentifierTransferable() {
-		return (AccessIdentifier_Transferable) SessionContext.getAccessIdentity().getTransferable();
 	}
 
 	private void updateStorableObjectHeader(final Set storableObjects, final StorableObject_Transferable transferables[]) {

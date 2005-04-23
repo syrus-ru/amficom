@@ -1,5 +1,5 @@
 /*
- * $Id: SessionInterface.java,v 1.8 2005/03/16 10:06:40 bob Exp $
+ * $Id: SessionInterface.java,v 1.9 2005/04/23 13:58:26 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,19 +11,19 @@ package com.syrus.AMFICOM.Client.General;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.syrus.AMFICOM.CORBA.Admin.AccessIdentity_Transferable;
+//import com.syrus.AMFICOM.CORBA.Admin.AccessIdentity_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
+import com.syrus.AMFICOM.general.corba.AccessIdentity_Transferable;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.8 $, $Date: 2005/03/16 10:06:40 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.9 $, $Date: 2005/04/23 13:58:26 $
  * @module generalclient_v1
  */
 public abstract class SessionInterface {
-	public abstract AccessIdentity_Transferable getAccessIdentity();
+	public abstract com.syrus.AMFICOM.CORBA.Admin.AccessIdentity_Transferable getAccessIdentity();
 
-	public abstract AccessIdentifier_Transferable getAccessIdentifier();
+	public abstract AccessIdentity_Transferable getAccessIdentifier();
 
 	public static final int SESSION_CLOSED = 0;	// вспомогательные константы
 	public static final int SESSION_OPENED = 1;	// состояния сессии
