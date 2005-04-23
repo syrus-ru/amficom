@@ -12,7 +12,8 @@ module AMFICOM {
 module cmserver {
 module corba {
 
-	interface CMServer:
+	interface CMServer :
+		general::corba::Verifiable,
 		general::corba::NameResolver,
 		general::corba::IdentifierGeneratorServer {
 
