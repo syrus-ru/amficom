@@ -12,7 +12,9 @@ module AMFICOM {
 module mserver {
 module corba {
 
-	interface MServer : general::corba::IdentifierGeneratorServer {
+	interface MServer :
+		general::corba::Verifiable,
+		general::corba::IdentifierGeneratorServer {
 
 ////////////////////////////////////////////	Receive ///////////////////////////////////////////////////
 		void receiveResults(in measurement::corba::ResultSeq_Transferable results,
