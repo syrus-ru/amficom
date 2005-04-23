@@ -9,13 +9,17 @@ IDLDIR=../idl_v1/idl
 HOST=mongol
 SERVICE_NAME=mongol
 
-###:$(LIBDIR)/servermisc.jar
+JAVACFLAGS = -source 1.4
+SUNJAVACFLAGS = -target 1.4
+JIKESFLAGS = -target 1.4.2
 
 include ../tools/Makefile.inc
 
-SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/mshserver/*.java)
+SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/mshserver/*.java) \
+	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/map/*.java) \
+	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/scheme/*.java)
 
-APPCLASSPATH = $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/map.jar:$(LIBDIR)/scheme.jar
+APPCLASSPATH = $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/map.jar:$(LIBDIR)/scheme.jar
 
 
 $(call checkenve,JAVA_HOME)
@@ -58,6 +62,8 @@ clean:	cleanmach cleancorba
 .PHONY:	cleanmach
 cleanmach:
 	rm -rf $(CLASSDIR)/com/syrus/AMFICOM/mshserver/*.class
+	rm -rf $(CLASSDIR)/com/syrus/AMFICOM/map/*.class
+	rm -rf $(CLASSDIR)/com/syrus/AMFICOM/scheme/*.class
 	rm -f .mach
 
 .PHONY:	cleancorba
