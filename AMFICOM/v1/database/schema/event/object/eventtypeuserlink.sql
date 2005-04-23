@@ -1,4 +1,4 @@
-CREATE TABLE UserEventTypeLink (
+CREATE TABLE EventTypeUserLink (
  user_id VARCHAR2(32) NOT NULL,
  event_type_id VARCHAR2(32) NOT NULL,
 --
