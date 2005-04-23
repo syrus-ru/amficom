@@ -16,7 +16,7 @@ Identifiable.java
 Identifier.java
 IdentifierGeneratorServer.java
 Verifiable.java
-NameResolver.java
+LoginServer.java
 ElementAttribute.java
 StringFieldSort.java
 CharacteristicSort.java
