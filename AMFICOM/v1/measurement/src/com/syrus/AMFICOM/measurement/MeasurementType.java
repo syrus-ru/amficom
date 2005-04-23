@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementType.java,v 1.67 2005/04/15 19:22:19 arseniy Exp $
+ * $Id: MeasurementType.java,v 1.68 2005/04/23 17:44:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 
 /**
- * @version $Revision: 1.67 $, $Date: 2005/04/15 19:22:19 $
+ * @version $Revision: 1.68 $, $Date: 2005/04/23 17:44:57 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -207,9 +207,6 @@ public class MeasurementType extends ActionType implements Namable {
 												measurementPortTypeIds);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.syrus.AMFICOM.general.StorableObjectType#isValid()
-	 */
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */

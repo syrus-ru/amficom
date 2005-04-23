@@ -1,5 +1,5 @@
 /*
- * $Id: Set.java,v 1.63 2005/04/15 19:22:19 arseniy Exp $
+ * $Id: Set.java,v 1.64 2005/04/23 17:45:00 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.63 $, $Date: 2005/04/15 19:22:19 $
+ * @version $Revision: 1.64 $, $Date: 2005/04/23 17:45:00 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -256,17 +256,17 @@ public final class Set extends StorableObject {
 	}
 
 	public void attachToMonitoredElement(Identifier monitoredElementId) {
-		if (monitoredElementId == null || this.isAttachedToMonitoredElement(monitoredElementId))
-			return;
-		this.monitoredElementIds.add(monitoredElementId);
-		super.changed = true;
+		if (monitoredElementId != null && !this.isAttachedToMonitoredElement(monitoredElementId)) {
+			this.monitoredElementIds.add(monitoredElementId);
+			super.changed = true;
+		}
 	}
 
 	public void detachFromMonitoredElement(Identifier monitoredElementId) {
-		if (monitoredElementId == null || !this.isAttachedToMonitoredElement(monitoredElementId))
-			return;
-		this.monitoredElementIds.remove(monitoredElementId);
-		super.changed = true;
+		if (monitoredElementId != null && this.isAttachedToMonitoredElement(monitoredElementId)) {
+			this.monitoredElementIds.remove(monitoredElementId);
+			super.changed = true;
+		}
 	}
 
 	protected synchronized void setMonitoredElementIds0(java.util.Set monitoredElementIds) {
