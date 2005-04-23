@@ -1,5 +1,5 @@
 /*
- * $Id: Event.java,v 1.19 2005/04/15 19:22:24 arseniy Exp $
+ * $Id: Event.java,v 1.20 2005/04/23 17:45:49 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.event.corba.EventParameter_Transferable;
 import com.syrus.AMFICOM.event.corba.Event_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -33,7 +34,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/04/15 19:22:24 $
+ * @version $Revision: 1.20 $, $Date: 2005/04/23 17:45:49 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -61,6 +62,8 @@ public final class Event extends StorableObject implements TypedObject {
 		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
+
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
 	public Event(Event_Transferable et) throws CreateObjectException {
@@ -120,6 +123,9 @@ public final class Event extends StorableObject implements TypedObject {
 											description,
 											eventParameters,
 											eventSourceIds);
+
+			assert event.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+
 			event.changed = true;
 			return event;
 		}
@@ -141,19 +147,21 @@ public final class Event extends StorableObject implements TypedObject {
 		for (int i = 0; i < et.parameters.length; i++)
 			this.eventParameters.add(new EventParameter(et.parameters[i]));
 
-		this.eventSourceIds = Identifier.fromTransferables(et.event_source_ids);
+		this.eventSourceIds = new HashSet(et.event_source_ids.length);
+		this.setEventSourceIds0(Identifier.fromTransferables(et.event_source_ids));
+
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
 	public IDLEntity getTransferable() {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+
 		int i = 0;
 		EventParameter_Transferable[] ept = new EventParameter_Transferable[this.eventParameters.size()];
 		for (Iterator it = this.eventParameters.iterator(); it.hasNext(); i++)
 			ept[i] = (EventParameter_Transferable) ((EventParameter) it.next()).getTransferable();
-		
-		Identifier_Transferable[] esIdsT = new Identifier_Transferable[this.eventSourceIds.size()];
-		i = 0;
-		for (Iterator it = this.eventSourceIds.iterator(); it.hasNext(); i++)
-			esIdsT[i] = (Identifier_Transferable) ((Identifier) it.next()).getTransferable();
+
+		Identifier_Transferable[] esIdsT = Identifier.createTransferables(this.eventSourceIds);
 
 		return new Event_Transferable(super.getHeaderTransferable(),
 				(Identifier_Transferable) this.type.getId().getTransferable(),
@@ -176,6 +184,17 @@ public final class Event extends StorableObject implements TypedObject {
 
 	public Set getEventSourceIds() {
 		return Collections.unmodifiableSet(this.eventSourceIds);
+	}
+
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	protected boolean isValid() {
+		return super.isValid()
+				&& this.type != null
+				&& this.description != null
+				&& this.eventParameters != null && this.eventParameters != Collections.EMPTY_SET
+				&& this.eventSourceIds != null && this.eventSourceIds != Collections.EMPTY_SET;
 	}
 
 	protected synchronized void setAttributes(Date created,
