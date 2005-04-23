@@ -1,5 +1,5 @@
 /*
- * $Id: CORBAGeneralObjectLoader.java,v 1.4 2005/04/22 19:24:09 arseniy Exp $
+ * $Id: CORBAGeneralObjectLoader.java,v 1.5 2005/04/23 14:07:03 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,7 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.cmserver.corba.CMServer;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
+import com.syrus.AMFICOM.general.corba.AccessIdentity_Transferable;
 import com.syrus.AMFICOM.general.corba.CharacteristicType_Transferable;
 import com.syrus.AMFICOM.general.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/04/22 19:24:09 $
+ * @version $Revision: 1.5 $, $Date: 2005/04/23 14:07:03 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
@@ -40,7 +40,7 @@ public final class CORBAGeneralObjectLoader extends CORBAObjectLoader implements
 
 	public ParameterType loadParameterType(Identifier id) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		try {
 			ParameterType_Transferable transferable = cmServer.transmitParameterType((Identifier_Transferable) id.getTransferable(),
@@ -57,7 +57,7 @@ public final class CORBAGeneralObjectLoader extends CORBAObjectLoader implements
 
 	public CharacteristicType loadCharacteristicType(Identifier id) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		try {
 			CharacteristicType_Transferable transferable = cmServer.transmitCharacteristicType((Identifier_Transferable) id.getTransferable(),
@@ -74,7 +74,7 @@ public final class CORBAGeneralObjectLoader extends CORBAObjectLoader implements
 
 	public Characteristic loadCharacteristic(Identifier id) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		try {
 			Characteristic_Transferable transferable = cmServer.transmitCharacteristic((Identifier_Transferable) id.getTransferable(), ait);
@@ -96,7 +96,7 @@ public final class CORBAGeneralObjectLoader extends CORBAObjectLoader implements
 	public Set loadParameterTypes(Set ids) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		try {
 			ParameterType_Transferable[] transferables = cmServer.transmitParameterTypes(idsT, ait);
@@ -119,7 +119,7 @@ public final class CORBAGeneralObjectLoader extends CORBAObjectLoader implements
 	public Set loadCharacteristicTypes(Set ids) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		try {
 			CharacteristicType_Transferable[] transferables = cmServer.transmitCharacteristicTypes(idsT, ait);
@@ -137,7 +137,7 @@ public final class CORBAGeneralObjectLoader extends CORBAObjectLoader implements
 	public Set loadCharacteristics(Set ids) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		try {
 			Characteristic_Transferable[] transferables = cmServer.transmitCharacteristics(idsT, ait);
@@ -165,7 +165,7 @@ public final class CORBAGeneralObjectLoader extends CORBAObjectLoader implements
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
 		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		try {
 			ParameterType_Transferable[] transferables = cmServer.transmitParameterTypesButIdsCondition(idsT, ait, conditionT);
@@ -189,7 +189,7 @@ public final class CORBAGeneralObjectLoader extends CORBAObjectLoader implements
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
 		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		try {
 			CharacteristicType_Transferable[] transferables = cmServer.transmitCharacteristicTypesButIdsCondition(idsT, ait, conditionT);
@@ -208,7 +208,7 @@ public final class CORBAGeneralObjectLoader extends CORBAObjectLoader implements
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
 		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		try {
 			Characteristic_Transferable[] transferables = cmServer.transmitCharacteristicsButIdsCondition(idsT, ait, conditionT);
@@ -234,7 +234,7 @@ public final class CORBAGeneralObjectLoader extends CORBAObjectLoader implements
 
 	public void saveParameterType(ParameterType parameterType, boolean force) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		ParameterType_Transferable transferable = (ParameterType_Transferable) parameterType.getTransferable();
 		try {
@@ -251,7 +251,7 @@ public final class CORBAGeneralObjectLoader extends CORBAObjectLoader implements
 
 	public void saveCharacteristicType(CharacteristicType characteristicType, boolean force) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		CharacteristicType_Transferable transferable = (CharacteristicType_Transferable) characteristicType.getTransferable();
 		try {
@@ -268,7 +268,7 @@ public final class CORBAGeneralObjectLoader extends CORBAObjectLoader implements
 
 	public void saveCharacteristic(Characteristic characteristic, boolean force) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		Characteristic_Transferable transferable = (Characteristic_Transferable) characteristic.getTransferable();
 		try {
@@ -289,7 +289,7 @@ public final class CORBAGeneralObjectLoader extends CORBAObjectLoader implements
 
 	public void saveParameterTypes(Set objects, boolean force) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		ParameterType_Transferable[] transferables = new ParameterType_Transferable[objects.size()];
 		int i = 0;
@@ -310,7 +310,7 @@ public final class CORBAGeneralObjectLoader extends CORBAObjectLoader implements
 
 	public void saveCharacteristicTypes(Set objects, boolean force) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		CharacteristicType_Transferable[] transferables = new CharacteristicType_Transferable[objects.size()];
 		int i = 0;
@@ -331,7 +331,7 @@ public final class CORBAGeneralObjectLoader extends CORBAObjectLoader implements
 
 	public void saveCharacteristics(Set objects, boolean force) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		Characteristic_Transferable[] transferables = new Characteristic_Transferable[objects.size()];
 		int i = 0;
@@ -354,7 +354,7 @@ public final class CORBAGeneralObjectLoader extends CORBAObjectLoader implements
 
 	public Set refresh(Set storableObjects) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		StorableObject_Transferable[] headersT = StorableObject.createHeadersTransferable(storableObjects);
 

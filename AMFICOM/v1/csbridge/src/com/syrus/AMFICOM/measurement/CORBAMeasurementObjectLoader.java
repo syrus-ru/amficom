@@ -1,5 +1,5 @@
 /*
- * $Id: CORBAMeasurementObjectLoader.java,v 1.2 2005/04/22 20:11:59 arseniy Exp $
+ * $Id: CORBAMeasurementObjectLoader.java,v 1.3 2005/04/23 14:07:03 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,18 +14,18 @@ import com.syrus.AMFICOM.cmserver.corba.CMServer;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CMServerConnectionManager;
 import com.syrus.AMFICOM.general.CORBAObjectLoader;
-import com.syrus.AMFICOM.general.ClientSession;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.SessionContext;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectConditionBuilder;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
+import com.syrus.AMFICOM.general.corba.AccessIdentity_Transferable;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
@@ -46,7 +46,7 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/22 20:11:59 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/23 14:07:03 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
@@ -62,7 +62,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public MeasurementType loadMeasurementType(Identifier id) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		try {
 			MeasurementType_Transferable transferable = cmServer.transmitMeasurementType((Identifier_Transferable) id.getTransferable(), ait);
@@ -78,7 +78,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public AnalysisType loadAnalysisType(Identifier id) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		try {
 			AnalysisType_Transferable transferable = cmServer.transmitAnalysisType((Identifier_Transferable) id.getTransferable(), ait);
@@ -94,7 +94,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public EvaluationType loadEvaluationType(Identifier id) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		try {
 			EvaluationType_Transferable transferable = cmServer.transmitEvaluationType((Identifier_Transferable) id.getTransferable(), ait);
@@ -110,7 +110,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public ModelingType loadModelingType(Identifier id) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		try {
 			ModelingType_Transferable transferable = cmServer.transmitModelingType((Identifier_Transferable) id.getTransferable(), ait);
@@ -128,7 +128,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public Measurement loadMeasurement(Identifier id) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		try {
 			Measurement_Transferable transferable = cmServer.transmitMeasurement((Identifier_Transferable) id.getTransferable(), ait);
@@ -144,7 +144,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public Analysis loadAnalysis(Identifier id) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		try {
 			Analysis_Transferable transferable = cmServer.transmitAnalysis((Identifier_Transferable) id.getTransferable(), ait);
@@ -160,7 +160,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public Evaluation loadEvaluation(Identifier id) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		try {
 			Evaluation_Transferable transferable = cmServer.transmitEvaluation((Identifier_Transferable) id.getTransferable(), ait);
@@ -176,7 +176,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public Modeling loadModeling(Identifier id) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		try {
 			Modeling_Transferable transferable = cmServer.transmitModeling((Identifier_Transferable) id.getTransferable(), ait);
@@ -192,7 +192,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public MeasurementSetup loadMeasurementSetup(Identifier id) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		try {
 			MeasurementSetup_Transferable transferable = cmServer.transmitMeasurementSetup((Identifier_Transferable) id.getTransferable(), ait);
@@ -208,7 +208,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public Result loadResult(Identifier id) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		try {
 			Result_Transferable transferable = cmServer.transmitResult((Identifier_Transferable) id.getTransferable(), ait);
@@ -224,7 +224,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public Set loadSet(Identifier id) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		try {
 			Set_Transferable transferable = cmServer.transmitSet((Identifier_Transferable) id.getTransferable(), ait);
@@ -240,7 +240,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public Test loadTest(Identifier id) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		try {
 			Test_Transferable transferable = cmServer.transmitTest((Identifier_Transferable) id.getTransferable(), ait);
@@ -256,7 +256,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public CronTemporalPattern loadCronTemporalPattern(Identifier id) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		try {
 			CronTemporalPattern_Transferable transferable = cmServer.transmitCronTemporalPattern((Identifier_Transferable) id.getTransferable(), ait);
@@ -277,7 +277,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 	public java.util.Set loadMeasurementTypes(java.util.Set ids) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		try {
 			MeasurementType_Transferable[] transferables = cmServer.transmitMeasurementTypes(idsT, ait);
@@ -300,7 +300,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 	public java.util.Set loadAnalysisTypes(java.util.Set ids) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		try {
 			AnalysisType_Transferable[] transferables = cmServer.transmitAnalysisTypes(idsT, ait);
@@ -323,7 +323,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 	public java.util.Set loadEvaluationTypes(java.util.Set ids) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		try {
 			EvaluationType_Transferable[] transferables = cmServer.transmitEvaluationTypes(idsT, ait);
@@ -346,7 +346,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 	public java.util.Set loadModelingTypes(java.util.Set ids) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		try {
 			ModelingType_Transferable[] transferables = cmServer.transmitModelingTypes(idsT, ait);
@@ -371,7 +371,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 	public java.util.Set loadMeasurements(java.util.Set ids) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		try {
 			Measurement_Transferable[] transferables = cmServer.transmitMeasurements(idsT, ait);
@@ -394,7 +394,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 	public java.util.Set loadAnalyses(java.util.Set ids) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		try {
 			Analysis_Transferable[] transferables = cmServer.transmitAnalyses(idsT, ait);
@@ -417,7 +417,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 	public java.util.Set loadEvaluations(java.util.Set ids) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		try {
 			Evaluation_Transferable[] transferables = cmServer.transmitEvaluations(idsT, ait);
@@ -440,7 +440,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 	public java.util.Set loadModelings(java.util.Set ids) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		try {
 			Modeling_Transferable[] transferables = cmServer.transmitModelings(idsT, ait);
@@ -463,7 +463,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 	public java.util.Set loadMeasurementSetups(java.util.Set ids) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		try {
 			MeasurementSetup_Transferable[] transferables = cmServer.transmitMeasurementSetups(idsT, ait);
@@ -486,7 +486,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 	public java.util.Set loadResults(java.util.Set ids) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		try {
 			Result_Transferable[] transferables = cmServer.transmitResults(idsT, ait);
@@ -509,7 +509,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 	public java.util.Set loadSets(java.util.Set ids) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		try {
 			Set_Transferable[] transferables = cmServer.transmitSets(idsT, ait);
@@ -532,7 +532,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 	public java.util.Set loadTests(java.util.Set ids) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		try {
 			Test_Transferable[] transferables = cmServer.transmitTests(idsT, ait);
@@ -555,7 +555,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 	public java.util.Set loadCronTemporalPatterns(java.util.Set ids) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		try {
 			CronTemporalPattern_Transferable[] transferables = cmServer.transmitCronTemporalPatterns(idsT, ait);
@@ -584,7 +584,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
 		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		try {
 			MeasurementType_Transferable[] transferables = cmServer.transmitMeasurementTypesButIdsCondition(idsT, ait, conditionT);
@@ -608,7 +608,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
 		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		try {
 			AnalysisType_Transferable[] transferables = cmServer.transmitAnalysisTypesButIdsCondition(idsT, ait, conditionT);
@@ -633,7 +633,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
 		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		try {
 			EvaluationType_Transferable[] transferables = cmServer.transmitEvaluationTypesButIdsCondition(idsT, ait, conditionT);
@@ -657,7 +657,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
 		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		try {
 			ModelingType_Transferable[] transferables = cmServer.transmitModelingTypesButIdsCondition(idsT, ait, conditionT);
@@ -684,7 +684,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
 		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		try {
 			Measurement_Transferable[] transferables = cmServer.transmitMeasurementsButIdsCondition(idsT, ait, conditionT);
@@ -708,7 +708,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
 		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		try {
 			Analysis_Transferable[] transferables = cmServer.transmitAnalysesButIdsCondition(idsT, ait, conditionT);
@@ -732,7 +732,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
 		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		try {
 			Evaluation_Transferable[] transferables = cmServer.transmitEvaluationsButIdsCondition(idsT, ait, conditionT);
@@ -756,7 +756,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
 		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		try {
 			Modeling_Transferable[] transferables = cmServer.transmitModelingsButIdsCondition(idsT, ait, conditionT);
@@ -781,7 +781,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
 		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		try {
 			MeasurementSetup_Transferable[] transferables = cmServer.transmitMeasurementSetupsButIdsCondition(idsT, ait, conditionT);
@@ -805,7 +805,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
 		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		try {
 			Result_Transferable[] transferables = cmServer.transmitResultsButIdsCondition(idsT, ait, conditionT);
@@ -829,7 +829,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
 		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		try {
 			Set_Transferable[] transferables = cmServer.transmitSetsButIdsCondition(idsT, ait, conditionT);
@@ -853,7 +853,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
 		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		try {
 			Test_Transferable[] transferables = cmServer.transmitTestsButIdsCondition(idsT, ait, conditionT);
@@ -878,7 +878,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
 		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		try {
 			CronTemporalPattern_Transferable[] transferables = cmServer.transmitCronTemporalPatternsButIdsCondition(idsT, ait, conditionT);
@@ -904,7 +904,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public void saveMeasurementType(MeasurementType measurementType, boolean force) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		MeasurementType_Transferable transferable = (MeasurementType_Transferable) measurementType.getTransferable();
 		try {
@@ -921,7 +921,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public void saveAnalysisType(AnalysisType analysisType, boolean force) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		AnalysisType_Transferable transferable = (AnalysisType_Transferable) analysisType.getTransferable();
 		try {
@@ -938,7 +938,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public void saveEvaluationType(EvaluationType evaluationType, boolean force) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		EvaluationType_Transferable transferable = (EvaluationType_Transferable) evaluationType.getTransferable();
 		try {
@@ -955,7 +955,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public void saveModelingType(ModelingType modelingType, boolean force) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		ModelingType_Transferable transferable = (ModelingType_Transferable) modelingType.getTransferable();
 		try {
@@ -975,7 +975,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public void saveMeasurement(Measurement measurement, boolean force) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		Measurement_Transferable transferable = (Measurement_Transferable) measurement.getTransferable();
 		try {
@@ -992,7 +992,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public void saveAnalysis(Analysis analysis, boolean force) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		Analysis_Transferable transferable = (Analysis_Transferable) analysis.getTransferable();
 		try {
@@ -1009,7 +1009,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public void saveEvaluation(Evaluation evaluation, boolean force) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		Evaluation_Transferable transferable = (Evaluation_Transferable) evaluation.getTransferable();
 		try {
@@ -1026,7 +1026,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public void saveModeling(Modeling modeling, boolean force) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		Modeling_Transferable transferable = (Modeling_Transferable) modeling.getTransferable();
 		try {
@@ -1043,7 +1043,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public void saveMeasurementSetup(MeasurementSetup measurementSetup, boolean force) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		MeasurementSetup_Transferable transferable = (MeasurementSetup_Transferable) measurementSetup.getTransferable();
 		try {
@@ -1060,7 +1060,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public void saveResult(Result result, boolean force) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		Result_Transferable transferable = (Result_Transferable) result.getTransferable();
 		try {
@@ -1077,7 +1077,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public void saveSet(Set set, boolean force) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		Set_Transferable transferable = (Set_Transferable) set.getTransferable();
 		try {
@@ -1094,7 +1094,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public void saveTest(Test test, boolean force) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		Test_Transferable transferable = (Test_Transferable) test.getTransferable();
 		try {
@@ -1111,7 +1111,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public void saveCronTemporalPattern(CronTemporalPattern cronTemporalPattern, boolean force) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		CronTemporalPattern_Transferable transferable = (CronTemporalPattern_Transferable) cronTemporalPattern.getTransferable();
 		try {
@@ -1132,7 +1132,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public void saveMeasurementTypes(java.util.Set objects, boolean force) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		MeasurementType_Transferable[] transferables = new MeasurementType_Transferable[objects.size()];
 		int i = 0;
@@ -1153,7 +1153,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public void saveAnalysisTypes(java.util.Set objects, boolean force) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		AnalysisType_Transferable[] transferables = new AnalysisType_Transferable[objects.size()];
 		int i = 0;
@@ -1174,7 +1174,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public void saveEvaluationTypes(java.util.Set objects, boolean force) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		EvaluationType_Transferable[] transferables = new EvaluationType_Transferable[objects.size()];
 		int i = 0;
@@ -1195,7 +1195,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public void saveModelingTypes(java.util.Set objects, boolean force) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		ModelingType_Transferable[] transferables = new ModelingType_Transferable[objects.size()];
 		int i = 0;
@@ -1218,7 +1218,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public void saveMeasurements(java.util.Set objects, boolean force) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		Measurement_Transferable[] transferables = new Measurement_Transferable[objects.size()];
 		int i = 0;
@@ -1239,7 +1239,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public void saveAnalyses(java.util.Set objects, boolean force) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		Analysis_Transferable[] transferables = new Analysis_Transferable[objects.size()];
 		int i = 0;
@@ -1260,7 +1260,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public void saveEvaluations(java.util.Set objects, boolean force) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		Evaluation_Transferable[] transferables = new Evaluation_Transferable[objects.size()];
 		int i = 0;
@@ -1281,7 +1281,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public void saveModelings(java.util.Set objects, boolean force) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		Modeling_Transferable[] transferables = new Modeling_Transferable[objects.size()];
 		int i = 0;
@@ -1302,7 +1302,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public void saveMeasurementSetups(java.util.Set objects, boolean force) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		MeasurementSetup_Transferable[] transferables = new MeasurementSetup_Transferable[objects.size()];
 		int i = 0;
@@ -1323,7 +1323,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public void saveResults(java.util.Set objects, boolean force) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		Result_Transferable[] transferables = new Result_Transferable[objects.size()];
 		int i = 0;
@@ -1344,7 +1344,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public void saveSets(java.util.Set objects, boolean force) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		Set_Transferable[] transferables = new Set_Transferable[objects.size()];
 		int i = 0;
@@ -1365,7 +1365,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public void saveTests(java.util.Set objects, boolean force) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		Test_Transferable[] transferables = new Test_Transferable[objects.size()];
 		int i = 0;
@@ -1386,7 +1386,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public void saveCronTemporalPatterns(java.util.Set objects, boolean force) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		CronTemporalPattern_Transferable[] transferables = new CronTemporalPattern_Transferable[objects.size()];
 		int i = 0;
@@ -1409,7 +1409,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public java.util.Set refresh(java.util.Set storableObjects) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+		AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 		StorableObject_Transferable[] headersT = StorableObject.createHeadersTransferable(storableObjects);
 

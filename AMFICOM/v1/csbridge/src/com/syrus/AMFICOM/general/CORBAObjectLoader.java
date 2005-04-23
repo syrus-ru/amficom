@@ -1,5 +1,5 @@
 /*
- * $Id: CORBAObjectLoader.java,v 1.1 2005/04/22 17:14:49 arseniy Exp $
+ * $Id: CORBAObjectLoader.java,v 1.2 2005/04/23 14:07:03 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,13 +12,13 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.cmserver.corba.CMServer;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
+import com.syrus.AMFICOM.general.corba.AccessIdentity_Transferable;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/22 17:14:49 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/23 14:07:03 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
@@ -32,7 +32,7 @@ public abstract class CORBAObjectLoader {
 	public void delete(Identifier id) {
 		try {
 			CMServer cmServer = this.cmServerConnectionManager.getCMServerReference();
-			AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+			AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 			Identifier_Transferable idT = (Identifier_Transferable) id.getTransferable();
 			cmServer.delete(idT, ait);
@@ -48,7 +48,7 @@ public abstract class CORBAObjectLoader {
 	public void delete(Set identifiables) {
 		try {
 			CMServer cmServer = this.cmServerConnectionManager.getCMServerReference();
-			AccessIdentifier_Transferable ait = ClientSession.getAccessIdentifierTransferable();
+			AccessIdentity_Transferable ait = SessionContext.getAccessIdentityTransferable();
 
 			Identifier_Transferable[] idsT = Identifier.createTransferables(identifiables);
 			cmServer.deleteList(idsT, ait);
