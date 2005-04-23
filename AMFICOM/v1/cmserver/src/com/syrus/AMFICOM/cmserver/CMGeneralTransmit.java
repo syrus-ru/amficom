@@ -1,5 +1,5 @@
 /*
- * $Id: CMGeneralTransmit.java,v 1.18 2005/04/14 07:31:53 bob Exp $
+ * $Id: CMGeneralTransmit.java,v 1.19 2005/04/23 13:36:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectConditionBuilder;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
+import com.syrus.AMFICOM.general.corba.AccessIdentity_Transferable;
 import com.syrus.AMFICOM.general.corba.CharacteristicType_Transferable;
 import com.syrus.AMFICOM.general.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
@@ -43,8 +43,8 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/04/14 07:31:53 $
- * @author $Author: bob $
+ * @version $Revision: 1.19 $, $Date: 2005/04/23 13:36:32 $
+ * @author $Author: arseniy $
  * @module cmserver_v1
  */
 
@@ -53,8 +53,8 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 	private static final long serialVersionUID = 6832454869836527727L;
 
 	public ParameterType_Transferable transmitParameterType(Identifier_Transferable identifier_Transferable,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Identifier id = new Identifier(identifier_Transferable);
 		Log.debugMessage("CMGeneralTransmit.transmitParameterType | require '" + id.toString()
 				+ "' for user '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
@@ -85,8 +85,8 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 	}
 
 	public CharacteristicType_Transferable transmitCharacteristicType(Identifier_Transferable identifier_Transferable,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Identifier id = new Identifier(identifier_Transferable);
 		Log.debugMessage("CMGeneralTransmit.transmitCharacteristicType | require '" + id.toString()
 				+ "' for user '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
@@ -117,8 +117,8 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 	}
 
 	public Characteristic_Transferable transmitCharacteristic(Identifier_Transferable identifier_Transferable,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Identifier id = new Identifier(identifier_Transferable);
 		Log.debugMessage("CMGeneralTransmit.transmitCharacteristic | require '" + id.toString()
 				+ "' for user '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
@@ -154,10 +154,10 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 
 
 	public ParameterType_Transferable[] transmitParameterTypes(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier)
+			AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
 		try {
-			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 			Log.debugMessage("CMGeneralTransmit.transmitParameterTypes | requiered " + identifier_Transferables.length
 					+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
@@ -179,10 +179,10 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 	}
 
 	public CharacteristicType_Transferable[] transmitCharacteristicTypes(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier)
+			AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
 		try {
-			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 			Log.debugMessage("CMGeneralTransmit.transmitCharacteristicTypes | requiered "
 					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
 				Log.DEBUGLEVEL07);
@@ -205,10 +205,10 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 	}
 
 	public Characteristic_Transferable[] transmitCharacteristics(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier)
+			AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
 		try {
-			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 			Log.debugMessage("CMGeneralTransmit.transmitCharacteristics | requiered " + identifier_Transferables.length
 					+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
@@ -252,9 +252,9 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 
 
 	public ParameterType_Transferable[] transmitParameterTypesButIds(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
 		try {
-			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 			Log.debugMessage("CMGeneralTransmit.transmitParameterTypesButIds | All, but "
 					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
 				Log.DEBUGLEVEL07);
@@ -277,9 +277,9 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 	}
 
 	public CharacteristicType_Transferable[] transmitCharacteristicTypesButIds(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
 		try {
-			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 			Log.debugMessage("CMGeneralTransmit.transmitCharacteristicTypesButIds | All, but "
 					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
 				Log.DEBUGLEVEL07);
@@ -303,9 +303,9 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 	}
 
 	public Characteristic_Transferable[] transmitCharacteristicsButIds(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
 		try {
-			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 			Log.debugMessage("CMGeneralTransmit.transmitCharacteristicsButIds | All, but "
 					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
 				Log.DEBUGLEVEL07);
@@ -351,10 +351,10 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 
 
 	public ParameterType_Transferable[] transmitParameterTypesButIdsCondition(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier,
+			AccessIdentity_Transferable accessIdentityT,
 			StorableObjectCondition_Transferable condition_Transferable) throws AMFICOMRemoteException {
 		try {
-			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 			Log.debugMessage("CMGeneralTransmit.transmitParameterTypesButIdsCondition | All, but "
 					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
 				Log.DEBUGLEVEL07);
@@ -377,10 +377,10 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 	}
 
 	public CharacteristicType_Transferable[] transmitCharacteristicTypesButIdsCondition(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier,
+			AccessIdentity_Transferable accessIdentityT,
 			StorableObjectCondition_Transferable condition_Transferable) throws AMFICOMRemoteException {
 		try {
-			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 			Log.debugMessage("CMGeneralTransmit.transmitCharacteristicTypesButIdsCondition | All, but "
 					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
 				Log.DEBUGLEVEL07);
@@ -403,10 +403,10 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 	}
 
 	public Characteristic_Transferable[] transmitCharacteristicsButIdsCondition(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier,
+			AccessIdentity_Transferable accessIdentityT,
 			StorableObjectCondition_Transferable condition_Transferable) throws AMFICOMRemoteException {
 		try {
-			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 			Log.debugMessage("CMGeneralTransmit.transmitCharacteristicsButIdsCondition | All, but "
 					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
 				Log.DEBUGLEVEL07);
@@ -461,8 +461,8 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 
 	// Refresh objects from a pool
 	public Identifier_Transferable[] transmitRefreshedGeneralObjects(StorableObject_Transferable[] storableObjects_Transferables,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Log.debugMessage("CMGeneralTransmit.transmitRefreshedGeneralObjects | Refreshing for user '"
 				+ accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 		try {

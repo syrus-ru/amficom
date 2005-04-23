@@ -253,7 +253,7 @@ module corba {
 
 
 		void updateTest(in measurement::corba::Test_Transferable test,
-						in general::corba::AccessIdentifier_Transferable accessIdentifier);
+						in general::corba::AccessIdentity_Transferable access_identity);
 /*
 		void updateTests(in measurement::corba::TestSeq_Transferable tests,
 						in general::corba::AccessIdentifier_Transferable accessIdentifier)

@@ -1,5 +1,5 @@
 /*
- * $Id: CMAdministrationTransmit.java,v 1.15 2005/04/14 07:31:53 bob Exp $
+ * $Id: CMAdministrationTransmit.java,v 1.16 2005/04/23 13:36:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectConditionBuilder;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
+import com.syrus.AMFICOM.general.corba.AccessIdentity_Transferable;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
@@ -45,8 +45,8 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/04/14 07:31:53 $
- * @author $Author: bob $
+ * @version $Revision: 1.16 $, $Date: 2005/04/23 13:36:32 $
+ * @author $Author: arseniy $
  * @module cmserver_v1
  */
 
@@ -55,8 +55,8 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 	private static final long serialVersionUID = 5322471674445475587L;
 
 	public User_Transferable transmitUser(Identifier_Transferable identifier_Transferable,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Identifier id = new Identifier(identifier_Transferable);
 		Log.debugMessage("CMAdministrationTransmit.transmitUser | require '" + id.toString()
 				+ "' for user '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
@@ -87,8 +87,8 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 	}
 
 	public Domain_Transferable transmitDomain(Identifier_Transferable identifier_Transferable,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Identifier id = new Identifier(identifier_Transferable);
 		Log.debugMessage("CMAdministrationTransmit.transmitDomain | require '" + id.toString()
 				+ "' for user '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
@@ -119,8 +119,8 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 	}
 
 	public Server_Transferable transmitServer(Identifier_Transferable identifier_Transferable,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Identifier id = new Identifier(identifier_Transferable);
 		Log.debugMessage("CMAdministrationTransmit.transmitServer | require '" + id.toString()
 				+ "' for user '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
@@ -151,8 +151,8 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 	}
 
 	public MCM_Transferable transmitMCM(Identifier_Transferable identifier_Transferable,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Identifier id = new Identifier(identifier_Transferable);
 		Log.debugMessage("CMAdministrationTransmit.transmitMCM | require '" + id.toString()
 				+ "' for user '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
@@ -188,9 +188,9 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 
 
 	public User_Transferable[] transmitUsers(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier)
+			AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Log.debugMessage("CMAdministrationTransmit.transmitUsers | requiered " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
@@ -212,9 +212,9 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 	}
 
 	public Domain_Transferable[] transmitDomains(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier)
+			AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Log.debugMessage("CMAdministrationTransmit.transmitDomains | requiered " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
@@ -236,9 +236,9 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 	}
 
 	public Server_Transferable[] transmitServers(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier)
+			AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Log.debugMessage("CMAdministrationTransmit.transmitServers | requiered " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
@@ -260,9 +260,9 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 	}
 
 	public MCM_Transferable[] transmitMCMs(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier)
+			AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Log.debugMessage("CMAdministrationTransmit.transmitMCMs | requiered " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
@@ -305,9 +305,9 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 
 
 	public User_Transferable[] transmitUsersButIds(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier)
+			AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Log.debugMessage("CMAdministrationTransmit.transmitUsersButIds | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
@@ -329,8 +329,8 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 	}
 
 	public Domain_Transferable[] transmitDomainsButIds(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Log.debugMessage("CMAdministrationTransmit.transmitDomainsButIds | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
@@ -352,8 +352,8 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 	}
 
 	public Server_Transferable[] transmitServersButIds(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Log.debugMessage("CMAdministrationTransmit.transmitServersButIds | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
@@ -375,8 +375,8 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 	}
 
 	public MCM_Transferable[] transmitMCMsButIds(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Log.debugMessage("CMAdministrationTransmit.transmitMCMsButIds | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
@@ -421,9 +421,9 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 
 
 	public User_Transferable[] transmitUsersButIdsCondition(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier,
+			AccessIdentity_Transferable accessIdentityT,
 			StorableObjectCondition_Transferable condition_Transferable) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Log.debugMessage("CMAdministrationTransmit.transmitUsersButIdsCondition | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
@@ -445,9 +445,9 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 	}
 
 	public Domain_Transferable[] transmitDomainsButIdsCondition(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier,
+			AccessIdentity_Transferable accessIdentityT,
 			StorableObjectCondition_Transferable condition_Transferable) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Log.debugMessage("CMAdministrationTransmit.transmitDomainsButIdsCondition | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
@@ -469,9 +469,9 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 	}
 
 	public Server_Transferable[] transmitServersButIdsCondition(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier,
+			AccessIdentity_Transferable accessIdentityT,
 			StorableObjectCondition_Transferable condition_Transferable) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Log.debugMessage("CMAdministrationTransmit.transmitServersButIdsCondition | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
@@ -493,9 +493,9 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 	}
 
 	public MCM_Transferable[] transmitMCMsButIdsCondition(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier,
+			AccessIdentity_Transferable accessIdentityT,
 			StorableObjectCondition_Transferable condition_Transferable) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Log.debugMessage("CMAdministrationTransmit.transmitMCMsButIdsCondition | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
@@ -551,8 +551,8 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 
 	// Refresh objects from a pool
 	public Identifier_Transferable[] transmitRefreshedAdministrationObjects(StorableObject_Transferable[] storableObjects_Transferables,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Log.debugMessage("CMAdministrationTransmit.transmitRefreshedAdministrationObjects | Refreshing for user '"
 				+ accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 		try {

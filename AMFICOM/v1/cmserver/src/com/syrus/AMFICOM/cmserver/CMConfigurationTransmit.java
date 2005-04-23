@@ -1,5 +1,5 @@
 /*
- * $Id: CMConfigurationTransmit.java,v 1.19 2005/04/22 18:50:02 arseniy Exp $
+ * $Id: CMConfigurationTransmit.java,v 1.20 2005/04/23 13:36:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -60,7 +60,7 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectConditionBuilder;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
+import com.syrus.AMFICOM.general.corba.AccessIdentity_Transferable;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
@@ -69,7 +69,7 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/04/22 18:50:02 $
+ * @version $Revision: 1.20 $, $Date: 2005/04/23 13:36:32 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -79,8 +79,8 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	private static final long serialVersionUID = 3564457938839553536L;
 
 	public CableLinkType_Transferable transmitCableLinkType(Identifier_Transferable id_Transferable,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Identifier id = new Identifier(id_Transferable);
 		Log.debugMessage("CMConfigurationTransmit.transmitCableLinkType | require '" + id.toString()
 				+ "' for user '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
@@ -111,8 +111,8 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public CableThreadType_Transferable transmitCableThreadType(Identifier_Transferable id_Transferable,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Identifier id = new Identifier(id_Transferable);
 		Log.debugMessage("CMConfigurationTransmit.transmitCableThreadType | require '" + id.toString()
 				+ "' for user '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
@@ -143,8 +143,8 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public LinkType_Transferable transmitLinkType(Identifier_Transferable id_Transferable,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Identifier id = new Identifier(id_Transferable);
 		Log.debugMessage("CMConfigurationTransmit.transmitLinkType | require '" + id.toString()
 				+ "' for user '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
@@ -175,8 +175,8 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public PortType_Transferable transmitPortType(Identifier_Transferable id_Transferable,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Identifier id = new Identifier(id_Transferable);
 		Log.debugMessage("CMConfigurationTransmit.PortType | require '" + id.toString()
 				+ "' for user '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
@@ -207,8 +207,8 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public EquipmentType_Transferable transmitEquipmentType(Identifier_Transferable id_Transferable,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Identifier id = new Identifier(id_Transferable);
 		Log.debugMessage("CMConfigurationTransmit.EquipmentType | require '" + id.toString()
 				+ "' for user '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
@@ -239,8 +239,8 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public MeasurementPortType_Transferable transmitMeasurementPortType(Identifier_Transferable id_Transferable,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Identifier id = new Identifier(id_Transferable);
 		Log.debugMessage("CMConfigurationTransmit.MeasurementPortType | require '" + id.toString()
 				+ "' for user '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
@@ -271,8 +271,8 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public TransmissionPathType_Transferable transmitTransmissionPathType(Identifier_Transferable identifier_Transferable,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Identifier id = new Identifier(identifier_Transferable);
 		Log.debugMessage("CMConfigurationTransmit.transmitTransmissionPathType | require '" + id.toString()
 				+ "' for user '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
@@ -310,8 +310,8 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 
 
 	public CableThread_Transferable transmitCableThread(Identifier_Transferable id_Transferable,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Identifier id = new Identifier(id_Transferable);
 		Log.debugMessage("CMConfigurationTransmit.transmitCableThread | require '" + id.toString()
 				+ "' for user '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
@@ -341,9 +341,9 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		}
 	}
 
-	public Link_Transferable transmitLink(Identifier_Transferable id_Transferable, AccessIdentifier_Transferable accessIdentifier)
+	public Link_Transferable transmitLink(Identifier_Transferable id_Transferable, AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Identifier id = new Identifier(id_Transferable);
 		Log.debugMessage("CMConfigurationTransmit.transmitLink | require '" + id.toString()
 				+ "' for user '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
@@ -373,9 +373,9 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		}
 	}
 
-	public Port_Transferable transmitPort(Identifier_Transferable id_Transferable, AccessIdentifier_Transferable accessIdentifier)
+	public Port_Transferable transmitPort(Identifier_Transferable id_Transferable, AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Identifier id = new Identifier(id_Transferable);
 		Log.debugMessage("CMConfigurationTransmit.Port | require '" + id.toString()
 				+ "' for user '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
@@ -406,8 +406,8 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public Equipment_Transferable transmitEquipment(Identifier_Transferable id_Transferable,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Identifier id = new Identifier(id_Transferable);
 		Log.debugMessage("CMConfigurationTransmit.Equipment | require '" + id.toString()
 				+ "' for user '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
@@ -437,10 +437,10 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		}
 	}
 
-	public KIS_Transferable transmitKIS(Identifier_Transferable id_Transferable, AccessIdentifier_Transferable accessIdentifier)
+	public KIS_Transferable transmitKIS(Identifier_Transferable id_Transferable, AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
 		Identifier id = new Identifier(id_Transferable);
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Log.debugMessage("CMConfigurationTransmit.KIS | require '" + id.toString()
 				+ "' for user '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 		try {
@@ -470,8 +470,8 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public MeasurementPort_Transferable transmitMeasurementPort(Identifier_Transferable id_Transferable,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Identifier id = new Identifier(id_Transferable);
 		Log.debugMessage("CMConfigurationTransmit.MeasurementPort | require '" + id.toString()
 				+ "' for user '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
@@ -502,8 +502,8 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public MonitoredElement_Transferable transmitMonitoredElement(Identifier_Transferable identifier_Transferable,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Identifier id = new Identifier(identifier_Transferable);
 		Log.debugMessage("CMConfigurationTransmit.transmitMonitoredElement | require '" + id.toString()
 				+ "' for user '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
@@ -534,8 +534,8 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public TransmissionPath_Transferable transmitTransmissionPath(Identifier_Transferable identifier_Transferable,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Identifier id = new Identifier(identifier_Transferable);
 		Log.debugMessage("CMConfigurationTransmit.transmitTransmissionPath | require '" + id.toString()
 				+ "' for user '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
@@ -571,9 +571,9 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 
 
 	public CableLinkType_Transferable[] transmitCableLinkTypes(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier)
+			AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Log.debugMessage("CMConfigurationTransmit.transmitCableLinkTypes | requiered " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
@@ -595,9 +595,9 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public CableThreadType_Transferable[] transmitCableThreadTypes(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier)
+			AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Log.debugMessage("CMConfigurationTransmit.transmitCableThreadTypes | requiered " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
@@ -619,9 +619,9 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public AbstractLinkType_Transferable[] transmitLinkTypes(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier)
+			AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Log.debugMessage("CMConfigurationTransmit.transmitLinkTypes | requiered " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
@@ -643,9 +643,9 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public PortType_Transferable[] transmitPortTypes(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier)
+			AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Log.debugMessage("CMConfigurationTransmit.transmitPortTypes | requiered " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
@@ -667,9 +667,9 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public EquipmentType_Transferable[] transmitEquipmentTypes(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier)
+			AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Log.debugMessage("CMConfigurationTransmit.transmitEquipmentTypes | requiered " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
@@ -691,9 +691,9 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public MeasurementPortType_Transferable[] transmitMeasurementPortTypes(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier)
+			AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Log.debugMessage("CMConfigurationTransmit.transmitMeasurementPortTypes | requiered " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
@@ -715,9 +715,9 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public TransmissionPathType_Transferable[] transmitTransmissionPathTypes(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier)
+			AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Log.debugMessage("CMConfigurationTransmit.transmitTransmissionPathTypes | requiered " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
@@ -745,9 +745,9 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 
 
 	public CableThread_Transferable[] transmitCableThreads(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier)
+			AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Log.debugMessage("CMConfigurationTransmit.transmitCableThreads | requiered " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
@@ -769,9 +769,9 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public Link_Transferable[] transmitLinks(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier)
+			AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Log.debugMessage("CMConfigurationTransmit.transmitLinks | requiered " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 		
@@ -793,9 +793,9 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public Port_Transferable[] transmitPorts(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier)
+			AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Log.debugMessage("CMConfigurationTransmit.transmitPorts | requiered " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
@@ -817,9 +817,9 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public Equipment_Transferable[] transmitEquipments(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier)
+			AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Log.debugMessage("CMConfigurationTransmit.transmitEquipments | requiered " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
@@ -841,9 +841,9 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public KIS_Transferable[] transmitKISs(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier)
+			AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Log.debugMessage("CMConfigurationTransmit.transmitKISs | requiered " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
@@ -865,9 +865,9 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public MeasurementPort_Transferable[] transmitMeasurementPorts(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier)
+			AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Log.debugMessage("CMConfigurationTransmit.transmitMeasurementPorts | requiered " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
@@ -889,9 +889,9 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public MonitoredElement_Transferable[] transmitMonitoredElements(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier)
+			AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Log.debugMessage("CMConfigurationTransmit.transmitMonitoredElements | requiered " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
@@ -913,9 +913,9 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public TransmissionPath_Transferable[] transmitTransmissionPaths(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier)
+			AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Log.debugMessage("CMConfigurationTransmit.transmitTransmissionPaths | requiered " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
@@ -959,8 +959,8 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 
 
 	public CableThreadType_Transferable[] transmitCableThreadTypesButIds(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Log.debugMessage("CMConfigurationTransmit.transmitCableThreadTypesButIds | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
@@ -982,8 +982,8 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public AbstractLinkType_Transferable[] transmitLinkTypesButIds(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Log.debugMessage("CMConfigurationTransmit.transmitLinkTypesButIds | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
@@ -1005,8 +1005,8 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public PortType_Transferable[] transmitPortTypesButIds(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Log.debugMessage("CMConfigurationTransmit.transmitPortTypesButIds | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
@@ -1028,8 +1028,8 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public EquipmentType_Transferable[] transmitEquipmentTypesButIds(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Log.debugMessage("CMConfigurationTransmit.transmitEquipmentTypesButIds | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
@@ -1051,8 +1051,8 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public MeasurementPortType_Transferable[] transmitMeasurementPortTypesButIds(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Log.debugMessage("CMConfigurationTransmit.transmitMeasurementPortTypesButIds | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
@@ -1076,8 +1076,8 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public TransmissionPathType_Transferable[] transmitTransmissionPathTypesButIds(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Log.debugMessage("CMConfigurationTransmit.transmitTransmissionPathTypesButIds | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
@@ -1105,8 +1105,8 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 
 
 	public Link_Transferable[] transmitLinksButIds(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Log.debugMessage("CMConfigurationTransmit.transmitLinksButIds | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
@@ -1128,8 +1128,8 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public Port_Transferable[] transmitPortsButIds(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Log.debugMessage("CMConfigurationTransmit.transmitPortsButIds | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
@@ -1151,8 +1151,8 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public Equipment_Transferable[] transmitEquipmentsButIds(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Log.debugMessage("CMConfigurationTransmit.transmitEquipmentsButIds | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
@@ -1174,8 +1174,8 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public KIS_Transferable[] transmitKISsButIds(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Log.debugMessage("CMConfigurationTransmit.transmitKISsButIds | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
@@ -1198,8 +1198,8 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public MeasurementPort_Transferable[] transmitMeasurementPortsButIds(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Log.debugMessage("CMConfigurationTransmit.transmitMeasurementPortsButIds | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
@@ -1221,8 +1221,8 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public MonitoredElement_Transferable[] transmitMonitoredElementsButIds(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Log.debugMessage("CMConfigurationTransmit.transmitMonitoredElementsButIds | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
@@ -1244,8 +1244,8 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public TransmissionPath_Transferable[] transmitTransmissionPathsButIds(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Log.debugMessage("CMConfigurationTransmit.transmitTransmissionPathsButIds | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
@@ -1292,10 +1292,10 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 
 
 	public EquipmentType_Transferable[] transmitEquipmentTypesButIdsCondition(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier,
+			AccessIdentity_Transferable accessIdentityT,
 			StorableObjectCondition_Transferable condition_Transferable) throws AMFICOMRemoteException {
 		try {
-			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 			Log.debugMessage("CMConfigurationTransmit.transmitEquipmentTypesButIdsCondition | All, but "
 					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
 				Log.DEBUGLEVEL07);
@@ -1317,10 +1317,10 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public PortType_Transferable[] transmitPortTypesButIdsCondition(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier,
+			AccessIdentity_Transferable accessIdentityT,
 			StorableObjectCondition_Transferable condition_Transferable) throws AMFICOMRemoteException {
 		try {
-			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 			Log.debugMessage("CMConfigurationTransmit.transmitPortTypesButIdsCondition | All, but "
 					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
 				Log.DEBUGLEVEL07);
@@ -1342,10 +1342,10 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public MeasurementPortType_Transferable[] transmitMeasurementPortTypesButIdsCondition(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier,
+			AccessIdentity_Transferable accessIdentityT,
 			StorableObjectCondition_Transferable condition_Transferable) throws AMFICOMRemoteException {
 		try {
-			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 			Log.debugMessage("CMConfigurationTransmit.transmitMeasurementPortTypesButIdsCondition | All, but "
 					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
 				Log.DEBUGLEVEL07);
@@ -1367,10 +1367,10 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public TransmissionPathType_Transferable[] transmitTransmissionPathTypesButIdsCondition(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier,
+			AccessIdentity_Transferable accessIdentityT,
 			StorableObjectCondition_Transferable condition_Transferable) throws AMFICOMRemoteException {
 		try {
-			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 			Log.debugMessage("CMConfigurationTransmit.transmitTransmissionPathTypesButIdsCondition | All, but "
 					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
 				Log.DEBUGLEVEL07);
@@ -1392,10 +1392,10 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public AbstractLinkType_Transferable[] transmitLinkTypesButIdsCondition(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier,
+			AccessIdentity_Transferable accessIdentityT,
 			StorableObjectCondition_Transferable condition_Transferable) throws AMFICOMRemoteException {
 		try {
-			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 			Log.debugMessage("CMConfigurationTransmit.transmitLinkTypesButIdsCondition | All, but "
 					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
 				Log.DEBUGLEVEL07);
@@ -1417,10 +1417,10 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public CableLinkType_Transferable[] transmitCableLinkTypesButIdsCondition(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier,
+			AccessIdentity_Transferable accessIdentityT,
 			StorableObjectCondition_Transferable condition_Transferable) throws AMFICOMRemoteException {
 		try {
-			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 			Log.debugMessage("CMConfigurationTransmit.transmitCableLinkTypesButIdsCondition | All, but "
 					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
 				Log.DEBUGLEVEL07);
@@ -1442,10 +1442,10 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public CableThreadType_Transferable[] transmitCableThreadTypesButIdsCondition(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier,
+			AccessIdentity_Transferable accessIdentityT,
 			StorableObjectCondition_Transferable condition_Transferable) throws AMFICOMRemoteException {
 		try {
-			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 			Log.debugMessage("CMConfigurationTransmit.transmitCableThreadTypesButIdsCondition | All, but "
 					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
 				Log.DEBUGLEVEL07);
@@ -1472,10 +1472,10 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 
 
 	public Link_Transferable[] transmitLinksButIdsCondition(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier,
+			AccessIdentity_Transferable accessIdentityT,
 			StorableObjectCondition_Transferable condition_Transferable) throws AMFICOMRemoteException {
 		try {
-			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 			Log.debugMessage("CMConfigurationTransmit.transmitLinksButIdsCondition | All, but "
 					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
 				Log.DEBUGLEVEL07);
@@ -1497,10 +1497,10 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public CableThread_Transferable[] transmitCableThreadsButIdsCondition(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier,
+			AccessIdentity_Transferable accessIdentityT,
 			StorableObjectCondition_Transferable condition_Transferable) throws AMFICOMRemoteException {
 		try {
-			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 			Log.debugMessage("CMConfigurationTransmit.transmitCableThreadsButIdsCondition | All, but "
 					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
 				Log.DEBUGLEVEL07);
@@ -1522,10 +1522,10 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public Port_Transferable[] transmitPortsButIdsCondition(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier,
+			AccessIdentity_Transferable accessIdentityT,
 			StorableObjectCondition_Transferable condition_Transferable) throws AMFICOMRemoteException {
 		try {
-			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 			Log.debugMessage("CMConfigurationTransmit.transmitPortsButIdsCondition | All, but "
 					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
 				Log.DEBUGLEVEL07);
@@ -1547,10 +1547,10 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public Equipment_Transferable[] transmitEquipmentsButIdsCondition(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier,
+			AccessIdentity_Transferable accessIdentityT,
 			StorableObjectCondition_Transferable condition_Transferable) throws AMFICOMRemoteException {
 		try {
-			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 			Log.debugMessage("CMConfigurationTransmit.transmitEquipmentsButIdsCondition | All, but "
 					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
 				Log.DEBUGLEVEL07);
@@ -1572,10 +1572,10 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public KIS_Transferable[] transmitKISsButIdsCondition(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier,
+			AccessIdentity_Transferable accessIdentityT,
 			StorableObjectCondition_Transferable condition_Transferable) throws AMFICOMRemoteException {
 		try {
-			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 			Log.debugMessage("CMConfigurationTransmit.transmitKISsButIdsCondition | All, but "
 					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
 				Log.DEBUGLEVEL07);
@@ -1597,10 +1597,10 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public MeasurementPort_Transferable[] transmitMeasurementPortsButIdsCondition(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier,
+			AccessIdentity_Transferable accessIdentityT,
 			StorableObjectCondition_Transferable condition_Transferable) throws AMFICOMRemoteException {
 		try {
-			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 			Log.debugMessage("CMConfigurationTransmit.transmitMeasurementPortsButIdsCondition | All, but "
 					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
 				Log.DEBUGLEVEL07);
@@ -1622,10 +1622,10 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public MonitoredElement_Transferable[] transmitMonitoredElementsButIdsCondition(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier,
+			AccessIdentity_Transferable accessIdentityT,
 			StorableObjectCondition_Transferable condition_Transferable) throws AMFICOMRemoteException {
 		try {
-			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 			Log.debugMessage("CMConfigurationTransmit.transmitMonitoredElementsButIdsCondition | All, but "
 					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
 				Log.DEBUGLEVEL07);
@@ -1647,10 +1647,10 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public TransmissionPath_Transferable[] transmitTransmissionPathsButIdsCondition(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier,
+			AccessIdentity_Transferable accessIdentityT,
 			StorableObjectCondition_Transferable condition_Transferable) throws AMFICOMRemoteException {
 		try {
-			AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 			Log.debugMessage("CMConfigurationTransmit.transmitTransmissionPathsButIdsCondition | All, but "
 					+ identifier_Transferables.length + " item(s) for '" + accessIdentity.getUserId() + "'",
 				Log.DEBUGLEVEL07);
@@ -1707,8 +1707,8 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 
 	// Refresh objects from a pool
 	public Identifier_Transferable[] transmitRefreshedConfigurationObjects(StorableObject_Transferable[] storableObjects_Transferables,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Log.debugMessage("CMConfigurationTransmit.transmitRefreshedConfigurationObjects | Refreshing for user '"
 				+ accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 		try {

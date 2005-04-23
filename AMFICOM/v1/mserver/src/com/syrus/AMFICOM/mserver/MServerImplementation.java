@@ -1,5 +1,5 @@
 /*
- * $Id: MServerImplementation.java,v 1.49 2005/04/22 16:05:53 arseniy Exp $
+ * $Id: MServerImplementation.java,v 1.50 2005/04/23 13:35:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -62,7 +62,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectConditionBuilder;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
+import com.syrus.AMFICOM.general.corba.AccessIdentity_Transferable;
 import com.syrus.AMFICOM.general.corba.CharacteristicType_Transferable;
 import com.syrus.AMFICOM.general.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
@@ -100,7 +100,7 @@ import com.syrus.AMFICOM.mserver.corba.MServerPOA;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.49 $, $Date: 2005/04/22 16:05:53 $
+ * @version $Revision: 1.50 $, $Date: 2005/04/23 13:35:39 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -1392,7 +1392,7 @@ public class MServerImplementation extends MServerPOA {
 
 
 
-  public void updateTest(Test_Transferable tt, AccessIdentifier_Transferable ait) {
+  public void updateTest(Test_Transferable tt, AccessIdentity_Transferable ait) {
   	Identifier id = new Identifier(tt.header.id);
   	Test test = null;
   	try {

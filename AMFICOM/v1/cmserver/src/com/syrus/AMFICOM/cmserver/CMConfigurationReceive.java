@@ -1,5 +1,5 @@
 /*
- * $Id: CMConfigurationReceive.java,v 1.16 2005/04/01 17:38:27 arseniy Exp $
+ * $Id: CMConfigurationReceive.java,v 1.17 2005/04/23 13:36:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -67,7 +67,7 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
+import com.syrus.AMFICOM.general.corba.AccessIdentity_Transferable;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
@@ -75,7 +75,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/04/01 17:38:27 $
+ * @version $Revision: 1.17 $, $Date: 2005/04/23 13:36:32 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -85,13 +85,13 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 
 	public StorableObject_Transferable receiveCableThreadType(CableThreadType_Transferable cableThreadType_Transferable,
 			boolean force,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
 		Log.debugMessage("CMConfigurationReceive.receiveCableThreadType | Received " + " cableThreadType", Log.DEBUGLEVEL07);
 		try {
 			CableThreadType cableThreadType = new CableThreadType(cableThreadType_Transferable);
 			ConfigurationStorableObjectPool.putStorableObject(cableThreadType);
 			CableThreadTypeDatabase database = ConfigurationDatabaseContext.getCableThreadTypeDatabase();
-			database.update(cableThreadType, new Identifier(accessIdentifier.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
+			database.update(cableThreadType, new Identifier(accessIdentityT.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
 					: StorableObjectDatabase.UPDATE_CHECK);
 			return cableThreadType.getHeaderTransferable();
 		}
@@ -115,7 +115,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 
 	public StorableObject_Transferable[] receiveCableLinkTypes(CableLinkType_Transferable[] cableLinkType_Transferables,
 			boolean force,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
 		Log.debugMessage("CMConfigurationReceive.receiveCableThreadTypes | Received "
 				+ cableLinkType_Transferables.length + " cableThreadTypes", Log.DEBUGLEVEL07);
 		Set cableThreadTypeList = new HashSet(cableLinkType_Transferables.length);
@@ -126,7 +126,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 				cableThreadTypeList.add(cableLinkType);
 			}
 			CableLinkTypeDatabase database = ConfigurationDatabaseContext.getCableLinkTypeDatabase();
-			database.update(cableThreadTypeList, new Identifier(accessIdentifier.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
+			database.update(cableThreadTypeList, new Identifier(accessIdentityT.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
 					: StorableObjectDatabase.UPDATE_CHECK);
 			return super.getListHeaders(cableThreadTypeList);
 		}
@@ -150,7 +150,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 
 	public StorableObject_Transferable[] receiveCableThreads(CableThread_Transferable[] cableThreads_Transferable,
 			boolean force,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
 
 		Log.debugMessage("CMConfigurationReceive.receiveCableThreads | Received "
 				+ cableThreads_Transferable.length + " transmissionPathTypes", Log.DEBUGLEVEL07);
@@ -162,7 +162,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 				cableThreadList.add(cableThread);
 			}
 			CableThreadDatabase cableThreadDatabase = ConfigurationDatabaseContext.getCableThreadDatabase();
-			cableThreadDatabase.update(cableThreadList, new Identifier(accessIdentifier.user_id), force
+			cableThreadDatabase.update(cableThreadList, new Identifier(accessIdentityT.user_id), force
 					? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return super.getListHeaders(cableThreadList);
 		}
@@ -190,13 +190,13 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 
 	public StorableObject_Transferable receiveCableLinkType(CableLinkType_Transferable cableLinkType_Transferable,
 			boolean force,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
 		Log.debugMessage("CMConfigurationReceive.receiveCableLinkType | Received " + " cableLinkType", Log.DEBUGLEVEL07);
 		try {
 			CableLinkType cableLinkType = new CableLinkType(cableLinkType_Transferable);
 			ConfigurationStorableObjectPool.putStorableObject(cableLinkType);
 			CableLinkTypeDatabase database = ConfigurationDatabaseContext.getCableLinkTypeDatabase();
-			database.update(cableLinkType, new Identifier(accessIdentifier.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
+			database.update(cableLinkType, new Identifier(accessIdentityT.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
 					: StorableObjectDatabase.UPDATE_CHECK);
 			return cableLinkType.getHeaderTransferable();
 		}
@@ -220,13 +220,13 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 
 	public StorableObject_Transferable receiveCableThread(CableThread_Transferable cableThread_Transferable,
 			boolean force,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
 		Log.debugMessage("CMConfigurationReceive.receiveCableThread | Received " + " cableThread", Log.DEBUGLEVEL07);
 		try {
 			CableThread cableThread = new CableThread(cableThread_Transferable);
 			ConfigurationStorableObjectPool.putStorableObject(cableThread);
 			CableThreadDatabase database = ConfigurationDatabaseContext.getCableThreadDatabase();
-			database.update(cableThread, new Identifier(accessIdentifier.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
+			database.update(cableThread, new Identifier(accessIdentityT.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
 					: StorableObjectDatabase.UPDATE_CHECK);
 			return cableThread.getHeaderTransferable();
 		}
@@ -250,7 +250,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 
 	public StorableObject_Transferable[] receiveCableThreadTypes(CableThreadType_Transferable[] cableThreadType_Transferables,
 			boolean force,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
 		Log.debugMessage("CMConfigurationReceive.receiveCableThreadTypes | Received "
 				+ cableThreadType_Transferables.length + " cableThreadTypes", Log.DEBUGLEVEL07);
 		Set cableThreadTypeList = new HashSet(cableThreadType_Transferables.length);
@@ -261,7 +261,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 				cableThreadTypeList.add(cableThreadType);
 			}
 			CableThreadTypeDatabase database = ConfigurationDatabaseContext.getCableThreadTypeDatabase();
-			database.update(cableThreadTypeList, new Identifier(accessIdentifier.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
+			database.update(cableThreadTypeList, new Identifier(accessIdentityT.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
 					: StorableObjectDatabase.UPDATE_CHECK);
 			return super.getListHeaders(cableThreadTypeList);
 		}
@@ -285,13 +285,13 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 
 	public StorableObject_Transferable receiveEquipment(Equipment_Transferable equipment_Transferable,
 			boolean force,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
 		Log.debugMessage("CMConfigurationReceive.receiveEquipment | Received " + " equipment", Log.DEBUGLEVEL07);
 		try {
 			Equipment equipment = new Equipment(equipment_Transferable);
 			ConfigurationStorableObjectPool.putStorableObject(equipment);
 			EquipmentDatabase equipmentDatabase = ConfigurationDatabaseContext.getEquipmentDatabase();
-			equipmentDatabase.update(equipment, new Identifier(accessIdentifier.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
+			equipmentDatabase.update(equipment, new Identifier(accessIdentityT.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
 					: StorableObjectDatabase.UPDATE_CHECK);
 			return equipment.getHeaderTransferable();
 		}
@@ -319,7 +319,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 
 	public StorableObject_Transferable[] receiveEquipments(Equipment_Transferable[] equipment_Transferables,
 			boolean force,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
 		Log.debugMessage("CMConfigurationReceive.receiveEquipments | Received " + equipment_Transferables.length + " equipments",
 				Log.DEBUGLEVEL07);
 		Set equipmentList = new HashSet(equipment_Transferables.length);
@@ -330,7 +330,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 				equipmentList.add(equipment);
 			}
 			EquipmentDatabase equipmentDatabase = ConfigurationDatabaseContext.getEquipmentDatabase();
-			equipmentDatabase.update(equipmentList, new Identifier(accessIdentifier.user_id), force
+			equipmentDatabase.update(equipmentList, new Identifier(accessIdentityT.user_id), force
 					? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return super.getListHeaders(equipmentList);
 		}
@@ -358,13 +358,13 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 
 	public StorableObject_Transferable receiveEquipmentType(EquipmentType_Transferable equipmentType_Transferable,
 			boolean force,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
 		Log.debugMessage("CMConfigurationReceive.receiveEquipmentType | Received " + " equipmentType", Log.DEBUGLEVEL07);
 		try {
 			EquipmentType equipmentType = new EquipmentType(equipmentType_Transferable);
 			ConfigurationStorableObjectPool.putStorableObject(equipmentType);
 			EquipmentTypeDatabase equipmentTypeDatabase = ConfigurationDatabaseContext.getEquipmentTypeDatabase();
-			equipmentTypeDatabase.update(equipmentType, new Identifier(accessIdentifier.user_id), force
+			equipmentTypeDatabase.update(equipmentType, new Identifier(accessIdentityT.user_id), force
 					? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return equipmentType.getHeaderTransferable();
 		}
@@ -392,7 +392,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 
 	public StorableObject_Transferable[] receiveEquipmentTypes(EquipmentType_Transferable[] equipmentType_Transferables,
 			boolean force,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
 		Log.debugMessage("CMConfigurationReceive.receiveEquipmentTypes | Received "
 				+ equipmentType_Transferables.length
 				+ " equipmentTypes", Log.DEBUGLEVEL07);
@@ -404,7 +404,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 				equipmentTypeList.add(equipmentType);
 			}
 			EquipmentTypeDatabase equipmentTypeDatabase = ConfigurationDatabaseContext.getEquipmentTypeDatabase();
-			equipmentTypeDatabase.update(equipmentTypeList, new Identifier(accessIdentifier.user_id), force
+			equipmentTypeDatabase.update(equipmentTypeList, new Identifier(accessIdentityT.user_id), force
 					? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return super.getListHeaders(equipmentTypeList);
 		}
@@ -432,13 +432,13 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 
 	public StorableObject_Transferable receiveKIS(KIS_Transferable kis_Transferable,
 			boolean force,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
 		Log.debugMessage("CMConfigurationReceive.receiveKIS | Received " + " kis", Log.DEBUGLEVEL07);
 		try {
 			KIS kis = new KIS(kis_Transferable);
 			ConfigurationStorableObjectPool.putStorableObject(kis);
 			KISDatabase kisDatabase = ConfigurationDatabaseContext.getKISDatabase();
-			kisDatabase.update(kis, new Identifier(accessIdentifier.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
+			kisDatabase.update(kis, new Identifier(accessIdentityT.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
 					: StorableObjectDatabase.UPDATE_CHECK);
 			return kis.getHeaderTransferable();
 		}
@@ -466,7 +466,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 
 	public StorableObject_Transferable[] receiveKISs(KIS_Transferable[] kis_Transferables,
 			boolean force,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
 		Log.debugMessage("CMConfigurationReceive.receiveKISs | Received " + kis_Transferables.length + " kiss", Log.DEBUGLEVEL07);
 		Set kisList = new HashSet(kis_Transferables.length);
 		try {
@@ -476,7 +476,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 				kisList.add(kis);
 			}
 			KISDatabase kisDatabase = ConfigurationDatabaseContext.getKISDatabase();
-			kisDatabase.update(kisList, new Identifier(accessIdentifier.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
+			kisDatabase.update(kisList, new Identifier(accessIdentityT.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
 					: StorableObjectDatabase.UPDATE_CHECK);
 			return super.getListHeaders(kisList);
 		}
@@ -504,13 +504,13 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 
 	public StorableObject_Transferable receiveLink(Link_Transferable link_Transferable,
 			boolean force,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
 		Log.debugMessage("CMConfigurationReceive.receiveLink | Received " + " link", Log.DEBUGLEVEL07);
 		try {
 			Link link = new Link(link_Transferable);
 			ConfigurationStorableObjectPool.putStorableObject(link);
 			LinkDatabase linkDatabase = ConfigurationDatabaseContext.getLinkDatabase();
-			linkDatabase.update(link, new Identifier(accessIdentifier.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
+			linkDatabase.update(link, new Identifier(accessIdentityT.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
 					: StorableObjectDatabase.UPDATE_CHECK);
 			return link.getHeaderTransferable();
 		}
@@ -538,7 +538,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 
 	public StorableObject_Transferable[] receiveLinks(Link_Transferable[] link_Transferables,
 			boolean force,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
 		Log.debugMessage("CMConfigurationReceive.receiveLinks | Received " + link_Transferables.length + " links", Log.DEBUGLEVEL07);
 		Set linkList = new HashSet(link_Transferables.length);
 		try {
@@ -548,7 +548,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 				linkList.add(list);
 			}
 			LinkDatabase linkDatabase = ConfigurationDatabaseContext.getLinkDatabase();
-			linkDatabase.update(linkList, new Identifier(accessIdentifier.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
+			linkDatabase.update(linkList, new Identifier(accessIdentityT.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
 					: StorableObjectDatabase.UPDATE_CHECK);
 			return super.getListHeaders(linkList);
 		}
@@ -576,13 +576,13 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 
 	public StorableObject_Transferable receiveLinkType(LinkType_Transferable linkType_Transferable,
 			boolean force,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
 		Log.debugMessage("CMConfigurationReceive.receiveLinkType | Received " + " linkType", Log.DEBUGLEVEL07);
 		try {
 			LinkType linkType = new LinkType(linkType_Transferable);
 			ConfigurationStorableObjectPool.putStorableObject(linkType);
 			LinkTypeDatabase linkTypeDatabase = ConfigurationDatabaseContext.getLinkTypeDatabase();
-			linkTypeDatabase.update(linkType, new Identifier(accessIdentifier.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
+			linkTypeDatabase.update(linkType, new Identifier(accessIdentityT.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
 					: StorableObjectDatabase.UPDATE_CHECK);
 			return linkType.getHeaderTransferable();
 		}
@@ -606,7 +606,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 
 	public StorableObject_Transferable[] receiveLinkTypes(AbstractLinkType_Transferable[] linkType_Transferables,
 			boolean force,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
 		Log.debugMessage("CMConfigurationReceive.receiveLinkTypes | Received " + linkType_Transferables.length + " links",
 				Log.DEBUGLEVEL07);
 		Set linkTypeList = new HashSet(linkType_Transferables.length);
@@ -633,7 +633,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 			}
 
 			LinkTypeDatabase linkTypeDatabase = ConfigurationDatabaseContext.getLinkTypeDatabase();
-			linkTypeDatabase.update(linkTypeList, new Identifier(accessIdentifier.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
+			linkTypeDatabase.update(linkTypeList, new Identifier(accessIdentityT.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
 					: StorableObjectDatabase.UPDATE_CHECK);
 			return this.getListHeaders(linkTypeList);
 		}
@@ -657,13 +657,13 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 
 	public StorableObject_Transferable receiveMeasurementPort(MeasurementPort_Transferable measurementPort_Transferable,
 			boolean force,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
 		Log.debugMessage("CMConfigurationReceive.receiveMeasurementPort | Received " + " measurementPort", Log.DEBUGLEVEL07);
 		try {
 			MeasurementPort measurementPort = new MeasurementPort(measurementPort_Transferable);
 			ConfigurationStorableObjectPool.putStorableObject(measurementPort);
 			MeasurementPortDatabase measurementPortDatabase = ConfigurationDatabaseContext.getMeasurementPortDatabase();
-			measurementPortDatabase.update(measurementPort, new Identifier(accessIdentifier.user_id), force
+			measurementPortDatabase.update(measurementPort, new Identifier(accessIdentityT.user_id), force
 					? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return measurementPort.getHeaderTransferable();
 		}
@@ -691,7 +691,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 
 	public StorableObject_Transferable[] receiveMeasurementPorts(MeasurementPort_Transferable[] measurementPort_Transferables,
 			boolean force,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
 		Log.debugMessage("CMConfigurationReceive.receiveMeasurementPorts | Received "
 				+ measurementPort_Transferables.length + " measurementPorts", Log.DEBUGLEVEL07);
 		Set measurementPortList = new HashSet(measurementPort_Transferables.length);
@@ -702,7 +702,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 				measurementPortList.add(measurementPort);
 			}
 			MeasurementPortDatabase measurementPortDatabase = ConfigurationDatabaseContext.getMeasurementPortDatabase();
-			measurementPortDatabase.update(measurementPortList, new Identifier(accessIdentifier.user_id), force
+			measurementPortDatabase.update(measurementPortList, new Identifier(accessIdentityT.user_id), force
 					? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return super.getListHeaders(measurementPortList);
 		}
@@ -730,13 +730,13 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 
 	public StorableObject_Transferable receiveMeasurementPortType(MeasurementPortType_Transferable measurementPortType_Transferable,
 			boolean force,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
 		Log.debugMessage("CMConfigurationReceive.receiveMeasurementPortType | Received " + " measurementPortType", Log.DEBUGLEVEL07);
 		try {
 			MeasurementPortType measurementPortType = new MeasurementPortType(measurementPortType_Transferable);
 			ConfigurationStorableObjectPool.putStorableObject(measurementPortType);
 			MeasurementPortTypeDatabase measurementPortTypeDatabase = ConfigurationDatabaseContext.getMeasurementPortTypeDatabase();
-			measurementPortTypeDatabase.update(measurementPortType, new Identifier(accessIdentifier.user_id), force
+			measurementPortTypeDatabase.update(measurementPortType, new Identifier(accessIdentityT.user_id), force
 					? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return measurementPortType.getHeaderTransferable();
 		}
@@ -764,7 +764,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 
 	public StorableObject_Transferable[] receiveMeasurementPortTypes(MeasurementPortType_Transferable[] measurementPortType_Transferables,
 			boolean force,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
 		Log.debugMessage("CMConfigurationReceive.receiveMeasurementPortTypes | Received "
 				+ measurementPortType_Transferables.length + " measurementPortTypes", Log.DEBUGLEVEL07);
 		Set measurementPortTypeList = new HashSet(measurementPortType_Transferables.length);
@@ -775,7 +775,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 				measurementPortTypeList.add(measurementPortType);
 			}
 			MeasurementPortTypeDatabase measurementPortTypeDatabase = ConfigurationDatabaseContext.getMeasurementPortTypeDatabase();
-			measurementPortTypeDatabase.update(measurementPortTypeList, new Identifier(accessIdentifier.user_id), force
+			measurementPortTypeDatabase.update(measurementPortTypeList, new Identifier(accessIdentityT.user_id), force
 					? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return super.getListHeaders(measurementPortTypeList);
 		}
@@ -803,13 +803,13 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 
 	public StorableObject_Transferable receiveMonitoredElement(MonitoredElement_Transferable monitoredElement_Transferable,
 			boolean force,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
 		Log.debugMessage("CMConfigurationReceive.receiveMonitoredElement | Received " + " monitoredElement", Log.DEBUGLEVEL07);
 		try {
 			MonitoredElement monitoredElement = new MonitoredElement(monitoredElement_Transferable);
 			ConfigurationStorableObjectPool.putStorableObject(monitoredElement);
 			MonitoredElementDatabase monitoredElementDatabase = ConfigurationDatabaseContext.getMonitoredElementDatabase();
-			monitoredElementDatabase.update(monitoredElement, new Identifier(accessIdentifier.user_id), force
+			monitoredElementDatabase.update(monitoredElement, new Identifier(accessIdentityT.user_id), force
 					? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return monitoredElement.getHeaderTransferable();
 		}
@@ -833,7 +833,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 
 	public StorableObject_Transferable[] receiveMonitoredElements(MonitoredElement_Transferable[] monitoredElement_Transferables,
 			boolean force,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
 		Log.debugMessage("CMConfigurationReceive.receiveMonitoredElements | Received "
 				+ monitoredElement_Transferables.length + " monitoredElements", Log.DEBUGLEVEL07);
 		Set monitoredElementList = new HashSet(monitoredElement_Transferables.length);
@@ -844,7 +844,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 				monitoredElementList.add(monitoredElement);
 			}
 			MonitoredElementDatabase monitoredElementDatabase = ConfigurationDatabaseContext.getMonitoredElementDatabase();
-			monitoredElementDatabase.update(monitoredElementList, new Identifier(accessIdentifier.user_id), force
+			monitoredElementDatabase.update(monitoredElementList, new Identifier(accessIdentityT.user_id), force
 					? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return super.getListHeaders(monitoredElementList);
 		}
@@ -868,13 +868,13 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 
 	public StorableObject_Transferable receivePort(Port_Transferable port_Transferable,
 			boolean force,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
 		Log.debugMessage("CMConfigurationReceive.receivePort | Received " + " port", Log.DEBUGLEVEL07);
 		try {
 			Port port = new Port(port_Transferable);
 			ConfigurationStorableObjectPool.putStorableObject(port);
 			PortDatabase portDatabase = ConfigurationDatabaseContext.getPortDatabase();
-			portDatabase.update(port, new Identifier(accessIdentifier.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
+			portDatabase.update(port, new Identifier(accessIdentityT.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
 					: StorableObjectDatabase.UPDATE_CHECK);
 			return port.getHeaderTransferable();
 		}
@@ -902,7 +902,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 
 	public StorableObject_Transferable[] receivePorts(Port_Transferable[] port_Transferables,
 			boolean force,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
 		Log.debugMessage("CMConfigurationReceive.receivePorts | Received " + port_Transferables.length + " ports", Log.DEBUGLEVEL07);
 		Set portList = new HashSet(port_Transferables.length);
 		try {
@@ -912,7 +912,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 				portList.add(port);
 			}
 			PortDatabase portDatabase = ConfigurationDatabaseContext.getPortDatabase();
-			portDatabase.update(portList, new Identifier(accessIdentifier.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
+			portDatabase.update(portList, new Identifier(accessIdentityT.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
 					: StorableObjectDatabase.UPDATE_CHECK);
 			return super.getListHeaders(portList);
 		}
@@ -938,13 +938,13 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 		}
 	}
 
-	public StorableObject_Transferable receivePortType(PortType_Transferable portType_Transferable, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+	public StorableObject_Transferable receivePortType(PortType_Transferable portType_Transferable, boolean force, AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
 		Log.debugMessage("CMConfigurationReceive.receivePortType | Received " + " domain", Log.DEBUGLEVEL07);
 		try {
 			PortType portType = new PortType(portType_Transferable);
 			ConfigurationStorableObjectPool.putStorableObject(portType);
 			PortTypeDatabase portTypeDatabase = ConfigurationDatabaseContext.getPortTypeDatabase();
-			portTypeDatabase.update(portType, new Identifier(accessIdentifier.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
+			portTypeDatabase.update(portType, new Identifier(accessIdentityT.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
 					: StorableObjectDatabase.UPDATE_CHECK);
 			return portType.getHeaderTransferable();
 		}
@@ -972,7 +972,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 
 	public StorableObject_Transferable[] receivePortTypes(PortType_Transferable[] portType_Transferables,
 			boolean force,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
 		Log.debugMessage("CMConfigurationReceive.receivePortTypes | Received " + portType_Transferables.length + " portTypes",
 				Log.DEBUGLEVEL07);
 		Set portTypeList = new HashSet(portType_Transferables.length);
@@ -983,7 +983,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 				portTypeList.add(portType);
 			}
 			PortTypeDatabase portTypeDatabase = ConfigurationDatabaseContext.getPortTypeDatabase();
-			portTypeDatabase.update(portTypeList, new Identifier(accessIdentifier.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
+			portTypeDatabase.update(portTypeList, new Identifier(accessIdentityT.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
 					: StorableObjectDatabase.UPDATE_CHECK);
 			return super.getListHeaders(portTypeList);
 		}
@@ -1011,13 +1011,13 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 
 	public StorableObject_Transferable receiveTransmissionPath(TransmissionPath_Transferable transmissionPath_Transferable,
 			boolean force,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
 		Log.debugMessage("CMConfigurationReceive.receiveTransmissionPath | Received " + " transmissionPath", Log.DEBUGLEVEL07);
 		try {
 			TransmissionPath transmissionPath = new TransmissionPath(transmissionPath_Transferable);
 			ConfigurationStorableObjectPool.putStorableObject(transmissionPath);
 			TransmissionPathDatabase transmissionPathDatabase = ConfigurationDatabaseContext.getTransmissionPathDatabase();
-			transmissionPathDatabase.update(transmissionPath, new Identifier(accessIdentifier.user_id), force
+			transmissionPathDatabase.update(transmissionPath, new Identifier(accessIdentityT.user_id), force
 					? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return transmissionPath.getHeaderTransferable();
 		}
@@ -1045,13 +1045,13 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 
 	public StorableObject_Transferable receiveTransmissionPathType(TransmissionPathType_Transferable transmissionPathType_Transferable,
 			boolean force,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
 		Log.debugMessage("CMConfigurationReceive.receiveTransmissionPathType | Received " + " transmissionPathType", Log.DEBUGLEVEL07);
 		try {
 			TransmissionPathType transmissionPathType = new TransmissionPathType(transmissionPathType_Transferable);
 			ConfigurationStorableObjectPool.putStorableObject(transmissionPathType);
 			TransmissionPathTypeDatabase transmissionPathTypeDatabase = ConfigurationDatabaseContext.getTransmissionPathTypeDatabase();
-			transmissionPathTypeDatabase.update(transmissionPathType, new Identifier(accessIdentifier.user_id), force
+			transmissionPathTypeDatabase.update(transmissionPathType, new Identifier(accessIdentityT.user_id), force
 					? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return transmissionPathType.getHeaderTransferable();
 		}
@@ -1079,7 +1079,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 
 	public StorableObject_Transferable[] receiveTransmissionPaths(TransmissionPath_Transferable[] transmissionPath_Transferables,
 			boolean force,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
 		Log.debugMessage("CMConfigurationReceive.receiveTransmissionPaths | Received "
 				+ transmissionPath_Transferables.length + " transmissionPaths", Log.DEBUGLEVEL07);
 		Set transmissionPathList = new HashSet(transmissionPath_Transferables.length);
@@ -1090,7 +1090,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 				transmissionPathList.add(transmissionPath);
 			}
 			TransmissionPathDatabase transmissionPathDatabase = ConfigurationDatabaseContext.getTransmissionPathDatabase();
-			transmissionPathDatabase.update(transmissionPathList, new Identifier(accessIdentifier.user_id), force
+			transmissionPathDatabase.update(transmissionPathList, new Identifier(accessIdentityT.user_id), force
 					? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return super.getListHeaders(transmissionPathList);
 		}
@@ -1118,7 +1118,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 
 	public StorableObject_Transferable[] receiveTransmissionPathTypes(TransmissionPathType_Transferable[] transmissionPathType_Transferables,
 			boolean force,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
 		Log.debugMessage("CMConfigurationReceive.receiveTransmissionPathTypes | Received "
 				+ transmissionPathType_Transferables.length + " transmissionPathTypes", Log.DEBUGLEVEL07);
 		Set transmissionPathTypeList = new HashSet(transmissionPathType_Transferables.length);
@@ -1129,7 +1129,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 				transmissionPathTypeList.add(transmissionPathType);
 			}
 			TransmissionPathTypeDatabase transmissionPathTypeDatabase = ConfigurationDatabaseContext.getTransmissionPathTypeDatabase();
-			transmissionPathTypeDatabase.update(transmissionPathTypeList, new Identifier(accessIdentifier.user_id), force
+			transmissionPathTypeDatabase.update(transmissionPathTypeList, new Identifier(accessIdentityT.user_id), force
 					? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return super.getListHeaders(transmissionPathTypeList);
 		}

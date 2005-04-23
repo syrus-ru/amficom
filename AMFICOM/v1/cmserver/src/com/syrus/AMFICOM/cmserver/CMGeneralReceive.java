@@ -1,5 +1,5 @@
 /*
- * $Id: CMGeneralReceive.java,v 1.13 2005/04/08 09:30:59 bass Exp $
+ * $Id: CMGeneralReceive.java,v 1.14 2005/04/23 13:36:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
+import com.syrus.AMFICOM.general.corba.AccessIdentity_Transferable;
 import com.syrus.AMFICOM.general.corba.CharacteristicType_Transferable;
 import com.syrus.AMFICOM.general.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
@@ -39,8 +39,8 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/04/08 09:30:59 $
- * @author $Author: bass $
+ * @version $Revision: 1.14 $, $Date: 2005/04/23 13:36:32 $
+ * @author $Author: arseniy $
  * @module cmserver_v1
  */
 
@@ -57,7 +57,7 @@ public abstract class CMGeneralReceive extends CMServerPOA {
 
 	public StorableObject_Transferable receiveParameterType(ParameterType_Transferable parameterType_Transferable,
 			boolean force,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
 		/**
 		 * TODO check user for access
 		 */
@@ -66,7 +66,7 @@ public abstract class CMGeneralReceive extends CMServerPOA {
 			ParameterType parameterType = new ParameterType(parameterType_Transferable);
 			GeneralStorableObjectPool.putStorableObject(parameterType);
 			ParameterTypeDatabase parameterTypeDatabase = GeneralDatabaseContext.getParameterTypeDatabase();
-			parameterTypeDatabase.update(parameterType, new Identifier(accessIdentifier.user_id), force
+			parameterTypeDatabase.update(parameterType, new Identifier(accessIdentityT.user_id), force
 					? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return parameterType.getHeaderTransferable();
 		}
@@ -90,7 +90,7 @@ public abstract class CMGeneralReceive extends CMServerPOA {
 
 	public StorableObject_Transferable[] receiveParameterTypes(ParameterType_Transferable[] parameterType_Transferables,
 			boolean force,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
 		/**
 		 * TODO check user for access
 		 */
@@ -105,7 +105,7 @@ public abstract class CMGeneralReceive extends CMServerPOA {
 				parameterTypeList.add(parameterType);
 			}
 			ParameterTypeDatabase parameterTypeDatabase = GeneralDatabaseContext.getParameterTypeDatabase();
-			parameterTypeDatabase.update(parameterTypeList, new Identifier(accessIdentifier.user_id), force
+			parameterTypeDatabase.update(parameterTypeList, new Identifier(accessIdentityT.user_id), force
 					? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return this.getListHeaders(parameterTypeList);
 		}
@@ -129,13 +129,13 @@ public abstract class CMGeneralReceive extends CMServerPOA {
 
 	public StorableObject_Transferable receiveCharacteristic(Characteristic_Transferable characteristic_Transferable,
 			boolean force,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
 		Log.debugMessage("CMGeneralReceive.receiveCharacteristic | Received " + " characteristic", Log.DEBUGLEVEL07);
 		try {
 			Characteristic characteristic = new Characteristic(characteristic_Transferable);
 			GeneralStorableObjectPool.putStorableObject(characteristic);
 			CharacteristicDatabase characteristicDatabase = GeneralDatabaseContext.getCharacteristicDatabase();
-			characteristicDatabase.update(characteristic, new Identifier(accessIdentifier.user_id), force
+			characteristicDatabase.update(characteristic, new Identifier(accessIdentityT.user_id), force
 					? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return characteristic.getHeaderTransferable();
 		}
@@ -163,7 +163,7 @@ public abstract class CMGeneralReceive extends CMServerPOA {
 
 	public StorableObject_Transferable[] receiveCharacteristics(Characteristic_Transferable[] characteristic_Transferables,
 			boolean force,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
 		Log.debugMessage("CMGeneralReceive.receiveCharacteristics | Received "
 				+ characteristic_Transferables.length
 				+ " characteristics", Log.DEBUGLEVEL07);
@@ -176,7 +176,7 @@ public abstract class CMGeneralReceive extends CMServerPOA {
 			}
 
 			CharacteristicDatabase characteristicDatabase = GeneralDatabaseContext.getCharacteristicDatabase();
-			characteristicDatabase.update(characteristicList, new Identifier(accessIdentifier.user_id), force
+			characteristicDatabase.update(characteristicList, new Identifier(accessIdentityT.user_id), force
 					? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return this.getListHeaders(characteristicList);
 		}
@@ -204,13 +204,13 @@ public abstract class CMGeneralReceive extends CMServerPOA {
 
 	public StorableObject_Transferable receiveCharacteristicType(CharacteristicType_Transferable characteristicType_Transferable,
 			boolean force,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
 		Log.debugMessage("CMGeneralReceive.receiveCharacteristicType | Received " + " characteristicTypes", Log.DEBUGLEVEL07);
 		try {
 			CharacteristicType characteristicType = new CharacteristicType(characteristicType_Transferable);
 			GeneralStorableObjectPool.putStorableObject(characteristicType);
 			CharacteristicTypeDatabase characteristicTypeDatabase = GeneralDatabaseContext.getCharacteristicTypeDatabase();
-			characteristicTypeDatabase.update(characteristicType, new Identifier(accessIdentifier.user_id), force
+			characteristicTypeDatabase.update(characteristicType, new Identifier(accessIdentityT.user_id), force
 					? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return characteristicType.getHeaderTransferable();
 		}
@@ -234,7 +234,7 @@ public abstract class CMGeneralReceive extends CMServerPOA {
 
 	public StorableObject_Transferable[] receiveCharacteristicTypes(CharacteristicType_Transferable[] characteristicType_Transferables,
 			boolean force,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+			AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
 		Log.debugMessage("CMGeneralReceive.receivecharacteristicTypes | Received "
 				+ characteristicType_Transferables.length
 				+ " characteristicTypes", Log.DEBUGLEVEL07);
@@ -247,7 +247,7 @@ public abstract class CMGeneralReceive extends CMServerPOA {
 			}
 
 			CharacteristicTypeDatabase characteristicTypeDatabase = GeneralDatabaseContext.getCharacteristicTypeDatabase();
-			characteristicTypeDatabase.update(characteristicTypeList, new Identifier(accessIdentifier.user_id), force
+			characteristicTypeDatabase.update(characteristicTypeList, new Identifier(accessIdentityT.user_id), force
 					? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return this.getListHeaders(characteristicTypeList);
 		}

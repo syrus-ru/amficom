@@ -1,5 +1,5 @@
 /*
- * $Id: CMAdministrationReceive.java,v 1.6 2005/04/01 17:38:27 arseniy Exp $
+ * $Id: CMAdministrationReceive.java,v 1.7 2005/04/23 13:36:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,13 +31,13 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
+import com.syrus.AMFICOM.general.corba.AccessIdentity_Transferable;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.util.Log;
 /**
- * @version $Revision: 1.6 $, $Date: 2005/04/01 17:38:27 $
+ * @version $Revision: 1.7 $, $Date: 2005/04/23 13:36:32 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -48,13 +48,13 @@ public abstract class CMAdministrationReceive extends CMGeneralReceive {
 	
 	public StorableObject_Transferable receiveUser(User_Transferable user_Transferable,
 									boolean force,
-									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+									AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
 		Log.debugMessage("CMAdministrationReceive.receiveUser | Received " + " user", Log.DEBUGLEVEL07);
 		try {
 			User user = new User(user_Transferable);
 			AdministrationStorableObjectPool.putStorableObject(user);
 			UserDatabase userDatabase = AdministrationDatabaseContext.getUserDatabase();
-			userDatabase.update(user, new Identifier(accessIdentifier.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
+			userDatabase.update(user, new Identifier(accessIdentityT.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
 					: StorableObjectDatabase.UPDATE_CHECK);
 			return user.getHeaderTransferable();
 		}
@@ -78,7 +78,7 @@ public abstract class CMAdministrationReceive extends CMGeneralReceive {
 
 	public StorableObject_Transferable[] receiveUsers(User_Transferable[] user_Transferables,
 									boolean force,
-									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+									AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
 		Log.debugMessage("CMAdministrationReceive.receiveUsers | Received " + user_Transferables.length + " users", Log.DEBUGLEVEL07);
 		Set userList = new HashSet(user_Transferables.length);
 		try {
@@ -88,7 +88,7 @@ public abstract class CMAdministrationReceive extends CMGeneralReceive {
 				userList.add(user);
 			}
 			UserDatabase userDatabase = AdministrationDatabaseContext.getUserDatabase();
-			userDatabase.update(userList, new Identifier(accessIdentifier.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
+			userDatabase.update(userList, new Identifier(accessIdentityT.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
 					: StorableObjectDatabase.UPDATE_CHECK);			
 			return super.getListHeaders(userList);
 		}
@@ -112,13 +112,13 @@ public abstract class CMAdministrationReceive extends CMGeneralReceive {
 
 	public StorableObject_Transferable receiveDomain(Domain_Transferable domain_Transferable,
 									boolean force,
-									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+									AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
 		Log.debugMessage("CMAdministrationReceive.receiveDomain | Received " + " domain", Log.DEBUGLEVEL07);
 		try {
 			Domain domain = new Domain(domain_Transferable);
 			AdministrationStorableObjectPool.putStorableObject(domain);
 			DomainDatabase domainDatabase = AdministrationDatabaseContext.getDomainDatabase();
-			domainDatabase.update(domain, new Identifier(accessIdentifier.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
+			domainDatabase.update(domain, new Identifier(accessIdentityT.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
 					: StorableObjectDatabase.UPDATE_CHECK);
 			return domain.getHeaderTransferable();
 		}
@@ -146,7 +146,7 @@ public abstract class CMAdministrationReceive extends CMGeneralReceive {
 
 	public StorableObject_Transferable[] receiveDomains(Domain_Transferable[] domain_Transferables,
 									boolean force,
-									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+									AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
 		Log.debugMessage("CMAdministrationReceive.receiveDomains | Received " + domain_Transferables.length + " domains", Log.DEBUGLEVEL07);
 		Set domainList = new HashSet(domain_Transferables.length);
 		try {
@@ -156,7 +156,7 @@ public abstract class CMAdministrationReceive extends CMGeneralReceive {
 				domainList.add(domain);
 			}
 			DomainDatabase domainDatabase = AdministrationDatabaseContext.getDomainDatabase();
-			domainDatabase.update(domainList, new Identifier(accessIdentifier.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
+			domainDatabase.update(domainList, new Identifier(accessIdentityT.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
 					: StorableObjectDatabase.UPDATE_CHECK);			
 			return super.getListHeaders(domainList);
 		}
@@ -184,13 +184,13 @@ public abstract class CMAdministrationReceive extends CMGeneralReceive {
 
 	public StorableObject_Transferable receiveServer(Server_Transferable server_Transferable,
 									boolean force,
-									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+									AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
 		Log.debugMessage("CMAdministrationReceive.receiveServer | Received " + " server", Log.DEBUGLEVEL07);
 		try {
 			Server server = new Server(server_Transferable);
 			AdministrationStorableObjectPool.putStorableObject(server);
 			ServerDatabase serverDatabase = AdministrationDatabaseContext.getServerDatabase();
-			serverDatabase.update(server, new Identifier(accessIdentifier.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
+			serverDatabase.update(server, new Identifier(accessIdentityT.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
 					: StorableObjectDatabase.UPDATE_CHECK);
 			return server.getHeaderTransferable();
 		}
@@ -218,7 +218,7 @@ public abstract class CMAdministrationReceive extends CMGeneralReceive {
 
 	public StorableObject_Transferable[] receiveServers(Server_Transferable[] server_Transferables,
 									boolean force,
-									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+									AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
 		Log.debugMessage("CMAdministrationReceive.receiveServers | Received " + server_Transferables.length + " servers", Log.DEBUGLEVEL07);
 		Set serverList = new HashSet(server_Transferables.length);
 		try {
@@ -228,7 +228,7 @@ public abstract class CMAdministrationReceive extends CMGeneralReceive {
 				serverList.add(server);
 			}
 			ServerDatabase serverDatabase = AdministrationDatabaseContext.getServerDatabase();
-			serverDatabase.update(serverList, new Identifier(accessIdentifier.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
+			serverDatabase.update(serverList, new Identifier(accessIdentityT.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
 					: StorableObjectDatabase.UPDATE_CHECK);
 			return super.getListHeaders(serverList);
 		}
@@ -256,13 +256,13 @@ public abstract class CMAdministrationReceive extends CMGeneralReceive {
 
 	public StorableObject_Transferable receiveMCM(MCM_Transferable mcm_Transferable,
 									boolean force,
-									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+									AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
 		Log.debugMessage("CMAdministrationReceive.receiveMCM | Received " + " mcm", Log.DEBUGLEVEL07);
 		try {
 			MCM mcm = new MCM(mcm_Transferable);
 			AdministrationStorableObjectPool.putStorableObject(mcm);
 			MCMDatabase mcmDatabase = AdministrationDatabaseContext.getMCMDatabase();
-			mcmDatabase.update(mcm, new Identifier(accessIdentifier.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
+			mcmDatabase.update(mcm, new Identifier(accessIdentityT.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
 					: StorableObjectDatabase.UPDATE_CHECK);
 			return mcm.getHeaderTransferable();
 		}
@@ -290,7 +290,7 @@ public abstract class CMAdministrationReceive extends CMGeneralReceive {
 
 	public StorableObject_Transferable[] receiveMCMs(MCM_Transferable[] mcm_Transferables,
 									boolean force,
-									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+									AccessIdentity_Transferable accessIdentityT) throws AMFICOMRemoteException {
 		Log.debugMessage("CMAdministrationReceive.receiveMCMs | Received " + mcm_Transferables.length + " mcms", Log.DEBUGLEVEL07);
 		Set mcmList = new HashSet(mcm_Transferables.length);
 		try {
@@ -300,7 +300,7 @@ public abstract class CMAdministrationReceive extends CMGeneralReceive {
 				mcmList.add(mcm);
 			}
 			MCMDatabase mcmDatabase = AdministrationDatabaseContext.getMCMDatabase();
-			mcmDatabase.update(mcmList, new Identifier(accessIdentifier.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
+			mcmDatabase.update(mcmList, new Identifier(accessIdentityT.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
 					: StorableObjectDatabase.UPDATE_CHECK);			
 			return super.getListHeaders(mcmList);
 		}

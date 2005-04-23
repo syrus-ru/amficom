@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.99 2005/04/15 22:14:11 arseniy Exp $
+ * $Id: CMServerImpl.java,v 1.100 2005/04/23 13:36:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
+import com.syrus.AMFICOM.general.corba.AccessIdentity_Transferable;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
@@ -41,7 +41,7 @@ import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.99 $, $Date: 2005/04/15 22:14:11 $
+ * @version $Revision: 1.100 $, $Date: 2005/04/23 13:36:32 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -189,11 +189,11 @@ public class CMServerImpl extends CMMeasurementTransmit {
     // Delete methods
 
 	public void delete(final Identifier_Transferable id,
-			final AccessIdentifier_Transferable accessIdentifier)
+			final AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
 		final Identifier id1 = new Identifier(id);
 		Log.debugMessage("CMServerImpl.delete | trying to delete object '" + id1 //$NON-NLS-1$
-				+ "' as requested by user '" + (new AccessIdentity(accessIdentifier)).getUserId() + "'", Log.DEBUGLEVEL07);  //$NON-NLS-1$//$NON-NLS-2$
+				+ "' as requested by user '" + (new AccessIdentity(accessIdentityT)).getUserId() + "'", Log.DEBUGLEVEL07);  //$NON-NLS-1$//$NON-NLS-2$
 		final short entityCode = id1.getMajor();
 		if (ObjectGroupEntities.isInGeneralGroup(entityCode))
 			GeneralStorableObjectPool.delete(id1);
@@ -208,9 +208,9 @@ public class CMServerImpl extends CMMeasurementTransmit {
 
 	}
 
-	public void deleteList(Identifier_Transferable[] id_Transferables, AccessIdentifier_Transferable accessIdentifier)
+	public void deleteList(Identifier_Transferable[] id_Transferables, AccessIdentity_Transferable accessIdentityT)
 			throws AMFICOMRemoteException {
-		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentityT);
 		Log.debugMessage("CMServerImpl.deleteList | Trying to delete " + id_Transferables.length //$NON-NLS-1$
 				+ " objects on request of user '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07); //$NON-NLS-1$ //$NON-NLS-2$
 
