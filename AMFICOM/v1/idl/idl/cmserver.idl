@@ -14,7 +14,7 @@ module corba {
 
 	interface CMServer :
 		general::corba::Verifiable,
-		general::corba::NameResolver,
+		general::corba::LoginServer,
 		general::corba::IdentifierGeneratorServer {
 
 		void delete(in general::corba::Identifier_Transferable id_Transferable,

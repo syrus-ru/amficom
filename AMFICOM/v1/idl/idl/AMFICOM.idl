@@ -1,5 +1,5 @@
 /*
- * $Id: AMFICOM.idl,v 1.12 2004/12/23 11:13:01 bass Exp $
+ * $Id: AMFICOM.idl,v 1.13 2005/04/23 15:38:55 cvsadmin Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ module com {
 module syrus {
 module AMFICOM {
 module CORBA {
-interface AMFICOM: general::corba::NameResolver {
+interface AMFICOM: general::corba::LoginServer {
 	void registerAlarmReceiver(
 			in Admin::AccessIdentity_Transferable accessIdentity,
 			in AMFICOMClient cli)

@@ -1,5 +1,5 @@
 /*
- * $Id: general.idl,v 1.70 2005/04/23 14:44:19 cvsadmin Exp $
+ * $Id: general.idl,v 1.71 2005/04/23 15:38:55 cvsadmin Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -196,8 +196,8 @@ module corba {
 	typedef Characteristic_Transferable Characteristic;
 	typedef sequence<Characteristic> CharacteristicSeq;
 
-///////////////////////// NameResolver ///////////////////////
-	abstract interface NameResolver {
+///////////////////////// LoginServer ///////////////////////
+	abstract interface LoginServer {
 		WString64 lookupDomainName(in Identifier_Transferable id) raises (AMFICOMRemoteException);
 
 		String32 lookupUserLogin(in Identifier_Transferable id) raises (AMFICOMRemoteException);
