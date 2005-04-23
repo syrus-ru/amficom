@@ -1,5 +1,5 @@
 /*
- * $Id: EventType.java,v 1.18 2005/04/15 19:22:24 arseniy Exp $
+ * $Id: EventType.java,v 1.19 2005/04/23 17:46:27 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.event;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
@@ -19,23 +18,21 @@ import org.omg.CORBA.portable.IDLEntity;
 import com.syrus.AMFICOM.event.corba.EventType_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/04/15 19:22:24 $
+ * @version $Revision: 1.19 $, $Date: 2005/04/23 17:46:27 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -46,11 +43,13 @@ public final class EventType extends StorableObjectType {
 	public static final String CODENAME_MEASUREMENT_ALARM = "measurement_alarm";
 
 	private Set parameterTypes;
+	private Set userIds;
 
 	public EventType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
 		this.parameterTypes = new HashSet();
+		this.userIds = new HashSet();
 
 		EventTypeDatabase database = EventDatabaseContext.getEventTypeDatabase();
 		try {
@@ -60,13 +59,7 @@ public final class EventType extends StorableObjectType {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
 
-		try {
-			for (Iterator it = this.parameterTypes.iterator(); it.hasNext();)
-				GeneralStorableObjectPool.putStorableObject((ParameterType) it.next());
-		}
-		catch (IllegalObjectEntityException ioee) {
-			Log.errorException(ioee);
-		}
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
 	public EventType(EventType_Transferable ett) throws CreateObjectException {
@@ -83,7 +76,8 @@ public final class EventType extends StorableObjectType {
 								long version,
 								String codename,
 								String description,
-								Set parameterTypes) {
+								Set parameterTypes,
+								Set userIds) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -95,6 +89,9 @@ public final class EventType extends StorableObjectType {
 
 		this.parameterTypes = new HashSet(); 
 		this.setParameterTypes0(parameterTypes);
+
+		this.userIds = new HashSet();
+		this.setUserIds0(userIds);
 	}
 
 	/**
@@ -109,7 +106,8 @@ public final class EventType extends StorableObjectType {
 	public static EventType createInstance(Identifier creatorId,
 															String codename,
 															String description,
-															Set parameterTypes) throws CreateObjectException {
+															Set parameterTypes,
+															Set userIds) throws CreateObjectException {
 		if (creatorId == null || codename == null || description == null)
 			throw new IllegalArgumentException("Argument is null'");
 
@@ -119,7 +117,11 @@ public final class EventType extends StorableObjectType {
 										0L,
 										codename,
 										description,
-										parameterTypes);
+										parameterTypes,
+										userIds);
+
+			assert eventType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+
 			eventType.changed = true;
 			return eventType;
 		}
@@ -133,23 +135,43 @@ public final class EventType extends StorableObjectType {
 
 		super.fromTransferable(ett.header, ett.codename, ett.description);
 
-		Set parTypeIds = Identifier.fromTransferables(ett.parameter_type_ids);
+		Set ids = Identifier.fromTransferables(ett.parameter_type_ids);
 		this.parameterTypes = new HashSet(ett.parameter_type_ids.length);
-		this.setParameterTypes0(GeneralStorableObjectPool.getStorableObjects(parTypeIds, true));
+		this.setParameterTypes0(GeneralStorableObjectPool.getStorableObjects(ids, true));
+
+		this.userIds = new HashSet(ett.user_ids.length);
+		this.setUserIds0(Identifier.fromTransferables(ett.user_ids));
+
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
 	public IDLEntity getTransferable() {
-		Identifier_Transferable[] parTypeIds = null;
-		parTypeIds = Identifier.createTransferables(this.parameterTypes);
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
+		Identifier_Transferable[] parTypeIdsT = Identifier.createTransferables(this.parameterTypes);
+		Identifier_Transferable[] userIdsT = Identifier.createTransferables(this.userIds);
 		return new EventType_Transferable(super.getHeaderTransferable(),
 										super.codename,
 										super.description != null ? super.description : "",
-										parTypeIds);
+										parTypeIdsT,
+										userIdsT);
 	}
 
   public Set getParameterTypes() {
 		return Collections.unmodifiableSet(this.parameterTypes);
+	}
+
+  public Set getUserIds() {
+		return Collections.unmodifiableSet(this.userIds);
+	}
+
+  /**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	protected boolean isValid() {
+		return super.isValid()
+				&& this.parameterTypes != null && this.parameterTypes != Collections.EMPTY_SET
+				&& this.userIds != null && this.userIds != Collections.EMPTY_SET;
 	}
 
 	protected synchronized void setAttributes(Date created,
@@ -185,12 +207,45 @@ public final class EventType extends StorableObjectType {
 		this.changed = true;
 	}
 
+	protected void setUserIds0(Set userIds) {
+		this.userIds.clear();
+		if (userIds != null)
+	     	this.userIds.addAll(userIds);
+	}
+
+	/**
+	 * client setter for userIds
+	 * 
+	 * @param userIds
+	 *            The userIds to set.
+	 */
+	public void setUserIds(Set userIds) {
+		this.setUserIds0(userIds);
+		this.changed = true;
+	}
+
+	public boolean hasUserId(Identifier userId) {
+		return this.userIds.contains(userId);
+	}
+
+	public void addUserId(Identifier userId) {
+		if (userId != null && !this.hasUserId(userId)) {
+			this.userIds.add(userId);
+			super.changed = true;
+		}
+	}
+
+	public void removeUserId(Identifier userId) {
+		if (userId != null && this.hasUserId(userId)) {
+			this.userIds.remove(userId);
+			super.changed = true;
+		}
+	}
+
 	public Set getDependencies() {
 		Set dependencies = new HashSet();
-
-		if (this.parameterTypes != null)
-			dependencies.addAll(this.parameterTypes);
-
+		dependencies.addAll(this.parameterTypes);
+		dependencies.addAll(this.userIds);
 		return dependencies;
 	}
 

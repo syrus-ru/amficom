@@ -1,5 +1,5 @@
 /*
- * $Id: EventTypeWrapper.java,v 1.7 2005/04/11 11:49:32 bob Exp $
+ * $Id: EventTypeWrapper.java,v 1.8 2005/04/23 17:46:27 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,14 +15,16 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/04/11 11:49:32 $
- * @author $Author: bob $
+ * @version $Revision: 1.8 $, $Date: 2005/04/23 17:46:27 $
+ * @author $Author: arseniy $
  * @module event_v1
  */
 public class EventTypeWrapper extends StorableObjectWrapper {
 
 	public static final String LINK_COLUMN_EVENT_TYPE_ID = "event_type_id";
 	public static final String LINK_FIELD_PARAMETER_TYPES = "parameter_types";
+	public static final String LINK_COLUMN_USER_ID = "user_id";
+	public static final String LINK_FIELD_USER_IDS = "user_ids";
 
 	private static EventTypeWrapper instance;
 
@@ -30,7 +32,7 @@ public class EventTypeWrapper extends StorableObjectWrapper {
 
 	private EventTypeWrapper() {
 		//	private constructor
-		String[] keysArray = new String[] {COLUMN_CODENAME, COLUMN_DESCRIPTION, LINK_FIELD_PARAMETER_TYPES};
+		String[] keysArray = new String[] {COLUMN_CODENAME, COLUMN_DESCRIPTION, LINK_FIELD_PARAMETER_TYPES, LINK_FIELD_USER_IDS};
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
@@ -59,6 +61,8 @@ public class EventTypeWrapper extends StorableObjectWrapper {
 				return eventType.getDescription();
 			if (key.equals(LINK_FIELD_PARAMETER_TYPES))
 				return eventType.getParameterTypes();
+			if (key.equals(LINK_FIELD_USER_IDS))
+				return eventType.getUserIds();
 		}
 		return null;
 	}
@@ -78,6 +82,9 @@ public class EventTypeWrapper extends StorableObjectWrapper {
 				else
 					if (key.equals(LINK_FIELD_PARAMETER_TYPES))
 						eventType.setParameterTypes((Set) value);
+					else
+						if (key.equals(LINK_FIELD_USER_IDS))
+							eventType.setUserIds((Set) value);
 		}
 	}
 

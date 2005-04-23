@@ -1,5 +1,5 @@
 /*
- * $Id: EventTypeDatabase.java,v 1.22 2005/04/12 17:07:46 arseniy Exp $
+ * $Id: EventTypeDatabase.java,v 1.23 2005/04/23 17:46:27 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.HashSet;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -31,13 +32,15 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.general.UpdateObjectException;
+import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/04/12 17:07:46 $
+ * @version $Revision: 1.23 $, $Date: 2005/04/23 17:46:27 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -92,7 +95,8 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		EventType eventType = this.fromStorableObject(storableObject);
 		this.retrieveEntity(eventType);
-		this.retrieveParameterTypes(eventType);
+		this.retrieveParameterTypesByOneQuery(Collections.singleton(eventType));
+		this.retrieveUserIdsByOneQuery(Collections.singleton(eventType));
 	}
 
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet) throws IllegalDataException, RetrieveObjectException, SQLException{
@@ -100,6 +104,7 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 				new EventType(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 											null,
 											0L,
+											null,
 											null,
 											null,
 											null) :
@@ -114,63 +119,14 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 		return eventType;
 	}
 
-	private void retrieveParameterTypes(EventType eventType) throws RetrieveObjectException {
-		Set parTyps = new HashSet();
-		String eventTypeIdStr = DatabaseIdentifier.toSQLString(eventType.getId());
-		String sql = SQL_SELECT
-			+ StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID
-			+ SQL_FROM + ObjectEntities.EVENTTYPPARTYPLINK_ENTITY
-			+ SQL_WHERE + EventTypeWrapper.LINK_COLUMN_EVENT_TYPE_ID + EQUALS + eventTypeIdStr;
-		Statement statement = null;
-		ResultSet resultSet = null;
-		Connection connection = DatabaseConnection.getConnection();
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("EventTypeDatabase.retrieveParameterType | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql);
-			Identifier parameterTypeId;
-			while (resultSet.next()) {
-				parameterTypeId = DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID);
-				parTyps.add(GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
-			}
-		}
-		catch (SQLException sqle) {
-			String mesg = "EventTypeDatabase.retrieveParameterTypes | Cannot retrieve parameter type ids for event type '" + eventTypeIdStr + "' -- " + sqle.getMessage();
-			throw new RetrieveObjectException(mesg, sqle);
-		}
-		catch (ApplicationException ae) {
-			throw new RetrieveObjectException(ae);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-			finally {
-				DatabaseConnection.releaseConnection(connection);
-			}
-		}
-
-		eventType.setParameterTypes(parTyps);
-	}
-
 	private void retrieveParameterTypesByOneQuery(Set eventTypes) throws RetrieveObjectException {
 		if ((eventTypes == null) || (eventTypes.isEmpty()))
 			return;
 
-		Map eventParamaterTypeIdsMap = null;
-		eventParamaterTypeIdsMap = this.retrieveLinkedEntityIds(eventTypes,
+		Map eventParamaterTypeIdsMap = this.retrieveLinkedEntityIds(eventTypes,
 				ObjectEntities.EVENTTYPPARTYPLINK_ENTITY,
 				EventTypeWrapper.LINK_COLUMN_EVENT_TYPE_ID,
 				StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID);
-
 		EventType eventType;
 		Identifier eventTypeId;
 		Set paramaterTypeIds;
@@ -188,6 +144,26 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
+	private void retrieveUserIdsByOneQuery(Set eventTypes) throws RetrieveObjectException {
+		if ((eventTypes == null) || (eventTypes.isEmpty()))
+			return;
+
+		Map userIdsMap = this.retrieveLinkedEntityIds(eventTypes,
+				ObjectEntities.EVENTTYPUSERLINK_ENTITY,
+				EventTypeWrapper.LINK_COLUMN_EVENT_TYPE_ID,
+				EventTypeWrapper.LINK_COLUMN_USER_ID);
+		EventType eventType;
+		Identifier eventTypeId;
+		Set userIds;
+		for (Iterator it = eventTypes.iterator(); it.hasNext();) {
+			eventType = (EventType) it.next();
+			eventTypeId = eventType.getId();
+			userIds = (Set) userIdsMap.get(eventTypeId);
+
+			eventType.setUserIds0(userIds);
+		}
+	}
+
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		EventType eventType = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
@@ -201,6 +177,12 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 		EventType eventType = this.fromStorableObject(storableObject);
 		this.insertEntity(eventType);
 		this.insertParameterTypes(eventType);
+		try {
+			this.updateUserIds(Collections.singleton(eventType));
+		}
+		catch (UpdateObjectException uoe) {
+			throw new CreateObjectException(uoe);
+		}
 	}
 
 	public void insert(Set storableObjects) throws IllegalDataException, CreateObjectException {
@@ -208,6 +190,12 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 			EventType eventType = this.fromStorableObject((StorableObject)it.next());
 			this.insertParameterTypes(eventType);
+		}
+		try {
+			this.updateUserIds(storableObjects);
+		}
+		catch (UpdateObjectException uoe) {
+			throw new CreateObjectException(uoe);
 		}
 	}
 
@@ -266,6 +254,55 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 				Log.errorException(sqle1);
 			}
 		}
+	}
+
+	/**
+	 * NOTE: Updates event type itself and identifiers of users, attached to it
+	 * Do not updates parameter types.
+	 */
+	public void update(StorableObject storableObject, Identifier modifierId, int updateKind)
+			throws VersionCollisionException, UpdateObjectException {
+		super.update(storableObject, modifierId, updateKind);
+		try {
+			this.updateUserIds(Collections.singleton(storableObject));
+		}
+		catch (IllegalDataException ide) {
+			Log.errorException(ide);
+		}
+	}
+
+	/**
+	 * NOTE: Updates event type itself and identifiers of users, attached to it
+	 * Do not updates parameter types.
+	 */
+	public void update(java.util.Set storableObjects, Identifier modifierId, int updateKind)
+			throws VersionCollisionException, UpdateObjectException {
+		super.update(storableObjects, modifierId, updateKind);
+		try {
+			this.updateUserIds(storableObjects);
+		}
+		catch (IllegalDataException ide) {
+			Log.errorException(ide);
+		}
+	}
+
+	private void updateUserIds(Set eventTypes) throws UpdateObjectException, IllegalDataException {
+		if ((eventTypes == null) || (eventTypes.isEmpty()))
+			return;
+
+		Map userIdsMap = new HashMap();
+		EventType eventType;
+		Set userIds;
+		for (Iterator it = eventTypes.iterator(); it.hasNext();) {
+			eventType = this.fromStorableObject((StorableObject) it.next());
+			userIds = eventType.getUserIds();
+			userIdsMap.put(eventType.getId(), userIds);
+		}
+
+		super.updateLinkedEntityIds(userIdsMap,
+				ObjectEntities.EVENTTYPUSERLINK_ENTITY,
+				EventTypeWrapper.LINK_COLUMN_EVENT_TYPE_ID,
+				EventTypeWrapper.LINK_COLUMN_USER_ID);
 	}
 
 	public void delete(Identifier id) {
@@ -346,9 +383,10 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 	}
 
 	protected Set retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
-		Set collection = super.retrieveByCondition(conditionQuery);
-		this.retrieveParameterTypesByOneQuery(collection);
-		return collection;
+		Set objects = super.retrieveByCondition(conditionQuery);
+		this.retrieveParameterTypesByOneQuery(objects);
+		this.retrieveUserIdsByOneQuery(objects);
+		return objects;
 	}
 
 }
