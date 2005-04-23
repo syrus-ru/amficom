@@ -1,5 +1,5 @@
 /*
- * $Id: ServantConnectionManager.java,v 1.3 2005/04/23 14:09:23 arseniy Exp $
+ * $Id: ServantConnectionManager.java,v 1.4 2005/04/23 17:50:45 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,15 +9,16 @@ package com.syrus.AMFICOM.general;
 
 import com.syrus.AMFICOM.cmserver.corba.CMServer;
 import com.syrus.AMFICOM.general.corba.IdentifierGeneratorServer;
+import com.syrus.AMFICOM.general.corba.LoginServer;
 import com.syrus.AMFICOM.mshserver.corba.MSHServer;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/04/23 14:09:23 $
+ * @version $Revision: 1.4 $, $Date: 2005/04/23 17:50:45 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
-public class ServantConnectionManager  implements IGSConnectionManager, CMServerConnectionManager {
+public class ServantConnectionManager  implements IGSConnectionManager, LoginServerConnectionManager, CMServerConnectionManager {
 
 	private static final String KEY_SERVANT_NAME_CMSERVER = "CMServerServantName";
 	private static final String KEY_SERVANT_NAME_MSHSERVER = "MSHServerServantName";
@@ -37,13 +38,22 @@ public class ServantConnectionManager  implements IGSConnectionManager, CMServer
 		CORBAServer corbaServer = new CORBAServer(serverHostName);
 		this.verifiedConnectionManager = new VerifiedConnectionManager(corbaServer,
 				new String[] {this.cmServerServantName, this.mshServerServantName});
-
-		// @todo Add here some code to startup client's own servant
 	}
 
 	public IdentifierGeneratorServer getVerifiedIGSReference() throws CommunicationException {
 		try {
 			return (IdentifierGeneratorServer) this.verifiedConnectionManager.getVerifiableReference(this.cmServerServantName);
+		}
+		catch (IllegalDataException ide) {
+			// Never
+			assert false;
+			return null;
+		}
+	}
+
+	public LoginServer getLoginServerReference() throws CommunicationException {
+		try {
+			return (LoginServer) this.verifiedConnectionManager.getVerifiableReference(this.cmServerServantName);
 		}
 		catch (IllegalDataException ide) {
 			// Never
