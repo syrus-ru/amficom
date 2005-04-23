@@ -1,5 +1,5 @@
 /*
- * $Id: AccessIdentity.java,v 1.5 2005/04/08 15:28:34 arseniy Exp $
+ * $Id: AccessIdentity.java,v 1.6 2005/04/23 13:32:53 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,33 +9,34 @@
 package com.syrus.AMFICOM.general;
 
 import java.util.Date;
+
 import org.omg.CORBA.portable.IDLEntity;
 
-import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
+import com.syrus.AMFICOM.general.corba.AccessIdentity_Transferable;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/04/08 15:28:34 $
+ * @version $Revision: 1.6 $, $Date: 2005/04/23 13:32:53 $
  * @author $Author: arseniy $
  * @module general_v1
  */
 public class AccessIdentity implements TransferableObject {
 
 
-	private Date start;
+	private Date startupDate;
 	private Identifier domainId;
 	private Identifier userId;
 	private String sessionCode;
 
-	public AccessIdentity(AccessIdentifier_Transferable transferable) {
-		this.start = new Date(transferable.started);
+	public AccessIdentity(AccessIdentity_Transferable transferable) {
+		this.startupDate = new Date(transferable.startup_date);
 		this.domainId = new Identifier(transferable.domain_id);
 		this.userId = new Identifier(transferable.user_id);
 		this.sessionCode = transferable.session_code;
 	}
 
 	public AccessIdentity(Date start, Identifier domainId, Identifier userId, String sessionCode) {
-		this.start = start;
+		this.startupDate = start;
 		this.domainId = domainId;
 		this.userId = userId;
 		this.sessionCode = sessionCode;
@@ -49,12 +50,12 @@ public class AccessIdentity implements TransferableObject {
 		return this.sessionCode;
 	}
 
-	public Date getStart() {
-		return this.start;
+	public Date getStartupDate() {
+		return this.startupDate;
 	}
 
 	public IDLEntity getTransferable() {
-		return new AccessIdentifier_Transferable(this.start.getTime(),
+		return new AccessIdentity_Transferable(this.startupDate.getTime(),
 				(Identifier_Transferable) this.domainId.getTransferable(),
 				(Identifier_Transferable) this.userId.getTransferable(),
 				this.sessionCode);
