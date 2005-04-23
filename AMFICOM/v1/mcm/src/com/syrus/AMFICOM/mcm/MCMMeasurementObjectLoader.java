@@ -1,5 +1,5 @@
 /*
- * $Id: MCMMeasurementObjectLoader.java,v 1.34 2005/04/22 16:13:32 arseniy Exp $
+ * $Id: MCMMeasurementObjectLoader.java,v 1.35 2005/04/23 13:34:47 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,12 +20,12 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.SessionContext;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.AnalysisTypeDatabase;
 import com.syrus.AMFICOM.measurement.CronTemporalPattern;
+import com.syrus.AMFICOM.measurement.CronTemporalPatternDatabase;
 import com.syrus.AMFICOM.measurement.DatabaseMeasurementObjectLoader;
 import com.syrus.AMFICOM.measurement.EvaluationType;
 import com.syrus.AMFICOM.measurement.EvaluationTypeDatabase;
@@ -38,7 +38,6 @@ import com.syrus.AMFICOM.measurement.Modeling;
 import com.syrus.AMFICOM.measurement.ModelingType;
 import com.syrus.AMFICOM.measurement.Set;
 import com.syrus.AMFICOM.measurement.SetDatabase;
-import com.syrus.AMFICOM.measurement.CronTemporalPatternDatabase;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.CronTemporalPattern_Transferable;
@@ -51,7 +50,7 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/04/22 16:13:32 $
+ * @version $Revision: 1.35 $, $Date: 2005/04/23 13:34:47 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -610,8 +609,7 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 
 		MServer mServerRef = MeasurementControlModule.mServerConnectionManager.getVerifiedMServerReference();
 		try {
-			mServerRef.updateTest((Test_Transferable) test.getTransferable(),
-					(AccessIdentifier_Transferable) SessionContext.getAccessIdentity().getTransferable());
+			mServerRef.updateTest((Test_Transferable) test.getTransferable(), SessionContext.getAccessIdentityTransferable());
 		}
 		catch (Throwable throwable) {
 			Log.errorException(throwable);
