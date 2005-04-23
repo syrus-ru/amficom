@@ -1,5 +1,5 @@
 /*
- * $Id: ClientSession.java,v 1.5 2005/04/23 14:46:04 arseniy Exp $
+ * $Id: ClientSession.java,v 1.6 2005/04/23 17:51:16 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,7 @@ import com.syrus.AMFICOM.administration.CORBAAdministrationObjectLoader;
 import com.syrus.AMFICOM.configuration.CORBAConfigurationObjectLoader;
 import com.syrus.AMFICOM.configuration.ConfigurationObjectLoader;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.general.corba.LoginServer;
 import com.syrus.AMFICOM.measurement.CORBAMeasurementObjectLoader;
 import com.syrus.AMFICOM.measurement.MeasurementObjectLoader;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
@@ -20,7 +21,7 @@ import com.syrus.util.Application;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/04/23 14:46:04 $
+ * @version $Revision: 1.6 $, $Date: 2005/04/23 17:51:16 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
@@ -35,9 +36,10 @@ public final class ClientSession {
 		//singleton
 	}
 
-	public static void open(final String user, final String password) throws CommunicationException {
+	public static void open(final String username, final String password) throws CommunicationException {
 		initServantConnection();
-		/*@todo here, before other operations, perform login*/
+		login(username, password);
+		activateServant();
 		initSessionContext();
 		initIdentifierPool();
 		initObjectPools();
@@ -46,6 +48,15 @@ public final class ClientSession {
 	private static void initServantConnection() throws CommunicationException {
 		final String serverHostName = ApplicationProperties.getString(KEY_SERVER_HOSTNAME, SERVER_HOSTNAME);
 		servantConnectionManager = new ServantConnectionManager(serverHostName);
+	}
+
+	private static void login(final String username, final String password) throws CommunicationException {
+		LoginServer loginServer = servantConnectionManager.getLoginServerReference();
+		
+	}
+
+	private static void activateServant() {
+		//@todo Add here some code to startup client's own servant
 	}
 
 	private static void initSessionContext() {
