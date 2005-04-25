@@ -458,7 +458,8 @@ public class AnalysisPanel extends MapMarkersPanel
 		{
 			_activeEvent = activeEvent;
 			activeEvent = event;
-			moveMarker(markerB, (events[event].first_point + events[event].last_point)/2);
+			if (markerB.pos < events[event].first_point || markerB.pos >= events[event].last_point)
+				moveMarker(markerB, (events[event].first_point));
 		}
 		parent.repaint();
 	}
