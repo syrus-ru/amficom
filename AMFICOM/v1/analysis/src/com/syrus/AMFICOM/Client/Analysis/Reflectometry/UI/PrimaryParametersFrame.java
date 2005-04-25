@@ -22,6 +22,7 @@ import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.Client.General.UI.ATable;
 import com.syrus.AMFICOM.Client.General.UI.FixedSizeEditableTableModel;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
+import com.syrus.AMFICOM.analysis.dadara.MathRef;
 import com.syrus.io.BellcoreStructure;
 
 public class PrimaryParametersFrame extends ATableFrame
@@ -141,7 +142,10 @@ implements BsHashChangeListener, CurrentTraceChangeListener
 			bs.getPulsewidth() + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_NS),
 			String.valueOf(bs.getIOR()),
 			String.valueOf(bs.getAverages()),
-			Math.round(res) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_MT),
+			// XXX: we round resolution with 3 digits;
+			// 4 digits can sometimes give 3.999 m resolution;
+			// 2 digits are not enough for 0.125 m
+			MathRef.floatRound(res, 3) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_MT),
 			Math.round(range) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_KM),
 			date,
 			time,
