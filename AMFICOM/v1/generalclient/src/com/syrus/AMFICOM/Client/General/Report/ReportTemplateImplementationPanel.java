@@ -267,10 +267,6 @@ public class ReportTemplateImplementationPanel extends JPanel
 		//Подгрузка нужных объектов с сервера
 		reportDataLoaded = false;
 
-		ReportBuilder.loadRequiredObjects(
-				 aContext,
-				 reportTemplate);
-
 		while(!reportDataLoaded)
 		{
 			try

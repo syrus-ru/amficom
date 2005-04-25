@@ -19,11 +19,6 @@ abstract public class ReportModel
 {
 	static public String rt_tableReport = "rt_tableReport";
 
-	abstract public void loadRequiredObjects(
-		DataSourceInterface dsi,
-		ObjectsReport rp,
-		ReportTemplate rt);
-
 	/**
 	 *
 	 * @param rp Элемент шаблона для реализации

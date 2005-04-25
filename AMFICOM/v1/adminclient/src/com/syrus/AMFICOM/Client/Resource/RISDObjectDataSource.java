@@ -1,5 +1,5 @@
 /*
- * $Id: RISDObjectDataSource.java,v 1.3 2004/10/19 13:45:52 bass Exp $
+ * $Id: RISDObjectDataSource.java,v 1.4 2005/04/25 09:41:04 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,22 +8,46 @@
 
 package com.syrus.AMFICOM.Client.Resource;
 
-import com.syrus.AMFICOM.CORBA.Admin.*;
-import com.syrus.AMFICOM.CORBA.Constants;
-import com.syrus.AMFICOM.CORBA.Resource.*;
-import com.syrus.AMFICOM.Client.General.SessionInterface;
-import com.syrus.AMFICOM.Client.Resource.Object.*;
-import com.syrus.AMFICOM.Client.Resource.System.*;
 import java.util.Vector;
+
+import com.syrus.AMFICOM.CORBA.Constants;
+import com.syrus.AMFICOM.CORBA.Admin.AgentSeq_TransferableHolder;
+import com.syrus.AMFICOM.CORBA.Admin.Agent_Transferable;
+import com.syrus.AMFICOM.CORBA.Admin.ClientSeq_TransferableHolder;
+import com.syrus.AMFICOM.CORBA.Admin.Client_Transferable;
+import com.syrus.AMFICOM.CORBA.Admin.CommandPermissionAttributesSeq_TransferableHolder;
+import com.syrus.AMFICOM.CORBA.Admin.CommandPermissionAttributes_Transferable;
+import com.syrus.AMFICOM.CORBA.Admin.DomainSeq_TransferableHolder;
+import com.syrus.AMFICOM.CORBA.Admin.Domain_Transferable;
+import com.syrus.AMFICOM.CORBA.Admin.OperatorCategorySeq_TransferableHolder;
+import com.syrus.AMFICOM.CORBA.Admin.OperatorCategory_Transferable;
+import com.syrus.AMFICOM.CORBA.Admin.OperatorGroupSeq_TransferableHolder;
+import com.syrus.AMFICOM.CORBA.Admin.OperatorGroup_Transferable;
+import com.syrus.AMFICOM.CORBA.Admin.OperatorProfileSeq_TransferableHolder;
+import com.syrus.AMFICOM.CORBA.Admin.OperatorProfile_Transferable;
+import com.syrus.AMFICOM.CORBA.Admin.ServerSeq_TransferableHolder;
+import com.syrus.AMFICOM.CORBA.Admin.Server_Transferable;
+import com.syrus.AMFICOM.CORBA.Admin.UserSeq_TransferableHolder;
+import com.syrus.AMFICOM.CORBA.Admin.User_Transferable;
+import com.syrus.AMFICOM.CORBA.Resource.ImageResourceSeq_TransferableHolder;
+import com.syrus.AMFICOM.CORBA.Resource.ImageResource_Transferable;
+import com.syrus.AMFICOM.Client.General.SessionInterface;
+import com.syrus.AMFICOM.Client.Resource.Object.CommandPermissionAttributes;
+import com.syrus.AMFICOM.Client.Resource.Object.Domain;
+import com.syrus.AMFICOM.Client.Resource.Object.OperatorCategory;
+import com.syrus.AMFICOM.Client.Resource.Object.OperatorGroup;
+import com.syrus.AMFICOM.Client.Resource.Object.OperatorProfile;
+import com.syrus.AMFICOM.Client.Resource.Object.User;
+import com.syrus.AMFICOM.Client.Resource.System.Agent;
+import com.syrus.AMFICOM.Client.Resource.System.Client;
+import com.syrus.AMFICOM.Client.Resource.System.Server;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2004/10/19 13:45:52 $
+ * @version $Revision: 1.4 $, $Date: 2005/04/25 09:41:04 $
  * @module admin_v1
  */
-public class RISDObjectDataSource
-		extends RISDReportDataSource
-		implements DataSourceInterface
+public class RISDObjectDataSource extends RISDDataSource
 {
 	protected RISDObjectDataSource()
 	{

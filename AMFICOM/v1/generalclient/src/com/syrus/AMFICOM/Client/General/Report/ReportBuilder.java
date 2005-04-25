@@ -1,5 +1,5 @@
 /*
- * $Id: ReportBuilder.java,v 1.9 2004/09/27 08:58:38 bass Exp $
+ * $Id: ReportBuilder.java,v 1.10 2005/04/25 09:39:47 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import javax.swing.*;
  * <p>Company: Syrus Systems</p>
  * 
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2004/09/27 08:58:38 $
+ * @version $Revision: 1.10 $, $Date: 2005/04/25 09:39:47 $
  * @module generalclient_v1
  */
 public class ReportBuilder
@@ -33,50 +33,6 @@ public class ReportBuilder
 
 	public ReportBuilder()
 	{
-	}
-
-	/**
-	 * Подгрузка объектов с сервера для заданного шаблона.
-	 * Класс определяет какие данные требуется подгрузить для каждого
-	 * элемента шаблона и проверяет, нет ли среди них дублирующих друг
-	 * друга. Все данные подгружаются один раз.
-	 *   @param dsi интерфейс для передачи данных</p>
-	 *   @param rt шаблон, которому принадлежит элемент</p>
-	 */
-	public static void loadRequiredObjects(
-			final ApplicationContext aContext,
-			final ReportTemplate rt)
-	{
-		//Подгружаем данные в шаблоны фильтров
-		for (int i = 0; i < rt.objectResourceFilters.size(); i++)
-		{
-			ObjectResourceFilter curFilter = (ObjectResourceFilter)rt.objectResourceFilters.get(i);
-			curFilter.logicScheme.setUnfilledFilterExpressions(aContext);
-		}
-
-//		aContext.getDispatcher().notify(new OperationEvent("",0,ReportBuilder.ev_startProgressBar));
-
-/*		ReportBuilder.invokeAsynchronously(new Runnable() {
-			public void run()
-			{*/
-				System.out.println(new Date(System.currentTimeMillis()).toString() +
-										 " " + "Getting data from server...");
-
-				for (int i = 0; i < rt.objectRenderers.size(); i++)
-				{
-					ObjectsReport curReport =
-						((RenderingObject) rt.objectRenderers.get(i)).getReportToRender();
-
-					curReport.model.loadRequiredObjects(aContext.getDataSource(), curReport, rt);
-				}
-
-				System.out.println(new Date(System.currentTimeMillis()).toString() +
-										 " " + "...done!");
-
-				aContext.getDispatcher().notify(new OperationEvent("",0,ReportBuilder.ev_stopProgressBar));
-/*			}
-		},
-		"Идёт загрузка. Пожалуйста, подождите.");*/
 	}
 
 	/**

@@ -5,7 +5,6 @@ import javax.swing.table.TableModel;
 
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Report.*;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.measurement.*;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
@@ -87,13 +86,6 @@ abstract public class ESAPEReportModel extends APOReportModel
 	}
 
 	public ESAPEReportModel()
-	{
-	}
-
-	public void loadRequiredObjects(
-			DataSourceInterface dsi,
-			ObjectsReport rp,
-			ReportTemplate rt)
 	{
 	}
 

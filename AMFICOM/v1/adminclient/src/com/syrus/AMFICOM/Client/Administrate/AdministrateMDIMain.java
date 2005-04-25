@@ -1,5 +1,5 @@
 /*
- * $Id: AdministrateMDIMain.java,v 1.3 2004/09/27 16:20:13 bass Exp $
+ * $Id: AdministrateMDIMain.java,v 1.4 2005/04/25 09:41:04 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import javax.swing.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2004/09/27 16:20:13 $
+ * @version $Revision: 1.4 $, $Date: 2005/04/25 09:41:04 $
  * @module admin_v1
  */
 public class AdministrateMDIMain extends JFrame implements OperationListener {
@@ -351,9 +351,6 @@ public class AdministrateMDIMain extends JFrame implements OperationListener {
 			 new ObjectDataSourceImage(dataSource).GetAdminObjects();
 
 			 Pool.put("Application_Context","Application_Context", aContext);
-
-			 Categories categ = new Categories(dataSource);
-			 Executables e = new Executables(dataSource);
 
 			 User user = (User)Pool.get(User.typ,
 												 aContext.getSessionInterface().getUserId());
