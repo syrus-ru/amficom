@@ -64,7 +64,7 @@ public class ScaledGraphPanel extends SimpleGraphPanel
 
 			public void mouseMoved(MouseEvent e)
 			{
-				this_mouseMoved();
+				this_mouseMoved(e);
 			}
 		});
 		this.addMouseListener(new java.awt.event.MouseAdapter()
@@ -75,11 +75,11 @@ public class ScaledGraphPanel extends SimpleGraphPanel
 			}
 			public void mouseReleased(MouseEvent e)
 			{
-				this_mouseReleased();
+				this_mouseReleased(e);
 			}
 			public void mouseClicked(MouseEvent e)
 			{
-			    this_mouseClicked();
+			    this_mouseClicked(e);
 			}
 		});
 	}
@@ -90,12 +90,12 @@ public class ScaledGraphPanel extends SimpleGraphPanel
 		currpos = e.getPoint();
 	}
 	
-	protected void this_mouseMoved()
+	protected void this_mouseMoved(MouseEvent e)
 	{
 		// do nothing
 	}
 	
-	protected void this_mouseClicked()
+	protected void this_mouseClicked(MouseEvent e)
 	{
 		// do nothing
 	}
@@ -111,7 +111,7 @@ public class ScaledGraphPanel extends SimpleGraphPanel
 		}
 	}
 
-	protected void this_mouseReleased()
+	protected void this_mouseReleased(MouseEvent e) // the formally unused argument may be needed to overriding methods
 	{
 		if (select_by_mouse)
 		{
