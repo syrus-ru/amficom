@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 
 import com.syrus.AMFICOM.Client.Map.MapConnectionException;
 import com.syrus.AMFICOM.Client.Map.MapDataException;
+import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 
 public class MapImagePanel extends JPanel
 {
@@ -107,26 +108,28 @@ public class MapImagePanel extends JPanel
 			this.imageIsMoving = true;
 		}
 		
-		g.setColor(Color.GRAY);
+		if (this.mapImage != null && g != null)
+			g.drawImage(this.mapImage, 0, 0, this);
 
-		if(shiftX > 0)
-			g.fillRect(0, 0, shiftX, this.getHeight());
-		else
-			if(shiftX < 0)
-				g.fillRect(this.getWidth() + shiftX, 0, -shiftX, this
-						.getHeight());
-
-		if(shiftY > 0)
-			g.fillRect(0, 0, this.getWidth(), shiftY);
-		else
-			if(shiftY < 0)
-				g.fillRect(
-						0,
-						this.getHeight() + shiftY,
-						this.getWidth(),
-						-shiftY);
-
-		if(this.mapImage != null && g != null)
-			g.drawImage(this.mapImage, shiftX, shiftY, this);
+//		g.setColor(Color.GRAY);
+//
+//		if(boundedShiftX > 0)
+//			g.fillRect(0, 0, boundedShiftX, this.getHeight());
+//		else
+//			if(boundedShiftX < 0)
+//				g.fillRect(this.getWidth() + boundedShiftX, 0, -boundedShiftX, this.getHeight());
+//
+//		if(boundedShiftY > 0)
+//			g.fillRect(0, 0, this.getWidth(), boundedShiftY);
+//		else
+//			if(boundedShiftY < 0)
+//				g.fillRect(
+//						0,
+//						this.getHeight() + boundedShiftY,
+//						this.getWidth(),
+//						-boundedShiftY);
+//
+//		if(this.mapImage != null && g != null)
+//			g.drawImage(this.mapImage, boundedShiftX, boundedShiftY, this);
 	}
 }

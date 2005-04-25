@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalImageCache.java,v 1.9 2005/04/18 15:07:07 peskovsky Exp $
+ * $Id: TopologicalImageCache.java,v 1.9.2.1 2005/04/25 08:38:26 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,7 +7,6 @@
  */
 package com.syrus.AMFICOM.Client.Map.Mapinfo;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Point;
@@ -34,32 +33,30 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.SpatialLayer;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.Client.Map.MapDataException;
+import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 
 /**
  * @author $Author: peskovsky $
- * @version $Revision: 1.9 $, $Date: 2005/04/18 15:07:07 $
+ * @version $Revision: 1.9.2.1 $, $Date: 2005/04/25 08:38:26 $
  * @module mapinfo_v1
  */
 public class TopologicalImageCache
 {
 	/**
-	 * Величина "поля" вокруг видимого экрана, изображение внутри
-	 * которого подгружается в кэш в фоновом режиме 
-	 */
-	private static final double MARGIN_SIZE = 0.33;
-
-	/**
+	 * Для кэша по масштабу:
 	 * Число изображений с большим и меньшим в MapInfologicalNetLayer.ZOOM_FACTOR
 	 * масштабом, которое будет подгружено в кэш масштаба. Приоритет выполнения 
 	 * кэширования этих изображений самый низкий. Для SCALE_CACHE_SIZE = 1 будет
 	 * подгружено одно изображение с большим и одно с меньшим масштабом.
+	 * Для кэша по изменению центра (дискретному):
+	 * Число изображений, смещённых на шаг дискретизации
 	 */
-	private static final int SCALE_CACHE_SIZE = 2;
+	private static final int CACHE_SIZE = 2;
 	
 	/**
 	 * "Рекомендуемое" количество сегментов в кэше
 	 */
-	private static final int CACHE_ELEMENTS_COUNT = 200;
+	private static final int CACHE_ELEMENTS_COUNT = 70;
 	
 	/**
 	 * Предельное число "лишних" сегментов в кэше. Если число сегментов
@@ -67,7 +64,7 @@ public class TopologicalImageCache
 	 * состоится очистка кэша от MAX_EXCEEDING_COUNT элементов, которые были
 	 * использованы наиболе давно.
 	 */
-	private static final int MAX_EXCEEDING_COUNT = 50;	
+	private static final int MAX_EXCEEDING_COUNT = 30;	
 
 	/**
 	 * Работа кэша в режиме изменения центра карты
@@ -112,9 +109,6 @@ public class TopologicalImageCache
 	private DoublePoint center = null;
 	private double scale = 1.f;
 	private Dimension imageSize = null;	
-	
-	private Rectangle2D.Double expressAreaSphBorders = new Rectangle2D.Double();
-	private Rectangle2D.Double cacheAreaSphBorders = new Rectangle2D.Double();	
 	
 	public TopologicalImageCache(MapInfoLogicalNetLayer miLayer)
 	{
@@ -171,8 +165,6 @@ public class TopologicalImageCache
 			}
 			
 			this.center = newCenter;
-			setECRegionBorders();
-			
 			this.createMovingRequests();			
 		}
 	}
@@ -216,7 +208,6 @@ public class TopologicalImageCache
 		this.loadingThread.clearQueue();
 
 		this.mode = TopologicalImageCache.MODE_CENTER_CHANGING;
-		setECRegionBorders();		
 		this.createMovingRequests();		
 	}
 	
@@ -235,28 +226,17 @@ public class TopologicalImageCache
 
 				System.out.println(this.miLayer.sdFormat.format(new Date(System.currentTimeMillis())) +
 						" TIC - getImage - painting request: " + request);
-				
-				//Изображение с надписями отрисовываем последним
-				if ((this.imagesToPaint.size() == 1) && (request.targetToDraw == TopologicalRequest.DRAW_LABELS_ONLY))
-				{
-					this.visibleImage.getGraphics().drawImage(
-							request.image.getImage(),
-							request.start.x,
-							request.start.y,
-							Color.WHITE,
-							this.miLayer.getMapViewer().getVisualComponent());
-				}
-				else
-				{
-					this.visibleImage.getGraphics().drawImage(
-							request.image.getImage(),
-							request.start.x - 1,
-							request.start.y - 1,
-							this.miLayer.getMapViewer().getVisualComponent());
-				}
 
+				this.visibleImage.getGraphics().drawImage(
+						request.image.getImage(),
+						request.start.x - 1,
+						request.start.y - 1,
+						this.miLayer.getMapViewer().getVisualComponent());
+
+				request.lastUsed = System.currentTimeMillis();
+				
 				System.out.println(this.miLayer.sdFormat.format(new Date(System.currentTimeMillis())) +
-				" TIC - getImage - request image painted");
+					" TIC - getImage - request image painted");
 				
 				it.remove();
 			}
@@ -277,251 +257,6 @@ public class TopologicalImageCache
 	}
 
 	/**
-	 * Выставляет значения границ для областей быстрой и кэш-подгрузки
-	 */
-	private void setECRegionBorders()
-	{
-		//!!!!Учитываем, что в MapInfo могут быть разные координатные системы;
-		//Но ширина и высота у нас всегда больше 0. Соответственно меняем начало координат для областей
-		
-		DoublePoint expressTopLeft = this.miLayer.convertScreenToMap(new Point(0,0));
-		DoublePoint expressBottomRight = this.miLayer.convertScreenToMap(
-				new Point(this.imageSize.width,this.imageSize.height));
-		
-		if (expressTopLeft.getX() < expressBottomRight.getX())
-			this.expressAreaSphBorders.x = expressTopLeft.getX();
-		else		
-			this.expressAreaSphBorders.x = expressBottomRight.getX();
-		
-			this.expressAreaSphBorders.width = Math.abs(expressBottomRight.getX() - expressTopLeft.getX());			
-
-		if (expressTopLeft.getY() < expressBottomRight.getY())
-			this.expressAreaSphBorders.y = expressTopLeft.getY();
-		else		
-			this.expressAreaSphBorders.y = expressBottomRight.getY();
-		
-		this.expressAreaSphBorders.height = Math.abs(expressBottomRight.getY() - expressTopLeft.getY());			
-
-		
-		DoublePoint cacheTopLeft = this.miLayer.convertScreenToMap(
-				new Point(
-						(int)Math.round(-this.imageSize.width * TopologicalImageCache.MARGIN_SIZE),
-						(int)Math.round(-this.imageSize.height * TopologicalImageCache.MARGIN_SIZE)));
-		
-		DoublePoint cacheBottomRight = this.miLayer.convertScreenToMap(
-				new Point(
-						(int)Math.round(this.imageSize.width * (1 + TopologicalImageCache.MARGIN_SIZE)),
-						(int)Math.round(this.imageSize.height * (1 + TopologicalImageCache.MARGIN_SIZE))));
-		
-		if (cacheTopLeft.getX() < cacheBottomRight.getX())
-			this.cacheAreaSphBorders.x = cacheTopLeft.getX();
-		else		
-			this.cacheAreaSphBorders.x = cacheBottomRight.getX();
-		
-			this.cacheAreaSphBorders.width = Math.abs(cacheBottomRight.getX() - cacheTopLeft.getX());			
-
-		if (cacheTopLeft.getY() < cacheBottomRight.getY())
-			this.cacheAreaSphBorders.y = cacheTopLeft.getY();
-		else		
-			this.cacheAreaSphBorders.y = cacheBottomRight.getY();
-		
-		this.cacheAreaSphBorders.height = Math.abs(cacheBottomRight.getY() - cacheTopLeft.getY());			
-	}
-	
-	/**
-	 * Ищет все точки внутри области кэш-подгрузки
-	 * @param xs Отсортированный список X-координат 
-	 * @param ys Отсортированный список Y-координат
-	 */
-	private void searchPointsInsideCacheArea(List xs, List ys)
-	{
-		//Добавляем те угловые точки областей запросов, которые входят в кэш-область
-		for (Iterator requestIt = this.cacheOfImages.iterator(); requestIt.hasNext();)
-		{
-			TopologicalRequest curRequest = (TopologicalRequest)requestIt.next();
-
-			if (this.rectangleContainsPoint(
-						this.cacheAreaSphBorders,
-						curRequest.topoBounds.x,
-						curRequest.topoBounds.y))
-			{
-				xs.add(new Double(curRequest.topoBounds.x));
-				ys.add(new Double(curRequest.topoBounds.y));					
-			}
-
-			if (this.rectangleContainsPoint(
-						this.cacheAreaSphBorders,
-						curRequest.topoBounds.x + curRequest.topoBounds.width,
-						curRequest.topoBounds.y))
-			{
-				xs.add(new Double(curRequest.topoBounds.x + curRequest.topoBounds.width));
-				ys.add(new Double(curRequest.topoBounds.y));					
-			}
-
-			if (this.rectangleContainsPoint(
-						this.cacheAreaSphBorders,
-						curRequest.topoBounds.x,
-						curRequest.topoBounds.y + curRequest.topoBounds.height))
-			{
-				xs.add(new Double(curRequest.topoBounds.x));
-				ys.add(new Double(curRequest.topoBounds.y + curRequest.topoBounds.height));					
-			}
-
-			if (this.rectangleContainsPoint(
-						this.cacheAreaSphBorders,
-						curRequest.topoBounds.x + curRequest.topoBounds.width,
-						curRequest.topoBounds.y + curRequest.topoBounds.height))
-			{
-				xs.add(new Double(curRequest.topoBounds.x + curRequest.topoBounds.width));
-				ys.add(new Double(curRequest.topoBounds.y + curRequest.topoBounds.height));					
-			}
-		}
-		
-		//Добавляем угловые точки области express-перерисовки
-		xs.add(new Double(this.expressAreaSphBorders.x));
-		xs.add(new Double(this.expressAreaSphBorders.x + this.expressAreaSphBorders.width));
-		ys.add(new Double(this.expressAreaSphBorders.y));					
-		ys.add(new Double(this.expressAreaSphBorders.y + this.expressAreaSphBorders.height));					
-		
-		//Добавляем угловые точки области cache-перерисовки		
-		xs.add(new Double(this.cacheAreaSphBorders.x));
-		xs.add(new Double(this.cacheAreaSphBorders.x + this.cacheAreaSphBorders.width));
-		ys.add(new Double(this.cacheAreaSphBorders.y));					
-		ys.add(new Double(this.cacheAreaSphBorders.y + this.cacheAreaSphBorders.height));					
-		
-		//Сортируем по возрастанию
-		Collections.sort(xs);
-		Collections.sort(ys);
-		
-		getUnrepeatedElements(xs);
-		getUnrepeatedElements(ys);		
-	}
-
-	/**
-	 * Удаляет из списка повторяющиеся значения
-	 * @param sourceList Отсортированный список
-	 */
-	private void getUnrepeatedElements (List sourceList)
-	{
-		// TODO Переписать на итераторы		
-		for (int i = 0; i < sourceList.size(); i++)
-		{
-			Double iElem = (Double)sourceList.get(i);
-			while (true)
-			{
-				if (i + 1 == sourceList.size())
-					break;
-				
-				Double jElem = (Double)sourceList.get(i + 1);
-				if (jElem.equals(iElem))
-					sourceList.remove(jElem);
-				else
-					break;
-			}
-		}
-	}
-	/**
-	 * Ищет все точки внутри области кэш-подгрузки
-	 * @param segmentBorders Границы сегмента
-	 * @return Запрос (либо вновь созданный, либо уже существовавший в кэше)
-	 */
-	private TopologicalRequest createRequestForSegment(Rectangle2D.Double segmentBorders)
-	{
-		TopologicalRequest result = null;
-		for (Iterator requestIt = this.cacheOfImages.iterator(); requestIt.hasNext();)
-		{
-			TopologicalRequest curRequest = (TopologicalRequest)requestIt.next();
-
-			if (	curRequest.topoBounds.contains(segmentBorders)
-					&&(curRequest.priority == TopologicalRequest.PRIORITY_ALREADY_LOADED))
-			{
-				//Наш запрос уже содержится в одном из реализованных
-				result = curRequest;
-				
-//				//Если он задавался с приоритетом BACKGROUND, а теперь относится к экспресс 
-//				//области - меняем приоритет
-//				if (	(curRequest.priority == TopologicalRequest.PRIORITY_BACKGROUND)
-//						&&this.expressAreaSphBorders.contains(segmentBorders))
-//				{
-//					//Изменим приоритет запроса
-//					this.loadingThread.removeRequest(curRequest);
-//					this.cacheOfImages.remove(curRequest);
-//					curRequest.priority = TopologicalRequest.PRIORITY_EXPRESS;
-//				}
-					
-				break;
-			}
-		}
-
-		if (result == null)
-		{
-			//В обратном случае формируем новый запрос
-			//Экранный размер сегмента, точка его начала и масштаб (зависит от ширины!!!)
-			//будет выставлен после оптимизации (сливания)
-			result = new TopologicalRequest();
-			result.topoBounds = segmentBorders;
-			
-			if (this.expressAreaSphBorders.contains(segmentBorders))
-				result.priority = TopologicalRequest.PRIORITY_EXPRESS;
-			else
-				result.priority = TopologicalRequest.PRIORITY_BACKGROUND;
-			
-//			result.targetToDraw = TopologicalRequest.DRAW_OBJECTS_ONLY;
-			result.targetToDraw = TopologicalRequest.DRAW_ALL;
-			
-			result.isUsedForCurrentImage = false;			
-		}
-
-		result.isUsedForCurrentImage = false;
-		result.lastUsed = System.currentTimeMillis();
-		
-		return result;
-	}
-	
-	private Point getScreenUpperLeftForMapRectangle(Rectangle2D.Double rect)
-	{
-		Point result = new Point();
-		
-		//Экранные координаты для топологического левого верхнего угла
-		Point topLeft = this.miLayer.convertMapToScreen(
-				new DoublePoint(
-						rect.x,
-						rect.y));
-
-		//Экранные координаты для топологического правого нижнего угла		
-		Point bottomRight = this.miLayer.convertMapToScreen(
-				new DoublePoint(
-						rect.x + rect.width,
-						rect.y + rect.height));
-		
-		result.x = (topLeft.x < bottomRight.x)? topLeft.x : bottomRight.x;
-		result.y = (topLeft.y < bottomRight.y)? topLeft.y : bottomRight.y;		
-		
-		return result;
-	}
-	
-	/**
-	 * Проверяет: содержится ли точка СТРОГО внутри прямоугольника.
-	 * (Стандартный метод Rectangle проверяет НЕСТРОГО)
-	 * @param rect прямоугольник
-	 * @param pointX X точки
-	 * @param pointY Y точки 
-	 * @return true, если содержит
-	 */
-	private boolean rectangleContainsPoint(
-			Rectangle2D.Double rect,
-			double pointX,
-			double pointY)
-	{
-		boolean returnValue = false;
-		if (	(rect.getX() < pointX) && (pointX < rect.getX() + rect.getWidth())
-				&&(rect.getY() < pointY) && (pointY < rect.getY() + rect.getHeight()))
-			returnValue = true;
-		
-		return returnValue;
-	}
-	
-	/**
 	 * Создаёт и кладёт запросы к серверу для кэширования при перемещении центра
 	 */
 	private void createMovingRequests()
@@ -529,171 +264,51 @@ public class TopologicalImageCache
 		System.out.println(this.miLayer.sdFormat.format(new Date(System.currentTimeMillis())) +
 			" TIC - createRequests - just entered");
 		
-		//Удаляем из имеющегося списка запросы - ненарисованные и не входящие в текущую
-		//кэш область
-		List unusedReports = this.loadingThread.removeOutOfCacheRequests(this.cacheAreaSphBorders);
-		this.imagesToPaint.removeAll(unusedReports);
-		this.cacheOfImages.removeAll(unusedReports);		
-		
-		//Ищем линии разбиения области на участки
-		List xs = new ArrayList();
-		List ys = new ArrayList();		
-		searchPointsInsideCacheArea(xs,ys);
-		
-		int rMatrixWidth = xs.size() - 1;
-		int rMatrixHeight = ys.size() - 1;
-		
-		//Создаём матрицу запросов
-		TopologicalRequest[][] requestsMatrix =
-			new TopologicalRequest[rMatrixHeight][rMatrixWidth];
-		
-		//Заполняем матрицу запросов
-		for (int i = 0; i < rMatrixHeight; i++)
-			for (int j = 0; j < rMatrixWidth; j++)
+		//Создаём недостающие изображения
+		for (int i = (-1) * TopologicalImageCache.CACHE_SIZE; i <= TopologicalImageCache.CACHE_SIZE; i++)
+			for (int j = (-1) * TopologicalImageCache.CACHE_SIZE; j <= TopologicalImageCache.CACHE_SIZE; j++)			
 			{
-				//Составляем запрос
-				final Rectangle2D.Double segmentBorders = new Rectangle2D.Double();
-				segmentBorders.x = ((Double)xs.get(j)).doubleValue();
-				segmentBorders.y = ((Double)ys.get(i)).doubleValue();
-				segmentBorders.width =
-					((Double)xs.get(j + 1)).doubleValue() - ((Double)xs.get(j)).doubleValue();
-				segmentBorders.height =
-					((Double)ys.get(i + 1)).doubleValue() - ((Double)ys.get(i)).doubleValue();
-			
-				requestsMatrix[i][j] = this.createRequestForSegment(segmentBorders);
-			}
-		
-		//Оптимизируем матрицу запросов, стараясь слить наибольшее число
-		//"микрозапросов" одного приоритета в один
-		for (int areaY = 0; areaY < rMatrixHeight; areaY++)//строка
-			for (int areaX = 0; areaX < rMatrixWidth; areaX++)//столбец
-			{
-				//Ищем наибольшую область для текущего начала координат
-
-				TopologicalRequest requestToSend = requestsMatrix[areaY][areaX];
-
-				if (requestToSend.isUsedForCurrentImage)
-				{
-					//Если же первый же сегмент в текущем прямоугольнике использован - двигаем дальше начало координат
-					continue;
-				}
+				DoublePoint imageCenter =	this.miLayer.convertScreenToMap(
+						new Point(
+								this.imageSize.width / 2 + i * (int)Math.round(this.imageSize.width * MapFrame.MOVE_CENTER_STEP_SIZE),
+								this.imageSize.height / 2 + j * (int)Math.round(this.imageSize.height * MapFrame.MOVE_CENTER_STEP_SIZE)));
 				
-				//Число "микрозапросов" одного приоритета по вертикали и горизонтали
-				Dimension maxAreaSize = new Dimension(1,1);
-				for (int areaHeight = 1; areaHeight < rMatrixHeight - areaY + 1; areaHeight++)//увеличиваем число строк
+				
+				TopologicalRequest requestForCenter = null;
+				
+				//Ищем, есть ли уже сегмент с таким центром
+				for (Iterator it = this.cacheOfImages.iterator(); it.hasNext();)
 				{
-					for (int areaWidth = 1; areaWidth < rMatrixWidth - areaX + 1; areaWidth++)//увеличиваем число столбцов
+					TopologicalRequest curRequest = (TopologicalRequest)it.next();
+					if (this.miLayer.convertMapToScreen(curRequest.topoCenter,imageCenter) < 10)					
 					{
-						//Если сегмент уже нарисован, то при оптимизации проверяется, чтобы у соседних ячеек были
-						//ссылки на один и тот же реализованный запрос					
-						//Иначе проверяем равенство приоритетов и неиспользованность
-						boolean maybeUsed = true;
-						for (int k = 0; k < areaHeight; k++)
-							for (int l = 0; l < areaWidth; l++)
-							{
-								if (requestsMatrix[areaY + k][areaX + l].isUsedForCurrentImage)
-								{
-									//Этот сегмент уже использован
-									maybeUsed = false;
-									break;
-								}
-								
-								if (requestsMatrix[areaY + k][areaX + l].priority == TopologicalRequest.PRIORITY_ALREADY_LOADED)
-								{
-									//Запрос уже реализован
-									//Проверяем чтобы у соседних ячеек источником был один запрос 
-									if (requestsMatrix[areaY + k][areaX + l] != requestsMatrix[areaY][areaX])
-									{
-										//Далее идёт другой реализованный запрос
-										maybeUsed = false;										
-										break;
-									}
-								}	
-								else if (requestsMatrix[areaY + k][areaX + l].priority !=	requestsMatrix[areaY][areaX].priority)
-								{
-									//Нереализованные запросы разных приоритетов
-									maybeUsed = false;
-									break;
-								}
-							}
-						//Если приоритет тот же и сегменты не были использованы в другом запросе
-						if (maybeUsed)
-						{
-							if (areaWidth * areaHeight > maxAreaSize.width * maxAreaSize.height)
-							{
-								maxAreaSize.width = areaWidth;
-								maxAreaSize.height = areaHeight;							
-							}
-						}
-						else
-							break;
+						requestForCenter = curRequest;
+						break;
 					}
 				}
 				
-				//Все сегменты из этой области уже не будут использованы в других запросах
-				for (int i = 0; i < maxAreaSize.height; i++)//строка
-					for (int j = 0; j < maxAreaSize.width; j++)//столбец
-						requestsMatrix[i + areaY][j + areaX].isUsedForCurrentImage = true;
-
-
-				if (requestsMatrix[areaY][areaX].priority != TopologicalRequest.PRIORITY_ALREADY_LOADED)
+				if (requestForCenter == null)
 				{
-					//Если это новая область, то считаем для неё ширину и высоту, масштаб
-					//Если она рисовалась - то они уже посчитаны
-					double newWidth = 0;
-					for (int i = 0; i < maxAreaSize.width; i++)//строка				
-						newWidth += requestsMatrix[areaY][i + areaX].topoBounds.width;
-	
-					requestToSend.topoBounds.width = newWidth;
+					//Если нет
+					int priority = TopologicalRequest.PRIORITY_BACKGROUND;
+					if ((i == 0) && (j == 0))
+						priority = TopologicalRequest.PRIORITY_EXPRESS;
 					
-					double newHeight = 0;
-					for (int i = 0; i < maxAreaSize.height; i++)//строка				
-						newHeight += requestsMatrix[i + areaY][areaX].topoBounds.height;
+					requestForCenter = this.createRequestForExpressArea(
+							this.miLayer.getScale(),
+							imageCenter,
+							priority);
+		
+					this.cacheOfImages.add(requestForCenter);
 					
-					requestToSend.topoBounds.height = newHeight;
-					
-					//Выставляем экранный размер
-					requestToSend.size = new Dimension(
-						(int)Math.round(Math.abs(this.miLayer.convertMapToScreen(new DoublePoint(0,0),new DoublePoint(newWidth,0)))) + 2,
-						(int)Math.round(Math.abs(this.miLayer.convertMapToScreen(new DoublePoint(0,0),new DoublePoint(0,newHeight)))) + 2);
-					
-					if ((requestToSend.size.width <= 0) || (requestToSend.size.height <= 0))
-					{
-						//Слишком маленький по одному из габаритов сегмент
-						//Случается когда уже существует большое количество подгруженных сегментов
-						//и матрица в сферических координатах имеет "узкие" колонки
-						continue;
-					}
-					
-					//Выставляем массштаб (зависящий от ширины!!!)
-					requestToSend.topoScale = 
-						this.miLayer.getScale() * requestToSend.size.width / (this.imageSize.width + 2);
-					
-					//Выставляем координаты центра сегмента
-					requestToSend.topoCenter = new DoublePoint(
-							requestToSend.topoBounds.x + requestToSend.topoBounds.width / 2.d,
-							requestToSend.topoBounds.y + requestToSend.topoBounds.height / 2.d);
-				}
-				
-				//Выставляем координаты левого верхнего угла на экране
-				requestToSend.start = this.getScreenUpperLeftForMapRectangle(requestToSend.topoBounds);					
-				
-				//Если новый запрос - кладём в список отрисованных областей
-				if (requestToSend.priority != TopologicalRequest.PRIORITY_ALREADY_LOADED)
-				{
-					this.cacheOfImages.add(requestToSend);
-					this.loadingThread.addRequest(requestToSend);
+					//Кладём в очередь на загрузку
+					this.loadingThread.addRequest(requestForCenter);
 				}
 
-				//Если запрос из EXPRESS области - ставим на отрисовку перерисовываем
-				if (requestToSend.priority != TopologicalRequest.PRIORITY_BACKGROUND)
-				{
-					this.imagesToPaint.add(requestToSend);
-				}
+				if (this.miLayer.convertMapToScreen(requestForCenter.topoCenter,this.miLayer.getCenter()) < 10)
+					//Кладём сегмент в очередь на отрисовку
+					this.imagesToPaint.add(requestForCenter);
 			}
-
-		//рисуем надписи
-//		createLabelsRedrawRequest();
 		
 		//Если в кэше слишком много сегментов удаляем самые старые				
 		if (this.cacheOfImages.size() > TopologicalImageCache.CACHE_ELEMENTS_COUNT + 
@@ -705,21 +320,6 @@ public class TopologicalImageCache
 	}
 	
 	
-	private void createLabelsRedrawRequest()
-	{
-		TopologicalRequest request = new TopologicalRequest();
-		request.priority = TopologicalRequest.PRIORITY_EXPRESS;
-		request.targetToDraw = TopologicalRequest.DRAW_LABELS_ONLY;
-		
-		request.topoScale = this.miLayer.getScale();
-		request.topoCenter = this.miLayer.getCenter();
-		
-		request.size = new Dimension(this.imageSize);
-		request.start = new Point(0,0);
-		
-		this.loadingThread.addRequest(request);
-		this.imagesToPaint.add(request);
-	}
 	/**
 	 * Чистит список подгруженных изображений
 	 *
@@ -783,12 +383,12 @@ public class TopologicalImageCache
 		if (TopologicalImageCache.compare(this.scale,this.miLayer.getScale() * MapInfoLogicalNetLayer.ZOOM_FACTOR))		
 		{
 			//Новый масштаб в ZOOM_FACTOR раз меньше предыдущего
-			scaleToCheck = this.miLayer.getScale() / Math.pow(MapInfoLogicalNetLayer.ZOOM_FACTOR,TopologicalImageCache.SCALE_CACHE_SIZE);
+			scaleToCheck = this.miLayer.getScale() / Math.pow(MapInfoLogicalNetLayer.ZOOM_FACTOR,TopologicalImageCache.CACHE_SIZE);
 		}
 		else if (TopologicalImageCache.compare(this.scale * MapInfoLogicalNetLayer.ZOOM_FACTOR,this.miLayer.getScale()))
 		{
 			//Новый масштаб в ZOOM_FACTOR раз больше предыдущего
-			scaleToCheck = this.miLayer.getScale() * Math.pow(MapInfoLogicalNetLayer.ZOOM_FACTOR,TopologicalImageCache.SCALE_CACHE_SIZE);			
+			scaleToCheck = this.miLayer.getScale() * Math.pow(MapInfoLogicalNetLayer.ZOOM_FACTOR,TopologicalImageCache.CACHE_SIZE);			
 		}
 		
 		//Ищем изображение с таким масштабом
@@ -802,11 +402,16 @@ public class TopologicalImageCache
 
 		//Нет такого - создаём изображение
 		TopologicalRequest newImageRequest =
-			this.createRequestForScaledExpressArea(scaleToCheck,TopologicalRequest.PRIORITY_BACKGROUND);
+			this.createRequestForExpressArea(scaleToCheck,this.miLayer.getCenter(), TopologicalRequest.PRIORITY_BACKGROUND);
 		
 		this.cacheOfImages.add(newImageRequest);
 		//Кладём сегмент на загрузку
 		this.loadingThread.addRequest(newImageRequest);
+		
+		//Если в кэше слишком много сегментов удаляем самые старые				
+		if (this.cacheOfImages.size() > TopologicalImageCache.CACHE_ELEMENTS_COUNT + 
+				TopologicalImageCache.MAX_EXCEEDING_COUNT)
+			this.clearOldSegments();
 	}
 
 	
@@ -824,8 +429,9 @@ public class TopologicalImageCache
 	private void renewScaleImages()
 	{
 		//Рисуем текущее изображение
-		TopologicalRequest currImageRequest =	this.createRequestForScaledExpressArea(
+		TopologicalRequest currImageRequest =	this.createRequestForExpressArea(
 				this.miLayer.getScale(),
+				this.miLayer.getCenter(),
 				TopologicalRequest.PRIORITY_EXPRESS);
 
 		//кладём в кэш
@@ -836,11 +442,12 @@ public class TopologicalImageCache
 		this.loadingThread.addRequest(currImageRequest);
 		
 		//Делаем изображения большего и меньшего изображения
-		for (int i = 0; i < TopologicalImageCache.SCALE_CACHE_SIZE; i++)
+		for (int i = 0; i < TopologicalImageCache.CACHE_SIZE; i++)
 		{
 			//Маленькое
-			TopologicalRequest smallScaledImage =	this.createRequestForScaledExpressArea(
+			TopologicalRequest smallScaledImage =	this.createRequestForExpressArea(
 					this.miLayer.getScale() / Math.pow(MapInfoLogicalNetLayer.ZOOM_FACTOR,i + 1),
+					this.miLayer.getCenter(),
 					TopologicalRequest.PRIORITY_BACKGROUND);
 
 			this.cacheOfImages.add(smallScaledImage);
@@ -849,8 +456,9 @@ public class TopologicalImageCache
 			this.loadingThread.addRequest(smallScaledImage);
 			
 			//Большое
-			TopologicalRequest bigScaledImage =	this.createRequestForScaledExpressArea(
+			TopologicalRequest bigScaledImage =	this.createRequestForExpressArea(
 					this.miLayer.getScale() * Math.pow(MapInfoLogicalNetLayer.ZOOM_FACTOR,i + 1),
+					this.miLayer.getCenter(),
 					TopologicalRequest.PRIORITY_BACKGROUND);
 
 			this.cacheOfImages.add(bigScaledImage);
@@ -860,19 +468,21 @@ public class TopologicalImageCache
 		}
 	}
 	
-	private TopologicalRequest createRequestForScaledExpressArea (
+	private TopologicalRequest createRequestForExpressArea (
 			double asScale,
+			DoublePoint asCenter, 
 			int asPriority)
 	{
 		TopologicalRequest result = new TopologicalRequest();
+		result.lastUsed = System.currentTimeMillis();
+		
 		result.priority = asPriority;
-		result.targetToDraw = TopologicalRequest.DRAW_ALL;
 		result.isUsedForCurrentImage = false;
 
-		result.topoCenter = this.miLayer.getCenter();
 		result.topoScale = asScale;
-		result.size = new Dimension(this.imageSize.width + 2,this.imageSize.height + 2);
+		result.topoCenter = asCenter;
 		
+		result.size = new Dimension(this.imageSize.width + 2,this.imageSize.height + 2);
 		result.start = new Point(0,0);
 		
 		return result;
@@ -1015,29 +625,6 @@ class LoadingThread extends Thread
 		this.addRequest(request);
 	}
 
-	/**
-	 * Удаляем ненарисованные запросы, вышедшие за границу cache области.
-	 * @param cacheArea Область кэш отрисовки
-	 * @return Список ненарисованных запросов, которые не входят в кэш
-	 */
-	public List removeOutOfCacheRequests(Rectangle2D.Double cacheArea)
-	{
-		List unusedRequests = new ArrayList();
-		for (ListIterator it = this.requestQueue.listIterator(); it.hasNext();)
-		{
-			TopologicalRequest request = (TopologicalRequest)it.next();
-			if (!request.topoBounds.intersects(cacheArea))
-			{
-				//Если кэш область и сегмент не пересекаются -
-				//удаляем запрос из очереди
-				unusedRequests.add(request);
-				it.remove();
-			}
-		}
-		
-		return unusedRequests;
-	}
-	
 	public void clearQueue()
 	{
 		this.requestQueue.clear();
@@ -1143,13 +730,11 @@ class LoadingThread extends Thread
 			//Видимость слоя зависит от того, хочет ли его видеть клиент, виден ли он при текущем масштабе на сервере
 			//и надо ли отображать объекты для текущего запроса
 			boolean toShowLayerObjects =	spL.isVisible()
-				&& spL.isVisibleAtScale(this.miLayer.getScale())
-				&& (request.targetToDraw != TopologicalRequest.DRAW_LABELS_ONLY);
+				&& spL.isVisibleAtScale(this.miLayer.getScale());
 
 			//то же самое для надписей
 			boolean toShowLayerLabels =	spL.isLabelVisible()
-				&& spL.isVisibleAtScale(this.miLayer.getScale())
-				&& (request.targetToDraw != TopologicalRequest.DRAW_OBJECTS_ONLY);
+				&& spL.isVisibleAtScale(this.miLayer.getScale());
 			
 			result += "&" + ServletCommandNames.PAR_LAYER_VISIBLE + index + "="	+ (toShowLayerObjects ? 1 : 0);
 			result += "&" + ServletCommandNames.PAR_LAYER_LABELS_VISIBLE + index + "=" + (toShowLayerLabels ? 1 : 0);
@@ -1163,7 +748,7 @@ class LoadingThread extends Thread
 /**
  * Структура запроса изображения с сервера
  * @author $Author: peskovsky $
- * @version $Revision: 1.9 $, $Date: 2005/04/18 15:07:07 $
+ * @version $Revision: 1.9.2.1 $, $Date: 2005/04/25 08:38:26 $
  * @module mapinfo_v1
  */
 class TopologicalRequest implements Comparable
@@ -1173,24 +758,6 @@ class TopologicalRequest implements Comparable
 	 * для текущего изображения - их будут отрисовывать
 	 */
 	public boolean isUsedForCurrentImage = false;
-	
-	/**
-	 * Рисовать и надписи и объекты
-	 */
-	public static final int DRAW_ALL = 2;	
-	/**
-	 * Рисовать только объекты
-	 */
-	public static final int DRAW_OBJECTS_ONLY = 1;
-	/**
-	 * Рисовать только надписи
-	 */
-	public static final int DRAW_LABELS_ONLY = 0;
-	
-	/**
-	 * Рисовать ли надписи запросу
-	 */
-	protected int targetToDraw = 0;
 	
 	/**
 	 * Для участков изображения, добавляемых в кэш "на всякий случай",

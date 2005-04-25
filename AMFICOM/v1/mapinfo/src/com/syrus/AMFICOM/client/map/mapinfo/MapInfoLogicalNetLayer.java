@@ -1,6 +1,7 @@
 package com.syrus.AMFICOM.Client.Map.Mapinfo;
 
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
@@ -23,6 +24,7 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.NetMapViewer;
 import com.syrus.AMFICOM.Client.Map.SpatialObject;
+import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.map.DoublePoint;
 
 public class MapInfoLogicalNetLayer extends LogicalNetLayer
@@ -391,9 +393,61 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 
 	public void handDragged(MouseEvent me)
 	{
+		Point hdEndPoint = me.getPoint();
 		int shiftX = (int )(me.getX() - this.startPoint.getX());
 		int shiftY = (int )(me.getY() - this.startPoint.getY());
+		Dimension visSize = this.getMapViewer().getVisualComponent().getSize();
 
+		int boundedShiftX = 0;
+		int boundedShiftY = 0;
+		//Определяем угол смещения - если он ближе к Pi*n/2, n = 2k + 1 - тогда смещаем по диагонали 
+		double angle = Math.toDegrees(Math.acos(shiftX / Math.sqrt(Math.pow(shiftX,2) + Math.pow(shiftY,2))));
+		
+		if (angle > 90)
+			angle = 180 - angle;
+		
+		if ((22.5 < angle) && (angle < 67.5))
+		{
+			if (	(Math.abs(shiftX) >= visSize.getWidth() * MapFrame.MOVE_CENTER_STEP_SIZE)
+					&&(Math.abs(shiftY) >= visSize.getHeight() * MapFrame.MOVE_CENTER_STEP_SIZE))
+			{
+				boundedShiftX = (int)(shiftX / Math.abs(shiftX) * visSize.getWidth() * MapFrame.MOVE_CENTER_STEP_SIZE);
+				boundedShiftY = (int)(shiftY / Math.abs(shiftY) * visSize.getHeight() * MapFrame.MOVE_CENTER_STEP_SIZE);
+			}
+		}
+		else if (angle <= 22.5)
+		{
+			if (Math.abs(shiftX) >= visSize.getWidth() * MapFrame.MOVE_CENTER_STEP_SIZE)			
+				boundedShiftX = (int)(shiftX / Math.abs(shiftX) * visSize.getWidth() * MapFrame.MOVE_CENTER_STEP_SIZE);
+			boundedShiftY = 0;			
+		}
+		else if (67.5 <= angle)
+		{
+			boundedShiftX = 0;
+			if (Math.abs(shiftY) >= visSize.getHeight() * MapFrame.MOVE_CENTER_STEP_SIZE)
+				boundedShiftY = (int)(shiftY / Math.abs(shiftY) * visSize.getHeight() * MapFrame.MOVE_CENTER_STEP_SIZE);			
+		}
+		
+		if ((boundedShiftX != 0) || (boundedShiftY != 0))
+		{
+			hdEndPoint.setLocation(
+					this.getStartPoint().x + boundedShiftX,
+					this.getStartPoint().y + boundedShiftY);
+			
+			DoublePoint center = this.getCenter();
+			DoublePoint p1 = this.convertScreenToMap(this.getStartPoint());
+			DoublePoint p2 = this.convertScreenToMap(hdEndPoint);
+			
+			double dx = p1.getX() - p2.getX();
+			double dy = p1.getY() - p2.getY();
+			center.setLocation(center.getX() + dx, center.getY() + dy);
+			this.setCenter(center);
+			this.getMapView().setCenter(this.getCenter());
+			this.repaint(true);
+			
+			this.setStartPoint(hdEndPoint);
+		}
+		
 		this.nmViewer.mapImagePanel.repaint(
 				this.nmViewer.mapImagePanel.getGraphics(),
 				shiftX,
