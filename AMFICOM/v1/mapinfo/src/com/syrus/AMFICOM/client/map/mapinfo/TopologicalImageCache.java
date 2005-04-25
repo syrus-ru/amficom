@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalImageCache.java,v 1.9.2.1 2005/04/25 08:38:26 peskovsky Exp $
+ * $Id: TopologicalImageCache.java,v 1.9.2.2 2005/04/25 16:59:15 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 
 /**
  * @author $Author: peskovsky $
- * @version $Revision: 1.9.2.1 $, $Date: 2005/04/25 08:38:26 $
+ * @version $Revision: 1.9.2.2 $, $Date: 2005/04/25 16:59:15 $
  * @module mapinfo_v1
  */
 public class TopologicalImageCache
@@ -164,8 +164,8 @@ public class TopologicalImageCache
 				this.loadingThread.clearQueue();
 			}
 			
-			this.center = newCenter;
-			this.createMovingRequests();			
+			this.createMovingRequests();
+			this.center = newCenter;			
 		}
 	}
 
@@ -264,14 +264,45 @@ public class TopologicalImageCache
 		System.out.println(this.miLayer.sdFormat.format(new Date(System.currentTimeMillis())) +
 			" TIC - createRequests - just entered");
 		
+		//Дискретное смещение в экранных координатах относительно предыдущего центра
+		Dimension discreteShifts = this.getDiscreteShifts();
+		
+		//Создаём недостающие изображения, постепенно увеличивая окрестность
+		for (int i = 0; i <= TopologicalImageCache.CACHE_SIZE; i++)
+			this.createMovingRequests(i,discreteShifts);
+			
+		//Удаляем неподгруженные очёты вышедшие из кэш области
+		this.clearFarAndUnloadedSegments();
+		
+		//Если в кэше слишком много сегментов удаляем самые старые				
+		if (this.cacheOfImages.size() > TopologicalImageCache.CACHE_ELEMENTS_COUNT + 
+				TopologicalImageCache.MAX_EXCEEDING_COUNT)
+			this.clearOldSegments();
+		
+		System.out.println(this.miLayer.sdFormat.format(new Date(System.currentTimeMillis())) +
+			" TIC - createRequests - exiting. Reports created and queued.");
+	}
+	
+	/**
+	 * проверяет наличие и при необходимости создаёт сегменты на заданной окрестности
+	 * @param neighbourhood Окрестность
+	 * @param discreteShifts Отсюда направление вычисляется
+	 */
+	private void createMovingRequests(int neighbourhood, Dimension discreteShifts)
+	{
 		//Создаём недостающие изображения
-		for (int i = (-1) * TopologicalImageCache.CACHE_SIZE; i <= TopologicalImageCache.CACHE_SIZE; i++)
-			for (int j = (-1) * TopologicalImageCache.CACHE_SIZE; j <= TopologicalImageCache.CACHE_SIZE; j++)			
+		for (int i = (-1) * neighbourhood; i <= neighbourhood; i++)
+			for (int j = (-1) * neighbourhood; j <= neighbourhood; j++)			
 			{
+				if (	(Math.abs(i) != neighbourhood)
+						&& (Math.abs(j) != neighbourhood))
+					//Мы работаем только с границей окрестности
+					continue;
+				
 				DoublePoint imageCenter =	this.miLayer.convertScreenToMap(
 						new Point(
-								this.imageSize.width / 2 + i * (int)Math.round(this.imageSize.width * MapFrame.MOVE_CENTER_STEP_SIZE),
-								this.imageSize.height / 2 + j * (int)Math.round(this.imageSize.height * MapFrame.MOVE_CENTER_STEP_SIZE)));
+								this.imageSize.width / 2 + j * (int)Math.round(this.imageSize.width * MapFrame.MOVE_CENTER_STEP_SIZE),
+								this.imageSize.height / 2 + i * (int)Math.round(this.imageSize.height * MapFrame.MOVE_CENTER_STEP_SIZE)));
 				
 				
 				TopologicalRequest requestForCenter = null;
@@ -287,38 +318,121 @@ public class TopologicalImageCache
 					}
 				}
 				
-				if (requestForCenter == null)
+				//Приоритет, который должен быть у данного запроса в текущий запрос
+				int requestCurPriority = TopologicalRequest.PRIORITY_BACKGROUND_LOW;
+				if ((i == 0) && (j == 0))
+					requestCurPriority = TopologicalRequest.PRIORITY_EXPRESS;
+				else
+				{
+					if (	((discreteShifts.width * j > 0) || (discreteShifts.width == j))
+							&&((discreteShifts.height * i > 0) || (discreteShifts.height == i)))
+						//Если текущий радиус-вектор сонаправлен с направлением движения
+						requestCurPriority = TopologicalRequest.PRIORITY_BACKGROUND_HIGH;								
+				}				
+				
+				if (requestForCenter != null)
+				{
+					if (requestForCenter.priority > requestCurPriority)
+						this.loadingThread.changeRequestPriority(requestForCenter,requestCurPriority);
+				}
+				else
 				{
 					//Если нет
-					int priority = TopologicalRequest.PRIORITY_BACKGROUND;
-					if ((i == 0) && (j == 0))
-						priority = TopologicalRequest.PRIORITY_EXPRESS;
-					
 					requestForCenter = this.createRequestForExpressArea(
 							this.miLayer.getScale(),
 							imageCenter,
-							priority);
+							requestCurPriority);
 		
 					this.cacheOfImages.add(requestForCenter);
 					
 					//Кладём в очередь на загрузку
 					this.loadingThread.addRequest(requestForCenter);
 				}
-
+				
 				if (this.miLayer.convertMapToScreen(requestForCenter.topoCenter,this.miLayer.getCenter()) < 10)
 					//Кладём сегмент в очередь на отрисовку
 					this.imagesToPaint.add(requestForCenter);
 			}
-		
-		//Если в кэше слишком много сегментов удаляем самые старые				
-		if (this.cacheOfImages.size() > TopologicalImageCache.CACHE_ELEMENTS_COUNT + 
-				TopologicalImageCache.MAX_EXCEEDING_COUNT)
-			this.clearOldSegments();
-		
-		System.out.println(this.miLayer.sdFormat.format(new Date(System.currentTimeMillis())) +
-			" TIC - createRequests - exiting. Reports created and queued.");
 	}
 	
+	/**
+	 * Удаляет сегменты, которые
+	 * а)были помещены в кэш загрузку, но
+	 * не успели подгрузиться,
+	 * б)центр которых отступает от текущего центра более, чем на
+	 * TopologicalImageCache.SCALE_SIZE * MapFrame.MOVE_CENTER_STEP_SIZE *
+	 * _VisualComponent_.getSize();
+	 *
+	 */
+	private void clearFarAndUnloadedSegments()
+	{
+		Point upperLeftScreen = new Point(
+				(int)Math.round(this.imageSize.width / 2 - MapFrame.MOVE_CENTER_STEP_SIZE *
+						this.imageSize.width * 2.d - 10.d),
+				(int)Math.round(this.imageSize.height / 2 - MapFrame.MOVE_CENTER_STEP_SIZE *
+						this.imageSize.height * 2.D - 10.d));
+		
+		Point downRightScreen = new Point(
+				(int)Math.round(this.imageSize.width / 2 + MapFrame.MOVE_CENTER_STEP_SIZE *
+						this.imageSize.width * 2.D + 10.d),
+				(int)Math.round(this.imageSize.height / 2 + MapFrame.MOVE_CENTER_STEP_SIZE *
+						this.imageSize.height * 2.D + 10.d));
+		
+		DoublePoint upperLeftSph = this.miLayer.convertScreenToMap(upperLeftScreen);
+		DoublePoint downRightSph = this.miLayer.convertScreenToMap(downRightScreen);		
+		
+		double x = (upperLeftSph.getX() < downRightSph.getX()) ? upperLeftSph.getX() : downRightSph.getX();
+		double y = (upperLeftSph.getY() < downRightSph.getY()) ? upperLeftSph.getY() : downRightSph.getY();		
+		
+		Rectangle2D.Double currCacheBorders = new Rectangle2D.Double(
+				x,
+				y,
+				Math.abs(downRightSph.getX() - upperLeftSph.getX()),
+				Math.abs(downRightSph.getY() - upperLeftSph.getY()));
+		
+		//Ищем, есть ли уже сегмент с таким центром
+		for (Iterator it = this.cacheOfImages.iterator(); it.hasNext();)
+		{
+			TopologicalRequest curRequest = (TopologicalRequest)it.next();
+			if (	(!rectangleContainsPoint(currCacheBorders, curRequest.topoCenter))
+					&&(curRequest.priority != TopologicalRequest.PRIORITY_ALREADY_LOADED))					
+			{
+				//Удаляем сегмент - не имеет смысла его подгружает
+				System.out.println(this.miLayer.sdFormat.format(new Date(System.currentTimeMillis())) +
+					" TIC - clearFarAndUnloadedSegments - removing request." + curRequest);
+				this.loadingThread.removeRequest(curRequest);
+				this.imagesToPaint.remove(curRequest);
+				it.remove();
+			}
+		}
+	}
+	
+	private boolean rectangleContainsPoint(Rectangle2D.Double rect, DoublePoint point)
+	{
+		if (	(rect.getX() < point.getX())
+				&&(point.getX() < rect.getX() + rect.getWidth())
+				&&(rect.getY() < point.getY())
+				&&(point.getY() < rect.getY() + rect.getHeight()))
+			return true;
+		
+		return false;
+	}
+	
+	/**
+	 * Возвращает дискретные смещения относительно предыдущего центра
+	 * @return
+	 */
+	private Dimension getDiscreteShifts()
+	{
+		Point prevScreenCenter = this.miLayer.convertMapToScreen(this.center);
+		Point currScreenCenter = this.miLayer.convertMapToScreen(this.miLayer.getCenter());
+		
+		Dimension result = this.miLayer.getDiscreteShifts(
+				currScreenCenter.x - prevScreenCenter.x,
+				currScreenCenter.y - prevScreenCenter.y);
+		
+		return result;
+	}
 	
 	/**
 	 * Чистит список подгруженных изображений
@@ -402,7 +516,7 @@ public class TopologicalImageCache
 
 		//Нет такого - создаём изображение
 		TopologicalRequest newImageRequest =
-			this.createRequestForExpressArea(scaleToCheck,this.miLayer.getCenter(), TopologicalRequest.PRIORITY_BACKGROUND);
+			this.createRequestForExpressArea(scaleToCheck,this.miLayer.getCenter(), TopologicalRequest.PRIORITY_BACKGROUND_HIGH);
 		
 		this.cacheOfImages.add(newImageRequest);
 		//Кладём сегмент на загрузку
@@ -448,7 +562,7 @@ public class TopologicalImageCache
 			TopologicalRequest smallScaledImage =	this.createRequestForExpressArea(
 					this.miLayer.getScale() / Math.pow(MapInfoLogicalNetLayer.ZOOM_FACTOR,i + 1),
 					this.miLayer.getCenter(),
-					TopologicalRequest.PRIORITY_BACKGROUND);
+					TopologicalRequest.PRIORITY_BACKGROUND_HIGH);
 
 			this.cacheOfImages.add(smallScaledImage);
 			
@@ -459,7 +573,7 @@ public class TopologicalImageCache
 			TopologicalRequest bigScaledImage =	this.createRequestForExpressArea(
 					this.miLayer.getScale() * Math.pow(MapInfoLogicalNetLayer.ZOOM_FACTOR,i + 1),
 					this.miLayer.getCenter(),
-					TopologicalRequest.PRIORITY_BACKGROUND);
+					TopologicalRequest.PRIORITY_BACKGROUND_HIGH);
 
 			this.cacheOfImages.add(bigScaledImage);
 			
@@ -748,7 +862,7 @@ class LoadingThread extends Thread
 /**
  * Структура запроса изображения с сервера
  * @author $Author: peskovsky $
- * @version $Revision: 1.9.2.1 $, $Date: 2005/04/25 08:38:26 $
+ * @version $Revision: 1.9.2.2 $, $Date: 2005/04/25 16:59:15 $
  * @module mapinfo_v1
  */
 class TopologicalRequest implements Comparable
@@ -763,17 +877,23 @@ class TopologicalRequest implements Comparable
 	 * Для участков изображения, добавляемых в кэш "на всякий случай",
 	 * до запроса пользователя и перерисовываемых в фоновом режиме
 	 */
-	public static final int PRIORITY_BACKGROUND = 2;
-	/**
-	 * Для участков изображения, уже подгруженных, которые требуется
-	 * только перерисовать
-	 */
-	public static final int PRIORITY_ALREADY_LOADED = 1;
+	private static final int PRIORITY_BACKGROUND = 20;
+	
+	public static final int PRIORITY_BACKGROUND_HIGH = TopologicalRequest.PRIORITY_BACKGROUND + 1;
+	
+	public static final int PRIORITY_BACKGROUND_LOW = TopologicalRequest.PRIORITY_BACKGROUND + 2;
+
 	/**
 	 * Для участков изображения, которые требуется отобразить по
 	 * текущему запросу пользователя (самый высокий приоритет)
 	 */
-	public static final int PRIORITY_EXPRESS = 0;	
+	public static final int PRIORITY_EXPRESS = 10;	
+	
+	/**
+	 * Для участков изображения, уже подгруженных, которые требуется
+	 * только перерисовать
+	 */
+	public static final int PRIORITY_ALREADY_LOADED = 0;
 	/**
 	 * Приоритет запроса
 	 */

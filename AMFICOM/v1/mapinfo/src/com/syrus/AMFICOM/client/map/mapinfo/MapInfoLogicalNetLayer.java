@@ -95,7 +95,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 					point.getY());
 			com.mapinfo.util.DoublePoint screendp =
 				getLocalMapJ().transformNumericToScreen(mapdp);
-			return new Point((int )screendp.x, (int )screendp.y);
+			return new Point((int)Math.round(screendp.x), (int)Math.round(screendp.y));
 		}
 		catch(Exception exc)
 		{
@@ -396,43 +396,13 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 		Point hdEndPoint = me.getPoint();
 		int shiftX = (int )(me.getX() - this.startPoint.getX());
 		int shiftY = (int )(me.getY() - this.startPoint.getY());
-		Dimension visSize = this.getMapViewer().getVisualComponent().getSize();
-
-		int boundedShiftX = 0;
-		int boundedShiftY = 0;
-		//Определяем угол смещения - если он ближе к Pi*n/2, n = 2k + 1 - тогда смещаем по диагонали 
-		double angle = Math.toDegrees(Math.acos(shiftX / Math.sqrt(Math.pow(shiftX,2) + Math.pow(shiftY,2))));
+		Dimension discreteShift = this.getDiscreteShifts(shiftX,shiftY);
 		
-		if (angle > 90)
-			angle = 180 - angle;
-		
-		if ((22.5 < angle) && (angle < 67.5))
-		{
-			if (	(Math.abs(shiftX) >= visSize.getWidth() * MapFrame.MOVE_CENTER_STEP_SIZE)
-					&&(Math.abs(shiftY) >= visSize.getHeight() * MapFrame.MOVE_CENTER_STEP_SIZE))
-			{
-				boundedShiftX = (int)(shiftX / Math.abs(shiftX) * visSize.getWidth() * MapFrame.MOVE_CENTER_STEP_SIZE);
-				boundedShiftY = (int)(shiftY / Math.abs(shiftY) * visSize.getHeight() * MapFrame.MOVE_CENTER_STEP_SIZE);
-			}
-		}
-		else if (angle <= 22.5)
-		{
-			if (Math.abs(shiftX) >= visSize.getWidth() * MapFrame.MOVE_CENTER_STEP_SIZE)			
-				boundedShiftX = (int)(shiftX / Math.abs(shiftX) * visSize.getWidth() * MapFrame.MOVE_CENTER_STEP_SIZE);
-			boundedShiftY = 0;			
-		}
-		else if (67.5 <= angle)
-		{
-			boundedShiftX = 0;
-			if (Math.abs(shiftY) >= visSize.getHeight() * MapFrame.MOVE_CENTER_STEP_SIZE)
-				boundedShiftY = (int)(shiftY / Math.abs(shiftY) * visSize.getHeight() * MapFrame.MOVE_CENTER_STEP_SIZE);			
-		}
-		
-		if ((boundedShiftX != 0) || (boundedShiftY != 0))
+		if ((discreteShift.width != 0) || (discreteShift.height != 0))
 		{
 			hdEndPoint.setLocation(
-					this.getStartPoint().x + boundedShiftX,
-					this.getStartPoint().y + boundedShiftY);
+					this.getStartPoint().x + discreteShift.width,
+					this.getStartPoint().y + discreteShift.height);
 			
 			DoublePoint center = this.getCenter();
 			DoublePoint p1 = this.convertScreenToMap(this.getStartPoint());
@@ -448,12 +418,48 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 			this.setStartPoint(hdEndPoint);
 		}
 		
-		this.nmViewer.mapImagePanel.repaint(
-				this.nmViewer.mapImagePanel.getGraphics(),
-				shiftX,
-				shiftY);
+//		this.nmViewer.mapImagePanel.repaint(
+//				this.nmViewer.mapImagePanel.getGraphics(),
+//				shiftX,
+//				shiftY);
 	}
 
+	public Dimension getDiscreteShifts(int shiftX, int shiftY)
+	{
+		Dimension visSize = this.getMapViewer().getVisualComponent().getSize();
+
+		int discreteShiftX = 0;
+		int discreteShiftY = 0;
+		//Определяем угол смещения - если он ближе к Pi*n/2, n = 2k + 1 - тогда смещаем по диагонали 
+		double angle = Math.toDegrees(Math.acos(shiftX / Math.sqrt(Math.pow(shiftX,2) + Math.pow(shiftY,2))));
+		
+		if (angle > 90)
+			angle = 180 - angle;
+		
+		if ((22.5 < angle) && (angle < 67.5))
+		{
+			if (	(Math.abs(shiftX) >= visSize.getWidth() * MapFrame.MOVE_CENTER_STEP_SIZE)
+					&&(Math.abs(shiftY) >= visSize.getHeight() * MapFrame.MOVE_CENTER_STEP_SIZE))
+			{
+				discreteShiftX = (int)Math.round(shiftX / Math.abs(shiftX) * visSize.getWidth() * MapFrame.MOVE_CENTER_STEP_SIZE);
+				discreteShiftY = (int)Math.round(shiftY / Math.abs(shiftY) * visSize.getHeight() * MapFrame.MOVE_CENTER_STEP_SIZE);
+			}
+		}
+		else if (angle <= 22.5)
+		{
+			if (Math.abs(shiftX) >= visSize.getWidth() * MapFrame.MOVE_CENTER_STEP_SIZE)			
+				discreteShiftX = (int)Math.round(shiftX / Math.abs(shiftX) * visSize.getWidth() * MapFrame.MOVE_CENTER_STEP_SIZE);
+			discreteShiftY = 0;			
+		}
+		else if (67.5 <= angle)
+		{
+			discreteShiftX = 0;
+			if (Math.abs(shiftY) >= visSize.getHeight() * MapFrame.MOVE_CENTER_STEP_SIZE)
+				discreteShiftY = (int)Math.round(shiftY / Math.abs(shiftY) * visSize.getHeight() * MapFrame.MOVE_CENTER_STEP_SIZE);			
+		}
+		return new Dimension(discreteShiftX,discreteShiftY);
+	}
+	
 	public List findSpatialObjects(String searchText)
 	{
 		List resultList = new ArrayList();
