@@ -1,5 +1,5 @@
 /*
- * $Id: MCMMeasurementObjectLoader.java,v 1.35 2005/04/23 13:34:47 arseniy Exp $
+ * $Id: MCMMeasurementObjectLoader.java,v 1.36 2005/04/25 10:45:51 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -50,8 +50,8 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/04/23 13:34:47 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.36 $, $Date: 2005/04/25 10:45:51 $
+ * @author $Author: bob $
  * @module mcm_v1
  */
 final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
@@ -283,7 +283,7 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 
 			if (cronTemporalPattern != null) {
 				try {
-					MeasurementDatabaseContext.getTemporalPatternDatabase().insert(cronTemporalPattern);
+					MeasurementDatabaseContext.getCronTemporalPatternDatabase().insert(cronTemporalPattern);
 				}
 				catch (ApplicationException ae) {
 					Log.errorException(ae);
@@ -526,7 +526,7 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 	}
 
 	public java.util.Set loadTemporalPatterns(java.util.Set ids) throws RetrieveObjectException {
-		CronTemporalPatternDatabase database = MeasurementDatabaseContext.getTemporalPatternDatabase();
+		CronTemporalPatternDatabase database = MeasurementDatabaseContext.getCronTemporalPatternDatabase();
 		java.util.Set objects = super.retrieveFromDatabase(database, ids);
 		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
 		if (loadIdsT.length == 0)
