@@ -209,10 +209,12 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 	 * @param avoidLastPoint true to draw [sre.begin .. sre.end-1]; false to draw [sre.begin .. sre.end].
 	 *  This parameter takes no effect if sre == null.
 	 */
-	protected void drawModelCurve(Graphics g, ModelTrace mt, SimpleReflectogramEvent sre, boolean avoidLastPoint)
+	protected void drawModelCurve(Graphics g, ModelTrace mt,
+			SimpleReflectogramEvent sre, boolean avoidLastPoint)
 	{
 		int n1 = sre == null ? 0 : sre.getBegin();
-		int n2 = sre == null ? mt.getLength() - 1 : sre.getEnd() - (avoidLastPoint ? 1 : 0);
+		int n2 = sre == null ? mt.getLength() - 1
+			: sre.getEnd() - (avoidLastPoint ? 1 : 0);
 		if ((n1 <= end) && (n2 >= start))
 		{
 		    int iFrom = Math.max(0, n1 - start);
