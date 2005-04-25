@@ -1,5 +1,5 @@
 /*
- * $Id: TestEventType.java,v 1.5 2005/04/01 15:20:22 arseniy Exp $
+ * $Id: TestEventType.java,v 1.6 2005/04/25 08:49:53 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,6 +7,7 @@
  */
 package com.syrus.AMFICOM.event;
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -27,7 +28,7 @@ import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.CompoundConditionSort;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/04/01 15:20:22 $
+ * @version $Revision: 1.6 $, $Date: 2005/04/25 08:49:53 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -72,7 +73,8 @@ public class TestEventType extends CommonEventTest {
 		EventType eventType = EventType.createInstance(creatorId,
 				codename,
 				description,
-				parameterTypes);
+				parameterTypes,
+				new HashSet());
 
 		Identifier id = eventType.getId();
 		assertEquals(ObjectEntities.EVENTTYPE_ENTITY_CODE, id.getMajor());
