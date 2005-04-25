@@ -1,5 +1,5 @@
 /*-
- * $Id: PeriodicalTemporalPatternDatabase.java,v 1.1 2005/04/25 08:19:54 bob Exp $
+ * $Id: PeriodicalTemporalPatternDatabase.java,v 1.2 2005/04/25 14:23:21 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/25 08:19:54 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/25 14:23:21 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -44,12 +44,12 @@ public class PeriodicalTemporalPatternDatabase extends StorableObjectDatabase {
 	}
 
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		PeriodicalTemporalPattern analysis = this.fromStorableObject(storableObject);
-		this.retrieveEntity(analysis);
+		PeriodicalTemporalPattern periodicalTemporalPattern = this.fromStorableObject(storableObject);
+		this.retrieveEntity(periodicalTemporalPattern);
 	}	
 
 	protected String getEnityName() {		
-		return ObjectEntities.ANALYSIS_ENTITY;
+		return ObjectEntities.PERIODICAL_TEMPORALPATTERN_ENTITY;
 	}	
 
 	protected String getColumnsTmpl() {
@@ -97,17 +97,17 @@ public class PeriodicalTemporalPatternDatabase extends StorableObjectDatabase {
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		PeriodicalTemporalPattern analysis = this.fromStorableObject(storableObject);
+		PeriodicalTemporalPattern periodicalTemporalPattern = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  analysis.getId() + "'; argument: " + arg);
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  periodicalTemporalPattern.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}
 
 	public void insert(StorableObject storableObject) throws CreateObjectException , IllegalDataException {
-		PeriodicalTemporalPattern analysis = this.fromStorableObject(storableObject);
-		this.insertEntity(analysis);
+		PeriodicalTemporalPattern periodicalTemporalPattern = this.fromStorableObject(storableObject);
+		this.insertEntity(periodicalTemporalPattern);
 	}
 
 	public void insert(java.util.Set storableObjects) throws IllegalDataException, CreateObjectException {
