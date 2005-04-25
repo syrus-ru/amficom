@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.63 2005/04/20 16:18:50 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.64 2005/04/25 15:17:34 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -82,7 +82,7 @@ import com.syrus.AMFICOM.scheme.SchemePath;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.63 $, $Date: 2005/04/20 16:18:50 $
+ * @version $Revision: 1.64 $, $Date: 2005/04/25 15:17:34 $
  * @module mapviewclient_v2
  */
 public abstract class LogicalNetLayer implements MapCoordinatesConverter
@@ -645,8 +645,8 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		Font font = p.getFont();
 		Color background = p.getBackground();
 
-		long f;
-		long d;
+//		long f;
+//		long d;
 
 //		System.out.println("------------------ paint called ----------------------");
 //		try {
@@ -655,26 +655,26 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 //		catch (Exception e) {
 //			e.printStackTrace();
 //		}
-		System.out.println("--------------------------------------");
-		f = System.currentTimeMillis();
+//		System.out.println("--------------------------------------");
+//		f = System.currentTimeMillis();
 		drawLines(p);
-		d = System.currentTimeMillis();
+//		d = System.currentTimeMillis();
 //		detailedDateFormat.format(new Date(System.currentTimeMillis()))
-		System.out.println("draw lines in " + String.valueOf(d - f) + " ms");
-		f = System.currentTimeMillis();
+//		System.out.println("draw lines in " + String.valueOf(d - f) + " ms");
+//		f = System.currentTimeMillis();
 		drawNodes(p);
-		d = System.currentTimeMillis();
-		System.out.println("draw nodes in " + String.valueOf(d - f) + " ms");
-		f = System.currentTimeMillis();
+//		d = System.currentTimeMillis();
+//		System.out.println("draw nodes in " + String.valueOf(d - f) + " ms");
+//		f = System.currentTimeMillis();
 		drawSelection(p);
-		d = System.currentTimeMillis();
-		System.out.println("draw selection in " + String.valueOf(d - f) + " ms");
-		f = System.currentTimeMillis();
+//		d = System.currentTimeMillis();
+//		System.out.println("draw selection in " + String.valueOf(d - f) + " ms");
+//		f = System.currentTimeMillis();
 		drawTempLines(p);
-		d = System.currentTimeMillis();
-		System.out.println("draw temp lines in " + String.valueOf(d - f) + " ms");
-		System.out.println("--------------------------------------");
-		
+//		d = System.currentTimeMillis();
+//		System.out.println("draw temp lines in " + String.valueOf(d - f) + " ms");
+//		System.out.println("--------------------------------------");
+
 		// revert graphics to previous settings
 		p.setColor(color);
 		p.setStroke(stroke);
