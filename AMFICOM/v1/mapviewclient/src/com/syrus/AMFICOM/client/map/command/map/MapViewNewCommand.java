@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewNewCommand.java,v 1.17 2005/04/25 09:41:20 bass Exp $
+ * $Id: MapViewNewCommand.java,v 1.18 2005/04/25 13:02:00 peskovsky Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -11,6 +11,7 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Map;
 
+//import com.syrus.AMFICOM.CORBA.Admin.AccessIdentity_Transferable;
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.StatusMessageEvent;
@@ -30,8 +31,8 @@ import com.syrus.AMFICOM.mapview.MapViewStorableObjectPool;
 
 /**
  * создать новый вид 
- * @author $Author: bass $
- * @version $Revision: 1.17 $, $Date: 2005/04/25 09:41:20 $
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.18 $, $Date: 2005/04/25 13:02:00 $
  * @module mapviewclient_v1
  */
 public class MapViewNewCommand extends VoidCommand

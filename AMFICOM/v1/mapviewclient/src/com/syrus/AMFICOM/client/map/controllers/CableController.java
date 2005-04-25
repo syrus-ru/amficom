@@ -1,5 +1,5 @@
 /**
- * $Id: CableController.java,v 1.15 2005/04/22 15:10:07 krupenn Exp $
+ * $Id: CableController.java,v 1.16 2005/04/25 13:02:00 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -46,8 +46,8 @@ import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 /**
  * Контроллер кабеля.
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.15 $, $Date: 2005/04/22 15:10:07 $
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.16 $, $Date: 2005/04/25 13:02:00 $
  * @module mapviewclient_v1
  */
 public final class CableController extends AbstractLinkController
@@ -297,8 +297,6 @@ public final class CableController extends AbstractLinkController
 
 				cci = CableChannelingItem.createInstance(
 						creatorId, 
-						"",//default
-						"",//default
 						startSpare,
 						endSpare,
 						0,//default
@@ -312,7 +310,6 @@ public final class CableController extends AbstractLinkController
 			else {
 				cci = CableChannelingItem.createInstance(
 						creatorId, 
-						"",//default 
 						startNode,
 						endNode,
 						schemeCableLink);

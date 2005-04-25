@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.36 2005/04/18 12:11:24 krupenn Exp $
+ * $Id: MapFrame.java,v 1.37 2005/04/25 13:02:00 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -80,8 +80,8 @@ import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
  * 
  * 
  * 
- * @version $Revision: 1.36 $, $Date: 2005/04/18 12:11:24 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.37 $, $Date: 2005/04/25 13:02:00 $
+ * @author $Author: peskovsky $
  * @module mapviewclient_v1
  */
 public class MapFrame extends JInternalFrame 
@@ -116,6 +116,11 @@ public class MapFrame extends JInternalFrame
 	 * Панель отображающая координты курсора и масштаб
 	 */
 	protected MapStatusBar mapStatusbar;
+	
+	/**
+	 * Величина шага по смещению центра карты в долях от величины экрана
+	 */
+	public static final double MOVE_CENTER_STEP_SIZE = 0.33;	
 	
 	/**
 	 * Экземпляр класса. Поскольку вид карты отнимает слишком много 
