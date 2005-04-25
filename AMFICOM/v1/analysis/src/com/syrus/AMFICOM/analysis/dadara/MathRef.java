@@ -160,6 +160,39 @@ public class MathRef
 		return Math.round(d * 10.0) / 10.0;
 	}
 
+	/**
+	 * Округляет число с плавающей точкой до указанного числа значащих
+	 * цифр.
+	 * @param v округляемое число
+	 * @param digits требуемое число значащих цифр (1 и более)
+	 * @return округленное значение
+	 */
+	public static double floatRound(double v, int digits)
+	{
+		if (v == 0)
+			return 0;
+		if (v < 0)
+			return -floatRound(-v, digits);
+		int p = 0;
+		double ddd = Math.pow(10.0, digits - 1);
+		while (v >= ddd * 10)
+		{
+			v /= 10;
+			p--;
+		}
+		while (v < ddd)
+		{
+			v *= 10;
+			p++;
+		}
+		System.err.println("floatRound:"
+			+ " digits=" + digits
+			+ " round(v)=" + Math.round(v)
+			+ " pow(10,-p)=" + 1.0 / Math.pow(10.0, p)
+			+ " ret=" + Math.round(v) / Math.pow(10.0, p));
+		return Math.round(v) / Math.pow(10.0, p);
+	}
+
 	/*
 	public static double round (double d, int digits)
 	{
