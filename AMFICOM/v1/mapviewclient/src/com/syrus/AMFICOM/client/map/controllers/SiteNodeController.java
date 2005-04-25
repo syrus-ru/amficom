@@ -1,5 +1,5 @@
 /**
- * $Id: SiteNodeController.java,v 1.6 2005/04/22 15:10:39 krupenn Exp $
+ * $Id: SiteNodeController.java,v 1.7 2005/04/25 15:18:34 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -24,20 +24,30 @@ import com.syrus.AMFICOM.map.SiteNode;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.geom.Rectangle2D;
+
+import javax.swing.ImageIcon;
 
 /**
  *  онтроллер сетевого узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.6 $, $Date: 2005/04/22 15:10:39 $
+ * @version $Revision: 1.7 $, $Date: 2005/04/25 15:18:34 $
  * @module mapviewclient_v1
  */
 public class SiteNodeController extends AbstractNodeController
 		implements VisualManager
 {
-	private static final String PROPERTY_PANE_CLASS_NAME = 
-			"com.syrus.AMFICOM.Client.Map.Props.MapSitePane";
+	static final int IMG_SIZE = 16;
+
+	public static Image externalNodeImage = Toolkit.getDefaultToolkit()
+			.getImage("images/extlink.gif").getScaledInstance(
+					IMG_SIZE,
+					IMG_SIZE,
+					Image.SCALE_SMOOTH);
 
 	/**
 	 * Instance
@@ -77,15 +87,6 @@ public class SiteNodeController extends AbstractNodeController
 	}
 
 	/**
-	 * ѕолучить им€ класса панели, описывающей свойства кабельного пути.
-	 * @return им€ класса
-	 */
-	public static String getPropertyPaneClassName()
-	{
-		return PROPERTY_PANE_CLASS_NAME;
-	}
-
-	/**
 	 * {@inheritDoc}
 	 */
 	public void paint (MapElement mapElement, Graphics g, Rectangle2D.Double visibleBounds)
@@ -109,6 +110,14 @@ public class SiteNodeController extends AbstractNodeController
 	
 			int width = getBounds(site).width;
 			int height = getBounds(site).height;
+
+			Graphics2D pg = (Graphics2D )g; 
+			
+			pg.drawImage(
+					SiteNodeController.externalNodeImage,
+	                p.x + width / 2 - IMG_SIZE / 2,
+	                p.y - height / 2 - IMG_SIZE / 2,
+	                null);
 
 			g.setColor(Color.BLUE);
 			g.drawRect( 
