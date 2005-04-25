@@ -275,7 +275,7 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 	/**
 	 * Paints one threshold or all thresholds.
 	 * @param g graphics
-	 * @param nEvent event number >= 0 to paint or -1 to paintall thresholds. 
+	 * @param nEvent event number >= 0 to paint or -1 to paint all thresholds. 
 	 */
 	private void paintThresholdsEx(Graphics g, int nEvent)
 	{
@@ -297,7 +297,9 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 				if (sre == null)
 					continue;
 			}
-			drawModelCurve(g, thresholdMT, sre, false);
+			// If we draw thresholds for one event only, avoid drawing thresholds at the end point.
+			// This is because sometimes (n/id event type) threshold curve can break.
+			drawModelCurve(g, thresholdMT, sre, nEvent >= 0);
 		}
 	}
 
