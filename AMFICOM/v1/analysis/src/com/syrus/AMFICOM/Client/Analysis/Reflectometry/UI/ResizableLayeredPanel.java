@@ -107,7 +107,8 @@ public class ResizableLayeredPanel extends JPanel
 		updScale2fit();
 	}
 
-	public void setGraphPanel(SimpleGraphPanel panel, int start, int end)
+	// unused?
+	private void setGraphPanel(SimpleGraphPanel panel, int start, int end)
 	{
 		jLayeredPane.removeAll();
 		jLayeredPane.add(panel);
