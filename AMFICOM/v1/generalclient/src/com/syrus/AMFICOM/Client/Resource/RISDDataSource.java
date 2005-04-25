@@ -1,5 +1,5 @@
 /*-
- * $Id: RISDDataSource.java,v 1.7 2005/04/25 09:39:47 bass Exp $
+ * $Id: RISDDataSource.java,v 1.8 2005/04/25 09:55:02 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.io.Rewriter;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/04/25 09:39:47 $
+ * @version $Revision: 1.8 $, $Date: 2005/04/25 09:55:02 $
  * @module generalclient_v1
  */
 public class RISDDataSource implements DataSourceInterface {
@@ -39,9 +39,6 @@ public class RISDDataSource implements DataSourceInterface {
 	public RISDDataSource(SessionInterface si) {
 		if (si instanceof RISDSessionInfo)
 			this.si = (RISDSessionInfo) si;
-	}
-
-	protected RISDDataSource() {
 	}
 
 	public boolean ChangePassword(String oldpwd, String newpwd) {
@@ -114,11 +111,8 @@ public class RISDDataSource implements DataSourceInterface {
 		return si;
 	}
 
-	/**
-	 * @deprecated
-	 */
 	public String GetUId(final String type) {
-		throw new UnsupportedOperationException();
+		return String.valueOf(System.currentTimeMillis());
 	}
 
 	public void LoadExecs() {
