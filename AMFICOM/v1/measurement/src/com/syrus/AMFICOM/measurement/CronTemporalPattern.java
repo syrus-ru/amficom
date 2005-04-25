@@ -1,5 +1,5 @@
 /*
- * $Id: CronTemporalPattern.java,v 1.2 2005/04/22 16:12:48 arseniy Exp $
+ * $Id: CronTemporalPattern.java,v 1.3 2005/04/25 09:47:17 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,8 +36,8 @@ import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/22 16:12:48 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/04/25 09:47:17 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -789,7 +789,7 @@ public class CronTemporalPattern extends AbstractTemporalPattern {
 	public CronTemporalPattern(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		CronTemporalPatternDatabase database = MeasurementDatabaseContext.getTemporalPatternDatabase();
+		CronTemporalPatternDatabase database = MeasurementDatabaseContext.getCronTemporalPatternDatabase();
 		try {
 			database.retrieve(this);
 		}
