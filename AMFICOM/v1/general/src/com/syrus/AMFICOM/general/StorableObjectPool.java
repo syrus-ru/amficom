@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.72 2005/04/21 14:48:50 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.73 2005/04/25 09:45:02 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,8 +25,8 @@ import java.util.Set;
 import org.omg.CORBA.portable.IDLEntity;
 
 /**
- * @version $Revision: 1.72 $, $Date: 2005/04/21 14:48:50 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.73 $, $Date: 2005/04/25 09:45:02 $
+ * @author $Author: bob $
  * @module general_v1
  */
 public abstract class StorableObjectPool {
@@ -186,8 +186,6 @@ public abstract class StorableObjectPool {
 		// this.deleteStorableObjects(objects);
 	}
 
-	protected abstract void deleteStorableObject(final Identifier id);
-
 	protected abstract void deleteStorableObjects(final Set identifiables);
 
 	/**
@@ -210,9 +208,6 @@ public abstract class StorableObjectPool {
 		switch (size) {
 			case 0:
 				return;
-			case 1:
-				this.deleteStorableObject((Identifier) entityDeletedIds.iterator().next());
-				break;
 			default:
 				this.deleteStorableObjects(entityDeletedIds);
 		}
@@ -230,9 +225,6 @@ public abstract class StorableObjectPool {
 		switch (size) {
 			case 0:
 				return;
-			case 1:
-				this.deleteStorableObject((Identifier) this.deletedIds.iterator().next());
-				break;
 			default:
 				this.deleteStorableObjects(this.deletedIds);
 		}
@@ -250,7 +242,7 @@ public abstract class StorableObjectPool {
 	 */
 	protected final void flushImpl(final Identifier id, final boolean force) throws ApplicationException {
 		if (this.deletedIds.contains(id))
-			this.deleteStorableObject(id);
+			this.deleteStorableObjects(Collections.singleton(id));
 		else {
 			synchronized (this.savingObjectsMap) {
 				this.prepareSavingObjectsMap(id);
@@ -525,7 +517,10 @@ public abstract class StorableObjectPool {
 			if (objectPool != null) {
 				StorableObject storableObject = (StorableObject) objectPool.get(objectId);
 				if (storableObject == null && useLoader) {
-					storableObject = this.loadStorableObject(objectId);
+					Set set = this.loadStorableObjects(Collections.singleton(objectId));
+					if (!set.isEmpty()) {
+						storableObject = (StorableObject) set.iterator().next();
+					}
 					if (storableObject != null)
 						try {
 							this.putStorableObjectImpl(storableObject);
@@ -742,6 +737,11 @@ public abstract class StorableObjectPool {
 		return set == null ? Collections.EMPTY_SET : set;
 	}
 
+	/**
+	 * @deprecated use {@link #loadStorableObjects}
+	 * @param objectId
+	 * @throws ApplicationException
+	 */
 	protected abstract StorableObject loadStorableObject(final Identifier objectId) throws ApplicationException;
 
 	protected abstract Set loadStorableObjects(final Set ids) throws ApplicationException;
