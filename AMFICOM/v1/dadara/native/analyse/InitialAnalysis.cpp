@@ -131,8 +131,8 @@ void InitialAnalysis::performAnalysis()
       splashes.disposeAll(); // очищаем массив ArrList
     } // удаляем пустой массив splashes
 
+    correctAllConnectorsFronts(data);// и только потом переименовываем послдений коннектор в конец_волокна 
     deleteAllEventsAfterLastConnector();// если ни одного коннектора не будет найдено, то удалятся все события
-    correctAllConnectorsFronts(data);
     excludeShortLinesBetweenConnectors(data, wlet_width);
     correctAllSpliceCoords();// поскольку уточнение двигает соседние события, то к этому моменту динейные участки должы уже существовать ( поэтому вызов после addLinearPartsBetweenEvents() )
     addLinearPartsBetweenEvents();
