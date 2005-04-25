@@ -1,6 +1,7 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
 import java.awt.BorderLayout;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 import javax.swing.BorderFactory;
@@ -128,12 +129,12 @@ implements BsHashChangeListener, CurrentTraceChangeListener
 		if (bs == null)
 			return;
 
-//		double res = (double)bs.fxdParams.DS[0] * .3d / (double)bs.fxdParams.GI;
-//		double res2 = (bs.fxdParams.AR - bs.fxdParams.AO) * 3d / ((double)bs.dataPts.TNDP * (double)bs.fxdParams.GI/1000d);
 		double res = bs.getResolution();
 		double range = bs.getRange();
-		SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
-		String date = sdf.format(bs.getDate());
+		// XXX: date formatting: temporal fix
+		//SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
+		String date = DateFormat.getDateInstance().format(bs.getDate());
+		String time = DateFormat.getTimeInstance().format(bs.getDate());
 
 		tModel.updateColumn(new Object[] {
 			bs.getOpticalModuleId(),
@@ -143,8 +144,8 @@ implements BsHashChangeListener, CurrentTraceChangeListener
 			String.valueOf(bs.getAverages()),
 			Math.round(res) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_MT),
 			Math.round(range) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_KM),
-			date.substring(0, 9), // FIXME: gives incorrect result
-			date.substring(9),
+			date,
+			time,
 			bs.getBackscatter() + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
 		}, 1);
 		jTable.updateUI();
