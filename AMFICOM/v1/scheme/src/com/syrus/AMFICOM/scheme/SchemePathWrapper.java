@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathWrapper.java,v 1.1 2005/04/22 16:23:00 max Exp $
+ * $Id: SchemePathWrapper.java,v 1.2 2005/04/25 08:18:33 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,10 +9,8 @@ package com.syrus.AMFICOM.scheme;
 
 import java.util.List;
 
-import com.syrus.AMFICOM.general.Identifier;
-
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/22 16:23:00 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/25 08:18:33 $
  * @author $Author: max $
  * @module scheme_v1
  */

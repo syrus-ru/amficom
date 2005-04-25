@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItemDatabase.java,v 1.2 2005/04/22 16:21:44 max Exp $
+ * $Id: CableChannelingItemDatabase.java,v 1.3 2005/04/25 08:18:33 max Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,19 +8,28 @@
 
 package com.syrus.AMFICOM.scheme;
 
-import com.syrus.AMFICOM.general.*;
-import com.syrus.util.Log;
-import com.syrus.util.database.DatabaseDate;
-import com.syrus.util.database.DatabaseString;
-
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.Set;
+
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseIdentifier;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.util.Log;
+import com.syrus.util.database.DatabaseDate;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: max $
- * @version $Revision: 1.2 $, $Date: 2005/04/22 16:21:44 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/25 08:18:33 $
  * @module scheme_v1
  */
 public final class CableChannelingItemDatabase extends StorableObjectDatabase {
@@ -80,11 +89,11 @@ public final class CableChannelingItemDatabase extends StorableObjectDatabase {
 			int retrieveKind, Object arg)
 			throws IllegalDataException, ObjectNotFoundException,
 			RetrieveObjectException {
-		CableChannelingItem CableChannelingItem = this.fromStorableObject(storableObject);
+		CableChannelingItem cableChannelingItem = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
 				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName()
-						+ " '" + CableChannelingItem.getId() + "'; argument: " + arg);
+						+ " '" + cableChannelingItem.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}
