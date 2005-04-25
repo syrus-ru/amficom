@@ -185,11 +185,6 @@ public class MathRef
 			v *= 10;
 			p++;
 		}
-		System.err.println("floatRound:"
-			+ " digits=" + digits
-			+ " round(v)=" + Math.round(v)
-			+ " pow(10,-p)=" + 1.0 / Math.pow(10.0, p)
-			+ " ret=" + Math.round(v) / Math.pow(10.0, p));
 		return Math.round(v) / Math.pow(10.0, p);
 	}
 
