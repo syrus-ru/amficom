@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementObjectLoader.java,v 1.33 2005/04/23 13:58:27 arseniy Exp $
+ * $Id: ClientMeasurementObjectLoader.java,v 1.34 2005/04/25 10:30:11 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,19 +32,21 @@ import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
 import com.syrus.AMFICOM.measurement.corba.CronTemporalPattern_Transferable;
 import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
+import com.syrus.AMFICOM.measurement.corba.IntervalsTemporalPattern_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ModelingType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Modeling_Transferable;
+import com.syrus.AMFICOM.measurement.corba.PeriodicalTemporalPattern_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/04/23 13:58:27 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.34 $, $Date: 2005/04/25 10:30:11 $
+ * @author $Author: bob $
  * @module generalclient_v1
  */
 
@@ -54,17 +56,6 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 
 	public ClientMeasurementObjectLoader(CMServer server) {
 		this.server = server;
-	}
-
-	public void delete(Identifier id) {
-		Identifier_Transferable identifier_Transferable = (Identifier_Transferable) id.getTransferable();
-		try {
-			this.server.delete(identifier_Transferable, SessionContext.getAccessIdentityTransferable());
-		} catch (AMFICOMRemoteException e) {
-			Log.errorException(e);
-		} catch (SystemException e) {
-			Log.errorException(e);
-		}
 	}
 
 	public void delete(java.util.Set ids) {
@@ -879,6 +870,56 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
+	
+	public java.util.Set loadIntervalsTemporalPatterns(java.util.Set ids) throws ApplicationException {
+		try {
+			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
+			int i = 0;
+			for (Iterator it = ids.iterator(); it.hasNext(); i++) {
+				Identifier id = (Identifier) it.next();
+				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
+			}
+			IntervalsTemporalPattern_Transferable[] transferables = this.server.transmitIntervalsTemporalPatterns(identifierTransferables,
+					SessionContext.getAccessIdentityTransferable());
+			java.util.Set set = new HashSet(transferables.length);
+			for (int j = 0; j < transferables.length; j++) {
+				IntervalsTemporalPattern intervalsTemporalPattern = (IntervalsTemporalPattern) this.fromTransferable(new Identifier(transferables[j].header.id), transferables[j]);
+				if (intervalsTemporalPattern == null)
+					intervalsTemporalPattern = new IntervalsTemporalPattern(transferables[j]);
+				set.add(intervalsTemporalPattern);
+			}
+			return set;
+		} catch (AMFICOMRemoteException e) {
+			throw new ApplicationException(e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
+		}
+	}
+
+	public java.util.Set loadPeriodicalTemporalPatterns(java.util.Set ids) throws ApplicationException {
+		try {
+			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
+			int i = 0;
+			for (Iterator it = ids.iterator(); it.hasNext(); i++) {
+				Identifier id = (Identifier) it.next();
+				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
+			}
+			PeriodicalTemporalPattern_Transferable[] transferables = this.server.transmitPeriodicalTemporalPatterns(identifierTransferables,
+					SessionContext.getAccessIdentityTransferable());
+			java.util.Set set = new HashSet(transferables.length);
+			for (int j = 0; j < transferables.length; j++) {
+				PeriodicalTemporalPattern periodicalTemporalPattern = (PeriodicalTemporalPattern) this.fromTransferable(new Identifier(transferables[j].header.id), transferables[j]);
+				if (periodicalTemporalPattern == null)
+					periodicalTemporalPattern = new PeriodicalTemporalPattern(transferables[j]);
+				set.add(periodicalTemporalPattern);
+			}
+			return set;
+		} catch (AMFICOMRemoteException e) {
+			throw new ApplicationException(e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
+		}
+	}
 
 	public java.util.Set loadCronTemporalPatternsButIds(StorableObjectCondition storableObjectCondition, java.util.Set ids)
 			throws ApplicationException {
@@ -894,6 +935,52 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				set.add(new CronTemporalPattern(transferables[j]));
+			}
+			return set;
+		} catch (AMFICOMRemoteException e) {
+			throw new ApplicationException(e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
+		}
+	}
+	
+	public java.util.Set loadIntervalsTemporalPatternsButIds(StorableObjectCondition storableObjectCondition,
+														java.util.Set ids) throws ApplicationException {
+		try {
+			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
+			int i = 0;
+			for (Iterator it = ids.iterator(); it.hasNext(); i++) {
+				Identifier id = (Identifier) it.next();
+				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
+			}
+			IntervalsTemporalPattern_Transferable[] transferables = this.server.transmitIntervalsTemporalPatternsButIds(
+				identifierTransferables, SessionContext.getAccessIdentityTransferable());
+			java.util.Set set = new HashSet(transferables.length);
+			for (int j = 0; j < transferables.length; j++) {
+				set.add(new IntervalsTemporalPattern(transferables[j]));
+			}
+			return set;
+		} catch (AMFICOMRemoteException e) {
+			throw new ApplicationException(e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
+		}
+	}
+
+	public java.util.Set loadPeriodicalTemporalPatternsButIds(StorableObjectCondition storableObjectCondition,
+														java.util.Set ids) throws ApplicationException {
+		try {
+			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
+			int i = 0;
+			for (Iterator it = ids.iterator(); it.hasNext(); i++) {
+				Identifier id = (Identifier) it.next();
+				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
+			}
+			PeriodicalTemporalPattern_Transferable[] transferables = this.server.transmitPeriodicalTemporalPatternsButIds(
+				identifierTransferables, SessionContext.getAccessIdentityTransferable());
+			java.util.Set set = new HashSet(transferables.length);
+			for (int j = 0; j < transferables.length; j++) {
+				set.add(new PeriodicalTemporalPattern(transferables[j]));
 			}
 			return set;
 		} catch (AMFICOMRemoteException e) {
@@ -1439,6 +1526,54 @@ public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoa
 			this.updateStorableObjectHeader(cronTemporalPatterns, this.server.receiveCronTemporalPatterns(transferables, force, SessionContext.getAccessIdentityTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientTemporalPaternObjectLoader.saveCronTemporalPaterns | receiveCronTemporalPaterns";
+
+			if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
+				throw new VersionCollisionException(msg, 0l, 0l);
+
+			throw new ApplicationException(msg, e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
+		}
+	}
+	
+	public void saveIntervalsTemporalPatterns(	java.util.Set cronTemporalPatterns,
+												boolean force) throws VersionCollisionException, ApplicationException {
+		IntervalsTemporalPattern_Transferable[] transferables = new IntervalsTemporalPattern_Transferable[cronTemporalPatterns
+				.size()];
+		int i = 0;
+		for (Iterator it = cronTemporalPatterns.iterator(); it.hasNext(); i++) {
+			transferables[i] = (IntervalsTemporalPattern_Transferable) ((IntervalsTemporalPattern) it.next())
+					.getTransferable();
+		}
+		try {
+			this.updateStorableObjectHeader(cronTemporalPatterns, this.server.receiveIntervalsTemporalPatterns(
+				transferables, force, SessionContext.getAccessIdentityTransferable()));
+		} catch (AMFICOMRemoteException e) {
+			String msg = "ClientTemporalPaternObjectLoader.saveIntervalsTemporalPaterns | receiveIntervalsTemporalPaterns";
+
+			if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
+				throw new VersionCollisionException(msg, 0l, 0l);
+
+			throw new ApplicationException(msg, e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
+		}
+	}
+
+	public void savePeriodicalTemporalPatterns(	java.util.Set cronTemporalPatterns,
+												boolean force) throws VersionCollisionException, ApplicationException {
+		PeriodicalTemporalPattern_Transferable[] transferables = new PeriodicalTemporalPattern_Transferable[cronTemporalPatterns
+				.size()];
+		int i = 0;
+		for (Iterator it = cronTemporalPatterns.iterator(); it.hasNext(); i++) {
+			transferables[i] = (PeriodicalTemporalPattern_Transferable) ((PeriodicalTemporalPattern) it.next())
+					.getTransferable();
+		}
+		try {
+			this.updateStorableObjectHeader(cronTemporalPatterns, this.server.receivePeriodicalTemporalPatterns(
+				transferables, force, SessionContext.getAccessIdentityTransferable()));
+		} catch (AMFICOMRemoteException e) {
+			String msg = "ClientTemporalPaternObjectLoader.savePeriodicalTemporalPaterns | receivePeriodicalTemporalPaterns";
 
 			if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
 				throw new VersionCollisionException(msg, 0l, 0l);

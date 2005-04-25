@@ -368,6 +368,16 @@ module corba {
 						in boolean force,
 						in general::corba::AccessIdentity_Transferable access_identity)
 			raises (general::corba::AMFICOMRemoteException);
+			
+		general::corba::StorableObjectSeq_Transferable receiveIntervalsTemporalPatterns(in measurement::corba::IntervalsTemporalPatternSeq_Transferable sets,
+						in boolean force,
+						in general::corba::AccessIdentity_Transferable access_identity)
+			raises (general::corba::AMFICOMRemoteException);
+			
+		general::corba::StorableObjectSeq_Transferable receivePeriodicalTemporalPatterns(in measurement::corba::PeriodicalTemporalPatternSeq_Transferable sets,
+						in boolean force,
+						in general::corba::AccessIdentity_Transferable access_identity)
+			raises (general::corba::AMFICOMRemoteException);
 
 		general::corba::StorableObject_Transferable receiveTest(in measurement::corba::Test_Transferable test_Transferable,
 						in boolean force,
@@ -1118,6 +1128,38 @@ module corba {
 			raises (general::corba::AMFICOMRemoteException);						
 
 		measurement::corba::CronTemporalPatternSeq_Transferable transmitCronTemporalPatternsButIdsCondition(
+						in general::corba::IdentifierSeq_Transferable ids,
+						in general::corba::AccessIdentity_Transferable access_identity,
+						in general::corba::StorableObjectCondition_Transferable condition_Transferable)
+			raises (general::corba::AMFICOMRemoteException);
+			
+		measurement::corba::IntervalsTemporalPatternSeq_Transferable transmitIntervalsTemporalPatterns(
+						in general::corba::IdentifierSeq_Transferable ids,
+						in general::corba::AccessIdentity_Transferable access_identity)
+			raises (general::corba::AMFICOMRemoteException);
+			
+		measurement::corba::IntervalsTemporalPatternSeq_Transferable transmitIntervalsTemporalPatternsButIdsCondition(
+						in general::corba::IdentifierSeq_Transferable ids,
+						in general::corba::AccessIdentity_Transferable access_identity,
+						in general::corba::StorableObjectCondition_Transferable condition_Transferable)
+			raises (general::corba::AMFICOMRemoteException);
+			
+		measurement::corba::IntervalsTemporalPatternSeq_Transferable transmitIntervalsTemporalPatternsButIds(
+						in general::corba::IdentifierSeq_Transferable ids,
+						in general::corba::AccessIdentity_Transferable access_identity)
+			raises (general::corba::AMFICOMRemoteException);						
+
+		measurement::corba::PeriodicalTemporalPatternSeq_Transferable transmitPeriodicalTemporalPatterns(
+						in general::corba::IdentifierSeq_Transferable ids,
+						in general::corba::AccessIdentity_Transferable access_identity)
+			raises (general::corba::AMFICOMRemoteException);
+			
+		measurement::corba::PeriodicalTemporalPatternSeq_Transferable transmitPeriodicalTemporalPatternsButIds(
+						in general::corba::IdentifierSeq_Transferable ids,
+						in general::corba::AccessIdentity_Transferable access_identity)
+			raises (general::corba::AMFICOMRemoteException);						
+
+		measurement::corba::PeriodicalTemporalPatternSeq_Transferable transmitPeriodicalTemporalPatternsButIdsCondition(
 						in general::corba::IdentifierSeq_Transferable ids,
 						in general::corba::AccessIdentity_Transferable access_identity,
 						in general::corba::StorableObjectCondition_Transferable condition_Transferable)
