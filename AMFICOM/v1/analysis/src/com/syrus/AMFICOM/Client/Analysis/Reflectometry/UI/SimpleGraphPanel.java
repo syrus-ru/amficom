@@ -53,8 +53,8 @@ public class SimpleGraphPanel extends JPanel
 		else
 			this.y = y1;
 
-		minY = y1[0];
-		maxY = y1[0];
+		minY = y1.length > 0 ? y1[0] : 0;
+		maxY = minY;
 		for (int i = 1; i < y1.length; i++)
 		{
 			if (y1[i] < minY)
