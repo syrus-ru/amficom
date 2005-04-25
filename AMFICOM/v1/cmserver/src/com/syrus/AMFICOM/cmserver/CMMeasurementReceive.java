@@ -1,5 +1,5 @@
 /*
- * $Id: CMMeasurementReceive.java,v 1.11 2005/04/23 13:36:32 arseniy Exp $
+ * $Id: CMMeasurementReceive.java,v 1.12 2005/04/25 10:44:13 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,6 +28,7 @@ import com.syrus.AMFICOM.measurement.Evaluation;
 import com.syrus.AMFICOM.measurement.EvaluationDatabase;
 import com.syrus.AMFICOM.measurement.EvaluationType;
 import com.syrus.AMFICOM.measurement.EvaluationTypeDatabase;
+import com.syrus.AMFICOM.measurement.IntervalsTemporalPattern;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
@@ -40,6 +41,8 @@ import com.syrus.AMFICOM.measurement.Modeling;
 import com.syrus.AMFICOM.measurement.ModelingDatabase;
 import com.syrus.AMFICOM.measurement.ModelingType;
 import com.syrus.AMFICOM.measurement.ModelingTypeDatabase;
+import com.syrus.AMFICOM.measurement.PeriodicalTemporalPattern;
+import com.syrus.AMFICOM.measurement.PeriodicalTemporalPatternDatabase;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.ResultDatabase;
 import com.syrus.AMFICOM.measurement.Set;
@@ -52,11 +55,13 @@ import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
 import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
+import com.syrus.AMFICOM.measurement.corba.IntervalsTemporalPattern_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ModelingType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Modeling_Transferable;
+import com.syrus.AMFICOM.measurement.corba.PeriodicalTemporalPattern_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
 import com.syrus.AMFICOM.measurement.corba.CronTemporalPattern_Transferable;
@@ -65,8 +70,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/04/23 13:36:32 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.12 $, $Date: 2005/04/25 10:44:13 $
+ * @author $Author: bob $
  * @module cmserver_v1
  */
 public abstract class CMMeasurementReceive extends CMConfigurationReceive {
@@ -957,7 +962,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		try {
 			CronTemporalPattern cronTemporalPattern = new CronTemporalPattern(cronTemporalPattern_Transferable);
 			MeasurementStorableObjectPool.putStorableObject(cronTemporalPattern);
-			CronTemporalPatternDatabase temporalPatternDatabase = MeasurementDatabaseContext.getTemporalPatternDatabase();
+			CronTemporalPatternDatabase temporalPatternDatabase = MeasurementDatabaseContext.getCronTemporalPatternDatabase();
 			temporalPatternDatabase.update(cronTemporalPattern, new Identifier(accessIdentityT.user_id), force
 					? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return cronTemporalPattern.getHeaderTransferable();
@@ -1000,7 +1005,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 				MeasurementStorableObjectPool.putStorableObject(cronTemporalPattern);
 				temporalPatternList.add(cronTemporalPattern);
 			}
-			CronTemporalPatternDatabase temporalPatternDatabase = MeasurementDatabaseContext.getTemporalPatternDatabase();
+			CronTemporalPatternDatabase temporalPatternDatabase = MeasurementDatabaseContext.getCronTemporalPatternDatabase();
 			temporalPatternDatabase.update(temporalPatternList, new Identifier(accessIdentityT.user_id), force
 					? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return super.getListHeaders(temporalPatternList);
@@ -1022,6 +1027,98 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e.getMessage());
 		}
 		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
+	}
+	
+	public StorableObject_Transferable[] receiveIntervalsTemporalPatterns(	IntervalsTemporalPattern_Transferable[] intervalsTemporalPattern_Transferables,
+																			boolean force,
+																			AccessIdentity_Transferable accessIdentityT)
+			throws AMFICOMRemoteException {
+		/**
+		 * TODO check user for access
+		 */
+		Log.debugMessage("CMMeasurementReceive.receiveIntervalsTemporalPatterns | Received "
+				+ intervalsTemporalPattern_Transferables.length + " IntervalsTemporalPatterns", Log.DEBUGLEVEL07);
+		java.util.Set temporalPatternList = new HashSet(intervalsTemporalPattern_Transferables.length);
+		try {
+			for (int i = 0; i < intervalsTemporalPattern_Transferables.length; i++) {
+				IntervalsTemporalPattern intervalsTemporalPattern = new IntervalsTemporalPattern(
+																							intervalsTemporalPattern_Transferables[i]);
+				MeasurementStorableObjectPool.putStorableObject(intervalsTemporalPattern);
+				temporalPatternList.add(intervalsTemporalPattern);
+			}
+			/*- TODO
+			IntervalsTemporalPatternDatabase temporalPatternDatabase = MeasurementDatabaseContext
+					.getIntervalsTemporalPatternDatabase();
+			temporalPatternDatabase.update(temporalPatternList, new Identifier(accessIdentityT.user_id), force
+					? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+			return super.getListHeaders(temporalPatternList);
+			*/
+			return null;
+		} 
+//		catch (UpdateObjectException e) {
+//			Log.errorException(e);
+//			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e.getMessage());
+//		} 
+		catch (IllegalObjectEntityException e) {
+			Log.errorException(e);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, e
+					.getMessage());
+		} 
+//		catch (VersionCollisionException e) {
+//			Log.errorException(e);
+//			throw new AMFICOMRemoteException(ErrorCode.ERROR_VERSION_COLLISION, CompletionStatus.COMPLETED_NO, e
+//					.getMessage());
+//		} 
+		catch (CreateObjectException e) {
+			Log.errorException(e);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e.getMessage());
+		} catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
+	}
+	
+
+	public StorableObject_Transferable[] receivePeriodicalTemporalPatterns(	PeriodicalTemporalPattern_Transferable[] periodicalTemporalPattern_Transferables,
+																			boolean force,
+																			AccessIdentity_Transferable accessIdentityT)
+			throws AMFICOMRemoteException {
+		/**
+		 * TODO check user for access
+		 */
+		Log.debugMessage("CMMeasurementReceive.receiveTemporalPatterns | Received "
+				+ periodicalTemporalPattern_Transferables.length + " TemporalPatterns", Log.DEBUGLEVEL07);
+		java.util.Set temporalPatternList = new HashSet(periodicalTemporalPattern_Transferables.length);
+		try {
+			for (int i = 0; i < periodicalTemporalPattern_Transferables.length; i++) {
+				PeriodicalTemporalPattern periodicalTemporalPattern = new PeriodicalTemporalPattern(
+																								periodicalTemporalPattern_Transferables[i]);
+				MeasurementStorableObjectPool.putStorableObject(periodicalTemporalPattern);
+				temporalPatternList.add(periodicalTemporalPattern);
+			}
+			PeriodicalTemporalPatternDatabase temporalPatternDatabase = MeasurementDatabaseContext
+					.getPeriodicalTemporalPatternDatabase();
+			temporalPatternDatabase.update(temporalPatternList, new Identifier(accessIdentityT.user_id), force
+					? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+			return super.getListHeaders(temporalPatternList);
+		} catch (UpdateObjectException e) {
+			Log.errorException(e);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e.getMessage());
+		} catch (IllegalObjectEntityException e) {
+			Log.errorException(e);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, e
+					.getMessage());
+		} catch (VersionCollisionException e) {
+			Log.errorException(e);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_VERSION_COLLISION, CompletionStatus.COMPLETED_NO, e
+					.getMessage());
+		} catch (CreateObjectException e) {
+			Log.errorException(e);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e.getMessage());
+		} catch (Throwable t) {
 			Log.errorException(t);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
 		}
