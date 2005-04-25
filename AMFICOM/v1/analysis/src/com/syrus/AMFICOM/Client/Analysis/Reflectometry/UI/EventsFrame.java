@@ -110,15 +110,15 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener, CurrentEv
 			int selectedRow = this.jTable.getSelectedRow();
 			if (selectedRow > 0) {
 				selectedRow--;
-			} else selectedRow =  this.jTable.getModel().getRowCount() - 1;				
-			this.selectRow(selectedRow);
+			} else selectedRow =  this.jTable.getModel().getRowCount() - 1;
+			this.selectRow(selectedRow); // @todo: exception occurs here if there is no rows in the table at all
 		}else if (actionCommand.equals(AnalyseApplicationModel.SELECT_NEXT_EVENT)) {
 			int selectedRow = this.jTable.getSelectedRow();
 			if (selectedRow < this.jTable.getModel().getRowCount() - 1) {
 				selectedRow++;
 			}
 			else selectedRow = 0;
-			this.selectRow(selectedRow);			
+			this.selectRow(selectedRow); // @todo: see todo for SELECT_PREVIOUS_EVENT
 		}
 	}
 
