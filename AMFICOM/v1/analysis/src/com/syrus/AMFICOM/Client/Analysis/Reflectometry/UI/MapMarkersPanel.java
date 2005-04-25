@@ -142,8 +142,12 @@ public class MapMarkersPanel extends ThresholdsPanel
 
 	void move_notify()
 	{
-		dispatcher.notify (new MapNavigateEvent (this, MapNavigateEvent.DATA_MARKER_MOVED_EVENT,
-												 active_marker.getId(), active_marker.pos * deltaX, scheme_path_id, monitored_element_id));
+		dispatcher.notify (new MapNavigateEvent (this,
+			MapNavigateEvent.DATA_MARKER_MOVED_EVENT,
+			active_marker.getId(),
+			active_marker.pos * deltaX,
+			scheme_path_id,
+			monitored_element_id));
 	}
 
 	protected void this_mouseReleased(MouseEvent e)
