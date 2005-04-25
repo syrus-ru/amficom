@@ -55,15 +55,15 @@ InitialAnalysis::InitialAnalysis(
     events = new ArrList();
 
 	if (lengthTillZero <= 0)
-		lastNonZeroPoint = getLastPoint();
+		lastPoint = getLastPoint();
 	else
-		lastNonZeroPoint = lengthTillZero - 1;
+		lastPoint = lengthTillZero - 1;
 
-	f_wlet	= new double[lastNonZeroPoint];
+	f_wlet	= new double[lastPoint];
 #ifdef debug_VCL
-	f_tmp   = new double[lastNonZeroPoint];
+	f_tmp   = new double[lastPoint];
 #endif
-	noise	= new double[lastNonZeroPoint];
+	noise	= new double[lastPoint];
 	type	= new double[data_length];
 
 	// если массив с уровнем шума не задан извне,
@@ -72,14 +72,14 @@ InitialAnalysis::InitialAnalysis(
 	if (externalNoise == 0 || lengthTillZero <= 0)
 	{	prf_b("IA: noise");
 		// вычисляем уровень шума
-		{ const int sz = lastNonZeroPoint;
+		{ const int sz = lastPoint;
 		  //fillNoiseArray(data, data_length, sz, 1 + width/20, noise);
 		  fillNoiseArray(data, data_length, sz, 1.0, noiseFactor, noise);
 		}
 	}
 	else
 	{	int i;
-		for (i = 0; i < lastNonZeroPoint; i++)
+		for (i = 0; i < lastPoint; i++)
 		{	noise[i] = externalNoise[i] * noiseFactor;
         }
 	}
@@ -109,15 +109,15 @@ void InitialAnalysis::performAnalysis()
 	// выполняем вейвлет-преобразование
 	// f_wlet - вейвлет-образ функции, wlet_width - ширина вейвлета, wn - норма вейвлета
     wn = getWLetNorma(wlet_width);
-    performTransformationOnly(data, 0, lastNonZeroPoint, f_wlet, wlet_width, wn);
+    performTransformationOnly(data, 0, lastPoint, f_wlet, wlet_width, wn);
 	calcAverageFactor(f_wlet, wlet_width, wn);
-	centerWletImageOnly(f_wlet, wlet_width, 0, lastNonZeroPoint, wn);// вычитаем из коэффициентов преобразования(КП) постоянную составляющую
+	centerWletImageOnly(f_wlet, wlet_width, 0, lastPoint, wn);// вычитаем из коэффициентов преобразования(КП) постоянную составляющую
 
 #if 0
 	{
 		FILE *f = fopen ("noise2.tmp", "w");assert(f);
 		int i;
-		for (i = 0; i < lastNonZeroPoint; i++)
+		for (i = 0; i < lastPoint; i++)
 			fprintf(f,"%d %g %g %g\n", i, data[i], f_wlet[i], noise[i]);
 		fclose(f);
 	}
@@ -218,7 +218,7 @@ int InitialAnalysis::processDeadZone(ArrList& splashes)
     { EventParams *ep = new EventParams;
       ep->type = EventParams::DEADZONE;
       ep->begin = begin; ep->end = end;
-      if(ep->end > lastNonZeroPoint){ ep->end = lastNonZeroPoint;}
+      if(ep->end > lastPoint){ ep->end = lastPoint;}
       events->add(ep);
     }
     return shift;
@@ -286,7 +286,7 @@ void InitialAnalysis::setSpliceParamsBySplash( EventParams& ep, Splash& sp)
     else 		  { ep.type = EventParams::LOSS; }
     ep.begin = sp.begin_weld;
     ep.end = sp.end_weld+1;
-    if(ep.end>lastNonZeroPoint){ep.end = lastNonZeroPoint;}
+    if(ep.end>lastPoint){ep.end = lastPoint;}
     if(ep.begin<0){ep.begin=0;}
     double max = -1;
 	for(int i=sp.begin_weld_n; i<sp.end_weld_n; i++)
@@ -304,8 +304,8 @@ void InitialAnalysis::setConnectorParamsBySplashes( EventParams& ep, Splash& sp1
    if(sp2.begin_conn_n != -1 && sp2.sign > 0)// если это начало нового коннектора
    { ep.end = sp2.begin_thr;// если два коннектора рядом, то конец первого совпадает с началом следующего 
    }
-   if(ep.end>lastNonZeroPoint)
-   {ep.end = lastNonZeroPoint;
+   if(ep.end>lastPoint)
+   {ep.end = lastPoint;
    }
    double max = -1;
    int i;
@@ -333,7 +333,7 @@ void InitialAnalysis::setUnrecognizedParamsBySplashes( EventParams& ep, Splash& 
    if(ep.end == 9642)
    {	int o=0; 
    }
-   if(ep.end>lastNonZeroPoint){ep.end = lastNonZeroPoint;}
+   if(ep.end>lastPoint){ep.end = lastPoint;}
 }
 // -------------------------------------------------------------------------------------------------
 // ВАЖНО: Считаем, что minimalThreshold < minimalWeld < minimalConnector
@@ -341,7 +341,7 @@ void InitialAnalysis::findAllWletSplashes(double* f_wlet, ArrList& splashes)
 {   //minimalThreshold,	//минимальный уровень события
 	//minimalWeld,		//минимальный уровень неотражательного события
 	//minimalConnector,	//минимальный уровень отражательного события
-    for(int i=1; i<lastNonZeroPoint; i++)// 1 т.к. i-1
+    for(int i=1; i<lastPoint; i++)// 1 т.к. i-1
     {   if(fabs(f_wlet[i])<=minimalThreshold)
      continue;
 		Splash& spl = (Splash&)(*(new Splash()));// раз уж пересекли хотя бы один порог, то объект уже должен быть создан;
@@ -349,14 +349,14 @@ void InitialAnalysis::findAllWletSplashes(double* f_wlet, ArrList& splashes)
         spl.f_extr = f_wlet[i];
 		int sign, sign_cur;
 		sign = xsign(f_wlet[i]);
-        for(  ; i<lastNonZeroPoint; i++)
+        for(  ; i<lastPoint; i++)
         {   sign_cur = xsign(f_wlet[i]);
         	// минимальные на рост
         	if( fabs(f_wlet[i])>= minimalThreshold+noise[i] && spl.begin_thr_n == -1)
             {	spl.begin_thr_n = i-1;
             }
             if( spl.begin_thr_n != -1 && spl.end_thr_n == -1
-            	&& ( fabs(f_wlet[i])<= minimalThreshold+noise[i] || sign_cur!=sign || i==lastNonZeroPoint-1)
+            	&& ( fabs(f_wlet[i])<= minimalThreshold+noise[i] || sign_cur!=sign || i==lastPoint-1)
 	          )
             {	spl.end_thr_n = i;
             }
@@ -365,7 +365,7 @@ void InitialAnalysis::findAllWletSplashes(double* f_wlet, ArrList& splashes)
             {	spl.begin_weld = i-1;
             }
             if( spl.begin_weld != -1 && spl.end_weld == -1
-            	&& ( fabs(f_wlet[i])<= minimalWeld || sign_cur!=sign || i==lastNonZeroPoint-1)
+            	&& ( fabs(f_wlet[i])<= minimalWeld || sign_cur!=sign || i==lastPoint-1)
               )
             {	spl.end_weld = i;
             }
@@ -373,7 +373,7 @@ void InitialAnalysis::findAllWletSplashes(double* f_wlet, ArrList& splashes)
             {	spl.begin_weld_n = i-1;
             }
             if( spl.begin_weld_n != -1 && spl.end_weld_n == -1
-            	&& (fabs(f_wlet[i])<= minimalWeld+noise[i] || sign_cur!=sign || i==lastNonZeroPoint-1)
+            	&& (fabs(f_wlet[i])<= minimalWeld+noise[i] || sign_cur!=sign || i==lastPoint-1)
               )
             {	spl.end_weld_n = i;
             }
@@ -382,7 +382,7 @@ void InitialAnalysis::findAllWletSplashes(double* f_wlet, ArrList& splashes)
             {	spl.begin_conn = i-1;
             }
             if( spl.begin_conn != -1 && spl.end_conn == -1
-            	&& ( fabs(f_wlet[i])<= minimalConnector || sign_cur!=sign || i==lastNonZeroPoint-1)
+            	&& ( fabs(f_wlet[i])<= minimalConnector || sign_cur!=sign || i==lastPoint-1)
               )
             {	spl.end_conn = i;
             }
@@ -390,12 +390,12 @@ void InitialAnalysis::findAllWletSplashes(double* f_wlet, ArrList& splashes)
             {	spl.begin_conn_n = i-1;
             }
             if( spl.begin_conn_n != -1 && spl.end_conn_n == -1
-            	&& (fabs(f_wlet[i])<= minimalConnector+noise[i] || sign_cur!=sign || i==lastNonZeroPoint-1)
+            	&& (fabs(f_wlet[i])<= minimalConnector+noise[i] || sign_cur!=sign || i==lastPoint-1)
               )
             {	spl.end_conn_n = i;
             }
 			// минимальные на спад
-            if( fabs(f_wlet[i])<=minimalThreshold || sign_cur!=sign || i==lastNonZeroPoint-1)
+            if( fabs(f_wlet[i])<=minimalThreshold || sign_cur!=sign || i==lastPoint-1)
         	{	spl.end_thr = i;
      	break;
      		}
@@ -425,22 +425,22 @@ void InitialAnalysis::findAllWletSplashes(double* f_wlet, ArrList& splashes)
 	Splash* splend = (Splash*)splashes[splashes.getLength()-1];
     if(splend->sign > 0)
     {   Splash* spl = new Splash();
-    	spl->begin_thr 		= lastNonZeroPoint+1; spl->begin_thr_n 	= lastNonZeroPoint+1; spl->begin_weld 	= lastNonZeroPoint+1;
-        spl->begin_weld_n 	= lastNonZeroPoint+1; spl->begin_conn 	= lastNonZeroPoint+1; spl->begin_conn_n	= lastNonZeroPoint+1;
-        spl->end_thr 		= lastNonZeroPoint+2; spl->end_thr_n	= lastNonZeroPoint+2; spl->end_weld		= lastNonZeroPoint+2;
-        spl->end_weld_n 	= lastNonZeroPoint+2; spl->end_conn 	= lastNonZeroPoint+2; spl->end_conn_n 	= lastNonZeroPoint+2;
+    	spl->begin_thr 		= lastPoint+1; spl->begin_thr_n 	= lastPoint+1; spl->begin_weld 	= lastPoint+1;
+        spl->begin_weld_n 	= lastPoint+1; spl->begin_conn 	= lastPoint+1; spl->begin_conn_n	= lastPoint+1;
+        spl->end_thr 		= lastPoint+2; spl->end_thr_n	= lastPoint+2; spl->end_weld		= lastPoint+2;
+        spl->end_weld_n 	= lastPoint+2; spl->end_conn 	= lastPoint+2; spl->end_conn_n 	= lastPoint+2;
 		spl->sign			= -1;
         splashes.add(spl);
     }
 
 #ifdef debug_lines
     // отображаем пороги
-    xs[cou] = 0; ys[cou] =  minimalThreshold; xe[cou] = lastNonZeroPoint*delta_x; ye[cou] =  minimalThreshold; col[cou] = 0x004444; cou++;
-    xs[cou] = 0; ys[cou] = -minimalThreshold; xe[cou] = lastNonZeroPoint*delta_x; ye[cou] = -minimalThreshold; col[cou] = 0x004444; cou++;
-    xs[cou] = 0; ys[cou] =  minimalWeld; 	  xe[cou] = lastNonZeroPoint*delta_x; ye[cou] =  minimalWeld;      col[cou] = 0x009999; cou++;
-    xs[cou] = 0; ys[cou] = -minimalWeld; 	  xe[cou] = lastNonZeroPoint*delta_x; ye[cou] = -minimalWeld;	   col[cou] = 0x009999; cou++;
-    xs[cou] = 0; ys[cou] =  minimalConnector; xe[cou] = lastNonZeroPoint*delta_x; ye[cou] =  minimalConnector; col[cou] = 0x00FFFF; cou++;
-    xs[cou] = 0; ys[cou] = -minimalConnector; xe[cou] = lastNonZeroPoint*delta_x; ye[cou] = -minimalConnector; col[cou] = 0x00FFFF; cou++;
+    xs[cou] = 0; ys[cou] =  minimalThreshold; xe[cou] = lastPoint*delta_x; ye[cou] =  minimalThreshold; col[cou] = 0x004444; cou++;
+    xs[cou] = 0; ys[cou] = -minimalThreshold; xe[cou] = lastPoint*delta_x; ye[cou] = -minimalThreshold; col[cou] = 0x004444; cou++;
+    xs[cou] = 0; ys[cou] =  minimalWeld; 	  xe[cou] = lastPoint*delta_x; ye[cou] =  minimalWeld;      col[cou] = 0x009999; cou++;
+    xs[cou] = 0; ys[cou] = -minimalWeld; 	  xe[cou] = lastPoint*delta_x; ye[cou] = -minimalWeld;	   col[cou] = 0x009999; cou++;
+    xs[cou] = 0; ys[cou] =  minimalConnector; xe[cou] = lastPoint*delta_x; ye[cou] =  minimalConnector; col[cou] = 0x00FFFF; cou++;
+    xs[cou] = 0; ys[cou] = -minimalConnector; xe[cou] = lastPoint*delta_x; ye[cou] = -minimalConnector; col[cou] = 0x00FFFF; cou++;
 #endif
 }
 // -------------------------------------------------------------------------------------------------
@@ -488,14 +488,14 @@ void InitialAnalysis::performTransformationOnly(double* f, int begin, int end, d
 {
 	//int len = end - begin;
 	SineWavelet wavelet;
-	wavelet.transform(freq, f, lastNonZeroPoint, begin, end - 1, f_wlet + begin, norma);
+	wavelet.transform(freq, f, lastPoint, begin, end - 1, f_wlet + begin, norma);
 }
 //------------------------------------------------------------------------------------------------------------
 // вычислить среднее значение вейвлет-образа 
 double InitialAnalysis::calcWletMeanValue(double *fw, double from, double to, int columns)
 {   //возможное затухание находится в пределах [0; -0.5] дБ
 	Histogramm* histo = new Histogramm(from, to, columns);
-	histo->init(fw, 0, lastNonZeroPoint-1);
+	histo->init(fw, 0, lastPoint-1);
 	double mean_att = histo->getMaximumValue();
 	delete histo;
 	return mean_att;
@@ -661,7 +661,7 @@ return;
     }
 #ifdef debug_VCL
     wn = getWLetNorma(wlet_width);
-  	performTransformationAndCenter(data, 0, lastNonZeroPoint, f_wlet, wlet_width, wn);
+  	performTransformationAndCenter(data, 0, lastPoint, f_wlet, wlet_width, wn);
 #endif
 	//prf_b("correctSpliceCoords: return");
 }
@@ -697,6 +697,7 @@ return;
     }//for
 }
 //------------------------------------------------------------------------------------------------------------
+// удалить все события после последнего отражательного и переименовать отражательное в "конец волокна"
 void InitialAnalysis::deleteAllEventsAfterLastConnector()
 {   for(int i=events->getLength()-1; i>0; i--)
 	{   EventParams* ev = (EventParams*)(*events)[i];
@@ -704,7 +705,7 @@ void InitialAnalysis::deleteAllEventsAfterLastConnector()
         {   events->slowRemove(i);
         }
         else
-     	{
+     	{	ev->type = EventParams::ENDOFTRACE;
     break;
         }
     }
@@ -771,8 +772,8 @@ void InitialAnalysis::trimAllEvents()
 		if(ev.end <= ev.begin)
         { ev.end = ev.begin+1;
         }
-		if(ev.end > lastNonZeroPoint)
-        { ev.end = lastNonZeroPoint;
+		if(ev.end > lastPoint)
+        { ev.end = lastPoint;
         }
 		prevEnd = ev.end;
     }
@@ -784,7 +785,7 @@ void InitialAnalysis::verifyResults()
     {	EventParams& ev = *(EventParams*)(*events)[i];
 //*//#ifndef debug_VCL
 		assert(ev.begin >= 0);
-		assert(ev.end <= lastNonZeroPoint);
+		assert(ev.end <= lastPoint);
 		assert(ev.end >= ev.begin);
 		assert(ev.end > ev.begin); // >, not just >=
 		assert(ev.begin == prevEnd || i == 0); // XXX
@@ -793,7 +794,7 @@ void InitialAnalysis::verifyResults()
 //сюда понатыкать брекпоинтов
 		if(!(ev.begin >= 0))
         { int o=0;}
-		if(!(ev.end <= lastNonZeroPoint))
+		if(!(ev.end <= lastPoint))
         { int o=0;}
 		if(!(ev.end >= ev.begin))
         { int o=0;}

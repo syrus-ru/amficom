@@ -63,7 +63,7 @@ private:
     int wlet_width; // базовая ширина вейвлета
     int reflectiveSize;// максимальная ширина коннектора
 
-	int lastNonZeroPoint;
+	int lastPoint;
 	double wletMeanValue; // среднее значение образа рефлектограммы
 
 	void performAnalysis();
