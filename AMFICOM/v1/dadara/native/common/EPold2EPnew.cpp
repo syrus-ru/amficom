@@ -41,6 +41,7 @@ void EPold2EPnew(EventParams* epo, EventP &epn, double delta_x)
 		break;
 
 	case EventParams_DEADZONE: // fall through
+	case EventParams_ENDOFTRACE: // fall through
 	case EventParams_REFLECTIVE:
 		epn.gentype = com_syrus_AMFICOM_analysis_dadara_SimpleReflectogramEvent_REFLECTIVE;
 		epn.mf.init(MF_ID_BREAKL);
@@ -83,6 +84,7 @@ void EPold2SE(EventParams* epo, SimpleEvent &epn)
 		break;
 
 	case EventParams_DEADZONE: // fall through
+	case EventParams_ENDOFTRACE: // fall through
 	case EventParams_REFLECTIVE:
 		epn.type = com_syrus_AMFICOM_analysis_dadara_SimpleReflectogramEvent_REFLECTIVE;
 		break;
