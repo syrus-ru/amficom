@@ -1,5 +1,5 @@
 /*
- * $Id: ARServerImpl.java,v 1.11 2005/04/12 08:29:16 bass Exp $
+ * $Id: ARServerImpl.java,v 1.12 2005/04/25 08:17:35 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,6 +7,11 @@
  */
 
 package com.syrus.AMFICOM.arserver;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 import com.syrus.AMFICOM.arserver.corba.ARServerPOA;
 import com.syrus.AMFICOM.general.AccessIdentity;
@@ -29,7 +34,7 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
+import com.syrus.AMFICOM.general.corba.AccessIdentity_Transferable;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
@@ -45,13 +50,8 @@ import com.syrus.AMFICOM.resource.corba.ImageResource_Transferable;
 import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceDataPackage.ImageResourceSort;
 import com.syrus.util.Log;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-
 /**
- * @version $Revision: 1.11 $, $Date: 2005/04/12 08:29:16 $
+ * @version $Revision: 1.12 $, $Date: 2005/04/25 08:17:35 $
  * @author $Author: bass $
  * @module arserver_v1
  */
@@ -60,11 +60,11 @@ public final class ARServerImpl extends ARServerPOA {
 	
 	// delete methods
 	public void delete(final Identifier_Transferable id, 
-			final AccessIdentifier_Transferable accessIdentifier)
+			final AccessIdentity_Transferable accessIdentity)
 			throws AMFICOMRemoteException {
 		final Identifier id1 = new Identifier(id);
 		Log.debugMessage("ARServerImpl.delete | trying to delete object '" + id1 //$NON-NLS-1$
-				+ "' as requested by user '" + (new AccessIdentity(accessIdentifier)).getUserId() + "'", Log.INFO);  //$NON-NLS-1$ //$NON-NLS-2$
+				+ "' as requested by user '" + (new AccessIdentity(accessIdentity)).getUserId() + "'", Log.INFO);  //$NON-NLS-1$ //$NON-NLS-2$
 		final short entityCode = id1.getMajor();
 		if (ObjectGroupEntities.isInResourceGroup(entityCode))
 			ResourceStorableObjectPool.delete(id1);
@@ -73,7 +73,7 @@ public final class ARServerImpl extends ARServerPOA {
 	}
 	
 	public void deleteList(Identifier_Transferable[] id_Transferables,
-			AccessIdentifier_Transferable accessIdentifier)
+			AccessIdentity_Transferable accessIdentity)
 			throws AMFICOMRemoteException {
 		Log.debugMessage("ARServerImpl.deleteList | Trying to delete... ", Log.DEBUGLEVEL03); //$NON-NLS-1$
 		final Set idList = Identifier.fromTransferables(id_Transferables);
@@ -83,14 +83,14 @@ public final class ARServerImpl extends ARServerPOA {
 	// receive methods
 	public void receiveImageResource(ImageResource_Transferable imageResource_Transferable,
 			boolean force,
-            AccessIdentifier_Transferable accessIdentifier)
+            AccessIdentity_Transferable accessIdentity)
 			throws AMFICOMRemoteException {
 		/**
 		 * TODO check user for access
 		 */
 		Log.debugMessage("ARServerImpl.receiveImageResource | Received " + " imageResource", Log.DEBUGLEVEL07); //$NON-NLS-1$ //$NON-NLS-2$
 		try {
-			imageResource_Transferable.header.modifier_id = accessIdentifier.user_id;
+			imageResource_Transferable.header.modifier_id = accessIdentity.user_id;
 			ImageResourceSort sort = imageResource_Transferable.data.discriminator();
 			AbstractImageResource abstractImageResource;
 			switch (sort.value()) {
@@ -108,7 +108,7 @@ public final class ARServerImpl extends ARServerPOA {
 			}         	
 			ResourceStorableObjectPool.putStorableObject(abstractImageResource);
 			ImageResourceDatabase database = ResourceDatabaseContext.getImageResourceDatabase();
-			database.update(abstractImageResource, new Identifier(accessIdentifier.user_id), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+			database.update(abstractImageResource, new Identifier(accessIdentity.user_id), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		} catch (UpdateObjectException e) {
 			Log.errorException(e);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e
@@ -131,7 +131,7 @@ public final class ARServerImpl extends ARServerPOA {
 	
 	public void receiveImageResources( ImageResource_Transferable[] imageResource_Transferables, 
 			boolean force,
-            AccessIdentifier_Transferable accessIdentifier)
+            AccessIdentity_Transferable accessIdentity)
             throws AMFICOMRemoteException {
         /**
         * TODO check user for access
@@ -141,7 +141,7 @@ public final class ARServerImpl extends ARServerPOA {
         final Set imageResources = new HashSet(imageResource_Transferables.length);
         try {
 			for (int i = 0; i < imageResource_Transferables.length; i++) {
-				imageResource_Transferables[i].header.modifier_id = accessIdentifier.user_id;
+				imageResource_Transferables[i].header.modifier_id = accessIdentity.user_id;
 				AbstractImageResource abstractImageResource;
 				ImageResourceSort sort = imageResource_Transferables[i].data
 						.discriminator();
@@ -170,7 +170,7 @@ public final class ARServerImpl extends ARServerPOA {
 			ImageResourceDatabase database = ResourceDatabaseContext
 					.getImageResourceDatabase();
 			database.update(imageResources,
-					new Identifier(accessIdentifier.user_id),
+					new Identifier(accessIdentity.user_id),
 					force ? StorableObjectDatabase.UPDATE_FORCE
 							: StorableObjectDatabase.UPDATE_CHECK);
 		} catch (UpdateObjectException e) {
@@ -195,7 +195,7 @@ public final class ARServerImpl extends ARServerPOA {
 	
 	// trannsmit methods
 	public ImageResource_Transferable transmitImageResource(Identifier_Transferable id_Transferable,
-			AccessIdentifier_Transferable accessIdentifier)
+			AccessIdentity_Transferable accessIdentity)
 			throws AMFICOMRemoteException {
 		Identifier id = new Identifier(id_Transferable);
         Log.debugMessage("ARServerImpl.transmitImageResource | require " + id.toString(), Log.DEBUGLEVEL07); //$NON-NLS-1$
@@ -225,10 +225,10 @@ public final class ARServerImpl extends ARServerPOA {
 	}
 	
 	public ImageResource_Transferable[] transmitImageResources(Identifier_Transferable[] ids_Transferable,
-			AccessIdentifier_Transferable accessIdentifier)
+			AccessIdentity_Transferable accessIdentity)
 			throws AMFICOMRemoteException {
 		try {
-			Identifier domainId = new Identifier(accessIdentifier.domain_id);
+			Identifier domainId = new Identifier(accessIdentity.domain_id);
 			Log.debugMessage("ARServerImpl.transmitImageResources | requiere " //$NON-NLS-1$
 					+ (ids_Transferable.length == 0 ? "all" : Integer //$NON-NLS-1$
 							.toString(ids_Transferable.length))
@@ -273,10 +273,10 @@ public final class ARServerImpl extends ARServerPOA {
 	
 	public ImageResource_Transferable[] transmitImageResourcesButIds(
             Identifier_Transferable[] identifier_Transferables,
-            AccessIdentifier_Transferable accessIdentifier)
+            AccessIdentity_Transferable accessIdentity)
             throws AMFICOMRemoteException {
         try {
-            Identifier domainId = new Identifier(accessIdentifier.domain_id);
+            Identifier domainId = new Identifier(accessIdentity.domain_id);
             Log.debugMessage("ARServerImpl.transmitImageResourcesButIds | requiere " //$NON-NLS-1$
                     + (identifier_Transferables.length == 0 ? "all" : Integer //$NON-NLS-1$
                             .toString(identifier_Transferables.length))
@@ -324,7 +324,7 @@ public final class ARServerImpl extends ARServerPOA {
 	
 	public ImageResource_Transferable[] transmitImageResourcesButIdsCondition(
 			Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier,
+			AccessIdentity_Transferable accessIdentity,
 			StorableObjectCondition_Transferable storableObjectCondition_Transferable)
 			throws AMFICOMRemoteException {
 		Log.debugMessage("ARServerImpl.transmitImageResourcesButIdsCondition | requiere " //$NON-NLS-1$
