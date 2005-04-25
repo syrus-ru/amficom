@@ -1,5 +1,5 @@
 /*
- * $Id: MapViewSaveAsCommand.java,v 1.14 2005/02/25 13:49:16 krupenn Exp $
+ * $Id: MapViewSaveAsCommand.java,v 1.15 2005/04/25 09:41:20 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,15 +26,15 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
-import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
+import com.syrus.AMFICOM.general.corba.AccessIdentity_Transferable;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.MapViewStorableObjectPool;
 
 /**
  * Класс используется для сохранения топологической схемы с новым
  * именем
- * @author $Author: krupenn $
- * @version $Revision: 1.14 $, $Date: 2005/02/25 13:49:16 $
+ * @author $Author: bass $
+ * @version $Revision: 1.15 $, $Date: 2005/04/25 09:41:20 $
  * @module mapviewclient_v1
  */
 public class MapViewSaveAsCommand extends VoidCommand
@@ -51,7 +51,7 @@ public class MapViewSaveAsCommand extends VoidCommand
 
 	public void execute()
 	{
-		AccessIdentifier_Transferable ait = 
+		AccessIdentity_Transferable ait = 
 			this.aContext.getSessionInterface().getAccessIdentifier();
 		Identifier creatorId = new Identifier(ait.user_id);
 		Identifier domainId = new Identifier(ait.domain_id);

@@ -16,7 +16,6 @@ import com.syrus.AMFICOM.Client.General.Report.ImagePanel;
 import com.syrus.AMFICOM.Client.General.Report.ObjectsReport;
 import com.syrus.AMFICOM.Client.General.Report.ReportResultsTablePanel;
 import com.syrus.AMFICOM.Client.General.Report.ReportTemplate;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 
 
 public class MapReportModel extends APOReportModel
@@ -68,13 +67,6 @@ public class MapReportModel extends APOReportModel
 		CreateReportException
 	{
 		return "";
-	}
-
-	public void loadRequiredObjects(
-			DataSourceInterface dsi,
-			ObjectsReport rp,
-			ReportTemplate rt)
-	{
 	}
 
 	public int getReportKind(ObjectsReport rp)

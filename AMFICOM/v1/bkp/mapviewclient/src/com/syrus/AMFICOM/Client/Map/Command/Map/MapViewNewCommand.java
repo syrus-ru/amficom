@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewNewCommand.java,v 1.16 2005/02/25 13:49:16 krupenn Exp $
+ * $Id: MapViewNewCommand.java,v 1.17 2005/04/25 09:41:20 bass Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
-import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
+import com.syrus.AMFICOM.general.corba.AccessIdentity_Transferable;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.mapview.MapView;
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.mapview.MapViewStorableObjectPool;
 
 /**
  * создать новый вид 
- * @author $Author: krupenn $
- * @version $Revision: 1.16 $, $Date: 2005/02/25 13:49:16 $
+ * @author $Author: bass $
+ * @version $Revision: 1.17 $, $Date: 2005/04/25 09:41:20 $
  * @module mapviewclient_v1
  */
 public class MapViewNewCommand extends VoidCommand
@@ -57,7 +57,7 @@ public class MapViewNewCommand extends VoidCommand
 					StatusMessageEvent.STATUS_MESSAGE,
 					LangModelMap.getString("MapNew")));
 
-		AccessIdentifier_Transferable ait = 
+		AccessIdentity_Transferable ait = 
 			this.aContext.getSessionInterface().getAccessIdentifier();
 		Identifier creatorId = new Identifier(ait.user_id);
 		Identifier domainId = new Identifier(ait.domain_id);
