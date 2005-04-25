@@ -1,5 +1,5 @@
 /**
- * $Id: MapTreeModel.java,v 1.1 2005/04/22 11:35:17 krupenn Exp $ Syrus
+ * $Id: MapTreeModel.java,v 1.2 2005/04/25 15:19:32 krupenn Exp $ Syrus
  * Systems Научно-технический центр Проект: АМФИКОМ Автоматизированный
  * МногоФункциональный Интеллектуальный Комплекс Объектного Мониторинга
  * Платформа: java 1.4.1
@@ -17,6 +17,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.ImageIcon;
 
@@ -37,13 +38,15 @@ import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.mapview.MapView;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/22 11:35:17 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/25 15:19:32 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
 public class MapTreeModel implements ChildrenFactory {
 
 	public static final String MAPS_BRANCH = "innermaps";
+
+	public static final String EXTERNAL_NODES_BRANCH = "externalnode";
 
 	public static final String NONAME_BRANCH = "noname";
 
@@ -63,6 +66,12 @@ public class MapTreeModel implements ChildrenFactory {
 
 	public static ImageIcon nodeIcon = new ImageIcon(Toolkit.getDefaultToolkit()
 			.getImage("images/node_in_tree.gif").getScaledInstance(
+					IMG_SIZE,
+					IMG_SIZE,
+					Image.SCALE_SMOOTH));
+
+	public static ImageIcon externalNodeIcon = new ImageIcon(Toolkit.getDefaultToolkit()
+			.getImage("images/externalnode.gif").getScaledInstance(
 					IMG_SIZE,
 					IMG_SIZE,
 					Image.SCALE_SMOOTH));
@@ -164,6 +173,9 @@ public class MapTreeModel implements ChildrenFactory {
 			if (s.equals(MapTreeModel.MAPS_BRANCH)) {
 				populateMapsNode((PopulatableIconedNode )node);
 			}
+			else if (s.equals(MapTreeModel.EXTERNAL_NODES_BRANCH)) {
+				populateExternalNodesNode((PopulatableIconedNode )node);
+			}
 			else if (s.equals(MapViewController.ELEMENT_SITENODE)) {
 				populateSitesNode((PopulatableIconedNode )node);
 			}
@@ -189,6 +201,7 @@ public class MapTreeModel implements ChildrenFactory {
 	void populateMapNode(PopulatableIconedNode node) {
 		PopulatableIconedNode mapsNode;
 		PopulatableIconedNode sitesNode;
+		PopulatableIconedNode externalNodesNode;
 		PopulatableIconedNode nodesNode;
 		PopulatableIconedNode linksNode;
 		PopulatableIconedNode collectorsNode;
@@ -202,6 +215,15 @@ public class MapTreeModel implements ChildrenFactory {
 					true);
 //			mapsNode.populate();
 			node.addChild(mapsNode);
+
+			externalNodesNode = new PopulatableIconedNode(
+					this,
+					MapTreeModel.EXTERNAL_NODES_BRANCH,
+					getObjectName(MapTreeModel.EXTERNAL_NODES_BRANCH),
+					folderIcon,
+					true);
+//			externalNodesNode.populate();
+			node.addChild(externalNodesNode);
 
 			sitesNode = new PopulatableIconedNode(
 					this,
@@ -378,6 +400,53 @@ public class MapTreeModel implements ChildrenFactory {
 						site,
 						getObjectName(site),
 						((IconedNode )node).getIcon(),
+						false);
+				// if(node.getChildren().isEmpty())
+				node.addChild(newItem);
+				// else
+				// node.getChildren().add(i, newItem);
+			}
+			i++;
+		}
+	}
+
+	void populateExternalNodesNode(PopulatableIconedNode node) {
+		Item parentNode = node.getParent();
+		Map map = (Map )parentNode.getObject();
+
+		Set siteNodes = map.getExternalNodes();
+
+		java.util.Map nodePresense = new HashMap();
+
+		List toRemove = new LinkedList();
+
+		for(Iterator iter = node.getChildren().iterator(); iter.hasNext();) {
+			Item childNode = (Item )iter.next();
+			SiteNode site = (SiteNode )childNode.getObject();
+			if(siteNodes.contains(site))
+				nodePresense.put(site, childNode);
+			else
+				toRemove.add(childNode);
+		}
+		for(Iterator it = toRemove.iterator(); it.hasNext();) {
+			Item childItem = (Item )it.next();
+			childItem.setParent(null);
+		}
+
+		int i = 0;
+		for(Iterator it = siteNodes.iterator(); it.hasNext();) {
+			SiteNode site = (SiteNode )it.next();
+			Item childNode = (Item )nodePresense.get(site);
+			if(childNode == null) {
+//				PopulatableIconedNode newItem = new PopulatableIconedNode(
+				Item newItem = new IconedNode(
+						site,
+						getObjectName(site),
+						new ImageIcon(NodeTypeController.getImage((SiteNodeType )site.getType())
+								.getScaledInstance(
+										IMG_SIZE,
+										IMG_SIZE,
+										Image.SCALE_SMOOTH)),
 						false);
 				// if(node.getChildren().isEmpty())
 				node.addChild(newItem);
