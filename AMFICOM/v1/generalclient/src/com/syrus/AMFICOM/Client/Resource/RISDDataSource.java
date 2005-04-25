@@ -1,5 +1,5 @@
 /*-
- * $Id: RISDDataSource.java,v 1.8 2005/04/25 09:55:02 bass Exp $
+ * $Id: RISDDataSource.java,v 1.9 2005/04/25 09:59:18 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,7 +20,6 @@ import com.syrus.AMFICOM.CORBA.Admin.Domain_Transferable;
 import com.syrus.AMFICOM.CORBA.Admin.UserSeq_TransferableHolder;
 import com.syrus.AMFICOM.CORBA.Admin.User_Transferable;
 import com.syrus.AMFICOM.CORBA.Resource.ImageResourceSeq_TransferableHolder;
-import com.syrus.AMFICOM.CORBA.Resource.ImageResource_Transferable;
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.SessionInterface;
 import com.syrus.AMFICOM.Client.Resource.Object.CommandPermissionAttributes;
@@ -30,7 +29,7 @@ import com.syrus.io.Rewriter;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/04/25 09:55:02 $
+ * @version $Revision: 1.9 $, $Date: 2005/04/25 09:59:18 $
  * @module generalclient_v1
  */
 public class RISDDataSource implements DataSourceInterface {
@@ -183,8 +182,6 @@ public class RISDDataSource implements DataSourceInterface {
 		int ecode = 0;
 		int count;
 		ImageResourceSeq_TransferableHolder ih = new ImageResourceSeq_TransferableHolder();
-		ImageResource_Transferable images[];
-		ImageResource image;
 		DomainSeq_TransferableHolder dh = new DomainSeq_TransferableHolder();
 		Domain_Transferable domains[];
 		Domain domain;
