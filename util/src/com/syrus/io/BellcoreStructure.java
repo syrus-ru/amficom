@@ -1,5 +1,5 @@
 /*
- * $Id: BellcoreStructure.java,v 1.12 2005/03/17 10:12:49 bass Exp $
+ * $Id: BellcoreStructure.java,v 1.13 2005/04/25 15:10:00 saa Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,8 +11,8 @@ package com.syrus.io;
 import java.util.Date;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/03/17 10:12:49 $
- * @author $Author: bass $
+ * @version $Revision: 1.13 $, $Date: 2005/04/25 15:10:00 $
+ * @author $Author: saa $
  * @module util
  */
 public class BellcoreStructure {
@@ -345,19 +345,32 @@ public class BellcoreStructure {
 		return this.fxdParams.gi / 100000d;
 	}
 
+	/**
+	 * Gives resolution (sample spacing) measured in meters.
+	 * Generally, gives relative accuracy better than 1e-5.
+	 * @return Data resolution, m.
+	 */
 	public double getResolution() {
+		// if BS contains info on data spacing, return that
+		if (this.fxdParams.tpw > 0)
+		{
+			double res = this.fxdParams.ds[0] * 1e-14 * 3e8
+				/ (this.fxdParams.gi * 1e-5);
+			if (res > 0)
+				return res;
+		}
+		// otherwise, guess it based on total length
 		int n = this.dataPts.tndp;
-		double res = (this.fxdParams.ar - this.fxdParams.ao) * 3d / ((double) n * (double) this.fxdParams.gi / 1000d);
-		if (getUnits().equals("km")) //$NON-NLS-1$
-			res *= 1000d;
+		double res = (this.fxdParams.ar - this.fxdParams.ao) * 3d
+			/ ((double) n * (double) this.fxdParams.gi / 1000d);
 		return res;
 	}
 
+	/**
+	 * @return trace range, km
+	 */
 	public double getRange() {
-		double range = (this.fxdParams.ar - this.fxdParams.ao) * 3d / this.fxdParams.gi * 1000;
-		if (getUnits().equals("mt")) //$NON-NLS-1$
-			range /= 1000d;
-		return range;
+		return (this.fxdParams.ar - this.fxdParams.ao) * 3d / this.fxdParams.gi;
 	}
 
 	public double[] getTraceData() {
