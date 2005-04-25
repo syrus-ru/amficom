@@ -1,5 +1,5 @@
 /*-
-* $Id: PeriodicalTemporalPattern.java,v 1.1 2005/04/22 14:32:31 bob Exp $
+* $Id: PeriodicalTemporalPattern.java,v 1.2 2005/04/25 08:20:11 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.measurement.corba.PeriodicalTemporalPattern_Transferabl
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/22 14:32:31 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/25 08:20:11 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module measurement_v1
@@ -145,6 +145,23 @@ public class PeriodicalTemporalPattern extends AbstractTemporalPattern {
 		}
 		this.period = period;
 		super.changed = true;
+	}
+	
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	protected synchronized void setAttributes(Date created,
+			Date modified,
+			Identifier creatorId,
+			Identifier modifierId,
+			long version,
+			long period) {
+		super.setAttributes(created,
+				modified,
+				creatorId,
+				modifierId,
+				version);
+		this.period = period;
 	}
 
 }
