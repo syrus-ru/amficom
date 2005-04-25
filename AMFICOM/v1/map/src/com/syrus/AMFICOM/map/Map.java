@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.38 2005/04/20 07:53:47 bass Exp $
+ * $Id: Map.java,v 1.39 2005/04/25 08:07:18 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,8 +39,8 @@ import com.syrus.AMFICOM.map.corba.Map_Transferable;
  * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на 
  * линиях, коллекторов (объединяющих в себе линии).
  * 
- * @author $Author: bass $
- * @version $Revision: 1.38 $, $Date: 2005/04/20 07:53:47 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.39 $, $Date: 2005/04/25 08:07:18 $
  * @module map_v1
  * @todo make maps persistent 
  */
@@ -450,6 +450,7 @@ public class Map extends DomainMember implements Namable {
 		this.nodeElements.addAll(this.getAllSiteNodes());
 		this.nodeElements.addAll(this.getAllTopologicalNodes());
 		this.nodeElements.addAll(this.getAllMarks());
+		this.nodeElements.addAll(this.getExternalNodes());
 		return this.nodeElements;
 	}
 
@@ -462,12 +463,10 @@ public class Map extends DomainMember implements Namable {
 	public void addNode(AbstractNode node) {
 		if (node instanceof SiteNode)
 			this.siteNodes.add(node);
-		else
-			if (node instanceof TopologicalNode)
-				this.topologicalNodes.add(node);
-			else
-				if (node instanceof Mark)
-					this.marks.add(node);
+		else if (node instanceof TopologicalNode)
+			this.topologicalNodes.add(node);
+		else if (node instanceof Mark)
+			this.marks.add(node);
 		node.setRemoved(false);
 		this.changed = true;
 	}
@@ -483,12 +482,12 @@ public class Map extends DomainMember implements Namable {
 		this.selectedElements.remove(node);
 		if (node instanceof SiteNode)
 			this.siteNodes.remove(node);
+		else if (node instanceof TopologicalNode)
+			this.topologicalNodes.remove(node);
+		else if (node instanceof Mark)
+			this.marks.remove(node);
 		else
-			if (node instanceof TopologicalNode)
-				this.topologicalNodes.remove(node);
-			else
-				if (node instanceof Mark)
-					this.marks.remove(node);
+			this.externalNodes.remove(node);
 		node.setRemoved(true);
 		this.changed = true;
 	}
@@ -817,6 +816,7 @@ public class Map extends DomainMember implements Namable {
 		this.allElements.addAll(this.getAllMarks());
 		this.allElements.addAll(this.getAllTopologicalNodes());
 		this.allElements.addAll(this.getAllSiteNodes());
+		this.allElements.addAll(this.getExternalNodes());
 
 		this.allElements.addAll(this.getAllNodeLinks());
 		this.allElements.addAll(this.getAllPhysicalLinks());
