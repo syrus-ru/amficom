@@ -1,6 +1,5 @@
 package com.syrus.AMFICOM.analysis.dadara;
 
-import com.syrus.AMFICOM.analysis.dadara.MathRef;
 
 public class ReflectogramMath
 {
@@ -319,7 +318,7 @@ public class ReflectogramMath
 				secondPoint = i;
 				break;
 			}
-		double[] d = MathRef.linearize2point(data, firstPoint, secondPoint);
+		double[] d = ReflectogramMath.linearize2point(data, firstPoint, secondPoint);
 		double eventSize = - 3d / d[0] + 150d / refraction * pulsewidth / 1000d / resolution;
 		if(eventSize < 2)
 			eventSize = 2;
@@ -341,6 +340,14 @@ public class ReflectogramMath
 				shift = data[i] - etalon[i];
 
 		return shift;
+	}
+
+	public static double[] linearize2point (double[] y, int begin, int end)
+	{
+		double res[] = new double[2];
+		res[0] = (y[end] - y[begin]) / (end - begin);
+		res[1] = y[begin] - res[0] * begin;
+		return res;
 	}
 }
 
