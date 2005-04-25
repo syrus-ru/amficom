@@ -1,5 +1,5 @@
 /*
- * $Id: TestWrapper.java,v 1.10 2005/04/11 11:49:13 bob Exp $
+ * $Id: TestWrapper.java,v 1.11 2005/04/25 08:49:23 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.measurement.corba.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/04/11 11:49:13 $
- * @author $Author: bob $
+ * @version $Revision: 1.11 $, $Date: 2005/04/25 08:49:23 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 public class TestWrapper extends StorableObjectWrapper {
@@ -35,7 +35,7 @@ public class TestWrapper extends StorableObjectWrapper {
 	public static final String COLUMN_RETURN_TYPE = "return_type";
 	public static final String COLUMN_START_TIME = "start_time";
 	public static final String COLUMN_STATUS = "status";
-	public static final String COLUMN_TEMPORAL_PATTERN_ID = "temporal_pattern_id";
+	public static final String COLUMN_TEMPORAL_PATTERN_ID = "cron_temporal_pattern_id";
 	public static final String COLUMN_TEMPORAL_TYPE = "temporal_type";
 	public static final String COLUMN_NUMBER_OF_MEASUREMENTS = "number_of_measurements";
 	public static final String LINK_COLUMN_TEST_ID = "test_id";

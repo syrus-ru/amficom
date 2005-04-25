@@ -9,7 +9,7 @@ CREATE TABLE Test (
  temporal_type NUMBER(2, 0) NOT NULL,
  start_time DATE,
  end_time DATE,
- temporal_pattern_id VARCHAR2(32),
+ cron_temporal_pattern_id VARCHAR2(32),
 --
  measurement_type_id VARCHAR2(32) NOT NULL,
  analysis_type_id VARCHAR2(32),
@@ -27,8 +27,8 @@ CREATE TABLE Test (
  CONSTRAINT test_modifier_fk FOREIGN KEY (modifier_id)
   REFERENCES "User" (id) ON DELETE CASCADE,
 --
- CONSTRAINT test_tp_fk FOREIGN KEY (temporal_pattern_id)
-  REFERENCES TemporalPattern (id) ON DELETE CASCADE,
+ CONSTRAINT test_ctp_fk FOREIGN KEY (cron_temporal_pattern_id)
+  REFERENCES CronTemporalPattern (id) ON DELETE CASCADE,
 --
  CONSTRAINT test_mnttype_fk FOREIGN KEY (measurement_type_id)
   REFERENCES MeasurementType (id) ON DELETE CASCADE,
