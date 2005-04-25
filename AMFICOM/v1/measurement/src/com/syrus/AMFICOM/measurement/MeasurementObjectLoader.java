@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementObjectLoader.java,v 1.29 2005/04/22 16:04:39 arseniy Exp $
+ * $Id: MeasurementObjectLoader.java,v 1.30 2005/04/25 09:48:58 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,48 +9,15 @@
 package com.syrus.AMFICOM.measurement;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/04/22 16:04:39 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.30 $, $Date: 2005/04/25 09:48:58 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
 public interface MeasurementObjectLoader {
-
-	/* Load single object*/
-
-	MeasurementType loadMeasurementType(Identifier id) throws ApplicationException;
-
-	AnalysisType loadAnalysisType(Identifier id) throws ApplicationException;
-
-	EvaluationType loadEvaluationType(Identifier id) throws ApplicationException;
-
-	ModelingType loadModelingType(Identifier id) throws ApplicationException;
-
-
-
-	Measurement loadMeasurement(Identifier id) throws ApplicationException;
-
-	Analysis loadAnalysis(Identifier id) throws ApplicationException;
-
-	Evaluation loadEvaluation(Identifier id) throws ApplicationException;
-
-	Modeling loadModeling(Identifier id) throws ApplicationException;
-
-	MeasurementSetup loadMeasurementSetup(Identifier id) throws ApplicationException;
-
-	Result loadResult(Identifier id) throws ApplicationException;
-
-	Set loadSet(Identifier id) throws ApplicationException;
-
-	Test loadTest(Identifier id) throws ApplicationException;
-
-	CronTemporalPattern loadCronTemporalPattern(Identifier id) throws ApplicationException;
-
-
 
 	/* Load multiple objects*/
 
@@ -81,7 +48,10 @@ public interface MeasurementObjectLoader {
 	java.util.Set loadTests(java.util.Set ids) throws ApplicationException;
 
 	java.util.Set loadCronTemporalPatterns(java.util.Set ids) throws ApplicationException;
-
+	
+	java.util.Set loadIntervalsTemporalPatterns(java.util.Set ids) throws ApplicationException;
+	
+	java.util.Set loadPeriodicalTemporalPatterns(java.util.Set ids) throws ApplicationException;
 
 
 	/* Load multiple objects but ids*/
@@ -114,38 +84,9 @@ public interface MeasurementObjectLoader {
 
 	java.util.Set loadCronTemporalPatternsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException;
 
-
-
-	/* Save single object*/
-
-	void saveMeasurementType(MeasurementType measurementType, boolean force) throws ApplicationException;
-
-	void saveAnalysisType(AnalysisType analysisType, boolean force) throws ApplicationException;
-
-	void saveEvaluationType(EvaluationType evaluationType, boolean force) throws ApplicationException;
-
-	void saveModelingType(ModelingType modelingType, boolean force) throws ApplicationException;
-
-
-
-	void saveMeasurement(Measurement measurement, boolean force) throws ApplicationException;
-
-	void saveAnalysis(Analysis analysis, boolean force) throws ApplicationException;
-
-	void saveEvaluation(Evaluation evaluation, boolean force) throws ApplicationException;
-
-	void saveModeling(Modeling modeling, boolean force) throws ApplicationException;
-
-	void saveMeasurementSetup(MeasurementSetup measurementSetup, boolean force) throws ApplicationException;
-
-	void saveResult(Result result, boolean force) throws ApplicationException;
-
-	void saveSet(Set set, boolean force) throws ApplicationException;
-
-	void saveTest(Test test, boolean force) throws ApplicationException;
-
-	void saveCronTemporalPattern(CronTemporalPattern cronTemporalPattern, boolean force) throws ApplicationException;
-
+	java.util.Set loadIntervalsTemporalPatternsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException;
+	
+	java.util.Set loadPeriodicalTemporalPatternsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException;
 
 
 	/* Save multiple objects*/
@@ -178,13 +119,12 @@ public interface MeasurementObjectLoader {
 
 	void saveCronTemporalPatterns(java.util.Set objects, boolean force) throws ApplicationException;
 
-
+	void saveIntervalsTemporalPatterns(java.util.Set objects, boolean force) throws ApplicationException;
+	
+	void savePeriodicalTemporalPatterns(java.util.Set objects, boolean force) throws ApplicationException;
+	
 
 	java.util.Set refresh(java.util.Set storableObjects) throws ApplicationException;
-
-
-
-	void delete(Identifier id);
 
 	void delete(final java.util.Set identifiables);
 

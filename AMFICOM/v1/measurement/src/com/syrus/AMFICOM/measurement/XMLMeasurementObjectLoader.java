@@ -1,5 +1,5 @@
 /*
- * $Id: XMLMeasurementObjectLoader.java,v 1.13 2005/04/22 16:04:39 arseniy Exp $
+ * $Id: XMLMeasurementObjectLoader.java,v 1.14 2005/04/25 09:49:11 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import java.io.File;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -22,8 +23,8 @@ import com.syrus.AMFICOM.general.StorableObjectXML;
 import com.syrus.AMFICOM.general.StorableObjectXMLDriver;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/04/22 16:04:39 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2005/04/25 09:49:11 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 public class XMLMeasurementObjectLoader implements MeasurementObjectLoader {
@@ -33,11 +34,6 @@ public class XMLMeasurementObjectLoader implements MeasurementObjectLoader {
 	public XMLMeasurementObjectLoader(final File path) {
 		StorableObjectXMLDriver driver = new StorableObjectXMLDriver(path, "measurement");
 		this.measurementXML = new StorableObjectXML(driver);
-	}
-
-	public void delete(Identifier id) {
-		this.measurementXML.delete(id);
-		this.measurementXML.flush();
 	}
 
 	public void delete(final java.util.Set identifiables) {
@@ -56,24 +52,12 @@ public class XMLMeasurementObjectLoader implements MeasurementObjectLoader {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
-	public Analysis loadAnalysis(Identifier id) throws ApplicationException {
-		return (Analysis) this.loadStorableObject(id);
-	}
-
-	public AnalysisType loadAnalysisType(Identifier id) throws ApplicationException {
-		return (AnalysisType) this.loadStorableObject(id);
-	}
-
 	public java.util.Set loadAnalysisTypes(java.util.Set ids) throws ApplicationException {
 		return this.loadStorableObjects(ids);
 	}
 
 	public java.util.Set loadAnalysisTypesButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
 		return this.loadStorableObjectButIds(condition, ids);
-	}
-
-	public Evaluation loadEvaluation(Identifier id) throws ApplicationException {
-		return (Evaluation) this.loadStorableObject(id);
 	}
 
 	public java.util.Set loadEvaluations(java.util.Set ids) throws ApplicationException {
@@ -84,20 +68,12 @@ public class XMLMeasurementObjectLoader implements MeasurementObjectLoader {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
-	public EvaluationType loadEvaluationType(Identifier id) throws ApplicationException {
-		return (EvaluationType) this.loadStorableObject(id);
-	}
-
 	public java.util.Set loadEvaluationTypes(java.util.Set ids) throws ApplicationException {
 		return this.loadStorableObjects(ids);
 	}
 
 	public java.util.Set loadEvaluationTypesButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
 		return this.loadStorableObjectButIds(condition, ids);
-	}
-
-	public Measurement loadMeasurement(Identifier id) throws ApplicationException {
-		return (Measurement) this.loadStorableObject(id);
 	}
 
 	public java.util.Set loadMeasurements(java.util.Set ids) throws ApplicationException {
@@ -108,10 +84,6 @@ public class XMLMeasurementObjectLoader implements MeasurementObjectLoader {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
-	public MeasurementSetup loadMeasurementSetup(Identifier id) throws ApplicationException {
-		return (MeasurementSetup) this.loadStorableObject(id);
-	}
-
 	public java.util.Set loadMeasurementSetups(java.util.Set ids) throws ApplicationException {
 		return this.loadStorableObjects(ids);
 	}
@@ -119,21 +91,12 @@ public class XMLMeasurementObjectLoader implements MeasurementObjectLoader {
 	public java.util.Set loadMeasurementSetupsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
-
-	public MeasurementType loadMeasurementType(Identifier id) throws ApplicationException {
-		return (MeasurementType) this.loadStorableObject(id);
-	}
-
 	public java.util.Set loadMeasurementTypes(java.util.Set ids) throws ApplicationException {
 		return this.loadStorableObjects(ids);
 	}
 
 	public java.util.Set loadMeasurementTypesButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
 		return this.loadStorableObjectButIds(condition, ids);
-	}
-
-	public Modeling loadModeling(Identifier id) throws ApplicationException {
-		return (Modeling) this.loadStorableObject(id);
 	}
 
 	public java.util.Set loadModelings(java.util.Set ids) throws ApplicationException {
@@ -144,20 +107,12 @@ public class XMLMeasurementObjectLoader implements MeasurementObjectLoader {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
-	public ModelingType loadModelingType(Identifier id) throws ApplicationException {
-		return (ModelingType) this.loadStorableObject(id);
-	}
-
 	public java.util.Set loadModelingTypes(java.util.Set ids) throws ApplicationException {
 		return this.loadStorableObjects(ids);
 	}
 
 	public java.util.Set loadModelingTypesButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
 		return this.loadStorableObjectButIds(condition, ids);
-	}
-
-	public Result loadResult(Identifier id) throws ApplicationException {
-		return (Result) this.loadStorableObject(id);
 	}
 
 	public java.util.Set loadResults(java.util.Set ids) throws ApplicationException {
@@ -168,10 +123,6 @@ public class XMLMeasurementObjectLoader implements MeasurementObjectLoader {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
-	public Set loadSet(Identifier id) throws ApplicationException {
-		return (Set) this.loadStorableObject(id);
-	}
-
 	public java.util.Set loadSets(java.util.Set ids) throws ApplicationException {
 		return this.loadStorableObjects(ids);
 	}
@@ -180,22 +131,32 @@ public class XMLMeasurementObjectLoader implements MeasurementObjectLoader {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
-	public CronTemporalPattern loadCronTemporalPattern(Identifier id) throws ApplicationException {
-		return (CronTemporalPattern) this.loadStorableObject(id);
-	}
-
 	public java.util.Set loadCronTemporalPatterns(java.util.Set ids) throws ApplicationException {
 		return this.loadStorableObjects(ids);
 	}
-
+	
 	public java.util.Set loadCronTemporalPatternsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
-
-	public Test loadTest(Identifier id) throws ApplicationException {
-		return (Test) this.loadStorableObject(id);
+	
+	public Set loadIntervalsTemporalPatterns(Set ids) throws ApplicationException {
+		return this.loadStorableObjects(ids);
+	}
+	
+	public Set loadIntervalsTemporalPatternsButIds(	StorableObjectCondition condition,
+													Set ids) throws ApplicationException {
+		return this.loadStorableObjectButIds(condition, ids);
 	}
 
+	public Set loadPeriodicalTemporalPatterns(Set ids) throws ApplicationException {
+		return this.loadStorableObjects(ids);
+	}
+	
+	public Set loadPeriodicalTemporalPatternsButIds(StorableObjectCondition condition,
+													Set ids) throws ApplicationException {
+		return this.loadStorableObjectButIds(condition, ids);
+	}
+	
 	public java.util.Set loadTests(java.util.Set ids) throws ApplicationException {
 		return this.loadStorableObjects(ids);
 	}
@@ -209,135 +170,71 @@ public class XMLMeasurementObjectLoader implements MeasurementObjectLoader {
 		return Collections.EMPTY_SET;
 	}
 
-	public void saveAnalyses(java.util.Set list, boolean force) throws ApplicationException {
-		this.saveStorableObjects(list, force);
+	public void saveAnalyses(java.util.Set objects, boolean force) throws ApplicationException {
+		this.saveStorableObjects(objects, force);
 	}
 
-	public void saveAnalysis(Analysis analysis, boolean force) throws ApplicationException {
-		this.saveStorableObject(analysis, force);
-		this.measurementXML.flush();
-	}
-
-	public void saveAnalysisType(AnalysisType analysisType, boolean force) throws ApplicationException {
-		this.saveStorableObject(analysisType, force);
-		this.measurementXML.flush();
-	}
-
-	public void saveAnalysisTypes(java.util.Set list, boolean force) throws ApplicationException {
-		this.saveStorableObjects(list, force);
+	public void saveAnalysisTypes(java.util.Set objects, boolean force) throws ApplicationException {
+		this.saveStorableObjects(objects, force);
 
 	}
 
-	public void saveEvaluation(Evaluation evaluation, boolean force) throws ApplicationException {
-		this.saveStorableObject(evaluation, force);
-		this.measurementXML.flush();
-	}
+	public void saveEvaluations(java.util.Set objects, boolean force) throws ApplicationException {
+		this.saveStorableObjects(objects, force);
+	}	
 
-	public void saveEvaluations(java.util.Set list, boolean force) throws ApplicationException {
-		this.saveStorableObjects(list, force);
-	}
-
-	public void saveEvaluationType(EvaluationType evaluationType, boolean force) throws ApplicationException {
-		this.saveStorableObject(evaluationType, force);
-		this.measurementXML.flush();
+	public void saveEvaluationTypes(java.util.Set objects, boolean force) throws ApplicationException {
+		this.saveStorableObjects(objects, force);
 
 	}
 
-	public void saveEvaluationTypes(java.util.Set list, boolean force) throws ApplicationException {
-		this.saveStorableObjects(list, force);
+	public void saveMeasurements(java.util.Set objects, boolean force) throws ApplicationException {
+		this.saveStorableObjects(objects, force);
 
 	}
 
-	public void saveMeasurement(Measurement measurement, boolean force) throws ApplicationException {
-		this.saveStorableObject(measurement, force);
-		this.measurementXML.flush();
-	}
-
-	public void saveMeasurements(java.util.Set list, boolean force) throws ApplicationException {
-		this.saveStorableObjects(list, force);
+	public void saveMeasurementSetups(java.util.Set objects, boolean force) throws ApplicationException {
+		this.saveStorableObjects(objects, force);
 
 	}
 
-	public void saveMeasurementSetup(MeasurementSetup measurementSetup, boolean force)
-			throws ApplicationException {
-		this.saveStorableObject(measurementSetup, force);
-		this.measurementXML.flush();
+	public void saveMeasurementTypes(java.util.Set objects, boolean force) throws ApplicationException {
+		this.saveStorableObjects(objects, force);
+
+	}
+	public void saveModelings(java.util.Set objects, boolean force) throws ApplicationException {
+		this.saveStorableObjects(objects, force);
 
 	}
 
-	public void saveMeasurementSetups(java.util.Set list, boolean force) throws ApplicationException {
-		this.saveStorableObjects(list, force);
+	public void saveModelingTypes(java.util.Set objects, boolean force) throws ApplicationException {
+		this.saveStorableObjects(objects, force);
 
 	}
 
-	public void saveMeasurementType(MeasurementType measurementType, boolean force) throws ApplicationException {
-		this.saveStorableObject(measurementType, force);
-		this.measurementXML.flush();
+	public void saveResults(java.util.Set objects, boolean force) throws ApplicationException {
+		this.saveStorableObjects(objects, force);
 	}
 
-	public void saveMeasurementTypes(java.util.Set list, boolean force) throws ApplicationException {
-		this.saveStorableObjects(list, force);
-
-	}
-
-	public void saveModeling(Modeling modeling, boolean force) throws ApplicationException {
-		this.saveStorableObject(modeling, force);
-		this.measurementXML.flush();
-	}
-
-	public void saveModelings(java.util.Set list, boolean force) throws ApplicationException {
-		this.saveStorableObjects(list, force);
+	public void saveSets(java.util.Set objects, boolean force) throws ApplicationException {
+		this.saveStorableObjects(objects, force);
 
 	}
 
-	public void saveModelingType(ModelingType modelingType, boolean force) throws ApplicationException {
-		this.saveStorableObject(modelingType, force);
-		this.measurementXML.flush();
+	public void saveCronTemporalPatterns(java.util.Set objects, boolean force) throws ApplicationException {
+		this.saveStorableObjects(objects, force);
+	}
+	
+	public void saveIntervalsTemporalPatterns(java.util.Set objects,boolean force) throws ApplicationException{
+		this.saveStorableObjects(objects, force);
+	}
+	
+	public void savePeriodicalTemporalPatterns(java.util.Set objects,boolean force) throws ApplicationException{
+		this.saveStorableObjects(objects, force);
 	}
 
-	public void saveModelingTypes(java.util.Set list, boolean force) throws ApplicationException {
-		this.saveStorableObjects(list, force);
-
-	}
-
-	public void saveResult(Result result, boolean force) throws ApplicationException {
-		this.saveStorableObject(result, force);
-		this.measurementXML.flush();
-
-	}
-
-	public void saveResults(java.util.Set list, boolean force) throws ApplicationException {
-		this.saveStorableObjects(list, force);
-	}
-
-	public void saveSet(Set set, boolean force) throws ApplicationException {
-		this.saveStorableObject(set, force);
-		this.measurementXML.flush();
-	}
-
-	public void saveSets(java.util.Set list, boolean force) throws ApplicationException {
-		this.saveStorableObjects(list, force);
-
-	}
-
-	public void saveCronTemporalPattern(CronTemporalPattern cronTemporalPattern, boolean force) throws ApplicationException {
-		this.saveStorableObject(cronTemporalPattern, force);
-		this.measurementXML.flush();
-
-	}
-
-	public void saveCronTemporalPatterns(java.util.Set list, boolean force) throws ApplicationException {
-		this.saveStorableObjects(list, force);
-	}
-
-	public void saveTest(Test test, boolean force) throws ApplicationException {
-		this.saveStorableObject(test, force);
-		this.measurementXML.flush();
-
-	}
-
-	public void saveTests(java.util.Set list, boolean force) throws ApplicationException {
-		this.saveStorableObjects(list, force);
+	public void saveTests(java.util.Set objects, boolean force) throws ApplicationException {
+		this.saveStorableObjects(objects, force);
 	}
 
 	private StorableObject loadStorableObject(Identifier id) throws ApplicationException {
@@ -349,12 +246,12 @@ public class XMLMeasurementObjectLoader implements MeasurementObjectLoader {
 	}
 
 	private java.util.Set loadStorableObjects(java.util.Set ids) throws ApplicationException {
-		java.util.Set list = new HashSet(ids.size());
+		java.util.Set objects = new HashSet(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
-			list.add(this.loadStorableObject(id));
+			objects.add(this.loadStorableObject(id));
 		}
-		return list;
+		return objects;
 	}
 
 	private void saveStorableObject(StorableObject storableObject, boolean force) throws ApplicationException {
