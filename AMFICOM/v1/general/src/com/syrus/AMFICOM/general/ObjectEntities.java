@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectEntities.java,v 1.58 2005/04/23 17:46:52 arseniy Exp $
+ * $Id: ObjectEntities.java,v 1.59 2005/04/25 11:56:53 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.58 $, $Date: 2005/04/23 17:46:52 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.59 $, $Date: 2005/04/25 11:56:53 $
+ * @author $Author: bob $
  * @module general_v1
  */
 public final class ObjectEntities {
@@ -91,7 +91,7 @@ public final class ObjectEntities {
 	public static final String RESULTPARAMETER_ENTITY = "ResultParameter";
 	public static final String CRONTEMPORALPATTERN_ENTITY = "CronTemporalPattern";
 	public static final String INTERVALS_TEMPORALPATTERN_ENTITY = "IntervalsTemporalPattern";
-	public static final String PERIODICAL_TEMPORALPATTERN_ENTITY = "PeriodicTemporalPattern";
+	public static final String PERIODICAL_TEMPORALPATTERN_ENTITY = "PeriodicalTemporalPattern";
 	public static final String MODELING_ENTITY = "Modeling";
 
 	/*        Scheme        */
