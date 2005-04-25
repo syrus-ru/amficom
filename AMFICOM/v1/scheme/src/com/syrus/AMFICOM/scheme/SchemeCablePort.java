@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePort.java,v 1.19 2005/04/25 15:07:11 bass Exp $
+ * $Id: SchemeCablePort.java,v 1.20 2005/04/25 16:26:41 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.scheme.corba.SchemeCablePort_Transferable;
  * #09 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.19 $, $Date: 2005/04/25 15:07:11 $
+ * @version $Revision: 1.20 $, $Date: 2005/04/25 16:26:41 $
  * @module scheme_v1
  */
 public final class SchemeCablePort extends AbstractSchemePort {
@@ -157,6 +157,10 @@ public final class SchemeCablePort extends AbstractSchemePort {
 					portType, port, measurementPortType,
 					measurementPort, parentSchemeDevice);
 			schemeCablePort.changed = true;
+			if (port != null || portType != null)
+				schemeCablePort.portTypeSet = true;
+			if (measurementPort != null || measurementPortType != null)
+				schemeCablePort.measurementPortTypeSet = true;
 			return schemeCablePort;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(
@@ -210,7 +214,6 @@ public final class SchemeCablePort extends AbstractSchemePort {
 	/**
 	 * @param port
 	 * @see AbstractSchemePort#setPort(Port)
-	 * @todo skip invariance checks.
 	 */
 	public void setPort(final Port port) {
 		assert port == null || port.getSort().value() == PortSort._PORT_SORT_CABLE_PORT: ErrorMessages.NATURE_INVALID;

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.24 2005/04/25 15:07:11 bass Exp $
+ * $Id: SchemeElement.java,v 1.25 2005/04/25 16:26:41 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.util.Log;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.24 $, $Date: 2005/04/25 15:07:11 $
+ * @version $Revision: 1.25 $, $Date: 2005/04/25 16:26:41 $
  * @module scheme_v1
  */
 public final class SchemeElement extends AbstractSchemeElement implements
@@ -77,6 +77,8 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	private Identifier ugoCellId;
 
 	private SchemeElementDatabase schemeElementDatabase;
+
+	private boolean equipmentTypeSet = false;
 
 	/**
 	 * @param id
@@ -227,6 +229,8 @@ public final class SchemeElement extends AbstractSchemeElement implements
 					created, created, creatorId, creatorId,
 					0L, name, description, label, equipmentType, equipment, kis, siteNode, symbol, ugoCell, schemeCell, parentScheme, null);
 			schemeElement.changed = true;
+			if (equipment != null || equipmentType != null)
+				schemeElement.equipmentTypeSet = true;
 			return schemeElement;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(
@@ -273,6 +277,8 @@ public final class SchemeElement extends AbstractSchemeElement implements
 					created, created, creatorId, creatorId,
 					0L, name, description, label, equipmentType, equipment, kis, siteNode, symbol, ugoCell, schemeCell, null, parentSchemeElement);
 			schemeElement.changed = true;
+			if (equipment != null || equipmentType != null)
+				schemeElement.equipmentTypeSet = true;
 			return schemeElement;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(
@@ -356,8 +362,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	}
 
 	public Equipment getEquipment() {
-		assert this.equipmentId != null && this.equipmentTypeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert this.equipmentId.isVoid() ^ this.equipmentTypeId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+		assert this.assertEquipmentTypeSetStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
 
 		if (this.equipmentId.isVoid())
 			return null;
@@ -371,8 +376,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	}
 
 	public EquipmentType getEquipmentType() {
-		assert this.equipmentId != null && this.equipmentTypeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert this.equipmentId.isVoid() ^ this.equipmentTypeId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+		assert this.assertEquipmentTypeSetStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
 
 		if (!this.equipmentId.isVoid())
 			return (EquipmentType) getEquipment().getType();
@@ -688,11 +692,9 @@ public final class SchemeElement extends AbstractSchemeElement implements
 
 	/**
 	 * @param equipment
-	 * @todo skip invariance checks
 	 */
 	public void setEquipment(final Equipment equipment) {
-		assert this.equipmentId != null && this.equipmentTypeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert this.equipmentId.isVoid() ^ this.equipmentTypeId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+		assert this.assertEquipmentTypeSetNonStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
 
 		final Identifier newEquipmentId = Identifier.possiblyVoid(equipment);
 		if (this.equipmentId.equals(newEquipmentId)) {
@@ -720,11 +722,9 @@ public final class SchemeElement extends AbstractSchemeElement implements
 
 	/**
 	 * @param equipmentType
-	 * @todo skip invariance checks
 	 */
 	public void setEquipmentType(final EquipmentType equipmentType) {
-		assert this.equipmentId != null && this.equipmentTypeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert this.equipmentId.isVoid() ^ this.equipmentTypeId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+		assert this.assertEquipmentTypeSetNonStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
 		assert equipmentType != null: ErrorMessages.NON_NULL_EXPECTED;
 
 		if (!this.equipmentId.isVoid())
@@ -953,6 +953,29 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	/*-********************************************************************
 	 * Non-model members.                                                 *
 	 **********************************************************************/
+
+	/**
+	 * Invoked by modifier methods.
+	 */
+	private boolean assertEquipmentTypeSetNonStrict() {
+		if (this.equipmentTypeSet)
+			return this.assertEquipmentTypeSetStrict();
+		this.equipmentTypeSet = true;
+		return this.equipmentId != null
+				&& this.equipmentTypeId != null
+				&& this.equipmentId.isVoid()
+				&& this.equipmentTypeId.isVoid();
+	}
+
+	/**
+	 * Invoked by accessor methods (it is assumed that object is already
+	 * initialized).
+	 */
+	private boolean assertEquipmentTypeSetStrict() {
+		return this.equipmentId != null
+				&& this.equipmentTypeId != null
+				&& (this.equipmentId.isVoid() ^ this.equipmentTypeId.isVoid());
+	}
 
 	public Set getSchemeCablePorts() {
 		final Set schemeCablePorts = new HashSet();

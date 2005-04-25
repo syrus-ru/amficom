@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.18 2005/04/25 15:07:11 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.19 2005/04/25 16:26:41 bass Exp $
  * 
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.18 $, $Date: 2005/04/25 15:07:11 $
+ * @version $Revision: 1.19 $, $Date: 2005/04/25 16:26:41 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemePort extends
@@ -63,6 +63,10 @@ public abstract class AbstractSchemePort extends
 	private Identifier parentSchemeDeviceId;
 
 	private Set characteristics;
+
+	boolean portTypeSet = false;
+
+	boolean measurementPortTypeSet = false;
 
 	/**
 	 * @param id
@@ -170,8 +174,7 @@ public abstract class AbstractSchemePort extends
 	}
 
 	public final MeasurementPort getMeasurementPort() {
-		assert this.measurementPortId != null && this.measurementPortTypeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert this.measurementPortId.isVoid() ^ this.measurementPortTypeId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+		assert this.assertMeasurementPortTypeSetStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
 
 		if (this.measurementPortId.isVoid())
 			return null;
@@ -185,8 +188,7 @@ public abstract class AbstractSchemePort extends
 	}
 
 	public final MeasurementPortType getMeasurementPortType() {
-		assert this.measurementPortId != null && this.measurementPortTypeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert this.measurementPortId.isVoid() ^ this.measurementPortTypeId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+		assert this.assertMeasurementPortTypeSetStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
 
 		if (!this.measurementPortId.isVoid())
 			return (MeasurementPortType) getMeasurementPort().getType();
@@ -223,8 +225,7 @@ public abstract class AbstractSchemePort extends
 	 * Overridden by descendants to add extra checks.
 	 */
 	public Port getPort() {
-		assert this.portId != null && this.portTypeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert this.portId.isVoid() ^ this.portTypeId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+		assert this.assertPortTypeSetStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
 
 		if (this.portId.isVoid())
 			return null;
@@ -238,8 +239,7 @@ public abstract class AbstractSchemePort extends
 	}
 
 	public final PortType getPortType() {
-		assert this.portId != null && this.portTypeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert this.portId.isVoid() ^ this.portTypeId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+		assert this.assertPortTypeSetStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
 
 		if (!this.portId.isVoid())
 			return (PortType) getPort().getType();
@@ -353,11 +353,9 @@ public abstract class AbstractSchemePort extends
 
 	/**
 	 * @param measurementPort
-	 * @todo skip invariance checks.
 	 */
 	public final void setMeasurementPort(final MeasurementPort measurementPort) {
-		assert this.measurementPortId != null && this.measurementPortTypeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert this.measurementPortId.isVoid() ^ this.measurementPortTypeId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+		assert this.assertMeasurementPortTypeSetNonStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
 
 		final Identifier newMeasurementPortId = Identifier.possiblyVoid(measurementPort);
 		if (this.measurementPortId.equals(newMeasurementPortId)) {
@@ -385,11 +383,9 @@ public abstract class AbstractSchemePort extends
 
 	/**
 	 * @param measurementPortType
-	 * @todo skip invariance checks.
 	 */
 	public final void setMeasurementPortType(final MeasurementPortType measurementPortType) {
-		assert this.measurementPortId != null && this.measurementPortTypeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert this.measurementPortId.isVoid() ^ this.measurementPortTypeId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+		assert this.assertMeasurementPortTypeSetNonStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
 		assert measurementPortType != null: ErrorMessages.NON_NULL_EXPECTED;
 
 		if (!this.measurementPortId.isVoid())
@@ -439,11 +435,9 @@ public abstract class AbstractSchemePort extends
 	 * Overridden by descendants to add extra checks.
 	 *
 	 * @param port
-	 * @todo skip invariance checks.
 	 */
 	public void setPort(final Port port) {
-		assert this.portId != null && this.portTypeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert this.portId.isVoid() ^ this.portTypeId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+		assert this.assertPortTypeSetNonStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
 
 		final Identifier newPortId = Identifier.possiblyVoid(port);
 		if (this.portId.equals(newPortId)) {
@@ -471,11 +465,9 @@ public abstract class AbstractSchemePort extends
 
 	/**
 	 * @param portType
-	 * @todo skip invariance checks.
 	 */
 	public final void setPortType(final PortType portType) {
-		assert this.portId != null && this.portTypeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert this.portId.isVoid() ^ this.portTypeId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+		assert this.assertPortTypeSetNonStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
 		assert portType != null: ErrorMessages.NON_NULL_EXPECTED;
 
 		if (!this.portId.isVoid())
@@ -489,5 +481,55 @@ public abstract class AbstractSchemePort extends
 			this.portTypeId = newPortTypeId;
 			this.changed = true;
 		}
+	}
+
+	/*-********************************************************************
+	 * Non-model members.                                                 *
+	 **********************************************************************/
+
+	/**
+	 * Invoked by modifier methods.
+	 */
+	private boolean assertPortTypeSetNonStrict() {
+		if (this.portTypeSet)
+			return this.assertPortTypeSetStrict();
+		this.portTypeSet = true;
+		return this.portId != null
+				&& this.portTypeId != null
+				&& this.portId.isVoid()
+				&& this.portTypeId.isVoid();
+	}
+
+	/**
+	 * Invoked by accessor methods (it is assumed that object is already
+	 * initialized).
+	 */
+	private boolean assertPortTypeSetStrict() {
+		return this.portId != null
+				&& this.portTypeId != null
+				&& (this.portId.isVoid() ^ this.portTypeId.isVoid());
+	}
+
+	/**
+	 * Invoked by modifier methods.
+	 */
+	private boolean assertMeasurementPortTypeSetNonStrict() {
+		if (this.measurementPortTypeSet)
+			return this.assertMeasurementPortTypeSetStrict();
+		this.measurementPortTypeSet = true;
+		return this.measurementPortId != null
+				&& this.measurementPortTypeId != null
+				&& this.measurementPortId.isVoid()
+				&& this.measurementPortTypeId.isVoid();
+	}
+
+	/**
+	 * Invoked by accessor methods (it is assumed that object is already
+	 * initialized).
+	 */
+	private boolean assertMeasurementPortTypeSetStrict() {
+		return this.measurementPortId != null
+				&& this.measurementPortTypeId != null
+				&& (this.measurementPortId.isVoid() ^ this.measurementPortTypeId.isVoid());
 	}
 }

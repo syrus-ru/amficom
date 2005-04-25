@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.20 2005/04/25 15:07:11 bass Exp $
+ * $Id: SchemeLink.java,v 1.21 2005/04/25 16:26:41 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,7 +36,7 @@ import com.syrus.util.Log;
  * #10 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.20 $, $Date: 2005/04/25 15:07:11 $
+ * @version $Revision: 1.21 $, $Date: 2005/04/25 16:26:41 $
  * @module scheme_v1
  */
 public final class SchemeLink extends AbstractSchemeLink {
@@ -226,6 +226,8 @@ public final class SchemeLink extends AbstractSchemeLink {
 					siteNode, sourceSchemePort,
 					targetSchemePort, null, null, null);
 			schemeLink.changed = true;
+			if (link != null || linkType != null)
+				schemeLink.abstractLinkTypeSet = true;
 			return schemeLink;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(
@@ -273,6 +275,8 @@ public final class SchemeLink extends AbstractSchemeLink {
 					targetSchemePort, parentScheme, null,
 					null);
 			schemeLink.changed = true;
+			if (link != null || linkType != null)
+				schemeLink.abstractLinkTypeSet = true;
 			return schemeLink;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(
@@ -320,6 +324,8 @@ public final class SchemeLink extends AbstractSchemeLink {
 					targetSchemePort, null, parentSchemeElement,
 					null);
 			schemeLink.changed = true;
+			if (link != null || linkType != null)
+				schemeLink.abstractLinkTypeSet = true;
 			return schemeLink;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(
@@ -367,6 +373,8 @@ public final class SchemeLink extends AbstractSchemeLink {
 					targetSchemePort, null, null,
 					parentSchemeProtoElement);
 			schemeLink.changed = true;
+			if (link != null || linkType != null)
+				schemeLink.abstractLinkTypeSet = true;
 			return schemeLink;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(
@@ -541,7 +549,6 @@ public final class SchemeLink extends AbstractSchemeLink {
 	/**
 	 * @param link
 	 * @see AbstractSchemeLink#setLink(Link)
-	 * @todo skip invariance checks.
 	 */
 	public void setLink(final Link link) {
 		assert link == null || link.getSort().value() == LinkSort._LINKSORT_LINK: ErrorMessages.NATURE_INVALID;
@@ -559,7 +566,6 @@ public final class SchemeLink extends AbstractSchemeLink {
 
 	/**
 	 * @param linkType
-	 * @todo skip invariance checks.
 	 */
 	public void setLinkType(final LinkType linkType) {
 		this.setAbstractLinkType(linkType);

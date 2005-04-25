@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeLink.java,v 1.7 2005/04/25 15:07:11 bass Exp $
+ * $Id: AbstractSchemeLink.java,v 1.8 2005/04/25 16:26:41 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeLink}instead.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/04/25 15:07:11 $
+ * @version $Revision: 1.8 $, $Date: 2005/04/25 16:26:41 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemeLink extends AbstractSchemeElement {
@@ -69,6 +69,8 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	 * or {@link SchemeCablePort}.
 	 */
 	private Identifier targetAbstractSchemePortId;
+
+	boolean abstractLinkTypeSet = false;
 
 	/**
 	 * @param id
@@ -130,8 +132,7 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	 * Overridden by descendants to add extra checks.
 	 */
 	public Link getLink() {
-		assert this.linkId != null && this.abstractLinkTypeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert this.linkId.isVoid() ^ this.abstractLinkTypeId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+		assert this.assertAbstractLinkTypeSetStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
 
 		if (this.linkId.isVoid())
 			return null;
@@ -148,8 +149,7 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	 * Overridden by descendants to add extra checks.
 	 */
 	public AbstractLinkType getAbstractLinkType() {
-		assert this.linkId != null && this.abstractLinkTypeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert this.linkId.isVoid() ^ this.abstractLinkTypeId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+		assert this.assertAbstractLinkTypeSetStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
 
 		if (!this.linkId.isVoid())
 			return (AbstractLinkType) getLink().getType();
@@ -192,8 +192,7 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	 * @param link
 	 */
 	public void setLink(final Link link) {
-		assert this.linkId != null && this.abstractLinkTypeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert this.linkId.isVoid() ^ this.abstractLinkTypeId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+		assert this.assertAbstractLinkTypeSetNonStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
 
 		final Identifier newLinkId = Identifier.possiblyVoid(link);
 		if (this.linkId.equals(newLinkId)) {
@@ -225,8 +224,7 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	 * @param abstractLinkType
 	 */
 	public void setAbstractLinkType(final AbstractLinkType abstractLinkType) {
-		assert this.linkId != null && this.abstractLinkTypeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert this.linkId.isVoid() ^ this.abstractLinkTypeId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+		assert this.assertAbstractLinkTypeSetNonStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
 		assert abstractLinkType != null: ErrorMessages.NON_NULL_EXPECTED;
 
 		if (!this.linkId.isVoid())
@@ -292,5 +290,32 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 		this.linkId = linkId;
 		this.sourceAbstractSchemePortId = sourceAbstractSchemePortId;
 		this.targetAbstractSchemePortId = targetAbstractSchemePortId;
+	}
+
+	/*-********************************************************************
+	 * Non-model members.                                                 *
+	 **********************************************************************/
+
+	/**
+	 * Invoked by modifier methods.
+	 */
+	private boolean assertAbstractLinkTypeSetNonStrict() {
+		if (this.abstractLinkTypeSet)
+			return this.assertAbstractLinkTypeSetStrict();
+		this.abstractLinkTypeSet = true;
+		return this.linkId != null
+				&& this.abstractLinkTypeId != null
+				&& this.linkId.isVoid()
+				&& this.abstractLinkTypeId.isVoid();
+	}
+
+	/**
+	 * Invoked by accessor methods (it is assumed that object is already
+	 * initialized).
+	 */
+	private boolean assertAbstractLinkTypeSetStrict() {
+		return this.linkId != null
+				&& this.abstractLinkTypeId != null
+				&& (this.linkId.isVoid() ^ this.abstractLinkTypeId.isVoid());
 	}
 }

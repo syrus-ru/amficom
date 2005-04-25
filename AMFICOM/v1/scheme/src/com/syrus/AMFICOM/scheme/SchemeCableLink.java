@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.23 2005/04/25 15:07:11 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.24 2005/04/25 16:26:41 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.util.Log;
  * #11 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.23 $, $Date: 2005/04/25 15:07:11 $
+ * @version $Revision: 1.24 $, $Date: 2005/04/25 16:26:41 $
  * @module scheme_v1
  */
 public final class SchemeCableLink extends AbstractSchemeLink {
@@ -153,6 +153,8 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 					sourceSchemeCablePort,
 					targetSchemeCablePort, parentScheme);
 			schemeCableLink.changed = true;
+			if (link != null || cableLinkType != null)
+				schemeCableLink.abstractLinkTypeSet = true;
 			return schemeCableLink;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(
@@ -330,7 +332,6 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	/**
 	 * @param link
 	 * @see AbstractSchemeLink#setLink(Link)
-	 * @todo skip invariance checks.
 	 */
 	public void setLink(final Link link) {
 		assert link == null || link.getSort().value() == LinkSort._LINKSORT_CABLELINK: ErrorMessages.NATURE_INVALID;
@@ -348,7 +349,6 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 
 	/**
 	 * @param cableLinkType
-	 * @todo skip invariance checks.
 	 */
 	public void setCableLinkType(final CableLinkType cableLinkType) {
 		this.setAbstractLinkType(cableLinkType);
