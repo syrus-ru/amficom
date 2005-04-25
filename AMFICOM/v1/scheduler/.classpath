@@ -7,10 +7,9 @@
 	<classpathentry kind="src" path="/config_v1"/>
 	<classpathentry kind="src" path="/measurement_v1"/>
 	<classpathentry kind="src" path="/corbaportable_v1"/>
-	<classpathentry kind="src" path="/util"/>
-	<classpathentry kind="src" path="/idl_v1"/>
 	<classpathentry kind="src" path="/event_v1"/>
 	<classpathentry kind="src" path="/admin_v1"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/util"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

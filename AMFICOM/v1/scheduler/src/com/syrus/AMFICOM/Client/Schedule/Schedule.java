@@ -4,8 +4,10 @@ import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
+import com.syrus.util.Application;
 
 public class Schedule {
+	private static final String APPLICATION_NAME = "scheduler";
 
 	private ApplicationContext	aContext;
 
@@ -22,7 +24,9 @@ public class Schedule {
 		}
 	}
 
-	public static void main(String[] args) {		
+	public static void main(String[] args) {
+		Application.init(APPLICATION_NAME);
+
 		new Schedule();
 	}
 }
