@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.19 2005/04/20 12:26:16 bass Exp $
+ * $Id: SchemeLink.java,v 1.20 2005/04/25 15:07:11 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,7 +36,7 @@ import com.syrus.util.Log;
  * #10 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.19 $, $Date: 2005/04/20 12:26:16 $
+ * @version $Revision: 1.20 $, $Date: 2005/04/25 15:07:11 $
  * @module scheme_v1
  */
 public final class SchemeLink extends AbstractSchemeLink {
@@ -107,7 +107,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 
 		assert (parentScheme == null ? 0 : 1)
 				+ (parentSchemeElement == null ? 0 : 1)
-				+ (parentSchemeProtoElement == null ? 0 : 1) <= 1: ErrorMessages.MULTIPLE_PARENTS_PROHIBITED;
+				+ (parentSchemeProtoElement == null ? 0 : 1) <= 1: ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 		this.parentSchemeElementId = Identifier.possiblyVoid(parentSchemeElement);
 		this.parentSchemeProtoElementId = Identifier.possiblyVoid(parentSchemeProtoElement);
 
@@ -383,13 +383,6 @@ public final class SchemeLink extends AbstractSchemeLink {
 	}
 
 	/**
-	 * @see AbstractSchemeLink#getAbstractLinkType()
-	 */
-	public AbstractLinkType getAbstractLinkType() {
-		return getLinkType();
-	}
-
-	/**
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicSort()
 	 */
 	public CharacteristicSort getCharacteristicSort() {
@@ -412,8 +405,17 @@ public final class SchemeLink extends AbstractSchemeLink {
 		return link;
 	}
 
+	/**
+	 * @see AbstractSchemeLink#getAbstractLinkType()
+	 */
+	public AbstractLinkType getAbstractLinkType() {
+		final AbstractLinkType abstractLinkType = super.getAbstractLinkType();
+		assert abstractLinkType instanceof LinkType;
+		return abstractLinkType;
+	}
+
 	public LinkType getLinkType() {
-		throw new UnsupportedOperationException();
+		return (LinkType) this.getAbstractLinkType();
 	}
 
 	/**
@@ -423,13 +425,13 @@ public final class SchemeLink extends AbstractSchemeLink {
 		assert super.parentSchemeId != null && this.parentSchemeElementId != null && this.parentSchemeProtoElementId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
 
 		if (super.parentSchemeId.isVoid()) {
-			assert !this.parentSchemeElementId.isVoid() || !this.parentSchemeProtoElementId.isVoid(): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
+			assert !this.parentSchemeElementId.isVoid() || !this.parentSchemeProtoElementId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 			Log.debugMessage("SchemeLink.getParentScheme() | Parent Scheme was requested, while parent is either a SchemeElement or a SchemeProtoElement; returning null", //$NON-NLS-1$
 					Log.FINE);
 			return null;
 		}
 
-		assert this.parentSchemeElementId.isVoid() && this.parentSchemeProtoElementId.isVoid(): ErrorMessages.MULTIPLE_PARENTS_PROHIBITED;
+		assert this.parentSchemeElementId.isVoid() && this.parentSchemeProtoElementId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 		return super.getParentScheme();
 	}
 
@@ -437,14 +439,14 @@ public final class SchemeLink extends AbstractSchemeLink {
 		assert super.parentSchemeId != null && this.parentSchemeElementId != null && this.parentSchemeProtoElementId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
 
 		if (this.parentSchemeElementId.isVoid()) {
-			assert !super.parentSchemeId.isVoid() || !this.parentSchemeProtoElementId.isVoid(): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
+			assert !super.parentSchemeId.isVoid() || !this.parentSchemeProtoElementId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 			Log.debugMessage("SchemeLink.getParentSchemeElement() | Parent SchemeElement was requested, while parent is either a Scheme or a SchemeProtoElement; returning null", //$NON-NLS-1$
 					Log.FINE);
 			return null;
 		}
 
 		try {
-			assert super.parentSchemeId.isVoid() && this.parentSchemeProtoElementId.isVoid(): ErrorMessages.MULTIPLE_PARENTS_PROHIBITED;
+			assert super.parentSchemeId.isVoid() && this.parentSchemeProtoElementId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 			return (SchemeElement) SchemeStorableObjectPool.getStorableObject(this.parentSchemeElementId, true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
@@ -456,14 +458,14 @@ public final class SchemeLink extends AbstractSchemeLink {
 		assert super.parentSchemeId != null && this.parentSchemeElementId != null && this.parentSchemeProtoElementId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
 
 		if (this.parentSchemeProtoElementId.isVoid()) {
-			assert !super.parentSchemeId.isVoid() || !this.parentSchemeElementId.isVoid(): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
+			assert !super.parentSchemeId.isVoid() || !this.parentSchemeElementId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 			Log.debugMessage("SchemeLink.getParentSchemeProtoElement() | Parent SchemeProtoElement was requested, while parent is either a Scheme or a SchemeElement; returning null", //$NON-NLS-1$
 					Log.FINE);
 			return null;
 		}
 
 		try {
-			assert super.parentSchemeId.isVoid() && this.parentSchemeElementId.isVoid(): ErrorMessages.MULTIPLE_PARENTS_PROHIBITED;
+			assert super.parentSchemeId.isVoid() && this.parentSchemeElementId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 			return (SchemeProtoElement) SchemeStorableObjectPool.getStorableObject(this.parentSchemeProtoElementId, true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
@@ -502,14 +504,6 @@ public final class SchemeLink extends AbstractSchemeLink {
 	 */
 	public IDLEntity getTransferable() {
 		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param abstractLinkType
-	 * @see AbstractSchemeLink#setAbstractLinkType(AbstractLinkType)
-	 */
-	public void setAbstractLinkType(final AbstractLinkType abstractLinkType) {
-		setLinkType((LinkType) abstractLinkType);
 	}
 
 	synchronized void setAttributes(final Date created,
@@ -555,11 +549,20 @@ public final class SchemeLink extends AbstractSchemeLink {
 	}
 
 	/**
+	 * @param abstractLinkType
+	 * @see AbstractSchemeLink#setAbstractLinkType(AbstractLinkType)
+	 */
+	public void setAbstractLinkType(final AbstractLinkType abstractLinkType) {
+		assert abstractLinkType instanceof LinkType;
+		super.setAbstractLinkType(abstractLinkType);
+	}
+
+	/**
 	 * @param linkType
 	 * @todo skip invariance checks.
 	 */
 	public void setLinkType(final LinkType linkType) {
-		throw new UnsupportedOperationException();
+		this.setAbstractLinkType(linkType);
 	}
 
 	/**
@@ -575,14 +578,14 @@ public final class SchemeLink extends AbstractSchemeLink {
 			 * Moving from a scheme to another scheme.
 			 */
 			assert this.parentSchemeElementId.isVoid()
-					&& this.parentSchemeProtoElementId.isVoid(): ErrorMessages.MULTIPLE_PARENTS_PROHIBITED;
+					&& this.parentSchemeProtoElementId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 			super.setParentScheme(parentScheme);
 		} else {
 			if (!this.parentSchemeElementId.isVoid()) {
 				/*
 				 * Moving from a scheme element to a scheme. 
 				 */
-				assert this.parentSchemeProtoElementId.isVoid(): ErrorMessages.MULTIPLE_PARENTS_PROHIBITED;
+				assert this.parentSchemeProtoElementId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 				if (parentScheme == null) {
 					Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Log.INFO);
 					return;
@@ -592,7 +595,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 				/*
 				 * Moving from a scheme protoelement to a scheme.
 				 */
-//				assert !this.parentSchemeProtoElementId.isVoid(): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
+				assert !this.parentSchemeProtoElementId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 				if (parentScheme == null) {
 					Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Log.INFO);
 					return;
@@ -614,7 +617,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 			 * Moving from a scheme to a scheme element.
 			 */
 			assert this.parentSchemeElementId.isVoid()
-					&& this.parentSchemeProtoElementId.isVoid(): ErrorMessages.MULTIPLE_PARENTS_PROHIBITED;
+					&& this.parentSchemeProtoElementId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 			if (parentSchemeElement == null) {
 				Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Log.INFO);
 				return;
@@ -625,7 +628,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 			/*
 			 * Moving from a scheme element to another scheme element. 
 			 */
-			assert this.parentSchemeProtoElementId.isVoid(): ErrorMessages.MULTIPLE_PARENTS_PROHIBITED;
+			assert this.parentSchemeProtoElementId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 			if (parentSchemeElement == null) {
 				Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Log.WARNING);
 				SchemeStorableObjectPool.delete(this.id);
@@ -638,7 +641,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 			/*
 			 * Moving from a scheme protoelement to a scheme element.
 			 */
-//			assert !this.parentSchemeProtoElementId.isVoid(): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
+			assert !this.parentSchemeProtoElementId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 			if (parentSchemeElement == null) {
 				Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Log.INFO);
 				return;
@@ -660,7 +663,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 			 * Moving from a scheme to a scheme protoelement.
 			 */
 			assert this.parentSchemeElementId.isVoid()
-					&& this.parentSchemeProtoElementId.isVoid(): ErrorMessages.MULTIPLE_PARENTS_PROHIBITED;
+					&& this.parentSchemeProtoElementId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 			if (parentSchemeProtoElement == null) {
 				Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Log.INFO);
 				return;
@@ -671,7 +674,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 			/*
 			 * Moving from a scheme element to a scheme protoelement. 
 			 */
-			assert this.parentSchemeProtoElementId.isVoid(): ErrorMessages.MULTIPLE_PARENTS_PROHIBITED;
+			assert this.parentSchemeProtoElementId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 			if (parentSchemeProtoElement == null) {
 				Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Log.INFO);
 				return;
@@ -682,7 +685,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 			/*
 			 * Moving from a scheme protoelement to another scheme protoelement.
 			 */
-//			assert !this.parentSchemeProtoElementId.isVoid(): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
+			assert !this.parentSchemeProtoElementId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 			if (parentSchemeProtoElement == null) {
 				Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Log.WARNING);
 				SchemeStorableObjectPool.delete(this.id);

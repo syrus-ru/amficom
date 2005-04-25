@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.19 2005/04/22 15:39:59 bass Exp $
+ * $Id: SchemeDevice.java,v 1.20 2005/04/25 15:07:11 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ import com.syrus.util.Log;
  * #07 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.19 $, $Date: 2005/04/22 15:39:59 $
+ * @version $Revision: 1.20 $, $Date: 2005/04/25 15:07:11 $
  * @module scheme_v1
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -97,7 +97,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 		this.name = name;
 		this.description = description;
 
-		assert parentSchemeProtoElement == null || parentSchemeElement == null: ErrorMessages.MULTIPLE_PARENTS_PROHIBITED;		
+		assert parentSchemeProtoElement == null || parentSchemeElement == null: ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;		
 		this.parentSchemeProtoElementId = Identifier.possiblyVoid(parentSchemeProtoElement);
 		this.parentSchemeElementId = Identifier.possiblyVoid(parentSchemeElement);
 

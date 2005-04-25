@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeLink.java,v 1.6 2005/04/20 12:26:16 bass Exp $
+ * $Id: AbstractSchemeLink.java,v 1.7 2005/04/25 15:07:11 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,10 +12,13 @@ import java.util.Date;
 
 import com.syrus.AMFICOM.configuration.AbstractLinkType;
 import com.syrus.AMFICOM.configuration.CableLinkType;
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.Link;
 import com.syrus.AMFICOM.configuration.LinkType;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.util.Log;
 
 /**
  * This class is never used directly, it was provided just in order for source
@@ -23,7 +26,7 @@ import com.syrus.AMFICOM.general.Identifier;
  * {@link AbstractSchemeLink}instead.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/04/20 12:26:16 $
+ * @version $Revision: 1.7 $, $Date: 2005/04/25 15:07:11 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemeLink extends AbstractSchemeElement {
@@ -47,7 +50,7 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	 * Depending on implementation, may reference either {@link LinkType} or
 	 * {@link CableLinkType}.
 	 */
-	protected Identifier abstractLinkTypeId;
+	private Identifier abstractLinkTypeId;
 
 	/**
 	 * Depending on implementation, may reference either {@link Link link}
@@ -59,13 +62,13 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	 * Depending on implementation, may reference either {@link SchemePort}
 	 * or {@link SchemeCablePort}.
 	 */
-	protected Identifier sourceAbstractSchemePortId;
+	private Identifier sourceAbstractSchemePortId;
 
 	/**
 	 * Depending on implementation, may reference either {@link SchemePort}
 	 * or {@link SchemeCablePort}.
 	 */
-	protected Identifier targetAbstractSchemePortId;
+	private Identifier targetAbstractSchemePortId;
 
 	/**
 	 * @param id
@@ -122,14 +125,41 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	AbstractSchemeLink() {
 		// super();
 	}
-
-	public abstract AbstractLinkType getAbstractLinkType();
 	
 	/**
 	 * Overridden by descendants to add extra checks.
 	 */
 	public Link getLink() {
-		throw new UnsupportedOperationException();
+		assert this.linkId != null && this.abstractLinkTypeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.linkId.isVoid() ^ this.abstractLinkTypeId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+
+		if (this.linkId.isVoid())
+			return null;
+
+		try {
+			return (Link) ConfigurationStorableObjectPool.getStorableObject(this.linkId, true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return null;
+		}
+	}
+
+	/**
+	 * Overridden by descendants to add extra checks.
+	 */
+	public AbstractLinkType getAbstractLinkType() {
+		assert this.linkId != null && this.abstractLinkTypeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.linkId.isVoid() ^ this.abstractLinkTypeId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+
+		if (!this.linkId.isVoid())
+			return (AbstractLinkType) getLink().getType();
+
+		try {
+			return (AbstractLinkType) ConfigurationStorableObjectPool.getStorableObject(this.abstractLinkTypeId, true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return null;
+		}
 	}
 
 	/**
@@ -156,15 +186,60 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 
 	public abstract AbstractSchemePort getTargetAbstractSchemePort();
 	
-	public abstract void setAbstractLinkType(final AbstractLinkType abstractLinkType);
-
 	/**
 	 * Overridden by descendants to add extra checks.
 	 *
 	 * @param link
 	 */
 	public void setLink(final Link link) {
-		throw new UnsupportedOperationException();
+		assert this.linkId != null && this.abstractLinkTypeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.linkId.isVoid() ^ this.abstractLinkTypeId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+
+		final Identifier newLinkId = Identifier.possiblyVoid(link);
+		if (this.linkId.equals(newLinkId)) {
+			Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Log.INFO);
+			return;
+		}
+
+		if (this.linkId.isVoid())
+			/*
+			 * Erasing old object-type value, setting new object
+			 * value.
+			 */
+			this.abstractLinkTypeId = Identifier.VOID_IDENTIFIER;
+		else if (newLinkId.isVoid())
+			/*
+			 * Erasing old object value, preserving old object-type
+			 * value. This point is not assumed to be reached unless
+			 * initial object value has already been set (i. e.
+			 * there already is object-type value to preserve). 
+			 */
+			this.abstractLinkTypeId = this.getLink().getType().getId();
+		this.linkId = newLinkId;
+		this.changed = true;
+	}
+
+	/**
+	 * Overridden by descendants to add extra checks.
+	 *
+	 * @param abstractLinkType
+	 */
+	public void setAbstractLinkType(final AbstractLinkType abstractLinkType) {
+		assert this.linkId != null && this.abstractLinkTypeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.linkId.isVoid() ^ this.abstractLinkTypeId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+		assert abstractLinkType != null: ErrorMessages.NON_NULL_EXPECTED;
+
+		if (!this.linkId.isVoid())
+			this.getLink().setType(abstractLinkType);
+		else {
+			final Identifier newAbstractLinkTypeId = abstractLinkType.getId();
+			if (this.abstractLinkTypeId.equals(newAbstractLinkTypeId)) {
+				Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Log.INFO);
+				return;
+			}
+			this.abstractLinkTypeId = newAbstractLinkTypeId;
+			this.changed = true;
+		}
 	}
 
 	/**

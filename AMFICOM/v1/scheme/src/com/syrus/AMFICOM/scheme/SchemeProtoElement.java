@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.26 2005/04/20 12:26:16 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.27 2005/04/25 15:07:11 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,7 +52,7 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.26 $, $Date: 2005/04/20 12:26:16 $
+ * @version $Revision: 1.27 $, $Date: 2005/04/25 15:07:11 $
  * @module scheme_v1
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation. 
  */
@@ -138,7 +138,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		this.ugoCellId = Identifier.possiblyVoid(ugoCell);
 		this.schemeCellId = Identifier.possiblyVoid(schemeCell);
 
-		assert parentSchemeProtoGroup == null || parentSchemeProtoElement == null: ErrorMessages.MULTIPLE_PARENTS_PROHIBITED;
+		assert parentSchemeProtoGroup == null || parentSchemeProtoElement == null: ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 		this.parentSchemeProtoGroupId = Identifier.possiblyVoid(parentSchemeProtoGroup);
 		this.parentSchemeProtoElementId = Identifier.possiblyVoid(parentSchemeProtoElement);
 
@@ -445,10 +445,8 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 				&& this.schemeCellId != null
 				&& this.parentSchemeProtoGroupId != null
 				&& this.parentSchemeProtoElementId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		if (!this.parentSchemeProtoGroupId.isVoid())
-			assert this.parentSchemeProtoElementId.isVoid(): ErrorMessages.MULTIPLE_PARENTS_PROHIBITED;
-		else
-			assert !this.parentSchemeProtoElementId.isVoid(): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
+		assert this.parentSchemeProtoGroupId.isVoid() ^ this.parentSchemeProtoElementId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+
 		final Set dependencies = new HashSet();
 		dependencies.add(this.equipmentTypeId);
 		dependencies.add(this.symbolId);
@@ -532,7 +530,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		final SchemeProtoGroup parentSchemeProtoGroup = getParentSchemeProtoGroup();
 		if (parentSchemeProtoGroup == null) {
 			if (getParentSchemeProtoElement() == null)
-				throw new UnsupportedOperationException(ErrorMessages.PARENTLESS_CHILD_PROHIBITED);
+				throw new UnsupportedOperationException(ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED);
 			throw new UnsupportedOperationException(ErrorMessages.OUT_OF_LIBRARY_HIERARCHY);
 		}
 		return parentSchemeProtoGroup;
@@ -540,16 +538,15 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 
 	public SchemeProtoElement getParentSchemeProtoElement() {
 		assert this.parentSchemeProtoElementId != null && this.parentSchemeProtoGroupId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.parentSchemeProtoElementId.isVoid() ^ this.parentSchemeProtoGroupId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 
 		if (this.parentSchemeProtoElementId.isVoid()) {
-			assert !this.parentSchemeProtoGroupId.isVoid(): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
 			Log.debugMessage("SchemeProtoElement.getParentSchemeProtoElement() | Parent SchemeProtoElement was requested, while parent is a SchemeProtoGroup; returning null.", //$NON-NLS-1$
 					Log.FINE);
 			return null;
 		}
 
 		try {
-			assert this.parentSchemeProtoGroupId.isVoid(): ErrorMessages.MULTIPLE_PARENTS_PROHIBITED;
 			return (SchemeProtoElement) SchemeStorableObjectPool.getStorableObject(this.parentSchemeProtoElementId, true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
@@ -559,16 +556,15 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 
 	public SchemeProtoGroup getParentSchemeProtoGroup() {
 		assert this.parentSchemeProtoElementId != null && this.parentSchemeProtoGroupId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.parentSchemeProtoElementId.isVoid() ^ this.parentSchemeProtoGroupId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 		
 		if (this.parentSchemeProtoGroupId.isVoid()) {
-			assert !this.parentSchemeProtoElementId.isVoid(): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
 			Log.debugMessage("SchemeProtoElement.getParentSchemeProtoGroup() | Parent SchemeProtoGroup was requested, while parent is a SchemeProtoElement; returnning null", //$NON-NLS-1$
 					Log.FINE);
 			return null;
 		}
 
 		try {
-			assert this.parentSchemeProtoElementId.isVoid(): ErrorMessages.MULTIPLE_PARENTS_PROHIBITED;
 			return (SchemeProtoGroup) SchemeStorableObjectPool.getStorableObject(this.parentSchemeProtoGroupId, true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
@@ -884,7 +880,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	public void setParent(final Library library) {
 		if (getParentSchemeProtoGroup() == null) {
 			if (getParentSchemeProtoElement() == null)
-				throw new UnsupportedOperationException(ErrorMessages.PARENTLESS_CHILD_PROHIBITED);
+				throw new UnsupportedOperationException(ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED);
 			throw new UnsupportedOperationException(ErrorMessages.OUT_OF_LIBRARY_HIERARCHY);
 		}
 		setParentSchemeProtoGroup((SchemeProtoGroup) library);
@@ -903,15 +899,15 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * @param parentSchemeProtoElement
 	 */
 	public void setParentSchemeProtoElement(final SchemeProtoElement parentSchemeProtoElement) {
-		assert this.parentSchemeProtoGroupId != null
-				&& this.parentSchemeProtoElementId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.parentSchemeProtoGroupId != null && this.parentSchemeProtoElementId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.parentSchemeProtoGroupId.isVoid() ^ this.parentSchemeProtoElementId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 		assert parentSchemeProtoElement != this: ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
+
 		Identifier newParentSchemeProtoElementId;
 		if (this.parentSchemeProtoGroupId.isVoid()) {
 			/*
 			 * Moving from an element to another element.
 			 */
-//			assert !this.parentSchemeProtoElementId.isVoid(): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
 			if (parentSchemeProtoElement == null) {
 				Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Log.WARNING);
 				SchemeStorableObjectPool.delete(this.id);
@@ -924,7 +920,6 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 			/*
 			 * Moving from a group to an element.
 			 */
-			assert this.parentSchemeProtoElementId.isVoid(): ErrorMessages.MULTIPLE_PARENTS_PROHIBITED;
 			if (parentSchemeProtoElement == null) {
 				Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Log.INFO);
 				return;
@@ -952,12 +947,13 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	public void setParentSchemeProtoGroup(final SchemeProtoGroup parentSchemeProtoGroup) {
 		assert this.parentSchemeProtoGroupId != null
 				&& this.parentSchemeProtoElementId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.parentSchemeProtoGroupId.isVoid() ^ this.parentSchemeProtoElementId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+
 		Identifier newParentSchemeProtoGroupId;
 		if (this.parentSchemeProtoElementId.isVoid()) {
 			/*
 			 * Moving from a group to another group.
 			 */
-//			assert !this.parentSchemeProtoGroupId.isVoid(): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
 			if (parentSchemeProtoGroup == null) {
 				Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Log.WARNING);
 				SchemeStorableObjectPool.delete(this.id);
@@ -970,7 +966,6 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 			/*
 			 * Moving from an element to a group.
 			 */
-			assert this.parentSchemeProtoGroupId.isVoid(): ErrorMessages.MULTIPLE_PARENTS_PROHIBITED;
 			if (parentSchemeProtoGroup == null) {
 				Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Log.INFO);
 				return;

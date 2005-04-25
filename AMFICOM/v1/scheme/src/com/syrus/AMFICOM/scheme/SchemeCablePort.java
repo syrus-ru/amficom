@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePort.java,v 1.18 2005/04/21 16:27:08 bass Exp $
+ * $Id: SchemeCablePort.java,v 1.19 2005/04/25 15:07:11 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,6 @@
 package com.syrus.AMFICOM.scheme;
 
 import java.util.Date;
-import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
 
@@ -35,7 +34,7 @@ import com.syrus.AMFICOM.scheme.corba.SchemeCablePort_Transferable;
  * #09 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.18 $, $Date: 2005/04/21 16:27:08 $
+ * @version $Revision: 1.19 $, $Date: 2005/04/25 15:07:11 $
  * @module scheme_v1
  */
 public final class SchemeCablePort extends AbstractSchemePort {

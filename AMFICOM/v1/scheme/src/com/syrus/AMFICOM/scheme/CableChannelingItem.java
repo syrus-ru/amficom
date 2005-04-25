@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.14 2005/04/22 14:12:24 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.15 2005/04/25 15:07:11 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,6 @@ import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
@@ -32,7 +31,7 @@ import com.syrus.AMFICOM.scheme.corba.CableChannelingItem_Transferable;
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2005/04/22 14:12:24 $
+ * @version $Revision: 1.15 $, $Date: 2005/04/25 15:07:11 $
  * @module scheme_v1
  */
 public final class CableChannelingItem extends AbstractCloneableStorableObject {

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.23 2005/04/20 12:26:16 bass Exp $
+ * $Id: SchemeElement.java,v 1.24 2005/04/25 15:07:11 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.util.Log;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.23 $, $Date: 2005/04/20 12:26:16 $
+ * @version $Revision: 1.24 $, $Date: 2005/04/25 15:07:11 $
  * @module scheme_v1
  */
 public final class SchemeElement extends AbstractSchemeElement implements
@@ -139,7 +139,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		this.ugoCellId = Identifier.possiblyVoid(ugoCell);
 		this.schemeCellId = Identifier.possiblyVoid(schemeCell);
 
-		assert parentScheme == null || parentSchemeElement == null: ErrorMessages.MULTIPLE_PARENTS_PROHIBITED;
+		assert parentScheme == null || parentSchemeElement == null: ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 		this.parentSchemeElementId = Identifier.possiblyVoid(parentSchemeElement);
 
 		this.schemeElementDatabase = SchemeDatabaseContext.getSchemeElementDatabase();
@@ -357,13 +357,12 @@ public final class SchemeElement extends AbstractSchemeElement implements
 
 	public Equipment getEquipment() {
 		assert this.equipmentId != null && this.equipmentTypeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		if (this.equipmentId.isVoid()) {
-			assert !this.equipmentTypeId.isVoid(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
+		assert this.equipmentId.isVoid() ^ this.equipmentTypeId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+
+		if (this.equipmentId.isVoid())
 			return null;
-		}
 
 		try {
-			assert this.equipmentTypeId.isVoid(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
 			return (Equipment) ConfigurationStorableObjectPool.getStorableObject(this.equipmentId, true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
@@ -373,13 +372,12 @@ public final class SchemeElement extends AbstractSchemeElement implements
 
 	public EquipmentType getEquipmentType() {
 		assert this.equipmentId != null && this.equipmentTypeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		if (this.equipmentTypeId.isVoid()) {
-			assert !this.equipmentId.isVoid(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
+		assert this.equipmentId.isVoid() ^ this.equipmentTypeId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+
+		if (!this.equipmentId.isVoid())
 			return (EquipmentType) getEquipment().getType();
-		}
 
 		try {
-			assert this.equipmentId.isVoid(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
 			return (EquipmentType) ConfigurationStorableObjectPool.getStorableObject(this.equipmentTypeId, true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
@@ -413,30 +411,28 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 */
 	public Scheme getParentScheme() {
 		assert super.parentSchemeId != null && this.parentSchemeElementId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert super.parentSchemeId.isVoid() ^ this.parentSchemeElementId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 
 		if (super.parentSchemeId.isVoid()) {
-			assert !this.parentSchemeElementId.isVoid(): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
 			Log.debugMessage("SchemeElement.getParentScheme() | Parent Scheme was requested, while parent is a SchemeElement; returning null", //$NON-NLS-1$
 					Log.FINE);
 			return null;
 		}
 
-		assert this.parentSchemeElementId.isVoid(): ErrorMessages.MULTIPLE_PARENTS_PROHIBITED;
 		return super.getParentScheme();
 	}
 
 	public SchemeElement getParentSchemeElement() {
 		assert super.parentSchemeId != null && this.parentSchemeElementId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert super.parentSchemeId.isVoid() ^ this.parentSchemeElementId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 
 		if (this.parentSchemeElementId.isVoid()) {
-			assert !super.parentSchemeId.isVoid(): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
 			Log.debugMessage("SchemeElement.getParentSchemeElement() | Parent SchemeElement was requested, while parent is a Scheme; returnung null", //$NON-NLS-1$
 					Log.FINE);
 			return null;
 		}
 		
 		try {
-			assert super.parentSchemeId.isVoid(): ErrorMessages.MULTIPLE_PARENTS_PROHIBITED;
 			return (SchemeElement) SchemeStorableObjectPool.getStorableObject(this.parentSchemeElementId, true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
@@ -696,7 +692,30 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 */
 	public void setEquipment(final Equipment equipment) {
 		assert this.equipmentId != null && this.equipmentTypeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		throw new UnsupportedOperationException();
+		assert this.equipmentId.isVoid() ^ this.equipmentTypeId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+
+		final Identifier newEquipmentId = Identifier.possiblyVoid(equipment);
+		if (this.equipmentId.equals(newEquipmentId)) {
+			Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Log.INFO);
+			return;
+		}
+
+		if (this.equipmentId.isVoid())
+			/*
+			 * Erasing old object-type value, setting new object
+			 * value.
+			 */
+			this.equipmentTypeId = Identifier.VOID_IDENTIFIER;
+		else if (newEquipmentId.isVoid())
+			/*
+			 * Erasing old object value, preserving old object-type
+			 * value. This point is not assumed to be reached unless
+			 * initial object value has already been set (i. e.
+			 * there already is object-type value to preserve). 
+			 */
+			this.equipmentTypeId = this.getEquipment().getType().getId(); 
+		this.equipmentId = newEquipmentId;
+		this.changed = true;
 	}
 
 	/**
@@ -705,7 +724,20 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 */
 	public void setEquipmentType(final EquipmentType equipmentType) {
 		assert this.equipmentId != null && this.equipmentTypeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		throw new UnsupportedOperationException();
+		assert this.equipmentId.isVoid() ^ this.equipmentTypeId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+		assert equipmentType != null: ErrorMessages.NON_NULL_EXPECTED;
+
+		if (!this.equipmentId.isVoid())
+			this.getEquipment().setType(equipmentType);
+		else {
+			final Identifier newEquipmentTypeId = equipmentType.getId();
+			if (this.equipmentTypeId.equals(newEquipmentTypeId)) {
+				Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Log.INFO);
+				return;
+			}
+			this.equipmentTypeId = newEquipmentTypeId;
+			this.changed = true;
+		}
 	}
 
 	/**
@@ -738,17 +770,17 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 */
 	public void setParentScheme(final Scheme parentScheme) {
 		assert super.parentSchemeId != null && this.parentSchemeElementId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		if (!super.parentSchemeId.isVoid()) {
+		assert super.parentSchemeId.isVoid() ^ this.parentSchemeElementId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+
+		if (!super.parentSchemeId.isVoid())
 			/*
 			 * Moving from a scheme to another scheme.
 			 */
-			assert this.parentSchemeElementId.isVoid(): ErrorMessages.MULTIPLE_PARENTS_PROHIBITED;
 			super.setParentScheme(parentScheme);
-		} else {
+		else {
 			/*
 			 * Moving from a scheme element to a scheme.
 			 */
-			assert !this.parentSchemeElementId.isVoid(): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
 			if (parentScheme == null) {
 				Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Log.INFO);
 				return;
@@ -761,12 +793,13 @@ public final class SchemeElement extends AbstractSchemeElement implements
 
 	public void setParentSchemeElement(final SchemeElement parentSchemeElement) {
 		assert super.parentSchemeId != null && this.parentSchemeElementId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert super.parentSchemeId.isVoid() ^ this.parentSchemeElementId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+
 		Identifier newParentSchemeElementId;
 		if (!super.parentSchemeId.isVoid()) {
 			/*
 			 * Moving from a scheme to a scheme element.
 			 */
-			assert this.parentSchemeElementId.isVoid(): ErrorMessages.MULTIPLE_PARENTS_PROHIBITED;
 			if (parentSchemeElement == null) {
 				Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Log.INFO);
 				return;
@@ -777,7 +810,6 @@ public final class SchemeElement extends AbstractSchemeElement implements
 			/*
 			 * Moving from a scheme element to another scheme element.
 			 */
-			assert !this.parentSchemeElementId.isVoid(): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
 			if (parentSchemeElement == null) {
 				Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Log.WARNING);
 				SchemeStorableObjectPool.delete(this.id);

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.22 2005/04/20 12:26:16 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.23 2005/04/25 15:07:11 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.util.Log;
  * #11 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.22 $, $Date: 2005/04/20 12:26:16 $
+ * @version $Revision: 1.23 $, $Date: 2005/04/25 15:07:11 $
  * @module scheme_v1
  */
 public final class SchemeCableLink extends AbstractSchemeLink {
@@ -179,13 +179,6 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 		return schemeCableLink;
 	}
 
-	/**
-	 * @see AbstractSchemeLink#getAbstractLinkType()
-	 */
-	public AbstractLinkType getAbstractLinkType() {
-		return getCableLinkType();
-	}
-
 	public Set getCableChannelingItems() {
 		try {
 			return Collections.unmodifiableSet(SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.CABLE_CHANNELING_ITEM_ENTITY_CODE), true));
@@ -193,10 +186,6 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 			Log.debugException(ae, Log.SEVERE);
 			return Collections.EMPTY_SET;
 		}
-	}
-
-	public CableLinkType getCableLinkType() {
-		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -223,11 +212,24 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	}
 
 	/**
+	 * @see AbstractSchemeLink#getAbstractLinkType()
+	 */
+	public AbstractLinkType getAbstractLinkType() {
+		final AbstractLinkType abstractLinkType = super.getAbstractLinkType();
+		assert abstractLinkType instanceof CableLinkType;
+		return abstractLinkType;
+	}
+
+	public CableLinkType getCableLinkType() {
+		return (CableLinkType) this.getAbstractLinkType();
+	}
+
+	/**
 	 * @see AbstractSchemeElement#getParentScheme()
 	 */
 	public Scheme getParentScheme() {
 		assert super.parentSchemeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert !super.parentSchemeId.isVoid(): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
+		assert !super.parentSchemeId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 
 		return super.getParentScheme();
 	}
@@ -278,14 +280,6 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	}
 
 	/**
-	 * @param abstractLinkType
-	 * @see AbstractSchemeLink#setAbstractLinkType(AbstractLinkType)
-	 */
-	public void setAbstractLinkType(final AbstractLinkType abstractLinkType) {
-		setCableLinkType((CableLinkType) abstractLinkType);
-	}
-
-	/**
 	 * @param created
 	 * @param modified
 	 * @param creatorId
@@ -315,7 +309,7 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 			final Identifier parentSchemeId) {
 		super.setAttributes(created, modified, creatorId, modifierId, version, name, description, physicalLength, opticalLength, cableLinkTypeId, linkId, sourceSchemeCablePortId, targetSchemeCablePortId, parentSchemeId);
 
-		assert !parentSchemeId.isVoid(): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
+		assert !parentSchemeId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 	}
 
 	public void setCableChannelingItems(final Set cableChannelingItems) {
@@ -334,14 +328,6 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	}
 
 	/**
-	 * @param cableLinkType
-	 * @todo skip invariance checks.
-	 */
-	public void setCableLinkType(final CableLinkType cableLinkType) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
 	 * @param link
 	 * @see AbstractSchemeLink#setLink(Link)
 	 * @todo skip invariance checks.
@@ -352,12 +338,29 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	}
 
 	/**
+	 * @param abstractLinkType
+	 * @see AbstractSchemeLink#setAbstractLinkType(AbstractLinkType)
+	 */
+	public void setAbstractLinkType(final AbstractLinkType abstractLinkType) {
+		assert abstractLinkType instanceof CableLinkType;
+		super.setAbstractLinkType(abstractLinkType);
+	}
+
+	/**
+	 * @param cableLinkType
+	 * @todo skip invariance checks.
+	 */
+	public void setCableLinkType(final CableLinkType cableLinkType) {
+		this.setAbstractLinkType(cableLinkType);
+	}
+
+	/**
 	 * @param parentScheme
 	 * @see AbstractSchemeElement#setParentScheme(Scheme)
 	 */
 	public void setParentScheme(final Scheme parentScheme) {
 		assert super.parentSchemeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert !super.parentSchemeId.isVoid(): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
+		assert !super.parentSchemeId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 		super.setParentScheme(parentScheme);
 	}
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.17 2005/04/21 16:27:08 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.18 2005/04/25 15:07:11 bass Exp $
  * 
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.17 $, $Date: 2005/04/21 16:27:08 $
+ * @version $Revision: 1.18 $, $Date: 2005/04/25 15:07:11 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemePort extends
@@ -171,13 +171,12 @@ public abstract class AbstractSchemePort extends
 
 	public final MeasurementPort getMeasurementPort() {
 		assert this.measurementPortId != null && this.measurementPortTypeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		if (this.measurementPortId.isVoid()) {
-			assert !this.measurementPortTypeId.isVoid(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
+		assert this.measurementPortId.isVoid() ^ this.measurementPortTypeId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+
+		if (this.measurementPortId.isVoid())
 			return null;
-		}
 
 		try {
-			assert this.measurementPortTypeId.isVoid(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
 			return (MeasurementPort) ConfigurationStorableObjectPool.getStorableObject(this.measurementPortId, true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
@@ -187,13 +186,12 @@ public abstract class AbstractSchemePort extends
 
 	public final MeasurementPortType getMeasurementPortType() {
 		assert this.measurementPortId != null && this.measurementPortTypeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		if (this.measurementPortTypeId.isVoid()) {
-			assert !this.measurementPortId.isVoid(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
+		assert this.measurementPortId.isVoid() ^ this.measurementPortTypeId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+
+		if (!this.measurementPortId.isVoid())
 			return (MeasurementPortType) getMeasurementPort().getType();
-		}
 
 		try {
-			assert this.measurementPortId.isVoid(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
 			return (MeasurementPortType) ConfigurationStorableObjectPool.getStorableObject(this.measurementPortTypeId, true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
@@ -211,7 +209,7 @@ public abstract class AbstractSchemePort extends
 
 	public final SchemeDevice getParentSchemeDevice() {
 		assert this.parentSchemeDeviceId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert !this.parentSchemeDeviceId.isVoid(): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
+		assert !this.parentSchemeDeviceId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 		
 		try {
 			return (SchemeDevice) SchemeStorableObjectPool.getStorableObject(this.parentSchemeDeviceId, true);
@@ -226,13 +224,12 @@ public abstract class AbstractSchemePort extends
 	 */
 	public Port getPort() {
 		assert this.portId != null && this.portTypeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		if (this.portId.isVoid()) {
-			assert !this.portTypeId.isVoid(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
+		assert this.portId.isVoid() ^ this.portTypeId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+
+		if (this.portId.isVoid())
 			return null;
-		}
 
 		try {
-			assert this.portTypeId.isVoid(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
 			return (Port) ConfigurationStorableObjectPool.getStorableObject(this.portId, true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
@@ -242,13 +239,12 @@ public abstract class AbstractSchemePort extends
 
 	public final PortType getPortType() {
 		assert this.portId != null && this.portTypeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		if (this.portTypeId.isVoid()) {
-			assert !this.portId.isVoid(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
+		assert this.portId.isVoid() ^ this.portTypeId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+
+		if (!this.portId.isVoid())
 			return (PortType) getPort().getType();
-		}
 
 		try {
-			assert this.portId.isVoid(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
 			return (PortType) ConfigurationStorableObjectPool.getStorableObject(this.portTypeId, true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
@@ -360,7 +356,31 @@ public abstract class AbstractSchemePort extends
 	 * @todo skip invariance checks.
 	 */
 	public final void setMeasurementPort(final MeasurementPort measurementPort) {
-		throw new UnsupportedOperationException();
+		assert this.measurementPortId != null && this.measurementPortTypeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.measurementPortId.isVoid() ^ this.measurementPortTypeId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+
+		final Identifier newMeasurementPortId = Identifier.possiblyVoid(measurementPort);
+		if (this.measurementPortId.equals(newMeasurementPortId)) {
+			Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Log.INFO);
+			return;
+		}
+
+		if (this.measurementPortId.isVoid())
+			/*
+			 * Erasing old object-type value, setting new object
+			 * value.
+			 */
+			this.measurementPortTypeId = Identifier.VOID_IDENTIFIER;
+		else if (newMeasurementPortId.isVoid())
+			/*
+			 * Erasing old object value, preserving old object-type
+			 * value. This point is not assumed to be reached unless
+			 * initial object value has already been set (i. e.
+			 * there already is object-type value to preserve). 
+			 */
+			this.measurementPortTypeId = this.getMeasurementPort().getType().getId();
+		this.measurementPortId = newMeasurementPortId;
+		this.changed = true;
 	}
 
 	/**
@@ -368,7 +388,21 @@ public abstract class AbstractSchemePort extends
 	 * @todo skip invariance checks.
 	 */
 	public final void setMeasurementPortType(final MeasurementPortType measurementPortType) {
-		throw new UnsupportedOperationException();
+		assert this.measurementPortId != null && this.measurementPortTypeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.measurementPortId.isVoid() ^ this.measurementPortTypeId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+		assert measurementPortType != null: ErrorMessages.NON_NULL_EXPECTED;
+
+		if (!this.measurementPortId.isVoid())
+			this.getMeasurementPort().setType(measurementPortType);
+		else {
+			final Identifier newMeasurementPortTypeId = measurementPortType.getId();
+			if (this.measurementPortTypeId.equals(newMeasurementPortTypeId)) {
+				Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Log.INFO);
+				return;
+			}
+			this.measurementPortTypeId = newMeasurementPortTypeId;
+			this.changed = true;
+		}
 	}
 
 	/**
@@ -388,7 +422,7 @@ public abstract class AbstractSchemePort extends
 	 */
 	public final void setParentSchemeDevice(final SchemeDevice parentSchemeDevice) {
 		assert this.parentSchemeDeviceId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert !this.parentSchemeDeviceId.isVoid(): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
+		assert !this.parentSchemeDeviceId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 		if (parentSchemeDevice == null) {
 			Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Log.WARNING);
 			SchemeStorableObjectPool.delete(this.id);
@@ -408,7 +442,31 @@ public abstract class AbstractSchemePort extends
 	 * @todo skip invariance checks.
 	 */
 	public void setPort(final Port port) {
-		throw new UnsupportedOperationException();
+		assert this.portId != null && this.portTypeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.portId.isVoid() ^ this.portTypeId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+
+		final Identifier newPortId = Identifier.possiblyVoid(port);
+		if (this.portId.equals(newPortId)) {
+			Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Log.INFO);
+			return;
+		}
+
+		if (this.portId.isVoid())
+			/*
+			 * Erasing old object-type value, setting new object
+			 * value.
+			 */
+			this.portTypeId = Identifier.VOID_IDENTIFIER;
+		else if (newPortId.isVoid())
+			/*
+			 * Erasing old object value, preserving old object-type
+			 * value. This point is not assumed to be reached unless
+			 * initial object value has already been set (i. e.
+			 * there already is object-type value to preserve). 
+			 */
+			this.portTypeId = this.getPort().getType().getId();
+		this.portId = newPortId;
+		this.changed = true;
 	}
 
 	/**
@@ -416,6 +474,20 @@ public abstract class AbstractSchemePort extends
 	 * @todo skip invariance checks.
 	 */
 	public final void setPortType(final PortType portType) {
-		throw new UnsupportedOperationException();
+		assert this.portId != null && this.portTypeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.portId.isVoid() ^ this.portTypeId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+		assert portType != null: ErrorMessages.NON_NULL_EXPECTED;
+
+		if (!this.portId.isVoid())
+			this.getPort().setType(portType);
+		else {
+			final Identifier newPortTypeId = portType.getId();
+			if (this.portTypeId.equals(newPortTypeId)) {
+				Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Log.INFO);
+				return;
+			}
+			this.portTypeId = newPortTypeId;
+			this.changed = true;
+		}
 	}
 }
