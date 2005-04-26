@@ -147,7 +147,7 @@ void InitialAnalysis::findEventsBySplashes(ArrList& splashes)
 return;
 	Splash* sp1 = (Splash*)splashes[0];
     Splash* sp2;
-    shift = processDeadZone(splashes);// ищем мёртвую зону 
+    shift = processDeadZone(splashes);// ищем мёртвую зону
 	// ищем остальные коннекторы  и сварки
     for(int i = shift+1; i<splashes.getLength()-1; i++)
     { int len = processIfIsConnector(i, splashes);
@@ -182,21 +182,24 @@ return;
 int InitialAnalysis::processDeadZone(ArrList& splashes)
 {   int i, shift = 0;
 	int begin = 0, end = -1;
-    int n_max = 0, n_min =0;
-    double f_max = 0, f_min =0;
+    int n_max = 0, n_min = 0;
+    double f_max = 0, f_min = 0;
 	Splash* sp1 = (Splash*)splashes[0];
     Splash* sp2 = (Splash*)splashes[1];
-    if(sp1->sign<0)
+    if(sp1->sign<0) // если сигнал сразу вниз, то считаем, что это мёртваязона и есть
     { begin = 0;
       end  = sp1->end_thr;
     }
-    else
+    else // иначе на расстоянии reflectiveSize от начала ищём максимальный всплеск вверх и поле него минимальный всплеск вниз
     { for(i = 0; sp2->begin_thr<reflectiveSize && i+1<splashes.getLength(); i++)
       { sp1 = (Splash*)splashes[i];
         sp2 = (Splash*)splashes[i+1];
         if(sp1->sign>0 && f_max<sp1->f_extr )
         { f_max = sp1->f_extr;
           begin = sp1->begin_thr;
+		  // сбрасываем запомненный слева мнимум, так как максимум сдвинулся вправо 	
+          end = -1;
+          f_min = 0;
         }
         if(sp2->sign<0 && f_min>sp2->f_extr && sp2->end_thr>begin)
         { f_min = sp2->f_extr;
@@ -205,7 +208,7 @@ int InitialAnalysis::processDeadZone(ArrList& splashes)
         }
       }
     }
-    if(end == -1)// если не нашли в пределах reflectiveSize , то ищем первый вниз
+    if(end == -1)// если не нашли колебание вверх-вниз в пределах reflectiveSize , то ищем первый вниз
     { for( ; i<splashes.getLength(); i++)
       { sp1 = (Splash*)splashes[i];
         if(sp1->sign<0)
@@ -765,7 +768,7 @@ void InitialAnalysis::trimAllEvents()
 		if(ev.begin != prevEnd && i != 0)
         {   if( fabs(ev.begin - prevEnd) > 2)
         	{   bool const GAP_BETWEEN_EVENTS_NOT_TOO_LARGE = false;
-            	assert(GAP_BETWEEN_EVENTS_NOT_TOO_LARGE);
+            	//assert(GAP_BETWEEN_EVENTS_NOT_TOO_LARGE);
             }
         	ev.begin = prevEnd;
         }
