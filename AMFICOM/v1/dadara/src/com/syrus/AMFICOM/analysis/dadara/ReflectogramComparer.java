@@ -27,7 +27,7 @@ package com.syrus.AMFICOM.analysis.dadara;
  * по ModelTrace - MaxDeviation и пр.
  * 
  * @author $Author: saa $
- * @version $Revision: 1.11 $, $Date: 2005/04/15 18:25:06 $
+ * @version $Revision: 1.12 $, $Date: 2005/04/26 07:35:20 $
  * @module analysis_v1
  */
 public class ReflectogramComparer
@@ -430,8 +430,8 @@ public class ReflectogramComparer
 		SimpleReflectogramEvent[] dataSRE = data.getSimpleEvents();
 		SimpleReflectogramEvent[] etalonSRE = etalon.getSimpleEvents();
 
-		int length1 = ReflectogramMath.getLastConnectorBegin(dataSRE);
-		int length2 = ReflectogramMath.getLastConnectorBegin(etalonSRE);
+		int length1 = ReflectogramMath.getEndOfTraceBegin(dataSRE);
+		int length2 = ReflectogramMath.getEndOfTraceBegin(etalonSRE);
 
 		int c = etalonSRE[0].getEnd();
 

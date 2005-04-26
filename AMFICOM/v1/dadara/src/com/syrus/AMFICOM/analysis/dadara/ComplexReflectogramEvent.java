@@ -1,5 +1,5 @@
 /*
- * $Id: ComplexReflectogramEvent.java,v 1.11 2005/03/21 18:02:57 saa Exp $
+ * $Id: ComplexReflectogramEvent.java,v 1.12 2005/04/26 07:35:20 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,7 @@ import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.11 $, $Date: 2005/03/21 18:02:57 $
+ * @version $Revision: 1.12 $, $Date: 2005/04/26 07:35:20 $
  * @module dadara
  * 
  * Класс предназначен для хранения расширенной информации о
@@ -84,7 +84,9 @@ public class ComplexReflectogramEvent implements SimpleReflectogramEvent
 		// корректируем mloss сварок и коннекторов (вычитаем средний наклон прямых)
 		for (int i = 0; i < ret.length; i++)
 		{
-			if (ret[i].isSplice() || ret[i].getEventType() == SimpleReflectogramEvent.REFLECTIVE)
+			if (ret[i].isSplice()
+					|| ret[i].getEventType()
+					== SimpleReflectogramEvent.CONNECTOR)
 			{
 				// берем средний (из одного или двух) наклон смежных линейных
 				// событий, которые по длине больше этой сварки

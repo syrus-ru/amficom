@@ -205,8 +205,8 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener
 
 		double maxDeviation = ReflectogramComparer.getMaxDeviation(etalonMTrace, dataMTrace);
 		double meanDeviation = ReflectogramComparer.getMeanDeviation(etalonMTrace, dataMTrace);
-		double etalonLength = ReflectogramMath.getLastConnectorBegin(etalonSRE) * deltaX;
-		double dataLength = ReflectogramMath.getLastConnectorBegin(dataSRE) * deltaX;
+		double etalonLength = ReflectogramMath.getEndOfTraceBegin(etalonSRE) * deltaX;
+		double dataLength = ReflectogramMath.getEndOfTraceBegin(dataSRE) * deltaX;
 		double lossDifference = ReflectogramComparer.getLossDifference(etalonMTM.getMTAE(), dataMTAE);
 
 		wctModel.setValueAt(String.valueOf(MathRef.round_3(dataLength))+ " " + LangModelAnalyse.getString("km"), 0, 1);

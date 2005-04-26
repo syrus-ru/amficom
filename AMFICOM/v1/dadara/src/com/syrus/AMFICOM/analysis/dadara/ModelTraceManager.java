@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.53 2005/04/25 08:24:30 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.54 2005/04/26 07:35:20 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
  * генерацией пороговых кривых и сохранением/восстановлением порогов.
  *
  * @author $Author: saa $
- * @version $Revision: 1.53 $, $Date: 2005/04/25 08:24:30 $
+ * @version $Revision: 1.54 $, $Date: 2005/04/26 07:35:20 $
  * @module
  */
 public class ModelTraceManager
@@ -103,7 +103,11 @@ implements DataStreamable
 				thresholds.add(new ThreshDY(i, false, evBegin, evEnd));
 				last = null;
 				break;
-			case SimpleReflectogramEvent.REFLECTIVE:
+			case SimpleReflectogramEvent.DEADZONE:
+				// fall through
+			case SimpleReflectogramEvent.ENDOFTRACE:
+				// fall through
+			case SimpleReflectogramEvent.CONNECTOR:
 				int[] pos = CoreAnalysisManager.getConnectorMinMaxMin(getMF(), evBegin, evEnd);
 				evBegin = pos[0];
 				int evCenter = pos[1];

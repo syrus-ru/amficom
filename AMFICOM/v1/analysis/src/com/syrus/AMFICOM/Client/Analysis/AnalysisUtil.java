@@ -316,13 +316,20 @@ public class AnalysisUtil
 		return eventTypeName;
 	}
 
+	// @todo: объединить getSimpleEventNameByType и getTraceEventNameByType?
 	public static String getSimpleEventNameByType(int eventType)
 	{
 		String eventTypeName;
 		switch(eventType)
 		{
-		case SimpleReflectogramEvent.REFLECTIVE:
+		case SimpleReflectogramEvent.CONNECTOR:
 		    eventTypeName = LangModelAnalyse.getString("eventTypeReflective");
+			break;
+		case SimpleReflectogramEvent.DEADZONE:
+		    eventTypeName = LangModelAnalyse.getString("eventTypeInitiate");
+			break;
+		case SimpleReflectogramEvent.ENDOFTRACE:
+		    eventTypeName = LangModelAnalyse.getString("eventTypeTerminate");
 			break;
 		case SimpleReflectogramEvent.GAIN:
 			eventTypeName = LangModelAnalyse.getString("eventTypeGain");

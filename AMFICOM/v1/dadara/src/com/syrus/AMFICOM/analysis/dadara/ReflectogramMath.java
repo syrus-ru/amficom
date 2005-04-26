@@ -261,11 +261,14 @@ public class ReflectogramMath
 		return -1;
 	}
 */
-	public static int getLastConnectorBegin(SimpleReflectogramEvent[] re)
+	public static int getEndOfTraceBegin(SimpleReflectogramEvent[] re)
 	{
+		// если есть событие "конец трассы", возвращаем его начало
 		for(int i = re.length - 1; i >= 0; i--)
-			if(re[i].getEventType() == SimpleReflectogramEvent.REFLECTIVE)
+			if(re[i].getEventType() == SimpleReflectogramEvent.ENDOFTRACE)
 				return re[i].getBegin();
+		// если нет - считаем, что трассы совсем нет
+		// XXX: м б тогда лучше начало м.з.?
 		return 0;
 	}
 

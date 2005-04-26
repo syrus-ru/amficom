@@ -265,13 +265,14 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 					case SimpleReflectogramEvent.LINEAR:
 					    color = linezoneColor;
 						break;
-					case SimpleReflectogramEvent.REFLECTIVE:
-						if (j == 0)
-						    color = deadzoneColor;
-						else if (j == ep.length - 1)
-						    color = endColor;
-						else
-						    color = connectColor;
+					case SimpleReflectogramEvent.CONNECTOR:
+					    color = connectColor;
+					    break;
+					case SimpleReflectogramEvent.DEADZONE:
+						color = deadzoneColor;
+						break;
+					case SimpleReflectogramEvent.ENDOFTRACE:
+					    color = endColor;
 						break;
 					case SimpleReflectogramEvent.GAIN:
 						// fall through

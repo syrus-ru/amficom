@@ -14,49 +14,46 @@ double fmin(double a, double b, double c)
 	return a;
 }
 
+static int etEPoEPn(int type)
+{
+	switch (type)
+	{
+	case EventParams_LINEAR:
+		return com_syrus_AMFICOM_analysis_dadara_SimpleReflectogramEvent_LINEAR;
+
+	case EventParams_LOSS:
+		return com_syrus_AMFICOM_analysis_dadara_SimpleReflectogramEvent_LOSS;
+
+	case EventParams_GAIN:
+		return com_syrus_AMFICOM_analysis_dadara_SimpleReflectogramEvent_GAIN;
+
+	case EventParams_DEADZONE:
+		return com_syrus_AMFICOM_analysis_dadara_SimpleReflectogramEvent_DEADZONE;
+
+	case EventParams_ENDOFTRACE:
+		return com_syrus_AMFICOM_analysis_dadara_SimpleReflectogramEvent_ENDOFTRACE;
+
+	case EventParams_REFLECTIVE:
+		return com_syrus_AMFICOM_analysis_dadara_SimpleReflectogramEvent_CONNECTOR;
+
+	case EventParams_UNRECOGNIZED:
+		return com_syrus_AMFICOM_analysis_dadara_SimpleReflectogramEvent_NOTIDENTIFIED;
+
+	default:
+		fprintf(stderr, "Unknown epo type = %d\n", type);
+		fflush(stderr);
+		assert(0);
+		return com_syrus_AMFICOM_analysis_dadara_SimpleReflectogramEvent_NOTIDENTIFIED;
+	}
+}
+
 void EPold2EPnew(EventParams* epo, EventP &epn, double delta_x)
 {
-	// fill ep
 	epn.begin	= epo->begin;
 	epn.end		= epo->end;
 	epn.delta_x	= delta_x;
-
-	// fill ep.type
-	switch (epo->type)
-	{
-	case EventParams_LINEAR:
-		epn.gentype = com_syrus_AMFICOM_analysis_dadara_SimpleReflectogramEvent_LINEAR;
-		epn.mf.init(MF_ID_BREAKL);
-		//epn.mf.init(MF_ID_LIN);
-		break;
-
-	case EventParams_LOSS:
-		epn.gentype = com_syrus_AMFICOM_analysis_dadara_SimpleReflectogramEvent_LOSS;
-		epn.mf.init(MF_ID_BREAKL);
-		break;
-
-	case EventParams_GAIN:
-		epn.gentype = com_syrus_AMFICOM_analysis_dadara_SimpleReflectogramEvent_GAIN;
-		epn.mf.init(MF_ID_BREAKL);
-		break;
-
-	case EventParams_DEADZONE: // fall through
-	case EventParams_ENDOFTRACE: // fall through
-	case EventParams_REFLECTIVE:
-		epn.gentype = com_syrus_AMFICOM_analysis_dadara_SimpleReflectogramEvent_REFLECTIVE;
-		epn.mf.init(MF_ID_BREAKL);
-		break;
-
-	case EventParams_UNRECOGNIZED:
-		epn.gentype = com_syrus_AMFICOM_analysis_dadara_SimpleReflectogramEvent_NOTIDENTIFIED;
-		epn.mf.init(MF_ID_BREAKL);
-		break;
-
-	default:
-		fprintf(stderr, "Unknown epo->type = %d\n", (int )epo->type);
-		fflush(stderr);
-		assert(0);
-	}
+	epn.gentype = etEPoEPn(epo->type);
+	epn.mf.init(MF_ID_BREAKL);
 
 	assert(epn.mf.isCorrect());
 }
@@ -64,41 +61,9 @@ void EPold2EPnew(EventParams* epo, EventP &epn, double delta_x)
 
 void EPold2SE(EventParams* epo, SimpleEvent &epn)
 {
-	// fill ep
 	epn.begin	= epo->begin;
 	epn.end		= epo->end;
-
-	// fill ep.type
-	switch (epo->type)
-	{
-	case EventParams_LINEAR:
-		epn.type = com_syrus_AMFICOM_analysis_dadara_SimpleReflectogramEvent_LINEAR;
-		break;
-
-	case EventParams_LOSS:
-		epn.type = com_syrus_AMFICOM_analysis_dadara_SimpleReflectogramEvent_LOSS;
-		break;
-
-	case EventParams_GAIN:
-		epn.type = com_syrus_AMFICOM_analysis_dadara_SimpleReflectogramEvent_GAIN;
-		break;
-
-	case EventParams_DEADZONE: // fall through
-	case EventParams_ENDOFTRACE: // fall through
-	case EventParams_REFLECTIVE:
-		epn.type = com_syrus_AMFICOM_analysis_dadara_SimpleReflectogramEvent_REFLECTIVE;
-		break;
-
-	case EventParams_UNRECOGNIZED:
-		epn.type = com_syrus_AMFICOM_analysis_dadara_SimpleReflectogramEvent_NOTIDENTIFIED;
-		break;
-
-	default:
-		fprintf(stderr, "Unknown epo->type = %d\n", (int )epo->type);
-		fflush(stderr);
-		assert(0);
-	}
-
+	epn.type	= etEPoEPn(epo->type);
 }
 
 void EPold2RE(EventParams* epo, ReliabilityEvent &epn)

@@ -53,7 +53,11 @@ public class RefAnalysis
 			case SimpleReflectogramEvent.LINEAR:
 				type = TraceEvent.LINEAR;
 				break;
-			case SimpleReflectogramEvent.REFLECTIVE:
+			case SimpleReflectogramEvent.DEADZONE:
+				// XXX: fall through (compatibility)
+			case SimpleReflectogramEvent.ENDOFTRACE:
+				// XXX: fall through (compatibility)
+			case SimpleReflectogramEvent.CONNECTOR:
 				type = TraceEvent.CONNECTOR;
 				break;
 			case SimpleReflectogramEvent.LOSS:
