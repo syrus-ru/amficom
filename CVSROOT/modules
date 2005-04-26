@@ -180,6 +180,9 @@ scripts_v1	AMFICOM/v1/scripts
 #M	importUCM_v1
 importUCM_v1	AMFICOM/v1/importUCM
 
+#M	test	Tests for all AMFICOM modules
+test		AMFICOM/v1/test
+
 akp		hw/akp
 trc		hw/trc
 tracedatareader	hw/tracedatareader
