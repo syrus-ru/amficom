@@ -149,7 +149,7 @@ public class AnalysisUtil
 		}
 	}
 
-	public static Set createCriteriaSetFromParams(Identifier userId, java.util.Set meIds) throws ApplicationException
+	public static Set createCriteriaSet(Identifier userId, java.util.Set meIds) throws ApplicationException
 	{
 		AnalysisParameters analysisParams = Heap.getMinuitAnalysisParams();
 		if (analysisParams == null)

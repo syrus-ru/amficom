@@ -66,7 +66,7 @@ public class SaveTestSetupCommand extends VoidCommand
 		try
 		{
 			if ((type & CRITERIA) != 0)
-				criteriaSet = AnalysisUtil.createCriteriaSetFromParams(userId, msTest.getMonitoredElementIds());
+				criteriaSet = AnalysisUtil.createCriteriaSet(userId, msTest.getMonitoredElementIds());
 			else
 				criteriaSet = msTest.getCriteriaSet();
 		} catch (ApplicationException e)
