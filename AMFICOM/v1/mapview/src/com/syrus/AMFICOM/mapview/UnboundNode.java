@@ -1,5 +1,5 @@
 /**
- * $Id: UnboundNode.java,v 1.10 2005/04/04 13:32:07 bass Exp $
+ * $Id: UnboundNode.java,v 1.11 2005/04/26 16:13:12 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
  * Непривязанный элемент. Сооветствует элеименту схемы, не привязанному 
  * ни к какому элементу топологической схемы.
  * 
- * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2005/04/04 13:32:07 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.11 $, $Date: 2005/04/26 16:13:12 $
  * @module mapviewclient_v1
  */
 public class UnboundNode extends SiteNode
@@ -87,7 +87,6 @@ public class UnboundNode extends SiteNode
 				"");
 
 		this.schemeElement = schemeElement;
-		this.name = schemeElement.getName();
 	}
 
 	/**
@@ -126,11 +125,11 @@ public class UnboundNode extends SiteNode
 		}
 		catch (IdentifierGenerationException e)
 		{
-			throw new CreateObjectException("MapUnboundNodeElement.createInstance | cannot generate identifier ", e);
+			throw new CreateObjectException("UnboundNode.createInstance | cannot generate identifier ", e);
 		}
 		catch (IllegalObjectEntityException e) 
 		{
-			throw new CreateObjectException("MapUnboundNodeElement.createInstance | cannot generate identifier ", e);
+			throw new CreateObjectException("UnboundNode.createInstance | cannot generate identifier ", e);
 		}
 	}
 
@@ -214,6 +213,14 @@ public class UnboundNode extends SiteNode
 	public IDLEntity getTransferable()
 	{
 		throw new UnsupportedOperationException();
+	}
+
+	public String getName() {
+		return this.schemeElement.getName();
+	}
+
+	public void setName(String name) {
+		throw new UnsupportedOperationException("Use SchemeElement.setName(String)");
 	}
 
 }
