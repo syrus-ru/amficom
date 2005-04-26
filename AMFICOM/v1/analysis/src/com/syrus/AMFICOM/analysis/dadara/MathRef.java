@@ -131,13 +131,19 @@ public class MathRef
 	}
 
 	// вычислить отражение
-	// параметры вышеприведенна€ сигма, амплитуда отражени€ в дЅ
-	public static double calcReflectance (double sigma, double peak)
+	// параметры: вышеприведенна€ сигма, амплитуда отражени€ в дЅ
+	// значени€ менее -99 дЅ отображаютс€ как -99 дЅ 
+	public static double calcReflectance(double sigma, double peak)
 	{
-		//System.out.println("calcReflectance: sigma "+sigma+" peak "+peak);
-		if (peak < 0)
-			peak = 0; // XXX
-		return (-sigma + 10d*Math.log(Math.pow(10d, peak/5d) - 1)/Math.log(10));
+		System.out.println("calcReflectance: sigma "+sigma+" peak "+peak);
+		final double MINF = -99; // XXX: отражение менее -99 отображаем как -99 дЅ 
+		if (peak <= 0)
+			return MINF;
+		double ret = (-sigma + 10.0*Math.log(Math.pow(10.0, peak/5.0) - 1)
+				/ Math.log(10));
+		if (ret < MINF)
+			return MINF;
+		return ret;
 	}
 
 	public static double round_4 (double d)
