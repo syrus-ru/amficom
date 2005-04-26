@@ -14,4 +14,4 @@ CREATE TABLE IntervalsTemporalPattern (
  CONSTRAINT itp_modifier_fk FOREIGN KEY (modifier_id)
   REFERENCES "User" (id) ON DELETE CASCADE
  )
-CREATE SEQUENCE temporalpattern_seq ORDER;
+CREATE SEQUENCE intervalstemporalpattern_seq ORDER;
