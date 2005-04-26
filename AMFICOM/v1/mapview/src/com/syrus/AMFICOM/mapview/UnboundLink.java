@@ -1,5 +1,5 @@
 /**
- * $Id: UnboundLink.java,v 1.8 2005/04/04 13:32:07 bass Exp $
+ * $Id: UnboundLink.java,v 1.9 2005/04/26 16:12:21 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,8 +29,8 @@ import com.syrus.AMFICOM.map.PhysicalLinkType;
  * Элемент непривязанной линии. Использыется как составляющая честь 
  * {@link CablePath} в случае, когда кабель не привязан на каком-либо участке 
  * между узлами.
- * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/04/04 13:32:07 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.9 $, $Date: 2005/04/26 16:12:21 $
  * @module mapviewclient_v1
  */
 public class UnboundLink extends PhysicalLink
@@ -50,7 +50,7 @@ public class UnboundLink extends PhysicalLink
 	 * @param creatorId пользователь
 	 * @param stNode начальный узел
 	 * @param eNode конечный узел
-	 * @param proto тип (должен быть {@link PhysicalLinkType#UNBOUND})
+	 * @param type тип (должен быть {@link PhysicalLinkType#UNBOUND})
 	 */
 	protected UnboundLink(
 			Identifier id,
@@ -58,9 +58,9 @@ public class UnboundLink extends PhysicalLink
 			final long version,
 			AbstractNode stNode, 
 			AbstractNode eNode, 
-			PhysicalLinkType proto)
+			PhysicalLinkType type)
 	{
-		super(id, creatorId, version, id.toString(), "", proto, stNode, eNode, "", "", "", 0, 0, true, true);
+		super(id, creatorId, version, id.toString(), "", type, stNode, eNode, "", "", "", 0, 0, true, true);
 	}
 
 	/**
@@ -68,7 +68,7 @@ public class UnboundLink extends PhysicalLink
 	 * @param creatorId пользователь
 	 * @param stNode начальный узел
 	 * @param eNode конечный узел
-	 * @param proto тип (должен быть {@link PhysicalLinkType#UNBOUND})
+	 * @param type тип (должен быть {@link PhysicalLinkType#UNBOUND})
 	 * @return новая линия
 	 * @throws com.syrus.AMFICOM.general.CreateObjectException если
 	 * нельзя создать объект
@@ -77,10 +77,10 @@ public class UnboundLink extends PhysicalLink
 			Identifier creatorId,
 			AbstractNode stNode, 
 			AbstractNode eNode, 
-			PhysicalLinkType proto)
+			PhysicalLinkType type)
 		throws CreateObjectException 
 	{
-		if (stNode == null || eNode == null || proto == null)
+		if (stNode == null || eNode == null || type == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		
 		try
@@ -91,17 +91,17 @@ public class UnboundLink extends PhysicalLink
 				0L,
 				stNode, 
 				eNode, 
-				proto);
+				type);
 			unboundLink.changed = true;
 			return unboundLink;
 		}
 		catch (IdentifierGenerationException e)
 		{
-			throw new CreateObjectException("MapUnboundLinkElement.createInstance | cannot generate identifier ", e);
+			throw new CreateObjectException("UnboundLink.createInstance | cannot generate identifier ", e);
 		}
 		catch (IllegalObjectEntityException e) 
 		{
-			throw new CreateObjectException("MapUnboundLinkElement.createInstance | cannot generate identifier ", e);
+			throw new CreateObjectException("UnboundLink.createInstance | cannot generate identifier ", e);
 		}
 	}
 
