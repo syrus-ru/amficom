@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemePathCommand.java,v 1.19 2005/04/18 11:02:29 krupenn Exp $
+ * $Id: PlaceSchemePathCommand.java,v 1.20 2005/04/26 16:19:21 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -38,22 +38,17 @@ import com.syrus.AMFICOM.scheme.corba.PathElement_TransferablePackage.DataPackag
  * (drag/drop), в точке point (в экранных координатах)
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.19 $, $Date: 2005/04/18 11:02:29 $
+ * @version $Revision: 1.20 $, $Date: 2005/04/26 16:19:21 $
  * @module mapviewclient_v1
  */
 public class PlaceSchemePathCommand extends MapActionCommandBundle
 {
-	/**
-	 * Выбранный фрагмент линии
-	 */
 	SiteNode startNode = null;
 	SiteNode endNode = null;
 
 	MeasurementPath measurementPath = null;
-	UnboundLink unbound = null;
-	NodeLink nodeLink;
 
-	SchemePath path = null;
+	SchemePath schemePath = null;
 	
 	Map map;
 	MapView mapView;
@@ -66,7 +61,7 @@ public class PlaceSchemePathCommand extends MapActionCommandBundle
 	public PlaceSchemePathCommand(SchemePath path)
 	{
 		super();
-		this.path = path;
+		this.schemePath = path;
 	}
 
 	public void execute()
@@ -80,16 +75,16 @@ public class PlaceSchemePathCommand extends MapActionCommandBundle
 		this.mapView = this.logicalNetLayer.getMapView();
 		this.map = this.mapView.getMap();
 		try {
-			Scheme scheme = this.path.getScheme();
-			this.startNode = this.mapView.getStartNode(this.path);
-			this.endNode = this.mapView.getEndNode(this.path);
-			this.measurementPath = this.mapView.findMeasurementPath(this.path);
+			Scheme scheme = this.schemePath.getScheme();
+			this.startNode = this.mapView.getStartNode(this.schemePath);
+			this.endNode = this.mapView.getEndNode(this.schemePath);
+			this.measurementPath = this.mapView.findMeasurementPath(this.schemePath);
 			if(this.measurementPath == null)
-				this.measurementPath = super.createMeasurementPath(this.path);
+				this.measurementPath = super.createMeasurementPath(this.schemePath);
 			else
 			// если путь уже есть, все его составляющие наносятся заново
 				super.removeMeasurementPathCables(this.measurementPath);
-			for(Iterator iter = this.path.getPathElements().iterator(); iter.hasNext();) {
+			for(Iterator iter = this.schemePath.getPathElements().iterator(); iter.hasNext();) {
 				PathElement pe = (PathElement )iter.next();
 				switch(pe.getKind().value())
 				{
