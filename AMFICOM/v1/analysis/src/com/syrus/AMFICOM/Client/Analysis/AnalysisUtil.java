@@ -197,7 +197,6 @@ public class AnalysisUtil
 		{
 			SetParameter[] params = new SetParameter[2];
 
-			// FIXME: save both events and thresholds
 			ParameterType ptype = getParameterType(ParameterTypeCodenames.DADARA_ETALON_MTM, DataType.DATA_TYPE_RAW);
 			params[0] = SetParameter.createInstance(ptype,
 					DataStreamableUtil.writeDataStreamableToBA(mtm));
