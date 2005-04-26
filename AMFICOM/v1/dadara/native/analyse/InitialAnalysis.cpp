@@ -768,7 +768,7 @@ void InitialAnalysis::trimAllEvents()
 		if(ev.begin != prevEnd && i != 0)
         {   if( fabs(ev.begin - prevEnd) > 2)
         	{   bool const GAP_BETWEEN_EVENTS_NOT_TOO_LARGE = false;
-            	//assert(GAP_BETWEEN_EVENTS_NOT_TOO_LARGE);
+            	assert(GAP_BETWEEN_EVENTS_NOT_TOO_LARGE);
             }
         	ev.begin = prevEnd;
         }
