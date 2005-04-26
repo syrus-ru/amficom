@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalImageCache.java,v 1.9.2.2 2005/04/25 16:59:15 peskovsky Exp $
+ * $Id: TopologicalImageCache.java,v 1.9.2.3 2005/04/26 14:33:02 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 
 /**
  * @author $Author: peskovsky $
- * @version $Revision: 1.9.2.2 $, $Date: 2005/04/25 16:59:15 $
+ * @version $Revision: 1.9.2.3 $, $Date: 2005/04/26 14:33:02 $
  * @module mapinfo_v1
  */
 public class TopologicalImageCache
@@ -110,6 +110,8 @@ public class TopologicalImageCache
 	private double scale = 1.f;
 	private Dimension imageSize = null;	
 	
+	private Dimension discreteShifts = null;
+	
 	public TopologicalImageCache(MapInfoLogicalNetLayer miLayer)
 	{
 		this.miLayer = miLayer;
@@ -162,6 +164,11 @@ public class TopologicalImageCache
 				this.imagesToPaint.clear();				
 				this.cacheOfImages.clear();
 				this.loadingThread.clearQueue();
+			}
+			else
+			{
+				//Дискретное смещение в экранных координатах относительно предыдущего центра
+				this.discreteShifts = this.getDiscreteShifts();
 			}
 			
 			this.createMovingRequests();
@@ -264,12 +271,9 @@ public class TopologicalImageCache
 		System.out.println(this.miLayer.sdFormat.format(new Date(System.currentTimeMillis())) +
 			" TIC - createRequests - just entered");
 		
-		//Дискретное смещение в экранных координатах относительно предыдущего центра
-		Dimension discreteShifts = this.getDiscreteShifts();
-		
 		//Создаём недостающие изображения, постепенно увеличивая окрестность
 		for (int i = 0; i <= TopologicalImageCache.CACHE_SIZE; i++)
-			this.createMovingRequests(i,discreteShifts);
+			this.createMovingRequests(i);
 			
 		//Удаляем неподгруженные очёты вышедшие из кэш области
 		this.clearFarAndUnloadedSegments();
@@ -286,9 +290,8 @@ public class TopologicalImageCache
 	/**
 	 * проверяет наличие и при необходимости создаёт сегменты на заданной окрестности
 	 * @param neighbourhood Окрестность
-	 * @param discreteShifts Отсюда направление вычисляется
 	 */
-	private void createMovingRequests(int neighbourhood, Dimension discreteShifts)
+	private void createMovingRequests(int neighbourhood)
 	{
 		//Создаём недостающие изображения
 		for (int i = (-1) * neighbourhood; i <= neighbourhood; i++)
@@ -324,10 +327,15 @@ public class TopologicalImageCache
 					requestCurPriority = TopologicalRequest.PRIORITY_EXPRESS;
 				else
 				{
-					if (	((discreteShifts.width * j > 0) || (discreteShifts.width == j))
-							&&((discreteShifts.height * i > 0) || (discreteShifts.height == i)))
+					if (	((this.discreteShifts.width * j > 0) || (this.discreteShifts.width == j))
+							&&((this.discreteShifts.height * i > 0) || (this.discreteShifts.height == i)))
 						//Если текущий радиус-вектор сонаправлен с направлением движения
-						requestCurPriority = TopologicalRequest.PRIORITY_BACKGROUND_HIGH;								
+						if (neighbourhood == 1)
+							//Ближайший по тому же направлению сегмент
+							requestCurPriority = TopologicalRequest.PRIORITY_BACKGROUND_HIGH;
+						else
+							//В том же квадранте
+							requestCurPriority = TopologicalRequest.PRIORITY_BACKGROUND_MIDDLE;							
 				}				
 				
 				if (requestForCenter != null)
@@ -394,7 +402,7 @@ public class TopologicalImageCache
 		for (Iterator it = this.cacheOfImages.iterator(); it.hasNext();)
 		{
 			TopologicalRequest curRequest = (TopologicalRequest)it.next();
-			if (	(!rectangleContainsPoint(currCacheBorders, curRequest.topoCenter))
+			if (	(!currCacheBorders.contains(curRequest.topoCenter.getX(),curRequest.topoCenter.getY()))
 					&&(curRequest.priority != TopologicalRequest.PRIORITY_ALREADY_LOADED))					
 			{
 				//Удаляем сегмент - не имеет смысла его подгружает
@@ -405,17 +413,6 @@ public class TopologicalImageCache
 				it.remove();
 			}
 		}
-	}
-	
-	private boolean rectangleContainsPoint(Rectangle2D.Double rect, DoublePoint point)
-	{
-		if (	(rect.getX() < point.getX())
-				&&(point.getX() < rect.getX() + rect.getWidth())
-				&&(rect.getY() < point.getY())
-				&&(point.getY() < rect.getY() + rect.getHeight()))
-			return true;
-		
-		return false;
 	}
 	
 	/**
@@ -862,7 +859,7 @@ class LoadingThread extends Thread
 /**
  * Структура запроса изображения с сервера
  * @author $Author: peskovsky $
- * @version $Revision: 1.9.2.2 $, $Date: 2005/04/25 16:59:15 $
+ * @version $Revision: 1.9.2.3 $, $Date: 2005/04/26 14:33:02 $
  * @module mapinfo_v1
  */
 class TopologicalRequest implements Comparable
@@ -880,8 +877,8 @@ class TopologicalRequest implements Comparable
 	private static final int PRIORITY_BACKGROUND = 20;
 	
 	public static final int PRIORITY_BACKGROUND_HIGH = TopologicalRequest.PRIORITY_BACKGROUND + 1;
-	
-	public static final int PRIORITY_BACKGROUND_LOW = TopologicalRequest.PRIORITY_BACKGROUND + 2;
+	public static final int PRIORITY_BACKGROUND_MIDDLE = TopologicalRequest.PRIORITY_BACKGROUND + 2;	
+	public static final int PRIORITY_BACKGROUND_LOW = TopologicalRequest.PRIORITY_BACKGROUND + 3;
 
 	/**
 	 * Для участков изображения, которые требуется отобразить по
