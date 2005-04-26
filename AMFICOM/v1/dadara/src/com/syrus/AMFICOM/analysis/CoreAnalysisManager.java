@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.51 2005/04/26 15:21:11 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.52 2005/04/26 16:08:55 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.51 $, $Date: 2005/04/26 15:21:11 $
+ * @version $Revision: 1.52 $, $Date: 2005/04/26 16:08:55 $
  * @module
  */
 
@@ -52,7 +52,7 @@ public class CoreAnalysisManager
 	 * @param nReflSize хар. размер неотраж. событи€ (в точках)
 	 * @param traceLength длина рефлектограммы до конца волокна,
 	 * может быть 0, тогда будет найдена автоматически
-	 * @param noiseDB уровень шума по 1 сигма, в абс. дЅ;
+	 * @param noiseDB уровень шума по 3 сигма, в абс. дЅ;
 	 * может быть null - тогда будет найден автоматически
 	 * @return массив событий
 	 */

@@ -1,5 +1,5 @@
 /*-
- * $Id: TracesAverages.java,v 1.1 2005/04/19 13:38:04 saa Exp $
+ * $Id: TracesAverages.java,v 1.2 2005/04/26 16:08:55 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.analysis.dadara;
 /**
  * Хранит данные по совокупности набора рефлектограмм
  * @author $Author: saa $
- * @version $Revision: 1.1 $, $Date: 2005/04/19 13:38:04 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/26 16:08:55 $
  * @module
  */
 public class TracesAverages
@@ -24,7 +24,7 @@ public class TracesAverages
 	public int nTraces = 0; // number of averaged traces
 	public double[] avY = null; // average Y
 	
-	// noise info
+	// noise info: 3 * sigma level
 	public double[] avNoise = null; // average noise of Y
 	public double[] noiseAv = null; // noise of averaged Y
 
