@@ -297,7 +297,7 @@ void InitialAnalysis::setSpliceParamsBySplash( EventParams& ep, Splash& sp)
 }
 // -------------------------------------------------------------------------------------------------
 void InitialAnalysis::setConnectorParamsBySplashes( EventParams& ep, Splash& sp1, Splash& sp2 )
-{  ep.type = EventParams::REFLECTIVE;
+{  ep.type = EventParams::CONNECTOR;
    ep.begin = sp1.begin_thr;
    if(ep.begin<0){ep.begin=0;}
    ep.end = sp2.end_thr;
@@ -510,7 +510,7 @@ return;
 	// у первого коннектора ( мёртвой зоны) корректировать нечего (считаем, что перед мёртвой зоной ничего нет )
 	for(int n=1; n<events->getLength(); n++)
     {   EventParams* ev1 = (EventParams*)(*events)[n];
-        if( ev1->type != EventParams::REFLECTIVE )// пока не дойдём до коннектора
+        if( ev1->type != EventParams::CONNECTOR )// пока не дойдём до коннектора
     continue;
     	// ищем точку на фронте коннектора такую, что всё слква от неё - меьше, а справа - не меньше
         int i_begin = ev1->begin, i_end = ev1->end;
@@ -673,7 +673,7 @@ return;
 	for(int n1=0, n2, n3; n1<events->getLength(); n1++)
 	{   // пока не дойдём до коннектора
         EventParams* ev1 = (EventParams*)(*events)[n1];
-    	if(ev1->type != EventParams::REFLECTIVE)
+    	if(ev1->type != EventParams::CONNECTOR)
     continue;
         else {cou1++;}
 		if(cou1 == 1) // первый "коннектор" это мёртвая зона
@@ -688,7 +688,7 @@ return;
         if(n3 >= events->getLength())
     break;
 	    EventParams* ev3 = (EventParams*)(*events)[n3];
-        if(ev3->type != EventParams::REFLECTIVE)
+        if(ev3->type != EventParams::CONNECTOR)
     continue;
     	if(ev2->end - ev2->begin < szc)
         { ev1->end = ev3->begin;
@@ -701,7 +701,7 @@ return;
 void InitialAnalysis::deleteAllEventsAfterLastConnector()
 {   for(int i=events->getLength()-1; i>0; i--)
 	{   EventParams* ev = (EventParams*)(*events)[i];
-    	if( ev->type != EventParams::REFLECTIVE)
+    	if( ev->type != EventParams::CONNECTOR)
         {   events->slowRemove(i);
         }
         else

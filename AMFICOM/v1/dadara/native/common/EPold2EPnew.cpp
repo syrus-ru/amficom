@@ -33,7 +33,7 @@ static int etEPoEPn(int type)
 	case EventParams_ENDOFTRACE:
 		return com_syrus_AMFICOM_analysis_dadara_SimpleReflectogramEvent_ENDOFTRACE;
 
-	case EventParams_REFLECTIVE:
+	case EventParams_CONNECTOR:
 		return com_syrus_AMFICOM_analysis_dadara_SimpleReflectogramEvent_CONNECTOR;
 
 	case EventParams_UNRECOGNIZED:
@@ -77,7 +77,7 @@ void EPold2RE(EventParams* epo, ReliabilityEvent &epn)
 		R = epo->R;
 		break;
 
-	case EventParams_REFLECTIVE:
+	case EventParams_CONNECTOR:
 		R = fmin(epo->R1, epo->R2, epo->R3);
 		break;
 

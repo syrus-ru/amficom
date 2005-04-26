@@ -14,7 +14,7 @@
 #define EventParams_LINEAR 10
 #define EventParams_GAIN 11
 #define EventParams_LOSS 12
-#define EventParams_REFLECTIVE 21
+#define EventParams_CONNECTOR 21
 #define EventParams_DEADZONE 22
 #define EventParams_ENDOFTRACE 23
 #define EventParams_UNRECOGNIZED 30
@@ -29,7 +29,7 @@ public:
 	static const int LINEAR;
 	static const int GAIN;
 	static const int LOSS;
-	static const int REFLECTIVE;
+	static const int CONNECTOR;
 	static const int DEADZONE;
 	static const int ENDOFTRACE;
     static const int UNRECOGNIZED;
