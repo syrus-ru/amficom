@@ -1,5 +1,5 @@
 /**
- * $Id: CablePathBinding.java,v 1.3 2005/03/16 12:53:22 bass Exp $
+ * $Id: CablePathBinding.java,v 1.4 2005/04/26 16:04:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,8 +20,8 @@ import java.util.Iterator;
 
 /**
  * Класс хранит данные о привязке кабеля к линиям.
- * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/03/16 12:53:22 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.4 $, $Date: 2005/04/26 16:04:00 $
  * @module mapviewclient_v1
  */
 public final class CablePathBinding extends HashMap
@@ -115,106 +115,104 @@ public final class CablePathBinding extends HashMap
 		return this.cablePath;
 	}
 
-/*
-	public MapNodeElement getStartUnbound(MapNodeElement pathStart)
-	{
-		MapNodeElement bufferSite = pathStart;
-		
-		for(Iterator it = super.iterator(); it.hasNext();)
-		{
-			CableChannelingItem cci = (CableChannelingItem )it.next();
-			if(! cci.startSiteId.equals(bufferSite.getId()))
-			{
-				return bufferSite;
-			}
-			bufferSite = map.getMapSiteNodeElement(cci.endSiteId);
-		}
-		return bufferSite;
-	}
-
-	public MapNodeElement getEndUnbound(MapNodeElement pathEnd)
-	{
-		MapNodeElement bufferSite = pathEnd;
-		
-		for(ListIterator it = super.listIterator(super.size()); it.hasPrevious();)
-		{
-			CableChannelingItem cci = (CableChannelingItem )it.previous();
-			if(! cci.endSiteId.equals(bufferSite.getId()))
-			{
-				return bufferSite;
-			}
-			bufferSite = map.getMapSiteNodeElement(cci.startSiteId);
-		}
-		return bufferSite;
-	}
-
-	public int indexOfSiteNode(String siteId)
-	{
-		int i = 0;
-		for(Iterator it = super.iterator(); it.hasNext();)
-		{
-			CableChannelingItem cci = (CableChannelingItem )it.next();
-			if(cci.startSiteId.equals(siteId))
-			{
-				return i;
-			}
-			else
-				i++;
-		}
-		return -1;
-	}
-
-	public int indexOfPhysicalLink(String physicalLinkId)
-	{
-		int i = 0;
-		for(Iterator it = super.iterator(); it.hasNext();)
-		{
-			CableChannelingItem cci = (CableChannelingItem )it.next();
-			if(cci.physicalLinkId.equals(physicalLinkId))
-			{
-				return i;
-			}
-			else
-				i++;
-		}
-		return -1;
-	}
-
-	public MapPhysicalLinkElement getStartLastBoundLink(MapNodeElement pathStart)
-	{
-		MapNodeElement bufferSite = pathStart;
-		MapPhysicalLinkElement link = null;
-		
-		for(Iterator it = super.iterator(); it.hasNext();)
-		{
-			CableChannelingItem cci = (CableChannelingItem )it.next();
-			if(! cci.startSiteId.equals(bufferSite.getId()))
-			{
-				return link;
-			}
-			bufferSite = map.getMapSiteNodeElement(cci.endSiteId);
-			link = map.getPhysicalLink(cci.physicalLinkId);
-		}
-		return link;
-	}
-
-	public MapPhysicalLinkElement getEndLastBoundLink(MapNodeElement pathEnd)
-	{
-		MapNodeElement bufferSite = pathEnd;
-		MapPhysicalLinkElement link = null;
-
-		for(ListIterator it = super.listIterator(super.size()); it.hasPrevious();)
-		{
-			CableChannelingItem cci = (CableChannelingItem )it.previous();
-			if(! cci.endSiteId.equals(bufferSite.getId()))
-			{
-				return link;
-			}
-			bufferSite = map.getMapSiteNodeElement(cci.startSiteId);
-			link = map.getPhysicalLink(cci.physicalLinkId);
-		}
-		return link;
-	}
-*/
+//	public MapNodeElement getStartUnbound(MapNodeElement pathStart)
+//	{
+//		MapNodeElement bufferSite = pathStart;
+//		
+//		for(Iterator it = super.iterator(); it.hasNext();)
+//		{
+//			CableChannelingItem cci = (CableChannelingItem )it.next();
+//			if(! cci.startSiteId.equals(bufferSite.getId()))
+//			{
+//				return bufferSite;
+//			}
+//			bufferSite = map.getMapSiteNodeElement(cci.endSiteId);
+//		}
+//		return bufferSite;
+//	}
+//
+//	public MapNodeElement getEndUnbound(MapNodeElement pathEnd)
+//	{
+//		MapNodeElement bufferSite = pathEnd;
+//		
+//		for(ListIterator it = super.listIterator(super.size()); it.hasPrevious();)
+//		{
+//			CableChannelingItem cci = (CableChannelingItem )it.previous();
+//			if(! cci.endSiteId.equals(bufferSite.getId()))
+//			{
+//				return bufferSite;
+//			}
+//			bufferSite = map.getMapSiteNodeElement(cci.startSiteId);
+//		}
+//		return bufferSite;
+//	}
+//
+//	public int indexOfSiteNode(String siteId)
+//	{
+//		int i = 0;
+//		for(Iterator it = super.iterator(); it.hasNext();)
+//		{
+//			CableChannelingItem cci = (CableChannelingItem )it.next();
+//			if(cci.startSiteId.equals(siteId))
+//			{
+//				return i;
+//			}
+//			else
+//				i++;
+//		}
+//		return -1;
+//	}
+//
+//	public int indexOfPhysicalLink(String physicalLinkId)
+//	{
+//		int i = 0;
+//		for(Iterator it = super.iterator(); it.hasNext();)
+//		{
+//			CableChannelingItem cci = (CableChannelingItem )it.next();
+//			if(cci.physicalLinkId.equals(physicalLinkId))
+//			{
+//				return i;
+//			}
+//			else
+//				i++;
+//		}
+//		return -1;
+//	}
+//
+//	public MapPhysicalLinkElement getStartLastBoundLink(MapNodeElement pathStart)
+//	{
+//		MapNodeElement bufferSite = pathStart;
+//		MapPhysicalLinkElement link = null;
+//		
+//		for(Iterator it = super.iterator(); it.hasNext();)
+//		{
+//			CableChannelingItem cci = (CableChannelingItem )it.next();
+//			if(! cci.startSiteId.equals(bufferSite.getId()))
+//			{
+//				return link;
+//			}
+//			bufferSite = map.getMapSiteNodeElement(cci.endSiteId);
+//			link = map.getPhysicalLink(cci.physicalLinkId);
+//		}
+//		return link;
+//	}
+//
+//	public MapPhysicalLinkElement getEndLastBoundLink(MapNodeElement pathEnd)
+//	{
+//		MapNodeElement bufferSite = pathEnd;
+//		MapPhysicalLinkElement link = null;
+//
+//		for(ListIterator it = super.listIterator(super.size()); it.hasPrevious();)
+//		{
+//			CableChannelingItem cci = (CableChannelingItem )it.previous();
+//			if(! cci.endSiteId.equals(bufferSite.getId()))
+//			{
+//				return link;
+//			}
+//			bufferSite = map.getMapSiteNodeElement(cci.startSiteId);
+//			link = map.getPhysicalLink(cci.physicalLinkId);
+//		}
+//		return link;
+//	}
 
 }
