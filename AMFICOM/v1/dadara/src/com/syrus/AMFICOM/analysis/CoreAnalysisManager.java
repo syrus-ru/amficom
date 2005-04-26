@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.50 2005/04/22 11:53:31 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.51 2005/04/26 15:21:11 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.50 $, $Date: 2005/04/22 11:53:31 $
+ * @version $Revision: 1.51 $, $Date: 2005/04/26 15:21:11 $
  * @module
  */
 
@@ -19,6 +19,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import com.syrus.io.BellcoreStructure;
+import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.AMFICOM.analysis.dadara.IncompatibleTracesException;
 import com.syrus.AMFICOM.analysis.dadara.ModelFunction;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEventsImpl;
@@ -194,6 +195,11 @@ public class CoreAnalysisManager
 			int traceLength,
 			double[] noiseArray)
 	{
+		System.err.println("cSE: "
+			+ minLevel
+			+ "/" + minWeld
+			+ "/" + minConnector
+			+ "; " + noiseFactor);
 		return analyse4(y, deltaX,
 			minLevel, minWeld, minConnector, noiseFactor,
 			reflSize, nReflSize,
@@ -354,12 +360,12 @@ public class CoreAnalysisManager
 	 * а точность определения событий - усредненными флуктуациями исходных
 	 * р/г.
 	 * @param av информация о наборе р/г с заполненными noise и bs полями, 
-	 * @param pars набор параметров для IA: { level, weld, connector, noiseFactor }
+	 * @param ap набор параметров для IA
 	 * @return результат анализа в виде mtae
 	 */
 	public static ModelTraceAndEventsImpl makeAnalysis(
 			TracesAverages av,
-			double[] pars
+			AnalysisParameters ap
 			)
 	{
 		long t0 = System.currentTimeMillis();
@@ -386,7 +392,10 @@ public class CoreAnalysisManager
 
 		ReliabilitySimpleReflectogramEventImpl[] rse = createSimpleEvents(
 				av.avY, av.deltaX,
-				pars[0], pars[1], pars[2], pars[3],
+				ap.getMinThreshold(),
+				ap.getMinSplice(),
+				ap.getMinConnector(),
+				ap.getNoiseFactor(),
 				reflSize, nReflSize,
 				av.minTraceLength, av.avNoise);
 
@@ -442,19 +451,19 @@ public class CoreAnalysisManager
 	 * @todo: declare to throw "invalid parameters exception"
 	 * 
 	 * @param bs рефлектограмма
-	 * @param pars параметры анализа {@link #makeAnalysis(TracesAverages, double[])}
+	 * @param ap параметры анализа
 	 * @return массив событий
 	 */
 	public static ModelTraceAndEventsImpl makeAnalysis(
 			BellcoreStructure bs,
-			double[] pars)
+			AnalysisParameters ap)
 	{
 		Set bsSet = new HashSet(1);
 		bsSet.add(bs);
 		try	{
 			// определяем все необходимые нам параметры совокупности р/г
 			TracesAverages av = findTracesAverages(bsSet, true, false, true);
-			return makeAnalysis(av, pars);
+			return makeAnalysis(av, ap);
 		} catch (IncompatibleTracesException e) {
 			// одна рефлектограмма всегда совместима с самой собой
 			throw new InternalError("Unexpected exception: " + e);
@@ -472,18 +481,19 @@ public class CoreAnalysisManager
 	 * </ul>
 	 * @param bsColl коллекция входных р/г.
 	 *   Должна быть непуста, а р/г должны иметь одинаковую длину.
-	 * @param pars параметры анализа {@link #makeAnalysis(TracesAverages, double[])}
+	 * @param ap параметры анализа
 	 * @return MTM созданного эталона
 	 * @throws IllegalArgumentException если bsColl пуст
 	 * @throws IncompatibleTracesException если bsColl содержит р/г
 	 *   с разными длинами, разрешением, длительностью импульса или
 	 *   показателем преломления.
 	 */
-	public static ModelTraceManager makeEtalon(Collection bsColl, double[] pars)
+	public static ModelTraceManager makeEtalon(Collection bsColl,
+			AnalysisParameters ap)
 	throws IncompatibleTracesException
 	{
 		TracesAverages av = findTracesAverages(bsColl, true, true, true);
-		ModelTraceAndEventsImpl mtae = makeAnalysis(av, pars);
+		ModelTraceAndEventsImpl mtae = makeAnalysis(av, ap);
 		ModelTraceManager mtm = new ModelTraceManager(mtae);
 		if (bsColl.size() > 1) {
 			// extend to max dev of mf
