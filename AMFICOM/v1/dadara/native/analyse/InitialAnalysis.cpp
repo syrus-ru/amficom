@@ -105,27 +105,25 @@ InitialAnalysis::~InitialAnalysis()
 }
 //------------------------------------------------------------------------------------------------------------
 void InitialAnalysis::performAnalysis()
-{
-	// выполняем вейвлет-преобразование
+{	// выполняем вейвлет-преобразование
 	// f_wlet - вейвлет-образ функции, wlet_width - ширина вейвлета, wn - норма вейвлета
     wn = getWLetNorma(wlet_width);
     performTransformationOnly(data, 0, lastPoint, f_wlet, wlet_width, wn);
 	calcAverageFactor(f_wlet, wlet_width, wn);
 	centerWletImageOnly(f_wlet, wlet_width, 0, lastPoint, wn);// вычитаем из коэффициентов преобразования(КП) постоянную составляющую
-
 #if 0
-	{
-		FILE *f = fopen ("noise2.tmp", "w");assert(f);
+	{	FILE *f = fopen ("noise2.tmp", "w");assert(f);
 		int i;
 		for (i = 0; i < lastPoint; i++)
 			fprintf(f,"%d %g %g %g\n", i, data[i], f_wlet[i], noise[i]);
 		fclose(f);
 	}
 #endif
-    
 	{ // ищём все всплески вейвлет-образа
       ArrList splashes; // создаем пустой ArrList
       findAllWletSplashes(f_wlet, splashes); // заполняем массив splashes объектами
+	  if(splashes.getLength() == 0){
+return;}
       findEventsBySplashes(splashes); // по выделенным всплескам определить события (по сути - сгруппировать всплсески)
       // используем ArrList и его объекты
       splashes.disposeAll(); // очищаем массив ArrList
@@ -424,7 +422,9 @@ void InitialAnalysis::findAllWletSplashes(double* f_wlet, ArrList& splashes)
         {  delete &spl; // если этого не делать, то будут утечки памяти, так как удалятся только те spl, которые  были добавлены в splashes 
         }
 	}
-    // напоследок добавляем фиктивный всплеск внихp так как из за резкого спада до нуля в конце всплеск может не успеть уйти вниз достаточно и конец не будет распознан
+    if(splashes.getLength() == 0)
+return;
+	// напоследок добавляем фиктивный всплеск вниз так как из за резкого спада до нуля в конце всплеск может не успеть уйти вниз достаточно и конец не будет распознан
 	Splash* splend = (Splash*)splashes[splashes.getLength()-1];
     if(splend->sign > 0)
     {   Splash* spl = new Splash();
@@ -435,7 +435,6 @@ void InitialAnalysis::findAllWletSplashes(double* f_wlet, ArrList& splashes)
 		spl->sign			= -1;
         splashes.add(spl);
     }
-
 #ifdef debug_lines
     // отображаем пороги
     xs[cou] = 0; ys[cou] =  minimalThreshold; xe[cou] = lastPoint*delta_x; ye[cou] =  minimalThreshold; col[cou] = 0x004444; cou++;
