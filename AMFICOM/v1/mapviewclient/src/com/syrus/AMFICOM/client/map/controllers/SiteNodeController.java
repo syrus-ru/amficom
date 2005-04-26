@@ -1,5 +1,5 @@
 /**
- * $Id: SiteNodeController.java,v 1.7 2005/04/25 15:18:34 krupenn Exp $
+ * $Id: SiteNodeController.java,v 1.8 2005/04/26 16:14:18 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,6 +11,14 @@
 
 package com.syrus.AMFICOM.Client.Map.Controllers;
 
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.geom.Rectangle2D;
+
 import com.syrus.AMFICOM.Client.Map.MapConnectionException;
 import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.Client.Map.MapDataException;
@@ -21,21 +29,10 @@ import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.SiteNode;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Point;
-import java.awt.Toolkit;
-import java.awt.geom.Rectangle2D;
-
-import javax.swing.ImageIcon;
-
 /**
  * Контроллер сетевого узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.7 $, $Date: 2005/04/25 15:18:34 $
+ * @version $Revision: 1.8 $, $Date: 2005/04/26 16:14:18 $
  * @module mapviewclient_v1
  */
 public class SiteNodeController extends AbstractNodeController
