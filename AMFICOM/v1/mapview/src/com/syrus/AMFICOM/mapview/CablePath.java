@@ -1,5 +1,5 @@
 /**
- * $Id: CablePath.java,v 1.14 2005/04/13 10:02:00 krupenn Exp $
+ * $Id: CablePath.java,v 1.15 2005/04/26 16:10:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,12 +20,7 @@ import java.util.ListIterator;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.Characteristic;
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IdentifierGenerationException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
-import com.syrus.AMFICOM.general.LocalIdentifierGenerator;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
@@ -40,26 +35,11 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
 /**
  * Элемент кабельного пути. Описывает привязку кабеля к топологическим линиям.
  * @author $Author: krupenn $
- * @version $Revision: 1.14 $, $Date: 2005/04/13 10:02:00 $
+ * @version $Revision: 1.15 $, $Date: 2005/04/26 16:10:00 $
  * @module mapviewclient_v1
  */
 public class CablePath implements MapElement
 {
-	/**
-	 * Идентификатор.
-	 */
-	protected transient Identifier id = null;
-
-	/**
-	 * Название.
-	 */
-	protected transient String name = null;
-
-	/**
-	 * Описание.
-	 */
-	protected transient String description = null;
-
 	/**
 	 * Флаг выделения.
 	 */
@@ -134,17 +114,13 @@ public class CablePath implements MapElement
 	 */
 	protected CablePath(
 			SchemeCableLink schemeCableLink,
-			Identifier id, 
 			AbstractNode stNode, 
 			AbstractNode eNode, 
 			MapView mapView)
 	{
 		this.mapView = mapView;
 
-		this.id = id;
-
 		this.schemeCableLink = schemeCableLink;
-		this.name = schemeCableLink.getName();
 
 		this.startNode = stNode;
 		this.endNode = eNode;
@@ -160,7 +136,6 @@ public class CablePath implements MapElement
 	 * @param eNode конечный узел
 	 * @param mapView вид
 	 * @return новый топологический кабель
-	 * @throws com.syrus.AMFICOM.general.CreateObjectException при невозможности
 	 * создания объекта.
 	 */
 	public static CablePath createInstance(
@@ -168,30 +143,15 @@ public class CablePath implements MapElement
 			AbstractNode stNode, 
 			AbstractNode eNode, 
 			MapView mapView)
-		throws CreateObjectException 
 	{
 		if (stNode == null || mapView == null || eNode == null || schemeCableLink == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		
-		try
-		{
-			Identifier ide =
-				LocalIdentifierGenerator.generateIdentifier(ObjectEntities.PHYSICAL_LINK_ENTITY_CODE);
-			return new CablePath(
-				schemeCableLink,
-				ide,
-				stNode, 
-				eNode, 
-				mapView);
-		}
-		catch (IdentifierGenerationException e)
-		{
-			throw new CreateObjectException("MapCablePathElement.createInstance | cannot generate identifier ", e);
-		}
-		catch (IllegalObjectEntityException e) 
-		{
-			throw new CreateObjectException("MapCablePathElement.createInstance | cannot generate identifier ", e);
-		}
+		return new CablePath(
+			schemeCableLink,
+			stNode, 
+			eNode, 
+			mapView);
 	}
 
 	/**
@@ -259,20 +219,11 @@ public class CablePath implements MapElement
 	}
 	
 	/**
-	 * Set id.
-	 * @param id id
-	 */
-	public void setId(Identifier id)
-	{
-		this.id = id;
-	}
-	
-	/**
 	 * {@inheritDoc}
 	 */
 	public Identifier getId()
 	{
-		return this.id;
+		return this.schemeCableLink.getId();
 	}
 
 	/**
@@ -281,7 +232,7 @@ public class CablePath implements MapElement
 	 */
 	public String getName() 
 	{
-		return this.name;
+		return this.schemeCableLink.getName();
 	}
 
 	/**
@@ -290,7 +241,7 @@ public class CablePath implements MapElement
 	 */
 	public void setName(String name) 
 	{
-		this.name = name;
+		this.schemeCableLink.setName(name);
 	}
 
 	/**
@@ -299,7 +250,7 @@ public class CablePath implements MapElement
 	 */
 	public String getDescription() 
 	{
-		return this.description;
+		return this.schemeCableLink.getDescription();
 	}
 
 	/**
@@ -308,7 +259,7 @@ public class CablePath implements MapElement
 	 */
 	public void setDescription(String description) 
 	{
-		this.description = description;
+		this.schemeCableLink.setDescription(description);
 	}
 
 	/**
@@ -910,14 +861,14 @@ public class CablePath implements MapElement
 	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set)
 	 */
 	public void setCharacteristics(Set characteristics) {
-		throw new UnsupportedOperationException();
+		this.schemeCableLink.setCharacteristics(characteristics);
 	}
 
 	/**
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicSort()
 	 */
 	public CharacteristicSort getCharacteristicSort() {
-		throw new UnsupportedOperationException();
+		return this.schemeCableLink.getCharacteristicSort();
 	}
 
 	/**
@@ -925,6 +876,6 @@ public class CablePath implements MapElement
 	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(Set)
 	 */
 	public void setCharacteristics0(Set characteristics) {
-		throw new UnsupportedOperationException();
+		this.schemeCableLink.setCharacteristics0(characteristics);
 	}
 }
