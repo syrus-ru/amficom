@@ -1,5 +1,5 @@
 /**
- * $Id: MapAddMapCommand.java,v 1.2 2005/03/16 13:48:18 bass Exp $
+ * $Id: MapAddMapCommand.java,v 1.3 2005/04/26 16:20:09 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,6 +11,11 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Map;
 
+import java.util.Collection;
+import java.util.Iterator;
+
+import javax.swing.JDesktopPane;
+
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.StatusMessageEvent;
@@ -18,6 +23,8 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
+import com.syrus.AMFICOM.Client.Map.Controllers.AbstractNodeController;
+import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapTableController;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceChooserDialog;
@@ -26,16 +33,15 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapStorableObjectPool;
 import com.syrus.AMFICOM.mapview.MapView;
-import java.util.Collection;
-import javax.swing.JDesktopPane;
 
 /**
  * добавить в вид схему из списка
- * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/03/16 13:48:18 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.3 $, $Date: 2005/04/26 16:20:09 $
  * @module mapviewclient_v1
  */
 public class MapAddMapCommand extends VoidCommand
@@ -112,6 +118,16 @@ public class MapAddMapCommand extends VoidCommand
 			if(!mapView.getMap().getMaps().contains(this.map))
 			{
 				mapView.getMap().addMap(this.map);
+
+				MapViewController mapViewController = mapFrame.getMapViewer()
+					.getLogicalNetLayer().getMapViewController();
+
+				for(Iterator iter = this.map.getNodes().iterator(); iter.hasNext();) {
+					AbstractNode node = (AbstractNode )iter.next();
+					AbstractNodeController nodeController = (AbstractNodeController )
+						mapViewController.getController(node);
+					nodeController.updateScaleCoefficient(node);
+				}
 				this.aContext.getDispatcher().notify(new MapEvent(
 						mapView,
 						MapEvent.MAP_VIEW_CHANGED));
