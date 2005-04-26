@@ -87,6 +87,7 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener, CurrentEv
 
 	private void makeAlignedDataMT()
 	{
+		// XXX: is alignment really required? Should it be performed here?
 		if (etalonMTM == null || dataMTAE == null)
 			return;
 		alignedDataMT = ReflectogramMath.createAlignedArrayModelTrace(
