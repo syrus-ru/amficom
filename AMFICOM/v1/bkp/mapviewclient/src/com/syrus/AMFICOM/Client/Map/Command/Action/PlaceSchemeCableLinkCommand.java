@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeCableLinkCommand.java,v 1.20 2005/04/22 15:08:45 krupenn Exp $
+ * $Id: PlaceSchemeCableLinkCommand.java,v 1.21 2005/04/26 16:18:58 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,6 +17,7 @@ import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.Controllers.CableController;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
@@ -30,7 +31,7 @@ import com.syrus.AMFICOM.scheme.CableChannelingItem;
  * Разместить кабель на карте.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.20 $, $Date: 2005/04/22 15:08:45 $
+ * @version $Revision: 1.21 $, $Date: 2005/04/26 16:18:58 $
  * @module mapviewclient_v1
  */
 public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
@@ -53,16 +54,16 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
 	/**
 	 * размещаемый кабель
 	 */
-	SchemeCableLink scl = null;
+	SchemeCableLink schemeCableLink = null;
 	
 	Map map;
 
 	MapView mapView;
 	
-	public PlaceSchemeCableLinkCommand(SchemeCableLink scl)
+	public PlaceSchemeCableLinkCommand(SchemeCableLink schemeCableLink)
 	{
 		super();
-		this.scl = scl;
+		this.schemeCableLink = schemeCableLink;
 	}
 
 	public void execute()
@@ -77,20 +78,21 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
 		this.map = this.mapView.getMap();
 		
 		try {
-			this.startNode = this.mapView.getStartNode(this.scl);
-			this.endNode = this.mapView.getEndNode(this.scl);
-			this.cablePath = this.mapView.findCablePath(this.scl);
+			this.startNode = this.mapView.getStartNode(this.schemeCableLink);
+			this.endNode = this.mapView.getEndNode(this.schemeCableLink);
+			this.cablePath = this.mapView.findCablePath(this.schemeCableLink);
 			// если кабельный путь уже есть - ничего не делать
 			if(this.cablePath != null)
 			{
 //			super.checkCablePathLinks(cablePath);
 				return;
 			}
-			this.cablePath = super.createCablePath(this.scl, this.startNode, this.endNode);
+			this.cablePath = super.createCablePath(this.schemeCableLink, this.startNode, this.endNode);
 			// идем по всем узлам кабельного пути от начального
 			SiteNode bufferStartSite = this.startNode;
 			// цикл по элементам привязки кабеля.
-			for(Iterator iter = this.scl.getCableChannelingItems().iterator(); iter.hasNext();) {
+			Identifier userId = this.logicalNetLayer.getUserId();
+			for(Iterator iter = this.schemeCableLink.getCableChannelingItems().iterator(); iter.hasNext();) {
 				CableChannelingItem cci = (CableChannelingItem )iter.next();
 				SiteNode smsne = cci.getStartSiteNode();
 				SiteNode emsne = cci.getEndSiteNode();
@@ -127,7 +129,7 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
 				if(!exists)
 				{
 					UnboundLink unbound = super.createUnboundLinkWithNodeLink(bufferStartSite, smsne);
-					this.cablePath.addLink(unbound, CableController.generateCCI(this.cablePath, unbound, this.logicalNetLayer.getUserId()));
+					this.cablePath.addLink(unbound, CableController.generateCCI(this.cablePath, unbound, userId));
 					unbound.setCablePath(this.cablePath);
 
 					bufferStartSite = emsne;
@@ -141,7 +143,7 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
 					if(link == null)
 					{
 						UnboundLink unbound = super.createUnboundLinkWithNodeLink(smsne, emsne);
-						this.cablePath.addLink(unbound, CableController.generateCCI(this.cablePath, unbound, this.logicalNetLayer.getUserId()));
+						this.cablePath.addLink(unbound, CableController.generateCCI(this.cablePath, unbound, userId));
 						unbound.setCablePath(this.cablePath);
 					}
 					else
@@ -151,7 +153,7 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
 							&& cci.getPlaceY() != -1)
 							link.getBinding().bind(this.cablePath, cci.getRowX(), cci.getPlaceY());
 			
-						this.cablePath.addLink(link, CableController.generateCCI(this.cablePath, link, this.logicalNetLayer.getUserId()));
+						this.cablePath.addLink(link, CableController.generateCCI(this.cablePath, link, userId));
 					}
 				}
 			}
@@ -160,7 +162,7 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
 			if(this.endNode != bufferStartSite)
 			{
 				UnboundLink unbound = super.createUnboundLinkWithNodeLink(bufferStartSite, this.endNode);
-				this.cablePath.addLink(unbound, CableController.generateCCI(this.cablePath, unbound, this.logicalNetLayer.getUserId()));
+				this.cablePath.addLink(unbound, CableController.generateCCI(this.cablePath, unbound, userId));
 				unbound.setCablePath(this.cablePath);
 			}
 			// операция закончена - оповестить слушателей
