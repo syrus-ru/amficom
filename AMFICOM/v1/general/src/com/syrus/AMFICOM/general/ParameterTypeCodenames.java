@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeCodenames.java,v 1.10 2005/04/12 13:07:25 bob Exp $
+ * $Id: ParameterTypeCodenames.java,v 1.11 2005/04/26 14:53:10 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/04/12 13:07:25 $
+ * @version $Revision: 1.11 $, $Date: 2005/04/26 14:53:10 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -39,10 +39,15 @@ public final class ParameterTypeCodenames {
 	// dadara analysis params
 	public static final String	DADARA						= "dadara";
 	public static final String	DADARA_ALARMS				= "dadara_alarm_array";
+
+	// outdated, should be delete:
 	public static final String	DADARA_NOISE_FACTOR			= "dadara_noise_factor";	// double
 	public static final String	MIN_EVENT					= "dadara_min_event";		// double
 	public static final String	MIN_SPLICE					= "dadara_min_splice";		// double
 	public static final String	MIN_CONNECTOR				= "dadara_min_connector";	// double
+
+	// new, instead of DADARA_NOISE_FACTOR, MIN_EVENT, MIN_SPLICE, MIN_CONNECTOR
+	public static final String	DADARA_CRITERIA				= "dadara_criteria";		// raw
 
 	public static final String ALARM_STATUS = "alarm_status";
 
