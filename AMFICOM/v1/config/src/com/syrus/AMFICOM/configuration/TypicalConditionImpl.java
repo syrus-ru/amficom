@@ -1,5 +1,5 @@
 /*-
- * $Id: TypicalConditionImpl.java,v 1.11 2005/04/26 09:39:14 max Exp $
+ * $Id: TypicalConditionImpl.java,v 1.12 2005/04/26 09:43:09 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,14 +16,10 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.general.corba.TypicalSort;
-import com.syrus.AMFICOM.measurement.MeasurementType;
-import com.syrus.AMFICOM.measurement.MeasurementTypeWrapper;
-import com.syrus.AMFICOM.measurement.Test;
-import com.syrus.AMFICOM.measurement.TestWrapper;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/04/26 09:39:14 $
+ * @version $Revision: 1.12 $, $Date: 2005/04/26 09:43:09 $
  * @author $Author: max $
  * @module config_v1
  */
@@ -100,7 +96,7 @@ final class TypicalConditionImpl extends TypicalCondition {
 
 	public boolean isConditionTrue(final StorableObject storableObject) throws IllegalObjectEntityException {
 		Wrapper wrapper;
-		if (storableObject instanceof Test)
+		if (storableObject instanceof PortType)
 			wrapper = PortTypeWrapper.getInstance();
 		else
 			throw new IllegalObjectEntityException(ENTITY_NOT_REGISTERED + storableObject.getClass().getName(),

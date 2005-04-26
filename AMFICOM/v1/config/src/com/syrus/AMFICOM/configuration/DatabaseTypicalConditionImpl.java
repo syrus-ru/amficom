@@ -1,5 +1,5 @@
 /*
-* $Id: DatabaseTypicalConditionImpl.java,v 1.6 2005/04/26 09:39:14 max Exp $
+* $Id: DatabaseTypicalConditionImpl.java,v 1.7 2005/04/26 09:43:09 max Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -12,11 +12,10 @@ import com.syrus.AMFICOM.general.AbstractDatabaseTypicalCondition;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.measurement.TestWrapper;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/04/26 09:39:14 $
+ * @version $Revision: 1.7 $, $Date: 2005/04/26 09:43:09 $
  * @author $Author: max $
  * @module config_v1
  */
