@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeCodenames.java,v 1.11 2005/04/26 14:53:10 bob Exp $
+ * $Id: ParameterTypeCodenames.java,v 1.12 2005/04/26 15:16:15 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/04/26 14:53:10 $
+ * @version $Revision: 1.12 $, $Date: 2005/04/26 15:16:15 $
  * @author $Author: bob $
  * @module general_v1
  */
