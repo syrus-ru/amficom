@@ -1,5 +1,5 @@
 /*
- * $Id: DadaraAnalysisManager.java,v 1.31 2005/04/15 11:39:23 saa Exp $
+ * $Id: DadaraAnalysisManager.java,v 1.32 2005/04/26 17:51:48 saa Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.mcm;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/04/15 11:39:23 $
+ * @version $Revision: 1.32 $, $Date: 2005/04/26 17:51:48 $
  * @author $Author: saa $
  * @module mcm_v1
  */
@@ -23,9 +23,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
+import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.AMFICOM.analysis.dadara.DataStreamableUtil;
 import com.syrus.AMFICOM.analysis.dadara.ModelFunction;
 import com.syrus.AMFICOM.analysis.dadara.ModelTrace;
+import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEventsImpl;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceComparer;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceImplMF;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
@@ -53,6 +55,7 @@ public class DadaraAnalysisManager implements AnalysisManager
 	public static final String CODENAME_REFLECTOGRAMMA = ParameterTypeCodenames.REFLECTOGRAMMA;
 	public static final String CODENAME_DADARA_ETALON_MTM = ParameterTypeCodenames.DADARA_ETALON_MTM;
 	public static final String CODENAME_DADARA_ETALON_BREAK_THRESH = ParameterTypeCodenames.DADARA_MIN_TRACE_LEVEL;
+	public static final String CODENAME_DADARA_CRITERIA = ParameterTypeCodenames.DADARA_CRITERIA;
 
 	// output SetParameters codenames
 //	public static final String CODENAME_DADARA_TRACELENGTH = "tracelength";
@@ -88,6 +91,10 @@ public class DadaraAnalysisManager implements AnalysisManager
 		throw new AnalysisException("Codename of parameter: '" + parameter.getId() + "' is NULL");
 	}
 
+	private boolean hasParameter(String codename)
+	{
+		return this.parameters.get(codename) != null;
+	}
 	private byte[] getParameter(String codename) throws AnalysisException
 	{
 		byte[] rawData = (byte[])this.parameters.get(codename);
@@ -96,7 +103,6 @@ public class DadaraAnalysisManager implements AnalysisManager
 		return rawData;
 	}
 
-	// this will be used when IA will be added
 	private ByteArray getParBA(String codename) throws AnalysisException
 	{
 		byte[] rawData = getParameter(codename);
@@ -111,6 +117,17 @@ public class DadaraAnalysisManager implements AnalysisManager
 		ModelTraceManager mtm = (ModelTraceManager)DataStreamableUtil.
 			readDataStreamableFromBA(etalonData, ModelTraceManager.getReader());
 		return mtm;
+	}
+
+	// may return null if no such parameter
+	private AnalysisParameters obtainAnalysisParameters()
+	throws AnalysisException
+	{
+		if (!hasParameter(CODENAME_DADARA_CRITERIA))
+			return null;
+		byte[] bar = getParameter(CODENAME_DADARA_CRITERIA);
+		return (AnalysisParameters)DataStreamableUtil.
+			readDataStreamableFromBA(bar, AnalysisParameters.getReader());
 	}
 
 	public SetParameter[] analyse() throws AnalysisException
@@ -175,18 +192,22 @@ public class DadaraAnalysisManager implements AnalysisManager
 		}
 		else // обрыв не обнаружен
 		{
-			// проверяем, если ли выход за пределы масок
-			ReflectogramAlarm alarm = ModelTraceComparer.compareTraceToMTM(mt, etMTM);
+			// проверяем, есть ли параметры для анализа.
+			// если есть, проводим анализ и сравниваем MTAE полностью.
+			// если нет - сравниваем только MT
+			// @todo: проверять, запрошен ли анализ и такой тип сравнения
+			AnalysisParameters ap = obtainAnalysisParameters();
+			ReflectogramAlarm alarm = null;
+			if (ap != null) {
+				// XXX: в этом случае шум вычисляется дважды
+				ModelTraceAndEventsImpl mtae =
+					CoreAnalysisManager.makeAnalysis(bs, ap);
+				alarm = ModelTraceComparer.compareMTAEToMTM(mtae, etMTM);
+			} else {
+				alarm = ModelTraceComparer.compareTraceToMTM(mt, etMTM);
+			}
 
-			// @todo: IA - пока не делаем
-//			getParBA(ParameterTypeCodenames.MIN_EVENT_LEVEL).toDouble();
-//			getParBA(ParameterTypeCodenames.MIN_SPLICE).toDouble();
-//			getParBA(ParameterTypeCodenames.MIN_CONNECTOR).toDouble();
-//			getParBA(ParameterTypeCodenames.MIN_END_LEVEL).toDouble();
-
-			if (alarm != null)
-			{
-				alarm.alarmType = ReflectogramAlarm.TYPE_OUTOFMASK;
+			if (alarm != null) {
 				alarmList.add(alarm);
 			}
 		}
