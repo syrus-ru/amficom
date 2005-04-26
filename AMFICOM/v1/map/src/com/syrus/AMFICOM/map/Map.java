@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.39 2005/04/25 08:07:18 krupenn Exp $
+ * $Id: Map.java,v 1.40 2005/04/26 16:02:29 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,9 +40,10 @@ import com.syrus.AMFICOM.map.corba.Map_Transferable;
  * линиях, коллекторов (объединяющих в себе линии).
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.39 $, $Date: 2005/04/25 08:07:18 $
+ * @version $Revision: 1.40 $, $Date: 2005/04/26 16:02:29 $
  * @module map_v1
  * @todo make maps persistent 
+ * @todo make externalNodes persistent 
  */
 public class Map extends DomainMember implements Namable {
 
@@ -76,6 +77,8 @@ public class Map extends DomainMember implements Namable {
 	private Set collectors;
 
 	protected transient Set maps;
+	protected transient Set externalNodes;
+
 	protected transient Set selectedElements;
 	/**
 	 * Сортированный список всех элементов топологической схемы
@@ -83,7 +86,6 @@ public class Map extends DomainMember implements Namable {
 	protected transient List allElements;
 	protected transient Set nodeElements;
 
-	protected transient Set externalNodes;
 
 	Map(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
