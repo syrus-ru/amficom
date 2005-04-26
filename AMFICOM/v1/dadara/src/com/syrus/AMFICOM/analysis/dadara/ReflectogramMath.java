@@ -156,16 +156,9 @@ public class ReflectogramMath
 		int len = Math.min(y.length, etalon.getLength());
 		if (len == 0)
 			return;
-		double maxEt = etalon.getY(0);
-		double maxDat = y[0];
-		for (int i = 1; i < len; i++)
-		{
-			if (maxDat < y[i])
-				maxDat = y[i];
-			if (maxEt < etalon.getY(i))
-				maxEt = etalon.getY(i);
-		}
-
+		double[] et = etalon.getYArrayZeroPad(0, len);
+		double maxDat = y[getArrayMaxIndex(y,  0, len - 1)];
+		double maxEt = et[getArrayMaxIndex(et, 0, len - 1)];
 		for (int i = 0; i < len; i++)
 			y[i] += maxEt - maxDat;
 	}
