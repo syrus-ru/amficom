@@ -135,7 +135,6 @@ public class MathRef
 	// значени€ менее -99 дЅ отображаютс€ как -99 дЅ 
 	public static double calcReflectance(double sigma, double peak)
 	{
-		System.out.println("calcReflectance: sigma "+sigma+" peak "+peak);
 		final double MINF = -99; // XXX: отражение менее -99 отображаем как -99 дЅ 
 		if (peak <= 0)
 			return MINF;
