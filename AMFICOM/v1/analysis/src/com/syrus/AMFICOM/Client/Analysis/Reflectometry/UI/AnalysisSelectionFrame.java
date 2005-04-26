@@ -37,6 +37,7 @@ import com.syrus.AMFICOM.Client.General.UI.AComboBox;
 import com.syrus.AMFICOM.Client.General.UI.ATable;
 import com.syrus.AMFICOM.Client.General.UI.FixedSizeEditableTableModel;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
+import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.AMFICOM.client_.general.ui_.ADefaultTableCellRenderer;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.io.BellcoreStructure;
@@ -94,13 +95,13 @@ implements BsHashChangeListener, PrimaryMTMListener
 		return tModelMinuit;
 	}
 
-	void setDefaults(double[] minuitParams)
+	void setDefaults(AnalysisParameters ap)
 	{
 		tModelMinuit.updateData(new Object[]{
-			 new Double(minuitParams[0]),
-			 new Double(minuitParams[1]),
-			 new Double(minuitParams[2]),
-			 new Double(minuitParams[3])
+			 new Double(ap.getMinThreshold()),
+			 new Double(ap.getMinSplice()),
+			 new Double(ap.getMinConnector()),
+			 new Double(ap.getNoiseFactor())
 		});
 
 		jTable.setModel(tModelMinuit);
@@ -193,13 +194,14 @@ implements BsHashChangeListener, PrimaryMTMListener
 	void analysisStartButton_actionPerformed(ActionEvent e)
 	{
 		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-		double[] minuitParams = new double[4];
-		minuitParams[0] = ((Double)jTable.getValueAt(0, 1)).doubleValue();
-		minuitParams[1] = ((Double)jTable.getValueAt(1, 1)).doubleValue();
-		minuitParams[2] = ((Double)jTable.getValueAt(2, 1)).doubleValue();
-		minuitParams[3] = ((Double)jTable.getValueAt(3, 1)).doubleValue();
+		double[] mp = new double[4];
+		mp[0] = ((Double)jTable.getValueAt(0, 1)).doubleValue();
+		mp[1] = ((Double)jTable.getValueAt(1, 1)).doubleValue();
+		mp[2] = ((Double)jTable.getValueAt(2, 1)).doubleValue();
+		mp[3] = ((Double)jTable.getValueAt(3, 1)).doubleValue();
 
-		Heap.setMinuitAnalysisParams(minuitParams);
+		Heap.setMinuitAnalysisParams(
+			new AnalysisParameters(mp[0], mp[1], mp[2], mp[3]));
 		new MinuitAnalyseCommand(aContext).execute();
 		dispatcher.notify(new RefUpdateEvent(RefUpdateEvent.PRIMARY_TRACE, RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));
 
@@ -208,14 +210,14 @@ implements BsHashChangeListener, PrimaryMTMListener
 
 	void analysisInitialButton_actionPerformed(ActionEvent e)
 	{
-		double[] defaults = Heap.getMinuitInitialParams();
-		setDefaults(defaults);
+		AnalysisParameters ap = Heap.getMinuitInitialParams();
+		setDefaults(ap);
 	}
 
 	void analysisDefaultsButton_actionPerformed(ActionEvent e)
 	{
-		double[] defaults = Heap.getMinuitDefaultParams();
-		setDefaults(defaults);
+		AnalysisParameters ap = Heap.getMinuitDefaultParams();
+		setDefaults(ap);
 	}
 
 	private class ParamTableModel extends AbstractTableModel
@@ -398,8 +400,8 @@ implements BsHashChangeListener, PrimaryMTMListener
 							LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_PATTERN) + ':' + ms.getDescription()) + ')');
 			}
 	
-			double[] minuitParams = Heap.getMinuitAnalysisParams();
-			setDefaults(minuitParams);
+			AnalysisParameters ap = Heap.getMinuitAnalysisParams();
+			setDefaults(ap);
 			setVisible(true);
 		}
 	}
@@ -432,8 +434,8 @@ implements BsHashChangeListener, PrimaryMTMListener
 	
 				if (ms.getCriteriaSet() != null)
 				{
-					double[] minuitParams = Heap.getMinuitAnalysisParams();
-					setDefaults(minuitParams);
+					AnalysisParameters ap = Heap.getMinuitAnalysisParams();
+					setDefaults(ap);
 				}
 		}
 	}

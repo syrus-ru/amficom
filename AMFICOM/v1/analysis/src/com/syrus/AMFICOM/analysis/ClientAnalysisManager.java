@@ -1,5 +1,5 @@
 /*
- * $Id: ClientAnalysisManager.java,v 1.6 2005/04/18 12:52:53 saa Exp $
+ * $Id: ClientAnalysisManager.java,v 1.7 2005/04/26 15:21:45 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,75 +14,53 @@ import java.io.IOException;
 import java.util.Properties;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
+import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.6 $, $Date: 2005/04/18 12:52:53 $
+ * @version $Revision: 1.7 $, $Date: 2005/04/26 15:21:45 $
  * @module
  */
 public class ClientAnalysisManager extends CoreAnalysisManager
 {
 	private static final String PROPERTIES_FILE_NAME = "analysis.properties";
 
-	double[] defaultMinuitParams = {
+	AnalysisParameters defaultMinuitParams = new AnalysisParameters (
 			0.05, //минимальный уровень события
 			0.07, //минимальный уровень сварки
 			0.21, //минимальный уровень коннектора
-			3 //коэфф. запаса для шума
-	};
+			3, //коэфф. запаса для шума
+			3  //мин. уровень отражения конца волокна
+	);
 
 	public ClientAnalysisManager() {
-		double[] minuitParams;
+		AnalysisParameters minuitParams;
 		Heap.setMinuitDefaultParams(defaultMinuitParams);
 
 		Properties properties = new Properties();
 		try {
 			properties.load(new FileInputStream(PROPERTIES_FILE_NAME));
 			String temp = properties.getProperty("parameters");
-			minuitParams = decompose(temp, defaultMinuitParams);
+			minuitParams = new AnalysisParameters(temp, defaultMinuitParams);
 		} catch (IOException ex) {
-		    // делаем копию массива
-			minuitParams = (double[] )defaultMinuitParams.clone();
+		    // делаем копию
+			minuitParams = (AnalysisParameters)defaultMinuitParams.clone();
 		}
 
 		// сохраняем в Pool
 		Heap.setMinuitAnalysisParams(minuitParams);
-		// сохраняем в Pool копию (double[] копируется целиком)
-		Heap.setMinuitInitialParams((double[])minuitParams.clone());
+		Heap.setMinuitInitialParams((AnalysisParameters)minuitParams.clone());
 	}
 
 	public void saveIni() {
-	    double[] minuitParams = Heap.getMinuitAnalysisParams();
+		AnalysisParameters ap = Heap.getMinuitAnalysisParams();
 		Properties properties = new Properties();
 		try {
 			properties.load(new FileInputStream(PROPERTIES_FILE_NAME));
-			properties.setProperty("parameters", compose(minuitParams));
+			properties.setProperty("parameters", ap.toString());
 			properties.store(new FileOutputStream(PROPERTIES_FILE_NAME), null);
 		} catch (IOException ex) {
 			// @todo: add an IOException handler
 		}
-	}
-
-	private double[] decompose(String val, double[] defaults) {
-		int i = 0;
-		int bind = -1;
-		int ind = val.indexOf(";");
-		double d[] = new double[defaults.length];
-
-		for (int j = 0; j < defaults.length; j++)
-			d[j] = defaults[j];
-		while ((ind != -1) && (i < defaults.length)) {
-			d[i++] = Double.parseDouble(val.substring(bind + 1, ind));
-			bind = ind;
-			ind = val.indexOf(";", bind + 1);
-		}
-		return d;
-	}
-
-	private String compose(double[] d) {
-		String str = "";
-		for (int i = 0; i < d.length; i++)
-			str = str + String.valueOf(d[i]) + ";";
-		return str;
 	}
 }

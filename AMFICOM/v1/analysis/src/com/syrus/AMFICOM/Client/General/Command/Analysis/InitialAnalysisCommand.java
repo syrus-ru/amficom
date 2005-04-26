@@ -18,17 +18,14 @@ public class InitialAnalysisCommand extends VoidCommand {
 			//double deltaX = bs.getResolution();
 			double[] y = bs.getTraceData();
 
-			double[] params = Heap.getMinuitAnalysisParams();
-			if (params == null) {
+			AnalysisParameters ap = Heap.getMinuitAnalysisParams();
+			if (ap == null) {
 				new ClientAnalysisManager();
-				params = Heap.getMinuitAnalysisParams();
+				ap = Heap.getMinuitAnalysisParams();
 			}
 
-			double[] pars = new double[params.length];
-			for (int i = 0; i < params.length; i++)
-				pars[i] = params[i];
-
-			ModelTraceAndEventsImpl mtae = CoreAnalysisManager.makeAnalysis(bs, pars);
+			ModelTraceAndEventsImpl mtae =
+				CoreAnalysisManager.makeAnalysis(bs, ap);
 
 			// фитировка нужна для определения вспомогательных парметров
 //	        ep = AnalysisManager.fitTrace(

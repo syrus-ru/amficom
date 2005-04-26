@@ -10,6 +10,7 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
 
 import com.syrus.AMFICOM.analysis.ClientAnalysisManager;
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
+import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.AMFICOM.analysis.dadara.IncompatibleTracesException;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEventsImpl;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
@@ -32,7 +33,6 @@ public class MinuitAnalyseCommand extends VoidCommand
 
 	public void execute()
 	{
-		long t0 = System.currentTimeMillis();
 		BellcoreStructure bs = Heap.getBSPrimaryTrace();
 		if (bs != null)
 		{
@@ -42,15 +42,10 @@ public class MinuitAnalyseCommand extends VoidCommand
 			// double deltaX = bs.getResolution();
 			double[] y = bs.getTraceData();
 
-			double[] params = Heap.getMinuitAnalysisParams();
-			if (params == null)
-			{
-				System.out.println("MinuitAnalysis.execute(): create AnalysisManager at dt/ms "
-						+ (System.currentTimeMillis() - t0));
+			AnalysisParameters ap = Heap.getMinuitAnalysisParams();
+			if (ap == null) {
 				new ClientAnalysisManager();
-				System.out.println("MinuitAnalysis.execute(): AnalysisManager created at dt/ms "
-						+ (System.currentTimeMillis() - t0));
-				params = Heap.getMinuitAnalysisParams();
+				ap = Heap.getMinuitAnalysisParams();
 			}
 
 			// XXX: сначала проводим анализ для одной primary trace, а потом, независимо от этого, по всему набору р/г - для создания эталона
@@ -58,7 +53,8 @@ public class MinuitAnalyseCommand extends VoidCommand
 			// создаем анализ для primary trace
 			// XXX: если InitialAnalysisCommand уже выполнен, то в принципе не нужно (если кнопки "IA" и "MA" будут отдельно)
 
-			ModelTraceAndEventsImpl mtaePri = CoreAnalysisManager.makeAnalysis(bs, params);
+			ModelTraceAndEventsImpl mtaePri =
+				CoreAnalysisManager.makeAnalysis(bs, ap);
 
 			RefAnalysis a = new RefAnalysis();
 			a.decode(y, mtaePri);
@@ -70,7 +66,7 @@ public class MinuitAnalyseCommand extends VoidCommand
 
 			ModelTraceManager mtm;
 			try {
-				mtm = CoreAnalysisManager.makeEtalon(Heap.getBSCollection(), params);
+				mtm = CoreAnalysisManager.makeEtalon(Heap.getBSCollection(), ap);
 			} catch (IncompatibleTracesException e){
 				GUIUtil.showErrorMessage("incompatibleTraces");
 				return;

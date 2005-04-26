@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.31 2005/04/22 11:44:39 saa Exp $
+ * $Id: Heap.java,v 1.32 2005/04/26 15:21:45 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,6 +27,7 @@ import com.syrus.AMFICOM.Client.General.Event.PrimaryMTMListener;
 import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryTraceListener;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
+import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEventsImpl;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
@@ -41,7 +42,7 @@ import com.syrus.io.BellcoreStructure;
  * использование остальных методов работы с BS
  * 
  * @author $Author: saa $
- * @version $Revision: 1.31 $, $Date: 2005/04/22 11:44:39 $
+ * @version $Revision: 1.32 $, $Date: 2005/04/26 15:21:45 $
  * @module
  */
 public class Heap
@@ -51,9 +52,9 @@ public class Heap
 	public static final String REFERENCE_TRACE_KEY = "referencetrace"; // XXX - is really required
 	public static final String MODELED_TRACE_KEY = "modeledtrace"; // trace got from modelling module
 
-	private static double[] minuitDefaultParams;	// OT_analysisparameters, OID_minuitdefaults
-	private static double[] minuitAnalysisParams;	// OT_analysisparameters, OID_minuitanalysis
-	private static double[] minuitInitialParams;	// OT_analysisparameters, OID_minuitinitials
+	private static AnalysisParameters minuitDefaultParams;
+	private static AnalysisParameters minuitAnalysisParams;
+	private static AnalysisParameters minuitInitialParams;
 	private static HashMap bsHash = new HashMap();	// "bellcorestructure", *
 	private static HashMap refAnalysisHash = new HashMap();		// "refanalysis", *
 	private static MeasurementSetup contextMeasurementSetup;	// AnalysisUtil.CONTEXT, "MeasurementSetup"
@@ -215,27 +216,27 @@ public class Heap
         return getFirstSecondaryBSKey() == null ? false : true;
     }
 
-    public static double[] getMinuitInitialParams() {
+    public static AnalysisParameters getMinuitInitialParams() {
         return minuitInitialParams;
     }
 
-    public static void setMinuitInitialParams(double[] minuitInitialParams) {
+    public static void setMinuitInitialParams(AnalysisParameters minuitInitialParams) {
         Heap.minuitInitialParams = minuitInitialParams;
     }
 
-    public static double[] getMinuitDefaultParams() {
+    public static AnalysisParameters getMinuitDefaultParams() {
         return minuitDefaultParams;
     }
 
-    public static void setMinuitDefaultParams(double[] minuitDefaults) {
+    public static void setMinuitDefaultParams(AnalysisParameters minuitDefaults) {
         Heap.minuitDefaultParams = minuitDefaults;
     }
 
-    public static double[] getMinuitAnalysisParams() {
+    public static AnalysisParameters getMinuitAnalysisParams() {
         return minuitAnalysisParams;
     }
 
-    public static void setMinuitAnalysisParams(double[] minuitAnalysisParams) {
+    public static void setMinuitAnalysisParams(AnalysisParameters minuitAnalysisParams) {
         Heap.minuitAnalysisParams = minuitAnalysisParams;
     }
 

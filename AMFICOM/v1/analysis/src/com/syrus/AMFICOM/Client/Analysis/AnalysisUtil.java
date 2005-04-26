@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
+import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.AMFICOM.analysis.dadara.DataStreamableUtil;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
@@ -152,28 +153,18 @@ public class AnalysisUtil
 
 	public static Set createCriteriaSetFromParams(Identifier userId, java.util.Set meIds) throws ApplicationException
 	{
-		double[] defaultMinuitParams;
-		defaultMinuitParams = Heap.getMinuitAnalysisParams();
-		if (defaultMinuitParams == null)
-			defaultMinuitParams = Heap.getMinuitDefaultParams();
+		AnalysisParameters analysisParams = Heap.getMinuitAnalysisParams();
+		if (analysisParams == null)
+			analysisParams = Heap.getMinuitDefaultParams();
 
-		String[] parameterCodenames = new String[] {
-				ParameterTypeCodenames.MIN_EVENT,
-				ParameterTypeCodenames.MIN_SPLICE,
-				ParameterTypeCodenames.MIN_CONNECTOR,
-				ParameterTypeCodenames.DADARA_NOISE_FACTOR
-		};
-
-        SetParameter[] params = new SetParameter[parameterCodenames.length];
+        SetParameter[] params = new SetParameter[1];
 
         try
 		{
-			for (int i = 0; i < parameterCodenames.length; i++)
-			{
-				ParameterType ptype = getParameterType(parameterCodenames[i], DataType.DATA_TYPE_DOUBLE);
-				params[i] = SetParameter.createInstance(ptype,
-						ByteArray.toByteArray(defaultMinuitParams[i]));
-			}
+			ParameterType ptype = getParameterType(
+				ParameterTypeCodenames.DADARA_CRITERIA, DataType.DATA_TYPE_RAW);
+			params[0] = SetParameter.createInstance(ptype,
+				DataStreamableUtil.writeDataStreamableToBA(analysisParams));
 		}
 		catch (CreateObjectException e)
 		{
@@ -259,29 +250,25 @@ public class AnalysisUtil
 
 	public static void setParamsFromCriteriaSet(Set criteriaSet)
 	{
-		try
+		AnalysisParameters analysisParams = null;
+		SetParameter[] params = criteriaSet.getParameters();
+		for (int i = 0; i < params.length; i++)
 		{
-			double[] minuitParams = new double[4];
-			SetParameter[] params = criteriaSet.getParameters();
-			for (int i = 0; i < params.length; i++)
-			{
-				ParameterType p = (ParameterType)params[i].getType();
-				if (p.getCodename().equals(ParameterTypeCodenames.MIN_EVENT))
-					minuitParams[0] = new ByteArray(params[i].getValue()).toDouble();
-				else if (p.getCodename().equals(ParameterTypeCodenames.MIN_SPLICE))
-					minuitParams[1] = new ByteArray(params[i].getValue()).toDouble();
-				else if (p.getCodename().equals(ParameterTypeCodenames.MIN_CONNECTOR))
-					minuitParams[2] = new ByteArray(params[i].getValue()).toDouble();
-				else if (p.getCodename().equals(ParameterTypeCodenames.DADARA_NOISE_FACTOR))
-					minuitParams[3] = new ByteArray(params[i].getValue()).toDouble();
-			}
-			Heap.setMinuitAnalysisParams((double[])minuitParams.clone());
-			Heap.setMinuitInitialParams((double[])minuitParams.clone());
+			ParameterType p = (ParameterType)params[i].getType();
+			if (p.getCodename().equals(ParameterTypeCodenames.DADARA_CRITERIA))
+				analysisParams = (AnalysisParameters)
+					DataStreamableUtil.readDataStreamableFromBA(
+						params[i].getValue(),
+						AnalysisParameters.getReader());
 		}
-		catch (IOException ex)
-		{
-			ex.printStackTrace();
+		if (analysisParams != null)	{
+			Heap.setMinuitAnalysisParams(
+				(AnalysisParameters)analysisParams.clone());
+			Heap.setMinuitInitialParams(analysisParams);
 		}
+		else {
+			// @todo: implement problem handler
+		}	
 	}
 	
 	public static String getTraceEventNameByType(int eventType)
