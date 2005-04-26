@@ -1,5 +1,5 @@
 /**
- * $Id: MeasurementPath.java,v 1.21 2005/04/15 18:04:51 bass Exp $
+ * $Id: MeasurementPath.java,v 1.22 2005/04/26 16:11:11 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,12 +19,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.Characteristic;
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IdentifierGenerationException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
-import com.syrus.AMFICOM.general.LocalIdentifierGenerator;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
@@ -44,27 +39,12 @@ import com.syrus.AMFICOM.scheme.corba.PathElement_TransferablePackage.DataPackag
 /**
  * Элемент пути.
  * 
- * @author $Author: bass $
- * @version $Revision: 1.21 $, $Date: 2005/04/15 18:04:51 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.22 $, $Date: 2005/04/26 16:11:11 $
  * @module mapviewclient_v1
  */
 public class MeasurementPath implements MapElement
 {
-	/**
-	 * Идентификатор.
-	 */
-	protected Identifier id;
-
-	/**
-	 * Название.
-	 */
-	protected String	name;
-
-	/**
-	 * Описание.
-	 */
-	protected String	description;
-
 	/**
 	 * Флаг выделения.
 	 */
@@ -84,10 +64,6 @@ public class MeasurementPath implements MapElement
 	 * Схемный путь.
 	 */
 	protected SchemePath schemePath;
-	/**
-	 * Схема.
-	 */
-	protected Scheme scheme;
 
 	/**
 	 * Вид карты.
@@ -102,14 +78,11 @@ public class MeasurementPath implements MapElement
 	 */
 	protected MeasurementPath(
 			SchemePath schemePath,
-			Identifier id, 
 			MapView mapView)
 	{
 		this.mapView = mapView;
 
-		this.id = id;
 		this.schemePath = schemePath;
-		this.name = schemePath.getName();
 	}
 
 	/**
@@ -117,33 +90,17 @@ public class MeasurementPath implements MapElement
 	 * @param schemePath схемный путь
 	 * @param mapView вид карты
 	 * @return новый элемент пути
-	 * @throws com.syrus.AMFICOM.general.CreateObjectException нельзя создать
 	 */
 	public static MeasurementPath createInstance(
 			SchemePath schemePath,
 			MapView mapView)
-		throws CreateObjectException 
 	{
 		if (mapView == null || schemePath == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		
-		try
-		{
-			Identifier ide =
-				LocalIdentifierGenerator.generateIdentifier(ObjectEntities.SITE_NODE_ENTITY_CODE);
-			return new MeasurementPath(
-				schemePath,
-				ide,
-				mapView);
-		}
-		catch (IllegalObjectEntityException e)
-		{
-			throw new CreateObjectException("MapMeasurementPathElement.createInstance | cannot generate identifier ", e);
-		}
-		catch (IdentifierGenerationException e)
-		{
-			throw new CreateObjectException("MapMeasurementPathElement.createInstance | cannot generate identifier ", e);
-		}
+		return new MeasurementPath(
+			schemePath,
+			mapView);
 	}
 
 	/**
@@ -169,22 +126,13 @@ public class MeasurementPath implements MapElement
 	{
 		this.schemePath.removeCharacteristic(ch);
 	}
-	
-	/**
-	 * Установить идентификатор
-	 * @param id идентификатор
-	 */
-	public void setId(Identifier id)
-	{
-		this.id = id;
-	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	public Identifier getId()
 	{
-		return this.id;
+		return this.schemePath.getId();
 	}
 
 	/**
@@ -192,7 +140,7 @@ public class MeasurementPath implements MapElement
 	 */
 	public String getName() 
 	{
-		return this.name;
+		return this.schemePath.getName();
 	}
 
 	/**
@@ -200,7 +148,7 @@ public class MeasurementPath implements MapElement
 	 */
 	public void setName(String name) 
 	{
-		this.name = name;
+		this.schemePath.setName(name);
 	}
 
 	/**
@@ -209,7 +157,7 @@ public class MeasurementPath implements MapElement
 	 */
 	public String getDescription() 
 	{
-		return this.description;
+		return this.schemePath.getDescription();
 	}
 
 	/**
@@ -218,7 +166,7 @@ public class MeasurementPath implements MapElement
 	 */
 	public void setDescription(String description) 
 	{
-		this.description = description;
+		this.schemePath.setDescription(description);
 	}
 
 	/**
@@ -319,8 +267,6 @@ public class MeasurementPath implements MapElement
 	public void setSchemePath(SchemePath schemePath)
 	{
 		this.schemePath = schemePath;
-		this.name = schemePath.getName();
-		this.scheme = schemePath.getScheme();
 	}
 
 	/**
@@ -390,6 +336,8 @@ public class MeasurementPath implements MapElement
 	{
 		synchronized(this.unsortedCablePaths)
 		{
+			Scheme scheme = this.schemePath.getScheme();
+
 			this.unsortedCablePaths.clear();
 			for(Iterator iter = this.schemePath.getPathElements().iterator(); iter.hasNext();) {
 				PathElement pe = (PathElement )iter.next();
@@ -406,8 +354,8 @@ public class MeasurementPath implements MapElement
 						break;
 					case Kind._SCHEME_LINK:
 						SchemeLink link = (SchemeLink )pe.getAbstractSchemeElement();
-						SchemeElement sse = SchemeUtils.getSchemeElementByDevice(this.scheme, link.getSourceSchemePort().getParentSchemeDevice());
-						SchemeElement ese = SchemeUtils.getSchemeElementByDevice(this.scheme, link.getTargetSchemePort().getParentSchemeDevice());
+						SchemeElement sse = SchemeUtils.getSchemeElementByDevice(scheme, link.getSourceSchemePort().getParentSchemeDevice());
+						SchemeElement ese = SchemeUtils.getSchemeElementByDevice(scheme, link.getTargetSchemePort().getParentSchemeDevice());
 						SiteNode ssite = this.mapView.findElement(sse);
 						SiteNode esite = this.mapView.findElement(ese);
 						if(ssite == esite)
@@ -600,14 +548,14 @@ public class MeasurementPath implements MapElement
 	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set)
 	 */
 	public void setCharacteristics(Set characteristics) {
-		throw new UnsupportedOperationException();
+		this.schemePath.setCharacteristics(characteristics);
 	}
 
 	/**
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicSort()
 	 */
 	public CharacteristicSort getCharacteristicSort() {
-		throw new UnsupportedOperationException();
+		return this.schemePath.getCharacteristicSort();
 	}
 
 	/**
@@ -615,6 +563,6 @@ public class MeasurementPath implements MapElement
 	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(Set)
 	 */
 	public void setCharacteristics0(Set characteristics) {
-		throw new UnsupportedOperationException();
+		this.schemePath.setCharacteristics0(characteristics);
 	}
 }
