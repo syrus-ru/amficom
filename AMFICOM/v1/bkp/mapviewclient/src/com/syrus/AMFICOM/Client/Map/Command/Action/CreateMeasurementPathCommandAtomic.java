@@ -1,5 +1,5 @@
 /**
- * $Id: CreateMeasurementPathCommandAtomic.java,v 1.11 2005/03/16 12:54:57 bass Exp $
+ * $Id: CreateMeasurementPathCommandAtomic.java,v 1.12 2005/04/26 16:16:16 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -13,7 +13,6 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.mapview.MeasurementPath;
 import com.syrus.AMFICOM.scheme.SchemePath;
 
@@ -22,28 +21,28 @@ import com.syrus.AMFICOM.scheme.SchemePath;
  * 
  * 
  * 
- * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2005/03/16 12:54:57 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.12 $, $Date: 2005/04/26 16:16:16 $
  * @module mapviewclient_v1
  */
 public class CreateMeasurementPathCommandAtomic extends MapActionCommand
 {
 	/** создаваемый измерительный путь */
-	MeasurementPath mp;
+	MeasurementPath measurementPath;
 	
 	/** схемный путь */
-	SchemePath path;
+	SchemePath schemePath;
 	
 	public CreateMeasurementPathCommandAtomic(
-			SchemePath path)
+			SchemePath schemePath)
 	{
 		super(MapActionCommand.ACTION_DRAW_LINE);
-		this.path = path;
+		this.schemePath = schemePath;
 	}
 	
 	public MeasurementPath getPath()
 	{
-		return this.mp;
+		return this.measurementPath;
 	}
 	
 	public void execute()
@@ -54,21 +53,12 @@ public class CreateMeasurementPathCommandAtomic extends MapActionCommand
 				getClass().getName(), 
 				"execute()");
 		
-		try
-		{
-			this.mp = MeasurementPath.createInstance(
-					this.path,
-					this.logicalNetLayer.getMapView());
-	
-			this.logicalNetLayer.getMapView().addMeasurementPath(this.mp);
-			setResult(Command.RESULT_OK);
-		}
-		catch (ApplicationException e)
-		{
-			setException(e);
-			setResult(Command.RESULT_NO);
-			e.printStackTrace();
-		}
+		this.measurementPath = MeasurementPath.createInstance(
+				this.schemePath,
+				this.logicalNetLayer.getMapView());
+
+		this.logicalNetLayer.getMapView().addMeasurementPath(this.measurementPath);
+		setResult(Command.RESULT_OK);
 	}
 }
 
