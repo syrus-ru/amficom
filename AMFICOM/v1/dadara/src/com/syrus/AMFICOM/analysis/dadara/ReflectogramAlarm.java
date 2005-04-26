@@ -35,7 +35,10 @@ public class ReflectogramAlarm {
 		return alarmType;
 	}
 */
-	// create 'no alarm' alarm
+	/**
+	 * Creates an empty 'no alarm' alarm
+	 * with level = LEVEL_NONE and type = TYPE_UNDEFINED.
+	 */
 	public ReflectogramAlarm()
 	{ // all initialization is already done
 	}
