@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.54 2005/04/26 07:35:20 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.55 2005/04/26 13:42:39 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
  * генерацией пороговых кривых и сохранением/восстановлением порогов.
  *
  * @author $Author: saa $
- * @version $Revision: 1.54 $, $Date: 2005/04/26 07:35:20 $
+ * @version $Revision: 1.55 $, $Date: 2005/04/26 13:42:39 $
  * @module
  */
 public class ModelTraceManager
@@ -537,10 +537,14 @@ implements DataStreamable
 	 * @param yCapture радиус захвата кривой мышью по вертикали
 	 * @param prioFactor поправка на приоритет алармов,
 	 *     =0: приоритетов нет; =1: 100% приоритет HARD-алармов
-	 * @param button номер кнопки мыши, 0=LMB, 1=RMB. 
+	 * @param button номер кнопки мыши, 0=LMB, 1=RMB.
+	 * @param nEvent номер события, которым надо ограничить захват,
+	 *    либо -1, если ограничивать не надо 
 	 * @return handle либо null
 	 */
-	public ThresholdHandle getThresholdHandle(double x0, double y0, double xCapture, double yCapture, double prioFactor, int button)
+	public ThresholdHandle getThresholdHandle(double x0, double y0,
+			double xCapture, double yCapture, double prioFactor, int button,
+			int nEvent)
 	{
 		if (xCapture <= 0.1)
 			xCapture = 0.1;  // XXX
@@ -616,6 +620,16 @@ implements DataStreamable
 
 		if (bestDR > 1)
 			return null;
+
+		// проверяем соответствие точки захвата заданному событию на
+		// определенной пороговой кривой
+		if (nEvent >= 0)
+		{
+			SimpleReflectogramEvent range
+				= getEventRangeOnThresholdCurve(nEvent, bestKey);
+			if (bestX < range.getBegin() || bestX > range.getEnd())
+				return null;
+		}
 
 		double bestY = getThresholdY(bestKey, bestX);
 
