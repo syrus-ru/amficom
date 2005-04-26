@@ -1,5 +1,5 @@
 /*-
- * $Id: TypicalConditionImpl.java,v 1.10 2005/04/04 13:09:40 bass Exp $
+ * $Id: TypicalConditionImpl.java,v 1.11 2005/04/26 09:39:14 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,10 +16,15 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.general.corba.TypicalSort;
+import com.syrus.AMFICOM.measurement.MeasurementType;
+import com.syrus.AMFICOM.measurement.MeasurementTypeWrapper;
+import com.syrus.AMFICOM.measurement.Test;
+import com.syrus.AMFICOM.measurement.TestWrapper;
+import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/04/04 13:09:40 $
- * @author $Author: bass $
+ * @version $Revision: 1.11 $, $Date: 2005/04/26 09:39:14 $
+ * @author $Author: max $
  * @module config_v1
  */
 final class TypicalConditionImpl extends TypicalCondition {
@@ -94,8 +99,13 @@ final class TypicalConditionImpl extends TypicalCondition {
 	}
 
 	public boolean isConditionTrue(final StorableObject storableObject) throws IllegalObjectEntityException {
-		throw new IllegalObjectEntityException(ENTITY_NOT_REGISTERED + storableObject.getClass().getName(),
-				IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+		Wrapper wrapper;
+		if (storableObject instanceof Test)
+			wrapper = PortTypeWrapper.getInstance();
+		else
+			throw new IllegalObjectEntityException(ENTITY_NOT_REGISTERED + storableObject.getClass().getName(),
+					IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+		return super.parseCondition(wrapper.getValue(storableObject, this.key));
 	}
 
 }
