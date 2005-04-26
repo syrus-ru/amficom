@@ -1,5 +1,5 @@
 /**
- * $Id: CreateCablePathCommandAtomic.java,v 1.12 2005/03/16 12:54:57 bass Exp $
+ * $Id: CreateCablePathCommandAtomic.java,v 1.13 2005/04/26 16:15:41 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,7 +13,6 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
@@ -24,8 +23,8 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
  * 
  * 
  * 
- * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2005/03/16 12:54:57 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.13 $, $Date: 2005/04/26 16:15:41 $
  * @module mapviewclient_v1
  */
 public class CreateCablePathCommandAtomic extends MapActionCommand
@@ -43,12 +42,12 @@ public class CreateCablePathCommandAtomic extends MapActionCommand
 	AbstractNode endNode;
 	
 	public CreateCablePathCommandAtomic(
-			SchemeCableLink scl,
+			SchemeCableLink schemeCableLink,
 			AbstractNode startNode,
 			AbstractNode endNode)
 	{
 		super(MapActionCommand.ACTION_DRAW_LINE);
-		this.schemeCableLink = scl;
+		this.schemeCableLink = schemeCableLink;
 		this.startNode = startNode;
 		this.endNode = endNode;
 	}
@@ -66,23 +65,14 @@ public class CreateCablePathCommandAtomic extends MapActionCommand
 				getClass().getName(), 
 				"execute()");
 		
-		try
-		{
-			this.cablePath = com.syrus.AMFICOM.mapview.CablePath.createInstance(
-					this.schemeCableLink,
-					this.startNode, 
-					this.endNode, 
-					this.logicalNetLayer.getMapView());
-	
-			this.logicalNetLayer.getMapView().addCablePath(this.cablePath);
-			setResult(Command.RESULT_OK);
-		}
-		catch (ApplicationException e)
-		{
-			setException(e);
-			setResult(Command.RESULT_NO);
-			e.printStackTrace();
-		}
+		this.cablePath = com.syrus.AMFICOM.mapview.CablePath.createInstance(
+				this.schemeCableLink,
+				this.startNode, 
+				this.endNode, 
+				this.logicalNetLayer.getMapView());
+
+		this.logicalNetLayer.getMapView().addCablePath(this.cablePath);
+		setResult(Command.RESULT_OK);
 	}
 	
 	public void redo()
