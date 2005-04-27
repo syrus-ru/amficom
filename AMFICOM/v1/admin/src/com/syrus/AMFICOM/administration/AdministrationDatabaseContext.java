@@ -1,5 +1,5 @@
 /*-
- * $Id: AdministrationDatabaseContext.java,v 1.5 2005/04/01 10:31:51 bass Exp $
+ * $Id: AdministrationDatabaseContext.java,v 1.6 2005/04/27 17:44:40 arseniy Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Научно-технический центр.
@@ -13,15 +13,16 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/04/01 10:31:51 $
- * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2005/04/27 17:44:40 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 public final class AdministrationDatabaseContext {
-	private static UserDatabase	userDatabase;
-	private static DomainDatabase	domainDatabase;
-	private static ServerDatabase	serverDatabase;
-	private static MCMDatabase	mcmDatabase;
+	private static UserDatabase userDatabase;
+	private static DomainDatabase domainDatabase;
+	private static ServerDatabase serverDatabase;
+	private static MCMDatabase mcmDatabase;
+	private static ServerProcessDatabase serverProcessDatabase;
 
 	private AdministrationDatabaseContext() {
 		assert false; 
@@ -31,7 +32,8 @@ public final class AdministrationDatabaseContext {
 			final UserDatabase	userDatabase1,
 			final DomainDatabase	domainDatabase1,
 			final ServerDatabase	serverDatabase1,
-			final MCMDatabase	mcmDatabase1) {
+			final MCMDatabase	mcmDatabase1,
+			final ServerProcessDatabase serverProcessDatabase1) {
 		if (userDatabase1 != null)
 			userDatabase = userDatabase1;
 		if (domainDatabase1 != null)
@@ -40,6 +42,8 @@ public final class AdministrationDatabaseContext {
 			serverDatabase = serverDatabase1;
 		if (mcmDatabase1 != null)
 			mcmDatabase = mcmDatabase1;
+		if (serverProcessDatabase1 != null)
+			serverProcessDatabase = serverProcessDatabase1;
 	}
 
 	public static StorableObjectDatabase getDatabase(final Short entityCode) {
@@ -49,13 +53,16 @@ public final class AdministrationDatabaseContext {
 	public static StorableObjectDatabase getDatabase(final short entityCode) {
 		switch (entityCode) {
 			case ObjectEntities.USER_ENTITY_CODE:
-				return getUserDatabase();
+				return userDatabase;
 			case ObjectEntities.DOMAIN_ENTITY_CODE:
-				return getDomainDatabase();
+				return domainDatabase;
 			case ObjectEntities.SERVER_ENTITY_CODE:
-				return getServerDatabase();
+				return serverDatabase;
 			case ObjectEntities.MCM_ENTITY_CODE:
-				return getMCMDatabase();
+				return mcmDatabase;
+			case ObjectEntities.SERVERPROCESS_ENTITY_CODE:
+				return serverProcessDatabase;
+			
 //			case ObjectEntities.PERMATTR_ENTITY_CODE:
 //				database = AdministrationDatabaseContext.getPermissionAttributesDatabase();
 //				break;
@@ -79,5 +86,9 @@ public final class AdministrationDatabaseContext {
 
 	public static MCMDatabase getMCMDatabase() {
 		return mcmDatabase;
+	}
+
+	public static ServerProcessDatabase getServerProcessDatabase() {
+		return serverProcessDatabase;
 	}
 }
