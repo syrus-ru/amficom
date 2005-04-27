@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServer.java,v 1.33 2005/04/21 11:19:45 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.34 2005/04/27 15:59:48 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -46,7 +46,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/04/21 11:19:45 $
+ * @version $Revision: 1.34 $, $Date: 2005/04/27 15:59:48 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -372,7 +372,6 @@ public class MeasurementServer extends SleepButWorkThread {
 			default:
 				Log.errorMessage("processError | Unknown error code: " + super.fallCode);
 		}
-		super.clearFalls();
 	}
 
 	private void abortTests() {

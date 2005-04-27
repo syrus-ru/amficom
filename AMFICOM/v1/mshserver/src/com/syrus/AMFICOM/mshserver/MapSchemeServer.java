@@ -1,5 +1,5 @@
 /*-
- * $Id: MapSchemeServer.java,v 1.2 2005/04/08 09:32:27 bass Exp $
+ * $Id: MapSchemeServer.java,v 1.3 2005/04/27 16:00:56 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,8 +31,8 @@ import org.omg.PortableServer.POA;
 import org.omg.PortableServer.POAHelper;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/08 09:32:27 $
- * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/04/27 16:00:56 $
+ * @author $Author: arseniy $
  * @module cmserver_v1
  */
 public class MapSchemeServer extends SleepButWorkThread {
@@ -197,7 +197,6 @@ public class MapSchemeServer extends SleepButWorkThread {
 			Log.errorMessage("processError | Unknown error code: " //$NON-NLS-1$
 					+ super.fallCode);
 		}
-		super.clearFalls();
 	}
 
 	protected synchronized void shutdown() {/* !! Need synchronization */

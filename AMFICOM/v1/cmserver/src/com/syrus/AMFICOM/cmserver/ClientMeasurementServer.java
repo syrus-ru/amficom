@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementServer.java,v 1.35 2005/04/15 22:14:36 arseniy Exp $
+ * $Id: ClientMeasurementServer.java,v 1.36 2005/04/27 15:59:25 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/04/15 22:14:36 $
+ * @version $Revision: 1.36 $, $Date: 2005/04/27 15:59:25 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -240,7 +240,6 @@ public class ClientMeasurementServer extends SleepButWorkThread {
 		default:
 			Log.errorMessage("processError | Unknown error code: " + super.fallCode);
 		}
-		super.clearFalls();
 	}
 
 	protected synchronized void shutdown() {/* !! Need synchronization */
