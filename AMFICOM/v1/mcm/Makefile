@@ -13,7 +13,7 @@ TRANSCEIVER_DIR := ./transceiver
 
 include ../tools/Makefile.inc
 
-APPCLASSPATH := $(LIBDIR)/mserver_interface.jar:$(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/event.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/dadara.jar
+APPCLASSPATH := $(LIBDIR)/loginserver_interface.jar:$(LIBDIR)/eventserver_interface.jar:$(LIBDIR)/mserver_interface.jar:$(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/event.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/csbridge.jar:$(LIBDIR)/dadara.jar
 
 JAVAH := javah
 JAVAH_FLAGS := \
@@ -36,7 +36,6 @@ SOURCES := com/syrus/util/KISConnectionLRUMap.java \
 	com/syrus/AMFICOM/mcm/PeriodicalTestProcessor.java \
 	com/syrus/AMFICOM/mcm/MeasurementControlModule.java \
 	com/syrus/AMFICOM/mcm/MCMImplementation.java \
-	com/syrus/AMFICOM/mcm/MServerConnectionManager.java \
 	com/syrus/AMFICOM/mcm/KISReport.java \
 	com/syrus/AMFICOM/mcm/Transceiver.java \
 	com/syrus/AMFICOM/mcm/KISConnection.java \
@@ -46,8 +45,7 @@ SOURCES := com/syrus/util/KISConnectionLRUMap.java \
 	com/syrus/AMFICOM/mcm/MeasurementException.java \
 	com/syrus/AMFICOM/mcm/TestProcessingException.java \
 	com/syrus/AMFICOM/mcm/AnalysisManager.java \
-	com/syrus/AMFICOM/mcm/AnalysisEvaluationProcessor.java \
-	com/syrus/AMFICOM/mcm/MeasurementControlModuleSetup.java
+	com/syrus/AMFICOM/mcm/AnalysisEvaluationProcessor.java
 
 #	com/syrus/AMFICOM/mcm/DadaraAnalysisManager.java
 

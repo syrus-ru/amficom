@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.79 2005/04/27 15:12:38 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.80 2005/04/27 19:34:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -53,7 +53,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.79 $, $Date: 2005/04/27 15:12:38 $
+ * @version $Revision: 1.80 $, $Date: 2005/04/27 19:34:06 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -123,7 +123,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 	/*	Variables for method processFall()	(remove results, ...)*/
 	private List resultsToRemove;
 
-	public MeasurementControlModule() {
+	MeasurementControlModule() {
 		super(ApplicationProperties.getInt(KEY_TICK_TIME, TICK_TIME) * 1000, ApplicationProperties.getInt(KEY_MAX_FALLS, MAX_FALLS));
 		this.forwardProcessing = ApplicationProperties.getInt(KEY_FORWARD_PROCESSING, FORWARD_PROCESSING)*1000;
 		this.running = true;
@@ -167,7 +167,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		}
 		catch (ApplicationException ae) {
 			Log.errorException(ae);
-			System.exit(-1);
+			System.exit(1);
 		}
 
 		DatabaseObjectLoader.init(user.getId());
@@ -177,7 +177,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		}
 		catch (CommunicationException ce) {
 			Log.errorException(ce);
-			System.exit(-1);
+			System.exit(1);
 		}
 		
 		try {
@@ -186,7 +186,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		}
 		catch (CommunicationException ce) {
 			Log.errorException(ce);
-			System.exit(-1);
+			System.exit(1);
 		}
 		catch (LoginException le) {
 			Log.errorException(le);
@@ -211,7 +211,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		}
 		catch (CommunicationException ce) {
 			Log.errorException(ce);
-			System.exit(-1);
+			System.exit(1);
 		}
 	}
 
@@ -225,7 +225,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		}
 		catch (Exception e) {
 			Log.errorException(e);
-			System.exit(-1);
+			System.exit(1);
 		}
 	}
 

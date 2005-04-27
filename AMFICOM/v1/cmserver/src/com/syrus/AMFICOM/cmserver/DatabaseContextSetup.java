@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.22 2005/04/25 10:44:45 bob Exp $
+ * $Id: DatabaseContextSetup.java,v 1.23 2005/04/27 19:32:50 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -60,12 +60,12 @@ import com.syrus.AMFICOM.measurement.TestDatabase;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/04/25 10:44:45 $
- * @author $Author: bob $
+ * @version $Revision: 1.23 $, $Date: 2005/04/27 19:32:50 $
+ * @author $Author: arseniy $
  * @module cmserver_v1
  */
 
-public class DatabaseContextSetup {
+final class DatabaseContextSetup {
 	public static final String KEY_GENERAL_POOL_SIZE = "GeneralPoolSize";
 	public static final String KEY_ADMINISTRATION_POOL_SIZE = "AdministrationPoolSize";
 	public static final String KEY_CONFIGURATION_POOL_SIZE = "ConfigurationPoolSize";

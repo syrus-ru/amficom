@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.6 2005/04/14 11:38:12 bass Exp $
+ * $Id: DatabaseContextSetup.java,v 1.7 2005/04/27 19:36:50 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -72,11 +72,11 @@ import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/04/14 11:38:12 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2005/04/27 19:36:50 $
  * @module msherver_v1
  */
-class DatabaseContextSetup {
+final class DatabaseContextSetup {
 	public static final String KEY_GENERAL_POOL_SIZE = "GeneralPoolSize"; //$NON-NLS-1$
 	public static final String KEY_ADMINISTRATION_POOL_SIZE = "AdministrationPoolSize"; //$NON-NLS-1$
 	public static final String KEY_CONFIGURATION_POOL_SIZE = "ConfigurationPoolSize"; //$NON-NLS-1$
