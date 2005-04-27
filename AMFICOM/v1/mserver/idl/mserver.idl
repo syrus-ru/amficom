@@ -255,7 +255,7 @@ module corba {
 
 
 		void updateTest(in measurement::corba::Test_Transferable test,
-						in general::corba::AccessIdentity_Transferable access_identity);
+						in general::corba::SecurityKey security_key);
 /*
 		void updateTests(in measurement::corba::TestSeq_Transferable tests,
 						in general::corba::AccessIdentifier_Transferable accessIdentifier)
