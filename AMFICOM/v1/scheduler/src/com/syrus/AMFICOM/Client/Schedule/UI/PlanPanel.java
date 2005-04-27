@@ -10,9 +10,11 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseMotionAdapter;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collection;
@@ -21,54 +23,30 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import javax.swing.DefaultListModel;
 import javax.swing.JComponent;
-import javax.swing.JList;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.ListCellRenderer;
 import javax.swing.Timer;
 import javax.swing.UIManager;
-import javax.swing.plaf.basic.BasicListUI;
 
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
+import com.syrus.AMFICOM.Client.Schedule.IntervalsEditor;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Schedule.TestEditor;
 import com.syrus.AMFICOM.Client.Schedule.TestsEditor;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.measurement.Test;
+import com.syrus.AMFICOM.measurement.TestTemporalStamps;
+import com.syrus.util.Log;
 
-public class PlanPanel extends JList implements TestsEditor, TestEditor, ActionListener {
-	
-	public static final int		TIME_OUT					= 500;
+public class PlanPanel extends JPanel implements TestsEditor, TestEditor, IntervalsEditor, ActionListener {
 
+	public static final int	TIME_OUT	= 500;
 
-	private Timer timer = new Timer(TIME_OUT, this);
-
-	class TestLinesCellRenderer implements ListCellRenderer {
-
-		public Component getListCellRendererComponent(	JList list,
-														Object value,
-														int index,
-														boolean isSelected,
-														boolean cellHasFocus) {
-			JComponent component = (JComponent) PlanPanel.this.testLines.get(value);
-			if (component == null) {
-				if (value instanceof MonitoredElement) {
-					MonitoredElement monitoredElement = (MonitoredElement) value;
-					TestLine testLine = new TestLine(PlanPanel.this.aContext, monitoredElement.getName(), monitoredElement.getId());
-					testLine.setPreferredSize(new Dimension(0, 25));
-					PlanPanel.this.testLines.put(value, testLine);
-					PlanPanel.this.updateTestLinesTimeRegion();
-					PlanPanel.this.addMouseListener(testLine.getTestLineMouseListener());
-					component = testLine;					
-				}
-			}
-			return component;
-		}
-	}
+	private Timer			timer		= new Timer(TIME_OUT, this);
 
 	private static class Step {
 
@@ -90,129 +68,129 @@ public class PlanPanel extends JList implements TestsEditor, TestEditor, ActionL
 			this.align = align;
 		}
 	}
-	public static final String[]	SCALES			= new String[] {
-			"10 min", "1 hour", "6 hours", "1 day", "1 week", "1 month"};					//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+	public static final String[]	SCALES				= new String[] {
+			"10 min", "1 hour", "6 hours", "1 day", "1 week", "1 month"};							//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 
 	/**
 	 * SCALES in milliseconds
 	 */
-	public static final long[]		SCALES_MS		= new long[] { 1000 * 60 * 10, 1000 * 60 * 60, 1000 * 60 * 60 * 6,
-			1000 * 60 * 60 * 24, 1000 * 60 * 60 * 24 * 7, 1000 * 60 * 60 * 31};
+	public static final long[]		SCALES_MS			= new long[] { 1000 * 60 * 10, 1000 * 60 * 60,
+			1000 * 60 * 60 * 6, 1000 * 60 * 60 * 24, 1000 * 60 * 60 * 24 * 7, 1000 * 60 * 60 * 31};
 
-	protected static final Step[]	STEPS			= new Step[] { new Step(Calendar.MINUTE, 1, 10, 6, 1),
+	protected static final Step[]	STEPS				= new Step[] { new Step(Calendar.MINUTE, 1, 10, 6, 1),
 			new Step(Calendar.MINUTE, 10, 60, 5, 5), new Step(Calendar.HOUR_OF_DAY, 1, 6, 6, 1),
 			new Step(Calendar.HOUR_OF_DAY, 4, 24, 4, 2), new Step(Calendar.DAY_OF_MONTH, 1, 7, 4, 1),
 			new Step(Calendar.DAY_OF_MONTH, 5, 30, 5, 1),};
-	protected int					actualScale		= 0;
+	protected int					actualScale			= 0;
 
-	protected Calendar				cal				= Calendar.getInstance();
+	protected Calendar				cal					= Calendar.getInstance();
 
-	protected Point					currpos			= new Point();
+	
 
-	protected final static int		MARGIN			= 14;
+	protected final static int		MARGIN				= 14;
 	protected JScrollPane			parent;
-	protected int					scale			= 0;
+	protected int					scale				= 0;
 	protected Date					scaleEnd;
 
 	// rounded start and end time of range displayed
 	protected Date					scaleStart;
 
-	protected SimpleDateFormat		sdf				= new SimpleDateFormat();
-
-	protected boolean				selectedByMouse	= false;
+	protected SimpleDateFormat		sdf					= new SimpleDateFormat();
 
 	// real start time including minutes and seconds
-	protected Date					startDate		= new Date(System.currentTimeMillis());
+	protected Date					startDate			= new Date(System.currentTimeMillis());
 
-	protected Point					startpos		= new Point();
-
-	protected Point					tmppos;
-	ApplicationContext		aContext;
+	protected Point					startPosition;
+	protected Point					currentPosition;
+	
+	ApplicationContext				aContext;
 	private SchedulerModel			schedulerModel;
 
-	private static final int		MAX_ZOOM		= 50;
-	Map						testLines		= new HashMap();
+	private static final int		MAX_ZOOM			= 50;
+	Map								testLines			= new HashMap();
+	Map								testTemporalLines	= new HashMap();
 
 	private PlanToolBar				toolBar;
-	private DefaultListModel defaultListModel = new DefaultListModel();
 
-	// new tests, which haven't saved yet
-	// private ArrayList unsavedTests;
+	private TimeStampsEditor		timeStampsEditor;
+	
+	private Color selectionColor;
 
 	public PlanPanel(JScrollPane parent, ApplicationContext aContext) {
-		this.setUI(new ListUI());
 		this.aContext = aContext;
 		this.parent = parent;
 		this.toolBar = new PlanToolBar(aContext, this);
 		this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();
 		this.schedulerModel.addTestsEditor(this);
 		this.schedulerModel.addTestEditor(this);
-		this.setModel(this.defaultListModel);
-		this.setCellRenderer(new TestLinesCellRenderer());
-		this.timer.start();
+		this.schedulerModel.setIntervalsEditor(this);
+		this.addComponentListener(new ComponentAdapter() {
 
-//		setLayout(new VerticalFlowLayout());
-//		setBackground(SystemColor.window);
-		setPreferredSize(new Dimension(600, 20));
-		// setCursor(UIStorage.DEFAULT_CURSOR);
-
-		this.addMouseListener(new MouseAdapter() {
-
-			public void mousePressed(MouseEvent e) {
-				PlanPanel.this.startpos = e.getPoint();
-				PlanPanel.this.currpos = e.getPoint();
-				if (e.getButton() == MouseEvent.BUTTON1) {
-					setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
-					PlanPanel.this.selectedByMouse = true;
-				}
-			}
-
-			public void mouseReleased(MouseEvent e) {
-				// if (e.getClickCount() > 0)
-				{
-					setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-
-					if (PlanPanel.this.currpos.x == PlanPanel.this.startpos.x) {
-						PlanPanel.this.parent.repaint();
-						return;
-					}
-					if (PlanPanel.this.selectedByMouse) {
-						PlanPanel.this.selectedByMouse = false;
-						double k = (PlanPanel.this.parent.getVisibleRect().width - 2 * MARGIN)
-								/ Math.abs((double) (PlanPanel.this.startpos.x - PlanPanel.this.currpos.x));
-						int viewX = Math.min(PlanPanel.this.startpos.x, PlanPanel.this.currpos.x);
-						updateScale(k, viewX);
+			public void componentResized(ComponentEvent e) {
+				int width = PlanPanel.this.getWidth();
+				Dimension dimension = null;
+				for (int i = 0; i < PlanPanel.this.getComponentCount(); i++) {
+					Component component = PlanPanel.this.getComponent(i);
+					if (component instanceof JComponent) {
+						JComponent jcomponent = (JComponent) component;
+						if (dimension == null) {
+							dimension = new Dimension(width, jcomponent.getHeight());
+						}
+						jcomponent.setPreferredSize(dimension);
 					}
 				}
 			}
 		});
-		this.addMouseMotionListener(new MouseMotionListener() {
+
+		this.timer.start();
+
+		this.addMouseListener(new MouseAdapter() {
+
+			public void mouseReleased(MouseEvent e) {
+				setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+
+				if (PlanPanel.this.startPosition != null && PlanPanel.this.currentPosition != null
+						&& Math.abs(PlanPanel.this.startPosition.x - PlanPanel.this.currentPosition.x) > 5) {
+					double k = (PlanPanel.this.parent.getVisibleRect().width - 2 * MARGIN)
+							/ Math.abs((double) (PlanPanel.this.startPosition.x - PlanPanel.this.currentPosition.x));
+					int viewX = Math.min(PlanPanel.this.startPosition.x, PlanPanel.this.currentPosition.x);
+					updateScale(k, viewX);
+				}
+				PlanPanel.this.startPosition = null;
+				PlanPanel.this.currentPosition = null;
+				PlanPanel.this.repaint();
+
+			}
+		});
+		this.addMouseMotionListener(new MouseMotionAdapter() {
 
 			public void mouseDragged(MouseEvent e) {
-				PlanPanel.this.tmppos = PlanPanel.this.currpos;
-				PlanPanel.this.currpos = e.getPoint();
+				PlanPanel.this.currentPosition = e.getPoint();
 
+				if (PlanPanel.this.startPosition == null) {
+					PlanPanel.this.startPosition = PlanPanel.this.currentPosition;
+					PlanPanel.this.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+					return;
+				}
+				
 				// check if we go out the borders of panel
 				int vx = 0;
 				int wx = getWidth();
 				int vy = 0;
 				int wy = getHeight();
 
-				if (PlanPanel.this.currpos.x < vx)
-					PlanPanel.this.currpos.x = vx;
-				if (PlanPanel.this.currpos.x > vx + wx)
-					PlanPanel.this.currpos.x = vx + wx;
-				if (PlanPanel.this.currpos.y < vy)
-					PlanPanel.this.currpos.y = vy;
-				if (PlanPanel.this.currpos.y > vy + wy)
-					PlanPanel.this.currpos.y = vy + wy;
-				if (PlanPanel.this.selectedByMouse)
-					paintSelect(getGraphics().create());
+				if (PlanPanel.this.currentPosition.x < vx)
+					PlanPanel.this.currentPosition.x = vx;
+				if (PlanPanel.this.currentPosition.x > vx + wx)
+					PlanPanel.this.currentPosition.x = vx + wx;
+				if (PlanPanel.this.currentPosition.y < vy)
+					PlanPanel.this.currentPosition.y = vy;
+				if (PlanPanel.this.currentPosition.y > vy + wy)
+					PlanPanel.this.currentPosition.y = vy + wy;
+
+				PlanPanel.this.repaint();
 			}
 
-			public void mouseMoved(MouseEvent e) {
-				// nothing
-			}
 		});
 
 		setStartDate(new Date(System.currentTimeMillis()));
@@ -232,7 +210,7 @@ public class PlanPanel extends JList implements TestsEditor, TestEditor, ActionL
 	public int getScale() {
 		return this.scale;
 	}
-	
+
 	public Date getStartDate() {
 		return this.startDate;
 	}
@@ -282,34 +260,34 @@ public class PlanPanel extends JList implements TestsEditor, TestEditor, ActionL
 			// scroll calendar to start point
 			this.cal.setTime(this.startDate);
 		}
-		
+
 		this.updateTestLinesTimeRegion();
 	}
 
-//	protected void paintComponent(Graphics g) {
-//		// for paint testlines
-////		super.paint(g);
-////		super.paintComponent(g);
-////		g.clearRect(0,0, this.getWidth(), this.getHeight());
-//		super.paintComponent(g);
-//		
-//		this.cal.setTimeInMillis(0);
-//		this.cal.add(STEPS[this.actualScale].scale, STEPS[this.actualScale].one);
-//		long diff = this.cal.getTimeInMillis();
-//		double delta = (getWidth() - 2 * PlanPanel.MARGIN)
-//				/ ((double) (this.scaleEnd.getTime() - this.scaleStart.getTime()) / (double) diff);
-//		double subDelta = delta / STEPS[this.actualScale].subscales;
-//
-//		paintScales(g, diff, delta, subDelta);
-//		paintScaleDigits(g, diff, delta, subDelta);
-//
-//		
-////		this.paintChildren(g);
-//
-//	}
-	
-	
-	public void actionPerformed(ActionEvent e) {		
+	// protected void paintComponent(Graphics g) {
+	// // for paint testlines
+	// // super.paint(g);
+	// // super.paintComponent(g);
+	// // g.clearRect(0,0, this.getWidth(), this.getHeight());
+	// super.paintComponent(g);
+	//		
+	// this.cal.setTimeInMillis(0);
+	// this.cal.add(STEPS[this.actualScale].scale, STEPS[this.actualScale].one);
+	// long diff = this.cal.getTimeInMillis();
+	// double delta = (getWidth() - 2 * PlanPanel.MARGIN)
+	// / ((double) (this.scaleEnd.getTime() - this.scaleStart.getTime()) /
+	// (double) diff);
+	// double subDelta = delta / STEPS[this.actualScale].subscales;
+	//
+	// paintScales(g, diff, delta, subDelta);
+	// paintScaleDigits(g, diff, delta, subDelta);
+	//
+	//		
+	// // this.paintChildren(g);
+	//
+	// }
+
+	public void actionPerformed(ActionEvent e) {
 		this.revalidate();
 		this.repaint();
 	}
@@ -317,8 +295,7 @@ public class PlanPanel extends JList implements TestsEditor, TestEditor, ActionL
 	protected void paintScaleDigits(Graphics g,
 									long diff,
 									double delta,
-									double subDelta)
-	{
+									double subDelta) {
 		int h = getHeight() - 1;
 		// int w = getWidth();
 
@@ -396,15 +373,6 @@ public class PlanPanel extends JList implements TestsEditor, TestEditor, ActionL
 		g.drawLine(0, h, w, h);
 	}
 
-	protected void paintSelect(Graphics g) {
-		g.setXORMode(Color.gray);
-		g.drawLine(this.startpos.x, 0, this.startpos.x, getHeight());
-		g.drawLine(this.startpos.x, 0, this.startpos.x, getHeight());
-		g.drawLine(this.tmppos.x, 0, this.tmppos.x, getHeight());
-		g.drawLine(this.currpos.x, 0, this.currpos.x, getHeight());
-
-	}
-
 	void setDate(	Date startDate,
 					int scale) {
 		this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -413,7 +381,7 @@ public class PlanPanel extends JList implements TestsEditor, TestEditor, ActionL
 		SchedulerModel model = (SchedulerModel) this.aContext.getApplicationModel();
 		try {
 			model.updateTests(this.scaleStart.getTime(), this.scaleEnd.getTime());
-			updateTestLines();			
+			updateTestLines();
 
 		} catch (ApplicationException e) {
 			SchedulerModel.showErrorMessage(this, e);
@@ -422,14 +390,56 @@ public class PlanPanel extends JList implements TestsEditor, TestEditor, ActionL
 		this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}
 
-	void updateTestLinesTimeRegion() {
-		for (Iterator it = this.testLines.keySet().iterator(); it.hasNext();) {
-			Object key = it.next();
-			TestLine line = (TestLine) this.testLines.get(key);
-			line.setStart(this.scaleStart.getTime());
-			line.setEnd(this.scaleEnd.getTime());
+	protected void paintComponent(Graphics g) {
+		super.paintComponent(g);
+
+		this.cal.setTimeInMillis(0);
+		this.cal.add(STEPS[this.actualScale].scale, STEPS[this.actualScale].one);
+		long diff = this.cal.getTimeInMillis();
+		double delta = (getWidth() - 2 * PlanPanel.MARGIN)
+				/ ((double) (this.scaleEnd.getTime() - this.scaleStart.getTime()) / (double) diff);
+		double subDelta = delta / STEPS[this.actualScale].subscales;
+
+		paintScales(g, diff, delta, subDelta);
+		paintScaleDigits(g, diff, delta, subDelta);
+
+		if (this.currentPosition != null && this.startPosition != null) {
+			if (this.selectionColor == null) {
+				Color color = Color.BLUE;
+				this.selectionColor = new Color(color.getRed(), color.getGreen(), color.getBlue(), 50);
+			}
+			Color color = g.getColor();
+			g.setColor(this.selectionColor);
+			int x;
+			int w;
+			if (this.currentPosition.x > this.startPosition.x) {
+				x = this.startPosition.x;
+			    w = this.currentPosition.x - this.startPosition.x;
+			} else {
+				x = this.currentPosition.x;
+			    w = this.startPosition.x - this.currentPosition.x;
+			}
+			
+			g.fillRect(x, 0, w, this.getHeight());
+			g.setColor(color);
+
 		}
-		updateRealScale();
+
+	}
+
+	void updateTestLinesTimeRegion() {
+		long scaleStartTime = this.scaleStart.getTime();
+		long scaleEndTime = this.scaleEnd.getTime();
+
+		for (int i = 0; i < this.getComponentCount(); i++) {
+			Component component = PlanPanel.this.getComponent(i);
+			if (component instanceof TimeLine) {
+				TimeLine timeLine = (TimeLine) component;
+				timeLine.setStart(scaleStartTime);
+				timeLine.setEnd(scaleEndTime);
+			}
+		}
+		this.updateRealScale();
 	}
 
 	void updateScale(double k) {
@@ -541,47 +551,55 @@ public class PlanPanel extends JList implements TestsEditor, TestEditor, ActionL
 		super.revalidate();
 		this.parent.repaint();
 	}
-	
+
 	public void updateTest() {
 		for (Iterator it = this.testLines.keySet().iterator(); it.hasNext();) {
 			Object key = it.next();
 			TestLine line = (TestLine) this.testLines.get(key);
-			Rectangle visibleRectangle = line.getVisibleRectangle();
+			Rectangle visibleRectangle = line.getVisibleRect();
 			if (visibleRectangle != null) {
 				this.scrollRectToVisible(visibleRectangle);
 			}
-			
-		}		
+
+		}
+	}
+
+	public void setIntervalsTemporalPattern(TestTemporalStamps testTemporalStamps) {
+		if (this.timeStampsEditor == null) {
+			this.timeStampsEditor = new TimeStampsEditor(this.aContext, "Editor");
+			this.timeStampsEditor.setPreferredSize(new Dimension(this.getWidth(), 25));
+			this.add(this.timeStampsEditor);
+		}
+
+		this.timeStampsEditor.setTestTemporalStamps(testTemporalStamps);
+		this.updateTestLinesTimeRegion();
 	}
 
 	protected void updateTestLines() {
 		Collection tests = ((SchedulerModel) this.aContext.getApplicationModel()).getTests();
-		this.removeAll();
-		this.defaultListModel.removeAllElements();
 		for (Iterator it = tests.iterator(); it.hasNext();) {
 			Test test = (Test) it.next();
 			MonitoredElement monitoredElement = test.getMonitoredElement();
-			if (!this.defaultListModel.contains(monitoredElement))
-				this.defaultListModel.addElement(monitoredElement);
+			if (!this.testLines.keySet().contains(monitoredElement)) {
+				TestLine testLine = new TestLine(this.aContext, monitoredElement.getName(), monitoredElement.getId());
+				// testLine.setTestTemporalStamps((TestTemporalStamps)
+				// this.testTemporalLines.get(monitoredElement));
+				this.testLines.put(monitoredElement, testLine);
+				testLine.setPreferredSize(new Dimension(this.getWidth(), 25));
+			}
 		}
+
+		this.removeAll();
+		for (Iterator it = this.testLines.keySet().iterator(); it.hasNext();) {
+			TestLine testLine = (TestLine) this.testLines.get(it.next());
+			this.add(testLine);
+		}
+
 		super.setPreferredSize(new Dimension(getPreferredSize().width, 30 + 25 * this.testLines.values().size()));
-		this.updateRealScale();
+
+		this.updateTestLinesTimeRegion();
+		this.revalidate();
+
 	}
-	
-	private class ListUI extends BasicListUI {
-		public void paint(	Graphics g,
-							JComponent c) {
-			cal.setTimeInMillis(0);
-			cal.add(STEPS[actualScale].scale, STEPS[actualScale].one);
-			long diff = cal.getTimeInMillis();
-			double delta = (getWidth() - 2 * PlanPanel.MARGIN)
-					/ ((double) (scaleEnd.getTime() - scaleStart.getTime()) / (double) diff);
-			double subDelta = delta / STEPS[actualScale].subscales;
-	
-			paintScales(g, diff, delta, subDelta);
-			paintScaleDigits(g, diff, delta, subDelta);
-			
-			super.paint(g, c);
-		}
-	}
+
 }

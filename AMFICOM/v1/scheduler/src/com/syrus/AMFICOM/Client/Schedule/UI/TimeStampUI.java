@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.measurement.CronTemporalPattern;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/04/22 16:17:25 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.9 $, $Date: 2005/04/27 15:26:37 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
  */

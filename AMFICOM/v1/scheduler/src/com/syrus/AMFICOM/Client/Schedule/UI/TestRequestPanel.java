@@ -1,12 +1,13 @@
 
 package com.syrus.AMFICOM.Client.Schedule.UI;
 
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -32,13 +33,17 @@ public class TestRequestPanel extends JPanel implements TestEditor {
 
 	private JTextField	nameTextField	= new JTextField();
 
-	private JTextField	ownerTextField	= new JTextField();
+	private JLabel	ownerTextField	= new JLabel();
 
-	private JTextField	typeTextField	= new JTextField();
+	private JLabel	typeTextField	= new JLabel();
 	
-	private JTextField	portTextField	= new JTextField();
+	private JLabel	portTextField	= new JLabel();
 	
 	private SchedulerModel		schedulerModel;
+	
+	JButton						createButton;
+
+	JButton						applyButton;
 
 	public TestRequestPanel(ApplicationContext aContext) {
 		this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();
@@ -48,27 +53,76 @@ public class TestRequestPanel extends JPanel implements TestEditor {
 		JLabel titleLabel = new JLabel(LangModelSchedule.getString("Title") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
 		panel.add(titleLabel);
 		panel.add(this.nameTextField);
-		this.nameTextField.setEditable(false);
+		this.nameTextField.setEditable(true);
 		// add(nameTextField);
 
 		JLabel ownerLabel = new JLabel(LangModelSchedule.getString("Owner") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
 		panel.add(ownerLabel);
 		// add(ownerLabel);
 		panel.add(this.ownerTextField);
-		this.ownerTextField.setEditable(false);
+//		this.ownerTextField.setEditable(false);
 		// add(ownerTextField);
 
 		JLabel typeLabel = new JLabel(LangModelSchedule.getString("Type") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
 		panel.add(typeLabel);
 		// add(typeLabel);
 		panel.add(this.typeTextField);
-		this.typeTextField.setEditable(false);
+//		this.typeTextField.setEditable(false);
 		// add(typeTextField);
 
 		JLabel objectLabel = new JLabel(LangModelSchedule.getString("Port") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
 		panel.add(objectLabel);
 		panel.add(this.portTextField);
+//		this.portTextField.setEditable(false);
 		this.add(panel);
+		
+		{
+			this.applyButton = new JButton(LangModelSchedule.getString("Apply"));
+			this.applyButton.setEnabled(false);
+			this.createButton = new JButton(LangModelSchedule.getString("Create"));
+
+			this.applyButton.addActionListener(new ActionListener() {
+
+				public void actionPerformed(ActionEvent e) {
+					createButton.setEnabled(false);
+					applyButton.setEnabled(false);
+					try {
+						schedulerModel.applyTest();
+					} catch (ApplicationException e1) {
+						SchedulerModel.showErrorMessage(TestRequestPanel.this, e1);
+					}
+					createButton.setEnabled(true);
+					applyButton.setEnabled(true);
+
+				}
+			});
+
+			this.createButton.addActionListener(new ActionListener() {
+
+				public void actionPerformed(ActionEvent e) {
+					createButton.setEnabled(false);
+					applyButton.setEnabled(false);
+					try {
+						schedulerModel.createTest();
+					} catch (ApplicationException e1) {
+						SchedulerModel.showErrorMessage(TestRequestPanel.this, e1);
+					}
+					createButton.setEnabled(true);
+					applyButton.setEnabled(true);
+				}
+			});
+
+			Box box = new Box(BoxLayout.X_AXIS);
+			this.createButton.setDefaultCapable(false);
+			this.createButton.setEnabled(true);
+			box.add(this.createButton);
+			box.add(Box.createGlue());
+			this.applyButton.setDefaultCapable(false);
+			this.applyButton.setEnabled(false);
+			box.add(this.applyButton);
+			this.add(box);
+		}
+
 		this.add(Box.createVerticalGlue());
 
 	}
@@ -82,11 +136,13 @@ public class TestRequestPanel extends JPanel implements TestEditor {
 
 	
 	public void updateTest() {
-		this.setTest(this.schedulerModel.getSelectedTest());
+		Test test = this.schedulerModel.getSelectedTest();
+		this.setTest(test);
 	}
 	
 	public void setTest(Test test) {
-		if (test != null) {			
+		if (test != null) {
+			this.applyButton.setEnabled(test.isChanged());
 			try {
 				this.nameTextField.setText(test.getDescription());
 				
@@ -103,6 +159,7 @@ public class TestRequestPanel extends JPanel implements TestEditor {
 				SchedulerModel.showErrorMessage(this, ae);
 			}			
 		} else {
+			this.applyButton.setEnabled(false);
 			this.cleanAllFields();
 		}
 	}

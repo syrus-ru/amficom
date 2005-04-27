@@ -51,13 +51,13 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.CompoundConditionSort;
+import com.syrus.AMFICOM.measurement.AbstractTemporalPattern;
 import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.EvaluationType;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.measurement.Set;
-import com.syrus.AMFICOM.measurement.CronTemporalPattern;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestTemporalStamps;
 import com.syrus.AMFICOM.measurement.TestWrapper;
@@ -108,6 +108,8 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 	private TestEditor[]				testEditors						= new TestEditor[0];
 
 	private MeasurementType				measurementType					= null;
+	
+	private IntervalsEditor	intervalsEditor;
 	private KIS							kis								= null;
 	private MonitoredElement			monitoredElement				= null;
 	private AnalysisType				analysisType					= null;
@@ -333,16 +335,16 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 					if (this.setEditor != null) {
 						this.setEditor.setSet(measurementSetup1.getParameterSet());
 					}
-					//this.measurementSetupEditor.setMeasurementSetup(measurementSetup1);
+					// this.measurementSetupEditor.setMeasurementSetup(measurementSetup1);
 				}
 			}
 
 			this.returnTypeEditor.setReturnType(this.selectedTest.getReturnType());
 			{
 				Identifier temporalPatternId = this.selectedTest.getTemporalPatternId();
-				CronTemporalPattern temporalPattern = null;
+				AbstractTemporalPattern temporalPattern = null;
 				if (temporalPatternId != null)
-					temporalPattern = (CronTemporalPattern) MeasurementStorableObjectPool.getStorableObject(
+					temporalPattern = (AbstractTemporalPattern) MeasurementStorableObjectPool.getStorableObject(
 						temporalPatternId, true);
 				TestTemporalStamps timeStamps = new TestTemporalStamps(this.selectedTest.getTemporalType(),
 																		this.selectedTest.getStartTime(),
@@ -352,7 +354,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 
 			for (int i = 0; i < this.testEditors.length; i++) {
 				this.testEditors[i].updateTest();
-			}			
+			}
 		}
 	}
 
@@ -501,28 +503,27 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 			this.refreshMeasurementSetups();
 		}
 	}
-	
+
 	public void setSelectedMonitoredElement(MonitoredElement monitoredElement,
 											MeasurementType measurementType) {
 		boolean changed = false;
 		if (this.monitoredElement == null || monitoredElement == null
 				|| !this.monitoredElement.getId().equals(monitoredElement.getId())) {
 			changed = true;
-			this.monitoredElement = monitoredElement;			
+			this.monitoredElement = monitoredElement;
 		}
-		
+
 		if (this.measurementType == null || measurementType == null
 				|| !this.measurementType.getId().equals(measurementType.getId())) {
 			changed = true;
 			this.measurementType = measurementType;
 			this.refreshMeasurementSetups();
 		}
-		
+
 		if (changed) {
 			this.refreshMeasurementSetups();
 		}
 	}
-
 
 	public void refreshMeasurementSetups() {
 		StorableObjectCondition condition = null;
@@ -569,8 +570,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 			}
 
 		} catch (ApplicationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			showErrorMessage(Environment.getActiveWindow(), e);
 		}
 	}
 
@@ -592,22 +592,26 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 				RISDSessionInfo sessionInterface = (RISDSessionInfo) this.aContext.getSessionInterface();
 				try {
 					this.measurementSetup = MeasurementSetup.createInstance(sessionInterface.getUserIdentifier(),
-						this.set, null, null, null, LangModelSchedule.getString("created by Scheduler")+ " /" + sdf.format(new Date()) + "/",
-						1000 * 60 * 10, Collections.singleton(this.monitoredElement.getId()), Collections
-								.singleton(this.measurementType.getId())); // @todo
-																			// link
-																			// to
-																			// measurement
-																			// type
-																			// --
-																			// temporal
-																			// fix
+						this.set, null, null, null, LangModelSchedule.getString("created by Scheduler") + " /"
+								+ sdf.format(new Date()) + "/", 1000 * 60 * 10, Collections
+								.singleton(this.monitoredElement.getId()), Collections.singleton(this.measurementType
+								.getId())); // @todo
+					// link
+					// to
+					// measurement
+					// type
+					// --
+					// temporal
+					// fix
 					MeasurementStorableObjectPool.putStorableObject(this.measurementSetup);
+					
 				} catch (IllegalObjectEntityException e) {
 					Log.debugException(e, Log.DEBUGLEVEL05);
 				} catch (CreateObjectException e) {
 					Log.debugException(e, Log.DEBUGLEVEL05);
 				}
+				this.refreshMeasurementSetups();
+
 			}
 			measurementSetupIds = Collections.singleton(this.measurementSetup.getId());
 			Identifier modifierId = ((RISDSessionInfo) this.aContext.getSessionInterface()).getUserIdentifier();
@@ -615,7 +619,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 			Date startTime = this.testTimeStamps.getStartTime();
 			Date endTime = this.testTimeStamps.getEndTime();
 			TestTemporalType temporalType = this.testTimeStamps.getTestTemporalType();
-			CronTemporalPattern temporalPattern = this.testTimeStamps.getTemporalPattern();
+			AbstractTemporalPattern temporalPattern = this.testTimeStamps.getTemporalPattern();
 			if (test == null) {
 				try {
 					test = Test.createInstance(modifierId, startTime, endTime, temporalPattern == null ? null
@@ -658,23 +662,27 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 	}
 
 	public static Color getColor(TestStatus testStatus) {
+		return getColor(testStatus, false);
+	}
+	
+	public static Color getColor(TestStatus testStatus, boolean selected) {
 		Color color;
 		switch (testStatus.value()) {
 			case TestStatus._TEST_STATUS_COMPLETED:
-				color = SchedulerModel.COLOR_COMPLETED;
+				color = selected ?  COLOR_COMPLETED_SELECTED : COLOR_COMPLETED;
 				break;
 			case TestStatus._TEST_STATUS_SCHEDULED:
 			case TestStatus._TEST_STATUS_NEW:
-				color = SchedulerModel.COLOR_SCHEDULED;
+				color = selected ? COLOR_SCHEDULED_SELECTED : COLOR_SCHEDULED;
 				break;
 			case TestStatus._TEST_STATUS_PROCESSING:
-				color = SchedulerModel.COLOR_PROCCESSING;
+				color = selected ? COLOR_PROCCESSING_SELECTED : COLOR_PROCCESSING;
 				break;
 			case TestStatus._TEST_STATUS_ABORTED:
-				color = SchedulerModel.COLOR_ABORDED;
+				color = selected ? COLOR_ABORDED_SELECTED : COLOR_ABORDED;
 				break;
 			default:
-				color = SchedulerModel.COLOR_UNRECOGNIZED;
+				color = COLOR_UNRECOGNIZED;
 				break;
 		}
 		return color;
@@ -769,4 +777,17 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 	}
 
 	
+	public void setIntervalsEditor(IntervalsEditor intervalsEditor) {
+		this.intervalsEditor = intervalsEditor;
+	}
+
+	public void refreshTestTemporalStamps() {
+		if (this.intervalsEditor != null) {
+			TestTemporalStamps testTemporalStamps = this.testTemporalStampsEditor.getTestTemporalStamps();
+			this.intervalsEditor.setIntervalsTemporalPattern(testTemporalStamps);
+		}
+	}
+	
+	
+
 }

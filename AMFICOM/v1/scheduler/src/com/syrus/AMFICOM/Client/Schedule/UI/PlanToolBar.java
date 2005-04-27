@@ -3,7 +3,6 @@ package com.syrus.AMFICOM.Client.Schedule.UI;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
@@ -424,8 +423,7 @@ class PlanToolBar {
 					}
 				}, LangModelSchedule.getString("Updating_tests_from_DB"));
 			}
-		});
-
+		});		
 	}
 
 	public JToolBar getToolBar() {
@@ -435,13 +433,13 @@ class PlanToolBar {
 	public Icon getColorIcon(Color color) {
 		int x = 0;
 		int y = 0;
-		BufferedImage img = new BufferedImage(w + 1, h + 1, BufferedImage.TYPE_INT_RGB);
+		BufferedImage img = new BufferedImage(this.w + 1, this.h + 1, BufferedImage.TYPE_INT_RGB);
 		Graphics2D g2d = (Graphics2D) img.getGraphics();
 		g2d.setBackground(Color.lightGray);
-		g2d.clearRect(x, y, w + 1, h + 1);
+		g2d.clearRect(x, y, this.w + 1, this.h + 1);
 		g2d.setColor(color);
-		g2d.fillRect(x + 2, y + 2, w - 3, h - 3);
-		g2d.draw3DRect(x, y, w, h, true);
+		g2d.fillRect(x + 2, y + 2, this.w - 3, this.h - 3);
+		g2d.draw3DRect(x, y, this.w, this.h, true);
 		Icon icon = new ImageIcon(img);
 		return icon;
 	}
