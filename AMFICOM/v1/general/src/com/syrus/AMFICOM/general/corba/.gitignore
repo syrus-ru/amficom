@@ -11,6 +11,7 @@ AMFICOMRemoteException.java
 CompletionStatus.java
 DataType.java
 ErrorCode.java
+SecurityKey.java
 IIdentifier.java
 Identifiable.java
 Identifier.java
