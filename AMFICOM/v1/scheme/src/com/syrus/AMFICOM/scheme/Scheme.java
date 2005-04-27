@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.21 2005/04/21 16:27:08 bass Exp $
+ * $Id: Scheme.java,v 1.22 2005/04/27 14:45:23 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.scheme;
 
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -40,7 +41,7 @@ import com.syrus.util.Log;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.21 $, $Date: 2005/04/21 16:27:08 $
+ * @version $Revision: 1.22 $, $Date: 2005/04/27 14:45:23 $
  * @module scheme_v1
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -271,7 +272,25 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 * @see com.syrus.AMFICOM.general.StorableObject#getDependencies()
 	 */
 	public Set getDependencies() {
-		throw new UnsupportedOperationException();
+		assert this.mapId != null
+				&& this.symbolId != null
+				&& this.ugoCellId != null
+				&& this.schemeCellId != null
+				&& this.currentSchemeMonitoringSolutionId != null
+				&& this.parentSchemeElementId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		final Set dependencies = new HashSet();
+		dependencies.add(this.mapId);
+		dependencies.add(this.symbolId);
+		dependencies.add(this.ugoCellId);
+		dependencies.add(this.schemeCellId);
+		/*
+		 * Prevent stack overflows.
+		 */
+//		dependencies.add(this.currentSchemeMonitoringSolutionId);
+		dependencies.add(this.parentSchemeElementId);
+		dependencies.remove(null);
+		dependencies.remove(Identifier.VOID_IDENTIFIER);
+		return Collections.unmodifiableSet(dependencies);
 	}
 
 	/**
@@ -283,7 +302,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	}
 
 	public int getHeight() {
-		throw new UnsupportedOperationException();
+		return this.height;
 	}
 
 	/**
@@ -408,7 +427,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	}
 
 	public int getWidth() {
-		throw new UnsupportedOperationException();
+		return this.width;
 	}
 
 	/**
@@ -534,7 +553,10 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	}
 
 	public void setHeight(final int height) {
-		throw new UnsupportedOperationException();
+		if (this.height == height)
+			return;
+		this.height = height;
+		this.changed = true;
 	}
 
 	/**
@@ -679,7 +701,10 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	}
 
 	public void setWidth(final int width) {
-		throw new UnsupportedOperationException();
+		if (this.width == width)
+			return;
+		this.width = width;
+		this.changed = true;
 	}
 
 	/**

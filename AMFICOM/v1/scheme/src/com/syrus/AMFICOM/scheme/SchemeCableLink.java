@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.24 2005/04/25 16:26:41 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.25 2005/04/27 14:45:23 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.util.Log;
  * #11 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.24 $, $Date: 2005/04/25 16:26:41 $
+ * @version $Revision: 1.25 $, $Date: 2005/04/27 14:45:23 $
  * @module scheme_v1
  */
 public final class SchemeCableLink extends AbstractSchemeLink {
@@ -195,13 +195,6 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	 */
 	public CharacteristicSort getCharacteristicSort() {
 		return CharacteristicSort.CHARACTERISTIC_SORT_SCHEMECABLELINK;
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.general.StorableObject#getDependencies()
-	 */
-	public Set getDependencies() {
-		throw new UnsupportedOperationException();
 	}
 
 	/**

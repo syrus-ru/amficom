@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.21 2005/04/27 10:40:16 bass Exp $
+ * $Id: SchemePath.java,v 1.22 2005/04/27 14:45:23 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,7 +43,7 @@ import com.syrus.util.Log;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.21 $, $Date: 2005/04/27 10:40:16 $
+ * @version $Revision: 1.22 $, $Date: 2005/04/27 14:45:23 $
  * @module scheme_v1
  */
 public final class SchemePath extends AbstractCloneableStorableObject implements
@@ -191,7 +191,14 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 * @see com.syrus.AMFICOM.general.StorableObject#getDependencies()
 	 */
 	public Set getDependencies() {
-		throw new UnsupportedOperationException();
+		assert this.transmissionPathId != null
+				&& this.parentSchemeMonitoringSolutionId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		final Set dependencies = new HashSet();
+		dependencies.add(this.transmissionPathId);
+		dependencies.add(this.parentSchemeMonitoringSolutionId);
+		dependencies.remove(null);
+		dependencies.remove(Identifier.VOID_IDENTIFIER);
+		return Collections.unmodifiableSet(dependencies);
 	}
 
 	/**

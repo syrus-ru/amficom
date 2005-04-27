@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeLink.java,v 1.9 2005/04/27 13:22:09 bass Exp $
+ * $Id: AbstractSchemeLink.java,v 1.10 2005/04/27 14:45:23 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,10 @@
 
 package com.syrus.AMFICOM.scheme;
 
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.syrus.AMFICOM.configuration.AbstractLinkType;
 import com.syrus.AMFICOM.configuration.CableLinkType;
@@ -26,7 +29,7 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeLink}instead.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/04/27 13:22:09 $
+ * @version $Revision: 1.10 $, $Date: 2005/04/27 14:45:23 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemeLink extends AbstractSchemeElement {
@@ -163,9 +166,8 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	}
 
 	/**
-	 * Getter returns optical length of this scheme link or scheme cable
-	 * link.
-	 * 
+	 * @return optical length of this <code>SchemeLink</code> or
+	 *         <code>SchemeCableLink</code>.
 	 * @see #opticalLength
 	 */
 	public final double getOpticalLength() {
@@ -173,9 +175,8 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	}
 
 	/**
-	 * Getter returns physical length of this scheme link or scheme cable
-	 * link.
-	 * 
+	 * @return physical length of this <code>SchemeLink</code> or
+	 *         <code>SchemeCableLink</code>.
 	 * @see #physicalLength
 	 */
 	public final double getPhysicalLength() {
@@ -241,23 +242,23 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	}
 
 	/**
-	 * Getter returns optical length of this scheme link or scheme cable
-	 * link.
-	 * 
 	 * @see #opticalLength
 	 */
 	public final void setOpticalLength(final double opticalLength) {
-		throw new UnsupportedOperationException();
+		if (this.opticalLength == opticalLength)
+			return;
+		this.opticalLength = opticalLength;
+		this.changed = true;
 	}
 
 	/**
-	 * Getter returns physical length of this scheme link or scheme cable
-	 * link.
-	 * 
 	 * @see #physicalLength
 	 */
 	public final void setPhysicalLength(final double physicalLength) {
-		throw new UnsupportedOperationException();
+		if (this.physicalLength == physicalLength)
+			return;
+		this.physicalLength = physicalLength;
+		this.changed = true;
 	}
 
 	public abstract void setSourceAbstractSchemePort(final AbstractSchemePort sourceAbstractSchemePort);
@@ -290,6 +291,24 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 		this.linkId = linkId;
 		this.sourceAbstractSchemePortId = sourceAbstractSchemePortId;
 		this.targetAbstractSchemePortId = targetAbstractSchemePortId;
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObject#getDependencies()
+	 */
+	public Set getDependencies() {
+		assert this.abstractLinkTypeId != null && this.linkId != null
+				&& this.sourceAbstractSchemePortId != null
+				&& this.targetAbstractSchemePortId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		final Set dependencies = new HashSet();
+		dependencies.addAll(super.getDependencies());
+		dependencies.add(this.abstractLinkTypeId);
+		dependencies.add(this.linkId);
+		dependencies.add(this.sourceAbstractSchemePortId);
+		dependencies.add(this.targetAbstractSchemePortId);
+		dependencies.remove(null);
+		dependencies.remove(Identifier.VOID_IDENTIFIER);
+		return Collections.unmodifiableSet(dependencies);
 	}
 
 	/*-********************************************************************

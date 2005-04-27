@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.19 2005/04/27 13:22:09 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.20 2005/04/27 14:45:23 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.scheme.corba.SchemeCableThread_Transferable;
  * #12 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.19 $, $Date: 2005/04/27 13:22:09 $
+ * @version $Revision: 1.20 $, $Date: 2005/04/27 14:45:23 $
  * @module scheme_v1
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
@@ -188,14 +188,26 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicSort()
 	 */
 	public CharacteristicSort getCharacteristicSort() {
-		throw new UnsupportedOperationException();
+		return CharacteristicSort.CHARACTERISTIC_SORT_SCHEMECABLETHREAD;
 	}
 
 	/**
 	 * @see com.syrus.AMFICOM.general.StorableObject#getDependencies()
 	 */
 	public Set getDependencies() {
-		throw new UnsupportedOperationException();
+		assert this.cableThreadTypeId != null && this.linkId != null
+				&& this.sourceSchemePortId != null
+				&& this.targetSchemePortId != null
+				&& this.parentSchemeCableLinkId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		final Set dependencies = new HashSet();
+		dependencies.add(this.cableThreadTypeId);
+		dependencies.add(this.linkId);
+		dependencies.add(this.sourceSchemePortId);
+		dependencies.add(this.targetSchemePortId);
+		dependencies.add(this.parentSchemeCableLinkId);
+		dependencies.remove(null);
+		dependencies.remove(Identifier.VOID_IDENTIFIER);
+		return Collections.unmodifiableSet(dependencies);
 	}
 
 	/**
@@ -372,16 +384,6 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	}
 
 	public void setParentSchemeCableLink(final SchemeCableLink parentSchemeCableLink) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param schemePort
-	 */
-	public void setSchemePort(final SchemePort schemePort) {
-		/**
-		 * @todo Update w/o notification.
-		 */
 		throw new UnsupportedOperationException();
 	}
 

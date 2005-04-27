@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.20 2005/04/25 15:07:11 bass Exp $
+ * $Id: SchemeDevice.java,v 1.21 2005/04/27 14:45:23 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ import com.syrus.util.Log;
  * #07 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.20 $, $Date: 2005/04/25 15:07:11 $
+ * @version $Revision: 1.21 $, $Date: 2005/04/27 14:45:23 $
  * @module scheme_v1
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -308,7 +308,14 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 * @see com.syrus.AMFICOM.general.StorableObject#getDependencies()
 	 */
 	public Set getDependencies() {
-		throw new UnsupportedOperationException();
+		assert this.parentSchemeElementId != null
+				&& this.parentSchemeProtoElementId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		final Set dependencies = new HashSet();
+		dependencies.add(this.parentSchemeElementId);
+		dependencies.add(this.parentSchemeProtoElementId);
+		dependencies.remove(null);
+		dependencies.remove(Identifier.VOID_IDENTIFIER);
+		return Collections.unmodifiableSet(dependencies);
 	}
 
 	/**

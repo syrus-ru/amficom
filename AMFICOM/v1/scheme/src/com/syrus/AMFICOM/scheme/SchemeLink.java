@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.21 2005/04/25 16:26:41 bass Exp $
+ * $Id: SchemeLink.java,v 1.22 2005/04/27 14:45:23 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,9 @@
 
 package com.syrus.AMFICOM.scheme;
 
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
@@ -36,7 +38,7 @@ import com.syrus.util.Log;
  * #10 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.21 $, $Date: 2005/04/25 16:26:41 $
+ * @version $Revision: 1.22 $, $Date: 2005/04/27 14:45:23 $
  * @module scheme_v1
  */
 public final class SchemeLink extends AbstractSchemeLink {
@@ -401,7 +403,17 @@ public final class SchemeLink extends AbstractSchemeLink {
 	 * @see com.syrus.AMFICOM.general.StorableObject#getDependencies()
 	 */
 	public Set getDependencies() {
-		throw new UnsupportedOperationException();
+		assert this.siteNodeId != null
+				&& this.parentSchemeElementId != null
+				&& this.parentSchemeProtoElementId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		final Set dependencies = new HashSet();
+		dependencies.addAll(super.getDependencies());
+		dependencies.add(this.siteNodeId);
+		dependencies.add(this.parentSchemeElementId);
+		dependencies.add(this.parentSchemeProtoElementId);
+		dependencies.remove(null);
+		dependencies.remove(Identifier.VOID_IDENTIFIER);
+		return Collections.unmodifiableSet(dependencies);
 	}
 
 	/**

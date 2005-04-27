@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.15 2005/04/25 15:07:11 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.16 2005/04/27 14:45:23 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,9 @@
 
 package com.syrus.AMFICOM.scheme;
 
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
@@ -31,7 +33,7 @@ import com.syrus.AMFICOM.scheme.corba.CableChannelingItem_Transferable;
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.15 $, $Date: 2005/04/25 15:07:11 $
+ * @version $Revision: 1.16 $, $Date: 2005/04/27 14:45:23 $
  * @module scheme_v1
  */
 public final class CableChannelingItem extends AbstractCloneableStorableObject {
@@ -201,7 +203,18 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject {
 	 * @see com.syrus.AMFICOM.general.StorableObject#getDependencies()
 	 */
 	public Set getDependencies() {
-		throw new UnsupportedOperationException();
+		assert this.physicalLinkId != null
+				&& this.startSiteNodeId != null
+				&& this.endSiteNodeId != null
+				&& this.parentSchemeCableLinkId != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		final Set dependencies = new HashSet();
+		dependencies.add(this.physicalLinkId);
+		dependencies.add(this.startSiteNodeId);
+		dependencies.add(this.endSiteNodeId);
+		dependencies.add(this.parentSchemeCableLinkId);
+		dependencies.remove(null);
+		dependencies.remove(Identifier.VOID_IDENTIFIER);
+		return Collections.unmodifiableSet(dependencies);
 	}
 
 	public SiteNode getEndSiteNode() {
@@ -299,7 +312,10 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject {
 	}
 
 	public void setEndSpare(final double endSpare) {
-		throw new UnsupportedOperationException();
+		if (this.endSpare == endSpare)
+			return;
+		this.endSpare = endSpare;
+		this.changed = true;
 	}
 
 	public void setParentSchemeCableLink(final SchemeCableLink parentSchemeCableLink) {
@@ -314,15 +330,24 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject {
 	}
 
 	public void setPlaceY(final int placeY) {
-		throw new UnsupportedOperationException();
+		if (this.placeY == placeY)
+			return;
+		this.placeY = placeY;
+		this.changed = true;
 	}
 
 	public void setRowX(final int rowX) {
-		throw new UnsupportedOperationException();
+		if (this.rowX == rowX)
+			return;
+		this.rowX = rowX;
+		this.changed = true;
 	}
 
 	public void setSequentialNumber(final int sequentialNumber) {
-		throw new UnsupportedOperationException();
+		if (this.sequentialNumber == sequentialNumber)
+			return;
+		this.sequentialNumber = sequentialNumber;
+		this.changed = true;
 	}
 
 	/**
@@ -333,7 +358,10 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject {
 	}
 
 	public void setStartSpare(final double startSpare) {
-		throw new UnsupportedOperationException();
+		if (this.startSpare == startSpare)
+			return;
+		this.startSpare = startSpare;
+		this.changed = true;
 	}
 
 	/**

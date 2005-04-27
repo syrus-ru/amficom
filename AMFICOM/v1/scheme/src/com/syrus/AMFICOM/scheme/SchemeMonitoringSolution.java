@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.20 2005/04/22 14:13:11 bass Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.21 2005/04/27 14:45:23 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.scheme;
 
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -35,7 +36,7 @@ import com.syrus.util.Log;
  * #06 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.20 $, $Date: 2005/04/22 14:13:11 $
+ * @version $Revision: 1.21 $, $Date: 2005/04/27 14:45:23 $
  * @module scheme_v1
  */
 public final class SchemeMonitoringSolution extends
@@ -166,7 +167,12 @@ public final class SchemeMonitoringSolution extends
 	 * @see com.syrus.AMFICOM.general.StorableObject#getDependencies()
 	 */
 	public Set getDependencies() {
-		throw new UnsupportedOperationException();
+		assert this.parentSchemeOptimizeInfoId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		final Set dependencies = new HashSet();
+		dependencies.add(this.parentSchemeOptimizeInfoId);
+		dependencies.remove(null);
+		dependencies.remove(Identifier.VOID_IDENTIFIER);
+		return Collections.unmodifiableSet(dependencies);
 	}
 
 	/**
@@ -273,7 +279,10 @@ public final class SchemeMonitoringSolution extends
 	}
 
 	public void setPrice(final int price) {
-		throw new UnsupportedOperationException();
+		if (this.price == price)
+			return;
+		this.price = price;
+		this.changed = true;
 	}
 
 	public void setSchemePaths(final Set schemePaths) {
