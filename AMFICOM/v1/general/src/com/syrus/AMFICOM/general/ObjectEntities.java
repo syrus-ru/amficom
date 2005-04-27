@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectEntities.java,v 1.59 2005/04/25 11:56:53 bob Exp $
+ * $Id: ObjectEntities.java,v 1.60 2005/04/27 17:54:37 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.59 $, $Date: 2005/04/25 11:56:53 $
- * @author $Author: bob $
+ * @version $Revision: 1.60 $, $Date: 2005/04/27 17:54:37 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public final class ObjectEntities {
@@ -61,6 +61,7 @@ public final class ObjectEntities {
 	public static final String DOMAIN_ENTITY = "Domain";
 	public static final String SERVER_ENTITY = "Server";
 	public static final String MCM_ENTITY = "MCM";
+	public static final String SERVERPROCESS_ENTITY = "ServerProcess";
 	public static final String PERMATTR_ENTITY = "PermissionAttributes";
 
 	/*	Configuration	*/
@@ -179,7 +180,8 @@ public final class ObjectEntities {
 	public static final short DOMAIN_ENTITY_CODE = 0x0102;
 	public static final short SERVER_ENTITY_CODE = 0x0103;
 	public static final short MCM_ENTITY_CODE = 0x0104;
-	public static final short PERMATTR_ENTITY_CODE = 0x0105;
+	public static final short SERVERPROCESS_ENTITY_CODE = 0x0105;
+	public static final short PERMATTR_ENTITY_CODE = 0x0106;
 
 	public static final short ADMINISTRATION_MAX_ENTITY_CODE = 0x0180;
 
@@ -346,6 +348,7 @@ public final class ObjectEntities {
 		else if (entity.equals(DOMAIN_ENTITY)) return DOMAIN_ENTITY_CODE;
 		else if (entity.equals(SERVER_ENTITY)) return SERVER_ENTITY_CODE;
 		else if (entity.equals(MCM_ENTITY)) return MCM_ENTITY_CODE;
+		else if (entity.equals(SERVERPROCESS_ENTITY)) return SERVERPROCESS_ENTITY_CODE;
 		else if (entity.equals(PERMATTR_ENTITY)) return PERMATTR_ENTITY_CODE;
 
 		else if (entity.equals(EQUIPMENT_ENTITY)) return EQUIPMENT_ENTITY_CODE;
@@ -468,6 +471,8 @@ public final class ObjectEntities {
 				return SERVER_ENTITY;
 			case MCM_ENTITY_CODE:
 				return MCM_ENTITY;
+			case SERVERPROCESS_ENTITY_CODE:
+				return SERVERPROCESS_ENTITY;
 			case PERMATTR_ENTITY_CODE:
 				return PERMATTR_ENTITY;
 
