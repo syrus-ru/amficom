@@ -1,5 +1,5 @@
 /*
- * $Id: general.idl,v 1.71 2005/04/23 15:38:55 cvsadmin Exp $
+ * $Id: general.idl,v 1.72 2005/04/27 15:18:29 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -56,6 +56,9 @@ module corba {
 		DATA_TYPE_RAW
 	};
 
+/*
+@todo Remove all unused constants
+*/
 	enum ErrorCode {
 		ERROR_NO_ERROR,
 		ERROR_RISD_ERROR,
@@ -74,6 +77,11 @@ module corba {
 		ERROR_UID,
 		ERROR_DELETE,
 		ERROR_VERSION_COLLISION,
+		ERROR_ILLEGAL_LOGIN,
+		ERROR_ILLEGAL_PASSWORD,
+		ERROR_NO_DOMAINS_AVAILABLE,
+		ERROR_NOT_LOGGED_IN,
+		ERROR_ALREADY_LOGGED,
 		ERROR_PASSWORD_EXPIRED
 	};
 
@@ -95,11 +103,9 @@ module corba {
 		wstring message;
 	};
 */
-//////////////////// AccessIdentity ///////////////////
-	struct AccessIdentity_Transferable {
-		long long startup_date;
-		Identifier_Transferable domain_id;
-		Identifier_Transferable user_id;		
+
+//////////////////// SecurityKey ///////////////////
+	struct SecurityKey {
 		WString64 session_code;
 	};
 
@@ -198,6 +204,7 @@ module corba {
 
 ///////////////////////// LoginServer ///////////////////////
 	abstract interface LoginServer {
+
 		WString64 lookupDomainName(in Identifier_Transferable id) raises (AMFICOMRemoteException);
 
 		String32 lookupUserLogin(in Identifier_Transferable id) raises (AMFICOMRemoteException);
