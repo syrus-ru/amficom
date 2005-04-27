@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PhysicalLinkTypes>
+	<PhysicalLinkType>
+		<sort>collector</sort>
+		<dimension_x>2</dimension_x>
+		<dimension_y>6</dimension_y>
+		<description/>
+		<name>Коллектор</name>
+		<characteristics>
+			<characteristic sort="visual" type="color" value="-12566464"/>
+			<characteristic sort="visual" type="thickness" value="3"/>
+		</characteristics>
+	</PhysicalLinkType>
+	<PhysicalLinkType>
+		<sort>tunnel</sort>
+		<dimension_x>3</dimension_x>
+		<dimension_y>4</dimension_y>
+		<description/>
+		<name>Тонель</name>
+		<characteristics>
+			<characteristic sort="visual" type="color" value="-16777216"/>
+			<characteristic sort="visual" type="thickness" value="2"/>
+		</characteristics>
+	</PhysicalLinkType>
+</PhysicalLinkTypes>
