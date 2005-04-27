@@ -1,5 +1,5 @@
 /*
- * $Id: UserDatabase.java,v 1.21 2005/04/01 06:51:54 bob Exp $
+ * $Id: UserDatabase.java,v 1.22 2005/04/27 17:48:50 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,38 +27,39 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/04/01 06:51:54 $
- * @author $Author: bob $
+ * @version $Revision: 1.22 $, $Date: 2005/04/27 17:48:50 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 
 public class UserDatabase extends StorableObjectDatabase {
 	private static String columns;
-    private static String updateMultipleSQLValues;
-    private static final int SIZE_LOGIN_COLUMN = 32; 
-    
+	private static String updateMultipleSQLValues;
+	private static final int SIZE_LOGIN_COLUMN = 32;
+
 	private User fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof User)
 			return (User) storableObject;
-		throw new IllegalDataException("UserDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
+		throw new IllegalDataException("UserDatabase.fromStorableObject | Illegal Storable Object: "
+				+ storableObject.getClass().getName());
 	}
-	
+
 	protected String getEnityName() {		
 		return '"' + ObjectEntities.USER_ENTITY + '"';
-	}	
+	}
 
-	protected String getColumnsTmpl() {		
-		if (columns == null){
+	protected String getColumnsTmpl() {
+		if (columns == null) {
 			columns = UserWrapper.COLUMN_LOGIN + COMMA
-				+ UserWrapper.COLUMN_SORT + COMMA
-				+ StorableObjectWrapper.COLUMN_NAME + COMMA
-				+ StorableObjectWrapper.COLUMN_DESCRIPTION;		
+					+ UserWrapper.COLUMN_SORT + COMMA
+					+ StorableObjectWrapper.COLUMN_NAME + COMMA
+					+ StorableObjectWrapper.COLUMN_DESCRIPTION;
 		}
 		return columns;
 	}	
-	
+
 	protected String getUpdateMultipleSQLValuesTmpl() {
-		if (updateMultipleSQLValues == null){
+		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues = QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -66,7 +67,7 @@ public class UserDatabase extends StorableObjectDatabase {
 		}
 		return updateMultipleSQLValues;
 	}	
-	
+
 	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		User user = this.fromStorableObject(storableObject);
 		return APOSTOPHE + DatabaseString.toQuerySubString(user.getLogin(), SIZE_LOGIN_COLUMN) + APOSTOPHE + COMMA
@@ -79,7 +80,7 @@ public class UserDatabase extends StorableObjectDatabase {
 		User user = this.fromStorableObject(storableObject);
 		this.retrieveEntity(user);	
 	}
-	
+
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		User user = (storableObject == null)?
@@ -105,9 +106,8 @@ public class UserDatabase extends StorableObjectDatabase {
 				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  user.getId() + "'; argument: " + arg);
 				return null;
 		}
-	}	
-	
-	
+	}
+
 	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
 			throws IllegalDataException, SQLException {
 		User user = this.fromStorableObject(storableObject);
@@ -117,12 +117,12 @@ public class UserDatabase extends StorableObjectDatabase {
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, user.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		return startParameterNumber;
 	}
-	
+
 	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		User user = this.fromStorableObject(storableObject);
 		this.insertEntity(user);
 	}
-	
+
 	public void insert(Set storableObjects) throws IllegalDataException, CreateObjectException {
 		insertEntities(storableObjects);
 	}

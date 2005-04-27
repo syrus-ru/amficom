@@ -1,5 +1,5 @@
 /*
- * $Id: User.java,v 1.18 2005/04/15 19:22:06 arseniy Exp $
+ * $Id: User.java,v 1.19 2005/04/27 17:48:50 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/04/15 19:22:06 $
+ * @version $Revision: 1.19 $, $Date: 2005/04/27 17:48:50 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -108,7 +108,7 @@ public final class User extends StorableObject {
 		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
-	
+
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
@@ -121,14 +121,14 @@ public final class User extends StorableObject {
 									 this.description);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.syrus.AMFICOM.general.StorableObject#isValid()
-	 */
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	protected boolean isValid() {
-		return super.isValid() && this.login != null && this.login.length() != 0 && this.name != null && this.name.length() != 0 && this.description != null ;
+		return super.isValid()
+				&& this.login != null && this.login.length() != 0
+				&& this.name != null && this.name.length() != 0
+				&& this.description != null;
 	}
 	
 	public String getLogin() {
@@ -163,7 +163,6 @@ public final class User extends StorableObject {
 	 */
 	public static User createInstance(Identifier creatorId, String login, UserSort sort, String name, String description)
 			throws CreateObjectException {
-
 		try {
 			User user = new User(IdentifierPool.getGeneratedIdentifier(ObjectEntities.USER_ENTITY_CODE),
 					creatorId,
