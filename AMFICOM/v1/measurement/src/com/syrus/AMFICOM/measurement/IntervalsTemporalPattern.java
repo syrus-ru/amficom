@@ -1,5 +1,5 @@
 /*-
-* $Id: IntervalsTemporalPattern.java,v 1.6 2005/04/22 14:32:59 bob Exp $
+* $Id: IntervalsTemporalPattern.java,v 1.7 2005/04/27 10:14:56 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -10,8 +10,10 @@ package com.syrus.AMFICOM.measurement;
 
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
@@ -34,7 +36,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/04/22 14:32:59 $
+ * @version $Revision: 1.7 $, $Date: 2005/04/27 10:14:56 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module measurement_v1
@@ -76,9 +78,11 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern {
 															final SortedMap intervalsAbstractTemporalPatternMap,
 							                                final SortedMap intervalsDuration) throws CreateObjectException {
 
-		try {
+//		try {
 			IntervalsTemporalPattern intervalsTemporalPattern = 
-				new IntervalsTemporalPattern(IdentifierPool.getGeneratedIdentifier(ObjectEntities.INTERVALS_TEMPORALPATTERN_ENTITY_CODE), 
+				new IntervalsTemporalPattern(
+					new Identifier(ObjectEntities.INTERVALS_TEMPORALPATTERN_ENTITY + "_"+ System.currentTimeMillis())
+					/* TODO IdentifierPool.getGeneratedIdentifier(ObjectEntities.INTERVALS_TEMPORALPATTERN_ENTITY_CODE) */, 
 					creatorId, 
 					0L, 
 					intervalsAbstractTemporalPatternMap,
@@ -88,9 +92,9 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern {
 			assert intervalsTemporalPattern.isValid() : ErrorMessages.OBJECT_NOT_INITIALIZED;			
 			
 			return intervalsTemporalPattern;
-		} catch (IdentifierGenerationException ige) {
-			throw new CreateObjectException("Cannot generate identifier ", ige);
-		}
+//		} catch (IdentifierGenerationException ige) {
+//			throw new CreateObjectException("Cannot generate identifier ", ige);
+//		}
 	}
 
 	
@@ -199,7 +203,9 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern {
 	 * @param intervalsAbstractTemporalPatternMap
 	 */
 	protected void setIntervalsAbstractTemporalPatternMap0(SortedMap intervalsAbstractTemporalPatternMap) {
-		if (this.intervalsAbstractTemporalPatternMap != null) {
+		if (this.intervalsAbstractTemporalPatternMap == null) {
+			this.intervalsAbstractTemporalPatternMap = new TreeMap();
+		} else {
 			this.intervalsAbstractTemporalPatternMap.clear();
 		}
 		
@@ -249,7 +255,7 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern {
 	}
 	
 	public void removeIntervalItem(long milliseconds) {
-//		Log.debugMessage("IntervalsTemporalPattern.removeIntervalItem | > milliseconds:" + milliseconds, Log.FINEST);
+		Log.debugMessage("IntervalsTemporalPattern.removeIntervalItem | > milliseconds:" + milliseconds, Log.FINEST);
 		/* clear times cache */
 		this.times.clear();
 
@@ -381,7 +387,7 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern {
 //									Log.FINEST);
 							} else {
 								this.intervalsAbstractTemporalPatternMap.remove(long1);
-								this.intervalsDuration.put(ms, Identifier.VOID_IDENTIFIER);
+								this.intervalsAbstractTemporalPatternMap.put(ms, Identifier.VOID_IDENTIFIER);
 							}
 						}
 
@@ -517,6 +523,38 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern {
 	public void setIntervalsAbstractTemporalPatternMap(SortedMap intervalsAbstractTemporalPatternMap) {
 		this.setIntervalsAbstractTemporalPatternMap0(intervalsAbstractTemporalPatternMap);
 		this.changed = true;
+	}
+
+	/**
+	 * @param offsets
+	 * @param offset
+	 */
+	public void moveIntervalItems(	java.util.Set offsets,
+									long offset) {
+		if (super.times != null) {
+			super.times.clear();
+		}
+		long minOffset = 0;
+		for (Iterator it = offsets.iterator(); it.hasNext();) {
+			Long ms = (Long) it.next();
+			long ms1 = ms.longValue();
+			this.removeIntervalItem(ms1);
+			this.intervalsAbstractTemporalPatternMap.put(new Long(ms1 + offset), Identifier.VOID_IDENTIFIER);
+			if (ms1 + offset < minOffset) {
+				minOffset = ms1 + offset;
+			}
+		}
+		
+		if (minOffset < 0) {
+			Map map = new HashMap();
+			for (Iterator it = this.intervalsAbstractTemporalPatternMap.keySet().iterator(); it.hasNext();) {
+				Long ms = (Long) it.next();
+				map.put(new Long(ms.longValue() - minOffset), this.intervalsAbstractTemporalPatternMap.get(ms));
+			}
+			this.intervalsAbstractTemporalPatternMap.clear();
+			this.intervalsAbstractTemporalPatternMap.putAll(map);
+		}
+		
 	}
 	
 
