@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.75 2005/04/27 13:20:46 bass Exp $
+ * $Id: StorableObjectPool.java,v 1.76 2005/04/27 13:47:28 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,8 +25,8 @@ import java.util.Set;
 import org.omg.CORBA.portable.IDLEntity;
 
 /**
- * @version $Revision: 1.75 $, $Date: 2005/04/27 13:20:46 $
- * @author $Author: bass $
+ * @version $Revision: 1.76 $, $Date: 2005/04/27 13:47:28 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public abstract class StorableObjectPool {
@@ -748,20 +748,6 @@ public abstract class StorableObjectPool {
 	protected abstract Set loadStorableObjectsButIds(final StorableObjectCondition condition, final Set ids)
 			throws ApplicationException;
 
-	protected final void populatePools() {
-		try {
-			for (Iterator it = this.objectPoolMap.keySet().iterator(); it.hasNext();) {
-				Short objectEntityCode = (Short) it.next();
-				Set keys = LRUMapSaver.load(ObjectEntities.codeToString(objectEntityCode));
-				if (keys != null)
-					this.getStorableObjectsImpl(keys, true);
-			}
-		} catch (ApplicationException ae) {
-			Log.errorException(ae);
-			Log.errorMessage(this.selfGroupName + "StorableObjectPool.populatePools | Error: " + ae.getMessage()); //$NON-NLS-1$
-		}
-	}
-
 	/**
 	 * @param storableObject
 	 *            a non-null pure java storable object.
@@ -871,6 +857,21 @@ public abstract class StorableObjectPool {
 	protected abstract void saveStorableObjects(final Set storableObjects,
 			final boolean force)
 			throws ApplicationException;
+
+	protected final void deserializePoolImpl() {
+		try {
+			for (Iterator it = this.objectPoolMap.keySet().iterator(); it.hasNext();) {
+				Short objectEntityCode = (Short) it.next();
+				Set keys = LRUMapSaver.load(ObjectEntities.codeToString(objectEntityCode));
+				if (keys != null)
+					this.getStorableObjectsImpl(keys, true);
+			}
+		}
+		catch (ApplicationException ae) {
+			Log.errorException(ae);
+			Log.errorMessage(this.selfGroupName + "StorableObjectPool.deserializePoolImpl | Error: " + ae.getMessage()); //$NON-NLS-1$
+		}
+	}
 
 	protected final void serializePoolImpl() {
 		final Set entityCodeSet = this.objectPoolMap.keySet();
