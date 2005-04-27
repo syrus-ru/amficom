@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseSchemeObjectLoader.java,v 1.1 2005/04/27 13:43:36 arseniy Exp $
+ * $Id: DatabaseSchemeObjectLoader.java,v 1.2 2005/04/27 15:39:00 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import java.util.Set;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.1 $, $Date: 2005/04/27 13:43:36 $
- * @module scheme_v1
+ * @version $Revision: 1.2 $, $Date: 2005/04/27 15:39:00 $
+ * @module csbridge_v1
  */
 public class DatabaseSchemeObjectLoader extends DatabaseObjectLoader implements SchemeObjectLoader {
 	/**

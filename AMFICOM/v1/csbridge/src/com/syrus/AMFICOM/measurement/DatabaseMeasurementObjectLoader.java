@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseMeasurementObjectLoader.java,v 1.1 2005/04/27 13:42:22 arseniy Exp $
+ * $Id: DatabaseMeasurementObjectLoader.java,v 1.2 2005/04/27 15:39:00 arseniy Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Научно-технический центр.
@@ -24,9 +24,9 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/27 13:42:22 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/27 15:39:00 $
  * @author $Author: arseniy $
- * @module measurement_v1
+ * @module csbridge_v1
  */
 
 public class DatabaseMeasurementObjectLoader extends DatabaseObjectLoader implements MeasurementObjectLoader {

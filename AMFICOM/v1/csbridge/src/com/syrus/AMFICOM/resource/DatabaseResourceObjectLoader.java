@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseResourceObjectLoader.java,v 1.1 2005/04/27 13:43:36 arseniy Exp $
+ * $Id: DatabaseResourceObjectLoader.java,v 1.2 2005/04/27 15:39:00 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,9 +25,9 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceDataPackage.ImageResourceSort;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/27 13:43:36 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/27 15:39:00 $
  * @author $Author: arseniy $
- * @module resource_v1
+ * @module csbridge_v1
  */
 public class DatabaseResourceObjectLoader extends DatabaseObjectLoader implements ResourceObjectLoader {
 

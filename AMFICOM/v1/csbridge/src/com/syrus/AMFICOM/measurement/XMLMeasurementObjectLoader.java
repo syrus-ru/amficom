@@ -1,5 +1,5 @@
 /*
- * $Id: XMLMeasurementObjectLoader.java,v 1.1 2005/04/27 13:42:22 arseniy Exp $
+ * $Id: XMLMeasurementObjectLoader.java,v 1.2 2005/04/27 15:39:00 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,9 +23,9 @@ import com.syrus.AMFICOM.general.StorableObjectXMLDriver;
 import com.syrus.AMFICOM.general.XMLObjectLoader;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/27 13:42:22 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/27 15:39:00 $
  * @author $Author: arseniy $
- * @module measurement_v1
+ * @module csbridge_v1
  */
 public class XMLMeasurementObjectLoader extends XMLObjectLoader implements MeasurementObjectLoader {
 

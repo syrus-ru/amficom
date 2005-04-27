@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseEventObjectLoader.java,v 1.1 2005/04/27 13:43:35 arseniy Exp $
+ * $Id: DatabaseEventObjectLoader.java,v 1.2 2005/04/27 15:39:00 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,9 +23,9 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/27 13:43:35 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/27 15:39:00 $
  * @author $Author: arseniy $
- * @module event_v1
+ * @module csbridge_v1
  */
 public class DatabaseEventObjectLoader extends DatabaseObjectLoader implements EventObjectLoader {
 
