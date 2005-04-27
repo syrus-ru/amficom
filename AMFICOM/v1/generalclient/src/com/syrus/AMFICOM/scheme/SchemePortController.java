@@ -34,7 +34,6 @@ public final class SchemePortController extends ObjectResourceController
 				COLUMN_SCHEME_LINK_ID,
 				COLUMN_DIRECTION,
 				COLUMN_MEASUREMENT_PORT_ID,
-				COLUMN_MEASUREMENT_PORT_TYPE_ID,
 				COLUMN_PORT_ID,
 				COLUMN_PORT_TYPE_ID,
 				COLUMN_SCHEME_DEVICE_ID,

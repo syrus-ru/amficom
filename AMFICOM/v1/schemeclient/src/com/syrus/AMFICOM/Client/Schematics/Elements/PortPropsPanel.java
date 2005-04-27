@@ -13,6 +13,7 @@ import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
 import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.configuration.corba.PortSeq_TransferableHelper;
 import com.syrus.AMFICOM.configuration.corba.PortTypeSort;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.scheme.SchemePort;
@@ -246,11 +247,12 @@ public class PortPropsPanel extends JPanel
 				typeComboBox_stateChanged();
 			}
 
-			boolean b = ports[0].getMeasurementPortType() != null;
-			for (int i = 0; i < ports.length; i++)
-			{
-				if (ports[i].getMeasurementPortType() != null != b)
-				{
+			final MeasurementPort measurementPort = ports[0].getMeasurementPort();
+			final boolean b = measurementPort != null && measurementPort.getType() != null;
+			for (int i = 0; i < ports.length; i++) {
+				final MeasurementPort measurementPort2 = ports[i].getMeasurementPort();
+				final boolean b2 = measurementPort2 != null && measurementPort2.getType() != null;
+				if (b != b2) {
 					isAccessCheckBox.setEnabled(false);
 					accessTypeComboBox.setEnabled(false);
 					return;
@@ -307,8 +309,9 @@ public class PortPropsPanel extends JPanel
 			for (int i = 0; i < ports.length; i++)
 			{
 				//System.out.println("setting for " + ports[i].getId() + " access true");
-				ports[i].setMeasurementPortType(
-								((MeasurementPortType)accessTypeComboBox.getSelectedItem()));
+				final MeasurementPort measurementPort = ports[i].getMeasurementPort();
+				if (measurementPort != null)
+					measurementPort.setType((MeasurementPortType) accessTypeComboBox.getSelectedItem());
 			}
 		}
 	}

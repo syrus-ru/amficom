@@ -5,6 +5,7 @@ import java.util.*;
 import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
@@ -339,8 +340,8 @@ public class PathBuilder
 			for (Iterator it = se.getSchemePorts().iterator(); it.hasNext();)
 			{
 				SchemePort p = (SchemePort)it.next();
-				if (p.getMeasurementPortType() != null)
-				{
+				final MeasurementPort measurementPort = p.getMeasurementPort();
+				if (measurementPort != null && measurementPort.getType() != null) {
 					port = p;
 					accessPorts++;
 				}
