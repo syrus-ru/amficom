@@ -1,4 +1,4 @@
--- $Id: schemeport.sql,v 1.3 2005/02/21 08:30:18 bass Exp $
+-- $Id: schemeport.sql,v 1.4 2005/04/27 10:10:10 bass Exp $
 
 CREATE TABLE "SchemePort" (
 	id VARCHAR2(32 CHAR) NOT NULL,
@@ -15,7 +15,6 @@ CREATE TABLE "SchemePort" (
 	direction_type NUMBER(1) NOT NULL,
 	port_type_id VARCHAR2(32 CHAR),
 	port_id VARCHAR2(32 CHAR),
-	measurement_port_type_id VARCHAR2(32 CHAR),
 	measurement_port_id VARCHAR2(32 CHAR),
 	parent_device_id VARCHAR2(32 CHAR) NOT NULL,
 --
@@ -30,8 +29,6 @@ CREATE TABLE "SchemePort" (
 		REFERENCES PortType(id) ON DELETE CASCADE,
 	CONSTRAINT schemeport_port_fk FOREIGN KEY(port_id)
 		REFERENCES Port(id) ON DELETE CASCADE,
-	CONSTRAINT schemeport_msrmnt_port_type_fk FOREIGN KEY(measurement_port_type_id)
-		REFERENCES MeasurementPortType(id) ON DELETE CASCADE,
 	CONSTRAINT schemeport_msrmnt_port_fk FOREIGN KEY(measurement_port_id)
 		REFERENCES MeasurementPort(id) ON DELETE CASCADE,
 	CONSTRAINT schemeport_prnt_schemdev_fk FOREIGN KEY(parent_device_id)
@@ -43,16 +40,9 @@ CREATE TABLE "SchemePort" (
 		((port_type_id IS NULL
 		AND port_id IS NOT NULL)
 		OR (port_type_id IS NOT NULL
-		AND port_id IS NULL)),
-	-- Boolean XOR: only one of measurement_port_type_id and
-	-- measurement_port_id may be defined, and only one may be null.
-	CONSTRAINT schemeport_msrmnt_port_chk CHECK
-		((measurement_port_type_id IS NULL
-		AND measurement_port_id IS NOT NULL)
-		OR (measurement_port_type_id IS NOT NULL
-		AND measurement_port_id IS NULL))
+		AND port_id IS NULL))
 );
 
-COMMENT ON TABLE "SchemePort" IS '$Id: schemeport.sql,v 1.3 2005/02/21 08:30:18 bass Exp $';
+COMMENT ON TABLE "SchemePort" IS '$Id: schemeport.sql,v 1.4 2005/04/27 10:10:10 bass Exp $';
 
 CREATE SEQUENCE "SchemePort_Seq" ORDER;
