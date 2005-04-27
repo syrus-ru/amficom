@@ -1,5 +1,5 @@
 /*
- * $Id: ServerWrapper.java,v 1.5 2005/04/11 11:48:27 bob Exp $
+ * $Id: ServerWrapper.java,v 1.6 2005/04/27 17:47:58 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/04/11 11:48:27 $
- * @author $Author: bob $
+ * @version $Revision: 1.6 $, $Date: 2005/04/27 17:47:58 $
+ * @author $Author: arseniy $
  * @module admin_v1
  */
 public class ServerWrapper extends StorableObjectWrapper {
@@ -27,8 +27,6 @@ public class ServerWrapper extends StorableObjectWrapper {
 	// name VARCHAR2(64) NOT NULL,
 	// hostname VARCHAR2(64) NOT NULL,
 	public static final String		COLUMN_HOSTNAME			= "hostname";
-	// user_id VARCHAR2(32) NOT NULL,
-	public static final String		COLUMN_USER_ID			= "user_id";
 
 	private static ServerWrapper	instance;
 
@@ -37,7 +35,7 @@ public class ServerWrapper extends StorableObjectWrapper {
 	private ServerWrapper() {
 		// empty private constructor
 		String[] keysArray = new String[] { COLUMN_NAME, COLUMN_DESCRIPTION, DomainMember.COLUMN_DOMAIN_ID,
-				COLUMN_HOSTNAME, COLUMN_USER_ID, COLUMN_CHARACTERISTICS};
+				COLUMN_HOSTNAME, COLUMN_CHARACTERISTICS};
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
@@ -68,8 +66,6 @@ public class ServerWrapper extends StorableObjectWrapper {
 				return server.getDomainId();
 			if (key.equals(COLUMN_HOSTNAME))
 				return server.getHostName();
-			if (key.equals(COLUMN_USER_ID))
-				return server.getUserId();
 			if (key.equals(COLUMN_CHARACTERISTICS))
 				return server.getCharacteristics();
 		}
@@ -91,8 +87,6 @@ public class ServerWrapper extends StorableObjectWrapper {
 				server.setDomainId((Identifier) value);
 			else if (key.equals(COLUMN_HOSTNAME))
 				server.setHostName((String) value);
-			else if (key.equals(COLUMN_USER_ID))
-				server.setUserId((Identifier) value);
 			else if (key.equals(COLUMN_CHARACTERISTICS))
 				server.setCharacteristics((Set) value);
 		}
