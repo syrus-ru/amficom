@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:include schemaLocation="PhysicalLinkType.xsd"/>
+
+  <xsd:element name="physicallinks" type="PhysicalLinks"/>
+
+  <xsd:complexType name="PhysicalLinks">
+    <xsd:sequence>
+      <xsd:element name="physicallink" type="PhysicalLink" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="PhysicalLink">
+    <xsd:all>
+      <xsd:element name="uid" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="name" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="description" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="type" type="PhysicalLinkType" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="startnodeuid" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="endnodeuid" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="city" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="street" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="building" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="characteristics" type="Characteristics" minOccurs="0" maxOccurs="1"/>
+    </xsd:all>
+  </xsd:complexType>
+
+</xsd:schema>

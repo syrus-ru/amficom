@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:include schemaLocation="Characteristic.xsd"/>
+
+  <xsd:element name="physicallinktypes" type="PhysicalLinkTypes"/>
+
+  <xsd:complexType name="PhysicalLinkTypes">
+    <xsd:sequence>
+      <xsd:element name="physicallinktype" type="PhysicalLinkType" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="PhysicalLinkType">
+    <xsd:sequence>
+      <xsd:element name="name" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="description" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="sort" type="PhysicalLinkTypeSort" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="dimension_x" type="xsd:integer" minOccurs="0" maxOccurs="1" fixed="1"/>
+      <xsd:element name="dimension_y" type="xsd:integer" minOccurs="0" maxOccurs="1" fixed="1"/>
+      <xsd:element name="characteristics" type="Characteristics" minOccurs="0" maxOccurs="1"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:simpleType name="PhysicalLinkTypeSort">
+      <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="tunnel"/>
+            <xsd:enumeration value="collector"/>
+            <xsd:enumeration value="indoor"/>
+            <xsd:enumeration value="submarine"/>
+            <xsd:enumeration value="overhead"/>
+      </xsd:restriction>
+  </xsd:simpleType>
+
+</xsd:schema>
