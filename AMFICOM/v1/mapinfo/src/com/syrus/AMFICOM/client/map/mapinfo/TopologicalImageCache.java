@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalImageCache.java,v 1.9.2.3 2005/04/26 14:33:02 peskovsky Exp $
+ * $Id: TopologicalImageCache.java,v 1.9.2.4 2005/04/27 15:03:27 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 
 /**
  * @author $Author: peskovsky $
- * @version $Revision: 1.9.2.3 $, $Date: 2005/04/26 14:33:02 $
+ * @version $Revision: 1.9.2.4 $, $Date: 2005/04/27 15:03:27 $
  * @module mapinfo_v1
  */
 public class TopologicalImageCache
@@ -228,19 +228,19 @@ public class TopologicalImageCache
 			for (ListIterator it = this.imagesToPaint.listIterator(); it.hasNext();)
 			{
 				TopologicalRequest request = (TopologicalRequest)it.next();
-				if (request.priority != TopologicalRequest.PRIORITY_ALREADY_LOADED)
+				if (request.getPriority() != TopologicalRequest.PRIORITY_ALREADY_LOADED)
 					continue;
 
 				System.out.println(this.miLayer.sdFormat.format(new Date(System.currentTimeMillis())) +
 						" TIC - getImage - painting request: " + request);
 
 				this.visibleImage.getGraphics().drawImage(
-						request.image.getImage(),
-						request.start.x - 1,
-						request.start.y - 1,
+						request.getImage().getImage(),
+						0,
+						0,
 						this.miLayer.getMapViewer().getVisualComponent());
 
-				request.lastUsed = System.currentTimeMillis();
+				request.setLastUsed(System.currentTimeMillis());
 				
 				System.out.println(this.miLayer.sdFormat.format(new Date(System.currentTimeMillis())) +
 					" TIC - getImage - request image painted");
@@ -314,7 +314,7 @@ public class TopologicalImageCache
 				for (Iterator it = this.cacheOfImages.iterator(); it.hasNext();)
 				{
 					TopologicalRequest curRequest = (TopologicalRequest)it.next();
-					if (this.miLayer.convertMapToScreen(curRequest.topoCenter,imageCenter) < 10)					
+					if (this.miLayer.convertMapToScreen(curRequest.getTopoCenter(),imageCenter) < 10)					
 					{
 						requestForCenter = curRequest;
 						break;
@@ -340,7 +340,10 @@ public class TopologicalImageCache
 				
 				if (requestForCenter != null)
 				{
-					if (requestForCenter.priority > requestCurPriority)
+					if (	(requestForCenter.getPriority() != TopologicalRequest.PRIORITY_ALREADY_LOADED)
+							&&(requestForCenter.getPriority() != requestCurPriority))
+						//Если текущий приоритет запроса ниже предлагаемого (в принятой
+						//численной системе приоритетов - больше)
 						this.loadingThread.changeRequestPriority(requestForCenter,requestCurPriority);
 				}
 				else
@@ -357,7 +360,7 @@ public class TopologicalImageCache
 					this.loadingThread.addRequest(requestForCenter);
 				}
 				
-				if (this.miLayer.convertMapToScreen(requestForCenter.topoCenter,this.miLayer.getCenter()) < 10)
+				if (this.miLayer.convertMapToScreen(requestForCenter.getTopoCenter(),this.miLayer.getCenter()) < 10)
 					//Кладём сегмент в очередь на отрисовку
 					this.imagesToPaint.add(requestForCenter);
 			}
@@ -402,8 +405,8 @@ public class TopologicalImageCache
 		for (Iterator it = this.cacheOfImages.iterator(); it.hasNext();)
 		{
 			TopologicalRequest curRequest = (TopologicalRequest)it.next();
-			if (	(!currCacheBorders.contains(curRequest.topoCenter.getX(),curRequest.topoCenter.getY()))
-					&&(curRequest.priority != TopologicalRequest.PRIORITY_ALREADY_LOADED))					
+			if (	(!currCacheBorders.contains(curRequest.getTopoCenter().getX(),curRequest.getTopoCenter().getY()))
+					&&(curRequest.getPriority() != TopologicalRequest.PRIORITY_ALREADY_LOADED))					
 			{
 				//Удаляем сегмент - не имеет смысла его подгружает
 				System.out.println(this.miLayer.sdFormat.format(new Date(System.currentTimeMillis())) +
@@ -417,7 +420,7 @@ public class TopologicalImageCache
 	
 	/**
 	 * Возвращает дискретные смещения относительно предыдущего центра
-	 * @return
+	 * @return смещения
 	 */
 	private Dimension getDiscreteShifts()
 	{
@@ -481,7 +484,7 @@ public class TopologicalImageCache
 		for (Iterator it = this.cacheOfImages.iterator(); it.hasNext();)
 		{
 			TopologicalRequest curRequest = (TopologicalRequest)it.next();
-			if (TopologicalImageCache.compare(curRequest.topoScale,this.miLayer.getScale()))
+			if (TopologicalImageCache.compare(curRequest.getTopoScale(),this.miLayer.getScale()))
 			{
 				//Кладём сегмент в очередь на отрисовку
 				this.imagesToPaint.add(curRequest);
@@ -506,7 +509,7 @@ public class TopologicalImageCache
 		for (Iterator it = this.cacheOfImages.iterator(); it.hasNext();)
 		{
 			TopologicalRequest curRequest = (TopologicalRequest)it.next();
-			if (TopologicalImageCache.compare(curRequest.topoScale,scaleToCheck))
+			if (TopologicalImageCache.compare(curRequest.getTopoScale(),scaleToCheck))
 				//Есть такое, не надо подгружать
 				return;
 		}
@@ -585,16 +588,12 @@ public class TopologicalImageCache
 			int asPriority)
 	{
 		TopologicalRequest result = new TopologicalRequest();
-		result.lastUsed = System.currentTimeMillis();
+		result.setLastUsed(System.currentTimeMillis());
 		
-		result.priority = asPriority;
-		result.isUsedForCurrentImage = false;
+		result.setPriority(asPriority);
 
-		result.topoScale = asScale;
-		result.topoCenter = asCenter;
-		
-		result.size = new Dimension(this.imageSize.width + 2,this.imageSize.height + 2);
-		result.start = new Point(0,0);
+		result.setTopoScale(asScale);
+		result.setTopoCenter(asCenter);
 		
 		return result;
 	}
@@ -638,13 +637,12 @@ class LoadingThread extends Thread
 		{
 			//Получаем первый в очереди запрос
 			TopologicalRequest request = null;
-			synchronized (this.requestQueue)
+
+			Iterator rqIt = this.requestQueue.iterator();
+			if (rqIt.hasNext())
 			{
-				if (!this.requestQueue.isEmpty())
-				{
-					request = (TopologicalRequest)this.requestQueue.get(0);
-					this.requestQueue.remove(request);
-				}
+				request = (TopologicalRequest)rqIt.next();
+				rqIt.remove();
 			}
 			
 			if (request == null)
@@ -661,6 +659,8 @@ class LoadingThread extends Thread
 				}
 			}
 			
+			request.setCurrentlyProcessed(true);
+			
 			System.out.println(this.miLayer.sdFormat.format(new Date(System.currentTimeMillis())) +
 				" TIC - loadingThread - run - loading request: " + request);
 			
@@ -672,17 +672,20 @@ class LoadingThread extends Thread
 				requestString += this.createRenderCommandString(request);
 
 				//Получили изображение
-				request.image = this.getServerMapImage(requestString);
-				request.priority = TopologicalRequest.PRIORITY_ALREADY_LOADED;
+				ImageIcon imageForRequest = this.getServerMapImage(requestString);
+				request.setImage(imageForRequest);
+				request.setPriority(TopologicalRequest.PRIORITY_ALREADY_LOADED);
 
 				System.out.println(this.miLayer.sdFormat.format(new Date(System.currentTimeMillis())) +
-					" TIC - loadingThread - run - request image loaded");
+					" TIC - loadingThread - run - image loaded for request (" + request + ")");
 				
 			} catch (MapDataException e)
 			{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+
+			request.setCurrentlyProcessed(false);			
 		}
 	}
 	
@@ -693,30 +696,35 @@ class LoadingThread extends Thread
 	
 	/**
 	 * Добавляет запрос в очередь, сортируя при этом запросы по приоритету
-	 * @param request Запрос
+	 * @param requestToAdd Запрос
 	 */
-	public void addRequest(TopologicalRequest request)
+	public void addRequest(TopologicalRequest requestToAdd)
 	{
+		System.out.println(this.miLayer.sdFormat.format(new Date(System.currentTimeMillis())) +
+				" TIC - loadingThread - addRequest - adding request (" + requestToAdd + ")");
+		
 		//Ищем первый запрос с приоритетом ниже, чем у нового запроса
-		//К сожалению нельзя воспользоваться итератором
-		for (int i = 0; i < this.requestQueue.size(); i++)
+		ListIterator lIt = this.requestQueue.listIterator();
+		for (;lIt.hasNext();)
 		{
 			TopologicalRequest curRequest = 
-				(TopologicalRequest) this.requestQueue.get(i);
-			if (request.priority < curRequest.priority)
+				(TopologicalRequest) lIt.next();
+			if (requestToAdd.getPriority() < curRequest.getPriority())
 			{
-				//Нашли
-				this.requestQueue.add(i,request);
+				lIt.previous();
+				lIt.add(requestToAdd);
 				return;
 			}
 		}
+
 		//Не нашли
-		this.requestQueue.add(request);			
+		lIt.add(requestToAdd);			
 	}
 
 	public void removeRequest(TopologicalRequest request)
 	{
-		this.requestQueue.remove(request);			
+		if (!request.isCurrentlyProcessed())
+			this.requestQueue.remove(request);			
 	}
 	
 	/**
@@ -726,14 +734,23 @@ class LoadingThread extends Thread
 	 */
 	public void changeRequestPriority(TopologicalRequest request, int newPriority)
 	{
-		//Удаляем запрос из очереди
-		this.requestQueue.remove(request);
-		
+		System.out.println(this.miLayer.sdFormat.format(new Date(System.currentTimeMillis())) +
+			" TIC - loadingThread - changeRequestPriority - changing request's (" + request +
+			") priority for " + newPriority);
+
+		if (request.isCurrentlyProcessed())
+			return;
+			
 		//Задаём ему новый приоритет
-		request.priority = newPriority;
+		request.setPriority(newPriority);
 		
-		//Снова ставим запрос в очередь
-		this.addRequest(request);
+		//Удаляем запрос из очереди
+		if (this.requestQueue.remove(request))
+		{
+			//Если запрос содержался в очереди
+			//Снова ставим запрос в очередь
+			this.addRequest(request);
+		}
 	}
 
 	public void clearQueue()
@@ -824,11 +841,13 @@ class LoadingThread extends Thread
 		result += "?" + ServletCommandNames.COMMAND_NAME + "="
 		+ ServletCommandNames.CN_RENDER_IMAGE;
 		
-		result += "&" + ServletCommandNames.PAR_WIDTH + "="	+ request.size.width;
-		result += "&" + ServletCommandNames.PAR_HEIGHT + "=" + request.size.height;
-		result += "&" + ServletCommandNames.PAR_CENTER_X + "=" + request.topoCenter.getX();
-		result += "&" + ServletCommandNames.PAR_CENTER_Y + "=" + request.topoCenter.getY();
-		result += "&" + ServletCommandNames.PAR_ZOOM_FACTOR + "=" + request.topoScale;
+		Dimension size = this.miLayer.getMapViewer().getVisualComponent().getSize();
+		
+		result += "&" + ServletCommandNames.PAR_WIDTH + "="	+ size.width;
+		result += "&" + ServletCommandNames.PAR_HEIGHT + "=" + size.height;
+		result += "&" + ServletCommandNames.PAR_CENTER_X + "=" + request.getTopoCenter().getX();
+		result += "&" + ServletCommandNames.PAR_CENTER_Y + "=" + request.getTopoCenter().getY();
+		result += "&" + ServletCommandNames.PAR_ZOOM_FACTOR + "=" + request.getTopoScale();
 
 		int index = 0;
 		
@@ -859,17 +878,11 @@ class LoadingThread extends Thread
 /**
  * Структура запроса изображения с сервера
  * @author $Author: peskovsky $
- * @version $Revision: 1.9.2.3 $, $Date: 2005/04/26 14:33:02 $
+ * @version $Revision: 1.9.2.4 $, $Date: 2005/04/27 15:03:27 $
  * @module mapinfo_v1
  */
 class TopologicalRequest implements Comparable
 {
-	/**
-	 * Равен true для участков изображения, уже включёных в какой-либо запрос
-	 * для текущего изображения - их будут отрисовывать
-	 */
-	public boolean isUsedForCurrentImage = false;
-	
 	/**
 	 * Для участков изображения, добавляемых в кэш "на всякий случай",
 	 * до запроса пользователя и перерисовываемых в фоновом режиме
@@ -891,45 +904,38 @@ class TopologicalRequest implements Comparable
 	 * только перерисовать
 	 */
 	public static final int PRIORITY_ALREADY_LOADED = 0;
+	
 	/**
 	 * Приоритет запроса
 	 */
-	protected int priority = TopologicalRequest.PRIORITY_BACKGROUND;
+	private int priority = TopologicalRequest.PRIORITY_BACKGROUND;
+	
+	/**
+	 * 
+	 */
+	private boolean isCurrentlyProcessed = false;
+	
 	/**
 	 * Отображаемое изображение
 	 */
-	protected ImageIcon image = null;
-	/**
-	 * Габариты изображения в пикселях
-	 */
-	protected Dimension size = null;
+	private ImageIcon image = null;
 	/**
 	 * Масштаб избражения (для текущей ширины изображения!)
 	 */
-	protected double topoScale = 1.f;
+	private double topoScale = 1.f;
 	/**
 	 * Сферические координаты границы избражения
 	 */
-	protected DoublePoint topoCenter = null;
-	/**
-	 * Сферические координаты границ избражения
-	 */
-	protected Rectangle2D.Double topoBounds = null;
-	/**
-	 * Экранные координаты в пикселях для левого-верхнего угла участка на кэш-изображении
-	 */
-	protected Point start = null;
+	private DoublePoint topoCenter = null;
 	/**
 	 * Время последнего использования
 	 */
-	protected long lastUsed = 0;
+	private long lastUsed = 0;
 	
 	public String toString()
 	{
 		String resultString = 
 			"priority (" + this.priority + "), " +
-			"screen start (" + this.start.x + ":" + this.start.y + "), " + 
-			"screen width/height (" + this.size.width + ":" + this.size.height + "), " +
 			"topo scale (" + this.topoScale + "), " +
 			"topo center (" + this.topoCenter.getX() + ":" + this.topoCenter.getY() + ")";
 		
@@ -948,5 +954,89 @@ class TopologicalRequest implements Comparable
 			return 1;
 		
 		return 0;
+	}
+	/**
+	 * @return Returns the image.
+	 */
+	public synchronized ImageIcon getImage()
+	{
+		return this.image;
+	}
+	/**
+	 * @param image The image to set.
+	 */
+	public synchronized void setImage(ImageIcon image)
+	{
+		this.image = image;
+	}
+	/**
+	 * @return Returns the lastUsed.
+	 */
+	public synchronized long getLastUsed()
+	{
+		return this.lastUsed;
+	}
+	/**
+	 * @param lastUsed The lastUsed to set.
+	 */
+	public synchronized void setLastUsed(long lastUsed)
+	{
+		this.lastUsed = lastUsed;
+	}
+	/**
+	 * @return Returns the priority.
+	 */
+	public synchronized int getPriority()
+	{
+		return this.priority;
+	}
+	/**
+	 * @param priority The priority to set.
+	 */
+	public synchronized void setPriority(int priority)
+	{
+		this.priority = priority;
+	}
+	/**
+	 * @return Returns the topoCenter.
+	 */
+	public synchronized DoublePoint getTopoCenter()
+	{
+		return this.topoCenter;
+	}
+	/**
+	 * @param topoCenter The topoCenter to set.
+	 */
+	public synchronized void setTopoCenter(DoublePoint topoCenter)
+	{
+		this.topoCenter = topoCenter;
+	}
+	/**
+	 * @return Returns the topoScale.
+	 */
+	public synchronized double getTopoScale()
+	{
+		return this.topoScale;
+	}
+	/**
+	 * @param topoScale The topoScale to set.
+	 */
+	public synchronized void setTopoScale(double topoScale)
+	{
+		this.topoScale = topoScale;
+	}
+	/**
+	 * @return Returns the isCurrentlyProcessed.
+	 */
+	public synchronized boolean isCurrentlyProcessed()
+	{
+		return isCurrentlyProcessed;
+	}
+	/**
+	 * @param isCurrentlyProcessed The isCurrentlyProcessed to set.
+	 */
+	public void setCurrentlyProcessed(boolean isCurrentlyProcessed)
+	{
+		this.isCurrentlyProcessed = isCurrentlyProcessed;
 	}
 }
