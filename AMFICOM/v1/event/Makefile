@@ -19,7 +19,6 @@ APPCLASSPATH := $(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDI
 
 SOURCES := com/syrus/AMFICOM/event/EventDatabaseContext.java \
 	com/syrus/AMFICOM/event/EventObjectLoader.java \
-	com/syrus/AMFICOM/event/DatabaseEventObjectLoader.java \
 	com/syrus/AMFICOM/event/EventStorableObjectPool.java \
 	com/syrus/AMFICOM/event/EventType.java \
 	com/syrus/AMFICOM/event/EventTypeDatabase.java \
