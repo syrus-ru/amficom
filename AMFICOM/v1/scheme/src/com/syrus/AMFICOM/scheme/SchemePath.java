@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.20 2005/04/22 15:36:23 bass Exp $
+ * $Id: SchemePath.java,v 1.21 2005/04/27 10:40:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,7 +43,7 @@ import com.syrus.util.Log;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.20 $, $Date: 2005/04/22 15:36:23 $
+ * @version $Revision: 1.21 $, $Date: 2005/04/27 10:40:16 $
  * @module scheme_v1
  */
 public final class SchemePath extends AbstractCloneableStorableObject implements
@@ -55,10 +55,6 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	private String description;
 
 	private Identifier transmissionPathId;
-
-	private Identifier startSchemeElementId;
-
-	private Identifier endSchemeElementId;
 
 	private Identifier parentSchemeMonitoringSolutionId;
 
@@ -93,8 +89,6 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 * @param name
 	 * @param description
 	 * @param transmissionPath
-	 * @param startSchemeElement
-	 * @param endSchemeElement
 	 * @param parentSchemeMonitoringSolution
 	 */
 	SchemePath(final Identifier id, final Date created,
@@ -102,15 +96,11 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 			final Identifier modifierId, final long version,
 			final String name, final String description,
 			final TransmissionPath transmissionPath,
-			final SchemeElement startSchemeElement,
-			final SchemeElement endSchemeElement,
 			final SchemeMonitoringSolution parentSchemeMonitoringSolution) {
 		super(id, created, modified, creatorId, modifierId, version);
 		this.name = name;
 		this.description = description;
 		this.transmissionPathId = Identifier.possiblyVoid(transmissionPath);
-		this.startSchemeElementId = Identifier.possiblyVoid(startSchemeElement);
-		this.endSchemeElementId = Identifier.possiblyVoid(endSchemeElement);
 		this.parentSchemeMonitoringSolutionId = Identifier.possiblyVoid(parentSchemeMonitoringSolution);
 	}
 
@@ -126,8 +116,6 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	public static SchemePath createInstance(final Identifier creatorId,
 			final String name, final String description,
 			final TransmissionPath transmissionPath,
-			final SchemeElement startSchemeElement,
-			final SchemeElement endSchemeElement,
 			final SchemeMonitoringSolution parentSchemeMonitoringSolution)
 			throws CreateObjectException {
 		assert creatorId != null && !creatorId.isVoid(): ErrorMessages.NON_VOID_EXPECTED;
@@ -145,8 +133,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 							.getGeneratedIdentifier(ObjectEntities.SCHEME_PATH_ENTITY_CODE),
 					created, created, creatorId, creatorId,
 					0L, name, description,
-					transmissionPath, startSchemeElement,
-					endSchemeElement,
+					transmissionPath,
 					parentSchemeMonitoringSolution);
 			schemePath.changed = true;
 			return schemePath;
@@ -215,10 +202,6 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 		return this.description;
 	}
 
-	public SchemeElement getEndSchemeElement() {
-		throw new UnsupportedOperationException();
-	}
-
 	/**
 	 * @see com.syrus.AMFICOM.general.Namable#getName()
 	 */
@@ -251,10 +234,6 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 * Getter for a transient property <code>scheme</code>.
 	 */
 	public Scheme getScheme() {
-		throw new UnsupportedOperationException();
-	}
-
-	public SchemeElement getStartSchemeElement() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -303,8 +282,6 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 * @param name
 	 * @param description
 	 * @param transmissionPathId
-	 * @param startSchemeElementId
-	 * @param endSchemeElementId
 	 * @param parentSchemeMonitoringSolutionId
 	 */
 	synchronized void setAttributes(final Date created,
@@ -312,8 +289,6 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 			final Identifier modifierId, final long version,
 			final String name, final String description,
 			final Identifier transmissionPathId,
-			final Identifier startSchemeElementId,
-			final Identifier endSchemeElementId,
 			final Identifier parentSchemeMonitoringSolutionId) {
 		super.setAttributes(created, modified, creatorId, modifierId, version);
 		
@@ -323,15 +298,11 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 		 * @todo Add additional assertions.
 		 */
 		assert transmissionPathId != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert startSchemeElementId != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert endSchemeElementId != null: ErrorMessages.NON_NULL_EXPECTED;
 		assert parentSchemeMonitoringSolutionId != null: ErrorMessages.NON_NULL_EXPECTED;
 
 		this.name = name;
 		this.description = description;
 		this.transmissionPathId = transmissionPathId;
-		this.startSchemeElementId = startSchemeElementId;
-		this.endSchemeElementId = endSchemeElementId;
 		this.parentSchemeMonitoringSolutionId = parentSchemeMonitoringSolutionId;
 	}
 
@@ -369,10 +340,6 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 		this.changed = true;
 	}
 
-	public void setEndSchemeElement(final SchemeElement endSchemeElement) {
-		throw new UnsupportedOperationException();
-	}
-
 	/**
 	 * @see com.syrus.AMFICOM.general.Namable#setName(String)
 	 */
@@ -400,10 +367,6 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 		throw new UnsupportedOperationException();
 	}
 
-	public void setStartSchemeElement(final SchemeElement startSchemeElement) {
-		throw new UnsupportedOperationException();
-	}
-
 	/**
 	 * @param newPathImpl
 	 */
@@ -423,6 +386,30 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	/*-********************************************************************
 	 * Non-model members.                                                 *
 	 **********************************************************************/
+
+	/**
+	 * @return <code>SchemeElement</code> associated with the first
+	 *         <code>PathElement</code> in this <code>SchemePath</code>.
+	 */
+	public SchemeElement getStartSchemeElement() {
+		final SortedSet pathElements = this.getPathElements();
+		assert !pathElements.isEmpty(): ErrorMessages.NON_EMPTY_EXPECTED;
+		final PathElement startPathElement = (PathElement) pathElements.first();
+		assert startPathElement.getKind().value() == Kind._SCHEME_ELEMENT: ErrorMessages.OBJECT_STATE_ILLEGAL;
+		return startPathElement.getSchemeElement();
+	}
+
+	/**
+	 * @return <code>SchemeElement</code> associated with the last
+	 *         <code>PathElement</code> in this <code>SchemePath</code>.
+	 */
+	public SchemeElement getEndSchemeElement() {
+		final SortedSet pathElements = this.getPathElements();
+		assert !pathElements.isEmpty(): ErrorMessages.NON_EMPTY_EXPECTED;
+		final PathElement endPathElement = (PathElement) pathElements.last();
+		assert endPathElement.getKind().value() == Kind._SCHEME_ELEMENT: ErrorMessages.OBJECT_STATE_ILLEGAL;
+		return endPathElement.getSchemeElement();
+	}
 
 	/**
 	 * @param pathElement

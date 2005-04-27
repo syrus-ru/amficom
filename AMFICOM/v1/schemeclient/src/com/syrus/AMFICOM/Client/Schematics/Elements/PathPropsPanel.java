@@ -323,7 +323,6 @@ public class PathPropsPanel extends JPanel
 			{
 				startDevTextField.setText(se.getName());
 				startDevTextField.setCaretPosition(0);
-				path.setStartSchemeElement(se);
 			}
 			updatePathElements();
 			element_to_add = null;
@@ -349,7 +348,6 @@ public class PathPropsPanel extends JPanel
 			}
 			endDevTextField.setText(se.getName());
 			endDevTextField.setCaretPosition(0);
-			path.setEndSchemeElement(se);
 			element_to_add = null;
 		}
 	}

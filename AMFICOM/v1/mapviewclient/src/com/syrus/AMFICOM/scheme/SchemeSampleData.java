@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeSampleData.java,v 1.4 2005/04/26 16:29:48 krupenn Exp $
+ * $Id: SchemeSampleData.java,v 1.5 2005/04/27 10:40:16 bass Exp $
  *
  * Copyright њ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,8 +25,8 @@ import com.syrus.AMFICOM.scheme.corba.Scheme_TransferablePackage.Kind;
 /**
  * this class is used to create two sample instances
  * of Scheme whithout graphical components
- * @author $Author: krupenn $
- * @version $Revision: 1.4 $
+ * @author $Author: bass $
+ * @version $Revision: 1.5 $
  * @module generalclient_v1
  */
 public final class SchemeSampleData {
@@ -222,7 +222,7 @@ public final class SchemeSampleData {
 		clink.add(clink3);
 		clink.add(clink4);
 
-		SchemePath path0 = SchemePath.createInstance(userId, "ѕут€ра измерений", "", null, el0, el3, null);
+		SchemePath path0 = SchemePath.createInstance(userId, "ѕут€ра измерений", "", null, null);
 		path0.setScheme(scheme);
 
 		path.add(path0);
@@ -358,7 +358,7 @@ public final class SchemeSampleData {
 		SchemeCableThread clink0th = SchemeCableThread.createInstance(userId, "1", "", null, null, null, null, clink0);
 		clink0.setSchemeCableThreads(Collections.singleton(clink0th));
 
-		SchemePath path0 = SchemePath.createInstance(userId, "ѕут€ра измерений", "", null, el1, el0, null);
+		SchemePath path0 = SchemePath.createInstance(userId, "ѕут€ра измерений", "", null, null);
 		path0.setScheme(scheme);
 
 		PathElement pel0 = PathElement.createInstance(userId, path0, link0);

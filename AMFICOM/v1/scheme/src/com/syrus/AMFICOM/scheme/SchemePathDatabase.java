@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathDatabase.java,v 1.2 2005/04/22 16:21:44 max Exp $
+ * $Id: SchemePathDatabase.java,v 1.3 2005/04/27 10:40:16 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import java.util.Date;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: max $
- * @version $Revision: 1.2 $, $Date: 2005/04/22 16:21:44 $
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/04/27 10:40:16 $
  * @module scheme_v1
  */
 public final class SchemePathDatabase extends CharacterizableDatabase {
@@ -59,8 +59,6 @@ public final class SchemePathDatabase extends CharacterizableDatabase {
 		if (columns == null) {
 			columns = StorableObjectWrapper.COLUMN_NAME + COMMA
 					+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
-					+ SchemePathWrapper.COLUMN_START_SCHEME_ELEMENT_ID + COMMA
-					+ SchemePathWrapper.COLUMN_END_SCHEME_ELEMENT_ID + COMMA
 					+ SchemePathWrapper.COLUMN_PARENT_SCHEME_MONITORING_SOLUTION_ID + COMMA
 					+ SchemePathWrapper.COLUMN_TRANSMISSION_PATH_ID;
 		}
@@ -137,7 +135,7 @@ public final class SchemePathDatabase extends CharacterizableDatabase {
 		if (storableObject == null) {
 			Date created = new Date(); 
 			schemePath = new SchemePath(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
-					created, created, null, null, 0L, null, null, null, null, null, null);
+					created, created, null, null, 0L, null, null, null, null);
 		} else {
 			schemePath = fromStorableObject(storableObject);
 		}
@@ -148,8 +146,6 @@ public final class SchemePathDatabase extends CharacterizableDatabase {
 				resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
-				DatabaseIdentifier.getIdentifier(resultSet, SchemePathWrapper.COLUMN_START_SCHEME_ELEMENT_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, SchemePathWrapper.COLUMN_END_SCHEME_ELEMENT_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, SchemePathWrapper.COLUMN_PARENT_SCHEME_MONITORING_SOLUTION_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, SchemePathWrapper.COLUMN_TRANSMISSION_PATH_ID));
 		return schemePath;

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathWrapper.java,v 1.2 2005/04/25 08:18:33 max Exp $
+ * $Id: SchemePathWrapper.java,v 1.3 2005/04/27 10:40:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,16 +10,14 @@ package com.syrus.AMFICOM.scheme;
 import java.util.List;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/25 08:18:33 $
- * @author $Author: max $
+ * @version $Revision: 1.3 $, $Date: 2005/04/27 10:40:16 $
+ * @author $Author: bass $
  * @module scheme_v1
  */
 public class SchemePathWrapper {
 	
 	//TODO: create a table in the database
 	
-	public static final String COLUMN_START_SCHEME_ELEMENT_ID = "start_scheme_element_id";
-	public static final String COLUMN_END_SCHEME_ELEMENT_ID = "end_scheme_element_id";
 	//TODO: Wrong colunm name, too many characters
 	public static final String COLUMN_PARENT_SCHEME_MONITORING_SOLUTION_ID = "parent_scheme_monitoring_solution_id";
 	public static final String COLUMN_TRANSMISSION_PATH_ID = "transmission_path_id";
