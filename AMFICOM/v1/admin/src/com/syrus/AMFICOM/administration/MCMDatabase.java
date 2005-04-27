@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.24 2005/03/11 09:26:27 bob Exp $
+ * $Id: MCMDatabase.java,v 1.25 2005/04/27 17:50:14 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,16 +8,14 @@
 
 package com.syrus.AMFICOM.administration;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Collection;
-import java.util.HashSet;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.CharacterizableDatabase;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -25,13 +23,12 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.Log;
-import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/03/11 09:26:27 $
- * @author $Author: bob $
+ * @version $Revision: 1.25 $, $Date: 2005/04/27 17:50:14 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 
@@ -127,47 +124,53 @@ public class MCMDatabase extends CharacterizableDatabase {
 
 		return mcm;
 	}
-
-	public Collection retrieveKISIds(MCM mcm) throws RetrieveObjectException {
-		Collection kisIds = new HashSet();
-		String mcmIdStr = DatabaseIdentifier.toSQLString(mcm.getId());
-		String sql = SQL_SELECT 
-			+ StorableObjectWrapper.COLUMN_ID
-			+ SQL_FROM + ObjectEntities.KIS_ENTITY
-			+ SQL_WHERE + MCMWrapper.LINK_COLUMN_MCM_ID + EQUALS + mcmIdStr;
-		Statement statement = null;
-		ResultSet resultSet = null;
-		Connection connection = DatabaseConnection.getConnection();
-    try {
-			statement = connection.createStatement();
-			Log.debugMessage("MCMDatabase.retrieveKISIds | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql);
-			while (resultSet.next())
-				kisIds.add(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID));
-		}
-		catch (SQLException sqle) {
-			String mesg = "MCMDatabase.retrieveKISIds | Cannot retrieve kis ids for mcm " + mcmIdStr;
-			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-			finally {
-				DatabaseConnection.releaseConnection(connection);
-			}
-		}
-
-		return kisIds;
-	}
+//
+//	/**
+//	 * @deprecated
+//	 * @param mcm
+//	 * @return
+//	 * @throws RetrieveObjectException
+//	 */
+//	public Collection retrieveKISIds(MCM mcm) throws RetrieveObjectException {
+//		Collection kisIds = new HashSet();
+//		String mcmIdStr = DatabaseIdentifier.toSQLString(mcm.getId());
+//		String sql = SQL_SELECT 
+//			+ StorableObjectWrapper.COLUMN_ID
+//			+ SQL_FROM + ObjectEntities.KIS_ENTITY
+//			+ SQL_WHERE + MCMWrapper.LINK_COLUMN_MCM_ID + EQUALS + mcmIdStr;
+//		Statement statement = null;
+//		ResultSet resultSet = null;
+//		Connection connection = DatabaseConnection.getConnection();
+//    try {
+//			statement = connection.createStatement();
+//			Log.debugMessage("MCMDatabase.retrieveKISIds | Trying: " + sql, Log.DEBUGLEVEL09);
+//			resultSet = statement.executeQuery(sql);
+//			while (resultSet.next())
+//				kisIds.add(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID));
+//		}
+//		catch (SQLException sqle) {
+//			String mesg = "MCMDatabase.retrieveKISIds | Cannot retrieve kis ids for mcm " + mcmIdStr;
+//			throw new RetrieveObjectException(mesg, sqle);
+//		}
+//		finally {
+//			try {
+//				if (statement != null)
+//					statement.close();
+//				if (resultSet != null)
+//					resultSet.close();
+//				statement = null;
+//				resultSet = null;
+//			}
+//			catch (SQLException sqle1) {
+//				Log.errorException(sqle1);
+//			}
+//			finally {
+//				DatabaseConnection.releaseConnection(connection);
+//			}
+//		}
+//
+//		return kisIds;
+//	}
 
   public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg)
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
@@ -179,4 +182,10 @@ public class MCMDatabase extends CharacterizableDatabase {
 		}
 	}
 
+  public Set retrieveForServer(Identifier serverId) throws RetrieveObjectException, IllegalDataException {
+  	String serverIdStr = DatabaseIdentifier.toSQLString(serverId);
+		String condition = MCMWrapper.COLUMN_SERVER_ID + EQUALS + serverIdStr;
+
+		return this.retrieveByCondition(condition);
+  }
 }
