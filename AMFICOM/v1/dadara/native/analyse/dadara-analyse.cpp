@@ -73,6 +73,7 @@ Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_analyse4(
 		min_weld = min_level;
 	if (min_connector < min_weld)
 		min_connector = min_weld;
+	// @todo: verify that min_end >= min_connector
 
 	prf_b("analyse() - starting IA");
 
@@ -86,6 +87,7 @@ Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_analyse4(
 		min_level,
 		min_weld,
 		min_connector,
+		min_connector, // @todo: take this parameter from Java
 		noiseFactor,
 		reflectiveSize,
 		nonReflectiveSize,

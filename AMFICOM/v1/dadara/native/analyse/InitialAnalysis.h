@@ -30,6 +30,7 @@ public:
 		double minimalThreshold,
 		double minimalWeld,
 		double minimalConnector,
+		double minimalEnd,
 		double noiseFactor,
 		int reflectiveSize,
 		int nonReflectiveSize,

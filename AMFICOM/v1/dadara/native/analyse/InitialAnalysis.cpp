@@ -22,6 +22,7 @@ InitialAnalysis::InitialAnalysis(
 	double minimalThreshold,	//минимальный уровень события
 	double minimalWeld,			//минимальный уровень неотражательного события
 	double minimalConnector,	//минимальный уровень отражательного события
+	double minimalEnd,			//минимальный уровень отражения в конце волокна
 	double noiseFactor,			// множитель для уровня шума (около 2.0)
 	int reflectiveSize,			//характерная длина отражательного события
 	int nonReflectiveSize,		//характерная длина неотражательного события
