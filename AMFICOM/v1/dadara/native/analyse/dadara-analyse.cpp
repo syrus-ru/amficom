@@ -26,11 +26,11 @@
 
 /*
  * Class:     com_syrus_AMFICOM_analysis_CoreAnalysisManager
- * Method:    analyse4
- * Signature: ([DDDDDDIII[D)[Lcom/syrus/AMFICOM/analysis/dadara/ReliabilitySimpleReflectogramEventImpl;
+ * Method:    analyse5
+ * Signature: ([DDDDDDDIII[D)[Lcom/syrus/AMFICOM/analysis/dadara/ReliabilitySimpleReflectogramEventImpl;
  */
 JNIEXPORT jobjectArray JNICALL
-Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_analyse4(
+Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_analyse5(
 	JNIEnv* env,
 	jclass obj,
 	jdoubleArray y,
@@ -38,6 +38,7 @@ Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_analyse4(
 	jdouble min_level,
 	jdouble min_weld,
 	jdouble min_connector,
+	jdouble min_end,
 	jdouble noiseFactor,
 	jint reflectiveSize,
 	jint nonReflectiveSize,
@@ -73,7 +74,8 @@ Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_analyse4(
 		min_weld = min_level;
 	if (min_connector < min_weld)
 		min_connector = min_weld;
-	// @todo: verify that min_end >= min_connector
+	if (min_end < min_connector)
+		min_end = min_connector;
 
 	prf_b("analyse() - starting IA");
 
@@ -87,7 +89,7 @@ Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_analyse4(
 		min_level,
 		min_weld,
 		min_connector,
-		min_connector, // @todo: take this parameter from Java
+		min_end,
 		noiseFactor,
 		reflectiveSize,
 		nonReflectiveSize,

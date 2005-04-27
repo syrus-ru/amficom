@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.52 2005/04/26 16:08:55 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.53 2005/04/27 08:21:57 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.52 $, $Date: 2005/04/26 16:08:55 $
+ * @version $Revision: 1.53 $, $Date: 2005/04/27 08:21:57 $
  * @module
  */
 
@@ -47,8 +47,13 @@ public class CoreAnalysisManager
 	 * @param minLevel уровень чувствительности для определения границ события
 	 * @param minWeld минимальное отраж. событие
 	 * @param minConnector минимальное неотр. событие
-	 * @param minEnd мин. уровень конца (пока не используется?)
-	 * @param reflSize хар. размер отраж. события (в точках) - влияет на макс. длину коннектора 
+	 * @param minEnd мин. уровень конца волокна
+	 * @param noiseFactor множитель для уровня шума - чем больше множитель,
+	 *   тем меньше чувствительность и больше достоверность.
+	 *   (1.0 - макс. чувствительность, по уровню 3 сигма; рекомендованы
+	 *   значения порядка 1.5 .. 3.0)
+	 * @param reflSize хар. размер отраж. события (в точках),
+	 *   влияет на макс. длину коннектора 
 	 * @param nReflSize хар. размер неотраж. события (в точках)
 	 * @param traceLength длина рефлектограммы до конца волокна,
 	 * может быть 0, тогда будет найдена автоматически
@@ -56,13 +61,14 @@ public class CoreAnalysisManager
 	 * может быть null - тогда будет найден автоматически
 	 * @return массив событий
 	 */
-	private static native ReliabilitySimpleReflectogramEventImpl[] analyse4(
+	private static native ReliabilitySimpleReflectogramEventImpl[] analyse5(
 			double[] y,
-			double dX, 
+			double dX,
 			double minLevel,
 			double minWeld,
 			double minConnector,
 			double minEnd,
+			double noiseFactor,
 			int reflSize,
 			int nReflSize,
 			int traceLength,
@@ -189,19 +195,24 @@ public class CoreAnalysisManager
 			double minLevel,
 			double minWeld,
 			double minConnector,
+			double minEnd,
 			double noiseFactor,
 			int reflSize,
 			int nReflSize,
 			int traceLength,
 			double[] noiseArray)
 	{
+		// FIXME: debug output of IA params
 		System.err.println("cSE: "
 			+ minLevel
 			+ "/" + minWeld
 			+ "/" + minConnector
-			+ "; " + noiseFactor);
-		return analyse4(y, deltaX,
-			minLevel, minWeld, minConnector, noiseFactor,
+			+ "/" + minEnd
+			+ "; nf " + noiseFactor
+			+ "; rs/nrs " + reflSize
+			+ "/" + nReflSize);
+		return analyse5(y, deltaX,
+			minLevel, minWeld, minConnector, minEnd, noiseFactor,
 			reflSize, nReflSize,
 			traceLength, noiseArray);
 	}
@@ -395,10 +406,12 @@ public class CoreAnalysisManager
 				ap.getMinThreshold(),
 				ap.getMinSplice(),
 				ap.getMinConnector(),
+				ap.getMinEnd(),
 				ap.getNoiseFactor(),
 				reflSize, nReflSize,
 				av.minTraceLength, av.avNoise);
 
+		// FIXME: debug output of IA results
 		for (int i = 0; i < rse.length; i++)
 			System.out.println("rse[" + i + "]:"
 				+ " begin=" + rse[i].getBegin()
