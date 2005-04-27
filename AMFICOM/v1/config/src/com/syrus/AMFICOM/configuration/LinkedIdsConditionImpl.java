@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.18 2005/04/13 12:20:39 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.19 2005/04/27 13:21:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,8 +23,8 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/04/13 12:20:39 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.19 $, $Date: 2005/04/27 13:21:19 $
+ * @author $Author: bass $
  * @module config_v1
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -85,8 +85,10 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				TransmissionPath transmissionPath = (TransmissionPath) storableObject;
 				switch (this.linkedEntityCode) {
 					case ObjectEntities.PORT_ENTITY_CODE:
-						condition = super.conditionTest(transmissionPath.getStartPortId())
-								|| super.conditionTest(transmissionPath.getFinishPortId());
+						final boolean precondition1 = super.conditionTest(transmissionPath.getStartPortId());
+						final boolean precondition2 = super.conditionTest(transmissionPath.getFinishPortId());
+						assert !(precondition1 && precondition2);
+						condition = precondition1 ^ precondition2;
 						break;
 					case ObjectEntities.DOMAIN_ENTITY_CODE:
 						condition = this.checkDomain(transmissionPath);

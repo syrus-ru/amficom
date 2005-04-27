@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsCondition.java,v 1.28 2005/04/08 08:51:01 bass Exp $
+ * $Id: LinkedIdsCondition.java,v 1.29 2005/04/27 13:21:18 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -67,7 +67,7 @@ import org.omg.CORBA.portable.IDLEntity;
  * </ul>
  * 
  * @author $Author: bass $
- * @version $Revision: 1.28 $, $Date: 2005/04/08 08:51:01 $
+ * @version $Revision: 1.29 $, $Date: 2005/04/27 13:21:18 $
  * @module general_v1
  */
 public class LinkedIdsCondition implements StorableObjectCondition {
@@ -211,11 +211,11 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 	private LinkedIdsCondition(final Set linkedIds, final Short entityCode) {
 		short linkedCode;
 		try {
-			linkedCode = getOnlyOneLinkedEntityCode(linkedIds);
+			linkedCode = StorableObject.getEntityCodeOfIdentifiables(linkedIds);
 		}
-		catch (IllegalDataException ide) {
+		catch (final AssertionError ae) {
 			linkedCode = ObjectEntities.UNKNOWN_ENTITY_CODE;
-			Log.errorException(ide);
+			Log.errorException(ae);
 		}
 
 		final String className = "com.syrus.AMFICOM." + ObjectGroupEntities.getGroupName(entityCode.shortValue()).toLowerCase().replaceAll("group$", "") + ".LinkedIdsConditionImpl"; //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
@@ -364,11 +364,11 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 
 	public void setLinkedIds(Set linkedIds) {
 		try {
-			this.delegate.linkedEntityCode = getOnlyOneLinkedEntityCode(linkedIds);
+			this.delegate.linkedEntityCode = StorableObject.getEntityCodeOfIdentifiables(linkedIds);
 		}
-		catch (IllegalDataException ide) {
+		catch (final AssertionError ae) {
 			this.delegate.linkedEntityCode = ObjectEntities.UNKNOWN_ENTITY_CODE;
-			Log.errorException(ide);
+			Log.errorException(ae);
 		}
 		this.delegate.linkedIds = linkedIds;
 	}
@@ -425,25 +425,15 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 		return false;
 	}
 
-	protected boolean conditionTest(Identifier paramId) {
-		if (paramId != null) {
-			for (Iterator it = this.linkedIds.iterator(); it.hasNext();) {
-				Identifier id = (Identifier) it.next();
-				if (paramId.equals(id)) { return true; }
+	protected boolean conditionTest(final Identifier paramId) {
+		if (paramId != null && !paramId.isVoid()) {
+			for (final Iterator it = this.linkedIds.iterator(); it.hasNext();) {
+				final Identifier id = (Identifier) it.next();
+				if (paramId.equals(id)) {
+					return true;
+				}
 			}
 		}
 		return false;
-	}
-
-	private static short getOnlyOneLinkedEntityCode(Set ids) throws IllegalDataException {
-		short code0 = ((Identifier) ids.iterator().next()).getMajor();
-		short code;
-		for (Iterator it = ids.iterator(); it.hasNext();) {
-			code = ((Identifier) it.next()).getMajor();
-			if (code != code0)
-				throw new IllegalDataException("Linked ids are not of the same entities");
-		}
-
-		return code0;
 	}
 }
