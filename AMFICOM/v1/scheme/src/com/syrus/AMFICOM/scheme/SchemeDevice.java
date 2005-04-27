@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.21 2005/04/27 14:45:23 bass Exp $
+ * $Id: SchemeDevice.java,v 1.22 2005/04/27 16:56:47 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ import com.syrus.util.Log;
  * #07 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.21 $, $Date: 2005/04/27 14:45:23 $
+ * @version $Revision: 1.22 $, $Date: 2005/04/27 16:56:47 $
  * @module scheme_v1
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -54,9 +54,11 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	
 	private Identifier parentSchemeProtoElementId;
 
+	private SchemeDeviceDatabase schemeDeviceDatabase;
+
 	private Set characteristics;
 
-	private SchemeDeviceDatabase schemeDeviceDatabase;
+	private boolean parentSet = false;
 
 	/**
 	 * @param id
@@ -115,8 +117,9 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * A shorthand for
-	 * {@link #createInstance(Identifier, String, String)}.
+	 * A shorthand for {@link #createInstance(Identifier, String, String)}.
+	 * This method breaks some assertions, so clients should consider using
+	 * other ones to create a new instance.
 	 *
 	 * @param creatorId
 	 * @param name
@@ -217,6 +220,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 					0L, name, description,
 					parentSchemeProtoElement, null);
 			schemeDevice.changed = true;
+			schemeDevice.parentSet = true;
 			return schemeDevice;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(
@@ -249,6 +253,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 					0L, name, description,
 					null, parentSchemeElement);
 			schemeDevice.changed = true;
+			schemeDevice.parentSet = true;
 			return schemeDevice;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(
@@ -335,11 +340,36 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	}
 
 	public SchemeElement getParentSchemeElement() {
-		throw new UnsupportedOperationException();
+		assert this.assertParentSetStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
+
+		if (this.parentSchemeElementId.isVoid()) {
+			Log.debugMessage("SchemeDevice.getParentSchemeElement() | Parent SchemeElement was requested, while parent is a SchemeProtoElement; returning null.", //$NON-NLS-1$
+					Log.FINE);
+			return null;
+		}
+
+		try {
+			return (SchemeElement) SchemeStorableObjectPool.getStorableObject(this.parentSchemeElementId, true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return null;
+		}
 	}
 
 	public SchemeProtoElement getParentSchemeProtoElement() {
-		throw new UnsupportedOperationException();
+		assert this.assertParentSetStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
+
+		if (this.parentSchemeProtoElementId.isVoid()) {
+			Log.debugMessage("SchemeDevice.getParentSchemeProtoElement() | Parent SchemeProtoElement was requested, while parent is a SchemeElement; returning null.",  //$NON-NLS-1$
+					Log.FINE);
+		}
+
+		try {
+			return (SchemeProtoElement) SchemeStorableObjectPool.getStorableObject(this.parentSchemeProtoElementId, true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return null;
+		}
 	}
 
 	/**
@@ -489,14 +519,68 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 * @todo skip check if parentless.
 	 */
 	public void setParentSchemeElement(final SchemeElement parentSchemeElement) {
-		throw new UnsupportedOperationException();
+		assert this.assertParentSetNonStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
+
+		Identifier newParentSchemeElementId;
+		if (this.parentSchemeProtoElementId.isVoid()) {
+			/*
+			 * Moving from an element to another element.
+			 */
+			if (parentSchemeElement == null) {
+				Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Log.WARNING);
+				SchemeStorableObjectPool.delete(super.id);
+				return;
+			}
+			newParentSchemeElementId = parentSchemeElement.getId();
+			if (this.parentSchemeElementId.equals(newParentSchemeElementId))
+				return;
+		} else {
+			/*
+			 * Moving from a protoelement to an element.
+			 */
+			if (parentSchemeElement == null) {
+				Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Log.INFO);
+				return;
+			}
+			newParentSchemeElementId = parentSchemeElement.getId();
+			this.parentSchemeProtoElementId = Identifier.VOID_IDENTIFIER;
+		}
+		this.parentSchemeElementId = newParentSchemeElementId;
+		this.changed = true;
 	}
 
 	/**
 	 * @todo skip check if parentless.
 	 */
 	public void setParentSchemeProtoElement(final SchemeProtoElement parentSchemeProtoElement) {
-		throw new UnsupportedOperationException();
+		assert this.assertParentSetNonStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
+
+		Identifier newParentSchemeProtoElementId;
+		if (this.parentSchemeElementId.isVoid()) {
+			/*
+			 * Moving from a protoelement to another protoelement.
+			 */
+			if (parentSchemeProtoElement == null) {
+				Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Log.WARNING);
+				SchemeStorableObjectPool.delete(super.id);
+				return;
+			}
+			newParentSchemeProtoElementId = parentSchemeProtoElement.getId();
+			if (this.parentSchemeProtoElementId.equals(newParentSchemeProtoElementId))
+				return;
+		} else {
+			/*
+			 * Moving from an element to a protoelement.
+			 */
+			if (parentSchemeProtoElement == null) {
+				Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Log.INFO);
+				return;
+			}
+			newParentSchemeProtoElementId = parentSchemeProtoElement.getId();
+			this.parentSchemeElementId = Identifier.VOID_IDENTIFIER;
+		}
+		this.parentSchemeProtoElementId = newParentSchemeProtoElementId;
+		this.changed = true;
 	}
 
 	public void setSchemeCablePorts(final Set schemeCablePorts) {
@@ -536,5 +620,32 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 */
 	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
 		throw new UnsupportedOperationException();
+	}
+
+	/*-********************************************************************
+	 * Non-model members.                                                 *
+	 **********************************************************************/
+
+	/**
+	 * Invoked by modifier methods.
+	 */
+	private boolean assertParentSetNonStrict() {
+		if (this.parentSet)
+			return this.assertParentSetStrict();
+		this.parentSet = true;
+		return this.parentSchemeElementId != null
+				&& this.parentSchemeProtoElementId != null
+				&& this.parentSchemeElementId.isVoid()
+				&& this.parentSchemeProtoElementId.isVoid();
+	}
+
+	/**
+	 * Invoked by accessor methods (it is assumed that object is already
+	 * initialized).
+	 */
+	private boolean assertParentSetStrict() {
+		return this.parentSchemeElementId != null
+				&& this.parentSchemeProtoElementId != null
+				&& (this.parentSchemeElementId.isVoid() ^ this.parentSchemeProtoElementId.isVoid());
 	}
 }
