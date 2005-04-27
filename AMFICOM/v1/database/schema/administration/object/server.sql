@@ -13,7 +13,6 @@ CREATE TABLE Server (
  name VARCHAR2(128) NOT NULL,
  description VARCHAR2(256),
  hostname VARCHAR2(64) NOT NULL,
- user_id VARCHAR2(32) NOT NULL,
 --
  CONSTRAINT server_pk PRIMARY KEY (id),
  CONSTRAINT server_creator_fk FOREIGN KEY (creator_id)
@@ -25,10 +24,7 @@ CREATE TABLE Server (
   REFERENCES Domain (id) ON DELETE CASCADE,
 --
  CONSTRAINT server_servertype_fk FOREIGN KEY (type_id)
-  REFERENCES ServerType (id) ON DELETE CASCADE,
---
- CONSTRAINT server_user_fk FOREIGN KEY (user_id)
-  REFERENCES "User" (id) ON DELETE CASCADE
+  REFERENCES ServerType (id) ON DELETE CASCADE
 );
 
 CREATE SEQUENCE server_seq ORDER;
