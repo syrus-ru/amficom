@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.5 2005/04/23 17:49:29 arseniy Exp $
+# $Id: Makefile,v 1.6 2005/04/27 13:43:55 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -18,13 +18,16 @@ JIKESFLAGS = -target 1.4.2
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 
-#corba.jar is deprecated!
-APPCLASSPATH := $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/map.jar:$(LIBDIR)/mapview.jar:$(LIBDIR)/scheme.jar:$(LIBDIR)/cmserver_interface.jar:$(LIBDIR)/mshserver_interface.jar
+APPCLASSPATH := $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/event.jar:$(LIBDIR)/resource.jar:$(LIBDIR)/map.jar:$(LIBDIR)/mapview.jar:$(LIBDIR)/scheme.jar:$(LIBDIR)/loginserver_interface.jar:$(LIBDIR)/cmserver_interface.jar:$(LIBDIR)/mshserver_interface.jar
 
 SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/general/*.java) \
 	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/administration/*.java) \
 	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/configuration/*.java) \
-	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/measurement/*.java)
+	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/measurement/*.java) \
+	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/event/*.java) \
+	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/resource/*.java) \
+	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/map/*.java) \
+	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/scheme/*.java)
 
 
 $(LIBNAME): .mach
@@ -32,7 +35,11 @@ $(LIBNAME): .mach
 		-C $(CLASSDIR) com/syrus/AMFICOM/general \
 		-C $(CLASSDIR) com/syrus/AMFICOM/administration \
 		-C $(CLASSDIR) com/syrus/AMFICOM/configuration \
-		-C $(CLASSDIR) com/syrus/AMFICOM/measurement
+		-C $(CLASSDIR) com/syrus/AMFICOM/measurement \
+		-C $(CLASSDIR) com/syrus/AMFICOM/event \
+		-C $(CLASSDIR) com/syrus/AMFICOM/resource \
+		-C $(CLASSDIR) com/syrus/AMFICOM/map \
+		-C $(CLASSDIR) com/syrus/AMFICOM/scheme
 
 .mach:	.corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
