@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisEvaluationProcessor.java,v 1.25 2005/04/13 12:02:46 saa Exp $
+ * $Id: AnalysisEvaluationProcessor.java,v 1.26 2005/04/27 15:09:21 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,7 @@ import java.lang.reflect.InvocationTargetException;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.SessionContext;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.Measurement;
@@ -28,8 +28,8 @@ import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/04/13 12:02:46 $
- * @author $Author: saa $
+ * @version $Revision: 1.26 $, $Date: 2005/04/27 15:09:21 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 
@@ -85,7 +85,7 @@ public class AnalysisEvaluationProcessor {
 			throw new AnalysisException("Criteria set is NULL");
 
 		try {
-			Analysis analysis = Analysis.createInstance(SessionContext.getAccessIdentity().getUserId(),
+			Analysis analysis = Analysis.createInstance(LoginManager.getUserId(),
 					analysisType,
 					monitoredElementId,
 					measurement,
@@ -152,7 +152,7 @@ public class AnalysisEvaluationProcessor {
 		SetParameter[] arParameters = analysisManager.analyse();
 		Result analysisResult;
 		try {
-			analysisResult = analysis.createResult(SessionContext.getAccessIdentity().getUserId(), arParameters);
+			analysisResult = analysis.createResult(LoginManager.getUserId(), arParameters);
 		}
 		catch (CreateObjectException coe) {
 			Log.errorException(coe);

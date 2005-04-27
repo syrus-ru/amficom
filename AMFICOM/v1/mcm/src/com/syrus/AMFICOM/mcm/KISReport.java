@@ -1,5 +1,5 @@
 /*
- * $Id: KISReport.java,v 1.28 2005/04/01 21:51:49 arseniy Exp $
+ * $Id: KISReport.java,v 1.29 2005/04/27 15:09:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,30 +9,31 @@
 package com.syrus.AMFICOM.mcm;
 
 import java.util.Collection;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
+
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.GeneralDatabaseContext;
+import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.ParameterTypeCodenames;
 import com.syrus.AMFICOM.general.ParameterTypeDatabase;
-import com.syrus.AMFICOM.general.GeneralDatabaseContext;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
-import com.syrus.AMFICOM.general.SessionContext;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.OperationSort;
+import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
-import com.syrus.AMFICOM.measurement.SetParameter;
-import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.Result;
+import com.syrus.AMFICOM.measurement.SetParameter;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/04/01 21:51:49 $
+ * @version $Revision: 1.29 $, $Date: 2005/04/27 15:09:39 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -68,7 +69,7 @@ public class KISReport {
 				parameters[i] = SetParameter.createInstance(parameterType, this.parameterValues[i]);
 			}
 
-			Result result = measurement.createResult(SessionContext.getAccessIdentity().getUserId(), parameters);
+			Result result = measurement.createResult(LoginManager.getUserId(), parameters);
 			MeasurementDatabaseContext.getResultDatabase().insert(result);
 			return result;
 		}

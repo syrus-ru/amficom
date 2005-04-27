@@ -1,5 +1,5 @@
 /*
- * $Id: TestProcessor.java,v 1.48 2005/04/21 14:44:35 arseniy Exp $
+ * $Id: TestProcessor.java,v 1.49 2005/04/27 15:10:29 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,8 +19,8 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.SessionContext;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
@@ -33,7 +33,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2005/04/21 14:44:35 $
+ * @version $Revision: 1.49 $, $Date: 2005/04/27 15:10:29 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -202,7 +202,7 @@ public abstract class TestProcessor extends SleepButWorkThread {
 	}
 
 	final void newMeasurementCreation(Date startTime) throws CreateObjectException {
-		Measurement measurement = this.test.createMeasurement(SessionContext.getAccessIdentity().getUserId(), startTime);
+		Measurement measurement = this.test.createMeasurement(LoginManager.getUserId(), startTime);
 		this.transceiver.addMeasurement(measurement, this);
 		this.currentMeasurementStartTime = startTime.getTime();
 		try {
