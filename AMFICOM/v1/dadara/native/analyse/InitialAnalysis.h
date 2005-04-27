@@ -60,6 +60,7 @@ private:
 	double minimalThreshold;
 	double minimalWeld;
 	double minimalConnector;
+    double minimalEnd;
 
     int wlet_width; // базовая ширина вейвлета
     int reflectiveSize;// максимальная ширина коннектора
@@ -94,7 +95,7 @@ private:
     void setSpliceParamsBySplash( EventParams& ep, Splash& sp1);
     void setConnectorParamsBySplashes( EventParams& ep, Splash& sp1, Splash& sp2);
     void setUnrecognizedParamsBySplashes( EventParams& ep, Splash& sp1, Splash& sp2);
-    void deleteAllEventsAfterLastConnector();
+    void processEndOfTrace();  // удалить все события после последнего отражательного и переименовать отражательное в "конец волокна"
     void addLinearPartsBetweenEvents();
     void correctAllConnectorsFronts(double *arr);
     void correctAllSpliceCoords(); // ф-я ПОРТИТ вейвлет образ !  (так как использует тот же массив для хранения образа на другом масштабе)

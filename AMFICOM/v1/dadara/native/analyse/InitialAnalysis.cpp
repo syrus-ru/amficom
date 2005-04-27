@@ -48,6 +48,7 @@ InitialAnalysis::InitialAnalysis(
 	this->minimalThreshold		= minimalThreshold;
 	this->minimalWeld			= minimalWeld;
 	this->minimalConnector		= minimalConnector;
+    this->minimalEnd			= minimalEnd;
 	this->data_length			= data_length;
 	this->data					= data;
     this->reflectiveSize		= reflectiveSize;
@@ -131,7 +132,7 @@ return;}
     } // удаляем пустой массив splashes
 
     correctAllConnectorsFronts(data);// и только потом переименовываем послдений коннектор в конец_волокна 
-    deleteAllEventsAfterLastConnector();// если ни одного коннектора не будет найдено, то удалятся все события
+    processEndOfTrace();// если ни одного коннектора не будет найдено, то удалятся все события
     excludeShortLinesBetweenConnectors(data, wlet_width);
     correctAllSpliceCoords();// поскольку уточнение двигает соседние события, то к этому моменту динейные участки должы уже существовать ( поэтому вызов после addLinearPartsBetweenEvents() )
     addLinearPartsBetweenEvents();
@@ -325,6 +326,10 @@ void InitialAnalysis::setConnectorParamsBySplashes( EventParams& ep, Splash& sp1
    double l = sp2.begin_thr - sp1.end_conn_n, l_max = reflectiveSize*2;
    assert(l>=-1);// -1 может быть так как мы искуствнно расширяем на одну точку каждый всплеск (начало ДО уровня, а конец ПОСЛЕ )
    ep.R3 = 2*ep.R2*(l_max-l)/(l+wlet_width)*(wlet_width/l_max);
+   // может ли этот "коннектор" быть концом волокна
+   if(sp1.sign>0 && sp1.f_extr>= minimalEnd)
+   { ep.can_be_endoftrace = true;
+   }
 }
 // -------------------------------------------------------------------------------------------------
 void InitialAnalysis::setUnrecognizedParamsBySplashes( EventParams& ep, Splash& sp1, Splash& sp2 )
@@ -701,10 +706,10 @@ return;
 }
 //------------------------------------------------------------------------------------------------------------
 // удалить все события после последнего отражательного и переименовать отражательное в "конец волокна"
-void InitialAnalysis::deleteAllEventsAfterLastConnector()
+void InitialAnalysis::processEndOfTrace()
 {   for(int i=events->getLength()-1; i>0; i--)
 	{   EventParams* ev = (EventParams*)(*events)[i];
-    	if( ev->type != EventParams::CONNECTOR)
+    	if( !ev->can_be_endoftrace)  // true  может быть только у отражательного события
         {   events->slowRemove(i);
         }
         else
