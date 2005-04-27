@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePort.java,v 1.20 2005/04/25 16:26:41 bass Exp $
+ * $Id: SchemeCablePort.java,v 1.21 2005/04/27 09:59:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,6 @@ import java.util.Date;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.configuration.MeasurementPort;
-import com.syrus.AMFICOM.configuration.MeasurementPortType;
 import com.syrus.AMFICOM.configuration.Port;
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.corba.PortSort;
@@ -34,7 +33,7 @@ import com.syrus.AMFICOM.scheme.corba.SchemeCablePort_Transferable;
  * #09 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.20 $, $Date: 2005/04/25 16:26:41 $
+ * @version $Revision: 1.21 $, $Date: 2005/04/27 09:59:55 $
  * @module scheme_v1
  */
 public final class SchemeCablePort extends AbstractSchemePort {
@@ -70,7 +69,6 @@ public final class SchemeCablePort extends AbstractSchemePort {
 	 * @param directionType
 	 * @param portType
 	 * @param port
-	 * @param measurementPortType
 	 * @param measurementPort
 	 * @param parentSchemeDevice
 	 */
@@ -80,13 +78,11 @@ public final class SchemeCablePort extends AbstractSchemePort {
 			final String name, final String description,
 			final AbstractSchemePortDirectionType directionType,
 			final PortType portType, final Port port,
-			final MeasurementPortType measurementPortType,
 			final MeasurementPort measurementPort,
 			final SchemeDevice parentSchemeDevice) {
 		super(id, created, modified, creatorId, modifierId, version,
 				name, description, directionType, portType, port,
-				measurementPortType, measurementPort,
-				parentSchemeDevice);
+				measurementPort, parentSchemeDevice);
 
 		assert port == null || port.getSort().value() == PortSort._PORT_SORT_CABLE_PORT;
 
@@ -104,7 +100,7 @@ public final class SchemeCablePort extends AbstractSchemePort {
 
 	/**
 	 * A shorthand for
-	 * {@link #createInstance(Identifier, String, String, AbstractSchemePortDirectionType, PortType, Port, MeasurementPortType, MeasurementPort, SchemeDevice)}.
+	 * {@link #createInstance(Identifier, String, String, AbstractSchemePortDirectionType, PortType, Port, MeasurementPort, SchemeDevice)}.
 	 *
 	 * @param creatorId
 	 * @param name
@@ -118,7 +114,7 @@ public final class SchemeCablePort extends AbstractSchemePort {
 			final SchemeDevice parentSchemeDevice)
 			throws CreateObjectException {
 		return createInstance(creatorId, name, "", directionType, null, //$NON-NLS-1$
-				null, null, null, parentSchemeDevice);
+				null, null, parentSchemeDevice);
 	}
 
 	/**
@@ -128,7 +124,6 @@ public final class SchemeCablePort extends AbstractSchemePort {
 	 * @param directionType
 	 * @param portType
 	 * @param port
-	 * @param measurementPortType
 	 * @param measurementPort
 	 * @param parentSchemeDevice
 	 * @throws CreateObjectException
@@ -137,7 +132,6 @@ public final class SchemeCablePort extends AbstractSchemePort {
 			final String name, final String description,
 			final AbstractSchemePortDirectionType directionType,
 			final PortType portType, final Port port,
-			final MeasurementPortType measurementPortType,
 			final MeasurementPort measurementPort,
 			final SchemeDevice parentSchemeDevice)
 			throws CreateObjectException {
@@ -154,13 +148,11 @@ public final class SchemeCablePort extends AbstractSchemePort {
 							.getGeneratedIdentifier(ObjectEntities.SCHEME_CABLE_PORT_ENTITY_CODE),
 					created, created, creatorId, creatorId,
 					0L, name, description, directionType,
-					portType, port, measurementPortType,
-					measurementPort, parentSchemeDevice);
+					portType, port, measurementPort,
+					parentSchemeDevice);
 			schemeCablePort.changed = true;
 			if (port != null || portType != null)
 				schemeCablePort.portTypeSet = true;
-			if (measurementPort != null || measurementPortType != null)
-				schemeCablePort.measurementPortTypeSet = true;
 			return schemeCablePort;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(

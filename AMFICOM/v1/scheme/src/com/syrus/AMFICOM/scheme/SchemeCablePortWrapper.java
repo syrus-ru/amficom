@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePortWrapper.java,v 1.1 2005/04/22 16:23:00 max Exp $
+ * $Id: SchemeCablePortWrapper.java,v 1.2 2005/04/27 09:59:56 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,8 +12,8 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/22 16:23:00 $
- * @author $Author: max $
+ * @version $Revision: 1.2 $, $Date: 2005/04/27 09:59:56 $
+ * @author $Author: bass $
  * @module scheme_v1
  */
 public class SchemeCablePortWrapper extends StorableObjectWrapper {
@@ -26,14 +26,12 @@ public class SchemeCablePortWrapper extends StorableObjectWrapper {
 //	direction_type NUMBER(1) NOT NULL,
 //	cable_port_type_id VARCHAR2(32 CHAR),
 //	cable_port_id VARCHAR2(32 CHAR),
-//	measurement_port_type_id VARCHAR2(32 CHAR),
 //	measurement_port_id VARCHAR2(32 CHAR),
 //	parent_device_id VARCHAR2(32 CHAR) NOT NULL,
 	
 	public static final String COLUMN_DIRECTION_TYPE = "direction_type";
 	public static final String COLUMN_CABLE_PORT_TYPE_ID = "cable_port_type_id";
 	public static final String COLUMN_CABLE_PORT_ID = "cable_port_id";
-	public static final String COLUMN_MEASUREMENT_PORT_TYPE_ID = "measurement_port_type_id";
 	public static final String COLUMN_MEASUREMENT_PORT_ID = "measurement_port_id";
 	public static final String COLUMN_PARENT_DEVICE_ID = "parent_device_id";
 	

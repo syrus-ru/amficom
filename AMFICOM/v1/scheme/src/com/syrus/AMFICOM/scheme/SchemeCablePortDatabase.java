@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePortDatabase.java,v 1.2 2005/04/22 16:21:44 max Exp $
+ * $Id: SchemeCablePortDatabase.java,v 1.3 2005/04/27 09:59:56 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import java.util.Date;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: max $
- * @version $Revision: 1.2 $, $Date: 2005/04/22 16:21:44 $
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/04/27 09:59:56 $
  * @module scheme_v1
  */
 public final class SchemeCablePortDatabase extends CharacterizableDatabase {
@@ -63,7 +63,6 @@ public final class SchemeCablePortDatabase extends CharacterizableDatabase {
 					+ SchemeCablePortWrapper.COLUMN_DIRECTION_TYPE + COMMA
 					+ SchemeCablePortWrapper.COLUMN_CABLE_PORT_TYPE_ID + COMMA
 					+ SchemeCablePortWrapper.COLUMN_CABLE_PORT_ID + COMMA
-					+ SchemeCablePortWrapper.COLUMN_MEASUREMENT_PORT_TYPE_ID + COMMA
 					+ SchemeCablePortWrapper.COLUMN_MEASUREMENT_PORT_ID + COMMA
 					+ SchemeCablePortWrapper.COLUMN_PARENT_DEVICE_ID;
 		}
@@ -101,7 +100,6 @@ public final class SchemeCablePortDatabase extends CharacterizableDatabase {
 				+ APOSTOPHE + schemeCablePort.getDirectionType().value() + APOSTOPHE + COMMA
 				+ DatabaseIdentifier.toSQLString(schemeCablePort.getPortType().getId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(schemeCablePort.getPort().getId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(schemeCablePort.getMeasurementPortType().getId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(schemeCablePort.getMeasurementPort().getId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(schemeCablePort.getParentSchemeDevice().getId());
 		return sql;
@@ -125,7 +123,6 @@ public final class SchemeCablePortDatabase extends CharacterizableDatabase {
 		preparedStatement.setInt(++startParameterNumber, schemeCablePort.getDirectionType().value());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeCablePort.getPortType().getId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeCablePort.getPort().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeCablePort.getMeasurementPortType().getId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeCablePort.getMeasurementPort().getId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeCablePort.getParentSchemeDevice().getId());
 		return startParameterNumber;
@@ -146,7 +143,7 @@ public final class SchemeCablePortDatabase extends CharacterizableDatabase {
 		if (storableObject == null) {
 			Date created = new Date(); 
 			schemeCablePort = new SchemeCablePort(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
-					created, created, null, null, 0L, null, null, null, null, null, null, null, null);
+					created, created, null, null, 0L, null, null, null, null, null, null, null);
 		} else {
 			schemeCablePort = fromStorableObject(storableObject);
 		}
@@ -160,7 +157,6 @@ public final class SchemeCablePortDatabase extends CharacterizableDatabase {
 				AbstractSchemePortDirectionType.from_int(resultSet.getInt(SchemeCablePortWrapper.COLUMN_DIRECTION_TYPE)),
 				DatabaseIdentifier.getIdentifier(resultSet, SchemeCablePortWrapper.COLUMN_CABLE_PORT_TYPE_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, SchemeCablePortWrapper.COLUMN_CABLE_PORT_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, SchemeCablePortWrapper.COLUMN_MEASUREMENT_PORT_TYPE_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, SchemeCablePortWrapper.COLUMN_MEASUREMENT_PORT_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, SchemeCablePortWrapper.COLUMN_PARENT_DEVICE_ID));
 		return schemeCablePort;

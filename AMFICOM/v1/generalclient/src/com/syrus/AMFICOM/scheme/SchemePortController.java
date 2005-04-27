@@ -10,7 +10,6 @@ public final class SchemePortController extends ObjectResourceController
 	public static final String COLUMN_SCHEME_LINK_ID = "scheme_link_id";
 	public static final String COLUMN_DIRECTION = "direction";
 	public static final String COLUMN_MEASUREMENT_PORT_ID = "measurement_port_id";
-	public static final String COLUMN_MEASUREMENT_PORT_TYPE_ID = "measurement_port_type_id";
 	public static final String COLUMN_PORT_ID = "port_id";
 	public static final String COLUMN_PORT_TYPE_ID = "port_type_id";
 	public static final String COLUMN_SCHEME_CABLE_THREAD_ID = "scheme_cable_thread_id";
@@ -90,8 +89,6 @@ public final class SchemePortController extends ObjectResourceController
 				result = Integer.toString(port.getDirectionType().value());
 			else if (key.equals(COLUMN_MEASUREMENT_PORT_ID))
 				result = port.getMeasurementPort().getId().getIdentifierString();
-			else if (key.equals(COLUMN_MEASUREMENT_PORT_TYPE_ID))
-				result = port.getMeasurementPortType().getId().getIdentifierString();
 			else if (key.equals(COLUMN_PORT_ID))
 				result = port.getPort().getId().getIdentifierString();
 			else if (key.equals(COLUMN_PORT_TYPE_ID))
