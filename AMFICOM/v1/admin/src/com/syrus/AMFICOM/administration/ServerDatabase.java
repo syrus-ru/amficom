@@ -1,5 +1,5 @@
 /*
- * $Id: ServerDatabase.java,v 1.21 2005/03/31 15:59:22 arseniy Exp $
+ * $Id: ServerDatabase.java,v 1.22 2005/04/27 17:47:42 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,13 +8,9 @@
 
 package com.syrus.AMFICOM.administration;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.HashSet;
-import java.util.Set;
 
 import com.syrus.AMFICOM.general.CharacterizableDatabase;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
@@ -25,12 +21,11 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.Log;
-import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/03/31 15:59:22 $
+ * @version $Revision: 1.22 $, $Date: 2005/04/27 17:47:42 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -57,8 +52,7 @@ public class ServerDatabase extends CharacterizableDatabase {
 			columns = DomainMember.COLUMN_DOMAIN_ID + COMMA
 				+ StorableObjectWrapper.COLUMN_NAME + COMMA
 				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
-				+ ServerWrapper.COLUMN_HOSTNAME + COMMA
-				+ ServerWrapper.COLUMN_USER_ID;		
+				+ ServerWrapper.COLUMN_HOSTNAME;		
 		}
 		return columns;
 	}	
@@ -66,7 +60,6 @@ public class ServerDatabase extends CharacterizableDatabase {
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null){
 			updateMultipleSQLValues = QUESTION + COMMA
-				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION;		
@@ -79,8 +72,7 @@ public class ServerDatabase extends CharacterizableDatabase {
 		return DatabaseIdentifier.toSQLString(server.getDomainId()) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(server.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(server.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(server.getHostName(), SIZE_HOSTNAME_COLUMN) + APOSTOPHE + COMMA
-			+ DatabaseIdentifier.toSQLString(server.getUserId());
+			+ APOSTOPHE + DatabaseString.toQuerySubString(server.getHostName(), SIZE_HOSTNAME_COLUMN) + APOSTOPHE;
 	}
 
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
@@ -89,7 +81,6 @@ public class ServerDatabase extends CharacterizableDatabase {
 				new Server(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 								null,
 								0L,
-								null,
 								null,
 								null,
 								null,
@@ -103,8 +94,7 @@ public class ServerDatabase extends CharacterizableDatabase {
 								DatabaseIdentifier.getIdentifier(resultSet, DomainMember.COLUMN_DOMAIN_ID),													
 								DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
 								DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
-								DatabaseString.fromQuerySubString(resultSet.getString(ServerWrapper.COLUMN_HOSTNAME)),
-								DatabaseIdentifier.getIdentifier(resultSet, ServerWrapper.COLUMN_USER_ID));
+								DatabaseString.fromQuerySubString(resultSet.getString(ServerWrapper.COLUMN_HOSTNAME)));
 		return server;
 	}
 
@@ -115,7 +105,6 @@ public class ServerDatabase extends CharacterizableDatabase {
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, server.getName(), SIZE_NAME_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, server.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, server.getHostName(), SIZE_HOSTNAME_COLUMN);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, server.getUserId());
 		return startParameterNumber;
 	}
 
@@ -123,54 +112,60 @@ public class ServerDatabase extends CharacterizableDatabase {
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		Server server = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
-			case Server.RETRIEVE_MCM_IDS:
-				return this.retrieveMCMIds(server);
+//			case Server.RETRIEVE_MCM_IDS:
+//				return this.retrieveMCMIds(server);
 			default:
 				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  server.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}
-
-	private Set retrieveMCMIds(Server server) throws RetrieveObjectException {
-		Set mcmIds = new HashSet();
-
-		String serverIdStr = DatabaseIdentifier.toSQLString(server.getId());
-		String sql = SQL_SELECT
-			+ StorableObjectWrapper.COLUMN_ID
-			+ SQL_FROM + ObjectEntities.MCM_ENTITY
-			+ SQL_WHERE + MCMWrapper.COLUMN_SERVER_ID + EQUALS + serverIdStr;
-
-		Statement statement = null;
-		ResultSet resultSet = null;
-		Connection connection = DatabaseConnection.getConnection();
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("ServerDatabase.retrieveServer | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql);
-			while (resultSet.next()) {
-				mcmIds.add(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID));
-			}
-		}
-		catch (SQLException sqle) {
-			String mesg = "ServerDatabase.retrieveServer | Cannot retrieve server " + serverIdStr;
-			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			} finally{
-				DatabaseConnection.releaseConnection(connection);
-			}
-		}
-		return mcmIds;
-	}
+//
+//	/**
+//	 * @deprecated
+//	 * @param server
+//	 * @return
+//	 * @throws RetrieveObjectException
+//	 */
+//	private Set retrieveMCMIds(Server server) throws RetrieveObjectException {
+//		Set mcmIds = new HashSet();
+//
+//		String serverIdStr = DatabaseIdentifier.toSQLString(server.getId());
+//		String sql = SQL_SELECT
+//			+ StorableObjectWrapper.COLUMN_ID
+//			+ SQL_FROM + ObjectEntities.MCM_ENTITY
+//			+ SQL_WHERE + MCMWrapper.COLUMN_SERVER_ID + EQUALS + serverIdStr;
+//
+//		Statement statement = null;
+//		ResultSet resultSet = null;
+//		Connection connection = DatabaseConnection.getConnection();
+//		try {
+//			statement = connection.createStatement();
+//			Log.debugMessage("ServerDatabase.retrieveServer | Trying: " + sql, Log.DEBUGLEVEL09);
+//			resultSet = statement.executeQuery(sql);
+//			while (resultSet.next()) {
+//				mcmIds.add(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID));
+//			}
+//		}
+//		catch (SQLException sqle) {
+//			String mesg = "ServerDatabase.retrieveServer | Cannot retrieve server " + serverIdStr;
+//			throw new RetrieveObjectException(mesg, sqle);
+//		}
+//		finally {
+//			try {
+//				if (statement != null)
+//					statement.close();
+//				if (resultSet != null)
+//					resultSet.close();
+//				statement = null;
+//				resultSet = null;
+//			}
+//			catch (SQLException sqle1) {
+//				Log.errorException(sqle1);
+//			} finally{
+//				DatabaseConnection.releaseConnection(connection);
+//			}
+//		}
+//		return mcmIds;
+//	}
 
 }

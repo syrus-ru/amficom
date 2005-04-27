@@ -1,5 +1,5 @@
 /*
- * $Id: Server.java,v 1.22 2005/04/15 19:22:06 arseniy Exp $
+ * $Id: Server.java,v 1.23 2005/04/27 17:47:42 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,20 +35,19 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/04/15 19:22:06 $
+ * @version $Revision: 1.23 $, $Date: 2005/04/27 17:47:42 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
 
 public class Server extends DomainMember implements Characterizable {
 	private static final long serialVersionUID = 1988410957632317660L;
-
-	protected static final int RETRIEVE_MCM_IDS	= 1;
+//
+//	protected static final int RETRIEVE_MCM_IDS	= 1;
 
 	private String name;
 	private String description;
 	private String hostname;
-	private Identifier userId;
 
 	private Set characteristics;
 
@@ -91,8 +90,7 @@ public class Server extends DomainMember implements Characterizable {
 								 Identifier domainId,
 								 String name,
 								 String description,
-								 String hostname,
-								 Identifier userId) {
+								 String hostname) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -103,7 +101,6 @@ public class Server extends DomainMember implements Characterizable {
 		this.name = name;
 		this.description = description;
 		this.hostname = hostname;
-		this.userId = userId;
 
 		this.characteristics = new HashSet();
 	}
@@ -117,7 +114,6 @@ public class Server extends DomainMember implements Characterizable {
 		this.name = st.name;
 		this.description = st.description;
 		this.hostname = st.hostname;
-		this.userId = new Identifier(st.user_id);
 
 		Set characteristicIds = Identifier.fromTransferables(st.characteristic_ids);
 		this.characteristics = new HashSet(st.characteristic_ids.length);
@@ -143,7 +139,6 @@ public class Server extends DomainMember implements Characterizable {
 									   this.name,
 									   this.description,
 										 this.hostname,
-									   (Identifier_Transferable)this.userId.getTransferable(),
 									   charIds);
 	}
 	
@@ -154,22 +149,25 @@ public class Server extends DomainMember implements Characterizable {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	protected boolean isValid() {
-		return super.isValid() && this.name != null && this.name.length() != 0 && this.description != null && this.hostname != null && this.userId != null
-			&& this.characteristics != null && this.characteristics != Collections.EMPTY_SET;
+		return super.isValid()
+				&& this.name != null && this.name.length() != 0
+				&& this.description != null
+				&& this.hostname != null
+				&& this.characteristics != null && this.characteristics != Collections.EMPTY_SET;
 	}
-
-	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 */
-	public Set retrieveMCMIds() throws ObjectNotFoundException, RetrieveObjectException {
-		ServerDatabase database = AdministrationDatabaseContext.getServerDatabase();
-		try {
-			return (Set) database.retrieveObject(this, RETRIEVE_MCM_IDS, null);
-		}
-		catch (IllegalDataException ide) {
-			throw new RetrieveObjectException(ide.getMessage(), ide);
-		}
-	}
+//
+//	/**
+//	 * <p><b>Clients must never explicitly call this method.</b></p>
+//	 */
+//	public Set retrieveMCMIds() throws ObjectNotFoundException, RetrieveObjectException {
+//		ServerDatabase database = AdministrationDatabaseContext.getServerDatabase();
+//		try {
+//			return (Set) database.retrieveObject(this, RETRIEVE_MCM_IDS, null);
+//		}
+//		catch (IllegalDataException ide) {
+//			throw new RetrieveObjectException(ide.getMessage(), ide);
+//		}
+//	}
 
 	public String getName() {
 		return this.name;
@@ -186,10 +184,6 @@ public class Server extends DomainMember implements Characterizable {
 	public void setDescription(String description) {
 		this.description = description;
 		super.changed = true;
-	}
-
-	public Identifier getUserId() {
-		return this.userId;
 	}
 
 	public void addCharacteristic(Characteristic characteristic) {
@@ -228,8 +222,7 @@ public class Server extends DomainMember implements Characterizable {
 										Identifier domainId,
 										String name,
 										String description,
-										String hostname,
-										Identifier userId) throws CreateObjectException {
+										String hostname) throws CreateObjectException {
 		try {
 			Server server = new Server(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SERVER_ENTITY_CODE),
 						creatorId,
@@ -237,8 +230,7 @@ public class Server extends DomainMember implements Characterizable {
 						domainId,
 						name,
 						description,
-						hostname,
-						userId);
+						hostname);
 			
 			assert server.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			
@@ -261,8 +253,7 @@ public class Server extends DomainMember implements Characterizable {
 											  Identifier domainId,
 											  String name,
 											  String description,
-											  String hostname,
-											  Identifier userId) {
+											  String hostname) {
 		super.setAttributes(created,
 					modified,
 					creatorId,
@@ -272,7 +263,6 @@ public class Server extends DomainMember implements Characterizable {
 		this.name = name;
 		this.description = description;
 		this.hostname = hostname;
-		this.userId = userId;
 	}
 
 	/**
@@ -280,8 +270,8 @@ public class Server extends DomainMember implements Characterizable {
 	 */
 	public Set getDependencies() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-		
-		return Collections.singleton(this.userId);
+
+		return Collections.EMPTY_SET;
 	}
 	
 	public void setHostName(String hostname) {
@@ -291,11 +281,6 @@ public class Server extends DomainMember implements Characterizable {
 	
 	public void setName(String name) {
 		this.name = name;
-		super.changed = true;
-	}
-	
-	public void setUserId(Identifier userId) {
-		this.userId = userId;
 		super.changed = true;
 	}
 
