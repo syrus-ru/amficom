@@ -1,5 +1,5 @@
 /*
- * $Id: MCMMeasurementObjectLoader.java,v 1.37 2005/04/25 10:53:50 bob Exp $
+ * $Id: MCMMeasurementObjectLoader.java,v 1.38 2005/04/27 15:11:26 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,30 +25,25 @@ import com.syrus.AMFICOM.measurement.CronTemporalPatternDatabase;
 import com.syrus.AMFICOM.measurement.DatabaseMeasurementObjectLoader;
 import com.syrus.AMFICOM.measurement.EvaluationType;
 import com.syrus.AMFICOM.measurement.EvaluationTypeDatabase;
-import com.syrus.AMFICOM.measurement.IntervalsTemporalPattern;
 import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MeasurementSetupDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.measurement.MeasurementTypeDatabase;
-import com.syrus.AMFICOM.measurement.PeriodicalTemporalPattern;
-import com.syrus.AMFICOM.measurement.PeriodicalTemporalPatternDatabase;
 import com.syrus.AMFICOM.measurement.Set;
 import com.syrus.AMFICOM.measurement.SetDatabase;
 import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.CronTemporalPattern_Transferable;
 import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
-import com.syrus.AMFICOM.measurement.corba.IntervalsTemporalPattern_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
-import com.syrus.AMFICOM.measurement.corba.PeriodicalTemporalPattern_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
 import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2005/04/25 10:53:50 $
- * @author $Author: bob $
+ * @version $Revision: 1.38 $, $Date: 2005/04/27 15:11:26 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
@@ -65,7 +60,7 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 		java.util.Set loadedObjects = new HashSet();
 
 		try {
-			MServer mServerRef = MeasurementControlModule.mServerConnectionManager.getVerifiedMServerReference();
+			MServer mServerRef = SessionEnvironment.getMCMServantManager().getMServerReference();
 			MeasurementType_Transferable[] transferables = mServerRef.transmitMeasurementTypes(loadIdsT);
 			for (int i = 0; i < transferables.length; i++) {
 				try {
@@ -110,7 +105,7 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 		java.util.Set loadedObjects = new HashSet();
 
 		try {
-			MServer mServerRef = MeasurementControlModule.mServerConnectionManager.getVerifiedMServerReference();
+			MServer mServerRef = SessionEnvironment.getMCMServantManager().getMServerReference();
 			AnalysisType_Transferable[] transferables = mServerRef.transmitAnalysisTypes(loadIdsT);
 			for (int i = 0; i < transferables.length; i++) {
 				try {
@@ -155,7 +150,7 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 		java.util.Set loadedObjects = new HashSet();
 
 		try {
-			MServer mServerRef = MeasurementControlModule.mServerConnectionManager.getVerifiedMServerReference();
+			MServer mServerRef = SessionEnvironment.getMCMServantManager().getMServerReference();
 			EvaluationType_Transferable[] transferables = mServerRef.transmitEvaluationTypes(loadIdsT);
 			for (int i = 0; i < transferables.length; i++) {
 				try {
@@ -202,7 +197,7 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 		java.util.Set loadedObjects = new HashSet();
 
 		try {
-			MServer mServerRef = MeasurementControlModule.mServerConnectionManager.getVerifiedMServerReference();
+			MServer mServerRef = SessionEnvironment.getMCMServantManager().getMServerReference();
 			MeasurementSetup_Transferable[] transferables = mServerRef.transmitMeasurementSetups(loadIdsT);
 			for (int i = 0; i < transferables.length; i++) {
 				try {
@@ -247,7 +242,7 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 		java.util.Set loadedObjects = new HashSet();
 
 		try {
-			MServer mServerRef = MeasurementControlModule.mServerConnectionManager.getVerifiedMServerReference();
+			MServer mServerRef = SessionEnvironment.getMCMServantManager().getMServerReference();
 			Set_Transferable[] transferables = mServerRef.transmitSets(loadIdsT);
 			for (int i = 0; i < transferables.length; i++) {
 				try {
@@ -292,7 +287,7 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 		java.util.Set loadedObjects = new HashSet();
 
 		try {
-			MServer mServerRef = MeasurementControlModule.mServerConnectionManager.getVerifiedMServerReference();
+			MServer mServerRef = SessionEnvironment.getMCMServantManager().getMServerReference();
 			CronTemporalPattern_Transferable[] transferables = mServerRef.transmitCronTemporalPatterns(loadIdsT);
 			for (int i = 0; i < transferables.length; i++) {
 				try {
@@ -339,7 +334,7 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 		java.util.Set loadedObjects = new HashSet();
 
 		try {
-			MServer mServerRef = MeasurementControlModule.mServerConnectionManager.getVerifiedMServerReference();
+			MServer mServerRef = SessionEnvironment.getMCMServantManager().getMServerReference();
 			IntervalsTemporalPattern_Transferable[] transferables = mServerRef.transmitIntervalsTemporalPatterns(loadIdsT);
 			for (int i = 0; i < transferables.length; i++) {
 				try {
@@ -388,7 +383,7 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 		java.util.Set loadedObjects = new HashSet();
 
 		try {
-			MServer mServerRef = MeasurementControlModule.mServerConnectionManager.getVerifiedMServerReference();
+			MServer mServerRef = SessionEnvironment.getMCMServantManager().getMServerReference();
 			PeriodicalTemporalPattern_Transferable[] transferables = mServerRef.transmitPeriodicalTemporalPatterns(loadIdsT);
 			for (int i = 0; i < transferables.length; i++) {
 				try {
