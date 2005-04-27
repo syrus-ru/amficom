@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.27 2005/04/25 15:07:11 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.28 2005/04/27 16:56:26 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,7 +52,7 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.27 $, $Date: 2005/04/25 15:07:11 $
+ * @version $Revision: 1.28 $, $Date: 2005/04/27 16:56:26 $
  * @module scheme_v1
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation. 
  */
@@ -82,6 +82,8 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	private SchemeProtoElementDatabase schemeProtoElementDatabase; 
 
 	private Set characteristics;
+
+	private boolean parentSet = false;
 
 	private ArrayList itemListeners = new ArrayList();
 
@@ -158,6 +160,8 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	/**
 	 * A shorthand for
 	 * {@link #createInstance(Identifier, String, String, String, EquipmentType, BitmapImageResource, SchemeImageResource, SchemeImageResource)}.
+	 * This method breaks some assertions, so clients should consider using
+	 * other ones to create a new instance.
 	 * 
 	 * @param creatorId cannot be <code>null</code>.
 	 * @param name cannot be <code>null</code>.
@@ -286,6 +290,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 					schemeCell, null,
 					parentSchemeProtoElement);
 			schemeProtoElement.changed = true;
+			schemeProtoElement.parentSet = true;
 			return schemeProtoElement;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(
@@ -331,6 +336,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 					schemeCell, parentSchemeProtoGroup,
 					null);
 			schemeProtoElement.changed = true;
+			schemeProtoElement.parentSet = true;
 			return schemeProtoElement;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(
@@ -537,8 +543,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	}
 
 	public SchemeProtoElement getParentSchemeProtoElement() {
-		assert this.parentSchemeProtoElementId != null && this.parentSchemeProtoGroupId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert this.parentSchemeProtoElementId.isVoid() ^ this.parentSchemeProtoGroupId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+		assert this.assertParentSetStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
 
 		if (this.parentSchemeProtoElementId.isVoid()) {
 			Log.debugMessage("SchemeProtoElement.getParentSchemeProtoElement() | Parent SchemeProtoElement was requested, while parent is a SchemeProtoGroup; returning null.", //$NON-NLS-1$
@@ -555,8 +560,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	}
 
 	public SchemeProtoGroup getParentSchemeProtoGroup() {
-		assert this.parentSchemeProtoElementId != null && this.parentSchemeProtoGroupId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert this.parentSchemeProtoElementId.isVoid() ^ this.parentSchemeProtoGroupId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+		assert this.assertParentSetStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
 		
 		if (this.parentSchemeProtoGroupId.isVoid()) {
 			Log.debugMessage("SchemeProtoElement.getParentSchemeProtoGroup() | Parent SchemeProtoGroup was requested, while parent is a SchemeProtoElement; returnning null", //$NON-NLS-1$
@@ -899,8 +903,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * @param parentSchemeProtoElement
 	 */
 	public void setParentSchemeProtoElement(final SchemeProtoElement parentSchemeProtoElement) {
-		assert this.parentSchemeProtoGroupId != null && this.parentSchemeProtoElementId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert this.parentSchemeProtoGroupId.isVoid() ^ this.parentSchemeProtoElementId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+		assert this.assertParentSetNonStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
 		assert parentSchemeProtoElement != this: ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
 
 		Identifier newParentSchemeProtoElementId;
@@ -910,7 +913,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 			 */
 			if (parentSchemeProtoElement == null) {
 				Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Log.WARNING);
-				SchemeStorableObjectPool.delete(this.id);
+				SchemeStorableObjectPool.delete(super.id);
 				return;
 			}
 			newParentSchemeProtoElementId = parentSchemeProtoElement.id;
@@ -945,9 +948,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * @param parentSchemeProtoGroup
 	 */
 	public void setParentSchemeProtoGroup(final SchemeProtoGroup parentSchemeProtoGroup) {
-		assert this.parentSchemeProtoGroupId != null
-				&& this.parentSchemeProtoElementId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert this.parentSchemeProtoGroupId.isVoid() ^ this.parentSchemeProtoElementId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+		assert this.assertParentSetNonStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
 
 		Identifier newParentSchemeProtoGroupId;
 		if (this.parentSchemeProtoElementId.isVoid()) {
@@ -956,7 +957,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 			 */
 			if (parentSchemeProtoGroup == null) {
 				Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Log.WARNING);
-				SchemeStorableObjectPool.delete(this.id);
+				SchemeStorableObjectPool.delete(super.id);
 				return;
 			}
 			newParentSchemeProtoGroupId = parentSchemeProtoGroup.getId();
@@ -1093,6 +1094,29 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	/*-********************************************************************
 	 * Non-model members.                                                 *
 	 **********************************************************************/
+
+	/**
+	 * Invoked by modifier methods.
+	 */
+	private boolean assertParentSetNonStrict() {
+		if (this.parentSet)
+			return this.assertParentSetStrict();
+		this.parentSet = true;
+		return this.parentSchemeProtoGroupId != null
+				&& this.parentSchemeProtoElementId != null
+				&& this.parentSchemeProtoGroupId.isVoid()
+				&& this.parentSchemeProtoElementId.isVoid();
+	}
+
+	/**
+	 * Invoked by accessor methods (it is assumed that object is already
+	 * initialized).
+	 */
+	private boolean assertParentSetStrict() {
+		return this.parentSchemeProtoGroupId != null
+				&& this.parentSchemeProtoElementId != null
+				&& (this.parentSchemeProtoGroupId.isVoid() ^ this.parentSchemeProtoElementId.isVoid());
+	}
 
 	/**
 	 * Returns <code>SchemeCablePort</code>s (as an unmodifiable set) for
