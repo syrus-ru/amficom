@@ -1,5 +1,5 @@
 /*
- * $Id: ServerProcess.java,v 1.1 2005/04/27 17:44:08 arseniy Exp $
+ * $Id: ServerProcess.java,v 1.2 2005/04/27 19:31:44 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/27 17:44:08 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/27 19:31:44 $
  * @author $Author: arseniy $
  * @module admin_v1
  */
@@ -77,7 +77,13 @@ public class ServerProcess extends StorableObject {
 	 * @param userId
 	 * @param description
 	 */
-	public ServerProcess(Identifier id, Identifier creatorId, long version, String codename, Identifier serverId, Identifier userId, String description) {
+	public ServerProcess(Identifier id,
+			Identifier creatorId,
+			long version,
+			String codename,
+			Identifier serverId,
+			Identifier userId,
+			String description) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
