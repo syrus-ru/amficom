@@ -1,3 +1,10 @@
+/*
+ * $Id: LocalIdentifierGeneratorServer.java,v 1.2 2005/04/27 15:30:21 arseniy Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
 package com.syrus.AMFICOM.general;
 
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
@@ -6,6 +13,11 @@ import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.IdentifierGeneratorServer;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
+/**
+ * @version $Revision: 1.2 $, $Date: 2005/04/27 15:30:21 $
+ * @author $Author: arseniy $
+ * @module csbridge_v1
+ */
 
 public class LocalIdentifierGeneratorServer implements IdentifierGeneratorServer, IGSConnectionManager {
 	private static final long serialVersionUID = 4417075411484576241L;

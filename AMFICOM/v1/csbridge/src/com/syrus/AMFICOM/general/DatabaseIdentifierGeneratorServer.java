@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseIdentifierGeneratorServer.java,v 1.1 2005/04/27 13:38:20 arseniy Exp $
+ * $Id: DatabaseIdentifierGeneratorServer.java,v 1.2 2005/04/27 15:30:21 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,9 +13,9 @@ import com.syrus.AMFICOM.general.corba.IdentifierGeneratorServer;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/27 13:38:20 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/27 15:30:21 $
  * @author $Author: arseniy $
- * @module general
+ * @module csbridge_v1
  */
 public class DatabaseIdentifierGeneratorServer implements IdentifierGeneratorServer, IGSConnectionManager {
 	private static final long serialVersionUID = -7936229317009903277L;

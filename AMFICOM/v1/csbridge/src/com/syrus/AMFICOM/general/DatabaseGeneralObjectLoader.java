@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseGeneralObjectLoader.java,v 1.1 2005/04/27 13:38:20 arseniy Exp $
+ * $Id: DatabaseGeneralObjectLoader.java,v 1.2 2005/04/27 15:30:20 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,9 +16,9 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/27 13:38:20 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/27 15:30:20 $
  * @author $Author: arseniy $
- * @module general_v1
+ * @module csbridge_v1
  */
 
 public class DatabaseGeneralObjectLoader extends DatabaseObjectLoader implements GeneralObjectLoader {

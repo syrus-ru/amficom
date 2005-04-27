@@ -1,5 +1,5 @@
 /*
- * $Id: ContextNameFactory.java,v 1.1 2005/04/27 13:38:54 arseniy Exp $
+ * $Id: ContextNameFactory.java,v 1.2 2005/04/27 15:30:20 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,9 +11,9 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/27 13:38:54 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/27 15:30:20 $
  * @author $Author: arseniy $
- * @module general_v1
+ * @module csbridge_v1
  */
 public final class ContextNameFactory {
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseObjectLoader.java,v 1.1 2005/04/27 13:38:20 arseniy Exp $
+ * $Id: DatabaseObjectLoader.java,v 1.2 2005/04/27 15:30:21 arseniy Exp $
  * 
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,9 +15,9 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/27 13:38:20 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/27 15:30:21 $
  * @author $Author: arseniy $
- * @module general_v1
+ * @module csbridge_v1
  */
 public abstract class DatabaseObjectLoader {
 	protected static Identifier userId;

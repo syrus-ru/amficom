@@ -1,5 +1,5 @@
 /*
- * $Id: XMLGeneralObjectLoader.java,v 1.1 2005/04/27 13:38:20 arseniy Exp $
+ * $Id: XMLGeneralObjectLoader.java,v 1.2 2005/04/27 15:30:21 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,9 +15,9 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/27 13:38:20 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/27 15:30:21 $
  * @author $Author: arseniy $
- * @module general_v1
+ * @module csbridge_v1
  */
 public final class XMLGeneralObjectLoader extends XMLObjectLoader implements GeneralObjectLoader {
 
