@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.21 2005/04/27 15:03:46 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.22 2005/04/27 15:22:10 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,10 @@ import java.util.Set;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.configuration.CableThreadType;
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.Link;
 import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -32,12 +34,13 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.scheme.corba.SchemeCableThread_Transferable;
+import com.syrus.util.Log;
 
 /**
  * #12 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.21 $, $Date: 2005/04/27 15:03:46 $
+ * @version $Revision: 1.22 $, $Date: 2005/04/27 15:22:10 $
  * @module scheme_v1
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
@@ -198,7 +201,14 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	}
 
 	public CableThreadType getCableThreadType() {
-		throw new UnsupportedOperationException();
+		assert this.cableThreadTypeId != null && !this.cableThreadTypeId.isVoid(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
+
+		try {
+			return (CableThreadType) ConfigurationStorableObjectPool.getStorableObject(this.cableThreadTypeId, true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return null;
+		}
 	}
 
 	/**
@@ -354,7 +364,14 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	 * @param cableThreadType
 	 */
 	public void setCableThreadType(final CableThreadType cableThreadType) {
-		throw new UnsupportedOperationException();
+		assert this.cableThreadTypeId != null && !this.cableThreadTypeId.isVoid(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
+		assert cableThreadType != null: ErrorMessages.NON_NULL_EXPECTED;
+
+		final Identifier newCableThreadTypeId = cableThreadType.getId();
+		if (this.cableThreadTypeId.equals(newCableThreadTypeId))
+			return;
+		this.cableThreadTypeId = newCableThreadTypeId;
+		this.changed = true;
 	}
 
 	/**
