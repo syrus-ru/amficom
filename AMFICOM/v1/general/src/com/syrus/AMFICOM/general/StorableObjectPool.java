@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.74 2005/04/26 11:48:01 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.75 2005/04/27 13:20:46 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,8 +25,8 @@ import java.util.Set;
 import org.omg.CORBA.portable.IDLEntity;
 
 /**
- * @version $Revision: 1.74 $, $Date: 2005/04/26 11:48:01 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.75 $, $Date: 2005/04/27 13:20:46 $
+ * @author $Author: bass $
  * @module general_v1
  */
 public abstract class StorableObjectPool {
@@ -560,14 +560,13 @@ public abstract class StorableObjectPool {
 		assert ids != null : "Supply an empty set instead"; //$NON-NLS-1$
 		assert condition != null : "Supply EquivalentCondition instead"; //$NON-NLS-1$
 
-		Set soSet = null;
 		Short entityCode = condition.getEntityCode();
 		LRUMap objectPool = (LRUMap) this.objectPoolMap.get(entityCode);
 
 		assert objectPool != null : "Cannot find object pool for entity code " + condition.getEntityCode() //$NON-NLS-1$
 				+ ", entity: '" + ObjectEntities.codeToString(entityCode) + " , condition class:" + condition.getClass().getName(); //$NON-NLS-1$ //$NON-NLS-2$
 
-		soSet = new HashSet();
+		final Set soSet = new HashSet();
 		for (Iterator it = objectPool.iterator(); it.hasNext();) {
 			StorableObject storableObject = (StorableObject) it.next();
 			Identifier id = storableObject.getId();
