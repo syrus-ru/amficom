@@ -22,27 +22,6 @@ APPCLASSPATH := $(LIBDIR)/general.jar:$(LIBDIR)/util.jar
 
 SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/administration/*.java)
 
-#SOURCES := com/syrus/AMFICOM/administration/DatabaseAdministrationObjectLoader.java \
-		com/syrus/AMFICOM/administration/AdministrationObjectLoader.java \
-		com/syrus/AMFICOM/administration/AdministrationStorableObjectPool.java \
-		com/syrus/AMFICOM/administration/AdministrationDatabaseContext.java \
-		com/syrus/AMFICOM/administration/XMLAdministrationObjectLoader.java \
-		com/syrus/AMFICOM/administration/User.java \
-		com/syrus/AMFICOM/administration/UserWrapper.java \
-		com/syrus/AMFICOM/administration/UserDatabase.java \
-		com/syrus/AMFICOM/administration/Domain.java \
-		com/syrus/AMFICOM/administration/DomainWrapper.java \
-		com/syrus/AMFICOM/administration/DomainDatabase.java \
-		com/syrus/AMFICOM/administration/DomainMember.java \
-		com/syrus/AMFICOM/administration/Server.java \
-		com/syrus/AMFICOM/administration/ServerWrapper.java \
-		com/syrus/AMFICOM/administration/ServerDatabase.java \
-		com/syrus/AMFICOM/administration/MCM.java \
-		com/syrus/AMFICOM/administration/MCMWrapper.java \
-		com/syrus/AMFICOM/administration/MCMDatabase.java \
-		com/syrus/AMFICOM/administration/StringFieldConditionImpl.java \
-		com/syrus/AMFICOM/administration/TypicalCondition.java
-
 
 $(LIBNAME): .mach
 	$(JAR) -cf $@ \
