@@ -1,5 +1,5 @@
 /*
- * $Id: ClientAnalysisManager.java,v 1.7 2005/04/26 15:21:45 saa Exp $
+ * $Id: ClientAnalysisManager.java,v 1.8 2005/04/27 08:24:56 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.7 $, $Date: 2005/04/26 15:21:45 $
+ * @version $Revision: 1.8 $, $Date: 2005/04/27 08:24:56 $
  * @module
  */
 public class ClientAnalysisManager extends CoreAnalysisManager
@@ -29,8 +29,8 @@ public class ClientAnalysisManager extends CoreAnalysisManager
 			0.05, //минимальный уровень события
 			0.07, //минимальный уровень сварки
 			0.21, //минимальный уровень коннектора
-			3, //коэфф. запаса для шума
-			3  //мин. уровень отражения конца волокна
+			3,  //мин. уровень отражения конца волокна
+			3 //коэфф. запаса для шума
 	);
 
 	public ClientAnalysisManager() {

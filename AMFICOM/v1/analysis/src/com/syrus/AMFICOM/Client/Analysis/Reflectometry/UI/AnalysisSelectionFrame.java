@@ -200,8 +200,9 @@ implements BsHashChangeListener, PrimaryMTMListener
 		mp[2] = ((Double)jTable.getValueAt(2, 1)).doubleValue();
 		mp[3] = ((Double)jTable.getValueAt(3, 1)).doubleValue();
 
-		Heap.setMinuitAnalysisParams(
-			new AnalysisParameters(mp[0], mp[1], mp[2], mp[3]));
+		// FIXME: set minimal end level properly
+		Heap.setMinuitAnalysisParams( 
+			new AnalysisParameters(mp[0], mp[1], mp[2], mp[2], mp[3]));
 		new MinuitAnalyseCommand(aContext).execute();
 		dispatcher.notify(new RefUpdateEvent(RefUpdateEvent.PRIMARY_TRACE, RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));
 
