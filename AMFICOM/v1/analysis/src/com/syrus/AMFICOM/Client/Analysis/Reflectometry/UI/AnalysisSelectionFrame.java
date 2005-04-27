@@ -101,6 +101,7 @@ implements BsHashChangeListener, PrimaryMTMListener
 			 new Double(ap.getMinThreshold()),
 			 new Double(ap.getMinSplice()),
 			 new Double(ap.getMinConnector()),
+			 new Double(ap.getMinEnd()),
 			 new Double(ap.getNoiseFactor())
 		});
 
@@ -194,15 +195,14 @@ implements BsHashChangeListener, PrimaryMTMListener
 	void analysisStartButton_actionPerformed(ActionEvent e)
 	{
 		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-		double[] mp = new double[4];
-		mp[0] = ((Double)jTable.getValueAt(0, 1)).doubleValue();
-		mp[1] = ((Double)jTable.getValueAt(1, 1)).doubleValue();
-		mp[2] = ((Double)jTable.getValueAt(2, 1)).doubleValue();
-		mp[3] = ((Double)jTable.getValueAt(3, 1)).doubleValue();
 
-		// FIXME: set minimal end level properly
-		Heap.setMinuitAnalysisParams( 
-			new AnalysisParameters(mp[0], mp[1], mp[2], mp[2], mp[3]));
+		Heap.setMinuitAnalysisParams(new AnalysisParameters(
+			((Double)jTable.getValueAt(0, 1)).doubleValue(),
+			((Double)jTable.getValueAt(1, 1)).doubleValue(),
+			((Double)jTable.getValueAt(2, 1)).doubleValue(),
+			((Double)jTable.getValueAt(3, 1)).doubleValue(),
+			((Double)jTable.getValueAt(4, 1)).doubleValue())
+		);
 		new MinuitAnalyseCommand(aContext).execute();
 		dispatcher.notify(new RefUpdateEvent(RefUpdateEvent.PRIMARY_TRACE, RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));
 
@@ -222,7 +222,7 @@ implements BsHashChangeListener, PrimaryMTMListener
 	}
 
 	private class ParamTableModel extends AbstractTableModel
- {	
+	{
 
 	 AComboBox nfComboBox = new AComboBox(AComboBox.SMALL_FONT);
 
@@ -233,12 +233,8 @@ implements BsHashChangeListener, PrimaryMTMListener
 		 { LangModelAnalyse.getString("analysisMinEvent"), new Double(0) },
 		 { LangModelAnalyse.getString("analysisMinWeld"), new Double(0) },
 		 { LangModelAnalyse.getString("analysisMinConnector"), new Double(0) },
-		 { LangModelAnalyse.getString("analysisNoiseFactor"), nfComboBox } // @todo: temporal
-
-		 //{ LangModelAnalyse.getString("analysisMinEnd"), new Double(0) }, // @todo: remove
-		 //{ LangModelAnalyse.getString("analysisNSigma"), new Double(0) }, // @todo: remove
-		 //{ LangModelAnalyse.getString("analysisStrategy"), strComboBox }, // @todo: remove
-		 //{ LangModelAnalyse.getString("analysisWavelet"), tactComboBox } // @todo: remove
+		 { LangModelAnalyse.getString("analysisMinEnd"), new Double(0) },
+		 { LangModelAnalyse.getString("analysisNoiseFactor"), nfComboBox }
 	 };
 
 	 ParamTableModel()
@@ -251,10 +247,10 @@ implements BsHashChangeListener, PrimaryMTMListener
 	 {
 		 for (int i = 0; i < d.length; i++)
 		 {
-			 if (i < 3)
+		 	if (data[i][1] instanceof Double)
 				 data[i][1] = d[i];
-			 else if (i == 3)
-				 nfComboBox.setSelectedItem(d[i]);
+			 else if (data[i][1] instanceof JComboBox)
+				 ((JComboBox)data[i][1]).setSelectedItem(d[i]);
 		 }
 		 super.fireTableDataChanged();
 	 }
@@ -277,19 +273,12 @@ implements BsHashChangeListener, PrimaryMTMListener
 		 return columnNames[col];
 	 }
 
-	 public Object getValueAt(int row, int col) {
-			 return getDoubleValueAt(row, col);//data[row][col];
-	 }
-
-	 public Object getDoubleValueAt(int row, int col)
+	 public Object getValueAt(int row, int col)
 	 {
-		 if (col < 1)
-			 return data[row][col];
-		 if (row < 3)
-			 return data[row][col];
-		 if (row == 3)
-			 return nfComboBox.getSelectedItem();
-		 return "XXX"; // FIXME
+	 	if (data[row][col] instanceof JComboBox)
+	 		return ((JComboBox)data[row][col]).getSelectedItem();
+	 	else
+	 		return data[row][col];
 	 }
 
 	 public Class getColumnClass(int p_col)
@@ -307,14 +296,13 @@ implements BsHashChangeListener, PrimaryMTMListener
 
 	 public void setValueAt(Object value, int row, int col)
 	 {
-		 data[row][col] = value;
-		 fireTableCellUpdated(row, col);
-	 }
-
-	 public void setValueAt(double value, int row, int col)
-	 {
-		 data[row][col] = new Double(value);
-		 fireTableCellUpdated(row, col);
+	 	if (data[row][col] instanceof JComboBox)
+	 	{
+	 		// do nothing
+	 	}
+	 	else
+	 		data[row][col] = value;
+	 	fireTableCellUpdated(row, col);
 	 }
  }
 	
@@ -335,13 +323,15 @@ implements BsHashChangeListener, PrimaryMTMListener
 				Object value, boolean isSelected, int row, int column)
 		{
 			editor = value;
-			if (row == 3 && column == 1)
+			if (model.data[row][column] instanceof JComboBox)
 			{
-				model.nfComboBox.setBackground(SystemColor.window);
-				return model.nfComboBox;
+				JComboBox box = (JComboBox)model.data[row][column]; 
+				box.setBackground(SystemColor.window);
+				return box;
 			}
-			return super.getTableCellEditorComponent(table, value, isSelected,
-				row, column);
+			else
+				return super.getTableCellEditorComponent(table, value,
+					isSelected, row, column);
 		}
 
 		public Object getCellEditorValue()
@@ -376,13 +366,15 @@ implements BsHashChangeListener, PrimaryMTMListener
 			this.model = model;
 		}
 	
-		public Component getTableCellRendererComponent(JTable table, Object value,
-				boolean isSelected, boolean hasFocus, int row, int column)
+		public Component getTableCellRendererComponent(JTable table,
+				Object value, boolean isSelected, boolean hasFocus,
+				int row, int column)
 		{
-			if(column == 1 && row == 3)
-				return model.nfComboBox;
-
-			return  super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+			if (model.data[row][column] instanceof JComboBox)
+				return (JComboBox)model.data[row][column];
+			else
+				return super.getTableCellRendererComponent(table, value,
+					isSelected, hasFocus, row, column);
 		}
 	}
 
