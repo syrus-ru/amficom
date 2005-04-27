@@ -1,5 +1,5 @@
 /*-
-* $Id: IntervalsTemporalPattern.java,v 1.7 2005/04/27 10:14:56 bob Exp $
+* $Id: IntervalsTemporalPattern.java,v 1.8 2005/04/27 15:21:45 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -36,7 +36,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/04/27 10:14:56 $
+ * @version $Revision: 1.8 $, $Date: 2005/04/27 15:21:45 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module measurement_v1
@@ -268,6 +268,7 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern {
 
 		if (abstractTemporalid.isVoid()) {
 			this.intervalsAbstractTemporalPatternMap.remove(long1);
+			this.intervalsDuration.remove(long1);
 		} else {
 			try {
 				AbstractTemporalPattern abstractTemporalPattern = (AbstractTemporalPattern) MeasurementStorableObjectPool
@@ -314,6 +315,7 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern {
 
 						if (i == 0) {
 							this.intervalsAbstractTemporalPatternMap.remove(ms);
+							this.intervalsDuration.remove(ms);
 							int newRepeate = times2.size() - 1;
 							Long newMilliseconds = new Long(milliseconds + period);
 							// Log.debugMessage("IntervalsTemporalPattern.removeIntervalItem
@@ -387,6 +389,7 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern {
 //									Log.FINEST);
 							} else {
 								this.intervalsAbstractTemporalPatternMap.remove(long1);
+								this.intervalsDuration.remove(long1);
 								this.intervalsAbstractTemporalPatternMap.put(ms, Identifier.VOID_IDENTIFIER);
 							}
 						}
@@ -538,8 +541,13 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern {
 		for (Iterator it = offsets.iterator(); it.hasNext();) {
 			Long ms = (Long) it.next();
 			long ms1 = ms.longValue();
-			this.removeIntervalItem(ms1);
-			this.intervalsAbstractTemporalPatternMap.put(new Long(ms1 + offset), Identifier.VOID_IDENTIFIER);
+			Long newMs = new Long(ms1 + offset);
+			Long duration = (Long) this.intervalsDuration.get(ms);
+			this.removeIntervalItem(ms1);			
+			this.intervalsAbstractTemporalPatternMap.put(newMs, Identifier.VOID_IDENTIFIER);
+			if (duration != null) {
+				this.intervalsDuration.put(newMs, duration);
+			}
 			if (ms1 + offset < minOffset) {
 				minOffset = ms1 + offset;
 			}
@@ -547,12 +555,18 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern {
 		
 		if (minOffset < 0) {
 			Map map = new HashMap();
+			Map durationMap = new HashMap();
 			for (Iterator it = this.intervalsAbstractTemporalPatternMap.keySet().iterator(); it.hasNext();) {
 				Long ms = (Long) it.next();
-				map.put(new Long(ms.longValue() - minOffset), this.intervalsAbstractTemporalPatternMap.get(ms));
+				Long newMs = new Long(ms.longValue() - minOffset);
+				map.put(newMs, this.intervalsAbstractTemporalPatternMap.get(ms));
+				durationMap.put(newMs, this.intervalsDuration.get(ms));
 			}
-			this.intervalsAbstractTemporalPatternMap.clear();
+			this.intervalsAbstractTemporalPatternMap.clear();			
 			this.intervalsAbstractTemporalPatternMap.putAll(map);
+			
+			this.intervalsDuration.clear();
+			this.intervalsDuration.putAll(durationMap);
 		}
 		
 	}
