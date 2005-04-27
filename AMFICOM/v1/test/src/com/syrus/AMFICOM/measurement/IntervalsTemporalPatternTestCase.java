@@ -1,5 +1,5 @@
 /*-
- * $Id: IntervalsTemporalPatternTestCase.java,v 1.1 2005/04/22 14:33:42 cvsadmin Exp $
+ * $Id: IntervalsTemporalPatternTestCase.java,v 1.2 2005/04/27 11:36:45 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,8 +22,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/22 14:33:42 $
- * @author $Author: cvsadmin $
+ * @version $Revision: 1.2 $, $Date: 2005/04/27 11:36:45 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module measurement_v1
  */
@@ -77,7 +77,7 @@ public class IntervalsTemporalPatternTestCase extends TestCase {
 		MeasurementStorableObjectPool.putStorableObject(intervalsTemporalPattern);
 		
 		{
-		PeriodicalTemporalPattern periodicTemporalPattern = new PeriodicalTemporalPattern(new Identifier("PeriodicTemporalPattern_1"),
+		PeriodicalTemporalPattern periodicTemporalPattern = new PeriodicalTemporalPattern(new Identifier("PeriodicalTemporalPattern_1"),
 			userId, 0L, intervalLength);
 		
 		MeasurementStorableObjectPool.putStorableObject(periodicTemporalPattern);
@@ -209,7 +209,7 @@ public class IntervalsTemporalPatternTestCase extends TestCase {
 
 		{
 
-			long timeToDelete = endTime - startTime - 2*intervalLength; 
+			long timeToDelete = endTime - startTime - 3*intervalLength; 
 
 			Date deletedDate = new Date(startTime + timeToDelete);
 
@@ -226,30 +226,33 @@ public class IntervalsTemporalPatternTestCase extends TestCase {
 		
 		
 		
-		{
-
-			long timeToInsert = endTime - startTime - 2*intervalLength; 
-
-			Date insertDate = new Date(startTime + timeToInsert);
-
-			System.out.println("expect added time " + insertDate);
-
-			intervalsTemporalPattern.addIntervalItem(timeToInsert, null);
-
-			SortedSet times = intervalsTemporalPattern.getTimes(startTime, endTime);
-
-			this.printTimes(intervalsTemporalPattern, startTime, endTime);
-
-			assertTrue(times.contains(insertDate));
-		}
+//		{
+//
+//			long timeToInsert = endTime - startTime - 2*intervalLength; 
+//
+//			Date insertDate = new Date(startTime + timeToInsert);
+//
+//			System.out.println("expect added time " + insertDate);
+//
+//			intervalsTemporalPattern.addIntervalItem(timeToInsert, null);
+//
+//			SortedSet times = intervalsTemporalPattern.getTimes(startTime, endTime);
+//
+//			this.printTimes(intervalsTemporalPattern, startTime, endTime);
+//
+//			assertTrue(times.contains(insertDate));
+//		}
 		
 		{
-//			PeriodicTemporalPattern periodicTemporalPattern = new PeriodicTemporalPattern(new Identifier("PeriodicTemporalPattern_2"),
-//				userId, 0L, intervalLength, (endTime - startTime)/intervalLength);
-//			
-//			MeasurementStorableObjectPool.putStorableObject(periodicTemporalPattern);
-//			
-//			intervalsTemporalPattern.addIntervalItem(0, periodicTemporalPattern.getId());
+			System.out.println("add periodical ");
+			PeriodicalTemporalPattern periodicTemporalPattern2 = new PeriodicalTemporalPattern(new Identifier("PeriodicalTemporalPattern_2"),
+				userId, 0L, intervalLength/2);
+			
+			MeasurementStorableObjectPool.putStorableObject(periodicTemporalPattern2);
+			
+			intervalsTemporalPattern.addIntervalItem(intervalLength, periodicTemporalPattern2.getId());
+			
+			this.printTimes(intervalsTemporalPattern, startTime, endTime);
 		}
 	}
 
