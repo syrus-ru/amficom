@@ -1,5 +1,5 @@
 /*
- * $Id: MapViewStorableObjectPool.java,v 1.13 2005/04/21 13:52:51 arseniy Exp $
+ * $Id: MapViewStorableObjectPool.java,v 1.14 2005/04/27 13:52:35 arseniy Exp $
  *
  * Copyright ? 2004 Syrus Systems.
  * ѕвиапр-жейпкаехмкл зепжф.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/04/21 13:52:51 $
+ * @version $Revision: 1.14 $, $Date: 2005/04/27 13:52:35 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -55,8 +55,6 @@ public final class MapViewStorableObjectPool extends StorableObjectPool {
 		mvObjectLoader = mvObjectLoader1;
 
 		instance.addObjectPool(ObjectEntities.MAPVIEW_ENTITY_CODE, size);
-
-		instance.populatePools();
 	}
 
 	public static void init(MapViewObjectLoader mvObjectLoader1) {
@@ -65,8 +63,6 @@ public final class MapViewStorableObjectPool extends StorableObjectPool {
 
 		mvObjectLoader = mvObjectLoader1;
 		instance.addObjectPool(ObjectEntities.MAPVIEW_ENTITY_CODE, MAPVIEW_OBJECT_POOL_SIZE);
-
-		instance.populatePools();
 	}
 
 	public static void init(MapViewObjectLoader mvObjectLoader1, Class cacheClass, final int size) {
@@ -226,6 +222,10 @@ public final class MapViewStorableObjectPool extends StorableObjectPool {
 
 	public static void delete(final Set identifiables) {
 		instance.deleteImpl(identifiables);
+	}
+
+	public static void deserializePool() {
+		instance.deserializePoolImpl();
 	}
 
 	public static void serializePool() {

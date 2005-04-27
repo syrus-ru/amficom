@@ -1,5 +1,5 @@
 /*
- * $Id: MapStorableObjectPool.java,v 1.17 2005/04/21 13:52:32 arseniy Exp $
+ * $Id: MapStorableObjectPool.java,v 1.18 2005/04/27 13:51:54 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/04/21 13:52:32 $
+ * @version $Revision: 1.18 $, $Date: 2005/04/27 13:51:54 $
  * @author $Author: arseniy $
  * @module map_v1
  */
@@ -83,8 +83,6 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 		instance.addObjectPool(ObjectEntities.PHYSICAL_LINK_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.COLLECTOR_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.MAP_ENTITY_CODE, size);
-
-		instance.populatePools();
 	}
 
 	public static void init(final MapObjectLoader mapObjectLoader1) {
@@ -102,8 +100,6 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 		instance.addObjectPool(ObjectEntities.PHYSICAL_LINK_ENTITY_CODE, PHYSICAL_LINK_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.COLLECTOR_ENTITY_CODE, COLLECTOR_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.MAP_ENTITY_CODE, MAP_OBJECT_POOL_SIZE);
-
-		instance.populatePools();
 	}
 
 	/**
@@ -373,6 +369,10 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 
 	protected void deleteStorableObjects(final Set identifiables) {
 		mapObjectLoader.delete(identifiables);
+	}
+
+	public static void deserializePool() {
+		instance.deserializePoolImpl();
 	}
 
 	public static void serializePool() {

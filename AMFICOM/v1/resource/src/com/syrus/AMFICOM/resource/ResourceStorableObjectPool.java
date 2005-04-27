@@ -1,5 +1,5 @@
 /*
- * $Id: ResourceStorableObjectPool.java,v 1.19 2005/04/21 13:52:20 arseniy Exp $
+ * $Id: ResourceStorableObjectPool.java,v 1.20 2005/04/27 13:51:35 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.19 $, $Date: 2005/04/21 13:52:20 $
+ * @version $Revision: 1.20 $, $Date: 2005/04/27 13:51:35 $
  * @module resource_v1
  */
 public final class ResourceStorableObjectPool extends StorableObjectPool {
@@ -52,8 +52,6 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 		rObjectLoader = rObjectLoader1;
 
 		instance.addObjectPool(ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE, size);
-
-		instance.populatePools();
 	}
 
 	public static void init(ResourceObjectLoader rObjectLoader1) {
@@ -63,8 +61,6 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 		rObjectLoader = rObjectLoader1;
 
 		instance.addObjectPool(ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE, IMAGERESOURCE_OBJECT_POOL_SIZE);
-
-		instance.populatePools();
 	}
 
 	public static void init(ResourceObjectLoader rObjectLoader1, Class cacheClass, final int size) {
@@ -229,7 +225,11 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 		instance.deleteImpl(identifiables);
 	}
 
-	public static void serializePool(){
+	public static void deserializePool() {
+		instance.deserializePoolImpl();
+	}
+
+	public static void serializePool() {
 		instance.serializePoolImpl();
 	}
 }

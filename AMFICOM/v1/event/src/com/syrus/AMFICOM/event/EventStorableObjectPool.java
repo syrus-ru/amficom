@@ -1,5 +1,5 @@
 /*
- * $Id: EventStorableObjectPool.java,v 1.21 2005/04/21 13:52:08 arseniy Exp $
+ * $Id: EventStorableObjectPool.java,v 1.22 2005/04/27 13:51:23 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/04/21 13:52:08 $
+ * @version $Revision: 1.22 $, $Date: 2005/04/27 13:51:23 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -60,8 +60,6 @@ public class EventStorableObjectPool extends StorableObjectPool {
 
 		instance.addObjectPool(ObjectEntities.EVENT_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.EVENTSOURCE_ENTITY_CODE, size);
-
-		instance.populatePools();
 	}
 
 	public static void init(EventObjectLoader eObjectLoader1) {
@@ -74,8 +72,6 @@ public class EventStorableObjectPool extends StorableObjectPool {
 
 		instance.addObjectPool(ObjectEntities.EVENT_ENTITY_CODE, EVENT_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.EVENTSOURCE_ENTITY_CODE, EVENTSOURCE_OBJECT_POOL_SIZE);
-
-		instance.populatePools();
 	}
 
 	public static void init(EventObjectLoader eObjectLoader1, Class cacheClass, final int size) {
@@ -261,6 +257,10 @@ public class EventStorableObjectPool extends StorableObjectPool {
 
 	protected void deleteStorableObjects(final Set identifiables) {
 		eObjectLoader.delete(identifiables);
+	}
+
+	public static void deserializePool() {
+		instance.deserializePoolImpl();
 	}
 
 	public static void serializePool() {

@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.78 2005/04/21 13:51:58 arseniy Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.79 2005/04/27 13:50:43 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.78 $, $Date: 2005/04/21 13:51:58 $
+ * @version $Revision: 1.79 $, $Date: 2005/04/27 13:50:43 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -83,8 +83,6 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 		instance.addObjectPool(ObjectEntities.KIS_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.MEASUREMENTPORT_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.ME_ENTITY_CODE, size);
-
-		instance.populatePools();
 	}
 
 	public static void init(ConfigurationObjectLoader cObjectLoader1) {
@@ -108,8 +106,6 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 		instance.addObjectPool(ObjectEntities.KIS_ENTITY_CODE, KIS_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.MEASUREMENTPORT_ENTITY_CODE, MEASUREMENTPORT_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.ME_ENTITY_CODE, ME_OBJECT_POOL_SIZE);
-
-		instance.populatePools();
 	}
 
 	public static void init(ConfigurationObjectLoader cObjectLoader1, Class cacheClass, final int size) {
@@ -455,6 +451,10 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 
 	protected void deleteStorableObjects(final Set identifiables) {
 		cObjectLoader.delete(identifiables);
+	}
+
+	public static void deserializePool() {
+		instance.deserializePoolImpl();
 	}
 
 	public static void serializePool() {

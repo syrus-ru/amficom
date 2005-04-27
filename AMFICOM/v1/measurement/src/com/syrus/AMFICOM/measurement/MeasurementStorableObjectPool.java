@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.86 2005/04/25 09:48:58 bob Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.87 2005/04/27 13:51:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,8 +23,8 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.86 $, $Date: 2005/04/25 09:48:58 $
- * @author $Author: bob $
+ * @version $Revision: 1.87 $, $Date: 2005/04/27 13:51:01 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -83,8 +83,6 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 		instance.addObjectPool(ObjectEntities.INTERVALS_TEMPORALPATTERN_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.PERIODICAL_TEMPORALPATTERN_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.RESULT_ENTITY_CODE, size);
-
-		instance.populatePools();
 	}
 
 	public static void init(MeasurementObjectLoader mObjectLoader1) {
@@ -109,8 +107,6 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 		instance.addObjectPool(ObjectEntities.INTERVALS_TEMPORALPATTERN_ENTITY_CODE, INTERVALS_TEMPORALPATTERN_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.PERIODICAL_TEMPORALPATTERN_ENTITY_CODE, PERIODIC_TEMPORALPATTERN_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.RESULT_ENTITY_CODE, RESULT_OBJECT_POOL_SIZE);
-
-		instance.populatePools();
 	}
 
 	public static void init(MeasurementObjectLoader mObjectLoader1, Class cacheClass, final int size) {
@@ -402,6 +398,10 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 
 	protected void deleteStorableObjects(final java.util.Set identifiables) {
 		mObjectLoader.delete(identifiables);
+	}
+
+	public static void deserializePool() {
+		instance.deserializePoolImpl();
 	}
 
 	public static void serializePool() {

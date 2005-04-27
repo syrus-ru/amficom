@@ -1,5 +1,5 @@
 /*
- * $Id: AdministrationStorableObjectPool.java,v 1.21 2005/04/21 13:51:53 arseniy Exp $
+ * $Id: AdministrationStorableObjectPool.java,v 1.22 2005/04/27 13:50:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/04/21 13:51:53 $
+ * @version $Revision: 1.22 $, $Date: 2005/04/27 13:50:01 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -62,8 +62,6 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 		instance.addObjectPool(ObjectEntities.SERVER_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.MCM_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.PERMATTR_ENTITY_CODE, size);
-
-		instance.populatePools();
 	}
 
 	public static void init(AdministrationObjectLoader aObjectLoader1) {
@@ -77,8 +75,6 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 		instance.addObjectPool(ObjectEntities.SERVER_ENTITY_CODE, SERVER_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.MCM_ENTITY_CODE, MCM_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.PERMATTR_ENTITY_CODE, PERMATTR_OBJECT_POOL_SIZE);
-
-		instance.populatePools();
 	}
 
 	public static void init(AdministrationObjectLoader aObjectLoader1, Class cacheClass, final int size) {
@@ -291,6 +287,10 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 	
 	protected void deleteStorableObjects(final Set identifiables) {
 		aObjectLoader.delete(identifiables);
+	}
+
+	public static void deserializePool() {
+		instance.deserializePoolImpl();
 	}
 
 	public static void serializePool() {

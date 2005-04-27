@@ -1,5 +1,5 @@
 /*
- * $Id: GeneralStorableObjectPool.java,v 1.21 2005/04/21 13:51:47 arseniy Exp $
+ * $Id: GeneralStorableObjectPool.java,v 1.22 2005/04/27 13:49:33 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import org.omg.CORBA.portable.IDLEntity;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/04/21 13:51:47 $
+ * @version $Revision: 1.22 $, $Date: 2005/04/27 13:49:33 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -50,8 +50,6 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 		instance.addObjectPool(ObjectEntities.PARAMETERTYPE_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.CHARACTERISTIC_ENTITY_CODE, size);
-
-		instance.populatePools();
 	}
 
 	public static void init(GeneralObjectLoader gObjectLoader1) {
@@ -63,8 +61,6 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 		instance.addObjectPool(ObjectEntities.PARAMETERTYPE_ENTITY_CODE, PARAMETERTYPE_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE, CHARACTERISTICTYPE_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.CHARACTERISTIC_ENTITY_CODE, CHARACTERISTIC_OBJECT_POOL_SIZE);
-
-		instance.populatePools();
 	}
 
 	public static void init(GeneralObjectLoader gObjectLoader1, Class cacheClass, final int size) {
@@ -255,6 +251,10 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 	
 	protected void deleteStorableObjects(final Set identifiables) {
 		gObjectLoader.delete(identifiables);
+	}
+
+	public static void deserializePool() {
+		instance.deserializePoolImpl();
 	}
 
 	public static void serializePool() {

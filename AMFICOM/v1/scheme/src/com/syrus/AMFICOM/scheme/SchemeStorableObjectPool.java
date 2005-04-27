@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeStorableObjectPool.java,v 1.16 2005/04/21 13:53:11 arseniy Exp $
+ * $Id: SchemeStorableObjectPool.java,v 1.17 2005/04/27 13:53:03 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.16 $, $Date: 2005/04/21 13:53:11 $
+ * @version $Revision: 1.17 $, $Date: 2005/04/27 13:53:03 $
  * @module scheme_v1
  */
 public final class SchemeStorableObjectPool extends StorableObjectPool {
@@ -100,8 +100,6 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 		instance.addObjectPool(ObjectEntities.CABLE_CHANNELING_ITEM_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.SCHEME_PATH_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.PATH_ELEMENT_ENTITY_CODE, size);
-
-		instance.populatePools();
 	}
 
 	public static void init(final SchemeObjectLoader schemeObjectLoader1) {
@@ -125,8 +123,6 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 		instance.addObjectPool(ObjectEntities.CABLE_CHANNELING_ITEM_ENTITY_CODE, CABLE_CHANNELING_ITEM_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.SCHEME_PATH_ENTITY_CODE, SCHEME_PATH_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.PATH_ELEMENT_ENTITY_CODE, PATH_ELEMENT_OBJECT_POOL_SIZE);
-
-		instance.populatePools();
 	}
 
 	/**
@@ -498,6 +494,10 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 	 */
 	protected void deleteStorableObjects(final Set identifiables) {
 		schemeObjectLoader.delete(identifiables);
+	}
+
+	public static void deserializePool() {
+		instance.deserializePoolImpl();
 	}
 
 	public static void serializePool() {
