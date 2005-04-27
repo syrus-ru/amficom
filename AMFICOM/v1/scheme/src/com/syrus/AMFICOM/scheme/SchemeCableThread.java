@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.20 2005/04/27 14:45:23 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.21 2005/04/27 15:03:46 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.scheme.corba.SchemeCableThread_Transferable;
  * #12 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.20 $, $Date: 2005/04/27 14:45:23 $
+ * @version $Revision: 1.21 $, $Date: 2005/04/27 15:03:46 $
  * @module scheme_v1
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
@@ -121,6 +121,32 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		fromTransferable(transferable);
 	}
 
+	/**
+	 * A shorthand for
+	 * {@link #createInstance(Identifier, String, String, CableThreadType, Link, SchemePort, SchemePort, SchemeCableLink)}.
+	 *
+	 * @param creatorId
+	 * @param name
+	 * @param cableThreadType
+	 * @param parentSchemeCableLink
+	 * @throws CreateObjectException
+	 */
+	public static SchemeCableThread createInstance(final Identifier creatorId, final String name, final CableThreadType cableThreadType, final SchemeCableLink parentSchemeCableLink) throws CreateObjectException {
+		return createInstance(creatorId, name, "", cableThreadType, //$NON-NLS-1$
+				null, null, null, parentSchemeCableLink);
+	}
+
+	/**
+	 * @param creatorId
+	 * @param name
+	 * @param description
+	 * @param cableThreadType
+	 * @param link
+	 * @param sourceSchemePort
+	 * @param targetSchemePort
+	 * @param parentSchemeCableLink
+	 * @throws CreateObjectException
+	 */
 	public static SchemeCableThread createInstance(
 			final Identifier creatorId, final String name,
 			final String description,
@@ -132,10 +158,8 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		assert creatorId != null && !creatorId.isVoid(): ErrorMessages.NON_VOID_EXPECTED;
 		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
 		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
-		/**
-		 * @todo Add additional assertions.
-		 * @todo Add a shorthand #createInstance()
-		 */
+		assert cableThreadType != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert parentSchemeCableLink != null: ErrorMessages.NON_NULL_EXPECTED;
 
 		try {
 			final Date created = new Date();
@@ -327,9 +351,9 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * @param newCableThreadTypeImpl
+	 * @param cableThreadType
 	 */
-	public void setCableThreadType(CableThreadType newCableThreadTypeImpl) {
+	public void setCableThreadType(final CableThreadType cableThreadType) {
 		throw new UnsupportedOperationException();
 	}
 

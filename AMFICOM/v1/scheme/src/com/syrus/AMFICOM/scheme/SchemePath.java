@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.22 2005/04/27 14:45:23 bass Exp $
+ * $Id: SchemePath.java,v 1.23 2005/04/27 15:03:46 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,7 +43,7 @@ import com.syrus.util.Log;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.22 $, $Date: 2005/04/27 14:45:23 $
+ * @version $Revision: 1.23 $, $Date: 2005/04/27 15:03:46 $
  * @module scheme_v1
  */
 public final class SchemePath extends AbstractCloneableStorableObject implements
@@ -113,6 +113,28 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 		fromTransferable(transferable);
 	}
 
+	/**
+	 * A shorthand for
+	 * {@link #createInstance(Identifier, String, String, TransmissionPath, SchemeMonitoringSolution)}.
+	 *
+	 * @param creatorId
+	 * @param name
+	 * @throws CreateObjectException
+	 */
+	public static SchemePath createInstance(final Identifier creatorId,
+			final String name)
+			throws CreateObjectException {
+		return createInstance(creatorId, name, "", null, null); //$NON-NLS-1$
+	}
+
+	/**
+	 * @param creatorId
+	 * @param name
+	 * @param description
+	 * @param transmissionPath
+	 * @param parentSchemeMonitoringSolution
+	 * @throws CreateObjectException
+	 */
 	public static SchemePath createInstance(final Identifier creatorId,
 			final String name, final String description,
 			final TransmissionPath transmissionPath,
@@ -121,10 +143,6 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 		assert creatorId != null && !creatorId.isVoid(): ErrorMessages.NON_VOID_EXPECTED;
 		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
 		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
-		/**
-		 * @todo Add additional assertions.
-		 * @todo Add a shorthand #createInstance()
-		 */
 
 		try {
 			final Date created = new Date();
@@ -375,9 +393,9 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	}
 
 	/**
-	 * @param newPathImpl
+	 * @param transmissionPath
 	 */
-	public void setTransmissionPath(TransmissionPath newPathImpl) {
+	public void setTransmissionPath(final TransmissionPath transmissionPath) {
 		throw new UnsupportedOperationException();
 	}
 
