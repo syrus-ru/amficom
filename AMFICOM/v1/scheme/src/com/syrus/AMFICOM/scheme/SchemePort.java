@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePort.java,v 1.20 2005/04/27 09:59:56 bass Exp $
+ * $Id: SchemePort.java,v 1.21 2005/04/27 13:22:09 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.scheme;
 
 import java.util.Date;
+import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
 
@@ -16,24 +17,27 @@ import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.configuration.Port;
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.corba.PortSort;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
 import com.syrus.AMFICOM.scheme.corba.SchemePort_Transferable;
+import com.syrus.util.Log;
 
 /**
  * #08 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.20 $, $Date: 2005/04/27 09:59:56 $
+ * @version $Revision: 1.21 $, $Date: 2005/04/27 13:22:09 $
  * @module scheme_v1
  */
 public final class SchemePort extends AbstractSchemePort {
@@ -193,11 +197,29 @@ public final class SchemePort extends AbstractSchemePort {
 	}
 
 	public SchemeCableThread getSchemeCableThread() {
-		throw new UnsupportedOperationException();
+		try {
+			final Set schemeCableThreads = SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, ObjectEntities.SCHEME_CABLE_THREAD_ENTITY_CODE), true);
+			assert schemeCableThreads != null && schemeCableThreads.size() <= 1;
+			return schemeCableThreads.isEmpty()
+					? null
+					: (SchemeCableThread) schemeCableThreads.iterator().next();
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return null;
+		}
 	}
 
 	public SchemeLink getSchemeLink() {
-		throw new UnsupportedOperationException();
+		try {
+			final Set schemeLinks = SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, ObjectEntities.SCHEME_LINK_ENTITY_CODE), true);
+			assert schemeLinks != null && schemeLinks.size() <= 1;
+			return schemeLinks.isEmpty()
+					? null
+					: (SchemeLink) schemeLinks.iterator().next();
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return null;
+		}
 	}
 
 	/**

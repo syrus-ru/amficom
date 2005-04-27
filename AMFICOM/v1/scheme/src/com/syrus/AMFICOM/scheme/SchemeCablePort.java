@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePort.java,v 1.21 2005/04/27 09:59:55 bass Exp $
+ * $Id: SchemeCablePort.java,v 1.22 2005/04/27 13:22:09 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.scheme;
 
 import java.util.Date;
+import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
 
@@ -16,24 +17,27 @@ import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.configuration.Port;
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.corba.PortSort;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
 import com.syrus.AMFICOM.scheme.corba.SchemeCablePort_Transferable;
+import com.syrus.util.Log;
 
 /**
  * #09 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.21 $, $Date: 2005/04/27 09:59:55 $
+ * @version $Revision: 1.22 $, $Date: 2005/04/27 13:22:09 $
  * @module scheme_v1
  */
 public final class SchemeCablePort extends AbstractSchemePort {
@@ -193,7 +197,16 @@ public final class SchemeCablePort extends AbstractSchemePort {
 	}
 
 	public SchemeCableLink getSchemeCableLink() {
-		throw new UnsupportedOperationException();
+		try {
+			final Set schemeCableLinks = SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE), true);
+			assert schemeCableLinks != null && schemeCableLinks.size() <= 1;
+			return schemeCableLinks.isEmpty()
+					? null
+					: (SchemeCableLink) schemeCableLinks.iterator().next();
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return null;
+		}
 	}
 
 	/**

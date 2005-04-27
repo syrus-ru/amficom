@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.18 2005/04/22 15:39:26 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.19 2005/04/27 13:22:09 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.scheme.corba.SchemeCableThread_Transferable;
  * #12 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.18 $, $Date: 2005/04/22 15:39:26 $
+ * @version $Revision: 1.19 $, $Date: 2005/04/27 13:22:09 $
  * @module scheme_v1
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
@@ -52,9 +52,9 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 
 	private Identifier linkId;
 
-	private Identifier sourceSchemePortId;
+	Identifier sourceSchemePortId;
 
-	private Identifier targetSchemePortId;
+	Identifier targetSchemePortId;
 
 	private Identifier parentSchemeCableLinkId;
 

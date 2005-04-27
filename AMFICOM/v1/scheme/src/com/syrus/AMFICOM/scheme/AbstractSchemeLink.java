@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeLink.java,v 1.8 2005/04/25 16:26:41 bass Exp $
+ * $Id: AbstractSchemeLink.java,v 1.9 2005/04/27 13:22:09 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeLink}instead.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/04/25 16:26:41 $
+ * @version $Revision: 1.9 $, $Date: 2005/04/27 13:22:09 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemeLink extends AbstractSchemeElement {
@@ -62,13 +62,13 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	 * Depending on implementation, may reference either {@link SchemePort}
 	 * or {@link SchemeCablePort}.
 	 */
-	private Identifier sourceAbstractSchemePortId;
+	Identifier sourceAbstractSchemePortId;
 
 	/**
 	 * Depending on implementation, may reference either {@link SchemePort}
 	 * or {@link SchemeCablePort}.
 	 */
-	private Identifier targetAbstractSchemePortId;
+	Identifier targetAbstractSchemePortId;
 
 	boolean abstractLinkTypeSet = false;
 
