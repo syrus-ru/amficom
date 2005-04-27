@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevicePropertiesManager.java,v 1.2 2005/04/22 07:32:50 stas Exp $
+ * $Id: SchemeDevicePropertiesManager.java,v 1.3 2005/04/27 08:47:29 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/04/22 07:32:50 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/27 08:47:29 $
  * @module schemeclient_v1
  */
 
@@ -22,6 +22,7 @@ public class SchemeDevicePropertiesManager implements VisualManager {
 	private static SchemeDevicePropertiesManager instance;
 	private EmptyStorableObjectEditor generalPane;
 	private EmptyStorableObjectEditor charPane;
+	private EmptyStorableObjectEditor emptyPanel;
 	
 	private SchemeDevicePropertiesManager() {
 		// empty
@@ -63,5 +64,15 @@ public class SchemeDevicePropertiesManager implements VisualManager {
 	 */
 	public ObjectResourceController getController() {
 		return null;
+	}
+	
+	/**
+	 * @return EmptyStorableObjectEditor
+	 * @see VisualManager#getAdditionalPropertiesPanel()
+	 */
+	public StorableObjectEditor getAdditionalPropertiesPanel() {
+		if (emptyPanel == null)
+			emptyPanel = new EmptyStorableObjectEditor();
+		return emptyPanel;
 	}
 }

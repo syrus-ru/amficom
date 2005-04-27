@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePortPropertiesManager.java,v 1.1 2005/04/18 10:45:17 stas Exp $
+ * $Id: SchemeCablePortPropertiesManager.java,v 1.2 2005/04/27 08:47:29 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.scheme.SchemeCablePortController;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/04/18 10:45:17 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/27 08:47:29 $
  * @module schemeclient_v1
  */
 
@@ -23,6 +23,7 @@ public class SchemeCablePortPropertiesManager implements VisualManager {
 	private static SchemeCablePortPropertiesManager instance;
 	private SchemeCablePortGeneralPanel generalPanel;
 	private SchemeCablePortCharacteristicsPanel charPanel;
+	private EmptyStorableObjectEditor emptyPanel;
 	
 	private SchemeCablePortPropertiesManager() {
 		// empty
@@ -42,6 +43,8 @@ public class SchemeCablePortPropertiesManager implements VisualManager {
 		if (charPanel == null)
 			charPanel = new SchemeCablePortCharacteristicsPanel(); 
 		charPanel.setContext(aContext);
+		if (emptyPanel == null)
+			emptyPanel = new EmptyStorableObjectEditor();
 	}
 	
 	/**
@@ -66,5 +69,13 @@ public class SchemeCablePortPropertiesManager implements VisualManager {
 	 */
 	public ObjectResourceController getController() {
 		return SchemeCablePortController.getInstance();
+	}
+	
+	/**
+	 * @return EmptyStorableObjectEditor
+	 * @see VisualManager#getAdditionalPropertiesPanel()
+	 */
+	public StorableObjectEditor getAdditionalPropertiesPanel() {
+		return emptyPanel;
 	}
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLinkPropertiesManager.java,v 1.1 2005/04/18 10:45:18 stas Exp $
+ * $Id: SchemeLinkPropertiesManager.java,v 1.2 2005/04/27 08:47:29 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.scheme.SchemeLinkController;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/04/18 10:45:18 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/27 08:47:29 $
  * @module schemeclient_v1
  */
 
@@ -23,6 +23,7 @@ public class SchemeLinkPropertiesManager implements VisualManager {
 	private static SchemeLinkPropertiesManager instance;
 	private SchemeLinkGeneralPanel generalPanel;
 	private SchemeLinkCharacteristicsPanel charPanel;
+	private EmptyStorableObjectEditor emptyPanel;
 	
 	private SchemeLinkPropertiesManager() {
 		// empty
@@ -42,6 +43,8 @@ public class SchemeLinkPropertiesManager implements VisualManager {
 		if (charPanel == null)
 			charPanel = new SchemeLinkCharacteristicsPanel();
 		charPanel.setContext(aContext);
+		if (emptyPanel == null)
+			emptyPanel = new EmptyStorableObjectEditor();
 	}
 
 	/**
@@ -66,5 +69,13 @@ public class SchemeLinkPropertiesManager implements VisualManager {
 	 */
 	public ObjectResourceController getController() {
 		return SchemeLinkController.getInstance();
+	}
+	
+	/**
+	 * @return EmptyStorableObjectEditor
+	 * @see VisualManager#getAdditionalPropertiesPanel()
+	 */
+	public StorableObjectEditor getAdditionalPropertiesPanel() {
+		return emptyPanel;
 	}
 }

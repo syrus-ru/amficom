@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePortPropertiesManager.java,v 1.1 2005/04/18 10:45:18 stas Exp $
+ * $Id: SchemePortPropertiesManager.java,v 1.2 2005/04/27 08:47:29 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.scheme.SchemePortController;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/04/18 10:45:18 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/27 08:47:29 $
  * @module schemeclient_v1
  */
 
@@ -23,6 +23,7 @@ public class SchemePortPropertiesManager implements VisualManager {
 	private static SchemePortPropertiesManager instance;
 	private SchemePortGeneralPanel generalPanel;
 	private SchemePortCharacteristicsPanel charPanel;
+	private EmptyStorableObjectEditor emptyPanel;
 	
 	private SchemePortPropertiesManager() {
 		// empty
@@ -42,6 +43,8 @@ public class SchemePortPropertiesManager implements VisualManager {
 		if (charPanel == null)
 			charPanel = new SchemePortCharacteristicsPanel();
 		charPanel.setContext(aContext);
+		if (emptyPanel == null)
+			emptyPanel = new EmptyStorableObjectEditor();
 	}
 	
 	/**
@@ -67,6 +70,12 @@ public class SchemePortPropertiesManager implements VisualManager {
 	public ObjectResourceController getController() {
 		return SchemePortController.getInstance();
 	}
+	
+	/**
+	 * @return EmptyStorableObjectEditor
+	 * @see VisualManager#getAdditionalPropertiesPanel()
+	 */
+	public StorableObjectEditor getAdditionalPropertiesPanel() {
+		return emptyPanel;
+	}
 }
-
-

@@ -1,5 +1,5 @@
 /*-
- * $Id: EmptyStorableObjectEditor.java,v 1.2 2005/04/22 07:32:50 stas Exp $
+ * $Id: EmptyStorableObjectEditor.java,v 1.3 2005/04/27 08:47:29 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,14 +16,14 @@ import com.syrus.AMFICOM.client_.general.ui_.DefaultStorableObjectEditor;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/04/22 07:32:50 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/27 08:47:29 $
  * @module schemeclient_v1
  */
 
 public class EmptyStorableObjectEditor extends DefaultStorableObjectEditor {
 	JPanel pnPanel0 = new JPanel();
 	
-	protected EmptyStorableObjectEditor() {
+	public EmptyStorableObjectEditor() {
 		try {
 			jbInit();
 		} catch (Exception e) {
