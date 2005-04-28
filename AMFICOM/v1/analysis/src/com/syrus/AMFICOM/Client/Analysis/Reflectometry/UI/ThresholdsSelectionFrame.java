@@ -25,6 +25,7 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.CreateEtalonCommand;
 import com.syrus.AMFICOM.Client.General.Event.CurrentEventChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
@@ -163,13 +164,7 @@ implements OperationListener, BsHashChangeListener,
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				if (et_mtm != null && currentEtEv != -1)
-				{
-					et_mtm.setDefaultThreshold(currentEtEv);
-					updateThresholds();
-					dispatcher.notify(new RefUpdateEvent(this,
-						RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
-				}
+				new CreateEtalonCommand().execute();
 			}
 		});
 
