@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.16 2005/04/27 14:45:23 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.17 2005/04/28 17:37:25 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,6 +16,7 @@ import java.util.Set;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
@@ -25,15 +26,17 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.map.MapStorableObjectPool;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.scheme.corba.CableChannelingItem_Transferable;
+import com.syrus.util.Log;
 
 /**
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.16 $, $Date: 2005/04/27 14:45:23 $
+ * @version $Revision: 1.17 $, $Date: 2005/04/28 17:37:25 $
  * @module scheme_v1
  */
 public final class CableChannelingItem extends AbstractCloneableStorableObject {
@@ -218,7 +221,18 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject {
 	}
 
 	public SiteNode getEndSiteNode() {
-		throw new UnsupportedOperationException();
+		assert this.startSiteNodeId != null
+				&& !this.startSiteNodeId.isVoid()
+				&& this.endSiteNodeId != null
+				&& !this.endSiteNodeId.isVoid(): ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert !this.endSiteNodeId.equals(this.startSiteNodeId): ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
+
+		try {
+			return (SiteNode) MapStorableObjectPool.getStorableObject(this.endSiteNodeId, true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return null;
+		}
 	}
 
 	public double getEndSpare() {
@@ -230,7 +244,15 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject {
 	}
 
 	public PhysicalLink getPhysicalLink() {
-		throw new UnsupportedOperationException();
+		assert this.physicalLinkId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		try {
+			return this.physicalLinkId.isVoid()
+					? null
+					: (PhysicalLink) MapStorableObjectPool.getStorableObject(this.physicalLinkId, true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return null;
+		}
 	}
 
 	public int getPlaceY() {
@@ -246,7 +268,18 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject {
 	}
 
 	public SiteNode getStartSiteNode() {
-		throw new UnsupportedOperationException();
+		assert this.startSiteNodeId != null
+				&& !this.startSiteNodeId.isVoid()
+				&& this.endSiteNodeId != null
+				&& !this.endSiteNodeId.isVoid(): ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert !this.startSiteNodeId.equals(this.endSiteNodeId): ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
+
+		try {
+			return (SiteNode) MapStorableObjectPool.getStorableObject(this.startSiteNodeId, true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return null;
+		}
 	}
 
 	public double getStartSpare() {
@@ -308,7 +341,17 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject {
 	 * @param endSiteNode
 	 */
 	public void setEndSiteNode(final SiteNode endSiteNode) {
-		throw new UnsupportedOperationException();
+		assert this.startSiteNodeId != null
+				&& !this.startSiteNodeId.isVoid()
+				&& this.endSiteNodeId != null
+				&& !this.endSiteNodeId.isVoid(): ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert !this.endSiteNodeId.equals(this.startSiteNodeId): ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
+		assert endSiteNode != null: ErrorMessages.NON_NULL_EXPECTED;
+		final Identifier newEndSiteNodeId = endSiteNode.getId();
+		if (this.endSiteNodeId.equals(newEndSiteNodeId))
+			return;
+		this.endSiteNodeId = newEndSiteNodeId;
+		super.changed = true;
 	}
 
 	public void setEndSpare(final double endSpare) {
@@ -326,7 +369,11 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject {
 	 * @param physicalLink
 	 */
 	public void setPhysicalLink(final PhysicalLink physicalLink) {
-		throw new UnsupportedOperationException();
+		final Identifier newPhysicalLinkId = Identifier.possiblyVoid(physicalLink);
+		if (this.physicalLinkId.equals(newPhysicalLinkId))
+			return;
+		this.physicalLinkId = newPhysicalLinkId;
+		super.changed = true;
 	}
 
 	public void setPlaceY(final int placeY) {
@@ -354,7 +401,17 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject {
 	 * @param startSiteNode
 	 */
 	public void setStartSiteNode(final SiteNode startSiteNode) {
-		throw new UnsupportedOperationException();
+		assert this.startSiteNodeId != null
+				&& !this.startSiteNodeId.isVoid()
+				&& this.endSiteNodeId != null
+				&& !this.endSiteNodeId.isVoid(): ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert !this.startSiteNodeId.equals(this.endSiteNodeId): ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
+		assert startSiteNode != null: ErrorMessages.NON_NULL_EXPECTED;
+		final Identifier newStartSiteNodeId = startSiteNode.getId();
+		if (this.startSiteNodeId.equals(newStartSiteNodeId))
+			return;
+		this.startSiteNodeId = newStartSiteNodeId;
+		super.changed = true;
 	}
 
 	public void setStartSpare(final double startSpare) {
