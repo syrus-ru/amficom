@@ -1,5 +1,5 @@
 /**
- * $Id: CableController.java,v 1.16 2005/04/25 13:02:00 peskovsky Exp $
+ * $Id: CableController.java,v 1.17 2005/04/28 12:55:52 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,9 +24,6 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.MapConnectionException;
 import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.client_.general.ui_.StorableObjectEditor;
-import com.syrus.AMFICOM.client_.general.ui_.VisualManager;
-import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
@@ -46,20 +43,16 @@ import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 /**
  * Контроллер кабеля.
  * 
- * @author $Author: peskovsky $
- * @version $Revision: 1.16 $, $Date: 2005/04/25 13:02:00 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.17 $, $Date: 2005/04/28 12:55:52 $
  * @module mapviewclient_v1
  */
 public final class CableController extends AbstractLinkController
-		implements VisualManager
 {
 	/**
 	 * Instance.
 	 */
 	private static CableController instance = null;
-
-	private static final String PROPERTY_PANE_CLASS_NAME = 
-			"com.syrus.AMFICOM.Client.Map.Props.MapCablePathPane";
 
 	/**
 	 * Private constructor.
@@ -79,28 +72,6 @@ public final class CableController extends AbstractLinkController
 		return instance;
 	}
 
-	public StorableObjectEditor getCharacteristicPropertiesPanel() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	public ObjectResourceController getController() {
-//		return CablePathWrapper.getInstance();
-		return null;
-	}
-	public StorableObjectEditor getGeneralPropertiesPanel() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/**
-	 * Получить имя класса панели, описывающей свойства кабельного пути.
-	 * @return имя класса
-	 */
-	public static String getPropertyPaneClassName()
-	{
-		return CableController.PROPERTY_PANE_CLASS_NAME;
-	}
-	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -275,9 +246,9 @@ public final class CableController extends AbstractLinkController
 
 	/**
 	 * Создать новый объект привязки к линии.
-	 * @param cablePath TODO
+	 * @param cablePath прокладка кабеля
 	 * @param link лниия
-	 * @param creatorId TODO
+	 * @param creatorId текущий пользователь
 	 * @return объект привязки, или <code>null</code> при возникновении ошибки
 	 */
 	public static CableChannelingItem generateCCI(CablePath cablePath, PhysicalLink link, Identifier creatorId)//, Identifier creatorId)

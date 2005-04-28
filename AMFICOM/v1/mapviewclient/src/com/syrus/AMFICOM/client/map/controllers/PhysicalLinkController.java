@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLinkController.java,v 1.11 2005/04/13 11:15:32 krupenn Exp $
+ * $Id: PhysicalLinkController.java,v 1.12 2005/04/28 12:55:52 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,9 +26,6 @@ import com.syrus.AMFICOM.Client.Map.MapConnectionException;
 import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.client_.general.ui_.StorableObjectEditor;
-import com.syrus.AMFICOM.client_.general.ui_.VisualManager;
-import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicType;
 import com.syrus.AMFICOM.map.AbstractNode;
@@ -40,14 +37,11 @@ import com.syrus.AMFICOM.map.PhysicalLinkType;
 /**
  * Контроллер линейного элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.11 $, $Date: 2005/04/13 11:15:32 $
+ * @version $Revision: 1.12 $, $Date: 2005/04/28 12:55:52 $
  * @module mapviewclient_v1
  */
 public class PhysicalLinkController extends AbstractLinkController
-		implements VisualManager
 {
-	private static final String PROPERTY_PANE_CLASS_NAME = 
-			"com.syrus.AMFICOM.Client.Map.Props.MapLinkPane";
 
 	/**
 	 * Instance
@@ -70,29 +64,6 @@ public class PhysicalLinkController extends AbstractLinkController
 		if(instance == null)
 			instance = new PhysicalLinkController();
 		return instance;
-	}
-
-	public StorableObjectEditor getCharacteristicPropertiesPanel() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	public ObjectResourceController getController() {
-//		return PhysicalLinkWrapper.getInstance();
-		return null;
-	}
-	
-	public StorableObjectEditor getGeneralPropertiesPanel() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/**
-	 * Получить имя класса панели, описывающей свойства кабельного пути.
-	 * @return имя класса
-	 */
-	public static String getPropertyPaneClassName()
-	{
-		return PROPERTY_PANE_CLASS_NAME;
 	}
 
 	/**

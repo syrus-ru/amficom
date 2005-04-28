@@ -1,5 +1,5 @@
 /**
- * $Id: MeasurementPathController.java,v 1.17 2005/04/18 11:15:02 krupenn Exp $
+ * $Id: MeasurementPathController.java,v 1.18 2005/04/28 12:55:52 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -23,9 +23,6 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.MapConnectionException;
 import com.syrus.AMFICOM.Client.Map.MapDataException;
-import com.syrus.AMFICOM.client_.general.ui_.StorableObjectEditor;
-import com.syrus.AMFICOM.client_.general.ui_.VisualManager;
-import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.configuration.TransmissionPath;
@@ -48,13 +45,11 @@ import com.syrus.AMFICOM.scheme.corba.PathElement_TransferablePackage.DataPackag
 /**
  *  онтроллер топологическиго пути.
  * @author $Author: krupenn $
- * @version $Revision: 1.17 $, $Date: 2005/04/18 11:15:02 $
+ * @version $Revision: 1.18 $, $Date: 2005/04/28 12:55:52 $
  * @module mapviewclient_v1
  */
 public final class MeasurementPathController extends AbstractLinkController
-		implements VisualManager
 {
-	private static final String PROPERTY_PANE_CLASS_NAME = "";
 
 	/**
 	 * Instance.
@@ -79,27 +74,6 @@ public final class MeasurementPathController extends AbstractLinkController
 		return instance;
 	}
 
-	public StorableObjectEditor getCharacteristicPropertiesPanel() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	public ObjectResourceController getController() {
-//		return MeasurementPathWrapper.getInstance();
-		return null;
-	}
-	public StorableObjectEditor getGeneralPropertiesPanel() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	/**
-	 * ѕолучить им€ класса панели, описывающей свойства кабельного пути.
-	 * @return им€ класса
-	 */
-	public static String getPropertyPaneClassName()
-	{
-		return PROPERTY_PANE_CLASS_NAME;
-	}
-	
 	/**
 	 * {@inheritDoc}
 	 */

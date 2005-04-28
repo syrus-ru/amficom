@@ -1,5 +1,5 @@
 /**
- * $Id: LinkTypeController.java,v 1.17 2005/04/20 16:15:53 krupenn Exp $
+ * $Id: LinkTypeController.java,v 1.18 2005/04/28 12:55:52 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,9 +26,6 @@ import com.syrus.AMFICOM.Client.General.UI.LineComboBox;
 import com.syrus.AMFICOM.Client.Map.MapConnectionException;
 import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.client_.general.ui_.StorableObjectEditor;
-import com.syrus.AMFICOM.client_.general.ui_.VisualManager;
-import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicType;
@@ -51,11 +48,10 @@ import com.syrus.AMFICOM.map.PhysicalLinkType;
 /**
  * Контроллер типа линейного элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.17 $, $Date: 2005/04/20 16:15:53 $
+ * @version $Revision: 1.18 $, $Date: 2005/04/28 12:55:52 $
  * @module mapviewclient_v1
  */
 public final class LinkTypeController extends AbstractLinkController
-		implements VisualManager
 {
 	/**
 	 * Хэш-таблица цветов типов линий. Для того, чтобы объект {@link Color} 
@@ -117,18 +113,6 @@ public final class LinkTypeController extends AbstractLinkController
 		return instance;
 	}
 
-	public StorableObjectEditor getCharacteristicPropertiesPanel() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	public ObjectResourceController getController() {
-//		return PhysicalLinkTypeWrapper.getInstance();
-		return null;
-	}
-	public StorableObjectEditor getGeneralPropertiesPanel() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 	/**
 	 * {@inheritDoc}
 	 * Suppress since PhysicalLinkType is not really a Map Element

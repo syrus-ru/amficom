@@ -1,5 +1,5 @@
 /**
- * $Id: TopologicalNodeController.java,v 1.12 2005/04/06 17:41:12 krupenn Exp $
+ * $Id: TopologicalNodeController.java,v 1.13 2005/04/28 12:55:52 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,19 +11,6 @@
 
 package com.syrus.AMFICOM.Client.Map.Controllers;
 
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
-import com.syrus.AMFICOM.Client.Map.MapConnectionException;
-import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
-import com.syrus.AMFICOM.Client.Map.MapDataException;
-import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.client_.general.ui_.StorableObjectEditor;
-import com.syrus.AMFICOM.client_.general.ui_.VisualManager;
-import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.map.AbstractNode;
-import com.syrus.AMFICOM.map.MapElement;
-import com.syrus.AMFICOM.map.TopologicalNode;
-
 import java.awt.BasicStroke;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -34,14 +21,23 @@ import java.awt.geom.Rectangle2D;
 
 import javax.swing.ImageIcon;
 
+import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
+import com.syrus.AMFICOM.Client.Map.MapConnectionException;
+import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
+import com.syrus.AMFICOM.Client.Map.MapDataException;
+import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.map.AbstractNode;
+import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.TopologicalNode;
+
 /**
  * Контроллер топологического узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.12 $, $Date: 2005/04/06 17:41:12 $
+ * @version $Revision: 1.13 $, $Date: 2005/04/28 12:55:52 $
  * @module mapviewclient_v1
  */
 public class TopologicalNodeController extends AbstractNodeController
-		implements VisualManager
 {
 	/** Размер пиктограммы поумолчанию. */
 	public static final Rectangle NODE_BOUNDS = new Rectangle(10, 10);
@@ -59,8 +55,6 @@ public class TopologicalNodeController extends AbstractNodeController
 	public static final String CLOSED_NODE_IMAGE = "images/node.gif";
 	/** Пиктограмма открытого топологического узла. */
 	public static final String OPEN_NODE_IMAGE = "images/void.gif";
-
-	private static final String PROPERTY_PANE_CLASS_NAME = "";
 
 	/**
 	 * Флаг необходимости инициализировать изображения маркеров событий.
@@ -97,29 +91,6 @@ public class TopologicalNodeController extends AbstractNodeController
 		return instance;
 	}
 
-	public StorableObjectEditor getCharacteristicPropertiesPanel() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	public ObjectResourceController getController() {
-//		return PhysicalLinkWrapper.getInstance();
-		return null;
-	}
-	
-	public StorableObjectEditor getGeneralPropertiesPanel() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/**
-	 * Получить имя класса панели, описывающей свойства кабельного пути.
-	 * @return имя класса
-	 */
-	public static String getPropertyPaneClassName()
-	{
-		return PROPERTY_PANE_CLASS_NAME;
-	}
-	
 	/**
 	 * {@inheritDoc}
 	 */

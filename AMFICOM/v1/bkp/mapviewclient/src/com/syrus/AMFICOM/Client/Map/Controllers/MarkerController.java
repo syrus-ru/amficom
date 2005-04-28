@@ -1,5 +1,5 @@
 /**
- * $Id: MarkerController.java,v 1.19 2005/04/13 11:15:06 krupenn Exp $
+ * $Id: MarkerController.java,v 1.20 2005/04/28 12:55:52 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,9 +28,6 @@ import com.syrus.AMFICOM.Client.Map.MapConnectionException;
 import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.client_.general.ui_.StorableObjectEditor;
-import com.syrus.AMFICOM.client_.general.ui_.VisualManager;
-import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
@@ -47,11 +44,10 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
 /**
  * Контроллер маркера.
  * @author $Author: krupenn $
- * @version $Revision: 1.19 $, $Date: 2005/04/13 11:15:06 $
+ * @version $Revision: 1.20 $, $Date: 2005/04/28 12:55:52 $
  * @module mapviewclient_v1
  */
 public class MarkerController extends AbstractNodeController
-		implements VisualManager
 {
 	/** Размер пиктограммы маркера. */
 	public static final Rectangle MARKER_BOUNDS = new Rectangle(20, 20);
@@ -60,8 +56,6 @@ public class MarkerController extends AbstractNodeController
 	public static final String IMAGE_NAME = "marker";
 	/** Пиктограмма. */
 	public static final String IMAGE_PATH = "images/marker.gif";
-
-	private static final String PROPERTY_PANE_CLASS_NAME = "";
 
 	/**
 	 * Флаг необходимости инициализировать изображения маркеров.
@@ -93,29 +87,6 @@ public class MarkerController extends AbstractNodeController
 		return instance;
 	}
 
-	public StorableObjectEditor getCharacteristicPropertiesPanel() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	public ObjectResourceController getController() {
-//		return PhysicalLinkWrapper.getInstance();
-		return null;
-	}
-	
-	public StorableObjectEditor getGeneralPropertiesPanel() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/**
-	 * Получить имя класса панели, описывающей свойства кабельного пути.
-	 * @return имя класса
-	 */
-	public static String getPropertyPaneClassName()
-	{
-		return PROPERTY_PANE_CLASS_NAME;
-	}
-	
 	/**
 	 * {@inheritDoc}
 	 */

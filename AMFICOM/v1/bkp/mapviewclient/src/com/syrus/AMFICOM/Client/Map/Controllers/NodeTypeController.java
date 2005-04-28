@@ -1,5 +1,5 @@
 /**
- * $Id: NodeTypeController.java,v 1.15 2005/04/20 16:15:53 krupenn Exp $
+ * $Id: NodeTypeController.java,v 1.16 2005/04/28 12:55:52 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,7 +11,6 @@
 
 package com.syrus.AMFICOM.Client.Map.Controllers;
 
-import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
@@ -24,9 +23,7 @@ import java.util.Iterator;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Map.MapConnectionException;
 import com.syrus.AMFICOM.Client.Map.MapDataException;
-import com.syrus.AMFICOM.client_.general.ui_.StorableObjectEditor;
-import com.syrus.AMFICOM.client_.general.ui_.VisualManager;
-import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
+import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
@@ -48,13 +45,11 @@ import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageR
 /**
  * контроллер типа сетевого узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.15 $, $Date: 2005/04/20 16:15:53 $
+ * @version $Revision: 1.16 $, $Date: 2005/04/28 12:55:52 $
  * @module mapviewclient_v1
  */
 public class NodeTypeController extends AbstractNodeController
-		implements VisualManager
 {
-	private static final String PROPERTY_PANE_CLASS_NAME = "";
 
 	/**
 	 * Instance.
@@ -92,29 +87,6 @@ public class NodeTypeController extends AbstractNodeController
 		return instance;
 	}
 
-	public StorableObjectEditor getCharacteristicPropertiesPanel() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	public ObjectResourceController getController() {
-//		return PhysicalLinkWrapper.getInstance();
-		return null;
-	}
-	
-	public StorableObjectEditor getGeneralPropertiesPanel() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/**
-	 * Получить имя класса панели, описывающей свойства кабельного пути.
-	 * @return имя класса
-	 */
-	public static String getPropertyPaneClassName()
-	{
-		return PROPERTY_PANE_CLASS_NAME;
-	}
-	
 	/**
 	 * {@inheritDoc}
 	 * Suppress since SiteNodeType is not really a Map Element
