@@ -156,7 +156,7 @@ implements OperationListener, BsHashChangeListener,
 		});
 
 		analysisDefaultsButton.setToolTipText(
-			LangModelAnalyse.getString("analysisDefaults"));
+			LangModelAnalyse.getString("newThresholds"));
 		analysisDefaultsButton.setIcon(UIManager.getIcon(
 			AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_CREATE_NEW));
 		analysisDefaultsButton.addActionListener(new ActionListener()
