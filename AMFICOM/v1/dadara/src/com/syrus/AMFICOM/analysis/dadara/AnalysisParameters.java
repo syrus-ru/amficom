@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisParameters.java,v 1.2 2005/04/27 08:23:05 saa Exp $
+ * $Id: AnalysisParameters.java,v 1.3 2005/04/28 15:27:05 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.2 $, $Date: 2005/04/27 08:23:05 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/28 15:27:05 $
  * @module
  */
 public class AnalysisParameters
@@ -32,11 +32,31 @@ implements DataStreamable, Cloneable
 	public double getMinConnector() {
 		return param[2];
 	}
-	public double getNoiseFactor() {
+	public double getMinEnd() {
 		return param[3];
 	}
-	public double getMinEnd() {
+	public double getNoiseFactor() {
 		return param[4];
+	}
+
+	public void setMinThreshold(double v) {
+		param[0] = v;
+	}
+
+	public void setMinSplice(double v) {
+		param[1] = v;
+	}
+
+	public void setMinConnector(double v) {
+		param[2] = v;
+	}
+
+	public void setMinEnd(double v) {
+		param[3] = v;
+	}
+
+	public void setNoiseFactor(double v) {
+		param[4] = v;
 	}
 
 	public AnalysisParameters(double minThreshold,
