@@ -51,7 +51,8 @@ import com.syrus.io.BellcoreStructure;
  * </ol>
  */
 public class ThresholdsSelectionFrame extends ATableFrame
-implements OperationListener, BsHashChangeListener, CurrentEventChangeListener, EtalonMTMListener
+implements OperationListener, BsHashChangeListener,
+	CurrentEventChangeListener, EtalonMTMListener
 {
 	protected Dispatcher dispatcher;
 	JTable jTable;
@@ -114,26 +115,34 @@ implements OperationListener, BsHashChangeListener, CurrentEventChangeListener, 
 		this.jTable = new ATable(this.tModelEmpty);
 		
 		JButton alysisInitialButton = new JButton();
-		alysisInitialButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+		alysisInitialButton.setMargin(UIManager.getInsets(
+			ResourceKeys.INSETS_ICONED_BUTTON));
 		
 		JButton analysisDefaultsButton = new JButton();
-		analysisDefaultsButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+		analysisDefaultsButton.setMargin(UIManager.getInsets(
+			ResourceKeys.INSETS_ICONED_BUTTON));
 		
 		JButton increaseThreshButton = new JButton();
-		increaseThreshButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+		increaseThreshButton.setMargin(UIManager.getInsets(
+			ResourceKeys.INSETS_ICONED_BUTTON));
 		
 		JButton decreaseThreshButton = new JButton();
-		decreaseThreshButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+		decreaseThreshButton.setMargin(UIManager.getInsets(
+			ResourceKeys.INSETS_ICONED_BUTTON));
 		
 		
 		JButton previuosEventButton = new JButton();
-		previuosEventButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+		previuosEventButton.setMargin(UIManager.getInsets(
+			ResourceKeys.INSETS_ICONED_BUTTON));
 		
 		JButton nextEventButton = new JButton();
-		nextEventButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+		nextEventButton.setMargin(UIManager.getInsets(
+			ResourceKeys.INSETS_ICONED_BUTTON));
 
-		alysisInitialButton.setToolTipText(LangModelAnalyse.getString("analysisInitial"));
-		alysisInitialButton.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_INITIAL));
+		alysisInitialButton.setToolTipText(
+			LangModelAnalyse.getString("analysisInitial"));
+		alysisInitialButton.setIcon(UIManager.getIcon(
+			AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_INITIAL));
 		alysisInitialButton.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -146,8 +155,10 @@ implements OperationListener, BsHashChangeListener, CurrentEventChangeListener, 
 			}
 		});
 
-		analysisDefaultsButton.setToolTipText(LangModelAnalyse.getString("analysisDefaults"));
-		analysisDefaultsButton.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_DEFAULT));
+		analysisDefaultsButton.setToolTipText(
+			LangModelAnalyse.getString("analysisDefaults"));
+		analysisDefaultsButton.setIcon(UIManager.getIcon(
+			AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_DEFAULT));
 		analysisDefaultsButton.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -156,13 +167,16 @@ implements OperationListener, BsHashChangeListener, CurrentEventChangeListener, 
 				{
 					et_mtm.setDefaultThreshold(currentEtEv);
 					updateThresholds();
-					dispatcher.notify(new RefUpdateEvent(this, RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
+					dispatcher.notify(new RefUpdateEvent(this,
+						RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
 				}
 			}
 		});
 
-		increaseThreshButton.setToolTipText(LangModelAnalyse.getString("increaseThresh"));
-		increaseThreshButton.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_INCREASE));
+		increaseThreshButton.setToolTipText(
+			LangModelAnalyse.getString("increaseThresh"));
+		increaseThreshButton.setIcon(UIManager.getIcon(
+			AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_INCREASE));
 		increaseThreshButton.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -172,14 +186,18 @@ implements OperationListener, BsHashChangeListener, CurrentEventChangeListener, 
 				{
 					ted.increaseValues();
 					int selectedColumn = jTable.getSelectedColumn();
-					dispatcher.notify(new RefUpdateEvent(this, RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
-					jTable.setColumnSelectionInterval(selectedColumn, selectedColumn);
+					dispatcher.notify(new RefUpdateEvent(this,
+						RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
+					jTable.setColumnSelectionInterval(selectedColumn,
+						selectedColumn);
 				}
 			}
 		});
 
-		decreaseThreshButton.setToolTipText(LangModelAnalyse.getString("decreaseThresh"));
-		decreaseThreshButton.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_DECREASE));
+		decreaseThreshButton.setToolTipText(
+			LangModelAnalyse.getString("decreaseThresh"));
+		decreaseThreshButton.setIcon(UIManager.getIcon(
+			AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_DECREASE));
 		decreaseThreshButton.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -189,30 +207,38 @@ implements OperationListener, BsHashChangeListener, CurrentEventChangeListener, 
 				{
 					int selectedColumn = jTable.getSelectedColumn();
 					ted.decreaseValues();
-					dispatcher.notify(new RefUpdateEvent(this, RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
-					jTable.setColumnSelectionInterval(selectedColumn, selectedColumn);
+					dispatcher.notify(new RefUpdateEvent(this,
+						RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
+					jTable.setColumnSelectionInterval(selectedColumn,
+						selectedColumn);
 				}
 			}
 		});
 		
-		previuosEventButton.setToolTipText(LangModelAnalyse.getString("previuosEvent"));
+		previuosEventButton.setToolTipText(
+			LangModelAnalyse.getString("previuosEvent"));
 		previuosEventButton.setText("<");
 		previuosEventButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
 
-				dispatcher.notify(new OperationEvent(this, 0, AnalyseApplicationModel.SELECT_PREVIOUS_EVENT));
+				dispatcher.notify(new OperationEvent(this,
+					0,
+					AnalyseApplicationModel.SELECT_PREVIOUS_EVENT));
 
 			}
 		});
 		
-		nextEventButton.setToolTipText(LangModelAnalyse.getString("nextEvent"));
+		nextEventButton.setToolTipText(
+			LangModelAnalyse.getString("nextEvent"));
 		nextEventButton.setText(">");
 		nextEventButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
 
-				dispatcher.notify(new OperationEvent(this, 0, AnalyseApplicationModel.SELECT_NEXT_EVENT));
+				dispatcher.notify(new OperationEvent(this,
+					0,
+					AnalyseApplicationModel.SELECT_NEXT_EVENT));
 
 			}
 		});
@@ -238,7 +264,8 @@ implements OperationListener, BsHashChangeListener, CurrentEventChangeListener, 
 		this.jTable.setColumnSelectionAllowed(true);
 		this.jTable.setRowSelectionAllowed(false);		
 		
-		this.jTable.setDefaultRenderer(Object.class, new ADefaultTableCellRenderer() {
+		this.jTable.setDefaultRenderer(Object.class,
+			new ADefaultTableCellRenderer() {
 
 			// (1) hides 'focus' - just because its color overrides selection
 			// colot
@@ -254,7 +281,8 @@ implements OperationListener, BsHashChangeListener, CurrentEventChangeListener, 
 				if (mColIndex == 0)
 					isSelected1 = false;
 				hasFocus = false;
-				return super.getTableCellRendererComponent(table, value, isSelected1, hasFocus, rowIndex, vColIndex);
+				return super.getTableCellRendererComponent(table, value,
+					isSelected1, hasFocus, rowIndex, vColIndex);
 			}
 		});
 		
@@ -273,7 +301,8 @@ implements OperationListener, BsHashChangeListener, CurrentEventChangeListener, 
 				if (vColIndex == -1) { return; }
 
 				// Determine if mouse was clicked between column heads
-				Rectangle headerRect = table.getTableHeader().getHeaderRect(vColIndex);
+				Rectangle headerRect =
+					table.getTableHeader().getHeaderRect(vColIndex);
 				if (vColIndex == 0) {
 					headerRect.width -= 3; // Hard-coded constant
 				} else {
@@ -304,7 +333,8 @@ implements OperationListener, BsHashChangeListener, CurrentEventChangeListener, 
 		if (et_mtm != null && currentEtEv != -1)
 		{
 			// XXX - getThreshEditor will generate few unnecessary objects
-			ModelTraceManager.ThreshEditor[] teds = et_mtm.getThreshEditors(currentEtEv);
+			ModelTraceManager.ThreshEditor[] teds =
+				et_mtm.getThreshEditors(currentEtEv);
 			int current_th = this.jTable.getSelectedColumn() - 1;
 			if (current_th >= 0 && current_th < teds.length)
 				return teds[current_th];
@@ -490,7 +520,8 @@ implements OperationListener, BsHashChangeListener, CurrentEventChangeListener, 
 	{
 		if (et_mtm != null) {
 			currentEtEv = Heap.getCurrentEtalonEvent();
-			if (currentEtEv < -1 || currentEtEv >= et_mtm.getMTAE().getNEvents()) {
+			if (currentEtEv < -1 ||
+					currentEtEv >= et_mtm.getMTAE().getNEvents()) {
 				// XXX: debug sysout
 				System.out.println("ThresholdsSelectionFrame: Warning: current_ev out of range:"
 					+ " currentEtEv=" + currentEtEv

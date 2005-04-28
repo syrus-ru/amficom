@@ -124,16 +124,21 @@ implements BsHashChangeListener, PrimaryMTMListener
 
 		tModelMinuit = new ParamTableModel();
 		jTable = new ATable (tModelMinuit);
-		jTable.setDefaultRenderer(Object.class, new ModelParamsTableRenderer(tModelMinuit));
-		jTable.setDefaultEditor(Object.class, new ModelParamsTableEditor(tModelMinuit));
+		jTable.setDefaultRenderer(Object.class,
+			new ModelParamsTableRenderer(tModelMinuit));
+		jTable.setDefaultEditor(Object.class,
+			new ModelParamsTableEditor(tModelMinuit));
 
 		JButton analysisStartButton = new JButton();
 		JButton analysisInitialButton = new JButton();
 		JButton analysisDefaultsButton = new JButton();
 
-		analysisStartButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
-		analysisStartButton.setToolTipText(LangModelAnalyse.getString("analysisStart"));
-		analysisStartButton.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_PERFORM_ANALYSIS));
+		analysisStartButton.setMargin(UIManager.getInsets(
+			ResourceKeys.INSETS_ICONED_BUTTON));
+		analysisStartButton.setToolTipText(
+			LangModelAnalyse.getString("analysisStart"));
+		analysisStartButton.setIcon(UIManager.getIcon(
+			AnalysisResourceKeys.ICON_ANALYSIS_PERFORM_ANALYSIS));
 		analysisStartButton.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -142,9 +147,12 @@ implements BsHashChangeListener, PrimaryMTMListener
 			}
 		});
 
-		analysisInitialButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
-		analysisInitialButton.setToolTipText(LangModelAnalyse.getString("analysisInitial"));
-		analysisInitialButton.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_INITIAL_ANALYSIS));
+		analysisInitialButton.setMargin(UIManager.getInsets(
+			ResourceKeys.INSETS_ICONED_BUTTON));
+		analysisInitialButton.setToolTipText(
+			LangModelAnalyse.getString("analysisInitial"));
+		analysisInitialButton.setIcon(UIManager.getIcon(
+			AnalysisResourceKeys.ICON_ANALYSIS_INITIAL_ANALYSIS));
 		analysisInitialButton.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -154,10 +162,14 @@ implements BsHashChangeListener, PrimaryMTMListener
 		});
 
 
-		analysisDefaultsButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
-		analysisDefaultsButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
-		analysisDefaultsButton.setToolTipText(LangModelAnalyse.getString("analysisDefaults"));
-		analysisDefaultsButton.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_DEFAULT_ANALYSIS));
+		analysisDefaultsButton.setMargin(UIManager.getInsets(
+			ResourceKeys.INSETS_ICONED_BUTTON));
+		analysisDefaultsButton.setMargin(UIManager.getInsets(
+			ResourceKeys.INSETS_NULL));
+		analysisDefaultsButton.setToolTipText(
+			LangModelAnalyse.getString("analysisDefaults"));
+		analysisDefaultsButton.setIcon(UIManager.getIcon(
+			AnalysisResourceKeys.ICON_ANALYSIS_DEFAULT_ANALYSIS));
 		analysisDefaultsButton.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -204,7 +216,8 @@ implements BsHashChangeListener, PrimaryMTMListener
 			((Double)jTable.getValueAt(4, 1)).doubleValue())
 		);
 		new MinuitAnalyseCommand(aContext).execute();
-		dispatcher.notify(new RefUpdateEvent(RefUpdateEvent.PRIMARY_TRACE, RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));
+		dispatcher.notify(new RefUpdateEvent(RefUpdateEvent.PRIMARY_TRACE,
+			RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));
 
 		setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}
