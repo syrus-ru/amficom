@@ -86,7 +86,7 @@ public class FileOpenAsBellcoreCommand extends VoidCommand
 			bs.title = chooser.getSelectedFile().getName();
 			Heap.setBSPrimaryTrace(bs);
 			Heap.setActiveContextActivePathIDToEmptyString();
-			new InitialAnalysisCommand().execute();
+			new AnalysisCommand().execute();
 			Heap.primaryTraceOpened(bs);
 			Heap.setCurrentTracePrimary();
 			dispatcher.notify(new RefUpdateEvent(RefUpdateEvent.PRIMARY_TRACE, RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));

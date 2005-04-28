@@ -121,7 +121,7 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 				Heap.setMTMEtalon(null);
 			}
 
-			new InitialAnalysisCommand().execute();
+			new AnalysisCommand().execute();
 
 			Heap.primaryTraceOpened(bs);
 			Heap.setCurrentTracePrimary();

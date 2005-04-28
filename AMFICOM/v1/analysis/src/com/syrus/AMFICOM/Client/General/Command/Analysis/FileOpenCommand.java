@@ -147,7 +147,7 @@ public class FileOpenCommand extends VoidCommand
 			Heap.setBSPrimaryTrace(bs);
 			Heap.setActiveContextActivePathIDToEmptyString();
 			Environment.getActiveWindow().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-			new InitialAnalysisCommand().execute();
+			new AnalysisCommand().execute();
 			Heap.primaryTraceOpened(bs);
 
 			Heap.setCurrentTracePrimary();

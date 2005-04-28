@@ -39,7 +39,7 @@ public class TraceMakeCurrentCommand extends VoidCommand
 		new FileRemoveCommand(RefUpdateEvent.PRIMARY_TRACE, aContext).execute();
 		Heap.setBSPrimaryTrace(bs);
 
-		new InitialAnalysisCommand().execute();
+		new AnalysisCommand().execute();
 		
 		Heap.primaryTraceOpened(bs);
 		Heap.setCurrentTracePrimary();

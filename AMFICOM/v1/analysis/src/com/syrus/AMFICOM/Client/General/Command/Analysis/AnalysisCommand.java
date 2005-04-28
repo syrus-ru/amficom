@@ -8,7 +8,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 import com.syrus.AMFICOM.analysis.dadara.*;
 import com.syrus.io.BellcoreStructure;
 
-public class InitialAnalysisCommand extends VoidCommand {
+public class AnalysisCommand extends VoidCommand {
 
 	public void execute()
 	{

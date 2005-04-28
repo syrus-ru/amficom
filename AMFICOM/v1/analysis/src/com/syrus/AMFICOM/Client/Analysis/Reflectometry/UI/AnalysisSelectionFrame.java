@@ -26,7 +26,7 @@ import javax.swing.table.TableModel;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.CreateEtalonCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.InitialAnalysisCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.AnalysisCommand;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryMTMListener;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
@@ -216,7 +216,7 @@ implements BsHashChangeListener, PrimaryMTMListener
 			((Double)jTable.getValueAt(3, 1)).doubleValue(),
 			((Double)jTable.getValueAt(4, 1)).doubleValue())
 		);
-		new InitialAnalysisCommand().execute();
+		new AnalysisCommand().execute();
 		dispatcher.notify(new RefUpdateEvent(RefUpdateEvent.PRIMARY_TRACE,
 			RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));
 
