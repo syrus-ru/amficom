@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeLink.java,v 1.10 2005/04/27 14:45:23 bass Exp $
+ * $Id: AbstractSchemeLink.java,v 1.11 2005/04/28 15:27:03 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeLink}instead.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2005/04/27 14:45:23 $
+ * @version $Revision: 1.11 $, $Date: 2005/04/28 15:27:03 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemeLink extends AbstractSchemeElement {
@@ -183,10 +183,44 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 		return this.physicalLength;
 	}
 
-	public abstract AbstractSchemePort getSourceAbstractSchemePort();
+	/**
+	 * Overridden by descendants to add extra checks.
+	 */
+	public AbstractSchemePort getSourceAbstractSchemePort() {
+		assert this.sourceAbstractSchemePortId != null
+				&& this.targetAbstractSchemePortId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.sourceAbstractSchemePortId.isVoid()
+				|| !this.sourceAbstractSchemePortId.equals(this.targetAbstractSchemePortId): ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
 
-	public abstract AbstractSchemePort getTargetAbstractSchemePort();
-	
+		try {
+			return this.sourceAbstractSchemePortId.isVoid()
+					? null
+					: (AbstractSchemePort) SchemeStorableObjectPool.getStorableObject(this.sourceAbstractSchemePortId, true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return null;
+		}
+	}
+
+	/**
+	 * Overridden by descendants to add extra checks.
+	 */
+	public AbstractSchemePort getTargetAbstractSchemePort() {
+		assert this.sourceAbstractSchemePortId != null
+				&& this.targetAbstractSchemePortId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.targetAbstractSchemePortId.isVoid()
+				|| !this.targetAbstractSchemePortId.equals(this.sourceAbstractSchemePortId): ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
+
+		try {
+			return this.targetAbstractSchemePortId.isVoid()
+					? null
+					: (AbstractSchemePort) SchemeStorableObjectPool.getStorableObject(this.targetAbstractSchemePortId, true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return null;
+		}
+	}
+
 	/**
 	 * Overridden by descendants to add extra checks.
 	 *
@@ -261,9 +295,43 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 		this.changed = true;
 	}
 
-	public abstract void setSourceAbstractSchemePort(final AbstractSchemePort sourceAbstractSchemePort);
+	/**
+	 * Overridden by descendants to add extra checks.
+	 *
+	 * @param sourceAbstractSchemePort
+	 */
+	public void setSourceAbstractSchemePort(final AbstractSchemePort sourceAbstractSchemePort) {
+		assert this.sourceAbstractSchemePortId != null
+				&& this.targetAbstractSchemePortId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.sourceAbstractSchemePortId.isVoid()
+				|| !this.sourceAbstractSchemePortId.equals(this.targetAbstractSchemePortId): ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
+		final Identifier newSourceAbstractSchemePortId = Identifier.possiblyVoid(sourceAbstractSchemePort);
+		assert newSourceAbstractSchemePortId.isVoid()
+				|| !newSourceAbstractSchemePortId.equals(this.targetAbstractSchemePortId): ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
+		if (this.sourceAbstractSchemePortId.equals(newSourceAbstractSchemePortId))
+			return;
+		this.sourceAbstractSchemePortId = newSourceAbstractSchemePortId;
+		super.changed = true;
+	}
 
-	public abstract void setTargetAbstractSchemePort(final AbstractSchemePort targetAbstractSchemePort);
+	/**
+	 * Overridden by descendants to add extra checks.
+	 *
+	 * @param targetAbstractSchemePort
+	 */
+	public void setTargetAbstractSchemePort(final AbstractSchemePort targetAbstractSchemePort) {
+		assert this.sourceAbstractSchemePortId != null
+				&& this.targetAbstractSchemePortId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.targetAbstractSchemePortId.isVoid()
+				|| !this.targetAbstractSchemePortId.equals(this.sourceAbstractSchemePortId): ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
+		final Identifier newTargetAbstractSchemePortId = Identifier.possiblyVoid(targetAbstractSchemePort);
+		assert newTargetAbstractSchemePortId.isVoid()
+				|| !newTargetAbstractSchemePortId.equals(this.sourceAbstractSchemePortId): ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
+		if (this.targetAbstractSchemePortId.equals(newTargetAbstractSchemePortId))
+			return;
+		this.targetAbstractSchemePortId = newTargetAbstractSchemePortId;
+		super.changed = true;
+	}
 
 	synchronized void setAttributes(final Date created, final Date modified,
 			final Identifier creatorId,

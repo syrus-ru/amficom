@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.22 2005/04/27 14:45:23 bass Exp $
+ * $Id: SchemeLink.java,v 1.23 2005/04/28 15:27:03 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,6 +30,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
+import com.syrus.AMFICOM.map.MapStorableObjectPool;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.scheme.corba.SchemeLink_Transferable;
 import com.syrus.util.Log;
@@ -38,7 +39,7 @@ import com.syrus.util.Log;
  * #10 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.22 $, $Date: 2005/04/27 14:45:23 $
+ * @version $Revision: 1.23 $, $Date: 2005/04/28 15:27:03 $
  * @module scheme_v1
  */
 public final class SchemeLink extends AbstractSchemeLink {
@@ -494,29 +495,41 @@ public final class SchemeLink extends AbstractSchemeLink {
 	}
 
 	public SiteNode getSiteNode() {
-		throw new UnsupportedOperationException();
+		assert this.siteNodeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		try {
+			return this.siteNodeId.isVoid()
+					? null
+					: (SiteNode) MapStorableObjectPool.getStorableObject(this.siteNodeId, true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return null;
+		}
 	}
 
 	/**
 	 * @see AbstractSchemeLink#getSourceAbstractSchemePort()
 	 */
 	public AbstractSchemePort getSourceAbstractSchemePort() {
-		return getSourceSchemePort();
+		final AbstractSchemePort sourceAbstractSchemePort = super.getSourceAbstractSchemePort();
+		assert sourceAbstractSchemePort == null || sourceAbstractSchemePort instanceof SchemePort: ErrorMessages.OBJECT_BADLY_INITIALIZED;
+		return sourceAbstractSchemePort;
 	}
 
 	public SchemePort getSourceSchemePort() {
-		throw new UnsupportedOperationException();
+		return (SchemePort) this.getSourceAbstractSchemePort();
 	}
 
 	/**
 	 * @see AbstractSchemeLink#getTargetAbstractSchemePort()
 	 */
 	public AbstractSchemePort getTargetAbstractSchemePort() {
-		return getTargetSchemePort();
+		final AbstractSchemePort targetAbstractSchemePort = super.getTargetAbstractSchemePort();
+		assert targetAbstractSchemePort == null || targetAbstractSchemePort instanceof SchemePort: ErrorMessages.OBJECT_BADLY_INITIALIZED;
+		return targetAbstractSchemePort;
 	}
 
 	public SchemePort getTargetSchemePort() {
-		throw new UnsupportedOperationException();
+		return (SchemePort) this.getTargetAbstractSchemePort();
 	}
 
 	/**
@@ -718,7 +731,11 @@ public final class SchemeLink extends AbstractSchemeLink {
 	}
 
 	public void setSiteNode(final SiteNode siteNode) {
-		throw new UnsupportedOperationException();
+		final Identifier newSiteNodeId = Identifier.possiblyVoid(siteNode);
+		if (this.siteNodeId.equals(newSiteNodeId))
+			return;
+		this.siteNodeId = newSiteNodeId;
+		this.changed = true;
 	}
 
 	/**
@@ -726,11 +743,12 @@ public final class SchemeLink extends AbstractSchemeLink {
 	 * @see AbstractSchemeLink#setSourceAbstractSchemePort(AbstractSchemePort)
 	 */
 	public void setSourceAbstractSchemePort(final AbstractSchemePort sourceAbstractSchemePort) {
-		setSourceSchemePort((SchemePort) sourceAbstractSchemePort);
+		assert sourceAbstractSchemePort == null || sourceAbstractSchemePort instanceof SchemePort: ErrorMessages.NATURE_INVALID;
+		super.setSourceAbstractSchemePort(sourceAbstractSchemePort);
 	}
 
 	public void setSourceSchemePort(final SchemePort sourceSchemePort) {
-		throw new UnsupportedOperationException();
+		this.setSourceAbstractSchemePort(sourceSchemePort);
 	}
 
 	/**
@@ -738,11 +756,12 @@ public final class SchemeLink extends AbstractSchemeLink {
 	 * @see AbstractSchemeLink#setTargetAbstractSchemePort(AbstractSchemePort)
 	 */
 	public void setTargetAbstractSchemePort(final AbstractSchemePort targetAbstractSchemePort) {
-		setTargetSchemePort((SchemePort) targetAbstractSchemePort);
+		assert targetAbstractSchemePort == null || targetAbstractSchemePort instanceof SchemePort: ErrorMessages.NATURE_INVALID;
+		super.setTargetAbstractSchemePort(targetAbstractSchemePort);
 	}
 
 	public void setTargetSchemePort(final SchemePort targetSchemePort) {
-		throw new UnsupportedOperationException();
+		this.setTargetAbstractSchemePort(targetSchemePort);
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.23 2005/04/27 16:56:04 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.24 2005/04/28 15:27:03 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,7 +40,7 @@ import com.syrus.util.Log;
  * #12 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.23 $, $Date: 2005/04/27 16:56:04 $
+ * @version $Revision: 1.24 $, $Date: 2005/04/28 15:27:03 $
  * @module scheme_v1
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
@@ -253,7 +253,15 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	}
 
 	public Link getLink() {
-		throw new UnsupportedOperationException();
+		assert this.linkId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		try {
+			return this.linkId.isVoid()
+					? null
+					: (Link) ConfigurationStorableObjectPool.getStorableObject(this.linkId, true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return null;
+		}
 	}
 
 	/**
@@ -290,11 +298,35 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	}
 
 	public SchemePort getSourceSchemePort() {
-		throw new UnsupportedOperationException();
+		assert this.sourceSchemePortId != null
+				&& this.targetSchemePortId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.sourceSchemePortId.isVoid()
+				|| !this.sourceSchemePortId.equals(this.targetSchemePortId): ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
+
+		try {
+			return this.sourceSchemePortId.isVoid()
+					? null
+					: (SchemePort) SchemeStorableObjectPool.getStorableObject(this.sourceSchemePortId, true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return null;
+		}
 	}
 
 	public SchemePort getTargetSchemePort() {
-		throw new UnsupportedOperationException();
+		assert this.sourceSchemePortId != null
+				&& this.targetSchemePortId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.targetSchemePortId.isVoid()
+				|| !this.targetSchemePortId.equals(this.sourceSchemePortId): ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
+
+		try {
+			return this.targetSchemePortId.isVoid()
+					? null
+					: (SchemePort) SchemeStorableObjectPool.getStorableObject(this.targetSchemePortId, true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return null;
+		}
 	}
 
 	/**
@@ -409,7 +441,11 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	}
 
 	public void setLink(final Link link) {
-		throw new UnsupportedOperationException();
+		final Identifier newLinkId = Identifier.possiblyVoid(link);
+		if (this.linkId.equals(newLinkId))
+			return;
+		this.linkId = newLinkId;
+		super.changed = true;
 	}
 
 	/**
@@ -429,11 +465,31 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	}
 
 	public void setSourceSchemePort(final SchemePort sourceSchemePort) {
-		throw new UnsupportedOperationException();
+		assert this.sourceSchemePortId != null
+				&& this.targetSchemePortId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.sourceSchemePortId.isVoid()
+				|| !this.sourceSchemePortId.equals(this.targetSchemePortId): ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
+		final Identifier newSourceSchemePortId = Identifier.possiblyVoid(sourceSchemePort);
+		assert newSourceSchemePortId.isVoid()
+				|| !newSourceSchemePortId.equals(this.targetSchemePortId): ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
+		if (this.sourceSchemePortId.equals(newSourceSchemePortId))
+			return;
+		this.sourceSchemePortId = newSourceSchemePortId;
+		super.changed = true;
 	}
 
 	public void setTargetSchemePort(final SchemePort targetSchemePort) {
-		throw new UnsupportedOperationException();
+		assert this.sourceSchemePortId != null
+				&& this.targetSchemePortId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.targetSchemePortId.isVoid()
+				|| !this.targetSchemePortId.equals(this.sourceSchemePortId): ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
+		final Identifier newTargetSchemePortId = Identifier.possiblyVoid(targetSchemePort);
+		assert newTargetSchemePortId.isVoid()
+				|| !newTargetSchemePortId.equals(this.sourceSchemePortId): ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
+		if (this.targetSchemePortId.equals(newTargetSchemePortId))
+			return;
+		this.targetSchemePortId = newTargetSchemePortId;
+		super.changed = true;
 	}
 
 	/**

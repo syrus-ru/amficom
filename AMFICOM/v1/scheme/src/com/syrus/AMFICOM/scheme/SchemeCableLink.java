@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.25 2005/04/27 14:45:23 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.26 2005/04/28 15:27:03 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.util.Log;
  * #11 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.25 $, $Date: 2005/04/27 14:45:23 $
+ * @version $Revision: 1.26 $, $Date: 2005/04/28 15:27:03 $
  * @module scheme_v1
  */
 public final class SchemeCableLink extends AbstractSchemeLink {
@@ -229,30 +229,42 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 		return super.getParentScheme();
 	}
 
+	/**
+	 * @return an immutable set.
+	 */
 	public Set getSchemeCableThreads() {
-		throw new UnsupportedOperationException();
+		try {
+			return Collections.unmodifiableSet(SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, ObjectEntities.SCHEME_CABLE_THREAD_ENTITY_CODE), true));
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return Collections.EMPTY_SET;
+		}
 	}
 
 	/**
 	 * @see AbstractSchemeLink#getSourceAbstractSchemePort()
 	 */
 	public AbstractSchemePort getSourceAbstractSchemePort() {
-		return getSourceSchemeCablePort();
+		final AbstractSchemePort sourceAbstractSchemePort = super.getSourceAbstractSchemePort();
+		assert sourceAbstractSchemePort == null || sourceAbstractSchemePort instanceof SchemeCablePort: ErrorMessages.OBJECT_BADLY_INITIALIZED;
+		return sourceAbstractSchemePort;
 	}
 
 	public SchemeCablePort getSourceSchemeCablePort() {
-		throw new UnsupportedOperationException();
+		return (SchemeCablePort) getSourceAbstractSchemePort();
 	}
 
 	/**
 	 * @see AbstractSchemeLink#getTargetAbstractSchemePort()
 	 */
 	public AbstractSchemePort getTargetAbstractSchemePort() {
-		return getTargetSchemeCablePort();
+		final AbstractSchemePort targetAbstractSchemePort = super.getTargetAbstractSchemePort();
+		assert targetAbstractSchemePort == null || targetAbstractSchemePort instanceof SchemeCablePort: ErrorMessages.OBJECT_BADLY_INITIALIZED;
+		return targetAbstractSchemePort;
 	}
 
 	public SchemeCablePort getTargetSchemeCablePort() {
-		throw new UnsupportedOperationException();
+		return (SchemeCablePort) getTargetAbstractSchemePort();
 	}
 
 	/**
@@ -377,11 +389,12 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	 * @see AbstractSchemeLink#setSourceAbstractSchemePort(AbstractSchemePort)
 	 */
 	public void setSourceAbstractSchemePort(final AbstractSchemePort sourceAbstractSchemePort) {
-		setSourceSchemeCablePort((SchemeCablePort) sourceAbstractSchemePort);
+		assert sourceAbstractSchemePort == null || sourceAbstractSchemePort instanceof SchemeCablePort: ErrorMessages.NATURE_INVALID;
+		super.setSourceAbstractSchemePort(sourceAbstractSchemePort);
 	}
 
 	public void setSourceSchemeCablePort(final SchemeCablePort sourceSchemeCablePort) {
-		throw new UnsupportedOperationException();
+		this.setSourceAbstractSchemePort(sourceSchemeCablePort);
 	}
 
 	/**
@@ -389,11 +402,12 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	 * @see AbstractSchemeLink#setTargetAbstractSchemePort(AbstractSchemePort)
 	 */
 	public void setTargetAbstractSchemePort(final AbstractSchemePort targetAbstractSchemePort) {
-		setTargetSchemeCablePort((SchemeCablePort) targetAbstractSchemePort);
+		assert targetAbstractSchemePort == null || targetAbstractSchemePort instanceof SchemeCablePort: ErrorMessages.NATURE_INVALID;
+		super.setTargetAbstractSchemePort(targetAbstractSchemePort);
 	}
 
 	public void setTargetSchemeCablePort(final SchemeCablePort targetSchemeCablePort) {
-		throw new UnsupportedOperationException();
+		this.setTargetAbstractSchemePort(targetSchemeCablePort);
 	}
 
 	/**
