@@ -1,5 +1,5 @@
 /*
- * Название: $Id: ControlsFrame.java,v 1.2 2005/04/15 11:12:33 peskovsky Exp $
+ * Название: $Id: ControlsFrame.java,v 1.3 2005/04/28 12:59:18 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,6 +14,7 @@ import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Model.MapEditorApplicationModel;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.mapview.MapView;
 
@@ -32,8 +33,8 @@ import javax.swing.JTabbedPane;
  * <li> Поиск элементов АМФИКОМ
  * <lI> Поиск географических объектов
  * <li> Управление отображением слоев
- * @version $Revision: 1.2 $
- * @author $Author: peskovsky $
+ * @version $Revision: 1.3 $
+ * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
  public class ControlsFrame extends JInternalFrame 
@@ -151,7 +152,7 @@ import javax.swing.JTabbedPane;
 
 		this.setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/general.gif")));
 
-		this.setTitle(LangModelMap.getString("menuViewSetup"));
+		this.setTitle(LangModelMap.getString(MapEditorApplicationModel.ITEM_VIEW_CONTROLS));
 		this.getContentPane().setLayout(this.borderLayout1);
 		this.setSize(new Dimension(370, 629));
 		

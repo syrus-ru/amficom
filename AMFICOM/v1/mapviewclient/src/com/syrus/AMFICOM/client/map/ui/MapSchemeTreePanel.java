@@ -23,6 +23,7 @@ import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Event.SchemeNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Model.MapEditorApplicationModel;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeNode;
 import com.syrus.AMFICOM.Client.General.UI.UniTreePanel;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewAddSchemeCommand;
@@ -107,7 +108,7 @@ public final class MapSchemeTreePanel extends JPanel
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		this.menuSchemeAddToView.setMaximumSize(BUTTON_DIMENSION);
 		this.menuSchemeAddToView.setPreferredSize(BUTTON_DIMENSION);
-		this.menuSchemeAddToView.setToolTipText(LangModelMap.getString("menuMapViewAddScheme"));
+		this.menuSchemeAddToView.setToolTipText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_VIEW_ADD_SCHEME));
 		this.menuSchemeAddToView.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -120,7 +121,7 @@ public final class MapSchemeTreePanel extends JPanel
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		this.menuSchemeRemoveFromView.setMaximumSize(BUTTON_DIMENSION);
 		this.menuSchemeRemoveFromView.setPreferredSize(BUTTON_DIMENSION);
-		this.menuSchemeRemoveFromView.setToolTipText(LangModelMap.getString("menuMapViewRemoveScheme"));
+		this.menuSchemeRemoveFromView.setToolTipText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_VIEW_REMOVE_SCHEME));
 		this.menuSchemeRemoveFromView.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -284,7 +285,7 @@ public final class MapSchemeTreePanel extends JPanel
 			return;
 		
 		MapViewAddSchemeCommand command = (MapViewAddSchemeCommand )
-			this.aContext.getApplicationModel().getCommand("menuMapViewAddScheme");
+			this.aContext.getApplicationModel().getCommand(MapEditorApplicationModel.ITEM_MAP_VIEW_ADD_SCHEME);
 		command.execute();
 /*
 		aContext.getDispatcher().notify(new StatusMessageEvent(
@@ -353,7 +354,7 @@ public final class MapSchemeTreePanel extends JPanel
 	void removeFromView()
 	{
 		MapViewRemoveSchemeCommand command = (MapViewRemoveSchemeCommand )
-			this.aContext.getApplicationModel().getCommand("menuMapViewRemoveScheme");
+			this.aContext.getApplicationModel().getCommand(MapEditorApplicationModel.ITEM_MAP_VIEW_REMOVE_SCHEME);
 		command.execute();
 /*
 		ObjectResourceTreeNode node = (ObjectResourceTreeNode )
