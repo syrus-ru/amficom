@@ -1,5 +1,5 @@
 #
-# $Id: Makefile.inc,v 1.20 2005/03/17 11:30:37 bass Exp $
+# $Id: Makefile.inc,v 1.21 2005/04/28 12:26:56 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -37,8 +37,8 @@ pathsearch = $(firstword $(wildcard $(addsuffix /$(1), $(subst :, , $(PATH)))))
 # User may override database connection settings
 USER = AMFICOM
 PASSWORD ?= amficom
-HOST ?= RESEARCH
-SERVICE_NAME ?= SHAITAN
+HOST ?= amficom
+SERVICE_NAME ?= jamaica
 
 sqlj = $(firstword $(wildcard $(addsuffix /bin/sqlj$(exesuffix), $(1))))
 SQLJ = $(call sqlj,$(ORACLE_HOME))
