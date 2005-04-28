@@ -1,5 +1,5 @@
 /**
- * $Id: CreateMeasurementPathCommandAtomic.java,v 1.12 2005/04/26 16:16:16 krupenn Exp $
+ * $Id: CreateMeasurementPathCommandAtomic.java,v 1.13 2005/04/28 13:07:29 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -13,6 +13,7 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.mapview.MeasurementPath;
 import com.syrus.AMFICOM.scheme.SchemePath;
 
@@ -22,7 +23,7 @@ import com.syrus.AMFICOM.scheme.SchemePath;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.12 $, $Date: 2005/04/26 16:16:16 $
+ * @version $Revision: 1.13 $, $Date: 2005/04/28 13:07:29 $
  * @module mapviewclient_v1
  */
 public class CreateMeasurementPathCommandAtomic extends MapActionCommand
@@ -33,11 +34,21 @@ public class CreateMeasurementPathCommandAtomic extends MapActionCommand
 	/** схемный путь */
 	SchemePath schemePath;
 	
+	/** начальный узел */
+	AbstractNode startNode;
+	
+	/** конечный узел */
+	AbstractNode endNode;
+	
 	public CreateMeasurementPathCommandAtomic(
-			SchemePath schemePath)
+			SchemePath schemePath,
+			AbstractNode startNode,
+			AbstractNode endNode)
 	{
 		super(MapActionCommand.ACTION_DRAW_LINE);
 		this.schemePath = schemePath;
+		this.startNode = startNode;
+		this.endNode = endNode;
 	}
 	
 	public MeasurementPath getPath()
@@ -55,6 +66,8 @@ public class CreateMeasurementPathCommandAtomic extends MapActionCommand
 		
 		this.measurementPath = MeasurementPath.createInstance(
 				this.schemePath,
+				this.startNode, 
+				this.endNode,
 				this.logicalNetLayer.getMapView());
 
 		this.logicalNetLayer.getMapView().addMeasurementPath(this.measurementPath);
