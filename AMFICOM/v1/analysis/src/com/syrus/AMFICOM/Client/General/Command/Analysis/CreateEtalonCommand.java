@@ -32,10 +32,8 @@ public class CreateEtalonCommand extends VoidCommand
 
 	public void execute()
 	{
-		System.err.println("CreateEtalonCommand: execute(): #0");
 		Collection bsColl = Heap.getBSCollection();
 
-		System.err.println("CreateEtalonCommand: execute(): #1");
 		// если не открыта ни одна р/г, просто игнорируем команду.
 		// в такой ситуации она не должна была запускаться,
 		// т.ч. обработка ошибки, в принципе, не нужна
@@ -65,6 +63,5 @@ public class CreateEtalonCommand extends VoidCommand
 
 		Environment.getActiveWindow().setCursor(
 			Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-		System.err.println("CreateEtalonCommand: execute(): #2");
 	}
 }
