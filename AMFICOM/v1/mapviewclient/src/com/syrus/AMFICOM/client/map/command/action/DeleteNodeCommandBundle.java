@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteNodeCommandBundle.java,v 1.23 2005/04/22 15:09:14 krupenn Exp $
+ * $Id: DeleteNodeCommandBundle.java,v 1.24 2005/04/28 13:07:59 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -31,6 +31,7 @@ import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.Marker;
+import com.syrus.AMFICOM.mapview.MeasurementPath;
 import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.mapview.UnboundNode;
 
@@ -38,7 +39,7 @@ import com.syrus.AMFICOM.mapview.UnboundNode;
  *   оманда удалени€ элемента наследника класса MapNodeElement.  оманда
  * состоит из  последовательности атомарных действий
  * @author $Author: krupenn $
- * @version $Revision: 1.23 $, $Date: 2005/04/22 15:09:14 $
+ * @version $Revision: 1.24 $, $Date: 2005/04/28 13:07:59 $
  * @module mapviewclient_v1
  */
 public class DeleteNodeCommandBundle extends MapActionCommandBundle
@@ -71,6 +72,22 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 
 		MapView mapView = this.logicalNetLayer.getMapView();
 		
+		// если удал€етс€ сетевой узел (не неприв€занный элемент),
+		// необходимо проверить все кабельные пути, включающие его
+		for(Iterator it = mapView.getMeasurementPaths(site).iterator(); it.hasNext();)
+		{
+			MeasurementPath measurementPath = (MeasurementPath)it.next();
+			
+			// если удал€емый узел содержит прив€зку концевого элемента
+			// кабельного пути, кабельный путь убираетс€ с карты
+			if(measurementPath.getStartNode().equals(site)
+				|| measurementPath.getEndNode().equals(site))
+			{
+				super.removeMeasurementPathCables(measurementPath);
+				super.removeMeasurementPath(measurementPath);
+			}
+		}
+
 		// если удал€етс€ сетевой узел (не неприв€занный элемент),
 		// необходимо проверить все кабельные пути, включающие его
 		for(Iterator it = mapView.getCablePaths(site).iterator(); it.hasNext();)
