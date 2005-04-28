@@ -1,5 +1,5 @@
 /*
- * $Id: SessionEnvironment.java,v 1.2 2005/04/28 10:35:21 arseniy Exp $
+ * $Id: SessionEnvironment.java,v 1.3 2005/04/28 15:00:30 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,9 +12,9 @@ import com.syrus.AMFICOM.general.DatabaseIdentifierGeneratorServer;
 import com.syrus.AMFICOM.general.IdentifierPool;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/28 10:35:21 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/28 15:00:30 $
  * @author $Author: arseniy $
- * @module loginserver_v1
+ * @module leserver_v1
  */
 public final class SessionEnvironment {
 	private static LEServerServantManager leServerServantManager;
