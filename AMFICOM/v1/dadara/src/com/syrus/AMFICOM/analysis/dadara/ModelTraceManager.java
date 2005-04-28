@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.55 2005/04/26 13:42:39 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.56 2005/04/28 14:02:55 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
  * генерацией пороговых кривых и сохранением/восстановлением порогов.
  *
  * @author $Author: saa $
- * @version $Revision: 1.55 $, $Date: 2005/04/26 13:42:39 $
+ * @version $Revision: 1.56 $, $Date: 2005/04/28 14:02:55 $
  * @module
  */
 public class ModelTraceManager
@@ -359,13 +359,6 @@ implements DataStreamable
 			dyFactor);
 		for (int i = 0; i < tDY.length; i++)
 			tDY[i].changeAllBy(dyMargin);
-	}
-
-	public void setDefaultThreshold(int nEvent)
-	{
-		throw new UnsupportedOperationException(); // FIXME
-		//invalidateThMFCache();
-		//re[nEvent].setThreshold(new Threshold());
 	}
 
 	/**
