@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemePathCommand.java,v 1.20 2005/04/26 16:19:21 krupenn Exp $
+ * $Id: PlaceSchemePathCommand.java,v 1.21 2005/04/28 13:08:46 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,12 +18,10 @@ import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.map.Map;
-import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.MeasurementPath;
-import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.scheme.PathElement;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
@@ -38,7 +36,7 @@ import com.syrus.AMFICOM.scheme.corba.PathElement_TransferablePackage.DataPackag
  * (drag/drop), в точке point (в экранных координатах)
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.20 $, $Date: 2005/04/26 16:19:21 $
+ * @version $Revision: 1.21 $, $Date: 2005/04/28 13:08:46 $
  * @module mapviewclient_v1
  */
 public class PlaceSchemePathCommand extends MapActionCommandBundle
@@ -80,7 +78,7 @@ public class PlaceSchemePathCommand extends MapActionCommandBundle
 			this.endNode = this.mapView.getEndNode(this.schemePath);
 			this.measurementPath = this.mapView.findMeasurementPath(this.schemePath);
 			if(this.measurementPath == null)
-				this.measurementPath = super.createMeasurementPath(this.schemePath);
+				this.measurementPath = super.createMeasurementPath(this.schemePath, this.startNode, this.endNode);
 			else
 			// если путь уже есть, все его составляющие наносятся заново
 				super.removeMeasurementPathCables(this.measurementPath);

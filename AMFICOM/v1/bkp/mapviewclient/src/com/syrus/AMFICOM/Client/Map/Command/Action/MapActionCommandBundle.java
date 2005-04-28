@@ -1,5 +1,5 @@
 /**
- * $Id: MapActionCommandBundle.java,v 1.20 2005/04/26 16:17:03 krupenn Exp $
+ * $Id: MapActionCommandBundle.java,v 1.21 2005/04/28 13:09:53 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
 /**
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.20 $, $Date: 2005/04/26 16:17:03 $
+ * @version $Revision: 1.21 $, $Date: 2005/04/28 13:09:53 $
  * @module maviewclient_v1
  */
 public class MapActionCommandBundle extends CommandBundle
@@ -189,10 +189,13 @@ public class MapActionCommandBundle extends CommandBundle
 	/**
 	 * Создается измерительный путь
 	 */
-	protected MeasurementPath createMeasurementPath(SchemePath schemePath)
+	protected MeasurementPath createMeasurementPath(
+			SchemePath schemePath,
+			AbstractNode startNode,
+			AbstractNode endNode)
 		throws Throwable
 	{
-		CreateMeasurementPathCommandAtomic cmd = new CreateMeasurementPathCommandAtomic(schemePath);
+		CreateMeasurementPathCommandAtomic cmd = new CreateMeasurementPathCommandAtomic(schemePath, startNode, endNode);
 		cmd.setLogicalNetLayer(this.logicalNetLayer);
 		cmd.execute();
 		if(cmd.getResult() != Command.RESULT_OK)
