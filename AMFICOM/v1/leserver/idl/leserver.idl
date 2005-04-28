@@ -1,0 +1,44 @@
+#ifndef _LOGINSERVER_IDL_
+#define _LOGINSERVER_IDL_
+
+#include <general.idl>
+#include <administration.idl>
+#include <event.idl>
+
+module com {
+module syrus {
+module AMFICOM {
+module leserver {
+module corba {
+
+	interface LoginServer : general::corba::Verifiable {
+
+		general::corba::SecurityKey login(in general::corba::WString32 login,
+			in general::corba::WString32 password,
+			out general::corba::Identifier_Transferable user_id)
+			raises (general::corba::AMFICOMRemoteException);
+
+		void logout(in general::corba::SecurityKey security_key)
+			raises (general::corba::AMFICOMRemoteException);
+
+		administration::corba::DomainSeq_Transferable transmitAvailableDomains(in general::corba::SecurityKey security_key)
+			raises (general::corba::AMFICOMRemoteException);
+
+		void selectDomain(in general::corba::Identifier_Transferable domain_id)
+			raises (general::corba::AMFICOMRemoteException);
+	};
+
+
+	interface EventServer : general::corba::Verifiable {
+
+		void eventGeneration(in event::corba::Event_Transferable event)
+			raises (general::corba::AMFICOMRemoteException);
+	};
+
+};
+};
+};
+};
+};
+
+#endif
