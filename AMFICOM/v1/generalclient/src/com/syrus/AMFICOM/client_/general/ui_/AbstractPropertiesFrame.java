@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractPropertiesFrame.java,v 1.4 2005/04/20 16:30:46 stas Exp $
+ * $Id: AbstractPropertiesFrame.java,v 1.5 2005/04/28 11:53:17 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,13 +13,16 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.event.*;
 
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+
 /**
  * @author $Author: stas $
- * @version $Revision: 1.4 $, $Date: 2005/04/20 16:30:46 $
+ * @version $Revision: 1.5 $, $Date: 2005/04/28 11:53:17 $
  * @module generalclient_v1
  */
 
 public abstract class AbstractPropertiesFrame extends JInternalFrame implements ChangeListener {
+	protected AbstractEventHandler eventHandler;
 	protected StorableObjectEditor editor;
 	protected JComponent emptyPane;
 	
@@ -59,6 +62,16 @@ public abstract class AbstractPropertiesFrame extends JInternalFrame implements 
 		super.doDefaultCloseAction();
 	}
 	
+	public void setEventhandler(AbstractEventHandler eventHandler) {
+		this.eventHandler = eventHandler;
+	}
+	
+	public void setContext(ApplicationContext aContext) {
+		if (this.eventHandler != null) {
+			this.eventHandler.setContext(aContext);
+		}
+	}
+	
 	public void setVisualManager(VisualManager manager) {
 		if (this.editor != null) {
 			this.editor.removeChangeListener(this);
@@ -83,11 +96,14 @@ public abstract class AbstractPropertiesFrame extends JInternalFrame implements 
 				AbstractPropertiesFrame.this.updateUI();
 			}
 		});
-		
 	}
-	
+
 	public void stateChanged(ChangeEvent e) { 
 		// should be overriden by children 
 	}
 	protected abstract StorableObjectEditor getEditor(VisualManager manager);
+	
+	public StorableObjectEditor getCurrentEditor() {
+		return editor;
+	}
 }
