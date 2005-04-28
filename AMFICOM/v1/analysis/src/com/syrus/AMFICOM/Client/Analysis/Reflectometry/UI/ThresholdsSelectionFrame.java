@@ -38,6 +38,7 @@ import com.syrus.AMFICOM.Client.General.Model.AnalyseApplicationModel;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.Client.General.UI.ATable;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
+import com.syrus.AMFICOM.analysis.dadara.MathRef;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager.ThreshEditor;
 import com.syrus.AMFICOM.client_.general.ui_.ADefaultTableCellRenderer;
@@ -407,8 +408,10 @@ implements OperationListener, BsHashChangeListener,
 		for (int k = 0; k < 4; k++)
 		{
 			pData[k] = new Double[te.length];
+            // XXX: round values to be displayed with 0.0001 precision
 			for (int i = 0; i < te.length; i++)
-				((Double[] )pData[k])[i] = new Double(te[i].getValue(k));
+				((Double[] )pData[k])[i] = new Double(
+                        MathRef.round_4(te[i].getValue(k)));
 		}
 
 		ThresholdTableModel tModel = new ThresholdTableModel(
