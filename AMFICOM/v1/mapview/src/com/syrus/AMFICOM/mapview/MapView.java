@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.25 2005/04/22 11:30:07 krupenn Exp $
+* $Id: MapView.java,v 1.26 2005/04/28 09:10:05 krupenn Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -55,7 +55,7 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
  * @author $Author: krupenn $
- * @version $Revision: 1.25 $, $Date: 2005/04/22 11:30:07 $
+ * @version $Revision: 1.26 $, $Date: 2005/04/28 09:10:05 $
  * @module mapview_v1
  * @todo use getCenter, setCenter instead of pair longitude, latitude
  */
@@ -411,19 +411,19 @@ public class MapView extends DomainMember implements Namable {
 	 * по элементам карты, в которых размещены начальный и конечный элемент
 	 * схемного кабеля.
 	 * 
-	 * @param cable топологический кабель
-	 * @param scl схемный кабель
+	 * @param cablePath топологический кабель
+	 * @param schemeCableLink схемный кабель
 	 */
-	public void correctStartEndNodes(CablePath cable, SchemeCableLink scl)
-	{
-		SiteNode startNode = getStartNode(scl);
-		SiteNode endNode = getEndNode(scl);
-		if(startNode != null && endNode != null)
-		{
-			cable.setStartNode(startNode);
-			cable.setEndNode(endNode);
-		}
-	}
+//	public void correctStartEndNodes(CablePath cablePath, SchemeCableLink schemeCableLink)
+//	{
+//		SiteNode startNode = getStartNode(schemeCableLink);
+//		SiteNode endNode = getEndNode(schemeCableLink);
+//		if(startNode != null && endNode != null)
+//		{
+//			cablePath.setStartNode(startNode);
+//			cablePath.setEndNode(endNode);
+//		}
+//	}
 	
 	/**
 	 * Возвращает топологический элемент, в котором расположен начальный
