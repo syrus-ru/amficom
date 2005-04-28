@@ -1,11 +1,11 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.1 2005/04/28 07:35:33 cvsadmin Exp $
+ * $Id: DatabaseContextSetup.java,v 1.2 2005/04/28 10:34:52 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
-package com.syrus.AMFICOM.loginserver;
+package com.syrus.AMFICOM.leserver;
 
 import com.syrus.AMFICOM.administration.AdministrationDatabaseContext;
 import com.syrus.AMFICOM.administration.DomainDatabase;
@@ -23,8 +23,8 @@ import com.syrus.AMFICOM.general.GeneralDatabaseContext;
 import com.syrus.AMFICOM.general.ParameterTypeDatabase;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/28 07:35:33 $
- * @author $Author: cvsadmin $
+ * @version $Revision: 1.2 $, $Date: 2005/04/28 10:34:52 $
+ * @author $Author: arseniy $
  * @module loginserver_v1
  */
 final class DatabaseContextSetup {

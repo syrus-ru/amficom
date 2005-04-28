@@ -1,11 +1,11 @@
 /*
- * $Id: PoolContext.java,v 1.1 2005/04/28 07:35:33 cvsadmin Exp $
+ * $Id: PoolContext.java,v 1.2 2005/04/28 10:35:53 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
-package com.syrus.AMFICOM.loginserver;
+package com.syrus.AMFICOM.leserver;
 
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.DatabaseAdministrationObjectLoader;
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectResizableLRUMap;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/28 07:35:33 $
- * @author $Author: cvsadmin $
+ * @version $Revision: 1.2 $, $Date: 2005/04/28 10:35:53 $
+ * @author $Author: arseniy $
  * @module loginserver_v1
  */
 final class PoolContext {

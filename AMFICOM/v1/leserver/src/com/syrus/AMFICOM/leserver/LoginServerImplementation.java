@@ -1,23 +1,23 @@
 /*
- * $Id: LoginServerImplementation.java,v 1.1 2005/04/28 07:35:33 cvsadmin Exp $
+ * $Id: LoginServerImplementation.java,v 1.2 2005/04/28 10:35:43 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
-package com.syrus.AMFICOM.loginserver;
+package com.syrus.AMFICOM.leserver;
 
 import com.syrus.AMFICOM.administration.corba.Domain_Transferable;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder;
 import com.syrus.AMFICOM.general.corba.SecurityKey;
-import com.syrus.AMFICOM.loginserver.corba.LoginServerPOA;
+import com.syrus.AMFICOM.leserver.corba.LoginServerPOA;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/28 07:35:33 $
- * @author $Author: cvsadmin $
+ * @version $Revision: 1.2 $, $Date: 2005/04/28 10:35:43 $
+ * @author $Author: arseniy $
  * @module loginserver_v1
  */
 public final class LoginServerImplementation extends LoginServerPOA {
