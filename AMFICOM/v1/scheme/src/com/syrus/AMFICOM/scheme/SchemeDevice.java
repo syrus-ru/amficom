@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.22 2005/04/27 16:56:47 bass Exp $
+ * $Id: SchemeDevice.java,v 1.23 2005/04/28 11:12:32 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ import com.syrus.util.Log;
  * #07 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.22 $, $Date: 2005/04/27 16:56:47 $
+ * @version $Revision: 1.23 $, $Date: 2005/04/28 11:12:32 $
  * @module scheme_v1
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -339,8 +339,13 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 		return this.name;
 	}
 
+	/**
+	 * @throws IllegalStateException
+	 */
 	public SchemeElement getParentSchemeElement() {
-		assert this.assertParentSetStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
+//		assert this.assertParentSetStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
+		if (!this.assertParentSetStrict())
+			throw new IllegalStateException(ErrorMessages.OBJECT_BADLY_INITIALIZED);
 
 		if (this.parentSchemeElementId.isVoid()) {
 			Log.debugMessage("SchemeDevice.getParentSchemeElement() | Parent SchemeElement was requested, while parent is a SchemeProtoElement; returning null.", //$NON-NLS-1$
@@ -356,8 +361,13 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 		}
 	}
 
+	/**
+	 * @throws IllegalStateException
+	 */
 	public SchemeProtoElement getParentSchemeProtoElement() {
-		assert this.assertParentSetStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
+//		assert this.assertParentSetStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
+		if (!this.assertParentSetStrict())
+			throw new IllegalStateException(ErrorMessages.OBJECT_BADLY_INITIALIZED);
 
 		if (this.parentSchemeProtoElementId.isVoid()) {
 			Log.debugMessage("SchemeDevice.getParentSchemeProtoElement() | Parent SchemeProtoElement was requested, while parent is a SchemeElement; returning null.",  //$NON-NLS-1$
