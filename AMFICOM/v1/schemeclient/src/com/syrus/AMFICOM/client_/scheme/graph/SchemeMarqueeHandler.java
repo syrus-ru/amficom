@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMarqueeHandler.java,v 1.2 2005/04/22 07:32:50 stas Exp $
+ * $Id: SchemeMarqueeHandler.java,v 1.3 2005/04/28 16:02:36 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,16 +18,20 @@ import javax.swing.*;
 import com.jgraph.graph.*;
 import com.jgraph.plaf.GraphUI;
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.*;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.*;
+import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.configuration.corba.PortSort;
 import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/04/22 07:32:50 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/28 16:02:36 $
  * @module schemeclient_v1
  */
 
@@ -74,6 +78,10 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 	protected Point start, current;
 	protected Rectangle bounds;
 	protected PortView port, firstPort, lastPort;
+	
+	protected Rectangle devBounds;
+	protected Point settingPoint;
+	private int crossSize = 4;
 	
 //	private transient SchemeProtoElement settingProto = null;
 	//	private transient boolean sendEvents = true;
@@ -158,7 +166,9 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 		SchemeGraph graph = (SchemeGraph)event.getSource();
 		if (graph.isEditable()) {
 			if (p1.isSelected() || p2.isSelected()) {
-				createPort(graph, event.getPoint());
+				createPort(graph, graph.snap(event.getPoint()));
+				devBounds = null;
+				settingPoint = null;
 				graph.repaint();
 				event.consume();
 			}
@@ -245,17 +255,40 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 		return new Identifier(((RISDSessionInfo)pane.aContext.getSessionInterface()).getAccessIdentifier().user_id);
 	}
 	
-	private void createPort(SchemeGraph graph, Point p) {
+	private DeviceCell getOnlySelectedDevice(SchemeGraph graph) {
 		DeviceCell deviceCell = null;
 		Object[] cells = graph.getSelectionCells();
-
 		int counter = 0;
-		for (int j = 0; j < cells.length; j++)
+		for (int j = 0; j < cells.length; j++) {
 			if (cells[j] instanceof DeviceCell) {
 				deviceCell = (DeviceCell) cells[j];
 				counter++;
 			}
-		if (counter == 1) {
+		}
+		if (counter > 1)
+			deviceCell = null;
+		return deviceCell;
+	}
+	
+	private AbstractSchemePortDirectionType getDirectionType(Rectangle dev_bounds, Point p) {
+		if (p.y > dev_bounds.y && p.y < dev_bounds.y + dev_bounds.height) {
+			if (p.x < dev_bounds.x )
+				return AbstractSchemePortDirectionType._IN;
+			else if (p.x > dev_bounds.x + dev_bounds.width)
+				return AbstractSchemePortDirectionType._OUT;
+			else {
+				Log.errorMessage("can't create PortCell in of horizontal bounds of DeviceCell"); //$NON-NLS-1$
+				return null;
+			}
+		}
+		Log.errorMessage("can't create PortCell out of vertical bounds of DeviceCell"); //$NON-NLS-1$
+		return null;
+	}
+	
+	private void createPort(SchemeGraph graph, Point p) {
+		DeviceCell deviceCell = getOnlySelectedDevice(graph);
+
+		if (deviceCell != null) {
 			/**
 			 * @todo Message "device must be ungrouped"
 			 * and next possibility to add ports to grouped element
@@ -271,27 +304,36 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 			
 			Map m = graph.getModel().getAttributes(deviceCell);
 			Rectangle dev_bounds = GraphConstants.getBounds(m);	
-			if (dev_bounds.y > p.y || dev_bounds.y + dev_bounds.height < p.y) {
-				Log.errorMessage("can't create PortCell out of vertical bounds of DeviceCell"); //$NON-NLS-1$
+			AbstractSchemePortDirectionType directionType = getDirectionType(dev_bounds, p);
+			if (directionType == null)
+				return;
+			
+			boolean isCable = !p1.isSelected();
+			
+			StorableObjectCondition condition = new TypicalCondition(
+					isCable ? PortSort._PORT_SORT_CABLE_PORT : PortSort._PORT_SORT_PORT,
+					0, OperationSort.OPERATION_EQUALS,
+					ObjectEntities.PORTTYPE_ENTITY_CODE, PortTypeWrapper.COLUMN_SORT);
+//			StorableObjectCondition condition = new EquivalentCondition(ObjectEntities.PORTTYPE_ENTITY_CODE);
+			Set types = Collections.EMPTY_SET;
+			try {
+				types = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
+			} catch (ApplicationException e1) {
+				Log.errorException(e1);
+			}
+			if (types.isEmpty()) {
+				JOptionPane.showMessageDialog(Environment.getActiveWindow(), Constants.ERROR_PORTTYPE_NOT_FOUND, Constants.ERROR, JOptionPane.ERROR_MESSAGE);
 				return;
 			}
-			AbstractSchemePortDirectionType directionType;
-			if (dev_bounds.x > p.x)
-				directionType = AbstractSchemePortDirectionType._IN;
-			else if (dev_bounds.x + dev_bounds.width < p.x)
-				directionType = AbstractSchemePortDirectionType._OUT;
-			else {
-				Log.errorMessage("can't create PortCell in of horizontal bounds of DeviceCell"); //$NON-NLS-1$
-				return;
-			}
-						
+			PortType type = (PortType)types.iterator().next();
+			
 			String name = String.valueOf(deviceCell.getChildCount());
 			DefaultGraphCell cell = SchemeActions.createAbstractPort(graph, deviceCell, 
-					graph.fromScreen(graph.snap(p)), name, directionType, p1.isSelected());
+					graph.fromScreen(graph.snap(p)), name, directionType, isCable);
 			
 			try {
 				AbstractSchemePort schemePort;
-				if (p1.isSelected()) { //port
+				if (!isCable) { //port
 					schemePort = SchemePort.createInstance(getUserId(), name, directionType, deviceCell.getSchemeDevice());
 					((PortCell)cell).setSchemePortId(schemePort.getId());
 				}
@@ -299,6 +341,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 					schemePort = SchemeCablePort.createInstance(getUserId(), name, directionType, deviceCell.getSchemeDevice());
 					((CablePortCell)cell).setSchemeCablePortId(schemePort.getId());
 				}
+				schemePort.setPortType(type);
 				SchemeStorableObjectPool.putStorableObject(schemePort);
 			} catch (ApplicationException e1) {
 				Log.errorException(e1);
@@ -464,6 +507,26 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 		if (!graph.isEditable())
 			return;
 
+		if (p1.isSelected() || p2.isSelected()) {
+			if (devBounds == null) {
+				DeviceCell deviceCell = getOnlySelectedDevice(graph);
+				if (deviceCell != null) {
+					Map m = graph.getModel().getAttributes(deviceCell);
+					devBounds = GraphConstants.getBounds(m);
+					settingPoint = graph.snap(event.getPoint());
+					graph.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+				}
+			}
+			Point p = graph.snap(event.getPoint());
+			int minX = Math.min(devBounds.x, Math.min(p.x, settingPoint.x) - crossSize) - 1;
+			int maxX = Math.max(devBounds.x + devBounds.width, Math.max(p.x, settingPoint.x + crossSize)) + 1;
+			int minY = Math.min(devBounds.y, Math.min(p.y, settingPoint.y - crossSize)) - 1;
+			int maxY = Math.max(devBounds.y + devBounds.height, Math.max(p.y, settingPoint.y + crossSize)) + 1;
+			graph.repaint(minX, minY, maxX - minX, maxY - minY);
+			settingPoint = p;
+			event.consume();
+		}
+		
 		if (!s.isSelected() && !event.isConsumed()) {
 			graph.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
 			event.consume();
@@ -509,9 +572,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 	
 	public void overlay(Graphics g) {
 		if (marqueeBounds != null) {
-			
-			g.drawRect(marqueeBounds.x, marqueeBounds.y, marqueeBounds.width,
-					marqueeBounds.height);
+			g.drawRect(marqueeBounds.x, marqueeBounds.y, marqueeBounds.width, marqueeBounds.height);
 		}
 		if (bounds != null && start != null) {
 			if (i.isSelected() || z.isSelected())
@@ -523,6 +584,25 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 				g.drawLine(start.x, start.y, current.x, current.y);
 			else if (!s.isSelected())
 				g.drawRect(bounds.x, bounds.y, bounds.width, bounds.height);
+		}
+		if ((p1.isSelected() || p2.isSelected()) && devBounds != null && settingPoint != null) {
+			if (settingPoint.y > devBounds.y && settingPoint.y < devBounds.y + devBounds.height) {
+				g.setColor(Color.GRAY);
+				if (settingPoint.x < devBounds.x) {
+					g.drawLine(settingPoint.x, settingPoint.y, devBounds.x, settingPoint.y);
+					g.drawLine(settingPoint.x - crossSize, settingPoint.y - crossSize, 
+							settingPoint.x + crossSize, settingPoint.y + crossSize);
+					g.drawLine(settingPoint.x - crossSize, settingPoint.y + crossSize, 
+							settingPoint.x + crossSize, settingPoint.y - crossSize);
+				}
+				else if (settingPoint.x > devBounds.x + devBounds.width) { 
+					g.drawLine(settingPoint.x, settingPoint.y, devBounds.x + devBounds.width, settingPoint.y);
+					g.drawLine(settingPoint.x - crossSize, settingPoint.y - crossSize, 
+							settingPoint.x + crossSize, settingPoint.y + crossSize);
+					g.drawLine(settingPoint.x - crossSize, settingPoint.y + crossSize, 
+							settingPoint.x + crossSize, settingPoint.y - crossSize);
+				}
+			}
 		}
 	}
 	

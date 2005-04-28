@@ -1,5 +1,5 @@
 /*-
- * $Id: UgoToolBar.java,v 1.2 2005/04/18 09:55:03 stas Exp $
+ * $Id: UgoToolBar.java,v 1.3 2005/04/28 16:02:36 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,11 +14,13 @@ import java.util.*;
 
 import javax.swing.*;
 
+import oracle.jdeveloper.layout.VerticalFlowLayout;
+
 import com.syrus.AMFICOM.client_.scheme.graph.actions.MarqeeAction;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/04/18 09:55:03 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/28 16:02:36 $
  * @module schemeclient_v1
  */
 
@@ -27,6 +29,8 @@ public class UgoToolBar extends JToolBar {
 	protected UgoTabbedPane pane;
 	protected int position = 0;
 	protected Map commands = new HashMap();
+	private static LayoutManager vertical = new VerticalFlowLayout(VerticalFlowLayout.TOP, 0, 0, false, false);
+	private static LayoutManager horizontal = new FlowLayout(FlowLayout.LEFT, 0, 0);
 	private static String[] buttons = new String[] { 
 		Constants.marqueeTool 
 	};
@@ -35,29 +39,39 @@ public class UgoToolBar extends JToolBar {
 		this.pane = pane;
 	}
 	
+	public void setOrientation(int o) {
+		super.setOrientation(o);
+		if (o == VERTICAL) {
+			setLayout(vertical);
+		} 
+		else if (o == HORIZONTAL) {
+			setLayout(horizontal);
+		}
+	}
+	
 	public void createToolBar() {
 		commands.putAll(createGraphButtons());
 
-		for (int i = 0; i < buttons.length; i++) {
-			if (buttons[i].equals(Constants.separator))
+		String[] butt = getButtons();
+		
+		for (int i = 0; i < butt.length; i++) {
+			if (butt[i].equals(Constants.separator))
 				insert(new JToolBar.Separator());
 			else
-				insert((JComponent)commands.get(buttons[i]));
+				insert((JComponent)commands.get(butt[i]));
 		}
+	}
+	
+	protected String[] getButtons() {
+		return buttons;
 	}
 
 	protected Map createGraphButtons() {
 		Map bttns = new HashMap();
-
 		SchemeMarqueeHandler mh = pane.getMarqueeHandler();
-
 		bttns.put(Constants.marqueeTool, createToolButton(mh.s, btn_size, null,
 				null, Constants.ICON_MARQUEE, new MarqeeAction(pane), true));
-		ButtonGroup group = new ButtonGroup();
-		for (Iterator it = bttns.values().iterator(); it.hasNext();)
-			group.add((AbstractButton) it.next());
 		mh.s.doClick();
-
 		return bttns;
 	}
 
@@ -81,8 +95,7 @@ public class UgoToolBar extends JToolBar {
 	}
 
 	protected void insert(Component c) {
-		add(c);//, new XYConstraints(position, 0, -1, -1));
-		position += c.getPreferredSize().width;
+		add(c);
 	}
 	
 	/* This will change the source of the actionevent to graph. */

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeEditorMainFrame.java,v 1.3 2005/04/22 07:32:50 stas Exp $
+ * $Id: SchemeEditorMainFrame.java,v 1.4 2005/04/28 16:02:36 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.client_.scheme;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/04/22 07:32:50 $
+ * @version $Revision: 1.4 $, $Date: 2005/04/28 16:02:36 $
  * @module schemeclient_v1
  */
 
@@ -57,14 +57,15 @@ public class SchemeEditorMainFrame extends JFrame implements OperationListener {
 	static int scheme_count = 0;
 
 	SchemeViewerFrame editorFrame;
-	SchemeViewerFrame ugoFrame;
+//	SchemeViewerFrame ugoFrame;
 	GeneralPropertiesFrame generalFrame;
 	// ElementsListFrame elementsListFrame;
 	CharacteristicPropertiesFrame characteristicFrame;
+	AdditionalPropertiesFrame additionalFrame;
 	JInternalFrame treeFrame;
 
 	ArrayList graphs = new ArrayList();
-	UgoTabbedPane ugoPane;
+//	UgoTabbedPane ugoPane;
 	SchemeTabbedPane schemeTab;
 
 	public SchemeEditorMainFrame(ApplicationContext aContext) {
@@ -100,7 +101,7 @@ public class SchemeEditorMainFrame extends JFrame implements OperationListener {
 		setResizable(true);
 		setTitle(LangModelSchematics.getString("SchemeEditorTitle"));
 		setJMenuBar(menuBar);
-
+		
 		mainPanel.setLayout(new BorderLayout());
 		setBackground(SystemColor.control);
 		desktopPane.setLayout(null);
@@ -136,30 +137,36 @@ public class SchemeEditorMainFrame extends JFrame implements OperationListener {
 		desktopPane.add(editorFrame);
 		// graphs.add(panel);
 
-		ugoPane = new UgoTabbedPane(aContext);
+		/*ugoPane = new UgoTabbedPane(aContext);
 		ugoFrame = new SchemeViewerFrame(aContext, ugoPane) {
 			protected void closeFrame() {
 				ugoPane.getCurrentPanel().getSchemeResource().setScheme(null);
 			}
 		};
 		ugoFrame.setTitle(LangModelSchematics.getString("elementsUGOTitle"));
-		desktopPane.add(ugoFrame);
+		desktopPane.add(ugoFrame);*/
 		// graphs.add(upanel);
 
-		SchemeToolBar schemeToolBar = new SchemeToolBar(schemeTab, ugoPane, aContext);
+		SchemeToolBar schemeToolBar = new SchemeToolBar(schemeTab, additionalFrame, aContext);
 		schemeToolBar.createToolBar();
 		schemeTab.setToolBar(schemeToolBar);
 				
 		// scheme_graph = epanel.getGraph();
 
-		generalFrame = new GeneralPropertiesFrame("Title", aContext);
+		generalFrame = new GeneralPropertiesFrame("Title");
 		desktopPane.add(generalFrame);
+		new SchemeEventHandler(generalFrame, aContext);
 
 		// elementsListFrame = new ElementsListFrame(aContext, true);
 		// desktopPane.add(elementsListFrame);
 
-		characteristicFrame = new CharacteristicPropertiesFrame("Title", aContext);
+		characteristicFrame = new CharacteristicPropertiesFrame("Title");
 		desktopPane.add(characteristicFrame);
+		new SchemeEventHandler(characteristicFrame, aContext);
+		
+		additionalFrame = new AdditionalPropertiesFrame("Title");
+		desktopPane.add(additionalFrame);
+		new SchemeEventHandler(additionalFrame, aContext);
 
 		// SchemeTreeFrame treeFrame = new SchemeTreeFrame(aContext,
 		// SchemeTreeFrame.SCHEME);
@@ -230,10 +237,8 @@ public class SchemeEditorMainFrame extends JFrame implements OperationListener {
 
 		aModel.setCommand("menuSchemeNew", new SchemeNewCommand(aContext));
 		aModel.setCommand("menuSchemeLoad", new SchemeOpenCommand(aContext));
-		aModel.setCommand("menuSchemeSave", new SchemeSaveCommand(aContext,
-				schemeTab, ugoPane));
-		aModel.setCommand("menuSchemeSaveAs", new SchemeSaveAsCommand(aContext,
-				schemeTab, ugoPane));
+		aModel.setCommand("menuSchemeSave", new SchemeSaveCommand(aContext, schemeTab));
+		aModel.setCommand("menuSchemeSaveAs", new SchemeSaveAsCommand(aContext, schemeTab));
 		// aModel.setCommand("menuInsertToCatalog", new
 		// InsertToCatalogCommand(aContext, epanel.getGraph()));
 		// aModel.setCommand("menuInsertToCatalog", new
@@ -281,7 +286,7 @@ public class SchemeEditorMainFrame extends JFrame implements OperationListener {
 		aModel.setCommand("menuWindowCatalog", new ShowCatalogFrameCommand(
 				aContext, desktopPane));
 		aModel.setCommand("menuWindowUgo", new ShowFrameCommand(desktopPane,
-				ugoFrame));
+				additionalFrame));
 		aModel.setCommand("menuWindowProps", new ShowFrameCommand(desktopPane,
 				generalFrame));
 		aModel.setCommand("menuWindowList", new ShowFrameCommand(desktopPane,
@@ -543,7 +548,7 @@ public class SchemeEditorMainFrame extends JFrame implements OperationListener {
 				ContextChangeEvent.DOMAIN_SELECTED_EVENT));
 
 		editorFrame.setVisible(true);
-		ugoFrame.setVisible(true);
+		additionalFrame.setVisible(true);
 		generalFrame.setVisible(true);
 		characteristicFrame.setVisible(true);
 		treeFrame.setVisible(true);
@@ -623,7 +628,7 @@ public class SchemeEditorMainFrame extends JFrame implements OperationListener {
 		aModel.fireModelChanged("");
 
 		editorFrame.setVisible(false);
-		ugoFrame.setVisible(false);
+		additionalFrame.setVisible(false);
 		generalFrame.setVisible(false);
 		characteristicFrame.setVisible(false);
 		treeFrame.setVisible(false);
@@ -714,7 +719,7 @@ class SchemeEditorWindowArranger extends WindowArranger {
 		// f.treeFrame.setVisible(true);
 
 		normalize(f.editorFrame);
-		normalize(f.ugoFrame);
+		normalize(f.additionalFrame);
 		normalize(f.generalFrame);
 		normalize(f.characteristicFrame);
 		normalize(f.treeFrame);
@@ -722,7 +727,7 @@ class SchemeEditorWindowArranger extends WindowArranger {
 			normalize(catalogFrame);
 
 		f.editorFrame.setSize(11 * w / 20, h);
-		f.ugoFrame.setSize(w / 4, 3 * h / 10);
+		f.additionalFrame.setSize(w / 4, 3 * h / 10);
 		f.generalFrame.setSize(w / 4, 4 * h / 10);
 		f.characteristicFrame.setSize(w / 4, 3 * h / 10);
 		f.treeFrame.setSize(w / 5, h);
@@ -730,7 +735,7 @@ class SchemeEditorWindowArranger extends WindowArranger {
 			catalogFrame.setSize(3 * w / 5, h);
 
 		f.editorFrame.setLocation(w / 5, 0);
-		f.ugoFrame.setLocation(3 * w / 4, 7 * h / 10);
+		f.additionalFrame.setLocation(3 * w / 4, 7 * h / 10);
 		f.generalFrame.setLocation(3 * w / 4, 0);
 		f.characteristicFrame.setLocation(3 * w / 4, 4 * h / 10);
 		f.treeFrame.setLocation(0, 0);

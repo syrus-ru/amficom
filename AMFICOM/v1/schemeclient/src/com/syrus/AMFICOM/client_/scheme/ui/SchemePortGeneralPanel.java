@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePortGeneralPanel.java,v 1.3 2005/04/22 07:32:50 stas Exp $
+ * $Id: SchemePortGeneralPanel.java,v 1.4 2005/04/28 16:02:36 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,30 +14,29 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
 
+import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.client_.general.ui_.*;
-import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.configuration.corba.PortSort;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.resource.*;
-import com.syrus.AMFICOM.resource.Constants;
-import com.syrus.AMFICOM.scheme.SchemePort;
+import com.syrus.AMFICOM.scheme.*;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/04/22 07:32:50 $
+ * @version $Revision: 1.4 $, $Date: 2005/04/28 16:02:36 $
  * @module schemeclient_v1
  */
 
 public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 	ApplicationContext aContext;
 	protected SchemePort schemePort;
+	protected SchemeElement parent;
 	
 	static JColorChooser tcc;
 	JPanel panel0 = new JPanel();
@@ -286,11 +285,9 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 				colorButton_actionPerformed(e);
 			}
 		});
-		portBox.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
+		portBox.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
 				setPortEnabled(portBox.isSelected());
-				if (!portBox.isSelected())
-					mpBox.setSelected(false);
 			}
 		});
 		mpBox.addChangeListener(new ChangeListener() {
@@ -318,6 +315,13 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 		colorLabel.setEnabled(b);
 		colorCombo.setEnabled(b);
 		colorBut.setEnabled(b);
+		if (b && parent != null && parent.getKis() != null)
+			mpBox.setEnabled(true);
+		else
+			mpBox.setEnabled(false);
+		if (!b) {
+			setMPTypeEnabled(false);
+		}
 	}
 	
 	void setMPTypeEnabled(boolean b) {
@@ -337,6 +341,7 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 		mpTypeCombo.removeAllItems();
 		
 		if (schemePort != null) {
+			parent = schemePort.getParentSchemeDevice().getParentSchemeElement();
 			EquivalentCondition condition = new EquivalentCondition(ObjectEntities.PORTTYPE_ENTITY_CODE);
 			try {
 				typeCombo.addElements(ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true));
@@ -367,7 +372,11 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 		}
 		else {
 			portBox.setSelected(false);
+			setPortEnabled(false);
 			markText.setText(Constants.EMPTY);
+			
+			if (parent == null || parent.getEquipment() == null)
+				portBox.setEnabled(false);
 		}
 		if (mPort != null) {
 			mpBox.setSelected(true);
@@ -375,6 +384,7 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 		}
 		else {
 			mpBox.setSelected(false);
+			setMPTypeEnabled(false);
 		}
 	}
 
@@ -392,7 +402,9 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 			if (portBox.isSelected()) {
 				if (port == null) {
 					try {
-						port = SchemeObjectsFactory.createPort(PortSort.PORT_SORT_PORT);
+						Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
+								getAccessIdentifier().user_id);
+						port = Port.createInstance(userId, schemePort.getPortType(), schemePort.getDescription(), parent.getEquipment().getId(), PortSort.PORT_SORT_PORT);
 						schemePort.setPort(port);
 					} catch (CreateObjectException e) {
 						Log.errorException(e);
@@ -408,26 +420,34 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 			else if (port != null) {
 				ConfigurationStorableObjectPool.delete(port.getId());
 				schemePort.setPort(null);
+				mpBox.setSelected(false);
+			}
+			else {
+				mpBox.setSelected(false);
 			}
 			
 			MeasurementPort mp = schemePort.getMeasurementPort();
 			if (mpBox.isSelected()) {
 				if (mp == null) {
-					try {
-						mp = SchemeObjectsFactory.createMeasurementPort();
-						schemePort.setMeasurementPort(mp);
-					} catch (CreateObjectException e) {
-						Log.errorException(e);
+					if (parent != null && parent.getKis() != null) {
+						try {
+							Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
+									getAccessIdentifier().user_id); 
+							MeasurementPortType mpType = (MeasurementPortType) mpTypeCombo.getSelectedItem();
+							mp = MeasurementPort.createInstance(userId, mpType, schemePort.getName(), schemePort.getDescription(), parent.getKis().getId(), schemePort.getPort().getId());
+							schemePort.setMeasurementPort(mp);
+						} catch (CreateObjectException e) {
+							Log.errorException(e);
+						}
+					}
+					else {
+						Log.debugMessage("KIS is null. Cannot create MeasurementPort", Log.FINEST); //$NON-NLS-1$
 					}
 				}
-				if (mp != null) {
+				else if (mp != null) {
 					mp.setName(schemePort.getName());
 					mp.setDescription(schemePort.getDescription());
 					mp.setType((MeasurementPortType)mpTypeCombo.getSelectedItem());
-					// TODO check kis presents
-					mp.setKISId(schemePort.getParentSchemeDevice().getParentSchemeElement().getKis().getId());
-					// XXX a nax nam tut vawe port?
-					mp.setPortId(schemePort.getPort().getId());
 				}
 			}
 			else if (mp != null) {

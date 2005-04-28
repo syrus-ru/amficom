@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.4 2005/04/22 07:32:50 stas Exp $
+ * $Id: SchemeActions.java,v 1.5 2005/04/28 16:02:36 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.4 $, $Date: 2005/04/22 07:32:50 $
+ * @version $Revision: 1.5 $, $Date: 2005/04/28 16:02:36 $
  * @module schemeclient_v1
  */
 
@@ -220,7 +220,7 @@ public class SchemeActions {
 		
 		Map viewMap = new HashMap();
 	
-		if (isCable) {
+		if (!isCable) {
 			visualPort = PortCell.createInstance("", portCellBounds, viewMap, direction);
 		}
 		else { // cableport

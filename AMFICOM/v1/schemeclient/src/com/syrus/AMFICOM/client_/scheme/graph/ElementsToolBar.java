@@ -1,5 +1,5 @@
 /*-
- * $Id: ElementsToolBar.java,v 1.3 2005/04/22 07:32:50 stas Exp $
+ * $Id: ElementsToolBar.java,v 1.4 2005/04/28 16:02:36 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,17 +13,18 @@ import java.util.*;
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.client_.general.ui_.AbstractPropertiesFrame;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.*;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/04/22 07:32:50 $
+ * @version $Revision: 1.4 $, $Date: 2005/04/28 16:02:36 $
  * @module schemeclient_v1
  */
 
 public class ElementsToolBar extends UgoToolBar {
 	protected ApplicationContext aContext;
-	protected UgoTabbedPane targetPane;
+	protected AbstractPropertiesFrame additionalFrame;
 	private static String[] buttons = new String[] { Constants.marqueeTool,
 		Constants.separator, Constants.rectangleTool, Constants.ellipseTool,
 		Constants.lineTool, Constants.textTool, Constants.separator,
@@ -35,21 +36,25 @@ public class ElementsToolBar extends UgoToolBar {
 		Constants.zoomActualKey
 	};
 	
-	public void createToolBar() {
-		commands.putAll(createGraphButtons());
-
-		for (int i = 0; i < buttons.length; i++) {
-			if (buttons[i].equals(Constants.separator))
-				insert(new JToolBar.Separator());
-			else
-				insert((JComponent)commands.get(buttons[i]));
-		}
+//	public void createToolBar() {
+//		commands.putAll(createGraphButtons());
+//
+//		for (int i = 0; i < buttons.length; i++) {
+//			if (buttons[i].equals(Constants.separator))
+//				insert(new JToolBar.Separator());
+//			else
+//				insert((JComponent)commands.get(buttons[i]));
+//		}
+//	}
+	
+	protected String[] getButtons() {
+		return buttons;
 	}
 
-	protected ElementsToolBar(UgoTabbedPane sourcePane, UgoTabbedPane targetPane,
+	protected ElementsToolBar(UgoTabbedPane sourcePane, AbstractPropertiesFrame additionalFrame,
 			ApplicationContext aContext) {
 		super(sourcePane);
-		this.targetPane = targetPane;
+		this.additionalFrame = additionalFrame;
 		this.aContext = aContext;
 	}
 
@@ -112,7 +117,7 @@ public class ElementsToolBar extends UgoToolBar {
 		// new HierarchyUpAction (getGraph()), true));
 		bttns.put(Constants.createTopLevelElementKey, createToolButton(mh.ugo,
 				btn_size, null, Constants.TEXT_CREATE_UGO, Constants.ICON_CREATE_UGO,
-				new CreateTopLevelSchemeAction(pane, targetPane, aContext), false));
+				new CreateTopLevelSchemeAction(pane, additionalFrame, aContext), false));
 		bttns.put(Constants.blockPortKey, createToolButton(mh.bp, btn_size, null,
 				Constants.TEXT_HIERARCHY_PORT, Constants.ICON_HIERARCHY_PORT,
 				new CreateBlockPortAction(pane), false));

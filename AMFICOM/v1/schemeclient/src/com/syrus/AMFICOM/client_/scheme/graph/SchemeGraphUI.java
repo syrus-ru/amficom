@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeGraphUI.java,v 1.2 2005/04/18 09:55:03 stas Exp $
+ * $Id: SchemeGraphUI.java,v 1.3 2005/04/28 16:02:36 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/04/18 09:55:03 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/28 16:02:36 $
  * @module schemeclient_v1
  */
 
@@ -191,7 +191,8 @@ public class SchemeGraphUI extends GPGraphUI {
 						event.consume();
 					}
 				}
-			} catch (Exception e) {// ignore
+			} catch (Exception e) {
+				e.printStackTrace();
 			} finally {
 				isDragging = false;
 				disconnect = null;

@@ -1,5 +1,5 @@
 /*
- * $Id: DefaultLink.java,v 1.2 2005/04/22 07:32:50 stas Exp $
+ * $Id: DefaultLink.java,v 1.3 2005/04/28 16:02:36 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.scheme.*;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/04/22 07:32:50 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/28 16:02:36 $
  * @module schemeclient_v1
  */
 
@@ -96,7 +96,7 @@ public class DefaultLink extends DefaultEdge {
 			DefaultLink cell = (DefaultLink) edge.getCell();
 			SchemeGraph graph = (SchemeGraph) edge.getGraph();
 
-			if (!getSchemeLinkId().equals(cell.getSchemeLinkId()))
+			if (getSchemeLinkId() != null && !getSchemeLinkId().equals(cell.getSchemeLinkId()))
 				setSchemeLinkId(cell.getSchemeLinkId());
 
 			if (cell.source != cell._source) {

@@ -1,5 +1,5 @@
 /*
- * $Id: Constants.java,v 1.2 2005/04/22 07:32:50 stas Exp $
+ * $Id: Constants.java,v 1.3 2005/04/28 16:02:36 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import javax.swing.ImageIcon;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/04/22 07:32:50 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/28 16:02:36 $
  * @module schemeclient_v1
  */
 
@@ -95,6 +95,7 @@ public interface Constants {
 	public static final String ERROR = "Error";
 	public static final String ERROR_COMPONENT_NOT_FOUND = "Не найдено ни одного компонента";
 	public static final String ERROR_HIERARCHY_PORT_NOT_FOUND = "Не найдено ни одного иерархического порта";
+	public static final String ERROR_PORTTYPE_NOT_FOUND = "Пожалуйста создайте сначала тип порта";
 	
 	// list of button keys
 	public static final String deleteKey = "deleteKey";

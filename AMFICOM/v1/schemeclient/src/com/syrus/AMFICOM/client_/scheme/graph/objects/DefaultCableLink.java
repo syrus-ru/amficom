@@ -1,5 +1,5 @@
 /*
- * $Id: DefaultCableLink.java,v 1.2 2005/04/22 07:32:50 stas Exp $
+ * $Id: DefaultCableLink.java,v 1.3 2005/04/28 16:02:36 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/04/22 07:32:50 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/28 16:02:36 $
  * @module schemeclient_v1
  */
 
@@ -98,7 +98,7 @@ public class DefaultCableLink extends DefaultEdge {
 			DefaultCableLink cell = (DefaultCableLink) edge.getCell();
 			SchemeGraph graph = (SchemeGraph) edge.getGraph();
 
-			if (!getSchemeCableLinkId().equals(cell.getSchemeCableLinkId()))
+			if (getSchemeCableLinkId() != null && !getSchemeCableLinkId().equals(cell.getSchemeCableLinkId()))
 				setSchemeCableLinkId(cell.getSchemeCableLinkId());
 
 			if (cell.source != cell._source) {

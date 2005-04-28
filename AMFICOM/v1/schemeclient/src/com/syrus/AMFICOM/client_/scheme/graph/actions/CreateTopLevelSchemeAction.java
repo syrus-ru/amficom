@@ -1,5 +1,5 @@
 /*
- * $Id: CreateTopLevelSchemeAction.java,v 1.3 2005/04/22 07:32:50 stas Exp $
+ * $Id: CreateTopLevelSchemeAction.java,v 1.4 2005/04/28 16:02:36 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,19 +10,14 @@ package com.syrus.AMFICOM.client_.scheme.graph.actions;
 
 import java.awt.Image;
 import java.awt.event.ActionEvent;
-import java.util.*;
 import java.util.ArrayList;
 
 import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.client_.general.ui_.AbstractPropertiesFrame;
 import com.syrus.AMFICOM.client_.scheme.graph.*;
-import com.syrus.AMFICOM.client_.scheme.graph.Constants;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.*;
-import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.resource.*;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
@@ -30,19 +25,19 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/04/22 07:32:50 $
+ * @version $Revision: 1.4 $, $Date: 2005/04/28 16:02:36 $
  * @module schemeclient_v1
  */
 
 public class CreateTopLevelSchemeAction extends AbstractAction {
 	UgoTabbedPane sourcePane;
-	UgoTabbedPane targetPane;
+	AbstractPropertiesFrame targetFrame;
 	ApplicationContext aContext;
 
-	public CreateTopLevelSchemeAction(UgoTabbedPane sourcePane, UgoTabbedPane targetPane, ApplicationContext aContext) {
+	public CreateTopLevelSchemeAction(UgoTabbedPane sourcePane, AbstractPropertiesFrame targetFrame, ApplicationContext aContext) {
 		super(Constants.createTopLevelElementKey);
 		this.sourcePane = sourcePane;
-		this.targetPane = targetPane;
+		this.targetFrame = targetFrame;
 		this.aContext = aContext;
 	}
 
@@ -89,6 +84,11 @@ public class CreateTopLevelSchemeAction extends AbstractAction {
 				icon = new ImageIcon(icon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
 		}
 		
+// TODO write SchemePropertiesManager
+		/*StorableObjectEditor editor = targetFrame.getEditor(SchemePropertiesManager);
+		editor.setObject(scheme);
+		UgoTabbedPane targetPane = (UgoTabbedPane)editor.getGUI(); 
+		
 		CreateUgo.create(targetPane.getGraph(), icon, scheme.getLabel(), blockports_in, blockports_out);
 		CreateGroup action = new CreateGroup(targetPane);
 		action.actionPerformed(null);
@@ -104,6 +104,6 @@ public class CreateTopLevelSchemeAction extends AbstractAction {
 				return;
 			}
 		}
-		ugo.setData((List)targetPane.getGraph().getArchiveableState());
+		ugo.setData((List)targetPane.getGraph().getArchiveableState());*/
 	}
 }

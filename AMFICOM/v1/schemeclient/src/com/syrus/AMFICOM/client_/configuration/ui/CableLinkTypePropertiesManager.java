@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypePropertiesManager.java,v 1.4 2005/04/18 10:45:17 stas Exp $
+ * $Id: CableLinkTypePropertiesManager.java,v 1.5 2005/04/28 16:02:36 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.configuration.CableLinkTypeController;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.4 $, $Date: 2005/04/18 10:45:17 $
+ * @version $Revision: 1.5 $, $Date: 2005/04/28 16:02:36 $
  * @module schemeclient_v1
  */
 
@@ -23,6 +23,7 @@ public class CableLinkTypePropertiesManager implements VisualManager {
 	private static CableLinkTypePropertiesManager instance;
 	private AbstractLinkTypeGeneralPanel generalPanel;
 	private CableLinkTypeCharacteristicsPanel charPanel;
+	private CableLinkTypeLayout layout;
 	
 	private CableLinkTypePropertiesManager() {
 		// empty
@@ -42,6 +43,9 @@ public class CableLinkTypePropertiesManager implements VisualManager {
 		if (charPanel == null)
 			charPanel = new CableLinkTypeCharacteristicsPanel();
 		charPanel.setContext(aContext);
+		if (layout == null)
+			layout = new CableLinkTypeLayout();
+		layout.setContext(aContext);
 	}
 	
 	/**
@@ -66,6 +70,14 @@ public class CableLinkTypePropertiesManager implements VisualManager {
 	 */
 	public ObjectResourceController getController() {
 		return CableLinkTypeController.getInstance();
+	}
+
+	/**
+	 * @return CableLinkTypeLayout
+	 * @see com.syrus.AMFICOM.client_.general.ui_.VisualManager#getAdditionalPropertiesPanel()
+	 */
+	public StorableObjectEditor getAdditionalPropertiesPanel() {
+		return layout;
 	}
 
 }

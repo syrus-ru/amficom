@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeObjectsFactory.java,v 1.3 2005/04/22 07:32:50 stas Exp $
+ * $Id: SchemeObjectsFactory.java,v 1.4 2005/04/28 16:02:36 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/04/22 07:32:50 $
+ * @version $Revision: 1.4 $, $Date: 2005/04/28 16:02:36 $
  * @module schemeclient_v1
  */
 
@@ -222,10 +222,11 @@ public class SchemeObjectsFactory {
 		return schemePort;
 	}*/
 	
-	public static MeasurementPort createMeasurementPort() throws CreateObjectException {
+	public static MeasurementPort createMeasurementPort(MeasurementPortType type) throws CreateObjectException {
 		Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
 				getAccessIdentifier().user_id);
-		MeasurementPort measurementPort = MeasurementPort.createInstance(userId, null, "", "", null, null);
+		MeasurementPort measurementPort = MeasurementPort.createInstance(
+				userId, type, "", "", null, null);
 		try {
 			SchemeStorableObjectPool.putStorableObject(measurementPort);
 		} 

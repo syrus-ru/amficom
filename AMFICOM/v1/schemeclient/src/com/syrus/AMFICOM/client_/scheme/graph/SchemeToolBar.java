@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeToolBar.java,v 1.2 2005/04/18 09:55:03 stas Exp $
+ * $Id: SchemeToolBar.java,v 1.3 2005/04/28 16:02:36 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,11 +15,12 @@ import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Scheme.Constants;
+import com.syrus.AMFICOM.client_.general.ui_.AbstractPropertiesFrame;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.*;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/04/18 09:55:03 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/28 16:02:36 $
  * @module schemeclient_v1
  */
 
@@ -42,22 +43,26 @@ public class SchemeToolBar extends ElementsToolBar {
 			Constants.separator, Constants.TOP_LEVEL_SCHEME_MODE 
 	};
 	
-	public SchemeToolBar(UgoTabbedPane sourcePane, UgoTabbedPane targetPane,
+	public SchemeToolBar(UgoTabbedPane sourcePane, AbstractPropertiesFrame additionalFrame,
 			ApplicationContext aContext) {
-		super(sourcePane, targetPane, aContext);
+		super(sourcePane, additionalFrame, aContext);
 	}
 	
-	public void createToolBar() {
-		commands.putAll(createGraphButtons());
+//	public void createToolBar() {
+//		commands.putAll(createGraphButtons());
+//
+//		for (int i = 0; i < buttons.length; i++) {
+//			if (buttons[i].equals(Constants.separator))
+//				insert(new JToolBar.Separator());
+//			else
+//				insert((JComponent)commands.get(buttons[i]));
+//		}
+//	}
 
-		for (int i = 0; i < buttons.length; i++) {
-			if (buttons[i].equals(Constants.separator))
-				insert(new JToolBar.Separator());
-			else
-				insert((JComponent)commands.get(buttons[i]));
-		}
+	protected String[] getButtons() {
+		return buttons;
 	}
-
+	
 	protected Map createGraphButtons() {
 		Map bttns = super.createGraphButtons();
 
@@ -70,7 +75,7 @@ public class SchemeToolBar extends ElementsToolBar {
 		bttns.put(Constants.createTopLevelSchemeKey, createToolButton(
 				mh.scheme_ugo, btn_size, null, "УГО схемы", new ImageIcon(Toolkit
 						.getDefaultToolkit().getImage("images/sheme_ugo.gif")),
-				new CreateTopLevelSchemeAction(pane, targetPane, aContext), true));
+				new CreateTopLevelSchemeAction(pane, additionalFrame, aContext), true));
 		bttns.put(Constants.backgroundSize, createToolButton(mh.bSize, btn_size,
 				null, "размер схемы", new ImageIcon(Toolkit.getDefaultToolkit()
 						.getImage("images/sheme_size.gif")), new SetBackgroundSizeAction(

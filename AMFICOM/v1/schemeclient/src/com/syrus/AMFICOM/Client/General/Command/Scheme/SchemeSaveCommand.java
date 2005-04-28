@@ -21,22 +21,19 @@ public class SchemeSaveCommand extends VoidCommand {
 	
 	ApplicationContext aContext;
 	SchemeTabbedPane schemeTab;
-	UgoTabbedPane ugoTab;
 
 	public SchemeSaveCommand(ApplicationContext aContext,
-			SchemeTabbedPane schemeTab, UgoTabbedPane ugoTab) {
+			SchemeTabbedPane schemeTab) {
 		this.aContext = aContext;
 		this.schemeTab = schemeTab;
-		this.ugoTab = ugoTab;
 	}
 
 	public Object clone() {
-		return new SchemeSaveCommand(aContext, schemeTab, ugoTab);
+		return new SchemeSaveCommand(aContext, schemeTab);
 	}
 
 	public void execute() {
 		SchemeGraph graph = schemeTab.getGraph();
-		SchemeGraph ugograph = ugoTab.getGraph();
 
 		if (graph.getRoots().length == 0) {
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
@@ -44,7 +41,6 @@ public class SchemeSaveCommand extends VoidCommand {
 			return;
 		}
 		SchemeResource res = schemeTab.getCurrentPanel().getSchemeResource();
-		SchemeResource ugores = ugoTab.getCurrentPanel().getSchemeResource();
 
 		if (res.getSchemeElement() != null) // сохраняем компонент
 		{
@@ -80,17 +76,7 @@ public class SchemeSaveCommand extends VoidCommand {
 		}
 
 		Scheme scheme = res.getScheme();
-		if (scheme.equals(ugores.getScheme())) {
-			if (ugograph.getRoots().length == 0) {
-				int ret = JOptionPane
-						.showConfirmDialog(
-								Environment.getActiveWindow(),
-								"Схему нельзя будет включить в другую схему,\nт.к. не создано условное графическое обозначение схемы.\nПродолжить сохранение?",
-								"Предупреждение", JOptionPane.YES_NO_OPTION);
-				if (ret == JOptionPane.NO_OPTION || ret == JOptionPane.CANCEL_OPTION)
-					return;
-			}
-		} else if (res.getScheme().getUgoCell() == null) {
+		if (res.getScheme().getUgoCell() == null) {
 			int ret = JOptionPane
 					.showConfirmDialog(
 							Environment.getActiveWindow(),
@@ -127,13 +113,7 @@ public class SchemeSaveCommand extends VoidCommand {
 				scheme.setSchemeCell(SchemeObjectsFactory.createImageResource());
 			}
 			scheme.getSchemeCell().setData((List) graph.getArchiveableState());
-			if (scheme.equals(ugores.getScheme())) {
-				if (scheme.getUgoCell() == null) {
-					scheme.setUgoCell(SchemeObjectsFactory.createImageResource());
-				}
-				scheme.getUgoCell().setData((List) ugograph.getArchiveableState());
-				ugoTab.setGraphChanged(false);
-			}
+		
 			SchemeStorableObjectPool.putStorableObject(scheme);
 
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Схема "

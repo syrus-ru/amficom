@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLinkGeneralPanel.java,v 1.2 2005/04/27 08:47:29 stas Exp $
+ * $Id: SchemeCableLinkGeneralPanel.java,v 1.3 2005/04/28 16:02:36 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/04/27 08:47:29 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/28 16:02:36 $
  * @module schemeclient_v1
  */
 
@@ -33,7 +33,7 @@ public class SchemeCableLinkGeneralPanel extends AbstractSchemeLinkGeneralPanel 
 	}
 
 	public void setObject(Object or) {
-		this.schemeLink = (SchemeLink)or;
+		this.schemeLink = (SchemeCableLink)or;
 		
 		typeCombo.removeAllItems();
 		if (schemeLink != null) {

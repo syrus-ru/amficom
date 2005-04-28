@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLinkGeneralPanel.java,v 1.1 2005/04/18 10:46:21 stas Exp $
+ * $Id: SchemeLinkGeneralPanel.java,v 1.2 2005/04/28 16:02:36 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.client_.scheme.ui;
 
+import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
@@ -19,7 +20,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/04/18 10:46:21 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/28 16:02:36 $
  * @module schemeclient_v1
  */
 
@@ -54,7 +55,11 @@ public class SchemeLinkGeneralPanel extends AbstractSchemeLinkGeneralPanel {
 			if (linkBox.isSelected()) {
 				if (link == null) {
 					try {
-						link = SchemeObjectsFactory.createLink(LinkSort.LINKSORT_LINK);
+						Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
+								getAccessIdentifier().user_id);
+						Identifier domainId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
+								getAccessIdentifier().domain_id);
+						link = Link.createInstance(userId, domainId, schemeLink.getName(), schemeLink.getDescription(), schemeLink.getAbstractLinkType(), "", "", "", LinkSort.LINKSORT_LINK, 0, "");
 						schemeLink.setLink(link);
 					} catch (CreateObjectException e) {
 						Log.errorException(e);
