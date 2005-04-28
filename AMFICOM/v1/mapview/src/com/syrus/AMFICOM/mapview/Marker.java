@@ -1,5 +1,5 @@
 /*-
- * $Id: Marker.java,v 1.14 2005/04/28 09:11:07 krupenn Exp $
+ * $Id: Marker.java,v 1.15 2005/04/28 10:44:04 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,10 +8,17 @@
 
 package com.syrus.AMFICOM.mapview;
 
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Set;
+
+import org.omg.CORBA.portable.IDLEntity;
+
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
@@ -21,14 +28,6 @@ import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.MapElementState;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.SiteNode;
-
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Set;
-
-import org.omg.CORBA.portable.IDLEntity;
 
 /**
  * Название: Маркер связывания оптической дистанции Lo, полученной      * 
@@ -51,9 +50,9 @@ import org.omg.CORBA.portable.IDLEntity;
  * 
  * 
  * 
- * @version $Revision: 1.14 $, $Date: 2005/04/28 09:11:07 $
+ * @version $Revision: 1.15 $, $Date: 2005/04/28 10:44:04 $
  * @module mapview_v1
- * @author $Author: krupenn $
+ * @author $Author: arseniy $
  */
 
 public class Marker extends AbstractNode
