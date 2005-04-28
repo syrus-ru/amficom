@@ -1,5 +1,5 @@
 /**
- * $Id: CablePath.java,v 1.15 2005/04/26 16:10:00 krupenn Exp $
+ * $Id: CablePath.java,v 1.16 2005/04/28 09:05:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
 /**
  * Элемент кабельного пути. Описывает привязку кабеля к топологическим линиям.
  * @author $Author: krupenn $
- * @version $Revision: 1.15 $, $Date: 2005/04/26 16:10:00 $
+ * @version $Revision: 1.16 $, $Date: 2005/04/28 09:05:33 $
  * @module mapviewclient_v1
  */
 public class CablePath implements MapElement
@@ -93,11 +93,6 @@ public class CablePath implements MapElement
 	protected transient SchemeCableLink schemeCableLink = null;
 
 	/**
-	 * Вид.
-	 */
-	protected transient MapView mapView = null;
-	
-	/**
 	 * Объект привязки кабеля к линиям.
 	 */
 	protected transient CablePathBinding binding = null;
@@ -110,16 +105,12 @@ public class CablePath implements MapElement
 	 * @param id идентификатор
 	 * @param stNode начальный узел
 	 * @param eNode конечный узел
-	 * @param mapView вид
 	 */
 	protected CablePath(
 			SchemeCableLink schemeCableLink,
 			AbstractNode stNode, 
-			AbstractNode eNode, 
-			MapView mapView)
+			AbstractNode eNode) 
 	{
-		this.mapView = mapView;
-
 		this.schemeCableLink = schemeCableLink;
 
 		this.startNode = stNode;
@@ -141,17 +132,15 @@ public class CablePath implements MapElement
 	public static CablePath createInstance(
 			SchemeCableLink schemeCableLink,
 			AbstractNode stNode, 
-			AbstractNode eNode, 
-			MapView mapView)
+			AbstractNode eNode) 
 	{
-		if (stNode == null || mapView == null || eNode == null || schemeCableLink == null)
+		if (stNode == null || eNode == null || schemeCableLink == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		
 		return new CablePath(
 			schemeCableLink,
 			stNode, 
-			eNode, 
-			mapView);
+			eNode);
 	}
 
 	/**
@@ -344,24 +333,6 @@ public class CablePath implements MapElement
 	public void setRemoved(boolean removed)
 	{
 		this.removed = removed;
-	}
-
-	/**
-	 * Установить вид карты.
-	 * @param mapView вид карты
-	 */
-	public void setMapView(MapView mapView)
-	{
-		this.mapView = mapView;
-	}
-	
-	/**
-	 * получить вид карты.
-	 * @return вид карты
-	 */
-	public MapView getMapView()
-	{
-		return this.mapView;
 	}
 
 	/**
