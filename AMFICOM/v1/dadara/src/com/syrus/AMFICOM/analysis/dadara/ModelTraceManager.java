@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.56 2005/04/28 14:02:55 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.57 2005/04/28 16:49:54 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
  * генерацией пороговых кривых и сохранением/восстановлением порогов.
  *
  * @author $Author: saa $
- * @version $Revision: 1.56 $, $Date: 2005/04/28 14:02:55 $
+ * @version $Revision: 1.57 $, $Date: 2005/04/28 16:49:54 $
  * @module
  */
 public class ModelTraceManager
@@ -31,7 +31,7 @@ implements DataStreamable
 	protected static final long SIGNATURE_THRESH = 3353620050119193102L;
 	public static final String CODENAME = "ModelTraceManager";
 
-	private ModelTraceAndEventsImpl mtae;
+	protected ModelTraceAndEventsImpl mtae;
 	private ModelTrace[] thMTCache = null;
 	protected Thresh[] tL; // полный список порогов
 	protected ThreshDX[] tDX; // список DX-порогов
@@ -214,7 +214,7 @@ implements DataStreamable
 		public double getValue(int key)
 		{
 			if (th instanceof ThreshDX)
-				return ((ThreshDX )th).getDX(key);
+				return ((ThreshDX )th).getDX(key) * mtae.getDeltaX(); // samples to meters
 			else
 				return ((ThreshDY )th).getDY(key);
 		}
@@ -223,7 +223,17 @@ implements DataStreamable
 			ModelTraceManager.this.invalidateThMTByKey(key);
 			if (type == TYPE_DXF || type == TYPE_DXT)
 			{
-				int val = (int )value;
+                // convert meters to samples
+                if (mtae.getDeltaX() > 0)
+                    value /= mtae.getDeltaX();
+                // round in some (user-convenient?) way
+                if (value > 0 && value < 1)
+                    value = 1;
+                if (value < 0 && value > -1)
+                    value = -1;
+                value = Math.round(value);
+				// convert to int, limit and set
+                int val = (int)value;
 				if (val > MAX_DX)
 					val = MAX_DX;
 				if (val < MIN_DX)
