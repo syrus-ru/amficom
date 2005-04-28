@@ -1,5 +1,5 @@
 /**
- * $Id: MeasurementPath.java,v 1.22 2005/04/26 16:11:11 krupenn Exp $
+ * $Id: MeasurementPath.java,v 1.23 2005/04/28 09:08:03 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -40,7 +40,7 @@ import com.syrus.AMFICOM.scheme.corba.PathElement_TransferablePackage.DataPackag
  * Элемент пути.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.22 $, $Date: 2005/04/26 16:11:11 $
+ * @version $Revision: 1.23 $, $Date: 2005/04/28 09:08:03 $
  * @module mapviewclient_v1
  */
 public class MeasurementPath implements MapElement
@@ -61,6 +61,16 @@ public class MeasurementPath implements MapElement
 	protected transient boolean removed = false;
 
 	/**
+	 * Узел карты, к которому привязан начальный узел кабеля.
+	 */
+	private transient AbstractNode startNode = null;
+
+	/**
+	 * Узел карты, к которому привязан конечный узел кабеля.
+	 */
+	private transient AbstractNode endNode = null;
+
+	/**
 	 * Схемный путь.
 	 */
 	protected SchemePath schemePath;
@@ -71,6 +81,25 @@ public class MeasurementPath implements MapElement
 	protected MapView mapView;
 
 	/**
+	 * Сортированный список кабельных путей, из которых строится 
+	 * измерительный путь.
+	 * to avoid instantiation of multiple objects.
+	 */
+	protected List sortedCablePaths = new LinkedList();
+	/**
+	 * Сортированный список фрагментов линий, из которых строится 
+	 * измерительный путь.
+	 * to avoid instantiation of multiple objects.
+	 */
+	protected List sortedNodeLinks = new LinkedList();
+	/**
+	 * Сортированный список узлов, по которым проходит 
+	 * измерительный путь.
+	 * to avoid instantiation of multiple objects.
+	 */
+	protected List sortedNodes = new LinkedList();
+
+	/**
 	 * Конструктор.
 	 * @param schemePath схемный путь
 	 * @param id идентификатор
@@ -78,8 +107,12 @@ public class MeasurementPath implements MapElement
 	 */
 	protected MeasurementPath(
 			SchemePath schemePath,
-			MapView mapView)
+			AbstractNode stNode, 
+			AbstractNode eNode,
+			MapView mapView) 
 	{
+		this.startNode = stNode;
+		this.endNode = eNode;
 		this.mapView = mapView;
 
 		this.schemePath = schemePath;
@@ -93,13 +126,17 @@ public class MeasurementPath implements MapElement
 	 */
 	public static MeasurementPath createInstance(
 			SchemePath schemePath,
-			MapView mapView)
+			AbstractNode stNode, 
+			AbstractNode eNode,
+			MapView mapView) 
 	{
-		if (mapView == null || schemePath == null)
+		if (mapView == null || stNode == null || eNode == null || schemePath == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		
 		return new MeasurementPath(
 			schemePath,
+			stNode, 
+			eNode,
 			mapView);
 	}
 
@@ -243,23 +280,43 @@ public class MeasurementPath implements MapElement
 	}
 
 	/**
-	 * Установить вид карты.
-	 * @param mapView вид карты
+	 * Get this.endNode.
+	 * @return this.endNode
 	 */
-	public void setMapView(MapView mapView)
+	public AbstractNode getEndNode() 
 	{
-		this.mapView = mapView;
+		return this.endNode;
+//		return getMapView().getEndNode(this.getSchemePath());
 	}
 	
 	/**
-	 * получить вид карты.
-	 * @return вид карты
+	 * Set {@link #endNode}.
+	 * @param endNode new endNode
 	 */
-	public MapView getMapView()
+	public void setEndNode(AbstractNode endNode) 
 	{
-		return this.mapView;
+		this.endNode = endNode;
 	}
-
+	
+	/**
+	 * Get {@link #startNode}.
+	 * @return this.startNode
+	 */
+	public AbstractNode getStartNode() 
+	{
+		return this.startNode;
+//		return getMapView().getStartNode(this.getSchemePath());
+	}
+	
+	/**
+	 * Set {@link #startNode}.
+	 * @param startNode new startNode
+	 */
+	public void setStartNode(AbstractNode startNode) 
+	{
+		this.startNode = startNode;
+	}
+	
 	/**
 	 * Установить схемный путь.
 	 * @param schemePath схемный путь.
@@ -340,12 +397,12 @@ public class MeasurementPath implements MapElement
 
 			this.unsortedCablePaths.clear();
 			for(Iterator iter = this.schemePath.getPathElements().iterator(); iter.hasNext();) {
-				PathElement pe = (PathElement )iter.next();
-				switch(pe.getKind().value())
+				PathElement pathElement = (PathElement )iter.next();
+				switch(pathElement.getKind().value())
 				{
 					case Kind._SCHEME_ELEMENT:
-						SchemeElement se = (SchemeElement )pe.getAbstractSchemeElement();
-						SiteNode site = this.mapView.findElement(se);
+						SchemeElement schemeElement = (SchemeElement )pathElement.getAbstractSchemeElement();
+						SiteNode site = this.mapView.findElement(schemeElement);
 						if(site != null)
 						{
 							//TODO think if link to 'site' is needed for mPath
@@ -353,51 +410,32 @@ public class MeasurementPath implements MapElement
 						}
 						break;
 					case Kind._SCHEME_LINK:
-						SchemeLink link = (SchemeLink )pe.getAbstractSchemeElement();
-						SchemeElement sse = SchemeUtils.getSchemeElementByDevice(scheme, link.getSourceSchemePort().getParentSchemeDevice());
-						SchemeElement ese = SchemeUtils.getSchemeElementByDevice(scheme, link.getTargetSchemePort().getParentSchemeDevice());
-						SiteNode ssite = this.mapView.findElement(sse);
-						SiteNode esite = this.mapView.findElement(ese);
-						if(ssite == esite)
+						SchemeLink schemeLink = (SchemeLink )pathElement.getAbstractSchemeElement();
+						SchemeElement startSchemeElement = SchemeUtils.getSchemeElementByDevice(scheme, schemeLink.getSourceSchemePort().getParentSchemeDevice());
+						SchemeElement endSchemeElement = SchemeUtils.getSchemeElementByDevice(scheme, schemeLink.getTargetSchemePort().getParentSchemeDevice());
+						SiteNode startSiteNode = this.mapView.findElement(startSchemeElement);
+						SiteNode endSiteNode = this.mapView.findElement(endSchemeElement);
+						if(startSiteNode == endSiteNode)
 						{
 							//TODO think if link to 'link' is needed for mPath
-		//					mPath.addCablePath(ssite);
+		//					mPath.addCablePath(startSiteNode);
 						}
 						break;
 					case Kind._SCHEME_CABLE_LINK:
-						SchemeCableLink clink = (SchemeCableLink )pe.getAbstractSchemeElement();
-						CablePath cp = this.mapView.findCablePath(clink);
-						if(cp != null)
+						SchemeCableLink schemeCableLink = (SchemeCableLink )pathElement.getAbstractSchemeElement();
+						CablePath cablePath = this.mapView.findCablePath(schemeCableLink);
+						if(cablePath != null)
 						{
-							this.unsortedCablePaths.add(cp);
+							this.unsortedCablePaths.add(cablePath);
 						}
 						break;
 					default:
-						throw new UnsupportedOperationException();
+						throw new UnsupportedOperationException("MeasurementPath.getCablePaths: Unknown path element kind: " + pathElement.getKind());
 				}
 			}
 		}
 		return Collections.unmodifiableList(this.unsortedCablePaths);
 	}
-
-	/**
-	 * Сортированный список кабельных путей, из которых строится 
-	 * измерительный путь.
-	 * to avoid instantiation of multiple objects.
-	 */
-	protected List sortedCablePaths = new LinkedList();
-	/**
-	 * Сортированный список фрагментов линий, из которых строится 
-	 * измерительный путь.
-	 * to avoid instantiation of multiple objects.
-	 */
-	protected List sortedNodeLinks = new LinkedList();
-	/**
-	 * Сортированный список узлов, по которым проходит 
-	 * измерительный путь.
-	 * to avoid instantiation of multiple objects.
-	 */
-	protected List sortedNodes = new LinkedList();
 
 	/**
 	 * Get {@link #sortedNodeLinks}.
@@ -424,24 +462,6 @@ public class MeasurementPath implements MapElement
 	public List getSortedCablePaths()
 	{
 		return Collections.unmodifiableList(this.sortedCablePaths);
-	}
-	
-	/**
-	 * Получить начальный узел пути. Определяется динамически.
-	 * @return узел
-	 */
-	public AbstractNode getStartNode()
-	{
-		return getMapView().getStartNode(this.getSchemePath());
-	}
-	
-	/**
-	 * Получить конечный узел пути. Определяется динамически.
-	 * @return узел
-	 */
-	public AbstractNode getEndNode()
-	{
-		return getMapView().getEndNode(this.getSchemePath());
 	}
 	
 	/**
