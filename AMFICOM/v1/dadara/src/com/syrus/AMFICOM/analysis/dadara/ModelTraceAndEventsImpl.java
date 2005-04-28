@@ -1,5 +1,5 @@
 /*-
- * $Id: ModelTraceAndEventsImpl.java,v 1.3 2005/04/14 16:01:28 saa Exp $
+ * $Id: ModelTraceAndEventsImpl.java,v 1.4 2005/04/28 16:48:48 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.3 $, $Date: 2005/04/14 16:01:28 $
+ * @version $Revision: 1.4 $, $Date: 2005/04/28 16:48:48 $
  * @module
  */
 public class ModelTraceAndEventsImpl
@@ -41,10 +41,6 @@ implements ModelTraceAndEvents, DataStreamable
 		mt = new ModelTraceImplMF(this.getMF(), this.getTraceLength());
 	}
 
-	public void setDeltaX(double deltaX)
-	{
-		setDeltaX(deltaX);
-	}
 	public double getDeltaX()
 	{
 		return deltaX;
