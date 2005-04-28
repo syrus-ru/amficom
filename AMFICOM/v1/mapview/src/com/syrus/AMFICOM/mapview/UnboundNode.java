@@ -1,5 +1,5 @@
 /**
- * $Id: UnboundNode.java,v 1.11 2005/04/26 16:13:12 krupenn Exp $
+ * $Id: UnboundNode.java,v 1.12 2005/04/28 09:11:07 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
-import com.syrus.AMFICOM.general.LocalIdentifierGenerator;
+import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.map.DoublePoint;
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
  * ни к какому элементу топологической схемы.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.11 $, $Date: 2005/04/26 16:13:12 $
+ * @version $Revision: 1.12 $, $Date: 2005/04/28 09:11:07 $
  * @module mapviewclient_v1
  */
 public class UnboundNode extends SiteNode
@@ -114,7 +114,7 @@ public class UnboundNode extends SiteNode
 		try
 		{
 			UnboundNode unboundNode = new UnboundNode(
-				LocalIdentifierGenerator.generateIdentifier(ObjectEntities.SITE_NODE_ENTITY_CODE),
+				IdentifierPool.getGeneratedIdentifier(ObjectEntities.SITE_NODE_ENTITY_CODE),
 				creatorId,
 				0L,
 				schemeElement,
@@ -124,10 +124,6 @@ public class UnboundNode extends SiteNode
 			return unboundNode;
 		}
 		catch (IdentifierGenerationException e)
-		{
-			throw new CreateObjectException("UnboundNode.createInstance | cannot generate identifier ", e);
-		}
-		catch (IllegalObjectEntityException e) 
 		{
 			throw new CreateObjectException("UnboundNode.createInstance | cannot generate identifier ", e);
 		}

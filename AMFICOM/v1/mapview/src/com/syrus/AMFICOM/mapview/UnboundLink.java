@@ -1,5 +1,5 @@
 /**
- * $Id: UnboundLink.java,v 1.9 2005/04/26 16:12:21 krupenn Exp $
+ * $Id: UnboundLink.java,v 1.10 2005/04/28 09:11:07 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
-import com.syrus.AMFICOM.general.LocalIdentifierGenerator;
+import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.map.AbstractNode;
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.map.PhysicalLinkType;
  * {@link CablePath} в случае, когда кабель не привязан на каком-либо участке 
  * между узлами.
  * @author $Author: krupenn $
- * @version $Revision: 1.9 $, $Date: 2005/04/26 16:12:21 $
+ * @version $Revision: 1.10 $, $Date: 2005/04/28 09:11:07 $
  * @module mapviewclient_v1
  */
 public class UnboundLink extends PhysicalLink
@@ -86,7 +86,7 @@ public class UnboundLink extends PhysicalLink
 		try
 		{
 			UnboundLink unboundLink = new UnboundLink(
-				LocalIdentifierGenerator.generateIdentifier(ObjectEntities.PHYSICAL_LINK_ENTITY_CODE),
+				IdentifierPool.getGeneratedIdentifier(ObjectEntities.PHYSICAL_LINK_ENTITY_CODE),
 				creatorId,
 				0L,
 				stNode, 
@@ -96,10 +96,6 @@ public class UnboundLink extends PhysicalLink
 			return unboundLink;
 		}
 		catch (IdentifierGenerationException e)
-		{
-			throw new CreateObjectException("UnboundLink.createInstance | cannot generate identifier ", e);
-		}
-		catch (IllegalObjectEntityException e) 
 		{
 			throw new CreateObjectException("UnboundLink.createInstance | cannot generate identifier ", e);
 		}

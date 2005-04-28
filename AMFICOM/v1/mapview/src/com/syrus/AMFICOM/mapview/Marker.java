@@ -1,5 +1,5 @@
 /*-
- * $Id: Marker.java,v 1.13 2005/04/13 10:03:01 krupenn Exp $
+ * $Id: Marker.java,v 1.14 2005/04/28 09:11:07 krupenn Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
-import com.syrus.AMFICOM.general.LocalIdentifierGenerator;
+import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
@@ -51,7 +51,7 @@ import org.omg.CORBA.portable.IDLEntity;
  * 
  * 
  * 
- * @version $Revision: 1.13 $, $Date: 2005/04/13 10:03:01 $
+ * @version $Revision: 1.14 $, $Date: 2005/04/28 09:11:07 $
  * @module mapview_v1
  * @author $Author: krupenn $
  */
@@ -164,7 +164,7 @@ public class Marker extends AbstractNode
 		try
 		{
 			Identifier ide =
-				LocalIdentifierGenerator.generateIdentifier(ObjectEntities.SITE_NODE_ENTITY_CODE);
+				IdentifierPool.getGeneratedIdentifier(ObjectEntities.SITE_NODE_ENTITY_CODE);
 			return new Marker(
 				ide,
 				creatorId,
@@ -175,10 +175,6 @@ public class Marker extends AbstractNode
 				path,
 				monitoredElementId,
 				dpoint);
-		}
-		catch (IllegalObjectEntityException e)
-		{
-			throw new CreateObjectException("MapMarker.createInstance | cannot generate identifier ", e);
 		}
 		catch (IdentifierGenerationException e) 
 		{
@@ -253,7 +249,7 @@ public class Marker extends AbstractNode
 		try
 		{
 			Identifier ide =
-				LocalIdentifierGenerator.generateIdentifier(ObjectEntities.SITE_NODE_ENTITY_CODE);
+				IdentifierPool.getGeneratedIdentifier(ObjectEntities.SITE_NODE_ENTITY_CODE);
 			return new Marker(
 				ide,
 				creatorId,
@@ -264,10 +260,6 @@ public class Marker extends AbstractNode
 				name);
 		}
 		catch (IdentifierGenerationException e)
-		{
-			throw new CreateObjectException("MapMarker.createInstance | cannot generate identifier ", e);
-		}
-		catch (IllegalObjectEntityException e) 
 		{
 			throw new CreateObjectException("MapMarker.createInstance | cannot generate identifier ", e);
 		}
