@@ -102,7 +102,8 @@ public class AnalysisSelectionFrame extends ATableFrame implements
 		tModelMinuit.updateData(new Object[] {
 				new Double(ap.getMinThreshold()),
 				new Double(ap.getMinSplice()),
-				new Double(ap.getMinConnector()), new Double(ap.getMinEnd()),
+				new Double(ap.getMinConnector()),
+				new Double(ap.getMinEnd()),
 				new Double(ap.getNoiseFactor()) });
 
 		jTable.setModel(tModelMinuit);
@@ -190,20 +191,29 @@ public class AnalysisSelectionFrame extends ATableFrame implements
 		this.updColorModel();
 	}
 
+    // @todo: this update should be performed every time the user changes analysis parameter(s), not only when a button clicked.
+    // (both if a value is entered and if a combobox selection is changed)
+    void updateHeapAP()
+    {
+        Heap.getMinuitAnalysisParams().setMinThreshold(
+                ((Double )jTable.getValueAt(0, 1)).doubleValue());
+        Heap.getMinuitAnalysisParams().setMinSplice(
+                ((Double )jTable.getValueAt(1, 1)).doubleValue());
+        Heap.getMinuitAnalysisParams().setMinConnector(
+                ((Double )jTable.getValueAt(2, 1)).doubleValue());
+        Heap.getMinuitAnalysisParams().setMinEnd(
+                ((Double )jTable.getValueAt(3, 1)).doubleValue());
+        Heap.getMinuitAnalysisParams().setNoiseFactor(
+                ((Double )jTable.getValueAt(4, 1)).doubleValue());
+    }
+
 	void analysisStartButton_actionPerformed(ActionEvent e)
 	{
 		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-
-		Heap.setMinuitAnalysisParams(new AnalysisParameters(
-				((Double )jTable.getValueAt(0, 1)).doubleValue(),
-				((Double )jTable.getValueAt(1, 1)).doubleValue(),
-				((Double )jTable.getValueAt(2, 1)).doubleValue(),
-				((Double )jTable.getValueAt(3, 1)).doubleValue(),
-				((Double )jTable.getValueAt(4, 1)).doubleValue()));
+		updateHeapAP();
 		new AnalysisCommand().execute();
 		dispatcher.notify(new RefUpdateEvent(RefUpdateEvent.PRIMARY_TRACE,
 				RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));
-
 		setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}
 
@@ -221,7 +231,6 @@ public class AnalysisSelectionFrame extends ATableFrame implements
 
 	private class ParamTableModel extends AbstractTableModel
 	{
-
 		AComboBox nfComboBox = new AComboBox(AComboBox.SMALL_FONT);
 
 		String[] columnNames = { "", "" };
