@@ -15,7 +15,6 @@ public class InitialAnalysisCommand extends VoidCommand {
 		BellcoreStructure bs = Heap.getBSPrimaryTrace();
 		if (bs != null)
 		{
-			//double deltaX = bs.getResolution();
 			double[] y = bs.getTraceData();
 
 			AnalysisParameters ap = Heap.getMinuitAnalysisParams();
@@ -26,10 +25,6 @@ public class InitialAnalysisCommand extends VoidCommand {
 
 			ModelTraceAndEventsImpl mtae =
 				CoreAnalysisManager.makeAnalysis(bs, ap);
-
-			// фитировка нужна для определения вспомогательных парметров
-//	        ep = AnalysisManager.fitTrace(
-//	            y, deltaX, ep, (int)params[6], meanAttenuation[0]);
 
 	        RefAnalysis a = new RefAnalysis();
 			a.decode(y, mtae);
