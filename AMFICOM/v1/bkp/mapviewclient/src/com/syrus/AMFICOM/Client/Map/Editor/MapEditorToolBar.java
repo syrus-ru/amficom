@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorToolBar.java,v 1.11 2005/04/13 15:45:37 krupenn Exp $
+ * $Id: MapEditorToolBar.java,v 1.12 2005/04/28 12:57:53 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,6 +16,7 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationModelListener;
+import com.syrus.AMFICOM.Client.General.Model.MapEditorApplicationModel;
 
 import java.awt.Dimension;
 import java.awt.Image;
@@ -31,7 +32,7 @@ import java.awt.event.ActionListener;
 /**
  * Панель инструментов модуля "Редактор топологических схем". 
  * @author $Author: krupenn $
- * @version $Revision: 1.11 $, $Date: 2005/04/13 15:45:37 $
+ * @version $Revision: 1.12 $, $Date: 2005/04/28 12:57:53 $
  * @module mapviewclient_v1
  */
 public class MapEditorToolBar extends JToolBar implements ApplicationModelListener
@@ -134,120 +135,120 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		this.sessionOpen.setMaximumSize(buttonSize);
 		this.sessionOpen.setPreferredSize(buttonSize);
-		this.sessionOpen.setToolTipText(LangModel.getString("menuSessionNew"));
-		this.sessionOpen.setName("menuSessionNew");
+		this.sessionOpen.setToolTipText(LangModel.getString(MapEditorApplicationModel.ITEM_SESSION_NEW));
+		this.sessionOpen.setName(MapEditorApplicationModel.ITEM_SESSION_NEW);
 		this.sessionOpen.addActionListener(actionAdapter);
 
 		this.buttonCloseSession.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/close_session.gif").
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		this.buttonCloseSession.setMaximumSize(buttonSize);
 		this.buttonCloseSession.setPreferredSize(buttonSize);
-		this.buttonCloseSession.setToolTipText(LangModel.getString("menuSessionClose"));
-		this.buttonCloseSession.setName("menuSessionClose");
+		this.buttonCloseSession.setToolTipText(LangModel.getString(MapEditorApplicationModel.ITEM_SESSION_CLOSE));
+		this.buttonCloseSession.setName(MapEditorApplicationModel.ITEM_SESSION_CLOSE);
 //		this.buttonCloseSession.addActionListener(actionAdapter);
 
 		this.menuSessionDomain.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/domains.gif").
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		this.menuSessionDomain.setMaximumSize(buttonSize);
 		this.menuSessionDomain.setPreferredSize(buttonSize);
-		this.menuSessionDomain.setToolTipText(LangModel.getString("menuSessionDomain"));
-		this.menuSessionDomain.setName("menuSessionDomain");
+		this.menuSessionDomain.setToolTipText(LangModel.getString(MapEditorApplicationModel.ITEM_SESSION_DOMAIN));
+		this.menuSessionDomain.setName(MapEditorApplicationModel.ITEM_SESSION_DOMAIN);
 //		this.menuSessionDomain.addActionListener(actionAdapter);
 
 		this.menuMapNew.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/new.gif").
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		this.menuMapNew.setMaximumSize(buttonSize);
 		this.menuMapNew.setPreferredSize(buttonSize);
-		this.menuMapNew.setToolTipText(LangModelMap.getString("menuMapNew"));
-		this.menuMapNew.setName("menuMapNew");
+		this.menuMapNew.setToolTipText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_NEW));
+		this.menuMapNew.setName(MapEditorApplicationModel.ITEM_MAP_NEW);
 		this.menuMapNew.addActionListener(actionAdapter);
 
 		this.menuMapOpen.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/main/map_mini.gif").
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		this.menuMapOpen.setMaximumSize(buttonSize);
 		this.menuMapOpen.setPreferredSize(buttonSize);
-		this.menuMapOpen.setToolTipText(LangModelMap.getString("menuMapOpen"));
-		this.menuMapOpen.setName("menuMapOpen");
+		this.menuMapOpen.setToolTipText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_OPEN));
+		this.menuMapOpen.setName(MapEditorApplicationModel.ITEM_MAP_OPEN);
 		this.menuMapOpen.addActionListener(actionAdapter);
 
 		this.menuMapSave.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/save.gif").
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		this.menuMapSave.setMaximumSize(buttonSize);
 		this.menuMapSave.setPreferredSize(buttonSize);
-		this.menuMapSave.setToolTipText(LangModelMap.getString("menuMapSave"));
-		this.menuMapSave.setName("menuMapSave");
+		this.menuMapSave.setToolTipText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_SAVE));
+		this.menuMapSave.setName(MapEditorApplicationModel.ITEM_MAP_SAVE);
 		this.menuMapSave.addActionListener(actionAdapter);
 
 		this.menuMapAddMap.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/addmap.gif").
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		this.menuMapAddMap.setMaximumSize(buttonSize);
 		this.menuMapAddMap.setPreferredSize(buttonSize);
-		this.menuMapAddMap.setToolTipText(LangModelMap.getString("menuMapAddMap"));
-		this.menuMapAddMap.setName("menuMapAddMap");
+		this.menuMapAddMap.setToolTipText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_ADD_MAP));
+		this.menuMapAddMap.setName(MapEditorApplicationModel.ITEM_MAP_ADD_MAP);
 		this.menuMapAddMap.addActionListener(actionAdapter);
 
 		this.menuMapRemoveMap.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/removemap.gif").
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		this.menuMapRemoveMap.setMaximumSize(buttonSize);
 		this.menuMapRemoveMap.setPreferredSize(buttonSize);
-		this.menuMapRemoveMap.setToolTipText(LangModelMap.getString("menuMapRemoveMap"));
-		this.menuMapRemoveMap.setName("menuMapRemoveMap");
+		this.menuMapRemoveMap.setToolTipText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_REMOVE_MAP));
+		this.menuMapRemoveMap.setName(MapEditorApplicationModel.ITEM_MAP_REMOVE_MAP);
 		this.menuMapRemoveMap.addActionListener(actionAdapter);
 
 		this.menuMapAddExternal.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/addexternal.gif").
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		this.menuMapAddExternal.setMaximumSize(buttonSize);
 		this.menuMapAddExternal.setPreferredSize(buttonSize);
-		this.menuMapAddExternal.setToolTipText(LangModelMap.getString("menuMapAddExternal"));
-		this.menuMapAddExternal.setName("menuMapAddExternal");
+		this.menuMapAddExternal.setToolTipText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_ADD_EXTERNAL));
+		this.menuMapAddExternal.setName(MapEditorApplicationModel.ITEM_MAP_ADD_EXTERNAL);
 		this.menuMapAddExternal.addActionListener(actionAdapter);
 
 		this.menuMapViewNew.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/newview.gif").
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		this.menuMapViewNew.setMaximumSize(buttonSize);
 		this.menuMapViewNew.setPreferredSize(buttonSize);
-		this.menuMapViewNew.setToolTipText(LangModelMap.getString("menuMapViewNew"));
-		this.menuMapViewNew.setName("menuMapViewNew");
+		this.menuMapViewNew.setToolTipText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_VIEW_NEW));
+		this.menuMapViewNew.setName(MapEditorApplicationModel.ITEM_MAP_VIEW_NEW);
 		this.menuMapViewNew.addActionListener(actionAdapter);
 
 		this.menuMapViewNew.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/openview.gif").
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		this.menuMapViewNew.setMaximumSize(buttonSize);
 		this.menuMapViewNew.setPreferredSize(buttonSize);
-		this.menuMapViewNew.setToolTipText(LangModelMap.getString("menuMapViewOpen"));
-		this.menuMapViewNew.setName("menuMapViewOpen");
+		this.menuMapViewNew.setToolTipText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_VIEW_OPEN));
+		this.menuMapViewNew.setName(MapEditorApplicationModel.ITEM_MAP_VIEW_OPEN);
 		this.menuMapViewNew.addActionListener(actionAdapter);
 
 		this.menuMapViewSave.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/saveview.gif").
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		this.menuMapViewSave.setMaximumSize(buttonSize);
 		this.menuMapViewSave.setPreferredSize(buttonSize);
-		this.menuMapViewSave.setToolTipText(LangModelMap.getString("menuMapViewSave"));
-		this.menuMapViewSave.setName("menuMapViewSave");
+		this.menuMapViewSave.setToolTipText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_VIEW_SAVE));
+		this.menuMapViewSave.setName(MapEditorApplicationModel.ITEM_MAP_VIEW_SAVE);
 		this.menuMapViewSave.addActionListener(actionAdapter);
 
 		this.menuMapViewAddScheme.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/addtoview.gif").
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		this.menuMapViewAddScheme.setMaximumSize(buttonSize);
 		this.menuMapViewAddScheme.setPreferredSize(buttonSize);
-		this.menuMapViewAddScheme.setToolTipText(LangModelMap.getString("menuMapViewAddScheme"));
-		this.menuMapViewAddScheme.setName("menuMapViewAddScheme");
+		this.menuMapViewAddScheme.setToolTipText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_VIEW_ADD_SCHEME));
+		this.menuMapViewAddScheme.setName(MapEditorApplicationModel.ITEM_MAP_VIEW_ADD_SCHEME);
 		this.menuMapViewAddScheme.addActionListener(actionAdapter);
 
 		this.menuMapViewRemoveScheme.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/removefromview.gif").
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		this.menuMapViewRemoveScheme.setMaximumSize(buttonSize);
 		this.menuMapViewRemoveScheme.setPreferredSize(buttonSize);
-		this.menuMapViewRemoveScheme.setToolTipText(LangModelMap.getString("menuMapViewRemoveScheme"));
-		this.menuMapViewRemoveScheme.setName("menuMapViewRemoveScheme");
+		this.menuMapViewRemoveScheme.setToolTipText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_VIEW_REMOVE_SCHEME));
+		this.menuMapViewRemoveScheme.setName(MapEditorApplicationModel.ITEM_MAP_VIEW_REMOVE_SCHEME);
 		this.menuMapViewRemoveScheme.addActionListener(actionAdapter);
 
 		this.menuViewSetup.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/mapsetup.gif").
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		this.menuViewSetup.setMaximumSize(buttonSize);
 		this.menuViewSetup.setPreferredSize(buttonSize);
-		this.menuViewSetup.setToolTipText(LangModelMap.getString("menuViewSetup"));
-		this.menuViewSetup.setName("menuViewSetup");
+		this.menuViewSetup.setToolTipText(LangModelMap.getString(MapEditorApplicationModel.ITEM_VIEW_CONTROLS));
+		this.menuViewSetup.setName(MapEditorApplicationModel.ITEM_VIEW_CONTROLS);
 		this.menuViewSetup.addActionListener(actionAdapter);
 
 		add(this.sessionOpen);
@@ -287,39 +288,39 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 
 	public void modelChanged(String e[])
 	{
-		this.sessionOpen.setVisible(this.aModel.isVisible("menuSessionNew"));
-		this.sessionOpen.setEnabled(this.aModel.isEnabled("menuSessionNew"));
-		this.buttonCloseSession.setVisible(this.aModel.isVisible("menuSessionClose"));
-		this.buttonCloseSession.setEnabled(this.aModel.isEnabled("menuSessionClose"));
-		this.menuSessionDomain.setVisible(this.aModel.isVisible("menuSessionDomain"));
-		this.menuSessionDomain.setEnabled(this.aModel.isEnabled("menuSessionDomain"));
+		this.sessionOpen.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_SESSION_NEW));
+		this.sessionOpen.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_SESSION_NEW));
+		this.buttonCloseSession.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_SESSION_CLOSE));
+		this.buttonCloseSession.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_SESSION_CLOSE));
+		this.menuSessionDomain.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_SESSION_DOMAIN));
+		this.menuSessionDomain.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_SESSION_DOMAIN));
 
-		this.menuMapNew.setVisible(this.aModel.isVisible("menuMapNew"));
-		this.menuMapNew.setEnabled(this.aModel.isEnabled("menuMapNew"));
-		this.menuMapOpen.setVisible(this.aModel.isVisible("menuMapOpen"));
-		this.menuMapOpen.setEnabled(this.aModel.isEnabled("menuMapOpen"));
-		this.menuMapSave.setVisible(this.aModel.isVisible("menuMapSave"));
-		this.menuMapSave.setEnabled(this.aModel.isEnabled("menuMapSave"));
-		this.menuMapAddMap.setVisible(this.aModel.isVisible("menuMapAddMap"));
-		this.menuMapAddMap.setEnabled(this.aModel.isEnabled("menuMapAddMap"));
-		this.menuMapRemoveMap.setVisible(this.aModel.isVisible("menuMapRemoveMap"));
-		this.menuMapRemoveMap.setEnabled(this.aModel.isEnabled("menuMapRemoveMap"));
-		this.menuMapAddExternal.setVisible(this.aModel.isVisible("menuMapAddExternal"));
-		this.menuMapAddExternal.setEnabled(this.aModel.isEnabled("menuMapAddExternal"));
+		this.menuMapNew.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_MAP_NEW));
+		this.menuMapNew.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_MAP_NEW));
+		this.menuMapOpen.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_MAP_OPEN));
+		this.menuMapOpen.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_MAP_OPEN));
+		this.menuMapSave.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_MAP_SAVE));
+		this.menuMapSave.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_MAP_SAVE));
+		this.menuMapAddMap.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_MAP_ADD_MAP));
+		this.menuMapAddMap.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_MAP_ADD_MAP));
+		this.menuMapRemoveMap.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_MAP_REMOVE_MAP));
+		this.menuMapRemoveMap.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_MAP_REMOVE_MAP));
+		this.menuMapAddExternal.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_MAP_ADD_EXTERNAL));
+		this.menuMapAddExternal.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_MAP_ADD_EXTERNAL));
 
-		this.menuMapViewNew.setVisible(this.aModel.isVisible("menuMapViewNew"));
-		this.menuMapViewNew.setEnabled(this.aModel.isEnabled("menuMapViewNew"));
-		this.menuMapViewNew.setVisible(this.aModel.isVisible("menuMapViewOpen"));
-		this.menuMapViewNew.setEnabled(this.aModel.isEnabled("menuMapViewOpen"));
-		this.menuMapViewSave.setVisible(this.aModel.isVisible("menuMapViewSave"));
-		this.menuMapViewSave.setEnabled(this.aModel.isEnabled("menuMapViewSave"));
-		this.menuMapViewAddScheme.setVisible(this.aModel.isVisible("menuMapViewAddScheme"));
-		this.menuMapViewAddScheme.setEnabled(this.aModel.isEnabled("menuMapViewAddScheme"));
-		this.menuMapViewRemoveScheme.setVisible(this.aModel.isVisible("menuMapViewRemoveScheme"));
-		this.menuMapViewRemoveScheme.setEnabled(this.aModel.isEnabled("menuMapViewRemoveScheme"));
+		this.menuMapViewNew.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_MAP_VIEW_NEW));
+		this.menuMapViewNew.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_NEW));
+		this.menuMapViewNew.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_MAP_VIEW_OPEN));
+		this.menuMapViewNew.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_OPEN));
+		this.menuMapViewSave.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_MAP_VIEW_SAVE));
+		this.menuMapViewSave.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_SAVE));
+		this.menuMapViewAddScheme.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_MAP_VIEW_ADD_SCHEME));
+		this.menuMapViewAddScheme.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_ADD_SCHEME));
+		this.menuMapViewRemoveScheme.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_MAP_VIEW_REMOVE_SCHEME));
+		this.menuMapViewRemoveScheme.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_REMOVE_SCHEME));
 
-		this.menuViewSetup.setVisible(this.aModel.isVisible("menuViewSetup"));
-		this.menuViewSetup.setEnabled(this.aModel.isEnabled("menuViewSetup"));
+		this.menuViewSetup.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_VIEW_CONTROLS));
+		this.menuViewSetup.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_VIEW_CONTROLS));
 	}
 
 	public void buttonActionPerformed(ActionEvent e)

@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMenuBar.java,v 1.12 2005/04/13 15:45:37 krupenn Exp $
+ * $Id: MapEditorMenuBar.java,v 1.13 2005/04/28 12:57:53 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,6 +17,7 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationModelListener;
+import com.syrus.AMFICOM.Client.General.Model.MapEditorApplicationModel;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -28,7 +29,7 @@ import javax.swing.JMenuItem;
 
 /**
  * Панель меню модуля "Редактор топологических схем".
- * @version $Revision: 1.12 $, $Date: 2005/04/13 15:45:37 $
+ * @version $Revision: 1.13 $, $Date: 2005/04/28 12:57:53 $
  * @module mapviewclient_v1
  * @author $Author: krupenn $
  */
@@ -68,9 +69,9 @@ public class MapEditorMenuBar extends JMenuBar
 	JMenuItem menuMapViewRemoveScheme = new JMenuItem();
 
 	JMenu menuView = new JMenu();
-	JMenuItem menuViewProto = new JMenuItem();
-	JMenuItem menuViewAttributes = new JMenuItem();
-	JMenuItem menuViewElements = new JMenuItem();
+	JMenuItem menuViewGeneral = new JMenuItem();
+	JMenuItem menuViewAdditional = new JMenuItem();
+	JMenuItem menuViewCharacteristics = new JMenuItem();
 	JMenuItem menuViewSetup = new JMenuItem();
 	JMenuItem menuViewMap = new JMenuItem();
 	JMenuItem menuViewMapScheme = new JMenuItem();
@@ -121,149 +122,149 @@ public class MapEditorMenuBar extends JMenuBar
 					}
 				};
 
-		this.menuSession.setText(LangModel.getString("menuSession"));
-		this.menuSession.setName("menuSession");
-		this.menuSessionNew.setText(LangModel.getString("menuSessionNew"));
-		this.menuSessionNew.setName("menuSessionNew");
+		this.menuSession.setText(LangModel.getString(MapEditorApplicationModel.ITEM_SESSION));
+		this.menuSession.setName(MapEditorApplicationModel.ITEM_SESSION);
+		this.menuSessionNew.setText(LangModel.getString(MapEditorApplicationModel.ITEM_SESSION_NEW));
+		this.menuSessionNew.setName(MapEditorApplicationModel.ITEM_SESSION_NEW);
 		this.menuSessionNew.addActionListener(actionAdapter);
-		this.menuSessionClose.setText(LangModel.getString("menuSessionClose"));
-		this.menuSessionClose.setName("menuSessionClose");
+		this.menuSessionClose.setText(LangModel.getString(MapEditorApplicationModel.ITEM_SESSION_CLOSE));
+		this.menuSessionClose.setName(MapEditorApplicationModel.ITEM_SESSION_CLOSE);
 		this.menuSessionClose.addActionListener(actionAdapter);
 //		this.menuSessionOptions.setText(LangModel.getString("menuSessionOptions"));
 //		this.menuSessionOptions.setName("menuSessionOptions");
 //		this.menuSessionOptions.addActionListener(actionAdapter);
-		this.menuSessionConnection.setText(LangModel.getString("menuSessionConnection"));
-		this.menuSessionConnection.setName("menuSessionConnection");
+		this.menuSessionConnection.setText(LangModel.getString(MapEditorApplicationModel.ITEM_SESSION_CONNECTION));
+		this.menuSessionConnection.setName(MapEditorApplicationModel.ITEM_SESSION_CONNECTION);
 		this.menuSessionConnection.addActionListener(actionAdapter);
-		this.menuSessionChangePassword.setText(LangModel.getString("menuSessionChangePassword"));
-		this.menuSessionChangePassword.setName("menuSessionChangePassword");
+		this.menuSessionChangePassword.setText(LangModel.getString(MapEditorApplicationModel.ITEM_SESSION_CHANGE_PASSWORD));
+		this.menuSessionChangePassword.setName(MapEditorApplicationModel.ITEM_SESSION_CHANGE_PASSWORD);
 		this.menuSessionChangePassword.addActionListener(actionAdapter);
-		this.menuSessionDomain.setText(LangModel.getString("menuSessionDomain"));
-		this.menuSessionDomain.setName("menuSessionDomain");
+		this.menuSessionDomain.setText(LangModel.getString(MapEditorApplicationModel.ITEM_SESSION_DOMAIN));
+		this.menuSessionDomain.setName(MapEditorApplicationModel.ITEM_SESSION_DOMAIN);
 		this.menuSessionDomain.addActionListener(actionAdapter);
-		this.menuExit.setText(LangModel.getString("menuExit"));
-		this.menuExit.setName("menuExit");
+		this.menuExit.setText(LangModel.getString(MapEditorApplicationModel.ITEM_SESSION_EXIT));
+		this.menuExit.setName(MapEditorApplicationModel.ITEM_SESSION_EXIT);
 		this.menuExit.addActionListener(actionAdapter);
 
-		this.menuView.setText(LangModelMap.getString("menuView"));
-		this.menuView.setName("menuView");
-		this.menuViewProto.setText(LangModelMap.getString("menuViewProto"));
-		this.menuViewProto.setName("menuViewProto");
-		this.menuViewProto.addActionListener(actionAdapter);
-		this.menuViewAttributes.setText(LangModelMap.getString("menuViewAttributes"));
-		this.menuViewAttributes.setName("menuViewAttributes");
-		this.menuViewAttributes.addActionListener(actionAdapter);
-		this.menuViewElements.setText(LangModelMap.getString("menuViewElements"));
-		this.menuViewElements.setName("menuViewElements");
-		this.menuViewElements.addActionListener(actionAdapter);
-		this.menuViewSetup.setText(LangModelMap.getString("menuViewSetup"));
-		this.menuViewSetup.setName("menuViewSetup");
+		this.menuView.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_VIEW));
+		this.menuView.setName(MapEditorApplicationModel.ITEM_VIEW);
+		this.menuViewGeneral.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_VIEW_GENERAL));
+		this.menuViewGeneral.setName(MapEditorApplicationModel.ITEM_VIEW_GENERAL);
+		this.menuViewGeneral.addActionListener(actionAdapter);
+		this.menuViewAdditional.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_VIEW_ADDITIONAL));
+		this.menuViewAdditional.setName(MapEditorApplicationModel.ITEM_VIEW_ADDITIONAL);
+		this.menuViewAdditional.addActionListener(actionAdapter);
+		this.menuViewCharacteristics.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_VIEW_CHARACTERISTICS));
+		this.menuViewCharacteristics.setName(MapEditorApplicationModel.ITEM_VIEW_CHARACTERISTICS);
+		this.menuViewCharacteristics.addActionListener(actionAdapter);
+		this.menuViewSetup.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_VIEW_CONTROLS));
+		this.menuViewSetup.setName(MapEditorApplicationModel.ITEM_VIEW_CONTROLS);
 		this.menuViewSetup.addActionListener(actionAdapter);
-		this.menuViewMap.setText(LangModelMap.getString("menuViewMap"));
-		this.menuViewMap.setName("menuViewMap");
+		this.menuViewMap.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_VIEW_MAP));
+		this.menuViewMap.setName(MapEditorApplicationModel.ITEM_VIEW_MAP);
 		this.menuViewMap.addActionListener(actionAdapter);
-		this.menuViewMapScheme.setText(LangModelMap.getString("menuViewMapScheme"));
-		this.menuViewMapScheme.setName("menuViewMapScheme");
+		this.menuViewMapScheme.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_VIEW_NAVIGATOR));
+		this.menuViewMapScheme.setName(MapEditorApplicationModel.ITEM_VIEW_NAVIGATOR);
 		this.menuViewMapScheme.addActionListener(actionAdapter);
-		this.menuViewAll.setText(LangModelMap.getString("menuViewAll"));
-		this.menuViewAll.setName("menuViewAll");
+		this.menuViewAll.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_VIEW_ALL));
+		this.menuViewAll.setName(MapEditorApplicationModel.ITEM_VIEW_ALL);
 		this.menuViewAll.addActionListener(actionAdapter);
 //		this.menuViewOptions.setText(LangModelMap.getString("menuViewOptions"));
 //		this.menuViewOptions.setName("menuViewOptions");
 //		this.menuViewOptions.addActionListener(actionAdapter);
 
-		this.menuMap.setText(LangModelMap.getString("menuMap"));
-		this.menuMap.setName("menuMap");
-		this.menuMapNew.setText(LangModelMap.getString("menuMapNew"));
-		this.menuMapNew.setName("menuMapNew");
+		this.menuMap.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP));
+		this.menuMap.setName(MapEditorApplicationModel.ITEM_MAP);
+		this.menuMapNew.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_NEW));
+		this.menuMapNew.setName(MapEditorApplicationModel.ITEM_MAP_NEW);
 		this.menuMapNew.addActionListener(actionAdapter);
-		this.menuMapOpen.setText(LangModelMap.getString("menuMapOpen"));
-		this.menuMapOpen.setName("menuMapOpen");
+		this.menuMapOpen.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_OPEN));
+		this.menuMapOpen.setName(MapEditorApplicationModel.ITEM_MAP_OPEN);
 		this.menuMapOpen.addActionListener(actionAdapter);
-		this.menuMapClose.setText(LangModelMap.getString("menuMapClose"));
-		this.menuMapClose.setName("menuMapClose");
+		this.menuMapClose.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_CLOSE));
+		this.menuMapClose.setName(MapEditorApplicationModel.ITEM_MAP_CLOSE);
 		this.menuMapClose.addActionListener(actionAdapter);
-		this.menuMapSave.setText(LangModelMap.getString("menuMapSave"));
-		this.menuMapSave.setName("menuMapSave");
+		this.menuMapSave.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_SAVE));
+		this.menuMapSave.setName(MapEditorApplicationModel.ITEM_MAP_SAVE);
 		this.menuMapSave.addActionListener(actionAdapter);
-		this.menuMapSaveAs.setText(LangModelMap.getString("menuMapSaveAs"));
-		this.menuMapSaveAs.setName("menuMapSaveAs");
+		this.menuMapSaveAs.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_SAVE_AS));
+		this.menuMapSaveAs.setName(MapEditorApplicationModel.ITEM_MAP_SAVE_AS);
 		this.menuMapSaveAs.addActionListener(actionAdapter);
-		this.menuMapAddMap.setText(LangModelMap.getString("menuMapAddMap"));
-		this.menuMapAddMap.setName("menuMapAddMap");
+		this.menuMapAddMap.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_ADD_MAP));
+		this.menuMapAddMap.setName(MapEditorApplicationModel.ITEM_MAP_ADD_MAP);
 		this.menuMapAddMap.addActionListener(actionAdapter);
-		this.menuMapRemoveMap.setText(LangModelMap.getString("menuMapRemoveMap"));
-		this.menuMapRemoveMap.setName("menuMapRemoveMap");
+		this.menuMapRemoveMap.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_REMOVE_MAP));
+		this.menuMapRemoveMap.setName(MapEditorApplicationModel.ITEM_MAP_REMOVE_MAP);
 		this.menuMapRemoveMap.addActionListener(actionAdapter);
-		this.menuMapAddExternal.setText(LangModelMap.getString("menuMapAddExternal"));
-		this.menuMapAddExternal.setName("menuMapAddExternal");
+		this.menuMapAddExternal.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_ADD_EXTERNAL));
+		this.menuMapAddExternal.setName(MapEditorApplicationModel.ITEM_MAP_ADD_EXTERNAL);
 		this.menuMapAddExternal.addActionListener(actionAdapter);
-		this.menuMapExport.setText(LangModelMap.getString("menuMapExport"));
-		this.menuMapExport.setName("menuMapExport");
+		this.menuMapExport.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_EXPORT));
+		this.menuMapExport.setName(MapEditorApplicationModel.ITEM_MAP_EXPORT);
 		this.menuMapExport.addActionListener(actionAdapter);
-		this.menuMapImport.setText(LangModelMap.getString("menuMapImport"));
-		this.menuMapImport.setName("menuMapImport");
+		this.menuMapImport.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_IMPORT));
+		this.menuMapImport.setName(MapEditorApplicationModel.ITEM_MAP_IMPORT);
 		this.menuMapImport.addActionListener(actionAdapter);
 
-		this.menuMapView.setText(LangModelMap.getString("menuMapView"));
-		this.menuMapView.setName("menuMapView");
-		this.menuMapViewNew.setText(LangModelMap.getString("menuMapViewNew"));
-		this.menuMapViewNew.setName("menuMapViewNew");
+		this.menuMapView.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_VIEW));
+		this.menuMapView.setName(MapEditorApplicationModel.ITEM_MAP_VIEW);
+		this.menuMapViewNew.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_VIEW_NEW));
+		this.menuMapViewNew.setName(MapEditorApplicationModel.ITEM_MAP_VIEW_NEW);
 		this.menuMapViewNew.addActionListener(actionAdapter);
-		this.menuMapViewOpen.setText(LangModelMap.getString("menuMapViewOpen"));
-		this.menuMapViewOpen.setName("menuMapViewOpen");
+		this.menuMapViewOpen.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_VIEW_OPEN));
+		this.menuMapViewOpen.setName(MapEditorApplicationModel.ITEM_MAP_VIEW_OPEN);
 		this.menuMapViewOpen.addActionListener(actionAdapter);
-		this.menuMapViewClose.setText(LangModelMap.getString("menuMapViewClose"));
-		this.menuMapViewClose.setName("menuMapViewClose");
+		this.menuMapViewClose.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_VIEW_CLOSE));
+		this.menuMapViewClose.setName(MapEditorApplicationModel.ITEM_MAP_VIEW_CLOSE);
 		this.menuMapViewClose.addActionListener(actionAdapter);
-		this.menuMapViewSave.setText(LangModelMap.getString("menuMapViewSave"));
-		this.menuMapViewSave.setName("menuMapViewSave");
+		this.menuMapViewSave.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_VIEW_SAVE));
+		this.menuMapViewSave.setName(MapEditorApplicationModel.ITEM_MAP_VIEW_SAVE);
 		this.menuMapViewSave.addActionListener(actionAdapter);
-		this.menuMapViewSaveAs.setText(LangModelMap.getString("menuMapViewSaveAs"));
-		this.menuMapViewSaveAs.setName("menuMapViewSaveAs");
+		this.menuMapViewSaveAs.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_VIEW_SAVE_AS));
+		this.menuMapViewSaveAs.setName(MapEditorApplicationModel.ITEM_MAP_VIEW_SAVE_AS);
 		this.menuMapViewSaveAs.addActionListener(actionAdapter);
-		this.menuMapViewAddScheme.setText(LangModelMap.getString("menuMapViewAddScheme"));
-		this.menuMapViewAddScheme.setName("menuMapViewAddScheme");
+		this.menuMapViewAddScheme.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_VIEW_ADD_SCHEME));
+		this.menuMapViewAddScheme.setName(MapEditorApplicationModel.ITEM_MAP_VIEW_ADD_SCHEME);
 		this.menuMapViewAddScheme.addActionListener(actionAdapter);
-		this.menuMapViewRemoveScheme.setText(LangModelMap.getString("menuMapViewRemoveScheme"));
-		this.menuMapViewRemoveScheme.setName("menuMapViewRemoveScheme");
+		this.menuMapViewRemoveScheme.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_VIEW_REMOVE_SCHEME));
+		this.menuMapViewRemoveScheme.setName(MapEditorApplicationModel.ITEM_MAP_VIEW_REMOVE_SCHEME);
 		this.menuMapViewRemoveScheme.addActionListener(actionAdapter);
 
 		this.menuReport.setText(LangModelReport.getString("label_report"));
-		this.menuReport.setName("menuReport");
+		this.menuReport.setName(MapEditorApplicationModel.ITEM_REPORT);
 		this.menuReportCreate.setText(LangModelReport.getString("label_reportForTemplate"));
-		this.menuReportCreate.setName("menuReportCreate");
+		this.menuReportCreate.setName(MapEditorApplicationModel.ITEM_REPORT_CREATE);
 		this.menuReportCreate.addActionListener(actionAdapter);
 		this.menuReport.add(this.menuReportCreate);
 
-		this.menuHelp.setText(LangModel.getString("menuHelp"));
-		this.menuHelp.setName("menuHelp");
-		this.menuHelpContents.setText(LangModel.getString("menuHelpContents"));
-		this.menuHelpContents.setName("menuHelpContents");
+		this.menuHelp.setText(LangModel.getString(MapEditorApplicationModel.ITEM_HELP));
+		this.menuHelp.setName(MapEditorApplicationModel.ITEM_HELP);
+		this.menuHelpContents.setText(LangModel.getString(MapEditorApplicationModel.ITEM_HELP_CONTENTS));
+		this.menuHelpContents.setName(MapEditorApplicationModel.ITEM_HELP_CONTENTS);
 		this.menuHelpContents.addActionListener(actionAdapter);
-		this.menuHelpFind.setText(LangModel.getString("menuHelpFind"));
-		this.menuHelpFind.setName("menuHelpFind");
+		this.menuHelpFind.setText(LangModel.getString(MapEditorApplicationModel.ITEM_HELP_FIND));
+		this.menuHelpFind.setName(MapEditorApplicationModel.ITEM_HELP_FIND);
 		this.menuHelpFind.addActionListener(actionAdapter);
-		this.menuHelpTips.setText(LangModel.getString("menuHelpTips"));
-		this.menuHelpTips.setName("menuHelpTips");
+		this.menuHelpTips.setText(LangModel.getString(MapEditorApplicationModel.ITEM_HELP_FIND));
+		this.menuHelpTips.setName(MapEditorApplicationModel.ITEM_HELP_FIND);
 		this.menuHelpTips.addActionListener(actionAdapter);
-		this.menuHelpStart.setText(LangModel.getString("menuHelpStart"));
-		this.menuHelpStart.setName("menuHelpStart");
+		this.menuHelpStart.setText(LangModel.getString(MapEditorApplicationModel.ITEM_HELP_START));
+		this.menuHelpStart.setName(MapEditorApplicationModel.ITEM_HELP_START);
 		this.menuHelpStart.addActionListener(actionAdapter);
-		this.menuHelpCourse.setText(LangModel.getString("menuHelpCourse"));
-		this.menuHelpCourse.setName("menuHelpCourse");
+		this.menuHelpCourse.setText(LangModel.getString(MapEditorApplicationModel.ITEM_HELP_COURSE));
+		this.menuHelpCourse.setName(MapEditorApplicationModel.ITEM_HELP_COURSE);
 		this.menuHelpCourse.addActionListener(actionAdapter);
-		this.menuHelpHelp.setText(LangModel.getString("menuHelpHelp"));
-		this.menuHelpHelp.setName("menuHelpHelp");
+		this.menuHelpHelp.setText(LangModel.getString(MapEditorApplicationModel.ITEM_HELP_HELP));
+		this.menuHelpHelp.setName(MapEditorApplicationModel.ITEM_HELP_HELP);
 		this.menuHelpHelp.addActionListener(actionAdapter);
-		this.menuHelpSupport.setText(LangModel.getString("menuHelpSupport"));
-		this.menuHelpSupport.setName("menuHelpSupport");
+		this.menuHelpSupport.setText(LangModel.getString(MapEditorApplicationModel.ITEM_HELP_SUPPORT));
+		this.menuHelpSupport.setName(MapEditorApplicationModel.ITEM_HELP_SUPPORT);
 		this.menuHelpSupport.addActionListener(actionAdapter);
-		this.menuHelpLicense.setText(LangModel.getString("menuHelpLicense"));
-		this.menuHelpLicense.setName("menuHelpLicense");
+		this.menuHelpLicense.setText(LangModel.getString(MapEditorApplicationModel.ITEM_HELP_LICENSE));
+		this.menuHelpLicense.setName(MapEditorApplicationModel.ITEM_HELP_LICENSE);
 		this.menuHelpLicense.addActionListener(actionAdapter);
-		this.menuHelpAbout.setText(LangModel.getString("menuHelpAbout"));
-		this.menuHelpAbout.setName("menuHelpAbout");
+		this.menuHelpAbout.setText(LangModel.getString(MapEditorApplicationModel.ITEM_HELP_ABOUT));
+		this.menuHelpAbout.setName(MapEditorApplicationModel.ITEM_HELP_ABOUT);
 		this.menuHelpAbout.addActionListener(actionAdapter);
 
 		this.menuSession.add(this.menuSessionNew);
@@ -276,9 +277,9 @@ public class MapEditorMenuBar extends JMenuBar
 		this.menuSession.addSeparator();
 		this.menuSession.add(this.menuExit);
 
-		this.menuView.add(this.menuViewProto);
-		this.menuView.add(this.menuViewAttributes);
-		this.menuView.add(this.menuViewElements);
+		this.menuView.add(this.menuViewGeneral);
+		this.menuView.add(this.menuViewAdditional);
+		this.menuView.add(this.menuViewCharacteristics);
 		this.menuView.add(this.menuViewSetup);
 		this.menuView.add(this.menuViewMap);
 		this.menuView.add(this.menuViewMapScheme);
@@ -345,140 +346,140 @@ public class MapEditorMenuBar extends JMenuBar
 
 	public void modelChanged(String e[])
 	{
-		this.menuSession.setVisible(this.aModel.isVisible("menuSession"));
-		this.menuSession.setEnabled(this.aModel.isEnabled("menuSession"));
+		this.menuSession.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_SESSION));
+		this.menuSession.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_SESSION));
 
-		this.menuSessionNew.setVisible(this.aModel.isVisible("menuSessionNew"));
-		this.menuSessionNew.setEnabled(this.aModel.isEnabled("menuSessionNew"));
+		this.menuSessionNew.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_SESSION_NEW));
+		this.menuSessionNew.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_SESSION_NEW));
 
-		this.menuSessionClose.setVisible(this.aModel.isVisible("menuSessionClose"));
-		this.menuSessionClose.setEnabled(this.aModel.isEnabled("menuSessionClose"));
+		this.menuSessionClose.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_SESSION_CLOSE));
+		this.menuSessionClose.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_SESSION_CLOSE));
 
-		this.menuSessionConnection.setVisible(this.aModel.isVisible("menuSessionConnection"));
-		this.menuSessionConnection.setEnabled(this.aModel.isEnabled("menuSessionConnection"));
+		this.menuSessionConnection.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_SESSION_CONNECTION));
+		this.menuSessionConnection.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_SESSION_CONNECTION));
 
-		this.menuSessionChangePassword.setVisible(this.aModel.isVisible("menuSessionChangePassword"));
-		this.menuSessionChangePassword.setEnabled(this.aModel.isEnabled("menuSessionChangePassword"));
+		this.menuSessionChangePassword.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_SESSION_CHANGE_PASSWORD));
+		this.menuSessionChangePassword.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_SESSION_CHANGE_PASSWORD));
 
-		this.menuSessionDomain.setVisible(this.aModel.isVisible("menuSessionDomain"));
-		this.menuSessionDomain.setEnabled(this.aModel.isEnabled("menuSessionDomain"));
+		this.menuSessionDomain.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_SESSION_DOMAIN));
+		this.menuSessionDomain.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_SESSION_DOMAIN));
 
-		this.menuExit.setVisible(this.aModel.isVisible("menuExit"));
-		this.menuExit.setEnabled(this.aModel.isEnabled("menuExit"));
+		this.menuExit.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_SESSION_EXIT));
+		this.menuExit.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_SESSION_EXIT));
 
-		this.menuView.setVisible(this.aModel.isVisible("menuView"));
-		this.menuView.setEnabled(this.aModel.isEnabled("menuView"));
+		this.menuView.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_VIEW));
+		this.menuView.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_VIEW));
 
-		this.menuViewProto.setVisible(this.aModel.isVisible("menuViewProto"));
-		this.menuViewProto.setEnabled(this.aModel.isEnabled("menuViewProto"));
+		this.menuViewGeneral.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_VIEW_GENERAL));
+		this.menuViewGeneral.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_VIEW_GENERAL));
 
-		this.menuViewAttributes.setVisible(this.aModel.isVisible("menuViewAttributes"));
-		this.menuViewAttributes.setEnabled(this.aModel.isEnabled("menuViewAttributes"));
+		this.menuViewAdditional.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_VIEW_ADDITIONAL));
+		this.menuViewAdditional.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_VIEW_ADDITIONAL));
 
-		this.menuViewElements.setVisible(this.aModel.isVisible("menuViewElements"));
-		this.menuViewElements.setEnabled(this.aModel.isEnabled("menuViewElements"));
+		this.menuViewCharacteristics.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_VIEW_CHARACTERISTICS));
+		this.menuViewCharacteristics.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_VIEW_CHARACTERISTICS));
 
-		this.menuViewSetup.setVisible(this.aModel.isVisible("menuViewSetup"));
-		this.menuViewSetup.setEnabled(this.aModel.isEnabled("menuViewSetup"));
+		this.menuViewSetup.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_VIEW_CONTROLS));
+		this.menuViewSetup.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_VIEW_CONTROLS));
 
-		this.menuViewMap.setVisible(this.aModel.isVisible("menuViewMap"));
-		this.menuViewMap.setEnabled(this.aModel.isEnabled("menuViewMap"));
+		this.menuViewMap.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_VIEW_MAP));
+		this.menuViewMap.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_VIEW_MAP));
 
-		this.menuViewMapScheme.setVisible(this.aModel.isVisible("menuViewMapScheme"));
-		this.menuViewMapScheme.setEnabled(this.aModel.isEnabled("menuViewMapScheme"));
+		this.menuViewMapScheme.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_VIEW_NAVIGATOR));
+		this.menuViewMapScheme.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_VIEW_NAVIGATOR));
 
-		this.menuViewAll.setVisible(this.aModel.isVisible("menuViewAll"));
-		this.menuViewAll.setEnabled(this.aModel.isEnabled("menuViewAll"));
+		this.menuViewAll.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_VIEW_ALL));
+		this.menuViewAll.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_VIEW_ALL));
 
 //		this.menuViewOptions.setVisible(this.aModel.isVisible("menuViewOptions"));
 //		this.menuViewOptions.setEnabled(this.aModel.isEnabled("menuViewOptions"));
 
-		this.menuMap.setVisible(this.aModel.isVisible("menuMap"));
-		this.menuMap.setEnabled(this.aModel.isEnabled("menuMap"));
+		this.menuMap.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_MAP));
+		this.menuMap.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_MAP));
 
-		this.menuMapNew.setVisible(this.aModel.isVisible("menuMapNew"));
-		this.menuMapNew.setEnabled(this.aModel.isEnabled("menuMapNew"));
+		this.menuMapNew.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_MAP_NEW));
+		this.menuMapNew.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_MAP_NEW));
 
-		this.menuMapOpen.setVisible(this.aModel.isVisible("menuMapOpen"));
-		this.menuMapOpen.setEnabled(this.aModel.isEnabled("menuMapOpen"));
+		this.menuMapOpen.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_MAP_OPEN));
+		this.menuMapOpen.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_MAP_OPEN));
 
-		this.menuMapClose.setVisible(this.aModel.isVisible("menuMapClose"));
-		this.menuMapClose.setEnabled(this.aModel.isEnabled("menuMapClose"));
+		this.menuMapClose.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_MAP_CLOSE));
+		this.menuMapClose.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_MAP_CLOSE));
 
-		this.menuMapSave.setVisible(this.aModel.isVisible("menuMapSave"));
-		this.menuMapSave.setEnabled(this.aModel.isEnabled("menuMapSave"));
+		this.menuMapSave.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_MAP_SAVE));
+		this.menuMapSave.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_MAP_SAVE));
 
-		this.menuMapSaveAs.setVisible(this.aModel.isVisible("menuMapSaveAs"));
-		this.menuMapSaveAs.setEnabled(this.aModel.isEnabled("menuMapSaveAs"));
+		this.menuMapSaveAs.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_MAP_SAVE_AS));
+		this.menuMapSaveAs.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_MAP_SAVE_AS));
 
-		this.menuMapAddMap.setVisible(this.aModel.isVisible("menuMapAddMap"));
-		this.menuMapAddMap.setEnabled(this.aModel.isEnabled("menuMapAddMap"));
+		this.menuMapAddMap.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_MAP_ADD_MAP));
+		this.menuMapAddMap.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_MAP_ADD_MAP));
 
-		this.menuMapRemoveMap.setVisible(this.aModel.isVisible("menuMapRemoveMap"));
-		this.menuMapRemoveMap.setEnabled(this.aModel.isEnabled("menuMapRemoveMap"));
+		this.menuMapRemoveMap.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_MAP_REMOVE_MAP));
+		this.menuMapRemoveMap.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_MAP_REMOVE_MAP));
 
-		this.menuMapAddExternal.setVisible(this.aModel.isVisible("menuMapAddExternal"));
-		this.menuMapAddExternal.setEnabled(this.aModel.isEnabled("menuMapAddExternal"));
+		this.menuMapAddExternal.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_MAP_ADD_EXTERNAL));
+		this.menuMapAddExternal.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_MAP_ADD_EXTERNAL));
 
-		this.menuMapExport.setVisible(this.aModel.isVisible("menuMapExport"));
-		this.menuMapExport.setEnabled(this.aModel.isEnabled("menuMapExport"));
+		this.menuMapExport.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_MAP_EXPORT));
+		this.menuMapExport.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_MAP_EXPORT));
 
-		this.menuMapImport.setVisible(this.aModel.isVisible("menuMapImport"));
-		this.menuMapImport.setEnabled(this.aModel.isEnabled("menuMapImport"));
+		this.menuMapImport.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_MAP_IMPORT));
+		this.menuMapImport.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_MAP_IMPORT));
 
-		this.menuMapView.setVisible(this.aModel.isVisible("menuMapView"));
-		this.menuMapView.setEnabled(this.aModel.isEnabled("menuMapView"));
+		this.menuMapView.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_MAP_VIEW));
+		this.menuMapView.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW));
 
-		this.menuMapViewNew.setVisible(this.aModel.isVisible("menuMapViewNew"));
-		this.menuMapViewNew.setEnabled(this.aModel.isEnabled("menuMapViewNew"));
+		this.menuMapViewNew.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_MAP_VIEW_NEW));
+		this.menuMapViewNew.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_NEW));
 
-		this.menuMapViewOpen.setVisible(this.aModel.isVisible("menuMapViewOpen"));
-		this.menuMapViewOpen.setEnabled(this.aModel.isEnabled("menuMapViewOpen"));
+		this.menuMapViewOpen.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_MAP_VIEW_OPEN));
+		this.menuMapViewOpen.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_OPEN));
 
-		this.menuMapViewClose.setVisible(this.aModel.isVisible("menuMapViewClose"));
-		this.menuMapViewClose.setEnabled(this.aModel.isEnabled("menuMapViewClose"));
+		this.menuMapViewClose.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_MAP_VIEW_CLOSE));
+		this.menuMapViewClose.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_CLOSE));
 
-		this.menuMapViewSave.setVisible(this.aModel.isVisible("menuMapViewSave"));
-		this.menuMapViewSave.setEnabled(this.aModel.isEnabled("menuMapViewSave"));
+		this.menuMapViewSave.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_MAP_VIEW_SAVE));
+		this.menuMapViewSave.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_SAVE));
 
-		this.menuMapViewSaveAs.setVisible(this.aModel.isVisible("menuMapViewSaveAs"));
-		this.menuMapViewSaveAs.setEnabled(this.aModel.isEnabled("menuMapViewSaveAs"));
+		this.menuMapViewSaveAs.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_MAP_VIEW_SAVE_AS));
+		this.menuMapViewSaveAs.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_SAVE_AS));
 
-		this.menuMapViewAddScheme.setVisible(this.aModel.isVisible("menuMapViewAddScheme"));
-		this.menuMapViewAddScheme.setEnabled(this.aModel.isEnabled("menuMapViewAddScheme"));
+		this.menuMapViewAddScheme.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_MAP_VIEW_ADD_SCHEME));
+		this.menuMapViewAddScheme.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_ADD_SCHEME));
 
-		this.menuMapViewRemoveScheme.setVisible(this.aModel.isVisible("menuMapViewRemoveScheme"));
-		this.menuMapViewRemoveScheme.setEnabled(this.aModel.isEnabled("menuMapViewRemoveScheme"));
+		this.menuMapViewRemoveScheme.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_MAP_VIEW_REMOVE_SCHEME));
+		this.menuMapViewRemoveScheme.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_REMOVE_SCHEME));
 
-		this.menuHelp.setVisible(this.aModel.isVisible("menuHelp"));
-		this.menuHelp.setEnabled(this.aModel.isEnabled("menuHelp"));
+		this.menuHelp.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_HELP));
+		this.menuHelp.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_HELP));
 
-		this.menuHelpContents.setVisible(this.aModel.isVisible("menuHelpContents"));
-		this.menuHelpContents.setEnabled(this.aModel.isEnabled("menuHelpContents"));
+		this.menuHelpContents.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_HELP_CONTENTS));
+		this.menuHelpContents.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_HELP_CONTENTS));
 
-		this.menuHelpFind.setVisible(this.aModel.isVisible("menuHelpFind"));
-		this.menuHelpFind.setEnabled(this.aModel.isEnabled("menuHelpFind"));
+		this.menuHelpFind.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_HELP_FIND));
+		this.menuHelpFind.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_HELP_FIND));
 
-		this.menuHelpTips.setVisible(this.aModel.isVisible("menuHelpTips"));
-		this.menuHelpTips.setEnabled(this.aModel.isEnabled("menuHelpTips"));
+		this.menuHelpTips.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_HELP_FIND));
+		this.menuHelpTips.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_HELP_FIND));
 
-		this.menuHelpStart.setVisible(this.aModel.isVisible("menuHelpStart"));
-		this.menuHelpStart.setEnabled(this.aModel.isEnabled("menuHelpStart"));
+		this.menuHelpStart.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_HELP_START));
+		this.menuHelpStart.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_HELP_START));
 
-		this.menuHelpCourse.setVisible(this.aModel.isVisible("menuHelpCourse"));
-		this.menuHelpCourse.setEnabled(this.aModel.isEnabled("menuHelpCourse"));
+		this.menuHelpCourse.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_HELP_COURSE));
+		this.menuHelpCourse.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_HELP_COURSE));
 
-		this.menuHelpHelp.setVisible(this.aModel.isVisible("menuHelpHelp"));
-		this.menuHelpHelp.setEnabled(this.aModel.isEnabled("menuHelpHelp"));
+		this.menuHelpHelp.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_HELP_HELP));
+		this.menuHelpHelp.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_HELP_HELP));
 
-		this.menuHelpSupport.setVisible(this.aModel.isVisible("menuHelpSupport"));
-		this.menuHelpSupport.setEnabled(this.aModel.isEnabled("menuHelpSupport"));
+		this.menuHelpSupport.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_HELP_SUPPORT));
+		this.menuHelpSupport.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_HELP_SUPPORT));
 
-		this.menuHelpLicense.setVisible(this.aModel.isVisible("menuHelpLicense"));
-		this.menuHelpLicense.setEnabled(this.aModel.isEnabled("menuHelpLicense"));
+		this.menuHelpLicense.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_HELP_LICENSE));
+		this.menuHelpLicense.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_HELP_LICENSE));
 
-		this.menuHelpAbout.setVisible(this.aModel.isVisible("menuHelpAbout"));
-		this.menuHelpAbout.setEnabled(this.aModel.isEnabled("menuHelpAbout"));
+		this.menuHelpAbout.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_HELP_ABOUT));
+		this.menuHelpAbout.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_HELP_ABOUT));
 	}
 
 	public void actionPerformed(ActionEvent e)

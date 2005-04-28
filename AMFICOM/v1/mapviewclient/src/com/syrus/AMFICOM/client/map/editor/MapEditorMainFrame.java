@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMainFrame.java,v 1.33 2005/04/22 15:06:33 krupenn Exp $
+ * $Id: MapEditorMainFrame.java,v 1.34 2005/04/28 12:57:53 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,9 +10,6 @@
 
 package com.syrus.AMFICOM.Client.Map.Editor;
 
-import com.syrus.AMFICOM.Client.Map.Command.Editor.ViewMapViewNavigatorCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Map.MapAddMapCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Map.MapRemoveMapCommand;
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -58,6 +55,7 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.General.Model.MapEditorApplicationModel;
 import com.syrus.AMFICOM.Client.General.Model.MapMapEditorApplicationModelFactory;
 import com.syrus.AMFICOM.Client.General.Model.Module;
 import com.syrus.AMFICOM.Client.General.UI.StatusBarModel;
@@ -71,36 +69,37 @@ import com.syrus.AMFICOM.Client.Map.Command.Editor.MapEditorSaveMapAsCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Editor.MapEditorSaveMapCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Editor.MapEditorSaveViewAsCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Editor.MapEditorSaveViewCommand;
+import com.syrus.AMFICOM.Client.Map.Command.Editor.ViewAdditionalPropertiesCommand;
+import com.syrus.AMFICOM.Client.Map.Command.Editor.ViewCharacteristicsCommand;
+import com.syrus.AMFICOM.Client.Map.Command.Editor.ViewGeneralPropertiesCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Editor.ViewMapAllCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Editor.ViewMapElementsCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Editor.ViewMapPropertiesCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Editor.ViewMapSetupCommand;
+import com.syrus.AMFICOM.Client.Map.Command.Editor.ViewMapControlsCommand;
+import com.syrus.AMFICOM.Client.Map.Command.Editor.ViewMapViewNavigatorCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Editor.ViewMapWindowCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Map.CreateMapReportCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapAddExternalNodeCommand;
+import com.syrus.AMFICOM.Client.Map.Command.Map.MapAddMapCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapExportCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapImportCommand;
+import com.syrus.AMFICOM.Client.Map.Command.Map.MapRemoveMapCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewAddSchemeCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewRemoveSchemeCommand;
-import com.syrus.AMFICOM.Client.Map.UI.MapElementsFrame;
+import com.syrus.AMFICOM.Client.Map.UI.MapAdditionalPropertiesFrame;
+import com.syrus.AMFICOM.Client.Map.UI.MapCharacteristicPropertiesFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
-import com.syrus.AMFICOM.Client.Map.UI.MapPropertyFrame;
-import com.syrus.AMFICOM.Client.Map.UI.MapElementCharacteristicsFrame;
+import com.syrus.AMFICOM.Client.Map.UI.MapGeneralPropertiesFrame;
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.mapview.MapView;
-import com.syrus.AMFICOM.scheme.SchemeSampleData;
 
 /**
  * Основное окно модуля Редактор топологической схемы
  * 
  * 
  * 
- * @version $Revision: 1.33 $, $Date: 2005/04/22 15:06:33 $
+ * @version $Revision: 1.34 $, $Date: 2005/04/28 12:57:53 $
  * @module mapviewclient_v1
  * @author $Author: krupenn $
  */
@@ -217,62 +216,63 @@ public class MapEditorMainFrame extends JFrame
 
 	void setDefaultModel (ApplicationModel aModel)
 	{
-		aModel.setEnabled("menuSession", false);
-		aModel.setEnabled("menuSessionNew", false);
-		aModel.setEnabled("menuSessionClose", false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_SESSION, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_SESSION_NEW, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_SESSION_CLOSE, false);
 		aModel.setEnabled("menuSessionOptions", false);
-		aModel.setEnabled("menuSessionConnection", false);
-		aModel.setEnabled("menuSessionChangePassword", false);
-		aModel.setEnabled("menuSessionDomain", false);
-		aModel.setEnabled("menuExit", false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_SESSION_CONNECTION, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_SESSION_CHANGE_PASSWORD, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_SESSION_DOMAIN, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_SESSION_EXIT, false);
 
-		aModel.setEnabled("menuView", false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_VIEW, false);
 		aModel.setEnabled("menuViewNavigator", false);
-		aModel.setEnabled("menuViewAttributes", false);
-		aModel.setEnabled("menuViewElements", false);
-		aModel.setEnabled("menuViewSetup", false);
-		aModel.setEnabled("menuViewMap", false);
-		aModel.setEnabled("menuViewMapScheme", false);
-		aModel.setEnabled("menuViewAll", false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_VIEW_GENERAL, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_VIEW_ADDITIONAL, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_VIEW_CHARACTERISTICS, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_VIEW_CONTROLS, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_VIEW_MAP, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_VIEW_NAVIGATOR, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_VIEW_ALL, false);
 
-		aModel.setEnabled("menuMap", false);
-		aModel.setEnabled("menuMapNew", false);
-		aModel.setEnabled("menuMapOpen", false);
-		aModel.setEnabled("menuMapClose", false);
-		aModel.setEnabled("menuMapSave", false);
-		aModel.setEnabled("menuMapSaveAs", false);
-		aModel.setEnabled("menuMapImport", false);
-		aModel.setEnabled("menuMapExport", false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_NEW, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_OPEN, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_CLOSE, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_SAVE, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_SAVE_AS, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_IMPORT, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_EXPORT, false);
 
-		aModel.setEnabled("menuMapView", false);
-		aModel.setEnabled("menuMapViewNew", false);
-		aModel.setEnabled("menuMapViewOpen", false);
-		aModel.setEnabled("menuMapViewClose", false);
-		aModel.setEnabled("menuMapViewSave", false);
-		aModel.setEnabled("menuMapViewSaveAs", false);
-		aModel.setEnabled("menuMapViewAddScheme", false);
-		aModel.setEnabled("menuMapViewRemoveScheme", false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_NEW, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_OPEN, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_CLOSE, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_SAVE, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_SAVE_AS, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_ADD_SCHEME, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_REMOVE_SCHEME, false);
 
-		aModel.setEnabled("menuHelp", false);
-		aModel.setEnabled("menuHelpContents", false);
-		aModel.setEnabled("menuHelpFind", false);
-		aModel.setEnabled("menuHelpTips", false);
-		aModel.setEnabled("menuHelpStart", false);
-		aModel.setEnabled("menuHelpCourse", false);
-		aModel.setEnabled("menuHelpHelp", false);
-		aModel.setEnabled("menuHelpSupport", false);
-		aModel.setEnabled("menuHelpLicense", false);
-		aModel.setEnabled("menuHelpAbout", false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_HELP, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_HELP_CONTENTS, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_HELP_FIND, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_HELP_FIND, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_HELP_START, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_HELP_COURSE, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_HELP_HELP, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_HELP_SUPPORT, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_HELP_LICENSE, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_HELP_ABOUT, false);
 
-		aModel.setEnabled("menuSession", true);
-		aModel.setEnabled("menuSessionNew", true);
-		aModel.setEnabled("menuSessionConnection", true);
-		aModel.setEnabled("menuExit", true);
-		aModel.setEnabled("menuView", true);
-		aModel.setEnabled("menuMap", true);
-		aModel.setEnabled("menuMapView", true);
-		aModel.setEnabled("menuHelp", true);
-		aModel.setEnabled("menuHelpAbout", true);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_SESSION, true);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_SESSION_NEW, true);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_SESSION_CONNECTION, true);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_SESSION_EXIT, true);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_VIEW, true);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP, true);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW, true);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_HELP, true);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_HELP_ABOUT, true);
 	}
 
 	public JDesktopPane getDesktop()
@@ -325,134 +325,138 @@ public class MapEditorMainFrame extends JFrame
 
 		setDefaultModel(aModel);
 
-		aModel.setCommand("menuSessionNew", 
+		aModel.setCommand(MapEditorApplicationModel.ITEM_SESSION_NEW, 
 				new SessionOpenCommand(
 					Environment.getDispatcher(), 
 					this.aContext));
-		aModel.setCommand("menuSessionClose", 
+		aModel.setCommand(MapEditorApplicationModel.ITEM_SESSION_CLOSE, 
 				new SessionCloseCommand(
 					Environment.getDispatcher(), 
 					this.aContext));
-		aModel.setCommand("menuSessionConnection", 
+		aModel.setCommand(MapEditorApplicationModel.ITEM_SESSION_CONNECTION, 
 				new SessionConnectionCommand(
 					Environment.getDispatcher(), 
 					this.aContext));
-		aModel.setCommand("menuSessionChangePassword", 
+		aModel.setCommand(MapEditorApplicationModel.ITEM_SESSION_CHANGE_PASSWORD, 
 				new SessionChangePasswordCommand(
 					Environment.getDispatcher(), 
 					this.aContext));
-		aModel.setCommand("menuSessionDomain", 
+		aModel.setCommand(MapEditorApplicationModel.ITEM_SESSION_DOMAIN, 
 				new SessionDomainCommand(
 					Environment.getDispatcher(), 
 					this.aContext));
-		aModel.setCommand("menuExit", 
+		aModel.setCommand(MapEditorApplicationModel.ITEM_SESSION_EXIT, 
 				new ExitCommand(this));
 
-		aModel.setCommand("menuMapNew", 
+		aModel.setCommand(MapEditorApplicationModel.ITEM_MAP_NEW, 
 				new MapEditorNewMapCommand(
 						this.desktopPane, 
 						this.aContext));
-		aModel.setCommand("menuMapOpen", 
+		aModel.setCommand(MapEditorApplicationModel.ITEM_MAP_OPEN, 
 				new MapEditorOpenMapCommand(
 						this.desktopPane, 
 						this.aContext));
-		aModel.setCommand("menuMapClose", 
+		aModel.setCommand(MapEditorApplicationModel.ITEM_MAP_CLOSE, 
 				new MapEditorCloseMapCommand(
 						this.desktopPane, 
 					this.internalDispatcher));
-		aModel.setCommand("menuMapSave", 
+		aModel.setCommand(MapEditorApplicationModel.ITEM_MAP_SAVE, 
 				new MapEditorSaveMapCommand(
 						this.desktopPane, 
 						this.aContext));
-		aModel.setCommand("menuMapSaveAs", 
+		aModel.setCommand(MapEditorApplicationModel.ITEM_MAP_SAVE_AS, 
 				new MapEditorSaveMapAsCommand(
 						this.desktopPane, 
 						this.aContext));
-		aModel.setCommand("menuMapAddMap", 
+		aModel.setCommand(MapEditorApplicationModel.ITEM_MAP_ADD_MAP, 
 				new MapAddMapCommand(
 						this.desktopPane, 
 						this.aContext));
-		aModel.setCommand("menuMapRemoveMap", 
+		aModel.setCommand(MapEditorApplicationModel.ITEM_MAP_REMOVE_MAP, 
 				new MapRemoveMapCommand(
 					this.desktopPane, 
 					this.aContext));
-		aModel.setCommand("menuMapAddExternal", 
+		aModel.setCommand(MapEditorApplicationModel.ITEM_MAP_ADD_EXTERNAL, 
 				new MapAddExternalNodeCommand(
 						this.desktopPane, 
 						this.aContext));
-		aModel.setCommand("menuMapExport", 
+		aModel.setCommand(MapEditorApplicationModel.ITEM_MAP_EXPORT, 
 				new MapExportCommand(
 						this.desktopPane, 
 						this.aContext));
-		aModel.setCommand("menuMapImport", 
+		aModel.setCommand(MapEditorApplicationModel.ITEM_MAP_IMPORT, 
 				new MapImportCommand(
 					this.desktopPane, 
 					this.aContext));
 
-		aModel.setCommand("menuMapViewAddScheme", 
+		aModel.setCommand(MapEditorApplicationModel.ITEM_MAP_VIEW_ADD_SCHEME, 
 				new MapViewAddSchemeCommand(
 						this.desktopPane, 
 						this.aContext));
-		aModel.setCommand("menuMapViewRemoveScheme", 
+		aModel.setCommand(MapEditorApplicationModel.ITEM_MAP_VIEW_REMOVE_SCHEME, 
 				new MapViewRemoveSchemeCommand(
 						this.desktopPane, 
 						this.aContext));
 
-		aModel.setCommand("menuMapViewNew", 
+		aModel.setCommand(MapEditorApplicationModel.ITEM_MAP_VIEW_NEW, 
 				new MapEditorNewViewCommand(
 						this.desktopPane, 
 						this.aContext));
-		aModel.setCommand("menuMapViewOpen", 
+		aModel.setCommand(MapEditorApplicationModel.ITEM_MAP_VIEW_OPEN, 
 				new MapEditorOpenViewCommand(
 						this.desktopPane, 
 						this.aContext));
-		aModel.setCommand("menuMapViewClose", 
+		aModel.setCommand(MapEditorApplicationModel.ITEM_MAP_VIEW_CLOSE, 
 				new MapEditorCloseViewCommand(
 						this.desktopPane, 
 						this.internalDispatcher));
-		aModel.setCommand("menuMapViewSave", 
+		aModel.setCommand(MapEditorApplicationModel.ITEM_MAP_VIEW_SAVE, 
 				new MapEditorSaveViewCommand(
 						this.desktopPane, 
 						this.aContext));
-		aModel.setCommand("menuMapViewSaveAs", 
+		aModel.setCommand(MapEditorApplicationModel.ITEM_MAP_VIEW_SAVE_AS, 
 				new MapEditorSaveViewAsCommand(
 						this.desktopPane, 
 						this.aContext));
 
-		aModel.setCommand("menuViewAttributes", 
-				new ViewMapPropertiesCommand(
+		aModel.setCommand(MapEditorApplicationModel.ITEM_VIEW_GENERAL, 
+				new ViewGeneralPropertiesCommand(
 						this.desktopPane, 
 						this.aContext));
-		aModel.setCommand("menuViewElements", 
-				new ViewMapElementsCommand(
+		aModel.setCommand(MapEditorApplicationModel.ITEM_VIEW_ADDITIONAL, 
+				new ViewAdditionalPropertiesCommand(
 						this.desktopPane, 
 						this.aContext));
-		aModel.setCommand("menuViewSetup", 
-				new ViewMapSetupCommand(
+		aModel.setCommand(MapEditorApplicationModel.ITEM_VIEW_CHARACTERISTICS, 
+				new ViewCharacteristicsCommand(
 						this.desktopPane, 
 						this.aContext));
-		aModel.setCommand("menuViewMap", 
+		aModel.setCommand(MapEditorApplicationModel.ITEM_VIEW_CONTROLS, 
+				new ViewMapControlsCommand(
+						this.desktopPane, 
+						this.aContext));
+		aModel.setCommand(MapEditorApplicationModel.ITEM_VIEW_MAP, 
 				new ViewMapWindowCommand(
 					this.internalDispatcher, 
 					this.desktopPane, 
 					this.aContext, 
 					new MapMapEditorApplicationModelFactory()));
-		aModel.setCommand("menuViewMapScheme", 
+		aModel.setCommand(MapEditorApplicationModel.ITEM_VIEW_NAVIGATOR, 
 				new ViewMapViewNavigatorCommand(
 					this.desktopPane, 
 					this.aContext ));
-		aModel.setCommand("menuViewAll", 
+		aModel.setCommand(MapEditorApplicationModel.ITEM_VIEW_ALL, 
 				new ViewMapAllCommand(
 						this.desktopPane,
 						this.aContext,
 						new MapMapEditorApplicationModelFactory()));
           
 		CreateMapReportCommand rc = new CreateMapReportCommand(this.aContext);
-		aModel.setCommand("menuReportCreate", rc);
+		aModel.setCommand(MapEditorApplicationModel.ITEM_REPORT_CREATE, rc);
 
 //		aModel.setCommand("menuReportOpen", new CreateMapReportCommand(this.aContext));
 
-		aModel.add("menuHelpAbout", 
+		aModel.add(MapEditorApplicationModel.ITEM_HELP_ABOUT, 
 				new HelpAboutCommand(this));
 
 		aModel.fireModelChanged();
@@ -537,15 +541,15 @@ public class MapEditorMainFrame extends JFrame
 //			ApplicationModel aModel = this.aContext.getApplicationModel();
 //			if(aModel != null)
 //			{
-//				aModel.getCommand("menuMapOpen").setParameter("mapFrame", mapFrame);
-//				aModel.getCommand("menuMapNew").setParameter("mapFrame", mapFrame);
-//				aModel.getCommand("menuMapSave").setParameter("mapFrame", mapFrame);
-//				aModel.getCommand("menuMapSaveAs").setParameter("mapFrame", mapFrame);
+//				aModel.getCommand(MapEditorApplicationModel.ITEM_MAP_OPEN).setParameter("mapFrame", mapFrame);
+//				aModel.getCommand(MapEditorApplicationModel.ITEM_MAP_NEW).setParameter("mapFrame", mapFrame);
+//				aModel.getCommand(MapEditorApplicationModel.ITEM_MAP_SAVE).setParameter("mapFrame", mapFrame);
+//				aModel.getCommand(MapEditorApplicationModel.ITEM_MAP_SAVE_AS).setParameter("mapFrame", mapFrame);
 //
-//				aModel.getCommand("menuMapViewOpen").setParameter("mapFrame", mapFrame);
-//				aModel.getCommand("menuMapViewNew").setParameter("mapFrame", mapFrame);
-//				aModel.getCommand("menuMapViewSave").setParameter("mapFrame", mapFrame);
-//				aModel.getCommand("menuMapViewSaveAs").setParameter("mapFrame", mapFrame);
+//				aModel.getCommand(MapEditorApplicationModel.ITEM_MAP_VIEW_OPEN).setParameter("mapFrame", mapFrame);
+//				aModel.getCommand(MapEditorApplicationModel.ITEM_MAP_VIEW_NEW).setParameter("mapFrame", mapFrame);
+//				aModel.getCommand(MapEditorApplicationModel.ITEM_MAP_VIEW_SAVE).setParameter("mapFrame", mapFrame);
+//				aModel.getCommand(MapEditorApplicationModel.ITEM_MAP_VIEW_SAVE_AS).setParameter("mapFrame", mapFrame);
 //
 //				aModel.getCommand("menuSchemeAddToView").setParameter("mapFrame", mapFrame);
 //				aModel.getCommand("menuSchemeRemoveFromView").setParameter("mapFrame", mapFrame);
@@ -555,16 +559,16 @@ public class MapEditorMainFrame extends JFrame
 		if(ae.getActionCommand().equals(MapEvent.MAP_VIEW_SELECTED))
 		{
 			ApplicationModel aModel = this.aContext.getApplicationModel();
-			aModel.setEnabled("menuMapSave", true);
-			aModel.setEnabled("menuMapSaveAs", true);
-			aModel.setEnabled("menuMapClose", true);
-			aModel.setEnabled("menuMapExport", true);
+			aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_SAVE, true);
+			aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_SAVE_AS, true);
+			aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_CLOSE, true);
+			aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_EXPORT, true);
 
-			aModel.setEnabled("menuMapViewSave", true);
-			aModel.setEnabled("menuMapViewSaveAs", true);
-			aModel.setEnabled("menuMapViewClose", true);
-			aModel.setEnabled("menuMapViewAddScheme", true);
-			aModel.setEnabled("menuMapViewRemoveScheme", true);
+			aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_SAVE, true);
+			aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_SAVE_AS, true);
+			aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_CLOSE, true);
+			aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_ADD_SCHEME, true);
+			aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_REMOVE_SCHEME, true);
 
 			aModel.fireModelChanged();
 			setTitle(LangModelMap.getString("MapView") + ": " + ((MapView )ae.getSource()).getName());
@@ -581,24 +585,24 @@ public class MapEditorMainFrame extends JFrame
 //					((MapFrame)comp).setMapView(null);
 					((MapFrame)comp).setContext(null);
 				}
-				else if (comp instanceof MapPropertyFrame)
-					((MapPropertyFrame)comp).setVisible(false);
-				else if (comp instanceof MapElementsFrame)
-					((MapElementsFrame)comp).setVisible(false);
-				else if (comp instanceof MapElementCharacteristicsFrame)
-					((MapElementCharacteristicsFrame)comp).setVisible(false);
+				else if (comp instanceof MapGeneralPropertiesFrame)
+					((MapGeneralPropertiesFrame)comp).setVisible(false);
+				else if (comp instanceof MapAdditionalPropertiesFrame)
+					((MapAdditionalPropertiesFrame)comp).setVisible(false);
+				else if (comp instanceof MapCharacteristicPropertiesFrame)
+					((MapCharacteristicPropertiesFrame)comp).setVisible(false);
 			}
 			ApplicationModel aModel = this.aContext.getApplicationModel();
-			aModel.setEnabled("menuMapSave", false);
-			aModel.setEnabled("menuMapSaveAs", false);
-			aModel.setEnabled("menuMapClose", false);
-			aModel.setEnabled("menuMapExport", false);
+			aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_SAVE, false);
+			aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_SAVE_AS, false);
+			aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_CLOSE, false);
+			aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_EXPORT, false);
 
-			aModel.setEnabled("menuMapViewSave", false);
-			aModel.setEnabled("menuMapViewSaveAs", false);
-			aModel.setEnabled("menuMapViewClose", false);
-			aModel.setEnabled("menuMapViewAddScheme", false);
-			aModel.setEnabled("menuMapViewRemoveScheme", false);
+			aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_SAVE, false);
+			aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_SAVE_AS, false);
+			aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_CLOSE, false);
+			aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_ADD_SCHEME, false);
+			aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_REMOVE_SCHEME, false);
 
 			aModel.fireModelChanged();
 			setTitle(LangModelMap.getString("MapView"));
@@ -674,10 +678,10 @@ public class MapEditorMainFrame extends JFrame
 	{
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 
-		aModel.setEnabled("menuSessionNew", true);
-		aModel.setEnabled("menuSessionClose", false);
-		aModel.setEnabled("menuSessionConnection", true);
-		aModel.setEnabled("menuSessionChangePassword", false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_SESSION_NEW, true);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_SESSION_CLOSE, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_SESSION_CONNECTION, true);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_SESSION_CHANGE_PASSWORD, false);
 
 		aModel.fireModelChanged();
 
@@ -689,16 +693,16 @@ public class MapEditorMainFrame extends JFrame
 	{
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 
-		aModel.setEnabled("menuSessionNew", true);
-		aModel.setEnabled("menuSessionClose", false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_SESSION_NEW, true);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_SESSION_CLOSE, false);
 		aModel.setEnabled("menuSessionOptions", false);
-		aModel.setEnabled("menuSessionChangePassword", false);
-		aModel.setEnabled("menuSessionDomain", false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_SESSION_CHANGE_PASSWORD, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_SESSION_DOMAIN, false);
 
-		aModel.setEnabled("menuMap", false);
-		aModel.setEnabled("menuMapView", false);
-		aModel.setEnabled("menuView", false);
-		aModel.setEnabled("menuReport", false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_VIEW, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_REPORT, false);
 
 		aModel.fireModelChanged();
 
@@ -710,16 +714,16 @@ public class MapEditorMainFrame extends JFrame
 	{
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 
-		aModel.setEnabled("menuSessionNew", false);
-		aModel.setEnabled("menuSessionClose", false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_SESSION_NEW, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_SESSION_CLOSE, false);
 		aModel.setEnabled("menuSessionOptions", false);
-		aModel.setEnabled("menuSessionChangePassword", false);
-		aModel.setEnabled("menuSessionDomain", false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_SESSION_CHANGE_PASSWORD, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_SESSION_DOMAIN, false);
 
-		aModel.setEnabled("menuMap", false);
-		aModel.setEnabled("menuMapView", false);
-		aModel.setEnabled("menuView", false);
-		aModel.setEnabled("menuReport", false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_VIEW, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_REPORT, false);
 
 		aModel.fireModelChanged();
 
@@ -730,11 +734,11 @@ public class MapEditorMainFrame extends JFrame
 	public void setSessionOpened()
 	{
 		ApplicationModel aModel = this.aContext.getApplicationModel();
-		aModel.setEnabled("menuSessionNew", false);
-		aModel.setEnabled("menuSessionClose", true);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_SESSION_NEW, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_SESSION_CLOSE, true);
 		aModel.setEnabled("menuSessionOptions", true);
-		aModel.setEnabled("menuSessionChangePassword", true);
-		aModel.setEnabled("menuSessionDomain", true);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_SESSION_CHANGE_PASSWORD, true);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_SESSION_DOMAIN, true);
 		aModel.fireModelChanged();
 		this.domainId = new Identifier(this.aContext.getSessionInterface().getAccessIdentifier().domain_id);
 		if (this.domainId != null) 
@@ -765,27 +769,27 @@ public class MapEditorMainFrame extends JFrame
 				new MapMapEditorApplicationModelFactory()).execute();
 
 		ApplicationModel aModel = this.aContext.getApplicationModel();
-		aModel.setEnabled("menuMap", true);
-		aModel.setEnabled("menuMapView", true);
-		aModel.setEnabled("menuView", true);
-		aModel.setEnabled("menuReport", true);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP, true);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW, true);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_VIEW, true);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_REPORT, true);
 
-		aModel.setEnabled("menuMapNew", true);
-		aModel.setEnabled("menuMapOpen", true);
-		aModel.setEnabled("menuMapImport", true);
-		aModel.setEnabled("menuMapViewNew", true);
-		aModel.setEnabled("menuMapViewOpen", true);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_NEW, true);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_OPEN, true);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_IMPORT, true);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_NEW, true);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_OPEN, true);
 
-		aModel.setEnabled("menuViewProto", true);
 		aModel.setEnabled("menuViewNavigator", true);
-		aModel.setEnabled("menuViewAttributes", true);
-		aModel.setEnabled("menuViewElements", true);
-		aModel.setEnabled("menuViewSetup", true);
-		aModel.setEnabled("menuViewMap", true);
-		aModel.setEnabled("menuViewMapScheme", true);
-		aModel.setEnabled("menuViewAll", true);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_VIEW_GENERAL, true);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_VIEW_ADDITIONAL, true);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_VIEW_CHARACTERISTICS, true);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_VIEW_CONTROLS, true);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_VIEW_MAP, true);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_VIEW_NAVIGATOR, true);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_VIEW_ALL, true);
     
-		aModel.setEnabled("menuReportCreate", true);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_REPORT_CREATE, true);
 
 		aModel.fireModelChanged();
 
@@ -816,35 +820,36 @@ public class MapEditorMainFrame extends JFrame
 	{
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 		setDefaultModel(aModel);
-		aModel.setEnabled("menuSessionNew", true);
-		aModel.setEnabled("menuSessionClose", false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_SESSION_NEW, true);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_SESSION_CLOSE, false);
 		aModel.setEnabled("menuSessionOptions", false);
-		aModel.setEnabled("menuSessionChangePassword", false);	
-		aModel.setEnabled("menuSessionDomain", false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_SESSION_CHANGE_PASSWORD, false);	
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_SESSION_DOMAIN, false);
 
-		aModel.setEnabled("menuMapViewNew", false);
-		aModel.setEnabled("menuMapViewOpen", false);
-		aModel.setEnabled("menuMapViewSave", false);
-		aModel.setEnabled("menuMapViewSaveAs", false);
-		aModel.setEnabled("menuMapViewClose", false);
-		aModel.setEnabled("menuMapViewAddScheme", false);
-		aModel.setEnabled("menuMapViewRemoveScheme", false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_NEW, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_OPEN, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_SAVE, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_SAVE_AS, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_CLOSE, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_ADD_SCHEME, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_REMOVE_SCHEME, false);
 		
-		aModel.setEnabled("menuMapNew", false);
-		aModel.setEnabled("menuMapOpen", false);
-		aModel.setEnabled("menuMapSave", false);
-		aModel.setEnabled("menuMapSaveAs", false);
-		aModel.setEnabled("menuMapClose", false);
-		aModel.setEnabled("menuMapImport", true);
-		aModel.setEnabled("menuMapExport", true);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_NEW, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_OPEN, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_SAVE, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_SAVE_AS, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_CLOSE, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_IMPORT, true);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_EXPORT, true);
 		
 		aModel.setEnabled("menuViewNavigator", false);
-		aModel.setEnabled("menuViewAttributes", false);
-		aModel.setEnabled("menuViewElements", false);
-		aModel.setEnabled("menuViewSetup", false);
-		aModel.setEnabled("menuViewMap", false);
-		aModel.setEnabled("menuViewMapScheme", false);
-		aModel.setEnabled("menuViewAll", false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_VIEW_GENERAL, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_VIEW_ADDITIONAL, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_VIEW_CHARACTERISTICS, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_VIEW_CONTROLS, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_VIEW_MAP, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_VIEW_NAVIGATOR, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_VIEW_ALL, false);
 		aModel.fireModelChanged();
 
 		new CloseAllInternalCommand(this.desktopPane).execute();
@@ -876,7 +881,7 @@ public class MapEditorMainFrame extends JFrame
 		{
 			if(getMapFrame() != null)
 				getMapFrame().saveConfig();
-			Command closeCommand = this.aContext.getApplicationModel().getCommand("menuExit");
+			Command closeCommand = this.aContext.getApplicationModel().getCommand(MapEditorApplicationModel.ITEM_SESSION_EXIT);
 			this.setContext(null);
 			closeCommand.execute();
 
