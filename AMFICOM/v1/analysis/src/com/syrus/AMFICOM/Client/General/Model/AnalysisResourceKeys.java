@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisResourceKeys.java,v 1.12 2005/04/06 11:24:29 bob Exp $
+ * $Id: AnalysisResourceKeys.java,v 1.13 2005/04/28 11:36:52 saa Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,8 +11,8 @@ package com.syrus.AMFICOM.Client.General.Model;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/04/06 11:24:29 $
- * @author $Author: bob $
+ * @version $Revision: 1.13 $, $Date: 2005/04/28 11:36:52 $
+ * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module analysis_v1
  */
@@ -70,7 +70,7 @@ public interface AnalysisResourceKeys extends ResourceKeys {
 	String	ICON_ANALYSIS_FIT						= "com.syrus.AMFICOM.icon.analisys.fit";
 	String	ICON_ANALYSIS_ZOOM_BOX					= "com.syrus.AMFICOM.icon.analisys.zoombox";
 	String	ICON_ANALYSIS_THRESHOLD_INITIAL			= "com.syrus.AMFICOM.icon.analisys.thresholdInitial";
-	String	ICON_ANALYSIS_THRESHOLD_DEFAULT			= "com.syrus.AMFICOM.icon.analisys.thresholdDefault";
+	String	ICON_ANALYSIS_THRESHOLD_CREATE_NEW		= "com.syrus.AMFICOM.icon.analisys.thresholdCreateNew";
 	String	ICON_ANALYSIS_THRESHOLD_INCREASE		= "com.syrus.AMFICOM.icon.analisys.thresholdIncrease";
 	String	ICON_ANALYSIS_THRESHOLD_DECREASE		= "com.syrus.AMFICOM.icon.analisys.thresholdDecrease";
 	String	ICON_ANALYSIS_EVENTS					= "com.syrus.AMFICOM.icon.analisys.events";
