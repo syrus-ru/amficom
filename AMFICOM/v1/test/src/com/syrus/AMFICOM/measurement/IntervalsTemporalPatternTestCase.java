@@ -1,5 +1,5 @@
 /*-
- * $Id: IntervalsTemporalPatternTestCase.java,v 1.2 2005/04/27 11:36:45 bob Exp $
+ * $Id: IntervalsTemporalPatternTestCase.java,v 1.3 2005/04/28 11:31:59 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/27 11:36:45 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/28 11:31:59 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module measurement_v1
@@ -254,6 +254,13 @@ public class IntervalsTemporalPatternTestCase extends TestCase {
 			
 			this.printTimes(intervalsTemporalPattern, startTime, endTime);
 		}
+		
+		{
+			long moveTime = -2 * intervalLength;
+			System.out.println("move " + moveTime);
+			intervalsTemporalPattern.moveAllItems(moveTime);
+			this.printTimes(intervalsTemporalPattern, startTime + (moveTime > 0 ? 0 : moveTime), endTime + (moveTime < 0 ? 0 : moveTime));
+		}
 	}
 
 	public void _testShortForwardPeriodItem() throws IllegalObjectEntityException {
@@ -371,7 +378,8 @@ public class IntervalsTemporalPatternTestCase extends TestCase {
 			this.printTimes(intervalsTemporalPattern, startTime, endTime);
 
 			assertFalse(times.contains(deletedDate));
-		}
+		}		
+	
 	}
 	
 	private void printTimes(IntervalsTemporalPattern intervalsTemporalPattern, long startTime, long endTime) {
