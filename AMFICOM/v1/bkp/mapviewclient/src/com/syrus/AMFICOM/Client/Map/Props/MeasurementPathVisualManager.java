@@ -1,5 +1,5 @@
 /**
- * $Id: MeasurementPathVisualManager.java,v 1.1 2005/04/19 15:48:33 krupenn Exp $
+ * $Id: MeasurementPathVisualManager.java,v 1.2 2005/04/28 12:57:09 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -52,6 +52,11 @@ public class MeasurementPathVisualManager implements VisualManager {
 //		{
 //			result = String.valueOf(mpc.getLineSize(path));
 //		}
+		return null;
+	}
+
+	public StorableObjectEditor getAdditionalPropertiesPanel() {
+		// TODO Auto-generated method stub
 		return null;
 	}
 

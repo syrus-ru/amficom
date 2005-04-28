@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewVisualManager.java,v 1.2 2005/04/20 16:20:47 krupenn Exp $
+ * $Id: MapViewVisualManager.java,v 1.3 2005/04/28 12:57:09 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
  * Класс используется для управления информацией о канализационной
  * прокладке кабелей и положении узлов и других топологических объектов.
  * @author $Author: krupenn $
- * @version $Revision: 1.2 $, $Date: 2005/04/20 16:20:47 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/28 12:57:09 $
  * @module mapviewclient_v1
  */
 public final class MapViewVisualManager implements VisualManager
@@ -53,6 +53,11 @@ public final class MapViewVisualManager implements VisualManager
 	}
 
 	public ObjectResourceController getController() {
+		return null;
+	}
+
+	public StorableObjectEditor getAdditionalPropertiesPanel() {
+		// TODO Auto-generated method stub
 		return null;
 	}
 }

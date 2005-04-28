@@ -1,5 +1,5 @@
 /**
- * $Id: UnboundLinkVisualManager.java,v 1.1 2005/04/19 15:48:57 krupenn Exp $
+ * $Id: UnboundLinkVisualManager.java,v 1.2 2005/04/28 12:57:09 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -52,6 +52,11 @@ public class UnboundLinkVisualManager implements VisualManager {
 //		{
 //			result = String.valueOf(plc.getLineSize(link));
 //		}
+		return null;
+	}
+
+	public StorableObjectEditor getAdditionalPropertiesPanel() {
+		// TODO Auto-generated method stub
 		return null;
 	}
 

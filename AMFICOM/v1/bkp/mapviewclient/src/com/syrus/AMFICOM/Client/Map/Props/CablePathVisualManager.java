@@ -1,5 +1,5 @@
 /**
- * $Id: CablePathVisualManager.java,v 1.2 2005/04/19 15:48:32 krupenn Exp $
+ * $Id: CablePathVisualManager.java,v 1.3 2005/04/28 12:57:09 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -52,6 +52,11 @@ public class CablePathVisualManager implements VisualManager {
 //		{
 //			result = String.valueOf(cc.getLineSize(path));
 //		}
+		return null;
+	}
+
+	public StorableObjectEditor getAdditionalPropertiesPanel() {
+		// TODO Auto-generated method stub
 		return null;
 	}
 

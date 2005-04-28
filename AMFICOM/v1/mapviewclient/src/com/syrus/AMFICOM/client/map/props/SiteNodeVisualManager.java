@@ -1,5 +1,5 @@
 /**
- * $Id: SiteNodeVisualManager.java,v 1.1 2005/04/18 16:14:38 krupenn Exp $
+ * $Id: SiteNodeVisualManager.java,v 1.2 2005/04/28 12:57:09 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -37,6 +37,11 @@ public class SiteNodeVisualManager implements VisualManager {
 	}
 
 	public ObjectResourceController getController() {
+		return null;
+	}
+
+	public StorableObjectEditor getAdditionalPropertiesPanel() {
+		// TODO Auto-generated method stub
 		return null;
 	}
 
