@@ -248,8 +248,8 @@ implements OperationListener, BsHashChangeListener,
 		//jToolBar1.setBorderPainted(true);
 		JToolBar jToolBar = new JToolBar();
 		jToolBar.setFloatable(false);
-		jToolBar.add(analysisInitialButton);
 		jToolBar.add(analysisDefaultsButton);
+		jToolBar.add(analysisInitialButton);
 		jToolBar.add(decreaseThreshButton);
 		jToolBar.add(increaseThreshButton);
 		jToolBar.add(new JToolBar.Separator());

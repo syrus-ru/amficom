@@ -182,10 +182,10 @@ implements BsHashChangeListener, PrimaryMTMListener
 
 		JToolBar jToolBar1 = new JToolBar();
 		jToolBar1.setFloatable(false);
-		jToolBar1.add(analysisStartButton);
-		jToolBar1.add(new JToolBar.Separator());
-		jToolBar1.add(analysisInitialButton);
 		jToolBar1.add(analysisDefaultsButton);
+		jToolBar1.add(analysisInitialButton);
+		jToolBar1.add(new JToolBar.Separator());
+		jToolBar1.add(analysisStartButton);
 
 //		jTable.getColumnModel().getColumn(0).setPreferredWidth(250);
 //		jTable.setPreferredScrollableViewportSize(new Dimension(200, 213));

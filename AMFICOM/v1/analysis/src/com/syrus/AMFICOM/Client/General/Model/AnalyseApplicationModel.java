@@ -134,7 +134,7 @@ public class AnalyseApplicationModel extends ApplicationModel {
 		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_INITIAL, new ImageIcon(Toolkit.getDefaultToolkit()
 				.getImage("images/th_initial.gif")));
 		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_DEFAULT, new ImageIcon(Toolkit.getDefaultToolkit()
-				.getImage("images/th_default.gif")));
+				.getImage("images/th_createNew.gif")));
 		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_INCREASE, new ImageIcon(Toolkit.getDefaultToolkit()
 				.getImage("images/increaseThresh.gif")));
 		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_DECREASE, new ImageIcon(Toolkit.getDefaultToolkit()
