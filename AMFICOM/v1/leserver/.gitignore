@@ -1,0 +1,16 @@
+.corba
+.mach
+*.jar
+*.jpr*
+*.jpx*
+*.trc
+*.tar
+*.gz
+*.swp
+*.log
+classes
+logs
+cache
+orb.db
+.project
+.classpath
