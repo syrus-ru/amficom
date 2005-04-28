@@ -1,5 +1,5 @@
 /*
- * $Id: TestTemporalStamps.java,v 1.4 2005/04/28 16:04:28 bob Exp $
+ * $Id: TestTemporalStamps.java,v 1.5 2005/04/28 16:53:03 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/04/28 16:04:28 $
+ * @version $Revision: 1.5 $, $Date: 2005/04/28 16:53:03 $
  * @author $Author: bob $
  * @module scheduler_v1
  */
@@ -29,9 +29,6 @@ public class TestTemporalStamps implements Undoable  {
 	
 	private Date undoEndTime;
 	private Date undoStartTime;
-	
-	private Date redoEndTime;
-	private Date redoStartTime;
 	
 	public TestTemporalStamps(TestTemporalType temporalType,
 			Date startTime,
@@ -78,13 +75,15 @@ public class TestTemporalStamps implements Undoable  {
 	public void undo() {
 	
 		if (this.undoStartTime != null) {
-			this.redoStartTime = this.startTime;
+			Date date = this.startTime;
 			this.startTime = this.undoStartTime;
+			this.undoStartTime = date;
 		}
 
 		if (this.undoEndTime != null) {
-			this.redoEndTime = this.endTime;
+			Date date = this.endTime;
 			this.endTime = this.undoEndTime;
+			this.undoEndTime = date;
 		}
 
 		if (this.temporalPattern instanceof Undoable) {
@@ -94,25 +93,6 @@ public class TestTemporalStamps implements Undoable  {
 		Log.debugMessage("TestTemporalStamps.undo | startTime is " + this.startTime, Log.FINEST);
 		Log.debugMessage("TestTemporalStamps.undo | endTime is " + this.endTime, Log.FINEST);
 
-	}
-	
-	public void redo() {
-		if (this.redoStartTime != null) {
-			this.undoStartTime = this.startTime;
-			this.startTime = this.redoStartTime;
-		}
-
-		if (this.redoEndTime != null) {
-			this.undoEndTime = this.endTime;
-			this.endTime = this.redoEndTime;
-		}
-
-		if (this.temporalPattern instanceof Undoable) {
-			((Undoable) this.temporalPattern).redo();
-		}
-		
-		Log.debugMessage("TestTemporalStamps.redo | startTime is " + this.startTime, Log.FINEST);
-		Log.debugMessage("TestTemporalStamps.redo | endTime is " + this.endTime, Log.FINEST);
-	}
+	}	
 	
 }

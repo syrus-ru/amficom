@@ -1,5 +1,5 @@
 /*-
- * $Id: TimeStampsEditor.java,v 1.2 2005/04/28 16:04:28 bob Exp $
+ * $Id: TimeStampsEditor.java,v 1.3 2005/04/28 16:53:03 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,9 +40,10 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.measurement.AbstractTemporalPattern;
 import com.syrus.AMFICOM.measurement.IntervalsTemporalPattern;
 import com.syrus.AMFICOM.measurement.TestTemporalStamps;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/28 16:04:28 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/28 16:53:03 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -64,11 +65,24 @@ public class TimeStampsEditor extends TimeLine {
 	Point currentPoint;
 	Point previousPoint;
 	
+	JMenuItem undoMenuItem;
+	JMenuItem cutMenuItem;
+	JMenuItem copyMenuItem;
+	JMenuItem pasteMenuItem;
+	JMenuItem deleteMenuItem;
+	
 	public TimeStampsEditor(ApplicationContext aContext, String title) {
 		this.title = title;
 		this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();		
 		this.createMouseListener();
 		this.setToolTipText("");		
+	}
+	
+	void updateMenuItemsState() {
+		boolean b = (this.selectedItems != null && !this.selectedItems.isEmpty());
+		this.cutMenuItem.setEnabled(b);
+		this.copyMenuItem.setEnabled(b);
+		this.deleteMenuItem.setEnabled(b);
 	}
 
 	private void createMouseListener() {
@@ -97,11 +111,13 @@ public class TimeStampsEditor extends TimeLine {
 						}
 					}
 					
+					TimeStampsEditor.this.updateMenuItemsState();
+					
 				} else if (SwingUtilities.isRightMouseButton(e)) {
 					if (TimeStampsEditor.this.popupMenu == null) {
 						createPopupMenu();
 					}
-					popupRelativeX = x;
+					TimeStampsEditor.this.popupRelativeX = x;
 					TimeStampsEditor.this.popupMenu.show(TimeStampsEditor.this, x, y);
 				}
 			}
@@ -149,8 +165,10 @@ public class TimeStampsEditor extends TimeLine {
 						
 						intervalsTemporalPattern.moveIntervalItems(offsets, offset);
 						TimeStampsEditor.this.refreshTimeItems();
+						TimeStampsEditor.this.undoMenuItem.setEnabled(true);
 						TimeStampsEditor.this.selectedItems.clear();
 						TimeStampsEditor.this.repaint();
+						TimeStampsEditor.this.updateMenuItemsState();
 					}			
 					
 					TimeStampsEditor.this.startPoint = null;
@@ -195,39 +213,34 @@ public class TimeStampsEditor extends TimeLine {
 	
 	void createPopupMenu() {
 		this.popupMenu = new JPopupMenu();
-		JMenuItem undoMenuItem = new JMenuItem(LangModelSchedule.getString("Undo"));
-		undoMenuItem.addActionListener(new ActionListener() {
-
+		this.undoMenuItem = new JMenuItem(LangModelSchedule.getString("Undo"));
+		this.undoMenuItem.setEnabled(false);
+		this.undoMenuItem.addActionListener(new ActionListener() {
+			
 			public void actionPerformed(ActionEvent e) {
+				JMenuItem menuItem =(JMenuItem) e.getSource();
 				if (TimeStampsEditor.this.testTemporalStamps != null) {
 					TimeStampsEditor.this.testTemporalStamps.undo();
+					if (menuItem.getText().equals(LangModelSchedule.getString("Undo"))) {
+						menuItem.setText(LangModelSchedule.getString("Redo"));
+					} else {
+						menuItem.setText(LangModelSchedule.getString("Undo"));
+					}
+					TimeStampsEditor.this.updateMenuItemsState();
 					TimeStampsEditor.this.refreshTimeItems();
-					TimeStampsEditor.this.repaint();
+					TimeStampsEditor.this.repaint();					
 				}
 			}
 		});		
-		this.popupMenu.add(undoMenuItem);
-		
-		JMenuItem redoMenuItem = new JMenuItem(LangModelSchedule.getString("Redo"));
-		redoMenuItem.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e) {
-				if (TimeStampsEditor.this.testTemporalStamps != null) {
-					TimeStampsEditor.this.testTemporalStamps.redo();
-					TimeStampsEditor.this.refreshTimeItems();
-					TimeStampsEditor.this.repaint();
-				}
-			}
-		});
-		this.popupMenu.add(redoMenuItem);
+		this.popupMenu.add(this.undoMenuItem);
 		
 		this.popupMenu.addSeparator();
-		JMenuItem cutMenuItem = new JMenuItem(LangModelSchedule.getString("Cut"));
-		cutMenuItem.addActionListener(new ActionListener() {
+		this.cutMenuItem = new JMenuItem(LangModelSchedule.getString("Cut"));
+		this.cutMenuItem.setEnabled(false);
+		this.cutMenuItem.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				if (TimeStampsEditor.this.testTemporalStamps != null && TimeStampsEditor.this.selectedItems != null
-						&& !TimeStampsEditor.this.selectedItems.isEmpty()) {
+				if (TimeStampsEditor.this.testTemporalStamps != null) {					
 					TimeStampsEditor.this.bufferedItems.clear();
 					TimeStampsEditor.this.bufferedItems.addAll(TimeStampsEditor.this.selectedItems);
 					
@@ -249,27 +262,32 @@ public class TimeStampsEditor extends TimeLine {
 						}
 						intervalsTemporalPattern.removeIntervalItems(set);
 					}
+					TimeStampsEditor.this.undoMenuItem.setText(LangModelSchedule.getString("Undo"));
+					TimeStampsEditor.this.undoMenuItem.setEnabled(true);
+					TimeStampsEditor.this.pasteMenuItem.setEnabled(!TimeStampsEditor.this.bufferedItems.isEmpty());
 				
 				}
 			}
 		});
-		this.popupMenu.add(cutMenuItem);
+		this.popupMenu.add(this.cutMenuItem);
 		
-		JMenuItem copyMenuItem = new JMenuItem(LangModelSchedule.getString("Copy"));
-		copyMenuItem.addActionListener(new ActionListener() {
+		this.copyMenuItem = new JMenuItem(LangModelSchedule.getString("Copy"));
+		this.copyMenuItem.setEnabled(false);
+		this.copyMenuItem.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				if (TimeStampsEditor.this.testTemporalStamps != null && TimeStampsEditor.this.selectedItems != null
-						&& !TimeStampsEditor.this.selectedItems.isEmpty()) {
+				if (TimeStampsEditor.this.testTemporalStamps != null) {
 					TimeStampsEditor.this.bufferedItems.clear();
 					TimeStampsEditor.this.bufferedItems.addAll(TimeStampsEditor.this.selectedItems);
+					TimeStampsEditor.this.pasteMenuItem.setEnabled(!TimeStampsEditor.this.bufferedItems.isEmpty());
 				}
 			}
 		});
-		this.popupMenu.add(copyMenuItem);
+		this.popupMenu.add(this.copyMenuItem);
 		
-		JMenuItem pasteMenuItem = new JMenuItem(LangModelSchedule.getString("Paste"));
-		pasteMenuItem.addActionListener(new ActionListener() {
+		this.pasteMenuItem = new JMenuItem(LangModelSchedule.getString("Paste"));
+		this.pasteMenuItem.setEnabled(false);
+		this.pasteMenuItem.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
 				if (TimeStampsEditor.this.testTemporalStamps != null && TimeStampsEditor.this.bufferedItems != null
@@ -320,24 +338,27 @@ public class TimeStampsEditor extends TimeLine {
 						intervalsTemporalPattern.addIntervalItems(map);
 						if (localStartTime < localStartTime_) {
 							intervalsTemporalPattern.moveAllItems(localStartTime_ - localStartTime);
-							testTemporalStamps.setStartTime(new Date(localStartTime));
+							TimeStampsEditor.this.testTemporalStamps.setStartTime(new Date(localStartTime));
 						}
 
 						if (localEndTime > localEndTime_) {
-							testTemporalStamps.setEndTime(new Date(localEndTime));
+							TimeStampsEditor.this.testTemporalStamps.setEndTime(new Date(localEndTime));
 
 						}
 
+						TimeStampsEditor.this.undoMenuItem.setEnabled(true);
+						TimeStampsEditor.this.undoMenuItem.setText(LangModelSchedule.getString("Undo"));
 						TimeStampsEditor.this.refreshTimeItems();
 						TimeStampsEditor.this.repaint();
 					}
 				}
 			}
 		});
-		this.popupMenu.add(pasteMenuItem);
+		this.popupMenu.add(this.pasteMenuItem);
 
-		JMenuItem deleteSelectedItem = new JMenuItem(LangModelSchedule.getString("Delete") + "...");
-		deleteSelectedItem.addActionListener(new ActionListener() {
+		this.deleteMenuItem = new JMenuItem(LangModelSchedule.getString("Delete") + "...");
+		this.deleteMenuItem.setEnabled(false);
+		this.deleteMenuItem.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
 				if (TimeStampsEditor.this.testTemporalStamps != null && TimeStampsEditor.this.selectedItems != null
@@ -357,6 +378,8 @@ public class TimeStampsEditor extends TimeLine {
 						}
 						TimeStampsEditor.this.selectedItems.clear();
 						intervalsTemporalPattern.removeIntervalItems(set);
+						TimeStampsEditor.this.undoMenuItem.setEnabled(true);
+						TimeStampsEditor.this.undoMenuItem.setText(LangModelSchedule.getString("Undo"));
 						TimeStampsEditor.this.refreshTimeItems();
 						TimeStampsEditor.this.repaint();
 
@@ -365,7 +388,7 @@ public class TimeStampsEditor extends TimeLine {
 
 			}
 		});
-		this.popupMenu.add(deleteSelectedItem);
+		this.popupMenu.add(this.deleteMenuItem);
 		
 		JMenuItem infoItem = new JMenuItem(LangModelSchedule.getString("Info"));
 		infoItem.addActionListener(new ActionListener() {
@@ -373,7 +396,7 @@ public class TimeStampsEditor extends TimeLine {
 			public void actionPerformed(ActionEvent e) {
 				if (TimeStampsEditor.this.testTemporalStamps != null) {
 					
-					String string = testTemporalStamps.getStartTime() + ", " + testTemporalStamps.getEndTime();
+					String string = TimeStampsEditor.this.testTemporalStamps.getStartTime() + ", " + TimeStampsEditor.this.testTemporalStamps.getEndTime();
 					JOptionPane.showMessageDialog(TimeStampsEditor.this, string);
 					
 				}
