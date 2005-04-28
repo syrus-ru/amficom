@@ -25,7 +25,6 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.CreateEtalonCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.AnalysisCommand;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryMTMListener;
@@ -43,25 +42,28 @@ import com.syrus.AMFICOM.client_.general.ui_.ADefaultTableCellRenderer;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.io.BellcoreStructure;
 
-public class AnalysisSelectionFrame extends ATableFrame
-implements BsHashChangeListener, PrimaryMTMListener
+public class AnalysisSelectionFrame extends ATableFrame implements
+		BsHashChangeListener, PrimaryMTMListener
 {
-	static final Double[] nf =
-	 {
-		 new Double(0.7), new Double(1.0), new Double(1.5), new Double(2.0),
-		 new Double(2.5), new Double(3)
-	 };
+	static final Double[] nf = { new Double(0.7), new Double(1.0),
+			new Double(1.5), new Double(2.0), new Double(2.5), new Double(3) };
 
 	private Dispatcher dispatcher;
+
 	private ParamTableModel tModelMinuit;
+
 	private ATable jTable;
 
 	BorderLayout borderLayout = new BorderLayout();
+
 	JPanel mainPanel = new JPanel();
+
 	JScrollPane scrollPane = new JScrollPane();
+
 	JViewport viewport = new JViewport();
+
 	ApplicationContext aContext;
-	
+
 	public AnalysisSelectionFrame(ApplicationContext aContext)
 	{
 		super();
@@ -69,8 +71,7 @@ implements BsHashChangeListener, PrimaryMTMListener
 		try
 		{
 			jbInit();
-		}
-		catch (Exception e)
+		} catch (Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -98,13 +99,11 @@ implements BsHashChangeListener, PrimaryMTMListener
 
 	void setDefaults(AnalysisParameters ap)
 	{
-		tModelMinuit.updateData(new Object[]{
-			 new Double(ap.getMinThreshold()),
-			 new Double(ap.getMinSplice()),
-			 new Double(ap.getMinConnector()),
-			 new Double(ap.getMinEnd()),
-			 new Double(ap.getNoiseFactor())
-		});
+		tModelMinuit.updateData(new Object[] {
+				new Double(ap.getMinThreshold()),
+				new Double(ap.getMinSplice()),
+				new Double(ap.getMinConnector()), new Double(ap.getMinEnd()),
+				new Double(ap.getNoiseFactor()) });
 
 		jTable.setModel(tModelMinuit);
 		jTable.getColumnModel().getColumn(0).setPreferredWidth(250);
@@ -116,7 +115,7 @@ implements BsHashChangeListener, PrimaryMTMListener
 
 	private void jbInit() throws Exception
 	{
-		setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
+		setFrameIcon((Icon )UIManager.get(ResourceKeys.ICON_GENERAL));
 		this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 		this.setResizable(true);
 		this.setClosable(true);
@@ -124,22 +123,19 @@ implements BsHashChangeListener, PrimaryMTMListener
 		this.setTitle(LangModelAnalyse.getString("analysisSelectionTitle"));
 
 		tModelMinuit = new ParamTableModel();
-		jTable = new ATable (tModelMinuit);
-		jTable.setDefaultRenderer(Object.class,
-			new ModelParamsTableRenderer(tModelMinuit));
-		jTable.setDefaultEditor(Object.class,
-			new ModelParamsTableEditor(tModelMinuit));
+		jTable = new ATable(tModelMinuit);
+		jTable.setDefaultRenderer(Object.class, new ModelParamsTableRenderer(
+				tModelMinuit));
+		jTable.setDefaultEditor(Object.class, new ModelParamsTableEditor(
+				tModelMinuit));
 
 		JButton analysisStartButton = new JButton();
 		JButton analysisInitialButton = new JButton();
 		JButton analysisDefaultsButton = new JButton();
 
-		analysisStartButton.setMargin(UIManager.getInsets(
-			ResourceKeys.INSETS_ICONED_BUTTON));
-		analysisStartButton.setToolTipText(
-			LangModelAnalyse.getString("analysisStart"));
-		analysisStartButton.setIcon(UIManager.getIcon(
-			AnalysisResourceKeys.ICON_ANALYSIS_PERFORM_ANALYSIS));
+		analysisStartButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+		analysisStartButton.setToolTipText(LangModelAnalyse.getString("analysisStart"));
+		analysisStartButton.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_PERFORM_ANALYSIS));
 		analysisStartButton.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -148,12 +144,9 @@ implements BsHashChangeListener, PrimaryMTMListener
 			}
 		});
 
-		analysisInitialButton.setMargin(UIManager.getInsets(
-			ResourceKeys.INSETS_ICONED_BUTTON));
-		analysisInitialButton.setToolTipText(
-			LangModelAnalyse.getString("analysisInitial"));
-		analysisInitialButton.setIcon(UIManager.getIcon(
-			AnalysisResourceKeys.ICON_ANALYSIS_INITIAL_ANALYSIS));
+		analysisInitialButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+		analysisInitialButton.setToolTipText(LangModelAnalyse.getString("analysisInitial"));
+		analysisInitialButton.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_INITIAL_ANALYSIS));
 		analysisInitialButton.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -162,15 +155,10 @@ implements BsHashChangeListener, PrimaryMTMListener
 			}
 		});
 
-
-		analysisDefaultsButton.setMargin(UIManager.getInsets(
-			ResourceKeys.INSETS_ICONED_BUTTON));
-		analysisDefaultsButton.setMargin(UIManager.getInsets(
-			ResourceKeys.INSETS_NULL));
-		analysisDefaultsButton.setToolTipText(
-			LangModelAnalyse.getString("analysisDefaults"));
-		analysisDefaultsButton.setIcon(UIManager.getIcon(
-			AnalysisResourceKeys.ICON_ANALYSIS_DEFAULT_ANALYSIS));
+		analysisDefaultsButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+		analysisDefaultsButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
+		analysisDefaultsButton.setToolTipText(LangModelAnalyse.getString("analysisDefaults"));
+		analysisDefaultsButton.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_DEFAULT_ANALYSIS));
 		analysisDefaultsButton.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -188,9 +176,6 @@ implements BsHashChangeListener, PrimaryMTMListener
 		jToolBar1.add(new JToolBar.Separator());
 		jToolBar1.add(analysisStartButton);
 
-//		jTable.getColumnModel().getColumn(0).setPreferredWidth(250);
-//		jTable.setPreferredScrollableViewportSize(new Dimension(200, 213));
-//		jTable.setMinimumSize(new Dimension(200, 213));
 		jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		scrollPane.setViewport(viewport);
@@ -200,7 +185,7 @@ implements BsHashChangeListener, PrimaryMTMListener
 		mainPanel.setLayout(new BorderLayout());
 		mainPanel.setBorder(BorderFactory.createLoweredBevelBorder());
 		mainPanel.add(scrollPane, BorderLayout.CENTER);
-		mainPanel.add(jToolBar1,  BorderLayout.NORTH);
+		mainPanel.add(jToolBar1, BorderLayout.NORTH);
 
 		this.updColorModel();
 	}
@@ -210,15 +195,14 @@ implements BsHashChangeListener, PrimaryMTMListener
 		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
 		Heap.setMinuitAnalysisParams(new AnalysisParameters(
-			((Double)jTable.getValueAt(0, 1)).doubleValue(),
-			((Double)jTable.getValueAt(1, 1)).doubleValue(),
-			((Double)jTable.getValueAt(2, 1)).doubleValue(),
-			((Double)jTable.getValueAt(3, 1)).doubleValue(),
-			((Double)jTable.getValueAt(4, 1)).doubleValue())
-		);
+				((Double )jTable.getValueAt(0, 1)).doubleValue(),
+				((Double )jTable.getValueAt(1, 1)).doubleValue(),
+				((Double )jTable.getValueAt(2, 1)).doubleValue(),
+				((Double )jTable.getValueAt(3, 1)).doubleValue(),
+				((Double )jTable.getValueAt(4, 1)).doubleValue()));
 		new AnalysisCommand().execute();
 		dispatcher.notify(new RefUpdateEvent(RefUpdateEvent.PRIMARY_TRACE,
-			RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));
+				RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));
 
 		setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}
@@ -238,88 +222,89 @@ implements BsHashChangeListener, PrimaryMTMListener
 	private class ParamTableModel extends AbstractTableModel
 	{
 
-	 AComboBox nfComboBox = new AComboBox(AComboBox.SMALL_FONT);
+		AComboBox nfComboBox = new AComboBox(AComboBox.SMALL_FONT);
 
-	 String[] columnNames = {"", "" };
+		String[] columnNames = { "", "" };
 
-	 Object[][] data =
-	 {
-		 { LangModelAnalyse.getString("analysisMinEvent"), new Double(0) },
-		 { LangModelAnalyse.getString("analysisMinWeld"), new Double(0) },
-		 { LangModelAnalyse.getString("analysisMinConnector"), new Double(0) },
-		 { LangModelAnalyse.getString("analysisMinEnd"), new Double(0) },
-		 { LangModelAnalyse.getString("analysisNoiseFactor"), nfComboBox }
-	 };
+		Object[][] data = {
+				{ LangModelAnalyse.getString("analysisMinEvent"), new Double(0) },
+				{ LangModelAnalyse.getString("analysisMinWeld"), new Double(0) },
+				{ LangModelAnalyse.getString("analysisMinConnector"),
+						new Double(0) },
+				{ LangModelAnalyse.getString("analysisMinEnd"), new Double(0) },
+				{ LangModelAnalyse.getString("analysisNoiseFactor"), nfComboBox } };
 
-	 ParamTableModel()
-	 {
-		 for(int i=0; i<nf.length; i++)
-			 nfComboBox.addItem(nf[i]);
-	 }
+		ParamTableModel()
+		{
+			for (int i = 0; i < nf.length; i++)
+				nfComboBox.addItem(nf[i]);
+		}
 
-	 void updateData(Object[] d)
-	 {
-		 for (int i = 0; i < d.length; i++)
-		 {
-		 	if (data[i][1] instanceof Double)
-				 data[i][1] = d[i];
-			 else if (data[i][1] instanceof JComboBox)
-				 ((JComboBox)data[i][1]).setSelectedItem(d[i]);
-		 }
-		 super.fireTableDataChanged();
-	 }
+		void updateData(Object[] d)
+		{
+			for (int i = 0; i < d.length; i++)
+			{
+				if (data[i][1] instanceof Double)
+					data[i][1] = d[i];
+				else if (data[i][1] instanceof JComboBox)
+					((JComboBox )data[i][1]).setSelectedItem(d[i]);
+			}
+			super.fireTableDataChanged();
+		}
 
-	 public void clearTable()
-	 {
-		 data = new Object[][]{};
-		 super.fireTableDataChanged();
-	 }
+		public void clearTable()
+		{
+			data = new Object[][] {};
+			super.fireTableDataChanged();
+		}
 
-	 public int getColumnCount() {
-		 return columnNames.length;
-	 }
+		public int getColumnCount()
+		{
+			return columnNames.length;
+		}
 
-	 public int getRowCount() {
-		 return data.length;
-	 }
+		public int getRowCount()
+		{
+			return data.length;
+		}
 
-	 public String getColumnName(int col) {
-		 return columnNames[col];
-	 }
+		public String getColumnName(int col)
+		{
+			return columnNames[col];
+		}
 
-	 public Object getValueAt(int row, int col)
-	 {
-	 	if (data[row][col] instanceof JComboBox)
-	 		return ((JComboBox)data[row][col]).getSelectedItem();
-	 	else
-	 		return data[row][col];
-	 }
+		public Object getValueAt(int row, int col)
+		{
+			if (data[row][col] instanceof JComboBox)
+				return ((JComboBox )data[row][col]).getSelectedItem();
+			else
+				return data[row][col];
+		}
 
-	 public Class getColumnClass(int p_col)
-	 {
-		 return Object.class;
-	 }
+		public Class getColumnClass(int p_col)
+		{
+			return Object.class;
+		}
 
-	 public boolean isCellEditable(int row, int col)
-	 {
-		 if (col < 1)
-			 return false;
-		 else
-			 return true;
-	 }
+		public boolean isCellEditable(int row, int col)
+		{
+			if (col < 1)
+				return false;
+			else
+				return true;
+		}
 
-	 public void setValueAt(Object value, int row, int col)
-	 {
-	 	if (data[row][col] instanceof JComboBox)
-	 	{
-	 		// do nothing
-	 	}
-	 	else
-	 		data[row][col] = value;
-	 	fireTableCellUpdated(row, col);
-	 }
- }
-	
+		public void setValueAt(Object value, int row, int col)
+		{
+			if (data[row][col] instanceof JComboBox)
+			{
+				// do nothing
+			} else
+				data[row][col] = value;
+			fireTableCellUpdated(row, col);
+		}
+	}
+
 	private class ModelParamsTableEditor extends DefaultCellEditor
 	{
 		Object editor;
@@ -339,11 +324,10 @@ implements BsHashChangeListener, PrimaryMTMListener
 			editor = value;
 			if (model.data[row][column] instanceof JComboBox)
 			{
-				JComboBox box = (JComboBox)model.data[row][column]; 
+				JComboBox box = (JComboBox )model.data[row][column];
 				box.setBackground(SystemColor.window);
 				return box;
-			}
-			else
+			} else
 				return super.getTableCellEditorComponent(table, value,
 					isSelected1, row, column);
 		}
@@ -371,21 +355,22 @@ implements BsHashChangeListener, PrimaryMTMListener
 				return obj;
 		}
 	}
-	
+
 	private class ModelParamsTableRenderer extends ADefaultTableCellRenderer
 	{
 		ParamTableModel model;
+
 		public ModelParamsTableRenderer(ParamTableModel model)
 		{
 			this.model = model;
 		}
-	
+
 		public Component getTableCellRendererComponent(JTable table,
-				Object value, boolean isSelected1, boolean hasFocus,
-				int row, int column)
+				Object value, boolean isSelected1, boolean hasFocus, int row,
+				int column)
 		{
 			if (model.data[row][column] instanceof JComboBox)
-				return (JComboBox)model.data[row][column];
+				return (JComboBox )model.data[row][column];
 			else
 				return super.getTableCellRendererComponent(table, value,
 					isSelected1, hasFocus, row, column);
@@ -398,61 +383,72 @@ implements BsHashChangeListener, PrimaryMTMListener
 		if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
 		{
 			if (bs.measurementId == null)
-				setTitle(LangModelAnalyse.getString("analysisSelectionTitle") + " (" + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_NO_PATTERN) + ')');
+				setTitle(LangModelAnalyse.getString("analysisSelectionTitle")
+						+ " ("
+						+ LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_NO_PATTERN)
+						+ ')');
 			else
 			{
-					MeasurementSetup ms = Heap.getContextMeasurementSetup();
-					setTitle(LangModelAnalyse.getString("analysisSelectionTitle") + " ("
-						+ (ms == null ? LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_NO_PATTERN) : 
-							LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_PATTERN) + ':' + ms.getDescription()) + ')');
+				MeasurementSetup ms = Heap.getContextMeasurementSetup();
+				setTitle(LangModelAnalyse.getString("analysisSelectionTitle")
+						+ " ("
+						+ (ms == null
+							? LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_NO_PATTERN)
+							: LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_PATTERN)
+									+ ':' + ms.getDescription()) + ')');
 			}
-	
+
 			AnalysisParameters ap = Heap.getMinuitAnalysisParams();
 			setDefaults(ap);
 			setVisible(true);
 		}
 	}
-	
+
 	public void bsHashRemoved(String key)
 	{
 	}
 
 	public void bsHashRemovedAll()
 	{
-		jTable.setModel(new FixedSizeEditableTableModel(
-			new String[] { "" },
-			new String[] { "" },
-			new String[] { "" },
-			new int[] { }));
-	setVisible(false);
+		jTable.setModel(new FixedSizeEditableTableModel(new String[] { "" },
+				new String[] { "" }, new String[] { "" }, new int[] {}));
+		setVisible(false);
 	}
 
 	public void primaryMTMCUpdated()
 	{
 		BellcoreStructure bs = Heap.getBSPrimaryTrace();
 		if (bs.measurementId == null)
-			setTitle(LangModelAnalyse.getString("analysisSelectionTitle") + " (" + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_NO_PATTERN) + ')');
+			setTitle(LangModelAnalyse.getString("analysisSelectionTitle")
+					+ " ("
+					+ LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_NO_PATTERN)
+					+ ')');
 		else
 		{
-				MeasurementSetup ms = Heap.getContextMeasurementSetup();
-				setTitle(LangModelAnalyse.getString("analysisSelectionTitle")  + " ("
-					+ (ms == null ? LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_NO_PATTERN) : 
-						LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_PATTERN) + ':' + ms.getDescription()) + ')');
-	
-				if (ms.getCriteriaSet() != null)
-				{
-					AnalysisParameters ap = Heap.getMinuitAnalysisParams();
-					setDefaults(ap);
-				}
+			MeasurementSetup ms = Heap.getContextMeasurementSetup();
+			setTitle(LangModelAnalyse.getString("analysisSelectionTitle")
+					+ " ("
+					+ (ms == null
+						? LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_NO_PATTERN)
+						: LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_PATTERN)
+								+ ':' + ms.getDescription()) + ')');
+
+			if (ms.getCriteriaSet() != null)
+			{
+				AnalysisParameters ap = Heap.getMinuitAnalysisParams();
+				setDefaults(ap);
+			}
 		}
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.syrus.AMFICOM.Client.General.Event.PrimaryMTMListener#primaryMTMRemoved()
 	 */
 	public void primaryMTMRemoved()
 	{
 		// @todo Auto-generated method stub
-		
+
 	}
 }
