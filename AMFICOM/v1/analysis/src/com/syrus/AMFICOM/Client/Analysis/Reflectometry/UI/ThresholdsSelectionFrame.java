@@ -59,10 +59,6 @@ implements OperationListener, BsHashChangeListener,
 	protected Dispatcher dispatcher;
 	JTable jTable;
 
-	protected ModelTraceManager et_mtm; // etalon MTM
-
-	protected int currentEtEv = -1;
-
 	JPanel mainPanel = new JPanel();
 	JScrollPane scrollPane = new JScrollPane();
 	JViewport viewport = new JViewport();
@@ -149,7 +145,7 @@ implements OperationListener, BsHashChangeListener,
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				if (et_mtm != null && currentEtEv != -1)
+				//if (et_mtm != null && currentEtEv != -1)
 				{
 					// FIXME: outdated / useless mtm.setThreshold(...,init_Threshs...) removed
 					// the button should be removed or replaced with something more useful
@@ -324,17 +320,24 @@ implements OperationListener, BsHashChangeListener,
 		mainPanel.add(scrollPane, BorderLayout.CENTER);
 	}
 
+    // gets all thresholds editors relevant to current event
+    protected ThreshEditor[] getTeds()
+    {
+        ModelTraceManager mtm = Heap.getMTMEtalon();
+        if (mtm == null)
+            return null;
+        int etEvent = Heap.getCurrentEtalonEvent();
+        if (etEvent < 0)
+            return null;
+        return mtm.getThreshEditors(etEvent);
+    }
 	protected ThreshEditor getCurrentTED()
 	{
-		if (et_mtm != null && currentEtEv != -1)
-		{
-			// XXX - getThreshEditor will generate few unnecessary objects
-			ModelTraceManager.ThreshEditor[] teds =
-				et_mtm.getThreshEditors(currentEtEv);
-			int current_th = this.jTable.getSelectedColumn() - 1;
-			if (current_th >= 0 && current_th < teds.length)
-				return teds[current_th];
-		}
+		// XXX - getThreshEditor will generate few unnecessary objects
+		ModelTraceManager.ThreshEditor[] teds = getTeds();
+		int current_th = this.jTable.getSelectedColumn() - 1;
+		if (current_th >= 0 && current_th < teds.length)
+			return teds[current_th];
 		return null;
 	}
 
@@ -369,18 +372,9 @@ implements OperationListener, BsHashChangeListener,
 
 	void updateThresholds()
 	{
-		// default values: no thresholds
-		ModelTraceManager.ThreshEditor[] te = null;
-
-		// if current event is present, select it
-		if (et_mtm != null && currentEtEv >= 0)
-		{
-			if (currentEtEv >= et_mtm.getMTAE().getNEvents()) // XXX: should never happen?
-				currentEtEv = et_mtm.getMTAE().getNEvents() - 1;
-			te = et_mtm.getThreshEditors(currentEtEv);
-		}
-		else
-			te = new ModelTraceManager.ThreshEditor[0];
+		ThreshEditor[] te = getTeds();
+        if (te == null)
+            te = new ThreshEditor[0];
 
 		String[] pColumns = new String[te.length + 1];
 		pColumns[0] = LangModelAnalyse.getString("thresholdsKey");
@@ -448,21 +442,21 @@ implements OperationListener, BsHashChangeListener,
 		}
 
 		public void setValueAt(Object value, int row, int col) {
-			if (et_mtm != null && currentEtEv != -1) {
-				ModelTraceManager.ThreshEditor[] te =
-					et_mtm.getThreshEditors(currentEtEv);
-				try
-				{
-					te[col - 1].setValue(
-							row,
-							Double.valueOf(value.toString()).doubleValue());
-					dispatcher.notify(new RefUpdateEvent(this,
-							RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
-				}
-				catch(NumberFormatException e)
-				{
-					// ignore invalid input
-				}
+            // XXX: create extra objects... it's better to save teds when it is selected and just take them now
+			ModelTraceManager.ThreshEditor[] te = getTeds();
+            if (te == null)
+                return; // XXX: can it happen?
+			try
+			{
+				te[col - 1].setValue(
+						row,
+						Double.valueOf(value.toString()).doubleValue());
+				dispatcher.notify(new RefUpdateEvent(this,
+						RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
+			}
+			catch(NumberFormatException e)
+			{
+				// ignore invalid input
 			}
 		}
 
@@ -510,36 +504,21 @@ implements OperationListener, BsHashChangeListener,
 
 	public void bsHashRemovedAll()
 	{
-			this.et_mtm = null;
 			this.jTable.setModel(this.tModelEmpty);
 	}
 
 	public void currentEventChanged()
 	{
-		if (et_mtm != null) {
-			currentEtEv = Heap.getCurrentEtalonEvent();
-			if (currentEtEv < -1 ||
-					currentEtEv >= et_mtm.getMTAE().getNEvents()) {
-				// XXX: debug sysout
-				System.out.println("ThresholdsSelectionFrame: Warning: current_ev out of range:"
-					+ " currentEtEv=" + currentEtEv
-					+ " et_mtm.MTAE.NEvents=" + et_mtm.getMTAE().getNEvents()
-					+ " Heap.MTMEtalon.MTAE.NEvents=" + Heap.getMTMEtalon().getMTAE().getNEvents());
-				currentEtEv = -1;
-			}
-			updateThresholds();
-		}
+		updateThresholds();
 	}
 
 	public void etalonMTMCUpdated()
 	{
-		et_mtm = Heap.getMTMEtalon();
 		updateThresholds();
 	}
 
 	public void etalonMTMRemoved()
 	{
-		et_mtm = Heap.getMTMEtalon();
 		updateThresholds();
 	}
 }
