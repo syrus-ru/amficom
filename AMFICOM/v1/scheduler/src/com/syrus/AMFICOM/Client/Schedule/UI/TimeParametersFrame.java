@@ -13,6 +13,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 
 import javax.swing.BorderFactory;
@@ -526,7 +527,25 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 						} 
 						
 						IntervalsTemporalPattern temporalPattern = (IntervalsTemporalPattern) TimeParametersPanel.this.temporalStamps.getTemporalPattern();
-						temporalPattern.addIntervalItem((getStartDate().getTime() - TimeParametersPanel.this.temporalStamps.getStartTime().getTime()), Identifier.VOID_IDENTIFIER);
+						
+						Date startDate = getStartDate();
+
+						long startTime = startDate.getTime();
+						
+						long ms = startTime - TimeParametersPanel.this.temporalStamps.getStartTime().getTime();
+						Log.debugMessage(".actionPerformed | ms:" + ms, Log.FINEST);
+
+						if (ms < 0) {
+							TimeParametersPanel.this.temporalStamps.setStartTime(startDate);
+							temporalPattern.moveAllItems(-ms);
+							ms = 0;
+						}
+						
+						if (startDate.compareTo(TimeParametersPanel.this.temporalStamps.getEndTime()) > 0) {
+							TimeParametersPanel.this.temporalStamps.setEndTime(startDate);
+						}
+
+						temporalPattern.addIntervalItems(Collections.singletonMap(new Long(ms), Identifier.VOID_IDENTIFIER));
 						
 						TimeParametersPanel.this.schedulerModel.refreshTestTemporalStamps();
 
@@ -543,39 +562,42 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 			this.periodPediodTimeButton.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
-						Date startDate = getStartDate();
-						Date endDate = getEndDate();
-						
-						long startTime = startDate.getTime();
-						long endTime = endDate.getTime();
-					
-						RISDSessionInfo sessionInterface = (RISDSessionInfo) TimeParametersPanel.this.aContext.getSessionInterface();
-						Identifier userIdentifier = sessionInterface.getUserIdentifier();
-						
-						if (TimeParametersPanel.this.temporalStamps == null) {
-							
-							try {
-								IntervalsTemporalPattern intervalsTemporalPattern = IntervalsTemporalPattern.createInstance(userIdentifier, null, null);
+					Date startDate = getStartDate();
+					Date endDate = getEndDate();
 
-								MeasurementStorableObjectPool.putStorableObject(intervalsTemporalPattern);
-								
-								TimeParametersPanel.this.temporalStamps = new TestTemporalStamps(TestTemporalType.TEST_TEMPORAL_TYPE_PERIODICAL, startDate, endDate, intervalsTemporalPattern);
-							} catch (IllegalObjectEntityException e1) {
-								SchedulerModel.showErrorMessage(TimeParametersPanel.this, e1);
-							} catch (CreateObjectException e1) {
-								SchedulerModel.showErrorMessage(TimeParametersPanel.this, e1);
-							}
-							
-						} 
+					long startTime = startDate.getTime();
+					long endTime = endDate.getTime();
 
-						long intervalLength = getIntervalLength();
+					RISDSessionInfo sessionInterface = (RISDSessionInfo) TimeParametersPanel.this.aContext
+							.getSessionInterface();
+					Identifier userIdentifier = sessionInterface.getUserIdentifier();
 
-						IntervalsTemporalPattern temporalPattern = (IntervalsTemporalPattern) TimeParametersPanel.this.temporalStamps.getTemporalPattern();
-						
-						
-						
-						
+					if (TimeParametersPanel.this.temporalStamps == null) {
+
 						try {
+							IntervalsTemporalPattern intervalsTemporalPattern = IntervalsTemporalPattern
+									.createInstance(userIdentifier, null, null);
+
+							MeasurementStorableObjectPool.putStorableObject(intervalsTemporalPattern);
+
+							TimeParametersPanel.this.temporalStamps = new TestTemporalStamps(
+																								TestTemporalType.TEST_TEMPORAL_TYPE_PERIODICAL,
+																								startDate, endDate,
+																								intervalsTemporalPattern);
+						} catch (IllegalObjectEntityException e1) {
+							SchedulerModel.showErrorMessage(TimeParametersPanel.this, e1);
+						} catch (CreateObjectException e1) {
+							SchedulerModel.showErrorMessage(TimeParametersPanel.this, e1);
+						}
+
+					}
+
+					long intervalLength = getIntervalLength();
+
+					IntervalsTemporalPattern temporalPattern = (IntervalsTemporalPattern) TimeParametersPanel.this.temporalStamps
+							.getTemporalPattern();
+
+					try {
 						PeriodicalTemporalPattern periodicTemporalPattern = null;
 						TypicalCondition typicalCondition = new TypicalCondition(
 																					intervalLength,
@@ -600,25 +622,36 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 							MeasurementStorableObjectPool.putStorableObject(periodicTemporalPattern);
 						}
 
-						Log.debugMessage(".actionPerformed | temporalStamps.getStartTime(): " + TimeParametersPanel.this.temporalStamps.getStartTime(), Log.FINEST);
+						Log.debugMessage(".actionPerformed | temporalStamps.getStartTime(): "
+								+ TimeParametersPanel.this.temporalStamps.getStartTime(), Log.FINEST);
 						long ms = startTime - TimeParametersPanel.this.temporalStamps.getStartTime().getTime();
 						Log.debugMessage(".actionPerformed | ms:" + ms, Log.FINEST);
-						temporalPattern.addIntervalItem(ms, periodicTemporalPattern.getId());
+
+						if (ms < 0) {
+							TimeParametersPanel.this.temporalStamps.setStartTime(startDate);
+							temporalPattern.moveAllItems(-ms);
+							ms = 0;
+						}
+
+						if (endTime > TimeParametersPanel.this.temporalStamps.getEndTime().getTime()) {
+							TimeParametersPanel.this.temporalStamps.setEndTime(endDate);
+						}
+
+						temporalPattern.addIntervalItems(Collections.singletonMap(new Long(ms), periodicTemporalPattern.getId()));
 						temporalPattern.setIntervalDuration(ms, endTime - startTime);
 					} catch (IllegalObjectEntityException e1) {
-							SchedulerModel.showErrorMessage(TimeParametersPanel.this, e1);
-						} catch (CreateObjectException e1) {
-							SchedulerModel.showErrorMessage(TimeParametersPanel.this, e1);
-						}
-						
-						
-						
-//						while(startTime + times < endTime) {
-//							temporalPattern.addIntervalItem(times, Identifier.VOID_IDENTIFIER);
-//							times += intervalLength;
-//						}
-						
-						TimeParametersPanel.this.schedulerModel.refreshTestTemporalStamps();
+						SchedulerModel.showErrorMessage(TimeParametersPanel.this, e1);
+					} catch (CreateObjectException e1) {
+						SchedulerModel.showErrorMessage(TimeParametersPanel.this, e1);
+					}
+
+					// while(startTime + times < endTime) {
+					// temporalPattern.addIntervalItem(times,
+					// Identifier.VOID_IDENTIFIER);
+					// times += intervalLength;
+					// }
+
+					TimeParametersPanel.this.schedulerModel.refreshTestTemporalStamps();
 				}
 			}
 			);

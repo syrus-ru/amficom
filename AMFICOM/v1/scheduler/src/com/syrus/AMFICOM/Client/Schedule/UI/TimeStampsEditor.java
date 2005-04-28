@@ -1,5 +1,5 @@
 /*-
- * $Id: TimeStampsEditor.java,v 1.1 2005/04/27 15:26:37 bob Exp $
+ * $Id: TimeStampsEditor.java,v 1.2 2005/04/28 16:04:28 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,15 +17,18 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 
@@ -39,19 +42,18 @@ import com.syrus.AMFICOM.measurement.IntervalsTemporalPattern;
 import com.syrus.AMFICOM.measurement.TestTemporalStamps;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/27 15:26:37 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/28 16:04:28 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
  */
 public class TimeStampsEditor extends TimeLine {
 
+
 	private SchedulerModel	schedulerModel;
 
 	TestTemporalStamps testTemporalStamps; 
-	//SortedSet timeItems = new TreeSet();
-	
-//	List timeItems = new LinkedList(); 
+
 	List selectedItems = new LinkedList();
 	SortedSet bufferedItems = new TreeSet();
 	
@@ -66,9 +68,8 @@ public class TimeStampsEditor extends TimeLine {
 		this.title = title;
 		this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();		
 		this.createMouseListener();
-		this.setToolTipText("");
+		this.setToolTipText("");		
 	}
-
 
 	private void createMouseListener() {
 		this.addMouseListener(new MouseAdapter() {
@@ -194,20 +195,74 @@ public class TimeStampsEditor extends TimeLine {
 	
 	void createPopupMenu() {
 		this.popupMenu = new JPopupMenu();
+		JMenuItem undoMenuItem = new JMenuItem(LangModelSchedule.getString("Undo"));
+		undoMenuItem.addActionListener(new ActionListener() {
 
+			public void actionPerformed(ActionEvent e) {
+				if (TimeStampsEditor.this.testTemporalStamps != null) {
+					TimeStampsEditor.this.testTemporalStamps.undo();
+					TimeStampsEditor.this.refreshTimeItems();
+					TimeStampsEditor.this.repaint();
+				}
+			}
+		});		
+		this.popupMenu.add(undoMenuItem);
+		
+		JMenuItem redoMenuItem = new JMenuItem(LangModelSchedule.getString("Redo"));
+		redoMenuItem.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				if (TimeStampsEditor.this.testTemporalStamps != null) {
+					TimeStampsEditor.this.testTemporalStamps.redo();
+					TimeStampsEditor.this.refreshTimeItems();
+					TimeStampsEditor.this.repaint();
+				}
+			}
+		});
+		this.popupMenu.add(redoMenuItem);
+		
+		this.popupMenu.addSeparator();
+		JMenuItem cutMenuItem = new JMenuItem(LangModelSchedule.getString("Cut"));
+		cutMenuItem.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				if (TimeStampsEditor.this.testTemporalStamps != null && TimeStampsEditor.this.selectedItems != null
+						&& !TimeStampsEditor.this.selectedItems.isEmpty()) {
+					TimeStampsEditor.this.bufferedItems.clear();
+					TimeStampsEditor.this.bufferedItems.addAll(TimeStampsEditor.this.selectedItems);
+					
+
+					AbstractTemporalPattern temporalPattern = TimeStampsEditor.this.testTemporalStamps
+							.getTemporalPattern();
+					if (temporalPattern instanceof IntervalsTemporalPattern) {
+						IntervalsTemporalPattern intervalsTemporalPattern = (IntervalsTemporalPattern) temporalPattern;
+						Set set = new HashSet();
+						for (Iterator it = TimeStampsEditor.this.selectedItems.iterator(); it.hasNext();) {
+							TestTimeItem testTimeItem = (TestTimeItem) it.next();
+							Date ms = (Date) testTimeItem.object;
+							// Log.debugMessage("TimeStampsEditor.createPopupMenu
+							// | ms " + ms, Log.FINEST);
+							set.add(new Long(ms.getTime()
+								- TimeStampsEditor.this.testTemporalStamps.getStartTime().getTime()));
+							TimeStampsEditor.this.refreshTimeItems();
+							TimeStampsEditor.this.repaint();
+						}
+						intervalsTemporalPattern.removeIntervalItems(set);
+					}
+				
+				}
+			}
+		});
+		this.popupMenu.add(cutMenuItem);
+		
 		JMenuItem copyMenuItem = new JMenuItem(LangModelSchedule.getString("Copy"));
 		copyMenuItem.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
 				if (TimeStampsEditor.this.testTemporalStamps != null && TimeStampsEditor.this.selectedItems != null
 						&& !TimeStampsEditor.this.selectedItems.isEmpty()) {
-//					if (TimeStampsEditor.this.bufferedItems == null) {
-//						TimeStampsEditor.this.bufferedItems = new ArrayList(TimeStampsEditor.this.selectedItems);
-//					} else 
-					{
-						TimeStampsEditor.this.bufferedItems.clear();
-						TimeStampsEditor.this.bufferedItems.addAll(TimeStampsEditor.this.selectedItems);
-					}
+					TimeStampsEditor.this.bufferedItems.clear();
+					TimeStampsEditor.this.bufferedItems.addAll(TimeStampsEditor.this.selectedItems);
 				}
 			}
 		});
@@ -236,15 +291,41 @@ public class TimeStampsEditor extends TimeLine {
 						IntervalsTemporalPattern intervalsTemporalPattern = (IntervalsTemporalPattern) temporalPattern;
 
 						long firstTime = 0;
+
+						long localStartTime = TimeStampsEditor.this.testTemporalStamps.getStartTime().getTime();
+						long localStartTime_ = localStartTime;
+						long localEndTime = TimeStampsEditor.this.testTemporalStamps.getEndTime().getTime();
+						long localEndTime_ = localEndTime;
+
+						Map map = new HashMap();
 						for (Iterator it = TimeStampsEditor.this.bufferedItems.iterator(); it.hasNext();) {
 							TestTimeItem testTimeItem = (TestTimeItem) it.next();
 							if (firstTestTimeItem == null) {
 								firstTestTimeItem = testTimeItem;
 								firstTime = ((Date) firstTestTimeItem.object).getTime();
 							}
-							long time = ((Date) testTimeItem.object).getTime() - firstTime;
-//							Log.debugMessage(".actionPerformed | time " + time, Log.FINEST);
-							intervalsTemporalPattern.addIntervalItem(time + pointTime, Identifier.VOID_IDENTIFIER);
+							long time = ((Date) testTimeItem.object).getTime() - firstTime + pointTime;
+							// Log.debugMessage(".actionPerformed | time " +
+							// time, Log.FINEST);
+							if (time < localStartTime) {
+								localStartTime = time;
+							}
+							if (time > localEndTime) {
+								localEndTime = time;
+							}
+							
+							map.put(new Long(time), Identifier.VOID_IDENTIFIER );
+						}
+
+						intervalsTemporalPattern.addIntervalItems(map);
+						if (localStartTime < localStartTime_) {
+							intervalsTemporalPattern.moveAllItems(localStartTime_ - localStartTime);
+							testTemporalStamps.setStartTime(new Date(localStartTime));
+						}
+
+						if (localEndTime > localEndTime_) {
+							testTemporalStamps.setEndTime(new Date(localEndTime));
+
 						}
 
 						TimeStampsEditor.this.refreshTimeItems();
@@ -265,22 +346,41 @@ public class TimeStampsEditor extends TimeLine {
 							.getTemporalPattern();
 					if (temporalPattern instanceof IntervalsTemporalPattern) {
 						IntervalsTemporalPattern intervalsTemporalPattern = (IntervalsTemporalPattern) temporalPattern;
+						Set set = new HashSet();
+						long startTime = TimeStampsEditor.this.testTemporalStamps.getStartTime().getTime();
 						for (Iterator it = TimeStampsEditor.this.selectedItems.iterator(); it.hasNext();) {
 							TestTimeItem testTimeItem = (TestTimeItem) it.next();
 							Date ms = (Date) testTimeItem.object;
 							// Log.debugMessage("TimeStampsEditor.createPopupMenu
 							// | ms " + ms, Log.FINEST);
-							intervalsTemporalPattern.removeIntervalItem(ms.getTime()
-									- TimeStampsEditor.this.testTemporalStamps.getStartTime().getTime());
-							TimeStampsEditor.this.refreshTimeItems();
-							TimeStampsEditor.this.repaint();
+							set.add(new Long(ms.getTime() - startTime));
 						}
+						TimeStampsEditor.this.selectedItems.clear();
+						intervalsTemporalPattern.removeIntervalItems(set);
+						TimeStampsEditor.this.refreshTimeItems();
+						TimeStampsEditor.this.repaint();
+
 					}
 				}
 
 			}
 		});
 		this.popupMenu.add(deleteSelectedItem);
+		
+		JMenuItem infoItem = new JMenuItem(LangModelSchedule.getString("Info"));
+		infoItem.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				if (TimeStampsEditor.this.testTemporalStamps != null) {
+					
+					String string = testTemporalStamps.getStartTime() + ", " + testTemporalStamps.getEndTime();
+					JOptionPane.showMessageDialog(TimeStampsEditor.this, string);
+					
+				}
+
+			}
+		});
+		this.popupMenu.add(infoItem);
 
 	}
 	
@@ -353,5 +453,11 @@ public class TimeStampsEditor extends TimeLine {
 		this.testTemporalStamps = testTemporalStamps;
 		this.refreshTimeItems();
 	}	
+	
+	
+//	public void operationPerformed(OperationEvent e) {
+//		// TODO Auto-generated method stub
+//		
+//	}
 	
 }
