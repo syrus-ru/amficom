@@ -1,5 +1,5 @@
 /*-
-* $Id: IntervalsTemporalPattern.java,v 1.9 2005/04/28 16:02:46 bob Exp $
+* $Id: IntervalsTemporalPattern.java,v 1.10 2005/04/28 16:53:24 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/04/28 16:02:46 $
+ * @version $Revision: 1.10 $, $Date: 2005/04/28 16:53:24 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module measurement_v1
@@ -58,8 +58,6 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern implements
 	
 	private SortedMap undoIntervalsAbstractTemporalPatternMap;
 	private SortedMap undoIntervalsDuration;
-	private boolean undo = true;
-
 	
 	protected IntervalsTemporalPattern(final Identifier id, 
 	                                final Identifier creatorId, 
@@ -651,13 +649,12 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern implements
 		
 	}
 	
-	private void saveState() {		
-		this.undo = true;
+	private void saveState() {
 		Log.debugMessage("IntervalsTemporalPattern.saveState | 1", Log.FINEST);
-		if (this.intervalsAbstractTemporalPatternMap == null && this.intervalsDuration == null && 
-				this.undoIntervalsAbstractTemporalPatternMap == null && this.undoIntervalsDuration == null)
+		if (this.intervalsAbstractTemporalPatternMap == null && this.intervalsDuration == null
+				&& this.undoIntervalsAbstractTemporalPatternMap == null && this.undoIntervalsDuration == null)
 			return;
-		
+
 		if (this.intervalsAbstractTemporalPatternMap != null) {
 			if (this.undoIntervalsAbstractTemporalPatternMap == null) {
 				this.undoIntervalsAbstractTemporalPatternMap = new TreeMap();
@@ -665,7 +662,7 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern implements
 				this.undoIntervalsAbstractTemporalPatternMap.clear();
 			}
 			Log.debugMessage("IntervalsTemporalPattern.saveState | 2", Log.FINEST);
-			this.undoIntervalsAbstractTemporalPatternMap.putAll(this.intervalsAbstractTemporalPatternMap);
+			this.undoIntervalsAbstractTemporalPatternMap.putAll(this.intervalsAbstractTemporalPatternMap);			
 		}
 
 		if (this.intervalsDuration != null) {
@@ -675,15 +672,11 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern implements
 				this.undoIntervalsDuration.clear();
 			}
 			Log.debugMessage("IntervalsTemporalPattern.saveState | 3", Log.FINEST);
-			this.undoIntervalsDuration.putAll(this.intervalsDuration);
+			this.undoIntervalsDuration.putAll(this.intervalsDuration);			
 		}
 	}
 	
 	public void undo() {
-		if (!this.undo) {
-			return;
-		}
-		
 		if (super.times != null) {
 			super.times.clear();
 		}
@@ -702,56 +695,30 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern implements
 			}
 
 			SortedMap map2 = new TreeMap(this.intervalsDuration);
+			
 			this.intervalsDuration.clear();
 			if (this.undoIntervalsDuration != null) {
 				this.intervalsDuration.putAll(this.undoIntervalsDuration);
 			}
 			
-			this.undo = false;
-			this.undoIntervalsAbstractTemporalPatternMap = map;
-			this.undoIntervalsDuration = map2;
+			if (this.undoIntervalsAbstractTemporalPatternMap == null) {
+				this.undoIntervalsAbstractTemporalPatternMap = map;
+			} else {
+				this.undoIntervalsAbstractTemporalPatternMap.clear();
+				this.undoIntervalsAbstractTemporalPatternMap.putAll(map);
+			}
+			
+			if (this.undoIntervalsDuration == null) {
+				this.undoIntervalsDuration = map2;
+			} else {
+				this.undoIntervalsDuration.clear();
+				this.undoIntervalsDuration.putAll(map2);
+			}
+			
 		} else {
 			assert false : "Cannot undo due to haven't any actions yet"; //$NON-NLS-1$
 		}
-	}
-	
-	public void redo() {
-		Log.debugMessage("IntervalsTemporalPattern.redo | undo is " + this.undo, Log.FINEST);
-		if (this.undo) {
-			return;
-		}
-		
-		if (super.times != null) {
-			super.times.clear();
-		}
-		
-			
-		if (this.undoIntervalsAbstractTemporalPatternMap != null || this.undoIntervalsDuration != null) {
-			this.printStructure();
-			Log.debugMessage("IntervalsTemporalPattern.redo | ", Log.FINEST);
-			
-			SortedMap map = new TreeMap(this.intervalsAbstractTemporalPatternMap);
-			
-			this.intervalsAbstractTemporalPatternMap.clear();
-
-			if (this.undoIntervalsAbstractTemporalPatternMap != null) {
-				this.intervalsAbstractTemporalPatternMap.putAll(this.undoIntervalsAbstractTemporalPatternMap);
-			}
-
-			SortedMap map2 = new TreeMap(this.intervalsDuration);
-			this.intervalsDuration.clear();
-			if (this.undoIntervalsDuration != null) {
-				this.intervalsDuration.putAll(this.undoIntervalsDuration);
-			}
-			
-			this.undo = true;
-			this.undoIntervalsAbstractTemporalPatternMap = map;
-			this.undoIntervalsDuration = map2;
-		} else {
-			assert false : "Cannot redo due to haven't any actions yet"; //$NON-NLS-1$
-		}
-	
-	}
+	}	
 
 }
 
