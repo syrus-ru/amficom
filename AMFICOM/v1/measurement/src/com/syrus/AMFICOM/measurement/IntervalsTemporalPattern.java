@@ -1,5 +1,5 @@
 /*-
-* $Id: IntervalsTemporalPattern.java,v 1.8 2005/04/27 15:21:45 bob Exp $
+* $Id: IntervalsTemporalPattern.java,v 1.9 2005/04/28 16:02:46 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -18,6 +18,7 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 import org.omg.CORBA.portable.IDLEntity;
 
@@ -28,6 +29,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.Undoable;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ITP_Interval_Duration;
 import com.syrus.AMFICOM.measurement.corba.ITP_Interval_Temporal_Pattern_Id;
@@ -36,13 +38,15 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/04/27 15:21:45 $
+ * @version $Revision: 1.9 $, $Date: 2005/04/28 16:02:46 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module measurement_v1
  */
-public class IntervalsTemporalPattern extends AbstractTemporalPattern {
+public class IntervalsTemporalPattern extends AbstractTemporalPattern implements Undoable {
 
+	
+	
 	private static final long	serialVersionUID	= 3257567312898175032L;
 	
 	/** SortedMap<Long milliseconds, Identifier<AbstractTemporalPattern>> */
@@ -50,6 +54,11 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern {
 	
 	/** SortedMap<Long milliseconds, Long duration> */
 	private SortedMap intervalsDuration;
+	
+	
+	private SortedMap undoIntervalsAbstractTemporalPatternMap;
+	private SortedMap undoIntervalsDuration;
+	private boolean undo = true;
 
 	
 	protected IntervalsTemporalPattern(final Identifier id, 
@@ -180,7 +189,7 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern {
 		this.addTimeItem(previousDate, new Date(this.endTime), previousDuration, previousTemporalPattern);
 	}
 	
-	private void addTimeItem(final Date startDate, final Date endDate, final Long duration, final AbstractTemporalPattern temporalPattern) {
+	private void addTimeItem(final Date startDate, final Date endDate, final Long duration, final AbstractTemporalPattern temporalPattern) {		
 		if (startDate != null) {
 			if (temporalPattern == null) {
 				super.times.add(startDate);
@@ -203,6 +212,9 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern {
 	 * @param intervalsAbstractTemporalPatternMap
 	 */
 	protected void setIntervalsAbstractTemporalPatternMap0(SortedMap intervalsAbstractTemporalPatternMap) {
+		/* save state before */
+		this.saveState();
+		
 		if (this.intervalsAbstractTemporalPatternMap == null) {
 			this.intervalsAbstractTemporalPatternMap = new TreeMap();
 		} else {
@@ -221,6 +233,9 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern {
 	}	
 	
 	protected void setIntervalsDuration0(SortedMap intervalsDuration) {
+		/* save state before */
+		this.saveState();
+		
 		if (this.intervalsDuration == null) {
 			this.intervalsDuration = new TreeMap();
 		} else {
@@ -232,8 +247,27 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern {
 		}
 	}	
 	
-	public void addIntervalItem(long milliseconds, Identifier temporalPatternId) {
-		this.addIntervalItem0(new Long(milliseconds), temporalPatternId);
+	
+	
+	public void addIntervalItems(Map offsetId) {
+		/* save state before */
+		this.saveState();
+		
+		if (super.times != null) {
+			super.times.clear();
+		}
+		
+		if (this.intervalsAbstractTemporalPatternMap == null) {
+			this.intervalsAbstractTemporalPatternMap = new TreeMap();
+		}
+		
+		for (Iterator it = offsetId.keySet().iterator(); it.hasNext();) {
+			Long ms = (Long) it.next();
+			Identifier temporalPatternId = (Identifier) offsetId.get(ms);
+			this.intervalsAbstractTemporalPatternMap.put(ms, temporalPatternId == null ? Identifier.VOID_IDENTIFIER
+					: temporalPatternId);
+		}
+		
 		super.changed = true;
 	}
 	
@@ -245,21 +279,44 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern {
 					+ (abstractTemporalPatternId.isVoid() ? "" : (", id:" + abstractTemporalPatternId.toString())),
 				Log.FINEST);
 		}
+		
+		if (this.undoIntervalsAbstractTemporalPatternMap != null) {
+			for (Iterator it = this.undoIntervalsAbstractTemporalPatternMap.keySet().iterator(); it.hasNext();) {
+				Long ms = (Long) it.next();
+				Identifier abstractTemporalPatternId = (Identifier) this.undoIntervalsAbstractTemporalPatternMap
+						.get(ms);
+				Log.debugMessage("IntervalsTemporalPattern.printStructure | UNDO ms:" + ms.longValue()
+						+ (abstractTemporalPatternId.isVoid() ? "" : (", id:" + abstractTemporalPatternId.toString())),
+					Log.FINEST);
+			}
+		}
 	}
 	
 	public void setIntervalDuration(long millesonds, long duration) {
+		/* save state before */
+		this.saveState();
+		
 		Long startedTime = this.getStartedTime(millesonds);
 		if (startedTime != null) {
 			this.intervalsDuration.put(startedTime, new Long(duration));
 		}
 	}
 	
-	public void removeIntervalItem(long milliseconds) {
+	
+	public void removeIntervalItems(java.util.Set offsets) {
+		/* save state before */
+		this.saveState();
+		
+		for (Iterator it = offsets.iterator(); it.hasNext();) {
+			Long offset = (Long) it.next();
+			this.removeIntervalItem0(offset);
+		}
+	}
+	
+	protected void removeIntervalItem0(Long milliseconds) {
 		Log.debugMessage("IntervalsTemporalPattern.removeIntervalItem | > milliseconds:" + milliseconds, Log.FINEST);
 		/* clear times cache */
 		this.times.clear();
-
-		Long long1 = new Long(milliseconds);
 
 		Long ms = this.getStartedTime(milliseconds);
 		Identifier abstractTemporalid = (Identifier) this.intervalsAbstractTemporalPatternMap.get(ms);
@@ -267,15 +324,15 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern {
 //				+ (abstractTemporalid.isVoid() ? "VOID" : abstractTemporalid.toString()), Log.FINEST);
 
 		if (abstractTemporalid.isVoid()) {
-			this.intervalsAbstractTemporalPatternMap.remove(long1);
-			this.intervalsDuration.remove(long1);
+			this.intervalsAbstractTemporalPatternMap.remove(milliseconds);
+			this.intervalsDuration.remove(milliseconds);
 		} else {
 			try {
 				AbstractTemporalPattern abstractTemporalPattern = (AbstractTemporalPattern) MeasurementStorableObjectPool
 						.getStorableObject(abstractTemporalid, true);
 				if (abstractTemporalPattern instanceof IntervalsTemporalPattern) {
 					IntervalsTemporalPattern intervalsTemporalPattern = (IntervalsTemporalPattern) abstractTemporalPattern;
-					intervalsTemporalPattern.removeIntervalItem(milliseconds);
+					intervalsTemporalPattern.removeIntervalItem0(milliseconds);
 				} else if (abstractTemporalPattern instanceof PeriodicalTemporalPattern) {
 					PeriodicalTemporalPattern periodicTemporalPattern = (PeriodicalTemporalPattern) abstractTemporalPattern;
 
@@ -300,7 +357,7 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern {
 					Date date = null;
 					for (Iterator it = times2.iterator(); it.hasNext(); i++) {
 						date = (Date) it.next();
-						if (date.getTime() == this.startTime + milliseconds) {
+						if (date.getTime() == this.startTime + milliseconds.longValue()) {
 							break;
 						}
 						date = null;
@@ -317,7 +374,7 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern {
 							this.intervalsAbstractTemporalPatternMap.remove(ms);
 							this.intervalsDuration.remove(ms);
 							int newRepeate = times2.size() - 1;
-							Long newMilliseconds = new Long(milliseconds + period);
+							Long newMilliseconds = new Long(milliseconds.longValue() + period);
 							// Log.debugMessage("IntervalsTemporalPattern.removeIntervalItem
 							// | newRepeate " + newRepeate, Log.FINEST);
 							if (newRepeate > 1 || newRepeate < 0) {
@@ -388,8 +445,8 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern {
 //										+ ((Long) this.intervalsDuration.get(ms)).longValue() / (60L * 1000L),
 //									Log.FINEST);
 							} else {
-								this.intervalsAbstractTemporalPatternMap.remove(long1);
-								this.intervalsDuration.remove(long1);
+								this.intervalsAbstractTemporalPatternMap.remove(milliseconds);
+								this.intervalsDuration.remove(milliseconds);
 								this.intervalsAbstractTemporalPatternMap.put(ms, Identifier.VOID_IDENTIFIER);
 							}
 						}
@@ -411,16 +468,20 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern {
 		return null;
 	}
 	
-	public final Long getStartedTime(final long milliseconds) {		
+	public final Long getStartedTime(final long milliseconds) {			
+		return this.getStartedTime(new Long(milliseconds));
+	}
+	
+	public final Long getStartedTime(final Long milliseconds) {
 		Long ms = null;		
-		Long long1 = new Long(milliseconds);		
+		long long2 = milliseconds.longValue();
 		Set keys = this.intervalsAbstractTemporalPatternMap.keySet();
-		if (keys.contains(long1)) {
-			ms = long1;
+		if (keys.contains(milliseconds)) {
+			ms = milliseconds;
 		} else {
 			for (Iterator it = keys.iterator(); it.hasNext();) {
 				Long time = (Long) it.next();
-				if (ms != null && ms.longValue() < milliseconds && milliseconds < time.longValue()) {
+				if (ms != null && ms.longValue() < long2 && long2 < time.longValue()) {
 					break;
 				}
 				ms = time;
@@ -453,6 +514,7 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern {
 	}
 	
 	protected void addIntervalItem0(Long milliseconds, Identifier temporalPatternId) {
+		
 		if (super.times != null) {
 			super.times.clear();
 		}
@@ -524,30 +586,48 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern {
 	}
 	
 	public void setIntervalsAbstractTemporalPatternMap(SortedMap intervalsAbstractTemporalPatternMap) {
+		/* save state before */
+		this.saveState();
 		this.setIntervalsAbstractTemporalPatternMap0(intervalsAbstractTemporalPatternMap);
 		this.changed = true;
 	}
 
+	public void moveAllItems(long offset) {
+		this.moveIntervalItems(new TreeSet(this.intervalsAbstractTemporalPatternMap.keySet()), offset);
+	}
+	
 	/**
+	 * move offsets forward for offset ms 
 	 * @param offsets
-	 * @param offset
+	 * @param offset to future if <code> offset &gt; 0 </code>, to past otherwise
 	 */
 	public void moveIntervalItems(	java.util.Set offsets,
 									long offset) {
 		if (super.times != null) {
 			super.times.clear();
 		}
+		
+		/* save state before */
+		this.saveState();
+		
 		long minOffset = 0;
 		for (Iterator it = offsets.iterator(); it.hasNext();) {
 			Long ms = (Long) it.next();
 			long ms1 = ms.longValue();
 			Long newMs = new Long(ms1 + offset);
-			Long duration = (Long) this.intervalsDuration.get(ms);
-			this.removeIntervalItem(ms1);			
+			
+//			Long duration = (Long) this.intervalsDuration.get(ms);
+//			Identifier temporalPatternId = (Identifier)this.intervalsAbstractTemporalPatternMap.get(ms);
+//			this.intervalsAbstractTemporalPatternMap.remove(ms);			
+//			this.intervalsAbstractTemporalPatternMap.put(newMs, temporalPatternId);
+//			if (duration != null) {
+//				this.intervalsDuration.remove(ms);
+//				this.intervalsDuration.put(newMs, duration);
+//			}
+			
+			this.removeIntervalItem0(ms);
 			this.intervalsAbstractTemporalPatternMap.put(newMs, Identifier.VOID_IDENTIFIER);
-			if (duration != null) {
-				this.intervalsDuration.put(newMs, duration);
-			}
+			
 			if (ms1 + offset < minOffset) {
 				minOffset = ms1 + offset;
 			}
@@ -571,6 +651,107 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern {
 		
 	}
 	
+	private void saveState() {		
+		this.undo = true;
+		Log.debugMessage("IntervalsTemporalPattern.saveState | 1", Log.FINEST);
+		if (this.intervalsAbstractTemporalPatternMap == null && this.intervalsDuration == null && 
+				this.undoIntervalsAbstractTemporalPatternMap == null && this.undoIntervalsDuration == null)
+			return;
+		
+		if (this.intervalsAbstractTemporalPatternMap != null) {
+			if (this.undoIntervalsAbstractTemporalPatternMap == null) {
+				this.undoIntervalsAbstractTemporalPatternMap = new TreeMap();
+			} else {
+				this.undoIntervalsAbstractTemporalPatternMap.clear();
+			}
+			Log.debugMessage("IntervalsTemporalPattern.saveState | 2", Log.FINEST);
+			this.undoIntervalsAbstractTemporalPatternMap.putAll(this.intervalsAbstractTemporalPatternMap);
+		}
+
+		if (this.intervalsDuration != null) {
+			if (this.undoIntervalsDuration == null) {
+				this.undoIntervalsDuration = new TreeMap();
+			} else {
+				this.undoIntervalsDuration.clear();
+			}
+			Log.debugMessage("IntervalsTemporalPattern.saveState | 3", Log.FINEST);
+			this.undoIntervalsDuration.putAll(this.intervalsDuration);
+		}
+	}
+	
+	public void undo() {
+		if (!this.undo) {
+			return;
+		}
+		
+		if (super.times != null) {
+			super.times.clear();
+		}
+		
+			
+		if (this.undoIntervalsAbstractTemporalPatternMap != null || this.undoIntervalsDuration != null) {
+			Log.debugMessage("IntervalsTemporalPattern.undo | ", Log.FINEST);
+			this.printStructure();
+			
+			SortedMap map = new TreeMap(this.intervalsAbstractTemporalPatternMap);
+			
+			this.intervalsAbstractTemporalPatternMap.clear();
+
+			if (this.undoIntervalsAbstractTemporalPatternMap != null) {
+				this.intervalsAbstractTemporalPatternMap.putAll(this.undoIntervalsAbstractTemporalPatternMap);
+			}
+
+			SortedMap map2 = new TreeMap(this.intervalsDuration);
+			this.intervalsDuration.clear();
+			if (this.undoIntervalsDuration != null) {
+				this.intervalsDuration.putAll(this.undoIntervalsDuration);
+			}
+			
+			this.undo = false;
+			this.undoIntervalsAbstractTemporalPatternMap = map;
+			this.undoIntervalsDuration = map2;
+		} else {
+			assert false : "Cannot undo due to haven't any actions yet"; //$NON-NLS-1$
+		}
+	}
+	
+	public void redo() {
+		Log.debugMessage("IntervalsTemporalPattern.redo | undo is " + this.undo, Log.FINEST);
+		if (this.undo) {
+			return;
+		}
+		
+		if (super.times != null) {
+			super.times.clear();
+		}
+		
+			
+		if (this.undoIntervalsAbstractTemporalPatternMap != null || this.undoIntervalsDuration != null) {
+			this.printStructure();
+			Log.debugMessage("IntervalsTemporalPattern.redo | ", Log.FINEST);
+			
+			SortedMap map = new TreeMap(this.intervalsAbstractTemporalPatternMap);
+			
+			this.intervalsAbstractTemporalPatternMap.clear();
+
+			if (this.undoIntervalsAbstractTemporalPatternMap != null) {
+				this.intervalsAbstractTemporalPatternMap.putAll(this.undoIntervalsAbstractTemporalPatternMap);
+			}
+
+			SortedMap map2 = new TreeMap(this.intervalsDuration);
+			this.intervalsDuration.clear();
+			if (this.undoIntervalsDuration != null) {
+				this.intervalsDuration.putAll(this.undoIntervalsDuration);
+			}
+			
+			this.undo = true;
+			this.undoIntervalsAbstractTemporalPatternMap = map;
+			this.undoIntervalsDuration = map2;
+		} else {
+			assert false : "Cannot redo due to haven't any actions yet"; //$NON-NLS-1$
+		}
+	
+	}
 
 }
 
