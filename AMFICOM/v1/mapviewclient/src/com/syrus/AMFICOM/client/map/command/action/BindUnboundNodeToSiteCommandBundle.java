@@ -1,5 +1,5 @@
 /**
- * $Id: BindUnboundNodeToSiteCommandBundle.java,v 1.16 2005/04/13 11:09:10 krupenn Exp $
+ * $Id: BindUnboundNodeToSiteCommandBundle.java,v 1.17 2005/04/28 13:05:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,13 +24,14 @@ import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.MapView;
+import com.syrus.AMFICOM.mapview.MeasurementPath;
 import com.syrus.AMFICOM.mapview.UnboundNode;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 
 /**
  *  Команда привязывания непривязанного элемента к узлу.
  * @author $Author: krupenn $
- * @version $Revision: 1.16 $, $Date: 2005/04/13 11:09:10 $
+ * @version $Revision: 1.17 $, $Date: 2005/04/28 13:05:39 $
  * @module mapviewclient_v1
  */
 public class BindUnboundNodeToSiteCommandBundle extends MapActionCommandBundle
@@ -80,6 +81,17 @@ public class BindUnboundNodeToSiteCommandBundle extends MapActionCommandBundle
 					cp.setEndNode(this.site);
 				if(cp.getStartNode().equals(this.unbound))
 					cp.setStartNode(this.site);
+			}
+			// список кабельных путей, включающий привязываемый элемент
+			List measurementPaths = mapView.getMeasurementPaths(this.unbound);
+			// обновляются концевые узлы кабельных путей
+			for(Iterator it = measurementPaths.iterator(); it.hasNext();)
+			{
+				MeasurementPath mp = (MeasurementPath )it.next();
+				if(mp.getEndNode().equals(this.unbound))
+					mp.setEndNode(this.site);
+				if(mp.getStartNode().equals(this.unbound))
+					mp.setStartNode(this.site);
 			}
 			//При привязывании меняются концевые узлы линий и фрагментов линий
 			for(Iterator it = this.map.getNodeLinks(this.unbound).iterator(); it.hasNext();)
