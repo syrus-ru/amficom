@@ -27,7 +27,7 @@ package com.syrus.AMFICOM.analysis.dadara;
  * по ModelTrace - MaxDeviation и пр.
  * 
  * @author $Author: saa $
- * @version $Revision: 1.12 $, $Date: 2005/04/26 07:35:20 $
+ * @version $Revision: 1.13 $, $Date: 2005/04/28 10:12:40 $
  * @module analysis_v1
  */
 public class ReflectogramComparer
@@ -1305,7 +1305,7 @@ public class ReflectogramComparer
 		if (type != e.getEventType())
 			return 0.;
 
-		return 0.; // data[nEvent].getWidth() - e.getWidth(); // FIXME
+		return 0.; // data[nEvent].getWidth() - e.getWidth(); // OLDFIXME
 	}
 
 }
