@@ -1,5 +1,5 @@
 /**
- * $Id: DefaultMapEditorApplicationModelFactory.java,v 1.5 2005/02/07 16:09:25 krupenn Exp $
+ * $Id: DefaultMapEditorApplicationModelFactory.java,v 1.6 2005/04/28 12:55:23 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2005/02/07 16:09:25 $
+ * @version $Revision: 1.6 $, $Date: 2005/04/28 12:55:23 $
  * @module mapviewclient_v1
  * @author $Author: krupenn $
  */
@@ -30,16 +30,14 @@ public class DefaultMapEditorApplicationModelFactory
 	{
 		ApplicationModel aModel = super.create();
 
-		aModel.setVisible("menuScheme", false);
-
-		aModel.setVisible("menuHelpContents", false);
-		aModel.setVisible("menuHelpFind", false);
-		aModel.setVisible("menuHelpTips", false);
-		aModel.setVisible("menuHelpStart", false);
-		aModel.setVisible("menuHelpCourse", false);
-		aModel.setVisible("menuHelpHelp", false);
-		aModel.setVisible("menuHelpSupport", false);
-		aModel.setVisible("menuHelpLicense", false);
+		aModel.setVisible(MapEditorApplicationModel.ITEM_HELP_CONTENTS, false);
+		aModel.setVisible(MapEditorApplicationModel.ITEM_HELP_FIND, false);
+		aModel.setVisible(MapEditorApplicationModel.ITEM_HELP_FIND, false);
+		aModel.setVisible(MapEditorApplicationModel.ITEM_HELP_START, false);
+		aModel.setVisible(MapEditorApplicationModel.ITEM_HELP_COURSE, false);
+		aModel.setVisible(MapEditorApplicationModel.ITEM_HELP_HELP, false);
+		aModel.setVisible(MapEditorApplicationModel.ITEM_HELP_SUPPORT, false);
+		aModel.setVisible(MapEditorApplicationModel.ITEM_HELP_LICENSE, false);
 
 		return aModel;
 	}
