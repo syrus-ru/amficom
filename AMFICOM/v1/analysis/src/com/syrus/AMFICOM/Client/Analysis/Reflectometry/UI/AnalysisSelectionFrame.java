@@ -78,9 +78,9 @@ implements BsHashChangeListener, PrimaryMTMListener
 		init_module(aContext.getDispatcher());
 	}
 
-	void init_module(Dispatcher dispatcher)
+	void init_module(Dispatcher dispatcher1)
 	{
-		this.dispatcher = dispatcher;
+		this.dispatcher = dispatcher1;
 		Heap.addBsHashListener(this);
 		Heap.addPrimaryMTMListener(this);
 	}
@@ -333,7 +333,7 @@ implements BsHashChangeListener, PrimaryMTMListener
 		}
 
 		public Component getTableCellEditorComponent(JTable table,
-				Object value, boolean isSelected, int row, int column)
+				Object value, boolean isSelected1, int row, int column)
 		{
 			editor = value;
 			if (model.data[row][column] instanceof JComboBox)
@@ -344,7 +344,7 @@ implements BsHashChangeListener, PrimaryMTMListener
 			}
 			else
 				return super.getTableCellEditorComponent(table, value,
-					isSelected, row, column);
+					isSelected1, row, column);
 		}
 
 		public Object getCellEditorValue()
@@ -380,14 +380,14 @@ implements BsHashChangeListener, PrimaryMTMListener
 		}
 	
 		public Component getTableCellRendererComponent(JTable table,
-				Object value, boolean isSelected, boolean hasFocus,
+				Object value, boolean isSelected1, boolean hasFocus,
 				int row, int column)
 		{
 			if (model.data[row][column] instanceof JComboBox)
 				return (JComboBox)model.data[row][column];
 			else
 				return super.getTableCellRendererComponent(table, value,
-					isSelected, hasFocus, row, column);
+					isSelected1, hasFocus, row, column);
 		}
 	}
 
