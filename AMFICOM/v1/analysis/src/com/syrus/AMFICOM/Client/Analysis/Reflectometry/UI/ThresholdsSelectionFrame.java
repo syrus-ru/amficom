@@ -114,8 +114,8 @@ implements OperationListener, BsHashChangeListener,
 		);
 		this.jTable = new ATable(this.tModelEmpty);
 		
-		JButton alysisInitialButton = new JButton();
-		alysisInitialButton.setMargin(UIManager.getInsets(
+		JButton analysisInitialButton = new JButton();
+		analysisInitialButton.setMargin(UIManager.getInsets(
 			ResourceKeys.INSETS_ICONED_BUTTON));
 		
 		JButton analysisDefaultsButton = new JButton();
@@ -139,11 +139,11 @@ implements OperationListener, BsHashChangeListener,
 		nextEventButton.setMargin(UIManager.getInsets(
 			ResourceKeys.INSETS_ICONED_BUTTON));
 
-		alysisInitialButton.setToolTipText(
+		analysisInitialButton.setToolTipText(
 			LangModelAnalyse.getString("analysisInitial"));
-		alysisInitialButton.setIcon(UIManager.getIcon(
+		analysisInitialButton.setIcon(UIManager.getIcon(
 			AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_INITIAL));
-		alysisInitialButton.addActionListener(new ActionListener()
+		analysisInitialButton.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
 			{
@@ -248,7 +248,7 @@ implements OperationListener, BsHashChangeListener,
 		//jToolBar1.setBorderPainted(true);
 		JToolBar jToolBar = new JToolBar();
 		jToolBar.setFloatable(false);
-		jToolBar.add(alysisInitialButton);
+		jToolBar.add(analysisInitialButton);
 		jToolBar.add(analysisDefaultsButton);
 		jToolBar.add(decreaseThreshButton);
 		jToolBar.add(increaseThreshButton);
