@@ -1,5 +1,5 @@
 /**
- * $Id: ViewMapSetupCommand.java,v 1.8 2005/03/16 13:48:18 bass Exp $
+ * $Id: ViewMapControlsCommand.java,v 1.1 2005/04/28 13:10:59 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -23,17 +23,17 @@ import javax.swing.JDesktopPane;
 
 /**
  *  оманда отображает окно управлени€ сло€ми и поиска 
- * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/03/16 13:48:18 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.1 $, $Date: 2005/04/28 13:10:59 $
  * @module mapviewclient_v1
  */
-public class ViewMapSetupCommand extends VoidCommand
+public class ViewMapControlsCommand extends VoidCommand
 {
 	ApplicationContext aContext;
 	JDesktopPane desktop;
 	public ControlsFrame frame;
 
-	public ViewMapSetupCommand(JDesktopPane desktop, ApplicationContext aContext)
+	public ViewMapControlsCommand(JDesktopPane desktop, ApplicationContext aContext)
 	{
 		this.desktop = desktop;
 		this.aContext = aContext;
