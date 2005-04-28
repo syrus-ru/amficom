@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorOpenViewCommand.java,v 1.17 2005/04/18 11:09:09 krupenn Exp $
+ * $Id: MapEditorOpenViewCommand.java,v 1.18 2005/04/28 13:16:57 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,8 +20,6 @@ import com.syrus.AMFICOM.Client.Map.MapConnectionException;
 import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewOpenCommand;
-import com.syrus.AMFICOM.Client.Map.UI.MapElementPropertiesFrame;
-import com.syrus.AMFICOM.Client.Map.UI.MapElementsFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.mapview.MapView;
 
@@ -31,7 +29,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * пользователь выбрал MapContext, открывается окно карты и сопутствующие окна
  * и MapContext передается в окно карты
  * 
- * @version $Revision: 1.17 $, $Date: 2005/04/18 11:09:09 $
+ * @version $Revision: 1.18 $, $Date: 2005/04/28 13:16:57 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see com.syrus.AMFICOM.Client.Map.Command.Map.MapOpenCommand
@@ -42,8 +40,6 @@ public class MapEditorOpenViewCommand extends VoidCommand
 	protected JDesktopPane desktop;
 	
 	protected MapFrame mapFrame = null;
-	protected MapElementPropertiesFrame propFrame = null;
-	protected MapElementsFrame elementsFrame = null;
 	
 	protected MapView mapView = null;
 
@@ -104,12 +100,10 @@ public class MapEditorOpenViewCommand extends VoidCommand
 
 			try {
 				this.mapFrame.setMapView(this.mapView);
-				ViewMapPropertiesCommand propCommand = new ViewMapPropertiesCommand(this.desktop, this.aContext);
+				ViewGeneralPropertiesCommand propCommand = new ViewGeneralPropertiesCommand(this.desktop, this.aContext);
 				propCommand.execute();
-				this.propFrame = propCommand.frame;
-				ViewMapElementsCommand elementsCommand = new ViewMapElementsCommand(this.desktop, this.aContext);
-				elementsCommand.execute();
-				this.elementsFrame = elementsCommand.frame;
+				ViewAdditionalPropertiesCommand addCommand = new ViewAdditionalPropertiesCommand(this.desktop, this.aContext);
+				addCommand.execute();
 			} catch(MapConnectionException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -119,22 +113,6 @@ public class MapEditorOpenViewCommand extends VoidCommand
 			}
 		}
 	}
-
-	public MapFrame getMapFrame()
-	{
-		return this.mapFrame;
-	}
-
-	public MapElementPropertiesFrame getPropertiesFrame()
-	{
-		return this.propFrame;
-	}
-
-	public MapElementsFrame getElementsFrame()
-	{
-		return this.elementsFrame;
-	}
-
 
 	public void setCanDelete(boolean canDelete)
 	{

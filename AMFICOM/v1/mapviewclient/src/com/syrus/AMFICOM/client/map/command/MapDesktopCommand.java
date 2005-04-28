@@ -5,46 +5,46 @@ import java.awt.Component;
 import javax.swing.JDesktopPane;
 
 import com.syrus.AMFICOM.Client.Map.Operations.ControlsFrame;
-import com.syrus.AMFICOM.Client.Map.UI.MapElementCharacteristicsFrame;
-import com.syrus.AMFICOM.Client.Map.UI.MapElementPropertiesFrame;
-import com.syrus.AMFICOM.Client.Map.UI.MapElementsFrame;
+import com.syrus.AMFICOM.Client.Map.UI.MapAdditionalPropertiesFrame;
+import com.syrus.AMFICOM.Client.Map.UI.MapCharacteristicPropertiesFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
+import com.syrus.AMFICOM.Client.Map.UI.MapGeneralPropertiesFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapViewTreeFrame;
 
 public abstract class MapDesktopCommand
 {
-	public static MapElementPropertiesFrame findMapPropertyFrame(JDesktopPane desktop)
+	public static MapGeneralPropertiesFrame findMapGeneralPropertiesFrame(JDesktopPane desktop)
 	{
 		for(int i = 0; i < desktop.getComponents().length; i++)
 		{
 			Component comp = desktop.getComponent(i);
 			if(comp != null
-				&& comp instanceof MapElementPropertiesFrame)
-					return (MapElementPropertiesFrame )comp;
+				&& comp instanceof MapGeneralPropertiesFrame)
+					return (MapGeneralPropertiesFrame )comp;
 		}
 		return null;
 	}
 	
-	public static MapElementsFrame findMapElementsFrame(JDesktopPane desktop)
+	public static MapAdditionalPropertiesFrame findMapAdditionalPropertiesFrame(JDesktopPane desktop)
 	{
 		for(int i = 0; i < desktop.getComponents().length; i++)
 		{
 			Component comp = desktop.getComponent(i);
 			if(comp != null
-				&& comp instanceof MapElementsFrame)
-					return (MapElementsFrame )comp;
+				&& comp instanceof MapAdditionalPropertiesFrame)
+					return (MapAdditionalPropertiesFrame )comp;
 		}
 		return null;
 	}
 	
-	public static MapElementCharacteristicsFrame findMapSchemeTreeFrame(JDesktopPane desktop)
+	public static MapCharacteristicPropertiesFrame findMapCharacteristicsFrame(JDesktopPane desktop)
 	{
 		for(int i = 0; i < desktop.getComponents().length; i++)
 		{
 			Component comp = desktop.getComponent(i);
 			if(comp != null
-				&& comp instanceof MapElementCharacteristicsFrame)
-					return (MapElementCharacteristicsFrame )comp;
+				&& comp instanceof MapCharacteristicPropertiesFrame)
+					return (MapCharacteristicPropertiesFrame )comp;
 		}
 		return null;
 	}

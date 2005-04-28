@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorOpenMapCommand.java,v 1.15 2005/04/22 11:40:50 krupenn Exp $
+ * $Id: MapEditorOpenMapCommand.java,v 1.16 2005/04/28 13:16:57 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapOpenCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewNewCommand;
-import com.syrus.AMFICOM.Client.Map.UI.MapElementPropertiesFrame;
+import com.syrus.AMFICOM.Client.Map.UI.MapGeneralPropertiesFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapViewTreeFrame;
 import com.syrus.AMFICOM.map.Map;
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * пользователь выбрал MapContext, открывается окно карты и сопутствующие окна
  * и MapContext передается в окно карты
  * 
- * @version $Revision: 1.15 $, $Date: 2005/04/22 11:40:50 $
+ * @version $Revision: 1.16 $, $Date: 2005/04/28 13:16:57 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see MapOpenCommand
@@ -44,7 +44,7 @@ public class MapEditorOpenMapCommand extends VoidCommand
 	JDesktopPane desktop;
 
 	MapFrame mapFrame = null;
-	MapElementPropertiesFrame propFrame = null;
+	MapGeneralPropertiesFrame propFrame = null;
 	MapViewTreeFrame treeFrame = null;
 	
 	Map map = null;
@@ -106,7 +106,7 @@ public class MapEditorOpenMapCommand extends VoidCommand
 				this.mapView.setCenter(this.mapFrame.getMapViewer().getLogicalNetLayer().getCenter());
 				this.mapView.setScale(this.mapFrame.getMapViewer().getLogicalNetLayer().getScale());
 				this.mapFrame.setMapView(this.mapView);
-				ViewMapPropertiesCommand propCommand = new ViewMapPropertiesCommand(this.desktop, this.aContext);
+				ViewGeneralPropertiesCommand propCommand = new ViewGeneralPropertiesCommand(this.desktop, this.aContext);
 				propCommand.execute();
 				this.propFrame = propCommand.frame;
 				ViewMapViewNavigatorCommand elementsCommand = new ViewMapViewNavigatorCommand(this.desktop, this.aContext);
@@ -127,7 +127,7 @@ public class MapEditorOpenMapCommand extends VoidCommand
 		return this.mapFrame;
 	}
 
-	public MapElementPropertiesFrame getPropertiesFrame()
+	public MapGeneralPropertiesFrame getPropertiesFrame()
 	{
 		return this.propFrame;
 	}
