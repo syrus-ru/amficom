@@ -1,5 +1,5 @@
 /**
- * $Id: MapCoordinatesConverter.java,v 1.5 2005/02/18 12:19:44 krupenn Exp $
+ * $Id: MapCoordinatesConverter.java,v 1.6 2005/04/28 13:17:45 krupenn Exp $
  * Syrus Systems Научно-технический центр Проект: АМФИКОМ Автоматизированный
  * МногоФункциональный Интеллектуальный Комплекс Объектного Мониторинга
  */
@@ -14,11 +14,8 @@ import java.awt.Point;
  * Конвертер географических и экранных координат для отображения элементов карты
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.5 $, $Date: 2005/02/18 12:19:44 $
+ * @version $Revision: 1.6 $, $Date: 2005/04/28 13:17:45 $
  * @module maviewclient_v1
- * @todo в панелях свойств используется приведение конвертера к типу
- *       LogicalNetLayer, поскольку в данной реализации модуля именно он
- *       имплементит MapCoordinatesConverter - необходимо найти обходной путь
  */
 public interface MapCoordinatesConverter
 {
