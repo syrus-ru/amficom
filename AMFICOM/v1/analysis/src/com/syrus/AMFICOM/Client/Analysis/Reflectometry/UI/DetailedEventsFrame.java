@@ -1,19 +1,46 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.util.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.util.HashMap;
+import java.util.Map;
 
-import java.awt.*;
-import javax.swing.*;
-import javax.swing.table.*;
+import javax.swing.BorderFactory;
+import javax.swing.Icon;
+import javax.swing.JInternalFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.JViewport;
+import javax.swing.ListSelectionModel;
+import javax.swing.UIManager;
+import javax.swing.WindowConstants;
+import javax.swing.table.AbstractTableModel;
 
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
-import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
+import com.syrus.AMFICOM.Client.General.Event.CurrentEventChangeListener;
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
+import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
+import com.syrus.AMFICOM.Client.General.Event.OperationListener;
+import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
-import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.General.UI.ATable;
+import com.syrus.AMFICOM.Client.General.UI.FixedSizeEditableTableModel;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
-import com.syrus.AMFICOM.analysis.dadara.*;
+import com.syrus.AMFICOM.analysis.dadara.ComplexReflectogramEvent;
+import com.syrus.AMFICOM.analysis.dadara.MathRef;
+import com.syrus.AMFICOM.analysis.dadara.ModelTrace;
+import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
+import com.syrus.AMFICOM.analysis.dadara.ReflectogramComparer;
+import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
+import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
+import com.syrus.AMFICOM.analysis.dadara.TraceEvent;
 import com.syrus.AMFICOM.client_.general.ui_.ADefaultTableCellRenderer;
 import com.syrus.io.BellcoreStructure;
 
@@ -21,8 +48,6 @@ public class DetailedEventsFrame extends JInternalFrame
 implements OperationListener, BsHashChangeListener,
 EtalonMTMListener, CurrentEventChangeListener
 {
-	private ModelTraceManager etalonMTM;
-	private ModelTraceAndEvents dataMTAE;
 	private ModelTrace alignedDataMT;
 
 	private Map tModels = new HashMap(6);
@@ -32,21 +57,17 @@ EtalonMTMListener, CurrentEventChangeListener
 	private BellcoreStructure bs;
 	private double res_km;
 
-	BorderLayout borderLayout = new BorderLayout();
-	JPanel mainPanel = new JPanel();
-	JScrollPane scrollPane = new JScrollPane();
-	JViewport viewport = new JViewport();
+	private JPanel mainPanel = new JPanel();
+	private JScrollPane scrollPane = new JScrollPane();
+	private JViewport viewport = new JViewport();
 
-	boolean analysis_performed = false;
-	boolean etalon_loaded = false;
-
+	private boolean analysis_performed = false;
 	private CompareTableModel ctModel;
 	private ATable jTableComp;
 
-	BorderLayout borderLayoutComp = new BorderLayout();
-	JPanel mainPanelComp = new JPanel();
-	JScrollPane scrollPaneComp = new JScrollPane();
-	JViewport viewportComp = new JViewport();
+	private JPanel mainPanelComp = new JPanel();
+	private JScrollPane scrollPaneComp = new JScrollPane();
+	private JViewport viewportComp = new JViewport();
 	private JTabbedPane tabbedPane = new JTabbedPane();
 
 	// these are just internally-used keys
@@ -89,11 +110,11 @@ EtalonMTMListener, CurrentEventChangeListener
 	private void makeAlignedDataMT()
 	{
 		// XXX: is alignment really required? Should it be performed here?
-		if (etalonMTM == null || dataMTAE == null)
+		if (Heap.getMTMEtalon() == null || Heap.getMTAEPrimary() == null)
 			return;
 		alignedDataMT = ReflectogramMath.createAlignedArrayModelTrace(
-			dataMTAE.getModelTrace(),
-			etalonMTM.getMTAE().getModelTrace());
+			Heap.getMTAEPrimary().getModelTrace(),
+			Heap.getMTMEtalon().getMTAE().getModelTrace());
 	}
 
 	public void operationPerformed(OperationEvent ae)
@@ -108,15 +129,14 @@ EtalonMTMListener, CurrentEventChangeListener
 					a = Heap.getRefAnalysisPrimary();
 					bs = Heap.getBSPrimaryTrace();
 					res_km = bs.getResolution() / 1000.0;
-					dataMTAE = Heap.getMTAEPrimary();
-					if(dataMTAE != null && etalonMTM != null)
+					if(Heap.getMTAEPrimary() != null && Heap.getMTMEtalon() != null)
 						makeAlignedDataMT();
 					else alignedDataMT = null;
 					updateTableModel();
 				}
 				if (Heap.hasEventParamsForPrimaryTrace())
 					analysis_performed = true;
-				if(etalon_loaded)
+				if (Heap.getMTMEtalon() != null)
 					tabbedPane.setEnabledAt(1, true);
 			}
 		}
@@ -268,22 +288,22 @@ EtalonMTMListener, CurrentEventChangeListener
 	{
 		int nEvent = Heap.getCurrentEvent();
 		int nEtalon = Heap.getCurrentEtalonEvent();
-		if(etalonMTM == null || alignedDataMT == null)
+		if(Heap.getMTMEtalon() == null || alignedDataMT == null)
 		{
 			tabbedPane.setSelectedIndex(0);
 			tabbedPane.setEnabledAt(1, false);
 			return;
 		}
-		if(nEvent >= dataMTAE.getNEvents() || nEvent < 0)
+		if(nEvent >= Heap.getMTAEPrimary().getNEvents() || nEvent < 0)
 		{
 			return;
 		}
-		double deltaX = dataMTAE.getDeltaX();
+		double deltaX = Heap.getMTAEPrimary().getDeltaX();
 
 		ComplexReflectogramEvent dataEvent =
-			dataMTAE.getComplexEvents()[nEvent];
+			Heap.getMTAEPrimary().getComplexEvents()[nEvent];
 		ComplexReflectogramEvent etalonEvent = nEtalon != -1
-				? etalonMTM.getMTAE().getComplexEvents()[nEtalon]
+				? Heap.getMTMEtalon().getMTAE().getComplexEvents()[nEtalon]
 				: null;
 		int dataType = dataEvent.getEventType();
 		int etalonType = etalonEvent != null
@@ -300,9 +320,9 @@ EtalonMTMListener, CurrentEventChangeListener
 		ctModel.setValueAt(etalonT, 1, 1);
 
 		// сравнение по модельной кривой
-		ModelTrace etalonMT = etalonMTM.getMTAE().getModelTrace();
-		double difference    = ReflectogramComparer.getMaxDeviation(dataMTAE, etalonMT, nEvent);
-		double meanDeviation = ReflectogramComparer.getMeanDeviation(dataMTAE, etalonMT, nEvent);
+		ModelTrace etalonMT = Heap.getMTMEtalon().getMTAE().getModelTrace();
+		double difference    = ReflectogramComparer.getMaxDeviation(Heap.getMTAEPrimary(), etalonMT, nEvent);
+		double meanDeviation = ReflectogramComparer.getMeanDeviation(Heap.getMTAEPrimary(), etalonMT, nEvent);
 
 		difference           = ((int)(difference*1000.))/1000.; // точность 0.001 дЅ
 		meanDeviation        = ((int)(meanDeviation*1000.))/1000.;
@@ -471,7 +491,6 @@ EtalonMTMListener, CurrentEventChangeListener
 			ctModel.clearTable();
 			tabbedPane.setEnabledAt(0, true);
 			tabbedPane.setSelectedIndex(0);
-			etalon_loaded = false;
 			tabbedPane.setEnabledAt(1, false);
 		}
 	}
@@ -489,15 +508,12 @@ EtalonMTMListener, CurrentEventChangeListener
 
 	public void etalonMTMCUpdated()
 	{
-		etalonMTM = Heap.getMTMEtalon();
-		if(dataMTAE != null)
+		if(Heap.getMTAEPrimary() != null)
 			makeAlignedDataMT();
 		else
 			alignedDataMT = null;
 		ctModel.clearTable();
 		tabbedPane.setEnabledAt(0, true);
-		tabbedPane.setSelectedIndex(0);
-		etalon_loaded = true;
 		if(analysis_performed)
 			tabbedPane.setEnabledAt(1, true);
 	}
@@ -508,7 +524,6 @@ EtalonMTMListener, CurrentEventChangeListener
 		ctModel.clearTable();
 		tabbedPane.setEnabledAt(0, true);
 		tabbedPane.setSelectedIndex(0);
-		etalon_loaded = false;
 		tabbedPane.setEnabledAt(1, false);
 	}
 
