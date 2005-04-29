@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.53 2005/04/27 08:21:57 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.54 2005/04/29 15:29:45 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.53 $, $Date: 2005/04/27 08:21:57 $
+ * @version $Revision: 1.54 $, $Date: 2005/04/29 15:29:45 $
  * @module
  */
 
@@ -412,14 +412,14 @@ public class CoreAnalysisManager
 				av.minTraceLength, av.avNoise);
 
 		// FIXME: debug output of IA results
-		for (int i = 0; i < rse.length; i++)
-			System.out.println("rse[" + i + "]:"
-				+ " begin=" + rse[i].getBegin()
-				+ " end=" + rse[i].getEnd()
-				+ " type=" + rse[i].getEventType()
-				+ " r=" + (rse[i].hasReliability() ?
-					String.valueOf(rse[i].getReliability()) : "<undefined>")
-				);
+//		for (int i = 0; i < rse.length; i++)
+//			System.out.println("rse[" + i + "]:"
+//				+ " begin=" + rse[i].getBegin()
+//				+ " end=" + rse[i].getEnd()
+//				+ " type=" + rse[i].getEventType()
+//				+ " r=" + (rse[i].hasReliability() ?
+//					String.valueOf(rse[i].getReliability()) : "<undefined>")
+//				);
 
 		// теперь уточняем длину рефлектограммы по концу последнего события
 		// (длина может уменьшиться)
