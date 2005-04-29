@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.23 2005/04/27 19:32:50 arseniy Exp $
+ * $Id: DatabaseContextSetup.java,v 1.24 2005/04/29 16:07:49 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,7 @@ import com.syrus.AMFICOM.administration.DatabaseAdministrationObjectLoader;
 import com.syrus.AMFICOM.administration.DomainDatabase;
 import com.syrus.AMFICOM.administration.MCMDatabase;
 import com.syrus.AMFICOM.administration.ServerDatabase;
+import com.syrus.AMFICOM.administration.ServerProcessDatabase;
 import com.syrus.AMFICOM.administration.UserDatabase;
 import com.syrus.AMFICOM.configuration.DatabaseConfigurationObjectLoader;
 import com.syrus.AMFICOM.configuration.CableLinkTypeDatabase;
@@ -60,7 +61,7 @@ import com.syrus.AMFICOM.measurement.TestDatabase;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/04/27 19:32:50 $
+ * @version $Revision: 1.24 $, $Date: 2005/04/29 16:07:49 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -93,7 +94,8 @@ final class DatabaseContextSetup {
 		AdministrationDatabaseContext.init(new UserDatabase(),
 				new DomainDatabase(),
 				new ServerDatabase(),
-				new MCMDatabase());
+				new MCMDatabase(),
+				new ServerProcessDatabase());
 
 		ConfigurationDatabaseContext.init(
 				new EquipmentTypeDatabase(),
