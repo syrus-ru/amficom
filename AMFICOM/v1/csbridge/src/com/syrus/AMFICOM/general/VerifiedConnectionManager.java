@@ -1,5 +1,5 @@
 /*
- * $Id: VerifiedConnectionManager.java,v 1.1 2005/04/27 13:38:20 arseniy Exp $
+ * $Id: VerifiedConnectionManager.java,v 1.2 2005/04/29 10:02:43 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.corba.VerifiableHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/27 13:38:20 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/29 10:02:43 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
@@ -39,7 +39,7 @@ public class VerifiedConnectionManager {
 	public VerifiedConnectionManager(CORBAServer corbaServer, Set servantNames) {
 		assert corbaServer != null : "corbaServer is NULL";
 		assert servantNames != null : "Servant names is NULL";
-		assert !servantNames.isEmpty() : "Хули пустой-то, а?";
+		//assert !servantNames.isEmpty() : "Хули пустой-то, а?";
 
 		this.corbaServer = corbaServer;
 
