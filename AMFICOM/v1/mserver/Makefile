@@ -13,15 +13,16 @@ include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 $(call checkenve,ORACLE_HOME)
 
-APPCLASSPATH := $(LIBDIR)/mcm_interface.jar:$(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/event.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar
+APPCLASSPATH := $(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/csbridge.jar:$(LIBDIR)/leserver_interface.jar:$(LIBDIR)/mcm_interface.jar:$(LIBDIR)/util.jar
 
 
-SOURCES := com/syrus/AMFICOM/mserver/DatabaseContextSetup.java \
+SOURCES := com/syrus/AMFICOM/mserver/MServerSessionEnvironment.java \
+	com/syrus/AMFICOM/mserver/MServerServantManager.java \
+	com/syrus/AMFICOM/mserver/MServerPoolContext.java \
+	com/syrus/AMFICOM/mserver/DatabaseContextSetup.java \
 	com/syrus/AMFICOM/mserver/MServerMeasurementObjectLoader.java \
 	com/syrus/AMFICOM/mserver/MeasurementServer.java \
-	com/syrus/AMFICOM/mserver/MServerImplementation.java \
-	com/syrus/AMFICOM/mserver/MCMConnectionManager.java \
-	com/syrus/AMFICOM/setup/MeasurementServerSetup.java
+	com/syrus/AMFICOM/mserver/MServerImplementation.java
 
 
 all: $(LIBNAME) $(LIBNAME_INTERFACE)
