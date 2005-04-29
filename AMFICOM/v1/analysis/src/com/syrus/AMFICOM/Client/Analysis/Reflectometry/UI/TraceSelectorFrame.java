@@ -18,6 +18,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 
+import com.syrus.AMFICOM.Client.Analysis.GUIUtil;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.CurrentTraceChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
@@ -191,7 +192,7 @@ implements BsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener
 		traces.add(id);
 
 		Log.debugMessage("TraceSelectorFrame.bsHashAdded | id is '" + id + '\'', Log.FINEST);
-		tModel.addRow(bs.title, new Color[] {Heap.getColor(id)});
+		tModel.addRow(bs.title, new Color[] {GUIUtil.getColor(id)});
 		setVisible(true);
 	}
 
@@ -224,7 +225,7 @@ implements BsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener
         String name = "etalon"; // @todo: externalize string
 
 		Log.debugMessage("TraceSelectorFrame.etalonMTMCUpdated | id is '" + id + "'; name = '" + name + "'", Log.FINEST);
-		tModel.addRow(name, new Color[] {Heap.getColor(id)});
+		tModel.addRow(name, new Color[] {GUIUtil.getColor(id)});
 		setVisible(true);
 	}
 

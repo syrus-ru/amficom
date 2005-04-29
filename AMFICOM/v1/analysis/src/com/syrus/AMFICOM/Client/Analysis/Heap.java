@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.34 2005/04/29 06:41:05 saa Exp $
+ * $Id: Heap.java,v 1.35 2005/04/29 06:46:08 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,25 +8,19 @@
  
 package com.syrus.AMFICOM.Client.Analysis;
 
-import java.awt.Color;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Map;
-import java.util.Random;
-
-import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.Analysis.UI.ReflectogrammLoadDialog;
+import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.CurrentEventChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.CurrentTraceChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryMTAEListener;
-import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryTraceListener;
-import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEventsImpl;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
@@ -56,16 +50,13 @@ import com.syrus.io.BellcoreStructure;
  * bsHash{}
  * 
  * Свойства с полным отслеживанием и уведомлениями:
- * primaryMTAE (он же primaryMTM - @todo: rename to primaryMTAE);
+ * primaryMTAE;
  * etalonMTM;
  * currentTrace;
  * currentEvent, currentEtalonEvent (пока не следят за MTM/MTAE);
  * 
- * Read-only автоматически генерируемые свойства:
- * idColorMap (XXX: думаю, стоит перенести в GUIUtil //saa)
- * 
  * @author $Author: saa $
- * @version $Revision: 1.34 $, $Date: 2005/04/29 06:41:05 $
+ * @version $Revision: 1.35 $, $Date: 2005/04/29 06:46:08 $
  * @module
  */
 public class Heap
@@ -74,7 +65,7 @@ public class Heap
 
 	public static final String PRIMARY_TRACE_KEY = "primarytrace";
 	public static final String ETALON_TRACE_KEY =  "etalon";
-	public static final String REFERENCE_TRACE_KEY = "referencetrace"; // XXX - is really required
+	public static final String REFERENCE_TRACE_KEY = "referencetrace"; // XXX - is referencetrace really required?
 	public static final String MODELED_TRACE_KEY = "modeledtrace"; // trace got from modelling module
 
     // properties
@@ -90,8 +81,6 @@ public class Heap
 	private static ModelTraceAndEventsImpl primaryMTAE = null;
 	private static ModelTraceManager etalonMTM = null;
 
-	private static Map idColorMap = new HashMap();
-
 	private static String currentTrace = ""; // XXX: initialize to avoid crushes
 	private static int currentEv = -1; // XXX: is this initialization good?
 
@@ -105,6 +94,8 @@ public class Heap
     private static LinkedList etalonMTMListeners = new LinkedList();
     private static LinkedList currentTraceChangeListeners = new LinkedList();
     private static LinkedList currentEventChangeListeners = new LinkedList();
+    
+    // methods
 
     public static ReflectogrammLoadDialog getRLDialogByKey(String key) {
         return (ReflectogrammLoadDialog) dialogHash.get(key);
@@ -190,44 +181,6 @@ public class Heap
 
     public static boolean hasEmptyAllBSMap() {
         return bsHash.isEmpty();
-    }
-
-    public static Color getColor(String id) {
-        Color color = null;
-        // System.out.println("id is '" + id + "'");
-        color = (Color) idColorMap.get(id);
-        if (color == null) {
-            color = UIManager.getColor(id);
-            if (color != null) {
-                idColorMap.put(id, color);
-            }
-        }
-        if (color == null) {
-            int i = 0;
-            String id1 = null;
-            while (id1 == null) {
-                id1 = AnalysisResourceKeys.COLOR_TRACE_PREFIX + i++;
-                // System.out.println("search by " + id1);
-                color = (Color) idColorMap.get(id1);
-                if (color != null)
-                    id1 = null;
-            }
-            // System.out.println("by id:" + id1);
-            color = UIManager.getColor(id1);
-            if (color == null) {
-                Random random = new Random();
-                // System.out.println("by random");
-                color = new Color(Math.abs(random.nextInt()) % 256,
-                        Math.abs(random.nextInt()) % 256,
-                        Math.abs(random.nextInt()) % 256);
-            }
-            idColorMap.put(id1, color);
-            if (!id1.equals(id))
-                idColorMap.put(id, color);
-        }
-        // System.out.println(color);
-        // System.out.println();
-        return color;
     }
 
     private static String getFirstSecondaryBSKey() {

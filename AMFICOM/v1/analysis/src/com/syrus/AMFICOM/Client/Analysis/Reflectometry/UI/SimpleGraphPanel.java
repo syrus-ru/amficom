@@ -6,7 +6,7 @@ import java.awt.Graphics;
 
 import javax.swing.JPanel;
 
-import com.syrus.AMFICOM.Client.Analysis.Heap;
+import com.syrus.AMFICOM.Client.Analysis.GUIUtil;
 
 public class SimpleGraphPanel extends JPanel
 {
@@ -92,7 +92,7 @@ public class SimpleGraphPanel extends JPanel
 	}
 
 	public synchronized void setColorModel(String id) {
-		this.color = Heap.getColor(id);
+		this.color = GUIUtil.getColor(id);
 		updColorModel();
 	}
 
