@@ -1,5 +1,5 @@
 /*
- * $Id: LEServerSessionEnvironment.java,v 1.1 2005/04/29 12:14:03 arseniy Exp $
+ * $Id: LEServerSessionEnvironment.java,v 1.2 2005/04/29 12:28:11 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,9 +10,10 @@ package com.syrus.AMFICOM.leserver;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseIdentifierGeneratorServer;
 import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.PoolContext;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/29 12:14:03 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/29 12:28:11 $
  * @author $Author: arseniy $
  * @module leserver_v1
  */
@@ -36,7 +37,11 @@ final class LEServerSessionEnvironment {
 		return this.leServerServantManager;
 	}
 
-	public static void create(String serverHostName) throws CommunicationException {
+	public PoolContext getPoolContext() {
+		return this.leServerPoolContext;
+	}
+
+	public static void createInstance(String serverHostName) throws CommunicationException {
 		LEServerServantManager leServerServantManager = LEServerServantManager.createAndStart(serverHostName);
 		instance = new LEServerSessionEnvironment(leServerServantManager, new LEServerPoolContext());
 	}
