@@ -29,8 +29,8 @@ public class AnalysisCommand extends VoidCommand {
 	        RefAnalysis a = new RefAnalysis();
 			a.decode(y, mtae);
 
+            Heap.setMTAEPrimary(mtae);
 			Heap.setRefAnalysisPrimary(a);
-			Heap.setMTAEPrimary(mtae);
 		}
 	}
 }
