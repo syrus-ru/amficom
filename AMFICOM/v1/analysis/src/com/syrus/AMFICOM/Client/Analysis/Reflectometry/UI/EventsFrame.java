@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
+import com.syrus.AMFICOM.Client.General.Event.PrimaryRefAnalysisListener;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
-import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalyseApplicationModel;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
@@ -44,8 +44,8 @@ import com.syrus.AMFICOM.analysis.dadara.TraceEvent;
 import com.syrus.io.BellcoreStructure;
 
 public class EventsFrame extends ATableFrame
-implements OperationListener, BsHashChangeListener,
-EtalonMTMListener, CurrentEventChangeListener
+implements OperationListener,
+    EtalonMTMListener, CurrentEventChangeListener, PrimaryRefAnalysisListener
 {
 	private static final String DASH = "-----";
 
@@ -85,29 +85,15 @@ EtalonMTMListener, CurrentEventChangeListener
 		this.dispatcher.register(this, RefUpdateEvent.typ);
 		this.dispatcher.register(this, AnalyseApplicationModel.SELECT_NEXT_EVENT);
 		this.dispatcher.register(this, AnalyseApplicationModel.SELECT_PREVIOUS_EVENT);
-		Heap.addBsHashListener(this);
 		Heap.addEtalonMTMListener(this);
 		Heap.addCurrentEventChangeListener(this);
+        Heap.addPrimaryRefAnalysisListener(this);
 	}
 
 	public void operationPerformed(OperationEvent ae)
 	{
 		String actionCommand = ae.getActionCommand();
-		if(actionCommand.equals(RefUpdateEvent.typ))
-		{
-			RefUpdateEvent rue = (RefUpdateEvent)ae;
-			if (rue.analysisPerformed())
-			{
-				if (Heap.getRefAnalysisPrimary() != null)
-				{
-					RefAnalysis a = Heap.getRefAnalysisPrimary();
-					BellcoreStructure bs = Heap.getBSPrimaryTrace();
-					setTableModel(bs, a.events);
-					updateTableModel ();
-				}
-				setVisible(true);
-			}
-		} else if (actionCommand.equals(AnalyseApplicationModel.SELECT_PREVIOUS_EVENT)) {
+		if (actionCommand.equals(AnalyseApplicationModel.SELECT_PREVIOUS_EVENT)) {
 			int selectedRow = this.jTable.getSelectedRow();
 			if (selectedRow > 0) {
 				selectedRow--;
@@ -139,7 +125,7 @@ EtalonMTMListener, CurrentEventChangeListener
 	}
 
 
-	public void setComparedWithEtalonEventsColor()
+	private void setComparedWithEtalonEventsColor()
 	{
 		if(getEtalon() == null || getData() == null)
 		{
@@ -162,7 +148,7 @@ EtalonMTMListener, CurrentEventChangeListener
         ModelTraceComparer.compareMTAEToMTM(Heap.getMTAEPrimary(), Heap.getMTMEtalon()); // XXX: will crush if no etalon will be at this moment
 	}
 
-	public void setNoComparedWithEtalonColor()
+	private void setNoComparedWithEtalonColor()
 	{
 		EventTableRenderer rend = (EventTableRenderer)jTable.getDefaultRenderer(Object.class);
 		rend.setNewEventsList(null);
@@ -267,9 +253,21 @@ EtalonMTMListener, CurrentEventChangeListener
 			}
 		UIGeneralStorage.arrangeTableColumns(this.jTable);
 	}
+    
+    private void updateColors() {
+        if (Heap.getMTMEtalon() == null)
+            setNoComparedWithEtalonColor();
+        else
+            setComparedWithEtalonEventsColor();
+    }
 
-	void setTableModel(BellcoreStructure bs, TraceEvent[] events)
+	private void setTableModel()
 	{
+        RefAnalysis ra = Heap.getRefAnalysisPrimary();
+        if (ra == null)
+            return;
+        BellcoreStructure bs = ra.getBS(); 
+        TraceEvent[] events = ra.events;
 		double res_km = bs.getResolution() / 1000.0;
 		double sigma = MathRef.calcSigma(bs.getWavelength(), bs.getPulsewidth());
 
@@ -434,46 +432,14 @@ EtalonMTMListener, CurrentEventChangeListener
 		}
 	}
 
-	public void bsHashAdded(String key, BellcoreStructure bs)
-	{
-		if (key.equals(Heap.PRIMARY_TRACE_KEY))
-		{
-			setNoComparedWithEtalonColor();
-			if (Heap.getRefAnalysisPrimary() != null)
-			{
-				RefAnalysis a = Heap.getRefAnalysisPrimary();
-				setTableModel(bs, a.events);
-				this.updateTableModel();
-			}
-			setVisible(true);
-		}
-	}
-
-
-	public void bsHashRemoved(String key)
-	{
-		if(key.equals(AnalysisUtil.ETALON))
-		{
-			setNoComparedWithEtalonColor();
-		}
-	}
-
-
-	public void bsHashRemovedAll()
-	{
-		tModel.clearTable();
-		setNoComparedWithEtalonColor();
-		setVisible(false);
-	}
-
 	public void etalonMTMCUpdated()
 	{
-		setComparedWithEtalonEventsColor();
+        updateColors();
 	}
 
 	public void etalonMTMRemoved()
 	{
-		setNoComparedWithEtalonColor();
+        updateColors();
 	}
 
 	public void currentEventChanged()
@@ -487,5 +453,21 @@ EtalonMTMListener, CurrentEventChangeListener
 	private ComplexReflectogramEvent []getEtalon() {
 		return Heap.getMTMEtalon().getMTAE().getComplexEvents();
 	}
+
+    public void primaryRefAnalysisCUpdated() {
+        updateColors();
+        if (Heap.getRefAnalysisPrimary() != null)
+        {
+            setTableModel();
+            updateTableModel();
+        }
+        setVisible(true);
+    }
+
+    public void primaryRefAnalysisRemoved() {
+        tModel.clearTable();
+        setNoComparedWithEtalonColor();
+        setVisible(false);
+    }
 
 }
