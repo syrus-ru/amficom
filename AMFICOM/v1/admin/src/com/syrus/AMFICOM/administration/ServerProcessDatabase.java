@@ -1,5 +1,5 @@
 /*
- * $Id: ServerProcessDatabase.java,v 1.1 2005/04/27 17:44:08 arseniy Exp $
+ * $Id: ServerProcessDatabase.java,v 1.2 2005/04/29 09:33:23 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,7 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -26,7 +27,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/27 17:44:08 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/29 09:33:23 $
  * @author $Author: arseniy $
  * @module admin_v1
  */
@@ -105,10 +106,12 @@ public class ServerProcessDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public ServerProcess retrieveForCodename(String codename)
+	public ServerProcess retrieveForServerAndCodename(Identifier serverId, String codename)
 			throws RetrieveObjectException, IllegalDataException, ObjectNotFoundException {
-		String condition = StorableObjectWrapper.COLUMN_CODENAME + EQUALS
-				+ APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTOPHE;
+		String condition = StorableObjectWrapper.COLUMN_ID + EQUALS + DatabaseIdentifier.toSQLString(serverId)
+				+ SQL_AND
+				+ StorableObjectWrapper.COLUMN_CODENAME + EQUALS
+					+ APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTOPHE;
 		Set objects = this.retrieveByCondition(condition);
 		if (!objects.isEmpty())
 			return (ServerProcess) objects.iterator().next();
