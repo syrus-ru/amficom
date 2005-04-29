@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.42 2005/04/29 12:37:00 saa Exp $
+ * $Id: Heap.java,v 1.43 2005/04/29 14:09:43 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -64,7 +64,7 @@ import com.syrus.io.BellcoreStructure;
  * Фактически, primaryMTAE - это часть refAnalysisPrimary.
  * 
  * @author $Author: saa $
- * @version $Revision: 1.42 $, $Date: 2005/04/29 12:37:00 $
+ * @version $Revision: 1.43 $, $Date: 2005/04/29 14:09:43 $
  * @module
  */
 public class Heap
@@ -397,6 +397,14 @@ public class Heap
 
     public static void removePrimaryMTMListener(PrimaryMTAEListener listener) {
         removeListener(primaryMTAEListeners, listener);
+    }
+
+    public static void addPrimaryRefAnalysisListener(PrimaryRefAnalysisListener listener) {
+        addListener(primaryRefAnalysisListeners, listener);
+    }
+
+    public static void removePrimaryRefAnalysisListener(PrimaryRefAnalysisListener listener) {
+        removeListener(primaryRefAnalysisListeners, listener);
     }
 
     public static void addEtalonMTMListener(EtalonMTMListener listener) {
