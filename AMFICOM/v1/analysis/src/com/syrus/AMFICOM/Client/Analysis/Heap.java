@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.38 2005/04/29 07:40:43 saa Exp $
+ * $Id: Heap.java,v 1.39 2005/04/29 08:37:27 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,7 +56,7 @@ import com.syrus.io.BellcoreStructure;
  * currentEvent, currentEtalonEvent (пока не следят за MTM/MTAE);
  * 
  * @author $Author: saa $
- * @version $Revision: 1.38 $, $Date: 2005/04/29 07:40:43 $
+ * @version $Revision: 1.39 $, $Date: 2005/04/29 08:37:27 $
  * @module
  */
 public class Heap
@@ -90,7 +90,7 @@ public class Heap
 
     private static LinkedList bsHashChangedListeners = new LinkedList();
     private static LinkedList primaryTraceListeners = new LinkedList();
-    private static LinkedList primaryMTMListeners = new LinkedList();
+    private static LinkedList primaryMTAEListeners = new LinkedList();
     private static LinkedList etalonMTMListeners = new LinkedList();
     private static LinkedList currentTraceChangeListeners = new LinkedList();
     private static LinkedList currentEventChangeListeners = new LinkedList();
@@ -325,12 +325,12 @@ public class Heap
     }
 
     private static void notifyPrimaryMTMCUpdated() {
-        for (Iterator it = primaryMTMListeners.iterator(); it.hasNext();)
+        for (Iterator it = primaryMTAEListeners.iterator(); it.hasNext();)
             ((PrimaryMTAEListener) it.next()).primaryMTMCUpdated();
     }
 
-    private static void notifyPrimaryMTMRemoved() {
-        for (Iterator it = primaryMTMListeners.iterator(); it.hasNext();)
+    private static void notifyPrimaryMTAERemoved() {
+        for (Iterator it = primaryMTAEListeners.iterator(); it.hasNext();)
             ((PrimaryMTAEListener) it.next()).primaryMTMRemoved();
     }
 
@@ -383,11 +383,11 @@ public class Heap
     }
 
     public static void addPrimaryMTMListener(PrimaryMTAEListener listener) {
-        addListener(primaryMTMListeners, listener);
+        addListener(primaryMTAEListeners, listener);
     }
 
     public static void removePrimaryMTMListener(PrimaryMTAEListener listener) {
-        removeListener(primaryMTMListeners, listener);
+        removeListener(primaryMTAEListeners, listener);
     }
 
     public static void addEtalonMTMListener(EtalonMTMListener listener) {
@@ -507,17 +507,17 @@ public class Heap
      * closes all BS traces, primary MTAE and etalon MTM 
      */
     public static void closeAll() {
+        // close Etalon MTM
+        etalonMTM = null;
+        notifyEtalonMTMRemoved();
+
         // close all BS
         removeAllBS();
         notifyBsHashRemoveAll();
         
-        // close Primary MTM
+        // close Primary MTAE
         primaryMTAE = null;
         fixCurrentEvent();
-        notifyPrimaryMTMRemoved();
-
-        // close Etalon MTM
-        etalonMTM = null;
-        notifyEtalonMTMRemoved();
+        notifyPrimaryMTAERemoved();
     }
 }
