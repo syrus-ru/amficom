@@ -717,7 +717,7 @@ public class AnalyseMainFrame extends JFrame implements BsHashChangeListener,
 			RefUpdateEvent rue = (RefUpdateEvent) ae;
 
 			if (rue.analysisPerformed()) {
-				updFrames(Heap.PRIMARY_TRACE_KEY);
+				updFrames();
 			}
 		}
 	}
@@ -844,9 +844,10 @@ public class AnalyseMainFrame extends JFrame implements BsHashChangeListener,
 		statusBar.setText("domain", LangModel.getString("statusNoDomain"));
 	}
 
-	void updFrames(String id)
+	void updFrames()
 	{
-		BellcoreStructure bs = Heap.getAnyBSTraceByKey(id);
+        String id = Heap.PRIMARY_TRACE_KEY;
+		BellcoreStructure bs = Heap.getBSPrimaryTrace();
 		double deltaX = bs.getResolution();
 
 		double[] filtered = Heap.getRefAnalysisByKey(id).filtered;
@@ -1033,7 +1034,7 @@ public class AnalyseMainFrame extends JFrame implements BsHashChangeListener,
 
 		aModel.fireModelChanged("");
 
-		updFrames(Heap.PRIMARY_TRACE_KEY);
+		updFrames();
 	}
 
 	public void primaryTraceRemoved()
