@@ -1,5 +1,5 @@
 /*
- * $Id: MServerImplementation.java,v 1.50 2005/04/23 13:35:39 arseniy Exp $
+ * $Id: MServerImplementation.java,v 1.51 2005/04/29 16:04:27 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -47,6 +47,7 @@ import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicType;
+import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
@@ -58,18 +59,24 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectConditionBuilder;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.UpdateObjectException;
+import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.AccessIdentity_Transferable;
 import com.syrus.AMFICOM.general.corba.CharacteristicType_Transferable;
 import com.syrus.AMFICOM.general.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder;
 import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
+import com.syrus.AMFICOM.general.corba.SecurityKey;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
+import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
+import com.syrus.AMFICOM.leserver.corba.LoginServer;
 import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.CronTemporalPattern;
@@ -100,7 +107,7 @@ import com.syrus.AMFICOM.mserver.corba.MServerPOA;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.50 $, $Date: 2005/04/23 13:35:39 $
+ * @version $Revision: 1.51 $, $Date: 2005/04/29 16:04:27 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -1390,32 +1397,65 @@ public class MServerImplementation extends MServerPOA {
 
 
 
+	public StorableObject_Transferable[] receiveTests(Test_Transferable[] testsT, boolean force, SecurityKey security_key)
+			throws AMFICOMRemoteException {
+		Log.debugMessage("MServerImplementation.receiveTests | Received " + testsT.length + " tests", Log.DEBUGLEVEL07);
 
+		Identifier modifierId = this.validateAccess(security_key);
 
-  public void updateTest(Test_Transferable tt, AccessIdentity_Transferable ait) {
-  	Identifier id = new Identifier(tt.header.id);
-  	Test test = null;
-  	try {
-			test = (Test) MeasurementStorableObjectPool.fromTransferable(id, tt);
-		}
-		catch (ApplicationException ae) {
-			Log.errorException(ae);
-		}
-
-  	if (test != null) {
-  		try {
-				TestDatabase database = MeasurementDatabaseContext.getTestDatabase();
-				database.update(test, new Identifier(ait.user_id), StorableObjectDatabase.UPDATE_FORCE);
+		java.util.Set objects = new HashSet(testsT.length);
+		for (int i = 0; i < testsT.length; i++) {
+			Test test = null;
+			try {
+				final Identifier id = new Identifier(testsT[i].header.id);
+				test = (Test) MeasurementStorableObjectPool.fromTransferable(id, testsT[i]);
+				if (test == null)
+					test = (Test) MeasurementStorableObjectPool.getStorableObject(id, true);
 			}
 			catch (ApplicationException ae) {
 				Log.errorException(ae);
 			}
-  	}
-  }
+
+			if (test != null)
+				objects.add(test);
+		}
+
+		TestDatabase testDatabase = MeasurementDatabaseContext.getTestDatabase();
+		try {
+			testDatabase.update(objects, modifierId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+			return StorableObject.createHeadersTransferable(objects);
+		}
+		catch (UpdateObjectException uoe) {
+			Log.errorException(uoe);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_UPDATE, CompletionStatus.COMPLETED_NO, uoe.getMessage());
+		}
+		catch (VersionCollisionException vce) {
+			Log.errorException(vce);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_UPDATE, CompletionStatus.COMPLETED_NO, vce.getMessage());
+		}
+	}
 
 
 
 	public void verify(byte i) {
 		Log.debugMessage("Verify value: " + i, Log.DEBUGLEVEL10);
+	}
+
+
+
+	/**
+	 * TODO Meaningful implementation*/
+	private Identifier validateAccess(SecurityKey securityKey) throws AMFICOMRemoteException {
+		try {
+			LoginServer loginServer = MServerSessionEnvironment.getInstance().getMServerServantManager().getLoginServerReference();
+
+			Identifier_TransferableHolder userIdTHolder = new Identifier_TransferableHolder();
+			Identifier_TransferableHolder domainIdTHolder = new Identifier_TransferableHolder();
+			loginServer.validateAccess(securityKey, userIdTHolder, domainIdTHolder);
+			return new Identifier(userIdTHolder.value);
+		}
+		catch (CommunicationException ce) {
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_ACCESS_VALIDATION, CompletionStatus.COMPLETED_NO, ce.getMessage());
+		}
 	}
 }
