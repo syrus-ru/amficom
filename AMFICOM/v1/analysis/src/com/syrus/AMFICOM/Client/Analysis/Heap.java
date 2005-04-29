@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.41 2005/04/29 10:51:46 saa Exp $
+ * $Id: Heap.java,v 1.42 2005/04/29 12:37:00 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.Client.General.Event.CurrentEventChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.CurrentTraceChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryMTAEListener;
+import com.syrus.AMFICOM.Client.General.Event.PrimaryRefAnalysisListener;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryTraceListener;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEventsImpl;
@@ -39,7 +40,6 @@ import com.syrus.io.BellcoreStructure;
  * 
  * Обладает свойствами, по которым не обеспечивает уведомлений:
  * minuitAnalysisParams, minuitDefaultParams, minuitInitialParams;
- * refAnalysisPrimary;
  * contextMeasurementSetup;
  * minTraceLevelt;
  * rLDialog{};
@@ -50,13 +50,21 @@ import com.syrus.io.BellcoreStructure;
  * bsHash{}
  * 
  * Свойства с полным отслеживанием и уведомлениями:
- * primaryMTAE;
+ * refAnalysisPrimary;
  * etalonMTM;
  * currentTrace;
  * currentEvent, currentEtalonEvent;
+ *
+ * Кроме того, есть свойство primaryMTAE, которое изменяется вместе и только
+ * вместе с refAnalysisPrimary; по его изменению тоже рассылаются уведомления.
+ * Рассылка происходит одновременно с рассылкой для refAnalysisPrimary,
+ * т.е. достаточно подписаться только на одно из них. Рекомендуется
+ * подписываться на primaryMTAE в тех случаях, когда refAnalysisPrimary не
+ * нужен, а на refAnalysisPrimary - в случаях, когда refAnalysisPrimary нужен.
+ * Фактически, primaryMTAE - это часть refAnalysisPrimary.
  * 
  * @author $Author: saa $
- * @version $Revision: 1.41 $, $Date: 2005/04/29 10:51:46 $
+ * @version $Revision: 1.42 $, $Date: 2005/04/29 12:37:00 $
  * @module
  */
 public class Heap
@@ -78,7 +86,6 @@ public class Heap
 	private static MeasurementSetup contextMeasurementSetup;	// AnalysisUtil.CONTEXT, "MeasurementSetup"
 	private static Double minTraceLevel;			// "min_trace_level", PRIMARY_TRACE_KEY
 	private static HashMap dialogHash = new HashMap();	// "dialog", "*"
-	private static ModelTraceAndEventsImpl primaryMTAE = null;
 	private static ModelTraceManager etalonMTM = null;
 
 	private static String currentTrace = ""; // XXX: initialize to avoid crushes
@@ -91,6 +98,7 @@ public class Heap
     private static LinkedList bsHashChangedListeners = new LinkedList();
     private static LinkedList primaryTraceListeners = new LinkedList();
     private static LinkedList primaryMTAEListeners = new LinkedList();
+    private static LinkedList primaryRefAnalysisListeners = new LinkedList();
     private static LinkedList etalonMTMListeners = new LinkedList();
     private static LinkedList currentTraceChangeListeners = new LinkedList();
     private static LinkedList currentEventChangeListeners = new LinkedList();
@@ -105,13 +113,13 @@ public class Heap
             ReflectogrammLoadDialog dialog) {
         dialogHash.put(key, dialog);
     }
-
     public static ModelTraceAndEventsImpl getMTAEPrimary() {
-        return primaryMTAE;
+        return refAnalysisPrimary.getMTAE();
     }
 
     private static int getNumberOfEvents() {
-    	return primaryMTAE == null ? 0 : primaryMTAE.getNEvents();
+    	return refAnalysisPrimary == null ?
+                0 : refAnalysisPrimary.getMTAE().getNEvents();
     }
 
     public static ModelTraceManager getMTMEtalon() {
@@ -120,10 +128,6 @@ public class Heap
 
     public static RefAnalysis getRefAnalysisPrimary() {
         return refAnalysisPrimary;
-    }
-
-    public static void setRefAnalysisPrimary(RefAnalysis ra) {
-        refAnalysisPrimary = ra;
     }
 
     public static BellcoreStructure getAnyBSTraceByKey(String key) {
@@ -160,12 +164,14 @@ public class Heap
 
 	// XXX: rather slow...
     public static int getCurrentEtalonEvent() {
-    	if (primaryMTAE == null || etalonMTM == null || currentEv < 0 || currentEv >= primaryMTAE.getNEvents())
+    	if (refAnalysisPrimary == null || etalonMTM == null || currentEv < 0
+                || currentEv >= getNumberOfEvents())
     		return -1;
     	// reliability comparison is actually performed
     	// @todo: ModelTraceAndEventsImpl: add getReliabilitySimpleEvents()
-    	ReflectogramComparer rcomp = new ReflectogramComparer(primaryMTAE.getSimpleEvents(),
-    		etalonMTM.getRSE());
+    	ReflectogramComparer rcomp = new ReflectogramComparer(
+                getMTAEPrimary().getSimpleEvents(),
+                etalonMTM.getRSE());
     	return rcomp.getEtalonIdByProbeId(currentEv);
     }
 
@@ -317,7 +323,7 @@ public class Heap
             ((PrimaryTraceListener) it.next()).primaryTraceRemoved();
     }
 
-    private static void notifyPrimaryMTMCUpdated() {
+    private static void notifyPrimaryMTAECUpdated() {
         for (Iterator it = primaryMTAEListeners.iterator(); it.hasNext();)
             ((PrimaryMTAEListener) it.next()).primaryMTMCUpdated();
     }
@@ -325,6 +331,16 @@ public class Heap
     private static void notifyPrimaryMTAERemoved() {
         for (Iterator it = primaryMTAEListeners.iterator(); it.hasNext();)
             ((PrimaryMTAEListener) it.next()).primaryMTMRemoved();
+    }
+
+    private static void notifyPrimaryRefAnalysisCUpdated() {
+        for (Iterator it = primaryRefAnalysisListeners.iterator(); it.hasNext();)
+            ((PrimaryRefAnalysisListener)it.next()).primaryRefAnalysisCUpdated();
+    }
+
+    private static void notifyPrimaryRefAnalysisRemoved() {
+        for (Iterator it = primaryRefAnalysisListeners.iterator(); it.hasNext();)
+            ((PrimaryRefAnalysisListener)it.next()).primaryRefAnalysisRemoved();
     }
 
     private static void notifyEtalonMTMCUpdated() {
@@ -445,12 +461,14 @@ public class Heap
 
     public static void setCurrentEtalonEvent(int nEtEvent) {
     	// @todo: store a pair {currentEvent, currentEtalonEvent} instead of lossy converting etalonEvent to event 
-    	if (primaryMTAE == null || etalonMTM == null || nEtEvent < 0 || nEtEvent >= etalonMTM.getMTAE().getNEvents()) {
+    	if (refAnalysisPrimary == null || etalonMTM == null ||
+                nEtEvent < 0 || nEtEvent >= etalonMTM.getMTAE().getNEvents()) {
     		setCurrentEvent(-1);
     		return;
     	}
     	else {
-        	ReflectogramComparer rcomp = new ReflectogramComparer(primaryMTAE.getSimpleEvents(),
+        	ReflectogramComparer rcomp = new ReflectogramComparer(
+                    getMTAEPrimary().getSimpleEvents(),
         		etalonMTM.getRSE());
         	setCurrentEvent(rcomp.getProbeIdByEtalonId(nEtEvent));
     	}
@@ -466,12 +484,13 @@ public class Heap
     }
 
     /**
-     * @param mtae  must not be null
+     * 
+     * @param ra not null
      */
-    public static void setMTAEPrimary(ModelTraceAndEventsImpl mtae) {
-        primaryMTAE = mtae;
-        fixCurrentEvent();
-        notifyPrimaryMTMCUpdated();
+    public static void setRefAnalysisPrimary(RefAnalysis ra) {
+        refAnalysisPrimary = ra;
+        notifyPrimaryRefAnalysisCUpdated();
+        notifyPrimaryMTAECUpdated();
     }
 
     /**
@@ -497,7 +516,7 @@ public class Heap
     }
 
     /**
-     * closes all BS traces, primary MTAE and etalon MTM 
+     * closes all BS traces, primary RefAnalysis&MTAE and etalon MTM 
      */
     public static void closeAll() {
         // close Etalon MTM
@@ -509,8 +528,9 @@ public class Heap
         notifyBsHashRemoveAll();
         
         // close Primary MTAE
-        primaryMTAE = null;
+        refAnalysisPrimary = null;
         fixCurrentEvent();
+        notifyPrimaryRefAnalysisRemoved();
         notifyPrimaryMTAERemoved();
     }
 }

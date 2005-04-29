@@ -1,14 +1,31 @@
 package com.syrus.AMFICOM.analysis.dadara;
 
+import com.syrus.AMFICOM.Client.Analysis.Heap;
+import com.syrus.AMFICOM.analysis.ClientAnalysisManager;
+import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
+import com.syrus.io.BellcoreStructure;
+
 public class RefAnalysis
 {
-	public TraceEvent[] events;
-	public double[] noise;
-	public double[] filtered;
-	public TraceEvent overallStats;
+	public TraceEvent[] events; // hope nobody will change it
+	public double[] noise; // hope nobody will change it
+	public double[] filtered; // hope nobody will change it
+	public TraceEvent overallStats; // hope nobody will change it
 
-	public RefAnalysis(double[] y, ModelTraceAndEvents mtae)
+    private ModelTraceAndEventsImpl mtae;
+
+	public RefAnalysis(BellcoreStructure bs)
 	{
+        double[] y = bs.getTraceData();
+
+        AnalysisParameters ap = Heap.getMinuitAnalysisParams();
+        if (ap == null) {
+            new ClientAnalysisManager();
+            ap = Heap.getMinuitAnalysisParams();
+        }
+
+        mtae = CoreAnalysisManager.makeAnalysis(bs, ap);
+
         decode(y, mtae);
 	}
 
@@ -207,4 +224,8 @@ public class RefAnalysis
 			}
 		}
 	}
+
+    public ModelTraceAndEventsImpl getMTAE() {
+        return mtae;
+    }
 }
