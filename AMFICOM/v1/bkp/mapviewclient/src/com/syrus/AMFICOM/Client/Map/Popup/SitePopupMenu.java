@@ -62,8 +62,8 @@ public final class SitePopupMenu extends MapPopupMenu
 				}
 			});
 		this.add(this.removeMenuItem);
-		this.addSeparator();
-		this.add(this.propertiesMenuItem);
+//		this.addSeparator();
+//		this.add(this.propertiesMenuItem);
 	}
 
 	void showProperties()
