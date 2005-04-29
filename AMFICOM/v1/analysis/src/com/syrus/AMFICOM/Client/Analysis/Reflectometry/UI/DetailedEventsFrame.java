@@ -22,7 +22,6 @@ import javax.swing.table.AbstractTableModel;
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.CurrentEventChangeListener;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryRefAnalysisListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
@@ -72,11 +71,6 @@ implements EtalonMTMListener,
 
 	public DetailedEventsFrame()
 	{
-		this(new Dispatcher());
-	}
-
-	public DetailedEventsFrame(Dispatcher dispatcher)
-	{
 		super();
 		try
 		{
@@ -87,10 +81,10 @@ implements EtalonMTMListener,
 			e.printStackTrace();
 		}
 
-		init_module(dispatcher);
+		init_module();
 	}
 
-	void init_module(Dispatcher dispatcher)
+	private void init_module()
 	{
 		Heap.addEtalonMTMListener(this);
 		Heap.addCurrentEventChangeListener(this);

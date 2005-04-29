@@ -343,7 +343,7 @@ public class AnalyseMainFrame extends JFrame implements BsHashChangeListener,
 
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | DETAILED_EVENTS_FRAME", Log.FINEST);
-				DetailedEventsFrame detailedEvFrame = new DetailedEventsFrame(internalDispatcher);
+				DetailedEventsFrame detailedEvFrame = new DetailedEventsFrame();
 				desktopPane.add(detailedEvFrame);
 				return detailedEvFrame;
 			}

@@ -188,7 +188,7 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener, CurrentTr
 		desktopPane.add(thresholdsSelectionFrame);
 		tables.add(thresholdsSelectionFrame);
 
-		detailedEvFrame = new DetailedEventsFrame(internal_dispatcher);
+		detailedEvFrame = new DetailedEventsFrame();
 		desktopPane.add(detailedEvFrame);
 
 		thresholdsFrame = new ThresholdsFrame(internal_dispatcher);
