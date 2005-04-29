@@ -1,0 +1,129 @@
+/*
+ * $Id: MServerServantManager.java,v 1.1 2005/04/29 16:00:37 arseniy Exp $
+ * 
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+package com.syrus.AMFICOM.mserver;
+
+import java.util.Set;
+
+import com.syrus.AMFICOM.administration.AdministrationDatabaseContext;
+import com.syrus.AMFICOM.administration.Server;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.BaseConnectionManager;
+import com.syrus.AMFICOM.general.CORBAServer;
+import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.ContextNameFactory;
+import com.syrus.AMFICOM.general.DatabaseIdentifierGeneratorServer;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.RunnableVerifiedConnectionManager;
+import com.syrus.AMFICOM.general.corba.IdentifierGeneratorServer;
+import com.syrus.AMFICOM.general.corba.Verifiable;
+import com.syrus.AMFICOM.leserver.corba.EventServer;
+import com.syrus.AMFICOM.leserver.corba.LoginServer;
+import com.syrus.AMFICOM.mcm.corba.MCM;
+import com.syrus.util.ApplicationProperties;
+import com.syrus.util.Log;
+
+/**
+ * @version $Revision: 1.1 $, $Date: 2005/04/29 16:00:37 $
+ * @author $Author: arseniy $
+ * @module cmserver_v1
+ */
+
+final class MServerServantManager extends RunnableVerifiedConnectionManager implements BaseConnectionManager {
+	private static final String KEY_SERVANT_NAME_LOGINSERVER = "LoginServerServantName";
+	private static final String KEY_SERVANT_NAME_EVENTSERVER = "EventServerServantName";
+	private static final String KEY_SERVANT_CHECK_TIMEOUT = "ServantCheckTimeout";
+
+	private static final String SERVANT_NAME_LOGINSERVER = "LoginServer";
+	private static final String SERVANT_NAME_EVENTSERVER = "EventServer";
+	public static final int SERVANT_CHECK_TIMEOUT = 10;		//min
+
+	private String loginServerServantName;
+	private String eventServerServantName;
+	private DatabaseIdentifierGeneratorServer databaseIdentifierGeneratorServer;
+
+	public MServerServantManager(CORBAServer corbaServer,
+			String loginServerServantName,
+			String eventServerServantName,
+			Set mcmIdStrings,
+			long timeout) {
+		super(corbaServer, mcmIdStrings, timeout);
+		super.addServantName(loginServerServantName);
+		super.addServantName(eventServerServantName);
+
+		this.loginServerServantName = loginServerServantName;
+		this.eventServerServantName = eventServerServantName;
+
+		this.databaseIdentifierGeneratorServer = new DatabaseIdentifierGeneratorServer();
+
+		assert timeout >= 10 * 60 * 1000 : "Too low timeout"; //not less then 10 min
+	}
+
+	public LoginServer getLoginServerReference() throws CommunicationException {
+		try {
+			return (LoginServer) super.getVerifiableReference(this.loginServerServantName);
+		}
+		catch (IllegalDataException e) {
+			// Never
+			assert false;
+			return null;
+		}
+	}
+
+	public EventServer getEventServerReference() throws CommunicationException {
+		try {
+			return (EventServer) super.getVerifiableReference(this.eventServerServantName);
+		}
+		catch (IllegalDataException e) {
+			// Never
+			assert false;
+			return null;
+		}
+	}
+
+	public IdentifierGeneratorServer getIGSReference() throws CommunicationException {
+		return this.databaseIdentifierGeneratorServer;
+	}
+
+	public MCM getVerifiedMCMReference(Identifier mcmId) throws CommunicationException, IllegalDataException {
+		Verifiable reference = super.getVerifiableReference(mcmId.toString());
+		return (MCM) reference;
+	}
+
+	protected void onLoseConnection(String servantName) {
+		Log.debugMessage("MServerServantManager.onLoseConnection | Connection with '" + servantName + "' lost", Log.DEBUGLEVEL08);
+		//@todo Generate event "Connection with MCM servantName lost"
+	}
+
+	protected void onRestoreConnection(String servantName) {
+		Log.debugMessage("MServerServantManager.onRestoreConnection | Connection with '" + servantName + "' restored",
+				Log.DEBUGLEVEL08);
+		//@todo Generate event "Connection with MCM servantName restored"
+	}
+
+	public static MServerServantManager createAndStart(String serverHostName, Set mcmIds) throws ApplicationException {
+		String contextName = ContextNameFactory.generateContextName(serverHostName);
+		CORBAServer corbaServer = new CORBAServer(contextName);
+
+		String loginServerServantName = ApplicationProperties.getString(KEY_SERVANT_NAME_LOGINSERVER, SERVANT_NAME_LOGINSERVER);
+		String eventServerServantName = ApplicationProperties.getString(KEY_SERVANT_NAME_EVENTSERVER, SERVANT_NAME_EVENTSERVER);
+
+		Set mcmIdStrings = Identifier.createStrings(mcmIds);
+
+		long timeout = ApplicationProperties.getInt(KEY_SERVANT_CHECK_TIMEOUT, SERVANT_CHECK_TIMEOUT) * 60 * 1000;
+
+		MServerServantManager mServerServantManager = new MServerServantManager(corbaServer,
+				loginServerServantName,
+				eventServerServantName,
+				mcmIdStrings,
+				timeout);
+		(new Thread(mServerServantManager)).start();
+		return mServerServantManager;
+	}
+}
+
