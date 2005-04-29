@@ -103,9 +103,9 @@ EtalonMTMListener, CurrentEventChangeListener
 			RefUpdateEvent rue = (RefUpdateEvent)ae;
 			if (rue.analysisPerformed())
 			{
-				if (Heap.getRefAnalysisByKey(Heap.PRIMARY_TRACE_KEY) != null)
+				if (Heap.getRefAnalysisPrimary() != null)
 				{
-					a = Heap.getRefAnalysisByKey(Heap.PRIMARY_TRACE_KEY);
+					a = Heap.getRefAnalysisPrimary();
 					bs = Heap.getBSPrimaryTrace();
 					res_km = bs.getResolution() / 1000.0;
 					dataMTAE = Heap.getMTAEPrimary();

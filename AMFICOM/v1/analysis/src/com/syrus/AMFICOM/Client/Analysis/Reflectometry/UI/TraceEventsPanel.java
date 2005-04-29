@@ -32,7 +32,9 @@ public class TraceEventsPanel extends ScaledGraphPanel
 
 	public void updEvents(String id)
 	{
-		RefAnalysis ra = Heap.getRefAnalysisByKey(id);
+        // do not expect any refAnalysis other than one for PRIMARY_TRACE 
+		RefAnalysis ra = id.equals(Heap.PRIMARY_TRACE_KEY)
+            ? Heap.getRefAnalysisPrimary() : null;
 		if (ra != null)
 			events = ra.events;
 	}

@@ -846,20 +846,19 @@ public class AnalyseMainFrame extends JFrame implements BsHashChangeListener,
 
 	void updFrames()
 	{
-        String id = Heap.PRIMARY_TRACE_KEY;
 		BellcoreStructure bs = Heap.getBSPrimaryTrace();
 		double deltaX = bs.getResolution();
 
-		double[] filtered = Heap.getRefAnalysisByKey(id).filtered;
-		double[] noise = Heap.getRefAnalysisByKey(id).noise;
+		double[] filtered = Heap.getRefAnalysisPrimary().filtered;
+		double[] noise = Heap.getRefAnalysisPrimary().noise;
 		
 		ScalableFrame noiseFrame = (ScalableFrame) this.frames.get(NOISE_FRAME);
 		ScalableFrame filteredFrame = (ScalableFrame) this.frames.get(FILTERED_FRAME);
 
-		noiseFrame.setGraph(noise, deltaX, false, id);
+		noiseFrame.setGraph(noise, deltaX, false, Heap.PRIMARY_TRACE_KEY);
 		noiseFrame.updScales();
 		noiseFrame.setVisible(true);
-		filteredFrame.setGraph(filtered, deltaX, true, id);
+		filteredFrame.setGraph(filtered, deltaX, true, Heap.PRIMARY_TRACE_KEY);
 		filteredFrame.updScales();
 		filteredFrame.setVisible(true);
 	}

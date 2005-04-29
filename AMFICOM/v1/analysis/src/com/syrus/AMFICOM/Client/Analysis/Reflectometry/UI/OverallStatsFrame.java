@@ -98,7 +98,7 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener
 			RefUpdateEvent rue = (RefUpdateEvent)ae;
 			if(rue.analysisPerformed())
 			{
-				updTableModel(Heap.PRIMARY_TRACE_KEY);
+				updTableModel();
 
 				if (Heap.hasEventParamsForPrimaryTrace())
 					analysis_performed = true;
@@ -229,11 +229,11 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener
 //		jTableWholeComp.setGridColor(ColorManager.getColor("tableGridColor"));
 	}
 
-	void updTableModel(String id)
+	void updTableModel()
 	{
-		BellcoreStructure bs = Heap.getAnyBSTraceByKey(id);
+		BellcoreStructure bs = Heap.getBSPrimaryTrace();
 
-		TraceEvent ev = Heap.getRefAnalysisByKey(id).overallStats;
+		TraceEvent ev = Heap.getRefAnalysisPrimary().overallStats;
 		if (ev == null)
 			return;
 
@@ -261,7 +261,7 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener
 	{
 		if (key.equals(RefUpdateEvent.PRIMARY_TRACE))
 		{
-			updTableModel(key);
+			updTableModel();
 			setVisible(true);
 			wctModel.clearTable();
 			tabbedPane.setSelectedIndex(0);

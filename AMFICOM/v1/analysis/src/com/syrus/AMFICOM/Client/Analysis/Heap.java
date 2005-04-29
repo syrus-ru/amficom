@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.35 2005/04/29 06:46:08 saa Exp $
+ * $Id: Heap.java,v 1.36 2005/04/29 07:38:10 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,7 +56,7 @@ import com.syrus.io.BellcoreStructure;
  * currentEvent, currentEtalonEvent (пока не следят за MTM/MTAE);
  * 
  * @author $Author: saa $
- * @version $Revision: 1.35 $, $Date: 2005/04/29 06:46:08 $
+ * @version $Revision: 1.36 $, $Date: 2005/04/29 07:38:10 $
  * @module
  */
 public class Heap
@@ -121,9 +121,13 @@ public class Heap
     public static RefAnalysis getRefAnalysisByKey(String key) {
         return (RefAnalysis) refAnalysisHash.get(key);
     }
+    
+    public static RefAnalysis getRefAnalysisPrimary() {
+        return (RefAnalysis) refAnalysisHash.get(PRIMARY_TRACE_KEY);
+    }
 
-    public static void setRefAnalysisByKey(String key, RefAnalysis ra) {
-        refAnalysisHash.put(key, ra);
+    public static void setRefAnalysisPrimary(RefAnalysis ra) {
+        refAnalysisHash.put(PRIMARY_TRACE_KEY, ra);
     }
 
     public static BellcoreStructure getAnyBSTraceByKey(String key) {

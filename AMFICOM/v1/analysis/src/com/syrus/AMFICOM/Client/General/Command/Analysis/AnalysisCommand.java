@@ -29,7 +29,7 @@ public class AnalysisCommand extends VoidCommand {
 	        RefAnalysis a = new RefAnalysis();
 			a.decode(y, mtae);
 
-			Heap.setRefAnalysisByKey(RefUpdateEvent.PRIMARY_TRACE, a);
+			Heap.setRefAnalysisPrimary(a);
 			Heap.setMTAEPrimary(mtae);
 		}
 	}

@@ -62,7 +62,7 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 
 	public void updateNoiseLevel()
 	{
-		RefAnalysis ana = Heap.getRefAnalysisByKey(RefUpdateEvent.PRIMARY_TRACE);
+		RefAnalysis ana = Heap.getRefAnalysisPrimary();
 		if (ana != null)
 		{
 			TraceEvent ev = ana.overallStats;

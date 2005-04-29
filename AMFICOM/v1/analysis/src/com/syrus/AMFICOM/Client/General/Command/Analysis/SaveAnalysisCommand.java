@@ -48,7 +48,7 @@ public class SaveAnalysisCommand extends VoidCommand
 			return;
 		}
 
-		RefAnalysis refanalysis = Heap.getRefAnalysisByKey(Heap.PRIMARY_TRACE_KEY);
+		RefAnalysis refanalysis = Heap.getRefAnalysisPrimary();
 		ModelTraceAndEventsImpl mtae = Heap.getMTAEPrimary();
 
 		Measurement m = null;

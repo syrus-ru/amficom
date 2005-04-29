@@ -98,10 +98,10 @@ EtalonMTMListener, CurrentEventChangeListener
 			RefUpdateEvent rue = (RefUpdateEvent)ae;
 			if (rue.analysisPerformed())
 			{
-				if (Heap.getRefAnalysisByKey(Heap.PRIMARY_TRACE_KEY) != null)
+				if (Heap.getRefAnalysisPrimary() != null)
 				{
-					RefAnalysis a = Heap.getRefAnalysisByKey(Heap.PRIMARY_TRACE_KEY);
-					BellcoreStructure bs = Heap.getAnyBSTraceByKey(Heap.PRIMARY_TRACE_KEY);
+					RefAnalysis a = Heap.getRefAnalysisPrimary();
+					BellcoreStructure bs = Heap.getBSPrimaryTrace();
 					setTableModel(bs, a.events);
 					updateTableModel ();
 				}
@@ -439,9 +439,9 @@ EtalonMTMListener, CurrentEventChangeListener
 		if (key.equals(Heap.PRIMARY_TRACE_KEY))
 		{
 			setNoComparedWithEtalonColor();
-			if (Heap.getRefAnalysisByKey(Heap.PRIMARY_TRACE_KEY) != null)
+			if (Heap.getRefAnalysisPrimary() != null)
 			{
-				RefAnalysis a = Heap.getRefAnalysisByKey(Heap.PRIMARY_TRACE_KEY);
+				RefAnalysis a = Heap.getRefAnalysisPrimary();
 				setTableModel(bs, a.events);
 				this.updateTableModel();
 			}
