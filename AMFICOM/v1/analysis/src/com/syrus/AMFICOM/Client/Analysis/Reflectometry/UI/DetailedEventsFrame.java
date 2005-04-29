@@ -291,28 +291,21 @@ implements EtalonMTMListener,
 		// сравнение с эталонным событием
 		if(etalonEvent != null) // из равенства следует, что эталонное событие найдено
 		{
-            // для всех событий кроме м.з. и конца волокна сравниваем потери
-            // @todo: move this check and comparison to comparer?
-            if (etalonEvent.getEventType() != SimpleReflectogramEvent.DEADZONE
-                    && etalonEvent.getEventType() != SimpleReflectogramEvent.ENDOFTRACE
-                    && dataEvent.getEventType() != SimpleReflectogramEvent.DEADZONE
-                    && dataEvent.getEventType() != SimpleReflectogramEvent.ENDOFTRACE)
-            {
-    			double lossDiff  = dataEvent.getMLoss() - etalonEvent.getMLoss();
-                lossDiff        = ((int)(lossDiff*1000.))/1000.;
-                ctModel.setValueAt(lossDiff + " " + LangModelAnalyse.getString("dB"), 4, 1);
-            }
-            else
-                ctModel.setValueAt("--", 4, 1);
-
+            double lossDiff  = dataEvent.getMLoss() - etalonEvent.getMLoss();
             double widthDiff = (dataEvent.getLength() - etalonEvent.getLength()) * deltaX;
-            widthDiff       = ((int)(widthDiff*10.))/10.;   // точность 0.1 м
-            ctModel.setValueAt(String.valueOf(widthDiff) + " " + LangModelAnalyse.getString("m"), 5, 1);
-
             double locationDiff = (dataEvent.getBegin() - etalonEvent.getBegin()) * deltaX;
-			locationDiff    = ((int)(locationDiff*10.))/10.;
 
+            lossDiff        = ((int)(lossDiff*1000.))/1000.;
+            widthDiff       = ((int)(widthDiff*10.))/10.;   // точность 0.1 м
+            locationDiff    = ((int)(locationDiff*10.))/10.;
+
+            ctModel.setValueAt(String.valueOf(widthDiff) + " " + LangModelAnalyse.getString("m"), 5, 1);
 			ctModel.setValueAt(String.valueOf(locationDiff) + " " + LangModelAnalyse.getString("m"), 6, 1);
+            if (etalonEvent.hasMLoss() && dataEvent.hasMLoss())
+                ctModel.setValueAt(lossDiff + " " + LangModelAnalyse.getString("dB"), 4, 1);
+                else
+                    ctModel.setValueAt("--", 4, 1);
+
 		}
 		else
 		{
