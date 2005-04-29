@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.37 2005/04/25 13:02:00 peskovsky Exp $
+ * $Id: MapFrame.java,v 1.38 2005/04/29 14:11:35 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -80,8 +80,8 @@ import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
  * 
  * 
  * 
- * @version $Revision: 1.37 $, $Date: 2005/04/25 13:02:00 $
- * @author $Author: peskovsky $
+ * @version $Revision: 1.38 $, $Date: 2005/04/29 14:11:35 $
+ * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
 public class MapFrame extends JInternalFrame 
@@ -596,8 +596,8 @@ public class MapFrame extends JInternalFrame
 
 	void thisComponentShown(ComponentEvent e)
 	{//empty
-		MapFrame.this.mapViewer.
-			getVisualComponent().getComponentListeners()[0].componentShown(e);
+//		MapFrame.this.mapViewer.
+//			getVisualComponent().getComponentListeners()[0].componentShown(e);
 	}
 
 	void thisComponentHidden(ComponentEvent e)
