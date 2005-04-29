@@ -113,7 +113,7 @@ implements EtalonMTMListener,
 				new Object[] {""},
 				new String[] {
 						"",
-						LangModelAnalyse.getString("eventLength"), // протяженность
+						LangModelAnalyse.getString("eventLength"),
 						LangModelAnalyse.getString("eventStartLevel"),
 						LangModelAnalyse.getString("eventEndLevel"),
 						LangModelAnalyse.getString("eventRMSDeviation"),
@@ -128,7 +128,7 @@ implements EtalonMTMListener,
 				new Object[] {""},
 				new String[] {
 						"",
-						LangModelAnalyse.getString("eventLength"), // протяженность
+						LangModelAnalyse.getString("eventLength"),
 						LangModelAnalyse.getString("eventStartLevel"),
 						LangModelAnalyse.getString("eventEndLevel"),
 						LangModelAnalyse.getString("eventEDZ"),
@@ -143,7 +143,7 @@ implements EtalonMTMListener,
 				new Object[] {""},
 				new String[] {
 						"",
-						LangModelAnalyse.getString("eventLength"), // протяженность
+						LangModelAnalyse.getString("eventLength"),
 						LangModelAnalyse.getString("eventMaxLevel"),
 						LangModelAnalyse.getString("eventMinLevel"),
 						LangModelAnalyse.getString("eventMaxDeviation")
@@ -157,11 +157,10 @@ implements EtalonMTMListener,
 				new Object[] {""},
 				new String[] {
 						"",
-						LangModelAnalyse.getString("eventLength"), // протяженность
+						LangModelAnalyse.getString("eventLength"),
 						LangModelAnalyse.getString("eventStartLevel"),
 						LangModelAnalyse.getString("eventEndLevel"),
 						LangModelAnalyse.getString("eventReflectionLevel")
-						//LangModelAnalyse.getString("eventFormFactor") // removed by saa 
 				},
 				null);
 		tModels.put(tmConnector, connectorModel);
@@ -172,7 +171,7 @@ implements EtalonMTMListener,
 				new Object[] {""},
 				new String[] {
 						"",
-						LangModelAnalyse.getString("eventLength"), // протяженность
+						LangModelAnalyse.getString("eventLength"),
 						LangModelAnalyse.getString("eventStartLevel"),
 						LangModelAnalyse.getString("eventEndLevel")
 				},
@@ -186,10 +185,9 @@ implements EtalonMTMListener,
 				new Object[] {""},
 				new String[] {
 						"",
-						LangModelAnalyse.getString("eventLength"), // протяженность
+						LangModelAnalyse.getString("eventLength"),
 						LangModelAnalyse.getString("eventStartLevel"),
 						LangModelAnalyse.getString("eventReflectionLevel")
-						//LangModelAnalyse.getString("eventFormFactor") // removed by saa
 				},
 				null);
 		tModels.put(tmTerminate, terminateModel);
