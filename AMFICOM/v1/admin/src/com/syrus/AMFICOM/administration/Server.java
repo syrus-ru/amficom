@@ -1,5 +1,5 @@
 /*
- * $Id: Server.java,v 1.23 2005/04/27 17:47:42 arseniy Exp $
+ * $Id: Server.java,v 1.24 2005/04/29 16:08:23 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,15 +35,13 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/04/27 17:47:42 $
+ * @version $Revision: 1.24 $, $Date: 2005/04/29 16:08:23 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
 
 public class Server extends DomainMember implements Characterizable {
 	private static final long serialVersionUID = 1988410957632317660L;
-//
-//	protected static final int RETRIEVE_MCM_IDS	= 1;
 
 	private String name;
 	private String description;
@@ -127,7 +125,7 @@ public class Server extends DomainMember implements Characterizable {
 	 */
 	public IDLEntity getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-		
+
 		int i = 0;
 
 		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
@@ -141,10 +139,7 @@ public class Server extends DomainMember implements Characterizable {
 										 this.hostname,
 									   charIds);
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.syrus.AMFICOM.general.StorableObject#isValid()
-	 */
+
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
@@ -155,19 +150,6 @@ public class Server extends DomainMember implements Characterizable {
 				&& this.hostname != null
 				&& this.characteristics != null && this.characteristics != Collections.EMPTY_SET;
 	}
-//
-//	/**
-//	 * <p><b>Clients must never explicitly call this method.</b></p>
-//	 */
-//	public Set retrieveMCMIds() throws ObjectNotFoundException, RetrieveObjectException {
-//		ServerDatabase database = AdministrationDatabaseContext.getServerDatabase();
-//		try {
-//			return (Set) database.retrieveObject(this, RETRIEVE_MCM_IDS, null);
-//		}
-//		catch (IllegalDataException ide) {
-//			throw new RetrieveObjectException(ide.getMessage(), ide);
-//		}
-//	}
 
 	public String getName() {
 		return this.name;
@@ -231,9 +213,9 @@ public class Server extends DomainMember implements Characterizable {
 						name,
 						description,
 						hostname);
-			
+
 			assert server.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			
+
 			server.changed = true;
 			return server;
 		}
@@ -273,12 +255,12 @@ public class Server extends DomainMember implements Characterizable {
 
 		return Collections.EMPTY_SET;
 	}
-	
+
 	public void setHostName(String hostname) {
 		this.hostname = hostname;
 		super.changed = true;
 	}
-	
+
 	public void setName(String name) {
 		this.name = name;
 		super.changed = true;

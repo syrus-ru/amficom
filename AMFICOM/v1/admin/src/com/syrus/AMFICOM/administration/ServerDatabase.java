@@ -1,5 +1,5 @@
 /*
- * $Id: ServerDatabase.java,v 1.22 2005/04/27 17:47:42 arseniy Exp $
+ * $Id: ServerDatabase.java,v 1.23 2005/04/29 16:08:23 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/04/27 17:47:42 $
+ * @version $Revision: 1.23 $, $Date: 2005/04/29 16:08:23 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -112,60 +112,10 @@ public class ServerDatabase extends CharacterizableDatabase {
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		Server server = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
-//			case Server.RETRIEVE_MCM_IDS:
-//				return this.retrieveMCMIds(server);
 			default:
 				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  server.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}
-//
-//	/**
-//	 * @deprecated
-//	 * @param server
-//	 * @return
-//	 * @throws RetrieveObjectException
-//	 */
-//	private Set retrieveMCMIds(Server server) throws RetrieveObjectException {
-//		Set mcmIds = new HashSet();
-//
-//		String serverIdStr = DatabaseIdentifier.toSQLString(server.getId());
-//		String sql = SQL_SELECT
-//			+ StorableObjectWrapper.COLUMN_ID
-//			+ SQL_FROM + ObjectEntities.MCM_ENTITY
-//			+ SQL_WHERE + MCMWrapper.COLUMN_SERVER_ID + EQUALS + serverIdStr;
-//
-//		Statement statement = null;
-//		ResultSet resultSet = null;
-//		Connection connection = DatabaseConnection.getConnection();
-//		try {
-//			statement = connection.createStatement();
-//			Log.debugMessage("ServerDatabase.retrieveServer | Trying: " + sql, Log.DEBUGLEVEL09);
-//			resultSet = statement.executeQuery(sql);
-//			while (resultSet.next()) {
-//				mcmIds.add(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID));
-//			}
-//		}
-//		catch (SQLException sqle) {
-//			String mesg = "ServerDatabase.retrieveServer | Cannot retrieve server " + serverIdStr;
-//			throw new RetrieveObjectException(mesg, sqle);
-//		}
-//		finally {
-//			try {
-//				if (statement != null)
-//					statement.close();
-//				if (resultSet != null)
-//					resultSet.close();
-//				statement = null;
-//				resultSet = null;
-//			}
-//			catch (SQLException sqle1) {
-//				Log.errorException(sqle1);
-//			} finally{
-//				DatabaseConnection.releaseConnection(connection);
-//			}
-//		}
-//		return mcmIds;
-//	}
 
 }
