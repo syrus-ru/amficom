@@ -26,6 +26,9 @@ $(call checkenve,ORACLE_HOME)
 
 
 SOURCES := com/syrus/util/KISConnectionLRUMap.java \
+	com/syrus/AMFICOM/mcm/MCMSessionEnvironment.java \
+	com/syrus/AMFICOM/mcm/MCMServantManager.java \
+	com/syrus/AMFICOM/mcm/MCMPoolContext.java \
 	com/syrus/AMFICOM/mcm/DatabaseContextSetup.java \
 	com/syrus/AMFICOM/mcm/MCMGeneralObjectLoader.java \
 	com/syrus/AMFICOM/mcm/MCMAdministrationObjectLoader.java \
