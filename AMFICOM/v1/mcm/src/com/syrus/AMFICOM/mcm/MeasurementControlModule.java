@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.82 2005/04/29 12:31:59 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.83 2005/04/29 15:59:20 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -53,7 +53,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.82 $, $Date: 2005/04/29 12:31:59 $
+ * @version $Revision: 1.83 $, $Date: 2005/04/29 15:59:20 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -155,7 +155,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		 * 	for work with database*/
 		DatabaseContextSetup.initDatabaseContext();
 
-		/*	Retrieve information about MCM it's user and server*/
+		/*	Retrieve information about MCM, it's user and server*/
 		mcmId = new Identifier(ApplicationProperties.getString(KEY_MCM_ID, MCM_ID));
 		MCM mcm = null;
 		User user = null;
@@ -165,13 +165,15 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 			user = new User(mcm.getUserId());
 			server = new Server(mcm.getServerId());
 		}
-		catch (ApplicationException ae) {
-			Log.errorException(ae);
+		catch (Exception e) {
+			Log.errorException(e);
 			System.exit(1);
 		}
 
+		/*	Init database object loader*/
 		DatabaseObjectLoader.init(user.getId());
 
+		/*	Create session environment*/
 		try {
 			MCMSessionEnvironment.createInstance(server.getHostName());
 		}
@@ -180,6 +182,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 			System.exit(1);
 		}
 
+		/*	Login*/
 		MCMSessionEnvironment sessionEnvironment = MCMSessionEnvironment.getInstance();
 		try {
 			sessionEnvironment.login(user.getLogin(), "password");

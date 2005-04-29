@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.56 2005/04/22 17:07:13 arseniy Exp $
+ * $Id: StorableObject.java,v 1.57 2005/04/29 15:56:11 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import org.omg.CORBA.portable.IDLEntity;
  * same identifier, comparison of object references (in Java terms) is enough.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.56 $, $Date: 2005/04/22 17:07:13 $
+ * @version $Revision: 1.57 $, $Date: 2005/04/29 15:56:11 $
  * @module general_v1
  */
 public abstract class StorableObject implements Identifiable, TransferableObject, Serializable {
@@ -383,4 +383,5 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 
 		return ((Identifiable) identifiables.iterator().next()).getId().getMajor();
 	}
+
 }
