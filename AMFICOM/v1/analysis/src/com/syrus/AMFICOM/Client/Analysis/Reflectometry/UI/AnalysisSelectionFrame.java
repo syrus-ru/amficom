@@ -27,7 +27,7 @@ import javax.swing.table.TableModel;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.AnalysisCommand;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.PrimaryMTMListener;
+import com.syrus.AMFICOM.Client.General.Event.PrimaryMTAEListener;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
@@ -43,7 +43,7 @@ import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.io.BellcoreStructure;
 
 public class AnalysisSelectionFrame extends ATableFrame implements
-		BsHashChangeListener, PrimaryMTMListener
+		BsHashChangeListener, PrimaryMTAEListener
 {
 	static final Double[] nf = { new Double(0.7), new Double(1.0),
 			new Double(1.5), new Double(2.0), new Double(2.5), new Double(3) };

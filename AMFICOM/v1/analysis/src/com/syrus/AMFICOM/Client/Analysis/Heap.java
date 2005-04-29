@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.33 2005/04/29 08:10:11 saa Exp $
+ * $Id: Heap.java,v 1.34 2005/04/29 06:41:05 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.Client.Analysis.UI.ReflectogrammLoadDialog;
 import com.syrus.AMFICOM.Client.General.Event.CurrentEventChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.CurrentTraceChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
-import com.syrus.AMFICOM.Client.General.Event.PrimaryMTMListener;
+import com.syrus.AMFICOM.Client.General.Event.PrimaryMTAEListener;
 import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryTraceListener;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
@@ -65,7 +65,7 @@ import com.syrus.io.BellcoreStructure;
  * idColorMap (XXX: думаю, стоит перенести в GUIUtil //saa)
  * 
  * @author $Author: saa $
- * @version $Revision: 1.33 $, $Date: 2005/04/29 08:10:11 $
+ * @version $Revision: 1.34 $, $Date: 2005/04/29 06:41:05 $
  * @module
  */
 public class Heap
@@ -373,12 +373,12 @@ public class Heap
 
     private static void notifyPrimaryMTMCUpdated() {
         for (Iterator it = primaryMTMListeners.iterator(); it.hasNext();)
-            ((PrimaryMTMListener) it.next()).primaryMTMCUpdated();
+            ((PrimaryMTAEListener) it.next()).primaryMTMCUpdated();
     }
 
     private static void notifyPrimaryMTMRemoved() {
         for (Iterator it = primaryMTMListeners.iterator(); it.hasNext();)
-            ((PrimaryMTMListener) it.next()).primaryMTMRemoved();
+            ((PrimaryMTAEListener) it.next()).primaryMTMRemoved();
     }
 
     private static void notifyEtalonMTMCUpdated() {
@@ -429,11 +429,11 @@ public class Heap
         removeListener(primaryTraceListeners, listener);
     }
 
-    public static void addPrimaryMTMListener(PrimaryMTMListener listener) {
+    public static void addPrimaryMTMListener(PrimaryMTAEListener listener) {
         addListener(primaryMTMListeners, listener);
     }
 
-    public static void removePrimaryMTMListener(PrimaryMTMListener listener) {
+    public static void removePrimaryMTMListener(PrimaryMTAEListener listener) {
         removeListener(primaryMTMListeners, listener);
     }
 
