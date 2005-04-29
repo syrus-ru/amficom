@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.80 2005/04/27 19:34:06 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.81 2005/04/29 12:18:11 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -53,7 +53,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.80 $, $Date: 2005/04/27 19:34:06 $
+ * @version $Revision: 1.81 $, $Date: 2005/04/29 12:18:11 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -67,9 +67,9 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 	public static final String KEY_DB_CONNECTION_TIMEOUT = "DBConnectionTimeout";
 	public static final String KEY_DB_LOGIN_NAME = "DBLoginName";
 	public static final String KEY_TICK_TIME = "TickTime";
+	public static final String KEY_MAX_FALLS = "MaxFalls";
 	public static final String KEY_FORWARD_PROCESSING = "ForwardProcessing";
 	public static final String KEY_FORGET_FRAME = "ForgetFrame";
-	public static final String KEY_MAX_FALLS = "MaxFalls";
 	public static final String KEY_MSERVER_SERVANT_NAME = "MServerServantName";
 	public static final String KEY_MSERVER_CHECK_TIMEOUT = "MServerCheckTimeout";
 	public static final String KEY_KIS_TICK_TIME = "KISTickTime";
@@ -173,16 +173,16 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		DatabaseObjectLoader.init(user.getId());
 
 		try {
-			SessionEnvironment.init(server.getHostName());
+			MCMSessionEnvironment.create(server.getHostName());
 		}
 		catch (CommunicationException ce) {
 			Log.errorException(ce);
 			System.exit(1);
 		}
-		
+
+		MCMSessionEnvironment sessionEnvironment = MCMSessionEnvironment.getInstance();
 		try {
-			//@todo password
-			SessionEnvironment.login(user.getLogin(), "password");
+			sessionEnvironment.login(user.getLogin(), "password");
 		}
 		catch (CommunicationException ce) {
 			Log.errorException(ce);
@@ -207,7 +207,8 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 
 		/*	Activate servant*/
 		try {
-			SessionEnvironment.getMCMServantManager().getCORBAServer().activateServant(new MCMImplementation(), mcmId.toString());
+			MCMSessionEnvironment.getInstance().getMCMServantManager().getCORBAServer().activateServant(new MCMImplementation(),
+					mcmId.toString());
 		}
 		catch (CommunicationException ce) {
 			Log.errorException(ce);
@@ -338,7 +339,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 			if (!resultList.isEmpty()) {
 				try {
 					resultsT = createTransferables();
-					mServerRef = SessionEnvironment.getMCMServantManager().getMServerReference();
+					mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
 					mServerRef.receiveResults(resultsT, (Identifier_Transferable) mcmId.getTransferable());
 					resultList.clear();
 					super.clearFalls();
@@ -510,15 +511,16 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		for (Iterator it = transceivers.keySet().iterator(); it.hasNext();)
 			((Transceiver)transceivers.get(it.next())).shutdown();
 
+		MCMSessionEnvironment sessionEnvironment = MCMSessionEnvironment.getInstance();
 		try {
-			SessionEnvironment.getMCMServantManager().getCORBAServer().deactivateServant(mcmId.toString());
+			sessionEnvironment.getMCMServantManager().getCORBAServer().deactivateServant(mcmId.toString());
 		}
 		catch (CommunicationException ce) {
 			Log.errorException(ce);
 		}
 
 		try {
-			SessionEnvironment.logout();
+			sessionEnvironment.logout();
 		}
 		catch (ApplicationException ae) {
 			Log.errorException(ae);
