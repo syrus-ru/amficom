@@ -1,5 +1,5 @@
 /*
- * $Id: LoginEventServer.java,v 1.6 2005/04/29 12:15:31 arseniy Exp $
+ * $Id: LoginEventServer.java,v 1.7 2005/04/29 12:31:31 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/04/29 12:15:31 $
+ * @version $Revision: 1.7 $, $Date: 2005/04/29 12:31:31 $
  * @author $Author: arseniy $
  * @module leserver_v1
  */
@@ -110,7 +110,7 @@ public final class LoginEventServer {
 		/*	Init session environment
 		 * NOTE: No logging in*/
 		try {
-			LEServerSessionEnvironment.create(server.getHostName());
+			LEServerSessionEnvironment.createInstance(server.getHostName());
 		}
 		catch (CommunicationException ce) {
 			Log.errorException(ce);
@@ -158,14 +158,18 @@ public final class LoginEventServer {
 	}
 
 	protected static void shutdown() {
+		LEServerSessionEnvironment leServerSessionEnvironment = LEServerSessionEnvironment.getInstance();
+
 		try {
-			CORBAServer corbaServer = LEServerSessionEnvironment.getInstance().getLEServerServantManager().getCORBAServer();
+			CORBAServer corbaServer = leServerSessionEnvironment.getLEServerServantManager().getCORBAServer();
 			corbaServer.deactivateServant(loginProcessCodename);
 			corbaServer.deactivateServant(eventProcessCodename);
 		}
 		catch (CommunicationException ce) {
 			Log.errorException(ce);
 		}
+
+		leServerSessionEnvironment.getPoolContext().serialize();
 
 		DatabaseConnection.closeConnection();
 	}
