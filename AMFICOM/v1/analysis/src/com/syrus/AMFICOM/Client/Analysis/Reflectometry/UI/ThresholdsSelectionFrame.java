@@ -34,7 +34,6 @@ import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.General.Model.AnalyseApplicationModel;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.Client.General.UI.ATable;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
@@ -211,13 +210,12 @@ implements OperationListener, BsHashChangeListener,
 			LangModelAnalyse.getString("previuosEvent"));
 		previuosEventButton.setText("<");
 		previuosEventButton.addActionListener(new ActionListener() {
-
 			public void actionPerformed(ActionEvent e) {
-
-				dispatcher.notify(new OperationEvent(this,
-					0,
-					AnalyseApplicationModel.SELECT_PREVIOUS_EVENT));
-
+                // @todo: iterate etalon events, not primary events
+                int nEvent = Heap.getCurrentEvent() - 1;
+                if (nEvent < 0)
+                    nEvent = Heap.getNumberOfEvents() - 1;
+                Heap.setCurrentEvent(nEvent); // will ignore us if no events
 			}
 		});
 		
@@ -225,13 +223,12 @@ implements OperationListener, BsHashChangeListener,
 			LangModelAnalyse.getString("nextEvent"));
 		nextEventButton.setText(">");
 		nextEventButton.addActionListener(new ActionListener() {
-
 			public void actionPerformed(ActionEvent e) {
-
-				dispatcher.notify(new OperationEvent(this,
-					0,
-					AnalyseApplicationModel.SELECT_NEXT_EVENT));
-
+                // @todo: iterate etalon events, not primary events
+                int nEvent = Heap.getCurrentEvent() + 1;
+                if (nEvent >= Heap.getNumberOfEvents())
+                    nEvent = 0;
+                Heap.setCurrentEvent(nEvent); // will ignore us if no events
 			}
 		});
 
