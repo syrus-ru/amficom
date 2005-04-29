@@ -1,5 +1,5 @@
 /*
- * $Id: XMLAdministrationObjectLoader.java,v 1.2 2005/04/27 15:39:00 arseniy Exp $
+ * $Id: XMLAdministrationObjectLoader.java,v 1.3 2005/04/29 08:56:46 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.XMLObjectLoader;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/27 15:39:00 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/29 08:56:46 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
@@ -121,6 +121,23 @@ public class XMLAdministrationObjectLoader extends XMLObjectLoader implements Ad
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
+	public ServerProcess loadServerProcess(Identifier id) throws ApplicationException {
+		return (ServerProcess) this.loadStorableObject(id);
+	}
+
+	public Set loadServerProcesses(Set ids) throws ApplicationException {
+		Set objects = new HashSet(ids.size());
+		for (Iterator it = ids.iterator(); it.hasNext();) {
+			Identifier id = (Identifier) it.next();
+			objects.add(this.loadStorableObject(id));
+		}
+		return objects;
+	}
+
+	public Set loadServerProcessesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+		return this.loadStorableObjectButIds(condition, ids);
+	}
+
 	public Set refresh(Set storableObjects) throws ApplicationException {
 		return Collections.EMPTY_SET;
 	}
@@ -162,6 +179,16 @@ public class XMLAdministrationObjectLoader extends XMLObjectLoader implements Ad
 	}
 
 	public void saveUsers(Set collection, boolean force) throws ApplicationException {
+		this.saveStorableObjects(collection, force);
+
+	}
+
+	public void saveServerProcess(ServerProcess serverProcess, boolean force) throws ApplicationException {
+		this.saveStorableObject(serverProcess, force);
+		this.administrationXML.flush();
+	}
+
+	public void saveServerProcesses(Set collection, boolean force) throws ApplicationException {
 		this.saveStorableObjects(collection, force);
 
 	}

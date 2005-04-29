@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseAdministrationObjectLoader.java,v 1.2 2005/04/27 15:39:00 arseniy Exp $
+ * $Id: DatabaseAdministrationObjectLoader.java,v 1.3 2005/04/29 08:56:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/27 15:39:00 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/29 08:56:46 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
@@ -45,6 +45,10 @@ public class DatabaseAdministrationObjectLoader extends DatabaseObjectLoader imp
 
 	public MCM loadMCM(Identifier id) throws ApplicationException {
 		return new MCM(id);
+	}
+
+	public ServerProcess loadServerProcess(Identifier id) throws ApplicationException {
+		return new ServerProcess(id);
 	}
 
 	//	public PermissionAttributes loadPermissionAttributes(Identifier id) throws ApplicationException {
@@ -73,6 +77,11 @@ public class DatabaseAdministrationObjectLoader extends DatabaseObjectLoader imp
 
 	public Set loadMCMs(Set ids) throws ApplicationException {
 		MCMDatabase database = AdministrationDatabaseContext.getMCMDatabase();
+		return super.retrieveFromDatabase(database, ids);
+	}
+
+	public Set loadServerProcesses(Set ids) throws ApplicationException {
+		ServerProcessDatabase database = AdministrationDatabaseContext.getServerProcessDatabase();
 		return super.retrieveFromDatabase(database, ids);
 	}
 
@@ -106,6 +115,11 @@ public class DatabaseAdministrationObjectLoader extends DatabaseObjectLoader imp
 		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 	}
 
+	public Set loadServerProcessesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+		ServerProcessDatabase database = AdministrationDatabaseContext.getServerProcessDatabase();
+		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
+	}
+
 	//  public PermissionAttributes loadPermissionAttributesButIds(Identifier id) throws ApplicationException {
 	//      return new PermissionAttributes(id);
 	//  }
@@ -133,6 +147,11 @@ public class DatabaseAdministrationObjectLoader extends DatabaseObjectLoader imp
 		database.update(mcm, userId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
+	public void saveServerProcess(ServerProcess serverProcess, boolean force) throws ApplicationException {
+		ServerProcessDatabase database = AdministrationDatabaseContext.getServerProcessDatabase();
+		database.update(serverProcess, userId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+	}
+
 	//	public void savePermissionAttributes(PermissionAttributes permissionAttributes, boolean force) throws DatabaseException ;
 
 
@@ -156,6 +175,11 @@ public class DatabaseAdministrationObjectLoader extends DatabaseObjectLoader imp
 
 	public void saveMCMs(Set collection, boolean force) throws ApplicationException {
 		MCMDatabase database = AdministrationDatabaseContext.getMCMDatabase();
+		database.update(collection, userId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+	}
+
+	public void saveServerProcesses(Set collection, boolean force) throws ApplicationException {
+		ServerProcessDatabase database = AdministrationDatabaseContext.getServerProcessDatabase();
 		database.update(collection, userId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 

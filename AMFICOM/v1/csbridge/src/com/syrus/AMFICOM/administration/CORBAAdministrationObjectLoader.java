@@ -1,5 +1,5 @@
 /*
- * $Id: CORBAAdministrationObjectLoader.java,v 1.4 2005/04/27 13:41:27 arseniy Exp $
+ * $Id: CORBAAdministrationObjectLoader.java,v 1.5 2005/04/29 08:56:46 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,7 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.administration.corba.Domain_Transferable;
 import com.syrus.AMFICOM.administration.corba.MCM_Transferable;
+import com.syrus.AMFICOM.administration.corba.ServerProcess_Transferable;
 import com.syrus.AMFICOM.administration.corba.Server_Transferable;
 import com.syrus.AMFICOM.administration.corba.User_Transferable;
 import com.syrus.AMFICOM.cmserver.corba.CMServer;
@@ -38,7 +39,7 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/04/27 13:41:27 $
+ * @version $Revision: 1.5 $, $Date: 2005/04/29 08:56:46 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
@@ -107,6 +108,22 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 		try {
 			MCM_Transferable transferable = cmServer.transmitMCM((Identifier_Transferable) id.getTransferable(), securityKey);
 			MCM storableObject = new MCM(transferable);
+			return storableObject;
+		}
+		catch (AMFICOMRemoteException are) {
+			if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
+				throw new ObjectNotFoundException("Object '" + id + "' not found on server");
+			throw new RetrieveObjectException(are.message);
+		}
+	}
+
+	public ServerProcess loadServerProcess(Identifier id) throws ApplicationException {
+		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
+		SecurityKey securityKey = LoginManager.getSecurityKey();
+
+		try {
+			ServerProcess_Transferable transferable = cmServer.transmitServerProcess((Identifier_Transferable) id.getTransferable(), securityKey);
+			ServerProcess storableObject = new ServerProcess(transferable);
 			return storableObject;
 		}
 		catch (AMFICOMRemoteException are) {
@@ -199,6 +216,24 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 				catch (CreateObjectException coe) {
 					Log.errorException(coe);
 				}
+			}
+			return objects;
+		}
+		catch (AMFICOMRemoteException are) {
+			throw new RetrieveObjectException(are.message);
+		}
+	}
+
+	public Set loadServerProcesses(Set ids) throws ApplicationException {
+		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
+		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
+		SecurityKey securityKey = LoginManager.getSecurityKey();
+
+		try {
+			ServerProcess_Transferable[] transferables = cmServer.transmitServerProcesses(idsT, securityKey);
+			Set objects = new HashSet(transferables.length);
+			for (int i = 0; i < transferables.length; i++) {
+				objects.add(new ServerProcess(transferables[i]));
 			}
 			return objects;
 		}
@@ -302,6 +337,25 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 		}
 	}
 
+	public Set loadServerProcessesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
+		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
+		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
+		SecurityKey securityKey = LoginManager.getSecurityKey();
+
+		try {
+			ServerProcess_Transferable[] transferables = cmServer.transmitServerProcessesButIdsCondition(idsT, securityKey, conditionT);
+			Set objects = new HashSet(transferables.length);
+			for (int i = 0; i < transferables.length; i++) {
+				objects.add(new ServerProcess(transferables[i]));
+			}
+			return objects;
+		}
+		catch (AMFICOMRemoteException are) {
+			throw new RetrieveObjectException(are.message);
+		}
+	}
+
 
 
 	/* Save single object*/
@@ -368,6 +422,23 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 		}
 		catch (AMFICOMRemoteException are) {
 			String mesg = "Cannot save object '" + mcm.getId() + "' -- ";
+			if (are.error_code.value() == ErrorCode._ERROR_VERSION_COLLISION)
+				throw new VersionCollisionException(mesg + are.message, 0L, 0L);
+			throw new UpdateObjectException(mesg + are.message);
+		}
+	}
+
+	public void saveServerProcess(ServerProcess serverProcess, boolean force) throws ApplicationException {
+		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
+		SecurityKey securityKey = LoginManager.getSecurityKey();
+
+		ServerProcess_Transferable transferable = (ServerProcess_Transferable) serverProcess.getTransferable();
+		try {
+			StorableObject_Transferable header = cmServer.receiveServerProcess(transferable, force, securityKey);
+			serverProcess.updateFromHeaderTransferable(header);
+		}
+		catch (AMFICOMRemoteException are) {
+			String mesg = "Cannot save object '" + serverProcess.getId() + "' -- ";
 			if (are.error_code.value() == ErrorCode._ERROR_VERSION_COLLISION)
 				throw new VersionCollisionException(mesg + are.message, 0L, 0L);
 			throw new UpdateObjectException(mesg + are.message);
@@ -452,6 +523,27 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 
 		try {
 			StorableObject_Transferable[] headers = cmServer.receiveMCMs(transferables, force, securityKey);
+			super.updateHeaders(objects, headers);
+		}
+		catch (AMFICOMRemoteException are) {
+			String mesg = "Cannot save objects -- ";
+			if (are.error_code.value() == ErrorCode._ERROR_VERSION_COLLISION)
+				throw new VersionCollisionException(mesg + are.message, 0L, 0L);
+			throw new UpdateObjectException(mesg + are.message);
+		}
+	}
+
+	public void saveServerProcesses(Set objects, boolean force) throws ApplicationException {
+		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
+		SecurityKey securityKey = LoginManager.getSecurityKey();
+
+		ServerProcess_Transferable[] transferables = new ServerProcess_Transferable[objects.size()];
+		int i = 0;
+		for (Iterator it = objects.iterator(); it.hasNext(); i++)
+			transferables[i] = (ServerProcess_Transferable) ((ServerProcess) it.next()).getTransferable();
+
+		try {
+			StorableObject_Transferable[] headers = cmServer.receiveServerProcesses(transferables, force, securityKey);
 			super.updateHeaders(objects, headers);
 		}
 		catch (AMFICOMRemoteException are) {

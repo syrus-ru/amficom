@@ -96,6 +96,16 @@ module corba {
 						in general::corba::SecurityKey security_key)
 			raises (general::corba::AMFICOMRemoteException);
 
+		general::corba::StorableObject_Transferable receiveServerProcess(in administration::corba::ServerProcess_Transferable serverProcess_Transferable,
+						in boolean force, 	
+						in general::corba::SecurityKey security_key)
+			raises (general::corba::AMFICOMRemoteException);
+
+		general::corba::StorableObjectSeq_Transferable receiveServerProcesses(in administration::corba::ServerProcessSeq_Transferable serverProcesses_Transferable,
+						in boolean force, 	
+						in general::corba::SecurityKey security_key)
+			raises (general::corba::AMFICOMRemoteException);
+
 /////////////////////////////////////////// Configuration Recieve ////////////////////////////////////////////
 		general::corba::StorableObject_Transferable receiveCableThread(in configuration::corba::CableThread_Transferable cableThread_Transferable,
 						in boolean force, 	
@@ -485,6 +495,11 @@ module corba {
 						in general::corba::SecurityKey security_key)
 			raises (general::corba::AMFICOMRemoteException);
 
+		administration::corba::ServerProcess_Transferable transmitServerProcess(
+						in general::corba::Identifier_Transferable id_Transferable,
+						in general::corba::SecurityKey security_key)
+			raises (general::corba::AMFICOMRemoteException);
+
 
 		// Transmit Sequences
 		administration::corba::UserSeq_Transferable transmitUsers(
@@ -546,6 +561,22 @@ module corba {
 			raises (general::corba::AMFICOMRemoteException);
 
 		administration::corba::MCMSeq_Transferable transmitMCMsButIdsCondition(
+						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::SecurityKey security_key,
+						in general::corba::StorableObjectCondition_Transferable condition_Transferable)
+			raises (general::corba::AMFICOMRemoteException);
+
+		administration::corba::ServerProcessSeq_Transferable transmitServerProcesses(
+						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::SecurityKey security_key)
+			raises (general::corba::AMFICOMRemoteException);
+
+		administration::corba::ServerProcessSeq_Transferable transmitServerProcessesButIds(
+						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::SecurityKey security_key)
+			raises (general::corba::AMFICOMRemoteException);
+
+		administration::corba::ServerProcessSeq_Transferable transmitServerProcessesButIdsCondition(
 						in general::corba::IdentifierSeq_Transferable ids_Transferable,
 						in general::corba::SecurityKey security_key,
 						in general::corba::StorableObjectCondition_Transferable condition_Transferable)

@@ -1,5 +1,5 @@
 /*
- * $Id: AdministrationObjectLoader.java,v 1.14 2005/04/22 19:26:07 arseniy Exp $
+ * $Id: AdministrationObjectLoader.java,v 1.15 2005/04/29 08:57:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/04/22 19:26:07 $
+ * @version $Revision: 1.15 $, $Date: 2005/04/29 08:57:57 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -32,6 +32,8 @@ public interface AdministrationObjectLoader {
 
 	MCM loadMCM(Identifier id) throws ApplicationException;
 
+	ServerProcess loadServerProcess(Identifier id) throws ApplicationException;
+
 //	PermissionAttributes loadPermissionAttributes(Identifier id) throws ApplicationException;
 
 
@@ -45,6 +47,8 @@ public interface AdministrationObjectLoader {
 	Set loadServers(Set ids) throws ApplicationException;
 
 	Set loadMCMs(Set ids) throws ApplicationException;
+
+	Set loadServerProcesses(Set ids) throws ApplicationException;
 
 //  PermissionAttributes loadPermissionAttributes(Set ids) throws ApplicationException;
 
@@ -60,6 +64,8 @@ public interface AdministrationObjectLoader {
 
 	Set loadMCMsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException;
 
+	Set loadServerProcessesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException;
+
 //  PermissionAttributes loadPermissionAttributesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException;
 
 
@@ -74,6 +80,8 @@ public interface AdministrationObjectLoader {
 
 	void saveMCM(MCM mcm, boolean force) throws ApplicationException;
 
+	void saveServerProcess(ServerProcess serverProcess, boolean force) throws ApplicationException;
+
 //	void savePermissionAttributes(PermissionAttributes permissionAttributes, boolean force) throws ApplicationException;
 
 
@@ -87,6 +95,8 @@ public interface AdministrationObjectLoader {
 	void saveServers(Set objects, boolean force) throws ApplicationException;
 
 	void saveMCMs(Set objects, boolean force) throws ApplicationException;
+
+	void saveServerProcesses(Set objects, boolean force) throws ApplicationException;
 
 //	void savePermissionAttributes(PermissionAttributes permissionAttributes, boolean force) throws ApplicationException;
 
