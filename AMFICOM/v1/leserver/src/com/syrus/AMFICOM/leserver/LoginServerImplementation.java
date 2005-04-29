@@ -1,5 +1,5 @@
 /*
- * $Id: LoginServerImplementation.java,v 1.3 2005/04/28 15:00:30 arseniy Exp $
+ * $Id: LoginServerImplementation.java,v 1.4 2005/04/29 16:07:16 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.leserver.corba.LoginServerPOA;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/04/28 15:00:30 $
+ * @version $Revision: 1.4 $, $Date: 2005/04/29 16:07:16 $
  * @author $Author: arseniy $
  * @module leserver_v1
  */
@@ -39,6 +39,11 @@ public final class LoginServerImplementation extends LoginServerPOA {
 	}
 
 	public void selectDomain(Identifier_Transferable domain_id) throws AMFICOMRemoteException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void validateAccess(SecurityKey security_key, Identifier_TransferableHolder user_id, Identifier_TransferableHolder domain_id) throws AMFICOMRemoteException {
 		// TODO Auto-generated method stub
 		
 	}

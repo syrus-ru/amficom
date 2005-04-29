@@ -1,5 +1,5 @@
 /*
- * $Id: LoginEventServer.java,v 1.7 2005/04/29 12:31:31 arseniy Exp $
+ * $Id: LoginEventServer.java,v 1.8 2005/04/29 16:06:14 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/04/29 12:31:31 $
+ * @version $Revision: 1.8 $, $Date: 2005/04/29 16:06:14 $
  * @author $Author: arseniy $
  * @module leserver_v1
  */
@@ -103,7 +103,7 @@ public final class LoginEventServer {
 		}
 		// TODO something with loginServerProcess and eventServerProcess
 		if (loginServerProcess == null || eventServerProcess == null) {
-			Log.errorMessage("Cannot find login server process or eventt server process");
+			Log.errorMessage("Cannot find login server process or event server process");
 			System.exit(1);
 		}
 
