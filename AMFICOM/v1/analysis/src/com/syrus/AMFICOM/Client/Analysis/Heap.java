@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.37 2005/04/29 07:40:29 saa Exp $
+ * $Id: Heap.java,v 1.38 2005/04/29 07:40:43 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ import com.syrus.io.BellcoreStructure;
  * 
  * Обладает свойствами, по которым не обеспечивает уведомлений:
  * minuitAnalysisParams, minuitDefaultParams, minuitInitialParams;
- * refAnalysis{};
+ * refAnalysisPrimary;
  * contextMeasurementSetup;
  * minTraceLevelt;
  * rLDialog{};
@@ -56,7 +56,7 @@ import com.syrus.io.BellcoreStructure;
  * currentEvent, currentEtalonEvent (пока не следят за MTM/MTAE);
  * 
  * @author $Author: saa $
- * @version $Revision: 1.37 $, $Date: 2005/04/29 07:40:29 $
+ * @version $Revision: 1.38 $, $Date: 2005/04/29 07:40:43 $
  * @module
  */
 public class Heap
