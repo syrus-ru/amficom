@@ -3,7 +3,6 @@ package com.syrus.AMFICOM.analysis.dadara;
 public class RefAnalysis
 {
 	public TraceEvent[] events;
-	public TraceEvent[] concavities;
 	public double[] noise;
 	public double[] filtered;
 	public TraceEvent overallStats;
