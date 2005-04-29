@@ -216,7 +216,6 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener,
 				this.jTable.setRowSelectionInterval(nEvent, nEvent);
 				this.jTable.scrollRectToVisible(this.jTable.getCellRect(this.jTable.getSelectedRow(), this.jTable.getSelectedColumn(), true));
 			}
-		UIGeneralStorage.arrangeTableColumns(this.jTable);
 	}
     
     private void updateColors() {
@@ -425,6 +424,7 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener,
         {
             setTableModel();
             updateTableModel();
+            UIGeneralStorage.arrangeTableColumns(this.jTable);
         }
         setVisible(true);
     }
