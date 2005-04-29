@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.39 2005/04/29 08:37:27 saa Exp $
+ * $Id: Heap.java,v 1.40 2005/04/29 08:59:17 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,10 +53,10 @@ import com.syrus.io.BellcoreStructure;
  * primaryMTAE;
  * etalonMTM;
  * currentTrace;
- * currentEvent, currentEtalonEvent (пока не следят за MTM/MTAE);
+ * currentEvent, currentEtalonEvent;
  * 
  * @author $Author: saa $
- * @version $Revision: 1.39 $, $Date: 2005/04/29 08:37:27 $
+ * @version $Revision: 1.40 $, $Date: 2005/04/29 08:59:17 $
  * @module
  */
 public class Heap
