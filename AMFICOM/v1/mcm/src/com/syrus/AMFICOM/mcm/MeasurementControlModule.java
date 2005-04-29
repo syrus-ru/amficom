@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.81 2005/04/29 12:18:11 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.82 2005/04/29 12:31:59 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -53,7 +53,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.81 $, $Date: 2005/04/29 12:18:11 $
+ * @version $Revision: 1.82 $, $Date: 2005/04/29 12:31:59 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -173,7 +173,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		DatabaseObjectLoader.init(user.getId());
 
 		try {
-			MCMSessionEnvironment.create(server.getHostName());
+			MCMSessionEnvironment.createInstance(server.getHostName());
 		}
 		catch (CommunicationException ce) {
 			Log.errorException(ce);
