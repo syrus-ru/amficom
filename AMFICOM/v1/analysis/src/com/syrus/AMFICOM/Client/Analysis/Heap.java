@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.32 2005/04/26 15:21:45 saa Exp $
+ * $Id: Heap.java,v 1.33 2005/04/29 08:10:11 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,19 +41,46 @@ import com.syrus.io.BellcoreStructure;
  * пока что API этой замены избыточна - например, getAllBSMap() делает необязательным
  * использование остальных методов работы с BS
  * 
+ * Обозначение: {} = хеш.
+ * 
+ * Обладает свойствами, по которым не обеспечивает уведомлений:
+ * minuitAnalysisParams, minuitDefaultParams, minuitInitialParams;
+ * refAnalysis{};
+ * contextMeasurementSetup;
+ * minTraceLevelt;
+ * rLDialog{};
+ * newMSName
+ * 
+ * Свойства, по которым уведомления предусмотрены, но не систематизированы
+ * (и не гарантированы):
+ * bsHash{}
+ * 
+ * Свойства с полным отслеживанием и уведомлениями:
+ * primaryMTAE (он же primaryMTM - @todo: rename to primaryMTAE);
+ * etalonMTM;
+ * currentTrace;
+ * currentEvent, currentEtalonEvent (пока не следят за MTM/MTAE);
+ * 
+ * Read-only автоматически генерируемые свойства:
+ * idColorMap (XXX: думаю, стоит перенести в GUIUtil //saa)
+ * 
  * @author $Author: saa $
- * @version $Revision: 1.32 $, $Date: 2005/04/26 15:21:45 $
+ * @version $Revision: 1.33 $, $Date: 2005/04/29 08:10:11 $
  * @module
  */
 public class Heap
 {
+    // constants
+
 	public static final String PRIMARY_TRACE_KEY = "primarytrace";
 	public static final String ETALON_TRACE_KEY =  "etalon";
 	public static final String REFERENCE_TRACE_KEY = "referencetrace"; // XXX - is really required
 	public static final String MODELED_TRACE_KEY = "modeledtrace"; // trace got from modelling module
 
+    // properties
+
+    private static AnalysisParameters minuitAnalysisParams;
 	private static AnalysisParameters minuitDefaultParams;
-	private static AnalysisParameters minuitAnalysisParams;
 	private static AnalysisParameters minuitInitialParams;
 	private static HashMap bsHash = new HashMap();	// "bellcorestructure", *
 	private static HashMap refAnalysisHash = new HashMap();		// "refanalysis", *
@@ -70,7 +97,16 @@ public class Heap
 
 	private static String newMSName = null; // the name for newly created (unsaved) MeasurementSetup; null if no new MS
 
-	public static ReflectogrammLoadDialog getRLDialogByKey(String key) {
+    // listeners 
+
+    private static LinkedList bsHashChangedListeners = new LinkedList();
+    private static LinkedList primaryTraceListeners = new LinkedList();
+    private static LinkedList primaryMTMListeners = new LinkedList();
+    private static LinkedList etalonMTMListeners = new LinkedList();
+    private static LinkedList currentTraceChangeListeners = new LinkedList();
+    private static LinkedList currentEventChangeListeners = new LinkedList();
+
+    public static ReflectogrammLoadDialog getRLDialogByKey(String key) {
         return (ReflectogrammLoadDialog) dialogHash.get(key);
     }
 
@@ -210,6 +246,7 @@ public class Heap
             currentTrace = getFirstSecondaryBSKey();
         if (currentTrace == null)
             currentTrace = PRIMARY_TRACE_KEY;
+        notifyCurrentTraceChanged();
     }
 
     public static boolean hasSecondaryBS() {
@@ -290,18 +327,6 @@ public class Heap
     }
 
     // dispatcher stuff
-
-    private static LinkedList bsHashChangedListeners = new LinkedList();
-
-    private static LinkedList primaryTraceListeners = new LinkedList();
-
-    private static LinkedList primaryMTMListeners = new LinkedList();
-
-    private static LinkedList etalonMTMListeners = new LinkedList();
-
-    private static LinkedList currentTraceChangeListeners = new LinkedList();
-
-    private static LinkedList currentEventChangeListeners = new LinkedList();
 
     // XXX: change each notify method to private as soon as bsHash will become
     // private
