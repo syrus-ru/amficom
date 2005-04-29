@@ -1,5 +1,5 @@
 /*
- * $Id: general.idl,v 1.73 2005/04/28 10:46:24 arseniy Exp $
+ * $Id: general.idl,v 1.74 2005/04/29 15:56:40 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -68,6 +68,7 @@ module corba {
 		ERROR_ILLEGAL_DATA,
 		ERROR_ILLEGAL_OBJECT_ENTITY,
 		ERROR_NO_CONNECT,
+		ERROR_PASSWORD_EXPIRED,
 		ERROR_SAVE,
 		ERROR_NOT_FOUND,
 		ERROR_RETRIEVE,
@@ -82,7 +83,7 @@ module corba {
 		ERROR_NO_DOMAINS_AVAILABLE,
 		ERROR_NOT_LOGGED_IN,
 		ERROR_ALREADY_LOGGED,
-		ERROR_PASSWORD_EXPIRED
+		ERROR_ACCESS_VALIDATION
 	};
 
 	enum CompletionStatus {
