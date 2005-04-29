@@ -1,5 +1,5 @@
 /*
- * $Id: MServerMeasurementObjectLoader.java,v 1.23 2005/04/12 17:19:41 arseniy Exp $
+ * $Id: MServerMeasurementObjectLoader.java,v 1.24 2005/04/29 16:03:25 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/04/12 17:19:41 $
+ * @version $Revision: 1.24 $, $Date: 2005/04/29 16:03:25 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -72,7 +72,7 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 						Log.DEBUGLEVEL09);
 
 				try {
-					mcmRef = MeasurementServer.mcmConnectionManager.getVerifiedMCMReference(preferredMCMId);
+					mcmRef = MServerSessionEnvironment.getInstance().getMServerServantManager().getVerifiedMCMReference(preferredMCMId);
 					measurement = new Measurement(mcmRef.transmitMeasurement((Identifier_Transferable)id.getTransferable()));
 				}
 				catch (IllegalDataException ide) {
@@ -105,7 +105,7 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 				for (Iterator it = mcmIds.iterator(); it.hasNext();) {
 					mcmId1 = (Identifier) it.next();
 					try {
-						mcmRef = MeasurementServer.mcmConnectionManager.getVerifiedMCMReference(mcmId1);
+						mcmRef = MServerSessionEnvironment.getInstance().getMServerServantManager().getVerifiedMCMReference(mcmId1);
 					}
 					catch (ApplicationException ae) {
 						Log.errorException(ae);
@@ -160,7 +160,7 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 						Log.DEBUGLEVEL09);
 
 				try {
-					mcmRef = MeasurementServer.mcmConnectionManager.getVerifiedMCMReference(preferredMCMId);
+					mcmRef = MServerSessionEnvironment.getInstance().getMServerServantManager().getVerifiedMCMReference(preferredMCMId);
 					Analysis_Transferable transferable = mcmRef.transmitAnalysis((Identifier_Transferable) id.getTransferable());
 					analysis = new Analysis(transferable);
 				}
@@ -194,7 +194,7 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 				for (Iterator it = mcmIds.iterator(); it.hasNext();) {
 					mcmId1 = (Identifier) it.next();
 					try {
-						mcmRef = MeasurementServer.mcmConnectionManager.getVerifiedMCMReference(mcmId1);
+						mcmRef = MServerSessionEnvironment.getInstance().getMServerServantManager().getVerifiedMCMReference(mcmId1);
 					}
 					catch (ApplicationException ae) {
 						Log.errorException(ae);
@@ -249,7 +249,7 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 						Log.DEBUGLEVEL09);
 
 				try {
-					mcmRef = MeasurementServer.mcmConnectionManager.getVerifiedMCMReference(preferredMCMId);
+					mcmRef = MServerSessionEnvironment.getInstance().getMServerServantManager().getVerifiedMCMReference(preferredMCMId);
 					Evaluation_Transferable transferable = mcmRef.transmitEvaluation((Identifier_Transferable) id.getTransferable());
 					evaluation = new Evaluation(transferable);
 				}
@@ -283,7 +283,7 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 				for (Iterator it = mcmIds.iterator(); it.hasNext();) {
 					mcmId1 = (Identifier) it.next();
 					try {
-						mcmRef = MeasurementServer.mcmConnectionManager.getVerifiedMCMReference(mcmId1);
+						mcmRef = MServerSessionEnvironment.getInstance().getMServerServantManager().getVerifiedMCMReference(mcmId1);
 					}
 					catch (ApplicationException ae) {
 						Log.errorException(ae);
@@ -485,7 +485,7 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 			Set loadedObjects) {
 		com.syrus.AMFICOM.mcm.corba.MCM mcmRef;
 		try {
-			mcmRef = MeasurementServer.mcmConnectionManager.getVerifiedMCMReference(mcmId1);
+			mcmRef = MServerSessionEnvironment.getInstance().getMServerServantManager().getVerifiedMCMReference(mcmId1);
 		}
 		catch (ApplicationException ae) {
 			Log.errorException(ae);
@@ -531,7 +531,7 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 			Set loadedObjects) {
 		com.syrus.AMFICOM.mcm.corba.MCM mcmRef;
 		try {
-			mcmRef = MeasurementServer.mcmConnectionManager.getVerifiedMCMReference(mcmId1);
+			mcmRef = MServerSessionEnvironment.getInstance().getMServerServantManager().getVerifiedMCMReference(mcmId1);
 		}
 		catch (ApplicationException ae) {
 			Log.errorException(ae);
@@ -577,7 +577,7 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 			Set loadedObjects) {
 		com.syrus.AMFICOM.mcm.corba.MCM mcmRef;
 		try {
-			mcmRef = MeasurementServer.mcmConnectionManager.getVerifiedMCMReference(mcmId1);
+			mcmRef = MServerSessionEnvironment.getInstance().getMServerServantManager().getVerifiedMCMReference(mcmId1);
 		}
 		catch (ApplicationException ae) {
 			Log.errorException(ae);
@@ -643,7 +643,7 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 		for (Iterator it = mcmIds.iterator(); it.hasNext();) {
 			mcmId1 = (Identifier) it.next();
 			try {
-				mcmRef = MeasurementServer.mcmConnectionManager.getVerifiedMCMReference(mcmId1);
+				mcmRef = MServerSessionEnvironment.getInstance().getMServerServantManager().getVerifiedMCMReference(mcmId1);
 			}
 			catch (ApplicationException ae) {
 				Log.errorException(ae);
@@ -719,7 +719,7 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 		for (Iterator it = mcmIds.iterator(); it.hasNext();) {
 			mcmId1 = (Identifier) it.next();
 			try {
-				mcmRef = MeasurementServer.mcmConnectionManager.getVerifiedMCMReference(mcmId1);
+				mcmRef = MServerSessionEnvironment.getInstance().getMServerServantManager().getVerifiedMCMReference(mcmId1);
 			}
 			catch (ApplicationException ae) {
 				Log.errorException(ae);
@@ -794,7 +794,7 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 		for (Iterator it = mcmIds.iterator(); it.hasNext();) {
 			mcmId1 = (Identifier) it.next();
 			try {
-				mcmRef = MeasurementServer.mcmConnectionManager.getVerifiedMCMReference(mcmId1);
+				mcmRef = MServerSessionEnvironment.getInstance().getMServerServantManager().getVerifiedMCMReference(mcmId1);
 			}
 			catch (ApplicationException ae) {
 				Log.errorException(ae);
