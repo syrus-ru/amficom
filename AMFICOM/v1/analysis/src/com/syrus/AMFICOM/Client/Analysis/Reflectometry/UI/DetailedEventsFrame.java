@@ -42,7 +42,6 @@ import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.TraceEvent;
 import com.syrus.AMFICOM.client_.general.ui_.ADefaultTableCellRenderer;
-import com.syrus.io.BellcoreStructure;
 
 public class DetailedEventsFrame extends JInternalFrame
 implements OperationListener,
@@ -55,14 +54,11 @@ implements OperationListener,
 
 	private ATable jTable;
 	private RefAnalysis a;
-	private BellcoreStructure bs;
-	private double res_km;
 
 	private JPanel mainPanel = new JPanel();
 	private JScrollPane scrollPane = new JScrollPane();
 	private JViewport viewport = new JViewport();
 
-	private boolean analysis_performed = false;
 	private CompareTableModel ctModel;
 	private ATable jTableComp;
 
@@ -129,15 +125,12 @@ implements OperationListener,
 				if (Heap.getRefAnalysisPrimary() != null)
 				{
 					a = Heap.getRefAnalysisPrimary();
-					bs = Heap.getBSPrimaryTrace();
-					res_km = bs.getResolution() / 1000.0;
 					if(Heap.getMTAEPrimary() != null && Heap.getMTMEtalon() != null)
 						makeAlignedDataMT();
 					else alignedDataMT = null;
 					updateTableModel();
 				}
 				if (Heap.hasEventParamsForPrimaryTrace())
-					analysis_performed = true;
 				if (Heap.getMTMEtalon() != null)
 					tabbedPane.setEnabledAt(1, true);
 			}
@@ -376,6 +369,7 @@ implements OperationListener,
 		if (num <0 || this.a == null || num >= a.events.length)
 			return;
 		TraceEvent ev = a.events[num];
+        double res_km = Heap.getBSPrimaryTrace().getResolution() / 1000.0;
 
 		FixedSizeEditableTableModel tModel = null;
 		int eventType = ev.getType();
@@ -478,7 +472,7 @@ implements OperationListener,
         makeAlignedDataMT();
 		ctModel.clearTable();
 		tabbedPane.setEnabledAt(0, true);
-		if(analysis_performed)
+		if(Heap.hasEventParamsForPrimaryTrace()) // XXX: inadequate condition
 			tabbedPane.setEnabledAt(1, true);
 	}
 
@@ -509,7 +503,6 @@ implements OperationListener,
         ctModel.clearTable();
         tabbedPane.setSelectedIndex(0);
         tabbedPane.setEnabledAt(0, true);
-        analysis_performed = false;
         tabbedPane.setEnabledAt(1, false);
         setVisible(false);
     }
