@@ -1,5 +1,5 @@
 /*
-* $Id: MCMAdministrationObjectLoader.java,v 1.17 2005/04/29 08:59:28 arseniy Exp $
+* $Id: MCMAdministrationObjectLoader.java,v 1.18 2005/04/29 12:40:51 arseniy Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/04/29 08:59:28 $
+ * @version $Revision: 1.18 $, $Date: 2005/04/29 12:40:51 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -53,7 +53,7 @@ final class MCMAdministrationObjectLoader extends DatabaseAdministrationObjectLo
 					+ "' not found in database; trying to load from Measurement Server", Log.DEBUGLEVEL08);
 			User user = null;
 
-			MServer mServerRef = SessionEnvironment.getMCMServantManager().getMServerReference();
+			MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
 			try {
 				User_Transferable transferable = mServerRef.transmitUser((Identifier_Transferable) id.getTransferable());
 				user = new User(transferable);
@@ -92,7 +92,7 @@ final class MCMAdministrationObjectLoader extends DatabaseAdministrationObjectLo
 					+ "' not found in database; trying to load from Measurement Server", Log.DEBUGLEVEL08);
 			Domain domain = null;
 
-			MServer mServerRef = SessionEnvironment.getMCMServantManager().getMServerReference();
+			MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
 			try {
 				Domain_Transferable transferable = mServerRef.transmitDomain((Identifier_Transferable) id.getTransferable());
 				domain = new Domain(transferable);
@@ -131,7 +131,7 @@ final class MCMAdministrationObjectLoader extends DatabaseAdministrationObjectLo
 					+ "' not found in database; trying to load from Measurement Server", Log.DEBUGLEVEL08);
 			Server server = null;
 
-			MServer mServerRef = SessionEnvironment.getMCMServantManager().getMServerReference();
+			MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
 			try {
 				Server_Transferable transferable = mServerRef.transmitServer((Identifier_Transferable) id.getTransferable());
 				server = new Server(transferable);
@@ -170,7 +170,7 @@ final class MCMAdministrationObjectLoader extends DatabaseAdministrationObjectLo
 					+ "' not found in database; trying to load from Measurement MCM", Log.DEBUGLEVEL08);
 			MCM mcm = null;
 
-			MServer mServerRef = SessionEnvironment.getMCMServantManager().getMServerReference();
+			MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
 			try {
 				MCM_Transferable transferable = mServerRef.transmitMCM((Identifier_Transferable) id.getTransferable());
 				mcm = new MCM(transferable);

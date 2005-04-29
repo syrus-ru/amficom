@@ -1,5 +1,5 @@
 /*
- * $Id: MCMConfigurationObjectLoader.java,v 1.32 2005/04/27 15:11:26 arseniy Exp $
+ * $Id: MCMConfigurationObjectLoader.java,v 1.33 2005/04/29 12:40:51 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -60,7 +60,7 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/04/27 15:11:26 $
+ * @version $Revision: 1.33 $, $Date: 2005/04/29 12:40:51 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -79,7 +79,7 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 					+ "' not found in database; trying to load from Measurement Server", Log.DEBUGLEVEL08);
 			EquipmentType equipmentType = null;
 
-			MServer mServerRef = SessionEnvironment.getMCMServantManager().getMServerReference();
+			MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
 			try {
 				EquipmentType_Transferable transferable = mServerRef.transmitEquipmentType((Identifier_Transferable) id.getTransferable());
 				equipmentType = new EquipmentType(transferable);
@@ -118,7 +118,7 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 					+ "' not found in database; trying to load from Measurement Server", Log.DEBUGLEVEL08);
 			PortType portType = null;
 	
-			MServer mServerRef = SessionEnvironment.getMCMServantManager().getMServerReference();
+			MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
 			try {
 				PortType_Transferable transferable = mServerRef.transmitPortType((Identifier_Transferable) id.getTransferable());
 				portType = new PortType(transferable);
@@ -158,7 +158,7 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 					+ "' not found in database; trying to load from Measurement Server", Log.DEBUGLEVEL08);
 			MeasurementPortType measurementPortType = null;
 	
-			MServer mServerRef = SessionEnvironment.getMCMServantManager().getMServerReference();
+			MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
 			try {
 				MeasurementPortType_Transferable transferable = mServerRef.transmitMeasurementPortType((Identifier_Transferable) id.getTransferable());
 				measurementPortType = new MeasurementPortType(transferable);
@@ -198,7 +198,7 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 					+ "' not found in database; trying to load from Measurement Server", Log.DEBUGLEVEL08);
 			TransmissionPathType transmissionPathType = null;
 
-			MServer mServerRef = SessionEnvironment.getMCMServantManager().getMServerReference();
+			MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
 			try {
 				TransmissionPathType_Transferable transferable = mServerRef.transmitTransmissionPathType((Identifier_Transferable) id.getTransferable());
 				transmissionPathType = new TransmissionPathType(transferable);
@@ -238,7 +238,7 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 					+ "' not found in database; trying to load from Measurement Server", Log.DEBUGLEVEL08);
 			LinkType linkType = null;
 
-			MServer mServerRef = SessionEnvironment.getMCMServantManager().getMServerReference();
+			MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
 			try {
 				LinkType_Transferable transferable = mServerRef.transmitLinkType((Identifier_Transferable) id.getTransferable());
 				linkType = new LinkType(transferable);
@@ -280,7 +280,7 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 					+ "' not found in database; trying to load from Measurement Server", Log.DEBUGLEVEL08);
 			Equipment equipment = null;
 
-			MServer mServerRef = SessionEnvironment.getMCMServantManager().getMServerReference();
+			MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
 			try {
 				Equipment_Transferable transferable = mServerRef.transmitEquipment((Identifier_Transferable) id.getTransferable());
 				equipment = new Equipment(transferable);
@@ -320,7 +320,7 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 					+ "' not found in database; trying to load from Measurement Server", Log.DEBUGLEVEL08);
 			Port port = null;
 
-			MServer mServerRef = SessionEnvironment.getMCMServantManager().getMServerReference();
+			MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
 			try {
 				Port_Transferable transferable = mServerRef.transmitPort((Identifier_Transferable) id.getTransferable());
 				port = new Port(transferable);
@@ -360,7 +360,7 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 					+ "' not found in database; trying to load from Measurement Server", Log.DEBUGLEVEL08);
 			MeasurementPort measurementPort = null;
 	
-			MServer mServerRef = SessionEnvironment.getMCMServantManager().getMServerReference();
+			MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
 			try {
 				MeasurementPort_Transferable transferable = mServerRef.transmitMeasurementPort((Identifier_Transferable) id.getTransferable());
 				measurementPort = new MeasurementPort(transferable);
@@ -400,7 +400,7 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 					+ "' not found in database; trying to load from Measurement Server", Log.DEBUGLEVEL08);
 			TransmissionPath transmissionPath = null;
 	
-			MServer mServerRef = SessionEnvironment.getMCMServantManager().getMServerReference();
+			MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
 			try {
 				TransmissionPath_Transferable transferable = mServerRef.transmitTransmissionPath((Identifier_Transferable) id.getTransferable());
 				transmissionPath = new TransmissionPath(transferable);
@@ -440,7 +440,7 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 					+ "' not found in database; trying to load from Measurement Server", Log.DEBUGLEVEL08);
 			KIS kis = null;
 
-			MServer mServerRef = SessionEnvironment.getMCMServantManager().getMServerReference();
+			MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
 			try {
 				KIS_Transferable transferable = mServerRef.transmitKIS((Identifier_Transferable) id.getTransferable());
 				kis = new KIS(transferable);
@@ -480,7 +480,7 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 					+ "' not found in database; trying to load from Measurement Server", Log.DEBUGLEVEL08);
 			MonitoredElement monitoredElement = null;
 
-			MServer mServerRef = SessionEnvironment.getMCMServantManager().getMServerReference();
+			MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
 			try {
 				MonitoredElement_Transferable transferable = mServerRef.transmitMonitoredElement((Identifier_Transferable) id.getTransferable());
 				monitoredElement = new MonitoredElement(transferable);
@@ -520,7 +520,7 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 					+ "' not found in database; trying to load from Measurement Server", Log.DEBUGLEVEL08);
 			Link link = null;
 	
-			MServer mServerRef = SessionEnvironment.getMCMServantManager().getMServerReference();
+			MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
 			try {
 				Link_Transferable transferable = mServerRef.transmitLink((Identifier_Transferable) id.getTransferable());
 				link = new Link(transferable);
@@ -564,7 +564,7 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 		Set loadedObjects = new HashSet();
 
 		try {
-			MServer mServerRef = SessionEnvironment.getMCMServantManager().getMServerReference();
+			MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
 			MeasurementPortType_Transferable[] transferables = mServerRef.transmitMeasurementPortTypes(loadIdsT);
 			for (int i = 0; i < transferables.length; i++) {
 				try {
@@ -611,7 +611,7 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 		Set loadedObjects = new HashSet();
 
 		try {
-			MServer mServerRef = SessionEnvironment.getMCMServantManager().getMServerReference();
+			MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
 			MeasurementPort_Transferable[] transferables = mServerRef.transmitMeasurementPorts(loadIdsT);
 			for (int i = 0; i < transferables.length; i++) {
 				try {
@@ -656,7 +656,7 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 		Set loadedObjects = new HashSet();
 	
 		try {
-			MServer mServerRef = SessionEnvironment.getMCMServantManager().getMServerReference();
+			MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
 			KIS_Transferable[] transferables = mServerRef.transmitKISs(loadIdsT);
 			for (int i = 0; i < transferables.length; i++) {
 				try {
@@ -701,7 +701,7 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 		Set loadedObjects = new HashSet();
 
 		try {
-			MServer mServerRef = SessionEnvironment.getMCMServantManager().getMServerReference();
+			MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
 			MonitoredElement_Transferable[] transferables = mServerRef.transmitMonitoredElements(loadIdsT);
 			for (int i = 0; i < transferables.length; i++) {
 				try {
@@ -750,7 +750,7 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 		Set loadedObjects = new HashSet();
 
 		try {
-			MServer mServerRef = SessionEnvironment.getMCMServantManager().getMServerReference();
+			MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
 			KIS_Transferable[] transferables = mServerRef.transmitKISsButIdsByCondition(loadButIdsT, conditionT);
 			for (int i = 0; i < transferables.length; i++) {
 				try {

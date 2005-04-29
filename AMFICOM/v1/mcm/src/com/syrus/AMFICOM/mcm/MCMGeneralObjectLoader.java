@@ -1,5 +1,5 @@
 /*
-* $Id: MCMGeneralObjectLoader.java,v 1.15 2005/04/27 15:11:26 arseniy Exp $
+* $Id: MCMGeneralObjectLoader.java,v 1.16 2005/04/29 12:40:51 arseniy Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/04/27 15:11:26 $
+ * @version $Revision: 1.16 $, $Date: 2005/04/29 12:40:51 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -53,7 +53,7 @@ final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
 					+ "' not found in database; trying to load from Measurement Server", Log.DEBUGLEVEL08);
 			ParameterType parameterType = null;
 
-			MServer mServerRef = SessionEnvironment.getMCMServantManager().getMServerReference();
+			MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
 			try {
 				ParameterType_Transferable transferable = mServerRef.transmitParameterType((Identifier_Transferable) id.getTransferable());
 				parameterType = new ParameterType(transferable);
@@ -92,7 +92,7 @@ final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
 					+ "' not found in database; trying to load from Measurement Server", Log.DEBUGLEVEL08);
 			CharacteristicType characteristicType = null;
 
-			MServer mServerRef = SessionEnvironment.getMCMServantManager().getMServerReference();
+			MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
 			try {
 				CharacteristicType_Transferable transferable = mServerRef.transmitCharacteristicType((Identifier_Transferable) id.getTransferable());
 				characteristicType = new CharacteristicType(transferable);
@@ -131,7 +131,7 @@ final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
 					+ "' not found in database; trying to load from Measurement Server", Log.DEBUGLEVEL08);
 			Characteristic characteristic = null;
 
-			MServer mServerRef = SessionEnvironment.getMCMServantManager().getMServerReference();
+			MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
 			try {
 				Characteristic_Transferable transferable = mServerRef.transmitCharacteristic((Identifier_Transferable) id.getTransferable());
 				characteristic = new Characteristic(transferable);
@@ -174,7 +174,7 @@ final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
 		Set loadedObjects = new HashSet();
 
 		try {
-			MServer mServerRef = SessionEnvironment.getMCMServantManager().getMServerReference();
+			MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
 			ParameterType_Transferable[] transferables = mServerRef.transmitParameterTypes(loadIdsT);
 			for (int i = 0; i < transferables.length; i++) {
 				try {
@@ -219,7 +219,7 @@ final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
 		Set loadedObjects = new HashSet();
 
 		try {
-			MServer mServerRef = SessionEnvironment.getMCMServantManager().getMServerReference();
+			MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
 			CharacteristicType_Transferable[] transferables = mServerRef.transmitCharacteristicTypes(loadIdsT);
 			for (int i = 0; i < transferables.length; i++)
 				loadedObjects.add(new CharacteristicType(transferables[i]));
@@ -258,7 +258,7 @@ final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
 		Set loadedObjects = new HashSet();
 
 		try {
-			MServer mServerRef = SessionEnvironment.getMCMServantManager().getMServerReference();
+			MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
 			Characteristic_Transferable[] transferables = mServerRef.transmitCharacteristics(loadIdsT);
 			for (int i = 0; i < transferables.length; i++) {
 				try {

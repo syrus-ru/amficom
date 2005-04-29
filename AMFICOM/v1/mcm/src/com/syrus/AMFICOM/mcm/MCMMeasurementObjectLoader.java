@@ -1,5 +1,5 @@
 /*
- * $Id: MCMMeasurementObjectLoader.java,v 1.38 2005/04/27 15:11:26 arseniy Exp $
+ * $Id: MCMMeasurementObjectLoader.java,v 1.39 2005/04/29 12:40:51 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/04/27 15:11:26 $
+ * @version $Revision: 1.39 $, $Date: 2005/04/29 12:40:51 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -60,7 +60,7 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 		java.util.Set loadedObjects = new HashSet();
 
 		try {
-			MServer mServerRef = SessionEnvironment.getMCMServantManager().getMServerReference();
+			MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
 			MeasurementType_Transferable[] transferables = mServerRef.transmitMeasurementTypes(loadIdsT);
 			for (int i = 0; i < transferables.length; i++) {
 				try {
@@ -105,7 +105,7 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 		java.util.Set loadedObjects = new HashSet();
 
 		try {
-			MServer mServerRef = SessionEnvironment.getMCMServantManager().getMServerReference();
+			MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
 			AnalysisType_Transferable[] transferables = mServerRef.transmitAnalysisTypes(loadIdsT);
 			for (int i = 0; i < transferables.length; i++) {
 				try {
@@ -150,7 +150,7 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 		java.util.Set loadedObjects = new HashSet();
 
 		try {
-			MServer mServerRef = SessionEnvironment.getMCMServantManager().getMServerReference();
+			MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
 			EvaluationType_Transferable[] transferables = mServerRef.transmitEvaluationTypes(loadIdsT);
 			for (int i = 0; i < transferables.length; i++) {
 				try {
@@ -197,7 +197,7 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 		java.util.Set loadedObjects = new HashSet();
 
 		try {
-			MServer mServerRef = SessionEnvironment.getMCMServantManager().getMServerReference();
+			MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
 			MeasurementSetup_Transferable[] transferables = mServerRef.transmitMeasurementSetups(loadIdsT);
 			for (int i = 0; i < transferables.length; i++) {
 				try {
@@ -242,7 +242,7 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 		java.util.Set loadedObjects = new HashSet();
 
 		try {
-			MServer mServerRef = SessionEnvironment.getMCMServantManager().getMServerReference();
+			MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
 			Set_Transferable[] transferables = mServerRef.transmitSets(loadIdsT);
 			for (int i = 0; i < transferables.length; i++) {
 				try {
@@ -287,7 +287,7 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 		java.util.Set loadedObjects = new HashSet();
 
 		try {
-			MServer mServerRef = SessionEnvironment.getMCMServantManager().getMServerReference();
+			MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
 			CronTemporalPattern_Transferable[] transferables = mServerRef.transmitCronTemporalPatterns(loadIdsT);
 			for (int i = 0; i < transferables.length; i++) {
 				try {
@@ -334,7 +334,7 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 		java.util.Set loadedObjects = new HashSet();
 
 		try {
-			MServer mServerRef = SessionEnvironment.getMCMServantManager().getMServerReference();
+			MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
 			IntervalsTemporalPattern_Transferable[] transferables = mServerRef.transmitIntervalsTemporalPatterns(loadIdsT);
 			for (int i = 0; i < transferables.length; i++) {
 				try {
@@ -383,7 +383,7 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 		java.util.Set loadedObjects = new HashSet();
 
 		try {
-			MServer mServerRef = SessionEnvironment.getMCMServantManager().getMServerReference();
+			MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
 			PeriodicalTemporalPattern_Transferable[] transferables = mServerRef.transmitPeriodicalTemporalPatterns(loadIdsT);
 			for (int i = 0; i < transferables.length; i++) {
 				try {
