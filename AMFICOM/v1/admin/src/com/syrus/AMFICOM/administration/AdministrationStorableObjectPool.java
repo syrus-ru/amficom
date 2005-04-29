@@ -1,5 +1,5 @@
 /*
- * $Id: AdministrationStorableObjectPool.java,v 1.22 2005/04/27 13:50:01 arseniy Exp $
+ * $Id: AdministrationStorableObjectPool.java,v 1.23 2005/04/29 06:55:54 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/04/27 13:50:01 $
+ * @version $Revision: 1.23 $, $Date: 2005/04/29 06:55:54 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -37,6 +37,7 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 	private static final int DOMAIN_OBJECT_POOL_SIZE = 4;
 	private static final int SERVER_OBJECT_POOL_SIZE = 4;
 	private static final int MCM_OBJECT_POOL_SIZE = 4;
+	private static final int SERVERPROCESS_OBJECT_POOL_SIZE = 1;
 	private static final int PERMATTR_OBJECT_POOL_SIZE = 4;
 
 	private static AdministrationObjectLoader aObjectLoader;
@@ -61,6 +62,7 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 		instance.addObjectPool(ObjectEntities.DOMAIN_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.SERVER_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.MCM_ENTITY_CODE, size);
+		instance.addObjectPool(ObjectEntities.SERVERPROCESS_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.PERMATTR_ENTITY_CODE, size);
 	}
 
@@ -74,6 +76,7 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 		instance.addObjectPool(ObjectEntities.DOMAIN_ENTITY_CODE, DOMAIN_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.SERVER_ENTITY_CODE, SERVER_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.MCM_ENTITY_CODE, MCM_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.SERVERPROCESS_ENTITY_CODE, SERVERPROCESS_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.PERMATTR_ENTITY_CODE, PERMATTR_OBJECT_POOL_SIZE);
 	}
 
