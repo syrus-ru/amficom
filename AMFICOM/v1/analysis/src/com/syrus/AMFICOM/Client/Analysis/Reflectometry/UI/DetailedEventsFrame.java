@@ -21,12 +21,12 @@ import javax.swing.table.AbstractTableModel;
 
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
-import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.CurrentEventChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
+import com.syrus.AMFICOM.Client.General.Event.PrimaryMTAEListener;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
@@ -45,8 +45,9 @@ import com.syrus.AMFICOM.client_.general.ui_.ADefaultTableCellRenderer;
 import com.syrus.io.BellcoreStructure;
 
 public class DetailedEventsFrame extends JInternalFrame
-implements OperationListener, BsHashChangeListener,
-EtalonMTMListener, CurrentEventChangeListener
+implements OperationListener,
+    EtalonMTMListener, PrimaryMTAEListener,
+    CurrentEventChangeListener
 {
 	private ModelTrace alignedDataMT;
 
@@ -102,17 +103,18 @@ EtalonMTMListener, CurrentEventChangeListener
 	void init_module(Dispatcher dispatcher)
 	{
 		dispatcher.register(this, RefUpdateEvent.typ);
-		Heap.addBsHashListener(this);
 		Heap.addEtalonMTMListener(this);
 		Heap.addCurrentEventChangeListener(this);
+        Heap.addPrimaryMTMListener(this);
 	}
 
 	private void makeAlignedDataMT()
 	{
 		// XXX: is alignment really required? Should it be performed here?
 		if (Heap.getMTMEtalon() == null || Heap.getMTAEPrimary() == null)
-			return;
-		alignedDataMT = ReflectogramMath.createAlignedArrayModelTrace(
+			alignedDataMT = null;
+        else
+            alignedDataMT = ReflectogramMath.createAlignedArrayModelTrace(
 			Heap.getMTAEPrimary().getModelTrace(),
 			Heap.getMTMEtalon().getMTAE().getModelTrace());
 	}
@@ -471,47 +473,9 @@ EtalonMTMListener, CurrentEventChangeListener
 		jTable.updateUI();
 	}
 
-	public void bsHashAdded(String key, BellcoreStructure bs1)
-	{
-		if (key.equals(Heap.PRIMARY_TRACE_KEY))
-		{
-			alignedDataMT = null;
-			tabbedPane.setSelectedIndex(0);
-			tabbedPane.setEnabledAt(0, true);
-			tabbedPane.setEnabledAt(1, false);
-			setVisible(true);
-		}
-	}
-
-	public void bsHashRemoved(String key)
-	{
-		if(key.equals(AnalysisUtil.ETALON))
-		{
-			alignedDataMT = null;
-			ctModel.clearTable();
-			tabbedPane.setEnabledAt(0, true);
-			tabbedPane.setSelectedIndex(0);
-			tabbedPane.setEnabledAt(1, false);
-		}
-	}
-
-	public void bsHashRemovedAll()
-	{
-		alignedDataMT = null;
-		ctModel.clearTable();
-		tabbedPane.setSelectedIndex(0);
-		tabbedPane.setEnabledAt(0, true);
-		analysis_performed = false;
-		tabbedPane.setEnabledAt(1, false);
-		setVisible(false);
-	}
-
 	public void etalonMTMCUpdated()
 	{
-		if(Heap.getMTAEPrimary() != null)
-			makeAlignedDataMT();
-		else
-			alignedDataMT = null;
+        makeAlignedDataMT();
 		ctModel.clearTable();
 		tabbedPane.setEnabledAt(0, true);
 		if(analysis_performed)
@@ -532,6 +496,23 @@ EtalonMTMListener, CurrentEventChangeListener
 		updateTableModel();
 		setData();
 	}
+
+    public void primaryMTMCUpdated() {
+        makeAlignedDataMT();
+        tabbedPane.setEnabledAt(0, true);
+        tabbedPane.setEnabledAt(1, false);
+        setVisible(true);
+    }
+
+    public void primaryMTMRemoved() {
+        alignedDataMT = null;
+        ctModel.clearTable();
+        tabbedPane.setSelectedIndex(0);
+        tabbedPane.setEnabledAt(0, true);
+        analysis_performed = false;
+        tabbedPane.setEnabledAt(1, false);
+        setVisible(false);
+    }
 }
 
 class CompareTableModel extends AbstractTableModel
