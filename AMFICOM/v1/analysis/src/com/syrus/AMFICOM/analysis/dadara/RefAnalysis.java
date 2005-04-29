@@ -12,11 +12,12 @@ public class RefAnalysis
 	public double[] filtered; // hope nobody will change it
 	public TraceEvent overallStats; // hope nobody will change it
 
+    private BellcoreStructure bs;
     private ModelTraceAndEventsImpl mtae;
 
 	public RefAnalysis(BellcoreStructure bs)
 	{
-        double[] y = bs.getTraceData();
+        this.bs = bs;
 
         AnalysisParameters ap = Heap.getMinuitAnalysisParams();
         if (ap == null) {
@@ -26,7 +27,7 @@ public class RefAnalysis
 
         mtae = CoreAnalysisManager.makeAnalysis(bs, ap);
 
-        decode(y, mtae);
+        decode();
 	}
 
     private static TraceEvent decodeEvent(double[] y,
@@ -145,8 +146,9 @@ public class RefAnalysis
         return event;
     }
 
-	private void decode (double[] y, ModelTraceAndEvents mtae)
+	private void decode ()
 	{
+        double[] y = bs.getTraceData();
 		ComplexReflectogramEvent[] re = mtae.getComplexEvents();
 		ModelTrace mt = mtae.getModelTrace();
 		events = new TraceEvent[re.length];
@@ -227,5 +229,8 @@ public class RefAnalysis
 
     public ModelTraceAndEventsImpl getMTAE() {
         return mtae;
+    }
+    public BellcoreStructure getBS() {
+        return bs;
     }
 }
