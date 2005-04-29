@@ -25,8 +25,7 @@ public class AnalysisCommand extends VoidCommand {
 			ModelTraceAndEventsImpl mtae =
 				CoreAnalysisManager.makeAnalysis(bs, ap);
 
-	        RefAnalysis a = new RefAnalysis();
-			a.decode(y, mtae);
+	        RefAnalysis a = new RefAnalysis(y, mtae);
 
             Heap.setMTAEPrimary(mtae);
 			Heap.setRefAnalysisPrimary(a);

@@ -7,8 +7,9 @@ public class RefAnalysis
 	public double[] filtered;
 	public TraceEvent overallStats;
 
-	public RefAnalysis()
+	public RefAnalysis(double[] y, ModelTraceAndEvents mtae)
 	{
+        decode(y, mtae);
 	}
 
     private static TraceEvent decodeEvent(double[] y,
@@ -127,7 +128,7 @@ public class RefAnalysis
         return event;
     }
 
-	public void decode (double[] y, ModelTraceAndEvents mtae)
+	private void decode (double[] y, ModelTraceAndEvents mtae)
 	{
 		ComplexReflectogramEvent[] re = mtae.getComplexEvents();
 		ModelTrace mt = mtae.getModelTrace();
