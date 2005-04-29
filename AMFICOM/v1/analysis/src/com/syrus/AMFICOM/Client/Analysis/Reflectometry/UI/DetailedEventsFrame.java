@@ -24,10 +24,7 @@ import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.CurrentEventChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Event.PrimaryMTAEListener;
-import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
+import com.syrus.AMFICOM.Client.General.Event.PrimaryRefAnalysisListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.Client.General.UI.ATable;
@@ -36,7 +33,6 @@ import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.ComplexReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.MathRef;
 import com.syrus.AMFICOM.analysis.dadara.ModelTrace;
-import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramComparer;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
@@ -44,16 +40,14 @@ import com.syrus.AMFICOM.analysis.dadara.TraceEvent;
 import com.syrus.AMFICOM.client_.general.ui_.ADefaultTableCellRenderer;
 
 public class DetailedEventsFrame extends JInternalFrame
-implements OperationListener,
-    EtalonMTMListener, PrimaryMTAEListener,
-    CurrentEventChangeListener
+implements EtalonMTMListener,
+    CurrentEventChangeListener, PrimaryRefAnalysisListener
 {
 	private ModelTrace alignedDataMT;
 
 	private Map tModels = new HashMap(6);
 
 	private ATable jTable;
-	private RefAnalysis a;
 
 	private JPanel mainPanel = new JPanel();
 	private JScrollPane scrollPane = new JScrollPane();
@@ -98,10 +92,9 @@ implements OperationListener,
 
 	void init_module(Dispatcher dispatcher)
 	{
-		dispatcher.register(this, RefUpdateEvent.typ);
 		Heap.addEtalonMTMListener(this);
 		Heap.addCurrentEventChangeListener(this);
-        Heap.addPrimaryMTMListener(this);
+        Heap.addPrimaryRefAnalysisListener(this);
 	}
 
 	private void makeAlignedDataMT()
@@ -113,28 +106,6 @@ implements OperationListener,
             alignedDataMT = ReflectogramMath.createAlignedArrayModelTrace(
 			Heap.getMTAEPrimary().getModelTrace(),
 			Heap.getMTMEtalon().getMTAE().getModelTrace());
-	}
-
-	public void operationPerformed(OperationEvent ae)
-	{
-		if(ae.getActionCommand().equals(RefUpdateEvent.typ))
-		{
-			RefUpdateEvent rue = (RefUpdateEvent)ae;
-			if (rue.analysisPerformed())
-			{
-				if (Heap.getRefAnalysisPrimary() != null)
-				{
-					a = Heap.getRefAnalysisPrimary();
-					if(Heap.getMTAEPrimary() != null && Heap.getMTMEtalon() != null)
-						makeAlignedDataMT();
-					else alignedDataMT = null;
-					updateTableModel();
-				}
-				if (Heap.hasEventParamsForPrimaryTrace())
-				if (Heap.getMTMEtalon() != null)
-					tabbedPane.setEnabledAt(1, true);
-			}
-		}
 	}
 
 	private void jbInit() throws Exception
@@ -366,9 +337,9 @@ implements OperationListener,
 	private void updateTableModel()
 	{
 		int num = Heap.getCurrentEvent();
-		if (num <0 || this.a == null || num >= a.events.length)
+		if (num < 0)
 			return;
-		TraceEvent ev = a.events[num];
+		TraceEvent ev = Heap.getRefAnalysisPrimary().events[num];
         double res_km = Heap.getBSPrimaryTrace().getResolution() / 1000.0;
 
 		FixedSizeEditableTableModel tModel = null;
@@ -491,14 +462,15 @@ implements OperationListener,
 		setData();
 	}
 
-    public void primaryMTMCUpdated() {
+    public void primaryRefAnalysisCUpdated() {
         makeAlignedDataMT();
         tabbedPane.setEnabledAt(0, true);
-        tabbedPane.setEnabledAt(1, false);
+        tabbedPane.setEnabledAt(1, true);
+        updateTableModel();
         setVisible(true);
     }
 
-    public void primaryMTMRemoved() {
+    public void primaryRefAnalysisRemoved() {
         alignedDataMT = null;
         ctModel.clearTable();
         tabbedPane.setSelectedIndex(0);
