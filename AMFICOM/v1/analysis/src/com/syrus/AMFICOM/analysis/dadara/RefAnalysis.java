@@ -11,13 +11,127 @@ public class RefAnalysis
 	{
 	}
 
-	public void decode (double[] y, ModelTraceAndEvents mtm)
-	{
-		ComplexReflectogramEvent[] re = mtm.getComplexEvents();
-		ModelTrace mt = mtm.getModelTrace();
-		events = new TraceEvent[re.length];
+    private static TraceEvent decodeEvent(double[] y,
+            ModelTraceAndEvents mtae,
+            int i,
+            double top,
+            ComplexReflectogramEvent[] re,
+            ModelTrace mt)
+    {
+        int type;
+        switch (re[i].getEventType())
+        {
+        case SimpleReflectogramEvent.LINEAR:
+            type = TraceEvent.LINEAR;
+            break;
+        case SimpleReflectogramEvent.DEADZONE:
+            type = TraceEvent.INITIATE;
+            break;
+        case SimpleReflectogramEvent.ENDOFTRACE:
+            type = TraceEvent.TERMINATE;
+            break;
+        case SimpleReflectogramEvent.CONNECTOR:
+            type = TraceEvent.CONNECTOR;
+            break;
+        case SimpleReflectogramEvent.LOSS:
+            type = TraceEvent.LOSS;
+            break;
+        case SimpleReflectogramEvent.GAIN:
+            type = TraceEvent.GAIN;
+            break;
+        default:
+            type = TraceEvent.NON_IDENTIFIED;
+        }
 
-		// if re.length == 0, we should anyway make processing related to noise etc
+        TraceEvent event = new TraceEvent(type, re[i].getBegin(), re[i].getEnd());
+
+        // определяем "асимптотические" значения слева и справа
+
+        double asympB = re[i].getAsympY0();
+        double asympE = re[i].getAsympY1();
+
+        if (type == TraceEvent.LINEAR) {
+            // TODO: использовать mloss вместо asympB,asympE,
+            // т.к. (нынешние) asympB,asympE зависят от смежных участков.
+            double[] data = new double[5];
+            data[0] = top - asympB;
+            data[1] = top - asympE;
+            data[2] = -(asympE - asympB)
+                    / (re[i].getEnd() - re[i].getBegin());
+            ModelTrace yMT = new ArrayModelTrace(y);
+            data[3] = ReflectogramComparer.getRMSDeviation(mtae.getModelTrace(), yMT, re[i]);
+            data[4] = ReflectogramComparer.getMaxDeviation(mtae.getModelTrace(), yMT, re[i]);
+            event.setLoss(re[i].getMLoss());
+            event.setData(data);
+        } else if (type == TraceEvent.CONNECTOR) {
+            double[] data = new double[4];
+            data[0] = top - asympB;
+            data[1] = top - asympE;
+            data[2] = data[0]
+                    - re[i].getALet(); // XXX
+            data[3] = 0; // FIXIT: больше не используется, убрать
+            event.setLoss(re[i].getMLoss());
+            event.setData(data);
+        } else if (type == TraceEvent.LOSS || type == TraceEvent.GAIN) {
+            double[] data = new double[3];
+            data[0] = top - asympB;
+            data[1] = top - asympE;
+            data[2] = re[i].getMLoss();
+            event.setLoss(re[i].getMLoss());
+            event.setData(data);
+        } else if (type == TraceEvent.TERMINATE) {
+            double[] data = new double[3];
+            data[0] = top - asympB;
+            data[1] = data[0]
+                    - re[i].getALet(); // XXX
+            data[2] = 0; // FIXME: больше не используется, убрать
+            event.setLoss(0);
+            event.setData(data);
+        } else if (type == TraceEvent.INITIATE) {
+            // extrapolate first linear event to x = 0
+            double po = asympB;
+
+            int adz = 0;
+            int edz = 0;
+            final int N = re[i].getEnd() - re[i].getBegin();
+            double[] yarr = mt.getYArrayZeroPad(re[i].getBegin(), N);
+            // find max
+            double vmax = po;
+            for (int k = 0; k < N; k++) {
+                if (vmax < yarr[k])
+                    vmax = yarr[k];
+            }
+            // find width
+            for (int k = 0; k < N; k++) {
+                if (yarr[k] > vmax - 1.5)
+                    edz++;
+                if (yarr[k] > po + .5)
+                    adz++;
+            }
+
+            double[] data = new double[4];
+            data[0] = top - vmax; // changed by saa
+            data[1] = top - po; // Po
+            data[2] = edz;
+            data[3] = adz;
+            event.setLoss(0); 
+            event.setData(data);
+        } else if (type == TraceEvent.NON_IDENTIFIED) {
+            double[] data = new double[3];
+            data[0] = top - asympB;
+            data[1] = top - asympE;
+            data[2] = data[1] - data[0]; //eventMaxDeviation - ?
+            event.setLoss(re[i].getMLoss()); 
+            event.setData(data);
+        }
+        return event;
+    }
+
+	public void decode (double[] y, ModelTraceAndEvents mtae)
+	{
+		ComplexReflectogramEvent[] re = mtae.getComplexEvents();
+		ModelTrace mt = mtae.getModelTrace();
+		events = new TraceEvent[re.length];
 
 		double maxY = 0; // XXX: saa: is 0 good for min/max? shall we use y[0] instead?
 		double minY = 0;
@@ -40,112 +154,7 @@ public class RefAnalysis
 
 		for (int i = 0; i < re.length; i++)
 		{
-            int type;
-			switch (re[i].getEventType())
-			{
-			case SimpleReflectogramEvent.LINEAR:
-				type = TraceEvent.LINEAR;
-				break;
-			case SimpleReflectogramEvent.DEADZONE:
-                type = TraceEvent.INITIATE;
-                break;
-			case SimpleReflectogramEvent.ENDOFTRACE:
-                type = TraceEvent.TERMINATE;
-                break;
-			case SimpleReflectogramEvent.CONNECTOR:
-				type = TraceEvent.CONNECTOR;
-				break;
-			case SimpleReflectogramEvent.LOSS:
-				type = TraceEvent.LOSS;
-				break;
-			case SimpleReflectogramEvent.GAIN:
-				type = TraceEvent.GAIN;
-				break;
-			default:
-				type = TraceEvent.NON_IDENTIFIED;
-			}
-
-			events[i] = new TraceEvent(type, re[i].getBegin(), re[i].getEnd());
-
-			// определяем "асимптотические" значения слева и справа
-
-			double asympB = re[i].getAsympY0();
-			double asympE = re[i].getAsympY1();
-			
-			if (type == TraceEvent.LINEAR) {
-			    // TODO: использовать mloss вместо asympB,asympE,
-			    // т.к. (нынешние) asympB,asympE зависят от смежных участков.
-				double[] data = new double[5];
-				data[0] = top - asympB;
-				data[1] = top - asympE;
-				data[2] = -(asympE - asympB)
-						/ (re[i].getEnd() - re[i].getBegin());
-				ModelTrace yMT = new ArrayModelTrace(y); 
-				data[3] = ReflectogramComparer.getRMSDeviation(mtm.getModelTrace(), yMT, re[i]);
-				data[4] = ReflectogramComparer.getMaxDeviation(mtm.getModelTrace(), yMT, re[i]);
-				events[i].setLoss(re[i].getMLoss()); 
-				events[i].setData(data);
-			} else if (type == TraceEvent.CONNECTOR) {
-				double[] data = new double[4];
-				data[0] = top - asympB;
-				data[1] = top - asympE;
-				data[2] = data[0]
-						- re[i].getALet(); // XXX
-				data[3] = 0; // FIXIT: больше не используется, убрать
-				events[i].setLoss(re[i].getMLoss()); 
-				events[i].setData(data);
-			} else if (type == TraceEvent.LOSS || type == TraceEvent.GAIN) {
-				double[] data = new double[3];
-				data[0] = top - asympB;
-				data[1] = top - asympE;
-				data[2] = re[i].getMLoss();
-				events[i].setLoss(re[i].getMLoss()); 
-				events[i].setData(data);
-			} else if (type == TraceEvent.TERMINATE) {
-				double[] data = new double[3];
-				data[0] = top - asympB;
-				data[1] = data[0]
-						- re[i].getALet(); // XXX
-				data[2] = 0; // FIXIT: больше не используется, убрать
-				events[i].setLoss(0);
-				events[i].setData(data);
-			} else if (type == TraceEvent.INITIATE) {
-                // extrapolate first linear event to x = 0
-                double po = asympB;
-
-                int adz = 0;
-				int edz = 0;
-				final int N = re[i].getEnd() - re[i].getBegin();
-				double[] yarr = mt.getYArrayZeroPad(re[i].getBegin(), N);
-				// find max
-				double vmax = po;
-				for (int k = 0; k < N; k++) {
-					if (vmax < yarr[k])
-						vmax = yarr[k];
-				}
-				// find width
-				for (int k = 0; k < N; k++) {
-					if (yarr[k] > vmax - 1.5)
-						edz++;
-					if (yarr[k] > po + .5)
-						adz++;
-				}
-
-				double[] data = new double[4];
-				data[0] = top - vmax; // changed by saa
-				data[1] = top - po; // Po
-				data[2] = edz;
-				data[3] = adz;
-				events[i].setLoss(0); 
-				events[i].setData(data);
-			} else if (type == TraceEvent.NON_IDENTIFIED) {
-				double[] data = new double[3];
-				data[0] = top - asympB;
-				data[1] = top - asympE;
-				data[2] = data[1] - data[0]; //eventMaxDeviation - ?
-				events[i].setLoss(re[i].getMLoss()); 
-				events[i].setData(data);
-			}
+            events[i] = decodeEvent(y, mtae, i, top, re, mt);
 		}
 
 		double maxNoise = 0.;
@@ -158,14 +167,16 @@ public class RefAnalysis
 				maxNoise = y[i];
 		}
 		overallStats = new TraceEvent(TraceEvent.OVERALL_STATS, 0, lastPoint);
-		double[] data = new double[5];
-        double po = re[0].getAsympY0();
-		data[0] = maxY - po;
-		data[1] = maxY - y[lastPoint];
-		data[2] = (maxY - maxNoise * 0.98);
-		data[3] = (maxY - po);
-		data[4] = re.length;
-		overallStats.setData(data);
+        {
+    		double[] data = new double[5];
+            double po = re[0].getAsympY0();
+    		data[0] = maxY - po;
+    		data[1] = maxY - y[lastPoint];
+    		data[2] = (maxY - maxNoise * 0.98);
+    		data[3] = (maxY - po);
+    		data[4] = re.length;
+    		overallStats.setData(data);
+        }
 
 		filtered = new double[y.length];
 		noise = new double[y.length];
@@ -194,7 +205,5 @@ public class RefAnalysis
 				}
 			}
 		}
-  // System.out.println("decode: after-processing (for/for) dt/ms " +
-	// (System.currentTimeMillis()-t0));
 	}
 }
