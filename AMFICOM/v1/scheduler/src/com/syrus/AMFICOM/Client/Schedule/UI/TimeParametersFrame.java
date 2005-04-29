@@ -51,6 +51,7 @@ import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.TypicalCondition;
@@ -537,7 +538,12 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 
 						if (ms < 0) {
 							TimeParametersPanel.this.temporalStamps.setStartTime(startDate);
-							temporalPattern.moveAllItems(-ms);
+							try {
+								temporalPattern.moveAllItems(-ms);
+							} catch (IllegalDataException e1) {
+								// never occur !!!
+								assert false;
+							}
 							ms = 0;
 						}
 						
@@ -545,7 +551,12 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 							TimeParametersPanel.this.temporalStamps.setEndTime(startDate);
 						}
 
-						temporalPattern.addIntervalItems(Collections.singletonMap(new Long(ms), Identifier.VOID_IDENTIFIER));
+						Long newMs = new Long(ms);
+						try {
+							temporalPattern.addIntervalItems(Collections.singletonMap(newMs, Identifier.VOID_IDENTIFIER), Collections.singletonMap(newMs, null));
+						} catch (IllegalDataException e1) {
+							SchedulerModel.showErrorMessage(TimeParametersPanel.this, e1);
+						}
 						
 						TimeParametersPanel.this.schedulerModel.refreshTestTemporalStamps();
 
@@ -637,11 +648,13 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 							TimeParametersPanel.this.temporalStamps.setEndTime(endDate);
 						}
 
-						temporalPattern.addIntervalItems(Collections.singletonMap(new Long(ms), periodicTemporalPattern.getId()));
-						temporalPattern.setIntervalDuration(ms, endTime - startTime);
+						Long newMs = new Long(ms);
+						temporalPattern.addIntervalItems(Collections.singletonMap(newMs, periodicTemporalPattern.getId()), Collections.singletonMap(newMs, new Long(endTime - startTime)));
 					} catch (IllegalObjectEntityException e1) {
 						SchedulerModel.showErrorMessage(TimeParametersPanel.this, e1);
 					} catch (CreateObjectException e1) {
+						SchedulerModel.showErrorMessage(TimeParametersPanel.this, e1);
+					} catch (IllegalDataException e1) {
 						SchedulerModel.showErrorMessage(TimeParametersPanel.this, e1);
 					}
 
