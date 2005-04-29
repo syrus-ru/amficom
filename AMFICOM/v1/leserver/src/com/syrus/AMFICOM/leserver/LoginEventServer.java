@@ -1,5 +1,5 @@
 /*
- * $Id: LoginEventServer.java,v 1.3 2005/04/28 15:00:30 arseniy Exp $
+ * $Id: LoginEventServer.java,v 1.4 2005/04/29 09:35:37 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.leserver;
 import com.syrus.AMFICOM.administration.AdministrationDatabaseContext;
 import com.syrus.AMFICOM.administration.Server;
 import com.syrus.AMFICOM.administration.ServerProcess;
+import com.syrus.AMFICOM.administration.ServerProcessDatabase;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.CommunicationException;
@@ -20,7 +21,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/04/28 15:00:30 $
+ * @version $Revision: 1.4 $, $Date: 2005/04/29 09:35:37 $
  * @author $Author: arseniy $
  * @module leserver_v1
  */
@@ -31,12 +32,14 @@ public final class LoginEventServer {
 	public static final String KEY_DB_SID = "DBSID";
 	public static final String KEY_DB_CONNECTION_TIMEOUT = "DBConnectionTimeout";
 	public static final String KEY_DB_LOGIN_NAME = "DBLoginName";
+	public static final String KEY_SERVER_ID = "ServerID";
 	public static final String KEY_LOGIN_PROCESS_CODENAME = "LoginProcessCodename";
 	public static final String KEY_EVENT_PROCESS_CODENAME = "EventProcessCodename";
 
 	public static final String DB_SID = "amficom";
 	public static final int DB_CONNECTION_TIMEOUT = 120;	//sec
 	public static final String DB_LOGIN_NAME = "amficom";
+	public static final String SERVER_ID = "Server_1";
 	public static final String LOGIN_PROCESS_CODENAME = "LoginServer";
 	public static final String EVENT_PROCESS_CODENAME = "EventServer";
 
@@ -73,35 +76,34 @@ public final class LoginEventServer {
 		 * 	for work with database*/
 		DatabaseContextSetup.initDatabaseContext();
 
+		/*	Retrieve info about server*/
+		Identifier serverId = new Identifier(ApplicationProperties.getString(KEY_SERVER_ID, SERVER_ID));
+		Server server = null;
+		try {
+			server = new Server(serverId);
+		}
+		catch (ApplicationException ae) {
+			Log.errorException(ae);
+			System.exit(1);
+		}
+
 		/*	Retrieve info about processes*/
 		ServerProcess loginServerProcess = null;
 		ServerProcess eventServerProcess = null;
 		loginProcessCodename = ApplicationProperties.getString(KEY_LOGIN_PROCESS_CODENAME, LOGIN_PROCESS_CODENAME);
 		eventProcessCodename = ApplicationProperties.getString(KEY_EVENT_PROCESS_CODENAME, EVENT_PROCESS_CODENAME);
+		ServerProcessDatabase serverProcessDatabase = AdministrationDatabaseContext.getServerProcessDatabase();
 		try {
-			loginServerProcess = AdministrationDatabaseContext.getServerProcessDatabase().retrieveForCodename(loginProcessCodename);
-			eventServerProcess = AdministrationDatabaseContext.getServerProcessDatabase().retrieveForCodename(eventProcessCodename);
+			loginServerProcess = serverProcessDatabase.retrieveForServerAndCodename(serverId, loginProcessCodename);
+			eventServerProcess = serverProcessDatabase.retrieveForServerAndCodename(serverId, eventProcessCodename);
 		}
 		catch (ApplicationException ae) {
 			Log.errorException(ae);
 			System.exit(1);
 		}
-		Identifier loginServerId = loginServerProcess.getServerId();
-		if (!loginServerId.equals(eventServerProcess.getServerId())) {
-			Log.errorMessage("Server id of Login Server -- '" + loginServerId
-					+ "' not the same as server id of Event Server -- '" + eventServerProcess.getServerId() + "'");
-			Log.errorMessage("Login Server and Event Server must run on the same server!");
-			System.exit(1);
-		}
-
-		/*	Retrieve info about server, on which to run
-		 * and user, on behave of which to run*/
-		Server server = null;
-		try {
-			server = new Server(loginServerId);
-		}
-		catch (ApplicationException ae) {
-			Log.errorException(ae);
+		// TODO something with loginServerProcess and eventServerProcess
+		if (loginServerProcess == null || eventServerProcess == null) {
+			Log.errorMessage("Cannot find login server process or eventt server process");
 			System.exit(1);
 		}
 
