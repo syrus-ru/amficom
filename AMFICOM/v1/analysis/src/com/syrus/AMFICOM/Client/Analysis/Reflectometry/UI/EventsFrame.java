@@ -22,7 +22,6 @@ import javax.swing.table.TableModel;
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.CurrentEventChangeListener;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryRefAnalysisListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
@@ -45,7 +44,6 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener,
 {
 	private static final String DASH = "-----";
 
-	private Dispatcher dispatcher;
 	private FixedSizeEditableTableModel tModel;
 	private JTable jTable;
 
@@ -54,11 +52,6 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener,
 	private JViewport viewport = new JViewport();
 
 	public EventsFrame()
-	{
-		this(new Dispatcher());
-	}
-
-	public EventsFrame(Dispatcher dispatcher)
 	{
 		super();
 
@@ -71,10 +64,10 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener,
 			e.printStackTrace();
 		}
 
-		this.initModule(dispatcher);
+		this.initModule();
 	}
 
-	private void initModule(Dispatcher dispatcher1)
+	private void initModule()
 	{
 		Heap.addEtalonMTMListener(this);
 		Heap.addCurrentEventChangeListener(this);

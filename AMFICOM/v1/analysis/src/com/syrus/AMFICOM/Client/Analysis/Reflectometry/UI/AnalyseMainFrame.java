@@ -332,7 +332,7 @@ public class AnalyseMainFrame extends JFrame implements BsHashChangeListener,
 
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | EVENTS_FRAME", Log.FINEST);
-				EventsFrame eventsFrame = new EventsFrame(internalDispatcher);
+				EventsFrame eventsFrame = new EventsFrame();
 				desktopPane.add(eventsFrame);
 				analysisReportCommand.setParameter(CreateAnalysisReportCommand.TABLE, eventsFrame);
 				return eventsFrame;

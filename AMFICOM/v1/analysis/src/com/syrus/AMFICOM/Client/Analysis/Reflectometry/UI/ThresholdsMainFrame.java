@@ -180,7 +180,7 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener, CurrentTr
 		desktopPane.add(statsFrame);
 		tables.add(statsFrame);
 
-		eventsFrame = new EventsFrame(internal_dispatcher);
+		eventsFrame = new EventsFrame();
 		desktopPane.add(eventsFrame);
 		tables.add(eventsFrame);
 
