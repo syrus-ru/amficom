@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.44 2005/04/29 15:11:55 saa Exp $
+ * $Id: Heap.java,v 1.45 2005/04/29 15:43:07 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -64,7 +64,7 @@ import com.syrus.io.BellcoreStructure;
  * Фактически, primaryMTAE - это часть refAnalysisPrimary.
  * 
  * @author $Author: saa $
- * @version $Revision: 1.44 $, $Date: 2005/04/29 15:11:55 $
+ * @version $Revision: 1.45 $, $Date: 2005/04/29 15:43:07 $
  * @module
  */
 public class Heap
@@ -497,6 +497,7 @@ public class Heap
      */
     public static void setRefAnalysisPrimary(RefAnalysis ra) {
         refAnalysisPrimary = ra;
+        fixCurrentEvent();
         notifyPrimaryRefAnalysisCUpdated();
         notifyPrimaryMTAECUpdated();
     }
