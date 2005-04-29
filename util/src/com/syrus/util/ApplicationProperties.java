@@ -1,5 +1,5 @@
 /*
- * $Id: ApplicationProperties.java,v 1.6 2005/04/28 14:53:37 arseniy Exp $
+ * $Id: ApplicationProperties.java,v 1.7 2005/04/29 10:32:41 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -60,7 +60,7 @@ public class ApplicationProperties {
 				return applicationResourceBundle.getString(key);
 			}
 			catch (Exception e) {
-				Log.debugMessage("Cannot get resource '" + key + "' from " + applicationFileName, Log.DEBUGLEVEL02); //$NON-NLS-1$
+				Log.debugMessage("Cannot get resource '" + key + "' from " + applicationFileName + "; using common file", Log.DEBUGLEVEL02); //$NON-NLS-1$
 			}
 		}
 
@@ -83,7 +83,7 @@ public class ApplicationProperties {
 				return Integer.parseInt(applicationResourceBundle.getString(key));
 			}
 			catch (Exception e) {
-				Log.debugMessage("Cannot get resource '" + key + "' from " + applicationFileName, Log.DEBUGLEVEL02); //$NON-NLS-1$
+				Log.debugMessage("Cannot get resource '" + key + "' from " + applicationFileName + "; using common file", Log.DEBUGLEVEL02); //$NON-NLS-1$
 			}
 		}
 
