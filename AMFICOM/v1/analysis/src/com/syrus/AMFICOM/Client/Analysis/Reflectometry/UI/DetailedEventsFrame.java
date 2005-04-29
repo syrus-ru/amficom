@@ -486,7 +486,7 @@ class CompareTableModel extends AbstractTableModel
 		{LangModelAnalyse.getString("etEventType"), "--"},
 		{LangModelAnalyse.getString("maxDeviation"), "--"},
 		{LangModelAnalyse.getString("meanDeviation"), "--"},
-		{LangModelAnalyse.getString("delta"), "--"},
+		{LangModelAnalyse.getString("dLoss"), "--"},
 		{LangModelAnalyse.getString("dWidth"), "--"},
 		{LangModelAnalyse.getString("dLocation"), "--"}
 	};

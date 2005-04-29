@@ -326,7 +326,7 @@ class WholeCompareTableModel extends AbstractTableModel
 		{LangModelAnalyse.getString("etLength"), "--"},
 		{LangModelAnalyse.getString("maxDeviation"), "--"},
 		{LangModelAnalyse.getString("meanDeviation"), "--"},
-		{LangModelAnalyse.getString("delta"), "--"},
+		{LangModelAnalyse.getString("dLoss"), "--"},
 	};
 
 	WholeCompareTableModel()
