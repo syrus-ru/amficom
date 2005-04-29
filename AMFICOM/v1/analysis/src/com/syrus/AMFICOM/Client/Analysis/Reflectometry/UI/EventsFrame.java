@@ -81,8 +81,6 @@ implements OperationListener,
 	private void initModule(Dispatcher dispatcher1)
 	{
 		this.dispatcher = dispatcher1;
-		//dispatcher.register(this, RefChangeEvent.typ);
-		this.dispatcher.register(this, RefUpdateEvent.typ);
 		this.dispatcher.register(this, AnalyseApplicationModel.SELECT_NEXT_EVENT);
 		this.dispatcher.register(this, AnalyseApplicationModel.SELECT_PREVIOUS_EVENT);
 		Heap.addEtalonMTMListener(this);
