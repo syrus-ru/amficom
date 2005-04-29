@@ -1,5 +1,5 @@
 /*
- * $Id: EventProcessor.java,v 1.2 2005/04/28 14:11:52 arseniy Exp $
+ * $Id: EventProcessor.java,v 1.3 2005/04/29 10:01:43 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,7 +7,9 @@
  */
 package com.syrus.AMFICOM.leserver;
 
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import com.syrus.AMFICOM.event.Event;
@@ -17,7 +19,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/28 14:11:52 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/29 10:01:43 $
  * @author $Author: arseniy $
  * @module leserver_v1
  */
@@ -35,6 +37,7 @@ final class EventProcessor extends SleepButWorkThread {
 	public EventProcessor() {
 		super(ApplicationProperties.getInt(KEY_EVENT_PROCESSOR_TICK_TIME, EVENT_PROCESSOR_TICK_TIME) * 1000,
 				ApplicationProperties.getInt(KEY_EVENT_PROCESSOR_MAX_FALLS, MAX_FALLS));
+		eventQueue = Collections.synchronizedList(new LinkedList());
 		this.running = true;
 
 		Runtime.getRuntime().addShutdownHook(new Thread() {
