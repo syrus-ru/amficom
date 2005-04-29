@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorApplicationModel.java,v 1.13 2005/04/28 12:55:23 krupenn Exp $
+ * $Id: MapEditorApplicationModel.java,v 1.14 2005/04/29 14:02:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
  * 
  * 
  * 
- * @version $Revision: 1.13 $, $Date: 2005/04/28 12:55:23 $
+ * @version $Revision: 1.14 $, $Date: 2005/04/29 14:02:17 $
  * @module mapviewclient_v1
  * @author $Author: krupenn $
  */
@@ -59,7 +59,7 @@ public class MapEditorApplicationModel extends ApplicationModel
 	public static final String ITEM_VIEW = "menuView";
 	public static final String ITEM_VIEW_GENERAL = "menuViewGeneral";
 	public static final String ITEM_VIEW_ADDITIONAL = "menuViewAdditional";
-	public static final String ITEM_VIEW_CHARACTERISTICS = "menuViewXharacteristics";
+	public static final String ITEM_VIEW_CHARACTERISTICS = "menuViewСharacteristics";
 	public static final String ITEM_VIEW_CONTROLS = "menuViewControls";
 	public static final String ITEM_VIEW_MAP = "menuViewMap";
 	public static final String ITEM_VIEW_NAVIGATOR = "menuViewNavigator";
