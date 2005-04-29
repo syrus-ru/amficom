@@ -1,5 +1,5 @@
 /*
- * $Id: CORBAServer.java,v 1.2 2005/04/27 15:30:20 arseniy Exp $
+ * $Id: CORBAServer.java,v 1.3 2005/04/29 10:32:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,10 @@ import java.util.Properties;
 import org.omg.CORBA.ORB;
 import org.omg.CORBA.Policy;
 import org.omg.CORBA.UserException;
-import org.omg.CORBA.ORBPackage.InvalidName;
+import org.omg.CosNaming.Binding;
+import org.omg.CosNaming.BindingIteratorHolder;
+import org.omg.CosNaming.BindingListHolder;
+import org.omg.CosNaming.BindingType;
 import org.omg.CosNaming.NameComponent;
 import org.omg.CosNaming.NamingContextExt;
 import org.omg.CosNaming.NamingContextExtHelper;
@@ -34,7 +37,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/27 15:30:20 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/29 10:32:09 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
@@ -136,7 +139,7 @@ public class CORBAServer /*extends Thread */{
 		try {
 			rootPoa = POAHelper.narrow(this.orb.resolve_initial_references("RootPOA"));
 		}
-		catch (InvalidName in) {
+		catch (org.omg.CORBA.ORBPackage.InvalidName in) {
 			Log.errorException(in);
 			return;
 		}
@@ -203,4 +206,26 @@ public class CORBAServer /*extends Thread */{
 		this.poa.destroy(false, false);
 		this.orb.shutdown(true);
 	}
+
+	public void printNamingContext() {
+		BindingListHolder bindingListHolder = new BindingListHolder();
+		BindingIteratorHolder bindingIteratorHolder = new BindingIteratorHolder();
+		this.namingContext.list(Integer.MAX_VALUE, bindingListHolder, bindingIteratorHolder);
+		Binding[] bindings = bindingListHolder.value;
+		for (int i = 0; i < bindings.length; i++) {
+			final Binding binding = bindings[i];
+			final NameComponent[] nameComponents = binding.binding_name;
+			try {
+				final String name = this.namingContext.to_string(nameComponents);
+				if (binding.binding_type.value() == BindingType._nobject)
+					Log.debugMessage("---- " + name, Log.DEBUGLEVEL08);
+				else
+					Log.debugMessage("+ " + name, Log.DEBUGLEVEL08);
+			}
+			catch (org.omg.CosNaming.NamingContextPackage.InvalidName in) {
+				Log.errorException(in);
+			}
+		}
+	}
+
 }
