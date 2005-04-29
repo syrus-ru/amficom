@@ -1,5 +1,5 @@
 /*
- * $Id: AdministrationStorableObjectPool.java,v 1.23 2005/04/29 06:55:54 arseniy Exp $
+ * $Id: AdministrationStorableObjectPool.java,v 1.24 2005/04/29 08:58:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/04/29 06:55:54 $
+ * @version $Revision: 1.24 $, $Date: 2005/04/29 08:58:32 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -148,6 +148,9 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 			case ObjectEntities.MCM_ENTITY_CODE:
 				storableObject = aObjectLoader.loadMCM(objectId);
 				break;
+			case ObjectEntities.SERVERPROCESS_ENTITY_CODE:
+				storableObject = aObjectLoader.loadServerProcess(objectId);
+				break;
 //			case ObjectEntities.PERMATTR_ENTITY_CODE:
 //				storableObject = aObjectLoader.loadPermissionAttributes(objectId);
 //				break;
@@ -170,6 +173,8 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 				return aObjectLoader.loadServers(ids);
 			case ObjectEntities.MCM_ENTITY_CODE:
 				return aObjectLoader.loadMCMs(ids);
+			case ObjectEntities.SERVERPROCESS_ENTITY_CODE:
+				return aObjectLoader.loadServerProcesses(ids);
 //			case ObjectEntities.PERMATTR_ENTITY_CODE:
 //				return aObjectLoader.loadPermissionAttributes(ids);
 			default:
@@ -193,6 +198,9 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 				break;
 			case ObjectEntities.MCM_ENTITY_CODE:
 				loadedObjects = aObjectLoader.loadMCMsButIds(condition, ids);
+				break;
+			case ObjectEntities.SERVERPROCESS_ENTITY_CODE:
+				loadedObjects = aObjectLoader.loadServerProcessesButIds(condition, ids);
 				break;
 //			case ObjectEntities.PERMATTR_ENTITY_CODE:
 //				loadedList = aObjectLoader.loadPermissionAttributessButIds(condition, ids);
@@ -238,6 +246,12 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 					aObjectLoader.saveMCM((MCM) storableObjects.iterator().next(), force);
 				else
 					aObjectLoader.saveMCMs(storableObjects, force);
+				break;
+			case ObjectEntities.SERVERPROCESS_ENTITY_CODE:
+				if (singleton)
+					aObjectLoader.saveServerProcess((ServerProcess) storableObjects.iterator().next(), force);
+				else
+					aObjectLoader.saveServerProcesses(storableObjects, force);
 				break;
 			default:
 				Log.errorMessage("AdministrationStorableObjectPool.saveStorableObjects | Unknown entity: '" + ObjectEntities.codeToString(entityCode) + "', entity code: " + entityCode);
