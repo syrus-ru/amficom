@@ -44,7 +44,8 @@ import com.syrus.AMFICOM.analysis.dadara.TraceEvent;
 import com.syrus.io.BellcoreStructure;
 
 public class EventsFrame extends ATableFrame
-implements OperationListener, BsHashChangeListener, EtalonMTMListener, CurrentEventChangeListener
+implements OperationListener, BsHashChangeListener,
+EtalonMTMListener, CurrentEventChangeListener
 {
 	private static final String DASH = "-----";
 

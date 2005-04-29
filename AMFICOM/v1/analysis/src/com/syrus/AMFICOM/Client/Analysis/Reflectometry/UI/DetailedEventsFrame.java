@@ -18,7 +18,8 @@ import com.syrus.AMFICOM.client_.general.ui_.ADefaultTableCellRenderer;
 import com.syrus.io.BellcoreStructure;
 
 public class DetailedEventsFrame extends JInternalFrame
-implements OperationListener, BsHashChangeListener, EtalonMTMListener, CurrentEventChangeListener
+implements OperationListener, BsHashChangeListener,
+EtalonMTMListener, CurrentEventChangeListener
 {
 	private ModelTraceManager etalonMTM;
 	private ModelTraceAndEvents dataMTAE;
