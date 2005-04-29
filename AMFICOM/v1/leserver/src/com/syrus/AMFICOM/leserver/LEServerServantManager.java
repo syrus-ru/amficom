@@ -1,5 +1,5 @@
 /*
- * $Id: LEServerServantManager.java,v 1.2 2005/04/28 15:00:30 arseniy Exp $
+ * $Id: LEServerServantManager.java,v 1.3 2005/04/29 09:36:01 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,11 +16,11 @@ import com.syrus.AMFICOM.general.RunnableVerifiedConnectionManager;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/28 15:00:30 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/29 09:36:01 $
  * @author $Author: arseniy $
  * @module leserver_v1
  */
-public final class LEServerServantManager extends RunnableVerifiedConnectionManager {
+final class LEServerServantManager extends RunnableVerifiedConnectionManager {
 	private static final String KEY_SERVANT_CHECK_TIMEOUT = "ServantCheckTimeout";
 
 	public static final int SERVANT_CHECK_TIMEOUT = 10;		//min
@@ -29,6 +29,11 @@ public final class LEServerServantManager extends RunnableVerifiedConnectionMana
 		super(corbaServer, new HashSet(), timeout);
 
 		assert timeout >= 10 * 60 * 1000 : "Too low timeout"; //not less then 10 min
+	}
+
+	protected void onLoseConnection(String servantName) {
+		// TODO Remove session of client
+		super.onLoseConnection(servantName);
 	}
 
 	public static LEServerServantManager createAndStart(String serverHostName) throws CommunicationException {
