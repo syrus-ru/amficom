@@ -24,11 +24,8 @@ import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.CurrentEventChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryRefAnalysisListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.General.Model.AnalyseApplicationModel;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.Client.General.UI.ATable;
 import com.syrus.AMFICOM.Client.General.UI.FixedSizeEditableTableModel;
@@ -43,8 +40,8 @@ import com.syrus.AMFICOM.analysis.dadara.TraceEvent;
 import com.syrus.io.BellcoreStructure;
 
 public class EventsFrame extends ATableFrame
-implements OperationListener,
-    EtalonMTMListener, CurrentEventChangeListener, PrimaryRefAnalysisListener
+implements EtalonMTMListener, PrimaryRefAnalysisListener,
+    CurrentEventChangeListener
 {
 	private static final String DASH = "-----";
 
@@ -79,31 +76,9 @@ implements OperationListener,
 
 	private void initModule(Dispatcher dispatcher1)
 	{
-		this.dispatcher = dispatcher1;
-		this.dispatcher.register(this, AnalyseApplicationModel.SELECT_NEXT_EVENT);
-		this.dispatcher.register(this, AnalyseApplicationModel.SELECT_PREVIOUS_EVENT);
 		Heap.addEtalonMTMListener(this);
 		Heap.addCurrentEventChangeListener(this);
         Heap.addPrimaryRefAnalysisListener(this);
-	}
-
-	public void operationPerformed(OperationEvent ae)
-	{
-		String actionCommand = ae.getActionCommand();
-		if (actionCommand.equals(AnalyseApplicationModel.SELECT_PREVIOUS_EVENT)) {
-			int selectedRow = this.jTable.getSelectedRow();
-			if (selectedRow > 0) {
-				selectedRow--;
-			} else selectedRow =  this.jTable.getModel().getRowCount() - 1;
-			this.selectRow(selectedRow); // @todo: exception occurs here if there is no rows in the table at all
-		}else if (actionCommand.equals(AnalyseApplicationModel.SELECT_NEXT_EVENT)) {
-			int selectedRow = this.jTable.getSelectedRow();
-			if (selectedRow < this.jTable.getModel().getRowCount() - 1) {
-				selectedRow++;
-			}
-			else selectedRow = 0;
-			this.selectRow(selectedRow); // @todo: see todo for SELECT_PREVIOUS_EVENT
-		}
 	}
 
 	private void selectRow(int row) {
