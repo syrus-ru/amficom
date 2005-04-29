@@ -30,7 +30,6 @@ public class RefAnalysis
 		}
 		double top = maxY - minY;
 
-		int type;
 		int lastPoint = re.length > 0
 			? re[re.length - 1].getBegin() // getBegin: changed acc. to Stas-2004-10 (was: getEnd)
 			: 0;
@@ -39,23 +38,20 @@ public class RefAnalysis
 			? re[re.length - 1].getEnd()
 			: 0;
 
-		double po = 0;
-
 		for (int i = 0; i < re.length; i++)
 		{
-			if (i == 0)
-				type = TraceEvent.INITIATE;
-			else if (i == re.length - 1)
-				type = TraceEvent.TERMINATE;
-			else switch (re[i].getEventType())
+            int type;
+			switch (re[i].getEventType())
 			{
 			case SimpleReflectogramEvent.LINEAR:
 				type = TraceEvent.LINEAR;
 				break;
 			case SimpleReflectogramEvent.DEADZONE:
-				// XXX: fall through (compatibility)
+                type = TraceEvent.INITIATE;
+                break;
 			case SimpleReflectogramEvent.ENDOFTRACE:
-				// XXX: fall through (compatibility)
+                type = TraceEvent.TERMINATE;
+                break;
 			case SimpleReflectogramEvent.CONNECTOR:
 				type = TraceEvent.CONNECTOR;
 				break;
@@ -111,28 +107,13 @@ public class RefAnalysis
 				data[1] = data[0]
 						- re[i].getALet(); // XXX
 				data[2] = 0; // FIXIT: больше не используется, убрать
-				events[i].setLoss(0); 
+				events[i].setLoss(0);
 				events[i].setData(data);
 			} else if (type == TraceEvent.INITIATE) {
-				// extrapolate first linear event to x = 0
-				for (int j = 1; j < re.length; j++)
-					if (re[j].getEventType() == SimpleReflectogramEvent.LINEAR) {
-						int x1 = re[j].getBegin() + 1;
-						int x2 = re[j].getEnd() - 1;
-						if (x1 >= x2)
-						{
-							po = mt.getY(x1);
-						}
-						else
-						{
-							double y1 = mt.getY(x1);
-							double y2 = mt.getY(x2);
-							po = (x1 * y2 - x2 * y1) / (x1 - x2);
-						}
-						break;
-					}
+                // extrapolate first linear event to x = 0
+                double po = asympB;
 
-				int adz = 0;
+                int adz = 0;
 				int edz = 0;
 				final int N = re[i].getEnd() - re[i].getBegin();
 				double[] yarr = mt.getYArrayZeroPad(re[i].getBegin(), N);
@@ -161,7 +142,7 @@ public class RefAnalysis
 				double[] data = new double[3];
 				data[0] = top - asympB;
 				data[1] = top - asympE;
-				data[2] = data[1] - data[0]; //eventMaxDeviation
+				data[2] = data[1] - data[0]; //eventMaxDeviation - ?
 				events[i].setLoss(re[i].getMLoss()); 
 				events[i].setData(data);
 			}
@@ -178,6 +159,7 @@ public class RefAnalysis
 		}
 		overallStats = new TraceEvent(TraceEvent.OVERALL_STATS, 0, lastPoint);
 		double[] data = new double[5];
+        double po = re[0].getAsympY0();
 		data[0] = maxY - po;
 		data[1] = maxY - y[lastPoint];
 		data[2] = (maxY - maxNoise * 0.98);
