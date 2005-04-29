@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.36 2005/04/29 07:38:10 saa Exp $
+ * $Id: Heap.java,v 1.37 2005/04/29 07:40:29 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,7 +56,7 @@ import com.syrus.io.BellcoreStructure;
  * currentEvent, currentEtalonEvent (пока не следят за MTM/MTAE);
  * 
  * @author $Author: saa $
- * @version $Revision: 1.36 $, $Date: 2005/04/29 07:38:10 $
+ * @version $Revision: 1.37 $, $Date: 2005/04/29 07:40:29 $
  * @module
  */
 public class Heap
@@ -74,7 +74,7 @@ public class Heap
 	private static AnalysisParameters minuitDefaultParams;
 	private static AnalysisParameters minuitInitialParams;
 	private static HashMap bsHash = new HashMap();	// "bellcorestructure", *
-	private static HashMap refAnalysisHash = new HashMap();		// "refanalysis", *
+	private static RefAnalysis refAnalysisPrimary = null; // "refanalysis", PRIMARY_TRACE_KEY
 	private static MeasurementSetup contextMeasurementSetup;	// AnalysisUtil.CONTEXT, "MeasurementSetup"
 	private static Double minTraceLevel;			// "min_trace_level", PRIMARY_TRACE_KEY
 	private static HashMap dialogHash = new HashMap();	// "dialog", "*"
@@ -118,16 +118,12 @@ public class Heap
         return etalonMTM;
     }
 
-    public static RefAnalysis getRefAnalysisByKey(String key) {
-        return (RefAnalysis) refAnalysisHash.get(key);
-    }
-    
     public static RefAnalysis getRefAnalysisPrimary() {
-        return (RefAnalysis) refAnalysisHash.get(PRIMARY_TRACE_KEY);
+        return refAnalysisPrimary;
     }
 
     public static void setRefAnalysisPrimary(RefAnalysis ra) {
-        refAnalysisHash.put(PRIMARY_TRACE_KEY, ra);
+        refAnalysisPrimary = ra;
     }
 
     public static BellcoreStructure getAnyBSTraceByKey(String key) {
