@@ -1,5 +1,5 @@
 /*
- * $Id: CommonAdministrationTest.java,v 1.1 2005/04/28 15:18:31 arseniy Exp $
+ * $Id: CommonAdministrationTest.java,v 1.2 2005/04/29 09:05:15 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,13 +22,14 @@ import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ParameterTypeDatabase;
+import com.syrus.AMFICOM.general.StorableObjectResizableLRUMap;
 import com.syrus.util.Application;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/28 15:18:31 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/29 09:05:15 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -98,9 +99,9 @@ public class CommonAdministrationTest extends TestCase {
 	}
 
 	private static void initStorableObjectPools() {
-		DatabaseObjectLoader.init(new Identifier("Users_58"));
-		GeneralStorableObjectPool.init(new DatabaseGeneralObjectLoader());
-		AdministrationStorableObjectPool.init(new DatabaseAdministrationObjectLoader());
+		DatabaseObjectLoader.init(new Identifier("User_56"));
+		GeneralStorableObjectPool.init(new DatabaseGeneralObjectLoader(), StorableObjectResizableLRUMap.class);
+		AdministrationStorableObjectPool.init(new DatabaseAdministrationObjectLoader(), StorableObjectResizableLRUMap.class);
 	}
 
 	private static void initIdentifierPool() {
