@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.40 2005/04/29 08:59:17 saa Exp $
+ * $Id: Heap.java,v 1.41 2005/04/29 10:51:46 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,7 +56,7 @@ import com.syrus.io.BellcoreStructure;
  * currentEvent, currentEtalonEvent;
  * 
  * @author $Author: saa $
- * @version $Revision: 1.40 $, $Date: 2005/04/29 08:59:17 $
+ * @version $Revision: 1.41 $, $Date: 2005/04/29 10:51:46 $
  * @module
  */
 public class Heap
@@ -299,21 +299,14 @@ public class Heap
             ((BsHashChangeListener) it.next()).bsHashRemoved(key);
     }
 
-    // закрыть и primary trace, и все остальные
     private static void notifyBsHashRemoveAll() {
         for (Iterator it = bsHashChangedListeners.iterator(); it.hasNext();)
             ((BsHashChangeListener) it.next()).bsHashRemovedAll();
     }
 
-    public static void notifyPrimaryTraceChanged() {
-        for (Iterator it = primaryTraceListeners.iterator(); it.hasNext();) {
-            if (bsHash.containsKey(PRIMARY_TRACE_KEY))
-                ((PrimaryTraceListener) it.next()).primaryTraceCUpdated();
-            else
-                ((PrimaryTraceListener) it.next()).primaryTraceRemoved();
-        }
-    }
-
+    /**
+     * should also be suitable if primary trace completely replaced
+     */
     public static void notifyPrimaryTraceOpened() {
         for (Iterator it = primaryTraceListeners.iterator(); it.hasNext();)
             ((PrimaryTraceListener) it.next()).primaryTraceCUpdated();
