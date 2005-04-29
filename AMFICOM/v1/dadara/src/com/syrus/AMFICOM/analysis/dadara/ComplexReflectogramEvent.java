@@ -1,5 +1,5 @@
 /*
- * $Id: ComplexReflectogramEvent.java,v 1.14 2005/04/29 15:29:19 saa Exp $
+ * $Id: ComplexReflectogramEvent.java,v 1.15 2005/04/29 15:54:30 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,7 @@ import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.14 $, $Date: 2005/04/29 15:29:19 $
+ * @version $Revision: 1.15 $, $Date: 2005/04/29 15:54:30 $
  * @module dadara
  * 
  * Класс предназначен для хранения расширенной информации о
@@ -46,12 +46,20 @@ public class ComplexReflectogramEvent implements SimpleReflectogramEvent
     /**
      * @return потери на событии.
      * для лин. событий это (asympY0 - asympY1);
-     * для м.з. - в принципе, не определено,
+     * для м.з. и конца волокна - не определен,
      * для остальных - то же, но скорректированное с учетом соседних
      * линейных событий. 
      */
-	public double getMLoss() { return mLoss; }
-    
+	public double getMLoss() { return hasMLoss() ? mLoss : 0; }
+
+    /**
+     * @return определен ли параметр mLoss
+     */
+    public boolean hasMLoss() {
+        return getEventType() != SimpleReflectogramEvent.DEADZONE
+            && getEventType() != SimpleReflectogramEvent.ENDOFTRACE;
+    }
+
     /**
      * @return
      * Для лин. события - ее линейная аппроксимация в начале события;
@@ -147,7 +155,7 @@ public class ComplexReflectogramEvent implements SimpleReflectogramEvent
 			}
 		}
 
-        // корректируем asympY0 для м.з.
+        // корректируем asympY0 и mLoss для м.з. и конца волокна
         if (se[0].getEventType() == SimpleReflectogramEvent.DEADZONE)
         {
             for (int j = 1; j < se.length; j++) {
@@ -169,6 +177,9 @@ public class ComplexReflectogramEvent implements SimpleReflectogramEvent
                     break;
                 }
             }
+            for (int i = 0; i < ret.length; i++)
+                if (!ret[i].hasMLoss())
+                    ret[i].mLoss = 0;
         }
 
         // устанавливаем aLet
