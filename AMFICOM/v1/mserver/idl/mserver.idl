@@ -254,13 +254,10 @@ module corba {
 
 
 
-		void updateTest(in measurement::corba::Test_Transferable test,
-						in general::corba::SecurityKey security_key);
-/*
-		void updateTests(in measurement::corba::TestSeq_Transferable tests,
-						in general::corba::AccessIdentifier_Transferable accessIdentifier)
+		general::corba::StorableObjectSeq_Transferable receiveTests(in measurement::corba::TestSeq_Transferable tests,
+						in boolean force,
+						in general::corba::SecurityKey security_key)
 			raises (general::corba::AMFICOMRemoteException);
-*/
 
 	};
 
