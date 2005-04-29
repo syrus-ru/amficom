@@ -1,5 +1,5 @@
 /*
- * $Id: MCMServantManager.java,v 1.4 2005/04/29 15:58:38 arseniy Exp $
+ * $Id: MCMServantManager.java,v 1.5 2005/04/29 17:08:55 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,6 +7,7 @@
  */
 package com.syrus.AMFICOM.mcm;
 
+import com.syrus.AMFICOM.administration.ServerProcessWrapper;
 import com.syrus.AMFICOM.general.BaseConnectionManager;
 import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.CommunicationException;
@@ -21,20 +22,13 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/04/29 15:58:38 $
+ * @version $Revision: 1.5 $, $Date: 2005/04/29 17:08:55 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
 final class MCMServantManager extends RunnableVerifiedConnectionManager implements BaseConnectionManager {
-
-	private static final String KEY_SERVANT_NAME_LOGINSERVER = "LoginServerServantName";
-	private static final String KEY_SERVANT_NAME_EVENTSERVER = "EventServerServantName";
-	private static final String KEY_SERVANT_NAME_MSERVER = "MServerServantName";
 	private static final String KEY_SERVANT_CHECK_TIMEOUT = "ServantCheckTimeout";
 
-	private static final String SERVANT_NAME_LOGINSERVER = "LoginServer";
-	private static final String SERVANT_NAME_EVENTSERVER = "EventServer";
-	private static final String SERVANT_NAME_MSERVER = "MServer";
 	public static final int SERVANT_CHECK_TIMEOUT = 10;		//min
 
 	private String loginServerServantName;
@@ -114,9 +108,12 @@ final class MCMServantManager extends RunnableVerifiedConnectionManager implemen
 		String contextName = ContextNameFactory.generateContextName(serverHostName);
 		CORBAServer corbaServer = new CORBAServer(contextName);
 
-		String loginServerServantName = ApplicationProperties.getString(KEY_SERVANT_NAME_LOGINSERVER, SERVANT_NAME_LOGINSERVER);
-		String eventServerServantName = ApplicationProperties.getString(KEY_SERVANT_NAME_EVENTSERVER, SERVANT_NAME_EVENTSERVER);
-		String mServerServantName = ApplicationProperties.getString(KEY_SERVANT_NAME_MSERVER, SERVANT_NAME_MSERVER);
+		String loginServerServantName = ApplicationProperties.getString(ServerProcessWrapper.KEY_LOGIN_PROCESS_CODENAME,
+				ServerProcessWrapper.LOGIN_PROCESS_CODENAME);
+		String eventServerServantName = ApplicationProperties.getString(ServerProcessWrapper.KEY_EVENT_PROCESS_CODENAME,
+				ServerProcessWrapper.EVENT_PROCESS_CODENAME);
+		String mServerServantName = ApplicationProperties.getString(ServerProcessWrapper.KEY_MSERVER_PROCESS_CODENAME,
+				ServerProcessWrapper.MSERVER_PROCESS_CODENAME);
 
 		long timeout = ApplicationProperties.getInt(KEY_SERVANT_CHECK_TIMEOUT, SERVANT_CHECK_TIMEOUT) * 60 * 1000;
 

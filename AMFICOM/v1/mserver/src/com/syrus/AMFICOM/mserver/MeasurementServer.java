@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServer.java,v 1.35 2005/04/29 16:02:51 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.36 2005/04/29 17:09:37 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,6 +19,7 @@ import java.util.Set;
 import com.syrus.AMFICOM.administration.AdministrationDatabaseContext;
 import com.syrus.AMFICOM.administration.Server;
 import com.syrus.AMFICOM.administration.ServerProcess;
+import com.syrus.AMFICOM.administration.ServerProcessWrapper;
 import com.syrus.AMFICOM.administration.User;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
@@ -46,7 +47,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/04/29 16:02:51 $
+ * @version $Revision: 1.36 $, $Date: 2005/04/29 17:09:37 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -59,7 +60,6 @@ public class MeasurementServer extends SleepButWorkThread {
 	public static final String KEY_DB_CONNECTION_TIMEOUT = "DBConnectionTimeout";
 	public static final String KEY_DB_LOGIN_NAME = "DBLoginName";
 	public static final String KEY_SERVER_ID = "ServerID";
-	public static final String KEY_PROCESS_CODENAME = "ProcessCodename";
 	public static final String KEY_TICK_TIME = "TickTime";
 	public static final String KEY_MAX_FALLS = "MaxFalls";
 
@@ -67,7 +67,6 @@ public class MeasurementServer extends SleepButWorkThread {
 	public static final int DB_CONNECTION_TIMEOUT = 120;
 	public static final String DB_LOGIN_NAME = "amficom";
 	public static final String SERVER_ID = "Server_1";
-	public static final String PROCESS_CODENAME = "MServer";
 	public static final int TICK_TIME = 5;	//sec
 
 	/*	Error codes for method processFall()	(abort tests, ...)*/
@@ -126,7 +125,8 @@ public class MeasurementServer extends SleepButWorkThread {
 		/*	Retrieve MCM ids for this server*/
 		/*	Retrieve info about user*/
 		serverId = new Identifier(ApplicationProperties.getString(KEY_SERVER_ID, SERVER_ID));
-		processCodename = ApplicationProperties.getString(KEY_PROCESS_CODENAME, PROCESS_CODENAME);
+		processCodename = ApplicationProperties.getString(ServerProcessWrapper.KEY_MSERVER_PROCESS_CODENAME,
+				ServerProcessWrapper.MSERVER_PROCESS_CODENAME);
 		Server server = null;
 		ServerProcess serverProcess = null;
 		User user = null;
