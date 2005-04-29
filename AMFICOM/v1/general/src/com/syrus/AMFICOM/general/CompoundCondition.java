@@ -1,5 +1,5 @@
 /*
- * $Id: CompoundCondition.java,v 1.21 2005/04/04 13:07:03 bass Exp $
+ * $Id: CompoundCondition.java,v 1.22 2005/04/29 08:06:03 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,8 +27,8 @@ import com.syrus.util.corba.JavaSoftORBUtil;
  * Compound condition such as (A & B & C & ... etc), (A | B | C | ... etc) where A, B, C .. are
  * conditions (they can be also compound condition too)
  * 
- * @version $Revision: 1.21 $, $Date: 2005/04/04 13:07:03 $
- * @author $Author: bass $
+ * @version $Revision: 1.22 $, $Date: 2005/04/29 08:06:03 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public final class CompoundCondition implements StorableObjectCondition {
@@ -91,7 +91,18 @@ public final class CompoundCondition implements StorableObjectCondition {
 
 		this.operation = operation.value();
 		this.conditions = conditions;
-	}	
+	}
+
+	public void addCondition(StorableObjectCondition condition) throws IllegalDataException {
+		assert (condition != null) : "NULL condition supplied";
+
+		Short code = condition.getEntityCode();
+		if (code.equals(this.entityCode))
+			this.conditions.add(condition);
+		else
+			throw new IllegalDataException("Cannot add condition for entity '" + ObjectEntities.codeToString(code)
+					+ "' to set of condition for entity '" + ObjectEntities.codeToString(this.entityCode) + "'");
+	}
 
 	public CompoundCondition(CompoundCondition_Transferable transferable) throws IllegalDataException {
 		this.operation = transferable.sort.value();
