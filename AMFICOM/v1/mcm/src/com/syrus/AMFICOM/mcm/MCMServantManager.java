@@ -1,5 +1,5 @@
 /*
- * $Id: MCMServantManager.java,v 1.2 2005/04/29 08:59:52 arseniy Exp $
+ * $Id: MCMServantManager.java,v 1.3 2005/04/29 12:17:49 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,13 +7,11 @@
  */
 package com.syrus.AMFICOM.mcm;
 
+import com.syrus.AMFICOM.general.BaseConnectionManager;
 import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.ContextNameFactory;
-import com.syrus.AMFICOM.general.EventServerConnectionManager;
-import com.syrus.AMFICOM.general.IGSConnectionManager;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.LoginServerConnectionManager;
 import com.syrus.AMFICOM.general.RunnableVerifiedConnectionManager;
 import com.syrus.AMFICOM.general.corba.IdentifierGeneratorServer;
 import com.syrus.AMFICOM.leserver.corba.EventServer;
@@ -23,11 +21,11 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/29 08:59:52 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/29 12:17:49 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
-public final class MCMServantManager extends RunnableVerifiedConnectionManager implements LoginServerConnectionManager, EventServerConnectionManager, IGSConnectionManager {
+public final class MCMServantManager extends RunnableVerifiedConnectionManager implements BaseConnectionManager {
 
 	private static final String KEY_SERVANT_NAME_LOGINSERVER = "LoginServerServantName";
 	private static final String KEY_SERVANT_NAME_EVENTSERVER = "EventServerServantName";
