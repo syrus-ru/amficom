@@ -15,22 +15,25 @@ import javax.swing.Box;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JToggleButton;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import oracle.jdeveloper.layout.VerticalFlowLayout;
+
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.Command.Action.CreateUnboundLinkCommandBundle;
 import com.syrus.AMFICOM.Client.Map.Controllers.CableController;
 import com.syrus.AMFICOM.Client.Map.UI.SimpleMapElementController;
+import com.syrus.AMFICOM.client_.general.ui_.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client_.general.ui_.ObjList;
 import com.syrus.AMFICOM.client_.general.ui_.ObjListModel;
-import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.map.IntPoint;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.PhysicalLinkBinding;
@@ -38,22 +41,18 @@ import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.scheme.CableChannelingItem;
 
-public final class MapLinkBindPanel
-		extends JPanel 
-		implements ObjectResourcePropertiesPane, MapPropertiesPane
+public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor
 {
 	private GridBagLayout gridBagLayout1 = new GridBagLayout();
 
-	PhysicalLink link;
-	
-	private LogicalNetLayer lnl;
-
-	private JLabel titleLabel = new JLabel();
+	private JPanel jPanel = new JPanel();
 	ObjList cableList = null;
+	JScrollPane cablesScrollPane = new JScrollPane();
 
 	TunnelLayout tunnelLayout = null;
+	JScrollPane tunnelsScrollPane = new JScrollPane();
 
-	private JPanel jPanel1 = new JPanel();
+	private JPanel buttonsPanel = new JPanel();
 	JToggleButton bindButton = new JToggleButton();
 	JButton unbindButton = new JButton();
 
@@ -62,6 +61,10 @@ public final class MapLinkBindPanel
 	JLabel leftRightLabel = new JLabel();
 	
 	private List unboundElements = new LinkedList();
+
+	PhysicalLink physicalLink;
+	
+	private LogicalNetLayer logicalNetLayer;
 
 	boolean processSelection = true;
 
@@ -83,7 +86,7 @@ public final class MapLinkBindPanel
 		rightlefticon = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/rightleft.gif"));
 	}
 
-	public MapLinkBindPanel()
+	public PhysicalLinkAddEditor()
 	{
 		this.tunnelLayout = new TunnelLayout(this);
 		try
@@ -99,12 +102,7 @@ public final class MapLinkBindPanel
 
 	public void setLogicalNetLayer(LogicalNetLayer lnl)
 	{
-		this.lnl = lnl;
-	}
-
-	public LogicalNetLayer getLogicalNetLayer()
-	{
-		return this.lnl;
+		this.logicalNetLayer = lnl;
 	}
 
 	private void jbInit()
@@ -115,21 +113,20 @@ public final class MapLinkBindPanel
 		this.cableList = new ObjList(controller, SimpleMapElementController.KEY_NAME);
 
 
-		this.setLayout(this.gridBagLayout1);
-		this.setName(LangModelMap.getString("LinkBinding"));
-		this.titleLabel.setText(LangModelMap.getString("LinkBinding"));
+		this.jPanel.setLayout(this.gridBagLayout1);
+		this.jPanel.setName(LangModelMap.getString("LinkBinding"));
 		this.cableList.addListSelectionListener(new ListSelectionListener()
 			{
 				public void valueChanged(ListSelectionEvent e)
 				{
-					if(MapLinkBindPanel.this.processSelection)
+					if(PhysicalLinkAddEditor.this.processSelection)
 					{
-						MapLinkBindPanel.this.processSelection = false;
-						Object or = MapLinkBindPanel.this.cableList.getSelectedValue();
+						PhysicalLinkAddEditor.this.processSelection = false;
+						Object or = PhysicalLinkAddEditor.this.cableList.getSelectedValue();
 						cableSelected(or);
-						MapLinkBindPanel.this.bindButton.setEnabled(or != null);
-						MapLinkBindPanel.this.unbindButton.setEnabled(or != null);
-						MapLinkBindPanel.this.processSelection = true;
+						PhysicalLinkAddEditor.this.bindButton.setEnabled(or != null);
+						PhysicalLinkAddEditor.this.unbindButton.setEnabled(or != null);
+						PhysicalLinkAddEditor.this.processSelection = true;
 					}
 				}
 			});
@@ -138,7 +135,7 @@ public final class MapLinkBindPanel
 			{
 				public void actionPerformed(ActionEvent e)
 				{
-					setBindMode(MapLinkBindPanel.this.bindButton.isSelected());
+					setBindMode(PhysicalLinkAddEditor.this.bindButton.isSelected());
 //					Object or = cableList.getSelectedObjectResource();
 //					bind(or);
 				}
@@ -148,21 +145,22 @@ public final class MapLinkBindPanel
 			{
 				public void actionPerformed(ActionEvent e)
 				{
-					Object or = MapLinkBindPanel.this.cableList.getSelectedValue();
+					Object or = PhysicalLinkAddEditor.this.cableList.getSelectedValue();
 					unbind(or);
 				}
 			});
-		this.jPanel1.add(this.bindButton, null);
-		this.jPanel1.add(this.unbindButton, null);
+		this.buttonsPanel.setLayout(new VerticalFlowLayout());
+		this.buttonsPanel.add(this.bindButton);
+		this.buttonsPanel.add(this.unbindButton);
 
 		this.horvertLabel.addMouseListener(new MouseAdapter()
 			{
 				public void mouseClicked(MouseEvent e)
 				{
-					MapLinkBindPanel.this.link.getBinding().flipHorizontalVertical();
-					MapLinkBindPanel.this.horvertLabel.setIcon(MapLinkBindPanel.this.link.getBinding().isHorizontalVertical() ?
+					PhysicalLinkAddEditor.this.physicalLink.getBinding().flipHorizontalVertical();
+					PhysicalLinkAddEditor.this.horvertLabel.setIcon(PhysicalLinkAddEditor.this.physicalLink.getBinding().isHorizontalVertical() ?
 						horverticon : verthoricon);
-					MapLinkBindPanel.this.tunnelLayout.updateElements();
+					PhysicalLinkAddEditor.this.tunnelLayout.updateElements();
 				}
 			});
 
@@ -170,10 +168,10 @@ public final class MapLinkBindPanel
 			{
 				public void mouseClicked(MouseEvent e)
 				{
-					MapLinkBindPanel.this.link.getBinding().flipTopToBottom();
-					MapLinkBindPanel.this.topDownLabel.setIcon(MapLinkBindPanel.this.link.getBinding().isTopToBottom() ?
+					PhysicalLinkAddEditor.this.physicalLink.getBinding().flipTopToBottom();
+					PhysicalLinkAddEditor.this.topDownLabel.setIcon(PhysicalLinkAddEditor.this.physicalLink.getBinding().isTopToBottom() ?
 						topdownicon : downtopicon);
-					MapLinkBindPanel.this.tunnelLayout.updateElements();
+					PhysicalLinkAddEditor.this.tunnelLayout.updateElements();
 				}
 			});
 
@@ -181,10 +179,10 @@ public final class MapLinkBindPanel
 			{
 				public void mouseClicked(MouseEvent e) 
 				{
-					MapLinkBindPanel.this.link.getBinding().flipLeftToRight();
-					MapLinkBindPanel.this.leftRightLabel.setIcon(MapLinkBindPanel.this.link.getBinding().isLeftToRight() ?
+					PhysicalLinkAddEditor.this.physicalLink.getBinding().flipLeftToRight();
+					PhysicalLinkAddEditor.this.leftRightLabel.setIcon(PhysicalLinkAddEditor.this.physicalLink.getBinding().isLeftToRight() ?
 						leftrighticon : rightlefticon);
-					MapLinkBindPanel.this.tunnelLayout.updateElements();
+					PhysicalLinkAddEditor.this.tunnelLayout.updateElements();
 				}
 			});
 
@@ -192,15 +190,16 @@ public final class MapLinkBindPanel
 		this.topDownLabel.setIcon(topdownicon);
 		this.leftRightLabel.setIcon(leftrighticon);
 		
-		this.add(this.titleLabel, ReusedGridBagConstraints.get(0, 0, 4, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		this.add(this.cableList, ReusedGridBagConstraints.get(0, 1, 1, 2, 0.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.VERTICAL, null, 100, 150));
-		this.add(Box.createVerticalGlue(), ReusedGridBagConstraints.get(1, 1, 1, 2, 0.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.VERTICAL, null, 10, 150));
-//		this.add(Box.createGlue(), ReusedGridBagConstraints.get(2, 1, 1, 1, 0.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
-		this.add(this.horvertLabel, ReusedGridBagConstraints.get(2, 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
-		this.add(this.leftRightLabel, ReusedGridBagConstraints.get(3, 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
-		this.add(this.topDownLabel, ReusedGridBagConstraints.get(2, 2, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH, GridBagConstraints.NONE, null, 0, 0));
-		this.add(this.tunnelLayout.getPanel().getGraph(), ReusedGridBagConstraints.get(3, 2, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, null, 0, 0));
-		this.add(this.jPanel1, ReusedGridBagConstraints.get(0, 3, 4, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.tunnelsScrollPane.getViewport().add(this.tunnelLayout.getPanel().getGraph());
+		this.cablesScrollPane.getViewport().add(this.cableList);
+
+		this.jPanel.add(this.cablesScrollPane, ReusedGridBagConstraints.get(0, 0, 2, 2, 1.0, 0.3, GridBagConstraints.WEST, GridBagConstraints.BOTH, null, 0, 0));
+		this.jPanel.add(this.buttonsPanel, ReusedGridBagConstraints.get(2, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 0, 0));
+//		this.jPanel.add(Box.createVerticalStrut(5), ReusedGridBagConstraints.get(0, 2, 3, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.jPanel.add(this.horvertLabel, ReusedGridBagConstraints.get(1, 3, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
+		this.jPanel.add(this.leftRightLabel, ReusedGridBagConstraints.get(2, 3, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
+		this.jPanel.add(this.topDownLabel, ReusedGridBagConstraints.get(0, 3, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH, GridBagConstraints.NONE, null, 0, 0));
+		this.jPanel.add(this.tunnelsScrollPane, ReusedGridBagConstraints.get(0, 4, 3, 1, 1.0, 0.7, GridBagConstraints.CENTER, GridBagConstraints.BOTH, null, 0, 0));
 
 		this.bindButton.setEnabled(false);
 		this.unbindButton.setEnabled(false);
@@ -208,14 +207,14 @@ public final class MapLinkBindPanel
 
 	public Object getObject()
 	{
-		return null;
+		return this.physicalLink;
 	}
 
-	public void setObject(Object objectResource)
+	public void setObject(Object object)
 	{
 		this.cableList.removeAll();
-		this.link = (PhysicalLink)objectResource;
-		if(this.link == null)
+		this.physicalLink = (PhysicalLink )object;
+		if(this.physicalLink == null)
 		{
 			this.cableList.setEnabled(false);
 			this.tunnelLayout.setBinding(null);
@@ -223,7 +222,7 @@ public final class MapLinkBindPanel
 		else
 		{
 			this.cableList.setEnabled(true);
-			PhysicalLinkBinding binding = this.link.getBinding();
+			PhysicalLinkBinding binding = this.physicalLink.getBinding();
 
 			this.tunnelLayout.setBinding(binding);
 
@@ -234,10 +233,6 @@ public final class MapLinkBindPanel
 			}
 
 		}
-	}
-
-	public void setContext(ApplicationContext aContext)
-	{//empty
 	}
 
 	public void cableSelected(Object or)
@@ -259,7 +254,7 @@ public final class MapLinkBindPanel
 			}
 			else
 			{
-				PhysicalLinkBinding binding = this.link.getBinding();
+				PhysicalLinkBinding binding = this.physicalLink.getBinding();
 				List list = binding.getBindObjects();
 				if(list != null)
 				{
@@ -267,7 +262,7 @@ public final class MapLinkBindPanel
 					for(Iterator it = list.iterator(); it.hasNext();)
 					{
 						CablePath cp = (CablePath)it.next();
-						IntPoint position = cp.getBindingPosition(this.link);
+						IntPoint position = cp.getBindingPosition(this.physicalLink);
 						if(position.x == col
 							&& position.y == row)
 						{
@@ -282,13 +277,13 @@ public final class MapLinkBindPanel
 
 	public void bind(Object or)
 	{
-		PhysicalLinkBinding binding = this.link.getBinding();
+		PhysicalLinkBinding binding = this.physicalLink.getBinding();
 		IntPoint pt = this.tunnelLayout.getActiveCoordinates();
 		if(pt != null)
 		{
 			binding.bind(or, pt.x, pt.y);
 			CablePath cp = (CablePath)or;
-			CableChannelingItem cci = (CableChannelingItem )(cp.getBinding().get(this.link));
+			CableChannelingItem cci = (CableChannelingItem )(cp.getBinding().get(this.physicalLink));
 			cci.setRowX(pt.x);
 			cci.setPlaceY(pt.y);
 			this.tunnelLayout.updateElements();
@@ -313,66 +308,35 @@ public final class MapLinkBindPanel
 	{
 		CablePath cablePath = (CablePath)or;
 
-		cablePath.removeLink(this.link);
+		cablePath.removeLink(this.physicalLink);
 
 		CreateUnboundLinkCommandBundle command = new CreateUnboundLinkCommandBundle(
-				this.link.getStartNode(),
-				this.link.getEndNode());
-		command.setLogicalNetLayer(this.lnl);
+				this.physicalLink.getStartNode(),
+				this.physicalLink.getEndNode());
+		command.setLogicalNetLayer(this.logicalNetLayer);
 		command.execute();
 
 		UnboundLink unbound = command.getUnbound();
 		unbound.setCablePath(cablePath);
 
-		cablePath.addLink(unbound, CableController.generateCCI(cablePath, unbound, this.lnl.getUserId()));
-		this.link.getBinding().remove(cablePath);
+		cablePath.addLink(unbound, CableController.generateCCI(cablePath, unbound, this.logicalNetLayer.getUserId()));
+		this.physicalLink.getBinding().remove(cablePath);
 		
 		((ObjListModel )this.cableList.getModel()).removeElement(cablePath);
 
 		this.tunnelLayout.updateElements();
 	}
 
-	public boolean modify()
-	{
-		try 
-		{
-			return true;
-		} 
-		catch (Exception ex) 
-		{
-			ex.printStackTrace();
-		} 
-		
-		return false;
-	}
-
-	public boolean create()
-	{
-		return false;
-	}
-
-	public boolean delete()
-	{
-		return false;
-	}
-
-	public boolean open()
-	{
-		return false;
-	}
-
-	public boolean save()
-	{
-		return false;
-	}
-
-	public boolean cancel()
-	{
-		return false;
-	}
-
 	public List getUnboundElements()
 	{
 		return this.unboundElements;
+	}
+
+	public JComponent getGUI() {
+		return this.jPanel;
+	}
+
+	public void commitChanges() {
+		// nothing to commit
 	}
 }

@@ -1,12 +1,5 @@
 package com.syrus.AMFICOM.Client.Map.Props;
 
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.mapview.CablePath;
-import com.syrus.AMFICOM.mapview.UnboundLink;
-import com.syrus.AMFICOM.map.AbstractNode;
-import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.map.SiteNode;
-
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
@@ -18,25 +11,38 @@ import java.awt.Stroke;
 import java.awt.geom.Arc2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
-
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.JPanel;
 
+import com.syrus.AMFICOM.map.AbstractNode;
+import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.SiteNode;
+import com.syrus.AMFICOM.mapview.CablePath;
+import com.syrus.AMFICOM.mapview.UnboundLink;
+
 public class SiteCrossingPanel extends JPanel 
 {
 	SiteNode site;
 
-	private LogicalNetLayer lnl;
+	private Map map;
 
-	public static final int WELL_RADIUS = 50;
+	public static final int WELL_RADIUS = 25;
 	public static final int ARROW_LENGTH = 20;
 	public static final int SPIKE_LENGTH = 8;
-	public static final int TUNNEL_LENGTH = 100;
-	public static final int TUNNEL_WIDTH = 20;
-	public static final int TEXT_DELTA = 30;
+	public static final int TUNNEL_LENGTH = 40;
+	public static final int TUNNEL_WIDTH = 10;
+	public static final int TEXT_DELTA = 20;
+
+//	public static final int WELL_RADIUS = 50;
+//	public static final int ARROW_LENGTH = 20;
+//	public static final int SPIKE_LENGTH = 8;
+//	public static final int TUNNEL_LENGTH = 100;
+//	public static final int TUNNEL_WIDTH = 20;
+//	public static final int TEXT_DELTA = 30;
 	
 	public static final Color FILL_COLOR = new Color(240, 240, 240);
 	public static final Color LINE_COLOR = Color.BLACK;
@@ -56,9 +62,9 @@ public class SiteCrossingPanel extends JPanel
 	{//empty
 	}
 
-	public void setLogicalNetLayer(LogicalNetLayer lnl)
+	public void setMap(Map map)
 	{
-		this.lnl = lnl;
+		this.map = map;
 	}
 
 	public void setSite(SiteNode site)
@@ -70,7 +76,7 @@ public class SiteCrossingPanel extends JPanel
 		this.tunnels.clear();
 		if(site != null)
 		{
-			for(Iterator it = this.lnl.getMapView().getMap().getPhysicalLinksAt(site).iterator(); it.hasNext();)
+			for(Iterator it = this.map.getPhysicalLinksAt(site).iterator(); it.hasNext();)
 			{
 				Object tunnel = it.next();
 				if(!(tunnel instanceof UnboundLink))

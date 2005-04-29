@@ -22,7 +22,7 @@ public class TunnelLayout implements OperationListener
 {
 	private ApplicationContext internalContext = new ApplicationContext();
 	private UgoPanel panel;
-	private static final int RADIUS = 20;
+	private static final int RADIUS = 15;
 	private static final int SPACE = 2;
 	private int m, n;
 	
@@ -32,9 +32,9 @@ public class TunnelLayout implements OperationListener
 
 	IntPoint activeCoordinates = null;
 	
-	MapLinkBindPanel parent;
+	PhysicalLinkAddEditor parent;
 
-	public TunnelLayout(MapLinkBindPanel parent)
+	public TunnelLayout(PhysicalLinkAddEditor parent)
 	{
 		this.parent = parent;
 
@@ -42,6 +42,7 @@ public class TunnelLayout implements OperationListener
 
 		this.panel = new UgoPanel(this.internalContext);
 		this.panel.getGraph().setGraphEditable(false);
+		this.panel.getGraph().setAntiAliased(true);
 
 		this.internalContext.getDispatcher().register(this, ObjectSelectedEvent.TYPE);
 	}

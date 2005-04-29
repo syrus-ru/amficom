@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLinkVisualManager.java,v 1.3 2005/04/28 12:57:09 krupenn Exp $
+ * $Id: PhysicalLinkVisualManager.java,v 1.4 2005/04/29 14:09:03 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,6 +16,7 @@ public class PhysicalLinkVisualManager implements VisualManager {
 	private static PhysicalLinkVisualManager instance;
 
 	private static PhysicalLinkEditor generalPanel;
+	private static PhysicalLinkAddEditor addPanel;
 	private static MapElementCharacteristicsEditor charPanel;
 
 	public static PhysicalLinkVisualManager getInstance() {
@@ -56,8 +57,9 @@ public class PhysicalLinkVisualManager implements VisualManager {
 	}
 
 	public StorableObjectEditor getAdditionalPropertiesPanel() {
-		// TODO Auto-generated method stub
-		return null;
+		if (addPanel == null)
+			addPanel = new PhysicalLinkAddEditor();
+		return addPanel;
 	}
 
 }

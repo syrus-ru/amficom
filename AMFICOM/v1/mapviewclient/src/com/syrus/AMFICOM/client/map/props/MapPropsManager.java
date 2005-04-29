@@ -20,10 +20,6 @@ public final class MapPropsManager
 	{
 		propsMap.put(com.syrus.AMFICOM.mapview.CablePath.class,
 			MapCablePathPane.getInstance());
-		propsMap.put(com.syrus.AMFICOM.map.PhysicalLink.class,
-			MapLinkPane.getInstance());
-		propsMap.put(com.syrus.AMFICOM.map.SiteNode.class,
-			MapSitePane.getInstance());
 		propsMap.put(com.syrus.AMFICOM.map.SiteNodeType.class,
 			MapProtoPane.getInstance());
 		propsMap.put(com.syrus.AMFICOM.mapview.VoidElement.class,
