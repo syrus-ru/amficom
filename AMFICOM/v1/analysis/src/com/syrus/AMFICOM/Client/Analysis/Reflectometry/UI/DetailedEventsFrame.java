@@ -442,8 +442,7 @@ implements EtalonMTMListener,
 	{
         makeAlignedDataMT();
 		ctModel.clearTable();
-		tabbedPane.setEnabledAt(0, true);
-		if(Heap.hasEventParamsForPrimaryTrace()) // XXX: inadequate condition
+		if(Heap.getRefAnalysisPrimary() != null)
 			tabbedPane.setEnabledAt(1, true);
 	}
 
@@ -451,7 +450,6 @@ implements EtalonMTMListener,
 	{
 		alignedDataMT = null;
 		ctModel.clearTable();
-		tabbedPane.setEnabledAt(0, true);
 		tabbedPane.setSelectedIndex(0);
 		tabbedPane.setEnabledAt(1, false);
 	}
@@ -464,8 +462,8 @@ implements EtalonMTMListener,
 
     public void primaryRefAnalysisCUpdated() {
         makeAlignedDataMT();
-        tabbedPane.setEnabledAt(0, true);
-        tabbedPane.setEnabledAt(1, true);
+        if (Heap.getMTMEtalon() != null)
+            tabbedPane.setEnabledAt(1, true);
         updateTableModel();
         setVisible(true);
     }
@@ -474,7 +472,6 @@ implements EtalonMTMListener,
         alignedDataMT = null;
         ctModel.clearTable();
         tabbedPane.setSelectedIndex(0);
-        tabbedPane.setEnabledAt(0, true);
         tabbedPane.setEnabledAt(1, false);
         setVisible(false);
     }
