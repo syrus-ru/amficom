@@ -1,5 +1,5 @@
 /*
- * $Id: MCMMeasurementObjectLoader.java,v 1.39 2005/04/29 12:40:51 arseniy Exp $
+ * $Id: MCMMeasurementObjectLoader.java,v 1.40 2005/04/29 15:59:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,15 +9,22 @@
 package com.syrus.AMFICOM.mcm;
 
 import java.util.HashSet;
+import java.util.Iterator;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.general.UpdateObjectException;
+import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
+import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.SecurityKey;
+import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.AnalysisTypeDatabase;
 import com.syrus.AMFICOM.measurement.CronTemporalPattern;
@@ -32,17 +39,19 @@ import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.measurement.MeasurementTypeDatabase;
 import com.syrus.AMFICOM.measurement.Set;
 import com.syrus.AMFICOM.measurement.SetDatabase;
+import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.CronTemporalPattern_Transferable;
 import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
+import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/04/29 12:40:51 $
+ * @version $Revision: 1.40 $, $Date: 2005/04/29 15:59:53 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -421,6 +430,32 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 		throw new UnsupportedOperationException();
 	}
 
+
+	public void saveTests(java.util.Set objects, boolean force) throws ApplicationException {
+		super.saveTests(objects, force);
+
+		MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
+		SecurityKey securityKey = LoginManager.getSecurityKey();
+
+		Test_Transferable[] transferables = new Test_Transferable[objects.size()];
+		int i = 0;
+		for (Iterator it = objects.iterator(); it.hasNext(); i++)
+			transferables[i] = (Test_Transferable) ((Test) it.next()).getTransferable();
+
+		try {
+			StorableObject_Transferable[] headers = mServerRef.receiveTests(transferables, force, securityKey);
+			super.updateHeaders(objects, headers);
+		}
+		catch (AMFICOMRemoteException are) {
+			String mesg = "Cannot save objects -- ";
+			if (are.error_code.value() == ErrorCode._ERROR_VERSION_COLLISION)
+				throw new VersionCollisionException(mesg + are.message, 0L, 0L);
+			throw new UpdateObjectException(mesg + are.message);
+		}
+	}
+
+
+
 	public java.util.Set loadAnalysisTypesButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
 	}
@@ -490,10 +525,6 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
 	}
 
-	public void saveTests(java.util.Set collection, boolean force) throws ApplicationException {
-		throw new UnsupportedOperationException("May be not need this? " + collection + ", " + force);
-	}
-	
 	public void saveCronTemporalPatterns(java.util.Set storableObjects,boolean force) throws ApplicationException{
 		throw new UnsupportedOperationException("May be not need this? " + storableObjects + ", " + force);
 	}
