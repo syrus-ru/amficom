@@ -1,5 +1,5 @@
 /*
- * $Id: ComplexReflectogramEvent.java,v 1.12 2005/04/26 07:35:20 saa Exp $
+ * $Id: ComplexReflectogramEvent.java,v 1.13 2005/04/29 09:57:53 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,7 @@ import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.12 $, $Date: 2005/04/26 07:35:20 $
+ * @version $Revision: 1.13 $, $Date: 2005/04/29 09:57:53 $
  * @module dadara
  * 
  * Класс предназначен для хранения расширенной информации о
@@ -36,43 +36,81 @@ public class ComplexReflectogramEvent implements SimpleReflectogramEvent
 	public int getEnd() { return end; }
 	public int getEventType() { return type; }
 
-	public double getALet() { return aLet; }
+    public double getLength() { return end - begin; }
+
+    /**
+     * @return амплитуда всплеска, т.е. yMax - asympY0
+     */
+    public double getALet() { return aLet; }
+
+    /**
+     * @return потери на событии.
+     * для лин. событий это (asympY0 - asympY1);
+     * для остальных - то же, но скорректированное с учетом соседних
+     * линейных событий. 
+     */
 	public double getMLoss() { return mLoss; }
-	public double getLength() { return end - begin; }
+    
+    /**
+     * @return
+     * Для лин. события - ее линейная аппроксимация в начале события;
+     * Для мертвой зоны - линейная экстраполяция ближайшего линейного события
+     *   на начало мертвой зоны;
+     * Для других событий - значение м.ф. в начале события.
+     */
 	public double getAsympY0() { return asympY0; }
-	public double getAsympY1() { return asympY1; }
+
+    /**
+     * @return
+     * Для лин. события - ее линейная аппроксимация в конце события;
+     * Для конца волокна - в принципе, не определено;
+     * Для других событий - значение м.ф. в конце события.
+     */
+    public double getAsympY1() { return asympY1; }
 	
+    /**
+     * @return type == LOSS || type == GAIN
+     */
 	protected boolean isSplice()
 	{
 		return type == LOSS || type == GAIN;
 	}
 
+    private void setALet(ModelTrace mt) {
+        if (type == SimpleReflectogramEvent.LINEAR)
+            aLet = 0;
+        else {
+            int N = end - begin + 1;
+            double []yArr = mt.getYArray(begin, N);
+            aLet = ReflectogramMath.getArrayMax(yArr) - asympY0;
+        }
+    }
+
 	// Метод сделан private, т.к. он создает объект не в окончательном виде.
-	// Например, для сварки потом надо будет уточнить mloss.
+	// Например, для сварки потом надо будет уточнить mloss, а aLet - вообще
+    // не инициализируется
 	private ComplexReflectogramEvent(SimpleReflectogramEvent se, ModelTrace mt)
 	{
 		begin = se.getBegin();
 		end = se.getEnd();
 		type = se.getEventType();
-		int N = end - begin + 1;
-		double []yArr = mt.getYArray(begin, N);
 		if (type == SimpleReflectogramEvent.LINEAR)
 		{
+            int N = end - begin + 1;
+            double []yArr = mt.getYArray(begin, N);
 			ModelFunction lin = ModelFunction.createLinearFrom0(yArr);
 			asympY0 = lin.fun(begin);
 			asympY1 = lin.fun(end);
 			mLoss = asympY0 - asympY1;
-			aLet = 0;
 		}
 		else
 		{
-			asympY0 = yArr[0];
-			asympY1 = yArr[N - 1];
+			asympY0 = mt.getY(begin);
+			asympY1 = mt.getY(end);
 			mLoss = asympY0 - asympY1;
-			aLet = ReflectogramMath.getArrayMax(yArr) - asympY0;
 		}
 	}
-	
+
 	public static ComplexReflectogramEvent[] createEvents(SimpleReflectogramEvent[] se, ModelTrace mt)
 	{
 		ComplexReflectogramEvent[] ret = new ComplexReflectogramEvent[se.length];
@@ -107,6 +145,35 @@ public class ComplexReflectogramEvent implements SimpleReflectogramEvent
 				ret[i].mLoss -= linAtt * ret[i].getLength();
 			}
 		}
-		return ret;
+
+        // корректируем asympY0 для м.з.
+        if (se[0].getEventType() == SimpleReflectogramEvent.DEADZONE)
+        {
+            for (int j = 1; j < se.length; j++) {
+                if (se[j].getEventType() == SimpleReflectogramEvent.LINEAR) {
+                    double po;
+                    int x1 = se[j].getBegin() + 1;
+                    int x2 = se[j].getEnd() - 1;
+                    if (x1 >= x2)
+                    {
+                        po = mt.getY(x1);
+                    }
+                    else
+                    {
+                        double y1 = mt.getY(x1);
+                        double y2 = mt.getY(x2);
+                        po = (x1 * y2 - x2 * y1) / (x1 - x2);
+                    }
+                    ret[0].asympY0 = po;
+                    break;
+                }
+            }
+        }
+
+        // устанавливаем aLet
+        for (int i = 0; i < ret.length; i++)
+            ret[i].setALet(mt);
+
+        return ret;
 	}
 }
