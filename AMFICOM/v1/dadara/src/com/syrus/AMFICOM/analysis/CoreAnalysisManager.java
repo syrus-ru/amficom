@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.54 2005/04/29 15:29:45 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.55 2005/04/30 13:18:57 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.54 $, $Date: 2005/04/29 15:29:45 $
+ * @version $Revision: 1.55 $, $Date: 2005/04/30 13:18:57 $
  * @module
  */
 
@@ -234,16 +234,17 @@ public class CoreAnalysisManager
 	 * @param pars провер€емые параметры
 	 * @return true, если набор корректен, false, если набор некорректен
 	 */
-	public static boolean checkAnalysisParameters(double[] pars)
+	public static boolean checkAnalysisParameters(AnalysisParameters ap)
 	{
-		if (pars.length < 3)
+        final double MIN_MIN_THRESHOLD = 0.001; // FIXME: debug: MIN_MIN_THRESHOLD should be 0.01 or 0.005 (?)
+		if (ap.getMinThreshold() < MIN_MIN_THRESHOLD)
 			return false;
-		if (pars[0] < 0.01) // minThreshold
+		if (ap.getMinSplice() < ap.getMinThreshold())
 			return false;
-		if (pars[1] < pars[0]) // minSplice
+		if (ap.getMinConnector() < ap.getMinSplice())
 			return false;
-		if (pars[2] < pars[1]) // minReflective
-			return false;
+        if (ap.getMinEnd() < ap.getMinConnector())
+            return false;
 		return true;
 	}
 
@@ -466,6 +467,8 @@ public class CoreAnalysisManager
 	 * @param bs рефлектограмма
 	 * @param ap параметры анализа
 	 * @return массив событий
+	 * @throws BadAnalysisParametersException ¬ходной набор параметров анализа
+     *   недопустим.
 	 */
 	public static ModelTraceAndEventsImpl makeAnalysis(
 			BellcoreStructure bs,
