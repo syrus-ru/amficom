@@ -121,7 +121,7 @@ public class ReflectogramAlarm {
 		}
 		catch(IOException ioe)
 		{
-			// XXX
+			// FIXME: exception handling
 			System.out.println("Something very unexpected in alarmsFromByteArray: " + ioe.getMessage());
 			ioe.printStackTrace();
 			return null;

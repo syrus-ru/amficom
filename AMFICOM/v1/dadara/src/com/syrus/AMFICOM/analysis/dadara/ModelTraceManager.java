@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.62 2005/04/30 09:43:36 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.63 2005/04/30 09:52:49 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
  * генерацией пороговых кривых и сохранением/восстановлением порогов.
  *
  * @author $Author: saa $
- * @version $Revision: 1.62 $, $Date: 2005/04/30 09:43:36 $
+ * @version $Revision: 1.63 $, $Date: 2005/04/30 09:52:49 $
  * @module
  */
 public class ModelTraceManager
@@ -557,11 +557,11 @@ implements DataStreamable, Cloneable
 			int nEvent)
 	{
 		if (xCapture <= 0.1)
-			xCapture = 0.1;  // XXX
+			xCapture = 0.1;  // XXX: xCapture range: min
 		if (xCapture > 5000)
-			xCapture = 5000; // XXX
+			xCapture = 5000; // XXX: xCapture range: max
 		if (yCapture <= 1e-4)
-			yCapture = 1e-4; // XXX: специфичный для рефлектометрии параметр
+			yCapture = 1e-4; // XXX: yCapture range: min (специфичный для рефлектометрии параметр)
 
 		int xRange = (int )(xCapture + 1);
 

@@ -1,5 +1,5 @@
 /*
- * $Id: ThreshDY.java,v 1.14 2005/04/30 07:33:28 saa Exp $
+ * $Id: ThreshDY.java,v 1.15 2005/04/30 09:52:49 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.14 $, $Date: 2005/04/30 07:33:28 $
+ * @version $Revision: 1.15 $, $Date: 2005/04/30 09:52:49 $
  * @module
  */
 public class ThreshDY extends Thresh
@@ -30,8 +30,8 @@ public class ThreshDY extends Thresh
 	{
 		super(eventId, eventId, xMin, xMax);
 		this.typeL = typeL;
-		//this.values = new double[] { 0.1, 0.2, -0.1, -0.2 }; // defaults -- XXX
-		this.values = new double[] { 0.0, 0.0, -0.0, -0.0 }; // FIXME: put default values of thresholds back
+		//this.values = new double[] { 0.1, 0.2, -0.1, -0.2 }; // defaults?
+		this.values = new double[] { 0.0, 0.0, -0.0, -0.0 }; // FIXME: default values of thresholds
 	}
 
     public Object clone() throws CloneNotSupportedException

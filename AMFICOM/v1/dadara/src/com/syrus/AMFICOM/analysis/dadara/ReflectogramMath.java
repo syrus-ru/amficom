@@ -193,7 +193,7 @@ public class ReflectogramMath
 				if(i < re.length-1)
 					re[i+1].setBegin(re[i].getEnd());
 			}
-			// XXX: refit is necessary?? // solution depends on IA
+			// refit is necessary?? // solution depends on IA
 	}
 
 	public static ReflectogramEvent getEvent(int coord, ReflectogramEvent[] re)
@@ -229,7 +229,7 @@ public class ReflectogramMath
 	{
 		ReflectogramEvent ev = getEvent(coord, re);
 		if (ev == null)
-			return 0; // XXX
+			return 0;
 		else
 			return ev.refAmplitude(coord);
 	}

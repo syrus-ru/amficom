@@ -1,5 +1,5 @@
 /*-
- * $Id: ModelTraceAndEventsImpl.java,v 1.6 2005/04/30 09:12:11 saa Exp $
+ * $Id: ModelTraceAndEventsImpl.java,v 1.7 2005/04/30 09:52:49 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.6 $, $Date: 2005/04/30 09:12:11 $
+ * @version $Revision: 1.7 $, $Date: 2005/04/30 09:52:49 $
  * @module
  */
 public class ModelTraceAndEventsImpl
@@ -26,7 +26,7 @@ implements ReliabilityModelTraceAndEvents, DataStreamable
 	private ReliabilitySimpleReflectogramEventImpl[] rse; // not null
 	private ModelFunction mf; // not null
 	private int traceLength;
-	private double deltaX = 1; // XXX
+	private double deltaX;
 	private ModelTrace mt; // will just contain mt
 
 	private static DataStreamable.Reader dsReader = null; // DIS reader singleton-style object
