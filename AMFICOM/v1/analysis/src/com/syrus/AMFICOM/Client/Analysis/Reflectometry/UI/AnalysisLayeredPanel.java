@@ -164,7 +164,7 @@ class AnalysisToolBar extends TraceEventsToolBar
 	JButton centerAButton = new JButton();
 	JButton centerBButton = new JButton();
 
-	protected static String[] buttons = new String[]
+	protected static String[] buttons1 = new String[]
 	{
 		EX, DX, EY, DY, FIX, SEPARATOR, loss, ref, noana, SEPARATOR, cA, cB, SEPARATOR, events, modeled
 	};
@@ -176,14 +176,14 @@ class AnalysisToolBar extends TraceEventsToolBar
 
 	protected String[] getButtons()
 	{
-		return buttons;
+		return buttons1;
 	}
 
 	protected Map createGraphButtons()
 	{
-		Map buttons = super.createGraphButtons();
+		Map buttons2 = super.createGraphButtons();
 
-		buttons.put(
+		buttons2.put(
 				loss,
 				createToolButton(
 				lossTButton,
@@ -200,7 +200,7 @@ class AnalysisToolBar extends TraceEventsToolBar
 					}
 				},
 				true));
-		buttons.put(
+		buttons2.put(
 				ref,
 				createToolButton(
 				reflectionTButton,
@@ -217,7 +217,7 @@ class AnalysisToolBar extends TraceEventsToolBar
 					}
 				},
 				true));
-		buttons.put(
+		buttons2.put(
 				noana,
 				createToolButton(
 				noAnalysisTButton,
@@ -234,7 +234,7 @@ class AnalysisToolBar extends TraceEventsToolBar
 					}
 				},
 				true));
-		buttons.put(
+		buttons2.put(
 				cA,
 				createToolButton(
 				centerAButton,
@@ -251,7 +251,7 @@ class AnalysisToolBar extends TraceEventsToolBar
 					}
 				},
 				true));
-		buttons.put(
+		buttons2.put(
 				cB,
 				createToolButton(
 				centerBButton,
@@ -275,36 +275,36 @@ class AnalysisToolBar extends TraceEventsToolBar
 		group.add(noAnalysisTButton);
 
 		noAnalysisTButton.doClick();
-		return buttons;
+		return buttons2;
 	}
 
 	void lossTButton_actionPerformed(ActionEvent e)
 	{
-		AnalysisLayeredPanel panel = (AnalysisLayeredPanel)super.panel;
-		panel.setAnalysisType (AnalysisLayeredPanel.LOSS_ANALYSIS);
+		AnalysisLayeredPanel panel1 = (AnalysisLayeredPanel)super.panel;
+		panel1.setAnalysisType (AnalysisLayeredPanel.LOSS_ANALYSIS);
 	}
 
 	void reflectionTButton_actionPerformed(ActionEvent e)
 	{
-		AnalysisLayeredPanel panel = (AnalysisLayeredPanel)super.panel;
-		panel.setAnalysisType (AnalysisLayeredPanel.REFLECTION_ANALYSIS);
+		AnalysisLayeredPanel panel1 = (AnalysisLayeredPanel)super.panel;
+		panel1.setAnalysisType (AnalysisLayeredPanel.REFLECTION_ANALYSIS);
 	}
 
 	void noAnalysisTButton_actionPerformed(ActionEvent e)
 	{
-		AnalysisLayeredPanel panel = (AnalysisLayeredPanel)super.panel;
-		panel.setAnalysisType (AnalysisLayeredPanel.NO_ANALYSIS);
+		AnalysisLayeredPanel panel1 = (AnalysisLayeredPanel)super.panel;
+		panel1.setAnalysisType (AnalysisLayeredPanel.NO_ANALYSIS);
 	}
 
 	void centerAButton_actionPerformed(ActionEvent e)
 	{
-		AnalysisLayeredPanel panel = (AnalysisLayeredPanel)super.panel;
-		panel.centerMarkerA();
+		AnalysisLayeredPanel panel1 = (AnalysisLayeredPanel)super.panel;
+		panel1.centerMarkerA();
 	}
 
 	void centerBButton_actionPerformed(ActionEvent e)
 	{
-		AnalysisLayeredPanel panel = (AnalysisLayeredPanel)super.panel;
-		panel.centerMarkerB();
+		AnalysisLayeredPanel panel1 = (AnalysisLayeredPanel)super.panel;
+		panel1.centerMarkerB();
 	}
 }
