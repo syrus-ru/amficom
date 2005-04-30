@@ -72,7 +72,5 @@ public class LoadTestSetupCommand extends VoidCommand
 		Heap.notifyPrimaryTraceClosed();
 		Heap.notifyPrimaryTraceOpened();
 		Heap.setCurrentTracePrimary();
-		aContext.getDispatcher().notify(new RefUpdateEvent(Heap.PRIMARY_TRACE_KEY,
-				RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));
 	}
 }

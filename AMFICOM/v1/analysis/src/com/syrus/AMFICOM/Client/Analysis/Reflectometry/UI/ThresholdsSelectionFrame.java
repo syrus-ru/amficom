@@ -346,17 +346,6 @@ implements OperationListener, BsHashChangeListener,
 	public void operationPerformed(OperationEvent ae) {
 		if (ae.getActionCommand().equals(RefUpdateEvent.typ)) {
 			RefUpdateEvent rue = (RefUpdateEvent) ae;
-//			if (rue.thresholdsUpdated()) {
-//				{
-//					et_mtm = Heap.getMTMEtalon();
-//					updateThresholds();
-//				}
-//			}
-			if (rue.analysisPerformed()) {
-				//mtm = Heap.getMTMByKey(id); // FIXME: what is MTM here?  
-				//bs = Heap.getAnyBSTraceByKey(id); // bs was never read locally
-				updateThresholds();
-			}
 			if (rue.thresholdChanged()) {
 				updateThresholds();
 			}
