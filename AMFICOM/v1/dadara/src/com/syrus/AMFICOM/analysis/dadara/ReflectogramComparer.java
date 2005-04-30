@@ -1,33 +1,30 @@
 package com.syrus.AMFICOM.analysis.dadara;
 
-
-//*
-
 /**
  * ReflectogramComparer
- * 
+ * <p>
  * Сравнивает результаты анализа.
  * Состоит из двух частей.
- * 
+ * <p>
  * (1) нестатическая часть - пользователь создает объект
- * класса ReflectogramComparer, дав на входе два массива
- * ReflectogramEvent[] - один - пробные события, второй - эталонные.
- * Сама рефлектограмма пока(?) не используется.
+ * этого класса , дав на входе два массива
+ * SimpleReflectogramEvent[] - один - пробные события, второй - эталонные.
  * Созданный объект находит соответствия событий, и после этого
  * умеет отвечать на вопросы об изменении состава и параметров событий.
- * Допускает полиморфизм - некоторые вопросы применимы для любых SimpleReflectogramEvent,
+ * <p>
+ * Допускает полиморфизм - некоторые вопросы применимы для любых
+ * SimpleReflectogramEvent,
  * некоторые - только для ComplexReflectogramEvent,
  * а некоторые - только для ReliabilitySimpleReflectogramEvent
- * <br>
- * NB: результат сравнения может зависеть от того, являются ли входные события
- * instanceof ReliabilitySimpleReflectogramEvent.
- * 
+ * <p>
+ * NB: результат сопоставления может зависеть от того, являются ли входные
+ * события instanceof {@link ReliabilitySimpleReflectogramEvent}.
  * <p>
  * (2) статическая часть - сравнивает модельные кривые, построенные
  * по ModelTrace - MaxDeviation и пр.
  * 
  * @author $Author: saa $
- * @version $Revision: 1.16 $, $Date: 2005/04/30 09:52:49 $
+ * @version $Revision: 1.17 $, $Date: 2005/04/30 11:20:55 $
  * @module analysis_v1
  */
 public class ReflectogramComparer
