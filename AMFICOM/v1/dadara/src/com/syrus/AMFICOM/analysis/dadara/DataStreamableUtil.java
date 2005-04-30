@@ -1,5 +1,5 @@
 /*-
- * $Id: DataStreamableUtil.java,v 1.2 2005/04/14 16:21:29 saa Exp $
+ * $Id: DataStreamableUtil.java,v 1.3 2005/04/30 10:04:07 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,12 +16,13 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.2 $, $Date: 2005/04/14 16:21:29 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/30 10:04:07 $
  * @module
  */
 public class DataStreamableUtil
 {
-	public static DataStreamable readDataStreamableFromBA(byte[] bar, DataStreamable.Reader reader)
+	public static DataStreamable readDataStreamableFromBA(byte[] bar,
+            DataStreamable.Reader reader)
 	{
 		try
 		{
@@ -57,9 +58,7 @@ public class DataStreamableUtil
 			return baos.toByteArray();
 		} catch (IOException e)
 		{
-			System.out.println("IOException caught: " + e);
-			e.printStackTrace();
-			return new byte[0]; //null // @todo: throw runtimeException instead
+            throw new InternalError("Unexpected exception: " + e.getMessage());
 		}
 	}
 }
