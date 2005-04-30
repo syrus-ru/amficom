@@ -1,5 +1,5 @@
 /*
- * $Id: TestEvent.java,v 1.1 2005/04/01 15:20:22 cvsadmin Exp $
+ * $Id: TestEvent.java,v 1.2 2005/04/30 14:18:45 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,7 @@ import java.util.Set;
 import junit.framework.Test;
 
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CommonTest;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
@@ -27,11 +28,11 @@ import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.CompoundConditionSort;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/01 15:20:22 $
- * @author $Author: cvsadmin $
+ * @version $Revision: 1.2 $, $Date: 2005/04/30 14:18:45 $
+ * @author $Author: arseniy $
  * @module event_v1
  */
-public class TestEvent extends CommonEventTest {
+public class TestEvent extends CommonTest {
 
 	public TestEvent(String name) {
 		super(name);

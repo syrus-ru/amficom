@@ -1,12 +1,12 @@
 /*
- * $Id: GeneralXMLTestCase.java,v 1.1 2005/02/04 14:21:34 cvsadmin Exp $
+ * $Id: GeneralXMLTestCase.java,v 1.2 2005/04/30 14:18:45 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
 
-package test.com.syrus.AMFICOM.general;
+package com.syrus.AMFICOM.general;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,8 +44,8 @@ import com.syrus.AMFICOM.measurement.corba.SetSort;
 import com.syrus.util.ByteArray;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/02/04 14:21:34 $
- * @author $Author: cvsadmin $
+ * @version $Revision: 1.2 $, $Date: 2005/04/30 14:18:45 $
+ * @author $Author: arseniy $
  * @module tools
  */
 public class GeneralXMLTestCase extends TestCase {

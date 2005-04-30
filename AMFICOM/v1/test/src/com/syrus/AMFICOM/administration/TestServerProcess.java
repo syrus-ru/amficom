@@ -1,5 +1,5 @@
 /*
- * $Id: TestServerProcess.java,v 1.1 2005/04/29 09:03:45 arseniy Exp $
+ * $Id: TestServerProcess.java,v 1.2 2005/04/30 14:18:45 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,6 +15,7 @@ import java.util.Set;
 import junit.framework.Test;
 
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CommonTest;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -23,11 +24,11 @@ import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.CompoundConditionSort;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/29 09:03:45 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/30 14:18:45 $
  * @author $Author: arseniy $
  * @module test
  */
-public final class TestServerProcess extends CommonAdministrationTest {
+public final class TestServerProcess extends CommonTest {
 	public static final String LOGIN_PROCESS_CODENAME = "LoginServer";
 	public static final String EVENT_PROCESS_CODENAME = "EventServer";
 	public static final String MSERVER_PROCESS_CODENAME = "MServer";
@@ -48,13 +49,13 @@ public final class TestServerProcess extends CommonAdministrationTest {
 		System.out.println("Server '" + server.getId() + "'");
 
 //	sys user
-		TypicalCondition tc = new TypicalCondition(TestUser.SYS_USER_LOGIN,
+		TypicalCondition tc = new TypicalCondition(UserWrapper.SYS_LOGIN,
 				OperationSort.OPERATION_EQUALS,
 				ObjectEntities.USER_ENTITY_CODE,
 				UserWrapper.COLUMN_LOGIN);
 
 //	login user
-		TypicalCondition tc1 = new TypicalCondition(TestUser.LOGIN_USER_LOGIN,
+		TypicalCondition tc1 = new TypicalCondition(UserWrapper.LOGINPROCESSOR_LOGIN,
 				OperationSort.OPERATION_EQUALS,
 				ObjectEntities.USER_ENTITY_CODE,
 				UserWrapper.COLUMN_LOGIN);
@@ -63,28 +64,28 @@ public final class TestServerProcess extends CommonAdministrationTest {
 		CompoundCondition cc = new CompoundCondition(tc, CompoundConditionSort.OR, tc1);
 
 //	event user
-		tc1 = new TypicalCondition(TestUser.EVENT_USER_LOGIN,
+		tc1 = new TypicalCondition(UserWrapper.EVENTPROCESSOR_LOGIN,
 				OperationSort.OPERATION_EQUALS,
 				ObjectEntities.USER_ENTITY_CODE,
 				UserWrapper.COLUMN_LOGIN);
 		cc.addCondition(tc1);
 
 //	mserver user
-		tc1 = new TypicalCondition(TestUser.MSERVER_USER_LOGIN,
+		tc1 = new TypicalCondition(UserWrapper.MSERVER_LOGIN,
 				OperationSort.OPERATION_EQUALS,
 				ObjectEntities.USER_ENTITY_CODE,
 				UserWrapper.COLUMN_LOGIN);
 		cc.addCondition(tc1);
 
 //	cmserver user
-		tc1 = new TypicalCondition(TestUser.CMSERVER_USER_LOGIN,
+		tc1 = new TypicalCondition(UserWrapper.CMSERVER_LOGIN,
 				OperationSort.OPERATION_EQUALS,
 				ObjectEntities.USER_ENTITY_CODE,
 				UserWrapper.COLUMN_LOGIN);
 		cc.addCondition(tc1);
 
 //	mshserver user
-		tc1 = new TypicalCondition(TestUser.MSHSERVER_USER_LOGIN,
+		tc1 = new TypicalCondition(UserWrapper.MSHSERVER_LOGIN,
 				OperationSort.OPERATION_EQUALS,
 				ObjectEntities.USER_ENTITY_CODE,
 				UserWrapper.COLUMN_LOGIN);
@@ -98,32 +99,32 @@ public final class TestServerProcess extends CommonAdministrationTest {
 			usersMap.put(user.getLogin(), user);
 		}
 
-		User sysUser = (User) usersMap.get(TestUser.SYS_USER_LOGIN);
+		User sysUser = (User) usersMap.get(UserWrapper.SYS_LOGIN);
 		User user;
 		ServerProcess serverProcess;
 
 //	login process
-		user = (User) usersMap.get(TestUser.LOGIN_USER_LOGIN);
+		user = (User) usersMap.get(UserWrapper.LOGINPROCESSOR_LOGIN);
 		serverProcess = ServerProcess.createInstance(sysUser.getId(), LOGIN_PROCESS_CODENAME, server.getId(), user.getId(), "Login process");
 		AdministrationStorableObjectPool.putStorableObject(serverProcess);
 
 //	event process
-		user = (User) usersMap.get(TestUser.EVENT_USER_LOGIN);
+		user = (User) usersMap.get(UserWrapper.EVENTPROCESSOR_LOGIN);
 		serverProcess = ServerProcess.createInstance(sysUser.getId(), EVENT_PROCESS_CODENAME, server.getId(), user.getId(), "Event process");
 		AdministrationStorableObjectPool.putStorableObject(serverProcess);
 
 //	mserver process
-		user = (User) usersMap.get(TestUser.MSERVER_USER_LOGIN);
+		user = (User) usersMap.get(UserWrapper.MSERVER_LOGIN);
 		serverProcess = ServerProcess.createInstance(sysUser.getId(), MSERVER_PROCESS_CODENAME, server.getId(), user.getId(), "Measurement Server");
 		AdministrationStorableObjectPool.putStorableObject(serverProcess);
 
 //	cmserver process
-		user = (User) usersMap.get(TestUser.CMSERVER_USER_LOGIN);
+		user = (User) usersMap.get(UserWrapper.CMSERVER_LOGIN);
 		serverProcess = ServerProcess.createInstance(sysUser.getId(), CMSERVER_PROCESS_CODENAME, server.getId(), user.getId(), "Client Measurement Server");
 		AdministrationStorableObjectPool.putStorableObject(serverProcess);
 
 //	mshserver process
-		user = (User) usersMap.get(TestUser.MSHSERVER_USER_LOGIN);
+		user = (User) usersMap.get(UserWrapper.MSHSERVER_LOGIN);
 		serverProcess = ServerProcess.createInstance(sysUser.getId(), MSHSERVER_PROCESS_CODENAME, server.getId(), user.getId(), "Map/Scheme Server");
 		AdministrationStorableObjectPool.putStorableObject(serverProcess);
 

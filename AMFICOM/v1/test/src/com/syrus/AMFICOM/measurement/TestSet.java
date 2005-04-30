@@ -1,5 +1,5 @@
 /*
- * $Id: TestSet.java,v 1.1 2005/04/01 13:24:34 cvsadmin Exp $
+ * $Id: TestSet.java,v 1.2 2005/04/30 14:18:45 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,7 @@ import java.util.Iterator;
 import junit.framework.Test;
 
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CommonTest;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -22,11 +23,11 @@ import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/01 13:24:34 $
- * @author $Author: cvsadmin $
+ * @version $Revision: 1.2 $, $Date: 2005/04/30 14:18:45 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
-public class TestSet extends CommonMeasurementTest {
+public class TestSet extends CommonTest {
 
 	public TestSet(String name) {
 		super(name);

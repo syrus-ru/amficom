@@ -1,5 +1,5 @@
 /*
- * $Id: TestTransmissionPathType.java,v 1.1 2005/02/28 09:48:12 cvsadmin Exp $
+ * $Id: TestTransmissionPathType.java,v 1.2 2005/04/30 14:18:45 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,14 +11,14 @@ import junit.framework.Test;
 
 import com.syrus.AMFICOM.configuration.corba.TransmissionPathType_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.SessionContext;
+import com.syrus.AMFICOM.general.CommonTest;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/02/28 09:48:12 $
- * @author $Author: cvsadmin $
+ * @version $Revision: 1.2 $, $Date: 2005/04/30 14:18:45 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
-public class TestTransmissionPathType extends CommonConfigurationTest {
+public class TestTransmissionPathType extends CommonTest {
 
 	public TestTransmissionPathType(String name) {
 		super(name);
