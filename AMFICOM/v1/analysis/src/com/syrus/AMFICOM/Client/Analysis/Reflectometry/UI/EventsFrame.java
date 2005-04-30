@@ -35,6 +35,7 @@ import com.syrus.AMFICOM.analysis.dadara.MathRef;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceComparer;
 import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramComparer;
+import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEventComparer;
 import com.syrus.AMFICOM.analysis.dadara.TraceEvent;
 import com.syrus.io.BellcoreStructure;
 
@@ -98,9 +99,9 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener,
 			return;
 		}
 
-		int []newEvents = ReflectogramComparer.getNewEventsList(getData(), getEtalon());
-		int []amplChengedEvents = ReflectogramComparer.getChangedAmplitudeEventsList(getData(), getEtalon(), .5);
-		int []lossChengedEvents = ReflectogramComparer.getChangedLossEventsList(getData(), getEtalon(), .5);
+		int []newEvents = SimpleReflectogramEventComparer.getNewEventsList(getData(), getEtalon());
+		int []amplChengedEvents = SimpleReflectogramEventComparer.getChangedAmplitudeEventsList(getData(), getEtalon(), .5);
+		int []lossChengedEvents = SimpleReflectogramEventComparer.getChangedLossEventsList(getData(), getEtalon(), .5);
 
 		EventTableRenderer rend = (EventTableRenderer)jTable.getDefaultRenderer(Object.class);
 		rend.setNewEventsList(newEvents);

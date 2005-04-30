@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.49 2005/04/30 09:47:14 saa Exp $
+ * $Id: Heap.java,v 1.50 2005/04/30 11:55:11 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,6 +27,7 @@ import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEventsImpl;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramComparer;
+import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEventComparer;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.Set;
 import com.syrus.io.BellcoreStructure;
@@ -65,7 +66,7 @@ import com.syrus.io.BellcoreStructure;
  * Фактически, primaryMTAE - это часть refAnalysisPrimary.
  * 
  * @author $Author: saa $
- * @version $Revision: 1.49 $, $Date: 2005/04/30 09:47:14 $
+ * @version $Revision: 1.50 $, $Date: 2005/04/30 11:55:11 $
  * @module
  */
 public class Heap
@@ -171,7 +172,7 @@ public class Heap
     		return -1;
     	// reliability comparison is actually performed
     	// @todo: ModelTraceAndEventsImpl: add getReliabilitySimpleEvents()
-    	ReflectogramComparer rcomp = new ReflectogramComparer(
+    	SimpleReflectogramEventComparer rcomp = new SimpleReflectogramEventComparer(
                 getMTAEPrimary(),
                 etalonMTM.getMTAE());
     	return rcomp.getEtalonIdByProbeId(currentEv);
@@ -495,7 +496,7 @@ public class Heap
     		return;
     	}
     	else {
-        	ReflectogramComparer rcomp = new ReflectogramComparer(
+        	SimpleReflectogramEventComparer rcomp = new SimpleReflectogramEventComparer(
         	        getMTAEPrimary(),
         	        etalonMTM.getMTAE());
         	setCurrentEvent(rcomp.getProbeIdByEtalonId(nEtEvent));
