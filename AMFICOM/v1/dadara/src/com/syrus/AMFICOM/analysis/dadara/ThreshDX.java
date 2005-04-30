@@ -1,5 +1,5 @@
 /*
- * $Id: ThreshDX.java,v 1.13 2005/03/30 12:50:02 saa Exp $
+ * $Id: ThreshDX.java,v 1.14 2005/04/30 07:33:28 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.13 $, $Date: 2005/03/30 12:50:02 $
+ * @version $Revision: 1.14 $, $Date: 2005/04/30 07:33:28 $
  * @module
  */
 public class ThreshDX extends Thresh
@@ -24,7 +24,14 @@ public class ThreshDX extends Thresh
 	protected ThreshDX()
 	{ // do nothing
 	}
-	
+
+    public Object clone() throws CloneNotSupportedException
+    {
+        ThreshDX ret = (ThreshDX)super.clone();
+        ret.dX = (int[])this.dX.clone();
+        return ret;
+    }
+
 	private int goodSign(int key)
 	{
 		return this.rise ^ IS_KEY_UPPER[key] ? 1 : -1;

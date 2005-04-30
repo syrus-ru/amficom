@@ -1,5 +1,5 @@
 /*
- * $Id: Thresh.java,v 1.11 2005/04/14 16:21:29 saa Exp $
+ * $Id: Thresh.java,v 1.12 2005/04/30 07:33:28 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,12 +13,13 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.11 $, $Date: 2005/04/14 16:21:29 $
+ * @version $Revision: 1.12 $, $Date: 2005/04/30 07:33:28 $
  * @module
  */
 
 // пол€ измен€ютс€ также через JNI-методы ModelFunction
 public abstract class Thresh
+implements Cloneable
 {
 	public static final boolean[] IS_KEY_UPPER = new boolean[] { true, true, false, false };
 	public static final boolean[] IS_KEY_HARD = new boolean[] { false, true, false, true };
@@ -45,6 +46,11 @@ public abstract class Thresh
 		this.xMin = xMin;
 		this.xMax = xMax;
 	}
+
+    public Object clone() throws CloneNotSupportedException
+    {
+        return super.clone();
+    }
 
 	public static Thresh readFromDIS(DataInputStream dis)
 	throws IOException, SignatureMismatchException

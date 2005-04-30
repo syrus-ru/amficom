@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.57 2005/04/28 16:49:54 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.58 2005/04/30 07:33:28 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,11 +22,11 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
  * генерацией пороговых кривых и сохранением/восстановлением порогов.
  *
  * @author $Author: saa $
- * @version $Revision: 1.57 $, $Date: 2005/04/28 16:49:54 $
+ * @version $Revision: 1.58 $, $Date: 2005/04/30 07:33:28 $
  * @module
  */
 public class ModelTraceManager
-implements DataStreamable
+implements DataStreamable, Cloneable
 {
 	protected static final long SIGNATURE_THRESH = 3353620050119193102L;
 	public static final String CODENAME = "ModelTraceManager";
@@ -38,6 +38,21 @@ implements DataStreamable
 	protected ThreshDY[] tDY; // список DY-порогов
 
 	private static DataStreamable.Reader dsReader;
+
+    public Object clone()
+    throws CloneNotSupportedException
+    {
+        ModelTraceManager ret = (ModelTraceManager)super.clone();
+        // remove cache data
+        ret.thMTCache = null;
+        // copy thresholds
+        Thresh[] tLout = (Thresh[]) this.tL.clone(); // clone the holder
+        for (int i = 0; i < tLout.length; i++)
+            tLout[i] = (Thresh)tLout[i].clone(); // clone each threshold in array
+        ret.setTL(tLout);
+        // no need to clone mtae
+        return ret;
+    }
 
 	protected void invalidateThMTCache()
 	{
@@ -147,7 +162,7 @@ implements DataStreamable
         return mtae.getSE();
     }
 
-    protected void setTL(Thresh tl[])
+    private void setTL(Thresh tl[])
 	{
 		tL = tl;
 		// формируем отдельно списки tDX и tDY
