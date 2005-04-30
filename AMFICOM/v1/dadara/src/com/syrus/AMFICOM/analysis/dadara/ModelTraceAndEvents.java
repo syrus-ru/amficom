@@ -1,5 +1,5 @@
 /*-
- * $Id: ModelTraceAndEvents.java,v 1.2 2005/04/11 10:35:31 saa Exp $
+ * $Id: ModelTraceAndEvents.java,v 1.3 2005/04/30 09:39:58 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,8 +9,16 @@
 package com.syrus.AMFICOM.analysis.dadara;
 
 /**
+ * Предоставляет информацию о м.ф. и списке событий определенной р/г.
+ * Эти две части связаны довольно тесно:
+ * они одновременно получаются (в анализе), одновременно используются
+ * при отображении аналитической кривой (т.е. м.ф.) с раскраской событий,
+ * одновременно нужны в эталоне, т.к. по ним обоим формируются пороги
+ * для м.ф.
+ * 
  * @author $Author: saa $
- * @version $Revision: 1.2 $, $Date: 2005/04/11 10:35:31 $
+ * @author: saa
+ * @version $Revision: 1.3 $, $Date: 2005/04/30 09:39:58 $
  * @module
  */
 public interface ModelTraceAndEvents
