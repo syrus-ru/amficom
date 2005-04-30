@@ -20,7 +20,7 @@ import java.io.*;
  * <p>Should be constructed as one of three AMFICOM-specific simple functions.
  * The modelling function will probably change when fit() will be called.</p>
  *
- * @version $Revision: 1.17 $, $Date: 2005/04/14 16:20:29 $
+ * @version $Revision: 1.18 $, $Date: 2005/04/30 12:02:22 $
  * @author $Author: saa $
  * @module analysis_v1
  */
@@ -445,9 +445,7 @@ public class ModelFunction {
 			return baos.toByteArray();
 		} catch (IOException e)
 		{
-			System.out.println("IOException caught: " + e);
-			e.printStackTrace();
-			return new byte[0]; //null // @todo: throw runtimeException
+            throw new InternalError("Unexpected exception" + e.toString());
 		}
 	}
 

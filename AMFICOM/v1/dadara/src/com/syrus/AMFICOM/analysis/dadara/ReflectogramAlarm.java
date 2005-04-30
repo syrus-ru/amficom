@@ -82,9 +82,7 @@ public class ReflectogramAlarm {
 			return baos.toByteArray();
 		}
 		catch (IOException ioe) {
-			System.out.println("Something very unexpected while getting byte array from alarm: " + ioe.getMessage());
-			ioe.printStackTrace();
-			return new byte[0]; //null // @todo: throw runtimeException
+            throw new InternalError("Unexpected exception" + ioe.toString());
 		}
 	}
 
@@ -100,12 +98,12 @@ public class ReflectogramAlarm {
 			}
 		}
 		catch (IOException ioe) {
-			System.out.println("Something very unexpected while getting byte array from alarms: " + ioe.getMessage());
-			ioe.printStackTrace(); // @todo: throw runtimeException
+            throw new InternalError("Unexpected exception" + ioe.toString());
 		}
 		return baos.toByteArray();
 	}
 
+    // seem to be unused
 	public static ReflectogramAlarm[] alarmsFromByteArray(byte[] bar)
 	{
 		ByteArrayInputStream bais = new ByteArrayInputStream(bar);
@@ -113,7 +111,7 @@ public class ReflectogramAlarm {
 		try
 		{
 			int count = dis.readInt();
-			ReflectogramAlarm[] ret = new ReflectogramAlarm[count]; // XXX: exception possible when input data is malformed
+			ReflectogramAlarm[] ret = new ReflectogramAlarm[count]; // exception possible when input data is malformed
 			for (int i = 0; i < count; i++)
 				ret[i] = createFromDIS(dis);
 			dis.close();
