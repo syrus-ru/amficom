@@ -52,7 +52,7 @@ implements OperationListener, CurrentEventChangeListener
 				{
 					if(rue.analysisPerformed())
 					{
-						((AnalysisPanel)panel).updEvents(RefUpdateEvent.PRIMARY_TRACE);
+						((AnalysisPanel)panel).updEvents(Heap.PRIMARY_TRACE_KEY);
 
 						ModelTraceAndEvents mtae = Heap.getMTAEPrimary();
 						((AnalysisPanel)panel).updateTrace(mtae); // FIXME: нужно UpdateMTM или UpdateTrace?

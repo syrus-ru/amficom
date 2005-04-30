@@ -27,8 +27,6 @@ public class RefUpdateEvent extends OperationEvent
 
 	public static final String typ = "refupdate";
 
-	public static final String PRIMARY_TRACE = Heap.PRIMARY_TRACE_KEY; // FIXME: remove
-
 	public RefUpdateEvent(Object source, long type)
 	{
 		super(source, 0, typ);

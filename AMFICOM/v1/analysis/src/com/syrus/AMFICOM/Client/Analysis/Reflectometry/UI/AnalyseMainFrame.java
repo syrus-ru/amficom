@@ -893,7 +893,7 @@ public class AnalyseMainFrame extends JFrame implements BsHashChangeListener,
 	{
 		ApplicationModel aModel = aContext.getApplicationModel();
 		String id = key;
-		if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
+		if (id.equals(Heap.PRIMARY_TRACE_KEY))
 		{
 			// do nothing special here: special code is performed in
 			// primaryTraceCUpdated()
@@ -1076,7 +1076,7 @@ public class AnalyseMainFrame extends JFrame implements BsHashChangeListener,
 	public void currentTraceChanged(String id)
 	{
 		ApplicationModel aModel = aContext.getApplicationModel();
-		if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
+		if (id.equals(Heap.PRIMARY_TRACE_KEY))
 		{
 			aModel.setEnabled("menuFileRemoveCompare", false);
 			aModel.setEnabled("menuTraceRemoveCompare", false);

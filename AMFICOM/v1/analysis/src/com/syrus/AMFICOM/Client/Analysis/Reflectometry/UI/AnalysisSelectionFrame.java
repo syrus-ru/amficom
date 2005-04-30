@@ -212,7 +212,7 @@ public class AnalysisSelectionFrame extends ATableFrame implements
 		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		updateHeapAP();
 		new AnalysisCommand().execute();
-		dispatcher.notify(new RefUpdateEvent(RefUpdateEvent.PRIMARY_TRACE,
+		dispatcher.notify(new RefUpdateEvent(Heap.PRIMARY_TRACE_KEY,
 				RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));
 		setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}
@@ -389,7 +389,7 @@ public class AnalysisSelectionFrame extends ATableFrame implements
 	public void bsHashAdded(String key, BellcoreStructure bs)
 	{
 		String id = key;
-		if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
+		if (id.equals(Heap.PRIMARY_TRACE_KEY))
 		{
 			if (bs.measurementId == null)
 				setTitle(LangModelAnalyse.getString("analysisSelectionTitle")

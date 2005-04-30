@@ -259,7 +259,7 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener
 
 	public void bsHashAdded(String key, BellcoreStructure bs)
 	{
-		if (key.equals(RefUpdateEvent.PRIMARY_TRACE))
+		if (key.equals(Heap.PRIMARY_TRACE_KEY))
 		{
 			updTableModel();
 			setVisible(true);

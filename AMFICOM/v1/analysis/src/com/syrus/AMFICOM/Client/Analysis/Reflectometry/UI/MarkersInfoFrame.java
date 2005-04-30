@@ -191,7 +191,7 @@ implements OperationListener, BsHashChangeListener
 
 	public void bsHashAdded(String key, BellcoreStructure bs)
 	{
-		if (key.equals(RefUpdateEvent.PRIMARY_TRACE))
+		if (key.equals(Heap.PRIMARY_TRACE_KEY))
 		{
 			bs = Heap.getBSPrimaryTrace();
 			sigma = MathRef.calcSigma(bs.getWavelength(), bs.getPulsewidth());

@@ -126,7 +126,7 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 			Heap.primaryTraceOpened(bs);
 			Heap.setCurrentTracePrimary();
 
-			dispatcher.notify(new RefUpdateEvent(RefUpdateEvent.PRIMARY_TRACE,
+			dispatcher.notify(new RefUpdateEvent(Heap.PRIMARY_TRACE_KEY,
 				RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));
 		}
 		Environment.getActiveWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));

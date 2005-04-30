@@ -611,7 +611,7 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener, CurrentTr
 	{
 		String id = key;
 		ApplicationModel aModel = aContext.getApplicationModel();
-		if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
+		if (id.equals(Heap.PRIMARY_TRACE_KEY))
 		{
 			aModel.setEnabled("menuFileSave", true);
 			aModel.setEnabled("menuFileSaveAll", true);
@@ -753,7 +753,7 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener, CurrentTr
 	{
 		ApplicationModel aModel = aContext.getApplicationModel();
 
-		if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
+		if (id.equals(Heap.PRIMARY_TRACE_KEY))
 		{
 			aModel.setEnabled("menuFileRemoveCompare", false);
 			aModel.setEnabled("menuTraceRemoveCompare", false);
