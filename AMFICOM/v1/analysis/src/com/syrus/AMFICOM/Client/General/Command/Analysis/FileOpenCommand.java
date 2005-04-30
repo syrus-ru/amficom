@@ -153,7 +153,7 @@ public class FileOpenCommand extends VoidCommand
 			Heap.setCurrentTracePrimary();
 			dispatcher.notify(new RefUpdateEvent(RefUpdateEvent.PRIMARY_TRACE, RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));
 
-            if (testBehaviour && Heap.getMTMEtalon() != null)
+            if (testBehaviour && Heap.getMTMEtalon() != null) // XXX: наличие необходимости такого кода (пусть даже при отладке) говорит о неправильной подписке или обработке событий
                 Heap.setMTMEtalon(Heap.getMTMEtalon());
 
 			try
