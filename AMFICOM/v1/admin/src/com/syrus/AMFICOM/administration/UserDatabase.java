@@ -1,5 +1,5 @@
 /*
- * $Id: UserDatabase.java,v 1.22 2005/04/27 17:48:50 arseniy Exp $
+ * $Id: UserDatabase.java,v 1.23 2005/04/30 14:20:24 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/04/27 17:48:50 $
+ * @version $Revision: 1.23 $, $Date: 2005/04/30 14:20:24 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -96,6 +96,21 @@ public class UserDatabase extends StorableObjectDatabase {
 							DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
 							DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)));
 		return user;
+	}
+
+	public User retrieveForLogin(String login) throws RetrieveObjectException, ObjectNotFoundException {
+		String condition = UserWrapper.COLUMN_LOGIN
+				+ EQUALS
+				+ APOSTOPHE + DatabaseString.toQuerySubString(login, SIZE_LOGIN_COLUMN) + APOSTOPHE;
+		try {
+			Set set = this.retrieveByCondition(condition);
+			if (!set.isEmpty())
+				return (User) set.iterator().next();
+			throw new ObjectNotFoundException("User for login '" + login + "' not found");
+		}
+		catch (IllegalDataException ide) {
+			throw new RetrieveObjectException(ide);
+		}
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg)
