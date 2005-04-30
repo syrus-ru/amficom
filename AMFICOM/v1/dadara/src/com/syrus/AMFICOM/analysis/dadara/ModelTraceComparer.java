@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceComparer.java,v 1.7 2005/04/30 09:12:11 saa Exp $
+ * $Id: ModelTraceComparer.java,v 1.8 2005/04/30 09:43:36 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.analysis.dadara;
 /**
  * Performs ModelTrace comparison to MTM and MinTraceLevel
  * @author $Author: saa $
- * @version $Revision: 1.7 $, $Date: 2005/04/30 09:12:11 $
+ * @version $Revision: 1.8 $, $Date: 2005/04/30 09:43:36 $
  * @module
  */
 public class ModelTraceComparer
@@ -41,7 +41,8 @@ public class ModelTraceComparer
      */
     public static ReflectogramAlarm compareEventsToMTM(ReliabilitySimpleReflectogramEvent[] events, ModelTraceManager mtm)
     {
-        ReliabilitySimpleReflectogramEvent[] etEvents = mtm.getRSE();
+        ReliabilitySimpleReflectogramEvent[] etEvents =
+            (ReliabilitySimpleReflectogramEvent[])mtm.getMTAE().getSimpleEvents();
         ReflectogramComparer rc = new ReflectogramComparer(events, etEvents);
         ReflectogramAlarm out = new ReflectogramAlarm(); // create 'no alarm' alarm
         ReflectogramAlarm cur = new ReflectogramAlarm(); // create 'no alarm' alarm
