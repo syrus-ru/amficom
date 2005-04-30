@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.46 2005/04/30 06:34:38 saa Exp $
+ * $Id: Heap.java,v 1.47 2005/04/30 07:01:10 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -64,7 +64,7 @@ import com.syrus.io.BellcoreStructure;
  * Фактически, primaryMTAE - это часть refAnalysisPrimary.
  * 
  * @author $Author: saa $
- * @version $Revision: 1.46 $, $Date: 2005/04/30 06:34:38 $
+ * @version $Revision: 1.47 $, $Date: 2005/04/30 07:01:10 $
  * @module
  */
 public class Heap
@@ -78,9 +78,9 @@ public class Heap
 
     // properties
 
-    private static AnalysisParameters minuitAnalysisParams;
-	private static AnalysisParameters minuitDefaultParams;
-	private static AnalysisParameters minuitInitialParams;
+    private static AnalysisParameters currentAP;
+	private static AnalysisParameters defaultAP;
+	private static AnalysisParameters initialAP;
 	private static HashMap bsHash = new HashMap();	// "bellcorestructure", *
 	private static RefAnalysis refAnalysisPrimary = null; // "refanalysis", PRIMARY_TRACE_KEY
 	private static MeasurementSetup contextMeasurementSetup;	// AnalysisUtil.CONTEXT, "MeasurementSetup"
@@ -213,27 +213,27 @@ public class Heap
     }
 
     public static AnalysisParameters getMinuitInitialParams() {
-        return minuitInitialParams;
+        return initialAP;
     }
 
     public static void setMinuitInitialParams(AnalysisParameters minuitInitialParams) {
-        Heap.minuitInitialParams = minuitInitialParams;
+        Heap.initialAP = minuitInitialParams;
     }
 
     public static AnalysisParameters getMinuitDefaultParams() {
-        return minuitDefaultParams;
+        return defaultAP;
     }
 
     public static void setMinuitDefaultParams(AnalysisParameters minuitDefaults) {
-        Heap.minuitDefaultParams = minuitDefaults;
+        Heap.defaultAP = minuitDefaults;
     }
 
     public static AnalysisParameters getMinuitAnalysisParams() {
-        return minuitAnalysisParams;
+        return currentAP;
     }
 
     public static void setMinuitAnalysisParams(AnalysisParameters minuitAnalysisParams) {
-        Heap.minuitAnalysisParams = minuitAnalysisParams;
+        Heap.currentAP = minuitAnalysisParams;
     }
 
     public static MeasurementSetup getContextMeasurementSetup() {
