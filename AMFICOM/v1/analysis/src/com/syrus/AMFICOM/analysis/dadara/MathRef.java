@@ -34,17 +34,6 @@ public class MathRef
 		return data;
 	}
 
-	/*
-	public static double[] getDerivative(double[] y)
-	{
-		double[] deriv = new double[y.length];
-		for(int i = 0; i < y.length - 1; i++)
-			deriv[i] = y[i+1] - y[i];
-		deriv[y.length-1] = 0.;
-		return deriv;
-	}
-	*/
-
 	public static double getLinearStartPoint (double[] y)
 	{
 		double[] res = calcLSA (y, 0, y.length - 1);
@@ -56,7 +45,7 @@ public class MathRef
 		return calcLSA(y, begin, end, 0);
 	}
 
-	public static double[] calcLSA(double[] y, int begin, int end, int shift)
+	private static double[] calcLSA(double[] y, int begin, int end, int shift)
 	{
 		double alfa=0d;
 		double beta=0d;
@@ -86,11 +75,9 @@ public class MathRef
 		return res;
 	}
 
-	public static double calcORL (double[] y, int begin, int end)
-	{
-		return calcORL (y[begin], y[end]);
-	}
+    private static final double MINF_DESIGNATION = -99; // XXX: отражение менее -99 отображаем как -99 дЅ
 
+    // значени€ менее MINF_DESIGNATION замен€ютс€ на MINF_DESIGNATION 
 	public static double calcORL (double y1, double y2)
 	{
 		if (y1 == y2)
@@ -98,7 +85,10 @@ public class MathRef
 		double s = 0.001;
 		double loss = y1 - y2;
 		double ret = (-10*Math.log(s/2d *(1d - Math.exp(-2d*0.23*Math.abs(loss))))/Math.log(10));
-		return ret; // @todo: replace values < -99 with '-inf' (?)
+        if (ret < MINF_DESIGNATION)
+            return MINF_DESIGNATION;
+        else
+            return ret;
 	}
 
 	// вычислить сигму дл€ отражени€
@@ -129,16 +119,15 @@ public class MathRef
 
 	// вычислить отражение
 	// параметры: вышеприведенна€ сигма, амплитуда отражени€ в дЅ
-	// значени€ менее -99 дЅ отображаютс€ как -99 дЅ 
+	// значени€ менее MINF_DESIGNATION замен€ютс€ на MINF_DESIGNATION 
 	public static double calcReflectance(double sigma, double peak)
 	{
-		final double MINF = -99; // XXX: отражение менее -99 отображаем как -99 дЅ 
 		if (peak <= 0)
-			return MINF;
+			return MINF_DESIGNATION;
 		double ret = (-sigma + 10.0*Math.log(Math.pow(10.0, peak/5.0) - 1)
 				/ Math.log(10));
-		if (ret < MINF)
-			return MINF;
+		if (ret < MINF_DESIGNATION)
+			return MINF_DESIGNATION;
 		return ret;
 	}
 

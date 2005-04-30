@@ -488,7 +488,7 @@ public class AnalysisPanel extends MapMarkersPanel
 		mInfo.a_b_attenuation = 1000d * (mInfo.a_b_loss) / mInfo.a_b_distance_m;
 		double lsa[] = MathRef.calcLSA(y, l, r);
 		mInfo.lsa_attenuation = -1000d * lsa[0] / deltaX;
-		mInfo.a_b_orl = MathRef.calcORL(y, l, r);
+		mInfo.a_b_orl = MathRef.calcORL(y[l], y[r]);
 		moved_here = true;
 		dispatcher.notify(new RefUpdateEvent(mInfo, RefUpdateEvent.MARKER_MOVED_EVENT));
 		moved_here = false;
