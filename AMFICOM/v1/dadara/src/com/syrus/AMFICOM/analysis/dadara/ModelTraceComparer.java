@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceComparer.java,v 1.4 2005/04/15 11:36:47 saa Exp $
+ * $Id: ModelTraceComparer.java,v 1.5 2005/04/30 07:44:20 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,11 +10,14 @@ package com.syrus.AMFICOM.analysis.dadara;
 /**
  * Performs ModelTrace comparison to MTM and MinTraceLevel
  * @author $Author: saa $
- * @version $Revision: 1.4 $, $Date: 2005/04/15 11:36:47 $
+ * @version $Revision: 1.5 $, $Date: 2005/04/30 07:44:20 $
  * @module
  */
 public class ModelTraceComparer
 {
+    private static final int ALARM_LEVEL_FOR_EVENT_CHANGE =
+        ReflectogramAlarm.LEVEL_SOFT;
+
     // @todo: extend MTAE iface to ReliabilitySimpleReflectogramEvent, then change contract of thos method from MTAEImpl to MTAE
     public static ReflectogramAlarm compareMTAEToMTM(ModelTraceAndEventsImpl mtae, ModelTraceManager mtm)
     {
@@ -43,7 +46,7 @@ public class ModelTraceComparer
         ReflectogramAlarm out = new ReflectogramAlarm(); // create 'no alarm' alarm
         ReflectogramAlarm cur = new ReflectogramAlarm(); // create 'no alarm' alarm
         cur.alarmType = ReflectogramAlarm.TYPE_EVENTLISTCHANGED;
-        cur.level = ReflectogramAlarm.LEVEL_SOFT; // XXX: default alarm level for event list change
+        cur.level = ALARM_LEVEL_FOR_EVENT_CHANGE;
         int i;
         for (i = 0; i < etEvents.length; i++)
         {
