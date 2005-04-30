@@ -1,5 +1,5 @@
 /*-
- * $Id: ModelTraceAndEventsImpl.java,v 1.5 2005/04/30 09:09:30 saa Exp $
+ * $Id: ModelTraceAndEventsImpl.java,v 1.6 2005/04/30 09:12:11 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.5 $, $Date: 2005/04/30 09:09:30 $
+ * @version $Revision: 1.6 $, $Date: 2005/04/30 09:12:11 $
  * @module
  */
 public class ModelTraceAndEventsImpl
@@ -23,7 +23,7 @@ implements ReliabilityModelTraceAndEvents, DataStreamable
 {
 	protected static final long SIGNATURE_EVENTS = 3353520050119193102L;
 
-	private ReliabilitySimpleReflectogramEventImpl[] se; // not null
+	private ReliabilitySimpleReflectogramEventImpl[] rse; // not null
 	private ModelFunction mf; // not null
 	private int traceLength;
 	private double deltaX = 1; // XXX
@@ -34,7 +34,7 @@ implements ReliabilityModelTraceAndEvents, DataStreamable
 	public ModelTraceAndEventsImpl(ReliabilitySimpleReflectogramEventImpl[] rse,
 			ModelFunction mf, double deltaX)
 	{
-		this.se = rse;
+		this.rse = rse;
 		this.mf = mf;
 		this.deltaX = deltaX;
 		this.setTraceLength(calcTraceLength());
@@ -54,9 +54,9 @@ implements ReliabilityModelTraceAndEvents, DataStreamable
      * protected because hopes that caller will not modify the array returned
      * @return internal array of reliability events.
      */
-	protected ReliabilitySimpleReflectogramEventImpl[] getSE()
+	protected ReliabilitySimpleReflectogramEventImpl[] getRSE()
 	{
-		return se;
+		return rse;
 	}
 	protected ModelFunction getMF()
 	{
@@ -69,10 +69,10 @@ implements ReliabilityModelTraceAndEvents, DataStreamable
 
 	private int calcTraceLength()
 	{
-		if (getSE().length == 0)
+		if (getRSE().length == 0)
 			return 0;
 		else
-			return getSE()[getSE().length - 1].getEnd() + 1;
+			return getRSE()[getRSE().length - 1].getEnd() + 1;
 	}
 	private void setTraceLength(int traceLength)
 	{
@@ -83,12 +83,12 @@ implements ReliabilityModelTraceAndEvents, DataStreamable
 	{
         // Copy an array and all its references to protect se array.
         // Array elements are unmodifiable, so no need to clone them.
-        return (ReliabilitySimpleReflectogramEvent[] )getSE().clone();
+        return (ReliabilitySimpleReflectogramEvent[] )getRSE().clone();
 	}
 
 	public ComplexReflectogramEvent[] getComplexEvents()
 	{
-		return ComplexReflectogramEvent.createEvents(getSE(), mt);
+		return ComplexReflectogramEvent.createEvents(getRSE(), mt);
 	}
 
 	/**
@@ -102,9 +102,9 @@ implements ReliabilityModelTraceAndEvents, DataStreamable
 	public int getEventByCoord(int x)
 	{
 		int ret = -1;
-		for (int i = 0; i < getSE().length; i++)
+		for (int i = 0; i < getRSE().length; i++)
 		{
-			if (x >= getSE()[i].getBegin() && x <= getSE()[i].getEnd())
+			if (x >= getRSE()[i].getBegin() && x <= getRSE()[i].getEnd())
 				ret = i;
 		}
 		return ret;
@@ -112,12 +112,12 @@ implements ReliabilityModelTraceAndEvents, DataStreamable
 
 	public int getNEvents()
 	{
-		return getSE().length;
+		return getRSE().length;
 	}
 
 	public SimpleReflectogramEvent getSimpleEvent(int nEvent)
 	{
-		return getSE()[nEvent];
+		return getRSE()[nEvent];
 	}
 
 	public void writeToDOS(DataOutputStream dos) throws IOException
@@ -125,9 +125,9 @@ implements ReliabilityModelTraceAndEvents, DataStreamable
 		dos.writeLong(SIGNATURE_EVENTS);
 		getMF().writeToDOS(dos);
 		dos.writeDouble(getDeltaX());
-		dos.writeInt(se.length);
-		for (int i = 0; i < se.length; i++)
-			se[i].writeToDOS(dos);
+		dos.writeInt(rse.length);
+		for (int i = 0; i < rse.length; i++)
+			rse[i].writeToDOS(dos);
 	}
 
 	public static DataStreamable.Reader getReader()
