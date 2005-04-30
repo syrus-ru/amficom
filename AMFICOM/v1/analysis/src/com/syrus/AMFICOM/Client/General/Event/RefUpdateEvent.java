@@ -1,7 +1,5 @@
 package com.syrus.AMFICOM.Client.General.Event;
 
-import com.syrus.AMFICOM.Client.Analysis.Heap;
-
 public class RefUpdateEvent extends OperationEvent
 {
 	private long flags = 0;
