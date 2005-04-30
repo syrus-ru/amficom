@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceComparer.java,v 1.9 2005/04/30 11:09:53 saa Exp $
+ * $Id: ModelTraceComparer.java,v 1.10 2005/04/30 11:15:30 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,10 +16,10 @@ package com.syrus.AMFICOM.analysis.dadara;
  * </ul>
  * and, based on all of the above,
  * <ul>
- * <li> ModelTraceAndEventsImpl to MTM
+ * <li> ReliabilityModelTraceAndEvents to MTM
  * </ul>
  * @author $Author: saa $
- * @version $Revision: 1.9 $, $Date: 2005/04/30 11:09:53 $
+ * @version $Revision: 1.10 $, $Date: 2005/04/30 11:15:30 $
  * @module
  */
 public class ModelTraceComparer
@@ -28,24 +28,27 @@ public class ModelTraceComparer
         ReflectogramAlarm.LEVEL_SOFT;
 
     public static ReflectogramAlarm compareMTAEToMTM(
-            ModelTraceAndEventsImpl mtae,
+            ReliabilityModelTraceAndEvents mtae,
             ModelTraceManager mtm)
     {
         System.out.println(
                 "ModelTraceComparer.compareToMTM: comparing mtae to mtm:");
-        ReflectogramAlarm alarmTrace = compareTraceToMTM(mtae.getModelTrace(),
+        ReflectogramAlarm alarmTrace =
+            compareTraceToMTM(mtae.getModelTrace(), mtm);
+        ReflectogramAlarm alarmEvents =
+            compareEventsToMTM(
+                (ReliabilitySimpleReflectogramEvent[])mtae.getSimpleEvents(),
                 mtm);
-        ReflectogramAlarm alarmEvents = compareEventsToMTM(mtae.getRSE(), mtm);
         System.out.println(
-                "ModelTraceComparer.compareToMTM: alarmTrace: " + alarmTrace);
+                "ModelTraceComparer.compareToMTM: trace alarm: " + alarmTrace);
         System.out.println(
-                "ModelTraceComparer.compareToMTM: alarmTrace: " + alarmEvents);
+                "ModelTraceComparer.compareToMTM: event alarm: " + alarmEvents);
         if (alarmTrace != null)
-            return
-            alarmTrace;
+            return alarmTrace;
         else
             return alarmEvents;
     }
+
     /**
      * Сравнивает события ReliabilitySimpleReflectogramEvent[] с эталоном.
      * @param events сравниваемый список событий
