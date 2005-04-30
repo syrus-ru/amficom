@@ -1,5 +1,5 @@
 /*
- * $Id: DadaraAnalysisManager.java,v 1.32 2005/04/26 17:51:48 saa Exp $
+ * $Id: DadaraAnalysisManager.java,v 1.33 2005/04/30 13:22:45 saa Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.mcm;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/04/26 17:51:48 $
+ * @version $Revision: 1.33 $, $Date: 2005/04/30 13:22:45 $
  * @author $Author: saa $
  * @module mcm_v1
  */
@@ -24,6 +24,7 @@ import java.util.Map;
 
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
+import com.syrus.AMFICOM.analysis.dadara.DataFormatException;
 import com.syrus.AMFICOM.analysis.dadara.DataStreamableUtil;
 import com.syrus.AMFICOM.analysis.dadara.ModelFunction;
 import com.syrus.AMFICOM.analysis.dadara.ModelTrace;
@@ -114,9 +115,13 @@ public class DadaraAnalysisManager implements AnalysisManager
 	{
 		// read etalon r/g and its thresholds
 		byte[] etalonData = getParameter(CODENAME_DADARA_ETALON_MTM);
-		ModelTraceManager mtm = (ModelTraceManager)DataStreamableUtil.
-			readDataStreamableFromBA(etalonData, ModelTraceManager.getReader());
-		return mtm;
+        try {
+            return (ModelTraceManager) DataStreamableUtil
+                    .readDataStreamableFromBA(etalonData, ModelTraceManager
+                            .getReader());
+        } catch (DataFormatException e) {
+            throw new AnalysisException("DataFormatException: " + e.toString());
+        }
 	}
 
 	// may return null if no such parameter
@@ -126,8 +131,12 @@ public class DadaraAnalysisManager implements AnalysisManager
 		if (!hasParameter(CODENAME_DADARA_CRITERIA))
 			return null;
 		byte[] bar = getParameter(CODENAME_DADARA_CRITERIA);
-		return (AnalysisParameters)DataStreamableUtil.
-			readDataStreamableFromBA(bar, AnalysisParameters.getReader());
+        try {
+            return (AnalysisParameters)DataStreamableUtil.
+                readDataStreamableFromBA(bar, AnalysisParameters.getReader());
+        } catch (DataFormatException e) {
+            throw new AnalysisException("DataFormatException: " + e.toString());
+        }
 	}
 
 	public SetParameter[] analyse() throws AnalysisException
