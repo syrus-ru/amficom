@@ -109,7 +109,7 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener,
 		this.jTable.revalidate();
 		this.jTable.repaint();
         
-        // FIXME: development-time console code
+        // FIXME: debug: development-time console code
         ModelTraceComparer.compareMTAEToMTM(Heap.getMTAEPrimary(), Heap.getMTMEtalon()); // XXX: will crush if no etalon will be at this moment
 	}
 

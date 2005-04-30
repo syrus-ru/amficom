@@ -116,14 +116,14 @@ public class SaveTestSetupCommand extends VoidCommand
 		}
 		catch (CreateObjectException e)
 		{
-			// FIXME: CreateObjectException
+			// FIXME: exceptions: CreateObjectException
 			System.err.println("CreateTestSetupCommand: CreateObjectException.");
 			e.printStackTrace();
 			return false;
 		}
 		catch(IllegalObjectEntityException e)
 		{
-			// FIXME: IllegalObjectEntityException
+			// FIXME: exceptions: IllegalObjectEntityException
 			System.err.println("CreateTestSetupCommand: IllegalObjectEntityException.");
 			e.printStackTrace();
 			return false;
@@ -137,10 +137,10 @@ public class SaveTestSetupCommand extends VoidCommand
 			MeasurementStorableObjectPool.flush(true);
 		}
 		catch(VersionCollisionException ex)
-		{ // FIXME: process exception
+		{ // FIXME: exceptions: process exception
 		}
 		catch(ApplicationException ex)
-		{ // FIXME: process exception
+		{ // FIXME: exceptions: process exception
 		}
 
 		return true;

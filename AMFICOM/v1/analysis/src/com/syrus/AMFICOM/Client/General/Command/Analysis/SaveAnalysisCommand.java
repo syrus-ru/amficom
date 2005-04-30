@@ -78,7 +78,7 @@ public class SaveAnalysisCommand extends VoidCommand
 			ptype1 = AnalysisUtil.getParameterType(ParameterTypeCodenames.TRACE_EVENTS, DataType.DATA_TYPE_RAW);
 			ptype2 = AnalysisUtil.getParameterType(ParameterTypeCodenames.DADARA_MTAE, DataType.DATA_TYPE_RAW);
 		} catch (ApplicationException e) {
-			// FIXME: add a better error processing
+			// FIXME: exceptions: add a better error processing
 			System.err.println("SaveAnalysisCommand: Application exception while getAnalysisType");
 			e.printStackTrace();
 			return;
@@ -96,7 +96,7 @@ public class SaveAnalysisCommand extends VoidCommand
 		} catch (CreateObjectException e1) {
 			JOptionPane.showMessageDialog(
 				Environment.getActiveWindow(),
-				LangModelAnalyse.getString("createObjectProblem"), // FIXME: add this string
+				LangModelAnalyse.getString("createObjectProblem"),
 				LangModelAnalyse.getString("error"), JOptionPane.OK_OPTION);
 			return;
 		}

@@ -38,7 +38,7 @@ public class CreateTestSetupCommand extends VoidCommand
 		}
 
 		if (Heap.getContextMeasurementSetup() == null) {
-			// FIXME: вывести сообщение, что-де нет исходного шаблона; а сообщение по bs.monitoredElementId == null, наверное, можно и не выводить(?)
+			// FIXME: exceptions: вывести сообщение, что-де нет исходного шаблона; а сообщение по bs.monitoredElementId == null, наверное, можно и не выводить(?)
 			System.err.println("no testSetup");
 			return null;
 		}

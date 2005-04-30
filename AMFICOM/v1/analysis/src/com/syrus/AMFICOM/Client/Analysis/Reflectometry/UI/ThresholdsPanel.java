@@ -263,7 +263,7 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 			     : AnalysisResourceKeys.COLOR_WARNING_THRESHOLD));
 			// Note: нет draw_joint_of_two_model_curves
 			ModelTrace thresholdMT = etalon.getThresholdMT(key);
-			// FIXME: debug code
+			// Определяем диапазон отрисовки
 			SimpleReflectogramEvent sre = null;
 			if (nEvent >= 0)
 			{

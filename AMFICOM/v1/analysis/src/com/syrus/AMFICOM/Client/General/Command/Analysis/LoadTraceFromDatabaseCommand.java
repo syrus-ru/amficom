@@ -92,7 +92,7 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 				bs = new BellcoreReader().getData(param.getValue());
 		}
 		if (bs == null)
-			return; // FIXME: выдавать собщение об ошибке
+			return; // FIXME: exceptions/error handling: выдавать собщение об ошибке
 
 		if (!Heap.hasEmptyAllBSMap())
 		{

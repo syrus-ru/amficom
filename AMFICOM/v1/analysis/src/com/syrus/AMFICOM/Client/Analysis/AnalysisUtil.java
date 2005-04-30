@@ -166,7 +166,7 @@ public class AnalysisUtil
 		}
 		catch (CreateObjectException e)
 		{
-			// FIXME
+			// FIXME: exceptions: process CreateObjectException
 			System.err.println("AnalysisUtil.createCriteriaSetFromParams: CreateObjectException...");
 			e.printStackTrace();
 		}
@@ -184,7 +184,7 @@ public class AnalysisUtil
 		}
 		catch (CreateObjectException e)
 		{
-			// FIXME
+			// FIXME: exceptions: process CreateObjectException
 			System.err.println("AnalysisUtil.createCriteriaSetFromParams: CreateObjectException -- wanna die.");
 			e.printStackTrace();
 			return null;
@@ -217,7 +217,7 @@ public class AnalysisUtil
 		}
 		catch (CreateObjectException e)
 		{
-			// FIXME
+			// FIXME: exceptions: process CreateObjectException
 			System.err.println("AnalysisUtil.createEtalon: CreateObjectException -- wanna die.");
 		e.printStackTrace();
 		return null;
