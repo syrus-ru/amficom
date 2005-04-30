@@ -107,6 +107,7 @@ public class ReflectogramMath
 	    return ret;
 	}
 /*
+// XXX: alignment: some old code
   // ?: the same thing is made inside ReflectogramComparer.doIt()... //saa
 	public static void align(ReflectogramEvent[] y, ReflectogramEvent[] etalon)
 	{
@@ -129,7 +130,6 @@ public class ReflectogramMath
 			}
 	}
 
-	// XXX: unused?
 	public static void align(double[] y, ReflectogramEvent[] etalon)
 	{
 		double maxData = 0;
