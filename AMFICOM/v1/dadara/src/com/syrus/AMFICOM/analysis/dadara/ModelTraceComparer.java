@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceComparer.java,v 1.8 2005/04/30 09:43:36 saa Exp $
+ * $Id: ModelTraceComparer.java,v 1.9 2005/04/30 11:09:53 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,9 +8,18 @@
 package com.syrus.AMFICOM.analysis.dadara;
 
 /**
- * Performs ModelTrace comparison to MTM and MinTraceLevel
+ * Performs comparison:
+ * <ul>
+ * <li> ModelTrace to MTM
+ * <li> ModelTrace to MinTraceLevel
+ * <li> ReliabilitySimpleReflectogramEvent[] to MTM 
+ * </ul>
+ * and, based on all of the above,
+ * <ul>
+ * <li> ModelTraceAndEventsImpl to MTM
+ * </ul>
  * @author $Author: saa $
- * @version $Revision: 1.8 $, $Date: 2005/04/30 09:43:36 $
+ * @version $Revision: 1.9 $, $Date: 2005/04/30 11:09:53 $
  * @module
  */
 public class ModelTraceComparer
@@ -18,14 +27,19 @@ public class ModelTraceComparer
     private static final int ALARM_LEVEL_FOR_EVENT_CHANGE =
         ReflectogramAlarm.LEVEL_SOFT;
 
-    // @todo: extend MTAE iface to ReliabilitySimpleReflectogramEvent, then change contract of thos method from MTAEImpl to MTAE
-    public static ReflectogramAlarm compareMTAEToMTM(ModelTraceAndEventsImpl mtae, ModelTraceManager mtm)
+    public static ReflectogramAlarm compareMTAEToMTM(
+            ModelTraceAndEventsImpl mtae,
+            ModelTraceManager mtm)
     {
-        System.out.println("ModelTraceComparer.compareToMTM: comparing mtae to mtm:");
-        ReflectogramAlarm alarmTrace = compareTraceToMTM(mtae.getModelTrace(), mtm);
+        System.out.println(
+                "ModelTraceComparer.compareToMTM: comparing mtae to mtm:");
+        ReflectogramAlarm alarmTrace = compareTraceToMTM(mtae.getModelTrace(),
+                mtm);
         ReflectogramAlarm alarmEvents = compareEventsToMTM(mtae.getRSE(), mtm);
-        System.out.println("ModelTraceComparer.compareToMTM: alarmTrace: " + alarmTrace);
-        System.out.println("ModelTraceComparer.compareToMTM: alarmTrace: " + alarmEvents);
+        System.out.println(
+                "ModelTraceComparer.compareToMTM: alarmTrace: " + alarmTrace);
+        System.out.println(
+                "ModelTraceComparer.compareToMTM: alarmTrace: " + alarmEvents);
         if (alarmTrace != null)
             return
             alarmTrace;
@@ -36,16 +50,18 @@ public class ModelTraceComparer
      * Сравнивает события ReliabilitySimpleReflectogramEvent[] с эталоном.
      * @param events сравниваемый список событий
      * @param mtm эталон
-     * @return soft type ReflectogramAlarm, если найдены значимые отличия в списке событий,
-     * либо null, если значимых различий не найдено.
+     * @return soft type ReflectogramAlarm, если найдены значимые
+     * отличия в списке событий, либо null, если значимых различий не найдено.
      */
-    public static ReflectogramAlarm compareEventsToMTM(ReliabilitySimpleReflectogramEvent[] events, ModelTraceManager mtm)
+    public static ReflectogramAlarm compareEventsToMTM(
+            ReliabilitySimpleReflectogramEvent[] events,
+            ModelTraceManager mtm)
     {
         ReliabilitySimpleReflectogramEvent[] etEvents =
             (ReliabilitySimpleReflectogramEvent[])mtm.getMTAE().getSimpleEvents();
         ReflectogramComparer rc = new ReflectogramComparer(events, etEvents);
-        ReflectogramAlarm out = new ReflectogramAlarm(); // create 'no alarm' alarm
-        ReflectogramAlarm cur = new ReflectogramAlarm(); // create 'no alarm' alarm
+        ReflectogramAlarm out = new ReflectogramAlarm();
+        ReflectogramAlarm cur = new ReflectogramAlarm();
         cur.alarmType = ReflectogramAlarm.TYPE_EVENTLISTCHANGED;
         cur.level = ALARM_LEVEL_FOR_EVENT_CHANGE;
         int i;
@@ -55,7 +71,9 @@ public class ModelTraceComparer
             {
                 cur.pointCoord = etEvents[i].getBegin();
                 cur.endPointCoord = etEvents[i].getEnd();
-                System.out.println("MTC: compareEventsToMTM: etalon event #" + i + " ( " + cur.pointCoord + " .. " + cur.endPointCoord + ") is reliably lost");
+                System.out.println("MTC: compareEventsToMTM: etalon event #"
+                        + i + " ( " + cur.pointCoord + " .. "
+                        + cur.endPointCoord + ") is reliably lost");
                 out.toHardest(cur);
             }
         }
@@ -65,7 +83,9 @@ public class ModelTraceComparer
             {
                 cur.pointCoord = events[i].getBegin();
                 cur.endPointCoord = events[i].getEnd();
-                System.out.println("MTC: compareEventsToMTM: probe event #" + i + " ( " + cur.pointCoord + " .. " + cur.endPointCoord + ") is reliably new");
+                System.out.println("MTC: compareEventsToMTM: probe event #"
+                        + i + " ( " + cur.pointCoord + " .. "
+                        + cur.endPointCoord + ") is reliably new");
                 out.toHardest(cur);
             }
         }
@@ -74,9 +94,11 @@ public class ModelTraceComparer
             : null;
     }
 
-    public static ReflectogramAlarm compareTraceToMTM(ModelTrace mt, ModelTraceManager mtm)
+    public static ReflectogramAlarm compareTraceToMTM(ModelTrace mt,
+            ModelTraceManager mtm)
 	{
-		ReflectogramAlarm alarm = new ReflectogramAlarm(); // create 'no alarm' alarm
+        // create initial 'no alarm' alarm
+		ReflectogramAlarm alarm = new ReflectogramAlarm();
 		double[] y = mt.getYArray();
 		for (int key = 0; key < 4; key++)
 		{
