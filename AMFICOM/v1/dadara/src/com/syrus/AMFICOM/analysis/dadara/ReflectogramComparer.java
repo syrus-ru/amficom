@@ -24,7 +24,7 @@ package com.syrus.AMFICOM.analysis.dadara;
  * по ModelTrace - MaxDeviation и пр.
  * 
  * @author $Author: saa $
- * @version $Revision: 1.17 $, $Date: 2005/04/30 11:20:55 $
+ * @version $Revision: 1.18 $, $Date: 2005/04/30 11:22:16 $
  * @module analysis_v1
  */
 public class ReflectogramComparer
@@ -65,22 +65,6 @@ public class ReflectogramComparer
 			)
 	{
 		probeEvents = _probeEvents;
-
-		// ‘ормируем эталон с заданными порогами.
-		// XXX: ѕорогов пока нет.  огда по€в€тс€ - вспомнить что тут есть такое ветвление.
-		// Ѕыть может, лучше сделать два конструктора - один - €вно с evaluation, другой - €вно без него.
-		/*
-		if (etalonThresholds != null)
-		{
-			etalonEvents = new ComplexReflectogramEvent[_etalonEvents.length];
-	        for (int i = 0; i < _etalonEvents.length; i++)
-	        {
-	            etalonEvents[i] = _etalonEvents[i].copy();
-	            etalonEvents[i].setThreshold(etalonThresholds[i]);
-	        }
-		}
-		else
-		*/
 		etalonEvents = _etalonEvents;
 
 		// начальный анализ - ищем соответствие событий эталона и пробы
