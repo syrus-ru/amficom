@@ -12,9 +12,7 @@ import javax.swing.UIManager;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.CurrentEventChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
+import com.syrus.AMFICOM.Client.General.Event.PrimaryRefAnalysisListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
@@ -22,7 +20,8 @@ import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEvents;
 
 public class AnalysisLayeredPanel
 extends TraceEventsLayeredPanel
-implements OperationListener, CurrentEventChangeListener
+implements CurrentEventChangeListener,
+    PrimaryRefAnalysisListener
 {
 	public static final long LOSS_ANALYSIS = 0x00000001;
 	public static final long REFLECTION_ANALYSIS = 0x00000010;
@@ -32,37 +31,12 @@ implements OperationListener, CurrentEventChangeListener
 	{
 		super(dispatcher);
 		Heap.addCurrentEventChangeListener(this);
+        Heap.addPrimaryRefAnalysisListener(this);
 	}
 
 	protected ToolBarPanel createToolBar()
 	{
 		return new AnalysisToolBar(this);
-	}
-
-	public void operationPerformed(OperationEvent ae)
-	{
-		if(ae.getActionCommand().equals(RefUpdateEvent.typ))
-		{
-			RefUpdateEvent rue = (RefUpdateEvent)ae;
-
-			for(int i=0; i<jLayeredPane.getComponentCount(); i++)
-			{
-				SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
-				if (panel instanceof AnalysisPanel)
-				{
-					if(rue.analysisPerformed())
-					{
-						((AnalysisPanel)panel).updEvents(Heap.PRIMARY_TRACE_KEY);
-
-						ModelTraceAndEvents mtae = Heap.getMTAEPrimary();
-						((AnalysisPanel)panel).updateTrace(mtae); // FIXME: нужно UpdateMTM или UpdateTrace?
-						((AnalysisPanel)panel).updMarkers();
-						jLayeredPane.repaint();
-					}
-				}
-			}
-		}
-		super.operationPerformed(ae);
 	}
 
 	public void updMarkers()
@@ -148,6 +122,27 @@ implements OperationListener, CurrentEventChangeListener
 			}
 		}
 	}
+
+    public void primaryRefAnalysisCUpdated() {
+        for(int i=0; i<jLayeredPane.getComponentCount(); i++)
+        {
+            SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
+            if (panel instanceof AnalysisPanel)
+            {
+                {
+                    ((AnalysisPanel)panel).updEvents(Heap.PRIMARY_TRACE_KEY);
+                    ModelTraceAndEvents mtae = Heap.getMTAEPrimary();
+                    ((AnalysisPanel)panel).updateTrace(mtae);
+                    ((AnalysisPanel)panel).updMarkers();
+                    jLayeredPane.repaint();
+                }
+            }
+        }
+    }
+
+    public void primaryRefAnalysisRemoved() {
+        // @todo Auto-generated method stub
+    }
 }
 
 class AnalysisToolBar extends TraceEventsToolBar

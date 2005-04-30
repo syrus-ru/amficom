@@ -89,7 +89,6 @@ public class FileOpenAsWavetekCommand extends VoidCommand
 			new AnalysisCommand().execute();
 			Heap.primaryTraceOpened(bs);
 			Heap.setCurrentTracePrimary();
-			dispatcher.notify(new RefUpdateEvent(Heap.PRIMARY_TRACE_KEY, RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));
 
 			try
 			{

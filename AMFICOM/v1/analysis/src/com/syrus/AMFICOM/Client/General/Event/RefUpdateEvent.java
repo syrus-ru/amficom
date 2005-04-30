@@ -11,15 +11,12 @@ public class RefUpdateEvent extends OperationEvent
 	
 	public boolean markerMoved()
 	    { return (flags & MARKER_MOVED_EVENT) != 0; }
-	public boolean analysisPerformed()
-		{ return (flags & ANALYSIS_PERFORMED_EVENT) != 0; }
 	public boolean thresholdChanged()
 	    {return (flags & THRESHOLD_CHANGED_EVENT) != 0; }
 	public boolean minTraceLevelChanged()
 	    { return (flags & MIN_TRACE_LEVEL_CHANGED_EVENT) != 0; }
 
 	public static final long MARKER_MOVED_EVENT 			= 0x00000001;
-	public static final long ANALYSIS_PERFORMED_EVENT 		= 0x00000100; // source is always and is always assumed to be Heap.PRIMARY_TRACE
 	public static final long THRESHOLD_CHANGED_EVENT 		= 0x00100000;
 	public static final long MIN_TRACE_LEVEL_CHANGED_EVENT 	= 0x01000000;
 

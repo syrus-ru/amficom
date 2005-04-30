@@ -5,7 +5,8 @@ import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 
-public class TraceEventsLayeredPanel extends ScalableLayeredPanel implements OperationListener
+public class TraceEventsLayeredPanel extends ScalableLayeredPanel
+implements OperationListener
 {
 	public TraceEventsLayeredPanel(Dispatcher dispatcher)
 	{
@@ -53,10 +54,6 @@ public class TraceEventsLayeredPanel extends ScalableLayeredPanel implements Ope
 						jLayeredPane.repaint();
 					}
 				}
-			}
-			if (rue.analysisPerformed())
-			{
-			    updPaintingMode();
 			}
 		}
 	}

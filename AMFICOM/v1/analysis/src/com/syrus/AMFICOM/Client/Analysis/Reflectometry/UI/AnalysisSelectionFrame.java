@@ -212,8 +212,6 @@ public class AnalysisSelectionFrame extends ATableFrame implements
 		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		updateHeapAP();
 		new AnalysisCommand().execute();
-		dispatcher.notify(new RefUpdateEvent(Heap.PRIMARY_TRACE_KEY,
-				RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));
 		setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}
 

@@ -149,9 +149,7 @@ public class FileOpenCommand extends VoidCommand
 			Environment.getActiveWindow().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 			new AnalysisCommand().execute();
 			Heap.primaryTraceOpened(bs);
-
 			Heap.setCurrentTracePrimary();
-			dispatcher.notify(new RefUpdateEvent(Heap.PRIMARY_TRACE_KEY, RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));
 
             if (testBehaviour && Heap.getMTMEtalon() != null) // XXX: наличие необходимости такого кода (пусть даже при отладке) говорит о неправильной подписке или обработке событий
                 Heap.setMTMEtalon(Heap.getMTMEtalon());

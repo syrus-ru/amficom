@@ -69,6 +69,7 @@ import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryMTAEListener;
+import com.syrus.AMFICOM.Client.General.Event.PrimaryRefAnalysisListener;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryTraceListener;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
@@ -90,7 +91,7 @@ import com.syrus.io.BellcoreStructure;
 import com.syrus.util.Log;
 
 public class AnalyseMainFrame extends JFrame implements BsHashChangeListener,
-		PrimaryTraceListener, PrimaryMTAEListener, OperationListener,
+		PrimaryTraceListener, PrimaryRefAnalysisListener, OperationListener,
 		EtalonMTMListener, CurrentTraceChangeListener
 {
 	public ApplicationContext aContext;
@@ -428,10 +429,9 @@ public class AnalyseMainFrame extends JFrame implements BsHashChangeListener,
 		statusBar.organize();
 
 		aContext.setDispatcher(internalDispatcher);
-		internalDispatcher.register(this, RefUpdateEvent.typ);
 		internalDispatcher.register(this, "contextchange");
 		Heap.addBsHashListener(this);
-		Heap.addPrimaryMTMListener(this);
+		Heap.addPrimaryRefAnalysisListener(this);
 		Heap.addPrimaryTraceListener(this);
 		Heap.addEtalonMTMListener(this);
 		Heap.addCurrentTraceChangeListener(this);
@@ -709,14 +709,8 @@ public class AnalyseMainFrame extends JFrame implements BsHashChangeListener,
 			if (cce.DOMAIN_SELECTED) {
 				setDomainSelected();
 			}
-		} else if (actionCommand.equals(RefUpdateEvent.typ)) {
-			RefUpdateEvent rue = (RefUpdateEvent) ae;
-
-			if (rue.analysisPerformed()) {
-				updFrames();
-			}
 		}
-	}
+    }
 
 	public void setConnectionOpened()
 	{
@@ -1036,26 +1030,14 @@ public class AnalyseMainFrame extends JFrame implements BsHashChangeListener,
 	{
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.syrus.AMFICOM.Client.General.Event.PrimaryMTMListener#primaryMTMCUpdated()
-	 */
-	public void primaryMTMCUpdated()
+	public void primaryRefAnalysisCUpdated()
 	{
-		// @todo Auto-generated method stub
-
+        updFrames();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.syrus.AMFICOM.Client.General.Event.PrimaryMTMListener#primaryMTMRemoved()
-	 */
-	public void primaryMTMRemoved()
+	public void primaryRefAnalysisRemoved()
 	{
-		// @todo Auto-generated method stub
-
+        updFrames();
 	}
 
 	public void etalonMTMCUpdated()
