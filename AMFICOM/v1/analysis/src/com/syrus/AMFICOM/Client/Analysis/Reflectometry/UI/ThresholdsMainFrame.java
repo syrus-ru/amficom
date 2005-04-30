@@ -268,7 +268,7 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener, CurrentTr
 		aModel.setCommand("menuTraceAddCompare", new AddTraceFromDatabaseCommand(aContext));
 		aModel.setCommand("menuTraceRemoveCompare", new FileRemoveCommand(null, aContext));
 		aModel.setCommand("menuTraceClose", new FileCloseCommand(aContext));
-		aModel.setCommand("menuTraceCloseEtalon", new RemoveEtalonCommand(aContext));
+		aModel.setCommand("menuTraceCloseEtalon", new RemoveEtalonCommand());
 		aModel.setCommand("menuTraceReferenceSet", new TraceOpenReferenceCommand(aContext));
 		aModel.setCommand("menuTraceReferenceMakeCurrent", new TraceMakeCurrentCommand(aContext));
 		aModel.setCommand("menuOptionsColor", new OptionsSetColorsCommand(aContext));
