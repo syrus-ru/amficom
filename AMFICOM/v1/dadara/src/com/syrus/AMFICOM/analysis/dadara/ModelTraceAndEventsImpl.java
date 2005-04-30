@@ -1,5 +1,5 @@
 /*-
- * $Id: ModelTraceAndEventsImpl.java,v 1.4 2005/04/28 16:48:48 saa Exp $
+ * $Id: ModelTraceAndEventsImpl.java,v 1.5 2005/04/30 09:09:30 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,11 +15,11 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.4 $, $Date: 2005/04/28 16:48:48 $
+ * @version $Revision: 1.5 $, $Date: 2005/04/30 09:09:30 $
  * @module
  */
 public class ModelTraceAndEventsImpl
-implements ModelTraceAndEvents, DataStreamable
+implements ReliabilityModelTraceAndEvents, DataStreamable
 {
 	protected static final long SIGNATURE_EVENTS = 3353520050119193102L;
 
@@ -31,10 +31,10 @@ implements ModelTraceAndEvents, DataStreamable
 
 	private static DataStreamable.Reader dsReader = null; // DIS reader singleton-style object
 
-	public ModelTraceAndEventsImpl(ReliabilitySimpleReflectogramEventImpl[] se,
+	public ModelTraceAndEventsImpl(ReliabilitySimpleReflectogramEventImpl[] rse,
 			ModelFunction mf, double deltaX)
 	{
-		this.se = se;
+		this.se = rse;
 		this.mf = mf;
 		this.deltaX = deltaX;
 		this.setTraceLength(calcTraceLength());
@@ -50,6 +50,10 @@ implements ModelTraceAndEvents, DataStreamable
 		return mt;
 	}
 
+    /**
+     * protected because hopes that caller will not modify the array returned
+     * @return internal array of reliability events.
+     */
 	protected ReliabilitySimpleReflectogramEventImpl[] getSE()
 	{
 		return se;
@@ -77,9 +81,9 @@ implements ModelTraceAndEvents, DataStreamable
 
 	public SimpleReflectogramEvent[] getSimpleEvents()
 	{
-		// Copy an array and all its references to protect se array.
-		// Array elements are unmodifiable, so no need to clone them.
-		return (SimpleReflectogramEvent[] )getSE().clone();
+        // Copy an array and all its references to protect se array.
+        // Array elements are unmodifiable, so no need to clone them.
+        return (ReliabilitySimpleReflectogramEvent[] )getSE().clone();
 	}
 
 	public ComplexReflectogramEvent[] getComplexEvents()
