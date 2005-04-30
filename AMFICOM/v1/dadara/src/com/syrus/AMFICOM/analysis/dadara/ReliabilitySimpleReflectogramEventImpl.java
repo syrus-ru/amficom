@@ -1,5 +1,5 @@
 /*-
- * $Id: ReliabilitySimpleReflectogramEventImpl.java,v 1.2 2005/04/14 16:01:28 saa Exp $
+ * $Id: ReliabilitySimpleReflectogramEventImpl.java,v 1.3 2005/04/30 07:56:05 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,12 +14,12 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.2 $, $Date: 2005/04/14 16:01:28 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/30 07:56:05 $
  * @module
  */
 public class ReliabilitySimpleReflectogramEventImpl
 extends SimpleReflectogramEventImpl
-implements ReliabilitySimpleReflectogramEvents {
+implements ReliabilitySimpleReflectogramEvent {
 
     double reliability;
 

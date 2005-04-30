@@ -1,5 +1,5 @@
 /*-
- * $Id: ReliabilitySimpleReflectogramEvents.java,v 1.2 2005/04/15 11:34:06 saa Exp $
+ * $Id: ReliabilitySimpleReflectogramEvent.java,v 1.1 2005/04/30 07:56:05 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,16 +9,15 @@
 package com.syrus.AMFICOM.analysis.dadara;
 
 /**
- * @todo: rename to ReliabilitySimpleReflectogramEvent
  * Дополняет SimpleReflectogramEvent параметром достоверности.
  * Как правило, событием становятся только те, которые уже
  * превысили порог значимости. Для таких событий нужен параметр,
  * указывающий достоверность этого превышения порога значимости.
  * @author $Author: saa $
- * @version $Revision: 1.2 $, $Date: 2005/04/15 11:34:06 $
+ * @version $Revision: 1.1 $, $Date: 2005/04/30 07:56:05 $
  * @module
  */
-public interface ReliabilitySimpleReflectogramEvents
+public interface ReliabilitySimpleReflectogramEvent
 extends SimpleReflectogramEvent {
     /**
      * порог достоверности события

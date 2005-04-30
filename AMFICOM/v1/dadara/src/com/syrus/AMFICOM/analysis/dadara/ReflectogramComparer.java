@@ -27,7 +27,7 @@ package com.syrus.AMFICOM.analysis.dadara;
  * по ModelTrace - MaxDeviation и пр.
  * 
  * @author $Author: saa $
- * @version $Revision: 1.13 $, $Date: 2005/04/28 10:12:40 $
+ * @version $Revision: 1.14 $, $Date: 2005/04/30 07:56:05 $
  * @module analysis_v1
  */
 public class ReflectogramComparer
@@ -266,9 +266,9 @@ public class ReflectogramComparer
 			int bestJ = -1;
             // значимые нелин. события - потенциальные кандидаты в новые/потерянные
             boolean reliablyNewOrLost = X[i].getEventType() != SimpleReflectogramEvent.LINEAR
-                && (X[i] instanceof ReliabilitySimpleReflectogramEvents)
-                && ((ReliabilitySimpleReflectogramEvents)X[i]).hasReliability()
-                && ((ReliabilitySimpleReflectogramEvents)X[i]).getReliability() > ReliabilitySimpleReflectogramEvents.RELIABLE; 
+                && (X[i] instanceof ReliabilitySimpleReflectogramEvent)
+                && ((ReliabilitySimpleReflectogramEvent)X[i]).hasReliability()
+                && ((ReliabilitySimpleReflectogramEvent)X[i]).getReliability() > ReliabilitySimpleReflectogramEvent.RELIABLE; 
 			for (int j = 0; j < Y.length; j++)
 			{
 				if (eventsOverlaps(X[i], Y[j]))
