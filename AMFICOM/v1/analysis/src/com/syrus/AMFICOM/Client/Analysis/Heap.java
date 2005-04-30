@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.48 2005/04/30 07:36:32 saa Exp $
+ * $Id: Heap.java,v 1.49 2005/04/30 09:47:14 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -65,7 +65,7 @@ import com.syrus.io.BellcoreStructure;
  * Фактически, primaryMTAE - это часть refAnalysisPrimary.
  * 
  * @author $Author: saa $
- * @version $Revision: 1.48 $, $Date: 2005/04/30 07:36:32 $
+ * @version $Revision: 1.49 $, $Date: 2005/04/30 09:47:14 $
  * @module
  */
 public class Heap
@@ -172,8 +172,8 @@ public class Heap
     	// reliability comparison is actually performed
     	// @todo: ModelTraceAndEventsImpl: add getReliabilitySimpleEvents()
     	ReflectogramComparer rcomp = new ReflectogramComparer(
-                getMTAEPrimary().getSimpleEvents(),
-                etalonMTM.getRSE());
+                getMTAEPrimary(),
+                etalonMTM.getMTAE());
     	return rcomp.getEtalonIdByProbeId(currentEv);
     }
 
@@ -496,8 +496,8 @@ public class Heap
     	}
     	else {
         	ReflectogramComparer rcomp = new ReflectogramComparer(
-                    getMTAEPrimary().getSimpleEvents(),
-        		etalonMTM.getRSE());
+        	        getMTAEPrimary(),
+        	        etalonMTM.getMTAE());
         	setCurrentEvent(rcomp.getProbeIdByEtalonId(nEtEvent));
     	}
     }
