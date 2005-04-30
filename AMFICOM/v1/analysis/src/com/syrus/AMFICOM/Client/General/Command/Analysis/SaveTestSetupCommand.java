@@ -177,7 +177,7 @@ public class SaveTestSetupCommand extends VoidCommand
 		if (name == null)
 		{
 			System.err.println("no name for creating new TestSetup");
-			// @todo: process newMSName == null -- saa
+			// FIXME: exceptions/error handling: process newMSName == null -- saa
 			return;
 		}
 

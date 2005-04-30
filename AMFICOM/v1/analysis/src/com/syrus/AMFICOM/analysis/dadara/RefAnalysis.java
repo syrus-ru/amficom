@@ -70,8 +70,6 @@ public class RefAnalysis
         double asympE = re[i].getAsympY1();
 
         if (type == TraceEvent.LINEAR) {
-            // TODO: использовать mloss вместо asympB,asympE,
-            // т.к. (нынешние) asympB,asympE зависят от смежных участков.
             double[] data = new double[5];
             data[0] = top - asympB;
             data[1] = top - asympE;
@@ -87,7 +85,7 @@ public class RefAnalysis
             data[0] = top - asympB;
             data[1] = top - asympE;
             data[2] = data[0]
-                    - re[i].getALet(); // XXX
+                    - re[i].getALet();
             data[3] = 0; // FIXIT: больше не используется, убрать
             event.setLoss(re[i].getMLoss());
             event.setData(data);
@@ -102,7 +100,7 @@ public class RefAnalysis
             double[] data = new double[3];
             data[0] = top - asympB;
             data[1] = data[0]
-                    - re[i].getALet(); // XXX
+                    - re[i].getALet();
             data[2] = 0; // FIXME: больше не используется, убрать
             event.setLoss(0);
             event.setData(data);
@@ -165,7 +163,7 @@ public class RefAnalysis
 		double top = maxY - minY;
 
 		int lastPoint = re.length > 0
-			? re[re.length - 1].getBegin() // getBegin: changed acc. to Stas-2004-10 (was: getEnd)
+			? re[re.length - 1].getBegin()
 			: 0;
 
 		int veryLastPoint = re.length > 0

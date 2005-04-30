@@ -333,7 +333,7 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener, CurrentTr
 		aModel.setEnabled("menuReport", true);
 		aModel.setEnabled("menuWindow", true);
 
-		aModel.setEnabled("menuFileOpen", AnalyseMainFrameSimplified.DEBUG); // XXX: saa: security bypass
+		aModel.setEnabled("menuFileOpen", AnalyseMainFrameSimplified.DEBUG);
 
 		aModel.setVisible("menuAnalyseUpload", false);
 		aModel.setVisible("menuAnalyseSaveCriteria", false);

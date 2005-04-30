@@ -28,6 +28,7 @@ import com.syrus.io.BellcoreStructure;
 public class AnalyseMainFrameSimplified extends JFrame
 implements BsHashChangeListener, OperationListener, EtalonMTMListener, CurrentTraceChangeListener
 {
+    // FIXME: saa: security bypass in all references to this fiels
 	public static final boolean DEBUG = System.getProperty("amficom.debug.nonstrict", "false").equals("true");
 
 	public ApplicationContext aContext;
@@ -252,7 +253,7 @@ implements BsHashChangeListener, OperationListener, EtalonMTMListener, CurrentTr
 		aModel.setEnabled("menuReport", true);
 		aModel.setEnabled("menuWindow", true);
 
-		aModel.setEnabled("menuFileOpen", AnalyseMainFrameSimplified.DEBUG); // XXX: saa: security bypass
+		aModel.setEnabled("menuFileOpen", AnalyseMainFrameSimplified.DEBUG);
 
 		aModel.setVisible("menuTestSetup", false);
 		aModel.setVisible("menuNetStudy", false);

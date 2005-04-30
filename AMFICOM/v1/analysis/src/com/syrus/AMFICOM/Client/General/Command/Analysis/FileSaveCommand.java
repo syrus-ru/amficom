@@ -30,7 +30,7 @@ public class FileSaveCommand extends VoidCommand
 
 	public void execute()
 	{
-		if (!AnalyseMainFrameSimplified.DEBUG) // XXX: saa: security bypass
+		if (!AnalyseMainFrameSimplified.DEBUG)
 		{
 			try
 			{

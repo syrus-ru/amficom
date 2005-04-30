@@ -592,10 +592,7 @@ public class AnalyseMainFrame extends JFrame implements BsHashChangeListener,
 		aModel.setEnabled("menuReport", true);
 		aModel.setEnabled("menuWindow", true);
 
-		aModel.setEnabled("menuFileOpen", AnalyseMainFrameSimplified.DEBUG); // XXX:
-																				// saa:
-																				// security
-																				// bypass
+		aModel.setEnabled("menuFileOpen", AnalyseMainFrameSimplified.DEBUG); 
 
 		aModel.setVisible("menuAnalyseSaveCriteria", false);
 		aModel.setVisible("menuSaveEtalon", false);

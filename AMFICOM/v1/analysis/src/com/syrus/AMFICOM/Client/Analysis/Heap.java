@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.45 2005/04/29 15:43:07 saa Exp $
+ * $Id: Heap.java,v 1.46 2005/04/30 06:34:38 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -64,7 +64,7 @@ import com.syrus.io.BellcoreStructure;
  * Фактически, primaryMTAE - это часть refAnalysisPrimary.
  * 
  * @author $Author: saa $
- * @version $Revision: 1.45 $, $Date: 2005/04/29 15:43:07 $
+ * @version $Revision: 1.46 $, $Date: 2005/04/30 06:34:38 $
  * @module
  */
 public class Heap
@@ -89,7 +89,7 @@ public class Heap
 	private static ModelTraceManager etalonMTM = null;
 
 	private static String currentTrace = ""; // XXX: initialize to avoid crushes
-	private static int currentEv = -1; // XXX: is this initialization good?
+	private static int currentEv = -1;
 
 	private static String newMSName = null; // the name for newly created (unsaved) MeasurementSetup; null if no new MS
 
@@ -275,12 +275,12 @@ public class Heap
         // Pool.put("activecontext", "activepathid", "");
     }
 
-    public static boolean hasEventParamsForPrimaryTrace() // XXX
+    public static boolean hasEventParamsForPrimaryTrace()
     {
         return getMTAEPrimary() != null; // XXX
     }
 
-    public static boolean hasEventParamsForEtalonTrace() // XXX
+    public static boolean hasEventParamsForEtalonTrace()
     {
         return getMTMEtalon() != null; // XXX
     }

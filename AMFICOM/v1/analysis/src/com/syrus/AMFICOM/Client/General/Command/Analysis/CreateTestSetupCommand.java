@@ -51,7 +51,7 @@ public class CreateTestSetupCommand extends VoidCommand
 
 		// если введен пустое имя
 		if (name.equals("")) {
-			// @todo: вывести сообщение об ошибке, что введено пустое имя
+			// FIXME: exceptions/error handling: вывести сообщение об ошибке, что введено пустое имя
 			return null; // и в любом случае ничего не делаем
 		}
 

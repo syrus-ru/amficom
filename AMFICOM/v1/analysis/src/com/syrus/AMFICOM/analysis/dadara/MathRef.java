@@ -105,9 +105,6 @@ public class MathRef
 	// параметры: длина волны в нм, длительность импульса в нс
 	public static double calcSigma (int wavelength, int pulsewidth)
 	{
-		// FIXIT: verify
-		//System.out.println("calcSigma: wavelength = " + wavelength + " pulse = " + pulsewidth); // FIXIT - remove
-		
 		// XXX: приблизительные расчет, предполагающий стандартное волокно
 		double sigma0;
 		double vG = 3e8 / 1.47 * 1e-9; // м/нс

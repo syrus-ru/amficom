@@ -264,7 +264,7 @@ public class AnalysisUtil
 			Heap.setMinuitInitialParams(analysisParams);
 		}
 		else {
-			// @todo: implement problem handler
+			// FIXME: exceptions/error handling: implement problem handler
 		}	
 	}
 	

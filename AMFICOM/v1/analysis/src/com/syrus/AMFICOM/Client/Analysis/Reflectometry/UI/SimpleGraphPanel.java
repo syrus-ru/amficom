@@ -102,7 +102,7 @@ public class SimpleGraphPanel extends JPanel
 
 	protected Color correctColor(Color color1)
 	{
-	    double weight = 0.3; // XXX
+	    double weight = 0.3; // XXX: color soften factor
 	    double a = weight;
 	    double b = 255 * (1.0 - weight);
 	    return weakColor ?

@@ -1,5 +1,5 @@
 /*
- * $Id: ClientAnalysisManager.java,v 1.8 2005/04/27 08:24:56 saa Exp $
+ * $Id: ClientAnalysisManager.java,v 1.9 2005/04/30 06:34:39 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.8 $, $Date: 2005/04/27 08:24:56 $
+ * @version $Revision: 1.9 $, $Date: 2005/04/30 06:34:39 $
  * @module
  */
 public class ClientAnalysisManager extends CoreAnalysisManager
@@ -60,7 +60,7 @@ public class ClientAnalysisManager extends CoreAnalysisManager
 			properties.setProperty("parameters", ap.toString());
 			properties.store(new FileOutputStream(PROPERTIES_FILE_NAME), null);
 		} catch (IOException ex) {
-			// @todo: add an IOException handler
+			// FIXME: exceptions: add an IOException handler
 		}
 	}
 }

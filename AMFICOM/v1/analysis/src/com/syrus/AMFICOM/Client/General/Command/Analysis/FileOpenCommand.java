@@ -36,7 +36,7 @@ public class FileOpenCommand extends VoidCommand
 
 	public void execute()
 	{
-		if (!AnalyseMainFrameSimplified.DEBUG) // XXX: saa: security bypass
+		if (!AnalyseMainFrameSimplified.DEBUG)
 		{
 			try
 			{
@@ -93,7 +93,7 @@ public class FileOpenCommand extends VoidCommand
 			}
 			if (bs == null)
 			{
-				if (true && AnalyseMainFrameSimplified.DEBUG) // XXX: saa: probable security bypass
+				if (true && AnalyseMainFrameSimplified.DEBUG)
 				{
 					// этот код написан для отладочных целей и предназначен для
 					// считывания рефлектограммы из текстового файла,
@@ -117,7 +117,7 @@ public class FileOpenCommand extends VoidCommand
 						}
 					} catch (IOException e1)
 					{
-						// @todo Auto-generated catch block
+						// FIXME: exceptions: Auto-generated catch block
 						e1.printStackTrace();
 					}
 				}
