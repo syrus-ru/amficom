@@ -16,14 +16,10 @@ import javax.swing.WindowConstants;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
-import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
-import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
+import com.syrus.AMFICOM.Client.General.Event.PrimaryRefAnalysisListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.UI.ATable;
 import com.syrus.AMFICOM.Client.General.UI.FixedSizeEditableTableModel;
@@ -39,30 +35,24 @@ import com.syrus.AMFICOM.analysis.dadara.TraceEvent;
 import com.syrus.io.BellcoreStructure;
 
 public class OverallStatsFrame extends ATableFrame
-implements OperationListener, BsHashChangeListener, EtalonMTMListener
+implements EtalonMTMListener, PrimaryRefAnalysisListener
 {
 	private FixedSizeEditableTableModel tModel;
 	private JTable jTable;
 
-	BorderLayout borderLayout = new BorderLayout();
-	JPanel mainPanel = new JPanel();
-	JScrollPane scrollPane = new JScrollPane();
-	JViewport viewport = new JViewport();
+	private JPanel mainPanel = new JPanel();
+	private JScrollPane scrollPane = new JScrollPane();
+	private JViewport viewport = new JViewport();
 	private JTabbedPane tabbedPane = new JTabbedPane();
-
-	boolean analysis_performed = false;
-	boolean etalon_loaded = false;
 
 	private WholeCompareTableModel wctModel;
 	private ATable jTableWholeComp;
 
-	BorderLayout borderLayoutWholeComp = new BorderLayout();
-	JPanel mainPanelWholeComp = new JPanel();
-	JScrollPane scrollPaneWholeComp = new JScrollPane();
-	JViewport viewportWholeComp = new JViewport();
+	private JPanel mainPanelWholeComp = new JPanel();
+	private JScrollPane scrollPaneWholeComp = new JScrollPane();
+	private JViewport viewportWholeComp = new JViewport();
 
-
-	public OverallStatsFrame()
+    public OverallStatsFrame()
 	{
 		this(new Dispatcher());
 	}
@@ -85,30 +75,8 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener
 
 	void init_module(Dispatcher dispatcher)
 	{
-		//dispatcher.register(this, RefChangeEvent.typ);
-		dispatcher.register(this, RefUpdateEvent.typ);
-		Heap.addBsHashListener(this);
 		Heap.addEtalonMTMListener(this);
-	}
-
-	public void operationPerformed(OperationEvent ae)
-	{
-		if(ae.getActionCommand().equals(RefUpdateEvent.typ))
-		{
-			RefUpdateEvent rue = (RefUpdateEvent)ae;
-			if(rue.analysisPerformed())
-			{
-				updTableModel();
-
-				if (Heap.hasEventParamsForPrimaryTrace())
-					analysis_performed = true;
-				if(etalon_loaded)
-				{
-					setWholeData();
-					tabbedPane.setEnabledAt(1, true);
-				}
-			}
-		}
+        Heap.addPrimaryRefAnalysisListener(this);
 	}
 
 	public String getReportTitle()
@@ -257,44 +225,10 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener
 		jTable.updateUI();
 	}
 
-	public void bsHashAdded(String key, BellcoreStructure bs)
-	{
-		if (key.equals(Heap.PRIMARY_TRACE_KEY))
-		{
-			updTableModel();
-			setVisible(true);
-			wctModel.clearTable();
-			tabbedPane.setSelectedIndex(0);
-			tabbedPane.setEnabledAt(1, false);
-		}
-	}
-
-	public void bsHashRemoved(String key)
-	{
-		if(key.equals(AnalysisUtil.ETALON))
-		{
-			wctModel.clearTable();
-			tabbedPane.setSelectedIndex(0);
-			etalon_loaded = false;
-			tabbedPane.setEnabledAt(1, false);
-		}
-	}
-
-	public void bsHashRemovedAll()
-	{
-		wctModel.clearTable();
-		tabbedPane.setSelectedIndex(0);
-		analysis_performed = false;
-		tabbedPane.setEnabledAt(1, false);
-		setVisible(false);
-	}
-
 	public void etalonMTMCUpdated()
 	{
 		wctModel.clearTable();
-		tabbedPane.setSelectedIndex(0);
-		etalon_loaded = true;
-		if(analysis_performed)
+		if (Heap.getRefAnalysisPrimary() != null)
 		{
 			setWholeData();
 			tabbedPane.setEnabledAt(1, true);
@@ -305,9 +239,26 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener
 	{
 		wctModel.clearTable();
 		tabbedPane.setSelectedIndex(0);
-		etalon_loaded = false;
 		tabbedPane.setEnabledAt(1, false);
 	}
+
+    public void primaryRefAnalysisCUpdated() {
+        updTableModel();
+        setVisible(true);
+        wctModel.clearTable(); // ?
+        if(Heap.getMTMEtalon() != null)
+        {
+            setWholeData();
+            tabbedPane.setEnabledAt(1, true);
+        }
+    }
+
+    public void primaryRefAnalysisRemoved() {
+        wctModel.clearTable();
+        tabbedPane.setSelectedIndex(0);
+        tabbedPane.setEnabledAt(1, false);
+        setVisible(false);
+    }
 }
 
 
