@@ -1,5 +1,5 @@
 /*
- * $Id: UserWrapper.java,v 1.4 2005/04/11 11:48:27 bob Exp $
+ * $Id: UserWrapper.java,v 1.5 2005/04/30 14:20:48 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,11 +16,17 @@ import com.syrus.AMFICOM.administration.corba.UserSort;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/04/11 11:48:27 $
- * @author $Author: bob $
+ * @version $Revision: 1.5 $, $Date: 2005/04/30 14:20:48 $
+ * @author $Author: arseniy $
  * @module admin_v1
  */
 public class UserWrapper extends StorableObjectWrapper {
+	public static final String	SYS_LOGIN		= "sys";
+	public static final String LOGINPROCESSOR_LOGIN = "loginprocessor";
+	public static final String EVENTPROCESSOR_LOGIN = "eventprocessor";
+	public static final String MSERVER_LOGIN = "mserver";
+	public static final String CMSERVER_LOGIN = "cmserver";
+	public static final String MSHSERVER_LOGIN = "mshserver";
 
 	// table :: users
 	// description VARCHAR2(256),
