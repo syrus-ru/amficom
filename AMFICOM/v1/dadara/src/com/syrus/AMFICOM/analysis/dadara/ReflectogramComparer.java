@@ -27,7 +27,7 @@ package com.syrus.AMFICOM.analysis.dadara;
  * по ModelTrace - MaxDeviation и пр.
  * 
  * @author $Author: saa $
- * @version $Revision: 1.14 $, $Date: 2005/04/30 07:56:05 $
+ * @version $Revision: 1.15 $, $Date: 2005/04/30 09:44:16 $
  * @module analysis_v1
  */
 public class ReflectogramComparer
@@ -50,6 +50,17 @@ public class ReflectogramComparer
 
 	//public static long COMPARE_ANALYSE = 0x1;
 	//public static long COMPARE_EVALUATE = 0x2;
+
+    // This constructor was added just for slight performance reasons:
+    // this way we need not copy 'events' arrays as it would happen
+    // if the caller used 'mtaeProbe.getSimpleEvents()'
+    public ReflectogramComparer(
+            ModelTraceAndEventsImpl mtaeProbe,
+            ModelTraceAndEventsImpl mtaeEtalon)
+    {
+        this(mtaeProbe != null ? mtaeProbe.getRSE() : null,
+                mtaeEtalon.getRSE());
+    }
 
 	public ReflectogramComparer(
 			SimpleReflectogramEvent[] _probeEvents, // may be null if analysis not performed
