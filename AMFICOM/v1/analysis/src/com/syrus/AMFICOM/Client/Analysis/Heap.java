@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.47 2005/04/30 07:01:10 saa Exp $
+ * $Id: Heap.java,v 1.48 2005/04/30 07:36:32 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,6 +43,7 @@ import com.syrus.io.BellcoreStructure;
  * contextMeasurementSetup;
  * minTraceLevelt;
  * rLDialog{};
+ * backupEtalonMTM;
  * newMSName
  * 
  * Свойства, по которым уведомления предусмотрены, но не систематизированы
@@ -64,7 +65,7 @@ import com.syrus.io.BellcoreStructure;
  * Фактически, primaryMTAE - это часть refAnalysisPrimary.
  * 
  * @author $Author: saa $
- * @version $Revision: 1.47 $, $Date: 2005/04/30 07:01:10 $
+ * @version $Revision: 1.48 $, $Date: 2005/04/30 07:36:32 $
  * @module
  */
 public class Heap
@@ -86,7 +87,8 @@ public class Heap
 	private static MeasurementSetup contextMeasurementSetup;	// AnalysisUtil.CONTEXT, "MeasurementSetup"
 	private static Double minTraceLevel;			// "min_trace_level", PRIMARY_TRACE_KEY
 	private static HashMap dialogHash = new HashMap();	// "dialog", "*"
-	private static ModelTraceManager etalonMTM = null;
+    private static ModelTraceManager etalonMTM = null;
+    private static ModelTraceManager backupEtalonMTM = null; // 'initial' state of etalon MTM
 
 	private static String currentTrace = ""; // XXX: initialize to avoid crushes
 	private static int currentEv = -1;
@@ -285,6 +287,21 @@ public class Heap
         return getMTMEtalon() != null; // XXX
     }
 
+    public static ModelTraceManager getMTMBackupEtalon() {
+        try {
+            return (ModelTraceManager)backupEtalonMTM.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new InternalError(e.getMessage());
+        }
+    }
+    private static void setMTMBackupEtalon(ModelTraceManager etalonMTM) {
+        try {
+            Heap.backupEtalonMTM = (ModelTraceManager)etalonMTM.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new InternalError(e.getMessage());
+        }
+    }
+
     // dispatcher stuff
 
     // XXX: change each notify method to private as soon as bsHash will become
@@ -447,8 +464,11 @@ public class Heap
     }
 
     /*
-     * methods that both make changed and notify appropriate listeners 
+     * ===============================================================
+     * methods that both make changed and notify appropriate listeners
+     * =============================================================== 
      */
+
     public static void setCurrentTrace(String id) {
         currentTrace = id;
         notifyCurrentTraceChanged();
@@ -508,6 +528,7 @@ public class Heap
      */
     public static void setMTMEtalon(ModelTraceManager mtm) {
         etalonMTM = mtm;
+        setMTMBackupEtalon(mtm);
         if (mtm == null)
             notifyEtalonMTMRemoved();
         else
@@ -530,6 +551,7 @@ public class Heap
     public static void closeAll() {
         // close Etalon MTM
         etalonMTM = null;
+        backupEtalonMTM = null;
         notifyEtalonMTMRemoved();
 
         // close all BS

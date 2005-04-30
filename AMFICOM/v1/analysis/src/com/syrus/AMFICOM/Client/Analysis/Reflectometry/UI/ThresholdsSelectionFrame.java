@@ -144,11 +144,7 @@ implements OperationListener, BsHashChangeListener,
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				//if (et_mtm != null && currentEtEv != -1)
-				{
-					// FIXME: outdated / useless mtm.setThreshold(...,init_Threshs...) removed
-					// the button should be removed or replaced with something more useful
-				}
+                Heap.setMTMEtalon(Heap.getMTMBackupEtalon());
 			}
 		});
 
