@@ -1,5 +1,5 @@
 /*-
- * $Id: DataStreamableUtil.java,v 1.3 2005/04/30 10:04:07 saa Exp $
+ * $Id: DataStreamableUtil.java,v 1.4 2005/04/30 13:02:01 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,13 +16,13 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.3 $, $Date: 2005/04/30 10:04:07 $
+ * @version $Revision: 1.4 $, $Date: 2005/04/30 13:02:01 $
  * @module
  */
 public class DataStreamableUtil
 {
 	public static DataStreamable readDataStreamableFromBA(byte[] bar,
-            DataStreamable.Reader reader)
+            DataStreamable.Reader reader) throws DataFormatException
 	{
 		try
 		{
@@ -32,20 +32,9 @@ public class DataStreamableUtil
 		}
 		catch (IOException e)
 		{
-			// FIXME: IOException - what to do?
-			// we should not catch exceptions here?
-			System.out.println("IOException caught, wanna die: " + e);
-			e.printStackTrace();
-			return null;
+            throw new DataFormatException(e.toString());
 		}
-		catch (SignatureMismatchException e)
-		{
-            // FIXME: SignatureMismatchException - what to do?
-			System.out.println("SignatureMismatchException caught, wanna die: " + e);
-			e.printStackTrace();
-			return null;
-            //return new ModelTraceManager(new ReflectogramEvent[0]); // ???
-		}
+		// do not catch (SignatureMismatchException e)
 	}
 	public static byte[] writeDataStreamableToBA(DataStreamable obj)
 	{

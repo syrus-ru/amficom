@@ -1,5 +1,5 @@
 /*-
- * $Id: GUIUtil.java,v 1.4 2005/04/29 06:46:08 saa Exp $
+ * $Id: GUIUtil.java,v 1.5 2005/04/30 13:02:06 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,17 +22,28 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.4 $, $Date: 2005/04/29 06:46:08 $
+ * @version $Revision: 1.5 $, $Date: 2005/04/30 13:02:06 $
  * @module
  */
 public class GUIUtil
 {
     private static Map idColorMap = new HashMap();
 
+    private static final String MSG_CREATE_OBJECT_PROBLEM = "createObjectProblem";
+    private static final String MSG_ERROR_DATA_FORMAT = "errorDataReceivedUnrecognized";
+
     private GUIUtil () {
 		// non-instantiable
 	}
-	public static void showErrorMessage(String codestring)
+
+    public static void showCreateObjectProblemError() {
+        showErrorMessage(MSG_CREATE_OBJECT_PROBLEM);
+    }
+    public static void showDataFormatError() {
+        showErrorMessage(MSG_ERROR_DATA_FORMAT);
+    }
+
+    public static void showErrorMessage(String codestring)
 	{
 		JOptionPane.showMessageDialog(
 			Environment.getActiveWindow(),

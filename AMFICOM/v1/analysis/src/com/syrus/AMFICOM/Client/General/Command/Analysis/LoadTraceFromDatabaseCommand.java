@@ -5,12 +5,14 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
+import com.syrus.AMFICOM.Client.Analysis.GUIUtil;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.Analysis.UI.ReflectogrammLoadDialog;
 import com.syrus.AMFICOM.Client.General.*;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.analysis.dadara.DataFormatException;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.measurement.*;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
@@ -111,20 +113,24 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 			MeasurementSetup ms = m.getSetup();
 			Heap.setContextMeasurementSetup(ms);
 
-			AnalysisUtil.load_CriteriaSet(userId, ms);
+            try {
+    			AnalysisUtil.load_CriteriaSet(userId, ms);
+    
+    			if (ms.getEtalon() != null)
+    				AnalysisUtil.load_Etalon(ms);
+    			else
+    			{
+    				Heap.setBSEtalonTrace(null);
+    				Heap.setMTMEtalon(null);
+    			}
+                new AnalysisCommand().execute();
 
-			if (ms.getEtalon() != null)
-				AnalysisUtil.load_Etalon(ms);
-			else
-			{
-				Heap.setBSEtalonTrace(null);
-				Heap.setMTMEtalon(null);
-			}
-
-			new AnalysisCommand().execute();
-
-			Heap.primaryTraceOpened(bs);
-			Heap.setCurrentTracePrimary();
+                Heap.primaryTraceOpened(bs);
+                Heap.setCurrentTracePrimary();
+            } catch (DataFormatException e) {
+                GUIUtil.showDataFormatError();
+                return;
+            }
 		}
 		Environment.getActiveWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}

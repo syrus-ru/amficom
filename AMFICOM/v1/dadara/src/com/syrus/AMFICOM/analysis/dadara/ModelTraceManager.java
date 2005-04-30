@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.63 2005/04/30 09:52:49 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.64 2005/04/30 13:02:01 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
  * генерацией пороговых кривых и сохранением/восстановлением порогов.
  *
  * @author $Author: saa $
- * @version $Revision: 1.63 $, $Date: 2005/04/30 09:52:49 $
+ * @version $Revision: 1.64 $, $Date: 2005/04/30 13:02:01 $
  * @module
  */
 public class ModelTraceManager
@@ -690,10 +690,14 @@ implements DataStreamable, Cloneable
 	 * Создает MTM по эталонной паре события+м.ф., считанной из ByteArray
 	 * @param bar
 	 * @return MTM с неопределенными порогами 
+	 * @throws DataFormatException 
 	 */
 	public static ModelTraceManager eventsAndTraceFromByteArray(byte[] bar)
+    throws DataFormatException
 	{
-		ModelTraceAndEventsImpl mtae = (ModelTraceAndEventsImpl)DataStreamableUtil.readDataStreamableFromBA(bar, ModelTraceAndEventsImpl.getReader()); 
+		ModelTraceAndEventsImpl mtae =(ModelTraceAndEventsImpl)
+            DataStreamableUtil.readDataStreamableFromBA(bar,
+                ModelTraceAndEventsImpl.getReader()); 
 		return new ModelTraceManager(mtae);
 	}
 

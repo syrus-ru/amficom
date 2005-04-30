@@ -3,6 +3,7 @@ package com.syrus.AMFICOM.Client.General.Command.Analysis;
 import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
+import com.syrus.AMFICOM.Client.Analysis.GUIUtil;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
@@ -94,10 +95,7 @@ public class SaveAnalysisCommand extends VoidCommand
 				"DADARA Analysis", // @todo: give a better name
 				m.getSetup().getCriteriaSet());
 		} catch (CreateObjectException e1) {
-			JOptionPane.showMessageDialog(
-				Environment.getActiveWindow(),
-				LangModelAnalyse.getString("createObjectProblem"),
-				LangModelAnalyse.getString("error"), JOptionPane.OK_OPTION);
+            GUIUtil.showCreateObjectProblemError();
 			return;
 		}
 
@@ -122,10 +120,7 @@ public class SaveAnalysisCommand extends VoidCommand
 		catch (CreateObjectException e)
 		{
 			System.err.println("SaveAnalysisCommand: CreateObjectException.");
-			JOptionPane.showMessageDialog(
-				Environment.getActiveWindow(),
-				LangModelAnalyse.getString("createObjectProblem"),
-				LangModelAnalyse.getString("error"), JOptionPane.OK_OPTION);
+            GUIUtil.showCreateObjectProblemError();
 			return;
 		}
 

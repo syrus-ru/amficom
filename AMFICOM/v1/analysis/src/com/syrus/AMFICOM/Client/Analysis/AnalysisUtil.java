@@ -6,6 +6,7 @@ import java.util.Iterator;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
+import com.syrus.AMFICOM.analysis.dadara.DataFormatException;
 import com.syrus.AMFICOM.analysis.dadara.DataStreamableUtil;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
@@ -93,9 +94,10 @@ public class AnalysisUtil
 	 * createDefaultCriteriaSet(ms);
 	 *
 	 * @param ms MeasurementSetup
+	 * @throws DataFormatException 
 	 */
 
-	public static void load_CriteriaSet(Identifier userId, MeasurementSetup ms)
+	public static void load_CriteriaSet(Identifier userId, MeasurementSetup ms) throws DataFormatException
 	{
 		/*
 		 * <ul>
@@ -107,21 +109,24 @@ public class AnalysisUtil
 
 		Set criteriaSet = ms.getCriteriaSet();
 		if (criteriaSet != null)
-			setParamsFromCriteriaSet(criteriaSet);
-//		else
-//		{
-//			criteriaSet = createCriteriaSetFromParams(userId, ms.getMonitoredElementIds());
-//			ms.setCriteriaSet(criteriaSet);
-//		}
+        {
+		    setParamsFromCriteriaSet(criteriaSet);
+        }
+//      else
+//      {
+//          criteriaSet = createCriteriaSetFromParams(userId, ms.getMonitoredElementIds());
+//          ms.setCriteriaSet(criteriaSet);
+//      }
 	}
 
 	/**
 	 * Method for loading Etalon for certain TestSetup to Pool. If there is no
 	 * Etalon attached to TestSetup method returns.
 	 * @param ms MeasurementSetup
+	 * @throws DataFormatException 
 	 * @see com.syrus.AMFICOM.Client.Resource.Result.Etalon
 	 */
-	public static void load_Etalon(MeasurementSetup ms)
+	public static void load_Etalon(MeasurementSetup ms) throws DataFormatException
 	{
 		Set etalon = ms.getEtalon();
 		Set metas = ms.getParameterSet();
@@ -149,7 +154,8 @@ public class AnalysisUtil
 		}
 	}
 
-	public static Set createCriteriaSet(Identifier userId, java.util.Set meIds) throws ApplicationException
+	public static Set createCriteriaSet(Identifier userId, java.util.Set meIds)
+    throws ApplicationException
 	{
 		AnalysisParameters analysisParams = Heap.getMinuitAnalysisParams();
 		if (analysisParams == null)
@@ -157,21 +163,13 @@ public class AnalysisUtil
 
         SetParameter[] params = new SetParameter[1];
 
-        try
 		{
 			ParameterType ptype = getParameterType(
 				ParameterTypeCodenames.DADARA_CRITERIA, DataType.DATA_TYPE_RAW);
 			params[0] = SetParameter.createInstance(ptype,
 				DataStreamableUtil.writeDataStreamableToBA(analysisParams));
 		}
-		catch (CreateObjectException e)
-		{
-			// FIXME: exceptions: process CreateObjectException
-			System.err.println("AnalysisUtil.createCriteriaSetFromParams: CreateObjectException...");
-			e.printStackTrace();
-		}
 
-		try
 		{
 			Set criteriaSet = Set.createInstance(
 				userId,
@@ -182,46 +180,30 @@ public class AnalysisUtil
 
 			return criteriaSet;
 		}
-		catch (CreateObjectException e)
-		{
-			// FIXME: exceptions: process CreateObjectException
-			System.err.println("AnalysisUtil.createCriteriaSetFromParams: CreateObjectException -- wanna die.");
-			e.printStackTrace();
-			return null;
-		}
 	}
 
-	public static Set createEtalon(Identifier userId, java.util.Set meIds, ModelTraceManager mtm) throws ApplicationException
+	public static Set createEtalon(Identifier userId, java.util.Set meIds,
+            ModelTraceManager mtm) throws ApplicationException
 	{
-		try
-		{
-			SetParameter[] params = new SetParameter[2];
+		SetParameter[] params = new SetParameter[2];
 
-			ParameterType ptype = getParameterType(ParameterTypeCodenames.DADARA_ETALON_MTM, DataType.DATA_TYPE_RAW);
-			params[0] = SetParameter.createInstance(ptype,
-					DataStreamableUtil.writeDataStreamableToBA(mtm));
+		ParameterType ptype = getParameterType(ParameterTypeCodenames.DADARA_ETALON_MTM, DataType.DATA_TYPE_RAW);
+		params[0] = SetParameter.createInstance(ptype,
+				DataStreamableUtil.writeDataStreamableToBA(mtm));
 
-			BellcoreStructure bs = Heap.getBSPrimaryTrace();
+		BellcoreStructure bs = Heap.getBSPrimaryTrace();
 
-			ptype = getParameterType(ParameterTypeCodenames.REFLECTOGRAMMA, DataType.DATA_TYPE_RAW);
-			params[1] = SetParameter.createInstance(ptype,
-					new BellcoreWriter().write(bs));
+		ptype = getParameterType(ParameterTypeCodenames.REFLECTOGRAMMA, DataType.DATA_TYPE_RAW);
+		params[1] = SetParameter.createInstance(ptype,
+				new BellcoreWriter().write(bs));
 
-			Set etalon = Set.createInstance(
-					userId,
-					SetSort.SET_SORT_ETALON,
-					"",
-					params,
-					meIds);
-			return etalon;
-		}
-		catch (CreateObjectException e)
-		{
-			// FIXME: exceptions: process CreateObjectException
-			System.err.println("AnalysisUtil.createEtalon: CreateObjectException -- wanna die.");
-		e.printStackTrace();
-		return null;
-		}
+		Set etalon = Set.createInstance(
+				userId,
+				SetSort.SET_SORT_ETALON,
+				"",
+				params,
+				meIds);
+		return etalon;
 	}
 
 	// FIXME: не используется? - а должен бы...
@@ -246,26 +228,25 @@ public class AnalysisUtil
 	}
 
 	public static void setParamsFromCriteriaSet(Set criteriaSet)
+    throws DataFormatException
 	{
 		AnalysisParameters analysisParams = null;
-		SetParameter[] params = criteriaSet.getParameters();
-		for (int i = 0; i < params.length; i++)
-		{
-			ParameterType p = (ParameterType)params[i].getType();
-			if (p.getCodename().equals(ParameterTypeCodenames.DADARA_CRITERIA))
-				analysisParams = (AnalysisParameters)
-					DataStreamableUtil.readDataStreamableFromBA(
-						params[i].getValue(),
-						AnalysisParameters.getReader());
-		}
-		if (analysisParams != null)	{
-			Heap.setMinuitAnalysisParams(
-				(AnalysisParameters)analysisParams.clone());
-			Heap.setMinuitInitialParams(analysisParams);
-		}
-		else {
-			// FIXME: exceptions/error handling: implement problem handler
-		}	
+        SetParameter[] params = criteriaSet.getParameters();
+        for (int i = 0; i < params.length; i++)
+        {
+            ParameterType p = (ParameterType)params[i].getType();
+            if (p.getCodename().equals(ParameterTypeCodenames.DADARA_CRITERIA))
+        analysisParams = (AnalysisParameters)
+        	DataStreamableUtil.readDataStreamableFromBA(
+        		params[i].getValue(),
+        		AnalysisParameters.getReader());
+        }
+        if (analysisParams == null)
+        throw new DataFormatException(
+                "No" + ParameterTypeCodenames.DADARA_CRITERIA);
+		Heap.setMinuitAnalysisParams(
+			(AnalysisParameters)analysisParams.clone());
+		Heap.setMinuitInitialParams(analysisParams);
 	}
 	
 	public static String getTraceEventNameByType(int eventType)

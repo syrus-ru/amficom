@@ -63,14 +63,17 @@ public class ReflectogramAlarm {
 		dos.writeInt(this.alarmType);
 	}
 
-	public static ReflectogramAlarm createFromByteArray(byte[] bar)
-	throws IOException
-	// @todo: catch IOException and throw some other exception: "format mismatch"
+	public static ReflectogramAlarm createFromByteArray(byte[] bar) throws DataFormatException
 	{
-		DataInputStream dis = new DataInputStream(new ByteArrayInputStream(bar));
-		ReflectogramAlarm ret = createFromDIS(dis);
-		dis.close();
-		return ret;
+            try {
+                DataInputStream dis = new DataInputStream(new ByteArrayInputStream(bar));
+                ReflectogramAlarm ret;
+                ret = createFromDIS(dis);
+                dis.close();
+                return ret;
+            } catch (IOException e) {
+                throw new DataFormatException(e.toString());
+            }
 	}
 
 	public byte[] toByteArray() {
@@ -105,6 +108,7 @@ public class ReflectogramAlarm {
 
     // seem to be unused
 	public static ReflectogramAlarm[] alarmsFromByteArray(byte[] bar)
+    throws DataFormatException
 	{
 		ByteArrayInputStream bais = new ByteArrayInputStream(bar);
 		DataInputStream dis = new DataInputStream(bais);
@@ -119,10 +123,7 @@ public class ReflectogramAlarm {
 		}
 		catch(IOException ioe)
 		{
-			// FIXME: exception handling
-			System.out.println("Something very unexpected in alarmsFromByteArray: " + ioe.getMessage());
-			ioe.printStackTrace();
-			return null;
+            throw new DataFormatException(ioe.toString());
 		}
 	}
 

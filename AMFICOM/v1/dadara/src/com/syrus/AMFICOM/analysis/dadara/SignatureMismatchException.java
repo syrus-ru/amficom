@@ -1,5 +1,5 @@
 /*
- * $Id: SignatureMismatchException.java,v 1.2 2004/12/17 18:16:20 arseniy Exp $
+ * $Id: SignatureMismatchException.java,v 1.3 2005/04/30 13:02:01 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,11 +8,13 @@
 package com.syrus.AMFICOM.analysis.dadara;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.2 $, $Date: 2004/12/17 18:16:20 $
+ * Thrown if a signature of input data stream does not mached
+ * current version signature of an expected object.
+ * @author $Author: saa $
+ * @version $Revision: 1.3 $, $Date: 2005/04/30 13:02:01 $
  * @module
  */
-public class SignatureMismatchException extends Exception
+public class SignatureMismatchException extends DataFormatException
 {
 	static final long serialVersionUID = 5660401178631587063L;
 

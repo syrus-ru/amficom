@@ -3,6 +3,7 @@ package com.syrus.AMFICOM.Client.General.Command.Analysis;
 import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
+import com.syrus.AMFICOM.Client.Analysis.GUIUtil;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.Analysis.UI.TestSetupLoadDialog;
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
@@ -10,6 +11,7 @@ import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.analysis.dadara.DataFormatException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.io.BellcoreStructure;
@@ -60,15 +62,19 @@ public class LoadTestSetupCommand extends VoidCommand
 			Heap.setCurrentTracePrimary();
 		}
 
-		AnalysisUtil.load_CriteriaSet(userId, ms);
-
-		if (ms.getEtalon() != null)
-			AnalysisUtil.load_Etalon(ms);
+        try {
+    		AnalysisUtil.load_CriteriaSet(userId, ms);
+    
+    		if (ms.getEtalon() != null)
+    			AnalysisUtil.load_Etalon(ms);
+        } catch (DataFormatException e) {
+            GUIUtil.showDataFormatError();
+        }
 //
 //		if (ms.getThresholdSet() != null)
 //			AnalysisUtil.load_Thresholds(userId, ms);
 
-		// Heap.notifyEtalonMTMCUpdated();
+        // XXX: are these notifications needed?
 		Heap.notifyPrimaryTraceClosed();
 		Heap.notifyPrimaryTraceOpened();
 		Heap.setCurrentTracePrimary();

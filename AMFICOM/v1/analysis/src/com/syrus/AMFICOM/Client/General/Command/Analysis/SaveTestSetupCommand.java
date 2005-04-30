@@ -72,7 +72,7 @@ public class SaveTestSetupCommand extends VoidCommand
 		} catch (ApplicationException e)
 		{
 			System.err.println("SaveTestSetupCommand: ApplicationException (criterias)");
-			GUIUtil.showErrorMessage("createObjectProblem");
+			GUIUtil.showCreateObjectProblemError();
 			return false;
 		}
 
@@ -95,7 +95,7 @@ public class SaveTestSetupCommand extends VoidCommand
 		} catch (ApplicationException e1)
 		{
 			System.err.println("SaveTestSetupCommand: ApplicationException (etalon)");
-			GUIUtil.showErrorMessage("createObjectProblem");
+			GUIUtil.showCreateObjectProblemError();
 			return false;
 		}
 
@@ -116,9 +116,7 @@ public class SaveTestSetupCommand extends VoidCommand
 		}
 		catch (CreateObjectException e)
 		{
-			// FIXME: exceptions: CreateObjectException
-			System.err.println("CreateTestSetupCommand: CreateObjectException.");
-			e.printStackTrace();
+            GUIUtil.showCreateObjectProblemError();
 			return false;
 		}
 		catch(IllegalObjectEntityException e)
@@ -135,9 +133,6 @@ public class SaveTestSetupCommand extends VoidCommand
 		try
 		{
 			MeasurementStorableObjectPool.flush(true);
-		}
-		catch(VersionCollisionException ex)
-		{ // FIXME: exceptions: process exception
 		}
 		catch(ApplicationException ex)
 		{ // FIXME: exceptions: process exception
