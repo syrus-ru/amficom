@@ -5,6 +5,7 @@ LIBNAME_INTERFACE := $(subst _v1,_interface,$(MODULE_NAME)).jar
 ARCHFILE := $(subst _v1,,$(MODULE_NAME)).tar.gz
 
 IDLDIR = ../idl_v1/idl
+LOCALIDLDIR = ./idl
 
 HOST = mongol
 SERVICE_NAME = mongol
@@ -15,14 +16,7 @@ $(call checkenve,ORACLE_HOME)
 
 APPCLASSPATH := $(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/csbridge.jar:$(LIBDIR)/leserver_interface.jar:$(LIBDIR)/mcm_interface.jar:$(LIBDIR)/util.jar
 
-
-SOURCES := com/syrus/AMFICOM/mserver/MServerSessionEnvironment.java \
-	com/syrus/AMFICOM/mserver/MServerServantManager.java \
-	com/syrus/AMFICOM/mserver/MServerPoolContext.java \
-	com/syrus/AMFICOM/mserver/DatabaseContextSetup.java \
-	com/syrus/AMFICOM/mserver/MServerMeasurementObjectLoader.java \
-	com/syrus/AMFICOM/mserver/MeasurementServer.java \
-	com/syrus/AMFICOM/mserver/MServerImplementation.java
+SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/mserver/*.java)
 
 
 all: $(LIBNAME) $(LIBNAME_INTERFACE)
@@ -43,22 +37,11 @@ $(LIBNAME_INTERFACE):	.corba
 .mach:	.corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH):$(CLASSDIR) \
-		$(addprefix $(SRCDIR)/,$(SOURCES))
+		$(SOURCES)
 	touch $@
 
 .corba:	$(CLASSDIR)
-	$(IDLJ) $(IDLJFLAGS) idl/mserver.idl
-#
-#	cpp -I../idl_v1/idl idl/mserver.idl idl/tmp_mserver.idl
-#	$(IDLJ) $(IDLJFLAGS) idl/tmp_mserver.idl
-#	$(RM) -r \
-		idl/tmp_mserver.idl \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration \
-		$(SRCDIR)/com/syrus/AMFICOM/CORBA \
-		$(SRCDIR)/com/syrus/AMFICOM/event \
-		$(SRCDIR)/com/syrus/AMFICOM/general \
-		$(SRCDIR)/com/syrus/AMFICOM/measurement
-#
+	$(IDLJ) $(IDLJFLAGS) $(LOCALIDLDIR)/mserver.idl
 	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
 		-classpath $(APPCLASSPATH) \
 		-sourcepath $(SRCDIR) \
@@ -74,7 +57,7 @@ clean:	cleanmach cleancorba
 
 .PHONY:	cleanmach
 cleanmach:
-	$(RM) $(addprefix $(CLASSDIR)/,$(subst .java,.class,$(SOURCES)))
+	$(RM) $(subst $(SRCDIR),$(CLASSDIR),$(subst .java,*.class,$(SOURCES)))
 	$(RM) .mach
 
 .PHONY:	cleancorba
@@ -93,6 +76,6 @@ install: $(LIBNAME) $(LIBNAME_INTERFACE) $(LIBDIR)
 arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
-		idl/mserver.idl \
-		$(addprefix $(SRCDIR)/,$(SOURCES))
+		$(LOCALIDLDIR)/mserver.idl \
+		$(SOURCES)
 

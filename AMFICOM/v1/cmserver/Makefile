@@ -77,5 +77,5 @@ arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
 		$(IDLDIR)/cmserver.idl \
-		$(addprefix $(SRCDIR)/,$(SOURCES))
+		$(SOURCES)
 

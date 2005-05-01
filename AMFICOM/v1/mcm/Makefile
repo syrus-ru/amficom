@@ -5,6 +5,7 @@ LIBNAME_INTERFACE := $(subst _v1,_interface,$(MODULE_NAME)).jar
 ARCHFILE := $(subst _v1,,$(MODULE_NAME)).tar.gz
 
 IDLDIR := ../idl_v1/idl
+LOCALIDLDIR = ./idl
 
 HOST := mongol
 SERVICE_NAME := mongol
@@ -24,33 +25,8 @@ JAVAH_FLAGS := \
 $(call checkenve,JAVA_HOME)
 $(call checkenve,ORACLE_HOME)
 
-
-SOURCES := com/syrus/util/KISConnectionLRUMap.java \
-	com/syrus/AMFICOM/mcm/MCMSessionEnvironment.java \
-	com/syrus/AMFICOM/mcm/MCMServantManager.java \
-	com/syrus/AMFICOM/mcm/MCMPoolContext.java \
-	com/syrus/AMFICOM/mcm/DatabaseContextSetup.java \
-	com/syrus/AMFICOM/mcm/MCMGeneralObjectLoader.java \
-	com/syrus/AMFICOM/mcm/MCMAdministrationObjectLoader.java \
-	com/syrus/AMFICOM/mcm/MCMConfigurationObjectLoader.java \
-	com/syrus/AMFICOM/mcm/MCMMeasurementObjectLoader.java \
-	com/syrus/AMFICOM/mcm/TestProcessor.java \
-	com/syrus/AMFICOM/mcm/OnetimeTestProcessor.java \
-	com/syrus/AMFICOM/mcm/PeriodicalTestProcessor.java \
-	com/syrus/AMFICOM/mcm/MeasurementControlModule.java \
-	com/syrus/AMFICOM/mcm/MCMImplementation.java \
-	com/syrus/AMFICOM/mcm/KISReport.java \
-	com/syrus/AMFICOM/mcm/Transceiver.java \
-	com/syrus/AMFICOM/mcm/KISConnection.java \
-	com/syrus/AMFICOM/mcm/KISConnectionManager.java \
-	com/syrus/AMFICOM/mcm/TCPKISConnection.java \
-	com/syrus/AMFICOM/mcm/AnalysisException.java \
-	com/syrus/AMFICOM/mcm/MeasurementException.java \
-	com/syrus/AMFICOM/mcm/TestProcessingException.java \
-	com/syrus/AMFICOM/mcm/AnalysisManager.java \
-	com/syrus/AMFICOM/mcm/AnalysisEvaluationProcessor.java
-
-#	com/syrus/AMFICOM/mcm/DadaraAnalysisManager.java
+SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/mcm/*.java) \
+	$(SRCDIR)/com/syrus/util/KISConnectionLRUMap.java
 
 
 all: $(LIBNAME) $(LIBNAME_INTERFACE)
@@ -77,47 +53,29 @@ $(LIBNAME_INTERFACE):	.corba
 .mach:	.corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH):$(CLASSDIR) \
-		$(addprefix $(SRCDIR)/,$(SOURCES))
+		$(SOURCES)
 	touch $@
 
-.PHONY: idl
-idl: .idl
-
-# Just idl-to-java compilation
-.idl: $(SRCDIR)
-	$(IDLJ) $(IDLJFLAGS) idl/mcm.idl
-	touch $@
-
-
-.PHONY: corba
-corba: .corba
-
-# Compilation of stubs & skeletons
-.corba:	$(CLASSDIR) .idl
+.corba:	$(CLASSDIR)
+	$(IDLJ) $(IDLJFLAGS) \
+		$(LOCALIDLDIR)/mcm.idl
 	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
 		-classpath $(APPCLASSPATH) \
 		-sourcepath $(SRCDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/corba/*.java
 	touch $@
 
-$(SRCDIR):
 $(CLASSDIR):
-$(LIBDIR):
 	mkdir -p $@
 
 
-.PHONY: idlclean
-idlclean:
-	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/mcm/corba
-	$(RM) .idl
-
 .PHONY:	clean
-clean:	cleanmach cleancorba cleanhead
+clean:	cleanmach cleancorba
 	$(RM) $(LIBNAME) $(LIBNAME_INTERFACE)
 
 .PHONY:	cleanmach
 cleanmach:
-	$(RM) $(addprefix $(CLASSDIR)/,$(subst .java,.class,$(SOURCES)))
+	$(RM) $(subst $(SRCDIR),$(CLASSDIR),$(subst .java,*.class,$(SOURCES)))
 	$(RM) .mach
 
 .PHONY:	cleanhead
@@ -128,8 +86,9 @@ cleanhead:
 	
 
 .PHONY:	cleancorba
-cleancorba: idlclean
+cleancorba:
 	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/mcm/corba
+	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/mcm/corba
 	$(RM) .corba
 
 #### Install ####
@@ -142,6 +101,6 @@ install: $(LIBNAME) $(LIBNAME_INTERFACE) $(LIBDIR)
 arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
-		idl/mcm.idl \
-		$(addprefix $(SRCDIR)/,$(SOURCES))
+		$(LOCALIDLDIR)/mcm.idl \
+		$(SOURCES)
 

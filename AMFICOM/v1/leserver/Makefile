@@ -5,6 +5,7 @@ LIBNAME_INTERFACE := $(subst _v1,_interface,$(MODULE_NAME)).jar
 ARCHFILE := $(subst _v1,,$(MODULE_NAME)).tar.gz
 
 IDLDIR = ../idl_v1/idl
+LOCALIDLDIR = ./idl
 
 HOST = mongol
 SERVICE_NAME = mongol
@@ -45,7 +46,7 @@ $(LIBNAME_INTERFACE):	.corba
 	touch $@
 
 .corba:	$(CLASSDIR)
-	$(IDLJ) $(IDLJFLAGS) idl/leserver.idl
+	$(IDLJ) $(IDLJFLAGS) $(LOCALIDLDIR)/leserver.idl
 	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
 		-classpath $(APPCLASSPATH) \
 		-sourcepath $(SRCDIR) \
@@ -80,6 +81,6 @@ install: $(LIBNAME) $(LIBNAME_INTERFACE)
 arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
-		idl/leserver.idl \
-		$(addprefix $(SRCDIR)/,$(SOURCES))
+		$(LOCALIDLDIR)/leserver.idl \
+		$(SOURCES)
 
