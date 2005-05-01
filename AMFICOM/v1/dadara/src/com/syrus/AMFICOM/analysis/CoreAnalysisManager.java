@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.59 2005/05/01 10:26:13 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.60 2005/05/01 10:56:50 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.59 $, $Date: 2005/05/01 10:26:13 $
+ * @version $Revision: 1.60 $, $Date: 2005/05/01 10:56:50 $
  * @module
  */
 
@@ -24,6 +24,7 @@ import com.syrus.AMFICOM.analysis.dadara.IncompatibleTracesException;
 import com.syrus.AMFICOM.analysis.dadara.ModelFunction;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEventsImpl;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
+import com.syrus.AMFICOM.analysis.dadara.ReflectogramComparer;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
 import com.syrus.AMFICOM.analysis.dadara.ReliabilitySimpleReflectogramEventImpl;
 import com.syrus.AMFICOM.analysis.dadara.ThreshDX;
@@ -521,6 +522,43 @@ public class CoreAnalysisManager
 		}
 		return mtm;
 	}
+
+    /**
+     * Находит в коллекции рефлектограмму, ближайшую к усредненному по
+     * коллекции значению. Входные р/г должны быть совместны, т.е.
+     * иметь одни и те же режимы регистрации (разрешение, длина импульса и пр.)
+     * @param bsColl входная коллекция рефлектограмм
+     * @return самю среднюю рефлектограмму из числа существующих
+     * @throws IncompatibleTracesException Если входные рефлектограммы
+     * несовместны
+     * @throws IllegalArgumentException Если входная совокупность р/г пуста
+     */
+    public static BellcoreStructure getMostTypicalTrace(Collection bsColl)
+    throws IncompatibleTracesException
+    {
+        TracesAverages av = findTracesAverages(bsColl, false, false, false);
+
+        // если входная коллекция пуста, то к этому моменту уже будет
+        // выброшено исключение IllegalArgumentException,
+        // т.ч. return null не произойдет.
+
+        BellcoreStructure nearest = null;
+        double bestDistance = 0;
+        for (Iterator it = bsColl.iterator(); it.hasNext();)
+        {
+            BellcoreStructure bs = (BellcoreStructure)it.next();
+            double[] yBS = bs.getTraceData();
+            double distance = ReflectogramComparer.getMaxDeviation(av.avY,
+                    yBS,
+                    av.minTraceLength);
+            if (nearest == null || distance < bestDistance)
+            {
+                nearest = bs;
+                bestDistance = distance;
+            }
+        }
+        return nearest;
+    }
 
 	public static double getMedian(double[] y, int pos)
 	{
