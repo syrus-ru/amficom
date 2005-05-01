@@ -1,5 +1,5 @@
 /*
- * $Id: Thresh.java,v 1.13 2005/05/01 06:00:38 saa Exp $
+ * $Id: Thresh.java,v 1.14 2005/05/01 06:18:37 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.13 $, $Date: 2005/05/01 06:00:38 $
+ * @version $Revision: 1.14 $, $Date: 2005/05/01 06:18:37 $
  * @module
  */
 
@@ -21,15 +21,16 @@ import java.io.IOException;
 public abstract class Thresh
 implements Cloneable
 {
-	public static final boolean[] IS_KEY_UPPER = new boolean[] { true, true, false, false };
-	public static final boolean[] IS_KEY_HARD = new boolean[] { false, true, false, true };
-	public static final int SOFT_UP = 0;
+	protected static final boolean[] IS_KEY_UPPER = new boolean[] { true, true, false, false };
+	protected static final boolean[] IS_KEY_HARD = new boolean[] { false, true, false, true };
+    protected static final int[] CONJ_KEY = new int[] { 2, 3, 0, 1 }; // upper <-> lower - парный key для данного
+    protected static final int[] LIMIT_KEY = new int[] { 1, 1, 3, 3 }; // key параметра, ограничивающим данный (self если ограничения нет)
+    protected static final int[] FORCEMOVE_KEY = new int[] { 0, 0, 2, 2 }; // key параметра, который принудительно двигается вместе с данным (self если принуждения нет)
+
+    public static final int SOFT_UP = 0;
 	public static final int HARD_UP = 1;
 	public static final int SOFT_DOWN = 2;
 	public static final int HARD_DOWN = 3;
-	protected static final int[] CONJ_KEY = new int[] { 2, 3, 0, 1 }; // upper <-> lower - парный key для данного
-	protected static final int[] LIMIT_KEY = new int[] { 1, 1, 3, 3 }; // key параметра, ограничивающим данный (self если ограничения нет)
-	protected static final int[] FORCEMOVE_KEY = new int[] { 0, 0, 2, 2 }; // key параметра, который принудительно двигается вместе с данным (self если принуждения нет)
 
 	protected int eventId0;
 	protected int eventId1;
@@ -133,4 +134,12 @@ implements Cloneable
 	// увеличить порог до совпадения с сеткой
 	// используется в native-коде
 	protected abstract void roundUp(int key);
+
+    public static boolean isKeyUpper(int key) {
+        return IS_KEY_UPPER[key];
+    }
+
+    public static boolean isKeyHard(int key) {
+        return IS_KEY_HARD[key];
+    }
 }
