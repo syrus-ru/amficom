@@ -1,5 +1,5 @@
 /*
- * $Id: CORBAObjectLoader.java,v 1.4 2005/04/29 15:57:57 arseniy Exp $
+ * $Id: CORBAObjectLoader.java,v 1.5 2005/05/01 16:53:15 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.corba.SecurityKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/04/29 15:57:57 $
+ * @version $Revision: 1.5 $, $Date: 2005/05/01 16:53:15 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
@@ -27,29 +27,13 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 		this.cmServerConnectionManager = cmServerConnectionManager;
 	}
 
-	public void delete(Identifier id) {
-		try {
-			CMServer cmServer = this.cmServerConnectionManager.getCMServerReference();
-			SecurityKey securityKey = LoginManager.getSecurityKey();
-
-			Identifier_Transferable idT = (Identifier_Transferable) id.getTransferable();
-			cmServer.delete(idT, securityKey);
-		}
-		catch (CommunicationException ce) {
-			Log.errorException(ce);
-		}
-		catch (AMFICOMRemoteException are) {
-			Log.errorMessage("CORBAGeneralObjectLoader.delete | Cannot delete object '" + id + "'" + are.message);
-		}
-	}
-
 	public void delete(Set identifiables) {
 		try {
 			CMServer cmServer = this.cmServerConnectionManager.getCMServerReference();
 			SecurityKey securityKey = LoginManager.getSecurityKey();
 
 			Identifier_Transferable[] idsT = Identifier.createTransferables(identifiables);
-			cmServer.deleteList(idsT, securityKey);
+			cmServer.delete(idsT, securityKey);
 		}
 		catch (CommunicationException ce) {
 			Log.errorException(ce);

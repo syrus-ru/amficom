@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseGeneralObjectLoader.java,v 1.2 2005/04/27 15:30:20 arseniy Exp $
+ * $Id: DatabaseGeneralObjectLoader.java,v 1.3 2005/05/01 16:53:15 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,30 +16,14 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/27 15:30:20 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/01 16:53:15 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
 
 public class DatabaseGeneralObjectLoader extends DatabaseObjectLoader implements GeneralObjectLoader {
 
-	public ParameterType loadParameterType(Identifier id) throws ApplicationException {
-		return new ParameterType(id);
-	}
-
-	public CharacteristicType loadCharacteristicType(Identifier id) throws ApplicationException {
-		return new CharacteristicType(id);
-	}
-
-	public Characteristic loadCharacteristic(Identifier id) throws ApplicationException {
-		return new Characteristic(id);
-	}
-
-
-
-
-
-	// for multiple objects
+	/* Load multiple objects*/
 
 	public Set loadParameterTypes(Set ids) throws ApplicationException {
 		ParameterTypeDatabase database = GeneralDatabaseContext.getParameterTypeDatabase();
@@ -55,6 +39,10 @@ public class DatabaseGeneralObjectLoader extends DatabaseObjectLoader implements
 		CharacteristicDatabase database = GeneralDatabaseContext.getCharacteristicDatabase();
 		return super.retrieveFromDatabase(database, ids);
 	}
+
+
+
+	/* Load multiple objects but ids*/
 
 	public Set loadParameterTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		ParameterTypeDatabase database = GeneralDatabaseContext.getParameterTypeDatabase();
@@ -73,27 +61,7 @@ public class DatabaseGeneralObjectLoader extends DatabaseObjectLoader implements
 
 
 
-
-
-	public void saveParameterType(ParameterType parameterType, boolean force) throws ApplicationException {
-		ParameterTypeDatabase database = GeneralDatabaseContext.getParameterTypeDatabase();
-		database.update(parameterType, userId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
-	}
-
-	public void saveCharacteristicType(CharacteristicType characteristicType, boolean force)
-			throws ApplicationException {
-		CharacteristicTypeDatabase database = GeneralDatabaseContext.getCharacteristicTypeDatabase();
-		database.update(characteristicType, userId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
-	}
-
-	public void saveCharacteristic(Characteristic characteristic, boolean force) throws ApplicationException {
-		CharacteristicDatabase database = GeneralDatabaseContext.getCharacteristicDatabase();
-		database.update(characteristic, userId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
-	}
-
-
-
-
+	/* Save multiple objects*/
 
 	public void saveParameterTypes(Set objects, boolean force) throws ApplicationException {
 		ParameterTypeDatabase database = GeneralDatabaseContext.getParameterTypeDatabase();
@@ -112,8 +80,6 @@ public class DatabaseGeneralObjectLoader extends DatabaseObjectLoader implements
 
 
 
-
-
 	public Set refresh(Set storableObjects) throws ApplicationException {
 		if (storableObjects.isEmpty())
 			return Collections.EMPTY_SET;
@@ -129,15 +95,6 @@ public class DatabaseGeneralObjectLoader extends DatabaseObjectLoader implements
 	}
 
 
-
-
-
-	public void delete(final Identifier id) {
-		short entityCode = id.getMajor();
-		StorableObjectDatabase storableObjectDatabase = GeneralDatabaseContext.getDatabase(entityCode);
-		if (storableObjectDatabase != null)
-			storableObjectDatabase.delete(id);
-	}
 
 	public void delete(final Set identifiables) {
 		if (identifiables == null || identifiables.isEmpty())

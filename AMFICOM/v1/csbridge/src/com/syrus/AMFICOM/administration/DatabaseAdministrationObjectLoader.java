@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseAdministrationObjectLoader.java,v 1.3 2005/04/29 08:56:46 arseniy Exp $
+ * $Id: DatabaseAdministrationObjectLoader.java,v 1.4 2005/05/01 16:53:15 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,47 +18,19 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseObjectLoader;
 import com.syrus.AMFICOM.general.Identifiable;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/04/29 08:56:46 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/01 16:53:15 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
 
 public class DatabaseAdministrationObjectLoader extends DatabaseObjectLoader implements AdministrationObjectLoader {
 
-	public User loadUser(Identifier id) throws ApplicationException {
-		return new User(id);
-	}
-
-	public Domain loadDomain(Identifier id) throws ApplicationException {
-		return new Domain(id);
-	}
-
-	public Server loadServer(Identifier id) throws ApplicationException {
-		return new Server(id);
-	}
-
-	public MCM loadMCM(Identifier id) throws ApplicationException {
-		return new MCM(id);
-	}
-
-	public ServerProcess loadServerProcess(Identifier id) throws ApplicationException {
-		return new ServerProcess(id);
-	}
-
-	//	public PermissionAttributes loadPermissionAttributes(Identifier id) throws ApplicationException {
-	//		return new PermissionAttributes(id);
-	//	}
-
-
-
-
-	// for multiple objects
+	/* Load multiple objects*/
 
 	public Set loadUsers(Set ids) throws ApplicationException {
 		UserDatabase database = AdministrationDatabaseContext.getUserDatabase();
@@ -89,11 +61,9 @@ public class DatabaseAdministrationObjectLoader extends DatabaseObjectLoader imp
 	//      return new PermissionAttributes(id);
 	//  }
 
-	/* Load Administration StorableObject but argument ids */
 
 
-
-
+	/* Load multiple objects but ids*/
 
 	public Set loadUsersButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		UserDatabase database = AdministrationDatabaseContext.getUserDatabase();
@@ -126,37 +96,7 @@ public class DatabaseAdministrationObjectLoader extends DatabaseObjectLoader imp
 
 
 
-
-	public void saveUser(User user, boolean force) throws ApplicationException {
-		UserDatabase database = AdministrationDatabaseContext.getUserDatabase();
-		database.update(user, userId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
-	}
-
-	public void saveDomain(Domain domain, boolean force) throws ApplicationException {
-		DomainDatabase database = AdministrationDatabaseContext.getDomainDatabase();
-		database.update(domain, userId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
-	}
-
-	public void saveServer(Server server, boolean force) throws ApplicationException {
-		ServerDatabase database = AdministrationDatabaseContext.getServerDatabase();
-		database.update(server, userId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
-	}
-
-	public void saveMCM(MCM mcm, boolean force) throws ApplicationException {
-		MCMDatabase database = AdministrationDatabaseContext.getMCMDatabase();
-		database.update(mcm, userId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
-	}
-
-	public void saveServerProcess(ServerProcess serverProcess, boolean force) throws ApplicationException {
-		ServerProcessDatabase database = AdministrationDatabaseContext.getServerProcessDatabase();
-		database.update(serverProcess, userId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
-	}
-
-	//	public void savePermissionAttributes(PermissionAttributes permissionAttributes, boolean force) throws DatabaseException ;
-
-
-
-
+	/* Save multiple objects*/
 
 	public void saveUsers(Set collection, boolean force) throws ApplicationException {
 		UserDatabase database = AdministrationDatabaseContext.getUserDatabase();
@@ -187,7 +127,6 @@ public class DatabaseAdministrationObjectLoader extends DatabaseObjectLoader imp
 
 
 
-
 	public Set refresh(Set storableObjects) throws ApplicationException {
 		if (storableObjects.isEmpty())
 			return Collections.EMPTY_SET;
@@ -203,14 +142,6 @@ public class DatabaseAdministrationObjectLoader extends DatabaseObjectLoader imp
 	}
 
 
-
-
-	public void delete(final Identifier id) {
-		short entityCode = id.getMajor();
-		StorableObjectDatabase storableObjectDatabase = AdministrationDatabaseContext.getDatabase(entityCode);
-		if (storableObjectDatabase != null)
-			storableObjectDatabase.delete(id);
-	}
 
 	public void delete(final Set identifiables) {
 		if (identifiables == null || identifiables.isEmpty())

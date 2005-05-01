@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseConfigurationObjectLoader.java,v 1.2 2005/04/27 15:39:00 arseniy Exp $
+ * $Id: DatabaseConfigurationObjectLoader.java,v 1.3 2005/05/01 16:53:15 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,84 +18,17 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseObjectLoader;
 import com.syrus.AMFICOM.general.Identifiable;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/27 15:39:00 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/01 16:53:15 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
 
 public class DatabaseConfigurationObjectLoader extends DatabaseObjectLoader implements ConfigurationObjectLoader {
-
-	/* Load single object*/
-
-	public EquipmentType loadEquipmentType(Identifier id) throws ApplicationException {
-		return new EquipmentType(id);
-	}
-
-	public PortType loadPortType(Identifier id) throws ApplicationException {
-		return new PortType(id);
-	}
-
-	public MeasurementPortType loadMeasurementPortType(Identifier id) throws ApplicationException {
-		return new MeasurementPortType(id);
-	}
-
-	public TransmissionPathType loadTransmissionPathType(Identifier id) throws ApplicationException {
-		return new TransmissionPathType(id);
-	}
-
-	public LinkType loadLinkType(Identifier id) throws ApplicationException {
-		return new LinkType(id);
-	}
-
-	public CableLinkType loadCableLinkType(Identifier id) throws ApplicationException {
-		return new CableLinkType(id);
-	}
-
-	public CableThreadType loadCableThreadType(Identifier id) throws ApplicationException {
-		return new CableThreadType(id);
-	}
-
-
-
-	public Equipment loadEquipment(Identifier id) throws ApplicationException {
-		return new Equipment(id);
-	}
-
-	public Port loadPort(Identifier id) throws ApplicationException {
-		return new Port(id);
-	}
-
-	public MeasurementPort loadMeasurementPort(Identifier id) throws ApplicationException {
-		return new MeasurementPort(id);
-	}
-
-	public TransmissionPath loadTransmissionPath(Identifier id) throws ApplicationException {
-		return new TransmissionPath(id);
-	}
-
-	public KIS loadKIS(Identifier id) throws ApplicationException {
-		return new KIS(id);
-	}
-
-	public MonitoredElement loadMonitoredElement(Identifier id) throws ApplicationException {
-		return new MonitoredElement(id);
-	}
-
-	public Link loadLink(Identifier id) throws ApplicationException {
-		return new Link(id);
-	}
-
-	public CableThread loadCableThread(Identifier id) throws ApplicationException {
-		return new CableThread(id);
-	}
-
-
 
 	/* Load multiple objects*/
 
@@ -257,96 +190,6 @@ public class DatabaseConfigurationObjectLoader extends DatabaseObjectLoader impl
 		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 	}
 
-//$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-//$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-//$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-
-	/* Save single object*/
-
-	public void saveEquipmentType(EquipmentType equipmentType, boolean force) throws ApplicationException {
-		EquipmentTypeDatabase database = ConfigurationDatabaseContext.getEquipmentTypeDatabase();
-		database.update(equipmentType, userId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
-	}
-
-	public void savePortType(PortType portType, boolean force) throws ApplicationException {
-		PortTypeDatabase database = ConfigurationDatabaseContext.getPortTypeDatabase();
-		database.update(portType, userId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
-	}
-
-	public void saveMeasurementPortType(MeasurementPortType measurementPortType, boolean force) throws ApplicationException {
-		MeasurementPortTypeDatabase database = ConfigurationDatabaseContext.getMeasurementPortTypeDatabase();
-		database.update(measurementPortType, userId,
-				force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
-	}
-
-	public void saveTransmissionPathType(TransmissionPathType transmissionPathType, boolean force)
-			throws ApplicationException {
-		TransmissionPathTypeDatabase database = ConfigurationDatabaseContext.getTransmissionPathTypeDatabase();
-		database.update(transmissionPathType, userId,
-				force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
-	}
-
-	public void saveLinkType(LinkType linkType, boolean force) throws ApplicationException {
-		LinkTypeDatabase database = ConfigurationDatabaseContext.getLinkTypeDatabase();
-		database.update(linkType, userId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
-	}
-
-	public void saveCableLinkType(CableLinkType cableLinkType, boolean force) throws ApplicationException {
-		StorableObjectDatabase database = ConfigurationDatabaseContext.getCableLinkTypeDatabase();
-		database.update(cableLinkType, userId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
-	}
-
-	public void saveCableThreadType(CableThreadType cableThreadType, boolean force) throws ApplicationException {
-		CableThreadTypeDatabase database = ConfigurationDatabaseContext.getCableThreadTypeDatabase();
-		database.update(cableThreadType, userId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
-	}
-
-
-
-	public void saveEquipment(Equipment equipment, boolean force) throws ApplicationException {
-		EquipmentDatabase database = ConfigurationDatabaseContext.getEquipmentDatabase();
-		database.update(equipment, userId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
-	}
-
-	public void savePort(Port port, boolean force) throws ApplicationException {
-		PortDatabase database = ConfigurationDatabaseContext.getPortDatabase();
-		database.update(port, userId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
-	}
-
-	public void saveMeasurementPort(MeasurementPort measurementPort, boolean force)
-			throws ApplicationException {
-		MeasurementPortDatabase database = ConfigurationDatabaseContext.getMeasurementPortDatabase();
-		database.update(measurementPort, userId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
-	}
-
-	public void saveTransmissionPath(TransmissionPath transmissionPath, boolean force)
-			throws ApplicationException {
-		TransmissionPathDatabase database = ConfigurationDatabaseContext.getTransmissionPathDatabase();
-		database.update(transmissionPath, userId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
-	}
-
-	public void saveKIS(KIS kis, boolean force) throws ApplicationException {
-		KISDatabase database = ConfigurationDatabaseContext.getKISDatabase();
-		database.update(kis, userId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
-	}
-
-	public void saveMonitoredElement(MonitoredElement monitoredElement, boolean force)
-			throws ApplicationException {
-		MonitoredElementDatabase database = ConfigurationDatabaseContext.getMonitoredElementDatabase();
-		database.update(monitoredElement, userId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
-	}
-
-	public void saveLink(Link link, boolean force) throws ApplicationException {
-		LinkDatabase database = ConfigurationDatabaseContext.getLinkDatabase();
-		database.update(link, userId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
-	}
-
-	public void saveCableThread(CableThread cableThread, boolean force)
-			throws ApplicationException {
-		CableThreadDatabase database = ConfigurationDatabaseContext.getCableThreadDatabase();
-		database.update(cableThread, userId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
-	}
-
 //############################################################################
 //############################################################################
 //############################################################################
@@ -432,7 +275,6 @@ public class DatabaseConfigurationObjectLoader extends DatabaseObjectLoader impl
 
 
 
-
 	public Set refresh(Set storableObjects) throws ApplicationException {
 		if (storableObjects.isEmpty())
 			return Collections.EMPTY_SET;
@@ -448,14 +290,6 @@ public class DatabaseConfigurationObjectLoader extends DatabaseObjectLoader impl
 	}
 
 
-
-
-	public void delete(Identifier id) {
-		short entityCode = id.getMajor();
-		StorableObjectDatabase storableObjectDatabase = ConfigurationDatabaseContext.getDatabase(entityCode);
-		if (storableObjectDatabase != null)
-			storableObjectDatabase.delete(id);
-	}
 
 	public void delete(final Set identifiables) {
 		if (identifiables == null || identifiables.isEmpty())

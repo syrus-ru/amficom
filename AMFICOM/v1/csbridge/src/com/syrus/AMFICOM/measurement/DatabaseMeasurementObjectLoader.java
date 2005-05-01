@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseMeasurementObjectLoader.java,v 1.2 2005/04/27 15:39:00 arseniy Exp $
+ * $Id: DatabaseMeasurementObjectLoader.java,v 1.3 2005/05/01 16:53:15 arseniy Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/27 15:39:00 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/01 16:53:15 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
@@ -105,6 +105,7 @@ public class DatabaseMeasurementObjectLoader extends DatabaseObjectLoader implem
 
 
 	/* Load multiple objects but ids*/
+
 	private java.util.Set loadStorableObjectsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
 		if (ids.isEmpty())
 			return Collections.EMPTY_SET;
@@ -183,14 +184,6 @@ public class DatabaseMeasurementObjectLoader extends DatabaseObjectLoader implem
 	}
 
 
-	/* Save single object*/
-
-	private void saveStorableObjects(final java.util.Set storableObjects, final boolean force) throws ApplicationException {
-		if (storableObjects.isEmpty())
-			return;
-		StorableObjectDatabase database = MeasurementDatabaseContext.getDatabase(((Identifier)storableObjects.iterator().next()).getMajor());
-		database.update(storableObjects, userId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
-	}	
 
 	/* Save multiple objects*/
 
@@ -257,6 +250,15 @@ public class DatabaseMeasurementObjectLoader extends DatabaseObjectLoader implem
 	}
 
 
+	private void saveStorableObjects(final java.util.Set storableObjects, final boolean force) throws ApplicationException {
+		if (storableObjects.isEmpty())
+			return;
+		StorableObjectDatabase database = MeasurementDatabaseContext.getDatabase(((Identifier)storableObjects.iterator().next()).getMajor());
+		database.update(storableObjects, userId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+	}	
+
+
+
 	public java.util.Set refresh(java.util.Set storableObjects) throws ApplicationException {
 		if (storableObjects.isEmpty())
 			return Collections.EMPTY_SET;
@@ -272,13 +274,6 @@ public class DatabaseMeasurementObjectLoader extends DatabaseObjectLoader implem
 	}
 
 
-
-	public void delete(Identifier id) {
-		short entityCode = id.getMajor();
-		StorableObjectDatabase storableObjectDatabase = MeasurementDatabaseContext.getDatabase(entityCode);
-		if (storableObjectDatabase != null)
-			storableObjectDatabase.delete(id);
-	}
 
 	public void delete(final java.util.Set identifiables) {
 		if (identifiables == null || identifiables.isEmpty())
