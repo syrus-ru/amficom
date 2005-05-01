@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.70 2005/05/01 13:05:37 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.71 2005/05/01 13:53:34 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
  * генерацией пороговых кривых и сохранением/восстановлением порогов.
  *
  * @author $Author: saa $
- * @version $Revision: 1.70 $, $Date: 2005/05/01 13:05:37 $
+ * @version $Revision: 1.71 $, $Date: 2005/05/01 13:53:34 $
  * @module
  */
 public class ModelTraceManager
@@ -368,6 +368,35 @@ implements DataStreamable, Cloneable
 	}
 
     /**
+     * Создает набор DX-порогов, в котором "все пороги нулевые кроме порогов
+     * заданного события"
+     * @param nEvent номер заданного события
+     * @return набор DY-порогов
+     */
+    private ThreshDX[] getSingleEventThreshDX(int nEvent) {
+        ThreshDX[] tmpTDX = new ThreshDX[tDX.length];
+        for (int i = 0; i < tmpTDX.length; i++) {
+            tmpTDX[i] = tDX[i].isRelevantToNEvent(nEvent)
+                ? tDX[i]
+                : tDX[i].makeZeroedCopy();
+        }
+        return tmpTDX;
+    }
+    /**
+     * Создает набор DY-порогов аналогично
+     * {@link #getSingleEventThreshDX(int)}
+     */
+    private ThreshDY[] getSingleEventThreshDY(int nEvent) {
+        ThreshDY[] tmpTDY = new ThreshDY[tDY.length];
+        for (int i = 0; i < tmpTDY.length; i++) {
+            tmpTDY[i] = tDY[i].isRelevantToNEvent(nEvent)
+                ? tDY[i]
+                : tDY[i].makeZeroedCopy();
+        }
+        return tmpTDY;
+    }
+
+    /**
      * Определяет все четыре пороговые кривые данного события
      *   "как если бы не не было других порогов".
      * <p>
@@ -387,18 +416,8 @@ implements DataStreamable, Cloneable
         }
 
         // make thresholds for 'this event only'
-        ThreshDX[] tmpTDX = new ThreshDX[tDX.length];
-        ThreshDY[] tmpTDY = new ThreshDY[tDY.length];
-        for (int i = 0; i < tmpTDX.length; i++) {
-            tmpTDX[i] = tDX[i].isRelevantToNEvent(nEvent)
-                ? tDX[i]
-                : tDX[i].makeZeroedCopy();
-        }
-        for (int i = 0; i < tmpTDY.length; i++) {
-            tmpTDY[i] = tDY[i].isRelevantToNEvent(nEvent)
-                ? tDY[i]
-                : tDY[i].makeZeroedCopy();
-        }
+        ThreshDX[] tmpTDX = getSingleEventThreshDX(nEvent);
+        ThreshDY[] tmpTDY = getSingleEventThreshDY(nEvent);
 
         // init cache
         thSingleMTRCacheEventId = nEvent;
@@ -610,6 +629,7 @@ implements DataStreamable, Cloneable
 	 * Само определяет, какой порог какого события будет изменяться.
 	 * Данная реализации содержит некоторые подстроечные параметры,
 	 * специфичные для рефлектометрии.
+     * XXX: написано довольно тяжело из-за неполиморфизма выбора singleEventCurveMode
 	 * @param x0 модельная x-координата (разверности индекса, но вещ.)
 	 * @param y0 модельная y-координата (дБ)
 	 * @param xCapture радиус захвата кривой мышью по горизонтали
@@ -618,13 +638,18 @@ implements DataStreamable, Cloneable
 	 *     =0: приоритетов нет; =1: 100% приоритет HARD-алармов
 	 * @param button номер кнопки мыши, 0=LMB, 1=RMB.
 	 * @param nEvent номер события, которым надо ограничить захват,
-	 *    либо -1, если ограничивать не надо 
+	 *    либо -1, если ограничивать не надо
+     * @param singleEventCurveMode true, если захватываются пороги,
+     *    отображенные "как если бы других порогов не было" (не имеет смысла
+     *    при nEvent < 0).
 	 * @return handle либо null
 	 */
 	public ThresholdHandle getThresholdHandle(double x0, double y0,
 			double xCapture, double yCapture, double prioFactor, int button,
-			int nEvent)
+			int nEvent, boolean singleEventCurveMode)
 	{
+        if (nEvent < 0)
+            singleEventCurveMode = false;
 		if (xCapture <= 0.1)
 			xCapture = 0.1;  // XXX: xCapture range: min
 		if (xCapture > 5000)
@@ -634,32 +659,46 @@ implements DataStreamable, Cloneable
 
 		int xRange = (int )(xCapture + 1);
 
+        ModelTraceRange[] singleCurveMTR = null;
+        if (singleEventCurveMode)
+            singleCurveMTR = getEventThresholdMTR(nEvent);
 		// Определяем ближайшую пороговую кривую и ближайшую точку на этой кривой
 		// UP2/DOWN2 takes precedence over UP1/DOWN1
 		double bestDR = 2; // наибольшее расстояние=1; 2 => еще не найдено  
 		int bestKey = 0;
 		int bestX = 0;
+        double bestY = 0;
 		int[] keys = new int[] { Thresh.SOFT_UP, Thresh.SOFT_DOWN, Thresh.HARD_UP, Thresh.HARD_DOWN }; 
 		for (int k = 0; k < 4; k++)
 		{
-			int xL = (int )x0 - xRange;
-			int w = xRange * 2;
-			double[] yArr = getThresholdMT(keys[k]).getYArray(xL, w + 1);
+			int xL;
+            double[] yArr;
+            if (singleEventCurveMode) {
+                ModelTraceRange mtr = singleCurveMTR[keys[k]];
+                xL = Math.max((int)x0 - xRange, mtr.getBegin());
+                int xR = Math.min((int)x0 + xRange, mtr.getEnd());
+                if (xL > xR)
+                    continue;
+                yArr = singleCurveMTR[keys[k]].getYArray(xL, xR - xL + 1);
+            } else {
+                xL = (int)x0 - xRange;
+                yArr = getThresholdMT(keys[k]).getYArray(xL, xRange * 2 + 1);
+            }
 
 			double xScale = xCapture;
 			double yScale = yCapture;
 			double curBestDR = 2; // >1 => еще не найдено
 			int curBestX = 0;
-			for (int i = 0; i <= w; i++)
+			for (int i = 0; i < yArr.length; i++)
 			{
 				double dX = (x0 - xL - i) / xScale;
 				double dY = (y0 - yArr[i]) / yScale;
 				double scalar;
 				double dR;
-				if (i == w) // последняя точка - рассматриваем расстояние только до нее самой
+				if (i == yArr.length - 1) // последняя точка - рассматриваем расстояние только до нее самой
 				{
 					dR = Math.sqrt(dX * dX + dY * dY);
-					scalar = 1;
+					scalar = 0;
 				}
 				else
 				{
@@ -694,15 +733,17 @@ implements DataStreamable, Cloneable
 				bestKey = keys[k];
 				bestDR = curBestDR;
 				bestX = curBestX;
+                bestY = yArr[curBestX - xL];
 			}
 		}
 
 		if (bestDR > 1)
 			return null;
 
+        // если нет режима singleEventCurveMode, но требуется одно событие, то
 		// проверяем соответствие точки захвата заданному событию на
 		// определенной пороговой кривой
-		if (nEvent >= 0)
+		if (nEvent >= 0 && !singleEventCurveMode)
 		{
 			SimpleReflectogramEvent range
 				= getEventRangeOnThresholdCurve(nEvent, bestKey);
@@ -710,24 +751,34 @@ implements DataStreamable, Cloneable
 				return null;
 		}
 
-		double bestY = getThresholdY(bestKey, bestX);
+		//double bestY = getThresholdY(bestKey, bestX);
 
+        ThreshDX[] tmpTDX = singleEventCurveMode
+            ? getSingleEventThreshDX(nEvent)
+            : tDX;
+        ThreshDY[] tmpTDY = singleEventCurveMode
+            ? getSingleEventThreshDY(nEvent)
+            : tDY;
 		if (button == 0)
 		{
-			int thId = getMF().findResponsibleThreshDYID(tDX, tDY, bestKey, bestX);
+			int thId = getMF().
+                findResponsibleThreshDYID(tmpTDX, tmpTDY, bestKey, bestX);
 			if (thId == -1)
 				return null;
-			ThresholdHandleDY handle = new ThresholdHandleDY(thId, bestKey, bestX, bestY);
-			handle.posY = getThresholdY(bestKey, handle.posX);
+			ThresholdHandleDY handle =
+                new ThresholdHandleDY(thId, bestKey, bestX, bestY);
+			handle.posY = bestY; //getThresholdY(bestKey, handle.posX);
 			return handle;
 		}
 		else
 		{
-			int thId = getMF().findResponsibleThreshDXID(tDX, tDY, bestKey, bestX);
+			int thId = getMF().
+                findResponsibleThreshDXID(tmpTDX, tmpTDY, bestKey, bestX);
 			if (thId == -1)
 				return null;
-			ThresholdHandleDX handle = new ThresholdHandleDX(thId, bestKey, bestX, bestY);
-			handle.posY = getThresholdY(bestKey, handle.posX);
+			ThresholdHandleDX handle =
+                new ThresholdHandleDX(thId, bestKey, bestX, bestY);
+			handle.posY = bestY; //getThresholdY(bestKey, handle.posX);
 			return handle;
 		}
 	}
