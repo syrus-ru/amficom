@@ -1,5 +1,5 @@
 /*
- * $Id: MCMServantManager.java,v 1.5 2005/04/29 17:08:55 arseniy Exp $
+ * $Id: MCMServantManager.java,v 1.6 2005/05/01 17:30:10 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,15 +22,11 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/04/29 17:08:55 $
+ * @version $Revision: 1.6 $, $Date: 2005/05/01 17:30:10 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
 final class MCMServantManager extends RunnableVerifiedConnectionManager implements BaseConnectionManager {
-	private static final String KEY_SERVANT_CHECK_TIMEOUT = "ServantCheckTimeout";
-
-	public static final int SERVANT_CHECK_TIMEOUT = 10;		//min
-
 	private String loginServerServantName;
 	private String eventServerServantName;
 	private String mServerServantName;
