@@ -1,5 +1,5 @@
 /*
- * $Id: MServerImplementation.java,v 1.51 2005/04/29 16:04:27 arseniy Exp $
+ * $Id: MServerImplementation.java,v 1.52 2005/05/01 17:56:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -107,7 +107,7 @@ import com.syrus.AMFICOM.mserver.corba.MServerPOA;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2005/04/29 16:04:27 $
+ * @version $Revision: 1.52 $, $Date: 2005/05/01 17:56:19 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -1410,7 +1410,7 @@ public class MServerImplementation extends MServerPOA {
 				final Identifier id = new Identifier(testsT[i].header.id);
 				test = (Test) MeasurementStorableObjectPool.fromTransferable(id, testsT[i]);
 				if (test == null)
-					test = (Test) MeasurementStorableObjectPool.getStorableObject(id, true);
+					test = new Test(testsT[i]);
 			}
 			catch (ApplicationException ae) {
 				Log.errorException(ae);
@@ -1431,7 +1431,11 @@ public class MServerImplementation extends MServerPOA {
 		}
 		catch (VersionCollisionException vce) {
 			Log.errorException(vce);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_UPDATE, CompletionStatus.COMPLETED_NO, vce.getMessage());
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_VERSION_COLLISION, CompletionStatus.COMPLETED_NO, vce.getMessage());
+		}
+		catch (Throwable throwable) {
+			Log.errorException(throwable);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_UPDATE, CompletionStatus.COMPLETED_NO, throwable.getMessage());
 		}
 	}
 
@@ -1456,6 +1460,10 @@ public class MServerImplementation extends MServerPOA {
 		}
 		catch (CommunicationException ce) {
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_ACCESS_VALIDATION, CompletionStatus.COMPLETED_NO, ce.getMessage());
+		}
+		catch (Throwable throwable) {
+			Log.errorException(throwable);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_ACCESS_VALIDATION, CompletionStatus.COMPLETED_NO, throwable.getMessage());
 		}
 	}
 }
