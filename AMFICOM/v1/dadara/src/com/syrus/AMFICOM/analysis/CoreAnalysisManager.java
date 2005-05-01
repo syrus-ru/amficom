@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.55 2005/04/30 13:18:57 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.56 2005/05/01 06:01:15 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.55 $, $Date: 2005/04/30 13:18:57 $
+ * @version $Revision: 1.56 $, $Date: 2005/05/01 06:01:15 $
  * @module
  */
 
@@ -231,7 +231,7 @@ public class CoreAnalysisManager
 
 	/**
 	 * Проверяет параметры для анализа.
-	 * @param pars проверяемые параметры
+	 * @param ap проверяемые параметры
 	 * @return true, если набор корректен, false, если набор некорректен
 	 */
 	public static boolean checkAnalysisParameters(AnalysisParameters ap)
@@ -467,8 +467,6 @@ public class CoreAnalysisManager
 	 * @param bs рефлектограмма
 	 * @param ap параметры анализа
 	 * @return массив событий
-	 * @throws BadAnalysisParametersException Входной набор параметров анализа
-     *   недопустим.
 	 */
 	public static ModelTraceAndEventsImpl makeAnalysis(
 			BellcoreStructure bs,
