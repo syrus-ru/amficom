@@ -1,5 +1,5 @@
 /*
- * $Id: configuration.idl,v 1.86 2005/03/16 16:42:52 bass Exp $
+ * $Id: configuration.idl,v 1.87 2005/05/01 16:55:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -94,11 +94,12 @@ module corba {
 	typedef sequence<MeasurementPortType> MeasurementPortTypeSeq;
 	
 /////////////////////// LinkType /////////////////////	
+/*
 	enum AbstractLinkTypeSort {
 		LINK_TYPE,
 		CABLE_LINK_TYPE
 	};
-
+*/
 	enum LinkTypeSort {
 		LINKTYPESORT_OPTICAL_FIBER,
 		LINKTYPESORT_ETHERNET,
@@ -153,7 +154,7 @@ module corba {
 	typedef sequence<CableThreadType_Transferable> CableThreadTypeSeq_Transferable;
 	typedef CableThreadType_Transferable CableThreadType;
 	typedef sequence<CableThreadType> CableThreadTypeSeq;
-
+/*
 	union AbstractLinkType_Transferable switch (AbstractLinkTypeSort) {
 		case LINK_TYPE:
 			LinkType_Transferable linkType;
@@ -164,7 +165,7 @@ module corba {
 	typedef sequence <AbstractLinkType_Transferable> AbstractLinkTypeSeq_Transferable;	
 	typedef AbstractLinkType_Transferable AbstractLinkType;	
 	typedef sequence<AbstractLinkType> AbstractLinkTypeSeq;	
-	
+*/
 
 ///////////////////////// Equipment ///////////////////////
 	struct Equipment_Transferable	{
