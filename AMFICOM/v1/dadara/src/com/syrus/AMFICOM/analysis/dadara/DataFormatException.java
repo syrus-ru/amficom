@@ -1,5 +1,5 @@
 /*-
- * $Id: DataFormatException.java,v 1.1 2005/04/30 13:02:01 saa Exp $
+ * $Id: DataFormatException.java,v 1.2 2005/05/01 06:12:58 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,11 +16,11 @@ package com.syrus.AMFICOM.analysis.dadara;
  * 
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.1 $, $Date: 2005/04/30 13:02:01 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/01 06:12:58 $
  * @module
  */
 public class DataFormatException extends Exception {
-    public static final long serialVersionUID = 7925323030302250981L;
+    private static final long serialVersionUID = 7925323030302250981L;
 
     public DataFormatException() {
         super();

@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceComparer.java,v 1.11 2005/04/30 11:54:28 saa Exp $
+ * $Id: ModelTraceComparer.java,v 1.12 2005/05/01 06:12:58 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,13 +19,17 @@ package com.syrus.AMFICOM.analysis.dadara;
  * <li> ReliabilityModelTraceAndEvents to MTM
  * </ul>
  * @author $Author: saa $
- * @version $Revision: 1.11 $, $Date: 2005/04/30 11:54:28 $
+ * @version $Revision: 1.12 $, $Date: 2005/05/01 06:12:58 $
  * @module
  */
 public class ModelTraceComparer
 {
     private static final int ALARM_LEVEL_FOR_EVENT_CHANGE =
         ReflectogramAlarm.LEVEL_SOFT;
+    
+    private ModelTraceComparer() {
+        // non-instantiable
+    }
 
     public static ReflectogramAlarm compareMTAEToMTM(
             ReliabilityModelTraceAndEvents mtae,

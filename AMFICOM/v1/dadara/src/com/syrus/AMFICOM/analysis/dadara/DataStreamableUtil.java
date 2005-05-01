@@ -1,5 +1,5 @@
 /*-
- * $Id: DataStreamableUtil.java,v 1.4 2005/04/30 13:02:01 saa Exp $
+ * $Id: DataStreamableUtil.java,v 1.5 2005/05/01 06:12:58 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,11 +16,15 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.4 $, $Date: 2005/04/30 13:02:01 $
+ * @version $Revision: 1.5 $, $Date: 2005/05/01 06:12:58 $
  * @module
  */
 public class DataStreamableUtil
 {
+    private DataStreamableUtil() {
+        // non-instantiable
+    }
+
 	public static DataStreamable readDataStreamableFromBA(byte[] bar,
             DataStreamable.Reader reader) throws DataFormatException
 	{

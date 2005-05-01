@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.56 2005/05/01 06:01:15 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.57 2005/05/01 06:12:58 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.56 $, $Date: 2005/05/01 06:01:15 $
+ * @version $Revision: 1.57 $, $Date: 2005/05/01 06:12:58 $
  * @module
  */
 
@@ -226,7 +226,7 @@ public class CoreAnalysisManager
 	 */
 	public static ModelFunction fitTrace(double[] y, int traceLength, double[] noiseArray)
 	{
-		return ModelFunction.CreateFitedAsBreakL(y, 0, traceLength, noiseArray);
+		return ModelFunction.createFitedAsBreakL(y, 0, traceLength, noiseArray);
 	}
 
 	/**
@@ -540,9 +540,9 @@ public class CoreAnalysisManager
 	 */
 	public static int[] getConnectorMinMaxMin(ModelFunction mf, int evBegin, int evEnd)
 	{
-		int x0 = evBegin;
-		int N = evEnd - evBegin + 1;
-		double[] arr = mf.funFillArray(x0, 1.0, N);
+		final int X0 = evBegin;
+		final int N = evEnd - evBegin + 1;
+		double[] arr = mf.funFillArray(X0, 1.0, N);
 		int iMax = ReflectogramMath.getArrayMaxIndex(arr, 0, N - 1);
 		int iLMin = ReflectogramMath.getArrayMinIndex(arr, 0, iMax);
 		int iRMin = ReflectogramMath.getArrayMinIndex(arr, iMax, N - 1);

@@ -1,5 +1,5 @@
 /*
- * $Id: SimpleReflectogramEvent.java,v 1.5 2005/04/26 07:35:21 saa Exp $
+ * $Id: SimpleReflectogramEvent.java,v 1.6 2005/05/01 06:12:58 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis.dadara;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.5 $, $Date: 2005/04/26 07:35:21 $
+ * @version $Revision: 1.6 $, $Date: 2005/05/01 06:12:58 $
  * @module dadara
  * 
  * Обеспечивает базовую информацию о рефлектометрическом событии -
@@ -22,14 +22,14 @@ package com.syrus.AMFICOM.analysis.dadara;
  */
 public interface SimpleReflectogramEvent
 {
-	static final int RESERVED = 0;
-	static final int LINEAR = 1;
-	static final int LOSS = 5;
-	static final int GAIN = 6;
-	static final int CONNECTOR = 3; // any reflection other than deadzone or end-of-trace
-	static final int DEADZONE = 7;
-	static final int ENDOFTRACE = 8;
-	static final int NOTIDENTIFIED = 4;
+	int RESERVED = 0;
+	int LINEAR = 1;
+	int LOSS = 5;
+	int GAIN = 6;
+	int CONNECTOR = 3; // any reflection other than deadzone or end-of-trace
+	int DEADZONE = 7;
+	int ENDOFTRACE = 8;
+	int NOTIDENTIFIED = 4;
 	int getBegin();
 	int getEnd();
 	int getEventType();

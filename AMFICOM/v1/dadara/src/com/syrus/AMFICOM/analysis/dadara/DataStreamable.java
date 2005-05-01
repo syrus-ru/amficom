@@ -1,5 +1,5 @@
 /*-
- * $Id: DataStreamable.java,v 1.2 2005/04/14 15:56:04 saa Exp $
+ * $Id: DataStreamable.java,v 1.3 2005/05/01 06:12:58 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import java.io.IOException;
  * This will make use of
  * {@link DataStreamableUtil#readDataStreamableFromBA}.
  * @author $Author: saa $
- * @version $Revision: 1.2 $, $Date: 2005/04/14 15:56:04 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/01 06:12:58 $
  * @module
  */
 public interface DataStreamable
@@ -45,7 +45,7 @@ public interface DataStreamable
      */
 	void writeToDOS(DataOutputStream dos) throws IOException;
 
-	static interface Reader
+	interface Reader
 	{
 		DataStreamable readFromDIS(DataInputStream dis) throws IOException, SignatureMismatchException;
 	}

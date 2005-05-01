@@ -1,5 +1,5 @@
 /*-
- * $Id: ReliabilitySimpleReflectogramEvent.java,v 1.1 2005/04/30 07:56:05 saa Exp $
+ * $Id: ReliabilitySimpleReflectogramEvent.java,v 1.2 2005/05/01 06:12:58 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ package com.syrus.AMFICOM.analysis.dadara;
  * превысили порог значимости. Для таких событий нужен параметр,
  * указывающий достоверность этого превышения порога значимости.
  * @author $Author: saa $
- * @version $Revision: 1.1 $, $Date: 2005/04/30 07:56:05 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/01 06:12:58 $
  * @module
  */
 public interface ReliabilitySimpleReflectogramEvent
@@ -22,13 +22,14 @@ extends SimpleReflectogramEvent {
     /**
      * порог достоверности события
      */
-    static double RELIABLE = 0.99;
+    double RELIABLE = 0.99;
 
     /**
      * 
      * @return определен ли параметр достоверности для данного события.
      * Значение true означает, что можно вызывать метод {@link #getReliability}
-     */boolean hasReliability();
+     */
+    boolean hasReliability();
     /**
      * Величина от 0 до 1, определяющая значение достоверности события
      * в единицах, похожих на вероятность. Определена только если

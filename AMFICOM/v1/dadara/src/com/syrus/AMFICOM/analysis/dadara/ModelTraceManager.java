@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.65 2005/05/01 06:01:58 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.66 2005/05/01 06:12:58 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
  * генерацией пороговых кривых и сохранением/восстановлением порогов.
  *
  * @author $Author: saa $
- * @version $Revision: 1.65 $, $Date: 2005/05/01 06:01:58 $
+ * @version $Revision: 1.66 $, $Date: 2005/05/01 06:12:58 $
  * @module
  */
 public class ModelTraceManager
@@ -384,10 +384,10 @@ implements DataStreamable, Cloneable
 	 */
 	public interface ThresholdHandle {
 
-		final int	VERTICAL_UP_TYPE		= 1;
-		final int	VERTICAL_DOWN_TYPE		= 2;
-		final int	HORIZONTAL_LEFT_TYPE	= 3;
-		final int	HORIZONTAL_RIGHT_TYPE	= 4;
+		int	VERTICAL_UP_TYPE		= 1;
+		int	VERTICAL_DOWN_TYPE		= 2;
+		int	HORIZONTAL_LEFT_TYPE	= 3;
+		int	HORIZONTAL_RIGHT_TYPE	= 4;
 
 		void moveBy(double dx,
 					double dy);
@@ -575,20 +575,20 @@ implements DataStreamable, Cloneable
 		for (int k = 0; k < 4; k++)
 		{
 			int xL = (int )x0 - xRange;
-			int W = xRange * 2;
-			double[] yArr = getThresholdMT(keys[k]).getYArray(xL, W + 1);
+			int w = xRange * 2;
+			double[] yArr = getThresholdMT(keys[k]).getYArray(xL, w + 1);
 
 			double xScale = xCapture;
 			double yScale = yCapture;
 			double curBestDR = 2; // >1 => еще не найдено
 			int curBestX = 0;
-			for (int i = 0; i <= W; i++)
+			for (int i = 0; i <= w; i++)
 			{
 				double dX = (x0 - xL - i) / xScale;
 				double dY = (y0 - yArr[i]) / yScale;
 				double scalar;
 				double dR;
-				if (i == W) // последняя точка - рассматриваем расстояние только до нее самой
+				if (i == w) // последняя точка - рассматриваем расстояние только до нее самой
 				{
 					dR = Math.sqrt(dX * dX + dY * dY);
 					scalar = 1;

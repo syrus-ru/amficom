@@ -5,11 +5,15 @@ package com.syrus.AMFICOM.analysis.dadara;
  * по ModelTrace - MaxDeviation и пр.
  * 
  * @author $Author: saa $
- * @version $Revision: 1.19 $, $Date: 2005/04/30 11:54:28 $
+ * @version $Revision: 1.20 $, $Date: 2005/05/01 06:12:58 $
  * @module analysis_v1
  */
 public class ReflectogramComparer
 {
+    private ReflectogramComparer() {
+        // non-instantible
+    }
+
 	// Статические методы - для сверки модельных кривых, не вдаваясь в
 	// вопросы соответствия событий.
 	//---------------------------------------------------------------------
@@ -19,7 +23,7 @@ public class ReflectogramComparer
 	private static double getMaxDeviation(ModelTrace mt1,
 			ModelTrace mt2, int iFrom, int iToEx)
 	{
-		int N = iToEx - iFrom;
+		final int N = iToEx - iFrom;
 		double[] y1 = mt1.getYArrayZeroPad(iFrom, N);
 		double[] y2 = mt2.getYArrayZeroPad(iFrom, N);
 
@@ -36,7 +40,7 @@ public class ReflectogramComparer
 	private static double getMeanDeviation(ModelTrace mt1,
 			ModelTrace mt2, int iFrom, int iToEx)
 	{
-		int N = iToEx - iFrom;
+		final int N = iToEx - iFrom;
 		double[] y1 = mt1.getYArrayZeroPad(iFrom, N);
 		double[] y2 = mt2.getYArrayZeroPad(iFrom, N);
 		double sum = 0.;
@@ -50,7 +54,7 @@ public class ReflectogramComparer
 	private static double getRMSDeviation(ModelTrace mt1,
 			ModelTrace mt2, int iFrom, int iToEx)
 	{
-		int N = iToEx - iFrom;
+		final int N = iToEx - iFrom;
 		double[] y1 = mt1.getYArrayZeroPad(iFrom, N);
 		double[] y2 = mt2.getYArrayZeroPad(iFrom, N);
 		double sum = 0.;
