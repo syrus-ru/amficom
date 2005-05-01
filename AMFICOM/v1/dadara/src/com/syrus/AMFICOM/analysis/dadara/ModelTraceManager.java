@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.68 2005/05/01 12:03:04 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.69 2005/05/01 12:52:39 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
  * генерацией пороговых кривых и сохранением/восстановлением порогов.
  *
  * @author $Author: saa $
- * @version $Revision: 1.68 $, $Date: 2005/05/01 12:03:04 $
+ * @version $Revision: 1.69 $, $Date: 2005/05/01 12:52:39 $
  * @module
  */
 public class ModelTraceManager
@@ -735,10 +735,11 @@ implements DataStreamable, Cloneable
         int end = -1;
         int[] aX = getMF().findResponsibleThreshDXArray(threshDX, threshDY,
                 key, 0, getTraceLength() - 1);
+        int eventBegin = getSE()[nEvent].getBegin();
+        int eventEnd = getSE()[nEvent].getEnd();
         for (int i = 0; i < getTraceLength(); i++)
         {
-            boolean belongs = i >= getSE()[nEvent].getBegin()
-            && i <= getSE()[nEvent].getEnd();
+            boolean belongs = i >= eventBegin && i <= eventEnd;
             if (aX[i] >= 0)
                 belongs = tDX[aX[i]].isRelevantToNEvent(nEvent);
             if (belongs)
