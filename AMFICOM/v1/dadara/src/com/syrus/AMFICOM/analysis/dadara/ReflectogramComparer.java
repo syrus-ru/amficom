@@ -2,10 +2,10 @@ package com.syrus.AMFICOM.analysis.dadara;
 
 /**
  * статическая часть - сравнивает модельные кривые, построенные
- * по ModelTrace - MaxDeviation и пр.
+ * по ModelTrace или заданные в виде массива.
  * 
  * @author $Author: saa $
- * @version $Revision: 1.20 $, $Date: 2005/05/01 06:12:58 $
+ * @version $Revision: 1.21 $, $Date: 2005/05/01 10:56:19 $
  * @module analysis_v1
  */
 public class ReflectogramComparer
@@ -14,27 +14,46 @@ public class ReflectogramComparer
         // non-instantible
     }
 
-	// Статические методы - для сверки модельных кривых, не вдаваясь в
-	// вопросы соответствия событий.
-	//---------------------------------------------------------------------
-	//---------------------------------------------------------------------
-	//---------------------------------------------------------------------
-	//-----------------------------------------------------------------------------
-	private static double getMaxDeviation(ModelTrace mt1,
+    public static double getMaxDeviation(double[] y1, double[] y2, int N)
+    {
+        double ret = 0.;
+        for (int i = 0; i < N; i++)
+        {
+            double diff = Math.abs(y1[i] - y2[i]);
+            if (diff > ret)
+                ret = diff;
+        }
+        return ret;
+    }
+
+    public static double getMeanDeviation(double[] y1, double[] y2, int N)
+    {
+        double sum = 0.;
+        for (int i = 0; i < N; i++)
+        {
+                sum += Math.abs(y1[i] - y2[i]);
+        }
+        return N > 0 ? sum / N : 0.0;
+    }
+
+    public static double getRMSDeviation(double[] y1, double[] y2, int N)
+    {
+        double sum = 0.;
+        for (int i = 0; i < N; i++)
+        {
+                double diff = y1[i] - y2[i];
+                sum += diff * diff;
+        }
+        return N > 0 ? Math.sqrt(sum / N) : 0.0;
+    }
+
+    private static double getMaxDeviation(ModelTrace mt1,
 			ModelTrace mt2, int iFrom, int iToEx)
 	{
-		final int N = iToEx - iFrom;
+        final int N = iToEx - iFrom;
 		double[] y1 = mt1.getYArrayZeroPad(iFrom, N);
 		double[] y2 = mt2.getYArrayZeroPad(iFrom, N);
-
-		double ret = 0.;
-		for (int i = 0; i < N; i++)
-		{
-			double diff = Math.abs(y1[i] - y2[i]);
-			if (diff > ret)
-				ret = diff;
-		}
-		return ret;
+        return getMaxDeviation(y1, y2, N);
 	}
 
 	private static double getMeanDeviation(ModelTrace mt1,
@@ -43,12 +62,7 @@ public class ReflectogramComparer
 		final int N = iToEx - iFrom;
 		double[] y1 = mt1.getYArrayZeroPad(iFrom, N);
 		double[] y2 = mt2.getYArrayZeroPad(iFrom, N);
-		double sum = 0.;
-		for (int i = 0; i < N; i++)
-		{
-				sum += Math.abs(y1[i] - y2[i]);
-		}
-		return N > 0 ? sum / N : 0.0;
+        return getMeanDeviation(y1, y2, N);
 	}
 
 	private static double getRMSDeviation(ModelTrace mt1,
@@ -57,13 +71,7 @@ public class ReflectogramComparer
 		final int N = iToEx - iFrom;
 		double[] y1 = mt1.getYArrayZeroPad(iFrom, N);
 		double[] y2 = mt2.getYArrayZeroPad(iFrom, N);
-		double sum = 0.;
-		for (int i = 0; i < N; i++)
-		{
-				double diff = y1[i] - y2[i];
-				sum += diff * diff;
-		}
-		return N > 0 ? Math.sqrt(sum / N) : 0.0;
+        return getRMSDeviation(y1, y2, N);
 	}
 
 	public static double getMaxDeviation(ModelTraceAndEvents data,
