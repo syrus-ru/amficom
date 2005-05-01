@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.64 2005/04/30 13:02:01 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.65 2005/05/01 06:01:58 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
  * генерацией пороговых кривых и сохранением/восстановлением порогов.
  *
  * @author $Author: saa $
- * @version $Revision: 1.64 $, $Date: 2005/04/30 13:02:01 $
+ * @version $Revision: 1.65 $, $Date: 2005/05/01 06:01:58 $
  * @module
  */
 public class ModelTraceManager
@@ -154,7 +154,8 @@ implements DataStreamable, Cloneable
 		return mtae.getRSE();
 	}
 
-    private void setTL(Thresh tl[])
+    // is 'protected' to be accessible from DSReader
+    protected void setTL(Thresh tl[])
 	{
 		tL = tl;
 		// формируем отдельно списки tDX и tDY
