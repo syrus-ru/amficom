@@ -1,5 +1,5 @@
 /*
- * $Id: MServerServantManager.java,v 1.2 2005/04/29 17:09:37 arseniy Exp $
+ * $Id: MServerServantManager.java,v 1.3 2005/05/01 17:56:57 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,16 +28,12 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/29 17:09:37 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/01 17:56:57 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
 
 final class MServerServantManager extends RunnableVerifiedConnectionManager implements BaseConnectionManager {
-	private static final String KEY_SERVANT_CHECK_TIMEOUT = "ServantCheckTimeout";
-
-	public static final int SERVANT_CHECK_TIMEOUT = 10;		//min
-
 	private String loginServerServantName;
 	private String eventServerServantName;
 	private DatabaseIdentifierGeneratorServer databaseIdentifierGeneratorServer;
@@ -92,13 +88,13 @@ final class MServerServantManager extends RunnableVerifiedConnectionManager impl
 
 	protected void onLoseConnection(String servantName) {
 		Log.debugMessage("MServerServantManager.onLoseConnection | Connection with '" + servantName + "' lost", Log.DEBUGLEVEL08);
-		//@todo Generate event "Connection with MCM servantName lost"
+		//@todo Generate event "Connection with servantName lost"
 	}
 
 	protected void onRestoreConnection(String servantName) {
 		Log.debugMessage("MServerServantManager.onRestoreConnection | Connection with '" + servantName + "' restored",
 				Log.DEBUGLEVEL08);
-		//@todo Generate event "Connection with MCM servantName restored"
+		//@todo Generate event "Connection with servantName restored"
 	}
 
 	public static MServerServantManager createAndStart(String serverHostName, Set mcmIds) throws ApplicationException {
