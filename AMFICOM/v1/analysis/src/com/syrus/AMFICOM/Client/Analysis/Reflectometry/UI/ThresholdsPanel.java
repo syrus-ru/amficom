@@ -105,7 +105,8 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 			MOUSE_COUPLING / this.scaleY,
 			0.5,
 			isRbutton ? 1 : 0,
-			allThresholds ? -1 : c_event);
+			allThresholds ? -1 : c_event,
+                    true);
 
 		if (this.c_TH != null) {
 
