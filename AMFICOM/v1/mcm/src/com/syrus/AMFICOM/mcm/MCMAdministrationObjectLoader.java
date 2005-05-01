@@ -1,5 +1,5 @@
 /*
-* $Id: MCMAdministrationObjectLoader.java,v 1.18 2005/04/29 12:40:51 arseniy Exp $
+* $Id: MCMAdministrationObjectLoader.java,v 1.19 2005/05/01 19:19:16 arseniy Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,216 +8,128 @@
 
 package com.syrus.AMFICOM.mcm;
 
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 import com.syrus.AMFICOM.administration.AdministrationDatabaseContext;
 import com.syrus.AMFICOM.administration.DatabaseAdministrationObjectLoader;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.MCM;
+import com.syrus.AMFICOM.administration.MCMDatabase;
 import com.syrus.AMFICOM.administration.Server;
+import com.syrus.AMFICOM.administration.ServerDatabase;
 import com.syrus.AMFICOM.administration.ServerProcess;
 import com.syrus.AMFICOM.administration.User;
-import com.syrus.AMFICOM.administration.corba.Domain_Transferable;
 import com.syrus.AMFICOM.administration.corba.MCM_Transferable;
 import com.syrus.AMFICOM.administration.corba.Server_Transferable;
-import com.syrus.AMFICOM.administration.corba.User_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/04/29 12:40:51 $
+ * @version $Revision: 1.19 $, $Date: 2005/05/01 19:19:16 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
 final class MCMAdministrationObjectLoader extends DatabaseAdministrationObjectLoader {
 
-	public User loadUser(Identifier id)
-			throws RetrieveObjectException, CommunicationException, ObjectNotFoundException, CreateObjectException {
+	/* Load multiple objects*/
+
+	public Set loadServers(Set ids) throws RetrieveObjectException {
+		ServerDatabase database = AdministrationDatabaseContext.getServerDatabase();
+		Set objects = super.retrieveFromDatabase(database, ids);
+		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
+		if (loadIdsT.length == 0)
+			return objects;
+
+		Set loadedObjects = new HashSet();
+
 		try {
-			return new User(id);
-		}
-		catch (ObjectNotFoundException e) {
-			Log.debugMessage("MCMAdministrationObjectLoader.loadUser | User '" + id
-					+ "' not found in database; trying to load from Measurement Server", Log.DEBUGLEVEL08);
-			User user = null;
-
 			MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
-			try {
-				User_Transferable transferable = mServerRef.transmitUser((Identifier_Transferable) id.getTransferable());
-				user = new User(transferable);
-				Log.debugMessage("MCMAdministrationObjectLoader.loadUser | User '" + id
-						+ "' loaded from MeasurementServer", Log.DEBUGLEVEL08);
-			}
-			catch (AMFICOMRemoteException are) {
-				if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
-					throw new ObjectNotFoundException("User '" + id + "' not found on Measurement Server -- " + are.message);
-				throw new RetrieveObjectException("Cannot retrieve User '" + id + "' from Measurement Server -- " + are.message);
-			}
-			catch (Throwable throwable) {
-				Log.errorException(throwable);
-			}
-
-			if (user != null) {
+			Server_Transferable[] transferables = mServerRef.transmitServers(loadIdsT);
+			for (int i = 0; i < transferables.length; i++) {
 				try {
-					AdministrationDatabaseContext.getUserDatabase().insert(user);
+					loadedObjects.add(new Server(transferables[i]));
 				}
-				catch (ApplicationException ae) {
-					Log.errorException(ae);
+				catch (CreateObjectException coe) {
+					Log.errorException(coe);
 				}
-				return user;
 			}
-			throw new ObjectNotFoundException("User '" + id + "' not found on Measurement Server");
-		}	//catch (ObjectNotFoundException e)
+		}
+		catch (CommunicationException ce) {
+			Log.errorException(ce);
+		}
+		catch (AMFICOMRemoteException are) {
+			Log.errorMessage("MCMGeneralObjectLoader.loadServers | Cannot load objects from MeasurementServer");
+		}
+		catch (Throwable throwable) {
+			Log.errorException(throwable);
+		}
+
+		if (!loadedObjects.isEmpty()) {
+			objects.addAll(loadedObjects);
+
+			try {
+				database.insert(loadedObjects);
+			}
+			catch (ApplicationException ae) {
+				Log.errorException(ae);
+			}
+		}
+
+		return objects;
 	}
 
-	public Domain loadDomain(Identifier id)
-			throws RetrieveObjectException, CommunicationException, ObjectNotFoundException, CreateObjectException {
+	public Set loadMCMs(Set ids) throws RetrieveObjectException {
+		MCMDatabase database = AdministrationDatabaseContext.getMCMDatabase();
+		Set objects = super.retrieveFromDatabase(database, ids);
+		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
+		if (loadIdsT.length == 0)
+			return objects;
+
+		Set loadedObjects = new HashSet();
+
 		try {
-			return new Domain(id);
-		}
-		catch (ObjectNotFoundException e) {
-			Log.debugMessage("MCMAdministrationObjectLoader.loadDomain | Domain '" + id
-					+ "' not found in database; trying to load from Measurement Server", Log.DEBUGLEVEL08);
-			Domain domain = null;
-
 			MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
-			try {
-				Domain_Transferable transferable = mServerRef.transmitDomain((Identifier_Transferable) id.getTransferable());
-				domain = new Domain(transferable);
-				Log.debugMessage("MCMAdministrationObjectLoader.loadDomain | Domain '" + id
-						+ "' loaded from MeasurementServer", Log.DEBUGLEVEL08);
-			}
-			catch (AMFICOMRemoteException are) {
-				if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
-					throw new ObjectNotFoundException("Domain '" + id + "' not found on Measurement Server -- " + are.message);
-				throw new RetrieveObjectException("Cannot retrieve Domain '" + id + "' from Measurement Server -- " + are.message);
-			}
-			catch (Throwable throwable) {
-				Log.errorException(throwable);
-			}
-
-			if (domain != null) {
+			MCM_Transferable[] transferables = mServerRef.transmitMCMs(loadIdsT);
+			for (int i = 0; i < transferables.length; i++) {
 				try {
-					AdministrationDatabaseContext.getDomainDatabase().insert(domain);
+					loadedObjects.add(new MCM(transferables[i]));
 				}
-				catch (ApplicationException ae) {
-					Log.errorException(ae);
+				catch (CreateObjectException coe) {
+					Log.errorException(coe);
 				}
-				return domain;
 			}
-			throw new ObjectNotFoundException("Domain '" + id + "' not found on Measurement Server");
-		}	//catch (ObjectNotFoundException e)
-	}
-
-	public Server loadServer(Identifier id)
-			throws RetrieveObjectException, CommunicationException, ObjectNotFoundException, CreateObjectException {
-		try {
-			return new Server(id);
 		}
-		catch (ObjectNotFoundException e) {
-			Log.debugMessage("MCMAdministrationObjectLoader.loadServer | Server '" + id
-					+ "' not found in database; trying to load from Measurement Server", Log.DEBUGLEVEL08);
-			Server server = null;
-
-			MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
-			try {
-				Server_Transferable transferable = mServerRef.transmitServer((Identifier_Transferable) id.getTransferable());
-				server = new Server(transferable);
-				Log.debugMessage("MCMAdministrationObjectLoader.loadServer | Server '" + id
-						+ "' loaded from MeasurementServer", Log.DEBUGLEVEL08);
-			}
-			catch (AMFICOMRemoteException are) {
-				if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
-					throw new ObjectNotFoundException("Server '" + id + "' not found on Measurement Server -- " + are.message);
-				throw new RetrieveObjectException("Cannot retrieve Server '" + id + "' from Measurement Server -- " + are.message);
-			}
-			catch (Throwable throwable) {
-				Log.errorException(throwable);
-			}
-
-			if (server != null) {
-				try {
-					AdministrationDatabaseContext.getServerDatabase().insert(server);
-				}
-				catch (ApplicationException ae) {
-					Log.errorException(ae);
-				}
-				return server;
-			}
-			throw new ObjectNotFoundException("Server '" + id + "' not found on Measurement Server");
-		}	//catch (ObjectNotFoundException e)
-	}
-
-	public MCM loadMCM(Identifier id)
-			throws RetrieveObjectException, CommunicationException, ObjectNotFoundException, CreateObjectException {
-		try {
-			return new MCM(id);
+		catch (CommunicationException ce) {
+			Log.errorException(ce);
 		}
-		catch (ObjectNotFoundException e) {
-			Log.debugMessage("MCMAdministrationObjectLoader.loadMCM | MCM '" + id
-					+ "' not found in database; trying to load from Measurement MCM", Log.DEBUGLEVEL08);
-			MCM mcm = null;
+		catch (AMFICOMRemoteException are) {
+			Log.errorMessage("MCMGeneralObjectLoader.loadMCMs | Cannot load objects from MeasurementServer");
+		}
+		catch (Throwable throwable) {
+			Log.errorException(throwable);
+		}
 
-			MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
+		if (!loadedObjects.isEmpty()) {
+			objects.addAll(loadedObjects);
+
 			try {
-				MCM_Transferable transferable = mServerRef.transmitMCM((Identifier_Transferable) id.getTransferable());
-				mcm = new MCM(transferable);
-				Log.debugMessage("MCMAdministrationObjectLoader.loadMCM | MCM '" + id
-						+ "' loaded from MeasurementMCM", Log.DEBUGLEVEL08);
+				database.insert(loadedObjects);
 			}
-			catch (AMFICOMRemoteException are) {
-				if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
-					throw new ObjectNotFoundException("MCM '" + id + "' not found on Measurement MCM -- " + are.message);
-				throw new RetrieveObjectException("Cannot retrieve MCM '" + id + "' from Measurement MCM -- " + are.message);
+			catch (ApplicationException ae) {
+				Log.errorException(ae);
 			}
-			catch (Throwable throwable) {
-				Log.errorException(throwable);
-			}
+		}
 
-			if (mcm != null) {
-				try {
-					AdministrationDatabaseContext.getMCMDatabase().insert(mcm);
-				}
-				catch (ApplicationException ae) {
-					Log.errorException(ae);
-				}
-				return mcm;
-			}
-			throw new ObjectNotFoundException("MCM '" + id + "' not found on Measurement MCM");
-		}	//catch (ObjectNotFoundException e)
-	}
-
-
-
-
-
-
-	/*	In normal circumstances MCM needs only one 'Server' and only one 'MCM'*/
-
-	public Set loadServers(Set ids) throws ApplicationException {
-		if (ids.size() == 1)
-			return Collections.singleton(this.loadServer((Identifier) ids.iterator().next()));
-
-		throw new UnsupportedOperationException("Method not implemented, ids: " + ids);
-	}
-
-	public Set loadMCMs(Set ids) throws ApplicationException {
-		if (ids.size() == 1)
-			return Collections.singleton(this.loadMCM((Identifier) ids.iterator().next()));
-
-		throw new UnsupportedOperationException("Method not implemented, ids: " + ids);
+		return objects;
 	}
 
 
@@ -226,14 +138,6 @@ final class MCMAdministrationObjectLoader extends DatabaseAdministrationObjectLo
 	/*
 	 * MCM do not need in all below methods
 	 * */
-
-	public ServerProcess loadServerProcess(Identifier id)
-			throws RetrieveObjectException, CommunicationException, ObjectNotFoundException, CreateObjectException {
-		throw new UnsupportedOperationException("Method not implemented, id: " + id);
-	}
-
-
-
 
 	public Set loadUsers(Set ids) throws ApplicationException {
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids);
@@ -332,10 +236,6 @@ final class MCMAdministrationObjectLoader extends DatabaseAdministrationObjectLo
 
 	public void delete(final Set identifiables) {
 		throw new UnsupportedOperationException("Method not implemented, objects: " + identifiables);
-	}
-
-	public void delete(Identifier id) {
-		throw new UnsupportedOperationException("Method not implemented, id: " + id);
 	}
 
 }

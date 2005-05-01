@@ -1,5 +1,5 @@
 /*
-* $Id: MCMGeneralObjectLoader.java,v 1.16 2005/04/29 12:40:51 arseniy Exp $
+* $Id: MCMGeneralObjectLoader.java,v 1.17 2005/05/01 19:19:16 arseniy Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -20,8 +20,6 @@ import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseGeneralObjectLoader;
 import com.syrus.AMFICOM.general.GeneralDatabaseContext;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.ParameterTypeDatabase;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -29,7 +27,6 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CharacteristicType_Transferable;
 import com.syrus.AMFICOM.general.corba.Characteristic_Transferable;
-import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
 import com.syrus.AMFICOM.mserver.corba.MServer;
@@ -37,132 +34,13 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/04/29 12:40:51 $
+ * @version $Revision: 1.17 $, $Date: 2005/05/01 19:19:16 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
 final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
 
-	public ParameterType loadParameterType(Identifier id)
-			throws RetrieveObjectException, CommunicationException, ObjectNotFoundException, CreateObjectException {
-		try {
-			return new ParameterType(id);
-		}
-		catch (ObjectNotFoundException e) {
-			Log.debugMessage("MCMGeneralObjectLoader.loadParameterType | ParameterType '" + id
-					+ "' not found in database; trying to load from Measurement Server", Log.DEBUGLEVEL08);
-			ParameterType parameterType = null;
-
-			MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
-			try {
-				ParameterType_Transferable transferable = mServerRef.transmitParameterType((Identifier_Transferable) id.getTransferable());
-				parameterType = new ParameterType(transferable);
-				Log.debugMessage("MCMGeneralObjectLoader.loadParameterType | ParameterType '" + id
-						+ "' loaded from MeasurementServer", Log.DEBUGLEVEL08);
-			}
-			catch (AMFICOMRemoteException are) {
-				if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
-					throw new ObjectNotFoundException("ParameterType '" + id + "' not found on Measurement Server -- " + are.message);
-				throw new RetrieveObjectException("Cannot retrieve ParameterType '" + id + "' from Measurement Server -- " + are.message);
-			}
-			catch (Throwable throwable) {
-				Log.errorException(throwable);
-			}
-
-			if (parameterType != null) {
-				try {
-					GeneralDatabaseContext.getParameterTypeDatabase().insert(parameterType);
-				}
-				catch (ApplicationException ae) {
-					Log.errorException(ae);
-				}
-				return parameterType;
-			}
-			throw new ObjectNotFoundException("ParameterType '" + id + "' not found on Measurement Server");
-		}	//catch (ObjectNotFoundException e)
-	}
-
-	public CharacteristicType loadCharacteristicType(Identifier id)
-			throws RetrieveObjectException, CommunicationException, ObjectNotFoundException, CreateObjectException {
-		try {
-			return new CharacteristicType(id);
-		}
-		catch (ObjectNotFoundException e) {
-			Log.debugMessage("MCMGeneralObjectLoader.loadCharacteristicType | CharacteristicType '" + id
-					+ "' not found in database; trying to load from Measurement Server", Log.DEBUGLEVEL08);
-			CharacteristicType characteristicType = null;
-
-			MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
-			try {
-				CharacteristicType_Transferable transferable = mServerRef.transmitCharacteristicType((Identifier_Transferable) id.getTransferable());
-				characteristicType = new CharacteristicType(transferable);
-				Log.debugMessage("MCMGeneralObjectLoader.loadCharacteristicType | CharacteristicType '" + id
-						+ "' loaded from MeasurementServer", Log.DEBUGLEVEL08);
-			}
-			catch (AMFICOMRemoteException are) {
-				if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
-					throw new ObjectNotFoundException("CharacteristicType '" + id + "' not found on Measurement Server -- " + are.message);
-				throw new RetrieveObjectException("Cannot retrieve CharacteristicType '" + id + "' from Measurement Server -- " + are.message);
-			}
-			catch (Throwable throwable) {
-				Log.errorException(throwable);
-			}
-
-			if (characteristicType != null) {
-				try {
-					GeneralDatabaseContext.getCharacteristicTypeDatabase().insert(characteristicType);
-				}
-				catch (ApplicationException ae) {
-					Log.errorException(ae);
-				}
-				return characteristicType;
-			}
-			throw new ObjectNotFoundException("CharacteristicType '" + id + "' not found on Measurement Server");
-		}	//catch (ObjectNotFoundException e)
-	}
-
-	public Characteristic loadCharacteristic(Identifier id)
-			throws RetrieveObjectException, CommunicationException, ObjectNotFoundException, CreateObjectException {
-		try {
-			return new Characteristic(id);
-		}
-		catch (ObjectNotFoundException e) {
-			Log.debugMessage("MCMGeneralObjectLoader.loadCharacteristic | Characteristic '" + id
-					+ "' not found in database; trying to load from Measurement Server", Log.DEBUGLEVEL08);
-			Characteristic characteristic = null;
-
-			MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
-			try {
-				Characteristic_Transferable transferable = mServerRef.transmitCharacteristic((Identifier_Transferable) id.getTransferable());
-				characteristic = new Characteristic(transferable);
-				Log.debugMessage("MCMGeneralObjectLoader.loadCharacteristic | Characteristic '" + id
-						+ "' loaded from MeasurementServer", Log.DEBUGLEVEL08);
-			}
-			catch (AMFICOMRemoteException are) {
-				if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
-					throw new ObjectNotFoundException("Characteristic '" + id + "' not found on Measurement Server -- " + are.message);
-				throw new RetrieveObjectException("Cannot retrieve Characteristic '" + id + "' from Measurement Server -- " + are.message);
-			}
-			catch (Throwable throwable) {
-				Log.errorException(throwable);
-			}
-
-			if (characteristic != null) {
-				try {
-					GeneralDatabaseContext.getCharacteristicDatabase().insert(characteristic);
-				}
-				catch (ApplicationException ae) {
-					Log.errorException(ae);
-				}
-				return characteristic;
-			}
-			throw new ObjectNotFoundException("Characteristic '" + id + "' not found on Measurement Server");
-		}	//catch (ObjectNotFoundException e)
-	}
-
-
-
-
+	/* Load multiple objects*/
 
 	public Set loadParameterTypes(Set ids) throws RetrieveObjectException {
 		ParameterTypeDatabase database = GeneralDatabaseContext.getParameterTypeDatabase();
@@ -352,9 +230,5 @@ final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
 
 	public void delete(final Set identifiables) {
 		throw new UnsupportedOperationException("Method not implemented, objects: " + identifiables);
-	}
-
-	public void delete(Identifier id) {
-		throw new UnsupportedOperationException("Method not implemented, id: " + id);
 	}
 }

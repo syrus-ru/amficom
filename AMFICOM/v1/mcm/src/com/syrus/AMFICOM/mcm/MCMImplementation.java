@@ -1,5 +1,5 @@
 /*
- * $Id: MCMImplementation.java,v 1.30 2005/04/15 22:15:09 arseniy Exp $
+ * $Id: MCMImplementation.java,v 1.31 2005/05/01 19:19:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,16 +39,14 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/04/15 22:15:09 $
+ * @version $Revision: 1.31 $, $Date: 2005/05/01 19:19:16 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
 
 public class MCMImplementation extends MCMPOA {
 
-	private static final long serialVersionUID = 3257003263382467639L;
-
-
+	private static final long serialVersionUID = -3362347139575001444L;
 
 
 	public void receiveTests(Test_Transferable[] testsT) throws AMFICOMRemoteException {
@@ -271,27 +269,33 @@ public class MCMImplementation extends MCMPOA {
 
   private Set getObjectsButIdsCondition(Identifier_Transferable[] identifier_Transferables,
 			StorableObjectCondition_Transferable storableObjectCondition_Transferable) throws AMFICOMRemoteException {
-		Set ids = Identifier.fromTransferables(identifier_Transferables);
-
-		StorableObjectCondition condition = null;
 		try {
-			condition = StorableObjectConditionBuilder.restoreCondition(storableObjectCondition_Transferable);
-		}
-		catch (IllegalDataException ide) {
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_DATA,
-					CompletionStatus.COMPLETED_NO,
-					"Cannot restore condition -- " + ide.getMessage());
-		}
 
-		Set objects = null;
-		try {
-			objects = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(ids, condition, true);
+			StorableObjectCondition condition = null;
+			try {
+				condition = StorableObjectConditionBuilder.restoreCondition(storableObjectCondition_Transferable);
+			}
+			catch (IllegalDataException ide) {
+				throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_DATA,
+						CompletionStatus.COMPLETED_NO,
+						"Cannot restore condition -- " + ide.getMessage());
+			}
+
+			Set objects = null;
+			try {
+				Set ids = Identifier.fromTransferables(identifier_Transferables);
+				objects = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(ids, condition, true);
+				return objects;
+			}
+			catch (ApplicationException ae) {
+				Log.errorException(ae);
+				throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
+			}
 		}
-		catch (ApplicationException ae) {
-			Log.errorException(ae);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
+		catch (Throwable throwable) {
+			Log.errorException(throwable);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, throwable.getMessage());
 		}
-		return objects;
 	}
 
 

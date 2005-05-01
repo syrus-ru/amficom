@@ -1,5 +1,5 @@
 /*
- * $Id: MCMMeasurementObjectLoader.java,v 1.40 2005/04/29 15:59:53 arseniy Exp $
+ * $Id: MCMMeasurementObjectLoader.java,v 1.41 2005/05/01 19:19:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,6 @@ import java.util.Iterator;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
@@ -51,7 +50,7 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2005/04/29 15:59:53 $
+ * @version $Revision: 1.41 $, $Date: 2005/05/01 19:19:16 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -546,10 +545,6 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 
 	public void delete(final java.util.Set identifiables) {
 		throw new UnsupportedOperationException("Method not implemented, objects: " + identifiables);
-	}
-
-	public void delete(Identifier id) {
-		throw new UnsupportedOperationException("Method not implemented, id: " + id);
 	}
 
 }
