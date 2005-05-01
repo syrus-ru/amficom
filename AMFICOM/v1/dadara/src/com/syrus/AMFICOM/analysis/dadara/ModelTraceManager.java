@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.66 2005/05/01 06:12:58 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.67 2005/05/01 09:35:16 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
  * генерацией пороговых кривых и сохранением/восстановлением порогов.
  *
  * @author $Author: saa $
- * @version $Revision: 1.66 $, $Date: 2005/05/01 06:12:58 $
+ * @version $Revision: 1.67 $, $Date: 2005/05/01 09:35:16 $
  * @module
  */
 public class ModelTraceManager
@@ -32,10 +32,14 @@ implements DataStreamable, Cloneable
 	public static final String CODENAME = "ModelTraceManager";
 
 	protected ModelTraceAndEventsImpl mtae;
-	private ModelTrace[] thMTCache = null;
+	private ModelTrace[] thMTCache = null; // cache for thresholds curves
 	protected Thresh[] tL; // полный список порогов
 	protected ThreshDX[] tDX; // список DX-порогов
 	protected ThreshDY[] tDY; // список DY-порогов
+
+    // thresholds curve cache for EventThresholdMTEImpl
+    protected int singleThCacheEventId;
+    protected ModelTraceRange[] singleThMTCache = null;
 
 	private static DataStreamable.Reader dsReader;
 
@@ -57,6 +61,7 @@ implements DataStreamable, Cloneable
 	protected void invalidateThMTCache()
 	{
 		thMTCache = null;
+        singleThMTCache = null;
 	}
 
 	// очищает записи кэша пороговых кривых key
@@ -65,6 +70,8 @@ implements DataStreamable, Cloneable
 		if (thMTCache == null)
 			thMTCache = new ModelTrace[] { null, null, null, null };
 		thMTCache[key] = null;
+
+        singleThMTCache = null; // client needs the whole array only
 	}
 
 	// очищает записи кэша, зависящие от ключа key в порогах
@@ -141,7 +148,7 @@ implements DataStreamable, Cloneable
 		setTL(tl);
 	}
 
-	private ModelFunction getMF()
+	protected ModelFunction getMF()
 	{
 		return mtae.getMF();
 	}
@@ -337,21 +344,49 @@ implements DataStreamable, Cloneable
 		return mtae.getTraceLength();
 	}
 
-	/**
-	 * Выдает модельную кривую указанного порога на участке указанного события,
-	 * такую, как будто бы на соседних событиях порога нет совсем.
-	 * Обеспечивает также мнимальное кэширование (в кэше хранятся результаты для
-	 * одного nEvent).
-	 * Производительность - не самая лучшая.
-	 * FIXME: сейчас игнорирует nEvent и вызывает getThresholdMT(key)
-	 * @param key код порога (Threshold)
-	 * @param nEvent номер события, для которого одного нужно сгенерировать порог
-	 * @return модельная кривая запрошенного порога, определенная на длине всей р/г
-	 */
-	public ModelTrace getEventThresholdMT(int key, int nEvent)
-	{
-		return getThresholdMT(key);
-	}
+    public ModelTraceRange[] getEventThresholdMTR(int nEvent) {
+        // check if the answer is already present
+        if (singleThCacheEventId == nEvent
+                && singleThMTCache != null)
+        {
+            //System.err.println("getEventThresholdMTR: nEvent " + nEvent + " cache hit");
+            return singleThMTCache;
+        }
+
+        // make thresholds for 'this event only'
+        ThreshDX[] tmpTDX = new ThreshDX[tDX.length];
+        ThreshDY[] tmpTDY = new ThreshDY[tDY.length];
+        for (int i = 0; i < tmpTDX.length; i++) {
+            tmpTDX[i] = tDX[i].isRelevantToNEvent(nEvent)
+                ? tDX[i]
+                : tDX[i].makeZeroedCopy();
+        }
+        for (int i = 0; i < tmpTDY.length; i++) {
+            tmpTDY[i] = tDY[i].isRelevantToNEvent(nEvent)
+                ? tDY[i]
+                : tDY[i].makeZeroedCopy();
+        }
+
+        // init cache
+        singleThCacheEventId = nEvent;
+        singleThMTCache = new ModelTraceRange[] { null, null, null, null };
+
+        // find ranges and curves, fill cache
+        for (int key = 0; key < 4; key++)
+        {
+            SimpleReflectogramEvent sre =
+                getEventRangeOnThresholdCurve(nEvent, key, tmpTDX, tmpTDY); 
+            ModelFunction tmp = getMF().copy();
+            tmp.changeByThresh(tmpTDX, tmpTDY, key);
+            singleThMTCache[key] = new ModelTraceRangeImplMF(tmp,
+                    sre.getBegin(),
+                    sre.getEnd());
+        }
+
+        // make a copy of resulting array for client
+        //System.err.println("getEventThresholdMTR: nEvent " + nEvent + " cache miss");
+        return (ModelTraceRange[])singleThMTCache.clone();
+    }
 
 	/**
 	 * Расширяет пороги так, чтобы покрыть указанные кривые с указанным
@@ -664,28 +699,38 @@ implements DataStreamable, Cloneable
 		}
 	}
 
-	// XXX: хитрый метод для определения участка, соответствующего данному событию
-	public SimpleReflectogramEvent getEventRangeOnThresholdCurve(int nEvent, int key)
+    // допускает указание иных порогов, нежели текущие
+    private SimpleReflectogramEvent getEventRangeOnThresholdCurve(int nEvent,
+            int key, ThreshDX[] threshDX, ThreshDY[] threshDY)
+    {
+        int begin = -1;
+        int end = -1;
+        int[] aX = getMF().findResponsibleThreshDXArray(threshDX, threshDY,
+                key, 0, getTraceLength() - 1);
+        for (int i = 0; i < getTraceLength(); i++)
+        {
+            boolean belongs = i >= getSE()[nEvent].getBegin()
+            && i <= getSE()[nEvent].getEnd();
+            if (aX[i] >= 0)
+                belongs = tDX[aX[i]].isRelevantToNEvent(nEvent);
+            if (belongs)
+            {
+                end = i;
+                if (begin < 0)
+                    begin = i;
+            }
+        }
+        if (begin < 0)
+            return null;
+        return new SimpleReflectogramEventImpl(begin, end,
+                getSE()[nEvent].getEventType());
+    }
+
+    // XXX: хитрый алгоритм определения участка, соответствующего данному событию
+    public SimpleReflectogramEvent getEventRangeOnThresholdCurve(int nEvent, int key)
 	{
-		int begin = -1;
-		int end = -1;
-		int[] aX = getMF().findResponsibleThreshDXArray(tDX, tDY, key, 0, getTraceLength() - 1);
-		for (int i = 0; i < getTraceLength(); i++)
-		{
-			boolean belongs = i >= getSE()[nEvent].getBegin() && i <= getSE()[nEvent].getEnd();
-			if (aX[i] >= 0)
-				belongs = tDX[aX[i]].isRelevantToNEvent(nEvent);
-			if (belongs)
-			{
-				end = i;
-				if (begin < 0)
-					begin = i;
-			}
-		}
-		if (begin < 0)
-			return null;
-		return new SimpleReflectogramEventImpl(begin, end, getSE()[nEvent].getEventType());
-	}
+        return getEventRangeOnThresholdCurve(nEvent, key, tDX, tDY);
+    }
 
 	/**
 	 * Создает MTM по эталонной паре события+м.ф., считанной из ByteArray

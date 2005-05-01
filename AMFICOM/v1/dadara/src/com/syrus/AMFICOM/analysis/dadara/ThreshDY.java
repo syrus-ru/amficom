@@ -1,5 +1,5 @@
 /*
- * $Id: ThreshDY.java,v 1.15 2005/04/30 09:52:49 saa Exp $
+ * $Id: ThreshDY.java,v 1.16 2005/05/01 09:35:17 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,13 +13,14 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.15 $, $Date: 2005/04/30 09:52:49 $
+ * @version $Revision: 1.16 $, $Date: 2005/05/01 09:35:17 $
  * @module
  */
 public class ThreshDY extends Thresh
 {
 	private static final double VALUE_FRACTION = 1000; // 1/1000 dB precision
-	private boolean typeL; // 0: dA, 1: dL
+
+    private boolean typeL; // 0: dA, 1: dL
 	private double[] values; // dA or dL values
 
 	protected ThreshDY()
@@ -102,4 +103,19 @@ public class ThreshDY extends Thresh
 		if (VALUE_FRACTION > 0)
 			values[key] = Math.ceil(values[key] * VALUE_FRACTION * sign) / VALUE_FRACTION / sign;
 	}
+
+    /**
+     * @return a threshold with same begin/end/type, but zero DY
+     */
+    public ThreshDY makeZeroedCopy()
+    {
+        try {
+            ThreshDY ret = (ThreshDY)this.clone();
+            for (int i = 0; i < ret.values.length; i++)
+                ret.values[i] = 0;
+            return ret;
+        } catch (CloneNotSupportedException e) {
+            throw new InternalError (e.toString());
+        }
+    }
 }

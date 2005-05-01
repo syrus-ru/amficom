@@ -1,5 +1,5 @@
 /*
- * $Id: ThreshDX.java,v 1.14 2005/04/30 07:33:28 saa Exp $
+ * $Id: ThreshDX.java,v 1.15 2005/05/01 09:35:16 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.14 $, $Date: 2005/04/30 07:33:28 $
+ * @version $Revision: 1.15 $, $Date: 2005/05/01 09:35:16 $
  * @module
  */
 public class ThreshDX extends Thresh
@@ -102,4 +102,19 @@ public class ThreshDX extends Thresh
 	protected void roundUp(int key)
 	{ // empty: we do not anything
 	}
+
+    /**
+     * @return a threshold with same begin/end/type, but zero DX
+     */
+    public ThreshDX makeZeroedCopy()
+    {
+        try {
+            ThreshDX ret = (ThreshDX)this.clone();
+            for (int i = 0; i < ret.dX.length; i++)
+                ret.dX[i] = 0;
+            return ret;
+        } catch (CloneNotSupportedException e) {
+            throw new InternalError (e.toString());
+        }
+    }
 }
