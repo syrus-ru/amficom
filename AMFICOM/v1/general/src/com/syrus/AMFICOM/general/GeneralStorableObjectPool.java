@@ -1,5 +1,5 @@
 /*
- * $Id: GeneralStorableObjectPool.java,v 1.22 2005/04/27 13:49:33 arseniy Exp $
+ * $Id: GeneralStorableObjectPool.java,v 1.23 2005/05/01 16:47:11 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import org.omg.CORBA.portable.IDLEntity;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/04/27 13:49:33 $
+ * @version $Revision: 1.23 $, $Date: 2005/05/01 16:47:11 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -33,7 +33,6 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 	private static GeneralStorableObjectPool instance;
 
 	private GeneralStorableObjectPool() {
-		// singleton
 		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.GENERAL_GROUP_CODE);
 	}
 
@@ -116,25 +115,6 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 		return instance.getStorableObjectsByConditionButIdsImpl(ids, condition, useLoader);
 	}
 
-	protected StorableObject loadStorableObject(Identifier objectId) throws ApplicationException {
-		StorableObject storableObject;
-		switch (objectId.getMajor()) {
-			case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
-				storableObject = gObjectLoader.loadParameterType(objectId);
-				break;
-			case ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE:
-				storableObject = gObjectLoader.loadCharacteristicType(objectId);
-				break;
-			case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
-				storableObject = gObjectLoader.loadCharacteristic(objectId);
-				break;
-			default:
-				Log.errorMessage("GeneralStorableObjectPool.loadStorableObject | Unknown entity: '" + ObjectEntities.codeToString(objectId.getMajor()) + "', entity code: " + objectId.getMajor());
-				storableObject = null;
-		}
-		return storableObject;
-	}
-
 	protected Set loadStorableObjects(final Set ids) throws ApplicationException {
 		assert StorableObject.hasSingleTypeEntities(ids);
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
@@ -171,34 +151,22 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 		return loadedObjects;
 	}
 
-	//public static void save()
-
-	protected void saveStorableObjects(final Set storableObjects,
-			final boolean force)
-			throws ApplicationException {
+	protected void saveStorableObjects(final Set storableObjects, final boolean force) throws ApplicationException {
 		if (storableObjects.isEmpty())
 			return;
+
 		assert StorableObject.hasSingleTypeEntities(storableObjects);
+
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(storableObjects);
-		final boolean singleton = storableObjects.size() == 1;
 		switch (entityCode) {
 			case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
-				if (singleton)
-					gObjectLoader.saveParameterType((ParameterType)storableObjects.iterator().next(), force);
-				else 
-					gObjectLoader.saveParameterTypes(storableObjects, force);
+				gObjectLoader.saveParameterTypes(storableObjects, force);
 				break;
 			case ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE:
-				if (singleton)
-					gObjectLoader.saveCharacteristicType((CharacteristicType) storableObjects.iterator().next(), force);
-				else
-					gObjectLoader.saveCharacteristicTypes(storableObjects, force);
+				gObjectLoader.saveCharacteristicTypes(storableObjects, force);
 				break;
 			case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
-				if (singleton)
-					gObjectLoader.saveCharacteristic((Characteristic) storableObjects.iterator().next(), force);
-				else
-					gObjectLoader.saveCharacteristics(storableObjects, force);
+				gObjectLoader.saveCharacteristics(storableObjects, force);
 				break;
 			default:
 				Log.errorMessage("GeneralStorableObjectPool.saveStorableObjects | Unknown entity: '" + ObjectEntities.codeToString(entityCode) + "', entity code: " + entityCode);
@@ -245,10 +213,6 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 		instance.deleteImpl(identifiables);
 	}
 
-	protected void deleteStorableObject(Identifier id) {
-		gObjectLoader.delete(id);
-	}
-	
 	protected void deleteStorableObjects(final Set identifiables) {
 		gObjectLoader.delete(identifiables);
 	}

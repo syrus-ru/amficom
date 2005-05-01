@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.79 2005/04/27 13:50:43 arseniy Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.80 2005/05/01 16:47:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.79 $, $Date: 2005/04/27 13:50:43 $
+ * @version $Revision: 1.80 $, $Date: 2005/05/01 16:47:53 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -54,7 +54,6 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 	private static ConfigurationStorableObjectPool instance;
 
 	private ConfigurationStorableObjectPool() {
-		// singleton
 		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.CONFIGURATION_GROUP_CODE);
 	}
 
@@ -161,58 +160,6 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 		return instance.getStorableObjectsByConditionButIdsImpl(ids, condition, useLoader);
 	}
 
-	protected StorableObject loadStorableObject(Identifier objectId) throws ApplicationException {
-		StorableObject storableObject;
-		switch (objectId.getMajor()) {
-			case ObjectEntities.CABLETHREADTYPE_ENTITY_CODE:
-				storableObject = cObjectLoader.loadCableThreadType(objectId);
-				break;
-			case ObjectEntities.CABLELINKTYPE_ENTITY_CODE:
-				storableObject = cObjectLoader.loadCableLinkType(objectId);
-				break;
-			case ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE:
-				storableObject = cObjectLoader.loadEquipmentType(objectId);
-				break;
-			case ObjectEntities.TRANSPATHTYPE_ENTITY_CODE:
-				storableObject = cObjectLoader.loadTransmissionPathType(objectId);
-				break;
-			case ObjectEntities.LINKTYPE_ENTITY_CODE:
-				storableObject = cObjectLoader.loadLinkType(objectId);
-				break;
-			case ObjectEntities.PORTTYPE_ENTITY_CODE:
-				storableObject = cObjectLoader.loadPortType(objectId);
-				break;
-			case ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE:
-				storableObject = cObjectLoader.loadMeasurementPortType(objectId);
-				break;
-			case ObjectEntities.EQUIPMENT_ENTITY_CODE:
-				storableObject = cObjectLoader.loadEquipment(objectId);
-				break;
-			case ObjectEntities.PORT_ENTITY_CODE:
-				storableObject = cObjectLoader.loadPort(objectId);
-				break;
-			case ObjectEntities.TRANSPATH_ENTITY_CODE:
-				storableObject = cObjectLoader.loadTransmissionPath(objectId);
-				break;
-			case ObjectEntities.KIS_ENTITY_CODE:
-				storableObject = cObjectLoader.loadKIS(objectId);
-				break;
-			case ObjectEntities.LINK_ENTITY_CODE:
-				storableObject = cObjectLoader.loadLink(objectId);
-				break;
-			case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:
-				storableObject = cObjectLoader.loadMeasurementPort(objectId);
-				break;
-			case ObjectEntities.ME_ENTITY_CODE:
-				storableObject = cObjectLoader.loadMonitoredElement(objectId);
-				break;
-			default:
-				Log.errorMessage("ConfigurationStorableObjectPool.loadStorableObject | Unknown entity: '" + ObjectEntities.codeToString(objectId.getMajor()) + "', entity code: " + objectId.getMajor());
-				storableObject = null;
-		}
-		return storableObject;
-	}
-
 	protected Set loadStorableObjects(final Set ids) throws ApplicationException {
 		assert StorableObject.hasSingleTypeEntities(ids);
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
@@ -304,102 +251,56 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 		return loadedCollection;
 	}
 
-	//public static void save()
-
-	protected void saveStorableObjects(final Set storableObjects,
-			final boolean force)
-			throws ApplicationException {
+	protected void saveStorableObjects(final Set storableObjects, final boolean force) throws ApplicationException {
 		if (storableObjects.isEmpty())
 			return;
+
 		assert StorableObject.hasSingleTypeEntities(storableObjects);
+
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(storableObjects);
-		final boolean singleton = storableObjects.size() == 1;
 		switch (entityCode) {
 			case ObjectEntities.CABLETHREADTYPE_ENTITY_CODE:
-				if (singleton)
-					cObjectLoader.saveCableThreadType((CableThreadType) storableObjects.iterator().next(), force);
-				else
-					cObjectLoader.saveCableThreadTypes(storableObjects, force);
+				cObjectLoader.saveCableThreadTypes(storableObjects, force);
 				break;
 			case ObjectEntities.CABLELINKTYPE_ENTITY_CODE:
-				if (singleton)
-					cObjectLoader.saveCableLinkType((CableLinkType) storableObjects.iterator().next(), force);
-				else
-					cObjectLoader.saveCableLinkTypes(storableObjects, force);
+				cObjectLoader.saveCableLinkTypes(storableObjects, force);
 				break;
 			case ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE:
-				if (singleton)
-					cObjectLoader.saveEquipmentType((EquipmentType) storableObjects.iterator().next(), force);
-				else
-					cObjectLoader.saveEquipmentTypes(storableObjects, force);
+				cObjectLoader.saveEquipmentTypes(storableObjects, force);
 				break;
 			case ObjectEntities.PORTTYPE_ENTITY_CODE:
-				if (singleton)
-					cObjectLoader.savePortType((PortType) storableObjects.iterator().next(), force);
-				else
-					cObjectLoader.savePortTypes(storableObjects, force);
+				cObjectLoader.savePortTypes(storableObjects, force);
 				break;
 			case ObjectEntities.LINKTYPE_ENTITY_CODE:
-				if (singleton)
-					cObjectLoader.saveLinkType((LinkType) storableObjects.iterator().next(), force);
-				else
-					cObjectLoader.saveLinkTypes(storableObjects, force);
+				cObjectLoader.saveLinkTypes(storableObjects, force);
 				break;
 			case ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE:
-				if (singleton)
-					cObjectLoader.saveMeasurementPortType((MeasurementPortType) storableObjects.iterator().next(), force);
-				else
-					cObjectLoader.saveMeasurementPortTypes(storableObjects, force);
+				cObjectLoader.saveMeasurementPortTypes(storableObjects, force);
 				break;
 			case ObjectEntities.EQUIPMENT_ENTITY_CODE:
-				if (singleton)
-					cObjectLoader.saveEquipment((Equipment) storableObjects.iterator().next(), force);
-				else
-					cObjectLoader.saveEquipments(storableObjects, force);
+				cObjectLoader.saveEquipments(storableObjects, force);
 				break;
 			case ObjectEntities.PORT_ENTITY_CODE:
-				if (singleton)
-					cObjectLoader.savePort((Port) storableObjects.iterator().next(), force);
-				else
-					cObjectLoader.savePorts(storableObjects, force);
+				cObjectLoader.savePorts(storableObjects, force);
 				break;
 			case ObjectEntities.LINK_ENTITY_CODE:
-				if (singleton)
-					cObjectLoader.saveLink((Link) storableObjects.iterator().next(), force);
-				else
-					cObjectLoader.saveLinks(storableObjects, force);
+				cObjectLoader.saveLinks(storableObjects, force);
 				break;
 			case ObjectEntities.KIS_ENTITY_CODE:
-				if (singleton)
-					cObjectLoader.saveKIS((KIS) storableObjects.iterator().next(), force);
-				else
-					cObjectLoader.saveKISs(storableObjects, force);
+				cObjectLoader.saveKISs(storableObjects, force);
 				break;
 			case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:
-				if (singleton)
-					cObjectLoader.saveMeasurementPort((MeasurementPort) storableObjects.iterator().next(), force);
-				else
-					cObjectLoader.saveMeasurementPorts(storableObjects, force);
+				cObjectLoader.saveMeasurementPorts(storableObjects, force);
 				break;
 			case ObjectEntities.ME_ENTITY_CODE:
-				if (singleton)
-					cObjectLoader.saveMonitoredElement((MonitoredElement) storableObjects.iterator().next(), force);
-				else
-					cObjectLoader.saveMonitoredElements(storableObjects, force);
+				cObjectLoader.saveMonitoredElements(storableObjects, force);
 				break;
 			case ObjectEntities.TRANSPATH_ENTITY_CODE:
-				if (singleton)
-					cObjectLoader.saveTransmissionPath((TransmissionPath) storableObjects.iterator().next(), force);
-				else
-					cObjectLoader.saveTransmissionPaths(storableObjects, force);
+				cObjectLoader.saveTransmissionPaths(storableObjects, force);
 				break;
 			case ObjectEntities.TRANSPATHTYPE_ENTITY_CODE:
-				if (singleton)
-					cObjectLoader.saveTransmissionPathType((TransmissionPathType) storableObjects.iterator().next(), force);
-				else
-					cObjectLoader.saveTransmissionPathTypes(storableObjects, force);
+				cObjectLoader.saveTransmissionPathTypes(storableObjects, force);
 				break;
-
 			default:
 				Log.errorMessage("ConfigurationStorableObjectPool.saveStorableObjects | Unknown entity: '" + ObjectEntities.codeToString(entityCode) + "', entity code: " + entityCode);
 		}
@@ -443,10 +344,6 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 
 	public static void delete(final Set identifiables) {
 		instance.deleteImpl(identifiables);
-	}
-
-	protected void deleteStorableObject(Identifier id) {
-		cObjectLoader.delete(id);
 	}
 
 	protected void deleteStorableObjects(final Set identifiables) {

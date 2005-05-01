@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementObjectLoader.java,v 1.30 2005/04/25 09:48:58 bob Exp $
+ * $Id: MeasurementObjectLoader.java,v 1.31 2005/05/01 16:48:20 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,8 +12,8 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/04/25 09:48:58 $
- * @author $Author: bob $
+ * @version $Revision: 1.31 $, $Date: 2005/05/01 16:48:20 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -124,7 +124,10 @@ public interface MeasurementObjectLoader {
 	void savePeriodicalTemporalPatterns(java.util.Set objects, boolean force) throws ApplicationException;
 	
 
+
 	java.util.Set refresh(java.util.Set storableObjects) throws ApplicationException;
+
+
 
 	void delete(final java.util.Set identifiables);
 

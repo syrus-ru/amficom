@@ -1,5 +1,5 @@
 /*
- * $Id: EventStorableObjectPool.java,v 1.22 2005/04/27 13:51:23 arseniy Exp $
+ * $Id: EventStorableObjectPool.java,v 1.23 2005/05/01 16:49:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/04/27 13:51:23 $
+ * @version $Revision: 1.23 $, $Date: 2005/05/01 16:49:02 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -33,16 +33,13 @@ public class EventStorableObjectPool extends StorableObjectPool {
 	private static final int OBJECT_POOL_MAP_SIZE = 4;		/* Number of entities  */
 
 	private static final int EVENTTYPE_OBJECT_POOL_SIZE = 2;
-//	private static final int ALARMTYPE_OBJECT_POOL_SIZE = 2;
 	private static final int EVENT_OBJECT_POOL_SIZE = 10;
 	private static final int EVENTSOURCE_OBJECT_POOL_SIZE = 10;
-//	private static final int ALARM_OBJECT_POOL_SIZE = 10;
 
 	private static EventObjectLoader	eObjectLoader;
 	private static EventStorableObjectPool instance;
 
 	private EventStorableObjectPool() {
-		// empty
 		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.EVENT_GROUP_CODE);
 	}
 
@@ -124,25 +121,6 @@ public class EventStorableObjectPool extends StorableObjectPool {
 		return instance.getStorableObjectsByConditionButIdsImpl(ids, condition, useLoader);
 	}
 
-	protected StorableObject loadStorableObject(Identifier objectId) throws ApplicationException {
-		StorableObject storableObject;
-		switch (objectId.getMajor()) {
-			case ObjectEntities.EVENTTYPE_ENTITY_CODE:
-				storableObject = eObjectLoader.loadEventType(objectId);
-				break;
-			case ObjectEntities.EVENT_ENTITY_CODE:
-				storableObject = eObjectLoader.loadEvent(objectId);
-				break;
-			case ObjectEntities.EVENTSOURCE_ENTITY_CODE:
-				storableObject = eObjectLoader.loadEventSource(objectId);
-				break;
-			default:
-				Log.errorMessage("EventStorableObjectPool.loadStorableObject | Unknown entity: '" + ObjectEntities.codeToString(objectId.getMajor()) + "', entity code: " + objectId.getMajor());
-				storableObject = null;
-		}
-		return storableObject;
-	}
-
 	protected Set loadStorableObjects(final Set ids) throws ApplicationException {
 		assert StorableObject.hasSingleTypeEntities(ids);
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
@@ -179,32 +157,22 @@ public class EventStorableObjectPool extends StorableObjectPool {
 		return loadedObjects;
 	}
 
-	protected void saveStorableObjects(final Set storableObjects,
-			final boolean force)
-			throws ApplicationException {
+	protected void saveStorableObjects(final Set storableObjects, final boolean force) throws ApplicationException {
 		if (storableObjects.isEmpty())
 			return;
+
 		assert StorableObject.hasSingleTypeEntities(storableObjects);
+
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(storableObjects);
-		final boolean singleton = storableObjects.size() == 1;
 		switch (entityCode) {
 			case ObjectEntities.EVENTTYPE_ENTITY_CODE:
-				if (singleton)
-					eObjectLoader.saveEventType((EventType)storableObjects.iterator().next(), force);
-				else 
-					eObjectLoader.saveEventTypes(storableObjects, force);
+				eObjectLoader.saveEventTypes(storableObjects, force);
 				break;
 			case ObjectEntities.EVENT_ENTITY_CODE:
-				if (singleton)
-					eObjectLoader.saveEvent((Event)storableObjects.iterator().next(), force);
-				else 
-					eObjectLoader.saveEvents(storableObjects, force);
+				eObjectLoader.saveEvents(storableObjects, force);
 				break;
 			case ObjectEntities.EVENTSOURCE_ENTITY_CODE:
-				if (singleton)
-					eObjectLoader.saveEventSource((EventSource)storableObjects.iterator().next(), force);
-				else 
-					eObjectLoader.saveEventSources(storableObjects, force);
+				eObjectLoader.saveEventSources(storableObjects, force);
 				break;
 			default:
 				Log.errorMessage("EventStorableObjectPool.saveStorableObjects | Unknown entity: '" + ObjectEntities.codeToString(entityCode) + "', entity code: " + entityCode);
@@ -249,10 +217,6 @@ public class EventStorableObjectPool extends StorableObjectPool {
 
 	public static void delete(final Set identifiables) {
 		instance.deleteImpl(identifiables);
-	}
-
-	protected void deleteStorableObject(Identifier id) {
-		eObjectLoader.delete(id);
 	}
 
 	protected void deleteStorableObjects(final Set identifiables) {

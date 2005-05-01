@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationObjectLoader.java,v 1.36 2005/04/22 13:46:48 arseniy Exp $
+ * $Id: ConfigurationObjectLoader.java,v 1.37 2005/05/01 16:47:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,52 +11,15 @@ package com.syrus.AMFICOM.configuration;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/04/22 13:46:48 $
+ * @version $Revision: 1.37 $, $Date: 2005/05/01 16:47:53 $
  * @author $Author: arseniy $
  * @module config_v1
  */
 
 public interface ConfigurationObjectLoader {
-
-	/* Load single object*/
-
-	EquipmentType loadEquipmentType(Identifier id) throws ApplicationException;
-
-	PortType loadPortType(Identifier id) throws ApplicationException;
-
-	MeasurementPortType loadMeasurementPortType(Identifier id) throws ApplicationException;
-
-	TransmissionPathType loadTransmissionPathType(Identifier id) throws ApplicationException;
-
-	LinkType loadLinkType(Identifier id) throws ApplicationException;
-
-	CableLinkType loadCableLinkType(Identifier id) throws ApplicationException;
-
-	CableThreadType loadCableThreadType(Identifier id) throws ApplicationException;
-
-
-
-	Equipment loadEquipment(Identifier id) throws ApplicationException;
-
-	Port loadPort(Identifier id) throws ApplicationException;
-
-	MeasurementPort loadMeasurementPort(Identifier id) throws ApplicationException;
-
-	TransmissionPath loadTransmissionPath(Identifier id) throws ApplicationException;
-
-	KIS loadKIS(Identifier id) throws ApplicationException;
-
-	MonitoredElement loadMonitoredElement(Identifier id) throws ApplicationException;
-
-	Link loadLink(Identifier id) throws ApplicationException;
-
-	CableThread loadCableThread(Identifier id) throws ApplicationException;
-
-
 
 	/* Load multiple objects*/
 
@@ -130,42 +93,6 @@ public interface ConfigurationObjectLoader {
 
 
 
-	/* Save single object*/
-
-	void saveEquipmentType(EquipmentType equipmentType, boolean force) throws ApplicationException;
-
-	void savePortType(PortType portType, boolean force) throws ApplicationException;
-
-	void saveMeasurementPortType(MeasurementPortType measurementPortType, boolean force) throws ApplicationException;
-
-	void saveTransmissionPathType(TransmissionPathType transmissionPathType, boolean force) throws ApplicationException;
-
-	void saveLinkType(LinkType linkType, boolean force) throws ApplicationException;
-
-	void saveCableLinkType(CableLinkType cableLinkType, boolean force) throws ApplicationException;
-
-	void saveCableThreadType(CableThreadType cableThreadType, boolean force) throws ApplicationException;
-
-
-
-	void saveEquipment(Equipment equipment, boolean force) throws ApplicationException;
-
-	void savePort(Port port, boolean force) throws ApplicationException;
-
-	void saveMeasurementPort(MeasurementPort measurementPort, boolean force) throws ApplicationException;
-
-	void saveTransmissionPath(TransmissionPath transmissionPath, boolean force) throws ApplicationException;
-
-	void saveKIS(KIS kis, boolean force) throws ApplicationException;
-
-	void saveMonitoredElement(MonitoredElement monitoredElement, boolean force) throws ApplicationException;
-
-	void saveLink(Link link, boolean force) throws ApplicationException;
-
-	void saveCableThread(CableThread cableThread, boolean force) throws ApplicationException;
-
-
-
 	/* Save multiple objects*/
 
 	void saveEquipmentTypes(Set objects, boolean force) throws ApplicationException;
@@ -205,8 +132,6 @@ public interface ConfigurationObjectLoader {
 	Set refresh(Set storableObjects) throws ApplicationException;
 
 
-
-	void delete(Identifier id);
 
 	void delete(final Set identifiables);
 

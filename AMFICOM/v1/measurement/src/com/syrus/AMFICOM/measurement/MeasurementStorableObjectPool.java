@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.87 2005/04/27 13:51:01 arseniy Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.88 2005/05/01 16:48:20 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.87 $, $Date: 2005/04/27 13:51:01 $
+ * @version $Revision: 1.88 $, $Date: 2005/05/01 16:48:20 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -53,7 +53,6 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 	private static MeasurementStorableObjectPool instance;
 
 	private MeasurementStorableObjectPool() {
-		// singleton
 		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.MEASUREMENT_GROUP_CODE);
 	}
 
@@ -159,55 +158,6 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 		return instance.getStorableObjectsByConditionButIdsImpl(ids, condition, useLoader);
 	}
 
-	protected StorableObject loadStorableObject(Identifier objectId) throws ApplicationException {
-		StorableObject storableObject;
-		switch (objectId.getMajor()) {
-//			case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
-//				storableObject = mObjectLoader.loadMeasurementType(objectId);
-//				break;
-//			case ObjectEntities.ANALYSISTYPE_ENTITY_CODE:
-//				storableObject = mObjectLoader.loadAnalysisType(objectId);
-//				break;
-//			case ObjectEntities.EVALUATIONTYPE_ENTITY_CODE:
-//				storableObject = mObjectLoader.loadEvaluationType(objectId);
-//				break;
-//			case ObjectEntities.MODELINGTYPE_ENTITY_CODE:
-//				storableObject = mObjectLoader.loadModelingType(objectId);
-//				break;
-//			case ObjectEntities.SET_ENTITY_CODE:
-//				storableObject = mObjectLoader.loadSet(objectId);
-//				break;
-//			case ObjectEntities.MODELING_ENTITY_CODE:
-//				storableObject = mObjectLoader.loadModeling(objectId);
-//				break;
-//			case ObjectEntities.MS_ENTITY_CODE:
-//				storableObject = mObjectLoader.loadMeasurementSetup(objectId);
-//				break;
-//			case ObjectEntities.ANALYSIS_ENTITY_CODE:
-//				storableObject = mObjectLoader.loadAnalysis(objectId);
-//				break;
-//			case ObjectEntities.EVALUATION_ENTITY_CODE:
-//				storableObject = mObjectLoader.loadEvaluation(objectId);
-//				break;
-//			case ObjectEntities.MEASUREMENT_ENTITY_CODE:
-//				storableObject = mObjectLoader.loadMeasurement(objectId);
-//				break;
-//			case ObjectEntities.TEST_ENTITY_CODE:
-//				storableObject = mObjectLoader.loadTest(objectId);
-//				break;
-//			case ObjectEntities.RESULT_ENTITY_CODE:
-//				storableObject = mObjectLoader.loadResult(objectId);
-//				break;
-//			case ObjectEntities.CRONTEMPORALPATTERN_ENTITY_CODE:
-//				storableObject = mObjectLoader.loadCronTemporalPattern(objectId);
-//				break;
-			default:
-				Log.errorMessage("MeasurementStorableObjectPool.loadStorableObject | Unknown entity: '" + ObjectEntities.codeToString(objectId.getMajor()) + "', entity code: " + objectId.getMajor());
-				storableObject = null;
-		}
-		return storableObject;
-	}
-
 	protected java.util.Set loadStorableObjects(final java.util.Set ids) throws ApplicationException {
 		assert StorableObject.hasSingleTypeEntities(ids);
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
@@ -304,49 +254,49 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 		return loadedCollection;
 	}
 
-	protected void saveStorableObjects(final java.util.Set storableObjects,
-			final boolean force)
-			throws ApplicationException {
+	protected void saveStorableObjects(final java.util.Set storableObjects, final boolean force) throws ApplicationException {
 		if (storableObjects.isEmpty())
 			return;
+
 		assert StorableObject.hasSingleTypeEntities(storableObjects);
+
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(storableObjects);
 		switch (entityCode) {
 			case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
-					mObjectLoader.saveMeasurementTypes(storableObjects, force);
+				mObjectLoader.saveMeasurementTypes(storableObjects, force);
 				break;
 			case ObjectEntities.ANALYSISTYPE_ENTITY_CODE:
-					mObjectLoader.saveAnalysisTypes(storableObjects, force);
+				mObjectLoader.saveAnalysisTypes(storableObjects, force);
 				break;
 			case ObjectEntities.EVALUATIONTYPE_ENTITY_CODE:
-					mObjectLoader.saveEvaluationTypes(storableObjects, force);
+				mObjectLoader.saveEvaluationTypes(storableObjects, force);
 				break;
 			case ObjectEntities.SET_ENTITY_CODE:
-					mObjectLoader.saveSets(storableObjects, force);
+				mObjectLoader.saveSets(storableObjects, force);
 				break;
 			case ObjectEntities.MS_ENTITY_CODE:
-					mObjectLoader.saveMeasurementSetups(storableObjects, force);
+				mObjectLoader.saveMeasurementSetups(storableObjects, force);
 				break;
 			case ObjectEntities.ANALYSIS_ENTITY_CODE:
-					mObjectLoader.saveAnalyses(storableObjects, force);
+				mObjectLoader.saveAnalyses(storableObjects, force);
 				break;
 			case ObjectEntities.EVALUATION_ENTITY_CODE:
-					mObjectLoader.saveEvaluations(storableObjects, force);
+				mObjectLoader.saveEvaluations(storableObjects, force);
 				break;
 			case ObjectEntities.MEASUREMENT_ENTITY_CODE:
-					mObjectLoader.saveMeasurements(storableObjects, force);
+				mObjectLoader.saveMeasurements(storableObjects, force);
 				break;
 			case ObjectEntities.TEST_ENTITY_CODE:
-					mObjectLoader.saveTests(storableObjects, force);
+				mObjectLoader.saveTests(storableObjects, force);
 				break;
 			case ObjectEntities.RESULT_ENTITY_CODE:
-					mObjectLoader.saveResults(storableObjects, force);
+				mObjectLoader.saveResults(storableObjects, force);
 				break;
 			case ObjectEntities.CRONTEMPORALPATTERN_ENTITY_CODE:
-					mObjectLoader.saveCronTemporalPatterns(storableObjects, force);
+				mObjectLoader.saveCronTemporalPatterns(storableObjects, force);
 				break;
 			case ObjectEntities.INTERVALS_TEMPORALPATTERN_ENTITY_CODE:
-					mObjectLoader.saveIntervalsTemporalPatterns(storableObjects, force);
+				mObjectLoader.saveIntervalsTemporalPatterns(storableObjects, force);
 				break;
 			case ObjectEntities.PERIODICAL_TEMPORALPATTERN_ENTITY_CODE:
 				mObjectLoader.savePeriodicalTemporalPatterns(storableObjects, force);

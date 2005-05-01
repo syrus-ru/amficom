@@ -1,5 +1,5 @@
 /*
- * $Id: AdministrationObjectLoader.java,v 1.15 2005/04/29 08:57:57 arseniy Exp $
+ * $Id: AdministrationObjectLoader.java,v 1.16 2005/05/01 16:47:29 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,32 +11,15 @@ package com.syrus.AMFICOM.administration;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/04/29 08:57:57 $
+ * @version $Revision: 1.16 $, $Date: 2005/05/01 16:47:29 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
 
 public interface AdministrationObjectLoader {
-
-	/* Load single object*/
-
-	User loadUser(Identifier id) throws ApplicationException;
-
-	Domain loadDomain(Identifier id) throws ApplicationException;
-
-	Server loadServer(Identifier id) throws ApplicationException;
-
-	MCM loadMCM(Identifier id) throws ApplicationException;
-
-	ServerProcess loadServerProcess(Identifier id) throws ApplicationException;
-
-//	PermissionAttributes loadPermissionAttributes(Identifier id) throws ApplicationException;
-
-
 
 	/* Load multiple objects*/
 
@@ -70,22 +53,6 @@ public interface AdministrationObjectLoader {
 
 
 
-	/* Save single object*/
-
-	void saveUser(User user, boolean force) throws ApplicationException;
-
-	void saveDomain(Domain domain, boolean force) throws ApplicationException;
-
-	void saveServer(Server server, boolean force) throws ApplicationException;
-
-	void saveMCM(MCM mcm, boolean force) throws ApplicationException;
-
-	void saveServerProcess(ServerProcess serverProcess, boolean force) throws ApplicationException;
-
-//	void savePermissionAttributes(PermissionAttributes permissionAttributes, boolean force) throws ApplicationException;
-
-
-
 	/* Save multiple objects*/
 
 	void saveUsers(Set objects, boolean force) throws ApplicationException;
@@ -105,8 +72,6 @@ public interface AdministrationObjectLoader {
 	Set refresh(Set storableObjects) throws ApplicationException;
 
 
-
-	void delete(Identifier id);
 
 	void delete(final Set identifiables);
 

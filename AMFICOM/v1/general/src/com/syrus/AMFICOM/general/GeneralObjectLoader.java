@@ -1,5 +1,5 @@
 /*
- * $Id: GeneralObjectLoader.java,v 1.14 2005/04/22 19:25:49 arseniy Exp $
+ * $Id: GeneralObjectLoader.java,v 1.15 2005/05/01 16:47:11 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,22 +11,12 @@ package com.syrus.AMFICOM.general;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/04/22 19:25:49 $
+ * @version $Revision: 1.15 $, $Date: 2005/05/01 16:47:11 $
  * @author $Author: arseniy $
  * @module general_v1
  */
 
 public interface GeneralObjectLoader {
-
-	/* Load single object*/
-
-	ParameterType loadParameterType(Identifier id) throws ApplicationException;
-
-	CharacteristicType loadCharacteristicType(Identifier id) throws ApplicationException;
-
-	Characteristic loadCharacteristic(Identifier id) throws ApplicationException;
-
-
 
 	/* Load multiple objects*/
 
@@ -48,16 +38,6 @@ public interface GeneralObjectLoader {
 
 
 
-	/* Save single object*/
-
-	void saveParameterType(ParameterType parameterType, boolean force) throws ApplicationException;
-
-	void saveCharacteristicType(CharacteristicType characteristicType, boolean force) throws ApplicationException;
-
-	void saveCharacteristic(Characteristic characteristic, boolean force) throws ApplicationException;
-
-
-
 	/* Save multiple objects*/
 
 	void saveParameterTypes(Set objects, boolean force) throws ApplicationException;
@@ -67,10 +47,10 @@ public interface GeneralObjectLoader {
 	void saveCharacteristics(Set objects, boolean force) throws ApplicationException;
 
 
+
 	Set refresh(Set objects) throws ApplicationException;
 	
 
-	void delete(Identifier id);
 
 	void delete(final Set identifiables);
 
