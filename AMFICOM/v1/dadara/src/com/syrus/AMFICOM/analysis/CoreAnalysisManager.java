@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.58 2005/05/01 09:50:53 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.59 2005/05/01 10:26:13 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.58 $, $Date: 2005/05/01 09:50:53 $
+ * @version $Revision: 1.59 $, $Date: 2005/05/01 10:26:13 $
  * @module
  */
 
@@ -286,7 +286,7 @@ public class CoreAnalysisManager
 			BellcoreStructure bs = (BellcoreStructure)it.next();
 
 			// general info
-		    double[] yCur = bs.getTraceData();
+		    double[] yCur = bs.getTraceData(); // is rather slow, typ. 25% of loop time
 		    int curLength = calcTraceLength(yCur);
 
 		    // general info
@@ -303,7 +303,7 @@ public class CoreAnalysisManager
 		    // при расчете noiseArray используем curLength, а не traceLength,
 		    // хотя расчет на traceLength мог бы быть немного быстрее
 		    double[] noiseData = needNoiseInfo || needMFInfo
-		    	? calcNoiseArray(yCur, curLength)
+		    	? calcNoiseArray(yCur, curLength) // typ., 50% of loop time
 		    	: null;
 
 	    	if (needNoiseInfo) {
@@ -362,7 +362,7 @@ public class CoreAnalysisManager
 			: calcNoiseArray(res.avY, res.minTraceLength);
 		}
 
-		return res;
+        return res;
 	}
 
 	/**
