@@ -287,12 +287,13 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
      * @param g graphics
      * @param nEvent event number, must be >= 0.
      */
-    private void paintThresholdsSec(Graphics g, int nEvent)
+    private void paintThresholdsSec(Graphics g, int nEvent, boolean dashStroke)
     {
         if (etalon == null)
             return;
 
-        ((Graphics2D)g).setStroke(ScaledGraphPanel.DASHED_STROKE);
+        if (dashStroke)
+            ((Graphics2D)g).setStroke(ScaledGraphPanel.DASHED_STROKE);
 
         ModelTraceRange[] curves = etalon.getEventThresholdMTR(nEvent);
 
@@ -305,21 +306,19 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 
             drawModelCurve(g, curves[key], true);
         }
-    ((Graphics2D)g).setStroke(ScaledGraphPanel.DEFAULT_STROKE);
+        if (dashStroke)
+            ((Graphics2D)g).setStroke(ScaledGraphPanel.DEFAULT_STROKE);
     }
 
 	private void paintOneThreshold(Graphics g)
 	{
 		if (c_event >= 0)
         {
-            // сначала рисуем пунктирную "secondary кривую" порога,
-            // а затем - сплошную основную кривую порога.
-            // эти два метода могут давать заметно несовпадающие кривые.
-            // XXX: paintOneThreshold: при рисовании, пунктир и сплошная кривая могут совпадать неточно, что приводит к "мохнатости" линии
-            // FIXME: пунктирная линия очень медленно прорисовывается
-            // Note: оставить только один paintThresholdsSec пока нельзя - захват мышью происходит по второй кривой
-            paintThresholdsSec(g, c_event);
-            paintThresholdsEx(g, c_event);
+            // Note: эти два метода иногда могут давать заметно несовпадающие кривые.
+            // Note: пунктирная линия - paintThresholdsSec(..., true) - очень медленно прорисовывается
+            paintThresholdsSec(g, c_event, false);
+            // Note: при рисовании пунктир и сплошная кривая могут совпадать неточно, что приводит к "мохнатости" линии
+            //paintThresholdsEx(g, c_event);
         }
 	}
 	private void paintAllThresholds(Graphics g)
