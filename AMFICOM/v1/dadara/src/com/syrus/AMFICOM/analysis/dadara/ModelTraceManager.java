@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.69 2005/05/01 12:52:39 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.70 2005/05/01 13:05:37 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
  * генерацией пороговых кривых и сохранением/восстановлением порогов.
  *
  * @author $Author: saa $
- * @version $Revision: 1.69 $, $Date: 2005/05/01 12:52:39 $
+ * @version $Revision: 1.70 $, $Date: 2005/05/01 13:05:37 $
  * @module
  */
 public class ModelTraceManager
@@ -106,7 +106,7 @@ implements DataStreamable, Cloneable
 	}
 
 	// создать пороги
-	private void createTH()
+	private Thresh[] createTH()
 	{
 		LinkedList thresholds = new LinkedList();
 		Thresh last = null; // далее будет всегда указывать на текущий порог A-типа, либо null, если разрыв (в нач. р/г либо после н/ид соб)
@@ -162,8 +162,7 @@ implements DataStreamable, Cloneable
 				break;
 			}
 		}
-		Thresh[] tl = (Thresh[] )thresholds.toArray(new Thresh[thresholds.size()]);
-		setTL(tl);
+		return (Thresh[] )thresholds.toArray(new Thresh[thresholds.size()]);
 	}
 
 	protected ModelFunction getMF()
@@ -208,8 +207,14 @@ implements DataStreamable, Cloneable
 	public ModelTraceManager(ModelTraceAndEventsImpl mtae)
 	{
 		this.mtae = mtae;
-		createTH();
+        setTL(createTH());
 	}
+
+    protected ModelTraceManager(ModelTraceAndEventsImpl mtae, Thresh[] tl)
+    {
+        this.mtae = mtae;
+        setTL(tl);
+    }
 
 	/**
 	 * Определяет значение порога в данной точке.
@@ -842,20 +847,19 @@ implements DataStreamable, Cloneable
 
 	private static class DSReader implements DataStreamable.Reader
 	{
-		// FIXME: very poor technique: init with defaults to oeverride a moment later, isn't it?
-		public DataStreamable readFromDIS(DataInputStream dis) throws IOException, SignatureMismatchException
+		public DataStreamable readFromDIS(DataInputStream dis)
+        throws IOException, SignatureMismatchException
 		{
-			ModelTraceAndEventsImpl mtae = (ModelTraceAndEventsImpl)ModelTraceAndEventsImpl.getReader().readFromDIS(dis);
-			ModelTraceManager mtm = new ModelTraceManager(mtae);
-			mtm.invalidateCache();
-			long signature = dis.readLong();
+			ModelTraceAndEventsImpl mtae =
+                (ModelTraceAndEventsImpl)ModelTraceAndEventsImpl.
+                    getReader().readFromDIS(dis);
+
+            long signature = dis.readLong();
 			if (signature != SIGNATURE_THRESH)
 				throw new SignatureMismatchException();
-			Thresh[] tl2 = Thresh.readArrayFromDIS(dis);
-			if (mtm.tL.length != tl2.length) 
-				throw new SignatureMismatchException();
-			mtm.setTL(tl2);
-			return mtm;
+
+            return new ModelTraceManager(mtae,
+                    Thresh.readArrayFromDIS(dis));
 		}
 	}
 
