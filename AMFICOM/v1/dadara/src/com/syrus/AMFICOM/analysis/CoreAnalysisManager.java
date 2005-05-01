@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.57 2005/05/01 06:12:58 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.58 2005/05/01 09:50:53 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.57 $, $Date: 2005/05/01 06:12:58 $
+ * @version $Revision: 1.58 $, $Date: 2005/05/01 09:50:53 $
  * @module
  */
 
@@ -396,8 +396,6 @@ public class CoreAnalysisManager
 			nReflSize = 3 * reflSize / 5;
 		reflSize *= 5;
 
-		System.out.println("reflSize="+reflSize+"; nReflSize="+nReflSize);
-
 		long t1 = System.currentTimeMillis();
 
 		// формирование событий по усредненной кривой
@@ -412,7 +410,7 @@ public class CoreAnalysisManager
 				reflSize, nReflSize,
 				av.minTraceLength, av.avNoise);
 
-		// FIXME: debug output of IA results
+		// FIX//ME: debug output of IA results
 //		for (int i = 0; i < rse.length; i++)
 //			System.out.println("rse[" + i + "]:"
 //				+ " begin=" + rse[i].getBegin()
@@ -441,6 +439,7 @@ public class CoreAnalysisManager
 
 		long t4 = System.currentTimeMillis();
 
+        // FIXME: debug output of analysis timing
 		System.out.println("makeAnalysis: "
 			+ "getDataAndLengthAndNoise: " + (t1-t0)
 			+ "; IA: " + (t2-t1) + "; fit: " + (t3-t2)
@@ -476,7 +475,10 @@ public class CoreAnalysisManager
 		bsSet.add(bs);
 		try	{
 			// определяем все необходимые нам параметры совокупности р/г
+            long t0 = System.currentTimeMillis();
 			TracesAverages av = findTracesAverages(bsSet, true, false, true);
+            long t1 = System.currentTimeMillis();
+            System.out.println("makeAnalysis: findTracesAverages: " + (t1-t0)); // FIXME: debug: analysis timing
 			return makeAnalysis(av, ap);
 		} catch (IncompatibleTracesException e) {
 			// одна рефлектограмма всегда совместима с самой собой
