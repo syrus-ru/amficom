@@ -1,5 +1,5 @@
 /*
- * $Id: Thresh.java,v 1.12 2005/04/30 07:33:28 saa Exp $
+ * $Id: Thresh.java,v 1.13 2005/05/01 06:00:38 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.12 $, $Date: 2005/04/30 07:33:28 $
+ * @version $Revision: 1.13 $, $Date: 2005/05/01 06:00:38 $
  * @module
  */
 
@@ -75,12 +75,11 @@ implements Cloneable
 		return ret;
 	}
 
-	protected void readSpecificFromDIS(DataInputStream dis) throws IOException
-	{ // empty
-	}
-	protected void writeSpecificToDOS(DataOutputStream dos) throws IOException
-	{ // empty
-	}
+	protected abstract void readSpecificFromDIS(DataInputStream dis)
+    throws IOException;
+
+    protected abstract void writeSpecificToDOS(DataOutputStream dos)
+    throws IOException;
 
 	public void writeToDOS(DataOutputStream dos)
 	throws IOException
@@ -129,13 +128,9 @@ implements Cloneable
 	}
 
 	// при необходимости упор€дочить все warn/soft параметры, предполага€ что редактировалс€ только key 
-	protected void arrangeLimits(int key)
-	{ // empty
-	}
+	protected abstract void arrangeLimits(int key);
 
 	// увеличить порог до совпадени€ с сеткой
 	// используетс€ в native-коде
-	protected void roundUp(int key)
-	{ // empty
-	}
+	protected abstract void roundUp(int key);
 }
