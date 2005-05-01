@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.76 2005/04/27 13:47:28 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.77 2005/05/01 16:46:15 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import java.util.Set;
 import org.omg.CORBA.portable.IDLEntity;
 
 /**
- * @version $Revision: 1.76 $, $Date: 2005/04/27 13:47:28 $
+ * @version $Revision: 1.77 $, $Date: 2005/05/01 16:46:15 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -735,13 +735,6 @@ public abstract class StorableObjectPool {
 
 		return set == null ? Collections.EMPTY_SET : set;
 	}
-//
-//	/**
-//	 * @deprecated use {@link #loadStorableObjects}
-//	 * @param objectId
-//	 * @throws ApplicationException
-//	 */
-//	protected abstract StorableObject loadStorableObject(final Identifier objectId) throws ApplicationException;
 
 	protected abstract Set loadStorableObjects(final Set ids) throws ApplicationException;
 
