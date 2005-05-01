@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.24 2005/04/29 16:07:49 arseniy Exp $
+ * $Id: DatabaseContextSetup.java,v 1.25 2005/05/01 17:24:55 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,19 +9,15 @@
 package com.syrus.AMFICOM.cmserver;
 
 import com.syrus.AMFICOM.administration.AdministrationDatabaseContext;
-import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
-import com.syrus.AMFICOM.administration.DatabaseAdministrationObjectLoader;
 import com.syrus.AMFICOM.administration.DomainDatabase;
 import com.syrus.AMFICOM.administration.MCMDatabase;
 import com.syrus.AMFICOM.administration.ServerDatabase;
 import com.syrus.AMFICOM.administration.ServerProcessDatabase;
 import com.syrus.AMFICOM.administration.UserDatabase;
-import com.syrus.AMFICOM.configuration.DatabaseConfigurationObjectLoader;
 import com.syrus.AMFICOM.configuration.CableLinkTypeDatabase;
 import com.syrus.AMFICOM.configuration.CableThreadDatabase;
 import com.syrus.AMFICOM.configuration.CableThreadTypeDatabase;
 import com.syrus.AMFICOM.configuration.ConfigurationDatabaseContext;
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.EquipmentDatabase;
 import com.syrus.AMFICOM.configuration.EquipmentTypeDatabase;
 import com.syrus.AMFICOM.configuration.KISDatabase;
@@ -34,34 +30,28 @@ import com.syrus.AMFICOM.configuration.PortDatabase;
 import com.syrus.AMFICOM.configuration.PortTypeDatabase;
 import com.syrus.AMFICOM.configuration.TransmissionPathDatabase;
 import com.syrus.AMFICOM.configuration.TransmissionPathTypeDatabase;
-import com.syrus.AMFICOM.general.ParameterTypeDatabase;
 import com.syrus.AMFICOM.general.CharacteristicDatabase;
 import com.syrus.AMFICOM.general.CharacteristicTypeDatabase;
-import com.syrus.AMFICOM.general.DatabaseGeneralObjectLoader;
 import com.syrus.AMFICOM.general.GeneralDatabaseContext;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
-import com.syrus.AMFICOM.general.StorableObjectResizableLRUMap;
-import com.syrus.AMFICOM.measurement.DatabaseMeasurementObjectLoader;
+import com.syrus.AMFICOM.general.ParameterTypeDatabase;
 import com.syrus.AMFICOM.measurement.AnalysisDatabase;
 import com.syrus.AMFICOM.measurement.AnalysisTypeDatabase;
+import com.syrus.AMFICOM.measurement.CronTemporalPatternDatabase;
 import com.syrus.AMFICOM.measurement.EvaluationDatabase;
 import com.syrus.AMFICOM.measurement.EvaluationTypeDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
 import com.syrus.AMFICOM.measurement.MeasurementSetupDatabase;
-import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.MeasurementTypeDatabase;
 import com.syrus.AMFICOM.measurement.ModelingDatabase;
 import com.syrus.AMFICOM.measurement.ModelingTypeDatabase;
 import com.syrus.AMFICOM.measurement.PeriodicalTemporalPatternDatabase;
 import com.syrus.AMFICOM.measurement.ResultDatabase;
 import com.syrus.AMFICOM.measurement.SetDatabase;
-import com.syrus.AMFICOM.measurement.CronTemporalPatternDatabase;
 import com.syrus.AMFICOM.measurement.TestDatabase;
-import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/04/29 16:07:49 $
+ * @version $Revision: 1.25 $, $Date: 2005/05/01 17:24:55 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -131,37 +121,4 @@ final class DatabaseContextSetup {
 				new PeriodicalTemporalPatternDatabase());
 	}
 
-	public static void initObjectPools() {
-		boolean databaseLoaderOnly = Boolean.valueOf(ApplicationProperties.getString(KEY_DATABASE_LOADER_ONLY, DEFAULT_DATABASE_LOADER_ONLY)).booleanValue();
-		
-		int generalPoolSize = ApplicationProperties.getInt(KEY_GENERAL_POOL_SIZE, DEFAULT_GENERAL_POOL_SIZE);
-		int administrationPoolSize = ApplicationProperties.getInt(KEY_ADMINISTRATION_POOL_SIZE, DEFAULT_ADMINISTRATION_POOL_SIZE);
-		int configurationPoolSize = ApplicationProperties.getInt(KEY_CONFIGURATION_POOL_SIZE, DEFAULT_CONFIGURATION_POOL_SIZE);
-		int measurementPoolSize = ApplicationProperties.getInt(KEY_MEASUREMENT_POOL_SIZE, DEFAULT_MEASUREMENT_POOL_SIZE);
-
-		GeneralStorableObjectPool.init(new DatabaseGeneralObjectLoader(),
-				StorableObjectResizableLRUMap.class,
-				generalPoolSize);
-		AdministrationStorableObjectPool.init(new DatabaseAdministrationObjectLoader(),
-				StorableObjectResizableLRUMap.class,
-				administrationPoolSize);		
-
-		if (!databaseLoaderOnly) {
-			long refreshTimeout = ApplicationProperties.getInt(KEY_REFRESH_TIMEOUT, DEFAULT_REFRESH_TIMEOUT) * 1000L * 60L;
-			ConfigurationStorableObjectPool.init(new CMServerConfigurationObjectLoader(refreshTimeout),
-					StorableObjectResizableLRUMap.class,
-					configurationPoolSize);
-			MeasurementStorableObjectPool.init(new CMServerMeasurementObjectLoader(refreshTimeout),
-					StorableObjectResizableLRUMap.class,
-					measurementPoolSize);
-		}
-		else {
-			ConfigurationStorableObjectPool.init(new DatabaseConfigurationObjectLoader(),
-					StorableObjectResizableLRUMap.class,
-					configurationPoolSize);
-			MeasurementStorableObjectPool.init(new DatabaseMeasurementObjectLoader(),
-					StorableObjectResizableLRUMap.class,
-					measurementPoolSize);
-		}
-	}
 }
