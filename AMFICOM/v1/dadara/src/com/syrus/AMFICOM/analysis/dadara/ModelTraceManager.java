@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.67 2005/05/01 09:35:16 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.68 2005/05/01 12:03:04 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
  * генерацией пороговых кривых и сохранением/восстановлением порогов.
  *
  * @author $Author: saa $
- * @version $Revision: 1.67 $, $Date: 2005/05/01 09:35:16 $
+ * @version $Revision: 1.68 $, $Date: 2005/05/01 12:03:04 $
  * @module
  */
 public class ModelTraceManager
@@ -32,14 +32,23 @@ implements DataStreamable, Cloneable
 	public static final String CODENAME = "ModelTraceManager";
 
 	protected ModelTraceAndEventsImpl mtae;
-	private ModelTrace[] thMTCache = null; // cache for thresholds curves
 	protected Thresh[] tL; // полный список порогов
 	protected ThreshDX[] tDX; // список DX-порогов
 	protected ThreshDY[] tDY; // список DY-порогов
 
-    // thresholds curve cache for EventThresholdMTEImpl
-    protected int singleThCacheEventId;
-    protected ModelTraceRange[] singleThMTCache = null;
+    // threshold curves cache
+    // cache for thresholds curves, cached objects are arary elements
+    private ModelTrace[] thMTCache = null;
+
+    // threshold event cache for getEventRangeOnThresholdCurve
+    // cached objects are array elements
+    protected int thSRECacheEventId;
+    protected SimpleReflectogramEvent[] thSRECache = null;
+
+    // 'single threshold mode' curve cache for getEventThresholdMTR
+    // cached object is whole array
+    protected int thSingleMTRCacheEventId;
+    protected ModelTraceRange[] thSingleMTRCache = null; 
 
 	private static DataStreamable.Reader dsReader;
 
@@ -58,28 +67,37 @@ implements DataStreamable, Cloneable
         return ret;
     }
 
-	protected void invalidateThMTCache()
+    // очищает все записи кэша
+	protected void invalidateCache()
 	{
 		thMTCache = null;
-        singleThMTCache = null;
+        thSingleMTRCache = null;
+        thSRECache = null;
 	}
 
-	// очищает записи кэша пороговых кривых key
-	protected void emptyThMTEntry(int key)
+    // очищает записи кэша, зависящие от ключа key,
+    // а также подготавливает кэш пороговых кривых
+	protected void emptyCacheEntryByKey(int key)
 	{
+        // это надо обязательно создать
 		if (thMTCache == null)
 			thMTCache = new ModelTrace[] { null, null, null, null };
 		thMTCache[key] = null;
 
-        singleThMTCache = null; // client needs the whole array only
+        // это создавать не обязательно (достаточно просто очистить)
+        if (thSRECache != null)
+            thSRECache[key] = null;
+
+        // а эта штука нужна только целиком - удаляем весь массив
+        thSingleMTRCache = null;
 	}
 
 	// очищает записи кэша, зависящие от ключа key в порогах
 	// (это key и Thresh.CONJ_KEY[key])
-	protected void invalidateThMTByKey(int key)
+	protected void invalidateCacheByKey(int key)
 	{
-		emptyThMTEntry(key);
-		emptyThMTEntry(Thresh.CONJ_KEY[key]);
+		emptyCacheEntryByKey(key);
+		emptyCacheEntryByKey(Thresh.CONJ_KEY[key]);
 	}
 
 	protected boolean isThMFCacheValid(int key)
@@ -235,7 +253,7 @@ implements DataStreamable, Cloneable
 		}
 		public void setValue(int key, double value)
 		{
-			ModelTraceManager.this.invalidateThMTByKey(key);
+			ModelTraceManager.this.invalidateCacheByKey(key);
 			if (type == TYPE_DXF || type == TYPE_DXT)
 			{
                 // convert meters to samples
@@ -258,7 +276,7 @@ implements DataStreamable, Cloneable
 			else
 				((ThreshDY )th).setDY(key, value);
 			th.arrangeLimits(key);
-			invalidateThMTCache(); // сбрасываем кэш всех кривых
+			invalidateCache(); // сбрасываем кэш всех кривых
 		}
 		/**
 		 * increase thresholds;
@@ -270,7 +288,7 @@ implements DataStreamable, Cloneable
 				((ThreshDX)th).changeAllBy(1);
 			else
 				((ThreshDY)th).changeAllBy(0.1);
-			invalidateThMTCache();
+			invalidateCache();
 		}
 		/**
 		 * increase thresholds;
@@ -282,7 +300,7 @@ implements DataStreamable, Cloneable
 				((ThreshDX)th).changeAllBy(-1);
 			else
 				((ThreshDY)th).changeAllBy(-0.1);
-			invalidateThMTCache();
+			invalidateCache();
 		}
 	}
 
@@ -333,7 +351,7 @@ implements DataStreamable, Cloneable
 			ModelFunction tmp = getMF().copy();
 			tmp.changeByThresh(tDX, tDY, key);
 			thMt = new ModelTraceImplMF(tmp, getTraceLength());
-			emptyThMTEntry(key);
+			emptyCacheEntryByKey(key);
 			thMTCache[key] = thMt;
 		}
 		return thMt;
@@ -344,13 +362,23 @@ implements DataStreamable, Cloneable
 		return mtae.getTraceLength();
 	}
 
+    /**
+     * Определяет все четыре пороговые кривые данного события
+     *   "как если бы не не было других порогов".
+     * <p>
+     * Note: Вычисляется довольно долго, зато кэширует результат
+     *   в пределах одного события.
+     * @param nEvent Номер события
+     * @return четыре пороговые кривые в формате ModelTraceRange,
+     *   в виде массива.
+     */
     public ModelTraceRange[] getEventThresholdMTR(int nEvent) {
         // check if the answer is already present
-        if (singleThCacheEventId == nEvent
-                && singleThMTCache != null)
+        if (thSingleMTRCacheEventId == nEvent
+                && thSingleMTRCache != null)
         {
             //System.err.println("getEventThresholdMTR: nEvent " + nEvent + " cache hit");
-            return singleThMTCache;
+            return thSingleMTRCache;
         }
 
         // make thresholds for 'this event only'
@@ -368,8 +396,8 @@ implements DataStreamable, Cloneable
         }
 
         // init cache
-        singleThCacheEventId = nEvent;
-        singleThMTCache = new ModelTraceRange[] { null, null, null, null };
+        thSingleMTRCacheEventId = nEvent;
+        thSingleMTRCache = new ModelTraceRange[] { null, null, null, null };
 
         // find ranges and curves, fill cache
         for (int key = 0; key < 4; key++)
@@ -378,14 +406,14 @@ implements DataStreamable, Cloneable
                 getEventRangeOnThresholdCurve(nEvent, key, tmpTDX, tmpTDY); 
             ModelFunction tmp = getMF().copy();
             tmp.changeByThresh(tmpTDX, tmpTDY, key);
-            singleThMTCache[key] = new ModelTraceRangeImplMF(tmp,
+            thSingleMTRCache[key] = new ModelTraceRangeImplMF(tmp,
                     sre.getBegin(),
                     sre.getEnd());
         }
 
         // make a copy of resulting array for client
         //System.err.println("getEventThresholdMTR: nEvent " + nEvent + " cache miss");
-        return (ModelTraceRange[])singleThMTCache.clone();
+        return (ModelTraceRange[])thSingleMTRCache.clone();
     }
 
 	/**
@@ -460,7 +488,7 @@ implements DataStreamable, Cloneable
 
 		public void release() {
 			this.th.arrangeLimits(this.key);
-			invalidateThMTCache(); // сбрасываем кэш всех кривых
+			invalidateCache(); // сбрасываем кэш всех кривых
 		}
 
 		public boolean isRelevantToNEvent(int nEvent) {
@@ -491,7 +519,7 @@ implements DataStreamable, Cloneable
 			this.dxFrac = desiredValue - thx.getDX(this.key);
 			this.posX += dx - this.dxFrac;
 			if (this.dxFrac != dx)
-				invalidateThMTByKey(this.key);
+				invalidateCacheByKey(this.key);
 		}		
 	}
 
@@ -556,7 +584,7 @@ implements DataStreamable, Cloneable
 			this.dyFrac = desiredValue - thy.getDY(this.key);
 			this.posY += dy - this.dyFrac; // привязка к сетке значения самого порога
 			if (dy != this.dyFrac)
-				invalidateThMTByKey(this.key);
+				invalidateCacheByKey(this.key);
 		}
 		
 	}
@@ -726,10 +754,37 @@ implements DataStreamable, Cloneable
                 getSE()[nEvent].getEventType());
     }
 
-    // XXX: хитрый алгоритм определения участка, соответствующего данному событию
+    /**
+     * Хитрый алгоритм определения участка, соответствующего данному событию.
+     *   Работает относительно медленно, зато кэширует результат в пределах
+     *   одного события.
+     * @param nEvent номер события
+     * @param key номер пороговой кривой
+     * @return участок р/г в виде SimpleReflectogramEvent
+     *   с определенными begin и end.
+     */
     public SimpleReflectogramEvent getEventRangeOnThresholdCurve(int nEvent, int key)
 	{
-        return getEventRangeOnThresholdCurve(nEvent, key, tDX, tDY);
+        // пытаемся взять из кэша
+        if (thSRECacheEventId == nEvent && thSRECache != null
+                && thSRECache[key] != null)
+        {
+            //System.err.println("getEventRangeOnThresholdCurve: nEvent " + nEvent + " cache hit");
+            return thSRECache[key];
+        }
+        
+        SimpleReflectogramEvent sre =
+            getEventRangeOnThresholdCurve(nEvent, key, tDX, tDY);
+
+        // кладем в кэш
+        if (thSRECacheEventId != nEvent)
+            thSRECache = null;
+        if (thSRECache == null)
+            thSRECache = new SimpleReflectogramEvent[] {null, null, null, null};
+        thSRECacheEventId = nEvent;
+        thSRECache[key] = sre;
+        //System.err.println("getEventRangeOnThresholdCurve: nEvent " + nEvent + " cache miss");
+        return sre;
     }
 
 	/**
@@ -791,7 +846,7 @@ implements DataStreamable, Cloneable
 		{
 			ModelTraceAndEventsImpl mtae = (ModelTraceAndEventsImpl)ModelTraceAndEventsImpl.getReader().readFromDIS(dis);
 			ModelTraceManager mtm = new ModelTraceManager(mtae);
-			mtm.invalidateThMTCache();
+			mtm.invalidateCache();
 			long signature = dis.readLong();
 			if (signature != SIGNATURE_THRESH)
 				throw new SignatureMismatchException();
