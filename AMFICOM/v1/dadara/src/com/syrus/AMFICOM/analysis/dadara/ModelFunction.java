@@ -20,7 +20,7 @@ import java.io.*;
  * <p>Should be constructed as one of three AMFICOM-specific simple functions.
  * The modelling function will probably change when fit() will be called.</p>
  *
- * @version $Revision: 1.19 $, $Date: 2005/05/01 06:12:58 $
+ * @version $Revision: 1.20 $, $Date: 2005/05/01 06:14:13 $
  * @author $Author: saa $
  * @module analysis_v1
  */
@@ -293,25 +293,6 @@ public class ModelFunction {
 	 */
 	public double calcRMS(double y[], int begin, int end) {
 		return nRMS(y, begin, end);
-	}
-
-	/**
-	 * ¬ычисл€ет максимальное отклонение между моделью и р/г.
-	 * довольно медленно, но важно ли это, если метод не используетс€? 
-	 * 
-	 * @param y	    рефлектограмма
-	 * @param begin   начальный индекс 
-	 * @param end     конечный индекс включительно
-	 * @return		максимальное по модулю отклонение
-	 */
-	public double calcMaxDeviation_unused(double y[], int begin, int end) {
-		double ret = 0;
-		for (int i = begin; i < end; i++) {
-			double dev = Math.abs(nF(i) - y[i]);
-			if (dev > ret)
-				ret = dev;
-		}
-		return ret;
 	}
 
 	/**
