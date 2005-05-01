@@ -212,33 +212,39 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 	protected void drawModelCurve(Graphics g, ModelTrace mt,
 			SimpleReflectogramEvent sre, boolean avoidLastPoint)
 	{
-		int n1 = sre == null ? 0 : sre.getBegin();
-		int n2 = sre == null ? mt.getLength() - 1
-			: sre.getEnd() - (avoidLastPoint ? 1 : 0);
-		if ((n1 <= end) && (n2 >= start))
-		{
-		    int iFrom = Math.max(0, n1 - start);
-		    int iTo = Math.min(end, n2) - start;
-		    if (iTo - iFrom >= 0)
-		    {
-		        double[] vArr = mt.getYArrayZeroPad(iFrom + start, iTo - iFrom + 1);
-		        draw_y_curve(g, vArr, 0, iFrom, iTo - iFrom);
-		    }
-		}
+        int n1 = sre == null ? 0 : sre.getBegin();
+        int n2 = sre == null ? mt.getLength() - 1
+            : sre.getEnd() - (avoidLastPoint ? 1 : 0);
+        if ((n1 <= end) && (n2 >= start))
+        {
+            int iFrom = Math.max(0, n1 - start);
+            int iTo = Math.min(end, n2) - start;
+            if (iTo - iFrom >= 0)
+            {
+                double[] vArr = mt.getYArrayZeroPad(iFrom + start, iTo - iFrom + 1);
+                draw_y_curve(g, vArr, 0, iFrom, iTo - iFrom);
+            }
+        }
 	}
-	/*
-	protected void draw_joint_of_two_model_curves(Graphics g, ReflectogramEvent reL, ReflectogramEvent reR)
-	{
-		int i = reR.getBegin() - start;
-		if (i == reL.getEnd() - start && i <= end - start && i >= 0)
-		{
-			g.drawLine(
-					(int )(i*scaleX+1), (int )((maxY - reL.refAmplitude(i+start) - top)*scaleY),
-					(int )(i*scaleX+1), (int )((maxY - reR.refAmplitude(i+start) - top)*scaleY));
-		}
-	}
-	*/
-	protected void paint_modeled_trace(Graphics g)
+
+    protected void drawModelCurve(Graphics g, ModelTraceRange mtr,
+            boolean avoidLastPoint)
+    {
+        int n1 = mtr.getBegin();
+        int n2 = mtr.getEnd() - (avoidLastPoint ? 1 : 0);
+        if ((n1 <= end) && (n2 >= start))
+        {
+            int iFrom = Math.max(0, n1 - start);
+            int iTo = Math.min(end, n2) - start;
+            if (iTo - iFrom >= 0)
+            {
+                double[] vArr = mtr.getYArray(iFrom + start, iTo - iFrom + 1);
+                draw_y_curve(g, vArr, 0, iFrom, iTo - iFrom);
+            }
+        }
+    }
+
+    protected void paint_modeled_trace(Graphics g)
 	{
 		if (mtae == null)
 			return;
