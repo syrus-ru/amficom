@@ -258,7 +258,7 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 
 		for (int key = 0; key < 4; key++)
 		{
-			g.setColor(UIManager.getColor(Thresh.IS_KEY_HARD[key]
+			g.setColor(UIManager.getColor(Thresh.isKeyHard(key)
 			     ? AnalysisResourceKeys.COLOR_ALARM_THRESHOLD
 			     : AnalysisResourceKeys.COLOR_WARNING_THRESHOLD));
 			// Note: нет draw_joint_of_two_model_curves
