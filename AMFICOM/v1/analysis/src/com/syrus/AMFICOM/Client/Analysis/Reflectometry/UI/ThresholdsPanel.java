@@ -249,7 +249,7 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 	/**
 	 * Paints one threshold or all thresholds.
 	 * @param g graphics
-	 * @param nEvent event number >= 0 to paint or -1 to paint all thresholds. 
+	 * @param nEvent event number >= 0 to paint or -1 to paint all thresholds.
 	 */
 	private void paintThresholdsEx(Graphics g, int nEvent)
 	{
@@ -258,12 +258,15 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 
 		for (int key = 0; key < 4; key++)
 		{
+            // определяем цвет
 			g.setColor(UIManager.getColor(Thresh.isKeyHard(key)
 			     ? AnalysisResourceKeys.COLOR_ALARM_THRESHOLD
 			     : AnalysisResourceKeys.COLOR_WARNING_THRESHOLD));
-			// Note: нет draw_joint_of_two_model_curves
+
+            // определяем, какую кривую рисовать
 			ModelTrace thresholdMT = etalon.getThresholdMT(key);
-			// Определяем диапазон отрисовки
+
+            // Определяем диапазон отрисовки
 			SimpleReflectogramEvent sre = null;
 			if (nEvent >= 0)
 			{
@@ -271,16 +274,50 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 				if (sre == null)
 					continue;
 			}
-			// If we draw thresholds for one event only, avoid drawing thresholds at the end point.
+
+            // If we draw thresholds for one event only, avoid drawing thresholds at the end point.
 			// This is because sometimes (n/id event type) threshold curve can break.
 			drawModelCurve(g, thresholdMT, sre, nEvent >= 0);
 		}
 	}
 
+    /**
+     * Paints secondary line for one threshold or all thresholds.
+     * @param g graphics
+     * @param nEvent event number, must be >= 0.
+     */
+    private void paintThresholdsSec(Graphics g, int nEvent)
+    {
+        if (etalon == null)
+            return;
+
+        ((Graphics2D)g).setStroke(ScaledGraphPanel.DASHED_STROKE);
+
+        ModelTraceRange[] curves = etalon.getEventThresholdMTR(nEvent);
+
+        for (int key = 0; key < 4; key++)
+        {
+            // определяем цвет
+            g.setColor(UIManager.getColor(Thresh.isKeyHard(key)
+                 ? AnalysisResourceKeys.COLOR_ALARM_THRESHOLD
+                 : AnalysisResourceKeys.COLOR_WARNING_THRESHOLD));
+
+            drawModelCurve(g, curves[key], true);
+        }
+    ((Graphics2D)g).setStroke(ScaledGraphPanel.DEFAULT_STROKE);
+    }
+
 	private void paintOneThreshold(Graphics g)
 	{
 		if (c_event >= 0)
-			paintThresholdsEx(g, c_event);
+        {
+            // сначала рисуем пунктирную "secondary кривую" порога,
+            // а затем - сплошную основную кривую порога.
+            // XXX: paintOneThreshold: при рисовании, пунктир и сплошная кривая могут совпадать неточно, что приводит к "мохнатости" линии
+            // XXX: paintOneThreshold: иногда пунктир и сплошная кривая могут по построению сильно различаться 
+            paintThresholdsSec(g, c_event);
+            paintThresholdsEx(g, c_event);
+        }
 	}
 	private void paintAllThresholds(Graphics g)
 	{
