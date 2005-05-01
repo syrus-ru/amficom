@@ -1,5 +1,5 @@
 /*
- * $Id: GeneralObjectLoader.java,v 1.15 2005/05/01 16:47:11 arseniy Exp $
+ * $Id: GeneralObjectLoader.java,v 1.16 2005/05/01 17:27:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.general;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/05/01 16:47:11 $
+ * @version $Revision: 1.16 $, $Date: 2005/05/01 17:27:56 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -48,9 +48,13 @@ public interface GeneralObjectLoader {
 
 
 
+	/*	Refresh*/
+
 	Set refresh(Set objects) throws ApplicationException;
 	
 
+
+	/*	Delete*/
 
 	void delete(final Set identifiables);
 

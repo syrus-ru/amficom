@@ -1,5 +1,5 @@
 /*
- * $Id: AdministrationObjectLoader.java,v 1.16 2005/05/01 16:47:29 arseniy Exp $
+ * $Id: AdministrationObjectLoader.java,v 1.17 2005/05/01 17:28:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/05/01 16:47:29 $
+ * @version $Revision: 1.17 $, $Date: 2005/05/01 17:28:04 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -69,9 +69,13 @@ public interface AdministrationObjectLoader {
 
 
 
+	/*	Refresh*/
+
 	Set refresh(Set storableObjects) throws ApplicationException;
 
 
+
+	/*	Delete*/
 
 	void delete(final Set identifiables);
 

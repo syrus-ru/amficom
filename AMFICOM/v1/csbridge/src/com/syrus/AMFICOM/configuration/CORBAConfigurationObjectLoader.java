@@ -1,5 +1,5 @@
 /*
- * $Id: CORBAConfigurationObjectLoader.java,v 1.4 2005/05/01 16:53:15 arseniy Exp $
+ * $Id: CORBAConfigurationObjectLoader.java,v 1.5 2005/05/01 17:29:09 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -48,7 +48,7 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/05/01 16:53:15 $
+ * @version $Revision: 1.5 $, $Date: 2005/05/01 17:29:09 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
@@ -1097,6 +1097,8 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 	}
 
 
+
+	/*	Refresh*/
 
 	public Set refresh(Set storableObjects) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();

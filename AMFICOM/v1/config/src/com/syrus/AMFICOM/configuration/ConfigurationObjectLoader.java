@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationObjectLoader.java,v 1.37 2005/05/01 16:47:53 arseniy Exp $
+ * $Id: ConfigurationObjectLoader.java,v 1.38 2005/05/01 17:28:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2005/05/01 16:47:53 $
+ * @version $Revision: 1.38 $, $Date: 2005/05/01 17:28:19 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -129,9 +129,13 @@ public interface ConfigurationObjectLoader {
 
 
 
+	/*	Refresh*/
+
 	Set refresh(Set storableObjects) throws ApplicationException;
 
 
+
+	/*	Delete*/
 
 	void delete(final Set identifiables);
 

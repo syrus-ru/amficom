@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseAdministrationObjectLoader.java,v 1.4 2005/05/01 16:53:15 arseniy Exp $
+ * $Id: DatabaseAdministrationObjectLoader.java,v 1.5 2005/05/01 17:29:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/05/01 16:53:15 $
+ * @version $Revision: 1.5 $, $Date: 2005/05/01 17:29:09 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
@@ -127,6 +127,8 @@ public class DatabaseAdministrationObjectLoader extends DatabaseObjectLoader imp
 
 
 
+	/*	Refresh*/
+
 	public Set refresh(Set storableObjects) throws ApplicationException {
 		if (storableObjects.isEmpty())
 			return Collections.EMPTY_SET;
@@ -142,6 +144,8 @@ public class DatabaseAdministrationObjectLoader extends DatabaseObjectLoader imp
 	}
 
 
+
+	/*	Delete*/
 
 	public void delete(final Set identifiables) {
 		if (identifiables == null || identifiables.isEmpty())

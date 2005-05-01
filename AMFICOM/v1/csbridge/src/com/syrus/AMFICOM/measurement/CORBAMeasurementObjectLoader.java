@@ -1,5 +1,5 @@
 /*
- * $Id: CORBAMeasurementObjectLoader.java,v 1.4 2005/04/27 13:41:27 arseniy Exp $
+ * $Id: CORBAMeasurementObjectLoader.java,v 1.5 2005/05/01 17:29:09 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -47,7 +47,7 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/04/27 13:41:27 $
+ * @version $Revision: 1.5 $, $Date: 2005/05/01 17:29:09 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
@@ -1109,6 +1109,8 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 	}
 
 
+
+	/*	Refresh*/
 
 	public java.util.Set refresh(java.util.Set storableObjects) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();

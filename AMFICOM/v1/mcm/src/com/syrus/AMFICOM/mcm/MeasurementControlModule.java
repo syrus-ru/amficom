@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.83 2005/04/29 15:59:20 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.84 2005/05/01 17:30:20 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -53,7 +53,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.83 $, $Date: 2005/04/29 15:59:20 $
+ * @version $Revision: 1.84 $, $Date: 2005/05/01 17:30:20 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -509,7 +509,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 			Log.errorMessage("removeResults | list is NULL or empty");
 	}
 
-	protected void shutdown() {/*!!	Need synchronization	*/
+	protected void shutdown() {
 		this.running = false;
 		for (Iterator it = transceivers.keySet().iterator(); it.hasNext();)
 			((Transceiver)transceivers.get(it.next())).shutdown();

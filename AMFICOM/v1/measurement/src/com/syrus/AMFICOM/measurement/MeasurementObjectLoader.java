@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementObjectLoader.java,v 1.31 2005/05/01 16:48:20 arseniy Exp $
+ * $Id: MeasurementObjectLoader.java,v 1.32 2005/05/01 17:28:27 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/05/01 16:48:20 $
+ * @version $Revision: 1.32 $, $Date: 2005/05/01 17:28:27 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -125,9 +125,13 @@ public interface MeasurementObjectLoader {
 	
 
 
+	/*	Refresh*/
+
 	java.util.Set refresh(java.util.Set storableObjects) throws ApplicationException;
 
 
+
+	/*	Delete*/
 
 	void delete(final java.util.Set identifiables);
 

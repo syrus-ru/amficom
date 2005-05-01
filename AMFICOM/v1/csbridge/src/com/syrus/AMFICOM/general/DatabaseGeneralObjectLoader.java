@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseGeneralObjectLoader.java,v 1.3 2005/05/01 16:53:15 arseniy Exp $
+ * $Id: DatabaseGeneralObjectLoader.java,v 1.4 2005/05/01 17:29:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/05/01 16:53:15 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/01 17:29:09 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
@@ -80,6 +80,8 @@ public class DatabaseGeneralObjectLoader extends DatabaseObjectLoader implements
 
 
 
+	/*	Refresh*/
+
 	public Set refresh(Set storableObjects) throws ApplicationException {
 		if (storableObjects.isEmpty())
 			return Collections.EMPTY_SET;
@@ -95,6 +97,8 @@ public class DatabaseGeneralObjectLoader extends DatabaseObjectLoader implements
 	}
 
 
+
+	/*	Delete*/
 
 	public void delete(final Set identifiables) {
 		if (identifiables == null || identifiables.isEmpty())

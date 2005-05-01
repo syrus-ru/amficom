@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseMeasurementObjectLoader.java,v 1.3 2005/05/01 16:53:15 arseniy Exp $
+ * $Id: DatabaseMeasurementObjectLoader.java,v 1.4 2005/05/01 17:29:09 arseniy Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/05/01 16:53:15 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/01 17:29:09 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
@@ -259,6 +259,8 @@ public class DatabaseMeasurementObjectLoader extends DatabaseObjectLoader implem
 
 
 
+	/*	Refresh*/
+
 	public java.util.Set refresh(java.util.Set storableObjects) throws ApplicationException {
 		if (storableObjects.isEmpty())
 			return Collections.EMPTY_SET;
@@ -274,6 +276,8 @@ public class DatabaseMeasurementObjectLoader extends DatabaseObjectLoader implem
 	}
 
 
+
+	/*	Delete*/
 
 	public void delete(final java.util.Set identifiables) {
 		if (identifiables == null || identifiables.isEmpty())
