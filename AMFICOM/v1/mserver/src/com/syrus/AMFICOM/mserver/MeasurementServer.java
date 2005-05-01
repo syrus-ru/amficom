@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServer.java,v 1.36 2005/04/29 17:09:37 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.37 2005/05/01 17:57:11 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -47,7 +47,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/04/29 17:09:37 $
+ * @version $Revision: 1.37 $, $Date: 2005/05/01 17:57:11 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -122,8 +122,8 @@ public class MeasurementServer extends SleepButWorkThread {
 
 		/*	Retrieve info about server*/
 		/*	Retrieve info about process*/
-		/*	Retrieve MCM ids for this server*/
 		/*	Retrieve info about user*/
+		/*	Retrieve MCM ids for this server*/
 		serverId = new Identifier(ApplicationProperties.getString(KEY_SERVER_ID, SERVER_ID));
 		processCodename = ApplicationProperties.getString(ServerProcessWrapper.KEY_MSERVER_PROCESS_CODENAME,
 				ServerProcessWrapper.MSERVER_PROCESS_CODENAME);
