@@ -196,8 +196,8 @@ public class RefAnalysis
     		overallStats.setData(data);
         }
 
-		filtered = new double[y.length];
-		noise = new double[y.length];
+		filtered = new double[veryLastPoint];
+		noise = new double[lastPoint];
 		maxNoise = 0;
 
 		// long t0 = System.currentTimeMillis();
@@ -208,19 +208,11 @@ public class RefAnalysis
 			int posFrom = re[i].getBegin();
 			int posTo = re[i].getEnd();
 			double[] yArrMT = mt.getYArrayZeroPad(posFrom, posTo - posFrom);
-			for (int j = posFrom; j < posTo; j++)
+			for (int j = posFrom; j < posTo && j < veryLastPoint; j++)
 			{
-				if (j < lastPoint) // XXX: saa: I think there should be '<='
-				{
-					filtered[j] = Math.max(0, yArrMT[j - posFrom]);
+                filtered[j] = Math.max(0, yArrMT[j - posFrom]);
+				if (j < lastPoint)
 					noise[j] = Math.abs(y[j] - filtered[j]);
-					if (noise[j] > maxNoise)
-						maxNoise = noise[j];
-				} else
-				{
-					filtered[j] = y[j];
-					noise[j] = maxNoise;
-				}
 			}
 		}
 	}
