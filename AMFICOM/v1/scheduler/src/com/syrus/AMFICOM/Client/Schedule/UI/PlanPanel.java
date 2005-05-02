@@ -31,6 +31,7 @@ import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.Client.Schedule.IntervalsEditor;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
@@ -115,7 +116,7 @@ public class PlanPanel extends JPanel implements TestsEditor, TestEditor, Interv
 	private TimeStampsEditor		timeStampsEditor;
 	
 	private Color selectionColor;
-
+	
 	public PlanPanel(JScrollPane parent, ApplicationContext aContext) {
 		this.aContext = aContext;
 		this.parent = parent;
@@ -566,7 +567,7 @@ public class PlanPanel extends JPanel implements TestsEditor, TestEditor, Interv
 
 	public void setIntervalsTemporalPattern(TestTemporalStamps testTemporalStamps) {
 		if (this.timeStampsEditor == null) {
-			this.timeStampsEditor = new TimeStampsEditor(this.aContext, "Editor");
+			this.timeStampsEditor = new TimeStampsEditor(this.aContext, LangModelSchedule.getString("Timetable editor"));
 			this.timeStampsEditor.setPreferredSize(new Dimension(this.getWidth(), 25));
 			this.add(this.timeStampsEditor);
 		}
