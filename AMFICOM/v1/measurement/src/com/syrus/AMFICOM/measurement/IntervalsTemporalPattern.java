@@ -1,5 +1,5 @@
 /*-
-* $Id: IntervalsTemporalPattern.java,v 1.11 2005/04/29 10:25:58 bob Exp $
+* $Id: IntervalsTemporalPattern.java,v 1.12 2005/05/02 10:45:05 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -40,7 +40,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/04/29 10:25:58 $
+ * @version $Revision: 1.12 $, $Date: 2005/05/02 10:45:05 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module measurement_v1
@@ -351,153 +351,6 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern implements
 		}
 	}
 	
-	protected void removeIntervalItem0(Long milliseconds) {
-		Log.debugMessage("IntervalsTemporalPattern.removeIntervalItem | > milliseconds:" + milliseconds, Log.FINEST);
-		/* clear times cache */
-		this.times.clear();
-
-		Long ms = this.getStartedTime(milliseconds);
-		Identifier abstractTemporalid = (Identifier) this.intervalsAbstractTemporalPatternMap.get(ms);
-//		Log.debugMessage("IntervalsTemporalPattern.removeIntervalItem | abstractTemporalid is "
-//				+ (abstractTemporalid.isVoid() ? "VOID" : abstractTemporalid.toString()), Log.FINEST);
-
-		if (abstractTemporalid.isVoid()) {
-			this.intervalsAbstractTemporalPatternMap.remove(milliseconds);
-			this.intervalsDuration.remove(milliseconds);
-		} else {
-			try {
-				AbstractTemporalPattern abstractTemporalPattern = (AbstractTemporalPattern) MeasurementStorableObjectPool
-						.getStorableObject(abstractTemporalid, true);
-				if (abstractTemporalPattern instanceof IntervalsTemporalPattern) {
-					IntervalsTemporalPattern intervalsTemporalPattern = (IntervalsTemporalPattern) abstractTemporalPattern;
-					intervalsTemporalPattern.removeIntervalItem0(milliseconds);
-				} else if (abstractTemporalPattern instanceof PeriodicalTemporalPattern) {
-					PeriodicalTemporalPattern periodicTemporalPattern = (PeriodicalTemporalPattern) abstractTemporalPattern;
-
-					long period = periodicTemporalPattern.getPeriod();
-
-					Long nextMilliseconds = this.getNextStartedTime(ms);
-					long nextms = nextMilliseconds == null ? this.endTime - this.startTime : nextMilliseconds
-							.longValue();
-
-					Long duration = (Long) this.intervalsDuration.get(ms);
-
-					if (duration != null) {
-						long nextms1 = ms.longValue() + duration.longValue();
-						if (nextms1 < nextms) {
-							nextms = nextms1;
-						}
-					}
-
-					SortedSet times2 = periodicTemporalPattern.getTimes(this.startTime + ms.longValue(), this.startTime
-							+ nextms);
-					int i = 0;
-					Date date = null;
-					for (Iterator it = times2.iterator(); it.hasNext(); i++) {
-						date = (Date) it.next();
-						if (date.getTime() == this.startTime + milliseconds.longValue()) {
-							break;
-						}
-						date = null;
-					}
-
-//					Log.debugMessage("IntervalsTemporalPattern.removeIntervalItem | found date " + date, Log.FINEST);
-
-					if (date != null) {
-
-//						Log.debugMessage(
-//							"IntervalsTemporalPattern.removeIntervalItem | i: " + i + ", " + times2.size(), Log.FINEST);
-
-						if (i == 0) {
-							this.intervalsAbstractTemporalPatternMap.remove(ms);
-							this.intervalsDuration.remove(ms);
-							int newRepeate = times2.size() - 1;
-							Long newMilliseconds = new Long(milliseconds.longValue() + period);
-							// Log.debugMessage("IntervalsTemporalPattern.removeIntervalItem
-							// | newRepeate " + newRepeate, Log.FINEST);
-							if (newRepeate > 1 || newRepeate < 0) {
-								// Log.debugMessage("IntervalsTemporalPattern.removeIntervalItem
-								// | newRepeate > 1 || newRepeate < 0 ",
-								// Log.FINEST);
-								if (nextMilliseconds != null) {
-									this.intervalsDuration.put(newMilliseconds, new Long((newRepeate - 1) * period));
-								}
-								this.intervalsAbstractTemporalPatternMap.put(newMilliseconds, abstractTemporalid);
-
-							} else {
-								this.intervalsAbstractTemporalPatternMap.put(newMilliseconds,
-									Identifier.VOID_IDENTIFIER);
-							}
-						} else if (i == times2.size() - 1) {
-							 Log.debugMessage("IntervalsTemporalPattern.removeIntervalItem | last item ", Log.FINEST);
-							int newRepeate = times2.size() - 1;
-							// Log.debugMessage("IntervalsTemporalPattern.removeIntervalItem
-							// | newRepeate:" + newRepeate, Log.FINEST);
-							if (newRepeate > 1 || newRepeate < 0) {
-								Long prevValue = (Long) this.intervalsDuration.get(ms);
-								 Log.debugMessage("IntervalsTemporalPattern.removeIntervalItem | prevValue " + prevValue, Log.FINEST);
-								this.intervalsDuration.put(ms, new Long(prevValue == null ? newRepeate * period
-										: (prevValue.longValue() - period)));
-								 Log.debugMessage("IntervalsTemporalPattern.removeIntervalItem | new Value " +
-								 this.intervalsDuration.get(ms), Log.FINEST);
-							} else {
-								this.intervalsAbstractTemporalPatternMap.put(ms, Identifier.VOID_IDENTIFIER);
-							}
-						} else {
-
-							long repeate = times2.size() - i - 1;
-//							Log.debugMessage("IntervalsTemporalPattern.removeIntervalItem | periodicTemporalPattern "
-//									+ periodicTemporalPattern.getId() + " repeate: " + repeate, Log.FINEST);
-
-							Long nextTime = null;
-							{
-								Date nextDate = null;
-								SortedSet futureSet = times2.tailSet(date);
-								for (Iterator it = futureSet.iterator(); it.hasNext();) {
-									nextDate = (Date) it.next();
-									if (nextDate.getTime() == date.getTime()) {
-										nextDate = null;
-									} else {
-										break;
-									}
-								}
-								nextTime = new Long(nextDate.getTime() - this.startTime);
-							}
-
-							if (repeate > 1 || repeate < 0) {
-								// Log.debugMessage("IntervalsTemporalPattern.removeIntervalItem
-								// | nextTime: " + new Date(nextTime.longValue()
-								// + this.startTime), Log.FINEST);
-								this.intervalsAbstractTemporalPatternMap.put(nextTime, abstractTemporalid);
-								this.intervalsDuration.put(nextTime, new Long(repeate * period));
-							} else {
-								this.addIntervalItem0(nextTime, Identifier.VOID_IDENTIFIER);
-							}
-
-//							Log.debugMessage("IntervalsTemporalPattern.removeIntervalItem | i is " + i, Log.FINEST);
-
-							if (i > 1) {
-								this.intervalsDuration.put(ms, new Long((i - 1) * period));
-//								Log.debugMessage("IntervalsTemporalPattern.removeIntervalItem | duration: "
-//										+ new Date(ms.longValue() + this.startTime) + ", "
-//										+ ((Long) this.intervalsDuration.get(ms)).longValue() / (60L * 1000L),
-//									Log.FINEST);
-							} else {
-								this.intervalsAbstractTemporalPatternMap.remove(milliseconds);
-								this.intervalsDuration.remove(milliseconds);
-								this.intervalsAbstractTemporalPatternMap.put(ms, Identifier.VOID_IDENTIFIER);
-							}
-						}
-
-					}
-
-				}
-			} catch (ApplicationException e) {
-				Log.errorException(e);
-			}
-		}
-	}	
-	
 	public final Identifier getTemporalPatternId(final long milliseconds) {
 		Long ms = this.getStartedTime(milliseconds);
 		if (ms != null) {
@@ -790,6 +643,7 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern implements
 	}
 
 	/**
+	 * joint from fist offset till last offset
 	 * @param offsets
 	 * @throws CreateObjectException 
 	 */
@@ -808,11 +662,8 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern implements
 		long firstTime = 0;
 		boolean initedFirst = false;
 		
-		SortedMap offsetIds = new TreeMap();
-		SortedMap offsetDuration = new TreeMap();
-		
-		long duration = 0;
-		
+		Long lastOffset = null;
+
 		for (Iterator it = offsets.iterator(); it.hasNext();) {
 			Long offset = (Long) it.next();
 			if (!initedFirst) {
@@ -820,6 +671,26 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern implements
 				firstOffset = offset;
 				firstTime = offset.longValue();
 			}
+			lastOffset = offset;
+		}
+		
+		long lastTime = lastOffset.longValue();
+		
+		SortedMap offsetIds = new TreeMap();
+		SortedMap offsetDuration = new TreeMap();
+		
+		long duration = 0;
+		
+		
+		for (Iterator it = this.intervalsAbstractTemporalPatternMap.keySet().iterator(); it.hasNext();) {			
+			Long offset = (Long) it.next();
+			long offsetMs = offset.longValue();
+			
+			if (offsetMs < firstTime)
+				continue;
+			
+			if (offsetMs > lastTime)
+				break;
 			
 			long newOffset = offset.longValue() - firstTime;
 			Long newMs = new Long(newOffset);
@@ -827,11 +698,13 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern implements
 			offsetIds.put(newMs, this.intervalsAbstractTemporalPatternMap.get(offset));
 			
 			/* remove it */
-			this.intervalsAbstractTemporalPatternMap.remove(offset);
+			it.remove();
 			this.intervalsDuration.remove(offset);
 			
 			offsetDuration.put(newMs, durationLong);
 			duration = newOffset + (durationLong != null ? durationLong.longValue() : 0);
+			
+			
 		}
 		
 		IntervalsTemporalPattern intervalsTemporalPattern = IntervalsTemporalPattern.createInstance(this.modifierId, offsetIds, offsetDuration);
