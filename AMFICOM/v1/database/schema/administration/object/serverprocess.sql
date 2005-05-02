@@ -23,3 +23,5 @@ CREATE TABLE ServerProcess (
  CONSTRAINT sproc_user_fk FOREIGN KEY (user_id)
   REFERENCES "User" (id) ON DELETE CASCADE
 );
+
+CREATE SEQUENCE ServerProcess_seq ORDER;
