@@ -1,5 +1,5 @@
 /*
- * $Id: LoginProcessor.java,v 1.2 2005/04/28 14:11:52 arseniy Exp $
+ * $Id: LoginProcessor.java,v 1.3 2005/05/02 19:04:40 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,12 +7,17 @@
  */
 package com.syrus.AMFICOM.leserver;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.syrus.AMFICOM.general.SleepButWorkThread;
+import com.syrus.AMFICOM.general.corba.SecurityKey;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/28 14:11:52 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/02 19:04:40 $
  * @author $Author: arseniy $
  * @module leserver_v1
  */
@@ -22,11 +27,16 @@ final class LoginProcessor extends SleepButWorkThread {
 
 	public static final int LOGIN_PROCESSOR_TICK_TIME = 5;	//sec
 
+	private static Map loginMap;
 	private boolean running;
 
 	public LoginProcessor() {
 		super(ApplicationProperties.getInt(KEY_LOGIN_PROCESSOR_TICK_TIME, LOGIN_PROCESSOR_TICK_TIME) * 1000,
 				ApplicationProperties.getInt(KEY_LOGIN_PROCESSOR_MAX_FALLS, MAX_FALLS));
+
+		if (loginMap == null)
+			loginMap = Collections.synchronizedMap(new HashMap());
+
 		this.running = true;
 
 		Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -56,6 +66,15 @@ final class LoginProcessor extends SleepButWorkThread {
 			default:
 				Log.errorMessage("processError | Unknown error code: " + super.fallCode);
 		}
+	}
+
+	protected static void addUserLogin(final UserLogin userLogin) {
+		Log.debugMessage("LoginProcessor.addUserLogin | Adding login for user '" + userLogin.getUserId() + "'", Log.DEBUGLEVEL08);
+		loginMap.put(userLogin.getSecurityKey(), userLogin);
+	}
+
+	protected static UserLogin removeUserLogin(final SecurityKey securityKey) {
+		return (UserLogin) loginMap.remove(securityKey);
 	}
 
 	protected void shutdown() {
