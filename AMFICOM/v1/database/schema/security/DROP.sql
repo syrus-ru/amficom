@@ -1,0 +1,2 @@
+DROP TABLE UserLogin;
+DROP TABLE Shadow;
