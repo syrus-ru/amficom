@@ -464,6 +464,7 @@ void ChangeArrayByThreshEx (double *yArr, THX *thX, THY *thY, int thNpX, int thN
 			}
 
 			// расширяем nBase0->nEnh2, забивая справа гориз. прямой; исходный вар-т не меняем
+
 			double *arr1t = new double[nEnh1];
 			assert(arr1t);
 #if CANTTDXDY
@@ -487,7 +488,7 @@ void ChangeArrayByThreshEx (double *yArr, THX *thX, THY *thY, int thNpX, int thN
 				arr1t[j] = arr1t[nBase0 - 1];
 #if CANTTDXDY
 				if (ttdyOut)
-					tid1t[j] = tid2io[nBase0 - 1];
+					tid1t[j] = tid1t[nBase0 - 1];
 #endif
 			}
 
@@ -576,6 +577,7 @@ void ChangeArrayByThreshEx (double *yArr, THX *thX, THY *thY, int thNpX, int thN
 #endif
 			//fprintf(stderr, "#6\n"); fflush(stderr);
 		}
+
 		// сохраняем запланированные изменения
 		prf_b("BreakL_ChangeByThresh: committing DX thresholds: calc XRmax");
 		int i;
@@ -723,6 +725,7 @@ int BreakL_ChangeByThresh (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, i
 
 	prf_b("Outer BreakL_ChangeByThresh: go inside");
 	ChangeBreakLByThreshEx (mf, taX, taY, key, xMin, xMax, 0, ttdxOut, ttdyOut);
+
 	prf_b("Outer BreakL_ChangeByThresh: back from inside");
 
 	int ret = -1;
