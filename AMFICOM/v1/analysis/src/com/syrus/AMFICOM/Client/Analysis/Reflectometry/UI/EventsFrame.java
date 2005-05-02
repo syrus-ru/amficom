@@ -185,7 +185,8 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener,
 			else
 			{
 				int selected = lsm.getMinSelectionIndex();
-				Heap.setCurrentEvent(selected);
+                if (Heap.getCurrentEvent() != selected)
+                    Heap.setCurrentEvent(selected);
 			}
 		}
 		});
