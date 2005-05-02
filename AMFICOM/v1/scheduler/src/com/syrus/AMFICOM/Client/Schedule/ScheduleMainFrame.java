@@ -29,6 +29,8 @@ import com.syrus.AMFICOM.Client.General.SessionInterface;
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.ExitCommand;
 import com.syrus.AMFICOM.Client.General.Command.HelpAboutCommand;
+import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
+import com.syrus.AMFICOM.Client.General.Command.Scheme.ArrangeWindowCommand;
 import com.syrus.AMFICOM.Client.General.Command.Session.SessionChangePasswordCommand;
 import com.syrus.AMFICOM.Client.General.Command.Session.SessionCloseCommand;
 import com.syrus.AMFICOM.Client.General.Command.Session.SessionConnectionCommand;
@@ -60,6 +62,7 @@ import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
+import com.syrus.util.Log;
 
 public class ScheduleMainFrame extends JFrame implements OperationListener {
 
@@ -324,6 +327,7 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_PROPERTIES, false);
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_TIME, false);
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_TABLE, false);
+		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_ARRANGE, false);
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_REPORT, false);
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_TEMPLATE_REPORT, false);
 		aModel.fireModelChanged("");
@@ -352,6 +356,7 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_PROPERTIES, true);
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_TIME, true);
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_TABLE, true);
+		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_ARRANGE, true);
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_REPORT, true);
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_TEMPLATE_REPORT, true);
 
@@ -383,58 +388,7 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		} catch (ApplicationException e) {
 			SchedulerModel.showErrorMessage(this, e);
 		}
-		if (this.scheduleWindowArranger == null) {
-			this.scheduleWindowArranger = new WindowArranger(this) {
-
-				public void arrange() {
-					ScheduleMainFrame f = (ScheduleMainFrame) this.mainframe;
-
-					int w = f.desktopPane.getSize().width;
-					int h = f.desktopPane.getSize().height;
-
-					// int minWidth = w / 5;
-
-					JInternalFrame paramsFrame = ((JInternalFrame) f.frames.get(ScheduleMainFrame.PARAMETERS_FRAME));
-					JInternalFrame propsFrame = ((JInternalFrame) f.frames.get(ScheduleMainFrame.PROPERTIES_FRAME));
-					JInternalFrame treeFrame = ((JInternalFrame) f.frames.get(ScheduleMainFrame.TREE_FRAME));
-					JInternalFrame timeFrame = ((JInternalFrame) f.frames.get(ScheduleMainFrame.TIME_PARAMETERS_FRAME));
-					JInternalFrame planFrame = ((JInternalFrame) f.frames.get(ScheduleMainFrame.PLAN_FRAME));
-					JInternalFrame saveFrame = ((JInternalFrame) f.frames.get(ScheduleMainFrame.SAVE_PARAMETERS_FRAME));
-					JInternalFrame tableFrame = ((JInternalFrame) f.frames.get(ScheduleMainFrame.TABLE_FRAME));
-
-					normalize(planFrame);
-					normalize(paramsFrame);
-					normalize(propsFrame);
-					normalize(treeFrame);
-					normalize(timeFrame);
-					normalize(saveFrame);
-					normalize(tableFrame);
-
-					treeFrame.setSize(w / 5, h / 2);
-					paramsFrame.setSize(w / 5, h / 2);
-
-					propsFrame.pack();
-					propsFrame.setSize(w / 5, propsFrame.getHeight());
-					saveFrame.pack();
-					saveFrame.setSize(w / 5, saveFrame.getHeight());
-
-					timeFrame.setSize(w / 5, h - propsFrame.getHeight() - saveFrame.getHeight());
-
-					tableFrame.setSize(w - propsFrame.getWidth() - treeFrame.getWidth(), h / 3);
-					planFrame.setSize(w - propsFrame.getWidth() - treeFrame.getWidth(), h - tableFrame.getHeight());
-
-					treeFrame.setLocation(0, 0);
-					planFrame.setLocation(treeFrame.getX() + treeFrame.getWidth(), 0);
-					propsFrame.setLocation(w - propsFrame.getWidth(), 0);
-					saveFrame.setLocation(w - saveFrame.getWidth(), propsFrame.getY() + propsFrame.getHeight());
-					timeFrame.setLocation(w - timeFrame.getWidth(), saveFrame.getY() + saveFrame.getHeight());
-
-					paramsFrame.setLocation(0, treeFrame.getHeight());
-					tableFrame.setLocation(treeFrame.getX() + treeFrame.getWidth(), planFrame.getHeight());
-
-				}
-			};
-		}
+		
 		this.scheduleWindowArranger.arrange();
 		ElementsTreeFrame treeFrame = (ElementsTreeFrame) this.frames.get(TREE_FRAME);
 		treeFrame.init();
@@ -546,6 +500,59 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		this.statusBar.setText("domain", LangModel.getString("statusNoDomain"));
 		this.statusBar.setText("time", " ");
 		this.statusBar.organize();
+		
+		if (this.scheduleWindowArranger == null) {
+			this.scheduleWindowArranger = new WindowArranger(this) {
+
+				public void arrange() {
+					ScheduleMainFrame f = (ScheduleMainFrame) this.mainframe;
+
+					int w = f.desktopPane.getSize().width;
+					int h = f.desktopPane.getSize().height;
+
+					// int minWidth = w / 5;
+
+					JInternalFrame paramsFrame = ((JInternalFrame) f.frames.get(ScheduleMainFrame.PARAMETERS_FRAME));
+					JInternalFrame propsFrame = ((JInternalFrame) f.frames.get(ScheduleMainFrame.PROPERTIES_FRAME));
+					JInternalFrame treeFrame = ((JInternalFrame) f.frames.get(ScheduleMainFrame.TREE_FRAME));
+					JInternalFrame timeFrame = ((JInternalFrame) f.frames.get(ScheduleMainFrame.TIME_PARAMETERS_FRAME));
+					JInternalFrame planFrame = ((JInternalFrame) f.frames.get(ScheduleMainFrame.PLAN_FRAME));
+					JInternalFrame saveFrame = ((JInternalFrame) f.frames.get(ScheduleMainFrame.SAVE_PARAMETERS_FRAME));
+					JInternalFrame tableFrame = ((JInternalFrame) f.frames.get(ScheduleMainFrame.TABLE_FRAME));
+
+					normalize(planFrame);
+					normalize(paramsFrame);
+					normalize(propsFrame);
+					normalize(treeFrame);
+					normalize(timeFrame);
+					normalize(saveFrame);
+					normalize(tableFrame);
+
+					treeFrame.setSize(w / 5, h / 2);
+					paramsFrame.setSize(w / 5, h / 2);
+
+					propsFrame.pack();
+					propsFrame.setSize(w / 5, propsFrame.getHeight());
+					saveFrame.pack();
+					saveFrame.setSize(w / 5, saveFrame.getHeight());
+
+					timeFrame.setSize(w / 5, h - propsFrame.getHeight() - saveFrame.getHeight());
+
+					tableFrame.setSize(w - propsFrame.getWidth() - treeFrame.getWidth(), h / 3);
+					planFrame.setSize(w - propsFrame.getWidth() - treeFrame.getWidth(), h - tableFrame.getHeight());
+
+					treeFrame.setLocation(0, 0);
+					planFrame.setLocation(treeFrame.getX() + treeFrame.getWidth(), 0);
+					propsFrame.setLocation(w - propsFrame.getWidth(), 0);
+					saveFrame.setLocation(w - saveFrame.getWidth(), propsFrame.getY() + propsFrame.getHeight());
+					timeFrame.setLocation(w - timeFrame.getWidth(), saveFrame.getY() + saveFrame.getHeight());
+
+					paramsFrame.setLocation(0, treeFrame.getHeight());
+					tableFrame.setLocation(treeFrame.getX() + treeFrame.getWidth(), planFrame.getHeight());
+
+				}
+			};
+		}
 
 		this.aContext.setDispatcher(this.dispatcher);
 		this.dispatcher.register(this, StatusMessageEvent.STATUS_MESSAGE);
@@ -575,7 +582,7 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		aModel.setCommand(ScheduleMainMenuBar.MENU_VIEW_PROPERTIES, this.getLazyCommand(PROPERTIES_FRAME));
 		aModel.setCommand(ScheduleMainMenuBar.MENU_VIEW_TIME, this.getLazyCommand(TIME_PARAMETERS_FRAME));
 		aModel.setCommand(ScheduleMainMenuBar.MENU_VIEW_TABLE, this.getLazyCommand(TABLE_FRAME));
-
+		aModel.setCommand(ScheduleMainMenuBar.MENU_VIEW_ARRANGE, new ArrangeWindowCommand(this.scheduleWindowArranger));
 		/**
 		 * TODO remove when all ok
 		 */
@@ -690,6 +697,7 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_PROPERTIES, false);
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_TIME, false);
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_TABLE, false);
+		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_ARRANGE, false);
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_REPORT, false);
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_TEMPLATE_REPORT, false);
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_HELP, true);

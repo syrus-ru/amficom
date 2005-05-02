@@ -31,6 +31,7 @@ public class ScheduleMainMenuBar extends JMenuBar {
 	public static final String			MENU_VIEW_PROPERTIES			= "menuViewProperties";
 	public static final String			MENU_VIEW_TABLE					= "menuViewTable";
 	public static final String			MENU_VIEW_SAVE_PARAMETERS		= "menuViewSaveParameters";
+	public static final String			MENU_VIEW_ARRANGE						= "menuViewArrange";
 
 	public static final String			MENU_REPORT						= "label_report";
   public static final String			MENU_TEMPLATE_REPORT	= "label_reportForTemplate";
@@ -137,6 +138,13 @@ public class ScheduleMainMenuBar extends JMenuBar {
 		menuViewSaveParametersItem.setName(MENU_VIEW_SAVE_PARAMETERS);
 		menuViewSaveParametersItem.addActionListener(actionAdapter);
 		this.menuView.add(menuViewSaveParametersItem);
+
+		this.menuView.addSeparator();
+		
+		final JMenuItem menuViewArrangeItem = new JMenuItem(LangModelSchedule.getString("Arrange"));
+		menuViewArrangeItem.setName(MENU_VIEW_ARRANGE);
+		menuViewArrangeItem.addActionListener(actionAdapter);
+		this.menuView.add(menuViewArrangeItem);
 
 		this.menuReport = new JMenu(LangModelReport.getString(MENU_REPORT));
 		this.menuReport.setName(MENU_REPORT);
