@@ -1,5 +1,5 @@
 /*-
- * $Id: TimeStampsEditor.java,v 1.4 2005/04/29 10:25:48 bob Exp $
+ * $Id: TimeStampsEditor.java,v 1.5 2005/05/02 10:48:11 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,6 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -52,7 +51,7 @@ import com.syrus.AMFICOM.measurement.TestTemporalStamps;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/04/29 10:25:48 $
+ * @version $Revision: 1.5 $, $Date: 2005/05/02 10:48:11 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -101,7 +100,7 @@ public class TimeStampsEditor extends TimeLine {
 		this.cutMenuItem.setEnabled(b);
 		this.copyMenuItem.setEnabled(b);
 		this.deleteMenuItem.setEnabled(b);
-		this.joinMenuItem.setEnabled(b);
+		this.joinMenuItem.setEnabled(b ? this.selectedItems.size() > 2 : b);
 		this.disjoinMenuItem.setEnabled(b);
 	}
 
@@ -122,6 +121,7 @@ public class TimeStampsEditor extends TimeLine {
 							TestTimeItem testTimeItem = (TestTimeItem) it.next();
 							if (testTimeItem.x < x && x < testTimeItem.x + testTimeItem.width) {
 								if (TimeStampsEditor.this.selectedItems.contains(testTimeItem)) {
+									TimeStampsEditor.this.selectedItems.remove(testTimeItem);
 									break;
 								}								
 								TimeStampsEditor.this.selectedItems.add(testTimeItem);
