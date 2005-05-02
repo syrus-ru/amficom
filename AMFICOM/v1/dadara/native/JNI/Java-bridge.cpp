@@ -281,7 +281,7 @@ JNIEXPORT jint JNICALL Java_com_syrus_AMFICOM_analysis_dadara_ModelFunction_nFin
 JNIEXPORT jintArray JNICALL Java_com_syrus_AMFICOM_analysis_dadara_ModelFunction_nFindResponsibleThreshDXArray
   (JNIEnv *env, jobject obj, jobjectArray threshArrDX, jobjectArray threshArrDY, jint keyj, jint xMinj, jint xMaxj)
 {
-	prf_b("nFindResponsibleThreshDXDYArray");
+	prf_b("nFindResponsibleThreshDXArray");
 	// получаем входные данные
 	ModelF mf;
 	if (ModelF_J2C(env, obj, mf))
