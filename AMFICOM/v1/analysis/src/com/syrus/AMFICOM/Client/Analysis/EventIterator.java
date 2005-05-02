@@ -1,5 +1,5 @@
 /*-
- * $Id: EventIterator.java,v 1.2 2005/05/02 16:57:00 saa Exp $
+ * $Id: EventIterator.java,v 1.3 2005/05/02 17:02:00 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEventComparer;
 /**
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.2 $, $Date: 2005/05/02 16:57:00 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/02 17:02:00 $
  * @module
  */
 public class EventIterator {
@@ -29,8 +29,6 @@ public class EventIterator {
      * iterations paired to different B events and vica versa.
      * true, if you want find every A and every B event only one time
      * during any kind of iteration.
-     * @todo: false strictMode is not now properly working with
-     * to(Prev|Next)(|Etalon)Event, its ok only for to*CompositeEvent
      */
     public EventIterator(boolean strictMode) {
         this.strictMode = strictMode;
@@ -53,30 +51,34 @@ public class EventIterator {
         n--;
     }
     public void toNextEvent() {
+        int pPrev = getEvent();
         for (int i = 0; i < len; i++) {
             toNextCompositeEvent();
-            if (getEvent() >= 0)
+            if (getEvent() >= 0 && getEvent() != pPrev)
                 return;
         }
     }
     public void toPrevEvent() {
+        int pPrev = getEvent();
         for (int i = 0; i < len; i++) {
             toPrevCompositeEvent();
-            if (getEvent() >= 0)
+            if (getEvent() >= 0 && getEvent() != pPrev)
                 return;
         }
     }
     public void toNextEtalonEvent() {
+        int ePrev = getEtalonEvent();
         for (int i = 0; i < len; i++) {
             toNextCompositeEvent();
-            if (getEtalonEvent() >= 0)
+            if (getEtalonEvent() >= 0 && getEtalonEvent() != ePrev)
                 return;
         }
     }
     public void toPrevEtalonEvent() {
+        int ePrev = getEtalonEvent();
         for (int i = 0; i < len; i++) {
             toPrevCompositeEvent();
-            if (getEtalonEvent() >= 0)
+            if (getEtalonEvent() >= 0 && getEtalonEvent() != ePrev)
                 return;
         }
     }
