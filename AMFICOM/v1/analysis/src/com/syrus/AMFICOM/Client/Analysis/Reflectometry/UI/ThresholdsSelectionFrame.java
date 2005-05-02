@@ -207,11 +207,7 @@ implements OperationListener, BsHashChangeListener,
 		previuosEventButton.setText("<");
 		previuosEventButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-                // @todo: iterate etalon events, not primary events
-                int nEvent = Heap.getCurrentEvent() - 1;
-                if (nEvent < 0)
-                    nEvent = Heap.getNumberOfEvents() - 1;
-                Heap.setCurrentEvent(nEvent); // will ignore us if no events
+                Heap.gotoPreviousEtalonEvent();
 			}
 		});
 		
@@ -220,11 +216,7 @@ implements OperationListener, BsHashChangeListener,
 		nextEventButton.setText(">");
 		nextEventButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-                // @todo: iterate etalon events, not primary events
-                int nEvent = Heap.getCurrentEvent() + 1;
-                if (nEvent >= Heap.getNumberOfEvents())
-                    nEvent = 0;
-                Heap.setCurrentEvent(nEvent); // will ignore us if no events
+                Heap.gotoNextEtalonEvent();
 			}
 		});
 
