@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.72 2005/05/02 08:46:23 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.73 2005/05/02 08:46:53 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
  * генерацией пороговых кривых и сохранением/восстановлением порогов.
  *
  * @author $Author: saa $
- * @version $Revision: 1.72 $, $Date: 2005/05/02 08:46:23 $
+ * @version $Revision: 1.73 $, $Date: 2005/05/02 08:46:53 $
  * @module
  */
 public class ModelTraceManager
@@ -638,6 +638,7 @@ implements DataStreamable, Cloneable
      *   точку на этой кривой
      * <li> определяем порог, соответствующей найденной точке найденной кривой
 	 * @param x0 модельная x-координата мыши (разверности индекса, но вещ.)
+     * </ul>
 	 * @param y0 модельная y-координата мыши (дБ)
 	 * @param xCapture радиус захвата кривой мышью по горизонтали
 	 * @param yCapture радиус захвата кривой мышью по вертикали
