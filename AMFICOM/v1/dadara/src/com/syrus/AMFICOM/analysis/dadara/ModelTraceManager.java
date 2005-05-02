@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.74 2005/05/02 08:48:16 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.75 2005/05/02 09:28:28 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
  * генерацией пороговых кривых и сохранением/восстановлением порогов.
  *
  * @author $Author: saa $
- * @version $Revision: 1.74 $, $Date: 2005/05/02 08:48:16 $
+ * @version $Revision: 1.75 $, $Date: 2005/05/02 09:28:28 $
  * @module
  */
 public class ModelTraceManager
@@ -808,11 +808,26 @@ implements DataStreamable, Cloneable
                 key, 0, getTraceLength() - 1);
         int eventBegin = getSE()[nEvent].getBegin();
         int eventEnd = getSE()[nEvent].getEnd();
-        for (int i = 0; i < getTraceLength(); i++)
+
+        // XXX: rather slow loop
+        // so, we try to increase its performance with traceLength and cache
+        int traceLength = getTraceLength();
+        boolean prevRelevant = false; // caching
+        int prevNT = -1; // caching
+        for (int i = 0; i < traceLength; i++)
         {
-            boolean belongs = i >= eventBegin && i <= eventEnd;
+            boolean belongs;
             if (aX[i] >= 0)
-                belongs = tDX[aX[i]].isRelevantToNEvent(nEvent);
+            {
+                if (prevNT != aX[i]) // caching
+                {
+                    prevNT = aX[i];
+                    prevRelevant = tDX[prevNT].isRelevantToNEvent(nEvent);
+                }
+                belongs = prevRelevant;
+            }
+            else
+                belongs = i >= eventBegin && i <= eventEnd;
             if (belongs)
             {
                 end = i;
