@@ -1,5 +1,5 @@
 /*-
- * $Id: TimeStampsEditor.java,v 1.5 2005/05/02 10:48:11 bob Exp $
+ * $Id: TimeStampsEditor.java,v 1.6 2005/05/02 12:40:13 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,13 +51,14 @@ import com.syrus.AMFICOM.measurement.TestTemporalStamps;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/05/02 10:48:11 $
+ * @version $Revision: 1.6 $, $Date: 2005/05/02 12:40:13 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
  */
 public class TimeStampsEditor extends TimeLine {
 
+	private static final long	serialVersionUID	= 3258417243959605561L;
 
 	private SchedulerModel	schedulerModel;
 
