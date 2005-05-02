@@ -578,6 +578,13 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 
 					long startTime = startDate.getTime();
 					long endTime = endDate.getTime();
+					
+					if (startTime >= endTime) {
+						JOptionPane.showMessageDialog(TimeParametersPanel.this,
+							LangModelSchedule.getString("End time less than begin time"), LangModelSchedule.getString("Error"), //$NON-NLS-1$ //$NON-NLS-2$
+							JOptionPane.OK_OPTION);
+						return ;
+					}
 
 					RISDSessionInfo sessionInterface = (RISDSessionInfo) TimeParametersPanel.this.aContext
 							.getSessionInterface();
