@@ -1,0 +1,7 @@
+CREATE TABLE Shadow (
+ user_id VARCHAR2(32) NOT NULL,
+ password VARCHAR2(64) NOT NULL,
+--
+ CONSTRAINT sdw_user_fk FOREIGN KEY (user_id)
+  REFERENCES "User" (id) ON DELETE CASCADE
+);
