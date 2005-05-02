@@ -1,5 +1,5 @@
 /*-
- * $Id: SimpleReflectogramEventComparer.java,v 1.1 2005/04/30 11:54:28 saa Exp $
+ * $Id: SimpleReflectogramEventComparer.java,v 1.2 2005/05/02 15:19:48 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ package com.syrus.AMFICOM.analysis.dadara;
  * <p>
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.1 $, $Date: 2005/04/30 11:54:28 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/02 15:19:48 $
  * @module
  */
 public class SimpleReflectogramEventComparer {
@@ -61,12 +61,27 @@ public class SimpleReflectogramEventComparer {
             ModelTraceAndEventsImpl mtaeEtalon)
     {
         this(mtaeProbe != null ? mtaeProbe.getRSE() : null,
-                mtaeEtalon.getRSE());
+                mtaeEtalon.getRSE(),
+                true);
     }
 
     public SimpleReflectogramEventComparer(
-            SimpleReflectogramEvent[] _probeEvents, // may be null if analysis not performed
-            SimpleReflectogramEvent[] _etalonEvents // not null
+            SimpleReflectogramEvent[] _probeEvents,
+            SimpleReflectogramEvent[] _etalonEvents
+            )
+    {
+        this(_probeEvents, _etalonEvents, true);
+    }
+
+    /**
+     * @param strict укажите false, если допускается, чтобы одному событию
+     * эталона соответствовало несколько событий пробного набора, и наоборот.
+     * true = нормальное поведение.
+     */
+    public SimpleReflectogramEventComparer(
+            SimpleReflectogramEvent[] _probeEvents,
+            SimpleReflectogramEvent[] _etalonEvents,
+            boolean strict
             )
     {
         probeEvents = _probeEvents;
@@ -77,8 +92,10 @@ public class SimpleReflectogramEventComparer {
         {
             probe2etalon = findNearestOverlappingEvent(probeEvents, etalonEvents);
             etalon2probe = findNearestOverlappingEvent(etalonEvents, probeEvents);
-            removeNonPaired(probe2etalon, etalon2probe);
-            removeNonPaired(etalon2probe, probe2etalon);
+            if (strict) {
+                removeNonPaired(probe2etalon, etalon2probe);
+                removeNonPaired(etalon2probe, probe2etalon);
+            }
         }
     }
     
@@ -298,7 +315,8 @@ public class SimpleReflectogramEventComparer {
     {
         if (data == null || etalon == null)
             return new int[0];
-        SimpleReflectogramEventComparer comparer = new SimpleReflectogramEventComparer(data, etalon);
+        SimpleReflectogramEventComparer comparer =
+            new SimpleReflectogramEventComparer(data, etalon, true);
         int count = 0;
         for (int i = 0; i < data.length; i++)
             if (comparer.isProbeEventChanged(i, changeType, changeThreshold))
