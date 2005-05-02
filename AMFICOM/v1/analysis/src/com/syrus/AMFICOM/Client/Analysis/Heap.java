@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.51 2005/05/02 15:22:19 saa Exp $
+ * $Id: Heap.java,v 1.52 2005/05/02 16:57:00 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -65,7 +65,7 @@ import com.syrus.io.BellcoreStructure;
  * Фактически, primaryMTAE - это часть refAnalysisPrimary.
  * 
  * @author $Author: saa $
- * @version $Revision: 1.51 $, $Date: 2005/05/02 15:22:19 $
+ * @version $Revision: 1.52 $, $Date: 2005/05/02 16:57:00 $
  * @module
  */
 public class Heap
@@ -92,7 +92,7 @@ public class Heap
 
 	private static String currentTrace = ""; // XXX: initialize to avoid crushes
 	//private static int currentEv = -1;
-    private static EventIterator currentEvent = new EventIterator();
+    private static EventIterator currentEvent = new EventIterator(false);
 
 	private static String newMSName = null; // the name for newly created (unsaved) MeasurementSetup; null if no new MS
 

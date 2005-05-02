@@ -1,5 +1,5 @@
 /*-
- * $Id: EventIterator.java,v 1.1 2005/05/02 15:21:09 saa Exp $
+ * $Id: EventIterator.java,v 1.2 2005/05/02 16:57:00 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEventComparer;
 /**
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.1 $, $Date: 2005/05/02 15:21:09 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/02 16:57:00 $
  * @module
  */
 public class EventIterator {
@@ -22,8 +22,18 @@ public class EventIterator {
     private int[] en = null;
     private int len = 0;
     private int n = -1;
+    private boolean strictMode;
 
-    public EventIterator() {
+    /**
+     * @param strictMode false, if you allow one A event being in many
+     * iterations paired to different B events and vica versa.
+     * true, if you want find every A and every B event only one time
+     * during any kind of iteration.
+     * @todo: false strictMode is not now properly working with
+     * to(Prev|Next)(|Etalon)Event, its ok only for to*CompositeEvent
+     */
+    public EventIterator(boolean strictMode) {
+        this.strictMode = strictMode;
     }
 
     public int getEvent() {
@@ -106,32 +116,31 @@ public class EventIterator {
             comp = new SimpleReflectogramEventComparer(
                     getPMTAE().getSimpleEvents(),
                     getEMTAE().getSimpleEvents(),
-                    false);
+                    strictMode);
         int[] pna = new int[pl + el];
         int[] ena = new int[pl + el];
         int pi, ei, ci;
         for (pi = 0, ei = 0, ci = 0; pi < pl || ei < el; ci++) {
-            System.out.println("pl:el" + pl + ":" + el
-                    + " pi:ei:ci" + pi + ":" + ei +":"+ ci);
             int e2p = comp != null && ei < el ?
                     comp.getProbeIdByEtalonId(ei) : -1;
             int p2e = comp != null && pi < pl ?
                     comp.getEtalonIdByProbeId(pi) : -1;
             if (e2p > pi || ei == el) {
                 pna[ci] = pi++;
-                ena[ci] = -1;
+                ena[ci] = strictMode ? -1 : p2e;
             } else if (e2p == pi && p2e == ei) {
                 pna[ci] = pi++;
                 ena[ci] = ei++;
             } else {
-                pna[ci] = -1;
+                pna[ci] = strictMode ? -1 : e2p;
                 ena[ci] = ei++;
             }
+            //System.out.println("c:p:e " + ci +":"+ pna[ci] +":"+ ena[ci]);
         }
         pn = pna;
         en = ena;
         len = ci;
-        System.out.println("pl " + pl + " el " + el + " len " + len);
+        //System.out.println("pl " + pl + " el " + el + " len " + len);
     }
     private void fixNEvent() {
         if (n >= len)
