@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementDatabaseContext.java,v 1.28 2005/04/25 09:48:36 bob Exp $
+ * $Id: MeasurementDatabaseContext.java,v 1.29 2005/05/03 13:56:30 max Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Научно-технический центр.
@@ -13,8 +13,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/04/25 09:48:36 $
- * @author $Author: bob $
+ * @version $Revision: 1.29 $, $Date: 2005/05/03 13:56:30 $
+ * @author $Author: max $
  * @module measurement_v1
  */
 public final class MeasurementDatabaseContext {
@@ -32,7 +32,7 @@ public final class MeasurementDatabaseContext {
 	private static TestDatabase		testDatabase;
 	private static ResultDatabase		resultDatabase;
 	private static CronTemporalPatternDatabase	cronTemporalPatternDatabase;
-	/* TODO private static IntervalsTemporalPatternDatabase intervalsTemporalPatternDatabase; */
+	private static IntervalsTemporalPatternDatabase intervalsTemporalPatternDatabase;
 	private static PeriodicalTemporalPatternDatabase periodicalTemporalPatternDatabase;
 
 	private MeasurementDatabaseContext() {
@@ -53,7 +53,7 @@ public final class MeasurementDatabaseContext {
 			final TestDatabase		testDatabase1,
 			final ResultDatabase		resultDatabase1,
 			final CronTemporalPatternDatabase	cronTemporalPatternDatabase1,
-			/* TODO final IntervalsTemporalPatternDatabase intervalsTemporalPatternDatabase1, */
+			final IntervalsTemporalPatternDatabase intervalsTemporalPatternDatabase1,
 			final PeriodicalTemporalPatternDatabase periodicalTemporalPatternDatabase1) {
 		if (measurementTypeDatabase1 != null)
 			measurementTypeDatabase = measurementTypeDatabase1;
@@ -81,10 +81,8 @@ public final class MeasurementDatabaseContext {
 			resultDatabase = resultDatabase1;
 		if (cronTemporalPatternDatabase1 != null)
 			cronTemporalPatternDatabase = cronTemporalPatternDatabase1;
-		/*- TODO
 		if (intervalsTemporalPatternDatabase1 != null)
 			intervalsTemporalPatternDatabase = intervalsTemporalPatternDatabase1;
-		*/
 		if (periodicalTemporalPatternDatabase1 != null)
 			periodicalTemporalPatternDatabase = periodicalTemporalPatternDatabase1;
 	}
@@ -120,8 +118,7 @@ public final class MeasurementDatabaseContext {
 			case ObjectEntities.CRONTEMPORALPATTERN_ENTITY_CODE:
 				return getCronTemporalPatternDatabase();
 			case ObjectEntities.INTERVALS_TEMPORALPATTERN_ENTITY_CODE:
-				/* TODO return getIntervalsTemporalPatternDatabase();*/
-				return null;
+				return getIntervalsTemporalPatternDatabase();
 			case ObjectEntities.PERIODICAL_TEMPORALPATTERN_ENTITY_CODE:
 				return getPeriodicalTemporalPatternDatabase();
 			case ObjectEntities.TEST_ENTITY_CODE:
@@ -180,12 +177,10 @@ public final class MeasurementDatabaseContext {
 		return cronTemporalPatternDatabase;
 	}
 
-	/*- TODO
 	public static IntervalsTemporalPatternDatabase getIntervalsTemporalPatternDatabase() {
 		return intervalsTemporalPatternDatabase;
 	}
-	*/
-
+	
 	public static PeriodicalTemporalPatternDatabase getPeriodicalTemporalPatternDatabase() {
 		return periodicalTemporalPatternDatabase;
 	}
