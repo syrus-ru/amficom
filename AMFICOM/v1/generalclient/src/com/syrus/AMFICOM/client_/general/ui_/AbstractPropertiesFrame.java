@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractPropertiesFrame.java,v 1.6 2005/05/03 12:53:35 stas Exp $
+ * $Id: AbstractPropertiesFrame.java,v 1.7 2005/05/03 13:03:28 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,13 +17,12 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.6 $, $Date: 2005/05/03 12:53:35 $
+ * @version $Revision: 1.7 $, $Date: 2005/05/03 13:03:28 $
  * @module generalclient_v1
  */
 
 public abstract class AbstractPropertiesFrame extends JInternalFrame implements ChangeListener {
 	protected AbstractEventHandler eventHandler;
-	protected JScrollPane scrollPane;
 	protected StorableObjectEditor editor;
 	protected JComponent emptyPane;
 	
@@ -46,10 +45,7 @@ public abstract class AbstractPropertiesFrame extends JInternalFrame implements 
 		this.setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
 				"images/general.gif")));
 
-		this.scrollPane = new JScrollPane(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, 
-				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		this.getContentPane().setLayout(new BorderLayout());
-		this.getContentPane().add(scrollPane, BorderLayout.CENTER);
 		
 		this.emptyPane = new JPanel();
 		emptyPane.setBackground(Color.WHITE);
@@ -93,8 +89,8 @@ public abstract class AbstractPropertiesFrame extends JInternalFrame implements 
 	}
 	
 	protected void setPropertiesPane(JComponent propertiesPane) {
-		scrollPane.getViewport().removeAll();
-		scrollPane.getViewport().add(propertiesPane);
+		this.getContentPane().removeAll();
+		this.getContentPane().add(propertiesPane, BorderLayout.CENTER);
 		SwingUtilities.invokeLater(new Runnable(){
 			public void run() {
 				AbstractPropertiesFrame.this.updateUI();
