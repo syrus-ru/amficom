@@ -17,3 +17,5 @@ docs
 Makefile.inc
 test
 .settings
+.classpath
+.project
