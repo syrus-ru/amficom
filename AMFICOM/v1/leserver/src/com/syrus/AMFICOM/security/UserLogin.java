@@ -1,5 +1,5 @@
 /*
- * $Id: UserLogin.java,v 1.1 2005/05/03 19:37:01 arseniy Exp $
+ * $Id: UserLogin.java,v 1.2 2005/05/03 19:44:46 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,11 +12,11 @@ import java.util.Date;
 import com.syrus.AMFICOM.general.Identifier;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/05/03 19:37:01 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/03 19:44:46 $
  * @author $Author: arseniy $
  * @module leserver_v1
  */
-final class UserLogin {
+public final class UserLogin {
 	private SessionKey sessionKey;
 	private Identifier userId;
 	private Identifier domainId;
@@ -31,37 +31,37 @@ final class UserLogin {
 		this.lastActivityDate = lastActivityDate;
 	}
 
-	protected static UserLogin createInstance(Identifier userId) {
+	public static UserLogin createInstance(Identifier userId) {
 		Date date = new Date(System.currentTimeMillis());
 		return new UserLogin(SessionKeyGenerator.generateSessionKey(userId), userId, null, date, date);
 	}
 
-	protected SessionKey getSessionKey() {
+	public SessionKey getSessionKey() {
 		return this.sessionKey;
 	}
 
-	protected Identifier getUserId() {
+	public Identifier getUserId() {
 		return this.userId;
 	}
 
-	protected Identifier getDomainId() {
+	public Identifier getDomainId() {
 		return this.domainId;
 	}
 
-	protected void setDomainId(Identifier domainId) {
+	public void setDomainId(Identifier domainId) {
 		this.domainId = domainId;
 		this.updateLastActivityDate();
 	}
 
-	protected Date getLoginDate() {
+	public Date getLoginDate() {
 		return this.loginDate;
 	}
 
-	protected Date getLastActivityDate() {
+	public Date getLastActivityDate() {
 		return this.lastActivityDate;
 	}
 
-	protected void updateLastActivityDate() {
+	public void updateLastActivityDate() {
 		this.lastActivityDate = new Date(System.currentTimeMillis());
 	}
 

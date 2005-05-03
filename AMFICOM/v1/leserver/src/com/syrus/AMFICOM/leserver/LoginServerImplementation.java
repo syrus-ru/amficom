@@ -1,5 +1,5 @@
 /*
- * $Id: LoginServerImplementation.java,v 1.7 2005/05/03 19:31:54 arseniy Exp $
+ * $Id: LoginServerImplementation.java,v 1.8 2005/05/03 19:44:46 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,11 +32,14 @@ import com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.leserver.corba.LoginServerPOA;
 import com.syrus.AMFICOM.security.SessionKey;
+import com.syrus.AMFICOM.security.ShadowDatabase;
+import com.syrus.AMFICOM.security.UserLogin;
+import com.syrus.AMFICOM.security.UserLoginDatabase;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/05/03 19:31:54 $
+ * @version $Revision: 1.8 $, $Date: 2005/05/03 19:44:46 $
  * @author $Author: arseniy $
  * @module leserver_v1
  */

@@ -1,5 +1,5 @@
 /*
- * $Id: LoginProcessor.java,v 1.5 2005/05/03 19:31:54 arseniy Exp $
+ * $Id: LoginProcessor.java,v 1.6 2005/05/03 19:44:46 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,11 +17,13 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
 import com.syrus.AMFICOM.security.SessionKey;
+import com.syrus.AMFICOM.security.UserLogin;
+import com.syrus.AMFICOM.security.UserLoginDatabase;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/05/03 19:31:54 $
+ * @version $Revision: 1.6 $, $Date: 2005/05/03 19:44:46 $
  * @author $Author: arseniy $
  * @module leserver_v1
  */

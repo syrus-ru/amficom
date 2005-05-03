@@ -1,5 +1,5 @@
 /*
- * $Id: UserLoginDatabase.java,v 1.1 2005/05/03 19:37:01 arseniy Exp $
+ * $Id: UserLoginDatabase.java,v 1.2 2005/05/03 19:44:46 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,11 +26,11 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/05/03 19:37:01 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/03 19:44:46 $
  * @author $Author: arseniy $
  * @module leserver_v1
  */
-final class UserLoginDatabase {
+public final class UserLoginDatabase {
 	private static final String TABLE_NAME_USER_LOGIN = "UserLogin";
 	private static final String COLUMN_SESSION_KEY = "session_key";
 	private static final String COLUMN_USER_ID = "user_id";
@@ -63,7 +63,7 @@ final class UserLoginDatabase {
 		return sql;
 	}
 
-	protected Set retrieveAll() throws RetrieveObjectException {
+	public Set retrieveAll() throws RetrieveObjectException {
 		return this.retrieveByCondition(null);
 	}
 
@@ -123,7 +123,7 @@ final class UserLoginDatabase {
 		return objects;
 	}
 
-	protected void insert(final UserLogin userLogin) throws CreateObjectException {
+	public void insert(final UserLogin userLogin) throws CreateObjectException {
 		final StringBuffer sql = new StringBuffer(StorableObjectDatabase.SQL_INSERT_INTO + TABLE_NAME_USER_LOGIN
 				+ StorableObjectDatabase.OPEN_BRACKET
 				+ COLUMN_SESSION_KEY + StorableObjectDatabase.COMMA
@@ -166,7 +166,7 @@ final class UserLoginDatabase {
 		}
 	}
 
-	protected void update(final UserLogin userLogin) throws UpdateObjectException {
+	public void update(final UserLogin userLogin) throws UpdateObjectException {
 		final StringBuffer sql = new StringBuffer(StorableObjectDatabase.SQL_UPDATE + TABLE_NAME_USER_LOGIN + StorableObjectDatabase.SQL_SET
 				+ COLUMN_USER_ID + StorableObjectDatabase.EQUALS + DatabaseIdentifier.toSQLString(userLogin.getUserId())
 				+ StorableObjectDatabase.COMMA
@@ -204,7 +204,7 @@ final class UserLoginDatabase {
 		}
 	}
 
-	protected void delete(final UserLogin userLogin) {
+	public void delete(final UserLogin userLogin) {
 		final StringBuffer sql = new StringBuffer(StorableObjectDatabase.SQL_DELETE_FROM + TABLE_NAME_USER_LOGIN
 				+ StorableObjectDatabase.SQL_WHERE + this.singleWhereClause(userLogin.getSessionKey()));
 
