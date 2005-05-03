@@ -1,5 +1,5 @@
 /*
- * $Id: CORBAServer.java,v 1.4 2005/05/03 18:12:54 arseniy Exp $
+ * $Id: CORBAServer.java,v 1.5 2005/05/03 19:25:20 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,7 +41,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/05/03 18:12:54 $
+ * @version $Revision: 1.5 $, $Date: 2005/05/03 19:25:20 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
@@ -207,18 +207,15 @@ public class CORBAServer {
 	}
 
 	public org.omg.CORBA.Object resolveReference(String name) throws CommunicationException {
-		if (this.running) {
-			try {
-				Log.debugMessage("Resolving name: " + name, Log.DEBUGLEVEL08);
-				org.omg.CORBA.Object ref = this.namingContext.resolve_str(name);
-				Log.debugMessage("Resolved reference: " + this.orb.object_to_string(ref), Log.DEBUGLEVEL10);
-				return ref;
-			}
-			catch (UserException nf) {
-				throw new CommunicationException("Name '" + name + "' not found", nf);
-			}
+		try {
+			Log.debugMessage("Resolving name: " + name, Log.DEBUGLEVEL08);
+			org.omg.CORBA.Object ref = this.namingContext.resolve_str(name);
+			Log.debugMessage("Resolved reference: " + this.orb.object_to_string(ref), Log.DEBUGLEVEL10);
+			return ref;
 		}
-		throw new IllegalStateException("Cannot resolve reference '" + name + "' -- shutting down");
+		catch (UserException nf) {
+			throw new CommunicationException("Name '" + name + "' not found", nf);
+		}
 	}
 
 	public void addShutdownHook(Thread hook) {
