@@ -32,9 +32,14 @@ import javax.swing.JSeparator;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerDateModel;
 import javax.swing.UIManager;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Command.Command;
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
+import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.UI.CalendarUI;
@@ -69,12 +74,13 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 
 	private static final long	serialVersionUID	= 6562288896016470275L;
 
-	public class TimeParametersPanel extends JPanel implements TestTemporalStampsEditor {
+	public class TimeParametersPanel extends JPanel implements TestTemporalStampsEditor, OperationListener {
 
 		private static final long	serialVersionUID	= -7975294015403739057L;
 
 		SchedulerModel schedulerModel;
 		ApplicationContext			aContext;
+		Dispatcher dispatcher;
 
 		private TimeSpinner			startTimeSpinner;
 
@@ -114,6 +120,8 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 
 		TestTemporalStamps	temporalStamps;
 		
+		TimeStampsEditor timeStampsEditor;
+		
 		public static final long MINUTE_LONG = 60L * 1000L;
 		public static final long HOUR_LONG = 60L * MINUTE_LONG;
 		public static final long DAY_LONG = 24L * HOUR_LONG;
@@ -128,6 +136,8 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 		public TimeParametersPanel(ApplicationContext aContext) {
 			this();
 			this.aContext = aContext;
+			this.dispatcher = this.aContext.getDispatcher();
+			this.dispatcher.register(this, TimeStampsEditor.DATE_OPERATION);
 			this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();
 			this.schedulerModel.setTestTemporalStampsEditor(this);
 		}
@@ -164,8 +174,22 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 			gbc.gridx = 1;
 			gbc.gridy++;
 
-			this.startTimeSpinner = new TimeSpinner();
-			this.startDateSpinner = new DateSpinner();
+			{
+				this.startTimeSpinner = new TimeSpinner();
+				this.startDateSpinner = new DateSpinner();
+				ChangeListener changeListener = new ChangeListener() {
+
+					public void stateChanged(ChangeEvent e) {
+						TimeParametersPanel.this.dispatcher.notify(new OperationEvent(TimeParametersPanel.this
+								.getStartDate(), 0, TimeStampsEditor.DATE_OPERATION));
+
+					}
+				};
+
+				this.startTimeSpinner.addChangeListener(changeListener);
+				this.startDateSpinner.addChangeListener(changeListener);
+			}
+			
 			final JButton startDateButton = new JButton(UIStorage.CALENDAR_ICON);
 			startDateButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 			startDateButton.setDefaultCapable(false);
@@ -558,9 +582,7 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 							SchedulerModel.showErrorMessage(TimeParametersPanel.this, e1);
 						}
 						
-						TimeParametersPanel.this.schedulerModel.refreshTestTemporalStamps();
-
-						
+						 TimeParametersPanel.this.schedulerModel.refreshTestTemporalStamps();
 						
 					}
 			});
@@ -677,6 +699,16 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 			);
 
 			
+		}
+		
+		public void operationPerformed(OperationEvent e) {
+			String actionCommand = e.getActionCommand();
+			
+			if (actionCommand.equals(TimeStampsEditor.DATE_OPERATION)) {
+				Date date = (Date) e.getSource();
+				this.startDateSpinner.getModel().setValue(date);
+				this.startTimeSpinner.getModel().setValue(date);
+			}
 		}
 		
 		void setOneDateEnable(boolean enable) {
