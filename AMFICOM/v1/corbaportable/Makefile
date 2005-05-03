@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.6 2005/04/13 20:44:03 arseniy Exp $
+# $Id: Makefile,v 1.7 2005/05/03 13:13:05 bass Exp $
 #
 # vim:ft=make:
 #
@@ -10,8 +10,7 @@ JAVACFLAGS = -source 1.4
 SUNJAVACFLAGS = -target 1.4
 JIKESFLAGS = -target 1.4.2
 IDLDIR = idl
-IDLDIR_EXTRA = ../idl_v1/idl
-IDLJFLAGS = -i $(IDLDIR) -i $(IDLDIR_EXTRA)
+IDLJFLAGS = -i $(IDLDIR)
 
 include ../tools/Makefile.inc
 
@@ -19,8 +18,6 @@ include ../tools/Makefile.inc
 idl: .idl
 
 .idl:
-	$(IDLJ) $(IDLJFLAGS) $(IDLDIR_EXTRA)/alarm.idl
-	$(IDLJ) $(IDLJFLAGS) $(IDLDIR_EXTRA)/constants.idl
 	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/alarm.idl
 	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/client.idl
 	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/common.idl
@@ -42,6 +39,4 @@ idl-clean:
 	find $(SRCDIR) -name 'Message\.java' -exec $(RM) \{\} \;
 	find $(SRCDIR) -name 'MessageDeliveryFailedException\.java' -exec $(RM) \{\} \;
 	find $(SRCDIR) -name 'PortableStackTraceElement\.java' -exec $(RM) \{\} \;
-	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/CORBA
-	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/event
 	$(RM) .idl
