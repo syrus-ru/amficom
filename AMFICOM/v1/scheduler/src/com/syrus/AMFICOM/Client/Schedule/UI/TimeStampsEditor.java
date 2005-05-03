@@ -1,5 +1,5 @@
 /*-
- * $Id: TimeStampsEditor.java,v 1.7 2005/05/03 07:58:00 bob Exp $
+ * $Id: TimeStampsEditor.java,v 1.8 2005/05/03 09:38:01 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,7 +54,7 @@ import com.syrus.AMFICOM.measurement.TestTemporalStamps;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/05/03 07:58:00 $
+ * @version $Revision: 1.8 $, $Date: 2005/05/03 09:38:01 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -207,60 +207,87 @@ public class TimeStampsEditor extends TimeLine implements OperationListener {
 	}
 	
 	void moveIntervals(long offset) {
+		if (offset == 0) {
+			return;
+		}
 		AbstractTemporalPattern temporalPattern = TimeStampsEditor.this.testTemporalStamps.getTemporalPattern();
 		if (temporalPattern instanceof IntervalsTemporalPattern) {
 			IntervalsTemporalPattern intervalsTemporalPattern = (IntervalsTemporalPattern) temporalPattern;
 
-//		 Log.debugMessage(".mouseReleased | offset: " +
-		// offset, Log.FINEST);
-		Set offsets = new HashSet();
-		long maxValue = TimeStampsEditor.this.testTemporalStamps.getEndTime().getTime();
-		long minValue = TimeStampsEditor.this.testTemporalStamps.getStartTime().getTime();
-		long baseMinValue = minValue;
-		long baseMaxValue = maxValue;
-		if (TimeStampsEditor.this.selectedItems != null) {
-			long startTime = TimeStampsEditor.this.testTemporalStamps.getStartTime().getTime();
-			for (Iterator it = TimeStampsEditor.this.selectedItems.iterator(); it.hasNext();) {
-				TestTimeItem testTimeItem = (TestTimeItem) it.next();
-				Long ms = (Long) testTimeItem.object;
-				long oldTime = ms.longValue();
-				if (oldTime + offset + startTime > maxValue) {
-					maxValue = oldTime + offset + startTime;
+			// Log.debugMessage(".mouseReleased | offset: " +
+			// offset, Log.FINEST);
+			Set offsets = new HashSet();
+			long maxValue = TimeStampsEditor.this.testTemporalStamps.getEndTime().getTime();
+			long minValue = TimeStampsEditor.this.testTemporalStamps.getStartTime().getTime();
+			long baseMinValue = minValue;
+			long baseMaxValue = maxValue;
+			if (TimeStampsEditor.this.selectedItems != null) {
+				long startTime = TimeStampsEditor.this.testTemporalStamps.getStartTime().getTime();
+				for (Iterator it = TimeStampsEditor.this.selectedItems.iterator(); it.hasNext();) {
+					TestTimeItem testTimeItem = (TestTimeItem) it.next();
+					Long ms = (Long) testTimeItem.object;
+					long oldTime = ms.longValue();
+					if (oldTime + offset + startTime > maxValue) {
+						maxValue = oldTime + offset + startTime;
+					}
+					if (oldTime + offset + startTime < minValue) {
+						minValue = oldTime + offset + startTime;
+					}
+					offsets.add(ms);
 				}
-				if (oldTime + offset + startTime < minValue) {
-					minValue = oldTime + offset + startTime;
-				}
-				offsets.add(ms);
 			}
-		}
 
-		if (baseMinValue != minValue) {
-			TimeStampsEditor.this.testTemporalStamps.setStartTime(new Date(minValue));
-		}
-		if (baseMaxValue != maxValue) {
-			TimeStampsEditor.this.testTemporalStamps.setEndTime(new Date(maxValue));
-		}
+			if (baseMinValue != minValue) {
+				TimeStampsEditor.this.testTemporalStamps.setStartTime(new Date(minValue));
+			}
+			if (baseMaxValue != maxValue) {
+				TimeStampsEditor.this.testTemporalStamps.setEndTime(new Date(maxValue));
+			}
 
-		// Log.debugMessage(".mouseReleased |
-		// testTemporalStamps.getStartTime:" +
-		// testTemporalStamps.getStartTime(), Log.FINEST);
-		// Log.debugMessage(".mouseReleased |
-		// testTemporalStamps.getEndTime:" +
-		// testTemporalStamps.getEndTime(), Log.FINEST);
+			// Log.debugMessage(".mouseReleased |
+			// testTemporalStamps.getStartTime:" +
+			// testTemporalStamps.getStartTime(), Log.FINEST);
+			// Log.debugMessage(".mouseReleased |
+			// testTemporalStamps.getEndTime:" +
+			// testTemporalStamps.getEndTime(), Log.FINEST);
 
-		try {
-			intervalsTemporalPattern.moveIntervalItems(offsets, offset);							
-			TimeStampsEditor.this.undoMenuItem.setEnabled(true);
-			TimeStampsEditor.this.selectedItems.clear();
-		} catch (IllegalDataException e1) {							
-			TimeStampsEditor.this.undoMenuItem.setEnabled(false);
-			TimeStampsEditor.this.undoMenuItem.setText(LangModelSchedule.getString("Undo"));
-			SchedulerModel.showErrorMessage(TimeStampsEditor.this, e1);
-		}
+			try {
+				intervalsTemporalPattern.moveIntervalItems(offsets, offset);
+				TimeStampsEditor.this.undoMenuItem.setEnabled(true);
+			
+				TimeStampsEditor.this.refreshTimeItems();
+				SortedSet sortedSet = new TreeSet();
+				for (Iterator it = this.selectedItems.iterator(); it.hasNext();) {
+					TestTimeItem testTimeItem = (TestTimeItem) it.next();
+					Long ms;
+					ms = new Long(((Long)testTimeItem.object).longValue() + offset + baseMinValue - minValue);
+//					Log.debugMessage("TimeStampsEditor.moveIntervals | was " + testTimeItem.object, Log.FINEST);
+//					Log.debugMessage("TimeStampsEditor.moveIntervals | now " + ms, Log.FINEST);
+					for (Iterator iterator = this.timeItems.iterator(); iterator.hasNext();) {
+						TestTimeItem testTimeItem2 = (TestTimeItem) iterator.next();
+//						Log.debugMessage("TimeStampsEditor.moveIntervals | new " + testTimeItem2.object, Log.FINEST);
+						if (ms.equals(testTimeItem2.object)) {
+//							Log.debugMessage("TimeStampsEditor.moveIntervals | found ", Log.FINEST);
+							sortedSet.add(testTimeItem2);
+							break;
+						}
+					}
+				}
+				this.selectedItems.clear();
+				this.selectedItems.addAll(sortedSet);
+//				TimeStampsEditor.this.selectedItems.clear();
+				
+			} catch (IllegalDataException e1) {
+				TimeStampsEditor.this.undoMenuItem.setEnabled(false);
+				TimeStampsEditor.this.undoMenuItem.setText(LangModelSchedule.getString("Undo"));
+				SchedulerModel.showErrorMessage(TimeStampsEditor.this, e1);
+			}
+			
+			
 
-		TimeStampsEditor.this.refreshTimeItems();
-		TimeStampsEditor.this.repaint();
-		TimeStampsEditor.this.updateMenuItemsState();
+			
+			TimeStampsEditor.this.repaint();
+			TimeStampsEditor.this.updateMenuItemsState();
 		}
 	}
 	
@@ -565,13 +592,8 @@ public class TimeStampsEditor extends TimeLine implements OperationListener {
 				TestTimeItem testTimeItem = (TestTimeItem)this.selectedItems.first();
 				long time = this.testTemporalStamps.getStartTime().getTime() + ((Long) testTimeItem.object).longValue();
 				long diff = date.getTime() - time;
-				if (diff > 0) {
-					this.moveIntervals(diff);
-					this.selectedItems.clear();
-					this.updateMenuItemsState();
-					this.refreshTimeItems();
-					this.repaint();
-				}
+				this.moveIntervals(diff);
+//					this.selectedItems.clear();
 			}
 		}
 		
