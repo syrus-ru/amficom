@@ -114,6 +114,11 @@ module corba {
 		measurement::corba::CronTemporalPatternSeq_Transferable transmitCronTemporalPatterns(in general::corba::IdentifierSeq_Transferable ids)
 			raises (general::corba::AMFICOMRemoteException);
 
+		measurement::corba::IntervalsTemporalPatternSeq_Transferable transmitIntervalsTemporalPatterns(in general::corba::IdentifierSeq_Transferable ids)
+			raises (general::corba::AMFICOMRemoteException);
+
+		measurement::corba::PeriodicalTemporalPatternSeq_Transferable transmitPeriodicalTemporalPatterns(in general::corba::IdentifierSeq_Transferable ids)
+			raises (general::corba::AMFICOMRemoteException);
 
 
 		/* Transmit multiple objects but ids by condition*/

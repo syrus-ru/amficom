@@ -1,5 +1,5 @@
 /*
- * $Id: MServerMeasurementTransmit.java,v 1.1 2005/05/01 19:17:31 arseniy Exp $
+ * $Id: MServerMeasurementTransmit.java,v 1.2 2005/05/03 18:29:06 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,24 +24,28 @@ import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.CronTemporalPattern;
 import com.syrus.AMFICOM.measurement.Evaluation;
 import com.syrus.AMFICOM.measurement.EvaluationType;
+import com.syrus.AMFICOM.measurement.IntervalsTemporalPattern;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.MeasurementType;
+import com.syrus.AMFICOM.measurement.PeriodicalTemporalPattern;
 import com.syrus.AMFICOM.measurement.Set;
 import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
 import com.syrus.AMFICOM.measurement.corba.CronTemporalPattern_Transferable;
 import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
+import com.syrus.AMFICOM.measurement.corba.IntervalsTemporalPattern_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
+import com.syrus.AMFICOM.measurement.corba.PeriodicalTemporalPattern_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/05/01 19:17:31 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/03 18:29:06 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -153,6 +157,32 @@ abstract class MServerMeasurementTransmit extends MServerConfigurationTransmit {
 		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
 			object = (Set) it.next();
 			transferables[i] = (Set_Transferable) object.getTransferable();
+		}
+		return transferables;
+	}
+
+	public IntervalsTemporalPattern_Transferable[] transmitIntervalsTemporalPatterns(Identifier_Transferable[] idsT) throws AMFICOMRemoteException {
+		java.util.Set objects = this.getMeasurementObjects(idsT);
+
+		IntervalsTemporalPattern_Transferable[] transferables = new IntervalsTemporalPattern_Transferable[objects.size()];
+		int i = 0;
+		IntervalsTemporalPattern object;
+		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+			object = (IntervalsTemporalPattern) it.next();
+			transferables[i] = (IntervalsTemporalPattern_Transferable) object.getTransferable();
+		}
+		return transferables;
+	}
+
+	public PeriodicalTemporalPattern_Transferable[] transmitPeriodicalTemporalPatterns(Identifier_Transferable[] idsT) throws AMFICOMRemoteException {
+		java.util.Set objects = this.getMeasurementObjects(idsT);
+
+		PeriodicalTemporalPattern_Transferable[] transferables = new PeriodicalTemporalPattern_Transferable[objects.size()];
+		int i = 0;
+		PeriodicalTemporalPattern object;
+		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+			object = (PeriodicalTemporalPattern) it.next();
+			transferables[i] = (PeriodicalTemporalPattern_Transferable) object.getTransferable();
 		}
 		return transferables;
 	}
