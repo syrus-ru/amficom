@@ -1,5 +1,5 @@
 /*
- * $Id: resource.idl,v 1.12 2004/12/17 11:33:38 bass Exp $
+ * $Id: resource.idl,v 1.13 2005/05/03 13:13:53 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,38 +39,6 @@ module com {
 					typedef sequence<ImageResource_Transferable> ImageResourceSeq_Transferable;
 					typedef ImageResource_Transferable ImageResource;
 					typedef sequence<ImageResource> ImageResourceSeq;
-				};
-			};
-
-			module CORBA {
-				module Resource {
-					/**
-					 * @deprecated Use {@link com.syrus.AMFICOM.resource.corba.ImageResource_Transferable} instead.
-					 */
-					struct ImageResource_Transferable {
-						wstring id;
-						wstring name;
-						wstring source_string;
-
-						wstring filename;
-						::CORBA::OctetSeq image;
-					};
-					typedef sequence<ImageResource_Transferable> ImageResourceSeq_Transferable;
-
-					struct ResourceDescriptor_Transferable {
-						wstring resource_id;
-						long long resource_modified;
-					};
-
-					typedef sequence<ResourceDescriptor_Transferable> ResourceDescriptorSeq_Transferable;
-
-				   	struct Filter_Transferable {
-						wstring id;
-						wstring resource_typ;
-						::CORBA::OctetSeq logic_scheme;
-					};
-
-					typedef sequence<Filter_Transferable> FilterSeq_Transferable;
 				};
 			};
 		};

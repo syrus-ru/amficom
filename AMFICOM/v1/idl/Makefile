@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.23 2005/04/08 08:42:24 bass Exp $
+# $Id: Makefile,v 1.24 2005/05/03 13:13:53 bass Exp $
 #
 # vim:ft=make:
 #
@@ -46,19 +46,15 @@ xtra: .xtra
 	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/scheme.idl
 	if [ -f ../mcm_v1/idl/mcm.idl ]; then $(IDLJ) $(IDLJFLAGS) ../mcm_v1/idl/mcm.idl; fi
 	if [ -f ../mserver_v1/idl/mserver.idl ]; then $(IDLJ) $(IDLJFLAGS) ../mserver_v1/idl/mserver.idl; fi
+	if [ -f ../leserver_v1/idl/leserver.idl ]; then $(IDLJ) $(IDLJFLAGS) ../leserver_v1/idl/leserver.idl; fi
 	touch $@
 
 .PHONY: idl
 idl: .idl
 
 .idl: $(SRCDIR) $(CLASSDIR)
-	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/AMFICOM.idl
-	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/admin.idl
 	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/alarm.idl
-	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/client.idl
-	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/constants.idl
 	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/general.idl
-	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/report.idl
 	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/resource.idl
 	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/administration.idl
 
