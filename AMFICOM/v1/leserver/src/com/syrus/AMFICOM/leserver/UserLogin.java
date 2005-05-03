@@ -1,5 +1,5 @@
 /*
- * $Id: UserLogin.java,v 1.1 2005/05/02 19:03:24 arseniy Exp $
+ * $Id: UserLogin.java,v 1.2 2005/05/03 12:03:46 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,26 +13,28 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.corba.SecurityKey;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/05/02 19:03:24 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/03 12:03:46 $
  * @author $Author: arseniy $
  * @module leserver_v1
  */
 final class UserLogin {
 	private SecurityKey securityKey;
 	private Identifier userId;
+	private Identifier domainId;
 	private Date loginDate;
 	private Date lastActivityDate;
 
-	protected UserLogin(SecurityKey securityKey, Identifier userId, Date loginDate, Date lastActivityDate) {
+	protected UserLogin(SecurityKey securityKey, Identifier userId, Identifier domainId, Date loginDate, Date lastActivityDate) {
 		this.securityKey = securityKey;
 		this.userId = userId;
+		this.domainId = domainId;
 		this.loginDate = loginDate;
 		this.lastActivityDate = lastActivityDate;
 	}
 
-	protected static UserLogin createInstance(Identifier userId, String password) {
+	protected static UserLogin createInstance(Identifier userId) {
 		Date date = new Date(System.currentTimeMillis());
-		return new UserLogin(SecurityKeyGenerator.generateSecurityKey(userId, password), userId, date, date);
+		return new UserLogin(SecurityKeyGenerator.generateSecurityKey(userId), userId, null, date, date);
 	}
 
 	protected SecurityKey getSecurityKey() {
@@ -41,6 +43,15 @@ final class UserLogin {
 
 	protected Identifier getUserId() {
 		return this.userId;
+	}
+
+	protected Identifier getDomainId() {
+		return this.domainId;
+	}
+
+	protected void setDomainId(Identifier domainId) {
+		this.domainId = domainId;
+		this.updateLastActivityDate();
 	}
 
 	protected Date getLoginDate() {
