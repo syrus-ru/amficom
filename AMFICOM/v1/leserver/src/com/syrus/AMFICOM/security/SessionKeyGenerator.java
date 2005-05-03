@@ -1,21 +1,21 @@
 /*
- * $Id: SessionKeyGenerator.java,v 1.2 2005/05/03 19:31:54 arseniy Exp $
+ * $Id: SessionKeyGenerator.java,v 1.1 2005/05/03 19:37:01 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
-package com.syrus.AMFICOM.general;
+package com.syrus.AMFICOM.security;
 
-import com.syrus.AMFICOM.security.SessionKey;
+import com.syrus.AMFICOM.general.Identifier;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/05/03 19:31:54 $
+ * @version $Revision: 1.1 $, $Date: 2005/05/03 19:37:01 $
  * @author $Author: arseniy $
  * @module leserver_v1
  */
-public final class SessionKeyGenerator {
+final class SessionKeyGenerator {
 	//TODO This is only stub. Implement generation
 	private static final int LENGTH = 128;
 
