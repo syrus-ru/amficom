@@ -363,7 +363,7 @@ public class AnalysisSelectionFrame extends ATableFrame implements
 		}
 	}
 
-	private class ModelParamsTableRenderer extends ADefaultTableCellRenderer
+	private class ModelParamsTableRenderer extends ADefaultTableCellRenderer.ObjectRenderer
 	{
 		ParamTableModel model;
 

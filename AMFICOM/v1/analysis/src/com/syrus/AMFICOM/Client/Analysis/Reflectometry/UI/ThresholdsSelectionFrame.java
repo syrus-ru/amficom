@@ -242,7 +242,7 @@ implements OperationListener, BsHashChangeListener,
 		this.jTable.setRowSelectionAllowed(false);		
 		
 		this.jTable.setDefaultRenderer(Object.class,
-			new ADefaultTableCellRenderer() {
+			new ADefaultTableCellRenderer.ObjectRenderer() {
 
 			// (1) hides 'focus' - just because its color overrides selection
 			// colot
