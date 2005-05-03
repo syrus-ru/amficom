@@ -1,5 +1,5 @@
 /*
- * $Id: MServerMeasurementReceive.java,v 1.1 2005/05/01 19:17:31 arseniy Exp $
+ * $Id: MServerMeasurementReceive.java,v 1.2 2005/05/03 14:29:47 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder;
-import com.syrus.AMFICOM.general.corba.SecurityKey;
+import com.syrus.AMFICOM.general.corba.SessionKey_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.leserver.corba.LoginServer;
 import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.mserver.corba.MServerPOA;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/05/01 19:17:31 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/03 14:29:47 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -84,11 +84,11 @@ abstract class MServerMeasurementReceive extends MServerPOA {
 		}
 	}
 
-	public StorableObject_Transferable[] receiveTests(Test_Transferable[] testsT, boolean force, SecurityKey security_key)
+	public StorableObject_Transferable[] receiveTests(Test_Transferable[] testsT, boolean force, SessionKey_Transferable sessionKeyT)
 			throws AMFICOMRemoteException {
 		Log.debugMessage("MServerImplementation.receiveTests | Received " + testsT.length + " tests", Log.DEBUGLEVEL07);
 
-		Identifier modifierId = this.validateAccess(security_key);
+		Identifier modifierId = this.validateAccess(sessionKeyT);
 
 		java.util.Set objects = new HashSet(testsT.length);
 		for (int i = 0; i < testsT.length; i++) {
@@ -131,13 +131,13 @@ abstract class MServerMeasurementReceive extends MServerPOA {
 	/*	Acces validation*/
 	/**
 	 * TODO Meaningful implementation*/
-	private Identifier validateAccess(SecurityKey securityKey) throws AMFICOMRemoteException {
+	private Identifier validateAccess(SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		try {
 			LoginServer loginServer = MServerSessionEnvironment.getInstance().getMServerServantManager().getLoginServerReference();
 
 			Identifier_TransferableHolder userIdTHolder = new Identifier_TransferableHolder();
 			Identifier_TransferableHolder domainIdTHolder = new Identifier_TransferableHolder();
-			loginServer.validateAccess(securityKey, userIdTHolder, domainIdTHolder);
+			loginServer.validateAccess(sessionKeyT, userIdTHolder, domainIdTHolder);
 			return new Identifier(userIdTHolder.value);
 		}
 		catch (CommunicationException ce) {

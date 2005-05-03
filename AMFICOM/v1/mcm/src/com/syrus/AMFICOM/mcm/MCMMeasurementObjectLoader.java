@@ -1,5 +1,5 @@
 /*
- * $Id: MCMMeasurementObjectLoader.java,v 1.41 2005/05/01 19:19:16 arseniy Exp $
+ * $Id: MCMMeasurementObjectLoader.java,v 1.42 2005/05/03 14:31:34 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.general.corba.SecurityKey;
+import com.syrus.AMFICOM.general.corba.SessionKey_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.AnalysisTypeDatabase;
@@ -50,7 +50,7 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2005/05/01 19:19:16 $
+ * @version $Revision: 1.42 $, $Date: 2005/05/03 14:31:34 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -434,7 +434,7 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 		super.saveTests(objects, force);
 
 		MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
-		SecurityKey securityKey = LoginManager.getSecurityKey();
+		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
 
 		Test_Transferable[] transferables = new Test_Transferable[objects.size()];
 		int i = 0;
@@ -442,7 +442,7 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 			transferables[i] = (Test_Transferable) ((Test) it.next()).getTransferable();
 
 		try {
-			StorableObject_Transferable[] headers = mServerRef.receiveTests(transferables, force, securityKey);
+			StorableObject_Transferable[] headers = mServerRef.receiveTests(transferables, force, sessionKeyT);
 			super.updateHeaders(objects, headers);
 		}
 		catch (AMFICOMRemoteException are) {

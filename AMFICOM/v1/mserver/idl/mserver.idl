@@ -157,7 +157,7 @@ module corba {
 
 		general::corba::StorableObjectSeq_Transferable receiveTests(in measurement::corba::TestSeq_Transferable tests,
 						in boolean force,
-						in general::corba::SecurityKey security_key)
+						in general::corba::SessionKey_Transferable sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		void receiveResults(in measurement::corba::ResultSeq_Transferable results,

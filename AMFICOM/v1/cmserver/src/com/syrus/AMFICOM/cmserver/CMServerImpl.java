@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.101 2005/05/01 17:27:12 arseniy Exp $
+ * $Id: CMServerImpl.java,v 1.102 2005/05/03 14:27:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,12 +26,12 @@ import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.general.corba.SecurityKey;
+import com.syrus.AMFICOM.general.corba.SessionKey_Transferable;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.101 $, $Date: 2005/05/01 17:27:12 $
+ * @version $Revision: 1.102 $, $Date: 2005/05/03 14:27:02 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -43,8 +43,8 @@ public class CMServerImpl extends CMMeasurementTransmit {
 
 	/* Delete*/
 
-	public void delete(Identifier_Transferable[] idsT, SecurityKey securityKey) throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+	public void delete(Identifier_Transferable[] idsT, SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+		super.validateAccess(sessionKeyT);
 
 		Set ids = Identifier.fromTransferables(idsT);
 		Set generalObjects = new HashSet(idsT.length);

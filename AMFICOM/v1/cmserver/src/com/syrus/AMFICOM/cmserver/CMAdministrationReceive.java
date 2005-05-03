@@ -1,5 +1,5 @@
 /*
- * $Id: CMAdministrationReceive.java,v 1.8 2005/05/01 17:27:11 arseniy Exp $
+ * $Id: CMAdministrationReceive.java,v 1.9 2005/05/03 14:27:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,11 +36,11 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
-import com.syrus.AMFICOM.general.corba.SecurityKey;
+import com.syrus.AMFICOM.general.corba.SessionKey_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.util.Log;
 /**
- * @version $Revision: 1.8 $, $Date: 2005/05/01 17:27:11 $
+ * @version $Revision: 1.9 $, $Date: 2005/05/03 14:27:01 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -53,8 +53,8 @@ public abstract class CMAdministrationReceive extends CMGeneralReceive {
 
 	public StorableObject_Transferable[] receiveUsers(User_Transferable[] transferables,
 			boolean force,
-			SecurityKey securityKey) throws AMFICOMRemoteException {
-		Identifier modifierId = super.validateAccess(securityKey);
+			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+		Identifier modifierId = super.validateAccess(sessionKeyT);
 
 		Set objects = new HashSet(transferables.length);
 		for (int i = 0; i < transferables.length; i++) {
@@ -94,8 +94,8 @@ public abstract class CMAdministrationReceive extends CMGeneralReceive {
 
 	public StorableObject_Transferable[] receiveDomains(Domain_Transferable[] transferables,
 			boolean force,
-			SecurityKey securityKey) throws AMFICOMRemoteException {
-		Identifier modifierId = super.validateAccess(securityKey);
+			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+		Identifier modifierId = super.validateAccess(sessionKeyT);
 
 		Set objects = new HashSet(transferables.length);
 		for (int i = 0; i < transferables.length; i++) {
@@ -135,8 +135,8 @@ public abstract class CMAdministrationReceive extends CMGeneralReceive {
 
 	public StorableObject_Transferable[] receiveServers(Server_Transferable[] transferables,
 			boolean force,
-			SecurityKey securityKey) throws AMFICOMRemoteException {
-		Identifier modifierId = super.validateAccess(securityKey);
+			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+		Identifier modifierId = super.validateAccess(sessionKeyT);
 
 		Set objects = new HashSet(transferables.length);
 		for (int i = 0; i < transferables.length; i++) {
@@ -176,8 +176,8 @@ public abstract class CMAdministrationReceive extends CMGeneralReceive {
 
 	public StorableObject_Transferable[] receiveMCMs(MCM_Transferable[] transferables,
 			boolean force,
-			SecurityKey securityKey) throws AMFICOMRemoteException {
-		Identifier modifierId = super.validateAccess(securityKey);
+			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+		Identifier modifierId = super.validateAccess(sessionKeyT);
 
 		Set objects = new HashSet(transferables.length);
 		for (int i = 0; i < transferables.length; i++) {
@@ -217,8 +217,8 @@ public abstract class CMAdministrationReceive extends CMGeneralReceive {
 
 	public StorableObject_Transferable[] receiveServerProcesses(ServerProcess_Transferable[] transferables,
 			boolean force,
-			SecurityKey securityKey) throws AMFICOMRemoteException {
-		Identifier modifierId = super.validateAccess(securityKey);
+			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+		Identifier modifierId = super.validateAccess(sessionKeyT);
 
 		Set objects = new HashSet(transferables.length);
 		for (int i = 0; i < transferables.length; i++) {

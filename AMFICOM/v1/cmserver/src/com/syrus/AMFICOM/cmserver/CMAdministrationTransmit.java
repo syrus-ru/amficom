@@ -1,5 +1,5 @@
 /*
- * $Id: CMAdministrationTransmit.java,v 1.17 2005/05/01 17:27:12 arseniy Exp $
+ * $Id: CMAdministrationTransmit.java,v 1.18 2005/05/03 14:27:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,13 +36,13 @@ import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.general.corba.SecurityKey;
+import com.syrus.AMFICOM.general.corba.SessionKey_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/05/01 17:27:12 $
+ * @version $Revision: 1.18 $, $Date: 2005/05/03 14:27:01 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -55,9 +55,9 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 
 	/* Transmit multiple objects*/
 
-	public User_Transferable[] transmitUsers(Identifier_Transferable[] idsT, SecurityKey securityKey)
+	public User_Transferable[] transmitUsers(Identifier_Transferable[] idsT, SessionKey_Transferable sessionKeyT)
 			throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjects(idsT);
 
@@ -71,9 +71,9 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 		return transferables;
 	}
 
-	public Domain_Transferable[] transmitDomains(Identifier_Transferable[] idsT, SecurityKey securityKey)
+	public Domain_Transferable[] transmitDomains(Identifier_Transferable[] idsT, SessionKey_Transferable sessionKeyT)
 			throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjects(idsT);
 
@@ -87,9 +87,9 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 		return transferables;
 	}
 
-	public Server_Transferable[] transmitServers(Identifier_Transferable[] idsT, SecurityKey securityKey)
+	public Server_Transferable[] transmitServers(Identifier_Transferable[] idsT, SessionKey_Transferable sessionKeyT)
 			throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjects(idsT);
 
@@ -103,9 +103,9 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 		return transferables;
 	}
 
-	public MCM_Transferable[] transmitMCMs(Identifier_Transferable[] idsT, SecurityKey securityKey)
+	public MCM_Transferable[] transmitMCMs(Identifier_Transferable[] idsT, SessionKey_Transferable sessionKeyT)
 			throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjects(idsT);
 
@@ -119,9 +119,9 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 		return transferables;
 	}
 
-	public ServerProcess_Transferable[] transmitServerProcesses(Identifier_Transferable[] idsT, SecurityKey securityKey)
+	public ServerProcess_Transferable[] transmitServerProcesses(Identifier_Transferable[] idsT, SessionKey_Transferable sessionKeyT)
 			throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjects(idsT);
 
@@ -157,8 +157,8 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 	/* Transmit multiple objects but ids*/
 
 	public User_Transferable[] transmitUsersButIds(Identifier_Transferable[] idsT,
-			SecurityKey securityKey) throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjectsButIds(idsT, ObjectEntities.USER_ENTITY_CODE);
 
@@ -173,8 +173,8 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 	}
 
 	public Domain_Transferable[] transmitDomainsButIds(Identifier_Transferable[] idsT,
-			SecurityKey securityKey) throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjectsButIds(idsT, ObjectEntities.DOMAIN_ENTITY_CODE);
 
@@ -189,8 +189,8 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 	}
 
 	public Server_Transferable[] transmitServersButIds(Identifier_Transferable[] idsT,
-			SecurityKey securityKey) throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjectsButIds(idsT, ObjectEntities.SERVER_ENTITY_CODE);
 
@@ -205,8 +205,8 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 	}
 
 	public MCM_Transferable[] transmitMCMsButIds(Identifier_Transferable[] idsT,
-			SecurityKey securityKey) throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjectsButIds(idsT, ObjectEntities.MCM_ENTITY_CODE);
 
@@ -221,8 +221,8 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 	}
 
 	public ServerProcess_Transferable[] transmitServerProcessesButIds(Identifier_Transferable[] idsT,
-			SecurityKey securityKey) throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjectsButIds(idsT, ObjectEntities.SERVERPROCESS_ENTITY_CODE);
 
@@ -260,9 +260,9 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 	/* Transmit multiple objects but ids by condition*/
 
 	public User_Transferable[] transmitUsersButIdsCondition(Identifier_Transferable[] idsT,
-			SecurityKey securityKey,
+			SessionKey_Transferable sessionKeyT,
 			StorableObjectCondition_Transferable conditionT) throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjectsButIdsCondition(idsT, conditionT);
 
@@ -277,9 +277,9 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 	}
 
 	public Domain_Transferable[] transmitDomainsButIdsCondition(Identifier_Transferable[] idsT,
-			SecurityKey securityKey,
+			SessionKey_Transferable sessionKeyT,
 			StorableObjectCondition_Transferable conditionT) throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjectsButIdsCondition(idsT, conditionT);
 
@@ -294,9 +294,9 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 	}
 
 	public Server_Transferable[] transmitServersButIdsCondition(Identifier_Transferable[] idsT,
-			SecurityKey securityKey,
+			SessionKey_Transferable sessionKeyT,
 			StorableObjectCondition_Transferable conditionT) throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjectsButIdsCondition(idsT, conditionT);
 
@@ -311,9 +311,9 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 	}
 
 	public MCM_Transferable[] transmitMCMsButIdsCondition(Identifier_Transferable[] idsT,
-			SecurityKey securityKey,
+			SessionKey_Transferable sessionKeyT,
 			StorableObjectCondition_Transferable conditionT) throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjectsButIdsCondition(idsT, conditionT);
 
@@ -328,9 +328,9 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 	}
 
 	public ServerProcess_Transferable[] transmitServerProcessesButIdsCondition(Identifier_Transferable[] idsT,
-			SecurityKey securityKey,
+			SessionKey_Transferable sessionKeyT,
 			StorableObjectCondition_Transferable conditionT) throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjectsButIdsCondition(idsT, conditionT);
 
@@ -380,8 +380,8 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 	/*	Refresh*/
 
 	public Identifier_Transferable[] transmitRefreshedAdministrationObjects(StorableObject_Transferable[] storableObjectsT,
-			SecurityKey securityKey) throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+		super.validateAccess(sessionKeyT);
 
 		Map storableObjectsTMap = new HashMap();
 		for (int i = 0; i < storableObjectsT.length; i++)

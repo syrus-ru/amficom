@@ -1,5 +1,5 @@
 /*
- * $Id: CMConfigurationReceive.java,v 1.18 2005/05/01 17:27:12 arseniy Exp $
+ * $Id: CMConfigurationReceive.java,v 1.19 2005/05/03 14:27:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -66,13 +66,13 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
-import com.syrus.AMFICOM.general.corba.SecurityKey;
+import com.syrus.AMFICOM.general.corba.SessionKey_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/05/01 17:27:12 $
+ * @version $Revision: 1.19 $, $Date: 2005/05/03 14:27:01 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -83,8 +83,8 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 
 	public StorableObject_Transferable[] receiveEquipmentTypes(EquipmentType_Transferable[] transferables,
 			boolean force,
-			SecurityKey securityKey) throws AMFICOMRemoteException {
-		Identifier modifierId = super.validateAccess(securityKey);
+			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+		Identifier modifierId = super.validateAccess(sessionKeyT);
 
 		Set objects = new HashSet(transferables.length);
 		for (int i = 0; i < transferables.length; i++) {
@@ -124,8 +124,8 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 
 	public StorableObject_Transferable[] receivePortTypes(PortType_Transferable[] transferables,
 			boolean force,
-			SecurityKey securityKey) throws AMFICOMRemoteException {
-		Identifier modifierId = super.validateAccess(securityKey);
+			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+		Identifier modifierId = super.validateAccess(sessionKeyT);
 
 		Set objects = new HashSet(transferables.length);
 		for (int i = 0; i < transferables.length; i++) {
@@ -165,8 +165,8 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 
 	public StorableObject_Transferable[] receiveMeasurementPortTypes(MeasurementPortType_Transferable[] transferables,
 			boolean force,
-			SecurityKey securityKey) throws AMFICOMRemoteException {
-		Identifier modifierId = super.validateAccess(securityKey);
+			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+		Identifier modifierId = super.validateAccess(sessionKeyT);
 
 		Set objects = new HashSet(transferables.length);
 		for (int i = 0; i < transferables.length; i++) {
@@ -206,8 +206,8 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 
 	public StorableObject_Transferable[] receiveTransmissionPathTypes(TransmissionPathType_Transferable[] transferables,
 			boolean force,
-			SecurityKey securityKey) throws AMFICOMRemoteException {
-		Identifier modifierId = super.validateAccess(securityKey);
+			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+		Identifier modifierId = super.validateAccess(sessionKeyT);
 
 		Set objects = new HashSet(transferables.length);
 		for (int i = 0; i < transferables.length; i++) {
@@ -247,8 +247,8 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 
 	public StorableObject_Transferable[] receiveLinkTypes(LinkType_Transferable[] transferables,
 			boolean force,
-			SecurityKey securityKey) throws AMFICOMRemoteException {
-		Identifier modifierId = super.validateAccess(securityKey);
+			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+		Identifier modifierId = super.validateAccess(sessionKeyT);
 
 		Set objects = new HashSet(transferables.length);
 		for (int i = 0; i < transferables.length; i++) {
@@ -288,8 +288,8 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 
 	public StorableObject_Transferable[] receiveCableLinkTypes(CableLinkType_Transferable[] transferables,
 			boolean force,
-			SecurityKey securityKey) throws AMFICOMRemoteException {
-		Identifier modifierId = super.validateAccess(securityKey);
+			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+		Identifier modifierId = super.validateAccess(sessionKeyT);
 
 		Set objects = new HashSet(transferables.length);
 		for (int i = 0; i < transferables.length; i++) {
@@ -329,8 +329,8 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 
 	public StorableObject_Transferable[] receiveCableThreadTypes(CableThreadType_Transferable[] transferables,
 			boolean force,
-			SecurityKey securityKey) throws AMFICOMRemoteException {
-		Identifier modifierId = super.validateAccess(securityKey);
+			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+		Identifier modifierId = super.validateAccess(sessionKeyT);
 
 		Set objects = new HashSet(transferables.length);
 		for (int i = 0; i < transferables.length; i++) {
@@ -372,8 +372,8 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 
 	public StorableObject_Transferable[] receiveEquipments(Equipment_Transferable[] transferables,
 			boolean force,
-			SecurityKey securityKey) throws AMFICOMRemoteException {
-		Identifier modifierId = super.validateAccess(securityKey);
+			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+		Identifier modifierId = super.validateAccess(sessionKeyT);
 
 		Set objects = new HashSet(transferables.length);
 		for (int i = 0; i < transferables.length; i++) {
@@ -413,8 +413,8 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 
 	public StorableObject_Transferable[] receivePorts(Port_Transferable[] transferables,
 			boolean force,
-			SecurityKey securityKey) throws AMFICOMRemoteException {
-		Identifier modifierId = super.validateAccess(securityKey);
+			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+		Identifier modifierId = super.validateAccess(sessionKeyT);
 
 		Set objects = new HashSet(transferables.length);
 		for (int i = 0; i < transferables.length; i++) {
@@ -454,8 +454,8 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 
 	public StorableObject_Transferable[] receiveMeasurementPorts(MeasurementPort_Transferable[] transferables,
 			boolean force,
-			SecurityKey securityKey) throws AMFICOMRemoteException {
-		Identifier modifierId = super.validateAccess(securityKey);
+			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+		Identifier modifierId = super.validateAccess(sessionKeyT);
 
 		Set objects = new HashSet(transferables.length);
 		for (int i = 0; i < transferables.length; i++) {
@@ -495,8 +495,8 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 
 	public StorableObject_Transferable[] receiveTransmissionPaths(TransmissionPath_Transferable[] transferables,
 			boolean force,
-			SecurityKey securityKey) throws AMFICOMRemoteException {
-		Identifier modifierId = super.validateAccess(securityKey);
+			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+		Identifier modifierId = super.validateAccess(sessionKeyT);
 
 		Set objects = new HashSet(transferables.length);
 		for (int i = 0; i < transferables.length; i++) {
@@ -536,8 +536,8 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 
 	public StorableObject_Transferable[] receiveKISs(KIS_Transferable[] transferables,
 			boolean force,
-			SecurityKey securityKey) throws AMFICOMRemoteException {
-		Identifier modifierId = super.validateAccess(securityKey);
+			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+		Identifier modifierId = super.validateAccess(sessionKeyT);
 
 		Set objects = new HashSet(transferables.length);
 		for (int i = 0; i < transferables.length; i++) {
@@ -577,8 +577,8 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 
 	public StorableObject_Transferable[] receiveMonitoredElements(MonitoredElement_Transferable[] transferables,
 			boolean force,
-			SecurityKey securityKey) throws AMFICOMRemoteException {
-		Identifier modifierId = super.validateAccess(securityKey);
+			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+		Identifier modifierId = super.validateAccess(sessionKeyT);
 
 		Set objects = new HashSet(transferables.length);
 		for (int i = 0; i < transferables.length; i++) {
@@ -618,8 +618,8 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 
 	public StorableObject_Transferable[] receiveLinks(Link_Transferable[] transferables,
 			boolean force,
-			SecurityKey securityKey) throws AMFICOMRemoteException {
-		Identifier modifierId = super.validateAccess(securityKey);
+			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+		Identifier modifierId = super.validateAccess(sessionKeyT);
 
 		Set objects = new HashSet(transferables.length);
 		for (int i = 0; i < transferables.length; i++) {
@@ -659,8 +659,8 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 
 	public StorableObject_Transferable[] receiveCableThreads(CableThread_Transferable[] transferables,
 			boolean force,
-			SecurityKey securityKey) throws AMFICOMRemoteException {
-		Identifier modifierId = super.validateAccess(securityKey);
+			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+		Identifier modifierId = super.validateAccess(sessionKeyT);
 
 		Set objects = new HashSet(transferables.length);
 		for (int i = 0; i < transferables.length; i++) {

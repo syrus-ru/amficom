@@ -1,5 +1,5 @@
 /*
- * $Id: CMGeneralTransmit.java,v 1.20 2005/05/01 17:27:12 arseniy Exp $
+ * $Id: CMGeneralTransmit.java,v 1.21 2005/05/03 14:27:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,13 +32,13 @@ import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
-import com.syrus.AMFICOM.general.corba.SecurityKey;
+import com.syrus.AMFICOM.general.corba.SessionKey_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/05/01 17:27:12 $
+ * @version $Revision: 1.21 $, $Date: 2005/05/03 14:27:01 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -51,9 +51,9 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 
 	/* Transmit multiple objects*/
 
-	public ParameterType_Transferable[] transmitParameterTypes(Identifier_Transferable[] idsT, SecurityKey securityKey)
+	public ParameterType_Transferable[] transmitParameterTypes(Identifier_Transferable[] idsT, SessionKey_Transferable sessionKeyT)
 			throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjects(idsT);
 
@@ -67,9 +67,9 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 		return transferables;
 	}
 
-	public CharacteristicType_Transferable[] transmitCharacteristicTypes(Identifier_Transferable[] idsT, SecurityKey securityKey)
+	public CharacteristicType_Transferable[] transmitCharacteristicTypes(Identifier_Transferable[] idsT, SessionKey_Transferable sessionKeyT)
 			throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjects(idsT);
 
@@ -83,9 +83,9 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 		return transferables;
 	}
 
-	public Characteristic_Transferable[] transmitCharacteristics(Identifier_Transferable[] idsT, SecurityKey securityKey)
+	public Characteristic_Transferable[] transmitCharacteristics(Identifier_Transferable[] idsT, SessionKey_Transferable sessionKeyT)
 			throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjects(idsT);
 
@@ -121,8 +121,8 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 	/* Transmit multiple objects but ids*/
 
 	public ParameterType_Transferable[] transmitParameterTypesButIds(Identifier_Transferable[] idsT,
-			SecurityKey securityKey) throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjectsButIds(idsT, ObjectEntities.PARAMETERTYPE_ENTITY_CODE);
 
@@ -137,8 +137,8 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 	}
 
 	public CharacteristicType_Transferable[] transmitCharacteristicTypesButIds(Identifier_Transferable[] idsT,
-			SecurityKey securityKey) throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjectsButIds(idsT, ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE);
 
@@ -153,8 +153,8 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 	}
 
 	public Characteristic_Transferable[] transmitCharacteristicsButIds(Identifier_Transferable[] idsT,
-			SecurityKey securityKey) throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjectsButIds(idsT, ObjectEntities.CHARACTERISTIC_ENTITY_CODE);
 
@@ -192,9 +192,9 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 	/* Transmit multiple objects but ids by condition*/
 
 	public ParameterType_Transferable[] transmitParameterTypesButIdsCondition(Identifier_Transferable[] idsT,
-			SecurityKey securityKey,
+			SessionKey_Transferable sessionKeyT,
 			StorableObjectCondition_Transferable conditionT) throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjectsButIdsCondition(idsT, conditionT);
 
@@ -209,9 +209,9 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 	}
 
 	public CharacteristicType_Transferable[] transmitCharacteristicTypesButIdsCondition(Identifier_Transferable[] idsT,
-			SecurityKey securityKey,
+			SessionKey_Transferable sessionKeyT,
 			StorableObjectCondition_Transferable conditionT) throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjectsButIdsCondition(idsT, conditionT);
 
@@ -226,9 +226,9 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 	}
 
 	public Characteristic_Transferable[] transmitCharacteristicsButIdsCondition(Identifier_Transferable[] idsT,
-			SecurityKey securityKey,
+			SessionKey_Transferable sessionKeyT,
 			StorableObjectCondition_Transferable conditionT) throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjectsButIdsCondition(idsT, conditionT);
 
@@ -278,8 +278,8 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 	/*	Refresh*/
 
 	public Identifier_Transferable[] transmitRefreshedGeneralObjects(StorableObject_Transferable[] storableObjectsT,
-			SecurityKey securityKey) throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+		super.validateAccess(sessionKeyT);
 
 		Map storableObjectsTMap = new HashMap();
 		for (int i = 0; i < storableObjectsT.length; i++)

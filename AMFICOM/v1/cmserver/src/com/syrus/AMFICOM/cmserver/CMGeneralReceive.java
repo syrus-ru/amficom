@@ -1,5 +1,5 @@
 /*
- * $Id: CMGeneralReceive.java,v 1.15 2005/05/01 17:27:12 arseniy Exp $
+ * $Id: CMGeneralReceive.java,v 1.16 2005/05/03 14:27:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,13 +34,13 @@ import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder;
 import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
-import com.syrus.AMFICOM.general.corba.SecurityKey;
+import com.syrus.AMFICOM.general.corba.SessionKey_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.leserver.corba.LoginServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/05/01 17:27:12 $
+ * @version $Revision: 1.16 $, $Date: 2005/05/03 14:27:01 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -50,13 +50,13 @@ public abstract class CMGeneralReceive extends CMServerPOA {
 
 	/**
 	 * TODO Meaningful implementation*/
-	final Identifier validateAccess(SecurityKey securityKey) throws AMFICOMRemoteException {
+	final Identifier validateAccess(SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		try {
 			LoginServer loginServer = CMServerSessionEnvironment.getInstance().getCMServerServantManager().getLoginServerReference();
 
 			Identifier_TransferableHolder userIdTHolder = new Identifier_TransferableHolder();
 			Identifier_TransferableHolder domainIdTHolder = new Identifier_TransferableHolder();
-			loginServer.validateAccess(securityKey, userIdTHolder, domainIdTHolder);
+			loginServer.validateAccess(sessionKeyT, userIdTHolder, domainIdTHolder);
 			return new Identifier(userIdTHolder.value);
 		}
 		catch (CommunicationException ce) {
@@ -72,8 +72,8 @@ public abstract class CMGeneralReceive extends CMServerPOA {
 
 	public StorableObject_Transferable[] receiveParameterTypes(ParameterType_Transferable[] transferables,
 			boolean force,
-			SecurityKey securityKey) throws AMFICOMRemoteException {
-		Identifier modifierId = this.validateAccess(securityKey);
+			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+		Identifier modifierId = this.validateAccess(sessionKeyT);
 
 		Set objects = new HashSet(transferables.length);
 		for (int i = 0; i < transferables.length; i++) {
@@ -113,8 +113,8 @@ public abstract class CMGeneralReceive extends CMServerPOA {
 
 	public StorableObject_Transferable[] receiveCharacteristicTypes(CharacteristicType_Transferable[] transferables,
 			boolean force,
-			SecurityKey securityKey) throws AMFICOMRemoteException {
-		Identifier modifierId = this.validateAccess(securityKey);
+			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+		Identifier modifierId = this.validateAccess(sessionKeyT);
 
 		Set objects = new HashSet(transferables.length);
 		for (int i = 0; i < transferables.length; i++) {
@@ -154,8 +154,8 @@ public abstract class CMGeneralReceive extends CMServerPOA {
 
 	public StorableObject_Transferable[] receiveCharacteristics(Characteristic_Transferable[] transferables,
 			boolean force,
-			SecurityKey securityKey) throws AMFICOMRemoteException {
-		Identifier modifierId = this.validateAccess(securityKey);
+			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+		Identifier modifierId = this.validateAccess(sessionKeyT);
 
 		Set objects = new HashSet(transferables.length);
 		for (int i = 0; i < transferables.length; i++) {

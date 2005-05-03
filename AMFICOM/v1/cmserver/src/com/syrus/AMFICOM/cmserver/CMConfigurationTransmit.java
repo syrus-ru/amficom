@@ -1,5 +1,5 @@
 /*
- * $Id: CMConfigurationTransmit.java,v 1.21 2005/05/01 17:27:12 arseniy Exp $
+ * $Id: CMConfigurationTransmit.java,v 1.22 2005/05/03 14:27:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -56,13 +56,13 @@ import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.general.corba.SecurityKey;
+import com.syrus.AMFICOM.general.corba.SessionKey_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/05/01 17:27:12 $
+ * @version $Revision: 1.22 $, $Date: 2005/05/03 14:27:01 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -75,9 +75,9 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 
 	/* Transmit multiple objects*/
 
-	public EquipmentType_Transferable[] transmitEquipmentTypes(Identifier_Transferable[] idsT, SecurityKey securityKey)
+	public EquipmentType_Transferable[] transmitEquipmentTypes(Identifier_Transferable[] idsT, SessionKey_Transferable sessionKeyT)
 			throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjects(idsT);
 
@@ -91,9 +91,9 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		return transferables;
 	}
 
-	public PortType_Transferable[] transmitPortTypes(Identifier_Transferable[] idsT, SecurityKey securityKey)
+	public PortType_Transferable[] transmitPortTypes(Identifier_Transferable[] idsT, SessionKey_Transferable sessionKeyT)
 			throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjects(idsT);
 
@@ -107,9 +107,9 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		return transferables;
 	}
 
-	public MeasurementPortType_Transferable[] transmitMeasurementPortTypes(Identifier_Transferable[] idsT, SecurityKey securityKey)
+	public MeasurementPortType_Transferable[] transmitMeasurementPortTypes(Identifier_Transferable[] idsT, SessionKey_Transferable sessionKeyT)
 			throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjects(idsT);
 
@@ -123,9 +123,9 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		return transferables;
 	}
 
-	public TransmissionPathType_Transferable[] transmitTransmissionPathTypes(Identifier_Transferable[] idsT, SecurityKey securityKey)
+	public TransmissionPathType_Transferable[] transmitTransmissionPathTypes(Identifier_Transferable[] idsT, SessionKey_Transferable sessionKeyT)
 			throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjects(idsT);
 
@@ -139,9 +139,9 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		return transferables;
 	}
 
-	public LinkType_Transferable[] transmitLinkTypes(Identifier_Transferable[] idsT, SecurityKey securityKey)
+	public LinkType_Transferable[] transmitLinkTypes(Identifier_Transferable[] idsT, SessionKey_Transferable sessionKeyT)
 			throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjects(idsT);
 
@@ -155,9 +155,9 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		return transferables;
 	}
 
-	public CableLinkType_Transferable[] transmitCableLinkTypes(Identifier_Transferable[] idsT, SecurityKey securityKey)
+	public CableLinkType_Transferable[] transmitCableLinkTypes(Identifier_Transferable[] idsT, SessionKey_Transferable sessionKeyT)
 			throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjects(idsT);
 
@@ -171,9 +171,9 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		return transferables;
 	}
 
-	public CableThreadType_Transferable[] transmitCableThreadTypes(Identifier_Transferable[] idsT, SecurityKey securityKey)
+	public CableThreadType_Transferable[] transmitCableThreadTypes(Identifier_Transferable[] idsT, SessionKey_Transferable sessionKeyT)
 			throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjects(idsT);
 
@@ -189,9 +189,9 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 
 
 
-	public Equipment_Transferable[] transmitEquipments(Identifier_Transferable[] idsT, SecurityKey securityKey)
+	public Equipment_Transferable[] transmitEquipments(Identifier_Transferable[] idsT, SessionKey_Transferable sessionKeyT)
 			throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjects(idsT);
 
@@ -205,9 +205,9 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		return transferables;
 	}
 
-	public Port_Transferable[] transmitPorts(Identifier_Transferable[] idsT, SecurityKey securityKey)
+	public Port_Transferable[] transmitPorts(Identifier_Transferable[] idsT, SessionKey_Transferable sessionKeyT)
 			throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjects(idsT);
 
@@ -221,9 +221,9 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		return transferables;
 	}
 
-	public MeasurementPort_Transferable[] transmitMeasurementPorts(Identifier_Transferable[] idsT, SecurityKey securityKey)
+	public MeasurementPort_Transferable[] transmitMeasurementPorts(Identifier_Transferable[] idsT, SessionKey_Transferable sessionKeyT)
 			throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjects(idsT);
 
@@ -237,9 +237,9 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		return transferables;
 	}
 
-	public TransmissionPath_Transferable[] transmitTransmissionPaths(Identifier_Transferable[] idsT, SecurityKey securityKey)
+	public TransmissionPath_Transferable[] transmitTransmissionPaths(Identifier_Transferable[] idsT, SessionKey_Transferable sessionKeyT)
 			throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjects(idsT);
 
@@ -253,9 +253,9 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		return transferables;
 	}
 
-	public KIS_Transferable[] transmitKISs(Identifier_Transferable[] idsT, SecurityKey securityKey)
+	public KIS_Transferable[] transmitKISs(Identifier_Transferable[] idsT, SessionKey_Transferable sessionKeyT)
 			throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjects(idsT);
 
@@ -269,9 +269,9 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		return transferables;
 	}
 
-	public MonitoredElement_Transferable[] transmitMonitoredElements(Identifier_Transferable[] idsT, SecurityKey securityKey)
+	public MonitoredElement_Transferable[] transmitMonitoredElements(Identifier_Transferable[] idsT, SessionKey_Transferable sessionKeyT)
 			throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjects(idsT);
 
@@ -285,9 +285,9 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		return transferables;
 	}
 
-	public Link_Transferable[] transmitLinks(Identifier_Transferable[] idsT, SecurityKey securityKey)
+	public Link_Transferable[] transmitLinks(Identifier_Transferable[] idsT, SessionKey_Transferable sessionKeyT)
 			throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjects(idsT);
 
@@ -301,9 +301,9 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		return transferables;
 	}
 
-	public CableThread_Transferable[] transmitCableThreads(Identifier_Transferable[] idsT, SecurityKey securityKey)
+	public CableThread_Transferable[] transmitCableThreads(Identifier_Transferable[] idsT, SessionKey_Transferable sessionKeyT)
 			throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjects(idsT);
 
@@ -339,8 +339,8 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	/* Transmit multiple objects but ids*/
 
 	public EquipmentType_Transferable[] transmitEquipmentTypesButIds(Identifier_Transferable[] idsT,
-			SecurityKey securityKey) throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjectsButIds(idsT, ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE);
 
@@ -355,8 +355,8 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public PortType_Transferable[] transmitPortTypesButIds(Identifier_Transferable[] idsT,
-			SecurityKey securityKey) throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjectsButIds(idsT, ObjectEntities.PORTTYPE_ENTITY_CODE);
 
@@ -371,8 +371,8 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public MeasurementPortType_Transferable[] transmitMeasurementPortTypesButIds(Identifier_Transferable[] idsT,
-			SecurityKey securityKey) throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjectsButIds(idsT, ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE);
 
@@ -387,8 +387,8 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public TransmissionPathType_Transferable[] transmitTransmissionPathTypesButIds(Identifier_Transferable[] idsT,
-			SecurityKey securityKey) throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjectsButIds(idsT, ObjectEntities.TRANSPATHTYPE_ENTITY_CODE);
 
@@ -403,8 +403,8 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public LinkType_Transferable[] transmitLinkTypesButIds(Identifier_Transferable[] idsT,
-			SecurityKey securityKey) throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjectsButIds(idsT, ObjectEntities.LINKTYPE_ENTITY_CODE);
 
@@ -419,8 +419,8 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public CableLinkType_Transferable[] transmitCableLinkTypesButIds(Identifier_Transferable[] idsT,
-			SecurityKey securityKey) throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjectsButIds(idsT, ObjectEntities.CABLELINKTYPE_ENTITY_CODE);
 
@@ -435,8 +435,8 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public CableThreadType_Transferable[] transmitCableThreadTypesButIds(Identifier_Transferable[] idsT,
-			SecurityKey securityKey) throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjectsButIds(idsT, ObjectEntities.CABLETHREADTYPE_ENTITY_CODE);
 
@@ -453,8 +453,8 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 
 
 	public Equipment_Transferable[] transmitEquipmentsButIds(Identifier_Transferable[] idsT,
-			SecurityKey securityKey) throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjectsButIds(idsT, ObjectEntities.EQUIPMENT_ENTITY_CODE);
 
@@ -469,8 +469,8 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public Port_Transferable[] transmitPortsButIds(Identifier_Transferable[] idsT,
-			SecurityKey securityKey) throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjectsButIds(idsT, ObjectEntities.PORT_ENTITY_CODE);
 
@@ -485,8 +485,8 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public MeasurementPort_Transferable[] transmitMeasurementPortsButIds(Identifier_Transferable[] idsT,
-			SecurityKey securityKey) throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjectsButIds(idsT, ObjectEntities.MEASUREMENTPORT_ENTITY_CODE);
 
@@ -501,8 +501,8 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public TransmissionPath_Transferable[] transmitTransmissionPathsButIds(Identifier_Transferable[] idsT,
-			SecurityKey securityKey) throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjectsButIds(idsT, ObjectEntities.TRANSPATH_ENTITY_CODE);
 
@@ -517,8 +517,8 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public KIS_Transferable[] transmitKISsButIds(Identifier_Transferable[] idsT,
-			SecurityKey securityKey) throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjectsButIds(idsT, ObjectEntities.KIS_ENTITY_CODE);
 
@@ -533,8 +533,8 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public MonitoredElement_Transferable[] transmitMonitoredElementsButIds(Identifier_Transferable[] idsT,
-			SecurityKey securityKey) throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjectsButIds(idsT, ObjectEntities.ME_ENTITY_CODE);
 
@@ -549,8 +549,8 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public Link_Transferable[] transmitLinksButIds(Identifier_Transferable[] idsT,
-			SecurityKey securityKey) throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjectsButIds(idsT, ObjectEntities.LINK_ENTITY_CODE);
 
@@ -565,8 +565,8 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public CableThread_Transferable[] transmitCableThreadsButIds(Identifier_Transferable[] idsT,
-			SecurityKey securityKey) throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjectsButIds(idsT, ObjectEntities.CABLETHREAD_ENTITY_CODE);
 
@@ -604,9 +604,9 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	/* Transmit multiple objects but ids by condition*/
 
 	public EquipmentType_Transferable[] transmitEquipmentTypesButIdsCondition(Identifier_Transferable[] idsT,
-			SecurityKey securityKey,
+			SessionKey_Transferable sessionKeyT,
 			StorableObjectCondition_Transferable conditionT) throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjectsButIdsCondition(idsT, conditionT);
 
@@ -621,9 +621,9 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public PortType_Transferable[] transmitPortTypesButIdsCondition(Identifier_Transferable[] idsT,
-			SecurityKey securityKey,
+			SessionKey_Transferable sessionKeyT,
 			StorableObjectCondition_Transferable conditionT) throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjectsButIdsCondition(idsT, conditionT);
 
@@ -638,9 +638,9 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public MeasurementPortType_Transferable[] transmitMeasurementPortTypesButIdsCondition(Identifier_Transferable[] idsT,
-			SecurityKey securityKey,
+			SessionKey_Transferable sessionKeyT,
 			StorableObjectCondition_Transferable conditionT) throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjectsButIdsCondition(idsT, conditionT);
 
@@ -655,9 +655,9 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public TransmissionPathType_Transferable[] transmitTransmissionPathTypesButIdsCondition(Identifier_Transferable[] idsT,
-			SecurityKey securityKey,
+			SessionKey_Transferable sessionKeyT,
 			StorableObjectCondition_Transferable conditionT) throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjectsButIdsCondition(idsT, conditionT);
 
@@ -672,9 +672,9 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public LinkType_Transferable[] transmitLinkTypesButIdsCondition(Identifier_Transferable[] idsT,
-			SecurityKey securityKey,
+			SessionKey_Transferable sessionKeyT,
 			StorableObjectCondition_Transferable conditionT) throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjectsButIdsCondition(idsT, conditionT);
 
@@ -689,9 +689,9 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public CableLinkType_Transferable[] transmitCableLinkTypesButIdsCondition(Identifier_Transferable[] idsT,
-			SecurityKey securityKey,
+			SessionKey_Transferable sessionKeyT,
 			StorableObjectCondition_Transferable conditionT) throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjectsButIdsCondition(idsT, conditionT);
 
@@ -706,9 +706,9 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public CableThreadType_Transferable[] transmitCableThreadTypesButIdsCondition(Identifier_Transferable[] idsT,
-			SecurityKey securityKey,
+			SessionKey_Transferable sessionKeyT,
 			StorableObjectCondition_Transferable conditionT) throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjectsButIdsCondition(idsT, conditionT);
 
@@ -725,9 +725,9 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 
 
 	public Equipment_Transferable[] transmitEquipmentsButIdsCondition(Identifier_Transferable[] idsT,
-			SecurityKey securityKey,
+			SessionKey_Transferable sessionKeyT,
 			StorableObjectCondition_Transferable conditionT) throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjectsButIdsCondition(idsT, conditionT);
 
@@ -742,9 +742,9 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public Port_Transferable[] transmitPortsButIdsCondition(Identifier_Transferable[] idsT,
-			SecurityKey securityKey,
+			SessionKey_Transferable sessionKeyT,
 			StorableObjectCondition_Transferable conditionT) throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjectsButIdsCondition(idsT, conditionT);
 
@@ -759,9 +759,9 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public MeasurementPort_Transferable[] transmitMeasurementPortsButIdsCondition(Identifier_Transferable[] idsT,
-			SecurityKey securityKey,
+			SessionKey_Transferable sessionKeyT,
 			StorableObjectCondition_Transferable conditionT) throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjectsButIdsCondition(idsT, conditionT);
 
@@ -776,9 +776,9 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public TransmissionPath_Transferable[] transmitTransmissionPathsButIdsCondition(Identifier_Transferable[] idsT,
-			SecurityKey securityKey,
+			SessionKey_Transferable sessionKeyT,
 			StorableObjectCondition_Transferable conditionT) throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjectsButIdsCondition(idsT, conditionT);
 
@@ -793,9 +793,9 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public KIS_Transferable[] transmitKISsButIdsCondition(Identifier_Transferable[] idsT,
-			SecurityKey securityKey,
+			SessionKey_Transferable sessionKeyT,
 			StorableObjectCondition_Transferable conditionT) throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjectsButIdsCondition(idsT, conditionT);
 
@@ -810,9 +810,9 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public MonitoredElement_Transferable[] transmitMonitoredElementsButIdsCondition(Identifier_Transferable[] idsT,
-			SecurityKey securityKey,
+			SessionKey_Transferable sessionKeyT,
 			StorableObjectCondition_Transferable conditionT) throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjectsButIdsCondition(idsT, conditionT);
 
@@ -827,9 +827,9 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public Link_Transferable[] transmitLinksButIdsCondition(Identifier_Transferable[] idsT,
-			SecurityKey securityKey,
+			SessionKey_Transferable sessionKeyT,
 			StorableObjectCondition_Transferable conditionT) throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjectsButIdsCondition(idsT, conditionT);
 
@@ -844,9 +844,9 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	}
 
 	public CableThread_Transferable[] transmitCableThreadsButIdsCondition(Identifier_Transferable[] idsT,
-			SecurityKey securityKey,
+			SessionKey_Transferable sessionKeyT,
 			StorableObjectCondition_Transferable conditionT) throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+		super.validateAccess(sessionKeyT);
 
 		Set objects = this.getObjectsButIdsCondition(idsT, conditionT);
 
@@ -896,8 +896,8 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	/*	Refresh*/
 
 	public Identifier_Transferable[] transmitRefreshedConfigurationObjects(StorableObject_Transferable[] storableObjectsT,
-			SecurityKey securityKey) throws AMFICOMRemoteException {
-		super.validateAccess(securityKey);
+			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+		super.validateAccess(sessionKeyT);
 
 		Map storableObjectsTMap = new HashMap();
 		for (int i = 0; i < storableObjectsT.length; i++)
