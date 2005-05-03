@@ -1,5 +1,5 @@
 /*
- * $Id: PasswordVerifier.java,v 1.1 2005/05/03 13:44:15 bass Exp $
+ * $Id: PasswordVerifier.java,v 1.2 2005/05/03 13:44:57 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
  * This class brings the same functionality as the Linux crypt() function does.
  * See <b><tt>crypt(3)</tt></b> manual entry for details.
  *
- * @version $Revision: 1.1 $, $Date: 2005/05/03 13:44:15 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/03 13:44:57 $
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
  * @module leserver_v1
@@ -270,7 +270,6 @@ public final class PasswordVerifier {
 	/**
 	 * Extracts salt from an encrypted password.
 	 *
-	 * @todo Revert to the original implementation as soon as possible.
 	 * @param encryptedKey encrypted password.
 	 * @return MD5 salt.
 	 */
