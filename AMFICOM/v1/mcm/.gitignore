@@ -10,9 +10,10 @@
 *.swp
 *.log
 .settings
+.classpath
+.project
 classes
 logs
 cache
 test
-.settings
 .idl

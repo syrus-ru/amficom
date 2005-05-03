@@ -15,3 +15,5 @@ orb.db
 gc
 SerializedLRUMaps
 .settings
+.classpath
+.project
