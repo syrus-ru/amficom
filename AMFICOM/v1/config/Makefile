@@ -65,27 +65,6 @@ install: $(LIBNAME) $(LIBDIR)
 	$(CP) $^
 
 
-#### Test ####
-
-TESTDIR = test
-TESTSOURCES := com/syrus/AMFICOM/configuration/CommonConfigurationTest.java \
-	com/syrus/AMFICOM/configuration/TestTransmissionPathType.java \
-	com/syrus/AMFICOM/configuration/TestTransmissionPath.java \
-	com/syrus/AMFICOM/configuration/TestMonitoredElement.java
-
-JUNITCLASSPATH = /mnt/d/eclipse/3.1M4/plugins/org.junit_3.8.1/junit.jar
-
-.PHONY:	test
-test: $(LIBNAME)
-	$(JAVAC) $(JAVACFLAGS) \
-		-classpath $(LIBNAME):$(APPCLASSPATH):../general_v1/classes:$(JUNITCLASSPATH) \
-		$(addprefix $(TESTDIR)/,$(TESTSOURCES))
-
-.PHONY:	cleantest
-cleantest:
-	$(RM) $(addprefix $(CLASSDIR)/,$(subst .java,*.class,$(TESTSOURCES)))
-
-
 
 #### Archive ####
 .PHONY:	arch

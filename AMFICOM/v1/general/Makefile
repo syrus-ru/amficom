@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.37 2005/03/09 15:10:27 bass Exp $
+# $Id: Makefile,v 1.38 2005/05/03 14:19:41 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -59,12 +59,6 @@ $(LIBDIR):
 	mkdir -p $@
 
 
-.PHONY: idlclean
-idlclean:
-	cd $(SRCDIR)/com/syrus/AMFICOM/general && $(RM) -r $(shell cat $(SRCDIR)/com/syrus/AMFICOM/general/.cvsignore)
-	cd $(SRCDIR)/com/syrus/AMFICOM/general/corba && $(RM) -r $(shell cat $(SRCDIR)/com/syrus/AMFICOM/general/corba/.cvsignore)
-	$(RM) .idl
-
 .PHONY:	clean
 clean:	cleanmach cleancorba
 	$(RM) $(LIBNAME)
@@ -74,38 +68,16 @@ cleanmach:
 	$(RM) $(subst $$,\$$,$(wildcard $(CLASSDIR)/com/syrus/AMFICOM/general/*.class))
 	$(RM) .mach
 
-.PHONY: cleandeprecatedcorba
-cleandeprecatedcorba:
-	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/CORBA/General
-	$(RM) -r $(SCRDIR)/com/syrus/AMFICOM/CORBA/General
-
 .PHONY:	cleancorba
-cleancorba: idlclean cleandeprecatedcorba
+cleancorba:
 	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/general/corba
+	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/general/corba
 	$(RM) .corba
 
 #### Install ####
 .PHONY:	install
 install: $(LIBNAME) $(LIBDIR)
 	$(CP) $^
-
-#### Test ####
-TESTDIR = test
-TESTSOURCES := com/syrus/AMFICOM/general/DefaultIdentifierGeneratorServer.java \
-		com/syrus/AMFICOM/general/CommonGeneralTest.java \
-		com/syrus/AMFICOM/general/TestParameterType.java
-JUNITCLASSPATH = /mnt/d/eclipse/3.1M4/plugins/org.junit_3.8.1/junit.jar
-
-.PHONY:	test
-test: $(LIBNAME)
-	$(JAVAC) $(JAVACFLAGS) \
-		-classpath $(LIBNAME):$(APPCLASSPATH):$(JUNITCLASSPATH) \
-		$(addprefix $(TESTDIR)/,$(TESTSOURCES))
-
-.PHONY:	cleantest
-cleantest:
-	$(RM) $(addprefix $(CLASSDIR)/,$(subst .java,*.class,$(TESTSOURCES)))
-
 
 #### Archive ####
 .PHONY:	arch
