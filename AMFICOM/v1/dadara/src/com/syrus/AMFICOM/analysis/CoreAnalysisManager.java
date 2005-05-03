@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.60 2005/05/01 10:56:50 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.61 2005/05/03 06:27:20 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.60 $, $Date: 2005/05/01 10:56:50 $
+ * @version $Revision: 1.61 $, $Date: 2005/05/03 06:27:20 $
  * @module
  */
 
@@ -204,7 +204,7 @@ public class CoreAnalysisManager
 			double[] noiseArray)
 	{
 		// FIXME: debug output of IA params
-		System.err.println("cSE: "
+		System.out.println("cSE: "
 			+ minLevel
 			+ "/" + minWeld
 			+ "/" + minConnector
@@ -479,7 +479,7 @@ public class CoreAnalysisManager
             long t0 = System.currentTimeMillis();
 			TracesAverages av = findTracesAverages(bsSet, true, false, true);
             long t1 = System.currentTimeMillis();
-            System.out.println("makeAnalysis: findTracesAverages: " + (t1-t0)); // FIXME: debug: analysis timing
+            System.out.println("makeAnalysis: findTracesAverages: dt " + (t1-t0)); // FIXME: debug: analysis timing
 			return makeAnalysis(av, ap);
 		} catch (IncompatibleTracesException e) {
 			// одна рефлектограмма всегда совместима с самой собой
