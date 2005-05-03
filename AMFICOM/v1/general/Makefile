@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.38 2005/05/03 14:19:41 arseniy Exp $
+# $Id: Makefile,v 1.39 2005/05/03 19:21:54 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -28,7 +28,8 @@ $(LIBNAME): .mach
 	$(JAVAC) \
 		$(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH):$(CLASSDIR) \
-		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/general/*.java)
+		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/general/*.java) \
+		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/security/*.java)
 	touch $@
 
 .PHONY: idl
@@ -50,7 +51,8 @@ corba: .corba
 		$(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
 		-classpath $(APPCLASSPATH):$(CLASSDIR) \
 		-sourcepath $(SRCDIR) \
-		$(SRCDIR)/com/syrus/AMFICOM/general/corba/*.java
+		$(SRCDIR)/com/syrus/AMFICOM/general/corba/*.java \
+		$(SRCDIR)/com/syrus/AMFICOM/security/corba/*.java
 	touch $@
 
 $(SRCDIR):
@@ -66,12 +68,15 @@ clean:	cleanmach cleancorba
 .PHONY:	cleanmach
 cleanmach:
 	$(RM) $(subst $$,\$$,$(wildcard $(CLASSDIR)/com/syrus/AMFICOM/general/*.class))
+	$(RM) $(subst $$,\$$,$(wildcard $(CLASSDIR)/com/syrus/AMFICOM/security/*.class))
 	$(RM) .mach
 
 .PHONY:	cleancorba
 cleancorba:
 	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/general/corba
+	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/security/corba
 	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/general/corba
+	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/security/corba
 	$(RM) .corba
 
 #### Install ####
