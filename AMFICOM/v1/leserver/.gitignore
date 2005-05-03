@@ -12,3 +12,6 @@ classes
 logs
 cache
 orb.db
+.classpath
+.project
+.settings
