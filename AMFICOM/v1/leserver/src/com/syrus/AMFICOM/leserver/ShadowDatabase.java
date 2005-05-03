@@ -1,5 +1,5 @@
 /*
- * $Id: ShadowDatabase.java,v 1.1 2005/05/02 19:03:03 arseniy Exp $
+ * $Id: ShadowDatabase.java,v 1.2 2005/05/03 12:13:37 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/05/02 19:03:03 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/03 12:13:37 $
  * @author $Author: arseniy $
  * @module leserver_v1
  */
@@ -40,7 +40,7 @@ final class ShadowDatabase {
 	private StringBuffer retrieveQuery(StringBuffer condition) {
 		final StringBuffer sql = new StringBuffer(StorableObjectDatabase.SQL_SELECT
 				+ COLUMN_USER_ID + StorableObjectDatabase.COMMA
-				+ COLUMN_PASSWORD + StorableObjectDatabase.COMMA
+				+ COLUMN_PASSWORD
 				+ StorableObjectDatabase.SQL_FROM + TABLE_NAME_SHADOW);
 
 		if (condition != null && condition.length() != 0) {
@@ -66,7 +66,7 @@ final class ShadowDatabase {
 			throw new ObjectNotFoundException("Cannot find password for user '"+ userId + "'");
 		}
 		catch (SQLException sqle) {
-			String mesg = "Cannot retrieve user password" + sqle.getMessage();
+			String mesg = "Cannot retrieve user password " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
