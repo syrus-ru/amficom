@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.84 2005/05/01 17:30:20 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.85 2005/05/03 15:55:24 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -53,7 +53,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.84 $, $Date: 2005/05/01 17:30:20 $
+ * @version $Revision: 1.85 $, $Date: 2005/05/03 15:55:24 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -95,6 +95,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 	public static final int KIS_MAX_OPENED_CONNECTIONS = 1;
 	public static final int KIS_CONNECTION_TIMEOUT = 120;	//sec
 
+	private static final String PASSWORD = "MCM";
 	/*	Error codes for method processFall()	(remove results, ...)*/
 	public static final int FALL_CODE_RECEIVE_RESULTS = 1;
 
@@ -185,7 +186,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		/*	Login*/
 		MCMSessionEnvironment sessionEnvironment = MCMSessionEnvironment.getInstance();
 		try {
-			sessionEnvironment.login(user.getLogin(), "password");
+			sessionEnvironment.login(user.getLogin(), PASSWORD);
 		}
 		catch (CommunicationException ce) {
 			Log.errorException(ce);
