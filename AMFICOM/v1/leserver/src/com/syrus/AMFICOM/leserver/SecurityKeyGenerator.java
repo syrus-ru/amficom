@@ -1,5 +1,5 @@
 /*
- * $Id: SecurityKeyGenerator.java,v 1.2 2005/05/02 19:06:47 arseniy Exp $
+ * $Id: SecurityKeyGenerator.java,v 1.3 2005/05/03 12:02:24 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.corba.SecurityKey;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/05/02 19:06:47 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/03 12:02:24 $
  * @author $Author: arseniy $
  * @module leserver_v1
  */
@@ -24,8 +24,8 @@ final class SecurityKeyGenerator {
 		assert false;
 	}
 
-	protected static SecurityKey generateSecurityKey(Identifier userId, String password) {
-		String str = userId.toString() + password;
+	protected static SecurityKey generateSecurityKey(Identifier userId) {
+		String str = userId.toString() + Long.toString(System.currentTimeMillis());
 		return new SecurityKey(str.substring(0, LENGTH));
 	}
 }
