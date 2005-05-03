@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicsPanel.java,v 1.2 2005/04/18 15:30:58 stas Exp $
+ * $Id: CharacteristicsPanel.java,v 1.3 2005/05/03 13:33:27 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.resource.*;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/04/18 15:30:58 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/03 13:33:27 $
  * @module generalclient_v1
  */
 
@@ -300,7 +300,7 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 		elementSelected(selectedTypeSort);
 	}
 
-	void tableUpdated(Object value, int row, int col) {
+	protected void tableUpdated(Object value, int row, int col) {
 		String name = (String) tModel.getValueAt(row, 0);
 		Collection chars = getCharacteristics();
 		if (chars != null)
@@ -356,7 +356,7 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 		return null;
 	}
 
-	void setCharacteristicValue(Collection characteristics, String name,
+	protected void setCharacteristicValue(Collection characteristics, String name,
 			String value) {
 		for (Iterator it = characteristics.iterator(); it.hasNext();) {
 			Characteristic ch = (Characteristic) it.next();
