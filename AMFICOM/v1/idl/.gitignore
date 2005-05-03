@@ -2,7 +2,6 @@ classes
 docs
 lib
 src
-test
 load_corba.bat
 *.deploy
 *.jar

@@ -1,5 +1,5 @@
 /*
- * $Id: event.idl,v 1.14 2005/04/23 17:36:31 cvsadmin Exp $
+ * $Id: event.idl,v 1.13 2005/04/05 10:27:31 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,6 @@ module corba {
 		general::corba::WString256 description;
 
 		general::corba::IdentifierSeq_Transferable parameter_type_ids;
-		general::corba::IdentifierSeq_Transferable user_ids;
 	};
 
 	typedef sequence <EventType_Transferable> EventTypeSeq_Transferable;

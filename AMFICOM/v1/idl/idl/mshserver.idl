@@ -1,5 +1,5 @@
 /*-
- * $Id: mshserver.idl,v 1.6 2005/04/27 15:19:43 arseniy Exp $
+ * $Id: mshserver.idl,v 1.4 2005/04/08 08:42:24 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,11 +19,11 @@ module mshserver {
 module corba {
 	interface MSHServer: general::corba::IdentifierGeneratorServer {
 		void delete(in general::corba::Identifier_Transferable id,
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		void deleteList(in general::corba::IdentifierSeq_Transferable ids,
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);		
 
 		/*-************************************************************
@@ -33,55 +33,55 @@ module corba {
 		general::corba::StorableObject_Transferable receiveSiteNode(
 				in map::corba::SiteNode_Transferable siteNode,
 				in boolean force, 	
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		general::corba::StorableObject_Transferable receiveTopologicalNode(
 				in map::corba::TopologicalNode_Transferable topologicalNode,
 				in boolean force, 	
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		general::corba::StorableObject_Transferable receiveNodeLink(
 				in map::corba::NodeLink_Transferable nodeLink,
 				in boolean force, 	
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);	
 
 		general::corba::StorableObject_Transferable receiveMark(
 				in map::corba::Mark_Transferable mark,
 				in boolean force, 	
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);	
 
 		general::corba::StorableObject_Transferable receivePhysicalLink(
 				in map::corba::PhysicalLink_Transferable physicalLink,
 				in boolean force, 	
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);	
 
 		general::corba::StorableObject_Transferable receiveCollector(
 				in map::corba::Collector_Transferable collector,
 				in boolean force, 	
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);	
 
 		general::corba::StorableObject_Transferable receiveMap(
 				in map::corba::Map_Transferable map,
 				in boolean force, 	
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);	
 
 		general::corba::StorableObject_Transferable receiveSiteNodeType(
 				in map::corba::SiteNodeType_Transferable siteNodeType,
 				in boolean force, 	
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		general::corba::StorableObject_Transferable receivePhysicalLinkType(
 				in map::corba::PhysicalLinkType_Transferable physicalLinkType,
 				in boolean force, 	
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		/*-************************************************************
@@ -91,55 +91,55 @@ module corba {
 		general::corba::StorableObjectSeq_Transferable receiveSiteNodes(
 				in map::corba::SiteNodeSeq_Transferable siteNodes,
 				in boolean force, 	
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		general::corba::StorableObjectSeq_Transferable receiveTopologicalNodes(
 				in map::corba::TopologicalNodeSeq_Transferable topologicalNodes,
 				in boolean force, 	
-		 		in general::corba::SecurityKey security_key)
+		 		in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		general::corba::StorableObjectSeq_Transferable receiveNodeLinks(
 				in map::corba::NodeLinkSeq_Transferable nodeLinks,
 				in boolean force, 	
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);	
 
 		general::corba::StorableObjectSeq_Transferable receiveMarks(
 				in map::corba::MarkSeq_Transferable marks,
 				in boolean force, 	
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);	
 
 		general::corba::StorableObjectSeq_Transferable receivePhysicalLinks(
 				in map::corba::PhysicalLinkSeq_Transferable physicalLinks,
 				in boolean force, 	
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);	
 
 		general::corba::StorableObjectSeq_Transferable receiveCollectors(
 				in map::corba::CollectorSeq_Transferable collectors,
 				in boolean force, 	
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);	
 
 		general::corba::StorableObjectSeq_Transferable receiveMaps(
 				in map::corba::MapSeq_Transferable maps,
 				in boolean force, 	
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);	
 
 		general::corba::StorableObjectSeq_Transferable receiveSiteNodeTypes(
 				in map::corba::SiteNodeTypeSeq_Transferable siteNodeTypes,
 				in boolean force, 	
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		general::corba::StorableObjectSeq_Transferable receivePhysicalLinkTypes(
 				in map::corba::PhysicalLinkTypeSeq_Transferable physicalLinkTypes,
 				in boolean force, 	
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		/*-************************************************************
@@ -148,47 +148,47 @@ module corba {
 
 		map::corba::SiteNode_Transferable transmitSiteNode(
 				in general::corba::Identifier_Transferable id,
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		map::corba::TopologicalNode_Transferable transmitTopologicalNode(
 				in general::corba::Identifier_Transferable id,
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		map::corba::NodeLink_Transferable transmitNodeLink(
 				in general::corba::Identifier_Transferable id,
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);	
 
 		map::corba::Mark_Transferable transmitMark(
 				in general::corba::Identifier_Transferable id,
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);	
 
 		map::corba::PhysicalLink_Transferable transmitPhysicalLink(
 				in general::corba::Identifier_Transferable id,
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);	
 
 		map::corba::Collector_Transferable transmitCollector(
 				in general::corba::Identifier_Transferable id,
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);	
 
 		map::corba::Map_Transferable transmitMap(
 				in general::corba::Identifier_Transferable id,
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);	
 
 		map::corba::SiteNodeType_Transferable transmitSiteNodeType(
 				in general::corba::Identifier_Transferable id,	
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		map::corba::PhysicalLinkType_Transferable transmitPhysicalLinkType(
 				in general::corba::Identifier_Transferable id,
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		/*-************************************************************
@@ -197,47 +197,47 @@ module corba {
 
 		map::corba::SiteNodeSeq_Transferable transmitSiteNodes(
 				in general::corba::IdentifierSeq_Transferable ids,
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		map::corba::TopologicalNodeSeq_Transferable transmitTopologicalNodes(
 				in general::corba::IdentifierSeq_Transferable ids,
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		map::corba::NodeLinkSeq_Transferable transmitNodeLinks(
 				in general::corba::IdentifierSeq_Transferable ids,
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);	
 
 		map::corba::MarkSeq_Transferable transmitMarks(
 				in general::corba::IdentifierSeq_Transferable ids,
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);	
 
 		map::corba::PhysicalLinkSeq_Transferable transmitPhysicalLinks(
 				in general::corba::IdentifierSeq_Transferable ids,
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);	
 
 		map::corba::CollectorSeq_Transferable transmitCollectors(
 				in general::corba::IdentifierSeq_Transferable ids,
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);	
 
 		map::corba::MapSeq_Transferable transmitMaps(
 				in general::corba::IdentifierSeq_Transferable ids,
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);	
 
 		map::corba::SiteNodeTypeSeq_Transferable transmitSiteNodeTypes(
 				in general::corba::IdentifierSeq_Transferable ids,	
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		map::corba::PhysicalLinkTypeSeq_Transferable transmitPhysicalLinkTypes(
 				in general::corba::IdentifierSeq_Transferable ids,
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		/*-************************************************************
@@ -247,91 +247,91 @@ module corba {
 		general::corba::StorableObject_Transferable receiveSchemeProtoGroup(
 				in scheme::corba::SchemeProtoGroup_Transferable schemeProtoGroup,
 				in boolean force, 	
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		general::corba::StorableObject_Transferable receiveSchemeProtoElement(
 				in scheme::corba::SchemeProtoElement_Transferable schemeProtoElement,
 				in boolean force, 	
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		general::corba::StorableObject_Transferable receiveScheme(
 				in scheme::corba::Scheme_Transferable scheme,
 				in boolean force, 	
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		general::corba::StorableObject_Transferable receiveSchemeElement(
 				in scheme::corba::SchemeElement_Transferable schemeElement,
 				in boolean force, 	
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		general::corba::StorableObject_Transferable receiveSchemeOptimizeInfo(
 				in scheme::corba::SchemeOptimizeInfo_Transferable schemeOptimizeInfo,
 				in boolean force, 	
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		general::corba::StorableObject_Transferable receiveSchemeMonitoringSolution(
 				in scheme::corba::SchemeMonitoringSolution_Transferable schemeMonitoringSolution,
 				in boolean force, 	
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		general::corba::StorableObject_Transferable receiveSchemeDevice(
 				in scheme::corba::SchemeDevice_Transferable schemeDevice,
 				in boolean force, 	
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		general::corba::StorableObject_Transferable receiveSchemePort(
 				in scheme::corba::SchemePort_Transferable schemePort,
 				in boolean force, 	
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		general::corba::StorableObject_Transferable receiveSchemeCablePort(
 				in scheme::corba::SchemeCablePort_Transferable schemeCablePort,
 				in boolean force, 	
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		general::corba::StorableObject_Transferable receiveSchemeLink(
 				in scheme::corba::SchemeLink_Transferable schemeLink,
 				in boolean force, 	
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		general::corba::StorableObject_Transferable receiveSchemeCableLink(
 				in scheme::corba::SchemeCableLink_Transferable schemeCableLink,
 				in boolean force, 	
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		general::corba::StorableObject_Transferable receiveSchemeCableThread(
 				in scheme::corba::SchemeCableThread_Transferable schemeCableThread,
 				in boolean force, 	
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		general::corba::StorableObject_Transferable receiveCableChannelingItem(
 				in scheme::corba::CableChannelingItem_Transferable cableChannelingItem,
 				in boolean force, 	
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		general::corba::StorableObject_Transferable receiveSchemePath(
 				in scheme::corba::SchemePath_Transferable schemePath,
 				in boolean force, 	
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		general::corba::StorableObject_Transferable receivePathElement(
 				in scheme::corba::PathElement_Transferable pathElement,
 				in boolean force, 	
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		/*-************************************************************
@@ -341,91 +341,91 @@ module corba {
 		general::corba::StorableObjectSeq_Transferable receiveSchemeProtoGroups(
 				in scheme::corba::SchemeProtoGroupSeq_Transferable schemeProtoGroups,
 				in boolean force, 
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		general::corba::StorableObjectSeq_Transferable receiveSchemeProtoElements(
 				in scheme::corba::SchemeProtoElementSeq_Transferable schemeProtoElements,
 				in boolean force, 
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		general::corba::StorableObjectSeq_Transferable receiveSchemes(
 				in scheme::corba::SchemeSeq_Transferable schemes,
 				in boolean force, 
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		general::corba::StorableObjectSeq_Transferable receiveSchemeElements(
 				in scheme::corba::SchemeElementSeq_Transferable schemeElements,
 				in boolean force, 
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		general::corba::StorableObjectSeq_Transferable receiveSchemeOptimizeInfos(
 				in scheme::corba::SchemeOptimizeInfoSeq_Transferable schemeOptimizeInfos,
 				in boolean force, 
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		general::corba::StorableObjectSeq_Transferable receiveSchemeMonitoringSolutions(
 				in scheme::corba::SchemeMonitoringSolutionSeq_Transferable schemeMonitoringSolutions,
 				in boolean force, 
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		general::corba::StorableObjectSeq_Transferable receiveSchemeDevices(
 				in scheme::corba::SchemeDeviceSeq_Transferable schemeDevices,
 				in boolean force, 
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		general::corba::StorableObjectSeq_Transferable receiveSchemePorts(
 				in scheme::corba::SchemePortSeq_Transferable schemePorts,
 				in boolean force, 
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		general::corba::StorableObjectSeq_Transferable receiveSchemeCablePorts(
 				in scheme::corba::SchemeCablePortSeq_Transferable schemeCablePorts,
 				in boolean force, 
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		general::corba::StorableObjectSeq_Transferable receiveSchemeLinks(
 				in scheme::corba::SchemeLinkSeq_Transferable schemeLinks,
 				in boolean force, 
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		general::corba::StorableObjectSeq_Transferable receiveSchemeCableLinks(
 				in scheme::corba::SchemeCableLinkSeq_Transferable schemeCableLinks,
 				in boolean force, 
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		general::corba::StorableObjectSeq_Transferable receiveSchemeCableThreads(
 				in scheme::corba::SchemeCableThreadSeq_Transferable schemeCableThreads,
 				in boolean force, 
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		general::corba::StorableObjectSeq_Transferable receiveCableChannelingItems(
 				in scheme::corba::CableChannelingItemSeq_Transferable cableChannelingItems,
 				in boolean force, 
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		general::corba::StorableObjectSeq_Transferable receiveSchemePaths(
 				in scheme::corba::SchemePathSeq_Transferable schemePaths,
 				in boolean force, 
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		general::corba::StorableObjectSeq_Transferable receivePathElements(
 				in scheme::corba::PathElementSeq_Transferable pathElements,
 				in boolean force, 
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		/*-************************************************************
@@ -434,77 +434,77 @@ module corba {
 
 		scheme::corba::SchemeProtoGroup_Transferable transmitSchemeProtoGroup(
 				in general::corba::Identifier_Transferable id,
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		scheme::corba::SchemeProtoElement_Transferable transmitSchemeProtoElement(
 				in general::corba::Identifier_Transferable id,
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		scheme::corba::Scheme_Transferable transmitScheme(
 				in general::corba::Identifier_Transferable id,
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		scheme::corba::SchemeElement_Transferable transmitSchemeElement(
 				in general::corba::Identifier_Transferable id,
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		scheme::corba::SchemeOptimizeInfo_Transferable transmitSchemeOptimizeInfo(
 				in general::corba::Identifier_Transferable id,
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		scheme::corba::SchemeMonitoringSolution_Transferable transmitSchemeMonitoringSolution(
 				in general::corba::Identifier_Transferable id,
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		scheme::corba::SchemeDevice_Transferable transmitSchemeDevice(
 				in general::corba::Identifier_Transferable id,
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		scheme::corba::SchemePort_Transferable transmitSchemePort(
 				in general::corba::Identifier_Transferable id,
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		scheme::corba::SchemeCablePort_Transferable transmitSchemeCablePort(
 				in general::corba::Identifier_Transferable id,
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		scheme::corba::SchemeLink_Transferable transmitSchemeLink(
 				in general::corba::Identifier_Transferable id,
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		scheme::corba::SchemeCableLink_Transferable transmitSchemeCableLink(
 				in general::corba::Identifier_Transferable id,
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		scheme::corba::SchemeCableThread_Transferable transmitSchemeCableThread(
 				in general::corba::Identifier_Transferable id,
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		scheme::corba::CableChannelingItem_Transferable transmitCableChannelingItem(
 				in general::corba::Identifier_Transferable id,
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		scheme::corba::SchemePath_Transferable transmitSchemePath(
 				in general::corba::Identifier_Transferable id,
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		scheme::corba::PathElement_Transferable transmitPathElement(
 				in general::corba::Identifier_Transferable id,
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		/*-************************************************************
@@ -513,77 +513,77 @@ module corba {
 
 		scheme::corba::SchemeProtoGroupSeq_Transferable transmitSchemeProtoGroups(
 				in general::corba::IdentifierSeq_Transferable ids,
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		scheme::corba::SchemeProtoElementSeq_Transferable transmitSchemeProtoElements(
 				in general::corba::IdentifierSeq_Transferable ids,
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		scheme::corba::SchemeSeq_Transferable transmitSchemes(
 				in general::corba::IdentifierSeq_Transferable ids,
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		scheme::corba::SchemeElementSeq_Transferable transmitSchemeElements(
 				in general::corba::IdentifierSeq_Transferable ids,
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		scheme::corba::SchemeOptimizeInfoSeq_Transferable transmitSchemeOptimizeInfos(
 				in general::corba::IdentifierSeq_Transferable ids,
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		scheme::corba::SchemeMonitoringSolutionSeq_Transferable transmitSchemeMonitoringSolutions(
 				in general::corba::IdentifierSeq_Transferable ids,
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		scheme::corba::SchemeDeviceSeq_Transferable transmitSchemeDevices(
 				in general::corba::IdentifierSeq_Transferable ids,
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		scheme::corba::SchemePortSeq_Transferable transmitSchemePorts(
 				in general::corba::IdentifierSeq_Transferable ids,
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		scheme::corba::SchemeCablePortSeq_Transferable transmitSchemeCablePorts(
 				in general::corba::IdentifierSeq_Transferable ids,
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		scheme::corba::SchemeLinkSeq_Transferable transmitSchemeLinks(
 				in general::corba::IdentifierSeq_Transferable ids,
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		scheme::corba::SchemeCableLinkSeq_Transferable transmitSchemeCableLinks(
 				in general::corba::IdentifierSeq_Transferable ids,
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		scheme::corba::SchemeCableThreadSeq_Transferable transmitSchemeCableThreads(
 				in general::corba::IdentifierSeq_Transferable ids,
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		scheme::corba::CableChannelingItemSeq_Transferable transmitCableChannelingItems(
 				in general::corba::IdentifierSeq_Transferable ids,
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		scheme::corba::SchemePathSeq_Transferable transmitSchemePaths(
 				in general::corba::IdentifierSeq_Transferable ids,
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 
 		scheme::corba::PathElementSeq_Transferable transmitPathElements(
 				in general::corba::IdentifierSeq_Transferable ids,
-				in general::corba::SecurityKey security_key)
+				in general::corba::AccessIdentifier_Transferable accessIdentifier)
 				raises (general::corba::AMFICOMRemoteException);
 	};
 };

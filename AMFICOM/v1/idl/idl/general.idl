@@ -1,5 +1,5 @@
 /*
- * $Id: general.idl,v 1.75 2005/05/02 19:01:46 arseniy Exp $
+ * $Id: general.idl,v 1.68 2005/04/16 21:10:37 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -56,9 +56,6 @@ module corba {
 		DATA_TYPE_RAW
 	};
 
-/*
-@todo Remove all unused constants
-*/
 	enum ErrorCode {
 		ERROR_NO_ERROR,
 		ERROR_RISD_ERROR,
@@ -68,7 +65,6 @@ module corba {
 		ERROR_ILLEGAL_DATA,
 		ERROR_ILLEGAL_OBJECT_ENTITY,
 		ERROR_NO_CONNECT,
-		ERROR_PASSWORD_EXPIRED,
 		ERROR_SAVE,
 		ERROR_NOT_FOUND,
 		ERROR_RETRIEVE,
@@ -78,12 +74,7 @@ module corba {
 		ERROR_UID,
 		ERROR_DELETE,
 		ERROR_VERSION_COLLISION,
-		ERROR_ILLEGAL_LOGIN,
-		ERROR_ILLEGAL_PASSWORD,
-		ERROR_NO_DOMAINS_AVAILABLE,
-		ERROR_NOT_LOGGED_IN,
-		ERROR_ALREADY_LOGGED,
-		ERROR_ACCESS_VALIDATION
+		ERROR_PASSWORD_EXPIRED
 	};
 
 	enum CompletionStatus {
@@ -104,10 +95,12 @@ module corba {
 		wstring message;
 	};
 */
-
-//////////////////// SecurityKey ///////////////////
-	struct SecurityKey {
-		WString128 session_code;
+//////////////////// AccessIdentifier ///////////////////
+	struct AccessIdentifier_Transferable {
+		long long started;
+		Identifier_Transferable domain_id;
+		Identifier_Transferable user_id;		
+		WString64 session_code;
 	};
 
 ////////////////////// ParameterType //////////////////////
@@ -203,13 +196,28 @@ module corba {
 	typedef Characteristic_Transferable Characteristic;
 	typedef sequence<Characteristic> CharacteristicSeq;
 
+///////////////////////// NameResolver ///////////////////////
+	abstract interface NameResolver {
+		WString64 lookupDomainName(in Identifier_Transferable id) raises (AMFICOMRemoteException);
+
+		String32 lookupUserLogin(in Identifier_Transferable id) raises (AMFICOMRemoteException);
+
+		WString64 lookupUserName(in Identifier_Transferable id) raises (AMFICOMRemoteException);
+
+		Identifier_Transferable reverseLookupDomainName(in WString64 domainName) raises (AMFICOMRemoteException);
+
+		Identifier_Transferable reverseLookupUserLogin(in String32 userLogin) raises (AMFICOMRemoteException);
+
+		Identifier_Transferable reverseLookupUserName(in WString64 userName) raises (AMFICOMRemoteException);
+	};
+
 ///////////////////////// Verifiable //////////////////////////
 	abstract interface Verifiable {
 		void verify(in octet i);
 	};
 
 ////////////////////// IdentifierGeneratorServer ///////////////
-	abstract interface IdentifierGeneratorServer {
+	abstract interface IdentifierGeneratorServer : Verifiable {
 		Identifier_Transferable getGeneratedIdentifier(in unsigned short entity) raises (AMFICOMRemoteException);
 		IdentifierSeq_Transferable getGeneratedIdentifierRange(in unsigned short entity, in unsigned long size) raises (AMFICOMRemoteException);
 	};
