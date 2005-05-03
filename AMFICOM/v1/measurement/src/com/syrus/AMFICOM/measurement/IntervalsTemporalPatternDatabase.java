@@ -1,5 +1,5 @@
 /*-
- * $Id: IntervalsTemporalPatternDatabase.java,v 1.1 2005/05/03 13:57:30 max Exp $
+ * $Id: IntervalsTemporalPatternDatabase.java,v 1.2 2005/05/03 14:59:49 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,8 +39,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/05/03 13:57:30 $
- * @author $Author: max $
+ * @version $Revision: 1.2 $, $Date: 2005/05/03 14:59:49 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 public class IntervalsTemporalPatternDatabase extends StorableObjectDatabase {
@@ -458,4 +458,3 @@ public class IntervalsTemporalPatternDatabase extends StorableObjectDatabase {
 		}
 	}
 }	
-	
