@@ -1,5 +1,5 @@
 /*-
- * $Id: CompositeEventList.java,v 1.1 2005/05/03 06:33:50 saa Exp $
+ * $Id: CompositeEventList.java,v 1.2 2005/05/03 12:41:11 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEventComparer;
 /**
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.1 $, $Date: 2005/05/03 06:33:50 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/03 12:41:11 $
  * @module
  */
 public class CompositeEventList {
@@ -111,9 +111,25 @@ public class CompositeEventList {
         return cNum;
     }
 
+    public int getC2P(int c) {
+        return c >= 0 ? c2p[c] : -1;
+    }
+    public int getC2E(int c) {
+        return c >= 0 ? c2e[c] : -1;
+    }
+    public int getP2C(int p) {
+        return p >= 0 ? p2c[p] : -1;
+    }
+    public int getE2C(int e) {
+        return e >= 0 ? e2c[e] : -1;
+    }
+
     public class Walker {
         private int n; // current composite number of event 
 
+        public int getCompositeEvent() {
+            return n;
+        }
         public int getEvent1() {
             return n >= 0 ? c2p[n] : -1;
         }

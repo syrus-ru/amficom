@@ -111,7 +111,7 @@ implements CurrentEventChangeListener,
 
 	public void currentEventChanged()
 	{
-		int num = Heap.getCurrentEvent();
+		int num = Heap.getCurrentEvent2();
 		for(int i=0; i<jLayeredPane.getComponentCount(); i++)
 		{
 			SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);

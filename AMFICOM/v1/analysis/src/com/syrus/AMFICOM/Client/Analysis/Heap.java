@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.54 2005/05/03 07:29:42 saa Exp $
+ * $Id: Heap.java,v 1.55 2005/05/03 12:41:11 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,6 +26,7 @@ import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEventsImpl;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
+import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEventComparer;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.Set;
 import com.syrus.io.BellcoreStructure;
@@ -64,7 +65,7 @@ import com.syrus.io.BellcoreStructure;
  * Фактически, primaryMTAE - это часть refAnalysisPrimary.
  * 
  * @author $Author: saa $
- * @version $Revision: 1.54 $, $Date: 2005/05/03 07:29:42 $
+ * @version $Revision: 1.55 $, $Date: 2005/05/03 12:41:11 $
  * @module
  */
 public class Heap
@@ -94,6 +95,8 @@ public class Heap
     private static CompositeEventList eventList = new CompositeEventList(false);
     private static CompositeEventList.Walker currentEvent =
         eventList.new Walker();
+
+    private static SimpleReflectogramEventComparer rComp = null;
 
 	private static String newMSName = null; // the name for newly created (unsaved) MeasurementSetup; null if no new MS
 
@@ -163,25 +166,45 @@ public class Heap
         return bsHash.containsKey(id);
     }
 
-    public static int getCurrentEvent() {
-    	return currentEvent.getEvent2();
+    /**
+     * @return номер в списке пар событий, сооветствующий текущему.
+     * Значение -1 может быть только в случае, если не выбрано ни одно событие
+     */
+    public static int getCurrentCompositeEvent() {
+        return currentEvent.getCompositeEvent();
     }
 
-    public static int getCurrentEtalonEvent() {
+    /**
+     * @return номер события, который точно (взаимно однозначно)
+     * соответствует текущему, либо -1, если такого события не нашлось
+     */
+    public static int getCurrentEvent1() {
+        return currentEvent.getEvent1();
+    }
+
+    /**
+     * @return номер события эталона, точно соответствующего текущему,
+     *   либо -1, если такого события не нашлось
+     */
+    public static int getCurrentEtalonEvent1() {
+        return currentEvent.getEtalonEvent1();
+    }
+
+
+    /**
+     * @return номер события, который грубо соответствует текущему
+     * (может быть -1, но это нечасто)
+     */
+    public static int getCurrentEvent2() {
+        return currentEvent.getEvent2();
+    }
+
+    /**
+     * @return номер события эталона, грубо соответствующего текущему
+     * (может быть -1, но это нечасто)
+     */
+    public static int getCurrentEtalonEvent2() {
         return currentEvent.getEtalonEvent2();
-        /*
-         // XXX: rather slow...
-    	if (refAnalysisPrimary == null || etalonMTM == null || currentEv < 0
-                || currentEv >= getNumberOfEvents())
-    		return -1;
-    	// reliability comparison is actually performed
-    	// @todo: ModelTraceAndEventsImpl: add getReliabilitySimpleEvents()
-    	SimpleReflectogramEventComparer rcomp = new SimpleReflectogramEventComparer(
-                getMTAEPrimary(),
-                etalonMTM.getMTAE(),
-                false);
-    	return rcomp.getEtalonIdByProbeId(currentEv);
-        */
     }
 
     public static void gotoNextEtalonEvent() {
@@ -317,6 +340,14 @@ public class Heap
         } catch (CloneNotSupportedException e) {
             throw new InternalError(e.getMessage());
         }
+    }
+
+    public static CompositeEventList getEventList() {
+        return eventList;
+    }
+
+    public static SimpleReflectogramEventComparer getEventComparer() {
+        return rComp;
     }
 
     // dispatcher stuff
@@ -523,6 +554,12 @@ public class Heap
     }
 
     private static void fixEventList() {
+        ModelTraceAndEventsImpl pri = getMTAEPrimary();
+        ModelTraceAndEventsImpl et = getMTMEtalon() != null ?
+                getMTMEtalon().getMTAE() : null;
+        rComp = pri != null && et != null
+            ? new SimpleReflectogramEventComparer(pri, et)
+            : null;
         eventList.dataUpdated();
         currentEvent.fixNEvent();
     }

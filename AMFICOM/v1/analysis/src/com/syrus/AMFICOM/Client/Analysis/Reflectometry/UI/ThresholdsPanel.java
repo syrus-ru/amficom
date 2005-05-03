@@ -53,7 +53,7 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 	// Design Note: uses TraceEventsPanel.events
 	public int[] getStartAndEndOfCurrentEvent()
 	{
-		int num = Heap.getCurrentEvent();
+		int num = Heap.getCurrentEvent2();
 		if (num < 0)
 			return new int[] {0, events[events.length-1].last_point};
 		if (num >= events.length)
@@ -69,12 +69,12 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 		if (events == null)
 			return;
 
-		c_event = Heap.getCurrentEtalonEvent();
+		c_event = Heap.getCurrentEtalonEvent2();
 
 		if (etalon != null && c_event >= etalon.getMTAE().getNEvents())
 			c_event = etalon.getMTAE().getNEvents() - 1;
 
-		int num = Heap.getCurrentEvent();
+		int num = Heap.getCurrentEvent2();
 
 		if (num >= 0) // XXX
 		{
@@ -308,7 +308,31 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
         }
         if (dashStroke)
             ((Graphics2D)g).setStroke(ScaledGraphPanel.DEFAULT_STROKE);
+        
+        this.fps.inc();
     }
+
+    private static class FPSCounter { // FIXME: debug only: FSPCounter
+        long count = 0;
+        long time = 0;
+        public FPSCounter() {
+            this.time = System.currentTimeMillis();
+        }
+        void inc() {
+            this.count++;
+            long ct = System.currentTimeMillis();
+            final long ONE_SECOND = 1000;
+            final long DT = 1000;
+            if (ct < this.time + DT)
+                return;
+            double fps = count * 1.0 * ONE_SECOND / (ct - this.time);
+            System.out.println("FPSCounter: " + fps + " fps");
+            this.time = ct;
+            this.count = 0;
+        }
+    }
+    
+    FPSCounter fps = new FPSCounter();
 
 	private void paintOneThreshold(Graphics g)
 	{

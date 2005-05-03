@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisResourceKeys.java,v 1.13 2005/04/28 11:36:52 saa Exp $
+ * $Id: AnalysisResourceKeys.java,v 1.14 2005/05/03 12:41:11 saa Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.Client.General.Model;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/04/28 11:36:52 $
+ * @version $Revision: 1.14 $, $Date: 2005/05/03 12:41:11 $
  * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module analysis_v1
@@ -25,12 +25,14 @@ public interface AnalysisResourceKeys extends ResourceKeys {
 	Object	COLOR_NOISE								= "noise";
 	Object  COLOR_PRIMARY_TRACE 					= "primaryTrace";
 	
-	String	COLOR_EVENTS_NEW						= "com.syrus.AMFICOM.color.analisys.events.new";
+    String  COLOR_EVENTS_LOST                       = "com.syrus.AMFICOM.color.analisys.events.lost";
+    String  COLOR_EVENTS_NEW                        = "com.syrus.AMFICOM.color.analisys.events.new";
 	String	COLOR_EVENTS_LOSS_CHANGED				= "com.syrus.AMFICOM.color.analisys.events.losschanged";
 	String	COLOR_EVENTS_AMPLITUDE_CHANGED			= "com.syrus.AMFICOM.color.analisys.events.amplitudechanged";
 	String	COLOR_EVENTS							= "com.syrus.AMFICOM.color.analisys.events";
 
-	String	COLOR_EVENTS_NEW_SELECTED				= "com.syrus.AMFICOM.color.analisys.events.newSelected";
+    String  COLOR_EVENTS_LOST_SELECTED              = "com.syrus.AMFICOM.color.analisys.events.lostSelected";
+    String  COLOR_EVENTS_NEW_SELECTED               = "com.syrus.AMFICOM.color.analisys.events.newSelected";
 	String	COLOR_EVENTS_LOSS_CHANGED_SELECTED		= "com.syrus.AMFICOM.color.analisys.events.losschangedSelected";
 	String	COLOR_EVENTS_AMPLITUDE_CHANGED_SELECTED	= "com.syrus.AMFICOM.color.analisys.events.amplitudechangedSelected";
 	String	COLOR_EVENTS_SELECTED					= "com.syrus.AMFICOM.color.analisys.eventsSelected";

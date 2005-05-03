@@ -244,8 +244,8 @@ implements EtalonMTMListener,
 
 	private void setData()
 	{
-		int nEvent = Heap.getCurrentEvent();
-		int nEtalon = Heap.getCurrentEtalonEvent();
+		int nEvent = Heap.getCurrentEvent1();
+		int nEtalon = Heap.getCurrentEtalonEvent1();
 		if(Heap.getMTMEtalon() == null || alignedDataMT == null)
 		{
 			tabbedPane.setSelectedIndex(0);
@@ -332,7 +332,7 @@ implements EtalonMTMListener,
 
 	private void updateTableModel()
 	{
-		int num = Heap.getCurrentEvent();
+		int num = Heap.getCurrentEvent1();
 		if (num < 0)
 			return;
 		TraceEvent ev = Heap.getRefAnalysisPrimary().events[num];

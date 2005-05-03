@@ -20,6 +20,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableModel;
 
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
+import com.syrus.AMFICOM.Client.Analysis.CompositeEventList;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.CurrentEventChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
@@ -32,9 +33,7 @@ import com.syrus.AMFICOM.Client.General.UI.UIGeneralStorage;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.ComplexReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.MathRef;
-import com.syrus.AMFICOM.analysis.dadara.ModelTraceComparer;
 import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
-import com.syrus.AMFICOM.analysis.dadara.ReflectogramComparer;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEventComparer;
 import com.syrus.AMFICOM.analysis.dadara.TraceEvent;
 import com.syrus.io.BellcoreStructure;
@@ -51,6 +50,73 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener,
 	private JPanel mainPanel = new JPanel();
 	private JScrollPane scrollPane = new JScrollPane();
 	private JViewport viewport = new JViewport();
+
+    protected static class TableView {
+        public static final int COMP = 10;
+        public static final int PRIM = 11;
+        public static final int ETAL = 12;
+        private int viewMode;
+        public TableView(int viewMode) {
+            this.viewMode = viewMode;
+        }
+        public int nRows(CompositeEventList eList) {
+            switch(viewMode) {
+            case COMP: return eList.getNCompositeEvents();
+            case PRIM: return eList.getNEvents();
+            case ETAL: return eList.getNEtalonEvents();
+            default: throw new InternalError();
+            }
+        }
+        public int nPri1(CompositeEventList eList, int row) {
+            switch(viewMode) {
+            case COMP: return eList.getC2P(row);
+            case PRIM: return row;
+            case ETAL: return eList.getC2P(eList.getE2C(row));
+            default: throw new InternalError();
+            }
+        }
+        public int nEt1(CompositeEventList eList, int row) {
+            switch(viewMode) {
+            case COMP: return eList.getC2E(row);
+            case PRIM: return eList.getC2E(eList.getP2C(row));
+            case ETAL: return row;
+            default: throw new InternalError();
+            }
+        }
+        public void toNextRow(CompositeEventList.Walker walker) {
+            switch(viewMode) {
+            case COMP:
+                walker.toNextCompositeEvent();
+                break;
+            case PRIM:
+                walker.toNextEvent();
+                break;
+            case ETAL:
+                walker.toNextEtalonEvent();
+                break;
+            default:
+                throw new InternalError();
+            }
+        }
+        /*public int currentRow(CompositeEventList.Walker walker) {
+            switch(viewMode) {
+            case COMP: return walker.getCompositeEvent();
+            case PRIM: return walker.getEvent2();
+            case ETAL: return walker.getEtalonEvent2();
+            default: throw new InternalError();
+            }
+        }*/
+        public int currentRow2() {
+            switch(viewMode) {
+            case COMP: return Heap.getCurrentCompositeEvent();
+            case PRIM: return Heap.getCurrentEvent2();
+            case ETAL: return Heap.getCurrentEtalonEvent2();
+            default: throw new InternalError();
+            }
+        }
+    }
+
+    protected TableView view; // State
 
 	public EventsFrame()
 	{
@@ -70,6 +136,7 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener,
 
 	private void initModule()
 	{
+        view = new TableView(TableView.PRIM); // XXX; другие виды пока не поддерживаются
 		Heap.addEtalonMTMListener(this);
 		Heap.addCurrentEventChangeListener(this);
         Heap.addPrimaryRefAnalysisListener(this);
@@ -90,7 +157,7 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener,
 		return tModel;
 	}
 
-
+	/*
 	private void setComparedWithEtalonEventsColor()
 	{
 		if(getEtalon() == null || getData() == null)
@@ -123,13 +190,14 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener,
 		this.jTable.revalidate();
 		this.jTable.repaint();
 	}
+    */
 
 	private void jbInit() throws Exception
 	{
 		setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
 		this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 
-		tModel = new FixedSizeEditableTableModel(
+		tModel = new FixedSizeEditableTableModel (
 					new String[] {LangModelAnalyse.getString("eventNum"),
 												LangModelAnalyse.getString("eventType"),
 												LangModelAnalyse.getString("eventStartLocationKM"),
@@ -148,19 +216,11 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener,
 			jTable.getColumnModel().getColumn(0).setPreferredWidth(fontMetrics.stringWidth("WW"));
 			jTable.getColumnModel().getColumn(0).setMaxWidth(fontMetrics.stringWidth("WWWW"));
 		}
-//		jTable.getColumnModel().getColumn(1).setPreferredWidth(85);
-//		jTable.getColumnModel().getColumn(2).setPreferredWidth(75);
-//		jTable.getColumnModel().getColumn(3).setPreferredWidth(80);
-//		jTable.getColumnModel().getColumn(4).setPreferredWidth(75);
-//		jTable.getColumnModel().getColumn(5).setPreferredWidth(70);
-//		jTable.getColumnModel().getColumn(6).setPreferredWidth(85);
 
 		setContentPane(mainPanel);
-//		this.setSize(new Dimension(200, 213));
 		this.setResizable(true);
 		this.setClosable(true);
 		this.setIconifiable(true);
-		//this.setMaximizable(true);
 		this.setTitle(LangModelAnalyse.getString("eventTableTitle"));
 
 		mainPanel.setLayout(new BorderLayout());
@@ -185,7 +245,7 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener,
 			else
 			{
 				int selected = lsm.getMinSelectionIndex();
-                if (Heap.getCurrentEvent() != selected)
+                if (Heap.getCurrentEvent2() != selected)
                     Heap.setCurrentEvent(selected);
 			}
 		}
@@ -198,33 +258,33 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener,
 
 		mainPanel.add(scrollPane, BorderLayout.CENTER);
 		scrollPane.getViewport().add(jTable);
-		updColorModel();
-	}
-
-	private void updColorModel()
-	{
-//		scrollPane.getViewport().setBackground(SystemColor.window);
-//		jTable.setBackground(SystemColor.window);
-//		jTable.setForeground(ColorManager.getColor("textColor"));
-//		jTable.setGridColor(ColorManager.getColor("tableGridColor"));
-//		repaint();
 	}
 
 	private void updateTableModel()
 	{
-		int nEvent = Heap.getCurrentEvent();
+        // подгоняем текущее выделение к тому месту в таблице,
+        // которое должно соответствовать текущей паре событий
+        // XXX: если текущего выделения не должно быть, надо бы его убрать.
+		int nEvent = view.currentRow2();
 		if (nEvent != -1 && nEvent < this.jTable.getRowCount())
-			{
-				this.jTable.setRowSelectionInterval(nEvent, nEvent);
-				this.jTable.scrollRectToVisible(this.jTable.getCellRect(this.jTable.getSelectedRow(), this.jTable.getSelectedColumn(), true));
-			}
+		{
+			this.jTable.setRowSelectionInterval(nEvent, nEvent);
+			this.jTable.scrollRectToVisible(this.jTable.getCellRect(
+                    this.jTable.getSelectedRow(),
+                    this.jTable.getSelectedColumn(),
+                    true));
+		}
 	}
-    
+
     private void updateColors() {
+        this.jTable.revalidate();
+        this.jTable.repaint();
+        /*
         if (Heap.getMTMEtalon() == null)
             setNoComparedWithEtalonColor();
         else
             setComparedWithEtalonEventsColor();
+        */
     }
 
 	private void setTableModel()
@@ -232,16 +292,26 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener,
         RefAnalysis ra = Heap.getRefAnalysisPrimary();
         if (ra == null)
             return;
-        BellcoreStructure bs = ra.getBS(); 
-        TraceEvent[] events = ra.events;
+        BellcoreStructure bs = ra.getBS();
 		double res_km = bs.getResolution() / 1000.0;
 		double sigma = MathRef.calcSigma(bs.getWavelength(), bs.getPulsewidth());
+        TraceEvent[] events = ra.events;
 
+        int nRows = view.nRows(Heap.getEventList());
 		tModel.clearTable();
 
-		for (int i = 0; i < events.length; i++)
+        CompositeEventList.Walker w = Heap.getEventList().new Walker();
+		for (int i = 0; i < nRows; i++, view.toNextRow(w))
 		{
-			int eventType = events[i].getType();
+//            // выбираем событие, которое будем отображать
+//            int nPrimary = w.getEvent2();
+//            int nEtalon = w.getEtalonEvent2();
+//            // nPrimary или nEtalon может быть -1, но не оба одновременно
+//			SimpleReflectogramEvent sre = nPrimary >= 0
+//                ? Heap.getMTAEPrimary().getSimpleEvent(nPrimary)
+//                : Heap.getMTMEtalon().getMTAE().getSimpleEvent(nEtalon);
+
+            int eventType = events[i].getType();
 			String eventTypeName = AnalysisUtil.getTraceEventNameByType(eventType);
 			switch (eventType)
 			{
@@ -327,26 +397,8 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener,
 	
 	private class EventTableRenderer extends DefaultTableCellRenderer
 	{
-		int []newEventsList;
-		int []amplitudeChangedEventsList;
-		int []lossChangedEventsList;
-
 		JTable table;
-
-		public void setNewEventsList(int []newEventsList)
-		{
-			this.newEventsList = newEventsList;
-		}
-
-		public void setAmplitudeChangedEventsList(int []amplitudeChangedEventsList)
-		{
-			this.amplitudeChangedEventsList = amplitudeChangedEventsList;
-		}
-
-		public void setLossChangedEventsList(int []lossChangedEventsList)
-		{
-			this.lossChangedEventsList = lossChangedEventsList;
-		}
+        int viewMode;
 
 		public EventTableRenderer(JTable table)
 		{
@@ -359,42 +411,53 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener,
 														boolean hasFocus,
 														int row,
 														int column) {
-			Component c = super.getTableCellRendererComponent(table1, value, isSelected1, hasFocus, row, column);
+			Component c = super.getTableCellRendererComponent(table1, value,
+                    isSelected1, hasFocus, row, column);
 
-			Color color = null;
-			if (containsRow(row, newEventsList))
-				color = isSelected1 ? UIManager.getColor(AnalysisResourceKeys.COLOR_EVENTS_NEW_SELECTED) : UIManager
-						.getColor(AnalysisResourceKeys.COLOR_EVENTS_NEW);
-			else if (containsRow(row, lossChangedEventsList))
-				color = isSelected1 ? UIManager.getColor(AnalysisResourceKeys.COLOR_EVENTS_LOSS_CHANGED_SELECTED)
-						: UIManager.getColor(AnalysisResourceKeys.COLOR_EVENTS_LOSS_CHANGED);
-			else if (containsRow(row, amplitudeChangedEventsList))
-				color = isSelected1 ? UIManager.getColor(AnalysisResourceKeys.COLOR_EVENTS_AMPLITUDE_CHANGED_SELECTED)
-						: UIManager.getColor(AnalysisResourceKeys.COLOR_EVENTS_AMPLITUDE_CHANGED);
-			else
-				color = isSelected1 ? UIManager.getColor(AnalysisResourceKeys.COLOR_EVENTS_SELECTED) : UIManager
-						.getColor(AnalysisResourceKeys.COLOR_EVENTS);
+			int nPrimary = view.nPri1(Heap.getEventList(), row);
+			int nEtalon = view.nEt1(Heap.getEventList(), row);
 
-			if (color != null) {
-				c.setForeground(color);
-			}
+            //SimpleReflectogramEventComparer comp = Heap.getEventComparer();
+            String colorCode = null;
+
+            if (Heap.getMTMEtalon() == null) {
+                // no etalon - use default colors
+            } else if (nPrimary < 0) {
+                colorCode = isSelected1
+                    ? AnalysisResourceKeys.COLOR_EVENTS_LOST_SELECTED
+                    : AnalysisResourceKeys.COLOR_EVENTS_LOST;
+            } else if (nEtalon < 0) {
+                colorCode = isSelected1
+                ? AnalysisResourceKeys.COLOR_EVENTS_NEW_SELECTED
+                : AnalysisResourceKeys.COLOR_EVENTS_NEW;
+            } else {
+                //System.err.println("row " + row + " column " + column);
+                // FIXME: add MTAE.getComplexEvent(int) or add caching of output CE[] in MTAE
+                ComplexReflectogramEvent pri =
+                    Heap.getMTAEPrimary().getComplexEvents()[nPrimary];
+                ComplexReflectogramEvent et =
+                    Heap.getMTMEtalon().getMTAE().getComplexEvents()[nEtalon];
+                if (SimpleReflectogramEventComparer.eventsAreDifferent(pri, et,
+                        SimpleReflectogramEventComparer.CHANGETYPE_LOSS,
+                        0.5))
+                    colorCode = isSelected1
+                    ? AnalysisResourceKeys.COLOR_EVENTS_LOSS_CHANGED_SELECTED
+                    : AnalysisResourceKeys.COLOR_EVENTS_LOSS_CHANGED;
+                else if (SimpleReflectogramEventComparer.eventsAreDifferent(pri, et,
+                        SimpleReflectogramEventComparer.CHANGETYPE_AMPL,
+                        0.5))
+                    colorCode = isSelected1
+                    ? AnalysisResourceKeys.COLOR_EVENTS_AMPLITUDE_CHANGED_SELECTED
+                    : AnalysisResourceKeys.COLOR_EVENTS_AMPLITUDE_CHANGED;
+                // no change - use default colors
+            }
+
+			if (colorCode != null)
+				c.setForeground(UIManager.getColor(colorCode));
+            else
+                c.setForeground(Color.BLACK); // XXX: default color
 
 			return c;
-		}
-
-		private boolean containsRow(int row,
-									int[] array) {
-			boolean result = false;
-			if (array == null)
-				return false;
-
-			for (int i = 0; i < array.length; i++) {
-				if (array[i] == row) {
-					result = true;
-					break;
-				}
-			}
-			return result;
 		}
 	}
 
@@ -413,13 +476,6 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener,
 		updateTableModel();
 	}
 
-	private ComplexReflectogramEvent []getData() {
-		return Heap.getMTAEPrimary().getComplexEvents();
-	}
-	private ComplexReflectogramEvent []getEtalon() {
-		return Heap.getMTMEtalon().getMTAE().getComplexEvents();
-	}
-
     public void primaryRefAnalysisCUpdated() {
         updateColors();
         if (Heap.getRefAnalysisPrimary() != null)
@@ -433,8 +489,8 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener,
 
     public void primaryRefAnalysisRemoved() {
         tModel.clearTable();
-        setNoComparedWithEtalonColor();
+        this.jTable.revalidate();
+        this.jTable.repaint();
         setVisible(false);
     }
-
 }

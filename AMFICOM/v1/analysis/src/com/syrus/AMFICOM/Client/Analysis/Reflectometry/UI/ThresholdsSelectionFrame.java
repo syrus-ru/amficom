@@ -311,7 +311,7 @@ implements OperationListener, BsHashChangeListener,
         ModelTraceManager mtm = Heap.getMTMEtalon();
         if (mtm == null)
             return null;
-        int etEvent = Heap.getCurrentEtalonEvent();
+        int etEvent = Heap.getCurrentEtalonEvent2();
         if (etEvent < 0)
             return null;
         return mtm.getThreshEditors(etEvent);
