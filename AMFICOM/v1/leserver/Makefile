@@ -18,7 +18,7 @@ APPCLASSPATH := $(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/eve
 
 
 SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/leserver/*.java) \
-	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/general/*.java)
+	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/security/*.java)
 
 all: $(LIBNAME) $(LIBNAME_INTERFACE)
 
