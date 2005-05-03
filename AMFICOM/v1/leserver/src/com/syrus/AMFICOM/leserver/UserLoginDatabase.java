@@ -1,5 +1,5 @@
 /*
- * $Id: UserLoginDatabase.java,v 1.2 2005/05/03 12:03:05 arseniy Exp $
+ * $Id: UserLoginDatabase.java,v 1.3 2005/05/03 14:36:40 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,38 +16,38 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.SessionKey;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.corba.SecurityKey;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/05/03 12:03:05 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/03 14:36:40 $
  * @author $Author: arseniy $
  * @module leserver_v1
  */
 final class UserLoginDatabase {
 	private static final String TABLE_NAME_USER_LOGIN = "UserLogin";
-	private static final String COLUMN_SECURITY_KEY = "security_key";
+	private static final String COLUMN_SESSION_KEY = "session_key";
 	private static final String COLUMN_USER_ID = "user_id";
 	private static final String COLUMN_DOMAIN_ID = "domain_id";
 	private static final String COLUMN_LOGIN_DATE = "login_date";
 	private static final String COLUMN_LAST_ACTIVITY_DATE = "last_activity_date";
-	private static final int SIZE_COLUMN_SECURITY_KEY = 128;
+	private static final int SIZE_COLUMN_SESSION_KEY = 128;
 
-	private StringBuffer singleWhereClause(final SecurityKey securityKey) {
-		return new StringBuffer(COLUMN_SECURITY_KEY + StorableObjectDatabase.EQUALS
+	private StringBuffer singleWhereClause(final SessionKey sessionKey) {
+		return new StringBuffer(COLUMN_SESSION_KEY + StorableObjectDatabase.EQUALS
 				+ StorableObjectDatabase.APOSTOPHE
-				+ DatabaseString.toQuerySubString(securityKey.session_code, SIZE_COLUMN_SECURITY_KEY)
+				+ DatabaseString.toQuerySubString(sessionKey.toString(), SIZE_COLUMN_SESSION_KEY)
 				+ StorableObjectDatabase.APOSTOPHE);
 	}
 
 	private StringBuffer retrieveQuery(final StringBuffer condition) {
 		StringBuffer sql = new StringBuffer(StorableObjectDatabase.SQL_SELECT
-				+ COLUMN_SECURITY_KEY + StorableObjectDatabase.COMMA
+				+ COLUMN_SESSION_KEY + StorableObjectDatabase.COMMA
 				+ COLUMN_USER_ID + StorableObjectDatabase.COMMA
 				+ COLUMN_DOMAIN_ID + StorableObjectDatabase.COMMA
 				+ DatabaseDate.toQuerySubString(COLUMN_LOGIN_DATE) + StorableObjectDatabase.COMMA
@@ -62,8 +62,8 @@ final class UserLoginDatabase {
 		return sql;
 	}
 
-	protected UserLogin retrieve(final SecurityKey securityKey) throws RetrieveObjectException, ObjectNotFoundException {
-		StringBuffer sql = this.retrieveQuery(this.singleWhereClause(securityKey));
+	protected UserLogin retrieve(final SessionKey sessionKey) throws RetrieveObjectException, ObjectNotFoundException {
+		StringBuffer sql = this.retrieveQuery(this.singleWhereClause(sessionKey));
 
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -73,7 +73,7 @@ final class UserLoginDatabase {
 			Log.debugMessage("UserLoginDatabase.retrieve | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
 			if (resultSet.next())
-				return new UserLogin(securityKey,
+				return new UserLogin(sessionKey,
 						DatabaseIdentifier.getIdentifier(resultSet, COLUMN_USER_ID),
 						DatabaseIdentifier.getIdentifier(resultSet, COLUMN_DOMAIN_ID),
 						DatabaseDate.fromQuerySubString(resultSet, COLUMN_LOGIN_DATE),
@@ -109,13 +109,13 @@ final class UserLoginDatabase {
 	protected void insert(final UserLogin userLogin) throws CreateObjectException {
 		final StringBuffer sql = new StringBuffer(StorableObjectDatabase.SQL_INSERT_INTO + TABLE_NAME_USER_LOGIN
 				+ StorableObjectDatabase.OPEN_BRACKET
-				+ COLUMN_SECURITY_KEY + StorableObjectDatabase.COMMA
+				+ COLUMN_SESSION_KEY + StorableObjectDatabase.COMMA
 				+ COLUMN_USER_ID + StorableObjectDatabase.COMMA
 				+ COLUMN_DOMAIN_ID + StorableObjectDatabase.COMMA
 				+ COLUMN_LOGIN_DATE + StorableObjectDatabase.COMMA
 				+ COLUMN_LAST_ACTIVITY_DATE
 				+ StorableObjectDatabase.CLOSE_BRACKET + StorableObjectDatabase.SQL_VALUES + StorableObjectDatabase.OPEN_BRACKET
-				+ StorableObjectDatabase.APOSTOPHE + DatabaseString.toQuerySubString(userLogin.getSecurityKey().session_code, SIZE_COLUMN_SECURITY_KEY) + StorableObjectDatabase.APOSTOPHE + StorableObjectDatabase.COMMA
+				+ StorableObjectDatabase.APOSTOPHE + DatabaseString.toQuerySubString(userLogin.getSessionKey().toString(), SIZE_COLUMN_SESSION_KEY) + StorableObjectDatabase.APOSTOPHE + StorableObjectDatabase.COMMA
 				+ DatabaseIdentifier.toSQLString(userLogin.getUserId()) + StorableObjectDatabase.COMMA
 				+ DatabaseIdentifier.toSQLString(userLogin.getDomainId()) + StorableObjectDatabase.COMMA
 				+ DatabaseDate.toUpdateSubString(userLogin.getLoginDate()) + StorableObjectDatabase.COMMA
@@ -158,7 +158,7 @@ final class UserLoginDatabase {
 				+ COLUMN_LOGIN_DATE + StorableObjectDatabase.EQUALS + DatabaseDate.toUpdateSubString(userLogin.getLoginDate())
 				+ StorableObjectDatabase.COMMA
 				+ COLUMN_LAST_ACTIVITY_DATE + StorableObjectDatabase.EQUALS + DatabaseDate.toUpdateSubString(userLogin.getLastActivityDate())
-				+ StorableObjectDatabase.SQL_WHERE + this.singleWhereClause(userLogin.getSecurityKey()));
+				+ StorableObjectDatabase.SQL_WHERE + this.singleWhereClause(userLogin.getSessionKey()));
 
 		Statement statement = null;
 		Connection connection = DatabaseConnection.getConnection();
@@ -189,7 +189,7 @@ final class UserLoginDatabase {
 
 	protected void delete(final UserLogin userLogin) {
 		final StringBuffer sql = new StringBuffer(StorableObjectDatabase.SQL_DELETE_FROM + TABLE_NAME_USER_LOGIN
-				+ StorableObjectDatabase.SQL_WHERE + this.singleWhereClause(userLogin.getSecurityKey()));
+				+ StorableObjectDatabase.SQL_WHERE + this.singleWhereClause(userLogin.getSessionKey()));
 
 		Statement statement = null;
 		Connection connection = DatabaseConnection.getConnection();

@@ -1,5 +1,5 @@
 /*
- * $Id: UserLogin.java,v 1.2 2005/05/03 12:03:46 arseniy Exp $
+ * $Id: UserLogin.java,v 1.3 2005/05/03 14:36:40 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,22 +10,23 @@ package com.syrus.AMFICOM.leserver;
 import java.util.Date;
 
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.corba.SecurityKey;
+import com.syrus.AMFICOM.general.SessionKey;
+import com.syrus.AMFICOM.general.SessionKeyGenerator;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/05/03 12:03:46 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/03 14:36:40 $
  * @author $Author: arseniy $
  * @module leserver_v1
  */
 final class UserLogin {
-	private SecurityKey securityKey;
+	private SessionKey sessionKey;
 	private Identifier userId;
 	private Identifier domainId;
 	private Date loginDate;
 	private Date lastActivityDate;
 
-	protected UserLogin(SecurityKey securityKey, Identifier userId, Identifier domainId, Date loginDate, Date lastActivityDate) {
-		this.securityKey = securityKey;
+	protected UserLogin(SessionKey sessionKey, Identifier userId, Identifier domainId, Date loginDate, Date lastActivityDate) {
+		this.sessionKey = sessionKey;
 		this.userId = userId;
 		this.domainId = domainId;
 		this.loginDate = loginDate;
@@ -34,11 +35,11 @@ final class UserLogin {
 
 	protected static UserLogin createInstance(Identifier userId) {
 		Date date = new Date(System.currentTimeMillis());
-		return new UserLogin(SecurityKeyGenerator.generateSecurityKey(userId), userId, null, date, date);
+		return new UserLogin(SessionKeyGenerator.generateSessionKey(userId), userId, null, date, date);
 	}
 
-	protected SecurityKey getSecurityKey() {
-		return this.securityKey;
+	protected SessionKey getSessionKey() {
+		return this.sessionKey;
 	}
 
 	protected Identifier getUserId() {
