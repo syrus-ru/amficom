@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementServer.java,v 1.37 2005/05/01 17:25:36 arseniy Exp $
+ * $Id: ClientMeasurementServer.java,v 1.38 2005/05/03 19:57:00 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2005/05/01 17:25:36 $
+ * @version $Revision: 1.38 $, $Date: 2005/05/03 19:57:00 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -87,7 +87,7 @@ public class ClientMeasurementServer {
 		}
 		catch (Exception e) {
 			Log.errorException(e);
-			System.exit(1);
+			System.exit(0);
 		}
 
 		/*	Init database object loader*/
@@ -99,7 +99,7 @@ public class ClientMeasurementServer {
 		}
 		catch (ApplicationException ae) {
 			Log.errorException(ae);
-			System.exit(1);
+			System.exit(0);
 		}
 
 		/*	Login*/
@@ -109,7 +109,7 @@ public class ClientMeasurementServer {
 		}
 		catch (CommunicationException ce) {
 			Log.errorException(ce);
-			System.exit(1);
+			System.exit(0);
 		}
 		catch (LoginException le) {
 			Log.errorException(le);
@@ -122,7 +122,7 @@ public class ClientMeasurementServer {
 		}
 		catch (CommunicationException ce) {
 			Log.errorException(ce);
-			System.exit(1);
+			System.exit(0);
 		}
 	}
 
@@ -136,26 +136,11 @@ public class ClientMeasurementServer {
 		}
 		catch (Exception e) {
 			Log.errorException(e);
-			System.exit(-1);
+			System.exit(0);
 		}
 	}
 
-	protected synchronized void shutdown() {/* !! Need synchronization */
-		CMServerSessionEnvironment sessionEnvironment = CMServerSessionEnvironment.getInstance();
-		try {
-			sessionEnvironment.getCMServerServantManager().getCORBAServer().deactivateServant(processCodename);
-		}
-		catch (CommunicationException ce) {
-			Log.errorException(ce);
-		}
-
-		try {
-			sessionEnvironment.logout();
-		}
-		catch (ApplicationException ae) {
-			Log.errorException(ae);
-		}
-
+	protected synchronized void shutdown() {
 		DatabaseConnection.closeConnection();
 	}
 
