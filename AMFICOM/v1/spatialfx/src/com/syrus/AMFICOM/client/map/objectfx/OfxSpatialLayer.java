@@ -128,4 +128,12 @@ public class OfxSpatialLayer implements SpatialLayer
 			return this.binName;
 		return this.className;
 	}
+
+	public boolean isVisibleAtScale(double scale) {
+		return true;
+	}
+
+	public boolean isVisibleAtCurrentScale() {
+		return true;
+	}
 }
