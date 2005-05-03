@@ -1,5 +1,5 @@
 /*
- * $Id: LoginManager.java,v 1.3 2005/04/29 10:37:32 arseniy Exp $
+ * $Id: LoginManager.java,v 1.4 2005/05/03 12:06:32 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.leserver.corba.LoginServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/04/29 10:37:32 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/03 12:06:32 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
@@ -126,7 +126,7 @@ public final class LoginManager {
 	public static void selectDomain(Identifier domainId1) throws CommunicationException {
 		LoginServer loginServer = loginServerConnectionManager.getLoginServerReference();
 		try {
-			loginServer.selectDomain((Identifier_Transferable) domainId1.getTransferable());
+			loginServer.selectDomain(securityKey, (Identifier_Transferable) domainId1.getTransferable());
 			domainId = domainId1;
 		}
 		catch (AMFICOMRemoteException are) {
