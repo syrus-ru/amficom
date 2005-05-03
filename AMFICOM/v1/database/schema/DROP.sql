@@ -1,3 +1,4 @@
+@@./security/DROP.sql
 @@./mapview/DROP.sql
 @@./scheme/DROP.sql
 @@./map/DROP.sql

@@ -24,3 +24,6 @@ REM scheme
 
 REM mapview
 @@./mapview/CREATE.sql
+
+REM security
+@@./security/CREATE.sql
