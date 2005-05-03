@@ -1,4 +1,4 @@
-CREATE TABLE IntervalsTemporalPattern (
+CREATE TABLE ITempPattern (
  id VARCHAR2(32),
  created DATE NOT NULL,
  modified DATE NOT NULL,
@@ -14,4 +14,4 @@ CREATE TABLE IntervalsTemporalPattern (
  CONSTRAINT itp_modifier_fk FOREIGN KEY (modifier_id)
   REFERENCES "User" (id) ON DELETE CASCADE
 );
-CREATE SEQUENCE intervalstemporalpattern_seq ORDER;
+CREATE SEQUENCE itemppattern_seq ORDER;
