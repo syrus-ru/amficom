@@ -280,7 +280,7 @@ public class CharacteristicsPanel extends GeneralPanel implements
 		setPropsEditable(editableSorts.contains(selectedTypeSort));
 	}
 
-	void showNoSelection() {
+	protected void showNoSelection() {
 		tModel.clearTable();
 		setPropsEditable(false);
 	}
@@ -321,7 +321,7 @@ public class CharacteristicsPanel extends GeneralPanel implements
 		return null;
 	}
 
-	void setCharacteristicValue(List characteristics, String name, String value) {
+	protected void setCharacteristicValue(List characteristics, String name, String value) {
 		for (Iterator it = characteristics.iterator(); it.hasNext();) {
 			Characteristic ch = (Characteristic) it.next();
 			if (ch.getName().equals(name)) {
