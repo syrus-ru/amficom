@@ -1,5 +1,5 @@
 /*
- * $Id: LoginEventServer.java,v 1.11 2005/05/03 18:16:55 arseniy Exp $
+ * $Id: LoginEventServer.java,v 1.12 2005/05/03 18:17:45 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/05/03 18:16:55 $
+ * @version $Revision: 1.12 $, $Date: 2005/05/03 18:17:45 $
  * @author $Author: arseniy $
  * @module leserver_v1
  */
@@ -81,7 +81,7 @@ public final class LoginEventServer {
 		}
 		catch (ApplicationException ae) {
 			Log.errorException(ae);
-			System.exit(1);
+			System.exit(0);
 		}
 
 		/*	Retrieve info about processes*/
@@ -98,12 +98,12 @@ public final class LoginEventServer {
 		}
 		catch (ApplicationException ae) {
 			Log.errorException(ae);
-			System.exit(1);
+			System.exit(0);
 		}
 		// TODO something with loginServerProcess and eventServerProcess
 		if (loginServerProcess == null || eventServerProcess == null) {
 			Log.errorMessage("Cannot find login server process or event server process");
-			System.exit(1);
+			System.exit(0);
 		}
 
 		/*	Init session environment
@@ -113,7 +113,7 @@ public final class LoginEventServer {
 		}
 		catch (CommunicationException ce) {
 			Log.errorException(ce);
-			System.exit(1);
+			System.exit(0);
 		}
 
 		/*	Activate servants*/
@@ -125,7 +125,7 @@ public final class LoginEventServer {
 		}
 		catch (CommunicationException ce) {
 			Log.errorException(ce);
-			System.exit(1);
+			System.exit(0);
 		}
 
 		/*	Add shutdown hook*/
@@ -146,7 +146,7 @@ public final class LoginEventServer {
 		}
 		catch (Exception e) {
 			Log.errorException(e);
-			System.exit(1);
+			System.exit(0);
 		}
 	}
 
