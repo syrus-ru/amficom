@@ -1,5 +1,5 @@
 /*
- * $Id: CORBAGeneralObjectLoader.java,v 1.8 2005/05/01 17:29:09 arseniy Exp $
+ * $Id: CORBAGeneralObjectLoader.java,v 1.9 2005/05/03 14:26:21 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,13 +18,13 @@ import com.syrus.AMFICOM.general.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
-import com.syrus.AMFICOM.general.corba.SecurityKey;
+import com.syrus.AMFICOM.general.corba.SessionKey_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/05/01 17:29:09 $
+ * @version $Revision: 1.9 $, $Date: 2005/05/03 14:26:21 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
@@ -41,10 +41,10 @@ public final class CORBAGeneralObjectLoader extends CORBAObjectLoader implements
 	public Set loadParameterTypes(Set ids) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
-		SecurityKey securityKey = LoginManager.getSecurityKey();
+		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
 
 		try {
-			ParameterType_Transferable[] transferables = cmServer.transmitParameterTypes(idsT, securityKey);
+			ParameterType_Transferable[] transferables = cmServer.transmitParameterTypes(idsT, sessionKeyT);
 			Set objects = new HashSet(transferables.length);
 			for (int i = 0; i < transferables.length; i++) {
 				try {
@@ -64,10 +64,10 @@ public final class CORBAGeneralObjectLoader extends CORBAObjectLoader implements
 	public Set loadCharacteristicTypes(Set ids) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
-		SecurityKey securityKey = LoginManager.getSecurityKey();
+		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
 
 		try {
-			CharacteristicType_Transferable[] transferables = cmServer.transmitCharacteristicTypes(idsT, securityKey);
+			CharacteristicType_Transferable[] transferables = cmServer.transmitCharacteristicTypes(idsT, sessionKeyT);
 			Set objects = new HashSet(transferables.length);
 			for (int i = 0; i < transferables.length; i++) {
 				objects.add(new CharacteristicType(transferables[i]));
@@ -82,10 +82,10 @@ public final class CORBAGeneralObjectLoader extends CORBAObjectLoader implements
 	public Set loadCharacteristics(Set ids) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
-		SecurityKey securityKey = LoginManager.getSecurityKey();
+		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
 
 		try {
-			Characteristic_Transferable[] transferables = cmServer.transmitCharacteristics(idsT, securityKey);
+			Characteristic_Transferable[] transferables = cmServer.transmitCharacteristics(idsT, sessionKeyT);
 			Set objects = new HashSet(transferables.length);
 			for (int i = 0; i < transferables.length; i++) {
 				try {
@@ -110,10 +110,10 @@ public final class CORBAGeneralObjectLoader extends CORBAObjectLoader implements
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
 		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
-		SecurityKey securityKey = LoginManager.getSecurityKey();
+		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
 
 		try {
-			ParameterType_Transferable[] transferables = cmServer.transmitParameterTypesButIdsCondition(idsT, securityKey, conditionT);
+			ParameterType_Transferable[] transferables = cmServer.transmitParameterTypesButIdsCondition(idsT, sessionKeyT, conditionT);
 			Set objects = new HashSet(transferables.length);
 			for (int i = 0; i < transferables.length; i++) {
 				try {
@@ -134,10 +134,10 @@ public final class CORBAGeneralObjectLoader extends CORBAObjectLoader implements
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
 		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
-		SecurityKey securityKey = LoginManager.getSecurityKey();
+		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
 
 		try {
-			CharacteristicType_Transferable[] transferables = cmServer.transmitCharacteristicTypesButIdsCondition(idsT, securityKey, conditionT);
+			CharacteristicType_Transferable[] transferables = cmServer.transmitCharacteristicTypesButIdsCondition(idsT, sessionKeyT, conditionT);
 			Set objects = new HashSet(transferables.length);
 			for (int i = 0; i < transferables.length; i++) {
 				objects.add(new CharacteristicType(transferables[i]));
@@ -153,10 +153,10 @@ public final class CORBAGeneralObjectLoader extends CORBAObjectLoader implements
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
 		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
-		SecurityKey securityKey = LoginManager.getSecurityKey();
+		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
 
 		try {
-			Characteristic_Transferable[] transferables = cmServer.transmitCharacteristicsButIdsCondition(idsT, securityKey, conditionT);
+			Characteristic_Transferable[] transferables = cmServer.transmitCharacteristicsButIdsCondition(idsT, sessionKeyT, conditionT);
 			Set objects = new HashSet(transferables.length);
 			for (int i = 0; i < transferables.length; i++) {
 				try {
@@ -179,7 +179,7 @@ public final class CORBAGeneralObjectLoader extends CORBAObjectLoader implements
 
 	public void saveParameterTypes(Set objects, boolean force) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		SecurityKey securityKey = LoginManager.getSecurityKey();
+		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
 
 		ParameterType_Transferable[] transferables = new ParameterType_Transferable[objects.size()];
 		int i = 0;
@@ -187,7 +187,7 @@ public final class CORBAGeneralObjectLoader extends CORBAObjectLoader implements
 			transferables[i] = (ParameterType_Transferable) ((ParameterType) it.next()).getTransferable();
 
 		try {
-			StorableObject_Transferable[] headers = cmServer.receiveParameterTypes(transferables, force, securityKey);
+			StorableObject_Transferable[] headers = cmServer.receiveParameterTypes(transferables, force, sessionKeyT);
 			super.updateHeaders(objects, headers);
 		}
 		catch (AMFICOMRemoteException are) {
@@ -200,7 +200,7 @@ public final class CORBAGeneralObjectLoader extends CORBAObjectLoader implements
 
 	public void saveCharacteristicTypes(Set objects, boolean force) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		SecurityKey securityKey = LoginManager.getSecurityKey();
+		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
 
 		CharacteristicType_Transferable[] transferables = new CharacteristicType_Transferable[objects.size()];
 		int i = 0;
@@ -208,7 +208,7 @@ public final class CORBAGeneralObjectLoader extends CORBAObjectLoader implements
 			transferables[i] = (CharacteristicType_Transferable) ((CharacteristicType) it.next()).getTransferable();
 
 		try {
-			StorableObject_Transferable[] headers = cmServer.receiveCharacteristicTypes(transferables, force, securityKey);
+			StorableObject_Transferable[] headers = cmServer.receiveCharacteristicTypes(transferables, force, sessionKeyT);
 			super.updateHeaders(objects, headers);
 		}
 		catch (AMFICOMRemoteException are) {
@@ -221,7 +221,7 @@ public final class CORBAGeneralObjectLoader extends CORBAObjectLoader implements
 
 	public void saveCharacteristics(Set objects, boolean force) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		SecurityKey securityKey = LoginManager.getSecurityKey();
+		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
 
 		Characteristic_Transferable[] transferables = new Characteristic_Transferable[objects.size()];
 		int i = 0;
@@ -229,7 +229,7 @@ public final class CORBAGeneralObjectLoader extends CORBAObjectLoader implements
 			transferables[i] = (Characteristic_Transferable) ((Characteristic) it.next()).getTransferable();
 
 		try {
-			StorableObject_Transferable[] headers = cmServer.receiveCharacteristics(transferables, force, securityKey);
+			StorableObject_Transferable[] headers = cmServer.receiveCharacteristics(transferables, force, sessionKeyT);
 			super.updateHeaders(objects, headers);
 		}
 		catch (AMFICOMRemoteException are) {
@@ -246,12 +246,12 @@ public final class CORBAGeneralObjectLoader extends CORBAObjectLoader implements
 
 	public Set refresh(Set storableObjects) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		SecurityKey securityKey = LoginManager.getSecurityKey();
+		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
 
 		StorableObject_Transferable[] headersT = StorableObject.createHeadersTransferable(storableObjects);
 
 		try {
-			Identifier_Transferable[] idsT = cmServer.transmitRefreshedGeneralObjects(headersT, securityKey);
+			Identifier_Transferable[] idsT = cmServer.transmitRefreshedGeneralObjects(headersT, sessionKeyT);
 
 			Set refreshedIds = Identifier.fromTransferables(idsT);
 			return refreshedIds;

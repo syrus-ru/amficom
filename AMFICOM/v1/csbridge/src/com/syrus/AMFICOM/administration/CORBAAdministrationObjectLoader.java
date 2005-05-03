@@ -1,5 +1,5 @@
 /*
- * $Id: CORBAAdministrationObjectLoader.java,v 1.7 2005/05/01 17:29:09 arseniy Exp $
+ * $Id: CORBAAdministrationObjectLoader.java,v 1.8 2005/05/03 14:26:21 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,13 +32,13 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.general.corba.SecurityKey;
+import com.syrus.AMFICOM.general.corba.SessionKey_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/05/01 17:29:09 $
+ * @version $Revision: 1.8 $, $Date: 2005/05/03 14:26:21 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
@@ -55,10 +55,10 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 	public Set loadUsers(Set ids) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
-		SecurityKey securityKey = LoginManager.getSecurityKey();
+		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
 
 		try {
-			User_Transferable[] transferables = cmServer.transmitUsers(idsT, securityKey);
+			User_Transferable[] transferables = cmServer.transmitUsers(idsT, sessionKeyT);
 			Set objects = new HashSet(transferables.length);
 			for (int i = 0; i < transferables.length; i++) {
 				objects.add(new User(transferables[i]));
@@ -73,10 +73,10 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 	public Set loadDomains(Set ids) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
-		SecurityKey securityKey = LoginManager.getSecurityKey();
+		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
 
 		try {
-			Domain_Transferable[] transferables = cmServer.transmitDomains(idsT, securityKey);
+			Domain_Transferable[] transferables = cmServer.transmitDomains(idsT, sessionKeyT);
 			Set objects = new HashSet(transferables.length);
 			for (int i = 0; i < transferables.length; i++) {
 				try {
@@ -96,10 +96,10 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 	public Set loadServers(Set ids) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
-		SecurityKey securityKey = LoginManager.getSecurityKey();
+		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
 
 		try {
-			Server_Transferable[] transferables = cmServer.transmitServers(idsT, securityKey);
+			Server_Transferable[] transferables = cmServer.transmitServers(idsT, sessionKeyT);
 			Set objects = new HashSet(transferables.length);
 			for (int i = 0; i < transferables.length; i++) {
 				try {
@@ -119,10 +119,10 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 	public Set loadMCMs(Set ids) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
-		SecurityKey securityKey = LoginManager.getSecurityKey();
+		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
 
 		try {
-			MCM_Transferable[] transferables = cmServer.transmitMCMs(idsT, securityKey);
+			MCM_Transferable[] transferables = cmServer.transmitMCMs(idsT, sessionKeyT);
 			Set objects = new HashSet(transferables.length);
 			for (int i = 0; i < transferables.length; i++) {
 				try {
@@ -142,10 +142,10 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 	public Set loadServerProcesses(Set ids) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
-		SecurityKey securityKey = LoginManager.getSecurityKey();
+		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
 
 		try {
-			ServerProcess_Transferable[] transferables = cmServer.transmitServerProcesses(idsT, securityKey);
+			ServerProcess_Transferable[] transferables = cmServer.transmitServerProcesses(idsT, sessionKeyT);
 			Set objects = new HashSet(transferables.length);
 			for (int i = 0; i < transferables.length; i++) {
 				objects.add(new ServerProcess(transferables[i]));
@@ -165,10 +165,10 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
 		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
-		SecurityKey securityKey = LoginManager.getSecurityKey();
+		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
 
 		try {
-			User_Transferable[] transferables = cmServer.transmitUsersButIdsCondition(idsT, securityKey, conditionT);
+			User_Transferable[] transferables = cmServer.transmitUsersButIdsCondition(idsT, sessionKeyT, conditionT);
 			Set objects = new HashSet(transferables.length);
 			for (int i = 0; i < transferables.length; i++) {
 				objects.add(new User(transferables[i]));
@@ -184,10 +184,10 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
 		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
-		SecurityKey securityKey = LoginManager.getSecurityKey();
+		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
 
 		try {
-			Domain_Transferable[] transferables = cmServer.transmitDomainsButIdsCondition(idsT, securityKey, conditionT);
+			Domain_Transferable[] transferables = cmServer.transmitDomainsButIdsCondition(idsT, sessionKeyT, conditionT);
 			Set objects = new HashSet(transferables.length);
 			for (int i = 0; i < transferables.length; i++) {
 				try {
@@ -208,10 +208,10 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
 		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
-		SecurityKey securityKey = LoginManager.getSecurityKey();
+		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
 
 		try {
-			Server_Transferable[] transferables = cmServer.transmitServersButIdsCondition(idsT, securityKey, conditionT);
+			Server_Transferable[] transferables = cmServer.transmitServersButIdsCondition(idsT, sessionKeyT, conditionT);
 			Set objects = new HashSet(transferables.length);
 			for (int i = 0; i < transferables.length; i++) {
 				try {
@@ -232,10 +232,10 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
 		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
-		SecurityKey securityKey = LoginManager.getSecurityKey();
+		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
 
 		try {
-			MCM_Transferable[] transferables = cmServer.transmitMCMsButIdsCondition(idsT, securityKey, conditionT);
+			MCM_Transferable[] transferables = cmServer.transmitMCMsButIdsCondition(idsT, sessionKeyT, conditionT);
 			Set objects = new HashSet(transferables.length);
 			for (int i = 0; i < transferables.length; i++) {
 				try {
@@ -256,10 +256,10 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
 		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
-		SecurityKey securityKey = LoginManager.getSecurityKey();
+		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
 
 		try {
-			ServerProcess_Transferable[] transferables = cmServer.transmitServerProcessesButIdsCondition(idsT, securityKey, conditionT);
+			ServerProcess_Transferable[] transferables = cmServer.transmitServerProcessesButIdsCondition(idsT, sessionKeyT, conditionT);
 			Set objects = new HashSet(transferables.length);
 			for (int i = 0; i < transferables.length; i++) {
 				objects.add(new ServerProcess(transferables[i]));
@@ -277,7 +277,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 
 	public void saveUsers(Set objects, boolean force) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		SecurityKey securityKey = LoginManager.getSecurityKey();
+		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
 
 		User_Transferable[] transferables = new User_Transferable[objects.size()];
 		int i = 0;
@@ -285,7 +285,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 			transferables[i] = (User_Transferable) ((User) it.next()).getTransferable();
 
 		try {
-			StorableObject_Transferable[] headers = cmServer.receiveUsers(transferables, force, securityKey);
+			StorableObject_Transferable[] headers = cmServer.receiveUsers(transferables, force, sessionKeyT);
 			super.updateHeaders(objects, headers);
 		}
 		catch (AMFICOMRemoteException are) {
@@ -298,7 +298,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 
 	public void saveDomains(Set objects, boolean force) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		SecurityKey securityKey = LoginManager.getSecurityKey();
+		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
 
 		Domain_Transferable[] transferables = new Domain_Transferable[objects.size()];
 		int i = 0;
@@ -306,7 +306,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 			transferables[i] = (Domain_Transferable) ((Domain) it.next()).getTransferable();
 
 		try {
-			StorableObject_Transferable[] headers = cmServer.receiveDomains(transferables, force, securityKey);
+			StorableObject_Transferable[] headers = cmServer.receiveDomains(transferables, force, sessionKeyT);
 			super.updateHeaders(objects, headers);
 		}
 		catch (AMFICOMRemoteException are) {
@@ -319,7 +319,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 
 	public void saveServers(Set objects, boolean force) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		SecurityKey securityKey = LoginManager.getSecurityKey();
+		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
 
 		Server_Transferable[] transferables = new Server_Transferable[objects.size()];
 		int i = 0;
@@ -327,7 +327,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 			transferables[i] = (Server_Transferable) ((Server) it.next()).getTransferable();
 
 		try {
-			StorableObject_Transferable[] headers = cmServer.receiveServers(transferables, force, securityKey);
+			StorableObject_Transferable[] headers = cmServer.receiveServers(transferables, force, sessionKeyT);
 			super.updateHeaders(objects, headers);
 		}
 		catch (AMFICOMRemoteException are) {
@@ -340,7 +340,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 
 	public void saveMCMs(Set objects, boolean force) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		SecurityKey securityKey = LoginManager.getSecurityKey();
+		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
 
 		MCM_Transferable[] transferables = new MCM_Transferable[objects.size()];
 		int i = 0;
@@ -348,7 +348,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 			transferables[i] = (MCM_Transferable) ((MCM) it.next()).getTransferable();
 
 		try {
-			StorableObject_Transferable[] headers = cmServer.receiveMCMs(transferables, force, securityKey);
+			StorableObject_Transferable[] headers = cmServer.receiveMCMs(transferables, force, sessionKeyT);
 			super.updateHeaders(objects, headers);
 		}
 		catch (AMFICOMRemoteException are) {
@@ -361,7 +361,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 
 	public void saveServerProcesses(Set objects, boolean force) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		SecurityKey securityKey = LoginManager.getSecurityKey();
+		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
 
 		ServerProcess_Transferable[] transferables = new ServerProcess_Transferable[objects.size()];
 		int i = 0;
@@ -369,7 +369,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 			transferables[i] = (ServerProcess_Transferable) ((ServerProcess) it.next()).getTransferable();
 
 		try {
-			StorableObject_Transferable[] headers = cmServer.receiveServerProcesses(transferables, force, securityKey);
+			StorableObject_Transferable[] headers = cmServer.receiveServerProcesses(transferables, force, sessionKeyT);
 			super.updateHeaders(objects, headers);
 		}
 		catch (AMFICOMRemoteException are) {
@@ -386,12 +386,12 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 
 	public Set refresh(Set storableObjects) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
-		SecurityKey securityKey = LoginManager.getSecurityKey();
+		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
 
 		StorableObject_Transferable[] headersT = StorableObject.createHeadersTransferable(storableObjects);
 
 		try {
-			Identifier_Transferable[] idsT = cmServer.transmitRefreshedAdministrationObjects(headersT, securityKey);
+			Identifier_Transferable[] idsT = cmServer.transmitRefreshedAdministrationObjects(headersT, sessionKeyT);
 
 			Set refreshedIds = Identifier.fromTransferables(idsT);
 			return refreshedIds;

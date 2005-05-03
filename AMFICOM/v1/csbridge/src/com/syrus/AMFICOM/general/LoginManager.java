@@ -1,5 +1,5 @@
 /*
- * $Id: LoginManager.java,v 1.4 2005/05/03 12:06:32 arseniy Exp $
+ * $Id: LoginManager.java,v 1.5 2005/05/03 14:26:21 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,18 +16,19 @@ import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder;
-import com.syrus.AMFICOM.general.corba.SecurityKey;
+import com.syrus.AMFICOM.general.corba.SessionKey_Transferable;
 import com.syrus.AMFICOM.leserver.corba.LoginServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/05/03 12:06:32 $
+ * @version $Revision: 1.5 $, $Date: 2005/05/03 14:26:21 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
 public final class LoginManager {
 	private static LoginServerConnectionManager loginServerConnectionManager;
-	private static SecurityKey securityKey;
+	private static SessionKey sessionKey;
+	private static SessionKey_Transferable sessionKeyT;
 	private static Identifier userId;
 	private static Identifier domainId;
 	private static boolean isLoggedIn;
@@ -52,7 +53,8 @@ public final class LoginManager {
 		LoginServer loginServer = loginServerConnectionManager.getLoginServerReference();
 		try {
 			Identifier_TransferableHolder userIdHolder = new Identifier_TransferableHolder();
-			securityKey = loginServer.login(login, password, userIdHolder);
+			sessionKeyT = loginServer.login(login, password, userIdHolder);
+			sessionKey = new SessionKey(sessionKeyT);
 			userId = new Identifier(userIdHolder.value);
 			isLoggedIn = true;
 		}
@@ -79,7 +81,7 @@ public final class LoginManager {
 
 		LoginServer loginServer = loginServerConnectionManager.getLoginServerReference();
 		try {
-			loginServer.logout(securityKey);
+			loginServer.logout((SessionKey_Transferable) sessionKey.getTransferable());
 			isLoggedIn = false;
 		}
 		catch (AMFICOMRemoteException are) {
@@ -98,7 +100,7 @@ public final class LoginManager {
 	public static Set getAvailableDomains() throws CommunicationException, LoginException {
 		LoginServer loginServer = loginServerConnectionManager.getLoginServerReference();
 		try {
-			Domain_Transferable[] domainsT = loginServer.transmitAvailableDomains(securityKey);
+			Domain_Transferable[] domainsT = loginServer.transmitAvailableDomains((SessionKey_Transferable) sessionKey.getTransferable());
 			Set domains = new HashSet(domainsT.length);
 			for (int i = 0; i < domainsT.length; i++) {
 				try {
@@ -126,7 +128,8 @@ public final class LoginManager {
 	public static void selectDomain(Identifier domainId1) throws CommunicationException {
 		LoginServer loginServer = loginServerConnectionManager.getLoginServerReference();
 		try {
-			loginServer.selectDomain(securityKey, (Identifier_Transferable) domainId1.getTransferable());
+			loginServer.selectDomain((SessionKey_Transferable) sessionKey.getTransferable(),
+					(Identifier_Transferable) domainId1.getTransferable());
 			domainId = domainId1;
 		}
 		catch (AMFICOMRemoteException are) {
@@ -134,8 +137,12 @@ public final class LoginManager {
 		}
 	}
 
-	public static SecurityKey getSecurityKey() {
-		return securityKey;
+	public static SessionKey getSessionKey() {
+		return sessionKey;
+	}
+
+	public static SessionKey_Transferable getSessionKeyTransferable() {
+		return sessionKeyT;
 	}
 
 	public static Identifier getUserId() {
