@@ -1,18 +1,19 @@
 /*
- * $Id: SessionKey.java,v 1.1 2005/05/03 14:19:15 arseniy Exp $
+ * $Id: SessionKey.java,v 1.1 2005/05/03 19:21:52 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
-package com.syrus.AMFICOM.general;
+package com.syrus.AMFICOM.security;
 
 import org.omg.CORBA.portable.IDLEntity;
 
-import com.syrus.AMFICOM.general.corba.SessionKey_Transferable;
+import com.syrus.AMFICOM.general.TransferableObject;
+import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/05/03 14:19:15 $
+ * @version $Revision: 1.1 $, $Date: 2005/05/03 19:21:52 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -20,10 +21,10 @@ public final class SessionKey implements TransferableObject {
 	private String sessionCode;
 
 	/**
-	 * Only for generator
+	 * Only for generator and database driver
 	 * @param sessionCode
 	 */
-	protected SessionKey(String sessionCode) {
+	public SessionKey(String sessionCode) {
 		this.sessionCode = sessionCode;
 	}
 
