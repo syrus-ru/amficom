@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServer.java,v 1.37 2005/05/01 17:57:11 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.38 2005/05/03 14:29:38 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -47,7 +47,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2005/05/01 17:57:11 $
+ * @version $Revision: 1.38 $, $Date: 2005/05/03 14:29:38 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -68,6 +68,8 @@ public class MeasurementServer extends SleepButWorkThread {
 	public static final String DB_LOGIN_NAME = "amficom";
 	public static final String SERVER_ID = "Server_1";
 	public static final int TICK_TIME = 5;	//sec
+
+	private static final String PASSWORD = "mserver";
 
 	/*	Error codes for method processFall()	(abort tests, ...)*/
 	public static final int FALL_CODE_RECEIVE_TESTS = 1;
@@ -157,7 +159,7 @@ public class MeasurementServer extends SleepButWorkThread {
 		/*	Login*/
 		MServerSessionEnvironment sessionEnvironment = MServerSessionEnvironment.getInstance();
 		try {
-			sessionEnvironment.login(user.getLogin(), "password");
+			sessionEnvironment.login(user.getLogin(), PASSWORD);
 		}
 		catch (CommunicationException ce) {
 			Log.errorException(ce);
