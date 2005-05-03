@@ -1,5 +1,5 @@
 /*
- * $Id: CORBAServer.java,v 1.3 2005/04/29 10:32:09 arseniy Exp $
+ * $Id: CORBAServer.java,v 1.4 2005/05/03 18:12:54 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,11 @@
 
 package com.syrus.AMFICOM.general;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Properties;
+import java.util.Set;
 
 import org.omg.CORBA.ORB;
 import org.omg.CORBA.Policy;
@@ -37,18 +41,46 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/04/29 10:32:09 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/03 18:12:54 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
 
-public class CORBAServer /*extends Thread */{
+public class CORBAServer {
 	public static final String DEFAULT_ORB_INITIAL_HOST = "127.0.0.1";
 	public static final int DEFAULT_ORB_INITIAL_PORT = 1050;
 
 	ORB orb;
 	private POA poa;
 	private NamingContextExt namingContext;
+
+	/*	Names of bound servants. Need for unbound all servants on shutdown*/
+	private Set servantNames;	//Set <String servantName>
+
+	/*	Wrapper class for shutdown hook*/
+	private class WrappedHook {
+		Thread hook;
+
+		WrappedHook(Thread hook) {
+			this.hook = hook;
+		}
+
+		public int hashCode() {
+	    return System.identityHashCode(this.hook);
+		}
+
+		public boolean equals(Object object) {
+			if (object instanceof WrappedHook)
+				return (((WrappedHook) object).hook == this.hook);
+			return false;
+		}
+	}
+
+	/*	This field is set to false on shutdown just before running hooks*/
+	private boolean running;
+
+	/*	Hooks themselves*/
+	private Set hooks;	//Set <WrappedHook hook>
 
 	public CORBAServer(String rootContextName) throws CommunicationException {
 		this.initORB();
@@ -63,64 +95,8 @@ public class CORBAServer /*extends Thread */{
 		this.initNamingContext(rootContextName);
 
 		this.runORB();
-	}
 
-/*
-	public void activateServant(org.omg.CORBA.Object reference, String name) throws CommunicationException {
-		try {
-			Servant servant = this.poa.reference_to_servant(reference);
-			this.poa.activate_object(servant);
-
-			NameComponent[] nameComponents = this.namingContext.to_name(name);
-			this.namingContext.rebind(nameComponents, reference);
-		}
-		catch (UserException ue) {
-			throw new CommunicationException("Cannot activate servant", ue);
-		}
-	}
-*/
-	public void activateServant(Servant servant, String name) throws CommunicationException {
-		try {
-			this.poa.activate_object(servant);
-
-			org.omg.CORBA.Object reference = this.poa.servant_to_reference(servant);
-			NameComponent[] nameComponents = this.namingContext.to_name(name);
-			this.namingContext.rebind(nameComponents, reference);
-			Log.debugMessage("Activated servant '" + name + "'", Log.DEBUGLEVEL05);
-		}
-		catch (UserException ue) {
-			throw new CommunicationException("Cannot activate servant '" + name + "'", ue);
-		}
-	}
-
-	public void deactivateServant(String name) throws CommunicationException {
-		try {
-			NameComponent[] nameComponents = this.namingContext.to_name(name);
-			this.namingContext.unbind(nameComponents);
-			Log.debugMessage("Deactivated servant '" + name + "'", Log.DEBUGLEVEL05);
-		}
-		catch (NotFound nf) {
-			Log.errorMessage("Cannot deactivate servant '" + name + "' -- no such servant");
-		}
-		catch (UserException ue) {
-			throw new CommunicationException("Cannot deactivate servant '" + name + "'", ue);
-		}
-	}
-
-	public org.omg.CORBA.Object resolveReference(String name) throws CommunicationException {
-		try {
-			Log.debugMessage("Resolving name: " + name, Log.DEBUGLEVEL08);
-			org.omg.CORBA.Object ref = this.namingContext.resolve_str(name);
-			Log.debugMessage("Resolved reference: " + this.orb.object_to_string(ref), Log.DEBUGLEVEL10);
-			return ref;
-		}
-		catch (UserException nf) {
-			throw new CommunicationException("Name '" + name + "' not found", nf);
-		}
-	}
-
-	public ORB getORB() {
-		return this.orb;
+		this.running = true;
 	}
 
 	private void initORB() {
@@ -159,6 +135,7 @@ public class CORBAServer /*extends Thread */{
 
 	private void initNamingContext(String rootContextNameStr) throws CommunicationException {
 		this.bindIfNonExistingNamingContext(rootContextNameStr);
+		this.servantNames = Collections.synchronizedSet(new HashSet());
 	}
 
 	private void bindIfNonExistingNamingContext(String rootContextNameStr) throws CommunicationException {
@@ -196,7 +173,116 @@ public class CORBAServer /*extends Thread */{
 		});
 	}
 
+/*
+	public void activateServant(org.omg.CORBA.Object reference, String name) throws CommunicationException {
+		try {
+			Servant servant = this.poa.reference_to_servant(reference);
+			this.poa.activate_object(servant);
+
+			NameComponent[] nameComponents = this.namingContext.to_name(name);
+			this.namingContext.rebind(nameComponents, reference);
+		}
+		catch (UserException ue) {
+			throw new CommunicationException("Cannot activate servant", ue);
+		}
+	}
+*/
+	public void activateServant(Servant servant, String name) throws CommunicationException {
+		if (this.running) {
+			try {
+				this.poa.activate_object(servant);
+
+				org.omg.CORBA.Object reference = this.poa.servant_to_reference(servant);
+				NameComponent[] nameComponents = this.namingContext.to_name(name);
+				this.namingContext.rebind(nameComponents, reference);
+				this.servantNames.add(name);
+				Log.debugMessage("Activated servant '" + name + "'", Log.DEBUGLEVEL05);
+			}
+			catch (UserException ue) {
+				throw new CommunicationException("Cannot activate servant '" + name + "'", ue);
+			}
+		}
+		else
+			throw new IllegalStateException("Cannot resolve reference '" + name + "' -- shutting down");
+	}
+
+	public org.omg.CORBA.Object resolveReference(String name) throws CommunicationException {
+		if (this.running) {
+			try {
+				Log.debugMessage("Resolving name: " + name, Log.DEBUGLEVEL08);
+				org.omg.CORBA.Object ref = this.namingContext.resolve_str(name);
+				Log.debugMessage("Resolved reference: " + this.orb.object_to_string(ref), Log.DEBUGLEVEL10);
+				return ref;
+			}
+			catch (UserException nf) {
+				throw new CommunicationException("Name '" + name + "' not found", nf);
+			}
+		}
+		throw new IllegalStateException("Cannot resolve reference '" + name + "' -- shutting down");
+	}
+
+	public void addShutdownHook(Thread hook) {
+		if (this.running) {
+			if (!hook.isAlive()) {
+				if (this.hooks == null) {
+					this.hooks = new HashSet(1);
+					this.hooks.add(new WrappedHook(hook));
+				}
+				else {
+					WrappedHook wrappedHook = new WrappedHook(hook);
+					if (!this.hooks.contains(wrappedHook))
+						this.hooks.add(wrappedHook);
+					else
+						Log.errorMessage("CORBAServer | Cannot add shutdown hook -- it is already added");
+				}
+			}
+			else
+				Log.errorMessage("CORBAServer | Cannot add shutdown hook -- it is already running");
+		}
+		else
+			Log.errorMessage("CORBAServer | Cannot add shutdown hook -- shutting down");
+	}
+
+	public boolean removeShutdownHook(Thread hook) {
+		if (this.hooks == null)
+			return false;
+
+		if (this.running) {
+			if (hook != null) {
+				boolean ret = this.hooks.remove(new WrappedHook(hook));
+				if (ret && this.hooks.isEmpty())
+					this.hooks = null;
+				return ret;
+			}
+			Log.errorMessage("CORBAServer | Cannot remove NULL shutdown hook");
+			return false;
+		}
+		Log.errorMessage("CORBAServer | Cannot remove shutdown hook -- shutting down");
+		return false;
+	}
+
+// Maybe not need this?
+//	public ORB getORB() {
+//		return this.orb;
+//	}
+
 	void shutdown() {
+		this.running = false;
+
+		this.runHooks();
+
+		synchronized (this.servantNames) {
+			for (Iterator it = this.servantNames.iterator(); it.hasNext();) {
+				try {
+					this.unbindServant((String) it.next());
+					it.remove();
+				}
+				catch (CommunicationException ce) {
+					Log.errorException(ce);
+				}
+			}
+		}
+
 		try {
 			this.poa.the_POAManager().deactivate(false, false);
 		}
@@ -205,6 +291,40 @@ public class CORBAServer /*extends Thread */{
 		}
 		this.poa.destroy(false, false);
 		this.orb.shutdown(true);
+	}
+
+	private void unbindServant(String name) throws CommunicationException {
+		try {
+			NameComponent[] nameComponents = this.namingContext.to_name(name);
+			this.namingContext.unbind(nameComponents);
+			//this.servantNames.remove(name);
+			Log.debugMessage("Deactivated servant '" + name + "'", Log.DEBUGLEVEL05);
+		}
+		catch (NotFound nf) {
+			Log.errorMessage("Cannot deactivate servant '" + name + "' -- no such servant");
+		}
+		catch (UserException ue) {
+			throw new CommunicationException("Cannot deactivate servant '" + name + "'", ue);
+		}
+	}
+
+	private void runHooks() {
+		if (this.hooks == null)
+			return;
+
+		/*	No synchronization on hooks.
+		 *	The value false of field running guarantees,
+		 *	that hooks cannot be modified*/
+		for (Iterator it = this.hooks.iterator(); it.hasNext();)
+			((WrappedHook) it.next()).hook.start();
+
+		for (Iterator it = this.hooks.iterator(); it.hasNext();)
+			try {
+				((WrappedHook) it.next()).hook.join();
+			}
+			catch (InterruptedException ie) {
+				continue;
+			}
 	}
 
 	public void printNamingContext() {
