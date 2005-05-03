@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadDatabase.java,v 1.23 2005/04/01 07:57:28 bob Exp $
+ * $Id: CableThreadDatabase.java,v 1.24 2005/05/03 14:02:14 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/04/01 07:57:28 $
- * @author $Author: bob $
+ * @version $Revision: 1.24 $, $Date: 2005/05/03 14:02:14 $
+ * @author $Author: max $
  * @module config_v1
  */
 public class CableThreadDatabase extends StorableObjectDatabase  {
@@ -40,7 +40,7 @@ public class CableThreadDatabase extends StorableObjectDatabase  {
 	private CableThread fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof CableThread)
 			return (CableThread) storableObject;
-		throw new IllegalDataException("LinkDatabase.fromStorableObject | Illegal Storable Object: "
+		throw new IllegalDataException("CableThreadDatabase.fromStorableObject | Illegal Storable Object: "
 				+ storableObject.getClass().getName());
 	}
 
