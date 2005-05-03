@@ -24,7 +24,7 @@ module corba {
 		administration::corba::DomainSeq_Transferable transmitAvailableDomains(in general::corba::SecurityKey security_key)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void selectDomain(in general::corba::Identifier_Transferable domain_id)
+		void selectDomain(in general::corba::SecurityKey security_key, in general::corba::Identifier_Transferable domain_id)
 			raises (general::corba::AMFICOMRemoteException);
 
 		void validateAccess(in general::corba::SecurityKey security_key,
