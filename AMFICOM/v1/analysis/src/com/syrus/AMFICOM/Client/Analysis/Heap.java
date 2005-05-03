@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.53 2005/05/03 06:33:50 saa Exp $
+ * $Id: Heap.java,v 1.54 2005/05/03 07:29:42 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -64,7 +64,7 @@ import com.syrus.io.BellcoreStructure;
  * Фактически, primaryMTAE - это часть refAnalysisPrimary.
  * 
  * @author $Author: saa $
- * @version $Revision: 1.53 $, $Date: 2005/05/03 06:33:50 $
+ * @version $Revision: 1.54 $, $Date: 2005/05/03 07:29:42 $
  * @module
  */
 public class Heap
@@ -118,7 +118,8 @@ public class Heap
         dialogHash.put(key, dialog);
     }
     public static ModelTraceAndEventsImpl getMTAEPrimary() {
-        return refAnalysisPrimary.getMTAE();
+        return refAnalysisPrimary != null ? refAnalysisPrimary.getMTAE()
+                : null;
     }
 
     public static int getNumberOfEvents() {
