@@ -17,7 +17,8 @@ $(call checkenve,ORACLE_HOME)
 APPCLASSPATH := $(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/event.jar:$(LIBDIR)/csbridge.jar:$(LIBDIR)/util.jar
 
 
-SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/leserver/*.java)
+SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/leserver/*.java) \
+	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/general/*.java)
 
 all: $(LIBNAME) $(LIBNAME_INTERFACE)
 
