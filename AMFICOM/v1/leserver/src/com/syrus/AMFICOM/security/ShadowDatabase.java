@@ -1,11 +1,11 @@
 /*
- * $Id: ShadowDatabase.java,v 1.2 2005/05/03 12:13:37 arseniy Exp $
+ * $Id: ShadowDatabase.java,v 1.1 2005/05/03 19:44:24 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
-package com.syrus.AMFICOM.leserver;
+package com.syrus.AMFICOM.security;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -23,11 +23,11 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/05/03 12:13:37 $
+ * @version $Revision: 1.1 $, $Date: 2005/05/03 19:44:24 $
  * @author $Author: arseniy $
  * @module leserver_v1
  */
-final class ShadowDatabase {
+public final class ShadowDatabase {
 	private static final String TABLE_NAME_SHADOW = "Shadow";
 	private static final String COLUMN_USER_ID = "user_id";
 	private static final String COLUMN_PASSWORD = "password";
@@ -51,7 +51,7 @@ final class ShadowDatabase {
 		return sql;
 	}
 
-	protected String retrieve(Identifier userId) throws RetrieveObjectException, ObjectNotFoundException {
+	public String retrieve(Identifier userId) throws RetrieveObjectException, ObjectNotFoundException {
 		final StringBuffer sql = this.retrieveQuery(this.singleWhereClause(userId));
 
 		Statement statement = null;
