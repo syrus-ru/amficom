@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.29 2005/04/29 16:02:27 arseniy Exp $
+ * $Id: DatabaseContextSetup.java,v 1.30 2005/05/03 14:30:31 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,6 +39,7 @@ import com.syrus.AMFICOM.measurement.AnalysisTypeDatabase;
 import com.syrus.AMFICOM.measurement.CronTemporalPatternDatabase;
 import com.syrus.AMFICOM.measurement.EvaluationDatabase;
 import com.syrus.AMFICOM.measurement.EvaluationTypeDatabase;
+import com.syrus.AMFICOM.measurement.IntervalsTemporalPatternDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
 import com.syrus.AMFICOM.measurement.MeasurementSetupDatabase;
@@ -51,7 +52,7 @@ import com.syrus.AMFICOM.measurement.TestDatabase;
 
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/04/29 16:02:27 $
+ * @version $Revision: 1.30 $, $Date: 2005/05/03 14:30:31 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -102,7 +103,7 @@ final class DatabaseContextSetup {
 				new TestDatabase(),
 				new ResultDatabase(),
 				new CronTemporalPatternDatabase(),
-				/* TODO new IntervalsTemporalPatternDatabase(),*/
+				new IntervalsTemporalPatternDatabase(),
 				new PeriodicalTemporalPatternDatabase());
 	}
 
