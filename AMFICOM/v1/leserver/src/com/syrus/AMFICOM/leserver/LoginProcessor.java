@@ -1,5 +1,5 @@
 /*
- * $Id: LoginProcessor.java,v 1.3 2005/05/02 19:04:40 arseniy Exp $
+ * $Id: LoginProcessor.java,v 1.4 2005/05/03 14:35:36 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,26 +8,32 @@
 package com.syrus.AMFICOM.leserver;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
+import com.syrus.AMFICOM.general.SessionKey;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
-import com.syrus.AMFICOM.general.corba.SecurityKey;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/05/02 19:04:40 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/03 14:35:36 $
  * @author $Author: arseniy $
  * @module leserver_v1
  */
 final class LoginProcessor extends SleepButWorkThread {
 	public static final String KEY_LOGIN_PROCESSOR_TICK_TIME = "LoginProcessorTickTime";
 	public static final String KEY_LOGIN_PROCESSOR_MAX_FALLS = "LoginProcessorMaxFalls";
+	public static final String KEY_MAX_USER_UNACTIVITY_PERIOD = "MaxUserUnactivityPeriod";
 
 	public static final int LOGIN_PROCESSOR_TICK_TIME = 5;	//sec
+	public static final int MAX_USER_UNACTIVITY_PERIOD = 1;	//hour
 
-	private static Map loginMap;
+	private static Map loginMap;		//Map <SessionKey sessionKey, UserLogin userLogin>
+	private long maxUserUnactivityPeriod;
+	private UserLoginDatabase userLoginDatabase;
 	private boolean running;
 
 	public LoginProcessor() {
@@ -37,6 +43,8 @@ final class LoginProcessor extends SleepButWorkThread {
 		if (loginMap == null)
 			loginMap = Collections.synchronizedMap(new HashMap());
 
+		this.maxUserUnactivityPeriod = ApplicationProperties.getInt(KEY_MAX_USER_UNACTIVITY_PERIOD, MAX_USER_UNACTIVITY_PERIOD) * 60 * 60 * 1000;
+		this.userLoginDatabase = new UserLoginDatabase();
 		this.running = true;
 
 		Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -48,7 +56,20 @@ final class LoginProcessor extends SleepButWorkThread {
 
 	public void run() {
 		while (this.running) {
-			//TODO Implement
+
+			synchronized (loginMap) {
+				for (Iterator it = loginMap.keySet().iterator(); it.hasNext();) {
+					final SessionKey sessionKey = (SessionKey) it.next();
+					final UserLogin userLogin = (UserLogin) loginMap.get(sessionKey);
+					final Date lastActivityDate = userLogin.getLastActivityDate();
+					if (System.currentTimeMillis() - lastActivityDate.getTime() >= this.maxUserUnactivityPeriod) {
+						Log.debugMessage("User '" + userLogin.getUserId() + "' unactive more, than "
+								+ (this.maxUserUnactivityPeriod / (60 * 60 * 1000)) + " hours. Deleting login", Log.DEBUGLEVEL06);
+						this.userLoginDatabase.delete(userLogin);
+						it.remove();
+					}
+				}
+			}
 
 			try {
 				sleep(super.initialTimeToSleep);
@@ -70,11 +91,15 @@ final class LoginProcessor extends SleepButWorkThread {
 
 	protected static void addUserLogin(final UserLogin userLogin) {
 		Log.debugMessage("LoginProcessor.addUserLogin | Adding login for user '" + userLogin.getUserId() + "'", Log.DEBUGLEVEL08);
-		loginMap.put(userLogin.getSecurityKey(), userLogin);
+		loginMap.put(userLogin.getSessionKey(), userLogin);
 	}
 
-	protected static UserLogin removeUserLogin(final SecurityKey securityKey) {
-		return (UserLogin) loginMap.remove(securityKey);
+	protected static UserLogin getUserLogin(final SessionKey sessionKey) {
+		return (UserLogin) loginMap.get(sessionKey);
+	}
+
+	protected static UserLogin removeUserLogin(final SessionKey sessionKey) {
+		return (UserLogin) loginMap.remove(sessionKey);
 	}
 
 	protected void shutdown() {
