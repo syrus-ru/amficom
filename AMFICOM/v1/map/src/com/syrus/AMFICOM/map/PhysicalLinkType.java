@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.33 2005/04/20 07:53:47 bass Exp $
+ * $Id: PhysicalLinkType.java,v 1.34 2005/05/03 14:05:40 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,9 +38,11 @@ import com.syrus.AMFICOM.map.corba.PhysicalLinkType_Transferable;
  * типов линий, которые определяются полем {@link #codename}, соответствующим
  * какому-либо значению {@link #TUNNEL}, {@link #COLLECTOR}, {@link #INDOOR}, 
  * {@link #SUBMARINE}, {@link #OVERHEAD}, {@link #UNBOUND}
- * @author $Author: bass $
- * @version $Revision: 1.33 $, $Date: 2005/04/20 07:53:47 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.34 $, $Date: 2005/05/03 14:05:40 $
  * @module map_v1
+ * @todo add (@link #topological} to constructor
+ * @todo make {@link #topological} persistent
  */
 public class PhysicalLinkType extends StorableObjectType implements Characterizable, Namable {
 
@@ -73,6 +75,8 @@ public class PhysicalLinkType extends StorableObjectType implements Characteriza
 	 * @todo добавить сохранение в БД
 	 */
 	private IntDimension 			bindingDimension;
+
+	private transient boolean topological;
 
 	PhysicalLinkType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
@@ -179,6 +183,15 @@ public class PhysicalLinkType extends StorableObjectType implements Characteriza
 
 	public void setDescription(String description) {
 		this.setDescription0(description);
+		this.changed = true;
+	}
+
+	public boolean isTopological() {
+		return this.topological;
+	}
+
+	public void setTopological(final boolean topological) {
+		this.topological = topological;
 		this.changed = true;
 	}
 
