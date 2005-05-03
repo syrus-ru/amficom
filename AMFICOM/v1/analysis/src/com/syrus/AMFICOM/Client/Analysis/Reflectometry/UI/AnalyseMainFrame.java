@@ -85,6 +85,7 @@ import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.analysis.ClientAnalysisManager;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.io.BellcoreStructure;
 import com.syrus.util.Log;
 
@@ -795,9 +796,7 @@ public class AnalyseMainFrame extends JFrame implements BsHashChangeListener,
 		aModel.setEnabled("menuSessionDomain", true);
 		aModel.setEnabled("menuSessionNew", false);
 		aModel.fireModelChanged("");
-		Identifier domain_id = new Identifier(
-				((RISDSessionInfo )aContext.getSessionInterface()).getAccessIdentifier().domain_id);
-		internalDispatcher.notify(new ContextChangeEvent(domain_id,
+		internalDispatcher.notify(new ContextChangeEvent(LoginManager.getDomainId(),
 				ContextChangeEvent.DOMAIN_SELECTED_EVENT));
 	}
 

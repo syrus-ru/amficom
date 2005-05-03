@@ -105,7 +105,7 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 
 		if (result1.getSort().equals(ResultSort.RESULT_SORT_MEASUREMENT)) {
 			Measurement m = (Measurement)result1.getAction();
-			Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
+//			Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
 			bs.title = m.getName();
 			bs.monitoredElementId = m.getMonitoredElementId().getIdentifierString();
 	
@@ -114,7 +114,7 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 			Heap.setContextMeasurementSetup(ms);
 
             try {
-    			AnalysisUtil.load_CriteriaSet(userId, ms);
+    			AnalysisUtil.load_CriteriaSet(LoginManager.getUserId(), ms);
     
     			if (ms.getEtalon() != null)
     				AnalysisUtil.load_Etalon(ms);

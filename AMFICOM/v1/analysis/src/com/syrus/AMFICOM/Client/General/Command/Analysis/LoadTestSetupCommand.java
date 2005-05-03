@@ -6,13 +6,12 @@ import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.Analysis.GUIUtil;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.Analysis.UI.TestSetupLoadDialog;
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.analysis.dadara.DataFormatException;
-import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.io.BellcoreStructure;
 
@@ -53,7 +52,7 @@ public class LoadTestSetupCommand extends VoidCommand
 		MeasurementSetup ms = dialog.resource;
 		Heap.setContextMeasurementSetup(ms);
 
-		Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
+//		Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
 //		bs.test_setup_id = ts.getId();
 
 		if (Heap.hasEventParamsForEtalonTrace()) // если эталон есть (уже открыт) - то закрыть
@@ -63,7 +62,7 @@ public class LoadTestSetupCommand extends VoidCommand
 		}
 
         try {
-    		AnalysisUtil.load_CriteriaSet(userId, ms);
+    		AnalysisUtil.load_CriteriaSet(LoginManager.getUserId(), ms);
     
     		if (ms.getEtalon() != null)
     			AnalysisUtil.load_Etalon(ms);

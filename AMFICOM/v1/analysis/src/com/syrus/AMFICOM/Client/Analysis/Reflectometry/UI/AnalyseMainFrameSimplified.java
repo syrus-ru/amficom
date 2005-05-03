@@ -415,8 +415,7 @@ implements BsHashChangeListener, OperationListener, EtalonMTMListener, CurrentTr
 		aModel.setEnabled("menuSessionDomain", true);
 		aModel.setEnabled("menuSessionNew", false);
 		aModel.fireModelChanged("");
-		Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().domain_id);
-		internal_dispatcher.notify(new ContextChangeEvent(domain_id, ContextChangeEvent.DOMAIN_SELECTED_EVENT));
+		internal_dispatcher.notify(new ContextChangeEvent(LoginManager.getDomainId(), ContextChangeEvent.DOMAIN_SELECTED_EVENT));
 	}
 
 	public void setDomainSelected()
@@ -436,9 +435,8 @@ implements BsHashChangeListener, OperationListener, EtalonMTMListener, CurrentTr
 
 		try
 		{
-			Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().domain_id);
 			Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(
-					domain_id, true);
+				LoginManager.getDomainId(), true);
 			statusBar.setText("domain", domain.getName());
 		}
 		catch(ApplicationException ex)

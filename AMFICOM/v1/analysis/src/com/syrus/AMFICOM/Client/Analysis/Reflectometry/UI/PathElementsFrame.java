@@ -5,7 +5,6 @@ import java.util.Iterator;
 import java.util.Set;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
@@ -14,6 +13,7 @@ import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
@@ -55,9 +55,7 @@ public class PathElementsFrame extends AnalysisFrame
 								new Identifier(bs.monitoredElementId), true);
 
 				if (me.getSort().equals(MonitoredElementSort.MONITOREDELEMENT_SORT_TRANSMISSION_PATH)) {
-					Identifier domainId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
-							getAccessIdentifier().domain_id);
-					LinkedIdsCondition condition = new LinkedIdsCondition(domainId,
+					LinkedIdsCondition condition = new LinkedIdsCondition(LoginManager.getDomainId(),
 							ObjectEntities.SCHEME_PATH_ENTITY_CODE);
 					Set paths = SchemeStorableObjectPool.getStorableObjectsByCondition(condition, true);
 

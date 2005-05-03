@@ -5,15 +5,28 @@ import javax.swing.JOptionPane;
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.Analysis.GUIUtil;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.analysis.dadara.*;
-import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.analysis.dadara.DataStreamableUtil;
+import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEventsImpl;
+import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.general.ParameterType;
+import com.syrus.AMFICOM.general.ParameterTypeCodenames;
 import com.syrus.AMFICOM.general.corba.DataType;
-import com.syrus.AMFICOM.measurement.*;
-import com.syrus.io.*;
+import com.syrus.AMFICOM.measurement.Analysis;
+import com.syrus.AMFICOM.measurement.AnalysisType;
+import com.syrus.AMFICOM.measurement.Measurement;
+import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
+import com.syrus.AMFICOM.measurement.SetParameter;
+import com.syrus.io.BellcoreStructure;
+import com.syrus.io.BellcoreWriter;
+import com.syrus.io.ByteArrayCollector;
 
 public class SaveAnalysisCommand extends VoidCommand
 {
@@ -65,7 +78,7 @@ public class SaveAnalysisCommand extends VoidCommand
 			return;
 		}
 
-		Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
+//		Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
 
 		Analysis a = null;
 		AnalysisType type;
@@ -88,7 +101,7 @@ public class SaveAnalysisCommand extends VoidCommand
 		try
 		{
 			a = Analysis.createInstance( // FIXME: does this code has any effect?
-				userId,
+				LoginManager.getUserId(),
 				type,
 				new Identifier(bs.monitoredElementId),
 				m,

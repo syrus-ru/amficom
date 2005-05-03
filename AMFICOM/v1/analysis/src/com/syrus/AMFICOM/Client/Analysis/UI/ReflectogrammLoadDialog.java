@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogrammLoadDialog.java,v 1.14 2005/04/11 15:54:35 bob Exp $
+ * $Id: ReflectogrammLoadDialog.java,v 1.15 2005/05/03 12:19:09 bob Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,6 +32,7 @@ import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.ParameterTypeCodenames;
 import com.syrus.AMFICOM.logic.IconPopulatableItem;
@@ -50,7 +51,7 @@ import com.syrus.io.BellcoreReader;
 import com.syrus.io.BellcoreStructure;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/04/11 15:54:35 $
+ * @version $Revision: 1.15 $, $Date: 2005/05/03 12:19:09 $
  * @author $Author: bob $
  * @module analysis_v1
  */
@@ -72,8 +73,9 @@ public class ReflectogrammLoadDialog extends JDialog {
 	public ReflectogrammLoadDialog(ApplicationContext aContext) {
 		super(Environment.getActiveWindow());
 		this.aContext = aContext;
-		this.domainId = new Identifier(
-										((RISDSessionInfo) aContext.getSessionInterface()).getAccessIdentifier().domain_id);
+		this.domainId = LoginManager.getDomainId();
+//		this.domainId = new Identifier(
+//										((RISDSessionInfo) aContext.getSessionInterface()).getAccessIdentifier().domain_id);
 
 		this.setModal(true);
 

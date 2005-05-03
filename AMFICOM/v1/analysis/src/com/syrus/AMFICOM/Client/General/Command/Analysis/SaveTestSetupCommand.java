@@ -59,14 +59,11 @@ public class SaveTestSetupCommand extends VoidCommand
 
 		// создаем новый MS
 
-		Identifier userId = new Identifier(((RISDSessionInfo)aContext
-				.getSessionInterface()).getAccessIdentifier().user_id);
-
 		Set criteriaSet = null;
 		try
 		{
 			if ((type & CRITERIA) != 0)
-				criteriaSet = AnalysisUtil.createCriteriaSet(userId, msTest.getMonitoredElementIds());
+				criteriaSet = AnalysisUtil.createCriteriaSet(LoginManager.getUserId(), msTest.getMonitoredElementIds());
 			else
 				criteriaSet = msTest.getCriteriaSet();
 		} catch (ApplicationException e)
@@ -88,7 +85,7 @@ public class SaveTestSetupCommand extends VoidCommand
 					GUIUtil.showErrorMessage("noEtalonError");
 					return false;
 				}
-				etalonSet = AnalysisUtil.createEtalon(userId, msTest.getMonitoredElementIds(), mtm);
+				etalonSet = AnalysisUtil.createEtalon(LoginManager.getUserId(), msTest.getMonitoredElementIds(), mtm);
 			}
 			else
 				etalonSet = msTest.getEtalon();
