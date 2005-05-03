@@ -239,7 +239,7 @@ implements EtalonMTMListener,
 		tabbedPane.setSelectedIndex(0);
 		tabbedPane.setEnabledAt(1, false);
 
-		updColorModel();
+//		updColorModel();
 	}
 
 	private void setData()
@@ -314,11 +314,11 @@ implements EtalonMTMListener,
 			ctModel.setValueAt("--", 6, 1);
 		}
 		
-		updColorModel(); // XXX: так ли надо перерисовывать всю таблицу?
+//		updColorModel(); // XXX: так ли надо перерисовывать всю таблицу?
 	}
 
-	private void updColorModel()
-	{
+//	private void updColorModel()
+//	{
 //		scrollPane.getViewport().setBackground(SystemColor.window);
 //		jTable.setBackground(SystemColor.window);
 //		jTable.setForeground(ColorManager.getColor("textColor"));
@@ -328,7 +328,7 @@ implements EtalonMTMListener,
 //		jTableComp.setBackground(SystemColor.window);
 //		jTableComp.setForeground(ColorManager.getColor("textColor"));
 //		jTableComp.setGridColor(ColorManager.getColor("tableGridColor"));
-	}
+//	}
 
 	private void updateTableModel()
 	{
@@ -431,15 +431,18 @@ implements EtalonMTMListener,
 		jTable.setModel(tModel);
 		jTable.getColumnModel().getColumn(0).setPreferredWidth(120);
 		jTable.getColumnModel().getColumn(1).setPreferredWidth(80);
-		jTable.updateUI();
+		this.jTableComp.repaint();
+		this.jTableComp.revalidate();
 	}
 
 	public void etalonMTMCUpdated()
 	{
         makeAlignedDataMT();
 		ctModel.clearTable();
-		if(Heap.getRefAnalysisPrimary() != null)
+		if(Heap.getRefAnalysisPrimary() != null) {
 			tabbedPane.setEnabledAt(1, true);
+		}
+		this.updateTableModel();
 	}
 
 	public void etalonMTMRemoved()
@@ -448,19 +451,21 @@ implements EtalonMTMListener,
 		ctModel.clearTable();
 		tabbedPane.setSelectedIndex(0);
 		tabbedPane.setEnabledAt(1, false);
+		this.jTable.repaint();
+		this.jTable.revalidate();
 	}
 
 	public void currentEventChanged()
 	{
-		updateTableModel();
-		setData();
+		this.updateTableModel();
+		this.setData();
 	}
 
     public void primaryRefAnalysisCUpdated() {
         makeAlignedDataMT();
         if (Heap.getMTMEtalon() != null)
             tabbedPane.setEnabledAt(1, true);
-        updateTableModel();
+        this.updateTableModel();
         setVisible(true);
     }
 
@@ -489,6 +494,7 @@ implements EtalonMTMListener,
 			Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
 			component.setForeground(sameType || row > 1 ? Color.BLACK : Color.RED);
+//			System.out.println("(" + row + " x " + column +") " + value +", " + component.getForeground());
 
 			return component;
 		}
