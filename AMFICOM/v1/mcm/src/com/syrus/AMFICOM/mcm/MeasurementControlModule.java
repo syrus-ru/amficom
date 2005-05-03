@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.85 2005/05/03 15:55:24 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.86 2005/05/03 18:30:31 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -53,7 +53,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.85 $, $Date: 2005/05/03 15:55:24 $
+ * @version $Revision: 1.86 $, $Date: 2005/05/03 18:30:31 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -96,6 +96,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 	public static final int KIS_CONNECTION_TIMEOUT = 120;	//sec
 
 	private static final String PASSWORD = "MCM";
+
 	/*	Error codes for method processFall()	(remove results, ...)*/
 	public static final int FALL_CODE_RECEIVE_RESULTS = 1;
 
@@ -514,21 +515,6 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		this.running = false;
 		for (Iterator it = transceivers.keySet().iterator(); it.hasNext();)
 			((Transceiver)transceivers.get(it.next())).shutdown();
-
-		MCMSessionEnvironment sessionEnvironment = MCMSessionEnvironment.getInstance();
-		try {
-			sessionEnvironment.getMCMServantManager().getCORBAServer().deactivateServant(mcmId.toString());
-		}
-		catch (CommunicationException ce) {
-			Log.errorException(ce);
-		}
-
-		try {
-			sessionEnvironment.logout();
-		}
-		catch (ApplicationException ae) {
-			Log.errorException(ae);
-		}
 
 		DatabaseConnection.closeConnection();
 	}

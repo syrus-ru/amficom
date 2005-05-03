@@ -1,5 +1,5 @@
 /*
- * $Id: MCMMeasurementObjectLoader.java,v 1.42 2005/05/03 14:31:34 arseniy Exp $
+ * $Id: MCMMeasurementObjectLoader.java,v 1.43 2005/05/03 18:30:31 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,26 +31,32 @@ import com.syrus.AMFICOM.measurement.CronTemporalPatternDatabase;
 import com.syrus.AMFICOM.measurement.DatabaseMeasurementObjectLoader;
 import com.syrus.AMFICOM.measurement.EvaluationType;
 import com.syrus.AMFICOM.measurement.EvaluationTypeDatabase;
+import com.syrus.AMFICOM.measurement.IntervalsTemporalPattern;
+import com.syrus.AMFICOM.measurement.IntervalsTemporalPatternDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MeasurementSetupDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.measurement.MeasurementTypeDatabase;
+import com.syrus.AMFICOM.measurement.PeriodicalTemporalPattern;
+import com.syrus.AMFICOM.measurement.PeriodicalTemporalPatternDatabase;
 import com.syrus.AMFICOM.measurement.Set;
 import com.syrus.AMFICOM.measurement.SetDatabase;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.CronTemporalPattern_Transferable;
 import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
+import com.syrus.AMFICOM.measurement.corba.IntervalsTemporalPattern_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
+import com.syrus.AMFICOM.measurement.corba.PeriodicalTemporalPattern_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2005/05/03 14:31:34 $
+ * @version $Revision: 1.43 $, $Date: 2005/05/03 18:30:31 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -331,8 +337,6 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 	}
 
 	public java.util.Set loadIntervalsTemporalPatterns(java.util.Set ids) throws RetrieveObjectException {
-		/*- 
-		TODO
 		IntervalsTemporalPatternDatabase database = MeasurementDatabaseContext.getIntervalsTemporalPatternDatabase();
 		java.util.Set objects = super.retrieveFromDatabase(database, ids);
 		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
@@ -375,13 +379,9 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 		}
 
 		return objects;
-		*/
-		Log.debugMessage("MCMMeasurementObjectLoader.loadIntervalsTemporalPatterns | method just isn't implemented", Log.FINEST);
-		throw new UnsupportedOperationException();
 	}
 
 	public java.util.Set loadPeriodicalTemporalPatterns(java.util.Set ids) throws RetrieveObjectException {
-		/*-
 		PeriodicalTemporalPatternDatabase database = MeasurementDatabaseContext.getPeriodicalTemporalPatternDatabase();
 		java.util.Set objects = super.retrieveFromDatabase(database, ids);
 		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
@@ -424,9 +424,6 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 		}
 
 		return objects;
-		*/
-		Log.debugMessage("MCMMeasurementObjectLoader.loadPeriodicalTemporalPatterns | method just isn't implemented", Log.FINEST);
-		throw new UnsupportedOperationException();
 	}
 
 
