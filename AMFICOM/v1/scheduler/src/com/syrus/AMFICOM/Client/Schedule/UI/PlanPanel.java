@@ -591,11 +591,16 @@ public class PlanPanel extends JPanel implements TestsEditor, TestEditor, Interv
 		}
 
 		this.removeAll();
+		if (this.timeStampsEditor != null) {
+			this.add(this.timeStampsEditor);
+		}
+
 		for (Iterator it = this.testLines.keySet().iterator(); it.hasNext();) {
 			TestLine testLine = (TestLine) this.testLines.get(it.next());
 			this.add(testLine);
 		}
-
+		
+		
 		super.setPreferredSize(new Dimension(getPreferredSize().width, 30 + 25 * this.testLines.values().size()));
 
 		this.updateTestLinesTimeRegion();
