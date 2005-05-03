@@ -81,10 +81,10 @@ implements EtalonMTMListener,
 			e.printStackTrace();
 		}
 
-		init_module();
+		initModule();
 	}
 
-	private void init_module()
+	private void initModule()
 	{
 		Heap.addEtalonMTMListener(this);
 		Heap.addCurrentEventChangeListener(this);
@@ -104,7 +104,7 @@ implements EtalonMTMListener,
 
 	private void jbInit() throws Exception
 	{
-		setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
+		this.setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
 		this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 
 		FixedSizeEditableTableModel linearModel = new FixedSizeEditableTableModel(
@@ -471,6 +471,29 @@ implements EtalonMTMListener,
         tabbedPane.setEnabledAt(1, false);
         setVisible(false);
     }
+	
+	private class CompareTableRenderer extends ADefaultTableCellRenderer.ObjectRenderer {
+
+		private boolean	sameType	= true;
+
+		public void setSameType(boolean key) {
+			sameType = key;
+		}
+
+		public Component getTableCellRendererComponent(	JTable table,
+														Object value,
+														boolean isSelected,
+														boolean hasFocus,
+														int row,
+														int column) {
+			Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+			component.setForeground(sameType || row > 1 ? Color.BLACK : Color.RED);
+
+			return component;
+		}
+	}
+	
 }
 
 class CompareTableModel extends AbstractTableModel
@@ -550,26 +573,5 @@ class CompareTableModel extends AbstractTableModel
 		data[row][col] = value;
 		fireTableCellUpdated(row, col);
 	}
-}
 
-class CompareTableRenderer extends ADefaultTableCellRenderer
-{
-	private boolean sameType = true;
-
-	public void setSameType(boolean key)
-	{
-		sameType = key;
-	}
-
-	public Component getTableCellRendererComponent(JTable table, Object value,
-			boolean isSelected, boolean hasFocus, int row, int column)
-	{
-		Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-
-		c.setForeground(sameType || row > 1
-		    		? Color.black
-		            : Color.red);
-
-		return c;
-	}
 }
