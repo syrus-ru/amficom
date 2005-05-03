@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServer.java,v 1.38 2005/05/03 14:29:38 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.39 2005/05/03 18:19:30 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -47,7 +47,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/05/03 14:29:38 $
+ * @version $Revision: 1.39 $, $Date: 2005/05/03 18:19:30 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -141,7 +141,7 @@ public class MeasurementServer extends SleepButWorkThread {
 		}
 		catch (Exception e) {
 			Log.errorException(e);
-			System.exit(1);
+			System.exit(0);
 		}
 
 		/*	Init database object loader*/
@@ -153,7 +153,7 @@ public class MeasurementServer extends SleepButWorkThread {
 		}
 		catch (ApplicationException ae) {
 			Log.errorException(ae);
-			System.exit(1);
+			System.exit(0);
 		}
 
 		/*	Login*/
@@ -163,7 +163,7 @@ public class MeasurementServer extends SleepButWorkThread {
 		}
 		catch (CommunicationException ce) {
 			Log.errorException(ce);
-			System.exit(1);
+			System.exit(0);
 		}
 		catch (LoginException le) {
 			Log.errorException(le);
@@ -184,7 +184,7 @@ public class MeasurementServer extends SleepButWorkThread {
 		}
 		catch (CommunicationException ce) {
 			Log.errorException(ce);
-			System.exit(1);
+			System.exit(0);
 		}
 	}
 
@@ -406,22 +406,6 @@ public class MeasurementServer extends SleepButWorkThread {
 
 	protected void shutdown() {
 		this.running = false;
-
-		MServerSessionEnvironment sessionEnvironment = MServerSessionEnvironment.getInstance();
-		try {
-			sessionEnvironment.getMServerServantManager().getCORBAServer().deactivateServant(processCodename);
-		}
-		catch (CommunicationException ce) {
-			Log.errorException(ce);
-		}
-
-		try {
-			sessionEnvironment.logout();
-		}
-		catch (ApplicationException ae) {
-			Log.errorException(ae);
-		}
-
 		DatabaseConnection.closeConnection();
 	}
 }
