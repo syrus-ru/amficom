@@ -1,5 +1,5 @@
 /*
- * $Id: general.idl,v 1.75 2005/05/02 19:01:46 arseniy Exp $
+ * $Id: general.idl,v 1.76 2005/05/03 14:12:47 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -106,7 +106,7 @@ module corba {
 */
 
 //////////////////// SecurityKey ///////////////////
-	struct SecurityKey {
+	struct SessionKey_Transferable {
 		WString128 session_code;
 	};
 
