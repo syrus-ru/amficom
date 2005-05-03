@@ -1,5 +1,5 @@
 /*-
-* $Id: IntervalsTemporalPattern.java,v 1.12 2005/05/02 10:45:05 bob Exp $
+* $Id: IntervalsTemporalPattern.java,v 1.13 2005/05/03 13:55:37 max Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -26,8 +26,6 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IdentifierGenerationException;
-import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -40,8 +38,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/05/02 10:45:05 $
- * @author $Author: bob $
+ * @version $Revision: 1.13 $, $Date: 2005/05/03 13:55:37 $
+ * @author $Author: max $
  * @author Vladimir Dolzhenko
  * @module measurement_v1
  */
@@ -57,7 +55,8 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern implements
 	/** SortedMap<Long milliseconds, Long duration> */
 	private SortedMap intervalsDuration;
 	
-	
+	private String name;
+
 	private SortedMap undoIntervalsAbstractTemporalPatternMap;
 	private SortedMap undoIntervalsDuration;
 	
@@ -106,6 +105,17 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern implements
 //		}
 	}
 
+	synchronized void setAttributes(final Date created,
+			final Date modified, final Identifier creatorId,
+			final Identifier modifierId, final long version,
+			final String name, 
+			final SortedMap intervalsAbstractTemporalPatternMap,
+			final SortedMap intervalsDuration) {
+		super.setAttributes(created, modified, creatorId, modifierId, version);
+		this.setName(name);
+		this.setIntervalsAbstractTemporalPatternMap0(intervalsAbstractTemporalPatternMap);
+		this.setIntervalsDuration0(intervalsDuration);
+	}
 	
 	public IntervalsTemporalPattern(IntervalsTemporalPattern_Transferable itpt) throws CreateObjectException {
 		
@@ -719,6 +729,18 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern implements
 		this.intervalsDuration.put(firstOffset, new Long(duration));
 	}
 	
+	public void setIntervalsDuration(SortedMap intervalsDuration) {
+		this.setIntervalsDuration0(intervalsDuration);
+		this.changed = true;
+	}
+	
+	public String getName() {
+		return this.name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	
 	public void disjoinIntervalItems(SortedSet offsets) throws ApplicationException {
 		if (offsets == null || offsets.isEmpty())
 			return;
@@ -791,4 +813,3 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern implements
 		}
 	}
 }
-
