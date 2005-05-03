@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.52 2005/05/02 16:57:00 saa Exp $
+ * $Id: Heap.java,v 1.53 2005/05/03 06:33:50 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,6 @@ import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEventsImpl;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
-import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEventComparer;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.Set;
 import com.syrus.io.BellcoreStructure;
@@ -65,7 +64,7 @@ import com.syrus.io.BellcoreStructure;
  * Фактически, primaryMTAE - это часть refAnalysisPrimary.
  * 
  * @author $Author: saa $
- * @version $Revision: 1.52 $, $Date: 2005/05/02 16:57:00 $
+ * @version $Revision: 1.53 $, $Date: 2005/05/03 06:33:50 $
  * @module
  */
 public class Heap
@@ -92,7 +91,9 @@ public class Heap
 
 	private static String currentTrace = ""; // XXX: initialize to avoid crushes
 	//private static int currentEv = -1;
-    private static EventIterator currentEvent = new EventIterator(false);
+    private static CompositeEventList eventList = new CompositeEventList(false);
+    private static CompositeEventList.Walker currentEvent =
+        eventList.new Walker();
 
 	private static String newMSName = null; // the name for newly created (unsaved) MeasurementSetup; null if no new MS
 
@@ -162,11 +163,11 @@ public class Heap
     }
 
     public static int getCurrentEvent() {
-    	return currentEvent.getEvent();
+    	return currentEvent.getEvent2();
     }
 
     public static int getCurrentEtalonEvent() {
-        return currentEvent.getEtalonEvent();
+        return currentEvent.getEtalonEvent2();
         /*
          // XXX: rather slow...
     	if (refAnalysisPrimary == null || etalonMTM == null || currentEv < 0
@@ -520,8 +521,9 @@ public class Heap
         notifyCurrentEventChanged();
     }
 
-    private static void fixCurrentEvent() {
-        currentEvent.dataUpdated();
+    private static void fixEventList() {
+        eventList.dataUpdated();
+        currentEvent.fixNEvent();
     }
 
     /**
@@ -530,7 +532,7 @@ public class Heap
      */
     public static void setRefAnalysisPrimary(RefAnalysis ra) {
         refAnalysisPrimary = ra;
-        fixCurrentEvent();
+        fixEventList();
         notifyPrimaryRefAnalysisCUpdated();
         notifyPrimaryMTAECUpdated();
     }
@@ -541,7 +543,7 @@ public class Heap
      */
     public static void setMTMEtalon(ModelTraceManager mtm) {
         etalonMTM = mtm;
-        fixCurrentEvent();
+        fixEventList();
         setMTMBackupEtalon(mtm);
         if (mtm == null)
             notifyEtalonMTMRemoved();
@@ -566,7 +568,7 @@ public class Heap
         // close Etalon MTM
         etalonMTM = null;
         backupEtalonMTM = null;
-        fixCurrentEvent();
+        fixEventList();
         notifyEtalonMTMRemoved();
 
         // close all BS
@@ -575,7 +577,7 @@ public class Heap
 
         // close Primary MTAE
         refAnalysisPrimary = null;
-        fixCurrentEvent();
+        fixEventList();
         notifyPrimaryRefAnalysisRemoved();
         notifyPrimaryMTAERemoved();
     }
