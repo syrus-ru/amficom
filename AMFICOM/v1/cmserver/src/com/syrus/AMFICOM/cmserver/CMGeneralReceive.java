@@ -1,5 +1,5 @@
 /*
- * $Id: CMGeneralReceive.java,v 1.16 2005/05/03 14:27:01 arseniy Exp $
+ * $Id: CMGeneralReceive.java,v 1.17 2005/05/03 19:29:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,13 +34,13 @@ import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder;
 import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
-import com.syrus.AMFICOM.general.corba.SessionKey_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.leserver.corba.LoginServer;
+import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/05/03 14:27:01 $
+ * @version $Revision: 1.17 $, $Date: 2005/05/03 19:29:06 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */

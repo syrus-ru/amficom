@@ -1,5 +1,5 @@
 /*
- * $Id: LoginProcessor.java,v 1.4 2005/05/03 14:35:36 arseniy Exp $
+ * $Id: LoginProcessor.java,v 1.5 2005/05/03 19:31:54 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,14 +12,16 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
-import com.syrus.AMFICOM.general.SessionKey;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
+import com.syrus.AMFICOM.security.SessionKey;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/05/03 14:35:36 $
+ * @version $Revision: 1.5 $, $Date: 2005/05/03 19:31:54 $
  * @author $Author: arseniy $
  * @module leserver_v1
  */
@@ -47,11 +49,26 @@ final class LoginProcessor extends SleepButWorkThread {
 		this.userLoginDatabase = new UserLoginDatabase();
 		this.running = true;
 
+		this.restoreState();
+
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			public void run() {
 				LoginProcessor.this.shutdown();
 			}
 		});
+	}
+
+	private void restoreState() {
+		try {
+			final Set userLogins = this.userLoginDatabase.retrieveAll();
+			for (Iterator it = userLogins.iterator(); it.hasNext();) {
+				final UserLogin userLogin = (UserLogin) it.next();
+				loginMap.put(userLogin.getSessionKey(), userLogin);
+			}
+		}
+		catch (RetrieveObjectException roe) {
+			Log.errorException(roe);
+		}
 	}
 
 	public void run() {

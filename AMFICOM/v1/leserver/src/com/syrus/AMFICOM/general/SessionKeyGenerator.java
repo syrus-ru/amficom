@@ -1,5 +1,5 @@
 /*
- * $Id: SessionKeyGenerator.java,v 1.1 2005/05/03 13:43:03 arseniy Exp $
+ * $Id: SessionKeyGenerator.java,v 1.2 2005/05/03 19:31:54 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,12 +7,11 @@
  */
 package com.syrus.AMFICOM.general;
 
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.SessionKey;
+import com.syrus.AMFICOM.security.SessionKey;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/05/03 13:43:03 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/03 19:31:54 $
  * @author $Author: arseniy $
  * @module leserver_v1
  */

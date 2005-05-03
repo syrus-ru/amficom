@@ -1,5 +1,5 @@
 /*
- * $Id: UserLogin.java,v 1.3 2005/05/03 14:36:40 arseniy Exp $
+ * $Id: UserLogin.java,v 1.4 2005/05/03 19:31:54 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,11 +10,11 @@ package com.syrus.AMFICOM.leserver;
 import java.util.Date;
 
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.SessionKey;
 import com.syrus.AMFICOM.general.SessionKeyGenerator;
+import com.syrus.AMFICOM.security.SessionKey;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/05/03 14:36:40 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/03 19:31:54 $
  * @author $Author: arseniy $
  * @module leserver_v1
  */

@@ -1,5 +1,5 @@
 /*
- * $Id: CMMeasurementTransmit.java,v 1.27 2005/05/03 14:27:02 arseniy Exp $
+ * $Id: CMMeasurementTransmit.java,v 1.28 2005/05/03 19:29:06 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,6 @@ import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.general.corba.SessionKey_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.measurement.Analysis;
@@ -58,10 +57,11 @@ import com.syrus.AMFICOM.measurement.corba.PeriodicalTemporalPattern_Transferabl
 import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
+import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/05/03 14:27:02 $
+ * @version $Revision: 1.28 $, $Date: 2005/05/03 19:29:06 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */

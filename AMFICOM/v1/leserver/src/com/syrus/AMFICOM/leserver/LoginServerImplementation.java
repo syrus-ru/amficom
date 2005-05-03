@@ -1,5 +1,5 @@
 /*
- * $Id: LoginServerImplementation.java,v 1.6 2005/05/03 14:25:57 arseniy Exp $
+ * $Id: LoginServerImplementation.java,v 1.7 2005/05/03 19:31:54 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.SessionKey;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
@@ -31,12 +30,13 @@ import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder;
 import com.syrus.AMFICOM.general.corba.OperationSort;
-import com.syrus.AMFICOM.general.corba.SessionKey_Transferable;
 import com.syrus.AMFICOM.leserver.corba.LoginServerPOA;
+import com.syrus.AMFICOM.security.SessionKey;
+import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/05/03 14:25:57 $
+ * @version $Revision: 1.7 $, $Date: 2005/05/03 19:31:54 $
  * @author $Author: arseniy $
  * @module leserver_v1
  */

@@ -1,5 +1,5 @@
 /*
- * $Id: CMMeasurementReceive.java,v 1.14 2005/05/03 14:27:01 arseniy Exp $
+ * $Id: CMMeasurementReceive.java,v 1.15 2005/05/03 19:29:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,6 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
-import com.syrus.AMFICOM.general.corba.SessionKey_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.AMFICOM.measurement.AnalysisDatabase;
@@ -30,6 +29,8 @@ import com.syrus.AMFICOM.measurement.Evaluation;
 import com.syrus.AMFICOM.measurement.EvaluationDatabase;
 import com.syrus.AMFICOM.measurement.EvaluationType;
 import com.syrus.AMFICOM.measurement.EvaluationTypeDatabase;
+import com.syrus.AMFICOM.measurement.IntervalsTemporalPattern;
+import com.syrus.AMFICOM.measurement.IntervalsTemporalPatternDatabase;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
@@ -65,11 +66,12 @@ import com.syrus.AMFICOM.measurement.corba.PeriodicalTemporalPattern_Transferabl
 import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
+import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/05/03 14:27:01 $
+ * @version $Revision: 1.15 $, $Date: 2005/05/03 19:29:06 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -617,44 +619,42 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 	public StorableObject_Transferable[] receiveIntervalsTemporalPatterns(IntervalsTemporalPattern_Transferable[] transferables,
 			boolean force,
 			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
-		//TODO Implement IntervalsTemporalPatternDatabase
-		return new StorableObject_Transferable[0];
-//		Identifier modifierId = super.validateAccess(sessionKeyT);
-//
-//		java.util.Set objects = new HashSet(transferables.length);
-//		for (int i = 0; i < transferables.length; i++) {
-//			IntervalsTemporalPattern object = null;
-//			try {
-//				final Identifier id = new Identifier(transferables[i].header.id);
-//				object = (IntervalsTemporalPattern) MeasurementStorableObjectPool.fromTransferable(id, transferables[i]);
-//				if (object == null)
-//					object = new IntervalsTemporalPattern(transferables[i]);
-//			}
-//			catch (ApplicationException ae) {
-//				Log.errorException(ae);
-//			}
-//
-//			if (object != null)
-//				objects.add(object);
-//		}
-//
-//		IntervalsTemporalPatternDatabase database = MeasurementDatabaseContext.getIntervalsTemporalPatternDatabase();
-//		try {
-//			database.update(objects, modifierId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
-//			return StorableObject.createHeadersTransferable(objects);
-//		}
-//		catch (UpdateObjectException uoe) {
-//			Log.errorException(uoe);
-//			throw new AMFICOMRemoteException(ErrorCode.ERROR_UPDATE, CompletionStatus.COMPLETED_NO, uoe.getMessage());
-//		}
-//		catch (VersionCollisionException vce) {
-//			Log.errorException(vce);
-//			throw new AMFICOMRemoteException(ErrorCode.ERROR_VERSION_COLLISION, CompletionStatus.COMPLETED_NO, vce.getMessage());
-//		}
-//		catch (Throwable throwable) {
-//			Log.errorException(throwable);
-//			throw new AMFICOMRemoteException(ErrorCode.ERROR_UPDATE, CompletionStatus.COMPLETED_NO, throwable.getMessage());
-//		}
+		Identifier modifierId = super.validateAccess(sessionKeyT);
+
+		java.util.Set objects = new HashSet(transferables.length);
+		for (int i = 0; i < transferables.length; i++) {
+			IntervalsTemporalPattern object = null;
+			try {
+				final Identifier id = new Identifier(transferables[i].header.id);
+				object = (IntervalsTemporalPattern) MeasurementStorableObjectPool.fromTransferable(id, transferables[i]);
+				if (object == null)
+					object = new IntervalsTemporalPattern(transferables[i]);
+			}
+			catch (ApplicationException ae) {
+				Log.errorException(ae);
+			}
+
+			if (object != null)
+				objects.add(object);
+		}
+
+		IntervalsTemporalPatternDatabase database = MeasurementDatabaseContext.getIntervalsTemporalPatternDatabase();
+		try {
+			database.update(objects, modifierId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+			return StorableObject.createHeadersTransferable(objects);
+		}
+		catch (UpdateObjectException uoe) {
+			Log.errorException(uoe);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_UPDATE, CompletionStatus.COMPLETED_NO, uoe.getMessage());
+		}
+		catch (VersionCollisionException vce) {
+			Log.errorException(vce);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_VERSION_COLLISION, CompletionStatus.COMPLETED_NO, vce.getMessage());
+		}
+		catch (Throwable throwable) {
+			Log.errorException(throwable);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_UPDATE, CompletionStatus.COMPLETED_NO, throwable.getMessage());
+		}
 	}
 
 	public StorableObject_Transferable[] receivePeriodicalTemporalPatterns(PeriodicalTemporalPattern_Transferable[] transferables,

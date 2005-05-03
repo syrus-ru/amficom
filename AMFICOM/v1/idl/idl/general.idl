@@ -1,5 +1,5 @@
 /*
- * $Id: general.idl,v 1.76 2005/05/03 14:12:47 arseniy Exp $
+ * $Id: general.idl,v 1.77 2005/05/03 19:28:54 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,7 @@
 module com {
 module syrus {
 module AMFICOM {
+
 module general {
 module corba {
 
@@ -104,11 +105,6 @@ module corba {
 		wstring message;
 	};
 */
-
-//////////////////// SecurityKey ///////////////////
-	struct SessionKey_Transferable {
-		WString128 session_code;
-	};
 
 ////////////////////// ParameterType //////////////////////
 	struct ParameterType_Transferable {
@@ -286,6 +282,17 @@ module corba {
 
 };
 };
+
+module security {
+module corba {
+//////////////////// SecurityKey ///////////////////
+	struct SessionKey_Transferable {
+		general::corba::WString128 session_code;
+	};
+
+};
+};
+
 };
 };
 };

@@ -1,5 +1,5 @@
 /*
- * $Id: CORBAMeasurementObjectLoader.java,v 1.6 2005/05/03 14:26:21 arseniy Exp $
+ * $Id: CORBAMeasurementObjectLoader.java,v 1.7 2005/05/03 19:30:40 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,6 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.general.corba.SessionKey_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
@@ -44,10 +43,11 @@ import com.syrus.AMFICOM.measurement.corba.PeriodicalTemporalPattern_Transferabl
 import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
+import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/05/03 14:26:21 $
+ * @version $Revision: 1.7 $, $Date: 2005/05/03 19:30:40 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */

@@ -1,5 +1,5 @@
 /*
- * $Id: UserLoginDatabase.java,v 1.3 2005/05/03 14:36:40 arseniy Exp $
+ * $Id: UserLoginDatabase.java,v 1.4 2005/05/03 19:31:54 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,21 +11,23 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.SessionKey;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.UpdateObjectException;
+import com.syrus.AMFICOM.security.SessionKey;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/05/03 14:36:40 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/03 19:31:54 $
  * @author $Author: arseniy $
  * @module leserver_v1
  */
@@ -62,23 +64,37 @@ final class UserLoginDatabase {
 		return sql;
 	}
 
+	protected Set retrieveAll() throws RetrieveObjectException {
+		return this.retrieveByCondition(null);
+	}
+
 	protected UserLogin retrieve(final SessionKey sessionKey) throws RetrieveObjectException, ObjectNotFoundException {
-		StringBuffer sql = this.retrieveQuery(this.singleWhereClause(sessionKey));
+		Set objects = this.retrieveByCondition(this.singleWhereClause(sessionKey));
+		if (!objects.isEmpty())
+			return (UserLogin) objects.iterator().next();
+		throw new ObjectNotFoundException("User login not found");
+	}
+
+	private Set retrieveByCondition(StringBuffer condition) throws RetrieveObjectException {
+		Set objects = new HashSet();
+
+		StringBuffer sql = this.retrieveQuery(condition);
 
 		Statement statement = null;
 		ResultSet resultSet = null;
 		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("UserLoginDatabase.retrieve | Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage("UserLoginDatabase.retrieveByCondition | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
-			if (resultSet.next())
-				return new UserLogin(sessionKey,
+			while (resultSet.next()) {
+				final UserLogin userLogin = new UserLogin(new SessionKey(DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_SESSION_KEY))),
 						DatabaseIdentifier.getIdentifier(resultSet, COLUMN_USER_ID),
 						DatabaseIdentifier.getIdentifier(resultSet, COLUMN_DOMAIN_ID),
 						DatabaseDate.fromQuerySubString(resultSet, COLUMN_LOGIN_DATE),
 						DatabaseDate.fromQuerySubString(resultSet, COLUMN_LAST_ACTIVITY_DATE));
-			throw new ObjectNotFoundException("User login not found");
+				objects.add(userLogin);
+			}
 		}
 		catch (SQLException sqle) {
 			String mesg = "Cannot retrieve user login" + sqle.getMessage();
@@ -104,6 +120,8 @@ final class UserLoginDatabase {
 				Log.errorException(sqle);
 			}
 		}
+
+		return objects;
 	}
 
 	protected void insert(final UserLogin userLogin) throws CreateObjectException {

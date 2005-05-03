@@ -1,5 +1,5 @@
 /*
- * $Id: MServerMeasurementReceive.java,v 1.2 2005/05/03 14:29:47 arseniy Exp $
+ * $Id: MServerMeasurementReceive.java,v 1.3 2005/05/03 19:29:17 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,6 @@ import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder;
-import com.syrus.AMFICOM.general.corba.SessionKey_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.leserver.corba.LoginServer;
 import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
@@ -35,10 +34,11 @@ import com.syrus.AMFICOM.measurement.TestDatabase;
 import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.AMFICOM.mserver.corba.MServerPOA;
+import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/05/03 14:29:47 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/03 19:29:17 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */

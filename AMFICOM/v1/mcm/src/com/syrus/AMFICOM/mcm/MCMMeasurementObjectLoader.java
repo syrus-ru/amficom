@@ -1,5 +1,5 @@
 /*
- * $Id: MCMMeasurementObjectLoader.java,v 1.43 2005/05/03 18:30:31 arseniy Exp $
+ * $Id: MCMMeasurementObjectLoader.java,v 1.44 2005/05/03 19:30:05 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,6 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.general.corba.SessionKey_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.AnalysisTypeDatabase;
@@ -53,10 +52,11 @@ import com.syrus.AMFICOM.measurement.corba.PeriodicalTemporalPattern_Transferabl
 import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.AMFICOM.mserver.corba.MServer;
+import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2005/05/03 18:30:31 $
+ * @version $Revision: 1.44 $, $Date: 2005/05/03 19:30:05 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
