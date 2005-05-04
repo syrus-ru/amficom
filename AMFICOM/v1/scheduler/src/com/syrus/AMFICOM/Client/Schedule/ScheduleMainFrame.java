@@ -29,14 +29,13 @@ import com.syrus.AMFICOM.Client.General.SessionInterface;
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.ExitCommand;
 import com.syrus.AMFICOM.Client.General.Command.HelpAboutCommand;
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Command.Scheme.ArrangeWindowCommand;
 import com.syrus.AMFICOM.Client.General.Command.Session.SessionChangePasswordCommand;
 import com.syrus.AMFICOM.Client.General.Command.Session.SessionCloseCommand;
 import com.syrus.AMFICOM.Client.General.Command.Session.SessionConnectionCommand;
 import com.syrus.AMFICOM.Client.General.Command.Session.SessionDomainCommand;
 import com.syrus.AMFICOM.Client.General.Command.Session.SessionOpenCommand;
 import com.syrus.AMFICOM.Client.General.Command.Session.SessionOptionsCommand;
+import com.syrus.AMFICOM.Client.General.Command.Window.ArrangeWindowCommand;
 import com.syrus.AMFICOM.Client.General.Event.ContextChangeEvent;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
@@ -62,7 +61,6 @@ import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
-import com.syrus.util.Log;
 
 public class ScheduleMainFrame extends JFrame implements OperationListener {
 
@@ -535,20 +533,24 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 					propsFrame.setSize(w / 5, propsFrame.getHeight());
 					saveFrame.pack();
 					saveFrame.setSize(w / 5, saveFrame.getHeight());
+					tableFrame.setSize(w - treeFrame.getWidth(), h / 3);
+					timeFrame.setSize(w / 5, h - propsFrame.getHeight() - saveFrame.getHeight() - tableFrame.getHeight());
 
-					timeFrame.setSize(w / 5, h - propsFrame.getHeight() - saveFrame.getHeight());
-
-					tableFrame.setSize(w - propsFrame.getWidth() - treeFrame.getWidth(), h / 3);
+					
 					planFrame.setSize(w - propsFrame.getWidth() - treeFrame.getWidth(), h - tableFrame.getHeight());
 
 					treeFrame.setLocation(0, 0);
-					planFrame.setLocation(treeFrame.getX() + treeFrame.getWidth(), 0);
+					tableFrame.setLocation(treeFrame.getX() + treeFrame.getWidth(), planFrame.getHeight());
 					propsFrame.setLocation(w - propsFrame.getWidth(), 0);
-					saveFrame.setLocation(w - saveFrame.getWidth(), propsFrame.getY() + propsFrame.getHeight());
-					timeFrame.setLocation(w - timeFrame.getWidth(), saveFrame.getY() + saveFrame.getHeight());
+					
+					saveFrame.setLocation(w - saveFrame.getWidth(), h - saveFrame.getHeight() - tableFrame.getHeight());
+					planFrame.setLocation(treeFrame.getX() + treeFrame.getWidth(), 0);
+					
+					
+					timeFrame.setLocation(w - timeFrame.getWidth(), propsFrame.getY() + propsFrame.getHeight());
 
 					paramsFrame.setLocation(0, treeFrame.getHeight());
-					tableFrame.setLocation(treeFrame.getX() + treeFrame.getWidth(), planFrame.getHeight());
+					
 
 				}
 			};
