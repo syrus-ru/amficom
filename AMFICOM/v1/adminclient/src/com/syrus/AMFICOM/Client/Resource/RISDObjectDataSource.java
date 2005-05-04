@@ -1,5 +1,5 @@
 /*-
- * $Id: RISDObjectDataSource.java,v 1.5 2005/04/25 09:55:01 bass Exp $
+ * $Id: RISDObjectDataSource.java,v 1.6 2005/05/04 10:51:58 bass Exp $
  * Copyright © 2004 Syrus Systems.
  * 
  * Научно-технический центр.
@@ -10,23 +10,6 @@ package com.syrus.AMFICOM.Client.Resource;
 
 import java.util.Vector;
 
-import com.syrus.AMFICOM.CORBA.Constants;
-import com.syrus.AMFICOM.CORBA.Admin.AgentSeq_TransferableHolder;
-import com.syrus.AMFICOM.CORBA.Admin.Agent_Transferable;
-import com.syrus.AMFICOM.CORBA.Admin.ClientSeq_TransferableHolder;
-import com.syrus.AMFICOM.CORBA.Admin.Client_Transferable;
-import com.syrus.AMFICOM.CORBA.Admin.CommandPermissionAttributes_Transferable;
-import com.syrus.AMFICOM.CORBA.Admin.Domain_Transferable;
-import com.syrus.AMFICOM.CORBA.Admin.OperatorCategorySeq_TransferableHolder;
-import com.syrus.AMFICOM.CORBA.Admin.OperatorCategory_Transferable;
-import com.syrus.AMFICOM.CORBA.Admin.OperatorGroupSeq_TransferableHolder;
-import com.syrus.AMFICOM.CORBA.Admin.OperatorGroup_Transferable;
-import com.syrus.AMFICOM.CORBA.Admin.OperatorProfileSeq_TransferableHolder;
-import com.syrus.AMFICOM.CORBA.Admin.OperatorProfile_Transferable;
-import com.syrus.AMFICOM.CORBA.Admin.ServerSeq_TransferableHolder;
-import com.syrus.AMFICOM.CORBA.Admin.Server_Transferable;
-import com.syrus.AMFICOM.CORBA.Admin.User_Transferable;
-import com.syrus.AMFICOM.CORBA.Resource.ImageResource_Transferable;
 import com.syrus.AMFICOM.Client.General.SessionInterface;
 import com.syrus.AMFICOM.Client.Resource.Object.CommandPermissionAttributes;
 import com.syrus.AMFICOM.Client.Resource.Object.Domain;
@@ -37,10 +20,16 @@ import com.syrus.AMFICOM.Client.Resource.Object.User;
 import com.syrus.AMFICOM.Client.Resource.System.Agent;
 import com.syrus.AMFICOM.Client.Resource.System.Client;
 import com.syrus.AMFICOM.Client.Resource.System.Server;
+import com.syrus.AMFICOM.administration.corba.Domain_Transferable;
+import com.syrus.AMFICOM.administration.corba.ServerSeq_TransferableHolder;
+import com.syrus.AMFICOM.administration.corba.Server_Transferable;
+import com.syrus.AMFICOM.administration.corba.User_Transferable;
+import com.syrus.AMFICOM.general.corba.ErrorCode;
+import com.syrus.AMFICOM.resource.corba.ImageResource_Transferable;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/04/25 09:55:01 $
+ * @version $Revision: 1.6 $, $Date: 2005/05/04 10:51:58 $
  * @module admin_v1
  */
 public class RISDObjectDataSource extends RISDDataSource {
@@ -81,7 +70,7 @@ public class RISDObjectDataSource extends RISDDataSource {
 			ex.printStackTrace();
 			return;
 		}
-		if (ecode != Constants.ERROR_NO_ERROR) {
+		if (ecode != ErrorCode._ERROR_NO_ERROR) {
 			System.out.println("Failed GetObjects! status = "
 					+ ecode);
 			return;
@@ -157,7 +146,7 @@ public class RISDObjectDataSource extends RISDDataSource {
 			return;
 		}
 
-		if (ecode != Constants.ERROR_NO_ERROR) {
+		if (ecode != ErrorCode._ERROR_NO_ERROR) {
 			System.out.println("Failed SaveDomain! status = "
 					+ ecode);
 			return;
@@ -199,7 +188,7 @@ public class RISDObjectDataSource extends RISDDataSource {
 			return;
 		}
 
-		if (ecode != Constants.ERROR_NO_ERROR) {
+		if (ecode != ErrorCode._ERROR_NO_ERROR) {
 			System.out.println("Failed SaveCategory! status = "
 					+ ecode);
 			return;
@@ -242,7 +231,7 @@ public class RISDObjectDataSource extends RISDDataSource {
 			return;
 		}
 
-		if (ecode != Constants.ERROR_NO_ERROR) {
+		if (ecode != ErrorCode._ERROR_NO_ERROR) {
 			System.out
 					.println("Failed SaveUser! status = "
 							+ ecode);
@@ -285,7 +274,7 @@ public class RISDObjectDataSource extends RISDDataSource {
 			return;
 		}
 
-		if (ecode != Constants.ERROR_NO_ERROR) {
+		if (ecode != ErrorCode._ERROR_NO_ERROR) {
 			System.out.println("Failed SaveGroup! status = "
 					+ ecode);
 			return;
@@ -326,7 +315,7 @@ public class RISDObjectDataSource extends RISDDataSource {
 			return;
 		}
 
-		if (ecode != Constants.ERROR_NO_ERROR) {
+		if (ecode != ErrorCode._ERROR_NO_ERROR) {
 			System.out
 					.println("Failed SaveOperatorProfile! status = "
 							+ ecode);
@@ -365,7 +354,7 @@ public class RISDObjectDataSource extends RISDDataSource {
 			return;
 		}
 
-		if (ecode != Constants.ERROR_NO_ERROR) {
+		if (ecode != ErrorCode._ERROR_NO_ERROR) {
 			System.out
 					.println("Failed SaveExec! status = "
 							+ ecode);
@@ -394,7 +383,7 @@ public class RISDObjectDataSource extends RISDDataSource {
 			return;
 		}
 
-		if (ecode != Constants.ERROR_NO_ERROR) {
+		if (ecode != ErrorCode._ERROR_NO_ERROR) {
 			System.out
 					.println("Failed Removedomain_idss! status = "
 							+ ecode);
@@ -423,7 +412,7 @@ public class RISDObjectDataSource extends RISDDataSource {
 			return;
 		}
 
-		if (ecode != Constants.ERROR_NO_ERROR) {
+		if (ecode != ErrorCode._ERROR_NO_ERROR) {
 			System.out.println("Failed Removeuser_idss! status = "
 					+ ecode);
 			return;
@@ -451,7 +440,7 @@ public class RISDObjectDataSource extends RISDDataSource {
 			return;
 		}
 
-		if (ecode != Constants.ERROR_NO_ERROR) {
+		if (ecode != ErrorCode._ERROR_NO_ERROR) {
 			System.out.println("Failed Removegroup_idss! status = "
 					+ ecode);
 			return;
@@ -480,7 +469,7 @@ public class RISDObjectDataSource extends RISDDataSource {
 			return;
 		}
 
-		if (ecode != Constants.ERROR_NO_ERROR) {
+		if (ecode != ErrorCode._ERROR_NO_ERROR) {
 			System.out
 					.println("Failed Removeoperator_profile_idss! status = "
 							+ ecode);
@@ -521,7 +510,7 @@ public class RISDObjectDataSource extends RISDDataSource {
 			ex.printStackTrace();
 			return;
 		}
-		if (ecode != Constants.ERROR_NO_ERROR) {
+		if (ecode != ErrorCode._ERROR_NO_ERROR) {
 			System.out.println("Failed GetAdminObjects! status = "
 					+ ecode);
 			return;
@@ -590,7 +579,7 @@ public class RISDObjectDataSource extends RISDDataSource {
 			return;
 		}
 
-		if (ecode != Constants.ERROR_NO_ERROR) {
+		if (ecode != ErrorCode._ERROR_NO_ERROR) {
 			System.out.println("Failed Saveserver! status = "
 					+ ecode);
 			return;
@@ -625,7 +614,7 @@ public class RISDObjectDataSource extends RISDDataSource {
 			return;
 		}
 
-		if (ecode != Constants.ERROR_NO_ERROR) {
+		if (ecode != ErrorCode._ERROR_NO_ERROR) {
 			System.out.println("Failed Saveclient! status = "
 					+ ecode);
 			return;
@@ -660,7 +649,7 @@ public class RISDObjectDataSource extends RISDDataSource {
 			return;
 		}
 
-		if (ecode != Constants.ERROR_NO_ERROR) {
+		if (ecode != ErrorCode._ERROR_NO_ERROR) {
 			System.out.println("Failed Saveagent! status = "
 					+ ecode);
 			return;
@@ -686,7 +675,7 @@ public class RISDObjectDataSource extends RISDDataSource {
 			return;
 		}
 
-		if (ecode != Constants.ERROR_NO_ERROR) {
+		if (ecode != ErrorCode._ERROR_NO_ERROR) {
 			System.out.println("Failed Removeserver! status = "
 					+ ecode);
 			return;
@@ -712,7 +701,7 @@ public class RISDObjectDataSource extends RISDDataSource {
 			return;
 		}
 
-		if (ecode != Constants.ERROR_NO_ERROR) {
+		if (ecode != ErrorCode._ERROR_NO_ERROR) {
 			System.out.println("Failed RemoveClient! status = "
 					+ ecode);
 			return;
@@ -738,7 +727,7 @@ public class RISDObjectDataSource extends RISDDataSource {
 			return;
 		}
 
-		if (ecode != Constants.ERROR_NO_ERROR) {
+		if (ecode != ErrorCode._ERROR_NO_ERROR) {
 			System.out.println("Failed Removeagent! status = "
 					+ ecode);
 			return;
