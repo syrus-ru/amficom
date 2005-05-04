@@ -17,7 +17,7 @@ import javax.swing.JViewport;
 import javax.swing.ListSelectionModel;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
-import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableModel;
 
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
@@ -26,7 +26,6 @@ import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryRefAnalysisListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
-import com.syrus.AMFICOM.Client.General.UI.ATable;
 import com.syrus.AMFICOM.Client.General.UI.FixedSizeEditableTableModel;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.ComplexReflectogramEvent;
@@ -46,16 +45,16 @@ implements EtalonMTMListener,
 
 	private Map tModels = new HashMap(6);
 
-	private ATable mainTable;
-	private ATable comparativeTable;
+	private JTable mainTable;
+	private JTable comparativeTable;
 	
 	private JPanel mainPanel = new JPanel();
 	private JScrollPane scrollPane = new JScrollPane();
 	private JViewport viewport = new JViewport();
 
-	private CompareTableModel ctModel;	
+	private DefaultTableModel ctModel;	
 
-	private JPanel mainPanelComp = new JPanel();
+	private JPanel mainPanelComp = new JPanel(new BorderLayout());
 	private JScrollPane scrollPaneComp = new JScrollPane();
 	private JViewport viewportComp = new JViewport();
 	private JTabbedPane tabbedPane = new JTabbedPane();
@@ -183,7 +182,7 @@ implements EtalonMTMListener,
 				null);
 		tModels.put(TERMINATE, terminateModel);
 
-		mainTable = new ATable();
+		this.mainTable = new JTable();
 
 		this.getContentPane().add(tabbedPane, BorderLayout.CENTER);
 
@@ -212,12 +211,24 @@ implements EtalonMTMListener,
 
 		tabbedPane.add(LangModelAnalyse.getString("Title.comparatives"), mainPanelComp);
 
-		ctModel = new CompareTableModel();
-		comparativeTable = new ATable (ctModel);
+		this.ctModel = new DefaultTableModel(new Object[][]{ { LangModelAnalyse.getString("eventType"), "--"},
+			{ LangModelAnalyse.getString("etEventType"), "--"},
+			{ LangModelAnalyse.getString("maxDeviation"), "--"},
+			{ LangModelAnalyse.getString("meanDeviation"), "--"},
+			{ LangModelAnalyse.getString("dLoss"), "--"},
+			{ LangModelAnalyse.getString("dWidth"), "--"},
+			{ LangModelAnalyse.getString("dLocation"), "--"}}, 
+			new Object[] {"", ""}
+		) {
+			public boolean isCellEditable(int row,int column) {
+				return false;
+			}
+		};
+		
+		this.comparativeTable = new JTable(this.ctModel);
 //		jTableComp.getColumnModel().getColumn(0).setPreferredWidth(120);
 //		jTableComp.getColumnModel().getColumn(1).setPreferredWidth(100);
 
-		mainPanelComp.setLayout(new BorderLayout());
 		mainPanelComp.setBorder(BorderFactory.createLoweredBevelBorder());
 		scrollPaneComp.setViewport(viewportComp);
 		scrollPaneComp.setAutoscrolls(true);
@@ -230,7 +241,6 @@ implements EtalonMTMListener,
 		tabbedPane.setSelectedIndex(0);
 		tabbedPane.setEnabledAt(1, false);
 
-//		updColorModel();
 	}
 
 	private void setData()
@@ -305,22 +315,8 @@ implements EtalonMTMListener,
 			ctModel.setValueAt("--", 6, 1);
 		}
 		
-//		updColorModel(); // XXX: так ли надо перерисовывать всю таблицу?
 	}
-
-//	private void updColorModel()
-//	{
-//		scrollPane.getViewport().setBackground(SystemColor.window);
-//		jTable.setBackground(SystemColor.window);
-//		jTable.setForeground(ColorManager.getColor("textColor"));
-//		jTable.setGridColor(ColorManager.getColor("tableGridColor"));
-
-//		scrollPaneComp.getViewport().setBackground(SystemColor.window);
-//		jTableComp.setBackground(SystemColor.window);
-//		jTableComp.setForeground(ColorManager.getColor("textColor"));
-//		jTableComp.setGridColor(ColorManager.getColor("tableGridColor"));
-//	}
-
+	
 	private void updateTableModel()
 	{
 		int num = Heap.getCurrentEvent1();
@@ -429,7 +425,7 @@ implements EtalonMTMListener,
 	public void etalonMTMCUpdated()
 	{
         makeAlignedDataMT();
-		ctModel.clearTable();
+		this.clearCTModelValues();
 		if(Heap.getRefAnalysisPrimary() != null) {
 			tabbedPane.setEnabledAt(1, true);
 		}
@@ -439,7 +435,7 @@ implements EtalonMTMListener,
 	public void etalonMTMRemoved()
 	{
 		alignedDataMT = null;
-		ctModel.clearTable();
+		this.clearCTModelValues();
 		tabbedPane.setSelectedIndex(0);
 		tabbedPane.setEnabledAt(1, false);
 		this.mainTable.repaint();
@@ -462,11 +458,17 @@ implements EtalonMTMListener,
 
     public void primaryRefAnalysisRemoved() {
         alignedDataMT = null;
-        ctModel.clearTable();
+		this.clearCTModelValues();
         tabbedPane.setSelectedIndex(0);
         tabbedPane.setEnabledAt(1, false);
         setVisible(false);
     }
+	
+	private void clearCTModelValues() {
+		for(int i=0;i<this.ctModel.getRowCount();i++) {
+			this.ctModel.setValueAt("--", i, 1);
+		}
+	}
 	
 	private class CompareTableRenderer extends ADefaultTableCellRenderer.ObjectRenderer {
 
@@ -485,75 +487,8 @@ implements EtalonMTMListener,
 			Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
 			component.setForeground(sameType || row > 1 ? Color.BLACK : Color.RED);
-//			System.out.println("(" + row + " x " + column +") " + value +", " + component.getForeground());
 
 			return component;
 		}
 	}
-
-	private class CompareTableModel extends AbstractTableModel {
-
-		// String[] columnNames = {LangModelModel.String("parameter") ,
-		// LangModelModel.String("value")};
-
-		String[]	columnNames	= { null, null};
-
-		Object[][]	data		= { { LangModelAnalyse.getString("eventType"), "--"},
-										{ LangModelAnalyse.getString("etEventType"), "--"},
-										{ LangModelAnalyse.getString("maxDeviation"), "--"},
-										{ LangModelAnalyse.getString("meanDeviation"), "--"},
-										{ LangModelAnalyse.getString("dLoss"), "--"},
-										{ LangModelAnalyse.getString("dWidth"), "--"},
-										{ LangModelAnalyse.getString("dLocation"), "--"}};
-
-		CompareTableModel() {
-			super();
-		}
-
-		public void clearTable() {
-			for(int i=0;i<this.data.length;i++) {
-				this.setValueAt("--", i, 1);
-			}
-			super.fireTableDataChanged();
-		}
-
-		public int getColumnCount() {
-			return columnNames.length;
-		}
-
-		public int getRowCount() {
-			return data.length;
-		}
-
-		public String getColumnName(int col) {
-			return columnNames[col];
-		}
-
-		public Object getValueAt(	int row,
-									int column) {
-			return data[row][column];
-		}
-
-		public double getvalueat(	int row,
-									int column) {
-			return ((Double) (data[row][column])).doubleValue();
-		}
-
-		public Class getColumnClass(int column) {
-			return getValueAt(0, column).getClass();
-		}
-
-		public boolean isCellEditable(	int row,
-										int col) {
-			return false;
-		}
-
-		public void setValueAt(	Object value,
-								int row,
-								int col) {
-			this.data[row][col] = value;
-			fireTableCellUpdated(row, col);
-		}
-	}
-
 }
