@@ -7,6 +7,7 @@ DBSTART_START="yes"
 DBSHUT_START="yes"
 AGENTCTL_START="no"
 OEMCTL_START="no"
+ISQLPLUSCTL_START="yes"
 
 check_exe() {
 	if [ "$2" = "yes" ]
@@ -47,12 +48,14 @@ pre() {
 	DBSHUT="${ORACLE_HOME}/bin/dbshut"
 	AGENTCTL="${ORACLE_HOME}/bin/agentctl"
 	OEMCTL="${ORACLE_HOME}/bin/oemctl"
+	ISQLPLUSCTL="${ORACLE_HOME}/bin/isqlplusctl"
 
 	check_exe ${LSNRCTL} ${LSNRCTL_START}
 	check_exe ${DBSTART} ${DBSTART_START}
 	check_exe ${DBSHUT} ${DBSHUT_START}
 	check_exe ${AGENTCTL} ${AGENTCTL_START}
 	check_exe ${OEMCTL} ${OEMCTL_START}
+	check_exe ${ISQLPLUSCTL} ${ISQLPLUSCTL_START}
 }
 
 post() {
@@ -61,7 +64,8 @@ post() {
 		DBSTART DBSTART_START \
 		DBSHUT	DBSHUT_START \
 		AGENTCTL AGENTCTL_START \
-		OEMCTL OEMCTL_START
+		OEMCTL OEMCTL_START \
+		ISQLPLUSCTL ISQLPLUSCTL_START
 }
 
 case "$1" in
@@ -90,6 +94,11 @@ case "$1" in
 			echo "\033[1;33;42m> Starting oemctl...\033[0m"
 			su - "${ORACLE_OWNER}" -c "${OEMCTL} start oms"
 		fi
+		if [ "${ISQLPLUSCTL_START}" = "yes" ]
+		then
+			echo "\033[1;33;42m> Starting isqlplusctl...\033[0m"
+			su - "${ORACLE_OWNER}" -c "${ISQLPLUSCTL} start"
+		fi
 		post
 		;;
 	stop)
@@ -97,6 +106,11 @@ case "$1" in
 		# The following command assumes that the oracle login
 		# will not prompt the user for any values
 		pre
+		if [ "${ISQLPLUSCTL_START}" = "yes" ]
+		then
+			echo "\033[1;33;42m> Stopping isqlplusctl...\033[0m"
+			su - "${ORACLE_OWNER}" -c "${ISQLPLUSCTL} stop"
+		fi
 		if [ "${OEMCTL_START}" = "yes" ]
 		then
 			echo "\033[1;33;42m> Stopping oemctl...\033[0m"
