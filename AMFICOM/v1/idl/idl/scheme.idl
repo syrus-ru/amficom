@@ -1,5 +1,5 @@
 /*-
- * $Id: scheme.idl,v 1.21 2005/05/04 15:05:40 bass Exp $
+ * $Id: scheme.idl,v 1.22 2005/05/04 16:18:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -162,7 +162,6 @@ module com {
 
 						general::corba::Identifier portTypeId;
 						general::corba::Identifier portId;
-						general::corba::Identifier measurementPortTypeId;
 						general::corba::Identifier measurementPortId;
 						general::corba::Identifier parentSchemeDeviceId;
 
@@ -180,7 +179,6 @@ module com {
 
 						general::corba::Identifier cablePortTypeId;
 						general::corba::Identifier cablePortId;
-						general::corba::Identifier measurementPortTypeId;
 						general::corba::Identifier measurementPortId;
 						general::corba::Identifier parentSchemeDeviceId;
 
@@ -194,8 +192,17 @@ module com {
 
 						general::corba::WString32 name;
 						general::corba::WString256 description;
+						double physicalLength;
+						double opticalLength;
 
+						general::corba::Identifier linkTypeId;
+						general::corba::Identifier linkId;
+						general::corba::Identifier siteNodeId;
+						general::corba::Identifier sourceSchemePortId;
+						general::corba::Identifier targetSchemePortId;
 						general::corba::Identifier parentSchemeId;
+						general::corba::Identifier parentSchemeElementId;
+						general::corba::Identifier parentSchemeProtoElementId;
 
 						general::corba::IdentifierSeq characteristicIds;
 					};
@@ -207,7 +214,13 @@ module com {
 
 						general::corba::WString32 name;
 						general::corba::WString256 description;
+						double physicalLength;
+						double opticalLength;
 
+						general::corba::Identifier cableLinkTypeId;
+						general::corba::Identifier cableLinkId;
+						general::corba::Identifier sourceSchemeCablePortId;
+						general::corba::Identifier targetSchemeCablePortId;
 						general::corba::Identifier parentSchemeId;
 
 						general::corba::IdentifierSeq characteristicIds;
@@ -221,16 +234,31 @@ module com {
 						general::corba::WString32 name;
 						general::corba::WString256 description;
 
+						general::corba::Identifier cableThreadTypeId;
+						general::corba::Identifier linkId;
+						general::corba::Identifier sourceSchemePortId;
+						general::corba::Identifier targetSchemePortId;
+						general::corba::Identifier parentSchemeCableLinkId;
+
 						general::corba::IdentifierSeq characteristicIds;
 					};
+
 
 					typedef sequence<SchemeCableThread_Transferable> SchemeCableThreadSeq_Transferable;
 
 					struct CableChannelingItem_Transferable {
 						general::corba::StorableObject header;
 
-						general::corba::WString32 name;
-						general::corba::WString256 description;
+						double startSpare;
+						double endSpare;
+						long rowX;
+						long placeY;
+						long sequentialNumber;
+
+						general::corba::Identifier physicalLinkId;
+						general::corba::Identifier startSiteNodeId;
+						general::corba::Identifier endSiteNodeId;
+						general::corba::Identifier parentSchemeCableLinkId;
 					};
 
 					typedef sequence<CableChannelingItem_Transferable> CableChannelingItemSeq_Transferable;
