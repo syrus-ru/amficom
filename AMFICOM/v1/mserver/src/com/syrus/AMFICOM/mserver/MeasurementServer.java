@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServer.java,v 1.42 2005/05/04 11:37:07 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.43 2005/05/04 11:59:28 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,6 +22,7 @@ import com.syrus.AMFICOM.administration.ServerProcess;
 import com.syrus.AMFICOM.administration.ServerProcessWrapper;
 import com.syrus.AMFICOM.administration.User;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -48,7 +49,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2005/05/04 11:37:07 $
+ * @version $Revision: 1.43 $, $Date: 2005/05/04 11:59:28 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -184,8 +185,9 @@ public class MeasurementServer extends SleepButWorkThread {
 
 		try {
 			/*	Activate servant*/
-			MServerSessionEnvironment.getInstance().getMServerServantManager().getCORBAServer().activateServant(new MServerImplementation(),
-					processCodename);
+			CORBAServer corbaServer = MServerSessionEnvironment.getInstance().getMServerServantManager().getCORBAServer();
+			corbaServer.activateServant(new MServerImplementation(), processCodename);
+			corbaServer.printNamingContext();
 		}
 		catch (CommunicationException ce) {
 			Log.errorException(ce);
