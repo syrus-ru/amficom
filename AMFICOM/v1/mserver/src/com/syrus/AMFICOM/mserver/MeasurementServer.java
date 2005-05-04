@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServer.java,v 1.41 2005/05/04 07:49:57 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.42 2005/05/04 11:37:07 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,6 +30,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginException;
+import com.syrus.AMFICOM.general.LoginRestorer;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
 import com.syrus.AMFICOM.general.TypicalCondition;
@@ -47,7 +48,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2005/05/04 07:49:57 $
+ * @version $Revision: 1.42 $, $Date: 2005/05/04 11:37:07 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -77,6 +78,9 @@ public class MeasurementServer extends SleepButWorkThread {
 
 	/*	Identifier of server*/
 	private static Identifier serverId;
+
+	/*	Login of the corresponding user*/
+	static String login;
 
 	/*	Process codename*/
 	private static String processCodename;
@@ -143,6 +147,7 @@ public class MeasurementServer extends SleepButWorkThread {
 			Log.errorException(e);
 			System.exit(0);
 		}
+		login = user.getLogin();
 
 		/*	Init database object loader*/
 		DatabaseObjectLoader.init(user.getId());
@@ -159,7 +164,7 @@ public class MeasurementServer extends SleepButWorkThread {
 		/*	Login*/
 		MServerSessionEnvironment sessionEnvironment = MServerSessionEnvironment.getInstance();
 		try {
-			sessionEnvironment.login(user.getLogin(), PASSWORD);
+			sessionEnvironment.login(login, PASSWORD);
 		}
 		catch (CommunicationException ce) {
 			Log.errorException(ce);
@@ -395,17 +400,29 @@ public class MeasurementServer extends SleepButWorkThread {
 			Log.errorMessage("abortTests | Collection is NULL or empty");
 	}
 
-
-
 	protected static Set getMCMIds() {
 		return Collections.unmodifiableSet(mcmTestQueueMap.keySet());
 	}
-
-
-
 
 	protected void shutdown() {
 		this.running = false;
 		DatabaseConnection.closeConnection();
 	}
+
+
+	static class MServerLoginRestorer implements LoginRestorer {
+
+		public boolean restoreLogin() {
+			return true;
+		}
+
+		public String getLogin() {
+			return login;
+		}
+
+		public String getPassword() {
+			return PASSWORD;
+		}
+	}
+
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.86 2005/05/03 18:30:31 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.87 2005/05/04 11:38:44 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,6 +32,7 @@ import com.syrus.AMFICOM.general.DatabaseObjectLoader;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginException;
+import com.syrus.AMFICOM.general.LoginRestorer;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
 import com.syrus.AMFICOM.general.TypicalCondition;
@@ -53,7 +54,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.86 $, $Date: 2005/05/03 18:30:31 $
+ * @version $Revision: 1.87 $, $Date: 2005/05/04 11:38:44 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -103,6 +104,9 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 
 	/*	Identifier of this MCM*/
 	protected static Identifier mcmId;
+
+	/*	Login of the corresponding user*/
+	static String login;
 
 	/*	Scheduled tests transferred from server	*/
 	protected static List testList;	//List <Test>
@@ -169,8 +173,9 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		}
 		catch (Exception e) {
 			Log.errorException(e);
-			System.exit(1);
+			System.exit(0);
 		}
+		login = user.getLogin();
 
 		/*	Init database object loader*/
 		DatabaseObjectLoader.init(user.getId());
@@ -181,17 +186,17 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		}
 		catch (CommunicationException ce) {
 			Log.errorException(ce);
-			System.exit(1);
+			System.exit(0);
 		}
 
 		/*	Login*/
 		MCMSessionEnvironment sessionEnvironment = MCMSessionEnvironment.getInstance();
 		try {
-			sessionEnvironment.login(user.getLogin(), PASSWORD);
+			sessionEnvironment.login(login, PASSWORD);
 		}
 		catch (CommunicationException ce) {
 			Log.errorException(ce);
-			System.exit(1);
+			System.exit(0);
 		}
 		catch (LoginException le) {
 			Log.errorException(le);
@@ -212,12 +217,11 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 
 		/*	Activate servant*/
 		try {
-			MCMSessionEnvironment.getInstance().getMCMServantManager().getCORBAServer().activateServant(new MCMImplementation(),
-					mcmId.toString());
+			sessionEnvironment.getMCMServantManager().getCORBAServer().activateServant(new MCMImplementation(), mcmId.toString());
 		}
 		catch (CommunicationException ce) {
 			Log.errorException(ce);
-			System.exit(1);
+			System.exit(0);
 		}
 	}
 
@@ -231,7 +235,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		}
 		catch (Exception e) {
 			Log.errorException(e);
-			System.exit(1);
+			System.exit(0);
 		}
 	}
 
@@ -517,6 +521,22 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 			((Transceiver)transceivers.get(it.next())).shutdown();
 
 		DatabaseConnection.closeConnection();
+	}
+
+
+	static class MCMLoginRestorer implements LoginRestorer {
+
+		public boolean restoreLogin() {
+			return true;
+		}
+
+		public String getLogin() {
+			return login;
+		}
+
+		public String getPassword() {
+			return PASSWORD;
+		}
 	}
 
 }

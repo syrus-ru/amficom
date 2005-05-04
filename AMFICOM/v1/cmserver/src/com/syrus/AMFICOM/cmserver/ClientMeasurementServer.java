@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementServer.java,v 1.39 2005/05/04 07:48:56 arseniy Exp $
+ * $Id: ClientMeasurementServer.java,v 1.40 2005/05/04 11:36:59 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,13 +18,14 @@ import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseObjectLoader;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginException;
+import com.syrus.AMFICOM.general.LoginRestorer;
 import com.syrus.util.Application;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/05/04 07:48:56 $
+ * @version $Revision: 1.40 $, $Date: 2005/05/04 11:36:59 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -47,6 +48,9 @@ public class ClientMeasurementServer {
 
 	/*	Identifier of server*/
 	private static Identifier serverId;
+
+	/*	Login of the corresponding user*/
+	static String login;
 
 	/*	Process codename*/
 	private static String processCodename;
@@ -88,6 +92,7 @@ public class ClientMeasurementServer {
 			Log.errorException(e);
 			System.exit(0);
 		}
+		login = user.getLogin();
 
 		/*	Init database object loader*/
 		DatabaseObjectLoader.init(user.getId());
@@ -104,7 +109,7 @@ public class ClientMeasurementServer {
 		/*	Login*/
 		CMServerSessionEnvironment sessionEnvironment = CMServerSessionEnvironment.getInstance();
 		try {
-			sessionEnvironment.login(user.getLogin(), PASSWORD);
+			sessionEnvironment.login(login, PASSWORD);
 		}
 		catch (CommunicationException ce) {
 			Log.errorException(ce);
@@ -141,6 +146,22 @@ public class ClientMeasurementServer {
 
 	protected synchronized void shutdown() {
 		DatabaseConnection.closeConnection();
+	}
+
+
+	static class CMServerLoginRestorer implements LoginRestorer {
+
+		public boolean restoreLogin() {
+			return true;
+		}
+
+		public String getLogin() {
+			return login;
+		}
+
+		public String getPassword() {
+			return PASSWORD;
+		}
 	}
 
 }
