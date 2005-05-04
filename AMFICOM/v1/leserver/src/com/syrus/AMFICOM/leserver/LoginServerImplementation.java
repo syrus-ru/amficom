@@ -1,5 +1,5 @@
 /*
- * $Id: LoginServerImplementation.java,v 1.9 2005/05/04 07:47:46 arseniy Exp $
+ * $Id: LoginServerImplementation.java,v 1.10 2005/05/04 11:29:13 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/05/04 07:47:46 $
+ * @version $Revision: 1.10 $, $Date: 2005/05/04 11:29:13 $
  * @author $Author: arseniy $
  * @module leserver_v1
  */
@@ -107,7 +107,7 @@ final class LoginServerImplementation extends LoginServerPOA {
 		if (userLogin != null)
 			this.userLoginDatabase.delete(userLogin);
 		else
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_DATA, CompletionStatus.COMPLETED_YES, "Illegal security key");
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_LOGGED_IN, CompletionStatus.COMPLETED_YES, "Not logged in");
 	}
 
 	/**
@@ -119,7 +119,7 @@ final class LoginServerImplementation extends LoginServerPOA {
 		SessionKey sessionKey = new SessionKey(sessionKeyT);
 		UserLogin userLogin = LoginProcessor.getUserLogin(sessionKey);
 		if (userLogin == null)
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_DATA, CompletionStatus.COMPLETED_YES, "Illegal security key");
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_LOGGED_IN, CompletionStatus.COMPLETED_YES, "Not logged in");
 
 		EquivalentCondition ec = new EquivalentCondition(ObjectEntities.DOMAIN_ENTITY_CODE);
 		try {
@@ -154,7 +154,7 @@ final class LoginServerImplementation extends LoginServerPOA {
 			}
 		}
 		else
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_DATA, CompletionStatus.COMPLETED_YES, "Illegal security data");
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_LOGGED_IN, CompletionStatus.COMPLETED_YES, "Not logged in");
 	}
 
 	public void validateAccess(SessionKey_Transferable sessionKeyT,
@@ -177,7 +177,7 @@ final class LoginServerImplementation extends LoginServerPOA {
 					: (Identifier_Transferable) Identifier.VOID_IDENTIFIER.getTransferable();
 		}
 		else
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_DATA, CompletionStatus.COMPLETED_YES, "Illegal security data");
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_LOGGED_IN, CompletionStatus.COMPLETED_YES, "Not logged in");
 	}
 
 	public void verify(byte i) {
