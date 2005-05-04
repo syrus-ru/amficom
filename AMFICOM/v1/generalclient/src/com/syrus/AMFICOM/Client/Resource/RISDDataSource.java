@@ -1,5 +1,5 @@
 /*-
- * $Id: RISDDataSource.java,v 1.9 2005/04/25 09:59:18 bass Exp $
+ * $Id: RISDDataSource.java,v 1.10 2005/05/04 10:42:40 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,24 +12,22 @@ import java.util.Vector;
 
 import org.omg.CORBA.WStringSeqHolder;
 
-import com.syrus.AMFICOM.CORBA.Constants;
-import com.syrus.AMFICOM.CORBA.Admin.CommandPermissionAttributesSeq_TransferableHolder;
-import com.syrus.AMFICOM.CORBA.Admin.CommandPermissionAttributes_Transferable;
-import com.syrus.AMFICOM.CORBA.Admin.DomainSeq_TransferableHolder;
-import com.syrus.AMFICOM.CORBA.Admin.Domain_Transferable;
-import com.syrus.AMFICOM.CORBA.Admin.UserSeq_TransferableHolder;
-import com.syrus.AMFICOM.CORBA.Admin.User_Transferable;
-import com.syrus.AMFICOM.CORBA.Resource.ImageResourceSeq_TransferableHolder;
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.SessionInterface;
 import com.syrus.AMFICOM.Client.Resource.Object.CommandPermissionAttributes;
 import com.syrus.AMFICOM.Client.Resource.Object.Domain;
 import com.syrus.AMFICOM.Client.Resource.Object.User;
+import com.syrus.AMFICOM.administration.corba.DomainSeq_TransferableHolder;
+import com.syrus.AMFICOM.administration.corba.Domain_Transferable;
+import com.syrus.AMFICOM.administration.corba.UserSeq_TransferableHolder;
+import com.syrus.AMFICOM.administration.corba.User_Transferable;
+import com.syrus.AMFICOM.general.corba.ErrorCode;
+import com.syrus.AMFICOM.resource.corba.ImageResourceSeq_TransferableHolder;
 import com.syrus.io.Rewriter;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/04/25 09:59:18 $
+ * @version $Revision: 1.10 $, $Date: 2005/05/04 10:42:40 $
  * @module generalclient_v1
  */
 public class RISDDataSource implements DataSourceInterface {
@@ -89,7 +87,7 @@ public class RISDDataSource implements DataSourceInterface {
 			ex.printStackTrace();
 			return new String[0];
 		}
-		if (ecode != Constants.ERROR_NO_ERROR) {
+		if (ecode != ErrorCode._ERROR_NO_ERROR) {
 			System.out.println("Failed GetLoggedUserIds! status = "
 					+ ecode);
 			return new String[0];
@@ -139,7 +137,7 @@ public class RISDDataSource implements DataSourceInterface {
 			ex.printStackTrace();
 			return;
 		}
-		if (ecode != Constants.ERROR_NO_ERROR) {
+		if (ecode != ErrorCode._ERROR_NO_ERROR) {
 			System.out
 					.println("Failed GetExecDescriptors! status = "
 							+ ecode);
@@ -199,7 +197,7 @@ public class RISDDataSource implements DataSourceInterface {
 			return;
 		}
 
-		if (ecode != Constants.ERROR_NO_ERROR) {
+		if (ecode != ErrorCode._ERROR_NO_ERROR) {
 			System.out
 					.println("Failed GetUserDescriptors! status = "
 							+ ecode);

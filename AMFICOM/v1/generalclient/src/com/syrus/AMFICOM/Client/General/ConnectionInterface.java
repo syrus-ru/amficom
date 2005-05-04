@@ -1,5 +1,5 @@
 /*
- * $Id: ConnectionInterface.java,v 1.3 2004/09/25 19:31:42 bass Exp $
+ * $Id: ConnectionInterface.java,v 1.4 2005/05/04 10:42:40 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,13 +8,12 @@
 
 package com.syrus.AMFICOM.Client.General;
 
-import com.syrus.AMFICOM.CORBA.AMFICOM;
 import java.lang.Object;
 import java.util.*;
 import org.omg.CORBA.*;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/09/25 19:31:42 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/04 10:42:40 $
  * @author $Author: bass $
  * @module generalclient_v1
  */

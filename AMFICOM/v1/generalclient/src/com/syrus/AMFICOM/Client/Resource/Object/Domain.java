@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.7 2004/09/27 15:47:44 bass Exp $
+ * $Id: Domain.java,v 1.8 2005/05/04 10:42:40 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,14 +8,17 @@
 
 package com.syrus.AMFICOM.Client.Resource.Object;
 
-import com.syrus.AMFICOM.CORBA.Admin.*;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
 import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.administration.corba.Domain_Transferable;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+
 import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2004/09/27 15:47:44 $
+ * @version $Revision: 1.8 $, $Date: 2005/05/04 10:42:40 $
  * @module generalclient_v1
  */
 public class Domain extends AdminObjectResource
@@ -99,7 +102,7 @@ public class Domain extends AdminObjectResource
 		created_by = transferable.created_by;
 		modified = transferable.modified;
 		modified_by = transferable.modified_by;
-		domain_id = transferable.domain_id;
+		domain_id = new Identifier(transferable.domain_id).getIdentifierString();
 
 		count = transferable.domain_ids.length;
 		domain_ids = new ArrayList();
@@ -124,7 +127,7 @@ public class Domain extends AdminObjectResource
 		transferable.created_by = created_by;
 		transferable.modified = modified;
 		transferable.modified_by = modified_by;
-		transferable.domain_id = domain_id;
+		transferable.domain_id = (Identifier_Transferable) new Identifier(domain_id).getTransferable();
 
 		count = domain_ids.size();
 		transferable.domain_ids = new String[count];

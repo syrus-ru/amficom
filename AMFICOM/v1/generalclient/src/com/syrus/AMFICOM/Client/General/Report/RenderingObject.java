@@ -11,8 +11,6 @@ import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.Dimension;
 
-import com.syrus.AMFICOM.CORBA.Report.RenderingObject_Transferable;
-
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
 

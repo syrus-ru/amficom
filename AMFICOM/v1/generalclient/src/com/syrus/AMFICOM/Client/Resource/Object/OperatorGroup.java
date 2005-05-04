@@ -1,5 +1,5 @@
 /*
- * $Id: OperatorGroup.java,v 1.5 2004/09/27 15:57:42 bass Exp $
+ * $Id: OperatorGroup.java,v 1.6 2005/05/04 10:42:40 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.Client.Resource.Object;
 
-import com.syrus.AMFICOM.CORBA.Admin.OperatorGroup_Transferable;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
 import com.syrus.AMFICOM.Client.Resource.*;
 import java.io.*;
@@ -20,7 +19,7 @@ import java.util.*;
  * dependencies between <tt>generalclient_v1</tt> and <tt>admin_1</tt>.
  *
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2004/09/27 15:57:42 $
+ * @version $Revision: 1.6 $, $Date: 2005/05/04 10:42:40 $
  * @module generalclient_v1
  */
 public class OperatorGroup extends AdminObjectResource implements Serializable

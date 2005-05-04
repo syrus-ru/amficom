@@ -1,5 +1,5 @@
 /*
- * $Id: CommandPermissionAttributes.java,v 1.7 2004/09/27 15:45:16 bass Exp $
+ * $Id: CommandPermissionAttributes.java,v 1.8 2005/05/04 10:42:40 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.Client.Resource.Object;
 
-import com.syrus.AMFICOM.CORBA.Admin.CommandPermissionAttributes_Transferable;
 import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
 import com.syrus.AMFICOM.Client.Resource.*;
@@ -16,7 +15,7 @@ import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2004/09/27 15:45:16 $
+ * @version $Revision: 1.8 $, $Date: 2005/05/04 10:42:40 $
  * @module generalclient_v1
  */
 public class CommandPermissionAttributes extends AdminObjectResource implements AdminObjectRWXresource

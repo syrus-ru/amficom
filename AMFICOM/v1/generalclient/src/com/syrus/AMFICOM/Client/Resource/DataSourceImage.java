@@ -1,5 +1,5 @@
 /*-
- * $Id: DataSourceImage.java,v 1.8 2005/04/25 09:39:47 bass Exp $
+ * $Id: DataSourceImage.java,v 1.9 2005/05/04 10:42:40 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,17 +24,15 @@ import java.util.Vector;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-import com.syrus.AMFICOM.CORBA.Constants;
-import com.syrus.AMFICOM.CORBA.Resource.ResourceDescriptorSeq_TransferableHolder;
-import com.syrus.AMFICOM.CORBA.Resource.ResourceDescriptor_Transferable;
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
+import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.util.CacheLock;
 import com.syrus.util.CacheLockObject;
 import com.syrus.util.NIOCacheLock;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/04/25 09:39:47 $
+ * @version $Revision: 1.9 $, $Date: 2005/05/04 10:42:40 $
  * @module generalclient_v1
  */
 public class DataSourceImage {
@@ -161,7 +159,7 @@ public class DataSourceImage {
 			return null;
 		}
 
-		if (ecode != Constants.ERROR_NO_ERROR) {
+		if (ecode != ErrorCode._ERROR_NO_ERROR) {
 			System.out.println("Failed GetDescriptors! status = "
 					+ ecode);
 			return null;

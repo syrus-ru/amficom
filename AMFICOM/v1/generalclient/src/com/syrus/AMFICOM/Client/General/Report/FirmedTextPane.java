@@ -8,8 +8,6 @@ import java.awt.Dimension;
 import java.awt.font.FontRenderContext;
 import java.awt.Font;
 
-import com.syrus.AMFICOM.CORBA.Report.FirmedTextPane_Transferable;
-
 /**
  * <p>Title: </p>
  * <p>Description: Надпись с возможностью привязки</p>

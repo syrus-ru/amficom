@@ -1,5 +1,5 @@
 /*
- * $Id: RISDSessionInfo.java,v 1.40 2005/04/23 13:58:26 arseniy Exp $
+ * $Id: RISDSessionInfo.java,v 1.41 2005/05/04 10:42:40 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,10 +24,6 @@ import org.omg.PortableServer.POA;
 import org.omg.PortableServer.POAHelper;
 import org.omg.PortableServer.POAManagerPackage.AdapterInactive;
 
-import com.syrus.AMFICOM.CORBA.AMFICOM;
-import com.syrus.AMFICOM.CORBA.Constants;
-//import com.syrus.AMFICOM.CORBA.Admin.AccessIdentity_Transferable;
-import com.syrus.AMFICOM.CORBA.Admin.AccessIdentity_TransferableHolder;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.ClientAdministrationObjectLoader;
@@ -42,7 +38,6 @@ import com.syrus.AMFICOM.configuration.XMLConfigurationObjectLoader;
 import com.syrus.AMFICOM.corba.portable.client.Client;
 import com.syrus.AMFICOM.corba.portable.client.ClientImpl;
 import com.syrus.AMFICOM.corba.portable.client.ClientPOATie;
-import com.syrus.AMFICOM.general.AccessIdentity;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.ClientGeneralObjectLoader;
 import com.syrus.AMFICOM.general.EquivalentCondition;
@@ -51,11 +46,10 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.LocalIdentifierGeneratorServer;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.SessionContext;
 import com.syrus.AMFICOM.general.StorableObjectResizableLRUMap;
 import com.syrus.AMFICOM.general.XMLGeneralObjectLoader;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.AccessIdentity_Transferable;
+import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.EmptyClientMapObjectLoader;
 import com.syrus.AMFICOM.map.MapStorableObjectPool;
@@ -74,8 +68,8 @@ import com.syrus.util.corba.JavaSoftORBUtil;
 import com.syrus.util.prefs.IIOPConnectionManager;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.40 $, $Date: 2005/04/23 13:58:26 $
+ * @author $Author: bass $
+ * @version $Revision: 1.41 $, $Date: 2005/05/04 10:42:40 $
  * @module generalclient_v1
  */
 public final class RISDSessionInfo extends SessionInterface {
@@ -99,7 +93,7 @@ public final class RISDSessionInfo extends SessionInterface {
 	 *
 	 * @deprecated Use {@link #getAccessIdentity()} instead.
 	 */
-	public com.syrus.AMFICOM.CORBA.Admin.AccessIdentity_Transferable accessIdentity;
+	public AccessIdentity_Transferable accessIdentity;
 
 	/**
 	 * New-style session id.
@@ -169,7 +163,7 @@ public final class RISDSessionInfo extends SessionInterface {
 			 * параметр для возврата идентификатора сессии
 			 */
 			AccessIdentity_TransferableHolder accessIdentityHolder = new AccessIdentity_TransferableHolder();
-			int ecode = Constants.ERROR_NO_CONNECT;
+			int ecode = ErrorCode._ERROR_NO_CONNECT;
 
 			if (ci == null)
 				ci = (RISDConnectionInfo) (RISDConnectionInfo.getInstance());
@@ -213,7 +207,7 @@ public final class RISDSessionInfo extends SessionInterface {
 			} catch (NullPointerException npe) {
 				npe.printStackTrace();
 			}
-			catch (com.syrus.AMFICOM.CORBA.General.AMFICOMRemoteException e) {
+			catch (AMFICOMRemoteException e) {
 //				 TODO Auto-generated catch block
 				e.printStackTrace();
 //				throw new ApplicationException(e);
@@ -223,7 +217,7 @@ public final class RISDSessionInfo extends SessionInterface {
 				e.printStackTrace();
 				throw new ApplicationException(e);
 			} 
-			if (ecode != Constants.ERROR_NO_ERROR) {
+			if (ecode != ErrorCode._ERROR_NO_ERROR) {
 				Log("Failed Logon! status = " + ecode);
 				/*
 				 * Second unsuccessful return point after client activation.
@@ -371,7 +365,7 @@ public final class RISDSessionInfo extends SessionInterface {
 				this.domainId = domain.getId();
 				this.userId = user.getId();
 				this.LogonTime = System.currentTimeMillis();
-				this.accessIdentity = new com.syrus.AMFICOM.CORBA.Admin.AccessIdentity_Transferable(
+				this.accessIdentity = new AccessIdentity_Transferable(
 						this.LogonTime,
 						user.getName(),
 						this.userId.getIdentifierString(),
@@ -608,7 +602,7 @@ public final class RISDSessionInfo extends SessionInterface {
 	 * Getter for {@link #accessIdentity} property.
 	 * @see #accessIdentity
 	 */
-	public com.syrus.AMFICOM.CORBA.Admin.AccessIdentity_Transferable getAccessIdentity() {
+	public AccessIdentity_Transferable getAccessIdentity() {
 		return this.accessIdentity;
 	}
 

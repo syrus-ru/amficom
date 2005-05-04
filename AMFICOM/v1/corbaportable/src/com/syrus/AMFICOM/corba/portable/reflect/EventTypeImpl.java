@@ -1,5 +1,5 @@
 /*
- * $Id: EventTypeImpl.java,v 1.2 2004/09/25 18:06:32 bass Exp $
+ * $Id: EventTypeImpl.java,v 1.3 2005/05/04 10:42:41 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,15 +8,17 @@
 
 package com.syrus.AMFICOM.corba.portable.reflect;
 
-import com.syrus.AMFICOM.CORBA.Constant.EventTypeConstants;
+import java.util.ArrayList;
+import java.util.Hashtable;
+
 import com.syrus.AMFICOM.corba.portable.common.DatabaseAccessException;
+import com.syrus.AMFICOM.corba.portable.constants.EventTypeConstants;
 import com.syrus.AMFICOM.corba.portable.reflect.common.ObjectResourceImpl;
 import com.syrus.util.logging.ErrorHandler;
-import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2004/09/25 18:06:32 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/04 10:42:41 $
  * @module corbaportable_v1
  */
 public final class EventTypeImpl {

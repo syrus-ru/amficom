@@ -1,11 +1,10 @@
 package com.syrus.AMFICOM.Client.Resource.Alarm;
 
-import com.syrus.AMFICOM.CORBA.Alarm.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2004/09/27 13:24:31 $
+ * @version $Revision: 1.6 $, $Date: 2005/05/04 10:42:40 $
  * @module generalclient_v1
  *
  * @see MessageModel

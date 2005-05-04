@@ -2,7 +2,6 @@ package com.syrus.AMFICOM.Client.Resource;
 
 import java.util.Vector;
 
-import com.syrus.AMFICOM.CORBA.Resource.ResourceDescriptor_Transferable;
 import com.syrus.AMFICOM.Client.General.Report.ReportTemplate;
 
 public final class ReportDataSourceImage extends DataSourceImage {

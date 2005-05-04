@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplate.java,v 1.16 2004/09/27 08:31:08 bass Exp $
+ * $Id: ReportTemplate.java,v 1.17 2005/05/04 10:42:40 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,8 +8,6 @@
 
 package com.syrus.AMFICOM.Client.General.Report;
 
-import com.syrus.AMFICOM.CORBA.Report.*;
-import com.syrus.AMFICOM.CORBA.Resource.Filter_Transferable;
 import com.syrus.AMFICOM.Client.General.Filter.ObjectResourceFilter;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
@@ -30,7 +28,7 @@ import javax.swing.JOptionPane;
  * отчёт </p>
  * 
  * @author $Author: bass $
- * @version $Revision: 1.16 $, $Date: 2004/09/27 08:31:08 $
+ * @version $Revision: 1.17 $, $Date: 2005/05/04 10:42:40 $
  * @module generalclient_v1
  */
 public class ReportTemplate extends StubResource implements Serializable

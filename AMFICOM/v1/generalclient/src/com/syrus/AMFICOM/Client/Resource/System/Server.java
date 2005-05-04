@@ -1,5 +1,5 @@
 /*
- * $Id: Server.java,v 1.4 2004/09/27 14:30:54 bass Exp $
+ * $Id: Server.java,v 1.5 2005/05/04 10:42:40 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,10 +8,11 @@
 
 package com.syrus.AMFICOM.Client.Resource.System;
 
-import com.syrus.AMFICOM.CORBA.Admin.Server_Transferable;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
 import com.syrus.AMFICOM.Client.Resource.Object.AdminObjectResource;
 import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.administration.corba.Server_Transferable;
+
 import java.io.*;
 import java.util.*;
 
@@ -21,7 +22,7 @@ import java.util.*;
  * dependencies between <tt>generalclient_v1</tt> and <tt>admin_1</tt>.
  *
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2004/09/27 14:30:54 $
+ * @version $Revision: 1.5 $, $Date: 2005/05/04 10:42:40 $
  * @module generalclient_v1
  */
 public class Server extends AdminObjectResource implements Serializable

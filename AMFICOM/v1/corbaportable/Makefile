@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.7 2005/05/03 13:13:05 bass Exp $
+# $Id: Makefile,v 1.8 2005/05/04 10:42:41 bass Exp $
 #
 # vim:ft=make:
 #
@@ -22,6 +22,7 @@ idl: .idl
 	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/client.idl
 	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/common.idl
 	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/reflect.idl
+	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/constants.idl
 	touch $@
 
 .PHONY: idl-clean
@@ -39,4 +40,7 @@ idl-clean:
 	find $(SRCDIR) -name 'Message\.java' -exec $(RM) \{\} \;
 	find $(SRCDIR) -name 'MessageDeliveryFailedException\.java' -exec $(RM) \{\} \;
 	find $(SRCDIR) -name 'PortableStackTraceElement\.java' -exec $(RM) \{\} \;
+	find $(SRCDIR) -name 'AlarmTypeConstants\.java' -exec $(RM) \{\} \;
+	find $(SRCDIR) -name 'EventTypeConstants\.java' -exec $(RM) \{\} \;
+	find $(SRCDIR) -name 'MessageTypeConstants\.java' -exec $(RM) \{\} \;
 	$(RM) .idl

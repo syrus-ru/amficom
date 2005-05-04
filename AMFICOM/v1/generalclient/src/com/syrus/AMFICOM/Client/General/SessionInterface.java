@@ -1,5 +1,5 @@
 /*
- * $Id: SessionInterface.java,v 1.9 2005/04/23 13:58:26 arseniy Exp $
+ * $Id: SessionInterface.java,v 1.10 2005/05/04 10:42:40 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,15 +13,14 @@ import java.util.List;
 
 //import com.syrus.AMFICOM.CORBA.Admin.AccessIdentity_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.corba.AccessIdentity_Transferable;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.9 $, $Date: 2005/04/23 13:58:26 $
+ * @author $Author: bass $
+ * @version $Revision: 1.10 $, $Date: 2005/05/04 10:42:40 $
  * @module generalclient_v1
  */
 public abstract class SessionInterface {
-	public abstract com.syrus.AMFICOM.CORBA.Admin.AccessIdentity_Transferable getAccessIdentity();
+	public abstract AccessIdentity_Transferable getAccessIdentity();
 
 	public abstract AccessIdentity_Transferable getAccessIdentifier();
 

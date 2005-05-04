@@ -19,7 +19,6 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Report.CreateReportException;
 
-import com.syrus.AMFICOM.CORBA.Report.ImagePane_Transferable;
 /**
  * <p>Title: </p>
  * <p>Description: Панель для отображения GIF и JPG</p>
