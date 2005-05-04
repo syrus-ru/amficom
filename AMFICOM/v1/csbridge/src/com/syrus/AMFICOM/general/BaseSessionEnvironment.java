@@ -1,5 +1,5 @@
 /*
- * $Id: BaseSessionEnvironment.java,v 1.4 2005/05/04 11:12:32 arseniy Exp $
+ * $Id: BaseSessionEnvironment.java,v 1.5 2005/05/04 12:24:10 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,11 +10,11 @@ package com.syrus.AMFICOM.general;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/05/04 11:12:32 $
+ * @version $Revision: 1.5 $, $Date: 2005/05/04 12:24:10 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
-public abstract class BaseSessionEnvironment {
+public class BaseSessionEnvironment {
 	protected BaseConnectionManager baseConnectionManager;
 	private PoolContext poolContext;
 
