@@ -1,5 +1,5 @@
 /*-
-* $Id: IntervalsTemporalPattern.java,v 1.13 2005/05/03 13:55:37 max Exp $
+* $Id: IntervalsTemporalPattern.java,v 1.14 2005/05/04 12:29:09 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -26,6 +26,8 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
+import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -34,12 +36,13 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ITP_Interval_Duration;
 import com.syrus.AMFICOM.measurement.corba.ITP_Interval_Temporal_Pattern_Id;
 import com.syrus.AMFICOM.measurement.corba.IntervalsTemporalPattern_Transferable;
+import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/05/03 13:55:37 $
- * @author $Author: max $
+ * @version $Revision: 1.14 $, $Date: 2005/05/04 12:29:09 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module measurement_v1
  */
@@ -86,11 +89,10 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern implements
 															final SortedMap intervalsAbstractTemporalPatternMap,
 							                                final SortedMap intervalsDuration) throws CreateObjectException {
 
-//		try {
+		try {
 			IntervalsTemporalPattern intervalsTemporalPattern = 
 				new IntervalsTemporalPattern(
-					new Identifier(ObjectEntities.INTERVALS_TEMPORALPATTERN_ENTITY + "_"+ System.currentTimeMillis())
-					/* TODO IdentifierPool.getGeneratedIdentifier(ObjectEntities.INTERVALS_TEMPORALPATTERN_ENTITY_CODE) */, 
+					IdentifierPool.getGeneratedIdentifier(ObjectEntities.INTERVALS_TEMPORALPATTERN_ENTITY_CODE), 
 					creatorId, 
 					0L, 
 					intervalsAbstractTemporalPatternMap,
@@ -100,9 +102,9 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern implements
 			assert intervalsTemporalPattern.isValid() : ErrorMessages.OBJECT_NOT_INITIALIZED;			
 			
 			return intervalsTemporalPattern;
-//		} catch (IdentifierGenerationException ige) {
-//			throw new CreateObjectException("Cannot generate identifier ", ige);
-//		}
+		} catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
+		}
 	}
 
 	synchronized void setAttributes(final Date created,
@@ -295,7 +297,7 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern implements
 					if (	(duration3 ==0 && l == l3) ||
 							(duration3 != 0 && l3 >= l && l <= l3 + duration3) ||
 							(l < l3 && (l + dur > l3))) {
-						throw new IllegalDataException("Cannot put over other items");
+						throw new IllegalDataException(LangModelMeasurement.getString("Cannot put over other items"));
 					}
 					 
 				}
@@ -573,14 +575,14 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern implements
 			
 			if (offset.longValue() < prev.longValue() + duration) {
 				this.undo();
-				throw new IllegalDataException("Illegal position");
+				throw new IllegalDataException(LangModelMeasurement.getString("Illegal position"));
 			}
 			prev = offset;
 		}
 	}
 	
 	private void saveState() {
-		Log.debugMessage("IntervalsTemporalPattern.saveState | 1", Log.FINEST);
+//		Log.debugMessage("IntervalsTemporalPattern.saveState | 1", Log.FINEST);
 		if (this.intervalsAbstractTemporalPatternMap == null && this.intervalsDuration == null
 				&& this.undoIntervalsAbstractTemporalPatternMap == null && this.undoIntervalsDuration == null)
 			return;
@@ -591,7 +593,7 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern implements
 			} else {
 				this.undoIntervalsAbstractTemporalPatternMap.clear();
 			}
-			Log.debugMessage("IntervalsTemporalPattern.saveState | 2", Log.FINEST);
+//			Log.debugMessage("IntervalsTemporalPattern.saveState | 2", Log.FINEST);
 			this.undoIntervalsAbstractTemporalPatternMap.putAll(this.intervalsAbstractTemporalPatternMap);			
 		}
 
@@ -601,7 +603,7 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern implements
 			} else {
 				this.undoIntervalsDuration.clear();
 			}
-			Log.debugMessage("IntervalsTemporalPattern.saveState | 3", Log.FINEST);
+//			Log.debugMessage("IntervalsTemporalPattern.saveState | 3", Log.FINEST);
 			this.undoIntervalsDuration.putAll(this.intervalsDuration);			
 		}
 		
@@ -615,7 +617,7 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern implements
 		
 			
 		if (this.undoIntervalsAbstractTemporalPatternMap != null || this.undoIntervalsDuration != null) {
-			Log.debugMessage("IntervalsTemporalPattern.undo | ", Log.FINEST);
+//			Log.debugMessage("IntervalsTemporalPattern.undo | ", Log.FINEST);
 			this.printStructure();
 			
 			SortedMap map = new TreeMap(this.intervalsAbstractTemporalPatternMap);
@@ -755,7 +757,7 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern implements
 		for (Iterator it = offsets.iterator(); it.hasNext();) {
 			Long offset = (Long) it.next();
 			long ms = offset.longValue();
-			Log.debugMessage("IntervalsTemporalPattern.disjoinIntervalItems | ms " + ms, Log.FINEST);
+//			Log.debugMessage("IntervalsTemporalPattern.disjoinIntervalItems | ms " + ms, Log.FINEST);
 			Identifier temporalPatternId = (Identifier) this.intervalsAbstractTemporalPatternMap.get(offset);			
 			if (temporalPatternId.isVoid())
 				continue;
@@ -775,7 +777,7 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern implements
 							.hasNext();) {
 						Long offset2 = (Long) iterator.next();
 						Long newOffset = new Long(offset2.longValue() + ms);
-						Log.debugMessage("IntervalsTemporalPattern.disjoin | INTERVALS " + offset2, Log.FINEST);
+//						Log.debugMessage("IntervalsTemporalPattern.disjoin | INTERVALS " + offset2, Log.FINEST);
 
 						this.intervalsAbstractTemporalPatternMap.put(newOffset, intervalsAbstractTemporalPatternMap2
 								.get(offset2));
@@ -786,18 +788,18 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern implements
 				case ObjectEntities.PERIODICAL_TEMPORALPATTERN_ENTITY_CODE: {
 					PeriodicalTemporalPattern periodicalTemporalPattern = (PeriodicalTemporalPattern) MeasurementStorableObjectPool
 					.getStorableObject(temporalPatternId, true);
-					Log.debugMessage("IntervalsTemporalPattern.disjoinIntervalItems | PERIODICAL duration: " + duration, Log.FINEST);
+//					Log.debugMessage("IntervalsTemporalPattern.disjoinIntervalItems | PERIODICAL duration: " + duration, Log.FINEST);
 					SortedSet times2 = periodicalTemporalPattern.getTimes(0, duration != null ? duration.longValue() : 0);
 					long firstTime = 0;
 					boolean initedFirstTime = false;
 					for (Iterator iterator = times2.iterator(); iterator.hasNext();) {
 						Date date = (Date) iterator.next();
-						Log.debugMessage("IntervalsTemporalPattern.disjoinIntervalItems | date " + date, Log.FINEST);
+//						Log.debugMessage("IntervalsTemporalPattern.disjoinIntervalItems | date " + date, Log.FINEST);
 						if (!initedFirstTime) {
 							firstTime = date.getTime();
 							initedFirstTime = true;
 						}
-						Log.debugMessage("IntervalsTemporalPattern.disjoinIntervalItems | add " + new Long(ms + date.getTime() - firstTime), Log.FINEST);
+//						Log.debugMessage("IntervalsTemporalPattern.disjoinIntervalItems | add " + new Long(ms + date.getTime() - firstTime), Log.FINEST);
 						this.intervalsAbstractTemporalPatternMap.put(new Long(ms + date.getTime() - firstTime), Identifier.VOID_IDENTIFIER);
 					}
 					
