@@ -1,5 +1,5 @@
 /*
- * $Id: CORBAGeneralObjectLoader.java,v 1.10 2005/05/03 19:30:40 arseniy Exp $
+ * $Id: CORBAGeneralObjectLoader.java,v 1.11 2005/05/04 11:12:32 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,6 +7,7 @@
  */
 package com.syrus.AMFICOM.general;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -24,7 +25,7 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/05/03 19:30:40 $
+ * @version $Revision: 1.11 $, $Date: 2005/05/04 11:12:32 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
@@ -41,23 +42,37 @@ public final class CORBAGeneralObjectLoader extends CORBAObjectLoader implements
 	public Set loadParameterTypes(Set ids) throws ApplicationException {
 		CMServer cmServer = super.cmServerConnectionManager.getCMServerReference();
 		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
-		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
 
-		try {
-			ParameterType_Transferable[] transferables = cmServer.transmitParameterTypes(idsT, sessionKeyT);
-			Set objects = new HashSet(transferables.length);
-			for (int i = 0; i < transferables.length; i++) {
-				try {
-					objects.add(new ParameterType(transferables[i]));
+		int n = 0;
+		while (true) {
+			SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
+			try {
+				n++;
+				ParameterType_Transferable[] transferables = cmServer.transmitParameterTypes(idsT, sessionKeyT);
+				Set objects = new HashSet(transferables.length);
+				for (int i = 0; i < transferables.length; i++) {
+					try {
+						objects.add(new ParameterType(transferables[i]));
+					}
+					catch (CreateObjectException coe) {
+						Log.errorException(coe);
+					}
 				}
-				catch (CreateObjectException coe) {
-					Log.errorException(coe);
-				}
+				return objects;
 			}
-			return objects;
-		}
-		catch (AMFICOMRemoteException are) {
-			throw new RetrieveObjectException(are.message);
+			catch (AMFICOMRemoteException are) {
+				if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN) {
+					if (n <= 1) {
+						if (LoginManager.restoreLogin()) {
+							continue;
+						}
+						Log.debugMessage("CORBAGeneralObjectLoader.loadParameterTypes | Restore login cancelled", Log.DEBUGLEVEL09);
+						return Collections.EMPTY_SET;
+					}
+					throw new LoginException(are.message);
+				}
+				throw new RetrieveObjectException(are.message);
+			}
 		}
 	}
 
@@ -75,6 +90,8 @@ public final class CORBAGeneralObjectLoader extends CORBAObjectLoader implements
 			return objects;
 		}
 		catch (AMFICOMRemoteException are) {
+			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+				throw new LoginException("Not logged in");
 			throw new RetrieveObjectException(are.message);
 		}
 	}
@@ -98,6 +115,8 @@ public final class CORBAGeneralObjectLoader extends CORBAObjectLoader implements
 			return objects;
 		}
 		catch (AMFICOMRemoteException are) {
+			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+				throw new LoginException("Not logged in");
 			throw new RetrieveObjectException(are.message);
 		}
 	}
@@ -126,6 +145,8 @@ public final class CORBAGeneralObjectLoader extends CORBAObjectLoader implements
 			return objects;
 		}
 		catch (AMFICOMRemoteException are) {
+			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+				throw new LoginException("Not logged in");
 			throw new RetrieveObjectException(are.message);
 		}
 	}
@@ -145,6 +166,8 @@ public final class CORBAGeneralObjectLoader extends CORBAObjectLoader implements
 			return objects;
 		}
 		catch (AMFICOMRemoteException are) {
+			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+				throw new LoginException("Not logged in");
 			throw new RetrieveObjectException(are.message);
 		}
 	}
@@ -169,6 +192,8 @@ public final class CORBAGeneralObjectLoader extends CORBAObjectLoader implements
 			return objects;
 		}
 		catch (AMFICOMRemoteException are) {
+			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+				throw new LoginException("Not logged in");
 			throw new RetrieveObjectException(are.message);
 		}
 	}
@@ -194,6 +219,8 @@ public final class CORBAGeneralObjectLoader extends CORBAObjectLoader implements
 			String mesg = "Cannot save objects -- ";
 			if (are.error_code.value() == ErrorCode._ERROR_VERSION_COLLISION)
 				throw new VersionCollisionException(mesg + are.message, 0L, 0L);
+			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+				throw new LoginException("Not logged in");
 			throw new UpdateObjectException(mesg + are.message);
 		}
 	}
@@ -215,6 +242,8 @@ public final class CORBAGeneralObjectLoader extends CORBAObjectLoader implements
 			String mesg = "Cannot save objects -- ";
 			if (are.error_code.value() == ErrorCode._ERROR_VERSION_COLLISION)
 				throw new VersionCollisionException(mesg + are.message, 0L, 0L);
+			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+				throw new LoginException("Not logged in");
 			throw new UpdateObjectException(mesg + are.message);
 		}
 	}
@@ -236,6 +265,8 @@ public final class CORBAGeneralObjectLoader extends CORBAObjectLoader implements
 			String mesg = "Cannot save objects -- ";
 			if (are.error_code.value() == ErrorCode._ERROR_VERSION_COLLISION)
 				throw new VersionCollisionException(mesg + are.message, 0L, 0L);
+			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+				throw new LoginException("Not logged in");
 			throw new UpdateObjectException(mesg + are.message);
 		}
 	}
@@ -257,6 +288,8 @@ public final class CORBAGeneralObjectLoader extends CORBAObjectLoader implements
 			return refreshedIds;
 		}
 		catch (AMFICOMRemoteException are) {
+			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+				throw new LoginException("Not logged in");
 			throw new ApplicationException(are);
 		}
 	}

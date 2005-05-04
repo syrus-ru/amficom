@@ -1,5 +1,5 @@
 /*
- * $Id: CORBAConfigurationObjectLoader.java,v 1.7 2005/05/03 19:30:40 arseniy Exp $
+ * $Id: CORBAConfigurationObjectLoader.java,v 1.8 2005/05/04 11:12:32 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,6 +32,7 @@ import com.syrus.AMFICOM.general.CMServerConnectionManager;
 import com.syrus.AMFICOM.general.CORBAObjectLoader;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -48,7 +49,7 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/05/03 19:30:40 $
+ * @version $Revision: 1.8 $, $Date: 2005/05/04 11:12:32 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
@@ -81,6 +82,8 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 			return objects;
 		}
 		catch (AMFICOMRemoteException are) {
+			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+				throw new LoginException("Not logged in");
 			throw new RetrieveObjectException(are.message);
 		}
 	}
@@ -104,6 +107,8 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 			return objects;
 		}
 		catch (AMFICOMRemoteException are) {
+			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+				throw new LoginException("Not logged in");
 			throw new RetrieveObjectException(are.message);
 		}
 	}
@@ -127,6 +132,8 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 			return objects;
 		}
 		catch (AMFICOMRemoteException are) {
+			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+				throw new LoginException("Not logged in");
 			throw new RetrieveObjectException(are.message);
 		}
 	}
@@ -150,6 +157,8 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 			return objects;
 		}
 		catch (AMFICOMRemoteException are) {
+			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+				throw new LoginException("Not logged in");
 			throw new RetrieveObjectException(are.message);
 		}
 	}
@@ -173,6 +182,8 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 			return objects;
 		}
 		catch (AMFICOMRemoteException are) {
+			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+				throw new LoginException("Not logged in");
 			throw new RetrieveObjectException(are.message);
 		}
 	}
@@ -196,6 +207,8 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 			return objects;
 		}
 		catch (AMFICOMRemoteException are) {
+			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+				throw new LoginException("Not logged in");
 			throw new RetrieveObjectException(are.message);
 		}
 	}
@@ -219,6 +232,8 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 			return objects;
 		}
 		catch (AMFICOMRemoteException are) {
+			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+				throw new LoginException("Not logged in");
 			throw new RetrieveObjectException(are.message);
 		}
 	}
@@ -244,6 +259,8 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 			return objects;
 		}
 		catch (AMFICOMRemoteException are) {
+			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+				throw new LoginException("Not logged in");
 			throw new RetrieveObjectException(are.message);
 		}
 	}
@@ -267,6 +284,8 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 			return objects;
 		}
 		catch (AMFICOMRemoteException are) {
+			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+				throw new LoginException("Not logged in");
 			throw new RetrieveObjectException(are.message);
 		}
 	}
@@ -290,6 +309,8 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 			return objects;
 		}
 		catch (AMFICOMRemoteException are) {
+			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+				throw new LoginException("Not logged in");
 			throw new RetrieveObjectException(are.message);
 		}
 	}
@@ -313,6 +334,8 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 			return objects;
 		}
 		catch (AMFICOMRemoteException are) {
+			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+				throw new LoginException("Not logged in");
 			throw new RetrieveObjectException(are.message);
 		}
 	}
@@ -336,6 +359,8 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 			return objects;
 		}
 		catch (AMFICOMRemoteException are) {
+			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+				throw new LoginException("Not logged in");
 			throw new RetrieveObjectException(are.message);
 		}
 	}
@@ -359,6 +384,8 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 			return objects;
 		}
 		catch (AMFICOMRemoteException are) {
+			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+				throw new LoginException("Not logged in");
 			throw new RetrieveObjectException(are.message);
 		}
 	}
@@ -382,6 +409,8 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 			return objects;
 		}
 		catch (AMFICOMRemoteException are) {
+			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+				throw new LoginException("Not logged in");
 			throw new RetrieveObjectException(are.message);
 		}
 	}
@@ -405,6 +434,8 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 			return objects;
 		}
 		catch (AMFICOMRemoteException are) {
+			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+				throw new LoginException("Not logged in");
 			throw new RetrieveObjectException(are.message);
 		}
 	}
@@ -433,6 +464,8 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 			return objects;
 		}
 		catch (AMFICOMRemoteException are) {
+			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+				throw new LoginException("Not logged in");
 			throw new RetrieveObjectException(are.message);
 		}
 	}
@@ -457,6 +490,8 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 			return objects;
 		}
 		catch (AMFICOMRemoteException are) {
+			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+				throw new LoginException("Not logged in");
 			throw new RetrieveObjectException(are.message);
 		}
 	}
@@ -481,6 +516,8 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 			return objects;
 		}
 		catch (AMFICOMRemoteException are) {
+			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+				throw new LoginException("Not logged in");
 			throw new RetrieveObjectException(are.message);
 		}
 	}
@@ -505,6 +542,8 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 			return objects;
 		}
 		catch (AMFICOMRemoteException are) {
+			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+				throw new LoginException("Not logged in");
 			throw new RetrieveObjectException(are.message);
 		}
 	}
@@ -529,6 +568,8 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 			return objects;
 		}
 		catch (AMFICOMRemoteException are) {
+			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+				throw new LoginException("Not logged in");
 			throw new RetrieveObjectException(are.message);
 		}
 	}
@@ -553,6 +594,8 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 			return objects;
 		}
 		catch (AMFICOMRemoteException are) {
+			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+				throw new LoginException("Not logged in");
 			throw new RetrieveObjectException(are.message);
 		}
 	}
@@ -577,6 +620,8 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 			return objects;
 		}
 		catch (AMFICOMRemoteException are) {
+			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+				throw new LoginException("Not logged in");
 			throw new RetrieveObjectException(are.message);
 		}
 	}
@@ -603,6 +648,8 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 			return objects;
 		}
 		catch (AMFICOMRemoteException are) {
+			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+				throw new LoginException("Not logged in");
 			throw new RetrieveObjectException(are.message);
 		}
 	}
@@ -627,6 +674,8 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 			return objects;
 		}
 		catch (AMFICOMRemoteException are) {
+			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+				throw new LoginException("Not logged in");
 			throw new RetrieveObjectException(are.message);
 		}
 	}
@@ -651,6 +700,8 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 			return objects;
 		}
 		catch (AMFICOMRemoteException are) {
+			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+				throw new LoginException("Not logged in");
 			throw new RetrieveObjectException(are.message);
 		}
 	}
@@ -675,6 +726,8 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 			return objects;
 		}
 		catch (AMFICOMRemoteException are) {
+			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+				throw new LoginException("Not logged in");
 			throw new RetrieveObjectException(are.message);
 		}
 	}
@@ -699,6 +752,8 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 			return objects;
 		}
 		catch (AMFICOMRemoteException are) {
+			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+				throw new LoginException("Not logged in");
 			throw new RetrieveObjectException(are.message);
 		}
 	}
@@ -723,6 +778,8 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 			return objects;
 		}
 		catch (AMFICOMRemoteException are) {
+			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+				throw new LoginException("Not logged in");
 			throw new RetrieveObjectException(are.message);
 		}
 	}
@@ -747,6 +804,8 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 			return objects;
 		}
 		catch (AMFICOMRemoteException are) {
+			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+				throw new LoginException("Not logged in");
 			throw new RetrieveObjectException(are.message);
 		}
 	}
@@ -771,6 +830,8 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 			return objects;
 		}
 		catch (AMFICOMRemoteException are) {
+			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+				throw new LoginException("Not logged in");
 			throw new RetrieveObjectException(are.message);
 		}
 	}
@@ -796,6 +857,8 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 			String mesg = "Cannot save objects -- ";
 			if (are.error_code.value() == ErrorCode._ERROR_VERSION_COLLISION)
 				throw new VersionCollisionException(mesg + are.message, 0L, 0L);
+			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+				throw new LoginException("Not logged in");
 			throw new UpdateObjectException(mesg + are.message);
 		}
 	}
@@ -817,6 +880,8 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 			String mesg = "Cannot save objects -- ";
 			if (are.error_code.value() == ErrorCode._ERROR_VERSION_COLLISION)
 				throw new VersionCollisionException(mesg + are.message, 0L, 0L);
+			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+				throw new LoginException("Not logged in");
 			throw new UpdateObjectException(mesg + are.message);
 		}
 	}
@@ -838,6 +903,8 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 			String mesg = "Cannot save objects -- ";
 			if (are.error_code.value() == ErrorCode._ERROR_VERSION_COLLISION)
 				throw new VersionCollisionException(mesg + are.message, 0L, 0L);
+			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+				throw new LoginException("Not logged in");
 			throw new UpdateObjectException(mesg + are.message);
 		}
 	}
@@ -859,6 +926,8 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 			String mesg = "Cannot save objects -- ";
 			if (are.error_code.value() == ErrorCode._ERROR_VERSION_COLLISION)
 				throw new VersionCollisionException(mesg + are.message, 0L, 0L);
+			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+				throw new LoginException("Not logged in");
 			throw new UpdateObjectException(mesg + are.message);
 		}
 	}
@@ -880,6 +949,8 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 			String mesg = "Cannot save objects -- ";
 			if (are.error_code.value() == ErrorCode._ERROR_VERSION_COLLISION)
 				throw new VersionCollisionException(mesg + are.message, 0L, 0L);
+			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+				throw new LoginException("Not logged in");
 			throw new UpdateObjectException(mesg + are.message);
 		}
 	}
@@ -901,6 +972,8 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 			String mesg = "Cannot save objects -- ";
 			if (are.error_code.value() == ErrorCode._ERROR_VERSION_COLLISION)
 				throw new VersionCollisionException(mesg + are.message, 0L, 0L);
+			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+				throw new LoginException("Not logged in");
 			throw new UpdateObjectException(mesg + are.message);
 		}
 	}
@@ -922,6 +995,8 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 			String mesg = "Cannot save objects -- ";
 			if (are.error_code.value() == ErrorCode._ERROR_VERSION_COLLISION)
 				throw new VersionCollisionException(mesg + are.message, 0L, 0L);
+			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+				throw new LoginException("Not logged in");
 			throw new UpdateObjectException(mesg + are.message);
 		}
 	}
@@ -945,6 +1020,8 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 			String mesg = "Cannot save objects -- ";
 			if (are.error_code.value() == ErrorCode._ERROR_VERSION_COLLISION)
 				throw new VersionCollisionException(mesg + are.message, 0L, 0L);
+			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+				throw new LoginException("Not logged in");
 			throw new UpdateObjectException(mesg + are.message);
 		}
 	}
@@ -966,6 +1043,8 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 			String mesg = "Cannot save objects -- ";
 			if (are.error_code.value() == ErrorCode._ERROR_VERSION_COLLISION)
 				throw new VersionCollisionException(mesg + are.message, 0L, 0L);
+			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+				throw new LoginException("Not logged in");
 			throw new UpdateObjectException(mesg + are.message);
 		}
 	}
@@ -987,6 +1066,8 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 			String mesg = "Cannot save objects -- ";
 			if (are.error_code.value() == ErrorCode._ERROR_VERSION_COLLISION)
 				throw new VersionCollisionException(mesg + are.message, 0L, 0L);
+			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+				throw new LoginException("Not logged in");
 			throw new UpdateObjectException(mesg + are.message);
 		}
 	}
@@ -1008,6 +1089,8 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 			String mesg = "Cannot save objects -- ";
 			if (are.error_code.value() == ErrorCode._ERROR_VERSION_COLLISION)
 				throw new VersionCollisionException(mesg + are.message, 0L, 0L);
+			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+				throw new LoginException("Not logged in");
 			throw new UpdateObjectException(mesg + are.message);
 		}
 	}
@@ -1029,6 +1112,8 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 			String mesg = "Cannot save objects -- ";
 			if (are.error_code.value() == ErrorCode._ERROR_VERSION_COLLISION)
 				throw new VersionCollisionException(mesg + are.message, 0L, 0L);
+			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+				throw new LoginException("Not logged in");
 			throw new UpdateObjectException(mesg + are.message);
 		}
 	}
@@ -1050,6 +1135,8 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 			String mesg = "Cannot save objects -- ";
 			if (are.error_code.value() == ErrorCode._ERROR_VERSION_COLLISION)
 				throw new VersionCollisionException(mesg + are.message, 0L, 0L);
+			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+				throw new LoginException("Not logged in");
 			throw new UpdateObjectException(mesg + are.message);
 		}
 	}
@@ -1071,6 +1158,8 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 			String mesg = "Cannot save objects -- ";
 			if (are.error_code.value() == ErrorCode._ERROR_VERSION_COLLISION)
 				throw new VersionCollisionException(mesg + are.message, 0L, 0L);
+			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+				throw new LoginException("Not logged in");
 			throw new UpdateObjectException(mesg + are.message);
 		}
 	}
@@ -1092,6 +1181,8 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 			String mesg = "Cannot save objects -- ";
 			if (are.error_code.value() == ErrorCode._ERROR_VERSION_COLLISION)
 				throw new VersionCollisionException(mesg + are.message, 0L, 0L);
+			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+				throw new LoginException("Not logged in");
 			throw new UpdateObjectException(mesg + are.message);
 		}
 	}
@@ -1113,6 +1204,8 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 			return refreshedIds;
 		}
 		catch (AMFICOMRemoteException are) {
+			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+				throw new LoginException("Not logged in");
 			throw new ApplicationException(are);
 		}
 	}

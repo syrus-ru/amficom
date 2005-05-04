@@ -1,5 +1,5 @@
 /*
- * $Id: LoginManager.java,v 1.6 2005/05/03 19:30:40 arseniy Exp $
+ * $Id: LoginManager.java,v 1.7 2005/05/04 11:12:32 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,42 +22,38 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/05/03 19:30:40 $
+ * @version $Revision: 1.7 $, $Date: 2005/05/04 11:12:32 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
 public final class LoginManager {
 	private static LoginServerConnectionManager loginServerConnectionManager;
+	private static LoginRestorer loginRestorer;
 	private static SessionKey sessionKey;
 	private static SessionKey_Transferable sessionKeyT;
 	private static Identifier userId;
 	private static Identifier domainId;
-	private static boolean isLoggedIn;
 
 	public LoginManager() {
 		// singleton
 		assert false;
 	}
 
-	public static void init(final LoginServerConnectionManager loginServerConnectionManager1) {
+	public static void init(final LoginServerConnectionManager loginServerConnectionManager1, LoginRestorer loginRestorer1) {
 		loginServerConnectionManager = loginServerConnectionManager1;
-		isLoggedIn = false;
+		loginRestorer = loginRestorer1;
 	}
 
 	/*
 	 * @todo Write meaningful processing of all possible error codes
 	 * */
 	public static void login(final String login, final String password) throws CommunicationException, LoginException {
-		if (isLoggedIn)
-			throw new LoginException("Already logged in, logout first");//AlreadyLoggedInException -- ?
-
 		LoginServer loginServer = loginServerConnectionManager.getLoginServerReference();
 		try {
 			Identifier_TransferableHolder userIdHolder = new Identifier_TransferableHolder();
 			sessionKeyT = loginServer.login(login, password, userIdHolder);
 			sessionKey = new SessionKey(sessionKeyT);
 			userId = new Identifier(userIdHolder.value);
-			isLoggedIn = true;
 		}
 		catch (AMFICOMRemoteException are) {
 			switch (are.error_code.value()) {
@@ -77,13 +73,9 @@ public final class LoginManager {
 	 * @todo Write meaningful processing of all possible error codes
 	 * */
 	public static void logout() throws CommunicationException, LoginException {
-		if (!isLoggedIn)
-			throw new LoginException("Not logged in");
-
 		LoginServer loginServer = loginServerConnectionManager.getLoginServerReference();
 		try {
 			loginServer.logout((SessionKey_Transferable) sessionKey.getTransferable());
-			isLoggedIn = false;
 		}
 		catch (AMFICOMRemoteException are) {
 			switch (are.error_code.value()) {
@@ -153,4 +145,14 @@ public final class LoginManager {
 	public static Identifier getDomainId() {
 		return domainId;
 	}
+
+
+	public static boolean restoreLogin() throws LoginException, CommunicationException {
+		if (loginRestorer != null && loginRestorer.restoreLogin()) {
+			login(loginRestorer.getLogin(), loginRestorer.getPassword());
+			return true;
+		}
+		return false;
+	}
+
 }
