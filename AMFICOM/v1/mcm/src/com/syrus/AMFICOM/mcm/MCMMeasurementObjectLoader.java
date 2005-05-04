@@ -1,5 +1,5 @@
 /*
- * $Id: MCMMeasurementObjectLoader.java,v 1.44 2005/05/03 19:30:05 arseniy Exp $
+ * $Id: MCMMeasurementObjectLoader.java,v 1.45 2005/05/04 11:54:42 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,12 +8,14 @@
 
 package com.syrus.AMFICOM.mcm;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.LoginException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
@@ -56,7 +58,7 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2005/05/03 19:30:05 $
+ * @version $Revision: 1.45 $, $Date: 2005/05/04 11:54:42 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -426,28 +428,43 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 		return objects;
 	}
 
-
+	
 	public void saveTests(java.util.Set objects, boolean force) throws ApplicationException {
 		super.saveTests(objects, force);
-
-		MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
-		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
 
 		Test_Transferable[] transferables = new Test_Transferable[objects.size()];
 		int i = 0;
 		for (Iterator it = objects.iterator(); it.hasNext(); i++)
 			transferables[i] = (Test_Transferable) ((Test) it.next()).getTransferable();
 
-		try {
-			StorableObject_Transferable[] headers = mServerRef.receiveTests(transferables, force, sessionKeyT);
-			super.updateHeaders(objects, headers);
+		MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
+
+		int n = 0;
+		while (true) {
+			SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
+			try {
+				n++;
+				StorableObject_Transferable[] headers = mServerRef.receiveTests(transferables, force, sessionKeyT);
+				super.updateHeaders(objects, headers);
+			}
+			catch (AMFICOMRemoteException are) {
+				String mesg = "Cannot save objects -- ";
+				if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN) {
+					if (n <= 1) {
+						if (LoginManager.restoreLogin()) {
+							continue;
+						}
+						Log.debugMessage("MCMMeasurementObjectLoader.saveTests | Restore login cancelled", Log.DEBUGLEVEL09);
+						return;
+					}
+					throw new LoginException(are.message);
+				}
+				if (are.error_code.value() == ErrorCode._ERROR_VERSION_COLLISION)
+					throw new VersionCollisionException(mesg + are.message, 0L, 0L);
+				throw new UpdateObjectException(mesg + are.message);
+			}
 		}
-		catch (AMFICOMRemoteException are) {
-			String mesg = "Cannot save objects -- ";
-			if (are.error_code.value() == ErrorCode._ERROR_VERSION_COLLISION)
-				throw new VersionCollisionException(mesg + are.message, 0L, 0L);
-			throw new UpdateObjectException(mesg + are.message);
-		}
+
 	}
 
 
