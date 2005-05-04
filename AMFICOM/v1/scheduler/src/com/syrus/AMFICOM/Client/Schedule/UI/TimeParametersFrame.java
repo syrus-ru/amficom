@@ -83,8 +83,8 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 		Dispatcher dispatcher;
 
 		private TimeSpinner			startTimeSpinner;
-
 		private DateSpinner			startDateSpinner;
+		boolean skipChanging = false;
 
 		private JLabel interavalLabel;
 //		private JLabel monthIntervalLabel;
@@ -180,8 +180,10 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 				ChangeListener changeListener = new ChangeListener() {
 
 					public void stateChanged(ChangeEvent e) {
-						TimeParametersPanel.this.dispatcher.notify(new OperationEvent(TimeParametersPanel.this
-								.getStartDate(), 0, TimeStampsEditor.DATE_OPERATION));
+						if (!TimeParametersPanel.this.skipChanging) {
+							TimeParametersPanel.this.dispatcher.notify(new OperationEvent(TimeParametersPanel.this
+									.getStartDate(), 0, TimeStampsEditor.DATE_OPERATION));
+						}
 
 					}
 				};
@@ -703,11 +705,16 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 		
 		public void operationPerformed(OperationEvent e) {
 			String actionCommand = e.getActionCommand();
-			
+
 			if (actionCommand.equals(TimeStampsEditor.DATE_OPERATION)) {
+				/* TODO remove dummy skipChanging */
+				this.skipChanging = true;
 				Date date = (Date) e.getSource();
+				// if (!date.equals(this.getStartDate())){
 				this.startDateSpinner.getModel().setValue(date);
 				this.startTimeSpinner.getModel().setValue(date);
+				this.skipChanging = false;
+				// }
 			}
 		}
 		

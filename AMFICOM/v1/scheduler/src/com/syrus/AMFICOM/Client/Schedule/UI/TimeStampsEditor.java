@@ -1,5 +1,5 @@
 /*-
- * $Id: TimeStampsEditor.java,v 1.8 2005/05/03 09:38:01 bob Exp $
+ * $Id: TimeStampsEditor.java,v 1.9 2005/05/04 08:40:14 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,7 +54,7 @@ import com.syrus.AMFICOM.measurement.TestTemporalStamps;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/05/03 09:38:01 $
+ * @version $Revision: 1.9 $, $Date: 2005/05/04 08:40:14 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -90,6 +90,7 @@ public class TimeStampsEditor extends TimeLine implements OperationListener {
 	JMenuItem cutMenuItem;
 	JMenuItem copyMenuItem;
 	JMenuItem pasteMenuItem;
+	JMenuItem pasteAfterEachMenuItem;
 	JMenuItem deleteMenuItem;
 	
 	JMenuItem joinMenuItem;
@@ -115,6 +116,7 @@ public class TimeStampsEditor extends TimeLine implements OperationListener {
 		this.cutMenuItem.setEnabled(b);
 		this.copyMenuItem.setEnabled(b);
 		this.deleteMenuItem.setEnabled(b);
+		this.pasteAfterEachMenuItem.setEnabled(this.offsetIdBuffer != null && !this.offsetIdBuffer.isEmpty() && b);
 		this.joinMenuItem.setEnabled(b ? this.selectedItems.size() > 2 : b);
 		this.disjoinMenuItem.setEnabled(b);
 		if (b) {
@@ -382,7 +384,9 @@ public class TimeStampsEditor extends TimeLine implements OperationListener {
 			public void actionPerformed(ActionEvent e) {
 				if (TimeStampsEditor.this.testTemporalStamps != null) {
 					TimeStampsEditor.this.copyToBuffer();
-					TimeStampsEditor.this.pasteMenuItem.setEnabled(!TimeStampsEditor.this.offsetIdBuffer.isEmpty());
+					boolean b = !TimeStampsEditor.this.offsetIdBuffer.isEmpty();
+					TimeStampsEditor.this.pasteMenuItem.setEnabled(b);
+//					TimeStampsEditor.this.pasteAfterEachMenuItem.setEnabled(b);
 				}
 			}
 		});
@@ -408,8 +412,8 @@ public class TimeStampsEditor extends TimeLine implements OperationListener {
 							/ TimeStampsEditor.this.scale)
 							- TimeStampsEditor.this.testTemporalStamps.getStartTime().getTime();
 
-					 Log.debugMessage(".actionPerformed | pointTime is " +
-					 pointTime, Log.FINEST);
+//					 Log.debugMessage(".actionPerformed | pointTime is " +
+//					 pointTime, Log.FINEST);
 
 					AbstractTemporalPattern temporalPattern = TimeStampsEditor.this.testTemporalStamps
 							.getTemporalPattern();
@@ -466,7 +470,87 @@ public class TimeStampsEditor extends TimeLine implements OperationListener {
 			}
 		});
 		this.popupMenu.add(this.pasteMenuItem);
+		
+		this.pasteAfterEachMenuItem = new JMenuItem(LangModelSchedule.getString("Paste after each"));
+		this.pasteAfterEachMenuItem.setEnabled(false);
+		this.pasteAfterEachMenuItem.addActionListener(new ActionListener() {
 
+			public void actionPerformed(ActionEvent e) {
+				if (TimeStampsEditor.this.testTemporalStamps != null && TimeStampsEditor.this.offsetIdBuffer != null
+						&& !TimeStampsEditor.this.offsetIdBuffer.isEmpty()) {
+
+
+					AbstractTemporalPattern temporalPattern = TimeStampsEditor.this.testTemporalStamps
+							.getTemporalPattern();
+					if (temporalPattern instanceof IntervalsTemporalPattern) {
+						IntervalsTemporalPattern intervalsTemporalPattern = (IntervalsTemporalPattern) temporalPattern;
+						SortedMap durations = intervalsTemporalPattern.getIntervalsDuration();
+						long localStartTime = 0;
+						long localStartTime_ = TimeStampsEditor.this.testTemporalStamps.getStartTime().getTime();
+						long localEndTime_ = TimeStampsEditor.this.testTemporalStamps.getEndTime().getTime();
+						long localEndTime = localEndTime_ - localStartTime_;
+
+						Map map = new HashMap();
+						Map mapDuration = new HashMap();
+						
+						Set offsetIdKey = TimeStampsEditor.this.offsetIdBuffer.keySet();
+						for (Iterator iterator = TimeStampsEditor.this.selectedItems.iterator(); iterator.hasNext();) {
+							TestTimeItem testTimeItem = (TestTimeItem) iterator.next();
+							Long msOffset = (Long) testTimeItem.object;
+							Long duration = (Long) durations.get(msOffset);
+							long pointTime = msOffset.longValue()
+									+ (duration != null ? duration.longValue()
+											: 0) + TimeParametersFrame.TimeParametersPanel.MINUTE_LONG;
+							Log.debugMessage(".actionPerformed | pointTime:" + pointTime, Log.FINEST);
+							for (Iterator it = offsetIdKey.iterator(); it.hasNext();) {
+								Long ms = (Long) it.next();
+								// Log.debugMessage(".actionPerformed | ms " +
+								// ms, Log.FINEST);
+								long time = ms.longValue() + pointTime;
+								// Log.debugMessage(".actionPerformed | time " +
+								// time, Log.FINEST);
+								if (time < localStartTime) {
+									localStartTime = time;
+								}
+								if (time > localEndTime) {
+									localEndTime = time;
+								}
+
+								Long newMs = new Long(time);
+
+								map.put(newMs, TimeStampsEditor.this.offsetIdBuffer.get(ms));
+								mapDuration.put(newMs, TimeStampsEditor.this.offsetDurationBuffer.get(ms));
+							}
+
+							
+						}
+						
+						try {
+							intervalsTemporalPattern.addIntervalItems(map, mapDuration);
+							if (localStartTime < 0) {
+								TimeStampsEditor.this.testTemporalStamps.setStartTime(new Date(localStartTime
+										+ localStartTime_));
+							}
+
+							if (localEndTime > localEndTime_ - localStartTime_) {
+								TimeStampsEditor.this.testTemporalStamps.setEndTime(new Date(localStartTime_
+										+ localEndTime));
+
+							}
+
+							TimeStampsEditor.this.undoMenuItem.setEnabled(true);
+							TimeStampsEditor.this.undoMenuItem.setText(LangModelSchedule.getString("Undo"));
+							TimeStampsEditor.this.refreshTimeItems();
+							TimeStampsEditor.this.repaint();
+						} catch (IllegalDataException ide) {
+							SchedulerModel.showErrorMessage(TimeStampsEditor.this, ide);
+						}
+					}
+				
+				}}
+			});
+		this.popupMenu.add(this.pasteAfterEachMenuItem);
+		
 		this.deleteMenuItem = new JMenuItem(LangModelSchedule.getString("Delete") + "...");
 		this.deleteMenuItem.setEnabled(false);
 		this.deleteMenuItem.addActionListener(new ActionListener() {
@@ -595,8 +679,7 @@ public class TimeStampsEditor extends TimeLine implements OperationListener {
 				this.moveIntervals(diff);
 //					this.selectedItems.clear();
 			}
-		}
-		
+		}		
 	}
 	
 	void refreshTimeItems() {
