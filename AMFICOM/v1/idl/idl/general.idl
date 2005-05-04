@@ -1,5 +1,5 @@
 /*
- * $Id: general.idl,v 1.78 2005/05/04 07:14:47 bass Exp $
+ * $Id: general.idl,v 1.79 2005/05/04 15:05:40 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,8 +24,6 @@ module corba {
 	typedef wstring<128> WString128;
 	typedef wstring<256> WString256;
 
-	typedef sequence <long> LongSeq;
-
 	struct Identifier_Transferable {
 #ifdef NUMERIC_IDENTIFIER
 		short major;
@@ -35,18 +33,20 @@ module corba {
 #endif // NUMERIC_IDENTIFIER
 	};
 
-	typedef sequence <Identifier_Transferable> IdentifierSeq_Transferable;
+	typedef Identifier_Transferable Identifier;
+	typedef sequence<Identifier> IdentifierSeq;
 
 	struct StorableObject_Transferable {
-		Identifier_Transferable id;
+		Identifier id;
 		long long created;
 		long long modified;
-		Identifier_Transferable creator_id;
-		Identifier_Transferable modifier_id;
+		Identifier creator_id;
+		Identifier modifier_id;
 		long long version;
 	};
 
-	typedef sequence<StorableObject_Transferable> StorableObjectSeq_Transferable;
+	typedef StorableObject_Transferable StorableObject;
+	typedef sequence<StorableObject> StorableObjectSeq;
 
 	enum DataType {
 		DATA_TYPE_INTEGER,
@@ -108,7 +108,7 @@ module corba {
 
 ////////////////////// ParameterType //////////////////////
 	struct ParameterType_Transferable {
-		StorableObject_Transferable header;
+		StorableObject header;
 
 		WString32 codename;
 		WString256 description;
@@ -116,10 +116,11 @@ module corba {
 		WString128 name;
 		DataType data_type;
 		
-		IdentifierSeq_Transferable characteristic_ids;
+		IdentifierSeq characteristic_ids;
 	};
 
-	typedef sequence <ParameterType_Transferable> ParameterTypeSeq_Transferable;
+	typedef ParameterType_Transferable ParameterType;
+	typedef sequence<ParameterType> ParameterTypeSeq;
 
 //////////////////// CharacteristicType ///////////////////
 	enum CharacteristicTypeSort {
@@ -131,7 +132,7 @@ module corba {
 	};
 
 	struct CharacteristicType_Transferable {
-		StorableObject_Transferable header;
+		StorableObject header;
 
 		WString32 codename;
 		WString256 description;
@@ -139,7 +140,8 @@ module corba {
 		CharacteristicTypeSort sort;
 	};
 
-	typedef sequence <CharacteristicType_Transferable> CharacteristicTypeSeq_Transferable;
+	typedef CharacteristicType_Transferable CharacteristicType;
+	typedef sequence<CharacteristicType> CharacteristicTypeSeq;
 
 ////////////////////// Characteristic /////////////////////
 	enum CharacteristicSort {
@@ -182,20 +184,19 @@ module corba {
 	};
 
 	struct Characteristic_Transferable {
-		StorableObject_Transferable header;
+		StorableObject header;
 
-		Identifier_Transferable type_id;
+		Identifier type_id;
 		WString128 name;
 		WString256 description;
 		CharacteristicSort sort;
 		WString256 value;
-		Identifier_Transferable characterizable_id;
+		Identifier characterizable_id;
 		boolean is_editable;
 		boolean is_visible;
 		
 	};
 
-	typedef sequence <Characteristic_Transferable> CharacteristicSeq_Transferable;
 	typedef Characteristic_Transferable Characteristic;
 	typedef sequence<Characteristic> CharacteristicSeq;
 
@@ -206,8 +207,8 @@ module corba {
 
 ////////////////////// IdentifierGeneratorServer ///////////////
 	abstract interface IdentifierGeneratorServer {
-		Identifier_Transferable getGeneratedIdentifier(in unsigned short entity) raises (AMFICOMRemoteException);
-		IdentifierSeq_Transferable getGeneratedIdentifierRange(in unsigned short entity, in unsigned long size) raises (AMFICOMRemoteException);
+		Identifier getGeneratedIdentifier(in unsigned short entity) raises (AMFICOMRemoteException);
+		IdentifierSeq getGeneratedIdentifierRange(in unsigned short entity, in unsigned long size) raises (AMFICOMRemoteException);
 	};
 
 ///////////////////////////// Condition ////////////////////////
@@ -215,10 +216,11 @@ module corba {
 	struct LinkedIdsCondition_Transferable {
 		short entity_code;
 		short linked_entity_code;
-		IdentifierSeq_Transferable linked_ids;
+		IdentifierSeq linked_ids;
 	};
-	
-		
+
+	typedef LinkedIdsCondition_Transferable LinkedIdsCondition;
+
 	enum TypicalSort {
 		TYPE_NUMBER_INT,
 		TYPE_NUMBER_LONG,
@@ -226,7 +228,7 @@ module corba {
 		TYPE_STRING,
 		TYPE_DATE
 	};
-	
+
 	enum OperationSort {
 		OPERATION_EQUALS,
 		OPERATION_GREAT,
@@ -248,10 +250,14 @@ module corba {
 		TypicalSort type;		
 		OperationSort operation; 
 	};
-	
+
+	typedef TypicalCondition_Transferable TypicalCondition;
+
 	struct EquivalentCondition_Transferable {
 		short	entity_code;
 	};
+
+	typedef EquivalentCondition_Transferable EquivalentCondition;
 
 	struct CompoundCondition_Transferable {
 		enum CompoundConditionSort {
@@ -264,21 +270,25 @@ module corba {
 		::CORBA::AnySeq innerConditions;
 	};
 
+	typedef CompoundCondition_Transferable CompoundCondition;
+
 	union StorableObjectCondition_Transferable switch(enum StorableObjectConditionSort {
 			LINKED_IDS,
 			COMPOUND,
 			TYPICAL,
 			EQUIVALENT}) {
 		case LINKED_IDS:
-			LinkedIdsCondition_Transferable linkedIdsCondition;
+			LinkedIdsCondition linkedIdsCondition;
 		case COMPOUND:
-			CompoundCondition_Transferable compoundCondition;
+			CompoundCondition compoundCondition;
 		case TYPICAL:
-			TypicalCondition_Transferable typicalCondition;
+			TypicalCondition typicalCondition;
 		case EQUIVALENT:
-			EquivalentCondition_Transferable equialentCondition;
+			EquivalentCondition equialentCondition;
 		
 	};
+
+	typedef StorableObjectCondition_Transferable StorableObjectCondition;
 
 };
 };
@@ -289,6 +299,7 @@ module corba {
 	struct SessionKey_Transferable {
 		general::corba::WString128 session_code;
 	};
+
 	typedef SessionKey_Transferable SessionKey;
 
 };

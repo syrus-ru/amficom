@@ -1,5 +1,5 @@
 /*
- * $Id: administration.idl,v 1.6 2005/04/27 17:53:54 arseniy Exp $
+ * $Id: administration.idl,v 1.7 2005/05/04 15:05:40 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ module corba {
 	};
 
 	struct User_Transferable {
-		general::corba::StorableObject_Transferable header;
+		general::corba::StorableObject header;
 	
 		general::corba::WString32 login;
 		UserSort sort;
@@ -39,14 +39,14 @@ module corba {
 
 /////////////////////////////////// Domain ////////////////////////////////
 	struct Domain_Transferable {
-		general::corba::StorableObject_Transferable header;
+		general::corba::StorableObject header;
 
-		general::corba::Identifier_Transferable domain_id;
+		general::corba::Identifier domain_id;
 
 		general::corba::WString128 name;
 		general::corba::WString256 description;
 		
-		general::corba::IdentifierSeq_Transferable characteristic_ids;
+		general::corba::IdentifierSeq characteristic_ids;
 	};
 	
 	typedef sequence <Domain_Transferable> DomainSeq_Transferable;
@@ -55,26 +55,26 @@ module corba {
 
 /////////////////////////////////// Server ////////////////////////////////
 	struct Server_Transferable {
-		general::corba::StorableObject_Transferable header;
+		general::corba::StorableObject header;
 
-		general::corba::Identifier_Transferable domain_id;
+		general::corba::Identifier domain_id;
 
 		general::corba::WString128 name;
 		general::corba::WString256 description;
 		general::corba::WString64 hostname;
 
-		general::corba::IdentifierSeq_Transferable characteristic_ids;
+		general::corba::IdentifierSeq characteristic_ids;
 	};
 
 	typedef sequence <Server_Transferable> ServerSeq_Transferable;
 
 //////////////////////////////// ServerProcess ////////////////////////////
 	struct ServerProcess_Transferable {
-		general::corba::StorableObject_Transferable header;
+		general::corba::StorableObject header;
 
 		general::corba::WString32 codename;
-		general::corba::Identifier_Transferable server_id;
-		general::corba::Identifier_Transferable user_id;
+		general::corba::Identifier server_id;
+		general::corba::Identifier user_id;
 		general::corba::WString256 description;
 	};
 
@@ -82,16 +82,16 @@ module corba {
 
 //////////////////////////////////// MCM //////////////////////////////////
 	struct MCM_Transferable {
-		general::corba::StorableObject_Transferable header;
+		general::corba::StorableObject header;
 
-		general::corba::Identifier_Transferable domain_id;
+		general::corba::Identifier domain_id;
 
 		general::corba::WString128 name;
 		general::corba::WString256 description;
 		general::corba::WString64 hostname;
-		general::corba::Identifier_Transferable user_id;
-		general::corba::Identifier_Transferable server_id;
-		general::corba::IdentifierSeq_Transferable characteristic_ids;
+		general::corba::Identifier user_id;
+		general::corba::Identifier server_id;
+		general::corba::IdentifierSeq characteristic_ids;
 	};
 	
 	typedef sequence <MCM_Transferable> MCMSeq_Transferable;

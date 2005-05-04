@@ -1,5 +1,5 @@
 /*
- * $Id: configuration.idl,v 1.87 2005/05/01 16:55:46 arseniy Exp $
+ * $Id: configuration.idl,v 1.88 2005/05/04 15:05:40 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,7 +19,7 @@ module corba {
 
 // Generic interface to Equipment, MonitoredElement, etc
 //	abstract interface MonitoredDomainMember_Transferable {
-//		attribute general::corba::IdentifierSeq_Transferable monitored_element_ids;
+//		attribute general::corba::IdentifierSeq monitored_element_ids;
 //
 //		void getKIS() raises (general::corba::AMFICOMRemoteException);
 //	};
@@ -27,7 +27,7 @@ module corba {
 
 /////////////////////// EquipmentType /////////////////////
 	struct EquipmentType_Transferable {
-		general::corba::StorableObject_Transferable header;
+		general::corba::StorableObject header;
 
 		general::corba::WString32 codename;
 		general::corba::WString256 description;
@@ -35,7 +35,7 @@ module corba {
 		general::corba::WString128 manufacturer;
 		general::corba::WString32 manufacturerCode;
 		
-		general::corba::IdentifierSeq_Transferable characteristic_ids;
+		general::corba::IdentifierSeq characteristic_ids;
 	};
 	
 	typedef sequence <EquipmentType_Transferable> EquipmentTypeSeq_Transferable;
@@ -44,13 +44,13 @@ module corba {
 	
 /////////////////////// TransmissionPathType /////////////////////
 	struct TransmissionPathType_Transferable {
-		general::corba::StorableObject_Transferable header;
+		general::corba::StorableObject header;
 
 		general::corba::WString32 codename;
 		general::corba::WString256 description;
 		general::corba::WString128 name;
 		
-		general::corba::IdentifierSeq_Transferable characteristic_ids;
+		general::corba::IdentifierSeq characteristic_ids;
 	};
 	
 	typedef sequence <TransmissionPathType_Transferable> TransmissionPathTypeSeq_Transferable;
@@ -66,13 +66,13 @@ module corba {
 
 /////////////////////// PortType /////////////////////
 	struct PortType_Transferable {
-		general::corba::StorableObject_Transferable header;
+		general::corba::StorableObject header;
 
 		general::corba::WString32 codename;
 		general::corba::WString256 description;
 		general::corba::WString128 name;
 		PortTypeSort sort;
-		general::corba::IdentifierSeq_Transferable characteristic_ids;
+		general::corba::IdentifierSeq characteristic_ids;
 	};
 	
 	typedef sequence <PortType_Transferable> PortTypeSeq_Transferable;
@@ -80,13 +80,13 @@ module corba {
 	typedef sequence<PortType> PortTypeSeq;
 
 	struct MeasurementPortType_Transferable {
-		general::corba::StorableObject_Transferable header;
+		general::corba::StorableObject header;
 
 		general::corba::WString32 codename;
 		general::corba::WString256 description;
 		general::corba::WString128 name;
 		
-		general::corba::IdentifierSeq_Transferable characteristic_ids;
+		general::corba::IdentifierSeq characteristic_ids;
 	};
 
 	typedef sequence <MeasurementPortType_Transferable> MeasurementPortTypeSeq_Transferable;
@@ -107,7 +107,7 @@ module corba {
 	};
 
 	struct LinkType_Transferable {
-		general::corba::StorableObject_Transferable header;
+		general::corba::StorableObject header;
 	  
 		general::corba::WString32 codename;
 		general::corba::WString256 description;
@@ -115,8 +115,8 @@ module corba {
 		LinkTypeSort sort;
 		general::corba::WString128 manufacturer;
 		general::corba::WString32 manufacturerCode;
-		general::corba::Identifier_Transferable image_id;
-		general::corba::IdentifierSeq_Transferable characteristic_ids;
+		general::corba::Identifier image_id;
+		general::corba::IdentifierSeq characteristic_ids;
 	};
 	typedef sequence<LinkType_Transferable> LinkTypeSeq_Transferable;
 	typedef LinkType_Transferable LinkType;
@@ -124,7 +124,7 @@ module corba {
 
 
 	struct CableLinkType_Transferable {
-		general::corba::StorableObject_Transferable header;
+		general::corba::StorableObject header;
 		
 		general::corba::WString32 codename;
 		general::corba::WString256 description;
@@ -132,15 +132,15 @@ module corba {
 		LinkTypeSort sort;
 		general::corba::WString128 manufacturer;
 		general::corba::WString32 manufacturerCode;
-		general::corba::Identifier_Transferable image_id;
-		general::corba::IdentifierSeq_Transferable characteristic_ids;
+		general::corba::Identifier image_id;
+		general::corba::IdentifierSeq characteristic_ids;
 	};
 	typedef sequence<CableLinkType_Transferable> CableLinkTypeSeq_Transferable;
 	typedef CableLinkType_Transferable CableLinkType;
 	typedef sequence<CableLinkType> CableLinkTypeSeq;
 
 	struct CableThreadType_Transferable {
-		general::corba::StorableObject_Transferable header;
+		general::corba::StorableObject header;
 		
 		general::corba::WString32 codename;
 		general::corba::WString256 description;
@@ -148,8 +148,8 @@ module corba {
 		
 		long color;
 		
-		general::corba::Identifier_Transferable linkTypeId;
-		general::corba::Identifier_Transferable cableLinkTypeId;
+		general::corba::Identifier linkTypeId;
+		general::corba::Identifier cableLinkTypeId;
 	};
 	typedef sequence<CableThreadType_Transferable> CableThreadTypeSeq_Transferable;
 	typedef CableThreadType_Transferable CableThreadType;
@@ -169,11 +169,11 @@ module corba {
 
 ///////////////////////// Equipment ///////////////////////
 	struct Equipment_Transferable	{
-		general::corba::StorableObject_Transferable header;
+		general::corba::StorableObject header;
 
-		general::corba::Identifier_Transferable domain_id;
+		general::corba::Identifier domain_id;
 
-		general::corba::Identifier_Transferable type_id;
+		general::corba::Identifier type_id;
 
 		general::corba::WString128 name;
 		general::corba::WString256 description;
@@ -190,9 +190,9 @@ module corba {
 		general::corba::WString64 swVersion;
 		general::corba::WString64 inventoryNumber;	
 		
-		general::corba::Identifier_Transferable image_id;
+		general::corba::Identifier image_id;
 
-		general::corba::IdentifierSeq_Transferable characteristic_ids;
+		general::corba::IdentifierSeq characteristic_ids;
 	};
 	
 	typedef sequence <Equipment_Transferable> EquipmentSeq_Transferable;
@@ -201,18 +201,18 @@ module corba {
 
 ///////////////////// Transmission Path ///////////////////
 	struct TransmissionPath_Transferable {
-		general::corba::StorableObject_Transferable header;
+		general::corba::StorableObject header;
 
-		general::corba::Identifier_Transferable domain_id;
+		general::corba::Identifier domain_id;
 
 		general::corba::WString128 name;
 		general::corba::WString256 description;
 
-		general::corba::Identifier_Transferable type_id;
-		general::corba::Identifier_Transferable start_port_id;
-		general::corba::Identifier_Transferable finish_port_id;
+		general::corba::Identifier type_id;
+		general::corba::Identifier start_port_id;
+		general::corba::Identifier finish_port_id;
 		
-		general::corba::IdentifierSeq_Transferable characteristic_ids;
+		general::corba::IdentifierSeq characteristic_ids;
 
 	};
 	
@@ -227,14 +227,14 @@ module corba {
 	};
 
 	struct Port_Transferable {
-		general::corba::StorableObject_Transferable header;
+		general::corba::StorableObject header;
 
-		general::corba::Identifier_Transferable type_id;
+		general::corba::Identifier type_id;
 		general::corba::WString256 description;
-		general::corba::Identifier_Transferable equipment_id;
+		general::corba::Identifier equipment_id;
 
 		PortSort sort;
-		general::corba::IdentifierSeq_Transferable characteristic_ids;
+		general::corba::IdentifierSeq characteristic_ids;
 	};
 
 	typedef sequence <Port_Transferable> PortSeq_Transferable;
@@ -243,17 +243,17 @@ module corba {
 
 //////////////////////////////// KIS ////////////////////////////////
 	struct KIS_Transferable	{
-		general::corba::StorableObject_Transferable header;
+		general::corba::StorableObject header;
 
-		general::corba::Identifier_Transferable domain_id;
+		general::corba::Identifier domain_id;
 
 		general::corba::WString128 name;
 		general::corba::WString256 description;
 		general::corba::WString64 hostname;
 		short tcp_port;
-		general::corba::Identifier_Transferable equipment_id;
-		general::corba::Identifier_Transferable mcm_id;
-		general::corba::IdentifierSeq_Transferable characteristic_ids;
+		general::corba::Identifier equipment_id;
+		general::corba::Identifier mcm_id;
+		general::corba::IdentifierSeq characteristic_ids;
 	};
 	
 	typedef sequence <KIS_Transferable> KISSeq_Transferable;
@@ -262,14 +262,14 @@ module corba {
 
 ////////////////////////// MeasurementPort ///////////////////////////
 	struct MeasurementPort_Transferable {
-		general::corba::StorableObject_Transferable header;
+		general::corba::StorableObject header;
 
-		general::corba::Identifier_Transferable type_id;
+		general::corba::Identifier type_id;
 		general::corba::WString128 name;
 		general::corba::WString256 description;
-		general::corba::Identifier_Transferable kis_id;
-		general::corba::Identifier_Transferable port_id;
-		general::corba::IdentifierSeq_Transferable characteristic_ids;
+		general::corba::Identifier kis_id;
+		general::corba::Identifier port_id;
+		general::corba::IdentifierSeq characteristic_ids;
 	};
 
 	typedef sequence <MeasurementPort_Transferable> MeasurementPortSeq_Transferable;
@@ -286,16 +286,16 @@ module corba {
 	};
 
 	struct MonitoredElement_Transferable {
-		general::corba::StorableObject_Transferable header;
+		general::corba::StorableObject header;
 
-		general::corba::Identifier_Transferable domain_id;
+		general::corba::Identifier domain_id;
 		
 		general::corba::WString128 name;
-		general::corba::Identifier_Transferable measurement_port_id;
+		general::corba::Identifier measurement_port_id;
 		MonitoredElementSort sort;
 		general::corba::WString64 local_address;
 
-		general::corba::IdentifierSeq_Transferable monitored_domain_member_ids;
+		general::corba::IdentifierSeq monitored_domain_member_ids;
 	};
 
 	typedef sequence <MonitoredElement_Transferable> MonitoredElementSeq_Transferable;
@@ -307,13 +307,13 @@ module corba {
 	};
 
 	struct Link_Transferable {
-		general::corba::StorableObject_Transferable header;
+		general::corba::StorableObject header;
 
-		general::corba::Identifier_Transferable domain_id;
+		general::corba::Identifier domain_id;
 		
 		general::corba::WString128 name;
 		general::corba::WString256 description;
-		general::corba::Identifier_Transferable type_id;		
+		general::corba::Identifier type_id;		
 		
 		LinkSort sort;		
 		
@@ -323,7 +323,7 @@ module corba {
 		
 		long color;
 		general::corba::WString32 mark;
-		general::corba::IdentifierSeq_Transferable characteristic_ids;		
+		general::corba::IdentifierSeq characteristic_ids;		
 	};
 
 	typedef sequence <Link_Transferable> LinkSeq_Transferable;
@@ -332,12 +332,12 @@ module corba {
 	
 ///////////////////// CableThread /////////////////////
 	struct CableThread_Transferable {
-		general::corba::StorableObject_Transferable header;
-		general::corba::Identifier_Transferable domain_id;
+		general::corba::StorableObject header;
+		general::corba::Identifier domain_id;
 		
 		general::corba::WString128 name;
 		general::corba::WString256 description;
-		general::corba::Identifier_Transferable type_id;		
+		general::corba::Identifier type_id;		
 	};
 
 	typedef sequence <CableThread_Transferable> CableThreadSeq_Transferable;

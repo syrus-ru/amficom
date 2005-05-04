@@ -1,5 +1,5 @@
 /*-
- * $Id: scheme.idl,v 1.20 2005/04/19 10:44:50 bass Exp $
+ * $Id: scheme.idl,v 1.21 2005/05/04 15:05:40 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,38 +17,38 @@ module com {
 			module scheme {
 				module corba {
 					struct SchemeProtoGroup_Transferable {
-						general::corba::StorableObject_Transferable header;
+						general::corba::StorableObject header;
 
 						general::corba::WString32 name;
 						general::corba::WString256 description;
 
-						general::corba::Identifier_Transferable symbolId;
-						general::corba::Identifier_Transferable parentSchemeProtoGroupId;
+						general::corba::Identifier symbolId;
+						general::corba::Identifier parentSchemeProtoGroupId;
 					};
 
 					typedef sequence<SchemeProtoGroup_Transferable> SchemeProtoGroupSeq_Transferable;
 
 					struct SchemeProtoElement_Transferable {
-						general::corba::StorableObject_Transferable header;
+						general::corba::StorableObject header;
 
 						general::corba::WString32 name;
 						general::corba::WString256 description;
 						general::corba::WString64 label;
 
-						general::corba::Identifier_Transferable equipmentTypeId;
-						general::corba::Identifier_Transferable symbolId;
-						general::corba::Identifier_Transferable ugoCellId;
-						general::corba::Identifier_Transferable schemeCellId;
-						general::corba::Identifier_Transferable parentSchemeProtoGroupId;
-						general::corba::Identifier_Transferable parentSchemeProtoElementId;
+						general::corba::Identifier equipmentTypeId;
+						general::corba::Identifier symbolId;
+						general::corba::Identifier ugoCellId;
+						general::corba::Identifier schemeCellId;
+						general::corba::Identifier parentSchemeProtoGroupId;
+						general::corba::Identifier parentSchemeProtoElementId;
 
-						general::corba::IdentifierSeq_Transferable characteristicIds;
+						general::corba::IdentifierSeq characteristicIds;
 					};
 
 					typedef sequence<SchemeProtoElement_Transferable> SchemeProtoElementSeq_Transferable;
 
 					struct Scheme_Transferable {
-						general::corba::StorableObject_Transferable header;
+						general::corba::StorableObject header;
 
 						general::corba::WString32 name;
 						general::corba::WString256 description;
@@ -66,41 +66,41 @@ module com {
 							CARDCAGE
 						} kind;
 
-						general::corba::Identifier_Transferable domainId;
-						general::corba::Identifier_Transferable mapId;
-						general::corba::Identifier_Transferable symbolId;
-						general::corba::Identifier_Transferable ugoCellId;
-						general::corba::Identifier_Transferable schemeCellId;
-						general::corba::Identifier_Transferable currentSchemeMonitoringSolutionId;
-						general::corba::Identifier_Transferable parentSchemeElementId;
+						general::corba::Identifier domainId;
+						general::corba::Identifier mapId;
+						general::corba::Identifier symbolId;
+						general::corba::Identifier ugoCellId;
+						general::corba::Identifier schemeCellId;
+						general::corba::Identifier currentSchemeMonitoringSolutionId;
+						general::corba::Identifier parentSchemeElementId;
 					};
 
 					typedef sequence<Scheme_Transferable> SchemeSeq_Transferable;
 
 					struct SchemeElement_Transferable {
-						general::corba::StorableObject_Transferable header;
+						general::corba::StorableObject header;
 
 						general::corba::WString32 name;
 						general::corba::WString256 description;
 						general::corba::WString64 label;
 
-						general::corba::Identifier_Transferable equipmentTypeId;
-						general::corba::Identifier_Transferable equipmentId;
-						general::corba::Identifier_Transferable kisId;
-						general::corba::Identifier_Transferable siteNodeId;
-						general::corba::Identifier_Transferable symbolId;
-						general::corba::Identifier_Transferable ugoCellId;
-						general::corba::Identifier_Transferable schemeCellId;
-						general::corba::Identifier_Transferable parentSchemeId;
-						general::corba::Identifier_Transferable parentSchemeElementId;
+						general::corba::Identifier equipmentTypeId;
+						general::corba::Identifier equipmentId;
+						general::corba::Identifier kisId;
+						general::corba::Identifier siteNodeId;
+						general::corba::Identifier symbolId;
+						general::corba::Identifier ugoCellId;
+						general::corba::Identifier schemeCellId;
+						general::corba::Identifier parentSchemeId;
+						general::corba::Identifier parentSchemeElementId;
 
-						general::corba::IdentifierSeq_Transferable characteristicIds;
+						general::corba::IdentifierSeq characteristicIds;
 					};
 
 					typedef sequence<SchemeElement_Transferable> SchemeElementSeq_Transferable;
 
 					struct SchemeOptimizeInfo_Transferable {
-						general::corba::StorableObject_Transferable header;
+						general::corba::StorableObject header;
 
 						general::corba::WString32 name;
 						general::corba::WString256 description;
@@ -117,33 +117,33 @@ module com {
 						double nodesCutProb;
 						double survivorRate;
 
-						general::corba::Identifier_Transferable parentSchemeId;
+						general::corba::Identifier parentSchemeId;
 					};
 
 					typedef sequence<SchemeOptimizeInfo_Transferable> SchemeOptimizeInfoSeq_Transferable;
 
 					struct SchemeMonitoringSolution_Transferable {
-						general::corba::StorableObject_Transferable header;
+						general::corba::StorableObject header;
 
 						general::corba::WString32 name;
 						general::corba::WString256 description;
 						long priceUsd;
 
-						general::corba::Identifier_Transferable parentSchemeOptimizeInfoId;
+						general::corba::Identifier parentSchemeOptimizeInfoId;
 					};
 
 					typedef sequence<SchemeMonitoringSolution_Transferable> SchemeMonitoringSolutionSeq_Transferable;
 
 					struct SchemeDevice_Transferable {
-						general::corba::StorableObject_Transferable header;
+						general::corba::StorableObject header;
 
 						general::corba::WString32 name;
 						general::corba::WString256 description;
 
-						general::corba::Identifier_Transferable parentSchemeProtoElementId;
-						general::corba::Identifier_Transferable parentSchemeElementId;
+						general::corba::Identifier parentSchemeProtoElementId;
+						general::corba::Identifier parentSchemeElementId;
 
-						general::corba::IdentifierSeq_Transferable characteristicIds;
+						general::corba::IdentifierSeq characteristicIds;
 					};
 
 					typedef sequence<SchemeDevice_Transferable> SchemeDeviceSeq_Transferable;					
@@ -154,80 +154,80 @@ module com {
 					};
 
 					struct SchemePort_Transferable {
-						general::corba::StorableObject_Transferable header;
+						general::corba::StorableObject header;
 
 						general::corba::WString32 name;
 						general::corba::WString256 description;
 						AbstractSchemePortDirectionType directionType;
 
-						general::corba::Identifier_Transferable portTypeId;
-						general::corba::Identifier_Transferable portId;
-						general::corba::Identifier_Transferable measurementPortTypeId;
-						general::corba::Identifier_Transferable measurementPortId;
-						general::corba::Identifier_Transferable parentSchemeDeviceId;
+						general::corba::Identifier portTypeId;
+						general::corba::Identifier portId;
+						general::corba::Identifier measurementPortTypeId;
+						general::corba::Identifier measurementPortId;
+						general::corba::Identifier parentSchemeDeviceId;
 
-						general::corba::IdentifierSeq_Transferable characteristicIds;
+						general::corba::IdentifierSeq characteristicIds;
 					};
 
 					typedef sequence<SchemePort_Transferable> SchemePortSeq_Transferable;
 
 					struct SchemeCablePort_Transferable {
-						general::corba::StorableObject_Transferable header;
+						general::corba::StorableObject header;
 
 						general::corba::WString32 name;
 						general::corba::WString256 description;
 						AbstractSchemePortDirectionType directionType;
 
-						general::corba::Identifier_Transferable cablePortTypeId;
-						general::corba::Identifier_Transferable cablePortId;
-						general::corba::Identifier_Transferable measurementPortTypeId;
-						general::corba::Identifier_Transferable measurementPortId;
-						general::corba::Identifier_Transferable parentSchemeDeviceId;
+						general::corba::Identifier cablePortTypeId;
+						general::corba::Identifier cablePortId;
+						general::corba::Identifier measurementPortTypeId;
+						general::corba::Identifier measurementPortId;
+						general::corba::Identifier parentSchemeDeviceId;
 
-						general::corba::IdentifierSeq_Transferable characteristicIds;
+						general::corba::IdentifierSeq characteristicIds;
 					};
 
 					typedef sequence<SchemeCablePort_Transferable> SchemeCablePortSeq_Transferable;
 
 					struct SchemeLink_Transferable {
-						general::corba::StorableObject_Transferable header;
+						general::corba::StorableObject header;
 
 						general::corba::WString32 name;
 						general::corba::WString256 description;
 
-						general::corba::Identifier_Transferable parentSchemeId;
+						general::corba::Identifier parentSchemeId;
 
-						general::corba::IdentifierSeq_Transferable characteristicIds;
+						general::corba::IdentifierSeq characteristicIds;
 					};
 
 					typedef sequence<SchemeLink_Transferable> SchemeLinkSeq_Transferable;
 
 					struct SchemeCableLink_Transferable {
-						general::corba::StorableObject_Transferable header;
+						general::corba::StorableObject header;
 
 						general::corba::WString32 name;
 						general::corba::WString256 description;
 
-						general::corba::Identifier_Transferable parentSchemeId;
+						general::corba::Identifier parentSchemeId;
 
-						general::corba::IdentifierSeq_Transferable characteristicIds;
+						general::corba::IdentifierSeq characteristicIds;
 					};
 
 					typedef sequence<SchemeCableLink_Transferable> SchemeCableLinkSeq_Transferable;
 
 					struct SchemeCableThread_Transferable {
-						general::corba::StorableObject_Transferable header;
+						general::corba::StorableObject header;
 
 						general::corba::WString32 name;
 						general::corba::WString256 description;
 
-						general::corba::IdentifierSeq_Transferable characteristicIds;
+						general::corba::IdentifierSeq characteristicIds;
 					};
 
 					typedef sequence<SchemeCableThread_Transferable> SchemeCableThreadSeq_Transferable;
 
 					struct CableChannelingItem_Transferable {
-						general::corba::StorableObject_Transferable header;
+						general::corba::StorableObject header;
 
 						general::corba::WString32 name;
 						general::corba::WString256 description;
@@ -236,20 +236,23 @@ module com {
 					typedef sequence<CableChannelingItem_Transferable> CableChannelingItemSeq_Transferable;
 
 					struct SchemePath_Transferable {
-						general::corba::StorableObject_Transferable header;
+						general::corba::StorableObject header;
 
 						general::corba::WString32 name;
 						general::corba::WString256 description;
 
-						general::corba::IdentifierSeq_Transferable characteristicIds;
+						general::corba::Identifier transmissionPathId;
+						general::corba::Identifier parentSchemeMonitoringSolutionId;
+
+						general::corba::IdentifierSeq characteristicIds;
 					};
 
 					typedef sequence<SchemePath_Transferable> SchemePathSeq_Transferable;
 
 					struct PathElement_Transferable {
-						general::corba::StorableObject_Transferable header;
+						general::corba::StorableObject header;
 
-						general::corba::Identifier_Transferable parentSchemePathId;
+						general::corba::Identifier parentSchemePathId;
 						long sequentialNumber;
 						union Data switch (enum Kind{
 								SCHEME_ELEMENT,
@@ -257,13 +260,13 @@ module com {
 								SCHEME_LINK}) {
 							case SCHEME_ELEMENT:
 								struct SchemeElementData {
-									general::corba::Identifier_Transferable startAbstractSchemePortId;
-									general::corba::Identifier_Transferable endAbstractSchemePortId;
+									general::corba::Identifier startAbstractSchemePortId;
+									general::corba::Identifier endAbstractSchemePortId;
 								} schemeElementData;
 							case SCHEME_CABLE_LINK:
-								general::corba::Identifier_Transferable schemeCableThreadId;
+								general::corba::Identifier schemeCableThreadId;
 							case SCHEME_LINK:
-								general::corba::Identifier_Transferable schemeLinkId;
+								general::corba::Identifier schemeLinkId;
 						} data;
 					};
 

@@ -1,5 +1,5 @@
 /*
- * $Id: event.idl,v 1.14 2005/04/23 17:36:31 cvsadmin Exp $
+ * $Id: event.idl,v 1.15 2005/05/04 15:05:40 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,13 +22,13 @@ module corba {
 /////////////////////// Event ////////////////////////
 
 	struct EventType_Transferable {
-		general::corba::StorableObject_Transferable header;
+		general::corba::StorableObject header;
 
 		general::corba::WString32 codename;
 		general::corba::WString256 description;
 
-		general::corba::IdentifierSeq_Transferable parameter_type_ids;
-		general::corba::IdentifierSeq_Transferable user_ids;
+		general::corba::IdentifierSeq parameter_type_ids;
+		general::corba::IdentifierSeq user_ids;
 	};
 
 	typedef sequence <EventType_Transferable> EventTypeSeq_Transferable;
@@ -36,25 +36,25 @@ module corba {
 
 
 	struct EventParameter_Transferable {
-		general::corba::Identifier_Transferable id;
-		general::corba::Identifier_Transferable type_id;
+		general::corba::Identifier id;
+		general::corba::Identifier type_id;
 		wstring value;
 	};
 
 	struct EventSource_Transferable {
-		general::corba::StorableObject_Transferable header;
+		general::corba::StorableObject header;
 
-		general::corba::Identifier_Transferable source_entity_id;
+		general::corba::Identifier source_entity_id;
 	};
 
 	struct Event_Transferable {
-		general::corba::StorableObject_Transferable header;
+		general::corba::StorableObject header;
 
-		general::corba::Identifier_Transferable type_id;
+		general::corba::Identifier type_id;
 		general::corba::WString256 description;
 
 		sequence <EventParameter_Transferable> parameters;
-		sequence <general::corba::Identifier_Transferable> event_source_ids;
+		sequence <general::corba::Identifier> event_source_ids;
 	};
 
 

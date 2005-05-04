@@ -16,7 +16,7 @@ module corba {
 		general::corba::Verifiable,
 		general::corba::IdentifierGeneratorServer {
 
-		void delete(in general::corba::IdentifierSeq_Transferable id_Transferables,
+		void delete(in general::corba::IdentifierSeq id_Transferables,
 						in security::corba::SessionKey sessionKeyT)
 				raises (general::corba::AMFICOMRemoteException);
 
@@ -25,17 +25,17 @@ module corba {
 
 /////////////////////////////////////////// General Recieve ////////////////////////////////////////////
 
-		general::corba::StorableObjectSeq_Transferable receiveParameterTypes(in general::corba::ParameterTypeSeq_Transferable sets,
+		general::corba::StorableObjectSeq receiveParameterTypes(in general::corba::ParameterTypeSeq sets,
 						in boolean force,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		general::corba::StorableObjectSeq_Transferable receiveCharacteristicTypes(in general::corba::CharacteristicTypeSeq_Transferable characteristicTypes_Transferable,
+		general::corba::StorableObjectSeq receiveCharacteristicTypes(in general::corba::CharacteristicTypeSeq characteristicTypes_Transferable,
 						in boolean force, 	
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		general::corba::StorableObjectSeq_Transferable receiveCharacteristics(in general::corba::CharacteristicSeq_Transferable characteristics_Transferable,
+		general::corba::StorableObjectSeq receiveCharacteristics(in general::corba::CharacteristicSeq characteristics_Transferable,
 						in boolean force, 	
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
@@ -45,27 +45,27 @@ module corba {
 
 /////////////////////////////////////////// Administration Recieve ////////////////////////////////////////////
 
-		general::corba::StorableObjectSeq_Transferable receiveUsers(in administration::corba::UserSeq_Transferable users_Transferable,
+		general::corba::StorableObjectSeq receiveUsers(in administration::corba::UserSeq_Transferable users_Transferable,
 						in boolean force, 	
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		general::corba::StorableObjectSeq_Transferable receiveDomains(in administration::corba::DomainSeq_Transferable domains_Transferable,
+		general::corba::StorableObjectSeq receiveDomains(in administration::corba::DomainSeq_Transferable domains_Transferable,
 						in boolean force, 	
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		general::corba::StorableObjectSeq_Transferable receiveServers(in administration::corba::ServerSeq_Transferable servers_Transferable,
+		general::corba::StorableObjectSeq receiveServers(in administration::corba::ServerSeq_Transferable servers_Transferable,
 						in boolean force, 	
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		general::corba::StorableObjectSeq_Transferable receiveMCMs(in administration::corba::MCMSeq_Transferable mcms_Transferable,
+		general::corba::StorableObjectSeq receiveMCMs(in administration::corba::MCMSeq_Transferable mcms_Transferable,
 						in boolean force, 	
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		general::corba::StorableObjectSeq_Transferable receiveServerProcesses(in administration::corba::ServerProcessSeq_Transferable serverProcesses_Transferable,
+		general::corba::StorableObjectSeq receiveServerProcesses(in administration::corba::ServerProcessSeq_Transferable serverProcesses_Transferable,
 						in boolean force, 	
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
@@ -75,79 +75,79 @@ module corba {
 
 /////////////////////////////////////////// Configuration Recieve ////////////////////////////////////////////
 
-		general::corba::StorableObjectSeq_Transferable receiveEquipmentTypes(in configuration::corba::EquipmentTypeSeq_Transferable equipmentTypes_Transferable,
+		general::corba::StorableObjectSeq receiveEquipmentTypes(in configuration::corba::EquipmentTypeSeq_Transferable equipmentTypes_Transferable,
 						in boolean force, 	
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		general::corba::StorableObjectSeq_Transferable receivePortTypes(in configuration::corba::PortTypeSeq_Transferable portTypes_Transferable,
+		general::corba::StorableObjectSeq receivePortTypes(in configuration::corba::PortTypeSeq_Transferable portTypes_Transferable,
 						in boolean force, 	
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		general::corba::StorableObjectSeq_Transferable receiveMeasurementPortTypes(in configuration::corba::MeasurementPortTypeSeq_Transferable measurementPortTypes_Transferable,
+		general::corba::StorableObjectSeq receiveMeasurementPortTypes(in configuration::corba::MeasurementPortTypeSeq_Transferable measurementPortTypes_Transferable,
 						in boolean force, 	
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		general::corba::StorableObjectSeq_Transferable receiveTransmissionPathTypes(in configuration::corba::TransmissionPathTypeSeq_Transferable transmissionPathTypes_Transferable,
+		general::corba::StorableObjectSeq receiveTransmissionPathTypes(in configuration::corba::TransmissionPathTypeSeq_Transferable transmissionPathTypes_Transferable,
 						in boolean force, 	
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		general::corba::StorableObjectSeq_Transferable receiveLinkTypes(in configuration::corba::LinkTypeSeq_Transferable linkType_Transferables,
+		general::corba::StorableObjectSeq receiveLinkTypes(in configuration::corba::LinkTypeSeq_Transferable linkType_Transferables,
 						in boolean force, 	
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		general::corba::StorableObjectSeq_Transferable receiveCableLinkTypes(in configuration::corba::CableLinkTypeSeq_Transferable cableLinkTypes_Transferable,
+		general::corba::StorableObjectSeq receiveCableLinkTypes(in configuration::corba::CableLinkTypeSeq_Transferable cableLinkTypes_Transferable,
 						in boolean force, 	
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		general::corba::StorableObjectSeq_Transferable receiveCableThreadTypes(in configuration::corba::CableThreadTypeSeq cableThreadTypes_Transferable,
+		general::corba::StorableObjectSeq receiveCableThreadTypes(in configuration::corba::CableThreadTypeSeq cableThreadTypes_Transferable,
 						in boolean force, 	
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 
 
-		general::corba::StorableObjectSeq_Transferable receiveEquipments(in configuration::corba::EquipmentSeq_Transferable equipments_Transferable,
+		general::corba::StorableObjectSeq receiveEquipments(in configuration::corba::EquipmentSeq_Transferable equipments_Transferable,
 						in boolean force, 	
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		general::corba::StorableObjectSeq_Transferable receivePorts(in configuration::corba::PortSeq_Transferable ports_Transferable,
+		general::corba::StorableObjectSeq receivePorts(in configuration::corba::PortSeq_Transferable ports_Transferable,
 						in boolean force, 	
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		general::corba::StorableObjectSeq_Transferable receiveMeasurementPorts(in configuration::corba::MeasurementPortSeq_Transferable measurementPorts_Transferable,
+		general::corba::StorableObjectSeq receiveMeasurementPorts(in configuration::corba::MeasurementPortSeq_Transferable measurementPorts_Transferable,
 						in boolean force, 	
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		general::corba::StorableObjectSeq_Transferable receiveTransmissionPaths(in configuration::corba::TransmissionPathSeq_Transferable transmissionPaths_Transferable,
+		general::corba::StorableObjectSeq receiveTransmissionPaths(in configuration::corba::TransmissionPathSeq_Transferable transmissionPaths_Transferable,
 						in boolean force, 	
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		general::corba::StorableObjectSeq_Transferable receiveKISs(in configuration::corba::KISSeq_Transferable kiss_Transferable,
+		general::corba::StorableObjectSeq receiveKISs(in configuration::corba::KISSeq_Transferable kiss_Transferable,
 						in boolean force, 	
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);			
 
-		general::corba::StorableObjectSeq_Transferable receiveMonitoredElements(in configuration::corba::MonitoredElementSeq_Transferable monitoredElements_Transferable,
+		general::corba::StorableObjectSeq receiveMonitoredElements(in configuration::corba::MonitoredElementSeq_Transferable monitoredElements_Transferable,
 						in boolean force, 	
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		general::corba::StorableObjectSeq_Transferable receiveLinks(in configuration::corba::LinkSeq_Transferable link_Transferables,
+		general::corba::StorableObjectSeq receiveLinks(in configuration::corba::LinkSeq_Transferable link_Transferables,
 						in boolean force, 	
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		general::corba::StorableObjectSeq_Transferable receiveCableThreads(in configuration::corba::CableThreadSeq_Transferable cableThreads_Transferable,
+		general::corba::StorableObjectSeq receiveCableThreads(in configuration::corba::CableThreadSeq_Transferable cableThreads_Transferable,
 						in boolean force, 	
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
@@ -157,79 +157,79 @@ module corba {
 
 //////////////////////////////////////////// Measurement Receive //////////////////////////////////////////////
 
-		general::corba::StorableObjectSeq_Transferable receiveMeasurementTypes(in measurement::corba::MeasurementTypeSeq_Transferable sets,
+		general::corba::StorableObjectSeq receiveMeasurementTypes(in measurement::corba::MeasurementTypeSeq_Transferable sets,
 						in boolean force,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		general::corba::StorableObjectSeq_Transferable receiveAnalysisTypes(in measurement::corba::AnalysisTypeSeq_Transferable sets,
+		general::corba::StorableObjectSeq receiveAnalysisTypes(in measurement::corba::AnalysisTypeSeq_Transferable sets,
 						in boolean force, 	
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		general::corba::StorableObjectSeq_Transferable receiveEvaluationTypes(in measurement::corba::EvaluationTypeSeq_Transferable sets,
+		general::corba::StorableObjectSeq receiveEvaluationTypes(in measurement::corba::EvaluationTypeSeq_Transferable sets,
 						in boolean force,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		general::corba::StorableObjectSeq_Transferable receiveModelingTypes(in measurement::corba::ModelingTypeSeq_Transferable modelingTypes_Transferable,
+		general::corba::StorableObjectSeq receiveModelingTypes(in measurement::corba::ModelingTypeSeq_Transferable modelingTypes_Transferable,
 						in boolean force,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 
 
-		general::corba::StorableObjectSeq_Transferable receiveMeasurements(in measurement::corba::MeasurementSeq_Transferable sets,
+		general::corba::StorableObjectSeq receiveMeasurements(in measurement::corba::MeasurementSeq_Transferable sets,
 						in boolean force,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		general::corba::StorableObjectSeq_Transferable receiveAnalyses(in measurement::corba::AnalysisSeq_Transferable sets,
+		general::corba::StorableObjectSeq receiveAnalyses(in measurement::corba::AnalysisSeq_Transferable sets,
 						in boolean force, 	
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		general::corba::StorableObjectSeq_Transferable receiveEvaluations(in measurement::corba::EvaluationSeq_Transferable sets,
+		general::corba::StorableObjectSeq receiveEvaluations(in measurement::corba::EvaluationSeq_Transferable sets,
 						in boolean force,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		general::corba::StorableObjectSeq_Transferable receiveModelings(in measurement::corba::ModelingSeq_Transferable modelings_Transferable,
+		general::corba::StorableObjectSeq receiveModelings(in measurement::corba::ModelingSeq_Transferable modelings_Transferable,
 						in boolean force,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		general::corba::StorableObjectSeq_Transferable receiveMeasurementSetups(in measurement::corba::MeasurementSetupSeq_Transferable sets,
+		general::corba::StorableObjectSeq receiveMeasurementSetups(in measurement::corba::MeasurementSetupSeq_Transferable sets,
 						in boolean force,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		general::corba::StorableObjectSeq_Transferable receiveResults(in measurement::corba::ResultSeq_Transferable sets,
+		general::corba::StorableObjectSeq receiveResults(in measurement::corba::ResultSeq_Transferable sets,
 						in boolean force,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		general::corba::StorableObjectSeq_Transferable receiveSets(in measurement::corba::SetSeq_Transferable sets,
+		general::corba::StorableObjectSeq receiveSets(in measurement::corba::SetSeq_Transferable sets,
 						in boolean force,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		general::corba::StorableObjectSeq_Transferable receiveTests(in measurement::corba::TestSeq_Transferable tests,
+		general::corba::StorableObjectSeq receiveTests(in measurement::corba::TestSeq_Transferable tests,
 						in boolean force,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		general::corba::StorableObjectSeq_Transferable receiveCronTemporalPatterns(in measurement::corba::CronTemporalPatternSeq_Transferable sets,
+		general::corba::StorableObjectSeq receiveCronTemporalPatterns(in measurement::corba::CronTemporalPatternSeq_Transferable sets,
 						in boolean force,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		general::corba::StorableObjectSeq_Transferable receiveIntervalsTemporalPatterns(in measurement::corba::IntervalsTemporalPatternSeq_Transferable sets,
+		general::corba::StorableObjectSeq receiveIntervalsTemporalPatterns(in measurement::corba::IntervalsTemporalPatternSeq_Transferable sets,
 						in boolean force,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		general::corba::StorableObjectSeq_Transferable receivePeriodicalTemporalPatterns(in measurement::corba::PeriodicalTemporalPatternSeq_Transferable sets,
+		general::corba::StorableObjectSeq receivePeriodicalTemporalPatterns(in measurement::corba::PeriodicalTemporalPatternSeq_Transferable sets,
 						in boolean force,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
@@ -241,18 +241,18 @@ module corba {
 
 		/* Transmit multiple objects*/
 
-		general::corba::ParameterTypeSeq_Transferable transmitParameterTypes(
-						in general::corba::IdentifierSeq_Transferable ids,
+		general::corba::ParameterTypeSeq transmitParameterTypes(
+						in general::corba::IdentifierSeq ids,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		general::corba::CharacteristicTypeSeq_Transferable transmitCharacteristicTypes(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+		general::corba::CharacteristicTypeSeq transmitCharacteristicTypes(
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		general::corba::CharacteristicSeq_Transferable transmitCharacteristics(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+		general::corba::CharacteristicSeq transmitCharacteristics(
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
@@ -260,18 +260,18 @@ module corba {
 
 		/* Transmit multiple objects but ids*/
 
-		general::corba::ParameterTypeSeq_Transferable transmitParameterTypesButIds(
-						in general::corba::IdentifierSeq_Transferable ids,
+		general::corba::ParameterTypeSeq transmitParameterTypesButIds(
+						in general::corba::IdentifierSeq ids,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		general::corba::CharacteristicTypeSeq_Transferable transmitCharacteristicTypesButIds(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+		general::corba::CharacteristicTypeSeq transmitCharacteristicTypesButIds(
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		general::corba::CharacteristicSeq_Transferable transmitCharacteristicsButIds(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+		general::corba::CharacteristicSeq transmitCharacteristicsButIds(
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
@@ -279,29 +279,29 @@ module corba {
 
 		/* Transmit multiple objects but ids by condition*/
 
-		general::corba::ParameterTypeSeq_Transferable transmitParameterTypesButIdsCondition(
-						in general::corba::IdentifierSeq_Transferable ids,
+		general::corba::ParameterTypeSeq transmitParameterTypesButIdsCondition(
+						in general::corba::IdentifierSeq ids,
 						in security::corba::SessionKey sessionKeyT,
-						in general::corba::StorableObjectCondition_Transferable condition_Transferable)
+						in general::corba::StorableObjectCondition condition_Transferable)
 			raises (general::corba::AMFICOMRemoteException);
 
-		general::corba::CharacteristicTypeSeq_Transferable transmitCharacteristicTypesButIdsCondition(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+		general::corba::CharacteristicTypeSeq transmitCharacteristicTypesButIdsCondition(
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT,
-						in general::corba::StorableObjectCondition_Transferable condition_Transferable)
+						in general::corba::StorableObjectCondition condition_Transferable)
 			raises (general::corba::AMFICOMRemoteException);
 
-		general::corba::CharacteristicSeq_Transferable transmitCharacteristicsButIdsCondition(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+		general::corba::CharacteristicSeq transmitCharacteristicsButIdsCondition(
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT,
-						in general::corba::StorableObjectCondition_Transferable condition_Transferable)
+						in general::corba::StorableObjectCondition condition_Transferable)
 			raises (general::corba::AMFICOMRemoteException);
 
 
 
 		/*	Refresh*/
-		general::corba::IdentifierSeq_Transferable transmitRefreshedGeneralObjects(
-						in general::corba::StorableObjectSeq_Transferable StorableObjects_Transferable,
+		general::corba::IdentifierSeq transmitRefreshedGeneralObjects(
+						in general::corba::StorableObjectSeq StorableObjects_Transferable,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
@@ -313,27 +313,27 @@ module corba {
 		/* Transmit multiple objects*/
 
 		administration::corba::UserSeq_Transferable transmitUsers(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		administration::corba::DomainSeq_Transferable transmitDomains(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		administration::corba::ServerSeq_Transferable transmitServers(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		administration::corba::MCMSeq_Transferable transmitMCMs(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		administration::corba::ServerProcessSeq_Transferable transmitServerProcesses(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
@@ -342,27 +342,27 @@ module corba {
 		/* Transmit multiple objects but ids*/
 
 		administration::corba::UserSeq_Transferable transmitUsersButIds(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		administration::corba::DomainSeq_Transferable transmitDomainsButIds(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		administration::corba::ServerSeq_Transferable transmitServersButIds(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		administration::corba::MCMSeq_Transferable transmitMCMsButIds(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		administration::corba::ServerProcessSeq_Transferable transmitServerProcessesButIds(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
@@ -371,40 +371,40 @@ module corba {
 		/* Transmit multiple objects but ids by condition*/
 
 		administration::corba::UserSeq_Transferable transmitUsersButIdsCondition(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT,
-						in general::corba::StorableObjectCondition_Transferable condition_Transferable)
+						in general::corba::StorableObjectCondition condition_Transferable)
 			raises (general::corba::AMFICOMRemoteException);
 
 		administration::corba::DomainSeq_Transferable transmitDomainsButIdsCondition(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT,
-						in general::corba::StorableObjectCondition_Transferable condition_Transferable)
+						in general::corba::StorableObjectCondition condition_Transferable)
 			raises (general::corba::AMFICOMRemoteException);
 
 		administration::corba::ServerSeq_Transferable transmitServersButIdsCondition(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT,
-						in general::corba::StorableObjectCondition_Transferable condition_Transferable)
+						in general::corba::StorableObjectCondition condition_Transferable)
 			raises (general::corba::AMFICOMRemoteException);
 
 		administration::corba::MCMSeq_Transferable transmitMCMsButIdsCondition(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT,
-						in general::corba::StorableObjectCondition_Transferable condition_Transferable)
+						in general::corba::StorableObjectCondition condition_Transferable)
 			raises (general::corba::AMFICOMRemoteException);
 
 		administration::corba::ServerProcessSeq_Transferable transmitServerProcessesButIdsCondition(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT,
-						in general::corba::StorableObjectCondition_Transferable condition_Transferable)
+						in general::corba::StorableObjectCondition condition_Transferable)
 			raises (general::corba::AMFICOMRemoteException);
 
 
 
 		/*	Refresh*/
-		general::corba::IdentifierSeq_Transferable transmitRefreshedAdministrationObjects(
-						in general::corba::StorableObjectSeq_Transferable StorableObjects_Transferable,
+		general::corba::IdentifierSeq transmitRefreshedAdministrationObjects(
+						in general::corba::StorableObjectSeq StorableObjects_Transferable,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
@@ -416,37 +416,37 @@ module corba {
 		/* Transmit multiple objects*/
 
 		configuration::corba::EquipmentTypeSeq_Transferable transmitEquipmentTypes(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		configuration::corba::PortTypeSeq_Transferable transmitPortTypes(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		configuration::corba::MeasurementPortTypeSeq_Transferable transmitMeasurementPortTypes(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		configuration::corba::TransmissionPathTypeSeq_Transferable transmitTransmissionPathTypes(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		configuration::corba::LinkTypeSeq_Transferable transmitLinkTypes(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		configuration::corba::CableLinkTypeSeq_Transferable	transmitCableLinkTypes(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		configuration::corba::CableThreadTypeSeq transmitCableThreadTypes(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
@@ -454,42 +454,42 @@ module corba {
 
 
 		configuration::corba::EquipmentSeq_Transferable transmitEquipments(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		configuration::corba::PortSeq_Transferable transmitPorts(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		configuration::corba::MeasurementPortSeq_Transferable transmitMeasurementPorts(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		configuration::corba::TransmissionPathSeq_Transferable transmitTransmissionPaths(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		configuration::corba::KISSeq_Transferable transmitKISs(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		configuration::corba::MonitoredElementSeq_Transferable transmitMonitoredElements(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		configuration::corba::LinkSeq_Transferable transmitLinks(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		configuration::corba::CableThreadSeq_Transferable transmitCableThreads(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
@@ -498,79 +498,79 @@ module corba {
 		/* Transmit multiple objects but ids*/
 
 		configuration::corba::EquipmentTypeSeq_Transferable transmitEquipmentTypesButIds(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		configuration::corba::PortTypeSeq_Transferable transmitPortTypesButIds(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		configuration::corba::MeasurementPortTypeSeq_Transferable transmitMeasurementPortTypesButIds(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		configuration::corba::TransmissionPathTypeSeq_Transferable transmitTransmissionPathTypesButIds(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		configuration::corba::LinkTypeSeq_Transferable transmitLinkTypesButIds(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		configuration::corba::CableLinkTypeSeq_Transferable transmitCableLinkTypesButIds(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		configuration::corba::CableThreadTypeSeq_Transferable transmitCableThreadTypesButIds(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 
 
 		configuration::corba::EquipmentSeq_Transferable transmitEquipmentsButIds(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		configuration::corba::PortSeq_Transferable transmitPortsButIds(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		configuration::corba::MeasurementPortSeq_Transferable transmitMeasurementPortsButIds(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		configuration::corba::TransmissionPathSeq_Transferable transmitTransmissionPathsButIds(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		configuration::corba::KISSeq_Transferable transmitKISsButIds(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		configuration::corba::MonitoredElementSeq_Transferable transmitMonitoredElementsButIds(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		configuration::corba::LinkSeq_Transferable transmitLinksButIds(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		configuration::corba::CableThreadSeq_Transferable transmitCableThreadsButIds(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
@@ -579,100 +579,100 @@ module corba {
 		/* Transmit multiple objects but ids by condition*/
 
 		configuration::corba::EquipmentTypeSeq_Transferable transmitEquipmentTypesButIdsCondition(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT,
-						in general::corba::StorableObjectCondition_Transferable condition_Transferable)
+						in general::corba::StorableObjectCondition condition_Transferable)
 			raises (general::corba::AMFICOMRemoteException);
 
 		configuration::corba::PortTypeSeq_Transferable transmitPortTypesButIdsCondition(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT,
-						in general::corba::StorableObjectCondition_Transferable condition_Transferable)
+						in general::corba::StorableObjectCondition condition_Transferable)
 			raises (general::corba::AMFICOMRemoteException);
 
 		configuration::corba::MeasurementPortTypeSeq_Transferable transmitMeasurementPortTypesButIdsCondition(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT,
-						in general::corba::StorableObjectCondition_Transferable condition_Transferable)
+						in general::corba::StorableObjectCondition condition_Transferable)
 			raises (general::corba::AMFICOMRemoteException);
 
 		configuration::corba::TransmissionPathTypeSeq_Transferable transmitTransmissionPathTypesButIdsCondition(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT,
-						in general::corba::StorableObjectCondition_Transferable condition_Transferable)
+						in general::corba::StorableObjectCondition condition_Transferable)
 			raises (general::corba::AMFICOMRemoteException);
 
 		configuration::corba::LinkTypeSeq_Transferable transmitLinkTypesButIdsCondition(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT,
-						in general::corba::StorableObjectCondition_Transferable condition_Transferable)
+						in general::corba::StorableObjectCondition condition_Transferable)
 			raises (general::corba::AMFICOMRemoteException);
 
 		configuration::corba::CableLinkTypeSeq_Transferable transmitCableLinkTypesButIdsCondition(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT,
-						in general::corba::StorableObjectCondition_Transferable condition_Transferable)
+						in general::corba::StorableObjectCondition condition_Transferable)
 			raises (general::corba::AMFICOMRemoteException);
 
 		configuration::corba::CableThreadTypeSeq_Transferable transmitCableThreadTypesButIdsCondition(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT,
-						in general::corba::StorableObjectCondition_Transferable condition_Transferable)
+						in general::corba::StorableObjectCondition condition_Transferable)
 			raises (general::corba::AMFICOMRemoteException);
 
 		configuration::corba::EquipmentSeq_Transferable transmitEquipmentsButIdsCondition(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT,
-						in general::corba::StorableObjectCondition_Transferable condition_Transferable)
+						in general::corba::StorableObjectCondition condition_Transferable)
 			raises (general::corba::AMFICOMRemoteException);
 
 		configuration::corba::PortSeq_Transferable transmitPortsButIdsCondition(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT,
-						in general::corba::StorableObjectCondition_Transferable condition_Transferable)
+						in general::corba::StorableObjectCondition condition_Transferable)
 			raises (general::corba::AMFICOMRemoteException);
 
 		configuration::corba::MeasurementPortSeq_Transferable transmitMeasurementPortsButIdsCondition(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT,
-						in general::corba::StorableObjectCondition_Transferable condition_Transferable)
+						in general::corba::StorableObjectCondition condition_Transferable)
 			raises (general::corba::AMFICOMRemoteException);
 
 		configuration::corba::TransmissionPathSeq_Transferable transmitTransmissionPathsButIdsCondition(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT,
-						in general::corba::StorableObjectCondition_Transferable condition_Transferable)
+						in general::corba::StorableObjectCondition condition_Transferable)
 			raises (general::corba::AMFICOMRemoteException);
 
 		configuration::corba::KISSeq_Transferable transmitKISsButIdsCondition(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT,
-						in general::corba::StorableObjectCondition_Transferable condition_Transferable)
+						in general::corba::StorableObjectCondition condition_Transferable)
 			raises (general::corba::AMFICOMRemoteException);		
 
 		configuration::corba::MonitoredElementSeq_Transferable transmitMonitoredElementsButIdsCondition(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT,
-						in general::corba::StorableObjectCondition_Transferable condition_Transferable)
+						in general::corba::StorableObjectCondition condition_Transferable)
 			raises (general::corba::AMFICOMRemoteException);
 
 		configuration::corba::LinkSeq_Transferable transmitLinksButIdsCondition(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT,
-						in general::corba::StorableObjectCondition_Transferable condition_Transferable)
+						in general::corba::StorableObjectCondition condition_Transferable)
 			raises (general::corba::AMFICOMRemoteException);
 
 		configuration::corba::CableThreadSeq_Transferable transmitCableThreadsButIdsCondition(
-						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::IdentifierSeq ids_Transferable,
 						in security::corba::SessionKey sessionKeyT,
-						in general::corba::StorableObjectCondition_Transferable condition_Transferable)
+						in general::corba::StorableObjectCondition condition_Transferable)
 			raises (general::corba::AMFICOMRemoteException);
 
 
 
 		/*	Refresh*/
-		general::corba::IdentifierSeq_Transferable transmitRefreshedConfigurationObjects(
-						in general::corba::StorableObjectSeq_Transferable StorableObjects_Transferable,
+		general::corba::IdentifierSeq transmitRefreshedConfigurationObjects(
+						in general::corba::StorableObjectSeq StorableObjects_Transferable,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
@@ -684,79 +684,79 @@ module corba {
 		/* Transmit multiple objects*/
 
 		measurement::corba::MeasurementTypeSeq_Transferable transmitMeasurementTypes(
-						in general::corba::IdentifierSeq_Transferable ids,
+						in general::corba::IdentifierSeq ids,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		measurement::corba::AnalysisTypeSeq_Transferable transmitAnalysisTypes(
-						in general::corba::IdentifierSeq_Transferable ids,
+						in general::corba::IdentifierSeq ids,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		measurement::corba::EvaluationTypeSeq_Transferable transmitEvaluationTypes(
-						in general::corba::IdentifierSeq_Transferable ids,
+						in general::corba::IdentifierSeq ids,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		measurement::corba::ModelingTypeSeq_Transferable transmitModelingTypes(
-						in general::corba::IdentifierSeq_Transferable ids,
+						in general::corba::IdentifierSeq ids,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 
 
 		measurement::corba::MeasurementSeq_Transferable transmitMeasurements(
-						in general::corba::IdentifierSeq_Transferable ids,
+						in general::corba::IdentifierSeq ids,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		measurement::corba::AnalysisSeq_Transferable transmitAnalyses(
-						in general::corba::IdentifierSeq_Transferable ids,
+						in general::corba::IdentifierSeq ids,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		measurement::corba::EvaluationSeq_Transferable transmitEvaluations(
-						in general::corba::IdentifierSeq_Transferable ids,
+						in general::corba::IdentifierSeq ids,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		measurement::corba::ModelingSeq_Transferable transmitModelings(
-						in general::corba::IdentifierSeq_Transferable ids,
+						in general::corba::IdentifierSeq ids,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		measurement::corba::MeasurementSetupSeq_Transferable transmitMeasurementSetups(
-						in general::corba::IdentifierSeq_Transferable ids,
+						in general::corba::IdentifierSeq ids,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		measurement::corba::ResultSeq_Transferable transmitResults(
-						in general::corba::IdentifierSeq_Transferable ids,
+						in general::corba::IdentifierSeq ids,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		measurement::corba::SetSeq_Transferable transmitSets(
-						in general::corba::IdentifierSeq_Transferable ids,
+						in general::corba::IdentifierSeq ids,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		measurement::corba::TestSeq_Transferable transmitTests(
-						in general::corba::IdentifierSeq_Transferable ids,
+						in general::corba::IdentifierSeq ids,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		measurement::corba::CronTemporalPatternSeq_Transferable transmitCronTemporalPatterns(
-						in general::corba::IdentifierSeq_Transferable ids,
+						in general::corba::IdentifierSeq ids,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		measurement::corba::IntervalsTemporalPatternSeq_Transferable transmitIntervalsTemporalPatterns(
-						in general::corba::IdentifierSeq_Transferable ids,
+						in general::corba::IdentifierSeq ids,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		measurement::corba::PeriodicalTemporalPatternSeq_Transferable transmitPeriodicalTemporalPatterns(
-						in general::corba::IdentifierSeq_Transferable ids,
+						in general::corba::IdentifierSeq ids,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
@@ -765,79 +765,79 @@ module corba {
 		/* Transmit multiple objects but ids*/
 
 		measurement::corba::MeasurementTypeSeq_Transferable transmitMeasurementTypesButIds(
-						in general::corba::IdentifierSeq_Transferable ids,
+						in general::corba::IdentifierSeq ids,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		measurement::corba::AnalysisTypeSeq_Transferable transmitAnalysisTypesButIds(
-						in general::corba::IdentifierSeq_Transferable ids,
+						in general::corba::IdentifierSeq ids,
 						in security::corba::SessionKey sessionKeyT)			
 			raises (general::corba::AMFICOMRemoteException);
 
 		measurement::corba::EvaluationTypeSeq_Transferable transmitEvaluationTypesButIds(
-						in general::corba::IdentifierSeq_Transferable ids,
+						in general::corba::IdentifierSeq ids,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		measurement::corba::ModelingTypeSeq_Transferable transmitModelingTypesButIds(
-						in general::corba::IdentifierSeq_Transferable ids,
+						in general::corba::IdentifierSeq ids,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 
 
 		measurement::corba::MeasurementSeq_Transferable transmitMeasurementsButIds(
-						in general::corba::IdentifierSeq_Transferable ids,
+						in general::corba::IdentifierSeq ids,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		measurement::corba::AnalysisSeq_Transferable transmitAnalysesButIds(
-						in general::corba::IdentifierSeq_Transferable ids,
+						in general::corba::IdentifierSeq ids,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		measurement::corba::EvaluationSeq_Transferable transmitEvaluationsButIds(
-						in general::corba::IdentifierSeq_Transferable ids,
+						in general::corba::IdentifierSeq ids,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		measurement::corba::ModelingSeq_Transferable transmitModelingsButIds(
-						in general::corba::IdentifierSeq_Transferable ids,
+						in general::corba::IdentifierSeq ids,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		measurement::corba::MeasurementSetupSeq_Transferable transmitMeasurementSetupsButIds(
-						in general::corba::IdentifierSeq_Transferable ids,
+						in general::corba::IdentifierSeq ids,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);			
 
 		measurement::corba::ResultSeq_Transferable transmitResultsButIds(
-						in general::corba::IdentifierSeq_Transferable ids,
+						in general::corba::IdentifierSeq ids,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		measurement::corba::SetSeq_Transferable transmitSetsButIds(
-						in general::corba::IdentifierSeq_Transferable ids,
+						in general::corba::IdentifierSeq ids,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		measurement::corba::TestSeq_Transferable transmitTestsButIds(
-						in general::corba::IdentifierSeq_Transferable ids,
+						in general::corba::IdentifierSeq ids,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		measurement::corba::CronTemporalPatternSeq_Transferable transmitCronTemporalPatternsButIds(
-						in general::corba::IdentifierSeq_Transferable ids,
+						in general::corba::IdentifierSeq ids,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);						
 
 		measurement::corba::IntervalsTemporalPatternSeq_Transferable transmitIntervalsTemporalPatternsButIds(
-						in general::corba::IdentifierSeq_Transferable ids,
+						in general::corba::IdentifierSeq ids,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);						
 
 		measurement::corba::PeriodicalTemporalPatternSeq_Transferable transmitPeriodicalTemporalPatternsButIds(
-						in general::corba::IdentifierSeq_Transferable ids,
+						in general::corba::IdentifierSeq ids,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);						
 
@@ -846,102 +846,102 @@ module corba {
 		/* Transmit multiple objects but ids by condition*/
 
 		measurement::corba::MeasurementTypeSeq_Transferable transmitMeasurementTypesButIdsCondition(
-						in general::corba::IdentifierSeq_Transferable ids,
+						in general::corba::IdentifierSeq ids,
 						in security::corba::SessionKey sessionKeyT,
-						in general::corba::StorableObjectCondition_Transferable condition_Transferable)
+						in general::corba::StorableObjectCondition condition_Transferable)
 			raises (general::corba::AMFICOMRemoteException);
 
 		measurement::corba::AnalysisTypeSeq_Transferable transmitAnalysisTypesButIdsCondition(
-						in general::corba::IdentifierSeq_Transferable ids,
+						in general::corba::IdentifierSeq ids,
 						in security::corba::SessionKey sessionKeyT,
-						in general::corba::StorableObjectCondition_Transferable condition_Transferable)			
+						in general::corba::StorableObjectCondition condition_Transferable)			
 			raises (general::corba::AMFICOMRemoteException);
 
 		measurement::corba::EvaluationTypeSeq_Transferable transmitEvaluationTypesButIdsCondition(
-						in general::corba::IdentifierSeq_Transferable ids,
+						in general::corba::IdentifierSeq ids,
 						in security::corba::SessionKey sessionKeyT,
-						in general::corba::StorableObjectCondition_Transferable condition_Transferable)
+						in general::corba::StorableObjectCondition condition_Transferable)
 			raises (general::corba::AMFICOMRemoteException);						
 
 		measurement::corba::ModelingTypeSeq_Transferable transmitModelingTypesButIdsCondition(
-						in general::corba::IdentifierSeq_Transferable ids,
+						in general::corba::IdentifierSeq ids,
 						in security::corba::SessionKey sessionKeyT,
-						in general::corba::StorableObjectCondition_Transferable condition_Transferable)
+						in general::corba::StorableObjectCondition condition_Transferable)
 			raises (general::corba::AMFICOMRemoteException);
 
 
 
 		measurement::corba::MeasurementSeq_Transferable transmitMeasurementsButIdsCondition(
-						in general::corba::IdentifierSeq_Transferable ids,
+						in general::corba::IdentifierSeq ids,
 						in security::corba::SessionKey sessionKeyT,
-						in general::corba::StorableObjectCondition_Transferable condition_Transferable)			
+						in general::corba::StorableObjectCondition condition_Transferable)			
 			raises (general::corba::AMFICOMRemoteException);	
 
 		measurement::corba::AnalysisSeq_Transferable transmitAnalysesButIdsCondition(
-						in general::corba::IdentifierSeq_Transferable ids,
+						in general::corba::IdentifierSeq ids,
 						in security::corba::SessionKey sessionKeyT,
-						in general::corba::StorableObjectCondition_Transferable condition_Transferable)			
+						in general::corba::StorableObjectCondition condition_Transferable)			
 			raises (general::corba::AMFICOMRemoteException);
 
 		measurement::corba::EvaluationSeq_Transferable transmitEvaluationsButIdsCondition(
-						in general::corba::IdentifierSeq_Transferable ids,
+						in general::corba::IdentifierSeq ids,
 						in security::corba::SessionKey sessionKeyT,
-						in general::corba::StorableObjectCondition_Transferable condition_Transferable)
+						in general::corba::StorableObjectCondition condition_Transferable)
 			raises (general::corba::AMFICOMRemoteException);
 
 		measurement::corba::ModelingSeq_Transferable transmitModelingsButIdsCondition(
-						in general::corba::IdentifierSeq_Transferable ids,
+						in general::corba::IdentifierSeq ids,
 						in security::corba::SessionKey sessionKeyT,
-						in general::corba::StorableObjectCondition_Transferable condition_Transferable)
+						in general::corba::StorableObjectCondition condition_Transferable)
 			raises (general::corba::AMFICOMRemoteException);
 
 		measurement::corba::MeasurementSetupSeq_Transferable transmitMeasurementSetupsButIdsCondition(
-						in general::corba::IdentifierSeq_Transferable ids,
+						in general::corba::IdentifierSeq ids,
 						in security::corba::SessionKey sessionKeyT,
-						in general::corba::StorableObjectCondition_Transferable condition_Transferable)
+						in general::corba::StorableObjectCondition condition_Transferable)
 			raises (general::corba::AMFICOMRemoteException);			
 
 		measurement::corba::ResultSeq_Transferable transmitResultsButIdsCondition(
-						in general::corba::IdentifierSeq_Transferable ids,
+						in general::corba::IdentifierSeq ids,
 						in security::corba::SessionKey sessionKeyT,
-						in general::corba::StorableObjectCondition_Transferable condition_Transferable)
+						in general::corba::StorableObjectCondition condition_Transferable)
 			raises (general::corba::AMFICOMRemoteException);
 
 		measurement::corba::SetSeq_Transferable transmitSetsButIdsCondition(
-						in general::corba::IdentifierSeq_Transferable ids,
+						in general::corba::IdentifierSeq ids,
 						in security::corba::SessionKey sessionKeyT,
-						in general::corba::StorableObjectCondition_Transferable condition_Transferable)
+						in general::corba::StorableObjectCondition condition_Transferable)
 			raises (general::corba::AMFICOMRemoteException);
 
 		measurement::corba::TestSeq_Transferable transmitTestsButIdsCondition(
-						in general::corba::IdentifierSeq_Transferable ids,
+						in general::corba::IdentifierSeq ids,
 						in security::corba::SessionKey sessionKeyT,
-						in general::corba::StorableObjectCondition_Transferable condition_Transferable)
+						in general::corba::StorableObjectCondition condition_Transferable)
 			raises (general::corba::AMFICOMRemoteException);	
 
 		measurement::corba::CronTemporalPatternSeq_Transferable transmitCronTemporalPatternsButIdsCondition(
-						in general::corba::IdentifierSeq_Transferable ids,
+						in general::corba::IdentifierSeq ids,
 						in security::corba::SessionKey sessionKeyT,
-						in general::corba::StorableObjectCondition_Transferable condition_Transferable)
+						in general::corba::StorableObjectCondition condition_Transferable)
 			raises (general::corba::AMFICOMRemoteException);
 			
 		measurement::corba::IntervalsTemporalPatternSeq_Transferable transmitIntervalsTemporalPatternsButIdsCondition(
-						in general::corba::IdentifierSeq_Transferable ids,
+						in general::corba::IdentifierSeq ids,
 						in security::corba::SessionKey sessionKeyT,
-						in general::corba::StorableObjectCondition_Transferable condition_Transferable)
+						in general::corba::StorableObjectCondition condition_Transferable)
 			raises (general::corba::AMFICOMRemoteException);
 
 		measurement::corba::PeriodicalTemporalPatternSeq_Transferable transmitPeriodicalTemporalPatternsButIdsCondition(
-						in general::corba::IdentifierSeq_Transferable ids,
+						in general::corba::IdentifierSeq ids,
 						in security::corba::SessionKey sessionKeyT,
-						in general::corba::StorableObjectCondition_Transferable condition_Transferable)
+						in general::corba::StorableObjectCondition condition_Transferable)
 			raises (general::corba::AMFICOMRemoteException);						
 
 
 
 		/*	Refresh*/
-		general::corba::IdentifierSeq_Transferable transmitRefreshedMeasurementObjects(
-						in general::corba::StorableObjectSeq_Transferable StorableObjects_Transferable,
+		general::corba::IdentifierSeq transmitRefreshedMeasurementObjects(
+						in general::corba::StorableObjectSeq StorableObjects_Transferable,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException); 
 

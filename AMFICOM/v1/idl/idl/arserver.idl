@@ -1,5 +1,5 @@
 /*
- * $Id: arserver.idl,v 1.15 2005/05/04 07:14:47 bass Exp $
+ * $Id: arserver.idl,v 1.16 2005/05/04 15:05:40 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,11 +19,11 @@ module com {
 				module corba {
 					interface ARServer: general::corba::IdentifierGeneratorServer {
 /////////////////////////////////////////// Delete Resources ////////////////////////////////////////////
-						void delete(in general::corba::Identifier_Transferable id_Transferable,
+						void delete(in general::corba::Identifier id_Transferable,
 								in security::corba::SessionKey sessionKey)
 							raises (general::corba::AMFICOMRemoteException);
 			
-						void deleteList(in general::corba::IdentifierSeq_Transferable id_Transferables,
+						void deleteList(in general::corba::IdentifierSeq id_Transferables,
 								in security::corba::SessionKey sessionKey)
 							raises (general::corba::AMFICOMRemoteException);
 /////////////////////////////////////////// Receive Resources ////////////////////////////////////////////
@@ -38,12 +38,12 @@ module com {
 							raises (general::corba::AMFICOMRemoteException);
 /////////////////////////////////////////// Transmit Resources ////////////////////////////////////////////
 						resource::corba::ImageResource_Transferable transmitImageResource(
-								in general::corba::Identifier_Transferable id_Transferable,
+								in general::corba::Identifier id_Transferable,
 								in security::corba::SessionKey sessionKey)
 							raises (general::corba::AMFICOMRemoteException);
 	
 						resource::corba::ImageResourceSeq_Transferable transmitImageResources(
-								in general::corba::IdentifierSeq_Transferable id_Transferables,
+								in general::corba::IdentifierSeq id_Transferables,
 								in security::corba::SessionKey sessionKey)
 							raises (general::corba::AMFICOMRemoteException);
 					};
