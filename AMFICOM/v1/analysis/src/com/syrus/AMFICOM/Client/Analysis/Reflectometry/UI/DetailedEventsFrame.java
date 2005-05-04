@@ -46,14 +46,14 @@ implements EtalonMTMListener,
 
 	private Map tModels = new HashMap(6);
 
-	private ATable jTable;
-
+	private ATable mainTable;
+	private ATable comparativeTable;
+	
 	private JPanel mainPanel = new JPanel();
 	private JScrollPane scrollPane = new JScrollPane();
 	private JViewport viewport = new JViewport();
 
-	private CompareTableModel ctModel;
-	private ATable jTableComp;
+	private CompareTableModel ctModel;	
 
 	private JPanel mainPanelComp = new JPanel();
 	private JScrollPane scrollPaneComp = new JScrollPane();
@@ -61,27 +61,18 @@ implements EtalonMTMListener,
 	private JTabbedPane tabbedPane = new JTabbedPane();
 
 	// these are just internally-used keys
-	private static final String tmLinear = "linear";
-	private static final String tmInitiate = "initiate";
-	private static final String tmNoid = "noid";
-	private static final String tmConnector = "connector";
-	private static final String tmLoss = "loss";
-	private static final String tmGain = "gain";
-	private static final String tmTerminate = "terminate";
+	private static final String LINEAR = "linear";
+	private static final String INITIATE = "initiate";
+	private static final String NOID = "noid";
+	private static final String CONNECTOR = "connector";
+	private static final String LOSS = "loss";
+	private static final String GAIN = "gain";
+	private static final String TERMINATE = "terminate";
 
 	public DetailedEventsFrame()
 	{
-		super();
-		try
-		{
-			jbInit();
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-
-		initModule();
+		this.init();
+		this.initModule();
 	}
 
 	private void initModule()
@@ -94,16 +85,16 @@ implements EtalonMTMListener,
 	private void makeAlignedDataMT()
 	{
 		// XXX: is alignment really required? Should it be performed here?
-		if (Heap.getMTMEtalon() == null || Heap.getMTAEPrimary() == null)
+		if (Heap.getMTMEtalon() == null || Heap.getMTAEPrimary() == null) {
 			alignedDataMT = null;
-        else
-            alignedDataMT = ReflectogramMath.createAlignedArrayModelTrace(
+		} else {
+			alignedDataMT = ReflectogramMath.createAlignedArrayModelTrace(
 			Heap.getMTAEPrimary().getModelTrace(),
 			Heap.getMTMEtalon().getMTAE().getModelTrace());
+		}
 	}
 
-	private void jbInit() throws Exception
-	{
+	private void init() {
 		this.setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
 		this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 
@@ -120,7 +111,7 @@ implements EtalonMTMListener,
 						LangModelAnalyse.getString("eventMaxDeviation")
 				},
 				null);
-		tModels.put(tmLinear, linearModel);
+		tModels.put(LINEAR, linearModel);
 
 		FixedSizeEditableTableModel initialModel = new FixedSizeEditableTableModel(
 				new String[] {LangModelAnalyse.getString("eventDetailedParam"),
@@ -135,7 +126,7 @@ implements EtalonMTMListener,
 						LangModelAnalyse.getString("eventADZ")
 				},
 				null);
-		tModels.put(tmInitiate, initialModel);
+		tModels.put(INITIATE, initialModel);
 
 		FixedSizeEditableTableModel noidModel = new FixedSizeEditableTableModel(
 				new String[] {LangModelAnalyse.getString("eventDetailedParam"),
@@ -149,7 +140,7 @@ implements EtalonMTMListener,
 						LangModelAnalyse.getString("eventMaxDeviation")
 				},
 				null);
-		tModels.put(tmNoid, noidModel);
+		tModels.put(NOID, noidModel);
 
 		FixedSizeEditableTableModel connectorModel = new FixedSizeEditableTableModel(
 				new String[] {LangModelAnalyse.getString("eventDetailedParam"),
@@ -163,7 +154,7 @@ implements EtalonMTMListener,
 						LangModelAnalyse.getString("eventReflectionLevel")
 				},
 				null);
-		tModels.put(tmConnector, connectorModel);
+		tModels.put(CONNECTOR, connectorModel);
 
 		FixedSizeEditableTableModel spliceModel = new FixedSizeEditableTableModel(
 				new String[] {LangModelAnalyse.getString("eventDetailedParam"),
@@ -176,8 +167,8 @@ implements EtalonMTMListener,
 						LangModelAnalyse.getString("eventEndLevel")
 				},
 				null);
-		tModels.put(tmLoss, spliceModel);
-		tModels.put(tmGain, spliceModel);
+		tModels.put(LOSS, spliceModel);
+		tModels.put(GAIN, spliceModel);
 
 		FixedSizeEditableTableModel terminateModel = new FixedSizeEditableTableModel(
 				new String[] {LangModelAnalyse.getString("eventDetailedParam"),
@@ -190,9 +181,9 @@ implements EtalonMTMListener,
 						LangModelAnalyse.getString("eventReflectionLevel")
 				},
 				null);
-		tModels.put(tmTerminate, terminateModel);
+		tModels.put(TERMINATE, terminateModel);
 
-		jTable = new ATable();
+		mainTable = new ATable();
 
 		this.getContentPane().add(tabbedPane, BorderLayout.CENTER);
 
@@ -211,18 +202,18 @@ implements EtalonMTMListener,
 		scrollPane.setViewport(viewport);
 		scrollPane.setAutoscrolls(true);
 
-		jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		mainTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 //		jTable.setPreferredScrollableViewportSize(new Dimension(200, 200));
 //		jTable.setMinimumSize(new Dimension(200, 200));
 		mainPanel.add(scrollPane, BorderLayout.CENTER);
-		scrollPane.getViewport().add(jTable);
+		scrollPane.getViewport().add(mainTable);
 		tabbedPane.setEnabledAt(0, true);
 
 
 		tabbedPane.add(LangModelAnalyse.getString("Title.comparatives"), mainPanelComp);
 
 		ctModel = new CompareTableModel();
-		jTableComp = new ATable (ctModel);
+		comparativeTable = new ATable (ctModel);
 //		jTableComp.getColumnModel().getColumn(0).setPreferredWidth(120);
 //		jTableComp.getColumnModel().getColumn(1).setPreferredWidth(100);
 
@@ -232,10 +223,10 @@ implements EtalonMTMListener,
 		scrollPaneComp.setAutoscrolls(true);
 //		jTableComp.setPreferredScrollableViewportSize(new Dimension(200, 213));
 //		jTableComp.setMinimumSize(new Dimension(200, 213));
-		jTableComp.setDefaultRenderer(Object.class, new CompareTableRenderer());
+		comparativeTable.setDefaultRenderer(Object.class, new CompareTableRenderer());
 
 		mainPanelComp.add(scrollPaneComp, BorderLayout.CENTER);
-		scrollPaneComp.getViewport().add(jTableComp);
+		scrollPaneComp.getViewport().add(comparativeTable);
 		tabbedPane.setSelectedIndex(0);
 		tabbedPane.setEnabledAt(1, false);
 
@@ -268,7 +259,7 @@ implements EtalonMTMListener,
 			        ? etalonEvent.getEventType()
 					: SimpleReflectogramEvent.RESERVED; // 'no event'
 
-		((CompareTableRenderer)jTableComp.getDefaultRenderer(Object.class))
+		((CompareTableRenderer)comparativeTable.getDefaultRenderer(Object.class))
 			.setSameType(dataType == etalonType);
 
 		String dataT = AnalysisUtil.getSimpleEventNameByType(dataType);
@@ -344,7 +335,7 @@ implements EtalonMTMListener,
 		switch (eventType)
 		{
 			case TraceEvent.LINEAR:
-				tModel = (FixedSizeEditableTableModel) tModels.get(tmLinear);
+				tModel = (FixedSizeEditableTableModel) tModels.get(LINEAR);
 				tModel.setValueAt(eventTypeName, 0, 0);
 				tModel.updateColumn(new Object[] {
 						String.valueOf(num + 1),
@@ -357,7 +348,7 @@ implements EtalonMTMListener,
 					1);
 				break;
 			case TraceEvent.INITIATE:
-				tModel = (FixedSizeEditableTableModel) tModels.get(tmInitiate);
+				tModel = (FixedSizeEditableTableModel) tModels.get(INITIATE);
 				tModel.setValueAt(eventTypeName, 0, 0);
 				tModel.updateColumn(new Object[] {
 						String.valueOf(num + 1),
@@ -371,7 +362,7 @@ implements EtalonMTMListener,
 								+ LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_MT)}, 1);
 				break;
 			case TraceEvent.NON_IDENTIFIED:
-				tModel = (FixedSizeEditableTableModel) tModels.get(tmNoid);
+				tModel = (FixedSizeEditableTableModel) tModels.get(NOID);
 				tModel.setValueAt(eventTypeName, 0, 0);
 				tModel.updateColumn(new Object[] {
 						String.valueOf(num + 1),
@@ -383,7 +374,7 @@ implements EtalonMTMListener,
 					1);
 				break;
 			case TraceEvent.CONNECTOR:
-				tModel = (FixedSizeEditableTableModel) tModels.get(tmConnector);
+				tModel = (FixedSizeEditableTableModel) tModels.get(CONNECTOR);
 				tModel.setValueAt(eventTypeName, 0, 0);
 				tModel.updateColumn(new Object[] {
 						String.valueOf(num + 1),
@@ -395,7 +386,7 @@ implements EtalonMTMListener,
 					}, 1);
 				break;
 			case TraceEvent.LOSS:
-				tModel = (FixedSizeEditableTableModel) tModels.get(tmLoss);
+				tModel = (FixedSizeEditableTableModel) tModels.get(LOSS);
 				tModel.setValueAt(eventTypeName, 0, 0);
 				tModel.updateColumn(new Object[] {
 						String.valueOf(num + 1),
@@ -406,7 +397,7 @@ implements EtalonMTMListener,
 					1);
 				break;
 			case TraceEvent.GAIN:
-				tModel = (FixedSizeEditableTableModel) tModels.get(tmGain);
+				tModel = (FixedSizeEditableTableModel) tModels.get(GAIN);
 				tModel.setValueAt(eventTypeName, 0, 0);
 				tModel.updateColumn(new Object[] {
 						String.valueOf(num + 1),
@@ -417,7 +408,7 @@ implements EtalonMTMListener,
 					1);
 				break;
 			case TraceEvent.TERMINATE:
-				tModel = (FixedSizeEditableTableModel) tModels.get(tmTerminate);
+				tModel = (FixedSizeEditableTableModel) tModels.get(TERMINATE);
 				tModel.setValueAt(eventTypeName, 0, 0);
 				tModel.updateColumn(new Object[] {
 						String.valueOf(num + 1),
@@ -428,11 +419,11 @@ implements EtalonMTMListener,
 					}, 1);
 				break;
 			}
-		jTable.setModel(tModel);
-		jTable.getColumnModel().getColumn(0).setPreferredWidth(120);
-		jTable.getColumnModel().getColumn(1).setPreferredWidth(80);
-		this.jTableComp.repaint();
-		this.jTableComp.revalidate();
+		mainTable.setModel(tModel);
+		mainTable.getColumnModel().getColumn(0).setPreferredWidth(120);
+		mainTable.getColumnModel().getColumn(1).setPreferredWidth(80);
+		this.comparativeTable.repaint();
+		this.comparativeTable.revalidate();
 	}
 
 	public void etalonMTMCUpdated()
@@ -451,8 +442,8 @@ implements EtalonMTMListener,
 		ctModel.clearTable();
 		tabbedPane.setSelectedIndex(0);
 		tabbedPane.setEnabledAt(1, false);
-		this.jTable.repaint();
-		this.jTable.revalidate();
+		this.mainTable.repaint();
+		this.mainTable.revalidate();
 	}
 
 	public void currentEventChanged()
@@ -499,85 +490,70 @@ implements EtalonMTMListener,
 			return component;
 		}
 	}
-	
-}
 
-class CompareTableModel extends AbstractTableModel
-{
-//  String[] columnNames = {LangModelModel.String("parameter") ,
-//    LangModelModel.String("value")};
+	private class CompareTableModel extends AbstractTableModel {
 
-	String[] columnNames = {null ,
-		null};
+		// String[] columnNames = {LangModelModel.String("parameter") ,
+		// LangModelModel.String("value")};
 
-	Object[][] data = {
-		{LangModelAnalyse.getString("eventType"), "--"},
-		{LangModelAnalyse.getString("etEventType"), "--"},
-		{LangModelAnalyse.getString("maxDeviation"), "--"},
-		{LangModelAnalyse.getString("meanDeviation"), "--"},
-		{LangModelAnalyse.getString("dLoss"), "--"},
-		{LangModelAnalyse.getString("dWidth"), "--"},
-		{LangModelAnalyse.getString("dLocation"), "--"}
-	};
+		String[]	columnNames	= { null, null};
 
-	CompareTableModel()
-	{
-		super();
-	}
+		Object[][]	data		= { { LangModelAnalyse.getString("eventType"), "--"},
+										{ LangModelAnalyse.getString("etEventType"), "--"},
+										{ LangModelAnalyse.getString("maxDeviation"), "--"},
+										{ LangModelAnalyse.getString("meanDeviation"), "--"},
+										{ LangModelAnalyse.getString("dLoss"), "--"},
+										{ LangModelAnalyse.getString("dWidth"), "--"},
+										{ LangModelAnalyse.getString("dLocation"), "--"}};
 
-	public void clearTable()
-	{
-		setValueAt("--", 0, 1);
-		setValueAt("--", 1, 1);
-		setValueAt("--", 2, 1);
-		setValueAt("--", 3, 1);
-		setValueAt("--", 4, 1);
-		setValueAt("--", 5, 1);
-		setValueAt("--", 6, 1);
+		CompareTableModel() {
+			super();
+		}
 
-		super.fireTableDataChanged();
-	}
+		public void clearTable() {
+			for(int i=0;i<this.data.length;i++) {
+				this.setValueAt("--", i, 1);
+			}
+			super.fireTableDataChanged();
+		}
 
-	public int getColumnCount() {
-		return columnNames.length;
-	}
+		public int getColumnCount() {
+			return columnNames.length;
+		}
 
-	public int getRowCount() {
-		return data.length;
-	}
+		public int getRowCount() {
+			return data.length;
+		}
 
-	public String getColumnName(int col) {
-		return columnNames[col];
-	}
+		public String getColumnName(int col) {
+			return columnNames[col];
+		}
 
-	public Object getValueAt(int row, int col) {
-		return data[row][col];
-	}
+		public Object getValueAt(	int row,
+									int column) {
+			return data[row][column];
+		}
 
-	public double getvalueat(int row, int col) {
-		return ((Double)(data[row][col])).doubleValue();
-	}
+		public double getvalueat(	int row,
+									int column) {
+			return ((Double) (data[row][column])).doubleValue();
+		}
 
-	public Class getColumnClass(int c) {
-		return getValueAt(0, c).getClass();
-	}
+		public Class getColumnClass(int column) {
+			return getValueAt(0, column).getClass();
+		}
 
-	public boolean isCellEditable(int row, int col)
-	{
-		return false;
-	}
+		public boolean isCellEditable(	int row,
+										int col) {
+			return false;
+		}
 
-	public void setValueAt(Object value, int row, int col)
-	{
-		data[row][col] = value;
-		fireTableCellUpdated(row, col);
-	}
-
-
-	public void setInicialValueAt(Object value, int row, int col)
-	{
-		data[row][col] = value;
-		fireTableCellUpdated(row, col);
+		public void setValueAt(	Object value,
+								int row,
+								int col) {
+			this.data[row][col] = value;
+			fireTableCellUpdated(row, col);
+		}
 	}
 
 }
