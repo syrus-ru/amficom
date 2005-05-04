@@ -1,4 +1,4 @@
-package com.syrus.AMFICOM.Client.General.Command.Scheme;
+package com.syrus.AMFICOM.Client.General.Command.Window;
 
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.UI.WindowArranger;
