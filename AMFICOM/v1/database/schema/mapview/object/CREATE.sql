@@ -1,2 +1,0 @@
-@@mapview
-@@mapviewscheme
