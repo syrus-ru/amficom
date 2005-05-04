@@ -6,6 +6,8 @@ import java.awt.Cursor;
 import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultCellEditor;
@@ -26,15 +28,13 @@ import javax.swing.table.TableModel;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.AnalysisCommand;
+import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryMTAEListener;
-import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
-import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.AComboBox;
-import com.syrus.AMFICOM.Client.General.UI.ATable;
 import com.syrus.AMFICOM.Client.General.UI.FixedSizeEditableTableModel;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
@@ -52,11 +52,9 @@ public class AnalysisSelectionFrame extends ATableFrame implements
 
 	private ParamTableModel tModelMinuit;
 
-	private ATable jTable;
+	private JTable table;
 
-	BorderLayout borderLayout = new BorderLayout();
-
-	JPanel mainPanel = new JPanel();
+	private JPanel mainPanel;
 
 	JScrollPane scrollPane = new JScrollPane();
 
@@ -106,8 +104,8 @@ public class AnalysisSelectionFrame extends ATableFrame implements
 				new Double(ap.getMinEnd()),
 				new Double(ap.getNoiseFactor()) });
 
-		jTable.setModel(tModelMinuit);
-		jTable.getColumnModel().getColumn(0).setPreferredWidth(250);
+		table.setModel(tModelMinuit);
+		table.getColumnModel().getColumn(0).setPreferredWidth(250);
 	}
 
 	private void updColorModel()
@@ -124,10 +122,10 @@ public class AnalysisSelectionFrame extends ATableFrame implements
 		this.setTitle(LangModelAnalyse.getString("analysisSelectionTitle"));
 
 		tModelMinuit = new ParamTableModel();
-		jTable = new ATable(tModelMinuit);
-		jTable.setDefaultRenderer(Object.class, new ModelParamsTableRenderer(
+		table = new JTable(tModelMinuit);
+		table.setDefaultRenderer(Object.class, new ModelParamsTableRenderer(
 				tModelMinuit));
-		jTable.setDefaultEditor(Object.class, new ModelParamsTableEditor(
+		table.setDefaultEditor(Object.class, new ModelParamsTableEditor(
 				tModelMinuit));
 
 		JButton analysisStartButton = new JButton();
@@ -168,6 +166,7 @@ public class AnalysisSelectionFrame extends ATableFrame implements
 			}
 		});
 
+		this.mainPanel = new JPanel(new BorderLayout());
 		this.setContentPane(mainPanel);
 
 		JToolBar jToolBar1 = new JToolBar();
@@ -177,13 +176,13 @@ public class AnalysisSelectionFrame extends ATableFrame implements
 		jToolBar1.add(new JToolBar.Separator());
 		jToolBar1.add(analysisStartButton);
 
-		jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		scrollPane.setViewport(viewport);
-		scrollPane.getViewport().add(jTable);
+		scrollPane.getViewport().add(table);
 		scrollPane.setAutoscrolls(true);
 
-		mainPanel.setLayout(new BorderLayout());
+		//mainPanel.setLayout();
 		mainPanel.setBorder(BorderFactory.createLoweredBevelBorder());
 		mainPanel.add(scrollPane, BorderLayout.CENTER);
 		mainPanel.add(jToolBar1, BorderLayout.NORTH);
@@ -196,15 +195,15 @@ public class AnalysisSelectionFrame extends ATableFrame implements
     void updateHeapAP()
     {
         Heap.getMinuitAnalysisParams().setMinThreshold(
-                ((Double )jTable.getValueAt(0, 1)).doubleValue());
+                ((Double )table.getValueAt(0, 1)).doubleValue());
         Heap.getMinuitAnalysisParams().setMinSplice(
-                ((Double )jTable.getValueAt(1, 1)).doubleValue());
+                ((Double )table.getValueAt(1, 1)).doubleValue());
         Heap.getMinuitAnalysisParams().setMinConnector(
-                ((Double )jTable.getValueAt(2, 1)).doubleValue());
+                ((Double )table.getValueAt(2, 1)).doubleValue());
         Heap.getMinuitAnalysisParams().setMinEnd(
-                ((Double )jTable.getValueAt(3, 1)).doubleValue());
+                ((Double )table.getValueAt(3, 1)).doubleValue());
         Heap.getMinuitAnalysisParams().setNoiseFactor(
-                ((Double )jTable.getValueAt(4, 1)).doubleValue());
+                ((Double )table.getValueAt(4, 1)).doubleValue());
     }
 
 	void analysisStartButton_actionPerformed(ActionEvent e)
@@ -241,10 +240,20 @@ public class AnalysisSelectionFrame extends ATableFrame implements
 				{ LangModelAnalyse.getString("analysisMinEnd"), new Double(0) },
 				{ LangModelAnalyse.getString("analysisNoiseFactor"), nfComboBox } };
 
-		ParamTableModel()
-		{
-			for (int i = 0; i < nf.length; i++)
+		ParamTableModel() {
+			for (int i = 0; i < nf.length; i++) {
 				nfComboBox.addItem(nf[i]);
+			}
+
+			this.nfComboBox.addItemListener(new ItemListener() {
+
+				public void itemStateChanged(ItemEvent e) {
+					if (e.getID() == ItemEvent.ITEM_STATE_CHANGED) {
+						AnalysisSelectionFrame.this.updateHeapAP();
+					}
+
+				}
+			});
 		}
 
 		void updateData(Object[] d)
@@ -303,12 +312,11 @@ public class AnalysisSelectionFrame extends ATableFrame implements
 
 		public void setValueAt(Object value, int row, int col)
 		{
-			if (data[row][col] instanceof JComboBox)
-			{
-				// do nothing
-			} else
+			if (!(data[row][col] instanceof JComboBox))	{
 				data[row][col] = value;
-			fireTableCellUpdated(row, col);
+				super.fireTableCellUpdated(row, col);
+				AnalysisSelectionFrame.this.updateHeapAP();
+			}
 		}
 	}
 
@@ -417,7 +425,7 @@ public class AnalysisSelectionFrame extends ATableFrame implements
 
 	public void bsHashRemovedAll()
 	{
-		jTable.setModel(new FixedSizeEditableTableModel(new String[] { "" },
+		table.setModel(new FixedSizeEditableTableModel(new String[] { "" },
 				new String[] { "" }, new String[] { "" }, new int[] {}));
 		setVisible(false);
 	}
