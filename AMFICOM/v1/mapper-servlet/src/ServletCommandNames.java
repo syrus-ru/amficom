@@ -1,6 +1,6 @@
 /**
- * @author $Author: peskovsky $
- * @version $Revision: 1.4 $, $Date: 2005/05/04 13:05:43 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.5 $, $Date: 2005/05/04 14:54:13 $
  * @module mapper-servlet
  */
 public class ServletCommandNames
@@ -32,5 +32,7 @@ public class ServletCommandNames
 	public static final String ERROR_INVALID_PARAMETERS = "invalid_params";
 	public static final String ERROR_NO_PARAMETERS = "no_params";
 	public static final String ERROR_MAP_EXCEPTION = "map_exception";
-	public static final String ERROR_NO_MAP_RENDERED = "no_map_available";	
+	public static final String ERROR_NO_MAP_RENDERED = "no_map_available";
+	public static final String ERROR_WRONG_REQUEST = "wrong_request";
+	public static final String ERROR_WRONG_STATE = "wrong_state";
 }
