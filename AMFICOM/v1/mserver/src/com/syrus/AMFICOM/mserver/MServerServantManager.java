@@ -1,5 +1,5 @@
 /*
- * $Id: MServerServantManager.java,v 1.3 2005/05/01 17:56:57 arseniy Exp $
+ * $Id: MServerServantManager.java,v 1.4 2005/05/04 13:50:53 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/05/01 17:56:57 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/04 13:50:53 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -52,7 +52,7 @@ final class MServerServantManager extends RunnableVerifiedConnectionManager impl
 
 		this.databaseIdentifierGeneratorServer = new DatabaseIdentifierGeneratorServer();
 
-		assert timeout >= 10 * 60 * 1000 : "Too low timeout"; //not less then 10 min
+		assert timeout >= 10L * 60L * 1000L : "Too low timeout"; //not less then 10 min
 	}
 
 	public LoginServer getLoginServerReference() throws CommunicationException {

@@ -1,5 +1,5 @@
 /*
- * $Id: MCMServantManager.java,v 1.6 2005/05/01 17:30:10 arseniy Exp $
+ * $Id: MCMServantManager.java,v 1.7 2005/05/04 13:51:19 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/05/01 17:30:10 $
+ * @version $Revision: 1.7 $, $Date: 2005/05/04 13:51:19 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -42,7 +42,7 @@ final class MCMServantManager extends RunnableVerifiedConnectionManager implemen
 		this.eventServerServantName = eventServerServantName;
 		this.mServerServantName = mServerServantName;
 
-		assert timeout >= 10 * 60 * 1000 : "Too low timeout"; //not less then 10 min
+		assert timeout >= 10L * 60L * 1000L : "Too low timeout"; //not less then 10 min
 	}
 
 	public LoginServer getLoginServerReference() throws CommunicationException {
