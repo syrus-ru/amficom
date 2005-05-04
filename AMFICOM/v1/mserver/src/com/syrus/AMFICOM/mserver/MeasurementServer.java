@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServer.java,v 1.40 2005/05/03 19:57:20 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.41 2005/05/04 07:49:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -47,7 +47,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2005/05/03 19:57:20 $
+ * @version $Revision: 1.41 $, $Date: 2005/05/04 07:49:57 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -69,7 +69,7 @@ public class MeasurementServer extends SleepButWorkThread {
 	public static final String SERVER_ID = "Server_1";
 	public static final int TICK_TIME = 5;	//sec
 
-	private static final String PASSWORD = "mserver";
+	private static final String PASSWORD = "MServer";
 
 	/*	Error codes for method processFall()	(abort tests, ...)*/
 	public static final int FALL_CODE_RECEIVE_TESTS = 1;
