@@ -207,7 +207,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 					center.getX(),
 					center.getY()));
 			
-			this.imageCache.centerChanged();			
+//			this.imageCache.centerChanged();			
 		}
 		catch(Exception exc)
 		{
@@ -321,7 +321,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 			getLocalMapJ().setZoom(z);
 			updateZoom();
 			
-			this.imageCache.scaleChanged();			
+//			this.imageCache.scaleChanged();			
 		}
 		catch(Exception exc)
 		{

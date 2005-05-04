@@ -2,7 +2,7 @@ package com.syrus.AMFICOM.Client.Map.Mapinfo;
 
 /**
  * @author $Author: peskovsky $
- * @version $Revision: 1.5 $, $Date: 2005/03/03 17:38:03 $
+ * @version $Revision: 1.5.2.1 $, $Date: 2005/05/04 13:14:09 $
  * @module mapper-servlet
  */
 public class ServletCommandNames
@@ -11,7 +11,9 @@ public class ServletCommandNames
 	public static final String COMMAND_NAME = "command";
 
 	//Values for parameter 	
-	public static final String CN_RENDER_IMAGE = "render";
+	public static final String CN_START_RENDER_IMAGE = "start_render";
+	public static final String CN_CANCEL_RENDERING = "stop_render";
+	public static final String CN_GET_RENDITION = "get_rendition";	
 	public static final String CN_SEARCH_NAME = "search";	
 	
 	//Parameters for rendering image
@@ -27,4 +29,10 @@ public class ServletCommandNames
 	
 	//Parameters for searching name
 	public static final String PAR_NAME_TO_SEARCH = "name";
+	
+	//Errors available
+	public static final String ERROR_INVALID_PARAMETERS = "invalid_params";
+	public static final String ERROR_NO_PARAMETERS = "no_params";
+	public static final String ERROR_MAP_EXCEPTION = "map_exception";
+	public static final String ERROR_NO_MAP_RENDERED = "no_map_available";	
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalImageCache.java,v 1.9.2.4 2005/04/27 15:03:27 peskovsky Exp $
+ * $Id: TopologicalImageCache.java,v 1.9.2.5 2005/05/04 13:14:09 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,9 @@ import java.awt.image.BufferedImage;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -37,7 +39,7 @@ import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 
 /**
  * @author $Author: peskovsky $
- * @version $Revision: 1.9.2.4 $, $Date: 2005/04/27 15:03:27 $
+ * @version $Revision: 1.9.2.5 $, $Date: 2005/05/04 13:14:09 $
  * @module mapinfo_v1
  */
 public class TopologicalImageCache
@@ -111,6 +113,35 @@ public class TopologicalImageCache
 	private Dimension imageSize = null;	
 	
 	private Dimension discreteShifts = null;
+	
+	
+	public void sample()
+	{
+		TopologicalRequest req1 = this.createRequestForExpressArea(
+				1000.d,
+				new DoublePoint(37.5199,55.7446),
+				TopologicalRequest.PRIORITY_BACKGROUND_MIDDLE);
+		
+		TopologicalRequest req2 = this.createRequestForExpressArea(
+				8000.d,
+				new DoublePoint(37.5199,55.7446),
+				TopologicalRequest.PRIORITY_BACKGROUND_LOW);
+		
+		
+		this.loadingThread.addRequest(req1);
+		this.loadingThread.addRequest(req2);		
+		try
+		{
+			Thread.sleep(100);
+		} catch (InterruptedException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+//		this.loadingThread.removeRequest(req1);
+		this.loadingThread.changeRequestPriority(req2,TopologicalRequest.PRIORITY_EXPRESS);
+	}
+	
 	
 	public TopologicalImageCache(MapInfoLogicalNetLayer miLayer)
 	{
@@ -220,46 +251,46 @@ public class TopologicalImageCache
 	
 	public Image getImage()
 	{
-		if (this.visibleImage == null)
-			return null;
-
-		while (this.imagesToPaint.size() > 0)
-		{
-			for (ListIterator it = this.imagesToPaint.listIterator(); it.hasNext();)
-			{
-				TopologicalRequest request = (TopologicalRequest)it.next();
-				if (request.getPriority() != TopologicalRequest.PRIORITY_ALREADY_LOADED)
-					continue;
-
-				System.out.println(this.miLayer.sdFormat.format(new Date(System.currentTimeMillis())) +
-						" TIC - getImage - painting request: " + request);
-
-				this.visibleImage.getGraphics().drawImage(
-						request.getImage().getImage(),
-						0,
-						0,
-						this.miLayer.getMapViewer().getVisualComponent());
-
-				request.setLastUsed(System.currentTimeMillis());
-				
-				System.out.println(this.miLayer.sdFormat.format(new Date(System.currentTimeMillis())) +
-					" TIC - getImage - request image painted");
-				
-				it.remove();
-			}
-			try
-			{
-				Thread.sleep(20);
-			} catch (InterruptedException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
-		System.out.println(this.miLayer.sdFormat.format(new Date(System.currentTimeMillis())) +
-			" TIC - getImage - returning image");
-		
+//		if (this.visibleImage == null)
+//			return null;
+//
+//		while (this.imagesToPaint.size() > 0)
+//		{
+//			for (ListIterator it = this.imagesToPaint.listIterator(); it.hasNext();)
+//			{
+//				TopologicalRequest request = (TopologicalRequest)it.next();
+//				if (request.getPriority() != TopologicalRequest.PRIORITY_ALREADY_LOADED)
+//					continue;
+//
+//				System.out.println(this.miLayer.sdFormat.format(new Date(System.currentTimeMillis())) +
+//						" TIC - getImage - painting request: " + request);
+//
+//				this.visibleImage.getGraphics().drawImage(
+//						request.getImage().getImage(),
+//						0,
+//						0,
+//						this.miLayer.getMapViewer().getVisualComponent());
+//
+//				request.setLastUsed(System.currentTimeMillis());
+//				
+//				System.out.println(this.miLayer.sdFormat.format(new Date(System.currentTimeMillis())) +
+//					" TIC - getImage - request image painted");
+//				
+//				it.remove();
+//			}
+//			try
+//			{
+//				Thread.sleep(20);
+//			} catch (InterruptedException e)
+//			{
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}
+//
+//		System.out.println(this.miLayer.sdFormat.format(new Date(System.currentTimeMillis())) +
+//			" TIC - getImage - returning image");
+		this.sample();
 		return this.visibleImage;
 	}
 
@@ -609,7 +640,20 @@ class LoadingThread extends Thread
 	private List requestQueue =
 		Collections.synchronizedList(new LinkedList());	
 	
+	/**
+	 * Запрос, обрабатываемый в текущий момент
+	 */
+	private TopologicalRequest requestCurrentlyProcessed = null;
+	
+	/**
+	 * Флаг, чтобы остановить поток
+	 */
 	private boolean toBreak = false;
+	
+	/**
+	 * Флаг, чтобы прервать получение изображения с сервера
+	 */
+	private boolean toBreakGettingRendition = false;
 	
 	private byte[] imageBuffer = null;
 	
@@ -636,21 +680,19 @@ class LoadingThread extends Thread
 		while (!this.toBreak)
 		{
 			//Получаем первый в очереди запрос
-			TopologicalRequest request = null;
-
 			Iterator rqIt = this.requestQueue.iterator();
 			if (rqIt.hasNext())
 			{
-				request = (TopologicalRequest)rqIt.next();
+				this.requestCurrentlyProcessed = (TopologicalRequest)rqIt.next();
 				rqIt.remove();
 			}
 			
-			if (request == null)
+			if (this.requestCurrentlyProcessed == null)
 			{
 				//Запросов к серверу нет
 				try
 				{
-					Thread.sleep(50);
+					Thread.sleep(10);
 					continue;
 				} catch (InterruptedException e)
 				{
@@ -659,39 +701,48 @@ class LoadingThread extends Thread
 				}
 			}
 			
-			request.setCurrentlyProcessed(true);
+			System.out.println(this.miLayer.sdFormat.format(new Date(System.currentTimeMillis())) +
+				" TIC - loadingThread - run - loading request: " + this.requestCurrentlyProcessed);
+
+			this.toBreakGettingRendition = false;
+			
+			//Посылаем запрос на рендеринг			
+			this.renderMapImageAtServer(this.requestCurrentlyProcessed);
+
+			ImageIcon imageForRequest = null;
+			while (		(imageForRequest == null)
+							&&(!this.toBreakGettingRendition))
+			{
+				//Ждём получения изображения или сигнала на прерывание
+				try
+				{
+					Thread.sleep(20);
+				} catch (InterruptedException e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				imageForRequest = this.getServerMapImage();
+			}
+			
+			this.requestCurrentlyProcessed.setImage(imageForRequest);
+			this.requestCurrentlyProcessed.setPriority(TopologicalRequest.PRIORITY_ALREADY_LOADED);
 			
 			System.out.println(this.miLayer.sdFormat.format(new Date(System.currentTimeMillis())) +
-				" TIC - loadingThread - run - loading request: " + request);
-			
-			//Формируем строку HTTP запроса
-			String requestString = new String(this.uriString);
-			
-			try
-			{
-				requestString += this.createRenderCommandString(request);
-
-				//Получили изображение
-				ImageIcon imageForRequest = this.getServerMapImage(requestString);
-				request.setImage(imageForRequest);
-				request.setPriority(TopologicalRequest.PRIORITY_ALREADY_LOADED);
-
-				System.out.println(this.miLayer.sdFormat.format(new Date(System.currentTimeMillis())) +
-					" TIC - loadingThread - run - image loaded for request (" + request + ")");
+				" TIC - loadingThread - run - image loaded for request (" + this.requestCurrentlyProcessed + ")");
 				
-			} catch (MapDataException e)
+			synchronized (this.requestCurrentlyProcessed)
 			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				this.requestCurrentlyProcessed = null;
 			}
-
-			request.setCurrentlyProcessed(false);			
 		}
 	}
 	
 	public void cancel()
 	{
 		this.toBreak = true;
+		this.toBreakGettingRendition = true;
 	}
 	
 	/**
@@ -711,20 +762,34 @@ class LoadingThread extends Thread
 				(TopologicalRequest) lIt.next();
 			if (requestToAdd.getPriority() < curRequest.getPriority())
 			{
+				//Добавляем перед этим запросом
 				lIt.previous();
 				lIt.add(requestToAdd);
 				return;
 			}
 		}
 
-		//Не нашли
-		lIt.add(requestToAdd);			
+		//Не нашли - добавляем в конец очереди
+		lIt.add(requestToAdd);
+		
+		//Если приоритет добавляемого запроса выше, чем у запроса, находящегося в обработке
+		synchronized (this.requestCurrentlyProcessed)
+		{
+			if (	(this.requestCurrentlyProcessed != null) 
+					&&(this.requestCurrentlyProcessed.getPriority() > requestToAdd.getPriority()))
+				this.stopRenderingAtServer();
+		}		
 	}
 
 	public void removeRequest(TopologicalRequest request)
 	{
-		if (!request.isCurrentlyProcessed())
-			this.requestQueue.remove(request);			
+		if (this.requestCurrentlyProcessed == request)
+			//Если мы удаляем запрос, который уже в обработке - то его уже нет в очереди.
+			//поэтому просто останавливаем рендеринг.
+			this.stopRenderingAtServer();
+		else
+			//Убираем запрос из очереди
+			this.requestQueue.remove(request);
 	}
 	
 	/**
@@ -738,16 +803,13 @@ class LoadingThread extends Thread
 			" TIC - loadingThread - changeRequestPriority - changing request's (" + request +
 			") priority for " + newPriority);
 
-		if (request.isCurrentlyProcessed())
-			return;
-			
-		//Задаём ему новый приоритет
-		request.setPriority(newPriority);
-		
 		//Удаляем запрос из очереди
 		if (this.requestQueue.remove(request))
 		{
 			//Если запрос содержался в очереди
+			//Задаём ему новый приоритет
+			request.setPriority(newPriority);
+			
 			//Снова ставим запрос в очередь
 			this.addRequest(request);
 		}
@@ -757,15 +819,130 @@ class LoadingThread extends Thread
 	{
 		this.requestQueue.clear();
 	}
+	
+	/**
+	 * Посылает запрос на сервер на остановку рендеринга.
+	 */
+	private void stopRenderingAtServer()
+	{
+		this.toBreakGettingRendition = true;
+		
+		String requestString = new String(
+				this.uriString + "?" + ServletCommandNames.COMMAND_NAME + "="
+				+ ServletCommandNames.CN_CANCEL_RENDERING);
+
+		System.out.println(this.miLayer.sdFormat.format(new Date(System.currentTimeMillis())) +
+				" TIC - loadingthread - stopping rendering at server");
+		
+		try
+		{
+			URI mapServerURI = new URI(requestString);
+			URL mapServerURL = new URL(mapServerURI.toASCIIString());
+			URLConnection connection = mapServerURL.openConnection();
+			
+			if(connection.getInputStream() == null)
+				return;
+			
+			ObjectInputStream ois = new ObjectInputStream(connection.getInputStream());
+
+			System.out.println(this.miLayer.sdFormat.format(new Date(System.currentTimeMillis())) +
+					" TIC - loadingthread - getServerMapImage - got data at ObjectInputStream");
+
+			Object readObject = ois.readObject();
+			System.out.println(readObject);
+			if(readObject instanceof String)
+			{
+				Environment.log(
+						Environment.LOG_LEVEL_FINER,
+						(String )readObject);
+				return;
+			}
+		} catch (MalformedURLException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (URISyntaxException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Посылает запрос на рендеринг изображения на сервере
+	 */
+	private void renderMapImageAtServer(TopologicalRequest request)
+	{
+		System.out.println(this.miLayer.sdFormat.format(new Date(System.currentTimeMillis())) +
+			" TIC - loadingthread - starting rendering at server");
+
+		try
+		{
+			String requestString = this.uriString + this.createRenderCommandString(request);			
+			URI mapServerURI = new URI(requestString);
+			URL mapServerURL = new URL(mapServerURI.toASCIIString());
+			URLConnection connection = mapServerURL.openConnection();
+			
+			if(connection.getInputStream() == null)
+				return;
+			
+			ObjectInputStream ois = new ObjectInputStream(connection.getInputStream());
+
+			System.out.println(this.miLayer.sdFormat.format(new Date(System.currentTimeMillis())) +
+					" TIC - loadingthread - getServerMapImage - got data at ObjectInputStream");
+
+			Object readObject = ois.readObject();
+			System.out.println(readObject);
+			if(readObject instanceof String)
+			{
+				Environment.log(
+						Environment.LOG_LEVEL_FINER,
+						(String )readObject);
+				return;
+			}
+		} catch (MalformedURLException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (URISyntaxException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (MapDataException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	/**
 	 * Подгружает изображение с сервера по HTTP-запросу
-	 * @param requestURIString Строка запроса
 	 * @return Изображение
 	 */
-	private ImageIcon getServerMapImage(String requestURIString)
+	private ImageIcon getServerMapImage()
 	{
 		try
 		{
+			String requestURIString = new String(
+					this.uriString + "?" + ServletCommandNames.COMMAND_NAME + "="
+					+ ServletCommandNames.CN_GET_RENDITION);
+			
 			URI mapServerURI = new URI(requestURIString);
 			URL mapServerURL = new URL(mapServerURI.toASCIIString());
 
@@ -826,9 +1003,10 @@ class LoadingThread extends Thread
 		return null;
 	}
 	
+	
 	/**
 	 * Создаёт по текущему запросу строку параметров для HTTP запроса к серверу
-	 * топографии для получения графических данных
+	 * топографии для рендеринга графических данных
 	 * @param request Запрос
 	 * @return Строка параметров для HTTP запроса к серверу
 	 * топографии 
@@ -839,7 +1017,7 @@ class LoadingThread extends Thread
 		String result = "";
 
 		result += "?" + ServletCommandNames.COMMAND_NAME + "="
-		+ ServletCommandNames.CN_RENDER_IMAGE;
+		+ ServletCommandNames.CN_START_RENDER_IMAGE;
 		
 		Dimension size = this.miLayer.getMapViewer().getVisualComponent().getSize();
 		
@@ -878,7 +1056,7 @@ class LoadingThread extends Thread
 /**
  * Структура запроса изображения с сервера
  * @author $Author: peskovsky $
- * @version $Revision: 1.9.2.4 $, $Date: 2005/04/27 15:03:27 $
+ * @version $Revision: 1.9.2.5 $, $Date: 2005/05/04 13:14:09 $
  * @module mapinfo_v1
  */
 class TopologicalRequest implements Comparable
@@ -1028,15 +1206,4 @@ class TopologicalRequest implements Comparable
 	/**
 	 * @return Returns the isCurrentlyProcessed.
 	 */
-	public synchronized boolean isCurrentlyProcessed()
-	{
-		return isCurrentlyProcessed;
-	}
-	/**
-	 * @param isCurrentlyProcessed The isCurrentlyProcessed to set.
-	 */
-	public void setCurrentlyProcessed(boolean isCurrentlyProcessed)
-	{
-		this.isCurrentlyProcessed = isCurrentlyProcessed;
-	}
 }
