@@ -226,6 +226,7 @@ implements EtalonMTMListener,
 		};
 		
 		this.comparativeTable = new JTable(this.ctModel);
+		this.comparativeTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 //		jTableComp.getColumnModel().getColumn(0).setPreferredWidth(120);
 //		jTableComp.getColumnModel().getColumn(1).setPreferredWidth(100);
 
