@@ -1,5 +1,5 @@
 /*
- * $Id: LoginServerImplementation.java,v 1.8 2005/05/03 19:44:46 arseniy Exp $
+ * $Id: LoginServerImplementation.java,v 1.9 2005/05/04 07:47:46 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/05/03 19:44:46 $
+ * @version $Revision: 1.9 $, $Date: 2005/05/04 07:47:46 $
  * @author $Author: arseniy $
  * @module leserver_v1
  */
@@ -84,27 +84,21 @@ final class LoginServerImplementation extends LoginServerPOA {
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_LOGIN_NOT_FOUND, CompletionStatus.COMPLETED_YES, onfe.getMessage());
 		}
 
-		try {
-			if (Encryptor.crypt(password).equals(localPassword)) {
-				final UserLogin userLogin = UserLogin.createInstance(userId);
-				LoginProcessor.addUserLogin(userLogin);
+		if (Encryptor.crypt(password).equals(localPassword)) {
+			final UserLogin userLogin = UserLogin.createInstance(userId);
+			LoginProcessor.addUserLogin(userLogin);
 
-				try {
-					this.userLoginDatabase.insert(userLogin);
-				}
-				catch (CreateObjectException coe) {
-					Log.errorException(coe);
-				}
-
-				userIdTH.value = (Identifier_Transferable) userId.getTransferable();
-				return (SessionKey_Transferable) userLogin.getSessionKey().getTransferable();
+			try {
+				this.userLoginDatabase.insert(userLogin);
 			}
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_PASSWORD, CompletionStatus.COMPLETED_YES, "Illegal password");
+			catch (CreateObjectException coe) {
+				Log.errorException(coe);
+			}
+
+			userIdTH.value = (Identifier_Transferable) userId.getTransferable();
+			return (SessionKey_Transferable) userLogin.getSessionKey().getTransferable();
 		}
-		catch (Throwable throwable) {
-			Log.errorException(throwable);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_PASSWORD, CompletionStatus.COMPLETED_YES, throwable.getMessage());
-		}
+		throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_PASSWORD, CompletionStatus.COMPLETED_YES, "Illegal password");
 	}
 
 	public void logout(SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
