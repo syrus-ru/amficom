@@ -1,5 +1,5 @@
 /*-
- * $Id: DataStreamable.java,v 1.3 2005/05/01 06:12:58 saa Exp $
+ * $Id: DataStreamable.java,v 1.4 2005/05/04 09:54:01 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import java.io.IOException;
  * public static DataStreamable.Reader getReader() {
  *     if (DS_READER == null)
  *         DS_READER = new DSReader() {
- *             public DataStreamable readFromDIS { ... } // a factory method 
+ *             public DataStreamable readFromDIS() { ... } // a factory method 
  *         };
  *     return DS_READER;
  * }
@@ -33,7 +33,7 @@ import java.io.IOException;
  * This will make use of
  * {@link DataStreamableUtil#readDataStreamableFromBA}.
  * @author $Author: saa $
- * @version $Revision: 1.3 $, $Date: 2005/05/01 06:12:58 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/04 09:54:01 $
  * @module
  */
 public interface DataStreamable
