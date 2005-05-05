@@ -345,5 +345,65 @@ public class ReflectogramMath
 		res[1] = y[begin] - res[0] * begin;
 		return res;
 	}
-}
 
+    public static double getPo(SimpleReflectogramEvent[] se,
+            int i, ModelTrace mt) {
+        if (se[i].getEventType() == SimpleReflectogramEvent.DEADZONE)
+        {
+            for (int j = i + 1; j < se.length; j++) {
+                if (se[j].getEventType() == SimpleReflectogramEvent.LINEAR) {
+                    int x1 = se[j].getBegin() + 1;
+                    int x2 = se[j].getEnd() - 1;
+                    if (x1 >= x2)
+                    {
+                        return mt.getY(x1);
+                    }
+                    else
+                    {
+                        double y1 = mt.getY(x1);
+                        double y2 = mt.getY(x2);
+                        return (x1 * y2 - x2 * y1) / (x1 - x2);
+                    }
+                }
+            }
+        }
+        return mt.getY(se[i].getBegin());
+    }
+    public static int[] getEdzAdz(double po,
+            SimpleReflectogramEvent sre, ModelTrace mt) {
+        int adz = 0;
+        int edz = 0;
+        final int N = sre.getEnd() - sre.getBegin();
+        double[] yarr = mt.getYArrayZeroPad(sre.getBegin(), N);
+        // find max
+        double vmax = po;
+        for (int k = 0; k < N; k++) {
+            if (vmax < yarr[k])
+                vmax = yarr[k];
+        }
+        // find width
+        for (int k = 0; k < N; k++) {
+            if (yarr[k] > vmax - 1.5)
+                edz++;
+            if (yarr[k] > po + .5)
+                adz++;
+        }
+        return new int[] { edz, adz };
+    }
+    public static double getMaxDev(double[] y,
+            SimpleReflectogramEvent se, ModelTrace mt) {
+        ModelTrace yMT = new ArrayModelTrace(y);
+        return ReflectogramComparer.getMaxDeviation(mt, yMT, se);
+    }
+    public static double getRmsDev(double[] y,
+            SimpleReflectogramEvent se, ModelTrace mt) {
+        ModelTrace yMT = new ArrayModelTrace(y);
+        return ReflectogramComparer.getRMSDeviation(mt, yMT, se);
+    }
+    public static double getYMin(SimpleReflectogramEvent ev, ModelTrace mt) {
+        return getArrayMin(mt.getYRE(ev));
+    }
+    public static double getYMax(SimpleReflectogramEvent ev, ModelTrace mt) {
+        return getArrayMax(mt.getYRE(ev));
+    }
+}
