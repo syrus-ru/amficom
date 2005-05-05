@@ -10,7 +10,6 @@ import com.syrus.AMFICOM.analysis.dadara.DataFormatException;
 import com.syrus.AMFICOM.analysis.dadara.DataStreamableUtil;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
-import com.syrus.AMFICOM.analysis.dadara.TraceEvent;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
