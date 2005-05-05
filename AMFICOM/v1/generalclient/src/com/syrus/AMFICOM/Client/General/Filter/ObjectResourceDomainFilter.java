@@ -1,12 +1,10 @@
 package com.syrus.AMFICOM.Client.General.Filter;
 
-import com.syrus.AMFICOM.Client.General.Filter.FilterPanel;
+import java.util.ArrayList;
+import java.util.List;
 
-import java.util.*;
-import com.syrus.AMFICOM.Client.General.Filter.FilterExpression;
+import com.syrus.AMFICOM.corba.portable.reflect.common.ObjectResource;
 import com.syrus.AMFICOM.filter.FilterExpressionInterface;
-import com.syrus.AMFICOM.Client.General.Filter.ObjectResourceFilter;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 
 
 public class ObjectResourceDomainFilter extends ObjectResourceFilter

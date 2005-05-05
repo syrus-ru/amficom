@@ -9,14 +9,13 @@ import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.table.TableCellRenderer;
 
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 /**
  * Abstract class for JComboBox rendering at JTable
  * 
- * @version $Revision: 1.5 $, $Date: 2005/04/13 21:40:46 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/05/05 11:04:48 $
+ * @author $Author: bob $
  * @module generalclient_v1
  */
 public abstract class AbstractComboBoxCellRenderer extends JComboBox implements TableCellRenderer {

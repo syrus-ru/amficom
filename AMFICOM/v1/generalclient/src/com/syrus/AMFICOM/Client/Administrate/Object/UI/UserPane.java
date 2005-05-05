@@ -1,5 +1,5 @@
 /*
- * $Id: UserPane.java,v 1.4 2004/09/27 12:54:41 bass Exp $
+ * $Id: UserPane.java,v 1.5 2005/05/05 11:04:46 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,18 +8,26 @@
 
 package com.syrus.AMFICOM.Client.Administrate.Object.UI;
 
-import com.syrus.AMFICOM.Client.General.Checker;
-import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Object.User;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+
 import javax.swing.JPanel;
 
+import com.syrus.AMFICOM.Client.General.Checker;
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
+import com.syrus.AMFICOM.Client.General.Event.OperationListener;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceCatalogFrame;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
+import com.syrus.AMFICOM.Client.General.UI.RejectDialog;
+import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.administration.User;
+import com.syrus.AMFICOM.corba.portable.reflect.common.ObjectResource;
+
 /**
- * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2004/09/27 12:54:41 $
+ * @author $Author: bob $
+ * @version $Revision: 1.5 $, $Date: 2005/05/05 11:04:46 $
  * @module generalclient_v1
  */
 public final class UserPane extends JPanel implements ObjectResourcePropertiesPane, OperationListener {

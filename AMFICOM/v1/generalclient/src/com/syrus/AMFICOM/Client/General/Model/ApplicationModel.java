@@ -1,5 +1,5 @@
 /*
- * $Id: ApplicationModel.java,v 1.8 2005/03/16 13:40:57 bass Exp $
+ * $Id: ApplicationModel.java,v 1.9 2005/05/05 11:04:47 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,25 +8,22 @@
 
 package com.syrus.AMFICOM.Client.General.Model;
 
-import com.syrus.AMFICOM.Client.General.Command.*;
-import com.syrus.AMFICOM.Client.General.SessionInterface;
-import com.syrus.AMFICOM.Client.Resource.*;
-import java.util.*;
+import java.util.Enumeration;
+import java.util.Hashtable;
+
+import com.syrus.AMFICOM.Client.General.Command.Command;
+import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 
 /**
  * Модель приложения описывает действия, которые пользователь (оператор) 
  * может производить с системой
  * 
- * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/03/16 13:40:57 $
+ * @author $Author: bob $
+ * @version $Revision: 1.9 $, $Date: 2005/05/05 11:04:47 $
  * @module generalclient_v1
  */
 public class ApplicationModel
 {
-	protected SessionInterface session = null;
-
-	protected DataSourceInterface dataSource = null;
-
 	/**
 	 * список элементов модели
 	 */
@@ -374,28 +371,14 @@ public class ApplicationModel
 				((ApplicationModelListener )listeners[i]).modelChanged(e);
 	}
 
-	public DataSourceInterface getDataSource(final SessionInterface session)
-	{
-		if ((this.session == null) || (!this.session.equals(session)))
-			synchronized (this)
-			{
-				if ((this.session == null) || (!this.session.equals(session)))
-				{
-					this.session = session;
-					this.dataSource = new RISDDataSource(this.session);
-				}
-			}
-		return this.dataSource;
-	}
-
 	/**
 	 * запись об элементе модели включает имя элемента, связанную с ним команду 
 	 * и флаги видимости и доступности команды пользователю.
 	 * конструктора без параметров нет, так как элемент определяется 
 	 * идентификатором
 	 * 
-	 * @author $Author: bass $
-	 * @version $Revision: 1.8 $, $Date: 2005/03/16 13:40:57 $
+	 * @author $Author: bob $
+	 * @version $Revision: 1.9 $, $Date: 2005/05/05 11:04:47 $
 	 * @module generalclient_v1
 	 */
 	class ApplicationEntry

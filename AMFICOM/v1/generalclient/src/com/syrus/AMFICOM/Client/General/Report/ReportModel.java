@@ -1,9 +1,8 @@
 package com.syrus.AMFICOM.Client.General.Report;
 
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-
 import javax.swing.JComponent;
+
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 
 /**
  * <p>Title: </p>

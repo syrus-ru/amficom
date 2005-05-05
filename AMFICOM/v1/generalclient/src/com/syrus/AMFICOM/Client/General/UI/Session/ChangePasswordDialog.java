@@ -1,5 +1,5 @@
 /*
- * $Id: ChangePasswordDialog.java,v 1.6 2004/09/25 19:34:28 bass Exp $
+ * $Id: ChangePasswordDialog.java,v 1.7 2005/05/05 11:04:47 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,12 +8,23 @@
 
 package com.syrus.AMFICOM.Client.General.UI.Session;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+
+import oracle.jdeveloper.layout.XYConstraints;
+import oracle.jdeveloper.layout.XYLayout;
+
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.SessionInterface;
-import java.awt.event.*;
-import javax.swing.*;
-import oracle.jdeveloper.layout.*;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
 
 /**
  * Диалоговое окно изменения пароля активного пользователя. Модуль вызывается
@@ -22,8 +33,8 @@ import oracle.jdeveloper.layout.*;
  * &quot;Изменить&quot; проверяется соответствие введенного логина и старого
  * пароля открытой сессии и равенство введённого и повторённого нового пароля.
  *
- * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2004/09/25 19:34:28 $
+ * @author $Author: bob $
+ * @version $Revision: 1.7 $, $Date: 2005/05/05 11:04:47 $
  * @module generalclient_v1
  */
 public final class ChangePasswordDialog extends JDialog

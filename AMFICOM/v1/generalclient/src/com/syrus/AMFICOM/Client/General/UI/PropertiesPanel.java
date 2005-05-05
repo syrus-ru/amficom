@@ -1,5 +1,5 @@
 /*
- * $Id: PropertiesPanel.java,v 1.6 2004/09/25 19:53:39 bass Exp $
+ * $Id: PropertiesPanel.java,v 1.7 2005/05/05 11:04:47 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,14 +8,15 @@
 
 package com.syrus.AMFICOM.Client.General.UI;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import javax.swing.JPanel;
 
+import com.syrus.AMFICOM.Client.General.Lang.LangModel;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.corba.portable.reflect.common.ObjectResource;
+
 /**
- * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2004/09/25 19:53:39 $
+ * @author $Author: bob $
+ * @version $Revision: 1.7 $, $Date: 2005/05/05 11:04:47 $
  * @module generalclient_v1
  * @deprecated Extend {@link JPanel} and implement
  *             {@link ObjectResourcePropertiesPane} instead.

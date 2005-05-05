@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourcePropertyFrame.java,v 1.5 2004/09/27 05:56:57 bass Exp $
+ * $Id: ObjectResourcePropertyFrame.java,v 1.6 2005/05/05 11:04:47 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,16 +8,24 @@
 
 package com.syrus.AMFICOM.Client.General.UI;
 
-import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Toolkit;
 import java.util.List;
-import javax.swing.*;
+
+import javax.swing.ImageIcon;
+import javax.swing.JInternalFrame;
+
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
+import com.syrus.AMFICOM.Client.General.Event.OperationListener;
+import com.syrus.AMFICOM.Client.General.Event.TreeDataSelectionEvent;
+import com.syrus.AMFICOM.Client.General.Event.TreeListSelectionEvent;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.corba.portable.reflect.common.ObjectResource;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2004/09/27 05:56:57 $
+ * @author $Author: bob $
+ * @version $Revision: 1.6 $, $Date: 2005/05/05 11:04:47 $
  * @module generalclient_v1
  */
 public class ObjectResourcePropertyFrame extends JInternalFrame

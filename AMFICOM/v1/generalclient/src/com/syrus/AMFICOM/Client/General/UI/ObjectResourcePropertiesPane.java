@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourcePropertiesPane.java,v 1.2 2004/09/21 13:53:17 bass Exp $
+ * $Id: ObjectResourcePropertiesPane.java,v 1.3 2005/05/05 11:04:47 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.Client.General.UI;
 
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
+import com.syrus.AMFICOM.corba.portable.reflect.common.ObjectResource;
 
 /**
  * If a class <code style = "background-color: #fff7e9;">T</code> realizes
@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.Client.Resource.ObjectResource;
  * <code style = "background-color: #fff7e9;"><b>protected</b></code> if the class is not
  * <code style = "background-color: #fff7e9;"><b>final</b></code>).</li></ul>
  *
- * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2004/09/21 13:53:17 $
+ * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2005/05/05 11:04:47 $
  * @module generalclient_v1
  */
 public interface ObjectResourcePropertiesPane

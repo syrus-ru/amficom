@@ -1,5 +1,5 @@
 /*
- * $Id: OperatorProfilePasswordPanel.java,v 1.3 2004/08/17 15:02:50 krupenn Exp $
+ * $Id: OperatorProfilePasswordPanel.java,v 1.4 2005/05/05 11:04:46 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,21 +8,31 @@
 
 package com.syrus.AMFICOM.Client.Administrate.Object.UI;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.UI.GeneralPanel;
-import com.syrus.AMFICOM.Client.Resource.Object.OperatorProfile;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
+import com.syrus.AMFICOM.corba.portable.reflect.common.ObjectResource;
 
 /**
  * This class actually belongs to <tt>admin_v1</tt> module. It was
  * moved to <tt>generalclient_v1</tt> to resolve cross-module
  * dependencies between <tt>generalclient_v1</tt> and <tt>admin_1</tt>.
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.3 $, $Date: 2004/08/17 15:02:50 $
+ * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2005/05/05 11:04:46 $
  * @module generalclient_v1
  */
 final class OperatorProfilePasswordPanel extends GeneralPanel

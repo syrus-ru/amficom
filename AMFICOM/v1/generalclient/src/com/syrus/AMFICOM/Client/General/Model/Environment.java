@@ -1,5 +1,5 @@
 /*
- * $Id: Environment.java,v 1.24 2005/04/08 07:58:06 bob Exp $
+ * $Id: Environment.java,v 1.25 2005/05/05 11:04:47 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,26 +38,26 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 import javax.swing.plaf.metal.MetalTheme;
 
-import com.incors.plaf.kunststoff.KunststoffLookAndFeel;
 import com.sun.java.swing.plaf.gtk.GTKLookAndFeel;
 import com.sun.java.swing.plaf.motif.MotifLookAndFeel;
 import com.sun.java.swing.plaf.windows.WindowsLookAndFeel;
-import com.syrus.AMFICOM.Client.General.ConnectionInterface;
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
-import com.syrus.AMFICOM.Client.General.SessionInterface;
+
+import com.incors.plaf.kunststoff.KunststoffLookAndFeel;
+
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.UI.AMFICOMMetalTheme;
 import com.syrus.AMFICOM.Client.General.UI.ModuleCodeDialog;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.io.IniFile;
 
 /**
  * Класс Environment используется для хранения общей для приложения информации.
  * 
  * @author $Author: bob $
- * @version $Revision: 1.24 $, $Date: 2005/04/08 07:58:06 $
+ * @version $Revision: 1.25 $, $Date: 2005/05/05 11:04:47 $
  * @module generalclient_v1
  */
 public final class Environment
@@ -132,7 +132,7 @@ public final class Environment
 	/** Domain */
 	private static final String FIELD_DOMAIN = "domain";
 
-	private static String domainId = "";
+	private static Identifier domainId;
 
 	/** Debug mode */
 	private static final String FIELD_DEBUG = "gubed";
@@ -212,11 +212,13 @@ public final class Environment
 				e1.printStackTrace();
 			}
 			
-			domainId = iniFile.getValue(FIELD_DOMAIN);
-			if(domainId == null || domainId.length() == 0)
-			{
-				domainId = "";
+			
+			try {
+				domainId = new Identifier(iniFile.getValue(FIELD_DOMAIN));
+			}catch(Exception e) {
+				domainId = Identifier.VOID_IDENTIFIER;
 			}
+			
 
 			String d_val = iniFile.getValue(FIELD_DEBUG);
 			debugMode = (d_val != null);
@@ -274,6 +276,13 @@ public final class Environment
 		UIManager.put(ResourceKeys.ICON_MINI_RESULT, new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/result.gif")
 										.getScaledInstance(15, 15, Image.SCALE_SMOOTH)));
 		
+		UIManager.put(ResourceKeys.IMAGE_LOGIN_LOGO, new UIDefaults.LazyValue() {
+
+			public Object createValue(UIDefaults table) {
+				return new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/main/logo2.jpg"));
+			}
+		});
+		
 		UIManager.put(ResourceKeys.INSETS_NULL, new UIDefaults.LazyValue() {
 
 			public Object createValue(UIDefaults table) {
@@ -322,7 +331,7 @@ public final class Environment
 		defaults.put(ResourceKeys.COLOR_GRAPHICS_BACKGROUND, Color.WHITE);
 	}
 
-	public static String getDomainId()
+	public static Identifier getDomainId()
 	{
 		return domainId;
 	}
@@ -554,30 +563,6 @@ public final class Environment
 		return connection;
 	}
 
-	/**
-	 * @deprecated Use {@link ConnectionInterface#getInstance()} instead.
-	 */
-	static public ConnectionInterface getDefaultConnectionInterface()
-	{
-		return ConnectionInterface.getInstance();
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public static SessionInterface getDefaultSessionInterface(ConnectionInterface connection)
-	{
-		return new RISDSessionInfo(connection);
-	}
-
-	/**
-	 * @deprecated Use {@link ApplicationModel#getDataSource(SessionInterface)} instead.
-	 */
-	public static DataSourceInterface getDefaultDataSourceInterface(final SessionInterface session)
-	{
-		return ApplicationModel.getInstance().getDataSource(session);
-	}
-
 	public static void addWindow(Window window)
 	{
 		System.out.println("new window " + window.getName());
@@ -592,15 +577,7 @@ public final class Environment
 		if(windows.isEmpty())
 		{
 			System.out.println("exit process");
-			saveProperties();
-			try
-			{
-				SessionInterface.getActiveSession().closeSession();
-			}
-			catch (Exception ex)
-			{
-				// no session to close
-			}
+			saveProperties();			
 			System.exit(0);
 		}
 	}
@@ -609,7 +586,7 @@ public final class Environment
 	{
 		try 
 		{
-			domainId = SessionInterface.getActiveSession().getDomainId();
+			domainId = LoginManager.getDomainId();
 			if (domainId != null)
 				iniFile.setValue(FIELD_DOMAIN, domainId);
 			iniFile.saveKeys();

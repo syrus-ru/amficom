@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourceSelectionDialog.java,v 1.3 2004/10/06 08:20:30 krupenn Exp $
+ * $Id: ObjectResourceSelectionDialog.java,v 1.4 2005/05/05 11:04:47 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,18 +8,27 @@
 
 package com.syrus.AMFICOM.Client.General.UI;
 
+import java.awt.Dimension;
+import java.awt.Frame;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Collection;
+
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import java.awt.*;
-import java.awt.event.*;
-import java.util.Collection;
-import javax.swing.*;
+import com.syrus.AMFICOM.corba.portable.reflect.common.ObjectResource;
 
 /**
- * @author $Author: krupenn $
- * @version $Revision: 1.3 $, $Date: 2004/10/06 08:20:30 $
+ * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2005/05/05 11:04:47 $
  * @module generalclient_v1
  */
 public class ObjectResourceSelectionDialog extends JDialog

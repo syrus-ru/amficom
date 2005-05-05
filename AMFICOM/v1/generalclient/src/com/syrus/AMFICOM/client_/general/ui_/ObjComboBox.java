@@ -1,5 +1,5 @@
 /*
- * $Id: ObjComboBox.java,v 1.8 2005/04/13 21:40:46 arseniy Exp $
+ * $Id: ObjComboBox.java,v 1.9 2005/05/05 11:04:48 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,16 +8,16 @@
 
 package com.syrus.AMFICOM.client_.general.ui_;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Collection;
 
 import com.syrus.AMFICOM.Client.General.UI.AComboBox;
-import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
+import com.syrus.util.Wrapper;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.8 $, $Date: 2005/04/13 21:40:46 $
+ * @author $Author: bob $
+ * @version $Revision: 1.9 $, $Date: 2005/05/05 11:04:48 $
  * @module generalclient_v1
  */
 public class ObjComboBox extends AComboBox {
@@ -27,18 +27,18 @@ public class ObjComboBox extends AComboBox {
 	private ObjListModel	model;
 
 	public ObjComboBox(ObjListModel model) {
-		LabelCheckBoxRenderer renderer = new LabelCheckBoxRenderer(model.controller, model.key);
+		LabelCheckBoxRenderer renderer = new LabelCheckBoxRenderer(model.wrapper, model.key);
 		this.setRenderer(renderer);
 		this.model = model;
 		this.setModel(model);
 	}
 
-	public ObjComboBox(ObjectResourceController controller, List objects, String key) {
-		this(new ObjListModel(controller, objects, key));
+	public ObjComboBox(Wrapper wrapper, List objects, String key) {
+		this(new ObjListModel(wrapper, objects, key));
 	}
 
-	public ObjComboBox(ObjectResourceController controller, String key) {
-		this(new ObjListModel(controller, new LinkedList(), key));
+	public ObjComboBox(Wrapper wrapper, String key) {
+		this(new ObjListModel(wrapper, new LinkedList(), key));
 	}	
 
 	public void removeAll() {

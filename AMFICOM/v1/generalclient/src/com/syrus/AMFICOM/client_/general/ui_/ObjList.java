@@ -1,5 +1,5 @@
 /*
- * $Id: ObjList.java,v 1.7 2005/01/14 11:04:09 bob Exp $
+ * $Id: ObjList.java,v 1.8 2005/05/05 11:04:48 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.7 $, $Date: 2005/01/14 11:04:09 $
+ * @version $Revision: 1.8 $, $Date: 2005/05/05 11:04:48 $
  * @module generalclient_v1
  */
 public class ObjList extends JList {
@@ -28,7 +28,7 @@ public class ObjList extends JList {
 	private ObjListModel	model;
 
 	public ObjList(ObjListModel model) {
-		LabelCheckBoxRenderer renderer = new LabelCheckBoxRenderer(model.controller, model.key);
+		LabelCheckBoxRenderer renderer = new LabelCheckBoxRenderer(model.wrapper, model.key);
 		this.setCellRenderer(renderer);
 		this.model = model;
 		this.setModel(model);		

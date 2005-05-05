@@ -93,7 +93,8 @@ public class CalendarUI extends JPanel
 			}
 		};
 		dialog.setModal(modal);
-		dialog.setSize(new Dimension(190, 190));
+//		dialog.setSize(new Dimension(190, 190));
+		dialog.pack();
 		dialog.setTitle(LangModel.getString("CalendarTitle"));
 		dialog.setContentPane(instance);
 		instance.setHideOnChoose(hideOnChoose);

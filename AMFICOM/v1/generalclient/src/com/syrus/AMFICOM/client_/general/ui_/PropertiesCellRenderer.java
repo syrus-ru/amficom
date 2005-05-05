@@ -1,11 +1,11 @@
 package com.syrus.AMFICOM.client_.general.ui_;
 
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-
 import java.awt.Component;
 
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
+
+import com.syrus.AMFICOM.corba.portable.reflect.common.ObjectResource;
 
 public class PropertiesCellRenderer extends DefaultTableCellRenderer 
 {

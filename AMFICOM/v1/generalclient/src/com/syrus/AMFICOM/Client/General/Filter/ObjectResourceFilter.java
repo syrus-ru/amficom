@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourceFilter.java,v 1.14 2004/09/27 10:40:41 bass Exp $
+ * $Id: ObjectResourceFilter.java,v 1.15 2005/05/05 11:04:47 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,13 +8,20 @@
 
 package com.syrus.AMFICOM.Client.General.Filter;
 
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.filter.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import com.syrus.AMFICOM.corba.portable.reflect.common.ObjectResource;
+import com.syrus.AMFICOM.filter.Filter;
+import com.syrus.AMFICOM.filter.FilterExpressionInterface;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2004/09/27 10:40:41 $
+ * @author $Author: bob $
+ * @version $Revision: 1.15 $, $Date: 2005/05/05 11:04:47 $
  * @module generalclient_v1
  */
 public abstract class ObjectResourceFilter implements Filter

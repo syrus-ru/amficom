@@ -1,5 +1,5 @@
 /*
- * $Id: SessionInfoDialog.java,v 1.6 2004/09/25 19:42:21 bass Exp $
+ * $Id: SessionInfoDialog.java,v 1.7 2005/05/05 11:04:47 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,21 +8,30 @@
 
 package com.syrus.AMFICOM.Client.General.UI.Session;
 
-import com.syrus.AMFICOM.Client.General.*;
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Object.Domain;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import javax.swing.*;
-import oracle.jdeveloper.layout.*;
+
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JSeparator;
+import javax.swing.SwingConstants;
+
+import oracle.jdeveloper.layout.XYConstraints;
+import oracle.jdeveloper.layout.XYLayout;
+
+import com.syrus.AMFICOM.Client.General.Lang.LangModel;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.administration.Domain;
+import com.syrus.AMFICOM.corba.portable.reflect.common.ObjectResource;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2004/09/25 19:42:21 $
+ * @author $Author: bob $
+ * @version $Revision: 1.7 $, $Date: 2005/05/05 11:04:47 $
  * @module generalclient_v1
  */
 public class SessionInfoDialog extends JDialog

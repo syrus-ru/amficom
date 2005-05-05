@@ -1,5 +1,5 @@
 /**
- * $Id: VoidCommand.java,v 1.11 2005/04/04 16:05:43 bass Exp $
+ * $Id: VoidCommand.java,v 1.12 2005/05/05 11:04:46 bob Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,9 +18,9 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
  * 
  * 
  * 
- * @version $Revision: 1.11 $, $Date: 2005/04/04 16:05:43 $
+ * @version $Revision: 1.12 $, $Date: 2005/05/05 11:04:46 $
  * @module
- * @author $Author: bass $
+ * @author $Author: bob $
  * @see
  */
 public class VoidCommand implements Command, Cloneable
@@ -52,7 +52,7 @@ public class VoidCommand implements Command, Cloneable
 	/** получить */
 	public Object clone()
 	{
-		return new VoidCommand(source);
+		return new VoidCommand(source);		
 	}
 
 	public VoidCommand(Object source)

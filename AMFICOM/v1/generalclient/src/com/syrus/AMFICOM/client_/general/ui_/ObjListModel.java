@@ -11,41 +11,41 @@ import java.util.Map;
 import javax.swing.AbstractListModel;
 import javax.swing.MutableComboBoxModel;
 
-import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/04/13 21:40:46 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.10 $, $Date: 2005/05/05 11:04:48 $
+ * @author $Author: bob $
  * @module generalclient_v1
  */
 public class ObjListModel extends AbstractListModel implements MutableComboBoxModel, Serializable {
 
-	private static final long			serialVersionUID	= -1607982236171940302L;
+	private static final long	serialVersionUID	= -1607982236171940302L;
 
-	private Object						selectedObject;
+	private Object				selectedObject;
 
-	private List						objects;
-
-	/**
-	 * ObjectResourceController of Model (ObjectResource) will be used for
-	 * sorting. see {@link ObjectResourceController}
-	 */
-	protected ObjectResourceController	controller;
-
-	protected String						key;
+	private List				objects;
 
 	/**
-	 * @param controller
-	 *            see {@link #controller}
+	 * Wrapper of Model (ObjectResource) will be used for sorting. see
+	 * {@link Wrapper}
 	 */
-	public ObjListModel(ObjectResourceController controller, String key) {
-		this(controller, new LinkedList(), key);
+	protected Wrapper			wrapper;
+
+	protected String			key;
+
+	/**
+	 * @param wrapper
+	 *            see {@link #wrapper}
+	 */
+	public ObjListModel(Wrapper wrapper, String key) {
+		this(wrapper, new LinkedList(), key);
 
 	}
 
-	public ObjListModel(ObjectResourceController controller, List objects, String key) {
-		this.controller = controller;
+	public ObjListModel(Wrapper wrapper, List objects, String key) {
+		this.wrapper = wrapper;
 		this.key = key;
 		this.objects = objects;
 	}
@@ -54,7 +54,7 @@ public class ObjListModel extends AbstractListModel implements MutableComboBoxMo
 	/**
 	 * Set the value of the selected item. The selected item may be null.
 	 * <p>
-	 *
+	 * 
 	 * @param anObject
 	 *            The combo box value or null for no selection.
 	 */
@@ -87,10 +87,10 @@ public class ObjListModel extends AbstractListModel implements MutableComboBoxMo
 
 	public Object getFieldByObject(Object object) {
 
-		Object obj = this.controller.getValue(object, this.key);
+		Object obj = this.wrapper.getValue(object, this.key);
 
-		if (this.controller.getPropertyValue(this.key) instanceof Map) {
-			Map map = (Map) this.controller.getPropertyValue(this.key);
+		if (this.wrapper.getPropertyValue(this.key) instanceof Map) {
+			Map map = (Map) this.wrapper.getPropertyValue(this.key);
 			Object keyObject = null;
 			for (Iterator it = map.keySet().iterator(); it.hasNext();) {
 				Object keyObj = it.next();
@@ -122,7 +122,7 @@ public class ObjListModel extends AbstractListModel implements MutableComboBoxMo
 
 	/**
 	 * Returns the index-position of the specified object in the list.
-	 *
+	 * 
 	 * @param anObject
 	 * @return an int representing the index position, where 0 is the first
 	 *         position
@@ -152,14 +152,15 @@ public class ObjListModel extends AbstractListModel implements MutableComboBoxMo
 	}
 
 	public void addElements(Collection objects) {
-		if(objects.size() == 0)
+		if (objects.size() == 0)
 			return;
 		this.objects.addAll(objects);
 		fireIntervalAdded(this, this.objects.size() - objects.size(), this.objects.size() - 1);
 	}
 
 	// implements javax.swing.MutableComboBoxModel
-	public void insertElementAt(Object anObject, int index) {
+	public void insertElementAt(Object anObject,
+								int index) {
 		this.objects.add(index, anObject);
 		fireIntervalAdded(this, index, index);
 	}

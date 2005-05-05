@@ -1,14 +1,10 @@
 package com.syrus.AMFICOM.Client.General.Report;
 
 import java.util.List;
-import javax.swing.table.TableColumn;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 
-import com.syrus.AMFICOM.Client.General.Report.ReportData;
-import com.syrus.AMFICOM.Client.General.Report.DividableTableColumnModel;
-import com.syrus.AMFICOM.Client.General.Report.DividableTableModel;
-import com.syrus.AMFICOM.Client.General.Report.ObjectsReport;
-import com.syrus.AMFICOM.Client.General.Report.CreateReportException;
+import javax.swing.table.TableColumn;
+
+import com.syrus.AMFICOM.corba.portable.reflect.common.ObjectResource;
 
 /**
  * <p>Title: </p>

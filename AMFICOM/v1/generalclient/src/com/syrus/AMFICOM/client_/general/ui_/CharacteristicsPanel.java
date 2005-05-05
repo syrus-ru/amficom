@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicsPanel.java,v 1.3 2005/05/03 13:33:27 stas Exp $
+ * $Id: CharacteristicsPanel.java,v 1.4 2005/05/05 11:04:48 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,29 +8,63 @@
 
 package com.syrus.AMFICOM.client_.general.ui_;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.SystemColor;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTree;
+import javax.swing.ListSelectionModel;
 import javax.swing.border.EtchedBorder;
-import javax.swing.event.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 
-import oracle.jdeveloper.layout.*;
+import oracle.jdeveloper.layout.XYConstraints;
+import oracle.jdeveloper.layout.XYLayout;
 
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
-import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.UI.FixedSizeEditableTableModel;
-import com.syrus.AMFICOM.client_.general.ui_.tree_.*;
-import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.general.corba.*;
+import com.syrus.AMFICOM.client_.general.ui_.tree_.IconedNode;
+import com.syrus.AMFICOM.client_.general.ui_.tree_.IconedTreeUI;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.CharacteristicType;
+import com.syrus.AMFICOM.general.Characterizable;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.corba.CharacteristicSort;
+import com.syrus.AMFICOM.general.corba.CharacteristicTypeSort;
 import com.syrus.AMFICOM.logic.Item;
-import com.syrus.AMFICOM.resource.*;
+import com.syrus.AMFICOM.resource.Constants;
+import com.syrus.AMFICOM.resource.LangModelGeneral;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/05/03 13:33:27 $
+ * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2005/05/05 11:04:48 $
  * @module generalclient_v1
  */
 

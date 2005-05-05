@@ -1,5 +1,5 @@
 /*
- * $Id: StubDisplayModel.java,v 1.4 2004/09/25 19:51:45 bass Exp $
+ * $Id: StubDisplayModel.java,v 1.5 2005/05/05 11:04:47 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,14 +8,16 @@
 
 package com.syrus.AMFICOM.Client.General.UI;
 
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import java.awt.Color;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Vector;
+
+import com.syrus.AMFICOM.corba.portable.reflect.common.ObjectResource;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2004/09/25 19:51:45 $
+ * @author $Author: bob $
+ * @version $Revision: 1.5 $, $Date: 2005/05/05 11:04:47 $
  * @module generalclient_v1
  */
 public class StubDisplayModel implements ObjectResourceDisplayModel

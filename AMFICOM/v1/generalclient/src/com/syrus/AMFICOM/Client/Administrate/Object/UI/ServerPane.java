@@ -1,5 +1,5 @@
 /*
- * $Id: ServerPane.java,v 1.3 2004/09/27 12:57:48 bass Exp $
+ * $Id: ServerPane.java,v 1.4 2005/05/05 11:04:46 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,8 +12,6 @@ import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Object.User;
-import com.syrus.AMFICOM.Client.Resource.System.Server;
 import java.awt.*;
 import java.util.Date;
 import javax.swing.*;
@@ -23,8 +21,8 @@ import javax.swing.*;
  * moved to <tt>generalclient_v1</tt> to resolve cross-module
  * dependencies between <tt>generalclient_v1</tt> and <tt>admin_1</tt>.
  *
- * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2004/09/27 12:57:48 $
+ * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2005/05/05 11:04:46 $
  * @module generalclient_v1
  */
 public final class ServerPane extends JPanel implements ObjectResourcePropertiesPane {

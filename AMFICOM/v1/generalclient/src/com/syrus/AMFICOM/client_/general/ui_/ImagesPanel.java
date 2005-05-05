@@ -1,5 +1,5 @@
 /*
- * $Id: ImagesPanel.java,v 1.5 2005/02/15 10:40:27 bob Exp $
+ * $Id: ImagesPanel.java,v 1.6 2005/05/05 11:04:48 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.BevelBorder;
 
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
@@ -48,7 +47,7 @@ import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageR
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.5 $, $Date: 2005/02/15 10:40:27 $
+ * @version $Revision: 1.6 $, $Date: 2005/05/05 11:04:48 $
  * @module generalclient_v1
  */
 public class ImagesPanel extends JPanel

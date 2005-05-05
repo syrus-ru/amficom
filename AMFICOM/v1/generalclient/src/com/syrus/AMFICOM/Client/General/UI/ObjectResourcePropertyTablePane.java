@@ -35,12 +35,17 @@
 
 package com.syrus.AMFICOM.Client.General.UI;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.SystemColor;
 import java.util.Vector;
-import javax.swing.*;
+
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionListener;
+
+import com.syrus.AMFICOM.Client.General.Lang.LangModel;
+import com.syrus.AMFICOM.corba.portable.reflect.common.ObjectResource;
 
 public class ObjectResourcePropertyTablePane extends JScrollPane
 {

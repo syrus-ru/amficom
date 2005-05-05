@@ -1,5 +1,5 @@
 /*
- * $Id: CommandPermissionAttributesPanel.java,v 1.6 2004/09/27 13:17:07 bass Exp $
+ * $Id: CommandPermissionAttributesPanel.java,v 1.7 2005/05/05 11:04:46 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,20 +8,31 @@
 
 package com.syrus.AMFICOM.Client.Administrate.Object.UI;
 
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.UI.GeneralPanel;
-import com.syrus.AMFICOM.Client.Resource.Object.*;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import javax.swing.*;
+
+import javax.swing.BorderFactory;
+import javax.swing.JEditorPane;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.border.TitledBorder;
+
 import oracle.jdeveloper.layout.VerticalFlowLayout;
 
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.General.UI.GeneralPanel;
+import com.syrus.AMFICOM.administration.User;
+import com.syrus.AMFICOM.corba.portable.reflect.common.ObjectResource;
+
 /**
- * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2004/09/27 13:17:07 $
+ * @author $Author: bob $
+ * @version $Revision: 1.7 $, $Date: 2005/05/05 11:04:46 $
  * @module generalclient_v1
  */
 public class CommandPermissionAttributesPanel extends GeneralPanel//ObjectResourcePropertiesPane

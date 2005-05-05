@@ -1,5 +1,5 @@
 /*
- * $Id: CheckConnectionCommand.java,v 1.4 2004/09/27 12:10:09 bass Exp $
+ * $Id: CheckConnectionCommand.java,v 1.5 2005/05/05 11:04:46 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,13 +9,14 @@
 package com.syrus.AMFICOM.Client.General.Command.Session;
 
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.ConnectionInterface;
-import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Event.ContextChangeEvent;
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.StatusMessageEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2004/09/27 12:10:09 $
+ * @author $Author: bob $
+ * @version $Revision: 1.5 $, $Date: 2005/05/05 11:04:46 $
  * @module generalclient_v1
  */
 public class CheckConnectionCommand extends VoidCommand

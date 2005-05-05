@@ -1,5 +1,5 @@
 /*
- * $Id: OperatorGroupPane.java,v 1.4 2004/09/27 13:03:49 bass Exp $
+ * $Id: OperatorGroupPane.java,v 1.5 2005/05/05 11:04:46 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,24 +8,30 @@
 
 package com.syrus.AMFICOM.Client.Administrate.Object.UI;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+
 import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.Object.*;
-import java.awt.*;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import javax.swing.*;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceCatalogFrame;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
+import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.administration.User;
+import com.syrus.AMFICOM.corba.portable.reflect.common.ObjectResource;
 
 /**
  * This class actually belongs to <tt>admin_v1</tt> module. It was
  * moved to <tt>generalclient_v1</tt> to resolve cross-module
  * dependencies between <tt>generalclient_v1</tt> and <tt>admin_1</tt>.
  *
- * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2004/09/27 13:03:49 $
+ * @author $Author: bob $
+ * @version $Revision: 1.5 $, $Date: 2005/05/05 11:04:46 $
  * @module generalclient_v1
  */
 public final class OperatorGroupPane extends JPanel implements ObjectResourcePropertiesPane {

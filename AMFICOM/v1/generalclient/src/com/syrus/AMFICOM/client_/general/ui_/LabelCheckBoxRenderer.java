@@ -13,12 +13,12 @@ import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
-import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
+import com.syrus.util.Wrapper;
 
 /**
  * Renderer for JCheckBox items based on JLabel.
- * @version $Revision: 1.5 $, $Date: 2005/04/13 21:40:46 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/05/05 11:04:48 $
+ * @author $Author: bob $
  * @module generalclient_v1
  */
 public class LabelCheckBoxRenderer extends JLabel implements ListCellRenderer {
@@ -31,13 +31,13 @@ public class LabelCheckBoxRenderer extends JLabel implements ListCellRenderer {
 
 	private JComponent	component;
 	
-	private ObjectResourceController controller;
+	private Wrapper wrapper;
 	
 	private String key;
 	
-	protected LabelCheckBoxRenderer(ObjectResourceController controller, String key) {
+	protected LabelCheckBoxRenderer(Wrapper wrapper, String key) {
 		this();
-		this.controller = controller;
+		this.wrapper = wrapper;
 		this.key = key;
 	}
 	
@@ -69,12 +69,12 @@ public class LabelCheckBoxRenderer extends JLabel implements ListCellRenderer {
 		this.component = this;
 
 		Object object;
-		if (this.controller == null && this.key == null) {
+		if (this.wrapper == null && this.key == null) {
 			object = value;
 		} else {
-			object = this.controller.getValue(value, this.key);
-			if (this.controller.getPropertyValue(this.key) instanceof Map) {
-				Map map = (Map) this.controller.getPropertyValue(this.key);
+			object = this.wrapper.getValue(value, this.key);
+			if (this.wrapper.getPropertyValue(this.key) instanceof Map) {
+				Map map = (Map) this.wrapper.getPropertyValue(this.key);
 				Object keyObject = null;
 				for (Iterator it = map.keySet().iterator(); it.hasNext();) {
 					Object keyObj = it.next();

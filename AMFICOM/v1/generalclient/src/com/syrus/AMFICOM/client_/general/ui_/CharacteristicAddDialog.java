@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicAddDialog.java,v 1.1 2005/04/18 08:55:31 stas Exp $
+ * $Id: CharacteristicAddDialog.java,v 1.2 2005/05/05 11:04:48 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,21 +8,48 @@
 
 package com.syrus.AMFICOM.client_.general.ui_;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Frame;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Collection;
+import java.util.Iterator;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.general.corba.*;
-import com.syrus.AMFICOM.resource.*;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CharacteristicType;
+import com.syrus.AMFICOM.general.CharacteristicTypeController;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.EquivalentCondition;
+import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.general.corba.CharacteristicTypeSort;
+import com.syrus.AMFICOM.general.corba.DataType;
+import com.syrus.AMFICOM.resource.Constants;
+import com.syrus.AMFICOM.resource.LangModelGeneral;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/04/18 08:55:31 $
+ * @author $Author: bob $
+ * @version $Revision: 1.2 $, $Date: 2005/05/05 11:04:48 $
  * @module generalclient_v1
  */
 

@@ -1,9 +1,9 @@
 package com.syrus.AMFICOM.Client.General.UI;
 
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-
 import java.util.Enumeration;
 import java.util.Vector;
+
+import com.syrus.AMFICOM.corba.portable.reflect.common.ObjectResource;
 
 public class ObjectResourceTreeFilter
 {

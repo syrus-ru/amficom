@@ -1,14 +1,14 @@
 package com.syrus.AMFICOM.client_.general.ui_;
 
-import com.syrus.AMFICOM.Client.General.UI.ATable;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
+import com.syrus.AMFICOM.Client.General.UI.ATable;
+import com.syrus.AMFICOM.corba.portable.reflect.common.ObjectResource;
+
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/13 21:40:47 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/05/05 11:04:48 $
+ * @author $Author: bob $
  * @module generalclient_v1
  */
 public class ObjectResourcePropertiesTable extends ATable 

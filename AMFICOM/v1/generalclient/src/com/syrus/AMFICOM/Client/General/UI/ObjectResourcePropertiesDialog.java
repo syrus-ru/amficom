@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourcePropertiesDialog.java,v 1.10 2005/04/13 21:40:46 arseniy Exp $
+ * $Id: ObjectResourcePropertiesDialog.java,v 1.11 2005/05/05 11:04:47 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,16 +8,24 @@
 
 package com.syrus.AMFICOM.Client.General.UI;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
-import com.syrus.AMFICOM.Client.General.UI.MessageBox;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
-import javax.swing.*;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
+import com.syrus.AMFICOM.Client.General.Lang.LangModel;
+import com.syrus.AMFICOM.corba.portable.reflect.common.ObjectResource;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.10 $, $Date: 2005/04/13 21:40:46 $
+ * @author $Author: bob $
+ * @version $Revision: 1.11 $, $Date: 2005/05/05 11:04:47 $
  * @module generalclient_v1
  */
 public class ObjectResourcePropertiesDialog extends JDialog
