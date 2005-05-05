@@ -10,7 +10,7 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.LayoutManager;
 
-public class LineLayout extends Object implements LayoutManager
+public class LineLayout implements LayoutManager
 {
 
 	public LineLayout()
