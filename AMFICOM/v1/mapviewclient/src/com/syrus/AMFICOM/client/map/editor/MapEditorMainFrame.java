@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMainFrame.java,v 1.34 2005/04/28 12:57:53 krupenn Exp $
+ * $Id: MapEditorMainFrame.java,v 1.35 2005/05/05 09:39:52 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,7 +22,6 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.WindowEvent;
 import java.io.FileInputStream;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
 
@@ -59,6 +58,7 @@ import com.syrus.AMFICOM.Client.General.Model.MapEditorApplicationModel;
 import com.syrus.AMFICOM.Client.General.Model.MapMapEditorApplicationModelFactory;
 import com.syrus.AMFICOM.Client.General.Model.Module;
 import com.syrus.AMFICOM.Client.General.UI.StatusBarModel;
+import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Map.Command.Editor.MapEditorCloseMapCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Editor.MapEditorCloseViewCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Editor.MapEditorNewMapCommand;
@@ -99,7 +99,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * 
  * 
  * 
- * @version $Revision: 1.34 $, $Date: 2005/04/28 12:57:53 $
+ * @version $Revision: 1.35 $, $Date: 2005/05/05 09:39:52 $
  * @module mapviewclient_v1
  * @author $Author: krupenn $
  */
@@ -113,9 +113,6 @@ public class MapEditorMainFrame extends JFrame
 	protected Identifier domainId;
 
 	protected static String iniFileName = "Map.properties";
-
-	protected static SimpleDateFormat sdf =
-			new java.text.SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 
 	BorderLayout borderLayout = new BorderLayout();
 
@@ -746,7 +743,7 @@ public class MapEditorMainFrame extends JFrame
 			setDomainSelected();
 		}
 		this.statusBar.setText(StatusBarModel.FIELD_STATUS, LangModel.getString("statusReady"));
-		this.statusBar.setText(StatusBarModel.FIELD_SESSION, sdf.format(new Date(this.aContext.getSessionInterface().getLogonTime())));
+		this.statusBar.setText(StatusBarModel.FIELD_SESSION, MapPropertiesManager.getDateFormat().format(new Date(this.aContext.getSessionInterface().getLogonTime())));
 
 		this.statusBar.setText(StatusBarModel.FIELD_USER, this.aContext.getSessionInterface().getUser());
 	}
