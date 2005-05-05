@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.34 2005/05/03 14:05:40 krupenn Exp $
+ * $Id: PhysicalLinkType.java,v 1.35 2005/05/05 09:00:34 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,34 +36,37 @@ import com.syrus.AMFICOM.map.corba.PhysicalLinkType_Transferable;
 /**
  * Тип линии топологической схемы. Существует несколько предустановленных 
  * типов линий, которые определяются полем {@link #codename}, соответствующим
- * какому-либо значению {@link #TUNNEL}, {@link #COLLECTOR}, {@link #INDOOR}, 
- * {@link #SUBMARINE}, {@link #OVERHEAD}, {@link #UNBOUND}
+ * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR}, 
+ * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
  * @author $Author: krupenn $
- * @version $Revision: 1.34 $, $Date: 2005/05/03 14:05:40 $
+ * @version $Revision: 1.35 $, $Date: 2005/05/05 09:00:34 $
  * @module map_v1
- * @todo add (@link #topological} to constructor
- * @todo make {@link #topological} persistent
+ * @todo add 'topological' to constructor
+ * @todo make 'topological' persistent
+ * @todo make 'sort' transient (update database scheme as well)
  */
 public class PhysicalLinkType extends StorableObjectType implements Characterizable, Namable {
 
 	/** тоннель */
-	public static final String TUNNEL = "tunnel";
+	public static final String DEFAULT_TUNNEL = "tunnel";
 	/** участок коллектора */
-	public static final String COLLECTOR = "collector";
+	public static final String DEFAULT_COLLECTOR = "collector";
 	/** внутренняя проводка */
-	public static final String INDOOR = "indoor";
+	public static final String DEFAULT_INDOOR = "indoor";
 	/** подводная линия */
-	public static final String SUBMARINE = "submarine";
+	public static final String DEFAULT_SUBMARINE = "submarine";
 	/** навесная линия */
-	public static final String OVERHEAD = "overhead";
+	public static final String DEFAULT_OVERHEAD = "overhead";
 	/** непривязанный кабель */
-	public static final String UNBOUND = "cable";
+	public static final String DEFAULT_UNBOUND = "cable";
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
 	 */
 	private static final long serialVersionUID = 3690191057812271924L;
 
+	private transient PhysicalLinkTypeSort sort;
+	
 	private Set characteristics;
 
 	private String name;
@@ -76,7 +79,7 @@ public class PhysicalLinkType extends StorableObjectType implements Characteriza
 	 */
 	private IntDimension 			bindingDimension;
 
-	private transient boolean topological;
+	private transient boolean topological = true;
 
 	PhysicalLinkType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
@@ -102,6 +105,7 @@ public class PhysicalLinkType extends StorableObjectType implements Characteriza
 	PhysicalLinkType(final Identifier id,
 			final Identifier creatorId,
 			final long version,
+			final PhysicalLinkTypeSort sort,
 			final String codename,
 			final String name,
 			final String description,
@@ -114,6 +118,7 @@ public class PhysicalLinkType extends StorableObjectType implements Characteriza
 				version,
 				codename,
 				description);
+		this.sort = sort;
 		this.name = name;
 		if (bindingDimension == null)
 			this.bindingDimension = new IntDimension(0, 0);
@@ -124,18 +129,20 @@ public class PhysicalLinkType extends StorableObjectType implements Characteriza
 	}
 
 	public static PhysicalLinkType createInstance(final Identifier creatorId,
+			final PhysicalLinkTypeSort sort,
 			final String codename,
 			final String name,
 			final String description,
 			final IntDimension bindingDimension) throws CreateObjectException {
 
-		if (creatorId == null || codename == null || name == null || description == null || bindingDimension == null)
+		if (creatorId == null || codename == null || name == null || description == null || bindingDimension == null || sort == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
 			PhysicalLinkType physicalLinkType = new PhysicalLinkType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE),
 					creatorId,
 					0L,
+					sort,
 					codename,
 					name,
 					description,
@@ -153,6 +160,9 @@ public class PhysicalLinkType extends StorableObjectType implements Characteriza
 		super.fromTransferable(pltt.header, pltt.codename, pltt.description);
 
 		this.name = pltt.name;
+
+		//@todo retreive from transferable!
+		this.sort = PhysicalLinkTypeSort.fromString(pltt.codename); 
 
 		Set ids = Identifier.fromTransferables(pltt.characteristicIds);
 		this.characteristics = GeneralStorableObjectPool.getStorableObjects(ids, true);
@@ -227,6 +237,15 @@ public class PhysicalLinkType extends StorableObjectType implements Characteriza
 				description);
 		this.bindingDimension = new IntDimension(width, height);
 		this.name = name;
+
+		//@todo retreive from transferable!
+		this.sort = PhysicalLinkTypeSort.fromString(codename); 
+	}
+
+	public void setCodename(String codename) {
+		super.setCodename(codename);
+		//@todo retreive from transferable!
+		this.sort = PhysicalLinkTypeSort.fromString(codename); 
 	}
 
 	protected void setBindingDimension0(IntDimension bindingDimension) {
@@ -285,5 +304,13 @@ public class PhysicalLinkType extends StorableObjectType implements Characteriza
 		this.characteristics.clear();
 		if (characteristics != null)
 			this.characteristics.addAll(characteristics);
+	}
+
+	public PhysicalLinkTypeSort getSort() {
+		return this.sort;
+	}
+
+	public void setSort(PhysicalLinkTypeSort sort) {
+		this.sort = sort;
 	}
 }
