@@ -1,5 +1,5 @@
 /**
- * $Id: MapPenBarPanel.java,v 1.9 2005/04/18 11:24:13 krupenn Exp $
+ * $Id: MapPenBarPanel.java,v 1.10 2005/05/05 09:49:13 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.map.PhysicalLinkType;
 
 /**
  *  На этой панельке располагаются элементы которые будут наноситься на карту
- * @version $Revision: 1.9 $, $Date: 2005/04/18 11:24:13 $
+ * @version $Revision: 1.10 $, $Date: 2005/05/05 09:49:13 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -85,7 +85,7 @@ public final class MapPenBarPanel extends JPanel
 		if(this.logicalNetLayer == null)
 			return;
 		PhysicalLinkType mpe = (PhysicalLinkType)this.penComboBox.getSelectedObjectResource();
-		this.logicalNetLayer.setPen(mpe);
+		this.logicalNetLayer.setCurrentPhysicalLinkType(mpe);
 	}
 }
 
