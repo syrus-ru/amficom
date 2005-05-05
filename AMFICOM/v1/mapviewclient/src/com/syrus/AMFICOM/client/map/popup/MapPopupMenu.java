@@ -1,5 +1,5 @@
 /**
- * $Id: MapPopupMenu.java,v 1.36 2005/04/22 11:41:05 krupenn Exp $
+ * $Id: MapPopupMenu.java,v 1.37 2005/05/05 09:41:34 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -62,7 +62,7 @@ import com.syrus.AMFICOM.mapview.UnboundNode;
 /**
  * Контекстное меню элемента карты
  * @author $Author: krupenn $
- * @version $Revision: 1.36 $, $Date: 2005/04/22 11:41:05 $
+ * @version $Revision: 1.37 $, $Date: 2005/05/05 09:41:34 $
  * @module mapviewclient_v1
  */
 public abstract class MapPopupMenu extends JPopupMenu
@@ -293,7 +293,7 @@ public abstract class MapPopupMenu extends JPopupMenu
 	
 	protected void addLinkToCollector(Collector collector, PhysicalLink mple)
 	{
-		PhysicalLinkType collectorType = LinkTypeController.getPhysicalLinkType(PhysicalLinkType.COLLECTOR);
+		PhysicalLinkType collectorType = LinkTypeController.getPhysicalLinkType(PhysicalLinkType.DEFAULT_COLLECTOR);
 
 		Collector prevCollector = this.logicalNetLayer.getMapView().getMap().getCollector(mple);
 		if(prevCollector != null)
@@ -326,7 +326,7 @@ public abstract class MapPopupMenu extends JPopupMenu
 
 		MapElementState state = mple.getState();
 
-		mple.setType(LinkTypeController.getPhysicalLinkType(PhysicalLinkType.TUNNEL));
+		mple.setType(LinkTypeController.getPhysicalLinkType(PhysicalLinkType.DEFAULT_TUNNEL));
 
 		MapElementStateChangeCommand command = new MapElementStateChangeCommand(mple, state, mple.getState());
 		command.setLogicalNetLayer(this.logicalNetLayer);

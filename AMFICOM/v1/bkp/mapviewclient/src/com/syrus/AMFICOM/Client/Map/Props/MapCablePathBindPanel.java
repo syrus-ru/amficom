@@ -342,7 +342,7 @@ public final class MapCablePathBindPanel
 	
 	private void setBindingPanels()
 	{
-		PhysicalLinkType unboundType = LinkTypeController.getPhysicalLinkType(PhysicalLinkType.UNBOUND);
+		PhysicalLinkType unboundType = LinkTypeController.getPhysicalLinkType(PhysicalLinkType.DEFAULT_UNBOUND);
 
 		this.startNode = this.path.getStartUnboundNode();
 		
