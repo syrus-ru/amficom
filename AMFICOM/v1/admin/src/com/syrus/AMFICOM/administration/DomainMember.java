@@ -1,5 +1,5 @@
 /*
- * $Id: DomainMember.java,v 1.13 2005/04/13 13:51:59 arseniy Exp $
+ * $Id: DomainMember.java,v 1.14 2005/05/05 15:55:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,10 +16,11 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/04/13 13:51:59 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2005/05/05 15:55:56 $
+ * @author $Author: bass $
  * @module administration_v1
  */
 
@@ -61,11 +62,18 @@ public abstract class DomainMember extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void fromTransferable(IDLEntity transferable, Identifier domainId1) throws ApplicationException {
-		super.fromTransferable(transferable);
+	protected void fromTransferable(final StorableObject_Transferable header, final Identifier domainId1) {
+		try {
+			super.fromTransferable(header);
+		} catch (final ApplicationException ae) {
+			/*
+			 * Never.
+			 */
+			assert false;
+		}
 		this.domainId = domainId1;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see com.syrus.AMFICOM.general.StorableObject#isValid()
 	 */
