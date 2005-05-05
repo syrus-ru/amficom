@@ -1,5 +1,5 @@
 /**
- * $Id: NodeTypeController.java,v 1.16 2005/04/28 12:55:52 krupenn Exp $
+ * $Id: NodeTypeController.java,v 1.17 2005/05/05 09:38:47 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -37,6 +37,7 @@ import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.MapStorableObjectPool;
 import com.syrus.AMFICOM.map.SiteNodeType;
+import com.syrus.AMFICOM.map.SiteNodeTypeSort;
 import com.syrus.AMFICOM.resource.FileImageResource;
 import com.syrus.AMFICOM.resource.ImageResourceWrapper;
 import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
@@ -45,7 +46,7 @@ import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageR
 /**
  * контроллер типа сетевого узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.16 $, $Date: 2005/04/28 12:55:52 $
+ * @version $Revision: 1.17 $, $Date: 2005/05/05 09:38:47 $
  * @module mapviewclient_v1
  */
 public class NodeTypeController extends AbstractNodeController
@@ -61,12 +62,13 @@ public class NodeTypeController extends AbstractNodeController
 	
 	static
 	{
-		imageFileNames.put(SiteNodeType.UNBOUND, "images/unbound.gif");
-		imageFileNames.put(SiteNodeType.ATS, "images/ats.gif");
-		imageFileNames.put(SiteNodeType.BUILDING, "images/building.gif");
-		imageFileNames.put(SiteNodeType.PIQUET, "images/piquet.gif");
-		imageFileNames.put(SiteNodeType.WELL, "images/well.gif");
-		imageFileNames.put(SiteNodeType.CABLE_INLET, "images/cableinlet.gif");
+		imageFileNames.put(SiteNodeType.DEFAULT_UNBOUND, "images/unbound.gif");
+		imageFileNames.put(SiteNodeType.DEFAULT_ATS, "images/ats.gif");
+		imageFileNames.put(SiteNodeType.DEFAULT_BUILDING, "images/building.gif");
+		imageFileNames.put(SiteNodeType.DEFAULT_PIQUET, "images/piquet.gif");
+		imageFileNames.put(SiteNodeType.DEFAULT_WELL, "images/well.gif");
+		imageFileNames.put(SiteNodeType.DEFAULT_CABLE_INLET, "images/cableinlet.gif");
+		imageFileNames.put(SiteNodeType.DEFAULT_TOWER, "images/tower.gif");
 	}
 
 	/**
@@ -237,8 +239,9 @@ public class NodeTypeController extends AbstractNodeController
 	 * @param codename кодовое имя
 	 * @return тип сетевого узла
 	 */
-	public static SiteNodeType getSiteNodeType(
+	private static SiteNodeType getSiteNodeType(
 			Identifier userId,
+			SiteNodeTypeSort sort,
 			String codename)
 	{
 		SiteNodeType type = getSiteNodeType(codename);
@@ -247,6 +250,7 @@ public class NodeTypeController extends AbstractNodeController
 		{
 			type = SiteNodeType.createInstance(
 				userId,
+				sort,
 				codename,
 				LangModelMap.getString(codename),
 				"",
@@ -270,58 +274,53 @@ public class NodeTypeController extends AbstractNodeController
 	public static void createDefaults(Identifier creatorId)
 	{
 		// make sure SiteNodeType.ATS is created
-		NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.ATS);
+		NodeTypeController.getSiteNodeType(creatorId, SiteNodeTypeSort.ATS, SiteNodeType.DEFAULT_ATS);
 		// make sure SiteNodeType.BUILDING is created
-		NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.BUILDING);
+		NodeTypeController.getSiteNodeType(creatorId, SiteNodeTypeSort.BUILDING, SiteNodeType.DEFAULT_BUILDING);
 		// make sure SiteNodeType.PIQUET is created
-		NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.PIQUET);
+		NodeTypeController.getSiteNodeType(creatorId, SiteNodeTypeSort.PIQUET, SiteNodeType.DEFAULT_PIQUET);
 		// make sure SiteNodeType.WELL is created
-		NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.WELL);
+		NodeTypeController.getSiteNodeType(creatorId, SiteNodeTypeSort.WELL, SiteNodeType.DEFAULT_WELL);
 		// make sure SiteNodeType.CABLE_INLET is created
-		NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.CABLE_INLET);
+		NodeTypeController.getSiteNodeType(creatorId, SiteNodeTypeSort.CABLE_INLET, SiteNodeType.DEFAULT_CABLE_INLET);
 		// make sure SiteNodeType.UNBOUND is created
-		NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.UNBOUND);
+		NodeTypeController.getSiteNodeType(creatorId, SiteNodeTypeSort.UNBOUND, SiteNodeType.DEFAULT_UNBOUND);
+		// make sure SiteNodeType.CABLE_INLET is created
+		NodeTypeController.getSiteNodeType(creatorId, SiteNodeTypeSort.TOWER, SiteNodeType.DEFAULT_TOWER);
 	}
 
 	/**
 	 * Получить список всех типов сетевых узлов.
 	 * @return список типов сетевых узлов &lt;{@link SiteNodeType}&gt;
 	 */
-	public static Collection getTopologicalNodeTypes()
-	{
-		Collection topologicalProtos = Collections.EMPTY_LIST;
-
+	public static Collection getTopologicalNodeTypes() {
+		Collection list = Collections.EMPTY_LIST;
 		StorableObjectCondition pTypeCondition = new EquivalentCondition(ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE);
-
-		try
-		{
-			topologicalProtos =
+		try {
+			list =
 				MapStorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
 
-			topologicalProtos.remove(getUnboundNodeType());
+			list.remove(getUnboundNodeType());
 
-			for(Iterator it = topologicalProtos.iterator(); it.hasNext();)
-			{
+			for(Iterator it = list.iterator(); it.hasNext();) {
 				SiteNodeType mnpe = (SiteNodeType )it.next();
 				if(!mnpe.isTopological())
 					it.remove();
 			}
 		}
-		catch(Exception e)
-		{
+		catch(Exception e) {
 			e.printStackTrace();
 		}
-		
-		return topologicalProtos;
+		return list;
 	}
 
 	/**
-	 * Получить тип непривязанного сетевого узла ({@link SiteNodeType#UNBOUND}).
+	 * Получить тип непривязанного сетевого узла ({@link SiteNodeType#DEFAULT_UNBOUND}).
 	 * @return тип сетевого узла
 	 */
 	public static SiteNodeType getUnboundNodeType()
 	{
-		return NodeTypeController.getSiteNodeType(SiteNodeType.UNBOUND);
+		return NodeTypeController.getSiteNodeType(SiteNodeType.DEFAULT_UNBOUND);
 	}
 
 
