@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalImageCache.java,v 1.1.2.1 2005/05/05 10:22:38 krupenn Exp $
+ * $Id: TopologicalImageCache.java,v 1.1.2.2 2005/05/05 12:04:22 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.map.DoublePoint;
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.1.2.1 $, $Date: 2005/05/05 10:22:38 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2005/05/05 12:04:22 $
  * @module mapinfo_v1
  */
 public class TopologicalImageCache
@@ -313,7 +313,7 @@ public class TopologicalImageCache
 	 * @param sphP2
 	 * @return Расстояние
 	 */
-	double convertMapToScreen(DoublePoint sphP1, DoublePoint sphP2)
+	double screenDistance(DoublePoint sphP1, DoublePoint sphP2)
 			throws MapConnectionException, MapDataException
 	{
 		Point p1 = this.logicalNetLayer.convertMapToScreen(sphP1);
@@ -351,7 +351,7 @@ public class TopologicalImageCache
 				for (Iterator it = this.cacheOfImages.iterator(); it.hasNext();)
 				{
 					TopologicalRequest curRequest = (TopologicalRequest)it.next();
-					if (convertMapToScreen(curRequest.getTopoCenter(),imageCenter) < 10)					
+					if (screenDistance(curRequest.getTopoCenter(),imageCenter) < 10)					
 					{
 						requestForCenter = curRequest;
 						break;
@@ -397,7 +397,7 @@ public class TopologicalImageCache
 					this.loadingThread.addRequest(requestForCenter);
 				}
 				
-				if (convertMapToScreen(requestForCenter.getTopoCenter(),this.logicalNetLayer.getCenter()) < 10)
+				if (screenDistance(requestForCenter.getTopoCenter(),this.logicalNetLayer.getCenter()) < 10)
 					//Кладём сегмент в очередь на отрисовку
 					this.imagesToPaint.add(requestForCenter);
 			}
