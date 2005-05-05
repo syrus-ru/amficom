@@ -1,5 +1,5 @@
 /**
- * $Id: LinkTypeController.java,v 1.18 2005/04/28 12:55:52 krupenn Exp $
+ * $Id: LinkTypeController.java,v 1.19 2005/05/05 09:37:42 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -44,11 +44,13 @@ import com.syrus.AMFICOM.map.IntDimension;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.MapStorableObjectPool;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
+import com.syrus.AMFICOM.map.PhysicalLinkTypeSort;
+import com.syrus.AMFICOM.map.SiteNodeType;
 
 /**
  *  онтроллер типа линейного элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.18 $, $Date: 2005/04/28 12:55:52 $
+ * @version $Revision: 1.19 $, $Date: 2005/05/05 09:37:42 $
  * @module mapviewclient_v1
  */
 public final class LinkTypeController extends AbstractLinkController
@@ -82,17 +84,17 @@ public final class LinkTypeController extends AbstractLinkController
 	
 	static
 	{
-		lineColors.put(PhysicalLinkType.COLLECTOR, Color.DARK_GRAY);
-		lineColors.put(PhysicalLinkType.TUNNEL, Color.BLACK);
-		lineColors.put(PhysicalLinkType.UNBOUND, Color.RED);
+		lineColors.put(PhysicalLinkType.DEFAULT_COLLECTOR, Color.DARK_GRAY);
+		lineColors.put(PhysicalLinkType.DEFAULT_TUNNEL, Color.BLACK);
+		lineColors.put(PhysicalLinkType.DEFAULT_UNBOUND, Color.RED);
 
-		lineThickness.put(PhysicalLinkType.COLLECTOR, new Integer(3));
-		lineThickness.put(PhysicalLinkType.TUNNEL, new Integer(2));
-		lineThickness.put(PhysicalLinkType.UNBOUND, new Integer(1));
+		lineThickness.put(PhysicalLinkType.DEFAULT_COLLECTOR, new Integer(3));
+		lineThickness.put(PhysicalLinkType.DEFAULT_TUNNEL, new Integer(2));
+		lineThickness.put(PhysicalLinkType.DEFAULT_UNBOUND, new Integer(1));
 
-		bindDimensions.put(PhysicalLinkType.COLLECTOR, new IntDimension(2, 6));
-		bindDimensions.put(PhysicalLinkType.TUNNEL, new IntDimension(3, 4));
-		bindDimensions.put(PhysicalLinkType.UNBOUND, new IntDimension(0, 0));
+		bindDimensions.put(PhysicalLinkType.DEFAULT_COLLECTOR, new IntDimension(2, 6));
+		bindDimensions.put(PhysicalLinkType.DEFAULT_TUNNEL, new IntDimension(3, 4));
+		bindDimensions.put(PhysicalLinkType.DEFAULT_UNBOUND, new IntDimension(0, 0));
 	}
 
 	/**
@@ -624,8 +626,9 @@ public final class LinkTypeController extends AbstractLinkController
 	 * @param codename кодовое им€
 	 * @return тип линии
 	 */
-	public static PhysicalLinkType getPhysicalLinkType(
+	private static PhysicalLinkType getPhysicalLinkType(
 			Identifier userId,
+			PhysicalLinkTypeSort sort,
 			String codename)
 	{
 		PhysicalLinkType type = getPhysicalLinkType(codename);
@@ -636,6 +639,7 @@ public final class LinkTypeController extends AbstractLinkController
 
 			type = PhysicalLinkType.createInstance(
 				userId,
+				sort,
 				codename,
 				LangModelMap.getString(codename),
 				"",
@@ -658,32 +662,35 @@ public final class LinkTypeController extends AbstractLinkController
 	public static void createDefaults(Identifier creatorId)
 	{
 		// make sure PhysicalLinkType.TUNNEL is created
-		LinkTypeController.getPhysicalLinkType(creatorId, PhysicalLinkType.TUNNEL);
+		LinkTypeController.getPhysicalLinkType(creatorId, PhysicalLinkTypeSort.TUNNEL, PhysicalLinkType.DEFAULT_TUNNEL);
 		// make sure PhysicalLinkType.COLLECTOR is created
-		LinkTypeController.getPhysicalLinkType(creatorId, PhysicalLinkType.COLLECTOR);
+		LinkTypeController.getPhysicalLinkType(creatorId, PhysicalLinkTypeSort.COLLECTOR, PhysicalLinkType.DEFAULT_COLLECTOR);
 		// make sure PhysicalLinkType.UNBOUND is created
-		LinkTypeController.getPhysicalLinkType(creatorId, PhysicalLinkType.UNBOUND);
+		LinkTypeController.getPhysicalLinkType(creatorId, PhysicalLinkTypeSort.UNBOUND, PhysicalLinkType.DEFAULT_UNBOUND);
 	}
 
 	/**
 	 * ѕолучить список всех типов линий.
 	 * @return список типов линий &lt;{@link PhysicalLinkType}&gt;
 	 */
-	public static Collection getTopologicalLinkTypes()
-	{
+	public static Collection getTopologicalLinkTypes() {
 		StorableObjectCondition pTypeCondition = new EquivalentCondition(
 				ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE);
 
 		Collection list = null;
-		try
-		{
+		try {
 			list =
 				MapStorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
 
 			list.remove(getUnboundPhysicalLinkType());
+
+			for(Iterator it = list.iterator(); it.hasNext();) {
+				PhysicalLinkType type = (PhysicalLinkType )it.next();
+				if(!type.isTopological())
+					it.remove();
+			}
 		}
-		catch(Exception e)
-		{
+		catch(Exception e) {
 			list = Collections.EMPTY_LIST;
 		}
 		
@@ -691,20 +698,20 @@ public final class LinkTypeController extends AbstractLinkController
 	}
 	
 	/**
-	 * ѕолучить тип линии по умолчанию ({@link PhysicalLinkType#TUNNEL}).
+	 * ѕолучить тип линии по умолчанию ({@link PhysicalLinkType#DEFAULT_TUNNEL}).
 	 * @return тип линии
 	 */
 	public static PhysicalLinkType getDefaultPhysicalLinkType()
 	{
-		return LinkTypeController.getPhysicalLinkType(PhysicalLinkType.TUNNEL);
+		return LinkTypeController.getPhysicalLinkType(PhysicalLinkType.DEFAULT_TUNNEL);
 	}
 
 	/**
-	 * ѕолучить тип неприв€занной линии ({@link PhysicalLinkType#UNBOUND}).
+	 * ѕолучить тип неприв€занной линии ({@link PhysicalLinkType#DEFAULT_UNBOUND}).
 	 * @return тип линии
 	 */
 	public static PhysicalLinkType getUnboundPhysicalLinkType()
 	{
-		return LinkTypeController.getPhysicalLinkType(PhysicalLinkType.UNBOUND);
+		return LinkTypeController.getPhysicalLinkType(PhysicalLinkType.DEFAULT_UNBOUND);
 	}
 }
