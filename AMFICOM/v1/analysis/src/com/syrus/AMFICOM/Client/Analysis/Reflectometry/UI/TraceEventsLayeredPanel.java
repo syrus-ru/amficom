@@ -1,5 +1,6 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
+import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
@@ -50,7 +51,7 @@ implements OperationListener
 				{
 					if(rue.minTraceLevelChanged())
 					{
-						((ReflectogramEventsPanel)panel).updateMinTraceLevel((Double)rue.getSource());
+						((ReflectogramEventsPanel)panel).updateMinTraceLevel(-Heap.getMinTraceLevel());
 						jLayeredPane.repaint();
 					}
 				}

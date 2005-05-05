@@ -143,12 +143,20 @@ public class AnalysisUtil
 				Heap.setMTMEtalon(mtm);
 				Heap.setEtalonEtalonMetas(metas);
 			}
-			else if (type.getCodename().equals(ParameterTypeCodenames.REFLECTOGRAMMA))
-			{
-				bsEt = new BellcoreReader().getData(params[i].getValue());
-				Heap.setBSEtalonTrace(bsEt);
-				bsEt.title = "Эталон (" + (ms.getDescription().equals("") ? ms.getId().getIdentifierString() : ms.getDescription()) + ")";
-			}
+            else if (type.getCodename().equals(ParameterTypeCodenames.REFLECTOGRAMMA))
+            {
+                bsEt = new BellcoreReader().getData(params[i].getValue());
+                Heap.setBSEtalonTrace(bsEt);
+                bsEt.title = "Эталон (" + (ms.getDescription().equals("") ? ms.getId().getIdentifierString() : ms.getDescription()) + ")"; // XXX: externalized string
+            }
+            else if (type.getCodename().equals(ParameterTypeCodenames.DADARA_MIN_TRACE_LEVEL))
+            {
+                try {
+                    Heap.setMinTraceLevel(new ByteArray(params[i].getValue()).toDouble());
+                } catch (IOException e) {
+                    throw new DataFormatException("cannot read double value minTraceLevel");
+                }
+            }
 		}
 	}
 
@@ -183,7 +191,7 @@ public class AnalysisUtil
 	public static Set createEtalon(Identifier userId, java.util.Set meIds,
             ModelTraceManager mtm) throws ApplicationException
 	{
-		SetParameter[] params = new SetParameter[2];
+		SetParameter[] params = new SetParameter[3];
 
 		ParameterType ptype = getParameterType(ParameterTypeCodenames.DADARA_ETALON_MTM, DataType.DATA_TYPE_RAW);
 		params[0] = SetParameter.createInstance(ptype,
@@ -194,6 +202,10 @@ public class AnalysisUtil
 		ptype = getParameterType(ParameterTypeCodenames.REFLECTOGRAMMA, DataType.DATA_TYPE_RAW);
 		params[1] = SetParameter.createInstance(ptype,
 				new BellcoreWriter().write(bs));
+
+        ptype = getParameterType(ParameterTypeCodenames.DADARA_MIN_TRACE_LEVEL, DataType.DATA_TYPE_DOUBLE);
+        params[2] = SetParameter.createInstance(ptype,
+                ByteArray.toByteArray(Heap.getMinTraceLevel()));
 
 		Set etalon = Set.createInstance(
 				userId,
@@ -216,7 +228,7 @@ public class AnalysisUtil
 			{
 				try
 				{
-					Heap.setMinTraceLevel(new Double(new ByteArray(params[i].getValue()).toDouble()));
+					Heap.setMinTraceLevel(new ByteArray(params[i].getValue()).toDouble());
 				}
 				catch (IOException ex)
 				{

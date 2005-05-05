@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.55 2005/05/03 12:41:11 saa Exp $
+ * $Id: Heap.java,v 1.56 2005/05/05 15:02:24 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -65,7 +65,7 @@ import com.syrus.io.BellcoreStructure;
  * Фактически, primaryMTAE - это часть refAnalysisPrimary.
  * 
  * @author $Author: saa $
- * @version $Revision: 1.55 $, $Date: 2005/05/03 12:41:11 $
+ * @version $Revision: 1.56 $, $Date: 2005/05/05 15:02:24 $
  * @module
  */
 public class Heap
@@ -85,7 +85,7 @@ public class Heap
 	private static HashMap bsHash = new HashMap();	// "bellcorestructure", *
 	private static RefAnalysis refAnalysisPrimary = null; // "refanalysis", PRIMARY_TRACE_KEY
 	private static MeasurementSetup contextMeasurementSetup;	// AnalysisUtil.CONTEXT, "MeasurementSetup"
-	private static Double minTraceLevel;			// "min_trace_level", PRIMARY_TRACE_KEY
+	private static double minTraceLevel;			// (negative value)
 	private static HashMap dialogHash = new HashMap();	// "dialog", "*"
     private static ModelTraceManager etalonMTM = null;
     private static ModelTraceManager backupEtalonMTM = null; // 'initial' state of etalon MTM
@@ -291,11 +291,11 @@ public class Heap
     	return Collections.unmodifiableCollection(bsHash.values());
     }
 
-    public static Double getMinTraceLevel() {
+    public static double getMinTraceLevel() {
         return minTraceLevel;
     }
 
-    public static void setMinTraceLevel(Double minTraceLevel) {
+    public static void setMinTraceLevel(double minTraceLevel) {
         Heap.minTraceLevel = minTraceLevel;
     }
 
