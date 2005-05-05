@@ -1,3 +1,4 @@
+package com.syrus.AMFICOM.map.mapperservlet;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 
@@ -6,7 +7,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import java.awt.Color;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.URISyntaxException;
@@ -15,14 +15,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-// MapInfo classes
-
-
-
-
 /**
- * @author $Author: krupenn $
- * @version $Revision: 1.9 $, $Date: 2005/05/04 14:54:35 $
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.1 $, $Date: 2005/05/05 10:09:52 $
  * @module mapper-servlet
  */
 public class MapperControllableServlet
@@ -165,7 +160,7 @@ public class MapperControllableServlet
 		}
 		catch (URISyntaxException e)
 		{
-			writeNLogError(currentRequestOS, ServletCommandNames.ERROR_INVALID_PARAMETERS);
+			logError(ServletCommandNames.ERROR_INVALID_PARAMETERS);
 			return;
 		}
 		
@@ -179,91 +174,162 @@ public class MapperControllableServlet
 		synchronized(this.state) {
 			switch(this.state.getValue()) {
 				case STATE_IDLE:
-					processIdleState(requestParameters, currentRequestOS, commandName);
+					processIdleState(requestParameters,commandName,currentRequestOS,resp);
 					break;
 				case STATE_RENDERING:
-					processRenderingState(requestParameters, currentRequestOS, commandName);
+					processRenderingState(requestParameters,commandName,currentRequestOS,resp);
 					break;
 				case STATE_RENDERED:
-					processRenderedState(requestParameters, currentRequestOS, commandName);
+					processRenderedState(requestParameters,commandName,currentRequestOS,resp);
 					break;
 				default:
-					writeNLogError(currentRequestOS, ServletCommandNames.ERROR_WRONG_STATE);
+					logError(ServletCommandNames.ERROR_WRONG_STATE);
 			}
 		}
 	}
 	
-	void processIdleState(Map requestParameters, ObjectOutputStream currentRequestOS, String commandName) throws IOException {
+	void processIdleState(
+			Map requestParameters,
+			String commandName,
+			ObjectOutputStream currentRequestOS,
+			HttpServletResponse resp)
+	{
 		if (commandName.equals(ServletCommandNames.CN_START_RENDER_IMAGE))			
 		{
-			render(requestParameters, currentRequestOS);
+			render(requestParameters);
 			setState(STATE_RENDERING);
+			resp.addHeader(
+					ServletCommandNames.STATUS_FIELD_NAME,
+					ServletCommandNames.STATUS_SUCCESS);
 		}
 		else if (commandName.equals(ServletCommandNames.CN_CANCEL_RENDERING))			
 		{
-			Logger.log("Before canceling rendition");				
-			writeNLogError(currentRequestOS, ServletCommandNames.ERROR_WRONG_REQUEST);
+			logError(ServletCommandNames.ERROR_WRONG_REQUEST);
+			resp.addHeader(
+					ServletCommandNames.STATUS_FIELD_NAME,
+					ServletCommandNames.ERROR_WRONG_REQUEST);
 		}
 		else if (commandName.equals(ServletCommandNames.CN_GET_RENDITION))			
 		{
-			Logger.log("Before getting rendition");
-			writeNLogError(currentRequestOS, ServletCommandNames.ERROR_WRONG_REQUEST);
+			logError(ServletCommandNames.ERROR_WRONG_REQUEST);
+			resp.addHeader(
+					ServletCommandNames.STATUS_FIELD_NAME,
+					ServletCommandNames.ERROR_WRONG_REQUEST);
 		}
 		else if (commandName.equals(ServletCommandNames.CN_SEARCH_NAME))			
 		{
 			search(requestParameters, currentRequestOS);
+			resp.addHeader(
+					ServletCommandNames.STATUS_FIELD_NAME,
+					ServletCommandNames.STATUS_SUCCESS);
 		}
 		else
-			writeNLogError(currentRequestOS, ServletCommandNames.ERROR_INVALID_PARAMETERS);
+		{
+			logError(ServletCommandNames.ERROR_INVALID_PARAMETERS);
+			Logger.log(commandName + " is not a valid command name!");			
+			resp.addHeader(
+					ServletCommandNames.STATUS_FIELD_NAME,
+					ServletCommandNames.ERROR_INVALID_PARAMETERS);
+		}
 	}
 
-	void processRenderingState(Map requestParameters, ObjectOutputStream currentRequestOS, String commandName) throws IOException {
+	void processRenderingState(
+			Map requestParameters,
+			String commandName,
+			ObjectOutputStream currentRequestOS,
+			HttpServletResponse resp)
+	{
 		if (commandName.equals(ServletCommandNames.CN_START_RENDER_IMAGE))			
 		{
-			writeNLogError(currentRequestOS, ServletCommandNames.ERROR_WRONG_REQUEST);
+			logError(ServletCommandNames.ERROR_WRONG_REQUEST);
+			resp.addHeader(
+					ServletCommandNames.STATUS_FIELD_NAME,
+					ServletCommandNames.ERROR_WRONG_REQUEST);
 		}
 		else if (commandName.equals(ServletCommandNames.CN_CANCEL_RENDERING))			
 		{
 			cancel();
 			setState(STATE_IDLE);
+			resp.addHeader(
+					ServletCommandNames.STATUS_FIELD_NAME,
+					ServletCommandNames.STATUS_SUCCESS);
 		}
 		else if (commandName.equals(ServletCommandNames.CN_GET_RENDITION))			
 		{
-			Logger.log("Before getting rendition");
-			writeNLogError(currentRequestOS, ServletCommandNames.ERROR_NO_MAP_RENDERED);
+			Logger.log("No map rendered.");
+			resp.addHeader(
+					ServletCommandNames.STATUS_FIELD_NAME,
+					ServletCommandNames.ERROR_NO_MAP_RENDERED);
 		}
 		else if (commandName.equals(ServletCommandNames.CN_SEARCH_NAME))			
 		{
 			search(requestParameters, currentRequestOS);
+			resp.addHeader(
+					ServletCommandNames.STATUS_FIELD_NAME,
+					ServletCommandNames.STATUS_SUCCESS);
 		}
 		else
-			writeNLogError(currentRequestOS, ServletCommandNames.ERROR_INVALID_PARAMETERS);
+		{
+			logError(ServletCommandNames.ERROR_INVALID_PARAMETERS);
+			Logger.log(commandName + " is not a valid command name!");			
+			resp.addHeader(
+					ServletCommandNames.STATUS_FIELD_NAME,
+					ServletCommandNames.ERROR_INVALID_PARAMETERS);
+		}
 	}
 
-	void processRenderedState(Map requestParameters, ObjectOutputStream currentRequestOS, String commandName) throws IOException {
+	void processRenderedState(
+			Map requestParameters,
+			String commandName,
+			ObjectOutputStream currentRequestOS,
+			HttpServletResponse resp)
+	{
+		
+		//В текущей идеологии сначала надо забрать изображение,
+		//а потом уже запускать рендеринг
+		
 		if (commandName.equals(ServletCommandNames.CN_START_RENDER_IMAGE))			
 		{
-			returnRendition(currentRequestOS);
-			render(requestParameters, currentRequestOS);
-			setState(STATE_RENDERING);
+//			returnRendition(currentRequestOS);
+//			render(requestParameters, currentRequestOS);
+//			setState(STATE_RENDERING);
+//			resp.addHeader(
+//					ServletCommandNames.STATUS_FIELD_NAME,
+//					ServletCommandNames.STATUS_SUCCESS);
+			logError(ServletCommandNames.ERROR_WRONG_REQUEST);
+			resp.addHeader(
+					ServletCommandNames.STATUS_FIELD_NAME,
+					ServletCommandNames.ERROR_WRONG_REQUEST);
 		}
 		else if (commandName.equals(ServletCommandNames.CN_CANCEL_RENDERING))			
 		{
-			returnRendition(currentRequestOS);
-			setState(STATE_IDLE);
+//			setState(STATE_IDLE);
+			logError(ServletCommandNames.ERROR_WRONG_REQUEST);			
+			resp.addHeader(
+					ServletCommandNames.STATUS_FIELD_NAME,
+					ServletCommandNames.ERROR_WRONG_REQUEST);
 		}
 		else if (commandName.equals(ServletCommandNames.CN_GET_RENDITION))			
 		{
-			Logger.log("Before getting rendition");
-			writeNLogError(currentRequestOS, ServletCommandNames.ERROR_NO_MAP_RENDERED);
+			returnRendition(currentRequestOS);			
+			resp.addHeader(
+				ServletCommandNames.STATUS_FIELD_NAME,
+				ServletCommandNames.STATUS_SUCCESS);
 		}
 		else if (commandName.equals(ServletCommandNames.CN_SEARCH_NAME))			
 		{
 			search(requestParameters, currentRequestOS);
+			resp.addHeader(
+					ServletCommandNames.STATUS_FIELD_NAME,
+					ServletCommandNames.STATUS_SUCCESS);
 		}
-		else {
-			Logger.log(commandName + " is not a valid command name!");
-			writeNLogError(currentRequestOS, ServletCommandNames.ERROR_INVALID_PARAMETERS);
+		else
+		{
+			logError(ServletCommandNames.ERROR_INVALID_PARAMETERS);
+			Logger.log(commandName + " is not a valid command name!");			
+			resp.addHeader(
+					ServletCommandNames.STATUS_FIELD_NAME,
+					ServletCommandNames.ERROR_INVALID_PARAMETERS);
 		}
 	}
 	
@@ -279,7 +345,7 @@ public class MapperControllableServlet
 		this.renderingThread.cancelRendering();
 	}
 
-	void render(Map requestParameters, ObjectOutputStream currentRequestOS) throws IOException {
+	void render(Map requestParameters){
 		try {
 			Logger.log ("Before getting rendition parameters");
 			String widthString = this.getParameter(requestParameters,ServletCommandNames.PAR_WIDTH);
@@ -293,7 +359,7 @@ public class MapperControllableServlet
 					||	centerYString.equals("NaN")						
 					||	zoomString.equals("NaN"))
 			{
-				writeNLogError(currentRequestOS, ServletCommandNames.ERROR_INVALID_PARAMETERS);
+				logError(ServletCommandNames.ERROR_INVALID_PARAMETERS);
 				return;
 			}
 			int width = Integer.parseInt(widthString);
@@ -302,7 +368,7 @@ public class MapperControllableServlet
 			Logger.log("height = " + Integer.toString(height));
 			if (! ( (width > 0) && (height > 0)))
 			{
-				writeNLogError(currentRequestOS, ServletCommandNames.ERROR_INVALID_PARAMETERS);
+				logError(ServletCommandNames.ERROR_INVALID_PARAMETERS);
 				return;
 			}
 			double centerX = Double.parseDouble(centerXString);
@@ -339,16 +405,14 @@ public class MapperControllableServlet
 					centerY,
 					layerParamIndex,layersVisibilities);
 			Logger.log ("Rendition started.");
-		} catch(NumberFormatException e) {
+		}
+		catch(NumberFormatException e) {
 			Logger.log("Number Format Exception was detected!");			
-			writeNLogError(currentRequestOS, ServletCommandNames.ERROR_INVALID_PARAMETERS);
-		} catch(IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}				
+			logError(ServletCommandNames.ERROR_INVALID_PARAMETERS);
+		}
 		catch (NullPointerException npExc) {
 			Logger.log("Null Pointer Exception was detected!");
-			writeNLogError(currentRequestOS, ServletCommandNames.ERROR_NO_PARAMETERS);
+			logError(ServletCommandNames.ERROR_NO_PARAMETERS);
 		}
 	}
 	
@@ -442,11 +506,9 @@ public class MapperControllableServlet
 //		}
 //	}
 
-	public void writeNLogError(ObjectOutputStream currentRequestOS, String error) throws
-		IOException
+	public void logError(String error)
 	{
 		Logger.log("ERROR!!! - " + error);
-		currentRequestOS.writeObject(error);
 	}
 	
 	/**

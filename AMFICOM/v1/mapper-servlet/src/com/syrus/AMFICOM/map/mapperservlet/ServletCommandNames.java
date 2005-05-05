@@ -1,6 +1,7 @@
+package com.syrus.AMFICOM.map.mapperservlet;
 /**
- * @author $Author: krupenn $
- * @version $Revision: 1.5 $, $Date: 2005/05/04 14:54:13 $
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.1 $, $Date: 2005/05/05 10:09:52 $
  * @module mapper-servlet
  */
 public class ServletCommandNames
@@ -28,7 +29,10 @@ public class ServletCommandNames
 	//Parameters for searching name
 	public static final String PAR_NAME_TO_SEARCH = "name";
 	
-	//Errors available
+	//Statuses
+	public static final String STATUS_FIELD_NAME = "status";
+	
+	public static final String STATUS_SUCCESS = "success";
 	public static final String ERROR_INVALID_PARAMETERS = "invalid_params";
 	public static final String ERROR_NO_PARAMETERS = "no_params";
 	public static final String ERROR_MAP_EXCEPTION = "map_exception";

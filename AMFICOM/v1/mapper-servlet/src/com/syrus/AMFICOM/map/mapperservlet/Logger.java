@@ -1,3 +1,4 @@
+package com.syrus.AMFICOM.map.mapperservlet;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -5,7 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * $Id: Logger.java,v 1.1 2005/05/04 14:53:45 krupenn Exp $ Syrus Systems Научно-технический центр Проект: АМФИКОМ
+ * $Id: Logger.java,v 1.1 2005/05/05 10:09:52 peskovsky Exp $ Syrus Systems Научно-технический центр Проект: АМФИКОМ
  */
 
 class Logger {

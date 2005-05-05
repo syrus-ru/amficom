@@ -1,3 +1,4 @@
+package com.syrus.AMFICOM.map.mapperservlet;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -18,7 +19,7 @@ import com.mapinfo.util.DoubleRect;
 import com.mapinfo.xmlprot.mxtj.ImageRequestComposer;
 
 /**
- * $Id: RenderingThread.java,v 1.1 2005/05/04 14:53:45 krupenn Exp $
+ * $Id: RenderingThread.java,v 1.1 2005/05/05 10:09:52 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -79,51 +80,38 @@ class RenderingThread extends Thread
 	
 	public void run()
 	{
-//		while (!this.toBreak)
-//		{
-//			while (this.isProcessing == false)
-//				try
-//				{
-//					Thread.sleep(10);
-//				} catch (InterruptedException e1)
-//				{
-//					// TODO Auto-generated catch block
-//					Logger.log(e1.getMessage());
-//				}
+		//Отображаем карту и записывает её в поток данных
+		Logger.log("RunningThread - run - Rendering map.");
+		
+		this.currentlyRenderingOutputStream = new ByteArrayOutputStream();
+		
+		try
+		{
+			this.renderer.render(ImageRequestComposer.create(
+				this.mapJObject,
+				MapperControllableServlet.NUM_OF_COLORS,
+				MapperControllableServlet.BACKGROUND_COLOR,
+				"image/gif"));
+		
+			Logger.log("RunningThread - run - Writing rendition to buffer.");
 			
-			//Отображаем карту и записывает её в поток данных
-			Logger.log("RunningThread - run - Rendering map.");
-			
-			this.currentlyRenderingOutputStream = new ByteArrayOutputStream();
-			
-			try
-			{
-				this.renderer.render(ImageRequestComposer.create(
-					this.mapJObject,
-					MapperControllableServlet.NUM_OF_COLORS,
-					MapperControllableServlet.BACKGROUND_COLOR,
-					"image/gif"));
-			
-				Logger.log("RunningThread - run - Writing rendition to buffer.");
-				
-				//Output the map
-				this.renderer.toStream(this.currentlyRenderingOutputStream);
-			}
-			catch (Exception e)
-			{
-				Logger.log(e.getMessage());
-			}
+			//Output the map
+			this.renderer.toStream(this.currentlyRenderingOutputStream);
+		}
+		catch (Exception e)
+		{
+			Logger.log(e.getMessage());
+		}
 
-			this.readyImageOutputStream = this.currentlyRenderingOutputStream;			
-			
-			this.isProcessing = false;
-			this.isMapRendered = true;
-			
-			Logger.log("RunningThread - run - Map rendered.");
-			synchronized(this.servlet.getState()) {
-				this.servlet.setState(MapperControllableServlet.STATE_RENDERED);
-			}
-//		}
+		this.readyImageOutputStream = this.currentlyRenderingOutputStream;			
+		
+		this.isProcessing = false;
+		this.isMapRendered = true;
+		
+		Logger.log("RunningThread - run - Map rendered.");
+		synchronized(this.servlet.getState()) {
+			this.servlet.setState(MapperControllableServlet.STATE_RENDERED);
+		}
 	}
 	
 	public void cancel()
