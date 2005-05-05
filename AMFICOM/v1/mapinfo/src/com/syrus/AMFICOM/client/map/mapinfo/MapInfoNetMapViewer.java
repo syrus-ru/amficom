@@ -17,6 +17,7 @@ import com.mapinfo.mapj.LayerType;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapConnection;
+import com.syrus.AMFICOM.Client.Map.MapConnectionException;
 import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Map.NetMapViewer;
@@ -134,9 +135,17 @@ public class MapInfoNetMapViewer extends NetMapViewer
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass()
 				.getName(), "saveConfig()");
 
-		MapPropertiesManager.setCenter(this.lnl.getCenter());
-		MapPropertiesManager.setZoom(this.lnl.getScale());
-		MapPropertiesManager.saveIniFile();
+		try {
+			MapPropertiesManager.setCenter(this.lnl.getCenter());
+			MapPropertiesManager.setZoom(this.lnl.getScale());
+			MapPropertiesManager.saveIniFile();
+		} catch(MapConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch(MapDataException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**
