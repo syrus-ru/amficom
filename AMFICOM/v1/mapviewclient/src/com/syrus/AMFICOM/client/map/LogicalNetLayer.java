@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.65 2005/05/05 09:54:14 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.66 2005/05/05 10:19:13 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -51,7 +51,6 @@ import com.syrus.AMFICOM.Client.Map.Controllers.MarkerController;
 import com.syrus.AMFICOM.Client.Map.Controllers.NodeLinkController;
 import com.syrus.AMFICOM.Client.Map.Controllers.NodeTypeController;
 import com.syrus.AMFICOM.Client.Map.Controllers.SiteNodeController;
-import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.AbstractNode;
@@ -82,11 +81,13 @@ import com.syrus.AMFICOM.scheme.SchemePath;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.65 $, $Date: 2005/05/05 09:54:14 $
+ * @version $Revision: 1.66 $, $Date: 2005/05/05 10:19:13 $
  * @module mapviewclient_v2
  */
 public abstract class LogicalNetLayer implements MapCoordinatesConverter
 {
+	public static final double ZOOM_FACTOR = 2D;
+
 	protected CommandList commandList = new CommandList(20);
 	
 	/** Нить, управляющая анимацией на слое. */
@@ -182,6 +183,11 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	
 	/** Текуший масштаб отображения оюъектов карты. */
 	protected double currentScale = 0.00001;
+
+	/**
+	 * Величина шага по смещению центра карты в долях от величины экрана
+	 */
+	public static final double MOVE_CENTER_STEP_SIZE = 0.33;
 
 	/**
 	 * Получить экранные координаты по географическим координатам.
@@ -1823,24 +1829,24 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		
 		if ((22.5 < angle) && (angle < 67.5))
 		{
-			if (	(Math.abs(shiftX) >= visSize.getWidth() * MapFrame.MOVE_CENTER_STEP_SIZE)
-					&&(Math.abs(shiftY) >= visSize.getHeight() * MapFrame.MOVE_CENTER_STEP_SIZE))
+			if (	(Math.abs(shiftX) >= visSize.getWidth() * LogicalNetLayer.MOVE_CENTER_STEP_SIZE)
+					&&(Math.abs(shiftY) >= visSize.getHeight() * LogicalNetLayer.MOVE_CENTER_STEP_SIZE))
 			{
-				discreteShiftX = (int)Math.round(shiftX / Math.abs(shiftX) * visSize.getWidth() * MapFrame.MOVE_CENTER_STEP_SIZE);
-				discreteShiftY = (int)Math.round(shiftY / Math.abs(shiftY) * visSize.getHeight() * MapFrame.MOVE_CENTER_STEP_SIZE);
+				discreteShiftX = (int)Math.round(shiftX / Math.abs(shiftX) * visSize.getWidth() * LogicalNetLayer.MOVE_CENTER_STEP_SIZE);
+				discreteShiftY = (int)Math.round(shiftY / Math.abs(shiftY) * visSize.getHeight() * LogicalNetLayer.MOVE_CENTER_STEP_SIZE);
 			}
 		}
 		else if (angle <= 22.5)
 		{
-			if (Math.abs(shiftX) >= visSize.getWidth() * MapFrame.MOVE_CENTER_STEP_SIZE)			
-				discreteShiftX = (int)Math.round(shiftX / Math.abs(shiftX) * visSize.getWidth() * MapFrame.MOVE_CENTER_STEP_SIZE);
+			if (Math.abs(shiftX) >= visSize.getWidth() * LogicalNetLayer.MOVE_CENTER_STEP_SIZE)			
+				discreteShiftX = (int)Math.round(shiftX / Math.abs(shiftX) * visSize.getWidth() * LogicalNetLayer.MOVE_CENTER_STEP_SIZE);
 			discreteShiftY = 0;			
 		}
 		else if (67.5 <= angle)
 		{
 			discreteShiftX = 0;
-			if (Math.abs(shiftY) >= visSize.getHeight() * MapFrame.MOVE_CENTER_STEP_SIZE)
-				discreteShiftY = (int)Math.round(shiftY / Math.abs(shiftY) * visSize.getHeight() * MapFrame.MOVE_CENTER_STEP_SIZE);			
+			if (Math.abs(shiftY) >= visSize.getHeight() * LogicalNetLayer.MOVE_CENTER_STEP_SIZE)
+				discreteShiftY = (int)Math.round(shiftY / Math.abs(shiftY) * visSize.getHeight() * LogicalNetLayer.MOVE_CENTER_STEP_SIZE);			
 		}
 		return new Dimension(discreteShiftX,discreteShiftY);
 	}
