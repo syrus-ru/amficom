@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLinkTypeDatabase.java,v 1.20 2005/04/01 11:11:05 bob Exp $
+ * $Id: PhysicalLinkTypeDatabase.java,v 1.21 2005/05/05 09:02:02 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,8 +29,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/04/01 11:11:05 $
- * @author $Author: bob $
+ * @version $Revision: 1.21 $, $Date: 2005/05/05 09:02:02 $
+ * @author $Author: krupenn $
  * @module map_v1
  */
 public class PhysicalLinkTypeDatabase extends CharacterizableDatabase {
@@ -101,7 +101,7 @@ public class PhysicalLinkTypeDatabase extends CharacterizableDatabase {
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 	throws IllegalDataException, RetrieveObjectException, SQLException {
 		PhysicalLinkType physicalLinkType = (storableObject == null) ? 
-				new PhysicalLinkType(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, null, null) : 
+				new PhysicalLinkType(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, null, null, null) : 
 					fromStorableObject(storableObject);
 		physicalLinkType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 							   DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
