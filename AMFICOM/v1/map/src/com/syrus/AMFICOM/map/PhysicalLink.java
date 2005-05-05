@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.51 2005/04/20 07:53:47 bass Exp $
+ * $Id: PhysicalLink.java,v 1.52 2005/05/05 09:00:57 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,10 +50,10 @@ import com.syrus.AMFICOM.map.corba.PhysicalLink_Transferable;
  * фрагментов. Фрагменты образуют цепочку. Последовательность фрагментов 
  * не хранится. Линия характеризуется типом (<code>{@link PhysicalLinkType}</code>). 
  * Предуствновленными являются  два типа - 
- * тоннель (<code>{@link PhysicalLinkType#TUNNEL}</code>) 
- * и коллектор (<code>{@link PhysicalLinkType#COLLECTOR}</code>).
- * @author $Author: bass $
- * @version $Revision: 1.51 $, $Date: 2005/04/20 07:53:47 $
+ * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>) 
+ * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
+ * @author $Author: krupenn $
+ * @version $Revision: 1.52 $, $Date: 2005/05/05 09:00:57 $
  * @module map_v1
  * @todo make binding.dimension persistent (just as bindingDimension for PhysicalLinkType)
  * @todo nodeLinks should be transient
@@ -910,13 +910,13 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 
 			Collection collection = MapStorableObjectPool.getStorableObjectsByCondition(condition, true);
 			if (collection == null || collection.size() == 0) {
-				typeCodeName1 = PhysicalLinkType.TUNNEL;
+				typeCodeName1 = PhysicalLinkType.DEFAULT_TUNNEL;
 
 				condition.setValue(typeCodeName1);
 
 				collection = MapStorableObjectPool.getStorableObjectsByCondition(condition, true);
 				if (collection == null || collection.size() == 0) {
-					throw new CreateObjectException("PhysicalLinkType \'" + PhysicalLinkType.TUNNEL + "\' not found");
+					throw new CreateObjectException("PhysicalLinkType \'" + PhysicalLinkType.DEFAULT_TUNNEL + "\' not found");
 				}
 			}
 			physicalLinkType1 = (PhysicalLinkType) collection.iterator().next();

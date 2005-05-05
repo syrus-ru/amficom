@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.32 2005/04/20 07:53:47 bass Exp $
+ * $Id: SiteNode.java,v 1.33 2005/05/05 09:00:57 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,16 +44,16 @@ import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
  * Сетевой узел на топологической схеме. Характеризуется типом 
  * (<code>{@link SiteNodeType}</code>). 
  * Предуствновленными являются несколько типов - 
- * колодец (<code>{@link SiteNodeType#WELL}</code>), 
- * пикет (<code>{@link SiteNodeType#PIQUET}</code>), 
- * кабельный ввод (<code>{@link SiteNodeType#CABLE_INLET}</code>) 
- * здание (<code>{@link SiteNodeType#BUILDING}</code>), 
- * телефонный узел (<code>{@link SiteNodeType#ATS}</code>). 
+ * колодец (<code>{@link SiteNodeType#DEFAULT_WELL}</code>), 
+ * пикет (<code>{@link SiteNodeType#DEFAULT_PIQUET}</code>), 
+ * кабельный ввод (<code>{@link SiteNodeType#DEFAULT_CABLE_INLET}</code>) 
+ * здание (<code>{@link SiteNodeType#DEFAULT_BUILDING}</code>), 
+ * телефонный узел (<code>{@link SiteNodeType#DEFAULT_ATS}</code>). 
  * Дополнительно описывается полями
  * {@link #city}, {@link #street}, {@link #building} для поиска по 
  * географическим параметрам. 
- * @author $Author: bass $
- * @version $Revision: 1.32 $, $Date: 2005/04/20 07:53:47 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.33 $, $Date: 2005/05/05 09:00:57 $
  * @module map_v1
  */
 public class SiteNode extends AbstractNode implements TypedObject {
@@ -387,13 +387,13 @@ public class SiteNode extends AbstractNode implements TypedObject {
 
 			Set set = MapStorableObjectPool.getStorableObjectsByCondition(condition, true);
 			if (set == null || set.size() == 0) {
-				typeCodeName1 = SiteNodeType.BUILDING;
+				typeCodeName1 = SiteNodeType.DEFAULT_BUILDING;
 
 				condition.setValue(typeCodeName1);
 
 				set = MapStorableObjectPool.getStorableObjectsByCondition(condition, true);
 				if (set == null || set.size() == 0) {
-					throw new CreateObjectException("SiteNodeType \'" + SiteNodeType.BUILDING + "\' not found");
+					throw new CreateObjectException("SiteNodeType \'" + SiteNodeType.DEFAULT_BUILDING + "\' not found");
 				}
 			}
 			siteNodeType = (SiteNodeType) set.iterator().next();
@@ -407,13 +407,15 @@ public class SiteNode extends AbstractNode implements TypedObject {
 
 			set = ResourceStorableObjectPool.getStorableObjectsByCondition(condition, true);
 			if (set == null || set.size() == 0) {
-				imageCodeName1 = SiteNodeType.BUILDING_IMAGE;
+				//@todo add public static final String AbstractImageResource.DEFAULT_SITE_IMAGE = "images/building.gif"
+//				imageCodeName1 = AbstractImageResource.DEFAULT_SITE_IMAGE;
+				imageCodeName1 = "images/building.gif";
 
 				condition.setValue(imageCodeName1);
 
 				set = ResourceStorableObjectPool.getStorableObjectsByCondition(condition, true);
 				if (set == null || set.size() == 0) {
-					throw new CreateObjectException("ImageResource \'" + SiteNodeType.BUILDING_IMAGE + "\' not found");
+					throw new CreateObjectException("ImageResource \'" + imageCodeName1 + "\' not found");
 				}
 			}
 			imageId1 = ((AbstractImageResource) set.iterator().next()).getId();
