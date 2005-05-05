@@ -23,7 +23,6 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 	protected ModelTraceAndEvents mtae; // используется только в методах, вызываемых из paint()
 	protected ReflectogramAlarm[] alarms;
 
-	protected double min_trace_level; // positive value, '-' sign is assumed
 	protected double noise_level = 28; // ???!
 	protected boolean moving_level = false;
 
@@ -33,31 +32,25 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 		init_module(dispatcher);
 	}
 
-	void init_module(Dispatcher dispatcher)
+	void init_module(Dispatcher dispatcher1)
 	{
-		this.dispatcher = dispatcher;
+		this.dispatcher = dispatcher1;
 	}
 
-	public void updateTrace (ModelTraceAndEvents mtae) // was: updateEvents
+	public void updateTrace (ModelTraceAndEvents mtae1) // was: updateEvents
 	{
-		this.mtae = mtae;
+		this.mtae = mtae1;
 	}
 
-	public void updateAlarms (ReflectogramAlarm[] alarms)
+	public void updateAlarms (ReflectogramAlarm[] alarms1)
 	{
-		this.alarms = alarms;
-		if (alarms != null)
+		this.alarms = alarms1;
+		if (alarms1 != null)
 		{
 			draw_alarms = true;
 		}
 		else
 			draw_alarms = false;
-	}
-
-	public void updateMinTraceLevel(double value)
-	{
-		min_trace_level = value;
-		Heap.setMinTraceLevel(-min_trace_level);
 	}
 
 	public void updateNoiseLevel()
@@ -88,7 +81,7 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 			if (coord2index(currpos.x) > y.length)
 				return;
 
-			if(Math.abs(currpos.y-(int)((min_trace_level - top) * scaleY - 1)) < MOUSE_COUPLING)
+			if(Math.abs(currpos.y-(int)((getMinTraceLevel() - top) * scaleY - 1)) < MOUSE_COUPLING)
 			{
 				moving_level = true;
 				setCursor(Cursor.getPredefinedCursor(Cursor.N_RESIZE_CURSOR));
@@ -105,7 +98,6 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 			moving_level = false;
 			setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 			parent.repaint();
-			updateMinTraceLevel(min_trace_level);
 			return;
 		}
 		super.this_mouseReleased(e);
@@ -117,11 +109,9 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 		{
 			upd_currpos(e);
 
-			double pos = min_trace_level;
-			pos += (currpos.y - tmppos.y)/scaleY;
-			min_trace_level = pos;
+			double pos = getMinTraceLevel() + (currpos.y - tmppos.y)/scaleY;
+            updateMinTraceLevel(pos);
 			parent.repaint();
-            updateMinTraceLevel(min_trace_level);
 			dispatcher.notify(new RefUpdateEvent(this, RefUpdateEvent.MIN_TRACE_LEVEL_CHANGED_EVENT));
 			return;
 		}
@@ -175,8 +165,8 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 		int jw = getWidth();
 		((Graphics2D) g).setStroke(SELECTION_STROKE);
 		g.setColor(UIManager.getColor(AnalysisResourceKeys.COLOR_MIN_TRACE_LEVEL));
-		g.drawLine(0, (int)((min_trace_level - top) * scaleY - 1),
-							 jw, (int)((min_trace_level - top) * scaleY - 1));
+		g.drawLine(0, (int)((getMinTraceLevel() - top) * scaleY - 1),
+							 jw, (int)((getMinTraceLevel() - top) * scaleY - 1));
 		((Graphics2D) g).setStroke(DEFAULT_STROKE);
 	}
 
@@ -307,4 +297,12 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 //				g.drawLine((int)(i*scaleX+1), (int)((maxY - y[i+start] - top) * scaleY),
 //					(int)((i+1)*scaleX+1), (int)((maxY - y[i+start+1] - top) * scaleY));
 	}
+
+    protected void updateMinTraceLevel(double value)
+    {
+        Heap.setMinTraceLevel(-value);
+    }
+    protected double getMinTraceLevel() {
+        return -Heap.getMinTraceLevel();
+    }
 }
