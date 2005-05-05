@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertiesManager.java,v 1.13 2005/04/08 14:19:21 peskovsky Exp $
+ * $Id: MapPropertiesManager.java,v 1.14 2005/05/05 09:52:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,9 +21,11 @@ import java.awt.SystemColor;
 import java.awt.Toolkit;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -51,8 +53,8 @@ import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
  * <li>center
  * <li>zoom
  * 
- * @author $Author: peskovsky $
- * @version $Revision: 1.13 $, $Date: 2005/04/08 14:19:21 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.14 $, $Date: 2005/05/05 09:52:10 $
  * @module mapviewclient_v1
  */
 public final class MapPropertiesManager 
@@ -75,6 +77,7 @@ public final class MapPropertiesManager
 	protected static final String KEY_LAST_ZOOM = "lastZoom";
 	protected static final String KEY_LAST_VIEW = "lastView";
 	protected static final String KEY_LAST_DIRECTORY = "lastDirectory";
+	protected static final String KEY_DESCRETE_NAVIGATION = "descreteNavigation";
 
 
 	public static final double DEFAULT_ZOOM = 1.0D;
@@ -97,6 +100,7 @@ public final class MapPropertiesManager
 	protected static String lastZoom = "";
 	protected static String lastView = "";
 	protected static String lastDirectory = ".";
+	protected static String descreteNavigation = "false";
 
 	/* display constants. */
 	public static final Color DEFAULT_TEXT_BACKGROUND = SystemColor.window;
@@ -207,6 +211,13 @@ public final class MapPropertiesManager
 	private static DecimalFormat distanceFormat;
 	private static DecimalFormat coordinatesFormat;
 	
+	/**
+	 * Для вывода времени в отладочных сообщениях
+	 */
+	private static DateFormat logDateFormat = new SimpleDateFormat("E M d H:m:s:S");
+
+	private static DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+
 	static
 	{
 		try
@@ -288,6 +299,14 @@ public final class MapPropertiesManager
 		return connectionClass;
 	}
 
+	public static DateFormat getLogDateFormat() {
+		return logDateFormat;
+	}
+	
+	public static DateFormat getDateFormat() {
+		return dateFormat;
+	}
+	
 	public static double getZoom()
 	{
 		try
@@ -345,6 +364,10 @@ public final class MapPropertiesManager
 		}
 	}
 
+	public static boolean isDescreteNavigation() {
+		return Boolean.valueOf(descreteNavigation).booleanValue();
+	}
+	
 	/**
 	 * Установить значения из инициализационного файла.
 	 */
@@ -369,6 +392,7 @@ public final class MapPropertiesManager
 			lastZoom = "0.0000";
 		
 		lastDirectory = properties.getProperty(KEY_LAST_DIRECTORY);
+		descreteNavigation = properties.getProperty(KEY_LAST_DIRECTORY);
 //		selectionColor = iniFile.getValue("selectionColor");
 //		selectionStyle = iniFile.getValue("selectionStyle");
 //		showPhysicalNodes = iniFile.getValue("showNodes");
@@ -385,6 +409,7 @@ public final class MapPropertiesManager
 		dataBaseView = "";
 		dataBaseURL = "";
 		lastDirectory = ".";
+		descreteNavigation = "false";
 	}
 
 	/**
