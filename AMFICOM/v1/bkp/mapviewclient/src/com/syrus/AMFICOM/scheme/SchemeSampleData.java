@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeSampleData.java,v 1.5 2005/04/27 10:40:16 bass Exp $
+ * $Id: SchemeSampleData.java,v 1.6 2005/05/05 09:34:17 krupenn Exp $
  *
  * Copyright ї 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,19 +14,23 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.configuration.CableThreadType;
+import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
 import com.syrus.AMFICOM.scheme.corba.Scheme_TransferablePackage.Kind;
 
 /**
  * this class is used to create two sample instances
  * of Scheme whithout graphical components
- * @author $Author: bass $
- * @version $Revision: 1.5 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.6 $
  * @module generalclient_v1
  */
 public final class SchemeSampleData {
@@ -46,7 +50,7 @@ public final class SchemeSampleData {
 		}
 	}
 
-	private static void scheme1(Identifier userId, Identifier domainId) throws CreateObjectException, IllegalObjectEntityException
+	private static void scheme1(Identifier userId, Identifier domainId) throws CreateObjectException, IllegalObjectEntityException, ObjectNotFoundException, RetrieveObjectException
 	{
 		Set el = new HashSet();
 		Set link = new HashSet();
@@ -176,12 +180,16 @@ public final class SchemeSampleData {
 
 		link.add(link0);
 
+		LinkType lt = new LinkType(userId);
+		CableLinkType clt = new CableLinkType(userId);
+		CableThreadType ctt = CableThreadType.createInstance(userId, "test", "", "CTT", 0, lt, clt); 
+		
 		SchemeCableLink clink0 = SchemeCableLink.createInstance(userId, "Кабелёк1", scheme);
 		clink0.setOpticalLength(1000.0D);
 		clink0.setPhysicalLength(1000.0D);
 		clink0.setSourceSchemeCablePort(cport10);
 		clink0.setTargetSchemeCablePort(cport00);
-		SchemeCableThread clink0th = SchemeCableThread.createInstance(userId, "1", "", null, null, null, null, clink0);
+		SchemeCableThread clink0th = SchemeCableThread.createInstance(userId, "1", "", ctt, null, null, null, clink0);
 		clink0.setSchemeCableThreads(Collections.singleton(clink0th));
 
 		SchemeCableLink clink1 = SchemeCableLink.createInstance(userId, "Кабелёк2", scheme);
@@ -189,7 +197,7 @@ public final class SchemeSampleData {
 		clink1.setPhysicalLength(1000.0D);
 		clink1.setSourceSchemeCablePort(cport11);
 		clink1.setTargetSchemeCablePort(cport20);
-		SchemeCableThread clink1th = SchemeCableThread.createInstance(userId, "1", "", null, null, null, null, clink1);
+		SchemeCableThread clink1th = SchemeCableThread.createInstance(userId, "1", "", ctt, null, null, null, clink1);
 		clink1.setSchemeCableThreads(Collections.singleton(clink1th));
 
 		SchemeCableLink clink2 = SchemeCableLink.createInstance(userId, "Кабелёк3", scheme);
@@ -197,7 +205,7 @@ public final class SchemeSampleData {
 		clink2.setPhysicalLength(1000.0D);
 		clink2.setSourceSchemeCablePort(cport21);
 		clink2.setTargetSchemeCablePort(cport30);
-		SchemeCableThread clink2th = SchemeCableThread.createInstance(userId, "1", "", null, null, null, null, clink2);
+		SchemeCableThread clink2th = SchemeCableThread.createInstance(userId, "1", "", ctt, null, null, null, clink2);
 		clink2.setSchemeCableThreads(Collections.singleton(clink2th));
 
 		SchemeCableLink clink3 = SchemeCableLink.createInstance(userId, "Кабелёк4", scheme);
@@ -205,7 +213,7 @@ public final class SchemeSampleData {
 		clink3.setPhysicalLength(1000.0D);
 		clink3.setSourceSchemeCablePort(cport31);
 		clink3.setTargetSchemeCablePort(cport40);
-		SchemeCableThread clink3th = SchemeCableThread.createInstance(userId, "1", "", null, null, null, null, clink3);
+		SchemeCableThread clink3th = SchemeCableThread.createInstance(userId, "1", "", ctt, null, null, null, clink3);
 		clink3.setSchemeCableThreads(Collections.singleton(clink3th));
 
 		SchemeCableLink clink4 = SchemeCableLink.createInstance(userId, "Кабелёк5", scheme);
@@ -213,7 +221,7 @@ public final class SchemeSampleData {
 		clink4.setPhysicalLength(1000.0D);
 		clink4.setSourceSchemeCablePort(cport41);
 		clink4.setTargetSchemeCablePort(cport22);
-		SchemeCableThread clink4th = SchemeCableThread.createInstance(userId, "1", "", null, null, null, null, clink4);
+		SchemeCableThread clink4th = SchemeCableThread.createInstance(userId, "1", "", ctt, null, null, null, clink4);
 		clink4.setSchemeCableThreads(Collections.singleton(clink4th));
 
 		clink.add(clink0);
@@ -222,7 +230,7 @@ public final class SchemeSampleData {
 		clink.add(clink3);
 		clink.add(clink4);
 
-		SchemePath path0 = SchemePath.createInstance(userId, "Путяра измерений", "", null, null);
+		SchemePath path0 = SchemePath.createInstance(userId, "Путяра измерений");
 		path0.setScheme(scheme);
 
 		path.add(path0);
@@ -286,7 +294,7 @@ public final class SchemeSampleData {
 		SchemeStorableObjectPool.putStorableObject(scheme);
 	}
 
-	private static void scheme2(Identifier userId, Identifier domainId) throws CreateObjectException, IllegalObjectEntityException
+	private static void scheme2(Identifier userId, Identifier domainId) throws CreateObjectException, IllegalObjectEntityException, ObjectNotFoundException, RetrieveObjectException
 	{
 		Set el = new HashSet();
 		Set link = new HashSet();
@@ -349,6 +357,10 @@ public final class SchemeSampleData {
 		link0.setSourceSchemePort(port10);
 		link0.setTargetSchemePort(port00);
 
+		LinkType lt = new LinkType(userId);
+		CableLinkType clt = new CableLinkType(userId);
+		CableThreadType ctt = CableThreadType.createInstance(userId, "test2", "", "CTT2", 0, lt, clt); 
+
 		SchemeCableLink clink0 = SchemeCableLink.createInstance(userId, "Кабелёк", scheme);
 		clink.add(clink0);
 		clink0.setOpticalLength(1000.0D);
@@ -358,7 +370,7 @@ public final class SchemeSampleData {
 		SchemeCableThread clink0th = SchemeCableThread.createInstance(userId, "1", "", null, null, null, null, clink0);
 		clink0.setSchemeCableThreads(Collections.singleton(clink0th));
 
-		SchemePath path0 = SchemePath.createInstance(userId, "Путяра измерений", "", null, null);
+		SchemePath path0 = SchemePath.createInstance(userId, "Путяра измерений");
 		path0.setScheme(scheme);
 
 		PathElement pel0 = PathElement.createInstance(userId, path0, link0);
