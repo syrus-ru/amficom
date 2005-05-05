@@ -1,12 +1,12 @@
 package com.syrus.AMFICOM.Client.Map.UI;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.User;
@@ -25,17 +25,6 @@ public final class MapTableController extends ObjectResourceController
 	private static MapTableController instance;
 
 	private List keys;
-
-	  static SimpleDateFormat sdf =
-		new java.text.SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
-
-	private static final String PROPERTY_PANE_CLASS_NAME = 
-			"com.syrus.AMFICOM.Client.Map.Props.MapPanel";
-
-	public static String getPropertyPaneClassName()
-	{
-		return PROPERTY_PANE_CLASS_NAME;
-	}
 
 	private MapTableController() 
 	{
@@ -101,12 +90,12 @@ public final class MapTableController extends ObjectResourceController
 		else
 		if (key.equals(KEY_CREATED))
 		{
-			result = sdf.format(map.getCreated());
+			result = MapPropertiesManager.getDateFormat().format(map.getCreated());
 		}
 		else
 		if (key.equals(KEY_MODIFIED))
 		{
-			result = sdf.format(map.getModified());
+			result = MapPropertiesManager.getDateFormat().format(map.getModified());
 		}
 		return result;
 	}
