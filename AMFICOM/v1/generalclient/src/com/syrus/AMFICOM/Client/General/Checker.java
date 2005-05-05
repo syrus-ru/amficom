@@ -1,5 +1,5 @@
 /*
- * $Id: Checker.java,v 1.10 2004/08/29 13:38:14 bass Exp $
+ * $Id: Checker.java,v 1.11 2005/05/05 12:12:55 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,12 +10,18 @@ package com.syrus.AMFICOM.Client.General;
 
 import com.syrus.AMFICOM.Client.Resource.Object.*;
 import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
+import com.syrus.AMFICOM.administration.User;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginManager;
+
 import java.util.*;
 import javax.swing.JOptionPane;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2004/08/29 13:38:14 $
+ * @author $Author: bob $
+ * @version $Revision: 1.11 $, $Date: 2005/05/05 12:12:55 $
  * @module generalclient_v1
  */
 public final class Checker {
@@ -240,20 +246,18 @@ public final class Checker {
 	/* 3 */
 	public static final String savePredictedReflectogramm = predict + "savePredictedReflectogramm";
 
-	User user;
+	private User user;
 
-	public Checker(DataSourceInterface dsi) {
-		if (dsi != null)
-			this.user = (User) (Pool.get(User.typ, dsi.getSession().getUserId()));
-		else
-			this.user = null;
-	}
-
-	public Checker(SessionInterface si) {
-		if (si != null)
-			this.user = (User) (Pool.get(User.typ, si.getUserId()));
-		else
-			this.user = null;
+	public Checker() {
+		Identifier userId = LoginManager.getUserId();
+		if (userId != null && !userId.isVoid()) {
+			try {
+				this.user = (User)AdministrationStorableObjectPool.getStorableObject(userId, true);
+			} catch (ApplicationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
 	public Checker(User user) {
@@ -263,69 +267,69 @@ public final class Checker {
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//  Defenition of the object checkers.
 
-	public boolean checkObject(String objectTyp, String objectId, String operationType) {
-		return checkObject(objectTyp, objectId, operationType, true);
-	}
+//	public boolean checkObject(String objectTyp, String objectId, String operationType) {
+//		return checkObject(objectTyp, objectId, operationType, true);
+//	}
 	
-	public boolean checkObject(String objectTyp, String objectId, String operationType, boolean showMessage) {
-		return checkObject(objectTyp, objectId, operationType, this.user, showMessage);
-	}
+//	public boolean checkObject(String objectTyp, String objectId, String operationType, boolean showMessage) {
+//		return checkObject(objectTyp, objectId, operationType, this.user, showMessage);
+//	}
 
-	public static boolean checkObject(String userId, String objectTyp, String objectId, String operationType, boolean showMessage) {
-		return checkObject(objectTyp, objectId, operationType, (User) (Pool.get(User.typ, userId)), showMessage);
-	}
+//	public static boolean checkObject(Identifier userId, String objectTyp, String objectId, String operationType, boolean showMessage) {
+//		return checkObject(objectTyp, objectId, operationType, (User) (Pool.get(User.typ, userId)), showMessage);
+//	}
+//
+//	public static boolean checkObject(String userId, String objectTyp, String objectId, String operationType) {
+//		return checkObject(userId, objectTyp, objectId, operationType, true);
+//	}
 
-	public static boolean checkObject(String userId, String objectTyp, String objectId, String operationType) {
-		return checkObject(userId, objectTyp, objectId, operationType, true);
-	}
-
-	private static boolean checkObject(final String typ, final String id, final String operationType, final User user, final boolean showMessage) {
-		if (user == null) {
-			if (showMessage)
-				JOptionPane.showMessageDialog(null, "Права пользователя не установлены.", "Ошибка", JOptionPane.OK_OPTION);
-			return false;
-		}
-		if (user.login.equals("sys"))
-			return true;
-
-		ObjectPermissionAttributes opa = null;
-		if (typ.equals(Domain.typ)) {
-			Domain dom = (Domain)Pool.get(typ, id);
-			if (dom == null)
-				return true;
-			opa = dom.opa;
-		}
-		if (opa == null)
-			return true;
-
-		if (opa.owner_id.equals(user.id)) {
-			if (opa.userR && operationType.equals(read))
-				return true;
-			if (opa.userW && operationType.equals(write))
-				return true;
-			if (opa.userX && operationType.equals(execute))
-				return true;
-		} else if (hasEqualElements(opa.group_ids, user.group_ids)) {
-			if (opa.groupR && operationType.equals(read))
-				return true;
-			if (opa.groupW && operationType.equals(write))
-				return true;
-			if (opa.groupX && operationType.equals(execute))
-				return true;
-		} else {
-			if(opa.otherR && operationType.equals(read))
-				return true;
-			if(opa.otherW && operationType.equals(write))
-				return true;
-			if(opa.otherX && operationType.equals(execute))
-				return true;
-		}
-
-		if (showMessage)
-			JOptionPane.showMessageDialog(null, opa.whyRejected, "Ошибка", JOptionPane.OK_OPTION);
-
-		return false;
-	}
+//	private static boolean checkObject(final String typ, final String id, final String operationType, final User user, final boolean showMessage) {
+//		if (user == null) {
+//			if (showMessage)
+//				JOptionPane.showMessageDialog(null, "Права пользователя не установлены.", "Ошибка", JOptionPane.OK_OPTION);
+//			return false;
+//		}
+//		if (user.login.equals("sys"))
+//			return true;
+//
+//		ObjectPermissionAttributes opa = null;
+//		if (typ.equals(Domain.typ)) {
+//			Domain dom = (Domain)Pool.get(typ, id);
+//			if (dom == null)
+//				return true;
+//			opa = dom.opa;
+//		}
+//		if (opa == null)
+//			return true;
+//
+//		if (opa.owner_id.equals(user.id)) {
+//			if (opa.userR && operationType.equals(read))
+//				return true;
+//			if (opa.userW && operationType.equals(write))
+//				return true;
+//			if (opa.userX && operationType.equals(execute))
+//				return true;
+//		} else if (hasEqualElements(opa.group_ids, user.group_ids)) {
+//			if (opa.groupR && operationType.equals(read))
+//				return true;
+//			if (opa.groupW && operationType.equals(write))
+//				return true;
+//			if (opa.groupX && operationType.equals(execute))
+//				return true;
+//		} else {
+//			if(opa.otherR && operationType.equals(read))
+//				return true;
+//			if(opa.otherW && operationType.equals(write))
+//				return true;
+//			if(opa.otherX && operationType.equals(execute))
+//				return true;
+//		}
+//
+//		if (showMessage)
+//			JOptionPane.showMessageDialog(null, opa.whyRejected, "Ошибка", JOptionPane.OK_OPTION);
+//
+//		return false;
+//	}
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//  Defenition of the command checkers.
@@ -337,45 +341,46 @@ public final class Checker {
 		return checkCommand(commandName, user);
 	}
 
-	public static boolean checkCommandByUserId(String userID, String commandName) {
-		return checkCommand(commandName, (User) (Pool.get(User.typ, userID)));
-	}
+//	public static boolean checkCommandByUserId(String userID, String commandName) {
+//		return checkCommand(commandName, (User) (Pool.get(User.typ, userID)));
+//	}
 
 	private static boolean checkCommand(String commandName, User user) {
-		if (user == null) {
-			JOptionPane.showMessageDialog(null, "Права пользователя не установлены", "Ошибка", JOptionPane.OK_OPTION);
-			return false;
-		}
-
-		if (user.login.equals("sys"))
-			return true;
-
-		CommandPermissionAttributes cpa = getCommand(commandName);
-		if ((cpa == null) || cpa.owner_id.equals(user.id) || hasEqualElements(cpa.category_ids, user.category_ids))
-			return true;
-
-		JOptionPane.showMessageDialog(null, cpa.whyRejected, "Ошибка", JOptionPane.OK_OPTION);
-		return false;
+//		if (user == null) {
+//			JOptionPane.showMessageDialog(null, "Права пользователя не установлены", "Ошибка", JOptionPane.OK_OPTION);
+//			return false;
+//		}
+//
+//		if (user.login.equals("sys"))
+//			return true;
+//
+//		CommandPermissionAttributes cpa = getCommand(commandName);
+//		if ((cpa == null) || cpa.owner_id.equals(user.id) || hasEqualElements(cpa.category_ids, user.category_ids))
+//			return true;
+//
+//		JOptionPane.showMessageDialog(null, cpa.whyRejected, "Ошибка", JOptionPane.OK_OPTION);
+//		return false;
+		return true;
 	}
 
-	// Definition of the helping functions.
-	private static CommandPermissionAttributes getCommand(final String commandName) {
-		Map map = Pool.getMap(CommandPermissionAttributes.typ);
-		if (map == null)
-			return null;
-
-		for (Iterator iterator = map.values().iterator(); iterator.hasNext();) {
-			CommandPermissionAttributes tmp = (CommandPermissionAttributes) (iterator.next());
-			if (tmp.codename.equals(commandName))
-				return tmp;
-		}
-		return null;
-	}
-
- 	private static boolean hasEqualElements(final Collection c1, final Collection c2) {
-		for (Iterator iterator = c1.iterator(); iterator.hasNext();)
-			if (c2.contains(iterator.next()))
-				return true;
-		return false;
-	}
+//	// Definition of the helping functions.
+//	private static CommandPermissionAttributes getCommand(final String commandName) {
+//		Map map = Pool.getMap(CommandPermissionAttributes.typ);
+//		if (map == null)
+//			return null;
+//
+//		for (Iterator iterator = map.values().iterator(); iterator.hasNext();) {
+//			CommandPermissionAttributes tmp = (CommandPermissionAttributes) (iterator.next());
+//			if (tmp.codename.equals(commandName))
+//				return tmp;
+//		}
+//		return null;
+//	}
+//
+// 	private static boolean hasEqualElements(final Collection c1, final Collection c2) {
+//		for (Iterator iterator = c1.iterator(); iterator.hasNext();)
+//			if (c2.contains(iterator.next()))
+//				return true;
+//		return false;
+//	}
 }
