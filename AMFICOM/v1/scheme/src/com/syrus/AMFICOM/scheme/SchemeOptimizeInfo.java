@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.18 2005/05/05 15:57:09 bass Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.19 2005/05/05 16:00:36 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.util.Log;
  * #05 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.18 $, $Date: 2005/05/05 15:57:09 $
+ * @version $Revision: 1.19 $, $Date: 2005/05/05 16:00:36 $
  * @module scheme_v1
  */
 public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
@@ -147,9 +147,8 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 
 	/**
 	 * @param transferable
-	 * @throws CreateObjectException
 	 */
-	SchemeOptimizeInfo(final SchemeOptimizeInfo_Transferable transferable) throws CreateObjectException {
+	SchemeOptimizeInfo(final SchemeOptimizeInfo_Transferable transferable) {
 		this.schemeOptimizeInfoDatabase = SchemeDatabaseContext.getSchemeOptimizeInfoDatabase();
 		fromTransferable(transferable);
 	}

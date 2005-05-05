@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePort.java,v 1.22 2005/05/05 15:57:09 bass Exp $
+ * $Id: SchemePort.java,v 1.23 2005/05/05 16:00:36 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.scheme;
 
-import java.nio.channels.OverlappingFileLockException;
 import java.util.Date;
 import java.util.Set;
 
@@ -32,7 +31,6 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
-import com.syrus.AMFICOM.scheme.corba.SchemeCablePort_Transferable;
 import com.syrus.AMFICOM.scheme.corba.SchemePort_Transferable;
 import com.syrus.util.Log;
 
@@ -40,7 +38,7 @@ import com.syrus.util.Log;
  * #08 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.22 $, $Date: 2005/05/05 15:57:09 $
+ * @version $Revision: 1.23 $, $Date: 2005/05/05 16:00:36 $
  * @module scheme_v1
  */
 public final class SchemePort extends AbstractSchemePort {

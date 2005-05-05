@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.22 2005/05/05 15:57:09 bass Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.23 2005/05/05 16:00:36 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.util.Log;
  * #06 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.22 $, $Date: 2005/05/05 15:57:09 $
+ * @version $Revision: 1.23 $, $Date: 2005/05/05 16:00:36 $
  * @module scheme_v1
  */
 public final class SchemeMonitoringSolution extends
@@ -97,9 +97,8 @@ public final class SchemeMonitoringSolution extends
 
 	/**
 	 * @param transferable
-	 * @throws CreateObjectException
 	 */
-	SchemeMonitoringSolution(final SchemeMonitoringSolution_Transferable transferable) throws CreateObjectException {
+	SchemeMonitoringSolution(final SchemeMonitoringSolution_Transferable transferable) {
 		this.schemeMonitoringSolutionDatabase = SchemeDatabaseContext.getSchemeMonitoringSolutionDatabase();
 		fromTransferable(transferable);
 	}
