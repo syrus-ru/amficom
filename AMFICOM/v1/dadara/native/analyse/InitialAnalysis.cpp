@@ -49,6 +49,7 @@ InitialAnalysis::InitialAnalysis(
 	this->minimalWeld			= minimalWeld;
 	this->minimalConnector		= minimalConnector;
     this->minimalEnd			= minimalEnd;
+    this->noiseFactor			= noiseFactor;
 	this->data_length			= data_length;
 	this->data					= data;
     this->reflectiveSize		= reflectiveSize;
@@ -56,11 +57,12 @@ InitialAnalysis::InitialAnalysis(
 
     events = new ArrList();
 
-	if (lengthTillZero <= 0)
+	if (lengthTillZero <= 0){
 		lastPoint = getLastPoint();
-	else
+    }
+	else{
 		lastPoint = lengthTillZero - 1;
-
+    }
 	f_wlet	= new double[lastPoint];
 #ifdef debug_VCL
 	f_tmp   = new double[lastPoint];
@@ -182,7 +184,6 @@ return;
 int InitialAnalysis::processDeadZone(ArrList& splashes)
 {   int i, shift = 0;
 	int begin = 0, end = -1;
-    int n_max = 0, n_min = 0;
     double f_max = 0, f_min = 0;
 	Splash* sp1 = (Splash*)splashes[0];
     Splash* sp2 = (Splash*)splashes[1];
@@ -287,8 +288,8 @@ int InitialAnalysis::processIfIsConnector(int i, ArrList& splashes)
 void InitialAnalysis::setSpliceParamsBySplash( EventParams& ep, Splash& sp)
 {   if(sp.sign>0) { ep.type = EventParams::GAIN; }
     else 		  { ep.type = EventParams::LOSS; }
-    ep.begin = sp.begin_weld;
-    ep.end = sp.end_weld+1;
+    ep.begin = sp.begin_thr_n; // sp.begin_weld; - thr - в расчёте на то, что потом уточним
+    ep.end = sp.end_thr_n + 1; // sp.end_weld+1;
     if(ep.end>lastPoint){ep.end = lastPoint;}
     if(ep.begin<0){ep.begin=0;}
     double max = -1;
@@ -337,9 +338,6 @@ void InitialAnalysis::setUnrecognizedParamsBySplashes( EventParams& ep, Splash& 
    ep.begin = sp1.begin_thr;
    if(ep.begin<0){ep.begin=0;}
    ep.end = sp2.end_thr;
-   if(ep.end == 9642)
-   {	int o=0; 
-   }
    if(ep.end>lastPoint){ep.end = lastPoint;}
 }
 // -------------------------------------------------------------------------------------------------
@@ -584,33 +582,29 @@ void InitialAnalysis::correctSpliceCoords(int n)
     if( !(ev.type == EventParams::GAIN || ev.type == EventParams::LOSS) )
 return;
 	//prf_b("correctSpliceCoords: enter");
-	const double noise_factor = 0;  // 0 , если мы не учитываем шум в пределах событий
-    const double angle_factor = 1.8; // расширения светового конуса для защиты от низкочастотных помех на больших масштабах
+	const double level_factor = 0.1; // уровень от максимума сигнала , при ктором считаем, что сигнал есть
+	const double noise_factor = 0.5;  // 0 , если мы не учитываем шум в пределах событий
+    const double angle_factor = 1.5; // расширения светового конуса для защиты от низкочастотных помех на больших масштабах
 	const double factor = 1.2; // множитель геометрической прогрессии
 	const int nscale = 20; // количество разных масштабов
 	int width = wlet_width; // frame-width: ширина окна (относительно границы события), в котором мы проводим дополнительный анализ
 	int w_l = ev.begin, w_r = ev.end; // w_l - wavelet_left: границы вейвлет-образа на текущем масштабе
-    int left_cross = (int )(w_l+width*angle_factor), right_cross = (int )(w_r-width*angle_factor); // точки пересечения световым конусом оси ОХ (по сути эквивалентно запоминанию масштаба, при котором это произошло, потому что точка X, где вейвлет пересёк порог, запоминается отдельно)
+    int left_cross = (int)(w_l+width*angle_factor), right_cross = (int)(w_r-width*angle_factor); // точки пересечения световым конусом оси ОХ (по сути эквивалентно запоминанию масштаба, при котором это произошло, потому что точка X, где вейвлет пересёк порог, запоминается отдельно)
 
 	int i;
 #ifdef debug_lines
-    int coln=-1,a=0xFFFFFF,b=0x0000FF,c=0x00FF00,d=0xFF7733,color[]={a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d};
+    int coln=-1,color[]={0xFFFFFF,0x0000FF,0x00FF00,0xFF7733};
+    int csz = sizeof(color)/sizeof(int);
 #endif
+    bool w_lr_ch = false; // цветом !!! при дебаге !!! выделяются участки только на тех масштабах, на которых границы изменились
+
     // анализируем при разныех масштабах
 	for(int step=0; step<=nscale; step++)
     {   width = (int)(width/factor);//(int )(wlet_width/pow(factor,step) +0.5);// чтобы не накапливать ошибки
     	if(width<=1)
     break;
-		//prf_b("correctSpliceCoords: getWLetNorma");
 	    wn = getWLetNorma(width);
-		//prf_b("correctSpliceCoords: performTransformationAndCenter");
-#ifdef debug_lines
-		performTransformationAndCenter(data, ev.begin, ev.end+1, f_wlet, width, wn);
-#else
 		performTransformationAndCenter(data, w_l, w_r+1, f_wlet, width, wn);
-#endif
-		//prf_b("correctSpliceCoords: processing");
-		// считаем добавку к шуму ( степень немонотонности от пересечения порога до максимума )
 		// сначала ищём положение экстремума при данном масштабе
         int i_max = w_l;
         double f_max = f_wlet[i_max];
@@ -619,7 +613,8 @@ return;
         	{	i_max = i; f_max = f_wlet[i_max];
             }
         }
-		double f_lmax = f_wlet[w_l], df_left = 0, df_right = 0;
+        // считаем добавку к шуму ( степень немонотонности от пересечения порога до максимума )
+		double f_lmax = f_wlet[w_l], df_left = 0, df_right = 0;// df - степень отклонения на немонотонных образах (после пересечения порога ф-я мжет колебаться, вот сепень этого колебания нас и интересует )
         for(i=w_l; i<i_max; i++) // добавки слева от пересечения порога до максимума
         { if( fabs(f_wlet[i])>fabs(f_lmax) ) { f_lmax = f_wlet[i];}// новый максимум  отклонения
           if( df_left<fabs(f_lmax-f_wlet[i]) ) { df_left=fabs(f_lmax-f_wlet[i]);} // новый максимальный уровень падения
@@ -629,21 +624,25 @@ return;
         { if(fabs(f_wlet[i])>fabs(f_lmax)) { f_lmax = f_wlet[i];}// новый максимум отклонения
           if(df_right<fabs(f_lmax-f_wlet[i])){ df_right=fabs(f_lmax-f_wlet[i]);} // новый максимальный уровень падения
         }
-
+        //
 		// ищем пересечение слева, пытаясь сдвинуть границу влево ( то есть пока i+width<=left_cross )
         for(i=w_l; i<w_r && i+width*angle_factor<=left_cross; i++)
-        {	if(fabs(f_wlet[i])>=minimalWeld+noise[i]*noise_factor+df_left)
+        {	//if(fabs(f_wlet[i])>= minimalThreshold+noise[i]*noise_factor+df_left)
+	        if(fabs(f_wlet[i]) >= level_factor*fabs(f_max) && fabs(f_wlet[i]) > fabs(df_left)/(0.5*level_factor) )// &&... - сигнал должен превышать свой шум ( за шум принимаем степень немонотонности ) 
         	{	w_l=i-1;//w_l=i;
-	            if(w_l+width*angle_factor<left_cross){ left_cross = (int )(w_l+width*angle_factor);}
+            	w_lr_ch = true;
+	            if(w_l+width*angle_factor<left_cross){ left_cross = (int)(w_l+width*angle_factor);}
         break;
             }
         }
    		// ищем пересечение справа
         for(int j=w_r; j>w_l && j-width*angle_factor>=right_cross; j--) // j-width>=right_cross - условие минимума в повёрнутой на 45 СК
-        {	if(fabs(f_wlet[j])>=minimalWeld+noise[j]*noise_factor+df_right)
+        {	//if(fabs(f_wlet[j])>=minimalThreshold+noise[j]*noise_factor+df_right)
+            if(fabs(f_wlet[j])>= level_factor*fabs(f_max) && fabs(f_wlet[i]) > fabs(df_right)/(0.5*level_factor) )// &&... - сигнал должен превышать свой шум ( за шум принимаем степень немонотонности )
         	{	w_r=j+1;//w_r=j;
+                w_lr_ch = true;
 	            if(w_r-width*angle_factor>right_cross)
-                { right_cross = (int )(w_r-width*angle_factor);}
+                { right_cross = (int)(w_r-width*angle_factor);}
         break;
             }
         }
@@ -652,13 +651,14 @@ return;
           for(int i=ev.begin; i<ev.end; i++)
           { double x1=i, y1=f_wlet[i], x2=i+1, y2=f_wlet[i+1];
             xs[cou]=x1*delta_x; ys[cou]=y1; xe[cou]=x2*delta_x; ye[cou]=y2;
-            col[cou]=color[coln];
-            if(i<w_l || i>w_r) col[cou] = 0x888888;
+            col[cou]=color[coln%csz];
+            if(i<w_l || i>w_r || !w_lr_ch) col[cou] = 0x888888;
             cou++;
           }
         }
 #endif
-    }
+		w_lr_ch = false;
+    }  // for(int step=0; step<=nscale;...
 	//prf_b("correctSpliceCoords: scales done");
 	if( w_l < w_r  )
     {   double old_left = ev.begin;

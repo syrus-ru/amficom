@@ -61,6 +61,7 @@ private:
 	double minimalWeld;
 	double minimalConnector;
     double minimalEnd;
+    double noiseFactor;
 
     int wlet_width; // базова€ ширина вейвлета
     int reflectiveSize;// максимальна€ ширина коннектора
