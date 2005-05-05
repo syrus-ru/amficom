@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeLinkSizeField.java,v 1.6 2005/02/10 11:48:39 krupenn Exp $
+ * $Id: MapNodeLinkSizeField.java,v 1.7 2005/05/05 09:48:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,7 +30,7 @@ import javax.swing.JTextField;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2005/02/10 11:48:39 $
+ * @version $Revision: 1.7 $, $Date: 2005/05/05 09:48:56 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -56,6 +56,8 @@ public final class MapNodeLinkSizeField extends JTextField
 	public void jbInit()
 	{
 		this.setFont(MapPropertiesManager.getFont());
+		this.setBackground(MapPropertiesManager.getTextBackground());
+		this.setForeground(MapPropertiesManager.getTextColor());
 
 		addKeyListener(new MapNodeLinkSizeField.MapNodeLinkSizeFieldKeyAdapter(this));
 		addFocusListener(new MapNodeLinkSizeField.MapNodeLinkSizeFieldFocusAdapter(this));
