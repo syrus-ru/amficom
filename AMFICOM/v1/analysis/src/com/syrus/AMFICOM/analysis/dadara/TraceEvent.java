@@ -89,7 +89,7 @@ public class TraceEvent
 	}
 	
 	// overallStats methods
-	public double overallStatsNoiseLevel() {
+	public double overallStatsNoiseLevel() { // yMax - yNoise
 		return data[2];
 	}
 	public double overallStatsLoss() {
