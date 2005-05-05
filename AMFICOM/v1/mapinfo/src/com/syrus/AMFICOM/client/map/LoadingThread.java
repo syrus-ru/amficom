@@ -1,5 +1,5 @@
 /**
- * $Id: LoadingThread.java,v 1.1.2.1 2005/05/05 10:21:52 krupenn Exp $
+ * $Id: LoadingThread.java,v 1.1.2.2 2005/05/05 12:04:48 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -39,13 +39,83 @@ public class LoadingThread extends Thread
 	 * ‘лаг, чтобы прервать получение изображени€ с сервера
 	 */
 	private boolean toBreakGettingRendition = false;
+
+	
+	private static final int STATE_IDLE = 0;
+	private static final int STATE_RENDERING = 1;
+	
+	private int state = STATE_IDLE;
+	
+	private static final int STATE_DELAYS[] = {10, 20}; 
+	
+	public void run()
+	{
+		while(true) {
+			checkStateEvents();
+			try
+			{
+				Thread.sleep(STATE_DELAYS[this.state]);
+			} catch (InterruptedException e)
+			{
+				e.printStackTrace();
+			}
+		}
+	}
+
+	void checkStateEvents() {
+		switch(this.state) {
+			case STATE_IDLE:
+				synchronized(this.requestQueue) {
+					Iterator rqIt = this.requestQueue.iterator();
+					if (rqIt.hasNext())
+					{
+						this.requestCurrentlyProcessed = (TopologicalRequest )rqIt.next();
+						rqIt.remove();
+
+						//ѕосылаем запрос на рендеринг			
+						try {
+							this.mapImageLoader.renderMapImageAtServer(this.requestCurrentlyProcessed);
+						} catch(MapConnectionException e1) {
+							e1.printStackTrace();
+							this.addRequest(this.requestCurrentlyProcessed);
+							return;
+						}
+						setState(STATE_RENDERING);
+					}
+				}
+				break;
+			case STATE_RENDERING: 
+				synchronized(this.requestQueue) {
+					ImageIcon imageForRequest = this.mapImageLoader.getServerMapImage();
+					if(imageForRequest != null) {
+						this.requestCurrentlyProcessed.setImage(imageForRequest);
+						this.requestCurrentlyProcessed.setPriority(TopologicalRequest.PRIORITY_ALREADY_LOADED);
+						
+						System.out.println(MapPropertiesManager.getLogDateFormat().format(new Date(System.currentTimeMillis())) +
+							" TIC - loadingThread - run - image loaded for request (" + this.requestCurrentlyProcessed + ")");
+							
+						this.requestCurrentlyProcessed = null;
+						setState(STATE_IDLE);
+					}
+				}
+				break;
+			default:
+				throw new UnsupportedOperationException("Wrong state!");
+		}
+	}
+	
+	void setState(int state) {
+		this.state = state;
+	}
+	
+	
 	
 	public LoadingThread(
 			MapImageLoader mapImageLoader)
 	{
 		this.mapImageLoader = mapImageLoader;
 	}
-	
+/*
 	public void run()
 	{
 		while (!this.toBreak)
@@ -116,7 +186,7 @@ public class LoadingThread extends Thread
 			}
 		}
 	}
-	
+*/
 	public void cancel()
 	{
 		this.toBreak = true;
