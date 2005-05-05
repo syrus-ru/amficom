@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseListener.java,v 1.25 2005/04/13 11:31:16 krupenn Exp $
+ * $Id: MapMouseListener.java,v 1.26 2005/05/05 09:48:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,12 +12,15 @@
 package com.syrus.AMFICOM.Client.Map.UI;
 
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import javax.swing.JComponent;
 import javax.swing.JOptionPane;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
@@ -49,7 +52,7 @@ import com.syrus.AMFICOM.mapview.VoidElement;
  * логического сетевого слоя operationMode. Если режим нулевой (NO_OPERATION),
  * то обработка события передается текущему активному элементу карты
  * (посредством объекта MapStrategy)
- * @version $Revision: 1.25 $, $Date: 2005/04/13 11:31:16 $
+ * @version $Revision: 1.26 $, $Date: 2005/05/05 09:48:10 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -95,6 +98,8 @@ public final class MapMouseListener implements MouseListener
 
 	public void mousePressed(MouseEvent me)
 	{
+		boolean proceed = true;
+
 		MapState mapState = this.logicalNetLayer.getMapState();
 		
 		mapState.setMouseMode(MapState.MOUSE_PRESSED);//Установить режим
@@ -134,7 +139,7 @@ public final class MapMouseListener implements MouseListener
 				case MapState.NODELINK_SIZE_EDIT:
 					// fall throuth
 				case MapState.NO_OPERATION:
-					boolean proceed = checkNodeSizeEdit(mapState, point);
+					proceed = checkNodeSizeEdit(mapState, point);
 					
 					if(!proceed)
 						break;
@@ -163,7 +168,8 @@ public final class MapMouseListener implements MouseListener
 			}//switch (mapState.getOperationMode()
 		}
 		try {
-			this.logicalNetLayer.repaint(false);
+			if(proceed)
+				this.logicalNetLayer.repaint(false);
 		} catch(MapConnectionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -334,7 +340,7 @@ public final class MapMouseListener implements MouseListener
 						finishMoveToCenter(point);
 						break;
 					case MapState.MOVE_HAND:
-						finishMoveHand(point);
+						finishMoveHand(me);
 						break;
 					case MapState.MOVE_FIXDIST:
 						// fall through
@@ -402,17 +408,57 @@ public final class MapMouseListener implements MouseListener
 	 * @throws MapConnectionException
 	 * @throws MapDataException
 	 */
-	private void finishMoveHand(Point point) throws MapConnectionException, MapDataException {
-		DoublePoint center = this.logicalNetLayer.getCenter();
-		DoublePoint p1 = this.logicalNetLayer.convertScreenToMap(this.logicalNetLayer.getStartPoint());
-		DoublePoint p2 = this.logicalNetLayer.convertScreenToMap(point);
-		double dx = p1.getX() - p2.getX();
-		double dy = p1.getY() - p2.getY();
-		center.setLocation(center.getX() + dx, center.getY() + dy);
-		this.logicalNetLayer.setCenter(center);
-		this.logicalNetLayer.getMapView().setCenter(
-				this.logicalNetLayer.getCenter());
-		this.logicalNetLayer.repaint(true);
+	private void finishMoveHand(MouseEvent me) throws MapConnectionException, MapDataException {
+		if(MapPropertiesManager.isDescreteNavigation()) {
+			Point startPoint = null;
+			Point endPoint = null;		
+			if (SwingUtilities.isRightMouseButton(me))
+			{
+				Dimension visSize = this.logicalNetLayer.getMapViewer().getVisualComponent().getSize();			
+				endPoint = new Point(visSize.width / 2, visSize.height / 2);
+				startPoint = me.getPoint();
+			}
+			else
+			{
+				startPoint = this.logicalNetLayer.getStartPoint();
+				endPoint = me.getPoint();			
+			}
+
+			int shiftX = (int )(endPoint.getX() - startPoint.getX());
+			int shiftY = (int )(endPoint.getY() - startPoint.getY());
+			Dimension discreteShift = this.logicalNetLayer.getDiscreteShifts(shiftX,shiftY);
+			
+			if ((discreteShift.width != 0) || (discreteShift.height != 0))
+			{
+				Point resultEndPoint = new Point(
+						startPoint.x + discreteShift.width,
+						startPoint.y + discreteShift.height);
+				
+				DoublePoint center = this.logicalNetLayer.getCenter();
+				DoublePoint p1 = this.logicalNetLayer.convertScreenToMap(startPoint);
+				DoublePoint p2 = this.logicalNetLayer.convertScreenToMap(resultEndPoint);
+				
+				double dx = p1.getX() - p2.getX();
+				double dy = p1.getY() - p2.getY();
+				center.setLocation(center.getX() + dx, center.getY() + dy);
+				this.logicalNetLayer.setCenter(center);
+				this.logicalNetLayer.getMapView().setCenter(
+						this.logicalNetLayer.getCenter());
+				this.logicalNetLayer.repaint(true);
+			}
+		}
+		else {
+			DoublePoint center = this.logicalNetLayer.getCenter();
+			DoublePoint p1 = this.logicalNetLayer.convertScreenToMap(this.logicalNetLayer.getStartPoint());
+			DoublePoint p2 = this.logicalNetLayer.convertScreenToMap(me.getPoint());
+			double dx = p1.getX() - p2.getX();
+			double dy = p1.getY() - p2.getY();
+			center.setLocation(center.getX() + dx, center.getY() + dy);
+			this.logicalNetLayer.setCenter(center);
+			this.logicalNetLayer.getMapView().setCenter(
+					this.logicalNetLayer.getCenter());
+			this.logicalNetLayer.repaint(true);
+		}
 	}
 
 	/**
