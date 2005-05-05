@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceComparer.java,v 1.12 2005/05/01 06:12:58 saa Exp $
+ * $Id: ModelTraceComparer.java,v 1.13 2005/05/05 15:20:58 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ package com.syrus.AMFICOM.analysis.dadara;
  * <li> ReliabilityModelTraceAndEvents to MTM
  * </ul>
  * @author $Author: saa $
- * @version $Revision: 1.12 $, $Date: 2005/05/01 06:12:58 $
+ * @version $Revision: 1.13 $, $Date: 2005/05/05 15:20:58 $
  * @module
  */
 public class ModelTraceComparer
@@ -152,16 +152,18 @@ public class ModelTraceComparer
 	 * Если опускается, возвращает соотв. координату.
 	 * Если не опускается
 	 * @param mt модельная кривая
-	 * @param th пороговое значение Y
+	 * @param th пороговое значение Y, отсчитанное от уровня абс. максимума.
+     *   Значение меньше нуля.
 	 * @return самая левая точка, в которой кривая ниже порога,
 	 * либо -1, если кривая везде выше порога
 	 */
 	public static int compareToMinLevel(ModelTrace mt, double th)
 	{
 		double[] y = mt.getYArray();
+        double yMax = ReflectogramMath.getArrayMax(y);
 		for (int i = 0; i < y.length; i++)
 		{
-			if (y[i] < th)
+			if (y[i] < yMax + th)
 				return i;
 		}
 		return -1;
