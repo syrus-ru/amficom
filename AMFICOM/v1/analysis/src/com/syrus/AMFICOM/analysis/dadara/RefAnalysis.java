@@ -173,6 +173,9 @@ public class RefAnalysis
 			? de[de.length - 1].getEnd()
 			: 0;
 
+        // XXX: we need to find trace length again 'cause mtae have forgotten it
+        int noiseStart = CoreAnalysisManager.calcTraceLength(y);
+
 //		for (int i = 0; i < re.length; i++)
 //		{
 //            events[i] = decodeEvent(y, mtae, i, top, re, mt);
@@ -198,7 +201,8 @@ public class RefAnalysis
                 po = 0;
     		data[0] = po; // y0
     		data[1] = maxY - y[lastPoint]; // y1
-    		data[2] = (maxY - maxNoise * 0.98); // noise // @todo: use correct noise determination algo - here and everywhere
+            //data[2] = (maxY - maxNoise * 0.98); // noise // @todo: use correct noise determination algo - here and everywhere
+            data[2] = maxY - CoreAnalysisManager.getMedian(y, noiseStart, y.length, 0.98);
     		data[3] = po; // po ?
     		data[4] = de.length;
     		overallStats.setData(data);
@@ -206,7 +210,6 @@ public class RefAnalysis
 
 		filtered = new double[veryLastPoint];
 		noise = new double[lastPoint];
-		maxNoise = 0;
 
 		// long t0 = System.currentTimeMillis();
 		for (int i = 0; i < de.length; i++)
