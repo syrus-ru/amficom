@@ -43,18 +43,18 @@ public class SiteCrossingPanel extends JPanel
 //	public static final int TUNNEL_LENGTH = 100;
 //	public static final int TUNNEL_WIDTH = 20;
 //	public static final int TEXT_DELTA = 30;
-	
+
 	public static final Color FILL_COLOR = new Color(240, 240, 240);
 	public static final Color LINE_COLOR = Color.BLACK;
 	public static final Color PATH_COLOR = Color.GREEN;
 
-	static final Stroke SIPMLE_STROKE = new BasicStroke(1);
+	static final Stroke SIMPLE_STROKE = new BasicStroke(1);
 	static final Stroke PATH_STROKE = new BasicStroke(4);
 
 	List tunnels = new LinkedList();
-	
+
 	CablePath cpath;
-	
+
 	int index1 = -1;
 	int index2 = -1;
 
@@ -129,7 +129,7 @@ public class SiteCrossingPanel extends JPanel
 		g2.setColor(Color.WHITE);
 		g2.fillRect(0, 0, width, height);
 
-		g2.setStroke(SIPMLE_STROKE);
+		g2.setStroke(SIMPLE_STROKE);
 
 		g2.setColor(FILL_COLOR);
 		
