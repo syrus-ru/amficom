@@ -28,13 +28,19 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.Client.General.UI.FixedSizeEditableTableModel;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
-import com.syrus.AMFICOM.analysis.dadara.ComplexReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.MathRef;
 import com.syrus.AMFICOM.analysis.dadara.ModelTrace;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramComparer;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
-import com.syrus.AMFICOM.analysis.dadara.TraceEvent;
+import com.syrus.AMFICOM.analysis.dadara.events.ConnectorDetailedEvent;
+import com.syrus.AMFICOM.analysis.dadara.events.DeadZoneDetailedEvent;
+import com.syrus.AMFICOM.analysis.dadara.events.DetailedEvent;
+import com.syrus.AMFICOM.analysis.dadara.events.DetailedEventUtil;
+import com.syrus.AMFICOM.analysis.dadara.events.EndOfTraceDetailedEvent;
+import com.syrus.AMFICOM.analysis.dadara.events.LinearDetailedEvent;
+import com.syrus.AMFICOM.analysis.dadara.events.NotIdentifiedDetailedEvent;
+import com.syrus.AMFICOM.analysis.dadara.events.SpliceDetailedEvent;
 import com.syrus.AMFICOM.client_.general.ui_.ADefaultTableCellRenderer;
 
 public class DetailedEventsFrame extends JInternalFrame
@@ -260,11 +266,16 @@ implements EtalonMTMListener,
 		}
 		double deltaX = Heap.getMTAEPrimary().getDeltaX();
 
-		ComplexReflectogramEvent dataEvent =
-			Heap.getMTAEPrimary().getComplexEvents()[nEvent];
-		ComplexReflectogramEvent etalonEvent = nEtalon != -1
-				? Heap.getMTMEtalon().getMTAE().getComplexEvents()[nEtalon]
-				: null;
+//		ComplexReflectogramEvent dataEvent =
+//			Heap.getMTAEPrimary().getComplexEvents()[nEvent];
+//		ComplexReflectogramEvent etalonEvent = nEtalon != -1
+//				? Heap.getMTMEtalon().getMTAE().getComplexEvents()[nEtalon]
+//				: null;
+        DetailedEvent dataEvent =
+            Heap.getMTAEPrimary().getDetailedEvents()[nEvent];
+        DetailedEvent etalonEvent = nEtalon != -1
+                ? Heap.getMTMEtalon().getMTAE().getDetailedEvents()[nEtalon]
+                : null;
 		int dataType = dataEvent.getEventType();
 		int etalonType = etalonEvent != null
 			        ? etalonEvent.getEventType()
@@ -291,23 +302,30 @@ implements EtalonMTMListener,
 		ctModel.setValueAt(meanDeviation + " " + LangModelAnalyse.getString("dB"), 3, 1);
 
 		// сравнение с эталонным событием
-		if(etalonEvent != null) // из равенства следует, что эталонное событие найдено
+		if(etalonEvent != null)
 		{
-            double lossDiff  = dataEvent.getMLoss() - etalonEvent.getMLoss();
-            double widthDiff = (dataEvent.getLength() - etalonEvent.getLength()) * deltaX;
+            String value;
+
+            try {
+                double lossDiff = DetailedEventUtil.
+                    getLossDiff(dataEvent,etalonEvent);
+                lossDiff = ((int)(lossDiff*1000.))/1000.;
+                value = lossDiff + " " + LangModelAnalyse.getString("dB");
+            } catch (NoSuchFieldException e) {
+                value = "--";
+            }
+            ctModel.setValueAt(value, 4, 1);
+
+            double widthDiff =
+                DetailedEventUtil.getWidthDiff(dataEvent, etalonEvent) * deltaX;
+            widthDiff = ((int)(widthDiff*10.))/10.;   // точность 0.1 м
+            value = String.valueOf(widthDiff) + " " + LangModelAnalyse.getString("m");
+            ctModel.setValueAt(value, 5, 1);
+
             double locationDiff = (dataEvent.getBegin() - etalonEvent.getBegin()) * deltaX;
-
-            lossDiff        = ((int)(lossDiff*1000.))/1000.;
-            widthDiff       = ((int)(widthDiff*10.))/10.;   // точность 0.1 м
             locationDiff    = ((int)(locationDiff*10.))/10.;
-
-            ctModel.setValueAt(String.valueOf(widthDiff) + " " + LangModelAnalyse.getString("m"), 5, 1);
-			ctModel.setValueAt(String.valueOf(locationDiff) + " " + LangModelAnalyse.getString("m"), 6, 1);
-            if (etalonEvent.hasMLoss() && dataEvent.hasMLoss())
-                ctModel.setValueAt(lossDiff + " " + LangModelAnalyse.getString("dB"), 4, 1);
-                else
-                    ctModel.setValueAt("--", 4, 1);
-
+            value = String.valueOf(locationDiff) + " " + LangModelAnalyse.getString("m");
+			ctModel.setValueAt(value, 6, 1);
 		}
 		else
 		{
@@ -315,7 +333,6 @@ implements EtalonMTMListener,
 			ctModel.setValueAt("--", 5, 1);
 			ctModel.setValueAt("--", 6, 1);
 		}
-		
 	}
 	
 	private void updateTableModel()
@@ -323,96 +340,94 @@ implements EtalonMTMListener,
 		int num = Heap.getCurrentEvent1();
 		if (num < 0)
 			return;
-		TraceEvent ev = Heap.getRefAnalysisPrimary().events[num];
-        double res_km = Heap.getBSPrimaryTrace().getResolution() / 1000.0;
+		DetailedEvent ev = Heap.getMTAEPrimary().getDetailedEvents()[num];
+        double resMt =  Heap.getBSPrimaryTrace().getResolution();
+        double resKm = resMt / 1000.0;
 
 		FixedSizeEditableTableModel tModel = null;
-		int eventType = ev.getType();
-		String eventTypeName = AnalysisUtil.getTraceEventNameByType(eventType);
+		int eventType = ev.getEventType();
+		String eventTypeName = AnalysisUtil.getSimpleEventNameByType(eventType);
+        String vCol1 = String.valueOf(num + 1);
+        String vCol2 = MathRef.round_3(DetailedEventUtil.getWidth(ev) * resKm)
+            + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_KM);
+        String sDB = " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB);
+        String sMT = " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_MT);
 		switch (eventType)
 		{
-			case TraceEvent.LINEAR:
+			case SimpleReflectogramEvent.LINEAR:
 				tModel = (FixedSizeEditableTableModel) tModels.get(LINEAR);
 				tModel.setValueAt(eventTypeName, 0, 0);
 				tModel.updateColumn(new Object[] {
-						String.valueOf(num + 1),
-						MathRef.round_3((ev.last_point - ev.first_point) * res_km) + " "
-								+ LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_KM),
-						MathRef.round_2(ev.linearData0()) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
-						MathRef.round_2(ev.linearData1()) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
-						MathRef.round_3(ev.linearData3()) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
-						MathRef.round_3(ev.linearData4()) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB)},
-					1);
+					vCol1,
+                    vCol2,
+					-MathRef.round_2(((LinearDetailedEvent)ev).getY0()) + sDB,
+					-MathRef.round_2(((LinearDetailedEvent)ev).getY1()) + sDB,
+					MathRef.round_3(((LinearDetailedEvent)ev).getRmsDev()) + sDB,
+					MathRef.round_3(((LinearDetailedEvent)ev).getMaxDev()) + sDB
+				}, 1);
 				break;
-			case TraceEvent.INITIATE:
+			case SimpleReflectogramEvent.DEADZONE:
 				tModel = (FixedSizeEditableTableModel) tModels.get(INITIATE);
 				tModel.setValueAt(eventTypeName, 0, 0);
 				tModel.updateColumn(new Object[] {
-						String.valueOf(num + 1),
-						MathRef.round_3((ev.last_point - ev.first_point) * res_km) + " "
-								+ LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_KM),
-						MathRef.round_2(ev.initialData0()) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
-						MathRef.round_2(ev.initialData1()) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
-						Math.round(ev.initialData2() * res_km * 1000d) + " "
-								+ LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_MT),
-						Math.round(ev.initialData3() * res_km * 1000d) + " "
-								+ LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_MT)}, 1);
+                    vCol1,
+                    vCol2,
+					-MathRef.round_2(((DeadZoneDetailedEvent)ev).getPo()) + sDB,
+					-MathRef.round_2(((DeadZoneDetailedEvent)ev).getY1()) + sDB,
+					Math.round(((DeadZoneDetailedEvent)ev).getEdz() * resMt) + sMT,
+					Math.round(((DeadZoneDetailedEvent)ev).getAdz() * resMt) + sMT
+			    }, 1);
 				break;
-			case TraceEvent.NON_IDENTIFIED:
+			case SimpleReflectogramEvent.NOTIDENTIFIED:
 				tModel = (FixedSizeEditableTableModel) tModels.get(NOID);
 				tModel.setValueAt(eventTypeName, 0, 0);
 				tModel.updateColumn(new Object[] {
-						String.valueOf(num + 1),
-						MathRef.round_3((ev.last_point - ev.first_point) * res_km) + " "
-								+ LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_KM),
-						MathRef.round_3(ev.nonidData0()) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
-						MathRef.round_3(ev.nonidData1()) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
-						MathRef.round_3(ev.nonidData2()) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB)},
-					1);
+                    vCol1,
+                    vCol2,
+					-MathRef.round_3(((NotIdentifiedDetailedEvent)ev).getYMin()) + sDB,
+					-MathRef.round_3(((NotIdentifiedDetailedEvent)ev).getYMax()) + sDB,
+					MathRef.round_3(((NotIdentifiedDetailedEvent)ev).getMaxDev()) + sDB
+                }, 1);
 				break;
-			case TraceEvent.CONNECTOR:
+			case SimpleReflectogramEvent.CONNECTOR:
 				tModel = (FixedSizeEditableTableModel) tModels.get(CONNECTOR);
 				tModel.setValueAt(eventTypeName, 0, 0);
 				tModel.updateColumn(new Object[] {
-						String.valueOf(num + 1),
-						MathRef.round_3((ev.last_point - ev.first_point) * res_km) + " "
-								+ LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_KM),
-						MathRef.round_2(ev.connectorData0()) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
-						MathRef.round_2(ev.connectorData1()) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
-						MathRef.round_2(ev.connectorData2()) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB)
+                        vCol1,
+                        vCol2,
+						-MathRef.round_2(((ConnectorDetailedEvent)ev).getY0()) + sDB,
+						-MathRef.round_2(((ConnectorDetailedEvent)ev).getY1()) + sDB,
+						-MathRef.round_2(((ConnectorDetailedEvent)ev).getY2()) + sDB
 					}, 1);
 				break;
-			case TraceEvent.LOSS:
+			case SimpleReflectogramEvent.LOSS:
 				tModel = (FixedSizeEditableTableModel) tModels.get(LOSS);
 				tModel.setValueAt(eventTypeName, 0, 0);
 				tModel.updateColumn(new Object[] {
-						String.valueOf(num + 1),
-						MathRef.round_3((ev.last_point - ev.first_point) * res_km) + " "
-								+ LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_KM),
-						MathRef.round_2(ev.spliceData0()) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
-						MathRef.round_2(ev.spliceData1()) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB)},
-					1);
+                        vCol1,
+                        vCol2,
+                        -MathRef.round_2(((SpliceDetailedEvent)ev).getY0()) + sDB,
+                        -MathRef.round_2(((SpliceDetailedEvent)ev).getY1()) + sDB
+				    }, 1);
 				break;
-			case TraceEvent.GAIN:
+			case SimpleReflectogramEvent.GAIN:
 				tModel = (FixedSizeEditableTableModel) tModels.get(GAIN);
 				tModel.setValueAt(eventTypeName, 0, 0);
 				tModel.updateColumn(new Object[] {
-						String.valueOf(num + 1),
-						MathRef.round_3((ev.last_point - ev.first_point) * res_km) + " "
-								+ LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_KM),
-						MathRef.round_2(ev.spliceData0()) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
-						MathRef.round_2(ev.spliceData1()) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB)},
-					1);
+                        vCol1,
+                        vCol2,
+                        -MathRef.round_2(((SpliceDetailedEvent)ev).getY0()) + sDB,
+                        -MathRef.round_2(((SpliceDetailedEvent)ev).getY1()) + sDB
+				    }, 1);
 				break;
-			case TraceEvent.TERMINATE:
+			case SimpleReflectogramEvent.ENDOFTRACE:
 				tModel = (FixedSizeEditableTableModel) tModels.get(TERMINATE);
 				tModel.setValueAt(eventTypeName, 0, 0);
 				tModel.updateColumn(new Object[] {
-						String.valueOf(num + 1),
-						MathRef.round_3((ev.last_point - ev.first_point) * res_km) + " "
-								+ LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_KM),
-						MathRef.round_2(ev.terminateData0()) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
-						MathRef.round_2(ev.terminateData1()) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB)
+                        vCol1,
+                        vCol2,
+                        -MathRef.round_2(((EndOfTraceDetailedEvent)ev).getY0()) + sDB,
+                        -MathRef.round_2(((EndOfTraceDetailedEvent)ev).getY2()) + sDB
 					}, 1);
 				break;
 			}
@@ -481,11 +496,11 @@ implements EtalonMTMListener,
 
 		public Component getTableCellRendererComponent(	JTable table,
 														Object value,
-														boolean isSelected,
+														boolean isSelected1,
 														boolean hasFocus,
 														int row,
 														int column) {
-			Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+			Component component = super.getTableCellRendererComponent(table, value, isSelected1, hasFocus, row, column);
 
 			component.setForeground(sameType || row > 1 ? Color.BLACK : Color.RED);
 

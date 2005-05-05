@@ -44,6 +44,8 @@ public class SaveAnalysisCommand extends VoidCommand
 
 	public void execute()
 	{
+        if (true) // FIXME: UnsupportedOperationException
+            throw new UnsupportedOperationException("The current version cannot save RefAnalysis.events");
 		BellcoreStructure bs = Heap.getBSPrimaryTrace();
 		if (bs.monitoredElementId == null)
 		{

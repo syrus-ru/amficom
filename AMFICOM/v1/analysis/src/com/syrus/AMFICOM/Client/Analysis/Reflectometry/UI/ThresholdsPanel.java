@@ -55,18 +55,18 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 	{
 		int num = Heap.getCurrentEvent2();
 		if (num < 0)
-			return new int[] {0, events[events.length-1].last_point};
-		if (num >= events.length)
-			num = events.length - 1;
-		int start1 = num > 0 ? events[num].first_point : 2;
-		int end1 = events[num].last_point;
+			return new int[] {0, sevents[sevents.length-1].getEnd()};
+		if (num >= sevents.length)
+			num = sevents.length - 1;
+		int start1 = num > 0 ? sevents[num].getBegin() : 2;
+		int end1 = sevents[num].getEnd();
 		return new int[] {start1, end1};
 	}
 
 	public void updateCurrentEvent()
 	{
 		// Design Note: uses TraceEventsPanel.events
-		if (events == null)
+		if (sevents == null)
 			return;
 
 		c_event = Heap.getCurrentEtalonEvent2();
@@ -78,8 +78,8 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 
 		if (num >= 0) // XXX
 		{
-			start = events[num].first_point;
-			end = events[num].last_point;
+			start = sevents[num].getBegin();
+			end = sevents[num].getEnd();
 		}
 	}
 	

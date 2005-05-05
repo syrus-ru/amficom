@@ -86,7 +86,7 @@ implements OperationListener,
 			SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
 			if (panel instanceof ThresholdsPanel)
 			{
-                if (((ThresholdsPanel)panel).events.length > 0)
+                if (((ThresholdsPanel)panel).sevents.length > 0)
                 {
                 	int[] startAndEnd = ((ThresholdsPanel)panel).getStartAndEndOfCurrentEvent();
     				int start = startAndEnd[0];

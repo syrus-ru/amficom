@@ -5,7 +5,7 @@ package com.syrus.AMFICOM.analysis.dadara;
  * по ModelTrace или заданные в виде массива.
  * 
  * @author $Author: saa $
- * @version $Revision: 1.21 $, $Date: 2005/05/01 10:56:19 $
+ * @version $Revision: 1.22 $, $Date: 2005/05/05 11:45:28 $
  * @module analysis_v1
  */
 public class ReflectogramComparer
@@ -48,13 +48,13 @@ public class ReflectogramComparer
     }
 
     private static double getMaxDeviation(ModelTrace mt1,
-			ModelTrace mt2, int iFrom, int iToEx)
-	{
+            ModelTrace mt2, int iFrom, int iToEx)
+    {
         final int N = iToEx - iFrom;
-		double[] y1 = mt1.getYArrayZeroPad(iFrom, N);
-		double[] y2 = mt2.getYArrayZeroPad(iFrom, N);
+        double[] y1 = mt1.getYArrayZeroPad(iFrom, N);
+        double[] y2 = mt2.getYArrayZeroPad(iFrom, N);
         return getMaxDeviation(y1, y2, N);
-	}
+    }
 
 	private static double getMeanDeviation(ModelTrace mt1,
 			ModelTrace mt2, int iFrom, int iToEx)

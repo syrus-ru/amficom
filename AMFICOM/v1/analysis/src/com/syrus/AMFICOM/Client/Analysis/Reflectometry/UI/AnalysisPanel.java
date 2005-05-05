@@ -71,8 +71,8 @@ public class AnalysisPanel extends MapMarkersPanel
 	public void updEvents(String id)
 	{
 		super.updEvents(id);
-		if (activeEvent >= events.length)
-			activeEvent = events.length - 1;
+		if (activeEvent >= sevents.length)
+			activeEvent = sevents.length - 1;
 	}
 
 	public void updMarkers()
@@ -416,10 +416,10 @@ public class AnalysisPanel extends MapMarkersPanel
 
 	int marker_to_event()
 	{
-		if (events == null)
+		if (sevents == null)
 			return -1;
-		for(int j=0; j<events.length; j++)
-			if(markerB.pos > events[j].first_point && markerB.pos <= events[j].last_point)
+		for(int j=0; j<sevents.length; j++)
+			if(markerB.pos > sevents[j].getBegin() && markerB.pos <= sevents[j].getEnd())
 				return j;
 		return -1;
 	}
@@ -450,16 +450,16 @@ public class AnalysisPanel extends MapMarkersPanel
 
 	void move_marker_to_ev (int event)
 	{
-		if (events == null)
+		if (sevents == null)
 			return;
-		if (event < 0 || event >= events.length)
+		if (event < 0 || event >= sevents.length)
 				return;
 		if (!moved_here)
 		{
 			_activeEvent = activeEvent;
 			activeEvent = event;
-			if (markerB.pos < events[event].first_point || markerB.pos >= events[event].last_point)
-				moveMarker(markerB, (events[event].first_point));
+			if (markerB.pos < sevents[event].getBegin() || markerB.pos >= sevents[event].getEnd())
+				moveMarker(markerB, (sevents[event].getBegin()));
 		}
 		parent.repaint();
 	}

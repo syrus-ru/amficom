@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.61 2005/05/03 06:27:20 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.62 2005/05/05 11:45:28 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.61 $, $Date: 2005/05/03 06:27:20 $
+ * @version $Revision: 1.62 $, $Date: 2005/05/05 11:45:28 $
  * @module
  */
 
@@ -436,7 +436,10 @@ public class CoreAnalysisManager
 
 		long t3 = System.currentTimeMillis();
 
-		ModelTraceAndEventsImpl mtae = new ModelTraceAndEventsImpl(rse, mf, av.deltaX);
+        double[] yTypical = av.avY; // FIXME: надо брать одну, самую типовую р/г, а не усредненную, т.к. потом по этим данным будет считаться rms
+
+        ModelTraceAndEventsImpl mtae =
+            new ModelTraceAndEventsImpl(rse, mf, yTypical, av.deltaX);
 
 		long t4 = System.currentTimeMillis();
 

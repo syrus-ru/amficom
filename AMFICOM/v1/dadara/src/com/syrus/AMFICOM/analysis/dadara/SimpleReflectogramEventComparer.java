@@ -1,5 +1,5 @@
 /*-
- * $Id: SimpleReflectogramEventComparer.java,v 1.2 2005/05/02 15:19:48 saa Exp $
+ * $Id: SimpleReflectogramEventComparer.java,v 1.3 2005/05/05 11:45:28 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,9 @@
  */
 
 package com.syrus.AMFICOM.analysis.dadara;
+
+import com.syrus.AMFICOM.analysis.dadara.events.DetailedEvent;
+import com.syrus.AMFICOM.analysis.dadara.events.DetailedEventUtil;
 
 /**
  * Сравнение событий.
@@ -30,7 +33,7 @@ package com.syrus.AMFICOM.analysis.dadara;
  * <p>
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.2 $, $Date: 2005/05/02 15:19:48 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/05 11:45:28 $
  * @module
  */
 public class SimpleReflectogramEventComparer {
@@ -189,10 +192,30 @@ public class SimpleReflectogramEventComparer {
         switch(changeType)
         {
         case CHANGETYPE_AMPL:
-            return Math.abs(((ComplexReflectogramEvent)a).getALet() - ((ComplexReflectogramEvent)b).getALet()) > changeThreshold;
+            if (a instanceof ComplexReflectogramEvent)
+                return Math.abs(((ComplexReflectogramEvent)a).getALet() - ((ComplexReflectogramEvent)b).getALet()) > changeThreshold;
+            else {
+                try {
+                    return Math.abs(DetailedEventUtil.getAmplDiff(
+                                (DetailedEvent)a, (DetailedEvent)b))
+                            > changeThreshold;
+                } catch (NoSuchFieldException e) {
+                    return false; // treat no difference if parameter is not present
+                }
+            }
 
         case CHANGETYPE_LOSS:
-            return Math.abs(((ComplexReflectogramEvent)a).getMLoss() - ((ComplexReflectogramEvent)b).getMLoss()) > changeThreshold;
+            if (a instanceof ComplexReflectogramEvent)
+                return Math.abs(((ComplexReflectogramEvent)a).getMLoss() - ((ComplexReflectogramEvent)b).getMLoss()) > changeThreshold;
+            else {
+                try {
+                    return Math.abs(DetailedEventUtil.getLossDiff(
+                                (DetailedEvent) a, (DetailedEvent) b))
+                            > changeThreshold;
+                } catch (NoSuchFieldException e) {
+                    return false; // treat no difference if parameter is not present
+                }
+            }
 
         case CHANGETYPE_TYPE:
             // при changeThreshold == 0 и 1 работать должно одинаково хорошо

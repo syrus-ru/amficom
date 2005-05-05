@@ -12,7 +12,7 @@ public class TraceEventsPanel extends ScaledGraphPanel
 {
 	protected boolean draw_events = true;
 
-	protected TraceEvent[] events;
+	protected SimpleReflectogramEvent[] sevents;
 
 	protected Color connectColor;
 	protected Color deadzoneColor;
@@ -32,11 +32,10 @@ public class TraceEventsPanel extends ScaledGraphPanel
 
 	public void updEvents(String id)
 	{
-        // do not expect any refAnalysis other than one for PRIMARY_TRACE 
-		RefAnalysis ra = id.equals(Heap.PRIMARY_TRACE_KEY)
-            ? Heap.getRefAnalysisPrimary() : null;
-		if (ra != null)
-			events = ra.events;
+        if (!id.equals(Heap.PRIMARY_TRACE_KEY))
+            return; // XXX: do not expect any refAnalysis other than one for PRIMARY_TRACE
+        sevents = Heap.getMTAEPrimary().getSimpleEvents();
+        
 	}
 
 	protected void updColorModel()
@@ -69,32 +68,30 @@ public class TraceEventsPanel extends ScaledGraphPanel
 
 	protected void paint_events(Graphics g)
 	{
-		if (events == null)
+		if (sevents == null)
 		{
 			paint_trace(g);
 			return;
 		}
-		for(int j=0; j<events.length; j++)
+		for(int j=0; j<sevents.length; j++)
 		{
-			if ((events[j].first_point < end) && (events[j].last_point > start))
+			if ((sevents[j].getBegin() < end) && (sevents[j].getEnd() > start))
 			{
-				int type = events[j].getType();
-				switch (type)
+				int stype = sevents[j].getEventType();
+				switch (stype)
 				{
-					case TraceEvent.LINEAR: g.setColor(linezoneColor); break;
-					case TraceEvent.INITIATE: g.setColor(deadzoneColor); break;
-					case TraceEvent.GAIN:
-						g.setColor(weldColor); break;
-					case TraceEvent.LOSS:
-						g.setColor(weldColor); break;
-					case TraceEvent.CONNECTOR: g.setColor(connectColor); break;
-					case TraceEvent.TERMINATE: g.setColor(endColor); break;
-					case TraceEvent.NON_IDENTIFIED: g.setColor(nonidColor); break;
+					case SimpleReflectogramEvent.LINEAR:   g.setColor(linezoneColor); break;
+					case SimpleReflectogramEvent.DEADZONE: g.setColor(deadzoneColor); break;
+					case SimpleReflectogramEvent.GAIN:     g.setColor(weldColor); break;
+					case SimpleReflectogramEvent.LOSS:     g.setColor(weldColor); break;
+					case SimpleReflectogramEvent.CONNECTOR: g.setColor(connectColor); break;
+					case SimpleReflectogramEvent.ENDOFTRACE: g.setColor(endColor); break;
+					case SimpleReflectogramEvent.NOTIDENTIFIED: g.setColor(nonidColor); break;
 					default: g.setColor(noiseColor);
 				}
 
-				int iFrom = events[j].first_point - start;
-				int iTo = Math.min (end, events[j].last_point) - start;
+				int iFrom = sevents[j].getBegin() - start;
+				int iTo = Math.min (end, sevents[j].getEnd()) - start;
 				draw_y_curve(g, y, iFrom + start, iFrom, iTo - iFrom + 1);
 //				for (int i = events[j].first_point - start; i <= Math.min (end, events[j].last_point) - start; i++)
 //				{
@@ -104,7 +101,7 @@ public class TraceEventsPanel extends ScaledGraphPanel
 			}
 		}
         g.setColor(noiseColor);
-        int lastPoint = events.length > 0 ? events[events.length - 1].last_point : 0; 
+        int lastPoint = sevents.length > 0 ? sevents[sevents.length - 1].getEnd() : 0; 
 		if (lastPoint < end)
 		{
 			int iFrom = lastPoint - start;

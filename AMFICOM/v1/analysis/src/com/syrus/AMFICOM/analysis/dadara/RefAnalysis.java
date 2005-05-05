@@ -3,6 +3,8 @@ package com.syrus.AMFICOM.analysis.dadara;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.analysis.ClientAnalysisManager;
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
+import com.syrus.AMFICOM.analysis.dadara.events.DeadZoneDetailedEvent;
+import com.syrus.AMFICOM.analysis.dadara.events.DetailedEvent;
 import com.syrus.io.BellcoreStructure;
 
 public class RefAnalysis
@@ -147,9 +149,10 @@ public class RefAnalysis
 	private void decode ()
 	{
         double[] y = bs.getTraceData();
-		ComplexReflectogramEvent[] re = mtae.getComplexEvents();
+		// ComplexReflectogramEvent[] re = mtae.getComplexEvents();
+        DetailedEvent[] de = mtae.getDetailedEvents();
 		ModelTrace mt = mtae.getModelTrace();
-		events = new TraceEvent[re.length];
+		events = null; //new TraceEvent[re.length];
 
 		double maxY = 0; // XXX: saa: is 0 good for min/max? shall we use y[0] instead?
 		double minY = 0;
@@ -162,18 +165,18 @@ public class RefAnalysis
 		}
 		double top = maxY - minY;
 
-		int lastPoint = re.length > 0
-			? re[re.length - 1].getBegin()
+		int lastPoint = de.length > 0
+			? de[de.length - 1].getBegin()
 			: 0;
 
-		int veryLastPoint = re.length > 0
-			? re[re.length - 1].getEnd()
+		int veryLastPoint = de.length > 0
+			? de[de.length - 1].getEnd()
 			: 0;
 
-		for (int i = 0; i < re.length; i++)
-		{
-            events[i] = decodeEvent(y, mtae, i, top, re, mt);
-		}
+//		for (int i = 0; i < re.length; i++)
+//		{
+//            events[i] = decodeEvent(y, mtae, i, top, re, mt);
+//		}
 
 		double maxNoise = 0.;
 		boolean b = false;
@@ -187,12 +190,17 @@ public class RefAnalysis
 		overallStats = new TraceEvent(TraceEvent.OVERALL_STATS, 0, lastPoint);
         {
     		double[] data = new double[5];
-            double po = re[0].getAsympY0();
-    		data[0] = maxY - po;
-    		data[1] = maxY - y[lastPoint];
-    		data[2] = (maxY - maxNoise * 0.98);
-    		data[3] = (maxY - po);
-    		data[4] = re.length;
+            //double po = re[0].getAsympY0();
+            double po;
+            if (de.length > 0 && de[0] instanceof DeadZoneDetailedEvent)
+                po = ((DeadZoneDetailedEvent)de[0]).getPo();
+            else
+                po = 0;
+    		data[0] = po; // y0
+    		data[1] = maxY - y[lastPoint]; // y1
+    		data[2] = (maxY - maxNoise * 0.98); // noise // @todo: use correct noise determination algo - here and everywhere
+    		data[3] = po; // po ?
+    		data[4] = de.length;
     		overallStats.setData(data);
         }
 
@@ -201,12 +209,12 @@ public class RefAnalysis
 		maxNoise = 0;
 
 		// long t0 = System.currentTimeMillis();
-		for (int i = 0; i < re.length; i++)
+		for (int i = 0; i < de.length; i++)
 		{
 			// for(int j = re[i].getBegin(); j < y.length; j++) -- changed just
 			// because was too slow -- saa
-			int posFrom = re[i].getBegin();
-			int posTo = re[i].getEnd();
+			int posFrom = de[i].getBegin();
+			int posTo = de[i].getEnd();
 			double[] yArrMT = mt.getYArrayZeroPad(posFrom, posTo - posFrom);
 			for (int j = posFrom; j < posTo && j < veryLastPoint; j++)
 			{

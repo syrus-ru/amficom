@@ -1,5 +1,5 @@
 /*-
- * $Id: ModelTraceAndEvents.java,v 1.3 2005/04/30 09:39:58 saa Exp $
+ * $Id: ModelTraceAndEvents.java,v 1.4 2005/05/05 11:45:28 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.analysis.dadara;
+
+import com.syrus.AMFICOM.analysis.dadara.events.DetailedEvent;
 
 /**
  * Предоставляет информацию о м.ф. и списке событий определенной р/г.
@@ -18,7 +20,7 @@ package com.syrus.AMFICOM.analysis.dadara;
  * 
  * @author $Author: saa $
  * @author: saa
- * @version $Revision: 1.3 $, $Date: 2005/04/30 09:39:58 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/05 11:45:28 $
  * @module
  */
 public interface ModelTraceAndEvents
@@ -27,7 +29,8 @@ public interface ModelTraceAndEvents
 	ModelTrace getModelTrace();
 	SimpleReflectogramEvent[] getSimpleEvents();
 	SimpleReflectogramEvent getSimpleEvent(int nEvent);
-	ComplexReflectogramEvent[] getComplexEvents();
+//  ComplexReflectogramEvent[] getComplexEvents();
+	DetailedEvent[] getDetailedEvents(); // @todo: add getDetailedEvent(int),it's more efficient
 	int getEventByCoord(int x);
 	int getNEvents();
 }

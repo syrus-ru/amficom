@@ -31,11 +31,16 @@ import com.syrus.AMFICOM.Client.General.UI.ATable;
 import com.syrus.AMFICOM.Client.General.UI.FixedSizeEditableTableModel;
 import com.syrus.AMFICOM.Client.General.UI.UIGeneralStorage;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
-import com.syrus.AMFICOM.analysis.dadara.ComplexReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.MathRef;
-import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
+import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEventComparer;
-import com.syrus.AMFICOM.analysis.dadara.TraceEvent;
+import com.syrus.AMFICOM.analysis.dadara.events.ConnectorDetailedEvent;
+import com.syrus.AMFICOM.analysis.dadara.events.DetailedEvent;
+import com.syrus.AMFICOM.analysis.dadara.events.DetailedEventUtil;
+import com.syrus.AMFICOM.analysis.dadara.events.EndOfTraceDetailedEvent;
+import com.syrus.AMFICOM.analysis.dadara.events.LinearDetailedEvent;
+import com.syrus.AMFICOM.analysis.dadara.events.NotIdentifiedDetailedEvent;
+import com.syrus.AMFICOM.analysis.dadara.events.SpliceDetailedEvent;
 import com.syrus.io.BellcoreStructure;
 
 public class EventsFrame extends ATableFrame
@@ -289,13 +294,13 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener,
 
 	private void setTableModel()
 	{
-        RefAnalysis ra = Heap.getRefAnalysisPrimary();
-        if (ra == null)
-            return;
-        BellcoreStructure bs = ra.getBS();
-		double res_km = bs.getResolution() / 1000.0;
+        if (Heap.getMTAEPrimary() == null)
+            return; // XXX
+        DetailedEvent[] devents = Heap.getMTAEPrimary().getDetailedEvents();
+        BellcoreStructure bs = Heap.getBSPrimaryTrace();
+        double resMt = bs.getResolution();
+        double resKm = resMt / 1000.0;
 		double sigma = MathRef.calcSigma(bs.getWavelength(), bs.getPulsewidth());
-        TraceEvent[] events = ra.events;
 
         int nRows = view.nRows(Heap.getEventList());
 		tModel.clearTable();
@@ -311,84 +316,86 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener,
 //                ? Heap.getMTAEPrimary().getSimpleEvent(nPrimary)
 //                : Heap.getMTMEtalon().getMTAE().getSimpleEvent(nEtalon);
 
-            int eventType = events[i].getType();
-			String eventTypeName = AnalysisUtil.getTraceEventNameByType(eventType);
-			switch (eventType)
+            int sType = devents[i].getEventType();
+			String eventTypeName = AnalysisUtil.getSimpleEventNameByType(sType);
+            String vCol1 = eventTypeName;
+            String vCol2 = Double.toString(MathRef.round_3(
+                    resKm * devents[i].getBegin())); //начало
+            String vCol3 = Double.toString(MathRef.round_3(
+                    resKm * (DetailedEventUtil.getWidth(devents[i])))); //протяженность
+
+			switch (sType)
 			{
-			case TraceEvent.INITIATE:
+			case SimpleReflectogramEvent.DEADZONE:
 				tModel.addRow(String.valueOf(i + 1), new Object[] {
-					 eventTypeName,
-					 Double.toString(MathRef.round_3(res_km * events[i].first_point)), //начало
-					 Double.toString(MathRef.round_3(res_km * (events[i].last_point - events[i].first_point))), //протяженность
+					 vCol1,
+                     vCol2,
+                     vCol3,
 					 DASH, // отраж
 					 DASH, // потери
 					 DASH  // затух
 				});
 				break;
-			case TraceEvent.LINEAR:
+			case SimpleReflectogramEvent.LINEAR:
 			    // TODO: использовать только один параметр в data[] вместо трех
 				tModel.addRow(String.valueOf(i + 1), new Object[] {
-					 eventTypeName,
-					 Double.toString(MathRef.round_3(res_km * events[i].first_point)), //начало
-					 Double.toString(MathRef.round_3(res_km * (events[i].last_point - events[i].first_point))), //протяженность
+                     vCol1,
+                     vCol2,
+                     vCol3,
 					 DASH, // отраж
-					 //Double.toString(MathRef.round_3(events[i].data[1] - events[i].data[0])), // потери
-					 Double.toString(MathRef.round_3(events[i].getLoss())), // потери
-					 Double.toString(MathRef.round_4(events[i].linearAsympLoss() / res_km)) //затух
+					 Double.toString(MathRef.round_3(((LinearDetailedEvent)devents[i]).getLoss())), // потери
+					 Double.toString(MathRef.round_4(((LinearDetailedEvent)devents[i]).getAttenuation() / resKm)) //затух
 				});
 				break;
-			case TraceEvent.NON_IDENTIFIED:
+			case SimpleReflectogramEvent.NOTIDENTIFIED:
 				tModel.addRow(String.valueOf(i + 1), new Object[] {
-					 eventTypeName,
-					 Double.toString(MathRef.round_3(res_km * events[i].first_point)), //начало
-					 Double.toString(MathRef.round_3(res_km * (events[i].last_point - events[i].first_point))), //протяженность
-					 DASH, // отраж
-					 //dash, // потери
-					 Double.toString(MathRef.round_3(events[i].getLoss())), // потери
-					 DASH  // затух
+                    vCol1,
+                    vCol2,
+                    vCol3,
+                    DASH, // отраж
+                    //dash, // потери
+                    Double.toString(MathRef.round_3(((NotIdentifiedDetailedEvent)devents[i]).getLoss())), // потери
+                    DASH  // затух
 				});
 				break;
-			case TraceEvent.CONNECTOR:
+			case SimpleReflectogramEvent.CONNECTOR:
 				tModel.addRow(String.valueOf(i + 1), new Object[] {
-					 eventTypeName,
-					 Double.toString(MathRef.round_3(res_km * events[i].first_point)), //начало
-					 Double.toString(MathRef.round_3(res_km * (events[i].last_point - events[i].first_point))), //протяженность
-					 Double.toString(MathRef.round_2(MathRef.calcReflectance(sigma, events[i].connectorPeak()))), // отраж
-					 //Double.toString(MathRef.round_3(events[i].data[1] - events[i].data[0])), // потери
-					 Double.toString(MathRef.round_3(events[i].getLoss())), // потери
-					 DASH  // затух
+                    vCol1,
+                    vCol2,
+                    vCol3,
+                    Double.toString(MathRef.round_2(MathRef.calcReflectance(sigma, ((ConnectorDetailedEvent)devents[i]).getAmpl()))), // отраж
+                    Double.toString(MathRef.round_3(((ConnectorDetailedEvent)devents[i]).getLoss())), // потери
+                    DASH  // затух
 				});
 				break;
-			case TraceEvent.GAIN:
+			case SimpleReflectogramEvent.GAIN:
 				tModel.addRow(String.valueOf(i + 1), new Object[] {
-					 eventTypeName,
-					 Double.toString(MathRef.round_3 (res_km * events[i].first_point)), //начало
-					 Double.toString(MathRef.round_3 (res_km * (events[i].last_point - events[i].first_point))), //протяженность
-					 DASH, // отраж
-					 //Double.toString( MathRef.round_3 ( events[i].data[2])), // потери
-					 Double.toString(MathRef.round_3(events[i].getLoss())), // потери
-					 DASH  // затух
+                    vCol1,
+                    vCol2,
+                    vCol3,
+				    DASH, // отраж
+				    Double.toString(MathRef.round_3(((SpliceDetailedEvent)devents[i]).getLoss())), // потери
+				    DASH  // затух
 				});
 				break;
-			case TraceEvent.LOSS:
+			case SimpleReflectogramEvent.LOSS:
 				tModel.addRow(String.valueOf(i + 1), new Object[] {
-					 eventTypeName,
-					 Double.toString(MathRef.round_3 (res_km * events[i].first_point)), //начало
-					 Double.toString(MathRef.round_3 (res_km * (events[i].last_point - events[i].first_point))), //протяженность
-					 DASH, // отраж
-					 //Double.toString( MathRef.round_3 ( events[i].data[2])), // потери
-					 Double.toString(MathRef.round_3(events[i].getLoss())), // потери
-					 DASH  // затух
+                    vCol1,
+                    vCol2,
+                    vCol3,
+				    DASH, // отраж
+				    Double.toString(MathRef.round_3(((SpliceDetailedEvent)devents[i]).getLoss())), // потери
+				    DASH  // затух
 				});
 				break;
-			case TraceEvent.TERMINATE:
+			case SimpleReflectogramEvent.ENDOFTRACE:
 				tModel.addRow(String.valueOf(i + 1), new Object[] {
-					 eventTypeName,
-					 Double.toString(MathRef.round_3(res_km * events[i].first_point)), //начало
-					 Double.toString(MathRef.round_3(res_km * (events[i].last_point - events[i].first_point))), //протяженность
-					 Double.toString(MathRef.round_2(MathRef.calcReflectance(sigma, events[i].terminateReflection()))), // отраж
-					 DASH, // потери
-					 DASH  // затух
+                    vCol1,
+                    vCol2,
+                    vCol3,
+				    Double.toString(MathRef.round_2(MathRef.calcReflectance(sigma, ((EndOfTraceDetailedEvent)devents[i]).getAmpl()))), // отраж
+				    DASH, // потери
+				    DASH  // затух
 				});
 				break;
 			}			
@@ -433,10 +440,10 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener,
             } else {
                 //System.err.println("row " + row + " column " + column);
                 // FIXME: add MTAE.getComplexEvent(int) or add caching of output CE[] in MTAE
-                ComplexReflectogramEvent pri =
-                    Heap.getMTAEPrimary().getComplexEvents()[nPrimary];
-                ComplexReflectogramEvent et =
-                    Heap.getMTMEtalon().getMTAE().getComplexEvents()[nEtalon];
+                DetailedEvent pri =
+                    Heap.getMTAEPrimary().getDetailedEvents()[nPrimary];
+                DetailedEvent et =
+                    Heap.getMTMEtalon().getMTAE().getDetailedEvents()[nEtalon];
                 if (SimpleReflectogramEventComparer.eventsAreDifferent(pri, et,
                         SimpleReflectogramEventComparer.CHANGETYPE_LOSS,
                         0.5))
