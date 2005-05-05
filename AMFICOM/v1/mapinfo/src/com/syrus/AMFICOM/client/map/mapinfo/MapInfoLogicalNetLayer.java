@@ -11,7 +11,6 @@ import java.io.ObjectInputStream;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -22,20 +21,17 @@ import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.Client.Map.MapConnectionException;
+import com.syrus.AMFICOM.Client.Map.MapDataException;
+import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Map.NetMapViewer;
 import com.syrus.AMFICOM.Client.Map.SpatialObject;
-import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
+import com.syrus.AMFICOM.Client.Map.TopologicalImageCache;
 import com.syrus.AMFICOM.map.DoublePoint;
+import com.syrus.AMFICOM.map.mapperservlet.ServletCommandNames;
 
 public class MapInfoLogicalNetLayer extends LogicalNetLayer
 {
-	/**
-	 * Для вывода времени в отладочных сообщениях
-	 */
-	public SimpleDateFormat sdFormat = new SimpleDateFormat("E M d H:m:s:S");
-	
-	public static final double ZOOM_FACTOR = 2D;
-
 	private MapInfoNetMapViewer nmViewer = null;
 	
 	private TopologicalImageCache imageCache = null;
@@ -57,11 +53,13 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	 *
 	 */
 	public void initializeImageCache()
+		throws MapConnectionException, MapDataException
 	{
-		this.imageCache = new TopologicalImageCache(this);		
+		this.imageCache = new TopologicalImageCache(this, new MapInfoMapImageLoader(this));		
 	}
 	
 	public void refreshLayers()
+			throws MapConnectionException, MapDataException
 	{
 		this.imageCache.refreshLayers();		
 	}
@@ -77,9 +75,16 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 					height));
 
 			this.imageCache.sizeChanged();
-			this.setCenter(this.convertScreenToMap(new Point(width / 2,height / 2)));			
-			
-			repaint(true);
+			try {
+				this.setCenter(this.convertScreenToMap(new Point(width / 2,height / 2)));
+				repaint(true);
+			} catch(MapConnectionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch(MapDataException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -87,6 +92,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	 * Получить экранные координаты по географическим координатам
 	 */
 	public Point convertMapToScreen(DoublePoint point)
+			throws MapConnectionException, MapDataException
 	{
 		try
 		{
@@ -109,6 +115,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	 * Получить географические координаты по экранным
 	 */
 	public DoublePoint convertScreenToMap(Point point)
+			throws MapConnectionException, MapDataException
 	{
 		try
 		{
@@ -127,6 +134,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	}
 
 	public double convertScreenToMap(double screenDistance)
+			throws MapConnectionException, MapDataException
 	{
 		DoublePoint p1 = convertScreenToMap(new Point(0, 0));
 		DoublePoint p2 = convertScreenToMap(new Point((int )screenDistance, 0));
@@ -139,6 +147,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	 * Это не работает в силу того, что масштабы могут разниться по разным координатным осям.
 	 */
 	public double convertMapToScreen(double topologicalDistance)
+			throws MapConnectionException, MapDataException
 	{
 		Point p1 = convertMapToScreen(new DoublePoint(0, 0));
 		Point p2 = convertMapToScreen(new DoublePoint(topologicalDistance, 0));		
@@ -147,25 +156,11 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 		return returnValue;
 	}
 
-	/**
-	 * Считает экранное расстояние между двумя точками в сферических координатах
-	 * @param sphP1 
-	 * @param sphP2
-	 * @return Расстояние
-	 */
-	public double convertMapToScreen(DoublePoint sphP1, DoublePoint sphP2)
-	{
-		Point p1 = convertMapToScreen(sphP1);
-		Point p2 = convertMapToScreen(sphP2);		
-		
-		double returnValue = Math.pow((Math.pow(p2.x - p1.x,2) + Math.pow(p2.y - p1.y,2)),0.5);
-		return returnValue;
-	}
-	
 	public DoublePoint pointAtDistance(
 			DoublePoint startPoint,
 			DoublePoint endPoint,
 			double dist)
+			throws MapConnectionException, MapDataException
 	{
 		double len = distance(startPoint, endPoint);
 
@@ -182,6 +177,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	 * Получить дистанцию между двумя точками в экранных координатах
 	 */
 	public double distance(DoublePoint from, DoublePoint to)
+			throws MapConnectionException, MapDataException
 	{
 		try
 		{
@@ -191,35 +187,35 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			throw new MapConnectionException("Cannot calculate spherical distance", e);
 		}
-		return 0.0D;
 	}
 
 	/**
 	 * Установить центральную точку вида карты
 	 */
 	public void setCenter(DoublePoint center)
+			throws MapConnectionException, MapDataException
 	{
 		try
 		{
 			getLocalMapJ().setCenter(new com.mapinfo.util.DoublePoint(
 					center.getX(),
 					center.getY()));
-			
-//			this.imageCache.centerChanged();			
 		}
 		catch(Exception exc)
 		{
 			System.out.println("MILNL - Failed setting center.");
-			exc.printStackTrace();
+			throw new MapConnectionException("Cannot set center", exc);
 		}
+		this.imageCache.centerChanged();			
 	}
 
 	/**
 	 * Получить центральную точку вида карты
 	 */
 	public DoublePoint getCenter()
+			throws MapConnectionException, MapDataException
 	{
 		com.mapinfo.util.DoublePoint center = null;
 		try
@@ -230,12 +226,12 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 		catch(Exception exc)
 		{
 			System.out.println("MapImagePanel - Failed getting center.");
+			throw new MapConnectionException("Cannot get center", exc);
 		}
-
-		return null;
 	}
 
 	public Rectangle2D.Double getVisibleBounds()
+			throws MapConnectionException, MapDataException
 	{
 		try
 		{
@@ -250,9 +246,8 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 		}
 		catch(Exception ex)
 		{
-			ex.printStackTrace();
+			throw new MapConnectionException("cannot get visible bounds", ex);
 		}
-		return null;
 	}
 
 	/**
@@ -266,14 +261,15 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	 * Перерисовать содержимое компонента с картой
 	 */
 	public void repaint(boolean fullRepaint)
+		throws MapConnectionException, MapDataException
 	{
 		if(fullRepaint)
 		{
-			System.out.println(this.sdFormat.format(new Date(System.currentTimeMillis())) +
+			System.out.println(MapPropertiesManager.getLogDateFormat().format(new Date(System.currentTimeMillis())) +
 					" MIFLNL - repaint - Entered full repaint");
 			
 			this.nmViewer.mapImagePanel.setImage(this.imageCache.getImage());
-			System.out.println(this.sdFormat.format(new Date(System.currentTimeMillis())) +
+			System.out.println(MapPropertiesManager.getLogDateFormat().format(new Date(System.currentTimeMillis())) +
 				" MIFLNL - repaint - Exiting full repaint");
 		}
 		this.nmViewer.mapImagePanel.repaint();		
@@ -297,6 +293,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	 * Получить текущий масштаб вида карты
 	 */
 	public double getScale()
+			throws MapConnectionException, MapDataException
 	{
 		double currentZoom = 0.0D;
 		try
@@ -315,25 +312,33 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	 * Установить заданный масштаб вида карты
 	 */
 	public void setScale(double z)
+			throws MapConnectionException, MapDataException
 	{
 		try
 		{
 			getLocalMapJ().setZoom(z);
 			updateZoom();
-			
-//			this.imageCache.scaleChanged();			
 		}
 		catch(Exception exc)
 		{
 			System.out.println("MapImagePanel - Failed setting zoom.");
 			exc.printStackTrace();
 		}
+		if(this.aContext != null) {
+			Dispatcher disp = this.aContext.getDispatcher();
+			if(disp != null) {
+				Double p = new Double(getScale());
+				disp.notify(new MapEvent(p, MapEvent.MAP_VIEW_SCALE_CHANGED));
+			}
+		}
+		this.imageCache.scaleChanged();			
 	}
 
 	/**
 	 * Установить масштаб вида карты с заданным коэффициентом
 	 */
 	public void scaleTo(double scaleСoef)
+			throws MapConnectionException, MapDataException
 	{
 		this.setScale(this.getScale() * scaleСoef);
 	}
@@ -342,6 +347,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	 * Приблизить вид карты со стандартным коэффициентом
 	 */
 	public void zoomIn()
+			throws MapConnectionException, MapDataException
 	{
 		scaleTo(1.0D / ZOOM_FACTOR);
 	}
@@ -350,6 +356,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	 * Отдалить вид карты со стандартным коэффициентом
 	 */
 	public void zoomOut()
+			throws MapConnectionException, MapDataException
 	{
 		scaleTo(ZOOM_FACTOR);
 	}
@@ -359,39 +366,32 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	 * координатам угловых точек
 	 */
 	public void zoomToBox(DoublePoint from, DoublePoint to)
+			throws MapConnectionException, MapDataException
 	{
 		// System.out.println("Zoom to box (" + from.getX() + ", " + from.getY()
 		// + ") - (" +
 		// to.getX() + ", " + to.getY() + ")");
-		try
-		{
+		try {
 			getLocalMapJ().setBounds(new DoubleRect(from.getX(), from.getY(),
 					to.getX(), to.getY()));
 
 			updateZoom();
-			
-			this.imageCache.scaleChanged();
 		}
-		catch(Exception e)
-		{
+		catch(Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	public void updateZoom()
-	{
-		super.updateZoom();
-
-		if(this.aContext == null)
-			return;
-		Dispatcher disp = this.aContext.getDispatcher();
-		if(disp == null)
-			return;
-		Double p = new Double(getScale());
-		disp.notify(new MapEvent(p, MapEvent.MAP_VIEW_SCALE_CHANGED));
+		if(this.aContext != null) {
+			Dispatcher disp = this.aContext.getDispatcher();
+			if(disp != null) {
+				Double p = new Double(getScale());
+				disp.notify(new MapEvent(p, MapEvent.MAP_VIEW_SCALE_CHANGED));
+			}
+		}
+		this.imageCache.scaleChanged();
 	}
 
 	public void handDragged(MouseEvent me)
+			throws MapConnectionException, MapDataException
 	{
 		Point hdEndPoint = me.getPoint();
 		int shiftX = (int )(me.getX() - this.startPoint.getX());
@@ -424,42 +424,6 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 //				shiftY);
 	}
 
-	public Dimension getDiscreteShifts(int shiftX, int shiftY)
-	{
-		Dimension visSize = this.getMapViewer().getVisualComponent().getSize();
-
-		int discreteShiftX = 0;
-		int discreteShiftY = 0;
-		//Определяем угол смещения - если он ближе к Pi*n/2, n = 2k + 1 - тогда смещаем по диагонали 
-		double angle = Math.toDegrees(Math.acos(shiftX / Math.sqrt(Math.pow(shiftX,2) + Math.pow(shiftY,2))));
-		
-		if (angle > 90)
-			angle = 180 - angle;
-		
-		if ((22.5 < angle) && (angle < 67.5))
-		{
-			if (	(Math.abs(shiftX) >= visSize.getWidth() * MapFrame.MOVE_CENTER_STEP_SIZE)
-					&&(Math.abs(shiftY) >= visSize.getHeight() * MapFrame.MOVE_CENTER_STEP_SIZE))
-			{
-				discreteShiftX = (int)Math.round(shiftX / Math.abs(shiftX) * visSize.getWidth() * MapFrame.MOVE_CENTER_STEP_SIZE);
-				discreteShiftY = (int)Math.round(shiftY / Math.abs(shiftY) * visSize.getHeight() * MapFrame.MOVE_CENTER_STEP_SIZE);
-			}
-		}
-		else if (angle <= 22.5)
-		{
-			if (Math.abs(shiftX) >= visSize.getWidth() * MapFrame.MOVE_CENTER_STEP_SIZE)			
-				discreteShiftX = (int)Math.round(shiftX / Math.abs(shiftX) * visSize.getWidth() * MapFrame.MOVE_CENTER_STEP_SIZE);
-			discreteShiftY = 0;			
-		}
-		else if (67.5 <= angle)
-		{
-			discreteShiftX = 0;
-			if (Math.abs(shiftY) >= visSize.getHeight() * MapFrame.MOVE_CENTER_STEP_SIZE)
-				discreteShiftY = (int)Math.round(shiftY / Math.abs(shiftY) * visSize.getHeight() * MapFrame.MOVE_CENTER_STEP_SIZE);			
-		}
-		return new Dimension(discreteShiftX,discreteShiftY);
-	}
-	
 	public List findSpatialObjects(String searchText)
 	{
 		List resultList = new ArrayList();
@@ -533,6 +497,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	}
 
 	public void centerSpatialObject(SpatialObject so)
+			throws MapConnectionException, MapDataException
 	{
 		MapInfoSpatialObject miso = (MapInfoSpatialObject )so;
 		this.setCenter(miso.getCenter());
