@@ -83,9 +83,11 @@ idl_v1		AMFICOM/v1/idl
 kisserver_v1	AMFICOM/v1/kisserver
 #M	general_v1	Common classes
 general_v1	AMFICOM/v1/general
-#M	csbridge_v1	Client-server bridge. Replacement for generalclient_v1
+#M	csbridge_v1	Client-server bridge
 csbridge_v1	AMFICOM/v1/csbridge
-#M	generalclient_v1	Client common classes. Deprecated, for client-server operations use csbridge_v1
+#M	commonclient_v1	Common classes for all client applications. Replacement for generalclient_v1
+commonclient_v1	AMFICOM/v1/commonclient
+#M	generalclient_v1	Client common classes. Deprecated, use commonclient_v1
 generalclient_v1	AMFICOM/v1/generalclient
 #M	admin_v1	Administrative module
 admin_v1	AMFICOM/v1/admin
