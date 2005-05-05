@@ -1,5 +1,5 @@
 /*
- * $Id: MapElementCharacteristicsEditor.java,v 1.4 2005/04/19 15:48:32 krupenn Exp $
+ * $Id: MapElementCharacteristicsEditor.java,v 1.5 2005/05/05 09:45:54 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,12 @@
 
 package com.syrus.AMFICOM.Client.Map.Props;
 
+import java.util.Collection;
+import java.util.Iterator;
+
+import com.syrus.AMFICOM.Client.Map.Controllers.PhysicalLinkController;
 import com.syrus.AMFICOM.client_.general.ui_.CharacteristicsPanel;
+import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.CharacteristicTypeSort;
 import com.syrus.AMFICOM.map.Collector;
@@ -22,7 +27,7 @@ import com.syrus.AMFICOM.mapview.Selection;
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.4 $, $Date: 2005/04/19 15:48:32 $
+ * @version $Revision: 1.5 $, $Date: 2005/05/05 09:45:54 $
  * @module schemeclient_v1
  */
 
@@ -85,4 +90,22 @@ public class MapElementCharacteristicsEditor extends CharacteristicsPanel {
 		else
 			super.showNoSelection();
 	}
+
+	void setCharacteristicValue(Collection characteristics, String name,
+			String value) {
+		for (Iterator it = characteristics.iterator(); it.hasNext();) {
+			Characteristic ch = (Characteristic) it.next();
+			if (ch.getName().equals(name)) {
+				if(ch.getCharacterizableId().equals(this.mapElement.getId()))
+					ch.setValue(value);
+				else {
+					PhysicalLinkController controller = (PhysicalLinkController )PhysicalLinkController.getInstance();
+					if(ch.getType().getCodename().equals(controller.ATTRIBUTE_COLOR))
+						controller.setColor(this.mapElement, null);
+				}
+				break;
+			}
+		}
+	}
+
 }
