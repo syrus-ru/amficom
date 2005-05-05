@@ -1,5 +1,5 @@
 /*-
- * $Id: ModelTraceRange.java,v 1.2 2005/05/01 13:50:29 saa Exp $
+ * $Id: ModelTraceRange.java,v 1.3 2005/05/05 11:11:46 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ package com.syrus.AMFICOM.analysis.dadara;
  * не определено.
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.2 $, $Date: 2005/05/01 13:50:29 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/05 11:11:46 $
  * @module
  */
 public abstract class ModelTraceRange {
@@ -46,6 +46,17 @@ public abstract class ModelTraceRange {
         for (int i = 0; i < N; i++)
             ret[i] = getY(x0 + i);
         return ret;
+    }
+
+    /**
+     * ¬озвращает значени€ игреков на диапазоне от начала до конца включительно
+     * данного событи€.
+     * @param ev диапазон
+     * @return массив значений Y
+     */
+    public double[] getYRE(SimpleReflectogramEvent ev)
+    {
+        return getYArray(ev.getBegin(), ev.getEnd() - ev.getBegin() + 1);
     }
 
     /**
