@@ -1,5 +1,5 @@
 /*
- * $Id: ClientSessionEnvironment.java,v 1.1 2005/05/05 08:56:37 cvsadmin Exp $
+ * $Id: ClientSessionEnvironment.java,v 1.2 2005/05/05 10:58:36 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,8 +10,8 @@ package com.syrus.AMFICOM.general;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/05/05 08:56:37 $
- * @author $Author: cvsadmin $
+ * @version $Revision: 1.2 $, $Date: 2005/05/05 10:58:36 $
+ * @author $Author: arseniy $
  * @module generalclient_v1
  */
 public final class ClientSessionEnvironment extends BaseSessionEnvironment {
@@ -37,6 +37,10 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 			default:
 				Log.errorMessage("Unknown kind of session -- " + sessionKind);
 		}
+
+		/*	Print available objects -- for debugging purpose*/
+		if (instance != null)
+			instance.baseConnectionManager.getCORBAServer().printNamingContext();
 	}
 
 	private static void createMeasurementSession(LoginRestorer loginRestorer) throws CommunicationException {
