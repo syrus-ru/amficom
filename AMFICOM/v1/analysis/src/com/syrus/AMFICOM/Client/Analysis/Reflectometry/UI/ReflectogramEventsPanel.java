@@ -70,12 +70,7 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 				noise_level = ev.overallStatsNoiseLevel();
 		}
 
-		min_trace_level = Heap.getMinTraceLevel();
-		if (min_trace_level == null)
-		{
-            // FIXME: updateMinTraceLevel seem to set something else than noise_level - 3 
-			updateMinTraceLevel(new Double(noise_level - 3));
-		}
+		updateMinTraceLevel(new Double(noise_level - 3));
 	}
 
 	protected void updColorModel()
