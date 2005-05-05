@@ -1,5 +1,5 @@
 /**
- * $Id: CreateUnboundNodeCommandAtomic.java,v 1.13 2005/03/16 12:54:57 bass Exp $
+ * $Id: CreateUnboundNodeCommandAtomic.java,v 1.14 2005/05/05 09:35:16 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,8 +24,8 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
  * Разместить сетевой элемент на карте. используется при переносе 
  * (drag/drop), в точке point (в экранных координатах)
  * 
- * @author $Author: bass $
- * @version $Revision: 1.13 $, $Date: 2005/03/16 12:54:57 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.14 $, $Date: 2005/05/05 09:35:16 $
  * @module mapviewclietn_v1
  */
 public class CreateUnboundNodeCommandAtomic extends MapActionCommand
@@ -80,7 +80,7 @@ public class CreateUnboundNodeCommandAtomic extends MapActionCommand
 				this.logicalNetLayer.getUserId(),
 				this.schemeElement,
 				this.coordinatePoint,
-				this.logicalNetLayer.getUnboundProto());
+				this.logicalNetLayer.getUnboundNodeType());
 			
 			UnboundNodeController unc = (UnboundNodeController)getLogicalNetLayer().getMapViewController().getController(this.unbound);
 
