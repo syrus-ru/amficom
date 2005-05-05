@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogrammLoadDialog.java,v 1.15 2005/05/03 12:19:09 bob Exp $
+ * $Id: ReflectogrammLoadDialog.java,v 1.16 2005/05/05 12:40:44 bob Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
@@ -51,7 +50,7 @@ import com.syrus.io.BellcoreReader;
 import com.syrus.io.BellcoreStructure;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/05/03 12:19:09 $
+ * @version $Revision: 1.16 $, $Date: 2005/05/05 12:40:44 $
  * @author $Author: bob $
  * @module analysis_v1
  */
@@ -143,19 +142,19 @@ public class ReflectogrammLoadDialog extends JDialog {
 	}
 
 	public void setVisible(boolean key) {
-		if (!domainId.equals(((RISDSessionInfo) aContext.getSessionInterface()).getDomainIdentifier()))
+		if (!domainId.equals(LoginManager.getDomainId()))
 			setTree();
 		super.setVisible(key);
 	}
 
 	public void show() {
-		if (!this.domainId.equals(((RISDSessionInfo) aContext.getSessionInterface()).getDomainIdentifier()))
+		if (!this.domainId.equals(LoginManager.getDomainId()))
 			setTree();
 		super.show();
 	}
 
 	void setTree() {
-		this.domainId = ((RISDSessionInfo) aContext.getSessionInterface()).getDomainIdentifier();
+		this.domainId = LoginManager.getDomainId();
 
 		
 //		getContentPane().remove(scrollPane);
@@ -163,11 +162,10 @@ public class ReflectogrammLoadDialog extends JDialog {
 			
 		try {
 			if (this.rootItem == null) {
-				Identifier domainId = ((RISDSessionInfo) aContext.getSessionInterface()).getDomainIdentifier();
-				Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
+				Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(this.domainId, true);
 
 				ArchiveChildrenFactory childrenFactory = ArchiveChildrenFactory.getInstance();
-				childrenFactory.setDomainId(domainId);
+				childrenFactory.setDomainId(this.domainId);
 				this.rootItem = new PopulatableItem();
 				this.rootItem.setObject(ArchiveChildrenFactory.ROOT);
 				this.rootItem.setName(LangModelAnalyse.getString("Archive"));

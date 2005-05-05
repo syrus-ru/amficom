@@ -49,7 +49,7 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 	{
 		try
 		{
-			Checker checker = new Checker(this.aContext.getSessionInterface());
+			Checker checker = new Checker();
 			if(!checker.checkCommand(Checker.loadReflectogrammFromDB))
 			{
 				return;

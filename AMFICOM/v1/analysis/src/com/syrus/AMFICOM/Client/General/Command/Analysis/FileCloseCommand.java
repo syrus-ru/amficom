@@ -24,7 +24,7 @@ public class FileCloseCommand extends VoidCommand
 		if(false) // FIXME: security bypass??
 		try
 		{
-			new Checker(this.aContext.getSessionInterface());
+			new Checker();
 		}
 		catch (NullPointerException ex)
 		{

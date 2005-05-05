@@ -22,7 +22,7 @@ public class OptionsSetColorsCommand extends VoidCommand
 	{
 		try
 		{
-			new Checker(this.aContext.getSessionInterface());
+			new Checker();
 		}
 		catch (NullPointerException ex)
 		{

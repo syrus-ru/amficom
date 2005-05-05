@@ -5,14 +5,19 @@ import javax.swing.JOptionPane;
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.Analysis.GUIUtil;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
-import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.measurement.*;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.measurement.MeasurementSetup;
+import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
+import com.syrus.AMFICOM.measurement.Set;
 import com.syrus.io.BellcoreStructure;
 
 public class SaveTestSetupCommand extends VoidCommand
@@ -100,7 +105,7 @@ public class SaveTestSetupCommand extends VoidCommand
 		try
 		{
 			measurementSetup = MeasurementSetup.createInstance(
-					((RISDSessionInfo)aContext.getSessionInterface()).getUserIdentifier(),
+					LoginManager.getUserId(),
 					msTest.getParameterSet(),
 					criteriaSet,
 					msTest.getThresholdSet(),

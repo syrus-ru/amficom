@@ -23,8 +23,6 @@ import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Checker;
-import com.syrus.AMFICOM.Client.General.ConnectionInterface;
-import com.syrus.AMFICOM.Client.General.SessionInterface;
 import com.syrus.AMFICOM.Client.General.Command.ExitCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.AddTraceFromDatabaseCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.CreateAnalysisReportCommand;
@@ -48,11 +46,11 @@ import com.syrus.AMFICOM.Client.General.Command.Analysis.SaveTestSetupCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.TraceMakeCurrentCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.TraceOpenReferenceCommand;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.ShowFrameCommand;
+import com.syrus.AMFICOM.Client.General.Command.Session.OpenSessionCommand;
 import com.syrus.AMFICOM.Client.General.Command.Session.SessionChangePasswordCommand;
 import com.syrus.AMFICOM.Client.General.Command.Session.SessionCloseCommand;
 import com.syrus.AMFICOM.Client.General.Command.Session.SessionConnectionCommand;
 import com.syrus.AMFICOM.Client.General.Command.Session.SessionDomainCommand;
-import com.syrus.AMFICOM.Client.General.Command.Session.SessionOpenCommand;
 import com.syrus.AMFICOM.Client.General.Command.Session.SessionOptionsCommand;
 import com.syrus.AMFICOM.Client.General.Command.Window.ArrangeWindowCommand;
 import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
@@ -67,14 +65,15 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.Report.ReportTemplate;
 import com.syrus.AMFICOM.Client.General.UI.StatusBarModel;
 import com.syrus.AMFICOM.Client.General.UI.WindowArranger;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.Domain;
+import com.syrus.AMFICOM.administration.User;
 import com.syrus.AMFICOM.analysis.ClientAnalysisManager;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.io.BellcoreStructure;
 
@@ -236,7 +235,7 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener, CurrentTr
 		Heap.addCurrentTraceChangeListener(this);
 		Environment.getDispatcher().register(this, "contextchange");
 
-		aModel.setCommand("menuSessionNew", new SessionOpenCommand(Environment.getDispatcher(), aContext));
+		aModel.setCommand("menuSessionNew", new OpenSessionCommand(Environment.getDispatcher(), aContext));
 		aModel.setCommand("menuSessionClose", new SessionCloseCommand(Environment.getDispatcher(), aContext));
 		aModel.setCommand("menuSessionOptions", new SessionOptionsCommand(aContext));
 		aModel.setCommand("menuSessionConnection", new SessionConnectionCommand(Environment.getDispatcher(), aContext));
@@ -276,7 +275,7 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener, CurrentTr
 			rc.setParameter(CreateAnalysisReportCommand.TABLE, it.next());
 		for (Iterator it = graphs.iterator(); it.hasNext();)
 			rc.setParameter(CreateAnalysisReportCommand.PANEL, it.next());
-		rc.setParameter(CreateAnalysisReportCommand.TYPE, ReportTemplate.rtt_Evaluation);
+//		rc.setParameter(CreateAnalysisReportCommand.TYPE, ReportTemplate.rtt_Evaluation);
 		aModel.setCommand("menuReportCreate", rc);
 
 		aModel.setCommand("menuWindowArrange", new ArrangeWindowCommand(new ThresholdsWindowArranger(this)));
@@ -296,26 +295,26 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener, CurrentTr
 
 		aModel.fireModelChanged("");
 
-		if(ConnectionInterface.getInstance() != null)
-		{
-			if(ConnectionInterface.getInstance().isConnected())
-		 internal_dispatcher.notify(new ContextChangeEvent(
-				 ConnectionInterface.getInstance(),
-				 ContextChangeEvent.CONNECTION_OPENED_EVENT));
-		}
-		if(SessionInterface.getActiveSession() != null)
-		{
-			aContext.setSessionInterface(SessionInterface.getActiveSession());
-			if(aContext.getSessionInterface().isOpened())
-		 internal_dispatcher.notify(new ContextChangeEvent(
-				 aContext.getSessionInterface(),
-				 ContextChangeEvent.SESSION_OPENED_EVENT));
-		}
-		else
-		{
-			aContext.setSessionInterface(Environment.getDefaultSessionInterface(ConnectionInterface.getInstance()));
-			SessionInterface.setActiveSession(aContext.getSessionInterface());
-		}
+//		if(ConnectionInterface.getInstance() != null)
+//		{
+//			if(ConnectionInterface.getInstance().isConnected())
+//		 internal_dispatcher.notify(new ContextChangeEvent(
+//				 ConnectionInterface.getInstance(),
+//				 ContextChangeEvent.CONNECTION_OPENED_EVENT));
+//		}
+//		if(SessionInterface.getActiveSession() != null)
+//		{
+//			aContext.setSessionInterface(SessionInterface.getActiveSession());
+//			if(aContext.getSessionInterface().isOpened())
+//		 internal_dispatcher.notify(new ContextChangeEvent(
+//				 aContext.getSessionInterface(),
+//				 ContextChangeEvent.SESSION_OPENED_EVENT));
+//		}
+//		else
+//		{
+//			aContext.setSessionInterface(Environment.getDefaultSessionInterface(ConnectionInterface.getInstance()));
+//			SessionInterface.setActiveSession(aContext.getSessionInterface());
+//		}
 	}
 
 	void setDefaultModel (ApplicationModel aModel)
@@ -384,20 +383,29 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener, CurrentTr
 			System.out.println("perform context change \"" + Long.toHexString(cce.change_type) + "\" at " + this.getTitle());
 			if(cce.SESSION_OPENED)
 			{
-				SessionInterface ssi = (SessionInterface)cce.getSource();
-				if(aContext.getSessionInterface().equals(ssi))
+//				SessionInterface ssi = (SessionInterface)cce.getSource();
+//				if(aContext.getSessionInterface().equals(ssi))
 				{
 					setSessionOpened();
 					statusBar.setText("status", LangModel.getString("statusReady"));
 					SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
-					statusBar.setText("session", sdf.format(new Date(aContext.getSessionInterface().getLogonTime())));
-					statusBar.setText("user", aContext.getSessionInterface().getUser());
+//					statusBar.setText("session", sdf.format(new Date(aContext.getSessionInterface().getLogonTime())));
+					Identifier userId = LoginManager.getUserId();
+					if (userId != null && !userId.isVoid()) {
+						try {
+							User  user = (User)AdministrationStorableObjectPool.getStorableObject(userId, true);
+							this.statusBar.setText("user", user.getName());
+						} catch (ApplicationException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
 				}
 			}
 			if(cce.SESSION_CLOSED)
 			{
-				SessionInterface ssi = (SessionInterface)cce.getSource();
-				if(aContext.getSessionInterface().equals(ssi))
+//				SessionInterface ssi = (SessionInterface)cce.getSource();
+//				if(aContext.getSessionInterface().equals(ssi))
 				{
 					setSessionClosed();
 					statusBar.setText("status", LangModel.getString("statusReady"));
@@ -407,18 +415,18 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener, CurrentTr
 			}
 			if(cce.CONNECTION_OPENED)
 			{
-				ConnectionInterface cci = (ConnectionInterface)cce.getSource();
-				if(ConnectionInterface.getInstance().equals(cci))
+//				ConnectionInterface cci = (ConnectionInterface)cce.getSource();
+//				if(ConnectionInterface.getInstance().equals(cci))
 				{
 					setConnectionOpened();
 					statusBar.setText("status", LangModel.getString("statusReady"));
-					statusBar.setText("server", ConnectionInterface.getInstance().getServerName());
+//					statusBar.setText("server", ConnectionInterface.getInstance().getServerName());
 				}
 			}
 			if(cce.CONNECTION_CLOSED)
 			{
-				ConnectionInterface cci = (ConnectionInterface)cce.getSource();
-				if(ConnectionInterface.getInstance().equals(cci))
+//				ConnectionInterface cci = (ConnectionInterface)cce.getSource();
+//				if(ConnectionInterface.getInstance().equals(cci))
 				{
 					statusBar.setText("status", LangModel.getString("statusDisconnected"));
 					statusBar.setText("server", LangModel.getString("statusNoConnection"));
@@ -427,8 +435,8 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener, CurrentTr
 			}
 			if(cce.CONNECTION_FAILED)
 			{
-				ConnectionInterface cci = (ConnectionInterface)cce.getSource();
-				if(ConnectionInterface.getInstance().equals(cci))
+//				ConnectionInterface cci = (ConnectionInterface)cce.getSource();
+//				if(ConnectionInterface.getInstance().equals(cci))
 				{
 					statusBar.setText("status", LangModel.getString("statusError"));
 					statusBar.setText("server", LangModel.getString("statusConnectionError"));
@@ -474,7 +482,7 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener, CurrentTr
 
 	public void setSessionOpened()
 	{
-		Checker checker = new Checker(aContext.getDataSource());
+		Checker checker = new Checker();
 		if(!checker.checkCommand(Checker.enterThresholdModul))
 		{
 			JOptionPane.showMessageDialog(
@@ -495,7 +503,7 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener, CurrentTr
 		aModel.setEnabled("menuSessionDomain", true);
 		aModel.setEnabled("menuSessionNew", false);
 		aModel.fireModelChanged("");
-		internal_dispatcher.notify(new ContextChangeEvent(LoginManager.getDomainId(), ContextChangeEvent.DOMAIN_SELECTED_EVENT));
+//		internal_dispatcher.notify(new ContextChangeEvent(LoginManager.getDomainId(), ContextChangeEvent.DOMAIN_SELECTED_EVENT));
 	}
 
 	public void setDomainSelected()

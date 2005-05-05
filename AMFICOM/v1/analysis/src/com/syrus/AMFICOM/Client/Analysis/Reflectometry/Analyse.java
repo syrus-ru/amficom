@@ -10,10 +10,13 @@ import com.syrus.AMFICOM.Client.General.Model.AnalyseApplicationModelFactory;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Model.ReflectometryAnalyseApplicationModelFactory;
+import com.syrus.util.Application;
 
 public class Analyse
 {
 	private ApplicationContext aContext = new ApplicationContext();
+	
+	public static final String APPLICATION_NAME = "analysis";
 
 	public Analyse(AnalyseApplicationModelFactory factory)
 	{
@@ -35,6 +38,8 @@ public class Analyse
 		catch(Exception e) {
 			e.printStackTrace();
 		}
+		
+		Application.init(APPLICATION_NAME);
 
 		new Analyse(new ReflectometryAnalyseApplicationModelFactory());
 	}
