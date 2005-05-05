@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.64 2005/04/25 15:17:34 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.65 2005/05/05 09:54:14 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,6 +13,7 @@ package com.syrus.AMFICOM.Client.Map;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -20,9 +21,7 @@ import java.awt.Point;
 import java.awt.Stroke;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
-import java.text.SimpleDateFormat;
 import java.util.Collection;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -52,6 +51,7 @@ import com.syrus.AMFICOM.Client.Map.Controllers.MarkerController;
 import com.syrus.AMFICOM.Client.Map.Controllers.NodeLinkController;
 import com.syrus.AMFICOM.Client.Map.Controllers.NodeTypeController;
 import com.syrus.AMFICOM.Client.Map.Controllers.SiteNodeController;
+import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.AbstractNode;
@@ -82,14 +82,11 @@ import com.syrus.AMFICOM.scheme.SchemePath;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.64 $, $Date: 2005/04/25 15:17:34 $
+ * @version $Revision: 1.65 $, $Date: 2005/05/05 09:54:14 $
  * @module mapviewclient_v2
  */
 public abstract class LogicalNetLayer implements MapCoordinatesConverter
 {
-	public static SimpleDateFormat detailedDateFormat = 
-		new SimpleDateFormat("E M d H:m:s:S");
-	
 	protected CommandList commandList = new CommandList(20);
 	
 	/** Нить, управляющая анимацией на слое. */
@@ -133,10 +130,10 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	protected PhysicalLinkType currentPhysicalLinkType = null;
 
 	/** Тип непривязанного схемного элемента. */
-	protected SiteNodeType unboundProto = null;
+	protected SiteNodeType unboundNodeType = null;
 
 	/** Тип непривязанного кабеля. */
-	protected PhysicalLinkType unboundLinkProto = null;
+	protected PhysicalLinkType unboundLinkType = null;
 	
 	/** Текущая точка курсора мыши на карте (в экранных координатах). */	
 	protected Point currentPoint = new Point(0, 0);
@@ -506,12 +503,12 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	 * Установить текущий масштаб точечных элементов.
 	 * @param currentScale текущий масштаб точечных элементов
 	 */
-	public void setCurrentScale(double currentScale)
-	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setCurrentScale(" + currentScale + ")");
-		this.currentScale = currentScale;
-		updateZoom();
-	}
+//	public void setCurrentScale(double currentScale)
+//	{
+//		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setCurrentScale(" + currentScale + ")");
+//		this.currentScale = currentScale;
+//		updateZoom();
+//	}
 	
 	/**
 	 * Получить текущее состояние слоя карты.
@@ -1754,8 +1751,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	 */
 	public PhysicalLinkType getCurrentPhysicalLinkType()
 	{
-		if(this.currentPhysicalLinkType == null)
-		{
+		if(this.currentPhysicalLinkType == null) {
 			this.currentPhysicalLinkType = LinkTypeController.getDefaultPhysicalLinkType();
 		}
 		return this.currentPhysicalLinkType;
@@ -1765,36 +1761,33 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	 * Получить тип непривязанного узла.
 	 * @return тип узла
 	 */
-	public SiteNodeType getUnboundProto()
+	public SiteNodeType getUnboundNodeType()
 	{
-		if(this.unboundProto == null)
-		{
-			this.unboundProto = NodeTypeController.getUnboundNodeType();
+		if(this.unboundNodeType == null) {
+			this.unboundNodeType = NodeTypeController.getUnboundNodeType();
 		}
-		return this.unboundProto;
+		return this.unboundNodeType;
 	}
 	
 	/**
 	 * Получить тип непривязанного кабеля.
 	 * @return тип непривязанного кабеля
 	 */
-	public PhysicalLinkType getUnboundPen()
+	public PhysicalLinkType getUnboundLinkType()
 	{
-		if(this.unboundLinkProto == null)
-		{
-
-			this.unboundLinkProto = LinkTypeController.getUnboundPhysicalLinkType();
+		if(this.unboundLinkType == null) {
+			this.unboundLinkType = LinkTypeController.getUnboundPhysicalLinkType();
 		}
-		return this.unboundLinkProto;
+		return this.unboundLinkType;
 	}
 	
 	/**
 	 * Выбрать тип линии для создания новых линий.
-	 * @param pen тип линии
+	 * @param type тип линии
 	 */
-	public void setPen(PhysicalLinkType pen)
+	public void setCurrentPhysicalLinkType(PhysicalLinkType type)
 	{
-		this.currentPhysicalLinkType = pen;
+		this.currentPhysicalLinkType = type;
 	}
 
 	/**
@@ -1815,4 +1808,41 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	{
 		return this.userId;
 	}
+
+	public Dimension getDiscreteShifts(int shiftX, int shiftY)
+	{
+		Dimension visSize = this.getMapViewer().getVisualComponent().getSize();
+
+		int discreteShiftX = 0;
+		int discreteShiftY = 0;
+		//Определяем угол смещения - если он ближе к Pi*n/2, n = 2k + 1 - тогда смещаем по диагонали 
+		double angle = Math.toDegrees(Math.acos(shiftX / Math.sqrt(Math.pow(shiftX,2) + Math.pow(shiftY,2))));
+		
+		if (angle > 90)
+			angle = 180 - angle;
+		
+		if ((22.5 < angle) && (angle < 67.5))
+		{
+			if (	(Math.abs(shiftX) >= visSize.getWidth() * MapFrame.MOVE_CENTER_STEP_SIZE)
+					&&(Math.abs(shiftY) >= visSize.getHeight() * MapFrame.MOVE_CENTER_STEP_SIZE))
+			{
+				discreteShiftX = (int)Math.round(shiftX / Math.abs(shiftX) * visSize.getWidth() * MapFrame.MOVE_CENTER_STEP_SIZE);
+				discreteShiftY = (int)Math.round(shiftY / Math.abs(shiftY) * visSize.getHeight() * MapFrame.MOVE_CENTER_STEP_SIZE);
+			}
+		}
+		else if (angle <= 22.5)
+		{
+			if (Math.abs(shiftX) >= visSize.getWidth() * MapFrame.MOVE_CENTER_STEP_SIZE)			
+				discreteShiftX = (int)Math.round(shiftX / Math.abs(shiftX) * visSize.getWidth() * MapFrame.MOVE_CENTER_STEP_SIZE);
+			discreteShiftY = 0;			
+		}
+		else if (67.5 <= angle)
+		{
+			discreteShiftX = 0;
+			if (Math.abs(shiftY) >= visSize.getHeight() * MapFrame.MOVE_CENTER_STEP_SIZE)
+				discreteShiftY = (int)Math.round(shiftY / Math.abs(shiftY) * visSize.getHeight() * MapFrame.MOVE_CENTER_STEP_SIZE);			
+		}
+		return new Dimension(discreteShiftX,discreteShiftY);
+	}
+	
 }
