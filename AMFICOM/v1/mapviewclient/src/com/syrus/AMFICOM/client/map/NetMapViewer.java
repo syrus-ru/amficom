@@ -1,5 +1,5 @@
 /**
- * $Id: NetMapViewer.java,v 1.11 2005/04/19 15:39:44 peskovsky Exp $
+ * $Id: NetMapViewer.java,v 1.12 2005/05/05 09:51:14 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,8 +13,6 @@ package com.syrus.AMFICOM.Client.Map;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import javax.swing.JComponent;
@@ -31,8 +29,8 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
  * картографии, следует вызвать метод {@link #getVisualComponent()}
  * <br> реализация com.syrus.AMFICOM.Client.Map.ObjectFX.OfxNetMapViewer 
  * <br> реализация com.syrus.AMFICOM.Client.Map.Mapinfo.MapInfoNetMapViewer
- * @author $Author: peskovsky $
- * @version $Revision: 1.11 $, $Date: 2005/04/19 15:39:44 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.12 $, $Date: 2005/05/05 09:51:14 $
  * @module mapviewclient_v1
  */
 public abstract class NetMapViewer 
