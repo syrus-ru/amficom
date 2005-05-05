@@ -1,5 +1,5 @@
 /*-
- * $Id: DetailedEventUtil.java,v 1.1 2005/05/05 11:45:28 saa Exp $
+ * $Id: DetailedEventUtil.java,v 1.2 2005/05/05 15:24:25 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,10 +11,13 @@ package com.syrus.AMFICOM.analysis.dadara.events;
 /**
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.1 $, $Date: 2005/05/05 11:45:28 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/05 15:24:25 $
  * @module
  */
 public class DetailedEventUtil {
+    private DetailedEventUtil() {
+        // non-instantiable
+    }
     public static double getLoss(DetailedEvent ev)
     throws NoSuchFieldException {
         if (ev instanceof LinearDetailedEvent)
