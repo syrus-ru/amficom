@@ -4,6 +4,8 @@ import java.awt.Component;
 
 import com.mapinfo.mapj.FeatureLayer;
 import com.mapinfo.unit.Distance;
+import com.syrus.AMFICOM.Client.Map.MapConnectionException;
+import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.SpatialLayer;
 
 public class MapInfoSpatialLayer implements SpatialLayer
@@ -76,16 +78,33 @@ public class MapInfoSpatialLayer implements SpatialLayer
 
 	public boolean isVisibleAtCurrentScale()
 	{
-		return isVisibleAtScale(this.layerToRepaint.getScale());
+		try {
+			return isVisibleAtScale(this.layerToRepaint.getScale());
+		} catch(MapConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch(MapDataException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return true;
 	}
 	
 	public void setVisible(boolean visible)
 	{
 		this.visible = visible;
-		this.layerToRepaint.refreshLayers();		
-		if (this.isVisibleAtScale(this.layerToRepaint.getScale()))
-		{
-			this.layerToRepaint.repaint(true);			
+		try {
+			this.layerToRepaint.refreshLayers();		
+			if (this.isVisibleAtScale(this.layerToRepaint.getScale()))
+			{
+				this.layerToRepaint.repaint(true);			
+			}
+		} catch(MapConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch(MapDataException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
