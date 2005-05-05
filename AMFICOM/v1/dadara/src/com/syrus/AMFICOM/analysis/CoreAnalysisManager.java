@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.62 2005/05/05 11:45:28 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.63 2005/05/05 13:37:03 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.62 $, $Date: 2005/05/05 11:45:28 $
+ * @version $Revision: 1.63 $, $Date: 2005/05/05 13:37:03 $
  * @module
  */
 
@@ -565,8 +565,19 @@ public class CoreAnalysisManager
 
 	public static double getMedian(double[] y, int pos)
 	{
+        if (pos < 0 || pos >= y.length)
+            throw new IllegalArgumentException("Invalid pos for getMedian");
 		return nMedian(y, pos);
 	}
+    /**
+     * @throws IllegalArgumentException is possible if ratio is outside [0,1]
+     */
+    public static double getMedian(double[] y, int iFrom, int iToEx, double ratio)
+    {
+        double[] temp = new double[iToEx - iFrom];
+        System.arraycopy(y, iFrom, temp, 0, temp.length);
+        return nMedian(temp, (int)(temp.length * ratio));
+    }
 	public static double getMedian(double[] y)
 	{
 		return nMedian(y, y.length / 2);
