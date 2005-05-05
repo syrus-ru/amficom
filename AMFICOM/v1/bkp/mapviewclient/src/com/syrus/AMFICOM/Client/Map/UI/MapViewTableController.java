@@ -6,13 +6,13 @@
 
 package com.syrus.AMFICOM.Client.Map.UI;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -29,9 +29,6 @@ public final class MapViewTableController extends ObjectResourceController
 	private static MapViewTableController instance;
 
 	private List keys;
-
-	  static SimpleDateFormat sdf =
-		new java.text.SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 
 	private MapViewTableController() 
 	{
@@ -95,12 +92,12 @@ public final class MapViewTableController extends ObjectResourceController
 		else
 		if (key.equals(KEY_CREATED))
 		{
-			result = sdf.format(view.getCreated());
+			result = MapPropertiesManager.getDateFormat().format(view.getCreated());
 		}
 		else
 		if (key.equals(KEY_MODIFIED))
 		{
-			result = sdf.format(view.getModified());
+			result = MapPropertiesManager.getDateFormat().format(view.getModified());
 		}
 		return result;
 	}

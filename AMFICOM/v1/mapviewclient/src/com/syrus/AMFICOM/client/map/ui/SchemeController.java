@@ -6,17 +6,17 @@
 
 package com.syrus.AMFICOM.Client.Map.UI;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.User;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
-import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.scheme.Scheme;
 
@@ -31,9 +31,6 @@ public final class SchemeController extends ObjectResourceController
 	private static SchemeController instance;
 
 	private List keys;
-
-	  static SimpleDateFormat sdf =
-		new java.text.SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 
 	private SchemeController() 
 	{
@@ -106,12 +103,12 @@ public final class SchemeController extends ObjectResourceController
 		else
 		if (key.equals(KEY_CREATED))
 		{
-			result = sdf.format(sc.getCreated());
+			result = MapPropertiesManager.getDateFormat().format(sc.getCreated());
 		}
 		else
 		if (key.equals(KEY_MODIFIED))
 		{
-			result = sdf.format(sc.getModified());
+			result = MapPropertiesManager.getDateFormat().format(sc.getModified());
 		}
 		return result;
 	}
