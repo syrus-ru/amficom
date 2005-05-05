@@ -247,40 +247,7 @@ public class AnalysisUtil
 			(AnalysisParameters)analysisParams.clone());
 		Heap.setMinuitInitialParams(analysisParams);
 	}
-	
-	public static String getTraceEventNameByType(int eventType)
-	{
-		String eventTypeName;
-		switch(eventType)
-		{
-		case TraceEvent.CONNECTOR:
-		    eventTypeName = LangModelAnalyse.getString("eventTypeReflective");
-			break;
-		case TraceEvent.GAIN:
-			eventTypeName = LangModelAnalyse.getString("eventTypeGain");
-			break;
-		case TraceEvent.LOSS:
-			eventTypeName = LangModelAnalyse.getString("eventTypeLoss");
-			break;
-		case TraceEvent.LINEAR:
-		    eventTypeName = LangModelAnalyse.getString("eventTypeLinear");
-			break;
-		case TraceEvent.NON_IDENTIFIED:
-		    eventTypeName = LangModelAnalyse.getString("eventTypeNonIdentified");
-			break;
-		case TraceEvent.INITIATE:
-		    eventTypeName = LangModelAnalyse.getString("eventTypeInitiate");
-			break;
-		case TraceEvent.TERMINATE:
-			eventTypeName = LangModelAnalyse.getString("eventTypeTerminate");
-			break;
-		default:
-		    eventTypeName = LangModelAnalyse.getString("eventTypeUnk"); // @todo: отличать от eventTypeNonIdentified или нет?
-		}
-		return eventTypeName;
-	}
 
-	// @todo: объединить getSimpleEventNameByType и getTraceEventNameByType?
 	public static String getSimpleEventNameByType(int eventType)
 	{
 		String eventTypeName;
