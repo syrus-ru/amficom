@@ -2,13 +2,17 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="src" path="/general_v1"/>
-	<classpathentry kind="src" path="/config_v1"/>
-	<classpathentry kind="src" path="/measurement_v1"/>
 	<classpathentry kind="src" path="/admin_v1"/>
+	<classpathentry kind="src" path="/config_v1"/>
+	<classpathentry kind="src" path="/general_v1"/>
+	<classpathentry kind="src" path="/map_v1"/>
+	<classpathentry kind="src" path="/measurement_v1"/>
+	<classpathentry kind="src" path="/scheme_v1"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/cmserver_interface"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/mshserver_interface"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/util"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/mserver_interface"/>
-	<classpathentry kind="src" path="/csbridge_v1"/>
+	<classpathentry kind="src" path="/event_v1"/>
+	<classpathentry kind="src" path="/resource_v1"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/leserver_interface"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
