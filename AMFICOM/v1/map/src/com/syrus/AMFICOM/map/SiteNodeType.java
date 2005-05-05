@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.29 2005/04/20 07:53:47 bass Exp $
+ * $Id: SiteNodeType.java,v 1.30 2005/05/05 09:00:15 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,30 +36,23 @@ import com.syrus.AMFICOM.map.corba.SiteNodeType_Transferable;
 /**
  * Тип сетевого узла топологической схемы. Существует несколько 
  * предустановленных  типов сетевых узлов, которые определяются полем 
- * {@link #codename}, соответствующим какому-либо значению {@link #WELL}, 
- * {@link #PIQUET}, {@link #ATS}, {@link #BUILDING}, {@link #UNBOUND}, 
- * {@link #CABLE_INLET}, {@link #TOWER}
- * @author $Author: bass $
- * @version $Revision: 1.29 $, $Date: 2005/04/20 07:53:47 $
+ * {@link #codename}, соответствующим какому-либо значению {@link #DEFAULT_WELL}, 
+ * {@link #DEFAULT_PIQUET}, {@link #DEFAULT_ATS}, {@link #DEFAULT_BUILDING}, {@link #DEFAULT_UNBOUND}, 
+ * {@link #DEFAULT_CABLE_INLET}, {@link #DEFAULT_TOWER}
+ * @author $Author: krupenn $
+ * @version $Revision: 1.30 $, $Date: 2005/05/05 09:00:15 $
  * @module map_v1
+ * @todo make 'sort' persistent (update database scheme as well)
  */
 public class SiteNodeType extends StorableObjectType implements Characterizable, Namable {
 
-	public static final String WELL = "well";
-	public static final String PIQUET = "piquet";
-	public static final String ATS = "ats";
-	public static final String BUILDING = "building";
-	public static final String UNBOUND = "unbound";
-	public static final String CABLE_INLET = "cableinlet";
-	public static final String TOWER = "tower";
-
-	public static final String WELL_IMAGE = "images/well.gif";
-	public static final String PIQUET_IMAGE = "images/piquet.gif";
-	public static final String ATS_IMAGE = "images/ats.gif";
-	public static final String BUILDING_IMAGE = "images/building.gif";
-	public static final String UNBOUND_IMAGE = "images/unbound.gif";
-	public static final String CABLE_INLET_IMAGE = "images/cableinlet.gif";
-	public static final String TOWER_IMAGE = "images/tower.gif";
+	public static final String DEFAULT_WELL = "well";
+	public static final String DEFAULT_PIQUET = "piquet";
+	public static final String DEFAULT_ATS = "ats";
+	public static final String DEFAULT_BUILDING = "building";
+	public static final String DEFAULT_UNBOUND = "unbound";
+	public static final String DEFAULT_CABLE_INLET = "cableinlet";
+	public static final String DEFAULT_TOWER = "tower";
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -71,6 +64,8 @@ public class SiteNodeType extends StorableObjectType implements Characterizable,
 	private Identifier imageId;
 	private String name;
 	private boolean topological;
+
+	private transient SiteNodeTypeSort sort;
 
 	SiteNodeType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
@@ -96,6 +91,7 @@ public class SiteNodeType extends StorableObjectType implements Characterizable,
 	SiteNodeType(final Identifier id,
 			final Identifier creatorId,
 			final long version,
+			final SiteNodeTypeSort sort,
 			final String codename,
 			final String name,
 			final String description,
@@ -112,24 +108,27 @@ public class SiteNodeType extends StorableObjectType implements Characterizable,
 		this.name = name;
 		this.imageId = imageId;
 		this.topological = topological;
+		this.sort = sort;
 
 		this.characteristics = new HashSet();
 	}
 
 	public static SiteNodeType createInstance(final Identifier creatorId,
+			final SiteNodeTypeSort sort,
 			final String codename,
 			final String name,
 			final String description,
 			final Identifier imageId,
 			final boolean isTopological) throws CreateObjectException {
 
-		if (creatorId == null || codename == null || name == null || description == null || imageId == null)
+		if (creatorId == null || codename == null || name == null || description == null || imageId == null || sort == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
 			SiteNodeType siteNodeType = new SiteNodeType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE),
 					creatorId,
 					0L,
+					sort,
 					codename,
 					name,
 					description,
@@ -150,6 +149,9 @@ public class SiteNodeType extends StorableObjectType implements Characterizable,
 		this.name = sntt.name;
 		this.imageId = new Identifier(sntt.imageId);
 		this.topological = sntt.topological;
+
+		//@todo retreive from transferable!
+		this.sort = SiteNodeTypeSort.fromString(sntt.codename); 
 
 		Set ids = Identifier.fromTransferables(sntt.characteristicIds);
 		this.characteristics = GeneralStorableObjectPool.getStorableObjects(ids, true);
@@ -220,6 +222,15 @@ public class SiteNodeType extends StorableObjectType implements Characterizable,
 		this.name = name;
 		this.imageId = imageId;
 		this.topological = topological;
+
+		//@todo retreive from transferable!
+		this.sort = SiteNodeTypeSort.fromString(codename); 
+	}
+
+	public void setCodename(String codename) {
+		super.setCodename(codename);
+		//@todo retreive from transferable!
+		this.sort = SiteNodeTypeSort.fromString(codename); 
 	}
 
 	public Set getCharacteristics() {
@@ -260,5 +271,13 @@ public class SiteNodeType extends StorableObjectType implements Characterizable,
 		this.characteristics.clear();
 		if (characteristics != null)
 			this.characteristics.addAll(characteristics);
+	}
+
+	public SiteNodeTypeSort getSort() {
+		return this.sort;
+	}
+
+	public void setSort(SiteNodeTypeSort sort) {
+		this.sort = sort;
 	}
 }
