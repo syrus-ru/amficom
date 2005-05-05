@@ -28,6 +28,7 @@ import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.SiteNodeType;
+import com.syrus.AMFICOM.map.SiteNodeTypeSort;
 
 public class CollectorEditor extends DefaultStorableObjectEditor
 {
@@ -118,8 +119,6 @@ public class CollectorEditor extends DefaultStorableObjectEditor
 		}
 		else
 		{
-			SiteNodeType piquetType = NodeTypeController.getSiteNodeType(SiteNodeType.PIQUET);
-			
 			this.nameTextField.setEnabled(true);
 			this.nameTextField.setText(this.collector.getName());
 			
@@ -134,10 +133,10 @@ public class CollectorEditor extends DefaultStorableObjectEditor
 				PhysicalLink link = (PhysicalLink )iter.next();
 				
 				if(link.getStartNode() instanceof SiteNode
-						&& ((SiteNode )link.getStartNode()).getType().equals(piquetType))
+						&& ((SiteNodeType )((SiteNode )link.getStartNode()).getType()).getSort().equals(SiteNodeTypeSort.PIQUET))
 					piquets.add(link.getStartNode());
 				if(link.getEndNode() instanceof SiteNode
-						&& ((SiteNode )link.getEndNode()).getType().equals(piquetType))
+						&& ((SiteNodeType )((SiteNode )link.getEndNode()).getType()).getSort().equals(SiteNodeTypeSort.PIQUET))
 					piquets.add(link.getEndNode());
 			}
 
