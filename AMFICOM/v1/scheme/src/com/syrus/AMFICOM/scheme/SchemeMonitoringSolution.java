@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.21 2005/04/27 14:45:23 bass Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.22 2005/05/05 15:57:09 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,6 +29,7 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.scheme.corba.SchemeMonitoringSolution_Transferable;
 import com.syrus.util.Log;
 
@@ -36,7 +37,7 @@ import com.syrus.util.Log;
  * #06 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.21 $, $Date: 2005/04/27 14:45:23 $
+ * @version $Revision: 1.22 $, $Date: 2005/05/05 15:57:09 $
  * @module scheme_v1
  */
 public final class SchemeMonitoringSolution extends
@@ -212,7 +213,10 @@ public final class SchemeMonitoringSolution extends
 	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
 	 */
 	public IDLEntity getTransferable() {
-		throw new UnsupportedOperationException();
+		return new SchemeMonitoringSolution_Transferable(
+				super.getHeaderTransferable(), this.name,
+				this.description, this.price,
+				(Identifier_Transferable) this.parentSchemeOptimizeInfoId.getTransferable());
 	}
 
 	public void removeSchemePath(final SchemePath schemePath) {
@@ -302,10 +306,21 @@ public final class SchemeMonitoringSolution extends
 
 	/**
 	 * @param transferable
-	 * @throws CreateObjectException
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IDLEntity)
 	 */
-	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
-		throw new UnsupportedOperationException();
+	protected void fromTransferable(final IDLEntity transferable) {
+		final SchemeMonitoringSolution_Transferable schemeMonitoringSolution = (SchemeMonitoringSolution_Transferable) transferable;
+		try {
+			super.fromTransferable(schemeMonitoringSolution.header);
+		} catch (final ApplicationException ae) {
+			/*
+			 * Never.
+			 */
+			assert false;
+		}
+		this.name = schemeMonitoringSolution.name;
+		this.description = schemeMonitoringSolution.description;
+		this.price = schemeMonitoringSolution.priceUsd;
+		this.parentSchemeOptimizeInfoId = new Identifier(schemeMonitoringSolution.parentSchemeOptimizeInfoId);
 	}
 }

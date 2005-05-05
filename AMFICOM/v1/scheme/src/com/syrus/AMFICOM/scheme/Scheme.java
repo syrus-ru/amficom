@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.22 2005/04/27 14:45:23 bass Exp $
+ * $Id: Scheme.java,v 1.23 2005/05/05 15:57:09 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,6 +29,7 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
@@ -41,7 +42,7 @@ import com.syrus.util.Log;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.22 $, $Date: 2005/04/27 14:45:23 $
+ * @version $Revision: 1.23 $, $Date: 2005/05/05 15:57:09 $
  * @module scheme_v1
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -407,7 +408,19 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
 	 */
 	public IDLEntity getTransferable() {
-		throw new UnsupportedOperationException();
+		/*
+		 * domainId is assumed to be non-null.
+		 */
+		return new Scheme_Transferable(super.getHeaderTransferable(),
+				this.name, this.description, this.label,
+				this.width, this.height, this.kind,
+				(Identifier_Transferable) super.getDomainId().getTransferable(),
+				(Identifier_Transferable) this.mapId.getTransferable(),
+				(Identifier_Transferable) this.symbolId.getTransferable(),
+				(Identifier_Transferable) this.ugoCellId.getTransferable(),
+				(Identifier_Transferable) this.schemeCellId.getTransferable(),
+				(Identifier_Transferable) this.currentSchemeMonitoringSolutionId.getTransferable(),
+				(Identifier_Transferable) this.parentSchemeElementId.getTransferable());
 	}
 
 	/**
@@ -709,16 +722,11 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 
 	/**
 	 * @param transferable
-	 * @throws CreateObjectException 
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IDLEntity)
 	 */
-	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
+	protected void fromTransferable(final IDLEntity transferable) {
 		final Scheme_Transferable scheme = (Scheme_Transferable) transferable;
-		try {
-			super.fromTransferable(scheme.header, new Identifier(scheme.domainId));
-		} catch (final ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
+		super.fromTransferable(scheme.header, new Identifier(scheme.domainId));
 		this.name = scheme.name;
 		this.description = scheme.description;
 		this.label = scheme.label;

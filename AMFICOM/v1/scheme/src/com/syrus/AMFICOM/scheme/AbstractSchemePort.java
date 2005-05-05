@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.20 2005/04/27 09:59:56 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.21 2005/05/05 15:57:09 bass Exp $
  * 
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,15 +21,19 @@ import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.20 $, $Date: 2005/04/27 09:59:56 $
+ * @version $Revision: 1.21 $, $Date: 2005/05/05 15:57:09 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemePort extends
@@ -47,17 +51,17 @@ public abstract class AbstractSchemePort extends
 	 * Depending on implementation, may reference either
 	 * {@link PortType PortType} or {@link PortType CablePortType}.
 	 */
-	private Identifier portTypeId;
+	Identifier portTypeId;
 
 	/**
 	 * Depending on implementation, may reference either {@link Port Port}
 	 * or {@link Port CablePort}.
 	 */
-	private Identifier portId;
+	Identifier portId;
 
-	private Identifier measurementPortId;
+	Identifier measurementPortId;
 
-	private Identifier parentSchemeDeviceId;
+	Identifier parentSchemeDeviceId;
 
 	private Set characteristics;
 
@@ -408,6 +412,42 @@ public abstract class AbstractSchemePort extends
 			this.portTypeId = newPortTypeId;
 			this.changed = true;
 		}
+	}
+
+	/**
+	 * @param header
+	 * @param name1
+	 * @param description1
+	 * @param directionType1
+	 * @param portTypeId1
+	 * @param portId1
+	 * @param measurementPortId1
+	 * @param parentSchemeDeviceId1
+	 * @param characteristicIds
+	 * @throws CreateObjectException
+	 */
+	void fromTransferable(final StorableObject_Transferable header,
+			final String name1, final String description1,
+			final AbstractSchemePortDirectionType directionType1,
+			final Identifier_Transferable portTypeId1,
+			final Identifier_Transferable portId1,
+			final Identifier_Transferable measurementPortId1,
+			final Identifier_Transferable parentSchemeDeviceId1,
+			final Identifier_Transferable characteristicIds[])
+			throws CreateObjectException {
+		try {
+			super.fromTransferable(header);
+			this.setCharacteristics0(GeneralStorableObjectPool.getStorableObjects(Identifier.fromTransferables(characteristicIds), true));
+		} catch (final ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
+		this.name = name1;
+		this.description = description1;
+		this.directionType = directionType1;
+		this.portTypeId = new Identifier(portTypeId1);
+		this.portId = new Identifier(portId1);
+		this.measurementPortId = new Identifier(measurementPortId1);
+		this.parentSchemeDeviceId = new Identifier(parentSchemeDeviceId1);
 	}
 
 	/*-********************************************************************

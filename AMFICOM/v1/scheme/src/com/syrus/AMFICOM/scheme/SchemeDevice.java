@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.23 2005/04/28 11:12:32 bass Exp $
+ * $Id: SchemeDevice.java,v 1.24 2005/05/05 15:57:09 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,6 +23,7 @@ import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -32,6 +33,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
+import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.scheme.corba.SchemeDevice_Transferable;
 import com.syrus.util.Log;
 
@@ -39,7 +41,7 @@ import com.syrus.util.Log;
  * #07 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.23 $, $Date: 2005/04/28 11:12:32 $
+ * @version $Revision: 1.24 $, $Date: 2005/05/05 15:57:09 $
  * @module scheme_v1
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -410,7 +412,12 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
 	 */
 	public IDLEntity getTransferable() {
-		throw new UnsupportedOperationException();
+		return new SchemeDevice_Transferable(
+				super.getHeaderTransferable(), this.name,
+				this.description,
+				(Identifier_Transferable) this.parentSchemeProtoElementId.getTransferable(),
+				(Identifier_Transferable) this.parentSchemeElementId.getTransferable(),
+				Identifier.createTransferables(this.characteristics));
 	}
 
 	/**
@@ -629,7 +636,17 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IDLEntity)
 	 */
 	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
-		throw new UnsupportedOperationException();
+		final SchemeDevice_Transferable schemeDevice = (SchemeDevice_Transferable) transferable;
+		try {
+			super.fromTransferable(schemeDevice.header);
+			this.setCharacteristics0(GeneralStorableObjectPool.getStorableObjects(Identifier.fromTransferables(schemeDevice.characteristicIds), true));
+		} catch (final ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
+		this.name = schemeDevice.name;
+		this.description = schemeDevice.description;
+		this.parentSchemeProtoElementId = new Identifier(schemeDevice.parentSchemeProtoElementId);
+		this.parentSchemeElementId = new Identifier(schemeDevice.parentSchemeElementId);
 	}
 
 	/*-********************************************************************

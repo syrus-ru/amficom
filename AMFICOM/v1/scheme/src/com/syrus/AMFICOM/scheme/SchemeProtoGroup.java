@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.23 2005/04/21 11:05:07 arseniy Exp $
+ * $Id: SchemeProtoGroup.java,v 1.24 2005/05/05 15:57:08 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,8 +44,8 @@ import com.syrus.util.Log;
 /**
  * #01 in hierarchy.
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.23 $, $Date: 2005/04/21 11:05:07 $
+ * @author $Author: bass $
+ * @version $Revision: 1.24 $, $Date: 2005/05/05 15:57:08 $
  * @module scheme_v1
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation. 
  */
@@ -394,7 +394,7 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	 */
 	public IDLEntity getTransferable() {
 		return new SchemeProtoGroup_Transferable(
-				getHeaderTransferable(),
+				super.getHeaderTransferable(),
 				this.name,
 				this.description,
 				(Identifier_Transferable) this.symbolId.getTransferable(),

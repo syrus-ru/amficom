@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePort.java,v 1.22 2005/04/27 13:22:09 bass Exp $
+ * $Id: SchemeCablePort.java,v 1.23 2005/05/05 15:57:08 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,6 +29,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
+import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
 import com.syrus.AMFICOM.scheme.corba.SchemeCablePort_Transferable;
 import com.syrus.util.Log;
@@ -37,7 +38,7 @@ import com.syrus.util.Log;
  * #09 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.22 $, $Date: 2005/04/27 13:22:09 $
+ * @version $Revision: 1.23 $, $Date: 2005/05/05 15:57:08 $
  * @module scheme_v1
  */
 public final class SchemeCablePort extends AbstractSchemePort {
@@ -213,7 +214,15 @@ public final class SchemeCablePort extends AbstractSchemePort {
 	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
 	 */
 	public IDLEntity getTransferable() {
-		throw new UnsupportedOperationException();
+		return new SchemeCablePort_Transferable(
+				super.getHeaderTransferable(), super.getName(),
+				super.getDescription(),
+				super.getDirectionType(),
+				(Identifier_Transferable) super.portTypeId.getTransferable(),
+				(Identifier_Transferable) super.portId.getTransferable(),
+				(Identifier_Transferable) super.measurementPortId.getTransferable(),
+				(Identifier_Transferable) super.parentSchemeDeviceId.getTransferable(),
+				Identifier.createTransferables(super.getCharacteristics()));
 	}
 
 	/**
@@ -231,6 +240,15 @@ public final class SchemeCablePort extends AbstractSchemePort {
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IDLEntity)
 	 */
 	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
-		throw new UnsupportedOperationException();
+		final SchemeCablePort_Transferable schemeCablePort = (SchemeCablePort_Transferable) transferable;
+		super.fromTransferable(schemeCablePort.header,
+				schemeCablePort.name,
+				schemeCablePort.description,
+				schemeCablePort.directionType,
+				schemeCablePort.cablePortTypeId,
+				schemeCablePort.cablePortId,
+				schemeCablePort.measurementPortId,
+				schemeCablePort.parentSchemeDeviceId,
+				schemeCablePort.characteristicIds);
 	}
 }

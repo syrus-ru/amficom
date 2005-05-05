@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.17 2005/04/27 14:45:23 bass Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.18 2005/05/05 15:57:09 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,6 +29,7 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfo_Transferable;
 import com.syrus.util.Log;
 
@@ -36,7 +37,7 @@ import com.syrus.util.Log;
  * #05 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.17 $, $Date: 2005/04/27 14:45:23 $
+ * @version $Revision: 1.18 $, $Date: 2005/05/05 15:57:09 $
  * @module scheme_v1
  */
 public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
@@ -345,7 +346,15 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
 	 */
 	public IDLEntity getTransferable() {
-		throw new UnsupportedOperationException();
+		return new SchemeOptimizeInfo_Transferable(
+				super.getHeaderTransferable(), this.name,
+				this.description, this.optimizationMode,
+				this.iterations, this.price, this.waveLength,
+				this.lenMargin, this.mutationRate,
+				this.mutationDegree, this.rtuDeleteProb,
+				this.rtuCreateProb, this.nodesSpliceProb,
+				this.nodesCutProb, this.survivorRate,
+				(Identifier_Transferable) this.parentSchemeId.getTransferable());
 	}
 
 	public double getWaveLength() {
@@ -589,10 +598,32 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 
 	/**
 	 * @param transferable
-	 * @throws CreateObjectException
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IDLEntity)
 	 */
-	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
-		throw new UnsupportedOperationException();
+	protected void fromTransferable(final IDLEntity transferable) {
+		final SchemeOptimizeInfo_Transferable schemeOptimizeInfo = (SchemeOptimizeInfo_Transferable) transferable;
+		try {
+			super.fromTransferable(schemeOptimizeInfo.header);
+		} catch (final ApplicationException ae) {
+			/*
+			 * Never.
+			 */
+			assert false;
+		}
+		this.name = schemeOptimizeInfo.name;
+		this.description = schemeOptimizeInfo.description;
+		this.optimizationMode = schemeOptimizeInfo.optimizationMode;
+		this.iterations = schemeOptimizeInfo.iterations;
+		this.price = schemeOptimizeInfo.price;
+		this.waveLength = schemeOptimizeInfo.waveLength;
+		this.lenMargin = schemeOptimizeInfo.lenMargin;
+		this.mutationRate = schemeOptimizeInfo.mutationRate;
+		this.mutationDegree = schemeOptimizeInfo.mutationDegree;
+		this.rtuDeleteProb = schemeOptimizeInfo.rtuDeleteProb;
+		this.rtuCreateProb = schemeOptimizeInfo.rtuCreateProb;
+		this.nodesSpliceProb = schemeOptimizeInfo.nodesSpliceProb;
+		this.nodesCutProb = schemeOptimizeInfo.nodesCutProb;
+		this.survivorRate = schemeOptimizeInfo.survivorRate;
+		this.parentSchemeId = new Identifier(schemeOptimizeInfo.parentSchemeId);
 	}
 }

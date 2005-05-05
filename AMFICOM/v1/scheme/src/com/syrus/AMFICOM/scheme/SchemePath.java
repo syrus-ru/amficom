@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.23 2005/04/27 15:03:46 bass Exp $
+ * $Id: SchemePath.java,v 1.24 2005/05/05 15:57:08 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,6 +26,7 @@ import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -35,6 +36,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
+import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.scheme.corba.SchemePath_Transferable;
 import com.syrus.AMFICOM.scheme.corba.PathElement_TransferablePackage.DataPackage.Kind;
 import com.syrus.util.Log;
@@ -43,7 +45,7 @@ import com.syrus.util.Log;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.23 $, $Date: 2005/04/27 15:03:46 $
+ * @version $Revision: 1.24 $, $Date: 2005/05/05 15:57:08 $
  * @module scheme_v1
  */
 public final class SchemePath extends AbstractCloneableStorableObject implements
@@ -266,7 +268,12 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
 	 */
 	public IDLEntity getTransferable() {
-		throw new UnsupportedOperationException();
+		return new SchemePath_Transferable(
+				super.getHeaderTransferable(), this.name,
+				this.description,
+				(Identifier_Transferable) this.transmissionPathId.getTransferable(),
+				(Identifier_Transferable) this.parentSchemeMonitoringSolutionId.getTransferable(),
+				Identifier.createTransferables(this.characteristics));
 	}
 
 	public TransmissionPath getTransmissionPath() {
@@ -405,7 +412,17 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IDLEntity)
 	 */
 	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
-		throw new UnsupportedOperationException();
+		final SchemePath_Transferable schemePath = (SchemePath_Transferable) transferable;
+		try {
+			super.fromTransferable(schemePath.header);
+			this.setCharacteristics0(GeneralStorableObjectPool.getStorableObjects(Identifier.fromTransferables(schemePath.characteristicIds), true));
+		} catch (final ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
+		this.name = schemePath.name;
+		this.description = schemePath.description;
+		this.transmissionPathId = new Identifier(schemePath.transmissionPathId);
+		this.parentSchemeMonitoringSolutionId = new Identifier(schemePath.parentSchemeMonitoringSolutionId);
 	}
 
 	/*-********************************************************************

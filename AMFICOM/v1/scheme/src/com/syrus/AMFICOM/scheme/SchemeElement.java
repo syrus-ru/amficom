@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.25 2005/04/25 16:26:41 bass Exp $
+ * $Id: SchemeElement.java,v 1.26 2005/05/05 15:57:09 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.util.Log;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.25 $, $Date: 2005/04/25 16:26:41 $
+ * @version $Revision: 1.26 $, $Date: 2005/05/05 15:57:09 $
  * @module scheme_v1
  */
 public final class SchemeElement extends AbstractSchemeElement implements
@@ -938,7 +938,10 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 */
 	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
 		final SchemeElement_Transferable schemeElement = (SchemeElement_Transferable) transferable;
-		fromTransferable(schemeElement.header, schemeElement.name, schemeElement.description, schemeElement.parentSchemeId, schemeElement.characteristicIds);
+		super.fromTransferable(schemeElement.header, schemeElement.name,
+				schemeElement.description,
+				schemeElement.parentSchemeId,
+				schemeElement.characteristicIds);
 		this.label = schemeElement.label;
 		this.equipmentTypeId = new Identifier(schemeElement.equipmentTypeId);
 		this.equipmentId = new Identifier(schemeElement.equipmentId);

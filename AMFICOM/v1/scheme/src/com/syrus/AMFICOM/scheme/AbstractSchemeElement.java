@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractSchemeElement.java,v 1.17 2005/04/20 16:38:07 bass Exp $
+ * $Id: AbstractSchemeElement.java,v 1.18 2005/05/05 15:57:09 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeElement}instead.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.17 $, $Date: 2005/04/20 16:38:07 $
+ * @version $Revision: 1.18 $, $Date: 2005/05/05 15:57:09 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemeElement extends
@@ -244,7 +244,7 @@ public abstract class AbstractSchemeElement extends
 			throws CreateObjectException {
 		try {
 			super.fromTransferable(header);
-			setCharacteristics0(GeneralStorableObjectPool.getStorableObjects(Identifier.fromTransferables(characteristicIds), true));
+			this.setCharacteristics0(GeneralStorableObjectPool.getStorableObjects(Identifier.fromTransferables(characteristicIds), true));
 		} catch (final ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}

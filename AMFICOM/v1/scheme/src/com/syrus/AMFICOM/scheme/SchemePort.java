@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePort.java,v 1.21 2005/04/27 13:22:09 bass Exp $
+ * $Id: SchemePort.java,v 1.22 2005/05/05 15:57:09 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.scheme;
 
+import java.nio.channels.OverlappingFileLockException;
 import java.util.Date;
 import java.util.Set;
 
@@ -29,7 +30,9 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
+import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
+import com.syrus.AMFICOM.scheme.corba.SchemeCablePort_Transferable;
 import com.syrus.AMFICOM.scheme.corba.SchemePort_Transferable;
 import com.syrus.util.Log;
 
@@ -37,7 +40,7 @@ import com.syrus.util.Log;
  * #08 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.21 $, $Date: 2005/04/27 13:22:09 $
+ * @version $Revision: 1.22 $, $Date: 2005/05/05 15:57:09 $
  * @module scheme_v1
  */
 public final class SchemePort extends AbstractSchemePort {
@@ -226,7 +229,15 @@ public final class SchemePort extends AbstractSchemePort {
 	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
 	 */
 	public IDLEntity getTransferable() {
-		throw new UnsupportedOperationException();
+		return new SchemePort_Transferable(
+				super.getHeaderTransferable(), super.getName(),
+				super.getDescription(),
+				super.getDirectionType(),
+				(Identifier_Transferable) super.portTypeId.getTransferable(),
+				(Identifier_Transferable) super.portId.getTransferable(),
+				(Identifier_Transferable) super.measurementPortId.getTransferable(),
+				(Identifier_Transferable) super.parentSchemeDeviceId.getTransferable(),
+				Identifier.createTransferables(super.getCharacteristics()));
 	}
 
 	/**
@@ -244,6 +255,12 @@ public final class SchemePort extends AbstractSchemePort {
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IDLEntity)
 	 */
 	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
-		throw new UnsupportedOperationException();
+		final SchemePort_Transferable schemePort = (SchemePort_Transferable) transferable;
+		super.fromTransferable(schemePort.header, schemePort.name,
+				schemePort.description,
+				schemePort.directionType, schemePort.portTypeId,
+				schemePort.portId, schemePort.measurementPortId,
+				schemePort.parentSchemeDeviceId,
+				schemePort.characteristicIds);
 	}
 }

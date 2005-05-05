@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.23 2005/04/28 15:27:03 bass Exp $
+ * $Id: SchemeLink.java,v 1.24 2005/05/05 15:57:08 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,6 +30,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
+import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.MapStorableObjectPool;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.scheme.corba.SchemeLink_Transferable;
@@ -39,7 +40,7 @@ import com.syrus.util.Log;
  * #10 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.23 $, $Date: 2005/04/28 15:27:03 $
+ * @version $Revision: 1.24 $, $Date: 2005/05/05 15:57:08 $
  * @module scheme_v1
  */
 public final class SchemeLink extends AbstractSchemeLink {
@@ -536,7 +537,20 @@ public final class SchemeLink extends AbstractSchemeLink {
 	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
 	 */
 	public IDLEntity getTransferable() {
-		throw new UnsupportedOperationException();
+		return new SchemeLink_Transferable(
+				super.getHeaderTransferable(), super.getName(),
+				super.getDescription(),
+				super.getPhysicalLength(),
+				super.getOpticalLength(),
+				(Identifier_Transferable) super.abstractLinkTypeId.getTransferable(),
+				(Identifier_Transferable) super.linkId.getTransferable(),
+				(Identifier_Transferable) this.siteNodeId.getTransferable(),
+				(Identifier_Transferable) super.sourceAbstractSchemePortId.getTransferable(),
+				(Identifier_Transferable) super.targetAbstractSchemePortId.getTransferable(),
+				(Identifier_Transferable) super.parentSchemeId.getTransferable(),
+				(Identifier_Transferable) this.parentSchemeElementId.getTransferable(),
+				(Identifier_Transferable) this.parentSchemeProtoElementId.getTransferable(),
+				Identifier.createTransferables(super.getCharacteristics()));
 	}
 
 	synchronized void setAttributes(final Date created,
@@ -771,7 +785,17 @@ public final class SchemeLink extends AbstractSchemeLink {
 	 */
 	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
 		final SchemeLink_Transferable schemeLink = (SchemeLink_Transferable) transferable;
-		fromTransferable(schemeLink.header, schemeLink.name, schemeLink.description, schemeLink.parentSchemeId, schemeLink.characteristicIds);
-		throw new UnsupportedOperationException();
+		super.fromTransferable(schemeLink.header, schemeLink.name,
+				schemeLink.description,
+				schemeLink.physicalLength,
+				schemeLink.opticalLength, schemeLink.linkTypeId,
+				schemeLink.linkId,
+				schemeLink.sourceSchemePortId,
+				schemeLink.targetSchemePortId,
+				schemeLink.parentSchemeId,
+				schemeLink.characteristicIds);
+		this.siteNodeId = new Identifier(schemeLink.siteNodeId);
+		this.parentSchemeElementId = new Identifier(schemeLink.parentSchemeElementId);
+		this.parentSchemeProtoElementId = new Identifier(schemeLink.parentSchemeProtoElementId);
 	}
 }

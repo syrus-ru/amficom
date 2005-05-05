@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.17 2005/04/28 17:37:25 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.18 2005/05/05 15:57:08 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,6 +26,7 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.MapStorableObjectPool;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
@@ -36,7 +37,7 @@ import com.syrus.util.Log;
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.17 $, $Date: 2005/04/28 17:37:25 $
+ * @version $Revision: 1.18 $, $Date: 2005/05/05 15:57:08 $
  * @module scheme_v1
  */
 public final class CableChannelingItem extends AbstractCloneableStorableObject {
@@ -290,7 +291,14 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject {
 	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
 	 */
 	public IDLEntity getTransferable() {
-		throw new UnsupportedOperationException();
+		return new CableChannelingItem_Transferable(
+				super.getHeaderTransferable(), this.startSpare,
+				this.endSpare, this.rowX, this.placeY,
+				this.sequentialNumber,
+				(Identifier_Transferable) this.physicalLinkId.getTransferable(),
+				(Identifier_Transferable) this.startSiteNodeId.getTransferable(),
+				(Identifier_Transferable) this.endSiteNodeId.getTransferable(),
+				(Identifier_Transferable) this.parentSchemeCableLinkId.getTransferable());
 	}
 
 	/**
@@ -423,10 +431,26 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject {
 
 	/**
 	 * @param transferable
-	 * @throws CreateObjectException
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IDLEntity)
 	 */
-	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
-		throw new UnsupportedOperationException();
+	protected void fromTransferable(final IDLEntity transferable) {
+		final CableChannelingItem_Transferable cableChannelingItem = (CableChannelingItem_Transferable) transferable;
+		try {
+			super.fromTransferable(cableChannelingItem.header);
+		} catch (final ApplicationException ae) {
+			/*
+			 * Never.
+			 */
+			assert false;
+		}
+		this.startSpare = cableChannelingItem.startSpare;
+		this.endSpare = cableChannelingItem.endSpare;
+		this.rowX = cableChannelingItem.rowX;
+		this.placeY = cableChannelingItem.placeY;
+		this.sequentialNumber = cableChannelingItem.sequentialNumber;
+		this.physicalLinkId = new Identifier(cableChannelingItem.physicalLinkId);
+		this.startSiteNodeId = new Identifier(cableChannelingItem.startSiteNodeId);
+		this.endSiteNodeId = new Identifier(cableChannelingItem.endSiteNodeId);
+		this.parentSchemeCableLinkId = new Identifier(cableChannelingItem.parentSchemeCableLinkId);
 	}
 }

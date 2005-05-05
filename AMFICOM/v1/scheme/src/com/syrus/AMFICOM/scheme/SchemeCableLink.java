@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.26 2005/04/28 15:27:03 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.27 2005/05/05 15:57:09 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,6 +31,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
+import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.scheme.corba.SchemeCableLink_Transferable;
 import com.syrus.util.Log;
 
@@ -38,7 +39,7 @@ import com.syrus.util.Log;
  * #11 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.26 $, $Date: 2005/04/28 15:27:03 $
+ * @version $Revision: 1.27 $, $Date: 2005/05/05 15:57:09 $
  * @module scheme_v1
  */
 public final class SchemeCableLink extends AbstractSchemeLink {
@@ -271,7 +272,17 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
 	 */
 	public IDLEntity getTransferable() {
-		throw new UnsupportedOperationException();
+		return new SchemeCableLink_Transferable(
+				super.getHeaderTransferable(), super.getName(),
+				super.getDescription(),
+				super.getPhysicalLength(),
+				super.getOpticalLength(),
+				(Identifier_Transferable) super.abstractLinkTypeId.getTransferable(),
+				(Identifier_Transferable) super.linkId.getTransferable(),
+				(Identifier_Transferable) super.sourceAbstractSchemePortId.getTransferable(),
+				(Identifier_Transferable) super.targetAbstractSchemePortId.getTransferable(),
+				(Identifier_Transferable) super.parentSchemeId.getTransferable(),
+				Identifier.createTransferables(super.getCharacteristics()));
 	}
 
 	public void removeCableChannelingItem(final CableChannelingItem cableChannelingItem) {
@@ -417,7 +428,14 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	 */
 	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
 		final SchemeCableLink_Transferable schemeCableLink = (SchemeCableLink_Transferable) transferable;
-		fromTransferable(schemeCableLink.header, schemeCableLink.name, schemeCableLink.description, schemeCableLink.parentSchemeId, schemeCableLink.characteristicIds);
-		throw new UnsupportedOperationException();
+		super.fromTransferable(schemeCableLink.header, schemeCableLink.name,
+				schemeCableLink.description,
+				schemeCableLink.physicalLength,
+				schemeCableLink.opticalLength, schemeCableLink.cableLinkTypeId,
+				schemeCableLink.cableLinkId,
+				schemeCableLink.sourceSchemeCablePortId,
+				schemeCableLink.targetSchemeCablePortId,
+				schemeCableLink.parentSchemeId,
+				schemeCableLink.characteristicIds);
 	}
 }

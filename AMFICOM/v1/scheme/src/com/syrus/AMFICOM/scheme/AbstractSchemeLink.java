@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeLink.java,v 1.11 2005/04/28 15:27:03 bass Exp $
+ * $Id: AbstractSchemeLink.java,v 1.12 2005/05/05 15:57:09 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,11 @@ import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.Link;
 import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.util.Log;
 
 /**
@@ -29,7 +32,7 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeLink}instead.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2005/04/28 15:27:03 $
+ * @version $Revision: 1.12 $, $Date: 2005/05/05 15:57:09 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemeLink extends AbstractSchemeElement {
@@ -53,13 +56,13 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	 * Depending on implementation, may reference either {@link LinkType} or
 	 * {@link CableLinkType}.
 	 */
-	private Identifier abstractLinkTypeId;
+	Identifier abstractLinkTypeId;
 
 	/**
 	 * Depending on implementation, may reference either {@link Link link}
 	 * or {@link Link cable link}.
 	 */
-	private Identifier linkId;
+	Identifier linkId;
 
 	/**
 	 * Depending on implementation, may reference either {@link SchemePort}
@@ -377,6 +380,39 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 		dependencies.remove(null);
 		dependencies.remove(Identifier.VOID_IDENTIFIER);
 		return Collections.unmodifiableSet(dependencies);
+	}
+
+	/**
+	 * @param header
+	 * @param name
+	 * @param description
+	 * @param physicalLength1
+	 * @param opticalLength1
+	 * @param abstractLinkTypeId1
+	 * @param linkId1
+	 * @param sourceAbstractSchemePortId1
+	 * @param targetAbstractSchemePortId1
+	 * @param parentSchemeId1
+	 * @param characteristicIds
+	 * @throws CreateObjectException
+	 */
+	void fromTransferable(final StorableObject_Transferable header,
+			final String name, final String description,
+			final double physicalLength1, final double opticalLength1,
+			final Identifier_Transferable abstractLinkTypeId1,
+			final Identifier_Transferable linkId1,
+			final Identifier_Transferable sourceAbstractSchemePortId1,
+			final Identifier_Transferable targetAbstractSchemePortId1,
+			final Identifier_Transferable parentSchemeId1,
+			final Identifier_Transferable characteristicIds[])
+			throws CreateObjectException {
+		super.fromTransferable(header, name, description, parentSchemeId1, characteristicIds);
+		this.physicalLength = physicalLength1;
+		this.opticalLength = opticalLength1;
+		this.abstractLinkTypeId = new Identifier(abstractLinkTypeId1);
+		this.linkId = new Identifier(linkId1);
+		this.sourceAbstractSchemePortId = new Identifier(sourceAbstractSchemePortId1);
+		this.targetAbstractSchemePortId = new Identifier(targetAbstractSchemePortId1);
 	}
 
 	/*-********************************************************************
