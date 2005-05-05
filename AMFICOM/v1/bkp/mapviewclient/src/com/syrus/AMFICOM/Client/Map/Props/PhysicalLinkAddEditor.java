@@ -1,5 +1,6 @@
 package com.syrus.AMFICOM.Client.Map.Props;
 
+import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Toolkit;
@@ -59,6 +60,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor
 	JLabel horvertLabel = new JLabel();
 	JLabel topDownLabel = new JLabel();
 	JLabel leftRightLabel = new JLabel();
+	private JPanel directionPanel = new JPanel();
 	
 	private List unboundElements = new LinkedList();
 
@@ -153,6 +155,11 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor
 		this.buttonsPanel.add(this.bindButton);
 		this.buttonsPanel.add(this.unbindButton);
 
+		this.directionPanel.setLayout(new FlowLayout());
+		this.directionPanel.add(this.topDownLabel);
+		this.directionPanel.add(this.horvertLabel);
+		this.directionPanel.add(this.leftRightLabel);
+
 		this.horvertLabel.addMouseListener(new MouseAdapter()
 			{
 				public void mouseClicked(MouseEvent e)
@@ -193,13 +200,11 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor
 		this.tunnelsScrollPane.getViewport().add(this.tunnelLayout.getPanel().getGraph());
 		this.cablesScrollPane.getViewport().add(this.cableList);
 
-		this.jPanel.add(this.cablesScrollPane, ReusedGridBagConstraints.get(0, 0, 2, 2, 1.0, 0.3, GridBagConstraints.WEST, GridBagConstraints.BOTH, null, 0, 0));
-		this.jPanel.add(this.buttonsPanel, ReusedGridBagConstraints.get(2, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 0, 0));
-//		this.jPanel.add(Box.createVerticalStrut(5), ReusedGridBagConstraints.get(0, 2, 3, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		this.jPanel.add(this.horvertLabel, ReusedGridBagConstraints.get(1, 3, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
-		this.jPanel.add(this.leftRightLabel, ReusedGridBagConstraints.get(2, 3, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
-		this.jPanel.add(this.topDownLabel, ReusedGridBagConstraints.get(0, 3, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH, GridBagConstraints.NONE, null, 0, 0));
-		this.jPanel.add(this.tunnelsScrollPane, ReusedGridBagConstraints.get(0, 4, 3, 1, 1.0, 0.7, GridBagConstraints.CENTER, GridBagConstraints.BOTH, null, 0, 0));
+		this.jPanel.add(this.cablesScrollPane, ReusedGridBagConstraints.get(0, 0, 1, 2, 1.0, 0.1, GridBagConstraints.WEST, GridBagConstraints.BOTH, null, 0, 0));
+		this.jPanel.add(this.buttonsPanel, ReusedGridBagConstraints.get(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 0, 0));
+		this.jPanel.add(this.directionPanel, ReusedGridBagConstraints.get(1, 1, 1, 1, 0.0, 0.0, GridBagConstraints.SOUTHEAST, GridBagConstraints.NONE, null, 0, 0));
+		this.jPanel.add(Box.createVerticalStrut(3), ReusedGridBagConstraints.get(0, 2, 2, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.jPanel.add(this.tunnelsScrollPane, ReusedGridBagConstraints.get(0, 3, 2, 3, 1.0, 0.9, GridBagConstraints.CENTER, GridBagConstraints.BOTH, null, 0, 0));
 
 		this.bindButton.setEnabled(false);
 		this.unbindButton.setEnabled(false);
