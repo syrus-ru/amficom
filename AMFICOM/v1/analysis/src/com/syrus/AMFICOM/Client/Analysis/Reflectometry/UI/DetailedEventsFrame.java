@@ -254,14 +254,10 @@ implements EtalonMTMListener,
 	{
 		int nEvent = Heap.getCurrentEvent1();
 		int nEtalon = Heap.getCurrentEtalonEvent1();
-		if(Heap.getMTMEtalon() == null || alignedDataMT == null)
+		if(Heap.getMTMEtalon() == null || Heap.getMTAEPrimary() == null || alignedDataMT == null)
 		{
 			tabbedPane.setSelectedIndex(0);
 			tabbedPane.setEnabledAt(1, false);
-			return;
-		}
-		if(nEvent >= Heap.getMTAEPrimary().getNEvents() || nEvent < 0)
-		{
 			return;
 		}
 		double deltaX = Heap.getMTAEPrimary().getDeltaX();
@@ -271,18 +267,23 @@ implements EtalonMTMListener,
 //		ComplexReflectogramEvent etalonEvent = nEtalon != -1
 //				? Heap.getMTMEtalon().getMTAE().getComplexEvents()[nEtalon]
 //				: null;
-        DetailedEvent dataEvent =
-            Heap.getMTAEPrimary().getDetailedEvents()[nEvent];
+        DetailedEvent dataEvent = nEvent != -1
+            ? Heap.getMTAEPrimary().getDetailedEvents()[nEvent]
+            : null;
         DetailedEvent etalonEvent = nEtalon != -1
                 ? Heap.getMTMEtalon().getMTAE().getDetailedEvents()[nEtalon]
                 : null;
-		int dataType = dataEvent.getEventType();
+		int dataType = dataEvent != null
+                    ? dataEvent.getEventType()
+                    : SimpleReflectogramEvent.RESERVED; // 'no event'
 		int etalonType = etalonEvent != null
 			        ? etalonEvent.getEventType()
 					: SimpleReflectogramEvent.RESERVED; // 'no event'
 
+        // выбираем, какое событие считать основным
+        DetailedEvent ev = dataEvent != null ? dataEvent : etalonEvent;
 		((CompareTableRenderer)comparativeTable.getDefaultRenderer(Object.class))
-			.setSameType(dataType == etalonType);
+			.setSameType(dataType == etalonType && dataType != SimpleReflectogramEvent.RESERVED);
 
 		String dataT = AnalysisUtil.getSimpleEventNameByType(dataType);
 		String etalonT = AnalysisUtil.getSimpleEventNameByType(etalonType);
@@ -292,17 +293,26 @@ implements EtalonMTMListener,
 
 		// сравнение по модельной кривой
 		ModelTrace etalonMT = Heap.getMTMEtalon().getMTAE().getModelTrace();
-		double difference    = ReflectogramComparer.getMaxDeviation(Heap.getMTAEPrimary(), etalonMT, nEvent);
-		double meanDeviation = ReflectogramComparer.getMeanDeviation(Heap.getMTAEPrimary(), etalonMT, nEvent);
-
-		difference           = ((int)(difference*1000.))/1000.; // точность 0.001 дБ
-		meanDeviation        = ((int)(meanDeviation*1000.))/1000.;
-
-		ctModel.setValueAt(difference + " " + LangModelAnalyse.getString("dB"), 2, 1);
-		ctModel.setValueAt(meanDeviation + " " + LangModelAnalyse.getString("dB"), 3, 1);
+        if (ev.getBegin() < Heap.getMTAEPrimary().getModelTrace().getLength()
+            && ev.getBegin() < etalonMT.getLength())
+        {
+    		double difference    = ReflectogramComparer.getMaxDeviation(Heap.getMTAEPrimary(), etalonMT, ev);
+    		double meanDeviation = ReflectogramComparer.getMeanDeviation(Heap.getMTAEPrimary(), etalonMT, ev);
+    
+    		difference           = ((int)(difference*1000.))/1000.; // точность 0.001 дБ
+    		meanDeviation        = ((int)(meanDeviation*1000.))/1000.;
+    
+    		ctModel.setValueAt(difference + " " + LangModelAnalyse.getString("dB"), 2, 1);
+    		ctModel.setValueAt(meanDeviation + " " + LangModelAnalyse.getString("dB"), 3, 1);
+        }
+        else
+        {
+            ctModel.setValueAt("--", 2, 1);
+            ctModel.setValueAt("--", 3, 1);
+        }
 
 		// сравнение с эталонным событием
-		if(etalonEvent != null)
+		if(dataEvent != null && etalonEvent != null)
 		{
             String value;
 
@@ -338,8 +348,10 @@ implements EtalonMTMListener,
 	private void updateTableModel()
 	{
 		int num = Heap.getCurrentEvent1();
-		if (num < 0)
-			return;
+		if (num < 0) {
+            // FIXME: set empty table 
+            return;
+        }
 		DetailedEvent ev = Heap.getMTAEPrimary().getDetailedEvents()[num];
         double resMt =  Heap.getBSPrimaryTrace().getResolution();
         double resKm = resMt / 1000.0;
