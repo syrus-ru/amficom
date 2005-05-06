@@ -435,7 +435,7 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener,
 //      System.err.println("MTAE = " + Heap.getMTAEPrimary());
 //      System.err.println("MTM = "  + Heap.getMTMEtalon());
         // FIXME: debug: development-time console code
-        if (Heap.getMTAEPrimary() != null)
+        if (Heap.getMTAEPrimary() != null && Heap.getMTMEtalon() != null)
             ModelTraceComparer.compareMTAEToMTM(Heap.getMTAEPrimary(), Heap.getMTMEtalon());
     }
 
