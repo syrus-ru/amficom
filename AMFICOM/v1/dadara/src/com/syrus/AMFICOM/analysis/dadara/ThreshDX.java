@@ -1,5 +1,5 @@
 /*
- * $Id: ThreshDX.java,v 1.15 2005/05/01 09:35:16 saa Exp $
+ * $Id: ThreshDX.java,v 1.16 2005/05/06 12:10:32 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.15 $, $Date: 2005/05/01 09:35:16 $
+ * @version $Revision: 1.16 $, $Date: 2005/05/06 12:10:32 $
  * @module
  */
 public class ThreshDX extends Thresh
@@ -47,6 +47,7 @@ public class ThreshDX extends Thresh
 
 	protected void readSpecificFromDIS(DataInputStream dis) throws IOException
 	{
+        this.dX = new int[4];
 		for (int k = 0; k < 4; k++)
 			this.dX[k] = dis.readInt();
 	}
