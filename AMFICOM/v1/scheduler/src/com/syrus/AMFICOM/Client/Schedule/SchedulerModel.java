@@ -310,10 +310,11 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 				MeasurementSetup measurementSetup1 = (MeasurementSetup) MeasurementStorableObjectPool
 						.getStorableObject(mainMeasurementSetupId, true);
 				if (measurementSetup1 != null) {
+					this.refreshMeasurementSetups();
 					if (this.setEditor != null) {
 						this.setEditor.setSet(measurementSetup1.getParameterSet());
 					}
-					// this.measurementSetupEditor.setMeasurementSetup(measurementSetup1);
+					this.measurementSetupEditor.setMeasurementSetup(measurementSetup1);
 				}
 			}
 

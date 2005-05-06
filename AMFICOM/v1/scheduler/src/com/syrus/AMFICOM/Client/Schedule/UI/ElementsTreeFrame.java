@@ -260,7 +260,7 @@ public class ElementsTreeFrame extends JInternalFrame implements KISEditor, Moni
 				}
 			};
 			this.treePanel.addSelectionListener(this.selectionListener);
-			setContentPane(this.treePanel.getPanel());
+			setContentPane(this.treePanel.getTree());
 
 		}
 		this.schedulerModel.setMeasurementTypeEditor(this);

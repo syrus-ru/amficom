@@ -25,6 +25,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.swing.BorderFactory;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -70,7 +71,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/05/06 12:27:37 $
+ * @version $Revision: 1.25 $, $Date: 2005/05/06 16:12:35 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -175,6 +176,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 	private ParameterType			pulswdParameterType;
 	private ParameterType			iorParameterType;
 	private ParameterType			scansParameterType;
+	private ParameterType 			flagsParameterType;
 
 	private JLabel					refractLabel;
 	private JLabel					waveLengthLabel;
@@ -182,6 +184,9 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 	private JLabel					pulseWidthLabel;
 	private JLabel					resolutionLabel;
 	private JLabel					maxDistanceLabel;
+	private JCheckBox 				gsOptionBox;
+	private JCheckBox 				bcOptionBox;
+	private JCheckBox 				lfdOptionBox;
 
 	long							maxPoints;
 
@@ -212,7 +217,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 
 			this.refreshTitles();
 			
-			SetParameter[] params = new SetParameter[6];
+			SetParameter[] params = new SetParameter[7];
 
 			ByteArray byteArray;
 
@@ -280,6 +285,13 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 			if (this.meId == null)
 				throw new IllegalArgumentException(LangModelSchedule.getString("Have not choosen Measurement element"));
 
+			long flags = (this.gsOptionBox.isSelected() ? 4 : 0) + (this.lfdOptionBox.isSelected() ? 2 :0);
+			Log.debugMessage("ReflectometryTestPanel.getSet | flags " + flags, Log.FINEST);
+			byteArray = this.getByteArray(Long.toString(flags), this.flagsParameterType); 
+
+			params[6] = SetParameter.createInstance(this.flagsParameterType, byteArray.getBytes());
+			
+			
 			set = Set.createInstance(LoginManager.getUserId(), SetSort.SET_SORT_MEASUREMENT_PARAMETERS,
 				"Set created by Scheduler", params, Collections.singleton(this.meId));
 			MeasurementStorableObjectPool.putStorableObject(set);
@@ -334,14 +346,20 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 																		OperationSort.OPERATION_EQUALS,
 																		ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
 																		StorableObjectWrapper.COLUMN_CODENAME);
+		
+		TypicalCondition flagsCondition = new TypicalCondition(ParameterTypeCodenames.TRACE_FLAGS,
+			OperationSort.OPERATION_EQUALS,
+			ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
+			StorableObjectWrapper.COLUMN_CODENAME);
 
-		java.util.Set conditions = new HashSet(6);
+		java.util.Set conditions = new HashSet(7);
 		conditions.add(waveLengthCondition);
 		conditions.add(traceLengthCondition);
 		conditions.add(resolutionCondition);
 		conditions.add(pulseWidthCondition);
 		conditions.add(indexOfRefractionCondition);
 		conditions.add(averageCountCondition);
+		conditions.add(flagsCondition);
 
 //		CompoundCondition compoundCondition = new CompoundCondition(conditions, CompoundConditionSort.OR);
 
@@ -374,6 +392,8 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 				this.iorParameterType = parameterType;
 			else if (codeName.equals(averageCountCondition.getValue()))
 				this.scansParameterType = parameterType;
+			else if (codeName.equals(flagsCondition.getValue()))
+				this.flagsParameterType = parameterType;
 		}
 		
 		if (this.wvlenParameterType == null) { throw new IllegalArgumentException("Cannot find parameter type "
@@ -394,6 +414,10 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 		if (this.scansParameterType == null)
 			throw new IllegalArgumentException("Cannot find parameter type "
 					+ ParameterTypeCodenames.TRACE_AVERAGE_COUNT);
+		
+		if (this.flagsParameterType == null)
+			throw new IllegalArgumentException("Cannot find parameter type "
+					+ ParameterTypeCodenames.TRACE_FLAGS);
 
 		this.refractLabel.setText(this.iorParameterType.getDescription() + this.getUnit(this.iorParameterType));
 		this.waveLengthLabel.setText(this.wvlenParameterType.getDescription() + this.getUnit(this.wvlenParameterType));
@@ -756,6 +780,13 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 		this.pulseWidthLabel = new JLabel(LangModelSchedule.getString("PulseWidth")); //$NON-NLS-1$
 		this.resolutionLabel = new JLabel(LangModelSchedule.getString("Resolution")); //$NON-NLS-1$
 		this.maxDistanceLabel = new JLabel(LangModelSchedule.getString("Distance")); //$NON-NLS-1$
+		
+		this.gsOptionBox = new JCheckBox();
+		this.bcOptionBox = new JCheckBox();
+		bcOptionBox.setSelected(false);
+		bcOptionBox.setEnabled(true);
+		this.lfdOptionBox = new JCheckBox();
+
 
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -798,7 +829,30 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 		gbc.weightx = 0.0;
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
 		this.add(this.maxDistanceComboBox, gbc);
-		gbc.weighty = 1.0;
+		
+		gbc.weightx = 1.0;
+		gbc.gridwidth = GridBagConstraints.RELATIVE;
+		this.add(new JLabel("Gain Splice"), gbc);
+		gbc.weightx = 0.0;
+		gbc.gridwidth = GridBagConstraints.REMAINDER;
+		this.add(this.gsOptionBox, gbc);
+
+//		gbc.weightx = 1.0;
+//		gbc.gridwidth = GridBagConstraints.RELATIVE;
+//		this.add(new JLabel("Option" + "bc"), gbc);
+//		gbc.weightx = 0.0;
+//		gbc.gridwidth = GridBagConstraints.REMAINDER;
+//		this.add(this.bcOptionBox, gbc);
+
+		
+		gbc.weightx = 1.0;
+		gbc.gridwidth = GridBagConstraints.RELATIVE;
+		this.add(new JLabel("Live Fiber Detect"), gbc);
+		gbc.weightx = 0.0;
+		gbc.gridwidth = GridBagConstraints.REMAINDER;
+		this.add(this.lfdOptionBox, gbc);		
+		
+		gbc.weighty = 1.0;		
 		gbc.anchor = GridBagConstraints.SOUTH;
 		this.add(new JLabel(), gbc);
 

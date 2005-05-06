@@ -65,6 +65,7 @@ import com.syrus.AMFICOM.measurement.MeasurementSetupWrapper;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.Set;
 import com.syrus.AMFICOM.measurement.SetParameter;
+import com.syrus.util.Log;
 
 public class TestParametersPanel extends JPanel implements OperationListener, MeasurementSetupEditor,
 		AnalysisTypeEditor, EvaluationTypeEditor, SetEditor {
@@ -439,7 +440,8 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 	}
 
 	public void setMeasurementSetup(MeasurementSetup measurementSetup) {
-		this.updateMeasurementSetups();
+		Log.debugMessage("TestParametersPanel.setMeasurementSetup | measurementSetup:" + measurementSetup.getDescription(), Log.FINEST);
+//		this.updateMeasurementSetups();
 
 		if (!this.msList.contains(measurementSetup)) {
 			this.msList.add(measurementSetup);
