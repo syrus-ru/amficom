@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.66 2005/05/06 15:34:03 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.67 2005/05/06 15:48:37 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.66 $, $Date: 2005/05/06 15:34:03 $
+ * @version $Revision: 1.67 $, $Date: 2005/05/06 15:48:37 $
  * @module
  */
 
@@ -401,6 +401,8 @@ public class CoreAnalysisManager
 //        if (reflSize < 300) // FIXME!
 //            reflSize = 300;
         reflSize = av.minTraceLength / 10; // FIXME!
+        if (reflSize < nReflSize * 10)
+            reflSize = nReflSize * 10; // FIXME!
 
 		long t1 = System.currentTimeMillis();
 
