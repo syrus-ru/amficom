@@ -135,7 +135,7 @@ public class FileOpenCommand extends VoidCommand
 					}
 				}
 			}
-            boolean testBehaviour = true && AnalyseMainFrameSimplified.DEBUG; // FIXME: debug only: for local comparison
+            boolean testBehaviour = false && AnalyseMainFrameSimplified.DEBUG; // FIXME: debug only: for local comparison; should be false
 			if (!Heap.hasEmptyAllBSMap())
 			{
 				if (Heap.getBSPrimaryTrace() != null && !testBehaviour)
