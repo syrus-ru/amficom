@@ -1,5 +1,5 @@
 /*
- * $Id: MServerMeasurementTransmit.java,v 1.2 2005/05/03 18:29:06 arseniy Exp $
+ * $Id: MServerMeasurementTransmit.java,v 1.3 2005/05/06 11:02:02 bob Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,8 +45,8 @@ import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/05/03 18:29:06 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/05/06 11:02:02 $
+ * @author $Author: bob $
  * @module mserver_v1
  */
 abstract class MServerMeasurementTransmit extends MServerConfigurationTransmit {
@@ -136,6 +136,7 @@ abstract class MServerMeasurementTransmit extends MServerConfigurationTransmit {
 	}
 
 	public MeasurementSetup_Transferable[] transmitMeasurementSetups(Identifier_Transferable[] idsT) throws AMFICOMRemoteException {
+		try {
 		java.util.Set objects = this.getMeasurementObjects(idsT);
 
 		MeasurementSetup_Transferable[] transferables = new MeasurementSetup_Transferable[objects.size()];
@@ -146,6 +147,10 @@ abstract class MServerMeasurementTransmit extends MServerConfigurationTransmit {
 			transferables[i] = (MeasurementSetup_Transferable) object.getTransferable();
 		}
 		return transferables;
+		} catch (Throwable throwable) {
+			Log.errorException(throwable);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, throwable.getMessage());
+		} 
 	}
 
 	public Set_Transferable[] transmitSets(Identifier_Transferable[] idsT) throws AMFICOMRemoteException {
