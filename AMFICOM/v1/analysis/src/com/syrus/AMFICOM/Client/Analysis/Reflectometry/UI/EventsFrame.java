@@ -431,12 +431,19 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener,
 		}
 	}
 
+    private void updateCompDebug() {
+//      System.err.println("MTAE = " + Heap.getMTAEPrimary());
+//      System.err.println("MTM = "  + Heap.getMTMEtalon());
+        // FIXME: debug: development-time console code
+        if (Heap.getMTAEPrimary() != null)
+            ModelTraceComparer.compareMTAEToMTM(Heap.getMTAEPrimary(), Heap.getMTMEtalon());
+    }
+
 	public void etalonMTMCUpdated()
 	{
         setTableModel();
         updateColors();
-        // FIXME: debug: development-time console code
-        ModelTraceComparer.compareMTAEToMTM(Heap.getMTAEPrimary(), Heap.getMTMEtalon()); // XXX: will crush if no etalon will be at this moment
+        updateCompDebug();
 	}
 
 	public void etalonMTMRemoved()
@@ -457,6 +464,7 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener,
             setTableModel();
             updateTableModel();
             UIGeneralStorage.arrangeTableColumns(this.jTable);
+            updateCompDebug();
         }
         setVisible(true);
     }
