@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.113 2005/05/06 10:48:22 bob Exp $
+ * $Id: Test.java,v 1.114 2005/05/06 11:02:30 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,7 +45,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.113 $, $Date: 2005/05/06 10:48:22 $
+ * @version $Revision: 1.114 $, $Date: 2005/05/06 11:02:30 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -296,7 +296,9 @@ public class Test extends StorableObject {
 		Log.debugMessage("Test.isValid | this.measurementSetupIds != null && !this.measurementSetupIds.isEmpty() " + (this.measurementSetupIds != null && !this.measurementSetupIds.isEmpty()), Log.FINEST);
 		Log.debugMessage("Test.isValid | this.mainMeasurementSetup != null " + (this.mainMeasurementSetup != null), Log.FINEST);
 		return super.isValid() && this.timeStamps != null && this.timeStamps.isValid() && this.measurementTypeId != null && this.monitoredElement != null
-			&& this.description != null && this.measurementSetupIds != null && !this.measurementSetupIds.isEmpty() && this.mainMeasurementSetup != null;
+			&& this.description != null && this.measurementSetupIds != null 
+			//&& !this.measurementSetupIds.isEmpty() && this.mainMeasurementSetup != null
+			;
 	}
 	
 	public short getEntityCode() {
