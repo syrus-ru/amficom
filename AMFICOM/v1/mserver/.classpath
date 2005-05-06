@@ -8,5 +8,7 @@
 	<classpathentry kind="src" path="/util"/>
 	<classpathentry kind="var" path="AMFICOM_HOME/lib/mcm_interface.jar"/>
 	<classpathentry kind="src" path="/admin_v1"/>
+	<classpathentry kind="src" path="/csbridge_v1"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/leserver_interface.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
