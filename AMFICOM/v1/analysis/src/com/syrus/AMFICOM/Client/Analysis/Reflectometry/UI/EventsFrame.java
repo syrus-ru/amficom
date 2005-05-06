@@ -89,6 +89,14 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener,
             default: throw new InternalError();
             }
         }
+        public int nComp(CompositeEventList eList, int row) {
+            switch(viewMode) {
+            case COMP: return row;
+            case PRIM: return eList.getP2C(row);
+            case ETAL: return eList.getE2C(row);
+            default: throw new InternalError();
+            }
+        }
         public void toNextRow(CompositeEventList.Walker walker) {
             switch(viewMode) {
             case COMP:
@@ -104,19 +112,19 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener,
                 throw new InternalError();
             }
         }
-        /*public int currentRow(CompositeEventList.Walker walker) {
-            switch(viewMode) {
-            case COMP: return walker.getCompositeEvent();
-            case PRIM: return walker.getEvent2();
-            case ETAL: return walker.getEtalonEvent2();
-            default: throw new InternalError();
-            }
-        }*/
         public int currentRow2() {
             switch(viewMode) {
             case COMP: return Heap.getCurrentCompositeEvent();
             case PRIM: return Heap.getCurrentEvent2();
             case ETAL: return Heap.getCurrentEtalonEvent2();
+            default: throw new InternalError();
+            }
+        }
+        public void moveTo(int row) {
+            switch(viewMode) {
+            case COMP: Heap.setCurrentCompositeEvent(row); return;
+            case PRIM: Heap.setCurrentEvent(row); return;
+            case ETAL: Heap.setCurrentEtalonEvent(row); return;
             default: throw new InternalError();
             }
         }
@@ -142,7 +150,7 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener,
 
 	private void initModule()
 	{
-        view = new TableView(TableView.PRIM); // XXX; другие виды пока не поддерживаются
+        view = new TableView(TableView.PRIM); // @todo: автоматически переключать виды
 		Heap.addEtalonMTMListener(this);
 		Heap.addCurrentEventChangeListener(this);
         Heap.addPrimaryRefAnalysisListener(this);
@@ -211,8 +219,8 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener,
 			else
 			{
 				int selected = lsm.getMinSelectionIndex();
-                if (Heap.getCurrentEvent2() != selected)
-                    Heap.setCurrentEvent(selected);
+                if (view.currentRow2() != selected)
+                    view.moveTo(selected);
 			}
 		}
 		});
@@ -248,7 +256,9 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener,
 	{
         if (Heap.getMTAEPrimary() == null)
             return; // XXX
-        DetailedEvent[] devents = Heap.getMTAEPrimary().getDetailedEvents();
+        DetailedEvent[] pevents = Heap.getMTAEPrimary().getDetailedEvents();
+        DetailedEvent[] eevents = Heap.getMTMEtalon() != null ?
+                Heap.getMTMEtalon().getMTAE().getDetailedEvents() : null;
         BellcoreStructure bs = Heap.getBSPrimaryTrace();
         double resMt = bs.getResolution();
         double resKm = resMt / 1000.0;
@@ -257,29 +267,30 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener,
         int nRows = view.nRows(Heap.getEventList());
 		tModel.clearTable();
 
-        CompositeEventList.Walker w = Heap.getEventList().new Walker();
-		for (int i = 0; i < nRows; i++, view.toNextRow(w))
+        CompositeEventList eList = Heap.getEventList();
+        CompositeEventList.Walker w = eList.new Walker();
+		for (int row = 0; row < nRows; row++, view.toNextRow(w))
 		{
-//            // выбираем событие, которое будем отображать
-//            int nPrimary = w.getEvent2();
-//            int nEtalon = w.getEtalonEvent2();
-//            // nPrimary или nEtalon может быть -1, но не оба одновременно
-//			SimpleReflectogramEvent sre = nPrimary >= 0
-//                ? Heap.getMTAEPrimary().getSimpleEvent(nPrimary)
-//                : Heap.getMTMEtalon().getMTAE().getSimpleEvent(nEtalon);
+            // nPri или nEt может быть -1, но не оба одновременно
+            int nPri = view.nPri1(eList, row);
+            int nEt = view.nEt1(eList, row);
 
-            int sType = devents[i].getEventType();
-			String eventTypeName = AnalysisUtil.getSimpleEventNameByType(sType);
-            String vCol1 = eventTypeName;
+            // выбираем, параметры какого события будем выводить - primary или etalon
+            // предпочтение отдается primary
+            DetailedEvent ev = nPri >= 0 ? pevents[nPri] : eevents[nEt];
+
+            int sType = ev.getEventType();
+
+            String vCol1 = AnalysisUtil.getSimpleEventNameByType(sType); // тип
             String vCol2 = Double.toString(MathRef.round_3(
-                    resKm * devents[i].getBegin())); //начало
+                    resKm * ev.getBegin())); //начало
             String vCol3 = Double.toString(MathRef.round_3(
-                    resKm * (DetailedEventUtil.getWidth(devents[i])))); //протяженность
+                    resKm * (DetailedEventUtil.getWidth(ev)))); //протяженность
 
 			switch (sType)
 			{
 			case SimpleReflectogramEvent.DEADZONE:
-				tModel.addRow(String.valueOf(i + 1), new Object[] {
+				tModel.addRow(String.valueOf(nPri + 1), new Object[] {
 					 vCol1,
                      vCol2,
                      vCol3,
@@ -290,62 +301,62 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener,
 				break;
 			case SimpleReflectogramEvent.LINEAR:
 			    // TODO: использовать только один параметр в data[] вместо трех
-				tModel.addRow(String.valueOf(i + 1), new Object[] {
+				tModel.addRow(String.valueOf(nPri + 1), new Object[] {
                      vCol1,
                      vCol2,
                      vCol3,
 					 DASH, // отраж
-					 Double.toString(MathRef.round_3(((LinearDetailedEvent)devents[i]).getLoss())), // потери
-					 Double.toString(MathRef.round_4(((LinearDetailedEvent)devents[i]).getAttenuation() / resKm)) //затух
+					 Double.toString(MathRef.round_3(((LinearDetailedEvent)ev).getLoss())), // потери
+					 Double.toString(MathRef.round_4(((LinearDetailedEvent)ev).getAttenuation() / resKm)) //затух
 				});
 				break;
 			case SimpleReflectogramEvent.NOTIDENTIFIED:
-				tModel.addRow(String.valueOf(i + 1), new Object[] {
+				tModel.addRow(String.valueOf(nPri + 1), new Object[] {
                     vCol1,
                     vCol2,
                     vCol3,
                     DASH, // отраж
                     //dash, // потери
-                    Double.toString(MathRef.round_3(((NotIdentifiedDetailedEvent)devents[i]).getLoss())), // потери
+                    Double.toString(MathRef.round_3(((NotIdentifiedDetailedEvent)ev).getLoss())), // потери
                     DASH  // затух
 				});
 				break;
 			case SimpleReflectogramEvent.CONNECTOR:
-				tModel.addRow(String.valueOf(i + 1), new Object[] {
+				tModel.addRow(String.valueOf(nPri + 1), new Object[] {
                     vCol1,
                     vCol2,
                     vCol3,
-                    Double.toString(MathRef.round_2(MathRef.calcReflectance(sigma, ((ConnectorDetailedEvent)devents[i]).getAmpl()))), // отраж
-                    Double.toString(MathRef.round_3(((ConnectorDetailedEvent)devents[i]).getLoss())), // потери
+                    Double.toString(MathRef.round_2(MathRef.calcReflectance(sigma, ((ConnectorDetailedEvent)ev).getAmpl()))), // отраж
+                    Double.toString(MathRef.round_3(((ConnectorDetailedEvent)ev).getLoss())), // потери
                     DASH  // затух
 				});
 				break;
 			case SimpleReflectogramEvent.GAIN:
-				tModel.addRow(String.valueOf(i + 1), new Object[] {
+				tModel.addRow(String.valueOf(nPri + 1), new Object[] {
                     vCol1,
                     vCol2,
                     vCol3,
 				    DASH, // отраж
-				    Double.toString(MathRef.round_3(((SpliceDetailedEvent)devents[i]).getLoss())), // потери
+				    Double.toString(MathRef.round_3(((SpliceDetailedEvent)ev).getLoss())), // потери
 				    DASH  // затух
 				});
 				break;
 			case SimpleReflectogramEvent.LOSS:
-				tModel.addRow(String.valueOf(i + 1), new Object[] {
+				tModel.addRow(String.valueOf(nPri + 1), new Object[] {
                     vCol1,
                     vCol2,
                     vCol3,
 				    DASH, // отраж
-				    Double.toString(MathRef.round_3(((SpliceDetailedEvent)devents[i]).getLoss())), // потери
+				    Double.toString(MathRef.round_3(((SpliceDetailedEvent)ev).getLoss())), // потери
 				    DASH  // затух
 				});
 				break;
 			case SimpleReflectogramEvent.ENDOFTRACE:
-				tModel.addRow(String.valueOf(i + 1), new Object[] {
+				tModel.addRow(String.valueOf(nPri + 1), new Object[] {
                     vCol1,
                     vCol2,
                     vCol3,
-				    Double.toString(MathRef.round_2(MathRef.calcReflectance(sigma, ((EndOfTraceDetailedEvent)devents[i]).getAmpl()))), // отраж
+				    Double.toString(MathRef.round_2(MathRef.calcReflectance(sigma, ((EndOfTraceDetailedEvent)ev).getAmpl()))), // отраж
 				    DASH, // потери
 				    DASH  // затух
 				});
@@ -422,6 +433,7 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener,
 
 	public void etalonMTMCUpdated()
 	{
+        setTableModel();
         updateColors();
         // FIXME: debug: development-time console code
         ModelTraceComparer.compareMTAEToMTM(Heap.getMTAEPrimary(), Heap.getMTMEtalon()); // XXX: will crush if no etalon will be at this moment
@@ -429,6 +441,7 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener,
 
 	public void etalonMTMRemoved()
 	{
+        setTableModel();
         updateColors();
 	}
 
