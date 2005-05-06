@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.33 2005/04/13 15:00:02 bob Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.34 2005/05/06 12:28:09 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/04/13 15:00:02 $
+ * @version $Revision: 1.34 $, $Date: 2005/05/06 12:28:09 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -87,7 +87,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 						condition = super.conditionTest(analysisType.getMeasurementTypeIds());
 						break;
 					default:
-						throw new IllegalObjectEntityException(LINKED_ENTITY_CODE_NOT_REGISTERED + this.linkedEntityCode
+						throw new IllegalObjectEntityException(LINKED_ENTITY_CODE_NOT_REGISTERED + ObjectEntities.codeToString(this.linkedEntityCode)
 								+ ", " + ObjectEntities.codeToString(this.linkedEntityCode),
 								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 				}
@@ -276,7 +276,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 									testNumberOfMeasurements++;
 								}
 							}
-							if (testNumberOfMeasurements < test.getNumberOfMeasurements())
+							if (test != null && testNumberOfMeasurements < test.getNumberOfMeasurements())
 								return true;
 						}
 						return false;
