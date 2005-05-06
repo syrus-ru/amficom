@@ -45,10 +45,9 @@ public class FileRemoveCommand extends VoidCommand
 				return;
 			}
 		}
+        // FIXME: activerefId can be null?
 
-		// FIXME: тут тоже какая-то ерунда
-		if (!activeRefId.equals(AnalysisUtil.ETALON))
-			Heap.removeAnyBSByName(activeRefId); // XXX: was Pool.remove(bs);
+        Heap.removeAnyBSByName(activeRefId);
 		Heap.traceClosed(activeRefId);
 		Heap.setCurrentTracePrimary();
 	}
