@@ -1,5 +1,5 @@
 /*
- * $Id: GeneralTestCase.java,v 1.2 2005/04/30 14:18:45 arseniy Exp $
+ * $Id: GeneralTestCase.java,v 1.3 2005/05/06 16:07:40 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.general;
 
-import java.util.Date;
 import java.util.Set;
 
 import junit.extensions.TestSetup;
@@ -18,36 +17,22 @@ import junit.framework.TestSuite;
 
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.Domain;
-import com.syrus.AMFICOM.administration.User;
-import com.syrus.AMFICOM.cmserver.DatabaseContextSetup;
-import com.syrus.AMFICOM.general.AccessIdentity;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.DefaultIdentifierGeneratorServer;
-import com.syrus.AMFICOM.general.EquivalentCondition;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.SessionContext;
 import com.syrus.util.Application;
-import com.syrus.util.ApplicationProperties;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/30 14:18:45 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/05/06 16:07:40 $
+ * @author $Author: bob $
  * @module tools
  */
 public class GeneralTestCase extends TestCase {
 
-	public static final int		DB_CONNECTION_TIMEOUT	= 120;
-
-	public static final String	DB_SID					= "mcm";
-
 	public static Identifier	domainId;
 
 	protected static Identifier	creatorId;
-
+	
+	public static final String APPLICATION_NAME = "cmserver";
+	
 	public GeneralTestCase(String name) {
 		super(name);
 	}
@@ -56,7 +41,7 @@ public class GeneralTestCase extends TestCase {
 		TestSuite suite = new TestSuite(clazz);
 		TestSetup wrapper = new TestSetup(suite) {
 
-			protected void setUp() {
+			protected void setUp() throws CommunicationException, LoginException {
 				oneTimeSetUp();
 			}
 
@@ -67,28 +52,37 @@ public class GeneralTestCase extends TestCase {
 		return wrapper;
 	}
 
-	static void oneTimeSetUp() {
-		Application.init("general");
-		establishDatabaseConnection();
-		DatabaseContextSetup.initDatabaseContext();
-		DatabaseContextSetup.initObjectPools();
+	static void oneTimeSetUp() throws CommunicationException, LoginException {
+		Application.init("scheduler");
+		final String login = "sys";
+		final String password = "sys";
+		LoginRestorer loginRestorer = new LoginRestorer() {
 
-		EquivalentCondition equivalentCondition = new EquivalentCondition(ObjectEntities.USER_ENTITY_CODE);
-		try {
-			Set users = AdministrationStorableObjectPool.getStorableObjectsByCondition(equivalentCondition, true);
-			equivalentCondition.setEntityCode(ObjectEntities.DOMAIN_ENTITY_CODE);
-			Set domains = AdministrationStorableObjectPool.getStorableObjectsByCondition(equivalentCondition, true);
+			/* TODO just dummy login restorer */
+			public String getLogin() {
+				return login;
+			}
 
-			GeneralTestCase.creatorId = ((User) users.iterator().next()).getId();
-			GeneralTestCase.domainId = ((Domain) domains.iterator().next()).getId();
+			public String getPassword() {
+				return password;
+			}
 
-			IdentifierPool.init(new DefaultIdentifierGeneratorServer());
-			
-			SessionContext.init(new AccessIdentity(new Date(), domainId, creatorId, "Session_0"), "");
-		} catch (ApplicationException e) {
-			fail();
-		}
+			public boolean restoreLogin() {
+				return true;
+			}
+		};
 
+		ClientSessionEnvironment.createInstance(ClientSessionEnvironment.SESSION_KIND_MEASUREMENT,
+			loginRestorer);
+		
+		final ClientSessionEnvironment clientSessionEnvironment = ClientSessionEnvironment.getInstance();
+		clientSessionEnvironment.login(login, password);
+		Set availableDomains = LoginManager.getAvailableDomains();
+		creatorId = LoginManager.getUserId();
+		Domain domain = (Domain) availableDomains.iterator().next();
+		domainId = domain.getId();
+		LoginManager.selectDomain(domainId);
+		
 	}
 
 	static void oneTimeTearDown() {
@@ -101,16 +95,5 @@ public class GeneralTestCase extends TestCase {
 		}
 		DatabaseConnection.closeConnection();
 	}
-
-	private static void establishDatabaseConnection() {
-		String dbHostName = ApplicationProperties.getString("DBHostName", Application.getInternetAddress());
-		String dbSid = ApplicationProperties.getString("DBSID", DB_SID);
-		long dbConnTimeout = ApplicationProperties.getInt("DBConnectionTimeout", DB_CONNECTION_TIMEOUT) * 1000;
-		try {
-			DatabaseConnection.establishConnection(dbHostName, dbSid, dbConnTimeout);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
+	
 }

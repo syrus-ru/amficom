@@ -1,12 +1,12 @@
 /*
- * $Id: QP1643ACharacteristrics.java,v 1.1 2005/04/15 17:34:16 cvsadmin Exp $
+ * $Id: QP1643ACharacteristrics.java,v 1.2 2005/05/06 16:07:40 bob Exp $
  *
  * Copyright ฟ 2004 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 
-package test.com.syrus.AMFICOM.general;
+package com.syrus.AMFICOM.general;
 
 import java.util.Set;
 
@@ -29,8 +29,8 @@ import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/15 17:34:16 $
- * @author $Author: cvsadmin $
+ * @version $Revision: 1.2 $, $Date: 2005/05/06 16:07:40 $
+ * @author $Author: bob $
  * @module tools
  */
 public class QP1643ACharacteristrics extends GeneralTestCase {
@@ -219,33 +219,67 @@ public class QP1643ACharacteristrics extends GeneralTestCase {
 		}
 
 		/* TODO units characteristic to parameter type*/
+		{
+
+			typicalCondition = new TypicalCondition(ParameterTypeCodenames.TRACE_RESOLUTION,
+													OperationSort.OPERATION_EQUALS,
+													ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
+													StorableObjectWrapper.COLUMN_CODENAME);
+			storableObjects = GeneralStorableObjectPool.getStorableObjectsByCondition(typicalCondition, true);
+			ParameterType parameterType = null;
+			if (storableObjects.isEmpty()) {
+				fail();
+			} else
+				parameterType = (ParameterType) storableObjects.iterator().next();
+
+			CharacteristicType resolutionType = CharacteristicType.createInstance(creatorId,
+				CharacteristicTypeCodenames.UNITS_RESOLUTION, "resolution unit type", DataType.DATA_TYPE_STRING,
+				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL);
+
+			GeneralStorableObjectPool.putStorableObject(resolutionType);
+
+			Characteristic resolutionCharacteristic = Characteristic.createInstance(creatorId, resolutionType,
+				"resolution unit", "resolution unit", CharacteristicSort.CHARACTERISTIC_SORT_PARAMETER_TYPE, "อ",
+				parameterType.getId(), false, true);
+			GeneralStorableObjectPool.putStorableObject(resolutionCharacteristic);
+		}
+
+		{
+			typicalCondition = new TypicalCondition(ParameterTypeCodenames.TRACE_WAVELENGTH,
+													OperationSort.OPERATION_EQUALS,
+													ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
+													StorableObjectWrapper.COLUMN_CODENAME);
+			storableObjects = GeneralStorableObjectPool.getStorableObjectsByCondition(typicalCondition, true);
+			ParameterType parameterType = null;
+			if (storableObjects.isEmpty()) {
+				fail();
+			} else
+				parameterType = (ParameterType) storableObjects.iterator().next();
+
+			CharacteristicType waveLengthType = CharacteristicType.createInstance(creatorId,
+				CharacteristicTypeCodenames.UNITS_WAVELENGTH, "wave length unit type", DataType.DATA_TYPE_STRING,
+				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL);
+
+			GeneralStorableObjectPool.putStorableObject(waveLengthType);
+
+			Characteristic characteristic = Characteristic.createInstance(creatorId, waveLengthType, "wavelength unit",
+				"wavelength unit", CharacteristicSort.CHARACTERISTIC_SORT_PARAMETER_TYPE, "ฮอ",
+				parameterType.getId(), false, true);
+			GeneralStorableObjectPool.putStorableObject(characteristic);
+		}
+//
 //		{
-//			CharacteristicType resolutionType = CharacteristicType.createInstance(creatorId,
-//				CharacteristicTypeCodenames.UNITS_RESOLUTION, "resolution unit type", DataType.DATA_TYPE_STRING,
-//				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL);
+//			typicalCondition = new TypicalCondition(ParameterTypeCodenames.TRACE_AVERAGE_COUNT,
+//				OperationSort.OPERATION_EQUALS,
+//				ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
+//				StorableObjectWrapper.COLUMN_CODENAME);
+//storableObjects = GeneralStorableObjectPool.getStorableObjectsByCondition(typicalCondition, true);
+//ParameterType parameterType = null;
+//if (storableObjects.isEmpty()) {
+//fail();
+//} else
+//parameterType = (ParameterType) storableObjects.iterator().next();
 //
-//			GeneralStorableObjectPool.putStorableObject(resolutionType);
-//
-//			Characteristic resolutionCharacteristic = Characteristic.createInstance(creatorId, resolutionType,
-//				"resolution unit", "resolution unit", CharacteristicSort.CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE, "อ",
-//				measurementPortTypeId, false, true);
-//			GeneralStorableObjectPool.putStorableObject(resolutionCharacteristic);
-//		}
-//
-//		{
-//			CharacteristicType waveLengthType = CharacteristicType.createInstance(creatorId,
-//				CharacteristicTypeCodenames.UNITS_WAVELENGTH, "wave length unit type", DataType.DATA_TYPE_STRING,
-//				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL);
-//
-//			GeneralStorableObjectPool.putStorableObject(waveLengthType);
-//
-//			Characteristic characteristic = Characteristic.createInstance(creatorId, waveLengthType, "wavelength unit",
-//				"wavelength unit", CharacteristicSort.CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE, "ฮอ",
-//				measurementPortTypeId, false, true);
-//			GeneralStorableObjectPool.putStorableObject(characteristic);
-//		}
-//
-//		{
 //			CharacteristicType averageCountType = CharacteristicType.createInstance(creatorId,
 //				CharacteristicTypeCodenames.UNITS_AVERAGE_COUNT, "average count unit type", DataType.DATA_TYPE_STRING,
 //				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL);
@@ -257,29 +291,49 @@ public class QP1643ACharacteristrics extends GeneralTestCase {
 //				true);
 //			GeneralStorableObjectPool.putStorableObject(characteristic);
 //		}
+
+		{
+			typicalCondition = new TypicalCondition(ParameterTypeCodenames.TRACE_LENGTH,
+													OperationSort.OPERATION_EQUALS,
+													ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
+													StorableObjectWrapper.COLUMN_CODENAME);
+			storableObjects = GeneralStorableObjectPool.getStorableObjectsByCondition(typicalCondition, true);
+			ParameterType parameterType = null;
+			if (storableObjects.isEmpty()) {
+				fail();
+			} else
+				parameterType = (ParameterType) storableObjects.iterator().next();
+			CharacteristicType traceLengthType = CharacteristicType.createInstance(creatorId,
+				CharacteristicTypeCodenames.UNITS_TRACE_LENGTH, "trace length unit type", DataType.DATA_TYPE_STRING,
+				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL);
+
+			GeneralStorableObjectPool.putStorableObject(traceLengthType);
+			Characteristic characteristic = Characteristic.createInstance(creatorId, traceLengthType,
+				"trace length unit", "trace length unit", CharacteristicSort.CHARACTERISTIC_SORT_PARAMETER_TYPE,
+				"หอ", parameterType.getId(), false, true);
+			GeneralStorableObjectPool.putStorableObject(characteristic);
+		}
 //
-//		{
-//			CharacteristicType traceLengthType = CharacteristicType.createInstance(creatorId,
-//				CharacteristicTypeCodenames.UNITS_TRACE_LENGTH, "trace length unit type", DataType.DATA_TYPE_STRING,
-//				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL);
-//
-//			GeneralStorableObjectPool.putStorableObject(traceLengthType);
-//			Characteristic characteristic = Characteristic.createInstance(creatorId, traceLengthType,
-//				"trace length unit", "trace length unit", CharacteristicSort.CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE,
-//				"หอ", measurementPortTypeId, false, true);
-//			GeneralStorableObjectPool.putStorableObject(characteristic);
-//		}
-//
-//		{
-//			CharacteristicType pulseWidthType = CharacteristicType.createInstance(creatorId,
-//				CharacteristicTypeCodenames.UNITS_PULSE_WIDTH, "average count unit type", DataType.DATA_TYPE_STRING,
-//				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL);
-//
-//			GeneralStorableObjectPool.putStorableObject(pulseWidthType);
-//			Characteristic characteristic = Characteristic.createInstance(creatorId, pulseWidthType,
-//				"pulse width unit", "pulse width unit", CharacteristicSort.CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE,
-//				"ฮำ", measurementPortTypeId, false, true);
-//			GeneralStorableObjectPool.putStorableObject(characteristic);
-//		}
+		{
+			typicalCondition = new TypicalCondition(ParameterTypeCodenames.TRACE_PULSE_WIDTH,
+													OperationSort.OPERATION_EQUALS,
+													ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
+													StorableObjectWrapper.COLUMN_CODENAME);
+			storableObjects = GeneralStorableObjectPool.getStorableObjectsByCondition(typicalCondition, true);
+			ParameterType parameterType = null;
+			if (storableObjects.isEmpty()) {
+				fail();
+			} else
+				parameterType = (ParameterType) storableObjects.iterator().next();
+			CharacteristicType pulseWidthType = CharacteristicType.createInstance(creatorId,
+				CharacteristicTypeCodenames.UNITS_PULSE_WIDTH, "pulse width unit type", DataType.DATA_TYPE_STRING,
+				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL);
+
+			GeneralStorableObjectPool.putStorableObject(pulseWidthType);
+			Characteristic characteristic = Characteristic.createInstance(creatorId, pulseWidthType,
+				"pulse width unit", "pulse width unit", CharacteristicSort.CHARACTERISTIC_SORT_PARAMETER_TYPE,
+				"ฮำ", parameterType.getId(), false, true);
+			GeneralStorableObjectPool.putStorableObject(characteristic);
+		}
 	}
 }
