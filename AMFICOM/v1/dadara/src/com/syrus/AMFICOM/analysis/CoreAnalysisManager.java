@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.63 2005/05/05 13:37:03 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.64 2005/05/06 07:14:11 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.63 $, $Date: 2005/05/05 13:37:03 $
+ * @version $Revision: 1.64 $, $Date: 2005/05/06 07:14:11 $
  * @module
  */
 
@@ -252,7 +252,7 @@ public class CoreAnalysisManager
 	/**
 	 * Собирает информацию о совокупности рефлектограмм
 	 * see {@link TracesAverages}
-	 * @param bsColl входная совокупность р/г
+	 * @param bsColl входная совокупность р/г ({@link BellcoreStructure})
 	 * @param needNoiseInfo нужна ли информация о шуме
 	 * @param needMFInfo нужны ли кривые мин./макс. фитированных кривых
 	 * @param needBSInfo нужна ли инф. о параметрах bs
@@ -318,7 +318,7 @@ public class CoreAnalysisManager
 		    	ModelFunction mf = fitTrace(yCur, curLength, noiseData);
 		    	double[] yMF = mf.funFillArray(0, 1, res.minTraceLength);
 		    	if (isFirst) {
-		    		// need to make one more copy, so close once only 
+		    		// need to make one more copy, so cloning once only 
 		    		res.minYMF = yMF;
 		    		res.maxYMF = (double[])yMF.clone();
 		    	}
