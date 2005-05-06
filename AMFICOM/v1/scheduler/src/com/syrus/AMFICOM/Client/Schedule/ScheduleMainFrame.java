@@ -23,17 +23,14 @@ import javax.swing.JViewport;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.General.ConnectionInterface;
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
-import com.syrus.AMFICOM.Client.General.SessionInterface;
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.ExitCommand;
 import com.syrus.AMFICOM.Client.General.Command.HelpAboutCommand;
+import com.syrus.AMFICOM.Client.General.Command.Session.OpenSessionCommand;
 import com.syrus.AMFICOM.Client.General.Command.Session.SessionChangePasswordCommand;
 import com.syrus.AMFICOM.Client.General.Command.Session.SessionCloseCommand;
 import com.syrus.AMFICOM.Client.General.Command.Session.SessionConnectionCommand;
 import com.syrus.AMFICOM.Client.General.Command.Session.SessionDomainCommand;
-import com.syrus.AMFICOM.Client.General.Command.Session.SessionOpenCommand;
 import com.syrus.AMFICOM.Client.General.Command.Session.SessionOptionsCommand;
 import com.syrus.AMFICOM.Client.General.Command.Window.ArrangeWindowCommand;
 import com.syrus.AMFICOM.Client.General.Event.ContextChangeEvent;
@@ -48,7 +45,6 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.UI.StatusBarModel;
 import com.syrus.AMFICOM.Client.General.UI.WindowArranger;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.Client.Schedule.UI.ElementsTreeFrame;
 import com.syrus.AMFICOM.Client.Schedule.UI.PlanFrame;
@@ -60,6 +56,8 @@ import com.syrus.AMFICOM.Client.Schedule.UI.TimeParametersFrame;
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 
 public class ScheduleMainFrame extends JFrame implements OperationListener {
@@ -251,20 +249,22 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 			// ApplicationModel aModel =
 			// aContext.getApplicationModel();
 			if (cce.SESSION_OPENED) {
-				SessionInterface ssi = (SessionInterface) cce.getSource();
-				if (this.aContext.getSessionInterface().equals(ssi)) {
+//				SessionInterface ssi = (SessionInterface) cce.getSource();
+//				if (this.aContext.getSessionInterface().equals(ssi)) 
+				{
 					setSessionOpened();
 
 					this.statusBar.setText("status", LangModel.getString("statusReady"));
 					SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
-					this.statusBar.setText("session", sdf.format(new Date(this.aContext.getSessionInterface()
-							.getLogonTime())));
-					this.statusBar.setText("user", this.aContext.getSessionInterface().getUser());
+//					this.statusBar.setText("session", sdf.format(new Date(this.aContext.getSessionInterface()
+//							.getLogonTime())));
+//					this.statusBar.setText("user", this.aContext.getSessionInterface().getUser());
 				}
 			}
 			if (cce.SESSION_CLOSED) {
-				SessionInterface ssi = (SessionInterface) cce.getSource();
-				if (this.aContext.getSessionInterface().equals(ssi)) {
+//				SessionInterface ssi = (SessionInterface) cce.getSource();
+//				if (this.aContext.getSessionInterface().equals(ssi)) 
+				{
 
 					setSessionClosed();
 
@@ -274,17 +274,19 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 				}
 			}
 			if (cce.CONNECTION_OPENED) {
-				ConnectionInterface cci = (ConnectionInterface) cce.getSource();
-				if (ConnectionInterface.getInstance().equals(cci)) {
+//				ConnectionInterface cci = (ConnectionInterface) cce.getSource();
+//				if (ConnectionInterface.getInstance().equals(cci)) 
+				{
 					setConnectionOpened();
 
 					this.statusBar.setText("status", LangModel.getString("statusReady"));
-					this.statusBar.setText("server", ConnectionInterface.getInstance().getServerName());
+//					this.statusBar.setText("server", ConnectionInterface.getInstance().getServerName());
 				}
 			}
 			if (cce.CONNECTION_CLOSED) {
-				ConnectionInterface cci = (ConnectionInterface) cce.getSource();
-				if (this.aContext.getConnectionInterface().equals(cci)) {
+//				ConnectionInterface cci = (ConnectionInterface) cce.getSource();
+//				if (this.aContext.getConnectionInterface().equals(cci)) 
+				{
 					this.statusBar.setText("status", LangModel.getString("statusError"));
 					this.statusBar.setText("server", LangModel.getString("statusConnectionError"));
 
@@ -296,8 +298,9 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 				}
 			}
 			if (cce.CONNECTION_FAILED) {
-				ConnectionInterface cci = (ConnectionInterface) cce.getSource();
-				if (this.aContext.getConnectionInterface().equals(cci)) {
+//				ConnectionInterface cci = (ConnectionInterface) cce.getSource();
+//				if (this.aContext.getConnectionInterface().equals(cci))
+				{
 					this.statusBar.setText("status", LangModel.getString("statusError"));
 					this.statusBar.setText("server", LangModel.getString("statusConnectionError"));
 
@@ -379,9 +382,7 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		aModel.fireModelChanged("");
 
 		try {
-			RISDSessionInfo sessionInterface = (RISDSessionInfo) this.aContext.getSessionInterface();
-			Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(sessionInterface
-					.getDomainIdentifier(), true);
+			Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(LoginManager.getDomainId(), true);
 			this.statusBar.setText("domain", domain.getName());
 		} catch (ApplicationException e) {
 			SchedulerModel.showErrorMessage(this, e);
@@ -430,8 +431,6 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		// this.checker = new
 		// Checker(aContext.getDataSourceInterface());
 
-		DataSourceInterface dataSource = this.aContext.getDataSource();
-
 		this.aContext.getDispatcher().notify(
 			new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, LangModelSchedule.getString("Loading_DB")));
 		// new SurveyDataSourceImage(dataSource).LoadParameterTypes();
@@ -456,8 +455,8 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_SESSION_DOMAIN, true);
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_SESSION_NEW, false);
 		aModel.fireModelChanged("");
-		String domainId = this.aContext.getSessionInterface().getDomainId();
-		if (domainId != null && !domainId.equals(""))
+		Identifier domainId = LoginManager.getDomainId();
+		if (domainId != null && !domainId.isVoid())
 			this.dispatcher.notify(new ContextChangeEvent(domainId, ContextChangeEvent.DOMAIN_SELECTED_EVENT));
 	}
 
@@ -566,7 +565,7 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		Dispatcher dispatcher = Environment.getDispatcher();
 		dispatcher.register(this, ContextChangeEvent.type);
 
-		aModel.setCommand(ScheduleMainMenuBar.MENU_SESSION_NEW, new SessionOpenCommand(dispatcher, this.aContext));
+		aModel.setCommand(ScheduleMainMenuBar.MENU_SESSION_NEW, new OpenSessionCommand(dispatcher, this.aContext));
 		aModel.setCommand(ScheduleMainMenuBar.MENU_SESSION_CLOSE, new SessionCloseCommand(dispatcher, this.aContext));
 		aModel.setCommand(ScheduleMainMenuBar.MENU_SESSION_OPTIONS, new SessionOptionsCommand(this.aContext));
 		aModel.setCommand(ScheduleMainMenuBar.MENU_SESSION_CONNECTION, new SessionConnectionCommand(dispatcher,
@@ -599,21 +598,21 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 
 		aModel.fireModelChanged("");
 
-		ConnectionInterface connectionInterface = ConnectionInterface.getInstance();
-		if (connectionInterface != null) {
-			if (connectionInterface.isConnected())
-				this.dispatcher.notify(new ContextChangeEvent(connectionInterface,
-																ContextChangeEvent.CONNECTION_OPENED_EVENT));
-		}
-		if (SessionInterface.getActiveSession() != null) {
-			this.aContext.setSessionInterface(SessionInterface.getActiveSession());
-			if (this.aContext.getSessionInterface().isOpened())
-				this.dispatcher.notify(new ContextChangeEvent(this.aContext.getSessionInterface(),
-																ContextChangeEvent.SESSION_OPENED_EVENT));
-		} else {
-			this.aContext.setSessionInterface(Environment.getDefaultSessionInterface(connectionInterface));
-			SessionInterface.setActiveSession(this.aContext.getSessionInterface());
-		}
+//		ConnectionInterface connectionInterface = ConnectionInterface.getInstance();
+//		if (connectionInterface != null) {
+//			if (connectionInterface.isConnected())
+//				this.dispatcher.notify(new ContextChangeEvent(connectionInterface,
+//																ContextChangeEvent.CONNECTION_OPENED_EVENT));
+//		}
+//		if (SessionInterface.getActiveSession() != null) {
+//			this.aContext.setSessionInterface(SessionInterface.getActiveSession());
+//			if (this.aContext.getSessionInterface().isOpened())
+//				this.dispatcher.notify(new ContextChangeEvent(this.aContext.getSessionInterface(),
+//																ContextChangeEvent.SESSION_OPENED_EVENT));
+//		} else {
+//			this.aContext.setSessionInterface(Environment.getDefaultSessionInterface(connectionInterface));
+//			SessionInterface.setActiveSession(this.aContext.getSessionInterface());
+//		}
 	}
 
 	private Command getLazyCommand(final Object key) {

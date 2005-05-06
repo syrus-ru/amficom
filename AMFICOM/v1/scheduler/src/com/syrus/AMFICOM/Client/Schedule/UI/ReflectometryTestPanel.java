@@ -29,7 +29,6 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
@@ -48,6 +47,7 @@ import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.ParameterType;
@@ -65,9 +65,10 @@ import com.syrus.AMFICOM.measurement.SetParameter;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.corba.SetSort;
 import com.syrus.util.ByteArray;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/04/15 17:07:34 $
+ * @version $Revision: 1.23 $, $Date: 2005/05/06 11:44:24 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -274,11 +275,10 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 
 			params[5] = SetParameter.createInstance(this.scansParameterType, byteArray.getBytes());
 
-			RISDSessionInfo sessionInterface = (RISDSessionInfo) this.aContext.getSessionInterface();
 			if (this.meId == null)
 				throw new IllegalArgumentException(LangModelSchedule.getString("Have not choosen Measurement element"));
 
-			set = Set.createInstance(sessionInterface.getUserIdentifier(), SetSort.SET_SORT_MEASUREMENT_PARAMETERS,
+			set = Set.createInstance(LoginManager.getUserId(), SetSort.SET_SORT_MEASUREMENT_PARAMETERS,
 				"Set created by Scheduler", params, Collections.singleton(this.meId));
 			MeasurementStorableObjectPool.putStorableObject(set);
 
@@ -495,6 +495,9 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 					+ CharacteristicTypeCodenames.TRACE_PULSE_WIDTH_SUFFIX + "|"
 					+ CharacteristicTypeCodenames.TRACE_INDEX_OF_REFRACTION_SUFFIX + "|"
 					+ CharacteristicTypeCodenames.TRACE_AVERAGE_COUNT_SUFFIX + ")");
+			
+			Log.debugMessage("ReflectometryTestPanel.setMonitoredElementId | characteristics.size() " + characteristics.size(), Log.FINEST);
+			
 			for (Iterator it = characteristics.iterator(); it.hasNext();) {
 				System.out.println();
 				Characteristic characteristic = (Characteristic) it.next();
@@ -571,7 +574,8 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 				}
 			}
 
-			String wavelength = this.waveLengthComboBox.getSelectedItem().toString();
+			Object selectedItem = this.waveLengthComboBox.getSelectedItem();
+			String wavelength = selectedItem != null ? this.waveLengthComboBox.getSelectedItem().toString() : null;
 			if (wavelength != null) {
 				System.out.println("wavelength is " + wavelength);
 				{
@@ -609,6 +613,8 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 					for (int i = 0; i < values.length; i++)
 						this.averageQuantityComboBox.addItem(values[i]);
 				}
+			} else {
+				System.err.println("selectedItem of waveLengthComboBox is null");
 			}
 
 		} catch (ApplicationException ae) {

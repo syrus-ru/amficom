@@ -19,8 +19,6 @@ import java.util.LinkedList;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
-import com.syrus.AMFICOM.Client.General.SessionInterface;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
@@ -30,8 +28,6 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeModel;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.RISDDataSource;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.Client.Schedule.item.MeasurementTypeChildrenFactory;
 import com.syrus.AMFICOM.Client.Schedule.item.MeasurementTypeItem;
@@ -46,6 +42,7 @@ import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.TypicalCondition;
@@ -118,8 +115,6 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 	private MeasurementSetup			measurementSetup				= null;
 	private TestReturnType				returnType						= null;
 	private TestTemporalStamps			testTimeStamps					= null;
-
-	private DataSourceInterface			dataSourceInterface;
 
 	/**
 	 * @TODO recast using alpha
@@ -201,21 +196,6 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 
 	}
 
-	public DataSourceInterface getDataSource(SessionInterface si) {
-		/**
-		 * TODO remove when will enable again
-		 */
-		// String connection = Environment.getConnectionType();
-		// if (connection.equals("RISD"))
-		// return new RISDSurveyDataSource(si);
-		// else if (connection.equals("Empty"))
-		// return new EmptySurveyDataSource(si);
-		// if (this.dataSourceInterface == null)
-		this.dataSourceInterface = new RISDDataSource(si);
-		return this.dataSourceInterface;
-		// return null;
-	}
-
 	/**
 	 * @return saved tests
 	 */
@@ -255,8 +235,6 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 	}
 
 	private void refreshEditors() throws ApplicationException {
-		RISDSessionInfo sessionInterface = (RISDSessionInfo) this.aContext.getSessionInterface();
-
 		Collection temporalPatterns = MeasurementStorableObjectPool.getStorableObjectsByCondition(
 			new EquivalentCondition(ObjectEntities.CRONTEMPORALPATTERN_ENTITY_CODE), true);
 		this.testTemporalStampsEditor.setTemporalPatterns(temporalPatterns);
@@ -279,8 +257,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 				MeasurementType measurementType1 = (MeasurementType) iter.next();
 				MeasurementTypeItem measurementTypeItem = new MeasurementTypeItem(measurementType1.getId());
 				measurementTypeItems.add(measurementTypeItem);
-				measurementTypeItem.setChildrenFactory(new MeasurementTypeChildrenFactory(sessionInterface
-						.getDomainIdentifier()));
+				measurementTypeItem.setChildrenFactory(new MeasurementTypeChildrenFactory(LoginManager.getDomainId()));
 			}
 
 			this.elementsViewer.setElements(measurementTypeItems);
@@ -418,9 +395,6 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		// this.setCursor(UIStorage.WAIT_CURSOR);
 		this.dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, LangModelSchedule
 				.getString("Updating tests from DB"))); //$NON-NLS-1$
-		DataSourceInterface dsi = this.aContext.getDataSource();
-		if (dsi == null)
-			return;
 
 		ConfigurationStorableObjectPool.refresh();
 		MeasurementStorableObjectPool.refresh();
@@ -590,9 +564,8 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 			if (this.measurementSetup == null) {
 				if (this.set == null)
 					return;
-				RISDSessionInfo sessionInterface = (RISDSessionInfo) this.aContext.getSessionInterface();
 				try {
-					this.measurementSetup = MeasurementSetup.createInstance(sessionInterface.getUserIdentifier(),
+					this.measurementSetup = MeasurementSetup.createInstance(LoginManager.getUserId(),
 						this.set, null, null, null, LangModelSchedule.getString("created by Scheduler") + " /"
 								+ sdf.format(new Date()) + "/", 1000 * 60 * 10, Collections
 								.singleton(this.monitoredElement.getId()), Collections.singleton(this.measurementType
@@ -615,7 +588,6 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 
 			}
 			measurementSetupIds = Collections.singleton(this.measurementSetup.getId());
-			Identifier modifierId = ((RISDSessionInfo) this.aContext.getSessionInterface()).getUserIdentifier();
 
 			Date startTime = this.testTimeStamps.getStartTime();
 			Date endTime = this.testTimeStamps.getEndTime();
@@ -623,7 +595,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 			AbstractTemporalPattern temporalPattern = this.testTimeStamps.getTemporalPattern();
 			if (test == null) {
 				try {
-					test = Test.createInstance(modifierId, startTime, endTime, temporalPattern == null ? null
+					test = Test.createInstance(LoginManager.getUserId(), startTime, endTime, temporalPattern == null ? null
 							: temporalPattern.getId(), temporalType, this.measurementType.getId(),
 						this.analysisType == null ? null : this.analysisType.getId(), this.evaluationType == null
 								? null : this.evaluationType.getId(), this.monitoredElement, this.returnType, sdf
@@ -638,7 +610,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 				this.tests.add(test);
 			} else {
 				test.setAttributes(test.getCreated(), new Date(System.currentTimeMillis()), test.getCreatorId(),
-					modifierId, test.getVersion(), temporalType.value(), startTime, endTime, temporalPattern == null
+					LoginManager.getUserId(), test.getVersion(), temporalType.value(), startTime, endTime, temporalPattern == null
 							? null : temporalPattern.getId(), this.measurementType.getId(), this.analysisType == null
 							? null : this.analysisType.getId(), this.evaluationType == null ? null
 							: this.evaluationType.getId(), test.getStatus().value(), this.monitoredElement,

@@ -35,7 +35,6 @@ import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
@@ -58,6 +57,7 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.OperationSort;
@@ -540,9 +540,8 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 
 				public void actionPerformed(ActionEvent e) {
 						if (TimeParametersPanel.this.temporalStamps == null) {
-							RISDSessionInfo sessionInterface = (RISDSessionInfo) TimeParametersPanel.this.aContext.getSessionInterface();
 							try {
-								IntervalsTemporalPattern intervalsTemporalPattern = IntervalsTemporalPattern.createInstance(sessionInterface.getUserIdentifier(), null, null);
+								IntervalsTemporalPattern intervalsTemporalPattern = IntervalsTemporalPattern.createInstance(LoginManager.getUserId(), null, null);
 								MeasurementStorableObjectPool.putStorableObject(intervalsTemporalPattern);
 								TimeParametersPanel.this.temporalStamps = new TestTemporalStamps(TestTemporalType.TEST_TEMPORAL_TYPE_PERIODICAL, getStartDate(), getEndDate(), intervalsTemporalPattern);
 							} catch (IllegalObjectEntityException e1) {
@@ -610,9 +609,7 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 						return ;
 					}
 
-					RISDSessionInfo sessionInterface = (RISDSessionInfo) TimeParametersPanel.this.aContext
-							.getSessionInterface();
-					Identifier userIdentifier = sessionInterface.getUserIdentifier();
+					Identifier userIdentifier = LoginManager.getUserId();
 
 					if (TimeParametersPanel.this.temporalStamps == null) {
 
@@ -828,9 +825,8 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 				}
 				
 				if (temporalPattern == null) {
-					RISDSessionInfo sessionInterface = (RISDSessionInfo) this.aContext.getSessionInterface();
 					try {
-						temporalPattern = PeriodicalTemporalPattern.createInstance(sessionInterface.getUserIdentifier(), intervalLength);
+						temporalPattern = PeriodicalTemporalPattern.createInstance(LoginManager.getUserId(), intervalLength);
 					} catch (CreateObjectException e) {
 						SchedulerModel.showErrorMessage(this, e);
 						return null;
