@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.34 2005/05/06 12:28:09 bob Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.35 2005/05/06 12:29:33 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/05/06 12:28:09 $
+ * @version $Revision: 1.35 $, $Date: 2005/05/06 12:29:33 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -276,7 +276,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 									testNumberOfMeasurements++;
 								}
 							}
-							if (test != null && testNumberOfMeasurements < test.getNumberOfMeasurements())
+							if (test != null || testNumberOfMeasurements < test.getNumberOfMeasurements())
 								return true;
 						}
 						return false;

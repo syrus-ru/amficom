@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupWrapper.java,v 1.11 2005/05/06 10:48:22 bob Exp $
+ * $Id: MeasurementSetupWrapper.java,v 1.12 2005/05/06 12:28:10 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,10 +18,11 @@ import com.syrus.AMFICOM.general.CharacteristicTypeCodenames;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/05/06 10:48:22 $
+ * @version $Revision: 1.12 $, $Date: 2005/05/06 12:28:10 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -98,6 +99,8 @@ public class MeasurementSetupWrapper extends StorableObjectWrapper {
 	}
 	
 	private void addSetParameterInfo(StringBuffer buffer, String title, SetParameter[] parameters) {
+		if (parameters.length == 0)
+			return;
 		buffer.append(title);
 		buffer.append('\n');
 		for (int i = 0; i < parameters.length; i++) {				
@@ -132,15 +135,15 @@ public class MeasurementSetupWrapper extends StorableObjectWrapper {
 		Set etalon = measurementSetup.getEtalon();
 		StringBuffer buffer = new StringBuffer();
 		if (parameterSet != null) {
-			this.addSetParameterInfo(buffer, "Measurement parameters:",  parameterSet.getParameters());
+			this.addSetParameterInfo(buffer, LangModelMeasurement.getString("Measurement parameters") + ':',  parameterSet.getParameters());
 		}
 		
 		if (criteriaSet != null) {
-			this.addSetParameterInfo(buffer, "Criteria parameters:",  criteriaSet.getParameters());
+			this.addSetParameterInfo(buffer, LangModelMeasurement.getString("Criteria parameters") + ':',  criteriaSet.getParameters());
 		}
 		
 		if (etalon != null) {
-			this.addSetParameterInfo(buffer, "Etalon parameters:",  etalon.getParameters());			
+			this.addSetParameterInfo(buffer, LangModelMeasurement.getString("Etalon parameters") + ':',  etalon.getParameters());			
 		}
 
 		return buffer.toString();

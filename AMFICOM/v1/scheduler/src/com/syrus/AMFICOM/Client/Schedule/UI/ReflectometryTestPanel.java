@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -52,6 +53,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.ParameterTypeCodenames;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
@@ -68,7 +70,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/05/06 11:44:24 $
+ * @version $Revision: 1.24 $, $Date: 2005/05/06 12:27:37 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -341,9 +343,21 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 		conditions.add(indexOfRefractionCondition);
 		conditions.add(averageCountCondition);
 
-		CompoundCondition compoundCondition = new CompoundCondition(conditions, CompoundConditionSort.OR);
+//		CompoundCondition compoundCondition = new CompoundCondition(conditions, CompoundConditionSort.OR);
 
-		Collection parameterTypes = GeneralStorableObjectPool.getStorableObjectsByCondition(compoundCondition, true);
+		Collection parameterTypes = 
+			new ArrayList(6);
+		for (Iterator iterator = conditions.iterator(); iterator.hasNext();) {
+			StorableObjectCondition condition
+			= (StorableObjectCondition) iterator.next();
+			
+			java.util.Set storableObjectsByCondition = GeneralStorableObjectPool.getStorableObjectsByCondition(condition, true);
+			if (storableObjectsByCondition.isEmpty())
+				throw new IllegalArgumentException("Cannot find parameter type ");
+			parameterTypes.add(storableObjectsByCondition.iterator().next());
+			
+		}
+//		GeneralStorableObjectPool.getStorableObjectsByCondition(compoundCondition, true);
 
 		for (Iterator iter = parameterTypes.iterator(); iter.hasNext();) {
 			ParameterType parameterType = (ParameterType) iter.next();

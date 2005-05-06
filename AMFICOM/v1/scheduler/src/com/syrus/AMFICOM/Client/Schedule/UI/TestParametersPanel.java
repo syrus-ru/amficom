@@ -276,7 +276,7 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 								SetParameter[] setParameters = criteriaSet.getParameters();
 								java.util.Set set = new HashSet(setParameters.length);
 								for (int i = 0; i < setParameters.length; i++)
-									set.add(setParameters[i].getId());
+									set.add(setParameters[i].getType().getId());
 								if (!set.isEmpty()) {
 									linkedIdsCondition = new LinkedIdsCondition(set,
 																				ObjectEntities.ANALYSISTYPE_ENTITY_CODE);
@@ -300,7 +300,7 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 								SetParameter[] setParameters = thresholdSet.getParameters();
 								java.util.Set set = new HashSet(setParameters.length);
 								for (int i = 0; i < setParameters.length; i++)
-									set.add(setParameters[i].getId());
+									set.add(setParameters[i].getType().getId());
 								if (!set.isEmpty()) {
 									if (linkedIdsCondition == null) {
 										linkedIdsCondition = new LinkedIdsCondition(
