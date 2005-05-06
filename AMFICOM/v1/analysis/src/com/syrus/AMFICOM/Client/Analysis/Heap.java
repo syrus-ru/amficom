@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.57 2005/05/06 08:49:26 saa Exp $
+ * $Id: Heap.java,v 1.58 2005/05/06 11:27:41 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -65,7 +65,7 @@ import com.syrus.io.BellcoreStructure;
  * Фактически, primaryMTAE - это часть refAnalysisPrimary.
  * 
  * @author $Author: saa $
- * @version $Revision: 1.57 $, $Date: 2005/05/06 08:49:26 $
+ * @version $Revision: 1.58 $, $Date: 2005/05/06 11:27:41 $
  * @module
  */
 public class Heap
@@ -155,7 +155,10 @@ public class Heap
     }
 
     public static void setBSEtalonTrace(BellcoreStructure etalonTrace) {
-        bsHash.put(ETALON_TRACE_KEY, etalonTrace);
+        if (etalonTrace != null)
+            bsHash.put(ETALON_TRACE_KEY, etalonTrace);
+        else
+            bsHash.remove(ETALON_TRACE_KEY);
     }
 
     public static BellcoreStructure getBSReferenceTrace() {
@@ -336,7 +339,7 @@ public class Heap
     }
     private static void setMTMBackupEtalon(ModelTraceManager etalonMTM) {
         try {
-            Heap.backupEtalonMTM = (ModelTraceManager)etalonMTM.clone();
+            Heap.backupEtalonMTM = etalonMTM == null ? null : (ModelTraceManager)etalonMTM.clone();
         } catch (CloneNotSupportedException e) {
             throw new InternalError(e.getMessage());
         }
