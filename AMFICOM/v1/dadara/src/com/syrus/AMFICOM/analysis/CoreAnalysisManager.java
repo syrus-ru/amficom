@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.64 2005/05/06 07:14:11 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.65 2005/05/06 15:16:44 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.64 $, $Date: 2005/05/06 07:14:11 $
+ * @version $Revision: 1.65 $, $Date: 2005/05/06 15:16:44 $
  * @module
  */
 
@@ -282,10 +282,12 @@ public class CoreAnalysisManager
 		TracesAverages res = new TracesAverages();
 		res.nTraces = N_TRACES;
 
+        System.err.println("N_TRACES: " + N_TRACES);
 		for (Iterator it = bsColl.iterator(); it.hasNext(); isFirst = false)
 		{
 			BellcoreStructure bs = (BellcoreStructure)it.next();
 
+            System.err.println("  bs = " + bs);
 			// general info
 		    double[] yCur = bs.getTraceData(); // is rather slow, typ. 25% of loop time
 		    int curLength = calcTraceLength(yCur);
@@ -395,7 +397,9 @@ public class CoreAnalysisManager
 
 		if (nReflSize > 3 * reflSize / 5)
 			nReflSize = 3 * reflSize / 5;
-		reflSize *= 5;
+		reflSize *= 15;
+        if (reflSize < 300) // FIXME!
+            reflSize = 300;
 
 		long t1 = System.currentTimeMillis();
 
