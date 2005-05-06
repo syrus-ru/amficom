@@ -807,8 +807,11 @@ public class AnalyseMainFrame extends JFrame implements BsHashChangeListener,
 		aModel.setEnabled("menuSessionDomain", true);
 		aModel.setEnabled("menuSessionNew", false);
 		aModel.fireModelChanged("");
-		internalDispatcher.notify(new ContextChangeEvent(LoginManager.getDomainId(),
-				ContextChangeEvent.DOMAIN_SELECTED_EVENT));
+        Identifier domainId = LoginManager.getDomainId();
+        if (domainId != null && !domainId.isVoid()) {
+            internalDispatcher.notify(new ContextChangeEvent(LoginManager
+                    .getDomainId(), ContextChangeEvent.DOMAIN_SELECTED_EVENT));
+        }
 	}
 
 	public void setSessionClosed()

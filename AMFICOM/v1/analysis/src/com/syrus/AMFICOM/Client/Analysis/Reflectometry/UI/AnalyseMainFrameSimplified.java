@@ -427,7 +427,11 @@ implements BsHashChangeListener, OperationListener, EtalonMTMListener, CurrentTr
 		aModel.setEnabled("menuSessionDomain", true);
 		aModel.setEnabled("menuSessionNew", false);
 		aModel.fireModelChanged("");
-		internal_dispatcher.notify(new ContextChangeEvent(LoginManager.getDomainId(), ContextChangeEvent.DOMAIN_SELECTED_EVENT));
+        Identifier domainId = LoginManager.getDomainId();
+        if (domainId != null && !domainId.isVoid()) {
+            internal_dispatcher.notify(new ContextChangeEvent(LoginManager
+                    .getDomainId(), ContextChangeEvent.DOMAIN_SELECTED_EVENT));
+        }
 	}
 
 	public void setDomainSelected()
