@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.112 2005/04/15 19:22:19 arseniy Exp $
+ * $Id: Test.java,v 1.113 2005/05/06 10:48:22 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,8 +45,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.112 $, $Date: 2005/04/15 19:22:19 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.113 $, $Date: 2005/05/06 10:48:22 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -288,6 +288,13 @@ public class Test extends StorableObject {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	protected boolean isValid() {
+		Log.debugMessage("Test.isValid | super.isValid():" + super.isValid(), Log.FINEST);
+		Log.debugMessage("Test.isValid | this.timeStamps != null && this.timeStamps.isValid(): " +  (this.timeStamps != null && this.timeStamps.isValid()), Log.FINEST);
+		Log.debugMessage("Test.isValid | this.measurementTypeId != null " + (this.measurementTypeId != null), Log.FINEST);
+		Log.debugMessage("Test.isValid | this.monitoredElement != null " + (this.monitoredElement != null), Log.FINEST);
+		Log.debugMessage("Test.isValid | this.description != null " + (this.description != null), Log.FINEST);
+		Log.debugMessage("Test.isValid | this.measurementSetupIds != null && !this.measurementSetupIds.isEmpty() " + (this.measurementSetupIds != null && !this.measurementSetupIds.isEmpty()), Log.FINEST);
+		Log.debugMessage("Test.isValid | this.mainMeasurementSetup != null " + (this.mainMeasurementSetup != null), Log.FINEST);
 		return super.isValid() && this.timeStamps != null && this.timeStamps.isValid() && this.measurementTypeId != null && this.monitoredElement != null
 			&& this.description != null && this.measurementSetupIds != null && !this.measurementSetupIds.isEmpty() && this.mainMeasurementSetup != null;
 	}

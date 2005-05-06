@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupWrapper.java,v 1.10 2005/04/13 10:02:44 arseniy Exp $
+ * $Id: MeasurementSetupWrapper.java,v 1.11 2005/05/06 10:48:22 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,10 +18,11 @@ import com.syrus.AMFICOM.general.CharacteristicTypeCodenames;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/04/13 10:02:44 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2005/05/06 10:48:22 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 public class MeasurementSetupWrapper extends StorableObjectWrapper {
@@ -105,10 +106,13 @@ public class MeasurementSetupWrapper extends StorableObjectWrapper {
 				ParameterType parameterType = (ParameterType) parameters[i].getType();
 				buffer.append(parameterType.getDescription() + ':' + string);
 				java.util.Set characteristics = parameterType.getCharacteristics();
+				Log.debugMessage("MeasurementSetupWrapper.addSetParameterInfo | ParameterType " + parameterType.getId() + ", "
+					+ parameterType.getCodename() + ", characteristics size:" + characteristics.size(), Log.FINEST);
 				if (!characteristics.isEmpty()) {
 					for (Iterator it = characteristics.iterator(); it.hasNext();) {
 						Characteristic characteristic = (Characteristic) it.next();
 						StorableObjectType type = characteristic.getType();
+						Log.debugMessage("MeasurementSetupWrapper.addSetParameterInfo | characteristic type codename " + type.getCodename(), Log.FINEST);
 						if (type.getCodename().startsWith(CharacteristicTypeCodenames.UNITS_PREFIX)) {
 							buffer.append(' ' + characteristic.getValue());
 							/* TODO check for all codename ?*/

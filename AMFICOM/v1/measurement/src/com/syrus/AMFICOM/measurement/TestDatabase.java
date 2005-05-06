@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.89 2005/04/12 17:03:29 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.90 2005/05/06 10:48:22 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,8 +45,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.89 $, $Date: 2005/04/12 17:03:29 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.90 $, $Date: 2005/05/06 10:48:22 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -475,8 +475,9 @@ public class TestDatabase extends StorableObjectDatabase {
 	}
 
 	private void updateMeasurementSetupIds(java.util.Set tests) throws IllegalDataException, UpdateObjectException {
-		if (tests == null || tests.isEmpty())
+		if (tests == null || tests.isEmpty()) {
 			return;
+		}
 
 		Map measurementSetupIdsMap = new HashMap();
 		Test test;

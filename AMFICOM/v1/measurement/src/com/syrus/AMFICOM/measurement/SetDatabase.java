@@ -1,5 +1,5 @@
 /*
- * $Id: SetDatabase.java,v 1.83 2005/04/12 19:40:36 arseniy Exp $
+ * $Id: SetDatabase.java,v 1.84 2005/05/06 10:48:22 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,8 +41,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.83 $, $Date: 2005/04/12 19:40:36 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.84 $, $Date: 2005/05/06 10:48:22 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -231,10 +231,14 @@ public class SetDatabase extends StorableObjectDatabase {
 	}
 
 	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
+		Log.debugMessage("SetDatabase.insert | 1 ", Log.DEBUGLEVEL01);
 		Set set = this.fromStorableObject(storableObject);
 		try {
+			Log.debugMessage("SetDatabase.insert | before insertEntity ", Log.DEBUGLEVEL01);
 			this.insertEntity(set);
+			Log.debugMessage("SetDatabase.insert | before insertSetParameters ", Log.DEBUGLEVEL01);
 			this.insertSetParameters(set);
+			Log.debugMessage("SetDatabase.insert | after insertSetParameters ", Log.DEBUGLEVEL01);
 			this.updateSetMELinks(Collections.singleton(set));
 		}
 		catch (CreateObjectException coe) {
@@ -248,6 +252,7 @@ public class SetDatabase extends StorableObjectDatabase {
 	}
 
 	public void insert(java.util.Set storableObjects) throws IllegalDataException, CreateObjectException {
+		Log.debugMessage("SetDatabase.insert | many ", Log.DEBUGLEVEL01);
 		this.insertEntities(storableObjects);
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 			Set set = this.fromStorableObject((StorableObject) it.next());
@@ -262,8 +267,10 @@ public class SetDatabase extends StorableObjectDatabase {
 	}
 
 	private void insertSetParameters(Set set) throws CreateObjectException {
-		Identifier setId = set.getId();
+		Log.debugMessage("SetDatabase.insertSetParameters | ", Log.DEBUGLEVEL01);
+		Identifier setId = set.getId();		
 		SetParameter[] setParameters = set.getParameters();
+		Log.debugMessage("SetDatabase.insertSetParameters | setParameters count:" + setParameters.length, Log.DEBUGLEVEL01);
 		String sql = SQL_INSERT_INTO 
 			+ ObjectEntities.SETPARAMETER_ENTITY
 			+ OPEN_BRACKET
@@ -277,6 +284,7 @@ public class SetDatabase extends StorableObjectDatabase {
 			+ QUESTION + COMMA
 			+ QUESTION + COMMA
 			+ SQL_FUNCTION_EMPTY_BLOB + CLOSE_BRACKET;
+		Log.debugMessage("SetDatabase.insertSetParameters | try:" + sql, Log.DEBUGLEVEL01);
 		PreparedStatement preparedStatement = null;
 		Identifier parameterId = null;
 		Identifier parameterTypeId = null;
