@@ -10,6 +10,7 @@ import com.syrus.AMFICOM.Client.General.Model.AnalyseApplicationModelFactory;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Model.ReflectometryAnalyseApplicationModelFactory;
+import com.syrus.util.Application;
 
 public class AnalyseExt
 {
@@ -28,6 +29,7 @@ public class AnalyseExt
 
 	public static void main(String[] args)
 	{
+        Application.init(Analyse.APPLICATION_NAME);
 		new AnalyseExt(new ReflectometryAnalyseApplicationModelFactory());
 	}
 }
