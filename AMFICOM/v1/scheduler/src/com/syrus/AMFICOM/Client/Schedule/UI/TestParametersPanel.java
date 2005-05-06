@@ -103,6 +103,8 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 	private Dispatcher			dispatcher;
 
 	private JRadioButton		patternRadioButton;
+	
+	private MeasurementSetup measurementSetup;
 
 	// private Test test;
 //	private JCheckBox			usePatternsWithAnalysisBox;
@@ -235,7 +237,7 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 			public void mouseClicked(MouseEvent e) {
 				if (SwingUtilities.isRightMouseButton(e)) {
 					final ObjList objList = (ObjList) e.getSource();
-					final MeasurementSetup measurementSetup = (MeasurementSetup) objList.getSelectedValue();
+					final MeasurementSetup measurementSetup1 = (MeasurementSetup) objList.getSelectedValue();
 					final JMenuItem deleteTestMenuItem = new JMenuItem("Show Measurement setup summary info");
 					final JPopupMenu popup = new JPopupMenu();
 					popup.add(deleteTestMenuItem);
@@ -245,7 +247,7 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 
 						public void actionPerformed(ActionEvent e) {
 							MeasurementSetupWrapper wrapper = MeasurementSetupWrapper.getInstance();
-							String info = (String) wrapper.getValue(measurementSetup,
+							String info = (String) wrapper.getValue(measurementSetup1,
 								MeasurementSetupWrapper.SUMMARY_INFO);
 							JOptionPane.showConfirmDialog(objList, info, "Measurement setup summary info",
 								JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE);
@@ -263,16 +265,16 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 			public void valueChanged(ListSelectionEvent e) {
 				// if (e.getStateChange() == ItemEvent.SELECTED)
 				// {
-				MeasurementSetup measurementSetup = (MeasurementSetup) TestParametersPanel.this.testSetups
+				MeasurementSetup measurementSetup1 = (MeasurementSetup) TestParametersPanel.this.testSetups
 						.getSelectedValue();
-				if (measurementSetup != null) {
+				if (measurementSetup1 != null) {
 					TestParametersPanel.this.useAnalysisBox.setEnabled(true);
 					try {
 						TestParametersPanel.this.analysisComboBox.removeAll();
 
 						LinkedIdsCondition linkedIdsCondition = null;
 						{
-							Set criteriaSet = measurementSetup.getCriteriaSet();
+							Set criteriaSet = measurementSetup1.getCriteriaSet();
 							if (criteriaSet != null) {
 								SetParameter[] setParameters = criteriaSet.getParameters();
 								java.util.Set set = new HashSet(setParameters.length);
@@ -296,7 +298,7 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 
 						TestParametersPanel.this.evaluationComboBox.removeAll();
 						{
-							Set thresholdSet = measurementSetup.getThresholdSet();
+							Set thresholdSet = measurementSetup1.getThresholdSet();
 							if (thresholdSet != null) {
 								SetParameter[] setParameters = thresholdSet.getParameters();
 								java.util.Set set = new HashSet(setParameters.length);
@@ -328,7 +330,7 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 							String key = (String) it.next();
 							ParametersTestPanel panel = (ParametersTestPanel) (TestParametersPanel.this.testPanels
 									.get(key));
-							panel.setSet(measurementSetup.getParameterSet());
+							panel.setSet(measurementSetup1.getParameterSet());
 						}
 					} catch (ApplicationException ae) {
 						SchedulerModel.showErrorMessage(TestParametersPanel.this, ae);
@@ -408,10 +410,10 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 	}
 
 	public MeasurementSetup getMeasurementSetup() {
-		MeasurementSetup measurementSetup = null;
+		MeasurementSetup measurementSetup1 = null;
 		if ((this.patternRadioButton.isSelected())) {
-			measurementSetup = (MeasurementSetup) this.testSetups.getSelectedValue();
-			if (measurementSetup == null) {
+			measurementSetup1 = (MeasurementSetup) this.testSetups.getSelectedValue();
+			if (measurementSetup1 == null) {
 				JOptionPane
 						.showMessageDialog(
 							this,
@@ -419,7 +421,7 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 							JOptionPane.OK_OPTION);
 				return null;
 			}
-			return measurementSetup;
+			return measurementSetup1;
 		}
 		return null;
 	}
@@ -440,9 +442,10 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 	}
 
 	public void setMeasurementSetup(MeasurementSetup measurementSetup) {
-		Log.debugMessage("TestParametersPanel.setMeasurementSetup | measurementSetup:" + measurementSetup.getDescription(), Log.FINEST);
-//		this.updateMeasurementSetups();
-
+		this.measurementSetup = measurementSetup; 
+		if (this.msList == null)
+			return;
+		
 		if (!this.msList.contains(measurementSetup)) {
 			this.msList.add(measurementSetup);
 		}
@@ -455,6 +458,7 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 	}
 
 	public void setMeasurementSetups(Collection measurementSetups) {
+		
 		if (this.msList == null)
 			this.msList = new LinkedList();
 		else {
@@ -470,16 +474,19 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 														MeasurementSetupController.KEY_NAME, true));
 		this.testSetups.removeAll();
 		for (Iterator it = this.msList.iterator(); it.hasNext();) {
-			MeasurementSetup measurementSetup = (MeasurementSetup) it.next();
-			if (!this.useAnalysisSetups.isSelected() || measurementSetup.getCriteriaSet() != null
-					|| measurementSetup.getThresholdSet() != null || measurementSetup.getEtalon() != null)
-				((ObjListModel) this.testSetups.getModel()).addElement(measurementSetup);
+			MeasurementSetup measurementSetup1 = (MeasurementSetup) it.next();
+			if (!this.useAnalysisSetups.isSelected() || measurementSetup1.getCriteriaSet() != null
+					|| measurementSetup1.getThresholdSet() != null || measurementSetup1.getEtalon() != null)
+				((ObjListModel) this.testSetups.getModel()).addElement(measurementSetup1);
 		}
 		
 		this.testSetups.setEnabled(true);
 		this.useAnalysisSetups.setEnabled(true);
 		this.useWOAnalysisSetups.setEnabled(true);
 
+		if (this.measurementSetup != null) {
+			this.setMeasurementSetup(this.measurementSetup);
+		}
 	}
 
 	public void updateMeasurementSetups() {

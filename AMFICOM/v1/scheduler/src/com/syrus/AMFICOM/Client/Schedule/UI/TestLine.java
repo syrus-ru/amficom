@@ -391,6 +391,8 @@ public class TestLine extends TimeLine implements TestsEditor, TestEditor {
 		
 //		Log.debugMessage("TestLine.refreshTimeItems | timeItems " + timeItems.size(), Log.FINEST);
 //		Log.debugMessage("TestLine.refreshTimeItems | unsavedTestTimeItems " + unsavedTestTimeItems.size(), Log.FINEST);
+		this.repaint();
+		this.revalidate();
 	}
 
 }

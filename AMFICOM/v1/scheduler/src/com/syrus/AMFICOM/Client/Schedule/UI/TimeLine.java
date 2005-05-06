@@ -1,5 +1,5 @@
 /*-
- * $Id: TimeLine.java,v 1.2 2005/05/06 11:44:24 bob Exp $
+ * $Id: TimeLine.java,v 1.3 2005/05/06 17:06:32 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,10 +26,9 @@ import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.Client.Schedule.UI.TestLine.TestTimeItem;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/05/06 11:44:24 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/06 17:06:32 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1

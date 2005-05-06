@@ -45,7 +45,6 @@ import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicTypeCodenames;
-import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
@@ -60,7 +59,6 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.AMFICOM.general.corba.OperationSort;
-import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.CompoundConditionSort;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.Set;
@@ -71,7 +69,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/05/06 16:12:35 $
+ * @version $Revision: 1.26 $, $Date: 2005/05/06 17:06:31 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -537,13 +535,13 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 			Log.debugMessage("ReflectometryTestPanel.setMonitoredElementId | characteristics.size() " + characteristics.size(), Log.FINEST);
 			
 			for (Iterator it = characteristics.iterator(); it.hasNext();) {
-				System.out.println();
+//				System.out.println();
 				Characteristic characteristic = (Characteristic) it.next();
 				StorableObjectType type = characteristic.getType();
-				System.out.println("characteristicType is " + type.getId());
+//				System.out.println("characteristicType is " + type.getId());
 				String codename = type.getCodename();
 				String value = characteristic.getValue();
-				System.out.println("codename is '" + codename + "', value is " + value);
+//				System.out.println("codename is '" + codename + "', value is " + value);
 
 				if (codename.equals(CharacteristicTypeCodenames.TRACE_WAVELENGTH)) {
 					String[] values = value.split("\\s+");
@@ -583,7 +581,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 						String suffix = null;
 						for (int j = 0; j <= matcher.groupCount(); j++) {
 							String substring = codename.substring(matcher.start(j), matcher.end(j));
-							System.out.println("j:" + j + "\t" + substring);
+//							System.out.println("j:" + j + "\t" + substring);
 							switch (j) {
 								case 1:
 									waveLength = substring;
@@ -615,7 +613,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 			Object selectedItem = this.waveLengthComboBox.getSelectedItem();
 			String wavelength = selectedItem != null ? this.waveLengthComboBox.getSelectedItem().toString() : null;
 			if (wavelength != null) {
-				System.out.println("wavelength is " + wavelength);
+//				System.out.println("wavelength is " + wavelength);
 				{
 					String value = (String) this.traceLength.get(wavelength);
 					if (value == null)
