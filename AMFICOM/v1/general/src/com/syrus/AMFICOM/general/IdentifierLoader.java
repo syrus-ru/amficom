@@ -1,5 +1,5 @@
 /*
- * $Id: IdentifierLoader.java,v 1.5 2004/12/17 18:44:23 arseniy Exp $
+ * $Id: IdentifierLoader.java,v 1.6 2005/05/06 05:19:21 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,8 +17,8 @@ import com.syrus.util.Fifo;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/12/17 18:44:23 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/05/06 05:19:21 $
+ * @author $Author: bob $
  * @module general_v1
  */
 public class IdentifierLoader extends SleepButWorkThread {
@@ -36,7 +36,7 @@ public class IdentifierLoader extends SleepButWorkThread {
 	}
 
 	protected void processFall() {
-		Log.errorMessage("coundn't fetch ids");
+		Log.errorMessage("IdentifierLoader.processFall | coundn't fetch " + ObjectEntities.codeToString(this.entityCode) + " ids");
 	}
 
 	protected void clearFalls() {
