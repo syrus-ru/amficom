@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.56 2005/05/05 15:02:24 saa Exp $
+ * $Id: Heap.java,v 1.57 2005/05/06 08:49:26 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -65,7 +65,7 @@ import com.syrus.io.BellcoreStructure;
  * Фактически, primaryMTAE - это часть refAnalysisPrimary.
  * 
  * @author $Author: saa $
- * @version $Revision: 1.56 $, $Date: 2005/05/05 15:02:24 $
+ * @version $Revision: 1.57 $, $Date: 2005/05/06 08:49:26 $
  * @module
  */
 public class Heap
@@ -529,27 +529,17 @@ public class Heap
 
     // value of -1 means 'no event selected'
     public static void setCurrentEvent(int nEvent) {
-//    	if (nEvent < -1 || nEvent >= getNumberOfEvents())
-//    		return;
-//    	currentEv = nEvent;
         currentEvent.toEvent(nEvent);
     	notifyCurrentEventChanged();
     }
 
     public static void setCurrentEtalonEvent(int nEtEvent) {
-//    	// @todo: store a pair {currentEvent, currentEtalonEvent} instead of lossy converting etalonEvent to event 
-//    	if (refAnalysisPrimary == null || etalonMTM == null ||
-//                nEtEvent < 0 || nEtEvent >= etalonMTM.getMTAE().getNEvents()) {
-//    		setCurrentEvent(-1);
-//    		return;
-//    	}
-//    	else {
-//        	SimpleReflectogramEventComparer rcomp = new SimpleReflectogramEventComparer(
-//        	        getMTAEPrimary(),
-//        	        etalonMTM.getMTAE());
-//        	setCurrentEvent(rcomp.getProbeIdByEtalonId(nEtEvent));
-//    	}
         currentEvent.toEtalonEvent(nEtEvent);
+        notifyCurrentEventChanged();
+    }
+
+    public static void setCurrentCompositeEvent(int nEvent) {
+        currentEvent.toCompositeEvent(nEvent);
         notifyCurrentEventChanged();
     }
 
