@@ -222,7 +222,7 @@ implements BsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener
 
 		traces.add(id);
 
-        String name = "etalon"; // @todo: externalize string
+        String name = LangModelAnalyse.getString("etalon");
 
 		Log.debugMessage("TraceSelectorFrame.etalonMTMCUpdated | id is '" + id + "'; name = '" + name + "'", Log.FINEST);
 		tModel.addRow(name, new Color[] {GUIUtil.getColor(id)});
