@@ -32,6 +32,7 @@ import com.syrus.AMFICOM.Client.General.UI.FixedSizeEditableTableModel;
 import com.syrus.AMFICOM.Client.General.UI.UIGeneralStorage;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.MathRef;
+import com.syrus.AMFICOM.analysis.dadara.ModelTraceComparer;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEventComparer;
 import com.syrus.AMFICOM.analysis.dadara.events.ConnectorDetailedEvent;
@@ -147,11 +148,6 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener,
         Heap.addPrimaryRefAnalysisListener(this);
 	}
 
-	private void selectRow(int row) {
-		this.jTable.setRowSelectionInterval(row, row);
-		this.jTable.scrollRectToVisible(this.jTable.getCellRect(this.jTable.getSelectedRow(), this.jTable.getSelectedColumn(), true));
-	}
-
 	public String getReportTitle()
 	{
 		return LangModelAnalyse.getString("eventTableTitle");
@@ -161,41 +157,6 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener,
 	{
 		return tModel;
 	}
-
-	/*
-	private void setComparedWithEtalonEventsColor()
-	{
-		if(getEtalon() == null || getData() == null)
-		{
-			setNoComparedWithEtalonColor();
-			return;
-		}
-
-		int []newEvents = SimpleReflectogramEventComparer.getNewEventsList(getData(), getEtalon());
-		int []amplChengedEvents = SimpleReflectogramEventComparer.getChangedAmplitudeEventsList(getData(), getEtalon(), .5);
-		int []lossChengedEvents = SimpleReflectogramEventComparer.getChangedLossEventsList(getData(), getEtalon(), .5);
-
-		EventTableRenderer rend = (EventTableRenderer)jTable.getDefaultRenderer(Object.class);
-		rend.setNewEventsList(newEvents);
-		rend.setAmplitudeChangedEventsList(amplChengedEvents);
-		rend.setLossChangedEventsList(lossChengedEvents);
-		this.jTable.revalidate();
-		this.jTable.repaint();
-        
-        // FIXME: debug: development-time console code
-        ModelTraceComparer.compareMTAEToMTM(Heap.getMTAEPrimary(), Heap.getMTMEtalon()); // XXX: will crush if no etalon will be at this moment
-	}
-
-	private void setNoComparedWithEtalonColor()
-	{
-		EventTableRenderer rend = (EventTableRenderer)jTable.getDefaultRenderer(Object.class);
-		rend.setNewEventsList(null);
-		rend.setAmplitudeChangedEventsList(null);
-		rend.setLossChangedEventsList(null);
-		this.jTable.revalidate();
-		this.jTable.repaint();
-	}
-    */
 
 	private void jbInit() throws Exception
 	{
@@ -256,9 +217,6 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener,
 		}
 		});
 
-//		jTable.setPreferredScrollableViewportSize(new Dimension(200, 213));
-//		jTable.setMinimumSize(new Dimension(200, 213));
-
 		jTable.setDefaultRenderer(Object.class, new EventTableRenderer(jTable));
 
 		mainPanel.add(scrollPane, BorderLayout.CENTER);
@@ -284,12 +242,6 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener,
     private void updateColors() {
         this.jTable.revalidate();
         this.jTable.repaint();
-        /*
-        if (Heap.getMTMEtalon() == null)
-            setNoComparedWithEtalonColor();
-        else
-            setComparedWithEtalonEventsColor();
-        */
     }
 
 	private void setTableModel()
@@ -471,6 +423,8 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener,
 	public void etalonMTMCUpdated()
 	{
         updateColors();
+        // FIXME: debug: development-time console code
+        ModelTraceComparer.compareMTAEToMTM(Heap.getMTAEPrimary(), Heap.getMTMEtalon()); // XXX: will crush if no etalon will be at this moment
 	}
 
 	public void etalonMTMRemoved()
