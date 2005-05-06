@@ -10,5 +10,7 @@
 	<classpathentry kind="var" path="AMFICOM_HOME/lib/mserver_interface.jar"/>
 	<classpathentry kind="src" path="/event_v1"/>
 	<classpathentry kind="src" path="/admin_v1"/>
+	<classpathentry kind="src" path="/leserver_v1"/>
+	<classpathentry kind="src" path="/csbridge_v1"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
