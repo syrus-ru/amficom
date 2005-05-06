@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.140 2005/04/12 16:14:29 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.141 2005/05/06 10:48:48 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,8 +31,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.140 $, $Date: 2005/04/12 16:14:29 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.141 $, $Date: 2005/05/06 10:48:48 $
+ * @author $Author: bob $
  * @module general_v1
  */
 
@@ -930,7 +930,7 @@ public abstract class StorableObjectDatabase {
 
 		if (insertObjects != null) {
 			try {
-				this.insertEntities(insertObjects);
+				this.insert(insertObjects);
 			}
 			catch (ApplicationException ae) {
 				throw new UpdateObjectException(ae);
