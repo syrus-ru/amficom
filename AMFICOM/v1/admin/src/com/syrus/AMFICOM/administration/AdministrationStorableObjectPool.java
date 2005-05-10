@@ -1,5 +1,5 @@
 /*
- * $Id: AdministrationStorableObjectPool.java,v 1.25 2005/05/01 16:47:29 arseniy Exp $
+ * $Id: AdministrationStorableObjectPool.java,v 1.26 2005/05/10 18:57:45 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,8 +24,8 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/05/01 16:47:29 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.26 $, $Date: 2005/05/10 18:57:45 $
+ * @author $Author: bass $
  * @module administration_v1
  */
 
@@ -42,6 +42,10 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 
 	private static AdministrationObjectLoader aObjectLoader;
 	private static AdministrationStorableObjectPool instance;
+
+	{
+		registerPool(ObjectGroupEntities.ADMINISTRATION_GROUP_CODE, this);
+	}
 
 	private AdministrationStorableObjectPool() {
 		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.ADMINISTRATION_GROUP_CODE);

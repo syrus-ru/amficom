@@ -1,5 +1,5 @@
 /*
- * $Id: IdentifierPool.java,v 1.17 2005/04/27 13:59:20 arseniy Exp $
+ * $Id: IdentifierPool.java,v 1.18 2005/05/10 18:54:13 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,8 +18,8 @@ import com.syrus.util.Fifo;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/04/27 13:59:20 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.18 $, $Date: 2005/05/10 18:54:13 $
+ * @author $Author: bass $
  * @module general_v1
  */
 public class IdentifierPool {
@@ -49,7 +49,7 @@ public class IdentifierPool {
 	}
 
 	public static Identifier getGeneratedIdentifier(final short entityCode) throws IdentifierGenerationException {
-		assert ObjectEntities.codeIsValid(entityCode) : "Illegal or unknown entity code supplied: " + entityCode;
+		assert ObjectEntities.isEntityCodeValid(entityCode) : "Illegal or unknown entity code supplied: " + entityCode;
 
 		final Short entityCodeShort = new Short(entityCode);
 		Fifo fifo = (Fifo) idPoolMap.get(entityCodeShort);

@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectGroupEntities.java,v 1.13 2005/05/10 17:34:00 bass Exp $
+ * $Id: ObjectGroupEntities.java,v 1.14 2005/05/10 18:54:13 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,7 @@ import gnu.trove.TObjectShortHashMap;
 import gnu.trove.TShortObjectHashMap;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/05/10 17:34:00 $
+ * @version $Revision: 1.14 $, $Date: 2005/05/10 18:54:13 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -213,5 +213,13 @@ public final class ObjectGroupEntities {
 	
 	public static String getPackageName(final short entityCode) {
 		return "com.syrus.AMFICOM." + getGroupName(entityCode).toLowerCase().replaceAll("group$", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	}
+
+	/**
+	 * @param groupCode
+	 * @see ObjectEntities#isEntityCodeValid(short)
+	 */
+	public static boolean isGroupCodeValid(final short groupCode) {
+		return codeToString(groupCode) != null;
 	}
 }

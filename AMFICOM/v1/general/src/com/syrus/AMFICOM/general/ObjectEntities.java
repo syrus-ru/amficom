@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectEntities.java,v 1.62 2005/05/10 16:21:14 bass Exp $
+ * $Id: ObjectEntities.java,v 1.63 2005/05/10 18:54:13 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,7 @@ import gnu.trove.TObjectShortHashMap;
 import gnu.trove.TShortObjectHashMap;
 
 /**
- * @version $Revision: 1.62 $, $Date: 2005/05/10 16:21:14 $
+ * @version $Revision: 1.63 $, $Date: 2005/05/10 18:54:13 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -438,8 +438,8 @@ public final class ObjectEntities {
 		return returnValue == 0 ? UNKNOWN_ENTITY_CODE : returnValue;
 	}
 
-	public static String codeToString(final short code) {
-		final String returnValue = (String) codeNameMap.get(code);
+	public static String codeToString(final short entityCode) {
+		final String returnValue = (String) codeNameMap.get(entityCode);
 		return returnValue == null ? UNKNOWN_ENTITY : returnValue;
 	}
 
@@ -448,7 +448,11 @@ public final class ObjectEntities {
 		return codeToString(code.shortValue());
 	}
 
-	public static boolean codeIsValid(final short code) {
-		return (codeToString(code) != null);
+	/**
+	 * @param entityCode
+	 * @see ObjectGroupEntities#isGroupCodeValid(short)
+	 */
+	public static boolean isEntityCodeValid(final short entityCode) {
+		return codeToString(entityCode) != null;
 	}
 }

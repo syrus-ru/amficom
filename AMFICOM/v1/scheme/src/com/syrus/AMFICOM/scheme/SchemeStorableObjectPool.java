@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeStorableObjectPool.java,v 1.17 2005/04/27 13:53:03 arseniy Exp $
+ * $Id: SchemeStorableObjectPool.java,v 1.18 2005/05/10 18:57:46 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,8 +24,8 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.17 $, $Date: 2005/04/27 13:53:03 $
+ * @author $Author: bass $
+ * @version $Revision: 1.18 $, $Date: 2005/05/10 18:57:46 $
  * @module scheme_v1
  */
 public final class SchemeStorableObjectPool extends StorableObjectPool {
@@ -70,6 +70,10 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 
 
 	private static SchemeStorableObjectPool instance;
+
+	{
+		registerPool(ObjectGroupEntities.SCHEME_GROUP_CODE, this);
+	}
 
 	private SchemeStorableObjectPool() {
 		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.SCHEME_GROUP_CODE);

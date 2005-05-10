@@ -1,5 +1,5 @@
 /*
- * $Id: GeneralStorableObjectPool.java,v 1.23 2005/05/01 16:47:11 arseniy Exp $
+ * $Id: GeneralStorableObjectPool.java,v 1.24 2005/05/10 18:54:13 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,8 +16,8 @@ import org.omg.CORBA.portable.IDLEntity;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/05/01 16:47:11 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.24 $, $Date: 2005/05/10 18:54:13 $
+ * @author $Author: bass $
  * @module general_v1
  */
 
@@ -31,6 +31,10 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 
 	private static GeneralObjectLoader gObjectLoader;
 	private static GeneralStorableObjectPool instance;
+
+	{
+		registerPool(ObjectGroupEntities.GENERAL_GROUP_CODE, this);
+	}
 
 	private GeneralStorableObjectPool() {
 		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.GENERAL_GROUP_CODE);

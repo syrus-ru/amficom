@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.88 2005/05/01 16:48:20 arseniy Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.89 2005/05/10 18:57:45 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,8 +23,8 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.88 $, $Date: 2005/05/01 16:48:20 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.89 $, $Date: 2005/05/10 18:57:45 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -51,6 +51,10 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 
 	private static MeasurementObjectLoader mObjectLoader;
 	private static MeasurementStorableObjectPool instance;
+
+	{
+		registerPool(ObjectGroupEntities.MEASUREMENT_GROUP_CODE, this);
+	}
 
 	private MeasurementStorableObjectPool() {
 		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.MEASUREMENT_GROUP_CODE);

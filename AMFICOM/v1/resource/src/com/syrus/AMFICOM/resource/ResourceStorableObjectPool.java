@@ -1,5 +1,5 @@
 /*
- * $Id: ResourceStorableObjectPool.java,v 1.20 2005/04/27 13:51:35 arseniy Exp $
+ * $Id: ResourceStorableObjectPool.java,v 1.21 2005/05/10 18:57:45 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,8 +24,8 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.20 $, $Date: 2005/04/27 13:51:35 $
+ * @author $Author: bass $
+ * @version $Revision: 1.21 $, $Date: 2005/05/10 18:57:45 $
  * @module resource_v1
  */
 public final class ResourceStorableObjectPool extends StorableObjectPool {
@@ -37,6 +37,10 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 	private static ResourceObjectLoader	rObjectLoader;
 	private static ResourceStorableObjectPool instance;
 	
+	{
+		registerPool(ObjectGroupEntities.RESOURCE_GROUP_CODE, this);
+	}
+
 	private ResourceStorableObjectPool() {
 		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.RESOURCE_GROUP_CODE);
 	}

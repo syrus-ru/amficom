@@ -1,5 +1,5 @@
 /*
- * $Id: MapViewStorableObjectPool.java,v 1.14 2005/04/27 13:52:35 arseniy Exp $
+ * $Id: MapViewStorableObjectPool.java,v 1.15 2005/05/10 18:57:46 bass Exp $
  *
  * Copyright ? 2004 Syrus Systems.
  * ѕвиапр-жейпкаехмкл зепжф.
@@ -22,8 +22,8 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/04/27 13:52:35 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.15 $, $Date: 2005/05/10 18:57:46 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -39,6 +39,10 @@ public final class MapViewStorableObjectPool extends StorableObjectPool {
 
 	private static MapViewObjectLoader			mvObjectLoader;
 	private static MapViewStorableObjectPool	instance;
+
+	{
+		registerPool(ObjectGroupEntities.MAPVIEW_GROUP_CODE, this);
+	}
 
 	private MapViewStorableObjectPool() {
 		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.MAPVIEW_GROUP_CODE);

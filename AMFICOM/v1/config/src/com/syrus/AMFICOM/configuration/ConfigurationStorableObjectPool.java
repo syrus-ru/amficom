@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.80 2005/05/01 16:47:53 arseniy Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.81 2005/05/10 18:57:45 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,8 +24,8 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.80 $, $Date: 2005/05/01 16:47:53 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.81 $, $Date: 2005/05/10 18:57:45 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
@@ -52,6 +52,10 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 
 	private static ConfigurationObjectLoader cObjectLoader;
 	private static ConfigurationStorableObjectPool instance;
+
+	{
+		registerPool(ObjectGroupEntities.CONFIGURATION_GROUP_CODE, this);
+	}
 
 	private ConfigurationStorableObjectPool() {
 		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.CONFIGURATION_GROUP_CODE);

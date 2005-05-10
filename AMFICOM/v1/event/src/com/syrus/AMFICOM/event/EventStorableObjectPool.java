@@ -1,5 +1,5 @@
 /*
- * $Id: EventStorableObjectPool.java,v 1.23 2005/05/01 16:49:02 arseniy Exp $
+ * $Id: EventStorableObjectPool.java,v 1.24 2005/05/10 18:57:46 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,8 +24,8 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/05/01 16:49:02 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.24 $, $Date: 2005/05/10 18:57:46 $
+ * @author $Author: bass $
  * @module event_v1
  */
 
@@ -38,6 +38,10 @@ public class EventStorableObjectPool extends StorableObjectPool {
 
 	private static EventObjectLoader	eObjectLoader;
 	private static EventStorableObjectPool instance;
+
+	{
+		registerPool(ObjectGroupEntities.EVENT_GROUP_CODE, this);
+	}
 
 	private EventStorableObjectPool() {
 		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.EVENT_GROUP_CODE);

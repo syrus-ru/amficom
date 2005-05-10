@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.78 2005/05/10 16:21:57 bass Exp $
+ * $Id: StorableObjectPool.java,v 1.79 2005/05/10 18:54:13 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,9 +12,10 @@ import com.syrus.io.LRUMapSaver;
 import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
+import gnu.trove.TShortObjectHashMap;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -25,7 +26,7 @@ import java.util.Set;
 import org.omg.CORBA.portable.IDLEntity;
 
 /**
- * @version $Revision: 1.78 $, $Date: 2005/05/10 16:21:57 $
+ * @version $Revision: 1.79 $, $Date: 2005/05/10 18:54:13 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -47,6 +48,11 @@ public abstract class StorableObjectPool {
 	private Set savingObjectIds; // HashSet <Identifier>
 
 	private Set deletedIds; // Set <Identifier>
+
+	/**
+	 * A "group code" -- "pool" map to store initialized pools.
+	 */
+	private static final TShortObjectHashMap groupCodePoolMap = new TShortObjectHashMap();
 
 	public StorableObjectPool(final int objectPoolMapSize, final short selfGroupCode) {
 		this(objectPoolMapSize, selfGroupCode, LRUMap.class);
@@ -102,9 +108,8 @@ public abstract class StorableObjectPool {
 		catch (IllegalAccessException e) {
 			throw new UnsupportedOperationException(this.selfGroupName + "StorableObjectPool.addObjectPool | CacheMapClass " //$NON-NLS-1$
 					+ this.cacheMapClass.getName() + " IllegalAccessException " + e.getMessage()); //$NON-NLS-1$
-		}
-		catch (InvocationTargetException e) {
-			final Throwable cause = e.getCause();
+		} catch (final InvocationTargetException ite) {
+			final Throwable cause = ite.getCause();
 			if (cause instanceof AssertionError) {
 				final String message = cause.getMessage();
 				if (message == null)
@@ -114,7 +119,7 @@ public abstract class StorableObjectPool {
 			}
 			else
 				throw new UnsupportedOperationException(this.selfGroupName + "StorableObjectPool.addObjectPool | CacheMapClass " //$NON-NLS-1$
-						+ this.cacheMapClass.getName() + " InvocationTargetException " + e.getMessage()); //$NON-NLS-1$
+						+ this.cacheMapClass.getName() + " InvocationTargetException " + ite.getMessage()); //$NON-NLS-1$
 		}
 
 	}
@@ -458,49 +463,13 @@ public abstract class StorableObjectPool {
 	}
 
 	private StorableObject getStorableObjectExt(Identifier id, boolean useLoader) throws ApplicationException {
-		short groupCode = ObjectGroupEntities.getGroupCode(id.getMajor());
-		if (groupCode == this.selfGroupCode)
-			return this.getStorableObjectImpl(id, useLoader);
-
-		return getStorableObjectOfGroup(id, useLoader, groupCode);
-	}
-
-	protected static StorableObject getStorableObjectOfGroup(Identifier id, boolean useLoader, short groupCode)
-			throws ApplicationException {
-		final String groupName = ObjectGroupEntities.codeToString(groupCode).replaceAll("Group$", ""); //$NON-NLS-1$ //$NON-NLS-2$
-		String className = "com.syrus.AMFICOM." + groupName.toLowerCase() + "." + groupName + "StorableObjectPool"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		Class clazz;
-
-		StorableObject storableObject = null;
-		try {
-			clazz = Class.forName(className);
-			Method getStorableObjectMethod = clazz.getDeclaredMethod("getStorableObject", new Class[] {Identifier.class, boolean.class}); //$NON-NLS-1$
-			storableObject = (StorableObject) getStorableObjectMethod.invoke(null, new Object[] {id,
-					useLoader ? Boolean.TRUE : Boolean.FALSE});
-		}
-		catch (ClassNotFoundException e) {
-			Log.errorException(e);
-		}
-		catch (SecurityException e) {
-			Log.errorException(e);
-		}
-		catch (NoSuchMethodException e) {
-			Log.errorException(e);
-		}
-		catch (IllegalArgumentException e) {
-			Log.errorException(e);
-		}
-		catch (IllegalAccessException e) {
-			Log.errorException(e);
-		}
-		catch (InvocationTargetException e) {
-			Throwable cause = e.getCause();
-			if (cause instanceof ApplicationException)
-				throw (ApplicationException) cause;
-
-			Log.errorException(e);
-		}
-		return storableObject;
+		assert id != null && !id.isVoid(): ErrorMessages.NON_VOID_EXPECTED;
+		final short groupCode = ObjectGroupEntities.getGroupCode(id.getMajor());
+		assert ObjectGroupEntities.isGroupCodeValid(groupCode);
+		final StorableObjectPool pool = (StorableObjectPool) groupCodePoolMap.get(groupCode);
+		if (pool == null)
+			throw new ApplicationException("StorableObjectPool.getStorableObjectOfGroup() | The pool for group: " + ObjectGroupEntities.codeToString(groupCode) + " is not initialized"); //$NON-NLS-1$ //$NON-NLS-2$
+		return pool.getStorableObjectImpl(id, useLoader);
 	}
 
 	protected final StorableObject getStorableObjectImpl(final Identifier objectId, final boolean useLoader) throws ApplicationException {
@@ -877,5 +846,10 @@ public abstract class StorableObjectPool {
 		else
 			Log.errorMessage("StorableObjectPool.truncateObjectPoolImpl | ERROR: Object pool class '" + objectPool.getClass().getName() //$NON-NLS-1$
 					+ "' not 'StorableObjectResizableLRUMap' -- cannot truncate pool");  //$NON-NLS-1$
+	}
+
+	protected static final void registerPool(final short groupCode, final StorableObjectPool pool) {
+		assert ObjectGroupEntities.isGroupCodeValid(groupCode);
+		groupCodePoolMap.put(groupCode, pool);
 	}
 }
