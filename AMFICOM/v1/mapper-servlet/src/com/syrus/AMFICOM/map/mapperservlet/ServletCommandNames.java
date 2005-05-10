@@ -1,13 +1,14 @@
 package com.syrus.AMFICOM.map.mapperservlet;
 /**
  * @author $Author: peskovsky $
- * @version $Revision: 1.1 $, $Date: 2005/05/05 10:09:52 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/10 07:08:44 $
  * @module mapper-servlet
  */
 public class ServletCommandNames
 {
 	//Parameters for rendering image
 	public static final String COMMAND_NAME = "command";
+	public static final String USER_ID = "user_id";
 
 	//Values for parameter 	
 	public static final String CN_START_RENDER_IMAGE = "start_render";

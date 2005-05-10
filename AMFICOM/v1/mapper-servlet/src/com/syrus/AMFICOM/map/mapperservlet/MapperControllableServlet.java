@@ -5,6 +5,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletRequest;
+
+import com.mapinfo.mapj.MapJ;
+import com.mapinfo.unit.LinearUnit;
+
 import java.awt.Color;
 
 import java.io.IOException;
@@ -17,25 +21,12 @@ import java.util.Map;
 
 /**
  * @author $Author: peskovsky $
- * @version $Revision: 1.1 $, $Date: 2005/05/05 10:09:52 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/10 07:08:44 $
  * @module mapper-servlet
  */
 public class MapperControllableServlet
 	extends HttpServlet
 {
-	class State {
-		int value;
-		public State(int value) {
-			this.value = value;
-		}
-		public int getValue() {
-			return this.value;
-		}
-		public void setValue(int value) {
-			this.value = value;
-		}
-		
-	}
 	// Define constants to control various rendering options
 	public static final int NUM_OF_COLORS = 256;
 	public static final Color BACKGROUND_COLOR = Color.WHITE;
@@ -46,12 +37,6 @@ public class MapperControllableServlet
 	public static final String INIT_PARAMNAME_MAPXTREME_URL = "mapxtremeurl"; //$NON-NLS-1$
 	public static final String INIT_PARAMNAME_TODEBUG = "toDebug"; //$NON-NLS-1$	
 	
-	static final int STATE_IDLE = 0;
-	static final int STATE_RENDERING = 1;
-	static final int STATE_RENDERED = 2;
-	
-	static final String[] states = {"IDLE", "RENDERING", "RENDERED"};
-
 	// TODO: Specify the physical path to the directory containing maps.
 	// Or you can specify this value using an init parameter called 'mappath'.
 	// Include a path separator at the end.
@@ -68,9 +53,14 @@ public class MapperControllableServlet
 
 	private boolean toDebug = false;
 
-	private State state = new State(STATE_IDLE);
+//	private State state = new State(STATE_IDLE);
 	
-	private RenderingThread renderingThread = null;
+	private Map stateMap = new HashMap();
+
+	/**
+	 * Объект для поиска топографических объектов
+	 */
+	private Searcher searcherInstance = null;
 	
 	/**
 	 * This method initializes the servlet and then reads and sets
@@ -123,10 +113,16 @@ public class MapperControllableServlet
 		Logger.log(INIT_PARAMNAME_FILETOLOAD + ": " + this.fileToLoad);
 		Logger.log(INIT_PARAMNAME_MAPXTREME_URL + ": " + this.mapXtremeURL);
 		Logger.log(INIT_PARAMNAME_TODEBUG + ": " + Boolean.toString(this.toDebug));
-
-		Logger.log("Creating RenderingThread instance at MCS.");
-		this.renderingThread = new RenderingThread(this);
-		Logger.log("RenderingThread instance is created at MCS. " + this.renderingThread);			
+		
+		try
+		{
+			this.searcherInstance = new Searcher(this.getFileToLoad(),this.getMapPath());
+		}
+		catch	(IOException exc)
+		{
+			logError("Failed creating searching instance.");
+			throw new ServletException();
+		}
 	}
 
 	/**
@@ -166,21 +162,52 @@ public class MapperControllableServlet
 		
 		Map requestParameters = this.searchParameters(queryString);
 
-		//Getting command name
-		String commandName = this.getParameter(requestParameters,ServletCommandNames.COMMAND_NAME);
-		Logger.log("commandName = " + commandName);
-		Logger.log("state = " + states[this.state.getValue()]);
+		String userId = this.getParameter(requestParameters,ServletCommandNames.USER_ID);
+		
+		SessionState sessionState = (SessionState )this.stateMap.get(userId);
+		if(sessionState == null) 
+		{
+			sessionState = new SessionState(userId);
+			this.stateMap.put(userId, sessionState);
+		}
+		
+		processSession(sessionState, requestParameters,currentRequestOS,resp);
+	}
 
-		synchronized(this.state) {
-			switch(this.state.getValue()) {
-				case STATE_IDLE:
-					processIdleState(requestParameters,commandName,currentRequestOS,resp);
+	void processSession(
+			SessionState sessionState,
+			Map requestParameters,
+			ObjectOutputStream currentRequestOS,
+			HttpServletResponse resp) {
+		
+		synchronized(sessionState)
+		{
+			//Getting command name
+			String commandName = this.getParameter(requestParameters,ServletCommandNames.COMMAND_NAME);
+			if (commandName == null)
+			{
+				logError("Command name parameter is not given");
+				resp.addHeader(
+						ServletCommandNames.STATUS_FIELD_NAME,
+						ServletCommandNames.ERROR_NO_PARAMETERS);
+				
+				return;
+			}
+			
+			Logger.log("userId = " + sessionState.getUserId());
+			Logger.log("commandName = " + commandName);
+			Logger.log("state = " + State.states[sessionState.getState().getValue()]);
+			
+			switch(sessionState.getState().getValue())
+			{
+				case State.STATE_IDLE:
+					processIdleState(sessionState,requestParameters,commandName,currentRequestOS,resp);
 					break;
-				case STATE_RENDERING:
-					processRenderingState(requestParameters,commandName,currentRequestOS,resp);
+				case State.STATE_RENDERING:
+					processRenderingState(sessionState,requestParameters,commandName,currentRequestOS,resp);
 					break;
-				case STATE_RENDERED:
-					processRenderedState(requestParameters,commandName,currentRequestOS,resp);
+				case State.STATE_RENDERED:
+					processRenderedState(sessionState,requestParameters,commandName,currentRequestOS,resp);
 					break;
 				default:
 					logError(ServletCommandNames.ERROR_WRONG_STATE);
@@ -189,6 +216,7 @@ public class MapperControllableServlet
 	}
 	
 	void processIdleState(
+			SessionState sessionState,
 			Map requestParameters,
 			String commandName,
 			ObjectOutputStream currentRequestOS,
@@ -196,11 +224,21 @@ public class MapperControllableServlet
 	{
 		if (commandName.equals(ServletCommandNames.CN_START_RENDER_IMAGE))			
 		{
-			render(requestParameters);
-			setState(STATE_RENDERING);
-			resp.addHeader(
-					ServletCommandNames.STATUS_FIELD_NAME,
-					ServletCommandNames.STATUS_SUCCESS);
+			try
+			{
+				render(sessionState, requestParameters);
+				sessionState.setState(State.STATE_RENDERING);
+				resp.addHeader(
+						ServletCommandNames.STATUS_FIELD_NAME,
+						ServletCommandNames.STATUS_SUCCESS);
+			} catch (IOException e)
+			{
+				logError ("Failed creating MapJ");
+				sessionState.setState(State.STATE_IDLE);
+				resp.addHeader(
+						ServletCommandNames.STATUS_FIELD_NAME,
+						ServletCommandNames.ERROR_MAP_EXCEPTION);
+			}
 		}
 		else if (commandName.equals(ServletCommandNames.CN_CANCEL_RENDERING))			
 		{
@@ -234,6 +272,7 @@ public class MapperControllableServlet
 	}
 
 	void processRenderingState(
+			SessionState sessionState,
 			Map requestParameters,
 			String commandName,
 			ObjectOutputStream currentRequestOS,
@@ -248,8 +287,8 @@ public class MapperControllableServlet
 		}
 		else if (commandName.equals(ServletCommandNames.CN_CANCEL_RENDERING))			
 		{
-			cancel();
-			setState(STATE_IDLE);
+			cancel(sessionState);
+			sessionState.setState(State.STATE_IDLE);
 			resp.addHeader(
 					ServletCommandNames.STATUS_FIELD_NAME,
 					ServletCommandNames.STATUS_SUCCESS);
@@ -279,6 +318,7 @@ public class MapperControllableServlet
 	}
 
 	void processRenderedState(
+			SessionState sessionState,
 			Map requestParameters,
 			String commandName,
 			ObjectOutputStream currentRequestOS,
@@ -311,10 +351,11 @@ public class MapperControllableServlet
 		}
 		else if (commandName.equals(ServletCommandNames.CN_GET_RENDITION))			
 		{
-			returnRendition(currentRequestOS);			
 			resp.addHeader(
-				ServletCommandNames.STATUS_FIELD_NAME,
-				ServletCommandNames.STATUS_SUCCESS);
+					ServletCommandNames.STATUS_FIELD_NAME,
+					ServletCommandNames.STATUS_SUCCESS);
+			returnRendition(sessionState, currentRequestOS);
+			sessionState.setState(State.STATE_IDLE);			
 		}
 		else if (commandName.equals(ServletCommandNames.CN_SEARCH_NAME))			
 		{
@@ -332,21 +373,25 @@ public class MapperControllableServlet
 					ServletCommandNames.ERROR_INVALID_PARAMETERS);
 		}
 	}
-	
-	void search(Map requestParameters, ObjectOutputStream currentRequestOS) {
+
+	void search(Map requestParameters,ObjectOutputStream currentRequestOS)
+	{
 		String nameToSearch = this.getParameter(requestParameters,ServletCommandNames.PAR_NAME_TO_SEARCH);
 		Logger.log("nameToSearch = " + nameToSearch);
-		
-		this.renderingThread.writeNamesNCenters(nameToSearch,currentRequestOS);
+	
+		this.searcherInstance.writeNamesNCenters(nameToSearch,currentRequestOS);
 	}
 
-	void cancel() {
+	void cancel(SessionState sessionState) {
 		Logger.log("Before canceling rendition");
-		this.renderingThread.cancelRendering();
+		sessionState.getRenderingThread().cancelRendering();
 	}
 
-	void render(Map requestParameters){
-		try {
+	void render(SessionState sessionState, Map requestParameters)
+		throws IOException
+	{
+		try
+		{
 			Logger.log ("Before getting rendition parameters");
 			String widthString = this.getParameter(requestParameters,ServletCommandNames.PAR_WIDTH);
 			String heightString = this.getParameter(requestParameters,ServletCommandNames.PAR_HEIGHT);
@@ -396,8 +441,20 @@ public class MapperControllableServlet
 						 " / " + layersVisibilities[2 * layerParamIndex] +
 						 " / " + layersVisibilities[2 * layerParamIndex + 1]);
 			}
-			Logger.log ("Before starting rendition " + this.renderingThread);
-			this.renderingThread.startProcessing(
+			Logger.log ("Before starting rendition");
+
+			MapJRenderer mapJRenderer = MapJRendererPool.lockRenderer(
+					this.getMapXtremeURL(),
+					this.getFileToLoad(),
+					this.getMapPath());
+			
+			Logger.log ("Before creating RenderingThread");			
+			RenderingThread renderingThread = new RenderingThread(sessionState,mapJRenderer);
+			
+			sessionState.setRenderingThread(renderingThread);
+			
+			Logger.log ("Before starting processing RenderingThread");			
+			sessionState.getRenderingThread().startProcessing(
 					width,
 					height,
 					zoom,
@@ -406,25 +463,31 @@ public class MapperControllableServlet
 					layerParamIndex,layersVisibilities);
 			Logger.log ("Rendition started.");
 		}
-		catch(NumberFormatException e) {
+		catch(NumberFormatException e)
+		{
 			Logger.log("Number Format Exception was detected!");			
 			logError(ServletCommandNames.ERROR_INVALID_PARAMETERS);
+			
 		}
-		catch (NullPointerException npExc) {
+		catch (NullPointerException npExc)
+		{
 			Logger.log("Null Pointer Exception was detected!");
 			logError(ServletCommandNames.ERROR_NO_PARAMETERS);
 		}
 	}
 	
-	void returnRendition(ObjectOutputStream currentRequestOS) {
-		if (this.renderingThread.isMapRendered())
-			this.renderingThread.getMapRenditionInto(currentRequestOS);
+	void returnRendition(SessionState sessionState, ObjectOutputStream currentRequestOS) {
+		if (sessionState.getOutputStream() != null)
+			try
+			{
+				sessionState.getOutputStream().writeTo(currentRequestOS);
+			} catch (IOException e)
+			{
+				// TODO Auto-generated catch block
+				Logger.log(e.getMessage());			
+			}
 	}
 
-	void setState(int stateValue) {
-		this.state.setValue(stateValue);
-	}
-	
 	/**
 	 *  This method returns an About string for this servlet
 	 */
@@ -447,6 +510,10 @@ public class MapperControllableServlet
 		for (;;)
 		{
 			int dividerIndex = queryString.indexOf('=',lastParamEndIndex);
+			
+			if (dividerIndex < 0)
+				break;
+			
 			String paramName = queryString.substring(lastParamEndIndex + 1,dividerIndex);
 			lastParamEndIndex = queryString.indexOf('&',dividerIndex);
 			
@@ -475,37 +542,6 @@ public class MapperControllableServlet
 		return null;
 	}
 	
-//	/**
-//	 * Записывает сообщения в конец файла "mcs_log.txt", указывая дату их записи.
-//	 * Файл расположен в $MapXtremeHome/bin.
-//	 */
-//	public void log(String msg)
-//	{
-//		if (!this.toDebug)
-//			return;
-//
-//		synchronized (this.logFOS)
-//		{
-//			try
-//			{
-//				if (msg == null)
-//				{
-//					this.logFOS.write("\n".getBytes());
-//				}
-//				else
-//				{
-//					String dateString = this.sdFormat.format(new Date(System.currentTimeMillis()));
-//					this.logFOS.write((dateString + "  MCS - " + msg + "\n").getBytes());
-//				}
-//				this.logFOS.flush();
-//			}
-//			catch (IOException exc)
-//			{
-//				//Ошибка при выводе логов
-//			}
-//		}
-//	}
-
 	public void logError(String error)
 	{
 		Logger.log("ERROR!!! - " + error);
@@ -534,9 +570,43 @@ public class MapperControllableServlet
 	{
 		this.mapPath = mapPath;
 	}
+	
+	/**
+	 * Создаёт объект MapJ и загружает картографические данные. 
+	 * @return Готовый к использованию объект MapJ для работы с
+	 *  картографическими данными
+	 * @throws IOException
+	 */
+	public static MapJ createMapJ(String fileToLoad, String mapPath) throws IOException
+	{
+		Logger.log("RunningThread - Initializing MapJ instance...");
+		// instantiate a MapJ and set the bounds
+		MapJ returnValue = new MapJ(); // this MapJ object
 
-	public State getState() {
-		return this.state;
+		// Query for image locations and load the geoset
+		try
+		{
+			Logger.log("RunningThread - Loading geoset...");
+			if (fileToLoad.endsWith(".gst"))
+			{
+				returnValue.loadGeoset(fileToLoad, mapPath, null);
+				Logger.log("RunningThread - Geoset " + fileToLoad + " has been loaded.");
+			}
+			else
+			{
+				returnValue.loadMapDefinition(fileToLoad);
+				Logger.log("RunningThread - Map definition " + fileToLoad + " has been loaded.");
+			}
+		}
+		catch (IOException e)
+		{
+			Logger.log("RunningThread - ERROR!!! - Can't load geoset: " + fileToLoad);
+			throw e;
+		}
+		
+		returnValue.setDistanceUnits(LinearUnit.meter);
+		
+		return returnValue;
 	}
 }
 
