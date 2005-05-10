@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.26 2005/05/05 15:57:09 bass Exp $
+ * $Id: SchemeElement.java,v 1.27 2005/05/10 17:07:52 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.util.Log;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.26 $, $Date: 2005/05/05 15:57:09 $
+ * @version $Revision: 1.27 $, $Date: 2005/05/10 17:07:52 $
  * @module scheme_v1
  */
 public final class SchemeElement extends AbstractSchemeElement implements
@@ -364,9 +364,6 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	public Equipment getEquipment() {
 		assert this.assertEquipmentTypeSetStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
 
-		if (this.equipmentId.isVoid())
-			return null;
-
 		try {
 			return (Equipment) ConfigurationStorableObjectPool.getStorableObject(this.equipmentId, true);
 		} catch (final ApplicationException ae) {
@@ -391,8 +388,6 @@ public final class SchemeElement extends AbstractSchemeElement implements
 
 	public KIS getKis() {
 		assert this.kisId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		if (this.kisId.isVoid())
-			return null;
 		try {
 			return (KIS) ConfigurationStorableObjectPool.getStorableObject(this.kisId, true);
 		} catch (final ApplicationException ae) {
@@ -461,8 +456,6 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 */
 	public SchemeImageResource getSchemeCell() {
 		assert this.schemeCellId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		if (this.schemeCellId.isVoid())
-			return null;
 		try {
 			return (SchemeImageResource) ResourceStorableObjectPool
 					.getStorableObject(this.schemeCellId, true);
@@ -522,8 +515,6 @@ public final class SchemeElement extends AbstractSchemeElement implements
 
 	public SiteNode getSiteNode() {
 		assert this.siteNodeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		if (this.siteNodeId.isVoid())
-			return null;
 		try {
 			return (SiteNode) MapStorableObjectPool.getStorableObject(this.siteNodeId, true);
 		} catch (final ApplicationException ae) {
@@ -537,8 +528,6 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 */
 	public BitmapImageResource getSymbol() {
 		assert this.symbolId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		if (this.symbolId.isVoid())
-			return null;
 		try {
 			return (BitmapImageResource) ResourceStorableObjectPool
 					.getStorableObject(this.symbolId, true);
@@ -573,8 +562,6 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 */
 	public SchemeImageResource getUgoCell() {
 		assert this.ugoCellId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		if (this.ugoCellId.isVoid())
-			return null;
 		try {
 			return (SchemeImageResource) ResourceStorableObjectPool
 					.getStorableObject(this.ugoCellId, true);

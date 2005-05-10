@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.21 2005/05/05 15:57:09 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.22 2005/05/10 17:07:52 bass Exp $
  * 
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.21 $, $Date: 2005/05/05 15:57:09 $
+ * @version $Revision: 1.22 $, $Date: 2005/05/10 17:07:52 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemePort extends
@@ -167,8 +167,6 @@ public abstract class AbstractSchemePort extends
 
 	public final MeasurementPort getMeasurementPort() {
 		assert this.measurementPortId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		if (this.measurementPortId.isVoid())
-			return null;
 		try {
 			return (MeasurementPort) ConfigurationStorableObjectPool.getStorableObject(this.measurementPortId, true);
 		} catch (final ApplicationException ae) {
@@ -202,9 +200,6 @@ public abstract class AbstractSchemePort extends
 	 */
 	public Port getPort() {
 		assert this.assertPortTypeSetStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
-
-		if (this.portId.isVoid())
-			return null;
 
 		try {
 			return (Port) ConfigurationStorableObjectPool.getStorableObject(this.portId, true);
@@ -352,7 +347,7 @@ public abstract class AbstractSchemePort extends
 		assert !this.parentSchemeDeviceId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 		if (parentSchemeDevice == null) {
 			Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Log.WARNING);
-			SchemeStorableObjectPool.delete(this.id);
+			SchemeStorableObjectPool.delete(super.id);
 			return;
 		}
 		final Identifier newParentSchemeDeviceId = parentSchemeDevice.getId();

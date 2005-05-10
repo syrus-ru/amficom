@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.23 2005/05/05 16:00:36 bass Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.24 2005/05/10 17:07:52 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.util.Log;
  * #06 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.23 $, $Date: 2005/05/05 16:00:36 $
+ * @version $Revision: 1.24 $, $Date: 2005/05/10 17:07:52 $
  * @module scheme_v1
  */
 public final class SchemeMonitoringSolution extends
@@ -50,6 +50,10 @@ public final class SchemeMonitoringSolution extends
 
 	private int price;
 
+	/**
+	 * May be void, as <code>SchemeMonitoringSolution</code> may be used
+	 * just as a storage for {@link SchemePath}s.
+	 */
 	private Identifier parentSchemeOptimizeInfoId;
 
 	private SchemeMonitoringSolutionDatabase schemeMonitoringSolutionDatabase; 
@@ -191,8 +195,20 @@ public final class SchemeMonitoringSolution extends
 		return this.name;
 	}
 
+	/**
+	 * @return <code>SchemeOptimizeInfo</code> parent for this
+	 *         <code>SchemeMonitoringSolution</code>, or <code>null</code>
+	 *         if none.
+	 */
 	public SchemeOptimizeInfo getParentSchemeOptimizeInfo() {
-		throw new UnsupportedOperationException();
+		assert this.parentSchemeOptimizeInfoId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+
+		try {
+			return (SchemeOptimizeInfo) SchemeStorableObjectPool.getStorableObject(this.parentSchemeOptimizeInfoId, true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return null;
+		}
 	}
 
 	public int getPrice() {
@@ -278,7 +294,11 @@ public final class SchemeMonitoringSolution extends
 	}
 
 	public void setParentSchemeOptimizeInfo(final SchemeOptimizeInfo parentSchemeOptimizeInfo) {
-		throw new UnsupportedOperationException();
+		final Identifier newParentSchemeOptimizeInfoId = Identifier.possiblyVoid(parentSchemeOptimizeInfo);
+		if (this.parentSchemeOptimizeInfoId.equals(newParentSchemeOptimizeInfoId))
+			return;
+		this.parentSchemeOptimizeInfoId = newParentSchemeOptimizeInfoId;
+		this.changed = true;
 	}
 
 	public void setPrice(final int price) {

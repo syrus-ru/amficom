@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.19 2005/05/05 16:00:36 bass Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.20 2005/05/10 17:07:52 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.util.Log;
  * #05 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.19 $, $Date: 2005/05/05 16:00:36 $
+ * @version $Revision: 1.20 $, $Date: 2005/05/10 17:07:52 $
  * @module scheme_v1
  */
 public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
@@ -305,7 +305,15 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 	}
 
 	public Scheme getParentScheme() {
-		throw new UnsupportedOperationException();
+		assert this.parentSchemeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert !this.parentSchemeId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+
+		try {
+			return (Scheme) SchemeStorableObjectPool.getStorableObject(this.parentSchemeId, true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return null;
+		}
 	}
 
 	public double getPrice() {
@@ -330,11 +338,21 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 	}
 
 	public Set getSchemeOptimizeInfoRtus() {
-		throw new UnsupportedOperationException();
+		try {
+			return Collections.unmodifiableSet(SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, ObjectEntities.SCHEME_OPTIMIZE_INFO_RTU_ENTITY_CODE), true));
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return Collections.EMPTY_SET;
+		}
 	}
 
 	public Set getSchemeOptimizeInfoSwitches() {
-		throw new UnsupportedOperationException();
+		try {
+			return Collections.unmodifiableSet(SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, ObjectEntities.SCHEME_OPTIMIZE_INFO_SWITCH_ENTITY_CODE), true));
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return Collections.EMPTY_SET;
+		}
 	}
 
 	public double getSurvivorRate() {
@@ -512,7 +530,18 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 	 * @param parentScheme
 	 */
 	public void setParentScheme(final Scheme parentScheme) {
-		throw new UnsupportedOperationException();
+		assert this.parentSchemeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert !this.parentSchemeId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+		if (parentScheme == null) {
+			Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Log.WARNING);
+			SchemeStorableObjectPool.delete(super.id);
+			return;
+		}
+		final Identifier newParentSchemeId = parentScheme.getId();
+		if (this.parentSchemeId.equals(newParentSchemeId))
+			return;
+		this.parentSchemeId = newParentSchemeId;
+		this.changed = true;
 	}
 
 	public void setPrice(double price) {

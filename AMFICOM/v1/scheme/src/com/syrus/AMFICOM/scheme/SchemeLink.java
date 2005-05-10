@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.24 2005/05/05 15:57:08 bass Exp $
+ * $Id: SchemeLink.java,v 1.25 2005/05/10 17:07:52 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,7 +40,7 @@ import com.syrus.util.Log;
  * #10 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.24 $, $Date: 2005/05/05 15:57:08 $
+ * @version $Revision: 1.25 $, $Date: 2005/05/10 17:07:52 $
  * @module scheme_v1
  */
 public final class SchemeLink extends AbstractSchemeLink {
@@ -498,9 +498,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 	public SiteNode getSiteNode() {
 		assert this.siteNodeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
 		try {
-			return this.siteNodeId.isVoid()
-					? null
-					: (SiteNode) MapStorableObjectPool.getStorableObject(this.siteNodeId, true);
+			return (SiteNode) MapStorableObjectPool.getStorableObject(this.siteNodeId, true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;

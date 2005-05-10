@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.24 2005/05/05 16:00:36 bass Exp $
+ * $Id: Scheme.java,v 1.25 2005/05/10 17:07:52 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,7 +42,7 @@ import com.syrus.util.Log;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.24 $, $Date: 2005/05/05 16:00:36 $
+ * @version $Revision: 1.25 $, $Date: 2005/05/10 17:07:52 $
  * @module scheme_v1
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -344,8 +344,6 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 */
 	public SchemeImageResource getSchemeCell() {
 		assert this.schemeCellId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		if (this.schemeCellId.isVoid())
-			return null;
 		try {
 			return (SchemeImageResource) ResourceStorableObjectPool
 					.getStorableObject(this.schemeCellId, true);
@@ -392,8 +390,6 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 */
 	public BitmapImageResource getSymbol() {
 		assert this.symbolId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		if (this.symbolId.isVoid())
-			return null;
 		try {
 			return (BitmapImageResource) ResourceStorableObjectPool
 					.getStorableObject(this.symbolId, true);
@@ -427,8 +423,6 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 */
 	public SchemeImageResource getUgoCell() {
 		assert this.ugoCellId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		if (this.ugoCellId.isVoid())
-			return null;
 		try {
 			return (SchemeImageResource) ResourceStorableObjectPool
 					.getStorableObject(this.ugoCellId, true);

@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.19 2005/05/05 16:00:36 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.20 2005/05/10 17:07:52 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.util.Log;
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.19 $, $Date: 2005/05/05 16:00:36 $
+ * @version $Revision: 1.20 $, $Date: 2005/05/10 17:07:52 $
  * @module scheme_v1
  */
 public final class CableChannelingItem extends AbstractCloneableStorableObject {
@@ -240,15 +240,21 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject {
 	}
 
 	public SchemeCableLink getParentSchemeCableLink() {
-		throw new UnsupportedOperationException();
+		assert this.parentSchemeCableLinkId != null: ErrorMessages.OBJECT_BADLY_INITIALIZED;
+		assert !this.parentSchemeCableLinkId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+
+		try {
+			return (SchemeCableLink) SchemeStorableObjectPool.getStorableObject(this.parentSchemeCableLinkId, true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return null;
+		}
 	}
 
 	public PhysicalLink getPhysicalLink() {
 		assert this.physicalLinkId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
 		try {
-			return this.physicalLinkId.isVoid()
-					? null
-					: (PhysicalLink) MapStorableObjectPool.getStorableObject(this.physicalLinkId, true);
+			return (PhysicalLink) MapStorableObjectPool.getStorableObject(this.physicalLinkId, true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
@@ -368,8 +374,22 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject {
 		this.changed = true;
 	}
 
+	/**
+	 * @param parentSchemeCableLink
+	 */
 	public void setParentSchemeCableLink(final SchemeCableLink parentSchemeCableLink) {
-		throw new UnsupportedOperationException();
+		assert this.parentSchemeCableLinkId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert !this.parentSchemeCableLinkId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+		if (parentSchemeCableLink == null) {
+			Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Log.WARNING);
+			SchemeStorableObjectPool.delete(super.id);
+			return;
+		}
+		final Identifier newParentSchemeCableLinkId = parentSchemeCableLink.getId();
+		if (this.parentSchemeCableLinkId.equals(newParentSchemeCableLinkId))
+			return;
+		this.parentSchemeCableLinkId = newParentSchemeCableLinkId;
+		this.changed = true;
 	}
 
 	/**

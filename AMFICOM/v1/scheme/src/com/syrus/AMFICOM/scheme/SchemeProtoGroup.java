@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.24 2005/05/05 15:57:08 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.25 2005/05/10 17:07:52 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.util.Log;
  * #01 in hierarchy.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.24 $, $Date: 2005/05/05 15:57:08 $
+ * @version $Revision: 1.25 $, $Date: 2005/05/10 17:07:52 $
  * @module scheme_v1
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation. 
  */
@@ -338,9 +338,6 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	public SchemeProtoGroup getParentSchemeProtoGroup() {
 		assert this.parentSchemeProtoGroupId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
 
-		if (this.parentSchemeProtoGroupId.isVoid())
-			return null;
-
 		try {
 			return (SchemeProtoGroup) SchemeStorableObjectPool.getStorableObject(this.parentSchemeProtoGroupId, true);
 		} catch (final ApplicationException ae) {
@@ -378,8 +375,6 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	 */
 	public BitmapImageResource getSymbol() {
 		assert this.symbolId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		if (this.symbolId.isVoid())
-			return null;
 		try {
 			return (BitmapImageResource) ResourceStorableObjectPool
 					.getStorableObject(this.symbolId, true);

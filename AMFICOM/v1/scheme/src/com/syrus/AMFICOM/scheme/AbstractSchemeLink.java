@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeLink.java,v 1.12 2005/05/05 15:57:09 bass Exp $
+ * $Id: AbstractSchemeLink.java,v 1.13 2005/05/10 17:07:52 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeLink}instead.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2005/05/05 15:57:09 $
+ * @version $Revision: 1.13 $, $Date: 2005/05/10 17:07:52 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemeLink extends AbstractSchemeElement {
@@ -140,9 +140,6 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	public Link getLink() {
 		assert this.assertAbstractLinkTypeSetStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
 
-		if (this.linkId.isVoid())
-			return null;
-
 		try {
 			return (Link) ConfigurationStorableObjectPool.getStorableObject(this.linkId, true);
 		} catch (final ApplicationException ae) {
@@ -196,9 +193,7 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 				|| !this.sourceAbstractSchemePortId.equals(this.targetAbstractSchemePortId): ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
 
 		try {
-			return this.sourceAbstractSchemePortId.isVoid()
-					? null
-					: (AbstractSchemePort) SchemeStorableObjectPool.getStorableObject(this.sourceAbstractSchemePortId, true);
+			return (AbstractSchemePort) SchemeStorableObjectPool.getStorableObject(this.sourceAbstractSchemePortId, true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
@@ -215,9 +210,7 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 				|| !this.targetAbstractSchemePortId.equals(this.sourceAbstractSchemePortId): ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
 
 		try {
-			return this.targetAbstractSchemePortId.isVoid()
-					? null
-					: (AbstractSchemePort) SchemeStorableObjectPool.getStorableObject(this.targetAbstractSchemePortId, true);
+			return (AbstractSchemePort) SchemeStorableObjectPool.getStorableObject(this.targetAbstractSchemePortId, true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;

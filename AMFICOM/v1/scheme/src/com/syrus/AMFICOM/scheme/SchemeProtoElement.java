@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.29 2005/05/05 15:57:09 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.30 2005/05/10 17:07:52 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,7 +52,7 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.29 $, $Date: 2005/05/05 15:57:09 $
+ * @version $Revision: 1.30 $, $Date: 2005/05/10 17:07:52 $
  * @module scheme_v1
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation. 
  */
@@ -480,8 +480,6 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 */
 	public EquipmentType getEquipmentType() {
 		assert this.equipmentTypeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		if (this.equipmentTypeId.isVoid())
-			return null;
 		try {
 			return (EquipmentType) ConfigurationStorableObjectPool
 					.getStorableObject(this.equipmentTypeId, true);
@@ -581,8 +579,6 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 */
 	public SchemeImageResource getSchemeCell() {
 		assert this.schemeCellId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		if (this.schemeCellId.isVoid())
-			return null;
 		try {
 			return (SchemeImageResource) ResourceStorableObjectPool
 					.getStorableObject(this.schemeCellId, true);
@@ -633,8 +629,6 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 */
 	public BitmapImageResource getSymbol() {
 		assert this.symbolId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		if (this.symbolId.isVoid())
-			return null;
 		try {
 			return (BitmapImageResource) ResourceStorableObjectPool
 					.getStorableObject(this.symbolId, true);
@@ -667,8 +661,6 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 */
 	public SchemeImageResource getUgoCell() {
 		assert this.ugoCellId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		if (this.ugoCellId.isVoid())
-			return null;
 		try {
 			return (SchemeImageResource) ResourceStorableObjectPool
 					.getStorableObject(this.ugoCellId, true);
