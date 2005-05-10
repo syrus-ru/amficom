@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectGroupEntities.java,v 1.12 2005/04/08 13:00:07 arseniy Exp $
+ * $Id: ObjectGroupEntities.java,v 1.13 2005/05/10 17:34:00 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,24 +7,34 @@
  */
 package com.syrus.AMFICOM.general;
 
+import gnu.trove.TObjectShortHashMap;
+import gnu.trove.TShortObjectHashMap;
+
 /**
- * @version $Revision: 1.12 $, $Date: 2005/04/08 13:00:07 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.13 $, $Date: 2005/05/10 17:34:00 $
+ * @author $Author: bass $
  * @module general_v1
  */
 public final class ObjectGroupEntities {
 	//  Group Types
-	public static final String GENERAL_GROUP = "GeneralGroup";
-	public static final String EVENT_GROUP = "EventGroup";
-	public static final String ADMINISTRATION_GROUP = "AdministrationGroup";
-	public static final String CONFIGURATION_GROUP = "ConfigurationGroup";
-	public static final String MEASUREMENT_GROUP = "MeasurementGroup";
-	public static final String SCHEME_GROUP = "SchemeGroup";
-	public static final String MAP_GROUP = "MapGroup";
-	public static final String RESOURCE_GROUP = "ResourceGroup";
-	public static final String MAPVIEW_GROUP = "MapViewGroup";
+	/**
+	 * Never gets registered.
+	 */
+	public static final String UNKNOWN_GROUP = null;
+	public static final String GENERAL_GROUP = "GeneralGroup"; //$NON-NLS-1$
+	public static final String EVENT_GROUP = "EventGroup"; //$NON-NLS-1$
+	public static final String ADMINISTRATION_GROUP = "AdministrationGroup"; //$NON-NLS-1$
+	public static final String CONFIGURATION_GROUP = "ConfigurationGroup"; //$NON-NLS-1$
+	public static final String MEASUREMENT_GROUP = "MeasurementGroup"; //$NON-NLS-1$
+	public static final String SCHEME_GROUP = "SchemeGroup"; //$NON-NLS-1$
+	public static final String MAP_GROUP = "MapGroup"; //$NON-NLS-1$
+	public static final String RESOURCE_GROUP = "ResourceGroup"; //$NON-NLS-1$
+	public static final String MAPVIEW_GROUP = "MapViewGroup"; //$NON-NLS-1$
     
 	//  Group Codes
+	/**
+	 * Never gets registered.
+	 */
 	public static final short UNKNOWN_GROUP_CODE = 0x0000;
 	public static final short GENERAL_GROUP_CODE = 0x0001;
 	public static final short EVENT_GROUP_CODE = 0x0002;
@@ -36,59 +46,44 @@ public final class ObjectGroupEntities {
 	public static final short RESOURCE_GROUP_CODE = 0x0008;
 	public static final short MAPVIEW_GROUP_CODE = 0x0009;
 
+	private static final TObjectShortHashMap nameCodeMap = new TObjectShortHashMap();  
+
+	private static final TShortObjectHashMap codeNameMap = new TShortObjectHashMap();
+
 	private ObjectGroupEntities() {
 		// singleton constructor
 		assert false;
 	}
 
-	public static short stringToCode(final String groupString) {
-		// recast using Trove Collections
-		if (groupString.equals(GENERAL_GROUP))
-			return GENERAL_GROUP_CODE;
-		else if (groupString.equals(EVENT_GROUP))
-			return EVENT_GROUP_CODE;
-		else if (groupString.equals(ADMINISTRATION_GROUP))
-			return ADMINISTRATION_GROUP_CODE;
-		else if (groupString.equals(CONFIGURATION_GROUP))
-			return CONFIGURATION_GROUP_CODE;
-		else if (groupString.equals(MEASUREMENT_GROUP))
-			return MEASUREMENT_GROUP_CODE;            
-		else if (groupString.equals(SCHEME_GROUP))
-			return SCHEME_GROUP_CODE;
-		else if (groupString.equals(MAP_GROUP))
-			return MAP_GROUP_CODE;
-		else if (groupString.equals(RESOURCE_GROUP))
-			return RESOURCE_GROUP_CODE;
-		else if (groupString.equals(MAPVIEW_GROUP))
-			return MAPVIEW_GROUP_CODE;
-		return UNKNOWN_GROUP_CODE;        
+	static {
+		registerGroups();
 	}
-    
+
+	private static void registerGroups() {
+		registerGroup(GENERAL_GROUP_CODE, GENERAL_GROUP);
+		registerGroup(EVENT_GROUP_CODE, EVENT_GROUP);
+		registerGroup(ADMINISTRATION_GROUP_CODE, ADMINISTRATION_GROUP);
+		registerGroup(CONFIGURATION_GROUP_CODE, CONFIGURATION_GROUP);
+		registerGroup(MEASUREMENT_GROUP_CODE, MEASUREMENT_GROUP);
+		registerGroup(SCHEME_GROUP_CODE, SCHEME_GROUP);
+		registerGroup(MAP_GROUP_CODE, MAP_GROUP);
+		registerGroup(RESOURCE_GROUP_CODE, RESOURCE_GROUP);
+		registerGroup(MAPVIEW_GROUP_CODE, MAPVIEW_GROUP);
+	}
+
+	private static void registerGroup(final short groupCode, final String group) {
+		codeNameMap.put(groupCode, group);
+		nameCodeMap.put(group, groupCode);
+	}
+
+	public static short stringToCode(final String group) {
+		final short returnValue = nameCodeMap.get(group);
+		return returnValue == 0 ? UNKNOWN_GROUP_CODE : returnValue;
+	}
+
 	public static String codeToString(final short groupCode) {
-		// recast using Trove Collections
-		switch (groupCode) {
-			case GENERAL_GROUP_CODE:
-				return GENERAL_GROUP;
-			case EVENT_GROUP_CODE:
-				return EVENT_GROUP;
-			case ADMINISTRATION_GROUP_CODE:
-				return ADMINISTRATION_GROUP;
-			case CONFIGURATION_GROUP_CODE:
-				return CONFIGURATION_GROUP;
-			case MEASUREMENT_GROUP_CODE:
-				return MEASUREMENT_GROUP;
-			case SCHEME_GROUP_CODE:
-				return SCHEME_GROUP;
-			case MAP_GROUP_CODE:
-				return MAP_GROUP;
-			case RESOURCE_GROUP_CODE:
-				return RESOURCE_GROUP;
-			case MAPVIEW_GROUP_CODE:
-				return MAPVIEW_GROUP;
-			case UNKNOWN_GROUP_CODE:
-			default:
-				return null;
-		}
+		final String returnValue = (String) codeNameMap.get(groupCode);
+		return returnValue == null ? UNKNOWN_GROUP : returnValue;
 	}
 
 	/**
@@ -217,6 +212,6 @@ public final class ObjectGroupEntities {
 	}
 	
 	public static String getPackageName(final short entityCode) {
-		return "com.syrus.AMFICOM." + getGroupName(entityCode).toLowerCase().replaceAll("group$", "");
+		return "com.syrus.AMFICOM." + getGroupName(entityCode).toLowerCase().replaceAll("group$", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 }
