@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectEntities.java,v 1.61 2005/05/03 14:00:23 max Exp $
+ * $Id: ObjectEntities.java,v 1.62 2005/05/10 16:21:14 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,133 +8,145 @@
 
 package com.syrus.AMFICOM.general;
 
+import gnu.trove.TObjectShortHashMap;
+import gnu.trove.TShortObjectHashMap;
+
 /**
- * @version $Revision: 1.61 $, $Date: 2005/05/03 14:00:23 $
- * @author $Author: max $
+ * @version $Revision: 1.62 $, $Date: 2005/05/10 16:21:14 $
+ * @author $Author: bass $
  * @module general_v1
  */
 public final class ObjectEntities {
+	/**
+	 * Never gets registered.
+	 */
+	public static final String UNKNOWN_ENTITY = null;
+
 	/*	Object Types	*/
-	public static final String PARAMETERTYPE_ENTITY = "ParameterType";
-	public static final String CHARACTERISTICTYPE_ENTITY = "CharacteristicType";
+	public static final String PARAMETERTYPE_ENTITY = "ParameterType"; //$NON-NLS-1$
+	public static final String CHARACTERISTICTYPE_ENTITY = "CharacteristicType"; //$NON-NLS-1$
 
-	public static final String EVENTTYPE_ENTITY = "EventType";
-	public static final String EVENTTYPPARTYPLINK_ENTITY = "EventTypParTypLink";
-	public static final String EVENTTYPUSERLINK_ENTITY = "EventTypeUserLink";
-//	public static final String ALARMTYPE_ENTITY = "AlarmType";
+	public static final String EVENTTYPE_ENTITY = "EventType"; //$NON-NLS-1$
+	public static final String EVENTTYPPARTYPLINK_ENTITY = "EventTypParTypLink"; //$NON-NLS-1$
+	public static final String EVENTTYPUSERLINK_ENTITY = "EventTypeUserLink"; //$NON-NLS-1$
+//	public static final String ALARMTYPE_ENTITY = "AlarmType"; //$NON-NLS-1$
 
-	public static final String EQUIPMENTTYPE_ENTITY = "EquipmentType";
-	public static final String PORTTYPE_ENTITY = "PortType";
-	public static final String MEASUREMENTPORTTYPE_ENTITY = "MeasurementPortType";
-	public static final String LINKTYPE_ENTITY = "LinkType";
-	public static final String CABLELINKTYPE_ENTITY = "CableLinkType";
-	public static final String CABLETHREADTYPE_ENTITY = "CableThreadType";
+	public static final String EQUIPMENTTYPE_ENTITY = "EquipmentType"; //$NON-NLS-1$
+	public static final String PORTTYPE_ENTITY = "PortType"; //$NON-NLS-1$
+	public static final String MEASUREMENTPORTTYPE_ENTITY = "MeasurementPortType"; //$NON-NLS-1$
+	public static final String LINKTYPE_ENTITY = "LinkType"; //$NON-NLS-1$
+	public static final String CABLELINKTYPE_ENTITY = "CableLinkType"; //$NON-NLS-1$
+	public static final String CABLETHREADTYPE_ENTITY = "CableThreadType"; //$NON-NLS-1$
 
-	public static final String MEASUREMENTTYPE_ENTITY = "MeasurementType";
-	public static final String MNTTYPPARTYPLINK_ENTITY = "MntTypParTypLink";
-	public static final String MNTTYPEMEASPORTTYPELINK_ENTITY = "MntTypMeasPortTypLink";
-	public static final String ANALYSISTYPE_ENTITY = "AnalysisType";
-	public static final String ANATYPPARTYPLINK_ENTITY = "AnaTypParTypLink";
-	public static final String EVALUATIONTYPE_ENTITY = "EvaluationType";
-	public static final String EVATYPPARTYPLINK_ENTITY = "EvaTypParTypLink";
-	public static final String MNTTYPANATYPEVATYP_ENTITY = "MntTypAnaTypEvaTyp";
-	public static final String MODELINGTYPE_ENTITY = "ModelingType";
-	public static final String MODTYPPARTYPLINK_ENTITY = "ModTypParTypLink";
-	//public static final String KISTYPE_ENTITY = "KISType";
-	public static final String TRANSPATHTYPE_ENTITY = "TransmissionPathType";
+	public static final String MEASUREMENTTYPE_ENTITY = "MeasurementType"; //$NON-NLS-1$
+	public static final String MNTTYPPARTYPLINK_ENTITY = "MntTypParTypLink"; //$NON-NLS-1$
+	public static final String MNTTYPEMEASPORTTYPELINK_ENTITY = "MntTypMeasPortTypLink"; //$NON-NLS-1$
+	public static final String ANALYSISTYPE_ENTITY = "AnalysisType"; //$NON-NLS-1$
+	public static final String ANATYPPARTYPLINK_ENTITY = "AnaTypParTypLink"; //$NON-NLS-1$
+	public static final String EVALUATIONTYPE_ENTITY = "EvaluationType"; //$NON-NLS-1$
+	public static final String EVATYPPARTYPLINK_ENTITY = "EvaTypParTypLink"; //$NON-NLS-1$
+	public static final String MNTTYPANATYPEVATYP_ENTITY = "MntTypAnaTypEvaTyp"; //$NON-NLS-1$
+	public static final String MODELINGTYPE_ENTITY = "ModelingType"; //$NON-NLS-1$
+	public static final String MODTYPPARTYPLINK_ENTITY = "ModTypParTypLink"; //$NON-NLS-1$
+	//public static final String KISTYPE_ENTITY = "KISType"; //$NON-NLS-1$
+	public static final String TRANSPATHTYPE_ENTITY = "TransmissionPathType"; //$NON-NLS-1$
 
-	public static final String SITE_NODE_TYPE_ENTITY = "SiteNodeType";
-	public static final String PHYSICAL_LINK_TYPE_ENTITY = "PhysicalLinkType";
+	public static final String SITE_NODE_TYPE_ENTITY = "SiteNodeType"; //$NON-NLS-1$
+	public static final String PHYSICAL_LINK_TYPE_ENTITY = "PhysicalLinkType"; //$NON-NLS-1$
 
 	/*	General */
-	public static final String CHARACTERISTIC_ENTITY = "Characteristic";
+	public static final String CHARACTERISTIC_ENTITY = "Characteristic"; //$NON-NLS-1$
 
 	/*	Event	*/
-	public static final String EVENTPARAMETER_ENTITY = "EventParameter";
-	public static final String EVENTSOURCE_ENTITY = "EventSource";
-	public static final String EVENTSOURCE_LINK_ENTITY = "EventSourceLink";
-	public static final String EVENT_ENTITY = "Event";
-//	public static final String ALARM_ENTITY = "Alarm";
+	public static final String EVENTPARAMETER_ENTITY = "EventParameter"; //$NON-NLS-1$
+	public static final String EVENTSOURCE_ENTITY = "EventSource"; //$NON-NLS-1$
+	public static final String EVENTSOURCE_LINK_ENTITY = "EventSourceLink"; //$NON-NLS-1$
+	public static final String EVENT_ENTITY = "Event"; //$NON-NLS-1$
+//	public static final String ALARM_ENTITY = "Alarm"; //$NON-NLS-1$
 
 	/*	Administration	*/
-	public static final String USER_ENTITY = "User";
-	public static final String DOMAIN_ENTITY = "Domain";
-	public static final String SERVER_ENTITY = "Server";
-	public static final String MCM_ENTITY = "MCM";
-	public static final String SERVERPROCESS_ENTITY = "ServerProcess";
-	public static final String PERMATTR_ENTITY = "PermissionAttributes";
+	public static final String USER_ENTITY = "User"; //$NON-NLS-1$
+	public static final String DOMAIN_ENTITY = "Domain"; //$NON-NLS-1$
+	public static final String SERVER_ENTITY = "Server"; //$NON-NLS-1$
+	public static final String MCM_ENTITY = "MCM"; //$NON-NLS-1$
+	public static final String SERVERPROCESS_ENTITY = "ServerProcess"; //$NON-NLS-1$
+	public static final String PERMATTR_ENTITY = "PermissionAttributes"; //$NON-NLS-1$
 
 	/*	Configuration	*/
-	public static final String EQUIPMENT_ENTITY = "Equipment";
-	public static final String EQUIPMENTMELINK_ENTITY = "EquipmentMELink";
-	public static final String PORT_ENTITY = "Port";
-	public static final String TRANSPATH_ENTITY = "TransmissionPath";
-	public static final String TRANSPATHMELINK_ENTITY = "TransmissionPathMELink";
-	public static final String KIS_ENTITY = "KIS";
-	public static final String MEASUREMENTPORT_ENTITY = "MeasurementPort";
-	public static final String ME_ENTITY = "MonitoredElement";
-	public static final String LINK_ENTITY = "Link";
-	public static final String CABLETHREAD_ENTITY = "CableThread";
+	public static final String EQUIPMENT_ENTITY = "Equipment"; //$NON-NLS-1$
+	public static final String EQUIPMENTMELINK_ENTITY = "EquipmentMELink"; //$NON-NLS-1$
+	public static final String PORT_ENTITY = "Port"; //$NON-NLS-1$
+	public static final String TRANSPATH_ENTITY = "TransmissionPath"; //$NON-NLS-1$
+	public static final String TRANSPATHMELINK_ENTITY = "TransmissionPathMELink"; //$NON-NLS-1$
+	public static final String KIS_ENTITY = "KIS"; //$NON-NLS-1$
+	public static final String MEASUREMENTPORT_ENTITY = "MeasurementPort"; //$NON-NLS-1$
+	public static final String ME_ENTITY = "MonitoredElement"; //$NON-NLS-1$
+	public static final String LINK_ENTITY = "Link"; //$NON-NLS-1$
+	public static final String CABLETHREAD_ENTITY = "CableThread"; //$NON-NLS-1$
 
 	/*	Measurement	*/
-	public static final String SET_ENTITY = "Set";
-	public static final String SETPARAMETER_ENTITY = "SetParameter";
-	public static final String SETMELINK_ENTITY = "SetMELink";
-	public static final String MS_ENTITY = "MeasurementSetup";
-	public static final String MSMELINK_ENTITY = "MeasurementSetupMELink";
-	public static final String MSMTLINK_ENTITY = "MeasurementSetupMTLink";
-	public static final String MEASUREMENT_ENTITY = "Measurement";
-	public static final String ANALYSIS_ENTITY = "Analysis";
-	public static final String EVALUATION_ENTITY = "Evaluation";
-	public static final String TEST_ENTITY = "Test";
-	public static final String MSTESTLINK_ENTITY = "MeasurementSetupTestLink";
-	public static final String RESULT_ENTITY = "Result";
-	public static final String RESULTPARAMETER_ENTITY = "ResultParameter";
-	public static final String CRONTEMPORALPATTERN_ENTITY = "CronTemporalPattern";
-	public static final String INTERVALS_TEMPORALPATTERN_ENTITY = "ITempPattern";
-	public static final String PERIODICAL_TEMPORALPATTERN_ENTITY = "PeriodicalTemporalPattern";
-	public static final String MODELING_ENTITY = "Modeling";
+	public static final String SET_ENTITY = "Set"; //$NON-NLS-1$
+	public static final String SETPARAMETER_ENTITY = "SetParameter"; //$NON-NLS-1$
+	public static final String SETMELINK_ENTITY = "SetMELink"; //$NON-NLS-1$
+	public static final String MS_ENTITY = "MeasurementSetup"; //$NON-NLS-1$
+	public static final String MSMELINK_ENTITY = "MeasurementSetupMELink"; //$NON-NLS-1$
+	public static final String MSMTLINK_ENTITY = "MeasurementSetupMTLink"; //$NON-NLS-1$
+	public static final String MEASUREMENT_ENTITY = "Measurement"; //$NON-NLS-1$
+	public static final String ANALYSIS_ENTITY = "Analysis"; //$NON-NLS-1$
+	public static final String EVALUATION_ENTITY = "Evaluation"; //$NON-NLS-1$
+	public static final String TEST_ENTITY = "Test"; //$NON-NLS-1$
+	public static final String MSTESTLINK_ENTITY = "MeasurementSetupTestLink"; //$NON-NLS-1$
+	public static final String RESULT_ENTITY = "Result"; //$NON-NLS-1$
+	public static final String RESULTPARAMETER_ENTITY = "ResultParameter"; //$NON-NLS-1$
+	public static final String CRONTEMPORALPATTERN_ENTITY = "CronTemporalPattern"; //$NON-NLS-1$
+	public static final String INTERVALS_TEMPORALPATTERN_ENTITY = "ITempPattern"; //$NON-NLS-1$
+	public static final String PERIODICAL_TEMPORALPATTERN_ENTITY = "PeriodicalTemporalPattern"; //$NON-NLS-1$
+	public static final String MODELING_ENTITY = "Modeling"; //$NON-NLS-1$
 
 	/*        Scheme        */
-	public static final String CABLE_CHANNELING_ITEM_ENTITY = "CableChannelingItem";
-	public static final String PATH_ELEMENT_ENTITY = "PathElement";
-	public static final String SCHEME_ENTITY = "Scheme";
-	public static final String SCHEME_CABLE_LINK_ENTITY = "SchemeCableLink";
-	public static final String SCHEME_CABLE_PORT_ENTITY = "SchemeCablePort";
-	public static final String SCHEME_CABLE_THREAD_ENTITY = "SchemeCableThread";
-	public static final String SCHEME_DEVICE_ENTITY = "SchemeDevice";
-	public static final String SCHEME_ELEMENT_ENTITY = "SchemeElement";
-	public static final String SCHEME_LINK_ENTITY = "SchemeLink";
-	public static final String SCHEME_MONITORING_SOLUTION_ENTITY = "SchemeMonitoringSolution";
-	public static final String SCHEME_OPTIMIZE_INFO_ENTITY = "SchemeOptimizeInfo";
-	public static final String SCHEME_PATH_ENTITY = "SchemePath";
-	public static final String SCHEME_PORT_ENTITY = "SchemePort";
-	public static final String SCHEME_PROTO_ELEMENT_ENTITY = "SchemeProtoElement";
-	public static final String SCHEME_PROTO_GROUP_ENTITY = "SchemeProtoGroup";
+	public static final String CABLE_CHANNELING_ITEM_ENTITY = "CableChannelingItem"; //$NON-NLS-1$
+	public static final String PATH_ELEMENT_ENTITY = "PathElement"; //$NON-NLS-1$
+	public static final String SCHEME_ENTITY = "Scheme"; //$NON-NLS-1$
+	public static final String SCHEME_CABLE_LINK_ENTITY = "SchemeCableLink"; //$NON-NLS-1$
+	public static final String SCHEME_CABLE_PORT_ENTITY = "SchemeCablePort"; //$NON-NLS-1$
+	public static final String SCHEME_CABLE_THREAD_ENTITY = "SchemeCableThread"; //$NON-NLS-1$
+	public static final String SCHEME_DEVICE_ENTITY = "SchemeDevice"; //$NON-NLS-1$
+	public static final String SCHEME_ELEMENT_ENTITY = "SchemeElement"; //$NON-NLS-1$
+	public static final String SCHEME_LINK_ENTITY = "SchemeLink"; //$NON-NLS-1$
+	public static final String SCHEME_MONITORING_SOLUTION_ENTITY = "SchemeMonitoringSolution"; //$NON-NLS-1$
+	public static final String SCHEME_OPTIMIZE_INFO_ENTITY = "SchemeOptimizeInfo"; //$NON-NLS-1$
+	public static final String SCHEME_OPTIMIZE_INFO_SWITCH_ENTITY = "SchemeOptimizeInfoSwitch"; //$NON-NLS-1$
+	public static final String SCHEME_OPTIMIZE_INFO_RTU_ENTITY = "SchemeOptimizeInfoRtu"; //$NON-NLS-1$
+	public static final String SCHEME_PATH_ENTITY = "SchemePath"; //$NON-NLS-1$
+	public static final String SCHEME_PORT_ENTITY = "SchemePort"; //$NON-NLS-1$
+	public static final String SCHEME_PROTO_ELEMENT_ENTITY = "SchemeProtoElement"; //$NON-NLS-1$
+	public static final String SCHEME_PROTO_GROUP_ENTITY = "SchemeProtoGroup"; //$NON-NLS-1$
 
 	/*			Map			*/
-	public static final String SITE_NODE_ENTITY = "SiteNode";
-	public static final String TOPOLOGICAL_NODE_ENTITY = "TopologicalNode";
-	public static final String NODE_LINK_ENTITY = "NodeLink";
-	public static final String MARK_ENTITY = "Mark";
-	public static final String PHYSICAL_LINK_ENTITY = "PhysicalLink";
-	public static final String COLLECTOR_ENTITY = "Collector";
-	public static final String MAP_ENTITY = "Map";
+	public static final String SITE_NODE_ENTITY = "SiteNode"; //$NON-NLS-1$
+	public static final String TOPOLOGICAL_NODE_ENTITY = "TopologicalNode"; //$NON-NLS-1$
+	public static final String NODE_LINK_ENTITY = "NodeLink"; //$NON-NLS-1$
+	public static final String MARK_ENTITY = "Mark"; //$NON-NLS-1$
+	public static final String PHYSICAL_LINK_ENTITY = "PhysicalLink"; //$NON-NLS-1$
+	public static final String COLLECTOR_ENTITY = "Collector"; //$NON-NLS-1$
+	public static final String MAP_ENTITY = "Map"; //$NON-NLS-1$
 
 	/*       Resource       */
-	public static final String IMAGE_RESOURCE_ENTITY = "ImageResource";
+	public static final String IMAGE_RESOURCE_ENTITY = "ImageResource"; //$NON-NLS-1$
 	
 	/*		MapView			*/
-	public static final String MAPVIEW_ENTITY = "MapView";
+	public static final String MAPVIEW_ENTITY = "MapView"; //$NON-NLS-1$
 
 	/*        Updike        */
 	/**
 	 * Шняга: {@value}.
 	 */
-	public static final String UPDIKE_ENTITY = "8========================D";
+	public static final String UPDIKE_ENTITY = "8========================D"; //$NON-NLS-1$
 
-
-	public static final short UNKNOWN_ENTITY_CODE = 0x0000;	
+	/**
+	 * Never gets registered.
+	 */
+	public static final short UNKNOWN_ENTITY_CODE = 0x0000;
 
 	/*
 	 * Здесь могла бы быть ваша реклама: 1-64 (0x0001-0x0040)
@@ -255,10 +267,12 @@ public final class ObjectEntities {
 	public static final short SCHEME_LINK_ENTITY_CODE = 0x0289;
 	public static final short SCHEME_MONITORING_SOLUTION_ENTITY_CODE = 0x028A;
 	public static final short SCHEME_OPTIMIZE_INFO_ENTITY_CODE = 0x028B;
-	public static final short SCHEME_PATH_ENTITY_CODE = 0x028C;
-	public static final short SCHEME_PORT_ENTITY_CODE = 0x028D;
-	public static final short SCHEME_PROTO_ELEMENT_ENTITY_CODE = 0x028E;
-	public static final short SCHEME_PROTO_GROUP_ENTITY_CODE = 0x028F;
+	public static final short SCHEME_OPTIMIZE_INFO_SWITCH_ENTITY_CODE = 0x028C;
+	public static final short SCHEME_OPTIMIZE_INFO_RTU_ENTITY_CODE = 0x028D;
+	public static final short SCHEME_PATH_ENTITY_CODE = 0x028E;
+	public static final short SCHEME_PORT_ENTITY_CODE = 0x028F;
+	public static final short SCHEME_PROTO_ELEMENT_ENTITY_CODE = 0x0290;
+	public static final short SCHEME_PROTO_GROUP_ENTITY_CODE = 0x0291;
 
 	public static final short SCHEME_MAX_ENTITY_CODE = 0x0300;
 
@@ -307,281 +321,126 @@ public final class ObjectEntities {
 	 */
 	public static final short UPDIKE_ENTITY_CODE = Short.MAX_VALUE;
 
+	private static final TObjectShortHashMap nameCodeMap = new TObjectShortHashMap();  
+
+	private static final TShortObjectHashMap codeNameMap = new TShortObjectHashMap();
+
 	private ObjectEntities() {
 		// empty singleton constructor
 		assert false;
 	}
 
+	static {
+		registerEntities();
+	}
+
+	private static void registerEntities() {
+		registerEntity(PARAMETERTYPE_ENTITY_CODE, PARAMETERTYPE_ENTITY);
+		registerEntity(CHARACTERISTICTYPE_ENTITY_CODE, CHARACTERISTICTYPE_ENTITY);
+
+		registerEntity(EVENTTYPE_ENTITY_CODE, EVENTTYPE_ENTITY);
+//		registerEntity(ALARMTYPE_ENTITY_CODE, ALARMTYPE_ENTITY);
+
+		registerEntity(EQUIPMENTTYPE_ENTITY_CODE, EQUIPMENTTYPE_ENTITY);
+		registerEntity(PORTTYPE_ENTITY_CODE, PORTTYPE_ENTITY);
+		registerEntity(MEASUREMENTPORTTYPE_ENTITY_CODE, MEASUREMENTPORTTYPE_ENTITY);
+		registerEntity(LINKTYPE_ENTITY_CODE, LINKTYPE_ENTITY);
+		registerEntity(CABLETHREADTYPE_ENTITY_CODE, CABLETHREADTYPE_ENTITY);
+		registerEntity(CABLELINKTYPE_ENTITY_CODE, CABLELINKTYPE_ENTITY);
+
+		registerEntity(MEASUREMENTTYPE_ENTITY_CODE, MEASUREMENTTYPE_ENTITY);
+		registerEntity(ANALYSISTYPE_ENTITY_CODE, ANALYSISTYPE_ENTITY);
+		registerEntity(EVALUATIONTYPE_ENTITY_CODE, EVALUATIONTYPE_ENTITY);
+		registerEntity(MODELINGTYPE_ENTITY_CODE, MODELINGTYPE_ENTITY);
+
+		registerEntity(SITE_NODE_TYPE_ENTITY_CODE, SITE_NODE_TYPE_ENTITY);
+		registerEntity(PHYSICAL_LINK_TYPE_ENTITY_CODE, PHYSICAL_LINK_TYPE_ENTITY);
+
+		registerEntity(CHARACTERISTIC_ENTITY_CODE, CHARACTERISTIC_ENTITY);
+
+		registerEntity(EVENTPARAMETER_ENTITY_CODE, EVENTPARAMETER_ENTITY);
+		registerEntity(EVENTSOURCE_ENTITY_CODE, EVENTSOURCE_ENTITY);
+		registerEntity(EVENT_ENTITY_CODE, EVENT_ENTITY);
+//		registerEntity(ALARM_ENTITY_CODE, ALARM_ENTITY);
+
+		registerEntity(USER_ENTITY_CODE, USER_ENTITY);
+		registerEntity(DOMAIN_ENTITY_CODE, DOMAIN_ENTITY);
+		registerEntity(SERVER_ENTITY_CODE, SERVER_ENTITY);
+		registerEntity(MCM_ENTITY_CODE, MCM_ENTITY);
+		registerEntity(SERVERPROCESS_ENTITY_CODE, SERVERPROCESS_ENTITY);
+		registerEntity(PERMATTR_ENTITY_CODE, PERMATTR_ENTITY);
+
+		registerEntity(EQUIPMENT_ENTITY_CODE, EQUIPMENT_ENTITY);
+		registerEntity(PORT_ENTITY_CODE, PORT_ENTITY);
+		registerEntity(TRANSPATH_ENTITY_CODE, TRANSPATH_ENTITY);
+		registerEntity(TRANSPATHTYPE_ENTITY_CODE, TRANSPATHTYPE_ENTITY);
+		registerEntity(KIS_ENTITY_CODE, KIS_ENTITY);
+//		registerEntity(KISTYPE_ENTITY_CODE, KISTYPE_ENTITY);
+		registerEntity(MEASUREMENTPORT_ENTITY_CODE, MEASUREMENTPORT_ENTITY);
+		registerEntity(ME_ENTITY_CODE, ME_ENTITY);
+		registerEntity(LINK_ENTITY_CODE, LINK_ENTITY);
+		registerEntity(CABLETHREAD_ENTITY_CODE, CABLETHREAD_ENTITY);
+
+		registerEntity(SET_ENTITY_CODE, SET_ENTITY);
+		registerEntity(SETPARAMETER_ENTITY_CODE, SETPARAMETER_ENTITY);
+		registerEntity(MS_ENTITY_CODE, MS_ENTITY);
+		registerEntity(MEASUREMENT_ENTITY_CODE, MEASUREMENT_ENTITY);
+		registerEntity(ANALYSIS_ENTITY_CODE, ANALYSIS_ENTITY);
+		registerEntity(EVALUATION_ENTITY_CODE, EVALUATION_ENTITY);
+		registerEntity(TEST_ENTITY_CODE, TEST_ENTITY);
+		registerEntity(RESULT_ENTITY_CODE, RESULT_ENTITY);
+		registerEntity(RESULTPARAMETER_ENTITY_CODE, RESULTPARAMETER_ENTITY);
+		registerEntity(CRONTEMPORALPATTERN_ENTITY_CODE, CRONTEMPORALPATTERN_ENTITY);
+		registerEntity(INTERVALS_TEMPORALPATTERN_ENTITY_CODE, INTERVALS_TEMPORALPATTERN_ENTITY);
+		registerEntity(PERIODICAL_TEMPORALPATTERN_ENTITY_CODE, PERIODICAL_TEMPORALPATTERN_ENTITY);
+		registerEntity(MODELING_ENTITY_CODE, MODELING_ENTITY);
+
+		registerEntity(CABLE_CHANNELING_ITEM_ENTITY_CODE, CABLE_CHANNELING_ITEM_ENTITY);
+		registerEntity(PATH_ELEMENT_ENTITY_CODE, PATH_ELEMENT_ENTITY);
+		registerEntity(SCHEME_ENTITY_CODE, SCHEME_ENTITY);
+		registerEntity(SCHEME_CABLE_LINK_ENTITY_CODE, SCHEME_CABLE_LINK_ENTITY);
+		registerEntity(SCHEME_CABLE_PORT_ENTITY_CODE, SCHEME_CABLE_PORT_ENTITY);
+		registerEntity(SCHEME_CABLE_THREAD_ENTITY_CODE, SCHEME_CABLE_THREAD_ENTITY);
+		registerEntity(SCHEME_DEVICE_ENTITY_CODE, SCHEME_DEVICE_ENTITY);
+		registerEntity(SCHEME_ELEMENT_ENTITY_CODE, SCHEME_ELEMENT_ENTITY);
+		registerEntity(SCHEME_LINK_ENTITY_CODE, SCHEME_LINK_ENTITY);
+		registerEntity(SCHEME_MONITORING_SOLUTION_ENTITY_CODE, SCHEME_MONITORING_SOLUTION_ENTITY);
+		registerEntity(SCHEME_OPTIMIZE_INFO_ENTITY_CODE, SCHEME_OPTIMIZE_INFO_ENTITY);
+		registerEntity(SCHEME_OPTIMIZE_INFO_SWITCH_ENTITY_CODE, SCHEME_OPTIMIZE_INFO_SWITCH_ENTITY);
+		registerEntity(SCHEME_OPTIMIZE_INFO_RTU_ENTITY_CODE, SCHEME_OPTIMIZE_INFO_RTU_ENTITY);
+		registerEntity(SCHEME_PATH_ENTITY_CODE, SCHEME_PATH_ENTITY);
+		registerEntity(SCHEME_PORT_ENTITY_CODE, SCHEME_PORT_ENTITY);
+		registerEntity(SCHEME_PROTO_ELEMENT_ENTITY_CODE, SCHEME_PROTO_ELEMENT_ENTITY);
+		registerEntity(SCHEME_PROTO_GROUP_ENTITY_CODE, SCHEME_PROTO_GROUP_ENTITY);
+
+		registerEntity(SITE_NODE_ENTITY_CODE, SITE_NODE_ENTITY);
+		registerEntity(TOPOLOGICAL_NODE_ENTITY_CODE, TOPOLOGICAL_NODE_ENTITY);
+		registerEntity(NODE_LINK_ENTITY_CODE, NODE_LINK_ENTITY);
+		registerEntity(MARK_ENTITY_CODE, MARK_ENTITY);
+		registerEntity(PHYSICAL_LINK_ENTITY_CODE, PHYSICAL_LINK_ENTITY);
+		registerEntity(COLLECTOR_ENTITY_CODE, COLLECTOR_ENTITY);
+		registerEntity(MAP_ENTITY_CODE, MAP_ENTITY);
+
+		registerEntity(IMAGE_RESOURCE_ENTITY_CODE, IMAGE_RESOURCE_ENTITY);
+
+		registerEntity(MAPVIEW_ENTITY_CODE, MAPVIEW_ENTITY);
+
+		registerEntity(UPDIKE_ENTITY_CODE, UPDIKE_ENTITY);
+	}
+
+	private static void registerEntity(final short entityCode, final String entity) {
+		codeNameMap.put(entityCode, entity);
+		nameCodeMap.put(entity, entityCode);
+	}
+
 	public static short stringToCode(final String entity) {
-		/**
-		 * TODO recast using Trove Collections
-		 */
-		if (entity.equals(PARAMETERTYPE_ENTITY)) return PARAMETERTYPE_ENTITY_CODE;
-		else if (entity.equals(CHARACTERISTICTYPE_ENTITY)) return CHARACTERISTICTYPE_ENTITY_CODE;
-
-		else if (entity.equals(EVENTTYPE_ENTITY)) return EVENTTYPE_ENTITY_CODE;
-//		else if (entity.equals(ALARMTYPE_ENTITY)) return ALARMTYPE_ENTITY_CODE;
-	
-		else if (entity.equals(EQUIPMENTTYPE_ENTITY)) return EQUIPMENTTYPE_ENTITY_CODE;
-		else if (entity.equals(PORTTYPE_ENTITY)) return PORTTYPE_ENTITY_CODE;
-		else if (entity.equals(MEASUREMENTPORTTYPE_ENTITY)) return MEASUREMENTPORTTYPE_ENTITY_CODE;
-		else if (entity.equals(LINKTYPE_ENTITY)) return LINKTYPE_ENTITY_CODE;
-		else if (entity.equals(CABLETHREADTYPE_ENTITY)) return CABLETHREADTYPE_ENTITY_CODE;
-		else if (entity.equals(CABLELINKTYPE_ENTITY)) return CABLELINKTYPE_ENTITY_CODE;
-		
-		else if (entity.equals(MEASUREMENTTYPE_ENTITY)) return MEASUREMENTTYPE_ENTITY_CODE;
-		else if (entity.equals(ANALYSISTYPE_ENTITY)) return ANALYSISTYPE_ENTITY_CODE;
-		else if (entity.equals(EVALUATIONTYPE_ENTITY)) return EVALUATIONTYPE_ENTITY_CODE;
-		else if (entity.equals(MODELINGTYPE_ENTITY)) return MODELINGTYPE_ENTITY_CODE;
-
-		else if (entity.equals(SITE_NODE_TYPE_ENTITY)) return SITE_NODE_TYPE_ENTITY_CODE;
-		else if (entity.equals(PHYSICAL_LINK_TYPE_ENTITY)) return PHYSICAL_LINK_TYPE_ENTITY_CODE;
-
-		else if (entity.equals(CHARACTERISTIC_ENTITY)) return CHARACTERISTIC_ENTITY_CODE;
-
-		else if (entity.equals(EVENTPARAMETER_ENTITY)) return EVENTPARAMETER_ENTITY_CODE;
-		else if (entity.equals(EVENTSOURCE_ENTITY)) return EVENTSOURCE_ENTITY_CODE;
-		else if (entity.equals(EVENT_ENTITY)) return EVENT_ENTITY_CODE;
-//		else if (entity.equals(ALARM_ENTITY)) return ALARM_ENTITY_CODE;
-
-		else if (entity.equals(USER_ENTITY)) return USER_ENTITY_CODE;
-		else if (entity.equals(DOMAIN_ENTITY)) return DOMAIN_ENTITY_CODE;
-		else if (entity.equals(SERVER_ENTITY)) return SERVER_ENTITY_CODE;
-		else if (entity.equals(MCM_ENTITY)) return MCM_ENTITY_CODE;
-		else if (entity.equals(SERVERPROCESS_ENTITY)) return SERVERPROCESS_ENTITY_CODE;
-		else if (entity.equals(PERMATTR_ENTITY)) return PERMATTR_ENTITY_CODE;
-
-		else if (entity.equals(EQUIPMENT_ENTITY)) return EQUIPMENT_ENTITY_CODE;
-		else if (entity.equals(PORT_ENTITY)) return PORT_ENTITY_CODE;
-		else if (entity.equals(TRANSPATH_ENTITY)) return TRANSPATH_ENTITY_CODE;
-		else if (entity.equals(TRANSPATHTYPE_ENTITY)) return TRANSPATHTYPE_ENTITY_CODE;
-		else if (entity.equals(KIS_ENTITY)) return KIS_ENTITY_CODE;
-		//else if (entity.equals(KISTYPE_ENTITY)) return KISTYPE_ENTITY_CODE;
-		else if (entity.equals(MEASUREMENTPORT_ENTITY)) return MEASUREMENTPORT_ENTITY_CODE;
-		else if (entity.equals(ME_ENTITY)) return ME_ENTITY_CODE;
-		else if (entity.equals(LINK_ENTITY)) return LINK_ENTITY_CODE;
-		else if (entity.equals(CABLETHREAD_ENTITY)) return CABLETHREAD_ENTITY_CODE;
-
-		else if (entity.equals(SET_ENTITY)) return SET_ENTITY_CODE;
-		else if (entity.equals(SETPARAMETER_ENTITY)) return SETPARAMETER_ENTITY_CODE;
-		else if (entity.equals(MS_ENTITY)) return MS_ENTITY_CODE;
-		else if (entity.equals(MEASUREMENT_ENTITY)) return MEASUREMENT_ENTITY_CODE;
-		else if (entity.equals(ANALYSIS_ENTITY)) return ANALYSIS_ENTITY_CODE;
-		else if (entity.equals(EVALUATION_ENTITY)) return EVALUATION_ENTITY_CODE;
-		else if (entity.equals(TEST_ENTITY)) return TEST_ENTITY_CODE;
-		else if (entity.equals(RESULT_ENTITY)) return RESULT_ENTITY_CODE;
-		else if (entity.equals(RESULTPARAMETER_ENTITY)) return RESULTPARAMETER_ENTITY_CODE;
-		else if (entity.equals(CRONTEMPORALPATTERN_ENTITY)) return CRONTEMPORALPATTERN_ENTITY_CODE;
-		else if (entity.equals(INTERVALS_TEMPORALPATTERN_ENTITY)) return INTERVALS_TEMPORALPATTERN_ENTITY_CODE;
-		else if (entity.equals(PERIODICAL_TEMPORALPATTERN_ENTITY)) return PERIODICAL_TEMPORALPATTERN_ENTITY_CODE;
-		else if (entity.equals(MODELING_ENTITY)) return MODELING_ENTITY_CODE;
-
-		else if (entity.equals(CABLE_CHANNELING_ITEM_ENTITY)) return CABLE_CHANNELING_ITEM_ENTITY_CODE;
-		else if (entity.equals(PATH_ELEMENT_ENTITY)) return PATH_ELEMENT_ENTITY_CODE;
-		else if (entity.equals(SCHEME_ENTITY)) return SCHEME_ENTITY_CODE;
-		else if (entity.equals(SCHEME_CABLE_LINK_ENTITY)) return SCHEME_CABLE_LINK_ENTITY_CODE;
-		else if (entity.equals(SCHEME_CABLE_PORT_ENTITY)) return SCHEME_CABLE_PORT_ENTITY_CODE;
-		else if (entity.equals(SCHEME_CABLE_THREAD_ENTITY)) return SCHEME_CABLE_THREAD_ENTITY_CODE;
-		else if (entity.equals(SCHEME_DEVICE_ENTITY)) return SCHEME_DEVICE_ENTITY_CODE;
-		else if (entity.equals(SCHEME_ELEMENT_ENTITY)) return SCHEME_ELEMENT_ENTITY_CODE;
-		else if (entity.equals(SCHEME_LINK_ENTITY)) return SCHEME_LINK_ENTITY_CODE;
-		else if (entity.equals(SCHEME_MONITORING_SOLUTION_ENTITY)) return SCHEME_MONITORING_SOLUTION_ENTITY_CODE;
-		else if (entity.equals(SCHEME_OPTIMIZE_INFO_ENTITY)) return SCHEME_OPTIMIZE_INFO_ENTITY_CODE;
-		else if (entity.equals(SCHEME_PATH_ENTITY)) return SCHEME_PATH_ENTITY_CODE;
-		else if (entity.equals(SCHEME_PORT_ENTITY)) return SCHEME_PORT_ENTITY_CODE;
-		else if (entity.equals(SCHEME_PROTO_ELEMENT_ENTITY)) return SCHEME_PROTO_ELEMENT_ENTITY_CODE;
-		else if (entity.equals(SCHEME_PROTO_GROUP_ENTITY)) return SCHEME_PROTO_GROUP_ENTITY_CODE;
-
-		else if (entity.equals(SITE_NODE_ENTITY)) return SITE_NODE_ENTITY_CODE;
-		else if (entity.equals(TOPOLOGICAL_NODE_ENTITY)) return TOPOLOGICAL_NODE_ENTITY_CODE;
-		else if (entity.equals(NODE_LINK_ENTITY)) return NODE_LINK_ENTITY_CODE;
-		else if (entity.equals(MARK_ENTITY)) return MARK_ENTITY_CODE;
-		else if (entity.equals(PHYSICAL_LINK_ENTITY)) return PHYSICAL_LINK_ENTITY_CODE;
-		else if (entity.equals(COLLECTOR_ENTITY)) return COLLECTOR_ENTITY_CODE;
-		else if (entity.equals(MAP_ENTITY)) return MAP_ENTITY_CODE;
-
-		else if (entity.equals(IMAGE_RESOURCE_ENTITY)) return IMAGE_RESOURCE_ENTITY_CODE;
-		
-		else if (entity.equals(MAPVIEW_ENTITY)) return MAPVIEW_ENTITY_CODE;
-
-		else if (entity.equals(UPDIKE_ENTITY)) return UPDIKE_ENTITY_CODE;
-
-		else return UNKNOWN_ENTITY_CODE;
+		final short returnValue = nameCodeMap.get(entity);
+		return returnValue == 0 ? UNKNOWN_ENTITY_CODE : returnValue;
 	}
 
 	public static String codeToString(final short code) {
-		/**
-		 * TODO recast using Trove Collections
-		 */
-		switch (code) {
-			case PARAMETERTYPE_ENTITY_CODE:
-				return PARAMETERTYPE_ENTITY;
-			case CHARACTERISTICTYPE_ENTITY_CODE:
-				return CHARACTERISTICTYPE_ENTITY;
-
-			case EVENTTYPE_ENTITY_CODE:
-				return EVENTTYPE_ENTITY;
-//			case ALARMTYPE_ENTITY_CODE:
-//				return ALARMTYPE_ENTITY;
-
-			case EQUIPMENTTYPE_ENTITY_CODE:
-				return EQUIPMENTTYPE_ENTITY;
-			case PORTTYPE_ENTITY_CODE:
-				return PORTTYPE_ENTITY;
-			case MEASUREMENTPORTTYPE_ENTITY_CODE:
-				return MEASUREMENTPORTTYPE_ENTITY;
-			case LINKTYPE_ENTITY_CODE:
-				return LINKTYPE_ENTITY;
-			case CABLETHREADTYPE_ENTITY_CODE:
-				return CABLETHREADTYPE_ENTITY;
-			case CABLELINKTYPE_ENTITY_CODE:
-				return CABLELINKTYPE_ENTITY;
-				
-			case MEASUREMENTTYPE_ENTITY_CODE:
-				return MEASUREMENTTYPE_ENTITY;
-			case ANALYSISTYPE_ENTITY_CODE:
-				return ANALYSISTYPE_ENTITY;
-			case EVALUATIONTYPE_ENTITY_CODE:
-				return EVALUATIONTYPE_ENTITY;
-			case MODELINGTYPE_ENTITY_CODE:
-				return MODELINGTYPE_ENTITY;
-
-			case SITE_NODE_TYPE_ENTITY_CODE:
-				return SITE_NODE_TYPE_ENTITY;
-			case PHYSICAL_LINK_TYPE_ENTITY_CODE:
-				return PHYSICAL_LINK_TYPE_ENTITY;
-
-			case CHARACTERISTIC_ENTITY_CODE:
-				return CHARACTERISTIC_ENTITY;
-
-			case EVENTPARAMETER_ENTITY_CODE:
-				return EVENTPARAMETER_ENTITY;
-			case EVENTSOURCE_ENTITY_CODE:
-				return EVENTSOURCE_ENTITY;
-			case EVENT_ENTITY_CODE:
-				return EVENT_ENTITY;
-//			case ALARM_ENTITY_CODE:
-//				return ALARM_ENTITY;
-
-			case USER_ENTITY_CODE:
-				return USER_ENTITY;
-			case DOMAIN_ENTITY_CODE:
-				return DOMAIN_ENTITY;
-			case SERVER_ENTITY_CODE:
-				return SERVER_ENTITY;
-			case MCM_ENTITY_CODE:
-				return MCM_ENTITY;
-			case SERVERPROCESS_ENTITY_CODE:
-				return SERVERPROCESS_ENTITY;
-			case PERMATTR_ENTITY_CODE:
-				return PERMATTR_ENTITY;
-
-			case EQUIPMENT_ENTITY_CODE:
-				return EQUIPMENT_ENTITY;
-			case PORT_ENTITY_CODE:
-				return PORT_ENTITY;
-			case TRANSPATH_ENTITY_CODE:
-				return TRANSPATH_ENTITY;
-			case TRANSPATHTYPE_ENTITY_CODE:
-				return TRANSPATHTYPE_ENTITY;
-			case KIS_ENTITY_CODE:
-				return KIS_ENTITY;
-//			case KISTYPE_ENTITY_CODE:
-//				return KISTYPE_ENTITY;
-			case MEASUREMENTPORT_ENTITY_CODE:
-				return MEASUREMENTPORT_ENTITY;
-			case ME_ENTITY_CODE:
-				return ME_ENTITY;
-			case LINK_ENTITY_CODE:
-				return LINK_ENTITY;
-			case CABLETHREAD_ENTITY_CODE:
-				return CABLETHREAD_ENTITY;
-			case SET_ENTITY_CODE:
-				return SET_ENTITY;
-			case SETPARAMETER_ENTITY_CODE:
-				return SETPARAMETER_ENTITY;
-			case MS_ENTITY_CODE:
-				return MS_ENTITY;
-			case MEASUREMENT_ENTITY_CODE:
-				return MEASUREMENT_ENTITY;
-			case ANALYSIS_ENTITY_CODE:
-				return ANALYSIS_ENTITY;
-			case EVALUATION_ENTITY_CODE:
-				return EVALUATION_ENTITY;
-			case TEST_ENTITY_CODE:
-				return TEST_ENTITY;
-			case RESULT_ENTITY_CODE:
-				return RESULT_ENTITY;
-			case RESULTPARAMETER_ENTITY_CODE:
-				return RESULTPARAMETER_ENTITY;
-			case CRONTEMPORALPATTERN_ENTITY_CODE:
-				return CRONTEMPORALPATTERN_ENTITY;
-			case INTERVALS_TEMPORALPATTERN_ENTITY_CODE:
-				return INTERVALS_TEMPORALPATTERN_ENTITY;
-			case PERIODICAL_TEMPORALPATTERN_ENTITY_CODE:
-				return PERIODICAL_TEMPORALPATTERN_ENTITY;
-			case MODELING_ENTITY_CODE:
-				return MODELING_ENTITY;
-
-			case CABLE_CHANNELING_ITEM_ENTITY_CODE:
-				return CABLE_CHANNELING_ITEM_ENTITY;
-			case PATH_ELEMENT_ENTITY_CODE:
-				return PATH_ELEMENT_ENTITY;
-			case SCHEME_ENTITY_CODE:
-				return SCHEME_ENTITY;
-			case SCHEME_CABLE_LINK_ENTITY_CODE:
-				return SCHEME_CABLE_LINK_ENTITY;
-			case SCHEME_CABLE_PORT_ENTITY_CODE:
-				return SCHEME_CABLE_PORT_ENTITY;
-			case SCHEME_CABLE_THREAD_ENTITY_CODE:
-				return SCHEME_CABLE_THREAD_ENTITY;
-			case SCHEME_DEVICE_ENTITY_CODE:
-				return SCHEME_DEVICE_ENTITY;
-			case SCHEME_ELEMENT_ENTITY_CODE:
-				return SCHEME_ELEMENT_ENTITY;
-			case SCHEME_LINK_ENTITY_CODE:
-				return SCHEME_LINK_ENTITY;
-			case SCHEME_MONITORING_SOLUTION_ENTITY_CODE:
-				return SCHEME_MONITORING_SOLUTION_ENTITY;
-			case SCHEME_OPTIMIZE_INFO_ENTITY_CODE:
-				return SCHEME_OPTIMIZE_INFO_ENTITY;
-			case SCHEME_PATH_ENTITY_CODE:
-				return SCHEME_PATH_ENTITY;
-			case SCHEME_PORT_ENTITY_CODE:
-				return SCHEME_PORT_ENTITY;
-			case SCHEME_PROTO_ELEMENT_ENTITY_CODE:
-				return SCHEME_PROTO_ELEMENT_ENTITY;
-			case SCHEME_PROTO_GROUP_ENTITY_CODE:
-				return SCHEME_PROTO_GROUP_ENTITY;
-
-			case SITE_NODE_ENTITY_CODE:
-				return SITE_NODE_ENTITY;
-			case TOPOLOGICAL_NODE_ENTITY_CODE:
-				return TOPOLOGICAL_NODE_ENTITY;
-			case NODE_LINK_ENTITY_CODE:
-				return NODE_LINK_ENTITY;
-			case MARK_ENTITY_CODE:
-				return MARK_ENTITY;
-			case PHYSICAL_LINK_ENTITY_CODE:
-				return PHYSICAL_LINK_ENTITY;
-			case COLLECTOR_ENTITY_CODE:
-				return COLLECTOR_ENTITY;
-			case MAP_ENTITY_CODE:
-				return MAP_ENTITY;
-
-			case IMAGE_RESOURCE_ENTITY_CODE:
-				return IMAGE_RESOURCE_ENTITY;
-			
-			case MAPVIEW_ENTITY_CODE:
-				return MAPVIEW_ENTITY;
-
-			case UPDIKE_ENTITY_CODE:
-				return UPDIKE_ENTITY;
-
-			case UNKNOWN_ENTITY_CODE:
-			default:
-				return null;
-		}
+		final String returnValue = (String) codeNameMap.get(code);
+		return returnValue == null ? UNKNOWN_ENTITY : returnValue;
 	}
 
 	public static String codeToString(final Short code) {
