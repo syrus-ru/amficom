@@ -1,5 +1,5 @@
 /*
- * $Id: AdministrationStorableObjectPool.java,v 1.26 2005/05/10 18:57:45 bass Exp $
+ * $Id: AdministrationStorableObjectPool.java,v 1.27 2005/05/10 19:26:22 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,11 +21,12 @@ import com.syrus.AMFICOM.general.ObjectGroupEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/05/10 18:57:45 $
- * @author $Author: bass $
+ * @version $Revision: 1.27 $, $Date: 2005/05/10 19:26:22 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 
@@ -43,16 +44,14 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 	private static AdministrationObjectLoader aObjectLoader;
 	private static AdministrationStorableObjectPool instance;
 
-	{
-		registerPool(ObjectGroupEntities.ADMINISTRATION_GROUP_CODE, this);
-	}
 
 	private AdministrationStorableObjectPool() {
-		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.ADMINISTRATION_GROUP_CODE);
+		this(LRUMap.class);
 	}
 
 	private AdministrationStorableObjectPool(Class cacheMapClass) {
 		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.ADMINISTRATION_GROUP_CODE, cacheMapClass);
+		registerPool(ObjectGroupEntities.ADMINISTRATION_GROUP_CODE, this);
 	}
 
 	public static void init(AdministrationObjectLoader aObjectLoader1, final int size) {

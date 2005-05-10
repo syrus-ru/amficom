@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.89 2005/05/10 18:57:45 bass Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.90 2005/05/10 19:26:12 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,11 +20,12 @@ import com.syrus.AMFICOM.general.ObjectGroupEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.89 $, $Date: 2005/05/10 18:57:45 $
- * @author $Author: bass $
+ * @version $Revision: 1.90 $, $Date: 2005/05/10 19:26:12 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -52,16 +53,14 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 	private static MeasurementObjectLoader mObjectLoader;
 	private static MeasurementStorableObjectPool instance;
 
-	{
-		registerPool(ObjectGroupEntities.MEASUREMENT_GROUP_CODE, this);
-	}
 
 	private MeasurementStorableObjectPool() {
-		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.MEASUREMENT_GROUP_CODE);
+		this(LRUMap.class);
 	}
 
 	private MeasurementStorableObjectPool(Class cacheMapClass) {
 		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.MEASUREMENT_GROUP_CODE, cacheMapClass);
+		registerPool(ObjectGroupEntities.MEASUREMENT_GROUP_CODE, this);
 	}
 
 	public static void init(final MeasurementObjectLoader mObjectLoader1, final int size) {

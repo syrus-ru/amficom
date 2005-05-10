@@ -1,5 +1,5 @@
 /*
- * $Id: ResourceStorableObjectPool.java,v 1.21 2005/05/10 18:57:45 bass Exp $
+ * $Id: ResourceStorableObjectPool.java,v 1.22 2005/05/10 19:25:32 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,11 +21,12 @@ import com.syrus.AMFICOM.general.ObjectGroupEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.21 $, $Date: 2005/05/10 18:57:45 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.22 $, $Date: 2005/05/10 19:25:32 $
  * @module resource_v1
  */
 public final class ResourceStorableObjectPool extends StorableObjectPool {
@@ -37,16 +38,14 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 	private static ResourceObjectLoader	rObjectLoader;
 	private static ResourceStorableObjectPool instance;
 	
-	{
-		registerPool(ObjectGroupEntities.RESOURCE_GROUP_CODE, this);
-	}
 
 	private ResourceStorableObjectPool() {
-		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.RESOURCE_GROUP_CODE);
+		this(LRUMap.class);
 	}
 	
 	private ResourceStorableObjectPool(Class cacheMapClass){
 		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.RESOURCE_GROUP_CODE, cacheMapClass);
+		registerPool(ObjectGroupEntities.RESOURCE_GROUP_CODE, this);
 	}
 
 	public static void init(ResourceObjectLoader rObjectLoader1, final int size) {

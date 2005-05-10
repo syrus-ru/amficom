@@ -1,5 +1,5 @@
 /*
- * $Id: MapViewStorableObjectPool.java,v 1.15 2005/05/10 18:57:46 bass Exp $
+ * $Id: MapViewStorableObjectPool.java,v 1.16 2005/05/10 19:25:17 arseniy Exp $
  *
  * Copyright ? 2004 Syrus Systems.
  * ѕвиапр-жейпкаехмкл зепжф.
@@ -19,11 +19,12 @@ import com.syrus.AMFICOM.general.ObjectGroupEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/05/10 18:57:46 $
- * @author $Author: bass $
+ * @version $Revision: 1.16 $, $Date: 2005/05/10 19:25:17 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -40,16 +41,14 @@ public final class MapViewStorableObjectPool extends StorableObjectPool {
 	private static MapViewObjectLoader			mvObjectLoader;
 	private static MapViewStorableObjectPool	instance;
 
-	{
-		registerPool(ObjectGroupEntities.MAPVIEW_GROUP_CODE, this);
-	}
 
 	private MapViewStorableObjectPool() {
-		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.MAPVIEW_GROUP_CODE);
+		this(LRUMap.class);
 	}
 
 	private MapViewStorableObjectPool(Class cacheMapClass) {
 		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.MAPVIEW_GROUP_CODE, cacheMapClass);
+		registerPool(ObjectGroupEntities.MAPVIEW_GROUP_CODE, this);
 	}
 
 	public static void init(MapViewObjectLoader mvObjectLoader1, final int size) {

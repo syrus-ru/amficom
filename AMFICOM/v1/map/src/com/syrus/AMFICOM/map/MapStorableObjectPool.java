@@ -1,5 +1,5 @@
 /*
- * $Id: MapStorableObjectPool.java,v 1.19 2005/05/10 18:57:46 bass Exp $
+ * $Id: MapStorableObjectPool.java,v 1.20 2005/05/10 19:25:25 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,11 +21,12 @@ import com.syrus.AMFICOM.general.ObjectGroupEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/05/10 18:57:46 $
- * @author $Author: bass $
+ * @version $Revision: 1.20 $, $Date: 2005/05/10 19:25:25 $
+ * @author $Author: arseniy $
  * @module map_v1
  */
 public final class MapStorableObjectPool extends StorableObjectPool {
@@ -60,16 +61,14 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 	
 	private static MapStorableObjectPool instance;
 
-	{
-		registerPool(ObjectGroupEntities.MAP_GROUP_CODE, this);
-	}
 
 	private MapStorableObjectPool() {
-		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.MAP_GROUP_CODE);
+		this(LRUMap.class);
 	}
 
 	private MapStorableObjectPool(final Class cacheMapClass) {
 		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.MAP_GROUP_CODE, cacheMapClass);
+		registerPool(ObjectGroupEntities.MAP_GROUP_CODE, this);
 	}
 
 	public static void init(final MapObjectLoader mapObjectLoader1, final int size) {

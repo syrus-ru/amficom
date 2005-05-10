@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.81 2005/05/10 18:57:45 bass Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.82 2005/05/10 19:26:17 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,11 +21,12 @@ import com.syrus.AMFICOM.general.ObjectGroupEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.81 $, $Date: 2005/05/10 18:57:45 $
- * @author $Author: bass $
+ * @version $Revision: 1.82 $, $Date: 2005/05/10 19:26:17 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -53,16 +54,14 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 	private static ConfigurationObjectLoader cObjectLoader;
 	private static ConfigurationStorableObjectPool instance;
 
-	{
-		registerPool(ObjectGroupEntities.CONFIGURATION_GROUP_CODE, this);
-	}
 
 	private ConfigurationStorableObjectPool() {
-		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.CONFIGURATION_GROUP_CODE);
+		this(LRUMap.class);
 	}
 
 	private ConfigurationStorableObjectPool(Class cacheMapClass) {
 		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.CONFIGURATION_GROUP_CODE, cacheMapClass);
+		registerPool(ObjectGroupEntities.CONFIGURATION_GROUP_CODE, this);
 	}
 
 	public static void init(ConfigurationObjectLoader cObjectLoader1, final int size) {

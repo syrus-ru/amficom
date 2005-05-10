@@ -1,5 +1,5 @@
 /*
- * $Id: EventStorableObjectPool.java,v 1.24 2005/05/10 18:57:46 bass Exp $
+ * $Id: EventStorableObjectPool.java,v 1.25 2005/05/10 19:26:07 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,11 +21,12 @@ import com.syrus.AMFICOM.general.ObjectGroupEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/05/10 18:57:46 $
- * @author $Author: bass $
+ * @version $Revision: 1.25 $, $Date: 2005/05/10 19:26:07 $
+ * @author $Author: arseniy $
  * @module event_v1
  */
 
@@ -39,16 +40,14 @@ public class EventStorableObjectPool extends StorableObjectPool {
 	private static EventObjectLoader	eObjectLoader;
 	private static EventStorableObjectPool instance;
 
-	{
-		registerPool(ObjectGroupEntities.EVENT_GROUP_CODE, this);
-	}
 
 	private EventStorableObjectPool() {
-		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.EVENT_GROUP_CODE);
+		this(LRUMap.class);
 	}
 
 	private EventStorableObjectPool(Class cacheMapClass) {
 		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.EVENT_GROUP_CODE, cacheMapClass);
+		registerPool(ObjectGroupEntities.EVENT_GROUP_CODE, this);
 	}
 
 	public static void init(EventObjectLoader eObjectLoader1, final int size) {

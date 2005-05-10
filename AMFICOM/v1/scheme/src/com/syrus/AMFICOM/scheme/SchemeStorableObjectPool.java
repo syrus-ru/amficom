@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeStorableObjectPool.java,v 1.18 2005/05/10 18:57:46 bass Exp $
+ * $Id: SchemeStorableObjectPool.java,v 1.19 2005/05/10 19:25:04 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,11 +21,12 @@ import com.syrus.AMFICOM.general.ObjectGroupEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.18 $, $Date: 2005/05/10 18:57:46 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.19 $, $Date: 2005/05/10 19:25:04 $
  * @module scheme_v1
  */
 public final class SchemeStorableObjectPool extends StorableObjectPool {
@@ -71,16 +72,14 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 
 	private static SchemeStorableObjectPool instance;
 
-	{
-		registerPool(ObjectGroupEntities.SCHEME_GROUP_CODE, this);
-	}
 
 	private SchemeStorableObjectPool() {
-		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.SCHEME_GROUP_CODE);
+		this(LRUMap.class);
 	}
 
 	private SchemeStorableObjectPool(final Class cacheMapClass) {
 		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.SCHEME_GROUP_CODE, cacheMapClass);
+		registerPool(ObjectGroupEntities.SCHEME_GROUP_CODE, this);
 	}
 
 	public static void init(final SchemeObjectLoader schemeObjectLoader1, final int size) {
