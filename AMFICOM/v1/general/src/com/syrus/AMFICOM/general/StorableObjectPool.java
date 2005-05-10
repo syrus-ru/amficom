@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.77 2005/05/01 16:46:15 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.78 2005/05/10 16:21:57 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,8 +25,8 @@ import java.util.Set;
 import org.omg.CORBA.portable.IDLEntity;
 
 /**
- * @version $Revision: 1.77 $, $Date: 2005/05/01 16:46:15 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.78 $, $Date: 2005/05/10 16:21:57 $
+ * @author $Author: bass $
  * @module general_v1
  */
 public abstract class StorableObjectPool {
@@ -217,9 +217,9 @@ public abstract class StorableObjectPool {
 	 * Actually delete objects, scheduled for deletion
 	 */
 	private final void flushDeleted() {
-		Log.debugMessage("StorableObjectPool.flushDeleted | ########### deleted objects: " + this.deletedIds.size(), Log.DEBUGLEVEL09);
+		Log.debugMessage("StorableObjectPool.flushDeleted | ########### deleted objects: " + this.deletedIds.size(), Log.DEBUGLEVEL09); //$NON-NLS-1$
 		for (Iterator it = this.deletedIds.iterator(); it.hasNext();)
-			Log.debugMessage("StorableObjectPool.flushDeleted | " + it.next(), Log.DEBUGLEVEL09);
+			Log.debugMessage("StorableObjectPool.flushDeleted | " + it.next(), Log.DEBUGLEVEL09); //$NON-NLS-1$
 
 		final int size = this.deletedIds.size();
 		switch (size) {
@@ -406,7 +406,7 @@ public abstract class StorableObjectPool {
 		}
 
 		if (storableObject.isChanged()) {
-			Log.debugMessage("StorableObjectPool.checkChangedWithDependencies | Object '" + storableObject.getId() + "' is changed",
+			Log.debugMessage("StorableObjectPool.checkChangedWithDependencies | Object '" + storableObject.getId() + "' is changed",  //$NON-NLS-1$//$NON-NLS-2$
 					Log.DEBUGLEVEL10);
 			Integer dependencyKey = new Integer(-dependencyLevel);
 			Map levelSavingObjectsMap = (Map) this.savingObjectsMap.get(dependencyKey);
@@ -504,44 +504,40 @@ public abstract class StorableObjectPool {
 	}
 
 	protected final StorableObject getStorableObjectImpl(final Identifier objectId, final boolean useLoader) throws ApplicationException {
-		assert objectId != null : "Null identifier supplied"; //$NON-NLS-1$
+		assert objectId != null: ErrorMessages.NON_NULL_EXPECTED;
 
-		if (objectId != null) {
-			/* do not load deleted objects */
-			if (this.deletedIds.contains(objectId)) {
-				return null;
-			}
+		/* 
+		 * Do not load:
+		 * a. anything if a void identifier is supplied;
+		 * b. deleted objects.
+		 */
+		if (objectId.isVoid() || this.deletedIds.contains(objectId))
+			return null;
 
-			short objectEntityCode = objectId.getMajor();
-			LRUMap objectPool = (LRUMap) this.objectPoolMap.get(new Short(objectEntityCode));
-			if (objectPool != null) {
-				StorableObject storableObject = (StorableObject) objectPool.get(objectId);
-				if (storableObject == null && useLoader) {
-					Set set = this.loadStorableObjects(Collections.singleton(objectId));
-					if (!set.isEmpty()) {
-						storableObject = (StorableObject) set.iterator().next();
+		final short objectEntityCode = objectId.getMajor();
+		final LRUMap objectPool = (LRUMap) this.objectPoolMap.get(new Short(objectEntityCode));
+		if (objectPool != null) {
+			StorableObject storableObject = (StorableObject) objectPool.get(objectId);
+			if (storableObject == null && useLoader) {
+				final Set storableObjects = this.loadStorableObjects(Collections.singleton(objectId));
+				if (!storableObjects.isEmpty())
+					storableObject = (StorableObject) storableObjects.iterator().next();
+				if (storableObject != null)
+					try {
+						this.putStorableObjectImpl(storableObject);
+					} catch (final IllegalObjectEntityException ioee) {
+						Log.errorException(ioee);
 					}
-					if (storableObject != null)
-						try {
-							this.putStorableObjectImpl(storableObject);
-						}
-						catch (IllegalObjectEntityException ioee) {
-							Log.errorException(ioee);
-						}
-				}
-				return storableObject;
 			}
-
-			Log.errorMessage(this.selfGroupName + "StorableObjectPool.getStorableObjectImpl | Cannot find object pool for objectId: '" //$NON-NLS-1$
-					+ objectId.toString() + "' entity code: '" + ObjectEntities.codeToString(objectEntityCode) + "'"); //$NON-NLS-1$ //$NON-NLS-2$
-			for (Iterator it = this.objectPoolMap.keySet().iterator(); it.hasNext();) {
-				final Short entityCode = (Short) it.next();
-				Log.debugMessage(this.selfGroupName + "StorableObjectPool.getStorableObjectImpl | available " //$NON-NLS-1$
-						+ ObjectEntities.codeToString(entityCode) + " / " + entityCode, Log.DEBUGLEVEL05); //$NON-NLS-1$
-			}
+			return storableObject;
 		}
-		else {
-			Log.errorMessage(this.selfGroupName + "StorableObjectPool.getStorableObjectImpl | NULL identifier supplied"); //$NON-NLS-1$
+
+		Log.errorMessage(this.selfGroupName + "StorableObjectPool.getStorableObjectImpl | Cannot find object pool for objectId: '" //$NON-NLS-1$
+				+ objectId + "' entity code: '" + ObjectEntities.codeToString(objectEntityCode) + "'"); //$NON-NLS-1$ //$NON-NLS-2$
+		for (final Iterator it = this.objectPoolMap.keySet().iterator(); it.hasNext();) {
+			final Short entityCode = (Short) it.next();
+			Log.debugMessage(this.selfGroupName + "StorableObjectPool.getStorableObjectImpl | available " //$NON-NLS-1$
+					+ ObjectEntities.codeToString(entityCode) + " / " + entityCode, Log.DEBUGLEVEL05); //$NON-NLS-1$
 		}
 		return null;
 	}
