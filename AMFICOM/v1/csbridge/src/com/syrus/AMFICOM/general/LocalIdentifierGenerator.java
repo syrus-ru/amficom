@@ -1,5 +1,5 @@
 /*
- * $Id: LocalIdentifierGenerator.java,v 1.3 2005/04/29 17:35:25 arseniy Exp $
+ * $Id: LocalIdentifierGenerator.java,v 1.4 2005/05/10 18:57:30 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,8 +10,8 @@ package com.syrus.AMFICOM.general;
 import java.util.List;
 import java.util.LinkedList;
 /**
- * @version $Revision: 1.3 $, $Date: 2005/04/29 17:35:25 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.4 $, $Date: 2005/05/10 18:57:30 $
+ * @author $Author: bass $
  * @module csbridge_v1
  */
 
@@ -41,7 +41,7 @@ public class LocalIdentifierGenerator {
 	}
 
 	private static short generateMajor(short entityCode) throws IllegalObjectEntityException {
-		if (ObjectEntities.codeIsValid(entityCode))
+		if (ObjectEntities.isEntityCodeValid(entityCode))
 			return entityCode;
 		throw new IllegalObjectEntityException("Illegal or unknown entity code supplied: " + entityCode, IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 	}
