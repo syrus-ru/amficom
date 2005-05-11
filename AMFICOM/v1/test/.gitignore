@@ -6,3 +6,4 @@ tools.jar
 *.jpr
 *.jpx*
 *.swp
+common.properties
