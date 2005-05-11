@@ -1,5 +1,5 @@
 /*
- * $Id: CommonTest.java,v 1.1 2005/04/30 14:18:25 arseniy Exp $
+ * $Id: CommonTest.java,v 1.2 2005/05/11 06:44:47 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -46,6 +46,7 @@ import com.syrus.AMFICOM.measurement.CronTemporalPatternDatabase;
 import com.syrus.AMFICOM.measurement.DatabaseMeasurementObjectLoader;
 import com.syrus.AMFICOM.measurement.EvaluationDatabase;
 import com.syrus.AMFICOM.measurement.EvaluationTypeDatabase;
+import com.syrus.AMFICOM.measurement.IntervalsTemporalPatternDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
 import com.syrus.AMFICOM.measurement.MeasurementSetupDatabase;
@@ -63,7 +64,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/30 14:18:25 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/11 06:44:47 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -158,7 +159,7 @@ public abstract class CommonTest extends TestCase {
 				new TestDatabase(),
 				new ResultDatabase(),
 				new CronTemporalPatternDatabase(),
-				/* TODO new IntervalsTemporalPatternDatabase(),*/
+				new IntervalsTemporalPatternDatabase(),
 				new PeriodicalTemporalPatternDatabase());
 		//More database contexts...
 	}

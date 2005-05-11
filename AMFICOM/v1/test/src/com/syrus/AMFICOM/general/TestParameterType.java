@@ -1,16 +1,22 @@
 /*
- * $Id: TestParameterType.java,v 1.2 2005/04/30 14:18:45 arseniy Exp $ Copyright © 2004 Syrus Systems. Научно-технический центр. Проект:
+ * $Id: TestParameterType.java,v 1.3 2005/05/11 06:44:59 arseniy Exp $ Copyright © 2004 Syrus Systems. Научно-технический центр. Проект:
  * АМФИКОМ.
  */
 package com.syrus.AMFICOM.general;
 
+import java.util.Set;
+
 import junit.framework.Test;
 
+import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
+import com.syrus.AMFICOM.administration.User;
+import com.syrus.AMFICOM.administration.UserWrapper;
 import com.syrus.AMFICOM.general.corba.DataType;
+import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/30 14:18:45 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/11 06:44:59 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -25,16 +31,22 @@ public class TestParameterType extends CommonTest {
 	}
 
 	public void testCreateInstance() throws ApplicationException {
-		Identifier creatorId = new Identifier("Users_58");
-		String codename = ParameterTypeCodenames.ALARM_STATUS;
-		String name = "Alarm status";
-		String description = "Status of alarm";
-		DataType dataType = DataType.DATA_TYPE_INTEGER;
+//	sys user
+		TypicalCondition tc = new TypicalCondition(UserWrapper.SYS_LOGIN,
+				OperationSort.OPERATION_EQUALS,
+				ObjectEntities.USER_ENTITY_CODE,
+				UserWrapper.COLUMN_LOGIN);
+		Set users = AdministrationStorableObjectPool.getStorableObjectsByCondition(tc, true);
+		User sysUser = (User) users.iterator().next();
+		System.out.println("sys user: '" + sysUser.getId() + "'");
 
-		ParameterType parameterType = ParameterType.createInstance(creatorId, codename, description, name, dataType);
+		String codename = ParameterTypeCodenames.TRACE_FLAG_GAIN_SPLICE;
+		String name = "Gain splice flag";
+		String description = "Gain splice on/off";
+		DataType dataType = DataType.DATA_TYPE_BOOLEAN;
+		ParameterType parameterType = ParameterType.createInstance(sysUser.getId(), codename, description, name, dataType);
 
 		ParameterType_Transferable ptt = (ParameterType_Transferable) parameterType.getTransferable();
-
 		ParameterType parameterType1 = new ParameterType(ptt);
 		assertEquals(parameterType.getId(), parameterType1.getId());
 		assertEquals(parameterType.getCreated(), parameterType1.getCreated());
@@ -46,17 +58,16 @@ public class TestParameterType extends CommonTest {
 		assertEquals(parameterType.getDescription(), parameterType1.getDescription());
 		assertEquals(parameterType.getDataType(), parameterType1.getDataType());
 
-		GeneralDatabaseContext.getDatabase(parameterType.getId().getMajor()).insert(parameterType);
+		GeneralStorableObjectPool.putStorableObject(parameterType);
 
-		codename = ParameterTypeCodenames.HZ_CHO;
-		name = "hz cho";
-		description = "hz cho";
-		dataType = DataType.DATA_TYPE_RAW;
 
-		parameterType = ParameterType.createInstance(creatorId, codename, description, name, dataType);
+		codename = ParameterTypeCodenames.TRACE_FLAG_LIVE_FIBER_DETECT;
+		name = "Live fiber detect flag";
+		description = "Live fiber detect on/off";
+		dataType = DataType.DATA_TYPE_BOOLEAN;
+		parameterType = ParameterType.createInstance(sysUser.getId(), codename, description, name, dataType);
 
 		ptt = (ParameterType_Transferable) parameterType.getTransferable();
-
 		parameterType1 = new ParameterType(ptt);
 		assertEquals(parameterType.getId(), parameterType1.getId());
 		assertEquals(parameterType.getCreated(), parameterType1.getCreated());
@@ -68,8 +79,10 @@ public class TestParameterType extends CommonTest {
 		assertEquals(parameterType.getDescription(), parameterType1.getDescription());
 		assertEquals(parameterType.getDataType(), parameterType1.getDataType());
 
-		GeneralDatabaseContext.getDatabase(parameterType.getId().getMajor()).insert(parameterType);
+		GeneralStorableObjectPool.putStorableObject(parameterType);
 
+
+//		GeneralStorableObjectPool.flush(ObjectEntities.PARAMETERTYPE_ENTITY_CODE, true);
 	}
 
 //	public void testRetrieveByCondition() throws ApplicationException {
