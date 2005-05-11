@@ -19,7 +19,7 @@ SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/mshserver/*.java) \
 	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/map/*.java) \
 	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/scheme/*.java)
 
-APPCLASSPATH = $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/map.jar:$(LIBDIR)/scheme.jar
+APPCLASSPATH = $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/map.jar:$(LIBDIR)/scheme.jar:$(LIBDIR)/csbridge.jar
 
 
 $(call checkenve,JAVA_HOME)
@@ -71,6 +71,11 @@ cleancorba:
 	rm -rf $(SRCDIR)/com/syrus/AMFICOM/mshserver/corba
 	rm -rf $(CLASSDIR)/com/syrus/AMFICOM/mshserver/corba
 	rm -f .corba
+
+#### Install ####
+.PHONY:	install
+install: $(LIBNAME) $(LIBNAME_INTERFACE) $(LIBDIR)
+	$(CP) $^
 
 #### Archive ####
 .PHONY:	arch
