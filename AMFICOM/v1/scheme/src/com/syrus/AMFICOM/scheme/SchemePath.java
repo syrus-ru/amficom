@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.24 2005/05/05 15:57:08 bass Exp $
+ * $Id: SchemePath.java,v 1.25 2005/05/11 13:10:18 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,6 +18,7 @@ import java.util.TreeSet;
 
 import org.omg.CORBA.portable.IDLEntity;
 
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.TransmissionPath;
 import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -45,7 +46,7 @@ import com.syrus.util.Log;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.24 $, $Date: 2005/05/05 15:57:08 $
+ * @version $Revision: 1.25 $, $Date: 2005/05/11 13:10:18 $
  * @module scheme_v1
  */
 public final class SchemePath extends AbstractCloneableStorableObject implements
@@ -204,7 +205,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicSort()
 	 */
 	public CharacteristicSort getCharacteristicSort() {
-		throw new UnsupportedOperationException();
+		return CharacteristicSort.CHARACTERISTIC_SORT_SCHEMEPATH;
 	}
 
 	/**
@@ -238,7 +239,13 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	}
 
 	public SchemeMonitoringSolution getParentSchemeMonitoringSolution() {
-		throw new UnsupportedOperationException();
+		assert this.parentSchemeMonitoringSolutionId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		try {
+			return (SchemeMonitoringSolution) SchemeStorableObjectPool.getStorableObject(this.parentSchemeMonitoringSolutionId, true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return null;
+		}
 	}
 
 	public SortedSet getPathElements() {
@@ -258,13 +265,6 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	}
 
 	/**
-	 * Getter for a transient property <code>scheme</code>.
-	 */
-	public Scheme getScheme() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
 	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
 	 */
 	public IDLEntity getTransferable() {
@@ -277,7 +277,13 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	}
 
 	public TransmissionPath getTransmissionPath() {
-		throw new UnsupportedOperationException();
+		assert this.transmissionPathId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		try {
+			return (TransmissionPath) ConfigurationStorableObjectPool.getStorableObject(this.transmissionPathId, true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return null;
+		}
 	}
 
 	/**
@@ -326,9 +332,6 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 		
 		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
 		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
-		/**
-		 * @todo Add additional assertions.
-		 */
 		assert transmissionPathId != null: ErrorMessages.NON_NULL_EXPECTED;
 		assert parentSchemeMonitoringSolutionId != null: ErrorMessages.NON_NULL_EXPECTED;
 
@@ -385,25 +388,40 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	}
 
 	public void setParentSchemeMonitoringSolution(final SchemeMonitoringSolution parentSchemeMonitoringSolution) {
-		throw new UnsupportedOperationException();
+		final Identifier newParentSchemeMonitoringSolutionId = Identifier.possiblyVoid(parentSchemeMonitoringSolution);
+		if (this.parentSchemeMonitoringSolutionId.equals(newParentSchemeMonitoringSolutionId))
+			return;
+		this.parentSchemeMonitoringSolutionId = newParentSchemeMonitoringSolutionId;
+		this.changed = true;
 	}
 
 	public void setPathElements(final SortedSet pathElements) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * Setter for a transient property <code>scheme</code>.
-	 */
-	public void setScheme(final Scheme scheme) {
-		throw new UnsupportedOperationException();
+		assert pathElements != null: ErrorMessages.NON_NULL_EXPECTED;
+		final SortedSet oldPathElements = this.getPathElements();
+		for (final Iterator oldPathElementIterator = oldPathElements.iterator(); oldPathElementIterator.hasNext();)
+			/*
+			 * Check is made to prevent PathElements from
+			 * permanently losing their parents.
+			 */
+			assert !pathElements.contains(oldPathElementIterator.next());
+		/*
+		 * It's enough to remove the first PathElement only.
+		 */
+		if (!oldPathElements.isEmpty())
+			this.removePathElement((PathElement) oldPathElements.first());
+		for (final Iterator pathElementIterator = pathElements.iterator(); pathElementIterator.hasNext();)
+			this.addPathElement((PathElement) pathElementIterator.next());
 	}
 
 	/**
 	 * @param transmissionPath
 	 */
 	public void setTransmissionPath(final TransmissionPath transmissionPath) {
-		throw new UnsupportedOperationException();
+		final Identifier newTransmissionPathId = Identifier.possiblyVoid(transmissionPath);
+		if (this.transmissionPathId.equals(newTransmissionPathId))
+			return;
+		this.transmissionPathId = newTransmissionPathId;
+		this.changed = true;
 	}
 
 	/**
@@ -428,6 +446,20 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	/*-********************************************************************
 	 * Non-model members.                                                 *
 	 **********************************************************************/
+
+	/**
+	 * Getter for a transient property <code>scheme</code>.
+	 */
+	public Scheme getScheme() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * Setter for a transient property <code>scheme</code>.
+	 */
+	public void setScheme(final Scheme scheme) {
+		throw new UnsupportedOperationException();
+	}
 
 	/**
 	 * @return <code>SchemeElement</code> associated with the first
