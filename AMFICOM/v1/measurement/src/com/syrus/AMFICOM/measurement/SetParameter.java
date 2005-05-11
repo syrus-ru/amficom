@@ -1,5 +1,5 @@
 /*
- * $Id: SetParameter.java,v 1.29 2005/04/15 19:22:19 arseniy Exp $
+ * $Id: SetParameter.java,v 1.30 2005/05/11 13:05:04 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,12 +30,13 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
+import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/04/15 19:22:19 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.30 $, $Date: 2005/05/11 13:05:04 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -184,6 +185,15 @@ public class SetParameter implements TransferableObject, TypedObject, Identifiab
 			case DataType._DATA_TYPE_LONG:
 				try {
 					string = Long.toString(byteArray.toLong());
+				}
+				catch (IOException ioe) {
+					// Never
+					Log.errorException(ioe);
+				}
+				break;
+			case DataType._DATA_TYPE_BOOLEAN:
+				try {
+					string = LangModelMeasurement.getString(byteArray.toBoolean() ? "on" : "off");
 				}
 				catch (IOException ioe) {
 					// Never
