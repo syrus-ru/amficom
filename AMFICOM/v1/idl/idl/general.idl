@@ -1,5 +1,5 @@
 /*
- * $Id: general.idl,v 1.79 2005/05/04 15:05:40 bass Exp $
+ * $Id: general.idl,v 1.80 2005/05/11 06:36:30 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -54,7 +54,8 @@ module corba {
 		DATA_TYPE_STRING,
 		DATA_TYPE_DATE,
 		DATA_TYPE_LONG,
-		DATA_TYPE_RAW
+		DATA_TYPE_RAW,
+		DATA_TYPE_BOOLEAN
 	};
 
 /*
