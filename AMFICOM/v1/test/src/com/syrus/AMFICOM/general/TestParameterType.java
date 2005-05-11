@@ -1,5 +1,5 @@
 /*
- * $Id: TestParameterType.java,v 1.3 2005/05/11 06:44:59 arseniy Exp $ Copyright © 2004 Syrus Systems. Научно-технический центр. Проект:
+ * $Id: TestParameterType.java,v 1.4 2005/05/11 07:08:20 arseniy Exp $ Copyright © 2004 Syrus Systems. Научно-технический центр. Проект:
  * АМФИКОМ.
  */
 package com.syrus.AMFICOM.general;
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/05/11 06:44:59 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/11 07:08:20 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -82,7 +82,7 @@ public class TestParameterType extends CommonTest {
 		GeneralStorableObjectPool.putStorableObject(parameterType);
 
 
-//		GeneralStorableObjectPool.flush(ObjectEntities.PARAMETERTYPE_ENTITY_CODE, true);
+		GeneralStorableObjectPool.flush(ObjectEntities.PARAMETERTYPE_ENTITY_CODE, true);
 	}
 
 //	public void testRetrieveByCondition() throws ApplicationException {
