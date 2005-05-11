@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectGroupEntities.java,v 1.14 2005/05/10 18:54:13 bass Exp $
+ * $Id: ObjectGroupEntities.java,v 1.15 2005/05/11 06:47:57 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,7 @@ import gnu.trove.TObjectShortHashMap;
 import gnu.trove.TShortObjectHashMap;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/05/10 18:54:13 $
+ * @version $Revision: 1.15 $, $Date: 2005/05/11 06:47:57 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -46,9 +46,9 @@ public final class ObjectGroupEntities {
 	public static final short RESOURCE_GROUP_CODE = 0x0008;
 	public static final short MAPVIEW_GROUP_CODE = 0x0009;
 
-	private static final TObjectShortHashMap nameCodeMap = new TObjectShortHashMap();  
+	private static final TObjectShortHashMap NAME_CODE_MAP = new TObjectShortHashMap();  
 
-	private static final TShortObjectHashMap codeNameMap = new TShortObjectHashMap();
+	private static final TShortObjectHashMap CODE_NAME_MAP = new TShortObjectHashMap();
 
 	private ObjectGroupEntities() {
 		// singleton constructor
@@ -72,17 +72,17 @@ public final class ObjectGroupEntities {
 	}
 
 	private static void registerGroup(final short groupCode, final String group) {
-		codeNameMap.put(groupCode, group);
-		nameCodeMap.put(group, groupCode);
+		CODE_NAME_MAP.put(groupCode, group);
+		NAME_CODE_MAP.put(group, groupCode);
 	}
 
 	public static short stringToCode(final String group) {
-		final short returnValue = nameCodeMap.get(group);
+		final short returnValue = NAME_CODE_MAP.get(group);
 		return returnValue == 0 ? UNKNOWN_GROUP_CODE : returnValue;
 	}
 
 	public static String codeToString(final short groupCode) {
-		final String returnValue = (String) codeNameMap.get(groupCode);
+		final String returnValue = (String) CODE_NAME_MAP.get(groupCode);
 		return returnValue == null ? UNKNOWN_GROUP : returnValue;
 	}
 

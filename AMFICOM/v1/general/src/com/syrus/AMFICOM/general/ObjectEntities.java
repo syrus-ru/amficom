@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectEntities.java,v 1.63 2005/05/10 18:54:13 bass Exp $
+ * $Id: ObjectEntities.java,v 1.64 2005/05/11 06:47:57 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,7 @@ import gnu.trove.TObjectShortHashMap;
 import gnu.trove.TShortObjectHashMap;
 
 /**
- * @version $Revision: 1.63 $, $Date: 2005/05/10 18:54:13 $
+ * @version $Revision: 1.64 $, $Date: 2005/05/11 06:47:57 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -321,9 +321,9 @@ public final class ObjectEntities {
 	 */
 	public static final short UPDIKE_ENTITY_CODE = Short.MAX_VALUE;
 
-	private static final TObjectShortHashMap nameCodeMap = new TObjectShortHashMap();  
+	private static final TObjectShortHashMap NAME_CODE_MAP = new TObjectShortHashMap();  
 
-	private static final TShortObjectHashMap codeNameMap = new TShortObjectHashMap();
+	private static final TShortObjectHashMap CODE_NAME_MAP = new TShortObjectHashMap();
 
 	private ObjectEntities() {
 		// empty singleton constructor
@@ -429,17 +429,17 @@ public final class ObjectEntities {
 	}
 
 	private static void registerEntity(final short entityCode, final String entity) {
-		codeNameMap.put(entityCode, entity);
-		nameCodeMap.put(entity, entityCode);
+		CODE_NAME_MAP.put(entityCode, entity);
+		NAME_CODE_MAP.put(entity, entityCode);
 	}
 
 	public static short stringToCode(final String entity) {
-		final short returnValue = nameCodeMap.get(entity);
+		final short returnValue = NAME_CODE_MAP.get(entity);
 		return returnValue == 0 ? UNKNOWN_ENTITY_CODE : returnValue;
 	}
 
 	public static String codeToString(final short entityCode) {
-		final String returnValue = (String) codeNameMap.get(entityCode);
+		final String returnValue = (String) CODE_NAME_MAP.get(entityCode);
 		return returnValue == null ? UNKNOWN_ENTITY : returnValue;
 	}
 

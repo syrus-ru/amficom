@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.79 2005/05/10 18:54:13 bass Exp $
+ * $Id: StorableObjectPool.java,v 1.80 2005/05/11 06:47:57 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import java.util.Set;
 import org.omg.CORBA.portable.IDLEntity;
 
 /**
- * @version $Revision: 1.79 $, $Date: 2005/05/10 18:54:13 $
+ * @version $Revision: 1.80 $, $Date: 2005/05/11 06:47:57 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -52,7 +52,7 @@ public abstract class StorableObjectPool {
 	/**
 	 * A "group code" -- "pool" map to store initialized pools.
 	 */
-	private static final TShortObjectHashMap groupCodePoolMap = new TShortObjectHashMap();
+	private static final TShortObjectHashMap GROUP_CODE_POOL_MAP = new TShortObjectHashMap();
 
 	public StorableObjectPool(final int objectPoolMapSize, final short selfGroupCode) {
 		this(objectPoolMapSize, selfGroupCode, LRUMap.class);
@@ -466,7 +466,7 @@ public abstract class StorableObjectPool {
 		assert id != null && !id.isVoid(): ErrorMessages.NON_VOID_EXPECTED;
 		final short groupCode = ObjectGroupEntities.getGroupCode(id.getMajor());
 		assert ObjectGroupEntities.isGroupCodeValid(groupCode);
-		final StorableObjectPool pool = (StorableObjectPool) groupCodePoolMap.get(groupCode);
+		final StorableObjectPool pool = (StorableObjectPool) GROUP_CODE_POOL_MAP.get(groupCode);
 		if (pool == null)
 			throw new ApplicationException("StorableObjectPool.getStorableObjectOfGroup() | The pool for group: " + ObjectGroupEntities.codeToString(groupCode) + " is not initialized"); //$NON-NLS-1$ //$NON-NLS-2$
 		return pool.getStorableObjectImpl(id, useLoader);
@@ -850,6 +850,6 @@ public abstract class StorableObjectPool {
 
 	protected static final void registerPool(final short groupCode, final StorableObjectPool pool) {
 		assert ObjectGroupEntities.isGroupCodeValid(groupCode);
-		groupCodePoolMap.put(groupCode, pool);
+		GROUP_CODE_POOL_MAP.put(groupCode, pool);
 	}
 }
