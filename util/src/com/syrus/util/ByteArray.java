@@ -1,5 +1,5 @@
 /*
- * $Id: ByteArray.java,v 1.10 2005/03/17 10:12:50 bass Exp $
+ * $Id: ByteArray.java,v 1.11 2005/05/11 07:26:51 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,6 +46,10 @@ public class ByteArray {
 
 	public ByteArray(double[] dar) {
 		this(toByteArray(dar));
+	}
+
+	public ByteArray(boolean b) {
+		this(toByteArray(b));
 	}
 
 	public ByteArray(String s) {
@@ -123,6 +127,12 @@ public class ByteArray {
 		return dar;
 	}
 
+  public boolean toBoolean() throws IOException {
+  	ByteArrayInputStream bais = new ByteArrayInputStream(this.bar);
+		DataInputStream dis = new DataInputStream(bais);
+		return dis.readBoolean();
+  }
+ 
   public String toUTFString() throws IOException {
 		ByteArrayInputStream bais = new ByteArrayInputStream(this.bar);
 		DataInputStream dis = new DataInputStream(bais);
@@ -219,6 +229,20 @@ public class ByteArray {
 		}
 		return baos.toByteArray();
 	}
+
+  public static byte[] toByteArray(boolean b) {
+  	ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		DataOutputStream dos = new DataOutputStream(baos);
+		try {
+			dos.writeBoolean(b);
+		}
+		catch (IOException ioe) {
+			// IOExceptions are never thrown in ByteArrayOutputStream.write()
+			System.err.println("Exception while converting boolean to byte array -- " + ioe.getMessage()); //$NON-NLS-1$
+			ioe.printStackTrace();
+		}
+		return baos.toByteArray();
+  }
 
   public static byte[] toByteArray(String s) {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
