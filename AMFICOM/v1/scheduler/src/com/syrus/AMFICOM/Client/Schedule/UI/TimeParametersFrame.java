@@ -130,7 +130,7 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 
 		public TimeParametersPanel() {
 			super(new GridBagLayout());
-			this.init();
+			this.createGUI();
 		}
 
 		public TimeParametersPanel(ApplicationContext aContext) {
@@ -142,7 +142,7 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 			this.schedulerModel.setTestTemporalStampsEditor(this);
 		}
 
-		private void init() {
+		private void createGUI() {
 			final GridBagConstraints gbc = new GridBagConstraints();
 			this.setBorder(BorderFactory.createEtchedBorder());			
 			gbc.anchor = GridBagConstraints.NORTH;

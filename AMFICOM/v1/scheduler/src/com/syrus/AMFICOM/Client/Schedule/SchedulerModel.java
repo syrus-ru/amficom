@@ -68,11 +68,11 @@ import com.syrus.util.Log;
  */
 public class SchedulerModel extends ApplicationModel implements OperationListener {
 
-	public static final String			COMMAND_ADD_PARAM_PANEL			= "AddParamPanel";			//$NON-NLS-1$
+//	public static final String			COMMAND_ADD_PARAM_PANEL			= "AddParamPanel";			//$NON-NLS-1$
 
 	public static final String			COMMAND_CHANGE_KIS				= "ChangeKIS";				//$NON-NLS-1$
 	public static final String			COMMAND_CHANGE_ME_TYPE			= "ChangeMEType";			//$NON-NLS-1$
-	public static final String			COMMAND_CHANGE_PARAM_PANEL		= "ChangeParamPanel";		//$NON-NLS-1$
+//	public static final String			COMMAND_CHANGE_PARAM_PANEL		= "ChangeParamPanel";		//$NON-NLS-1$
 	public static final String			COMMAND_CHANGE_STATUSBAR_STATE	= "ChangeStatusBarState";
 
 	// //$NON-NLS-1$
@@ -493,7 +493,6 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 				|| !this.measurementType.getId().equals(measurementType.getId())) {
 			changed = true;
 			this.measurementType = measurementType;
-			this.refreshMeasurementSetups();
 		}
 
 		if (changed) {

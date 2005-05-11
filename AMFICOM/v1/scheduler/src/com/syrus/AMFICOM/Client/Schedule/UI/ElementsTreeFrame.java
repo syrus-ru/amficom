@@ -12,6 +12,7 @@ import javax.swing.Icon;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTree;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.tree.TreePath;
 
@@ -211,36 +212,45 @@ public class ElementsTreeFrame extends JInternalFrame implements KISEditor, Moni
 						Item item = (Item) it.next();
 						Object object = item.getObject();
 						if (object instanceof Identifier) {
-							Identifier identifier = (Identifier) object;
+							final Identifier identifier = (Identifier) object;
 							short major = identifier.getMajor();
 							switch (major) {
 								case ObjectEntities.ME_ENTITY_CODE: {
-									Item parent = item;
-									while(true) {
-										if (!parent.canHaveParent())
+									Item parent1 = item;
+									while (true) {
+										if (!parent1.canHaveParent())
 											break;
-										parent = parent.getParent();
-										if (parent == null)
+										parent1 = parent1.getParent();
+										if (parent1 == null)
 											break;
-										Object object2 = parent.getObject();
+										Object object2 = parent1.getObject();
 										if (object2 instanceof Identifier) {
 											Identifier identifier2 = (Identifier) object2;
 											if (identifier2.getMajor() == ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE)
 												break;
 										}
 									}
-									
-									dispatcher.notify(new OperationEvent(identifier, 0,
-																			SchedulerModel.COMMAND_CHANGE_ME_TYPE));
-									try {
-										ElementsTreeFrame.this.schedulerModel
-												.setSelectedMonitoredElement((MonitoredElement) ConfigurationStorableObjectPool
-														.getStorableObject(identifier, true),
-														parent != null ? (MeasurementType) MeasurementStorableObjectPool
-														.getStorableObject((Identifier) parent.getObject(), true)  : null);
-									} catch (ApplicationException e) {
-										SchedulerModel.showErrorMessage(ElementsTreeFrame.this, e);
-									}
+
+									final Item parent = parent1;
+									SwingUtilities.invokeLater(new Runnable() {
+
+										public void run() {
+											dispatcher
+													.notify(new OperationEvent(identifier, 0,
+																				SchedulerModel.COMMAND_CHANGE_ME_TYPE));
+											try {
+												ElementsTreeFrame.this.schedulerModel.setSelectedMonitoredElement(
+													(MonitoredElement) ConfigurationStorableObjectPool
+															.getStorableObject(identifier, true), parent != null
+															? (MeasurementType) MeasurementStorableObjectPool
+																	.getStorableObject((Identifier) parent.getObject(),
+																		true) : null);
+											} catch (ApplicationException e) {
+												SchedulerModel.showErrorMessage(ElementsTreeFrame.this, e);
+											}
+										}
+									});
+
 								}
 									break;
 								case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE: {

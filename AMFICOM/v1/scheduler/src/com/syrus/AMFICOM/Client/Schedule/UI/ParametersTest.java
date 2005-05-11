@@ -14,14 +14,7 @@ import com.syrus.AMFICOM.measurement.Set;
  */
 public interface ParametersTest {
 
-	//String COMMAND_SEND_TEST = "SendTest";
-	String	PARAMETER_ID_NAME	= "testargument";	//$NON-NLS-1$
-
 	Set getSet();
 	
 	void setSet(Set set);
-
-	String getPanelName();
-	
-	void unregisterDispatcher();
 }

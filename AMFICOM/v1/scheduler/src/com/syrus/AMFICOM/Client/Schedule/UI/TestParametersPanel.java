@@ -1,7 +1,6 @@
 
 package com.syrus.AMFICOM.Client.Schedule.UI;
 
-import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -11,19 +10,18 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.Enumeration;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
+import java.util.ResourceBundle;
 
-import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -31,7 +29,9 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
+import javax.swing.UIDefaults;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -46,15 +46,18 @@ import com.syrus.AMFICOM.Client.Schedule.EvaluationTypeEditor;
 import com.syrus.AMFICOM.Client.Schedule.MeasurementSetupEditor;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Schedule.SetEditor;
-import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 import com.syrus.AMFICOM.client_.general.ui_.ColumnSorter;
 import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
 import com.syrus.AMFICOM.client_.general.ui_.ObjList;
 import com.syrus.AMFICOM.client_.general.ui_.ObjListModel;
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.configuration.MeasurementPort;
+import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.Plugger;
 import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.AnalysisTypeController;
 import com.syrus.AMFICOM.measurement.EvaluationType;
@@ -67,13 +70,9 @@ import com.syrus.AMFICOM.measurement.Set;
 import com.syrus.AMFICOM.measurement.SetParameter;
 import com.syrus.util.Log;
 
-public class TestParametersPanel extends JPanel implements OperationListener, MeasurementSetupEditor,
+public class TestParametersPanel
+implements OperationListener, MeasurementSetupEditor,
 		AnalysisTypeEditor, EvaluationTypeEditor, SetEditor {
-
-	public static final String	PARAMETER_PARAMETER		= "Parameter";											//$NON-NLS-1$
-	public static final String	PARAMETERS_PANEL_PREFIX	= "PARAMETERS_PANEL";									//$NON-NLS-1$
-
-	private static final String	PATTERN_PANEL_NAME		= "PATTERN_PANEL";										//$NON-NLS-1$
 
 	ApplicationContext			aContext;
 	private SchedulerModel		schedulerModel;
@@ -81,33 +80,29 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 																			Collections.EMPTY_LIST,
 																			AnalysisTypeController.KEY_NAME);
 
-	String						currentParametersPanelName;
 	ObjComboBox					evaluationComboBox		= new ObjComboBox(EvaluationTypeController.getInstance(),
 																			Collections.EMPTY_LIST,
 																			EvaluationTypeController.KEY_NAME);
-	JRadioButton				paramsRadioButton;
-
 	final JPanel				switchPanel				= new JPanel(new CardLayout());
-	// Map testMap;
 	List						msList;
-
-	Map							testPanels				= new HashMap();
 
 	ObjList						testSetups;
 
 	JCheckBox					useAnalysisBox;
 
+	 JTabbedPane tabbedPane;
 	private JRadioButton		useAnalysisSetups;
 	private JRadioButton		useWOAnalysisSetups;
 
 	private Dispatcher			dispatcher;
+	
+	ParametersTestPanel parametersTestPanel;
 
-	private JRadioButton		patternRadioButton;
+
 	
 	private MeasurementSetup measurementSetup;
-
-	// private Test test;
-//	private JCheckBox			usePatternsWithAnalysisBox;
+	
+	private Hashtable panels = new UIDefaults(); 
 
 	public TestParametersPanel(final ApplicationContext aContext) {
 		this.aContext = aContext;
@@ -120,56 +115,42 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 		if (aContext != null) {
 			initModule(aContext.getDispatcher());
 		}
-		setLayout(new BorderLayout());
+		
+		this.createGUI();
+		this.preparePanels();
+	}
 
-		this.patternRadioButton = UIStorage.createRadioButton(
-			LangModelSchedule.getString("Use pattern"), new AbstractAction() { //$NON-NLS-1$
+	private void preparePanels() {
+		ResourceBundle bundle = ResourceBundle.getBundle("com.syrus.AMFICOM.Client.Schedule.UI.parametersPanel");
+		Enumeration keys = bundle.getKeys();
+		while (keys.hasMoreElements()) {
+			String codename = (String) keys.nextElement();
+			final String className = (String) bundle.getObject(codename);
+			Log.debugMessage("TestParametersPanel.preparePanels | codename " + codename, Log.FINEST);
+			Log.debugMessage("TestParametersPanel.preparePanels | className " + className, Log.FINEST);
+			this.panels.put(codename, new UIDefaults.LazyValue() {
 
-				public void actionPerformed(ActionEvent e) {
-					CardLayout cl = (CardLayout) (TestParametersPanel.this.switchPanel.getLayout());
-					cl.show(TestParametersPanel.this.switchPanel, PATTERN_PANEL_NAME);
-					revalidate();
+				public Object createValue(UIDefaults table) {
+					return (ParametersTestPanel) Plugger.reflectClass(className,
+						new Class[] { ApplicationContext.class}, new Object[] { TestParametersPanel.this.aContext});
 				}
 			});
-		this.paramsRadioButton = UIStorage.createRadioButton(
-			LangModelSchedule.getString("Use parameters"), new AbstractAction() { //$NON-NLS-1$
 
-				public void actionPerformed(ActionEvent e) {
-					CardLayout cl = (CardLayout) (TestParametersPanel.this.switchPanel.getLayout());
-					cl.show(TestParametersPanel.this.switchPanel, TestParametersPanel.this.currentParametersPanelName);
-					revalidate();
-				}
-			});
-		this.paramsRadioButton.setEnabled(false);
-		ButtonGroup group = new ButtonGroup();
-		group.add(this.patternRadioButton);
-		group.add(this.paramsRadioButton);
+		}
+	}
 
-		Box typePanel = new Box(BoxLayout.Y_AXIS);
-		typePanel.add(this.patternRadioButton);
-		typePanel.add(this.paramsRadioButton);
-
-		add(typePanel, BorderLayout.NORTH);
-
-		JPanel parametersPanel = new JPanel(new GridBagLayout());
-		parametersPanel.setBorder(BorderFactory.createEtchedBorder());
-
+	private void createGUI() {
+		this.tabbedPane = new JTabbedPane();		
 		JPanel patternPanel = new JPanel(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.weightx = 1.0;
 		gbc.weighty = 0.0;
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
+		
 		patternPanel.setBorder(BorderFactory.createEtchedBorder());
+		this.switchPanel.setBorder(BorderFactory.createEtchedBorder());
 
-//		this.usePatternsWithAnalysisBox = new JCheckBox(LangModelSchedule.getString("Use patterns with analisys"), true); //$NON-NLS-1$
-//		this.usePatternsWithAnalysisBox.addActionListener(new ActionListener() {
-//
-//			public void actionPerformed(ActionEvent e) {
-//				updateMeasurementSetups();
-//				setMeasurementSetups(TestParametersPanel.this.msList);
-//			}
-//		});
 		final ActionListener listener = new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
@@ -178,15 +159,13 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 			}
 		};
 
-//		patternPanel.add(this.usePatternsWithAnalysisBox, gbc);
-
 		{
 			this.useAnalysisSetups = new JRadioButton(LangModelSchedule.getString("with analysis parameters"));
 			this.useAnalysisSetups.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
 					listener.actionPerformed(e);
-					useAnalysisBox.setEnabled(true);
+					TestParametersPanel.this.useAnalysisBox.setEnabled(true);
 				}
 			});
 			this.useWOAnalysisSetups = new JRadioButton(LangModelSchedule.getString("without analysis parameters"));
@@ -201,7 +180,7 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 						TestParametersPanel.this.useAnalysisBox.doClick();
 					}
 					
-					useAnalysisBox.setEnabled(false);
+					TestParametersPanel.this.useAnalysisBox.setEnabled(false);
 				}
 			});
 			
@@ -229,7 +208,6 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 		final JLabel evaluationLabel = new JLabel(LangModelSchedule.getString("Evaluation Analysis")); //$NON-NLS-1$
 		patternPanel.add(evaluationLabel, gbc);
 		patternPanel.add(this.evaluationComboBox, gbc);
-		// this.testMap = new HashMap();
 		patternPanel.add(new JLabel(LangModelSchedule.getString("Patterns")), gbc);
 		this.testSetups = new ObjList(MeasurementSetupController.getInstance(), MeasurementSetupController.KEY_NAME);
 		this.testSetups.addMouseListener(new MouseAdapter() {
@@ -263,8 +241,6 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 		this.testSetups.addListSelectionListener(new ListSelectionListener() {
 
 			public void valueChanged(ListSelectionEvent e) {
-				// if (e.getStateChange() == ItemEvent.SELECTED)
-				// {
 				MeasurementSetup measurementSetup1 = (MeasurementSetup) TestParametersPanel.this.testSetups
 						.getSelectedValue();
 				if (measurementSetup1 != null) {
@@ -326,22 +302,16 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 							}
 						}
 
-						for (Iterator it = TestParametersPanel.this.testPanels.keySet().iterator(); it.hasNext();) {
-							String key = (String) it.next();
-							ParametersTestPanel panel = (ParametersTestPanel) (TestParametersPanel.this.testPanels
-									.get(key));
-							panel.setSet(measurementSetup1.getParameterSet());
+						if (TestParametersPanel.this.parametersTestPanel != null) {
+							TestParametersPanel.this.parametersTestPanel.setSet(measurementSetup1.getParameterSet());
 						}
 					} catch (ApplicationException ae) {
-						SchedulerModel.showErrorMessage(TestParametersPanel.this, ae);
+						SchedulerModel.showErrorMessage(TestParametersPanel.this.tabbedPane, ae);
 					}
 
-				} else {
-					TestParametersPanel.this.paramsRadioButton.doClick();
 				}
 			}
-			// }
-			});
+		});
 		JScrollPane scroll = new JScrollPane(this.testSetups);
 		gbc.weighty = 1.0;
 		patternPanel.add(scroll, gbc);
@@ -365,36 +335,15 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 		this.evaluationComboBox.setEnabled(false);
 
 		
-		this.switchPanel.add(patternPanel, PATTERN_PANEL_NAME);
-		add(this.switchPanel, BorderLayout.CENTER);
+		this.tabbedPane.addTab(LangModelSchedule.getString("Pattern"), null, patternPanel, LangModelSchedule.getString("Use pattern"));
+		this.tabbedPane.addTab(LangModelSchedule.getString("Parameters"), null, this.switchPanel, LangModelSchedule.getString("Use parameters"));
 
-		this.patternRadioButton.doClick();
-
-	}
-
-	/**
-	 * Add test parameter panel for various TestTypes
-	 * 
-	 * @param command
-	 *            when dispatcher get this command name test parameter panel
-	 *            switch to panel
-	 * @param panel
-	 *            ParametersTestPanel
-	 */
-	public void addParameterPanel(	String command,
-									ParametersTestPanel panel) {
-		this.testPanels.put(command, panel);
-		this.switchPanel.add(panel, command);
-		this.paramsRadioButton.setEnabled(true);
-	}
-
-	public boolean isParameterPanelExists(String command) {
-		return this.testPanels.get(command) != null;
+		this.tabbedPane.setSelectedIndex(0);
 	}
 
 	public AnalysisType getAnalysisType() {
 		AnalysisType analysisType = null;
-		if (this.patternRadioButton.isSelected() && this.useAnalysisBox.isSelected()) {
+		if (this.tabbedPane.getSelectedIndex() == 0 && this.useAnalysisBox.isSelected()) {
 			analysisType = (AnalysisType) this.analysisComboBox.getSelectedItem();
 		}
 		return analysisType;
@@ -402,8 +351,7 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 
 	public EvaluationType getEvaluationType() {
 		EvaluationType evaluationType = null;
-
-		if (this.patternRadioButton.isSelected() && this.useAnalysisBox.isSelected()) {
+		if (this.tabbedPane.getSelectedIndex() == 0 && this.useAnalysisBox.isSelected()) {
 			evaluationType = (EvaluationType) this.evaluationComboBox.getSelectedItem();
 		}
 		return evaluationType;
@@ -411,24 +359,26 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 
 	public MeasurementSetup getMeasurementSetup() {
 		MeasurementSetup measurementSetup1 = null;
-		if ((this.patternRadioButton.isSelected())) {
+		if (this.tabbedPane.getSelectedIndex() == 0) {
 			measurementSetup1 = (MeasurementSetup) this.testSetups.getSelectedValue();
 			if (measurementSetup1 == null) {
 				JOptionPane
 						.showMessageDialog(
-							this,
+							this.tabbedPane,
 							LangModelSchedule.getString("Have_not_choosen_measurement_pattern"), LangModelSchedule.getString("Error"), //$NON-NLS-1$ //$NON-NLS-2$
 							JOptionPane.OK_OPTION);
 				return null;
 			}
-			return measurementSetup1;
 		}
-		return null;
+		return measurementSetup1;
 	}
 
 	public Set getSet() {
-		return (this.paramsRadioButton.isSelected()) ? ((ParametersTestPanel) (this.testPanels
-				.get(this.currentParametersPanelName))).getSet() : null;
+		Set set = null;
+		if (this.tabbedPane.getSelectedIndex() == 1) {
+			set = this.parametersTestPanel != null ? this.parametersTestPanel.getSet() : null;
+		}
+		return set;
 	}
 
 	public void setAnalysisType(AnalysisType analysisType) {
@@ -450,11 +400,12 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 			this.msList.add(measurementSetup);
 		}
 		this.testSetups.setSelectedValue(measurementSetup, true);
-		if (this.useAnalysisSetups.isSelected() && this.testSetups.getSelectedValue() == null) {
-//			this.usePatternsWithAnalysisBox.doClick();
-			this.testSetups.setSelectedValue(measurementSetup, true);
+		if (this.useAnalysisSetups.isSelected() && this.testSetups.getSelectedIndex() < 0 && this.parametersTestPanel != null) {
+			this.parametersTestPanel.setSet(measurementSetup.getParameterSet());
+			this.tabbedPane.setSelectedIndex(1);
+		} else {
+			this.tabbedPane.setSelectedIndex(0);
 		}
-		this.patternRadioButton.doClick();
 	}
 
 	public void setMeasurementSetups(Collection measurementSetups) {
@@ -497,12 +448,9 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 	}
 
 	public void setSet(Set set) {
-		if (set != null)
-			for (Iterator it = TestParametersPanel.this.testPanels.keySet().iterator(); it.hasNext();) {
-				String key = (String) it.next();
-				ParametersTestPanel panel = (ParametersTestPanel) (TestParametersPanel.this.testPanels.get(key));
-				panel.setSet(set);
-			}
+		if (set != null && this.parametersTestPanel != null) {
+			this.parametersTestPanel.setSet(set);
+		}
 	}
 
 	public void setAnalysisTypes(Collection analysisTypes) {
@@ -523,36 +471,42 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 		String commandName = ae.getActionCommand();
 		Object obj = ae.getSource();
 		Environment.log(Environment.LOG_LEVEL_INFO, "commandName:" + commandName, getClass().getName());
-		if (commandName.equals(SchedulerModel.COMMAND_CHANGE_PARAM_PANEL)) {
-			this.currentParametersPanelName = obj.toString();
-			this.paramsRadioButton.doClick();
-		} else if (commandName.equals(SchedulerModel.COMMAND_ADD_PARAM_PANEL)) {
-			ParametersTestPanel panel = (ParametersTestPanel) obj;
-			String name = panel.getPanelName();
-			// System.out.println("name : "+name);
-			if (!isParameterPanelExists(name)) {
-				// System.out.println("name isn't at map");
-				addParameterPanel(name, panel);
+		if (commandName.equals(SchedulerModel.COMMAND_CHANGE_ME_TYPE)) {			
+			Identifier meId = (Identifier) obj;
+			try {
+				MonitoredElement me = (MonitoredElement) ConfigurationStorableObjectPool.getStorableObject(meId, true);
+				MeasurementPort port = (MeasurementPort) ConfigurationStorableObjectPool.getStorableObject(me
+					.getMeasurementPortId(), true);
+				this.switchPanel.removeAll();
+				
+				this.parametersTestPanel = (ParametersTestPanel) this.panels.get(port.getType().getCodename());
+				if (this.parametersTestPanel != null) {
+					this.parametersTestPanel.setMonitoredElement(me);
+					/*/
+					this.switchPanel.add(parametersTestPanel);
+					/*/
+					this.switchPanel.add(this.parametersTestPanel, "");
+					//*/
+					this.tabbedPane.revalidate();
+				}
 			}
-			this.currentParametersPanelName = name;
-			this.paramsRadioButton.doClick();
-		}
+			catch (ApplicationException e) {
+				SchedulerModel.showErrorMessage(this.tabbedPane, e);
+			}
+		} 
+	}
+	
+	public JComponent getComponent() {
+		return this.tabbedPane;
 	}
 
 	public void unregisterDispatcher() {
-		for (Iterator it = this.testPanels.keySet().iterator(); it.hasNext();) {
-			Object key = it.next();
-			ParametersTestPanel panel = (ParametersTestPanel) this.testPanels.get(key);
-			panel.unregisterDispatcher();
-		}
-		this.dispatcher.unregister(this, SchedulerModel.COMMAND_CHANGE_PARAM_PANEL);
-		this.dispatcher.unregister(this, SchedulerModel.COMMAND_ADD_PARAM_PANEL);
+		this.dispatcher.unregister(this, SchedulerModel.COMMAND_CHANGE_ME_TYPE);
 	}
 
 	private void initModule(Dispatcher dispatcher) {
 		this.dispatcher = dispatcher;
-		this.dispatcher.register(this, SchedulerModel.COMMAND_CHANGE_PARAM_PANEL);
-		this.dispatcher.register(this, SchedulerModel.COMMAND_ADD_PARAM_PANEL);
+		this.dispatcher.register(this, SchedulerModel.COMMAND_CHANGE_ME_TYPE);
 	}
 
 	private void selectComboBox(ObjComboBox cb,
