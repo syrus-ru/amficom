@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkTypeSort.java,v 1.1 2005/05/05 08:57:31 krupenn Exp $
+ * $Id: PhysicalLinkTypeSort.java,v 1.2 2005/05/11 06:33:43 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,27 +8,14 @@
 
 package com.syrus.AMFICOM.map;
 
-import java.util.Date;
-import java.util.Set;
-
-import org.omg.CORBA.portable.IDLEntity;
-
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IdentifierGenerationException;
-import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObject;
 
 /**
  * Тип линии топологической схемы. Существует несколько предустановленных 
  * типов линий, которые определяются полем {@link #codename}, соответствующим
  * какому-либо значению {@link #TUNNEL}, {@link #COLLECTOR}, {@link #INDOOR}, 
  * {@link #SUBMARINE}, {@link #OVERHEAD}, {@link #UNBOUND}
- * @author $Author: krupenn $
- * @version $Revision: 1.1 $, $Date: 2005/05/05 08:57:31 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2005/05/11 06:33:43 $
  * @module map_v1
  */
 public class PhysicalLinkTypeSort {

@@ -1,5 +1,5 @@
 /*
- * $Id: Set.java,v 1.65 2005/05/06 10:48:22 bob Exp $
+ * $Id: Set.java,v 1.66 2005/05/11 06:34:00 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,11 +31,10 @@ import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.AMFICOM.measurement.corba.SetSort;
 import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
 import com.syrus.util.HashCodeGenerator;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.65 $, $Date: 2005/05/06 10:48:22 $
- * @author $Author: bob $
+ * @version $Revision: 1.66 $, $Date: 2005/05/11 06:34:00 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
