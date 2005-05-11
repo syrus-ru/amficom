@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.25 2005/05/10 17:07:52 bass Exp $
+ * $Id: Scheme.java,v 1.26 2005/05/11 08:58:25 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,6 +31,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.MapStorableObjectPool;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
@@ -42,7 +43,7 @@ import com.syrus.util.Log;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.25 $, $Date: 2005/05/10 17:07:52 $
+ * @version $Revision: 1.26 $, $Date: 2005/05/11 08:58:25 $
  * @module scheme_v1
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -265,7 +266,13 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	}
 
 	public SchemeMonitoringSolution getCurrentSchemeMonitoringSolution() {
-		throw new UnsupportedOperationException();
+		assert this.currentSchemeMonitoringSolutionId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		try {
+			return (SchemeMonitoringSolution) SchemeStorableObjectPool.getStorableObject(this.currentSchemeMonitoringSolutionId, true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return null;
+		}
 	}
 
 	/**
@@ -315,7 +322,13 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	}
 
 	public Map getMap() {
-		throw new UnsupportedOperationException();
+		assert this.mapId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		try {
+			return (Map) MapStorableObjectPool.getStorableObject(this.mapId, true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return null;
+		}
 	}
 
 	/**
@@ -327,7 +340,13 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	}
 
 	public SchemeElement getParentSchemeElement() {
-		throw new UnsupportedOperationException();
+		assert this.parentSchemeElementId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		try {
+			return (SchemeElement) SchemeStorableObjectPool.getStorableObject(this.parentSchemeElementId, true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return null;
+		}
 	}
 
 	public Set getSchemeCableLinks() {
@@ -543,7 +562,11 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	}
 
 	public void setCurrentSchemeMonitoringSolution(final SchemeMonitoringSolution currentSchemeMonitoringSolution) {
-		throw new UnsupportedOperationException();
+		final Identifier newCurrentSchemeMonitoringSolutionId = Identifier.possiblyVoid(currentSchemeMonitoringSolution);
+		if (this.currentSchemeMonitoringSolutionId.equals(newCurrentSchemeMonitoringSolutionId))
+			return;
+		this.currentSchemeMonitoringSolutionId = newCurrentSchemeMonitoringSolutionId;
+		this.changed = true;
 	}
 
 	/**
@@ -579,7 +602,11 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	}
 
 	public void setMap(final Map map) {
-		throw new UnsupportedOperationException();
+		final Identifier newMapId = Identifier.possiblyVoid(map);
+		if (this.mapId.equals(newMapId))
+			return;
+		this.mapId = newMapId;
+		this.changed = true;
 	}
 
 	/**
@@ -595,7 +622,11 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	}
 
 	public void setParentSchemeElement(final SchemeElement parentSchemeElement) {
-		throw new UnsupportedOperationException();
+		final Identifier newParentSchemeElementId = Identifier.possiblyVoid(parentSchemeElement);
+		if (this.parentSchemeElementId.equals(newParentSchemeElementId))
+			return;
+		this.parentSchemeElementId = newParentSchemeElementId;
+		this.changed = true;
 	}
 
 	public void setSchemeCableLinks(final Set schemeCableLinks) {
