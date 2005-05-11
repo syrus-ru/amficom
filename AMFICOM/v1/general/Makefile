@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.39 2005/05/03 19:21:54 arseniy Exp $
+# $Id: Makefile,v 1.40 2005/05/11 06:38:36 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -19,6 +19,7 @@ include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 
 APPCLASSPATH := $(LIBDIR)/util.jar
+EXTCLASSPATH := $(EXTLIBDIR)/trove-1.1b4/lib/trove.jar
 
 $(LIBNAME): .mach
 	$(JAR) -cf $@ \
@@ -27,7 +28,7 @@ $(LIBNAME): .mach
 .mach:	.corba $(CLASSDIR)
 	$(JAVAC) \
 		$(JAVACFLAGS) \
-		-classpath $(APPCLASSPATH):$(CLASSDIR) \
+		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(CLASSDIR) \
 		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/general/*.java) \
 		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/security/*.java)
 	touch $@
