@@ -46,6 +46,7 @@ import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTableModel;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestController;
+import com.syrus.util.Log;
 
 /**
  * @author Vladimir Dolzhenko
@@ -77,9 +78,20 @@ public class TableFrame extends JInternalFrame implements TestsEditor, TestEdito
 		this.test = this.schedulerModel.getSelectedTest();
 		ObjectResourceTableModel tableModel = (ObjectResourceTableModel) this.listTable.getModel();
 		int rowIndex = tableModel.getIndexOfObject(this.test);
+		Log.debugMessage("TableFrame.updateTest | rowIndex " + rowIndex, Log.FINEST);
 		if (rowIndex >= 0) {
-			rowIndex = ((ObjectResourceTableModel) this.listTable.getModel()).getIndexOfObject(this.test);
 			this.listTable.setRowSelectionInterval(rowIndex, rowIndex);
+		} else {
+			int[] selectedRows = this.listTable.getSelectedRows();
+			if (selectedRows.length > 0) {
+				int maxRowIndex = Integer.MIN_VALUE;
+				int minRowIndex = Integer.MAX_VALUE;
+				for (int i = 0; i < selectedRows.length; i++) {
+					maxRowIndex = maxRowIndex > selectedRows[i] ? maxRowIndex : selectedRows[i];
+					minRowIndex = minRowIndex < selectedRows[i] ? minRowIndex : selectedRows[i];
+				}
+				this.listTable.removeRowSelectionInterval(minRowIndex, maxRowIndex);
+			}
 		}
 	}
 

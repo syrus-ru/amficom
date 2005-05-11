@@ -29,6 +29,7 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeModel;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
+import com.syrus.AMFICOM.Client.Schedule.UI.TimeStampsEditor;
 import com.syrus.AMFICOM.Client.Schedule.item.MeasurementTypeChildrenFactory;
 import com.syrus.AMFICOM.Client.Schedule.item.MeasurementTypeItem;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
@@ -75,6 +76,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 //	public static final String			COMMAND_CHANGE_PARAM_PANEL		= "ChangeParamPanel";		//$NON-NLS-1$
 	public static final String			COMMAND_CHANGE_STATUSBAR_STATE	= "ChangeStatusBarState";
 
+	
 	// //$NON-NLS-1$
 	public static final String			COMMAND_CLEAN					= "Clean";
 
@@ -149,7 +151,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		this.aContext = aContext;
 		this.dispatcher = aContext.getDispatcher();
 		this.dispatcher.register(this, COMMAND_CLEAN);
-
+		
 		//
 		add("menuSession");
 		add("menuSessionNew");
@@ -225,7 +227,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 			} catch (ApplicationException e) {
 				showErrorMessage(Environment.getActiveWindow(), e);
 			}
-		}
+		} 
 	}
 
 	public void removeTest(Test test) throws ApplicationException {
@@ -331,9 +333,10 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 				this.testTemporalStampsEditor.setTestTemporalStamps(timeStamps);
 			}
 
-			for (int i = 0; i < this.testEditors.length; i++) {
-				this.testEditors[i].updateTest();
-			}
+		}
+		
+		for (int i = 0; i < this.testEditors.length; i++) {
+			this.testEditors[i].updateTest();
 		}
 	}
 

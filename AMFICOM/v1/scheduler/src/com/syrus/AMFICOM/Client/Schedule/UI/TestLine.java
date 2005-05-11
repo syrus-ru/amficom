@@ -126,6 +126,13 @@ public class TestLine extends TimeLine implements TestsEditor, TestEditor {
 						selectTest(x, y, TestLine.this.unsavedTestTimeItems);
 
 					}
+					if (TestLine.this.selectedTest == null) {
+						try {
+							TestLine.this.schedulerModel.setSelectedTest(null);
+						} catch (ApplicationException e1) {
+							SchedulerModel.showErrorMessage(TestLine.this, e1);
+						}
+					}
 				}
 			}
 		});
@@ -136,9 +143,13 @@ public class TestLine extends TimeLine implements TestsEditor, TestEditor {
 					Collection collection) {
 		for (Iterator it = collection.iterator(); it.hasNext();) {
 			TestTimeItem testTimeItem = (TestTimeItem) it.next();
+//			Log.debugMessage("TestLine.selectTest | testTimeItem.x  " + testTimeItem.x , Log.FINEST);
+//			Log.debugMessage("TestLine.selectTest | x  " + x , Log.FINEST);
+//			Log.debugMessage("TestLine.selectTest | testTimeItem.x + testTimeItem.width " + (testTimeItem.x + testTimeItem.width), Log.FINEST);
 			if (testTimeItem.x < x && x < testTimeItem.x + testTimeItem.width) {
 				try {
 					this.schedulerModel.setSelectedTest((Test) testTimeItem.object);
+//					Log.debugMessage("TestLine.selectTest | select " + ((Test) testTimeItem.object).getId(), Log.FINEST);
 				} catch (ApplicationException e) {
 					SchedulerModel.showErrorMessage(this, e);
 				}
@@ -193,7 +204,8 @@ public class TestLine extends TimeLine implements TestsEditor, TestEditor {
 
 		Log.debugMessage("TestLine.updateTest | this.selectedTest is "
 				+ (this.selectedTest == null ? "null" : this.selectedTest.getId().toString()), Log.FINEST);
-		this.repaint();
+		super.repaint();
+		super.revalidate();
 	}
 
 	public void updateTests() {
@@ -391,8 +403,8 @@ public class TestLine extends TimeLine implements TestsEditor, TestEditor {
 		
 //		Log.debugMessage("TestLine.refreshTimeItems | timeItems " + timeItems.size(), Log.FINEST);
 //		Log.debugMessage("TestLine.refreshTimeItems | unsavedTestTimeItems " + unsavedTestTimeItems.size(), Log.FINEST);
-		this.repaint();
-		this.revalidate();
+		super.repaint();
+		super.revalidate();
 	}
 
 }
