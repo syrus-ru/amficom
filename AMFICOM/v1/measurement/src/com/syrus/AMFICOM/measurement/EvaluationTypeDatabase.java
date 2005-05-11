@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeDatabase.java,v 1.77 2005/04/13 10:03:39 arseniy Exp $
+ * $Id: EvaluationTypeDatabase.java,v 1.78 2005/05/11 08:13:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.77 $, $Date: 2005/04/13 10:03:39 $
+ * @version $Revision: 1.78 $, $Date: 2005/05/11 08:13:13 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -201,10 +201,15 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 				etalonParameterTypeIds = (java.util.Set) etalonParameterTypeIdsMap.get(evaluationTypeId);
 				outParameterTypeIds = (java.util.Set) outParameterTypeIdsMap.get(evaluationTypeId);
 
-				evaluationType.setParameterTypes(GeneralStorableObjectPool.getStorableObjects(inParameterTypeIds, true),
-						GeneralStorableObjectPool.getStorableObjects(thresholdParameterTypeIds, true),
-						GeneralStorableObjectPool.getStorableObjects(etalonParameterTypeIds, true),
-						GeneralStorableObjectPool.getStorableObjects(outParameterTypeIds, true));
+				final java.util.Set inParameterTypes = (inParameterTypeIds != null && !inParameterTypeIds.isEmpty())
+						? GeneralStorableObjectPool.getStorableObjects(inParameterTypeIds, true) : Collections.EMPTY_SET;
+				final java.util.Set thresholdParameterTypes = (thresholdParameterTypeIds != null && !thresholdParameterTypeIds.isEmpty())
+						? GeneralStorableObjectPool.getStorableObjects(thresholdParameterTypeIds, true) : Collections.EMPTY_SET;
+				final java.util.Set etalonParameterTypes = (etalonParameterTypeIds != null && !etalonParameterTypeIds.isEmpty())
+						? GeneralStorableObjectPool.getStorableObjects(etalonParameterTypeIds, true) : Collections.EMPTY_SET;
+				final java.util.Set outParameterTypes = (outParameterTypeIds != null && !outParameterTypeIds.isEmpty())
+						? GeneralStorableObjectPool.getStorableObjects(outParameterTypeIds, true) : Collections.EMPTY_SET;
+				evaluationType.setParameterTypes(inParameterTypes, thresholdParameterTypes, etalonParameterTypes, outParameterTypes);
 			}
 
 		}

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeDatabase.java,v 1.89 2005/04/13 14:40:55 arseniy Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.90 2005/05/11 08:13:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.89 $, $Date: 2005/04/13 14:40:55 $
+ * @version $Revision: 1.90 $, $Date: 2005/05/11 08:13:13 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -177,8 +177,11 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 				inParameterTypeIds = (java.util.Set) inParameterTypeIdsMap.get(measurementTypeId);
 				outParameterTypeIds = (java.util.Set) outParameterTypeIdsMap.get(measurementTypeId);
 
-				measurementType.setParameterTypes(GeneralStorableObjectPool.getStorableObjects(inParameterTypeIds, true),
-						GeneralStorableObjectPool.getStorableObjects(outParameterTypeIds, true));
+				final java.util.Set inParameterTypes = (inParameterTypeIds != null && !inParameterTypeIds.isEmpty())
+						? GeneralStorableObjectPool.getStorableObjects(inParameterTypeIds, true) : Collections.EMPTY_SET;
+				final java.util.Set outParameterTypes = (outParameterTypeIds != null && !outParameterTypeIds.isEmpty())
+						? GeneralStorableObjectPool.getStorableObjects(outParameterTypeIds, true) : Collections.EMPTY_SET;
+				measurementType.setParameterTypes(inParameterTypes, outParameterTypes);
 			}
 
 		}
@@ -249,7 +252,9 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 				measurementTypeId = measurementType.getId();
 				measurementPortTypeIds = (java.util.Set) measurementPortTypeIdsMap.get(measurementTypeId);
 
-				measurementType.setMeasurementPortTypes0(ConfigurationStorableObjectPool.getStorableObjects(measurementPortTypeIds, true));
+				final java.util.Set measurementPortTypes = (measurementPortTypeIds != null && !measurementPortTypeIds.isEmpty())
+						? ConfigurationStorableObjectPool.getStorableObjects(measurementPortTypeIds, true) : Collections.EMPTY_SET;
+				measurementType.setMeasurementPortTypes0(measurementPortTypes);
 			}
 
 		}

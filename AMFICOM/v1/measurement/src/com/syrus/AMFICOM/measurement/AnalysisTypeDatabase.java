@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeDatabase.java,v 1.82 2005/04/13 10:03:39 arseniy Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.83 2005/05/11 08:13:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.82 $, $Date: 2005/04/13 10:03:39 $
+ * @version $Revision: 1.83 $, $Date: 2005/05/11 08:13:13 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -190,10 +190,15 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 				etalonParameterTypeIds = (java.util.Set) etalonParameterTypeIdsMap.get(analysisTypeId);
 				outParameterTypeIds = (java.util.Set) outParameterTypeIdsMap.get(analysisTypeId);
 
-				analysisType.setParameterTypes(GeneralStorableObjectPool.getStorableObjects(inParameterTypeIds, true),
-						GeneralStorableObjectPool.getStorableObjects(criteriaParameterTypeIds, true),
-						GeneralStorableObjectPool.getStorableObjects(etalonParameterTypeIds, true),
-						GeneralStorableObjectPool.getStorableObjects(outParameterTypeIds, true));
+				final java.util.Set inParameterTypes = (inParameterTypeIds != null && !inParameterTypeIds.isEmpty())
+						? GeneralStorableObjectPool.getStorableObjects(inParameterTypeIds, true) : Collections.EMPTY_SET;
+				final java.util.Set criteriaParameterTypes = (criteriaParameterTypeIds != null && !criteriaParameterTypeIds.isEmpty())
+						? GeneralStorableObjectPool.getStorableObjects(criteriaParameterTypeIds, true) : Collections.EMPTY_SET;
+				final java.util.Set etalonParameterTypes = (etalonParameterTypeIds != null && !etalonParameterTypeIds.isEmpty())
+						? GeneralStorableObjectPool.getStorableObjects(etalonParameterTypeIds, true) : Collections.EMPTY_SET;
+				final java.util.Set outParameterTypes = (outParameterTypeIds != null && !outParameterTypeIds.isEmpty())
+						? GeneralStorableObjectPool.getStorableObjects(outParameterTypeIds, true) : Collections.EMPTY_SET;
+				analysisType.setParameterTypes(inParameterTypes, criteriaParameterTypes, etalonParameterTypes, outParameterTypes);
 			}
 
 		}
