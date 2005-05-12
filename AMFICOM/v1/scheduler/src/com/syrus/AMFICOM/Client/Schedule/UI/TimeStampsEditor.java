@@ -1,5 +1,5 @@
 /*-
- * $Id: TimeStampsEditor.java,v 1.10 2005/05/12 09:58:35 bob Exp $
+ * $Id: TimeStampsEditor.java,v 1.11 2005/05/12 16:34:21 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,7 +54,7 @@ import com.syrus.AMFICOM.measurement.TestTemporalStamps;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/05/12 09:58:35 $
+ * @version $Revision: 1.11 $, $Date: 2005/05/12 16:34:21 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -142,7 +142,7 @@ public class TimeStampsEditor extends TimeLine implements OperationListener {
 					if (!TimeStampsEditor.this.timeItems.isEmpty()) {
 						for (Iterator it = TimeStampsEditor.this.timeItems.iterator(); it.hasNext();) {
 							TestTimeItem testTimeItem = (TestTimeItem) it.next();
-							if (testTimeItem.x < x && x < testTimeItem.x + testTimeItem.width) {
+							if (testTimeItem.x < x && x < testTimeItem.x + testTimeItem.getWidth()) {
 								if (TimeStampsEditor.this.selectedItems.contains(testTimeItem)) {
 									TimeStampsEditor.this.selectedItems.remove(testTimeItem);
 								} else {
@@ -711,9 +711,9 @@ public class TimeStampsEditor extends TimeLine implements OperationListener {
 				testTimeItem.x = x;
 				Long duration = (Long)this.intervalsDuration.get(offset);
 				Log.debugMessage("TimeStampsEditor.refreshTimeItems | offset:" + offset + ", duration:" + duration, Log.FINEST);
-				testTimeItem.width = duration != null ? (int) (this.scale * ((Long)this.intervalsDuration.get(offset)).longValue()) : this.minimalWidth;
-				if (testTimeItem.width < this.minimalWidth) {
-					testTimeItem.width = this.minimalWidth;
+				testTimeItem.setWidth(duration != null ? (int) (this.scale * ((Long)this.intervalsDuration.get(offset)).longValue()) : this.minimalWidth);
+				if (testTimeItem.getWidth() < this.minimalWidth) {
+					testTimeItem.setWidth(this.minimalWidth);
 				}
 				testTimeItem.object = offset;
 				testTimeItem.selectedColor = selectedColor;
@@ -725,7 +725,7 @@ public class TimeStampsEditor extends TimeLine implements OperationListener {
 			TestTimeItem prevItem = null;
 			for (Iterator it = this.timeItems.iterator(); it.hasNext();) {
 				TestTimeItem testTimeItem = (TestTimeItem) it.next();
-				if (prevItem != null && (testTimeItem.x - (prevItem.x + prevItem.width)) < 0) {
+				if (prevItem != null && (testTimeItem.x - (prevItem.x + prevItem.getWidth())) < 0) {
 					it.remove();
 					// Log.debugMessage("TimeStampsEditor.refreshTimeItems |
 					// remove testTimeItem " + testTimeItem.object, Log.FINEST);
@@ -746,7 +746,7 @@ public class TimeStampsEditor extends TimeLine implements OperationListener {
 		if (!this.timeItems.isEmpty()) {
 			for (Iterator it = this.timeItems.iterator(); it.hasNext();) {
 				TestTimeItem testTimeItem = (TestTimeItem) it.next();
-				if (testTimeItem.x < x && x < testTimeItem.x + testTimeItem.width) {
+				if (testTimeItem.x < x && x < testTimeItem.x + testTimeItem.getWidth()) {
 					Long offset = (Long) testTimeItem.object;
 					String dateString;
 					{
@@ -803,7 +803,7 @@ public class TimeStampsEditor extends TimeLine implements OperationListener {
 		if (!this.timeItems.isEmpty() && super.scale != 0.0) {
 			for (Iterator it = this.timeItems.iterator(); it.hasNext();) {
 				TestTimeItem testTimeItem = (TestTimeItem) it.next();
-				this.drawItemRect(g, testTimeItem.x, y, testTimeItem.width, h, this.selectedItems.contains(testTimeItem) ?  testTimeItem.selectedColor : testTimeItem.color);
+				this.drawItemRect(g, testTimeItem.x, y, testTimeItem.getWidth(), h, this.selectedItems.contains(testTimeItem) ?  testTimeItem.selectedColor : testTimeItem.color);
 			}
 		}
 	}
@@ -816,11 +816,5 @@ public class TimeStampsEditor extends TimeLine implements OperationListener {
 		this.testTemporalStamps = testTemporalStamps;
 		this.refreshTimeItems();
 	}	
-	
-	
-//	public void operationPerformed(OperationEvent e) {
-//		// TODO Auto-generated method stub
-//		
-//	}
 	
 }

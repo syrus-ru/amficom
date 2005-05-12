@@ -124,6 +124,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 	public static final String	COMMAND_REFRESH_TEST	= "RefreshTest";
 	public static final String	COMMAND_REFRESH_TESTS	= "RefreshTests";
 
+//	public static final String	COMMAND_ONE_TIME_S
 
 //	private KISEditor					kisEditor;
 

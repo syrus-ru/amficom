@@ -113,8 +113,9 @@ public class ElementsTreeFrame extends JInternalFrame implements Commandable {
 
 	public MeasurementType getMeasurementType() {
 		try {
-			return (MeasurementType) MeasurementStorableObjectPool.getStorableObject(this
-					.getObject(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE), true);
+			Identifier measurementTypeId = this
+			.getObject(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
+			return measurementTypeId != null ? (MeasurementType) MeasurementStorableObjectPool.getStorableObject(measurementTypeId, true) : null;
 		} catch (ApplicationException e) {
 			//
 		}

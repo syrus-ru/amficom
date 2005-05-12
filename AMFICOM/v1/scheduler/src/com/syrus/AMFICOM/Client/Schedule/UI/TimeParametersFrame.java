@@ -65,6 +65,7 @@ import com.syrus.AMFICOM.measurement.IntervalsTemporalPattern;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.PeriodicalTemporalPattern;
 import com.syrus.AMFICOM.measurement.PeriodicalTemporalPatternWrapper;
+import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestTemporalStamps;
 import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 import com.syrus.util.Log;
@@ -102,7 +103,7 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 		private JButton endDateButton;
 		private TimeSpinner					endTimeSpinner;		
 		private DateSpinner					endDateSpinner;
-
+		
 //		ObjList						timeStamps;
 
 		JRadioButton				oneRadioButton;
@@ -214,22 +215,54 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 					private Thread thread = new Thread() {
 						
 						public void run() {
-							startedThread = true;
-							while(true) {
-								if (waiting && (System.currentTimeMillis() - previousEventTime) > TIMEOUT) {
-									TimeParametersPanel.this.dispatcher.notify(new OperationEvent(TimeParametersPanel.this
-										.getStartDate(), 0, TimeStampsEditor.DATE_OPERATION));
-									Log.debugMessage(".run | notify ", Log.FINEST);
-									waiting = false;
-								}
-								
-								try {
-									Thread.sleep(TIMEOUT);
-								} catch (InterruptedException e) {
-									// nothing
-								}
-							}
-						}
+																startedThread = true;
+																while (true) {
+																	if (waiting
+																			&& (System.currentTimeMillis() - previousEventTime) > TIMEOUT) {
+																		Test selectedTest = TimeParametersPanel.this.schedulerModel
+																				.getSelectedTest();
+																		if (selectedTest != null
+																				&& selectedTest.isChanged()) {
+																			TestTemporalType temporalType = selectedTest
+																					.getTemporalType();
+																			Date startDate = TimeParametersPanel.this
+																					.getStartDate();
+																			Date endDate = TimeParametersPanel.this
+																					.getEndDate();
+																			switch (temporalType.value()) {
+																				case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
+																					selectedTest
+																							.setStartTime(startDate);
+																					break;
+																				default:
+																					if (startDate.getTime() < endDate
+																							.getTime()) {
+																						selectedTest
+																								.setStartTime(startDate);
+																					} else {
+																						waiting = false;
+																					}
+
+																			}
+
+																			if (waiting) {
+																				TimeParametersPanel.this.dispatcher
+																						.notify(new OperationEvent(
+																													this,
+																													0,
+																													SchedulerModel.COMMAND_REFRESH_TESTS));
+																			}
+																		}
+																		waiting = false;
+																	}
+
+																	try {
+																		Thread.sleep(TIMEOUT);
+																	} catch (InterruptedException e) {
+																		// nothing
+																	}
+																}
+															}
 						
 					};
 					

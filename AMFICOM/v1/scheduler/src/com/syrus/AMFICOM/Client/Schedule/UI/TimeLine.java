@@ -1,5 +1,5 @@
 /*-
- * $Id: TimeLine.java,v 1.4 2005/05/11 15:34:12 bob Exp $
+ * $Id: TimeLine.java,v 1.5 2005/05/12 16:34:21 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,9 +26,10 @@ import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.Client.Schedule.UI.TestLine.TestTimeItem;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/05/11 15:34:12 $
+ * @version $Revision: 1.5 $, $Date: 2005/05/12 16:34:21 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -40,8 +41,8 @@ public abstract class TimeLine extends JComponent {
 
 	String		title;
 
-	long		start;
-	long		end;
+	long		start = 0;
+	long		end = 0;
 	double		scale = 0.0;
 
 	SortedSet	timeItems	= new TreeSet();
@@ -112,7 +113,7 @@ public abstract class TimeLine extends JComponent {
 		if (!this.timeItems.isEmpty()) {
 			for (Iterator it = this.timeItems.iterator(); it.hasNext();) {
 				TestTimeItem testTimeItem = (TestTimeItem) it.next();
-				if (testTimeItem.x < x && x < testTimeItem.x + testTimeItem.width) {
+				if (testTimeItem.x < x && x < testTimeItem.x + testTimeItem.getWidth()) {
 					SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
 					return sdf
 							.format(new Date((long) (this.start + ((testTimeItem.x - PlanPanel.MARGIN / 2) / this.scale))));
@@ -153,6 +154,7 @@ public abstract class TimeLine extends JComponent {
 	
 	protected final void drawItemRect(Graphics g, int x, int y, int width, int height, Color c) {
 		g.setColor(c);
+//		Log.debugMessage("TimeLine.drawItemRect | width " + width, Log.FINEST);
 		g.fillRect(x + 2, y + 2, width - 3, height - 3);
 		g.draw3DRect(x, y, width, height, true);
 	}
