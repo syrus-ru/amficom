@@ -405,8 +405,8 @@ class PlanToolBar {
 					public void run() {
 						try {
 							schedulerModel.commitChanges();
-						} catch (ApplicationException e) {
-							SchedulerModel.showErrorMessage(PlanToolBar.this.toolBar, e);
+						} catch (ApplicationException e1) {
+							SchedulerModel.showErrorMessage(PlanToolBar.this.toolBar, e1);
 						}
 						Calendar date = Calendar.getInstance();
 						date.setTime((Date) PlanToolBar.this.dateSpinner.getValue());

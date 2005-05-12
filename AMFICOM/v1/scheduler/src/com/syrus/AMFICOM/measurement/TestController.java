@@ -1,5 +1,5 @@
 /*
- * $Id: TestController.java,v 1.8 2005/05/12 09:58:35 bob Exp $
+ * $Id: TestController.java,v 1.9 2005/05/12 11:26:27 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/05/12 09:58:35 $
+ * @version $Revision: 1.9 $, $Date: 2005/05/12 11:26:27 $
  * @author $Author: bob $
  * @module module
  */
@@ -208,7 +208,7 @@ public class TestController extends ObjectResourceController {
 
 	public void setValue(Object object, String key, Object value) {
 		if (object instanceof Test) {
-			Test test = (Test) object;
+//			Test test = (Test) object;
 		}
 	}
 

@@ -219,8 +219,8 @@ public class TestLine extends TimeLine {
 			this.selectedTest = null;
 		}
 		
-		Log.debugMessage("TestLine.updateTest | this.selectedTest is "
-				+ (this.selectedTest == null ? "null" : this.selectedTest.getId().toString()), Log.FINEST);
+//		Log.debugMessage("TestLine.updateTest | this.selectedTest is "
+//				+ (this.selectedTest == null ? "null" : this.selectedTest.getId().toString()), Log.FINEST);
 		super.repaint();
 		super.revalidate();
 	}
@@ -352,6 +352,10 @@ public class TestLine extends TimeLine {
 
 	void refreshTimeItems() {
 		this.timeItems.clear();
+		if (this.scale == 0.0) {
+			return;
+		}
+		
 		for (Iterator iterator = this.tests.iterator(); iterator.hasNext();) {
 			Test test = (Test) iterator.next();
 
@@ -418,8 +422,8 @@ public class TestLine extends TimeLine {
 			}
 		}
 		
-//		Log.debugMessage("TestLine.refreshTimeItems | timeItems " + timeItems.size(), Log.FINEST);
-//		Log.debugMessage("TestLine.refreshTimeItems | unsavedTestTimeItems " + unsavedTestTimeItems.size(), Log.FINEST);
+		Log.debugMessage("TestLine.refreshTimeItems | timeItems " + timeItems.size(), Log.FINEST);
+		Log.debugMessage("TestLine.refreshTimeItems | unsavedTestTimeItems " + unsavedTestTimeItems.size(), Log.FINEST);
 		super.repaint();
 		super.revalidate();
 	}

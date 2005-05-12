@@ -5,12 +5,10 @@
 
 package com.syrus.AMFICOM.Client.Scheduler.General;
 
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
@@ -23,7 +21,6 @@ import java.text.SimpleDateFormat;
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JComponent;
 import javax.swing.JRadioButton;
 import javax.swing.UIManager;
 

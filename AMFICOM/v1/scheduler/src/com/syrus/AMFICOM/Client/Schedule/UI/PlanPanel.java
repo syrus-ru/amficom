@@ -577,7 +577,7 @@ ActionListener {
 		for (Iterator it = this.testLines.keySet().iterator(); it.hasNext();) {
 			Object key = it.next();
 			TestLine line = (TestLine) this.testLines.get(key);
-			Rectangle visibleRectangle = line.getVisibleRect();
+			Rectangle visibleRectangle = line.getVisibleRectangle();
 			if (visibleRectangle != null) {
 				this.scrollRectToVisible(visibleRectangle);
 			}

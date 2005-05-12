@@ -1,5 +1,5 @@
 /*
- * $Id: CronTemporalPatternController.java,v 1.1 2005/04/27 15:26:37 bob Exp $
+ * $Id: CronTemporalPatternController.java,v 1.2 2005/05/12 11:26:27 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/27 15:26:37 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/12 11:26:27 $
  * @author $Author: bob $
  * @module module
  */
@@ -94,7 +94,7 @@ public class CronTemporalPatternController extends ObjectResourceController {
 
 	public void setValue(Object object, String key, Object value) {
 		if (object instanceof CronTemporalPattern) {
-			CronTemporalPattern temporalPattern = (CronTemporalPattern) object;
+//			CronTemporalPattern temporalPattern = (CronTemporalPattern) object;
 		}
 	}
 

@@ -248,7 +248,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		Object obj = ae.getSource();
 		Environment.log(Environment.LOG_LEVEL_INFO, "commandName:" + commandName, getClass().getName());
 		if (commandName.equals(TimeStampsEditor.DATE_OPERATION)) {
-			if (this.selectedTest != null) {
+			if (this.selectedTest != null && this.selectedTest.isChanged()) {
 				TestTemporalType temporalType = this.selectedTest.getTemporalType();
 				switch(temporalType.value()) {
 					case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
@@ -546,22 +546,6 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 
 		this.tests = MeasurementStorableObjectPool.getStorableObjectsByCondition(compoundCondition, true);
 
-		for (Iterator it = this.tests.iterator(); it.hasNext();) {
-			Test test = (Test) it.next();
-			System.out.println(">" + test.getId());
-		}
-
-		// {
-		// List alarmsIds = null;
-		// List testArgumentSetIds = null;
-		// if (alarmsIds != null)
-		// dsi.GetAlarms((String[]) alarmsIds.toArray(new
-		// String[alarmsIds.size()]));
-		// if (testArgumentSetIds != null)
-		// dsi.LoadTestArgumentSets((String[]) testArgumentSetIds.toArray(new
-		// String[testArgumentSetIds.size()]));
-		// }
-
 		this.dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, LangModelSchedule
 				.getString("Updating_tests_from_BD_finished"))); //$NON-NLS-1$
 		this.refreshTests();
@@ -704,14 +688,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 						this.set, null, null, null, LangModelSchedule.getString("created by Scheduler") + " /"
 								+ sdf.format(new Date()) + "/", 1000 * 60 * 10, Collections
 								.singleton(this.monitoredElement.getId()), Collections.singleton(this.measurementType
-								.getId())); // @todo
-					// link
-					// to
-					// measurement
-					// type
-					// --
-					// temporal
-					// fix
+								.getId())); 
 					MeasurementStorableObjectPool.putStorableObject(this.measurementSetup);
 					
 				} catch (IllegalObjectEntityException e) {

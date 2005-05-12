@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupController.java,v 1.3 2005/04/12 06:53:14 bob Exp $
+ * $Id: MeasurementSetupController.java,v 1.4 2005/05/12 11:26:27 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/04/12 06:53:14 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/12 11:26:27 $
  * @author $Author: bob $
  * @module module
  */
@@ -94,7 +94,7 @@ public class MeasurementSetupController extends ObjectResourceController {
 
 	public void setValue(Object object, String key, Object value) {
 		if (object instanceof MeasurementSetup) {
-			MeasurementSetup measurementSetup = (MeasurementSetup) object;
+//			MeasurementSetup measurementSetup = (MeasurementSetup) object;
 		}
 	}
 

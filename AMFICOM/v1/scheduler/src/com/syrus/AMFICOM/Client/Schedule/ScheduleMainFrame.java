@@ -103,7 +103,7 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 
 			public void windowClosing(WindowEvent e) {
 				ScheduleMainFrame.this.dispatcher.unregister(ScheduleMainFrame.this, ContextChangeEvent.type);
-				Environment.the_dispatcher.unregister(ScheduleMainFrame.this, ContextChangeEvent.type);
+				Environment.getDispatcher().unregister(ScheduleMainFrame.this, ContextChangeEvent.type);
 				ScheduleMainFrame.this.aContext.getApplicationModel().getCommand(ScheduleMainMenuBar.MENU_EXIT)
 						.execute();
 			}
@@ -560,17 +560,17 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		this.dispatcher.register(this, SchedulerModel.COMMAND_CHANGE_STATUSBAR_STATE);
 
 		this.dispatcher.register(this, ContextChangeEvent.type);
-		Dispatcher dispatcher = Environment.getDispatcher();
-		dispatcher.register(this, ContextChangeEvent.type);
+		Dispatcher dispatcher1 = Environment.getDispatcher();
+		dispatcher1.register(this, ContextChangeEvent.type);
 
-		aModel.setCommand(ScheduleMainMenuBar.MENU_SESSION_NEW, new OpenSessionCommand(dispatcher, this.aContext));
-		aModel.setCommand(ScheduleMainMenuBar.MENU_SESSION_CLOSE, new SessionCloseCommand(dispatcher, this.aContext));
+		aModel.setCommand(ScheduleMainMenuBar.MENU_SESSION_NEW, new OpenSessionCommand(dispatcher1, this.aContext));
+		aModel.setCommand(ScheduleMainMenuBar.MENU_SESSION_CLOSE, new SessionCloseCommand(dispatcher1, this.aContext));
 		aModel.setCommand(ScheduleMainMenuBar.MENU_SESSION_OPTIONS, new SessionOptionsCommand(this.aContext));
-		aModel.setCommand(ScheduleMainMenuBar.MENU_SESSION_CONNECTION, new SessionConnectionCommand(dispatcher,
+		aModel.setCommand(ScheduleMainMenuBar.MENU_SESSION_CONNECTION, new SessionConnectionCommand(dispatcher1,
 																									this.aContext));
 		aModel.setCommand(ScheduleMainMenuBar.MENU_SESSION_CHANGE_PASSWORD,
-			new SessionChangePasswordCommand(dispatcher, this.aContext));
-		aModel.setCommand(ScheduleMainMenuBar.MENU_SESSION_DOMAIN, new SessionDomainCommand(dispatcher, this.aContext));
+			new SessionChangePasswordCommand(dispatcher1, this.aContext));
+		aModel.setCommand(ScheduleMainMenuBar.MENU_SESSION_DOMAIN, new SessionDomainCommand(dispatcher1, this.aContext));
 		aModel.setCommand(ScheduleMainMenuBar.MENU_EXIT, new ExitCommand(this));
 
 		/* TODO FIXXX */

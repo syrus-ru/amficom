@@ -65,11 +65,7 @@ import com.syrus.AMFICOM.measurement.Set;
 import com.syrus.AMFICOM.measurement.SetParameter;
 import com.syrus.util.Log;
 
-public class TestParametersPanel
-implements OperationListener
-//, MeasurementSetupEditor,
-//		AnalysisTypeEditor, EvaluationTypeEditor, SetEditor 
-		{
+public class TestParametersPanel implements OperationListener {
 
 	ApplicationContext			aContext;
 	private SchedulerModel		schedulerModel;
@@ -97,7 +93,7 @@ implements OperationListener
 
 
 	
-	private MeasurementSetup measurementSetup;
+	MeasurementSetup measurementSetup;
 	
 	private Hashtable panels = new UIDefaults(); 
 
@@ -220,7 +216,7 @@ implements OperationListener
 
 					deleteTestMenuItem.addActionListener(new ActionListener() {
 
-						public void actionPerformed(ActionEvent e) {
+						public void actionPerformed(ActionEvent e1) {
 							MeasurementSetupWrapper wrapper = MeasurementSetupWrapper.getInstance();
 							String info = (String) wrapper.getValue(measurementSetup1,
 								MeasurementSetupWrapper.SUMMARY_INFO);
@@ -389,14 +385,21 @@ implements OperationListener
 	}
 
 	public void setMeasurementSetup(MeasurementSetup measurementSetup) {
-		this.measurementSetup = measurementSetup; 
-		if (this.msList == null)
+//		Log.debugMessage("TestParametersPanel.setMeasurementSetup | " + (measurementSetup != null ? measurementSetup.getId() : null), Log.FINEST);
+		if (this.measurementSetup != null && measurementSetup != null && this.measurementSetup.getId().equals(measurementSetup.getId()) || this.msList == null) {
+//			Log.debugMessage("TestParametersPanel.setMeasurementSetup | return ", Log.FINEST);
 			return;
+		}
+		
+		this.measurementSetup = measurementSetup;
+
 		
 		if (!this.msList.contains(measurementSetup)) {
 			this.msList.add(measurementSetup);
 		}
-		this.testSetups.setSelectedValue(measurementSetup, true);
+		this.testSetups.setSelectedIndex(((ObjListModel)this.testSetups.getModel()).getIndexOf(measurementSetup));
+//		this.testSetups.setSelectedValue(measurementSetup, true);
+//		Log.debugMessage("TestParametersPanel.setMeasurementSetup | this.testSetups.getSelectedIndex() " + this.testSetups.getSelectedIndex(), Log.FINEST);
 		if (this.useAnalysisSetups.isSelected() && this.testSetups.getSelectedIndex() < 0 && this.parametersTestPanel != null) {
 			this.parametersTestPanel.setSet(measurementSetup.getParameterSet());
 			this.tabbedPane.setSelectedIndex(1);
@@ -501,8 +504,8 @@ implements OperationListener
 		this.dispatcher.unregister(this, SchedulerModel.COMMAND_CHANGE_ME_TYPE);
 	}
 
-	private void initModule(final Dispatcher dispatcher) {
-		this.dispatcher = dispatcher;
+	private void initModule(final Dispatcher dispatcher1) {
+		this.dispatcher = dispatcher1;
 		this.dispatcher.register(this, SchedulerModel.COMMAND_CHANGE_ME_TYPE);
 //		this.schedulerModel.setMeasurementSetupEditor(this);
 //		this.schedulerModel.setAnalysisTypeEditor(this);
@@ -525,6 +528,7 @@ implements OperationListener
 					}
 				} else if (actionCommand.equals(SchedulerModel.COMMAND_SET_MEASUREMENT_SETUP)) {
 					if (!this.skip) {
+						TestParametersPanel.this.measurementSetup = null;
 						setMeasurementSetup((MeasurementSetup) object);
 					}
 				}  else if (actionCommand.equals(SchedulerModel.COMMAND_SET_MEASUREMENT_SETUPS)) {
@@ -539,28 +543,28 @@ implements OperationListener
 					AnalysisType analysisType = getAnalysisType();
 					if (analysisType != null) {
 						this.skip = true;
-						dispatcher.notify(new OperationEvent(analysisType, 0, SchedulerModel.COMMAND_SET_ANALYSIS_TYPE));
+						dispatcher1.notify(new OperationEvent(analysisType, 0, SchedulerModel.COMMAND_SET_ANALYSIS_TYPE));
 						this.skip = false;
 					}
 				} else if (actionCommand.equals(SchedulerModel.COMMAND_GET_EVALUATION_TYPE)) {
 					EvaluationType evaluationType = getEvaluationType();
 					if (evaluationType != null) {
 						this.skip = true;
-						dispatcher.notify(new OperationEvent(evaluationType, 0, SchedulerModel.COMMAND_SET_EVALUATION_TYPE));
+						dispatcher1.notify(new OperationEvent(evaluationType, 0, SchedulerModel.COMMAND_SET_EVALUATION_TYPE));
 						this.skip = false;
 					}
 				} else if (actionCommand.equals(SchedulerModel.COMMAND_GET_MEASUREMENT_SETUP)) {
 					MeasurementSetup measurementSetup1 = getMeasurementSetup();
 					if (measurementSetup1 != null) {
 						this.skip = true;
-						dispatcher.notify(new OperationEvent(measurementSetup1, 0, SchedulerModel.COMMAND_SET_MEASUREMENT_SETUP));
+						dispatcher1.notify(new OperationEvent(measurementSetup1, 0, SchedulerModel.COMMAND_SET_MEASUREMENT_SETUP));
 						this.skip = false;
 					}
 				}  else if (actionCommand.equals(SchedulerModel.COMMAND_GET_SET)) {
 					Set set = getSet();
 					if (set != null) {
 						this.skip = true;
-						dispatcher.notify(new OperationEvent(set, 0, SchedulerModel.COMMAND_SET_SET));
+						dispatcher1.notify(new OperationEvent(set, 0, SchedulerModel.COMMAND_SET_SET));
 						this.skip = false;
 					}
 				} 
