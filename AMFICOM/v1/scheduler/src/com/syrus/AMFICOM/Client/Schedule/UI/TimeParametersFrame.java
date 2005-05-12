@@ -74,7 +74,7 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 
 	private static final long	serialVersionUID	= 6562288896016470275L;
 
-	public class TimeParametersPanel extends JPanel implements TestTemporalStampsEditor, OperationListener {
+	public class TimeParametersPanel implements TestTemporalStampsEditor, OperationListener {
 
 		private static final long	serialVersionUID	= -7975294015403739057L;
 
@@ -122,6 +122,8 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 		
 		TimeStampsEditor timeStampsEditor;
 		
+		JPanel panel;
+		
 		public static final long MINUTE_LONG = 60L * 1000L;
 		public static final long HOUR_LONG = 60L * MINUTE_LONG;
 		public static final long DAY_LONG = 24L * HOUR_LONG;
@@ -129,7 +131,6 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 		
 
 		public TimeParametersPanel() {
-			super(new GridBagLayout());
 			this.createGUI();
 		}
 
@@ -143,8 +144,9 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 		}
 
 		private void createGUI() {
+			this.panel = new JPanel(new GridBagLayout());
 			final GridBagConstraints gbc = new GridBagConstraints();
-			this.setBorder(BorderFactory.createEtchedBorder());			
+			this.panel.setBorder(BorderFactory.createEtchedBorder());			
 			gbc.anchor = GridBagConstraints.NORTH;
 			gbc.weightx = 1.0;
 			gbc.weighty = 0.0;
@@ -158,18 +160,18 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 			
 			gbc.gridwidth = GridBagConstraints.REMAINDER;
 			gbc.gridy++;
-			add(this.oneRadioButton, gbc);
+			this.panel.add(this.oneRadioButton, gbc);
 			gbc.gridy++;
-			add(this.periodicalRadioButton, gbc);
+			this.panel.add(this.periodicalRadioButton, gbc);
 			gbc.gridy++;
-			add(this.continuosRadioButton, gbc);
+			this.panel.add(this.continuosRadioButton, gbc);
 			gbc.gridy++;
-			add(this.timeTableRadioButton, gbc);
+			this.panel.add(this.timeTableRadioButton, gbc);
 
 			JLabel beginLabel = new JLabel(LangModelSchedule.getString("Start") + ':');
 			gbc.gridx = 1;
 			gbc.gridy++;			
-			add(beginLabel, gbc);
+			this.panel.add(beginLabel, gbc);
 			gbc.gridwidth = 1;
 			gbc.gridx = 1;
 			gbc.gridy++;
@@ -178,13 +180,44 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 				this.startTimeSpinner = new TimeSpinner();
 				this.startDateSpinner = new DateSpinner();
 				ChangeListener changeListener = new ChangeListener() {
+					
+					OperationEvent event;
+					long previousEventTime;		
+					boolean startedThread = false;
+					static final long TIMEOUT = 500;
+					
+					private Thread thread = new Thread() {
+						
+						public void run() {
+							startedThread = true;
+							while(true) {
+								if (event != null && (System.currentTimeMillis() - previousEventTime) > TIMEOUT) {
+									TimeParametersPanel.this.dispatcher.notify(event);
+									Log.debugMessage(".run | notify ", Log.FINEST);
+									event = null;
+								}
+								
+								try {
+									Thread.sleep(TIMEOUT);
+								} catch (InterruptedException e) {
+									// nothing
+								}
+							}
+						}
+						
+					};
+					
 
 					public void stateChanged(ChangeEvent e) {
-						if (!TimeParametersPanel.this.skipChanging) {
-							TimeParametersPanel.this.dispatcher.notify(new OperationEvent(TimeParametersPanel.this
-									.getStartDate(), 0, TimeStampsEditor.DATE_OPERATION));
-						}
+						if (this.event == null) {
+							this.event = new OperationEvent(TimeParametersPanel.this
+								.getStartDate(), 0, TimeStampsEditor.DATE_OPERATION);
+							if (!this.startedThread) {
+								this.thread.start();
+							}
 
+						}
+						this.previousEventTime = System.currentTimeMillis();						
 					}
 				};
 
@@ -216,14 +249,14 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 				box.add(this.startTimeSpinner);
 				box.add(this.periodOneTimeButton);
 				gbc.gridwidth = GridBagConstraints.REMAINDER;				
-				add(box, gbc);
+				this.panel.add(box, gbc);
 			}
 
 			{
 				gbc.gridx = 1;
 				gbc.gridy++;
 				this.interavalLabel = new JLabel(LangModelSchedule.getString("Interval") + ':');
-				add(this.interavalLabel, gbc);
+				this.panel.add(this.interavalLabel, gbc);
 				gbc.weightx = 1.0;
 				gbc.gridx = 1;
 				gbc.gridy++;
@@ -250,14 +283,14 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 					((SpinnerDateModel)this.periodTimeSpinner.getModel()).setValue(calendar.getTime());
 					
 					gbc.gridwidth = GridBagConstraints.REMAINDER;
-					add(box, gbc);
+					this.panel.add(box, gbc);
 				}
 			}
 			
 			gbc.gridx = 1;
 			gbc.gridy++;
 			this.endingLabel = new JLabel(LangModelSchedule.getString("Finish") + ':');
-			add(this.endingLabel, gbc);
+			this.panel.add(this.endingLabel, gbc);
 			gbc.weightx = 1.0;
 			gbc.gridx = 1;
 			gbc.gridy++;
@@ -289,7 +322,7 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 				UIGeneralStorage.fixHorizontalSize(this.endTimeSpinner);
 				box.add(this.endTimeSpinner);
 				gbc.gridwidth = GridBagConstraints.REMAINDER;
-				add(box, gbc);
+				this.panel.add(box, gbc);
 			}
 
 //			JSeparator jsep2 = new JSeparator();
@@ -455,16 +488,16 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 			 */
 			if (false) {
 				gbc.gridy++;
-				add(this.synchroRadioButton, gbc);
+				this.panel.add(this.synchroRadioButton, gbc);
 				gbc.gridy++;
-				add(this.alternateRadioButton, gbc);
+				this.panel.add(this.alternateRadioButton, gbc);
 
 				JSeparator jsep4 = new JSeparator();
 				gbc.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 				gbc.gridheight = GridBagConstraints.RELATIVE;
 				jsep4.setBorder(BorderFactory.createEtchedBorder());
 				gbc.gridy++;
-				add(jsep4, gbc);
+				this.panel.add(jsep4, gbc);
 				gbc.insets = gbcInsetsDefault;
 			} else {
 //				gbc.gridy++;
@@ -474,7 +507,7 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 			gbc.gridwidth = GridBagConstraints.REMAINDER;
 			gbc.gridheight = GridBagConstraints.REMAINDER;
 			gbc.weighty = 1.0;
-			add(Box.createVerticalGlue(), gbc);
+			this.panel.add(Box.createVerticalGlue(), gbc);
 			
 			this.synchroRadioButton.doClick();
 			this.periodicalRadioButton.doClick();
@@ -556,9 +589,9 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 								MeasurementStorableObjectPool.putStorableObject(intervalsTemporalPattern);
 								TimeParametersPanel.this.temporalStamps = new TestTemporalStamps(TestTemporalType.TEST_TEMPORAL_TYPE_PERIODICAL, getStartDate(), getEndDate(), intervalsTemporalPattern);
 							} catch (IllegalObjectEntityException e1) {
-								SchedulerModel.showErrorMessage(TimeParametersPanel.this, e1);
+								SchedulerModel.showErrorMessage(TimeParametersPanel.this.panel, e1);
 							} catch (CreateObjectException e1) {
-								SchedulerModel.showErrorMessage(TimeParametersPanel.this, e1);
+								SchedulerModel.showErrorMessage(TimeParametersPanel.this.panel, e1);
 							}
 							
 						} 
@@ -588,7 +621,7 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 						try {
 							temporalPattern.addIntervalItems(Collections.singletonMap(newMs, Identifier.VOID_IDENTIFIER), Collections.singletonMap(newMs, null));
 						} catch (IllegalDataException e1) {
-							SchedulerModel.showErrorMessage(TimeParametersPanel.this, e1);
+							SchedulerModel.showErrorMessage(TimeParametersPanel.this.panel, e1);
 						}
 						
 						 TimeParametersPanel.this.schedulerModel.refreshTestTemporalStamps();
@@ -597,7 +630,7 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 						try {
 							TimeParametersPanel.this.schedulerModel.createTest();
 						} catch (ApplicationException e1) {
-							SchedulerModel.showErrorMessage(TimeParametersPanel.this, e1);
+							SchedulerModel.showErrorMessage(TimeParametersPanel.this.panel, e1);
 						}
 					}
 				}
@@ -619,7 +652,7 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 						long endTime = endDate.getTime();
 
 						if (startTime >= endTime) {
-							JOptionPane.showMessageDialog(TimeParametersPanel.this, LangModelSchedule
+							JOptionPane.showMessageDialog(TimeParametersPanel.this.panel, LangModelSchedule
 									.getString("End time less than begin time"), LangModelSchedule.getString("Error"), //$NON-NLS-1$ //$NON-NLS-2$
 								JOptionPane.OK_OPTION);
 							return;
@@ -640,9 +673,9 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 																									startDate, endDate,
 																									intervalsTemporalPattern);
 							} catch (IllegalObjectEntityException e1) {
-								SchedulerModel.showErrorMessage(TimeParametersPanel.this, e1);
+								SchedulerModel.showErrorMessage(TimeParametersPanel.this.panel, e1);
 							} catch (CreateObjectException e1) {
-								SchedulerModel.showErrorMessage(TimeParametersPanel.this, e1);
+								SchedulerModel.showErrorMessage(TimeParametersPanel.this.panel, e1);
 							}
 
 						}
@@ -667,7 +700,7 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 									periodicTemporalPattern = (PeriodicalTemporalPattern) set.iterator().next();
 								}
 							} catch (ApplicationException e1) {
-								SchedulerModel.showErrorMessage(TimeParametersPanel.this, e1);
+								SchedulerModel.showErrorMessage(TimeParametersPanel.this.panel, e1);
 								return;
 							}
 
@@ -696,11 +729,11 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 							temporalPattern.addIntervalItems(Collections.singletonMap(newMs, periodicTemporalPattern
 									.getId()), Collections.singletonMap(newMs, new Long(endTime - startTime)));
 						} catch (IllegalObjectEntityException e1) {
-							SchedulerModel.showErrorMessage(TimeParametersPanel.this, e1);
+							SchedulerModel.showErrorMessage(TimeParametersPanel.this.panel, e1);
 						} catch (CreateObjectException e1) {
-							SchedulerModel.showErrorMessage(TimeParametersPanel.this, e1);
+							SchedulerModel.showErrorMessage(TimeParametersPanel.this.panel, e1);
 						} catch (IllegalDataException e1) {
-							SchedulerModel.showErrorMessage(TimeParametersPanel.this, e1);
+							SchedulerModel.showErrorMessage(TimeParametersPanel.this.panel, e1);
 						}
 
 						// while(startTime + times < endTime) {
@@ -715,7 +748,7 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 						try {
 							TimeParametersPanel.this.schedulerModel.createTest();
 						} catch (ApplicationException e1) {
-							SchedulerModel.showErrorMessage(TimeParametersPanel.this, e1);
+							SchedulerModel.showErrorMessage(TimeParametersPanel.this.panel, e1);
 						}
 
 					}
@@ -846,7 +879,7 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 						temporalPattern = (AbstractTemporalPattern)set.iterator().next();
 					}
 				} catch (ApplicationException e) {
-					SchedulerModel.showErrorMessage(this, e);
+					SchedulerModel.showErrorMessage(this.panel, e);
 					return null;
 				}
 				
@@ -854,20 +887,20 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 					try {
 						temporalPattern = PeriodicalTemporalPattern.createInstance(LoginManager.getUserId(), intervalLength);
 					} catch (CreateObjectException e) {
-						SchedulerModel.showErrorMessage(this, e);
+						SchedulerModel.showErrorMessage(this.panel, e);
 						return null;
 					}
 					
 					try {
 						MeasurementStorableObjectPool.putStorableObject(temporalPattern);
 					} catch (IllegalObjectEntityException e) {
-						SchedulerModel.showErrorMessage(this, e);
+						SchedulerModel.showErrorMessage(this.panel, e);
 						return null;
 					}
 				}
 				
 				if (temporalPattern == null) {
-					JOptionPane.showMessageDialog(this,
+					JOptionPane.showMessageDialog(this.panel,
 						LangModelSchedule.getString("Have not choosen temporal pattern"), LangModelSchedule.getString("Error"), //$NON-NLS-1$ //$NON-NLS-2$
 						JOptionPane.OK_OPTION);
 					this.schedulerModel.setBreakData();
@@ -884,7 +917,7 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 			Date end = this.getEndDate();
 		
 			if (!temporalType.equals(TestTemporalType.TEST_TEMPORAL_TYPE_ONETIME) && end.getTime() < start.getTime()) {
-				JOptionPane.showMessageDialog(this,
+				JOptionPane.showMessageDialog(this.panel,
 					LangModelSchedule.getString("End time less than begin time"), LangModelSchedule.getString("Error"), //$NON-NLS-1$ //$NON-NLS-2$
 					JOptionPane.OK_OPTION);
 				this.schedulerModel.setBreakData();
@@ -980,7 +1013,7 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 
 	}
 
-	private TimeParametersPanel	panel;
+	private TimeParametersPanel	timeParametersPanel;
 
 	private Command				command;
 
@@ -990,8 +1023,8 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 		setResizable(true);
 		setClosable(true);
 		setIconifiable(true);
-		this.panel = new TimeParametersPanel(aContext);
-		this.getContentPane().add(this.panel, BorderLayout.CENTER);
+		this.timeParametersPanel = new TimeParametersPanel(aContext);
+		this.getContentPane().add(this.timeParametersPanel.panel, BorderLayout.CENTER);
 		this.command = new WindowCommand(this);
 	}
 	

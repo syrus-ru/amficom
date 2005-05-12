@@ -470,7 +470,7 @@ implements OperationListener, MeasurementSetupEditor,
 	public void operationPerformed(OperationEvent ae) {
 		String commandName = ae.getActionCommand();
 		Object obj = ae.getSource();
-		Environment.log(Environment.LOG_LEVEL_INFO, "commandName:" + commandName, getClass().getName());
+//		Environment.log(Environment.LOG_LEVEL_INFO, "commandName:" + commandName, getClass().getName());
 		if (commandName.equals(SchedulerModel.COMMAND_CHANGE_ME_TYPE)) {			
 			Identifier meId = (Identifier) obj;
 			try {

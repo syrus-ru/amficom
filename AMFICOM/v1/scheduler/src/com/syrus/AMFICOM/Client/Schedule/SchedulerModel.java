@@ -13,8 +13,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
 
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
@@ -29,7 +32,6 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeModel;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
-import com.syrus.AMFICOM.Client.Schedule.UI.TimeStampsEditor;
 import com.syrus.AMFICOM.Client.Schedule.item.MeasurementTypeChildrenFactory;
 import com.syrus.AMFICOM.Client.Schedule.item.MeasurementTypeItem;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
@@ -92,6 +94,8 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 	private ObjectResourceTreeModel		treeModel;
 	private Collection					tests							= new LinkedList();
 	private Test						selectedTest;
+	private Map				measurementSetupMap;
+	
 
 	private MeasurementTypeEditor		measurementTypeEditor;
 	private KISEditor					kisEditor;
@@ -400,6 +404,9 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		this.dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, LangModelSchedule
 				.getString("Updating tests from DB"))); //$NON-NLS-1$
 
+		if (this.measurementSetupMap != null) {
+			this.measurementSetupMap.clear();
+		}
 		ConfigurationStorableObjectPool.refresh();
 		MeasurementStorableObjectPool.refresh();
 
@@ -507,30 +514,51 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		StorableObjectCondition condition = null;
 
 		LinkedIdsCondition measurementTypeCondition = null;
-		if (this.measurementType != null)
-			measurementTypeCondition = new LinkedIdsCondition(this.measurementType.getId(),
+		Identifier identifier = null;
+		java.util.Set idSet = null;
+		
+		
+		if (this.measurementType != null) {
+			identifier = this.measurementType.getId();
+			measurementTypeCondition = new LinkedIdsCondition(identifier,
 																ObjectEntities.MS_ENTITY_CODE);
+		}
 
 		if (this.monitoredElement != null) {
-			LinkedIdsCondition linkedIdsCondition2 = new LinkedIdsCondition(this.monitoredElement.getId(),
+			LinkedIdsCondition monitoredElementCondition = new LinkedIdsCondition(this.monitoredElement.getId(),
 																			ObjectEntities.MS_ENTITY_CODE);
 			try {
-				if (measurementTypeCondition != null)
+				if (measurementTypeCondition != null) {
+					idSet = new HashSet(2);
+					idSet.add(identifier);
+					identifier = this.monitoredElement.getId();
+					idSet.add(identifier);
 					condition = new CompoundCondition(measurementTypeCondition, CompoundConditionSort.OR,
-														linkedIdsCondition2);
-				else
-					condition = linkedIdsCondition2;
+														monitoredElementCondition);
+				} else {
+					idSet = Collections.singleton(identifier);
+					condition = monitoredElementCondition;
+				}
 			} catch (CreateObjectException e) {
 				// never !
 				e.printStackTrace();
 			}
-		} else
+		} else {
 			condition = measurementTypeCondition;
+		}
 
 		try {
-			if (condition != null)
-				this.measurementSetupEditor.setMeasurementSetups(MeasurementStorableObjectPool
-						.getStorableObjectsByCondition(condition, true));
+			if (condition != null) {
+				java.util.Set measurementSetups = (java.util.Set) (this.measurementSetupMap != null ? this.measurementSetupMap.get(idSet) : null);
+				if (measurementSetups == null) {
+					measurementSetups = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
+					if (this.measurementSetupMap == null) {
+						this.measurementSetupMap = new HashMap();
+					}
+					this.measurementSetupMap.put(idSet, measurementSetups);
+				}
+				this.measurementSetupEditor.setMeasurementSetups(measurementSetups);
+			}
 
 			if (this.selectedTest != null) {
 				Collection measurementSetupIds = this.selectedTest.getMeasurementSetupIds();
