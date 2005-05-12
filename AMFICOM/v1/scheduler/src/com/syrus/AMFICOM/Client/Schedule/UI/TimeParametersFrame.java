@@ -49,7 +49,6 @@ import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.Client.Schedule.Commandable;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
-import com.syrus.AMFICOM.Client.Schedule.TestTemporalStampsEditor;
 import com.syrus.AMFICOM.Client.Schedule.WindowCommand;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -74,7 +73,9 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 
 	private static final long	serialVersionUID	= 6562288896016470275L;
 
-	public class TimeParametersPanel implements TestTemporalStampsEditor, OperationListener {
+	public class TimeParametersPanel implements 
+	//TestTemporalStampsEditor, 
+	OperationListener {
 
 		private static final long	serialVersionUID	= -7975294015403739057L;
 
@@ -140,7 +141,30 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 			this.dispatcher = this.aContext.getDispatcher();
 			this.dispatcher.register(this, TimeStampsEditor.DATE_OPERATION);
 			this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();
-			this.schedulerModel.setTestTemporalStampsEditor(this);
+//			this.schedulerModel.setTestTemporalStampsEditor(this);
+			
+			this.dispatcher = aContext.getDispatcher();
+			OperationListener operationListener = new OperationListener() {
+				private boolean skip = false;
+				public void operationPerformed(OperationEvent e) {					
+					String actionCommand = e.getActionCommand();
+					if (actionCommand.equals(SchedulerModel.COMMAND_SET_TEMPORAL_STAMPS)) {
+						if (!this.skip) {
+							setTestTemporalStamps((TestTemporalStamps) e.getSource());
+						}
+					} else if (actionCommand.equals(SchedulerModel.COMMAND_GET_TEMPORAL_STAMPS)){
+						TestTemporalStamps testTemporalStamps = getTestTemporalStamps();
+						if (testTemporalStamps != null) {
+							this.skip = true;
+							TimeParametersPanel.this.dispatcher.notify(new OperationEvent(testTemporalStamps, 0, SchedulerModel.COMMAND_SET_TEMPORAL_STAMPS));
+							this.skip = false;
+						}
+					}
+				}
+			};
+			
+			this.dispatcher.register(operationListener, SchedulerModel.COMMAND_SET_TEMPORAL_STAMPS);
+			this.dispatcher.register(operationListener, SchedulerModel.COMMAND_GET_TEMPORAL_STAMPS);
 		}
 
 		private void createGUI() {
@@ -181,7 +205,8 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 				this.startDateSpinner = new DateSpinner();
 				ChangeListener changeListener = new ChangeListener() {
 					
-					OperationEvent event;
+					//OperationEvent event;
+					boolean waiting = false;
 					long previousEventTime;		
 					boolean startedThread = false;
 					static final long TIMEOUT = 500;
@@ -191,10 +216,11 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 						public void run() {
 							startedThread = true;
 							while(true) {
-								if (event != null && (System.currentTimeMillis() - previousEventTime) > TIMEOUT) {
-									TimeParametersPanel.this.dispatcher.notify(event);
+								if (waiting && (System.currentTimeMillis() - previousEventTime) > TIMEOUT) {
+									TimeParametersPanel.this.dispatcher.notify(new OperationEvent(TimeParametersPanel.this
+										.getStartDate(), 0, TimeStampsEditor.DATE_OPERATION));
 									Log.debugMessage(".run | notify ", Log.FINEST);
-									event = null;
+									waiting = false;
 								}
 								
 								try {
@@ -209,13 +235,12 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 					
 
 					public void stateChanged(ChangeEvent e) {
-						if (this.event == null) {
-							this.event = new OperationEvent(TimeParametersPanel.this
-								.getStartDate(), 0, TimeStampsEditor.DATE_OPERATION);
+						if (!this.waiting) {
+//							this.event = ;
 							if (!this.startedThread) {
 								this.thread.start();
 							}
-
+							this.waiting = true;
 						}
 						this.previousEventTime = System.currentTimeMillis();						
 					}
@@ -623,15 +648,11 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 						} catch (IllegalDataException e1) {
 							SchedulerModel.showErrorMessage(TimeParametersPanel.this.panel, e1);
 						}
-						
-						 TimeParametersPanel.this.schedulerModel.refreshTestTemporalStamps();
+						/* TODO */
+//						 TimeParametersPanel.this.schedulerModel.refreshTestTemporalStamps();
 						
 					} else {
-						try {
-							TimeParametersPanel.this.schedulerModel.createTest();
-						} catch (ApplicationException e1) {
-							SchedulerModel.showErrorMessage(TimeParametersPanel.this.panel, e1);
-						}
+						TimeParametersPanel.this.schedulerModel.createTest();
 					}
 				}
 			});
@@ -742,14 +763,11 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 						// times += intervalLength;
 						// }
 
-						TimeParametersPanel.this.schedulerModel.refreshTestTemporalStamps();
+						/* TODO */
+//						TimeParametersPanel.this.schedulerModel.refreshTestTemporalStamps();
 
 					} else {
-						try {
-							TimeParametersPanel.this.schedulerModel.createTest();
-						} catch (ApplicationException e1) {
-							SchedulerModel.showErrorMessage(TimeParametersPanel.this.panel, e1);
-						}
+						TimeParametersPanel.this.schedulerModel.createTest();
 
 					}
 				}

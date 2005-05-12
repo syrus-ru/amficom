@@ -32,27 +32,29 @@ import javax.swing.table.JTableHeader;
 
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
+import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.Client.Schedule.Commandable;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
-import com.syrus.AMFICOM.Client.Schedule.TestEditor;
-import com.syrus.AMFICOM.Client.Schedule.TestsEditor;
 import com.syrus.AMFICOM.Client.Schedule.WindowCommand;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTable;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTableModel;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestController;
-import com.syrus.util.Log;
 
 /**
  * @author Vladimir Dolzhenko
  */
-public class TableFrame extends JInternalFrame implements TestsEditor, TestEditor , Commandable {
+public class TableFrame extends JInternalFrame implements 
+//TestsEditor, TestEditor , 
+Commandable {
 
+	private static final long	serialVersionUID	= 3761405313630156343L;
 	Dispatcher			dispatcher;
 	SchedulerModel		schedulerModel;
 	ObjectResourceTable	listTable;
@@ -67,8 +69,22 @@ public class TableFrame extends JInternalFrame implements TestsEditor, TestEdito
 		if (aContext != null) {
 			// initModule(aContext.getDispatcher());
 			this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();
-			this.schedulerModel.addTestsEditor(this);
-			this.schedulerModel.addTestEditor(this);
+//			this.schedulerModel.addTestsEditor(this);
+//			this.schedulerModel.addTestEditor(this);
+			this.dispatcher = aContext.getDispatcher();
+			OperationListener operationListener = new OperationListener() {
+				public void operationPerformed(OperationEvent e) {
+					String actionCommand = e.getActionCommand();
+					if (actionCommand.equals(SchedulerModel.COMMAND_REFRESH_TESTS)) {
+						updateTests();
+					} else if (actionCommand.equals(SchedulerModel.COMMAND_REFRESH_TEST)) {
+						updateTest();
+					}
+				}
+			};
+			
+			this.dispatcher.register(operationListener, SchedulerModel.COMMAND_REFRESH_TESTS);
+			this.dispatcher.register(operationListener, SchedulerModel.COMMAND_REFRESH_TEST);
 		}
 		init();
 		this.command = new WindowCommand(this);
@@ -78,7 +94,6 @@ public class TableFrame extends JInternalFrame implements TestsEditor, TestEdito
 		this.test = this.schedulerModel.getSelectedTest();
 		ObjectResourceTableModel tableModel = (ObjectResourceTableModel) this.listTable.getModel();
 		int rowIndex = tableModel.getIndexOfObject(this.test);
-		Log.debugMessage("TableFrame.updateTest | rowIndex " + rowIndex, Log.FINEST);
 		if (rowIndex >= 0) {
 			this.listTable.setRowSelectionInterval(rowIndex, rowIndex);
 		} else {
@@ -106,9 +121,9 @@ public class TableFrame extends JInternalFrame implements TestsEditor, TestEdito
 		model.clear();
 		Collection tests = this.schedulerModel.getTests();
 		for (Iterator it = tests.iterator(); it.hasNext();) {
-			Test test = (Test) it.next();
-			if (model.getIndexOfObject(test) < 0) {
-				model.getContents().add(test);
+			Test test1 = (Test) it.next();
+			if (model.getIndexOfObject(test1) < 0) {
+				model.getContents().add(test1);
 			}
 		}
 		this.listTable.revalidate();
@@ -186,17 +201,13 @@ public class TableFrame extends JInternalFrame implements TestsEditor, TestEdito
 										else
 											TableFrame.this.rowToRemove.clear();
 										for (int i = 0; i < rowIndices.length; i++) {
-											Test test = (Test) model.getObject(rowIndices[i]);
-											TableFrame.this.rowToRemove.add(test);
+											Test test1 = (Test) model.getObject(rowIndices[i]);
+											TableFrame.this.rowToRemove.add(test1);
 										}
 										for (Iterator it = TableFrame.this.rowToRemove.iterator(); it.hasNext();) {
-											Test test = (Test) it.next();
-											try {
-												TableFrame.this.schedulerModel.removeTest(test);
-												model.getContents().remove(test);
-											} catch (ApplicationException e1) {
-												SchedulerModel.showErrorMessage(TableFrame.this, e1);
-											}
+											Test test1 = (Test) it.next();
+											TableFrame.this.schedulerModel.removeTest(test1);
+											model.getContents().remove(test1);
 
 										}
 										table.revalidate();

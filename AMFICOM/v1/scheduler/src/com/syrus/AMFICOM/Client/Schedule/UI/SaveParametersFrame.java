@@ -22,11 +22,13 @@ import javax.swing.JRadioButton;
 import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.General.Command.Command;
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
+import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.Client.Schedule.Commandable;
-import com.syrus.AMFICOM.Client.Schedule.ReturnTypeEditor;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Schedule.WindowCommand;
 import com.syrus.AMFICOM.measurement.corba.TestReturnType;
@@ -34,7 +36,11 @@ import com.syrus.AMFICOM.measurement.corba.TestReturnType;
 /**
  * @author Vladimir Dolzhenko
  */
-public class SaveParametersFrame extends JInternalFrame implements ReturnTypeEditor, Commandable {
+public class SaveParametersFrame extends JInternalFrame implements 
+// ReturnTypeEditor, 
+Commandable {
+
+	private static final long	serialVersionUID	= 3257007652956746292L;
 
 	private JPanel			panel;
 
@@ -66,8 +72,34 @@ public class SaveParametersFrame extends JInternalFrame implements ReturnTypeEdi
 		// this.aContext = aContext;
 		init();
 		if (aContext != null) {
-			SchedulerModel schedulerModel = (SchedulerModel) aContext.getApplicationModel();
-			schedulerModel.setReturnTypeEditor(this);
+//			SchedulerModel schedulerModel = (SchedulerModel) aContext.getApplicationModel();
+//			schedulerModel.setReturnTypeEditor(this);
+			
+			final Dispatcher dispatcher = aContext.getDispatcher();
+			
+			OperationListener listener = new OperationListener() {
+				private boolean skip = false;
+				
+				public void operationPerformed(OperationEvent e) {
+					String actionCommand = e.getActionCommand();
+					Object obj = e.getSource();
+					if (actionCommand.equals(SchedulerModel.COMMAND_SET_RETURN_TYPE)) {
+						if (!this.skip) {
+						setReturnType( (TestReturnType) obj);
+						}
+					} else if (actionCommand.equals(SchedulerModel.COMMAND_GET_RETURN_TYPE)) {
+						TestReturnType testReturnType = getReturnType();
+						if (testReturnType != null) {
+							this.skip = true;
+							dispatcher.notify(new OperationEvent(testReturnType, 0, SchedulerModel.COMMAND_SET_RETURN_TYPE));
+							this.skip = false;
+						}					
+					} 
+				}
+			};
+			
+			dispatcher.register(listener, SchedulerModel.COMMAND_SET_RETURN_TYPE);
+			dispatcher.register(listener, SchedulerModel.COMMAND_GET_RETURN_TYPE);
 		}
 		this.command = new WindowCommand(this);
 	}

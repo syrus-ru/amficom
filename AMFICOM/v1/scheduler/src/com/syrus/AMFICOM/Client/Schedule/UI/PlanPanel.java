@@ -29,21 +29,24 @@ import javax.swing.JScrollPane;
 import javax.swing.Timer;
 import javax.swing.UIManager;
 
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
+import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
-import com.syrus.AMFICOM.Client.Schedule.IntervalsEditor;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
-import com.syrus.AMFICOM.Client.Schedule.TestEditor;
-import com.syrus.AMFICOM.Client.Schedule.TestsEditor;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestTemporalStamps;
-import com.syrus.util.Log;
 
-public class PlanPanel extends JPanel implements TestsEditor, TestEditor, IntervalsEditor, ActionListener {
+public class PlanPanel extends JPanel implements 
+// TestsEditor, TestEditor, IntervalsEditor, 
+ActionListener {
+
+	private static final long	serialVersionUID	= 3258417243925984817L;
 
 	public static final int	TIME_OUT	= 500;
 
@@ -105,7 +108,7 @@ public class PlanPanel extends JPanel implements TestsEditor, TestEditor, Interv
 	protected Point					currentPosition;
 	
 	ApplicationContext				aContext;
-	private SchedulerModel			schedulerModel;
+//	private SchedulerModel			schedulerModel;
 
 	private static final int		MAX_ZOOM			= 50;
 	Map								testLines			= new HashMap();
@@ -121,10 +124,27 @@ public class PlanPanel extends JPanel implements TestsEditor, TestEditor, Interv
 		this.aContext = aContext;
 		this.parent = parent;
 		this.toolBar = new PlanToolBar(aContext, this);
-		this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();
-		this.schedulerModel.addTestsEditor(this);
-		this.schedulerModel.addTestEditor(this);
-		this.schedulerModel.setIntervalsEditor(this);
+//		this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();
+//		this.schedulerModel.addTestsEditor(this);
+//		this.schedulerModel.addTestEditor(this);
+//		this.schedulerModel.setIntervalsEditor(this);
+		/* TODO */
+		
+		final Dispatcher dispatcher = aContext.getDispatcher();
+		OperationListener operationListener = new OperationListener() {
+			public void operationPerformed(OperationEvent e) {
+				String actionCommand = e.getActionCommand();
+				if (actionCommand.equals(SchedulerModel.COMMAND_REFRESH_TESTS)) {
+					updateTests();
+				} else if (actionCommand.equals(SchedulerModel.COMMAND_REFRESH_TEST)) {
+					updateTest();
+				}
+			}
+		};
+		
+		dispatcher.register(operationListener, SchedulerModel.COMMAND_REFRESH_TESTS);
+		dispatcher.register(operationListener, SchedulerModel.COMMAND_REFRESH_TEST);
+		
 		this.addComponentListener(new ComponentAdapter() {
 
 			public void componentResized(ComponentEvent e) {

@@ -19,14 +19,11 @@ import javax.swing.tree.TreePath;
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
+import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.Client.Schedule.Commandable;
-import com.syrus.AMFICOM.Client.Schedule.ElementsViewer;
-import com.syrus.AMFICOM.Client.Schedule.KISEditor;
-import com.syrus.AMFICOM.Client.Schedule.MeasurementTypeEditor;
-import com.syrus.AMFICOM.Client.Schedule.MonitoredElementEditor;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Schedule.WindowCommand;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
@@ -43,8 +40,12 @@ import com.syrus.AMFICOM.logic.ServiceItem;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 
-public class ElementsTreeFrame extends JInternalFrame implements KISEditor, MonitoredElementEditor,
-		MeasurementTypeEditor, ElementsViewer, Commandable {
+public class ElementsTreeFrame extends JInternalFrame implements Commandable {
+
+	/**
+	 * 
+	 */
+	private static final long	serialVersionUID	= 3761121639580186678L;
 
 	private Command				command;
 
@@ -60,7 +61,7 @@ public class ElementsTreeFrame extends JInternalFrame implements KISEditor, Moni
 
 	private Item				rootItem						= new ServiceItem("/");
 
-	public static final String	ACCESSPORT_NAME_REFLECTOMETER	= "MeasurementPortTypeReflectometry";	//$NON-NLS-1$
+//	public static final String	ACCESSPORT_NAME_REFLECTOMETER	= "MeasurementPortTypeReflectometry";	//$NON-NLS-1$
 
 	public ElementsTreeFrame(ApplicationContext aContext) {
 		this.aContext = aContext;
@@ -273,10 +274,48 @@ public class ElementsTreeFrame extends JInternalFrame implements KISEditor, Moni
 			setContentPane(this.treePanel.getTree());
 
 		}
-		this.schedulerModel.setMeasurementTypeEditor(this);
-		this.schedulerModel.setMonitoredElementEditor(this);
-		this.schedulerModel.setKisEditor(this);
-		this.schedulerModel.setElementsViewer(this);
+
+		final Dispatcher dispatcher = this.aContext.getDispatcher();
+		
+		OperationListener listener = new OperationListener() {
+			private boolean skip = false;
+			
+			public void operationPerformed(OperationEvent e) {
+				String actionCommand = e.getActionCommand();
+				Object obj = e.getSource();
+				if (actionCommand.equals(SchedulerModel.COMMAND_SET_MEASUREMENT_TYPE)) {
+					if (!this.skip) {
+					setMeasurementType((MeasurementType) obj);
+					}
+				} else if (actionCommand.equals(SchedulerModel.COMMAND_SET_MEASUREMENT_TYPES)) {
+					setElements((Collection) obj);
+				} else if (actionCommand.equals(SchedulerModel.COMMAND_SET_MONITORED_ELEMENT)) {
+					if (!this.skip) {
+					setMonitoredElement((MonitoredElement) obj);
+					}
+				} else if (actionCommand.equals(SchedulerModel.COMMAND_GET_MEASUREMENT_TYPE)) {
+					MeasurementType measurementType = getMeasurementType();
+					if (measurementType != null) {
+						this.skip = true;
+						dispatcher.notify(new OperationEvent(measurementType, 0, SchedulerModel.COMMAND_SET_MEASUREMENT_TYPE));
+						this.skip = false;
+					}					
+				}   else if (actionCommand.equals(SchedulerModel.COMMAND_GET_MONITORED_ELEMENT)) {
+					MonitoredElement monitoredElement = getMonitoredElement();
+					if (monitoredElement != null) {
+						this.skip = true;
+						dispatcher.notify(new OperationEvent(monitoredElement, 0, SchedulerModel.COMMAND_SET_MONITORED_ELEMENT));
+						this.skip = false;
+					}					
+				}  
+			}
+		};
+		
+		dispatcher.register(listener, SchedulerModel.COMMAND_SET_MEASUREMENT_TYPE);
+		dispatcher.register(listener, SchedulerModel.COMMAND_SET_MEASUREMENT_TYPES);
+		dispatcher.register(listener, SchedulerModel.COMMAND_SET_MONITORED_ELEMENT);
+		dispatcher.register(listener, SchedulerModel.COMMAND_GET_MEASUREMENT_TYPE);
+		dispatcher.register(listener, SchedulerModel.COMMAND_GET_MONITORED_ELEMENT);
 
 	}
 

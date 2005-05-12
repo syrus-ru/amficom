@@ -1,5 +1,5 @@
 /*
- * $Id: TestController.java,v 1.7 2005/04/12 06:53:14 bob Exp $
+ * $Id: TestController.java,v 1.8 2005/05/12 09:58:35 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/04/12 06:53:14 $
+ * @version $Revision: 1.8 $, $Date: 2005/05/12 09:58:35 $
  * @author $Author: bob $
  * @module module
  */
@@ -55,7 +55,8 @@ public class TestController extends ObjectResourceController {
 
 	private class ComparableLabel extends JLabel implements Comparable {
 		
-		
+		private static final long	serialVersionUID	= 3546642105390084920L;
+
 		public ComparableLabel(String string) {
 			super(string);
 		}

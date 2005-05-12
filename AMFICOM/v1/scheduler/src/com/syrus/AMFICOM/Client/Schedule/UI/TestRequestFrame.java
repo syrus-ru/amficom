@@ -15,6 +15,8 @@ import com.syrus.AMFICOM.Client.Schedule.WindowCommand;
 
 public class TestRequestFrame extends JInternalFrame  implements Commandable {
 
+	private static final long	serialVersionUID	= 3256445815399788853L;
+	
 	private TestRequestPanel	panel;
 	private Command				command;
 

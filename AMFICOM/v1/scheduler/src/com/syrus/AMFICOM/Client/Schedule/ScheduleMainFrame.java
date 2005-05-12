@@ -10,7 +10,6 @@ import java.awt.SystemColor;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.WindowEvent;
-import java.text.SimpleDateFormat;
 
 import javax.swing.BorderFactory;
 import javax.swing.JDesktopPane;
@@ -20,7 +19,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JViewport;
 import javax.swing.UIDefaults;
-import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.ExitCommand;
@@ -44,7 +42,6 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.UI.StatusBarModel;
 import com.syrus.AMFICOM.Client.General.UI.WindowArranger;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
-import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.Client.Schedule.UI.ElementsTreeFrame;
 import com.syrus.AMFICOM.Client.Schedule.UI.PlanFrame;
 import com.syrus.AMFICOM.Client.Schedule.UI.SaveParametersFrame;
@@ -61,6 +58,8 @@ import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 
 public class ScheduleMainFrame extends JFrame implements OperationListener {
 
+	private static final long	serialVersionUID	= 3257563988626848055L;
+	
 	ApplicationContext			aContext;
 	JDesktopPane				desktopPane				= new JDesktopPane();
 
@@ -254,7 +253,7 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 					setSessionOpened();
 
 					this.statusBar.setText("status", LangModel.getString("statusReady"));
-					SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
+//					SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
 //					this.statusBar.setText("session", sdf.format(new Date(this.aContext.getSessionInterface()
 //							.getLogonTime())));
 //					this.statusBar.setText("user", this.aContext.getSessionInterface().getUser());

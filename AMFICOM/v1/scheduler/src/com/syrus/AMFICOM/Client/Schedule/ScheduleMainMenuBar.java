@@ -3,16 +3,22 @@ package com.syrus.AMFICOM.Client.Schedule;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.*;
+import javax.swing.AbstractButton;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 
-import com.syrus.AMFICOM.Client.General.Command.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
+import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationModelListener;
+import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 
 public class ScheduleMainMenuBar extends JMenuBar {
 
+	private static final long	serialVersionUID	= 3689065136446912305L;
+	
 	public static final String			MENU_SESSION					= "menuSession";
 	public static final String			MENU_SESSION_NEW				= "menuSessionNew";
 	public static final String			MENU_SESSION_CLOSE				= "menuSessionClose";

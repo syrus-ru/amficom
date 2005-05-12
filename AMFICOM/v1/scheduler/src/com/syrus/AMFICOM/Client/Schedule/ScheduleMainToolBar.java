@@ -15,6 +15,8 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationModelListener;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 
 public class ScheduleMainToolBar extends JToolBar implements ApplicationModelListener {
+	
+	private static final long	serialVersionUID	= 3258130254177646902L;
 
 	ApplicationModel	aModel;
 

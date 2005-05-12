@@ -18,6 +18,7 @@ import com.syrus.AMFICOM.Client.Schedule.WindowCommand;
 
 public class PlanFrame extends JInternalFrame implements Commandable {
 
+	private static final long	serialVersionUID	= 3761969371601776689L;
 	private JToolBar	toolBar;
 	private PlanPanel	mainPanel;
 	private Command command;

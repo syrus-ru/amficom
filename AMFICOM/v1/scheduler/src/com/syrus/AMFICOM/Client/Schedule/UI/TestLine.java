@@ -21,10 +21,10 @@ import java.util.TreeSet;
 import javax.swing.SwingUtilities;
 
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
+import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
-import com.syrus.AMFICOM.Client.Schedule.TestEditor;
-import com.syrus.AMFICOM.Client.Schedule.TestsEditor;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
@@ -37,7 +37,9 @@ import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 import com.syrus.util.Log;
 
-public class TestLine extends TimeLine implements TestsEditor, TestEditor {
+public class TestLine extends TimeLine {
+
+	private static final long	serialVersionUID	= 3978424736810416184L;
 
 	private class TestTimeLine implements Comparable {
 
@@ -103,12 +105,27 @@ public class TestLine extends TimeLine implements TestsEditor, TestEditor {
 
 	public TestLine(ApplicationContext aContext, String title, Identifier monitoredElementId) {
 		this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();
-		this.schedulerModel.addTestsEditor(this);
-		this.schedulerModel.addTestEditor(this);
+//		this.schedulerModel.addTestsEditor(this);
+//		this.schedulerModel.addTestEditor(this);
 		this.createTestLineMouseListener();
 		this.title = title;
 		this.monitoredElementId = monitoredElementId;
 		this.acquireTests();
+		
+		this.dispatcher = aContext.getDispatcher();
+		OperationListener operationListener = new OperationListener() {
+			public void operationPerformed(OperationEvent e) {
+				String actionCommand = e.getActionCommand();
+				if (actionCommand.equals(SchedulerModel.COMMAND_REFRESH_TESTS)) {
+					updateTests();
+				} else if (actionCommand.equals(SchedulerModel.COMMAND_REFRESH_TEST)) {
+					updateTest();
+				}
+			}
+		};
+		
+		this.dispatcher.register(operationListener, SchedulerModel.COMMAND_REFRESH_TESTS);
+		this.dispatcher.register(operationListener, SchedulerModel.COMMAND_REFRESH_TEST);
 	}
 
 	private void createTestLineMouseListener() {
@@ -201,7 +218,7 @@ public class TestLine extends TimeLine implements TestsEditor, TestEditor {
 		} else {
 			this.selectedTest = null;
 		}
-
+		
 		Log.debugMessage("TestLine.updateTest | this.selectedTest is "
 				+ (this.selectedTest == null ? "null" : this.selectedTest.getId().toString()), Log.FINEST);
 		super.repaint();

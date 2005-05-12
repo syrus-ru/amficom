@@ -1,5 +1,5 @@
 /*-
- * $Id: TimeStampsEditor.java,v 1.9 2005/05/04 08:40:14 bob Exp $
+ * $Id: TimeStampsEditor.java,v 1.10 2005/05/12 09:58:35 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,7 +54,7 @@ import com.syrus.AMFICOM.measurement.TestTemporalStamps;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/05/04 08:40:14 $
+ * @version $Revision: 1.10 $, $Date: 2005/05/12 09:58:35 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -65,7 +65,7 @@ public class TimeStampsEditor extends TimeLine implements OperationListener {
 	
 	private static final long	serialVersionUID	= 3258417243959605561L;
 
-	private SchedulerModel	schedulerModel;
+//	private SchedulerModel	schedulerModel;
 	private ApplicationContext aContext;
 	private Dispatcher dispatcher;
 
@@ -98,7 +98,7 @@ public class TimeStampsEditor extends TimeLine implements OperationListener {
 	
 	public TimeStampsEditor(ApplicationContext aContext, String title) {
 		this.title = title;
-		this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();
+//		this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();
 		this.initModule(aContext);
 		this.createMouseListener();
 		this.createPopupMenu();

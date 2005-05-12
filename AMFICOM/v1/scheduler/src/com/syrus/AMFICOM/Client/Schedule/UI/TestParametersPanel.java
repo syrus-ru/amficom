@@ -39,13 +39,8 @@ import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
-import com.syrus.AMFICOM.Client.Schedule.AnalysisTypeEditor;
-import com.syrus.AMFICOM.Client.Schedule.EvaluationTypeEditor;
-import com.syrus.AMFICOM.Client.Schedule.MeasurementSetupEditor;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
-import com.syrus.AMFICOM.Client.Schedule.SetEditor;
 import com.syrus.AMFICOM.client_.general.ui_.ColumnSorter;
 import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
 import com.syrus.AMFICOM.client_.general.ui_.ObjList;
@@ -71,8 +66,10 @@ import com.syrus.AMFICOM.measurement.SetParameter;
 import com.syrus.util.Log;
 
 public class TestParametersPanel
-implements OperationListener, MeasurementSetupEditor,
-		AnalysisTypeEditor, EvaluationTypeEditor, SetEditor {
+implements OperationListener
+//, MeasurementSetupEditor,
+//		AnalysisTypeEditor, EvaluationTypeEditor, SetEditor 
+		{
 
 	ApplicationContext			aContext;
 	private SchedulerModel		schedulerModel;
@@ -107,10 +104,10 @@ implements OperationListener, MeasurementSetupEditor,
 	public TestParametersPanel(final ApplicationContext aContext) {
 		this.aContext = aContext;
 		this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();
-		this.schedulerModel.setMeasurementSetupEditor(this);
-		this.schedulerModel.setAnalysisTypeEditor(this);
-		this.schedulerModel.setEvaluationTypeEditor(this);
-		this.schedulerModel.setSetEditor(this);
+//		this.schedulerModel.setMeasurementSetupEditor(this);
+//		this.schedulerModel.setAnalysisTypeEditor(this);
+//		this.schedulerModel.setEvaluationTypeEditor(this);
+//		this.schedulerModel.setSetEditor(this);
 
 		if (aContext != null) {
 			initModule(aContext.getDispatcher());
@@ -504,9 +501,83 @@ implements OperationListener, MeasurementSetupEditor,
 		this.dispatcher.unregister(this, SchedulerModel.COMMAND_CHANGE_ME_TYPE);
 	}
 
-	private void initModule(Dispatcher dispatcher) {
+	private void initModule(final Dispatcher dispatcher) {
 		this.dispatcher = dispatcher;
 		this.dispatcher.register(this, SchedulerModel.COMMAND_CHANGE_ME_TYPE);
+//		this.schedulerModel.setMeasurementSetupEditor(this);
+//		this.schedulerModel.setAnalysisTypeEditor(this);
+//		this.schedulerModel.setEvaluationTypeEditor(this);
+//		this.schedulerModel.setSetEditor(this);
+		
+		OperationListener operationListener = new OperationListener() {
+			private boolean skip = false;
+			
+			public void operationPerformed(OperationEvent e) {
+				String actionCommand = e.getActionCommand();
+				Object object = e.getSource();
+				if (actionCommand.equals(SchedulerModel.COMMAND_SET_ANALYSIS_TYPE)) {
+					if (!this.skip) {
+						setAnalysisType((AnalysisType) object);
+					}					
+				} else if (actionCommand.equals(SchedulerModel.COMMAND_SET_EVALUATION_TYPE)) {
+					if (!this.skip) {
+						setEvaluationType((EvaluationType) object);
+					}
+				} else if (actionCommand.equals(SchedulerModel.COMMAND_SET_MEASUREMENT_SETUP)) {
+					if (!this.skip) {
+						setMeasurementSetup((MeasurementSetup) object);
+					}
+				}  else if (actionCommand.equals(SchedulerModel.COMMAND_SET_MEASUREMENT_SETUPS)) {
+					if (!this.skip) {
+						setMeasurementSetups((Collection) object);
+					}
+				}   else if (actionCommand.equals(SchedulerModel.COMMAND_SET_SET)) {
+					if (!this.skip) {
+						setSet((Set) object);
+					}
+				} if (actionCommand.equals(SchedulerModel.COMMAND_GET_ANALYSIS_TYPE)) {
+					AnalysisType analysisType = getAnalysisType();
+					if (analysisType != null) {
+						this.skip = true;
+						dispatcher.notify(new OperationEvent(analysisType, 0, SchedulerModel.COMMAND_SET_ANALYSIS_TYPE));
+						this.skip = false;
+					}
+				} else if (actionCommand.equals(SchedulerModel.COMMAND_GET_EVALUATION_TYPE)) {
+					EvaluationType evaluationType = getEvaluationType();
+					if (evaluationType != null) {
+						this.skip = true;
+						dispatcher.notify(new OperationEvent(evaluationType, 0, SchedulerModel.COMMAND_SET_EVALUATION_TYPE));
+						this.skip = false;
+					}
+				} else if (actionCommand.equals(SchedulerModel.COMMAND_GET_MEASUREMENT_SETUP)) {
+					MeasurementSetup measurementSetup1 = getMeasurementSetup();
+					if (measurementSetup1 != null) {
+						this.skip = true;
+						dispatcher.notify(new OperationEvent(measurementSetup1, 0, SchedulerModel.COMMAND_SET_MEASUREMENT_SETUP));
+						this.skip = false;
+					}
+				}  else if (actionCommand.equals(SchedulerModel.COMMAND_GET_SET)) {
+					Set set = getSet();
+					if (set != null) {
+						this.skip = true;
+						dispatcher.notify(new OperationEvent(set, 0, SchedulerModel.COMMAND_SET_SET));
+						this.skip = false;
+					}
+				} 
+				
+			}
+		};
+		this.dispatcher.register(operationListener, SchedulerModel.COMMAND_SET_ANALYSIS_TYPE);
+		this.dispatcher.register(operationListener, SchedulerModel.COMMAND_SET_EVALUATION_TYPE);
+		this.dispatcher.register(operationListener, SchedulerModel.COMMAND_SET_MEASUREMENT_SETUP);
+		this.dispatcher.register(operationListener, SchedulerModel.COMMAND_SET_MEASUREMENT_SETUPS);
+		this.dispatcher.register(operationListener, SchedulerModel.COMMAND_SET_SET);
+
+		this.dispatcher.register(operationListener, SchedulerModel.COMMAND_GET_ANALYSIS_TYPE);
+		this.dispatcher.register(operationListener, SchedulerModel.COMMAND_GET_EVALUATION_TYPE);
+		this.dispatcher.register(operationListener, SchedulerModel.COMMAND_GET_MEASUREMENT_SETUP);
+		this.dispatcher.register(operationListener, SchedulerModel.COMMAND_GET_SET);
+
 	}
 
 	private void selectComboBox(ObjComboBox cb,

@@ -63,12 +63,14 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/05/11 13:04:34 $
+ * @version $Revision: 1.28 $, $Date: 2005/05/12 09:58:35 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
  */
 public class ReflectometryTestPanel extends ParametersTestPanel implements ParametersTest {
+
+	private static final long	serialVersionUID	= 3257004354304553266L;
 
 	private class ListNumberComparator implements java.util.Comparator {
 
