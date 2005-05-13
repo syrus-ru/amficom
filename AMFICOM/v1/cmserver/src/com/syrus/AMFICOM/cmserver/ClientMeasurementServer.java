@@ -1,9 +1,9 @@
-/*
- * $Id: ClientMeasurementServer.java,v 1.41 2005/05/04 12:01:20 arseniy Exp $
+/*-
+ * $Id: ClientMeasurementServer.java,v 1.42 2005/05/13 17:51:04 bass Exp $
  *
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+ * Copyright © 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.cmserver;
@@ -15,7 +15,6 @@ import com.syrus.AMFICOM.administration.ServerProcessWrapper;
 import com.syrus.AMFICOM.administration.User;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CORBAServer;
-import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseObjectLoader;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginException;
@@ -26,45 +25,66 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2005/05/04 12:01:20 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.42 $, $Date: 2005/05/13 17:51:04 $
+ * @author $Author: bass $
  * @module cmserver_v1
  */
 public class ClientMeasurementServer {
+	public static final String APPLICATION_NAME = "cmserver"; //$NON-NLS-1$
 
-	public static final String APPLICATION_NAME = "cmserver";
+	/*-********************************************************************
+	 * Keys.                                                              *
+	 **********************************************************************/
 
-	public static final String KEY_DB_HOST_NAME = "DBHostName";
-	public static final String KEY_DB_SID = "DBSID";
-	public static final String KEY_DB_CONNECTION_TIMEOUT = "DBConnectionTimeout";
-	public static final String KEY_DB_LOGIN_NAME = "DBLoginName";
-	public static final String KEY_SERVER_ID = "ServerID";
+	public static final String KEY_DB_HOST_NAME = "DBHostName"; //$NON-NLS-1$
+	public static final String KEY_DB_SID = "DBSID"; //$NON-NLS-1$
+	public static final String KEY_DB_CONNECTION_TIMEOUT = "DBConnectionTimeout"; //$NON-NLS-1$
+	public static final String KEY_DB_LOGIN_NAME = "DBLoginName"; //$NON-NLS-1$
+	public static final String KEY_SERVER_ID = "ServerID"; //$NON-NLS-1$
 
-	public static final String DB_SID = "amficom";
+	/*-********************************************************************
+	 * Default values.                                                    *
+	 **********************************************************************/
+
+	public static final String DB_SID = "amficom"; //$NON-NLS-1$
+	/**
+	 * Database connection timeout, in seconds.
+	 */
 	public static final int DB_CONNECTION_TIMEOUT = 120;
-	public static final String DB_LOGIN_NAME = "amficom";
-	public static final String SERVER_ID = "Server_1";
+	public static final String DB_LOGIN_NAME = "amficom"; //$NON-NLS-1$
+	public static final String SERVER_ID = "Server_1"; //$NON-NLS-1$
 
-	private static final String PASSWORD = "CMServer";
+	private static final String PASSWORD = "CMServer"; //$NON-NLS-1$
 
-	/*	Identifier of server*/
+	/**
+	 * Identifier of this server.
+	 */
 	private static Identifier serverId;
 
-	/*	Login of the corresponding user*/
+	/**
+	 * Login of the corresponding user
+	 */
 	static String login;
 
-	/*	Process codename*/
+	/**
+	 * Process codename.
+	 */
 	private static String processCodename;
-
-	public ClientMeasurementServer() {
-		super();
-	}
 
 	public static void main(String[] args) {
 		Application.init(APPLICATION_NAME);
 
 		/*	All preparations on startup*/
 		startup();
+
+		/**
+		 * Add shutdown hook.
+		 */
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			public void run() {
+				shutdown();
+			}
+		});
 	}
 
 	private static void startup() {
@@ -81,53 +101,32 @@ public class ClientMeasurementServer {
 		serverId = new Identifier(ApplicationProperties.getString(KEY_SERVER_ID, SERVER_ID));
 		processCodename = ApplicationProperties.getString(ServerProcessWrapper.KEY_CMSERVER_PROCESS_CODENAME,
 				ServerProcessWrapper.CMSERVER_PROCESS_CODENAME);
-		Server server = null;
-		ServerProcess serverProcess = null;
-		User user = null;
 		try {
-			server = new Server(serverId);
-			serverProcess = AdministrationDatabaseContext.getServerProcessDatabase().retrieveForServerAndCodename(serverId, processCodename);
-			user = new User(serverProcess.getUserId());
-		}
-		catch (Exception e) {
-			Log.errorException(e);
-			System.exit(0);
-		}
-		login = user.getLogin();
+			final Server server = new Server(serverId);
+			final ServerProcess serverProcess = AdministrationDatabaseContext.getServerProcessDatabase().retrieveForServerAndCodename(serverId, processCodename);
+			final User user = new User(serverProcess.getUserId());
+			login = user.getLogin();
 
-		/*	Init database object loader*/
-		DatabaseObjectLoader.init(user.getId());
-
-		/*	Create session environment*/
-		try {
+			/*	Init database object loader*/
+			DatabaseObjectLoader.init(user.getId());
+	
+			/*	Create session environment*/
 			CMServerSessionEnvironment.createInstance(server.getHostName());
-		}
-		catch (ApplicationException ae) {
-			Log.errorException(ae);
-			System.exit(0);
-		}
-
-		/*	Login*/
-		CMServerSessionEnvironment sessionEnvironment = CMServerSessionEnvironment.getInstance();
-		try {
-			sessionEnvironment.login(login, PASSWORD);
-		}
-		catch (CommunicationException ce) {
-			Log.errorException(ce);
-			System.exit(0);
-		}
-		catch (LoginException le) {
-			Log.errorException(le);
-		}
-
-		try {
+	
+			/*	Login*/
+			final CMServerSessionEnvironment sessionEnvironment = CMServerSessionEnvironment.getInstance();
+			try {
+				sessionEnvironment.login(login, PASSWORD);
+			} catch (final LoginException le) {
+				Log.errorException(le);
+			}
+	
 			/*	Activate servant*/
-			CORBAServer corbaServer = CMServerSessionEnvironment.getInstance().getCMServerServantManager().getCORBAServer();
+			final CORBAServer corbaServer = sessionEnvironment.getCMServerServantManager().getCORBAServer();
 			corbaServer.activateServant(new CMServerImpl(), processCodename);
 			corbaServer.printNamingContext();
-		}
-		catch (CommunicationException ce) {
-			Log.errorException(ce);
+		} catch (final ApplicationException ae) {
+			Log.errorException(ae);
 			System.exit(0);
 		}
 	}
@@ -146,10 +145,9 @@ public class ClientMeasurementServer {
 		}
 	}
 
-	protected synchronized void shutdown() {
+	protected static synchronized void shutdown() {
 		DatabaseConnection.closeConnection();
 	}
-
 
 	static class CMServerLoginRestorer implements LoginRestorer {
 
@@ -165,5 +163,4 @@ public class ClientMeasurementServer {
 			return PASSWORD;
 		}
 	}
-
 }

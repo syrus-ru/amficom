@@ -1,5 +1,5 @@
 /*
- * $Id: CMGeneralReceive.java,v 1.17 2005/05/03 19:29:06 arseniy Exp $
+ * $Id: CMGeneralReceive.java,v 1.18 2005/05/13 17:51:04 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,8 +40,8 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/05/03 19:29:06 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.18 $, $Date: 2005/05/13 17:51:04 $
+ * @author $Author: bass $
  * @module cmserver_v1
  */
 
@@ -59,10 +59,10 @@ public abstract class CMGeneralReceive extends CMServerPOA {
 			loginServer.validateAccess(sessionKeyT, userIdTHolder, domainIdTHolder);
 			return new Identifier(userIdTHolder.value);
 		}
-		catch (CommunicationException ce) {
+		catch (final CommunicationException ce) {
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_ACCESS_VALIDATION, CompletionStatus.COMPLETED_NO, ce.getMessage());
 		}
-		catch (Throwable throwable) {
+		catch (final Throwable throwable) {
 			Log.errorException(throwable);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_ACCESS_VALIDATION, CompletionStatus.COMPLETED_NO, throwable.getMessage());
 		}
