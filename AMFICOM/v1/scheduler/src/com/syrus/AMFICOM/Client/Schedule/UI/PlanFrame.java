@@ -24,7 +24,7 @@ public class PlanFrame extends JInternalFrame implements Commandable {
 	private Command command;
 
 	public PlanFrame(ApplicationContext aContext) {
-		setTitle(LangModelSchedule.getString("Plan.Title")); //$NON-NLS-1$
+		setTitle(LangModelSchedule.getString("Tests time table")); //$NON-NLS-1$
 		setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
 		setResizable(true);
 		setClosable(true);

@@ -32,7 +32,6 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeModel;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
-import com.syrus.AMFICOM.Client.Schedule.UI.TimeStampsEditor;
 import com.syrus.AMFICOM.Client.Schedule.item.MeasurementTypeChildrenFactory;
 import com.syrus.AMFICOM.Client.Schedule.item.MeasurementTypeItem;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
@@ -92,8 +91,12 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 
 	private ObjectResourceTreeModel		treeModel;
 	private Collection					tests							= new LinkedList();
-	private Test						selectedTest;
+	private Test						selectedFirstTest;
+	private java.util.Set				selectedTestIds;
 	private Map				measurementSetupMap;
+	
+	public static final String COMMAND_GET_NAME = "GetName";
+	public static final String COMMAND_SET_NAME = "SetName";
 	
 	public static final String COMMAND_GET_MEASUREMENT_TYPE = "GetMeasurementType";
 	public static final String COMMAND_SET_MEASUREMENT_TYPE = "SetMeasurementType";
@@ -121,8 +124,11 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 	public static final String COMMAND_GET_TEMPORAL_STAMPS = "GetTestTemporalStamps";
 	public static final String COMMAND_SET_TEMPORAL_STAMPS = "SetTestTemporalStamps";
 	
+	public static final String	COMMAND_REFRESH_TIME_STAMPS	= "RefreshTimeStamp";
 	public static final String	COMMAND_REFRESH_TEST	= "RefreshTest";
 	public static final String	COMMAND_REFRESH_TESTS	= "RefreshTests";
+	
+	public static final String	COMMAND_SET_GROUP_TEST = "GroupTest";
 
 //	public static final String	COMMAND_ONE_TIME_S
 
@@ -132,6 +138,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 	
 //	private IntervalsEditor	intervalsEditor;
 //	private KIS							kis								= null;
+	private String name = null;
 	private MonitoredElement			monitoredElement				= null;
 	private AnalysisType				analysisType					= null;
 	private EvaluationType				evaluationType					= null;
@@ -139,7 +146,10 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 	private MeasurementSetup			measurementSetup				= null;
 	private TestReturnType				returnType						= null;
 	private TestTemporalStamps			testTimeStamps					= null;
+	private Map	meTestGroup;
 
+	private boolean groupTest = false;
+	
 	/**
 	 * @TODO recast using alpha
 	 */
@@ -159,9 +169,9 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 
 	public static final Color			COLOR_PROCCESSING_SELECTED		= Color.CYAN;
 
-	public static final Color			COLOR_SCHEDULED					= Color.WHITE.darker();
+	public static final Color			COLOR_SCHEDULED					= Color.GRAY;
 
-	public static final Color			COLOR_SCHEDULED_SELECTED		= Color.WHITE;
+	public static final Color			COLOR_SCHEDULED_SELECTED		= Color.LIGHT_GRAY;
 
 	public static final Color			COLOR_UNRECOGNIZED				= new Color(20, 20, 60);
 
@@ -173,8 +183,9 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 //		this.aContext = aContext;
 		this.dispatcher = aContext.getDispatcher();
 		
-		this.dispatcher.register(this, TimeStampsEditor.DATE_OPERATION);
+//		this.dispatcher.register(this, TimeStampsEditor.DATE_OPERATION);
 		this.dispatcher.register(this, COMMAND_CLEAN);
+		this.dispatcher.register(this, COMMAND_SET_NAME );
 		this.dispatcher.register(this, COMMAND_SET_TEMPORAL_STAMPS );
 		this.dispatcher.register(this, COMMAND_SET_SET );
 		this.dispatcher.register(this, COMMAND_SET_RETURN_TYPE );
@@ -183,6 +194,8 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		this.dispatcher.register(this, COMMAND_SET_MEASUREMENT_SETUP );
 		this.dispatcher.register(this, COMMAND_SET_EVALUATION_TYPE );
 		this.dispatcher.register(this, COMMAND_SET_ANALYSIS_TYPE );
+		this.dispatcher.register(this, COMMAND_REFRESH_TIME_STAMPS);
+		this.dispatcher.register(this, COMMAND_SET_GROUP_TEST);
 		
 		//
 		add("menuSession");
@@ -248,21 +261,22 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		String commandName = ae.getActionCommand();
 		Object obj = ae.getSource();
 		Environment.log(Environment.LOG_LEVEL_INFO, "commandName:" + commandName, getClass().getName());
-		if (commandName.equals(TimeStampsEditor.DATE_OPERATION)) {
-			if (this.selectedTest != null && this.selectedTest.isChanged()) {
-				TestTemporalType temporalType = this.selectedTest.getTemporalType();
-				switch(temporalType.value()) {
-					case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
-						Log.debugMessage("SchedulerModel.operationPerformed | selected test " + this.selectedTest.getId(), Log.FINEST);
-						Log.debugMessage("SchedulerModel.operationPerformed | selected test was " + this.selectedTest.getStartTime(), Log.FINEST);
-						this.selectedTest.setStartTime((Date) obj);
-						Log.debugMessage("SchedulerModel.operationPerformed | selected test now " + this.selectedTest.getStartTime(), Log.FINEST);
-						this.refreshTests();
-						break;
-				}
-			}
-		}
-		else if (commandName.equals(COMMAND_CLEAN)) {
+//		if (commandName.equals(TimeStampsEditor.DATE_OPERATION)) {
+//			if (this.selectedTestIds != null && this.selectedTestIds.isChanged()) {
+//				TestTemporalType temporalType = this.selectedTestIds.getTemporalType();
+//				switch(temporalType.value()) {
+//					case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
+//						Log.debugMessage("SchedulerModel.operationPerformed | selected test " + this.selectedTestIds.getId(), Log.FINEST);
+//						Log.debugMessage("SchedulerModel.operationPerformed | selected test was " + this.selectedTestIds.getStartTime(), Log.FINEST);
+//						this.selectedTestIds.setStartTime((Date) obj);
+//						Log.debugMessage("SchedulerModel.operationPerformed | selected test now " + this.selectedTestIds.getStartTime(), Log.FINEST);
+//						this.refreshTests();
+//						break;
+//				}
+//			}
+//		}
+//		else 
+			if (commandName.equals(COMMAND_CLEAN)) {
 			if (!obj.equals(this)) {
 				if (this.tests != null)
 					this.tests.clear();
@@ -297,12 +311,22 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		} else if(commandName.equals(COMMAND_SET_TEMPORAL_STAMPS)) {
 			this.testTimeStamps = (TestTemporalStamps)obj;
 //			this.generateTest();
-		} 
+		} else if (commandName.equals(COMMAND_SET_NAME)) {
+			this.name = (String)obj;
+		}
+		else if (commandName.equals(COMMAND_REFRESH_TIME_STAMPS)) {
+			this.refreshTemporalStamps();
+		} else if (commandName.equals(COMMAND_SET_GROUP_TEST)) {
+			this.groupTest = true;
+		}
 	}
 
 	public void removeTest(Test test) {
 		this.tests.remove(test);
-		this.selectedTest = null;
+		if (this.selectedTestIds != null) {
+			this.selectedTestIds.clear();
+			this.selectedFirstTest = null;
+		}
 		this.refreshTests();
 	}
 
@@ -358,28 +382,30 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 	}
 
 	private void refreshTest() throws ApplicationException {
-		if (this.selectedTest != null) {
+		Test test = this.getSelectedTest();
+
+		if (test != null) {			
 			this.dispatcher.notify(new OperationEvent(MeasurementStorableObjectPool
-				.getStorableObject(this.selectedTest.getMeasurementTypeId(), true), 0, COMMAND_SET_MEASUREMENT_TYPE));
-			MonitoredElement monitoredElement1 = this.selectedTest.getMonitoredElement();
+				.getStorableObject(test.getMeasurementTypeId(), true), 0, COMMAND_SET_MEASUREMENT_TYPE));
+			MonitoredElement monitoredElement1 = test.getMonitoredElement();
 //			MeasurementPort measurementPort = (MeasurementPort) ConfigurationStorableObjectPool.getStorableObject(
 //				monitoredElement.getMeasurementPortId(), true);
 //			this.kisEditor.setKIS((KIS) ConfigurationStorableObjectPool.getStorableObject(measurementPort.getKISId(),
 //				true));
 			this.dispatcher.notify(new OperationEvent(monitoredElement1, 0, COMMAND_SET_MONITORED_ELEMENT));
 
-			Identifier analysisTypeId = this.selectedTest.getAnalysisTypeId();
+			Identifier analysisTypeId = test.getAnalysisTypeId();
 			if (analysisTypeId != null) {
 				this.dispatcher.notify(new OperationEvent(MeasurementStorableObjectPool.getStorableObject(
 					analysisTypeId, true), 0, COMMAND_SET_ANALYSIS_TYPE));
 			}
 
-			Identifier evaluationTypeId = this.selectedTest.getEvaluationTypeId();
+			Identifier evaluationTypeId = test.getEvaluationTypeId();
 			if (evaluationTypeId != null) {
 				this.dispatcher.notify(new OperationEvent(MeasurementStorableObjectPool
 						.getStorableObject(evaluationTypeId, true), 0, COMMAND_SET_EVALUATION_TYPE));
 			}
-			Collection measurementSetupIds = this.selectedTest.getMeasurementSetupIds();
+			Collection measurementSetupIds = test.getMeasurementSetupIds();
 			if (!measurementSetupIds.isEmpty()) {
 				Identifier mainMeasurementSetupId = (Identifier) measurementSetupIds.iterator().next();
 				MeasurementSetup measurementSetup1 = (MeasurementSetup) MeasurementStorableObjectPool
@@ -395,20 +421,9 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 				}
 			}
 
-			this.dispatcher.notify(new OperationEvent(this.selectedTest.getReturnType(), 0, COMMAND_SET_RETURN_TYPE));
+			this.dispatcher.notify(new OperationEvent(test.getReturnType(), 0, COMMAND_SET_RETURN_TYPE));
 //			this.returnTypeEditor.setReturnType(this.selectedTest.getReturnType());
-			{
-				Identifier temporalPatternId = this.selectedTest.getTemporalPatternId();
-				AbstractTemporalPattern temporalPattern = null;
-				if (temporalPatternId != null)
-					temporalPattern = (AbstractTemporalPattern) MeasurementStorableObjectPool.getStorableObject(
-						temporalPatternId, true);
-				TestTemporalStamps timeStamps = new TestTemporalStamps(this.selectedTest.getTemporalType(),
-																		this.selectedTest.getStartTime(),
-																		this.selectedTest.getEndTime(), temporalPattern);
-//				this.testTemporalStampsEditor.setTestTemporalStamps(timeStamps);
-				this.dispatcher.notify(new OperationEvent(timeStamps, 0, COMMAND_SET_TEMPORAL_STAMPS));
-			}
+			this.refreshTemporalStamps();
 
 		}
 		
@@ -416,6 +431,29 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 //			this.testEditors[i].updateTest();
 //		}
 		this.dispatcher.notify(new OperationEvent(this, 0, COMMAND_REFRESH_TEST));
+	}
+	
+	private void refreshTemporalStamps() {
+		Test test = this.getSelectedTest();
+
+		if (test != null) {	
+		Identifier temporalPatternId = test.getTemporalPatternId();
+		AbstractTemporalPattern temporalPattern = null;
+		if (temporalPatternId != null) {
+			try {
+				temporalPattern = (AbstractTemporalPattern) MeasurementStorableObjectPool.getStorableObject(
+					temporalPatternId, true);
+			} catch (ApplicationException e) {
+				Log.errorException(e);
+			}
+		}
+		TestTemporalStamps timeStamps = new TestTemporalStamps(test.getTemporalType(),
+			test.getStartTime(),
+			test.getEndTime(), temporalPattern);
+//			this.testTemporalStampsEditor.setTestTemporalStamps(timeStamps);
+		this.dispatcher.notify(new OperationEvent(timeStamps, 0, COMMAND_SET_TEMPORAL_STAMPS));
+		}
+		
 	}
 
 	private void refreshTests() {
@@ -450,6 +488,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 	}
 
 	private void startGetData() {
+		this.groupTest = false;
 		this.dispatcher.notify(new OperationEvent(this, 0, COMMAND_GET_MEASUREMENT_TYPE));
 		if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE) {
 			this.dispatcher.notify(new OperationEvent(this, 0, COMMAND_GET_MONITORED_ELEMENT));
@@ -472,6 +511,10 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE) {
 			this.dispatcher.notify(new OperationEvent(this, 0, COMMAND_GET_TEMPORAL_STAMPS));
 		}
+		if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE) {
+			this.dispatcher.notify(new OperationEvent(this, 0, COMMAND_GET_NAME));
+		}
+		
 
 		// this.measurementType =
 		// this.measurementTypeEditor.getMeasurementType();
@@ -552,16 +595,37 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		this.refreshTests();
 	}
 
+	public java.util.Set getSelectedTestIds() {
+		return this.selectedTestIds;
+	}
+	
 	public Test getSelectedTest() {
-		return this.selectedTest;
+		return this.selectedFirstTest;
 	}
 
-	public void setSelectedTest(Test selectedTest) throws ApplicationException {
-		if (this.selectedTest == null || selectedTest == null
-				|| !this.selectedTest.getId().equals(selectedTest.getId())) {
-			this.selectedTest = selectedTest;
-			this.refreshTest();
+	public void addSelectedTest(Test selectedTest) throws ApplicationException {
+		Identifier selectedTestId = selectedTest.getId();
+		if (this.selectedTestIds == null) {
+			this.selectedTestIds = new HashSet();
 		}
+		
+		if (selectedTest != null) {
+			if (this.selectedTestIds.isEmpty()) {
+				this.selectedFirstTest = selectedTest;
+			}
+			this.selectedTestIds.add(selectedTestId);
+			this.refreshTest();
+		} else {
+			Log.debugMessage("SchedulerModel.setSelectedTest | selectedTest is " + selectedTest, Log.FINEST);
+		}		
+	}
+	
+	public void unselectTests() throws ApplicationException {
+		if (this.selectedTestIds != null) {
+			this.selectedTestIds.clear();
+		}
+		this.selectedFirstTest = null;
+		this.refreshTest();
 	}
 
 	public void setSelectedMeasurementType(MeasurementType measurementType) {
@@ -650,8 +714,8 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 				this.dispatcher.notify(new OperationEvent(measurementSetups, 0, COMMAND_SET_MEASUREMENT_SETUPS));
 			}
 
-			if (this.selectedTest != null) {
-				Collection measurementSetupIds = this.selectedTest.getMeasurementSetupIds();
+			if (this.selectedTestIds != null) {
+				Collection measurementSetupIds = this.getSelectedTest().getMeasurementSetupIds();
 				if (!measurementSetupIds.isEmpty()) {
 					Identifier mainMeasurementSetupId = (Identifier) measurementSetupIds.iterator().next();
 					MeasurementSetup measurementSetup1 = (MeasurementSetup) MeasurementStorableObjectPool
@@ -669,16 +733,20 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		}
 	}
 
-	public void commitChanges() throws ApplicationException {
+	public void commitChanges() throws ApplicationException {		
 		MeasurementStorableObjectPool.flush(true);
+		if (this.meTestGroup != null) {
+			this.meTestGroup.clear();
+		}
 		this.refreshTests();
 		this.refreshTest();
 	}
-
+	
 	private void generateTest() {
 		if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE) {
 
-			Test test = (this.flag == FLAG_APPLY) ? this.selectedTest : null;
+			Test test = null;
+			test = (this.flag == FLAG_APPLY) ? this.getSelectedTest() : null;
 			SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
 			java.util.Set measurementSetupIds;
 			if (this.measurementSetup == null) {
@@ -708,11 +776,26 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 			AbstractTemporalPattern temporalPattern = this.testTimeStamps.getTemporalPattern();
 			if (test == null) {
 				try {
-					test = Test.createInstance(LoginManager.getUserId(), startTime, endTime, temporalPattern == null ? null
-							: temporalPattern.getId(), temporalType, this.measurementType.getId(),
+					test = Test.createInstance(LoginManager.getUserId(), startTime, endTime, temporalPattern == null
+							? null : temporalPattern.getId(), temporalType, this.measurementType.getId(),
 						this.analysisType == null ? null : this.analysisType.getId(), this.evaluationType == null
-								? null : this.evaluationType.getId(), this.monitoredElement, this.returnType, sdf
-								.format(startTime), measurementSetupIds);
+								? null : this.evaluationType.getId(), null, this.monitoredElement, this.returnType,
+						this.name != null && this.name.trim().length() > 0 ? this.name : sdf.format(startTime),
+						measurementSetupIds);
+					
+					if (this.groupTest) {
+						if (this.meTestGroup == null) {
+							this.meTestGroup = new HashMap();
+						}
+						Identifier meId = this.monitoredElement.getId();
+						Identifier testGroupId = (Identifier) this.meTestGroup.get(meId);
+						if (testGroupId == null) {
+							testGroupId = test.getId();
+							this.meTestGroup.put(meId, testGroupId);
+						}
+						
+						test.setGroupTestId(testGroupId);
+					}
 
 					MeasurementStorableObjectPool.putStorableObject(test);
 				} catch (IllegalObjectEntityException e) {
@@ -723,11 +806,12 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 				this.tests.add(test);
 			} else {
 				test.setAttributes(test.getCreated(), new Date(System.currentTimeMillis()), test.getCreatorId(),
-					LoginManager.getUserId(), test.getVersion(), temporalType.value(), startTime, endTime, temporalPattern == null
-							? null : temporalPattern.getId(), this.measurementType.getId(), this.analysisType == null
-							? null : this.analysisType.getId(), this.evaluationType == null ? null
+					LoginManager.getUserId(), test.getVersion(), temporalType.value(), startTime, endTime,
+					temporalPattern == null ? null : temporalPattern.getId(), this.measurementType.getId(),
+					this.analysisType == null ? null : this.analysisType.getId(), test.getGroupTestId(), this.evaluationType == null ? null
 							: this.evaluationType.getId(), test.getStatus().value(), this.monitoredElement,
-					this.returnType.value(), sdf.format(startTime), test.getNumberOfMeasurements());
+					this.returnType.value(), this.name != null && this.name.trim().length() > 0 ? this.name : sdf
+							.format(startTime), test.getNumberOfMeasurements());
 			}
 			try {
 				MeasurementStorableObjectPool.putStorableObject(test);
@@ -735,8 +819,17 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 				Log.debugException(e, Log.DEBUGLEVEL05);
 			}
 
-			this.selectedTest = test;
-			this.refreshTests();
+		
+			try {
+				if (this.selectedTestIds != null) {
+					this.selectedTestIds.clear();
+				}
+				this.addSelectedTest(test);
+				this.refreshTests();
+			} catch (ApplicationException e) {
+				Log.errorException(e);
+			}
+			
 		}
 	}
 

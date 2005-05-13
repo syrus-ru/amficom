@@ -13,7 +13,6 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 
 import javax.swing.BorderFactory;
@@ -53,15 +52,12 @@ import com.syrus.AMFICOM.Client.Schedule.WindowCommand;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.measurement.AbstractTemporalPattern;
-import com.syrus.AMFICOM.measurement.IntervalsTemporalPattern;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.PeriodicalTemporalPattern;
 import com.syrus.AMFICOM.measurement.PeriodicalTemporalPatternWrapper;
@@ -96,8 +92,9 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 		private JSpinner					periodDaySpinner;
 		private JSpinner					periodTimeSpinner;
 		
-		private JButton periodOneTimeButton;
-		private JButton periodPediodTimeButton;
+		private JButton startTimeButton;
+		private JButton pediodTimeButton;
+		private JButton endTimeButton;
 		
 		private JLabel endingLabel;
 		private JButton endDateButton;
@@ -148,7 +145,9 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 			OperationListener operationListener = new OperationListener() {
 				private boolean skip = false;
 				public void operationPerformed(OperationEvent e) {					
+					
 					String actionCommand = e.getActionCommand();
+					Log.debugMessage(".operationPerformed | actionCommand " + actionCommand, Log.FINEST);
 					if (actionCommand.equals(SchedulerModel.COMMAND_SET_TEMPORAL_STAMPS)) {
 						if (!this.skip) {
 							setTestTemporalStamps((TestTemporalStamps) e.getSource());
@@ -158,6 +157,9 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 						if (testTemporalStamps != null) {
 							this.skip = true;
 							TimeParametersPanel.this.dispatcher.notify(new OperationEvent(testTemporalStamps, 0, SchedulerModel.COMMAND_SET_TEMPORAL_STAMPS));
+							if (TimeParametersPanel.this.timeTableRadioButton.isSelected()) {
+								TimeParametersPanel.this.dispatcher.notify(new OperationEvent(testTemporalStamps, 0, SchedulerModel.COMMAND_SET_GROUP_TEST));
+							}
 							this.skip = false;
 						}
 					}
@@ -273,7 +275,8 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 							if (!this.startedThread) {
 								this.thread.start();
 							}
-							this.waiting = true;
+							this.waiting =  isTestAgree(TimeParametersPanel.this.schedulerModel
+								.getSelectedTest());
 						}
 						this.previousEventTime = System.currentTimeMillis();						
 					}
@@ -305,7 +308,7 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 				box.add(Box.createHorizontalGlue());
 				UIGeneralStorage.fixHorizontalSize(this.startTimeSpinner);
 				box.add(this.startTimeSpinner);
-				box.add(this.periodOneTimeButton);
+				box.add(this.startTimeButton);
 				gbc.gridwidth = GridBagConstraints.REMAINDER;				
 				this.panel.add(box, gbc);
 			}
@@ -332,7 +335,7 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 					this.dayIntervalLabel = new JLabel(LangModelSchedule.getString("day"));
 					box.add(this.dayIntervalLabel);
 					box.add(this.periodTimeSpinner);
-					box.add(this.periodPediodTimeButton);
+					box.add(this.pediodTimeButton);
 					Calendar calendar = Calendar.getInstance();
 					/* TODO debug mode */
 //					calendar.set(Calendar.HOUR_OF_DAY, 0);
@@ -352,13 +355,15 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 			gbc.weightx = 1.0;
 			gbc.gridx = 1;
 			gbc.gridy++;
+			
 			this.endTimeSpinner = new TimeSpinner();
+			this.endDateSpinner = new DateSpinner();
 			{
 			/* TODO debug */
 			SpinnerDateModel model = (SpinnerDateModel) this.endTimeSpinner.getModel();
 			model.setValue(new Date(((Date)model.getValue()).getTime() + 5L * 60L * 60L * 1000L));
 			}
-			this.endDateSpinner = new DateSpinner();
+			
 			this.endDateButton = new JButton(UIStorage.CALENDAR_ICON);
 			this.endDateButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 			this.endDateButton.setDefaultCapable(false);
@@ -379,8 +384,78 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 				box.add(Box.createHorizontalGlue());
 				UIGeneralStorage.fixHorizontalSize(this.endTimeSpinner);
 				box.add(this.endTimeSpinner);
+				box.add(this.endTimeButton);
 				gbc.gridwidth = GridBagConstraints.REMAINDER;
 				this.panel.add(box, gbc);
+			}
+			
+			{
+				ChangeListener changeListener = new ChangeListener() {
+					
+					//OperationEvent event;
+					boolean waiting = false;
+					long previousEventTime;		
+					boolean startedThread = false;
+					static final long TIMEOUT = 500;
+					
+					private Thread		thread			= new Thread() {
+
+															public void run() {
+																startedThread = true;
+																while (true) {
+																	if (waiting
+																			&& (System.currentTimeMillis() - previousEventTime) > TIMEOUT) {
+																		Test selectedTest = TimeParametersPanel.this.schedulerModel
+																				.getSelectedTest();
+																		if (selectedTest != null
+																				&& selectedTest.isChanged()) {
+																			Date startDate = TimeParametersPanel.this
+																					.getStartDate();
+																			Date endDate = TimeParametersPanel.this
+																					.getEndDate();
+																			if (startDate.getTime() < endDate.getTime()) {
+																				selectedTest.setEndTime(endDate);
+																			} else {
+																				waiting = false;
+																			}
+
+																			if (waiting) {
+																				TimeParametersPanel.this.dispatcher
+																						.notify(new OperationEvent(
+																													this,
+																													0,
+																													SchedulerModel.COMMAND_REFRESH_TESTS));
+																			}
+																		}
+																		waiting = false;
+																	}
+
+																	try {
+																		Thread.sleep(TIMEOUT);
+																	} catch (InterruptedException e) {
+																		// nothing
+																	}
+																}
+															}
+
+														};
+					
+
+					public void stateChanged(ChangeEvent e) {
+						if (!this.waiting) {
+//							this.event = ;
+							if (!this.startedThread) {
+								this.thread.start();
+							}
+							this.waiting = isTestAgree(TimeParametersPanel.this.schedulerModel
+								.getSelectedTest());
+						}
+						this.previousEventTime = System.currentTimeMillis();						
+					}
+				};
+
+				this.endTimeSpinner.addChangeListener(changeListener);
+				this.endDateSpinner.addChangeListener(changeListener);
 			}
 
 //			JSeparator jsep2 = new JSeparator();
@@ -607,16 +682,12 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 
 				public void itemStateChanged(ItemEvent e) {
 					if (e.getStateChange() == ItemEvent.SELECTED) {
-						setEndDateEnable(true);						
 						setPeriodEnabled(false);
+						setEndDateEnable(true);				
+						
 					}
 				}
 			});
-			
-			/* TODO */
-			this.continuosRadioButton.setVisible(false);
-			
-			
 			
 			this.timeTableRadioButton.addItemListener(new ItemListener() {
 
@@ -628,186 +699,218 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 				}
 			});
 			
-			this.periodOneTimeButton = new JButton(">>");
-			this.periodOneTimeButton.setToolTipText(LangModelSchedule.getString("Add time item"));
-			this.periodOneTimeButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+			this.startTimeButton = new JButton(">>");
+			this.startTimeButton.setToolTipText(LangModelSchedule.getString("Add time item"));
+			this.startTimeButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 			
-			this.periodOneTimeButton.addActionListener(new ActionListener() {
+			this.endTimeButton = new JButton(">>");
+			this.endTimeButton.setToolTipText(LangModelSchedule.getString("Add time item"));
+			this.endTimeButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+			
+//			this.startTimeButton.addActionListener(new ActionListener() {
+//
+//				public void actionPerformed(ActionEvent e) {
+//					Date startDate = getStartDate();
+//
+//					long startTime = startDate.getTime();
+//
+////				 if (TimeParametersPanel.this.timeTableRadioButton.isSelected()) {
+////					
+////						if (TimeParametersPanel.this.temporalStamps == null) {
+////							try {
+////								IntervalsTemporalPattern intervalsTemporalPattern = IntervalsTemporalPattern.createInstance(LoginManager.getUserId(), null, null);
+////								MeasurementStorableObjectPool.putStorableObject(intervalsTemporalPattern);
+////								TimeParametersPanel.this.temporalStamps = new TestTemporalStamps(TestTemporalType.TEST_TEMPORAL_TYPE_PERIODICAL, getStartDate(), getEndDate(), intervalsTemporalPattern);
+////							} catch (IllegalObjectEntityException e1) {
+////								SchedulerModel.showErrorMessage(TimeParametersPanel.this.panel, e1);
+////							} catch (CreateObjectException e1) {
+////								SchedulerModel.showErrorMessage(TimeParametersPanel.this.panel, e1);
+////							}
+////							
+////						} 
+////						
+////						IntervalsTemporalPattern temporalPattern = (IntervalsTemporalPattern) TimeParametersPanel.this.temporalStamps.getTemporalPattern();
+////						
+////												
+////						long ms = startTime - TimeParametersPanel.this.temporalStamps.getStartTime().getTime();
+////						Log.debugMessage(".actionPerformed | ms:" + ms, Log.FINEST);
+////
+////						if (ms < 0) {
+////							TimeParametersPanel.this.temporalStamps.setStartTime(startDate);
+////							try {
+////								temporalPattern.moveAllItems(-ms);
+////							} catch (IllegalDataException e1) {
+////								// never occur !!!
+////								assert false;
+////							}
+////							ms = 0;
+////						}
+////						
+////						if (startDate.compareTo(TimeParametersPanel.this.temporalStamps.getEndTime()) > 0) {
+////							TimeParametersPanel.this.temporalStamps.setEndTime(startDate);
+////						}
+////
+////						Long newMs = new Long(ms);
+////						try {
+////							temporalPattern.addIntervalItems(Collections.singletonMap(newMs, Identifier.VOID_IDENTIFIER), Collections.singletonMap(newMs, null));
+////						} catch (IllegalDataException e1) {
+////							SchedulerModel.showErrorMessage(TimeParametersPanel.this.panel, e1);
+////						}
+////						/* TODO */
+//////						 TimeParametersPanel.this.schedulerModel.refreshTestTemporalStamps();
+////						
+////					} else {
+//						
+//						TimeParametersPanel.this.schedulerModel.createTest();
+////					}
+//				}
+//			});
 
+			
+			this.pediodTimeButton = new JButton(">>");
+			this.pediodTimeButton.setToolTipText(LangModelSchedule.getString("Add periodical sequence"));
+			this.pediodTimeButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+			
+//			this.pediodTimeButton.addActionListener(new ActionListener() {
+//
+//				public void actionPerformed(ActionEvent e) {
+////					if (TimeParametersPanel.this.timeTableRadioButton.isSelected()) {
+////						Date startDate = getStartDate();
+////						Date endDate = getEndDate();
+////
+////						long startTime = startDate.getTime();
+////						long endTime = endDate.getTime();
+////
+////						if (startTime >= endTime) {
+////							JOptionPane.showMessageDialog(TimeParametersPanel.this.panel, LangModelSchedule
+////									.getString("End time less than begin time"), LangModelSchedule.getString("Error"), //$NON-NLS-1$ //$NON-NLS-2$
+////								JOptionPane.OK_OPTION);
+////							return;
+////						}
+////
+////						Identifier userIdentifier = LoginManager.getUserId();
+////
+////						if (TimeParametersPanel.this.temporalStamps == null) {
+////
+////							try {
+////								IntervalsTemporalPattern intervalsTemporalPattern = IntervalsTemporalPattern
+////										.createInstance(userIdentifier, null, null);
+////
+////								MeasurementStorableObjectPool.putStorableObject(intervalsTemporalPattern);
+////
+////								TimeParametersPanel.this.temporalStamps = new TestTemporalStamps(
+////																									TestTemporalType.TEST_TEMPORAL_TYPE_PERIODICAL,
+////																									startDate, endDate,
+////																									intervalsTemporalPattern);
+////							} catch (IllegalObjectEntityException e1) {
+////								SchedulerModel.showErrorMessage(TimeParametersPanel.this.panel, e1);
+////							} catch (CreateObjectException e1) {
+////								SchedulerModel.showErrorMessage(TimeParametersPanel.this.panel, e1);
+////							}
+////
+////						}
+////
+////						long intervalLength = getIntervalLength();
+////
+////						IntervalsTemporalPattern temporalPattern = (IntervalsTemporalPattern) TimeParametersPanel.this.temporalStamps
+////								.getTemporalPattern();
+////
+////						try {
+////							PeriodicalTemporalPattern periodicTemporalPattern = null;
+////							TypicalCondition typicalCondition = new TypicalCondition(
+////																						intervalLength,
+////																						intervalLength,
+////																						OperationSort.OPERATION_EQUALS,
+////																						ObjectEntities.PERIODICAL_TEMPORALPATTERN_ENTITY_CODE,
+////																						PeriodicalTemporalPatternWrapper.COLUMN_PERIOD);
+////							try {
+////								java.util.Set set = MeasurementStorableObjectPool.getStorableObjectsByCondition(
+////									typicalCondition, true);
+////								if (!set.isEmpty()) {
+////									periodicTemporalPattern = (PeriodicalTemporalPattern) set.iterator().next();
+////								}
+////							} catch (ApplicationException e1) {
+////								SchedulerModel.showErrorMessage(TimeParametersPanel.this.panel, e1);
+////								return;
+////							}
+////
+////							if (periodicTemporalPattern == null) {
+////								periodicTemporalPattern = PeriodicalTemporalPattern.createInstance(userIdentifier,
+////									intervalLength);
+////								MeasurementStorableObjectPool.putStorableObject(periodicTemporalPattern);
+////							}
+////
+////							Log.debugMessage(".actionPerformed | temporalStamps.getStartTime(): "
+////									+ TimeParametersPanel.this.temporalStamps.getStartTime(), Log.FINEST);
+////							long ms = startTime - TimeParametersPanel.this.temporalStamps.getStartTime().getTime();
+////							Log.debugMessage(".actionPerformed | ms:" + ms, Log.FINEST);
+////
+////							if (ms < 0) {
+////								TimeParametersPanel.this.temporalStamps.setStartTime(startDate);
+////								temporalPattern.moveAllItems(-ms);
+////								ms = 0;
+////							}
+////
+////							if (endTime > TimeParametersPanel.this.temporalStamps.getEndTime().getTime()) {
+////								TimeParametersPanel.this.temporalStamps.setEndTime(endDate);
+////							}
+////
+////							Long newMs = new Long(ms);
+////							temporalPattern.addIntervalItems(Collections.singletonMap(newMs, periodicTemporalPattern
+////									.getId()), Collections.singletonMap(newMs, new Long(endTime - startTime)));
+////						} catch (IllegalObjectEntityException e1) {
+////							SchedulerModel.showErrorMessage(TimeParametersPanel.this.panel, e1);
+////						} catch (CreateObjectException e1) {
+////							SchedulerModel.showErrorMessage(TimeParametersPanel.this.panel, e1);
+////						} catch (IllegalDataException e1) {
+////							SchedulerModel.showErrorMessage(TimeParametersPanel.this.panel, e1);
+////						}
+////
+////						// while(startTime + times < endTime) {
+////						// temporalPattern.addIntervalItem(times,
+////						// Identifier.VOID_IDENTIFIER);
+////						// times += intervalLength;
+////						// }
+////
+////						/* TODO */
+//////						TimeParametersPanel.this.schedulerModel.refreshTestTemporalStamps();
+////
+////					} else {
+//						TimeParametersPanel.this.schedulerModel.createTest();
+//
+////					}
+//				}
+//			}
+//			);
+			
+			ActionListener actionListener = new ActionListener() {
+				
 				public void actionPerformed(ActionEvent e) {
-					Date startDate = getStartDate();
-
-					long startTime = startDate.getTime();
-
-				 if (TimeParametersPanel.this.timeTableRadioButton.isSelected()) {
-					
-						if (TimeParametersPanel.this.temporalStamps == null) {
-							try {
-								IntervalsTemporalPattern intervalsTemporalPattern = IntervalsTemporalPattern.createInstance(LoginManager.getUserId(), null, null);
-								MeasurementStorableObjectPool.putStorableObject(intervalsTemporalPattern);
-								TimeParametersPanel.this.temporalStamps = new TestTemporalStamps(TestTemporalType.TEST_TEMPORAL_TYPE_PERIODICAL, getStartDate(), getEndDate(), intervalsTemporalPattern);
-							} catch (IllegalObjectEntityException e1) {
-								SchedulerModel.showErrorMessage(TimeParametersPanel.this.panel, e1);
-							} catch (CreateObjectException e1) {
-								SchedulerModel.showErrorMessage(TimeParametersPanel.this.panel, e1);
-							}
-							
-						} 
-						
-						IntervalsTemporalPattern temporalPattern = (IntervalsTemporalPattern) TimeParametersPanel.this.temporalStamps.getTemporalPattern();
-						
-												
-						long ms = startTime - TimeParametersPanel.this.temporalStamps.getStartTime().getTime();
-						Log.debugMessage(".actionPerformed | ms:" + ms, Log.FINEST);
-
-						if (ms < 0) {
-							TimeParametersPanel.this.temporalStamps.setStartTime(startDate);
-							try {
-								temporalPattern.moveAllItems(-ms);
-							} catch (IllegalDataException e1) {
-								// never occur !!!
-								assert false;
-							}
-							ms = 0;
-						}
-						
-						if (startDate.compareTo(TimeParametersPanel.this.temporalStamps.getEndTime()) > 0) {
-							TimeParametersPanel.this.temporalStamps.setEndTime(startDate);
-						}
-
-						Long newMs = new Long(ms);
-						try {
-							temporalPattern.addIntervalItems(Collections.singletonMap(newMs, Identifier.VOID_IDENTIFIER), Collections.singletonMap(newMs, null));
-						} catch (IllegalDataException e1) {
-							SchedulerModel.showErrorMessage(TimeParametersPanel.this.panel, e1);
-						}
-						/* TODO */
-//						 TimeParametersPanel.this.schedulerModel.refreshTestTemporalStamps();
-						
-					} else {
-						TimeParametersPanel.this.schedulerModel.createTest();
-					}
+					TimeParametersPanel.this.schedulerModel.createTest();
 				}
-			});
+			};
 
+			this.startTimeButton.addActionListener(actionListener);
+			this.pediodTimeButton.addActionListener(actionListener);
+			this.endTimeButton.addActionListener(actionListener);
 			
-			this.periodPediodTimeButton = new JButton(">>");
-			this.periodPediodTimeButton.setToolTipText(LangModelSchedule.getString("Add periodical sequence"));
-			this.periodPediodTimeButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
-			
-			this.periodPediodTimeButton.addActionListener(new ActionListener() {
-
-				public void actionPerformed(ActionEvent e) {
-					if (TimeParametersPanel.this.timeTableRadioButton.isSelected()) {
-						Date startDate = getStartDate();
-						Date endDate = getEndDate();
-
-						long startTime = startDate.getTime();
-						long endTime = endDate.getTime();
-
-						if (startTime >= endTime) {
-							JOptionPane.showMessageDialog(TimeParametersPanel.this.panel, LangModelSchedule
-									.getString("End time less than begin time"), LangModelSchedule.getString("Error"), //$NON-NLS-1$ //$NON-NLS-2$
-								JOptionPane.OK_OPTION);
-							return;
-						}
-
-						Identifier userIdentifier = LoginManager.getUserId();
-
-						if (TimeParametersPanel.this.temporalStamps == null) {
-
-							try {
-								IntervalsTemporalPattern intervalsTemporalPattern = IntervalsTemporalPattern
-										.createInstance(userIdentifier, null, null);
-
-								MeasurementStorableObjectPool.putStorableObject(intervalsTemporalPattern);
-
-								TimeParametersPanel.this.temporalStamps = new TestTemporalStamps(
-																									TestTemporalType.TEST_TEMPORAL_TYPE_PERIODICAL,
-																									startDate, endDate,
-																									intervalsTemporalPattern);
-							} catch (IllegalObjectEntityException e1) {
-								SchedulerModel.showErrorMessage(TimeParametersPanel.this.panel, e1);
-							} catch (CreateObjectException e1) {
-								SchedulerModel.showErrorMessage(TimeParametersPanel.this.panel, e1);
-							}
-
-						}
-
-						long intervalLength = getIntervalLength();
-
-						IntervalsTemporalPattern temporalPattern = (IntervalsTemporalPattern) TimeParametersPanel.this.temporalStamps
-								.getTemporalPattern();
-
-						try {
-							PeriodicalTemporalPattern periodicTemporalPattern = null;
-							TypicalCondition typicalCondition = new TypicalCondition(
-																						intervalLength,
-																						intervalLength,
-																						OperationSort.OPERATION_EQUALS,
-																						ObjectEntities.PERIODICAL_TEMPORALPATTERN_ENTITY_CODE,
-																						PeriodicalTemporalPatternWrapper.COLUMN_PERIOD);
-							try {
-								java.util.Set set = MeasurementStorableObjectPool.getStorableObjectsByCondition(
-									typicalCondition, true);
-								if (!set.isEmpty()) {
-									periodicTemporalPattern = (PeriodicalTemporalPattern) set.iterator().next();
-								}
-							} catch (ApplicationException e1) {
-								SchedulerModel.showErrorMessage(TimeParametersPanel.this.panel, e1);
-								return;
-							}
-
-							if (periodicTemporalPattern == null) {
-								periodicTemporalPattern = PeriodicalTemporalPattern.createInstance(userIdentifier,
-									intervalLength);
-								MeasurementStorableObjectPool.putStorableObject(periodicTemporalPattern);
-							}
-
-							Log.debugMessage(".actionPerformed | temporalStamps.getStartTime(): "
-									+ TimeParametersPanel.this.temporalStamps.getStartTime(), Log.FINEST);
-							long ms = startTime - TimeParametersPanel.this.temporalStamps.getStartTime().getTime();
-							Log.debugMessage(".actionPerformed | ms:" + ms, Log.FINEST);
-
-							if (ms < 0) {
-								TimeParametersPanel.this.temporalStamps.setStartTime(startDate);
-								temporalPattern.moveAllItems(-ms);
-								ms = 0;
-							}
-
-							if (endTime > TimeParametersPanel.this.temporalStamps.getEndTime().getTime()) {
-								TimeParametersPanel.this.temporalStamps.setEndTime(endDate);
-							}
-
-							Long newMs = new Long(ms);
-							temporalPattern.addIntervalItems(Collections.singletonMap(newMs, periodicTemporalPattern
-									.getId()), Collections.singletonMap(newMs, new Long(endTime - startTime)));
-						} catch (IllegalObjectEntityException e1) {
-							SchedulerModel.showErrorMessage(TimeParametersPanel.this.panel, e1);
-						} catch (CreateObjectException e1) {
-							SchedulerModel.showErrorMessage(TimeParametersPanel.this.panel, e1);
-						} catch (IllegalDataException e1) {
-							SchedulerModel.showErrorMessage(TimeParametersPanel.this.panel, e1);
-						}
-
-						// while(startTime + times < endTime) {
-						// temporalPattern.addIntervalItem(times,
-						// Identifier.VOID_IDENTIFIER);
-						// times += intervalLength;
-						// }
-
-						/* TODO */
-//						TimeParametersPanel.this.schedulerModel.refreshTestTemporalStamps();
-
-					} else {
-						TimeParametersPanel.this.schedulerModel.createTest();
-
-					}
+		}
+		
+		boolean isTestAgree(Test test) {
+			if (test != null) {
+				TestTemporalType temporalType = test.getTemporalType();
+				switch (temporalType.value()) {
+					case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
+						return this.oneRadioButton.isSelected();
+					case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
+						return this.pediodTimeButton.isSelected();
+					case TestTemporalType._TEST_TEMPORAL_TYPE_CONTINUOUS:
+						return this.continuosRadioButton.isSelected();
 				}
+				if (test.getGroupTestId() != null)
+					return this.timeTableRadioButton.isSelected();
 			}
-			);
-
-			
+			return false;
 		}
 		
 		public void operationPerformed(OperationEvent e) {
@@ -826,9 +929,9 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 		}
 		
 		void setOneDateEnable(boolean enable) {
-			this.periodOneTimeButton.setVisible(enable);
-			this.periodOneTimeButton.setEnabled(enable);
-			this.periodPediodTimeButton.setVisible(false);
+			this.startTimeButton.setVisible(enable);
+			this.startTimeButton.setEnabled(enable);
+			this.pediodTimeButton.setVisible(false);
 		}
 		
 		void setEndDateEnable(boolean enable) {
@@ -836,24 +939,30 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 			this.endTimeSpinner.setEnabled(enable);
 			this.endDateSpinner.setEnabled(enable);
 			this.endDateButton.setEnabled(enable);
+			this.endTimeButton.setEnabled(enable);
 			
 			this.endingLabel.setVisible(enable);
 			this.endTimeSpinner.setVisible(enable);
 			this.endDateSpinner.setVisible(enable);
 			this.endDateButton.setVisible(enable);
+			this.endTimeButton.setVisible(enable);
 		}
 		
 		void setIntervalEnabled(boolean enable) {
-			this.periodOneTimeButton.setVisible(true);
-			this.periodPediodTimeButton.setVisible(true);
+			this.endTimeButton.setEnabled(false);
+			this.endTimeButton.setVisible(false);
+			this.startTimeButton.setVisible(true);
+			this.pediodTimeButton.setVisible(true);
 			setPeriodEnabled(enable, LangModelSchedule.getString("Interval"));
 		}
 
 		
 		void setPeriodEnabled(boolean enable) {		
-			this.periodOneTimeButton.setVisible(false);
-			this.endTimeSpinner.setEnabled(true);
-			this.periodPediodTimeButton.setVisible(true);
+			this.startTimeButton.setVisible(false);
+			this.endTimeButton.setEnabled(false);
+			this.endTimeButton.setVisible(false);
+			this.pediodTimeButton.setVisible(enable);
+			this.endTimeButton.setEnabled(enable);			
 			setPeriodEnabled(enable, LangModelSchedule.getString("Period"));
 		}
 		

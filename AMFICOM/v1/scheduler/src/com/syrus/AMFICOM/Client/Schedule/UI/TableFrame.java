@@ -13,6 +13,7 @@ import java.awt.event.MouseEvent;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Set;
 
 import javax.swing.Icon;
 import javax.swing.JInternalFrame;
@@ -44,6 +45,7 @@ import com.syrus.AMFICOM.Client.Schedule.WindowCommand;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTable;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTableModel;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestController;
 
@@ -60,9 +62,10 @@ Commandable {
 	ObjectResourceTable	listTable;
 	ApplicationContext	aContext;
 	private JPanel		panel;
-	private Test		test;
+//	private Test		test;
 	java.util.List		rowToRemove;
 	private Command		command;
+	boolean skip = false;
 
 	public TableFrame(ApplicationContext aContext) {
 		this.aContext = aContext;
@@ -91,12 +94,10 @@ Commandable {
 	}
 
 	public void updateTest() {
-		this.test = this.schedulerModel.getSelectedTest();
-		ObjectResourceTableModel tableModel = (ObjectResourceTableModel) this.listTable.getModel();
-		int rowIndex = tableModel.getIndexOfObject(this.test);
-		if (rowIndex >= 0) {
-			this.listTable.setRowSelectionInterval(rowIndex, rowIndex);
-		} else {
+		this.skip = true;
+		Set selectedTestIds = this.schedulerModel.getSelectedTestIds();
+		if (selectedTestIds == null || selectedTestIds.isEmpty()) {
+
 			int[] selectedRows = this.listTable.getSelectedRows();
 			if (selectedRows.length > 0) {
 				int maxRowIndex = Integer.MIN_VALUE;
@@ -107,7 +108,32 @@ Commandable {
 				}
 				this.listTable.removeRowSelectionInterval(minRowIndex, maxRowIndex);
 			}
+		
+		} else {
+//			int[] selectedRows = new int[selectedTestIds.size()];
+//			int j = 0;
+			ObjectResourceTableModel tableModel = (ObjectResourceTableModel) this.listTable.getModel();
+			for (Iterator iterator = selectedTestIds.iterator(); iterator.hasNext();) {
+				Identifier identifier = (Identifier) iterator.next();
+				for(int i=0;i<tableModel.getRowCount();i++) {
+					Test test = (Test)tableModel.getObject(i);
+					Identifier testId = test.getGroupTestId();
+					testId = testId != null ? testId : test.getId();
+					if (testId.equals(identifier)) {
+//						selectedRows[j++] = i;
+						this.listTable.setRowSelectionInterval(i, i);
+						break;
+					}
+				}
+			}
+//			listTable.setRow
 		}
+//		ObjectResourceTableModel tableModel = (ObjectResourceTableModel) this.listTable.getModel();
+//		int rowIndex = tableModel.getIndexOfObject(this.test);
+//		if (rowIndex >= 0) {
+//			this.listTable.setRowSelectionInterval(rowIndex, rowIndex);
+//		} else {}
+		this.skip = false;
 	}
 
 	public void updateTests() {
@@ -122,6 +148,10 @@ Commandable {
 		Collection tests = this.schedulerModel.getTests();
 		for (Iterator it = tests.iterator(); it.hasNext();) {
 			Test test1 = (Test) it.next();
+			Identifier groupTestId = test1.getGroupTestId();
+			if (groupTestId != null && !groupTestId.equals(test1.getId())) {
+				continue;
+			}
 			if (model.getIndexOfObject(test1) < 0) {
 				model.getContents().add(test1);
 			}
@@ -144,11 +174,12 @@ Commandable {
 						return;
 
 					ListSelectionModel lsm = (ListSelectionModel) e.getSource();
-					if (!lsm.isSelectionEmpty()) {
+					if (!lsm.isSelectionEmpty() && !TableFrame.this.skip) {
 						int selectedRow = lsm.getMinSelectionIndex();
 						try {
+							TableFrame.this.schedulerModel.unselectTests();
 							TableFrame.this.schedulerModel
-									.setSelectedTest((Test) ((ObjectResourceTableModel) TableFrame.this.listTable
+									.addSelectedTest((Test) ((ObjectResourceTableModel) TableFrame.this.listTable
 											.getModel()).getObject(selectedRow));
 						} catch (ApplicationException e1) {
 							SchedulerModel.showErrorMessage(TableFrame.this, e1);

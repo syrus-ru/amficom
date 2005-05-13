@@ -1,5 +1,5 @@
 /*
- * $Id: ElementItem.java,v 1.5 2005/03/30 14:26:20 bob Exp $
+ * $Id: ElementItem.java,v 1.6 2005/05/13 15:07:30 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.logic.Item;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/03/30 14:26:20 $
+ * @version $Revision: 1.6 $, $Date: 2005/05/13 15:07:30 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -43,8 +43,8 @@ public abstract class ElementItem extends AbstractItem {
 	}	
 
 	public void addChild(Item childItem) {
-		Log.debugMessage("ElementItem.addChild | this.name: " + this.getName() + " \n\t name: " + childItem.getName(),
-			Log.FINEST);
+//		Log.debugMessage("ElementItem.addChild | this.name: " + this.getName() + " \n\t name: " + childItem.getName(),
+//			Log.FINEST);
 
 		if (this.entityCode == ObjectEntities.UNKNOWN_ENTITY_CODE)
 			this.entityCode = this.getChildenEntityCode();

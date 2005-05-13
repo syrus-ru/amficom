@@ -523,30 +523,31 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 					normalize(saveFrame);
 					normalize(tableFrame);
 
-					treeFrame.setSize(w / 5, h / 2);
-					paramsFrame.setSize(w / 5, h / 2);
+					treeFrame.setSize(w / 5, h);
 
 					propsFrame.pack();
 					propsFrame.setSize(w / 5, propsFrame.getHeight());
 					saveFrame.pack();
 					saveFrame.setSize(w / 5, saveFrame.getHeight());
-					tableFrame.setSize(w - treeFrame.getWidth(), h / 3);
-					timeFrame.setSize(w / 5, h - propsFrame.getHeight() - saveFrame.getHeight() - tableFrame.getHeight());
-
-					
+					tableFrame.setSize(w - propsFrame.getWidth() - treeFrame.getWidth(), 2 * h / 5);
+					timeFrame.setSize(w / 5, h / 3);					
 					planFrame.setSize(w - propsFrame.getWidth() - treeFrame.getWidth(), h - tableFrame.getHeight());
 
 					treeFrame.setLocation(0, 0);
-					tableFrame.setLocation(treeFrame.getX() + treeFrame.getWidth(), planFrame.getHeight());
+					timeFrame.setLocation(w - timeFrame.getWidth(), h - timeFrame.getHeight());
+					saveFrame.setLocation(w - saveFrame.getWidth(), h - timeFrame.getHeight() - saveFrame.getHeight());
 					propsFrame.setLocation(w - propsFrame.getWidth(), 0);
+					paramsFrame.setSize(w / 5, saveFrame.getY() - (propsFrame.getY() + propsFrame.getHeight()));
+					paramsFrame.setLocation(w - paramsFrame.getWidth(), propsFrame.getY() + propsFrame.getHeight());					
+					tableFrame.setLocation(treeFrame.getX() + treeFrame.getWidth(), planFrame.getHeight());
 					
-					saveFrame.setLocation(w - saveFrame.getWidth(), h - saveFrame.getHeight() - tableFrame.getHeight());
+					
+					
 					planFrame.setLocation(treeFrame.getX() + treeFrame.getWidth(), 0);
 					
 					
-					timeFrame.setLocation(w - timeFrame.getWidth(), propsFrame.getY() + propsFrame.getHeight());
 
-					paramsFrame.setLocation(0, treeFrame.getHeight());
+					
 					
 
 				}

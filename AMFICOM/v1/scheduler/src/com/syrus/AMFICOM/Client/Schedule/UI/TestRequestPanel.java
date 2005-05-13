@@ -7,7 +7,6 @@ import java.awt.event.ActionListener;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -37,7 +36,7 @@ public class TestRequestPanel extends JPanel
 
 	private static final long	serialVersionUID	= 3834032471820939824L;
 
-	private JTextField	nameTextField	= new JTextField();
+	JTextField	nameTextField	= new JTextField();
 
 	private JLabel	ownerTextField	= new JLabel();
 
@@ -47,24 +46,27 @@ public class TestRequestPanel extends JPanel
 	
 	SchedulerModel		schedulerModel;
 	
-	JButton						createButton;
-
-	JButton						applyButton;
+//	JButton						createButton;
+//
+//	JButton						applyButton;
 
 	public TestRequestPanel(ApplicationContext aContext) {
 		this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();
 		
-		Dispatcher dispatcher = aContext.getDispatcher();
+		final Dispatcher dispatcher = aContext.getDispatcher();
 		OperationListener operationListener = new OperationListener() {
 			public void operationPerformed(OperationEvent e) {
 				String actionCommand = e.getActionCommand();
 				if (actionCommand.equals(SchedulerModel.COMMAND_REFRESH_TEST)) {
 					updateTest();
+				} else if (actionCommand.equals(SchedulerModel.COMMAND_GET_NAME)) {
+					dispatcher.notify(new OperationEvent(TestRequestPanel.this.nameTextField.getText(), 0, SchedulerModel.COMMAND_SET_NAME));
 				}
 			}
 		};
 		
 		dispatcher.register(operationListener, SchedulerModel.COMMAND_REFRESH_TEST);
+		dispatcher.register(operationListener, SchedulerModel.COMMAND_GET_NAME);
 		
 //		this.schedulerModel.addTestEditor(this);
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -73,6 +75,18 @@ public class TestRequestPanel extends JPanel
 		panel.add(titleLabel);
 		panel.add(this.nameTextField);
 		this.nameTextField.setEditable(true);
+		this.nameTextField.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				JTextField textField = (JTextField) e.getSource();
+				Test selectedTest = TestRequestPanel.this.schedulerModel.getSelectedTest();
+				if (selectedTest != null && selectedTest.isChanged()) {
+					selectedTest.setDescription(textField.getText());
+					dispatcher.notify(new OperationEvent(this, 0, SchedulerModel.COMMAND_REFRESH_TEST));
+				}
+			}
+		}
+			);
 		// add(nameTextField);
 
 		JLabel ownerLabel = new JLabel(LangModelSchedule.getString("Owner") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -95,44 +109,44 @@ public class TestRequestPanel extends JPanel
 //		this.portTextField.setEditable(false);
 		this.add(panel);
 		
-		{
-			this.applyButton = new JButton(LangModelSchedule.getString("Apply"));
-			this.applyButton.setEnabled(false);
-			this.createButton = new JButton(LangModelSchedule.getString("Create"));
-
-			this.applyButton.addActionListener(new ActionListener() {
-
-				public void actionPerformed(ActionEvent e) {
-					TestRequestPanel.this.createButton.setEnabled(false);
-					TestRequestPanel.this.applyButton.setEnabled(false);
-					TestRequestPanel.this.schedulerModel.applyTest();
-					TestRequestPanel.this.createButton.setEnabled(true);
-					TestRequestPanel.this.applyButton.setEnabled(true);
-
-				}
-			});
-
-			this.createButton.addActionListener(new ActionListener() {
-
-				public void actionPerformed(ActionEvent e) {
-					TestRequestPanel.this.createButton.setEnabled(false);
-					TestRequestPanel.this.applyButton.setEnabled(false);
-					TestRequestPanel.this.schedulerModel.createTest();
-					TestRequestPanel.this.createButton.setEnabled(true);
-					TestRequestPanel.this.applyButton.setEnabled(true);
-				}
-			});
-
-			Box box = new Box(BoxLayout.X_AXIS);
-			this.createButton.setDefaultCapable(false);
-			this.createButton.setEnabled(true);
-			box.add(this.createButton);
-			box.add(Box.createGlue());
-			this.applyButton.setDefaultCapable(false);
-			this.applyButton.setEnabled(false);
-			box.add(this.applyButton);
-			this.add(box);
-		}
+//		{
+//			this.applyButton = new JButton(LangModelSchedule.getString("Apply"));
+//			this.applyButton.setEnabled(false);
+//			this.createButton = new JButton(LangModelSchedule.getString("Create"));
+//
+//			this.applyButton.addActionListener(new ActionListener() {
+//
+//				public void actionPerformed(ActionEvent e) {
+//					TestRequestPanel.this.createButton.setEnabled(false);
+//					TestRequestPanel.this.applyButton.setEnabled(false);
+//					TestRequestPanel.this.schedulerModel.applyTest();
+//					TestRequestPanel.this.createButton.setEnabled(true);
+//					TestRequestPanel.this.applyButton.setEnabled(true);
+//
+//				}
+//			});
+//
+//			this.createButton.addActionListener(new ActionListener() {
+//
+//				public void actionPerformed(ActionEvent e) {
+//					TestRequestPanel.this.createButton.setEnabled(false);
+//					TestRequestPanel.this.applyButton.setEnabled(false);
+//					TestRequestPanel.this.schedulerModel.createTest();
+//					TestRequestPanel.this.createButton.setEnabled(true);
+//					TestRequestPanel.this.applyButton.setEnabled(true);
+//				}
+//			});
+//
+//			Box box = new Box(BoxLayout.X_AXIS);
+//			this.createButton.setDefaultCapable(false);
+//			this.createButton.setEnabled(true);
+//			box.add(this.createButton);
+//			box.add(Box.createGlue());
+//			this.applyButton.setDefaultCapable(false);
+//			this.applyButton.setEnabled(false);
+//			box.add(this.applyButton);
+//			this.add(box);
+//		}
 
 		this.add(Box.createVerticalGlue());
 
@@ -153,7 +167,7 @@ public class TestRequestPanel extends JPanel
 	
 	public void setTest(Test test) {
 		if (test != null) {
-			this.applyButton.setEnabled(test.isChanged());
+//			this.applyButton.setEnabled(test.isChanged());
 			try {
 				this.nameTextField.setText(test.getDescription());
 				
@@ -170,7 +184,7 @@ public class TestRequestPanel extends JPanel
 				SchedulerModel.showErrorMessage(this, ae);
 			}			
 		} else {
-			this.applyButton.setEnabled(false);
+//			this.applyButton.setEnabled(false);
 			this.cleanAllFields();
 		}
 	}
