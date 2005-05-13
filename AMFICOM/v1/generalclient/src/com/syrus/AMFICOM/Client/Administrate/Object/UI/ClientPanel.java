@@ -1,5 +1,5 @@
 /*
- * $Id: ClientPanel.java,v 1.2 2004/08/17 15:02:50 krupenn Exp $
+ * $Id: ClientPanel.java,v 1.3 2005/05/13 19:03:16 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,6 +19,8 @@ import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.System.*;
+import com.syrus.AMFICOM.general.StorableObject;
+
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
@@ -28,8 +30,8 @@ import java.awt.Insets;
  * moved to <tt>generalclient_v1</tt> to resolve cross-module
  * dependencies between <tt>generalclient_v1</tt> and <tt>admin_1</tt>.
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.2 $, $Date: 2004/08/17 15:02:50 $
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/05/13 19:03:16 $
  * @module generalclient_v1
  */
 public class ClientPanel extends GeneralPanel
@@ -70,7 +72,7 @@ public class ClientPanel extends GeneralPanel
     }
   }
 
-  public ClientPanel(ObjectResource or)
+  public ClientPanel(StorableObject or)
   {
     this();
     setObjectResource(or);
@@ -144,7 +146,7 @@ public class ClientPanel extends GeneralPanel
   }
 
 
-  public void setObjectResource(ObjectResource or)
+  public void setObjectResource(StorableObject or)
   {
     if(or == null)
       return;
@@ -160,7 +162,7 @@ public class ClientPanel extends GeneralPanel
     jTextFieldContact.setText(client.contact);
     jTextFieldCreated.setText(sdf.format(new Date(client.created)));
     jTextFieldHostName.setText(client.hostname);
-    jTextFieldId.setText(client.id);
+    jTextFieldId.setText(client.getId());
     jTextFieldLicense.setText(client.licence_id);
     jTextFieldLocation.setText(client.location);
     jTextFieldModified.setText(sdf.format(new Date(client.modified)));
@@ -169,13 +171,13 @@ public class ClientPanel extends GeneralPanel
   }
 
 
-  public ObjectResource getModifiedObjectResource()
+  public StorableObject getModifiedObjectResource()
   {
     Date d = new Date();
     client.contact = jTextFieldContact.getText();
 
     client.hostname = jTextFieldHostName.getText();
-    client.id = jTextFieldId.getText();
+    client.getId() = jTextFieldId.getText();
     client.licence_id = jTextFieldLicense.getText();
     client.location = jTextFieldLocation.getText();
 

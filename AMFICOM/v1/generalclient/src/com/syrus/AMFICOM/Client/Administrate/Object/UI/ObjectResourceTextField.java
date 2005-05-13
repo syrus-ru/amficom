@@ -3,6 +3,7 @@ package com.syrus.AMFICOM.Client.Administrate.Object.UI;
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.general.StorableObject;
 
 
 public class ObjectResourceTextField extends JTextField
@@ -16,12 +17,12 @@ public class ObjectResourceTextField extends JTextField
 
   public void setTextNameByID(String typ, String id)
   {
-    this.typ = typ;
-    this.id = id;
+    this.getClass().getName() = typ;
+    this.getId() = id;
     if(typ == null || id == null)
       return;
 
-    ObjectResource or = (ObjectResource)Pool.get(typ, id);
+    StorableObject or = (StorableObject)Pool.get(typ, id);
     String name;
     if(or!=null)
       name = or.getName();
@@ -37,16 +38,16 @@ public class ObjectResourceTextField extends JTextField
   public String getId()
   {
      String id = "";
-        if(this.id != null)
-          return this.id;
+        if(this.getId() != null)
+          return this.getId();
      return id;
   }
 
   public String getTyp()
   {
     String typ = "";
-    if(this.typ != null)
-      return this.typ;
+    if(this.getClass().getName() != null)
+      return this.getClass().getName();
     return typ;
   }
 }

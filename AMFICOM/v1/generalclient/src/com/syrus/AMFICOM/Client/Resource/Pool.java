@@ -40,6 +40,8 @@ package com.syrus.AMFICOM.Client.Resource;
 
 import java.util.*;
 
+import com.syrus.AMFICOM.general.StorableObject;
+
 /**
  *
  *  ласс позвол€ет хранить объекты, структуриру€ доступ к ним по типу объекта и
@@ -88,8 +90,8 @@ public final class Pool {
 		Object res = get(objTypeId, objId);
 		if (res != null)
 		{
-			if (res instanceof ObjectResource)
-				result = ((ObjectResource)res).getName();
+			if (res instanceof StorableObject)
+				result = ((StorableObject)res).getName();
 			else
 				result = res.toString();
 		}
@@ -172,7 +174,7 @@ public final class Pool {
 }
 
 	/**
-	 * получить список измененных объектов ObjectResource типа objTypeId
+	 * получить список измененных объектов StorableObject типа objTypeId
 	 *
 	 * @param objTypeId
 	 *            тип объектов
@@ -186,8 +188,8 @@ public final class Pool {
 				result = new HashMap();
 				for (Iterator it = table.values().iterator(); it.hasNext(); ) {
 					Object obj = it.next();
-					if (obj instanceof ObjectResource) {
-						ObjectResource or = (ObjectResource) obj;
+					if (obj instanceof StorableObject) {
+						StorableObject or = (StorableObject) obj;
 						if (or.isChanged())
 							result.put(or.getId(), or);
 					}
@@ -198,7 +200,7 @@ public final class Pool {
 }
 
 	/**
-	 * получить список измененных объектов ObjectResource типа objTypeId
+	 * получить список измененных объектов StorableObject типа objTypeId
 	 * @deprecated use {@link Pool#getChangedMap() getChangedMap()}
 	 * @param objTypeId
 	 *            тип объектов
@@ -214,8 +216,8 @@ public final class Pool {
 				result = new Hashtable();
 				for (Iterator it = table.keySet().iterator(); it.hasNext();) {
 					Object obj = table.get(it.next());
-					if (obj instanceof ObjectResource) {
-						ObjectResource or = (ObjectResource) obj;
+					if (obj instanceof StorableObject) {
+						StorableObject or = (StorableObject) obj;
 						if (or.isChanged()) result.put(or.getId(), or);
 					}
 				}

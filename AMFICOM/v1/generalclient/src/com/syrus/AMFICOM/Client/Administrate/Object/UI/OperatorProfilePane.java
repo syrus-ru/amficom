@@ -1,5 +1,5 @@
 /*
- * $Id: OperatorProfilePane.java,v 1.4 2004/09/27 13:01:57 bass Exp $
+ * $Id: OperatorProfilePane.java,v 1.5 2005/05/13 19:03:16 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,9 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Object.*;
+import com.syrus.AMFICOM.administration.User;
+import com.syrus.AMFICOM.general.StorableObject;
+
 import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -25,7 +28,7 @@ import javax.swing.event.*;
  * dependencies between <tt>generalclient_v1</tt> and <tt>admin_1</tt>.
  *
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2004/09/27 13:01:57 $
+ * @version $Revision: 1.5 $, $Date: 2005/05/13 19:03:16 $
  * @module generalclient_v1
  */
 public final class OperatorProfilePane extends JPanel implements ObjectResourcePropertiesPane {
@@ -38,7 +41,7 @@ public final class OperatorProfilePane extends JPanel implements ObjectResourceP
   NewUpDater updater;
 
   OperatorProfileGeneralPanel genPanel = new OperatorProfileGeneralPanel();
-  TwoListsPanel groupsPanel = new TwoListsPanel("Подключенные группы", "Неподключенные группы", OperatorGroup.typ);
+  TwoListsPanel groupsPanel = new TwoListsPanel("Подключенные группы", "Неподключенные группы", OperatorGroup.class.getName());
   OperatorProfileOtherPanel othPanel = new OperatorProfileOtherPanel();
 	OperatorProfilePasswordPanel passPanel = new OperatorProfilePasswordPanel();
 
@@ -79,14 +82,14 @@ public final class OperatorProfilePane extends JPanel implements ObjectResourceP
 		jtp.add(othPanel.getName(), othPanel);
 	}
 
-  public ObjectResource getObjectResource()
+  public StorableObject getObjectResource()
   {
     return profile;
   }
 
-  public void setObjectResource(ObjectResource or)
+  public void setObjectResource(StorableObject or)
   {
-    this.operatorProfileUser = (User)Pool.get(User.typ, ((OperatorProfile)or).user_id);
+    this.operatorProfileUser = (User)Pool.get(User.class.getName(), ((OperatorProfile)or).user_id);
 
     ObjectResourceCatalogFrame f = (ObjectResourceCatalogFrame)
                                    Pool.get("ObjectFrame", "AdministrateObjectFrame");
@@ -105,12 +108,12 @@ public final class OperatorProfilePane extends JPanel implements ObjectResourceP
     setData(or);
   }
 
-  private void setData(ObjectResource or)
+  private void setData(StorableObject or)
   {
 
     this.profile = (OperatorProfile )or;
     profile.updateLocalFromTransferable();
-    this.operatorProfileUser = (User)Pool.get(User.typ, profile.user_id);
+    this.operatorProfileUser = (User)Pool.get(User.class.getName(), profile.user_id);
     user.updateLocalFromTransferable();
 
     genPanel.setObjectResource(profile);
@@ -127,7 +130,7 @@ public final class OperatorProfilePane extends JPanel implements ObjectResourceP
     groupsPanel.setContext(aContext);
     othPanel.setContext(aContext);
 		passPanel.setContext(aContext);
-    this.user = (User)(Pool.get(User.typ,
+    this.user = (User)(Pool.get(User.class.getName(),
                                 aContext.getSessionInterface().getUserId()));
     updater = new NewUpDater(this.aContext);
   }
@@ -160,11 +163,11 @@ public final class OperatorProfilePane extends JPanel implements ObjectResourceP
     }
 
     profile.name = profile.login;
-    profile.modified_by = user.id;
+    profile.modified_by = user.getId();
     Date d = new Date();
     profile.modified = d.getTime();
 
-    Pool.put(OperatorProfile.typ, profile.id, profile);
+    Pool.put(OperatorProfile.class.getName(), profile.getId(), profile);
 
 
     operatorProfileUser.last_login = profile.last_login;
@@ -183,7 +186,7 @@ public final class OperatorProfilePane extends JPanel implements ObjectResourceP
         operatorProfileUser.category_ids.add(profile.category_ids.get(i));
       }
     }
-    Pool.put(User.typ, operatorProfileUser.id, operatorProfileUser);
+    Pool.put(User.class.getName(), operatorProfileUser.getId(), operatorProfileUser);
     operatorProfileUser.updateLocalFromTransferable();
 
 
@@ -196,8 +199,8 @@ public final class OperatorProfilePane extends JPanel implements ObjectResourceP
     profile.setTransferableFromLocal();
     operatorProfileUser.setTransferableFromLocal();
 
-    aContext.getDataSource().SaveUser(operatorProfileUser.id);
-    aContext.getDataSource().SaveOperatorProfile(profile.id);
+    aContext.getDataSource().SaveUser(operatorProfileUser.getId());
+    aContext.getDataSource().SaveOperatorProfile(profile.getId());
 
 
 
@@ -224,9 +227,9 @@ public final class OperatorProfilePane extends JPanel implements ObjectResourceP
     DataSourceInterface dataSource = aContext.getDataSource();
 
     profile = new OperatorProfile();
-    profile.id = dataSource.GetUId(OperatorProfile.typ);
-    profile.login = profile.id;
-    profile.name = profile.id;
+    profile.getId() = dataSource.GetUId(OperatorProfile.class.getName());
+    profile.login = profile.getId();
+    profile.name = profile.getId();
     profile.created_by = this.user.getId();
     profile.owner_id = this.user.getId();
     profile.modified_by = this.user.getId();
@@ -237,28 +240,28 @@ public final class OperatorProfilePane extends JPanel implements ObjectResourceP
 		calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) + 1);
 		profile.disabled = calendar.getTimeInMillis();
     operatorProfileUser = new User();
-    operatorProfileUser.id = dataSource.GetUId(User.typ);
-    operatorProfileUser.type = OperatorProfile.typ;
-    operatorProfileUser.object_id = profile.id;
-    profile.user_id = operatorProfileUser.id;
+    operatorProfileUser.getId() = dataSource.GetUId(User.class.getName());
+    operatorProfileUser.type = OperatorProfile.class.getName();
+    operatorProfileUser.object_id = profile.getId();
+    profile.user_id = operatorProfileUser.getId();
 
     profile.setTransferableFromLocal();
     operatorProfileUser.setTransferableFromLocal();
 
-    Pool.put(User.typ, operatorProfileUser.id, operatorProfileUser);
-    Pool.put(OperatorProfile.typ, profile.id, profile);
+    Pool.put(User.class.getName(), operatorProfileUser.getId(), operatorProfileUser);
+    Pool.put(OperatorProfile.class.getName(), profile.getId(), profile);
     profile.updateLocalFromTransferable();
     setData(profile);
 
 
-    aContext.getDataSource().SaveUser(operatorProfileUser.id);
-    aContext.getDataSource().SaveOperatorProfile(profile.id);
+    aContext.getDataSource().SaveUser(operatorProfileUser.getId());
+    aContext.getDataSource().SaveOperatorProfile(profile.getId());
     return true;
   }
 
   public boolean delete()
   {
-    if(profile.login.equals("sys") &&  profile.id.equals("sysuser"))
+    if(profile.login.equals("sys") &&  profile.getId().equals("sysuser"))
     {
       String error = " Пользователь SYS не может быть удален \n ни при каких условиях.";
       JOptionPane.showMessageDialog(null, error, "Ошибка", JOptionPane.OK_OPTION);
@@ -304,16 +307,16 @@ public final class OperatorProfilePane extends JPanel implements ObjectResourceP
       operatorProfileUser.group_ids = new ArrayList();
       operatorProfileUser.category_ids = new ArrayList();
 
-      Pool.put(OperatorProfile.typ, profile.id, profile);
-      Pool.put(User.typ, operatorProfileUser.id, operatorProfileUser);
+      Pool.put(OperatorProfile.class.getName(), profile.getId(), profile);
+      Pool.put(User.class.getName(), operatorProfileUser.getId(), operatorProfileUser);
 
       updater.updateObjectResources(profile, true);
       updater.updateObjectResources(operatorProfileUser, true);
 
       String[]s = new String[1];
-      s[0] = profile.id;
+      s[0] = profile.getId();
       this.aContext.getDataSource().RemoveOperatorProfile(s);
-      s[0] = operatorProfileUser.id;
+      s[0] = operatorProfileUser.getId();
       this.aContext.getDataSource().RemoveUser(s);
       Pool.remove(profile);
       Pool.remove(operatorProfileUser);

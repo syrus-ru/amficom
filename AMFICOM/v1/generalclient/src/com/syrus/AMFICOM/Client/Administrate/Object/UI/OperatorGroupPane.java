@@ -1,5 +1,5 @@
 /*
- * $Id: OperatorGroupPane.java,v 1.5 2005/05/05 11:04:46 bob Exp $
+ * $Id: OperatorGroupPane.java,v 1.6 2005/05/13 19:03:16 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.corba.portable.reflect.common.ObjectResource;
  * moved to <tt>generalclient_v1</tt> to resolve cross-module
  * dependencies between <tt>generalclient_v1</tt> and <tt>admin_1</tt>.
  *
- * @author $Author: bob $
- * @version $Revision: 1.5 $, $Date: 2005/05/05 11:04:46 $
+ * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2005/05/13 19:03:16 $
  * @module generalclient_v1
  */
 public final class OperatorGroupPane extends JPanel implements ObjectResourcePropertiesPane {
@@ -39,7 +39,7 @@ public final class OperatorGroupPane extends JPanel implements ObjectResourcePro
 
   OperatorGroupGeneralPanel genPanel = new OperatorGroupGeneralPanel();
   TwoListsPanel usersPanel = new TwoListsPanel("Подключенные пользователи",
-                                                  "Неподключенные пользователи", User.typ);
+                                                  "Неподключенные пользователи", User.class.getName());
 
   ApplicationContext aContext = new ApplicationContext();
   NewUpDater updater;
@@ -111,11 +111,11 @@ public final class OperatorGroupPane extends JPanel implements ObjectResourcePro
     this.aContext = aContext;
     genPanel.setContext(aContext);
     usersPanel.setContext(aContext);
-    this.user = (User)Pool.get(User.typ,
+    this.user = (User)Pool.get(User.class.getName(),
                                aContext.getSessionInterface().getUserId());
 
 //    this.dispatcher = aContext.getDispatcher();
-//    this.dispatcher.register(this, OperatorGroup.typ+"updated");
+//    this.dispatcher.register(this, OperatorGroup.class.getName()+"updated");
 
     this.updater = new NewUpDater(this.aContext);
 
@@ -137,14 +137,14 @@ public final class OperatorGroupPane extends JPanel implements ObjectResourcePro
 
     Date d = new Date();
     group.modified = d.getTime();
-    group.modified_by = user.id;
+    group.modified_by = user.getId();
 
     if(!NewUpDater.checkName(group))
       return false;
 
     updater.updateObjectResources(group, false);
-    Pool.put(OperatorGroup.typ, group.id, group);
-		aContext.getDataSource().SaveGroup(group.id);
+    Pool.put(OperatorGroup.class.getName(), group.getId(), group);
+		aContext.getDataSource().SaveGroup(group.getId());
 
     this.setData(group);
     return true;
@@ -167,18 +167,18 @@ public final class OperatorGroupPane extends JPanel implements ObjectResourcePro
     this.showTheWindow(true);
 		DataSourceInterface dataSource = aContext.getDataSource();
     group = new OperatorGroup(); //creating of the new group
-    group.id = dataSource.GetUId(OperatorGroup.typ);
-    group.owner_id = user.id; // setting of the user (owner)
-    group.created_by = user.id;
-    group.modified_by = user.id;
+    group.getId() = dataSource.GetUId(OperatorGroup.class.getName());
+    group.owner_id = user.getId(); // setting of the user (owner)
+    group.created_by = user.getId();
+    group.modified_by = user.getId();
     Date d = new Date(); // Setting of the creation time
     group.created = d.getTime();
     group.modified = d.getTime();
-    Pool.put(OperatorGroup.typ, group.id, group);
+    Pool.put(OperatorGroup.class.getName(), group.getId(), group);
 
     setData(group);
 
-		this.aContext.getDataSource().SaveGroup(group.id);
+		this.aContext.getDataSource().SaveGroup(group.getId());
 		return true;
 	}
 
@@ -190,10 +190,10 @@ public final class OperatorGroupPane extends JPanel implements ObjectResourcePro
 
       updater.updateObjectResources(group, true);
 
-      Pool.put(OperatorGroup.typ, group.id, group);
+      Pool.put(OperatorGroup.class.getName(), group.getId(), group);
 
       String[] s = new String[1];
-      s[0] = group.id;
+      s[0] = group.getId();
 			this.aContext.getDataSource().RemoveGroup(s);
 			Pool.remove(group);
 			return true;

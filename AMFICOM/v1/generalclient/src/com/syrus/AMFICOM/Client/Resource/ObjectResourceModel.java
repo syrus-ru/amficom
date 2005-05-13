@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourceModel.java,v 1.6 2004/09/27 16:09:13 bass Exp $
+ * $Id: ObjectResourceModel.java,v 1.7 2005/05/13 19:03:16 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,12 +9,14 @@
 package com.syrus.AMFICOM.Client.Resource;
 
 import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.general.StorableObject;
+
 import java.awt.Component;
 import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2004/09/27 16:09:13 $
+ * @version $Revision: 1.7 $, $Date: 2005/05/13 19:03:16 $
  * @module generalclient_v1
  */
 public class ObjectResourceModel
@@ -38,7 +40,7 @@ public class ObjectResourceModel
 	public static final String	COLUMN_TYPE_STRING		= "string";
 	public static final String	COLUMN_TYPE_TIME		= "time";	
 	
-	protected ObjectResource or;
+	protected StorableObject or;
 	private LinkedList children = new LinkedList();
 	private ObjectResourcePropertiesPane panel = new GeneralPanel();
 
@@ -48,7 +50,7 @@ public class ObjectResourceModel
 	{
 	}
 
-	public ObjectResourceModel(ObjectResource or)
+	public ObjectResourceModel(StorableObject or)
 	{
 		this.or = or;
 	}

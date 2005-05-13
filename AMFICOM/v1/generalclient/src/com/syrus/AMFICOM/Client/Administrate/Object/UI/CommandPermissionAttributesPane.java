@@ -1,5 +1,5 @@
 /*
- * $Id: CommandPermissionAttributesPane.java,v 1.7 2004/09/27 13:21:00 bass Exp $
+ * $Id: CommandPermissionAttributesPane.java,v 1.8 2005/05/13 19:03:16 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,13 +13,16 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Object.*;
+import com.syrus.AMFICOM.administration.User;
+import com.syrus.AMFICOM.general.StorableObject;
+
 import java.awt.*;
 import java.util.Date;
 import javax.swing.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2004/09/27 13:21:00 $
+ * @version $Revision: 1.8 $, $Date: 2005/05/13 19:03:16 $
  * @module generalclient_v1
  */
 public final class CommandPermissionAttributesPane extends JPanel implements ObjectResourcePropertiesPane {
@@ -75,14 +78,14 @@ public final class CommandPermissionAttributesPane extends JPanel implements Obj
 		this.setData(cpa);
 		return false;
 	 }
-	 if(cpa.id.equals(""))
+	 if(cpa.getId().equals(""))
 		return false;
 
 
 
 	 this.cpap.modify();
 	 Date d = new Date();
-	 cpa.modified_by = user.id;
+	 cpa.modified_by = user.getId();
 	 cpa.modified = d.getTime();
 
 
@@ -90,8 +93,8 @@ public final class CommandPermissionAttributesPane extends JPanel implements Obj
 		return false;
 
 	 updater.updateObjectResources(this.cpa, false);
-	 Pool.put(CommandPermissionAttributes.typ, cpa.id, cpa);
-	 this.aContext.getDataSource().SaveExec(cpa.id);
+	 Pool.put(CommandPermissionAttributes.class.getName(), cpa.getId(), cpa);
+	 this.aContext.getDataSource().SaveExec(cpa.getId());
 
 	 this.setData(cpa);
 
@@ -117,13 +120,13 @@ public final class CommandPermissionAttributesPane extends JPanel implements Obj
   public void setContext(ApplicationContext aContext)
   {
 	 this.aContext = aContext;
-	 this.user = (User)Pool.get(User.typ,
+	 this.user = (User)Pool.get(User.class.getName(),
 										 this.aContext.getSessionInterface().getUserId());
 
 	 this.updater = new NewUpDater(aContext);
   }
 
-  public void setObjectResource(ObjectResource or)
+  public void setObjectResource(StorableObject or)
   {
 	 ObjectResourceCatalogFrame f = (ObjectResourceCatalogFrame)
 											  Pool.get("ObjectFrame", "AdministrateObjectFrame");
@@ -143,14 +146,14 @@ public final class CommandPermissionAttributesPane extends JPanel implements Obj
 	 setData(or);
   }
 
-  private void setData(ObjectResource or)
+  private void setData(StorableObject or)
   {
 	 cpa = (CommandPermissionAttributes)or;
 	 cpa.updateLocalFromTransferable();
 	 this.cpap.setObjectResource(or);
   }
 
-  public ObjectResource getObjectResource()
+  public StorableObject getObjectResource()
   {
 	 return cpa;
   }

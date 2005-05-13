@@ -1,5 +1,5 @@
 /*
- * $Id: DomainPaneAdmin.java,v 1.7 2004/09/27 13:14:56 bass Exp $
+ * $Id: DomainPaneAdmin.java,v 1.8 2005/05/13 19:03:16 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,13 +13,17 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Object.*;
+import com.syrus.AMFICOM.administration.Domain;
+import com.syrus.AMFICOM.administration.User;
+import com.syrus.AMFICOM.general.StorableObject;
+
 import java.awt.*;
 import java.util.*;
 import javax.swing.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2004/09/27 13:14:56 $
+ * @version $Revision: 1.8 $, $Date: 2005/05/13 19:03:16 $
  * @module generalclient_v1
  */
 public class DomainPaneAdmin extends JPanel implements ObjectResourcePropertiesPane
@@ -69,12 +73,12 @@ public class DomainPaneAdmin extends JPanel implements ObjectResourcePropertiesP
 
   }
 
-  public ObjectResource getObjectResource()
+  public StorableObject getObjectResource()
   {
     return domain;
   }
 
-  public void setObjectResource(ObjectResource or)
+  public void setObjectResource(StorableObject or)
   {
     ObjectResourceCatalogFrame f = (ObjectResourceCatalogFrame)
                                    Pool.get("ObjectFrame", "AdministrateObjectFrame");
@@ -93,15 +97,15 @@ public class DomainPaneAdmin extends JPanel implements ObjectResourcePropertiesP
     setData(or);
   }
 
-  private void setData(ObjectResource or)
+  private void setData(StorableObject or)
   {
     this.domain = (Domain)or;
     if(domain == null)
       return;
 
-    if(domain.opa.id.equals("") || domain.opa.id == null)
+    if(domain.opa.getId().equals("") || domain.opa.getId() == null)
     {
-      domain.opa.id = aContext.getDataSource().GetUId(ObjectPermissionAttributes.typ);
+      domain.opa.getId() = aContext.getDataSource().GetUId(ObjectPermissionAttributes.class.getName());
     }
     domain.updateLocalFromTransferable();
     ddp.setObjectResource(or);
@@ -125,7 +129,7 @@ public class DomainPaneAdmin extends JPanel implements ObjectResourcePropertiesP
     opap.modify();
 
 //    this.domain.modified = d.getTime();
-//    this.domain.modified_by = user.id;
+//    this.domain.modified_by = user.getId();
 //    this.domain.opa.modified = domain.modified;
 //    this.domain.opa.modified_by = domain.modified_by;
 //    this.domain.opa.created = domain.created;
@@ -136,9 +140,9 @@ public class DomainPaneAdmin extends JPanel implements ObjectResourcePropertiesP
       return false;
 
     updater.updateDomain(domain, false);
-    Pool.put(Domain.typ, domain.id, domain);
+    Pool.put(Domain.class.getName(), domain.getId(), domain);
 
-    this.aContext.getDataSource().SaveDomain(domain.id);
+    this.aContext.getDataSource().SaveDomain(domain.getId());
 
     setData(domain);
 
@@ -169,19 +173,19 @@ public class DomainPaneAdmin extends JPanel implements ObjectResourcePropertiesP
     DataSourceInterface dataSource = aContext.getDataSource();
     domain = new Domain();
 
-    domain.id = dataSource.GetUId(Domain.typ);
-    domain.opa.id = dataSource.GetUId(ObjectPermissionAttributes.typ);
+    domain.getId() = dataSource.GetUId(Domain.class.getName());
+    domain.opa.getId() = dataSource.GetUId(ObjectPermissionAttributes.class.getName());
 
-    domain.name = domain.id;
-    domain.codename = domain.id;
+    domain.name = domain.getId();
+    domain.codename = domain.getId();
     Date d = new Date();
 
     domain.created = d.getTime();
     domain.modified = d.getTime();
 
-    domain.created_by = user.id;
-    domain.modified_by = user.id;
-    domain.owner_id = user.id;
+    domain.created_by = user.getId();
+    domain.modified_by = user.getId();
+    domain.owner_id = user.getId();
 
     domain.opa.created = domain.created;
     domain.opa.modified = domain.modified;
@@ -189,12 +193,12 @@ public class DomainPaneAdmin extends JPanel implements ObjectResourcePropertiesP
     domain.opa.created_by = domain.created_by;
     domain.opa.modified_by = domain.modified_by;
     domain.opa.name = "Атрибуты домена " + domain.name;
-    domain.opa.codename = Domain.typ + "" + domain.id;
+    domain.opa.codename = Domain.class.getName() + "" + domain.getId();
 
-    Pool.put(Domain.typ, domain.id, domain);
+    Pool.put(Domain.class.getName(), domain.getId(), domain);
 
     setData(domain);
-    this.aContext.getDataSource().SaveDomain(domain.id);
+    this.aContext.getDataSource().SaveDomain(domain.getId());
 
     return true;
   }
@@ -212,8 +216,8 @@ public class DomainPaneAdmin extends JPanel implements ObjectResourcePropertiesP
       domain.domain_ids = new ArrayList();
       updater.updateDomain(domain, true);
       String[] s = new String[1];
-      s[0] = domain.id;
-      Pool.put(Domain.typ, domain.id, domain);
+      s[0] = domain.getId();
+      Pool.put(Domain.class.getName(), domain.getId(), domain);
       this.aContext.getDataSource().RemoveDomain(s);
       Pool.remove(domain);
       return true;
@@ -236,12 +240,12 @@ public class DomainPaneAdmin extends JPanel implements ObjectResourcePropertiesP
   public void setContext(ApplicationContext aContext)
   {
     this.aContext = aContext;
-    this.user = (User)Pool.get(User.typ,
+    this.user = (User)Pool.get(User.class.getName(),
                                aContext.getSessionInterface().getUserId());
     opap.setContext(aContext);
 //    this.dispatcher = this.aContext.getDispatcher();
 
-//    this.dispatcher.register(this, Domain.typ+"updated");
+//    this.dispatcher.register(this, Domain.class.getName()+"updated");
 
     this.updater = new NewUpDater(this.aContext);
   }

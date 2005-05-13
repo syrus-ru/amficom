@@ -1,5 +1,5 @@
 /*
- * $Id: OperatorProfileOtherPanel.java,v 1.2 2004/08/17 15:02:50 krupenn Exp $
+ * $Id: OperatorProfileOtherPanel.java,v 1.3 2005/05/13 19:03:16 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,6 +15,8 @@ import javax.swing.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Object.*;
+import com.syrus.AMFICOM.general.StorableObject;
+
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
@@ -25,8 +27,8 @@ import java.awt.Dimension;
  * moved to <tt>generalclient_v1</tt> to resolve cross-module
  * dependencies between <tt>generalclient_v1</tt> and <tt>admin_1</tt>.
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.2 $, $Date: 2004/08/17 15:02:50 $
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/05/13 19:03:16 $
  * @module generalclient_v1
  */
 public class OperatorProfileOtherPanel extends GeneralPanel
@@ -181,12 +183,12 @@ public class OperatorProfileOtherPanel extends GeneralPanel
     this.add(Box.createVerticalGlue(), new GridBagConstraints(0, 14, 2, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
   }
 
-  public ObjectResource getObjectResource()
+  public StorableObject getObjectResource()
   {
     return profile;
   }
 
-  public void setObjectResource(ObjectResource or)
+  public void setObjectResource(StorableObject or)
   {
     this.profile = (OperatorProfile )or;
 
@@ -194,7 +196,7 @@ public class OperatorProfileOtherPanel extends GeneralPanel
 /*
   profileN.setText(profile.name);
   profileCodeName.setText(profile.codename);
-  profileId.setText(profile.id);
+  profileId.setText(profile.getId());
   if(profile.image_id != null && !profile.image_id.equals(""))
    profileImage.setIcon(new ImageIcon(ImageCatalogue.get(profile.image_id).getImage(profileImage)));
   profileOperators.removeAll();

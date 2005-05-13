@@ -1,5 +1,5 @@
 /*
- * $Id: OperatorProfileGeneralPanel.java,v 1.2 2004/08/17 15:02:50 krupenn Exp $
+ * $Id: OperatorProfileGeneralPanel.java,v 1.3 2005/05/13 19:03:16 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,30 +8,50 @@
 
 package com.syrus.AMFICOM.Client.Administrate.Object.UI;
 
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Object.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
-import java.awt.*;
-import java.awt.event.*;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JDialog;
+import javax.swing.JEditorPane;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
+import javax.swing.border.TitledBorder;
 
-import java.text.*;
+import oracle.jdeveloper.layout.VerticalFlowLayout;
 
-import java.util.*;
-
-import javax.swing.*;
-import javax.swing.border.*;
-
-import oracle.jdeveloper.layout.*;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.General.UI.CalendarUI;
+import com.syrus.AMFICOM.Client.General.UI.DateSpinner;
+import com.syrus.AMFICOM.Client.General.UI.GeneralPanel;
+import com.syrus.AMFICOM.administration.User;
+import com.syrus.AMFICOM.general.StorableObject;
 
 /**
  * This class actually belongs to <tt>admin_v1</tt> module. It was
  * moved to <tt>generalclient_v1</tt> to resolve cross-module
  * dependencies between <tt>generalclient_v1</tt> and <tt>admin_1</tt>.
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.2 $, $Date: 2004/08/17 15:02:50 $
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/05/13 19:03:16 $
  * @module generalclient_v1
  */
 public class OperatorProfileGeneralPanel extends GeneralPanel
@@ -100,7 +120,7 @@ public class OperatorProfileGeneralPanel extends GeneralPanel
 */
   private JCheckBox CheckBoxUnlimitedAccess = new JCheckBox();
   private JLabel jLabel19 = new JLabel();
-  private TwoListsPanel categoriesPanel = new TwoListsPanel("Подключенные категории", "Неподключенные категории", OperatorCategory.typ);
+  private TwoListsPanel categoriesPanel = new TwoListsPanel("Подключенные категории", "Неподключенные категории", OperatorCategory.class.getName());
   private TitledBorder titledBorder2;
 	private GridBagLayout gridBagLayout1 = new GridBagLayout();
 
@@ -303,12 +323,12 @@ public class OperatorProfileGeneralPanel extends GeneralPanel
 
   }
 
-  public ObjectResource getObjectResource()
+  public StorableObject getObjectResource()
   {
     return profile;
   }
 
-  public void setObjectResource(ObjectResource or)
+  public void setObjectResource(StorableObject or)
   {
     this.profile = (OperatorProfile )or;
     if(profile == null)
@@ -318,13 +338,13 @@ public class OperatorProfileGeneralPanel extends GeneralPanel
 //    System.out.println("set prop pane to " + profile.name);
 
     profileLogin.setText(profile.login);
-    profileId.setText(profile.id);
+    profileId.setText(profile.getId());
 
-    profileOwner.setTyp(User.typ);
-    profileOwner.setSelectedTyp(User.typ, profile.owner_id);
+    profileOwner.setTyp(User.class.getName());
+    profileOwner.setSelectedTyp(User.class.getName(), profile.owner_id);
 
     profileCreated.setText(sdf.format(new Date(profile.created)));
-    profileCreatedBy.setTextNameByID(User.typ, profile.created_by);
+    profileCreatedBy.setTextNameByID(User.class.getName(), profile.created_by);
 
     if(profile.disabled == 0)
     {
@@ -356,7 +376,7 @@ public class OperatorProfileGeneralPanel extends GeneralPanel
     }
 
     profileModified.setText(sdf.format(new Date(profile.modified)));
-    profileModifiedBy.setTextNameByID(User.typ, profile.modified_by);
+    profileModifiedBy.setTextNameByID(User.class.getName(), profile.modified_by);
     profileLastSession.setText(sdf.format(new Date(profile.last_login)));
 //		profileStatus.setText(profile.status);
 //		profileState.setText(profile.state);

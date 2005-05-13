@@ -12,6 +12,9 @@ import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Object.*;
+import com.syrus.AMFICOM.administration.User;
+import com.syrus.AMFICOM.general.StorableObject;
+
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
@@ -139,13 +142,13 @@ public class UserPanel  extends GeneralPanel
 */
   }
 
-  public void setObjectResource(ObjectResource or)
+  public void setObjectResource(StorableObject or)
   {
     this.user = (User)or;
     if(user == null)
       return;
 
-    this.jTextFieldID.setText(user.id);
+    this.jTextFieldID.setText(user.getId());
     this.jTextFieldLogin.setText(user.login);
     this.jTextFieldTyp.setText(user.type);
     this.jTextFieldProfileName.setTextNameByID(user.type, user.object_id);
@@ -153,7 +156,7 @@ public class UserPanel  extends GeneralPanel
     List g = new ArrayList();
     for(ListIterator lIt = user.group_ids.listIterator(); lIt.hasNext();)
     {
-      Object o = Pool.get(OperatorGroup.typ, (String)lIt.next());
+      Object o = Pool.get(OperatorGroup.class.getName(), (String)lIt.next());
       if(o != null)
         g.add(o);
     }
@@ -161,7 +164,7 @@ public class UserPanel  extends GeneralPanel
     List c = new ArrayList();
     for(ListIterator lIt = user.category_ids.listIterator(); lIt.hasNext();)    
     {
-      Object o = Pool.get(OperatorCategory.typ, (String)lIt.next());
+      Object o = Pool.get(OperatorCategory.class.getName(), (String)lIt.next());
       if(o != null)
         c.add(o);
     }

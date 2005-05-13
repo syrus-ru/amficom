@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourceSorter.java,v 1.11 2005/04/13 20:20:33 arseniy Exp $
+ * $Id: ObjectResourceSorter.java,v 1.12 2005/05/13 19:03:16 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,9 +9,11 @@ package com.syrus.AMFICOM.Client.Resource;
 
 import java.util.*;
 
+import com.syrus.AMFICOM.general.StorableObject;
+
 /**
- * @version $Revision: 1.11 $, $Date: 2005/04/13 20:20:33 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.12 $, $Date: 2005/05/13 19:03:16 $
+ * @author $Author: bass $
  * @module generalclient_v1
  */
 public abstract class ObjectResourceSorter {
@@ -41,11 +43,11 @@ public abstract class ObjectResourceSorter {
 		return sort(getSortedColumns()[0][0], SORT_ASCENDING);
 	}
 
-	public abstract long getLong(ObjectResource or, String column);
+	public abstract long getLong(StorableObject or, String column);
 
 	public abstract String[][] getSortedColumns();
 
-	public abstract String getString(ObjectResource or, String column);
+	public abstract String getString(StorableObject or, String column);
 
 	public void setDataSet(Collection collection) {
 		this.list = new LinkedList();
@@ -71,7 +73,7 @@ public abstract class ObjectResourceSorter {
 
 		int size = list.size();
 		String sort_type = "";
-		ObjectResource temp_or = null;
+		StorableObject temp_or = null;
 		long long_obj_sorter = 0;
 		String string_obj_sorter = "";
 
@@ -91,10 +93,10 @@ public abstract class ObjectResourceSorter {
 		}
 
 		for (int i = 0; i < size; i++) {
-			curr_long = -9223372036854775808L;
+			curr_long = -9223372036854775808L; // <-- LOL!
 			curr_string = "";
 			for (Iterator it = list.iterator(); it.hasNext();) {
-				ObjectResource or = (ObjectResource) it.next();
+				StorableObject or = (StorableObject) it.next();
 				if (sort_type.equals("long")) {
 					long_obj_sorter = getLong(or, column);
 					if (sortdir == SORT_ASCENDING) {

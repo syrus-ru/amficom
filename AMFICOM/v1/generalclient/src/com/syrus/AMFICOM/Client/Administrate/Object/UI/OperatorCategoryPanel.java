@@ -1,5 +1,5 @@
 /*
- * $Id: OperatorCategoryPanel.java,v 1.3 2004/09/27 13:04:43 bass Exp $
+ * $Id: OperatorCategoryPanel.java,v 1.4 2005/05/13 19:03:16 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,9 @@ import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Object.*;
+import com.syrus.AMFICOM.administration.User;
+import com.syrus.AMFICOM.general.StorableObject;
+
 import java.awt.*;
 import javax.swing.*;
 
@@ -22,7 +25,7 @@ import javax.swing.*;
  * dependencies between <tt>generalclient_v1</tt> and <tt>admin_1</tt>.
  *
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2004/09/27 13:04:43 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/13 19:03:16 $
  * @module generalclient_v1
  */
 public final class OperatorCategoryPanel extends JPanel implements ObjectResourcePropertiesPane {
@@ -99,12 +102,12 @@ public final class OperatorCategoryPanel extends JPanel implements ObjectResourc
 		jScrollPane1.getViewport().add(categoryOperators, null);
 	}
 
-  public ObjectResource getObjectResource()
+  public StorableObject getObjectResource()
   {
     return category;
   }
 
-  public void setObjectResource(ObjectResource or)
+  public void setObjectResource(StorableObject or)
   {
     ObjectResourceCatalogFrame f = (ObjectResourceCatalogFrame)
                                    Pool.get("ObjectFrame", "AdministrateObjectFrame");
@@ -123,22 +126,22 @@ public final class OperatorCategoryPanel extends JPanel implements ObjectResourc
     setData(or);
   }
 
-  private void setData(ObjectResource or)
+  private void setData(StorableObject or)
   {
     this.category = (OperatorCategory )or;
     category.updateLocalFromTransferable();
     categoryName.setText(category.name);
-    categoryId.setText(category.id);
+    categoryId.setText(category.getId());
     categoryOperators.removeAll();
 
-    categoryOperators.setContents(category.getChildren(User.typ));
+    categoryOperators.setContents(category.getChildren(User.class.getName()));
     categoryNotes.setText(category.description);
   }
 
   public void setContext(ApplicationContext aContext)
   {
     this.aContext = aContext;
-    this.user = (User)Pool.get(User.typ,
+    this.user = (User)Pool.get(User.class.getName(),
                                this.aContext.getSessionInterface().getUserId());
     this.updater = new NewUpDater(this.aContext);
   }
@@ -160,9 +163,9 @@ public final class OperatorCategoryPanel extends JPanel implements ObjectResourc
       return false;
 
     updater.updateObjectResources(category, false);
-    Pool.put(OperatorCategory.typ, category.id, category);
+    Pool.put(OperatorCategory.class.getName(), category.getId(), category);
 
-    this.aContext.getDataSource().SaveCategory(category.id);
+    this.aContext.getDataSource().SaveCategory(category.getId());
     return true;
   }
 

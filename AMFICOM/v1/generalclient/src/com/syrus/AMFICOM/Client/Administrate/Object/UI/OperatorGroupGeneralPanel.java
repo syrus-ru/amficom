@@ -1,5 +1,5 @@
 /*
- * $Id: OperatorGroupGeneralPanel.java,v 1.2 2004/08/17 15:02:50 krupenn Exp $
+ * $Id: OperatorGroupGeneralPanel.java,v 1.3 2005/05/13 19:03:16 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,27 +8,33 @@
 
 package com.syrus.AMFICOM.Client.Administrate.Object.UI;
 
-import java.awt.*;
-import java.text.*;
-import java.util.*;
-
-import javax.swing.*;
-
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Object.*;
-import java.awt.GridBagLayout;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import javax.swing.BorderFactory;
+import javax.swing.JEditorPane;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.General.UI.GeneralPanel;
+import com.syrus.AMFICOM.administration.User;
+import com.syrus.AMFICOM.general.StorableObject;
 
 /**
  * This class actually belongs to <tt>admin_v1</tt> module. It was
  * moved to <tt>generalclient_v1</tt> to resolve cross-module
  * dependencies between <tt>generalclient_v1</tt> and <tt>admin_1</tt>.
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.2 $, $Date: 2004/08/17 15:02:50 $
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/05/13 19:03:16 $
  * @module generalclient_v1
  */
 public class OperatorGroupGeneralPanel extends GeneralPanel
@@ -178,12 +184,12 @@ public class OperatorGroupGeneralPanel extends GeneralPanel
 */	
   }
 
-  public ObjectResource getObjectResource()
+  public StorableObject getObjectResource()
   {
     return group;
   }
 
-  public void setObjectResource(ObjectResource or)
+  public void setObjectResource(StorableObject or)
   {
     this.group = (OperatorGroup )or;
 //    System.out.println("set prop pane to " + group.name);
@@ -191,19 +197,19 @@ public class OperatorGroupGeneralPanel extends GeneralPanel
     SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy HH:mm:ss");
 
     groupName.setText(group.name);
-    groupId.setText(group.id);
+    groupId.setText(group.getId());
     groupCreated.setText(sdf.format(new Date(group.created)));
-    groupCreatedBy.setTextNameByID(User.typ,group.created_by);
+    groupCreatedBy.setTextNameByID(User.class.getName(),group.created_by);
     groupModified.setText(sdf.format(new Date(group.modified)));
-    groupModifiedBy.setTextNameByID(User.typ, group.modified_by);
+    groupModifiedBy.setTextNameByID(User.class.getName(), group.modified_by);
     groupNotes.setText(group.description);
 
     groupOperators.removeAll();
-    groupOperators.setContents(group.getChildren(User.typ));
+    groupOperators.setContents(group.getChildren(User.class.getName()));
     // list of operators
 
-    groupOwner.setTyp(User.typ);
-    groupOwner.setSelectedTyp(User.typ, group.owner_id);
+    groupOwner.setTyp(User.class.getName());
+    groupOwner.setSelectedTyp(User.class.getName(), group.owner_id);
   }
 
   public boolean modify()

@@ -15,6 +15,8 @@ import oracle.jdeveloper.layout.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Object.*;
+import com.syrus.AMFICOM.administration.Domain;
+import com.syrus.AMFICOM.general.StorableObject;
 
 
 public class DomainDomainPanel extends GeneralPanel
@@ -132,13 +134,13 @@ public class DomainDomainPanel extends GeneralPanel
     splitPane.setResizeWeight(.5);
   }
 
-  public ObjectResource getObjectResource()
+  public StorableObject getObjectResource()
   {
     return domain;
   }
 
 //--------------------------------------------------------
-/*  public boolean setObjectResource(ObjectResource or)
+/*  public boolean setObjectResource(StorableObject or)
   {
 
     this.domain = (Domain)or;
@@ -149,19 +151,19 @@ public class DomainDomainPanel extends GeneralPanel
     this.internalDomainsList.removeAll();
     this.otherDomainsList.removeAll();
 
-    this.fatherDomain.setTyp(Domain.typ);
+    this.fatherDomain.setTyp(Domain.class.getName());
     this.fatherDomain.remove(this.domain);
-    this.fatherDomain.setSelectedTyp(Domain.typ, domain.domain_id);
+    this.fatherDomain.setSelectedTyp(Domain.class.getName(), domain.domain_id);
 
     this.internalDomainsList.
-        setContents(this.domain.getChildren(Domain.typ));
+        setContents(this.domain.getChildren(Domain.class.getName()));
 
     this.otherDomainsList.setContents(getOtherDomains());
     return true;
   }*/
 
 
-  public void setObjectResource(ObjectResource or)
+  public void setObjectResource(StorableObject or)
   {
 
     this.domain = (Domain)or;
@@ -172,11 +174,11 @@ public class DomainDomainPanel extends GeneralPanel
     this.internalDomainsList.removeAll();
     this.otherDomainsList.removeAll();
 
-    this.fatherDomain.setTyp(Domain.typ);
+    this.fatherDomain.setTyp(Domain.class.getName());
     this.fatherDomain.remove(this.domain);
-    this.fatherDomain.setSelectedTyp(Domain.typ, domain.domain_id);
+    this.fatherDomain.setSelectedTyp(Domain.class.getName(), domain.domain_id);
     ObjectResourceSorter sorter = new ObjectResourceNameSorter();//MonitoredElement.getDefaultSorter();
-    sorter.setDataSet(this.domain.getChildren(Domain.typ));
+    sorter.setDataSet(this.domain.getChildren(Domain.class.getName()));
     internalDomainsList.setContents(sorter.default_sort());
 
     sorter = new ObjectResourceNameSorter();//MonitoredElement.getDefaultSorter();
@@ -188,18 +190,18 @@ public class DomainDomainPanel extends GeneralPanel
   private Collection getOtherDomains()
   {
     List exeptOtherIds = this.internalDomainsList.getVectorIDfromList();
-    exeptOtherIds.add(this.domain.id);
+    exeptOtherIds.add(this.domain.getId());
     exeptOtherIds.add(this.fatherDomain.getSelectedId());
 
     Map other = new HashMap();
-    Map tmp_h = Pool.getMap(Domain.typ);
+    Map tmp_h = Pool.getMap(Domain.class.getName());
 
     if(tmp_h == null)
       tmp_h = new HashMap();
 
     for(Iterator it = tmp_h.values().iterator(); it.hasNext();)
     {
-      ObjectResource o = (ObjectResource)it.next();
+      StorableObject o = (StorableObject)it.next();
       if(!exeptOtherIds.contains(o.getId()))
         other.put(o.getId(), o);
     }
@@ -244,7 +246,7 @@ public class DomainDomainPanel extends GeneralPanel
   {
     if(fatherID == null)
       fatherID = "";
-    Domain fatherDomain = (Domain)Pool.get(Domain.typ, fatherID);
+    Domain fatherDomain = (Domain)Pool.get(Domain.class.getName(), fatherID);
 
     List internalIds = this.internalDomainsList.getVectorIDfromList();
 

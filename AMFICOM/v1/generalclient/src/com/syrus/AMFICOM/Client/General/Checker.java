@@ -1,5 +1,5 @@
 /*
- * $Id: Checker.java,v 1.11 2005/05/05 12:12:55 bob Exp $
+ * $Id: Checker.java,v 1.12 2005/05/13 19:03:16 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,8 +20,8 @@ import java.util.*;
 import javax.swing.JOptionPane;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.11 $, $Date: 2005/05/05 12:12:55 $
+ * @author $Author: bass $
+ * @version $Revision: 1.12 $, $Date: 2005/05/13 19:03:16 $
  * @module generalclient_v1
  */
 public final class Checker {
@@ -276,7 +276,7 @@ public final class Checker {
 //	}
 
 //	public static boolean checkObject(Identifier userId, String objectTyp, String objectId, String operationType, boolean showMessage) {
-//		return checkObject(objectTyp, objectId, operationType, (User) (Pool.get(User.typ, userId)), showMessage);
+//		return checkObject(objectTyp, objectId, operationType, (User) (Pool.get(User.class.getName(), userId)), showMessage);
 //	}
 //
 //	public static boolean checkObject(String userId, String objectTyp, String objectId, String operationType) {
@@ -293,7 +293,7 @@ public final class Checker {
 //			return true;
 //
 //		ObjectPermissionAttributes opa = null;
-//		if (typ.equals(Domain.typ)) {
+//		if (typ.equals(Domain.class.getName())) {
 //			Domain dom = (Domain)Pool.get(typ, id);
 //			if (dom == null)
 //				return true;
@@ -302,7 +302,7 @@ public final class Checker {
 //		if (opa == null)
 //			return true;
 //
-//		if (opa.owner_id.equals(user.id)) {
+//		if (opa.owner_id.equals(user.getId())) {
 //			if (opa.userR && operationType.equals(read))
 //				return true;
 //			if (opa.userW && operationType.equals(write))
@@ -342,7 +342,7 @@ public final class Checker {
 	}
 
 //	public static boolean checkCommandByUserId(String userID, String commandName) {
-//		return checkCommand(commandName, (User) (Pool.get(User.typ, userID)));
+//		return checkCommand(commandName, (User) (Pool.get(User.class.getName(), userID)));
 //	}
 
 	private static boolean checkCommand(String commandName, User user) {
@@ -355,7 +355,7 @@ public final class Checker {
 //			return true;
 //
 //		CommandPermissionAttributes cpa = getCommand(commandName);
-//		if ((cpa == null) || cpa.owner_id.equals(user.id) || hasEqualElements(cpa.category_ids, user.category_ids))
+//		if ((cpa == null) || cpa.owner_id.equals(user.getId()) || hasEqualElements(cpa.category_ids, user.category_ids))
 //			return true;
 //
 //		JOptionPane.showMessageDialog(null, cpa.whyRejected, "Ошибка", JOptionPane.OK_OPTION);
@@ -365,7 +365,7 @@ public final class Checker {
 
 //	// Definition of the helping functions.
 //	private static CommandPermissionAttributes getCommand(final String commandName) {
-//		Map map = Pool.getMap(CommandPermissionAttributes.typ);
+//		Map map = Pool.getMap(CommandPermissionAttributes.class.getName());
 //		if (map == null)
 //			return null;
 //

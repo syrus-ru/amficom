@@ -1,5 +1,5 @@
 /*
- * $Id: UserPane.java,v 1.5 2005/05/05 11:04:46 bob Exp $
+ * $Id: UserPane.java,v 1.6 2005/05/13 19:03:16 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,10 +24,11 @@ import com.syrus.AMFICOM.Client.General.UI.RejectDialog;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.administration.User;
 import com.syrus.AMFICOM.corba.portable.reflect.common.ObjectResource;
+import com.syrus.AMFICOM.general.StorableObject;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.5 $, $Date: 2005/05/05 11:04:46 $
+ * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2005/05/13 19:03:16 $
  * @module generalclient_v1
  */
 public final class UserPane extends JPanel implements ObjectResourcePropertiesPane, OperationListener {
@@ -96,8 +97,8 @@ public final class UserPane extends JPanel implements ObjectResourcePropertiesPa
 		this.aContext = aContext;
 		String userID = this.aContext.getSessionInterface().getUserId();
 		this.dispatcher = this.aContext.getDispatcher();
-		this.loggedUser = (User)Pool.get(User.typ, userID);
-		this.dispatcher.register(this, User.typ+"updated");
+		this.loggedUser = (User)Pool.get(User.class.getName(), userID);
+		this.dispatcher.register(this, User.class.getName()+"updated");
 	}
 
 	public void setObjectResource(ObjectResource or) {
@@ -120,7 +121,7 @@ public final class UserPane extends JPanel implements ObjectResourcePropertiesPa
 		up.setObjectResource(or);
 	}
 
-	public ObjectResource getObjectResource() {
+	public StorableObject getObjectResource() {
 		return user;
 	}
 
@@ -130,8 +131,8 @@ public final class UserPane extends JPanel implements ObjectResourcePropertiesPa
 	}
 
 	public void operationPerformed(OperationEvent oe) {
-		if (oe.getActionCommand().equals(User.typ + "updated") && user != null) {
-			user = (User)Pool.get(User.typ, user.id);
+		if (oe.getActionCommand().equals(User.class.getName() + "updated") && user != null) {
+			user = (User)Pool.get(User.class.getName(), user.getId());
 			this.setData(user);
 		}
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: ClientPane.java,v 1.4 2005/05/05 11:04:46 bob Exp $
+ * $Id: ClientPane.java,v 1.5 2005/05/13 19:03:16 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,9 @@ import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.administration.User;
+import com.syrus.AMFICOM.general.StorableObject;
+
 import java.awt.*;
 import java.util.Date;
 import javax.swing.*;
@@ -22,8 +25,8 @@ import javax.swing.*;
  * moved to <tt>generalclient_v1</tt> to resolve cross-module
  * dependencies between <tt>generalclient_v1</tt> and <tt>admin_1</tt>.
  *
- * @author $Author: bob $
- * @version $Revision: 1.4 $, $Date: 2005/05/05 11:04:46 $
+ * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2005/05/13 19:03:16 $
  * @module generalclient_v1
  */
 public final class ClientPane extends JPanel implements ObjectResourcePropertiesPane {
@@ -50,7 +53,7 @@ public final class ClientPane extends JPanel implements ObjectResourceProperties
 	/**
 	 * @deprecated Use {@link #getInstance()} instead.
 	 */
-	public ClientPane(ObjectResource or) {
+	public ClientPane(StorableObject or) {
 		this();
 		setObjectResource(or);
 	}
@@ -66,12 +69,12 @@ public final class ClientPane extends JPanel implements ObjectResourceProperties
   {
     this.aContext = aContext;
     String userId = aContext.getSessionInterface().getUserId();
-    user = (User)Pool.get(User.typ, userId);
+    user = (User)Pool.get(User.class.getName(), userId);
     checker = new Checker(user);
   }
 
 
-  public void setObjectResource(ObjectResource or)
+  public void setObjectResource(StorableObject or)
   {
     if(!checker.checkCommand(Checker.readClientInfo))
       return;
@@ -82,7 +85,7 @@ public final class ClientPane extends JPanel implements ObjectResourceProperties
     clientPanel.setObjectResource(client);
   }
 
-  public ObjectResource getObjectResource()
+  public StorableObject getObjectResource()
   {
     return client;
   }
@@ -97,8 +100,8 @@ public final class ClientPane extends JPanel implements ObjectResourceProperties
     if(!NewUpDater.checkName(client))
       return false;
 
-    Pool.put(Client.typ, client.id, client);
-    aContext.getDataSource().SaveClient(client.id);
+    Pool.put(Client.class.getName(), client.getId(), client);
+    aContext.getDataSource().SaveClient(client.getId());
     return true;
   }
 
@@ -114,15 +117,15 @@ public final class ClientPane extends JPanel implements ObjectResourceProperties
 
     if(!checker.checkCommand(Checker.createClient))
       return false;
-    String id = aContext.getDataSource().GetUId(Client.typ);
+    String id = aContext.getDataSource().GetUId(Client.class.getName());
 
     client = new Client();
-    client.id = id;
+    client.getId() = id;
     Date d = new Date();
     client.created = d.getTime();
     client.modified = d.getTime();
 
-    Pool.put(Client.typ, client.id, client);
+    Pool.put(Client.class.getName(), client.getId(), client);
 
     setObjectResource(client);
 
@@ -153,9 +156,9 @@ public final class ClientPane extends JPanel implements ObjectResourceProperties
 
     String []s = new String[1];
 
-    s[0] = client.id;
+    s[0] = client.getId();
     aContext.getDataSource().RemoveClient(s);
-    Pool.remove(Client.typ, client.id);
+    Pool.remove(Client.class.getName(), client.getId());
 
     return true;
   }

@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.general.StorableObject;
 
 
 /**
@@ -29,7 +30,7 @@ public class OrListBox extends ObjectResourceListBox
     List v = new ArrayList();
     for(int i=0; i<l; i++)
     {
-      String s = ((ObjectResource)this.getModel().getElementAt(i)).getId();
+      String s = ((StorableObject)this.getModel().getElementAt(i)).getId();
       v.add(s);
     }
     return v;

@@ -1,5 +1,5 @@
 /*
- * $Id: ServerPanel.java,v 1.2 2004/08/17 15:02:50 krupenn Exp $
+ * $Id: ServerPanel.java,v 1.3 2005/05/13 19:03:16 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,6 +19,9 @@ import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.System.*;
+import com.syrus.AMFICOM.administration.Server;
+import com.syrus.AMFICOM.general.StorableObject;
+
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
@@ -28,8 +31,8 @@ import java.awt.Insets;
  * moved to <tt>generalclient_v1</tt> to resolve cross-module
  * dependencies between <tt>generalclient_v1</tt> and <tt>admin_1</tt>.
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.2 $, $Date: 2004/08/17 15:02:50 $
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/05/13 19:03:16 $
  * @module generalclient_v1
  */
 public class ServerPanel extends GeneralPanel
@@ -72,7 +75,7 @@ public class ServerPanel extends GeneralPanel
     }
   }
 
-  public ServerPanel(ObjectResource or)
+  public ServerPanel(StorableObject or)
   {
     this();
     setObjectResource(or);
@@ -152,7 +155,7 @@ public class ServerPanel extends GeneralPanel
   }
 
 
-  public void setObjectResource(ObjectResource or)
+  public void setObjectResource(StorableObject or)
   {
     if(or == null)
       return;
@@ -168,7 +171,7 @@ public class ServerPanel extends GeneralPanel
     jTextFieldContact.setText(server.contact);
     jTextFieldCreated.setText(sdf.format(new Date(server.created)));
     jTextFieldHostName.setText(server.hostname);
-    jTextFieldId.setText(server.id);
+    jTextFieldId.setText(server.getId());
     jTextFieldLicense.setText(server.licence_id);
     jTextFieldLocation.setText(server.location);
     jTextFieldModified.setText(sdf.format(new Date(server.modified)));
@@ -177,13 +180,13 @@ public class ServerPanel extends GeneralPanel
     jTextFieldSessions.setText(String.valueOf(server.sessions));
   }
 
-  public ObjectResource getModifiedObjectResource()
+  public StorableObject getModifiedObjectResource()
   {
     Date d = new Date();
     server.contact = jTextFieldContact.getText();
 
     server.hostname = jTextFieldHostName.getText();
-    server.id = jTextFieldId.getText();
+    server.getId() = jTextFieldId.getText();
     server.licence_id = jTextFieldLicense.getText();
     server.location = jTextFieldLocation.getText();
 

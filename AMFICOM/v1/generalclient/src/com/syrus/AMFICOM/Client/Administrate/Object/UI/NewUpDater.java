@@ -1,5 +1,5 @@
 /*
- * $Id: NewUpDater.java,v 1.6 2004/09/27 13:10:46 bass Exp $
+ * $Id: NewUpDater.java,v 1.7 2005/05/13 19:03:16 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,12 +12,16 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Object.*;
 import com.syrus.AMFICOM.Client.Resource.System.*;
+import com.syrus.AMFICOM.administration.Domain;
+import com.syrus.AMFICOM.administration.User;
+import com.syrus.AMFICOM.general.StorableObject;
+
 import java.util.*;
 import javax.swing.JOptionPane;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2004/09/27 13:10:46 $
+ * @version $Revision: 1.7 $, $Date: 2005/05/13 19:03:16 $
  * @module generalclient_v1
  */
 public class NewUpDater {
@@ -32,7 +36,7 @@ public class NewUpDater {
 
 
 //------------------------------------------------------------------------------
-  private void updateObjectResources(ObjectResource or){
+  private void updateObjectResources(StorableObject or){
 
     or.updateLocalFromTransferable();
     AdminObjectResource aor = (AdminObjectResource)or;
@@ -51,15 +55,15 @@ public class NewUpDater {
           for(Iterator it = h.values().iterator(); it.hasNext();)
           {
             AdminObjectResource child = (AdminObjectResource)it.next();
-            List parentIds = child.getChildIds(aor.getTyp());
+            List parentIds = child.getChildIds(aor.getClass().getName());
             if(childIds.contains(child.getId()) && !parentIds.contains(aor.getId()))
             {
-              child.addChildId(aor.getTyp(), aor.getId());//And, it must be saved;
+              child.addChildId(aor.getClass().getName(), aor.getId());//And, it must be saved;
               saveObjectResource(child);
             }
             else if(!childIds.contains(child.getId()) && parentIds.contains(aor.getId()))
             {
-              child.removeChildId(aor.getTyp(), aor.getId());//And, it must be saved;
+              child.removeChildId(aor.getClass().getName(), aor.getId());//And, it must be saved;
               saveObjectResource(child);
             }
           }
@@ -75,7 +79,7 @@ public class NewUpDater {
     or.setModificationTime(modified);
     or.setTransferableFromLocal();
     or.updateLocalFromTransferable();
-    Pool.put(or.getTyp(), or.getId(), or);
+    Pool.put(or.getClass().getName(), or.getId(), or);
 
 
     if(or instanceof OperatorCategory){
@@ -83,7 +87,7 @@ public class NewUpDater {
     }
     else if(or instanceof OperatorProfile){
       OperatorProfile op = (OperatorProfile)or;
-      User user = (User)Pool.get(User.typ, op.user_id);
+      User user = (User)Pool.get(User.class.getName(), op.user_id);
 
       user.category_ids = new ArrayList();
       user.group_ids    = new ArrayList();
@@ -96,7 +100,7 @@ public class NewUpDater {
       user.setModificationTime(modified);
       user.setTransferableFromLocal();
       user.updateLocalFromTransferable();
-      Pool.put(user.getTyp(), user.getId(), user);
+      Pool.put(user.getClass().getName(), user.getId(), user);
 
       dsi.SaveUser(user.getId());
       dsi.SaveOperatorProfile(op.getId());
@@ -121,7 +125,7 @@ public class NewUpDater {
     }
     else if(or instanceof User){
       User user = (User)or;
-      OperatorProfile op = (OperatorProfile)Pool.get(OperatorProfile.typ, user.object_id);
+      OperatorProfile op = (OperatorProfile)Pool.get(OperatorProfile.class.getName(), user.object_id);
 
       op.group_ids = new ArrayList();
       op.category_ids = new ArrayList();
@@ -135,7 +139,7 @@ public class NewUpDater {
       op.setModificationTime(modified);
       op.setTransferableFromLocal();
       op.updateLocalFromTransferable();
-      Pool.put(op.getTyp(), op.getId(), op);
+      Pool.put(op.getClass().getName(), op.getId(), op);
 
       dsi.SaveUser(user.getId());
       dsi.SaveOperatorProfile(op.getId());
@@ -150,7 +154,7 @@ public class NewUpDater {
 
 
 //------------------------------------------------------------------------------
-  void updateObjectResources(ObjectResource or, boolean toBeDeleted){
+  void updateObjectResources(StorableObject or, boolean toBeDeleted){
     if(toBeDeleted){
       or.updateLocalFromTransferable();
       AdminObjectResource aor = (AdminObjectResource)or;
@@ -166,11 +170,11 @@ public class NewUpDater {
         for(Iterator it = h.values().iterator(); it.hasNext();)
         {
           AdminObjectResource parent = (AdminObjectResource)it.next();
-          List chilsIds = parent.getChildIds(aor.getTyp());
+          List chilsIds = parent.getChildIds(aor.getClass().getName());
           if(chilsIds.contains(aor.getId())){
-            parent.removeChildId(aor.getTyp(), aor.getId());//And, it must be saved;
+            parent.removeChildId(aor.getClass().getName(), aor.getId());//And, it must be saved;
             parent.setTransferableFromLocal();
-            Pool.put(parent.getTyp(), parent.getId(), parent);
+            Pool.put(parent.getClass().getName(), parent.getId(), parent);
             saveObjectResource(parent);
           }
         }
@@ -215,37 +219,37 @@ public class NewUpDater {
 
 //----------------------------------------------------
   public String []getAllTyps(){
-    String []s = {Domain.typ, User.typ, OperatorProfile.typ, CommandPermissionAttributes.typ, OperatorGroup.typ,
-                  OperatorCategory.typ, Agent.typ, Client.typ, Server.typ,
-                  ObjectPermissionAttributes.typ};
+    String []s = {Domain.class.getName(), User.class.getName(), OperatorProfile.class.getName(), CommandPermissionAttributes.class.getName(), OperatorGroup.class.getName(),
+                  OperatorCategory.class.getName(), Agent.class.getName(), Client.class.getName(), Server.class.getName(),
+                  ObjectPermissionAttributes.class.getName()};
     return s;
   }
 
 
 //------------------------------------------------------------------------------
-  public String []getParentTyps(ObjectResource or){
+  public String []getParentTyps(StorableObject or){
     List v = new ArrayList();
 
-    if(Domain.getChildTypes_().contains(or.getTyp()))
-      v.add(Domain.typ);
-    if(CommandPermissionAttributes.getChildTypes_().contains(or.getTyp()))
-      v.add(CommandPermissionAttributes.typ);
-    if(ObjectPermissionAttributes.getChildTypes_().contains(or.getTyp()))
-      v.add(ObjectPermissionAttributes.typ);
-    if(OperatorCategory.getChildTypes_().contains(or.getTyp()))
-      v.add(OperatorCategory.typ);
-    if(OperatorGroup.getChildTypes_().contains(or.getTyp()))
-      v.add(OperatorGroup.typ);
-    if(User.getChildTypes_().contains(or.getTyp()))
-      v.add(User.typ);
-    if(Agent.getChildTypes_().contains(or.getTyp()))
-      v.add(Agent.typ);
-    if(Client.getChildTypes_().contains(or.getTyp()))
-      v.add(Client.typ);
-    if(Server.getChildTypes_().contains(or.getTyp()))
-      v.add(Server.typ);
-    if(OperatorProfile.getChildTypes_().contains(or.getTyp()))
-      v.add(OperatorProfile.typ);
+    if(Domain.getChildTypes_().contains(or.getClass().getName()))
+      v.add(Domain.class.getName());
+    if(CommandPermissionAttributes.getChildTypes_().contains(or.getClass().getName()))
+      v.add(CommandPermissionAttributes.class.getName());
+    if(ObjectPermissionAttributes.getChildTypes_().contains(or.getClass().getName()))
+      v.add(ObjectPermissionAttributes.class.getName());
+    if(OperatorCategory.getChildTypes_().contains(or.getClass().getName()))
+      v.add(OperatorCategory.class.getName());
+    if(OperatorGroup.getChildTypes_().contains(or.getClass().getName()))
+      v.add(OperatorGroup.class.getName());
+    if(User.getChildTypes_().contains(or.getClass().getName()))
+      v.add(User.class.getName());
+    if(Agent.getChildTypes_().contains(or.getClass().getName()))
+      v.add(Agent.class.getName());
+    if(Client.getChildTypes_().contains(or.getClass().getName()))
+      v.add(Client.class.getName());
+    if(Server.getChildTypes_().contains(or.getClass().getName()))
+      v.add(Server.class.getName());
+    if(OperatorProfile.getChildTypes_().contains(or.getClass().getName()))
+      v.add(OperatorProfile.class.getName());
 
     return (String [])v.toArray(new String[v.size()]);
   }
@@ -282,7 +286,7 @@ public class NewUpDater {
       domain.domain_ids.clear();
     }
 
-    Map h = Pool.getMap(Domain.typ);
+    Map h = Pool.getMap(Domain.class.getName());
     if(h == null)
       h = new HashMap();
 

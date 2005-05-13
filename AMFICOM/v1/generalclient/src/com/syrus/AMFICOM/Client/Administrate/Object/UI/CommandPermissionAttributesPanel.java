@@ -1,5 +1,5 @@
 /*
- * $Id: CommandPermissionAttributesPanel.java,v 1.7 2005/05/05 11:04:46 bob Exp $
+ * $Id: CommandPermissionAttributesPanel.java,v 1.8 2005/05/13 19:03:16 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,8 +31,8 @@ import com.syrus.AMFICOM.administration.User;
 import com.syrus.AMFICOM.corba.portable.reflect.common.ObjectResource;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.7 $, $Date: 2005/05/05 11:04:46 $
+ * @author $Author: bass $
+ * @version $Revision: 1.8 $, $Date: 2005/05/13 19:03:16 $
  * @module generalclient_v1
  */
 public class CommandPermissionAttributesPanel extends GeneralPanel//ObjectResourcePropertiesPane
@@ -48,7 +48,7 @@ public class CommandPermissionAttributesPanel extends GeneralPanel//ObjectResour
   JLabel jLabelModifiedBy = new JLabel();
   ObjectResourceTextField jTextID = new ObjectResourceTextField();
   ObjectResourceTextField jTextName = new ObjectResourceTextField();
-  OrComboBox ComboOwner = new OrComboBox();//(OperatorProfile.typ);
+  OrComboBox ComboOwner = new OrComboBox();//(OperatorProfile.class.getName());
   ObjectResourceTextField jTextCreated = new ObjectResourceTextField();
   ObjectResourceTextField jTextCreatedBy = new ObjectResourceTextField();
   ObjectResourceTextField jTextModified = new ObjectResourceTextField();
@@ -61,7 +61,7 @@ public class CommandPermissionAttributesPanel extends GeneralPanel//ObjectResour
   JPanel jPanel5 = new JPanel();
   VerticalFlowLayout verticalFlowLayout2 = new VerticalFlowLayout();
   JLabel jLabelCategories = new JLabel();
-  private TwoListsPanel categoriesPanel = new TwoListsPanel("Подключенные категории", "Неподключенные категории", OperatorCategory.typ);
+  private TwoListsPanel categoriesPanel = new TwoListsPanel("Подключенные категории", "Неподключенные категории", OperatorCategory.class.getName());
   private TitledBorder titledBorder1;
 	private GridBagLayout gridBagLayout1 = new GridBagLayout();
 
@@ -205,14 +205,14 @@ public class CommandPermissionAttributesPanel extends GeneralPanel//ObjectResour
     if(cpa == null)
       return;
 
-    this.jTextCreatedBy.setTextNameByID(User.typ,cpa.created_by);
-    this.jTextID.setText(cpa.id);
-    this.jTextModifiedBy.setTextNameByID(User.typ,cpa.modified_by);
+    this.jTextCreatedBy.setTextNameByID(User.class.getName(),cpa.created_by);
+    this.jTextID.setText(cpa.getId());
+    this.jTextModifiedBy.setTextNameByID(User.class.getName(),cpa.modified_by);
     this.jTextName.setText(cpa.name);
     this.jTextAreaForbidden.setText(cpa.whyRejected);
 
-    this.ComboOwner.setTyp(User.typ);
-    this.ComboOwner.setSelectedTyp(User.typ, cpa.owner_id);
+    this.ComboOwner.setTyp(User.class.getName());
+    this.ComboOwner.setSelectedTyp(User.class.getName(), cpa.owner_id);
 
 
     this.jTextCreated.setText(sdf.format(new Date(cpa.created)));

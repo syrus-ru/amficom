@@ -1,5 +1,5 @@
 /*
- * $Id: AgentPane.java,v 1.4 2005/05/05 11:04:46 bob Exp $
+ * $Id: AgentPane.java,v 1.5 2005/05/13 19:03:16 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,8 +16,6 @@ import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import com.visigenic.vbroker.ObjLocation.Agent;
-
 import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
@@ -30,8 +28,8 @@ import com.syrus.AMFICOM.corba.portable.reflect.common.ObjectResource;
  * moved to <tt>generalclient_v1</tt> to resolve cross-module
  * dependencies between <tt>generalclient_v1</tt> and <tt>admin_1</tt>.
  *
- * @author $Author: bob $
- * @version $Revision: 1.4 $, $Date: 2005/05/05 11:04:46 $
+ * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2005/05/13 19:03:16 $
  * @module generalclient_v1
  */
 public final class AgentPane extends JPanel implements ObjectResourcePropertiesPane {
@@ -73,7 +71,7 @@ public final class AgentPane extends JPanel implements ObjectResourcePropertiesP
   {
     this.aContext = aContext;
     String userId = aContext.getSessionInterface().getUserId();
-    user = (User)Pool.get(User.typ, userId);
+    user = (User)Pool.get(User.class.getName(), userId);
     checker = new Checker(user);
   }
 
@@ -108,8 +106,8 @@ public final class AgentPane extends JPanel implements ObjectResourcePropertiesP
     if(!NewUpDater.checkName(agent))
       return false;
 
-   Pool.put(Agent.typ, agent.id, agent);
-    aContext.getDataSource().SaveAgent(agent.id);
+   Pool.put(Agent.class.getName(), agent.getId(), agent);
+    aContext.getDataSource().SaveAgent(agent.getId());
     return true;
   }
 
@@ -124,15 +122,15 @@ public final class AgentPane extends JPanel implements ObjectResourcePropertiesP
 
     if(!checker.checkCommand(Checker.createAgent))
       return false;
-    String id = aContext.getDataSource().GetUId(Agent.typ);
+    String id = aContext.getDataSource().GetUId(Agent.class.getName());
 
     agent = new Agent();
-    agent.id = id;
+    agent.getId() = id;
     Date d = new Date();
     agent.created = d.getTime();
     agent.modified = d.getTime();
 
-    Pool.put(Agent.typ, agent.id, agent);
+    Pool.put(Agent.class.getName(), agent.getId(), agent);
 
     setObjectResource(agent);
 
@@ -162,9 +160,9 @@ public final class AgentPane extends JPanel implements ObjectResourcePropertiesP
 
     String []s = new String[1];
 
-    s[0] = agent.id;
+    s[0] = agent.getId();
     aContext.getDataSource().RemoveAgent(s);
-    Pool.remove(Agent.typ, agent.id);
+    Pool.remove(Agent.class.getName(), agent.getId());
 
     return true;
   }
