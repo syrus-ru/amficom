@@ -14,6 +14,7 @@ CREATE TABLE Test (
  measurement_type_id VARCHAR2(32) NOT NULL,
  analysis_type_id VARCHAR2(32),
  evaluation_type_id VARCHAR2(32),
+ group_test_id	VARCHAR(32),
 --
  status NUMBER(2, 0) NOT NULL,
  monitored_element_id VARCHAR2(32) NOT NULL,
@@ -36,6 +37,8 @@ CONSTRAINT test_anatype_fk FOREIGN KEY (analysis_type_id)
   REFERENCES AnalysisType (id) ON DELETE CASCADE,
 CONSTRAINT test_evatype_fk FOREIGN KEY (evaluation_type_id)
   REFERENCES EvaluationType (id) ON DELETE CASCADE,
+CONSTRAINT test_grouptest_fk FOREIGN KEY (group_test_id)
+  REFERENCES Test (id) ON DELETE CASCADE,
 --
  CONSTRAINT test_me_fk FOREIGN KEY (monitored_element_id)
   REFERENCES MonitoredElement (id) ON DELETE CASCADE
