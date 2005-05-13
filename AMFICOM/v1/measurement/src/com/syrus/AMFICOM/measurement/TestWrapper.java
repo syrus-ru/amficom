@@ -1,5 +1,5 @@
 /*
- * $Id: TestWrapper.java,v 1.11 2005/04/25 08:49:23 arseniy Exp $
+ * $Id: TestWrapper.java,v 1.12 2005/05/13 10:50:54 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.measurement.corba.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/04/25 08:49:23 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.12 $, $Date: 2005/05/13 10:50:54 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 public class TestWrapper extends StorableObjectWrapper {
@@ -35,6 +35,7 @@ public class TestWrapper extends StorableObjectWrapper {
 	public static final String COLUMN_RETURN_TYPE = "return_type";
 	public static final String COLUMN_START_TIME = "start_time";
 	public static final String COLUMN_STATUS = "status";
+	public static final String COLUMN_GROUP_TEST_ID = "group_test_id";
 	public static final String COLUMN_TEMPORAL_PATTERN_ID = "cron_temporal_pattern_id";
 	public static final String COLUMN_TEMPORAL_TYPE = "temporal_type";
 	public static final String COLUMN_NUMBER_OF_MEASUREMENTS = "number_of_measurements";
@@ -54,6 +55,7 @@ public class TestWrapper extends StorableObjectWrapper {
 				COLUMN_MEASUREMENT_TYPE_ID,
 				COLUMN_ANALYSIS_TYPE_ID,
 				COLUMN_EVALUATION_TYPE_ID,
+				COLUMN_GROUP_TEST_ID,
 				COLUMN_STATUS,
 				COLUMN_MONITORED_ELEMENT_ID,
 				COLUMN_RETURN_TYPE,
@@ -98,6 +100,8 @@ public class TestWrapper extends StorableObjectWrapper {
 				return test.getAnalysisTypeId();
 			if (key.equals(COLUMN_EVALUATION_TYPE_ID))
 				return test.getEvaluationTypeId();
+			if (key.equals(COLUMN_GROUP_TEST_ID))
+				return test.getGroupTestId();
 			if (key.equals(COLUMN_STATUS))
 				return new Integer(test.getStatus().value());
 			if (key.equals(COLUMN_MONITORED_ELEMENT_ID))
@@ -135,6 +139,8 @@ public class TestWrapper extends StorableObjectWrapper {
 				test.setAnalysisTypeId((Identifier) value);
 			else if (key.equals(COLUMN_EVALUATION_TYPE_ID))
 				test.setEvaluationTypeId((Identifier) value);
+			else if (key.equals(COLUMN_GROUP_TEST_ID))
+				test.setGroupTestId((Identifier) value);
 			else if (key.equals(COLUMN_STATUS))
 				test.setStatus(TestStatus.from_int(((Integer) value).intValue()));
 			else if (key.equals(COLUMN_MONITORED_ELEMENT_ID))

@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.114 2005/05/06 11:02:30 bob Exp $
+ * $Id: Test.java,v 1.115 2005/05/13 10:50:54 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,7 +45,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.114 $, $Date: 2005/05/06 11:02:30 $
+ * @version $Revision: 1.115 $, $Date: 2005/05/13 10:50:54 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -79,6 +79,7 @@ public class Test extends StorableObject {
 
 	private MeasurementSetup mainMeasurementSetup;
 
+	private Identifier groupTestId;
 	private Identifier kisId;
 	private Identifier mcmId;
 
@@ -145,6 +146,7 @@ public class Test extends StorableObject {
 					 Identifier measurementTypeId,
 					 Identifier analysisTypeId,
 					 Identifier evaluationTypeId,
+					 Identifier groupTestId,
 					 MonitoredElement monitoredElement,
 					 int returnType,
 					 String description,
@@ -165,6 +167,7 @@ public class Test extends StorableObject {
 		this.measurementTypeId = measurementTypeId;
 		this.analysisTypeId = analysisTypeId;
 		this.evaluationTypeId = evaluationTypeId;
+		this.groupTestId = groupTestId;
 		this.monitoredElement = monitoredElement;
 		this.returnType = returnType;
 		this.description = description;
@@ -198,6 +201,7 @@ public class Test extends StorableObject {
 			Identifier measurementTypeId,
 			Identifier analysisTypeId,
 			Identifier evaluationTypeId,
+			Identifier groupTestId,
 			MonitoredElement monitoredElement,
 			TestReturnType returnType,
 			String description,
@@ -213,6 +217,7 @@ public class Test extends StorableObject {
 					measurementTypeId,
 					analysisTypeId,
 					evaluationTypeId,
+					groupTestId,
 					monitoredElement,
 					returnType.value(),
 					description,
@@ -375,6 +380,7 @@ public class Test extends StorableObject {
 						: (new Identifier_Transferable("")),
 				(this.evaluationTypeId != null) ? (Identifier_Transferable) this.evaluationTypeId.getTransferable()
 						: (new Identifier_Transferable("")),
+				(Identifier_Transferable)(this.groupTestId != null ? this.groupTestId : Identifier.VOID_IDENTIFIER).getTransferable(),  
 				TestStatus.from_int(this.status),
 				(Identifier_Transferable) this.monitoredElement.getId().getTransferable(),
 				TestReturnType.from_int(this.returnType),
@@ -467,6 +473,15 @@ public class Test extends StorableObject {
 		this.status = status.value();
 	}
 
+	public Identifier getGroupTestId() {
+		return this.groupTestId;
+	}
+	
+	public void setGroupTestId(Identifier groupTestId) {
+		this.groupTestId = groupTestId;
+		this.changed = true;
+	}
+	
 	/**
 	 * @param temporalPatternId The temporalPatternId to set.
 	 */
@@ -501,6 +516,7 @@ public class Test extends StorableObject {
 										   Identifier measurementTypeId,
 										   Identifier analysisTypeId,
 										   Identifier evaluationTypeId,
+										   Identifier groupTestId,
 										   int status,
 										   MonitoredElement monitoredElement,
 										   int returnType,
@@ -520,6 +536,7 @@ public class Test extends StorableObject {
 		this.measurementTypeId = measurementTypeId;
 		this.analysisTypeId = analysisTypeId;
 		this.evaluationTypeId = evaluationTypeId;
+		this.groupTestId = groupTestId;
 		this.status = status;
 		this.monitoredElement = monitoredElement;
 		this.returnType = returnType;
@@ -751,5 +768,6 @@ public class Test extends StorableObject {
 		public void setTestTemporalType(TestTemporalType temporalType) {
 			this.discriminator = temporalType.value();
 		}
-	}
+	}	
+	
 }

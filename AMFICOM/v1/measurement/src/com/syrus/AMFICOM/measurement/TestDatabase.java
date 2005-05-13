@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.90 2005/05/06 10:48:22 bob Exp $
+ * $Id: TestDatabase.java,v 1.91 2005/05/13 10:50:54 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,7 +45,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.90 $, $Date: 2005/05/06 10:48:22 $
+ * @version $Revision: 1.91 $, $Date: 2005/05/13 10:50:54 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -69,6 +69,7 @@ public class TestDatabase extends StorableObjectDatabase {
 				+ TestWrapper.COLUMN_MEASUREMENT_TYPE_ID + COMMA
 				+ TestWrapper.COLUMN_ANALYSIS_TYPE_ID + COMMA
 				+ TestWrapper.COLUMN_EVALUATION_TYPE_ID + COMMA
+				+ TestWrapper.COLUMN_GROUP_TEST_ID + COMMA
 				+ TestWrapper.COLUMN_STATUS + COMMA
 				+ TestWrapper.COLUMN_MONITORED_ELEMENT_ID + COMMA
 				+ TestWrapper.COLUMN_RETURN_TYPE + COMMA
@@ -91,6 +92,7 @@ public class TestDatabase extends StorableObjectDatabase {
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
+				+ QUESTION + COMMA
 				+ QUESTION;
 		}
 		return updateMultipleSQLValues;
@@ -103,6 +105,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		Identifier temporalPatternId = test.getTemporalPatternId();		
 		Identifier analysisTypeId = test.getAnalysisTypeId();
 		Identifier evaluationTypeId = test.getEvaluationTypeId();
+		Identifier groupTestId = test.getGroupTestId();
 
 		return test.getTemporalType().value() + COMMA
 			+ ((startTime != null) ? DatabaseDate.toUpdateSubString(startTime) : SQL_NULL ) + COMMA
@@ -111,6 +114,7 @@ public class TestDatabase extends StorableObjectDatabase {
 			+ DatabaseIdentifier.toSQLString(test.getMeasurementTypeId()) + COMMA
 			+ ((analysisTypeId != null) ? DatabaseIdentifier.toSQLString(analysisTypeId): SQL_NULL) + COMMA			
 			+ ((evaluationTypeId != null) ? DatabaseIdentifier.toSQLString(evaluationTypeId) : SQL_NULL) + COMMA
+			+ ((groupTestId != null) ? DatabaseIdentifier.toSQLString(groupTestId) : SQL_NULL) + COMMA
 			+ test.getStatus().value() + COMMA
 			+ DatabaseIdentifier.toSQLString(test.getMonitoredElement().getId()) + COMMA
 			+ test.getReturnType().value() + COMMA
@@ -134,6 +138,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		Identifier temporalPatternId = test.getTemporalPatternId();		
 		Identifier analysisTypeId = test.getAnalysisTypeId();
 		Identifier evaluationTypeId = test.getEvaluationTypeId();
+		Identifier groupTestId = test.getGroupTestId();
 		preparedStatement.setInt(++startParameterNumber, test.getTemporalType().value());
 		preparedStatement.setTimestamp(++startParameterNumber, (startTime != null) ? (new Timestamp(startTime.getTime())) : null);
 		preparedStatement.setTimestamp(++startParameterNumber, (endTime != null) ? (new Timestamp(endTime.getTime())) : null);
@@ -141,6 +146,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, test.getMeasurementTypeId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, (analysisTypeId != null) ? analysisTypeId : null);
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, (evaluationTypeId != null) ? evaluationTypeId : null);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, (groupTestId != null) ? groupTestId : null);
 		preparedStatement.setInt(++startParameterNumber, test.getStatus().value());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, test.getMonitoredElement().getId());
 		preparedStatement.setInt(++startParameterNumber, test.getReturnType().value());
@@ -165,7 +171,7 @@ public class TestDatabase extends StorableObjectDatabase {
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		Test test = (storableObject == null)?
 				new Test(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, null, TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME, 
-						 null, null, null, null, 0, null, null) :
+						 null, null, null, null, null, 0, null, null) :
 					this.fromStorableObject(storableObject);
 
 		MonitoredElement monitoredElement;
@@ -189,6 +195,7 @@ public class TestDatabase extends StorableObjectDatabase {
 				DatabaseIdentifier.getIdentifier(resultSet, TestWrapper.COLUMN_MEASUREMENT_TYPE_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, TestWrapper.COLUMN_ANALYSIS_TYPE_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, TestWrapper.COLUMN_EVALUATION_TYPE_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, TestWrapper.COLUMN_GROUP_TEST_ID),
 				resultSet.getInt(TestWrapper.COLUMN_STATUS),
 				monitoredElement,
 				resultSet.getInt(TestWrapper.COLUMN_RETURN_TYPE),
