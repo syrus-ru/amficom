@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.141 2005/05/06 10:48:48 bob Exp $
+ * $Id: StorableObjectDatabase.java,v 1.142 2005/05/13 20:45:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,8 +31,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.141 $, $Date: 2005/05/06 10:48:48 $
- * @author $Author: bob $
+ * @version $Revision: 1.142 $, $Date: 2005/05/13 20:45:32 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -1158,6 +1158,22 @@ public abstract class StorableObjectDatabase {
 			String mesg = this.getEnityName() + "Database.updateLinkedEntities | SQLException: " + sqle.getMessage();
 			throw new UpdateObjectException(mesg, sqle);
 		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (resultSet != null)
+					resultSet.close();
+				statement = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+			finally {
+				DatabaseConnection.releaseConnection(connection);
+			}
+		}
 
 		Set linkedObjIds;
 		Map insertIdsMap = new HashMap();
@@ -1279,7 +1295,7 @@ public abstract class StorableObjectDatabase {
 		}
 	}
 
-	private void deleteLinkedEntityIds(Map idLinkedObjectIdsMap, String tableName, String idColumnName, String linkedIdColumnName) {
+	protected void deleteLinkedEntityIds(Map idLinkedObjectIdsMap, String tableName, String idColumnName, String linkedIdColumnName) {
 		if (idLinkedObjectIdsMap == null || idLinkedObjectIdsMap.isEmpty())
 			return;
 
