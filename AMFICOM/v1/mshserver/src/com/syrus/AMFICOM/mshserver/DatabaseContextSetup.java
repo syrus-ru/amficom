@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.8 2005/05/11 07:44:35 arseniy Exp $
+ * $Id: DatabaseContextSetup.java,v 1.9 2005/05/13 17:47:53 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -73,8 +73,8 @@ import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.8 $, $Date: 2005/05/11 07:44:35 $
+ * @author $Author: bass $
+ * @version $Revision: 1.9 $, $Date: 2005/05/13 17:47:53 $
  * @module msherver_v1
  */
 final class DatabaseContextSetup {
@@ -106,7 +106,7 @@ final class DatabaseContextSetup {
 				new ServerDatabase(),
 				new MCMDatabase(),
 				new ServerProcessDatabase());
-	
+
 		GeneralDatabaseContext.init(new ParameterTypeDatabase(),
 				new CharacteristicTypeDatabase(),
 				new CharacteristicDatabase());

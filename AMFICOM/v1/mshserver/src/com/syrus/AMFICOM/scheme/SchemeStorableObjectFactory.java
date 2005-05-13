@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeStorableObjectFactory.java,v 1.1 2005/04/08 09:32:27 bass Exp $
+ * $Id: SchemeStorableObjectFactory.java,v 1.2 2005/05/13 17:47:53 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,15 +29,14 @@ import com.syrus.AMFICOM.scheme.corba.Scheme_Transferable;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/04/08 09:32:27 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/13 17:47:53 $
  * @module mshserver_v1
  */
 public abstract class SchemeStorableObjectFactory extends MapStorableObjectFactory {
 	/**
 	 * @param schemeProtoGroup
-	 * @throws CreateObjectException
 	 */
-	protected final SchemeProtoGroup newSchemeProtoGroup(final SchemeProtoGroup_Transferable schemeProtoGroup) throws CreateObjectException {
+	protected final SchemeProtoGroup newSchemeProtoGroup(final SchemeProtoGroup_Transferable schemeProtoGroup) {
 		return new SchemeProtoGroup(schemeProtoGroup);
 	}
 
@@ -51,9 +50,8 @@ public abstract class SchemeStorableObjectFactory extends MapStorableObjectFacto
 
 	/**
 	 * @param scheme
-	 * @throws CreateObjectException
 	 */
-	protected final Scheme newScheme(final Scheme_Transferable scheme) throws CreateObjectException {
+	protected final Scheme newScheme(final Scheme_Transferable scheme) {
 		return new Scheme(scheme);
 	}
 
@@ -67,17 +65,15 @@ public abstract class SchemeStorableObjectFactory extends MapStorableObjectFacto
 
 	/**
 	 * @param schemeOptimizeInfo
-	 * @throws CreateObjectException
 	 */
-	protected final SchemeOptimizeInfo newSchemeOptimizeInfo(final SchemeOptimizeInfo_Transferable schemeOptimizeInfo) throws CreateObjectException {
+	protected final SchemeOptimizeInfo newSchemeOptimizeInfo(final SchemeOptimizeInfo_Transferable schemeOptimizeInfo) {
 		return new SchemeOptimizeInfo(schemeOptimizeInfo);
 	}
 
 	/**
 	 * @param schemeMonitoringSolution
-	 * @throws CreateObjectException
 	 */
-	protected final SchemeMonitoringSolution newSchemeMonitoringSolution(final SchemeMonitoringSolution_Transferable schemeMonitoringSolution) throws CreateObjectException {
+	protected final SchemeMonitoringSolution newSchemeMonitoringSolution(final SchemeMonitoringSolution_Transferable schemeMonitoringSolution) {
 		return new SchemeMonitoringSolution(schemeMonitoringSolution);
 	}
 
@@ -131,9 +127,8 @@ public abstract class SchemeStorableObjectFactory extends MapStorableObjectFacto
 
 	/**
 	 * @param cableChannelingItem
-	 * @throws CreateObjectException
 	 */
-	protected final CableChannelingItem newCableChannelingItem(final CableChannelingItem_Transferable cableChannelingItem) throws CreateObjectException {
+	protected final CableChannelingItem newCableChannelingItem(final CableChannelingItem_Transferable cableChannelingItem) {
 		return new CableChannelingItem(cableChannelingItem);
 	}
 
@@ -147,9 +142,8 @@ public abstract class SchemeStorableObjectFactory extends MapStorableObjectFacto
 
 	/**
 	 * @param pathElement
-	 * @throws CreateObjectException
 	 */
-	protected final PathElement newPathElement(final PathElement_Transferable pathElement) throws CreateObjectException {
+	protected final PathElement newPathElement(final PathElement_Transferable pathElement) {
 		return new PathElement(pathElement);
 	}
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: MapSchemeServer.java,v 1.3 2005/04/27 16:00:56 arseniy Exp $
+ * $Id: MapSchemeServer.java,v 1.4 2005/05/13 17:47:53 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,71 +8,93 @@
 
 package com.syrus.AMFICOM.mshserver;
 
+import org.omg.PortableServer.POA;
+
+import com.syrus.AMFICOM.administration.AdministrationDatabaseContext;
+import com.syrus.AMFICOM.administration.Server;
+import com.syrus.AMFICOM.administration.ServerProcess;
+import com.syrus.AMFICOM.administration.ServerProcessWrapper;
+import com.syrus.AMFICOM.administration.User;
 import com.syrus.AMFICOM.general.CORBAServer;
-import com.syrus.AMFICOM.general.SleepButWorkThread;
+import com.syrus.AMFICOM.general.DatabaseObjectLoader;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginException;
+import com.syrus.AMFICOM.general.LoginRestorer;
 import com.syrus.AMFICOM.map.MapStorableObjectPool;
-import com.syrus.AMFICOM.mshserver.corba.MSHServer;
 import com.syrus.AMFICOM.mshserver.corba.MSHServerPOATie;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.util.Application;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
-import com.syrus.util.corba.JavaSoftORBUtil;
 import com.syrus.util.database.DatabaseConnection;
 
-import java.net.InetAddress;
-
-import org.omg.CORBA.ORB;
-import org.omg.CosNaming.NameComponent;
-import org.omg.CosNaming.NamingContextExt;
-import org.omg.CosNaming.NamingContextExtHelper;
-import org.omg.CosNaming.NamingContextPackage.AlreadyBound;
-import org.omg.PortableServer.POA;
-import org.omg.PortableServer.POAHelper;
-
 /**
- * @version $Revision: 1.3 $, $Date: 2005/04/27 16:00:56 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.4 $, $Date: 2005/05/13 17:47:53 $
+ * @author $Author: bass $
  * @module cmserver_v1
  */
-public class MapSchemeServer extends SleepButWorkThread {
+public class MapSchemeServer {
+	public static final String APPLICATION_NAME = "mshserver"; //$NON-NLS-1$
 
-	public static final String	APPLICATION_NAME			= "mshserver"; //$NON-NLS-1$
+	/*-********************************************************************
+	 * Keys.                                                              *
+	 **********************************************************************/
 
-	public static final String	KEY_DB_HOST_NAME			= "DBHostName"; //$NON-NLS-1$
+	public static final String KEY_DB_HOST_NAME = "DBHostName"; //$NON-NLS-1$
 
-	public static final String	KEY_DB_SID					= "DBSID"; //$NON-NLS-1$
+	public static final String KEY_DB_SID = "DBSID"; //$NON-NLS-1$
 
-	public static final String	KEY_DB_CONNECTION_TIMEOUT	= "DBConnectionTimeout"; //$NON-NLS-1$
+	public static final String KEY_DB_CONNECTION_TIMEOUT = "DBConnectionTimeout"; //$NON-NLS-1$
 
-	public static final String	KEY_DB_LOGIN_NAME			= "DBLoginName"; //$NON-NLS-1$
+	public static final String KEY_DB_LOGIN_NAME = "DBLoginName"; //$NON-NLS-1$
 
-	public static final String	KEY_TICK_TIME				= "TickTime"; //$NON-NLS-1$
+	public static final String KEY_SERVER_ID = "ServerID"; //$NON-NLS-1$
 
-	public static final String	KEY_MAX_FALLS				= "MaxFalls"; //$NON-NLS-1$
+	/*-********************************************************************
+	 * Default values.                                                    *
+	 **********************************************************************/
 
-	public static final String	DB_SID						= "amficom"; //$NON-NLS-1$
+	public static final String DB_SID = "amficom"; //$NON-NLS-1$
 
-	public static final int		DB_CONNECTION_TIMEOUT		= 120;
+	/**
+	 * Database connection timeout, in seconds.
+	 */
+	public static final int DB_CONNECTION_TIMEOUT = 120;
 
-	public static final String	DB_LOGIN_NAME				= "amficom"; //$NON-NLS-1$
+	public static final String DB_LOGIN_NAME = "amficom"; //$NON-NLS-1$
 
-	public static final int		TICK_TIME					= 5;
+	public static final String SERVER_ID = "Server_1"; //$NON-NLS-1$
 
-	/* CORBA server */
-	private static CORBAServer	corbaServer;
 
-	private boolean				running;
+	private static final String PASSWORD = "MShServer"; //$NON-NLS-1$
 
-	public MapSchemeServer() {
-		super(ApplicationProperties.getInt(KEY_TICK_TIME, TICK_TIME) * 1000,
-				ApplicationProperties.getInt(KEY_MAX_FALLS, MAX_FALLS));
-		this.running = true;
-	}
+	/**
+	 * Identifier of this server.
+	 */
+	private static Identifier serverId;
+
+	/**
+	 * Login of the corresponding user.
+	 */
+	static String login;
+
+	/**
+	 * Process codename.
+	 */
+	private static String processCodename;
 
 	public static void main(String[] args) {
 		Application.init(APPLICATION_NAME);
 		startup();
+
+		/**
+		 * Add shutdown hook.
+		 */
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			public void run() {
+				shutdown();
+			}
+		});
 	}
 
 	private static void establishDatabaseConnection() {
@@ -93,129 +115,75 @@ public class MapSchemeServer extends SleepButWorkThread {
 	}
 
 	private static void startup() {
-		/* Establish connection with database */
+		/*
+		 * Establish connection with database.
+		 */
 		establishDatabaseConnection();
 
-		/* Create CORBA server with servant(s) */
-		activateCORBAServer();
-
 		DatabaseContextSetup.initDatabaseContext();
-		DatabaseContextSetup.initObjectPools();
-		/* Start main loop */
-		final MapSchemeServer mapSchemeServer = new MapSchemeServer();
-		Log.debugMessage("MapSchemeServer.startup | Ready.", Log.DEBUGLEVEL03); //$NON-NLS-1$
-		mapSchemeServer.start();
-
-		/* Add shutdown hook */
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-
-			public void run() {
-				mapSchemeServer.shutdown();
-			}
-		});
-	}
-
-	private static void activateCORBAServer() {
-		/* Create local CORBA server end activate servant */
+		serverId = new Identifier(ApplicationProperties.getString(KEY_SERVER_ID, SERVER_ID));
+		processCodename = ApplicationProperties.getString(
+				ServerProcessWrapper.KEY_MSHSERVER_PROCESS_CODENAME,
+				ServerProcessWrapper.MSHSERVER_PROCESS_CODENAME);
 		try {
-			ORB orb = JavaSoftORBUtil.getInstance().getORB();
+			final Server server = new Server(serverId);
+			final ServerProcess serverProcess = AdministrationDatabaseContext.getServerProcessDatabase().retrieveForServerAndCodename(serverId, processCodename);
+			final User user = new User(serverProcess.getUserId());
+			login = user.getLogin();
 
-			POA rootPOA = POAHelper.narrow(orb
-					.resolve_initial_references("RootPOA")); //$NON-NLS-1$
-			rootPOA.the_POAManager().activate();
-			NamingContextExt rootNamingCtx = NamingContextExtHelper.narrow(orb
-					.resolve_initial_references("NameService")); //$NON-NLS-1$
+			/*
+			 * Init database object loader.
+			 */
+			DatabaseObjectLoader.init(user.getId());
 
-			final String hostName = InetAddress.getLocalHost()
-					.getCanonicalHostName().replaceAll("\\.", "_"); //$NON-NLS-1$ //$NON-NLS-2$
+			/*
+			 * Create session environment.
+			 */
+			MSHServerSessionEnvironment.createInstance(server.getHostName());
 
-			NameComponent childPath[] = rootNamingCtx.to_name(hostName);
-
-			NamingContextExt childNamingCtx;
+			/*
+			 * Login.
+			 */
+			final MSHServerSessionEnvironment sessionEnvironment = MSHServerSessionEnvironment.getInstance();
 			try {
-				childNamingCtx = NamingContextExtHelper.narrow(rootNamingCtx
-						.bind_new_context(childPath));
-			} catch (AlreadyBound ab) {
-				childNamingCtx = NamingContextExtHelper.narrow(rootNamingCtx
-						.resolve_str(hostName));
+				sessionEnvironment.login(login, PASSWORD);
+			} catch (final LoginException le) {
+				Log.errorException(le);
 			}
 
-			MSHServer server = (new MSHServerPOATie(new MSHServerImpl(), rootPOA))
-					._this(orb);
-			NameComponent serverPath[] = rootNamingCtx.to_name("MSHServer"); //$NON-NLS-1$
-			childNamingCtx.rebind(serverPath, server);
-			corbaServer = new CORBAServer();
-
-		} catch (Exception e) {
-			DatabaseConnection.closeConnection();
-			Log.errorException(e);
-			System.err.println(e);
-			System.exit(-1);
+			/*
+			 * Activate the servant.
+			 */
+			final CORBAServer corbaServer = sessionEnvironment.getMSHServerServantManager().getCORBAServer();
+			final POA poa = corbaServer.getPoa();
+			corbaServer.activateServant(
+					poa.reference_to_servant((new MSHServerPOATie(new MSHServerImpl(), poa))._this(corbaServer.getOrb())),
+					processCodename);
+			corbaServer.printNamingContext();
+		} catch (final Exception e) {
+			Log.debugException(e, Log.SEVERE);
+			System.exit(0);
 		}
 	}
 
-	private static void stopCORBAServer() {
-		try {
-			ORB orb = JavaSoftORBUtil.getInstance().getORB();
-
-			POA rootPOA = POAHelper.narrow(orb
-					.resolve_initial_references("RootPOA")); //$NON-NLS-1$
-			rootPOA.the_POAManager().activate();
-			NamingContextExt rootNamingCtx = NamingContextExtHelper.narrow(orb
-					.resolve_initial_references("NameService")); //$NON-NLS-1$
-
-			final String hostName = InetAddress.getLocalHost()
-					.getCanonicalHostName().replaceAll("\\.", "_"); //$NON-NLS-1$ //$NON-NLS-2$
-
-			NameComponent childPath[] = rootNamingCtx.to_name(hostName);
-
-			NamingContextExt childNamingCtx;
-			try {
-				childNamingCtx = NamingContextExtHelper.narrow(rootNamingCtx
-						.bind_new_context(childPath));
-			} catch (AlreadyBound ab) {
-				childNamingCtx = NamingContextExtHelper.narrow(rootNamingCtx
-						.resolve_str(hostName));
-			}
-
-			NameComponent serverPath[] = rootNamingCtx.to_name("MSHServer"); //$NON-NLS-1$
-
-			childNamingCtx.unbind(serverPath);			
-
-		} catch (Exception e) {
-			Log.errorException(e);
-			System.err.println(e);
-			System.exit(-1);
-		}
-	}
-
-	protected void processFall() {
-		switch (super.fallCode) {
-		case FALL_CODE_NO_ERROR:
-			break;
-		default:
-			Log.errorMessage("processError | Unknown error code: " //$NON-NLS-1$
-					+ super.fallCode);
-		}
-	}
-
-	protected synchronized void shutdown() {/* !! Need synchronization */
-		this.running = false;
-		Log.debugMessage("MapSchemeServer.shutdown | serialize MapStorableObjectPool" , Log.DEBUGLEVEL03); //$NON-NLS-1$
+	protected static synchronized void shutdown() {
+		Log.debugMessage("MapSchemeServer.shutdown | serializing MapStorableObjectPool" , Log.INFO); //$NON-NLS-1$
 		MapStorableObjectPool.serializePool();
-		Log.debugMessage("MapSchemeServer.shutdown | serialize SchemeStorableObjectPool" , Log.DEBUGLEVEL03); //$NON-NLS-1$
+		Log.debugMessage("MapSchemeServer.shutdown | serializing SchemeStorableObjectPool" , Log.INFO); //$NON-NLS-1$
 		SchemeStorableObjectPool.serializePool();
 	}
 
-	public void run() {
-		while (this.running) {
-			try {				
-				sleep(super.initialTimeToSleep);
-			} catch (InterruptedException ie) {
-				Log.errorException(ie);
-			}
+	static class MSHServerLoginRestorer implements LoginRestorer {
+		public boolean restoreLogin() {
+			return true;
 		}
-		stopCORBAServer();
-	}
 
+		public String getLogin() {
+			return login;
+		}
+
+		public String getPassword() {
+			return PASSWORD;
+		}
+	}
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: MSHServerImpl.java,v 1.9 2005/04/23 15:36:31 arseniy Exp $
+ * $Id: MSHServerImpl.java,v 1.10 2005/05/13 17:47:53 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.mshserver;
 
-import com.syrus.AMFICOM.general.AccessIdentity;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
@@ -28,7 +27,6 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.AccessIdentity_Transferable;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
@@ -55,6 +53,8 @@ import com.syrus.AMFICOM.map.corba.SiteNode_Transferable;
 import com.syrus.AMFICOM.map.corba.TopologicalNode_Transferable;
 import com.syrus.AMFICOM.scheme.SchemeDatabaseContext;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
+import com.syrus.AMFICOM.security.SessionKey;
+import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 import java.util.Collection;
@@ -65,8 +65,8 @@ import java.util.Set;
 import org.omg.CORBA.portable.IDLEntity;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/04/23 15:36:31 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.10 $, $Date: 2005/05/13 17:47:53 $
+ * @author $Author: bass $
  * @module mshserver_1
  */
 public final class MSHServerImpl extends MSHServerSchemeTransmit {
@@ -121,12 +121,12 @@ public final class MSHServerImpl extends MSHServerSchemeTransmit {
 	}
 
 	public void delete(final Identifier_Transferable id,
-			final AccessIdentity_Transferable accessIdentityT)
+			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
 		final Identifier id1 = new Identifier(id);
 		Log.debugMessage("MSHServerImpl.delete | Trying to delete object '" //$NON-NLS-1$
 				+ id1 + "' as requested by user '" //$NON-NLS-1$
-				+ (new AccessIdentity(accessIdentityT)).getUserId() + '\'',
+				+ (new SessionKey(sessionKey)).getUserId() + '\'',
 				Log.INFO);
 		final short entityCode = id1.getMajor();
 		if (ObjectGroupEntities.isInMapGroup(entityCode))
@@ -138,12 +138,12 @@ public final class MSHServerImpl extends MSHServerSchemeTransmit {
 	}
 
 	public void deleteList(final Identifier_Transferable ids[],
-			final AccessIdentity_Transferable accessIdentityT)
+			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
 		Log.debugMessage("MSHServerImpl.deleteList | Trying to delete " //$NON-NLS-1$
 				+ ids.length
 				+ " object(s) as requested by user '" //$NON-NLS-1$
-				+ (new AccessIdentity(accessIdentityT)).getUserId()
+				+ (new SessionKey(sessionKey)).getUserId()
 				+ '\'', Log.INFO);
 		final Set ids1 = Identifier.fromTransferables(ids);
 		final Set mapIds = new HashSet(ids.length);
@@ -164,19 +164,19 @@ public final class MSHServerImpl extends MSHServerSchemeTransmit {
 
 	/**
 	 * @param storableObject
-	 * @param accessIdentityT
+	 * @param sessionKey
 	 * @param force
 	 * @throws AMFICOMRemoteException
-	 * @see MSHServerMapReceive#receiveStorableObject(StorableObject, accessIdentityT_Transferable, boolean)
+	 * @see MSHServerMapReceive#receiveStorableObject(StorableObject, SessionKey_Transferable, boolean)
 	 */
 	StorableObject_Transferable receiveStorableObject(
 			final StorableObject storableObject,
-			final AccessIdentity_Transferable accessIdentityT, 
+			final SessionKey_Transferable sessionKey, 
 			final boolean force)
 			throws AMFICOMRemoteException {
 		try {
 			final short entityCode = storableObject.getId().getMajor();
-			final Identifier userId = (new AccessIdentity(accessIdentityT)).getUserId();
+			final Identifier userId = (new SessionKey(sessionKey)).getUserId();
 			Log.debugMessage("MSHServerImpl.receiveStorableObject | Receiving a(n) " //$NON-NLS-1$
 					+ ObjectEntities.codeToString(entityCode)
 					+ " as requested by user '" + userId + '\'', //$NON-NLS-1$
@@ -213,14 +213,14 @@ public final class MSHServerImpl extends MSHServerSchemeTransmit {
 
 	/**
 	 * @param storableObjects
-	 * @param accessIdentityT
+	 * @param sessionKey
 	 * @param force
 	 * @throws AMFICOMRemoteException
-	 * @see MSHServerMapReceive#receiveStorableObjects(Set, accessIdentityT_Transferable, boolean)
+	 * @see MSHServerMapReceive#receiveStorableObjects(Set, SessionKey_Transferable, boolean)
 	 */
 	StorableObject_Transferable[] receiveStorableObjects(
 			final Set storableObjects,
-			final AccessIdentity_Transferable accessIdentityT,
+			final SessionKey_Transferable sessionKey,
 			final boolean force)
 			throws AMFICOMRemoteException {
 		try {
@@ -228,7 +228,7 @@ public final class MSHServerImpl extends MSHServerSchemeTransmit {
 				return new StorableObject_Transferable[0];
 			assert StorableObject.hasSingleTypeEntities(storableObjects);
 			final short entityCode = StorableObject.getEntityCodeOfIdentifiables(storableObjects);
-			final Identifier userId = (new AccessIdentity(accessIdentityT)).getUserId();
+			final Identifier userId = (new SessionKey(sessionKey)).getUserId();
 			Log.debugMessage("MSHServerImpl.receiveStorableObjects | Receiving " //$NON-NLS-1$
 					+ storableObjects.size() + ' '
 					+ ObjectEntities.codeToString(entityCode)
@@ -261,18 +261,18 @@ public final class MSHServerImpl extends MSHServerSchemeTransmit {
 
 	/**
 	 * @param id
-	 * @param accessIdentityT
+	 * @param sessionKey
 	 * @throws AMFICOMRemoteException
-	 * @see MSHServerMapTransmit#transmitStorableObject(Identifier_Transferable, accessIdentityT_Transferable)
+	 * @see MSHServerMapTransmit#transmitStorableObject(Identifier_Transferable, SessionKey_Transferable)
 	 */
 	IDLEntity transmitStorableObject(
 			final Identifier_Transferable id,
-			final AccessIdentity_Transferable accessIdentityT)
+			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
 		try {
 			final Identifier id1 = new Identifier(id);
 			final short entityCode = id1.getMajor();
-			final Identifier userId = (new AccessIdentity(accessIdentityT)).getUserId();
+			final Identifier userId = (new SessionKey(sessionKey)).getUserId();
 			Log.debugMessage("MSHServerImpl.transmitStorableObject | Transmitting a(n) " //$NON-NLS-1$
 					+ ObjectEntities.codeToString(entityCode)
 					+ " as requested by user '" + userId + '\'', //$NON-NLS-1$
@@ -338,9 +338,9 @@ public final class MSHServerImpl extends MSHServerSchemeTransmit {
 	}
 
 	public SiteNode_Transferable[] transmitSiteNodes(	Identifier_Transferable[] ids_Transferable,
-			AccessIdentity_Transferable accessIdentityT)
+			SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		Identifier domainId = new Identifier(accessIdentityT.domain_id);
+		Identifier domainId = new Identifier(sessionKey.domain_id);
 
 		Log.debugMessage("MSHServerImpl.transmitSiteNodes | requiere " //$NON-NLS-1$
 				+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length)) //$NON-NLS-1$
@@ -361,9 +361,9 @@ public final class MSHServerImpl extends MSHServerSchemeTransmit {
 	}
 
 	public TopologicalNode_Transferable[] transmitTopologicalNodes(	Identifier_Transferable[] ids_Transferable,
-			AccessIdentity_Transferable accessIdentityT)
+			SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		Identifier domainId = new Identifier(accessIdentityT.domain_id);
+		Identifier domainId = new Identifier(sessionKey.domain_id);
 
 		Log.debugMessage("MSHServerImpl.transmitTopologicalNodes | requiere " //$NON-NLS-1$
 				+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length)) //$NON-NLS-1$
@@ -384,9 +384,9 @@ public final class MSHServerImpl extends MSHServerSchemeTransmit {
 	}
 
 	public NodeLink_Transferable[] transmitNodeLinks(	Identifier_Transferable[] ids_Transferable,
-			AccessIdentity_Transferable accessIdentityT)
+			SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		Identifier domainId = new Identifier(accessIdentityT.domain_id);
+		Identifier domainId = new Identifier(sessionKey.domain_id);
 
 		Log.debugMessage("MSHServerImpl.transmitNodeLinks | requiere " //$NON-NLS-1$
 				+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length)) //$NON-NLS-1$
@@ -407,9 +407,9 @@ public final class MSHServerImpl extends MSHServerSchemeTransmit {
 	}
 
 	public Mark_Transferable[] transmitMarks(	Identifier_Transferable[] ids_Transferable,
-			AccessIdentity_Transferable accessIdentityT)
+			SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		Identifier domainId = new Identifier(accessIdentityT.domain_id);
+		Identifier domainId = new Identifier(sessionKey.domain_id);
 
 		Log.debugMessage("MSHServerImpl.transmitMarks | requiere " //$NON-NLS-1$
 				+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length)) //$NON-NLS-1$
@@ -430,9 +430,9 @@ public final class MSHServerImpl extends MSHServerSchemeTransmit {
 	}
 
 	public PhysicalLink_Transferable[] transmitPhysicalLinks(	Identifier_Transferable[] ids_Transferable,
-			AccessIdentity_Transferable accessIdentityT)
+			SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		Identifier domainId = new Identifier(accessIdentityT.domain_id);
+		Identifier domainId = new Identifier(sessionKey.domain_id);
 
 		Log.debugMessage("MSHServerImpl.transmitPhysicalLinks | requiere " //$NON-NLS-1$
 				+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length)) //$NON-NLS-1$
@@ -453,9 +453,9 @@ public final class MSHServerImpl extends MSHServerSchemeTransmit {
 	}
 
 	public Collector_Transferable[] transmitCollectors(	Identifier_Transferable[] ids_Transferable,
-			AccessIdentity_Transferable accessIdentityT)
+			SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		Identifier domainId = new Identifier(accessIdentityT.domain_id);
+		Identifier domainId = new Identifier(sessionKey.domain_id);
 
 		Log.debugMessage("MSHServerImpl.transmitCollectors | requiere " //$NON-NLS-1$
 				+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length)) //$NON-NLS-1$
@@ -476,9 +476,9 @@ public final class MSHServerImpl extends MSHServerSchemeTransmit {
 	}
 
 	public Map_Transferable[] transmitMaps(	Identifier_Transferable[] ids_Transferable,
-			AccessIdentity_Transferable accessIdentityT)
+			SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		Identifier domainId = new Identifier(accessIdentityT.domain_id);
+		Identifier domainId = new Identifier(sessionKey.domain_id);
 
 		Log.debugMessage("MSHServerImpl.transmitMaps | requiere " //$NON-NLS-1$
 				+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length)) //$NON-NLS-1$
@@ -499,9 +499,9 @@ public final class MSHServerImpl extends MSHServerSchemeTransmit {
 	}
 
 	public SiteNodeType_Transferable[] transmitSiteNodeTypes(	Identifier_Transferable[] ids_Transferable,
-			AccessIdentity_Transferable accessIdentityT)
+			SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		Identifier domainId = new Identifier(accessIdentityT.domain_id);
+		Identifier domainId = new Identifier(sessionKey.domain_id);
 
 		Log.debugMessage("MSHServerImpl.transmitSiteNodeTypes | requiere " //$NON-NLS-1$
 				+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length)) //$NON-NLS-1$
@@ -522,9 +522,9 @@ public final class MSHServerImpl extends MSHServerSchemeTransmit {
 	}
 
 	public PhysicalLinkType_Transferable[] transmitPhysicalLinkTypes(	Identifier_Transferable[] ids_Transferable,
-			AccessIdentity_Transferable accessIdentityT)
+			SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		Identifier domainId = new Identifier(accessIdentityT.domain_id);
+		Identifier domainId = new Identifier(sessionKey.domain_id);
 
 		Log.debugMessage("MSHServerImpl.transmitPhysicalLinkTypes | requiere " //$NON-NLS-1$
 				+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length)) //$NON-NLS-1$
