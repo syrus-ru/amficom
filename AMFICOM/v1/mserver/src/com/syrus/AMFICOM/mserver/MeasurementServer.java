@@ -1,9 +1,9 @@
-/*
- * $Id: MeasurementServer.java,v 1.43 2005/05/04 11:59:28 arseniy Exp $
+/*-
+ * $Id: MeasurementServer.java,v 1.44 2005/05/13 17:58:31 bass Exp $
  *
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+ * Copyright © 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.mserver;
@@ -23,7 +23,6 @@ import com.syrus.AMFICOM.administration.ServerProcessWrapper;
 import com.syrus.AMFICOM.administration.User;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CORBAServer;
-import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseObjectLoader;
@@ -49,38 +48,56 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2005/05/04 11:59:28 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.44 $, $Date: 2005/05/13 17:58:31 $
+ * @author $Author: bass $
  * @module mserver_v1
  */
 
 public class MeasurementServer extends SleepButWorkThread {
-	public static final String APPLICATION_NAME = "mserver";
+	public static final String APPLICATION_NAME = "mserver"; //$NON-NLS-1$
 
-	public static final String KEY_DB_HOST_NAME = "DBHostName";
-	public static final String KEY_DB_SID = "DBSID";
-	public static final String KEY_DB_CONNECTION_TIMEOUT = "DBConnectionTimeout";
-	public static final String KEY_DB_LOGIN_NAME = "DBLoginName";
-	public static final String KEY_SERVER_ID = "ServerID";
-	public static final String KEY_TICK_TIME = "TickTime";
-	public static final String KEY_MAX_FALLS = "MaxFalls";
+	/*-********************************************************************
+	 * Keys.                                                              *
+	 **********************************************************************/
 
-	public static final String DB_SID = "amficom";
+	public static final String KEY_DB_HOST_NAME = "DBHostName"; //$NON-NLS-1$
+	public static final String KEY_DB_SID = "DBSID"; //$NON-NLS-1$
+	public static final String KEY_DB_CONNECTION_TIMEOUT = "DBConnectionTimeout"; //$NON-NLS-1$
+	public static final String KEY_DB_LOGIN_NAME = "DBLoginName"; //$NON-NLS-1$
+	public static final String KEY_SERVER_ID = "ServerID"; //$NON-NLS-1$
+	public static final String KEY_TICK_TIME = "TickTime"; //$NON-NLS-1$
+	public static final String KEY_MAX_FALLS = "MaxFalls"; //$NON-NLS-1$
+
+	/*-********************************************************************
+	 * Default values.                                                    *
+	 **********************************************************************/
+
+	public static final String DB_SID = "amficom"; //$NON-NLS-1$
+	/**
+	 * Database connection timeout, in seconds.
+	 */
 	public static final int DB_CONNECTION_TIMEOUT = 120;
-	public static final String DB_LOGIN_NAME = "amficom";
-	public static final String SERVER_ID = "Server_1";
+	public static final String DB_LOGIN_NAME = "amficom"; //$NON-NLS-1$
+	public static final String SERVER_ID = "Server_1"; //$NON-NLS-1$
+	/**
+	 * Tick time, in seconds.
+	 */
 	public static final int TICK_TIME = 5;	//sec
 
-	private static final String PASSWORD = "MServer";
+	private static final String PASSWORD = "MServer"; //$NON-NLS-1$
 
 	/*	Error codes for method processFall()	(abort tests, ...)*/
 	public static final int FALL_CODE_RECEIVE_TESTS = 1;
 
 
-	/*	Identifier of server*/
+	/**
+	 * Identifier of this server.
+	 */
 	private static Identifier serverId;
 
-	/*	Login of the corresponding user*/
+	/**
+	 * Login of the corresponding user.
+	 */
 	static String login;
 
 	/*	Process codename*/
@@ -134,63 +151,41 @@ public class MeasurementServer extends SleepButWorkThread {
 		serverId = new Identifier(ApplicationProperties.getString(KEY_SERVER_ID, SERVER_ID));
 		processCodename = ApplicationProperties.getString(ServerProcessWrapper.KEY_MSERVER_PROCESS_CODENAME,
 				ServerProcessWrapper.MSERVER_PROCESS_CODENAME);
-		Server server = null;
-		ServerProcess serverProcess = null;
-		User user = null;
-		Set mcmIds = null;
 		try {
-			server = new Server(serverId);
-			serverProcess = AdministrationDatabaseContext.getServerProcessDatabase().retrieveForServerAndCodename(serverId, processCodename);
-			user = new User(serverProcess.getUserId());
-			mcmIds = Identifier.getIdentifiers(AdministrationDatabaseContext.getMCMDatabase().retrieveForServer(serverId));
-		}
-		catch (Exception e) {
-			Log.errorException(e);
-			System.exit(0);
-		}
-		login = user.getLogin();
-
-		/*	Init database object loader*/
-		DatabaseObjectLoader.init(user.getId());
-
-		/*	Create session environment*/
-		try {
+			final Server server = new Server(serverId);
+			final ServerProcess serverProcess = AdministrationDatabaseContext.getServerProcessDatabase().retrieveForServerAndCodename(serverId, processCodename);
+			final User user = new User(serverProcess.getUserId());
+			final Set mcmIds = Identifier.getIdentifiers(AdministrationDatabaseContext.getMCMDatabase().retrieveForServer(serverId));
+			login = user.getLogin();
+	
+			/*	Init database object loader*/
+			DatabaseObjectLoader.init(user.getId());
+	
+			/*	Create session environment*/
 			MServerSessionEnvironment.createInstance(server.getHostName(), mcmIds);
-		}
-		catch (ApplicationException ae) {
-			Log.errorException(ae);
-			System.exit(0);
-		}
-
-		/*	Login*/
-		MServerSessionEnvironment sessionEnvironment = MServerSessionEnvironment.getInstance();
-		try {
-			sessionEnvironment.login(login, PASSWORD);
-		}
-		catch (CommunicationException ce) {
-			Log.errorException(ce);
-			System.exit(0);
-		}
-		catch (LoginException le) {
-			Log.errorException(le);
-		}
-
-		/*	Create map of test queues*/
-		mcmTestQueueMap = Collections.synchronizedMap(new HashMap(mcmIds.size()));
-		for (Iterator it = mcmIds.iterator(); it.hasNext();)
-			mcmTestQueueMap.put(it.next(), Collections.synchronizedSet(new HashSet()));
-
-		/*	Create collection of MCM identifiers for aborting tests*/
-		mcmIdsToAbortTests = Collections.synchronizedSet(new HashSet());
-
-		try {
+	
+			/*	Login*/
+			final MServerSessionEnvironment sessionEnvironment = MServerSessionEnvironment.getInstance();
+			try {
+				sessionEnvironment.login(login, PASSWORD);
+			} catch (final LoginException le) {
+				Log.errorException(le);
+			}
+	
+			/*	Create map of test queues*/
+			mcmTestQueueMap = Collections.synchronizedMap(new HashMap(mcmIds.size()));
+			for (Iterator it = mcmIds.iterator(); it.hasNext();)
+				mcmTestQueueMap.put(it.next(), Collections.synchronizedSet(new HashSet()));
+	
+			/*	Create collection of MCM identifiers for aborting tests*/
+			mcmIdsToAbortTests = Collections.synchronizedSet(new HashSet());
+	
 			/*	Activate servant*/
-			CORBAServer corbaServer = MServerSessionEnvironment.getInstance().getMServerServantManager().getCORBAServer();
+			final CORBAServer corbaServer = sessionEnvironment.getMServerServantManager().getCORBAServer();
 			corbaServer.activateServant(new MServerImplementation(), processCodename);
 			corbaServer.printNamingContext();
-		}
-		catch (CommunicationException ce) {
-			Log.errorException(ce);
+		} catch (final ApplicationException ae) {
+			Log.errorException(ae);
 			System.exit(0);
 		}
 	}

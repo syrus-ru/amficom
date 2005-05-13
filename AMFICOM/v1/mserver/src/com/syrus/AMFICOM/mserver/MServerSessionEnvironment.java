@@ -1,10 +1,11 @@
-/*
- * $Id: MServerSessionEnvironment.java,v 1.2 2005/05/04 11:37:07 arseniy Exp $
- * 
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+/*-
+ * $Id: MServerSessionEnvironment.java,v 1.3 2005/05/13 17:58:31 bass Exp $
+ *
+ * Copyright © 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.mserver;
 
 import java.util.Set;
@@ -13,14 +14,16 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.BaseSessionEnvironment;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/05/04 11:37:07 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/05/13 17:58:31 $
+ * @author $Author: bass $
  * @module mserver_v1
  */
 final class MServerSessionEnvironment extends BaseSessionEnvironment {
 	private static MServerSessionEnvironment instance;
 
-	private MServerSessionEnvironment(MServerServantManager mServerServantManager, MServerPoolContext mServerPoolContext) {
+	private MServerSessionEnvironment(
+			final MServerServantManager mServerServantManager,
+			final MServerPoolContext mServerPoolContext) {
 		super(mServerServantManager, mServerPoolContext, new MeasurementServer.MServerLoginRestorer());
 	}
 
@@ -28,8 +31,8 @@ final class MServerSessionEnvironment extends BaseSessionEnvironment {
 		return (MServerServantManager) super.baseConnectionManager;
 	}
 
-	public static void createInstance(String serverHostName, Set mcmIds) throws ApplicationException {
-		MServerServantManager mServerServantManager = MServerServantManager.createAndStart(serverHostName, mcmIds);
+	public static void createInstance(final String serverHostName, final Set mcmIds) throws ApplicationException {
+		final MServerServantManager mServerServantManager = MServerServantManager.createAndStart(serverHostName, mcmIds);
 		instance = new MServerSessionEnvironment(mServerServantManager, new MServerPoolContext());
 	}
 

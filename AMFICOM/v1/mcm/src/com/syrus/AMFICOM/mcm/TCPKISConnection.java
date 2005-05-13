@@ -149,7 +149,7 @@ public class TCPKISConnection implements KISConnection {
 	/**
 	 * Receive report from socket. On success save the report into field kisReport
 	 * NOTE: if nothing received, this method also returns true, but saves null into field kisReport
-	 * @param timeout
+	 * @param timewait
 	 * @return true on success, false on failure.
 	 */
 	public native boolean receiveKISReportFromSocket(long timewait);

@@ -1,10 +1,11 @@
-/*
- * $Id: MCMPoolContext.java,v 1.1 2005/04/29 12:16:18 arseniy Exp $
- * 
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+/*-
+ * $Id: MCMPoolContext.java,v 1.2 2005/05/13 17:57:01 bass Exp $
+ *
+ * Copyright © 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.mcm;
 
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
@@ -15,16 +16,11 @@ import com.syrus.AMFICOM.general.StorableObjectResizableLRUMap;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/29 12:16:18 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2005/05/13 17:57:01 $
+ * @author $Author: bass $
  * @module mcm_v1
  */
 final class MCMPoolContext extends PoolContext {
-
-	public MCMPoolContext() {
-		// Nothing
-	}
-
 	public void init() {
 		GeneralStorableObjectPool.init(new MCMGeneralObjectLoader(), StorableObjectResizableLRUMap.class);
 		AdministrationStorableObjectPool.init(new MCMAdministrationObjectLoader(), StorableObjectResizableLRUMap.class);

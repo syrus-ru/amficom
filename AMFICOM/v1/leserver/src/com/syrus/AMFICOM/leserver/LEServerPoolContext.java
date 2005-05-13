@@ -1,10 +1,11 @@
-/*
- * $Id: LEServerPoolContext.java,v 1.1 2005/04/29 12:14:32 arseniy Exp $
- * 
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+/*-
+ * $Id: LEServerPoolContext.java,v 1.2 2005/05/13 17:55:50 bass Exp $
+ *
+ * Copyright © 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.leserver;
 
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
@@ -17,16 +18,11 @@ import com.syrus.AMFICOM.general.PoolContext;
 import com.syrus.AMFICOM.general.StorableObjectResizableLRUMap;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/29 12:14:32 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2005/05/13 17:55:50 $
+ * @author $Author: bass $
  * @module leserver_v1
  */
 final class LEServerPoolContext extends PoolContext {
-
-	public LEServerPoolContext() {
-		// Nothing
-	}
-
 	public void init() {
 		GeneralStorableObjectPool.init(new DatabaseGeneralObjectLoader(), StorableObjectResizableLRUMap.class);
 		AdministrationStorableObjectPool.init(new DatabaseAdministrationObjectLoader(), StorableObjectResizableLRUMap.class);

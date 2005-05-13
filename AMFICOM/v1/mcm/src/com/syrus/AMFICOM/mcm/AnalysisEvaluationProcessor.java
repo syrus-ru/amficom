@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisEvaluationProcessor.java,v 1.26 2005/04/27 15:09:21 arseniy Exp $
+ * $Id: AnalysisEvaluationProcessor.java,v 1.27 2005/05/13 17:57:30 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/04/27 15:09:21 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.27 $, $Date: 2005/05/13 17:57:30 $
+ * @author $Author: bass $
  * @module mcm_v1
  */
 
@@ -73,8 +73,7 @@ public class AnalysisEvaluationProcessor {
 			Analysis analysis = createAnalysis(analysisType, monitoredElementId, measurement, measurementSetup.getCriteriaSet());
 			return new Result[] { analyseAndEvaluate(measurementResult, analysis, measurementSetup.getEtalon()) };
 		}
-        else
-            return new Result[0];
+		return new Result[0];
 	}
 
 	private static Analysis createAnalysis(AnalysisType analysisType,

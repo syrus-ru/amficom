@@ -1,10 +1,11 @@
-/*
- * $Id: LEServerSessionEnvironment.java,v 1.2 2005/04/29 12:28:11 arseniy Exp $
- * 
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+/*-
+ * $Id: LEServerSessionEnvironment.java,v 1.3 2005/05/13 17:55:50 bass Exp $
+ *
+ * Copyright © 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.leserver;
 
 import com.syrus.AMFICOM.general.CommunicationException;
@@ -13,8 +14,8 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.PoolContext;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/29 12:28:11 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/05/13 17:55:50 $
+ * @author $Author: bass $
  * @module leserver_v1
  */
 final class LEServerSessionEnvironment {
@@ -23,7 +24,9 @@ final class LEServerSessionEnvironment {
 	private LEServerServantManager leServerServantManager;
 	private LEServerPoolContext leServerPoolContext;
 
-	private LEServerSessionEnvironment(LEServerServantManager leServerServantManager, LEServerPoolContext leServerPoolContext) {
+	private LEServerSessionEnvironment(
+			final LEServerServantManager leServerServantManager,
+			final LEServerPoolContext leServerPoolContext) {
 		this.leServerServantManager = leServerServantManager;
 		this.leServerPoolContext = leServerPoolContext;
 
@@ -41,8 +44,8 @@ final class LEServerSessionEnvironment {
 		return this.leServerPoolContext;
 	}
 
-	public static void createInstance(String serverHostName) throws CommunicationException {
-		LEServerServantManager leServerServantManager = LEServerServantManager.createAndStart(serverHostName);
+	public static void createInstance(final String serverHostName) throws CommunicationException {
+		final LEServerServantManager leServerServantManager = LEServerServantManager.createAndStart(serverHostName);
 		instance = new LEServerSessionEnvironment(leServerServantManager, new LEServerPoolContext());
 	}
 

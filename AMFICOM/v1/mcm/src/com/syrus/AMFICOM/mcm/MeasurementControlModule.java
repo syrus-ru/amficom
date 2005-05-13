@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.88 2005/05/04 12:00:51 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.89 2005/05/13 17:57:01 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -55,58 +55,76 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.88 $, $Date: 2005/05/04 12:00:51 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.89 $, $Date: 2005/05/13 17:57:01 $
+ * @author $Author: bass $
  * @module mcm_v1
  */
 
 public final class MeasurementControlModule extends SleepButWorkThread {
-	public static final String APPLICATION_NAME = "mcm";
+	public static final String APPLICATION_NAME = "mcm"; //$NON-NLS-1$
 
-	public static final String KEY_MCM_ID = "MCMID";
-	public static final String KEY_DB_HOST_NAME = "DBHostName";
-	public static final String KEY_DB_SID = "DBSID";
-	public static final String KEY_DB_CONNECTION_TIMEOUT = "DBConnectionTimeout";
-	public static final String KEY_DB_LOGIN_NAME = "DBLoginName";
-	public static final String KEY_TICK_TIME = "TickTime";
-	public static final String KEY_MAX_FALLS = "MaxFalls";
-	public static final String KEY_FORWARD_PROCESSING = "ForwardProcessing";
-	public static final String KEY_FORGET_FRAME = "ForgetFrame";
-	public static final String KEY_MSERVER_SERVANT_NAME = "MServerServantName";
-	public static final String KEY_MSERVER_CHECK_TIMEOUT = "MServerCheckTimeout";
-	public static final String KEY_KIS_TICK_TIME = "KISTickTime";
-	public static final String KEY_KIS_MAX_FALLS = "KISMaxFalls";
-	public static final String KEY_KIS_HOST_NAME = "KISHostName";
-	public static final String KEY_KIS_TCP_PORT = "KISTCPPort";
-	public static final String KEY_KIS_MAX_OPENED_CONNECTIONS = "KISMaxOpenedConnections";
-	public static final String KEY_KIS_CONNECTION_TIMEOUT = "KISConnectionTimeout";
+	/*-********************************************************************
+	 * Keys.                                                              *
+	 **********************************************************************/
 
-	public static final String MCM_ID = "MCM_1";
-	public static final String DB_SID = "amficom";
+	public static final String KEY_MCM_ID = "MCMID"; //$NON-NLS-1$
+	public static final String KEY_DB_HOST_NAME = "DBHostName"; //$NON-NLS-1$
+	public static final String KEY_DB_SID = "DBSID"; //$NON-NLS-1$
+	public static final String KEY_DB_CONNECTION_TIMEOUT = "DBConnectionTimeout"; //$NON-NLS-1$
+	public static final String KEY_DB_LOGIN_NAME = "DBLoginName"; //$NON-NLS-1$
+	public static final String KEY_TICK_TIME = "TickTime"; //$NON-NLS-1$
+	public static final String KEY_MAX_FALLS = "MaxFalls"; //$NON-NLS-1$
+	public static final String KEY_FORWARD_PROCESSING = "ForwardProcessing"; //$NON-NLS-1$
+	public static final String KEY_FORGET_FRAME = "ForgetFrame"; //$NON-NLS-1$
+	public static final String KEY_MSERVER_SERVANT_NAME = "MServerServantName"; //$NON-NLS-1$
+	public static final String KEY_MSERVER_CHECK_TIMEOUT = "MServerCheckTimeout"; //$NON-NLS-1$
+	public static final String KEY_KIS_TICK_TIME = "KISTickTime"; //$NON-NLS-1$
+	public static final String KEY_KIS_MAX_FALLS = "KISMaxFalls"; //$NON-NLS-1$
+	public static final String KEY_KIS_HOST_NAME = "KISHostName"; //$NON-NLS-1$
+	public static final String KEY_KIS_TCP_PORT = "KISTCPPort"; //$NON-NLS-1$
+	public static final String KEY_KIS_MAX_OPENED_CONNECTIONS = "KISMaxOpenedConnections"; //$NON-NLS-1$
+	public static final String KEY_KIS_CONNECTION_TIMEOUT = "KISConnectionTimeout"; //$NON-NLS-1$
+
+	/*-********************************************************************
+	 * Default values.                                                    *
+	 **********************************************************************/
+
+	public static final String MCM_ID = "MCM_1"; //$NON-NLS-1$
+	public static final String DB_SID = "amficom"; //$NON-NLS-1$
+	/**
+	 * Database connection timeout, in seconds.
+	 */
 	public static final int DB_CONNECTION_TIMEOUT = 120;	//sec
-	public static final String DB_LOGIN_NAME = "amficom";
+	public static final String DB_LOGIN_NAME = "amficom"; //$NON-NLS-1$
+	/**
+	 * Tick time, in seconds.
+	 */
 	public static final int TICK_TIME = 5;	//sec
 	public static final int FORWARD_PROCESSING = 2;
 	public static final int FORGET_FRAME = 24 * 60 * 60;	//sec
-	public static final String MSERVER_SERVANT_NAME = "MServer";
+	public static final String MSERVER_SERVANT_NAME = "MServer"; //$NON-NLS-1$
 	public static final int MSERVER_CHECK_TIMEOUT = 10;		//min
 	public static final int KIS_TICK_TIME = 1;	//sec
 	public static final int KIS_MAX_FALLS = 10;
-	public static final String KIS_HOST_NAME = "127.0.0.1";
+	public static final String KIS_HOST_NAME = "127.0.0.1"; //$NON-NLS-1$
 	public static final short KIS_TCP_PORT = 7501;
 	public static final int KIS_MAX_OPENED_CONNECTIONS = 1;
 	public static final int KIS_CONNECTION_TIMEOUT = 120;	//sec
 
-	private static final String PASSWORD = "MCM";
+	private static final String PASSWORD = "MCM"; //$NON-NLS-1$
 
 	/*	Error codes for method processFall()	(remove results, ...)*/
 	public static final int FALL_CODE_RECEIVE_RESULTS = 1;
 
 
-	/*	Identifier of this MCM*/
+	/**
+	 * Identifier of this MCM.
+	 */
 	protected static Identifier mcmId;
 
-	/*	Login of the corresponding user*/
+	/**
+	 * Login of the corresponding user.
+	 */
 	static String login;
 
 	/*	Scheduled tests transferred from server	*/
@@ -164,66 +182,45 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 
 		/*	Retrieve information about MCM, it's user and server*/
 		mcmId = new Identifier(ApplicationProperties.getString(KEY_MCM_ID, MCM_ID));
-		MCM mcm = null;
-		User user = null;
-		Server server = null;
 		try {
-			mcm = new MCM(mcmId);
-			user = new User(mcm.getUserId());
-			server = new Server(mcm.getServerId());
-		}
-		catch (Exception e) {
-			Log.errorException(e);
-			System.exit(0);
-		}
-		login = user.getLogin();
-
-		/*	Init database object loader*/
-		DatabaseObjectLoader.init(user.getId());
-
-		/*	Create session environment*/
-		try {
+			final MCM mcm = new MCM(mcmId);
+			final User user = new User(mcm.getUserId());
+			final Server server = new Server(mcm.getServerId());
+			login = user.getLogin();
+	
+			/*	Init database object loader*/
+			DatabaseObjectLoader.init(user.getId());
+	
+			/*	Create session environment*/
 			MCMSessionEnvironment.createInstance(server.getHostName());
-		}
-		catch (CommunicationException ce) {
-			Log.errorException(ce);
-			System.exit(0);
-		}
+	
+			/*	Login*/
+			final MCMSessionEnvironment sessionEnvironment = MCMSessionEnvironment.getInstance();
+			try {
+				sessionEnvironment.login(login, PASSWORD);
+			} catch (final LoginException le) {
+				Log.errorException(le);
+			}
 
-		/*	Login*/
-		MCMSessionEnvironment sessionEnvironment = MCMSessionEnvironment.getInstance();
-		try {
-			sessionEnvironment.login(login, PASSWORD);
-		}
-		catch (CommunicationException ce) {
-			Log.errorException(ce);
-			System.exit(0);
-		}
-		catch (LoginException le) {
-			Log.errorException(le);
-		}
-
-		/*	Create map of test processors*/
-		testProcessors = Collections.synchronizedMap(new HashMap());
-
-		/*	Create (and start - ?) KIS connection manager*/
-		activateKISConnectionManager();
-
-		/*	Create and start transceiver for every KIS*/
-		activateKISTransceivers();
-
-		/*	Create and fill lists: testList - sheduled tests ordered by start_time;	*/
-		prepareResultList();
-		prepareTestList();
-
-		/*	Activate servant*/
-		try {
-			CORBAServer corbaServer = sessionEnvironment.getMCMServantManager().getCORBAServer();
+			/*	Create map of test processors*/
+			testProcessors = Collections.synchronizedMap(new HashMap());
+	
+			/*	Create (and start - ?) KIS connection manager*/
+			activateKISConnectionManager();
+	
+			/*	Create and start transceiver for every KIS*/
+			activateKISTransceivers();
+	
+			/*	Create and fill lists: testList - sheduled tests ordered by start_time;	*/
+			prepareResultList();
+			prepareTestList();
+	
+			/*	Activate servant*/
+			final CORBAServer corbaServer = sessionEnvironment.getMCMServantManager().getCORBAServer();
 			corbaServer.activateServant(new MCMImplementation(), mcmId.toString());
 			corbaServer.printNamingContext();
-		}
-		catch (CommunicationException ce) {
-			Log.errorException(ce);
+		} catch (final ApplicationException ae) {
+			Log.errorException(ae);
 			System.exit(0);
 		}
 	}

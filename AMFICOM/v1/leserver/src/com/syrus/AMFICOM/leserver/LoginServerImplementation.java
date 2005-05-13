@@ -1,5 +1,5 @@
 /*
- * $Id: LoginServerImplementation.java,v 1.10 2005/05/04 11:29:13 arseniy Exp $
+ * $Id: LoginServerImplementation.java,v 1.11 2005/05/13 17:55:50 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,8 +39,8 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/05/04 11:29:13 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2005/05/13 17:55:50 $
+ * @author $Author: bass $
  * @module leserver_v1
  */
 final class LoginServerImplementation extends LoginServerPOA {
@@ -157,27 +157,32 @@ final class LoginServerImplementation extends LoginServerPOA {
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_LOGGED_IN, CompletionStatus.COMPLETED_YES, "Not logged in");
 	}
 
-	public void validateAccess(SessionKey_Transferable sessionKeyT,
-			Identifier_TransferableHolder userIdTH,
-			Identifier_TransferableHolder domainIdTH) throws AMFICOMRemoteException {
-		SessionKey sessionKey = new SessionKey(sessionKeyT);
-		UserLogin userLogin = LoginProcessor.getUserLogin(sessionKey);
-		if (userLogin != null) {
-			userLogin.updateLastActivityDate();
-			try {
-				this.userLoginDatabase.update(userLogin);
-			}
-			catch (UpdateObjectException uoe) {
-				Log.errorException(uoe);
-			}
+	/**
+	 * @param sessionKeyT an "in" parameter.
+	 * @param userIdTH an "out" parameter representing a user id.
+	 * @param domainIdTH an "out" parameter representing a domain id.
+	 * @throws AMFICOMRemoteException if user not logged in.
+	 * @see com.syrus.AMFICOM.leserver.corba.LoginServerOperations#validateAccess(com.syrus.AMFICOM.security.corba.SessionKey_Transferable, com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder, com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder)
+	 */
+	public void validateAccess(final SessionKey_Transferable sessionKeyT,
+			final Identifier_TransferableHolder userIdTH,
+			final Identifier_TransferableHolder domainIdTH) throws AMFICOMRemoteException {
+		final UserLogin userLogin = LoginProcessor.getUserLogin(new SessionKey(sessionKeyT));
+		if (userLogin == null)
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_LOGGED_IN, CompletionStatus.COMPLETED_YES, "Not logged in"); //$NON-NLS-1$
 
-			userIdTH.value = (Identifier_Transferable) userLogin.getUserId().getTransferable();
-			Identifier domainId = userLogin.getDomainId();
-			domainIdTH.value = (domainId != null) ? (Identifier_Transferable) userLogin.getDomainId().getTransferable()
-					: (Identifier_Transferable) Identifier.VOID_IDENTIFIER.getTransferable();
+		userLogin.updateLastActivityDate();
+		try {
+			this.userLoginDatabase.update(userLogin);
+		} catch (final UpdateObjectException uoe) {
+			Log.errorException(uoe);
 		}
-		else
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_LOGGED_IN, CompletionStatus.COMPLETED_YES, "Not logged in");
+
+		userIdTH.value = (Identifier_Transferable) userLogin.getUserId().getTransferable();
+		final Identifier domainId = userLogin.getDomainId();
+		domainIdTH.value = (Identifier_Transferable)
+				(domainId == null ? Identifier.VOID_IDENTIFIER : domainId)
+				.getTransferable();
 	}
 
 	public void verify(byte i) {

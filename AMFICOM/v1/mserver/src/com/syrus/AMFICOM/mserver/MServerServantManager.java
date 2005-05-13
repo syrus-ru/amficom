@@ -1,10 +1,11 @@
-/*
- * $Id: MServerServantManager.java,v 1.4 2005/05/04 13:50:53 arseniy Exp $
- * 
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+/*-
+ * $Id: MServerServantManager.java,v 1.5 2005/05/13 17:58:31 bass Exp $
+ *
+ * Copyright © 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.mserver;
 
 import java.util.Set;
@@ -28,8 +29,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/05/04 13:50:53 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.5 $, $Date: 2005/05/13 17:58:31 $
+ * @author $Author: bass $
  * @module cmserver_v1
  */
 

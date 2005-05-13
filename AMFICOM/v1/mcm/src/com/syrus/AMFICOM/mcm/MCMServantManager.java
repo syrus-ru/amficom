@@ -1,10 +1,11 @@
-/*
- * $Id: MCMServantManager.java,v 1.7 2005/05/04 13:51:19 arseniy Exp $
- * 
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+/*-
+ * $Id: MCMServantManager.java,v 1.8 2005/05/13 17:57:01 bass Exp $
+ *
+ * Copyright © 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.mcm;
 
 import com.syrus.AMFICOM.administration.ServerProcessWrapper;
@@ -12,6 +13,7 @@ import com.syrus.AMFICOM.general.BaseConnectionManager;
 import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.ContextNameFactory;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.RunnableVerifiedConnectionManager;
 import com.syrus.AMFICOM.general.corba.IdentifierGeneratorServer;
@@ -22,8 +24,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/05/04 13:51:19 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/05/13 17:57:01 $
+ * @author $Author: bass $
  * @module mcm_v1
  */
 final class MCMServantManager extends RunnableVerifiedConnectionManager implements BaseConnectionManager {
@@ -42,7 +44,7 @@ final class MCMServantManager extends RunnableVerifiedConnectionManager implemen
 		this.eventServerServantName = eventServerServantName;
 		this.mServerServantName = mServerServantName;
 
-		assert timeout >= 10L * 60L * 1000L : "Too low timeout"; //not less then 10 min
+		assert timeout >= 10L * 60L * 1000L: ErrorMessages.TIMEOUT_TOO_SHORT; //not less then 10 min
 	}
 
 	public LoginServer getLoginServerReference() throws CommunicationException {
@@ -90,12 +92,12 @@ final class MCMServantManager extends RunnableVerifiedConnectionManager implemen
 	}
 
 	protected void onLoseConnection(String servantName) {
-		Log.debugMessage("MCMServantManager.onLoseConnection | Connection with '" + servantName + "' lost", Log.DEBUGLEVEL08);
+		Log.debugMessage("MCMServantManager.onLoseConnection | Connection with '" + servantName + "' lost", Log.DEBUGLEVEL08); //$NON-NLS-1$ //$NON-NLS-2$
 		//@todo Generate event "Connection lost"
 	}
 
 	protected void onRestoreConnection(String servantName) {
-		Log.debugMessage("MCMServantManager.onRestoreConnection | Connection with '" + servantName + "' restored",
+		Log.debugMessage("MCMServantManager.onRestoreConnection | Connection with '" + servantName + "' restored", //$NON-NLS-1$ //$NON-NLS-2$
 				Log.DEBUGLEVEL08);
 		//@todo Generate event "Connection restored"
 	}
