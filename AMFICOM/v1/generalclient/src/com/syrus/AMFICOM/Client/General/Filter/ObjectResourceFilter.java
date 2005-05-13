@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourceFilter.java,v 1.15 2005/05/05 11:04:47 bob Exp $
+ * $Id: ObjectResourceFilter.java,v 1.16 2005/05/13 19:05:47 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,8 +20,8 @@ import com.syrus.AMFICOM.filter.Filter;
 import com.syrus.AMFICOM.filter.FilterExpressionInterface;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.15 $, $Date: 2005/05/05 11:04:47 $
+ * @author $Author: bass $
+ * @version $Revision: 1.16 $, $Date: 2005/05/13 19:05:47 $
  * @module generalclient_v1
  */
 public abstract class ObjectResourceFilter implements Filter
@@ -35,13 +35,13 @@ public abstract class ObjectResourceFilter implements Filter
 
 	public ObjectResourceFilter()
 	{
-		this.id = "filter" + System.currentTimeMillis();
+		this.getId() = "filter" + System.currentTimeMillis();
 		this.logicScheme = new LogicScheme(this);
 	}
 
 	public ObjectResourceFilter(LogicScheme ls)
 	{
-		this.id = "filter" + System.currentTimeMillis();
+		this.getId() = "filter" + System.currentTimeMillis();
 		this.logicScheme = ls;
 	}
 
@@ -54,7 +54,7 @@ public abstract class ObjectResourceFilter implements Filter
 
 	public String getId()
 	{
-		return this.id;
+		return this.getId();
 	}
 
 	public boolean expression(FilterExpressionInterface expr, Object or)

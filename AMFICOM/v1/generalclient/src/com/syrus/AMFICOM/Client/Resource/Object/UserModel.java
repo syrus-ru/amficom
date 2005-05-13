@@ -1,5 +1,5 @@
 /*
- * $Id: UserModel.java,v 1.4 2004/09/27 15:38:15 bass Exp $
+ * $Id: UserModel.java,v 1.5 2005/05/13 19:05:47 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,15 +8,20 @@
 
 package com.syrus.AMFICOM.Client.Resource.Object;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.Vector;
+
 import com.syrus.AMFICOM.Client.Administrate.Object.UI.UserPane;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
-import com.syrus.AMFICOM.Client.Resource.*;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
+import com.syrus.AMFICOM.administration.User;
+import com.syrus.AMFICOM.general.StorableObject;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2004/09/27 15:38:15 $
+ * @version $Revision: 1.5 $, $Date: 2005/05/13 19:05:47 $
  * @module generalclient_v1
  */
 public class UserModel extends ObjectResourceModel
@@ -35,7 +40,7 @@ public class UserModel extends ObjectResourceModel
 
   public Class getChildClass(String type)
   {
-    return ObjectResource.class;
+    return StorableObject.class;
   }
 
 	public  ObjectResourcePropertiesPane getPropertyPane() {
@@ -51,7 +56,7 @@ public class UserModel extends ObjectResourceModel
 	  try
 	  {
 //      if(col_id.equals("id"))
-//        s = user.id;
+//        s = user.getId();
       if(col_id.equals("name"))
         s = user.login;
       if(col_id.equals("sessions"))

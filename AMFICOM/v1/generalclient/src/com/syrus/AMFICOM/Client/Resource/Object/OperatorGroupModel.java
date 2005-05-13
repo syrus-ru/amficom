@@ -1,5 +1,5 @@
 /*
- * $Id: OperatorGroupModel.java,v 1.4 2004/09/27 15:56:45 bass Exp $
+ * $Id: OperatorGroupModel.java,v 1.5 2005/05/13 19:05:47 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,6 +11,9 @@ package com.syrus.AMFICOM.Client.Resource.Object;
 import com.syrus.AMFICOM.Client.Administrate.Object.UI.OperatorGroupPane;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.administration.User;
+import com.syrus.AMFICOM.general.StorableObject;
+
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -20,7 +23,7 @@ import java.util.*;
  * dependencies between <tt>generalclient_v1</tt> and <tt>admin_1</tt>.
  *
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2004/09/27 15:56:45 $
+ * @version $Revision: 1.5 $, $Date: 2005/05/13 19:05:47 $
  * @module generalclient_v1
  */
 public class OperatorGroupModel extends ObjectResourceModel
@@ -34,7 +37,7 @@ public class OperatorGroupModel extends ObjectResourceModel
 
 	public Collection getChildren(String key)
 	{
-		if(key.equals(User.typ))
+		if(key.equals(User.class.getName()))
 			return group.users.values();
 
 		return new Vector();
@@ -42,15 +45,15 @@ public class OperatorGroupModel extends ObjectResourceModel
 	public Enumeration getChildTypes()
 	{
 		Vector ret = new Vector();
-		ret.add(User.typ);
+		ret.add(User.class.getName());
 		return ret.elements();
 	}
 
 	public Class getChildClass(String type)
 	{
-		if(type.equals(User.typ))
+		if(type.equals(User.class.getName()))
 			 return User.class;
-		return ObjectResource.class;
+		return StorableObject.class;
 	}
 
 	public ObjectResourcePropertiesPane getPropertyPane() {
@@ -66,11 +69,11 @@ public class OperatorGroupModel extends ObjectResourceModel
 		try
 		{
 //      if(col_id.equals("id"))
-//        s = group.id;
+//        s = group.getId();
 			if(col_id.equals("name"))
 				s = group.name;
 			if(col_id.equals("owner_id"))
-				s = ((ObjectResource )Pool.get(User.typ, group.owner_id)).getName();
+				s = ((StorableObject )Pool.get(User.class.getName(), group.owner_id)).getName();
 			if(col_id.equals("modified"))
 				s = sdf.format(new Date(group.modified));
 		}

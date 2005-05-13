@@ -14,7 +14,7 @@ public class FilterTreeNode extends DefaultMutableTreeNode
 	{
 		super(name);
 		this.name = name;
-		this.id = id;
+		this.getId() = id;
 	}
 
 	public String getName()

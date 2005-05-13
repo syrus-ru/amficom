@@ -133,9 +133,9 @@ public final class FirmedTextPane extends JTextPane
 			for (int i = 0; i < ros.size(); i++)
 			{
 				RenderingObject curRO = (RenderingObject) ros.get(i);
-				if (ftp_trans.horizFirmer.equals(curRO.id))
+				if (ftp_trans.horizFirmer.equals(curRO.getId()))
 					this.horizFirmer = curRO;
-				if (ftp_trans.vertFirmer.equals(curRO.id))
+				if (ftp_trans.vertFirmer.equals(curRO.getId()))
 					this.vertFirmer = curRO;
 			}
 	}

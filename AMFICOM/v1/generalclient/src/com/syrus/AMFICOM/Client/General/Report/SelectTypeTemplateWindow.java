@@ -1,5 +1,5 @@
 /*
- * $Id: SelectTypeTemplateWindow.java,v 1.6 2004/09/27 08:22:56 bass Exp $
+ * $Id: SelectTypeTemplateWindow.java,v 1.7 2005/05/13 19:05:47 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import javax.swing.event.*;
  * открытия шаблонов определённого типа.
  *
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2004/09/27 08:22:56 $
+ * @version $Revision: 1.7 $, $Date: 2005/05/13 19:05:47 $
  * @module generalclient_v1
  */
 public class SelectTypeTemplateWindow extends JDialog
@@ -153,9 +153,9 @@ public class SelectTypeTemplateWindow extends JDialog
 
 	private void setListContents()
 	{
-		Pool.removeMap(ReportTemplate.typ);
+		Pool.removeMap(ReportTemplate.class.getName());
 		new ReportDataSourceImage(aContext.getDataSource()).LoadReportTemplates();
-		Map map = Pool.getMap(ReportTemplate.typ);
+		Map map = Pool.getMap(ReportTemplate.class.getName());
 		if (map != null)
 			for (Iterator iterator = map.values().iterator(); iterator.hasNext();)
 			{

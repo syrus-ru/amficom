@@ -1,5 +1,5 @@
 /*
- * $Id: ServerModel.java,v 1.3 2004/09/27 14:30:54 bass Exp $
+ * $Id: ServerModel.java,v 1.4 2005/05/13 19:05:47 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,6 +11,9 @@ package com.syrus.AMFICOM.Client.Resource.System;
 import com.syrus.AMFICOM.Client.Administrate.Object.UI.ServerPane;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.administration.Server;
+import com.syrus.AMFICOM.general.StorableObject;
+
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -20,7 +23,7 @@ import java.util.*;
  * dependencies between <tt>generalclient_v1</tt> and <tt>admin_1</tt>.
  *
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2004/09/27 14:30:54 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/13 19:05:47 $
  * @module generalclient_v1
  */
 public class ServerModel extends ObjectResourceModel
@@ -45,7 +48,7 @@ public class ServerModel extends ObjectResourceModel
     try
     {
       if(col_id.equals("id"))
-        s = server.id;
+        s = server.getId();
       if(col_id.equals("name"))
         s = server.name;
       if(col_id.equals("created"))
@@ -71,6 +74,6 @@ public class ServerModel extends ObjectResourceModel
 
   public Class getChildClass(String type)
   {
-    return ObjectResource.class;
+    return StorableObject.class;
   }
 }

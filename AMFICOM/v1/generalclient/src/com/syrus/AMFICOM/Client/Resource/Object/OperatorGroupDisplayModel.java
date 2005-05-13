@@ -1,5 +1,5 @@
 /*
- * $Id: OperatorGroupDisplayModel.java,v 1.2 2004/08/17 15:02:51 krupenn Exp $
+ * $Id: OperatorGroupDisplayModel.java,v 1.3 2005/05/13 19:05:47 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,14 +12,15 @@ import java.util.*;
 
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.general.StorableObject;
 
 /**
  * This class actually belongs to <tt>admin_v1</tt> module. It was
  * moved to <tt>generalclient_v1</tt> to resolve cross-module
  * dependencies between <tt>generalclient_v1</tt> and <tt>admin_1</tt>.
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.2 $, $Date: 2004/08/17 15:02:51 $
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/05/13 19:05:47 $
  * @module generalclient_v1
  */
 public class OperatorGroupDisplayModel extends StubDisplayModel
@@ -56,7 +57,7 @@ public class OperatorGroupDisplayModel extends StubDisplayModel
 	  return s;
   }
 
-  public PropertyRenderer getColumnRenderer(ObjectResource or, String col_id)
+  public PropertyRenderer getColumnRenderer(StorableObject or, String col_id)
   {
 	ObjectResourceModel mod = or.getModel();
 	return new JLabelRenderer(mod.getColumnValue(col_id));

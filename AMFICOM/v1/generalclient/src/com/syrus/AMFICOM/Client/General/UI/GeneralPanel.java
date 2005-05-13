@@ -1,5 +1,5 @@
 /*
- * $Id: GeneralPanel.java,v 1.7 2005/05/05 11:04:47 bob Exp $
+ * $Id: GeneralPanel.java,v 1.8 2005/05/13 19:05:47 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,8 +17,8 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.corba.portable.reflect.common.ObjectResource;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.7 $, $Date: 2005/05/05 11:04:47 $
+ * @author $Author: bass $
+ * @version $Revision: 1.8 $, $Date: 2005/05/13 19:05:47 $
  * @module generalclient_v1
  */
 public class GeneralPanel extends JPanel implements ObjectResourcePropertiesPane
@@ -66,7 +66,7 @@ public class GeneralPanel extends JPanel implements ObjectResourcePropertiesPane
 	{
 		return false;
 //		or.prepareRemoval();
-//		Pool.remove(or.getTyp(), or);
+//		Pool.remove(or.getClass().getName(), or);
 	}
 
 	public boolean open()

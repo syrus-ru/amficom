@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourceCatalogPanel.java,v 1.8 2005/03/05 15:23:50 stas Exp $
+ * $Id: ObjectResourceCatalogPanel.java,v 1.9 2005/05/13 19:05:47 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,8 @@ import com.syrus.AMFICOM.Client.General.Filter.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.general.StorableObject;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.lang.reflect.InvocationTargetException;
@@ -23,8 +25,8 @@ import javax.swing.event.*;
 import oracle.jdeveloper.layout.XYConstraints;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.8 $, $Date: 2005/03/05 15:23:50 $
+ * @author $Author: bass $
+ * @version $Revision: 1.9 $, $Date: 2005/05/13 19:05:47 $
  * @module generalclient_v1
  */
 public class ObjectResourceCatalogPanel extends JPanel implements OperationListener
@@ -181,7 +183,7 @@ public class ObjectResourceCatalogPanel extends JPanel implements OperationListe
 		ObjectResourceSorter sor = null;
 
 		this.orclass = orclass;
-		if (orclass != null && ObjectResource.class.isAssignableFrom(orclass))
+		if (orclass != null && StorableObject.class.isAssignableFrom(orclass))
 		{
 			try
 			{
@@ -282,11 +284,11 @@ public class ObjectResourceCatalogPanel extends JPanel implements OperationListe
 			{
 				if (!propPane.create())
 					return;
-				ObjectResource res = propPane.getObjectResource();
+				StorableObject res = propPane.getObjectResource();
 				dataSet.add(res);
 				listPane.tableModel.fireTableDataChanged();
 				sendEvent = true;
-				dispatcher.notify(new TreeListSelectionEvent(res.getTyp(), TreeListSelectionEvent.REFRESH_EVENT));
+				dispatcher.notify(new TreeListSelectionEvent(res.getClass().getName(), TreeListSelectionEvent.REFRESH_EVENT));
 				dispatcher.notify(new TreeListSelectionEvent(res, TreeListSelectionEvent.SELECT_EVENT));
 				sendEvent = false;
 				listPane.setSelected(res);
@@ -305,13 +307,13 @@ public class ObjectResourceCatalogPanel extends JPanel implements OperationListe
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				ObjectResource or = (ObjectResource)listPane.getSelectedObject();
+				StorableObject or = (StorableObject)listPane.getSelectedObject();
 				if (!propPane.delete())
 					return;
 				dataSet.remove(or);
 				listPane.tableModel.fireTableDataChanged();
 				sendEvent = true;
-				dispatcher.notify(new TreeListSelectionEvent(or.getTyp(), TreeListSelectionEvent.REFRESH_EVENT));
+				dispatcher.notify(new TreeListSelectionEvent(or.getClass().getName(), TreeListSelectionEvent.REFRESH_EVENT));
 				sendEvent = false;
 				buttonCancel.setEnabled(true);
 				buttonSave.setEnabled(true);
@@ -327,14 +329,14 @@ public class ObjectResourceCatalogPanel extends JPanel implements OperationListe
 				}
 				else
 				{
-					ObjectResource obj = (ObjectResource )dataSet.iterator().next();
+					StorableObject obj = (StorableObject )dataSet.iterator().next();
 					listPane.setSelected(obj);
 					sendEvent = true;
 					dispatcher.notify(new TreeListSelectionEvent(obj, TreeListSelectionEvent.SELECT_EVENT));
 					sendEvent = false;
 				}
 				sendEvent = true;
-				dispatcher.notify(new TreeListSelectionEvent(or.getTyp(), TreeListSelectionEvent.REFRESH_EVENT));
+				dispatcher.notify(new TreeListSelectionEvent(or.getClass().getName(), TreeListSelectionEvent.REFRESH_EVENT));
 				sendEvent = false;
 			}
 		});
@@ -345,7 +347,7 @@ public class ObjectResourceCatalogPanel extends JPanel implements OperationListe
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				ObjectResource or  = (ObjectResource)listPane.getSelectedObject();
+				StorableObject or  = (StorableObject)listPane.getSelectedObject();
 				if (or != null)
 				{
 					try
@@ -371,7 +373,7 @@ public class ObjectResourceCatalogPanel extends JPanel implements OperationListe
 				if (!propPane.save())
 					return;
 				listPane.updateUI();
-				ObjectResource or = propPane.getObjectResource();
+				StorableObject or = propPane.getObjectResource();
 				sendEvent = true;
 				dispatcher.notify(new TreeListSelectionEvent("", TreeListSelectionEvent.REFRESH_EVENT));
 				dispatcher.notify(new TreeListSelectionEvent(or, TreeListSelectionEvent.SELECT_EVENT));
@@ -457,8 +459,8 @@ public class ObjectResourceCatalogPanel extends JPanel implements OperationListe
 				Object obj = (Object) listPane.getSelectedObject();
 				if (obj == null)
 					return;
-				if (obj instanceof ObjectResource)
-					propPane.setObjectResource((ObjectResource) obj);
+				if (obj instanceof StorableObject)
+					propPane.setObjectResource((StorableObject) obj);
 				jTabbedPane.setIconAt(1, new TextIcon(LangModel.getString("Properties"), jTabbedPane, true));
 				jTabbedPane.setEnabledAt(1, true);
 				buttonProperties.setEnabled(true);
@@ -551,7 +553,7 @@ public class ObjectResourceCatalogPanel extends JPanel implements OperationListe
 
 			if (n != -1)
 			{
-				ObjectResource res = (ObjectResource )data.get(n);
+				StorableObject res = (StorableObject )data.get(n);
 
 				if (dataSet.indexOf(res) == -1)
 				{

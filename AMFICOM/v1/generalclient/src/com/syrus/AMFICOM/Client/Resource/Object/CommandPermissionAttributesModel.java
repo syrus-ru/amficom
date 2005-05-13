@@ -1,5 +1,5 @@
 /*
- * $Id: CommandPermissionAttributesModel.java,v 1.5 2004/09/27 15:46:18 bass Exp $
+ * $Id: CommandPermissionAttributesModel.java,v 1.6 2005/05/13 19:05:47 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,12 +11,15 @@ package com.syrus.AMFICOM.Client.Resource.Object;
 import com.syrus.AMFICOM.Client.Administrate.Object.UI.CommandPermissionAttributesPane;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.administration.User;
+import com.syrus.AMFICOM.general.StorableObject;
+
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2004/09/27 15:46:18 $
+ * @version $Revision: 1.6 $, $Date: 2005/05/13 19:05:47 $
  * @module generalclient_v1
  */
 public class CommandPermissionAttributesModel extends ObjectResourceModel
@@ -31,7 +34,7 @@ public class CommandPermissionAttributesModel extends ObjectResourceModel
 
 	public Collection getChildren(String key)
 	{
-		if(key.equals(OperatorCategory.typ))
+		if(key.equals(OperatorCategory.class.getName()))
 		{
 			return cpa.categories.values();
 		}
@@ -41,16 +44,16 @@ public class CommandPermissionAttributesModel extends ObjectResourceModel
 	public Enumeration getChildTypes()
 	{
 		Vector ret = new Vector();
-		ret.add(OperatorCategory.typ);
+		ret.add(OperatorCategory.class.getName());
 		return ret.elements();
 	}
 
 	public Class getChildClass(String type)
 	{
-		if(type.equals(OperatorCategory.typ))
+		if(type.equals(OperatorCategory.class.getName()))
 			return OperatorCategory.class;
 
-		return ObjectResource.class;
+		return StorableObject.class;
 	}
 
 	public ObjectResourcePropertiesPane getPropertyPane() {
@@ -66,11 +69,11 @@ public class CommandPermissionAttributesModel extends ObjectResourceModel
 		try
 		{
 //      if(col_id.equals("id"))
-//        s = cpa.id;
+//        s = cpa.getId();
 			if(col_id.equals("name"))
 				s = cpa.name;
 			if(col_id.equals("owner_id"))
-				s = ((ObjectResource)Pool.get(User.typ, cpa.owner_id)).getName();
+				s = ((StorableObject)Pool.get(User.class.getName(), cpa.owner_id)).getName();
 			if(col_id.equals("modified"))
 				s = sdf.format(new Date(cpa.modified));
 		}

@@ -2,6 +2,7 @@
 package com.syrus.AMFICOM.client_.general.ui_;
 
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
+import com.syrus.AMFICOM.general.StorableObject;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,8 +14,8 @@ import javax.swing.table.AbstractTableModel;
 import java.util.Iterator;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/05/05 11:04:49 $
- * @author $Author: bob $
+ * @version $Revision: 1.10 $, $Date: 2005/05/13 19:06:18 $
+ * @author $Author: bass $
  * @module generalclient_v1
  */
 public class ObjectResourceTableModel extends AbstractTableModel {
@@ -22,7 +23,7 @@ public class ObjectResourceTableModel extends AbstractTableModel {
 	private static final long			serialVersionUID	= 4007513055820570639L;
 
 	/**
-	 * ObjectResourceController of Model (ObjectResource) will be used for
+	 * ObjectResourceController of Model (StorableObject) will be used for
 	 * sorting. see {@link ObjectResourceController}
 	 */
 	protected ObjectResourceController	controller;
@@ -38,7 +39,7 @@ public class ObjectResourceTableModel extends AbstractTableModel {
 	private boolean						doRestrict			= false;
 
 	/**
-	 * list of Model (ObjectResouce) elements. see {@link ObjectResource}
+	 * list of Model (ObjectResouce) elements. see {@link StorableObject}
 	 */
 	private List						orList;
 
@@ -146,7 +147,7 @@ public class ObjectResourceTableModel extends AbstractTableModel {
 	public void restrictContents() {
 		List removeItemList = new ArrayList();
 		for (Iterator it = this.orList.iterator(); it.hasNext();) {
-			ObjectResource or = (ObjectResource) it.next();
+			StorableObject or = (StorableObject) it.next();
 			if (!or.getDomainId().equals(this.domainId))
 				removeItemList.add(or);
 		}

@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourcePropertyFrame.java,v 1.6 2005/05/05 11:04:47 bob Exp $
+ * $Id: ObjectResourcePropertyFrame.java,v 1.7 2005/05/13 19:05:47 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,8 +24,8 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.corba.portable.reflect.common.ObjectResource;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.6 $, $Date: 2005/05/05 11:04:47 $
+ * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2005/05/13 19:05:47 $
  * @module generalclient_v1
  */
 public class ObjectResourcePropertyFrame extends JInternalFrame
@@ -69,7 +69,7 @@ public class ObjectResourcePropertyFrame extends JInternalFrame
 			return;
 //		disp.register(this, MapNavigateEvent.type);
 		disp.register(this, TreeDataSelectionEvent.type);
-		disp.register(this, TreeListSelectionEvent.typ);
+		disp.register(this, TreeListSelectionEvent.class.getName());
 	}
 
 	public void setContents(ObjectResource obj)
@@ -118,7 +118,7 @@ public class ObjectResourcePropertyFrame extends JInternalFrame
 			}
 		}
 		else
-		if(oe.getActionCommand().equals(TreeListSelectionEvent.typ))
+		if(oe.getActionCommand().equals(TreeListSelectionEvent.class.getName()))
 		{
 			Object o = oe.getSource();
 			if(o instanceof ObjectResource)

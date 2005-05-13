@@ -1,5 +1,5 @@
 /*
- * $Id: ServerDisplayModel.java,v 1.3 2004/09/27 14:30:54 bass Exp $
+ * $Id: ServerDisplayModel.java,v 1.4 2005/05/13 19:05:47 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,6 +10,8 @@ package com.syrus.AMFICOM.Client.Resource.System;
 
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.general.StorableObject;
+
 import java.util.*;
 
 /**
@@ -18,7 +20,7 @@ import java.util.*;
  * dependencies between <tt>generalclient_v1</tt> and <tt>admin_1</tt>.
  *
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2004/09/27 14:30:54 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/13 19:05:47 $
  * @module generalclient_v1
  */
 public class ServerDisplayModel extends StubDisplayModel
@@ -55,7 +57,7 @@ public class ServerDisplayModel extends StubDisplayModel
     return s;
   }
 
-  public PropertyRenderer getColumnRenderer(ObjectResource or, String col_id)
+  public PropertyRenderer getColumnRenderer(StorableObject or, String col_id)
   {
     ObjectResourceModel mod = or.getModel();
     return new JLabelRenderer(mod.getColumnValue(col_id));

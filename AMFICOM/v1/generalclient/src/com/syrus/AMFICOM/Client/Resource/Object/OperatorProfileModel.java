@@ -1,5 +1,5 @@
 /*
- * $Id: OperatorProfileModel.java,v 1.4 2004/09/27 15:40:36 bass Exp $
+ * $Id: OperatorProfileModel.java,v 1.5 2005/05/13 19:05:47 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,6 +11,8 @@ package com.syrus.AMFICOM.Client.Resource.Object;
 import com.syrus.AMFICOM.Client.Administrate.Object.UI.OperatorProfilePane;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.general.StorableObject;
+
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -20,7 +22,7 @@ import java.util.*;
  * dependencies between <tt>generalclient_v1</tt> and <tt>admin_1</tt>.
  *
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2004/09/27 15:40:36 $
+ * @version $Revision: 1.5 $, $Date: 2005/05/13 19:05:47 $
  * @module generalclient_v1
  */
 public class OperatorProfileModel extends ObjectResourceModel
@@ -34,11 +36,11 @@ public class OperatorProfileModel extends ObjectResourceModel
 
 	public Collection getChildren(String key)
 	{
-		if(key.equals(OperatorGroup.typ))
+		if(key.equals(OperatorGroup.class.getName()))
 		{
 			return prof.groups.values();
 		}
-		if(key.equals(OperatorCategory.typ))
+		if(key.equals(OperatorCategory.class.getName()))
 		{
 			return prof.categories.values();
 		}
@@ -47,8 +49,8 @@ public class OperatorProfileModel extends ObjectResourceModel
 
 	Vector childrenTypes = new Vector();
 	{
-					 childrenTypes.add(OperatorCategory.typ);
-					 childrenTypes.add(OperatorGroup.typ);
+					 childrenTypes.add(OperatorCategory.class.getName());
+					 childrenTypes.add(OperatorGroup.class.getName());
 	}
 
 	public Enumeration getChildTypes()
@@ -58,15 +60,15 @@ public class OperatorProfileModel extends ObjectResourceModel
 
 	public Class getChildClass(String type)
 	{
-		if(type.equals(OperatorCategory.typ))
+		if(type.equals(OperatorCategory.class.getName()))
 		{
 			return OperatorCategory.class;
 		}
-		if(type.equals(OperatorGroup.typ))
+		if(type.equals(OperatorGroup.class.getName()))
 		{
 			return OperatorGroup.class;
 		}
-			return ObjectResource.class;
+			return StorableObject.class;
 	}
 
 	public ObjectResourcePropertiesPane getPropertyPane() {
@@ -82,11 +84,11 @@ public class OperatorProfileModel extends ObjectResourceModel
 		try
 		{
 //      if(col_id.equals("id"))
-//        s = prof.id;
+//        s = prof.getId();
 			if(col_id.equals("name"))
 				s = prof.name;
 			if(col_id.equals("owner_id"))
-				s = ((ObjectResource )Pool.get("user", prof.owner_id)).getName();
+				s = ((StorableObject )Pool.get("user", prof.owner_id)).getName();
 			if(col_id.equals("modified"))
 				s = sdf.format(new Date(prof.modified));
 		}

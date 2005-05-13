@@ -1,10 +1,11 @@
-/*
- * $Id: ClientPoolContext.java,v 1.3 2005/05/05 12:33:16 bob Exp $
- * 
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+/*-
+ * $Id: ClientPoolContext.java,v 1.4 2005/05/13 19:08:27 bass Exp $
+ *
+ * Copyright © 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.general;
 
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
@@ -13,8 +14,8 @@ import com.syrus.AMFICOM.configuration.CORBAConfigurationObjectLoader;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/05/05 12:33:16 $
- * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2005/05/13 19:08:27 $
+ * @author $Author: bass $
  * @module generalclient_v1
  */
 class ClientPoolContext extends PoolContext {

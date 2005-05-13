@@ -145,7 +145,7 @@ public class LogicSchemePanel extends JPanel
 	 if (selectedElement == null)
 		return;
 
-	 if (selectedElement.getTyp().equals(LogicSchemeElementBase.TYP))
+	 if (selectedElement.getClass().getName().equals(LogicSchemeElementBase.TYP))
 	 {
 		LogicSchemeElement se = (LogicSchemeElement)selectedElement;
 		se.x = objectMouseClickedX + e.getX() - mouseClickedX;
@@ -169,13 +169,13 @@ public class LogicSchemePanel extends JPanel
 	 if (selectedElement == null)
 		return;
 
-	 if (selectedElement.getTyp().equals(LogicSchemeElementBase.TYP))
+	 if (selectedElement.getClass().getName().equals(LogicSchemeElementBase.TYP))
 	 {
 		objectMouseClickedX = selectedElement.x;
 		objectMouseClickedY = selectedElement.y;
 	 }
 
-	 if (selectedElement.getTyp().equals(ElementsActiveZoneBase.TYP))
+	 if (selectedElement.getClass().getName().equals(ElementsActiveZoneBase.TYP))
 	 {
 		firstActiveZone = (ElementsActiveZone)selectedElement;
 	 }
@@ -189,7 +189,7 @@ public class LogicSchemePanel extends JPanel
 
 	 selectedElement.selected = true;
 
-	 if (selectedElement.getTyp().equals(ElementsActiveZoneBase.TYP))
+	 if (selectedElement.getClass().getName().equals(ElementsActiveZoneBase.TYP))
 	 {
 		if (firstActiveZone != null)
 		{
@@ -218,7 +218,7 @@ public class LogicSchemePanel extends JPanel
 	 if (selectedElement == null)
 		return;
 
-	 if (selectedElement.getTyp().equals(LogicSchemeElementBase.TYP))
+	 if (selectedElement.getClass().getName().equals(LogicSchemeElementBase.TYP))
 	 {
 		LogicSchemeElement se = (LogicSchemeElement)selectedElement;
 

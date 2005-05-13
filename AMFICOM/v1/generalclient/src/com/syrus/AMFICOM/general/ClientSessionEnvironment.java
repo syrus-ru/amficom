@@ -1,17 +1,18 @@
-/*
- * $Id: ClientSessionEnvironment.java,v 1.3 2005/05/05 12:33:16 bob Exp $
- * 
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+/*-
+ * $Id: ClientSessionEnvironment.java,v 1.4 2005/05/13 19:08:27 bass Exp $
+ *
+ * Copyright © 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.general;
 
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/05/05 12:33:16 $
- * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2005/05/13 19:08:27 $
+ * @author $Author: bass $
  * @module generalclient_v1
  */
 public final class ClientSessionEnvironment extends BaseSessionEnvironment {
@@ -19,9 +20,10 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 
 	private static ClientSessionEnvironment instance;
 
-	private ClientSessionEnvironment(ClientServantManager clientServantManager,
-			ClientPoolContext clientPoolContext,
-			LoginRestorer loginRestorer) {
+	private ClientSessionEnvironment(
+			final ClientServantManager clientServantManager,
+			final ClientPoolContext clientPoolContext,
+			final LoginRestorer loginRestorer) {
 		super(clientServantManager, clientPoolContext, loginRestorer);
 	}
 
@@ -29,13 +31,15 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 		return (ClientServantManager) super.baseConnectionManager;
 	}
 
-	public static void createInstance(int sessionKind, LoginRestorer loginRestorer) throws CommunicationException {
+	public static void createInstance(final int sessionKind,
+			final LoginRestorer loginRestorer)
+			throws CommunicationException {
 		switch (sessionKind) {
 			case SESSION_KIND_MEASUREMENT:
 				createMeasurementSession(loginRestorer);
 				break;
 			default:
-				Log.errorMessage("Unknown kind of session -- " + sessionKind);
+				Log.errorMessage("Unknown kind of session -- " + sessionKind); //$NON-NLS-1$
 		}
 
 		/*	Print available objects -- for debugging purpose*/
@@ -43,9 +47,11 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 			instance.baseConnectionManager.getCORBAServer().printNamingContext();
 	}
 
-	private static void createMeasurementSession(LoginRestorer loginRestorer) throws CommunicationException {
-		MClientServantManager clientServantManager = MClientServantManager.create();
-		ClientPoolContext clientPoolContext = new MClientPoolContext(clientServantManager);
+	private static void createMeasurementSession(
+			final LoginRestorer loginRestorer)
+			throws CommunicationException {
+		final MClientServantManager clientServantManager = MClientServantManager.create();
+		final ClientPoolContext clientPoolContext = new MClientPoolContext(clientServantManager);
 		instance = new ClientSessionEnvironment(clientServantManager, clientPoolContext, loginRestorer);
 	}
 

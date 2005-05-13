@@ -1,22 +1,22 @@
-/*
- * $Id: MClientPoolContext.java,v 1.3 2005/05/05 12:33:16 bob Exp $
- * 
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+/*-
+ * $Id: MClientPoolContext.java,v 1.4 2005/05/13 19:08:27 bass Exp $
+ *
+ * Copyright © 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.general;
 
 import com.syrus.AMFICOM.measurement.CORBAMeasurementObjectLoader;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/05/05 12:33:16 $
- * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2005/05/13 19:08:27 $
+ * @author $Author: bass $
  * @module generalclient_v1
  */
 final class MClientPoolContext extends ClientPoolContext {
-
 	public MClientPoolContext(final CMServerConnectionManager cmServerConnectionManager) {
 		super(cmServerConnectionManager);
 	}

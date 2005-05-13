@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourceChooserDialog.java,v 1.9 2005/04/13 21:40:46 arseniy Exp $
+ * $Id: ObjectResourceChooserDialog.java,v 1.10 2005/05/13 19:05:46 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,8 @@ import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTable;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTableModel;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
+import com.syrus.AMFICOM.general.StorableObject;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
@@ -27,12 +29,12 @@ import javax.swing.event.*;
  * (выбрал объект или отменил действия) определяется методом getReturnCode(). 
  * Выбранный объект получается методом getReturnObject().
  * В окне выбора объекта можно включить функцию удаления выбранного объекта.
- * Для этого следует переопределить метод remove(ObjectResource obj). Для того,
+ * Для этого следует переопределить метод remove(StorableObject obj). Для того,
  * чтобы включить эту возможность, необходимо вызвать метод 
  * setCanDelete(boolean bool)
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.9 $, $Date: 2005/04/13 21:40:46 $
+ * @author $Author: bass $
+ * @version $Revision: 1.10 $, $Date: 2005/05/13 19:05:46 $
  * @module generalclient_v1
  */
 public class ObjectResourceChooserDialog extends JDialog 
@@ -51,7 +53,7 @@ public class ObjectResourceChooserDialog extends JDialog
 	protected ObjectResourceController controller;
 	protected JScrollPane scrollPane = new JScrollPane();
 
-	protected ObjectResource retObject;
+	protected StorableObject retObject;
 	protected int retCode = 2;
 	
 	protected JPanel eastPanel = new JPanel();
@@ -167,7 +169,7 @@ public class ObjectResourceChooserDialog extends JDialog
 		return retCode;
 	}
 	
-	public ObjectResource getReturnObject()
+	public StorableObject getReturnObject()
 	{
 		return retObject;
 	}
@@ -185,7 +187,7 @@ public class ObjectResourceChooserDialog extends JDialog
 
 	protected void buttonOpen_actionPerformed(ActionEvent e)
 	{
-		retObject = (ObjectResource )getTableModel().getObject(table.getSelectedRow());
+		retObject = (StorableObject )getTableModel().getObject(table.getSelectedRow());
 		if(retObject == null)
 			return;
 
@@ -199,19 +201,19 @@ public class ObjectResourceChooserDialog extends JDialog
 		this.dispose();
 	}
 
-	protected boolean delete(ObjectResource obj)
+	protected boolean delete(StorableObject obj)
 	{
 /*
 		if(obj instanceof MapContext)
 		{
 			dataSource.RemoveMap(obj.getId());
-			Pool.remove(MapContext.typ, obj.getId());
+			Pool.remove(MapContext.class.getName(), obj.getId());
 		}
 		else
 		if(obj instanceof Scheme)
 		{
 			dataSource.RemoveScheme(obj.getId());
-			Pool.remove(Scheme.typ, obj.getId());
+			Pool.remove(Scheme.class.getName(), obj.getId());
 		}
 */
 		return false;
@@ -222,7 +224,7 @@ public class ObjectResourceChooserDialog extends JDialog
 		if(!canDelete)
 			return;
 
-		ObjectResource obj = (ObjectResource )getTableModel().getObject(table.getSelectedRow());
+		StorableObject obj = (StorableObject )getTableModel().getObject(table.getSelectedRow());
 		if(obj == null)
 			return;
 
@@ -240,7 +242,7 @@ public class ObjectResourceChooserDialog extends JDialog
 //		if (e.getValueIsAdjusting())
 //			return;
 
-		ObjectResource or = (ObjectResource )getTableModel().getObject(table.getSelectedRow());
+		StorableObject or = (StorableObject )getTableModel().getObject(table.getSelectedRow());
 		if (or != null)
 		{
 			buttonOpen.setEnabled(true);

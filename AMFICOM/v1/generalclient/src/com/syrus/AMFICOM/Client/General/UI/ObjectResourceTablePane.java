@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourceTablePane.java,v 1.10 2004/09/25 20:00:39 bass Exp $
+ * $Id: ObjectResourceTablePane.java,v 1.11 2005/05/13 19:05:47 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,6 +10,8 @@ package com.syrus.AMFICOM.Client.General.UI;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.general.StorableObject;
+
 import java.awt.SystemColor;
 import java.awt.event.*;
 import java.util.List;
@@ -19,7 +21,7 @@ import javax.swing.table.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2004/09/25 20:00:39 $
+ * @version $Revision: 1.11 $, $Date: 2005/05/13 19:05:47 $
  * @module generalclient_v1
  */
 public class ObjectResourceTablePane extends JScrollPane
@@ -85,8 +87,8 @@ public class ObjectResourceTablePane extends JScrollPane
 			editor = new ObjectResourceTableEditor(tableModel);
 
 		jTable.setModel(tableModel);
-		jTable.setDefaultRenderer(ObjectResource.class, renderer);
-		jTable.setDefaultEditor(ObjectResource.class, editor);
+		jTable.setDefaultRenderer(StorableObject.class, renderer);
+		jTable.setDefaultEditor(StorableObject.class, editor);
 
 //		jTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		TableColumnModel ctm = jTable.getColumnModel();
@@ -105,14 +107,14 @@ public class ObjectResourceTablePane extends JScrollPane
 	{
 		this.renderer = renderer;
 		renderer.setModel(tableModel);
-		jTable.setDefaultRenderer(ObjectResource.class, renderer);
+		jTable.setDefaultRenderer(StorableObject.class, renderer);
 	}
 
 	public void setEditor(ObjectResourceTableEditor editor)
 	{
 		this.editor = editor;
 		editor.setModel(tableModel);
-		jTable.setDefaultEditor(ObjectResource.class, editor);
+		jTable.setDefaultEditor(StorableObject.class, editor);
 	}
 
 	public void initialize(ObjectResourceDisplayModel displayModel, List dataSet)

@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourcePropertiesPane.java,v 1.3 2005/05/05 11:04:47 bob Exp $
+ * $Id: ObjectResourcePropertiesPane.java,v 1.4 2005/05/13 19:05:46 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.Client.General.UI;
 
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.corba.portable.reflect.common.ObjectResource;
+import com.syrus.AMFICOM.general.StorableObject;
 
 /**
  * If a class <code style = "background-color: #fff7e9;">T</code> realizes
@@ -21,8 +22,8 @@ import com.syrus.AMFICOM.corba.portable.reflect.common.ObjectResource;
  * <code style = "background-color: #fff7e9;"><b>protected</b></code> if the class is not
  * <code style = "background-color: #fff7e9;"><b>final</b></code>).</li></ul>
  *
- * @author $Author: bob $
- * @version $Revision: 1.3 $, $Date: 2005/05/05 11:04:47 $
+ * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2005/05/13 19:05:46 $
  * @module generalclient_v1
  */
 public interface ObjectResourcePropertiesPane
@@ -31,7 +32,7 @@ public interface ObjectResourcePropertiesPane
 
 	int DEF_WIDTH = 150;
 
-	ObjectResource getObjectResource();
+	StorableObject getObjectResource();
 
 	void setObjectResource(ObjectResource objectResource);
 

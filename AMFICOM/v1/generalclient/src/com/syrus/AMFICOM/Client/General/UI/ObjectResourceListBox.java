@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourceListBox.java,v 1.8 2005/04/13 21:07:04 arseniy Exp $
+ * $Id: ObjectResourceListBox.java,v 1.9 2005/05/13 19:05:47 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,14 +9,16 @@
 package com.syrus.AMFICOM.Client.General.UI;
 
 import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.general.StorableObject;
+
 import java.awt.*;
 import java.util.*;
 import java.util.List;
 import javax.swing.*;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.8 $, $Date: 2005/04/13 21:07:04 $
+ * @author $Author: bass $
+ * @version $Revision: 1.9 $, $Date: 2005/05/13 19:05:47 $
  * @module generalclient_v1
  */
 public class ObjectResourceListBox extends JList
@@ -50,9 +52,9 @@ public class ObjectResourceListBox extends JList
 				boolean isSelected,
 				boolean cellHasFocus)
 				{
-			if(value instanceof ObjectResource)
+			if(value instanceof StorableObject)
 			{
-				ObjectResource or = (ObjectResource)value;
+				StorableObject or = (StorableObject)value;
 				String text = "";
 				if(parent.col_id.equals(ObjectResourceListBox._DEFAULT_COL_ID))
 					text = or.getName();
@@ -101,7 +103,7 @@ public class ObjectResourceListBox extends JList
 			Iterator it = objs.values().iterator();
 			for(;it.hasNext();)
 			{
-				ObjectResource or = (ObjectResource )it.next();
+				StorableObject or = (StorableObject )it.next();
 				vec.add(or);
 			}
 		}
@@ -134,7 +136,7 @@ public class ObjectResourceListBox extends JList
 			Iterator it = objs.values().iterator();
 			for(;it.hasNext();)
 			{
-				ObjectResource or = (ObjectResource )it.next();
+				StorableObject or = (StorableObject )it.next();
 				vec.add(or);
 			}
 		}
@@ -184,7 +186,7 @@ public class ObjectResourceListBox extends JList
 			Iterator it = collection.iterator();
 			for(;it.hasNext();)
 			{
-				ObjectResource or = (ObjectResource )it.next();
+				StorableObject or = (StorableObject )it.next();
 				vec.add(or);
 			}
 		}
@@ -202,7 +204,7 @@ public class ObjectResourceListBox extends JList
 			Iterator it = objs.values().iterator();
 			for(;it.hasNext();)
 			{
-				ObjectResource or = (ObjectResource )it.next();
+				StorableObject or = (StorableObject )it.next();
 				vec.add(or);
 			}
 		}
@@ -225,7 +227,7 @@ public class ObjectResourceListBox extends JList
 		setListData(vec);
 	}
 
-	public void remove(ObjectResource or)
+	public void remove(StorableObject or)
 	{
 		vec.remove(or);
 		setListData(vec);
@@ -234,7 +236,7 @@ public class ObjectResourceListBox extends JList
 	public void remove(Object[] objs)
 	{
 		for(int i = 0; i < objs.length; i++)
-			vec.remove((ObjectResource )objs[i]);
+			vec.remove((StorableObject )objs[i]);
 		setListData(vec);
 	}
 
@@ -242,14 +244,14 @@ public class ObjectResourceListBox extends JList
 	{
 		for(int i = 0; i < vec.size(); i++)
 		{
-			ObjectResource or = (ObjectResource )vec.get(i);
+			StorableObject or = (StorableObject )vec.get(i);
 			if(or.getId().equals(obj_id))
 				vec.remove(or);
 		}
 		setListData(vec);
 	}
 
-	public void add(ObjectResource or)
+	public void add(StorableObject or)
 	{
 		vec.add(or);
 		if(doRestrict)
@@ -274,7 +276,7 @@ public class ObjectResourceListBox extends JList
 			Iterator it = e.iterator();
 			for(; it.hasNext();)
 			{
-				ObjectResource or = (ObjectResource )it.next();
+				StorableObject or = (StorableObject )it.next();
 				vec.add(or);
 			}
 		}
@@ -285,16 +287,16 @@ public class ObjectResourceListBox extends JList
 
 	public Object getSelected()
 	{
-		ObjectResource or = (ObjectResource )super.getSelectedValue();
+		StorableObject or = (StorableObject )super.getSelectedValue();
 		if(or == null)
 			return null;
 		obj_id = or.getId();
 		return obj_id;
 	}
 
-	public ObjectResource getSelectedObjectResource()
+	public StorableObject getSelectedObjectResource()
 	{
-		ObjectResource or = (ObjectResource )super.getSelectedValue();
+		StorableObject or = (StorableObject )super.getSelectedValue();
 		return or;
 	}
 
@@ -304,7 +306,7 @@ public class ObjectResourceListBox extends JList
 		{
 			return;
 		}
-		if(obj instanceof ObjectResource)
+		if(obj instanceof StorableObject)
 		{
 			this.setSelectedValue(obj, true);
 			return;
@@ -316,7 +318,7 @@ public class ObjectResourceListBox extends JList
 			Iterator it = vec.listIterator();
 			for(;it.hasNext();)
 			{
-				ObjectResource or = (ObjectResource )it.next();
+				StorableObject or = (StorableObject )it.next();
 				if(or.getId().equals(obj_id))
 				{
 					this.setSelectedValue(or, true);
@@ -328,7 +330,7 @@ public class ObjectResourceListBox extends JList
 
 	public void deselect(Object obj)
 	{
-		ObjectResource or = null;
+		StorableObject or = null;
 		if(obj == null)
 		{
 			return;
@@ -340,7 +342,7 @@ public class ObjectResourceListBox extends JList
 			Iterator it = vec.listIterator();
 			for(;it.hasNext();)
 			{
-				ObjectResource or1 = (ObjectResource )it.next();
+				StorableObject or1 = (StorableObject )it.next();
 				if(or1.getId().equals(obj_id))
 				{
 					or = or1;
@@ -348,9 +350,9 @@ public class ObjectResourceListBox extends JList
 				}
 			}
 		}
-		if(obj instanceof ObjectResource)
+		if(obj instanceof StorableObject)
 		{
-			or = (ObjectResource )obj;
+			or = (StorableObject )obj;
 		}
 		if(or != null)
 		{
@@ -358,7 +360,7 @@ public class ObjectResourceListBox extends JList
 			Iterator it = vec.listIterator();
 			for(;it.hasNext();)
 			{
-				ObjectResource or2 = (ObjectResource )it.next();
+				StorableObject or2 = (StorableObject )it.next();
 				if(or2.equals(or))
 				{
 					this.getSelectionModel().removeSelectionInterval(index, index);
@@ -384,12 +386,12 @@ public class ObjectResourceListBox extends JList
 		Iterator it = vec.listIterator();
 		for(;it.hasNext();)
 		{
-			ObjectResource or = (ObjectResource )it.next();
+			StorableObject or = (StorableObject )it.next();
 			if(!or.getDomainId().equals(domain_id))
 				vec_to_remove.add(or);
 		}
 		for(int i = 0; i < vec_to_remove.size(); i++)
-			vec.remove((ObjectResource )vec_to_remove.get(i));
+			vec.remove((StorableObject )vec_to_remove.get(i));
 	}
 
 	public void setDomainId(String domain_id)

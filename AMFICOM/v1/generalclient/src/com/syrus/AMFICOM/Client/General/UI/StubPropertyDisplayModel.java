@@ -1,5 +1,5 @@
 /*
- * $Id: StubPropertyDisplayModel.java,v 1.5 2004/09/25 19:50:00 bass Exp $
+ * $Id: StubPropertyDisplayModel.java,v 1.6 2005/05/13 19:05:47 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,23 +10,25 @@ package com.syrus.AMFICOM.Client.General.UI;
 
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
 import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.general.StorableObject;
+
 import java.awt.Color;
 import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2004/09/25 19:50:00 $
+ * @version $Revision: 1.6 $, $Date: 2005/05/13 19:05:47 $
  * @module generalclient_v1
  */
 public class StubPropertyDisplayModel implements ObjectResourceDisplayModel
 {
-	ObjectResource or;
+	StorableObject or;
 	
 	public StubPropertyDisplayModel()
 	{
 	}
 	
-	public StubPropertyDisplayModel(ObjectResource or)
+	public StubPropertyDisplayModel(StorableObject or)
 	{
 		this.or = or;
 	}
@@ -68,7 +70,7 @@ public class StubPropertyDisplayModel implements ObjectResourceDisplayModel
 		return mod.isPropertyEditable(col_id);
 	}
 
-	public PropertyRenderer getColumnRenderer(ObjectResource or, String col_id)
+	public PropertyRenderer getColumnRenderer(StorableObject or, String col_id)
     {
 		if(this.or == null)
 			return null;
@@ -78,7 +80,7 @@ public class StubPropertyDisplayModel implements ObjectResourceDisplayModel
 		return (PropertyRenderer )mod.getPropertyRenderer(col_id);
 	}
 
-	public PropertyEditor getColumnEditor(ObjectResource or, String col_id)
+	public PropertyEditor getColumnEditor(StorableObject or, String col_id)
     {
 		if(this.or == null)
 			return null;
@@ -93,7 +95,7 @@ public class StubPropertyDisplayModel implements ObjectResourceDisplayModel
 		return false;
 	}
 	
-	public Color getColumnColor(ObjectResource or, String col_id)
+	public Color getColumnColor(StorableObject or, String col_id)
 	{
 		return Color.white;
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: SessionInfoDialog.java,v 1.7 2005/05/05 11:04:47 bob Exp $
+ * $Id: SessionInfoDialog.java,v 1.8 2005/05/13 19:05:47 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.corba.portable.reflect.common.ObjectResource;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.7 $, $Date: 2005/05/05 11:04:47 $
+ * @author $Author: bass $
+ * @version $Revision: 1.8 $, $Date: 2005/05/13 19:05:47 $
  * @module generalclient_v1
  */
 public class SessionInfoDialog extends JDialog
@@ -101,7 +101,7 @@ public class SessionInfoDialog extends JDialog
 		long st2 = st / 3600000;//hours
 		String s1 = String.valueOf(st2) + sdf2.format(new Date(st));
 		labelSessionTotal.setText(s1);
-		labelConnectPeriod.setText(((ObjectResource)Pool.get(Domain.typ, si.getDomainId())).getName());
+		labelConnectPeriod.setText(((ObjectResource)Pool.get(Domain.class.getName(), si.getDomainId())).getName());
 		labelConnectLast.setText("");
 	}
 

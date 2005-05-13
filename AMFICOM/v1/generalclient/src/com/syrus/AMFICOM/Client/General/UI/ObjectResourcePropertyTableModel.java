@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourcePropertyTableModel.java,v 1.5 2004/09/27 09:33:42 bass Exp $
+ * $Id: ObjectResourcePropertyTableModel.java,v 1.6 2005/05/13 19:05:46 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,13 +9,15 @@
 package com.syrus.AMFICOM.Client.General.UI;
 
 import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.general.StorableObject;
+
 import java.awt.Component;
 import java.util.*;
 import javax.swing.table.AbstractTableModel;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2004/09/27 09:33:42 $
+ * @version $Revision: 1.6 $, $Date: 2005/05/13 19:05:46 $
  * @module generalclient_v1
  */
 public class ObjectResourcePropertyTableModel extends AbstractTableModel
@@ -23,13 +25,13 @@ public class ObjectResourcePropertyTableModel extends AbstractTableModel
     private Component parent;
 
 	private List columns = new LinkedList();
-	private ObjectResource or;
+	private StorableObject or;
 	private ObjectResourceDisplayModel displayModel = new StubPropertyDisplayModel();
 
 	public ObjectResourcePropertyTableModel(
 			List columns,
 //			ObjectResourceDisplayModel displayModel,
-			ObjectResource or)
+			StorableObject or)
 	{
 		this.columns.addAll(columns);
 //		setDisplayModel(displayModel);
@@ -39,7 +41,7 @@ public class ObjectResourcePropertyTableModel extends AbstractTableModel
 	public ObjectResourcePropertyTableModel(
 			String[] columns,
 //			ObjectResourceDisplayModel displayModel,
-			ObjectResource or)
+			StorableObject or)
 	{
 		for(int i = 0; i < columns.length; i++)
 			this.columns.add(columns[i]);
@@ -77,14 +79,14 @@ public class ObjectResourcePropertyTableModel extends AbstractTableModel
 		return (String )displayModel.getColumns().get(col_i);
 	}
 
-	public void setContents(ObjectResource or)
+	public void setContents(StorableObject or)
 	{
 		this.or = or;
 		displayModel = new StubPropertyDisplayModel(or);
 		super.fireTableDataChanged();
 	}
 
-	public ObjectResource getContents()
+	public StorableObject getContents()
 	{
 		return or;
 	}

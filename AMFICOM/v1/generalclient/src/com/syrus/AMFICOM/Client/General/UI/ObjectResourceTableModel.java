@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourceTableModel.java,v 1.4 2004/09/25 20:00:39 bass Exp $
+ * $Id: ObjectResourceTableModel.java,v 1.5 2005/05/13 19:05:47 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,13 +9,15 @@
 package com.syrus.AMFICOM.Client.General.UI;
 
 import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.general.StorableObject;
+
 import java.awt.Component;
 import java.util.*;
 import javax.swing.table.AbstractTableModel;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2004/09/25 20:00:39 $
+ * @version $Revision: 1.5 $, $Date: 2005/05/13 19:05:47 $
  * @module generalclient_v1
  */
 public class ObjectResourceTableModel extends AbstractTableModel
@@ -90,12 +92,12 @@ public class ObjectResourceTableModel extends AbstractTableModel
 		List vec_to_remove = new LinkedList();
 		for(Iterator it = dataSet.iterator(); it.hasNext();)
 		{
-			ObjectResource or = (ObjectResource )it.next();
+			StorableObject or = (StorableObject )it.next();
 			if(!or.getDomainId().equals(domain_id))
 				vec_to_remove.add(or);
 		}
 		for(Iterator it = vec_to_remove.iterator(); it.hasNext();)
-			dataSet.remove((ObjectResource )it.next());
+			dataSet.remove((StorableObject )it.next());
 	}
 
 	public void setDomainId(String domain_id)
@@ -140,7 +142,7 @@ public class ObjectResourceTableModel extends AbstractTableModel
 	public Object getValueAt(int p_row, int p_col)
 	{
 		String col_id = (String )displayModel.getColumns().get(p_col);
-		ObjectResource or = (ObjectResource )dataSet.get(p_row);
+		StorableObject or = (StorableObject )dataSet.get(p_row);
 		return or;
 //		ObjectResourceModel model = or.getModel();
 //		return model.getColumnValue(col_id);
@@ -152,7 +154,7 @@ public class ObjectResourceTableModel extends AbstractTableModel
 	//--------------------------------------------------------------------------
 	public Class getColumnClass(int p_col)
 	{
-		return ObjectResource.class;
+		return StorableObject.class;
 	}
 
 	//--------------------------------------------------------------------------
@@ -172,16 +174,16 @@ public class ObjectResourceTableModel extends AbstractTableModel
 	public void setValueAt( Object p_obj, int p_row, int p_col)
 	{
 		String col_id = (String )displayModel.getColumns().get(p_col);
-		ObjectResource or = (ObjectResource )dataSet.get(p_row);
+		StorableObject or = (StorableObject )dataSet.get(p_row);
 		ObjectResourceModel model = or.getModel();
 		model.setColumnValue(col_id, p_obj);
 		this.fireTableDataChanged();
 	}
 
-	public ObjectResource getObjectByIndex(int ind)
+	public StorableObject getObjectByIndex(int ind)
 	{
 //		String col_id = (String )displayModel.getColumns().get(p_col);
-		return (ObjectResource )dataSet.get(ind);
+		return (StorableObject )dataSet.get(ind);
 	}
 
 	public void clearTable()

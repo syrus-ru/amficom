@@ -1,5 +1,5 @@
 /*
- * $Id: UniTreePanel.java,v 1.14 2005/04/13 21:07:04 arseniy Exp $
+ * $Id: UniTreePanel.java,v 1.15 2005/05/13 19:05:47 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,6 +19,7 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.tree.*;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
+import com.syrus.AMFICOM.general.StorableObject;
 
 /**
  * для оптимизации работы дерева вводится следующая схема разворачивания ветви
@@ -32,21 +33,21 @@ registerSearchableNode(String criteria, ObjectResourceTreeNode tn).
 Например, при добавлении в дерево группы этот метод будет вызываться так:
 
 			ortn = new ObjectResourceTreeNode(
-											OperatorGroup.typ,
+											OperatorGroup.class.getName(),
 											"Группы",
 											true);
 			vec.add(ortn);
-			registerSearchableNode(OperatorGroup.typ, ortn);
+			registerSearchableNode(OperatorGroup.class.getName(), ortn);
 
 
 Если группа добавляется в дочернюю ветвь (например, список групп в
 пользователях или командах), эта функция вызываться не должна.
 
-Таким образом, послав в дерево ListSelectionEvent с указанием OperatorGroup.typ
+Таким образом, послав в дерево ListSelectionEvent с указанием OperatorGroup.class.getName()
 зарегистрированная ветвь станет выделенной.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.14 $, $Date: 2005/04/13 21:07:04 $
+ * @author $Author: bass $
+ * @version $Revision: 1.15 $, $Date: 2005/05/13 19:05:47 $
  * @module generalclient_v1
  */
 public class UniTreePanel extends JPanel
@@ -228,7 +229,7 @@ public class UniTreePanel extends JPanel
 
 	public void operationPerformed (OperationEvent ev)
 	{
-		if (ev.getActionCommand().equals(TreeListSelectionEvent.typ))
+		if (ev.getActionCommand().equals(TreeListSelectionEvent.class.getName()))
 		{
 			TreeListSelectionEvent select_event = (TreeListSelectionEvent)ev;
 			if(select_event.SELECT)
@@ -252,7 +253,7 @@ public class UniTreePanel extends JPanel
 					if (tp != null)
 					{
 						ObjectResourceTreeNode orte = (ObjectResourceTreeNode )tp.getLastPathComponent();
-						if (orte.getObject() instanceof ObjectResource)
+						if (orte.getObject() instanceof StorableObject)
 						{
 							orte = (ObjectResourceTreeNode )orte.getParent();
 						}
@@ -286,7 +287,7 @@ public class UniTreePanel extends JPanel
 				if (tp != null)
 				{
 					ObjectResourceTreeNode orte = (ObjectResourceTreeNode )tp.getLastPathComponent();
-					if (orte != null && orte.getObject() instanceof ObjectResource)
+					if (orte != null && orte.getObject() instanceof StorableObject)
 					{
 						orte = (ObjectResourceTreeNode )orte.getParent();
 					}
@@ -356,7 +357,7 @@ public class UniTreePanel extends JPanel
 		int n = 0;
 		Object selectedObject = node.getObject();
 
-		if (!(node.getObject() instanceof ObjectResource))
+		if (!(node.getObject() instanceof StorableObject))
 		{
 			if (node.isFinal() == false && node.getChildCount() != 0)
 			{
@@ -386,7 +387,7 @@ public class UniTreePanel extends JPanel
 							if(!tn.isFinal())
 								tn.add(new ObjectResourceTreeNode("", "", true));
 							Object obj = tn.getObject();
-							if (obj instanceof ObjectResource)
+							if (obj instanceof StorableObject)
 							{
 								res.add( obj );
 							}
@@ -400,7 +401,7 @@ public class UniTreePanel extends JPanel
 						{
 							ObjectResourceTreeNode tn = (ObjectResourceTreeNode ) en.nextElement();
 							Object obj = tn.getObject();
-							if (obj instanceof ObjectResource)
+							if (obj instanceof StorableObject)
 							{
 								res.add( obj );
 							}
@@ -418,7 +419,7 @@ public class UniTreePanel extends JPanel
 			orcam = otm.getNodeActionModel(node);
 			n = -1;
 		}
-		else if ((node.getObject() instanceof ObjectResource))
+		else if ((node.getObject() instanceof StorableObject))
 		{
 			if (node.isRoot())
 				return;
@@ -429,7 +430,7 @@ public class UniTreePanel extends JPanel
 			for(; enumeration.hasMoreElements();)
 			{
 				Object oo = enumeration.nextElement();
-				if (((ObjectResourceTreeNode)oo).getObject() instanceof ObjectResource)
+				if (((ObjectResourceTreeNode)oo).getObject() instanceof StorableObject)
 				{
 					res.add( ((ObjectResourceTreeNode)oo).getObject() );
 				}

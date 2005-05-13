@@ -80,7 +80,7 @@ public class RenderingObject
 	 */
 	public RenderingObject(RenderingObject_Transferable ro_trans)
 	{
-		this.id = ro_trans.roID;
+		this.getId() = ro_trans.roID;
 
 		this.x = ro_trans.objectX;
 		this.y = ro_trans.objectY;
@@ -100,7 +100,7 @@ public class RenderingObject
 		}
 		catch(Exception ex)
 		{
-			System.out.println("Error reading report for rendering object " + this.id);
+			System.out.println("Error reading report for rendering object " + this.getId());
 		}
 
 		this.setReportToRender(loadedReport);

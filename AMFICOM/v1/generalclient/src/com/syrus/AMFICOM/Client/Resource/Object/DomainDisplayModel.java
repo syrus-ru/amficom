@@ -4,6 +4,7 @@ import java.util.*;
 
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.general.StorableObject;
 
 /**
  * <p>Title: </p>
@@ -51,7 +52,7 @@ public class DomainDisplayModel extends StubDisplayModel
     return s;
   }
 
-  public PropertyRenderer getColumnRenderer(ObjectResource or, String col_id)
+  public PropertyRenderer getColumnRenderer(StorableObject or, String col_id)
   {
     ObjectResourceModel mod = or.getModel();
     return new JLabelRenderer(mod.getColumnValue(col_id));

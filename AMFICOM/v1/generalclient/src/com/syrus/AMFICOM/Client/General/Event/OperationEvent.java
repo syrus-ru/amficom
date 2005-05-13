@@ -12,7 +12,7 @@ public class OperationEvent extends ActionEvent
 	{
 		super(source, id, command);
 		this.source = source;
-		this.id = id;
+		this.getId() = id;
 		this.command = command;
 	}
 

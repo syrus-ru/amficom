@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourceCatalogButtonsPanel.java,v 1.5 2004/09/27 06:19:46 bass Exp $
+ * $Id: ObjectResourceCatalogButtonsPanel.java,v 1.6 2005/05/13 19:05:47 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,7 @@ import oracle.jdeveloper.layout.XYConstraints;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2004/09/27 06:19:46 $
+ * @version $Revision: 1.6 $, $Date: 2005/05/13 19:05:47 $
  * @module generalclient_v1
  */
 public class ObjectResourceCatalogButtonsPanel extends JPanel
@@ -182,7 +182,7 @@ public class ObjectResourceCatalogButtonsPanel extends JPanel
 		list.remove(or);
 		listPane.tableModel.fireTableDataChanged();
 
-		dispatcher.notify(new OperationEvent(or.getTyp(), 0, "treelistrefreshevent"));
+		dispatcher.notify(new OperationEvent(or.getClass().getName(), 0, "treelistrefreshevent"));
 		buttonCancel.setEnabled(true);
 		buttonSave.setEnabled(true);
 		jTabbedPane.setSelectedComponent(listPane);
@@ -218,7 +218,7 @@ public class ObjectResourceCatalogButtonsPanel extends JPanel
 		list.add(res);
 
 		listPane.tableModel.fireTableDataChanged();
-		dispatcher.notify(new OperationEvent(res.getTyp(), 0, "treelistrefreshevent"));
+		dispatcher.notify(new OperationEvent(res.getClass().getName(), 0, "treelistrefreshevent"));
 
 		send_event = true;
 		dispatcher.notify(new OperationEvent(res, 0, "treelistselectionevent"));
@@ -237,7 +237,7 @@ public class ObjectResourceCatalogButtonsPanel extends JPanel
 		if(!propPane.save())
 			return;
 		
-		dispatcher.notify(new OperationEvent(propPane.getObjectResource().getTyp(), 0, "treelistrefreshevent"));
+		dispatcher.notify(new OperationEvent(propPane.getObjectResource().getClass().getName(), 0, "treelistrefreshevent"));
 
 		buttonSave.setEnabled(false);
 		buttonCancel.setEnabled(false);

@@ -1,10 +1,11 @@
-/*
- * $Id: MClientServantManager.java,v 1.3 2005/05/05 12:33:16 bob Exp $
- * 
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+/*-
+ * $Id: MClientServantManager.java,v 1.4 2005/05/13 19:08:27 bass Exp $
+ *
+ * Copyright © 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.general;
 
 import com.syrus.AMFICOM.administration.ServerProcessWrapper;
@@ -16,8 +17,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/05/05 12:33:16 $
- * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2005/05/13 19:08:27 $
+ * @author $Author: bass $
  * @module generalclient_v1
  */
 public final class MClientServantManager extends VerifiedConnectionManager implements ClientServantManager, CMServerConnectionManager {
@@ -81,12 +82,12 @@ public final class MClientServantManager extends VerifiedConnectionManager imple
 	}
 
 	protected void onLoseConnection(String servantName) {
-		Log.debugMessage("CMServerConnectionManager.onLoseConnection | Connection with '" + servantName + "' lost", Log.DEBUGLEVEL08);
+		Log.debugMessage("CMServerConnectionManager.onLoseConnection | Connection with '" + servantName + "' lost", Log.DEBUGLEVEL08); //$NON-NLS-1$ //$NON-NLS-2$
 		// @todo Maybe, GUI-specific actions
 	}
 
 	protected void onRestoreConnection(String servantName) {
-		Log.debugMessage("CMServerConnectionManager.onRestoreConnection | Connection with '" + servantName + "' restored",
+		Log.debugMessage("CMServerConnectionManager.onRestoreConnection | Connection with '" + servantName + "' restored", //$NON-NLS-1$ //$NON-NLS-2$
 				Log.DEBUGLEVEL08);
 		// @todo Maybe, GUI-specific actions
 	}
