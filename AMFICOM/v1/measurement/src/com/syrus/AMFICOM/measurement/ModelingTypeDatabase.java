@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingTypeDatabase.java,v 1.33 2005/05/13 21:17:13 arseniy Exp $
+ * $Id: ModelingTypeDatabase.java,v 1.34 2005/05/13 21:17:55 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -36,7 +35,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/05/13 21:17:13 $
+ * @version $Revision: 1.34 $, $Date: 2005/05/13 21:17:55 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
