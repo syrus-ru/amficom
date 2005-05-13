@@ -1,5 +1,5 @@
 /*
- * $Id: RunnableVerifiedConnectionManager.java,v 1.1 2005/04/27 13:38:20 arseniy Exp $
+ * $Id: RunnableVerifiedConnectionManager.java,v 1.2 2005/05/13 17:38:43 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,19 +16,19 @@ import com.syrus.AMFICOM.general.corba.Verifiable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/27 13:38:20 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2005/05/13 17:38:43 $
+ * @author $Author: bass $
  * @module csbridge_v1
  */
 public class RunnableVerifiedConnectionManager extends VerifiedConnectionManager implements Runnable {
 	private long timeout;
 
 
-	public RunnableVerifiedConnectionManager(CORBAServer corbaServer, String[] servantNames, long timeout) {
+	public RunnableVerifiedConnectionManager(final CORBAServer corbaServer, final String[] servantNames, final long timeout) {
 		this(corbaServer, new HashSet(Arrays.asList(servantNames)), timeout);
 	}
 
-	public RunnableVerifiedConnectionManager(CORBAServer corbaServer, Set servantNames, long timeout) {
+	public RunnableVerifiedConnectionManager(final CORBAServer corbaServer, final Set servantNames, final long timeout) {
 		super(corbaServer, servantNames);
 
 		this.timeout = timeout;
