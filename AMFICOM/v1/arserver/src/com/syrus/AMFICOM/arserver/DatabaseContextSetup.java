@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.4 2005/04/08 09:09:26 bass Exp $
+ * $Id: DatabaseContextSetup.java,v 1.5 2005/05/13 17:41:55 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/04/08 09:09:26 $
+ * @version $Revision: 1.5 $, $Date: 2005/05/13 17:41:55 $
  * @author $Author: bass $
  * @module mserver_v1
  */
@@ -47,7 +47,7 @@ class DatabaseContextSetup {
 
 	public static void initDatabaseContext() {
 		ResourceDatabaseContext.init(new ImageResourceDatabase());
-		AdministrationDatabaseContext.init(null, new DomainDatabase(), null, null);
+		AdministrationDatabaseContext.init(null, new DomainDatabase(), null, null, null);
 		GeneralDatabaseContext.init(null , null, new CharacteristicDatabase());
 	}
 

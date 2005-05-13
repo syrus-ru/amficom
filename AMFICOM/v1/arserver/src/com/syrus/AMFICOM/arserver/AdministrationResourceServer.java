@@ -1,5 +1,5 @@
 /*
- * $Id: AdministrationResourceServer.java,v 1.3 2005/04/04 13:55:21 bass Exp $
+ * $Id: AdministrationResourceServer.java,v 1.4 2005/05/13 17:41:55 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,9 +7,17 @@
  */
 package com.syrus.AMFICOM.arserver;
 
+import com.syrus.AMFICOM.administration.AdministrationDatabaseContext;
+import com.syrus.AMFICOM.administration.Server;
+import com.syrus.AMFICOM.administration.ServerProcess;
+import com.syrus.AMFICOM.administration.ServerProcessWrapper;
+import com.syrus.AMFICOM.administration.User;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CORBAServer;
-import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.SleepButWorkThread;
+import com.syrus.AMFICOM.general.DatabaseObjectLoader;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginException;
+import com.syrus.AMFICOM.general.LoginRestorer;
 import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
 import com.syrus.util.Application;
 import com.syrus.util.ApplicationProperties;
@@ -17,39 +25,72 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/04/04 13:55:21 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/13 17:41:55 $
  * @author $Author: bass $
  * @module arserver_v1
  */
-public class AdministrationResourceServer extends SleepButWorkThread {
-	
-	public static final String	APPLICATION_NAME			= "arserver"; //$NON-NLS-1$
-	public static final String	KEY_DB_HOST_NAME			= "DBHostName"; //$NON-NLS-1$
-	public static final String	KEY_DB_SID					= "DBSID"; //$NON-NLS-1$
-	public static final String	KEY_DB_CONNECTION_TIMEOUT	= "DBConnectionTimeout"; //$NON-NLS-1$
-	public static final String	KEY_DB_LOGIN_NAME			= "DBLoginName"; //$NON-NLS-1$
-	public static final String	KEY_TICK_TIME				= "TickTime"; //$NON-NLS-1$
-	public static final String	KEY_MAX_FALLS				= "MaxFalls"; //$NON-NLS-1$
-	
-	public static final String	DB_SID						= "amficom"; //$NON-NLS-1$
-	public static final int		DB_CONNECTION_TIMEOUT		= 120;
-	public static final String	DB_LOGIN_NAME				= "amficom"; //$NON-NLS-1$
-	public static final int		TICK_TIME					= 5;
+public class AdministrationResourceServer {
+	public static final String APPLICATION_NAME = "arserver"; //$NON-NLS-1$
 
-	/* CORBA server */
-	private static CORBAServer	corbaServer;
+	/*-********************************************************************
+	 * Keys.                                                              *
+	 **********************************************************************/
 
-	private boolean				running;
+	public static final String KEY_DB_HOST_NAME = "DBHostName"; //$NON-NLS-1$
 
-	public AdministrationResourceServer() {
-		super(ApplicationProperties.getInt(KEY_TICK_TIME, TICK_TIME) * 1000,
-				ApplicationProperties.getInt(KEY_MAX_FALLS, MAX_FALLS));
-		this.running = true;
-	}
-	
+	public static final String KEY_DB_SID = "DBSID"; //$NON-NLS-1$
+
+	public static final String KEY_DB_CONNECTION_TIMEOUT = "DBConnectionTimeout"; //$NON-NLS-1$
+
+	public static final String KEY_DB_LOGIN_NAME = "DBLoginName"; //$NON-NLS-1$
+
+	public static final String KEY_SERVER_ID = "ServerID"; //$NON-NLS-1$
+
+	/*-********************************************************************
+	 * Default values.                                                    *
+	 **********************************************************************/
+
+	public static final String DB_SID = "amficom"; //$NON-NLS-1$
+
+	/**
+	 * Database connection timeout, in seconds.
+	 */
+	public static final int DB_CONNECTION_TIMEOUT = 120;
+
+	public static final String DB_LOGIN_NAME = "amficom"; //$NON-NLS-1$
+
+	public static final String SERVER_ID = "Server_1"; //$NON-NLS-1$
+
+
+	private static final String PASSWORD = "ARServer"; //$NON-NLS-1$
+
+	/**
+	 * Identifier of this server.
+	 */
+	private static Identifier serverId;
+
+	/**
+	 * Login of the corresponding user.
+	 */
+	static String login;
+
+	/**
+	 * Process codename.
+	 */
+	private static String processCodename;
+
 	public static void main(String[] args) {
 		Application.init(APPLICATION_NAME);
 		startup();
+
+		/**
+		 * Add shutdown hook.
+		 */
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			public void run() {
+				shutdown();
+			}
+		});
 	}
 	
 	private static void establishDatabaseConnection() {
@@ -67,81 +108,70 @@ public class AdministrationResourceServer extends SleepButWorkThread {
 	}
 	
 	private static void startup() {
-		/* Establish connection with database */
+		/*
+		 * Establish connection with database.
+		 */
 		establishDatabaseConnection();
 
-		/* Create CORBA server with servant(s) */
-		activateCORBAServer();
-
 		DatabaseContextSetup.initDatabaseContext();
-		DatabaseContextSetup.initObjectPools();
-		
-        /* Start main loop */
-		final AdministrationResourceServer server = new AdministrationResourceServer();
-		Log.debugMessage("AdministrationResourceServer.startup | Ready.", Log.DEBUGLEVEL03); //$NON-NLS-1$
-		server.start();
+		serverId = new Identifier(ApplicationProperties.getString(KEY_SERVER_ID, SERVER_ID));
+		processCodename = ApplicationProperties.getString(
+				ServerProcessWrapper.KEY_ARSERVER_PROCESS_CODENAME,
+				ServerProcessWrapper.ARSERVER_PROCESS_CODENAME);
+		try {
+			final Server server = new Server(serverId);
+			final ServerProcess serverProcess = AdministrationDatabaseContext.getServerProcessDatabase().retrieveForServerAndCodename(serverId, processCodename);
+			final User user = new User(serverProcess.getUserId());
+			login = user.getLogin();
 
-		/* Add shutdown hook */
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			public void run() {
-				server.shutdown();
+			/*
+			 * Init database object loader.
+			 */
+			DatabaseObjectLoader.init(user.getId());
+
+			/*
+			 * Create session environment.
+			 */
+			ARServerSessionEnvironment.createInstance(server.getHostName());
+
+			/*
+			 * Login.
+			 */
+			final ARServerSessionEnvironment sessionEnvironment = ARServerSessionEnvironment.getInstance();
+			try {
+				sessionEnvironment.login(login, PASSWORD);
+			} catch (final LoginException le) {
+				Log.errorException(le);
 			}
-		});
-	}
-	
-	private static void activateCORBAServer() {
-		/* Create local CORBA server end activate servant */
-		try {
-			corbaServer = new CORBAServer();
-			corbaServer.activateServant(new ARServerImpl(), "ARServer"); //$NON-NLS-1$
-		}
-		catch (CommunicationException ce) {
-			Log.errorException(ce);
-			System.exit(-1);
-		}
-		catch (Exception e) {
-			Log.errorException(e);
-		}
-	}
-	
-	private static void deactivateCORBAServer() {
-		try {
-			corbaServer.deactivateServant("ARServer"); //$NON-NLS-1$
-		}
-		catch (CommunicationException ce) {
-			Log.errorException(ce);
-			System.err.println(ce);
-			System.exit(-1);
-		}
-	}
-	
-	protected void processFall() {
-		switch (super.fallCode) {
-		case FALL_CODE_NO_ERROR:
-			break;
-		default:
-			Log.errorMessage("processError | Unknown error code: " + super.fallCode); //$NON-NLS-1$
-		}
-		super.clearFalls();
-	}
-	
-	protected synchronized void shutdown() {/* !! Need synchronization */
-		this.running = false;
 
-		deactivateCORBAServer();
-
-		Log.debugMessage("AdministrationResourceServer.shutdown | serialize ResourceStorableObjectPool" , Log.DEBUGLEVEL03); //$NON-NLS-1$
+			/*
+			 * Activate the servant.
+			 */
+			final CORBAServer corbaServer = sessionEnvironment.getARServerServantManager().getCORBAServer();
+			corbaServer.activateServant(new ARServerImpl(), processCodename);
+			corbaServer.printNamingContext();
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			System.exit(0);
+		}
+	}
+	
+	protected static synchronized void shutdown() {
+		Log.debugMessage("AdministrationResourceServer.shutdown | serializing ResourceStorableObjectPool" , Log.INFO); //$NON-NLS-1$
 		ResourceStorableObjectPool.serializePool();		
 	}
-	
-	public void run() {
-		while (this.running) {
-			try {				
-				sleep(super.initialTimeToSleep);
-			}
-			catch (InterruptedException ie) {
-				Log.errorException(ie);
-			}
+
+	static class ARServerLoginRestorer implements LoginRestorer {
+		public boolean restoreLogin() {
+			return true;
+		}
+
+		public String getLogin() {
+			return login;
+		}
+
+		public String getPassword() {
+			return PASSWORD;
 		}
 	}
 }
