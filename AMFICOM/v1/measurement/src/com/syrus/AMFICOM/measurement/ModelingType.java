@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingType.java,v 1.23 2005/04/15 19:22:19 arseniy Exp $
+ * $Id: ModelingType.java,v 1.24 2005/05/13 21:17:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,27 +11,24 @@ package com.syrus.AMFICOM.measurement;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ModelingType_Transferable;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/04/15 19:22:19 $
+ * @version $Revision: 1.24 $, $Date: 2005/05/13 21:17:13 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -44,8 +41,8 @@ public class ModelingType extends ActionType {
 
 	public static final String CODENAME_DADARA = "dadara";
 
-	private java.util.Set inParameterTypes;
-	private java.util.Set outParameterTypes;
+	private java.util.Set inParameterTypeIds;
+	private java.util.Set outParameterTypeIds;
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
@@ -53,8 +50,8 @@ public class ModelingType extends ActionType {
 	public ModelingType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.inParameterTypes = new HashSet();
-		this.outParameterTypes = new HashSet();
+		this.inParameterTypeIds = new HashSet();
+		this.outParameterTypeIds = new HashSet();
 
 		ModelingTypeDatabase database = MeasurementDatabaseContext.getModelingTypeDatabase();
 		try {
@@ -87,8 +84,8 @@ public class ModelingType extends ActionType {
 							 long version,
 							 String codename,
 							 String description,
-							 java.util.Set inParameterTypes,
-							 java.util.Set outParameterTypes) {
+							 java.util.Set inParameterTypeIds,
+							 java.util.Set outParameterTypeIds) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -98,11 +95,11 @@ public class ModelingType extends ActionType {
 				codename,
 				description);
 
-		this.inParameterTypes = new HashSet();
-		this.setInParameterTypes0(inParameterTypes);
+		this.inParameterTypeIds = new HashSet();
+		this.setInParameterTypeIds0(inParameterTypeIds);
 
-		this.outParameterTypes = new HashSet();
-		this.setOutParameterTypes0(outParameterTypes);
+		this.outParameterTypeIds = new HashSet();
+		this.setOutParameterTypeIds0(outParameterTypeIds);
 	}
 
 	/**
@@ -110,15 +107,15 @@ public class ModelingType extends ActionType {
 	 * @param creatorId
 	 * @param codename
 	 * @param description
-	 * @param inParameterTypes
-	 * @param outParameterTypes
+	 * @param inParameterTypeIds
+	 * @param outParameterTypeIds
 	 * @throws com.syrus.AMFICOM.general.CreateObjectException
 	 */
 	public static ModelingType createInstance(Identifier creatorId,
 												String codename,
 												String description,
-												java.util.Set inParameterTypes,
-												java.util.Set outParameterTypes) throws CreateObjectException {
+												java.util.Set inParameterTypeIds,
+												java.util.Set outParameterTypeIds) throws CreateObjectException {
 		if (creatorId == null || codename == null || codename.length() == 0 || description == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
@@ -128,8 +125,8 @@ public class ModelingType extends ActionType {
 										0L,
 										codename,
 										description,
-										inParameterTypes,
-										outParameterTypes);
+										inParameterTypeIds,
+										outParameterTypeIds);
 			assert modelingType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			
 			modelingType.changed = true;
@@ -147,15 +144,8 @@ public class ModelingType extends ActionType {
 		ModelingType_Transferable mtt = (ModelingType_Transferable) transferable;
 		super.fromTransferable(mtt.header, mtt.codename, mtt.description);
 
-		java.util.Set parTypeIds;
-
-		parTypeIds = Identifier.fromTransferables(mtt.in_parameter_type_ids);
-		this.inParameterTypes = new HashSet(mtt.in_parameter_type_ids.length);
-		this.setInParameterTypes0(GeneralStorableObjectPool.getStorableObjects(parTypeIds, true));
-
-		parTypeIds = Identifier.fromTransferables(mtt.out_parameter_type_ids);
-		this.outParameterTypes = new HashSet(mtt.out_parameter_type_ids.length);
-		this.setOutParameterTypes0(GeneralStorableObjectPool.getStorableObjects(parTypeIds, true));
+		this.inParameterTypeIds = Identifier.fromTransferables(mtt.in_parameter_type_ids);
+		this.outParameterTypeIds = Identifier.fromTransferables(mtt.out_parameter_type_ids);
 		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
@@ -166,17 +156,8 @@ public class ModelingType extends ActionType {
 	public IDLEntity getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
-		int i;
-
-		Identifier_Transferable[] inParTypeIds = new Identifier_Transferable[this.inParameterTypes.size()];
-		i = 0;
-		for (Iterator iterator = this.inParameterTypes.iterator(); iterator.hasNext();)
-			inParTypeIds[i++] = (Identifier_Transferable) ((ParameterType) iterator.next()).getId().getTransferable();
-
-		Identifier_Transferable[] outParTypeIds = new Identifier_Transferable[this.outParameterTypes.size()];
-		i = 0;
-		for (Iterator iterator = this.outParameterTypes.iterator(); iterator.hasNext();)
-			outParTypeIds[i++] = (Identifier_Transferable) ((ParameterType) iterator.next()).getId().getTransferable();
+		Identifier_Transferable[] inParTypeIds = Identifier.createTransferables(this.inParameterTypeIds);
+		Identifier_Transferable[] outParTypeIds = Identifier.createTransferables(this.outParameterTypeIds);
 
 		return new ModelingType_Transferable(super.getHeaderTransferable(),
 											super.codename,
@@ -192,16 +173,16 @@ public class ModelingType extends ActionType {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	protected boolean isValid() {
-		return super.isValid() && this.inParameterTypes != null && this.inParameterTypes != Collections.EMPTY_SET
-			&& this.outParameterTypes != null && this.outParameterTypes != Collections.EMPTY_SET;
+		return super.isValid() && this.inParameterTypeIds != null && this.inParameterTypeIds != Collections.EMPTY_SET
+			&& this.outParameterTypeIds != null && this.outParameterTypeIds != Collections.EMPTY_SET;
 	}
 	
-	public java.util.Set getInParameterTypes() {
-		return Collections.unmodifiableSet(this.inParameterTypes);
+	public java.util.Set getInParameterTypeIds() {
+		return Collections.unmodifiableSet(this.inParameterTypeIds);
 	}
 
-	public java.util.Set getOutParameterTypes() {
-		return Collections.unmodifiableSet(this.outParameterTypes);
+	public java.util.Set getOutParameterTypeIds() {
+		return Collections.unmodifiableSet(this.outParameterTypeIds);
 	}
 
 	/**
@@ -226,49 +207,48 @@ public class ModelingType extends ActionType {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected synchronized void setParameterTypes(java.util.Set inParameterTypes,
-			java.util.Set outParameterTypes) {
-		this.setInParameterTypes0(inParameterTypes);
-		this.setOutParameterTypes0(outParameterTypes);
+	protected synchronized void setParameterTypeIds(java.util.Set inParameterTypeIds, java.util.Set outParameterTypeIds) {
+		this.setInParameterTypeIds0(inParameterTypeIds);
+		this.setOutParameterTypeIds0(outParameterTypeIds);
 	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void setInParameterTypes0(java.util.Set inParameterTypes) {
-		this.inParameterTypes.clear();
-		if (inParameterTypes != null)
-			this.inParameterTypes.addAll(inParameterTypes);
+	protected void setInParameterTypeIds0(java.util.Set inParameterTypeIds) {
+		this.inParameterTypeIds.clear();
+		if (inParameterTypeIds != null)
+			this.inParameterTypeIds.addAll(inParameterTypeIds);
 	}
 
 	/**
-	 * client setter for inParameterTypes
+	 * client setter for inParameterTypeIds
 	 * 
-	 * @param inParameterTypes
-	 *            The inParameterTypes to set.
+	 * @param inParameterTypeIds
+	 *            The inParameterTypeIds to set.
 	 */
-	public void setInParameterTypes(java.util.Set inParameterTypes) {
-		this.setInParameterTypes0(inParameterTypes);
+	public void setInParameterTypeIds(java.util.Set inParameterTypeIds) {
+		this.setInParameterTypeIds0(inParameterTypeIds);
 		super.changed = true;		
 	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void setOutParameterTypes0(java.util.Set outParameterTypes) {
-		this.outParameterTypes.clear();
-		if (outParameterTypes != null)
-			this.outParameterTypes.addAll(outParameterTypes);
+	protected void setOutParameterTypeIds0(java.util.Set outParameterTypeIds) {
+		this.outParameterTypeIds.clear();
+		if (outParameterTypeIds != null)
+			this.outParameterTypeIds.addAll(outParameterTypeIds);
 	}
 
 	/**
-	 * client setter for outParameterTypes
+	 * client setter for outParameterTypeIds
 	 * 
-	 * @param outParameterTypes
-	 *            The outParameterTypes to set.
+	 * @param outParameterTypeIds
+	 *            The outParameterTypeIds to set.
 	 */
-	public void setOutParameterTypes(java.util.Set outParameterTypes) {
-		this.setOutParameterTypes0(outParameterTypes);
+	public void setOutParameterTypeIds(java.util.Set outParameterTypeIds) {
+		this.setOutParameterTypeIds0(outParameterTypeIds);
 		super.changed = true;
 	}
 
@@ -279,11 +259,11 @@ public class ModelingType extends ActionType {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
 		java.util.Set dependencies = new HashSet();
-		if (this.inParameterTypes != null)
-			dependencies.addAll(this.inParameterTypes);
+		if (this.inParameterTypeIds != null)
+			dependencies.addAll(this.inParameterTypeIds);
 				
-		if (this.outParameterTypes != null)
-			dependencies.addAll(this.outParameterTypes);
+		if (this.outParameterTypeIds != null)
+			dependencies.addAll(this.outParameterTypeIds);
 				
 		return dependencies;
 	}

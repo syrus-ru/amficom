@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeDatabase.java,v 1.78 2005/05/11 08:13:13 arseniy Exp $
+ * $Id: EvaluationTypeDatabase.java,v 1.79 2005/05/13 21:17:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,31 +19,29 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 
-import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.general.UpdateObjectException;
+import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.78 $, $Date: 2005/05/11 08:13:13 $
+ * @version $Revision: 1.79 $, $Date: 2005/05/13 21:17:13 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
 
-public class EvaluationTypeDatabase extends StorableObjectDatabase {
+public class EvaluationTypeDatabase extends ActionTypeDatabase {
 
 	private static String columns;
 	private static String updateMultipleSQLValues;
@@ -201,15 +199,7 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 				etalonParameterTypeIds = (java.util.Set) etalonParameterTypeIdsMap.get(evaluationTypeId);
 				outParameterTypeIds = (java.util.Set) outParameterTypeIdsMap.get(evaluationTypeId);
 
-				final java.util.Set inParameterTypes = (inParameterTypeIds != null && !inParameterTypeIds.isEmpty())
-						? GeneralStorableObjectPool.getStorableObjects(inParameterTypeIds, true) : Collections.EMPTY_SET;
-				final java.util.Set thresholdParameterTypes = (thresholdParameterTypeIds != null && !thresholdParameterTypeIds.isEmpty())
-						? GeneralStorableObjectPool.getStorableObjects(thresholdParameterTypeIds, true) : Collections.EMPTY_SET;
-				final java.util.Set etalonParameterTypes = (etalonParameterTypeIds != null && !etalonParameterTypeIds.isEmpty())
-						? GeneralStorableObjectPool.getStorableObjects(etalonParameterTypeIds, true) : Collections.EMPTY_SET;
-				final java.util.Set outParameterTypes = (outParameterTypeIds != null && !outParameterTypeIds.isEmpty())
-						? GeneralStorableObjectPool.getStorableObjects(outParameterTypeIds, true) : Collections.EMPTY_SET;
-				evaluationType.setParameterTypes(inParameterTypes, thresholdParameterTypes, etalonParameterTypes, outParameterTypes);
+				evaluationType.setParameterTypeIds(inParameterTypeIds, thresholdParameterTypeIds, etalonParameterTypeIds, outParameterTypeIds);
 			}
 
 		}
@@ -217,9 +207,6 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 			String mesg = "EvaluationTypeDatabase.retrieveParameterTypes | Cannot retrieve parameter type ids for evaluation types -- "
 					+ sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
-		}
-		catch (ApplicationException ae) {
-			throw new RetrieveObjectException(ae);
 		}
 		finally {
 			try {
@@ -243,66 +230,17 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 		if ((evaluationTypes == null) || (evaluationTypes.isEmpty()))
 			return;
 
-		StringBuffer sql = new StringBuffer(SQL_SELECT
-				+ EvaluationTypeWrapper.LINK_COLUMN_EVALUATION_TYPE_ID + COMMA
-				+ MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID
-				+ SQL_FROM + ObjectEntities.MNTTYPANATYPEVATYP_ENTITY
-				+ SQL_WHERE);
-		sql.append(idsEnumerationString(evaluationTypes, EvaluationTypeWrapper.LINK_COLUMN_EVALUATION_TYPE_ID, true));
+		Map measurementTypeIdsMap = super.retrieveLinkedEntityIds(evaluationTypes,
+				ObjectEntities.MNTTYPANATYPEVATYP_ENTITY,
+				EvaluationTypeWrapper.LINK_COLUMN_EVALUATION_TYPE_ID,
+				MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID);
 
-		Statement statement = null;
-		ResultSet resultSet = null;
-		Connection connection = DatabaseConnection.getConnection();
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("EvaluationTypeDatabase.retrieveMeasurementTypeIdsByOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql.toString());
+		for (Iterator it = evaluationTypes.iterator(); it.hasNext();) {
+			final EvaluationType evaluationType = (EvaluationType) it.next();
+			final Identifier evaluationTypeId = evaluationType.getId();
+			final java.util.Set measurementTypeIds = (java.util.Set) measurementTypeIdsMap.get(evaluationTypeId);
 
-			Map measurementTypeIdsMap = new HashMap();
-			Identifier evaluationTypeId;
-			Identifier measurementTypeId;
-			java.util.Set measurementTypeIds;
-			while (resultSet.next()) {
-				evaluationTypeId = DatabaseIdentifier.getIdentifier(resultSet, EvaluationTypeWrapper.LINK_COLUMN_EVALUATION_TYPE_ID);
-				measurementTypeId = DatabaseIdentifier.getIdentifier(resultSet, MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID);
-
-				measurementTypeIds = (java.util.Set) measurementTypeIdsMap.get(evaluationTypeId);
-				if (measurementTypeIds == null) {
-					measurementTypeIds = new HashSet();
-					measurementTypeIdsMap.put(evaluationTypeId, measurementTypeIds);
-				}
-				measurementTypeIds.add(measurementTypeId);
-			}
-
-			EvaluationType evaluationType;
-			for (Iterator it = evaluationTypes.iterator(); it.hasNext();) {
-				evaluationType = (EvaluationType) it.next();
-				evaluationTypeId = evaluationType.getId();
-				measurementTypeIds = (java.util.Set) measurementTypeIdsMap.get(evaluationTypeId);
-
-				evaluationType.setMeasurementTypeIds0(measurementTypeIds);
-			}
-		}
-		catch (SQLException sqle) {
-			String mesg = "EvaluationTypeDatabase.retrieveMeasurementTypeIdsByOneQuery | Cannot retrieve parameter type ids for evaluation types -- "
-					+ sqle.getMessage();
-			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-			finally {
-				DatabaseConnection.releaseConnection(connection);
-			}
+			evaluationType.setMeasurementTypeIds0(measurementTypeIds);
 		}
 	}
 
@@ -319,113 +257,98 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 	public void insert(StorableObject storableObject) throws CreateObjectException , IllegalDataException {
 		EvaluationType evaluationType = this.fromStorableObject(storableObject);
 		this.insertEntity(evaluationType);
-		this.insertParameterTypes(evaluationType);
+		try {
+			this.updateParameterTypes(Collections.singleton(storableObject));
+			this.updateMeasurementTypeIds(Collections.singleton(storableObject));
+		}
+		catch (UpdateObjectException uoe) {
+			throw new CreateObjectException(uoe);
+		}
 	}
 
 	public void insert(java.util.Set storableObjects) throws IllegalDataException, CreateObjectException {
 		this.insertEntities(storableObjects);
-		for(Iterator it=storableObjects.iterator();it.hasNext();){
-			EvaluationType evaluationType = this.fromStorableObject((StorableObject)it.next());
-			insertParameterTypes(evaluationType);
+		try {
+			this.updateParameterTypes(storableObjects);
+			this.updateMeasurementTypeIds(storableObjects);
+		}
+		catch (UpdateObjectException uoe) {
+			throw new CreateObjectException(uoe);
 		}
 	}
 
-	private PreparedStatement insertParameterTypesPreparedStatement() throws SQLException {
-		PreparedStatement preparedStatement = null;
-		Connection connection = DatabaseConnection.getConnection();
+	public void update(StorableObject storableObject, Identifier modifierId, int updateKind)
+			throws VersionCollisionException, UpdateObjectException {
+		super.update(storableObject, modifierId, updateKind);
+		this.updateParameterTypes(Collections.singleton(storableObject));
 		try {
-			String sql = SQL_INSERT_INTO
-			+ ObjectEntities.EVATYPPARTYPLINK_ENTITY + OPEN_BRACKET
-			+ EvaluationTypeWrapper.LINK_COLUMN_EVALUATION_TYPE_ID + COMMA
-			+ StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID + COMMA
-			+ StorableObjectWrapper.LINK_COLUMN_PARAMETER_MODE
-			+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION
-			+ CLOSE_BRACKET;
-			preparedStatement = connection.prepareStatement(sql);
+			this.updateMeasurementTypeIds(Collections.singleton(storableObject));
 		}
-		finally {
-			DatabaseConnection.releaseConnection(connection);
+		catch (IllegalDataException ide) {
+			Log.errorException(ide);
 		}
-		return preparedStatement;
 	}
-	
-	private void updatePrepareStatementValues(PreparedStatement preparedStatement, EvaluationType evaluationType)
-			throws SQLException {
-		java.util.Set inParTyps = evaluationType.getInParameterTypes();
-		java.util.Set thresholdParTyps = evaluationType.getThresholdParameterTypes();
-		java.util.Set etalonParTyps = evaluationType.getEtalonParameterTypes();
-		java.util.Set outParTyps = evaluationType.getOutParameterTypes();
-		Identifier evaluationTypeId = evaluationType.getId();
-		Identifier parameterTypeId = null;
-		String parameterMode = null;
 
-		for (Iterator iterator = inParTyps.iterator(); iterator.hasNext();) {
-			parameterTypeId = ((ParameterType) iterator.next()).getId();
-			DatabaseIdentifier.setIdentifier(preparedStatement, 1, evaluationTypeId);
-			DatabaseIdentifier.setIdentifier(preparedStatement, 2, parameterTypeId);			
-			parameterMode = EvaluationTypeWrapper.MODE_IN;
-			preparedStatement.setString(3, parameterMode);
-			Log.debugMessage("EvaluationTypeDatabase.insertParameterTypes | Inserting parameter type " + parameterTypeId
-					+ " of parameter mode '" + parameterMode + "' for evaluation type " + evaluationTypeId, Log.DEBUGLEVEL09);
-			preparedStatement.executeUpdate();
+	public void update(java.util.Set storableObjects, Identifier modifierId, int updateKind)
+			throws VersionCollisionException, UpdateObjectException {
+		super.update(storableObjects, modifierId, updateKind);
+		this.updateParameterTypes(storableObjects);
+		try {
+			this.updateMeasurementTypeIds(storableObjects);
 		}
-		for (Iterator iterator = thresholdParTyps.iterator(); iterator.hasNext();) {
-			parameterTypeId = ((ParameterType) iterator.next()).getId();
-			DatabaseIdentifier.setIdentifier(preparedStatement, 1, evaluationTypeId);
-			DatabaseIdentifier.setIdentifier(preparedStatement, 2, parameterTypeId);			
-			parameterMode = EvaluationTypeWrapper.MODE_THRESHOLD;
-			preparedStatement.setString(3, parameterMode);
-			Log.debugMessage("EvaluationTypeDatabase.insertParameterTypes | Inserting parameter type " + parameterTypeId
-					+ " of parameter mode '" + parameterMode + "' for evaluation type " + evaluationTypeId, Log.DEBUGLEVEL09);
-			preparedStatement.executeUpdate();
-		}
-		for (Iterator iterator = etalonParTyps.iterator(); iterator.hasNext();) {
-			parameterTypeId = ((ParameterType) iterator.next()).getId();
-			DatabaseIdentifier.setIdentifier(preparedStatement, 1, evaluationTypeId);
-			DatabaseIdentifier.setIdentifier(preparedStatement, 2, parameterTypeId);			
-			parameterMode = EvaluationTypeWrapper.MODE_ETALON;
-			preparedStatement.setString(3, parameterMode);
-			Log.debugMessage("EvaluationTypeDatabase.insertParameterTypes | Inserting parameter type " + parameterTypeId
-					+ " of parameter mode '" + parameterMode + "' for evaluation type " + evaluationTypeId, Log.DEBUGLEVEL09);
-			preparedStatement.executeUpdate();
-		}
-		for (Iterator iterator = outParTyps.iterator(); iterator.hasNext();) {
-			parameterTypeId = ((ParameterType) iterator.next()).getId();
-			DatabaseIdentifier.setIdentifier(preparedStatement, 1, evaluationTypeId);
-			DatabaseIdentifier.setIdentifier(preparedStatement, 2, parameterTypeId);			
-			parameterMode = EvaluationTypeWrapper.MODE_OUT;
-			preparedStatement.setString(3, parameterMode);
-			Log.debugMessage("EvaluationTypeDatabase.insertParameterTypes | Inserting parameter type " + parameterTypeId
-					+ " of parameter mode '" + parameterMode + "' for evaluation type " + evaluationTypeId, Log.DEBUGLEVEL09);
-			preparedStatement.executeUpdate();
+		catch (IllegalDataException ide) {
+			Log.errorException(ide);
 		}
 	}
-	
-	private void insertParameterTypes(EvaluationType evaluationType) throws CreateObjectException {
-		PreparedStatement preparedStatement = null;
-		Identifier evaluationTypeId = evaluationType.getId();
+
+	private void updateParameterTypes(java.util.Set evaluationTypes) throws UpdateObjectException {
+		if (evaluationTypes == null || evaluationTypes.isEmpty())
+			return;
+
+		Map parameterTypeIdsMap = new HashMap(evaluationTypes.size());
+		for (Iterator it = evaluationTypes.iterator(); it.hasNext();) {
+			final EvaluationType evaluationType = (EvaluationType) it.next();
+			final Map parTypeIdsModeMap = new HashMap();
+			parTypeIdsModeMap.put(EvaluationTypeWrapper.MODE_IN, evaluationType.getInParameterTypeIds());
+			parTypeIdsModeMap.put(EvaluationTypeWrapper.MODE_THRESHOLD, evaluationType.getThresholdParameterTypeIds());
+			parTypeIdsModeMap.put(EvaluationTypeWrapper.MODE_ETALON, evaluationType.getEtalonParameterTypeIds());
+			parTypeIdsModeMap.put(EvaluationTypeWrapper.MODE_OUT, evaluationType.getOutParameterTypeIds());
+			parameterTypeIdsMap.put(evaluationType.getId(), parTypeIdsModeMap);
+		}
+
+		Map dbParameterTypeIdsMap = null;
 		try {
-			preparedStatement = this.insertParameterTypesPreparedStatement();
-			this.updatePrepareStatementValues(preparedStatement, evaluationType);
+			dbParameterTypeIdsMap = super.retrieveDBParameterTypeIdsMap(evaluationTypes,
+					ObjectEntities.EVATYPPARTYPLINK_ENTITY,
+					EvaluationTypeWrapper.LINK_COLUMN_EVALUATION_TYPE_ID);
 		}
-		catch (SQLException sqle) {
-			String mesg = "EvaluationTypeDatabase.insertParameterTypes | Cannot insert parameter type for evaluation type '"
-					+ evaluationTypeId + "' -- " + sqle.getMessage();
-			throw new CreateObjectException(mesg, sqle);
+		catch (RetrieveObjectException roe) {
+			throw new UpdateObjectException(roe);
 		}
-		finally {
-			try {
-				if (preparedStatement != null)
-					preparedStatement.close();
-				preparedStatement = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
+
+		super.updateParameterTypes(parameterTypeIdsMap,
+				dbParameterTypeIdsMap,
+				ObjectEntities.EVATYPPARTYPLINK_ENTITY,
+				EvaluationTypeWrapper.LINK_COLUMN_EVALUATION_TYPE_ID);
+	}
+
+	private void updateMeasurementTypeIds(java.util.Set evaluationTypes) throws IllegalDataException, UpdateObjectException {
+		if (evaluationTypes == null || evaluationTypes.isEmpty())
+			return;
+
+		Map mtIdsMap = new HashMap();
+		EvaluationType evaluationType;
+		java.util.Set mtIds;
+		for (Iterator it = evaluationTypes.iterator(); it.hasNext();) {
+			evaluationType = this.fromStorableObject((StorableObject) it.next());
+			mtIds = evaluationType.getMeasurementTypeIds();
+			mtIdsMap.put(evaluationType.getId(), mtIds);
 		}
+
+		this.updateLinkedEntityIds(mtIdsMap,
+				ObjectEntities.MNTTYPANATYPEVATYP_ENTITY,
+				EvaluationTypeWrapper.LINK_COLUMN_EVALUATION_TYPE_ID,
+				MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID);
 	}
 
 	public void delete(Identifier id) {

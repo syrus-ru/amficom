@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeDatabase.java,v 1.83 2005/05/11 08:13:13 arseniy Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.84 2005/05/13 21:17:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,31 +19,29 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 
-import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.general.UpdateObjectException;
+import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.83 $, $Date: 2005/05/11 08:13:13 $
+ * @version $Revision: 1.84 $, $Date: 2005/05/13 21:17:13 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
 
-public class AnalysisTypeDatabase extends StorableObjectDatabase {	
+public class AnalysisTypeDatabase extends ActionTypeDatabase {	
 
 	private static String columns;
 	private static String updateMultipleSQLValues;
@@ -190,15 +188,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 				etalonParameterTypeIds = (java.util.Set) etalonParameterTypeIdsMap.get(analysisTypeId);
 				outParameterTypeIds = (java.util.Set) outParameterTypeIdsMap.get(analysisTypeId);
 
-				final java.util.Set inParameterTypes = (inParameterTypeIds != null && !inParameterTypeIds.isEmpty())
-						? GeneralStorableObjectPool.getStorableObjects(inParameterTypeIds, true) : Collections.EMPTY_SET;
-				final java.util.Set criteriaParameterTypes = (criteriaParameterTypeIds != null && !criteriaParameterTypeIds.isEmpty())
-						? GeneralStorableObjectPool.getStorableObjects(criteriaParameterTypeIds, true) : Collections.EMPTY_SET;
-				final java.util.Set etalonParameterTypes = (etalonParameterTypeIds != null && !etalonParameterTypeIds.isEmpty())
-						? GeneralStorableObjectPool.getStorableObjects(etalonParameterTypeIds, true) : Collections.EMPTY_SET;
-				final java.util.Set outParameterTypes = (outParameterTypeIds != null && !outParameterTypeIds.isEmpty())
-						? GeneralStorableObjectPool.getStorableObjects(outParameterTypeIds, true) : Collections.EMPTY_SET;
-				analysisType.setParameterTypes(inParameterTypes, criteriaParameterTypes, etalonParameterTypes, outParameterTypes);
+				analysisType.setParameterTypeIds(inParameterTypeIds, criteriaParameterTypeIds, etalonParameterTypeIds, outParameterTypeIds);
 			}
 
 		}
@@ -206,9 +196,6 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 			String mesg = "AnalysisTypeDatabase.retrieveParameterTypesByOneQuery | Cannot retrieve parameter type ids for analysis types -- "
 					+ sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
-		}
-		catch (ApplicationException ae) {
-			throw new RetrieveObjectException(ae);
 		}
 		finally {
 			try {
@@ -232,66 +219,17 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		if ((analysisTypes == null) || (analysisTypes.isEmpty()))
 			return;
 
-		StringBuffer sql = new StringBuffer(SQL_SELECT
-				+ AnalysisTypeWrapper.LINK_COLUMN_ANALYSIS_TYPE_ID + COMMA
-				+ MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID
-				+ SQL_FROM + ObjectEntities.MNTTYPANATYPEVATYP_ENTITY
-				+ SQL_WHERE);
-		sql.append(idsEnumerationString(analysisTypes, AnalysisTypeWrapper.LINK_COLUMN_ANALYSIS_TYPE_ID, true));
+		Map measurementTypeIdsMap = super.retrieveLinkedEntityIds(analysisTypes,
+				ObjectEntities.MNTTYPANATYPEVATYP_ENTITY,
+				AnalysisTypeWrapper.LINK_COLUMN_ANALYSIS_TYPE_ID,
+				MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID);
 
-		Statement statement = null;
-		ResultSet resultSet = null;
-		Connection connection = DatabaseConnection.getConnection();
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("AnalysisTypeDatabase.retrieveMeasurementTypeIdsByOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql.toString());
+		for (Iterator it = analysisTypes.iterator(); it.hasNext();) {
+			final AnalysisType analysisType = (AnalysisType) it.next();
+			final Identifier analysisTypeId = analysisType.getId();
+			final java.util.Set measurementTypeIds = (java.util.Set) measurementTypeIdsMap.get(analysisTypeId);
 
-			Map measurementTypeIdsMap = new HashMap();
-			Identifier analysisTypeId;
-			Identifier measurementTypeId;
-			java.util.Set measurementTypeIds;
-			while (resultSet.next()) {
-				analysisTypeId = DatabaseIdentifier.getIdentifier(resultSet, AnalysisTypeWrapper.LINK_COLUMN_ANALYSIS_TYPE_ID);
-				measurementTypeId = DatabaseIdentifier.getIdentifier(resultSet, MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID);
-
-				measurementTypeIds = (java.util.Set) measurementTypeIdsMap.get(analysisTypeId);
-				if (measurementTypeIds == null) {
-					measurementTypeIds = new HashSet();
-					measurementTypeIdsMap.put(analysisTypeId, measurementTypeIds);
-				}
-				measurementTypeIds.add(measurementTypeId);
-			}
-
-			AnalysisType analysisType;
-			for (Iterator it = analysisTypes.iterator(); it.hasNext();) {
-				analysisType = (AnalysisType) it.next();
-				analysisTypeId = analysisType.getId();
-				measurementTypeIds = (java.util.Set) measurementTypeIdsMap.get(analysisTypeId);
-
-				analysisType.setMeasurementTypeIds0(measurementTypeIds);
-			}
-		}
-		catch (SQLException sqle) {
-			String mesg = "AnalysisTypeDatabase.retrieveMeasurementTypeIdsByOneQuery | Cannot retrieve parameter type ids for analysis types -- "
-					+ sqle.getMessage();
-			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-			finally {
-				DatabaseConnection.releaseConnection(connection);
-			}
+			analysisType.setMeasurementTypeIds0(measurementTypeIds);
 		}
 	}
 
@@ -308,112 +246,98 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 	public void insert(StorableObject storableObject) throws CreateObjectException, IllegalDataException {
 		AnalysisType analysisType = this.fromStorableObject(storableObject);
 		this.insertEntity(analysisType);
-		this.insertParameterTypes(analysisType);
+		try {
+			this.updateParameterTypes(Collections.singleton(storableObject));
+			this.updateMeasurementTypeIds(Collections.singleton(storableObject));
+		}
+		catch (UpdateObjectException uoe) {
+			throw new CreateObjectException(uoe);
+		}
 	}
 
 	public void insert(java.util.Set storableObjects) throws IllegalDataException, CreateObjectException {
 		this.insertEntities(storableObjects);
-		for(Iterator it = storableObjects.iterator(); it.hasNext();) {
-			AnalysisType analysisType = this.fromStorableObject((StorableObject)it.next());
-			insertParameterTypes(analysisType);
-		}
-	}
-
-	private PreparedStatement insertParameterTypesPreparedStatement() throws SQLException {
-		PreparedStatement preparedStatement = null;
-		Connection connection = DatabaseConnection.getConnection();
 		try {
-			String sql = SQL_INSERT_INTO
-			+ ObjectEntities.ANATYPPARTYPLINK_ENTITY + OPEN_BRACKET
-			+ AnalysisTypeWrapper.LINK_COLUMN_ANALYSIS_TYPE_ID + COMMA
-			+ StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID + COMMA
-			+ StorableObjectWrapper.LINK_COLUMN_PARAMETER_MODE
-			+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION
-			+ CLOSE_BRACKET;
-			preparedStatement = connection.prepareStatement(sql);
+			this.updateParameterTypes(storableObjects);
+			this.updateMeasurementTypeIds(storableObjects);
 		}
-		finally {
-			DatabaseConnection.releaseConnection(connection);
-		}
-		return preparedStatement;
-	}
-
-	private void updatePrepareStatementValues(PreparedStatement preparedStatement, AnalysisType analysisType) throws SQLException {
-		java.util.Set inParTyps = analysisType.getInParameterTypes();
-		java.util.Set criteriaParTyps = analysisType.getCriteriaParameterTypes();
-		java.util.Set etalonParTyps = analysisType.getEtalonParameterTypes();
-		java.util.Set outParTyps = analysisType.getOutParameterTypes();
-		Identifier analysisTypeId = analysisType.getId();
-		Identifier parameterTypeId = null;
-		String parameterMode = null;
-
-		for (Iterator iterator = inParTyps.iterator(); iterator.hasNext();) {
-			parameterTypeId = ((ParameterType) iterator.next()).getId();
-			DatabaseIdentifier.setIdentifier(preparedStatement, 1, analysisTypeId);
-			DatabaseIdentifier.setIdentifier(preparedStatement, 2, parameterTypeId);			
-			parameterMode = AnalysisTypeWrapper.MODE_IN;
-			preparedStatement.setString(3, parameterMode);
-			Log.debugMessage("AnalysisTypeDatabase.updatePrepareStatementValues | Inserting parameter type " + parameterTypeId
-					+ " of parameter mode '" + parameterMode + "' for analysis type " + analysisTypeId, Log.DEBUGLEVEL09);
-			preparedStatement.executeUpdate();
-		}
-		for (Iterator iterator = criteriaParTyps.iterator(); iterator.hasNext();) {
-			parameterTypeId = ((ParameterType) iterator.next()).getId();
-			DatabaseIdentifier.setIdentifier(preparedStatement, 1, analysisTypeId);
-			DatabaseIdentifier.setIdentifier(preparedStatement, 2, parameterTypeId);			
-			parameterMode = AnalysisTypeWrapper.MODE_CRITERION;
-			preparedStatement.setString(3, parameterMode);
-			Log.debugMessage("AnalysisTypeDatabase.updatePrepareStatementValues | Inserting parameter type " + parameterTypeId
-					+ " of parameter mode '" + parameterMode + "' for analysis type " + analysisTypeId, Log.DEBUGLEVEL09);
-			preparedStatement.executeUpdate();
-		}
-		for (Iterator iterator = etalonParTyps.iterator(); iterator.hasNext();) {
-			parameterTypeId = ((ParameterType) iterator.next()).getId();
-			DatabaseIdentifier.setIdentifier(preparedStatement, 1, analysisTypeId);
-			DatabaseIdentifier.setIdentifier(preparedStatement, 2, parameterTypeId);			
-			parameterMode = AnalysisTypeWrapper.MODE_ETALON;
-			preparedStatement.setString(3, parameterMode);
-			Log.debugMessage("AnalysisTypeDatabase.updatePrepareStatementValues | Inserting parameter type "+ parameterTypeId
-					+ " of parameter mode '" + parameterMode + "' for analysis type " + analysisTypeId, Log.DEBUGLEVEL09);
-			preparedStatement.executeUpdate();
-		}
-		for (Iterator iterator = outParTyps.iterator(); iterator.hasNext();) {
-			parameterTypeId = ((ParameterType) iterator.next()).getId();
-			DatabaseIdentifier.setIdentifier(preparedStatement, 1, analysisTypeId);
-			DatabaseIdentifier.setIdentifier(preparedStatement, 2, parameterTypeId);			
-			parameterMode = AnalysisTypeWrapper.MODE_OUT;
-			preparedStatement.setString(3, parameterMode);
-			Log.debugMessage("AnalysisTypeDatabase.updatePrepareStatementValues | Inserting parameter type " + parameterTypeId
-					+ " of parameter mode '" + parameterMode + "' for analysis type " + analysisTypeId, Log.DEBUGLEVEL09);
-			preparedStatement.executeUpdate();
+		catch (UpdateObjectException uoe) {
+			throw new CreateObjectException(uoe);
 		}
 	}
 
-	private void insertParameterTypes(AnalysisType analysisType) throws CreateObjectException {
-		PreparedStatement preparedStatement = null;
-		Identifier analysisTypeId = analysisType.getId();
+	public void update(StorableObject storableObject, Identifier modifierId, int updateKind)
+			throws VersionCollisionException, UpdateObjectException {
+		super.update(storableObject, modifierId, updateKind);
+		this.updateParameterTypes(Collections.singleton(storableObject));
 		try {
-			preparedStatement = this.insertParameterTypesPreparedStatement();
-			this.updatePrepareStatementValues(preparedStatement, analysisType);
+			this.updateMeasurementTypeIds(Collections.singleton(storableObject));
 		}
-		catch (SQLException sqle) {
-			String mesg = "AnalysisTypeDatabase.insertParameterTypes | Cannot insert parameter type for analysis type '"
-					+ analysisTypeId + "' -- " + sqle.getMessage();
-			throw new CreateObjectException(mesg, sqle);
+		catch (IllegalDataException ide) {
+			Log.errorException(ide);
 		}
-		finally {
-			try {
-				if (preparedStatement != null)
-					preparedStatement.close();
-				preparedStatement = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
+	}
+
+	public void update(java.util.Set storableObjects, Identifier modifierId, int updateKind)
+			throws VersionCollisionException, UpdateObjectException {
+		super.update(storableObjects, modifierId, updateKind);
+		this.updateParameterTypes(storableObjects);
+		try {
+			this.updateMeasurementTypeIds(storableObjects);
 		}
+		catch (IllegalDataException ide) {
+			Log.errorException(ide);
+		}
+	}
+
+	private void updateParameterTypes(java.util.Set analysisTypes) throws UpdateObjectException {
+		if (analysisTypes == null || analysisTypes.isEmpty())
+			return;
+
+		Map parameterTypeIdsMap = new HashMap(analysisTypes.size());
+		for (Iterator it = analysisTypes.iterator(); it.hasNext();) {
+			final AnalysisType analysisType = (AnalysisType) it.next();
+			final Map parTypeIdsModeMap = new HashMap();
+			parTypeIdsModeMap.put(AnalysisTypeWrapper.MODE_IN, analysisType.getInParameterTypeIds());
+			parTypeIdsModeMap.put(AnalysisTypeWrapper.MODE_CRITERION, analysisType.getCriteriaParameterTypeIds());
+			parTypeIdsModeMap.put(AnalysisTypeWrapper.MODE_ETALON, analysisType.getEtalonParameterTypeIds());
+			parTypeIdsModeMap.put(AnalysisTypeWrapper.MODE_OUT, analysisType.getOutParameterTypeIds());
+			parameterTypeIdsMap.put(analysisType.getId(), parTypeIdsModeMap);
+		}
+
+		Map dbParameterTypeIdsMap = null;
+		try {
+			dbParameterTypeIdsMap = super.retrieveDBParameterTypeIdsMap(analysisTypes,
+					ObjectEntities.ANATYPPARTYPLINK_ENTITY,
+					AnalysisTypeWrapper.LINK_COLUMN_ANALYSIS_TYPE_ID);
+		}
+		catch (RetrieveObjectException roe) {
+			throw new UpdateObjectException(roe);
+		}
+
+		super.updateParameterTypes(parameterTypeIdsMap,
+				dbParameterTypeIdsMap,
+				ObjectEntities.ANATYPPARTYPLINK_ENTITY,
+				AnalysisTypeWrapper.LINK_COLUMN_ANALYSIS_TYPE_ID);
+	}
+
+	private void updateMeasurementTypeIds(java.util.Set analysisTypes) throws IllegalDataException, UpdateObjectException {
+		if (analysisTypes == null || analysisTypes.isEmpty())
+			return;
+
+		Map mtIdsMap = new HashMap();
+		AnalysisType analysisType;
+		java.util.Set mtIds;
+		for (Iterator it = analysisTypes.iterator(); it.hasNext();) {
+			analysisType = this.fromStorableObject((StorableObject) it.next());
+			mtIds = analysisType.getMeasurementTypeIds();
+			mtIdsMap.put(analysisType.getId(), mtIds);
+		}
+
+		this.updateLinkedEntityIds(mtIdsMap,
+				ObjectEntities.MNTTYPANATYPEVATYP_ENTITY,
+				AnalysisTypeWrapper.LINK_COLUMN_ANALYSIS_TYPE_ID,
+				MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID);
 	}
 
 	public void delete(Identifier id) {

@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.36 2005/05/06 13:09:10 bob Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.37 2005/05/13 21:17:13 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/05/06 13:09:10 $
- * @author $Author: bob $
+ * @version $Revision: 1.37 $, $Date: 2005/05/13 21:17:13 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -77,10 +77,10 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				switch (this.linkedEntityCode) {
 					case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
 						Set params = new HashSet();
-						params.addAll(analysisType.getCriteriaParameterTypes());
-						params.addAll(analysisType.getInParameterTypes());
-						params.addAll(analysisType.getOutParameterTypes());
-						params.addAll(analysisType.getEtalonParameterTypes());
+						params.addAll(analysisType.getCriteriaParameterTypeIds());
+						params.addAll(analysisType.getInParameterTypeIds());
+						params.addAll(analysisType.getOutParameterTypeIds());
+						params.addAll(analysisType.getEtalonParameterTypeIds());
 						condition = super.conditionTest(params);
 						break;
 					case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
@@ -97,10 +97,10 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				switch (this.linkedEntityCode) {
 					case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
 						Set params = new HashSet();
-						params.addAll(evaluationType.getThresholdParameterTypes());
-						params.addAll(evaluationType.getInParameterTypes());
-						params.addAll(evaluationType.getOutParameterTypes());
-						params.addAll(evaluationType.getEtalonParameterTypes());
+						params.addAll(evaluationType.getThresholdParameterTypeIds());
+						params.addAll(evaluationType.getInParameterTypeIds());
+						params.addAll(evaluationType.getOutParameterTypeIds());
+						params.addAll(evaluationType.getEtalonParameterTypeIds());
 						condition = super.conditionTest(params);
 						break;
 					case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
@@ -117,8 +117,8 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				switch (this.linkedEntityCode) {
 					case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
 						Set params = new HashSet();
-						params.addAll(modelingType.getInParameterTypes());
-						params.addAll(modelingType.getOutParameterTypes());
+						params.addAll(modelingType.getInParameterTypeIds());
+						params.addAll(modelingType.getOutParameterTypeIds());
 						condition = super.conditionTest(params);
 						break;
 					default:
@@ -158,7 +158,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				MeasurementType measurementType = (MeasurementType) storableObject;
 				switch (this.linkedEntityCode) {
 					case ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE:
-						condition = super.conditionTest(measurementType.getMeasurementPortTypes());
+						condition = super.conditionTest(measurementType.getMeasurementPortTypeIds());
 						break;
 					default:
 						throw new IllegalObjectEntityException(LINKED_ENTITY_CODE_NOT_REGISTERED + this.linkedEntityCode

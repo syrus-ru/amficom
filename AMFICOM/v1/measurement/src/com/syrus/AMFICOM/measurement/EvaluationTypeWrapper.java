@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeWrapper.java,v 1.7 2005/04/11 11:49:13 bob Exp $
+ * $Id: EvaluationTypeWrapper.java,v 1.8 2005/05/13 21:17:13 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/04/11 11:49:13 $
- * @author $Author: bob $
+ * @version $Revision: 1.8 $, $Date: 2005/05/13 21:17:13 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 public class EvaluationTypeWrapper extends StorableObjectWrapper {
@@ -61,13 +61,13 @@ public class EvaluationTypeWrapper extends StorableObjectWrapper {
 			if (key.equals(COLUMN_DESCRIPTION))
 				return evaluationType.getDescription();
 			if (key.equals(MODE_IN))
-				return evaluationType.getInParameterTypes();
+				return evaluationType.getInParameterTypeIds();
 			if (key.equals(MODE_OUT))
-				return evaluationType.getOutParameterTypes();
+				return evaluationType.getOutParameterTypeIds();
 			if (key.equals(MODE_THRESHOLD))
-				return evaluationType.getThresholdParameterTypes();
+				return evaluationType.getThresholdParameterTypeIds();
 			if (key.equals(MODE_ETALON))
-				return evaluationType.getEtalonParameterTypes();
+				return evaluationType.getEtalonParameterTypeIds();
 
 		}
 		return null;
@@ -85,13 +85,13 @@ public class EvaluationTypeWrapper extends StorableObjectWrapper {
 			else if (key.equals(COLUMN_DESCRIPTION))
 				evaluationType.setDescription((String) value);
 			else if (key.equals(MODE_IN))
-				evaluationType.setInParameterTypes((java.util.Set) value);
+				evaluationType.setInParameterTypeIds((java.util.Set) value);
 			else if (key.equals(MODE_OUT))
-				evaluationType.setOutParameterTypes((java.util.Set) value);
+				evaluationType.setOutParameterTypeIds((java.util.Set) value);
 			else if (key.equals(MODE_THRESHOLD))
-				evaluationType.setThresholdParameterTypes((java.util.Set) value);
+				evaluationType.setThresholdParameterTypeIds((java.util.Set) value);
 			else if (key.equals(MODE_ETALON))
-				evaluationType.setEtalonParameterTypes((java.util.Set) value);
+				evaluationType.setEtalonParameterTypeIds((java.util.Set) value);
 		}
 	}
 

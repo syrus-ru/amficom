@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingTypeDatabase.java,v 1.32 2005/05/11 08:13:13 arseniy Exp $
+ * $Id: ModelingTypeDatabase.java,v 1.33 2005/05/13 21:17:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,31 +19,29 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 
-import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.general.UpdateObjectException;
+import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/05/11 08:13:13 $
+ * @version $Revision: 1.33 $, $Date: 2005/05/13 21:17:13 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
 
-public class ModelingTypeDatabase extends StorableObjectDatabase {
+public class ModelingTypeDatabase extends ActionTypeDatabase {
 
 	private static String columns;
 	private static String updateMultipleSQLValues;
@@ -121,94 +119,17 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 		if ((modelingTypes == null) || (modelingTypes.isEmpty()))
 			return;
 
-    StringBuffer sql = new StringBuffer(SQL_SELECT
-				+ StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID + COMMA
-				+ StorableObjectWrapper.LINK_COLUMN_PARAMETER_MODE + COMMA
-				+ ModelingTypeWrapper.LINK_COLUMN_MODELING_TYPE_ID
-				+ SQL_FROM + ObjectEntities.MODTYPPARTYPLINK_ENTITY
-				+ SQL_WHERE);
-    sql.append(idsEnumerationString(modelingTypes, ModelingTypeWrapper.LINK_COLUMN_MODELING_TYPE_ID, true));
-
-		Statement statement = null;
-		ResultSet resultSet = null;
-		Connection connection = DatabaseConnection.getConnection();
-
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("ModelingTypeDatabase.retrieveParameterTypesByOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql.toString());
-
-			Map inParameterTypeIdsMap = new HashMap();
-			Map outParameterTypeIdsMap = new HashMap();
-			String parameterMode;
-			Identifier parameterTypeId;
-			Identifier modelingTypeId;
-			java.util.Set inParameterTypeIds;
-			java.util.Set outParameterTypeIds;
-			while (resultSet.next()) {
-				parameterMode = resultSet.getString(StorableObjectWrapper.LINK_COLUMN_PARAMETER_MODE);
-				parameterTypeId = DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID);
-				modelingTypeId = DatabaseIdentifier.getIdentifier(resultSet, ModelingTypeWrapper.LINK_COLUMN_MODELING_TYPE_ID);
-
-				if (parameterMode.equals(ModelingTypeWrapper.MODE_IN)) {
-					inParameterTypeIds = (java.util.Set) inParameterTypeIdsMap.get(modelingTypeId);
-					if (inParameterTypeIds == null) {
-						inParameterTypeIds = new HashSet();
-						inParameterTypeIdsMap.put(modelingTypeId, inParameterTypeIds);
-					}
-					inParameterTypeIds.add(parameterTypeId);
-				}
-				else
-					if (parameterMode.equals(ModelingTypeWrapper.MODE_OUT)) {
-						outParameterTypeIds = (java.util.Set) outParameterTypeIdsMap.get(modelingTypeId);
-						if (outParameterTypeIds == null) {
-							outParameterTypeIds = new HashSet();
-							outParameterTypeIdsMap.put(modelingTypeId, outParameterTypeIds);
-						}
-						outParameterTypeIds.add(parameterTypeId);
-					}
-					else
-						Log.errorMessage("ModelingTypeDatabase.retrieveParameterTypes | ERROR: Unknown parameter mode '"
-								+ parameterMode + "' for parameterTypeId '" + parameterTypeId
-								+ "' of modeling type '" + modelingTypeId + "'");
-			}
-
-			ModelingType modelingType;
-			for (Iterator it = modelingTypes.iterator(); it.hasNext();) {
-				modelingType = (ModelingType) it.next();
-				modelingTypeId = modelingType.getId();
-				inParameterTypeIds = (java.util.Set) inParameterTypeIdsMap.get(modelingTypeId);
-				outParameterTypeIds = (java.util.Set) outParameterTypeIdsMap.get(modelingTypeId);
-
-				final java.util.Set inParameterTypes = (inParameterTypeIds != null && !inParameterTypeIds.isEmpty())
-						? GeneralStorableObjectPool.getStorableObjects(inParameterTypeIds, true) : Collections.EMPTY_SET;
-				final java.util.Set outParameterTypes = (outParameterTypeIds != null && !outParameterTypeIds.isEmpty())
-						? GeneralStorableObjectPool.getStorableObjects(outParameterTypeIds, true) : Collections.EMPTY_SET;
-				modelingType.setParameterTypes(inParameterTypes, outParameterTypes);
-			}
-
-		}
-		catch (SQLException sqle) {
-			String mesg = "ModelingTypeDatabase.retrieveParameterTypes | Cannot retrieve parameter type ids for modeling types -- " + sqle.getMessage();
-			throw new RetrieveObjectException(mesg, sqle);
-		}
-		catch (ApplicationException ae) {
-			throw new RetrieveObjectException(ae);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-			finally {
-				DatabaseConnection.releaseConnection(connection);
+		final Map parameterTypeIdsMap = super.retrieveParameterTypesByOneQuery(modelingTypes,
+				ObjectEntities.MODTYPPARTYPLINK_ENTITY,
+				ModelingTypeWrapper.LINK_COLUMN_MODELING_TYPE_ID);
+		Map parameterTypeIdsModeMap;
+		for (Iterator it = modelingTypes.iterator(); it.hasNext();) {
+			final ModelingType modelingType = (ModelingType) it.next();
+			parameterTypeIdsModeMap = (Map) parameterTypeIdsMap.get(modelingType.getId());
+			if (parameterTypeIdsModeMap != null) {
+				final java.util.Set inParameterTypeIds = (java.util.Set) parameterTypeIdsModeMap.get(ModelingTypeWrapper.MODE_IN);
+				final java.util.Set outParameterTypeIds = (java.util.Set) parameterTypeIdsModeMap.get(ModelingTypeWrapper.MODE_OUT);
+				modelingType.setParameterTypeIds(inParameterTypeIds, outParameterTypeIds);
 			}
 		}
 	}
@@ -225,87 +146,63 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 	public void insert(StorableObject storableObject) throws CreateObjectException , IllegalDataException {
 		ModelingType modelingType = this.fromStorableObject(storableObject);
 		this.insertEntity(modelingType);
-		this.insertParameterTypes(modelingType);
+		try {
+			this.updateParameterTypes(Collections.singleton(storableObject));
+		}
+		catch (UpdateObjectException uoe) {
+			throw new CreateObjectException(uoe);
+		}
 	}
 
 	public void insert(java.util.Set storableObjects) throws IllegalDataException, CreateObjectException {
 		this.insertEntities(storableObjects);
-		for(Iterator it=storableObjects.iterator();it.hasNext();){
-			ModelingType modelingType = this.fromStorableObject((StorableObject)it.next());
-			insertParameterTypes(modelingType);
-		}
-	}
-
-	private PreparedStatement insertParameterTypesPreparedStatement() throws SQLException {
-		PreparedStatement preparedStatement = null;
-		Connection connection = DatabaseConnection.getConnection();
 		try {
-			String sql = SQL_INSERT_INTO
-				+ ObjectEntities.MODTYPPARTYPLINK_ENTITY + OPEN_BRACKET
-				+ ModelingTypeWrapper.LINK_COLUMN_MODELING_TYPE_ID + COMMA
-				+ StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID + COMMA
-				+ StorableObjectWrapper.LINK_COLUMN_PARAMETER_MODE
-				+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
-				+ QUESTION + COMMA
-				+ QUESTION + COMMA
-				+ QUESTION
-				+ CLOSE_BRACKET;
-			preparedStatement = connection.prepareStatement(sql);
+			this.updateParameterTypes(storableObjects);
 		}
-		finally {
-			DatabaseConnection.releaseConnection(connection);
-		}
-		return preparedStatement;
-	}
-
-	private void updatePrepareStatementValues(PreparedStatement preparedStatement, ModelingType modelingType) throws SQLException {
-		java.util.Set inParTyps = modelingType.getInParameterTypes();
-		java.util.Set outParTyps = modelingType.getOutParameterTypes();
-		Identifier modelingTypeId = modelingType.getId();
-		Identifier parameterTypeId = null;
-		String parameterMode = null;
-
-		for (Iterator iterator = inParTyps.iterator(); iterator.hasNext();) {
-			parameterTypeId = ((ParameterType) iterator.next()).getId();
-			DatabaseIdentifier.setIdentifier(preparedStatement, 1, modelingTypeId);
-			DatabaseIdentifier.setIdentifier(preparedStatement, 2, parameterTypeId);			
-			parameterMode = ModelingTypeWrapper.MODE_IN;
-			preparedStatement.setString(3, parameterMode);
-			Log.debugMessage("ModelingTypeDatabase.insertParameterTypes | Inserting parameter type " + parameterTypeId + " of parameter mode '" + parameterMode + "' for modeling type " + modelingTypeId, Log.DEBUGLEVEL09);
-			preparedStatement.executeUpdate();
-		}
-		for (Iterator iterator = outParTyps.iterator(); iterator.hasNext();) {
-			parameterTypeId = ((ParameterType) iterator.next()).getId();
-			DatabaseIdentifier.setIdentifier(preparedStatement, 1, modelingTypeId);
-			DatabaseIdentifier.setIdentifier(preparedStatement, 2, parameterTypeId);
-			parameterMode = ModelingTypeWrapper.MODE_OUT;
-			preparedStatement.setString(3, parameterMode);
-			Log.debugMessage("ModelingTypeDatabase.insertParameterTypes | Inserting parameter type '" + parameterTypeId + "' of parameter mode '" + parameterMode + "' for modeling type '" + modelingTypeId + "'", Log.DEBUGLEVEL09);
-			preparedStatement.executeUpdate();
+		catch (UpdateObjectException uoe) {
+			throw new CreateObjectException(uoe);
 		}
 	}
 
-	private void insertParameterTypes(ModelingType modelingType) throws CreateObjectException {
-		PreparedStatement preparedStatement = null;
-		Identifier modelingTypeId = modelingType.getId();
+	public void update(StorableObject storableObject, Identifier modifierId, int updateKind)
+			throws VersionCollisionException, UpdateObjectException {
+		super.update(storableObject, modifierId, updateKind);
+		this.updateParameterTypes(Collections.singleton(storableObject));
+	}
+
+	public void update(java.util.Set storableObjects, Identifier modifierId, int updateKind)
+			throws VersionCollisionException, UpdateObjectException {
+		super.update(storableObjects, modifierId, updateKind);
+		this.updateParameterTypes(storableObjects);
+	}
+
+	private void updateParameterTypes(java.util.Set modelingTypes) throws UpdateObjectException {
+		if (modelingTypes == null || modelingTypes.isEmpty())
+			return;
+
+		Map parameterTypeIdsMap = new HashMap(modelingTypes.size());
+		for (Iterator it = modelingTypes.iterator(); it.hasNext();) {
+			final ModelingType modelingType = (ModelingType) it.next();
+			final Map parTypeIdsModeMap = new HashMap();
+			parTypeIdsModeMap.put(ModelingTypeWrapper.MODE_IN, modelingType.getInParameterTypeIds());
+			parTypeIdsModeMap.put(ModelingTypeWrapper.MODE_OUT, modelingType.getOutParameterTypeIds());
+			parameterTypeIdsMap.put(modelingType.getId(), parTypeIdsModeMap);
+		}
+
+		Map dbParameterTypeIdsMap = null;
 		try {
-			preparedStatement = this.insertParameterTypesPreparedStatement();
-			this.updatePrepareStatementValues(preparedStatement, modelingType);
+			dbParameterTypeIdsMap = super.retrieveDBParameterTypeIdsMap(modelingTypes,
+					ObjectEntities.MODTYPPARTYPLINK_ENTITY,
+					ModelingTypeWrapper.LINK_COLUMN_MODELING_TYPE_ID);
 		}
-		catch (SQLException sqle) {
-			String mesg = "ModelingTypeDatabase.insertParameterTypes | Cannot insert parameter type for modeling type '" + modelingTypeId + "' -- " + sqle.getMessage();
-			throw new CreateObjectException(mesg, sqle);
+		catch (RetrieveObjectException roe) {
+			throw new UpdateObjectException(roe);
 		}
-		finally {
-			try {
-				if (preparedStatement != null)
-					preparedStatement.close();
-				preparedStatement = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}
+
+		super.updateParameterTypes(parameterTypeIdsMap,
+				dbParameterTypeIdsMap,
+				ObjectEntities.MODTYPPARTYPLINK_ENTITY,
+				ModelingTypeWrapper.LINK_COLUMN_MODELING_TYPE_ID);
 	}
 
 	public void delete(Identifier id) {

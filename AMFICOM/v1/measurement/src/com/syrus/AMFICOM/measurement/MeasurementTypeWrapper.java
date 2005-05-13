@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeWrapper.java,v 1.7 2005/04/11 11:49:13 bob Exp $
+ * $Id: MeasurementTypeWrapper.java,v 1.8 2005/05/13 21:17:13 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/04/11 11:49:13 $
- * @author $Author: bob $
+ * @version $Revision: 1.8 $, $Date: 2005/05/13 21:17:13 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 public class MeasurementTypeWrapper extends StorableObjectWrapper {
@@ -61,11 +61,11 @@ public class MeasurementTypeWrapper extends StorableObjectWrapper {
 			if (key.equals(COLUMN_DESCRIPTION))
 				return measurementType.getDescription();
 			if (key.equals(MODE_IN))
-				return measurementType.getInParameterTypes();
+				return measurementType.getInParameterTypeIds();
 			if (key.equals(MODE_OUT))
-				return measurementType.getOutParameterTypes();
+				return measurementType.getOutParameterTypeIds();
 			if (key.equals(LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID))
-				return measurementType.getMeasurementPortTypes();
+				return measurementType.getMeasurementPortTypeIds();
 
 		}
 		return null;
@@ -83,11 +83,11 @@ public class MeasurementTypeWrapper extends StorableObjectWrapper {
 			else if (key.equals(COLUMN_DESCRIPTION))
 				measurementType.setDescription((String) value);
 			else if (key.equals(MODE_IN))
-				measurementType.setInParameterTypes((java.util.Set) value);
+				measurementType.setInParameterTypeIds((java.util.Set) value);
 			else if (key.equals(MODE_OUT))
-				measurementType.setOutParameterTypes((java.util.Set) value);
+				measurementType.setOutParameterTypeIds((java.util.Set) value);
 			else if (key.equals(LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID))
-				measurementType.setMeasurementPortTypes((java.util.Set) value);
+				measurementType.setMeasurementPortTypeIds((java.util.Set) value);
 		}
 	}
 

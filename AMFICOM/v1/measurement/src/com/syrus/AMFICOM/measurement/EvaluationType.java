@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationType.java,v 1.61 2005/04/15 19:22:19 arseniy Exp $
+ * $Id: EvaluationType.java,v 1.62 2005/05/13 21:17:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,27 +11,24 @@ package com.syrus.AMFICOM.measurement;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
 
 /**
- * @version $Revision: 1.61 $, $Date: 2005/04/15 19:22:19 $
+ * @version $Revision: 1.62 $, $Date: 2005/05/13 21:17:13 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -44,10 +41,10 @@ public class EvaluationType extends ActionType {
 
 	public static final String CODENAME_DADARA = "dadara";
 
-	private java.util.Set inParameterTypes;
-	private java.util.Set thresholdParameterTypes;
-	private java.util.Set etalonParameterTypes;
-	private java.util.Set outParameterTypes;
+	private java.util.Set inParameterTypeIds;
+	private java.util.Set thresholdParameterTypeIds;
+	private java.util.Set etalonParameterTypeIds;
+	private java.util.Set outParameterTypeIds;
 
 	private java.util.Set measurementTypeIds;
 
@@ -57,10 +54,10 @@ public class EvaluationType extends ActionType {
 	public EvaluationType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.inParameterTypes = new HashSet();
-		this.thresholdParameterTypes = new HashSet();
-		this.etalonParameterTypes = new HashSet();
-		this.outParameterTypes = new HashSet();
+		this.inParameterTypeIds = new HashSet();
+		this.thresholdParameterTypeIds = new HashSet();
+		this.etalonParameterTypeIds = new HashSet();
+		this.outParameterTypeIds = new HashSet();
 
 		this.measurementTypeIds = new HashSet();
 
@@ -95,10 +92,10 @@ public class EvaluationType extends ActionType {
 							 long version,
 							 String codename,
 							 String description,
-							 java.util.Set inParameterTypes,
-							 java.util.Set thresholdParameterTypes,
-							 java.util.Set etalonParameterTypes,
-							 java.util.Set outParameterTypes,
+							 java.util.Set inParameterTypeIds,
+							 java.util.Set thresholdParameterTypeIds,
+							 java.util.Set etalonParameterTypeIds,
+							 java.util.Set outParameterTypeIds,
 						   java.util.Set measurementTypeIds) {
 		super(id,
 				new Date(System.currentTimeMillis()),
@@ -109,17 +106,17 @@ public class EvaluationType extends ActionType {
 				codename,
 				description);
 
-		this.inParameterTypes = new HashSet();
-		this.setInParameterTypes0(inParameterTypes);
+		this.inParameterTypeIds = new HashSet();
+		this.setInParameterTypeIds0(inParameterTypeIds);
 
-		this.thresholdParameterTypes = new HashSet();
-		this.setThresholdParameterTypes0(thresholdParameterTypes);
+		this.thresholdParameterTypeIds = new HashSet();
+		this.setThresholdParameterTypeIds0(thresholdParameterTypeIds);
 
-		this.etalonParameterTypes = new HashSet();
-		this.setEtalonParameterTypes0(etalonParameterTypes);
+		this.etalonParameterTypeIds = new HashSet();
+		this.setEtalonParameterTypeIds0(etalonParameterTypeIds);
 
-		this.outParameterTypes = new HashSet();
-		this.setOutParameterTypes0(outParameterTypes);
+		this.outParameterTypeIds = new HashSet();
+		this.setOutParameterTypeIds0(outParameterTypeIds);
 
 
 		this.measurementTypeIds = new HashSet();
@@ -132,20 +129,20 @@ public class EvaluationType extends ActionType {
 	 * @param creatorId
 	 * @param codename
 	 * @param description
-	 * @param inParameterTypes
-	 * @param thresholdParameterTypes
-	 * @param etalonParameterTypes
-	 * @param outParameterTypes
+	 * @param inParameterTypeIds
+	 * @param thresholdParameterTypeIds
+	 * @param etalonParameterTypeIds
+	 * @param outParameterTypeIds
 	 * @param measurementTypeIds
 	 * @throws CreateObjectException
 	 */
 	public static EvaluationType createInstance(Identifier creatorId,
 			String codename,
 			String description,
-			java.util.Set inParameterTypes,
-			java.util.Set thresholdParameterTypes,
-			java.util.Set etalonParameterTypes,
-			java.util.Set outParameterTypes,
+			java.util.Set inParameterTypeIds,
+			java.util.Set thresholdParameterTypeIds,
+			java.util.Set etalonParameterTypeIds,
+			java.util.Set outParameterTypeIds,
 			java.util.Set measurementTypeIds) throws CreateObjectException {
 		try {
 			EvaluationType evaluationType = new EvaluationType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE),
@@ -153,10 +150,10 @@ public class EvaluationType extends ActionType {
 					0L,
 					codename,
 					description,
-					inParameterTypes,
-					thresholdParameterTypes,
-					etalonParameterTypes,
-					outParameterTypes,
+					inParameterTypeIds,
+					thresholdParameterTypeIds,
+					etalonParameterTypeIds,
+					outParameterTypeIds,
 					measurementTypeIds);
 			assert evaluationType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			evaluationType.changed = true;
@@ -174,23 +171,10 @@ public class EvaluationType extends ActionType {
 		EvaluationType_Transferable ett = (EvaluationType_Transferable)transferable;
 		super.fromTransferable(ett.header, ett.codename, ett.description);
 
-		java.util.Set parTypIds;
-
-		parTypIds = Identifier.fromTransferables(ett.in_parameter_type_ids);
-		this.inParameterTypes = new HashSet(ett.in_parameter_type_ids.length);
-		this.setInParameterTypes0(GeneralStorableObjectPool.getStorableObjects(parTypIds, true));
-
-		parTypIds = Identifier.fromTransferables(ett.threshold_parameter_type_ids);
-		this.thresholdParameterTypes = new HashSet(ett.threshold_parameter_type_ids.length);
-		this.setThresholdParameterTypes0(GeneralStorableObjectPool.getStorableObjects(parTypIds, true));
-
-		parTypIds = Identifier.fromTransferables(ett.etalon_parameter_type_ids);
-		this.etalonParameterTypes = new HashSet(ett.etalon_parameter_type_ids.length);
-		this.setEtalonParameterTypes0(GeneralStorableObjectPool.getStorableObjects(parTypIds, true));
-
-		parTypIds = Identifier.fromTransferables(ett.out_parameter_type_ids);
-		this.outParameterTypes = new HashSet(ett.out_parameter_type_ids.length);
-		this.setOutParameterTypes0(GeneralStorableObjectPool.getStorableObjects(parTypIds, true));		
+		this.inParameterTypeIds = Identifier.fromTransferables(ett.in_parameter_type_ids);
+		this.thresholdParameterTypeIds = Identifier.fromTransferables(ett.threshold_parameter_type_ids);
+		this.etalonParameterTypeIds = Identifier.fromTransferables(ett.etalon_parameter_type_ids);
+		this.outParameterTypeIds = Identifier.fromTransferables(ett.out_parameter_type_ids);		
 
 		this.measurementTypeIds = Identifier.fromTransferables(ett.measurement_type_ids);
 		
@@ -203,34 +187,12 @@ public class EvaluationType extends ActionType {
 	public IDLEntity getTransferable() {
 		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-		
-		int i;
 
-		Identifier_Transferable[] inParTypeIds = new Identifier_Transferable[this.inParameterTypes.size()];
-		i = 0;
-		for (Iterator iterator = this.inParameterTypes.iterator(); iterator.hasNext();)
-			inParTypeIds[i++] = (Identifier_Transferable) ((ParameterType) iterator.next()).getId().getTransferable();
-
-		Identifier_Transferable[] thresholdParTypeIds = new Identifier_Transferable[this.thresholdParameterTypes.size()];
-		i = 0;
-		for (Iterator iterator = this.thresholdParameterTypes.iterator(); iterator.hasNext();)
-			thresholdParTypeIds[i++] = (Identifier_Transferable) ((ParameterType) iterator.next()).getId().getTransferable();
-
-		Identifier_Transferable[] etalonParTypeIds = new Identifier_Transferable[this.etalonParameterTypes.size()];
-		i = 0;
-		for (Iterator iterator = this.etalonParameterTypes.iterator(); iterator.hasNext();)
-			etalonParTypeIds[i++] = (Identifier_Transferable) ((ParameterType) iterator.next()).getId().getTransferable();
-
-		Identifier_Transferable[] outParTypeIds = new Identifier_Transferable[this.outParameterTypes.size()];
-		i = 0;
-		for (Iterator iterator = this.outParameterTypes.iterator(); iterator.hasNext();)
-			outParTypeIds[i++] = (Identifier_Transferable) ((ParameterType) iterator.next()).getId().getTransferable();
-
-
-		Identifier_Transferable[] measTypIds = new Identifier_Transferable[this.measurementTypeIds.size()];
-		i = 0;
-		for (Iterator iterator = this.measurementTypeIds.iterator(); iterator.hasNext();)
-			measTypIds[i++] = (Identifier_Transferable) ((Identifier) iterator.next()).getTransferable();
+		Identifier_Transferable[] inParTypeIds = Identifier.createTransferables(this.inParameterTypeIds);
+		Identifier_Transferable[] thresholdParTypeIds = Identifier.createTransferables(this.thresholdParameterTypeIds);
+		Identifier_Transferable[] etalonParTypeIds = Identifier.createTransferables(this.etalonParameterTypeIds);
+		Identifier_Transferable[] outParTypeIds = Identifier.createTransferables(this.outParameterTypeIds);
+		Identifier_Transferable[] measTypIds = Identifier.createTransferables(this.measurementTypeIds);
 
 		return new EvaluationType_Transferable(super.getHeaderTransferable(),
 											   super.codename,
@@ -249,27 +211,27 @@ public class EvaluationType extends ActionType {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	protected boolean isValid() {
-		return super.isValid() && this.inParameterTypes != null && this.inParameterTypes != Collections.EMPTY_SET
-				&& this.thresholdParameterTypes != null && this.thresholdParameterTypes != Collections.EMPTY_SET
-				&& this.etalonParameterTypes != null && this.etalonParameterTypes != Collections.EMPTY_SET
-				&& this.outParameterTypes != null && this.outParameterTypes != Collections.EMPTY_SET
+		return super.isValid() && this.inParameterTypeIds != null && this.inParameterTypeIds != Collections.EMPTY_SET
+				&& this.thresholdParameterTypeIds != null && this.thresholdParameterTypeIds != Collections.EMPTY_SET
+				&& this.etalonParameterTypeIds != null && this.etalonParameterTypeIds != Collections.EMPTY_SET
+				&& this.outParameterTypeIds != null && this.outParameterTypeIds != Collections.EMPTY_SET
 				&& this.measurementTypeIds != null && this.measurementTypeIds != Collections.EMPTY_SET;
 	}
 
-	public java.util.Set getInParameterTypes() {
-		return Collections.unmodifiableSet(this.inParameterTypes);
+	public java.util.Set getInParameterTypeIds() {
+		return Collections.unmodifiableSet(this.inParameterTypeIds);
 	}
 
-	public java.util.Set getThresholdParameterTypes() {
-		return Collections.unmodifiableSet(this.thresholdParameterTypes);
+	public java.util.Set getThresholdParameterTypeIds() {
+		return Collections.unmodifiableSet(this.thresholdParameterTypeIds);
 	}
 
-	public java.util.Set getEtalonParameterTypes() {
-		return Collections.unmodifiableSet(this.etalonParameterTypes);
+	public java.util.Set getEtalonParameterTypeIds() {
+		return Collections.unmodifiableSet(this.etalonParameterTypeIds);
 	}
 
-	public java.util.Set getOutParameterTypes() {
-		return Collections.unmodifiableSet(this.outParameterTypes);
+	public java.util.Set getOutParameterTypeIds() {
+		return Collections.unmodifiableSet(this.outParameterTypeIds);
 	}
 
 	public java.util.Set getMeasurementTypeIds() {
@@ -298,93 +260,93 @@ public class EvaluationType extends ActionType {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected synchronized void setParameterTypes(java.util.Set inParameterTypes,
-			java.util.Set thresholdParameterTypes,
-			java.util.Set etalonParameterTypes,
-			java.util.Set outParameterTypes) {
-		this.setInParameterTypes0(inParameterTypes);
-		this.setThresholdParameterTypes0(thresholdParameterTypes);
-		this.setEtalonParameterTypes0(etalonParameterTypes);
-		this.setOutParameterTypes0(outParameterTypes);
+	protected synchronized void setParameterTypeIds(java.util.Set inParameterTypeIds,
+			java.util.Set thresholdParameterTypeIds,
+			java.util.Set etalonParameterTypeIds,
+			java.util.Set outParameterTypeIds) {
+		this.setInParameterTypeIds0(inParameterTypeIds);
+		this.setThresholdParameterTypeIds0(thresholdParameterTypeIds);
+		this.setEtalonParameterTypeIds0(etalonParameterTypeIds);
+		this.setOutParameterTypeIds0(outParameterTypeIds);
 	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void setInParameterTypes0(java.util.Set inParameterTypes) {
-		this.inParameterTypes.clear();
-		if (inParameterTypes != null)
-			this.inParameterTypes.addAll(inParameterTypes);
+	protected void setInParameterTypeIds0(java.util.Set inParameterTypeIds) {
+		this.inParameterTypeIds.clear();
+		if (inParameterTypeIds != null)
+			this.inParameterTypeIds.addAll(inParameterTypeIds);
 	}
 	
 	/**
-	 * client setter for inParameterTypes
+	 * client setter for inParameterTypeIds
 	 * 
-	 * @param inParameterTypes
-	 *            The inParameterTypes to set.
+	 * @param inParameterTypeIds
+	 *            The inParameterTypeIds to set.
 	 */
-	public void setInParameterTypes(java.util.Set inParameterTypes) {
-		this.setInParameterTypes0(inParameterTypes);
+	public void setInParameterTypeIds(java.util.Set inParameterTypeIds) {
+		this.setInParameterTypeIds0(inParameterTypeIds);
 		super.changed = true;		
 	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void setThresholdParameterTypes0(java.util.Set thresholdParameterTypes) {
-		this.thresholdParameterTypes.clear();
-		if (thresholdParameterTypes != null)
-			this.thresholdParameterTypes.addAll(thresholdParameterTypes);
+	protected void setThresholdParameterTypeIds0(java.util.Set thresholdParameterTypeIds) {
+		this.thresholdParameterTypeIds.clear();
+		if (thresholdParameterTypeIds != null)
+			this.thresholdParameterTypeIds.addAll(thresholdParameterTypeIds);
 	}
 
 	/**
-	 * client setter for thresholdParameterTypes
+	 * client setter for thresholdParameterTypeIds
 	 * 
-	 * @param thresholdParameterTypes
-	 *            The thresholdParameterTypes to set.
+	 * @param thresholdParameterTypeIds
+	 *            The thresholdParameterTypeIds to set.
 	 */
-	public void setThresholdParameterTypes(java.util.Set thresholdParameterTypes) {
-		this.setThresholdParameterTypes0(thresholdParameterTypes);
+	public void setThresholdParameterTypeIds(java.util.Set thresholdParameterTypeIds) {
+		this.setThresholdParameterTypeIds0(thresholdParameterTypeIds);
 		super.changed = true;
 	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void setEtalonParameterTypes0(java.util.Set etalonParameterTypes) {
-		this.etalonParameterTypes.clear();
-		if (etalonParameterTypes != null)
-			this.etalonParameterTypes.addAll(etalonParameterTypes);
+	protected void setEtalonParameterTypeIds0(java.util.Set etalonParameterTypeIds) {
+		this.etalonParameterTypeIds.clear();
+		if (etalonParameterTypeIds != null)
+			this.etalonParameterTypeIds.addAll(etalonParameterTypeIds);
 	}
 
 	/**
-	 * client setter for etalonParameterTypes
+	 * client setter for etalonParameterTypeIds
 	 * 
-	 * @param etalonParameterTypes
-	 *            The etalonParameterTypes to set.
+	 * @param etalonParameterTypeIds
+	 *            The etalonParameterTypeIds to set.
 	 */
-	public void setEtalonParameterTypes(java.util.Set etalonParameterTypes) {
-		this.setEtalonParameterTypes0(etalonParameterTypes);
+	public void setEtalonParameterTypeIds(java.util.Set etalonParameterTypeIds) {
+		this.setEtalonParameterTypeIds0(etalonParameterTypeIds);
 		super.changed = true;
 	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void setOutParameterTypes0(java.util.Set outParameterTypes) {
-		this.outParameterTypes.clear();
-		if (outParameterTypes != null)
-			this.outParameterTypes.addAll(outParameterTypes);
+	protected void setOutParameterTypeIds0(java.util.Set outParameterTypeIds) {
+		this.outParameterTypeIds.clear();
+		if (outParameterTypeIds != null)
+			this.outParameterTypeIds.addAll(outParameterTypeIds);
 	}
 
 	/**
-	 * client setter for outParameterTypes
+	 * client setter for outParameterTypeIds
 	 * 
-	 * @param outParameterTypes
-	 *            The outParameterTypes to set.
+	 * @param outParameterTypeIds
+	 *            The outParameterTypeIds to set.
 	 */
-	public void setOutParameterTypes(java.util.Set outParameterTypes) {
-		this.setOutParameterTypes0(outParameterTypes);
+	public void setOutParameterTypeIds(java.util.Set outParameterTypeIds) {
+		this.setOutParameterTypeIds0(outParameterTypeIds);
 		super.changed = true;
 	}
 
@@ -398,7 +360,7 @@ public class EvaluationType extends ActionType {
 	}
 
 	/**
-	 * client setter for outParameterTypes
+	 * client setter for measurementTypeIds
 	 * @param measurementTypeIds
 	 */
 	public void setMeasurementTypeIds(java.util.Set measurementTypeIds) {
@@ -413,17 +375,17 @@ public class EvaluationType extends ActionType {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
 		java.util.Set dependencies = new HashSet();
-		if (this.inParameterTypes != null)
-			dependencies.addAll(this.inParameterTypes);
+		if (this.inParameterTypeIds != null)
+			dependencies.addAll(this.inParameterTypeIds);
 
-		if (this.thresholdParameterTypes != null)
-			dependencies.addAll(this.thresholdParameterTypes);
+		if (this.thresholdParameterTypeIds != null)
+			dependencies.addAll(this.thresholdParameterTypeIds);
 
-		if (this.etalonParameterTypes != null)
-			dependencies.addAll(this.etalonParameterTypes);
+		if (this.etalonParameterTypeIds != null)
+			dependencies.addAll(this.etalonParameterTypeIds);
 
-		if (this.outParameterTypes != null)
-			dependencies.addAll(this.outParameterTypes);
+		if (this.outParameterTypeIds != null)
+			dependencies.addAll(this.outParameterTypeIds);
 
 
 		if (this.measurementTypeIds != null)

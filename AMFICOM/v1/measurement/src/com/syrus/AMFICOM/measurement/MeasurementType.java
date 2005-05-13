@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementType.java,v 1.68 2005/04/23 17:44:57 arseniy Exp $
+ * $Id: MeasurementType.java,v 1.69 2005/05/13 21:17:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,16 +11,12 @@ package com.syrus.AMFICOM.measurement;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 
 import org.omg.CORBA.portable.IDLEntity;
 
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-import com.syrus.AMFICOM.configuration.MeasurementPortType;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -28,13 +24,12 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 
 /**
- * @version $Revision: 1.68 $, $Date: 2005/04/23 17:44:57 $
+ * @version $Revision: 1.69 $, $Date: 2005/05/13 21:17:13 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -47,9 +42,9 @@ public class MeasurementType extends ActionType implements Namable {
 
 	public static final String CODENAME_REFLECTOMETRY = "reflectometry";
 
-	private java.util.Set inParameterTypes;
-	private java.util.Set outParameterTypes;
-	private java.util.Set measurementPortTypes;
+	private java.util.Set inParameterTypeIds;
+	private java.util.Set outParameterTypeIds;
+	private java.util.Set measurementPortTypeIds;
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
@@ -57,9 +52,9 @@ public class MeasurementType extends ActionType implements Namable {
 	public MeasurementType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.inParameterTypes = new HashSet();
-		this.outParameterTypes = new HashSet();
-		this.measurementPortTypes = new HashSet();
+		this.inParameterTypeIds = new HashSet();
+		this.outParameterTypeIds = new HashSet();
+		this.measurementPortTypeIds = new HashSet();
 
 		MeasurementTypeDatabase database = MeasurementDatabaseContext.getMeasurementTypeDatabase();
 		try {
@@ -92,9 +87,9 @@ public class MeasurementType extends ActionType implements Namable {
 							  long version,
 							  String codename,
 							  String description,
-							  java.util.Set inParameterTypes,
-							  java.util.Set outParameterTypes,
-							  java.util.Set measurementPortTypes) {
+							  java.util.Set inParameterTypeIds,
+							  java.util.Set outParameterTypeIds,
+							  java.util.Set measurementPortTypeIds) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -104,40 +99,42 @@ public class MeasurementType extends ActionType implements Namable {
 				codename,
 				description);
 
-		this.inParameterTypes = new HashSet(); 
-		this.setInParameterTypes0(inParameterTypes);
+		this.inParameterTypeIds = new HashSet(); 
+		this.setInParameterTypeIds0(inParameterTypeIds);
 
-		this.outParameterTypes = new HashSet();
-		this.setOutParameterTypes0(outParameterTypes);
+		this.outParameterTypeIds = new HashSet();
+		this.setOutParameterTypeIds0(outParameterTypeIds);
 
-		this.measurementPortTypes = new HashSet();
-		this.setMeasurementPortTypes0(measurementPortTypes);
+		this.measurementPortTypeIds = new HashSet();
+		this.setMeasurementPortTypeIds0(measurementPortTypeIds);
 	}
 
 	/**
-	 * create new instance for client
+	 * Create new instance
 	 * @param creatorId
 	 * @param codename
 	 * @param description
-	 * @param inParameterTypes
-	 * @param outParameterTypes
+	 * @param inParameterTypeIds
+	 * @param outParameterTypeIds
+	 * @param measurementPortTypeIds
+	 * @return
 	 * @throws CreateObjectException
 	 */
 	public static MeasurementType createInstance(Identifier creatorId,
 												 String codename,
 												 String description,
-												 java.util.Set inParameterTypes,
-												 java.util.Set outParameterTypes,
-												 java.util.Set measurementPortTypes) throws CreateObjectException {
+												 java.util.Set inParameterTypeIds,
+												 java.util.Set outParameterTypeIds,
+												 java.util.Set measurementPortTypeIds) throws CreateObjectException {
 		try {
 			MeasurementType measurementType = new MeasurementType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE),
-										creatorId,
-										0L,
-										codename,
-										description,
-										inParameterTypes,
-										outParameterTypes,
-										measurementPortTypes);
+					creatorId,
+					0L,
+					codename,
+					description,
+					inParameterTypeIds,
+					outParameterTypeIds,
+					measurementPortTypeIds);
 			
 			assert measurementType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			
@@ -156,19 +153,9 @@ public class MeasurementType extends ActionType implements Namable {
 		MeasurementType_Transferable mtt = (MeasurementType_Transferable) transferable;
 		super.fromTransferable(mtt.header, mtt.codename, mtt.description);
 
-		java.util.Set typeIds;
-
-		typeIds = Identifier.fromTransferables(mtt.in_parameter_type_ids);
-		this.inParameterTypes = new HashSet(mtt.in_parameter_type_ids.length);
-		this.setInParameterTypes0(GeneralStorableObjectPool.getStorableObjects(typeIds, true));
-
-		typeIds = Identifier.fromTransferables(mtt.out_parameter_type_ids);
-		this.outParameterTypes = new HashSet(mtt.out_parameter_type_ids.length);
-		this.setOutParameterTypes0(GeneralStorableObjectPool.getStorableObjects(typeIds, true));
-
-		typeIds = Identifier.fromTransferables(mtt.measurement_port_type_ids);
-		this.measurementPortTypes = new HashSet(mtt.measurement_port_type_ids.length);
-		this.setMeasurementPortTypes0(ConfigurationStorableObjectPool.getStorableObjects(typeIds, true));
+		this.inParameterTypeIds = Identifier.fromTransferables(mtt.in_parameter_type_ids);
+		this.outParameterTypeIds = Identifier.fromTransferables(mtt.out_parameter_type_ids);
+		this.measurementPortTypeIds = Identifier.fromTransferables(mtt.measurement_port_type_ids);
 		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
@@ -178,50 +165,34 @@ public class MeasurementType extends ActionType implements Namable {
 	 */
 	public IDLEntity getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-		
-		int i;
 
-		Identifier_Transferable[] inParTypeIds = new Identifier_Transferable[this.inParameterTypes.size()];
-		i = 0;
-		for (Iterator iterator = this.inParameterTypes.iterator(); iterator.hasNext();)
-			inParTypeIds[i++] = (Identifier_Transferable) ((ParameterType) iterator.next()).getId().getTransferable();
-
-		Identifier_Transferable[] outParTypeIds = new Identifier_Transferable[this.outParameterTypes.size()];
-		i = 0;
-		for (Iterator iterator = this.outParameterTypes.iterator(); iterator.hasNext();)
-			outParTypeIds[i++] = (Identifier_Transferable) ((ParameterType) iterator.next()).getId().getTransferable();
-		
-		Identifier_Transferable[] measurementPortTypeIds = new Identifier_Transferable[this.measurementPortTypes.size()];
-		i = 0;
-		for (Iterator iterator = this.measurementPortTypes.iterator(); iterator.hasNext();){
-			MeasurementPortType measurementPortType = (MeasurementPortType) iterator.next();
-			if (measurementPortType != null)
-				measurementPortTypeIds[i++] = (Identifier_Transferable) measurementPortType.getId().getTransferable();
-		}
+		Identifier_Transferable[] inParTypeIds = Identifier.createTransferables(this.inParameterTypeIds);
+		Identifier_Transferable[] outParTypeIds = Identifier.createTransferables(this.outParameterTypeIds);
+		Identifier_Transferable[] measPortTypeIds = Identifier.createTransferables(this.measurementPortTypeIds);
 
 		return new MeasurementType_Transferable(super.getHeaderTransferable(),
 												super.codename,
 												super.description != null ? super.description : "",
 												inParTypeIds,	
 												outParTypeIds,
-												measurementPortTypeIds);
+												measPortTypeIds);
 	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	protected boolean isValid() {
-		return super.isValid() && this.inParameterTypes != null && this.inParameterTypes != Collections.EMPTY_SET &&
-			this.outParameterTypes != null && this.outParameterTypes != Collections.EMPTY_SET &&
-			this.measurementPortTypes != null && !this.measurementPortTypes.isEmpty();
+		return super.isValid() && this.inParameterTypeIds != null && this.inParameterTypeIds != Collections.EMPTY_SET &&
+			this.outParameterTypeIds != null && this.outParameterTypeIds != Collections.EMPTY_SET &&
+			this.measurementPortTypeIds != null && !this.measurementPortTypeIds.isEmpty();
 	}
 	
-	public java.util.Set getInParameterTypes() {
-		return Collections.unmodifiableSet(this.inParameterTypes);
+	public java.util.Set getInParameterTypeIds() {
+		return Collections.unmodifiableSet(this.inParameterTypeIds);
 	}
 
-	public java.util.Set getOutParameterTypes() {
-		return Collections.unmodifiableSet(this.outParameterTypes);
+	public java.util.Set getOutParameterTypeIds() {
+		return Collections.unmodifiableSet(this.outParameterTypeIds);
 	}
 
 	/**
@@ -246,72 +217,72 @@ public class MeasurementType extends ActionType implements Namable {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected synchronized void setParameterTypes(java.util.Set inParameterTypes, java.util.Set outParameterTypes) {
-		this.setInParameterTypes0(inParameterTypes);
-		this.setOutParameterTypes0(outParameterTypes);
+	protected synchronized void setParameterTypeIds(java.util.Set inParameterTypeIds, java.util.Set outParameterTypeIds) {
+		this.setInParameterTypeIds0(inParameterTypeIds);
+		this.setOutParameterTypeIds0(outParameterTypeIds);
 	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void setInParameterTypes0(java.util.Set inParameterTypes) {
-		this.inParameterTypes.clear();
-		if (inParameterTypes != null)
-			this.inParameterTypes.addAll(inParameterTypes);
+	protected void setInParameterTypeIds0(java.util.Set inParameterTypeIds) {
+		this.inParameterTypeIds.clear();
+		if (inParameterTypeIds != null)
+			this.inParameterTypeIds.addAll(inParameterTypeIds);
 	}
 
 	/**
-	 * client setter for inParameterTypes
+	 * client setter for inParameterTypeIds
 	 * 
-	 * @param inParameterTypes
-	 *            The inParameterTypes to set.
+	 * @param inParameterTypeIds
+	 *            The inParameterTypeIds to set.
 	 */
-	public void setInParameterTypes(java.util.Set inParameterTypes) {
-		this.setInParameterTypes0(inParameterTypes);
+	public void setInParameterTypeIds(java.util.Set inParameterTypeIds) {
+		this.setInParameterTypeIds0(inParameterTypeIds);
 		super.changed = true;		
 	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void setOutParameterTypes0(java.util.Set outParameterTypes) {
-		this.outParameterTypes.clear();
-		if (outParameterTypes != null)
-			this.outParameterTypes.addAll(outParameterTypes);
+	protected void setOutParameterTypeIds0(java.util.Set outParameterTypeIds) {
+		this.outParameterTypeIds.clear();
+		if (outParameterTypeIds != null)
+			this.outParameterTypeIds.addAll(outParameterTypeIds);
 	}
 
 	/**
-	 * client setter for outParameterTypes
+	 * client setter for outParameterTypeIds
 	 * 
-	 * @param outParameterTypes
-	 *            The outParameterTypes to set.
+	 * @param outParameterTypeIds
+	 *            The outParameterTypeIds to set.
 	 */
-	public void setOutParameterTypes(java.util.Set outParameterTypes) {
-		this.setOutParameterTypes0(outParameterTypes);
+	public void setOutParameterTypeIds(java.util.Set outParameterTypeIds) {
+		this.setOutParameterTypeIds0(outParameterTypeIds);
 		super.changed = true;		
 	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void setMeasurementPortTypes0(java.util.Set measurementPortTypes) {
-		this.measurementPortTypes.clear();
-		if (measurementPortTypes != null)
-	     	this.measurementPortTypes.addAll(measurementPortTypes);
+	protected void setMeasurementPortTypeIds0(java.util.Set measurementPortTypeIds) {
+		this.measurementPortTypeIds.clear();
+		if (measurementPortTypeIds != null)
+	     	this.measurementPortTypeIds.addAll(measurementPortTypeIds);
 	}
 
 	/**
-	 * client setter for measurementPortTypes
-	 * @param measurementPortTypes
-	 * 		The measurementPortTypes to set
+	 * client setter for measurementPortTypeIds
+	 * @param measurementPortTypeIds
+	 * 		The measurementPortTypeIds to set
 	 */
-	public void setMeasurementPortTypes(java.util.Set measurementPortTypes) {
-		this.setMeasurementPortTypes0(measurementPortTypes);
+	public void setMeasurementPortTypeIds(java.util.Set measurementPortTypeIds) {
+		this.setMeasurementPortTypeIds0(measurementPortTypeIds);
 		super.changed = true;		
 	}
 
-	public java.util.Set getMeasurementPortTypes() {
-		return Collections.unmodifiableSet(this.measurementPortTypes);
+	public java.util.Set getMeasurementPortTypeIds() {
+		return Collections.unmodifiableSet(this.measurementPortTypeIds);
 	}
 
 	/**
@@ -323,14 +294,14 @@ public class MeasurementType extends ActionType implements Namable {
 		
 		java.util.Set dependencies = new HashSet();
 
-		if (this.inParameterTypes != null)
-			dependencies.addAll(this.inParameterTypes);
+		if (this.inParameterTypeIds != null)
+			dependencies.addAll(this.inParameterTypeIds);
 
-		if (this.outParameterTypes != null)
-			dependencies.addAll(this.outParameterTypes);
+		if (this.outParameterTypeIds != null)
+			dependencies.addAll(this.outParameterTypeIds);
 
-		if (this.measurementPortTypes != null)
-			dependencies.addAll(this.measurementPortTypes);
+		if (this.measurementPortTypeIds != null)
+			dependencies.addAll(this.measurementPortTypeIds);
 
 		return dependencies;
 	}

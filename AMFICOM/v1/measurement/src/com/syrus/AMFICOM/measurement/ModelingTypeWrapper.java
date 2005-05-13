@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingTypeWrapper.java,v 1.7 2005/04/11 11:49:13 bob Exp $
+ * $Id: ModelingTypeWrapper.java,v 1.8 2005/05/13 21:17:13 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/04/11 11:49:13 $
- * @author $Author: bob $
+ * @version $Revision: 1.8 $, $Date: 2005/05/13 21:17:13 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 public class ModelingTypeWrapper extends StorableObjectWrapper {
@@ -59,9 +59,9 @@ public class ModelingTypeWrapper extends StorableObjectWrapper {
 			if (key.equals(COLUMN_DESCRIPTION))
 				return modelingType.getDescription();
 			if (key.equals(MODE_IN))
-				return modelingType.getInParameterTypes();
+				return modelingType.getInParameterTypeIds();
 			if (key.equals(MODE_OUT))
-				return modelingType.getOutParameterTypes();
+				return modelingType.getOutParameterTypeIds();
 		}
 		return null;
 	}
@@ -78,9 +78,9 @@ public class ModelingTypeWrapper extends StorableObjectWrapper {
 			else if (key.equals(COLUMN_DESCRIPTION))
 				modelingType.setDescription((String) value);
 			else if (key.equals(MODE_IN))
-				modelingType.setInParameterTypes((java.util.Set) value);
+				modelingType.setInParameterTypeIds((java.util.Set) value);
 			else if (key.equals(MODE_OUT))
-				modelingType.setOutParameterTypes((java.util.Set) value);
+				modelingType.setOutParameterTypeIds((java.util.Set) value);
 		}
 	}
 

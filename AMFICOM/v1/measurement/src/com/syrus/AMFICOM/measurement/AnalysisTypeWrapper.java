@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeWrapper.java,v 1.9 2005/04/11 11:49:13 bob Exp $
+ * $Id: AnalysisTypeWrapper.java,v 1.10 2005/05/13 21:17:13 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/04/11 11:49:13 $
- * @author $Author: bob $
+ * @version $Revision: 1.10 $, $Date: 2005/05/13 21:17:13 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 public class AnalysisTypeWrapper extends StorableObjectWrapper {
@@ -61,13 +61,13 @@ public class AnalysisTypeWrapper extends StorableObjectWrapper {
 			if (key.equals(COLUMN_DESCRIPTION))
 				return analysisType.getDescription();
 			if (key.equals(MODE_IN))
-				return analysisType.getInParameterTypes();
+				return analysisType.getInParameterTypeIds();
 			if (key.equals(MODE_OUT))
-				return analysisType.getOutParameterTypes();
+				return analysisType.getOutParameterTypeIds();
 			if (key.equals(MODE_CRITERION))
-				return analysisType.getCriteriaParameterTypes();
+				return analysisType.getCriteriaParameterTypeIds();
 			if (key.equals(MODE_ETALON))
-				return analysisType.getEtalonParameterTypes();
+				return analysisType.getEtalonParameterTypeIds();
 
 		}
 		return null;
@@ -85,13 +85,13 @@ public class AnalysisTypeWrapper extends StorableObjectWrapper {
 			else if (key.equals(COLUMN_DESCRIPTION))
 				analysisType.setDescription((String) value);
 			else if (key.equals(MODE_IN))
-				analysisType.setInParameterTypes((java.util.Set) value);
+				analysisType.setInParameterTypeIds((java.util.Set) value);
 			else if (key.equals(MODE_OUT))
-				analysisType.setOutParameterTypes((java.util.Set) value);
+				analysisType.setOutParameterTypeIds((java.util.Set) value);
 			else if (key.equals(MODE_CRITERION))
-				analysisType.setCriteriaParameterTypes((java.util.Set) value);
+				analysisType.setCriteriaParameterTypeIds((java.util.Set) value);
 			else if (key.equals(MODE_ETALON))
-				analysisType.setEtalonParameterTypes((java.util.Set) value);
+				analysisType.setEtalonParameterTypeIds((java.util.Set) value);
 		}
 	}
 
