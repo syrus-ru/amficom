@@ -1,5 +1,5 @@
 /*
- * $Id: measurement.idl,v 1.64 2005/05/04 15:05:40 bass Exp $
+ * $Id: measurement.idl,v 1.65 2005/05/13 05:07:42 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -225,7 +225,8 @@ module corba {
 	enum TestTemporalType {
 		TEST_TEMPORAL_TYPE_ONETIME,
 		TEST_TEMPORAL_TYPE_PERIODICAL,
-		TEST_TEMPORAL_TYPE_CONTINUOUS
+		TEST_TEMPORAL_TYPE_CONTINUOUS,
+		TEST_TEMPORAL_TYPE_TIME_TABLE
 	};
 
 	union TestTimeStamps_Transferable switch (TestTemporalType) {
