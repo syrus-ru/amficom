@@ -1,20 +1,21 @@
-/*
- * $Id: BaseSessionEnvironment.java,v 1.5 2005/05/04 12:24:10 arseniy Exp $
- * 
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+/*-
+ * $Id: BaseSessionEnvironment.java,v 1.6 2005/05/13 17:39:06 bass Exp $
+ *
+ * Copyright © 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.general;
 
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/05/04 12:24:10 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/05/13 17:39:06 $
+ * @author $Author: bass $
  * @module csbridge_v1
  */
-public class BaseSessionEnvironment {
+public abstract class BaseSessionEnvironment {
 	protected BaseConnectionManager baseConnectionManager;
 	private PoolContext poolContext;
 
@@ -24,7 +25,7 @@ public class BaseSessionEnvironment {
 			try {
 				BaseSessionEnvironment.this.logout0();
 			}
-			catch (ApplicationException ae) {
+			catch (final ApplicationException ae) {
 				Log.errorException(ae);
 			}
 		}
@@ -33,7 +34,10 @@ public class BaseSessionEnvironment {
 
 	private LogoutShutdownHook logoutShutdownHook;
 
-	public BaseSessionEnvironment(BaseConnectionManager baseConnectionManager, PoolContext poolContext, LoginRestorer loginRestorer) {
+	public BaseSessionEnvironment(
+			final BaseConnectionManager baseConnectionManager,
+			final PoolContext poolContext,
+			final LoginRestorer loginRestorer) {
 		this.baseConnectionManager = baseConnectionManager;
 		this.poolContext = poolContext;
 
@@ -58,7 +62,7 @@ public class BaseSessionEnvironment {
 
 		this.baseConnectionManager.getCORBAServer().addShutdownHook(this.logoutShutdownHook);
 	}
-	
+
 	public void logout() throws CommunicationException, LoginException {
 		this.baseConnectionManager.getCORBAServer().removeShutdownHook(this.logoutShutdownHook);
 
@@ -69,5 +73,4 @@ public class BaseSessionEnvironment {
 		this.poolContext.serialize();
 		LoginManager.logout();
 	}
-
 }
