@@ -1,5 +1,5 @@
 /*-
- * $Id: ErrorMessages.java,v 1.12 2005/04/25 15:06:27 bass Exp $
+ * $Id: ErrorMessages.java,v 1.13 2005/05/13 17:32:32 bass Exp $
  *
  * Copyright ø 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.general;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2005/04/25 15:06:27 $
+ * @version $Revision: 1.13 $, $Date: 2005/05/13 17:32:32 $
  * @module general_v1
  */
 public interface ErrorMessages {
@@ -32,4 +32,6 @@ public interface ErrorMessages {
 	String NO_COMMON_PARENT = "objects do not have a common parent"; //$NON-NLS-1$
 	String NATURE_INVALID = "nature invalid"; //$NON-NLS-1$
 	String CHILDREN_ALIEN = "object(s) alien with respect to this parent"; //$NON-NLS-1$
+	String ËıÏÈ_ıÛÙÔÍ = "Ë’Ã… –’”‘œ -‘œ, ¡?"; //$NON-NLS-1$
+	String TIMEOUT_TOO_SHORT = "Timeout too short, should be at least 10 min"; //$NON-NLS-1$
 }
