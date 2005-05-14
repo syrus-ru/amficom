@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.19 2005/04/13 19:08:09 arseniy Exp $
+# $Id: Makefile,v 1.20 2005/05/14 09:50:16 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -79,6 +79,7 @@ cleanmach:
 .PHONY: cleancorba
 cleancorba: idlclean
 	$(RM) .corba
+	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/scheme/corba
 
 #### Install ####
 .PHONY:	install
