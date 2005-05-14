@@ -1,5 +1,5 @@
 /*
- * $Id: TestAnalysisType.java,v 1.1 2005/05/13 21:18:44 arseniy Exp $
+ * $Id: TestAnalysisType.java,v 1.2 2005/05/14 09:43:34 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,10 +20,15 @@ import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ParameterType;
+import com.syrus.AMFICOM.general.ParameterTypeCodenames;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.general.TypicalCondition;
+import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/05/13 21:18:44 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/14 09:43:34 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -86,10 +91,34 @@ public class TestAnalysisType extends CommonTest {
 			System.out.println("Loaded: '" + it.next() + "'");
 		}
 
-		inParTypIds = Collections.singleton(new Identifier("ParameterType_367"));
+		TypicalCondition tc = new TypicalCondition(ParameterTypeCodenames.REFLECTOGRAMMA,
+				OperationSort.OPERATION_EQUALS,
+				ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
+				StorableObjectWrapper.COLUMN_CODENAME);
+		inParTypIds = Collections.singleton(((ParameterType) GeneralStorableObjectPool.getStorableObjectsByCondition(tc, true).iterator().next()).getId());
 		criParTypIds = Collections.EMPTY_SET;
 		etaParTypIds = Collections.EMPTY_SET;
 		outParTypIds = Collections.EMPTY_SET;
+//		Iterator it = parameterTypeIds.iterator();
+//		int i;
+//
+//		inParTypIds = new HashSet(inParTypIds);
+//		i = 0;
+//		for (; it.hasNext() && i < 3; i++)
+//			inParTypIds.add(it.next());
+//		criParTypIds = new HashSet(criParTypIds);
+//		i = 0;
+//		for (; it.hasNext() && i < 3; i++)
+//			criParTypIds.add(it.next());
+//		etaParTypIds = new HashSet(etaParTypIds);
+//		i = 0;
+//		for (; it.hasNext() && i < 3; i++)
+//			etaParTypIds.add(it.next());
+//		outParTypIds = new HashSet(outParTypIds);
+//		i = 0;
+//		for (; it.hasNext() && i < 3; i++)
+//			outParTypIds.add(it.next());
+		
 		analysisType.setInParameterTypeIds(inParTypIds);
 		analysisType.setCriteriaParameterTypeIds(criParTypIds);
 		analysisType.setEtalonParameterTypeIds(etaParTypIds);
