@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationType.java,v 1.62 2005/05/13 21:17:13 arseniy Exp $
+ * $Id: EvaluationType.java,v 1.63 2005/05/14 09:43:14 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,7 +10,9 @@ package com.syrus.AMFICOM.measurement;
 
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 import org.omg.CORBA.portable.IDLEntity;
 
@@ -28,7 +30,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
 
 /**
- * @version $Revision: 1.62 $, $Date: 2005/05/13 21:17:13 $
+ * @version $Revision: 1.63 $, $Date: 2005/05/14 09:43:14 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -260,14 +262,23 @@ public class EvaluationType extends ActionType {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected synchronized void setParameterTypeIds(java.util.Set inParameterTypeIds,
-			java.util.Set thresholdParameterTypeIds,
-			java.util.Set etalonParameterTypeIds,
-			java.util.Set outParameterTypeIds) {
-		this.setInParameterTypeIds0(inParameterTypeIds);
-		this.setThresholdParameterTypeIds0(thresholdParameterTypeIds);
-		this.setEtalonParameterTypeIds0(etalonParameterTypeIds);
-		this.setOutParameterTypeIds0(outParameterTypeIds);
+	protected synchronized void setParameterTypeIds(Map parameterTypeIdsModeMap) {
+		this.setInParameterTypeIds0((java.util.Set) parameterTypeIdsModeMap.get(EvaluationTypeWrapper.MODE_IN));
+		this.setThresholdParameterTypeIds0((java.util.Set) parameterTypeIdsModeMap.get(EvaluationTypeWrapper.MODE_THRESHOLD));
+		this.setEtalonParameterTypeIds0((java.util.Set) parameterTypeIdsModeMap.get(EvaluationTypeWrapper.MODE_ETALON));
+		this.setOutParameterTypeIds0((java.util.Set) parameterTypeIdsModeMap.get(EvaluationTypeWrapper.MODE_OUT));
+	}
+
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	protected Map getParameterTypeIdsModeMap() {
+		Map parameterTypeIdsModeMap = new HashMap(4);
+		parameterTypeIdsModeMap.put(EvaluationTypeWrapper.MODE_IN, this.inParameterTypeIds);
+		parameterTypeIdsModeMap.put(EvaluationTypeWrapper.MODE_THRESHOLD, this.thresholdParameterTypeIds);
+		parameterTypeIdsModeMap.put(EvaluationTypeWrapper.MODE_ETALON, this.etalonParameterTypeIds);
+		parameterTypeIdsModeMap.put(EvaluationTypeWrapper.MODE_OUT, this.outParameterTypeIds);
+		return parameterTypeIdsModeMap;
 	}
 
 	/**

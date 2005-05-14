@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeDatabase.java,v 1.91 2005/05/13 21:17:13 arseniy Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.92 2005/05/14 09:43:14 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.91 $, $Date: 2005/05/13 21:17:13 $
+ * @version $Revision: 1.92 $, $Date: 2005/05/14 09:43:14 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -44,6 +44,14 @@ public class MeasurementTypeDatabase extends ActionTypeDatabase  {
 
 	private static String columns;
 	private static String updateMultipleSQLValues;
+
+	String getParameterTypeLinkTableName() {
+		return ObjectEntities.MNTTYPPARTYPLINK_ENTITY;
+	}
+
+	String getActionTypeColumnName() {
+		return MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID;
+	}
 
 	private MeasurementType fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof MeasurementType)
@@ -105,27 +113,8 @@ public class MeasurementTypeDatabase extends ActionTypeDatabase  {
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		MeasurementType measurementType = this.fromStorableObject(storableObject);
 		this.retrieveEntity(measurementType);
-		this.retrieveParameterTypesByOneQuery(Collections.singleton(measurementType));
+		super.retrieveParameterTypesByOneQuery(Collections.singleton(measurementType));
 		this.retrieveMeasurementPortTypesByOneQuery(Collections.singleton(measurementType));
-	}
-
-	private void retrieveParameterTypesByOneQuery(java.util.Set measurementTypes) throws RetrieveObjectException {
-		if ((measurementTypes == null) || (measurementTypes.isEmpty()))
-			return;
-
-		final Map parameterTypeIdsMap = super.retrieveParameterTypesByOneQuery(measurementTypes,
-				ObjectEntities.MNTTYPPARTYPLINK_ENTITY,
-				MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID);
-		Map parameterTypeIdsModeMap;
-		for (Iterator it = measurementTypes.iterator(); it.hasNext();) {
-			final MeasurementType measurementType = (MeasurementType) it.next();
-			parameterTypeIdsModeMap = (Map) parameterTypeIdsMap.get(measurementType.getId());
-			if (parameterTypeIdsModeMap != null) {
-				final java.util.Set inParameterTypeIds = (java.util.Set) parameterTypeIdsModeMap.get(MeasurementTypeWrapper.MODE_IN);
-				final java.util.Set outParameterTypeIds = (java.util.Set) parameterTypeIdsModeMap.get(MeasurementTypeWrapper.MODE_OUT);
-				measurementType.setParameterTypeIds(inParameterTypeIds, outParameterTypeIds);
-			}
-		}
 	}
 
 	private void retrieveMeasurementPortTypesByOneQuery(java.util.Set measurementTypes) throws RetrieveObjectException {
@@ -161,7 +150,7 @@ public class MeasurementTypeDatabase extends ActionTypeDatabase  {
 		MeasurementType measurementType = this.fromStorableObject(storableObject);
 		this.insertEntity(measurementType);
 		try {
-			this.updateParameterTypes(Collections.singleton(storableObject));
+			super.updateParameterTypes(Collections.singleton(storableObject));
 			this.updateMeasurementPortTypeIds(Collections.singleton(storableObject));
 		}
 		catch (UpdateObjectException uoe) {
@@ -172,7 +161,7 @@ public class MeasurementTypeDatabase extends ActionTypeDatabase  {
 	public void insert(java.util.Set storableObjects) throws IllegalDataException, CreateObjectException {
 		this.insertEntities(storableObjects);
 		try {
-			this.updateParameterTypes(storableObjects);
+			super.updateParameterTypes(storableObjects);
 			this.updateMeasurementPortTypeIds(storableObjects);
 		}
 		catch (UpdateObjectException uoe) {
@@ -183,7 +172,7 @@ public class MeasurementTypeDatabase extends ActionTypeDatabase  {
 	public void update(StorableObject storableObject, Identifier modifierId, int updateKind)
 			throws VersionCollisionException, UpdateObjectException {
 		super.update(storableObject, modifierId, updateKind);
-		this.updateParameterTypes(Collections.singleton(storableObject));
+		super.updateParameterTypes(Collections.singleton(storableObject));
 		try {
 			this.updateMeasurementPortTypeIds(Collections.singleton(storableObject));
 		}
@@ -195,42 +184,13 @@ public class MeasurementTypeDatabase extends ActionTypeDatabase  {
 	public void update(java.util.Set storableObjects, Identifier modifierId, int updateKind)
 			throws VersionCollisionException, UpdateObjectException {
 		super.update(storableObjects, modifierId, updateKind);
-		this.updateParameterTypes(storableObjects);
+		super.updateParameterTypes(storableObjects);
 		try {
 			this.updateMeasurementPortTypeIds(storableObjects);
 		}
 		catch (IllegalDataException ide) {
 			Log.errorException(ide);
 		}
-	}
-
-	private void updateParameterTypes(java.util.Set measurementTypes) throws UpdateObjectException {
-		if (measurementTypes == null || measurementTypes.isEmpty())
-			return;
-
-		Map parameterTypeIdsMap = new HashMap(measurementTypes.size());
-		for (Iterator it = measurementTypes.iterator(); it.hasNext();) {
-			final MeasurementType measurementType = (MeasurementType) it.next();
-			final Map parTypeIdsModeMap = new HashMap();
-			parTypeIdsModeMap.put(MeasurementTypeWrapper.MODE_IN, measurementType.getInParameterTypeIds());
-			parTypeIdsModeMap.put(MeasurementTypeWrapper.MODE_OUT, measurementType.getOutParameterTypeIds());
-			parameterTypeIdsMap.put(measurementType.getId(), parTypeIdsModeMap);
-		}
-
-		Map dbParameterTypeIdsMap = null;
-		try {
-			dbParameterTypeIdsMap = super.retrieveDBParameterTypeIdsMap(measurementTypes,
-					ObjectEntities.MNTTYPPARTYPLINK_ENTITY,
-					MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID);
-		}
-		catch (RetrieveObjectException roe) {
-			throw new UpdateObjectException(roe);
-		}
-
-		super.updateParameterTypes(parameterTypeIdsMap,
-				dbParameterTypeIdsMap,
-				ObjectEntities.MNTTYPPARTYPLINK_ENTITY,
-				MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID);
 	}
 
 	private void updateMeasurementPortTypeIds(java.util.Set measurementTypes) throws UpdateObjectException, IllegalDataException {
@@ -292,10 +252,10 @@ public class MeasurementTypeDatabase extends ActionTypeDatabase  {
 	}
 
 	protected java.util.Set retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
-		java.util.Set set = super.retrieveByCondition(conditionQuery);
-		this.retrieveParameterTypesByOneQuery(set);
-		this.retrieveMeasurementPortTypesByOneQuery(set);
-		return set;
+		java.util.Set objects = super.retrieveByCondition(conditionQuery);
+		this.retrieveParameterTypesByOneQuery(objects);
+		this.retrieveMeasurementPortTypesByOneQuery(objects);
+		return objects;
 	}
 
 	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject,

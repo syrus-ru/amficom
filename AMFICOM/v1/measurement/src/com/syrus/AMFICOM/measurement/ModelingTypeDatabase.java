@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingTypeDatabase.java,v 1.34 2005/05/13 21:17:55 arseniy Exp $
+ * $Id: ModelingTypeDatabase.java,v 1.35 2005/05/14 09:43:14 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,9 +14,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
@@ -35,7 +32,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/05/13 21:17:55 $
+ * @version $Revision: 1.35 $, $Date: 2005/05/14 09:43:14 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -44,6 +41,14 @@ public class ModelingTypeDatabase extends ActionTypeDatabase {
 
 	private static String columns;
 	private static String updateMultipleSQLValues;
+
+	String getParameterTypeLinkTableName() {
+		return ObjectEntities.MODTYPPARTYPLINK_ENTITY;
+	}
+
+	String getActionTypeColumnName() {
+		return ModelingTypeWrapper.LINK_COLUMN_MODELING_TYPE_ID;
+	}
 
 	private ModelingType fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof ModelingType)
@@ -111,26 +116,7 @@ public class ModelingTypeDatabase extends ActionTypeDatabase {
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		ModelingType modelingType = this.fromStorableObject(storableObject);
 		this.retrieveEntity(modelingType);
-		this.retrieveParameterTypesByOneQuery(Collections.singleton(modelingType));
-	}
-
-	private void retrieveParameterTypesByOneQuery(java.util.Set modelingTypes) throws RetrieveObjectException {
-		if ((modelingTypes == null) || (modelingTypes.isEmpty()))
-			return;
-
-		final Map parameterTypeIdsMap = super.retrieveParameterTypesByOneQuery(modelingTypes,
-				ObjectEntities.MODTYPPARTYPLINK_ENTITY,
-				ModelingTypeWrapper.LINK_COLUMN_MODELING_TYPE_ID);
-		Map parameterTypeIdsModeMap;
-		for (Iterator it = modelingTypes.iterator(); it.hasNext();) {
-			final ModelingType modelingType = (ModelingType) it.next();
-			parameterTypeIdsModeMap = (Map) parameterTypeIdsMap.get(modelingType.getId());
-			if (parameterTypeIdsModeMap != null) {
-				final java.util.Set inParameterTypeIds = (java.util.Set) parameterTypeIdsModeMap.get(ModelingTypeWrapper.MODE_IN);
-				final java.util.Set outParameterTypeIds = (java.util.Set) parameterTypeIdsModeMap.get(ModelingTypeWrapper.MODE_OUT);
-				modelingType.setParameterTypeIds(inParameterTypeIds, outParameterTypeIds);
-			}
-		}
+		super.retrieveParameterTypesByOneQuery(Collections.singleton(modelingType));
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
@@ -146,7 +132,7 @@ public class ModelingTypeDatabase extends ActionTypeDatabase {
 		ModelingType modelingType = this.fromStorableObject(storableObject);
 		this.insertEntity(modelingType);
 		try {
-			this.updateParameterTypes(Collections.singleton(storableObject));
+			super.updateParameterTypes(Collections.singleton(storableObject));
 		}
 		catch (UpdateObjectException uoe) {
 			throw new CreateObjectException(uoe);
@@ -156,7 +142,7 @@ public class ModelingTypeDatabase extends ActionTypeDatabase {
 	public void insert(java.util.Set storableObjects) throws IllegalDataException, CreateObjectException {
 		this.insertEntities(storableObjects);
 		try {
-			this.updateParameterTypes(storableObjects);
+			super.updateParameterTypes(storableObjects);
 		}
 		catch (UpdateObjectException uoe) {
 			throw new CreateObjectException(uoe);
@@ -166,42 +152,13 @@ public class ModelingTypeDatabase extends ActionTypeDatabase {
 	public void update(StorableObject storableObject, Identifier modifierId, int updateKind)
 			throws VersionCollisionException, UpdateObjectException {
 		super.update(storableObject, modifierId, updateKind);
-		this.updateParameterTypes(Collections.singleton(storableObject));
+		super.updateParameterTypes(Collections.singleton(storableObject));
 	}
 
 	public void update(java.util.Set storableObjects, Identifier modifierId, int updateKind)
 			throws VersionCollisionException, UpdateObjectException {
 		super.update(storableObjects, modifierId, updateKind);
-		this.updateParameterTypes(storableObjects);
-	}
-
-	private void updateParameterTypes(java.util.Set modelingTypes) throws UpdateObjectException {
-		if (modelingTypes == null || modelingTypes.isEmpty())
-			return;
-
-		Map parameterTypeIdsMap = new HashMap(modelingTypes.size());
-		for (Iterator it = modelingTypes.iterator(); it.hasNext();) {
-			final ModelingType modelingType = (ModelingType) it.next();
-			final Map parTypeIdsModeMap = new HashMap();
-			parTypeIdsModeMap.put(ModelingTypeWrapper.MODE_IN, modelingType.getInParameterTypeIds());
-			parTypeIdsModeMap.put(ModelingTypeWrapper.MODE_OUT, modelingType.getOutParameterTypeIds());
-			parameterTypeIdsMap.put(modelingType.getId(), parTypeIdsModeMap);
-		}
-
-		Map dbParameterTypeIdsMap = null;
-		try {
-			dbParameterTypeIdsMap = super.retrieveDBParameterTypeIdsMap(modelingTypes,
-					ObjectEntities.MODTYPPARTYPLINK_ENTITY,
-					ModelingTypeWrapper.LINK_COLUMN_MODELING_TYPE_ID);
-		}
-		catch (RetrieveObjectException roe) {
-			throw new UpdateObjectException(roe);
-		}
-
-		super.updateParameterTypes(parameterTypeIdsMap,
-				dbParameterTypeIdsMap,
-				ObjectEntities.MODTYPPARTYPLINK_ENTITY,
-				ModelingTypeWrapper.LINK_COLUMN_MODELING_TYPE_ID);
+		super.updateParameterTypes(storableObjects);
 	}
 
 	public void delete(Identifier id) {
@@ -240,9 +197,9 @@ public class ModelingTypeDatabase extends ActionTypeDatabase {
 	}
 
 	protected java.util.Set retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
-		java.util.Set collection = super.retrieveByCondition(conditionQuery);
-		this.retrieveParameterTypesByOneQuery(collection);
-		return collection;
+		java.util.Set objects = super.retrieveByCondition(conditionQuery);
+		super.retrieveParameterTypesByOneQuery(objects);
+		return objects;
 	}
 
 }

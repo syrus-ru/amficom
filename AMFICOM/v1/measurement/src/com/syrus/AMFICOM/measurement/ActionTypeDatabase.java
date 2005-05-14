@@ -1,5 +1,5 @@
 /*
- * $Id: ActionTypeDatabase.java,v 1.1 2005/05/13 21:16:53 arseniy Exp $
+ * $Id: ActionTypeDatabase.java,v 1.2 2005/05/14 09:43:14 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,15 +29,21 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/05/13 21:16:53 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/14 09:43:14 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
 public abstract class ActionTypeDatabase extends StorableObjectDatabase {
 
-	Map retrieveParameterTypesByOneQuery(java.util.Set actionTypes, String tableName, String actionTypeColumnName)
+	abstract String getParameterTypeLinkTableName();
+
+	abstract String getActionTypeColumnName();
+
+	void retrieveParameterTypesByOneQuery(java.util.Set actionTypes)
 			throws RetrieveObjectException {
 
+		String tableName = this.getParameterTypeLinkTableName();
+		String actionTypeColumnName = this.getActionTypeColumnName();
     StringBuffer sql = new StringBuffer(SQL_SELECT
 				+ StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID + COMMA
 				+ StorableObjectWrapper.LINK_COLUMN_PARAMETER_MODE + COMMA
@@ -74,8 +80,6 @@ public abstract class ActionTypeDatabase extends StorableObjectDatabase {
 				}
 				parameterTypeIds.add(parameterTypeId);
 			}
-
-			return parameterTypeIdsMap;
 		}
 		catch (SQLException sqle) {
 			String mesg = "Cannot retrieve parameter type ids";
@@ -97,12 +101,38 @@ public abstract class ActionTypeDatabase extends StorableObjectDatabase {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}
+
+		for (Iterator it = actionTypes.iterator(); it.hasNext();) {
+			final ActionType actionType = (ActionType) it.next();
+			final Identifier actionTypeId = actionType.getId();
+			parameterTypeIdsModeMap = (Map) parameterTypeIdsMap.get(actionTypeId);
+
+			actionType.setParameterTypeIds(parameterTypeIdsModeMap);
+		}
 	}
 
-	void updateParameterTypes(Map parameterTypeIdsMap,
-			Map dbParameterTypeIdsMap,
-			String tableName,
-			String actionTypeColumnName) throws UpdateObjectException {
+	void updateParameterTypes(java.util.Set actionTypes) throws UpdateObjectException {
+		if (actionTypes == null || actionTypes.isEmpty())
+			return;
+
+		Map dbParameterTypeIdsMap = null;
+		try {
+			dbParameterTypeIdsMap = this.retrieveDBParameterTypeIdsMap(actionTypes);
+		}
+		catch (RetrieveObjectException roe) {
+			throw new UpdateObjectException(roe);
+		}
+
+		Map parameterTypeIdsMap = new HashMap(actionTypes.size());
+		for (Iterator it = actionTypes.iterator(); it.hasNext();) {
+			final ActionType actionType = (ActionType) it.next();
+			parameterTypeIdsMap.put(actionType.getId(), actionType.getParameterTypeIdsModeMap());
+		}
+
+		this.updateParameterTypes(parameterTypeIdsMap, dbParameterTypeIdsMap);
+	}
+
+	private void updateParameterTypes(Map parameterTypeIdsMap, Map dbParameterTypeIdsMap) throws UpdateObjectException {
 		Map insertParameterTypeIdsMap = new HashMap();
 		Map deleteParameterTypeIdsMap = new HashMap();
 		Map altParameterTypeIdsModeMap;
@@ -179,10 +209,10 @@ public abstract class ActionTypeDatabase extends StorableObjectDatabase {
 		}
 
 		try {
-			this.insertParameterTypes(insertParameterTypeIdsMap, tableName, actionTypeColumnName);
+			this.insertParameterTypes(insertParameterTypeIdsMap);
 			super.deleteLinkedEntityIds(deleteParameterTypeIdsMap,
-					tableName,
-					actionTypeColumnName,
+					this.getParameterTypeLinkTableName(),
+					this.getActionTypeColumnName(),
 					StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID);
 		}
 		catch (CreateObjectException coe) {
@@ -190,11 +220,13 @@ public abstract class ActionTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	private void insertParameterTypes(Map parameterTypeIdsMap, String tableName, String actionTypeColumnName)
+	private void insertParameterTypes(Map parameterTypeIdsMap)
 			throws CreateObjectException {
 		if (parameterTypeIdsMap == null || parameterTypeIdsMap.isEmpty())
 			return;
 
+		String tableName = this.getParameterTypeLinkTableName();
+		String actionTypeColumnName = this.getActionTypeColumnName();
 		String sql = SQL_INSERT_INTO + tableName
 				+ OPEN_BRACKET
 				+ actionTypeColumnName + COMMA
@@ -250,7 +282,9 @@ public abstract class ActionTypeDatabase extends StorableObjectDatabase {
 
 	}
 
-	Map retrieveDBParameterTypeIdsMap(java.util.Set actionTypes, String tableName, String actionTypeColumnName) throws RetrieveObjectException {
+	private Map retrieveDBParameterTypeIdsMap(java.util.Set actionTypes) throws RetrieveObjectException {
+		String tableName = this.getParameterTypeLinkTableName();
+		String actionTypeColumnName = this.getActionTypeColumnName();
 		StringBuffer sql = new StringBuffer(SQL_SELECT
 				+ actionTypeColumnName+ COMMA
 				+ StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID + COMMA
