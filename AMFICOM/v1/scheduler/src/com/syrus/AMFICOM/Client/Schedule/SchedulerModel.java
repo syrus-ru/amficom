@@ -786,6 +786,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 			AbstractTemporalPattern temporalPattern = this.testTimeStamps.getTemporalPattern();
 			if (test == null) {
 				try {
+					if (this.isValid(startTime, endTime, this.monitoredElement.getId())) {
 					test = Test.createInstance(LoginManager.getUserId(), startTime, endTime, temporalPattern == null
 							? null : temporalPattern.getId(), temporalType, this.measurementType.getId(),
 						this.analysisType == null ? null : this.analysisType.getId(), this.evaluationType == null
@@ -793,7 +794,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 						this.name != null && this.name.trim().length() > 0 ? this.name : sdf.format(startTime),
 						measurementSetupIds);
 					
-					if (this.isValid(test)) {
+					
 					
 					if (this.groupTest) {
 						if (this.meTestGroup == null) {
@@ -820,7 +821,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 				}
 				this.tests.add(test);
 			} else {
-				if (this.isValid(test)) {
+				if (this.isValid(startTime, endTime, this.monitoredElement.getId())) {
 				test.setAttributes(test.getCreated(), new Date(System.currentTimeMillis()), test.getCreatorId(),
 					LoginManager.getUserId(), test.getVersion(), temporalType.value(), startTime, endTime,
 					temporalPattern == null ? null : temporalPattern.getId(), this.measurementType.getId(),
@@ -875,6 +876,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 				Test firstTest = ((Test) selectedTests.first());
 				long offset = startDate.getTime() - firstTest.getStartTime().getTime();
 
+				boolean correct = true;
 				for (Iterator iterator = selectedTests.iterator(); iterator.hasNext();) {
 					Test selectedTest = (Test) iterator.next();
 					Date newStartDate = new Date(selectedTest.getStartTime().getTime() + offset);
@@ -882,11 +884,26 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 					if (newEndDate != null) {
 						newEndDate = new Date(newEndDate.getTime() + offset);
 					}
-					selectedTest.setStartTime(newStartDate);
-					selectedTest.setEndTime(newEndDate);
-
+					correct = this.isValid(newStartDate, newEndDate, selectedTest.getMonitoredElement().getId());
+					if (!correct) {
+						// TODO inform
+						break;
+					}
 				}
-				this.refreshTests();
+
+				if (correct) {
+					for (Iterator iterator = selectedTests.iterator(); iterator.hasNext();) {
+						Test selectedTest = (Test) iterator.next();
+						Date newStartDate = new Date(selectedTest.getStartTime().getTime() + offset);
+						Date newEndDate = selectedTest.getEndTime();
+						if (newEndDate != null) {
+							newEndDate = new Date(newEndDate.getTime() + offset);
+						}
+						selectedTest.setStartTime(newStartDate);
+						selectedTest.setEndTime(newEndDate);
+					}
+					this.refreshTests();
+				}
 			} catch (ApplicationException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -903,6 +920,8 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 			try {
 				Test testGroup = (Test) MeasurementStorableObjectPool.getStorableObject(testGroupId, true);
 				if (this.aloneGroupTest) {
+					if (this.isValid(this.startGroupDate, null, testGroup
+								.getMonitoredElement().getId())) {
 					Test test = Test.createInstance(LoginManager.getUserId(), this.startGroupDate, null, null,
 						TestTemporalType.TEST_TEMPORAL_TYPE_ONETIME, testGroup.getMeasurementTypeId(), testGroup
 								.getAnalysisTypeId(), testGroup.getEvaluationTypeId(), testGroupId, testGroup
@@ -916,6 +935,9 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 						this.selectedTestIds = new HashSet();						
 					}
 					this.selectedTestIds.add(test.getId());
+					} else {
+						// TODO inform
+					}
 				} else {
 					if (this.selectedTestIds != null && !this.selectedTestIds.isEmpty()) {
 						SortedSet selectedTests = new TreeSet(new WrapperComparator(TestWrapper.getInstance(), TestWrapper.COLUMN_START_TIME));
@@ -933,25 +955,49 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 						
 						this.selectedTestIds.clear();
 
+						boolean correct = true;
 						for (Iterator iterator = selectedTests.iterator(); iterator.hasNext();) {
 							Test selectedTest = (Test) iterator.next();
-							Date startDate = new Date(selectedTest.getStartTime().getTime() + offset );
+							Date startDate = new Date(selectedTest.getStartTime().getTime() + offset);
 							Date endDate = selectedTest.getEndTime();
 							if (endDate != null) {
 								endDate = new Date(endDate.getTime() + offset);
 							}
-							
-							Log.debugMessage("SchedulerModel.addGroupTests | new startDate " + startDate, Log.FINEST);
-							Log.debugMessage("SchedulerModel.addGroupTests | new endDate " + endDate, Log.FINEST);
-							Test test = Test.createInstance(LoginManager.getUserId(),startDate, endDate, selectedTest.getTemporalPatternId(),
-								selectedTest.getTemporalType(), selectedTest.getMeasurementTypeId(), selectedTest
-										.getAnalysisTypeId(), selectedTest.getEvaluationTypeId(), testGroupId, selectedTest
-										.getMonitoredElement(), selectedTest.getReturnType(), selectedTest.getDescription(),
-										selectedTest.getMeasurementSetupIds());
-							this.tests.add(test);
-							MeasurementStorableObjectPool.putStorableObject(test);
-							this.selectedTestIds.add(test.getId());
-							assert Log.debugMessage("SchedulerModel.addGroupTests | add test " + test.getId() +" at " + startDate +"," + endDate, Log.FINEST);
+
+//							Log.debugMessage("SchedulerModel.addGroupTests | new startDate " + startDate, Log.FINEST);
+//							Log.debugMessage("SchedulerModel.addGroupTests | new endDate " + endDate, Log.FINEST);
+							correct = this.isValid(startDate, endDate, selectedTest.getMonitoredElement().getId());
+							if (!correct) {
+//								 TODO inform
+								break;
+							}
+						}
+						
+						if (correct) {
+							for (Iterator iterator = selectedTests.iterator(); iterator.hasNext();) {
+								Test selectedTest = (Test) iterator.next();
+								Date startDate = new Date(selectedTest.getStartTime().getTime() + offset);
+								Date endDate = selectedTest.getEndTime();
+								if (endDate != null) {
+									endDate = new Date(endDate.getTime() + offset);
+								}
+
+								// Log.debugMessage("SchedulerModel.addGroupTests
+								// | new startDate " + startDate, Log.FINEST);
+								// Log.debugMessage("SchedulerModel.addGroupTests
+								// | new endDate " + endDate, Log.FINEST);
+								Test test = Test.createInstance(LoginManager.getUserId(), startDate, endDate,
+									selectedTest.getTemporalPatternId(), selectedTest.getTemporalType(), selectedTest
+											.getMeasurementTypeId(), selectedTest.getAnalysisTypeId(), selectedTest
+											.getEvaluationTypeId(), testGroupId, selectedTest.getMonitoredElement(),
+									selectedTest.getReturnType(), selectedTest.getDescription(), selectedTest
+											.getMeasurementSetupIds());
+								this.tests.add(test);
+								MeasurementStorableObjectPool.putStorableObject(test);
+								this.selectedTestIds.add(test.getId());
+								assert Log.debugMessage("SchedulerModel.addGroupTests | add test " + test.getId()
+										+ " at " + startDate + "," + endDate, Log.FINEST);
+							}
 						}
 						
 						
@@ -972,8 +1018,24 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		this.refreshTests();
 	}
 	
-	private boolean isValid(Test test) {
-		return true;
+	private boolean isValid(final Date startDate, final Date endDate, final Identifier monitoredElementId) {
+		boolean result = true;
+		for (Iterator iterator = this.tests.iterator(); iterator.hasNext();) {
+			Test test = (Test) iterator.next();
+			Date startTime = test.getStartTime();
+			Date endTime = test.getEndTime();
+			if (endTime == null) {
+				endTime = startTime;
+			}
+			if (test.getMonitoredElement().getId().equals(monitoredElementId) && 
+					((endDate != null && endDate.after(startTime) && endDate.before(endTime))
+					|| (startDate.after(startTime) && startDate.before(endTime)))){
+				result = false;
+				break;
+			}
+		}
+		Log.debugMessage("SchedulerModel.isValid | result is " + result, Log.FINEST);
+		return result;
 	}
 
 	public static void showErrorMessage(Component component,
