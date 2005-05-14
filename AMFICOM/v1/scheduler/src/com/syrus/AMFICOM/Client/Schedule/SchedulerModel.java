@@ -18,6 +18,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
@@ -63,6 +65,7 @@ import com.syrus.AMFICOM.measurement.corba.TestReturnType;
 import com.syrus.AMFICOM.measurement.corba.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 import com.syrus.util.Log;
+import com.syrus.util.WrapperComparator;
 
 /**
  * @author Vladimir Dolzhenko
@@ -129,6 +132,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 	public static final String	COMMAND_REFRESH_TESTS	= "RefreshTests";
 	
 	public static final String	COMMAND_SET_GROUP_TEST = "GroupTest";
+	public static final String	COMMAND_SET_START_GROUP_TIME = "SetStartGroupTime";
 
 //	public static final String	COMMAND_ONE_TIME_S
 
@@ -146,13 +150,15 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 	private MeasurementSetup			measurementSetup				= null;
 	private TestReturnType				returnType						= null;
 	private TestTemporalStamps			testTimeStamps					= null;
+	
+	private Date startGroupDate;
+	private long interval;
+	private boolean aloneGroupTest;
+	
 	private Map	meTestGroup;
 
 	private boolean groupTest = false;
 	
-	/**
-	 * @TODO recast using alpha
-	 */
 	public static final Color			COLOR_ABORDED					= Color.RED;
 
 	public static final Color			COLOR_ABORDED_SELECTED			= Color.RED.darker();
@@ -171,7 +177,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 
 	public static final Color			COLOR_SCHEDULED					= Color.GRAY;
 
-	public static final Color			COLOR_SCHEDULED_SELECTED		= Color.LIGHT_GRAY;
+	public static final Color			COLOR_SCHEDULED_SELECTED		= Color.LIGHT_GRAY.brighter();
 
 	public static final Color			COLOR_UNRECOGNIZED				= new Color(20, 20, 60);
 
@@ -423,7 +429,11 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 
 			this.dispatcher.notify(new OperationEvent(test.getReturnType(), 0, COMMAND_SET_RETURN_TYPE));
 //			this.returnTypeEditor.setReturnType(this.selectedTest.getReturnType());
-			this.refreshTemporalStamps();
+			if (test.getGroupTestId() == null) {
+				this.refreshTemporalStamps();
+			} else {
+				dispatcher.notify(new OperationEvent(test.getStartTime(), 0, COMMAND_SET_START_GROUP_TIME));
+			}
 
 		}
 		
@@ -783,6 +793,8 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 						this.name != null && this.name.trim().length() > 0 ? this.name : sdf.format(startTime),
 						measurementSetupIds);
 					
+					if (this.isValid(test)) {
+					
 					if (this.groupTest) {
 						if (this.meTestGroup == null) {
 							this.meTestGroup = new HashMap();
@@ -798,6 +810,9 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 					}
 
 					MeasurementStorableObjectPool.putStorableObject(test);
+					} else {
+						// TODO inform error 
+					}
 				} catch (IllegalObjectEntityException e) {
 					Log.errorException(e);
 				} catch (CreateObjectException e) {
@@ -805,6 +820,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 				}
 				this.tests.add(test);
 			} else {
+				if (this.isValid(test)) {
 				test.setAttributes(test.getCreated(), new Date(System.currentTimeMillis()), test.getCreatorId(),
 					LoginManager.getUserId(), test.getVersion(), temporalType.value(), startTime, endTime,
 					temporalPattern == null ? null : temporalPattern.getId(), this.measurementType.getId(),
@@ -812,6 +828,9 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 							: this.evaluationType.getId(), test.getStatus().value(), this.monitoredElement,
 					this.returnType.value(), this.name != null && this.name.trim().length() > 0 ? this.name : sdf
 							.format(startTime), test.getNumberOfMeasurements());
+				} else {
+					// TODO inform error 
+				}
 			}
 			try {
 				MeasurementStorableObjectPool.putStorableObject(test);
@@ -831,6 +850,130 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 			}
 			
 		}
+	}
+	
+	public void addGroupTest(Date date) {
+		this.aloneGroupTest = true;
+		this.startGroupDate = date;
+		this.addGroupTests();
+	}
+	
+	public void addGroupTests(Date date, long interval1) {
+		this.aloneGroupTest = false;
+		this.startGroupDate = date;
+		this.interval = interval1;
+		this.addGroupTests();
+	}
+	
+	public void moveSelectedTests(Date startDate) {
+		if (this.selectedTestIds != null && !this.selectedTestIds.isEmpty()) {
+			try {
+				SortedSet selectedTests = new TreeSet(new WrapperComparator(TestWrapper.getInstance(),
+																			TestWrapper.COLUMN_START_TIME));
+				selectedTests.addAll(MeasurementStorableObjectPool.getStorableObjects(this.selectedTestIds, true));
+
+				Test firstTest = ((Test) selectedTests.first());
+				long offset = startDate.getTime() - firstTest.getStartTime().getTime();
+
+				for (Iterator iterator = selectedTests.iterator(); iterator.hasNext();) {
+					Test selectedTest = (Test) iterator.next();
+					Date newStartDate = new Date(selectedTest.getStartTime().getTime() + offset);
+					Date newEndDate = selectedTest.getEndTime();
+					if (newEndDate != null) {
+						newEndDate = new Date(newEndDate.getTime() + offset);
+					}
+					selectedTest.setStartTime(newStartDate);
+					selectedTest.setEndTime(newEndDate);
+
+				}
+				this.refreshTests();
+			} catch (ApplicationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+
+			}
+		}
+
+	}
+	
+	private void addGroupTests() {
+		Identifier meId = this.monitoredElement.getId();
+		Identifier testGroupId = (Identifier) (this.meTestGroup != null ? this.meTestGroup.get(meId) : null);
+		if (testGroupId != null) {
+			try {
+				Test testGroup = (Test) MeasurementStorableObjectPool.getStorableObject(testGroupId, true);
+				if (this.aloneGroupTest) {
+					Test test = Test.createInstance(LoginManager.getUserId(), this.startGroupDate, null, null,
+						TestTemporalType.TEST_TEMPORAL_TYPE_ONETIME, testGroup.getMeasurementTypeId(), testGroup
+								.getAnalysisTypeId(), testGroup.getEvaluationTypeId(), testGroupId, testGroup
+								.getMonitoredElement(), testGroup.getReturnType(), testGroup.getDescription(),
+						testGroup.getMeasurementSetupIds());
+					this.tests.add(test);
+					MeasurementStorableObjectPool.putStorableObject(test);
+					if (this.selectedTestIds != null) {
+						this.selectedTestIds.clear();
+					} else {
+						this.selectedTestIds = new HashSet();						
+					}
+					this.selectedTestIds.add(test.getId());
+				} else {
+					if (this.selectedTestIds != null && !this.selectedTestIds.isEmpty()) {
+						SortedSet selectedTests = new TreeSet(new WrapperComparator(TestWrapper.getInstance(), TestWrapper.COLUMN_START_TIME));
+						selectedTests.addAll(MeasurementStorableObjectPool.getStorableObjects(this.selectedTestIds, true));
+						
+						Test firstTest = ((Test)selectedTests.first());
+						Test lastTest = ((Test)selectedTests.last());
+						Date endTime = lastTest.getEndTime();
+						long firstTime = firstTest.getStartTime().getTime();
+						long offset = (endTime != null ? endTime : lastTest.getStartTime()).getTime() + this.interval - firstTime;
+
+						
+						assert Log.debugMessage("SchedulerModel.addGroupTests | firstTime is " + new Date(firstTime), Log.FINEST);
+						assert Log.debugMessage("SchedulerModel.addGroupTests | offset is " + offset, Log.FINEST);
+						
+						this.selectedTestIds.clear();
+
+						for (Iterator iterator = selectedTests.iterator(); iterator.hasNext();) {
+							Test selectedTest = (Test) iterator.next();
+							Date startDate = new Date(selectedTest.getStartTime().getTime() + offset );
+							Date endDate = selectedTest.getEndTime();
+							if (endDate != null) {
+								endDate = new Date(endDate.getTime() + offset);
+							}
+							
+							Log.debugMessage("SchedulerModel.addGroupTests | new startDate " + startDate, Log.FINEST);
+							Log.debugMessage("SchedulerModel.addGroupTests | new endDate " + endDate, Log.FINEST);
+							Test test = Test.createInstance(LoginManager.getUserId(),startDate, endDate, selectedTest.getTemporalPatternId(),
+								selectedTest.getTemporalType(), selectedTest.getMeasurementTypeId(), selectedTest
+										.getAnalysisTypeId(), selectedTest.getEvaluationTypeId(), testGroupId, selectedTest
+										.getMonitoredElement(), selectedTest.getReturnType(), selectedTest.getDescription(),
+										selectedTest.getMeasurementSetupIds());
+							this.tests.add(test);
+							MeasurementStorableObjectPool.putStorableObject(test);
+							this.selectedTestIds.add(test.getId());
+							assert Log.debugMessage("SchedulerModel.addGroupTests | add test " + test.getId() +" at " + startDate +"," + endDate, Log.FINEST);
+						}
+						
+						
+					} else {
+						this.startGroupDate = new Date(this.startGroupDate.getTime() + this.interval);
+						this.aloneGroupTest = true;
+						this.addGroupTests();
+					}
+				}
+			} catch (ApplicationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+
+			}
+		} else {
+			this.createTest();
+		}
+		this.refreshTests();
+	}
+	
+	private boolean isValid(Test test) {
+		return true;
 	}
 
 	public static void showErrorMessage(Component component,

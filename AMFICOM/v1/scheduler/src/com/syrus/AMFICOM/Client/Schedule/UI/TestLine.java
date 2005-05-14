@@ -8,6 +8,7 @@ import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -25,20 +26,24 @@ import java.util.TreeSet;
 
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
+import com.syrus.util.Log;
 
 public class TestLine extends TimeLine {
 
@@ -113,13 +118,15 @@ public class TestLine extends TimeLine {
 		
 	}
 
-	Collection					tests					= new LinkedList();
+	Set					testIds					= new HashSet();
 
 	Dispatcher					dispatcher;
 
 	boolean						flash					= false;
 	SchedulerModel				schedulerModel;
-	Set						selectedTests;
+//	Set						selectedTests;
+	Set selectedTestIds;
+
 
 	Collection					unsavedTests			= new LinkedList();
 	SortedSet					unsavedTestTimeItems	= new TreeSet();
@@ -152,6 +159,7 @@ public class TestLine extends TimeLine {
 		this.createMouseListener();
 		this.title = title;
 		this.monitoredElementId = monitoredElementId;
+		
 		this.acquireTests();
 		
 		this.dispatcher = aContext.getDispatcher();
@@ -168,6 +176,7 @@ public class TestLine extends TimeLine {
 		
 		this.dispatcher.register(operationListener, SchedulerModel.COMMAND_REFRESH_TESTS);
 		this.dispatcher.register(operationListener, SchedulerModel.COMMAND_REFRESH_TEST);
+		this.setToolTipText("");		
 	}
 //
 //	private void createTestLineMouseListener() {
@@ -205,11 +214,11 @@ public class TestLine extends TimeLine {
 //			Log.debugMessage("TestLine.selectTest | testTimeItem.x + testTimeItem.width " + (testTimeItem.x + testTimeItem.width), Log.FINEST);
 			if (testTimeItem.x < x && x < testTimeItem.x + testTimeItem.getWidth()) {
 				try {
-					if (this.selectedTests == null) {
-						this.selectedTests = new HashSet();
+					if (this.selectedTestIds == null) {
+						this.selectedTestIds = new HashSet();
 					}
 					Test test =(Test)testTimeItem.object;
-					this.selectedTests.add(test);
+					this.selectedTestIds.add(test.getId());
 					this.skip = true;
 					this.schedulerModel.addSelectedTest(test);
 					this.skip = false;
@@ -228,16 +237,17 @@ public class TestLine extends TimeLine {
 
 	public Rectangle getVisibleRectangle() {
 		Rectangle rectangle = null;
-		if (this.selectedTests != null && !this.selectedTests.isEmpty()) {
-			
-//			List testTimeLineList = (List) this.measurements.get(this.selectedTests.getId());
-			Test test=(Test) this.selectedTests.iterator().next();
+		if (this.selectedTestIds != null && !this.selectedTestIds.isEmpty()) {
+
+			// List testTimeLineList = (List)
+			// this.measurements.get(this.selectedTests.getId());
+			Identifier testId = (Identifier) this.selectedTestIds.iterator().next();
 			for (Iterator iter = this.timeItems.iterator(); iter.hasNext();) {
 				TestTimeItem element = (TestTimeItem) iter.next();
-				if (((Test)element.object).getId().equals(test.getId())){
+				if (((Test) element.object).getId().equals(testId)) {
 					int x = element.x;
 					rectangle = new Rectangle(x - PlanPanel.MARGIN / 2, 0, element.x, this.getHeight()
-						- (this.titleHeight / 2 + 4) - 2);
+							- (this.titleHeight / 2 + 4) - 2);
 					break;
 				}
 			}
@@ -260,7 +270,7 @@ public class TestLine extends TimeLine {
 //				Log.debugMessage("TestLine.paintFlash | testTimeItem >  " + ((Test) testTimeItem.object).getId(), Log.FINEST);
 //				}
 				this.drawItemRect(g, testTimeItem.x, y, testTimeItem.getWidth(), h, this.flash
-						? (((this.selectedTests == null) || (!this.selectedTests.contains(test)))
+						? (((this.selectedTestIds == null) || (!this.selectedTestIds.contains(test.getId())))
 								? SchedulerModel.COLOR_SCHEDULED : SchedulerModel.COLOR_SCHEDULED_SELECTED)
 						: SchedulerModel.COLOR_UNRECOGNIZED);
 			}
@@ -273,32 +283,55 @@ public class TestLine extends TimeLine {
 			return;
 		}
 		
-		Test test = this.schedulerModel.getSelectedTest();
+//		Log.debugMessage("TestLine.updateTest | ", Log.FINEST);
+//		Test test = this.schedulerModel.getSelectedTest();
+		Set selectedTestIds2 = this.schedulerModel.getSelectedTestIds();
 		this.selectedItems.clear();
-		if (test == null) {
-			if (this.selectedTests != null) {
-				this.selectedTests.clear();
-			}
-//			this.selectedTests = test;
-		} else if (this.tests.contains(test)) {
-			if (this.selectedTests != null) {
-				this.selectedTests.clear();
-			} else {
-				this.selectedTests = new HashSet();
-			}
-			this.selectedTests.add(test);			
-//			this.acquireTests();			
-			for (Iterator it = this.unsavedTestTimeItems.iterator(); it.hasNext();) {
-				TestTimeItem testTimeItem = (TestTimeItem) it.next();
-				Test test1 = (Test)testTimeItem.object;
-				if (test1.getId().equals(test.getId())) {
-					this.selectedItems.add(testTimeItem);					
-					break;
+		if (this.selectedTestIds != null) {
+			this.selectedTestIds.clear();
+		}
+		if (selectedTestIds2 != null) {
+			for (Iterator iterator = selectedTestIds2.iterator(); iterator.hasNext();) {
+				Identifier testId = (Identifier) iterator.next();
+				if (this.testIds.contains(testId)) {
+					if (this.selectedTestIds == null) {
+						this.selectedTestIds = new HashSet();
+					}
+					this.selectedTestIds.add(testId);
+//					Log.debugMessage("TestLine.updateTest | add testId " + testId, Log.FINEST);
 				}
 			}
-		} else {
-			this.selectedTests = null;
-		}
+			
+			if (this.selectedTestIds != null && !this.selectedTestIds.isEmpty()) {
+				for (Iterator it = this.unsavedTestTimeItems.iterator(); it.hasNext();) {
+					TestTimeItem testTimeItem = (TestTimeItem) it.next();
+					Test test1 = (Test) testTimeItem.object;
+					for (Iterator iterator = this.selectedTestIds.iterator(); iterator.hasNext();) {
+						Identifier identifier = (Identifier) iterator.next();
+						if (test1.getId().equals(identifier)) {
+//							Log.debugMessage("TestLine.updateTest | selectedItems add " + identifier, Log.FINEST);
+							this.selectedItems.add(testTimeItem);
+							break;
+						}
+					}
+					
+				}
+				
+				for (Iterator it = this.timeItems.iterator(); it.hasNext();) {
+					TestTimeItem testTimeItem = (TestTimeItem) it.next();
+					Test test1 = (Test) testTimeItem.object;
+					for (Iterator iterator = this.selectedTestIds.iterator(); iterator.hasNext();) {
+						Identifier identifier = (Identifier) iterator.next();
+						if (test1.getId().equals(identifier)) {
+//							Log.debugMessage("TestLine.updateTest | selectedItems add " + identifier, Log.FINEST);
+							this.selectedItems.add(testTimeItem);
+							break;
+						}
+					}
+					
+				}
+			}
+		} 
 		
 //		Log.debugMessage("TestLine.updateTest | this.selectedTest is "
 //				+ (this.selectedTest == null ? "null" : this.selectedTest.getId().toString()), Log.FINEST);
@@ -325,8 +358,8 @@ public class TestLine extends TimeLine {
 		if (!this.timeItems.isEmpty() && super.scale > 0.0) {
 			for (Iterator it = this.timeItems.iterator(); it.hasNext();) {
 				TestTimeItem testTimeItem = (TestTimeItem) it.next();				
-				this.drawItemRect(g, testTimeItem.x, y, testTimeItem.getWidth(), h, (this.selectedTests == null)
-						|| (!this.selectedTests.contains(testTimeItem.object))
+				this.drawItemRect(g, testTimeItem.x, y, testTimeItem.getWidth(), h, (this.selectedTestIds == null)
+						|| (!this.selectedTestIds.contains(((Test)testTimeItem.object).getId()))
 						? testTimeItem.color : testTimeItem.selectedColor);
 			}
 		}
@@ -344,14 +377,14 @@ public class TestLine extends TimeLine {
 				if (SwingUtilities.isLeftMouseButton(e)) {
 					if (TestLine.this.selectedItems != null && !e.isShiftDown()) {
 						TestLine.this.selectedItems.clear();
+						if (TestLine.this.selectedTestIds != null) {
+							TestLine.this.selectedTestIds.clear();
+						}
 						try {
 							TestLine.this.schedulerModel.unselectTests();
 						} catch (ApplicationException e1) {
 							SchedulerModel.showErrorMessage(TestLine.this, e1);
 						}
-					}
-					if (TestLine.this.selectedTests != null) {
-						TestLine.this.selectedTests.clear();
 					}
 					if (!TestLine.this.timeItems.isEmpty()) {
 						if (!selectTest(x, y, TestLine.this.timeItems)) {
@@ -430,6 +463,9 @@ public class TestLine extends TimeLine {
 							
 							for (Iterator it = TestLine.this.selectedItems.iterator(); it.hasNext();) {
 								TestTimeItem testTimeItem = (TestTimeItem) it.next();
+								if (testTimeItem.object instanceof StorableObject && !((StorableObject)testTimeItem.object).isChanged()) {
+									continue;
+								}
 								testTimeItem.x += dx;
 //								Log.debugMessage(".mouseDragged | dx is " + dx, Log.FINEST);
 //								Log.debugMessage(".mouseDragged | testTimeItem.x " + testTimeItem.x, Log.FINEST);
@@ -455,13 +491,14 @@ public class TestLine extends TimeLine {
 	private void acquireTests() {
 		Collection tests1 = this.schedulerModel.getTests();
 //		Log.debugMessage("TestLine.acquireTests | test1.size() " + tests1.size(), Log.FINEST);
-		this.tests.clear();
+		this.testIds.clear();
 		this.unsavedTests.clear();
 		this.measurements.clear();
 		for (Iterator it = tests1.iterator(); it.hasNext();) {
 			Test test = (Test) it.next();
+//			Log.debugMessage("TestLine.acquireTests | test is " + test.getId(), Log.FINEST);
 			if (test.getMonitoredElement().getId().equals(this.monitoredElementId)) {
-				this.tests.add(test);
+				this.testIds.add(test.getId());
 				if (test.isChanged()) {
 					this.unsavedTests.add(test);
 				} else {
@@ -587,7 +624,8 @@ public class TestLine extends TimeLine {
 //			e.printStackTrace();
 //		}
 		
-		for (Iterator iterator = this.tests.iterator(); iterator.hasNext();) {
+		try {
+		for (Iterator iterator = MeasurementStorableObjectPool.getStorableObjects(this.testIds, true).iterator(); iterator.hasNext();) {
 			Test test = (Test) iterator.next();
 
 			int i = 0;
@@ -628,7 +666,7 @@ public class TestLine extends TimeLine {
 					selectedColor = SchedulerModel.getColor(test.getStatus(), true);
 					unselectedColor = SchedulerModel.getColor(test.getStatus(), false);
 				}
-				
+//				Log.debugMessage("TestLine.refreshTimeItems | test is " + test.getId(), Log.FINEST);
 				testTimeItem.object = test;
 				testTimeItem.selectedColor = selectedColor;
 				testTimeItem.color = unselectedColor;
@@ -666,8 +704,44 @@ public class TestLine extends TimeLine {
 		
 //		Log.debugMessage("TestLine.refreshTimeItems | timeItems " + timeItems.size(), Log.FINEST);
 //		Log.debugMessage("TestLine.refreshTimeItems | unsavedTestTimeItems " + unsavedTestTimeItems.size(), Log.FINEST);
+		} catch(ApplicationException e) {
+			SchedulerModel.showErrorMessage(this, e);
+		}
 		super.repaint();
 		super.revalidate();
+	}
+	
+	public String getToolTipText(MouseEvent event) {
+		int x = event.getX();
+		String title1 = this.getTitle(x, this.timeItems);
+		if (title1 == null) {
+			title1 = this.getTitle(x, this.unsavedTestTimeItems);
+			if (title1 == null) {
+				title1 = this.title;
+			}
+		} 
+		return title1;
+	}
+	
+	private String getTitle(int x, Collection collection) {
+//		Log.debugMessage("TestLine.getTitle | collection.size() " + collection.size(), Log.FINEST);
+		if (!collection.isEmpty()) {
+			for (Iterator it = collection.iterator(); it.hasNext();) {
+				TestTimeItem testTimeItem = (TestTimeItem) it.next();
+				if (testTimeItem.x < x && x < testTimeItem.x + testTimeItem.getWidth()) {
+					Object object = testTimeItem.object;
+					SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
+					if (object instanceof Test) {
+						Test test = (Test)object;
+						return sdf
+						.format(test.getStartTime());
+					}
+					return sdf
+							.format(new Date((long) (this.start + ((testTimeItem.x - PlanPanel.MARGIN / 2) / this.scale))));
+				}
+			}
+		}
+		return null;
 	}
 
 }

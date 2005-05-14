@@ -80,8 +80,8 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 		ApplicationContext			aContext;
 		Dispatcher dispatcher;
 
-		private TimeSpinner			startTimeSpinner;
-		private DateSpinner			startDateSpinner;
+		TimeSpinner			startTimeSpinner;
+		DateSpinner			startDateSpinner;
 		boolean skipChanging = false;
 
 		private JLabel interavalLabel;
@@ -92,12 +92,15 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 		private JSpinner					periodDaySpinner;
 		private JSpinner					periodTimeSpinner;
 		
-		private JButton startTimeButton;
-		private JButton pediodTimeButton;
+		JButton startTimeButton;
+		JButton pediodTimeButton;
 		private JButton endTimeButton;
+		
+		JButton choosedButton;		
 		
 		private JLabel endingLabel;
 		private JButton endDateButton;
+		
 		private TimeSpinner					endTimeSpinner;		
 		private DateSpinner					endDateSpinner;
 		
@@ -109,7 +112,7 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 
 		private JRadioButton		periodicalRadioButton;
 		
-		JRadioButton		timeTableRadioButton;
+		JRadioButton		groupRadioButton;
 
 		private JRadioButton		synchroRadioButton;
 
@@ -157,17 +160,27 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 						if (testTemporalStamps != null) {
 							this.skip = true;
 							TimeParametersPanel.this.dispatcher.notify(new OperationEvent(testTemporalStamps, 0, SchedulerModel.COMMAND_SET_TEMPORAL_STAMPS));
-							if (TimeParametersPanel.this.timeTableRadioButton.isSelected()) {
+							if (TimeParametersPanel.this.groupRadioButton.isSelected()) {
 								TimeParametersPanel.this.dispatcher.notify(new OperationEvent(testTemporalStamps, 0, SchedulerModel.COMMAND_SET_GROUP_TEST));
 							}
 							this.skip = false;
 						}
+					} else if(actionCommand.equals(SchedulerModel.COMMAND_SET_START_GROUP_TIME)){
+						TimeParametersPanel.this.groupRadioButton.doClick();
+						TimeParametersPanel.this.skipChanging = true;
+						Date date = (Date) e.getSource();
+						// if (!date.equals(this.getStartDate())){
+						TimeParametersPanel.this.startDateSpinner.getModel().setValue(date);
+						TimeParametersPanel.this.startTimeSpinner.getModel().setValue(date);
+						TimeParametersPanel.this.skipChanging = false;
+						
 					}
 				}
 			};
 			
 			this.dispatcher.register(operationListener, SchedulerModel.COMMAND_SET_TEMPORAL_STAMPS);
 			this.dispatcher.register(operationListener, SchedulerModel.COMMAND_GET_TEMPORAL_STAMPS);
+			this.dispatcher.register(operationListener, SchedulerModel.COMMAND_SET_START_GROUP_TIME);
 		}
 
 		private void createGUI() {
@@ -193,7 +206,7 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 			gbc.gridy++;
 			this.panel.add(this.continuosRadioButton, gbc);
 			gbc.gridy++;
-			this.panel.add(this.timeTableRadioButton, gbc);
+			this.panel.add(this.groupRadioButton, gbc);
 
 			JLabel beginLabel = new JLabel(LangModelSchedule.getString("Start") + ':');
 			gbc.gridx = 1;
@@ -216,44 +229,25 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 					
 					private Thread thread = new Thread() {
 						
-						public void run() {
-																startedThread = true;
+						public void run() {																
 																while (true) {
 																	if (waiting
 																			&& (System.currentTimeMillis() - previousEventTime) > TIMEOUT) {
-																		Test selectedTest = TimeParametersPanel.this.schedulerModel
-																				.getSelectedTest();
-																		if (selectedTest != null
-																				&& selectedTest.isChanged()) {
-																			TestTemporalType temporalType = selectedTest
-																					.getTemporalType();
-																			Date startDate = TimeParametersPanel.this
-																					.getStartDate();
-																			Date endDate = TimeParametersPanel.this
-																					.getEndDate();
-																			switch (temporalType.value()) {
-																				case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
-																					selectedTest
-																							.setStartTime(startDate);
-																					break;
-																				default:
-																					if (startDate.getTime() < endDate
-																							.getTime()) {
-																						selectedTest
-																								.setStartTime(startDate);
-																					} else {
-																						waiting = false;
-																					}
-
+																		
+																		Date startDate = TimeParametersPanel.this
+																		.getStartDate();
+																		Date endDate = TimeParametersPanel.this
+																			.getEndDate();
+																
+																		if (!oneRadioButton.isSelected() || !groupRadioButton.isSelected()) {
+																			if (startDate.getTime() > endDate
+																					.getTime()) {
+																				waiting = false;
 																			}
-
-																			if (waiting) {
-																				TimeParametersPanel.this.dispatcher
-																						.notify(new OperationEvent(
-																													this,
-																													0,
-																													SchedulerModel.COMMAND_REFRESH_TESTS));
-																			}
+																		}
+																		
+																		if (waiting) {
+																			schedulerModel.moveSelectedTests(startDate);
 																		}
 																		waiting = false;
 																	}
@@ -274,6 +268,7 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 //							this.event = ;
 							if (!this.startedThread) {
 								this.thread.start();
+								this.startedThread = true;
 							}
 							this.waiting =  isTestAgree(TimeParametersPanel.this.schedulerModel
 								.getSelectedTest());
@@ -401,7 +396,6 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 					private Thread		thread			= new Thread() {
 
 															public void run() {
-																startedThread = true;
 																while (true) {
 																	if (waiting
 																			&& (System.currentTimeMillis() - previousEventTime) > TIMEOUT) {
@@ -446,6 +440,7 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 //							this.event = ;
 							if (!this.startedThread) {
 								this.thread.start();
+								this.startedThread = true;
 							}
 							this.waiting = isTestAgree(TimeParametersPanel.this.schedulerModel
 								.getSelectedTest());
@@ -599,7 +594,7 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 			group.add(this.oneRadioButton);
 			group.add(this.periodicalRadioButton);
 			group.add(this.continuosRadioButton);
-			group.add(this.timeTableRadioButton);
+			group.add(this.groupRadioButton);
 
 
 //			JSeparator jsep3 = new JSeparator();
@@ -653,7 +648,7 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 			this.oneRadioButton = new JRadioButton(LangModelSchedule.getString("Onetime"));
 			this.continuosRadioButton = new JRadioButton(LangModelSchedule.getString("Continual"));		
 			this.periodicalRadioButton = new JRadioButton(LangModelSchedule.getString("Periodical"));			
-			this.timeTableRadioButton = new JRadioButton(LangModelSchedule.getString("Time table"));
+			this.groupRadioButton = new JRadioButton(LangModelSchedule.getString("Sectional"));
 
 
 			this.oneRadioButton.addItemListener(new ItemListener() {
@@ -689,7 +684,7 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 				}
 			});
 			
-			this.timeTableRadioButton.addItemListener(new ItemListener() {
+			this.groupRadioButton.addItemListener(new ItemListener() {
 
 				public void itemStateChanged(ItemEvent e) {
 					if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -886,7 +881,17 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 			ActionListener actionListener = new ActionListener() {
 				
 				public void actionPerformed(ActionEvent e) {
+					TimeParametersPanel.this.choosedButton = (JButton)e.getSource();
+					if (!TimeParametersPanel.this.groupRadioButton.isSelected()) { 
 					TimeParametersPanel.this.schedulerModel.createTest();
+					} else {
+						TimeParametersPanel.this.dispatcher.notify(new OperationEvent(this, 0, SchedulerModel.COMMAND_GET_MONITORED_ELEMENT));
+						if (TimeParametersPanel.this.choosedButton == TimeParametersPanel.this.startTimeButton) {
+							TimeParametersPanel.this.schedulerModel.addGroupTest(TimeParametersPanel.this.getStartDate());
+						} else if (TimeParametersPanel.this.choosedButton == TimeParametersPanel.this.pediodTimeButton) {
+							TimeParametersPanel.this.schedulerModel.addGroupTests(TimeParametersPanel.this.getStartDate(), TimeParametersPanel.this.getIntervalLength());
+						}
+					}
 				}
 			};
 
@@ -908,7 +913,7 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 						return this.continuosRadioButton.isSelected();
 				}
 				if (test.getGroupTestId() != null)
-					return this.timeTableRadioButton.isSelected();
+					return this.groupRadioButton.isSelected();
 			}
 			return false;
 		}
@@ -949,11 +954,16 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 		}
 		
 		void setIntervalEnabled(boolean enable) {
+			setPeriodEnabled(enable, LangModelSchedule.getString("Interval"));
 			this.endTimeButton.setEnabled(false);
 			this.endTimeButton.setVisible(false);
 			this.startTimeButton.setVisible(true);
 			this.pediodTimeButton.setVisible(true);
-			setPeriodEnabled(enable, LangModelSchedule.getString("Interval"));
+			
+			this.endingLabel.setVisible(false);
+			this.endTimeSpinner.setVisible(false);
+			this.endDateSpinner.setVisible(false);
+			this.endDateButton.setVisible(false);			
 		}
 
 		
@@ -1068,8 +1078,22 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 				}
 			} else if (this.continuosRadioButton.isSelected()) {
 				temporalType = TestTemporalType.TEST_TEMPORAL_TYPE_CONTINUOUS;
-			} else {
+			} else  if (this.groupRadioButton.isSelected()) {
+				if (this.choosedButton != null) {
+					if (this.choosedButton == this.startTimeButton) {
+						temporalType = TestTemporalType.TEST_TEMPORAL_TYPE_ONETIME;
+					} else {
+						this.schedulerModel.setBreakData();
+						return null;
+					}  
+				} else {
+					this.schedulerModel.setBreakData();
+					return null;
+				}
+			}
+			else {
 				// SchedulerModel.showErrorMessage(this, ne)
+				this.schedulerModel.setBreakData();
 				return null;
 			}
 

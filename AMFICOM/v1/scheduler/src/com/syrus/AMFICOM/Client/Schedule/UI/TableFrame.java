@@ -46,8 +46,10 @@ import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTable;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTableModel;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestController;
+import com.syrus.util.Log;
 
 /**
  * @author Vladimir Dolzhenko
@@ -115,6 +117,16 @@ Commandable {
 			ObjectResourceTableModel tableModel = (ObjectResourceTableModel) this.listTable.getModel();
 			for (Iterator iterator = selectedTestIds.iterator(); iterator.hasNext();) {
 				Identifier identifier = (Identifier) iterator.next();
+				try {
+					Test test1 = (Test)MeasurementStorableObjectPool.getStorableObject(identifier, true);
+					Identifier groupTestId = test1.getGroupTestId();
+					if (groupTestId != null) {
+						identifier = groupTestId;
+					}
+				} catch (ApplicationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				for(int i=0;i<tableModel.getRowCount();i++) {
 					Test test = (Test)tableModel.getObject(i);
 					Identifier testId = test.getGroupTestId();
@@ -147,12 +159,14 @@ Commandable {
 		model.clear();
 		Collection tests = this.schedulerModel.getTests();
 		for (Iterator it = tests.iterator(); it.hasNext();) {
-			Test test1 = (Test) it.next();
+			Test test1 = (Test) it.next();			
 			Identifier groupTestId = test1.getGroupTestId();
+			assert Log.debugMessage("TableFrame.setTests | test1 is " + test1.getId() + ", groupTestId is " + groupTestId, Log.FINEST);
 			if (groupTestId != null && !groupTestId.equals(test1.getId())) {
 				continue;
-			}
+			}			
 			if (model.getIndexOfObject(test1) < 0) {
+				Log.debugMessage("TableFrame.setTests | added ", Log.FINEST);
 				model.getContents().add(test1);
 			}
 		}

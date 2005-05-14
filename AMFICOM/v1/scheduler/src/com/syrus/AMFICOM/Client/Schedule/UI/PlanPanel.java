@@ -426,7 +426,7 @@ ActionListener {
 
 		if (this.currentPosition != null && this.startPosition != null) {
 			if (this.selectionColor == null) {
-				Color color = Color.BLUE;
+				Color color = UIManager.getColor("List.selectionBackground");
 				this.selectionColor = new Color(color.getRed(), color.getGreen(), color.getBlue(), 50);
 			}
 			Color color = g.getColor();

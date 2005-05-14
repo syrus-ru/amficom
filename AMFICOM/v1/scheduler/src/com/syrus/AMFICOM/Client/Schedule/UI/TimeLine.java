@@ -1,5 +1,5 @@
 /*-
- * $Id: TimeLine.java,v 1.6 2005/05/13 15:07:30 bob Exp $
+ * $Id: TimeLine.java,v 1.7 2005/05/14 13:21:28 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,9 +26,11 @@ import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.Client.Schedule.UI.TestLine.TestTimeItem;
+import com.syrus.AMFICOM.measurement.Test;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/05/13 15:07:30 $
+ * @version $Revision: 1.7 $, $Date: 2005/05/14 13:21:28 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -109,11 +111,21 @@ public abstract class TimeLine extends JComponent {
 	
 	public String getToolTipText(MouseEvent event) {
 		int x = event.getX();
+//		Log.debugMessage("TimeLine.getToolTipText | this.timeItems.size() " + this.timeItems.size(), Log.FINEST);
 		if (!this.timeItems.isEmpty()) {
 			for (Iterator it = this.timeItems.iterator(); it.hasNext();) {
 				TestTimeItem testTimeItem = (TestTimeItem) it.next();
+//				Log.debugMessage("TimeLine.getToolTipText | testTimeItem.x " + testTimeItem.x, Log.FINEST);
+//				Log.debugMessage("TimeLine.getToolTipText | x " + x, Log.FINEST);
+//				Log.debugMessage("TimeLine.getToolTipText | testTimeItem.x + testTimeItem.getWidth() " + (testTimeItem.x + testTimeItem.getWidth()), Log.FINEST);
 				if (testTimeItem.x < x && x < testTimeItem.x + testTimeItem.getWidth()) {
+					Object object = testTimeItem.object;
 					SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
+					if (object instanceof Test) {
+						Test test = (Test)object;
+						return sdf
+						.format(test.getStartTime());
+					}
 					return sdf
 							.format(new Date((long) (this.start + ((testTimeItem.x - PlanPanel.MARGIN / 2) / this.scale))));
 				}
