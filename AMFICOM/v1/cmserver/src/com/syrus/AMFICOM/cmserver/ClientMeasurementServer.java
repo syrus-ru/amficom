@@ -1,5 +1,5 @@
 /*-
- * $Id: ClientMeasurementServer.java,v 1.42 2005/05/13 17:51:04 bass Exp $
+ * $Id: ClientMeasurementServer.java,v 1.43 2005/05/16 14:43:08 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,8 +25,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2005/05/13 17:51:04 $
- * @author $Author: bass $
+ * @version $Revision: 1.43 $, $Date: 2005/05/16 14:43:08 $
+ * @author $Author: arseniy $
  * @module cmserver_v1
  */
 public class ClientMeasurementServer {
@@ -70,6 +70,10 @@ public class ClientMeasurementServer {
 	 * Process codename.
 	 */
 	private static String processCodename;
+
+	private ClientMeasurementServer() {
+		assert false : "Nothing";
+	}
 
 	public static void main(String[] args) {
 		Application.init(APPLICATION_NAME);
@@ -117,7 +121,8 @@ public class ClientMeasurementServer {
 			final CMServerSessionEnvironment sessionEnvironment = CMServerSessionEnvironment.getInstance();
 			try {
 				sessionEnvironment.login(login, PASSWORD);
-			} catch (final LoginException le) {
+			}
+			catch (final LoginException le) {
 				Log.errorException(le);
 			}
 	
@@ -125,7 +130,8 @@ public class ClientMeasurementServer {
 			final CORBAServer corbaServer = sessionEnvironment.getCMServerServantManager().getCORBAServer();
 			corbaServer.activateServant(new CMServerImpl(), processCodename);
 			corbaServer.printNamingContext();
-		} catch (final ApplicationException ae) {
+		}
+		catch (final ApplicationException ae) {
 			Log.errorException(ae);
 			System.exit(0);
 		}

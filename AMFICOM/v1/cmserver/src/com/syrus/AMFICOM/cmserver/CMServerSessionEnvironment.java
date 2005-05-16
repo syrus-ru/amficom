@@ -1,5 +1,5 @@
 /*-
- * $Id: CMServerSessionEnvironment.java,v 1.3 2005/05/13 17:49:03 bass Exp $
+ * $Id: CMServerSessionEnvironment.java,v 1.4 2005/05/16 14:45:03 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,15 +12,14 @@ import com.syrus.AMFICOM.general.BaseSessionEnvironment;
 import com.syrus.AMFICOM.general.CommunicationException;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/05/13 17:49:03 $
- * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2005/05/16 14:45:03 $
+ * @author $Author: arseniy $
  * @module cmserver_v1
  */
 final class CMServerSessionEnvironment extends BaseSessionEnvironment {
 	private static CMServerSessionEnvironment instance;
 
-	private CMServerSessionEnvironment(
-			final CMServerServantManager cmServerServantManager,
+	private CMServerSessionEnvironment(final CMServerServantManager cmServerServantManager,
 			final CMServerPoolContext cmServerPoolContext) {
 		super(cmServerServantManager, cmServerPoolContext, new ClientMeasurementServer.CMServerLoginRestorer());
 	}
