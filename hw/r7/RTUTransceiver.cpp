@@ -86,8 +86,8 @@ void* RTUTransceiver::run(void* args) {
 
 	MeasurementSegment* measurement_segment;
 	ByteArray* local_address;
-	int need_switch_otau;
-	ByteArray* previous_address = NULL;
+//	int need_switch_otau;
+//	ByteArray* previous_address = NULL;
 	Parameter** parameters = NULL;
 	unsigned int par_number = 0;
 
@@ -107,19 +107,27 @@ void* RTUTransceiver::run(void* args) {
 
 			local_address = measurement_segment->getLocalAddress();
 
-			need_switch_otau = 0;
-			if (previous_address == NULL || (*local_address) != (*previous_address))
-				need_switch_otau = 1;
-
-			if (need_switch_otau) {
-				if (! rtuTransceiver->switch_OTAU(local_address->getData(), local_address->getLength())) {
-					printf("RTUTransceiver | ERROR: Cannot switch OTAU. Measurement cancelled\n");
-					delete measurement_segment;
-					continue;
-				}
-				if (previous_address != NULL)
-					delete previous_address;
-				previous_address = local_address->clone();
+			/**
+			* Alwais switch OTAU
+			*/
+//			need_switch_otau = 0;
+//			if (previous_address == NULL || (*local_address) != (*previous_address))
+//				need_switch_otau = 1;
+//
+//			if (need_switch_otau) {
+//				if (! rtuTransceiver->switch_OTAU(local_address->getData(), local_address->getLength())) {
+//					printf("RTUTransceiver | ERROR: Cannot switch OTAU. Measurement cancelled\n");
+//					delete measurement_segment;
+//					continue;
+//				}
+//				if (previous_address != NULL)
+//					delete previous_address;
+//				previous_address = local_address->clone();
+//			}
+			if (! rtuTransceiver->switch_OTAU(local_address->getData(), local_address->getLength())) {
+				printf("RTUTransceiver | ERROR: Cannot switch OTAU. Measurement cancelled\n");
+				delete measurement_segment;
+				continue;
 			}
 
 			rtuTransceiver->retrieve_plugin_data(otdr_card_index);
@@ -697,6 +705,9 @@ int RTUTransceiver::set_measurement_parameters(Parameter** parameters, unsigned 
 	if (flags & 0x00000004)
 		this->filter_flags |= GAIN_SPLICE_ON;
 
+	/*	NOTE: Turn on gain splice. This is need for greater dynamic range*/
+	this->filter_flags |= GAIN_SPLICE_ON;
+
 	int set_params_ret = QPOTDRAcqSetParams(this->otdr_cards[otdr_card_index],
 								(WORD)(this->averages / this->plugin_data->dwFastScanCount),
 								wave_index,
@@ -773,8 +784,7 @@ int RTUTransceiver::get_point_spacing_index(const double res, const WORD otdr_ca
 		float* point_spacings = new float[MAX_SPACINGS];
 		QPOTDRGetAvailSpacings(otdr_card, point_spacings);
 		//FIXME: Total number of values is 8, but QPOTDRGetMaxPointSpacings returns 7
-		//ret = get_index_in_array((float)res, point_spacings, max_point_spacings);
-		ret = get_index_in_array((float)res, point_spacings, MAX_SPACINGS);
+		ret = get_index_in_array((float)res, point_spacings, max_point_spacings + 1);
 		delete[] point_spacings;
 	}
 	else {
