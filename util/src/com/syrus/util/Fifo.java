@@ -1,5 +1,5 @@
 /*
- * $Id: Fifo.java,v 1.5 2005/03/04 08:05:49 bass Exp $
+ * $Id: Fifo.java,v 1.6 2005/05/16 10:12:23 max Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,8 +11,8 @@ package com.syrus.util;
 import java.io.Serializable;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/03/04 08:05:49 $
- * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2005/05/16 10:12:23 $
+ * @author $Author: max $
  * @module util
  */
 
@@ -77,5 +77,29 @@ public class Fifo implements Serializable {
 
 	public int getNumber() {
 		return this.number;
+	}
+	
+	/**
+	 * <b>Do NOT use this metthod</b>. 
+	 * <p>This method can be used only in special cases, for example in seriallization.</p>
+	 */
+	public Object[] getObjects() {
+		return this.fifo;
+	}
+
+	/**
+	 * <b>Do NOT use this metthod</b>. 
+	 * <p>This method can be used only in special cases, for example in seriallization.</p><p>Instead one may use {@link Fifo#push(Object)}</p> 
+	 */
+	public void setObjects(Object[] objects) {
+		this.fifo = objects;		
+	}
+
+	/**
+	 * <b>Do NOT use this metthod</b>.
+	 * <p>This method can be used only in special cases, for example in seriallization.</p>
+	 */
+	public void setNumber(int number) {
+		this.number = number;
 	}
 }
