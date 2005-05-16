@@ -1,5 +1,5 @@
 /*-
- * $Id: CMServerServantManager.java,v 1.3 2005/05/13 17:49:38 bass Exp $
+ * $Id: CMServerServantManager.java,v 1.4 2005/05/16 14:38:09 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,8 +25,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/05/13 17:49:38 $
- * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2005/05/16 14:38:09 $
+ * @author $Author: arseniy $
  * @module cmserver_v1
  */
 final class CMServerServantManager extends RunnableVerifiedConnectionManager implements BaseConnectionManager {
@@ -45,6 +45,9 @@ final class CMServerServantManager extends RunnableVerifiedConnectionManager imp
 		this.loginServerServantName = loginServerServantName;
 		this.eventServerServantName = eventServerServantName;
 		this.mServerServantName = mServerServantName;
+
+		//NOTE CMServer never generates identifiers for himself, so this initialization is redundant.
+		this.databaseIdentifierGeneratorServer = new DatabaseIdentifierGeneratorServer();
 
 		assert timeout >= 10L * 60L * 1000L: ErrorMessages.TIMEOUT_TOO_SHORT; //not less then 10 min
 	}
