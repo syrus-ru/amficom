@@ -63,7 +63,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/05/12 09:58:35 $
+ * @version $Revision: 1.29 $, $Date: 2005/05/16 12:54:51 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -162,6 +162,8 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 	Set set = null;
 
 	long							maxPoints;
+	
+	private Map unchangedObjects;
 
 	public ReflectometryTestPanel(ApplicationContext aContext) {
 		super(aContext);
@@ -273,7 +275,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 		}
 		return this.set;
 	}
-
+	
 	private void refreshTitles() {
 
 		if (this.wvlenParameterType != null && this.trclenParameterType != null && this.resParameterType != null

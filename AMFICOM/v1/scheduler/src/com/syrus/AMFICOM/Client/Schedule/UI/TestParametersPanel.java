@@ -63,6 +63,7 @@ import com.syrus.AMFICOM.measurement.MeasurementSetupWrapper;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.Set;
 import com.syrus.AMFICOM.measurement.SetParameter;
+import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.util.Log;
 
 public class TestParametersPanel implements OperationListener {
@@ -237,6 +238,25 @@ public class TestParametersPanel implements OperationListener {
 				MeasurementSetup measurementSetup1 = (MeasurementSetup) TestParametersPanel.this.testSetups
 						.getSelectedValue();
 				if (measurementSetup1 != null) {
+					
+					java.util.Set selectedTestIds = schedulerModel.getSelectedTestIds();
+					if (selectedTestIds != null && !selectedTestIds.isEmpty()) {
+						try {
+							java.util.Set measurementSetupIdSet = Collections.singleton(measurementSetup1.getId());
+							java.util.Set storableObjects = MeasurementStorableObjectPool.getStorableObjects(selectedTestIds,
+								true);
+							for (Iterator iterator = storableObjects.iterator(); iterator.hasNext();) {
+								Test test = (Test) iterator.next();
+								if (test.isChanged()) {
+									test.setMeasurementSetupIds(measurementSetupIdSet);
+								}
+							}
+						} catch (ApplicationException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					}
+					
 					TestParametersPanel.this.useAnalysisBox.setEnabled(true);
 					try {
 						TestParametersPanel.this.analysisComboBox.removeAll();

@@ -34,6 +34,7 @@ import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
+import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
@@ -42,8 +43,8 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.Test;
+import com.syrus.AMFICOM.measurement.TestController;
 import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
-import com.syrus.util.Log;
 
 public class TestLine extends TimeLine {
 
@@ -412,30 +413,41 @@ public class TestLine extends TimeLine {
 			public void mouseReleased(MouseEvent e) {
 				if (TestLine.this.currentPoint != null && TestLine.this.startPoint != null) {
 					long offset = (long) ((TestLine.this.currentPoint.x - TestLine.this.startPoint.x) / scale);
-//					moveIntervals(offset);
-					
-					
-					for (Iterator iterator = TestLine.this.selectedItems.iterator(); iterator.hasNext();) {
-						TestTimeItem testTimeItem = (TestTimeItem) iterator.next();
+					// moveIntervals(offset);
+
+					if (TestLine.this.selectedItems != null && !TestLine.this.selectedItems.isEmpty()) {
+						TestTimeItem testTimeItem = (TestTimeItem) TestLine.this.selectedItems.first();
 						Test test = (Test) testTimeItem.object;
 						Date startTime = test.getStartTime();
-						Date endTime = test.getEndTime();
-						test.setStartTime(new Date(startTime.getTime() + offset));
-						if (endTime != null) {
-							test.setEndTime(new Date(endTime.getTime() + offset));
-						}				
-					
+						TestLine.this.schedulerModel.moveSelectedTests(new Date(startTime.getTime() + offset));
+						// for (Iterator iterator =
+						// TestLine.this.selectedItems.iterator();
+						// iterator.hasNext();) {
+						// TestTimeItem testTimeItem = (TestTimeItem)
+						// iterator.next();
+						// Test test = (Test) testTimeItem.object;
+						// Date startTime = test.getStartTime();
+						// Date endTime = test.getEndTime();
+						// test.setStartTime(new Date(startTime.getTime() +
+						// offset));
+						// if (endTime != null) {
+						// test.setEndTime(new Date(endTime.getTime() +
+						// offset));
+						// }
+						//					
+						// }
+						// TestLine.this.selectedTests = null;
+						// Log.debugMessage("TestLine.createMouseListener |
+						// mouseReleased ", Log.FINEST);
+						TestLine.this.dispatcher
+								.notify(new OperationEvent(this, 0, SchedulerModel.COMMAND_REFRESH_TIME_STAMPS));
 					}
-//					TestLine.this.selectedTests = null;
-//					Log.debugMessage("TestLine.createMouseListener | mouseReleased ", Log.FINEST);
-					TestLine.this.dispatcher.notify(new OperationEvent(this, 0, SchedulerModel.COMMAND_REFRESH_TIME_STAMPS));
 
 					TestLine.this.startPoint = null;
 					TestLine.this.previousPoint = null;
 					TestLine.this.currentPoint = null;
 				}
 
-			
 			}
 		});
 
@@ -725,6 +737,7 @@ public class TestLine extends TimeLine {
 	
 	private String getTitle(int x, Collection collection) {
 //		Log.debugMessage("TestLine.getTitle | collection.size() " + collection.size(), Log.FINEST);
+		TestController testController = TestController.getInstance();
 		if (!collection.isEmpty()) {
 			for (Iterator it = collection.iterator(); it.hasNext();) {
 				TestTimeItem testTimeItem = (TestTimeItem) it.next();
@@ -732,9 +745,10 @@ public class TestLine extends TimeLine {
 					Object object = testTimeItem.object;
 					SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
 					if (object instanceof Test) {
-						Test test = (Test)object;
-						return sdf
-						.format(test.getStartTime());
+						Test test = (Test) object;
+						return testController.getValue(test, TestController.KEY_TEMPORAL_TYPE_NAME).toString() + ", "
+								+ testController.getName(TestController.KEY_START_TIME) + ':'
+								+ testController.getValue(test, TestController.KEY_START_TIME);
 					}
 					return sdf
 							.format(new Date((long) (this.start + ((testTimeItem.x - PlanPanel.MARGIN / 2) / this.scale))));

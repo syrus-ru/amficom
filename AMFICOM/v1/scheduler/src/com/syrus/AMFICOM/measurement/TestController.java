@@ -1,5 +1,5 @@
 /*
- * $Id: TestController.java,v 1.9 2005/05/12 11:26:27 bob Exp $
+ * $Id: TestController.java,v 1.10 2005/05/16 12:54:51 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,7 @@ import java.awt.Component;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -30,13 +31,14 @@ import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/05/12 11:26:27 $
+ * @version $Revision: 1.10 $, $Date: 2005/05/16 12:54:51 $
  * @author $Author: bob $
  * @module module
  */
 public class TestController extends ObjectResourceController {
 
 	public static final String		KEY_TEMPORAL_TYPE		= "TemporalType";
+	public static final String		KEY_TEMPORAL_TYPE_NAME	= "TemporalTypeName";
 	public static final String		KEY_KIS					= "RTU";
 	public static final String		KEY_MONITORED_ELEMENT	= "MonitoredElement";
 	public static final String		KEY_TEST_OBJECT			= "TestObject";
@@ -164,8 +166,26 @@ public class TestController extends ObjectResourceController {
 		Object value = null;
 		if (object instanceof Test) {
 			Test test = (Test) object;
-			if (key.equals(KEY_TEMPORAL_TYPE))
-				value = test.getTemporalType(); //$NON-NLS-1$
+			if (key.equals(KEY_TEMPORAL_TYPE)) {
+				if (test.getGroupTestId() == null) {
+					value = test.getTemporalType(); //$NON-NLS-1$
+				} else {
+					value = LangModelSchedule.getString("Sectional");
+				}
+			} else if (key.equals(KEY_TEMPORAL_TYPE_NAME)) {
+				if (test.getGroupTestId() == null) {
+					TestTemporalType temporalType = test.getTemporalType();
+					for (Iterator iterator = this.temporalTypeMap.keySet().iterator(); iterator.hasNext();) {
+						String name = (String) iterator.next();
+						if ((this.temporalTypeMap.get(name)).equals(temporalType)) {
+							value = name;
+							break;
+						}
+					}
+				} else {
+					value = LangModelSchedule.getString("Sectional");
+				}				
+			}
 			else if (key.equals(KEY_KIS))
 				try {
 					MeasurementPort mp = (MeasurementPort)ConfigurationStorableObjectPool.getStorableObject(test.getMonitoredElement().getMeasurementPortId(), true);

@@ -328,7 +328,25 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 	}
 
 	public void removeTest(Test test) {
-		this.tests.remove(test);
+		Identifier groupTestId = test.getGroupTestId();
+		if (groupTestId != null) {
+			try {
+				java.util.Set testsByCondition = MeasurementStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(groupTestId, ObjectEntities.TEST_ENTITY_CODE), true);
+				java.util.Set testIds = new HashSet(testsByCondition.size());
+				for (Iterator iterator = testsByCondition.iterator(); iterator.hasNext();) {
+					Test test2 = (Test) iterator.next();
+					testIds.add(test2.getId());
+					this.tests.remove(test2);
+				}
+				MeasurementStorableObjectPool.delete(testIds);
+			} catch (ApplicationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else {
+			this.tests.remove(test);
+			MeasurementStorableObjectPool.delete(test.getId());
+		}
 		if (this.selectedTestIds != null) {
 			this.selectedTestIds.clear();
 			this.selectedFirstTest = null;
@@ -812,7 +830,8 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 
 					MeasurementStorableObjectPool.putStorableObject(test);
 					} else {
-						// TODO inform error 
+						JOptionPane.showMessageDialog(Environment.getActiveWindow(), LangModelSchedule.getString("Cannot add test"), LangModelSchedule.getString("Error"),
+							JOptionPane.OK_OPTION);
 					}
 				} catch (IllegalObjectEntityException e) {
 					Log.errorException(e);
@@ -830,7 +849,8 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 					this.returnType.value(), this.name != null && this.name.trim().length() > 0 ? this.name : sdf
 							.format(startTime), test.getNumberOfMeasurements());
 				} else {
-					// TODO inform error 
+					JOptionPane.showMessageDialog(Environment.getActiveWindow(), LangModelSchedule.getString("Cannot update test"), LangModelSchedule.getString("Error"),
+						JOptionPane.OK_OPTION);
 				}
 			}
 			try {
@@ -886,7 +906,8 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 					}
 					correct = this.isValid(newStartDate, newEndDate, selectedTest.getMonitoredElement().getId());
 					if (!correct) {
-						// TODO inform
+						JOptionPane.showMessageDialog(Environment.getActiveWindow(), LangModelSchedule.getString("Cannot move tests"), LangModelSchedule.getString("Error"),
+							JOptionPane.OK_OPTION);
 						break;
 					}
 				}
@@ -902,7 +923,6 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 						selectedTest.setStartTime(newStartDate);
 						selectedTest.setEndTime(newEndDate);
 					}
-					this.refreshTests();
 				}
 			} catch (ApplicationException e) {
 				// TODO Auto-generated catch block
@@ -910,10 +930,12 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 
 			}
 		}
+		this.refreshTests();
 
 	}
 	
 	private void addGroupTests() {
+		Log.debugMessage("SchedulerModel.addGroupTests | ", Log.FINEST);
 		Identifier meId = this.monitoredElement.getId();
 		Identifier testGroupId = (Identifier) (this.meTestGroup != null ? this.meTestGroup.get(meId) : null);
 		if (testGroupId != null) {
@@ -935,24 +957,46 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 						this.selectedTestIds = new HashSet();						
 					}
 					this.selectedTestIds.add(test.getId());
+					} else {						
+						JOptionPane.showMessageDialog(Environment.getActiveWindow(), LangModelSchedule.getString("Cannot add tests"), LangModelSchedule.getString("Error"),
+							JOptionPane.OK_OPTION);
+					}
+				} 
+			} catch (ApplicationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+
+			}
+		} 
+		{
+			try {
+
+				if (this.selectedTestIds == null || (this.selectedTestIds.isEmpty())) {
+					if (testGroupId == null) {
+					this.createTest();
 					} else {
-						// TODO inform
+						this.startGroupDate = new Date(this.startGroupDate.getTime() + this.interval);
+						this.aloneGroupTest = true;
+						this.addGroupTests();
 					}
 				} else {
-					if (this.selectedTestIds != null && !this.selectedTestIds.isEmpty()) {
-						SortedSet selectedTests = new TreeSet(new WrapperComparator(TestWrapper.getInstance(), TestWrapper.COLUMN_START_TIME));
-						selectedTests.addAll(MeasurementStorableObjectPool.getStorableObjects(this.selectedTestIds, true));
-						
-						Test firstTest = ((Test)selectedTests.first());
-						Test lastTest = ((Test)selectedTests.last());
+
+						SortedSet selectedTests = new TreeSet(new WrapperComparator(TestWrapper.getInstance(),
+																			TestWrapper.COLUMN_START_TIME));
+						selectedTests.addAll(MeasurementStorableObjectPool.getStorableObjects(this.selectedTestIds,
+								true));
+						Test firstTest = ((Test) selectedTests.first());
+						Test lastTest = ((Test) selectedTests.last());
+
 						Date endTime = lastTest.getEndTime();
 						long firstTime = firstTest.getStartTime().getTime();
-						long offset = (endTime != null ? endTime : lastTest.getStartTime()).getTime() + this.interval - firstTime;
+						long offset = (endTime != null ? endTime : lastTest.getStartTime()).getTime() + this.interval
+								- firstTime;
 
-						
-						assert Log.debugMessage("SchedulerModel.addGroupTests | firstTime is " + new Date(firstTime), Log.FINEST);
+						assert Log.debugMessage("SchedulerModel.addGroupTests | firstTime is " + new Date(firstTime),
+							Log.FINEST);
 						assert Log.debugMessage("SchedulerModel.addGroupTests | offset is " + offset, Log.FINEST);
-						
+
 						this.selectedTestIds.clear();
 
 						boolean correct = true;
@@ -964,15 +1008,19 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 								endDate = new Date(endDate.getTime() + offset);
 							}
 
-//							Log.debugMessage("SchedulerModel.addGroupTests | new startDate " + startDate, Log.FINEST);
-//							Log.debugMessage("SchedulerModel.addGroupTests | new endDate " + endDate, Log.FINEST);
+							// Log.debugMessage("SchedulerModel.addGroupTests |
+							// new startDate " + startDate, Log.FINEST);
+							// Log.debugMessage("SchedulerModel.addGroupTests |
+							// new endDate " + endDate, Log.FINEST);
 							correct = this.isValid(startDate, endDate, selectedTest.getMonitoredElement().getId());
 							if (!correct) {
-//								 TODO inform
+								JOptionPane.showMessageDialog(Environment.getActiveWindow(), LangModelSchedule
+										.getString("Cannot add tests"), LangModelSchedule.getString("Error"),
+									JOptionPane.OK_OPTION);
 								break;
 							}
 						}
-						
+
 						if (correct) {
 							for (Iterator iterator = selectedTests.iterator(); iterator.hasNext();) {
 								Test selectedTest = (Test) iterator.next();
@@ -985,13 +1033,17 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 								// Log.debugMessage("SchedulerModel.addGroupTests
 								// | new startDate " + startDate, Log.FINEST);
 								// Log.debugMessage("SchedulerModel.addGroupTests
-								// | new endDate " + endDate, Log.FINEST);
+								// | new endDate " + endDate, Log.FINEST);								
 								Test test = Test.createInstance(LoginManager.getUserId(), startDate, endDate,
 									selectedTest.getTemporalPatternId(), selectedTest.getTemporalType(), selectedTest
 											.getMeasurementTypeId(), selectedTest.getAnalysisTypeId(), selectedTest
 											.getEvaluationTypeId(), testGroupId, selectedTest.getMonitoredElement(),
 									selectedTest.getReturnType(), selectedTest.getDescription(), selectedTest
 											.getMeasurementSetupIds());
+								if (testGroupId == null) {
+									testGroupId = test.getId();
+									test.setGroupTestId(testGroupId);
+								}
 								this.tests.add(test);
 								MeasurementStorableObjectPool.putStorableObject(test);
 								this.selectedTestIds.add(test.getId());
@@ -999,27 +1051,21 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 										+ " at " + startDate + "," + endDate, Log.FINEST);
 							}
 						}
-						
-						
-					} else {
-						this.startGroupDate = new Date(this.startGroupDate.getTime() + this.interval);
-						this.aloneGroupTest = true;
-						this.addGroupTests();
-					}
-				}
+
+					}				
 			} catch (ApplicationException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 
 			}
-		} else {
-			this.createTest();
+
 		}
 		this.refreshTests();
 	}
 	
-	private boolean isValid(final Date startDate, final Date endDate, final Identifier monitoredElementId) {
+	public boolean isValid(final Date startDate, final Date endDate, final Identifier monitoredElementId) {
 		boolean result = true;
+		Log.debugMessage("SchedulerModel.isValid | ", Log.FINEST);
 		for (Iterator iterator = this.tests.iterator(); iterator.hasNext();) {
 			Test test = (Test) iterator.next();
 			Date startTime = test.getStartTime();
@@ -1027,6 +1073,9 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 			if (endTime == null) {
 				endTime = startTime;
 			}
+			Log.debugMessage("SchedulerModel.isValid | startDate " + startDate + ", endDate " + endDate, Log.FINEST);
+
+			Log.debugMessage("SchedulerModel.isValid | startTime " + startTime + ", endTime " + endTime, Log.FINEST);
 			if (test.getMonitoredElement().getId().equals(monitoredElementId) && 
 					((endDate != null && endDate.after(startTime) && endDate.before(endTime))
 					|| (startDate.after(startTime) && startDate.before(endTime)))){

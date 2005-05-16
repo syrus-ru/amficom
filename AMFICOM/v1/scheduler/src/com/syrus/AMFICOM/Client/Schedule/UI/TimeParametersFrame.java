@@ -408,7 +408,20 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 																			Date endDate = TimeParametersPanel.this
 																					.getEndDate();
 																			if (startDate.getTime() < endDate.getTime()) {
-																				selectedTest.setEndTime(endDate);
+																				if (schedulerModel.isValid(startDate, endDate, selectedTest.getMonitoredElement().getId())){
+																					selectedTest.setEndTime(endDate);
+																				} else {
+																					JOptionPane
+																							.showMessageDialog(
+																								Environment
+																										.getActiveWindow(),
+																								LangModelSchedule
+																										.getString("Cannot change end test"),
+																								LangModelSchedule
+																										.getString("Error"),
+																								JOptionPane.OK_OPTION);
+
+																				}
 																			} else {
 																				waiting = false;
 																			}
