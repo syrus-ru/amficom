@@ -1,5 +1,5 @@
 /*
- * $Id: LoginServerImplementation.java,v 1.11 2005/05/13 17:55:50 bass Exp $
+ * $Id: LoginServerImplementation.java,v 1.12 2005/05/16 14:59:00 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,8 +39,8 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/05/13 17:55:50 $
- * @author $Author: bass $
+ * @version $Revision: 1.12 $, $Date: 2005/05/16 14:59:00 $
+ * @author $Author: arseniy $
  * @module leserver_v1
  */
 final class LoginServerImplementation extends LoginServerPOA {
@@ -174,15 +174,14 @@ final class LoginServerImplementation extends LoginServerPOA {
 		userLogin.updateLastActivityDate();
 		try {
 			this.userLoginDatabase.update(userLogin);
-		} catch (final UpdateObjectException uoe) {
+		}
+		catch (final UpdateObjectException uoe) {
 			Log.errorException(uoe);
 		}
 
 		userIdTH.value = (Identifier_Transferable) userLogin.getUserId().getTransferable();
 		final Identifier domainId = userLogin.getDomainId();
-		domainIdTH.value = (Identifier_Transferable)
-				(domainId == null ? Identifier.VOID_IDENTIFIER : domainId)
-				.getTransferable();
+		domainIdTH.value = (Identifier_Transferable) (domainId == null ? Identifier.VOID_IDENTIFIER : domainId).getTransferable();
 	}
 
 	public void verify(byte i) {
