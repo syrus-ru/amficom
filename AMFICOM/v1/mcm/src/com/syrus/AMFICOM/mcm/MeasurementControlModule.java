@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.89 2005/05/13 17:57:01 bass Exp $
+ * $Id: MeasurementControlModule.java,v 1.90 2005/05/16 14:53:35 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -55,8 +55,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.89 $, $Date: 2005/05/13 17:57:01 $
- * @author $Author: bass $
+ * @version $Revision: 1.90 $, $Date: 2005/05/16 14:53:35 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 
@@ -198,7 +198,8 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 			final MCMSessionEnvironment sessionEnvironment = MCMSessionEnvironment.getInstance();
 			try {
 				sessionEnvironment.login(login, PASSWORD);
-			} catch (final LoginException le) {
+			}
+			catch (final LoginException le) {
 				Log.errorException(le);
 			}
 
@@ -219,7 +220,8 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 			final CORBAServer corbaServer = sessionEnvironment.getMCMServantManager().getCORBAServer();
 			corbaServer.activateServant(new MCMImplementation(), mcmId.toString());
 			corbaServer.printNamingContext();
-		} catch (final ApplicationException ae) {
+		}
+		catch (final ApplicationException ae) {
 			Log.errorException(ae);
 			System.exit(0);
 		}

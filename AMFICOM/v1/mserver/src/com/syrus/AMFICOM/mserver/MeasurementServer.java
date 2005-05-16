@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementServer.java,v 1.44 2005/05/13 17:58:31 bass Exp $
+ * $Id: MeasurementServer.java,v 1.45 2005/05/16 14:49:26 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,8 +48,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2005/05/13 17:58:31 $
- * @author $Author: bass $
+ * @version $Revision: 1.45 $, $Date: 2005/05/16 14:49:26 $
+ * @author $Author: arseniy $
  * @module mserver_v1
  */
 
@@ -168,7 +168,8 @@ public class MeasurementServer extends SleepButWorkThread {
 			final MServerSessionEnvironment sessionEnvironment = MServerSessionEnvironment.getInstance();
 			try {
 				sessionEnvironment.login(login, PASSWORD);
-			} catch (final LoginException le) {
+			}
+			catch (final LoginException le) {
 				Log.errorException(le);
 			}
 	
@@ -184,7 +185,8 @@ public class MeasurementServer extends SleepButWorkThread {
 			final CORBAServer corbaServer = sessionEnvironment.getMServerServantManager().getCORBAServer();
 			corbaServer.activateServant(new MServerImplementation(), processCodename);
 			corbaServer.printNamingContext();
-		} catch (final ApplicationException ae) {
+		}
+		catch (final ApplicationException ae) {
 			Log.errorException(ae);
 			System.exit(0);
 		}
