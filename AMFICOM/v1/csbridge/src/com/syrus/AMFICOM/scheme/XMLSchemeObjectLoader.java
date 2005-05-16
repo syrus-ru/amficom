@@ -1,5 +1,5 @@
 /*-
- * $Id: XMLSchemeObjectLoader.java,v 1.2 2005/04/27 15:39:00 arseniy Exp $
+ * $Id: XMLSchemeObjectLoader.java,v 1.3 2005/05/16 16:04:19 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,15 +10,22 @@ package com.syrus.AMFICOM.scheme;
 
 import com.syrus.AMFICOM.general.*;
 
+import java.io.File;
 import java.util.*;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.2 $, $Date: 2005/04/27 15:39:00 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/16 16:04:19 $
  * @module csbridge_v1
  */
 public final class XMLSchemeObjectLoader extends XMLObjectLoader implements SchemeObjectLoader {
+	private StorableObjectXML schemeXML;
+
+	public XMLSchemeObjectLoader(final File path) {
+		StorableObjectXMLDriver driver = new StorableObjectXMLDriver(path, "scheme");
+		this.schemeXML = new StorableObjectXML(driver);
+	}
 
 	/**
 	 * @param ids

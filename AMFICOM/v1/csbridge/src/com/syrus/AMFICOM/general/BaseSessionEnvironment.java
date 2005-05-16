@@ -1,5 +1,5 @@
 /*-
- * $Id: BaseSessionEnvironment.java,v 1.6 2005/05/13 17:39:06 bass Exp $
+ * $Id: BaseSessionEnvironment.java,v 1.7 2005/05/16 16:04:19 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,8 +11,8 @@ package com.syrus.AMFICOM.general;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/05/13 17:39:06 $
- * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2005/05/16 16:04:19 $
+ * @author $Author: arseniy $
  * @module csbridge_v1
  */
 public abstract class BaseSessionEnvironment {
@@ -34,8 +34,7 @@ public abstract class BaseSessionEnvironment {
 
 	private LogoutShutdownHook logoutShutdownHook;
 
-	public BaseSessionEnvironment(
-			final BaseConnectionManager baseConnectionManager,
+	public BaseSessionEnvironment(final BaseConnectionManager baseConnectionManager,
 			final PoolContext poolContext,
 			final LoginRestorer loginRestorer) {
 		this.baseConnectionManager = baseConnectionManager;
