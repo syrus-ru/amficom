@@ -1,5 +1,5 @@
 /**
- * $Id: UnboundLink.java,v 1.11 2005/04/28 10:44:05 arseniy Exp $
+ * $Id: UnboundLink.java,v 1.12 2005/05/16 11:30:41 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,8 +29,8 @@ import com.syrus.AMFICOM.map.PhysicalLinkType;
  * Элемент непривязанной линии. Использыется как составляющая честь 
  * {@link CablePath} в случае, когда кабель не привязан на каком-либо участке 
  * между узлами.
- * @author $Author: arseniy $
- * @version $Revision: 1.11 $, $Date: 2005/04/28 10:44:05 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.12 $, $Date: 2005/05/16 11:30:41 $
  * @module mapviewclient_v1
  */
 public class UnboundLink extends PhysicalLink
@@ -50,7 +50,7 @@ public class UnboundLink extends PhysicalLink
 	 * @param creatorId пользователь
 	 * @param stNode начальный узел
 	 * @param eNode конечный узел
-	 * @param type тип (должен быть {@link PhysicalLinkType#UNBOUND})
+	 * @param type тип (должен быть {@link PhysicalLinkType#DEFAULT_UNBOUND})
 	 */
 	protected UnboundLink(
 			Identifier id,
@@ -68,7 +68,7 @@ public class UnboundLink extends PhysicalLink
 	 * @param creatorId пользователь
 	 * @param stNode начальный узел
 	 * @param eNode конечный узел
-	 * @param type тип (должен быть {@link PhysicalLinkType#UNBOUND})
+	 * @param type тип (должен быть {@link PhysicalLinkType#DEFAULT_UNBOUND})
 	 * @return новая линия
 	 * @throws com.syrus.AMFICOM.general.CreateObjectException если
 	 * нельзя создать объект

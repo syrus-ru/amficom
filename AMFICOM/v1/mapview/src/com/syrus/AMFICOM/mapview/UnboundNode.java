@@ -1,5 +1,5 @@
 /**
- * $Id: UnboundNode.java,v 1.13 2005/04/28 10:44:05 arseniy Exp $
+ * $Id: UnboundNode.java,v 1.14 2005/05/16 11:30:41 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
  * Непривязанный элемент. Сооветствует элеименту схемы, не привязанному 
  * ни к какому элементу топологической схемы.
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.13 $, $Date: 2005/04/28 10:44:05 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.14 $, $Date: 2005/05/16 11:30:41 $
  * @module mapviewclient_v1
  */
 public class UnboundNode extends SiteNode
@@ -62,7 +62,7 @@ public class UnboundNode extends SiteNode
 	 * @param schemeElement элемент схемы
 	 * @param id идентификатор непривязанного элемента
 	 * @param location географические координаты непривязанного элемента
-	 * @param nodeType тип элемента (должен быть {@link SiteNodeType#UNBOUND})
+	 * @param nodeType тип элемента (должен быть {@link SiteNodeType#DEFAULT_UNBOUND})
 	 */
 	protected UnboundNode(
 		Identifier id,
@@ -96,7 +96,7 @@ public class UnboundNode extends SiteNode
 	 * в модуле mapviewclient_v1).
 	 * @param schemeElement элемент схемы
 	 * @param location географические координаты непривязанного элемента
-	 * @param nodeType тип элемента (должен быть {@link SiteNodeType#UNBOUND})
+	 * @param nodeType тип элемента (должен быть {@link SiteNodeType#DEFAULT_UNBOUND})
 	 * @return новый непривязанный элемент
 	 * @throws com.syrus.AMFICOM.general.CreateObjectException
 	 * 	если невозможно получить новый идентификатор
