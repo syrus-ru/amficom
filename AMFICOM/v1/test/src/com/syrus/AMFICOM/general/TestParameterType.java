@@ -1,5 +1,5 @@
 /*
- * $Id: TestParameterType.java,v 1.4 2005/05/11 07:08:20 arseniy Exp $ Copyright © 2004 Syrus Systems. Научно-технический центр. Проект:
+ * $Id: TestParameterType.java,v 1.5 2005/05/16 17:44:04 arseniy Exp $ Copyright © 2004 Syrus Systems. Научно-технический центр. Проект:
  * АМФИКОМ.
  */
 package com.syrus.AMFICOM.general;
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/05/11 07:08:20 $
+ * @version $Revision: 1.5 $, $Date: 2005/05/16 17:44:04 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -30,7 +30,7 @@ public class TestParameterType extends CommonTest {
 		return suiteWrapper(TestParameterType.class);
 	}
 
-	public void testCreateInstance() throws ApplicationException {
+	public void t1estCreateInstance() throws ApplicationException {
 //	sys user
 		TypicalCondition tc = new TypicalCondition(UserWrapper.SYS_LOGIN,
 				OperationSort.OPERATION_EQUALS,
@@ -40,7 +40,7 @@ public class TestParameterType extends CommonTest {
 		User sysUser = (User) users.iterator().next();
 		System.out.println("sys user: '" + sysUser.getId() + "'");
 
-		String codename = ParameterTypeCodenames.TRACE_FLAG_GAIN_SPLICE;
+		String codename = ParameterTypeCodenames.TRACE_FLAG_GAIN_SPLICE_ON;
 		String name = "Gain splice flag";
 		String description = "Gain splice on/off";
 		DataType dataType = DataType.DATA_TYPE_BOOLEAN;
@@ -83,6 +83,18 @@ public class TestParameterType extends CommonTest {
 
 
 		GeneralStorableObjectPool.flush(ObjectEntities.PARAMETERTYPE_ENTITY_CODE, true);
+	}
+
+	public void testUpdate() throws ApplicationException {
+		TypicalCondition tc = new TypicalCondition("ref_flag_gain_splice",
+				OperationSort.OPERATION_EQUALS,
+				ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
+				StorableObjectWrapper.COLUMN_CODENAME);
+		Set objects = GeneralStorableObjectPool.getStorableObjectsByCondition(tc, true);
+		ParameterType parameterType = (ParameterType) objects.iterator().next();
+		System.out.println("Parameter type: '" + parameterType.getId() + "'");
+		parameterType.setCodename(ParameterTypeCodenames.TRACE_FLAG_GAIN_SPLICE_ON);
+		GeneralStorableObjectPool.flush(parameterType.getId(), false);
 	}
 
 //	public void testRetrieveByCondition() throws ApplicationException {

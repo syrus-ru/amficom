@@ -1,5 +1,5 @@
 /*
- * $Id: TestMeasurementType.java,v 1.1 2005/05/13 21:18:44 arseniy Exp $
+ * $Id: TestMeasurementType.java,v 1.2 2005/05/16 17:44:04 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.Com
 import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/05/13 21:18:44 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/16 17:44:04 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -104,7 +104,7 @@ public class TestMeasurementType extends CommonTest {
 				OperationSort.OPERATION_EQUALS,
 				ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
 				StorableObjectWrapper.COLUMN_CODENAME));
-		cc.addCondition(new TypicalCondition(ParameterTypeCodenames.TRACE_FLAG_GAIN_SPLICE,
+		cc.addCondition(new TypicalCondition(ParameterTypeCodenames.TRACE_FLAG_GAIN_SPLICE_ON,
 				OperationSort.OPERATION_EQUALS,
 				ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
 				StorableObjectWrapper.COLUMN_CODENAME));
@@ -130,7 +130,7 @@ public class TestMeasurementType extends CommonTest {
 		inParTypIds.add(parTypeIdsCodename.get(ParameterTypeCodenames.TRACE_PULSE_WIDTH));
 		inParTypIds.add(parTypeIdsCodename.get(ParameterTypeCodenames.TRACE_INDEX_OF_REFRACTION));
 		inParTypIds.add(parTypeIdsCodename.get(ParameterTypeCodenames.TRACE_AVERAGE_COUNT));
-		inParTypIds.add(parTypeIdsCodename.get(ParameterTypeCodenames.TRACE_FLAG_GAIN_SPLICE));
+		inParTypIds.add(parTypeIdsCodename.get(ParameterTypeCodenames.TRACE_FLAG_GAIN_SPLICE_ON));
 		inParTypIds.add(parTypeIdsCodename.get(ParameterTypeCodenames.TRACE_FLAG_LIVE_FIBER_DETECT));
 		outParTypIds = Collections.singleton(parTypeIdsCodename.get(ParameterTypeCodenames.REFLECTOGRAMMA));
 

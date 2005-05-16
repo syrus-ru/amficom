@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeCodenames.java,v 1.13 2005/05/11 06:38:31 arseniy Exp $
+ * $Id: ParameterTypeCodenames.java,v 1.14 2005/05/16 17:43:48 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/05/11 06:38:31 $
+ * @version $Revision: 1.14 $, $Date: 2005/05/16 17:43:48 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -24,7 +24,7 @@ public final class ParameterTypeCodenames {
 	public static final String	TRACE_PULSE_WIDTH			= "ref_pulswd";
 	public static final String	TRACE_INDEX_OF_REFRACTION	= "ref_ior";
 	public static final String	TRACE_AVERAGE_COUNT			= "ref_scans";
-	public static final String	TRACE_FLAG_GAIN_SPLICE			= "ref_flag_gain_splice";
+	public static final String	TRACE_FLAG_GAIN_SPLICE_ON			= "ref_flag_gain_splice_on";
 	public static final String	TRACE_FLAG_LIVE_FIBER_DETECT			= "ref_flag_live_fiber_detect";
 	public static final String	TRACE_EVENTS				= "traceeventarray";
 
