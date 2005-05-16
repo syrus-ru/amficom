@@ -71,7 +71,8 @@ private:
 	static const char* PARAMETER_NAME_PULSE_WIDTH;
 	static const char* PARAMETER_NAME_IOR;
 	static const char* PARAMETER_NAME_SCANS;
-	static const char* PARAMETER_NAME_FLAGS;
+	static const char* PARAMETER_NAME_FLAG_GAIN_SPLICE_ON;
+	static const char* PARAMETER_NAME_FLAG_LIVE_FIBER_DETECT;
 	static const char* PARAMETER_NAME_REFLECTOGRAMMA;
 
 	int initialize_OTDR_cards();

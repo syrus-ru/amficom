@@ -12,7 +12,8 @@ const char* RTUTransceiver::PARAMETER_NAME_RESOLUTION = "ref_res";
 const char* RTUTransceiver::PARAMETER_NAME_PULSE_WIDTH = "ref_pulswd";
 const char* RTUTransceiver::PARAMETER_NAME_IOR = "ref_ior";
 const char* RTUTransceiver::PARAMETER_NAME_SCANS = "ref_scans";
-const char* RTUTransceiver::PARAMETER_NAME_FLAGS = "ref_flags";
+const char* RTUTransceiver::PARAMETER_NAME_FLAG_GAIN_SPLICE_ON = "ref_flag_gain_splice_on";
+const char* RTUTransceiver::PARAMETER_NAME_FLAG_LIVE_FIBER_DETECT = "ref_flag_live_fiber_detect";
 const char* RTUTransceiver::PARAMETER_NAME_REFLECTOGRAMMA = "reflectogramma";
 
 //////////////////////////////////////////////////////////////////////
@@ -603,7 +604,8 @@ int RTUTransceiver::set_measurement_parameters(Parameter** parameters, unsigned 
 	int pulswd = -1;
 	double ior = -1;
 	double scans = -1;
-	int flags = 0;
+	int flag_gain_splice_on = 0;
+	int flag_live_fiber_detect = 0;
 
 	unsigned int i;
 
@@ -647,13 +649,19 @@ int RTUTransceiver::set_measurement_parameters(Parameter** parameters, unsigned 
 								delete bvalue;
 							}
 							else
-								if (strcmp(par_name, PARAMETER_NAME_FLAGS) == 0) {
+								if (strcmp(par_name, PARAMETER_NAME_FLAG_GAIN_SPLICE_ON) == 0) {
 									bvalue = parameters[i]->getValue()->getReversed();
-									flags = *(int*)(bvalue->getData());
+									flag_gain_splice_on = *(int*)(bvalue->getData());
 									delete bvalue;
 								}
 								else
-									printf("RTUTransceiver | Unknown name of parameter: %s\n", par_name);
+									if (strcmp(par_name, PARAMETER_NAME_FLAG_LIVE_FIBER_DETECT) == 0) {
+										bvalue = parameters[i]->getValue()->getReversed();
+										flag_live_fiber_detect = *(int*)(bvalue->getData());
+										delete bvalue;
+									}
+									else
+										printf("RTUTransceiver | Unknown name of parameter: %s\n", par_name);
 	}
 
 	int wave_index = get_wave_index(wvlen, this->otdr_cards[otdr_card_index]);
@@ -698,15 +706,10 @@ int RTUTransceiver::set_measurement_parameters(Parameter** parameters, unsigned 
 	this->averages = (DWORD)scans;
 
 	this->filter_flags = 0;
-	if (flags & 0x00000001)
-		this->filter_flags |= REAL_TIME_SCAN;
-	if (flags & 0x00000002)
-		this->filter_flags |= LIVE_FIBER_DETECT;
-	if (flags & 0x00000004)
+	if (flag_gain_splice_on)
 		this->filter_flags |= GAIN_SPLICE_ON;
-
-	/*	NOTE: Turn on gain splice. This is need for greater dynamic range*/
-	this->filter_flags |= GAIN_SPLICE_ON;
+	if (flag_live_fiber_detect)
+		this->filter_flags |= LIVE_FIBER_DETECT;
 
 	int set_params_ret = QPOTDRAcqSetParams(this->otdr_cards[otdr_card_index],
 								(WORD)(this->averages / this->plugin_data->dwFastScanCount),
