@@ -1,5 +1,5 @@
 /*
- * $Id: Application.java,v 1.3 2005/03/04 08:05:49 bass Exp $
+ * $Id: Application.java,v 1.4 2005/05/16 10:06:51 max Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,6 +44,10 @@ public class Application {
 		Log.debugMessage(applicationName + " -- started", Log.DEBUGLEVEL01); //$NON-NLS-1$
 	}
 
+	public static String getApplicationName () {
+		return applicationName;
+	}
+	
 	public static String getInternetAddress() {
 		return internetAddress;
 	}
