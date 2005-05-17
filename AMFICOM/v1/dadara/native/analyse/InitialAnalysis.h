@@ -32,8 +32,10 @@ public:
 		double minimalConnector,
 		double minimalEnd,
 		double noiseFactor,
-		int reflectiveSize,
 		int nonReflectiveSize,
+		double rACrit,	// порог "большого" коннектора
+		int rSSmall,	// макс. длина для маленького коннектора
+		int rSBig,		// макс. длина для большого коннектора
 		int lengthTillZero = 0,
 		double *externalNoise = 0); // null to find automatically
 

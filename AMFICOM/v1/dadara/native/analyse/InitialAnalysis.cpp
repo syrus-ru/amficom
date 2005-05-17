@@ -24,8 +24,10 @@ InitialAnalysis::InitialAnalysis(
 	double minimalConnector,	//минимальный уровень отражательного события
 	double minimalEnd,			//минимальный уровень отражения в конце волокна
 	double noiseFactor,			// множитель для уровня шума (около 2.0)
-	int reflectiveSize,			//характерная длина отражательного события
 	int nonReflectiveSize,		//характерная длина неотражательного события
+	double rACrit,				// порог "большого" коннектора
+	int rSSmall,				// макс. длина для маленького коннектора
+	int rSBig,					// макс. длина для большого коннектора
 	int lengthTillZero,			//вычисленная заранее длина ( ==0 -> найти самим)
 	double *externalNoise)		//вычисленный заранее шум ( ==0 -> ищем сами)
 {
@@ -52,7 +54,7 @@ InitialAnalysis::InitialAnalysis(
     this->noiseFactor			= noiseFactor;
 	this->data_length			= data_length;
 	this->data					= data;
-    this->reflectiveSize		= reflectiveSize;
+    this->reflectiveSize		= rSSmall; // @todo: use rACrit/rSSmall/rSBig
     this->wlet_width			= nonReflectiveSize;
 
     events = new ArrList();

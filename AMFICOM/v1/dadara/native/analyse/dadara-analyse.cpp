@@ -91,8 +91,10 @@ Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_analyse5(
 		min_connector,
 		min_end,
 		noiseFactor,
-		reflectiveSize,
 		nonReflectiveSize,
+		0, // @todo: implement
+		reflectiveSize,
+		reflectiveSize,
 		traceLength,
 		noiseData);
 

@@ -38,10 +38,11 @@ public:
 	int type;
 	int begin;
 	int end;
+
     // SPLICE params
     double R; // см листочек с пояснениями или алгоритм вычисления этой величины
     // CONNECTOR params
-    double R1, R2, R3; // см листочек с пояснениями или алгоритм вычисления этих величин
+    double R1, R2, R3; // @todo: remove
     // flags
     bool can_be_endoftrace; // если splash достиг некоторого порогового уровня, то мы признаём, что всплеск достаточно велик и может быть в принципе концом волокна
 };
