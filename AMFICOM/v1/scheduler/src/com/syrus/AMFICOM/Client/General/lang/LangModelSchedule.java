@@ -24,6 +24,14 @@ public class LangModelSchedule {
 			string = RESOURCE_BUNDLE.getString(_keyName);
 		} catch (MissingResourceException e) {
 			String key = null;
+			
+			try {
+				throw new Exception();
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
 			string = "!" + _keyName + "!";
 			try {
 				key = OLDRESOURCE_BUNDLE.getString(_keyName);

@@ -1,5 +1,5 @@
 /*-
- * $Id: Plugger.java,v 1.1 2005/05/11 13:04:34 bob Exp $
+ * $Id: Plugger.java,v 1.2 2005/05/17 07:30:44 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import org.xml.sax.SAXException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/05/11 13:04:34 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/17 07:30:44 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module schedulerClone
@@ -134,13 +134,13 @@ public class Plugger {
 		return null;
 	}
 
-	public Plugin getPlugin(String id) {
-		return (Plugin) this.plugins.get(id);
-	}
+//	public Plugin getPlugin(String id) {
+//		return (Plugin) this.plugins.get(id);
+//	}
 	
-	public static void main(String[] args) {
-		Plugger plugger = new Plugger();
-		Plugin plugin = plugger.getPlugin("parametersPanel");
-		System.out.println("plugin " + plugin);
-	}
+//	public static void main(String[] args) {
+//		Plugger plugger = new Plugger();
+//		Plugin plugin = plugger.getPlugin("parametersPanel");
+//		System.out.println("plugin " + plugin);
+//	}
 }

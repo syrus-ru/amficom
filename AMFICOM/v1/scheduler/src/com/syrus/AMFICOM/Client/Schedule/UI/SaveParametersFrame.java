@@ -5,16 +5,13 @@
 
 package com.syrus.AMFICOM.Client.Schedule.UI;
 
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.util.Iterator;
 
 import javax.swing.ButtonGroup;
 import javax.swing.Icon;
-import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -31,10 +28,17 @@ import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.Client.Schedule.Commandable;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Schedule.WindowCommand;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
+import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.corba.TestReturnType;
 
 /**
+ * 
+ * @version $Revision: 1.9 $, $Date: 2005/05/17 07:30:44 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
+ * @module schedulerClone
  */
 public class SaveParametersFrame extends JInternalFrame implements 
 // ReturnTypeEditor, 
@@ -49,33 +53,19 @@ Commandable {
 	private JRadioButton	measurementIdButton;
 	private Command			command;
 
-	/**
-	 * @todo only for testing mode
-	 */
-	public static void main(String[] args) {
-
-		SaveParametersFrame frame = new SaveParametersFrame(null);
-		JFrame mainFrame = new JFrame("SaveParametersFrame"); //$NON-NLS-1$
-		mainFrame.addWindowListener(new WindowAdapter() {
-
-			public void windowClosing(WindowEvent e) {
-				System.exit(0);
-			}
-		});
-		mainFrame.getContentPane().add(frame.getPanel());
-		mainFrame.pack();
-		mainFrame.setSize(new Dimension(250, 465));
-		mainFrame.setVisible(true);
-	}
-
+	private SchedulerModel			schedulerModel;
+	java.util.Set testIds;
+	
 	public SaveParametersFrame(ApplicationContext aContext) {
 		// this.aContext = aContext;
-		init();
+		this.init();
 		if (aContext != null) {
 //			SchedulerModel schedulerModel = (SchedulerModel) aContext.getApplicationModel();
 //			schedulerModel.setReturnTypeEditor(this);
 			
 			final Dispatcher dispatcher = aContext.getDispatcher();
+			
+			this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();
 			
 			OperationListener listener = new OperationListener() {
 				private boolean skip = false;
@@ -113,6 +103,26 @@ Commandable {
 		this.panel = getPanel();
 		setContentPane(this.panel);
 
+	}
+	
+	private void refreshTestsSet() {
+		TestReturnType returnType = this.getReturnType();
+		java.util.Set selectedTestIds = this.schedulerModel.getSelectedTestIds();
+		if (this.testIds != null && (this.testIds.size() != (selectedTestIds != null ? selectedTestIds.size() : 0))) {
+			try {
+				java.util.Set storableObjects = MeasurementStorableObjectPool.getStorableObjects(selectedTestIds, true);
+				for (Iterator iterator = storableObjects.iterator(); iterator.hasNext();) {
+					Test test = (Test) iterator.next();
+					if (test.isChanged()) {
+						test.setReturnType(returnType);
+					}
+				}
+			} catch (ApplicationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
 	}
 
 	private JPanel getPanel() {
@@ -169,6 +179,7 @@ Commandable {
 	}
 
 	public void setReturnType(TestReturnType returnType) {
+		this.refreshTestsSet();
 		if (returnType.equals(TestReturnType.TEST_RETURN_TYPE_WHOLE)) {
 			this.allResultsButton.doClick();
 		} else if (returnType.equals(TestReturnType.TEST_RETURN_TYPE_EVENTS)) {
