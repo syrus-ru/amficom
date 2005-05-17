@@ -341,6 +341,12 @@ void InitialAnalysis::setUnrecognizedParamsBySplashes( EventParams& ep, Splash& 
    if(ep.end>lastPoint){ep.end = lastPoint;}
 }
 // -------------------------------------------------------------------------------------------------
+// чтобы не менять кучу кода, когда меняем алгоритм пересчёта порогов вынесли в отдельную юфункцию
+double InitialAnalysis::calcThresh(double thres, double noise)
+{   return thres>noise ? thres : noise;// = max(thres, noise)
+	//return thres+noise;
+}
+// -------------------------------------------------------------------------------------------------
 // ВАЖНО: Считаем, что minimalThreshold < minimalWeld < minimalConnector
 void InitialAnalysis::findAllWletSplashes(double* f_wlet, ArrList& splashes)
 {   //minimalThreshold,	//минимальный уровень события
@@ -357,11 +363,11 @@ void InitialAnalysis::findAllWletSplashes(double* f_wlet, ArrList& splashes)
         for(  ; i<lastPoint; i++)
         {   sign_cur = xsign(f_wlet[i]);
         	// минимальные на рост
-        	if( fabs(f_wlet[i])>= minimalThreshold+noise[i] && spl.begin_thr_n == -1)
+        	if( fabs(f_wlet[i])>= calcThresh(minimalThreshold,noise[i]) && spl.begin_thr_n == -1)
             {	spl.begin_thr_n = i-1;
             }
             if( spl.begin_thr_n != -1 && spl.end_thr_n == -1
-            	&& ( fabs(f_wlet[i])<= minimalThreshold+noise[i] || sign_cur!=sign || i==lastPoint-1)
+            	&& ( fabs(f_wlet[i])<= calcThresh(minimalThreshold, noise[i]) || sign_cur!=sign || i==lastPoint-1)
 	          )
             {	spl.end_thr_n = i;
             }
@@ -374,11 +380,11 @@ void InitialAnalysis::findAllWletSplashes(double* f_wlet, ArrList& splashes)
               )
             {	spl.end_weld = i;
             }
-            if( fabs(f_wlet[i])>= minimalWeld+noise[i] && spl.begin_weld_n == -1)
+            if( fabs(f_wlet[i])>= calcThresh(minimalWeld, noise[i]) && spl.begin_weld_n == -1)
             {	spl.begin_weld_n = i-1;
             }
             if( spl.begin_weld_n != -1 && spl.end_weld_n == -1
-            	&& (fabs(f_wlet[i])<= minimalWeld+noise[i] || sign_cur!=sign || i==lastPoint-1)
+            	&& (fabs(f_wlet[i])<= calcThresh(minimalWeld, noise[i]) || sign_cur!=sign || i==lastPoint-1)
               )
             {	spl.end_weld_n = i;
             }
@@ -391,11 +397,11 @@ void InitialAnalysis::findAllWletSplashes(double* f_wlet, ArrList& splashes)
               )
             {	spl.end_conn = i;
             }
-            if( fabs(f_wlet[i])>= minimalConnector+noise[i] && spl.begin_conn_n == -1)
+            if( fabs(f_wlet[i])>= calcThresh(minimalConnector, noise[i]) && spl.begin_conn_n == -1)
             {	spl.begin_conn_n = i-1;
             }
             if( spl.begin_conn_n != -1 && spl.end_conn_n == -1
-            	&& (fabs(f_wlet[i])<= minimalConnector+noise[i] || sign_cur!=sign || i==lastPoint-1)
+            	&& (fabs(f_wlet[i])<= calcThresh(minimalConnector,noise[i]) || sign_cur!=sign || i==lastPoint-1)
               )
             {	spl.end_conn_n = i;
             }
@@ -624,7 +630,6 @@ return;
         { if(fabs(f_wlet[i])>fabs(f_lmax)) { f_lmax = f_wlet[i];}// новый максимум отклонения
           if(df_right<fabs(f_lmax-f_wlet[i])){ df_right=fabs(f_lmax-f_wlet[i]);} // новый максимальный уровень падения
         }
-        //
 		// ищем пересечение слева, пытаясь сдвинуть границу влево ( то есть пока i+width<=left_cross )
         for(i=w_l; i<w_r && i+width*angle_factor<=left_cross; i++)
         {	//if(fabs(f_wlet[i])>= minimalThreshold+noise[i]*noise_factor+df_left)

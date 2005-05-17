@@ -78,6 +78,7 @@ private:
 	// заполнить массив шума (шум не посто€нен, поэтому используем массив дл€ описани€ значен€ шума в каждой точке)
 	void fillNoiseArray(double *y, int data_length, int N, double Neff, double NoiseFactor, double *outNoise);
 	void getNoise(double *noise, int freq);
+	double calcThresh(double thres, double noise); // чтобы не мен€ть кучу кода, когда мен€ем алгоритм пересчЄта порогов вынесли в отдельную юфункцию
 
 	// подготовка среднего значени€
 	double calcWletMeanValue(double* fw, double from, double to, int columns);// вычислить самое попул€рное значение ф-ции fw
