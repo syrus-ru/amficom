@@ -8,6 +8,8 @@ package com.syrus.AMFICOM.Client.Schedule.UI;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.HashSet;
 import java.util.Iterator;
 
 import javax.swing.ButtonGroup;
@@ -32,10 +34,11 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.corba.TestReturnType;
+import com.syrus.util.Log;
 
 /**
  * 
- * @version $Revision: 1.9 $, $Date: 2005/05/17 07:30:44 $
+ * @version $Revision: 1.10 $, $Date: 2005/05/17 14:13:59 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module schedulerClone
@@ -53,8 +56,7 @@ Commandable {
 	private JRadioButton	measurementIdButton;
 	private Command			command;
 
-	private SchedulerModel			schedulerModel;
-	java.util.Set testIds;
+	SchedulerModel			schedulerModel;
 	
 	public SaveParametersFrame(ApplicationContext aContext) {
 		// this.aContext = aContext;
@@ -87,7 +89,8 @@ Commandable {
 					} 
 				}
 			};
-			
+
+			dispatcher.register(listener, SchedulerModel.COMMAND_REFRESH_TEST);			
 			dispatcher.register(listener, SchedulerModel.COMMAND_SET_RETURN_TYPE);
 			dispatcher.register(listener, SchedulerModel.COMMAND_GET_RETURN_TYPE);
 		}
@@ -104,26 +107,6 @@ Commandable {
 		setContentPane(this.panel);
 
 	}
-	
-	private void refreshTestsSet() {
-		TestReturnType returnType = this.getReturnType();
-		java.util.Set selectedTestIds = this.schedulerModel.getSelectedTestIds();
-		if (this.testIds != null && (this.testIds.size() != (selectedTestIds != null ? selectedTestIds.size() : 0))) {
-			try {
-				java.util.Set storableObjects = MeasurementStorableObjectPool.getStorableObjects(selectedTestIds, true);
-				for (Iterator iterator = storableObjects.iterator(); iterator.hasNext();) {
-					Test test = (Test) iterator.next();
-					if (test.isChanged()) {
-						test.setReturnType(returnType);
-					}
-				}
-			} catch (ApplicationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-		}
-	}
 
 	private JPanel getPanel() {
 		if (this.panel == null) {
@@ -134,30 +117,66 @@ Commandable {
 			gbc.weighty = 0.0;
 			gbc.gridwidth = GridBagConstraints.REMAINDER;
 			this.allResultsButton = new JRadioButton(LangModelSchedule.getString("AllTestResults")); //$NON-NLS-1$
-			this.allResultsButton.addActionListener(new java.awt.event.ActionListener() {
-
-				public void actionPerformed(ActionEvent e) {
-					// jButton1_actionPerformed(e);
-				}
-			});
+			// this.allResultsButton.addActionListener(new
+			// java.awt.event.ActionListener() {
+			//
+			// public void actionPerformed(ActionEvent e) {
+			// // jButton1_actionPerformed(e);
+			// }
+			// });
 			this.recognizedEventsButton = new JRadioButton(LangModelSchedule.getString("Only_recognized_events")); //$NON-NLS-1$
-			this.recognizedEventsButton.addActionListener(new java.awt.event.ActionListener() {
-
-				public void actionPerformed(ActionEvent e) {
-					// jButton2_actionPerformed(e);
-				}
-			});
+			// this.recognizedEventsButton.addActionListener(new
+			// java.awt.event.ActionListener() {
+			//
+			// public void actionPerformed(ActionEvent e) {
+			// // jButton2_actionPerformed(e);
+			// }
+			// });
 			this.measurementIdButton = new JRadioButton(LangModelSchedule.getString("Only_Measurement_Id")); //$NON-NLS-1$
-			this.measurementIdButton.addActionListener(new java.awt.event.ActionListener() {
-
-				public void actionPerformed(ActionEvent e) {
-					// jButton3_actionPerformed(e);
-				}
-			});
+			// this.measurementIdButton.addActionListener(new
+			// java.awt.event.ActionListener() {
+			//
+			// public void actionPerformed(ActionEvent e) {
+			// // jButton3_actionPerformed(e);
+			// }
+			// });
 			ButtonGroup group = new ButtonGroup();
 			group.add(this.allResultsButton);
 			group.add(this.recognizedEventsButton);
 			group.add(this.measurementIdButton);
+
+			ActionListener actionListener = new ActionListener() {
+
+				public void actionPerformed(ActionEvent e) {
+					TestReturnType returnType = SaveParametersFrame.this.getReturnType();
+					Log.debugMessage("SaveParametersFrame.refreshTestsReturnType | " + returnType.value(), Log.FINEST);
+
+					java.util.Set selectedTestIds = SaveParametersFrame.this.schedulerModel.getSelectedTestIds();
+					if (selectedTestIds != null && !selectedTestIds.isEmpty()) {
+						try {
+							java.util.Set storableObjects = MeasurementStorableObjectPool.getStorableObjects(
+								selectedTestIds, true);
+							for (Iterator iterator = storableObjects.iterator(); iterator.hasNext();) {
+								Test test = (Test) iterator.next();
+								if (test.isChanged()) {
+									Log.debugMessage("SaveParametersFrame.refreshTestsReturnType | set " + test.getId()
+											+ ", " + returnType.value(), Log.FINEST);
+									test.setReturnType(returnType);
+								}
+							}
+						} catch (ApplicationException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					}
+
+				}
+			};
+
+			this.allResultsButton.addActionListener(actionListener);
+			this.recognizedEventsButton.addActionListener(actionListener);
+			this.measurementIdButton.addActionListener(actionListener);
+
 			this.allResultsButton.setSelected(true);
 			this.panel.add(this.allResultsButton, gbc);
 			this.panel.add(this.recognizedEventsButton, gbc);
@@ -178,8 +197,7 @@ Commandable {
 		return returnType;
 	}
 
-	public void setReturnType(TestReturnType returnType) {
-		this.refreshTestsSet();
+	public void setReturnType(TestReturnType returnType) {		
 		if (returnType.equals(TestReturnType.TEST_RETURN_TYPE_WHOLE)) {
 			this.allResultsButton.doClick();
 		} else if (returnType.equals(TestReturnType.TEST_RETURN_TYPE_EVENTS)) {

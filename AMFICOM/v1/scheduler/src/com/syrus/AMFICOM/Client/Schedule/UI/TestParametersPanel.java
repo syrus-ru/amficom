@@ -248,6 +248,7 @@ public class TestParametersPanel implements OperationListener {
 							for (Iterator iterator = storableObjects.iterator(); iterator.hasNext();) {
 								Test test = (Test) iterator.next();
 								if (test.isChanged()) {
+									Log.debugMessage(".valueChanged | set to test " + test.getId() + " > " + measurementSetup1.getId(), Log.FINEST);
 									test.setMeasurementSetupIds(measurementSetupIdSet);
 								}
 							}
@@ -587,7 +588,11 @@ public class TestParametersPanel implements OperationListener {
 						dispatcher1.notify(new OperationEvent(set, 0, SchedulerModel.COMMAND_SET_SET));
 						this.skip = false;
 					}
-				} 
+				} else if (actionCommand.equals(SchedulerModel.COMMAND_ADD_NEW_MEASUREMENT_SETUP)) {
+					int selectedIndex = TestParametersPanel.this.testSetups.getSelectedIndex();
+					TestParametersPanel.this.testSetups.removeSelectionInterval(selectedIndex, selectedIndex);
+					TestParametersPanel.this.tabbedPane.setSelectedIndex(1);
+				}
 				
 			}
 		};
@@ -601,6 +606,8 @@ public class TestParametersPanel implements OperationListener {
 		this.dispatcher.register(operationListener, SchedulerModel.COMMAND_GET_EVALUATION_TYPE);
 		this.dispatcher.register(operationListener, SchedulerModel.COMMAND_GET_MEASUREMENT_SETUP);
 		this.dispatcher.register(operationListener, SchedulerModel.COMMAND_GET_SET);
+		
+		this.dispatcher.register(operationListener, SchedulerModel.COMMAND_ADD_NEW_MEASUREMENT_SETUP);
 
 	}
 
