@@ -1,5 +1,5 @@
 /*
- * $Id: Log.java,v 1.5 2005/03/04 08:05:49 bass Exp $
+ * $Id: Log.java,v 1.6 2005/05/17 07:26:55 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -79,13 +79,19 @@ public class Log {
 		logger = logger1;
 	}
 
-	public static void debugMessage(String mesg, int debugLevel) {
+	/**
+	 * @param message
+	 * @param debugLevel
+	 * @return always true, can be used as <code>assert Log.debugMessage(...)</code>
+	 */
+	public static boolean debugMessage(String message, int debugLevel) {
 		try { 
-			logger.debugMessage(mesg, debugLevel);
+			logger.debugMessage(message, debugLevel);
 		}
 		catch (NullPointerException npe) {
-			System.out.println(mesg);
+			System.out.println(message);
 		}
+		return true;
 	}
 
 	public static void debugException(Throwable throwable, int debugLevel) {
