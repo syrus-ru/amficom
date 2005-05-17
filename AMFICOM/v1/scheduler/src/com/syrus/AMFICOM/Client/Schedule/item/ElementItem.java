@@ -1,5 +1,5 @@
 /*
- * $Id: ElementItem.java,v 1.6 2005/05/13 15:07:30 bob Exp $
+ * $Id: ElementItem.java,v 1.7 2005/05/17 14:13:59 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,10 +14,9 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.logic.AbstractItem;
 import com.syrus.AMFICOM.logic.Item;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/05/13 15:07:30 $
+ * @version $Revision: 1.7 $, $Date: 2005/05/17 14:13:59 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1

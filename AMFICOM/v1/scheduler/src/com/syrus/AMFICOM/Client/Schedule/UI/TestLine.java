@@ -34,7 +34,6 @@ import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
-import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
@@ -412,7 +411,7 @@ public class TestLine extends TimeLine {
 			
 			public void mouseReleased(MouseEvent e) {
 				if (TestLine.this.currentPoint != null && TestLine.this.startPoint != null) {
-					long offset = (long) ((TestLine.this.currentPoint.x - TestLine.this.startPoint.x) / scale);
+					long offset = (long) ((TestLine.this.currentPoint.x - TestLine.this.startPoint.x) / TestLine.this.scale);
 					// moveIntervals(offset);
 
 					if (TestLine.this.selectedItems != null && !TestLine.this.selectedItems.isEmpty()) {

@@ -133,6 +133,8 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 	
 	public static final String	COMMAND_SET_GROUP_TEST = "GroupTest";
 	public static final String	COMMAND_SET_START_GROUP_TIME = "SetStartGroupTime";
+	
+	public static final String COMMAND_ADD_NEW_MEASUREMENT_SETUP = "AddNewMeasurementSetup";
 
 //	public static final String	COMMAND_ONE_TIME_S
 
@@ -202,6 +204,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		this.dispatcher.register(this, COMMAND_SET_ANALYSIS_TYPE );
 		this.dispatcher.register(this, COMMAND_REFRESH_TIME_STAMPS);
 		this.dispatcher.register(this, COMMAND_SET_GROUP_TEST);
+		this.dispatcher.register(this, COMMAND_ADD_NEW_MEASUREMENT_SETUP);
 		
 		//
 		add("menuSession");
@@ -266,7 +269,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 	public void operationPerformed(OperationEvent ae) {
 		String commandName = ae.getActionCommand();
 		Object obj = ae.getSource();
-		Environment.log(Environment.LOG_LEVEL_INFO, "commandName:" + commandName, getClass().getName());
+//		Environment.log(Environment.LOG_LEVEL_INFO, "commandName:" + commandName, getClass().getName());
 //		if (commandName.equals(TimeStampsEditor.DATE_OPERATION)) {
 //			if (this.selectedTestIds != null && this.selectedTestIds.isChanged()) {
 //				TestTemporalType temporalType = this.selectedTestIds.getTemporalType();
@@ -324,6 +327,12 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 			this.refreshTemporalStamps();
 		} else if (commandName.equals(COMMAND_SET_GROUP_TEST)) {
 			this.groupTest = true;
+		} else if(commandName.equals(COMMAND_ADD_NEW_MEASUREMENT_SETUP)) {
+			if (this.measurementSetupMap != null) {
+				this.measurementSetupMap.clear();
+			} 
+			this.refreshMeasurementSetups();
+			this.refreshTests();
 		}
 	}
 
@@ -742,7 +751,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 				this.dispatcher.notify(new OperationEvent(measurementSetups, 0, COMMAND_SET_MEASUREMENT_SETUPS));
 			}
 
-			if (this.selectedTestIds != null) {
+			if (this.selectedTestIds != null && !this.selectedTestIds.isEmpty()) {
 				Collection measurementSetupIds = this.getSelectedTest().getMeasurementSetupIds();
 				if (!measurementSetupIds.isEmpty()) {
 					Identifier mainMeasurementSetupId = (Identifier) measurementSetupIds.iterator().next();
@@ -787,7 +796,9 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 								.singleton(this.monitoredElement.getId()), Collections.singleton(this.measurementType
 								.getId())); 
 					MeasurementStorableObjectPool.putStorableObject(this.measurementSetup);
-					
+					if (this.measurementSetupMap != null) {
+						this.measurementSetupMap.clear();
+					}
 				} catch (IllegalObjectEntityException e) {
 					Log.debugException(e, Log.DEBUGLEVEL05);
 				} catch (CreateObjectException e) {

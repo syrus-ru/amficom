@@ -69,7 +69,7 @@ import com.syrus.util.Log;
 public class TestParametersPanel implements OperationListener {
 
 	ApplicationContext			aContext;
-	private SchedulerModel		schedulerModel;
+	SchedulerModel		schedulerModel;
 	ObjComboBox					analysisComboBox		= new ObjComboBox(AnalysisTypeController.getInstance(),
 																			Collections.EMPTY_LIST,
 																			AnalysisTypeController.KEY_NAME);
@@ -239,7 +239,7 @@ public class TestParametersPanel implements OperationListener {
 						.getSelectedValue();
 				if (measurementSetup1 != null) {
 					
-					java.util.Set selectedTestIds = schedulerModel.getSelectedTestIds();
+					java.util.Set selectedTestIds = TestParametersPanel.this.schedulerModel.getSelectedTestIds();
 					if (selectedTestIds != null && !selectedTestIds.isEmpty()) {
 						try {
 							java.util.Set measurementSetupIdSet = Collections.singleton(measurementSetup1.getId());

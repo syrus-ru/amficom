@@ -9,7 +9,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.HashSet;
 import java.util.Iterator;
 
 import javax.swing.ButtonGroup;
@@ -38,7 +37,7 @@ import com.syrus.util.Log;
 
 /**
  * 
- * @version $Revision: 1.10 $, $Date: 2005/05/17 14:13:59 $
+ * @version $Revision: 1.11 $, $Date: 2005/05/17 14:17:30 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module schedulerClone
