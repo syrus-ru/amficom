@@ -1,5 +1,5 @@
 /*
- * $Id: OpenSessionCommand.java,v 1.1 2005/05/05 12:33:16 bob Exp $
+ * $Id: OpenSessionCommand.java,v 1.2 2005/05/17 08:33:30 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,25 +43,25 @@ import com.syrus.AMFICOM.general.LoginRestorer;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.1 $, $Date: 2005/05/05 12:33:16 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/17 08:33:30 $
  * @module generalclient_v1
  */
 public class OpenSessionCommand extends VoidCommand {
 
-	private Dispatcher			dispatcher;
-	private ApplicationContext	aContext;
+	private Dispatcher				dispatcher;
+	private ApplicationContext		aContext;
 
 	/* static fields use due to dummy command using -> clone (new ...) */
-	private static JPanel				mainPanel;
+	private static JPanel			mainPanel;
 
-	private static JTextField			loginTextField;
-	private static JPasswordField		passwordTextField;
-	private static String				login;
-	private static String				password;
+	private static JTextField		loginTextField;
+	private static JPasswordField	passwordTextField;
+	private static String			login;
+	private static String			password;
 
-	private static boolean				logged	= false;
-	
-	private static LoginRestorer loginRestorer;
+	private static boolean			logged	= false;
+
+	private static LoginRestorer	loginRestorer;
 
 	public OpenSessionCommand() {
 		// nothing
@@ -96,35 +96,46 @@ public class OpenSessionCommand extends VoidCommand {
 		if (Environment.getConnectionType().equals(Environment.CONNECTION_EMPTY)) {
 			executeLocal();
 		} else {
-			while(!this.executeRemote());
+			while (!this.executeRemote());
 		}
 	}
 
 	private void executeLocal() {
-//		try {
-//			SessionInterface ssi = aContext.getSessionInterface().openSession();
-//		} catch (ApplicationException e) {
-//			Log.debugException(e, Log.WARNING);
-//		}
-//
-//		dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "Открытие сессии..."));
-//		dispatcher.notify(new ContextChangeEvent(aContext.getSessionInterface(),
-//													ContextChangeEvent.SESSION_CHANGING_EVENT));
-//
-//		final DataSourceInterface dataSource = aContext.getApplicationModel().getDataSource(
-//			aContext.getSessionInterface());
-//		//
-//		dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "Инициализация начальных данных"));
-//
-//		dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_PROGRESS_BAR, true));
-//
-//		dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_PROGRESS_BAR, false));
-//
-//		SessionInterface sess = dataSource.getSession();
-//
-//		dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "Сессия открыта"));
-//		dispatcher.notify(new ContextChangeEvent(aContext.getSessionInterface(),
-//													ContextChangeEvent.SESSION_OPENED_EVENT));
+		// try {
+		// SessionInterface ssi = aContext.getSessionInterface().openSession();
+		// } catch (ApplicationException e) {
+		// Log.debugException(e, Log.WARNING);
+		// }
+		//
+		// dispatcher.notify(new
+		// StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "Открытие
+		// сессии..."));
+		// dispatcher.notify(new
+		// ContextChangeEvent(aContext.getSessionInterface(),
+		// ContextChangeEvent.SESSION_CHANGING_EVENT));
+		//
+		// final DataSourceInterface dataSource =
+		// aContext.getApplicationModel().getDataSource(
+		// aContext.getSessionInterface());
+		// //
+		// dispatcher.notify(new
+		// StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "Инициализация
+		// начальных данных"));
+		//
+		// dispatcher.notify(new
+		// StatusMessageEvent(StatusMessageEvent.STATUS_PROGRESS_BAR, true));
+		//
+		// dispatcher.notify(new
+		// StatusMessageEvent(StatusMessageEvent.STATUS_PROGRESS_BAR, false));
+		//
+		// SessionInterface sess = dataSource.getSession();
+		//
+		// dispatcher.notify(new
+		// StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "Сессия
+		// открыта"));
+		// dispatcher.notify(new
+		// ContextChangeEvent(aContext.getSessionInterface(),
+		// ContextChangeEvent.SESSION_OPENED_EVENT));
 	}
 
 	private boolean executeRemote() {
@@ -142,7 +153,13 @@ public class OpenSessionCommand extends VoidCommand {
 		dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "Открытие сессии..."));
 		dispatcher.notify(new ContextChangeEvent(this, ContextChangeEvent.SESSION_CHANGING_EVENT));
 
-		this.showOpenSessionDialog(Environment.getActiveWindow());
+		if (System.getProperty("com.amficom.login") == null || System.getProperty("com.amficom.password") == null) {
+			this.showOpenSessionDialog(Environment.getActiveWindow());
+		} else {
+			OpenSessionCommand.login = System.getProperty("com.amficom.login");
+			OpenSessionCommand.password = System.getProperty("com.amficom.password");
+			OpenSessionCommand.logged = true;
+		}
 
 		if (!OpenSessionCommand.logged) {
 			dispatcher
@@ -156,30 +173,31 @@ public class OpenSessionCommand extends VoidCommand {
 			final String password = OpenSessionCommand.password;
 
 			if (loginRestorer == null) {
-				try {
-					loginRestorer = new LoginRestorer() {
+				loginRestorer = new LoginRestorer() {
 
-						/* TODO just dummy login restorer */
-						public String getLogin() {
-							return login;
-						}
+					/* TODO just dummy login restorer */
+					public String getLogin() {
+						return login;
+					}
 
-						public String getPassword() {
-							return password;
-						}
+					public String getPassword() {
+						return password;
+					}
 
-						public boolean restoreLogin() {
-							return true;
-						}
-					};
+					public boolean restoreLogin() {
+						return true;
+					}
+				};
+			}
+			try {
 
-					ClientSessionEnvironment.createInstance(ClientSessionEnvironment.SESSION_KIND_MEASUREMENT,
-						loginRestorer);
-				} catch (CommunicationException e) {
-					JOptionPane.showMessageDialog(Environment.getActiveWindow(), LangModel
-							.getString("Error server connection"), LangModel.getString("errorTitleOpenSession"),
-						JOptionPane.ERROR_MESSAGE, null);
-				}
+				ClientSessionEnvironment.createInstance(ClientSessionEnvironment.SESSION_KIND_MEASUREMENT,
+					loginRestorer);
+			} catch (CommunicationException e) {
+				JOptionPane.showMessageDialog(Environment.getActiveWindow(), LangModel
+						.getString("Error server connection"), LangModel.getString("errorTitleOpenSession"),
+					JOptionPane.ERROR_MESSAGE, null);
+				return false;
 			}
 
 			final ClientSessionEnvironment clientSessionEnvironment = ClientSessionEnvironment.getInstance();
@@ -199,7 +217,7 @@ public class OpenSessionCommand extends VoidCommand {
 				JOptionPane.showMessageDialog(Environment.getActiveWindow(), LangModel
 						.getString("Error server connection"), LangModel.getString("errorTitleOpenSession"),
 					JOptionPane.ERROR_MESSAGE, null);
-				return true;
+				return false;
 			} catch (LoginException e) {
 				JOptionPane.showMessageDialog(Environment.getActiveWindow(), LangModel.getString("errorWrongLogin"),
 					LangModel.getString("errorTitleOpenSession"), JOptionPane.ERROR_MESSAGE, null);
@@ -223,14 +241,15 @@ public class OpenSessionCommand extends VoidCommand {
 						if (domain.getId().equals(domainId)) {
 							try {
 								LoginManager.selectDomain(domainId);
+								dispatcher.notify(new ContextChangeEvent(OpenSessionCommand.this,
+																			ContextChangeEvent.DOMAIN_SELECTED_EVENT));
 							} catch (CommunicationException e) {
 								JOptionPane.showMessageDialog(Environment.getActiveWindow(), LangModel
 										.getString("Error server connection"), LangModel
 										.getString("errorTitleOpenSession"), JOptionPane.ERROR_MESSAGE, null);
 								return;
 							}
-							dispatcher.notify(new ContextChangeEvent(OpenSessionCommand.this,
-																		ContextChangeEvent.DOMAIN_SELECTED_EVENT));
+
 							break;
 						}
 					}
@@ -241,7 +260,7 @@ public class OpenSessionCommand extends VoidCommand {
 		}
 		return true;
 	}
-	
+
 	private void showOpenSessionDialog(JFrame frame) {
 		if (mainPanel == null) {
 			mainPanel = new JPanel(new GridBagLayout());
@@ -298,7 +317,8 @@ public class OpenSessionCommand extends VoidCommand {
 
 		int result = JOptionPane.showOptionDialog(frame, mainPanel, LangModel.getString("SessionOpenTitle"),
 			JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, new Object[] {
-					LangModel.getString("buttonEnter"), LangModel.getString("buttonCancel")}, LangModel.getString("buttonEnter"));
+					LangModel.getString("buttonEnter"), LangModel.getString("buttonCancel")}, LangModel
+					.getString("buttonEnter"));
 		if (result == JOptionPane.OK_OPTION) {
 			login = loginTextField.getText();
 			password = new String(passwordTextField.getPassword());
@@ -308,9 +328,9 @@ public class OpenSessionCommand extends VoidCommand {
 		}
 
 	}
-	
+
 	public static void main(String[] args) {
-		
+
 		JFrame frame = new JFrame();
 		frame.setVisible(true);
 		System.out.println(Environment.class);
