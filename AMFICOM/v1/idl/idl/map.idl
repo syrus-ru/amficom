@@ -1,27 +1,15 @@
-/*
- * $Id: map.idl,v 1.15 2005/05/04 15:05:40 bass Exp $
+/*-
+ * $Id: map.idl,v 1.16 2005/05/18 10:55:20 bass Exp $
  *
- * Copyright © 2004 Syrus Systems.
+ * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
- *
- * Describe a geak li'l mapletty 
- * 
- * Defines that can be specified at compile time:
- *
- * NUMERIC_IDENTIFIER (off by default, implies MAP_COMMON) -- Identifier will
- *  hold primitive major and minor fields rather than a string;
  */
 
-#ifndef MAPLETTY_IDL
-#define MAPLETTY_IDL
-
-#include <streams.idl>
-
-#include "general.idl"
+#ifndef MAP_IDL
+#define MAP_IDL
 
 #include "configuration.idl"
-
 #include "resource.idl"
 
 module com {
@@ -272,4 +260,4 @@ module com {
 		};
 	};
 };
-#endif // MAPLETTY_IDL
+#endif // MAP_IDL
