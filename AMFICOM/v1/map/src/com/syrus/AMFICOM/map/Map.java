@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.40 2005/04/26 16:02:29 krupenn Exp $
+ * $Id: Map.java,v 1.41 2005/05/18 11:48:20 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,19 +31,20 @@ import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.Map_Transferable;
 
 /**
  * Топологическая схема, которая содержит в себе набор связанных друг с другом
- * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на 
+ * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на
  * линиях, коллекторов (объединяющих в себе линии).
- * 
- * @author $Author: krupenn $
- * @version $Revision: 1.40 $, $Date: 2005/04/26 16:02:29 $
+ *
+ * @author $Author: bass $
+ * @version $Revision: 1.41 $, $Date: 2005/05/18 11:48:20 $
  * @module map_v1
- * @todo make maps persistent 
- * @todo make externalNodes persistent 
+ * @todo make maps persistent
+ * @todo make externalNodes persistent
  */
 public class Map extends DomainMember implements Namable {
 
@@ -108,11 +109,11 @@ public class Map extends DomainMember implements Namable {
 		}
 	}
 
-	Map(final Identifier id, 
-				  final Identifier creatorId, 
+	Map(final Identifier id,
+				  final Identifier creatorId,
 				  final long version,
-				  final Identifier domainId, 
-				  final String name, 
+				  final Identifier domainId,
+				  final String name,
 				  final String description) {
 		super(id,
 			new Date(System.currentTimeMillis()),
@@ -168,22 +169,22 @@ public class Map extends DomainMember implements Namable {
 		Set ids;
 		
 		ids = Identifier.fromTransferables(mt.siteNodeIds);
-		this.siteNodes = MapStorableObjectPool.getStorableObjects(ids, true);
+		this.siteNodes = StorableObjectPool.getStorableObjects(ids, true);
 
 		ids = Identifier.fromTransferables(mt.topologicalNodeIds);
-		this.topologicalNodes = MapStorableObjectPool.getStorableObjects(ids, true);
+		this.topologicalNodes = StorableObjectPool.getStorableObjects(ids, true);
 
 		ids = Identifier.fromTransferables(mt.nodeLinkIds);
-		this.nodeLinks = MapStorableObjectPool.getStorableObjects(ids, true);
+		this.nodeLinks = StorableObjectPool.getStorableObjects(ids, true);
 
 		ids = Identifier.fromTransferables(mt.physicalLinkIds);
-		this.physicalLinks = MapStorableObjectPool.getStorableObjects(ids, true);
+		this.physicalLinks = StorableObjectPool.getStorableObjects(ids, true);
 
 		ids = Identifier.fromTransferables(mt.markIds);
-		this.marks = MapStorableObjectPool.getStorableObjects(ids, true);
+		this.marks = StorableObjectPool.getStorableObjects(ids, true);
 
 		ids = Identifier.fromTransferables(mt.collectorIds);
-		this.collectors = MapStorableObjectPool.getStorableObjects(ids, true);
+		this.collectors = StorableObjectPool.getStorableObjects(ids, true);
 	}
 
 	public Set getDependencies() {
@@ -444,7 +445,7 @@ public class Map extends DomainMember implements Namable {
 
 	/**
 	 * Получить список всех узловых элементов топологической схемы.
-	 * 
+	 *
 	 * @return список узлов
 	 */
 	public Set getNodes() {
@@ -458,7 +459,7 @@ public class Map extends DomainMember implements Namable {
 
 	/**
 	 * Добавить новый узел.
-	 * 
+	 *
 	 * @param node
 	 *          узел
 	 */
@@ -475,7 +476,7 @@ public class Map extends DomainMember implements Namable {
 
 	/**
 	 * Удалить узел.
-	 * 
+	 *
 	 * @param node
 	 *          узел
 	 */
@@ -496,7 +497,7 @@ public class Map extends DomainMember implements Namable {
 
 	/**
 	 * Получить элемент сетевого узла по идентификатору.
-	 * 
+	 *
 	 * @param siteId
 	 *          идентификатор сетевого узла
 	 * @return сетевой узел или null, если узел не найден
@@ -514,7 +515,7 @@ public class Map extends DomainMember implements Namable {
 
 	/**
 	 * Получить элемент топологического узла по идентификатору.
-	 * 
+	 *
 	 * @param topologicalNodeId
 	 *          идентификатор топологического узла
 	 * @return топологический узел или null, если узел не найден
@@ -532,7 +533,7 @@ public class Map extends DomainMember implements Namable {
 
 	/**
 	 * Получить метку по идентификатору.
-	 * 
+	 *
 	 * @param markId
 	 *          идентификатор метки
 	 * @return метка или null, если метка не найден
@@ -550,7 +551,7 @@ public class Map extends DomainMember implements Namable {
 
 	/**
 	 * Получить узел по идентификатору.
-	 * 
+	 *
 	 * @param nodeId
 	 *          идентификатор метки
 	 * @return узел или null, если узел не найден
@@ -586,7 +587,7 @@ public class Map extends DomainMember implements Namable {
 
 	/**
 	 * Добавить новый коллектор.
-	 * 
+	 *
 	 * @param collector
 	 *          новый коллектор
 	 */
@@ -598,7 +599,7 @@ public class Map extends DomainMember implements Namable {
 
 	/**
 	 * Удалить коллектор.
-	 * 
+	 *
 	 * @param collector
 	 *          коллектор
 	 */
@@ -612,7 +613,7 @@ public class Map extends DomainMember implements Namable {
 
 	/**
 	 * Получить коллектор, в составе которого есть заданная линия.
-	 * 
+	 *
 	 * @param physicalLink
 	 *          линия
 	 * @return коллектор
@@ -628,7 +629,7 @@ public class Map extends DomainMember implements Namable {
 
 	/**
 	 * Получить список линий, начинающихся или заканчивающихся в заданном узле.
-	 * 
+	 *
 	 * @param node
 	 *          узел
 	 * @return список линий
@@ -647,7 +648,7 @@ public class Map extends DomainMember implements Namable {
 
 	/**
 	 * Добавить новую линию.
-	 * 
+	 *
 	 * @param physicalLink
 	 *          линия
 	 */
@@ -660,7 +661,7 @@ public class Map extends DomainMember implements Namable {
 
 	/**
 	 * Удалить линию.
-	 * 
+	 *
 	 * @param physicalLink
 	 *          линия
 	 */
@@ -679,7 +680,7 @@ public class Map extends DomainMember implements Namable {
 
 	/**
 	 * Получить линию по ее идентификатору.
-	 * 
+	 *
 	 * @param phisicalLinkId
 	 *          идентификатор линии
 	 * @return лниия
@@ -697,7 +698,7 @@ public class Map extends DomainMember implements Namable {
 
 	/**
 	 * Получить линию по концевым узлам.
-	 * 
+	 *
 	 * @param startNode
 	 *          один концевой узел
 	 * @param endNode
@@ -717,7 +718,7 @@ public class Map extends DomainMember implements Namable {
 
 	/**
 	 * добавить новый фрагмент линии.
-	 * 
+	 *
 	 * @param nodeLink
 	 *          фрагмент линии
 	 */
@@ -729,7 +730,7 @@ public class Map extends DomainMember implements Namable {
 
 	/**
 	 * Удалить фрагмент линии.
-	 * 
+	 *
 	 * @param nodeLink
 	 *          фрагмент линии
 	 */
@@ -743,7 +744,7 @@ public class Map extends DomainMember implements Namable {
 
 	/**
 	 * Получить фрагмент линии по идентификатору.
-	 * 
+	 *
 	 * @param nodeLinkId
 	 *          идентификатор фрагмента линии
 	 * @return фрагмент линии
@@ -772,7 +773,7 @@ public class Map extends DomainMember implements Namable {
 
 	/**
 	 * Получить фрагмент линии по концевому узлу.
-	 * 
+	 *
 	 * @param node
 	 *          концевой узел
 	 * @return фрагмент линии
@@ -789,7 +790,7 @@ public class Map extends DomainMember implements Namable {
 
 	/**
 	 * Получить фрагмент линии по концевым узлам.
-	 * 
+	 *
 	 * @param startNode
 	 *          один концевой узел
 	 * @param endNode
@@ -809,7 +810,7 @@ public class Map extends DomainMember implements Namable {
 
 	/**
 	 * Получить список всех топологических элементов карты ({@link MapElement}).
-	 * 
+	 *
 	 * @return список всех элементов
 	 */
 	public List getAllElements() {
@@ -828,8 +829,8 @@ public class Map extends DomainMember implements Namable {
 	}
 
 	/**
-	 * Получить набор всех выделенных элементов топологической схемы. 
-	 * Выделенные элементы - те, для которых  метод 
+	 * Получить набор всех выделенных элементов топологической схемы.
+	 * Выделенные элементы - те, для которых  метод
 	 * <code>{@link MapElement#isSelected()}</code> возвращает <code>true</code>.
 	 * @return набор выделенных элементов
 	 */
@@ -846,7 +847,7 @@ public class Map extends DomainMember implements Namable {
 
 	/**
 	 * Зарегистрировать изменение флага выделения элемента топологической схемы.
-	 * 
+	 *
 	 * @param me
 	 *          элемент
 	 * @param selected
@@ -863,7 +864,7 @@ public class Map extends DomainMember implements Namable {
 	/**
 	 * Возвращает описывающий элемент набор параметров, который используется для
 	 * экспорта.
-	 * 
+	 *
 	 * @return хэш-таблица параметров элемента
 	 */
 	public java.util.Map getExportMap() {
@@ -909,7 +910,7 @@ public class Map extends DomainMember implements Namable {
 		{
 			NodeLink nodeLink = (NodeLink )it.next();
 			
-			if ( (nodeLink.getEndNode().equals(node)) 
+			if ( (nodeLink.getEndNode().equals(node))
 				|| (nodeLink.getStartNode().equals(node)))
 			{
 				returnNodeLinks.add(nodeLink);
@@ -920,10 +921,10 @@ public class Map extends DomainMember implements Namable {
 	}
 
 	/**
-	 * Возвращает фрагмент линии, включающий данный узел, по не равный 
-	 * переданному в параметре. Если фрагмент А и фрагмент Б имеют общую 
+	 * Возвращает фрагмент линии, включающий данный узел, по не равный
+	 * переданному в параметре. Если фрагмент А и фрагмент Б имеют общую
 	 * точку Т, то вызов метода <code>Т.getOtherNodeLink(А)</code> вернет Б, а вызов
-	 * <code>Т.getOtherNodeLink(Б)</code> вернет А. Таким образом, для топологического 
+	 * <code>Т.getOtherNodeLink(Б)</code> вернет А. Таким образом, для топологического
 	 * узла возвращает единственный противоположный,
 	 * для сетевого узла их может быть несколько, по этой причине метод
 	 * не должен использоваться и возвращает null
@@ -953,7 +954,7 @@ public class Map extends DomainMember implements Namable {
 	}
 
 	/**
-	 * Получить вектор узлов на противоположных концах всех фрагментов линий 
+	 * Получить вектор узлов на противоположных концах всех фрагментов линий
 	 * данного элемента.
 	 * @param node узел
 	 * @return список узлов
@@ -989,7 +990,7 @@ public class Map extends DomainMember implements Namable {
 		{
 			PhysicalLink physicalLink = (PhysicalLink )it.next();
 			
-			if ( (physicalLink.getEndNode().equals(node)) 
+			if ( (physicalLink.getEndNode().equals(node))
 					|| (physicalLink.getStartNode().equals(node)) )
 				returnLinks.add(physicalLink);
 		}

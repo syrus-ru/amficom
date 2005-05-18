@@ -1,5 +1,5 @@
 /**
- * $Id: MapElement.java,v 1.11 2005/04/13 09:43:38 krupenn Exp $
+ * $Id: MapElement.java,v 1.12 2005/05/18 11:48:20 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,11 +18,11 @@ import com.syrus.AMFICOM.general.Namable;
 /**
  *  Интерфейс для всех элементов карты. Нужен для определения координат
  *  элемента, его стратегии, выбора, передвижения, отображения и т.д.
- * 
- * 
- * 
- * @author $Author: krupenn $
- * @version $Revision: 1.11 $, $Date: 2005/04/13 09:43:38 $
+ *
+ *
+ *
+ * @author $Author: bass $
+ * @version $Revision: 1.12 $, $Date: 2005/05/18 11:48:20 $
  * @module map_v1
  */
 public interface MapElement extends Characterizable, Namable

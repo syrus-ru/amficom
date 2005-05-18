@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.38 2005/04/20 07:53:47 bass Exp $
+ * $Id: NodeLink.java,v 1.39 2005/05/18 11:48:21 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,6 @@ import org.omg.CORBA.portable.IDLEntity;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -28,17 +27,18 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.NodeLink_Transferable;
 
 /**
  * Фрагмент линии на топологической схеме. Фрагмент представляет собой линейный
- * отрезок, соединяющий два концевых узла ({@link AbstractNode}). Фрагменты 
+ * отрезок, соединяющий два концевых узла ({@link AbstractNode}). Фрагменты
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
  * @author $Author: bass $
- * @version $Revision: 1.38 $, $Date: 2005/04/20 07:53:47 $
+ * @version $Revision: 1.39 $, $Date: 2005/05/18 11:48:21 $
  * @module map_v1
  */
 public class NodeLink extends StorableObject implements MapElement {
@@ -170,7 +170,7 @@ public class NodeLink extends StorableObject implements MapElement {
 		this.endNode = (AbstractNode) MapStorableObjectPool.getStorableObject(new Identifier(nlt.endNodeId), true);
 
 		Set characteristicIds = Identifier.fromTransferables(nlt.characteristicIds);
-		this.characteristics.addAll(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
+		this.characteristics.addAll(StorableObjectPool.getStorableObjects(characteristicIds, true));
 	}
 
 	public IDLEntity getTransferable() {
@@ -273,7 +273,7 @@ public class NodeLink extends StorableObject implements MapElement {
 
 	/**
 	 * Получить другой концевой узел фрагмента.
-	 * 
+	 *
 	 * @param node
 	 *          концевой узел
 	 * @return другой концевой узел. В случае, если node не является концевым для
@@ -364,7 +364,7 @@ public class NodeLink extends StorableObject implements MapElement {
 
 	/**
 	 * Получить топологическую длинну фрагмента.
-	 * 
+	 *
 	 * @return топологическая длина
 	 */
 	public double getLengthLt() {
@@ -374,7 +374,7 @@ public class NodeLink extends StorableObject implements MapElement {
 	/**
 	 * Установить топологическую длинну фрагмента. Высчитывается в месте, в
 	 * котором осуществляется управление рисованием фрагментов линий.
-	 * 
+	 *
 	 * @param length
 	 *          топологическая длина
 	 */

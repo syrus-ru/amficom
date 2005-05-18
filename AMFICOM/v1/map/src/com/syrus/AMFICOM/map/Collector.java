@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.38 2005/04/20 07:53:47 bass Exp $
+ * $Id: Collector.java,v 1.39 2005/05/18 11:48:20 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,6 @@ import org.omg.CORBA.portable.IDLEntity;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -30,6 +29,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.Collector_Transferable;
@@ -37,9 +37,9 @@ import com.syrus.AMFICOM.map.corba.Collector_Transferable;
 /**
  * Коллектор на топологической схеме, который характеризуется набором входящих
  * в него линий. Линии не обязаны быть связными.
- * 
+ *
  * @author $Author: bass $
- * @version $Revision: 1.38 $, $Date: 2005/04/20 07:53:47 $
+ * @version $Revision: 1.39 $, $Date: 2005/05/18 11:48:20 $
  * @module map_v1
  */
 public class Collector extends StorableObject implements MapElement {
@@ -54,7 +54,7 @@ public class Collector extends StorableObject implements MapElement {
 	public static final String COLUMN_DESCRIPTION = "description";
 	public static final String COLUMN_LINKS = "links";
 
-	/** 
+	/**
 	 * набор параметров для экспорта. инициализируется только в случае
 	 * необходимости экспорта
 	 */
@@ -141,10 +141,10 @@ public class Collector extends StorableObject implements MapElement {
 		Set ids;
 
 		ids = Identifier.fromTransferables(ct.physicalLinkIds);
-		this.physicalLinks = MapStorableObjectPool.getStorableObjects(ids, true);
+		this.physicalLinks = StorableObjectPool.getStorableObjects(ids, true);
 
 		ids = Identifier.fromTransferables(ct.characteristicIds);
-		this.characteristics = GeneralStorableObjectPool.getStorableObjects(ids, true);
+		this.characteristics = StorableObjectPool.getStorableObjects(ids, true);
 	}
 
 	public Set getDependencies() {
@@ -256,7 +256,7 @@ public class Collector extends StorableObject implements MapElement {
 	}
 
 	/**
-	 * Возвращает суммарную топологическую длинну всех линий в составе 
+	 * Возвращает суммарную топологическую длинну всех линий в составе
 	 * коллектора в метрах.
 	 * @return суммарная длина
 	 */

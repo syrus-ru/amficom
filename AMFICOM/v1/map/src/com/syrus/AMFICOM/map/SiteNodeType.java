@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.30 2005/05/05 09:00:15 krupenn Exp $
+ * $Id: SiteNodeType.java,v 1.31 2005/05/18 11:48:20 bass Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,6 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -28,19 +27,20 @@ import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.SiteNodeType_Transferable;
 
 /**
- * “ип сетевого узла топологической схемы. —уществует несколько 
- * предустановленных  типов сетевых узлов, которые определ€ютс€ полем 
- * {@link #codename}, соответствующим какому-либо значению {@link #DEFAULT_WELL}, 
- * {@link #DEFAULT_PIQUET}, {@link #DEFAULT_ATS}, {@link #DEFAULT_BUILDING}, {@link #DEFAULT_UNBOUND}, 
+ * “ип сетевого узла топологической схемы. —уществует несколько
+ * предустановленных  типов сетевых узлов, которые определ€ютс€ полем
+ * {@link #codename}, соответствующим какому-либо значению {@link #DEFAULT_WELL},
+ * {@link #DEFAULT_PIQUET}, {@link #DEFAULT_ATS}, {@link #DEFAULT_BUILDING}, {@link #DEFAULT_UNBOUND},
  * {@link #DEFAULT_CABLE_INLET}, {@link #DEFAULT_TOWER}
- * @author $Author: krupenn $
- * @version $Revision: 1.30 $, $Date: 2005/05/05 09:00:15 $
+ * @author $Author: bass $
+ * @version $Revision: 1.31 $, $Date: 2005/05/18 11:48:20 $
  * @module map_v1
  * @todo make 'sort' persistent (update database scheme as well)
  */
@@ -151,10 +151,10 @@ public class SiteNodeType extends StorableObjectType implements Characterizable,
 		this.topological = sntt.topological;
 
 		//@todo retreive from transferable!
-		this.sort = SiteNodeTypeSort.fromString(sntt.codename); 
+		this.sort = SiteNodeTypeSort.fromString(sntt.codename);
 
 		Set ids = Identifier.fromTransferables(sntt.characteristicIds);
-		this.characteristics = GeneralStorableObjectPool.getStorableObjects(ids, true);
+		this.characteristics = StorableObjectPool.getStorableObjects(ids, true);
 	}
 
 	public Set getDependencies() {
@@ -224,13 +224,13 @@ public class SiteNodeType extends StorableObjectType implements Characterizable,
 		this.topological = topological;
 
 		//@todo retreive from transferable!
-		this.sort = SiteNodeTypeSort.fromString(codename); 
+		this.sort = SiteNodeTypeSort.fromString(codename);
 	}
 
 	public void setCodename(String codename) {
 		super.setCodename(codename);
 		//@todo retreive from transferable!
-		this.sort = SiteNodeTypeSort.fromString(codename); 
+		this.sort = SiteNodeTypeSort.fromString(codename);
 	}
 
 	public Set getCharacteristics() {

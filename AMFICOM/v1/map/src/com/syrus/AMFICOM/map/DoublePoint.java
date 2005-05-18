@@ -1,5 +1,5 @@
 /**
- * $Id: DoublePoint.java,v 1.4 2005/02/28 16:13:05 krupenn Exp $
+ * $Id: DoublePoint.java,v 1.5 2005/05/18 11:48:20 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,9 +15,9 @@ package com.syrus.AMFICOM.map;
  * Пара вещественных чисел, соответствующих географическим координатам.
  * Класс необходим для работы с географическими объектами, их отображения,
  * конвертации координат.
- *  
- * @author $Author: krupenn $
- * @version $Revision: 1.4 $, $Date: 2005/02/28 16:13:05 $
+ *
+ * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2005/05/18 11:48:20 $
  * @module map_v1
  */
 public class DoublePoint implements Cloneable {

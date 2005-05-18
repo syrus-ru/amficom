@@ -1,5 +1,5 @@
 /**
- * $Id: NodeState.java,v 1.3 2005/01/17 15:05:41 bob Exp $
+ * $Id: NodeState.java,v 1.4 2005/05/18 11:48:20 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,13 +15,13 @@ import com.syrus.util.HashCodeGenerator;
 import java.util.HashMap;
 
 /**
- * состояние элемента - узла 
- * 
- * 
- * 
- * @version $Revision: 1.3 $, $Date: 2005/01/17 15:05:41 $
+ * состояние элемента - узла
+ *
+ *
+ *
+ * @version $Revision: 1.4 $, $Date: 2005/05/18 11:48:20 $
  * @module map_v1
- * @author $Author: bob $
+ * @author $Author: bass $
  */
 public class NodeState extends MapElementState
 {

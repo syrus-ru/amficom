@@ -1,5 +1,5 @@
 /*
- * $Id: MapStorableObjectPool.java,v 1.20 2005/05/10 19:25:25 arseniy Exp $
+ * $Id: MapStorableObjectPool.java,v 1.21 2005/05/18 11:48:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,6 @@ import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectGroupEntities;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -25,8 +24,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/05/10 19:25:25 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.21 $, $Date: 2005/05/18 11:48:20 $
+ * @author $Author: bass $
  * @module map_v1
  */
 public final class MapStorableObjectPool extends StorableObjectPool {
@@ -117,7 +116,7 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 			instance = new MapStorableObjectPool(Class.forName(cacheClassName));
 		}
 		catch (final ClassNotFoundException cnfe) {
-			Log.errorMessage("Cache class '" + cacheClassName + "' cannot be found, using default"); //$NON-NLS-1$
+			Log.errorMessage("Cache class '" + cacheClassName + "' cannot be found, using default");
 			instance = new MapStorableObjectPool();
 		}
 		init(mapObjectLoader1, size);
@@ -129,14 +128,10 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 			instance = new MapStorableObjectPool(Class.forName(cacheClassName));
 		}
 		catch (final ClassNotFoundException cnfe) {
-			Log.errorMessage("Cache class '" + cacheClassName + "' cannot be found, using default"); //$NON-NLS-1$
+			Log.errorMessage("Cache class '" + cacheClassName + "' cannot be found, using default");
 			instance = new MapStorableObjectPool();
 		}
 		init(mapObjectLoader1);
-	}
-
-	public static void refresh() throws ApplicationException {
-		instance.refreshImpl();
 	}
 
 	protected Set refreshStorableObjects(final Set storableObjects) throws ApplicationException {
@@ -145,24 +140,6 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 
 	public static StorableObject getStorableObject(final Identifier id, final boolean useLoader) throws ApplicationException {
 		return instance.getStorableObjectImpl(id, useLoader);
-	}
-
-	public static Set getStorableObjects(final Set ids, boolean useLoader) throws ApplicationException {
-		return instance.getStorableObjectsImpl(ids, useLoader);
-	}
-
-	public static Set getStorableObjectsByCondition(
-			final StorableObjectCondition storableObjectCondition,
-			final boolean useLoader)
-			throws ApplicationException {
-		return instance.getStorableObjectsByConditionImpl(storableObjectCondition, useLoader);
-	}
-
-	public static Set getStorableObjectsByConditionButIds(final Set ids,
-			final StorableObjectCondition storableObjectCondition,
-			final boolean useLoader)
-			throws ApplicationException {
-		return instance.getStorableObjectsByConditionButIdsImpl(ids, storableObjectCondition, useLoader);
 	}
 
 	protected StorableObject loadStorableObject(final Identifier id) throws ApplicationException {
@@ -187,9 +164,9 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 				return mapObjectLoader.loadMap(id);
 			default:
 				final short entityCode = id.getMajor();
-				Log.errorMessage("MapStorableObjectPool.loadStorableObject | Unknown entity: " //$NON-NLS-1$
+				Log.errorMessage("MapStorableObjectPool.loadStorableObject | Unknown entity: "
 						+ ObjectEntities.codeToString(entityCode)
-						+ " (" + entityCode + ')'); //$NON-NLS-1$
+						+ " (" + entityCode + ')');
 				return null;
 		}
 	}
@@ -217,9 +194,9 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 			case ObjectEntities.MAP_ENTITY_CODE:
 				return mapObjectLoader.loadMaps(ids);
 			default:
-				Log.errorMessage("MapStorableObjectPool.loadStorableObjects | Unknown entity: " //$NON-NLS-1$
+				Log.errorMessage("MapStorableObjectPool.loadStorableObjects | Unknown entity: "
 						+ ObjectEntities.codeToString(entityCode)
-						+ " (" + entityCode + ')'); //$NON-NLS-1$
+						+ " (" + entityCode + ')');
 				return Collections.EMPTY_SET;
 		}
 	}
@@ -249,9 +226,9 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 			case ObjectEntities.MAP_ENTITY_CODE:
 				return mapObjectLoader.loadMapsButIds(storableObjectCondition, ids);
 			default:
-				Log.errorMessage("MapStorableObjectPool.loadStorableObjectsButIds | Unknown entity: " //$NON-NLS-1$
+				Log.errorMessage("MapStorableObjectPool.loadStorableObjectsButIds | Unknown entity: "
 						+ ObjectEntities.codeToString(entityCode)
-						+ " (" + entityCode + ')'); //$NON-NLS-1$
+						+ " (" + entityCode + ')');
 				return Collections.EMPTY_SET;
 		}
 	}
@@ -320,14 +297,10 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 					mapObjectLoader.saveMaps(storableObjects, force);
 				break;
 			default:
-				Log.errorMessage("MapStorableObjectPool.saveStorableObjects | Unknown entity: " //$NON-NLS-1$
+				Log.errorMessage("MapStorableObjectPool.saveStorableObjects | Unknown entity: "
 						+ ObjectEntities.codeToString(entityCode)
-						+ " (" + entityCode + ')'); //$NON-NLS-1$
+						+ " (" + entityCode + ')');
 		}
-	}
-
-	public static StorableObject putStorableObject(final StorableObject storableObject) throws IllegalObjectEntityException {
-		return instance.putStorableObjectImpl(storableObject);
 	}
 
 	public static StorableObject fromTransferable(final Identifier id, final IDLEntity transferable) throws ApplicationException {
@@ -338,11 +311,11 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 		instance.flushImpl(id, force);
 	}
 
-	public static void flush(final short entityCode, final boolean force) throws ApplicationException {		 
+	public static void flush(final short entityCode, final boolean force) throws ApplicationException {		
 		instance.flushImpl(entityCode, force);
 	}
 
-	public static void flush(final Short entityCode, final boolean force) throws ApplicationException {		 
+	public static void flush(final Short entityCode, final boolean force) throws ApplicationException {		
 		instance.flushImpl(entityCode, force);
 	}
 
@@ -360,10 +333,6 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 
 	public static void delete(final Identifier id) {
 		instance.deleteImpl(id);
-	}
-
-	public static void delete(final Set identifiables) {
-		instance.deleteImpl(identifiables);
 	}
 
 	protected void deleteStorableObject(final Identifier id) {

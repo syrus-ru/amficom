@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeTypeDatabase.java,v 1.20 2005/05/05 09:02:02 krupenn Exp $
+ * $Id: SiteNodeTypeDatabase.java,v 1.21 2005/05/18 11:48:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,8 +29,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/05/05 09:02:02 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.21 $, $Date: 2005/05/18 11:48:20 $
+ * @author $Author: bass $
  * @module map_v1
  */
 public class SiteNodeTypeDatabase extends CharacterizableDatabase {
@@ -99,9 +99,9 @@ public class SiteNodeTypeDatabase extends CharacterizableDatabase {
 	}
 	
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
-	throws IllegalDataException, RetrieveObjectException, SQLException {
-		SiteNodeType siteNodeType = (storableObject == null) ? 
-				new SiteNodeType(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, null, null, null, false) : 
+	throws IllegalDataException, SQLException {
+		SiteNodeType siteNodeType = (storableObject == null) ?
+				new SiteNodeType(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, null, null, null, false) :
 					fromStorableObject(storableObject);
 		siteNodeType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 							   DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
@@ -117,7 +117,7 @@ public class SiteNodeTypeDatabase extends CharacterizableDatabase {
 	}
 
 	
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) {
 //		SiteNodeType siteNodeType = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:

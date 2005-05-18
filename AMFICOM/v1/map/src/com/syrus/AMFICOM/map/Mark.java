@@ -1,5 +1,5 @@
 /*-
- * $Id: Mark.java,v 1.33 2005/04/20 07:53:47 bass Exp $
+ * $Id: Mark.java,v 1.34 2005/05/18 11:48:20 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,6 @@ import org.omg.CORBA.portable.IDLEntity;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -30,19 +29,20 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.Mark_Transferable;
 
 /**
- * Метка на линии на топологической схеме. Метка частично характеризуется 
- * абстрактным узлом, одняко привязан к некоторой дистанции на линии и, 
- * соответственно, не может быть концевым для линий и фрагментов линий, 
- * в связи с чем методы класса {@link AbstractNode}, работающие с линиями и 
- * фрагментами линий, переопределены и бросают 
+ * Метка на линии на топологической схеме. Метка частично характеризуется
+ * абстрактным узлом, одняко привязан к некоторой дистанции на линии и,
+ * соответственно, не может быть концевым для линий и фрагментов линий,
+ * в связи с чем методы класса {@link AbstractNode}, работающие с линиями и
+ * фрагментами линий, переопределены и бросают
  * <code>{@link UnsupportedOperationException}</code>.
  * @author $Author: bass $
- * @version $Revision: 1.33 $, $Date: 2005/04/20 07:53:47 $
+ * @version $Revision: 1.34 $, $Date: 2005/05/18 11:48:20 $
  * @module map_v1
  */
 public class Mark extends AbstractNode {
@@ -114,7 +114,7 @@ public class Mark extends AbstractNode {
 			Set characteristicIds = new HashSet(mt.characteristicIds.length);
 			for (int i = 0; i < mt.characteristicIds.length; i++)
 				characteristicIds.add(new Identifier(mt.characteristicIds[i]));
-			super.characteristics.addAll(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
+			super.characteristics.addAll(StorableObjectPool.getStorableObjects(characteristicIds, true));
 		}
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
@@ -326,7 +326,7 @@ public class Mark extends AbstractNode {
 
 	/**
 	 * Установить фрагмент, на который помещается метка.
-	 * 
+	 *
 	 * @param nodeLink
 	 *          фрагмент линии
 	 */
@@ -336,7 +336,7 @@ public class Mark extends AbstractNode {
 
 	/**
 	 * Установить фрагмент, на котором находится метка.
-	 * 
+	 *
 	 * @return фрагмент линии
 	 */
 	public NodeLink getNodeLink() {
@@ -345,7 +345,7 @@ public class Mark extends AbstractNode {
 
 	/**
 	 * Установить начальный узел фрагмента, на котором находится метка.
-	 * 
+	 *
 	 * @param startNode
 	 *          узел
 	 */
@@ -355,7 +355,7 @@ public class Mark extends AbstractNode {
 
 	/**
 	 * Получить начальный узел фрагмента, на котором находится метка.
-	 * 
+	 *
 	 * @return узел
 	 */
 	public AbstractNode getStartNode() {
@@ -379,7 +379,7 @@ public class Mark extends AbstractNode {
 
 	/**
 	 * Получить топологическую дистанцию от начального узла линии до метки.
-	 * 
+	 *
 	 * @return дистанция
 	 */
 	public double getFromStartLengthLt() {
@@ -400,7 +400,7 @@ public class Mark extends AbstractNode {
 
 	/**
 	 * Получить топологическую дистанцию от концевого узла линии до метки.
-	 * 
+	 *
 	 * @return дистанция
 	 */
 	public double getFromEndLengthLt() {
@@ -424,7 +424,7 @@ public class Mark extends AbstractNode {
 	 * Установить листанцию от начального узла фрагмента линии, на которой
 	 * находится метка, до метки. Вычисление осуществляется в том месте, где
 	 * осуществляется управление передвижением метки.
-	 * 
+	 *
 	 * @param sizeInDoubleLt
 	 *          дистанция
 	 */
@@ -435,7 +435,7 @@ public class Mark extends AbstractNode {
 	/**
 	 * Получить листанцию от начального узла фрагмента линии, на которой находится
 	 * метка, до метки.
-	 * 
+	 *
 	 * @return дистанция
 	 */
 	public double getSizeInDoubleLt() {

@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeDatabase.java,v 1.22 2005/04/01 11:11:05 bob Exp $
+ * $Id: SiteNodeDatabase.java,v 1.23 2005/05/18 11:48:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/04/01 11:11:05 $
- * @author $Author: bob $
+ * @version $Revision: 1.23 $, $Date: 2005/05/18 11:48:20 $
+ * @author $Author: bass $
  * @module map_v1
  */
 public class SiteNodeDatabase extends CharacterizableDatabase {
@@ -60,7 +60,7 @@ public class SiteNodeDatabase extends CharacterizableDatabase {
 			columns = StorableObjectWrapper.COLUMN_NAME + COMMA
 				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
 				+ SiteNodeWrapper.COLUMN_LONGITUDE + COMMA
-				+ SiteNodeWrapper.COLUMN_LATIUDE + COMMA 
+				+ SiteNodeWrapper.COLUMN_LATIUDE + COMMA
 				+ SiteNodeWrapper.COLUMN_IMAGE_ID + COMMA
 				+ SiteNodeWrapper.COLUMN_SITE_NODE_TYPE_ID + COMMA
 				+ SiteNodeWrapper.COLUMN_CITY + COMMA
@@ -75,10 +75,10 @@ public class SiteNodeDatabase extends CharacterizableDatabase {
 			updateMultipleSQLValues = QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
-				+ QUESTION + COMMA 
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
-				+ QUESTION 
+				+ QUESTION + COMMA
+				+ QUESTION
 				+ QUESTION
 				+ QUESTION;
 		}
@@ -117,8 +117,8 @@ public class SiteNodeDatabase extends CharacterizableDatabase {
 	
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 	throws IllegalDataException, RetrieveObjectException, SQLException {
-		SiteNode siteNode = (storableObject == null) ? 
-				new SiteNode(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, null, null, 0.0, 0.0, null, null, null) : 
+		SiteNode siteNode = (storableObject == null) ?
+				new SiteNode(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, null, null, 0.0, 0.0, null, null, null) :
 					fromStorableObject(storableObject);
 				
 		SiteNodeType type;
@@ -149,7 +149,7 @@ public class SiteNodeDatabase extends CharacterizableDatabase {
 	}
 
 	
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) {
 //		SiteNode siteNode = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:

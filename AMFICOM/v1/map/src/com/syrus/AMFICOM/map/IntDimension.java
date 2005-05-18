@@ -1,5 +1,5 @@
 /*
-* $Id: IntDimension.java,v 1.6 2005/01/27 14:43:37 krupenn Exp $
+* $Id: IntDimension.java,v 1.7 2005/05/18 11:48:19 bass Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -12,9 +12,9 @@ package com.syrus.AMFICOM.map;
 /**
  * Пара целых чисел, соответствующих размерности чего-либо в двухмерном
  * пространстве (ширина и высота)
- * 
- * @author $Author: krupenn $
- * @version $Revision: 1.6 $, $Date: 2005/01/27 14:43:37 $
+ *
+ * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2005/05/18 11:48:19 $
  * @module map_v1
  */
 

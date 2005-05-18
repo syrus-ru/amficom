@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLinkTypeDatabase.java,v 1.21 2005/05/05 09:02:02 krupenn Exp $
+ * $Id: PhysicalLinkTypeDatabase.java,v 1.22 2005/05/18 11:48:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,8 +29,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/05/05 09:02:02 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.22 $, $Date: 2005/05/18 11:48:20 $
+ * @author $Author: bass $
  * @module map_v1
  */
 public class PhysicalLinkTypeDatabase extends CharacterizableDatabase {
@@ -99,9 +99,9 @@ public class PhysicalLinkTypeDatabase extends CharacterizableDatabase {
 	}
 	
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
-	throws IllegalDataException, RetrieveObjectException, SQLException {
-		PhysicalLinkType physicalLinkType = (storableObject == null) ? 
-				new PhysicalLinkType(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, null, null, null) : 
+	throws IllegalDataException, SQLException {
+		PhysicalLinkType physicalLinkType = (storableObject == null) ?
+				new PhysicalLinkType(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, null, null, null) :
 					fromStorableObject(storableObject);
 		physicalLinkType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 							   DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
@@ -117,7 +117,7 @@ public class PhysicalLinkTypeDatabase extends CharacterizableDatabase {
 	}
 
 	
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) {
 //		PhysicalLinkType physicalLinkType = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:

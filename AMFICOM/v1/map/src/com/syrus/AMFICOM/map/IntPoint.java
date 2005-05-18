@@ -1,5 +1,5 @@
 /**
- * $Id: IntPoint.java,v 1.3 2005/01/27 14:43:37 krupenn Exp $
+ * $Id: IntPoint.java,v 1.4 2005/05/18 11:48:20 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,12 +14,12 @@ package com.syrus.AMFICOM.map;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * Пара целых чисел, соответствующих, например, координатам объекта в 
+ * Пара целых чисел, соответствующих, например, координатам объекта в
  * целочисленной двумерной плоскости.
- * 
- * @author $Author: krupenn $
- * @version $Revision: 1.3 $, $Date: 2005/01/27 14:43:37 $
- * @module 
+ *
+ * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2005/05/18 11:48:20 $
+ * @module
  */
 public class IntPoint implements Cloneable {
 

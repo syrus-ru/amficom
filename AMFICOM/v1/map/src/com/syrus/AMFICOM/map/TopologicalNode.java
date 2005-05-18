@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalNode.java,v 1.32 2005/04/20 10:50:39 krupenn Exp $
+ * $Id: TopologicalNode.java,v 1.33 2005/05/18 11:48:20 bass Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,6 @@ import org.omg.CORBA.portable.IDLEntity;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -30,6 +29,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
@@ -38,10 +38,10 @@ import com.syrus.AMFICOM.map.corba.TopologicalNode_Transferable;
 /**
  * “опологический узел нв топологической схеме. “опологический узел может
  * быть концевым дл€ линии и дл€ фрагмента линии. ¬ физическом смысле
- * топологический узел соответствует точке изгиба линии и не требует 
+ * топологический узел соответствует точке изгиба линии и не требует
  * дополнительной описательной информации.
- * @author $Author: krupenn $
- * @version $Revision: 1.32 $, $Date: 2005/04/20 10:50:39 $
+ * @author $Author: bass $
+ * @version $Revision: 1.33 $, $Date: 2005/05/18 11:48:20 $
  * @module map_v1
  * @todo physicalLink should be transient
  */
@@ -99,7 +99,7 @@ public class TopologicalNode extends AbstractNode {
 			for (int i = 0; i < tnt.characteristicIds.length; i++)
 				characteristicIds.add(new Identifier(tnt.characteristicIds[i]));
 
-			this.characteristics.addAll(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
+			this.characteristics.addAll(StorableObjectPool.getStorableObjects(characteristicIds, true));
 		}
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
@@ -158,7 +158,7 @@ public class TopologicalNode extends AbstractNode {
 			Identifier creatorId,
 			String name,
 			String description,
-			PhysicalLink physicalLink, 
+			PhysicalLink physicalLink,
 			DoublePoint location)
 		throws CreateObjectException {
 
@@ -188,7 +188,7 @@ public class TopologicalNode extends AbstractNode {
 			Identifier creatorId,
 			String name,
 			String description,
-			PhysicalLink physicalLink, 
+			PhysicalLink physicalLink,
 			DoublePoint location)
 		throws CreateObjectException {
 
@@ -234,7 +234,7 @@ public class TopologicalNode extends AbstractNode {
 	 * установить активность топологического узла. узел активен, если он находитс€
 	 * в середине св€зи, и не активен, если он находитс€ на конце св€зи. активные
 	 * и неактивные топологические узлы отображаютс€ разными иконками
-	 * 
+	 *
 	 * @param active
 	 *          флаг активности
 	 */
@@ -256,7 +256,7 @@ public class TopologicalNode extends AbstractNode {
 		try {
 			StorableObjectCondition condition = new LinkedIdsCondition(this.getId(), ObjectEntities.NODE_LINK_ENTITY_CODE);
 			Set nlinks;
-			nlinks = MapStorableObjectPool.getStorableObjectsByCondition(condition, false);
+			nlinks = StorableObjectPool.getStorableObjectsByCondition(condition, false);
 			NodeLink nodeLink = (NodeLink )nlinks.iterator().next();
 			return nodeLink.getPhysicalLink();
 		} catch(ApplicationException e) {
@@ -296,7 +296,7 @@ public class TopologicalNode extends AbstractNode {
 	/**
 	 * ”становить флаг возможности прив€зки топологического узла к сетевому и/или
 	 * неприв€занному узлу.
-	 * 
+	 *
 	 * @param canBind
 	 *          флаг овзможности прив€зки
 	 */
@@ -307,7 +307,7 @@ public class TopologicalNode extends AbstractNode {
 	/**
 	 * ѕолучить флаг возможности прив€зки топологического узла к сетевому и/или
 	 * неприв€занному узлу.
-	 * 
+	 *
 	 * @return флаг овзможности прив€зки
 	 */
 	public boolean isCanBind() {

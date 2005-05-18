@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseTypicalConditionImpl.java,v 1.3 2005/04/12 16:59:08 arseniy Exp $
+ * $Id: DatabaseTypicalConditionImpl.java,v 1.4 2005/05/18 11:48:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/04/12 16:59:08 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.4 $, $Date: 2005/05/18 11:48:20 $
+ * @author $Author: bass $
  * @module map_v1
  */
 public class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
@@ -31,12 +31,12 @@ public class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalConditi
 		switch (super.condition.getEntityCode().shortValue()) {
 			case ObjectEntities.PHYSICAL_LINK_ENTITY_CODE:
 				if (this.condition.getKey().equals(StorableObjectWrapper.COLUMN_CODENAME)) {
-					return StorableObjectWrapper.COLUMN_CODENAME; 
+					return StorableObjectWrapper.COLUMN_CODENAME;
 					}
 				break;
 			case ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE:
-				if (this.condition.getKey().equals(StorableObjectWrapper.COLUMN_CODENAME)) { 
-					return StorableObjectWrapper.COLUMN_CODENAME; 
+				if (this.condition.getKey().equals(StorableObjectWrapper.COLUMN_CODENAME)) {
+					return StorableObjectWrapper.COLUMN_CODENAME;
 					}
 				break;
 			default:

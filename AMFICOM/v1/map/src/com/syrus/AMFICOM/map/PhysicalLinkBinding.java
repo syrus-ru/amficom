@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLinkBinding.java,v 1.6 2005/02/09 15:12:53 krupenn Exp $
+ * $Id: PhysicalLinkBinding.java,v 1.7 2005/05/18 11:48:20 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,12 +19,12 @@ import java.util.List;
  * Объект привязки кабелей к тоннелю. Принадлежит определенному тоннелю.
  * включает всебя список кабелей, которые проходят по данному тоннелю,
  * и матрицу пролегания кабелей по трубам тоннеля.
- * 
- * @author $Author: krupenn $
- * @version $Revision: 1.6 $, $Date: 2005/02/09 15:12:53 $
+ *
+ * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2005/05/18 11:48:20 $
  * @module map_v1
  */
-public final class PhysicalLinkBinding 
+public final class PhysicalLinkBinding
 {
 	/** карта привязки кабелей к трубам */
 	private List[][] bindingMap = null;
@@ -85,9 +85,9 @@ public final class PhysicalLinkBinding
 	{
 		this.bindObjects.clear();
 
-		for (int i = 0; i < this.bindingMap.length; i++) 
+		for (int i = 0; i < this.bindingMap.length; i++)
 		{
-			for (int j = 0; j < this.bindingMap[i].length; j++) 
+			for (int j = 0; j < this.bindingMap[i].length; j++)
 			{
 				this.bindingMap[i][j] = new LinkedList();
 			}
@@ -123,9 +123,9 @@ public final class PhysicalLinkBinding
 		// создается новая матрица прокладки
 		List[][] bindingMap2 = new List[dimension.getWidth()][dimension.getHeight()];
 
-		for (int i = 0; i < bindingMap2.length; i++) 
+		for (int i = 0; i < bindingMap2.length; i++)
 		{
-			for (int j = 0; j < bindingMap2[i].length; j++) 
+			for (int j = 0; j < bindingMap2[i].length; j++)
 			{
 				bindingMap2[i][j] = new LinkedList();
 			}
@@ -136,10 +136,10 @@ public final class PhysicalLinkBinding
 		{
 			int mini = Math.min(this.bindingMap.length, bindingMap2.length);
 
-			for (int i = 0; i < mini; i++) 
+			for (int i = 0; i < mini; i++)
 			{
 				int minj = Math.min(this.bindingMap[i].length, bindingMap2[i].length);
-				for (int j = 0; j < minj; j++) 
+				for (int j = 0; j < minj; j++)
 				{
 					bindingMap2[i][j].addAll(this.bindingMap[i][j]);
 				}
@@ -151,7 +151,7 @@ public final class PhysicalLinkBinding
 	/**
 	 * Получить порядковый номер в тоннеле. Высчитывается по координатам
 	 * в соответствии с порядком нумерации и направлением нумерации
-	 * по горизонтали и вертикали ({@link #horizontalVertical}, 
+	 * по горизонтали и вертикали ({@link #horizontalVertical},
 	 * {@link #leftToRight}, {@link #topToBottom})
 	 * @param ii координата по горизонтали
 	 * @param jj координата по вертикали
@@ -246,7 +246,7 @@ public final class PhysicalLinkBinding
 	/**
 	 * Проверить, определено ли место прохождения кабеля в тоннеле.
 	 * @param object кабель
-	 * @return <code>true</code>, если место кабеля определено, 
+	 * @return <code>true</code>, если место кабеля определено,
 	 * <code>false</code> иначе
 	 */
 	public boolean isBound(Object object)
@@ -254,9 +254,9 @@ public final class PhysicalLinkBinding
 		int index = this.bindObjects.indexOf(object);
 		if(index == -1)
 			return false;
-		for (int i = 0; i < this.bindingMap.length; i++) 
+		for (int i = 0; i < this.bindingMap.length; i++)
 		{
-			for (int j = 0; j < this.bindingMap[i].length; j++) 
+			for (int j = 0; j < this.bindingMap[i].length; j++)
 			{
 				if(this.bindingMap[i][j].contains(object))
 					return true;
@@ -276,9 +276,9 @@ public final class PhysicalLinkBinding
 		int index = this.bindObjects.indexOf(object);
 		if(index == -1)
 			return null;
-		for (int i = 0; i < this.bindingMap.length; i++) 
+		for (int i = 0; i < this.bindingMap.length; i++)
 		{
-			for (int j = 0; j < this.bindingMap[i].length; j++) 
+			for (int j = 0; j < this.bindingMap[i].length; j++)
 			{
 				if(this.bindingMap[i][j].contains(object))
 					return new IntPoint(i, j);
@@ -298,7 +298,7 @@ public final class PhysicalLinkBinding
 
 	/**
 	 * Получить направление нумерации по вертикали.
-	 * @return <code>true</code> при нумерации сверху вниз, 
+	 * @return <code>true</code> при нумерации сверху вниз,
 	 * иначе <code>false</code>
 	 */
 	public boolean isTopToBottom()
@@ -318,7 +318,7 @@ public final class PhysicalLinkBinding
 
 	/**
 	 * Получить направление нумерации по горизонтали.
-	 * @return <code>true</code> при нумерации слева направо, 
+	 * @return <code>true</code> при нумерации слева направо,
 	 * иначе <code>false</code>
 	 */
 	public boolean isLeftToRight()
@@ -338,7 +338,7 @@ public final class PhysicalLinkBinding
 
 	/**
 	 * Получить порядок нумерации.
-	 * @return <code>true</code> при нумерации сначала по горизонтали, 
+	 * @return <code>true</code> при нумерации сначала по горизонтали,
 	 * потом по вертикали, иначе <code>false</code>
 	 */
 	public boolean isHorizontalVertical()

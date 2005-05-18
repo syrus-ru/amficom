@@ -1,5 +1,5 @@
 /*
- * $Id: MarkDatabase.java,v 1.20 2005/04/01 11:11:05 bob Exp $
+ * $Id: MarkDatabase.java,v 1.21 2005/05/18 11:48:19 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/04/01 11:11:05 $
- * @author $Author: bob $
+ * @version $Revision: 1.21 $, $Date: 2005/05/18 11:48:19 $
+ * @author $Author: bass $
  * @module map_v1
  */
 public class MarkDatabase extends CharacterizableDatabase {
@@ -66,7 +66,7 @@ public class MarkDatabase extends CharacterizableDatabase {
 				+ MarkWrapper.COLUMN_LONGITUDE + COMMA
 				+ MarkWrapper.COLUMN_LATIUDE + COMMA
 				+ MarkWrapper.COLUMN_PHYSICAL_LINK_ID + COMMA
-				+ MarkWrapper.COLUMN_DISTANCE + COMMA 
+				+ MarkWrapper.COLUMN_DISTANCE + COMMA
 				+ MarkWrapper.COLUMN_CITY  + COMMA
 				+ MarkWrapper.COLUMN_STREET + COMMA
 				+ MarkWrapper.COLUMN_BUILDING;
@@ -81,8 +81,8 @@ public class MarkDatabase extends CharacterizableDatabase {
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
-				+ QUESTION + COMMA 
-				+ QUESTION 
+				+ QUESTION + COMMA
+				+ QUESTION
 				+ QUESTION
 				+ QUESTION;
 		}
@@ -121,8 +121,8 @@ public class MarkDatabase extends CharacterizableDatabase {
 	
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 	throws IllegalDataException, RetrieveObjectException, SQLException {
-		Mark mark = (storableObject == null) ? 
-				new Mark(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, 0.0, 0.0, null, 0.0, null, null, null) : 
+		Mark mark = (storableObject == null) ?
+				new Mark(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, 0.0, 0.0, null, 0.0, null, null, null) :
 					fromStorableObject(storableObject);
 				
 		PhysicalLink physicalLink;
@@ -153,7 +153,7 @@ public class MarkDatabase extends CharacterizableDatabase {
 	}
 
 	
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) {
 //		Mark mark = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:

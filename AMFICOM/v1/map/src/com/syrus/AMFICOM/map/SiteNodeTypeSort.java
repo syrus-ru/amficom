@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeTypeSort.java,v 1.2 2005/05/11 06:33:43 arseniy Exp $
+ * $Id: SiteNodeTypeSort.java,v 1.3 2005/05/18 11:48:20 bass Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,13 +10,13 @@ package com.syrus.AMFICOM.map;
 
 
 /**
- * “ип сетевого узла топологической схемы. —уществует несколько 
- * предустановленных  типов сетевых узлов, которые определ€ютс€ полем 
- * {@link #codename}, соответствующим какому-либо значению {@link #WELL}, 
- * {@link #PIQUET}, {@link #ATS}, {@link #BUILDING}, {@link #UNBOUND}, 
+ * “ип сетевого узла топологической схемы. —уществует несколько
+ * предустановленных  типов сетевых узлов, которые определ€ютс€ полем
+ * {@link #codename}, соответствующим какому-либо значению {@link #WELL},
+ * {@link #PIQUET}, {@link #ATS}, {@link #BUILDING}, {@link #UNBOUND},
  * {@link #CABLE_INLET}, {@link #TOWER}
- * @author $Author: arseniy $
- * @version $Revision: 1.2 $, $Date: 2005/05/11 06:33:43 $
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/05/18 11:48:20 $
  * @module map_v1
  */
 public class SiteNodeTypeSort {

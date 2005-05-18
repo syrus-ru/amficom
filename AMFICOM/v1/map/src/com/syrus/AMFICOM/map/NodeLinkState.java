@@ -1,5 +1,5 @@
 /**
- * $Id: NodeLinkState.java,v 1.2 2005/01/17 15:05:24 bob Exp $
+ * $Id: NodeLinkState.java,v 1.3 2005/05/18 11:48:20 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,13 +13,13 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * состояние фрагмента линии 
- * 
- * 
- * 
- * @version $Revision: 1.2 $, $Date: 2005/01/17 15:05:24 $
+ * состояние фрагмента линии
+ *
+ *
+ *
+ * @version $Revision: 1.3 $, $Date: 2005/05/18 11:48:20 $
  * @module map_v1
- * @author $Author: bob $
+ * @author $Author: bass $
  */
 public final class NodeLinkState extends MapElementState
 {

@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.33 2005/05/05 09:00:57 krupenn Exp $
+ * $Id: SiteNode.java,v 1.34 2005/05/18 11:48:20 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,6 @@ import org.omg.CORBA.portable.IDLEntity;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -28,6 +27,7 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypedObject;
@@ -41,19 +41,19 @@ import com.syrus.AMFICOM.resource.AbstractImageResource;
 import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
 
 /**
- * Сетевой узел на топологической схеме. Характеризуется типом 
- * (<code>{@link SiteNodeType}</code>). 
- * Предуствновленными являются несколько типов - 
- * колодец (<code>{@link SiteNodeType#DEFAULT_WELL}</code>), 
- * пикет (<code>{@link SiteNodeType#DEFAULT_PIQUET}</code>), 
- * кабельный ввод (<code>{@link SiteNodeType#DEFAULT_CABLE_INLET}</code>) 
- * здание (<code>{@link SiteNodeType#DEFAULT_BUILDING}</code>), 
- * телефонный узел (<code>{@link SiteNodeType#DEFAULT_ATS}</code>). 
+ * Сетевой узел на топологической схеме. Характеризуется типом
+ * (<code>{@link SiteNodeType}</code>).
+ * Предуствновленными являются несколько типов -
+ * колодец (<code>{@link SiteNodeType#DEFAULT_WELL}</code>),
+ * пикет (<code>{@link SiteNodeType#DEFAULT_PIQUET}</code>),
+ * кабельный ввод (<code>{@link SiteNodeType#DEFAULT_CABLE_INLET}</code>)
+ * здание (<code>{@link SiteNodeType#DEFAULT_BUILDING}</code>),
+ * телефонный узел (<code>{@link SiteNodeType#DEFAULT_ATS}</code>).
  * Дополнительно описывается полями
- * {@link #city}, {@link #street}, {@link #building} для поиска по 
- * географическим параметрам. 
- * @author $Author: krupenn $
- * @version $Revision: 1.33 $, $Date: 2005/05/05 09:00:57 $
+ * {@link #city}, {@link #street}, {@link #building} для поиска по
+ * географическим параметрам.
+ * @author $Author: bass $
+ * @version $Revision: 1.34 $, $Date: 2005/05/18 11:48:20 $
  * @module map_v1
  */
 public class SiteNode extends AbstractNode implements TypedObject {
@@ -117,7 +117,7 @@ public class SiteNode extends AbstractNode implements TypedObject {
 			for (int i = 0; i < snt.characteristicIds.length; i++)
 				characteristicIds.add(new Identifier(snt.characteristicIds[i]));
 
-			this.characteristics.addAll(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
+			this.characteristics.addAll(StorableObjectPool.getStorableObjects(characteristicIds, true));
 		}
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
@@ -385,13 +385,13 @@ public class SiteNode extends AbstractNode implements TypedObject {
 					ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE,
 					StorableObjectWrapper.COLUMN_CODENAME);
 
-			Set set = MapStorableObjectPool.getStorableObjectsByCondition(condition, true);
+			Set set = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 			if (set == null || set.size() == 0) {
 				typeCodeName1 = SiteNodeType.DEFAULT_BUILDING;
 
 				condition.setValue(typeCodeName1);
 
-				set = MapStorableObjectPool.getStorableObjectsByCondition(condition, true);
+				set = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 				if (set == null || set.size() == 0) {
 					throw new CreateObjectException("SiteNodeType \'" + SiteNodeType.DEFAULT_BUILDING + "\' not found");
 				}
@@ -405,7 +405,7 @@ public class SiteNode extends AbstractNode implements TypedObject {
 					ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE,
 					StorableObjectWrapper.COLUMN_CODENAME);
 
-			set = ResourceStorableObjectPool.getStorableObjectsByCondition(condition, true);
+			set = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 			if (set == null || set.size() == 0) {
 				//@todo add public static final String AbstractImageResource.DEFAULT_SITE_IMAGE = "images/building.gif"
 //				imageCodeName1 = AbstractImageResource.DEFAULT_SITE_IMAGE;
@@ -413,7 +413,7 @@ public class SiteNode extends AbstractNode implements TypedObject {
 
 				condition.setValue(imageCodeName1);
 
-				set = ResourceStorableObjectPool.getStorableObjectsByCondition(condition, true);
+				set = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 				if (set == null || set.size() == 0) {
 					throw new CreateObjectException("ImageResource \'" + imageCodeName1 + "\' not found");
 				}

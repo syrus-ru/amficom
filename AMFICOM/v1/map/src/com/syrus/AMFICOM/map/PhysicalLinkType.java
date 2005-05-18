@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.35 2005/05/05 09:00:34 krupenn Exp $
+ * $Id: PhysicalLinkType.java,v 1.36 2005/05/18 11:48:20 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,6 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -28,18 +27,19 @@ import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.PhysicalLinkType_Transferable;
 
 /**
- * Тип линии топологической схемы. Существует несколько предустановленных 
+ * Тип линии топологической схемы. Существует несколько предустановленных
  * типов линий, которые определяются полем {@link #codename}, соответствующим
- * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR}, 
+ * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
- * @author $Author: krupenn $
- * @version $Revision: 1.35 $, $Date: 2005/05/05 09:00:34 $
+ * @author $Author: bass $
+ * @version $Revision: 1.36 $, $Date: 2005/05/18 11:48:20 $
  * @module map_v1
  * @todo add 'topological' to constructor
  * @todo make 'topological' persistent
@@ -74,7 +74,7 @@ public class PhysicalLinkType extends StorableObjectType implements Characteriza
 	/**
 	 * Размерность тоннеля. Для тоннеля обозначает размерность матрицы труб в
 	 * разрезе, для участка коллектора - число полок и мест на полках
-	 * 
+	 *
 	 * @todo добавить сохранение в БД
 	 */
 	private IntDimension 			bindingDimension;
@@ -162,10 +162,10 @@ public class PhysicalLinkType extends StorableObjectType implements Characteriza
 		this.name = pltt.name;
 
 		//@todo retreive from transferable!
-		this.sort = PhysicalLinkTypeSort.fromString(pltt.codename); 
+		this.sort = PhysicalLinkTypeSort.fromString(pltt.codename);
 
 		Set ids = Identifier.fromTransferables(pltt.characteristicIds);
-		this.characteristics = GeneralStorableObjectPool.getStorableObjects(ids, true);
+		this.characteristics = StorableObjectPool.getStorableObjects(ids, true);
 	}
 
 	public Set getDependencies() {
@@ -239,13 +239,13 @@ public class PhysicalLinkType extends StorableObjectType implements Characteriza
 		this.name = name;
 
 		//@todo retreive from transferable!
-		this.sort = PhysicalLinkTypeSort.fromString(codename); 
+		this.sort = PhysicalLinkTypeSort.fromString(codename);
 	}
 
 	public void setCodename(String codename) {
 		super.setCodename(codename);
 		//@todo retreive from transferable!
-		this.sort = PhysicalLinkTypeSort.fromString(codename); 
+		this.sort = PhysicalLinkTypeSort.fromString(codename);
 	}
 
 	protected void setBindingDimension0(IntDimension bindingDimension) {

@@ -1,5 +1,5 @@
 /*-
- * $Id: MapDatabaseContext.java,v 1.5 2005/04/01 11:27:33 bass Exp $
+ * $Id: MapDatabaseContext.java,v 1.6 2005/05/18 11:48:20 bass Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,7 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/04/01 11:27:33 $
+ * @version $Revision: 1.6 $, $Date: 2005/05/18 11:48:20 $
  * @author Vladimir ``Bob'' Dolzhenko
  * @author $Author: bass $
  * @module map_v1
@@ -90,7 +90,7 @@ public final class MapDatabaseContext {
 			case ObjectEntities.TOPOLOGICAL_NODE_ENTITY_CODE:
 				return getTopologicalNodeDatabase();
 			default:
-				Log.errorMessage("MapDatabaseContext.getDatabase | Unknown entity: " + entityCode); //$NON-NLS-1$
+				Log.errorMessage("MapDatabaseContext.getDatabase | Unknown entity: " + entityCode);
 				return null;
 		}
 	}

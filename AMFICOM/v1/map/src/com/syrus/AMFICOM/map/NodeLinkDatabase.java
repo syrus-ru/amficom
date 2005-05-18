@@ -1,5 +1,5 @@
 /*
- * $Id: NodeLinkDatabase.java,v 1.20 2005/04/01 11:11:05 bob Exp $
+ * $Id: NodeLinkDatabase.java,v 1.21 2005/05/18 11:48:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/04/01 11:11:05 $
- * @author $Author: bob $
+ * @version $Revision: 1.21 $, $Date: 2005/05/18 11:48:20 $
+ * @author $Author: bass $
  * @module map_v1
  */
 public class NodeLinkDatabase extends CharacterizableDatabase {
@@ -60,7 +60,7 @@ public class NodeLinkDatabase extends CharacterizableDatabase {
 			columns = StorableObjectWrapper.COLUMN_NAME + COMMA
 				+ NodeLinkWrapper.COLUMN_PHYSICAL_LINK_ID + COMMA
 				+ NodeLinkWrapper.COLUMN_START_NODE_ID + COMMA
-				+ NodeLinkWrapper.COLUMN_END_NODE_ID + COMMA 
+				+ NodeLinkWrapper.COLUMN_END_NODE_ID + COMMA
 				+ NodeLinkWrapper.COLUMN_LENGTH;
 		}
 		return columns;
@@ -71,7 +71,7 @@ public class NodeLinkDatabase extends CharacterizableDatabase {
 			updateMultipleSQLValues = QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
-				+ QUESTION + COMMA 
+				+ QUESTION + COMMA
 				+ QUESTION;
 		}
 		return updateMultipleSQLValues;
@@ -101,8 +101,8 @@ public class NodeLinkDatabase extends CharacterizableDatabase {
 	
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 	throws IllegalDataException, RetrieveObjectException, SQLException {
-		NodeLink nodeLink = (storableObject == null) ? 
-				new NodeLink(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, null, null, 0.0) : 
+		NodeLink nodeLink = (storableObject == null) ?
+				new NodeLink(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, null, null, 0.0) :
 					fromStorableObject(storableObject);
 
 		PhysicalLink physicalLink;
@@ -111,7 +111,7 @@ public class NodeLinkDatabase extends CharacterizableDatabase {
 		
 		try{
 			physicalLink = (PhysicalLink)MapStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, NodeLinkWrapper.COLUMN_PHYSICAL_LINK_ID), true);
-			startNode = (AbstractNode)MapStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, NodeLinkWrapper.COLUMN_START_NODE_ID), true); 
+			startNode = (AbstractNode)MapStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, NodeLinkWrapper.COLUMN_START_NODE_ID), true);
 			endNode = (AbstractNode)MapStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, NodeLinkWrapper.COLUMN_END_NODE_ID), true);
 		} catch (ApplicationException ae) {
 			String msg = this.getEnityName() + "Database.updateEntityFromResultSet | Error " + ae.getMessage();
@@ -135,7 +135,7 @@ public class NodeLinkDatabase extends CharacterizableDatabase {
 	}
 
 	
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) {
 //		NodeLink nodeLink = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {			
 			default:

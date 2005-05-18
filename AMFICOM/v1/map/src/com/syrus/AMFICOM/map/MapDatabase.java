@@ -1,5 +1,5 @@
 /*
- * $Id: MapDatabase.java,v 1.25 2005/04/12 17:10:26 arseniy Exp $
+ * $Id: MapDatabase.java,v 1.26 2005/05/18 11:48:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,6 +28,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
@@ -38,20 +39,20 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/04/12 17:10:26 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.26 $, $Date: 2005/05/18 11:48:20 $
+ * @author $Author: bass $
  * @module map_v1
  */
 public class MapDatabase extends CharacterizableDatabase {
-	 // linked tables :: 
-    private static final String MAP_COLLECTOR 			= "MapCollector";    
+	 // linked tables ::
+    private static final String MAP_COLLECTOR 			= "MapCollector";
     private static final String MAP_MARK 				= "MapMark";
 	private static final String MAP_NODE_LINK 			= "MapNodeLink";
 	private static final String MAP_PHYSICAL_LINK 		= "MapPhysicalLink";
 	private static final String MAP_SITE_NODE 			=  "MapSiteNode";
 	private static final String MAP_TOPOLOGICAL_NODE 	= "MapTopologicalNode";
 	
-    private static final int _MAP_COLLECTOR 			= 0;    
+    private static final int _MAP_COLLECTOR 			= 0;
     private static final int _MAP_MARK 					= 1;
 	private static final int _MAP_NODE_LINK 			= 2;
 	private static final int _MAP_PHYSICAL_LINK 		= 3;
@@ -122,7 +123,7 @@ public class MapDatabase extends CharacterizableDatabase {
 				Set collectorIds = (Set)collectors.get(id);
 				if (id.equals(map.getId())){
 					try {
-						map.setCollectors0(MapStorableObjectPool.getStorableObjects(collectorIds, true));
+						map.setCollectors0(StorableObjectPool.getStorableObjects(collectorIds, true));
 					} catch (ApplicationException e) {
 						throw new RetrieveObjectException(e);
 					}
@@ -137,10 +138,10 @@ public class MapDatabase extends CharacterizableDatabase {
 				Set markIds = (Set)marks.get(id);
 				if (id.equals(map.getId())){
 					try {
-						map.setMarks0(MapStorableObjectPool.getStorableObjects(markIds, true));
+						map.setMarks0(StorableObjectPool.getStorableObjects(markIds, true));
 					} catch (ApplicationException e) {
 						throw new RetrieveObjectException(e);
-					} 
+					}
 				}
 			}
 		}
@@ -152,7 +153,7 @@ public class MapDatabase extends CharacterizableDatabase {
 				Set nodeLinkIds = (Set)nodeLinks.get(id);
 				if (id.equals(map.getId())){
 					try {
-						map.setNodeLinks0(MapStorableObjectPool.getStorableObjects(nodeLinkIds, true));
+						map.setNodeLinks0(StorableObjectPool.getStorableObjects(nodeLinkIds, true));
 					} catch (ApplicationException e) {
 						throw new RetrieveObjectException(e);
 					}
@@ -167,10 +168,10 @@ public class MapDatabase extends CharacterizableDatabase {
 				Set physicalLinkIds = (Set)physicalLinks.get(id);
 				if (id.equals(map.getId())){
 					try {
-						map.setPhysicalLinks0(MapStorableObjectPool.getStorableObjects(physicalLinkIds, true));
+						map.setPhysicalLinks0(StorableObjectPool.getStorableObjects(physicalLinkIds, true));
 					} catch (ApplicationException e) {
 						throw new RetrieveObjectException(e);
-					} 
+					}
 				}
 			}
 		}
@@ -182,10 +183,10 @@ public class MapDatabase extends CharacterizableDatabase {
 				Set siteNodeIds = (Set)siteNodes.get(id);
 				if (id.equals(map.getId())){
 					try {
-						map.setSiteNodes0(MapStorableObjectPool.getStorableObjects(siteNodeIds, true));
+						map.setSiteNodes0(StorableObjectPool.getStorableObjects(siteNodeIds, true));
 					} catch (ApplicationException e) {
 						throw new RetrieveObjectException(e);
-					} 
+					}
 				}
 			}
 		}
@@ -197,7 +198,7 @@ public class MapDatabase extends CharacterizableDatabase {
 				Set topologicalNodeIds = (Set)topologicalNodes.get(id);
 				if (id.equals(map.getId())){
 					try {
-						map.setTopologicalNodes0(MapStorableObjectPool.getStorableObjects(topologicalNodeIds, true));
+						map.setTopologicalNodes0(StorableObjectPool.getStorableObjects(topologicalNodeIds, true));
 					} catch (ApplicationException e) {
 						throw new RetrieveObjectException(e);
 					}
@@ -257,9 +258,9 @@ public class MapDatabase extends CharacterizableDatabase {
 	}
 	
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
-	throws IllegalDataException, RetrieveObjectException, SQLException {
-		Map map = (storableObject == null) ? 
-				new Map(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, null) : 
+	throws IllegalDataException, SQLException {
+		Map map = (storableObject == null) ?
+				new Map(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, null) :
 					fromStorableObject(storableObject);				
 		
 		map.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
@@ -274,7 +275,7 @@ public class MapDatabase extends CharacterizableDatabase {
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg)
-			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+			throws IllegalDataException {
 		Map map = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
@@ -544,10 +545,10 @@ public class MapDatabase extends CharacterizableDatabase {
 				Set collectorIds = (Set)collectors.get(id);				
 				if (id.equals(map.getId())){
 					try {
-						map.setCollectors0(MapStorableObjectPool.getStorableObjects(collectorIds, true));
+						map.setCollectors0(StorableObjectPool.getStorableObjects(collectorIds, true));
 					} catch (ApplicationException e) {
 						throw new RetrieveObjectException(e);
-					} 
+					}
 				}
 			}
 		}
@@ -560,7 +561,7 @@ public class MapDatabase extends CharacterizableDatabase {
 				Set markIds = (Set)marks.get(id);
 				if (id.equals(map.getId())){
 					try {
-						map.setMarks0(MapStorableObjectPool.getStorableObjects(markIds, true));
+						map.setMarks0(StorableObjectPool.getStorableObjects(markIds, true));
 					} catch (ApplicationException e) {
 						throw new RetrieveObjectException(e);
 					}
@@ -576,7 +577,7 @@ public class MapDatabase extends CharacterizableDatabase {
 				Set nodeLinkIds = (Set)nodeLinks.get(id);
 				if (id.equals(map.getId())){
 					try {
-						map.setNodeLinks0(MapStorableObjectPool.getStorableObjects(nodeLinkIds, true));
+						map.setNodeLinks0(StorableObjectPool.getStorableObjects(nodeLinkIds, true));
 					} catch (ApplicationException e) {
 						throw new RetrieveObjectException(e);
 					}
@@ -592,10 +593,10 @@ public class MapDatabase extends CharacterizableDatabase {
 				Set physicalLinkIds = (Set)physicalLinks.get(id);
 				if (id.equals(map.getId())){
 					try {
-						map.setPhysicalLinks0(MapStorableObjectPool.getStorableObjects(physicalLinkIds, true));
+						map.setPhysicalLinks0(StorableObjectPool.getStorableObjects(physicalLinkIds, true));
 					} catch (ApplicationException e) {
 						throw new RetrieveObjectException(e);
-					} 
+					}
 				}
 			}
 		}
@@ -608,7 +609,7 @@ public class MapDatabase extends CharacterizableDatabase {
 				Set siteNodeIds = (Set)siteNodes.get(id);
 				if (id.equals(map.getId())){
 					try {
-						map.setSiteNodes0(MapStorableObjectPool.getStorableObjects(siteNodeIds, true));
+						map.setSiteNodes0(StorableObjectPool.getStorableObjects(siteNodeIds, true));
 					} catch (ApplicationException e) {
 						throw new RetrieveObjectException(e);
 					}
@@ -624,7 +625,7 @@ public class MapDatabase extends CharacterizableDatabase {
 				Set topologicalNodeIds = (Set)topologicalNodes.get(id);
 				if (id.equals(map.getId())){
 					try {
-						map.setTopologicalNodes0(MapStorableObjectPool.getStorableObjects(topologicalNodeIds, true));
+						map.setTopologicalNodes0(StorableObjectPool.getStorableObjects(topologicalNodeIds, true));
 					} catch (ApplicationException e) {
 						throw new RetrieveObjectException(e);
 					}

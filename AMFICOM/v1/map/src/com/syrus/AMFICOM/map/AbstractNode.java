@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractNode.java,v 1.21 2005/04/13 09:46:51 krupenn Exp $
+ * $Id: AbstractNode.java,v 1.22 2005/05/18 11:48:20 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,18 +23,18 @@ import java.util.Set;
 import org.omg.CORBA.portable.IDLEntity;
 
 /**
- * Абстрактный класс, описывающий узловой элемент топологической схемы 
+ * Абстрактный класс, описывающий узловой элемент топологической схемы
  * ({@link Map}). Узловой объект характеризуется наличием координат
  * ({@link #location}) и изображением ({@link #imageId}).
- * 
- * @author $Author: krupenn $
- * @version $Revision: 1.21 $, $Date: 2005/04/13 09:46:51 $
+ *
+ * @author $Author: bass $
+ * @version $Revision: 1.22 $, $Date: 2005/05/18 11:48:20 $
  * @module map_v1
  * @see SiteNode
  * @see TopologicalNode
  */
-public abstract class AbstractNode 
-	extends StorableObject 
+public abstract class AbstractNode
+	extends StorableObject
 	implements MapElement
 {
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.52 2005/05/05 09:00:57 krupenn Exp $
+ * $Id: PhysicalLink.java,v 1.53 2005/05/18 11:48:19 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,6 @@ import org.omg.CORBA.portable.IDLEntity;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -35,6 +34,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypedObject;
@@ -45,15 +45,15 @@ import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.map.corba.PhysicalLink_Transferable;
 
 /**
- * Линия топологический схемы. Линия имеет начальный и конечный узлы, 
+ * Линия топологический схемы. Линия имеет начальный и конечный узлы,
  * внутренние топологические узлы (список не хранится явно) и состоит из
- * фрагментов. Фрагменты образуют цепочку. Последовательность фрагментов 
- * не хранится. Линия характеризуется типом (<code>{@link PhysicalLinkType}</code>). 
- * Предуствновленными являются  два типа - 
- * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>) 
+ * фрагментов. Фрагменты образуют цепочку. Последовательность фрагментов
+ * не хранится. Линия характеризуется типом (<code>{@link PhysicalLinkType}</code>).
+ * Предуствновленными являются  два типа -
+ * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
- * @author $Author: krupenn $
- * @version $Revision: 1.52 $, $Date: 2005/05/05 09:00:57 $
+ * @author $Author: bass $
+ * @version $Revision: 1.53 $, $Date: 2005/05/18 11:48:19 $
  * @module map_v1
  * @todo make binding.dimension persistent (just as bindingDimension for PhysicalLinkType)
  * @todo nodeLinks should be transient
@@ -267,7 +267,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		this.endNode = (AbstractNode) MapStorableObjectPool.getStorableObject(new Identifier(plt.endNodeId), true);
 
 		Set ids = Identifier.fromTransferables(plt.characteristicIds);
-		this.characteristics = GeneralStorableObjectPool.getStorableObjects(ids, true);
+		this.characteristics = StorableObjectPool.getStorableObjects(ids, true);
 
 		this.selected = false;
 
@@ -422,7 +422,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		try {
 			StorableObjectCondition condition = new LinkedIdsCondition(this.getId(), ObjectEntities.NODE_LINK_ENTITY_CODE);
 			Set nlinks;
-			nlinks = MapStorableObjectPool.getStorableObjectsByCondition(condition, false);
+			nlinks = StorableObjectPool.getStorableObjectsByCondition(condition, false);
 			List nlinkslist = new ArrayList(nlinks.size());
 			for(Iterator iter = nlinks.iterator(); iter.hasNext();) {
 				nlinkslist.add(iter.next());
@@ -523,7 +523,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	/**
 	 * Получить объект, описывающий привязку кабелей
 	 * (com.syrus.AMFICOM.scheme.corba.SchemeCableLink) к линии.
-	 * 
+	 *
 	 * @return привязка
 	 */
 	public PhysicalLinkBinding getBinding() {
@@ -533,7 +533,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	/**
 	 * Возвращяет топологическую длинну линии, которая представляет собой
 	 * суммарную длину фрагментов, составляющих линию
-	 * 
+	 *
 	 * @return топологическая длинна линии
 	 */
 	public double getLengthLt() {
@@ -548,7 +548,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	/**
 	 * Убрать фрагмент из состава линии. Внимание! концевые точки линии не
 	 * обновляются.
-	 * 
+	 *
 	 * @param nodeLink
 	 *          фрагмент линии
 	 */
@@ -561,7 +561,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	/**
 	 * Добавить фрагмент в состав линии. Внимание! концевые точки линии не
 	 * обновляются.
-	 * 
+	 *
 	 * @param addNodeLink
 	 *          фрагмент линии
 	 */
@@ -584,7 +584,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	 * Получить список фрагментов этой линии, имеющие заданный узел концевым.
 	 * Список включает не более двух фрагментов (поскольку фрагменты образуют
 	 * цепочку).
-	 * 
+	 *
 	 * @param node
 	 *          узел
 	 * @return список фрагментов
@@ -604,7 +604,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	/**
 	 * Получить первый фрагмент в цепочке фрагментов, из которых строится линия.
 	 * Первый фрагмент определяется начальным узлом линии.
-	 * 
+	 *
 	 * @return первый фрагмент, или <code>null</code>, если в линии не найден
 	 *         фрагмент, вклучающий начальный узел линии
 	 */
@@ -633,7 +633,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	 * Получить список отсортированных узлов, входящих в состав линии, начиная от
 	 * начального узла линии. Сортировка узлов должна производиться явно (
 	 * {@link #sortNodes()}) до вызова этой функции
-	 * 
+	 *
 	 * @return список отсортированных узлов, или <code>null</code>, если узлы
 	 *         не отсортированы
 	 */
@@ -646,7 +646,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	/**
 	 * Сортировать фрагменты линии по цепочке начиная от начального узла. При
 	 * сортировке фрагментов сортируются также узлы
-	 * 
+	 *
 	 */
 	public void sortNodeLinks() {
 		if (!this.nodeLinksSorted) {
@@ -694,7 +694,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 
 	/**
 	 * Получить следующий фрагмент по цепочке сортированных фрагментов.
-	 * 
+	 *
 	 * @param nodeLink
 	 *          фрагмент
 	 * @return следующий фрагмент, или <code>null</code>, если nl - последний в
@@ -715,7 +715,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 
 	/**
 	 * Получить предыдущий фрагмент по цепочке сортированных фрагментов.
-	 * 
+	 *
 	 * @param nodeLink
 	 *          фрагмент
 	 * @return предыдущий фрагмент, или <code>null</code>, если nl - первый в
@@ -777,7 +777,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 
 	/**
 	 * Получить другой конечный узел линии для заданного конечного узла.
-	 * 
+	 *
 	 * @param node
 	 *          узел
 	 * @return другой конечный узел
@@ -908,13 +908,13 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 					ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE,
 					StorableObjectWrapper.COLUMN_CODENAME);
 
-			Collection collection = MapStorableObjectPool.getStorableObjectsByCondition(condition, true);
+			Collection collection = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 			if (collection == null || collection.size() == 0) {
 				typeCodeName1 = PhysicalLinkType.DEFAULT_TUNNEL;
 
 				condition.setValue(typeCodeName1);
 
-				collection = MapStorableObjectPool.getStorableObjectsByCondition(condition, true);
+				collection = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 				if (collection == null || collection.size() == 0) {
 					throw new CreateObjectException("PhysicalLinkType \'" + PhysicalLinkType.DEFAULT_TUNNEL + "\' not found");
 				}

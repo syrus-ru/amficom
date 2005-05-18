@@ -1,5 +1,5 @@
 /*
- * $Id: CollectorDatabase.java,v 1.27 2005/04/20 07:53:47 bass Exp $
+ * $Id: CollectorDatabase.java,v 1.28 2005/05/18 11:48:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,6 +28,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
@@ -38,7 +39,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/04/20 07:53:47 $
+ * @version $Revision: 1.28 $, $Date: 2005/05/18 11:48:20 $
  * @author $Author: bass $
  * @module map_v1
  */
@@ -74,7 +75,7 @@ public class CollectorDatabase extends CharacterizableDatabase {
 			Collector collector = (Collector) it.next();
 			Set physicalLinkIds = (Set) map.get(collector);
 			try {
-				collector.setPhysicalLinks0(MapStorableObjectPool.getStorableObjects(physicalLinkIds, true));
+				collector.setPhysicalLinks0(StorableObjectPool.getStorableObjects(physicalLinkIds, true));
 			}
 			catch (ApplicationException e) {
 				throw new RetrieveObjectException(e);
@@ -118,7 +119,6 @@ public class CollectorDatabase extends CharacterizableDatabase {
 
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException,
-				RetrieveObjectException,
 				SQLException {
 		Collector collector = (storableObject == null) ? new Collector(DatabaseIdentifier.getIdentifier(resultSet,
 				StorableObjectWrapper.COLUMN_ID), null, 0L, null, null) : fromStorableObject(storableObject);
@@ -134,7 +134,7 @@ public class CollectorDatabase extends CharacterizableDatabase {
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg)
-			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+			throws IllegalDataException {
 		Collector collector = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:

@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLinkDatabase.java,v 1.21 2005/04/01 11:11:05 bob Exp $
+ * $Id: PhysicalLinkDatabase.java,v 1.22 2005/05/18 11:48:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,14 +29,14 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/04/01 11:11:05 $
- * @author $Author: bob $
+ * @version $Revision: 1.22 $, $Date: 2005/05/18 11:48:20 $
+ * @author $Author: bass $
  * @module map_v1
  */
 public class PhysicalLinkDatabase extends CharacterizableDatabase {
 	private static final int LEFT_RIGHT = 0x01;
     private static final int TOP_BOTTOM = 0x02;
-    
+
 	private static String columns;
 	
 	private static String updateMultipleSQLValues;
@@ -62,7 +62,7 @@ public class PhysicalLinkDatabase extends CharacterizableDatabase {
 			columns = StorableObjectWrapper.COLUMN_NAME + COMMA
 				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
 				+ PhysicalLinkWrapper.COLUMN_PHYSICAL_LINK_TYPE_ID + COMMA
-				+ PhysicalLinkWrapper.COLUMN_CITY + COMMA 
+				+ PhysicalLinkWrapper.COLUMN_CITY + COMMA
 				+ PhysicalLinkWrapper.COLUMN_STREET + COMMA
 				+ PhysicalLinkWrapper.COLUMN_BUILDING + COMMA
 				+ PhysicalLinkWrapper.COLUMN_DIMENSION_X + COMMA
@@ -79,9 +79,9 @@ public class PhysicalLinkDatabase extends CharacterizableDatabase {
 			updateMultipleSQLValues = QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
-				+ QUESTION + COMMA 
 				+ QUESTION + COMMA
-				+ QUESTION + COMMA 
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -127,9 +127,9 @@ public class PhysicalLinkDatabase extends CharacterizableDatabase {
 	
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 	throws IllegalDataException, RetrieveObjectException, SQLException {
-		PhysicalLink physicalLink = (storableObject == null) ? 
-				new PhysicalLink(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, null, null, null, 
-						null, null, null, 0, 0, false, false) : 
+		PhysicalLink physicalLink = (storableObject == null) ?
+				new PhysicalLink(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, null, null, null,
+						null, null, null, 0, 0, false, false) :
 					fromStorableObject(storableObject);
 				
 		PhysicalLinkType type;
@@ -153,7 +153,7 @@ public class PhysicalLinkDatabase extends CharacterizableDatabase {
 							   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
 							   resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
 							   DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
-							   DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),							   
+							   DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),							
 							   type,
 							   DatabaseString.fromQuerySubString(resultSet.getString(PhysicalLinkWrapper.COLUMN_CITY)),
 							   DatabaseString.fromQuerySubString(resultSet.getString(PhysicalLinkWrapper.COLUMN_STREET)),
@@ -168,7 +168,7 @@ public class PhysicalLinkDatabase extends CharacterizableDatabase {
 	}
 
 	
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) {
 //		Mark mark = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
