@@ -1,5 +1,5 @@
 /*-
- * $Id: ARServerServantManager.java,v 1.2 2005/05/18 12:56:28 bass Exp $
+ * $Id: ARServerServantManager.java,v 1.3 2005/05/18 13:03:22 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/05/18 12:56:28 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/18 13:03:22 $
  * @module arserver_v1
  */
 public class ARServerServantManager extends RunnableVerifiedConnectionManager
@@ -45,6 +45,9 @@ public class ARServerServantManager extends RunnableVerifiedConnectionManager
 
 		this.loginServerServantName = loginServerServantName;
 		this.eventServerServantName = eventServerServantName;
+
+		//NOTE ARServer never generates identifiers for himself, so this initialization is redundant.
+		this.databaseIdentifierGeneratorServer = new DatabaseIdentifierGeneratorServer();
 
 		assert timeout >= 10L * 60L * 1000L: ErrorMessages.TIMEOUT_TOO_SHORT; //not less then 10 min
 	}
