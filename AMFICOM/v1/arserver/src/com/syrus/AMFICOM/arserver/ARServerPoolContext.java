@@ -1,5 +1,5 @@
 /*-
- * $Id: ARServerPoolContext.java,v 1.1 2005/05/13 17:41:55 bass Exp $
+ * $Id: ARServerPoolContext.java,v 1.2 2005/05/18 12:56:28 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,15 +17,15 @@ import com.syrus.util.ApplicationProperties;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/05/13 17:41:55 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/18 12:56:28 $
  * @module arserver_v1
  */
 final class ARServerPoolContext extends PoolContext {
-	public static final String KEY_RESOURCE_POOL_SIZE = "ResourcePoolSize"; //$NON-NLS-1$
+	public static final String KEY_RESOURCE_POOL_SIZE = "ResourcePoolSize";
 
-	public static final String KEY_REFRESH_TIMEOUT = "RefreshPoolTimeout"; //$NON-NLS-1$
+	public static final String KEY_REFRESH_TIMEOUT = "RefreshPoolTimeout";
 
-	public static final String KEY_DATABASE_LOADER_ONLY = "DatabaseLoaderOnly"; //$NON-NLS-1$
+	public static final String KEY_DATABASE_LOADER_ONLY = "DatabaseLoaderOnly";
 
 	public static final int RESOURCE_POOL_SIZE = 1000;
 
@@ -34,7 +34,7 @@ final class ARServerPoolContext extends PoolContext {
 	 */
 	public static final int REFRESH_TIMEOUT = 5;
 
-	public static final String DATABASE_LOADER_ONLY = "false"; //$NON-NLS-1$
+	public static final String DATABASE_LOADER_ONLY = "false";
 
 	public void init() {
 		ResourceStorableObjectPool.init(Boolean.valueOf(ApplicationProperties.getString(KEY_DATABASE_LOADER_ONLY, DATABASE_LOADER_ONLY)).booleanValue()

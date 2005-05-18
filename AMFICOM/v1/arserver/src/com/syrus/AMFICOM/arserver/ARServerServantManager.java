@@ -1,5 +1,5 @@
 /*-
- * $Id: ARServerServantManager.java,v 1.1 2005/05/13 17:41:55 bass Exp $
+ * $Id: ARServerServantManager.java,v 1.2 2005/05/18 12:56:28 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/05/13 17:41:55 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/18 12:56:28 $
  * @module arserver_v1
  */
 public class ARServerServantManager extends RunnableVerifiedConnectionManager
@@ -87,10 +87,10 @@ public class ARServerServantManager extends RunnableVerifiedConnectionManager
 	 * @todo Generate event "Connection lost".
 	 */
 	protected void onLoseConnection(final String servantName) {
-		Log.debugMessage("ARServerServantManager.onLoseConnection | Connection with '" //$NON-NLS-1$
+		Log.debugMessage("ARServerServantManager.onLoseConnection | Connection with '"
 				+ servantName
-				+ "' lost", //$NON-NLS-1$
-				Log.WARNING);  //$NON-NLS-1$//$NON-NLS-2$
+				+ "' lost",
+				Log.WARNING);
 	}
 
 	/**
@@ -99,9 +99,9 @@ public class ARServerServantManager extends RunnableVerifiedConnectionManager
 	 * @todo Generate event "Connection restored".
 	 */
 	protected void onRestoreConnection(final String servantName) {
-		Log.debugMessage("ARServerServantManager.onRestoreConnection | Connection with '" //$NON-NLS-1$
+		Log.debugMessage("ARServerServantManager.onRestoreConnection | Connection with '"
 				+ servantName
-				+ "' restored", //$NON-NLS-1$
+				+ "' restored",
 				Log.INFO);
 				
 	}

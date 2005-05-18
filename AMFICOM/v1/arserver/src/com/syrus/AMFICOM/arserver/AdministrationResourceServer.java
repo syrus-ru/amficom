@@ -1,5 +1,5 @@
 /*
- * $Id: AdministrationResourceServer.java,v 1.4 2005/05/13 17:41:55 bass Exp $
+ * $Id: AdministrationResourceServer.java,v 1.5 2005/05/18 12:56:28 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,12 +7,14 @@
  */
 package com.syrus.AMFICOM.arserver;
 
+import org.omg.PortableServer.POA;
+
 import com.syrus.AMFICOM.administration.AdministrationDatabaseContext;
 import com.syrus.AMFICOM.administration.Server;
 import com.syrus.AMFICOM.administration.ServerProcess;
 import com.syrus.AMFICOM.administration.ServerProcessWrapper;
 import com.syrus.AMFICOM.administration.User;
-import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.arserver.corba.ARServerPOATie;
 import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.DatabaseObjectLoader;
 import com.syrus.AMFICOM.general.Identifier;
@@ -25,44 +27,44 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/05/13 17:41:55 $
+ * @version $Revision: 1.5 $, $Date: 2005/05/18 12:56:28 $
  * @author $Author: bass $
  * @module arserver_v1
  */
 public class AdministrationResourceServer {
-	public static final String APPLICATION_NAME = "arserver"; //$NON-NLS-1$
+	public static final String APPLICATION_NAME = "arserver";
 
 	/*-********************************************************************
 	 * Keys.                                                              *
 	 **********************************************************************/
 
-	public static final String KEY_DB_HOST_NAME = "DBHostName"; //$NON-NLS-1$
+	public static final String KEY_DB_HOST_NAME = "DBHostName";
 
-	public static final String KEY_DB_SID = "DBSID"; //$NON-NLS-1$
+	public static final String KEY_DB_SID = "DBSID";
 
-	public static final String KEY_DB_CONNECTION_TIMEOUT = "DBConnectionTimeout"; //$NON-NLS-1$
+	public static final String KEY_DB_CONNECTION_TIMEOUT = "DBConnectionTimeout";
 
-	public static final String KEY_DB_LOGIN_NAME = "DBLoginName"; //$NON-NLS-1$
+	public static final String KEY_DB_LOGIN_NAME = "DBLoginName";
 
-	public static final String KEY_SERVER_ID = "ServerID"; //$NON-NLS-1$
+	public static final String KEY_SERVER_ID = "ServerID";
 
 	/*-********************************************************************
 	 * Default values.                                                    *
 	 **********************************************************************/
 
-	public static final String DB_SID = "amficom"; //$NON-NLS-1$
+	public static final String DB_SID = "amficom";
 
 	/**
 	 * Database connection timeout, in seconds.
 	 */
 	public static final int DB_CONNECTION_TIMEOUT = 120;
 
-	public static final String DB_LOGIN_NAME = "amficom"; //$NON-NLS-1$
+	public static final String DB_LOGIN_NAME = "amficom";
 
-	public static final String SERVER_ID = "Server_1"; //$NON-NLS-1$
+	public static final String SERVER_ID = "Server_1";
 
 
-	private static final String PASSWORD = "ARServer"; //$NON-NLS-1$
+	private static final String PASSWORD = "ARServer";
 
 	/**
 	 * Identifier of this server.
@@ -148,16 +150,19 @@ public class AdministrationResourceServer {
 			 * Activate the servant.
 			 */
 			final CORBAServer corbaServer = sessionEnvironment.getARServerServantManager().getCORBAServer();
-			corbaServer.activateServant(new ARServerImpl(), processCodename);
+			final POA poa = corbaServer.getPoa();
+			corbaServer.activateServant(
+					poa.reference_to_servant((new ARServerPOATie(new ARServerImpl(), poa))._this(corbaServer.getOrb())),
+					processCodename);
 			corbaServer.printNamingContext();
-		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+		} catch (final Exception e) {
+			Log.debugException(e, Log.SEVERE);
 			System.exit(0);
 		}
 	}
 	
 	protected static synchronized void shutdown() {
-		Log.debugMessage("AdministrationResourceServer.shutdown | serializing ResourceStorableObjectPool" , Log.INFO); //$NON-NLS-1$
+		Log.debugMessage("AdministrationResourceServer.shutdown | serializing ResourceStorableObjectPool" , Log.INFO);
 		ResourceStorableObjectPool.serializePool();		
 	}
 
