@@ -1,5 +1,5 @@
 /**
- * $Id: CableController.java,v 1.17 2005/04/28 12:55:52 krupenn Exp $
+ * $Id: CableController.java,v 1.18 2005/05/18 14:59:46 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -27,6 +27,7 @@ import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.MapElement;
@@ -38,13 +39,12 @@ import com.syrus.AMFICOM.mapview.MeasurementPath;
 import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.scheme.CableChannelingItem;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
-import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 
 /**
  * Контроллер кабеля.
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.17 $, $Date: 2005/04/28 12:55:52 $
+ * @author $Author: bass $
+ * @version $Revision: 1.18 $, $Date: 2005/05/18 14:59:46 $
  * @module mapviewclient_v1
  */
 public final class CableController extends AbstractLinkController
@@ -286,7 +286,7 @@ public final class CableController extends AbstractLinkController
 						schemeCableLink);
 			}
 		
-			SchemeStorableObjectPool.putStorableObject(cci);
+			StorableObjectPool.putStorableObject(cci);
 		}
 		catch (IllegalObjectEntityException e)
 		{

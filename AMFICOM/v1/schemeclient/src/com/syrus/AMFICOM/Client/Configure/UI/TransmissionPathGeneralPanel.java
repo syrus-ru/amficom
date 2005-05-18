@@ -1,19 +1,34 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
-import java.text.SimpleDateFormat;
-import java.util.*;
-
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
-import javax.swing.*;
+import java.text.SimpleDateFormat;
+import java.util.Collection;
+import java.util.Iterator;
 
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.JTextPane;
+
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.UI.GeneralPanel;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
-import com.syrus.AMFICOM.configuration.*;
-import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.configuration.MonitoredElement;
+import com.syrus.AMFICOM.configuration.TransmissionPath;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.scheme.SchemePath;
 
 public class TransmissionPathGeneralPanel extends GeneralPanel
@@ -150,7 +165,7 @@ public class TransmissionPathGeneralPanel extends GeneralPanel
 				Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
 						getAccessIdentifier().domain_id);
 				StorableObjectCondition condition = new LinkedIdsCondition(domain_id, ObjectEntities.ME_ENTITY_CODE);
-				Collection mes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
+				Collection mes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 				for (Iterator it = mes.iterator(); it.hasNext(); ) {
 					MonitoredElement monitoredelement = (MonitoredElement)it.next();
 					if (monitoredelement.getMonitoredDomainMemberIds().contains(path.getTransmissionPath().getId())) {
@@ -210,7 +225,7 @@ public class TransmissionPathGeneralPanel extends GeneralPanel
 			if (path.getTransmissionPath() != null)
 			{
 				try {
-					ConfigurationStorableObjectPool.putStorableObject(path.getTransmissionPath());
+					StorableObjectPool.putStorableObject(path.getTransmissionPath());
 				}
 				catch (ApplicationException ex) {
 				}

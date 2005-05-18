@@ -1,20 +1,37 @@
 package com.syrus.AMFICOM.Client.Schematics.UI;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.Arrays;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTree;
 import javax.swing.border.EtchedBorder;
 
-import oracle.jdeveloper.layout.*;
+import oracle.jdeveloper.layout.XYConstraints;
+import oracle.jdeveloper.layout.XYLayout;
 
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
-import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
+import com.syrus.AMFICOM.Client.General.Event.OperationListener;
+import com.syrus.AMFICOM.Client.General.Event.TreeDataSelectionEvent;
+import com.syrus.AMFICOM.Client.General.Event.TreeListSelectionEvent;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeModel;
+import com.syrus.AMFICOM.Client.General.UI.UniTreePanel;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.scheme.SchemeProtoGroup;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 
 public class SchemeProtoGroupNavigatorPanel extends JPanel implements OperationListener
@@ -168,7 +185,7 @@ public class SchemeProtoGroupNavigatorPanel extends JPanel implements OperationL
 				new_group = SchemeProtoGroup.createInstance(
 						userId, ret, "", null, null);
 
-			SchemeStorableObjectPool.putStorableObject(new_group);
+			StorableObjectPool.putStorableObject(new_group);
 			dispatcher.notify(new TreeListSelectionEvent("",
 					TreeListSelectionEvent.REFRESH_EVENT));
 		}

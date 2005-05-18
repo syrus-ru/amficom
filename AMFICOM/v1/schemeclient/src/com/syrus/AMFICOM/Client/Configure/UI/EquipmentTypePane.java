@@ -8,6 +8,7 @@ import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 
 public class EquipmentTypePane extends JPanel implements ObjectResourcePropertiesPane
@@ -89,7 +90,7 @@ public class EquipmentTypePane extends JPanel implements ObjectResourcePropertie
 		if (modify()) {
 			if (chPanel.save()) {
 				try {
-					ConfigurationStorableObjectPool.putStorableObject(eq);
+					StorableObjectPool.putStorableObject(eq);
 					ConfigurationStorableObjectPool.flush(true);
 					return true;
 				} 

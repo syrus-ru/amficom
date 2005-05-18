@@ -8,6 +8,7 @@ import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.scheme.SchemePath;
 
 public class TransmissionPathPane extends JPanel implements ObjectResourcePropertiesPane
@@ -88,7 +89,7 @@ public class TransmissionPathPane extends JPanel implements ObjectResourceProper
 		if (modify()) {
 			if (path.getTransmissionPath() != null) {
 				try {
-					ConfigurationStorableObjectPool.putStorableObject(path.getTransmissionPath());
+					StorableObjectPool.putStorableObject(path.getTransmissionPath());
 					ConfigurationStorableObjectPool.flush(true);
 					return true;
 				} 

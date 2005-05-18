@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePortGeneralPanel.java,v 1.4 2005/04/28 16:02:36 stas Exp $
+ * $Id: SchemePortGeneralPanel.java,v 1.5 2005/05/18 14:59:43 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,28 +8,62 @@
 
 package com.syrus.AMFICOM.client_.scheme.ui;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Color;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
-import javax.swing.*;
-import javax.swing.event.*;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JColorChooser;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
-import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
-import com.syrus.AMFICOM.client_.general.ui_.*;
-import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.client_.general.ui_.ColorListCellRenderer;
+import com.syrus.AMFICOM.client_.general.ui_.DefaultStorableObjectEditor;
+import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.configuration.MeasurementPort;
+import com.syrus.AMFICOM.configuration.MeasurementPortType;
+import com.syrus.AMFICOM.configuration.MeasurementPortTypeController;
+import com.syrus.AMFICOM.configuration.Port;
+import com.syrus.AMFICOM.configuration.PortType;
+import com.syrus.AMFICOM.configuration.PortTypeController;
 import com.syrus.AMFICOM.configuration.corba.PortSort;
-import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.resource.*;
-import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.EquivalentCondition;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.resource.Constants;
+import com.syrus.AMFICOM.resource.LangModelScheme;
+import com.syrus.AMFICOM.scheme.SchemeElement;
+import com.syrus.AMFICOM.scheme.SchemePort;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.4 $, $Date: 2005/04/28 16:02:36 $
+ * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2005/05/18 14:59:43 $
  * @module schemeclient_v1
  */
 
@@ -344,13 +378,13 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 			parent = schemePort.getParentSchemeDevice().getParentSchemeElement();
 			EquivalentCondition condition = new EquivalentCondition(ObjectEntities.PORTTYPE_ENTITY_CODE);
 			try {
-				typeCombo.addElements(ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true));
+				typeCombo.addElements(StorableObjectPool.getStorableObjectsByCondition(condition, true));
 			} catch (ApplicationException e) {
 				Log.errorException(e);
 			}
 			condition = new EquivalentCondition(ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE);
 			try {
-				mpTypeCombo.addElements(ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true));
+				mpTypeCombo.addElements(StorableObjectPool.getStorableObjectsByCondition(condition, true));
 			} catch (ApplicationException e) {
 				Log.errorException(e);
 			}

@@ -1,7 +1,6 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import java.awt.*;
@@ -57,7 +56,7 @@ public class CableLinkFibrePanel extends GeneralPanel
 	private void jbInit() throws Exception
 	{
 		EquivalentCondition condition = new EquivalentCondition(ObjectEntities.LINKTYPE_ENTITY_CODE);
-		List lTypes = new ArrayList(ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true));
+		List lTypes = new ArrayList(StorableObjectPool.getStorableObjectsByCondition(condition, true));
 		linksTypeBox = new ObjComboBox(
 				LinkTypeController.getInstance(),
 				lTypes,

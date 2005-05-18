@@ -32,7 +32,6 @@ import javax.swing.event.ListSelectionListener;
 import oracle.jdeveloper.layout.XYConstraints;
 import oracle.jdeveloper.layout.XYLayout;
 
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
@@ -41,7 +40,10 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.UI.FixedSizeEditableTableModel;
-import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.General.UI.GeneralPanel;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeModel;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeNode;
+import com.syrus.AMFICOM.Client.General.UI.UniTreePanel;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -51,6 +53,7 @@ import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.CharacteristicTypeSort;
 
@@ -191,8 +194,8 @@ public class CharacteristicsPanel extends GeneralPanel implements
 				List added = (List) it.next();
 				for (Iterator it2 = added.iterator(); it2.hasNext();) {
 					Characteristic ch = (Characteristic) it2.next();
-					GeneralStorableObjectPool.putStorableObject(ch.getType());
-					GeneralStorableObjectPool.putStorableObject(ch);
+					StorableObjectPool.putStorableObject(ch.getType());
+					StorableObjectPool.putStorableObject(ch);
 				}
 			}
 			Set removedIds = new HashSet();

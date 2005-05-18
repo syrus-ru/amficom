@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMainFrame.java,v 1.35 2005/05/05 09:39:52 krupenn Exp $
+ * $Id: MapEditorMainFrame.java,v 1.36 2005/05/18 14:59:46 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,8 +32,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JViewport;
 
-import com.syrus.AMFICOM.Client.General.ConnectionInterface;
-import com.syrus.AMFICOM.Client.General.SessionInterface;
 import com.syrus.AMFICOM.Client.General.Command.CloseAllInternalCommand;
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.ExitCommand;
@@ -42,7 +40,6 @@ import com.syrus.AMFICOM.Client.General.Command.Session.SessionChangePasswordCom
 import com.syrus.AMFICOM.Client.General.Command.Session.SessionCloseCommand;
 import com.syrus.AMFICOM.Client.General.Command.Session.SessionConnectionCommand;
 import com.syrus.AMFICOM.Client.General.Command.Session.SessionDomainCommand;
-import com.syrus.AMFICOM.Client.General.Command.Session.SessionOpenCommand;
 import com.syrus.AMFICOM.Client.General.Event.ContextChangeEvent;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
@@ -99,9 +96,9 @@ import com.syrus.AMFICOM.mapview.MapView;
  * 
  * 
  * 
- * @version $Revision: 1.35 $, $Date: 2005/05/05 09:39:52 $
+ * @version $Revision: 1.36 $, $Date: 2005/05/18 14:59:46 $
  * @module mapviewclient_v1
- * @author $Author: krupenn $
+ * @author $Author: bass $
  */
 public class MapEditorMainFrame extends JFrame 
 	implements OperationListener, Module

@@ -1,5 +1,5 @@
 /*
- * $Id: AddPropFrame.java,v 1.4 2005/04/22 07:32:50 stas Exp $
+ * $Id: AddPropFrame.java,v 1.5 2005/05/18 14:59:43 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -40,18 +39,18 @@ import com.syrus.AMFICOM.general.CharacteristicType;
 import com.syrus.AMFICOM.general.CharacteristicTypeController;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.corba.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.corba.DataType;
-import com.syrus.AMFICOM.resource.*;
 import com.syrus.AMFICOM.resource.Constants;
+import com.syrus.AMFICOM.resource.LangModelScheme;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.4 $, $Date: 2005/04/22 07:32:50 $
+ * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2005/05/18 14:59:43 $
  * @module schemeclient_v1
  */
 
@@ -210,7 +209,7 @@ public class AddPropFrame extends JDialog {
 		try {
 			EquivalentCondition condition = new EquivalentCondition(
 					ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE);
-			Collection characteristicTypes = GeneralStorableObjectPool
+			Collection characteristicTypes = StorableObjectPool
 					.getStorableObjectsByCondition(condition, true);
 			for (Iterator it = characteristicTypes.iterator(); it.hasNext();) {
 				CharacteristicType ctype = (CharacteristicType) it.next();

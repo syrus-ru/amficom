@@ -247,9 +247,9 @@ public class MeasurementPortTypeGeneralPanel extends GeneralPanel {
 		
 		try {
 			LinkedIdsCondition condition = new LinkedIdsCondition(type.getId(), ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
-			mPTypes = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
+			mPTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 			EquivalentCondition condition2 = new EquivalentCondition(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE); 
-			Collection allMPTypes = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition2, true);
+			Collection allMPTypes = StorableObjectPool.getStorableObjectsByCondition(condition2, true);
 			
 			for (Iterator it = allMPTypes.iterator(); it.hasNext();) {
 				MeasurementType t = (MeasurementType)it.next();

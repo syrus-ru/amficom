@@ -7,7 +7,6 @@ import java.util.Date;
 
 import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.*;
 import com.syrus.AMFICOM.Client.General.Command.ExitCommand;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.*;
 import com.syrus.AMFICOM.Client.General.Command.Session.*;

@@ -120,7 +120,7 @@ public class SchemeOpenTreeModel extends ObjectResourceTreeModel
 					ObjectEntities.SCHEME_ENTITY_CODE,
 					com.syrus.AMFICOM.scheme.SchemeController.COLUMN_TYPE);
 				try {
-					Set schemes = SchemeStorableObjectPool.getStorableObjectsByCondition(condition, true);
+					Set schemes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 
 					for (Iterator it = schemes.iterator(); it.hasNext(); ) {
 						Scheme sc = (Scheme)it.next();

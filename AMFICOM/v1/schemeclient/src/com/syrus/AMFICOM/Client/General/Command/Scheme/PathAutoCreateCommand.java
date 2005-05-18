@@ -2,14 +2,14 @@ package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
 import javax.swing.JOptionPane;
 
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.Event.SchemeNavigateEvent;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Scheme.UgoPanel;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.Scheme;
+import com.syrus.AMFICOM.scheme.SchemePath;
 
 public class PathAutoCreateCommand extends VoidCommand
 {

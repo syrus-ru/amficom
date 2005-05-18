@@ -57,7 +57,7 @@ public class MeasurementPortGeneralPanel extends GeneralPanel
 	private void jbInit() throws Exception
 	{
 		EquivalentCondition condition = new EquivalentCondition(ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE);
-		List mpTypes = new ArrayList(ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true));
+		List mpTypes = new ArrayList(StorableObjectPool.getStorableObjectsByCondition(condition, true));
 		
 		typeBox = new ObjComboBox(
 				MeasurementPortTypeController.getInstance(),
@@ -132,7 +132,7 @@ public class MeasurementPortGeneralPanel extends GeneralPanel
 			try {
 				LinkedIdsCondition condition = new LinkedIdsCondition(port.getId(), ObjectEntities.ME_ENTITY_CODE);
 
-				Collection list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
+				Collection list = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 				if (list.size() > 0) {
 					me = (MonitoredElement)list.iterator().next();
 				}

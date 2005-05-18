@@ -4,15 +4,19 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.TreeListSelectionEvent;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.Scheme.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.scheme.*;
-import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.General.Scheme.SchemeGraph;
+import com.syrus.AMFICOM.Client.General.Scheme.SchemePanel;
+import com.syrus.AMFICOM.Client.General.Scheme.UgoPanel;
+import com.syrus.AMFICOM.Client.Resource.MiscUtil;
+import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.scheme.Scheme;
 
 public class SchemeCopyCommand extends VoidCommand
 {
@@ -82,7 +86,7 @@ public class SchemeCopyCommand extends VoidCommand
 //		}
 
 		try {
-			SchemeStorableObjectPool.putStorableObject(scheme);
+			StorableObjectPool.putStorableObject(scheme);
 
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),

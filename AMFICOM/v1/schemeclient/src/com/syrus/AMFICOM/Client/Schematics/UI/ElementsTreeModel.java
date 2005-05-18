@@ -10,7 +10,6 @@ import java.util.List;
 
 import javax.swing.ImageIcon;
 
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceCatalogActionModel;
@@ -19,7 +18,6 @@ import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeNode;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.configuration.CableLinkTypeController;
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.configuration.LinkTypeController;
 import com.syrus.AMFICOM.configuration.MeasurementPortType;
@@ -33,11 +31,11 @@ import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.measurement.MeasurementTypeController;
-import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
+import com.syrus.AMFICOM.scheme.SchemeProtoGroup;
 
 
 public class ElementsTreeModel extends ObjectResourceTreeModel
@@ -233,7 +231,7 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 			{
 				try {
 					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.LINKTYPE_ENTITY_CODE);
-					Collection linkTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
+					Collection linkTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 
 					for (Iterator it = linkTypes.iterator(); it.hasNext(); ) {
 						LinkType type = (LinkType)it.next();
@@ -249,7 +247,7 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 			{
 				try {
 					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.CABLELINKTYPE_ENTITY_CODE);
-					Collection linkTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
+					Collection linkTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 
 					for (Iterator it = linkTypes.iterator(); it.hasNext(); ) {
 						CableLinkType type = (CableLinkType)it.next();
@@ -266,7 +264,7 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 			{
 				try {
 					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.PORTTYPE_ENTITY_CODE);
-					Collection portTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
+					Collection portTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 
 					for (Iterator it = portTypes.iterator(); it.hasNext(); ) {
 						PortType type = (PortType)it.next();
@@ -282,7 +280,7 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 			{
 				try {
 					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.TRANSPATHTYPE_ENTITY_CODE);
-					Collection pathTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
+					Collection pathTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 
 					for (Iterator it = pathTypes.iterator(); it.hasNext(); ) {
 						TransmissionPathType type = (TransmissionPathType)it.next();
@@ -298,7 +296,7 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 			{
 				try {
 					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE);
-					Collection pathTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
+					Collection pathTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 
 					for (Iterator it = pathTypes.iterator(); it.hasNext(); ) {
 						MeasurementPortType type = (MeasurementPortType)it.next();
@@ -314,7 +312,7 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 			{
 				try {
 					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
-					Collection measurementTypes = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
+					Collection measurementTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 
 					for (Iterator it = measurementTypes.iterator(); it.hasNext(); ) {
 						MeasurementType type = (MeasurementType)it.next();
@@ -333,7 +331,7 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 							getAccessIdentifier().domain_id);
 					LinkedIdsCondition condition = new LinkedIdsCondition(domain_id,
 							ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE);
-					Collection groups = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
+					Collection groups = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 
 					for (Iterator it = groups.iterator(); it.hasNext(); ) {
 						SchemeProtoGroup group = (SchemeProtoGroup)it.next();

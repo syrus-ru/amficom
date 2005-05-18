@@ -1,8 +1,6 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
 import java.awt.Dimension;
-import java.util.Arrays;
-
 import javax.swing.BorderFactory;
 
 import oracle.jdeveloper.layout.XYConstraints;

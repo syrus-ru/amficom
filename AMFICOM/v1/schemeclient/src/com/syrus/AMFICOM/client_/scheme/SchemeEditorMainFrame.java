@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeEditorMainFrame.java,v 1.5 2005/05/04 12:17:29 bass Exp $
+ * $Id: SchemeEditorMainFrame.java,v 1.6 2005/05/18 14:59:44 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,34 +10,78 @@ package com.syrus.AMFICOM.client_.scheme;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/05/04 12:17:29 $
+ * @version $Revision: 1.6 $, $Date: 2005/05/18 14:59:44 $
  * @module schemeclient_v1
  */
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.SystemColor;
+import java.awt.Toolkit;
+import java.awt.event.ComponentEvent;
+import java.awt.event.WindowEvent;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JDesktopPane;
+import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JViewport;
+import javax.swing.WindowConstants;
 
-import com.syrus.AMFICOM.Client.General.*;
 import com.syrus.AMFICOM.Client.General.Command.ExitCommand;
-import com.syrus.AMFICOM.Client.General.Command.Scheme.*;
-import com.syrus.AMFICOM.Client.General.Command.Session.*;
+import com.syrus.AMFICOM.Client.General.Command.Scheme.CreateSchemeReportCommand;
+import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeNewCommand;
+import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeOpenCommand;
+import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeSaveAsCommand;
+import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeSaveCommand;
+import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeToFileCommand;
+import com.syrus.AMFICOM.Client.General.Command.Scheme.ShowCatalogFrameCommand;
+import com.syrus.AMFICOM.Client.General.Command.Scheme.ShowFrameCommand;
+import com.syrus.AMFICOM.Client.General.Command.Session.SessionChangePasswordCommand;
+import com.syrus.AMFICOM.Client.General.Command.Session.SessionCloseCommand;
+import com.syrus.AMFICOM.Client.General.Command.Session.SessionConnectionCommand;
+import com.syrus.AMFICOM.Client.General.Command.Session.SessionDomainCommand;
+import com.syrus.AMFICOM.Client.General.Command.Session.SessionOptionsCommand;
 import com.syrus.AMFICOM.Client.General.Command.Window.ArrangeWindowCommand;
-import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Lang.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.Report.ReportTemplate;
-import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.General.Event.ContextChangeEvent;
+import com.syrus.AMFICOM.Client.General.Event.CreatePathEvent;
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
+import com.syrus.AMFICOM.Client.General.Event.OperationListener;
+import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
+import com.syrus.AMFICOM.Client.General.Event.SchemeNavigateEvent;
+import com.syrus.AMFICOM.Client.General.Event.TreeListSelectionEvent;
+import com.syrus.AMFICOM.Client.General.Lang.LangModel;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceCatalogFrame;
+import com.syrus.AMFICOM.Client.General.UI.StatusBarModel;
+import com.syrus.AMFICOM.Client.General.UI.WindowArranger;
 import com.syrus.AMFICOM.Client.Schematics.UI.ElementsNavigatorPanel;
-import com.syrus.AMFICOM.administration.*;
-import com.syrus.AMFICOM.client_.general.ui_.*;
-import com.syrus.AMFICOM.client_.scheme.graph.*;
-import com.syrus.AMFICOM.client_.scheme.ui.*;
-import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
+import com.syrus.AMFICOM.administration.Domain;
+import com.syrus.AMFICOM.client_.general.ui_.AdditionalPropertiesFrame;
+import com.syrus.AMFICOM.client_.general.ui_.CharacteristicPropertiesFrame;
+import com.syrus.AMFICOM.client_.general.ui_.GeneralPropertiesFrame;
+import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
+import com.syrus.AMFICOM.client_.scheme.graph.SchemeTabbedPane;
+import com.syrus.AMFICOM.client_.scheme.graph.SchemeToolBar;
+import com.syrus.AMFICOM.client_.scheme.graph.UgoPanel;
+import com.syrus.AMFICOM.client_.scheme.ui.SchemeTreeModel;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.scheme.Scheme;
+import com.syrus.AMFICOM.scheme.SchemeElement;
+import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 
 public class SchemeEditorMainFrame extends JFrame implements OperationListener {
 	public ApplicationContext aContext;

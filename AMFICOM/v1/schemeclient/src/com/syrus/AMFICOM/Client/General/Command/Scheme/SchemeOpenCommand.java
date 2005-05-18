@@ -2,15 +2,18 @@ package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
 import java.util.Set;
 
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Schematics.UI.SchemeController;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceChooserDialog;
-import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.scheme.Scheme;
 
 public class SchemeOpenCommand extends VoidCommand
 {
@@ -33,7 +36,7 @@ public class SchemeOpenCommand extends VoidCommand
 		try {
 			Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().domain_id);
 			LinkedIdsCondition condition = new LinkedIdsCondition(domain_id, ObjectEntities.SCHEME_ENTITY_CODE);
-			Set schemes = SchemeStorableObjectPool.getStorableObjectsByCondition(condition, true);
+			Set schemes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 			mcd.setContents(schemes);
 		}
 		catch (ApplicationException ex) {

@@ -1,22 +1,41 @@
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.util.Iterator;
 import java.util.List;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
+import com.syrus.AMFICOM.Client.General.Event.TreeListSelectionEvent;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.Resource.MiscUtil;
+import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Schematics.Elements.SchemePropsPanel;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
-import com.syrus.AMFICOM.client_.scheme.graph.*;
-import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
+import com.syrus.AMFICOM.client_.scheme.graph.SchemePanel;
+import com.syrus.AMFICOM.client_.scheme.graph.SchemeResource;
+import com.syrus.AMFICOM.client_.scheme.graph.SchemeTabbedPane;
+import com.syrus.AMFICOM.client_.scheme.graph.UgoPanel;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.scheme.Scheme;
+import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.corba.Scheme_TransferablePackage.Kind;
 import com.syrus.util.Log;
 
@@ -103,7 +122,7 @@ public class SchemeSaveAsCommand extends VoidCommand {
 					.getSessionInterface()).getAccessIdentifier().domain_id);
 			scheme.setDomainId(domainId);
 
-			SchemeStorableObjectPool.putStorableObject(scheme);
+			StorableObjectPool.putStorableObject(scheme);
 
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Схема "
 					+ scheme.getName() + " успешно сохранена", "Сообщение",

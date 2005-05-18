@@ -57,7 +57,7 @@ public class AbstractPortGeneralPanel extends GeneralPanel
 	private void jbInit() throws Exception
 	{
 		EquivalentCondition condition = new EquivalentCondition(ObjectEntities.PORTTYPE_ENTITY_CODE);
-		List pTypes = new LinkedList(ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true));
+		List pTypes = new LinkedList(StorableObjectPool.getStorableObjectsByCondition(condition, true));
 		typeBox = new ObjComboBox(
 					PortTypeController.getInstance(),
 					pTypes,
@@ -170,7 +170,7 @@ public class AbstractPortGeneralPanel extends GeneralPanel
 		if(modify())
 		{
 			try {
-				ConfigurationStorableObjectPool.putStorableObject(port.getPort());
+				StorableObjectPool.putStorableObject(port.getPort());
 			}
 			catch (ApplicationException ex) {
 			}

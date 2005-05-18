@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.5 2005/04/28 16:02:36 stas Exp $
+ * $Id: SchemeActions.java,v 1.6 2005/05/18 14:59:44 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,11 +26,10 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
 import com.syrus.AMFICOM.scheme.corba.Scheme_TransferablePackage.Kind;
-import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.5 $, $Date: 2005/04/28 16:02:36 $
+ * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2005/05/18 14:59:44 $
  * @module schemeclient_v1
  */
 

@@ -8,7 +8,6 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Report.CreateReportException;
 import com.syrus.AMFICOM.Client.General.Report.DividableTableColumnModel;
 import com.syrus.AMFICOM.Client.General.Report.DividableTableModel;
-import com.syrus.AMFICOM.Client.General.Report.ObjectsReport;
 import com.syrus.AMFICOM.Client.General.Report.ReportData;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
@@ -18,7 +17,9 @@ import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.SiteNodeType;
-import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.scheme.CableChannelingItem;
+import com.syrus.AMFICOM.scheme.Scheme;
+import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 
 public class CableLayoutReport extends ReportData

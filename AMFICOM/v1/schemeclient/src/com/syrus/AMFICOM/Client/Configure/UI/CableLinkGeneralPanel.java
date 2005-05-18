@@ -30,7 +30,7 @@ public class CableLinkGeneralPanel extends AbstractLinkGeneralPanel
 
 		try {
 			EquivalentCondition condition = new EquivalentCondition(ObjectEntities.CABLELINKTYPE_ENTITY_CODE);
-			List clTypes = new ArrayList(ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true));
+			List clTypes = new ArrayList(StorableObjectPool.getStorableObjectsByCondition(condition, true));
 			typeBox.setModel(new ObjListModel(
 					CableLinkTypeController.getInstance(),
 					clTypes,

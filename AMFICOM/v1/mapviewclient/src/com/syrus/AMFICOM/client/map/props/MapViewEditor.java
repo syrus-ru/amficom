@@ -28,6 +28,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.VoidElement;
@@ -172,7 +173,7 @@ public class MapViewEditor extends DefaultStorableObjectEditor
 				new EquivalentCondition(ObjectEntities.DOMAIN_ENTITY_CODE);
 			try
 			{
-				domains = AdministrationStorableObjectPool.getStorableObjectsByCondition(
+				domains = StorableObjectPool.getStorableObjectsByCondition(
 						condition,
 						true);
 			}

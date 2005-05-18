@@ -1,22 +1,55 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
-import javax.swing.*;
-import javax.swing.event.*;
+import javax.swing.JButton;
+import javax.swing.JColorChooser;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
-import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
+import com.syrus.AMFICOM.Client.General.Event.OperationListener;
+import com.syrus.AMFICOM.Client.General.Event.SchemeNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Scheme.ThreadTypeCell;
 import com.syrus.AMFICOM.Client.General.UI.GeneralPanel;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
-import com.syrus.AMFICOM.client_.general.ui_.*;
-import com.syrus.AMFICOM.configuration.*;
-import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.client_.general.ui_.ColorListCellRenderer;
+import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
+import com.syrus.AMFICOM.client_.general.ui_.ObjList;
+import com.syrus.AMFICOM.configuration.CableLinkType;
+import com.syrus.AMFICOM.configuration.CableThreadType;
+import com.syrus.AMFICOM.configuration.CableThreadTypeController;
+import com.syrus.AMFICOM.configuration.LinkType;
+import com.syrus.AMFICOM.configuration.LinkTypeController;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.EquivalentCondition;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 public class CableLinkTypeFibrePanel extends GeneralPanel {
 	protected CableLinkType clt;
@@ -60,7 +93,7 @@ public class CableLinkTypeFibrePanel extends GeneralPanel {
 	private void jbInit() throws Exception {
 		EquivalentCondition condition = new EquivalentCondition(
 				ObjectEntities.LINKTYPE_ENTITY_CODE);
-		List lTypes = new ArrayList(ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true)); 
+		List lTypes = new ArrayList(StorableObjectPool.getStorableObjectsByCondition(condition, true)); 
 		cmbTypeCombo = new ObjComboBox(LinkTypeController.getInstance(),
 				lTypes,
 				StorableObjectWrapper.COLUMN_NAME);
@@ -321,7 +354,7 @@ public class CableLinkTypeFibrePanel extends GeneralPanel {
 									.createInstance(user_id, codename, "", name + (i + 1),
 											Color.BLACK.getRGB(), link_type, clt);
 							try {
-								ConfigurationStorableObjectPool.putStorableObject(newctt);
+								StorableObjectPool.putStorableObject(newctt);
 							} 
 							catch (IllegalObjectEntityException e1) {
 								throw new CreateObjectException(
@@ -343,7 +376,7 @@ public class CableLinkTypeFibrePanel extends GeneralPanel {
 						CableThreadType ctt = (CableThreadType)it.next(); 
 						toDelete.add(ctt.getId());
 					}
-					ConfigurationStorableObjectPool.delete(toDelete);
+					StorableObjectPool.delete(toDelete);
 				} 
 				else
 					modify();

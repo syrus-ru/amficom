@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypeGeneralPanel.java,v 1.10 2005/04/18 10:57:46 stas Exp $
+ * $Id: MeasurementPortTypeGeneralPanel.java,v 1.11 2005/05/18 14:59:43 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.resource.Constants;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.10 $, $Date: 2005/04/18 10:57:46 $
+ * @author $Author: bass $
+ * @version $Revision: 1.11 $, $Date: 2005/05/18 14:59:43 $
  * @module schemeclient_v1
  */
 
@@ -200,7 +200,7 @@ public class MeasurementPortTypeGeneralPanel extends DefaultStorableObjectEditor
 			try {
 				LinkedIdsCondition condition = new LinkedIdsCondition(type.getId(),
 						ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
-				Collection mPTypes = MeasurementStorableObjectPool.getStorableObjectsByCondition(
+				Collection mPTypes = StorableObjectPool.getStorableObjectsByCondition(
 						condition, true);
 				
 				for (Iterator it = measurementTypeNodes.iterator(); it.hasNext();) {
@@ -274,7 +274,7 @@ public class MeasurementPortTypeGeneralPanel extends DefaultStorableObjectEditor
 		EquivalentCondition condition = new EquivalentCondition(
 				ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
 		try {
-			Collection allMPTypes = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
+			Collection allMPTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 			for (Iterator it = allMPTypes.iterator(); it.hasNext();) {
 				MeasurementType t = (MeasurementType) it.next();
 					root1.addChild(new CheckableNode(t, false));

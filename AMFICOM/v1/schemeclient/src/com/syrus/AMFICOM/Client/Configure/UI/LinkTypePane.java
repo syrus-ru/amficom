@@ -1,18 +1,29 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 
-import javax.swing.*;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.SwingConstants;
 
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
-import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.UI.PopupNameFrame;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
-import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.configuration.corba.LinkTypeSort;
-import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 
 public class LinkTypePane extends JPanel implements ObjectResourcePropertiesPane
 {
@@ -94,7 +105,7 @@ public class LinkTypePane extends JPanel implements ObjectResourcePropertiesPane
 		if (modify()) {
 			if (chPanel.save()) {
 				try {
-					ConfigurationStorableObjectPool.putStorableObject(linkType);
+					StorableObjectPool.putStorableObject(linkType);
 					ConfigurationStorableObjectPool.flush(true);
 					return true;
 				} catch (ApplicationException ex) {

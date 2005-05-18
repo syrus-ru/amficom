@@ -1,5 +1,5 @@
 /*
- * $Id: CreateTopLevelElementAction.java,v 1.3 2005/04/22 07:32:50 stas Exp $
+ * $Id: CreateTopLevelElementAction.java,v 1.4 2005/05/18 14:59:44 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,25 +8,10 @@
 
 package com.syrus.AMFICOM.client_.scheme.graph.actions;
 
-import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.util.*;
-
-import javax.swing.*;
-
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.client_.scheme.graph.*;
-import com.syrus.AMFICOM.client_.scheme.graph.objects.*;
-import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.resource.BitmapImageResource;
-import com.syrus.AMFICOM.scheme.*;
-import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
-import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/04/22 07:32:50 $
+ * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2005/05/18 14:59:44 $
  * @module schemeclient_v1
  */
 /*

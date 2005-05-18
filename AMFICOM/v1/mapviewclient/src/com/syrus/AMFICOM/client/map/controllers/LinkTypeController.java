@@ -1,5 +1,5 @@
 /**
- * $Id: LinkTypeController.java,v 1.19 2005/05/05 09:37:42 krupenn Exp $
+ * $Id: LinkTypeController.java,v 1.20 2005/05/18 14:59:46 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -36,6 +36,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
@@ -45,12 +46,11 @@ import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.MapStorableObjectPool;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
 import com.syrus.AMFICOM.map.PhysicalLinkTypeSort;
-import com.syrus.AMFICOM.map.SiteNodeType;
 
 /**
  * Контроллер типа линейного элемента карты.
- * @author $Author: krupenn $
- * @version $Revision: 1.19 $, $Date: 2005/05/05 09:37:42 $
+ * @author $Author: bass $
+ * @version $Revision: 1.20 $, $Date: 2005/05/18 14:59:46 $
  * @module mapviewclient_v1
  */
 public final class LinkTypeController extends AbstractLinkController
@@ -242,7 +242,7 @@ public final class LinkTypeController extends AbstractLinkController
 						true,
 						true);
 				linkType.addCharacteristic(ea);
-				GeneralStorableObjectPool.putStorableObject(ea);
+				StorableObjectPool.putStorableObject(ea);
 				GeneralStorableObjectPool.flush(true);
 			}
 			catch (CreateObjectException e)
@@ -307,7 +307,7 @@ public final class LinkTypeController extends AbstractLinkController
 						true,
 						true);
 				linkType.addCharacteristic(ea);
-				GeneralStorableObjectPool.putStorableObject(ea);
+				StorableObjectPool.putStorableObject(ea);
 				GeneralStorableObjectPool.flush(true);
 			}
 			catch (CreateObjectException e)
@@ -392,7 +392,7 @@ public final class LinkTypeController extends AbstractLinkController
 						true,
 						true);
 				linkType.addCharacteristic(ea);
-				GeneralStorableObjectPool.putStorableObject(ea);
+				StorableObjectPool.putStorableObject(ea);
 				GeneralStorableObjectPool.flush(true);
 			}
 			catch (CreateObjectException e)
@@ -469,7 +469,7 @@ public final class LinkTypeController extends AbstractLinkController
 						true,
 						true);
 				linkType.addCharacteristic(ea);
-				GeneralStorableObjectPool.putStorableObject(ea);
+				StorableObjectPool.putStorableObject(ea);
 				GeneralStorableObjectPool.flush(true);
 			}
 			catch (CreateObjectException e)
@@ -547,7 +547,7 @@ public final class LinkTypeController extends AbstractLinkController
 						true,
 						true);
 				linkType.addCharacteristic(ea);
-				GeneralStorableObjectPool.putStorableObject(ea);
+				StorableObjectPool.putStorableObject(ea);
 				GeneralStorableObjectPool.flush(true);
 			}
 			catch (CreateObjectException e)
@@ -602,7 +602,7 @@ public final class LinkTypeController extends AbstractLinkController
 		try
 		{
 			Collection pTypes =
-				MapStorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
+				StorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
 			for (Iterator it = pTypes.iterator(); it.hasNext();)
 			{
 				PhysicalLinkType type = (PhysicalLinkType )it.next();
@@ -648,7 +648,7 @@ public final class LinkTypeController extends AbstractLinkController
 			ltc.setLineSize(userId, type, LinkTypeController.getLineThickness(codename));
 			ltc.setColor(userId, type, LinkTypeController.getLineColor(codename));
 
-			MapStorableObjectPool.putStorableObject(type);
+			StorableObjectPool.putStorableObject(type);
 			MapStorableObjectPool.flush(true);
 		}
 		catch (Exception e)
@@ -680,7 +680,7 @@ public final class LinkTypeController extends AbstractLinkController
 		Collection list = null;
 		try {
 			list =
-				MapStorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
+				StorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
 
 			list.remove(getUnboundPhysicalLinkType());
 

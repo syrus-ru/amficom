@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewOpenCommand.java,v 1.19 2005/03/04 14:30:55 krupenn Exp $
+ * $Id: MapViewOpenCommand.java,v 1.20 2005/05/18 14:59:46 bass Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -31,13 +31,13 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.mapview.MapView;
-import com.syrus.AMFICOM.mapview.MapViewStorableObjectPool;
 
 /**
  * открыть вид 
- * @author $Author: krupenn $
- * @version $Revision: 1.19 $, $Date: 2005/03/04 14:30:55 $
+ * @author $Author: bass $
+ * @version $Revision: 1.20 $, $Date: 2005/05/18 14:59:46 $
  * @module mapviewclient_v1
  */
 public class MapViewOpenCommand extends VoidCommand
@@ -81,7 +81,7 @@ public class MapViewOpenCommand extends VoidCommand
 //						false);
 
 			StorableObjectCondition condition = new LinkedIdsCondition(domainId, ObjectEntities.MAPVIEW_ENTITY_CODE);
-			mapViews = MapViewStorableObjectPool.getStorableObjectsByCondition(condition, true);
+			mapViews = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 		}
 		catch (CommunicationException e)
 		{

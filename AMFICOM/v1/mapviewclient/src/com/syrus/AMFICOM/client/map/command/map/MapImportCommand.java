@@ -1,5 +1,5 @@
 /*
- * $Id: MapImportCommand.java,v 1.24 2005/04/18 11:10:08 krupenn Exp $
+ * $Id: MapImportCommand.java,v 1.25 2005/05/18 14:59:46 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,11 +29,11 @@ import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
-import com.syrus.AMFICOM.map.MapStorableObjectPool;
 import com.syrus.AMFICOM.map.Mark;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
@@ -55,8 +55,8 @@ import javax.swing.JDesktopPane;
  * самого окна карты. При этом в азголовке окна отображается информация о том,
  * что активной карты нет, и карта центрируется по умолчанию
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.24 $, $Date: 2005/04/18 11:10:08 $
+ * @author $Author: bass $
+ * @version $Revision: 1.25 $, $Date: 2005/05/18 14:59:46 $
  * @module mapviewclient_v1
  */
 public class MapImportCommand extends ImportCommand
@@ -123,7 +123,7 @@ public class MapImportCommand extends ImportCommand
 			if(map == null)
 				return;
 
-			MapStorableObjectPool.putStorableObject(map);
+			StorableObjectPool.putStorableObject(map);
 
 			MapView mv = this.mapFrame.getMapView();
 			this.mapFrame.getMapViewer().getLogicalNetLayer().getMapViewController().removeSchemes();
@@ -253,7 +253,7 @@ public class MapImportCommand extends ImportCommand
 			else
 				return null;
 
-			MapStorableObjectPool.putStorableObject((StorableObject )me);
+			StorableObjectPool.putStorableObject((StorableObject )me);
 		}
 
 		super.close();

@@ -8,7 +8,6 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Report.CreateReportException;
 import com.syrus.AMFICOM.Client.General.Report.DividableTableColumnModel;
 import com.syrus.AMFICOM.Client.General.Report.DividableTableModel;
-import com.syrus.AMFICOM.Client.General.Report.ObjectsReport;
 import com.syrus.AMFICOM.Client.General.Report.ReportData;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;

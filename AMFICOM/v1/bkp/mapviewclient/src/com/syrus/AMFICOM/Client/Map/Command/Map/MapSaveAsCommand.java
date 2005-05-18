@@ -1,5 +1,5 @@
 /*
- * $Id: MapSaveAsCommand.java,v 1.15 2005/02/25 13:49:16 krupenn Exp $
+ * $Id: MapSaveAsCommand.java,v 1.16 2005/05/18 14:59:46 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,14 +26,15 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapStorableObjectPool;
 
 /**
  * Класс $RCSfile: MapSaveAsCommand.java,v $ используется для сохранения 
  * топологической схемы с новым именем
- * @author $Author: krupenn $
- * @version $Revision: 1.15 $, $Date: 2005/02/25 13:49:16 $
+ * @author $Author: bass $
+ * @version $Revision: 1.16 $, $Date: 2005/05/18 14:59:46 $
  * @module mapviewclient_v1
  */
 public class MapSaveAsCommand extends VoidCommand
@@ -109,7 +110,7 @@ public class MapSaveAsCommand extends VoidCommand
 */
 			try
 			{
-				MapStorableObjectPool.putStorableObject(this.newMap);
+				StorableObjectPool.putStorableObject(this.newMap);
 			}
 			catch (IllegalObjectEntityException e)
 			{

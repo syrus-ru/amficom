@@ -108,7 +108,7 @@ public class ElementsListFrame extends JInternalFrame implements OperationListen
 					}
 
 					try {
-						SchemeStorableObjectPool.putStorableObject(path);
+						StorableObjectPool.putStorableObject(path);
 					}
 					catch (IllegalObjectEntityException ex) {
 						ex.printStackTrace();

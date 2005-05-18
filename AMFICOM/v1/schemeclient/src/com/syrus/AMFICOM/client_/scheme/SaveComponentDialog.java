@@ -1,5 +1,5 @@
 /*-
- * $Id: SaveComponentDialog.java,v 1.1 2005/04/05 14:10:45 stas Exp $
+ * $Id: SaveComponentDialog.java,v 1.2 2005/05/18 14:59:44 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,11 +19,12 @@ import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.Client.Schematics.Elements.ProtoElementPropsPanel;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.scheme.*;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/04/05 14:10:45 $
+ * @author $Author: bass $
+ * @version $Revision: 1.2 $, $Date: 2005/05/18 14:59:44 $
  * @module schemeclient_v1
  */
 
@@ -114,8 +115,8 @@ public class SaveComponentDialog extends JDialog {
 		EquipmentType eqt = proto.getEquipmentType();
 
 		try {
-			SchemeStorableObjectPool.putStorableObject(proto);
-			ConfigurationStorableObjectPool.putStorableObject(eqt);
+			StorableObjectPool.putStorableObject(proto);
+			StorableObjectPool.putStorableObject(eqt);
 			aContext.getDispatcher().notify(
 					new TreeListSelectionEvent(scheme_proto,
 							TreeListSelectionEvent.REFRESH_EVENT));

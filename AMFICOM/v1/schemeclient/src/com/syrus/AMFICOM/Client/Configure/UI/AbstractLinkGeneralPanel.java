@@ -12,6 +12,7 @@ import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.configuration.corba.Link_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.AbstractSchemeLink;
@@ -298,7 +299,7 @@ public abstract class AbstractLinkGeneralPanel extends GeneralPanel {
 		if (modify()) {
 			if (this.link.getLink() != null) {
 				try {
-					ConfigurationStorableObjectPool.putStorableObject(this.link.getLink());
+					StorableObjectPool.putStorableObject(this.link.getLink());
 				}
 				catch (ApplicationException ex) {
 					ex.printStackTrace();

@@ -114,7 +114,7 @@ public class SchemeSaveCommand extends VoidCommand {
 			}
 			scheme.getSchemeCell().setData((List) graph.getArchiveableState());
 		
-			SchemeStorableObjectPool.putStorableObject(scheme);
+			StorableObjectPool.putStorableObject(scheme);
 
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Схема "
 					+ scheme.getName() + " успешно сохранена", "Сообщение",

@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeSampleData.java,v 1.6 2005/05/05 09:34:17 krupenn Exp $
+ * $Id: SchemeSampleData.java,v 1.7 2005/05/18 14:59:46 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,14 +23,15 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
 import com.syrus.AMFICOM.scheme.corba.Scheme_TransferablePackage.Kind;
 
 /**
  * this class is used to create two sample instances
  * of Scheme whithout graphical components
- * @author $Author: krupenn $
- * @version $Revision: 1.6 $
+ * @author $Author: bass $
+ * @version $Revision: 1.7 $
  * @module generalclient_v1
  */
 public final class SchemeSampleData {
@@ -291,7 +292,7 @@ public final class SchemeSampleData {
 		scheme.setWidth(100);
 		scheme.setDomainId(domainId);
 
-		SchemeStorableObjectPool.putStorableObject(scheme);
+		StorableObjectPool.putStorableObject(scheme);
 	}
 
 	private static void scheme2(Identifier userId, Identifier domainId) throws CreateObjectException, IllegalObjectEntityException, ObjectNotFoundException, RetrieveObjectException
@@ -403,6 +404,6 @@ public final class SchemeSampleData {
 		scheme.setWidth(100);
 		scheme.setDomainId(domainId);
 
-		SchemeStorableObjectPool.putStorableObject(scheme);
+		StorableObjectPool.putStorableObject(scheme);
 	}
 }

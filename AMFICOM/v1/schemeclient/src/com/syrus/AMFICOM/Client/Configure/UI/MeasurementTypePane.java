@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypePane.java,v 1.2 2005/04/05 10:01:05 stas Exp $
+ * $Id: MeasurementTypePane.java,v 1.3 2005/05/18 14:59:43 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,22 +8,31 @@
 
 package com.syrus.AMFICOM.Client.Configure.UI;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.util.HashSet;
 
-import javax.swing.*;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.SwingConstants;
 
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
-import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.UI.PopupNameFrame;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
-import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.measurement.*;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
+import com.syrus.AMFICOM.measurement.MeasurementType;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/04/05 10:01:05 $
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/05/18 14:59:43 $
  * @module schemeclient_v1
  */
 
@@ -86,7 +95,7 @@ public class MeasurementTypePane  extends JPanel implements ObjectResourceProper
 	public boolean save() {
 		if (modify()) {
 			try {
-				MeasurementStorableObjectPool.putStorableObject(measurementType);
+				StorableObjectPool.putStorableObject(measurementType);
 				MeasurementStorableObjectPool.flush(true);
 				return true;
 			} catch (ApplicationException ex) {

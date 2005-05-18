@@ -13,9 +13,7 @@ import com.syrus.AMFICOM.Client.General.Report.AMTReport;
 import com.syrus.AMFICOM.Client.General.Report.APOReportModel;
 import com.syrus.AMFICOM.Client.General.Report.CreateReportException;
 import com.syrus.AMFICOM.Client.General.Report.ImagePanel;
-import com.syrus.AMFICOM.Client.General.Report.ObjectsReport;
 import com.syrus.AMFICOM.Client.General.Report.ReportResultsTablePanel;
-import com.syrus.AMFICOM.Client.General.Report.ReportTemplate;
 
 
 public class MapReportModel extends APOReportModel

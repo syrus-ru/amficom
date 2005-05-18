@@ -1,5 +1,5 @@
 /*
- * $Id: MapElementCharacteristicsEditor.java,v 1.5 2005/05/05 09:45:54 krupenn Exp $
+ * $Id: MapElementCharacteristicsEditor.java,v 1.6 2005/05/18 14:59:45 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.Client.Map.Props;
 import java.util.Collection;
 import java.util.Iterator;
 
+import com.syrus.AMFICOM.Client.Map.Controllers.AbstractLinkController;
 import com.syrus.AMFICOM.Client.Map.Controllers.PhysicalLinkController;
 import com.syrus.AMFICOM.client_.general.ui_.CharacteristicsPanel;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -26,8 +27,8 @@ import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.mapview.Selection;
 
 /**
- * @author $Author: krupenn $
- * @version $Revision: 1.5 $, $Date: 2005/05/05 09:45:54 $
+ * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2005/05/18 14:59:45 $
  * @module schemeclient_v1
  */
 
@@ -100,7 +101,7 @@ public class MapElementCharacteristicsEditor extends CharacteristicsPanel {
 					ch.setValue(value);
 				else {
 					PhysicalLinkController controller = (PhysicalLinkController )PhysicalLinkController.getInstance();
-					if(ch.getType().getCodename().equals(controller.ATTRIBUTE_COLOR))
+					if(ch.getType().getCodename().equals(AbstractLinkController.ATTRIBUTE_COLOR))
 						controller.setColor(this.mapElement, null);
 				}
 				break;

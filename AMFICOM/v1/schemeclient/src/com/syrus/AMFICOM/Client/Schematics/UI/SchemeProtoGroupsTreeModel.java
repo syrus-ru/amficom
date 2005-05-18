@@ -10,18 +10,17 @@ import java.util.List;
 
 import javax.swing.ImageIcon;
 
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeModel;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeNode;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
+import com.syrus.AMFICOM.scheme.SchemeProtoGroup;
 
 public class SchemeProtoGroupsTreeModel extends ObjectResourceTreeModel
 {
@@ -102,7 +101,7 @@ public class SchemeProtoGroupsTreeModel extends ObjectResourceTreeModel
 				Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
 						getAccessIdentifier().domain_id);
 				LinkedIdsCondition condition = new LinkedIdsCondition(domain_id, ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE);
-				Collection groups = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
+				Collection groups = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 
 				for (Iterator it = groups.iterator(); it.hasNext(); )
 				{

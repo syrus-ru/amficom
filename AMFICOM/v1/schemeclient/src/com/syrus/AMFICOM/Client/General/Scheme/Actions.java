@@ -1,29 +1,69 @@
 package com.syrus.AMFICOM.Client.General.Scheme;
 
-import java.io.*;
-import java.util.*;
-import java.util.List;
-import java.util.zip.*;
-
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Image;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
-import javax.swing.*;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
-import com.jgraph.graph.*;
+import javax.swing.AbstractAction;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+
+import com.jgraph.graph.ConnectionSet;
+import com.jgraph.graph.DefaultEdge;
+import com.jgraph.graph.DefaultGraphCell;
+import com.jgraph.graph.DefaultGraphModel;
+import com.jgraph.graph.DefaultPort;
+import com.jgraph.graph.GraphConstants;
+import com.jgraph.graph.GraphUndoManager;
+import com.jgraph.graph.ParentMap;
 import com.jgraph.graph.Port;
 import com.jgraph.pad.GPLibraryPanel;
-import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
-import com.syrus.AMFICOM.configuration.*;
-import com.syrus.AMFICOM.configuration.corba.*;
+
+import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.General.UI.AComboBox;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.configuration.EquipmentType;
+import com.syrus.AMFICOM.configuration.PortType;
+import com.syrus.AMFICOM.configuration.corba.PortTypeSort;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
-import com.syrus.AMFICOM.scheme.*;
-import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
+import com.syrus.AMFICOM.scheme.Scheme;
+import com.syrus.AMFICOM.scheme.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.SchemeCablePort;
+import com.syrus.AMFICOM.scheme.SchemeDevice;
+import com.syrus.AMFICOM.scheme.SchemeElement;
+import com.syrus.AMFICOM.scheme.SchemeLink;
+import com.syrus.AMFICOM.scheme.SchemePort;
+import com.syrus.AMFICOM.scheme.SchemeProtoElement;
+import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
+import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
 
 
 class PortToolAction extends AbstractAction
@@ -556,8 +596,8 @@ class GroupAction extends AbstractAction
 			SchemeProtoElement schemeProtoElement = SchemeProtoElement.createInstance();
 			schemeProtoElement.setEquipmentType(eqt);
 			try {
-				ConfigurationStorableObjectPool.putStorableObject(eqt);
-				SchemeStorableObjectPool.putStorableObject(schemeProtoElement);
+				StorableObjectPool.putStorableObject(eqt);
+				StorableObjectPool.putStorableObject(schemeProtoElement);
 			}
 			catch (IllegalObjectEntityException ex) {
 				ex.printStackTrace();

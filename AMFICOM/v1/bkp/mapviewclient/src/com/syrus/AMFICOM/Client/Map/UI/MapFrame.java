@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.39 2005/05/05 10:19:13 krupenn Exp $
+ * $Id: MapFrame.java,v 1.40 2005/05/18 14:59:45 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -62,6 +62,7 @@ import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.Map;
@@ -80,8 +81,8 @@ import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
  * 
  * 
  * 
- * @version $Revision: 1.39 $, $Date: 2005/05/05 10:19:13 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.40 $, $Date: 2005/05/18 14:59:45 $
+ * @author $Author: bass $
  * @module mapviewclient_v1
  */
 public class MapFrame extends JInternalFrame 
@@ -444,7 +445,7 @@ public class MapFrame extends JInternalFrame
 			{
 				try
 				{
-					MapStorableObjectPool.putStorableObject(map);
+					StorableObjectPool.putStorableObject(map);
 				}
 				catch (IllegalObjectEntityException e)
 				{

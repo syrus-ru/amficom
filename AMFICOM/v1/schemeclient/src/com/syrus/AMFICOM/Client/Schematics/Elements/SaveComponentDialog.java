@@ -1,8 +1,5 @@
 package com.syrus.AMFICOM.Client.Schematics.Elements;
 
-import java.util.*;
-import java.util.List;
-
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -13,7 +10,6 @@ import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.scheme.*;
-import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 
 public class SaveComponentDialog extends JDialog
 {
@@ -125,8 +121,8 @@ public class SaveComponentDialog extends JDialog
 		EquipmentType eqt = proto.getEquipmentType();
 
 		try {
-			SchemeStorableObjectPool.putStorableObject(proto);
-			ConfigurationStorableObjectPool.putStorableObject(eqt);
+			StorableObjectPool.putStorableObject(proto);
+			StorableObjectPool.putStorableObject(eqt);
 			aContext.getDispatcher().notify(new TreeListSelectionEvent(scheme_proto, TreeListSelectionEvent.REFRESH_EVENT));
 			dispose();
 

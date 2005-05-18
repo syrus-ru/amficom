@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLinkGeneralPanel.java,v 1.2 2005/04/28 16:02:36 stas Exp $
+ * $Id: SchemeLinkGeneralPanel.java,v 1.3 2005/05/18 14:59:44 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,19 +8,22 @@
 
 package com.syrus.AMFICOM.client_.scheme.ui;
 
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
-import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
-import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
-import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.configuration.Link;
 import com.syrus.AMFICOM.configuration.corba.LinkSort;
-import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.EquivalentCondition;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.scheme.SchemeLink;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/04/28 16:02:36 $
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/05/18 14:59:44 $
  * @module schemeclient_v1
  */
 
@@ -41,7 +44,7 @@ public class SchemeLinkGeneralPanel extends AbstractSchemeLinkGeneralPanel {
 		if (schemeLink != null) {
 			EquivalentCondition condition = new EquivalentCondition(ObjectEntities.LINKTYPE_ENTITY_CODE);
 			try {
-				typeCombo.addElements(ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true));
+				typeCombo.addElements(StorableObjectPool.getStorableObjectsByCondition(condition, true));
 			} catch (ApplicationException e) {
 				Log.errorException(e);
 			}

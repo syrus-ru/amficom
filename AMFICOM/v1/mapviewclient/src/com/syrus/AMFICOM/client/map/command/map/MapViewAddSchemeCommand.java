@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewAddSchemeCommand.java,v 1.9 2005/04/05 15:48:07 krupenn Exp $
+ * $Id: MapViewAddSchemeCommand.java,v 1.10 2005/05/18 14:59:46 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,14 +31,14 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.scheme.Scheme;
-import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 
 /**
  * добавить в вид схему из списка
- * @author $Author: krupenn $
- * @version $Revision: 1.9 $, $Date: 2005/04/05 15:48:07 $
+ * @author $Author: bass $
+ * @version $Revision: 1.10 $, $Date: 2005/05/18 14:59:46 $
  * @module mapviewclient_v1
  */
 public class MapViewAddSchemeCommand extends VoidCommand
@@ -91,7 +91,7 @@ public class MapViewAddSchemeCommand extends VoidCommand
 //					domainId,
 //					false);
 			StorableObjectCondition condition = new LinkedIdsCondition(domainId, ObjectEntities.SCHEME_ENTITY_CODE);
-			Set schemes = SchemeStorableObjectPool.getStorableObjectsByCondition(condition, true);
+			Set schemes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 			mcd.setContents(schemes);
 		}
 		catch (ApplicationException e)

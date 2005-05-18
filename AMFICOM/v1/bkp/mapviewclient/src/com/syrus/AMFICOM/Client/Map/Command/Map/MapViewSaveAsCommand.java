@@ -1,5 +1,5 @@
 /*
- * $Id: MapViewSaveAsCommand.java,v 1.15 2005/04/25 09:41:20 bass Exp $
+ * $Id: MapViewSaveAsCommand.java,v 1.16 2005/05/18 14:59:46 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
-import com.syrus.AMFICOM.general.corba.AccessIdentity_Transferable;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.MapViewStorableObjectPool;
 
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.mapview.MapViewStorableObjectPool;
  * Класс используется для сохранения топологической схемы с новым
  * именем
  * @author $Author: bass $
- * @version $Revision: 1.15 $, $Date: 2005/04/25 09:41:20 $
+ * @version $Revision: 1.16 $, $Date: 2005/05/18 14:59:46 $
  * @module mapviewclient_v1
  */
 public class MapViewSaveAsCommand extends VoidCommand
@@ -69,7 +69,7 @@ public class MapViewSaveAsCommand extends VoidCommand
 					1.0D,
 					this.mapView.getMap());
 
-			MapViewStorableObjectPool.putStorableObject(this.newMapView);
+			StorableObjectPool.putStorableObject(this.newMapView);
 
 			this.newMapView.setName(this.mapView.getName() + "(Copy)");
 		}

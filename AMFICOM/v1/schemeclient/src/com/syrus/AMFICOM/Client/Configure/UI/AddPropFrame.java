@@ -24,7 +24,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
@@ -33,9 +32,9 @@ import com.syrus.AMFICOM.general.CharacteristicType;
 import com.syrus.AMFICOM.general.CharacteristicTypeController;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.corba.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.corba.DataType;
@@ -206,7 +205,7 @@ public class AddPropFrame extends JDialog {
 		try {
 			EquivalentCondition condition = new EquivalentCondition(
 					ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE);
-			Collection characteristicTypes = GeneralStorableObjectPool
+			Collection characteristicTypes = StorableObjectPool
 					.getStorableObjectsByCondition(condition, true);
 			for (Iterator it = characteristicTypes.iterator(); it.hasNext();) {
 				CharacteristicType ctype = (CharacteristicType) it.next();

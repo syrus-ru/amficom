@@ -10,7 +10,6 @@ import com.syrus.AMFICOM.Client.General.UI.GeneralPanel;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.scheme.*;
-import com.syrus.AMFICOM.scheme.SchemeUtils;
 
 public class EquipmentTypeGeneralPanel extends GeneralPanel
 {

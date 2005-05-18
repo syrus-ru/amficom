@@ -11,14 +11,12 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -29,7 +27,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.PathBuilder;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
@@ -39,7 +36,6 @@ import com.syrus.AMFICOM.Client.General.UI.PopupNameFrame;
 import com.syrus.AMFICOM.Client.General.UI.UniTreePanel;
 import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.TransmissionPathType;
 import com.syrus.AMFICOM.configuration.TransmissionPathTypeController;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -47,9 +43,13 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.PathElement;
+import com.syrus.AMFICOM.scheme.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.SchemeElement;
+import com.syrus.AMFICOM.scheme.SchemeLink;
+import com.syrus.AMFICOM.scheme.SchemePath;
 
 public class PathPropsPanel extends JPanel
 {
@@ -182,7 +182,7 @@ public class PathPropsPanel extends JPanel
 
 		try {
 			EquivalentCondition condition = new EquivalentCondition(ObjectEntities.TRANSPATHTYPE_ENTITY_CODE);
-			pathTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
+			pathTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 		}
 		catch (ApplicationException ex) {
 			ex.printStackTrace();

@@ -268,7 +268,7 @@ public class CableLinkPropsPanel extends JPanel
 
 		try {
 			EquivalentCondition condition = new EquivalentCondition(ObjectEntities.CABLELINKTYPE_ENTITY_CODE);
-			cablelinkTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
+			cablelinkTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 
 			for (int i = 0; i < linkTypeSorts.length; i++) {
 				sortComboBox.addItem(linkTypeSorts[i]);

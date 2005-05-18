@@ -1,5 +1,5 @@
 /*-
- * $Id: ElementsEditorMainFrame.java,v 1.2 2005/05/04 12:17:29 bass Exp $
+ * $Id: ElementsEditorMainFrame.java,v 1.3 2005/05/18 14:59:44 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,6 @@ import java.util.Date;
 
 import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.*;
 import com.syrus.AMFICOM.Client.General.Command.ExitCommand;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.*;
 import com.syrus.AMFICOM.Client.General.Command.Session.*;
@@ -31,7 +30,7 @@ import com.syrus.AMFICOM.general.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/05/04 12:17:29 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/18 14:59:44 $
  * @module schemeclient_v1
  */
 

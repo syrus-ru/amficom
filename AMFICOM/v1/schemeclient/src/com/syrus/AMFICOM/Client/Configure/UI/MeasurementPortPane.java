@@ -8,6 +8,7 @@ import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 
 public class MeasurementPortPane extends JPanel implements
 		ObjectResourcePropertiesPane {
@@ -74,7 +75,7 @@ public class MeasurementPortPane extends JPanel implements
 		if (modify()) {
 			if (chPanel.save()) {
 				try {
-					ConfigurationStorableObjectPool.putStorableObject(port);
+					StorableObjectPool.putStorableObject(port);
 					ConfigurationStorableObjectPool.flush(true);
 					return true;
 				} 

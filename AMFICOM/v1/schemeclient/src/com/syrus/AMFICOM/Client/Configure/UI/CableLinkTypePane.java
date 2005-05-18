@@ -1,19 +1,33 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.util.Iterator;
 
-import javax.swing.*;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.SwingConstants;
 
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
-import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.UI.PopupNameFrame;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
-import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.configuration.CableLinkType;
+import com.syrus.AMFICOM.configuration.CableThreadType;
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.configuration.corba.LinkTypeSort;
-import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
+import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 
 public class CableLinkTypePane extends JPanel implements ObjectResourcePropertiesPane
 {
@@ -100,11 +114,11 @@ public class CableLinkTypePane extends JPanel implements ObjectResourcePropertie
 		if (modify()) {
 			if (chPanel.save()) {
 				try {
-					ConfigurationStorableObjectPool.putStorableObject(linkType);
+					StorableObjectPool.putStorableObject(linkType);
 					if (linkType.getCableThreadTypes() != null) {
 						for (Iterator it = linkType.getCableThreadTypes().iterator(); it.hasNext();) {
 							CableThreadType ctt = (CableThreadType) it.next();
-							ConfigurationStorableObjectPool.putStorableObject(ctt);
+							StorableObjectPool.putStorableObject(ctt);
 						}
 					}
 					ConfigurationStorableObjectPool.flush(true);

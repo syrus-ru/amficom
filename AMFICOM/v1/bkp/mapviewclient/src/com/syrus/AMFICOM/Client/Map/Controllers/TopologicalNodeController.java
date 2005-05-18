@@ -1,5 +1,5 @@
 /**
- * $Id: TopologicalNodeController.java,v 1.13 2005/04/28 12:55:52 krupenn Exp $
+ * $Id: TopologicalNodeController.java,v 1.14 2005/05/18 14:59:46 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,7 +21,6 @@ import java.awt.geom.Rectangle2D;
 
 import javax.swing.ImageIcon;
 
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.Map.MapConnectionException;
 import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.Client.Map.MapDataException;
@@ -33,8 +32,8 @@ import com.syrus.AMFICOM.map.TopologicalNode;
 
 /**
  * Контроллер топологического узла.
- * @author $Author: krupenn $
- * @version $Revision: 1.13 $, $Date: 2005/04/28 12:55:52 $
+ * @author $Author: bass $
+ * @version $Revision: 1.14 $, $Date: 2005/05/18 14:59:46 $
  * @module mapviewclient_v1
  */
 public class TopologicalNodeController extends AbstractNodeController

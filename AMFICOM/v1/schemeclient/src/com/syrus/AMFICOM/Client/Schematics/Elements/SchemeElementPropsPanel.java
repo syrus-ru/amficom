@@ -8,7 +8,6 @@ import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ChoosableFileFilter;
 import com.syrus.AMFICOM.configuration.*;
-import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 
 public class SchemeElementPropsPanel extends JPanel

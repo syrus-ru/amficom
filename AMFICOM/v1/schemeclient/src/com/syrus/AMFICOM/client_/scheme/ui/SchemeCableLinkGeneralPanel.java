@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLinkGeneralPanel.java,v 1.3 2005/04/28 16:02:36 stas Exp $
+ * $Id: SchemeCableLinkGeneralPanel.java,v 1.4 2005/05/18 14:59:44 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import com.syrus.AMFICOM.scheme.*;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/04/28 16:02:36 $
+ * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2005/05/18 14:59:44 $
  * @module schemeclient_v1
  */
 
@@ -39,7 +39,7 @@ public class SchemeCableLinkGeneralPanel extends AbstractSchemeLinkGeneralPanel 
 		if (schemeLink != null) {
 			EquivalentCondition condition = new EquivalentCondition(ObjectEntities.CABLELINKTYPE_ENTITY_CODE);
 			try {
-				typeCombo.addElements(ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true));
+				typeCombo.addElements(StorableObjectPool.getStorableObjectsByCondition(condition, true));
 			} catch (ApplicationException e) {
 				Log.errorException(e);
 			}

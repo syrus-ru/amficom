@@ -1,5 +1,5 @@
 /**
- * $Id: MapAddMapCommand.java,v 1.3 2005/04/26 16:20:09 krupenn Exp $
+ * $Id: MapAddMapCommand.java,v 1.4 2005/05/18 14:59:46 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,15 +33,15 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.Map;
-import com.syrus.AMFICOM.map.MapStorableObjectPool;
 import com.syrus.AMFICOM.mapview.MapView;
 
 /**
  * добавить в вид схему из списка
- * @author $Author: krupenn $
- * @version $Revision: 1.3 $, $Date: 2005/04/26 16:20:09 $
+ * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2005/05/18 14:59:46 $
  * @module mapviewclient_v1
  */
 public class MapAddMapCommand extends VoidCommand
@@ -91,7 +91,7 @@ public class MapAddMapCommand extends VoidCommand
 //					domainId,
 //					false);
 			StorableObjectCondition condition = new LinkedIdsCondition(domainId, ObjectEntities.MAP_ENTITY_CODE);
-			Collection ss = MapStorableObjectPool.getStorableObjectsByCondition(condition, true);
+			Collection ss = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 			ss.remove(mapView.getMap());
 			mcd.setContents(ss);
 		}

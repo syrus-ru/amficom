@@ -1,19 +1,40 @@
 package com.syrus.AMFICOM.Client.Schematics.Elements;
 
-import java.util.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.util.Collection;
+import java.util.Iterator;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.General.UI.AComboBox;
+import com.syrus.AMFICOM.Client.General.UI.PopupNameFrame;
 import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
-import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.configuration.PortType;
+import com.syrus.AMFICOM.configuration.PortTypeController;
 import com.syrus.AMFICOM.configuration.corba.PortTypeSort;
-import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.EquivalentCondition;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.scheme.SchemeCablePort;
 
 public class CablePortPropsPanel extends JPanel
@@ -161,7 +182,7 @@ public class CablePortPropsPanel extends JPanel
 
 		try {
 			EquivalentCondition condition = new EquivalentCondition(ObjectEntities.PORTTYPE_ENTITY_CODE);
-			portTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
+			portTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 
 			for (int i = 0; i < portTypeSorts.length; i++) {
 				sortComboBox.addItem(portTypeSorts[i]);
@@ -300,7 +321,7 @@ public class CablePortPropsPanel extends JPanel
 						(PortTypeSort)sortComboBox.getSelectedItem());
 
 				portTypes.add(new_type);
-				ConfigurationStorableObjectPool.putStorableObject(new_type);
+				StorableObjectPool.putStorableObject(new_type);
 				typeComboBox.addItem(new_type);
 				typeComboBox.setSelectedItem(new_type);
 			}

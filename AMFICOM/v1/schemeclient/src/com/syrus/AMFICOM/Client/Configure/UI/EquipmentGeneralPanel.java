@@ -13,7 +13,6 @@ import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.scheme.*;
-import com.syrus.AMFICOM.scheme.SchemeUtils;
 
 public class EquipmentGeneralPanel extends GeneralPanel
 {

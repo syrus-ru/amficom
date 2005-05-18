@@ -102,7 +102,7 @@ public class GraphActions
 		SchemeDevice device = SchemeDevice.createInstance();
 		cell.setSchemeDeviceId(device.getId());
 		try {
-			SchemeStorableObjectPool.putStorableObject(device);
+			StorableObjectPool.putStorableObject(device);
 		}
 		catch (IllegalObjectEntityException ex) {
 			ex.printStackTrace();
@@ -186,7 +186,7 @@ public class GraphActions
 			link.setName(name);
 			cell.setSchemeLinkId(link.getId());
 			try {
-				SchemeStorableObjectPool.putStorableObject(link);
+				StorableObjectPool.putStorableObject(link);
 			}
 			catch (IllegalObjectEntityException ex) {
 				ex.printStackTrace();
@@ -271,7 +271,7 @@ public class GraphActions
 			link.setName(name);
 
 			try {
-				SchemeStorableObjectPool.putStorableObject(link);
+				StorableObjectPool.putStorableObject(link);
 			}
 			catch (IllegalObjectEntityException ex) {
 				ex.printStackTrace();

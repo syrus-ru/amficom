@@ -1,5 +1,5 @@
 /**
- * $Id: MapOpenCommand.java,v 1.19 2005/03/04 14:30:55 krupenn Exp $
+ * $Id: MapOpenCommand.java,v 1.20 2005/05/18 14:59:46 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,13 +31,13 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.Map;
-import com.syrus.AMFICOM.map.MapStorableObjectPool;
 
 /**
  * открыть карту. карта открывается в новом виде
- * @author $Author: krupenn $
- * @version $Revision: 1.19 $, $Date: 2005/03/04 14:30:55 $
+ * @author $Author: bass $
+ * @version $Revision: 1.20 $, $Date: 2005/05/18 14:59:46 $
  * @module mapviewclient_v1
  */
 public class MapOpenCommand extends VoidCommand
@@ -82,7 +82,7 @@ public class MapOpenCommand extends VoidCommand
 //				false);
 
 			StorableObjectCondition condition = new LinkedIdsCondition(domainId, ObjectEntities.MAP_ENTITY_CODE);
-			maps = MapStorableObjectPool.getStorableObjectsByCondition(condition, true);
+			maps = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 		}
 		catch (CommunicationException e)
 		{

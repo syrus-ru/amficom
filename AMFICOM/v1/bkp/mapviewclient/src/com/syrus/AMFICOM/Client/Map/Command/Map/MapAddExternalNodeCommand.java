@@ -1,5 +1,5 @@
 /**
- * $Id: MapAddExternalNodeCommand.java,v 1.3 2005/04/22 15:07:17 krupenn Exp $
+ * $Id: MapAddExternalNodeCommand.java,v 1.4 2005/05/18 14:59:46 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,8 +28,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.Map;
-import com.syrus.AMFICOM.map.MapStorableObjectPool;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.mapview.MapView;
 import java.util.Collection;
@@ -37,8 +37,8 @@ import javax.swing.JDesktopPane;
 
 /**
  * добавить в вид схему из списка
- * @author $Author: krupenn $
- * @version $Revision: 1.3 $, $Date: 2005/04/22 15:07:17 $
+ * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2005/05/18 14:59:46 $
  * @module mapviewclient_v1
  */
 public class MapAddExternalNodeCommand extends VoidCommand
@@ -89,7 +89,7 @@ public class MapAddExternalNodeCommand extends VoidCommand
 //					domainId,
 //					false);
 			StorableObjectCondition condition = new LinkedIdsCondition(domainId, ObjectEntities.MAP_ENTITY_CODE);
-			Collection ss = MapStorableObjectPool.getStorableObjectsByCondition(condition, true);
+			Collection ss = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 			ss.remove(mapView.getMap());
 			mapChooserDialog.setContents(ss);
 		}

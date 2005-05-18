@@ -25,7 +25,7 @@ public class LinkGeneralPanel extends AbstractLinkGeneralPanel
 
 		try {
 			EquivalentCondition condition = new EquivalentCondition(ObjectEntities.LINKTYPE_ENTITY_CODE);
-			List lTypes = new ArrayList(ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true));
+			List lTypes = new ArrayList(StorableObjectPool.getStorableObjectsByCondition(condition, true));
 			typeBox.setModel(new ObjListModel(
 					LinkTypeController.getInstance(),
 					lTypes,

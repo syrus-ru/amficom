@@ -1,24 +1,45 @@
 package com.syrus.AMFICOM.Client.Schematics.UI;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
-import java.util.List;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Iterator;
+import java.util.Set;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.border.EtchedBorder;
 
-import oracle.jdeveloper.layout.*;
+import oracle.jdeveloper.layout.XYConstraints;
+import oracle.jdeveloper.layout.XYLayout;
 
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
-import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
+import com.syrus.AMFICOM.Client.General.Event.OperationListener;
+import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
+import com.syrus.AMFICOM.Client.General.Event.TreeDataSelectionEvent;
+import com.syrus.AMFICOM.Client.General.Event.TreeListSelectionEvent;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.client_.general.ui_.tree_.*;
+import com.syrus.AMFICOM.client_.general.ui_.tree_.IconedTreeUI;
+import com.syrus.AMFICOM.client_.general.ui_.tree_.PopulatableIconedNode;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemeTreeUI;
-import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.logic.ChildrenFactory;
-import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.scheme.Scheme;
+import com.syrus.AMFICOM.scheme.SchemeProtoElement;
+import com.syrus.AMFICOM.scheme.SchemeProtoGroup;
+import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 
 public class ElementsNavigatorPanel extends JPanel implements OperationListener
 {
@@ -223,7 +244,7 @@ public class ElementsNavigatorPanel extends JPanel implements OperationListener
 							getAccessIdentifier().domain_id);
 					LinkedIdsCondition condition = new LinkedIdsCondition(domain_id,
 							ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE);
-					Set groups = SchemeStorableObjectPool.getStorableObjectsByCondition(condition, true);
+					Set groups = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 
 					for (Iterator it = groups.iterator(); it.hasNext(); ) {
 						SchemeProtoGroup map_proto = (SchemeProtoGroup)it.next();

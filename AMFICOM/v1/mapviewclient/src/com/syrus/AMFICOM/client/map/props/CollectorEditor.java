@@ -19,7 +19,6 @@ import javax.swing.SwingConstants;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
-import com.syrus.AMFICOM.Client.Map.Controllers.NodeTypeController;
 import com.syrus.AMFICOM.Client.Map.UI.SimpleMapElementController;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.client_.general.ui_.DefaultStorableObjectEditor;

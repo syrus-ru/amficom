@@ -7,8 +7,8 @@ import javax.swing.*;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.scheme.*;
-import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.AMFICOM.Client.Schematics.UI.*;
 
 public class ChooseMapGroupDialog extends JDialog implements OperationListener
@@ -179,7 +179,7 @@ public class ChooseMapGroupDialog extends JDialog implements OperationListener
 		{
 			SchemeProtoGroup group = gpp.getSchemeProtoGroup();
 			try {
-				SchemeStorableObjectPool.putStorableObject(group);
+				StorableObjectPool.putStorableObject(group);
 			} catch (IllegalObjectEntityException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

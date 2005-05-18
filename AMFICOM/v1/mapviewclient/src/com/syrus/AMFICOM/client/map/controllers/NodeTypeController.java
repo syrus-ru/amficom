@@ -1,5 +1,5 @@
 /**
- * $Id: NodeTypeController.java,v 1.17 2005/05/05 09:38:47 krupenn Exp $
+ * $Id: NodeTypeController.java,v 1.18 2005/05/18 14:59:46 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,6 +31,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.OperationSort;
@@ -45,8 +46,8 @@ import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageR
 
 /**
  * контроллер типа сетевого узла.
- * @author $Author: krupenn $
- * @version $Revision: 1.17 $, $Date: 2005/05/05 09:38:47 $
+ * @author $Author: bass $
+ * @version $Revision: 1.18 $, $Date: 2005/05/18 14:59:46 $
  * @module mapviewclient_v1
  */
 public class NodeTypeController extends AbstractNodeController
@@ -164,7 +165,7 @@ public class NodeTypeController extends AbstractNodeController
 				OperationSort.OPERATION_EQUALS,
 				ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE,
 				ImageResourceWrapper.COLUMN_SORT);
-			Collection bitMaps = ResourceStorableObjectPool.getStorableObjectsByCondition(condition, true);
+			Collection bitMaps = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 //			List bitMaps = Collections.EMPTY_LIST;
 
 			for (Iterator it = bitMaps.iterator(); it.hasNext(); ) 
@@ -185,7 +186,7 @@ public class NodeTypeController extends AbstractNodeController
 			FileImageResource ir = FileImageResource.createInstance(
 				userId,
 				filename);
-			ResourceStorableObjectPool.putStorableObject(ir);
+			StorableObjectPool.putStorableObject(ir);
 			ResourceStorableObjectPool.flush(true);
 			return ir.getId();
 		} catch (CreateObjectException e) {
@@ -217,7 +218,7 @@ public class NodeTypeController extends AbstractNodeController
 		try
 		{
 			Collection pTypes =
-				MapStorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
+				StorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
 			for (Iterator it = pTypes.iterator(); it.hasNext();)
 			{
 				SiteNodeType type = (SiteNodeType )it.next();
@@ -260,7 +261,7 @@ public class NodeTypeController extends AbstractNodeController
 						NodeTypeController.getImageFileName(codename)),
 				true);
 				
-			MapStorableObjectPool.putStorableObject(type);
+			StorableObjectPool.putStorableObject(type);
 			MapStorableObjectPool.flush(true);
 		}
 		catch (Exception e)
@@ -298,7 +299,7 @@ public class NodeTypeController extends AbstractNodeController
 		StorableObjectCondition pTypeCondition = new EquivalentCondition(ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE);
 		try {
 			list =
-				MapStorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
+				StorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
 
 			list.remove(getUnboundNodeType());
 

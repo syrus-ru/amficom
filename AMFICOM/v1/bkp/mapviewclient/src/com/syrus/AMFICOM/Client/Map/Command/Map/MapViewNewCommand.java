@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewNewCommand.java,v 1.18 2005/04/25 13:02:00 peskovsky Exp $
+ * $Id: MapViewNewCommand.java,v 1.19 2005/05/18 14:59:46 bass Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -23,16 +23,15 @@ import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
-import com.syrus.AMFICOM.general.corba.AccessIdentity_Transferable;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.mapview.MapView;
-import com.syrus.AMFICOM.mapview.MapViewStorableObjectPool;
 
 /**
  * создать новый вид 
- * @author $Author: peskovsky $
- * @version $Revision: 1.18 $, $Date: 2005/04/25 13:02:00 $
+ * @author $Author: bass $
+ * @version $Revision: 1.19 $, $Date: 2005/05/18 14:59:46 $
  * @module mapviewclient_v1
  */
 public class MapViewNewCommand extends VoidCommand
@@ -79,7 +78,7 @@ public class MapViewNewCommand extends VoidCommand
 					zoom,
 					this.map);
 
-			MapViewStorableObjectPool.putStorableObject(this.mapView);
+			StorableObjectPool.putStorableObject(this.mapView);
 		}
 		catch (CreateObjectException e)
 		{

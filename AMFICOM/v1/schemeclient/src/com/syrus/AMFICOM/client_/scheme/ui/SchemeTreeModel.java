@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeTreeModel.java,v 1.18 2005/04/27 08:47:29 stas Exp $
+ * $Id: SchemeTreeModel.java,v 1.19 2005/05/18 14:59:44 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.client_.scheme.ui;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.18 $, $Date: 2005/04/27 08:47:29 $
+ * @author $Author: bass $
+ * @version $Revision: 1.19 $, $Date: 2005/05/18 14:59:44 $
  * @module schemeclient_v1
  */
 
@@ -178,7 +178,7 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 			else if (s.equals(Constants.LINK_TYPE)) {
 				try {
 					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.LINKTYPE_ENTITY_CODE);
-					Collection linkTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
+					Collection linkTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 					
 					Collection toAdd = getDifference(linkTypes, contents);
 					Collection toRemove = getDifference(contents, linkTypes);
@@ -199,7 +199,7 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 			else if (s.equals(Constants.CABLE_LINK_TYPE)) {
 				try {
 					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.CABLELINKTYPE_ENTITY_CODE);
-					Collection linkTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
+					Collection linkTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 
 					Collection toAdd = getDifference(linkTypes, contents);
 					Collection toRemove = getDifference(contents, linkTypes);
@@ -220,7 +220,7 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 			else if (s.equals(Constants.PORT_TYPE)) {
 				try {
 					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.PORTTYPE_ENTITY_CODE);
-					Collection portTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
+					Collection portTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 					
 					Collection toAdd = getDifference(portTypes, contents);
 					Collection toRemove = getDifference(contents, portTypes);
@@ -241,7 +241,7 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 			else if (s.equals(Constants.EQUIPMENT_TYPE)) {
 				try {
 					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE);
-					Collection equipmentTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
+					Collection equipmentTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 					
 					Collection toAdd = getDifference(equipmentTypes, contents);
 					Collection toRemove = getDifference(contents, equipmentTypes);
@@ -280,7 +280,7 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 				try {
 					EquivalentCondition condition = new EquivalentCondition(
 							ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE);
-					Collection mpTypes = ConfigurationStorableObjectPool
+					Collection mpTypes = StorableObjectPool
 							.getStorableObjectsByCondition(condition, true);
 
 					Collection toAdd = getDifference(mpTypes, contents);
@@ -302,7 +302,7 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 				try {
 					EquivalentCondition condition = new EquivalentCondition(
 							ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
-					Collection measurementTypes = MeasurementStorableObjectPool
+					Collection measurementTypes = StorableObjectPool
 							.getStorableObjectsByCondition(condition, true);
 
 					Collection toAdd = getDifference(measurementTypes, contents);

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeObjectsFactory.java,v 1.4 2005/04/28 16:02:36 stas Exp $
+ * $Id: SchemeObjectsFactory.java,v 1.5 2005/05/18 14:59:44 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,19 +10,33 @@ package com.syrus.AMFICOM.client_.scheme;
 
 import java.util.Collections;
 
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.configuration.*;
-import com.syrus.AMFICOM.configuration.corba.*;
-import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.measurement.*;
-import com.syrus.AMFICOM.resource.*;
-import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.configuration.CableLinkType;
+import com.syrus.AMFICOM.configuration.Equipment;
+import com.syrus.AMFICOM.configuration.EquipmentType;
+import com.syrus.AMFICOM.configuration.KIS;
+import com.syrus.AMFICOM.configuration.Link;
+import com.syrus.AMFICOM.configuration.LinkType;
+import com.syrus.AMFICOM.configuration.MeasurementPort;
+import com.syrus.AMFICOM.configuration.MeasurementPortType;
+import com.syrus.AMFICOM.configuration.Port;
+import com.syrus.AMFICOM.configuration.PortType;
+import com.syrus.AMFICOM.configuration.corba.LinkSort;
+import com.syrus.AMFICOM.configuration.corba.LinkTypeSort;
+import com.syrus.AMFICOM.configuration.corba.PortSort;
+import com.syrus.AMFICOM.configuration.corba.PortTypeSort;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.measurement.MeasurementType;
+import com.syrus.AMFICOM.resource.BitmapImageResource;
+import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.4 $, $Date: 2005/04/28 16:02:36 $
+ * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2005/05/18 14:59:44 $
  * @module schemeclient_v1
  */
 
@@ -39,7 +53,7 @@ public class SchemeObjectsFactory {
 				getAccessIdentifier().user_id);
 		EquipmentType eqt = EquipmentType.createInstance(userId, "", "", "", "", "");
 		try {
-			ConfigurationStorableObjectPool.putStorableObject(eqt);
+			StorableObjectPool.putStorableObject(eqt);
 		} catch (IllegalObjectEntityException e) {
 			Log.debugException(e, Log.SEVERE);
 		}
@@ -51,7 +65,7 @@ public class SchemeObjectsFactory {
 				getAccessIdentifier().user_id);
 		MeasurementType type = MeasurementType.createInstance(userId, codename, "", Collections.EMPTY_SET, Collections.EMPTY_SET, Collections.EMPTY_SET);
 		try {
-			MeasurementStorableObjectPool.putStorableObject(type);
+			StorableObjectPool.putStorableObject(type);
 		} catch (IllegalObjectEntityException e) {
 			Log.debugException(e, Log.SEVERE);
 		}
@@ -63,7 +77,7 @@ public class SchemeObjectsFactory {
 				getAccessIdentifier().user_id);
 		MeasurementPortType type = MeasurementPortType.createInstance(userId, codename, "", "");
 		try {
-			MeasurementStorableObjectPool.putStorableObject(type);
+			StorableObjectPool.putStorableObject(type);
 		} catch (IllegalObjectEntityException e) {
 			Log.debugException(e, Log.SEVERE);
 		}
@@ -75,7 +89,7 @@ public class SchemeObjectsFactory {
 				getAccessIdentifier().user_id);
 		PortType type = PortType.createInstance(userId, codename, "", "", PortTypeSort.PORTTYPESORT_OPTICAL);
 		try {
-			ConfigurationStorableObjectPool.putStorableObject(type);
+			StorableObjectPool.putStorableObject(type);
 		} catch (IllegalObjectEntityException e) {
 			Log.debugException(e, Log.SEVERE);
 		}
@@ -87,7 +101,7 @@ public class SchemeObjectsFactory {
 				getAccessIdentifier().user_id);
 		LinkType type = LinkType.createInstance(userId, codename, "", "", LinkTypeSort.LINKTYPESORT_OPTICAL_FIBER, "", "", null);
 		try {
-			ConfigurationStorableObjectPool.putStorableObject(type);
+			StorableObjectPool.putStorableObject(type);
 		} catch (IllegalObjectEntityException e) {
 			Log.debugException(e, Log.SEVERE);
 		}
@@ -99,7 +113,7 @@ public class SchemeObjectsFactory {
 				getAccessIdentifier().user_id);
 		CableLinkType type = CableLinkType.createInstance(userId, codename, "", "", LinkTypeSort.LINKTYPESORT_OPTICAL_FIBER, "", "", null);
 		try {
-			ConfigurationStorableObjectPool.putStorableObject(type);
+			StorableObjectPool.putStorableObject(type);
 		} catch (IllegalObjectEntityException e) {
 			Log.debugException(e, Log.SEVERE);
 		}
@@ -113,7 +127,7 @@ public class SchemeObjectsFactory {
 				getAccessIdentifier().domain_id);
 		Equipment eq = Equipment.createInstance(userId, domainId, null, "", "", null, "", "", 0, 0, "", "", "", "", "");
 		try {
-			ConfigurationStorableObjectPool.putStorableObject(eq);
+			StorableObjectPool.putStorableObject(eq);
 		} catch (IllegalObjectEntityException e) {
 			Log.debugException(e, Log.SEVERE);
 		}
@@ -127,7 +141,7 @@ public class SchemeObjectsFactory {
 				getAccessIdentifier().domain_id);
 		KIS kis = KIS.createInstance(userId, domainId, "", "", "", (short)0, null, null);
 		try {
-			ConfigurationStorableObjectPool.putStorableObject(kis);
+			StorableObjectPool.putStorableObject(kis);
 		} catch (IllegalObjectEntityException e) {
 			Log.debugException(e, Log.SEVERE);
 		}
@@ -141,7 +155,7 @@ public class SchemeObjectsFactory {
 				getAccessIdentifier().domain_id);
 		Link link = Link.createInstance(userId, domainId, "", "", null, "", "", "", sort, 0, "");
 		try {
-			ConfigurationStorableObjectPool.putStorableObject(link);
+			StorableObjectPool.putStorableObject(link);
 		} catch (IllegalObjectEntityException e) {
 			Log.debugException(e, Log.SEVERE);
 		}
@@ -153,7 +167,7 @@ public class SchemeObjectsFactory {
 				getAccessIdentifier().user_id);
 		Port port = Port.createInstance(userId, null, "", null, sort);
 		try {
-			ConfigurationStorableObjectPool.putStorableObject(port);
+			StorableObjectPool.putStorableObject(port);
 		} catch (IllegalObjectEntityException e) {
 			Log.debugException(e, Log.SEVERE);
 		}
@@ -165,7 +179,7 @@ public class SchemeObjectsFactory {
 				getAccessIdentifier().user_id);
 		SchemeImageResource ir = SchemeImageResource.createInstance(userId);
 		try {
-			ResourceStorableObjectPool.putStorableObject(ir);
+			StorableObjectPool.putStorableObject(ir);
 		} catch (IllegalObjectEntityException e) {
 			 Log.debugException(e, Log.SEVERE);
 		}
@@ -180,7 +194,7 @@ public class SchemeObjectsFactory {
 				getAccessIdentifier().user_id);
 		BitmapImageResource ir = BitmapImageResource.createInstance(userId, codename, image);
 		try {
-			ResourceStorableObjectPool.putStorableObject(ir);
+			StorableObjectPool.putStorableObject(ir);
 		} catch (IllegalObjectEntityException e) {
 			 Log.debugException(e, Log.SEVERE);
 		}
@@ -228,7 +242,7 @@ public class SchemeObjectsFactory {
 		MeasurementPort measurementPort = MeasurementPort.createInstance(
 				userId, type, "", "", null, null);
 		try {
-			SchemeStorableObjectPool.putStorableObject(measurementPort);
+			StorableObjectPool.putStorableObject(measurementPort);
 		} 
 		catch (IllegalObjectEntityException e) {
 			Log.debugException(e, Log.SEVERE);

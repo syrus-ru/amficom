@@ -9,6 +9,7 @@ import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.scheme.SchemeCablePort;
 
 public class CablePortPane extends JPanel implements ObjectResourcePropertiesPane
@@ -93,7 +94,7 @@ public class CablePortPane extends JPanel implements ObjectResourcePropertiesPan
 			if (chPanel.save()) {
 				if (port.getPort() != null) {
 					try {
-						ConfigurationStorableObjectPool.putStorableObject(port.getPort());
+						StorableObjectPool.putStorableObject(port.getPort());
 						ConfigurationStorableObjectPool.flush(true);
 						return true;
 					} catch (ApplicationException ex) {
