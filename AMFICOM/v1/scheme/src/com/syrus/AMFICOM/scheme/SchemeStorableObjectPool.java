@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeStorableObjectPool.java,v 1.19 2005/05/10 19:25:04 arseniy Exp $
+ * $Id: SchemeStorableObjectPool.java,v 1.20 2005/05/18 12:03:14 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,6 @@ import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectGroupEntities;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -25,8 +24,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.19 $, $Date: 2005/05/10 19:25:04 $
+ * @author $Author: bass $
+ * @version $Revision: 1.20 $, $Date: 2005/05/18 12:03:14 $
  * @module scheme_v1
  */
 public final class SchemeStorableObjectPool extends StorableObjectPool {
@@ -138,8 +137,8 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 		try {
 			instance = new SchemeStorableObjectPool(Class.forName(cacheClassName));
 		} catch (final ClassNotFoundException cnfe) {
-			Log.errorMessage("Cache class '" + cacheClassName //$NON-NLS-1$
-					+ "' cannot be found, using default"); //$NON-NLS-1$
+			Log.errorMessage("Cache class '" + cacheClassName
+					+ "' cannot be found, using default");
 			instance = new SchemeStorableObjectPool();
 		}
 		init(schemeObjectLoader1, size);
@@ -150,20 +149,16 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 		try {
 			instance = new SchemeStorableObjectPool(Class.forName(cacheClassName));
 		} catch (final ClassNotFoundException cnfe) {
-			Log.errorMessage("Cache class '" + cacheClassName //$NON-NLS-1$
-					+ "' cannot be found, using default"); //$NON-NLS-1$
+			Log.errorMessage("Cache class '" + cacheClassName
+					+ "' cannot be found, using default");
 			instance = new SchemeStorableObjectPool();
 		}
 		init(schemeObjectLoader1);
 	}
 
-	public static void refresh() throws ApplicationException {
-		instance.refreshImpl();
-	}
-
 	/**
 	 * @param storableObjects
-	 * @throws ApplicationException 
+	 * @throws ApplicationException
 	 */
 	protected Set refreshStorableObjects(final Set storableObjects) throws ApplicationException {
 		return schemeObjectLoader.refresh(storableObjects);
@@ -171,24 +166,6 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 
 	public static StorableObject getStorableObject(final Identifier id, final boolean useLoader) throws ApplicationException {
 		return instance.getStorableObjectImpl(id, useLoader);
-	}
-
-	public static Set getStorableObjects(final Set ids, final boolean useLoader) throws ApplicationException {
-		return instance.getStorableObjectsImpl(ids, useLoader);
-	}
-
-	public static Set getStorableObjectsByCondition(
-			final StorableObjectCondition storableObjectCondition,
-			final boolean useLoader)
-			throws ApplicationException {
-		return instance.getStorableObjectsByConditionImpl(storableObjectCondition, useLoader);
-	}
-
-	public static Set getStorableObjectsByConditionButIds(final Set ids,
-			final StorableObjectCondition storableObjectCondition,
-			final boolean useLoader)
-			throws ApplicationException {
-		return instance.getStorableObjectsByConditionButIdsImpl(ids, storableObjectCondition, useLoader);
 	}
 
 	/**
@@ -229,9 +206,9 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 				return schemeObjectLoader.loadPathElement(id);
 			default:
 				final short entityCode = id.getMajor();
-				Log.errorMessage("SchemeStorableObjectPool.loadStorableObject | Unknown entity: " //$NON-NLS-1$
+				Log.errorMessage("SchemeStorableObjectPool.loadStorableObject | Unknown entity: "
 						+ ObjectEntities.codeToString(entityCode)
-						+ " (" + entityCode + ')'); //$NON-NLS-1$
+						+ " (" + entityCode + ')');
 				return null;
 		}
 	}
@@ -276,9 +253,9 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 			case ObjectEntities.PATH_ELEMENT_ENTITY_CODE:
 				return schemeObjectLoader.loadPathElements(ids);
 			default:
-				Log.errorMessage("SchemeStorableObjectPool.loadStorableObjects | Unknown entity: " //$NON-NLS-1$
+				Log.errorMessage("SchemeStorableObjectPool.loadStorableObjects | Unknown entity: "
 						+ ObjectEntities.codeToString(entityCode)
-						+ " (" + entityCode + ')'); //$NON-NLS-1$
+						+ " (" + entityCode + ')');
 				return Collections.EMPTY_SET;
 		}
 	}
@@ -325,9 +302,9 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 			case ObjectEntities.PATH_ELEMENT_ENTITY_CODE:
 				return schemeObjectLoader.loadPathElementsButIds(storableObjectCondition, ids);
 			default:
-				Log.errorMessage("SchemeStorableObjectPool.loadStorableObjectsButIds | Unknown entity: " //$NON-NLS-1$
+				Log.errorMessage("SchemeStorableObjectPool.loadStorableObjectsButIds | Unknown entity: "
 						+ ObjectEntities.codeToString(entityCode)
-						+ " (" + entityCode + ')'); //$NON-NLS-1$
+						+ " (" + entityCode + ')');
 				return Collections.EMPTY_SET;
 		}
 	}
@@ -438,14 +415,10 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 					schemeObjectLoader.savePathElements(storableObjects, force);
 				break;
 			default:
-				Log.errorMessage("SchemeStorableObjectPool.saveStorableObjects | Unknown entity: " //$NON-NLS-1$
+				Log.errorMessage("SchemeStorableObjectPool.saveStorableObjects | Unknown entity: "
 						+ ObjectEntities.codeToString(entityCode)
-						+ " (" + entityCode + ')'); //$NON-NLS-1$
+						+ " (" + entityCode + ')');
 		}
-	}
-
-	public static StorableObject putStorableObject(final StorableObject storableObject) throws IllegalObjectEntityException {
-		return instance.putStorableObjectImpl(storableObject);
 	}
 
 	public static StorableObject fromTransferable(final Identifier id, final IDLEntity transferable) throws ApplicationException {
@@ -456,15 +429,15 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 		instance.flushImpl(id, force);
 	}
 
-	public static void flush(final short entityCode, final boolean force) throws ApplicationException {		 
+	public static void flush(final short entityCode, final boolean force) throws ApplicationException {		
 		instance.flushImpl(entityCode, force);
 	}
 
-	public static void flush(final Short entityCode, final boolean force) throws ApplicationException {		 
+	public static void flush(final Short entityCode, final boolean force) throws ApplicationException {		
 		instance.flushImpl(entityCode, force);
 	}
 
-	public static void flush(final boolean force) throws ApplicationException {		 
+	public static void flush(final boolean force) throws ApplicationException {		
 		instance.flushImpl(force);
 	}
 
@@ -478,10 +451,6 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 
 	public static void delete(final Identifier id) {
 		instance.deleteImpl(id);
-	}
-
-	public static void delete(final Set identifiables) {
-		instance.deleteImpl(identifiables);
 	}
 
 	/**

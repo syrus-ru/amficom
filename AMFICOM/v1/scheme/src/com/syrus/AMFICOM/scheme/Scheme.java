@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.26 2005/05/11 08:58:25 bass Exp $
+ * $Id: Scheme.java,v 1.27 2005/05/18 12:03:15 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,6 +29,7 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapStorableObjectPool;
@@ -43,7 +44,7 @@ import com.syrus.util.Log;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.26 $, $Date: 2005/05/11 08:58:25 $
+ * @version $Revision: 1.27 $, $Date: 2005/05/18 12:03:15 $
  * @module scheme_v1
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -167,7 +168,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 			final String name, final Kind kind,
 			final Identifier domainId)
 			throws CreateObjectException {
-		return createInstance(creatorId, name, "", "", DEFAULT_WIDTH, //$NON-NLS-1$ //$NON-NLS-2$
+		return createInstance(creatorId, name, "", "", DEFAULT_WIDTH,
 				DEFAULT_HEIGHT, kind, domainId, null, null,
 				null, null, null, null);
 	}
@@ -221,7 +222,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 			return scheme;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(
-					"Scheme.createInstance | cannot generate identifier ", ige); //$NON-NLS-1$
+					"Scheme.createInstance | cannot generate identifier ", ige);
 		}
 	}
 
@@ -351,7 +352,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 
 	public Set getSchemeCableLinks() {
 		try {
-			return Collections.unmodifiableSet(SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE), true));
+			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE), true));
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return Collections.EMPTY_SET;
@@ -374,7 +375,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 
 	public Set getSchemeElements() {
 		try {
-			return Collections.unmodifiableSet(SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE), true));
+			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE), true));
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return Collections.EMPTY_SET;
@@ -388,7 +389,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 
 	public Set getSchemeLinks() {
 		try {
-			return Collections.unmodifiableSet(SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_LINK_ENTITY_CODE), true));
+			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_LINK_ENTITY_CODE), true));
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return Collections.EMPTY_SET;
@@ -397,7 +398,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 
 	public Set getSchemeOptimizeInfos() {
 		try {
-			return Collections.unmodifiableSet(SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_OPTIMIZE_INFO_ENTITY_CODE), true));
+			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_OPTIMIZE_INFO_ENTITY_CODE), true));
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return Collections.EMPTY_SET;

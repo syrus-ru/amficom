@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDeviceDatabase.java,v 1.2 2005/04/22 16:21:44 max Exp $
+ * $Id: SchemeDeviceDatabase.java,v 1.3 2005/05/18 12:03:15 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import java.util.Date;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: max $
- * @version $Revision: 1.2 $, $Date: 2005/04/22 16:21:44 $
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/05/18 12:03:15 $
  * @module scheme_v1
  */
 public final class SchemeDeviceDatabase extends CharacterizableDatabase {
@@ -38,13 +38,10 @@ public final class SchemeDeviceDatabase extends CharacterizableDatabase {
 	 * @param retrieveKind
 	 * @param arg
 	 * @throws IllegalDataException
-	 * @throws ObjectNotFoundException
-	 * @throws RetrieveObjectException
 	 */
 	public Object retrieveObject(StorableObject storableObject,
 			int retrieveKind, Object arg)
-			throws IllegalDataException, ObjectNotFoundException,
-			RetrieveObjectException {
+			throws IllegalDataException {
 		SchemeDevice schemeDevice = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
@@ -117,16 +114,14 @@ public final class SchemeDeviceDatabase extends CharacterizableDatabase {
 	 * @param storableObject
 	 * @param resultSet
 	 * @throws IllegalDataException
-	 * @throws RetrieveObjectException
 	 * @throws SQLException
 	 */
 	protected StorableObject updateEntityFromResultSet(
 			StorableObject storableObject, ResultSet resultSet)
-			throws IllegalDataException, RetrieveObjectException,
-			SQLException {
+			throws IllegalDataException, SQLException {
 		SchemeDevice schemeDevice;
 		if (storableObject == null) {
-			Date created = new Date(); 
+			Date created = new Date();
 			schemeDevice = new SchemeDevice(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 					created, created, null, null, 0L, null, null, null, null);
 		} else {

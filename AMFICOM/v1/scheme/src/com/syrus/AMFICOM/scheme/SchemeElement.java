@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.27 2005/05/10 17:07:52 bass Exp $
+ * $Id: SchemeElement.java,v 1.28 2005/05/18 12:03:15 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,6 +31,7 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.MapStorableObjectPool;
@@ -45,7 +46,7 @@ import com.syrus.util.Log;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.27 $, $Date: 2005/05/10 17:07:52 $
+ * @version $Revision: 1.28 $, $Date: 2005/05/18 12:03:15 $
  * @module scheme_v1
  */
 public final class SchemeElement extends AbstractSchemeElement implements
@@ -168,7 +169,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	public static SchemeElement createInstance(final Identifier creatorId,
 			final String name, final Scheme parentScheme)
 			throws CreateObjectException {
-		return createInstance(creatorId, name, "", "", null, null, //$NON-NLS-1$ //$NON-NLS-2$
+		return createInstance(creatorId, name, "", "", null, null,
 				null, null, null, null, null, parentScheme);
 	}
 
@@ -185,7 +186,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 			final String name,
 			final SchemeElement parentSchemeElement)
 			throws CreateObjectException {
-		return createInstance(creatorId, name, "", "", null, null, //$NON-NLS-1$ //$NON-NLS-2$
+		return createInstance(creatorId, name, "", "", null, null,
 				null, null, null, null, null, parentSchemeElement);
 	}
 
@@ -234,7 +235,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 			return schemeElement;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(
-					"SchemeElement.createInstance | cannot generate identifier ", ige); //$NON-NLS-1$
+					"SchemeElement.createInstance | cannot generate identifier ", ige);
 		}
 	}
 
@@ -282,7 +283,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 			return schemeElement;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(
-					"SchemeElement.createInstance | cannot generate identifier ", ige); //$NON-NLS-1$
+					"SchemeElement.createInstance | cannot generate identifier ", ige);
 		}
 	}
 
@@ -413,7 +414,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		assert super.parentSchemeId.isVoid() ^ this.parentSchemeElementId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 
 		if (super.parentSchemeId.isVoid()) {
-			Log.debugMessage("SchemeElement.getParentScheme() | Parent Scheme was requested, while parent is a SchemeElement; returning null", //$NON-NLS-1$
+			Log.debugMessage("SchemeElement.getParentScheme() | Parent Scheme was requested, while parent is a SchemeElement; returning null",
 					Log.FINE);
 			return null;
 		}
@@ -426,7 +427,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		assert super.parentSchemeId.isVoid() ^ this.parentSchemeElementId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 
 		if (this.parentSchemeElementId.isVoid()) {
-			Log.debugMessage("SchemeElement.getParentSchemeElement() | Parent SchemeElement was requested, while parent is a Scheme; returnung null", //$NON-NLS-1$
+			Log.debugMessage("SchemeElement.getParentSchemeElement() | Parent SchemeElement was requested, while parent is a Scheme; returnung null",
 					Log.FINE);
 			return null;
 		}
@@ -470,7 +471,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 */
 	public Set getSchemeDevices() {
 		try {
-			return Collections.unmodifiableSet(SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_DEVICE_ENTITY_CODE), true));
+			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_DEVICE_ENTITY_CODE), true));
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return Collections.EMPTY_SET;
@@ -482,7 +483,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 */
 	public Set getSchemeElements() {
 		try {
-			return Collections.unmodifiableSet(SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE), true));
+			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE), true));
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return Collections.EMPTY_SET;
@@ -494,7 +495,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 */
 	public Set getSchemeLinks() {
 		try {
-			return Collections.unmodifiableSet(SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_LINK_ENTITY_CODE), true));
+			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_LINK_ENTITY_CODE), true));
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return Collections.EMPTY_SET;
@@ -506,7 +507,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 */
 	public Set getSchemes() {
 		try {
-			return Collections.unmodifiableSet(SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_ENTITY_CODE), true));
+			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_ENTITY_CODE), true));
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return Collections.EMPTY_SET;
@@ -644,7 +645,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 			final String name, final String description,
 			final String label, final Identifier equipmentTypeId,
 			final Identifier equipmentId, final Identifier kisId,
-			final Identifier siteNodeId, 
+			final Identifier siteNodeId,
 			final Identifier symbolId, final Identifier ugoCellId,
 			final Identifier schemeCellId,
 			final Identifier parentSchemeId,
@@ -700,9 +701,9 @@ public final class SchemeElement extends AbstractSchemeElement implements
 			 * Erasing old object value, preserving old object-type
 			 * value. This point is not assumed to be reached unless
 			 * initial object value has already been set (i. e.
-			 * there already is object-type value to preserve). 
+			 * there already is object-type value to preserve).
 			 */
-			this.equipmentTypeId = this.getEquipment().getType().getId(); 
+			this.equipmentTypeId = this.getEquipment().getType().getId();
 		this.equipmentId = newEquipmentId;
 		this.changed = true;
 	}
@@ -811,7 +812,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	}
 
 	public void setScheme(final Scheme scheme) {
-		setSchemes(scheme == null 
+		setSchemes(scheme == null
 				? Collections.EMPTY_SET
 				: Collections.singleton(scheme));
 	}
@@ -982,18 +983,18 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	}
 
 	public SchemePath getAlarmedPath() {
-		throw new UnsupportedOperationException("Method not implemented"); //$NON-NLS-1$
+		throw new UnsupportedOperationException("Method not implemented");
 	}
 
 	public PathElement getAlarmedPathElement() {
-		throw new UnsupportedOperationException("Method not implemented"); //$NON-NLS-1$
+		throw new UnsupportedOperationException("Method not implemented");
 	}
 
 	public void setAlarmedPath(final SchemePath alarmedPath) {
-		throw new UnsupportedOperationException("Method not implemented"); //$NON-NLS-1$
+		throw new UnsupportedOperationException("Method not implemented");
 	}
 
 	public void setAlarmedPathElement(final PathElement alarmedPathElement) {
-		throw new UnsupportedOperationException("Method not implemented"); //$NON-NLS-1$
+		throw new UnsupportedOperationException("Method not implemented");
 	}
 }

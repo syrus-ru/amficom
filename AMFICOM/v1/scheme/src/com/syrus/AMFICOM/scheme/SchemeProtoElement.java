@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.30 2005/05/10 17:07:52 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.31 2005/05/18 12:03:14 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,6 @@ import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.ErrorMessages;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -36,6 +35,7 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.logic.Item;
@@ -52,9 +52,9 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.30 $, $Date: 2005/05/10 17:07:52 $
+ * @version $Revision: 1.31 $, $Date: 2005/05/18 12:03:14 $
  * @module scheme_v1
- * @todo Implement fireParentChanged() and call it on any setParent*() invocation. 
+ * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
 public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		implements Describable, SchemeCellContainer, Characterizable,
@@ -79,7 +79,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 
 	private Identifier parentSchemeProtoElementId;
 
-	private SchemeProtoElementDatabase schemeProtoElementDatabase; 
+	private SchemeProtoElementDatabase schemeProtoElementDatabase;
 
 	private Set characteristics;
 
@@ -162,7 +162,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * {@link #createInstance(Identifier, String, String, String, EquipmentType, BitmapImageResource, SchemeImageResource, SchemeImageResource)}.
 	 * This method breaks some assertions, so clients should consider using
 	 * other ones to create a new instance.
-	 * 
+	 *
 	 * @param creatorId cannot be <code>null</code>.
 	 * @param name cannot be <code>null</code>.
 	 * @throws CreateObjectException
@@ -170,7 +170,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	public static SchemeProtoElement createInstance(
 			final Identifier creatorId, final String name)
 			throws CreateObjectException {
-		return createInstance(creatorId, name, "", "", null, null, null, //$NON-NLS-1$//$NON-NLS-2$
+		return createInstance(creatorId, name, "", "", null, null, null,
 				null);
 	}
 
@@ -187,7 +187,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 			final Identifier creatorId, final String name,
 			final SchemeProtoElement parentSchemeProtoElement)
 			throws CreateObjectException {
-		return createInstance(creatorId, name, "", "", null, null, null, //$NON-NLS-1$ //$NON-NLS-2$
+		return createInstance(creatorId, name, "", "", null, null, null,
 				null, parentSchemeProtoElement);
 	}
 
@@ -204,7 +204,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 			final Identifier creatorId, final String name,
 			final SchemeProtoGroup parentSchemeProtoGroup)
 			throws CreateObjectException {
-		return createInstance(creatorId, name, "", "", null, null, null, //$NON-NLS-1$ //$NON-NLS-2$
+		return createInstance(creatorId, name, "", "", null, null, null,
 				null, parentSchemeProtoGroup);
 	}
 
@@ -248,7 +248,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 			return schemeProtoElement;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(
-					"SchemeProtoElement.createInstance | cannot generate identifier ", ige); //$NON-NLS-1$
+					"SchemeProtoElement.createInstance | cannot generate identifier ", ige);
 		}
 	}
 
@@ -294,7 +294,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 			return schemeProtoElement;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(
-					"SchemeProtoElement.createInstance | cannot generate identifier ", ige); //$NON-NLS-1$
+					"SchemeProtoElement.createInstance | cannot generate identifier ", ige);
 		}
 	}
 
@@ -340,7 +340,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 			return schemeProtoElement;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(
-					"SchemeProtoElement.createInstance | cannot generate identifier ", ige); //$NON-NLS-1$
+					"SchemeProtoElement.createInstance | cannot generate identifier ", ige);
 		}
 	}
 
@@ -544,7 +544,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		assert this.assertParentSetStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
 
 		if (this.parentSchemeProtoElementId.isVoid()) {
-			Log.debugMessage("SchemeProtoElement.getParentSchemeProtoElement() | Parent SchemeProtoElement was requested, while parent is a SchemeProtoGroup; returning null.", //$NON-NLS-1$
+			Log.debugMessage("SchemeProtoElement.getParentSchemeProtoElement() | Parent SchemeProtoElement was requested, while parent is a SchemeProtoGroup; returning null.",
 					Log.FINE);
 			return null;
 		}
@@ -561,7 +561,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		assert this.assertParentSetStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
 		
 		if (this.parentSchemeProtoGroupId.isVoid()) {
-			Log.debugMessage("SchemeProtoElement.getParentSchemeProtoGroup() | Parent SchemeProtoGroup was requested, while parent is a SchemeProtoElement; returnning null", //$NON-NLS-1$
+			Log.debugMessage("SchemeProtoElement.getParentSchemeProtoGroup() | Parent SchemeProtoGroup was requested, while parent is a SchemeProtoElement; returnning null",
 					Log.FINE);
 			return null;
 		}
@@ -593,7 +593,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 */
 	public Set getSchemeDevices() {
 		try {
-			return Collections.unmodifiableSet(SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_DEVICE_ENTITY_CODE), true));
+			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_DEVICE_ENTITY_CODE), true));
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return Collections.EMPTY_SET;
@@ -605,7 +605,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 */
 	public Set getSchemeLinks() {
 		try {
-			return Collections.unmodifiableSet(SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_LINK_ENTITY_CODE), true));
+			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_LINK_ENTITY_CODE), true));
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return Collections.EMPTY_SET;
@@ -617,7 +617,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 */
 	public Set getSchemeProtoElements() {
 		try {
-			return Collections.unmodifiableSet(SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE), true));
+			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE), true));
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return Collections.EMPTY_SET;
@@ -936,7 +936,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * <code>parentSchemeProtoGroup</code> is <code>null</code>, then
 	 * this <code>SchemeProtoElement</code> will delete itself from the
 	 * pool.
-	 * 
+	 *
 	 * @param parentSchemeProtoGroup
 	 */
 	public void setParentSchemeProtoGroup(final SchemeProtoGroup parentSchemeProtoGroup) {
@@ -1061,14 +1061,14 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 
 	/**
 	 * @param transferable
-	 * @throws CreateObjectException 
+	 * @throws CreateObjectException
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IDLEntity)
 	 */
 	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
 		final SchemeProtoElement_Transferable schemeProtoElement = (SchemeProtoElement_Transferable) transferable;
 		try {
 			super.fromTransferable(schemeProtoElement.header);
-			this.setCharacteristics0(GeneralStorableObjectPool.getStorableObjects(Identifier.fromTransferables(schemeProtoElement.characteristicIds), true));
+			this.setCharacteristics0(StorableObjectPool.getStorableObjects(Identifier.fromTransferables(schemeProtoElement.characteristicIds), true));
 		} catch (final ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}

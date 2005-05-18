@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.25 2005/05/10 17:07:52 bass Exp $
+ * $Id: SchemeLink.java,v 1.26 2005/05/18 12:03:15 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,7 +40,7 @@ import com.syrus.util.Log;
  * #10 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.25 $, $Date: 2005/05/10 17:07:52 $
+ * @version $Revision: 1.26 $, $Date: 2005/05/18 12:03:15 $
  * @module scheme_v1
  */
 public final class SchemeLink extends AbstractSchemeLink {
@@ -137,7 +137,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 	 */
 	public static SchemeLink createInstance(final Identifier creatorId,
 			final String name) throws CreateObjectException {
-		return createInstance(creatorId, name, "", 0, 0, null, null, //$NON-NLS-1$
+		return createInstance(creatorId, name, "", 0, 0, null, null,
 				null, null, null);
 	}
 
@@ -153,7 +153,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 	public static SchemeLink createInstance(final Identifier creatorId,
 			final String name, final Scheme parentScheme)
 			throws CreateObjectException {
-		return createInstance(creatorId, name, "", 0, 0, null, null, //$NON-NLS-1$
+		return createInstance(creatorId, name, "", 0, 0, null, null,
 				null, null, null, parentScheme);
 	}
 
@@ -170,7 +170,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 			final String name,
 			final SchemeElement parentSchemeElement)
 			throws CreateObjectException {
-		return createInstance(creatorId, name, "", 0, 0, null, null, //$NON-NLS-1$
+		return createInstance(creatorId, name, "", 0, 0, null, null,
 				null, null, null, parentSchemeElement);
 	}
 
@@ -187,12 +187,12 @@ public final class SchemeLink extends AbstractSchemeLink {
 			final String name,
 			final SchemeProtoElement parentSchemeProtoElement)
 			throws CreateObjectException {
-		return createInstance(creatorId, name, "", 0, 0, null, null, //$NON-NLS-1$
+		return createInstance(creatorId, name, "", 0, 0, null, null,
 				null, null, null, parentSchemeProtoElement);
 	}
 
         /**
-         * This method breaks some assertions, so clients should consider using                           
+         * This method breaks some assertions, so clients should consider using
          * other ones to create a new instance.
          *
          * @param creatorId
@@ -235,7 +235,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 			return schemeLink;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(
-					"SchemeLink.createInstance | cannot generate identifier ", ige); //$NON-NLS-1$
+					"SchemeLink.createInstance | cannot generate identifier ", ige);
 		}
 	}
 
@@ -284,7 +284,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 			return schemeLink;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(
-					"SchemeLink.createInstance | cannot generate identifier ", ige); //$NON-NLS-1$
+					"SchemeLink.createInstance | cannot generate identifier ", ige);
 		}
 	}
 
@@ -333,7 +333,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 			return schemeLink;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(
-					"SchemeLink.createInstance | cannot generate identifier ", ige); //$NON-NLS-1$
+					"SchemeLink.createInstance | cannot generate identifier ", ige);
 		}
 	}
 
@@ -382,7 +382,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 			return schemeLink;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(
-					"SchemeLink.createInstance | cannot generate identifier ", ige); //$NON-NLS-1$
+					"SchemeLink.createInstance | cannot generate identifier ", ige);
 		}
 	}
 
@@ -448,7 +448,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 
 		if (super.parentSchemeId.isVoid()) {
 			assert !this.parentSchemeElementId.isVoid() || !this.parentSchemeProtoElementId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
-			Log.debugMessage("SchemeLink.getParentScheme() | Parent Scheme was requested, while parent is either a SchemeElement or a SchemeProtoElement; returning null", //$NON-NLS-1$
+			Log.debugMessage("SchemeLink.getParentScheme() | Parent Scheme was requested, while parent is either a SchemeElement or a SchemeProtoElement; returning null",
 					Log.FINE);
 			return null;
 		}
@@ -462,7 +462,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 
 		if (this.parentSchemeElementId.isVoid()) {
 			assert !super.parentSchemeId.isVoid() || !this.parentSchemeProtoElementId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
-			Log.debugMessage("SchemeLink.getParentSchemeElement() | Parent SchemeElement was requested, while parent is either a Scheme or a SchemeProtoElement; returning null", //$NON-NLS-1$
+			Log.debugMessage("SchemeLink.getParentSchemeElement() | Parent SchemeElement was requested, while parent is either a Scheme or a SchemeProtoElement; returning null",
 					Log.FINE);
 			return null;
 		}
@@ -481,7 +481,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 
 		if (this.parentSchemeProtoElementId.isVoid()) {
 			assert !super.parentSchemeId.isVoid() || !this.parentSchemeElementId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
-			Log.debugMessage("SchemeLink.getParentSchemeProtoElement() | Parent SchemeProtoElement was requested, while parent is either a Scheme or a SchemeElement; returning null", //$NON-NLS-1$
+			Log.debugMessage("SchemeLink.getParentSchemeProtoElement() | Parent SchemeProtoElement was requested, while parent is either a Scheme or a SchemeElement; returning null",
 					Log.FINE);
 			return null;
 		}
@@ -626,7 +626,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 		} else {
 			if (!this.parentSchemeElementId.isVoid()) {
 				/*
-				 * Moving from a scheme element to a scheme. 
+				 * Moving from a scheme element to a scheme.
 				 */
 				assert this.parentSchemeProtoElementId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 				if (parentScheme == null) {
@@ -669,7 +669,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 			super.parentSchemeId = Identifier.VOID_IDENTIFIER;
 		} else if (!this.parentSchemeElementId.isVoid()) {
 			/*
-			 * Moving from a scheme element to another scheme element. 
+			 * Moving from a scheme element to another scheme element.
 			 */
 			assert this.parentSchemeProtoElementId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 			if (parentSchemeElement == null) {
@@ -715,7 +715,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 			super.parentSchemeId = Identifier.VOID_IDENTIFIER;
 		} else if (!this.parentSchemeElementId.isVoid()) {
 			/*
-			 * Moving from a scheme element to a scheme protoelement. 
+			 * Moving from a scheme element to a scheme protoelement.
 			 */
 			assert this.parentSchemeProtoElementId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 			if (parentSchemeProtoElement == null) {

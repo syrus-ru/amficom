@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLinkWrapper.java,v 1.1 2005/04/22 16:23:00 max Exp $
+ * $Id: SchemeLinkWrapper.java,v 1.2 2005/05/18 12:03:14 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,8 +12,8 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/22 16:23:00 $
- * @author $Author: max $
+ * @version $Revision: 1.2 $, $Date: 2005/05/18 12:03:14 $
+ * @author $Author: bass $
  * @module scheme_v1
  */
 public class SchemeLinkWrapper extends StorableObjectWrapper {
@@ -39,7 +39,7 @@ public class SchemeLinkWrapper extends StorableObjectWrapper {
 
 	public static final String COLUMN_PHYSICAL_LENGTH = "physical_length";
 	public static final String COLUMN_OPTICAL_LENGTH = "optical_length";
-	public static final String COLUMN_LINK_TYPE_ID = "link_type_id"; 
+	public static final String COLUMN_LINK_TYPE_ID = "link_type_id";
 	public static final String COLUMN_LINK_ID = "link_id";
 	public static final String COLUMN_SITE_NODE_ID = "site_node_id";
 	public static final String COLUMN_SOURCE_SCHEME_PORT_ID = "source_scheme_port_id";

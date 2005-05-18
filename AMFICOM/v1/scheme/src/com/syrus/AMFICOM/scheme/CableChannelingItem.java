@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.20 2005/05/10 17:07:52 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.21 2005/05/18 12:03:14 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.util.Log;
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.20 $, $Date: 2005/05/10 17:07:52 $
+ * @version $Revision: 1.21 $, $Date: 2005/05/18 12:03:14 $
  * @module scheme_v1
  */
 public final class CableChannelingItem extends AbstractCloneableStorableObject {
@@ -61,12 +61,12 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject {
 
 	private Identifier parentSchemeCableLinkId;
 
-	private CableChannelingItemDatabase cableChannelingItemDatabase; 
+	private CableChannelingItemDatabase cableChannelingItemDatabase;
 
 	/**
 	 * @param id
-	 * @throws RetrieveObjectException 
-	 * @throws ObjectNotFoundException 
+	 * @throws RetrieveObjectException
+	 * @throws ObjectNotFoundException
 	 */
 	CableChannelingItem(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
@@ -189,7 +189,7 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject {
 			return cableChannelingItem;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(
-					"CableChanelingItem.createInstance | cannot generate identifier ", ige); //$NON-NLS-1$
+					"CableChanelingItem.createInstance | cannot generate identifier ", ige);
 		}
 	}
 

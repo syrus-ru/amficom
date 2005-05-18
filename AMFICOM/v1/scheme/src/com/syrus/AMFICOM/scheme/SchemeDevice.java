@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.24 2005/05/05 15:57:09 bass Exp $
+ * $Id: SchemeDevice.java,v 1.25 2005/05/18 12:03:14 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,6 @@ import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.ErrorMessages;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -32,6 +31,7 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.scheme.corba.SchemeDevice_Transferable;
@@ -41,7 +41,7 @@ import com.syrus.util.Log;
  * #07 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.24 $, $Date: 2005/05/05 15:57:09 $
+ * @version $Revision: 1.25 $, $Date: 2005/05/18 12:03:14 $
  * @module scheme_v1
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -129,7 +129,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 */
 	public static SchemeDevice createInstance(final Identifier creatorId,
 			final String name) throws CreateObjectException {
-		return createInstance(creatorId, name, ""); //$NON-NLS-1$
+		return createInstance(creatorId, name, "");
 	}
 
 	/**
@@ -145,7 +145,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 			final String name,
 			final SchemeProtoElement parentSchemeProtoElement)
 			throws CreateObjectException {
-		return createInstance(creatorId, name, "", parentSchemeProtoElement); //$NON-NLS-1$
+		return createInstance(creatorId, name, "", parentSchemeProtoElement);
 		
 	}
 
@@ -162,7 +162,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 			final String name,
 			final SchemeElement parentSchemeElement)
 			throws CreateObjectException {
-		return createInstance(creatorId, name, "", parentSchemeElement); //$NON-NLS-1$
+		return createInstance(creatorId, name, "", parentSchemeElement);
 	}
 
 	/**
@@ -193,7 +193,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 			return schemeDevice;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(
-					"SchemeDevice.createInstance | cannot generate identifier ", ige); //$NON-NLS-1$
+					"SchemeDevice.createInstance | cannot generate identifier ", ige);
 		}
 	}
 
@@ -226,7 +226,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 			return schemeDevice;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(
-					"SchemeDevice.createInstance | cannot generate identifier ", ige); //$NON-NLS-1$
+					"SchemeDevice.createInstance | cannot generate identifier ", ige);
 		}
 	}
 
@@ -259,7 +259,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 			return schemeDevice;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(
-					"SchemeDevice.createInstance | cannot generate identifier ", ige); //$NON-NLS-1$
+					"SchemeDevice.createInstance | cannot generate identifier ", ige);
 		}
 	}
 
@@ -350,7 +350,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 			throw new IllegalStateException(ErrorMessages.OBJECT_BADLY_INITIALIZED);
 
 		if (this.parentSchemeElementId.isVoid()) {
-			Log.debugMessage("SchemeDevice.getParentSchemeElement() | Parent SchemeElement was requested, while parent is a SchemeProtoElement; returning null.", //$NON-NLS-1$
+			Log.debugMessage("SchemeDevice.getParentSchemeElement() | Parent SchemeElement was requested, while parent is a SchemeProtoElement; returning null.",
 					Log.FINE);
 			return null;
 		}
@@ -372,7 +372,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 			throw new IllegalStateException(ErrorMessages.OBJECT_BADLY_INITIALIZED);
 
 		if (this.parentSchemeProtoElementId.isVoid()) {
-			Log.debugMessage("SchemeDevice.getParentSchemeProtoElement() | Parent SchemeProtoElement was requested, while parent is a SchemeElement; returning null.",  //$NON-NLS-1$
+			Log.debugMessage("SchemeDevice.getParentSchemeProtoElement() | Parent SchemeProtoElement was requested, while parent is a SchemeElement; returning null.",
 					Log.FINE);
 		}
 
@@ -389,7 +389,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 */
 	public Set getSchemeCablePorts() {
 		try {
-			return Collections.unmodifiableSet(SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_CABLE_PORT_ENTITY_CODE), true));
+			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_CABLE_PORT_ENTITY_CODE), true));
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return Collections.EMPTY_SET;
@@ -401,7 +401,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 */
 	public Set getSchemePorts() {
 		try {
-			return Collections.unmodifiableSet(SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_PORT_ENTITY_CODE), true));
+			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_PORT_ENTITY_CODE), true));
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return Collections.EMPTY_SET;
@@ -639,7 +639,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 		final SchemeDevice_Transferable schemeDevice = (SchemeDevice_Transferable) transferable;
 		try {
 			super.fromTransferable(schemeDevice.header);
-			this.setCharacteristics0(GeneralStorableObjectPool.getStorableObjects(Identifier.fromTransferables(schemeDevice.characteristicIds), true));
+			this.setCharacteristics0(StorableObjectPool.getStorableObjects(Identifier.fromTransferables(schemeDevice.characteristicIds), true));
 		} catch (final ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}

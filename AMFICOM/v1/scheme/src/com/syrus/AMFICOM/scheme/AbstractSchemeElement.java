@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractSchemeElement.java,v 1.18 2005/05/05 15:57:09 bass Exp $
+ * $Id: AbstractSchemeElement.java,v 1.19 2005/05/18 12:03:15 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,8 +20,8 @@ import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.ErrorMessages;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.util.Log;
@@ -30,9 +30,9 @@ import com.syrus.util.Log;
  * This class is never used directly, it was provided just in order for source
  * generated from IDL files to compile cleanly. Use other implementations of
  * {@link AbstractSchemeElement}instead.
- * 
+ *
  * @author $Author: bass $
- * @version $Revision: 1.18 $, $Date: 2005/05/05 15:57:09 $
+ * @version $Revision: 1.19 $, $Date: 2005/05/18 12:03:15 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemeElement extends
@@ -87,7 +87,7 @@ public abstract class AbstractSchemeElement extends
 
 	/**
 	 * Will transmute to the constructor from the corresponding
-	 * transferable. 
+	 * transferable.
 	 */
 	AbstractSchemeElement() {
 		// super();
@@ -142,7 +142,7 @@ public abstract class AbstractSchemeElement extends
 	 * Returns <code>Scheme</code> parent to this <code>SchemeLink</code>
 	 * or <code>SchemeCableLlink</code> or <code>SchemeElement</code>.
 	 * Descendants almost always need to override this.
-	 * 
+	 *
 	 * @see #parentSchemeId
 	 */
 	public Scheme getParentScheme() {
@@ -213,7 +213,7 @@ public abstract class AbstractSchemeElement extends
 
 	/**
 	 * Descendants almost always need to override this.
-	 * 
+	 *
 	 * @see #parentSchemeId
 	 */
 	public void setParentScheme(final Scheme parentScheme) {
@@ -244,7 +244,7 @@ public abstract class AbstractSchemeElement extends
 			throws CreateObjectException {
 		try {
 			super.fromTransferable(header);
-			this.setCharacteristics0(GeneralStorableObjectPool.getStorableObjects(Identifier.fromTransferables(characteristicIds), true));
+			this.setCharacteristics0(StorableObjectPool.getStorableObjects(Identifier.fromTransferables(characteristicIds), true));
 		} catch (final ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}

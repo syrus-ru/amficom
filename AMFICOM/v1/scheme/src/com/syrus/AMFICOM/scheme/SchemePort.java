@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePort.java,v 1.23 2005/05/05 16:00:36 bass Exp $
+ * $Id: SchemePort.java,v 1.24 2005/05/18 12:03:14 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,6 +28,7 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
@@ -38,7 +39,7 @@ import com.syrus.util.Log;
  * #08 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.23 $, $Date: 2005/05/05 16:00:36 $
+ * @version $Revision: 1.24 $, $Date: 2005/05/18 12:03:14 $
  * @module scheme_v1
  */
 public final class SchemePort extends AbstractSchemePort {
@@ -119,7 +120,7 @@ public final class SchemePort extends AbstractSchemePort {
 			final AbstractSchemePortDirectionType directionType,
 			final SchemeDevice parentSchemeDevice)
 			throws CreateObjectException {
-		return createInstance(creatorId, name, "", directionType, null, //$NON-NLS-1$
+		return createInstance(creatorId, name, "", directionType, null,
 				null, null, parentSchemeDevice);
 	}
 	
@@ -162,7 +163,7 @@ public final class SchemePort extends AbstractSchemePort {
 			return schemePort;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(
-					"SchemePort.createInstance | cannot generate identifier ", ige); //$NON-NLS-1$
+					"SchemePort.createInstance | cannot generate identifier ", ige);
 		}
 	}
 
@@ -199,7 +200,7 @@ public final class SchemePort extends AbstractSchemePort {
 
 	public SchemeCableThread getSchemeCableThread() {
 		try {
-			final Set schemeCableThreads = SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, ObjectEntities.SCHEME_CABLE_THREAD_ENTITY_CODE), true);
+			final Set schemeCableThreads = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, ObjectEntities.SCHEME_CABLE_THREAD_ENTITY_CODE), true);
 			assert schemeCableThreads != null && schemeCableThreads.size() <= 1;
 			return schemeCableThreads.isEmpty()
 					? null
@@ -212,7 +213,7 @@ public final class SchemePort extends AbstractSchemePort {
 
 	public SchemeLink getSchemeLink() {
 		try {
-			final Set schemeLinks = SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, ObjectEntities.SCHEME_LINK_ENTITY_CODE), true);
+			final Set schemeLinks = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, ObjectEntities.SCHEME_LINK_ENTITY_CODE), true);
 			assert schemeLinks != null && schemeLinks.size() <= 1;
 			return schemeLinks.isEmpty()
 					? null

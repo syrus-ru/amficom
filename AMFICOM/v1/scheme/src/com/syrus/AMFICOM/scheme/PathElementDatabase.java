@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElementDatabase.java,v 1.2 2005/04/19 11:21:58 max Exp $
+ * $Id: PathElementDatabase.java,v 1.3 2005/05/18 12:03:15 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import java.util.Set;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: max $
- * @version $Revision: 1.2 $, $Date: 2005/04/19 11:21:58 $
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/05/18 12:03:15 $
  * @module scheme_v1
  */
 public final class PathElementDatabase extends StorableObjectDatabase {
@@ -73,13 +73,10 @@ public final class PathElementDatabase extends StorableObjectDatabase {
 	 * @param retrieveKind
 	 * @param arg
 	 * @throws IllegalDataException
-	 * @throws ObjectNotFoundException
-	 * @throws RetrieveObjectException
 	 */
 	public Object retrieveObject(StorableObject storableObject,
 			int retrieveKind, Object arg)
-			throws IllegalDataException, ObjectNotFoundException,
-			RetrieveObjectException {
+			throws IllegalDataException {
 		PathElement pe = fromStorableObject(storableObject);
 		switch (retrieveKind) {
 		default:
@@ -164,16 +161,14 @@ public final class PathElementDatabase extends StorableObjectDatabase {
 	 * @param storableObject
 	 * @param resultSet
 	 * @throws IllegalDataException
-	 * @throws RetrieveObjectException
 	 * @throws SQLException
 	 */
 	protected StorableObject updateEntityFromResultSet(
 			StorableObject storableObject, ResultSet resultSet)
-			throws IllegalDataException, RetrieveObjectException,
-			SQLException {
+			throws IllegalDataException, SQLException {
 		PathElement pathElement;
 		if (storableObject == null) {
-			Date created = new Date(); 
+			Date created = new Date();
 			pathElement = new PathElement(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 					created, created, null, null, 0L, null, 0, null, null, null, null, null);
 		} else {

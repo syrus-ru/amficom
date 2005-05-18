@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.23 2005/04/21 16:27:08 bass Exp $
+ * $Id: PathElement.java,v 1.24 2005/05/18 12:03:15 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,13 +38,13 @@ import com.syrus.util.Log;
 
 /**
  * #15 in hierarchy.
- * 
+ *
  * PathElement has no associated <code>name</code> field:
  * its {@link PathElement#getName() getName()} method actually returns
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
- * 
+ *
  * @author $Author: bass $
- * @version $Revision: 1.23 $, $Date: 2005/04/21 16:27:08 $
+ * @version $Revision: 1.24 $, $Date: 2005/05/18 12:03:15 $
  * @module scheme_v1
  * @todo <code>setAttributes()</code> should contain, among others,
  *       kind and sequentialNumber paremeters.
@@ -124,7 +124,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 	/**
 	 * Client-side constructor; creates an instance of type
 	 * {@link Kind#SCHEME_ELEMENT}.
-	 * 
+	 *
 	 * @param id
 	 * @param created
 	 * @param modified
@@ -163,7 +163,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 	/**
 	 * Client-side constructor; creates an instance of type
 	 * {@link Kind#SCHEME_CABLE_LINK}.
-	 * 
+	 *
 	 * @param id
 	 * @param created
 	 * @param modified
@@ -196,7 +196,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 	/**
 	 * Client-side constructor; creates an instance of type
 	 * {@link Kind#SCHEME_LINK}.
-	 * 
+	 *
 	 * @param id
 	 * @param created
 	 * @param modified
@@ -311,7 +311,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 			return pathElement;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(
-					"PathElement.createInstance() | cannot generate identifier ", ige); //$NON-NLS-1$
+					"PathElement.createInstance() | cannot generate identifier ", ige);
 		}
 	}
 
@@ -340,7 +340,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 			return pathElement;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(
-					"PathElement.createInstance() | cannot generate identifier ", ige); //$NON-NLS-1$
+					"PathElement.createInstance() | cannot generate identifier ", ige);
 		}
 	}
 
@@ -369,7 +369,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 			return pathElement;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(
-					"PathElement.createInstance() | cannot generate identifier ", ige); //$NON-NLS-1$
+					"PathElement.createInstance() | cannot generate identifier ", ige);
 		}
 	}
 
@@ -393,8 +393,8 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 	 * @param that
 	 */
 	public int compareTo(final PathElement that) {
-		assert this.parentSchemePathId.equals(that.parentSchemePathId): ErrorMessages.NO_COMMON_PARENT; 
-		return this.sequentialNumber <= that.sequentialNumber ? this.sequentialNumber < that.sequentialNumber ? -1 : 0 : 1; 
+		assert this.parentSchemePathId.equals(that.parentSchemePathId): ErrorMessages.NO_COMMON_PARENT;
+		return this.sequentialNumber <= that.sequentialNumber ? this.sequentialNumber < that.sequentialNumber ? -1 : 0 : 1;
 	}
 
 	public AbstractSchemeElement getAbstractSchemeElement() {
@@ -426,19 +426,19 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 				assert (isFirst() || !this.startAbstractSchemePortId.isVoid())
 						&& (isLast() || !this.endAbstractSchemePortId.isVoid())
 						&& this.schemeCableThreadId.isVoid()
-						&& this.schemeLinkId.isVoid(): ErrorMessages.OBJECT_BADLY_INITIALIZED; 
+						&& this.schemeLinkId.isVoid(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
 				break;
 			case Kind._SCHEME_CABLE_LINK:
 				assert this.startAbstractSchemePortId.isVoid()
 						&& this.endAbstractSchemePortId.isVoid()
 						&& !this.schemeCableThreadId.isVoid()
-						&& this.schemeLinkId.isVoid(): ErrorMessages.OBJECT_BADLY_INITIALIZED; 
+						&& this.schemeLinkId.isVoid(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
 				break;
 			case Kind._SCHEME_LINK:
 				assert this.startAbstractSchemePortId.isVoid()
 						&& this.endAbstractSchemePortId.isVoid()
 						&& this.schemeCableThreadId.isVoid()
-						&& !this.schemeLinkId.isVoid(): ErrorMessages.OBJECT_BADLY_INITIALIZED; 
+						&& !this.schemeLinkId.isVoid(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
 				break;
 			default:
 				assert false;
@@ -700,7 +700,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 		 * (scheme ports and scheme cable ports will have NO parent
 		 * device).
 		 */
-		assert isFirst() 
+		assert isFirst()
 				|| getStartAbstractSchemePort().getParentSchemeDevice()
 				== endAbstractSchemePort.getParentSchemeDevice(): ErrorMessages.NO_COMMON_PARENT;
 		final Identifier newEndAbstractSchemePortId = endAbstractSchemePort.getId();
@@ -794,7 +794,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 		 * (scheme ports and scheme cable ports will have NO parent
 		 * device).
 		 */
-		assert isLast() 
+		assert isLast()
 				|| getEndAbstractSchemePort().getParentSchemeDevice()
 				== startAbstractSchemePort.getParentSchemeDevice(): ErrorMessages.NO_COMMON_PARENT;
 		final Identifier newStartAbstractSchemePortId = startAbstractSchemePort.getId();

@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeLink.java,v 1.13 2005/05/10 17:07:52 bass Exp $
+ * $Id: AbstractSchemeLink.java,v 1.14 2005/05/18 12:03:14 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,9 +30,9 @@ import com.syrus.util.Log;
  * This class is never used directly, it was provided just in order for source
  * generated from IDL files to compile cleanly. Use other implementations of
  * {@link AbstractSchemeLink}instead.
- * 
+ *
  * @author $Author: bass $
- * @version $Revision: 1.13 $, $Date: 2005/05/10 17:07:52 $
+ * @version $Revision: 1.14 $, $Date: 2005/05/18 12:03:14 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemeLink extends AbstractSchemeElement {
@@ -40,14 +40,14 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 
 	/**
 	 * 0 means either zero or unspecified length.
-	 * 
+	 *
 	 * @see #getPhysicalLength()
 	 */
 	private double physicalLength;
 
 	/**
 	 * 0 means either zero or unspecified length.
-	 * 
+	 *
 	 * @see #getOpticalLength()
 	 */
 	private double opticalLength;
@@ -128,7 +128,7 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 
 	/**
 	 * Will transmute to the constructor from the corresponding
-	 * transferable. 
+	 * transferable.
 	 */
 	AbstractSchemeLink() {
 		// super();
@@ -242,7 +242,7 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 			 * Erasing old object value, preserving old object-type
 			 * value. This point is not assumed to be reached unless
 			 * initial object value has already been set (i. e.
-			 * there already is object-type value to preserve). 
+			 * there already is object-type value to preserve).
 			 */
 			this.abstractLinkTypeId = this.getLink().getType().getId();
 		this.linkId = newLinkId;

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.26 2005/05/10 17:07:52 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.27 2005/05/18 12:03:15 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,6 @@ import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.ErrorMessages;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -33,6 +32,7 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.scheme.corba.SchemeCableThread_Transferable;
@@ -42,7 +42,7 @@ import com.syrus.util.Log;
  * #12 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.26 $, $Date: 2005/05/10 17:07:52 $
+ * @version $Revision: 1.27 $, $Date: 2005/05/18 12:03:15 $
  * @module scheme_v1
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
@@ -137,7 +137,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	 * @throws CreateObjectException
 	 */
 	public static SchemeCableThread createInstance(final Identifier creatorId, final String name, final CableThreadType cableThreadType, final SchemeCableLink parentSchemeCableLink) throws CreateObjectException {
-		return createInstance(creatorId, name, "", cableThreadType, //$NON-NLS-1$
+		return createInstance(creatorId, name, "", cableThreadType,
 				null, null, null, parentSchemeCableLink);
 	}
 
@@ -179,7 +179,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 			return schemeCableThread;
 		} catch (final IdentifierGenerationException ioee) {
 			throw new CreateObjectException(
-					"SchemeCableThread.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
+					"SchemeCableThread.createInstance | cannot generate identifier ", ioee);
 		}
 	}
 
@@ -302,7 +302,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 			return targetSchemePort;
 		else
 			throw new IllegalArgumentException(
-					"This scheme cable thread is in no way connected to the scheme device specified."); //$NON-NLS-1$
+					"This scheme cable thread is in no way connected to the scheme device specified.");
 	}
 
 	public SchemePort getSourceSchemePort() {
@@ -527,7 +527,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		final SchemeCableThread_Transferable schemeCableThread = (SchemeCableThread_Transferable) transferable;
 		try {
 			super.fromTransferable(schemeCableThread.header);
-			this.setCharacteristics0(GeneralStorableObjectPool.getStorableObjects(Identifier.fromTransferables(schemeCableThread.characteristicIds), true));
+			this.setCharacteristics0(StorableObjectPool.getStorableObjects(Identifier.fromTransferables(schemeCableThread.characteristicIds), true));
 		} catch (final ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDatabaseContext.java,v 1.3 2005/04/01 13:59:08 bass Exp $
+ * $Id: SchemeDatabaseContext.java,v 1.4 2005/05/18 12:03:15 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/04/01 13:59:08 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/18 12:03:15 $
  * @module scheme_v1
  */
 public final class SchemeDatabaseContext {
@@ -137,7 +137,7 @@ public final class SchemeDatabaseContext {
 			case ObjectEntities.PATH_ELEMENT_ENTITY_CODE:
 				return getPathElementDatabase();
 			default:
-				Log.errorMessage("SchemeDatabaseContext.getDatabase | Unknown entity: " + entityCode); //$NON-NLS-1$
+				Log.errorMessage("SchemeDatabaseContext.getDatabase | Unknown entity: " + entityCode);
 				return null;
 		}
 	}

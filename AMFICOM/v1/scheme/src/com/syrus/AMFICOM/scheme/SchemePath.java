@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.25 2005/05/11 13:10:18 bass Exp $
+ * $Id: SchemePath.java,v 1.26 2005/05/18 12:03:14 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,6 @@ import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.ErrorMessages;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -36,6 +35,7 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.scheme.corba.SchemePath_Transferable;
@@ -46,7 +46,7 @@ import com.syrus.util.Log;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.25 $, $Date: 2005/05/11 13:10:18 $
+ * @version $Revision: 1.26 $, $Date: 2005/05/18 12:03:14 $
  * @module scheme_v1
  */
 public final class SchemePath extends AbstractCloneableStorableObject implements
@@ -127,7 +127,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	public static SchemePath createInstance(final Identifier creatorId,
 			final String name)
 			throws CreateObjectException {
-		return createInstance(creatorId, name, "", null, null); //$NON-NLS-1$
+		return createInstance(creatorId, name, "", null, null);
 	}
 
 	/**
@@ -160,7 +160,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 			return schemePath;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(
-					"SchemePath.createInstance | cannot generate identifier ", ige); //$NON-NLS-1$
+					"SchemePath.createInstance | cannot generate identifier ", ige);
 		}
 	}
 
@@ -257,7 +257,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 */
 	private Set getPathElements0() {
 		try {
-			return SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.PATH_ELEMENT_ENTITY_CODE), true);
+			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.PATH_ELEMENT_ENTITY_CODE), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return Collections.EMPTY_SET;
@@ -433,7 +433,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 		final SchemePath_Transferable schemePath = (SchemePath_Transferable) transferable;
 		try {
 			super.fromTransferable(schemePath.header);
-			this.setCharacteristics0(GeneralStorableObjectPool.getStorableObjects(Identifier.fromTransferables(schemePath.characteristicIds), true));
+			this.setCharacteristics0(StorableObjectPool.getStorableObjects(Identifier.fromTransferables(schemePath.characteristicIds), true));
 		} catch (final ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
@@ -657,7 +657,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 */
 	public PathElement getPreviousPathElement(final PathElement pathElement) {
 		assert assertContains(pathElement): ErrorMessages.CHILDREN_ALIEN;
-		final SortedSet pathElements = getPathElements().headSet(pathElement); 
+		final SortedSet pathElements = getPathElements().headSet(pathElement);
 		return pathElements.isEmpty() ? null : (PathElement) pathElements.last();
 	}
 

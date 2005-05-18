@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.24 2005/05/10 17:07:52 bass Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.25 2005/05/18 12:03:14 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,6 +29,7 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.scheme.corba.SchemeMonitoringSolution_Transferable;
 import com.syrus.util.Log;
@@ -37,7 +38,7 @@ import com.syrus.util.Log;
  * #06 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.24 $, $Date: 2005/05/10 17:07:52 $
+ * @version $Revision: 1.25 $, $Date: 2005/05/18 12:03:14 $
  * @module scheme_v1
  */
 public final class SchemeMonitoringSolution extends
@@ -56,7 +57,7 @@ public final class SchemeMonitoringSolution extends
 	 */
 	private Identifier parentSchemeOptimizeInfoId;
 
-	private SchemeMonitoringSolutionDatabase schemeMonitoringSolutionDatabase; 
+	private SchemeMonitoringSolutionDatabase schemeMonitoringSolutionDatabase;
 
 	/**
 	 * @param id
@@ -118,7 +119,7 @@ public final class SchemeMonitoringSolution extends
 	public static SchemeMonitoringSolution createInstance(
 			final Identifier creatorId, final String name)
 			throws CreateObjectException {
-		return createInstance(creatorId, name, "", 0, null); //$NON-NLS-1$
+		return createInstance(creatorId, name, "", 0, null);
 	}	
 
 	/**
@@ -149,7 +150,7 @@ public final class SchemeMonitoringSolution extends
 			return schemeMonitoringSolution;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(
-					"SchemeMonitoringSolution.createInstance | cannot generate identifier ", ige); //$NON-NLS-1$
+					"SchemeMonitoringSolution.createInstance | cannot generate identifier ", ige);
 		}
 	}
 
@@ -217,7 +218,7 @@ public final class SchemeMonitoringSolution extends
 
 	public Set getSchemePaths() {
 		try {
-			return Collections.unmodifiableSet(SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_PATH_ENTITY_CODE), true));
+			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_PATH_ENTITY_CODE), true));
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return Collections.EMPTY_SET;

@@ -1,5 +1,5 @@
 /*-
- * $Id: TypicalConditionImpl.java,v 1.3 2005/04/14 09:27:08 bass Exp $
+ * $Id: TypicalConditionImpl.java,v 1.4 2005/05/18 12:03:14 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.scheme;
 
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.OperationSort;
@@ -20,7 +19,7 @@ import java.util.Set;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/04/14 09:27:08 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/18 12:03:14 $
  * @module scheme_v1
  */
 final class TypicalConditionImpl extends TypicalCondition {
@@ -100,10 +99,9 @@ final class TypicalConditionImpl extends TypicalCondition {
 
 	/**
 	 * @param storableObject
-	 * @throws IllegalObjectEntityException
 	 * @see com.syrus.AMFICOM.general.StorableObjectCondition#isConditionTrue(StorableObject)
 	 */
-	public boolean isConditionTrue(final StorableObject storableObject) throws IllegalObjectEntityException {
+	public boolean isConditionTrue(final StorableObject storableObject) {
 		throw new UnsupportedOperationException();
 	}
 }

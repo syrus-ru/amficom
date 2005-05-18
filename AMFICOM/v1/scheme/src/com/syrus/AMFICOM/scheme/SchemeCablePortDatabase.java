@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePortDatabase.java,v 1.3 2005/04/27 09:59:56 bass Exp $
+ * $Id: SchemeCablePortDatabase.java,v 1.4 2005/05/18 12:03:15 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import java.util.Date;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/04/27 09:59:56 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/18 12:03:15 $
  * @module scheme_v1
  */
 public final class SchemeCablePortDatabase extends CharacterizableDatabase {
@@ -39,14 +39,11 @@ public final class SchemeCablePortDatabase extends CharacterizableDatabase {
 	 * @param retrieveKind
 	 * @param arg
 	 * @throws IllegalDataException
-	 * @throws ObjectNotFoundException
-	 * @throws RetrieveObjectException
 	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#retrieveObject(com.syrus.AMFICOM.general.StorableObject, int, java.lang.Object)
 	 */
 	public Object retrieveObject(StorableObject storableObject,
 			int retrieveKind, Object arg)
-			throws IllegalDataException, ObjectNotFoundException,
-			RetrieveObjectException {
+			throws IllegalDataException {
 		SchemeCablePort schemeCablePort = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
@@ -70,7 +67,7 @@ public final class SchemeCablePortDatabase extends CharacterizableDatabase {
 	}
 
 	protected String getEnityName() {
-		return ObjectEntities.SCHEME_CABLE_PORT_ENTITY; 
+		return ObjectEntities.SCHEME_CABLE_PORT_ENTITY;
 	}
 
 	protected String getUpdateMultipleSQLValuesTmpl() {
@@ -132,16 +129,14 @@ public final class SchemeCablePortDatabase extends CharacterizableDatabase {
 	 * @param storableObject
 	 * @param resultSet
 	 * @throws IllegalDataException
-	 * @throws RetrieveObjectException
 	 * @throws SQLException
 	 */
 	protected StorableObject updateEntityFromResultSet(
 			StorableObject storableObject, ResultSet resultSet)
-			throws IllegalDataException, RetrieveObjectException,
-			SQLException {
+			throws IllegalDataException, SQLException {
 		SchemeCablePort schemeCablePort;
 		if (storableObject == null) {
-			Date created = new Date(); 
+			Date created = new Date();
 			schemeCablePort = new SchemeCablePort(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 					created, created, null, null, 0L, null, null, null, null, null, null, null);
 		} else {

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePort.java,v 1.23 2005/05/05 15:57:08 bass Exp $
+ * $Id: SchemeCablePort.java,v 1.24 2005/05/18 12:03:14 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,6 +28,7 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
@@ -38,7 +39,7 @@ import com.syrus.util.Log;
  * #09 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.23 $, $Date: 2005/05/05 15:57:08 $
+ * @version $Revision: 1.24 $, $Date: 2005/05/18 12:03:14 $
  * @module scheme_v1
  */
 public final class SchemeCablePort extends AbstractSchemePort {
@@ -118,7 +119,7 @@ public final class SchemeCablePort extends AbstractSchemePort {
 			final AbstractSchemePortDirectionType directionType,
 			final SchemeDevice parentSchemeDevice)
 			throws CreateObjectException {
-		return createInstance(creatorId, name, "", directionType, null, //$NON-NLS-1$
+		return createInstance(creatorId, name, "", directionType, null,
 				null, null, parentSchemeDevice);
 	}
 
@@ -161,7 +162,7 @@ public final class SchemeCablePort extends AbstractSchemePort {
 			return schemeCablePort;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(
-					"SchemeCablePort.createInstance | cannot generate identifier ", ige); //$NON-NLS-1$
+					"SchemeCablePort.createInstance | cannot generate identifier ", ige);
 		}
 	}
 
@@ -199,7 +200,7 @@ public final class SchemeCablePort extends AbstractSchemePort {
 
 	public SchemeCableLink getSchemeCableLink() {
 		try {
-			final Set schemeCableLinks = SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE), true);
+			final Set schemeCableLinks = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE), true);
 			assert schemeCableLinks != null && schemeCableLinks.size() <= 1;
 			return schemeCableLinks.isEmpty()
 					? null

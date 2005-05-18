@@ -1,6 +1,6 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.22 2005/05/10 17:07:52 bass Exp $
- * 
+ * $Id: AbstractSchemePort.java,v 1.23 2005/05/18 12:03:14 bass Exp $
+ *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
@@ -24,8 +24,8 @@ import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.ErrorMessages;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
@@ -33,7 +33,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.22 $, $Date: 2005/05/10 17:07:52 $
+ * @version $Revision: 1.23 $, $Date: 2005/05/18 12:03:14 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemePort extends
@@ -115,7 +115,7 @@ public abstract class AbstractSchemePort extends
 
 	/**
 	 * Will transmute to the constructor from the corresponding
-	 * transferable. 
+	 * transferable.
 	 */
 	AbstractSchemePort() {
 		// super();
@@ -382,7 +382,7 @@ public abstract class AbstractSchemePort extends
 			 * Erasing old object value, preserving old object-type
 			 * value. This point is not assumed to be reached unless
 			 * initial object value has already been set (i. e.
-			 * there already is object-type value to preserve). 
+			 * there already is object-type value to preserve).
 			 */
 			this.portTypeId = this.getPort().getType().getId();
 		this.portId = newPortId;
@@ -432,7 +432,7 @@ public abstract class AbstractSchemePort extends
 			throws CreateObjectException {
 		try {
 			super.fromTransferable(header);
-			this.setCharacteristics0(GeneralStorableObjectPool.getStorableObjects(Identifier.fromTransferables(characteristicIds), true));
+			this.setCharacteristics0(StorableObjectPool.getStorableObjects(Identifier.fromTransferables(characteristicIds), true));
 		} catch (final ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}

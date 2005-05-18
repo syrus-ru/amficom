@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.20 2005/05/10 17:07:52 bass Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.21 2005/05/18 12:03:14 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,6 +29,7 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfo_Transferable;
 import com.syrus.util.Log;
@@ -37,7 +38,7 @@ import com.syrus.util.Log;
  * #05 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.20 $, $Date: 2005/05/10 17:07:52 $
+ * @version $Revision: 1.21 $, $Date: 2005/05/18 12:03:14 $
  * @module scheme_v1
  */
 public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
@@ -165,7 +166,7 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 	public static SchemeOptimizeInfo createInstance(
 			final Identifier creatorId, final String name,
 			final Scheme parentScheme) throws CreateObjectException {
-		return createInstance(creatorId, name, "", 0, 0, 0, 0, 0, 0, 0, //$NON-NLS-1$
+		return createInstance(creatorId, name, "", 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, parentScheme);
 	}
 
@@ -220,7 +221,7 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 			return schemeOptimizeInfo;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(
-					"SchemeOptimizeInfo.createInstance | cannot generate identifier ", ige); //$NON-NLS-1$
+					"SchemeOptimizeInfo.createInstance | cannot generate identifier ", ige);
 		}
 	}
 
@@ -330,7 +331,7 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 
 	public Set getSchemeMonitoringSolutions() {
 		try {
-			return Collections.unmodifiableSet(SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_MONITORING_SOLUTION_ENTITY_CODE), true));
+			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_MONITORING_SOLUTION_ENTITY_CODE), true));
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return Collections.EMPTY_SET;
@@ -339,7 +340,7 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 
 	public Set getSchemeOptimizeInfoRtus() {
 		try {
-			return Collections.unmodifiableSet(SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, ObjectEntities.SCHEME_OPTIMIZE_INFO_RTU_ENTITY_CODE), true));
+			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, ObjectEntities.SCHEME_OPTIMIZE_INFO_RTU_ENTITY_CODE), true));
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return Collections.EMPTY_SET;
@@ -348,7 +349,7 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 
 	public Set getSchemeOptimizeInfoSwitches() {
 		try {
-			return Collections.unmodifiableSet(SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, ObjectEntities.SCHEME_OPTIMIZE_INFO_SWITCH_ENTITY_CODE), true));
+			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, ObjectEntities.SCHEME_OPTIMIZE_INFO_SWITCH_ENTITY_CODE), true));
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return Collections.EMPTY_SET;

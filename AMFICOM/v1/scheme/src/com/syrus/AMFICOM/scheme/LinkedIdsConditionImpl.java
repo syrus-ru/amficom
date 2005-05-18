@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.4 2005/04/27 13:22:09 bass Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.5 2005/05/18 12:03:15 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import java.util.Set;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/04/27 13:22:09 $
+ * @version $Revision: 1.5 $, $Date: 2005/05/18 12:03:15 $
  * @module scheme_v1
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -35,12 +35,12 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 		this.entityCode = entityCode;
 	}
 
-	private boolean checkDomain(final DomainMember domainMember) throws IllegalObjectEntityException {
+	private boolean checkDomain(final DomainMember domainMember) {
 		try {
 			final Domain dmDomain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainMember.getDomainId(), true);
 			for (final Iterator linkedIdIterator = this.linkedIds.iterator(); linkedIdIterator.hasNext();) {
 				final Identifier id = (Identifier) linkedIdIterator.next();
-				if (id.getMajor() == ObjectEntities.DOMAIN_ENTITY_CODE 
+				if (id.getMajor() == ObjectEntities.DOMAIN_ENTITY_CODE
 						&& dmDomain.isChild((Domain) AdministrationStorableObjectPool.getStorableObject(id, true)))
 					return true;
 			}
@@ -69,7 +69,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 						throw new IllegalObjectEntityException(
 								LINKED_ENTITY_CODE_NOT_REGISTERED
 										+ super.linkedEntityCode
-										+ ", " //$NON-NLS-1$
+										+ ", "
 										+ ObjectEntities
 												.codeToString(super.linkedEntityCode),
 								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
@@ -86,7 +86,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 						throw new IllegalObjectEntityException(
 								LINKED_ENTITY_CODE_NOT_REGISTERED
 										+ super.linkedEntityCode
-										+ ", " //$NON-NLS-1$
+										+ ", "
 										+ ObjectEntities
 												.codeToString(super.linkedEntityCode),
 								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
@@ -103,7 +103,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 						throw new IllegalObjectEntityException(
 								LINKED_ENTITY_CODE_NOT_REGISTERED
 										+ super.linkedEntityCode
-										+ ", " //$NON-NLS-1$
+										+ ", "
 										+ ObjectEntities
 												.codeToString(super.linkedEntityCode),
 								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
@@ -112,7 +112,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				throw new IllegalObjectEntityException(
 						ENTITY_CODE_NOT_REGISTERED
 								+ super.entityCode
-								+ ", " //$NON-NLS-1$
+								+ ", "
 								+ ObjectEntities
 										.codeToString(super.entityCode),
 						IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
@@ -135,7 +135,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				throw new IllegalObjectEntityException(
 						ENTITY_CODE_NOT_REGISTERED
 								+ super.entityCode
-								+ ", " //$NON-NLS-1$
+								+ ", "
 								+ ObjectEntities
 										.codeToString(super.entityCode),
 						IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.25 2005/05/10 17:07:52 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.26 2005/05/18 12:03:15 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,6 +31,7 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.logic.ItemListener;
@@ -43,11 +44,11 @@ import com.syrus.util.Log;
 
 /**
  * #01 in hierarchy.
- * 
+ *
  * @author $Author: bass $
- * @version $Revision: 1.25 $, $Date: 2005/05/10 17:07:52 $
+ * @version $Revision: 1.26 $, $Date: 2005/05/18 12:03:15 $
  * @module scheme_v1
- * @todo Implement fireParentChanged() and call it on any setParent*() invocation. 
+ * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
 public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 		implements Describable, SchemeSymbolContainer, Library {
@@ -61,7 +62,7 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 
 	private Identifier parentSchemeProtoGroupId;
 
-	private SchemeProtoGroupDatabase schemeProtoGroupDatabase; 
+	private SchemeProtoGroupDatabase schemeProtoGroupDatabase;
 
 	private ArrayList itemListeners = new ArrayList();
 
@@ -128,7 +129,7 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	public static SchemeProtoGroup createInstance(
 			final Identifier creatorId, final String name)
 			throws CreateObjectException {
-		return createInstance(creatorId, name, "", null, null); //$NON-NLS-1$
+		return createInstance(creatorId, name, "", null, null);
 	}
 
 	/**
@@ -161,7 +162,7 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 			return schemeProtoGroup;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(
-					"SchemeProtoGroup.createInstance | cannot generate identifier ", ige); //$NON-NLS-1$
+					"SchemeProtoGroup.createInstance | cannot generate identifier ", ige);
 		}
 	}
 
@@ -351,7 +352,7 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	 */
 	public Set getSchemeProtoElements() {
 		try {
-			return Collections.unmodifiableSet(SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE), true));
+			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE), true));
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return Collections.EMPTY_SET;
@@ -363,7 +364,7 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	 */
 	public Set getSchemeProtoGroups() {
 		try {
-			return Collections.unmodifiableSet(SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE), true));
+			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE), true));
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return Collections.EMPTY_SET;
@@ -431,7 +432,7 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	/**
 	 * The <code>SchemeProtoGroup</code> must belong to this
 	 * <code>SchemeProtoGroup</code>, or crap will meet the fan.
-	 * 
+	 *
 	 * @param schemeProtoGroup
 	 * @todo Decide whether it's good to have more than one top-level
 	 *       <code>schemeProtoGroup</code>.
@@ -540,7 +541,7 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	 * <em>physical removal</em>, the collection of new ones <em>must
 	 * not</em> contain any <code>schemeProtoElement</code> from old ones,
 	 * or crap will meet the fan.
-	 * 
+	 *
 	 * @param schemeProtoElements
 	 */
 	public void setSchemeProtoElements(final Set schemeProtoElements) {
@@ -565,7 +566,7 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	 * {@link #removeSchemeProtoGroup(SchemeProtoGroup)}. This method
 	 * will completely overwrite old <code>schemeProtoGroups</code> with
 	 * the new ones (i. e. remove old and add new ones).
-	 * 
+	 *
 	 * @param schemeProtoGroups
 	 */
 	public void setSchemeProtoGroups(final Set schemeProtoGroups) {

@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItemDatabase.java,v 1.3 2005/04/25 08:18:33 max Exp $
+ * $Id: CableChannelingItemDatabase.java,v 1.4 2005/05/18 12:03:15 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,8 +28,8 @@ import com.syrus.util.database.DatabaseDate;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: max $
- * @version $Revision: 1.3 $, $Date: 2005/04/25 08:18:33 $
+ * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2005/05/18 12:03:15 $
  * @module scheme_v1
  */
 public final class CableChannelingItemDatabase extends StorableObjectDatabase {
@@ -82,13 +82,10 @@ public final class CableChannelingItemDatabase extends StorableObjectDatabase {
 	 * @param retrieveKind
 	 * @param arg
 	 * @throws IllegalDataException
-	 * @throws ObjectNotFoundException
-	 * @throws RetrieveObjectException
 	 */
 	public Object retrieveObject(StorableObject storableObject,
 			int retrieveKind, Object arg)
-			throws IllegalDataException, ObjectNotFoundException,
-			RetrieveObjectException {
+			throws IllegalDataException {
 		CableChannelingItem cableChannelingItem = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
@@ -179,16 +176,14 @@ public final class CableChannelingItemDatabase extends StorableObjectDatabase {
 	 * @param storableObject
 	 * @param resultSet
 	 * @throws IllegalDataException
-	 * @throws RetrieveObjectException
 	 * @throws SQLException
 	 */
 	protected StorableObject updateEntityFromResultSet(
 			StorableObject storableObject, ResultSet resultSet)
-			throws IllegalDataException, RetrieveObjectException,
-			SQLException {
+			throws IllegalDataException, SQLException {
 		CableChannelingItem cableChannelingItem;
 		if (storableObject == null) {
-			Date created = new Date(); 
+			Date created = new Date();
 			cableChannelingItem = new CableChannelingItem(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 					created, created, null, null, 0L, 0d, 0d, 0, 0, 0, null, null, null, null);
 		} else {
