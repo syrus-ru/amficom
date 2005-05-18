@@ -1,5 +1,5 @@
 /*
- * $Id: Characteristic.java,v 1.27 2005/04/15 19:22:02 arseniy Exp $
+ * $Id: Characteristic.java,v 1.28 2005/05/18 11:07:38 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,8 +19,8 @@ import com.syrus.AMFICOM.general.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/04/15 19:22:02 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.28 $, $Date: 2005/05/18 11:07:38 $
+ * @author $Author: bass $
  * @module general_v1
  */
 
@@ -57,7 +57,7 @@ public class Characteristic extends StorableObject implements TypedObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 * @param ct
-	 * @throws ApplicationException
+	 * @throws CreateObjectException
 	 */
 	public Characteristic(Characteristic_Transferable ct) throws CreateObjectException {
 		try {
@@ -280,7 +280,7 @@ public class Characteristic extends StorableObject implements TypedObject {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	protected void setSort0(CharacteristicSort sort) {
-		this.sort = sort.value(); 
+		this.sort = sort.value();
 	}
 	
 	

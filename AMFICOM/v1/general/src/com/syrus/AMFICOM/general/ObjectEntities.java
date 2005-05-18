@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectEntities.java,v 1.64 2005/05/11 06:47:57 bass Exp $
+ * $Id: ObjectEntities.java,v 1.65 2005/05/18 11:07:38 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,7 @@ import gnu.trove.TObjectShortHashMap;
 import gnu.trove.TShortObjectHashMap;
 
 /**
- * @version $Revision: 1.64 $, $Date: 2005/05/11 06:47:57 $
+ * @version $Revision: 1.65 $, $Date: 2005/05/18 11:07:38 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -23,125 +23,125 @@ public final class ObjectEntities {
 	public static final String UNKNOWN_ENTITY = null;
 
 	/*	Object Types	*/
-	public static final String PARAMETERTYPE_ENTITY = "ParameterType"; //$NON-NLS-1$
-	public static final String CHARACTERISTICTYPE_ENTITY = "CharacteristicType"; //$NON-NLS-1$
+	public static final String PARAMETERTYPE_ENTITY = "ParameterType";
+	public static final String CHARACTERISTICTYPE_ENTITY = "CharacteristicType";
 
-	public static final String EVENTTYPE_ENTITY = "EventType"; //$NON-NLS-1$
-	public static final String EVENTTYPPARTYPLINK_ENTITY = "EventTypParTypLink"; //$NON-NLS-1$
-	public static final String EVENTTYPUSERLINK_ENTITY = "EventTypeUserLink"; //$NON-NLS-1$
-//	public static final String ALARMTYPE_ENTITY = "AlarmType"; //$NON-NLS-1$
+	public static final String EVENTTYPE_ENTITY = "EventType";
+	public static final String EVENTTYPPARTYPLINK_ENTITY = "EventTypParTypLink";
+	public static final String EVENTTYPUSERLINK_ENTITY = "EventTypeUserLink";
+//	public static final String ALARMTYPE_ENTITY = "AlarmType";
 
-	public static final String EQUIPMENTTYPE_ENTITY = "EquipmentType"; //$NON-NLS-1$
-	public static final String PORTTYPE_ENTITY = "PortType"; //$NON-NLS-1$
-	public static final String MEASUREMENTPORTTYPE_ENTITY = "MeasurementPortType"; //$NON-NLS-1$
-	public static final String LINKTYPE_ENTITY = "LinkType"; //$NON-NLS-1$
-	public static final String CABLELINKTYPE_ENTITY = "CableLinkType"; //$NON-NLS-1$
-	public static final String CABLETHREADTYPE_ENTITY = "CableThreadType"; //$NON-NLS-1$
+	public static final String EQUIPMENTTYPE_ENTITY = "EquipmentType";
+	public static final String PORTTYPE_ENTITY = "PortType";
+	public static final String MEASUREMENTPORTTYPE_ENTITY = "MeasurementPortType";
+	public static final String LINKTYPE_ENTITY = "LinkType";
+	public static final String CABLELINKTYPE_ENTITY = "CableLinkType";
+	public static final String CABLETHREADTYPE_ENTITY = "CableThreadType";
 
-	public static final String MEASUREMENTTYPE_ENTITY = "MeasurementType"; //$NON-NLS-1$
-	public static final String MNTTYPPARTYPLINK_ENTITY = "MntTypParTypLink"; //$NON-NLS-1$
-	public static final String MNTTYPEMEASPORTTYPELINK_ENTITY = "MntTypMeasPortTypLink"; //$NON-NLS-1$
-	public static final String ANALYSISTYPE_ENTITY = "AnalysisType"; //$NON-NLS-1$
-	public static final String ANATYPPARTYPLINK_ENTITY = "AnaTypParTypLink"; //$NON-NLS-1$
-	public static final String EVALUATIONTYPE_ENTITY = "EvaluationType"; //$NON-NLS-1$
-	public static final String EVATYPPARTYPLINK_ENTITY = "EvaTypParTypLink"; //$NON-NLS-1$
-	public static final String MNTTYPANATYPEVATYP_ENTITY = "MntTypAnaTypEvaTyp"; //$NON-NLS-1$
-	public static final String MODELINGTYPE_ENTITY = "ModelingType"; //$NON-NLS-1$
-	public static final String MODTYPPARTYPLINK_ENTITY = "ModTypParTypLink"; //$NON-NLS-1$
-	//public static final String KISTYPE_ENTITY = "KISType"; //$NON-NLS-1$
-	public static final String TRANSPATHTYPE_ENTITY = "TransmissionPathType"; //$NON-NLS-1$
+	public static final String MEASUREMENTTYPE_ENTITY = "MeasurementType";
+	public static final String MNTTYPPARTYPLINK_ENTITY = "MntTypParTypLink";
+	public static final String MNTTYPEMEASPORTTYPELINK_ENTITY = "MntTypMeasPortTypLink";
+	public static final String ANALYSISTYPE_ENTITY = "AnalysisType";
+	public static final String ANATYPPARTYPLINK_ENTITY = "AnaTypParTypLink";
+	public static final String EVALUATIONTYPE_ENTITY = "EvaluationType";
+	public static final String EVATYPPARTYPLINK_ENTITY = "EvaTypParTypLink";
+	public static final String MNTTYPANATYPEVATYP_ENTITY = "MntTypAnaTypEvaTyp";
+	public static final String MODELINGTYPE_ENTITY = "ModelingType";
+	public static final String MODTYPPARTYPLINK_ENTITY = "ModTypParTypLink";
+	//public static final String KISTYPE_ENTITY = "KISType";
+	public static final String TRANSPATHTYPE_ENTITY = "TransmissionPathType";
 
-	public static final String SITE_NODE_TYPE_ENTITY = "SiteNodeType"; //$NON-NLS-1$
-	public static final String PHYSICAL_LINK_TYPE_ENTITY = "PhysicalLinkType"; //$NON-NLS-1$
+	public static final String SITE_NODE_TYPE_ENTITY = "SiteNodeType";
+	public static final String PHYSICAL_LINK_TYPE_ENTITY = "PhysicalLinkType";
 
 	/*	General */
-	public static final String CHARACTERISTIC_ENTITY = "Characteristic"; //$NON-NLS-1$
+	public static final String CHARACTERISTIC_ENTITY = "Characteristic";
 
 	/*	Event	*/
-	public static final String EVENTPARAMETER_ENTITY = "EventParameter"; //$NON-NLS-1$
-	public static final String EVENTSOURCE_ENTITY = "EventSource"; //$NON-NLS-1$
-	public static final String EVENTSOURCE_LINK_ENTITY = "EventSourceLink"; //$NON-NLS-1$
-	public static final String EVENT_ENTITY = "Event"; //$NON-NLS-1$
-//	public static final String ALARM_ENTITY = "Alarm"; //$NON-NLS-1$
+	public static final String EVENTPARAMETER_ENTITY = "EventParameter";
+	public static final String EVENTSOURCE_ENTITY = "EventSource";
+	public static final String EVENTSOURCE_LINK_ENTITY = "EventSourceLink";
+	public static final String EVENT_ENTITY = "Event";
+//	public static final String ALARM_ENTITY = "Alarm";
 
 	/*	Administration	*/
-	public static final String USER_ENTITY = "User"; //$NON-NLS-1$
-	public static final String DOMAIN_ENTITY = "Domain"; //$NON-NLS-1$
-	public static final String SERVER_ENTITY = "Server"; //$NON-NLS-1$
-	public static final String MCM_ENTITY = "MCM"; //$NON-NLS-1$
-	public static final String SERVERPROCESS_ENTITY = "ServerProcess"; //$NON-NLS-1$
-	public static final String PERMATTR_ENTITY = "PermissionAttributes"; //$NON-NLS-1$
+	public static final String USER_ENTITY = "User";
+	public static final String DOMAIN_ENTITY = "Domain";
+	public static final String SERVER_ENTITY = "Server";
+	public static final String MCM_ENTITY = "MCM";
+	public static final String SERVERPROCESS_ENTITY = "ServerProcess";
+	public static final String PERMATTR_ENTITY = "PermissionAttributes";
 
 	/*	Configuration	*/
-	public static final String EQUIPMENT_ENTITY = "Equipment"; //$NON-NLS-1$
-	public static final String EQUIPMENTMELINK_ENTITY = "EquipmentMELink"; //$NON-NLS-1$
-	public static final String PORT_ENTITY = "Port"; //$NON-NLS-1$
-	public static final String TRANSPATH_ENTITY = "TransmissionPath"; //$NON-NLS-1$
-	public static final String TRANSPATHMELINK_ENTITY = "TransmissionPathMELink"; //$NON-NLS-1$
-	public static final String KIS_ENTITY = "KIS"; //$NON-NLS-1$
-	public static final String MEASUREMENTPORT_ENTITY = "MeasurementPort"; //$NON-NLS-1$
-	public static final String ME_ENTITY = "MonitoredElement"; //$NON-NLS-1$
-	public static final String LINK_ENTITY = "Link"; //$NON-NLS-1$
-	public static final String CABLETHREAD_ENTITY = "CableThread"; //$NON-NLS-1$
+	public static final String EQUIPMENT_ENTITY = "Equipment";
+	public static final String EQUIPMENTMELINK_ENTITY = "EquipmentMELink";
+	public static final String PORT_ENTITY = "Port";
+	public static final String TRANSPATH_ENTITY = "TransmissionPath";
+	public static final String TRANSPATHMELINK_ENTITY = "TransmissionPathMELink";
+	public static final String KIS_ENTITY = "KIS";
+	public static final String MEASUREMENTPORT_ENTITY = "MeasurementPort";
+	public static final String ME_ENTITY = "MonitoredElement";
+	public static final String LINK_ENTITY = "Link";
+	public static final String CABLETHREAD_ENTITY = "CableThread";
 
 	/*	Measurement	*/
-	public static final String SET_ENTITY = "Set"; //$NON-NLS-1$
-	public static final String SETPARAMETER_ENTITY = "SetParameter"; //$NON-NLS-1$
-	public static final String SETMELINK_ENTITY = "SetMELink"; //$NON-NLS-1$
-	public static final String MS_ENTITY = "MeasurementSetup"; //$NON-NLS-1$
-	public static final String MSMELINK_ENTITY = "MeasurementSetupMELink"; //$NON-NLS-1$
-	public static final String MSMTLINK_ENTITY = "MeasurementSetupMTLink"; //$NON-NLS-1$
-	public static final String MEASUREMENT_ENTITY = "Measurement"; //$NON-NLS-1$
-	public static final String ANALYSIS_ENTITY = "Analysis"; //$NON-NLS-1$
-	public static final String EVALUATION_ENTITY = "Evaluation"; //$NON-NLS-1$
-	public static final String TEST_ENTITY = "Test"; //$NON-NLS-1$
-	public static final String MSTESTLINK_ENTITY = "MeasurementSetupTestLink"; //$NON-NLS-1$
-	public static final String RESULT_ENTITY = "Result"; //$NON-NLS-1$
-	public static final String RESULTPARAMETER_ENTITY = "ResultParameter"; //$NON-NLS-1$
-	public static final String CRONTEMPORALPATTERN_ENTITY = "CronTemporalPattern"; //$NON-NLS-1$
-	public static final String INTERVALS_TEMPORALPATTERN_ENTITY = "ITempPattern"; //$NON-NLS-1$
-	public static final String PERIODICAL_TEMPORALPATTERN_ENTITY = "PeriodicalTemporalPattern"; //$NON-NLS-1$
-	public static final String MODELING_ENTITY = "Modeling"; //$NON-NLS-1$
+	public static final String SET_ENTITY = "Set";
+	public static final String SETPARAMETER_ENTITY = "SetParameter";
+	public static final String SETMELINK_ENTITY = "SetMELink";
+	public static final String MS_ENTITY = "MeasurementSetup";
+	public static final String MSMELINK_ENTITY = "MeasurementSetupMELink";
+	public static final String MSMTLINK_ENTITY = "MeasurementSetupMTLink";
+	public static final String MEASUREMENT_ENTITY = "Measurement";
+	public static final String ANALYSIS_ENTITY = "Analysis";
+	public static final String EVALUATION_ENTITY = "Evaluation";
+	public static final String TEST_ENTITY = "Test";
+	public static final String MSTESTLINK_ENTITY = "MeasurementSetupTestLink";
+	public static final String RESULT_ENTITY = "Result";
+	public static final String RESULTPARAMETER_ENTITY = "ResultParameter";
+	public static final String CRONTEMPORALPATTERN_ENTITY = "CronTemporalPattern";
+	public static final String INTERVALS_TEMPORALPATTERN_ENTITY = "ITempPattern";
+	public static final String PERIODICAL_TEMPORALPATTERN_ENTITY = "PeriodicalTemporalPattern";
+	public static final String MODELING_ENTITY = "Modeling";
 
 	/*        Scheme        */
-	public static final String CABLE_CHANNELING_ITEM_ENTITY = "CableChannelingItem"; //$NON-NLS-1$
-	public static final String PATH_ELEMENT_ENTITY = "PathElement"; //$NON-NLS-1$
-	public static final String SCHEME_ENTITY = "Scheme"; //$NON-NLS-1$
-	public static final String SCHEME_CABLE_LINK_ENTITY = "SchemeCableLink"; //$NON-NLS-1$
-	public static final String SCHEME_CABLE_PORT_ENTITY = "SchemeCablePort"; //$NON-NLS-1$
-	public static final String SCHEME_CABLE_THREAD_ENTITY = "SchemeCableThread"; //$NON-NLS-1$
-	public static final String SCHEME_DEVICE_ENTITY = "SchemeDevice"; //$NON-NLS-1$
-	public static final String SCHEME_ELEMENT_ENTITY = "SchemeElement"; //$NON-NLS-1$
-	public static final String SCHEME_LINK_ENTITY = "SchemeLink"; //$NON-NLS-1$
-	public static final String SCHEME_MONITORING_SOLUTION_ENTITY = "SchemeMonitoringSolution"; //$NON-NLS-1$
-	public static final String SCHEME_OPTIMIZE_INFO_ENTITY = "SchemeOptimizeInfo"; //$NON-NLS-1$
-	public static final String SCHEME_OPTIMIZE_INFO_SWITCH_ENTITY = "SchemeOptimizeInfoSwitch"; //$NON-NLS-1$
-	public static final String SCHEME_OPTIMIZE_INFO_RTU_ENTITY = "SchemeOptimizeInfoRtu"; //$NON-NLS-1$
-	public static final String SCHEME_PATH_ENTITY = "SchemePath"; //$NON-NLS-1$
-	public static final String SCHEME_PORT_ENTITY = "SchemePort"; //$NON-NLS-1$
-	public static final String SCHEME_PROTO_ELEMENT_ENTITY = "SchemeProtoElement"; //$NON-NLS-1$
-	public static final String SCHEME_PROTO_GROUP_ENTITY = "SchemeProtoGroup"; //$NON-NLS-1$
+	public static final String CABLE_CHANNELING_ITEM_ENTITY = "CableChannelingItem";
+	public static final String PATH_ELEMENT_ENTITY = "PathElement";
+	public static final String SCHEME_ENTITY = "Scheme";
+	public static final String SCHEME_CABLE_LINK_ENTITY = "SchemeCableLink";
+	public static final String SCHEME_CABLE_PORT_ENTITY = "SchemeCablePort";
+	public static final String SCHEME_CABLE_THREAD_ENTITY = "SchemeCableThread";
+	public static final String SCHEME_DEVICE_ENTITY = "SchemeDevice";
+	public static final String SCHEME_ELEMENT_ENTITY = "SchemeElement";
+	public static final String SCHEME_LINK_ENTITY = "SchemeLink";
+	public static final String SCHEME_MONITORING_SOLUTION_ENTITY = "SchemeMonitoringSolution";
+	public static final String SCHEME_OPTIMIZE_INFO_ENTITY = "SchemeOptimizeInfo";
+	public static final String SCHEME_OPTIMIZE_INFO_SWITCH_ENTITY = "SchemeOptimizeInfoSwitch";
+	public static final String SCHEME_OPTIMIZE_INFO_RTU_ENTITY = "SchemeOptimizeInfoRtu";
+	public static final String SCHEME_PATH_ENTITY = "SchemePath";
+	public static final String SCHEME_PORT_ENTITY = "SchemePort";
+	public static final String SCHEME_PROTO_ELEMENT_ENTITY = "SchemeProtoElement";
+	public static final String SCHEME_PROTO_GROUP_ENTITY = "SchemeProtoGroup";
 
 	/*			Map			*/
-	public static final String SITE_NODE_ENTITY = "SiteNode"; //$NON-NLS-1$
-	public static final String TOPOLOGICAL_NODE_ENTITY = "TopologicalNode"; //$NON-NLS-1$
-	public static final String NODE_LINK_ENTITY = "NodeLink"; //$NON-NLS-1$
-	public static final String MARK_ENTITY = "Mark"; //$NON-NLS-1$
-	public static final String PHYSICAL_LINK_ENTITY = "PhysicalLink"; //$NON-NLS-1$
-	public static final String COLLECTOR_ENTITY = "Collector"; //$NON-NLS-1$
-	public static final String MAP_ENTITY = "Map"; //$NON-NLS-1$
+	public static final String SITE_NODE_ENTITY = "SiteNode";
+	public static final String TOPOLOGICAL_NODE_ENTITY = "TopologicalNode";
+	public static final String NODE_LINK_ENTITY = "NodeLink";
+	public static final String MARK_ENTITY = "Mark";
+	public static final String PHYSICAL_LINK_ENTITY = "PhysicalLink";
+	public static final String COLLECTOR_ENTITY = "Collector";
+	public static final String MAP_ENTITY = "Map";
 
 	/*       Resource       */
-	public static final String IMAGE_RESOURCE_ENTITY = "ImageResource"; //$NON-NLS-1$
+	public static final String IMAGE_RESOURCE_ENTITY = "ImageResource";
 	
 	/*		MapView			*/
-	public static final String MAPVIEW_ENTITY = "MapView"; //$NON-NLS-1$
+	public static final String MAPVIEW_ENTITY = "MapView";
 
 	/*        Updike        */
 	/**
 	 * Шняга: {@value}.
 	 */
-	public static final String UPDIKE_ENTITY = "8========================D"; //$NON-NLS-1$
+	public static final String UPDIKE_ENTITY = "8========================D";
 
 	/**
 	 * Never gets registered.
@@ -210,7 +210,7 @@ public final class ObjectEntities {
 	public static final short MEASUREMENTPORT_ENTITY_CODE = 0x0185;
 	public static final short ME_ENTITY_CODE = 0x0186;
 	public static final short LINK_ENTITY_CODE = 0x0187;
-	public static final short CABLETHREAD_ENTITY_CODE = 0x0188;    
+	public static final short CABLETHREAD_ENTITY_CODE = 0x0188;
 
 	public static final short EQUIPMENTTYPE_ENTITY_CODE = 0x01C1;
 	public static final short PORTTYPE_ENTITY_CODE = 0x01C2;
@@ -220,7 +220,7 @@ public final class ObjectEntities {
 	public static final short TRANSPATHTYPE_ENTITY_CODE = 0x01C6;
 	public static final short CABLETHREADTYPE_ENTITY_CODE = 0x01C7;
 	public static final short CABLELINKTYPE_ENTITY_CODE = 0x01C8;
-    
+
 	public static final short CONFIGURATION_MAX_ENTITY_CODE = 0x0200;
 
 	/*
@@ -321,7 +321,7 @@ public final class ObjectEntities {
 	 */
 	public static final short UPDIKE_ENTITY_CODE = Short.MAX_VALUE;
 
-	private static final TObjectShortHashMap NAME_CODE_MAP = new TObjectShortHashMap();  
+	private static final TObjectShortHashMap NAME_CODE_MAP = new TObjectShortHashMap();
 
 	private static final TShortObjectHashMap CODE_NAME_MAP = new TShortObjectHashMap();
 

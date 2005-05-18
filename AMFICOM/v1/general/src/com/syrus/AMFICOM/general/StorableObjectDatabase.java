@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.142 2005/05/13 20:45:32 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.143 2005/05/18 11:07:39 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,8 +31,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.142 $, $Date: 2005/05/13 20:45:32 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.143 $, $Date: 2005/05/18 11:07:39 $
+ * @author $Author: bass $
  * @module general_v1
  */
 
@@ -224,7 +224,7 @@ public abstract class StorableObjectDatabase {
 	/**
 	 * If <code>storableObject</code> is <code>null</code> creates new
 	 * StorableObject Else - fills it fields from <code>resultSet</code>
-	 * 
+	 *
 	 * @param storableObject
 	 * @param resultSet
 	 * @return Storable Object with filled fields
@@ -238,7 +238,7 @@ public abstract class StorableObjectDatabase {
 	// ////////////////////refresh /////////////////////////
 
 	/**
-	 * 
+	 *
 	 * @param storableObjects
 	 * @return List&lt;Identifier&gt; of changed storable objects
 	 * @throws RetrieveObjectException
@@ -472,14 +472,13 @@ public abstract class StorableObjectDatabase {
 
 	/**
 	 * Map&lt;StorableObject, List&lt;Identifier&gt;&gt;
-	 * 
+	 *
 	 * @param storableObjects
 	 *            List&lt;StorableObject&gt;
 	 * @param tableName
 	 * @param idColumnName
 	 * @param linkedIdColumnName
 	 * @throws RetrieveObjectException
-	 * @throws IllegalDataException
 	 */
 	protected Map retrieveLinkedEntityIds(Set storableObjects,
 			String tableName,
@@ -1117,7 +1116,7 @@ public abstract class StorableObjectDatabase {
 	 * If a linked id exists in idLinkedMap but not exists in DB - insert it to
 	 * DB If a linked id exists in DB but not exists in idLinkedMap - delete it
 	 * from DB
-	 * 
+	 *
 	 * @param idLinkedIdMap
 	 * @param tableName
 	 * @param idColumnName
@@ -1347,12 +1346,11 @@ public abstract class StorableObjectDatabase {
 	 * 'idM') ..." If <code>inList</code> is <code>false</code> returns a
 	 * string like "idColumn NOT IN ('id1', 'id2',... , 'idN') AND idColumn NOT
 	 * IN ('id3', 'id4',... , 'idM') ..."
-	 * 
+	 *
 	 * @param identifiables
 	 * @param idColumn
 	 * @param inList
 	 * @return String for "WHERE" subclause of SQL query
-	 * @throws IllegalDataException
 	 */
 	protected static StringBuffer idsEnumerationString(Set identifiables, String idColumn, boolean inList) {
 		if (identifiables == null || identifiables.isEmpty())

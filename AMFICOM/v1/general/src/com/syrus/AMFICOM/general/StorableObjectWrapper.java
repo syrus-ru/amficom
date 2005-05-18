@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectWrapper.java,v 1.5 2005/04/12 13:10:25 max Exp $
+ * $Id: StorableObjectWrapper.java,v 1.6 2005/05/18 11:07:38 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,17 +16,17 @@ import com.syrus.util.Wrapper;
 /**
  * StorableObjectWrapper provides data from Model (such as StorableObject,
  * ObjectResource) using key set.
- * 
+ *
  * Model has various fields, accessors for them and many other things, which are
  * represented through controller to viewers using the same interface of
  * interaction.
- * 
+ *
  * All entities of the same kind use a single StorableObjectWrapper, that's why
  * wrapper's constructor must be private and its instance must be obtained using
  * a static method <code>getInstance()</code>.
- * 
- * @author $Author: max $
- * @version $Revision: 1.5 $, $Date: 2005/04/12 13:10:25 $
+ *
+ * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2005/05/18 11:07:38 $
  * @see <a href =
  *      "http://bass.science.syrus.ru/java/Bitter%20Java.pdf">&laquo;Bitter
  *      Java&raquo; by Bruce A. Tate </a>
@@ -64,12 +64,12 @@ public abstract class StorableObjectWrapper implements Wrapper {
 			wrapper = (StorableObjectWrapper) method.invoke(null, new Object[0]);
 
 		} catch (ClassNotFoundException e) {
-			throw new IllegalDataException("StorableObjectWrapper.getWrapper | Class " + className //$NON-NLS-1$
+			throw new IllegalDataException("StorableObjectWrapper.getWrapper | Class " + className
 					+ " not found on the classpath - " + e.getMessage());
 		} catch (SecurityException e) {
 			throw new IllegalDataException("StorableObjectWrapper.getWrapper | Caught " + e.getMessage());
 		} catch (NoSuchMethodException e) {
-			throw new IllegalDataException("StorableObjectWrapper.getWrapper | Class " + className //$NON-NLS-1$
+			throw new IllegalDataException("StorableObjectWrapper.getWrapper | Class " + className
 					+ " haven't getInstance static method - " + e.getMessage());
 		} catch (IllegalArgumentException e) {
 			throw new IllegalDataException("StorableObjectWrapper.getWrapper | Caught " + e.getMessage());

@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXMLDriver.java,v 1.19 2005/04/12 16:28:11 arseniy Exp $
+ * $Id: StorableObjectXMLDriver.java,v 1.20 2005/05/18 11:07:39 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,9 +47,9 @@ import com.syrus.util.Log;
 
 /**
  * XML Driver for storable object package, one per package.
- * 
- * @version $Revision: 1.19 $, $Date: 2005/04/12 16:28:11 $
- * @author $Author: arseniy $
+ *
+ * @version $Revision: 1.20 $, $Date: 2005/05/18 11:07:39 $
+ * @author $Author: bass $
  * @module general_v1
  */
 public class StorableObjectXMLDriver {
@@ -136,13 +136,13 @@ public class StorableObjectXMLDriver {
 					+ storableObject.getId().getIdentifierString(), Log.INFO);
 
 		} catch (ClassNotFoundException e) {
-			throw new IllegalDataException("StorableObjectXMLDriver.reflectStorableObject | Class " + className //$NON-NLS-1$
+			throw new IllegalDataException("StorableObjectXMLDriver.reflectStorableObject | Class " + className
 					+ " not found on the classpath - " + e.getMessage());
 		} catch (SecurityException e) {
 			throw new IllegalDataException("StorableObjectXMLDriver.reflectStorableObject | Caught SecurityException "
 					+ e.getMessage());
 		} catch (NoSuchMethodException e) {
-			throw new IllegalDataException("StorableObjectXMLDriver.reflectStorableObject | Class " + className //$NON-NLS-1$
+			throw new IllegalDataException("StorableObjectXMLDriver.reflectStorableObject | Class " + className
 					+ " haven't getStorableObject static method - " + e.getMessage());
 		} catch (IllegalArgumentException e) {
 			throw new IllegalDataException(

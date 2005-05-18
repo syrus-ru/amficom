@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXML.java,v 1.24 2005/04/27 14:00:06 arseniy Exp $
+ * $Id: StorableObjectXML.java,v 1.25 2005/05/18 11:07:38 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,9 +29,9 @@ import java.util.Set;
  * {@link com.syrus.AMFICOM.general.CharacteristicWrapper}for
  * {@link com.syrus.AMFICOM.general.Characteristic}) which must have static
  * getInstance method.
- * 
- * @version $Revision: 1.24 $, $Date: 2005/04/27 14:00:06 $
- * @author $Author: arseniy $
+ *
+ * @version $Revision: 1.25 $, $Date: 2005/05/18 11:07:38 $
+ * @author $Author: bass $
  * @module general_v1
  */
 public class StorableObjectXML {
@@ -212,7 +212,7 @@ public class StorableObjectXML {
 				}
 			}
 		} catch (ClassNotFoundException e) {
-			throw new IllegalDataException("StorableObjectXML.getStorableObject | Class " + clazzName //$NON-NLS-1$
+			throw new IllegalDataException("StorableObjectXML.getStorableObject | Class " + clazzName
 					+ " not found on the classpath - " + e.getMessage());
 		}
 		throw new IllegalDataException(

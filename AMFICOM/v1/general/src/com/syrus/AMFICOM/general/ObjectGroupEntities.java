@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectGroupEntities.java,v 1.15 2005/05/11 06:47:57 bass Exp $
+ * $Id: ObjectGroupEntities.java,v 1.16 2005/05/18 11:07:38 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,7 @@ import gnu.trove.TObjectShortHashMap;
 import gnu.trove.TShortObjectHashMap;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/05/11 06:47:57 $
+ * @version $Revision: 1.16 $, $Date: 2005/05/18 11:07:38 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -21,16 +21,16 @@ public final class ObjectGroupEntities {
 	 * Never gets registered.
 	 */
 	public static final String UNKNOWN_GROUP = null;
-	public static final String GENERAL_GROUP = "GeneralGroup"; //$NON-NLS-1$
-	public static final String EVENT_GROUP = "EventGroup"; //$NON-NLS-1$
-	public static final String ADMINISTRATION_GROUP = "AdministrationGroup"; //$NON-NLS-1$
-	public static final String CONFIGURATION_GROUP = "ConfigurationGroup"; //$NON-NLS-1$
-	public static final String MEASUREMENT_GROUP = "MeasurementGroup"; //$NON-NLS-1$
-	public static final String SCHEME_GROUP = "SchemeGroup"; //$NON-NLS-1$
-	public static final String MAP_GROUP = "MapGroup"; //$NON-NLS-1$
-	public static final String RESOURCE_GROUP = "ResourceGroup"; //$NON-NLS-1$
-	public static final String MAPVIEW_GROUP = "MapViewGroup"; //$NON-NLS-1$
-    
+	public static final String GENERAL_GROUP = "GeneralGroup";
+	public static final String EVENT_GROUP = "EventGroup";
+	public static final String ADMINISTRATION_GROUP = "AdministrationGroup";
+	public static final String CONFIGURATION_GROUP = "ConfigurationGroup";
+	public static final String MEASUREMENT_GROUP = "MeasurementGroup";
+	public static final String SCHEME_GROUP = "SchemeGroup";
+	public static final String MAP_GROUP = "MapGroup";
+	public static final String RESOURCE_GROUP = "ResourceGroup";
+	public static final String MAPVIEW_GROUP = "MapViewGroup";
+
 	//  Group Codes
 	/**
 	 * Never gets registered.
@@ -46,7 +46,7 @@ public final class ObjectGroupEntities {
 	public static final short RESOURCE_GROUP_CODE = 0x0008;
 	public static final short MAPVIEW_GROUP_CODE = 0x0009;
 
-	private static final TObjectShortHashMap NAME_CODE_MAP = new TObjectShortHashMap();  
+	private static final TObjectShortHashMap NAME_CODE_MAP = new TObjectShortHashMap();
 
 	private static final TShortObjectHashMap CODE_NAME_MAP = new TShortObjectHashMap();
 
@@ -89,7 +89,7 @@ public final class ObjectGroupEntities {
 	/**
 	 * Here and below, an assertion is made in order to ensure that entity
 	 * code is not only within the valid range, but also refers to a valid
-	 * entity name.  
+	 * entity name.
 	 */
 	public static boolean isInGeneralGroup(final short entityCode) {
 		assert ObjectEntities.codeToString(entityCode) != null;
@@ -130,13 +130,13 @@ public final class ObjectGroupEntities {
 	public static boolean isInConfigurationGroup(final String entityName) {
 		return isInConfigurationGroup(ObjectEntities.stringToCode(entityName));
 	}
-	    
+	
 	public static boolean isInMeasurementGroup(final short entityCode) {
 		assert ObjectEntities.codeToString(entityCode) != null;
 		return entityCode >= ObjectEntities.MEASUREMENT_MIN_ENTITY_CODE
 			&& entityCode <= ObjectEntities.MEASUREMENT_MAX_ENTITY_CODE;
 	}
-    
+
 	public static boolean isInMeasurementGroup(final String entityName) {
 		return isInMeasurementGroup(ObjectEntities.stringToCode(entityName));
 	}
@@ -204,7 +204,7 @@ public final class ObjectGroupEntities {
 			return RESOURCE_GROUP_CODE;
 		else if (isInMapViewGroup(entityCode))
 			return MAPVIEW_GROUP_CODE;
-		return UNKNOWN_GROUP_CODE;        
+		return UNKNOWN_GROUP_CODE;
 	}
 
 	public static String getGroupName(final short entityCode) {
@@ -212,7 +212,7 @@ public final class ObjectGroupEntities {
 	}
 	
 	public static String getPackageName(final short entityCode) {
-		return "com.syrus.AMFICOM." + getGroupName(entityCode).toLowerCase().replaceAll("group$", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		return "com.syrus.AMFICOM." + getGroupName(entityCode).toLowerCase().replaceAll("group$", "");
 	}
 
 	/**

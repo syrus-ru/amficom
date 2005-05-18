@@ -1,5 +1,5 @@
 /*-
- * $Id: GeneralDatabaseContext.java,v 1.6 2005/04/01 10:27:37 bass Exp $
+ * $Id: GeneralDatabaseContext.java,v 1.7 2005/05/18 11:07:39 bass Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.general;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/04/01 10:27:37 $
+ * @version $Revision: 1.7 $, $Date: 2005/05/18 11:07:39 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -21,7 +21,7 @@ public final class GeneralDatabaseContext {
 	private static CharacteristicDatabase		characteristicDatabase;
 
 	private GeneralDatabaseContext() {
-		assert false; 
+		assert false;
 	}
 
 	public static void init(
@@ -49,8 +49,8 @@ public final class GeneralDatabaseContext {
 			case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
 				return getCharacteristicDatabase();
 			default:
-				Log.errorMessage("GeneralDatabaseContext.getDatabase | Unknown entity: " + entityCode); //$NON-NLS-1$
-				return null;       
+				Log.errorMessage("GeneralDatabaseContext.getDatabase | Unknown entity: " + entityCode);
+				return null;
 		}
 	}
 

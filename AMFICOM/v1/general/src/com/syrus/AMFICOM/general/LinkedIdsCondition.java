@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsCondition.java,v 1.29 2005/04/27 13:21:18 bass Exp $
+ * $Id: LinkedIdsCondition.java,v 1.30 2005/05/18 11:07:39 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,43 +41,43 @@ import org.omg.CORBA.portable.IDLEntity;
  * </li>
  * <li>It must declare <em>the only</em> <code>private</code> constructor
  * with the following code:
- * 
+ *
  * <pre>
- * 
+ *
  * private LinkedIdsConditionImpl(final Identifier identifier, final Short entityCode) {
  * 	super(); // First line must invoke superconstructor w/o parameters.
  * 	this.identifier = identifier;
  * 	this.entityCode = entityCode;
  * 	this.linkedIds = null;
  * }
- * 
+ *
  * private LinkedIdsConditionImpl(final List linkedIds, final Short entityCode) {
  * 	super(); // First line must invoke superconstructor w/o parameters.
  * 	this.identifier = null;
  * 	this.entityCode = entityCode;
  * 	this.linkedIds = linkedIds;
  * }
- * 
- * 
+ *
+ *
  * </pre>
- * 
+ *
  * </li>
  * <li>It must override {@link #isConditionTrue(StorableObject)},
  * {@link #isNeedMore(Set)}and {@link #setEntityCode(Short)}.</li>
  * </ul>
- * 
+ *
  * @author $Author: bass $
- * @version $Revision: 1.29 $, $Date: 2005/04/27 13:21:18 $
+ * @version $Revision: 1.30 $, $Date: 2005/05/18 11:07:39 $
  * @module general_v1
  */
 public class LinkedIdsCondition implements StorableObjectCondition {
 
-	private static final String CREATING_A_DUMMY_CONDITION = "; creating a dummy condition..."; //$NON-NLS-1$
-	private static final String INVALID_UNDERLYING_IMPLEMENTATION = "Invalid underlying implementation: "; //$NON-NLS-1$
-	private static final String LINKED_IDS_CONDITION_INIT = "LinkedIdsCondition.<init>() | "; //$NON-NLS-1$
-	private static final String LINKED_IDS_CONDITION_INNER_ONE_IS_CONDITION_TRUE = "LinkedIdsCondition$1.isConditionTrue() | "; //$NON-NLS-1$
-	protected static final String ENTITY_CODE_NOT_REGISTERED = "Entity not registered for this condition -- "; //$NON-NLS-1$
-	protected static final String LINKED_ENTITY_CODE_NOT_REGISTERED = "Linked entity not registered for this condition -- "; //$NON-NLS-1$
+	private static final String CREATING_A_DUMMY_CONDITION = "; creating a dummy condition...";
+	private static final String INVALID_UNDERLYING_IMPLEMENTATION = "Invalid underlying implementation: ";
+	private static final String LINKED_IDS_CONDITION_INIT = "LinkedIdsCondition.<init>() | ";
+	private static final String LINKED_IDS_CONDITION_INNER_ONE_IS_CONDITION_TRUE = "LinkedIdsCondition$1.isConditionTrue() | ";
+	protected static final String ENTITY_CODE_NOT_REGISTERED = "Entity not registered for this condition -- ";
+	protected static final String LINKED_ENTITY_CODE_NOT_REGISTERED = "Linked entity not registered for this condition -- ";
 
 	/**
 	 * Field is used by descendants only, and never directly.
@@ -117,7 +117,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 			linkIds.add(new Identifier(transferable.linked_ids[i]));
 		}
 
-		final String className = "com.syrus.AMFICOM." + ObjectGroupEntities.getGroupName(code.shortValue()).toLowerCase().replaceAll("group$", "") + ".LinkedIdsConditionImpl"; //$NON-NLS-1$
+		final String className = "com.syrus.AMFICOM." + ObjectGroupEntities.getGroupName(code.shortValue()).toLowerCase().replaceAll("group$", "") + ".LinkedIdsConditionImpl";
 		try {
 			Constructor ctor;
 			ctor = Class.forName(className).getDeclaredConstructor(new Class[] {Set.class, Short.class, Short.class});
@@ -125,23 +125,23 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 			this.delegate = (LinkedIdsCondition) ctor.newInstance(new Object[] {linkIds, new Short(linkedCode), code});
 		}
 		catch (ClassNotFoundException cnfe) {
-			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Class " + className //$NON-NLS-1$
-					+ " not found on the classpath" //$NON-NLS-1$
+			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Class " + className
+					+ " not found on the classpath"
 					+ CREATING_A_DUMMY_CONDITION, Log.WARNING);
 		}
 		catch (ClassCastException cce) {
-			Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class " //$NON-NLS-1$
-					+ className + " doesn't inherit from " //$NON-NLS-1$
+			Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
+					+ className + " doesn't inherit from "
 					+ LinkedIdsCondition.class.getName() + CREATING_A_DUMMY_CONDITION, Log.WARNING);
 		}
 		catch (NoSuchMethodException nsme) {
-			Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class " //$NON-NLS-1$
-					+ className + " doesn't have the constructor expected" //$NON-NLS-1$
+			Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
+					+ className + " doesn't have the constructor expected"
 					+ CREATING_A_DUMMY_CONDITION, Log.WARNING);
 		}
 		catch (InstantiationException ie) {
-			Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class " //$NON-NLS-1$
-					+ className + " is abstract" //$NON-NLS-1$
+			Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
+					+ className + " is abstract"
 					+ CREATING_A_DUMMY_CONDITION, Log.WARNING);
 		}
 		catch (InvocationTargetException ite) {
@@ -155,7 +155,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 			}
 			else
 				Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION
-						+ "constructor throws an exception in class " //$NON-NLS-1$
+						+ "constructor throws an exception in class "
 						+ className + CREATING_A_DUMMY_CONDITION, Log.WARNING);
 		}
 		catch (IllegalAccessException iae) {
@@ -163,7 +163,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 			 * Never.
 			 */
 			Log.debugException(iae, Log.SEVERE);
-			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught an IllegalAccessException" //$NON-NLS-1$
+			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught an IllegalAccessException"
 					+ CREATING_A_DUMMY_CONDITION, Log.SEVERE);
 		}
 		catch (IllegalArgumentException iae) {
@@ -171,7 +171,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 			 * Never.
 			 */
 			Log.debugException(iae, Log.SEVERE);
-			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught an IllegalArgumentException" //$NON-NLS-1$
+			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught an IllegalArgumentException"
 					+ CREATING_A_DUMMY_CONDITION, Log.SEVERE);
 		}
 		catch (SecurityException se) {
@@ -179,7 +179,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 			 * Never.
 			 */
 			Log.debugException(se, Log.SEVERE);
-			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught a SecurityException" //$NON-NLS-1$
+			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught a SecurityException"
 					+ CREATING_A_DUMMY_CONDITION, Log.SEVERE);
 		}
 		finally {
@@ -189,7 +189,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 					public boolean isConditionTrue(final StorableObject storableObject) {
 						Log.debugMessage(LINKED_IDS_CONDITION_INNER_ONE_IS_CONDITION_TRUE
 								+ "Object: " + storableObject.toString() + "; "
-								+ "This is a dummy condition; evaluation result is always false...", //$NON-NLS-1$
+								+ "This is a dummy condition; evaluation result is always false...",
 								Log.WARNING);
 						return false;
 					}
@@ -218,7 +218,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 			Log.errorException(ae);
 		}
 
-		final String className = "com.syrus.AMFICOM." + ObjectGroupEntities.getGroupName(entityCode.shortValue()).toLowerCase().replaceAll("group$", "") + ".LinkedIdsConditionImpl"; //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		final String className = "com.syrus.AMFICOM." + ObjectGroupEntities.getGroupName(entityCode.shortValue()).toLowerCase().replaceAll("group$", "") + ".LinkedIdsConditionImpl";
 		try {
 			Constructor ctor;
 			ctor = Class.forName(className).getDeclaredConstructor(new Class[] {Set.class, Short.class, Short.class});
@@ -226,23 +226,23 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 			this.delegate = (LinkedIdsCondition) ctor.newInstance(new Object[] {linkedIds, new Short(linkedCode), entityCode});
 		}
 		catch (ClassNotFoundException cnfe) {
-			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Class " + className //$NON-NLS-1$
-					+ " not found on the classpath" //$NON-NLS-1$
+			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Class " + className
+					+ " not found on the classpath"
 					+ CREATING_A_DUMMY_CONDITION, Log.WARNING);
 		}
 		catch (ClassCastException cce) {
-			Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class " //$NON-NLS-1$
-					+ className + " doesn't inherit from " //$NON-NLS-1$
+			Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
+					+ className + " doesn't inherit from "
 					+ LinkedIdsCondition.class.getName() + CREATING_A_DUMMY_CONDITION, Log.WARNING);
 		}
 		catch (NoSuchMethodException nsme) {
-			Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class " //$NON-NLS-1$
-					+ className + " doesn't have the constructor expected" //$NON-NLS-1$
+			Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
+					+ className + " doesn't have the constructor expected"
 					+ CREATING_A_DUMMY_CONDITION, Log.WARNING);
 		}
 		catch (InstantiationException ie) {
-			Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class " //$NON-NLS-1$
-					+ className + " is abstract" //$NON-NLS-1$
+			Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
+					+ className + " is abstract"
 					+ CREATING_A_DUMMY_CONDITION, Log.WARNING);
 		}
 		catch (InvocationTargetException ite) {
@@ -256,7 +256,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 			}
 			else
 				Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION
-						+ "constructor throws an exception in class " //$NON-NLS-1$
+						+ "constructor throws an exception in class "
 						+ className
 						+ CREATING_A_DUMMY_CONDITION, Log.WARNING);
 		}
@@ -265,7 +265,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 			 * Never.
 			 */
 			Log.debugException(iae, Log.SEVERE);
-			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught an IllegalAccessException" //$NON-NLS-1$
+			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught an IllegalAccessException"
 					+ CREATING_A_DUMMY_CONDITION, Log.SEVERE);
 		}
 		catch (IllegalArgumentException iae) {
@@ -273,7 +273,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 			 * Never.
 			 */
 			Log.debugException(iae, Log.SEVERE);
-			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught an IllegalArgumentException" //$NON-NLS-1$
+			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught an IllegalArgumentException"
 					+ CREATING_A_DUMMY_CONDITION, Log.SEVERE);
 		}
 		catch (SecurityException se) {
@@ -281,7 +281,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 			 * Never.
 			 */
 			Log.debugException(se, Log.SEVERE);
-			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught a SecurityException" //$NON-NLS-1$
+			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught a SecurityException"
 					+ CREATING_A_DUMMY_CONDITION, Log.SEVERE);
 		}
 		finally {
@@ -291,7 +291,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 					public boolean isConditionTrue(final StorableObject storableObject) {
 						Log.debugMessage(LINKED_IDS_CONDITION_INNER_ONE_IS_CONDITION_TRUE
 								+ "Object: " + storableObject.toString() + "; "
-								+ "This is a dummy condition; evaluation result is always false...", //$NON-NLS-1$
+								+ "This is a dummy condition; evaluation result is always false...",
 								Log.WARNING);
 						return false;
 					}
@@ -316,7 +316,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 
 	/**
 	 * Creates a new object on every invocation.
-	 * 
+	 *
 	 * @see StorableObjectCondition#getTransferable()
 	 */
 	public final IDLEntity getTransferable() {
@@ -333,7 +333,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 	/**
 	 * Must be overridden by descendants, or a {@link NullPointerException}will
 	 * occur.
-	 * 
+	 *
 	 * @param storableObject
 	 * @throws IllegalObjectEntityException
 	 * @see StorableObjectCondition#isConditionTrue(StorableObject)
@@ -355,7 +355,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 	}
 
 	/**
-	 * @throws IllegalObjectEntityException 
+	 * @throws IllegalObjectEntityException
 	 * @see StorableObjectCondition#setEntityCode(Short)
 	 */
 	public void setEntityCode(final Short entityCode) throws IllegalObjectEntityException {

@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.31 2005/04/13 15:00:29 arseniy Exp $
+ * $Id: CharacteristicDatabase.java,v 1.32 2005/05/18 11:07:38 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,8 +18,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/04/13 15:00:29 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.32 $, $Date: 2005/05/18 11:07:38 $
+ * @author $Author: bass $
  * @module general_v1
  */
 
@@ -105,7 +105,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 	}
 
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet) throws RetrieveObjectException, SQLException, IllegalDataException {
-		Characteristic characteristic = (storableObject == null) ? null : this.fromStorableObject(storableObject); 
+		Characteristic characteristic = (storableObject == null) ? null : this.fromStorableObject(storableObject);
 		if (characteristic == null) {
 			characteristic = new Characteristic(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 																null,
@@ -151,7 +151,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 		return characteristic;
 	}
 
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
 		Characteristic characteristic = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:

@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterType.java,v 1.25 2005/04/15 19:22:02 arseniy Exp $
+ * $Id: ParameterType.java,v 1.26 2005/05/18 11:07:39 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,8 +23,8 @@ import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/04/15 19:22:02 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.26 $, $Date: 2005/05/18 11:07:39 $
+ * @author $Author: bass $
  * @module general_v1
  */
 
@@ -34,7 +34,7 @@ public final class ParameterType extends StorableObjectType implements Character
 	private String name;
 	private int dataType;
 	
-	private Set characteristics; 
+	private Set characteristics;
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
@@ -151,7 +151,7 @@ public final class ParameterType extends StorableObjectType implements Character
 		
 		Set characteristicIds = Identifier.fromTransferables(ptt.characteristic_ids);
 		this.characteristics = new HashSet(ptt.characteristic_ids.length);
-		this.setCharacteristics0(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
+		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
 		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
@@ -187,7 +187,7 @@ public final class ParameterType extends StorableObjectType implements Character
 	}
 
 	/**
-	 * client setter for name 
+	 * client setter for name
 	 * @param name The name to set.
 	 */
 	public void setName(String name) {

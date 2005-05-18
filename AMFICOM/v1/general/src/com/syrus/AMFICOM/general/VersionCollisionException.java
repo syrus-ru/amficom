@@ -1,5 +1,5 @@
 /*
- * $Id: VersionCollisionException.java,v 1.5 2005/02/10 18:53:13 arseniy Exp $
+ * $Id: VersionCollisionException.java,v 1.6 2005/05/18 11:07:38 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/02/10 18:53:13 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/05/18 11:07:38 $
+ * @author $Author: bass $
  * @module general_v1
  */
 
@@ -21,7 +21,7 @@ public class VersionCollisionException extends ApplicationException {
 	private long actualVersion;
 
 	/**
-	 * 
+	 *
 	 * @param message
 	 * @param desiredVersion
 	 * @param actualVersion
@@ -33,7 +33,7 @@ public class VersionCollisionException extends ApplicationException {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param message
 	 * @param cause
 	 * @param desiredVersion
@@ -46,7 +46,7 @@ public class VersionCollisionException extends ApplicationException {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param cause
 	 * @param desiredVersion
 	 * @param actualVersion
@@ -58,7 +58,7 @@ public class VersionCollisionException extends ApplicationException {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return desired version
 	 */
 	public long getDesiredVersion() {
@@ -66,7 +66,7 @@ public class VersionCollisionException extends ApplicationException {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return actual version
 	 */
 	public long getActualVersion() {

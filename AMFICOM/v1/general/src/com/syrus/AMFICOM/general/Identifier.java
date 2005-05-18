@@ -1,5 +1,5 @@
 /*
- * $Id: Identifier.java,v 1.34 2005/04/29 15:55:43 arseniy Exp $
+ * $Id: Identifier.java,v 1.35 2005/05/18 11:07:39 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,8 +23,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
  * its respective <code>creatorId</code> and <code>modifierId</code>. But
  * there&apos;s a particular task of <code>id</code> handling.
  *
- * @version $Revision: 1.34 $, $Date: 2005/04/29 15:55:43 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.35 $, $Date: 2005/05/18 11:07:39 $
+ * @author $Author: bass $
  * @module general_v1
  */
 public class Identifier implements Comparable, TransferableObject, Serializable, Identifiable {
@@ -85,7 +85,7 @@ public class Identifier implements Comparable, TransferableObject, Serializable,
 	}
 
 	public String getIdentifierString() {
-		return this.identifierString; 
+		return this.identifierString;
 	}
 
 	public short getMajor() {
@@ -124,6 +124,7 @@ public class Identifier implements Comparable, TransferableObject, Serializable,
 			idStrings.add(((Identifiable) identifiableIterator.next()).getId().toString());
 		return idStrings;
 	}
+
 	/**
 	 * @param identifiables <code>Collection&lt;Identifiable&gt;</code>
 	 * @return a newly created <code>Identifier_Transferable[]</code> with
@@ -134,9 +135,23 @@ public class Identifier implements Comparable, TransferableObject, Serializable,
 		assert identifiables != null: ErrorMessages.NON_NULL_EXPECTED;
 
 		int i = 0;
-		Identifier_Transferable ids[] = new Identifier_Transferable[identifiables.size()];
+		final Identifier_Transferable ids[] = new Identifier_Transferable[identifiables.size()];
 		for (final Iterator identifiableIterator = identifiables.iterator(); identifiableIterator.hasNext(); i++)
 			ids[i] = (Identifier_Transferable) ((Identifiable) identifiableIterator.next()).getId().getTransferable();
+		return ids;
+	}
+
+	/**
+	 * @param identifiables
+	 * @see #createTransferables(Collection)
+	 */
+	public static Identifier_Transferable[] createTransferables(final Identifiable identifiables[]) {
+		assert identifiables != null: ErrorMessages.NON_NULL_EXPECTED;
+		
+		final int length = identifiables.length;
+		final Identifier_Transferable ids[] = new Identifier_Transferable[length];
+		for (int i = 0; i < length; i++)
+			ids[i] = (Identifier_Transferable) identifiables[i].getId().getTransferable();
 		return ids;
 	}
 
@@ -167,7 +182,7 @@ public class Identifier implements Comparable, TransferableObject, Serializable,
 	 *
 	 * <p><em>Shouldn&apos;t be invoked by clients &amp; mousebusters as
 	 * they should never mess with <code>Identifier</code>s directly.</em></p>
-	 * 
+	 *
 	 * @param storableObject a <code>StorableObject</code> whose
 	 *        identifier is to be determined; can be <code>null</code>.
 	 * @return an <code>Identifier</code> of the object supplied, or

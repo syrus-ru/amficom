@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicType.java,v 1.22 2005/04/15 19:22:02 arseniy Exp $
+ * $Id: CharacteristicType.java,v 1.23 2005/05/18 11:07:39 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,8 +20,8 @@ import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/04/15 19:22:02 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.23 $, $Date: 2005/05/18 11:07:39 $
+ * @author $Author: bass $
  * @module general_v1
  */
 
@@ -95,7 +95,7 @@ public final class CharacteristicType extends StorableObjectType {
 
 	/**
 	 * create new instance for client
-	 * 
+	 *
 	 * @param creatorId
 	 * @param codename
 	 * @param description

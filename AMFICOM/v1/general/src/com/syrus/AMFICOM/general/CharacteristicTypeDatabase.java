@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicTypeDatabase.java,v 1.21 2005/04/01 06:34:57 bob Exp $
+ * $Id: CharacteristicTypeDatabase.java,v 1.22 2005/05/18 11:07:39 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,8 +18,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/04/01 06:34:57 $
- * @author $Author: bob $
+ * @version $Revision: 1.22 $, $Date: 2005/05/18 11:07:39 $
+ * @author $Author: bass $
  * @module general_v1
  */
 
@@ -54,7 +54,7 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 	}
 
 	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
-		CharacteristicType characteristicType = this.fromStorableObject(storableObject); 
+		CharacteristicType characteristicType = this.fromStorableObject(storableObject);
 		String sql = APOSTOPHE + DatabaseString.toQuerySubString(characteristicType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(characteristicType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
 			+ Integer.toString(characteristicType.getDataType().value()) + COMMA
@@ -65,7 +65,7 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject,
 			PreparedStatement preparedStatement, int startParameterNumber)
 			throws IllegalDataException, SQLException {
-		CharacteristicType characteristicType = this.fromStorableObject(storableObject); 
+		CharacteristicType characteristicType = this.fromStorableObject(storableObject);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, characteristicType.getCodename(), SIZE_CODENAME_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, characteristicType.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		preparedStatement.setInt( ++startParameterNumber, characteristicType.getDataType().value());
@@ -87,7 +87,7 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 
 	protected StorableObject updateEntityFromResultSet(
 			StorableObject storableObject, ResultSet resultSet)
-			throws IllegalDataException, RetrieveObjectException, SQLException {
+			throws IllegalDataException, SQLException {
 		CharacteristicType characteristicType = storableObject == null ? null : this.fromStorableObject(storableObject);
 
 		if (characteristicType == null) {
@@ -112,7 +112,7 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 		return characteristicType;
 	}
 
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
 		CharacteristicType characteristicType = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:

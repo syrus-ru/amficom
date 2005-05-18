@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.57 2005/04/29 15:56:11 arseniy Exp $
+ * $Id: StorableObject.java,v 1.58 2005/05/18 11:07:39 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,8 +28,8 @@ import org.omg.CORBA.portable.IDLEntity;
  * there can only be a single inctance of <code>StorableObject</code> with the
  * same identifier, comparison of object references (in Java terms) is enough.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.57 $, $Date: 2005/04/29 15:56:11 $
+ * @author $Author: bass $
+ * @version $Revision: 1.58 $, $Date: 2005/05/18 11:07:39 $
  * @module general_v1
  */
 public abstract class StorableObject implements Identifiable, TransferableObject, Serializable {
@@ -97,13 +97,12 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 		this.savedVersion = 0;
 	}
 	
-	/** 
-	 * 
+	/**
+	 *
 	 * Will be overridden by descendants.
-	 * 
+	 *
 	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 * @throws CreateObjectException 
-	 * @throws ApplicationException 
+	 * @throws ApplicationException
 	 */
 	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
 		StorableObject_Transferable sot = (StorableObject_Transferable) transferable;
@@ -139,7 +138,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 
 	/**
 	 * Will be overridden by descendants.
-	 * 
+	 *
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	public abstract Set getDependencies();
@@ -148,7 +147,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	 * Returns structure to be transmitted via CORBA. Should be declared
 	 * final as soon as <code>Marker</code>, <code>UnboundLink</code> and
 	 * <code>UnboundNode</code> stop overriding it.
-	 * 
+	 *
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	public StorableObject_Transferable getHeaderTransferable() {
@@ -162,7 +161,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 
 	/**
 	 * This method called only when client succesfully updated object
-	 * 
+	 *
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 * @param sot
 	 */
@@ -226,8 +225,8 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	 */
 	protected final void rollbackUpdate() {
 		if (this.savedModified == null || this.savedModifierId == null || this.savedVersion == VERSION_ILLEGAL) {
-			Log.errorMessage("Cannot rollback update of object: '" + this.id + "', entity: '" + ObjectEntities.codeToString(this.id.getMajor())  //$NON-NLS-1$//$NON-NLS-2$
-					+ "' -- saved values are in illegal states!"); //$NON-NLS-1$
+			Log.errorMessage("Cannot rollback update of object: '" + this.id + "', entity: '" + ObjectEntities.codeToString(this.id.getMajor())
+					+ "' -- saved values are in illegal states!");
 			return;
 		}
 
@@ -274,7 +273,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 * 
+	 *
 	 * @param created
 	 * @param modified
 	 * @param creatorId
@@ -341,9 +340,8 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	/**
 	 * This method should only be invoked during assertion evaluation, and
 	 * never in a release system.
-	 * 
-	 * @param identifiables non-null set of identifiables (empty set is
-	 *        ok).
+	 *
+	 * @param identifiables non-null set of identifiables (empty set is ok).
 	 * @return <code>true</code> if all entities within this set are of
 	 *         the same type, <code>false</code> otherwise.
 	 */
@@ -365,17 +363,42 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	}
 
 	/**
+	 * This method should only be invoked during assertion evaluation, and
+	 * never in a release system.
+	 *
+	 * @param identifiables non-null set of identifiables (empty set is ok).
+	 * @return <code>true</code> if all entities within this set belong to
+	 *         the same group, <code>false</code> otherwise.
+	 */
+	public static boolean hasSingleGroupEntities(final Set identifiables) {
+		/*
+		 * Nested assertions are ok.
+		 */
+		assert identifiables != null;
+
+		if (identifiables.isEmpty())
+			return true;
+
+		final Iterator identifiableIterator = identifiables.iterator();
+		final short groupCode = ObjectGroupEntities.getGroupCode(((Identifiable) identifiableIterator.next()).getId().getMajor());
+		while (identifiableIterator.hasNext())
+			if (groupCode != ObjectGroupEntities.getGroupCode(((Identifiable) identifiableIterator.next()).getId().getMajor()))
+				return false;
+		return true;
+	}
+
+	/**
 	 * Code that invokes this method, should preliminarily call
 	 * {@link #hasSingleTypeEntities(Set)} with the same parameter and
 	 * ensure that return value is <code>true</code>, e.g.:
-	 * 
+	 *
 	 * <pre>
-	 * assert hasSingleTypeEntities(storableObjects) : &quot;Storable objects of different type should be treated separately...&quot;;
+	 * assert hasSingleTypeEntities(identifiables): &quot;Identifiables of different type should be treated separately...&quot;;
 	 * </pre>
-	 * 
+	 *
 	 * @param identifiables non-null, non-empty set of storable objects or
 	 *        identifiers of the same type.
-	 * @return common type of storable objects supplied as
+	 * @return common type of identifiables supplied as
 	 *         <code>short</code>.
 	 */
 	public static short getEntityCodeOfIdentifiables(final Set identifiables) {
@@ -384,4 +407,22 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 		return ((Identifiable) identifiables.iterator().next()).getId().getMajor();
 	}
 
+	/**
+	 * Code that invokes this method, should preliminarily call
+	 * {@link #hasSingleGroupEntities(Set)} with the same parameter and
+	 * ensure that return value is <code>true</code>, e.g.:
+	 *
+	 * <pre>
+	 * assert hasSingleGroupEntities(identifiables) : &quot;Identifiables of different group should be treated separately...&quot;;
+	 * </pre>
+	 * @param identifiables non-null, non-empty set of storable objects or
+	 *        identifiers of the same type.
+	 * @return common group of identifiables supplied as
+	 *         <code>short</code>.
+	 */
+	public static short getGroupCodeOfIdentifiables(final Set identifiables) {
+		assert identifiables != null && !identifiables.isEmpty();
+
+		return ObjectGroupEntities.getGroupCode(((Identifiable) identifiables.iterator().next()).getId().getMajor());
+	}
 }

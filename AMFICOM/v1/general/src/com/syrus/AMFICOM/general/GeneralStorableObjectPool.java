@@ -1,5 +1,5 @@
 /*
- * $Id: GeneralStorableObjectPool.java,v 1.25 2005/05/10 19:26:39 arseniy Exp $
+ * $Id: GeneralStorableObjectPool.java,v 1.26 2005/05/18 11:07:38 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,8 +17,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/05/10 19:26:39 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.26 $, $Date: 2005/05/18 11:07:38 $
+ * @author $Author: bass $
  * @module general_v1
  */
 
@@ -91,31 +91,12 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 		init(gObjectLoader1);
 	}
 
-	public static void refresh() throws ApplicationException {
-		instance.refreshImpl();
-	}
-
-  protected Set refreshStorableObjects(Set storableObjects) throws ApplicationException {
+	protected Set refreshStorableObjects(Set storableObjects) throws ApplicationException {
 		return gObjectLoader.refresh(storableObjects);
 	}
 
 	public static StorableObject getStorableObject(Identifier objectId, boolean useLoader) throws ApplicationException {
 		return instance.getStorableObjectImpl(objectId, useLoader);
-	}
-
-	public static Set getStorableObjects(Set objectIds, boolean useLoader) throws ApplicationException {
-		return instance.getStorableObjectsImpl(objectIds, useLoader);
-	}
-
-	public static Set getStorableObjectsByCondition(StorableObjectCondition condition, boolean useLoader)
-			throws ApplicationException {
-		return instance.getStorableObjectsByConditionImpl(condition, useLoader);
-	}
-
-	public static Set getStorableObjectsByConditionButIds(Set ids,
-												StorableObjectCondition condition,
-												boolean useLoader) throws ApplicationException {
-		return instance.getStorableObjectsByConditionButIdsImpl(ids, condition, useLoader);
 	}
 
 	protected Set loadStorableObjects(final Set ids) throws ApplicationException {
@@ -129,7 +110,7 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 			case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
 				return gObjectLoader.loadCharacteristics(ids);
 			default:
-				Log.errorMessage("GeneralStorableObjectPool.loadStorableObjects | Unknown entity: '" + ObjectEntities.codeToString(entityCode) + "', entity code: " + entityCode); //$NON-NLS-1$ //$NON-NLS-2$
+				Log.errorMessage("GeneralStorableObjectPool.loadStorableObjects | Unknown entity: '" + ObjectEntities.codeToString(entityCode) + "', entity code: " + entityCode);
 				return Collections.EMPTY_SET;
 		}
 	}
@@ -176,10 +157,6 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 		}
 	}
 
-	public static StorableObject putStorableObject(StorableObject storableObject) throws IllegalObjectEntityException {
-		return instance.putStorableObjectImpl(storableObject);
-	}
-
 	public static StorableObject fromTransferable(Identifier id, IDLEntity transferable) throws ApplicationException {
 		return instance.fromTransferableImpl(id, transferable);
 	}
@@ -188,15 +165,15 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 		instance.flushImpl(id, force);
 	}
 
-	public static void flush(final short entityCode, final boolean force) throws ApplicationException {		 
+	public static void flush(final short entityCode, final boolean force) throws ApplicationException {		
 		instance.flushImpl(entityCode, force);
 	}
 
-	public static void flush(final Short entityCode, final boolean force) throws ApplicationException {		 
+	public static void flush(final Short entityCode, final boolean force) throws ApplicationException {		
 		instance.flushImpl(entityCode, force);
 	}
 
-	public static void flush(boolean force) throws ApplicationException {		 
+	public static void flush(boolean force) throws ApplicationException {		
 		instance.flushImpl(force);
 	}
 

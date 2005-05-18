@@ -1,5 +1,5 @@
 /*
- * $Id: IdentifierPool.java,v 1.19 2005/05/18 09:44:13 max Exp $
+ * $Id: IdentifierPool.java,v 1.20 2005/05/18 11:07:38 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,8 +20,8 @@ import com.syrus.util.Fifo;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/05/18 09:44:13 $
- * @author $Author: max $
+ * @version $Revision: 1.20 $, $Date: 2005/05/18 11:07:38 $
+ * @author $Author: bass $
  * @module general_v1
  */
 public class IdentifierPool {
@@ -70,7 +70,7 @@ public class IdentifierPool {
 		// Wait if fifo is empty yet
 		while (fifo.getNumber() < 1)
 			try {
-				Log.debugMessage("IdentifierPool.getGeneratedIdentifier | Wait for fetching ids", Log.DEBUGLEVEL10); //$NON-NLS-1$
+				Log.debugMessage("IdentifierPool.getGeneratedIdentifier | Wait for fetching ids", Log.DEBUGLEVEL10);
 				Thread.sleep(TIME_TO_SLEEP);
 			}
 			catch (final InterruptedException ie) {

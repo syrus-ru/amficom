@@ -1,6 +1,6 @@
 /*
- * $Id: StorableObjectResizableLRUMap.java,v 1.3 2005/03/21 16:15:57 arseniy Exp $
- * 
+ * $Id: StorableObjectResizableLRUMap.java,v 1.4 2005/05/18 11:07:38 bass Exp $
+ *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
@@ -15,8 +15,8 @@ import java.util.LinkedList;
 import com.syrus.util.LRUMap;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/03/21 16:15:57 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.4 $, $Date: 2005/05/18 11:07:38 $
+ * @author $Author: bass $
  * @module general_v1
  */
 public class StorableObjectResizableLRUMap extends LRUMap {
