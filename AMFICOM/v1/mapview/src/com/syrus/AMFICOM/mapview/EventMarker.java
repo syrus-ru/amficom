@@ -1,5 +1,5 @@
 /**
- * $Id: EventMarker.java,v 1.5 2005/04/26 16:03:22 krupenn Exp $
+ * $Id: EventMarker.java,v 1.6 2005/05/18 12:37:39 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,8 +15,8 @@ import com.syrus.AMFICOM.general.Identifier;
 
 /**
  * Стационарный маркер собития на пути.
- * @author $Author: krupenn $
- * @version $Revision: 1.5 $, $Date: 2005/04/26 16:03:22 $
+ * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2005/05/18 12:37:39 $
  * @module mapviewclient_v1
  * @todo EventMarker functionality
  */
@@ -27,10 +27,10 @@ public class EventMarker extends Marker {
 	private static final long serialVersionUID = 3834312821583655217L;
 
 	public EventMarker(
-			Identifier id, 
+			Identifier id,
 			Identifier creatorId,
 			MapView mapView,
-			double len, 
+			double len,
 			MeasurementPath path,
 			Identifier meId,
 			String name) {
@@ -39,7 +39,7 @@ public class EventMarker extends Marker {
 
 //	public static MapEventMarker createInstance(
 //			MapView mapView,
-//			double opticalDistance, 
+//			double opticalDistance,
 //			MapMeasurementPathElement path,
 //			Identifier meId)
 //	{
@@ -53,7 +53,7 @@ public class EventMarker extends Marker {
 //			return new MapEventMarker(
 //				ide,
 //				mapView,
-//				opticalDistance, 
+//				opticalDistance,
 //				path,
 //				meId);
 //		}
@@ -61,7 +61,7 @@ public class EventMarker extends Marker {
 //		{
 //			e.printStackTrace();
 //		}
-//		catch (IllegalObjectEntityException e) 
+//		catch (IllegalObjectEntityException e)
 //		{
 //			e.printStackTrace();
 //		}

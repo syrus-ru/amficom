@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.4 2005/04/04 13:32:07 bass Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.5 2005/05/18 12:37:39 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  * @author $Author: bass $
  * @module mapview_v1
  */
@@ -54,7 +54,7 @@ final class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsCo
 		return condition;
 	}
 
-	public boolean isConditionTrue(final StorableObject storableObject) throws IllegalObjectEntityException {
+	public boolean isConditionTrue(final StorableObject storableObject) {
 		boolean condition = false;
 		DomainMember domainMember;
 		switch (this.entityCode.shortValue()) {

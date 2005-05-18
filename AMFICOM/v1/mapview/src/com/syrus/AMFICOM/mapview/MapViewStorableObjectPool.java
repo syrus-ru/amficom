@@ -1,5 +1,5 @@
 /*
- * $Id: MapViewStorableObjectPool.java,v 1.16 2005/05/10 19:25:17 arseniy Exp $
+ * $Id: MapViewStorableObjectPool.java,v 1.17 2005/05/18 12:37:39 bass Exp $
  *
  * Copyright ? 2004 Syrus Systems.
  * ѕвиапр-жейпкаехмкл зепжф.
@@ -13,7 +13,6 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectGroupEntities;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -23,8 +22,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/05/10 19:25:17 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.17 $, $Date: 2005/05/18 12:37:39 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -94,31 +93,12 @@ public final class MapViewStorableObjectPool extends StorableObjectPool {
 		init(mvObjectLoader1);
 	}
 
-	public static void refresh() throws ApplicationException {
-		instance.refreshImpl();
-	}
-
 	protected java.util.Set refreshStorableObjects(java.util.Set storableObjects) throws ApplicationException {
 		return mvObjectLoader.refresh(storableObjects);
 	}
 
 	public static StorableObject getStorableObject(Identifier objectId, boolean useLoader) throws ApplicationException {
 		return instance.getStorableObjectImpl(objectId, useLoader);
-	}
-
-	public static Set getStorableObjects(Set objectIds, boolean useLoader) throws ApplicationException {
-		return instance.getStorableObjectsImpl(objectIds, useLoader);
-	}
-
-	public static Set getStorableObjectsByCondition(StorableObjectCondition condition, boolean useLoader)
-			throws ApplicationException {
-		return instance.getStorableObjectsByConditionImpl(condition, useLoader);
-	}
-
-	public static Set getStorableObjectsByConditionButIds(	Set ids,
-															StorableObjectCondition condition,
-															boolean useLoader) throws ApplicationException {
-		return instance.getStorableObjectsByConditionButIdsImpl(ids, condition, useLoader);
 	}
 
 	protected StorableObject loadStorableObject(Identifier objectId) throws ApplicationException {
@@ -183,19 +163,15 @@ public final class MapViewStorableObjectPool extends StorableObjectPool {
 		}
 	}
 
-	public static StorableObject putStorableObject(StorableObject storableObject) throws IllegalObjectEntityException {
-		return instance.putStorableObjectImpl(storableObject);
-	}
-
 	public static void flush(final Identifier id, final boolean force) throws ApplicationException {
 		instance.flushImpl(id, force);
 	}
 
-	public static void flush(final short entityCode, final boolean force) throws ApplicationException {		 
+	public static void flush(final short entityCode, final boolean force) throws ApplicationException {		
 		instance.flushImpl(entityCode, force);
 	}
 
-	public static void flush(final Short entityCode, final boolean force) throws ApplicationException {		 
+	public static void flush(final Short entityCode, final boolean force) throws ApplicationException {		
 		instance.flushImpl(entityCode, force);
 	}
 
@@ -221,10 +197,6 @@ public final class MapViewStorableObjectPool extends StorableObjectPool {
 
 	public static void delete(Identifier id) {
 		instance.deleteImpl(id);
-	}
-
-	public static void delete(final Set identifiables) {
-		instance.deleteImpl(identifiables);
 	}
 
 	public static void deserializePool() {

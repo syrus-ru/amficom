@@ -1,5 +1,5 @@
 /**
- * $Id: CablePath.java,v 1.16 2005/04/28 09:05:33 krupenn Exp $
+ * $Id: CablePath.java,v 1.17 2005/05/18 12:37:39 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -34,8 +34,8 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
 
 /**
  * Элемент кабельного пути. Описывает привязку кабеля к топологическим линиям.
- * @author $Author: krupenn $
- * @version $Revision: 1.16 $, $Date: 2005/04/28 09:05:33 $
+ * @author $Author: bass $
+ * @version $Revision: 1.17 $, $Date: 2005/05/18 12:37:39 $
  * @module mapviewclient_v1
  */
 public class CablePath implements MapElement
@@ -102,14 +102,13 @@ public class CablePath implements MapElement
 	/**
 	 * Конструктор.
 	 * @param schemeCableLink схемный кабель
-	 * @param id идентификатор
 	 * @param stNode начальный узел
 	 * @param eNode конечный узел
 	 */
 	protected CablePath(
 			SchemeCableLink schemeCableLink,
-			AbstractNode stNode, 
-			AbstractNode eNode) 
+			AbstractNode stNode,
+			AbstractNode eNode)
 	{
 		this.schemeCableLink = schemeCableLink;
 
@@ -125,21 +124,20 @@ public class CablePath implements MapElement
 	 * @param schemeCableLink схемный кабель
 	 * @param stNode начальный узел
 	 * @param eNode конечный узел
-	 * @param mapView вид
 	 * @return новый топологический кабель
 	 * создания объекта.
 	 */
 	public static CablePath createInstance(
 			SchemeCableLink schemeCableLink,
-			AbstractNode stNode, 
-			AbstractNode eNode) 
+			AbstractNode stNode,
+			AbstractNode eNode)
 	{
 		if (stNode == null || eNode == null || schemeCableLink == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		
 		return new CablePath(
 			schemeCableLink,
-			stNode, 
+			stNode,
 			eNode);
 	}
 
@@ -147,7 +145,7 @@ public class CablePath implements MapElement
 	 * Get this.endNode.
 	 * @return this.endNode
 	 */
-	public AbstractNode getEndNode() 
+	public AbstractNode getEndNode()
 	{
 		return this.endNode;
 	}
@@ -156,7 +154,7 @@ public class CablePath implements MapElement
 	 * Set {@link #endNode}.
 	 * @param endNode new endNode
 	 */
-	public void setEndNode(AbstractNode endNode) 
+	public void setEndNode(AbstractNode endNode)
 	{
 		this.endNode = endNode;
 		this.nodeLinksSorted = false;
@@ -166,7 +164,7 @@ public class CablePath implements MapElement
 	 * Get {@link #startNode}.
 	 * @return this.startNode
 	 */
-	public AbstractNode getStartNode() 
+	public AbstractNode getStartNode()
 	{
 		return this.startNode;
 	}
@@ -175,7 +173,7 @@ public class CablePath implements MapElement
 	 * Set {@link #startNode}.
 	 * @param startNode new startNode
 	 */
-	public void setStartNode(AbstractNode startNode) 
+	public void setStartNode(AbstractNode startNode)
 	{
 		this.startNode = startNode;
 		this.nodeLinksSorted = false;
@@ -186,7 +184,7 @@ public class CablePath implements MapElement
 	 * {@inheritDoc}
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics()
 	 */
-	public Set getCharacteristics() 
+	public Set getCharacteristics()
 	{
 		return this.schemeCableLink.getCharacteristics();
 	}
@@ -219,7 +217,7 @@ public class CablePath implements MapElement
 	 * получить название.
 	 * @return название
 	 */
-	public String getName() 
+	public String getName()
 	{
 		return this.schemeCableLink.getName();
 	}
@@ -228,7 +226,7 @@ public class CablePath implements MapElement
 	 * Установить название.
 	 * @param name новое название
 	 */
-	public void setName(String name) 
+	public void setName(String name)
 	{
 		this.schemeCableLink.setName(name);
 	}
@@ -237,7 +235,7 @@ public class CablePath implements MapElement
 	 * Получить описание.
 	 * @return описание
 	 */
-	public String getDescription() 
+	public String getDescription()
 	{
 		return this.schemeCableLink.getDescription();
 	}
@@ -246,7 +244,7 @@ public class CablePath implements MapElement
 	 * Установить описание.
 	 * @param description новое описание
 	 */
-	public void setDescription(String description) 
+	public void setDescription(String description)
 	{
 		this.schemeCableLink.setDescription(description);
 	}
@@ -312,7 +310,7 @@ public class CablePath implements MapElement
 
 	/**
 	 * {@inheritDoc}
-	 * Suppress since this class is transient 
+	 * Suppress since this class is transient
 	 */
 	public void setLocation(DoublePoint location)
 	{
@@ -485,7 +483,7 @@ public class CablePath implements MapElement
 	}
 
 	/**
-	 * Сортировать список линий, по которым проходит кабель, начиная с 
+	 * Сортировать список линий, по которым проходит кабель, начиная с
 	 * начального узла кабеля до конечного.
 	 */
 	public void sortLinks()
@@ -497,7 +495,7 @@ public class CablePath implements MapElement
 			origList.addAll(this.getLinks());
 			List list = new LinkedList();
 			int count = origList.size();
-			for (int i = 0; i < count; i++) 
+			for (int i = 0; i < count; i++)
 //			while(!smne.equals(this.getEndNode()))
 			{
 				boolean canSort = false;
@@ -543,7 +541,7 @@ public class CablePath implements MapElement
 	/**
 	 * Получить следующую линию по цепочке сортированных линий.
 	 * @param physicalLink линия
-	 * @return следующая линия, или <code>null</code>, если link - последняя 
+	 * @return следующая линия, или <code>null</code>, если link - последняя
 	 * в списке
 	 */
 	public PhysicalLink nextLink(PhysicalLink physicalLink)
@@ -566,7 +564,7 @@ public class CablePath implements MapElement
 	/**
 	 * Получить предыдущую линию по цепочке сортированных линий.
 	 * @param physicalLink линия
-	 * @return предыдущая линия, или <code>null</code>, если link - первая 
+	 * @return предыдущая линия, или <code>null</code>, если link - первая
 	 * в списке
 	 */
 	public PhysicalLink previousLink(PhysicalLink physicalLink)
@@ -597,7 +595,7 @@ public class CablePath implements MapElement
 	
 	/**
 	 * Получить список отсортированных узлов, входящих в состав кабеля, начиная
-	 * от начального узла линии. Сортировка узлов должна производиться явно 
+	 * от начального узла линии. Сортировка узлов должна производиться явно
 	 * ({@link #sortNodes()}) до вызова этой функции
 	 * @return список отсортированных узлов, или <code>Collections.EMPTY_LIST</code>, если
 	 * узлы не отсортированы
@@ -610,10 +608,10 @@ public class CablePath implements MapElement
 	}
 
 	/**
-	 * Получить список отсортированных фрагментов линий, входящих в состав 
-	 * кабеля, начиная от начального узла линии. Сортировка узлов должна 
+	 * Получить список отсортированных фрагментов линий, входящих в состав
+	 * кабеля, начиная от начального узла линии. Сортировка узлов должна
 	 * производиться явно ({@link #sortNodes()}) до вызова этой функции
-	 * @return список отсортированных фрагментов линий, или 
+	 * @return список отсортированных фрагментов линий, или
 	 * <code>Collections.EMPTY_LIST</code>, если узлы не отсортированы
 	 */
 	public List getSortedNodeLinks()
@@ -675,7 +673,7 @@ public class CablePath implements MapElement
 
 	/**
 	 * Получить координаты прокладки кабелья по линии <code>link</code>.
-	 * 
+	 *
 	 * @param link
 	 *            линия
 	 * @return координаты прокладки в тоннеле
@@ -802,7 +800,7 @@ public class CablePath implements MapElement
 
 	/**
 	 * {@inheritDoc}
-	 * Suppress since this class is transient 
+	 * Suppress since this class is transient
 	 */
 	public MapElementState getState()
 	{
@@ -811,7 +809,7 @@ public class CablePath implements MapElement
 
 	/**
 	 * {@inheritDoc}
-	 * Suppress since this class is transient 
+	 * Suppress since this class is transient
 	 */
 	public void revert(MapElementState state)
 	{
@@ -820,7 +818,7 @@ public class CablePath implements MapElement
 
 	/**
 	 * {@inheritDoc}
-	 * Suppress since this class is transient 
+	 * Suppress since this class is transient
 	 */
 	public java.util.Map getExportMap()
 	{

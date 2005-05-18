@@ -1,5 +1,5 @@
 /*-
- * $Id: MapViewDatabaseContext.java,v 1.2 2005/04/01 14:35:54 bass Exp $
+ * $Id: MapViewDatabaseContext.java,v 1.3 2005/05/18 12:37:39 bass Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,7 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/01 14:35:54 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/18 12:37:39 $
  * @author $Author: bass $
  * @module mapview_v1
  */
@@ -39,7 +39,7 @@ public final class MapViewDatabaseContext {
 			case ObjectEntities.MAPVIEW_ENTITY_CODE:
 				return getMapViewDatabase();
 			default:
-				Log.errorMessage("MapViewDatabaseContext.getDatabase | Unknown entity: " + entityCode); //$NON-NLS-1$
+				Log.errorMessage("MapViewDatabaseContext.getDatabase | Unknown entity: " + entityCode);
 				return null;
 		}
 	}

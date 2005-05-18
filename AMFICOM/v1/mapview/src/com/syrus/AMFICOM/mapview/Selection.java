@@ -1,8 +1,8 @@
 /**
- * $Id: Selection.java,v 1.8 2005/04/26 16:07:31 krupenn Exp $ 
+ * $Id: Selection.java,v 1.9 2005/05/18 12:37:39 bass Exp $
  *
  * Syrus Systems
- * Научно-технический центр 
+ * Научно-технический центр
  * Проект: АМФИКОМ Автоматизированный
  * МногоФункциональный Интеллектуальный Комплекс Объектного Мониторинга
  */
@@ -26,9 +26,9 @@ import java.util.Set;
 
 /**
  * Набор выбранных элементов.
- * 
- * @author $Author: krupenn $
- * @version $Revision: 1.8 $, $Date: 2005/04/26 16:07:31 $
+ *
+ * @author $Author: bass $
+ * @version $Revision: 1.9 $, $Date: 2005/05/18 12:37:39 $
  * @module mapviewclient_v1
  * @todo copy/paste, properties
  */
@@ -80,7 +80,7 @@ public final class Selection implements MapElement {
 
 	/**
 	 * Конструктор
-	 * 
+	 *
 	 * @param map топологическая схема
 	 */
 	public Selection(Map map) {
@@ -126,7 +126,7 @@ public final class Selection implements MapElement {
 
 	/**
 	 * Добавить в список новый выделенный элемент карты.
-	 * 
+	 *
 	 * @param mapElement элемент карты
 	 */
 	public void add(MapElement mapElement) {
@@ -137,7 +137,7 @@ public final class Selection implements MapElement {
 
 	/**
 	 * Добавить в список множество выделенных элементов.
-	 * 
+	 *
 	 * @param coll набор элементов
 	 */
 	public void addAll(Set coll) {
@@ -148,7 +148,7 @@ public final class Selection implements MapElement {
 
 	/**
 	 * Убрать из списка элемент карты.
-	 * 
+	 *
 	 * @param mapElement элемент карты
 	 */
 	public void remove(MapElement mapElement) {

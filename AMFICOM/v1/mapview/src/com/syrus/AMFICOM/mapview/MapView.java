@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.26 2005/04/28 09:10:05 krupenn Exp $
+* $Id: MapView.java,v 1.27 2005/05/18 12:37:39 bass Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -30,6 +30,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
@@ -44,18 +45,17 @@ import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemePath;
-import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
 
 /**
- * Класс используется для хранения объектов, отображаемых на 
+ * Класс используется для хранения объектов, отображаемых на
  * топологической схеме. Объекты включают в себя:
- * <br>&#9;- объект топологической схемы {@link Map}, то есть прокладку 
+ * <br>&#9;- объект топологической схемы {@link Map}, то есть прокладку
  * канализационную
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
- * @author $Author: krupenn $
- * @version $Revision: 1.26 $, $Date: 2005/04/28 09:10:05 $
+ * @author $Author: bass $
+ * @version $Revision: 1.27 $, $Date: 2005/05/18 12:37:39 $
  * @module mapview_v1
  * @todo use getCenter, setCenter instead of pair longitude, latitude
  */
@@ -110,7 +110,7 @@ public class MapView extends DomainMember implements Namable {
 		}
 	}
 
-	protected MapView(final Identifier id, 
+	protected MapView(final Identifier id,
 				  final Identifier creatorId,
 				  final long version,
 				  final Identifier domainId,
@@ -198,7 +198,7 @@ public class MapView extends DomainMember implements Namable {
 		}			
 		
 		try{
-			this.schemes = SchemeStorableObjectPool.getStorableObjects(schemeIds, true);
+			this.schemes = StorableObjectPool.getStorableObjects(schemeIds, true);
 		}catch(ApplicationException ae){
 			throw new CreateObjectException("MapView.<init> | cannot get schemes ", ae);
 		}
@@ -410,7 +410,7 @@ public class MapView extends DomainMember implements Namable {
 	 * Коррекция начального и конечного узлов топологической прокладки кабеля
 	 * по элементам карты, в которых размещены начальный и конечный элемент
 	 * схемного кабеля.
-	 * 
+	 *
 	 * @param cablePath топологический кабель
 	 * @param schemeCableLink схемный кабель
 	 */
@@ -428,7 +428,7 @@ public class MapView extends DomainMember implements Namable {
 	/**
 	 * Возвращает топологический элемент, в котором расположен начальный
 	 * элемент кабеля.
-	 * 
+	 *
 	 * @param scl кабель
 	 * @return начальный элемент кабеля, или null, если элемент не найден
 	 * (не нанесен на карту)
@@ -442,11 +442,11 @@ public class MapView extends DomainMember implements Namable {
 				Scheme sch = (Scheme )it.next();
 				if(SchemeUtils.getTopologicalCableLinks(sch).contains(scl))
 				{
-					SchemeElement se = 
+					SchemeElement se =
 						SchemeUtils.getTopologicalElement(
 							sch,
 							SchemeUtils.getSchemeElementByDevice(
-								sch, 
+								sch,
 								scl.getSourceAbstractSchemePort().getParentSchemeDevice()));
 					return findElement(se);
 				}
@@ -462,7 +462,7 @@ public class MapView extends DomainMember implements Namable {
 	/**
 	 * Возвращает топологический элемент, в котором расположен конечный
 	 * элемент кабеля.
-	 * 
+	 *
 	 * @param scl кабель
 	 * @return конечный элемент кабеля, или null, если элемент не найден
 	 * (не нанесен на карту)
@@ -476,11 +476,11 @@ public class MapView extends DomainMember implements Namable {
 				Scheme sch = (Scheme )it.next();
 				if(SchemeUtils.getTopologicalCableLinks(sch).contains(scl))
 				{
-					SchemeElement se = 
+					SchemeElement se =
 						SchemeUtils.getTopologicalElement(
 							sch,
 							SchemeUtils.getSchemeElementByDevice(
-								sch, 
+								sch,
 								scl.getTargetAbstractSchemePort().getParentSchemeDevice()));
 					return findElement(se);
 				}
@@ -496,7 +496,7 @@ public class MapView extends DomainMember implements Namable {
 	/**
 	 * Возвращает топологический элемент, в котором расположен начальный
 	 * элемент пути.
-	 * 
+	 *
 	 * @param path путь
 	 * @return начальный элемент пути, или null, если элемент не найден
 	 *   (не нанесен на карту)
@@ -527,7 +527,7 @@ public class MapView extends DomainMember implements Namable {
 	/**
 	 * Возвращает топологический элемент, в котором расположен конечный
 	 * элемент пути.
-	 * 
+	 *
 	 * @param path путь
 	 * @return конечный элемент пути, или null, если элемент не найден
 	 *   (не нанесен на карту)
@@ -676,7 +676,7 @@ public class MapView extends DomainMember implements Namable {
 	}
 
 	/**
-	 * Получить список топологических кабелей, проходящих через указанный 
+	 * Получить список топологических кабелей, проходящих через указанный
 	 * фрагмент линии.
 	 * @param nodeLink фрагмент линии
 	 * @return список топологических кабелей
@@ -723,7 +723,7 @@ public class MapView extends DomainMember implements Namable {
 	}
 
 	/**
-	 * Получить список топологических путей, проходящих через указанный 
+	 * Получить список топологических путей, проходящих через указанный
 	 * топологический кабель.
 	 * @param cpath топологический кабель
 	 * @return список топологических путей
@@ -790,7 +790,7 @@ public class MapView extends DomainMember implements Namable {
 	}
 
 	/**
-	 * Получить список топологических путей, проходящих через указанный 
+	 * Получить список топологических путей, проходящих через указанный
 	 * фрагмент линии.
 	 * @param nodeLink фрагмент линии
 	 * @return список топологических путей

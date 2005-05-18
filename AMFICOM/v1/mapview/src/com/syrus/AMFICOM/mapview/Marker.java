@@ -1,5 +1,5 @@
 /*-
- * $Id: Marker.java,v 1.15 2005/04/28 10:44:04 arseniy Exp $
+ * $Id: Marker.java,v 1.16 2005/05/18 12:37:39 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,29 +30,29 @@ import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.SiteNode;
 
 /**
- * Название: Маркер связывания оптической дистанции Lo, полученной      * 
- *         экспериментальным путем, со строительной дистанцией Lf,      * 
- *         вводимой при конфигурировании системы, и топологической      * 
- *         дистанцией Lt, полученной в результате расчетов по           * 
- *         координатам и используемо для отображения в окне карты       * 
- *         Связывание дистанций производится по коэффициентам:          * 
- *             Ku = Lo / Lf                                             * 
- *             Kd = Lf / Lt                                             * 
- *         Связывание отображение маркера на карте и на рефлектограмме  * 
- *         строится на основе дистанции Lo, в связи с чем принимаемая   * 
- *         в сообщении из окна рефлектограммы дистанция преобразуется   * 
- *         из Lo в Lf и Lt и наоборот, в отсылаемом сообщении Lt        * 
- *         преобразуется в Lf и Lo. Исключение составляет случай        * 
- *         создания маркера с карты, в этом случае отправляется Lf,     * 
- *         так как топологическая схема не содержит информации о Ku,    * 
- *         и окно рефлектограммы инициализирует маркер такой            * 
- *         информацией, после чего опять используется Lo.               * 
- * 
- * 
- * 
- * @version $Revision: 1.15 $, $Date: 2005/04/28 10:44:04 $
+ * Название: Маркер связывания оптической дистанции Lo, полученной      *
+ *         экспериментальным путем, со строительной дистанцией Lf,      *
+ *         вводимой при конфигурировании системы, и топологической      *
+ *         дистанцией Lt, полученной в результате расчетов по           *
+ *         координатам и используемо для отображения в окне карты       *
+ *         Связывание дистанций производится по коэффициентам:          *
+ *             Ku = Lo / Lf                                             *
+ *             Kd = Lf / Lt                                             *
+ *         Связывание отображение маркера на карте и на рефлектограмме  *
+ *         строится на основе дистанции Lo, в связи с чем принимаемая   *
+ *         в сообщении из окна рефлектограммы дистанция преобразуется   *
+ *         из Lo в Lf и Lt и наоборот, в отсылаемом сообщении Lt        *
+ *         преобразуется в Lf и Lo. Исключение составляет случай        *
+ *         создания маркера с карты, в этом случае отправляется Lf,     *
+ *         так как топологическая схема не содержит информации о Ku,    *
+ *         и окно рефлектограммы инициализирует маркер такой            *
+ *         информацией, после чего опять используется Lo.               *
+ *
+ *
+ *
+ * @version $Revision: 1.16 $, $Date: 2005/05/18 12:37:39 $
  * @module mapview_v1
- * @author $Author: arseniy $
+ * @author $Author: bass $
  */
 
 public class Marker extends AbstractNode
@@ -101,7 +101,7 @@ public class Marker extends AbstractNode
 
 	/**
 	 * Создание маркера пользователем на карте.
-	 * 
+	 *
 	 * @param id ижентификатор
 	 * @param creatorId пользователь
 	 * @param mapView вид карты
@@ -113,7 +113,7 @@ public class Marker extends AbstractNode
 	 * @param dpoint географические координаты меркера
 	 */
 	protected Marker(
-			Identifier id, 
+			Identifier id,
 			Identifier creatorId,
 			MapView mapView,
 			AbstractNode startNode,
@@ -133,7 +133,7 @@ public class Marker extends AbstractNode
 
 	/**
 	 * Создание маркера пользователем на карте.
-	 * 
+	 *
 	 * @param creatorId пользователь
 	 * @param mapView вид карты
 	 * @param startNode начальный узел фрагмента
@@ -154,7 +154,7 @@ public class Marker extends AbstractNode
 			MeasurementPath path,
 			Identifier monitoredElementId,
 			DoublePoint dpoint)
-		throws CreateObjectException 
+		throws CreateObjectException
 	{
 		if (startNode == null || mapView == null || endNode == null
 				|| path == null || dpoint == null)
@@ -175,16 +175,16 @@ public class Marker extends AbstractNode
 				monitoredElementId,
 				dpoint);
 		}
-		catch (IdentifierGenerationException e) 
+		catch (IdentifierGenerationException e)
 		{
 			throw new CreateObjectException("MapMarker.createInstance | cannot generate identifier ", e);
 		}
 	}
 
 	/**
-	 * Создание маркера на основе полученного сообщения с указанием оптической 
+	 * Создание маркера на основе полученного сообщения с указанием оптической
 	 * дистанции.
-	 * 
+	 *
 	 * @param id идентификатор
 	 * @param creatorId пользователь
 	 * @param mapView вид карты
@@ -194,10 +194,10 @@ public class Marker extends AbstractNode
 	 * @param name название маркера
 	 */
 	public Marker(
-			Identifier id, 
+			Identifier id,
 			Identifier creatorId,
 			MapView mapView,
-			double opticalDistance, 
+			double opticalDistance,
 			MeasurementPath path,
 			Identifier monitoredElementId,
 			String name)
@@ -221,9 +221,9 @@ public class Marker extends AbstractNode
 	}
 
 	/**
-	 * Создание маркера на основе полученного сообщения с указанием оптической 
+	 * Создание маркера на основе полученного сообщения с указанием оптической
 	 * дистанции.
-	 * 
+	 *
 	 * @param creatorId пользователь
 	 * @param mapView вид карты
 	 * @param opticalDistance оптическая дистанция от начала пути
@@ -236,11 +236,11 @@ public class Marker extends AbstractNode
 	public static Marker createInstance(
 			Identifier creatorId,
 			MapView mapView,
-			double opticalDistance, 
+			double opticalDistance,
 			MeasurementPath path,
 			Identifier monitoredElementId,
 			String name)
-		throws CreateObjectException 
+		throws CreateObjectException
 	{
 		if (monitoredElementId == null || mapView == null || path == null)
 			throw new IllegalArgumentException("Argument is 'null'");
@@ -253,7 +253,7 @@ public class Marker extends AbstractNode
 				ide,
 				creatorId,
 				mapView,
-				opticalDistance, 
+				opticalDistance,
 				path,
 				monitoredElementId,
 				name);
@@ -429,7 +429,7 @@ public class Marker extends AbstractNode
 
 	/**
 	 * {@inheritDoc}
-	 * Suppress since this class is transient 
+	 * Suppress since this class is transient
 	 */
 	public MapElementState getState()
 	{
@@ -438,7 +438,7 @@ public class Marker extends AbstractNode
 
 	/**
 	 * {@inheritDoc}
-	 * Suppress since this class is transient 
+	 * Suppress since this class is transient
 	 */
 	public void revert(MapElementState state)
 	{
@@ -447,7 +447,7 @@ public class Marker extends AbstractNode
 
 	/**
 	 * {@inheritDoc}
-	 * Suppress since this class is transient 
+	 * Suppress since this class is transient
 	 */
 	public java.util.Map getExportMap()
 	{
@@ -458,17 +458,17 @@ public class Marker extends AbstractNode
 
 	/**
 	 * {@inheritDoc}
-	 * Suppress since this class is not storable 
+	 * Suppress since this class is not storable
 	 * (unlike {@link com.syrus.AMFICOM.general.StorableObject})
 	 */
-	public void insert() throws CreateObjectException
+	public void insert()
 	{
 		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * {@inheritDoc}
-	 * Suppress since this class is not storable 
+	 * Suppress since this class is not storable
 	 * (unlike {@link com.syrus.AMFICOM.general.StorableObject})
 	 */
 	public Set getDependencies()
@@ -478,7 +478,7 @@ public class Marker extends AbstractNode
 
 	/**
 	 * {@inheritDoc}
-	 * Suppress since this class is not storable 
+	 * Suppress since this class is not storable
 	 * (unlike {@link com.syrus.AMFICOM.general.StorableObject})
 	 */
 	public StorableObject_Transferable getHeaderTransferable()
@@ -488,7 +488,7 @@ public class Marker extends AbstractNode
 
 	/**
 	 * {@inheritDoc}
-	 * Suppress since this class is not storable 
+	 * Suppress since this class is not storable
 	 * (unlike {@link com.syrus.AMFICOM.general.StorableObject})
 	 */
 	public IDLEntity getTransferable()

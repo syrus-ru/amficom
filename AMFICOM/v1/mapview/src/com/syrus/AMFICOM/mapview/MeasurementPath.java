@@ -1,5 +1,5 @@
 /**
- * $Id: MeasurementPath.java,v 1.23 2005/04/28 09:08:03 krupenn Exp $
+ * $Id: MeasurementPath.java,v 1.24 2005/05/18 12:37:39 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -38,9 +38,9 @@ import com.syrus.AMFICOM.scheme.corba.PathElement_TransferablePackage.DataPackag
 
 /**
  * Элемент пути.
- * 
- * @author $Author: krupenn $
- * @version $Revision: 1.23 $, $Date: 2005/04/28 09:08:03 $
+ *
+ * @author $Author: bass $
+ * @version $Revision: 1.24 $, $Date: 2005/05/18 12:37:39 $
  * @module mapviewclient_v1
  */
 public class MeasurementPath implements MapElement
@@ -81,19 +81,19 @@ public class MeasurementPath implements MapElement
 	protected MapView mapView;
 
 	/**
-	 * Сортированный список кабельных путей, из которых строится 
+	 * Сортированный список кабельных путей, из которых строится
 	 * измерительный путь.
 	 * to avoid instantiation of multiple objects.
 	 */
 	protected List sortedCablePaths = new LinkedList();
 	/**
-	 * Сортированный список фрагментов линий, из которых строится 
+	 * Сортированный список фрагментов линий, из которых строится
 	 * измерительный путь.
 	 * to avoid instantiation of multiple objects.
 	 */
 	protected List sortedNodeLinks = new LinkedList();
 	/**
-	 * Сортированный список узлов, по которым проходит 
+	 * Сортированный список узлов, по которым проходит
 	 * измерительный путь.
 	 * to avoid instantiation of multiple objects.
 	 */
@@ -102,14 +102,13 @@ public class MeasurementPath implements MapElement
 	/**
 	 * Конструктор.
 	 * @param schemePath схемный путь
-	 * @param id идентификатор
 	 * @param mapView вид
 	 */
 	protected MeasurementPath(
 			SchemePath schemePath,
-			AbstractNode stNode, 
+			AbstractNode stNode,
 			AbstractNode eNode,
-			MapView mapView) 
+			MapView mapView)
 	{
 		this.startNode = stNode;
 		this.endNode = eNode;
@@ -126,16 +125,16 @@ public class MeasurementPath implements MapElement
 	 */
 	public static MeasurementPath createInstance(
 			SchemePath schemePath,
-			AbstractNode stNode, 
+			AbstractNode stNode,
 			AbstractNode eNode,
-			MapView mapView) 
+			MapView mapView)
 	{
 		if (mapView == null || stNode == null || eNode == null || schemePath == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		
 		return new MeasurementPath(
 			schemePath,
-			stNode, 
+			stNode,
 			eNode,
 			mapView);
 	}
@@ -143,7 +142,7 @@ public class MeasurementPath implements MapElement
 	/**
 	 * {@inheritDoc}
 	 */
-	public Set getCharacteristics() 
+	public Set getCharacteristics()
 	{
 		return this.schemePath.getCharacteristics();
 	}
@@ -175,7 +174,7 @@ public class MeasurementPath implements MapElement
 	/**
 	 * {@inheritDoc}
 	 */
-	public String getName() 
+	public String getName()
 	{
 		return this.schemePath.getName();
 	}
@@ -183,7 +182,7 @@ public class MeasurementPath implements MapElement
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setName(String name) 
+	public void setName(String name)
 	{
 		this.schemePath.setName(name);
 	}
@@ -192,7 +191,7 @@ public class MeasurementPath implements MapElement
 	 * Получить описание.
 	 * @return описание
 	 */
-	public String getDescription() 
+	public String getDescription()
 	{
 		return this.schemePath.getDescription();
 	}
@@ -201,7 +200,7 @@ public class MeasurementPath implements MapElement
 	 * Установить описание.
 	 * @param description описание
 	 */
-	public void setDescription(String description) 
+	public void setDescription(String description)
 	{
 		this.schemePath.setDescription(description);
 	}
@@ -283,7 +282,7 @@ public class MeasurementPath implements MapElement
 	 * Get this.endNode.
 	 * @return this.endNode
 	 */
-	public AbstractNode getEndNode() 
+	public AbstractNode getEndNode()
 	{
 		return this.endNode;
 //		return getMapView().getEndNode(this.getSchemePath());
@@ -293,7 +292,7 @@ public class MeasurementPath implements MapElement
 	 * Set {@link #endNode}.
 	 * @param endNode new endNode
 	 */
-	public void setEndNode(AbstractNode endNode) 
+	public void setEndNode(AbstractNode endNode)
 	{
 		this.endNode = endNode;
 	}
@@ -302,7 +301,7 @@ public class MeasurementPath implements MapElement
 	 * Get {@link #startNode}.
 	 * @return this.startNode
 	 */
-	public AbstractNode getStartNode() 
+	public AbstractNode getStartNode()
 	{
 		return this.startNode;
 //		return getMapView().getStartNode(this.getSchemePath());
@@ -312,7 +311,7 @@ public class MeasurementPath implements MapElement
 	 * Set {@link #startNode}.
 	 * @param startNode new startNode
 	 */
-	public void setStartNode(AbstractNode startNode) 
+	public void setStartNode(AbstractNode startNode)
 	{
 		this.startNode = startNode;
 	}
@@ -378,7 +377,7 @@ public class MeasurementPath implements MapElement
 	}
 
 	/**
-	 * Несортированный список кабельных путей, из которых строится 
+	 * Несортированный список кабельных путей, из которых строится
 	 * измерительный путь.
 	 * to avoid instantiation of multiple objects.
 	 */
@@ -509,7 +508,7 @@ public class MeasurementPath implements MapElement
 	/**
 	 * Получить следующий фрагмент по цепочке сортированных фрагментов.
 	 * @param nodeLink фрагмент
-	 * @return следующий фрагмент, или <code>null</code>, если nl - последний 
+	 * @return следующий фрагмент, или <code>null</code>, если nl - последний
 	 * в списке
 	 */
 	public NodeLink nextNodeLink(NodeLink nodeLink)
@@ -524,7 +523,7 @@ public class MeasurementPath implements MapElement
 	/**
 	 * Получить предыдущий фрагмент по цепочке сортированных фрагментов.
 	 * @param nodeLink фрагмент
-	 * @return предыдущий фрагмент, или <code>null</code>, если nl - первый 
+	 * @return предыдущий фрагмент, или <code>null</code>, если nl - первый
 	 * в списке
 	 */
 	public NodeLink previousNodeLink(NodeLink nodeLink)
@@ -538,7 +537,7 @@ public class MeasurementPath implements MapElement
 
 	/**
 	 * {@inheritDoc}
-	 * Suppress since this class is transient 
+	 * Suppress since this class is transient
 	 */
 	public MapElementState getState()
 	{
@@ -547,7 +546,7 @@ public class MeasurementPath implements MapElement
 
 	/**
 	 * {@inheritDoc}
-	 * Suppress since this class is transient 
+	 * Suppress since this class is transient
 	 */
 	public void revert(MapElementState state)
 	{
@@ -556,7 +555,7 @@ public class MeasurementPath implements MapElement
 
 	/**
 	 * {@inheritDoc}
-	 * Suppress since this class is transient 
+	 * Suppress since this class is transient
 	 */
 	public java.util.Map getExportMap()
 	{

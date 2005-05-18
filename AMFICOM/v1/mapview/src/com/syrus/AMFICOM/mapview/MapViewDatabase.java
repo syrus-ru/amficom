@@ -1,5 +1,5 @@
 /*
-* $Id: MapViewDatabase.java,v 1.20 2005/04/13 20:14:22 arseniy Exp $
+* $Id: MapViewDatabase.java,v 1.21 2005/05/18 12:37:39 bass Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -29,12 +29,12 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.map.MapStorableObjectPool;
 import com.syrus.AMFICOM.scheme.Scheme;
-import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
@@ -42,8 +42,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/04/13 20:14:22 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.21 $, $Date: 2005/05/18 12:37:39 $
+ * @author $Author: bass $
  * @module mapview_v1
  */
 public class MapViewDatabase extends CharacterizableDatabase {
@@ -61,16 +61,16 @@ public class MapViewDatabase extends CharacterizableDatabase {
     public static final String COLUMN_SCALE = "scale";
     // defaultScale FLOAT,
     public static final String COLUMN_DEFAULTSCALE  = "defaultScale";
-    // map_id VARCHAR2(32), 
+    // map_id VARCHAR2(32),
     public static final String COLUMN_MAP_ID        = "map_id";
-    
-    // linked table ::    
+
+    // linked table ::
     private static final String MAPVIEW_SCHEME        = "MapViewScheme";
     // mapview_id VARCHAR2(32),
     private static final String LINK_COLUMN_MAPVIEW_ID    = "mapview_id";
     // scheme_id VARCHAR2(32),
     private static final String LINK_COLUMN_SCHEME_ID     = "scheme_id";
-    
+
 
 	private static String columns;
 	
@@ -95,7 +95,7 @@ public class MapViewDatabase extends CharacterizableDatabase {
 			Set schemeIds = (Set)schemeIdsMap.get(id);
 			if (id.equals(mapView.getId())){
 				try{
-				mapView.setSchemes0(SchemeStorableObjectPool.getStorableObjects(schemeIds, true));
+				mapView.setSchemes0(StorableObjectPool.getStorableObjects(schemeIds, true));
 				}catch(ApplicationException ae){
 					throw new RetrieveObjectException(this.getEnityName() + "Database.retrieve | cannot retrieve schemes" ,  ae);
 				}
@@ -165,8 +165,8 @@ public class MapViewDatabase extends CharacterizableDatabase {
 	
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 	throws IllegalDataException, RetrieveObjectException, SQLException {
-		MapView map = (storableObject == null) ? 
-				new MapView(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, null, 0.0, 0.0, 0.0, 0.0, null) : 
+		MapView map = (storableObject == null) ?
+				new MapView(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, null, 0.0, 0.0, 0.0, 0.0, null) :
 					fromStorableObject(storableObject);				
 		
 		try{
@@ -190,7 +190,7 @@ public class MapViewDatabase extends CharacterizableDatabase {
 	}
 
 	
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) {
 //		MapView mapView = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
@@ -258,9 +258,9 @@ public class MapViewDatabase extends CharacterizableDatabase {
 			Set linkedObjectList = mapView.getSchemes();
 	
 			Set linkedObjectIds = new HashSet(linkedObjectList.size());
-	        for (Iterator it = linkedObjectList.iterator(); it.hasNext();) 
+	        for (Iterator it = linkedObjectList.iterator(); it.hasNext();)
 	            linkedObjectIds.add(((Scheme) it.next()).getId());
-	        
+	
 	        mapIdLinkedObjectIds.put(mapView.getId(), linkedObjectIds);
 		}
 		//TODO: may be wrong correction
@@ -285,7 +285,7 @@ public class MapViewDatabase extends CharacterizableDatabase {
 				mapIds.put(mapId, map);
 			}catch(ApplicationException ae){
 				Log.errorMessage(this.getEnityName()+"Database.delete | Couldn't found map for " + mapId);
-			} 
+			}
 		}
 		
 		for (Iterator it = ids.iterator(); it.hasNext();) {
@@ -368,7 +368,7 @@ public class MapViewDatabase extends CharacterizableDatabase {
 			Set schemeIds = (Set)schemeIdsMap.get(id);				
 			if (id.equals(map.getId())){
 				try {
-					map.setSchemes0(SchemeStorableObjectPool.getStorableObjects(schemeIds, true));
+					map.setSchemes0(StorableObjectPool.getStorableObjects(schemeIds, true));
 				} catch (ApplicationException ae) {
 					throw new RetrieveObjectException(this.getEnityName() + "Database.updateEntityFromResultSet | cannot retrieve schemes" ,  ae);
 				}

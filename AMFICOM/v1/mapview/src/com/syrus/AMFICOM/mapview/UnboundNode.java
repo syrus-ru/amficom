@@ -1,5 +1,5 @@
 /**
- * $Id: UnboundNode.java,v 1.14 2005/05/16 11:30:41 krupenn Exp $
+ * $Id: UnboundNode.java,v 1.15 2005/05/18 12:37:39 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -27,11 +27,11 @@ import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 
 /**
- * Непривязанный элемент. Сооветствует элеименту схемы, не привязанному 
+ * Непривязанный элемент. Сооветствует элеименту схемы, не привязанному
  * ни к какому элементу топологической схемы.
- * 
- * @author $Author: krupenn $
- * @version $Revision: 1.14 $, $Date: 2005/05/16 11:30:41 $
+ *
+ * @author $Author: bass $
+ * @version $Revision: 1.15 $, $Date: 2005/05/18 12:37:39 $
  * @module mapviewclient_v1
  */
 public class UnboundNode extends SiteNode
@@ -52,7 +52,7 @@ public class UnboundNode extends SiteNode
 	 * При перемещении его через элемент топологической карты флаг получает
 	 * значение <code>true</code>, что означает, что при отпускании мыши
 	 * схемный элемент {@link #schemeElement} будет привязан к элементу.
-	 * При перемещении мыши за пределы элемента топологической карты 
+	 * При перемещении мыши за пределы элемента топологической карты
 	 * флаг опять принимает значение <code>false</code>.
 	 */
 	protected boolean canBind = false;
@@ -73,17 +73,17 @@ public class UnboundNode extends SiteNode
 		SiteNodeType nodeType)
 	{
 		super(
-				id, 
-				creatorId, 
+				id,
+				creatorId,
 				version,
-				nodeType.getImageId(), 
-				nodeType.getName(), 
-				"", 
-				nodeType, 
+				nodeType.getImageId(),
+				nodeType.getName(),
+				"",
+				nodeType,
 				location.getX(),
-				location.getY(), 
-				"", 
-				"", 
+				location.getY(),
+				"",
+				"",
 				"");
 
 		this.schemeElement = schemeElement;
@@ -106,7 +106,7 @@ public class UnboundNode extends SiteNode
 			SchemeElement schemeElement,
 			DoublePoint location,
 			SiteNodeType nodeType)
-		throws CreateObjectException 
+		throws CreateObjectException
 	{
 		if (schemeElement == null || location == null || nodeType == null)
 			throw new IllegalArgumentException("Argument is 'null'");
@@ -173,17 +173,17 @@ public class UnboundNode extends SiteNode
 
 	/**
 	 * {@inheritDoc}
-	 * Suppress since this class is not storable 
+	 * Suppress since this class is not storable
 	 * (unlike {@link com.syrus.AMFICOM.general.StorableObject})
 	 */
-	public void insert() throws CreateObjectException
+	public void insert()
 	{
 		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * {@inheritDoc}
-	 * Suppress since this class is not storable 
+	 * Suppress since this class is not storable
 	 * (unlike {@link com.syrus.AMFICOM.general.StorableObject})
 	 */
 	public Set getDependencies()
@@ -193,7 +193,7 @@ public class UnboundNode extends SiteNode
 
 	/**
 	 * {@inheritDoc}
-	 * Suppress since this class is not storable 
+	 * Suppress since this class is not storable
 	 * (unlike {@link com.syrus.AMFICOM.general.StorableObject})
 	 */
 	public StorableObject_Transferable getHeaderTransferable()
@@ -203,7 +203,7 @@ public class UnboundNode extends SiteNode
 
 	/**
 	 * {@inheritDoc}
-	 * Suppress since this class is not storable 
+	 * Suppress since this class is not storable
 	 * (unlike {@link com.syrus.AMFICOM.general.StorableObject})
 	 */
 	public IDLEntity getTransferable()

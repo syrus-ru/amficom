@@ -1,8 +1,8 @@
 /**
- * $Id: VoidElement.java,v 1.8 2005/04/26 16:08:47 krupenn Exp $ 
+ * $Id: VoidElement.java,v 1.9 2005/05/18 12:37:39 bass Exp $
  *
  * Syrus Systems
- * Научно-технический центр 
+ * Научно-технический центр
  * Проект: АМФИКОМ Автоматизированный
  * МногоФункциональный Интеллектуальный Комплекс Объектного Мониторинга
  */
@@ -22,9 +22,9 @@ import com.syrus.AMFICOM.mapview.MapView;
 
 /**
  * Пустой элемент.
- * 
- * @author $Author: krupenn $
- * @version $Revision: 1.8 $, $Date: 2005/04/26 16:08:47 $
+ *
+ * @author $Author: bass $
+ * @version $Revision: 1.9 $, $Date: 2005/05/18 12:37:39 $
  * @module mapviewclient_v1
  */
 public final class VoidElement implements MapElement {
@@ -47,7 +47,7 @@ public final class VoidElement implements MapElement {
 
 	/**
 	 * Get instance.
-	 * 
+	 *
 	 * @param mapView вид карты
 	 * @return instance
 	 */
@@ -58,7 +58,7 @@ public final class VoidElement implements MapElement {
 
 	/**
 	 * Получить вид карты.
-	 * 
+	 *
 	 * @return вид карты
 	 */
 	public MapView getMapView() {

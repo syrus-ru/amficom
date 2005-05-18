@@ -1,5 +1,5 @@
 /**
- * $Id: UnboundLink.java,v 1.12 2005/05/16 11:30:41 krupenn Exp $
+ * $Id: UnboundLink.java,v 1.13 2005/05/18 12:37:39 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,8 +29,8 @@ import com.syrus.AMFICOM.map.PhysicalLinkType;
  * Элемент непривязанной линии. Использыется как составляющая честь 
  * {@link CablePath} в случае, когда кабель не привязан на каком-либо участке 
  * между узлами.
- * @author $Author: krupenn $
- * @version $Revision: 1.12 $, $Date: 2005/05/16 11:30:41 $
+ * @author $Author: bass $
+ * @version $Revision: 1.13 $, $Date: 2005/05/18 12:37:39 $
  * @module mapviewclient_v1
  */
 public class UnboundLink extends PhysicalLink
@@ -56,8 +56,8 @@ public class UnboundLink extends PhysicalLink
 			Identifier id,
 			Identifier creatorId,
 			final long version,
-			AbstractNode stNode, 
-			AbstractNode eNode, 
+			AbstractNode stNode,
+			AbstractNode eNode,
 			PhysicalLinkType type)
 	{
 		super(id, creatorId, version, id.toString(), "", type, stNode, eNode, "", "", "", 0, 0, true, true);
@@ -75,10 +75,10 @@ public class UnboundLink extends PhysicalLink
 	 */
 	public static PhysicalLink createInstance(
 			Identifier creatorId,
-			AbstractNode stNode, 
-			AbstractNode eNode, 
+			AbstractNode stNode,
+			AbstractNode eNode,
 			PhysicalLinkType type)
-		throws CreateObjectException 
+		throws CreateObjectException
 	{
 		if (stNode == null || eNode == null || type == null)
 			throw new IllegalArgumentException("Argument is 'null'");
@@ -89,8 +89,8 @@ public class UnboundLink extends PhysicalLink
 				IdentifierPool.getGeneratedIdentifier(ObjectEntities.PHYSICAL_LINK_ENTITY_CODE),
 				creatorId,
 				0L,
-				stNode, 
-				eNode, 
+				stNode,
+				eNode,
 				type);
 			unboundLink.changed = true;
 			return unboundLink;
@@ -124,17 +124,17 @@ public class UnboundLink extends PhysicalLink
 
 	/**
 	 * {@inheritDoc}
-	 * Suppress since this class is not storable 
+	 * Suppress since this class is not storable
 	 * (unlike {@link com.syrus.AMFICOM.general.StorableObject})
 	 */
-	public void insert() throws CreateObjectException
+	public void insert()
 	{
 		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * {@inheritDoc}
-	 * Suppress since this class is not storable 
+	 * Suppress since this class is not storable
 	 * (unlike {@link com.syrus.AMFICOM.general.StorableObject})
 	 */
 	public Set getDependencies()
@@ -144,7 +144,7 @@ public class UnboundLink extends PhysicalLink
 
 	/**
 	 * {@inheritDoc}
-	 * Suppress since this class is not storable 
+	 * Suppress since this class is not storable
 	 * (unlike {@link com.syrus.AMFICOM.general.StorableObject})
 	 */
 	public StorableObject_Transferable getHeaderTransferable()
@@ -154,7 +154,7 @@ public class UnboundLink extends PhysicalLink
 
 	/**
 	 * {@inheritDoc}
-	 * Suppress since this class is not storable 
+	 * Suppress since this class is not storable
 	 * (unlike {@link com.syrus.AMFICOM.general.StorableObject})
 	 */
 	public IDLEntity getTransferable()
