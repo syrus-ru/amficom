@@ -1,5 +1,5 @@
 /*
- * $Id: JdbcBlobManager.java,v 1.5 2005/03/04 08:05:49 bass Exp $
+ * $Id: JdbcBlobManager.java,v 1.6 2005/05/18 10:49:17 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import java.sql.*;
  * as a byte&nbsp;array/input&nbsp;stream.
  *
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/03/04 08:05:49 $
+ * @version $Revision: 1.6 $, $Date: 2005/05/18 10:49:17 $
  * @module util
  */
 public final class JdbcBlobManager {
@@ -42,8 +42,8 @@ public final class JdbcBlobManager {
 	public static byte[] getData(final Connection conn,
 			final String colName, final String table,
 			final String where) throws SQLException {
-		return getData(conn, "SELECT "  + colName + " FROM " + table //$NON-NLS-1$ //$NON-NLS-2$
-			+ " WHERE " + where); //$NON-NLS-1$
+		return getData(conn, "SELECT "  + colName + " FROM " + table
+			+ " WHERE " + where);
 	}
 
 	/**
@@ -53,14 +53,14 @@ public final class JdbcBlobManager {
 	 * @param colName the name of the table column.
 	 * @param table the name of the database table.
 	 * @param where the trailing <code>WHERE</code> clause of the SQL query.
-	 * @return input stream which data stored in the BLOB can be read from. 
+	 * @return input stream which data stored in the BLOB can be read from.
 	 * @throws SQLException if a database error occurs.
 	 */
 	public static InputStream getDataAsStream(final Connection conn,
 			final String colName, final String table,
 			final String where) throws SQLException {
-		return getDataAsStream(conn, "SELECT "  + colName + " FROM " //$NON-NLS-1$ //$NON-NLS-2$
-			+ table + " WHERE " + where); //$NON-NLS-1$
+		return getDataAsStream(conn, "SELECT "  + colName + " FROM "
+			+ table + " WHERE " + where);
 	}
 
 	/**
@@ -92,7 +92,7 @@ public final class JdbcBlobManager {
 	 * @param where the trailing <code>WHERE</code> clause of the SQL query.
 	 * @param executeCommit if <code>true</code>, then <code>COMMIT</code>
 	 *        is issued automatically before method returns; otherwise it
-	 *        lies on programmer's conscience to issue <code>COMMIT</code>. 
+	 *        lies on programmer's conscience to issue <code>COMMIT</code>.
 	 * @param data the byte array which contains the data to be stored.
 	 * @throws SQLException if a database error occurs.
 	 */
@@ -100,8 +100,8 @@ public final class JdbcBlobManager {
 			final String table, final String where,
 			final boolean executeCommit, final byte data[])
 			throws SQLException {
-		setData(conn, "SELECT " + colName + " FROM " + table + " WHERE " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			+ where + " FOR UPDATE", executeCommit, data); //$NON-NLS-1$
+		setData(conn, "SELECT " + colName + " FROM " + table + " WHERE "
+			+ where + " FOR UPDATE", executeCommit, data);
 	}
 
 	/**
@@ -109,7 +109,7 @@ public final class JdbcBlobManager {
 	 * #setDataAsStream(Connection, String, String, String, boolean,
 	 * InputStream)}; the only difference is that this method issues
 	 * <code>COMMIT</code> automatically.
-	 * 
+	 *
 	 * @param conn the database connection to use.
 	 * @param colName the name of the table column.
 	 * @param table the name of the database table.
@@ -136,7 +136,7 @@ public final class JdbcBlobManager {
 	 * @param where the trailing <code>WHERE</code> clause of the SQL query.
 	 * @param executeCommit if <code>true</code>, then <code>COMMIT</code>
 	 *        is issued automatically before method returns; otherwise it
-	 *        lies on programmer's conscience to issue <code>COMMIT</code>. 
+	 *        lies on programmer's conscience to issue <code>COMMIT</code>.
 	 * @param in the input stream which the data to be stored will be read
 	 *        from.
 	 * @throws SQLException if a database error occurs.
@@ -145,8 +145,8 @@ public final class JdbcBlobManager {
 			final String colName, final String table,
 			final String where, final boolean executeCommit,
 			final InputStream in) throws SQLException {
-		setDataAsStream(conn, "SELECT " + colName + " FROM " + table + //$NON-NLS-1$ //$NON-NLS-2$
-			" WHERE " + where + " FOR UPDATE", executeCommit, in); //$NON-NLS-1$ //$NON-NLS-2$
+		setDataAsStream(conn, "SELECT " + colName + " FROM " + table +
+			" WHERE " + where + " FOR UPDATE", executeCommit, in);
 	}
 
 	/**
@@ -155,7 +155,7 @@ public final class JdbcBlobManager {
 	 * @param conn the database connection to use.
 	 * @param sql full SQL query. Must return 1 row, the 1st column of this
 	 *        row being a BLOB.
-	 * @return byte array which contains data stored in the BLOB. 
+	 * @return byte array which contains data stored in the BLOB.
 	 * @throws SQLException if a database error occurs.
 	 */
 	public static byte[] getData(final Connection conn, final String sql)
@@ -181,7 +181,7 @@ public final class JdbcBlobManager {
 	 * @param conn the database connection to use.
 	 * @param sql full SQL query. Must return 1 row, the 1st column of this
 	 *        row being a BLOB.
-	 * @return input stream which data stored in the BLOB can be read from. 
+	 * @return input stream which data stored in the BLOB can be read from.
 	 * @throws SQLException if a database error occurs.
 	 */
 	public static InputStream getDataAsStream(final Connection conn,
@@ -205,7 +205,7 @@ public final class JdbcBlobManager {
 	 * Stores the contents of the byte array as a BLOB. The same as {@link
 	 * #setData(Connection, String, boolean, byte[])}; the only difference
 	 * is that this method issues <code>COMMIT</code> automatically.
-	 * 
+	 *
 	 * @param conn the database connection to use.
 	 * @param sql full SQL query. Must return 1 row, the 1st column of this
 	 *        row being a <i>locked</i> BLOB
@@ -228,7 +228,7 @@ public final class JdbcBlobManager {
 	 *        (<code>SELECT ... FROM ... WHERE ... FOR UPDATE</code>).
 	 * @param executeCommit if <code>true</code>, then <code>COMMIT</code>
 	 *        is issued automatically before method returns; otherwise it
-	 *        lies on programmer's conscience to issue <code>COMMIT</code>. 
+	 *        lies on programmer's conscience to issue <code>COMMIT</code>.
 	 * @param data the byte array which contains the data to be stored.
 	 * @throws SQLException if a database error occurs.
 	 */
@@ -265,7 +265,7 @@ public final class JdbcBlobManager {
 	 * The same as {@link #setDataAsStream(Connection, String,
 	 * boolean, InputStream)}; the only difference is that this
 	 * method issues <code>COMMIT</code> automatically.
-	 * 
+	 *
 	 * @param conn the database connection to use.
 	 * @param sql full SQL query. Must return 1 row, the 1st column of this
 	 *        row being a <i>locked</i> BLOB
@@ -290,7 +290,7 @@ public final class JdbcBlobManager {
 	 *        (<code>SELECT ... FROM ... WHERE ... FOR UPDATE</code>).
 	 * @param executeCommit if <code>true</code>, then <code>COMMIT</code>
 	 *        is issued automatically before method returns; otherwise it
-	 *        lies on programmer's conscience to issue <code>COMMIT</code>. 
+	 *        lies on programmer's conscience to issue <code>COMMIT</code>.
 	 * @param in the input stream which the data to be stored will be read
 	 *        from.
 	 * @throws SQLException if a database error occurs.
@@ -327,13 +327,13 @@ public final class JdbcBlobManager {
 	 * Returns a byte-array representation of the BLOB.
 	 *
 	 * @param blob the BLOB to read data from.
-	 * @return byte array which contains data stored in the BLOB. 
+	 * @return byte array which contains data stored in the BLOB.
 	 * @throws SQLException if a database error occurs.
 	 */
 	public static byte[] getData(final Blob blob) throws SQLException {
 		long blobLength = blob.length();
 		if (blobLength > Integer.MAX_VALUE)
-			throw new SQLException("Blob too large to fit into an array"); //$NON-NLS-1$
+			throw new SQLException("Blob too large to fit into an array");
 		return blob.getBytes(1L, (int) blobLength);
 	}
 
@@ -341,7 +341,7 @@ public final class JdbcBlobManager {
 	 * Returns an input-stream representation of the BLOB.
 	 *
 	 * @param blob the BLOB to read data from.
-	 * @return input stream which data stored in the BLOB can be read from. 
+	 * @return input stream which data stored in the BLOB can be read from.
 	 * @throws SQLException if a database error occurs.
 	 */
 	public static InputStream getDataAsStream(final Blob blob)
@@ -403,7 +403,7 @@ public final class JdbcBlobManager {
 		Statement stmt = null;
 		try {
 			stmt = conn.createStatement();
-			stmt.execute("COMMIT"); //$NON-NLS-1$
+			stmt.execute("COMMIT");
 		} finally {
 			if (stmt != null)
 				stmt.close();

@@ -1,5 +1,5 @@
 /*
- * $Id: Fifo.java,v 1.6 2005/05/16 10:12:23 max Exp $
+ * $Id: Fifo.java,v 1.7 2005/05/18 10:49:17 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,8 +11,8 @@ package com.syrus.util;
 import java.io.Serializable;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/05/16 10:12:23 $
- * @author $Author: max $
+ * @version $Revision: 1.7 $, $Date: 2005/05/18 10:49:17 $
+ * @author $Author: bass $
  * @module util
  */
 
@@ -31,7 +31,7 @@ public class Fifo implements Serializable {
 		if (size > 0)
 			this.fifo = new Object[size];
 		else
-			throw new IllegalArgumentException("Illegal size: " + size); //$NON-NLS-1$
+			throw new IllegalArgumentException("Illegal size: " + size);
 		this.number = 0;
 	}
 	
@@ -80,7 +80,7 @@ public class Fifo implements Serializable {
 	}
 	
 	/**
-	 * <b>Do NOT use this metthod</b>. 
+	 * <b>Do NOT use this metthod</b>.
 	 * <p>This method can be used only in special cases, for example in seriallization.</p>
 	 */
 	public Object[] getObjects() {
@@ -88,8 +88,8 @@ public class Fifo implements Serializable {
 	}
 
 	/**
-	 * <b>Do NOT use this metthod</b>. 
-	 * <p>This method can be used only in special cases, for example in seriallization.</p><p>Instead one may use {@link Fifo#push(Object)}</p> 
+	 * <b>Do NOT use this metthod</b>.
+	 * <p>This method can be used only in special cases, for example in seriallization.</p><p>Instead one may use {@link Fifo#push(Object)}</p>
 	 */
 	public void setObjects(Object[] objects) {
 		this.fifo = objects;		

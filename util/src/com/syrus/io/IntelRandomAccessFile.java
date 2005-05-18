@@ -1,5 +1,5 @@
 /*
- * $Id: IntelRandomAccessFile.java,v 1.4 2005/03/04 08:05:49 bass Exp $
+ * $Id: IntelRandomAccessFile.java,v 1.5 2005/05/18 10:49:17 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/03/04 08:05:49 $
+ * @version $Revision: 1.5 $, $Date: 2005/05/18 10:49:17 $
  * @author $Author: bass $
  * @module util
  */
@@ -122,7 +122,7 @@ public class IntelRandomAccessFile extends RandomAccessFile
 	public final String readIString2space() throws IOException
 	{
 		byte b[] = new byte[1];
-		String s = ""; //$NON-NLS-1$
+		String s = "";
 
 		while (true)
 		{

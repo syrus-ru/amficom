@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseString.java,v 1.9 2005/03/04 08:05:49 bass Exp $
+ * $Id: DatabaseString.java,v 1.10 2005/05/18 10:49:17 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/03/04 08:05:49 $
+ * @version $Revision: 1.10 $, $Date: 2005/05/18 10:49:17 $
  * @author $Author: bass $
  * @module util
  */
@@ -35,7 +35,7 @@ public class DatabaseString {
 		 * then do the same below to avoid stack overflowing.
 		 */
 //*/
-		return (string != null) ? string.replaceAll("(')", "$1$1") : ""; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		return (string != null) ? string.replaceAll("(')", "$1$1") : "";
 /*/
 		return (string != null)
 				? toQuerySubString(string, string.length())
@@ -69,12 +69,12 @@ public class DatabaseString {
 				? toQuerySubString((string.length() > length)
 						? string.substring(0, length)
 						: string)
-				: ""; //$NON-NLS-1$
+				: "";
 //*/
 	}
 
 	/**
-	 * 
+	 *
 	 * @param preparedStatement
 	 * @param parameterIndex
 	 * @param string string to query, null is also available
@@ -83,13 +83,13 @@ public class DatabaseString {
 	 */
 	public static void setString(PreparedStatement preparedStatement, int parameterIndex, String string, int length)
 		throws SQLException {
-		preparedStatement.setString(parameterIndex, 
-			(string != null) ? ((string.length() > length) ? string.substring(0, length) : string) : ""); //$NON-NLS-1$
+		preparedStatement.setString(parameterIndex,
+			(string != null) ? ((string.length() > length) ? string.substring(0, length) : string) : "");
 	}
 
 	/**
-	 * @param string 
-	 * @return sql query without escape chars 
+	 * @param string
+	 * @return sql query without escape chars
  	 * @since j2sdk 1.4
 	 */
 	public static String fromQuerySubString(final String string){

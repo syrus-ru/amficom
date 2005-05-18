@@ -1,5 +1,5 @@
 /*
- * $Id: StolenLogger.java,v 1.7 2005/03/04 08:05:49 bass Exp $
+ * $Id: StolenLogger.java,v 1.8 2005/05/18 10:49:17 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,20 +15,20 @@ import java.util.Date;
 import java.text.SimpleDateFormat;
 
 public abstract class StolenLogger implements Logger {
-	static final String DELIMITER = "."; //$NON-NLS-1$
-	static final String ERROR = "error"; //$NON-NLS-1$
-	static final String DEBUG = "debug"; //$NON-NLS-1$
-	static final String KEY_LOG_DEBUG_LEVEL = "LogDebugLevel"; //$NON-NLS-1$
-	static final String KEY_ECHO_DEBUG = "EchoDebug"; //$NON-NLS-1$
-	static final String KEY_ECHO_ERROR = "EchoError"; //$NON-NLS-1$
-	static final String KEY_THIS_LEVEL_ONLY = "LogOnlyThisLevel"; //$NON-NLS-1$
-	static final String KEY_LOG_PATH = "LogPath"; //$NON-NLS-1$
+	static final String DELIMITER = ".";
+	static final String ERROR = "error";
+	static final String DEBUG = "debug";
+	static final String KEY_LOG_DEBUG_LEVEL = "LogDebugLevel";
+	static final String KEY_ECHO_DEBUG = "EchoDebug";
+	static final String KEY_ECHO_ERROR = "EchoError";
+	static final String KEY_THIS_LEVEL_ONLY = "LogOnlyThisLevel";
+	static final String KEY_LOG_PATH = "LogPath";
 
-	static final String DEFAULT_APPNAME = "defaultApp"; //$NON-NLS-1$
-	static final String DEFAULT_HOSTNAME = "defaultHost"; //$NON-NLS-1$
-	static final String DEFAULT_LOG_ECHO_DEBUG = "false"; //$NON-NLS-1$
-	static final String DEFAULT_LOG_ECHO_ERROR = "false"; //$NON-NLS-1$
-	static final String DEFAULT_LOG_ONLY_THIS_LEVEL = "false"; //$NON-NLS-1$
+	static final String DEFAULT_APPNAME = "defaultApp";
+	static final String DEFAULT_HOSTNAME = "defaultHost";
+	static final String DEFAULT_LOG_ECHO_DEBUG = "false";
+	static final String DEFAULT_LOG_ECHO_ERROR = "false";
+	static final String DEFAULT_LOG_ONLY_THIS_LEVEL = "false";
 	static final int DEFAULT_LOG_DEBUG_LEVEL = 5;
 
 	private String appName;
@@ -74,7 +74,7 @@ public abstract class StolenLogger implements Logger {
 			}
 		}
 		catch (Exception e) {
-			System.out.println("Exception in debug logging: " + e.getMessage()); //$NON-NLS-1$
+			System.out.println("Exception in debug logging: " + e.getMessage());
 			e.printStackTrace();
 		}
 	}
@@ -85,18 +85,18 @@ public abstract class StolenLogger implements Logger {
 			if (!this.thisLevelOnly && debugLevel <= this.logDebugLevel || debugLevel == this.logDebugLevel) {
 				this.debugLog = new PrintWriter(new FileWriter(this.debugLogFileName, true), true);
 				logTimeStamp(this.debugLog);
-				this.debugLog.println("Exception: " + throwable.getMessage()); //$NON-NLS-1$
+				this.debugLog.println("Exception: " + throwable.getMessage());
 				throwable.printStackTrace(this.debugLog);
 				this.debugLog.close();
 				if (this.echoDebug) {
 					echoTimeStamp();
-					System.out.println("Exception: " + throwable.getMessage()); //$NON-NLS-1$
+					System.out.println("Exception: " + throwable.getMessage());
 					throwable.printStackTrace();
 				}
 			}
 		}
 		catch (Exception e) {
-			System.out.println("Exception in debug logging: " + e.getMessage()); //$NON-NLS-1$
+			System.out.println("Exception in debug logging: " + e.getMessage());
 			e.printStackTrace();
 		}
 	}
@@ -115,7 +115,7 @@ public abstract class StolenLogger implements Logger {
 			}
 		}
 		catch (Exception e) {
-			System.out.println("Exception in error logging: " + e.getMessage()); //$NON-NLS-1$
+			System.out.println("Exception in error logging: " + e.getMessage());
 			e.printStackTrace();
 		}
 	}
@@ -125,23 +125,23 @@ public abstract class StolenLogger implements Logger {
 		try {
 			this.errorLog = new PrintWriter(new FileWriter(this.errorLogFileName, true), true);
 			logTimeStamp(this.errorLog);
-			this.errorLog.println("Exception: " + throwable.getMessage()); //$NON-NLS-1$
+			this.errorLog.println("Exception: " + throwable.getMessage());
 				throwable.printStackTrace(this.errorLog);
 				this.errorLog.close();
 				if (this.echoError) {
 					echoTimeStamp();
-					System.out.println("Exception: " + throwable.getMessage()); //$NON-NLS-1$
+					System.out.println("Exception: " + throwable.getMessage());
 					throwable.printStackTrace();
 				}
 		}
 		catch (Exception e) {
-			System.out.println("Exception in error logging: " + e.getMessage()); //$NON-NLS-1$
+			System.out.println("Exception in error logging: " + e.getMessage());
 			e.printStackTrace();
 		}
 	}
 
 	private void checkLogRollover() {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd"); //$NON-NLS-1$
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 		String currd = sdf.format(this.logDate);
 		String d = sdf.format(new Date());
 		if(!currd.equals(d)) {
@@ -152,25 +152,25 @@ public abstract class StolenLogger implements Logger {
 	}
 
 	private static void logTimeStamp(PrintWriter pw) {
-		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss"); //$NON-NLS-1$
-		pw.print(sdf.format(new Date()) + "| "); //$NON-NLS-1$
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+		pw.print(sdf.format(new Date()) + "| ");
 	}
 
 	private static void echoTimeStamp() {
-		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss"); //$NON-NLS-1$
-		System.out.print(sdf.format(new Date()) + "| "); //$NON-NLS-1$
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+		System.out.print(sdf.format(new Date()) + "| ");
 	}
 
 	private String createLogFileName(String logType) {
 				return this.getLogPath(logType) +	File.separator +
 								logType +	DELIMITER +
 								this.appName + DELIMITER +
-								this.hostName + ".log"; //$NON-NLS-1$
+								this.hostName + ".log";
 	}
 
 	private String getLogPath(String logType) {
 		String logPath = this.baseLogPath;
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd"); //$NON-NLS-1$
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 		logPath += File.separator + sdf.format(this.logDate) + File.separator + logType;
 		File file = new File(logPath);
 		if (!file.exists())

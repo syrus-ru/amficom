@@ -1,5 +1,5 @@
 /*
-* $Id: Wrapper.java,v 1.2 2005/02/22 07:23:43 bass Exp $
+* $Id: Wrapper.java,v 1.3 2005/05/18 10:49:17 bass Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -13,17 +13,17 @@ import java.util.List;
 
 /**
  * Wrapper provides data from Model (such as StorableObject, ObjectResource) using key set.
- * 
+ *
  * Model has various fields, accessors for them and many other things,
  * which are represented through controller to viewers using the same interface
  * of interaction.
- * 
+ *
  * All entities of the same kind use a single Wrapper, that's why
  * wrapper's constructor must be private and its instance must be obtained
- * using a static method <code>getInstance()</code>. 
+ * using a static method <code>getInstance()</code>.
  *
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/02/22 07:23:43 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/18 10:49:17 $
  * @see <a href = "http://bass.science.syrus.ru/java/Bitter%20Java.pdf">&laquo;Bitter Java&raquo; by Bruce A. Tate</a>
  * @module util
  */
@@ -34,15 +34,15 @@ public interface Wrapper {
 	 *
 	 * @param index
 	 * @return key, if index in the range of keys array, <code>null</code>
-	 *         otherwise 
+	 *         otherwise
 	 */
 	String getKey(final int index);
 	
 	/**
 	 * Entity keys of controller must be unique and cannot be changed.
 	 * This implementation uses unmodified List.
-	 * 
-	 * 
+	 *
+	 *
 	 *
 	 * @return array of keys
 	 */
@@ -74,7 +74,7 @@ public interface Wrapper {
 	 * <tr><td><tt>red</tt></td><td>{@link java.awt.Color#RED}</td></tr>
 	 * <tr><td><tt>blue</tt></td><td>{@link java.awt.Color#BLUE}</td></tr>
 	 * </tbody></table>
-	 * 
+	 *
 	 * @param key entity key, see {@link #getKeys()}
 	 */
 	Object getPropertyValue(final String key);
@@ -89,7 +89,7 @@ public interface Wrapper {
 
 	/**
 	 * Model value witch linked to entity key.
-	 * 
+	 *
 	 * @param object
 	 * @param key entity key
 	 */

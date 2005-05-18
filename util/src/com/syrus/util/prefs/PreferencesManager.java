@@ -1,5 +1,5 @@
 /*
- * $Id: PreferencesManager.java,v 1.8 2005/03/17 10:12:49 bass Exp $
+ * $Id: PreferencesManager.java,v 1.9 2005/05/18 10:49:17 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,12 +16,12 @@ import javax.swing.tree.DefaultMutableTreeNode;
 /**
  * @todo PREFS LOCATION: local or db
  *
- * @version $Revision: 1.8 $, $Date: 2005/03/17 10:12:49 $
+ * @version $Revision: 1.9 $, $Date: 2005/05/18 10:49:17 $
  * @author $Author: bass $
  * @module util
  */
 public final class PreferencesManager {
-	public static final String PREFERENCES_ROOT = "amficom"; //$NON-NLS-1$
+	public static final String PREFERENCES_ROOT = "amficom";
 	
 	private PreferencesManager() {
 		assert false;
@@ -36,20 +36,20 @@ public final class PreferencesManager {
 	}
 
 	static {
-		migratePreferences(PREFERENCES_ROOT + "/util/connections/jndi", "Connection.properties");  //$NON-NLS-1$//$NON-NLS-2$
-		migratePreferences(PREFERENCES_ROOT + "/util/connections/jdbc", "ServerConnection.properties");  //$NON-NLS-1$//$NON-NLS-2$
+		migratePreferences(PREFERENCES_ROOT + "/util/connections/jndi", "Connection.properties");
+		migratePreferences(PREFERENCES_ROOT + "/util/connections/jdbc", "ServerConnection.properties");
 	}
 
 	private static void migratePreferences(String pathName, String fileName) {
 		/*
 		 * Look for ini file in the current directory.
 		 */
-		File file = new File(System.getProperty("user.dir"), fileName); //$NON-NLS-1$
+		File file = new File(System.getProperty("user.dir"), fileName);
 		if (! file.exists()) {
 			/*
 			 * If failed, look for ini file in user's home directory.
 			 */
-			file = new File(System.getProperty("user.home"), fileName); //$NON-NLS-1$
+			file = new File(System.getProperty("user.home"), fileName);
 			if (! file.exists())
 				file = null;
 		}
@@ -72,7 +72,7 @@ public final class PreferencesManager {
 			 * Ditto.
 			 */
 		} catch (final BackingStoreException bse) {
-			System.err.println("Preferences migration failed!"); //$NON-NLS-1$
+			System.err.println("Preferences migration failed!");
 		}
 	}
 

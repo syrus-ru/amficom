@@ -1,5 +1,5 @@
 /*
- * $Id: NameServiceIORPrinter.java,v 1.4 2005/03/04 08:05:49 bass Exp $
+ * $Id: NameServiceIORPrinter.java,v 1.5 2005/05/18 10:49:17 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import org.omg.CORBA.*;
  *
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/03/04 08:05:49 $
+ * @version $Revision: 1.5 $, $Date: 2005/05/18 10:49:17 $
  * @module util
  */
 final class NameServiceIORPrinter {
@@ -28,6 +28,6 @@ final class NameServiceIORPrinter {
 	public static void main(String args[]) throws UserException {
 		ORB orb = JavaSoftORBUtil.getInstance().getORB();
 		System.out.println(orb.object_to_string(
-			orb.resolve_initial_references("NameService"))); //$NON-NLS-1$
+			orb.resolve_initial_references("NameService")));
 	}
 }

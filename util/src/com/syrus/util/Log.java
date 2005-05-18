@@ -1,5 +1,5 @@
 /*
- * $Id: Log.java,v 1.6 2005/05/17 07:26:55 bob Exp $
+ * $Id: Log.java,v 1.7 2005/05/18 10:49:17 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -85,7 +85,7 @@ public class Log {
 	 * @return always true, can be used as <code>assert Log.debugMessage(...)</code>
 	 */
 	public static boolean debugMessage(String message, int debugLevel) {
-		try { 
+		try {
 			logger.debugMessage(message, debugLevel);
 		}
 		catch (NullPointerException npe) {
@@ -95,7 +95,7 @@ public class Log {
 	}
 
 	public static void debugException(Throwable throwable, int debugLevel) {
-		try { 
+		try {
 			logger.debugException(throwable, debugLevel);
 		}
 		catch (NullPointerException npe) {
@@ -105,7 +105,7 @@ public class Log {
 	}
 
 	public static void errorMessage(String mesg) {
-		try { 
+		try {
 			logger.errorMessage(mesg);
 		}
 		catch (NullPointerException npe) {
@@ -114,7 +114,7 @@ public class Log {
 	}
 
 	public static void errorException(Throwable throwable) {
-		try { 
+		try {
 			logger.errorException(throwable);
 		}
 		catch (NullPointerException npe) {

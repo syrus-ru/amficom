@@ -1,5 +1,5 @@
 /*
- * $Id: Server.java,v 1.3 2005/03/04 08:05:49 bass Exp $
+ * $Id: Server.java,v 1.4 2005/05/18 10:49:17 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ public class Server {
 	}
 
 	public static void init() {
-		init("server"); //$NON-NLS-1$
+		init("server");
 	}
 
 	public static void init(String appName) {
@@ -42,9 +42,9 @@ public class Server {
 				internetAddress = InetAddress.getLocalHost().getHostName();
 			}
 			catch (UnknownHostException e) {
-				internetAddress = "INETADDR_UNKNOWN"; //$NON-NLS-1$
+				internetAddress = "INETADDR_UNKNOWN";
 			}
 		Log.initialize(new ServerLogger(applicationName, internetAddress));
-		Log.debugMessage(applicationName + " -- started", Log.DEBUGLEVEL01); //$NON-NLS-1$
+		Log.debugMessage(applicationName + " -- started", Log.DEBUGLEVEL01);
 	}
 }

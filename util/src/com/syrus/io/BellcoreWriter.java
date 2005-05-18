@@ -1,5 +1,5 @@
 /*
- * $Id: BellcoreWriter.java,v 1.7 2005/03/17 10:12:49 bass Exp $
+ * $Id: BellcoreWriter.java,v 1.8 2005/05/18 10:49:17 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import java.io.*;
 import java.nio.*;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/03/17 10:12:49 $
+ * @version $Revision: 1.8 $, $Date: 2005/05/18 10:49:17 $
  * @author $Author: bass $
  * @module util
  */
@@ -64,7 +64,7 @@ public class BellcoreWriter {
 											this.writeSpecial(j++, i++);
 										}
 										else
-											System.out.println("Unknown block!"); //$NON-NLS-1$
+											System.out.println("Unknown block!");
 		}
 
 		this.data = new byte[this.baos.size()];
@@ -85,7 +85,7 @@ public class BellcoreWriter {
 			}
 		}
 		catch (IOException e) {
-			System.out.println("IO Error writing Map"); //$NON-NLS-1$
+			System.out.println("IO Error writing Map");
 			return 0;
 		}
 		return 1;
@@ -110,7 +110,7 @@ public class BellcoreWriter {
 			this.idos.writeIString(this.bs.genParams.cmt);
 		}
 		catch (IOException e) {
-			System.out.println("IO Error writing GenParams"); //$NON-NLS-1$
+			System.out.println("IO Error writing GenParams");
 			return 0;
 		}
 		return 1;
@@ -129,7 +129,7 @@ public class BellcoreWriter {
 			this.idos.writeIString(this.bs.supParams.ot);
 		}
 		catch (IOException e) {
-			System.out.println("IO Error writing SupParams"); //$NON-NLS-1$
+			System.out.println("IO Error writing SupParams");
 			return 0;
 		}
 		return 1;
@@ -164,7 +164,7 @@ public class BellcoreWriter {
 			this.idos.writeIUnsignedShort(this.bs.fxdParams.et);
 		}
 		catch (IOException e) {
-			System.out.println("IO Error writing FxdParams"); //$NON-NLS-1$
+			System.out.println("IO Error writing FxdParams");
 			return 0;
 		}
 		return 1;
@@ -196,7 +196,7 @@ public class BellcoreWriter {
 			this.idos.writeIInt(this.bs.keyEvents.rlmp[1]);
 		}
 		catch (IOException e) {
-			System.out.println("IO Error writing KeyEvents"); //$NON-NLS-1$
+			System.out.println("IO Error writing KeyEvents");
 			return 0;
 		}
 		return 1;
@@ -225,7 +225,7 @@ public class BellcoreWriter {
 			}
 		}
 		catch (IOException e) {
-			System.out.println("IO Error writing LnkParams"); //$NON-NLS-1$
+			System.out.println("IO Error writing LnkParams");
 			return 0;
 		}
 		return 1;
@@ -245,7 +245,7 @@ public class BellcoreWriter {
 			}
 		}
 		catch (IOException e) {
-			System.out.println("IO Error writing DataPts"); //$NON-NLS-1$
+			System.out.println("IO Error writing DataPts");
 			return 0;
 		}
 		return 1;
@@ -259,7 +259,7 @@ public class BellcoreWriter {
 				this.idos.writeByte(this.bs.special[j].specData[i]);
 		}
 		catch (IOException e) {
-			System.out.println("IO Error writing Special Data"); //$NON-NLS-1$
+			System.out.println("IO Error writing Special Data");
 			return 0;
 		}
 		return 1;

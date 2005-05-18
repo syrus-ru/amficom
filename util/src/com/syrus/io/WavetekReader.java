@@ -1,5 +1,5 @@
 /*
- * $Id: WavetekReader.java,v 1.7 2005/03/16 16:29:26 arseniy Exp $
+ * $Id: WavetekReader.java,v 1.8 2005/05/18 10:49:17 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,8 +12,8 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/03/16 16:29:26 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/05/18 10:49:17 $
+ * @author $Author: bass $
  * @module util
  */
 public class WavetekReader extends DataReader {
@@ -109,7 +109,7 @@ public class WavetekReader extends DataReader {
 
 		this.bs.addField(4);
 		this.bs.fxdParams.dts = datetime;
-		this.bs.fxdParams.ud = "mt"; //$NON-NLS-1$
+		this.bs.fxdParams.ud = "mt";
 		this.bs.fxdParams.aw = (short)(actualwavelength);
 		this.bs.fxdParams.tpw = 1;
 		this.bs.fxdParams.pwu = new short[1];
@@ -133,12 +133,12 @@ public class WavetekReader extends DataReader {
 		this.bs.map.bRev = new int[6];
 		this.bs.map.bSize = new int[6];
 
-		this.bs.map.bId[0] = "Map"; //$NON-NLS-1$
-		this.bs.map.bId[1] = "GenParams"; //$NON-NLS-1$
-		this.bs.map.bId[2] = "SupParams"; //$NON-NLS-1$
-		this.bs.map.bId[3] = "FxdParams"; //$NON-NLS-1$
-		this.bs.map.bId[4] = "DataPts"; //$NON-NLS-1$
-		this.bs.map.bId[5] = "Cksum"; //$NON-NLS-1$
+		this.bs.map.bId[0] = "Map";
+		this.bs.map.bId[1] = "GenParams";
+		this.bs.map.bId[2] = "SupParams";
+		this.bs.map.bId[3] = "FxdParams";
+		this.bs.map.bId[4] = "DataPts";
+		this.bs.map.bId[5] = "Cksum";
 
 		for (int i1 = 1; i1 < 6; i1++)
 			this.bs.map.bRev[i1] = 100;

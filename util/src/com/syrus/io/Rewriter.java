@@ -1,5 +1,5 @@
 /*
- * $Id: Rewriter.java,v 1.3 2005/03/04 08:05:49 bass Exp $
+ * $Id: Rewriter.java,v 1.4 2005/05/18 10:49:17 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,7 @@
 
 package com.syrus.io;
 
-public class Rewriter 
+public class Rewriter
 {
 //	public static final const long serialVersionUID = 01L;
 

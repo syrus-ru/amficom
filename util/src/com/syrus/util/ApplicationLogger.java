@@ -1,5 +1,5 @@
 /*
- * $Id: ApplicationLogger.java,v 1.5 2005/03/04 08:05:49 bass Exp $
+ * $Id: ApplicationLogger.java,v 1.6 2005/05/18 10:49:17 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,8 +9,8 @@
 package com.syrus.util;
 
 public class ApplicationLogger extends StolenLogger {
-	private static final String DEFAULT_HOME = System.getProperty("user.home"); //$NON-NLS-1$
-	private static final String DEFAULT_LOG_PATH = DEFAULT_HOME + "/logs"; //$NON-NLS-1$
+	private static final String DEFAULT_HOME = System.getProperty("user.home");
+	private static final String DEFAULT_LOG_PATH = DEFAULT_HOME + "/logs";
 
 
 	public ApplicationLogger(String appName, String hostName) {

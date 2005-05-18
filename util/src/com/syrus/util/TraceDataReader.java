@@ -1,5 +1,5 @@
 /*
- * $Id: TraceDataReader.java,v 1.3 2005/03/04 08:05:49 bass Exp $
+ * $Id: TraceDataReader.java,v 1.4 2005/05/18 10:49:17 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.util;
 
 public class TraceDataReader {
 	static {
-		System.loadLibrary("TraceData"); //$NON-NLS-1$
+		System.loadLibrary("TraceData");
 	}
 
 	public native byte[] getBellcoreData(String fileName);

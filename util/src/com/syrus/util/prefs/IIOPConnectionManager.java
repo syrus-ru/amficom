@@ -1,5 +1,5 @@
 /*
- * $Id: IIOPConnectionManager.java,v 1.3 2005/03/04 08:05:49 bass Exp $
+ * $Id: IIOPConnectionManager.java,v 1.4 2005/05/18 10:49:17 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,12 +12,12 @@ import java.net.*;
 import java.util.prefs.Preferences;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/03/04 08:05:49 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/18 10:49:17 $
  * @author $Author: bass $
  * @module util
  */
 public final class IIOPConnectionManager {
-	private static final String EMPTY_ORB_INITIAL_HOST = ""; //$NON-NLS-1$
+	private static final String EMPTY_ORB_INITIAL_HOST = "";
 
 	private static final String DEFAULT_ORB_INITIAL_HOST;
 
@@ -25,15 +25,15 @@ public final class IIOPConnectionManager {
 
 	private static final int DEFAULT_ORB_INITIAL_PORT = 1050;
 
-	private static final String EMPTY_CLIENT_ID = ""; //$NON-NLS-1$
+	private static final String EMPTY_CLIENT_ID = "";
 
 	private static final String DEFAULT_CLIENT_ID;
 
-	private static final String ORB_INITIAL_HOST_KEY_NAME = "org.omg.CORBA.ORBInitialHost"; //$NON-NLS-1$
+	private static final String ORB_INITIAL_HOST_KEY_NAME = "org.omg.CORBA.ORBInitialHost";
 
-	private static final String ORB_INITIAL_PORT_KEY_NAME = "org.omg.CORBA.ORBInitialPort"; //$NON-NLS-1$
+	private static final String ORB_INITIAL_PORT_KEY_NAME = "org.omg.CORBA.ORBInitialPort";
 
-	private static final String CLIENT_ID_KEY_NAME = "clientId"; //$NON-NLS-1$
+	private static final String CLIENT_ID_KEY_NAME = "clientId";
 
 	private static Preferences preferences;
 
@@ -49,8 +49,8 @@ public final class IIOPConnectionManager {
 			defaultORBInitialHost = canonicalLocalHostName;
 			defaultClientId = canonicalLocalHostName;
 		} catch (UnknownHostException uhe) {
-			defaultORBInitialHost = "localhost"; //$NON-NLS-1$
-			defaultClientId = "localhost"; //$NON-NLS-1$
+			defaultORBInitialHost = "localhost";
+			defaultClientId = "localhost";
 		}
 		DEFAULT_ORB_INITIAL_HOST = defaultORBInitialHost;
 		DEFAULT_CLIENT_ID = defaultClientId;
@@ -58,8 +58,8 @@ public final class IIOPConnectionManager {
 
 	static {
 		preferences = Preferences.userRoot().
-			node(PreferencesManager.PREFERENCES_ROOT).node("util"). //$NON-NLS-1$
-			node("connections").node("iiop"); //$NON-NLS-1$ //$NON-NLS-2$
+			node(PreferencesManager.PREFERENCES_ROOT).node("util").
+			node("connections").node("iiop");
 		if (preferences.get(ORB_INITIAL_HOST_KEY_NAME, EMPTY_ORB_INITIAL_HOST).equals(EMPTY_ORB_INITIAL_HOST))
 			preferences.put(ORB_INITIAL_HOST_KEY_NAME, DEFAULT_ORB_INITIAL_HOST);
 		if (preferences.getInt(ORB_INITIAL_PORT_KEY_NAME, EMPTY_ORB_INITIAL_PORT) == EMPTY_ORB_INITIAL_PORT)

@@ -1,5 +1,5 @@
 /*
- * $Id: ByteArrayConverter.java,v 1.4 2005/03/04 08:05:49 bass Exp $
+ * $Id: ByteArrayConverter.java,v 1.5 2005/05/18 10:49:17 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@
 package com.syrus.io;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/03/04 08:05:49 $
+ * @version $Revision: 1.5 $, $Date: 2005/05/18 10:49:17 $
  * @author $Author: bass $
  * @module util
  */
@@ -61,7 +61,7 @@ public class ByteArrayConverter
   public final String readIString(int i)
   {
     byte nul = 0x00;
-    String s = ""; //$NON-NLS-1$
+    String s = "";
 
     while (true)
     {

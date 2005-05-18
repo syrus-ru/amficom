@@ -1,5 +1,5 @@
 /*-
-* $Id: WrapperComparator.java,v 1.1 2005/03/31 15:26:29 bob Exp $
+* $Id: WrapperComparator.java,v 1.2 2005/05/18 10:49:17 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -13,8 +13,8 @@ import java.util.Comparator;
 
 /**
  * Wrapper comparator
- * @version $Revision: 1.1 $, $Date: 2005/03/31 15:26:29 $
- * @author $Author: bob $
+ * @version $Revision: 1.2 $, $Date: 2005/05/18 10:49:17 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module util
  */
@@ -26,7 +26,7 @@ public final class WrapperComparator implements Comparator {
 	private boolean ascend;
 	
 	/**
-	 * @param wrapper object wrapper  
+	 * @param wrapper object wrapper
 	 * @param key key for wrapper
 	 * @param ascend ascend compare
 	 */

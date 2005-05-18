@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseDate.java,v 1.12 2005/03/21 13:10:31 arseniy Exp $
+ * $Id: DatabaseDate.java,v 1.13 2005/05/18 10:49:17 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.util.Log;
 
 public class DatabaseDate {
 
-	public static final SimpleDateFormat SDF = new SimpleDateFormat("yyyyMMdd HHmmss"); //$NON-NLS-1$
+	public static final SimpleDateFormat SDF = new SimpleDateFormat("yyyyMMdd HHmmss");
 
 	private DatabaseDate() {
 		assert false;
@@ -32,19 +32,19 @@ public class DatabaseDate {
 				date = SDF.parse(dateStr);
 		}
 		catch (ParseException pe) {
-			Log.errorMessage("DatabaseDate.fromQuerySubString | parse exception '" + pe.getMessage() + '\''); //$NON-NLS-1$
+			Log.errorMessage("DatabaseDate.fromQuerySubString | parse exception '" + pe.getMessage() + '\'');
 		}
 		return date;
 	}
 
 	public static String toQuerySubString(String column) {
-		String subString = "TO_CHAR(" + column + ", 'YYYYMMDD HH24MISS') " + column; //$NON-NLS-1$ //$NON-NLS-2$
+		String subString = "TO_CHAR(" + column + ", 'YYYYMMDD HH24MISS') " + column;
 		return subString;
 	}
 
 	public static String toUpdateSubString(Date date) {
 		if(date != null) {
-			String subString = "TO_DATE('" + SDF.format(date) + "', 'YYYYMMDD HH24MISS')"; //$NON-NLS-1$ //$NON-NLS-2$
+			String subString = "TO_DATE('" + SDF.format(date) + "', 'YYYYMMDD HH24MISS')";
 			return subString;
 		}
 		return null;

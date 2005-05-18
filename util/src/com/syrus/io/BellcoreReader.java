@@ -1,5 +1,5 @@
 /*
- * $Id: BellcoreReader.java,v 1.7 2005/03/16 16:29:25 arseniy Exp $
+ * $Id: BellcoreReader.java,v 1.8 2005/05/18 10:49:17 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,8 +12,8 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/03/16 16:29:25 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/05/18 10:49:17 $
+ * @author $Author: bass $
  * @module util
  */
 public class BellcoreReader extends DataReader {
@@ -21,7 +21,7 @@ public class BellcoreReader extends DataReader {
 	ByteArrayInputStream bais;
 	IntelDataInputStream idis;
 
-	private static final String IO_ERROR_MESSAGE = "I/O Error"; //$NON-NLS-1$
+	private static final String IO_ERROR_MESSAGE = "I/O Error";
 
 	public BellcoreStructure getData(byte[] raw_data) {
 		if (raw_data.length < 50)
@@ -340,7 +340,7 @@ public class BellcoreReader extends DataReader {
 		{
 			this.idis = new IntelDataInputStream(new ByteArrayInputStream(this.bs.special[this.bs.specials-1].specData));
 
-			this.bs.fxdParams.ud = "mt"; //$NON-NLS-1$
+			this.bs.fxdParams.ud = "mt";
 			this.bs.fxdParams.tpw = 1;
 			this.bs.fxdParams.pwu = new short[1];
 			this.bs.fxdParams.ds = new int [1];

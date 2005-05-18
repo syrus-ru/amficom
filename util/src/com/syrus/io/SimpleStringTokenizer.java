@@ -1,5 +1,5 @@
 /*
- * $Id: SimpleStringTokenizer.java,v 1.2 2005/03/04 08:05:49 bass Exp $
+ * $Id: SimpleStringTokenizer.java,v 1.3 2005/05/18 10:49:17 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,11 +30,11 @@ public class SimpleStringTokenizer extends StringTokenizer
 
 	public String finalToken()
 	{
-		String s = ""; //$NON-NLS-1$
+		String s = "";
 		if(hasMoreTokens())
 			s = s + nextToken();
 		while(hasMoreTokens())
-			s = s + " " + nextToken(); //$NON-NLS-1$
+			s = s + " " + nextToken();
 		return s;
 	}
 }

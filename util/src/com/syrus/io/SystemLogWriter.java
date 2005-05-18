@@ -1,5 +1,5 @@
 /*
- * $Id: SystemLogWriter.java,v 1.5 2005/03/17 10:12:49 bass Exp $
+ * $Id: SystemLogWriter.java,v 1.6 2005/05/18 10:49:17 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,31 +16,31 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class SystemLogWriter {
-	static SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy HH:mm:ss"); //$NON-NLS-1$
+	static SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy HH:mm:ss");
 	static FileOutputStream fos;
 	static PrintStream pstr;
 	static PrintWriter pwr;
 
 	static {
 		try {
-			fos = new FileOutputStream(".\\client.log", true); //$NON-NLS-1$
+			fos = new FileOutputStream(".\\client.log", true);
 //			pwr = new PrintWriter(fos);
 			pstr = new PrintStream(fos);
 			System.setOut(pstr);
 		}
 		catch (Exception e) {
-			System.err.println("COULD NOT CREATE CLIENT LOG FILE: " + e.getMessage()); //$NON-NLS-1$
+			System.err.println("COULD NOT CREATE CLIENT LOG FILE: " + e.getMessage());
 			e.printStackTrace();
 		}
 		try {
-			System.out.println(""); //$NON-NLS-1$
-			System.out.println("-------------------------------------------------------"); //$NON-NLS-1$
-			System.out.println("started " + sdf.format(new Date(System.currentTimeMillis()))); //$NON-NLS-1$
-			System.out.println("-------------------------------------------------------"); //$NON-NLS-1$
-			System.out.println(""); //$NON-NLS-1$
+			System.out.println("");
+			System.out.println("-------------------------------------------------------");
+			System.out.println("started " + sdf.format(new Date(System.currentTimeMillis())));
+			System.out.println("-------------------------------------------------------");
+			System.out.println("");
 		}
 		catch (Exception e) {
-			System.err.println("COULD NOT WRITE CLIENT LOG FILE: " + e.getMessage()); //$NON-NLS-1$
+			System.err.println("COULD NOT WRITE CLIENT LOG FILE: " + e.getMessage());
 			e.printStackTrace();
 		}
 	}
@@ -60,22 +60,22 @@ public class SystemLogWriter {
 
 	public static void closeLog() {
 		try {
-			System.out.println(""); //$NON-NLS-1$
-			System.out.println("-------------------------------------------------------"); //$NON-NLS-1$
-			System.out.println("closed " + sdf.format(new Date(System.currentTimeMillis()))); //$NON-NLS-1$
-			System.out.println("-------------------------------------------------------"); //$NON-NLS-1$
-			System.out.println(""); //$NON-NLS-1$
+			System.out.println("");
+			System.out.println("-------------------------------------------------------");
+			System.out.println("closed " + sdf.format(new Date(System.currentTimeMillis())));
+			System.out.println("-------------------------------------------------------");
+			System.out.println("");
 			System.out.close();
 			try {
 				fos.close();
 			}
 			catch (IOException ioe) {
-				System.err.println("Exception: " + ioe.getMessage()); //$NON-NLS-1$
+				System.err.println("Exception: " + ioe.getMessage());
 				ioe.printStackTrace();
 			}
 		}
 		catch (Exception e) {
-			System.err.println("Exception: " + e.getMessage()); //$NON-NLS-1$
+			System.err.println("Exception: " + e.getMessage());
 			e.printStackTrace();
 		}
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: TraceReader.java,v 1.8 2005/03/17 10:12:49 bass Exp $
+ * $Id: TraceReader.java,v 1.9 2005/05/18 10:49:17 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import java.text.SimpleDateFormat;
 import com.syrus.util.TraceDataReader;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/03/17 10:12:49 $
+ * @version $Revision: 1.9 $, $Date: 2005/05/18 10:49:17 $
  * @author $Author: bass $
  * @module util
  */
@@ -31,32 +31,32 @@ public class TraceReader extends DataReader {
 
 	static {
 		try {
-			System.loadLibrary("Treader"); //$NON-NLS-1$
+			System.loadLibrary("Treader");
 			treaderLoaded = true;
 		}
 		catch (UnsatisfiedLinkError ule) {
-			System.err.println("Cannot load library for TraceReader -- " + ule.getMessage()); //$NON-NLS-1$
+			System.err.println("Cannot load library for TraceReader -- " + ule.getMessage());
 			ule.printStackTrace();
 		}
 
 	}
 
 	public BellcoreStructure getData(byte[] b) {
-		throw new UnsupportedOperationException("Method not implemented"); //$NON-NLS-1$
+		throw new UnsupportedOperationException("Method not implemented");
 		//return null;
 	}
 
 	public BellcoreStructure getData(File f) {
 		BellcoreStructure bs = null;
 		// then Bellcore
-		if (f.getName().toLowerCase().endsWith(".sor")) { //$NON-NLS-1$
+		if (f.getName().toLowerCase().endsWith(".sor")) {
 			filetype = BELLCORE;
 			BellcoreReader br = new BellcoreReader();
 			bs = br.getData(f);
 		}
 		else
 			// then Wavetek
-			if (f.getName().toLowerCase().endsWith(".tfw")) { //$NON-NLS-1$
+			if (f.getName().toLowerCase().endsWith(".tfw")) {
 				filetype = WAVETEK;
 				WavetekReader wr = new WavetekReader();
 				bs = wr.getData(f);
@@ -72,7 +72,7 @@ public class TraceReader extends DataReader {
 						bs = fillBellcore(bs);
 					}
 					else {
-						System.out.println("Error reading " + f.getAbsolutePath() + " Unknown format"); //$NON-NLS-1$ //$NON-NLS-2$
+						System.out.println("Error reading " + f.getAbsolutePath() + " Unknown format");
 					}
 		return bs;
 	}
@@ -101,11 +101,11 @@ public class TraceReader extends DataReader {
 		bs.addField(3);
 		bs.supParams.omid = id;
 
-		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy hh:mm:ss"); //$NON-NLS-1$
+		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy hh:mm:ss");
 		long dt = 0;
 		try
 		{
-			dt = sdf.parse(date + " " + time).getTime() / 1000; //$NON-NLS-1$
+			dt = sdf.parse(date + " " + time).getTime() / 1000;
 		}
 		catch (java.text.ParseException ex)
 		{
@@ -114,7 +114,7 @@ public class TraceReader extends DataReader {
 
 		bs.addField(4);
 		bs.fxdParams.dts = dt;
-		bs.fxdParams.ud = "mt"; //$NON-NLS-1$
+		bs.fxdParams.ud = "mt";
 		bs.fxdParams.aw = (short) (actualwavelength);
 		bs.fxdParams.tpw = 1;
 		bs.fxdParams.pwu = new short[1];
@@ -153,12 +153,12 @@ public class TraceReader extends DataReader {
 		bs.map.bRev = new int[6];
 		bs.map.bSize = new int[6];
 
-		bs.map.bId[0] = "Map"; //$NON-NLS-1$
-		bs.map.bId[1] = "GenParams"; //$NON-NLS-1$
-		bs.map.bId[2] = "SupParams"; //$NON-NLS-1$
-		bs.map.bId[3] = "FxdParams"; //$NON-NLS-1$
-		bs.map.bId[4] = "DataPts"; //$NON-NLS-1$
-		bs.map.bId[5] = "Cksum"; //$NON-NLS-1$
+		bs.map.bId[0] = "Map";
+		bs.map.bId[1] = "GenParams";
+		bs.map.bId[2] = "SupParams";
+		bs.map.bId[3] = "FxdParams";
+		bs.map.bId[4] = "DataPts";
+		bs.map.bId[5] = "Cksum";
 		for (int i = 1; i < 6; i++)
 			bs.map.bRev[i] = 100;
 		bs.map.bSize[1] = bs.genParams.getSize();

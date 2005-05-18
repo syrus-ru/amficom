@@ -1,5 +1,5 @@
 /*
- * $Id: JPreferencesManagerFrame.java,v 1.7 2005/03/04 08:05:49 bass Exp $
+ * $Id: JPreferencesManagerFrame.java,v 1.8 2005/05/18 10:49:17 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import javax.swing.event.*;
 import javax.swing.tree.*;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/03/04 08:05:49 $
+ * @version $Revision: 1.8 $, $Date: 2005/05/18 10:49:17 $
  * @author $Author: bass $
  * @module util
  */
@@ -53,7 +53,7 @@ public class JPreferencesManagerFrame extends JFrame {
 		getContentPane().setLayout(new java.awt.GridBagLayout());
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setTitle("Preferences Manager"); //$NON-NLS-1$
+		setTitle("Preferences Manager");
 		setResizable(false);
 		addWindowListener(new java.awt.event.WindowAdapter() {
 			public void windowClosing(java.awt.event.WindowEvent e) {
@@ -70,11 +70,11 @@ public class JPreferencesManagerFrame extends JFrame {
 				if ((e.isAddedPath()) && (key instanceof String)) {
 					JPreferencesManagerFrame.this.jButton3.setEnabled(true);
 					JPreferencesManagerFrame.this.jTextField1.setEnabled(true);
-					JPreferencesManagerFrame.this.jTextField1.setText(((PreferencesManager.PreferencesHolder) (((DefaultMutableTreeNode) (defaultMutableTreeNode.getParent())).getUserObject())).getPreferences().get((String) key, "")); //$NON-NLS-1$
+					JPreferencesManagerFrame.this.jTextField1.setText(((PreferencesManager.PreferencesHolder) (((DefaultMutableTreeNode) (defaultMutableTreeNode.getParent())).getUserObject())).getPreferences().get((String) key, ""));
 				} else {
 					JPreferencesManagerFrame.this.jButton3.setEnabled(false);
 					JPreferencesManagerFrame.this.jTextField1.setEnabled(false);
-					JPreferencesManagerFrame.this.jTextField1.setText(""); //$NON-NLS-1$
+					JPreferencesManagerFrame.this.jTextField1.setText("");
 				}
 			}
 		});
@@ -113,7 +113,7 @@ public class JPreferencesManagerFrame extends JFrame {
 		this.jPanel2.setLayout(new java.awt.GridLayout(1, 0, 5, 0));
 		
 		this.jButton1.setMnemonic('N');
-		this.jButton1.setText("New..."); //$NON-NLS-1$
+		this.jButton1.setText("New...");
 		this.jButton1.setDefaultCapable(false);
 		this.jButton1.setEnabled(false);
 		this.jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -125,7 +125,7 @@ public class JPreferencesManagerFrame extends JFrame {
 		this.jPanel2.add(this.jButton1);
 		
 		this.jButton2.setMnemonic('L');
-		this.jButton2.setText("Delete"); //$NON-NLS-1$
+		this.jButton2.setText("Delete");
 		this.jButton2.setDefaultCapable(false);
 		this.jButton2.setEnabled(false);
 		this.jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -145,7 +145,7 @@ public class JPreferencesManagerFrame extends JFrame {
 		this.jPanel3.setLayout(new java.awt.GridLayout(1, 0, 5, 0));
 		
 		this.jButton3.setMnemonic('A');
-		this.jButton3.setText("Apply"); //$NON-NLS-1$
+		this.jButton3.setText("Apply");
 		this.jButton3.setEnabled(false);
 		this.jButton3.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -156,7 +156,7 @@ public class JPreferencesManagerFrame extends JFrame {
 		this.jPanel3.add(this.jButton3);
 		
 		this.jButton4.setMnemonic('D');
-		this.jButton4.setText("Dismiss"); //$NON-NLS-1$
+		this.jButton4.setText("Dismiss");
 		this.jButton4.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				jButton4ActionPerformed();
@@ -166,7 +166,7 @@ public class JPreferencesManagerFrame extends JFrame {
 		this.jPanel3.add(this.jButton4);
 		
 		this.jButton5.setMnemonic('H');
-		this.jButton5.setText("Help"); //$NON-NLS-1$
+		this.jButton5.setText("Help");
 		this.jButton5.setEnabled(false);
 		this.jButton5.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {

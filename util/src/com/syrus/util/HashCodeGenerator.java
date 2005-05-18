@@ -1,5 +1,5 @@
 /*
- * $Id: HashCodeGenerator.java,v 1.7 2005/03/04 08:05:49 bass Exp $
+ * $Id: HashCodeGenerator.java,v 1.8 2005/05/18 10:49:17 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,8 +13,8 @@ import java.util.Date;
 /**
  * HashCodeGenerator methods have got from Effective Java: Programming Language
  * Guide by Joshua Bloch
- * 
- * @version $Revision: 1.7 $, $Date: 2005/03/04 08:05:49 $
+ *
+ * @version $Revision: 1.8 $, $Date: 2005/05/18 10:49:17 $
  * @author $Author: bass $
  * @module util
  */
@@ -218,6 +218,6 @@ public class HashCodeGenerator {
 	}
 
 	public String toString() {
-		return "HashCodeGenerator result:" + this.result; //$NON-NLS-1$
+		return "HashCodeGenerator result:" + this.result;
 	}
 }

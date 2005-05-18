@@ -1,5 +1,5 @@
 /*
- * $Id: IntelDataInputStream.java,v 1.6 2005/03/04 08:05:49 bass Exp $
+ * $Id: IntelDataInputStream.java,v 1.7 2005/05/18 10:49:17 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,7 @@ package com.syrus.io;
 import java.io.*;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/03/04 08:05:49 $
+ * @version $Revision: 1.7 $, $Date: 2005/05/18 10:49:17 $
  * @author $Author: bass $
  * @module util
  */
@@ -73,7 +73,7 @@ public class IntelDataInputStream extends DataInputStream
 	public final String readIString() throws IOException
 	{
 		byte b[] = new byte[1];
-		String s = ""; //$NON-NLS-1$
+		String s = "";
 
 		while (true)
 		{
@@ -90,7 +90,7 @@ public class IntelDataInputStream extends DataInputStream
 		int res;
 		int nRead = 0;
 		byte b[] = new byte[1];
-		String s = ""; //$NON-NLS-1$
+		String s = "";
 
 		while (true)
 		{

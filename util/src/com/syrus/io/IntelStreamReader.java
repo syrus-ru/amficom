@@ -1,5 +1,5 @@
 /*
- * $Id: IntelStreamReader.java,v 1.3 2005/03/04 08:05:49 bass Exp $
+ * $Id: IntelStreamReader.java,v 1.4 2005/05/18 10:49:17 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ public String readASCIIString() throws IOException
 		int nRead = 0;
 		char ch[] = new char[1];
 
-		String s = ""; //$NON-NLS-1$
+		String s = "";
 
 		while (true)
 		{

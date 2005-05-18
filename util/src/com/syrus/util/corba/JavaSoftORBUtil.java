@@ -1,5 +1,5 @@
 /*
- * $Id: JavaSoftORBUtil.java,v 1.5 2005/03/04 08:05:49 bass Exp $
+ * $Id: JavaSoftORBUtil.java,v 1.6 2005/05/18 10:49:17 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.util.Properties;
 import org.omg.CORBA.ORB;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/03/04 08:05:49 $
+ * @version $Revision: 1.6 $, $Date: 2005/05/18 10:49:17 $
  * @author $Author: bass $
  * @module util
  */
@@ -25,24 +25,24 @@ public final class JavaSoftORBUtil extends ORBUtil {
 	private static final String ORB_SINGLETON_CLASS;
 
 	static {
-		String javaSpecificationVersion = System.getProperty("java.specification.version"); //$NON-NLS-1$
+		String javaSpecificationVersion = System.getProperty("java.specification.version");
 		if ((javaSpecificationVersion != null)
 				&& (javaSpecificationVersion.length() == 3)
 				&& (javaSpecificationVersion.charAt(0) == '1')
 				&& (javaSpecificationVersion.charAt(1) == '.')) {
 			char minor = javaSpecificationVersion.charAt(2);
 			if (minor == '4') {
-				ORB_CLASS = "com.sun.corba.se.internal.Interceptors.PIORB"; //$NON-NLS-1$
+				ORB_CLASS = "com.sun.corba.se.internal.Interceptors.PIORB";
 				ORB_SINGLETON_CLASS
-					= "com.sun.corba.se.internal.corba.ORBSingleton"; //$NON-NLS-1$
+					= "com.sun.corba.se.internal.corba.ORBSingleton";
 			} else if (minor == '5') {
-				ORB_CLASS = "com.sun.corba.se.impl.orb.ORBImpl"; //$NON-NLS-1$
-				ORB_SINGLETON_CLASS = "com.sun.corba.se.impl.orb.ORBSingleton"; //$NON-NLS-1$
+				ORB_CLASS = "com.sun.corba.se.impl.orb.ORBImpl";
+				ORB_SINGLETON_CLASS = "com.sun.corba.se.impl.orb.ORBSingleton";
 			} else
 				throw new UnsupportedOperationException(
-					"Only java specifications v1.4 and 1.5 are supported."); //$NON-NLS-1$
+					"Only java specifications v1.4 and 1.5 are supported.");
 		} else
-			throw new UnsupportedOperationException("Java specification major version is not 1."); //$NON-NLS-1$
+			throw new UnsupportedOperationException("Java specification major version is not 1.");
 
 		try {
 			Class.forName(IIOPConnectionManager.class.getName());
@@ -63,10 +63,10 @@ public final class JavaSoftORBUtil extends ORBUtil {
 		if (this.orb != null)
 			return;
 		Properties properties = new Properties();
-		properties.put("org.omg.CORBA.ORBClass", ORB_CLASS); //$NON-NLS-1$
-		properties.put("org.omg.CORBA.ORBSingletonClass", ORB_SINGLETON_CLASS); //$NON-NLS-1$
-		properties.put("org.omg.CORBA.ORBInitialHost", IIOPConnectionManager.getORBInitialHost()); //$NON-NLS-1$
-		properties.put("org.omg.CORBA.ORBInitialPort", String.valueOf(IIOPConnectionManager.getORBInitialPort())); //$NON-NLS-1$
+		properties.put("org.omg.CORBA.ORBClass", ORB_CLASS);
+		properties.put("org.omg.CORBA.ORBSingletonClass", ORB_SINGLETON_CLASS);
+		properties.put("org.omg.CORBA.ORBInitialHost", IIOPConnectionManager.getORBInitialHost());
+		properties.put("org.omg.CORBA.ORBInitialPort", String.valueOf(IIOPConnectionManager.getORBInitialPort()));
 		this.orb = ORB.init(new String[0], properties);
 		Thread thread = new Thread() {
 			public void run() {
@@ -86,10 +86,10 @@ public final class JavaSoftORBUtil extends ORBUtil {
 	synchronized void initORBSingleton() {
 		if (this.orbSingleton != null)
 			return;
-		System.setProperty("org.omg.CORBA.ORBClass", ORB_CLASS); //$NON-NLS-1$
-		System.setProperty("org.omg.CORBA.ORBSingletonClass", ORB_SINGLETON_CLASS); //$NON-NLS-1$
-		System.setProperty("org.omg.CORBA.ORBInitialHost", IIOPConnectionManager.getORBInitialHost()); //$NON-NLS-1$
-		System.setProperty("org.omg.CORBA.ORBInitialPort", String.valueOf(IIOPConnectionManager.getORBInitialPort())); //$NON-NLS-1$
+		System.setProperty("org.omg.CORBA.ORBClass", ORB_CLASS);
+		System.setProperty("org.omg.CORBA.ORBSingletonClass", ORB_SINGLETON_CLASS);
+		System.setProperty("org.omg.CORBA.ORBInitialHost", IIOPConnectionManager.getORBInitialHost());
+		System.setProperty("org.omg.CORBA.ORBInitialPort", String.valueOf(IIOPConnectionManager.getORBInitialPort()));
 		this.orbSingleton = ORB.init();
 	}
 }

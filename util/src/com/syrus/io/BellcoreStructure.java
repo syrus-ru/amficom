@@ -1,5 +1,5 @@
 /*
- * $Id: BellcoreStructure.java,v 1.13 2005/04/25 15:10:00 saa Exp $
+ * $Id: BellcoreStructure.java,v 1.14 2005/05/18 10:49:17 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,20 +11,20 @@ package com.syrus.io;
 import java.util.Date;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/04/25 15:10:00 $
- * @author $Author: saa $
+ * @version $Revision: 1.14 $, $Date: 2005/05/18 10:49:17 $
+ * @author $Author: bass $
  * @module util
  */
 public class BellcoreStructure {
-	protected static final String FIELD_NAME_MAP = "Map"; //$NON-NLS-1$
-	protected static final String FIELD_NAME_GENPARAMS = "GenParams"; //$NON-NLS-1$
-	protected static final String FIELD_NAME_SUPPARAMS = "SupParams"; //$NON-NLS-1$
-	protected static final String FIELD_NAME_FXDPARAMS = "FxdParams"; //$NON-NLS-1$
-	protected static final String FIELD_NAME_KEYEVENTS = "KeyEvents"; //$NON-NLS-1$
-	protected static final String FIELD_NAME_LNKPARAMS = "LnkParams"; //$NON-NLS-1$
-	protected static final String FIELD_NAME_DATAPTS = "DataPts"; //$NON-NLS-1$
-	protected static final String FIELD_NAME_CKSUM = "Cksum"; //$NON-NLS-1$
-	protected static final String FIELD_NAME_HP_MINI_SPECIAL = "HPMiniSpecial"; //$NON-NLS-1$
+	protected static final String FIELD_NAME_MAP = "Map";
+	protected static final String FIELD_NAME_GENPARAMS = "GenParams";
+	protected static final String FIELD_NAME_SUPPARAMS = "SupParams";
+	protected static final String FIELD_NAME_FXDPARAMS = "FxdParams";
+	protected static final String FIELD_NAME_KEYEVENTS = "KeyEvents";
+	protected static final String FIELD_NAME_LNKPARAMS = "LnkParams";
+	protected static final String FIELD_NAME_DATAPTS = "DataPts";
+	protected static final String FIELD_NAME_CKSUM = "Cksum";
+	protected static final String FIELD_NAME_HP_MINI_SPECIAL = "HPMiniSpecial";
 
 	static final int MAP = 1;
 	static final int GENPARAMS = 2;
@@ -62,7 +62,7 @@ public class BellcoreStructure {
 	Cksum cksum;
 	Special[] special;
 
-	public String title = ""; //$NON-NLS-1$
+	public String title = "";
 	public String schemePathId;
 	public String measurementId;
 	public String monitoredElementId;
@@ -151,19 +151,19 @@ public class BellcoreStructure {
 
 	// ----------- General Parameters ------------//
 	class GenParams {
-		public String lc = "EN"; // Language Code (2 bytes) //$NON-NLS-1$
-		public String cid = " "; // Cable ID //$NON-NLS-1$
-		public String fid = " "; // Fiber ID //$NON-NLS-1$
+		public String lc = "EN"; // Language Code (2 bytes)
+		public String cid = " "; // Cable ID
+		public String fid = " "; // Fiber ID
 		public short ft = 652; // Fiber Type
 		public short nw = 1310; // Nominal Wavelength
-		public String ol = " "; // Originating Location //$NON-NLS-1$
-		public String tl = " "; // Terminating Location //$NON-NLS-1$
-		public String ccd = " "; // Cable Code //$NON-NLS-1$
-		public String cdf = "BC"; // Current Data Flag (2 bytes) //$NON-NLS-1$
+		public String ol = " "; // Originating Location
+		public String tl = " "; // Terminating Location
+		public String ccd = " "; // Cable Code
+		public String cdf = "BC"; // Current Data Flag (2 bytes)
 		public int uo = 0; // User Offset
 		public int uod = 0; // User Offset Distance
-		public String op = " "; // Operator //$NON-NLS-1$
-		public String cmt = " "; // Comment //$NON-NLS-1$
+		public String op = " "; // Operator
+		public String cmt = " "; // Comment
 
 		public int getSize() {
 			return (10
@@ -180,13 +180,13 @@ public class BellcoreStructure {
 
 	// ----------- Supplier Parameters ------------//
 	class SupParams {
-		public String sn = " "; // Supplier Name //$NON-NLS-1$
-		public String mfid = " "; // OTDR Mainframe ID //$NON-NLS-1$
-		public String otdr = " "; // OTDR Mainframe SerNum //$NON-NLS-1$
-		public String omid = " "; // Optical Module ID //$NON-NLS-1$
-		public String omsn = " "; // Optical Module SerNum //$NON-NLS-1$
-		public String sr = " "; // Software Revision //$NON-NLS-1$
-		public String ot = " "; // Other //$NON-NLS-1$
+		public String sn = " "; // Supplier Name
+		public String mfid = " "; // OTDR Mainframe ID
+		public String otdr = " "; // OTDR Mainframe SerNum
+		public String omid = " "; // Optical Module ID
+		public String omsn = " "; // Optical Module SerNum
+		public String sr = " "; // Software Revision
+		public String ot = " "; // Other
 
 		public int getSize() {
 			return (7
@@ -202,7 +202,7 @@ public class BellcoreStructure {
 	// ----------- Fixed Parameters ------------//
 	class FxdParams {
 		public long dts = 0; // Date/Time Stamp (in ms)
-		public String ud = "km"; // Units of Distanse (2 bytes) //$NON-NLS-1$
+		public String ud = "km"; // Units of Distanse (2 bytes)
 		public short aw = 13100; // Actual Wavelength
 		public int ao = 0; // Acquision Offset
 		public int aod = 0; // Acquision Offset Distance
@@ -223,7 +223,7 @@ public class BellcoreStructure {
 		public int lt = 200; // Loss Threshold
 		public int rt = 40000; // Reflectance Threshold
 		public int et = 3000; // End-of-Fiber Threshold
-		public String tt = "ST"; // Trace Type -- ?? //$NON-NLS-1$
+		public String tt = "ST"; // Trace Type -- ??
 		public int wc[] = new int[4]; // Window Coordinates
 
 		public int getSize() {

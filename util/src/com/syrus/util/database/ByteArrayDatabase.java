@@ -1,5 +1,5 @@
 /*
- * $Id: ByteArrayDatabase.java,v 1.14 2005/03/04 08:05:49 bass Exp $
+ * $Id: ByteArrayDatabase.java,v 1.15 2005/05/18 10:49:17 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import com.syrus.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2005/03/04 08:05:49 $
+ * @version $Revision: 1.15 $, $Date: 2005/05/18 10:49:17 $
  * @module util
  */
 public final class ByteArrayDatabase {
@@ -29,16 +29,16 @@ public final class ByteArrayDatabase {
 
 		Statement statement = null;
 		ResultSet ors = null;
-		String s = "SELECT " + column + " FROM " + table + " WHERE " + where + " FOR UPDATE"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		String s = "SELECT " + column + " FROM " + table + " WHERE " + where + " FOR UPDATE";
 		try {
 			statement = conn.createStatement();
-			Log.debugMessage("Trying: " + s, Log.DEBUGLEVEL09); //$NON-NLS-1$
+			Log.debugMessage("Trying: " + s, Log.DEBUGLEVEL09);
 			ors = statement.executeQuery(s);
 			Blob blob = null;
 			if (ors.next())
 				blob = ors.getBlob(column);
 			else
-				throw new SQLException("No record in " + table + " for '" + where + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				throw new SQLException("No record in " + table + " for '" + where + "'");
 			OutputStream os = null;
 			os = blob.setBinaryStream(0L);
 			os.write(bar);

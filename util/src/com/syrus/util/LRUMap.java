@@ -1,5 +1,5 @@
 /*
- * $Id: LRUMap.java,v 1.23 2005/03/21 16:20:12 arseniy Exp $
+ * $Id: LRUMap.java,v 1.24 2005/05/18 10:49:17 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,8 +14,8 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/03/21 16:20:12 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.24 $, $Date: 2005/05/18 10:49:17 $
+ * @author $Author: bass $
  * @module util
  */
 
@@ -39,7 +39,7 @@ public class LRUMap implements Serializable {
 			this.array = new Entry[capacity];
 		}
 		else
-			throw new IllegalArgumentException("Illegal capacity: " + capacity); //$NON-NLS-1$
+			throw new IllegalArgumentException("Illegal capacity: " + capacity);
 	}
 
 	public synchronized void clear() {
@@ -97,7 +97,7 @@ public class LRUMap implements Serializable {
 
 	public synchronized Object get(Object key) {
 		this.modCount++;
-		if (key != null) { 
+		if (key != null) {
 			Object ret = null;
 			for (int i = 0; i < this.array.length; i++)
 				if (this.array[i] != null && key.equals(this.array[i].key)) {
@@ -106,7 +106,7 @@ public class LRUMap implements Serializable {
 				}
 			return ret;
 		}
-		throw new IllegalArgumentException("Key is NULL"); //$NON-NLS-1$
+		throw new IllegalArgumentException("Key is NULL");
 	}
 
 	public synchronized boolean containsKey(Object key) {
@@ -116,12 +116,12 @@ public class LRUMap implements Serializable {
 					return true;
 			return false;
 		}
-		throw new IllegalArgumentException("Key is NULL"); //$NON-NLS-1$
+		throw new IllegalArgumentException("Key is NULL");
 	}
 
 	public synchronized Object remove(Object key) {
 		this.modCount++;
-		if (key != null) { 
+		if (key != null) {
 			Object ret = null;
 			for (int i = 0; i < this.array.length; i++) {
 				Entry entry = this.array[i];
@@ -135,7 +135,7 @@ public class LRUMap implements Serializable {
 			}				
 			return ret;
 		}
-		throw new IllegalArgumentException("Key is NULL"); //$NON-NLS-1$
+		throw new IllegalArgumentException("Key is NULL");
 	}
 
 	protected class Entry /*implements Serializable */{
@@ -149,10 +149,10 @@ public class LRUMap implements Serializable {
 					this.value = value;
 				}
 				else
-					throw new IllegalArgumentException("Value is NULL"); //$NON-NLS-1$
+					throw new IllegalArgumentException("Value is NULL");
 			}
 			else
-				throw new IllegalArgumentException("Key is NULL"); //$NON-NLS-1$
+				throw new IllegalArgumentException("Key is NULL");
 		}
 
 		public Object getKey() {
@@ -216,7 +216,7 @@ public class LRUMap implements Serializable {
                 checkForComodification();
 
     	    try {
-    	    int modCountPrev = LRUMap.this.modCount; 
+    	    int modCountPrev = LRUMap.this.modCount;
     	    LRUMap.this.remove(LRUMap.this.array[this.lastRet].key);
     	    LRUMap.this.modCount = modCountPrev;
     		if (this.lastRet < this.cursor)

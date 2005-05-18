@@ -1,5 +1,5 @@
 /*
- * $Id: NIOCacheLock.java,v 1.6 2005/03/17 10:12:50 bass Exp $
+ * $Id: NIOCacheLock.java,v 1.7 2005/05/18 10:49:17 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.nio.channels.*;
 import java.util.*;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/03/17 10:12:50 $
+ * @version $Revision: 1.7 $, $Date: 2005/05/18 10:49:17 $
  * @author $Author: bass $
  * @module util
  */
@@ -41,13 +41,13 @@ public class NIOCacheLock implements CacheLock {
 					put(e);
 					return e;
 				}
-			} 
+			}
 			catch (Exception ex) {
 				try {
 					fl.release();
 				}
 				catch (Exception ex2) {
-					System.err.println("Exception: " + ex2.getMessage()); //$NON-NLS-1$
+					System.err.println("Exception: " + ex2.getMessage());
 					ex2.printStackTrace();
 				}
 				// ex.printStackTrace();
@@ -76,7 +76,7 @@ public class NIOCacheLock implements CacheLock {
 					fl.release();
 				}
 				catch (Exception ex2) {
-					System.err.println("Exception: " + ex2.getMessage()); //$NON-NLS-1$
+					System.err.println("Exception: " + ex2.getMessage());
 					ex2.printStackTrace();
 				}
 				// ex.printStackTrace();
@@ -100,11 +100,11 @@ public class NIOCacheLock implements CacheLock {
 				os.flush();
 				os.close();
 				remove(e);
-			} 
+			}
 			catch (Exception ex) {
-				System.err.println("Exception: " + ex.getMessage()); //$NON-NLS-1$
+				System.err.println("Exception: " + ex.getMessage());
 				ex.printStackTrace();
-			} 
+			}
 			return true;
 		}
 	}
@@ -122,11 +122,11 @@ public class NIOCacheLock implements CacheLock {
 				InputStream is = (InputStream )e.stream;
 				is.close();
 				remove(e);
-			} 
+			}
 			catch (Exception ex) {
-				System.err.println("Exception: " + ex.getMessage()); //$NON-NLS-1$
+				System.err.println("Exception: " + ex.getMessage());
 				ex.printStackTrace();
-			} 
+			}
 			return true;
 		}
 	}

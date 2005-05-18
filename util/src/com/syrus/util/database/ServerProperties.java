@@ -1,5 +1,5 @@
 /*
- * $Id: ServerProperties.java,v 1.3 2005/03/16 16:29:26 arseniy Exp $
+ * $Id: ServerProperties.java,v 1.4 2005/05/18 10:49:17 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import sqlj.runtime.ref.DefaultContext;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/03/16 16:29:26 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.4 $, $Date: 2005/05/18 10:49:17 $
+ * @author $Author: bass $
  * @module util
  */
 public final class ServerProperties {
@@ -33,7 +33,7 @@ public final class ServerProperties {
 		try {
 			return get(key);
 		} catch (SQLException sqle) {
-			Log.debugMessage("Cannot get resource " + key + " from database", Log.DEBUGLEVEL02); //$NON-NLS-1$ //$NON-NLS-2$
+			Log.debugMessage("Cannot get resource " + key + " from database", Log.DEBUGLEVEL02);
 			return defaultValue;
 		}
 	}
@@ -42,7 +42,7 @@ public final class ServerProperties {
 		try {
 			return Integer.parseInt(get(key));
 		} catch (SQLException sqle) {
-			Log.debugMessage("Cannot get resource " + key + " from database", Log.DEBUGLEVEL02); //$NON-NLS-1$ //$NON-NLS-2$
+			Log.debugMessage("Cannot get resource " + key + " from database", Log.DEBUGLEVEL02);
 			return defaultValue;
 		}
 	}
@@ -51,14 +51,14 @@ public final class ServerProperties {
 		Statement stmt = null;
 		ResultSet resultSet = null;
 		try {
-			StringBuffer sql = new StringBuffer("SELECT value FROM amficom.serverproperty WHERE key = '"); //$NON-NLS-1$
+			StringBuffer sql = new StringBuffer("SELECT value FROM amficom.serverproperty WHERE key = '");
 			sql.append(key);
 			sql.append('\'');
 
 			stmt = CONN.createStatement();
 			resultSet = stmt.executeQuery(sql.toString());
 			resultSet.next();
-			return resultSet.getString("value"); //$NON-NLS-1$
+			return resultSet.getString("value");
 		} finally {
 			try {
 				if (resultSet != null)
