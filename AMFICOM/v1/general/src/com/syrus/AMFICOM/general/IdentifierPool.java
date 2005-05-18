@@ -1,5 +1,5 @@
 /*
- * $Id: IdentifierPool.java,v 1.18 2005/05/10 18:54:13 bass Exp $
+ * $Id: IdentifierPool.java,v 1.19 2005/05/18 09:44:13 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,16 +10,18 @@ package com.syrus.AMFICOM.general;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.corba.IdentifierGeneratorServer;
+import com.syrus.io.FIFOSaver;
 import com.syrus.util.Fifo;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/05/10 18:54:13 $
- * @author $Author: bass $
+ * @version $Revision: 1.19 $, $Date: 2005/05/18 09:44:13 $
+ * @author $Author: max $
  * @module general_v1
  */
 public class IdentifierPool {
@@ -94,6 +96,24 @@ public class IdentifierPool {
 		}
 		catch (InterruptedException ie) {
 			Log.errorException(ie);
+		}
+	}
+
+	public static void serialize() {
+		for (Iterator it = idPoolMap.keySet().iterator(); it.hasNext();) {
+			Short code = (Short) it.next();
+			String entityName = ObjectEntities.codeToString(code);
+			Fifo fifo = (Fifo) idPoolMap.get(code);
+			FIFOSaver.save(fifo, entityName);
+		}
+	}
+
+	public static void deserialize() {
+		Map codeNameFifo = FIFOSaver.load();
+		for (Iterator it = codeNameFifo.keySet().iterator(); it.hasNext();) {
+			String codeName = (String) it.next();
+			Short code = new Short(ObjectEntities.stringToCode(codeName));
+			idPoolMap.put(code, codeNameFifo.get(codeName));
 		}
 	}
 }
