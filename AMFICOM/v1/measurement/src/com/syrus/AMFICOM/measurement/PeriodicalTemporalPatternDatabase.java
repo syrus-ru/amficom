@@ -1,5 +1,5 @@
 /*-
- * $Id: PeriodicalTemporalPatternDatabase.java,v 1.2 2005/04/25 14:23:21 bob Exp $
+ * $Id: PeriodicalTemporalPatternDatabase.java,v 1.3 2005/05/18 11:34:42 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,8 +26,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/25 14:23:21 $
- * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2005/05/18 11:34:42 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -80,12 +80,12 @@ public class PeriodicalTemporalPatternDatabase extends StorableObjectDatabase {
 	}
 
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
-			throws IllegalDataException, RetrieveObjectException, SQLException {
-		PeriodicalTemporalPattern periodicalTemporalPattern = (storableObject == null) ? 
+			throws IllegalDataException, SQLException {
+		PeriodicalTemporalPattern periodicalTemporalPattern = (storableObject == null) ?
 				new PeriodicalTemporalPattern(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 								null,
 								0L,
-								0) : 
+								0) :
 					this.fromStorableObject(storableObject);
 		periodicalTemporalPattern.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 							   DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
@@ -96,7 +96,7 @@ public class PeriodicalTemporalPatternDatabase extends StorableObjectDatabase {
 		return periodicalTemporalPattern;
 	}
 
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
 		PeriodicalTemporalPattern periodicalTemporalPattern = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:

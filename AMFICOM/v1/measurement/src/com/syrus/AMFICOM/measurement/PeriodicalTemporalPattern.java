@@ -1,5 +1,5 @@
 /*-
-* $Id: PeriodicalTemporalPattern.java,v 1.2 2005/04/25 08:20:11 bob Exp $
+* $Id: PeriodicalTemporalPattern.java,v 1.3 2005/05/18 11:34:42 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -25,8 +25,8 @@ import com.syrus.AMFICOM.measurement.corba.PeriodicalTemporalPattern_Transferabl
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/25 08:20:11 $
- * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2005/05/18 11:34:42 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module measurement_v1
  */
@@ -76,17 +76,17 @@ public class PeriodicalTemporalPattern extends AbstractTemporalPattern {
 	
 	/**
 	 * create new instance for client
-	 * @param creatorId creator id 
+	 * @param creatorId creator id
 	 * @param period period in milliseconds
 	 */
 	public static PeriodicalTemporalPattern createInstance(	Identifier creatorId,
 															long period) throws CreateObjectException {
 
 		try {
-			PeriodicalTemporalPattern periodicalTemporalPattern = 
-				new PeriodicalTemporalPattern(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PERIODICAL_TEMPORALPATTERN_ENTITY_CODE), 
-					creatorId, 
-					0L, 
+			PeriodicalTemporalPattern periodicalTemporalPattern =
+				new PeriodicalTemporalPattern(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PERIODICAL_TEMPORALPATTERN_ENTITY_CODE),
+					creatorId,
+					0L,
 					period);
 			periodicalTemporalPattern.changed = true;
 			

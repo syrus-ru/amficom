@@ -1,5 +1,5 @@
 /*-
- * $Id: ResourceDatabaseContext.java,v 1.4 2005/04/01 11:11:38 bass Exp $
+ * $Id: ResourceDatabaseContext.java,v 1.5 2005/05/18 11:37:17 bass Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/04/01 11:11:38 $
+ * @version $Revision: 1.5 $, $Date: 2005/05/18 11:37:17 $
  * @module resource_v1
  */
 public final class ResourceDatabaseContext {
@@ -39,7 +39,7 @@ public final class ResourceDatabaseContext {
 			case ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE:
 				return getImageResourceDatabase();
 			default:
-				Log.errorMessage("ResourceDatabaseContext.getDatabase | Unknown entity: " + entityCode); //$NON-NLS-1$
+				Log.errorMessage("ResourceDatabaseContext.getDatabase | Unknown entity: " + entityCode);
 				return null;
 		}
 	}

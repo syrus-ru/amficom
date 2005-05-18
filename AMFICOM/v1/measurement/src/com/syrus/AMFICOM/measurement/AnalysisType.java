@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisType.java,v 1.67 2005/05/14 09:43:14 arseniy Exp $
+ * $Id: AnalysisType.java,v 1.68 2005/05/18 11:34:42 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 
 /**
- * @version $Revision: 1.67 $, $Date: 2005/05/14 09:43:14 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.68 $, $Date: 2005/05/18 11:34:42 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -126,7 +126,7 @@ public class AnalysisType extends ActionType {
 	}
 	
 	/**
-	 * create new instance for client 
+	 * create new instance for client
 	 * @param creatorId
 	 * @param codename
 	 * @param description
@@ -206,8 +206,8 @@ public class AnalysisType extends ActionType {
 	}
 
 	protected boolean isValid() {
-		return super.isValid() && this.inParameterTypeIds != null && this.inParameterTypeIds != Collections.EMPTY_SET && 
-			this.criteriaParameterTypeIds != null && this.criteriaParameterTypeIds != Collections.EMPTY_SET && 
+		return super.isValid() && this.inParameterTypeIds != null && this.inParameterTypeIds != Collections.EMPTY_SET &&
+			this.criteriaParameterTypeIds != null && this.criteriaParameterTypeIds != Collections.EMPTY_SET &&
 			this.etalonParameterTypeIds != null && this.etalonParameterTypeIds != Collections.EMPTY_SET &&
 			this.outParameterTypeIds != null && this.outParameterTypeIds != Collections.EMPTY_SET &&
 			this.measurementTypeIds != null && this.measurementTypeIds != Collections.EMPTY_SET;
@@ -285,7 +285,7 @@ public class AnalysisType extends ActionType {
 	
 	/**
 	 * client setter for inParameterTypeIds
-	 * 
+	 *
 	 * @param inParameterTypeIds
 	 *            The inParameterTypeIds to set.
 	 */
@@ -304,7 +304,7 @@ public class AnalysisType extends ActionType {
 	}
 	/**
 	 * client setter for criteriaParameterTypeIds
-	 * 
+	 *
 	 * @param thresholdParameterTypeIds
 	 *            The thresholdParameterTypeIds to set.
 	 */
@@ -323,7 +323,7 @@ public class AnalysisType extends ActionType {
 	}
 	/**
 	 * client setter for etalonParameterTypeIds
-	 * 
+	 *
 	 * @param etalonParameterTypeIds
 	 *            The etalonParameterTypeIds to set.
 	 */
@@ -343,7 +343,7 @@ public class AnalysisType extends ActionType {
 
 	/**
 	 * client setter for outParameterTypeIds
-	 * 
+	 *
 	 * @param outParameterTypeIds
 	 *            The outParameterTypeIds to set.
 	 */

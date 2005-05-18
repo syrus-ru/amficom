@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.91 2005/05/13 10:50:54 bob Exp $
+ * $Id: TestDatabase.java,v 1.92 2005/05/18 11:34:42 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,8 +45,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.91 $, $Date: 2005/05/13 10:50:54 $
- * @author $Author: bob $
+ * @version $Revision: 1.92 $, $Date: 2005/05/18 11:34:42 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -170,7 +170,7 @@ public class TestDatabase extends StorableObjectDatabase {
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		Test test = (storableObject == null)?
-				new Test(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, null, TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME, 
+				new Test(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, null, TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME,
 						 null, null, null, null, null, 0, null, null) :
 					this.fromStorableObject(storableObject);
 
@@ -244,7 +244,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		}
 		if (!msList.isEmpty())
 			test.setMeasurementSetupIds0(msList);
-		else 
+		else
 			throw new RetrieveObjectException("TestDatabase.retrieveMeasurementSetupTestLinks | Measurement setup ids for test '" + testIdStr + "' not found.");
 	}
 

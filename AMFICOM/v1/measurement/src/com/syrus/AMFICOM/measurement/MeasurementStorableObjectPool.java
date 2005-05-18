@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.90 2005/05/10 19:26:12 arseniy Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.91 2005/05/18 11:34:42 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,6 @@ import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectGroupEntities;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -24,8 +23,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.90 $, $Date: 2005/05/10 19:26:12 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.91 $, $Date: 2005/05/18 11:34:42 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -137,28 +136,12 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 		init(mObjectLoader1);
 	}
 
-  public static void refresh() throws ApplicationException {
-		instance.refreshImpl();
-	}
-
-  protected java.util.Set refreshStorableObjects(java.util.Set storableObjects) throws ApplicationException {
+	protected java.util.Set refreshStorableObjects(java.util.Set storableObjects) throws ApplicationException {
 		return mObjectLoader.refresh(storableObjects);
 	}
 
 	public static StorableObject getStorableObject(Identifier objectId, boolean useLoader) throws ApplicationException {
 		return instance.getStorableObjectImpl(objectId, useLoader);
-	}
-
-	public static java.util.Set getStorableObjects(java.util.Set objectIds, boolean useLoader) throws ApplicationException {
-		return instance.getStorableObjectsImpl(objectIds, useLoader);
-	}
-
-	public static java.util.Set getStorableObjectsByCondition(StorableObjectCondition condition, boolean useLoader) throws ApplicationException {
-		return instance.getStorableObjectsByConditionImpl(condition, useLoader);
-	}
-
-	public static java.util.Set getStorableObjectsByConditionButIds(java.util.Set ids, StorableObjectCondition condition, boolean useLoader) throws ApplicationException {
-		return instance.getStorableObjectsByConditionButIdsImpl(ids, condition, useLoader);
 	}
 
 	protected java.util.Set loadStorableObjects(final java.util.Set ids) throws ApplicationException {
@@ -309,10 +292,6 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 		}
 	}
 
-	public static StorableObject putStorableObject(StorableObject storableObject) throws IllegalObjectEntityException {
-		return instance.putStorableObjectImpl(storableObject);
-	}
-
 	public static StorableObject fromTransferable(Identifier id, IDLEntity transferable) throws ApplicationException {
 		return instance.fromTransferableImpl(id, transferable);
 	}
@@ -321,15 +300,15 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 		instance.flushImpl(id, force);
 	}
 
-	public static void flush(final short entityCode, final boolean force) throws ApplicationException {		 
+	public static void flush(final short entityCode, final boolean force) throws ApplicationException {		
 		instance.flushImpl(entityCode, force);
 	}
 
-	public static void flush(final Short entityCode, final boolean force) throws ApplicationException {		 
+	public static void flush(final Short entityCode, final boolean force) throws ApplicationException {		
 		instance.flushImpl(entityCode, force);
 	}
 
-	public static void flush(boolean force) throws ApplicationException {		 
+	public static void flush(boolean force) throws ApplicationException {		
 		instance.flushImpl(force);
 	}
 
@@ -343,10 +322,6 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 
 	public static void delete(Identifier id) {
 		instance.deleteImpl(id);
-	}
-
-	public static void delete(final java.util.Set identifiables) {
-		instance.deleteImpl(identifiables);
 	}
 
 	protected void deleteStorableObjects(final java.util.Set identifiables) {

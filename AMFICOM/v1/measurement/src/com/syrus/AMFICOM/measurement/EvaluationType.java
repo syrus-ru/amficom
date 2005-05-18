@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationType.java,v 1.63 2005/05/14 09:43:14 arseniy Exp $
+ * $Id: EvaluationType.java,v 1.64 2005/05/18 11:34:41 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
 
 /**
- * @version $Revision: 1.63 $, $Date: 2005/05/14 09:43:14 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.64 $, $Date: 2005/05/18 11:34:41 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -127,7 +127,7 @@ public class EvaluationType extends ActionType {
 
 	/**
 	 * create new instance for client
-	 * 
+	 *
 	 * @param creatorId
 	 * @param codename
 	 * @param description
@@ -292,7 +292,7 @@ public class EvaluationType extends ActionType {
 	
 	/**
 	 * client setter for inParameterTypeIds
-	 * 
+	 *
 	 * @param inParameterTypeIds
 	 *            The inParameterTypeIds to set.
 	 */
@@ -312,7 +312,7 @@ public class EvaluationType extends ActionType {
 
 	/**
 	 * client setter for thresholdParameterTypeIds
-	 * 
+	 *
 	 * @param thresholdParameterTypeIds
 	 *            The thresholdParameterTypeIds to set.
 	 */
@@ -332,7 +332,7 @@ public class EvaluationType extends ActionType {
 
 	/**
 	 * client setter for etalonParameterTypeIds
-	 * 
+	 *
 	 * @param etalonParameterTypeIds
 	 *            The etalonParameterTypeIds to set.
 	 */
@@ -352,7 +352,7 @@ public class EvaluationType extends ActionType {
 
 	/**
 	 * client setter for outParameterTypeIds
-	 * 
+	 *
 	 * @param outParameterTypeIds
 	 *            The outParameterTypeIds to set.
 	 */

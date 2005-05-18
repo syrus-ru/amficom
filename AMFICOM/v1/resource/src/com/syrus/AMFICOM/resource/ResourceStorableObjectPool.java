@@ -1,5 +1,5 @@
 /*
- * $Id: ResourceStorableObjectPool.java,v 1.22 2005/05/10 19:25:32 arseniy Exp $
+ * $Id: ResourceStorableObjectPool.java,v 1.23 2005/05/18 11:37:17 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,6 @@ import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectGroupEntities;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -25,8 +24,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.22 $, $Date: 2005/05/10 19:25:32 $
+ * @author $Author: bass $
+ * @version $Revision: 1.23 $, $Date: 2005/05/18 11:37:17 $
  * @module resource_v1
  */
 public final class ResourceStorableObjectPool extends StorableObjectPool {
@@ -92,30 +91,13 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 		init(rObjectLoader1);
 	}
 
-	public static void refresh() throws ApplicationException {        
-    	instance.refreshImpl();
-    }
-	
 	protected Set refreshStorableObjects(Set storableObjects) throws ApplicationException{
-    	return rObjectLoader.refresh(storableObjects);
-    }
+		return rObjectLoader.refresh(storableObjects);
+	}
 
 	public static StorableObject getStorableObject(Identifier objectId, boolean useLoader)
 			throws ApplicationException {
 		return instance.getStorableObjectImpl(objectId, useLoader);
-	}
-	
-	public static Set getStorableObjects(Set objectIds, boolean useLoader)
-			throws ApplicationException {
-		return instance.getStorableObjectsImpl(objectIds, useLoader);
-	}
-	
-	public static Set getStorableObjectsByCondition(StorableObjectCondition condition, boolean useLoader) throws ApplicationException {
-		return instance.getStorableObjectsByConditionImpl(condition, useLoader);
-	}
-
-	public static Set getStorableObjectsByConditionButIds(Set ids, StorableObjectCondition condition, boolean useLoader) throws ApplicationException {
-		return instance.getStorableObjectsByConditionButIdsImpl(ids, condition, useLoader);
 	}
 	
 	protected StorableObject loadStorableObject(Identifier objectId)
@@ -126,7 +108,7 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 			storableObject = rObjectLoader.loadImageResource(objectId);
 			break;
 		default:
-			Log.errorMessage("ResourceStorableObjectPool.loadStorableObject | Unknown entity: " //$NON-NLS-1$
+			Log.errorMessage("ResourceStorableObjectPool.loadStorableObject | Unknown entity: "
 							+ ObjectEntities.codeToString(objectId.getMajor()));
 			storableObject = null;
 		}
@@ -140,7 +122,7 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 			case ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE:
 				return rObjectLoader.loadImageResources(ids);
 			default:
-				Log.errorMessage("ResourceStorableObjectPool.loadStorableObjects | Unknown entityCode : " + entityCode); //$NON-NLS-1$
+				Log.errorMessage("ResourceStorableObjectPool.loadStorableObjects | Unknown entityCode : " + entityCode);
 				return Collections.EMPTY_SET;
 		}
 	}
@@ -154,7 +136,7 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 				loadedList = rObjectLoader.loadImageResourcesButIds(condition, ids);
 				break;
 			default:
-				Log.errorMessage("ResourceStorableObjectPool.loadStorableObjectsButIds | Unknown entity: " + ObjectEntities.codeToString(entityCode)); //$NON-NLS-1$
+				Log.errorMessage("ResourceStorableObjectPool.loadStorableObjectsButIds | Unknown entity: " + ObjectEntities.codeToString(entityCode));
 				loadedList = null;
 		}		
 		return loadedList;
@@ -172,16 +154,12 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 			case ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE:
 				if (singleton)
 					rObjectLoader.saveImageResource((AbstractImageResource)storableObjects.iterator().next(), force);
-				else 
+				else
 					rObjectLoader.saveImageResources(storableObjects, force);
 				break;
 			default:
-				Log.errorMessage("ResourceStorableObjectPool.saveStorableObjects | Unknown Unknown entity : '" + ObjectEntities.codeToString(entityCode) + "'");  //$NON-NLS-1$//$NON-NLS-2$
+				Log.errorMessage("ResourceStorableObjectPool.saveStorableObjects | Unknown Unknown entity : '" + ObjectEntities.codeToString(entityCode) + "'");
 		}
-	}
-
-	public static StorableObject putStorableObject(StorableObject storableObject) throws IllegalObjectEntityException {
-		return instance.putStorableObjectImpl(storableObject);
 	}
 
 	public static StorableObject fromTransferable(Identifier id, IDLEntity transferable) throws ApplicationException {
@@ -192,15 +170,15 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 		instance.flushImpl(id, force);
 	}
 
-	public static void flush(final short entityCode, final boolean force) throws ApplicationException {		 
+	public static void flush(final short entityCode, final boolean force) throws ApplicationException {		
 		instance.flushImpl(entityCode, force);
 	}
 
-	public static void flush(final Short entityCode, final boolean force) throws ApplicationException {		 
+	public static void flush(final Short entityCode, final boolean force) throws ApplicationException {		
 		instance.flushImpl(entityCode, force);
 	}
 
-	public static void flush(boolean force) throws ApplicationException{		 
+	public static void flush(boolean force) throws ApplicationException{		
 		instance.flushImpl(force);
 	}
 
@@ -222,10 +200,6 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 
 	public static void delete(Identifier id) {
 		instance.deleteImpl(id);
-	}
-
-	public static void delete(final Set identifiables) {
-		instance.deleteImpl(identifiables);
 	}
 
 	public static void deserializePool() {

@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementDatabaseContext.java,v 1.29 2005/05/03 13:56:30 max Exp $
+ * $Id: MeasurementDatabaseContext.java,v 1.30 2005/05/18 11:34:42 bass Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Научно-технический центр.
@@ -13,8 +13,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/05/03 13:56:30 $
- * @author $Author: max $
+ * @version $Revision: 1.30 $, $Date: 2005/05/18 11:34:42 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 public final class MeasurementDatabaseContext {
@@ -124,7 +124,7 @@ public final class MeasurementDatabaseContext {
 			case ObjectEntities.TEST_ENTITY_CODE:
 				return getTestDatabase();
 			default:
-				Log.errorMessage("MeasurementDatabaseContext.getDatabase | Unknown entity: " + entityCode); //$NON-NLS-1$
+				Log.errorMessage("MeasurementDatabaseContext.getDatabase | Unknown entity: " + entityCode);
 				return null;
 		}
 	}

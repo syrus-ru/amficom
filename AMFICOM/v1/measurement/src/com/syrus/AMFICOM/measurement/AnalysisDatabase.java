@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisDatabase.java,v 1.54 2005/04/01 14:10:28 arseniy Exp $
+ * $Id: AnalysisDatabase.java,v 1.55 2005/05/18 11:34:42 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.54 $, $Date: 2005/04/01 14:10:28 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.55 $, $Date: 2005/05/18 11:34:42 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -91,7 +91,7 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 			throws IllegalDataException, SQLException {
 		Analysis analysis = this.fromStorableObject(storableObject);
 		Measurement measurement = analysis.getMeasurement();
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, analysis.getType().getId()); 
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, analysis.getType().getId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, analysis.getMonitoredElementId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, (measurement != null) ? measurement.getId() : null);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, analysis.getName(), SIZE_NAME_COLUMN);
@@ -101,7 +101,7 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
-		Analysis analysis = (storableObject == null) ? 
+		Analysis analysis = (storableObject == null) ?
 				new Analysis(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 								null,
 								0L,
@@ -109,7 +109,7 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 								null,
 								null,
 								null,
-								null) : 
+								null) :
 					this.fromStorableObject(storableObject);
 		AnalysisType analysisType;
 		Measurement measurement = null;
@@ -137,7 +137,7 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 		return analysis;
 	}
 
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
 		Analysis analysis = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.65 2005/04/23 17:45:00 arseniy Exp $
+ * $Id: MeasurementSetup.java,v 1.66 2005/05/18 11:34:42 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,8 +29,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 
 /**
- * @version $Revision: 1.65 $, $Date: 2005/04/23 17:45:00 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.66 $, $Date: 2005/05/18 11:34:42 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -218,14 +218,14 @@ public final class MeasurementSetup extends StorableObject {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	protected boolean isValid() {
-		return super.isValid() && this.parameterSet != null && this.description != null && this.monitoredElementIds != null && !this.monitoredElementIds.isEmpty() && 
+		return super.isValid() && this.parameterSet != null && this.description != null && this.monitoredElementIds != null && !this.monitoredElementIds.isEmpty() &&
 			this.measurementTypeIds != null && !this.measurementTypeIds.isEmpty();
 	}
 
     public short getEntityCode() {
         return ObjectEntities.MS_ENTITY_CODE;
     }
-    
+
     public Set getParameterSet() {
 		return this.parameterSet;
 	}
@@ -357,7 +357,7 @@ public final class MeasurementSetup extends StorableObject {
 
 	/**
 	 * client setter for criteriaSet
-	 * 
+	 *
 	 * @param criteriaSet
 	 *          The criteriaSet to set.
 	 */
@@ -368,7 +368,7 @@ public final class MeasurementSetup extends StorableObject {
 
 	/**
 	 * client setter for description
-	 * 
+	 *
 	 * @param description
 	 *            The description to set.
 	 */
@@ -379,7 +379,7 @@ public final class MeasurementSetup extends StorableObject {
 
 	/**
 	 * client setter for etalon
-	 * 
+	 *
 	 * @param etalon
 	 *            The etalon to set.
 	 */
@@ -390,7 +390,7 @@ public final class MeasurementSetup extends StorableObject {
 
 	/**
 	 * client setter for measurementDuration
-	 * 
+	 *
 	 * @param measurementDuration
 	 *            The measurementDuration to set.
 	 */
@@ -401,7 +401,7 @@ public final class MeasurementSetup extends StorableObject {
 
 	/**
 	 * client setter for
-	 * 
+	 *
 	 * @param parameterSet
 	 *            The parameterSet to set.
 	 */
@@ -412,7 +412,7 @@ public final class MeasurementSetup extends StorableObject {
 
 	/**
 	 * client setter for thresholdSet
-	 * 
+	 *
 	 * @param thresholdSet
 	 *            The thresholdSet to set.
 	 */
@@ -431,16 +431,16 @@ public final class MeasurementSetup extends StorableObject {
 		java.util.Set dependencies = new HashSet();
 		if (this.parameterSet != null)
 			dependencies.add(this.parameterSet);
-        
+
 		if (this.criteriaSet != null)
 			dependencies.add(this.criteriaSet);
-        
+
 		if (this.thresholdSet != null)
 			dependencies.add(this.thresholdSet);
-        
+
 		if (this.etalon != null)
 			dependencies.add(this.etalon);
-        
+
 		dependencies.addAll(this.monitoredElementIds);
 		return dependencies;
 	}

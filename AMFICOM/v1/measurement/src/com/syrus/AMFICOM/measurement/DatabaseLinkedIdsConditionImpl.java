@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.20 2005/04/13 15:00:02 bob Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.21 2005/05/18 11:34:42 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/04/13 15:00:02 $
- * @author $Author: bob $
+ * @version $Revision: 1.21 $, $Date: 2005/05/18 11:34:42 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 public class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCondition {
@@ -51,7 +51,7 @@ public class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCon
 			case ObjectEntities.EVALUATIONTYPE_ENTITY_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
 					case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
-						return getLinkedQuery(EvaluationTypeWrapper.LINK_COLUMN_EVALUATION_TYPE_ID, 
+						return getLinkedQuery(EvaluationTypeWrapper.LINK_COLUMN_EVALUATION_TYPE_ID,
 								StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID,
 								ObjectEntities.EVATYPPARTYPLINK_ENTITY);
 					case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
@@ -109,12 +109,12 @@ public class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCon
 			case ObjectEntities.MS_ENTITY_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
 					case ObjectEntities.ME_ENTITY_CODE:
-						return super.getLinkedQuery(MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID, 
-									MeasurementSetupWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID, 
+						return super.getLinkedQuery(MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID,
+									MeasurementSetupWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID,
 									ObjectEntities.MSMELINK_ENTITY);
 					case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
-						return super.getLinkedQuery(MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID, 
-							MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID, 
+						return super.getLinkedQuery(MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID,
+							MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID,
 							ObjectEntities.MSMTLINK_ENTITY);
 					default:
 						throw new IllegalObjectEntityException("Unsupported linked entity type -- "

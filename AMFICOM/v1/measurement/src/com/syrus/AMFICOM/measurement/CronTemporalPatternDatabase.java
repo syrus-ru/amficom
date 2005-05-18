@@ -1,5 +1,5 @@
 /*
- * $Id: CronTemporalPatternDatabase.java,v 1.1 2005/04/22 16:12:27 arseniy Exp $
+ * $Id: CronTemporalPatternDatabase.java,v 1.2 2005/05/18 11:34:42 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/22 16:12:27 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2005/05/18 11:34:42 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -97,7 +97,7 @@ public class CronTemporalPatternDatabase extends StorableObjectDatabase {
 	}
 
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
-			throws IllegalDataException, RetrieveObjectException, SQLException {
+			throws IllegalDataException, SQLException {
 		CronTemporalPattern temporalPattern = (storableObject == null) ?
 				new CronTemporalPattern(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null):
 				this.fromStorableObject(storableObject);
@@ -113,7 +113,7 @@ public class CronTemporalPatternDatabase extends StorableObjectDatabase {
 		return temporalPattern;
 	}
 
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws ObjectNotFoundException, RetrieveObjectException, IllegalDataException {
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
 		CronTemporalPattern temporalPattern = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
@@ -136,7 +136,7 @@ public class CronTemporalPatternDatabase extends StorableObjectDatabase {
 		PreparedStatement preparedStatement = null;
 		Connection connection = DatabaseConnection.getConnection();
 		try{
-			String sql = SQL_INSERT_INTO + ObjectEntities.CRONTEMPORALPATTERN_ENTITY 
+			String sql = SQL_INSERT_INTO + ObjectEntities.CRONTEMPORALPATTERN_ENTITY
 			+ OPEN_BRACKET
 			+ this.getColumns(MODE_INSERT)
 			+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET

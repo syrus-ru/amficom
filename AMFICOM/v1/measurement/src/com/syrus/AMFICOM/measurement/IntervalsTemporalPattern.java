@@ -1,5 +1,5 @@
 /*-
-* $Id: IntervalsTemporalPattern.java,v 1.14 2005/05/04 12:29:09 bob Exp $
+* $Id: IntervalsTemporalPattern.java,v 1.15 2005/05/18 11:34:42 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -31,6 +31,7 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.Undoable;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ITP_Interval_Duration;
@@ -41,8 +42,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/05/04 12:29:09 $
- * @author $Author: bob $
+ * @version $Revision: 1.15 $, $Date: 2005/05/18 11:34:42 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module measurement_v1
  */
@@ -63,9 +64,9 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern implements
 	private SortedMap undoIntervalsAbstractTemporalPatternMap;
 	private SortedMap undoIntervalsDuration;
 	
-	protected IntervalsTemporalPattern(final Identifier id, 
-	                                final Identifier creatorId, 
-	                                final long version, 
+	protected IntervalsTemporalPattern(final Identifier id,
+	                                final Identifier creatorId,
+	                                final long version,
 	                                final SortedMap intervalsAbstractTemporalPatternMap,
 	                                final SortedMap intervalsDuration) {
 		super(id,
@@ -81,20 +82,20 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern implements
 	
 	/**
 	 * create new instance for client
-	 * @param creatorId creator id 
+	 * @param creatorId creator id
 	 * @param intervalsAbstractTemporalPatternMap
-	 * @param intervalsDuration 
+	 * @param intervalsDuration
 	 */
 	public static IntervalsTemporalPattern createInstance(	final Identifier creatorId,
 															final SortedMap intervalsAbstractTemporalPatternMap,
 							                                final SortedMap intervalsDuration) throws CreateObjectException {
 
 		try {
-			IntervalsTemporalPattern intervalsTemporalPattern = 
+			IntervalsTemporalPattern intervalsTemporalPattern =
 				new IntervalsTemporalPattern(
-					IdentifierPool.getGeneratedIdentifier(ObjectEntities.INTERVALS_TEMPORALPATTERN_ENTITY_CODE), 
-					creatorId, 
-					0L, 
+					IdentifierPool.getGeneratedIdentifier(ObjectEntities.INTERVALS_TEMPORALPATTERN_ENTITY_CODE),
+					creatorId,
+					0L,
 					intervalsAbstractTemporalPatternMap,
 					intervalsDuration);
 			intervalsTemporalPattern.changed = true;
@@ -110,7 +111,7 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern implements
 	synchronized void setAttributes(final Date created,
 			final Date modified, final Identifier creatorId,
 			final Identifier modifierId, final long version,
-			final String name, 
+			final String name,
 			final SortedMap intervalsAbstractTemporalPatternMap,
 			final SortedMap intervalsDuration) {
 		super.setAttributes(created, modified, creatorId, modifierId, version);
@@ -236,7 +237,7 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern implements
 		if (intervalsAbstractTemporalPatternMap != null) {
 			for (Iterator it = intervalsAbstractTemporalPatternMap.keySet().iterator(); it.hasNext();) {
 				Long ms = (Long) it.next();
-				Identifier abstractTemporalPatternId = (Identifier) intervalsAbstractTemporalPatternMap.get(ms); 
+				Identifier abstractTemporalPatternId = (Identifier) intervalsAbstractTemporalPatternMap.get(ms);
 				this.addIntervalItem0(ms, abstractTemporalPatternId);
 				
 			}
@@ -299,7 +300,7 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern implements
 							(l < l3 && (l + dur > l3))) {
 						throw new IllegalDataException(LangModelMeasurement.getString("Cannot put over other items"));
 					}
-					 
+					
 				}
 			}
 		}
@@ -504,10 +505,10 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern implements
 	}
 	
 	/**
-	 * move offsets forward for offset ms 
+	 * move offsets forward for offset ms
 	 * @param offsets
 	 * @param offset to future if <code> offset &gt; 0 </code>, to past otherwise
-	 * @throws IllegalDataException 
+	 * @throws IllegalDataException
 	 */
 	public void moveIntervalItems(	java.util.Set offsets,
 									long offset) throws IllegalDataException {
@@ -650,14 +651,14 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern implements
 			}
 			
 		} else {
-			assert false : "Cannot undo due to haven't any actions yet"; //$NON-NLS-1$
+			assert false : "Cannot undo due to haven't any actions yet";
 		}
 	}
 
 	/**
 	 * joint from fist offset till last offset
 	 * @param offsets
-	 * @throws CreateObjectException 
+	 * @throws CreateObjectException
 	 */
 	public void joinIntervalItems(SortedSet offsets) throws CreateObjectException {
 		if (offsets == null || offsets.size() <= 1)
@@ -721,7 +722,7 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern implements
 		
 		IntervalsTemporalPattern intervalsTemporalPattern = IntervalsTemporalPattern.createInstance(this.modifierId, offsetIds, offsetDuration);
 		try {
-			MeasurementStorableObjectPool.putStorableObject(intervalsTemporalPattern);
+			StorableObjectPool.putStorableObject(intervalsTemporalPattern);
 		} catch (IllegalObjectEntityException e) {
 			// newer occur
 			assert false;

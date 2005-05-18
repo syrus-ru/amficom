@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementType.java,v 1.70 2005/05/14 09:43:14 arseniy Exp $
+ * $Id: MeasurementType.java,v 1.71 2005/05/18 11:34:41 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,8 +31,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 
 /**
- * @version $Revision: 1.70 $, $Date: 2005/05/14 09:43:14 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.71 $, $Date: 2005/05/18 11:34:41 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -101,7 +101,7 @@ public class MeasurementType extends ActionType implements Namable {
 				codename,
 				description);
 
-		this.inParameterTypeIds = new HashSet(); 
+		this.inParameterTypeIds = new HashSet();
 		this.setInParameterTypeIds0(inParameterTypeIds);
 
 		this.outParameterTypeIds = new HashSet();
@@ -119,7 +119,6 @@ public class MeasurementType extends ActionType implements Namable {
 	 * @param inParameterTypeIds
 	 * @param outParameterTypeIds
 	 * @param measurementPortTypeIds
-	 * @return
 	 * @throws CreateObjectException
 	 */
 	public static MeasurementType createInstance(Identifier creatorId,
@@ -245,7 +244,7 @@ public class MeasurementType extends ActionType implements Namable {
 
 	/**
 	 * client setter for inParameterTypeIds
-	 * 
+	 *
 	 * @param inParameterTypeIds
 	 *            The inParameterTypeIds to set.
 	 */
@@ -265,7 +264,7 @@ public class MeasurementType extends ActionType implements Namable {
 
 	/**
 	 * client setter for outParameterTypeIds
-	 * 
+	 *
 	 * @param outParameterTypeIds
 	 *            The outParameterTypeIds to set.
 	 */

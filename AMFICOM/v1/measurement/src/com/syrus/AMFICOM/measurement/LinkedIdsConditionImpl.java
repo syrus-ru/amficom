@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.37 2005/05/13 21:17:13 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.38 2005/05/18 11:34:42 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2005/05/13 21:17:13 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.38 $, $Date: 2005/05/18 11:34:42 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -56,7 +56,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 	 *         </li>
    	 *         <li>if {@link #entityCode} is {@link Evaluation} for all
 	 *         evaluation for parent action identifier in
-	 *         </li>  
+	 *         </li>
 	 *         <li>if {@link #entityCode} is {@link Measurement}for all
 	 *         measurements for Test identifier in linkedIds;</li>
 	 *         <li>if {@link #entityCode} is {@link Result}for all results for

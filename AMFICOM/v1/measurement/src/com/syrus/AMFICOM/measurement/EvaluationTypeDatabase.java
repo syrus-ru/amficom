@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeDatabase.java,v 1.80 2005/05/14 09:43:14 arseniy Exp $
+ * $Id: EvaluationTypeDatabase.java,v 1.81 2005/05/18 11:34:42 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.80 $, $Date: 2005/05/14 09:43:14 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.81 $, $Date: 2005/05/18 11:34:42 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -84,7 +84,7 @@ public class EvaluationTypeDatabase extends ActionTypeDatabase {
 	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
 			throws IllegalDataException, SQLException {
 		EvaluationType evaluationType = this.fromStorableObject(storableObject);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, evaluationType.getCodename(), SIZE_CODENAME_COLUMN); 
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, evaluationType.getCodename(), SIZE_CODENAME_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, evaluationType.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		return startParameterNumber;
 	}
@@ -97,7 +97,7 @@ public class EvaluationTypeDatabase extends ActionTypeDatabase {
 	}
 
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
-		throws IllegalDataException, RetrieveObjectException, SQLException {
+		throws IllegalDataException, SQLException {
 		EvaluationType evaluationType = (storableObject == null) ?
 				new EvaluationType(DatabaseIdentifier.getIdentifier(
 			resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, null, null, null, null, null) :
@@ -137,7 +137,7 @@ public class EvaluationTypeDatabase extends ActionTypeDatabase {
 		}
 	}
 
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
 		EvaluationType evaluationType = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:

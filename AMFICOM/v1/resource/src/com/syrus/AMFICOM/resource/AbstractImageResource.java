@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractImageResource.java,v 1.8 2005/04/08 12:57:16 arseniy Exp $
+ * $Id: AbstractImageResource.java,v 1.9 2005/05/18 11:37:17 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,8 +25,8 @@ import com.syrus.AMFICOM.resource.corba.ImageResource_Transferable;
 import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceDataPackage.ImageResourceSort;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.8 $, $Date: 2005/04/08 12:57:16 $
+ * @author $Author: bass $
+ * @version $Revision: 1.9 $, $Date: 2005/05/18 11:37:17 $
  * @module resource_v1
  */
 public abstract class AbstractImageResource extends StorableObject {
@@ -62,7 +62,7 @@ public abstract class AbstractImageResource extends StorableObject {
 
 	/**
 	 * Middle-tier constructor. Shouldn't be invoked by clients.
-	 * @throws CreateObjectException 
+	 * @throws CreateObjectException
 	 */
 	protected AbstractImageResource(final ImageResource_Transferable irt) throws CreateObjectException {
 		try {

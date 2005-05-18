@@ -1,5 +1,5 @@
 /*-
- * $Id: IntervalsTemporalPatternDatabase.java,v 1.2 2005/05/03 14:59:49 arseniy Exp $
+ * $Id: IntervalsTemporalPatternDatabase.java,v 1.3 2005/05/18 11:34:42 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,8 +39,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/05/03 14:59:49 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/05/18 11:34:42 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 public class IntervalsTemporalPatternDatabase extends StorableObjectDatabase {
@@ -101,7 +101,7 @@ public class IntervalsTemporalPatternDatabase extends StorableObjectDatabase {
 		SortedMap durMap = new TreeMap();
 		
 		IntervalsTemporalPattern intervalsTemporalPattern;
-		if (storableObject == null) 
+		if (storableObject == null)
 			intervalsTemporalPattern = new IntervalsTemporalPattern(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 					null, 0L, null, null);
 		else
@@ -128,11 +128,11 @@ public class IntervalsTemporalPatternDatabase extends StorableObjectDatabase {
 	
 	private Map getMapsFromDB(Identifier intervalsTemporalPatternId) throws RetrieveObjectException {
 		Map tableMap = new HashMap();
-		String sql = SQL_SELECT + IntervalsTemporalPatternWrapper.COLUMN_OFFSET + COMMA 
+		String sql = SQL_SELECT + IntervalsTemporalPatternWrapper.COLUMN_OFFSET + COMMA
 				+ IntervalsTemporalPatternWrapper.COLUMN_TEMPORAL_PATTREN_ID + COMMA
 				+ IntervalsTemporalPatternWrapper.COLUMN_DURATION
 				+ SQL_FROM  + IntervalsTemporalPatternWrapper.OFFSET_TEMP_PATTERN_AND_DURATION_TABLE
-				+ SQL_WHERE + IntervalsTemporalPatternWrapper.COLUMN_INTERVALS_TEMPORAL_PARENT_ID 
+				+ SQL_WHERE + IntervalsTemporalPatternWrapper.COLUMN_INTERVALS_TEMPORAL_PARENT_ID
 				+ EQUALS + DatabaseIdentifier.toSQLString(intervalsTemporalPatternId);
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -181,7 +181,7 @@ public class IntervalsTemporalPatternDatabase extends StorableObjectDatabase {
 		
 	}
 	
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
 		IntervalsTemporalPattern intervalsTemporalPattern = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
@@ -207,7 +207,7 @@ public class IntervalsTemporalPatternDatabase extends StorableObjectDatabase {
 	}
 	
 	private void remove(Identifier id) {
-		String sql = SQL_DELETE_FROM + IntervalsTemporalPatternWrapper.OFFSET_TEMP_PATTERN_AND_DURATION_TABLE 
+		String sql = SQL_DELETE_FROM + IntervalsTemporalPatternWrapper.OFFSET_TEMP_PATTERN_AND_DURATION_TABLE
 		+ SQL_WHERE + IntervalsTemporalPatternWrapper.COLUMN_INTERVALS_TEMPORAL_PARENT_ID
 		+ EQUALS + DatabaseIdentifier.toSQLString(id);
 		Statement statement = null;
@@ -276,7 +276,7 @@ public class IntervalsTemporalPatternDatabase extends StorableObjectDatabase {
 			Identifier temporalPatternId = (Identifier) abstractMap.get(offset);
 			Long duration = (Long) durationMap.get(offset);
 			if(dbRow != null) {
-				if(dbRow.get(TEMPORAL_PATTERN_ID_ROW) != temporalPatternId 
+				if(dbRow.get(TEMPORAL_PATTERN_ID_ROW) != temporalPatternId
 						|| dbRow.get(DURATION_ROW) != duration) {
 					List row = new ArrayList(2);
 					row.add(TEMPORAL_PATTERN_ID_ROW, temporalPatternId);
@@ -298,23 +298,23 @@ public class IntervalsTemporalPatternDatabase extends StorableObjectDatabase {
 	private void updateDB(Identifier intervalsTemporalPatternId, Map updateMap, int updateMode) throws UpdateObjectException {
 		String sql;
 		if(updateMode == MODE_UPDATE)
-			sql = SQL_UPDATE + IntervalsTemporalPatternWrapper.OFFSET_TEMP_PATTERN_AND_DURATION_TABLE 
-					+ SQL_SET 
-					+ IntervalsTemporalPatternWrapper.COLUMN_TEMPORAL_PATTREN_ID 
+			sql = SQL_UPDATE + IntervalsTemporalPatternWrapper.OFFSET_TEMP_PATTERN_AND_DURATION_TABLE
+					+ SQL_SET
+					+ IntervalsTemporalPatternWrapper.COLUMN_TEMPORAL_PATTREN_ID
 					+ EQUALS + QUESTION + COMMA
 					+ IntervalsTemporalPatternWrapper.COLUMN_DURATION
-					+ EQUALS + QUESTION 
-					+ SQL_WHERE + IntervalsTemporalPatternWrapper.COLUMN_INTERVALS_TEMPORAL_PARENT_ID 
-					+ EQUALS + DatabaseIdentifier.toSQLString(intervalsTemporalPatternId)  
-					+ SQL_AND + IntervalsTemporalPatternWrapper.COLUMN_OFFSET 
-					+ EQUALS + QUESTION; 
+					+ EQUALS + QUESTION
+					+ SQL_WHERE + IntervalsTemporalPatternWrapper.COLUMN_INTERVALS_TEMPORAL_PARENT_ID
+					+ EQUALS + DatabaseIdentifier.toSQLString(intervalsTemporalPatternId)
+					+ SQL_AND + IntervalsTemporalPatternWrapper.COLUMN_OFFSET
+					+ EQUALS + QUESTION;
 		else if(updateMode == MODE_INSERT)
-			sql = SQL_INSERT_INTO + IntervalsTemporalPatternWrapper.OFFSET_TEMP_PATTERN_AND_DURATION_TABLE 
+			sql = SQL_INSERT_INTO + IntervalsTemporalPatternWrapper.OFFSET_TEMP_PATTERN_AND_DURATION_TABLE
 					+ OPEN_BRACKET
 					+ IntervalsTemporalPatternWrapper.COLUMN_INTERVALS_TEMPORAL_PARENT_ID + COMMA
 					+ IntervalsTemporalPatternWrapper.COLUMN_TEMPORAL_PATTREN_ID + COMMA
 					+ IntervalsTemporalPatternWrapper.COLUMN_DURATION + COMMA
-					+ IntervalsTemporalPatternWrapper.COLUMN_OFFSET 
+					+ IntervalsTemporalPatternWrapper.COLUMN_OFFSET
 					+ CLOSE_BRACKET
 					+ SQL_VALUES
 					+ OPEN_BRACKET
@@ -383,10 +383,10 @@ public class IntervalsTemporalPatternDatabase extends StorableObjectDatabase {
 	}
 
 	private void removeFromDB(Identifier intervalsTemporalPatternId, Set setToRemove) throws UpdateObjectException {
-		String sql = SQL_DELETE_FROM + IntervalsTemporalPatternWrapper.OFFSET_TEMP_PATTERN_AND_DURATION_TABLE 
+		String sql = SQL_DELETE_FROM + IntervalsTemporalPatternWrapper.OFFSET_TEMP_PATTERN_AND_DURATION_TABLE
 				+ SQL_WHERE + IntervalsTemporalPatternWrapper.COLUMN_INTERVALS_TEMPORAL_PARENT_ID
-				+ EQUALS + DatabaseIdentifier.toSQLString(intervalsTemporalPatternId) 
-				+ SQL_AND + IntervalsTemporalPatternWrapper.COLUMN_OFFSET 
+				+ EQUALS + DatabaseIdentifier.toSQLString(intervalsTemporalPatternId)
+				+ SQL_AND + IntervalsTemporalPatternWrapper.COLUMN_OFFSET
 				+ EQUALS + QUESTION;
 		
 		PreparedStatement preparedStatement = null;
@@ -450,8 +450,7 @@ public class IntervalsTemporalPatternDatabase extends StorableObjectDatabase {
 		}
 	}
 	
-	public void insert(Set storableObjects) throws IllegalDataException,
-			CreateObjectException {
+	public void insert(Set storableObjects) throws CreateObjectException {
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 			IntervalsTemporalPattern intervalsTemporalPattern = (IntervalsTemporalPattern) it.next();
 			insertInLinkedTable(intervalsTemporalPattern);			

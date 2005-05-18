@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.64 2005/04/15 19:22:19 arseniy Exp $
+ * $Id: Measurement.java,v 1.65 2005/05/18 11:34:43 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,6 +24,7 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
 import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
@@ -31,8 +32,8 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.64 $, $Date: 2005/04/15 19:22:19 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.65 $, $Date: 2005/05/18 11:34:43 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -300,7 +301,7 @@ public class Measurement extends Action {
 		LinkedIdsCondition condition = new LinkedIdsCondition(this.id, ObjectEntities.RESULT_ENTITY_CODE);
 		java.util.Set results = null;
 		try {
-			results = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
+			results = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 		}
 		catch (ApplicationException ae) {
 			Log.errorException(ae);

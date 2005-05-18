@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingTypeDatabase.java,v 1.35 2005/05/14 09:43:14 arseniy Exp $
+ * $Id: ModelingTypeDatabase.java,v 1.36 2005/05/18 11:34:41 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/05/14 09:43:14 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.36 $, $Date: 2005/05/18 11:34:41 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -80,7 +80,7 @@ public class ModelingTypeDatabase extends ActionTypeDatabase {
 	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
 			throws IllegalDataException, SQLException {
 		ModelingType modelingType = this.fromStorableObject(storableObject);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, modelingType.getCodename(), SIZE_CODENAME_COLUMN); 
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, modelingType.getCodename(), SIZE_CODENAME_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, modelingType.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		return startParameterNumber;
 	}
@@ -93,7 +93,7 @@ public class ModelingTypeDatabase extends ActionTypeDatabase {
 	}
 
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
-		throws IllegalDataException, RetrieveObjectException, SQLException {
+		throws IllegalDataException, SQLException {
 		ModelingType modelingType = (storableObject == null) ?
 				new ModelingType(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 												 null,
@@ -101,7 +101,7 @@ public class ModelingTypeDatabase extends ActionTypeDatabase {
 												 null,
 												 null,
 												 null,
-												 null) : 
+												 null) :
 					this.fromStorableObject(storableObject);
 		modelingType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 									 DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
@@ -119,7 +119,7 @@ public class ModelingTypeDatabase extends ActionTypeDatabase {
 		super.retrieveParameterTypesByOneQuery(Collections.singleton(modelingType));
 	}
 
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
 		ModelingType modelingType = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:

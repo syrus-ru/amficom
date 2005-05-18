@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationDatabase.java,v 1.49 2005/04/01 08:43:32 bob Exp $
+ * $Id: EvaluationDatabase.java,v 1.50 2005/05/18 11:34:42 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.49 $, $Date: 2005/04/01 08:43:32 $
- * @author $Author: bob $
+ * @version $Revision: 1.50 $, $Date: 2005/05/18 11:34:42 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -86,7 +86,7 @@ public class EvaluationDatabase extends StorableObjectDatabase {
 			throws IllegalDataException, SQLException {
 		Evaluation evaluation = this.fromStorableObject(storableObject);
 		Measurement measurement = evaluation.getMeasurement();
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, evaluation.getType().getId()); 
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, evaluation.getType().getId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, evaluation.getMonitoredElementId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, (measurement != null) ? measurement.getId() : null);
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, evaluation.getThresholdSet().getId());
@@ -95,14 +95,14 @@ public class EvaluationDatabase extends StorableObjectDatabase {
 
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
-		Evaluation evaluation = (storableObject == null) ? 
+		Evaluation evaluation = (storableObject == null) ?
 				new Evaluation(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 								null,
 								0L,
 								null,
 								null,
 								null,
-								null) : 
+								null) :
 					this.fromStorableObject(storableObject);
 		EvaluationType evaluationType;
 		Measurement measurement = null;
@@ -129,7 +129,7 @@ public class EvaluationDatabase extends StorableObjectDatabase {
 		return evaluation;
 	}
 
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
 		Evaluation evaluation = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:

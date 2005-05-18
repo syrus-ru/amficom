@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.115 2005/05/13 10:50:54 bob Exp $
+ * $Id: Test.java,v 1.116 2005/05/18 11:34:42 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,8 +45,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.115 $, $Date: 2005/05/13 10:50:54 $
- * @author $Author: bob $
+ * @version $Revision: 1.116 $, $Date: 2005/05/18 11:34:42 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -113,9 +113,9 @@ public class Test extends StorableObject {
 			measurement = Measurement.createInstance(measurementCreatorId,
 					(MeasurementType) MeasurementStorableObjectPool.getStorableObject(this.measurementTypeId, true),
 					this.monitoredElement.getId(),
-					LangModelMeasurement.getString("created by Test") + ":'" 
-					+ this.getDescription() + "' " 
-					+ LangModelMeasurement.getString("at.time") 
+					LangModelMeasurement.getString("created by Test") + ":'"
+					+ this.getDescription() + "' "
+					+ LangModelMeasurement.getString("at.time")
 					+ " " + DatabaseDate.SDF.format(new Date(System.currentTimeMillis())),
 					this.mainMeasurementSetup,
 					startTime,
@@ -301,7 +301,7 @@ public class Test extends StorableObject {
 		Log.debugMessage("Test.isValid | this.measurementSetupIds != null && !this.measurementSetupIds.isEmpty() " + (this.measurementSetupIds != null && !this.measurementSetupIds.isEmpty()), Log.FINEST);
 		Log.debugMessage("Test.isValid | this.mainMeasurementSetup != null " + (this.mainMeasurementSetup != null), Log.FINEST);
 		return super.isValid() && this.timeStamps != null && this.timeStamps.isValid() && this.measurementTypeId != null && this.monitoredElement != null
-			&& this.description != null && this.measurementSetupIds != null 
+			&& this.description != null && this.measurementSetupIds != null
 			//&& !this.measurementSetupIds.isEmpty() && this.mainMeasurementSetup != null
 			;
 	}
@@ -380,7 +380,7 @@ public class Test extends StorableObject {
 						: (new Identifier_Transferable("")),
 				(this.evaluationTypeId != null) ? (Identifier_Transferable) this.evaluationTypeId.getTransferable()
 						: (new Identifier_Transferable("")),
-				(Identifier_Transferable)(this.groupTestId != null ? this.groupTestId : Identifier.VOID_IDENTIFIER).getTransferable(),  
+				(Identifier_Transferable)(this.groupTestId != null ? this.groupTestId : Identifier.VOID_IDENTIFIER).getTransferable(),
 				TestStatus.from_int(this.status),
 				(Identifier_Transferable) this.monitoredElement.getId().getTransferable(),
 				TestReturnType.from_int(this.returnType),
@@ -660,7 +660,7 @@ public class Test extends StorableObject {
 			assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		}
 
-		TestTimeStamps(TestTimeStamps_Transferable ttst) throws CreateObjectException {
+		TestTimeStamps(TestTimeStamps_Transferable ttst) {
 			this.discriminator = ttst.discriminator().value();
 			switch (this.discriminator) {
 				case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
@@ -728,7 +728,7 @@ public class Test extends StorableObject {
 			hashCodeGenerator.addObject(this.startTime);
 			hashCodeGenerator.addObject(this.endTime);
 			hashCodeGenerator.addObject(this.temporalPatternId);
-			int result = hashCodeGenerator.getResult(); 
+			int result = hashCodeGenerator.getResult();
 			return result;
 		}
 		

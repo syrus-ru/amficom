@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabase.java,v 1.74 2005/04/01 14:10:10 arseniy Exp $
+ * $Id: MeasurementDatabase.java,v 1.75 2005/05/18 11:34:42 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.74 $, $Date: 2005/04/01 14:10:10 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.75 $, $Date: 2005/05/18 11:34:42 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -132,7 +132,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 								null,
 								null,
 								null,
-								null) : 
+								null) :
 					this.fromStorableObject(storableObject);		
 
 		MeasurementType measurementType;

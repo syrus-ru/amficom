@@ -1,5 +1,5 @@
 /*
- * $Id: SetDatabase.java,v 1.84 2005/05/06 10:48:22 bob Exp $
+ * $Id: SetDatabase.java,v 1.85 2005/05/18 11:34:41 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,8 +41,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.84 $, $Date: 2005/05/06 10:48:22 $
- * @author $Author: bob $
+ * @version $Revision: 1.85 $, $Date: 2005/05/18 11:34:41 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -51,7 +51,7 @@ public class SetDatabase extends StorableObjectDatabase {
 	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
 
 	private static String columns;
-	private static String updateMultipleSQLValues;    
+	private static String updateMultipleSQLValues;
 
 	protected String getEnityName() {
 		return '"' + ObjectEntities.SET_ENTITY + '"';
@@ -95,7 +95,7 @@ public class SetDatabase extends StorableObjectDatabase {
 	}
 
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
-			throws IllegalDataException, RetrieveObjectException, SQLException {
+			throws IllegalDataException, SQLException {
 		Set set = (storableObject == null) ?
 				new Set(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, 0, null, null, null) :			
 				this.fromStorableObject(storableObject);
@@ -221,7 +221,7 @@ public class SetDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
 		Set set = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
@@ -271,14 +271,14 @@ public class SetDatabase extends StorableObjectDatabase {
 		Identifier setId = set.getId();		
 		SetParameter[] setParameters = set.getParameters();
 		Log.debugMessage("SetDatabase.insertSetParameters | setParameters count:" + setParameters.length, Log.DEBUGLEVEL01);
-		String sql = SQL_INSERT_INTO 
+		String sql = SQL_INSERT_INTO
 			+ ObjectEntities.SETPARAMETER_ENTITY
 			+ OPEN_BRACKET
 			+ StorableObjectWrapper.COLUMN_ID  + COMMA
 			+ StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
 			+ SetWrapper.LINK_COLUMN_SET_ID + COMMA
 			+ SetWrapper.LINK_COLUMN_PARAMETER_VALUE + CLOSE_BRACKET
-			+ SQL_VALUES 
+			+ SQL_VALUES
 			+ OPEN_BRACKET
 			+ QUESTION + COMMA
 			+ QUESTION + COMMA

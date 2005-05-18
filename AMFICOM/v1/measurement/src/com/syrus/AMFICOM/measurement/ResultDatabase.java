@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.85 2005/04/12 17:03:29 arseniy Exp $
+ * $Id: ResultDatabase.java,v 1.86 2005/05/18 11:34:42 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,8 +39,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.85 $, $Date: 2005/04/12 17:03:29 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.86 $, $Date: 2005/05/18 11:34:42 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -231,7 +231,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 			default:
 				Log.errorMessage("Unkown sort: " + resultSort + " of result " + result.getId().getIdentifierString());
 		}
-		result.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED), 
+		result.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 							 DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 							 DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 							 DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
@@ -295,7 +295,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 //		result.setParameters((SetParameter[]) parameters.toArray(new SetParameter[parameters.size()]));
 //	}
 
-	/**	 
+	/**	
 	 * @param results
 	 * @throws RetrieveObjectException
 	 */
@@ -307,7 +307,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 				+ StorableObjectWrapper.COLUMN_ID + COMMA
 				+ StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
 				+ ResultWrapper.LINK_COLUMN_PARAMETER_VALUE + COMMA
-				+ ResultWrapper.LINK_COLUMN_RESULT_ID 
+				+ ResultWrapper.LINK_COLUMN_RESULT_ID
 				+ SQL_FROM + ObjectEntities.RESULTPARAMETER_ENTITY
 				+ SQL_WHERE);
 		sql.append(idsEnumerationString(results, ResultWrapper.LINK_COLUMN_RESULT_ID, true));
@@ -381,7 +381,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg)
-			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+			throws IllegalDataException {
 		Result result = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:

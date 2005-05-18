@@ -1,5 +1,5 @@
 /*
- * $Id: SetParameter.java,v 1.30 2005/05/11 13:05:04 bob Exp $
+ * $Id: SetParameter.java,v 1.31 2005/05/18 11:34:42 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/05/11 13:05:04 $
- * @author $Author: bob $
+ * @version $Revision: 1.31 $, $Date: 2005/05/18 11:34:42 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -142,7 +142,7 @@ public class SetParameter implements TransferableObject, TypedObject, Identifiab
 //	public String toString() {
 //		String str = getClass().getName() + EOSL
 //					+ ID + this.id.toString() + EOSL
-//					+ ID_TYPE + KEY_VALUE_SEPERATOR 
+//					+ ID_TYPE + KEY_VALUE_SEPERATOR
 //					+ OPEN_BLOCK
 //					+ this.type.toString()
 //					+ CLOSE_BLOCK;				

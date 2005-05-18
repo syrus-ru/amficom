@@ -1,5 +1,5 @@
 /*
- * $Id: CronTemporalPattern.java,v 1.3 2005/04/25 09:47:17 bob Exp $
+ * $Id: CronTemporalPattern.java,v 1.4 2005/05/18 11:34:42 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,8 +36,8 @@ import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/04/25 09:47:17 $
- * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2005/05/18 11:34:42 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -85,20 +85,20 @@ public class CronTemporalPattern extends AbstractTemporalPattern {
 
 		public void fillAllData() {
 			if (this.minutes == null)
-				this.minutes = parseExpression(LangModelMeasurement.getString(I18N_KEY_MIN), "*", 0, 59); //$NON-NLS-1$ //$NON-NLS-2$
+				this.minutes = parseExpression(LangModelMeasurement.getString(I18N_KEY_MIN), "*", 0, 59);
 			if (this.hours == null)
-				this.hours = parseExpression(LangModelMeasurement.getString(I18N_KEY_HOUR), "*", 0, 23); //$NON-NLS-1$ //$NON-NLS-2$
+				this.hours = parseExpression(LangModelMeasurement.getString(I18N_KEY_HOUR), "*", 0, 23);
 			if (this.dayOfMonth == null)
 				this.dayOfMonth = parseExpression(
 									LangModelMeasurement
 											.getString(I18N_KEY_DAY_OF_MONTH),
-									"*", 1, 31); //$NON-NLS-1$ //$NON-NLS-2$
+									"*", 1, 31);
 			if (this.month == null)
-				this.month = parseExpression(LangModelMeasurement.getString(I18N_KEY_MONTH), "*", 0, 11); //$NON-NLS-1$ //$NON-NLS-2$
+				this.month = parseExpression(LangModelMeasurement.getString(I18N_KEY_MONTH), "*", 0, 11);
 			this.month.names = MONTH_NAMES;
 			if (this.dayOfWeek == null)
-				this.dayOfWeek = parseExpression(LangModelMeasurement.getString(I18N_KEY_DAY_OF_WEEK), //$NON-NLS-1$
-									"*", 0, 6); //$NON-NLS-1$ //$NON-NLS-2$
+				this.dayOfWeek = parseExpression(LangModelMeasurement.getString(I18N_KEY_DAY_OF_WEEK),
+									"*", 0, 6);
 			this.dayOfWeek.names = DAY_OF_WEEK_NAMES;
 		}
 
@@ -128,21 +128,21 @@ public class CronTemporalPattern extends AbstractTemporalPattern {
 				if (this.hours == null)
 					parseTemplate();
 				StringBuffer desc = new StringBuffer();
-				// //$NON-NLS-1$
+				//
 				if (this.hours.isAll()) {
 					desc.append(this.minutes.toString());
-					desc.append(" "); //$NON-NLS-1$
-					desc.append(LangModelMeasurement.getString(I18N_KEY_OF)); //$NON-NLS-1$
-					desc.append(" "); //$NON-NLS-1$
+					desc.append(" ");
+					desc.append(LangModelMeasurement.getString(I18N_KEY_OF));
+					desc.append(" ");
 					desc.append(this.hours.toString());
 
 				} else {
 					LinkedList list = new LinkedList();
 					for (int h = 0; h < this.hours.host.length; h++) {
 						for (int m = 0; m < this.minutes.host.length; m++) {
-							list.add((this.hours.host[h] < 10 ? "0" : "") //$NON-NLS-1$ //$NON-NLS-2$
-									+ Integer.toString(this.hours.host[h]) + ":" //$NON-NLS-1$
-									+ (this.minutes.host[m] < 10 ? "0" : "") //$NON-NLS-1$ //$NON-NLS-2$
+							list.add((this.hours.host[h] < 10 ? "0" : "")
+									+ Integer.toString(this.hours.host[h]) + ":"
+									+ (this.minutes.host[m] < 10 ? "0" : "")
 									+ Integer.toString(this.minutes.host[m]));
 						}
 					}
@@ -151,25 +151,25 @@ public class CronTemporalPattern extends AbstractTemporalPattern {
 						for (int i = 0; i < list.size(); i++) {
 							String str = (String) list.get(i);
 							if (desc.length() > 0)
-								desc.append(", "); //$NON-NLS-1$
+								desc.append(", ");
 							desc.append(str);
 						}
 					} else {
 						desc.append(this.hours.toString());
-						desc.append("; "); //$NON-NLS-1$
+						desc.append("; ");
 						desc.append(this.minutes.toString());
 					}
 				}
 				if (!this.dayOfWeek.isAll()) {
-					desc.append("; "); //$NON-NLS-1$
+					desc.append("; ");
 					desc.append(this.dayOfWeek.toString());
 				}
 				if (!this.dayOfMonth.isAll()) {
-					desc.append("; "); //$NON-NLS-1$
+					desc.append("; ");
 					desc.append(this.dayOfMonth.toString());
 				}
 				if (!this.month.isAll()) {
-					desc.append("; "); //$NON-NLS-1$
+					desc.append("; ");
 					desc.append(this.month.toString());
 				}
 				this.timeLineDescription = desc.toString();
@@ -223,7 +223,7 @@ public class CronTemporalPattern extends AbstractTemporalPattern {
 			//String template = timeLine.getTemplate();
 			//String template = (String) templates.get(k);
 			long startTimeCalc = System.currentTimeMillis();
-			Pattern p = Pattern.compile("(.+)\\s+(.+)\\s+(.+)\\s+(.+)\\s+(.+)"); //$NON-NLS-1$
+			Pattern p = Pattern.compile("(.+)\\s+(.+)\\s+(.+)\\s+(.+)\\s+(.+)");
 			//Pattern p = Pattern.compile("(.*)");
 			if (this.dateList != null)
 				this.dateList.clear();
@@ -236,39 +236,39 @@ public class CronTemporalPattern extends AbstractTemporalPattern {
 						String subString = this.template.substring(matcher.start(i), matcher
 								.end(i));
 						if (DEBUG)
-							System.out.println(i + "\t" + subString); //$NON-NLS-1$
+							System.out.println(i + "\t" + subString);
 						switch (i) {
 							case 1:
 								//minute
 								this.minutes = parseExpression(LangModelMeasurement
-										.getString(I18N_KEY_MIN), subString, 0, //$NON-NLS-1$
+										.getString(I18N_KEY_MIN), subString, 0,
 												59);
 								break;
 							case 2:
 								//hour
 								this.hours = parseExpression(LangModelMeasurement
-										.getString(I18N_KEY_HOUR), //$NON-NLS-1$
-												subString, 0, //$NON-NLS-1$
+										.getString(I18N_KEY_HOUR),
+												subString, 0,
 												23);
 								break;
 							case 3:
 								//day of month
 								this.dayOfMonth = parseExpression(LangModelMeasurement
 										.getString(I18N_KEY_DAY_OF_MONTH),
-													subString, //$NON-NLS-1$
+													subString,
 													1, 31);
 								break;
 							case 4:
 								//month
 								this.month = parseExpression(LangModelMeasurement
 										.getString(I18N_KEY_MONTH), subString,
-												0, //$NON-NLS-1$
+												0,
 												11);
 								break;
 							case 5:
 								//day of week
 								this.dayOfWeek = parseExpression(LangModelMeasurement
-										.getString(I18N_KEY_DAY_OF_WEEK), //$NON-NLS-1$
+										.getString(I18N_KEY_DAY_OF_WEEK),
 													subString, 0, 6);
 								break;
 						}
@@ -288,9 +288,9 @@ public class CronTemporalPattern extends AbstractTemporalPattern {
 			//c.set(Calendar.MINUTE, 41);
 			long backTime = c.getTimeInMillis();
 			if (DEBUG) {
-				System.out.println("startPeriod:" //$NON-NLS-1$
+				System.out.println("startPeriod:"
 						+ new Date(this.startPeriod).toString());
-				System.out.println("endPeriod:" //$NON-NLS-1$
+				System.out.println("endPeriod:"
 						+ new Date(this.endPeriod).toString());
 			}
 			for (int m = 0; m < this.month.host.length; m++) {
@@ -299,7 +299,7 @@ public class CronTemporalPattern extends AbstractTemporalPattern {
 				long mTime = c.getTimeInMillis();
 				if ((this.startPeriod - MONTH_LONG <= mTime) && (mTime <= this.endPeriod + MONTH_LONG)) {
 					if (DEBUG)
-						System.out.println("month\t" //$NON-NLS-1$
+						System.out.println("month\t"
 								+ c.getTime().toString());
 					long backMTime = c.getTimeInMillis();
 					for (int dm = 0; dm < this.dayOfMonth.host.length; dm++) {
@@ -309,7 +309,7 @@ public class CronTemporalPattern extends AbstractTemporalPattern {
 						if ((this.startPeriod - DAY_LONG <= mTime)
 								&& (mTime <= this.endPeriod + DAY_LONG)) {
 							if (DEBUG)
-								System.out.println("dayOfMonth\t" //$NON-NLS-1$
+								System.out.println("dayOfMonth\t"
 										+ c.getTime().toString());
 							long backDMTime = c.getTimeInMillis();
 							for (int dw = 0; dw < this.dayOfWeek.host.length; dw++) {
@@ -321,7 +321,7 @@ public class CronTemporalPattern extends AbstractTemporalPattern {
 										&& (mTime <= this.endPeriod + DAY_LONG)) {
 									if (DEBUG)
 										System.out
-												.println("dayOfWeek\t" //$NON-NLS-1$
+												.println("dayOfWeek\t"
 														+ c
 																.getTime()
 																.toString());
@@ -345,7 +345,7 @@ public class CronTemporalPattern extends AbstractTemporalPattern {
 											// (DEBUG)
 											//												System.out
 											//														.println("hour\t"
-											// //$NON-NLS-1$
+											//
 											//																+ c
 											//																		.getTime()
 											//																		.toString());
@@ -405,7 +405,7 @@ public class CronTemporalPattern extends AbstractTemporalPattern {
 																	.getTime());
 													if (DEBUG)
 														System.out
-																.println("minutes\t" //$NON-NLS-1$
+																.println("minutes\t"
 																		+ c
 																				.getTime()
 																				.toString());
@@ -425,8 +425,8 @@ public class CronTemporalPattern extends AbstractTemporalPattern {
 				}
 			}
 			if (DEBUG)
-				System.out.println("Calc time:" //$NON-NLS-1$
-						+ (System.currentTimeMillis() - startTimeCalc) + " ms."); //$NON-NLS-1$
+				System.out.println("Calc time:"
+						+ (System.currentTimeMillis() - startTimeCalc) + " ms.");
 
 		}
 
@@ -468,7 +468,7 @@ public class CronTemporalPattern extends AbstractTemporalPattern {
 		 * Parse one crontab-like expression [value[,value[...]]] .
 		 * value can be: * (asterix) , integer number, integer interval
 		 * n-m e.g 5-8
-		 * 
+		 *
 		 * @param exp
 		 *                expression to be parsed
 		 * @param min
@@ -482,7 +482,7 @@ public class CronTemporalPattern extends AbstractTemporalPattern {
 			boolean[] indices = new boolean[max + 1];
 			for (int i = 0; i < indices.length; i++)
 				indices[i] = false;
-			String[] params = exp.split(","); //$NON-NLS-1$
+			String[] params = exp.split(",");
 			int count = 0;
 			if (this.divisorList == null)
 				this.divisorList = new LinkedList();
@@ -502,7 +502,7 @@ public class CronTemporalPattern extends AbstractTemporalPattern {
 				int rvalue = -1;
 				String substr = params[j];
 				//System.out.println("->" + substr);
-				Pattern pattern = Pattern.compile("(\\*(\\/(\\d+))?)|((\\d+)(\\-(\\d+))?)"); //$NON-NLS-1$
+				Pattern pattern = Pattern.compile("(\\*(\\/(\\d+))?)|((\\d+)(\\-(\\d+))?)");
 				Matcher matcher = pattern.matcher(params[j]);
 				if (matcher.find()) {
 					for (int i = 1; i <= matcher.groupCount(); i++) {
@@ -527,8 +527,8 @@ public class CronTemporalPattern extends AbstractTemporalPattern {
 
 							}
 							if (DEBUG)
-								System.out.println(">" + i + "\t" + s //$NON-NLS-1$ //$NON-NLS-2$
-										+ "\t" + lvalue + "," + rvalue); //$NON-NLS-1$ //$NON-NLS-2$
+								System.out.println(">" + i + "\t" + s
+										+ "\t" + lvalue + "," + rvalue);
 						}
 						//					else {
 						//						System.out.println(">" + i +
@@ -677,14 +677,14 @@ public class CronTemporalPattern extends AbstractTemporalPattern {
 			if (this.divisor != null) {
 				for (int i = 0; i < this.divisor.length; i++) {
 					if (sbuf.length() > 0)
-						sbuf.append(", "); //$NON-NLS-1$
+						sbuf.append(", ");
 
-					sbuf.append(LangModelMeasurement.getString(I18N_KEY_EACH)); //$NON-NLS-1$
-					sbuf.append(" "); //$NON-NLS-1$
+					sbuf.append(LangModelMeasurement.getString(I18N_KEY_EACH));
+					sbuf.append(" ");
 					String str = Integer.toString(this.divisor[i]);
 					if (this.divisor[i] != 1) {
 						sbuf.append(str);
-						sbuf.append(" "); //$NON-NLS-1$
+						sbuf.append(" ");
 					}
 					sbuf.append(this.name);
 				}
@@ -693,32 +693,32 @@ public class CronTemporalPattern extends AbstractTemporalPattern {
 				for (int i = 0; i < this.starts.length; i++) {
 					if (this.starts[i] != this.ends[i]) {
 						if (sbuf.length() > 0)
-							sbuf.append(", "); //$NON-NLS-1$
-						sbuf.append(LangModelMeasurement.getString(I18N_KEY_FROM)); //$NON-NLS-1$
-						sbuf.append(" "); //$NON-NLS-1$
+							sbuf.append(", ");
+						sbuf.append(LangModelMeasurement.getString(I18N_KEY_FROM));
+						sbuf.append(" ");
 						if (this.names == null)
 							sbuf.append(Integer.toString(this.starts[i]));
 						else
 							sbuf.append(this.names[this.starts[i]]);
-						sbuf.append(" "); //$NON-NLS-1$
-						sbuf.append(LangModelMeasurement.getString(I18N_KEY_TO)); //$NON-NLS-1$
-						sbuf.append(" "); //$NON-NLS-1$
+						sbuf.append(" ");
+						sbuf.append(LangModelMeasurement.getString(I18N_KEY_TO));
+						sbuf.append(" ");
 						if (this.names == null)
 							sbuf.append(Integer.toString(this.ends[i]));
 						else
 							sbuf.append(this.names[this.ends[i]]);
-						sbuf.append(" "); //$NON-NLS-1$
+						sbuf.append(" ");
 						if (this.names == null)
 							sbuf.append(this.name);
 					} else {
 						if (sbuf.length() > 0)
-							sbuf.append(", "); //$NON-NLS-1$
+							sbuf.append(", ");
 						if (this.names == null)
 							sbuf.append(Integer.toString(this.ends[i]));
 						else
 							sbuf.append(this.names[this.ends[i]]);
 						if (this.names == null) {
-							sbuf.append(" "); //$NON-NLS-1$
+							sbuf.append(" ");
 							sbuf.append(this.name);
 						}
 					}
@@ -760,18 +760,18 @@ public class CronTemporalPattern extends AbstractTemporalPattern {
 	}
 
 	static final String[]		DAY_OF_WEEK_NAMES	= new String[] {
-			LangModelMeasurement.getString("Sunday"), LangModelMeasurement.getString("Monday"), //$NON-NLS-1$ //$NON-NLS-2$
-			LangModelMeasurement.getString("Tuesday"), LangModelMeasurement.getString("Wednesday"), //$NON-NLS-1$ //$NON-NLS-2$
-			LangModelMeasurement.getString("Thursday"), LangModelMeasurement.getString("Friday"), //$NON-NLS-1$ //$NON-NLS-2$
-			LangModelMeasurement.getString("Saturday"),};							//$NON-NLS-1$
+			LangModelMeasurement.getString("Sunday"), LangModelMeasurement.getString("Monday"),
+			LangModelMeasurement.getString("Tuesday"), LangModelMeasurement.getString("Wednesday"),
+			LangModelMeasurement.getString("Thursday"), LangModelMeasurement.getString("Friday"),
+			LangModelMeasurement.getString("Saturday"),};							
 
 	static final String[]		MONTH_NAMES		= new String[] {
-			LangModelMeasurement.getString("January"), LangModelMeasurement.getString("February"), //$NON-NLS-1$ //$NON-NLS-2$
-			LangModelMeasurement.getString("March"), LangModelMeasurement.getString("April"), //$NON-NLS-1$ //$NON-NLS-2$
-			LangModelMeasurement.getString("May"), LangModelMeasurement.getString("June"), //$NON-NLS-1$ //$NON-NLS-2$
-			LangModelMeasurement.getString("July"), LangModelMeasurement.getString("Augest"), //$NON-NLS-1$ //$NON-NLS-2$
-			LangModelMeasurement.getString("September"), LangModelMeasurement.getString("October"), //$NON-NLS-1$ //$NON-NLS-2$
-			LangModelMeasurement.getString("November"), LangModelMeasurement.getString("December")};	//$NON-NLS-1$ //$NON-NLS-2$
+			LangModelMeasurement.getString("January"), LangModelMeasurement.getString("February"),
+			LangModelMeasurement.getString("March"), LangModelMeasurement.getString("April"),
+			LangModelMeasurement.getString("May"), LangModelMeasurement.getString("June"),
+			LangModelMeasurement.getString("July"), LangModelMeasurement.getString("Augest"),
+			LangModelMeasurement.getString("September"), LangModelMeasurement.getString("October"),
+			LangModelMeasurement.getString("November"), LangModelMeasurement.getString("December")};	
 
 	static final int[]		WEEK_NUMBER		= new int[] { Calendar.SUNDAY, Calendar.MONDAY,
 			Calendar.TUESDAY, Calendar.WEDNESDAY, Calendar.THURSDAY, Calendar.FRIDAY, Calendar.SATURDAY};
@@ -835,7 +835,7 @@ public class CronTemporalPattern extends AbstractTemporalPattern {
 
 	/**
 	 * create new instance for client
-	 * 
+	 *
 	 * @param description
 	 * @param cronString
 	 * @throws CreateObjectException

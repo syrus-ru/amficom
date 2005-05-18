@@ -1,6 +1,6 @@
 /*
- * $Id: ActionTypeDatabase.java,v 1.2 2005/05/14 09:43:14 arseniy Exp $
- * 
+ * $Id: ActionTypeDatabase.java,v 1.3 2005/05/18 11:34:42 bass Exp $
+ *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
@@ -29,8 +29,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/05/14 09:43:14 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/05/18 11:34:42 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 public abstract class ActionTypeDatabase extends StorableObjectDatabase {

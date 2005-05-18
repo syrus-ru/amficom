@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractTemporalPattern.java,v 1.2 2005/04/22 14:33:11 bob Exp $
+ * $Id: AbstractTemporalPattern.java,v 1.3 2005/05/18 11:34:42 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/22 14:33:11 $
- * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2005/05/18 11:34:42 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module measurement_v1
  */
@@ -65,7 +65,7 @@ public abstract class AbstractTemporalPattern extends StorableObject {
 	/**
 	 * get times in ms that describes by temporal patterns and between start and
 	 * end
-	 * 
+	 *
 	 * @param start
 	 *            Date
 	 * @param end
@@ -80,7 +80,7 @@ public abstract class AbstractTemporalPattern extends StorableObject {
 	/**
 	 * get times in ms that describes by temporal patterns and between start and
 	 * end
-	 * 
+	 *
 	 * @param start
 	 *            long
 	 * @param end

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeDatabase.java,v 1.92 2005/05/14 09:43:14 arseniy Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.93 2005/05/18 11:34:42 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.92 $, $Date: 2005/05/14 09:43:14 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.93 $, $Date: 2005/05/18 11:34:42 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -66,7 +66,7 @@ public class MeasurementTypeDatabase extends ActionTypeDatabase  {
 
 	protected String getColumnsTmpl() {
 		if (columns == null) {
-			columns = StorableObjectWrapper.COLUMN_CODENAME + COMMA 
+			columns = StorableObjectWrapper.COLUMN_CODENAME + COMMA
 				+ StorableObjectWrapper.COLUMN_DESCRIPTION;
 		}
 		return columns;
@@ -74,7 +74,7 @@ public class MeasurementTypeDatabase extends ActionTypeDatabase  {
 
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
-			updateMultipleSQLValues = QUESTION + COMMA 
+			updateMultipleSQLValues = QUESTION + COMMA
 				+ QUESTION;
 		}
 		return updateMultipleSQLValues;
@@ -82,14 +82,14 @@ public class MeasurementTypeDatabase extends ActionTypeDatabase  {
 
 	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		MeasurementType measurementType = this.fromStorableObject(storableObject);
-		String sql = APOSTOPHE + DatabaseString.toQuerySubString(measurementType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA 
+		String sql = APOSTOPHE + DatabaseString.toQuerySubString(measurementType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(measurementType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE;
 		return sql;
 	}
 
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
-		throws IllegalDataException, RetrieveObjectException, SQLException {
-		MeasurementType measurementType = (storableObject == null) ? 
+		throws IllegalDataException, SQLException {
+		MeasurementType measurementType = (storableObject == null) ?
 				new MeasurementType(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 														null,
 														0L,
@@ -97,7 +97,7 @@ public class MeasurementTypeDatabase extends ActionTypeDatabase  {
 														null,
 														null,
 														null,
-														null) : 
+														null) :
 				this.fromStorableObject(storableObject);
 		measurementType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
@@ -136,7 +136,7 @@ public class MeasurementTypeDatabase extends ActionTypeDatabase  {
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg)
-			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+			throws IllegalDataException {
 		MeasurementType measurementType = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
@@ -228,7 +228,7 @@ public class MeasurementTypeDatabase extends ActionTypeDatabase  {
 					+ ObjectEntities.MNTTYPPARTYPLINK_ENTITY
 					+ SQL_WHERE + MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID + EQUALS + measurementTypeIdStr);
 			statement.executeUpdate(SQL_DELETE_FROM
-					+ ObjectEntities.MEASUREMENTTYPE_ENTITY 
+					+ ObjectEntities.MEASUREMENTTYPE_ENTITY
 					+ SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + measurementTypeIdStr);
 
 			connection.commit();

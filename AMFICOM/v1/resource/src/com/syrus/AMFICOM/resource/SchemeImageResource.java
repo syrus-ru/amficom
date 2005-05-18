@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeImageResource.java,v 1.15 2005/04/15 19:22:31 arseniy Exp $
+ * $Id: SchemeImageResource.java,v 1.16 2005/05/18 11:37:17 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageR
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.15 $, $Date: 2005/04/15 19:22:31 $
+ * @author $Author: bass $
+ * @version $Revision: 1.16 $, $Date: 2005/05/18 11:37:17 $
  * @module resource_v1
  */
 public final class SchemeImageResource extends AbstractImageResource {
@@ -51,7 +51,7 @@ public final class SchemeImageResource extends AbstractImageResource {
 	/**
 	 * If given a bad argument, will raise an AssertionError if assertions
 	 * enabled, and ::CORBA::BAD_OPERATION otherwise.
-	 * @throws CreateObjectException 
+	 * @throws CreateObjectException
 	 */
 	public SchemeImageResource(final ImageResource_Transferable imageResource) throws CreateObjectException {
 		super(imageResource);
@@ -68,11 +68,11 @@ public final class SchemeImageResource extends AbstractImageResource {
 	protected SchemeImageResource(final Identifier id,
 			final Identifier creatorId,
 			final long version) {
-		super(id, 
+		super(id,
 			new Date(System.currentTimeMillis()),
 			new Date(System.currentTimeMillis()),
-			creatorId, 
-			creatorId, 
+			creatorId,
+			creatorId,
 			version);
 		this.data = new ArrayList(3);
 	}
@@ -102,7 +102,7 @@ public final class SchemeImageResource extends AbstractImageResource {
 	public List getData() {
 		return Collections.unmodifiableList(this.data);
 	}
-    
+
 	/**
 	 * @see AbstractImageResource#getImage()
 	 */

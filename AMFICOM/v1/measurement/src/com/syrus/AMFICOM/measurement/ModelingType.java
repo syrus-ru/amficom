@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingType.java,v 1.25 2005/05/14 09:43:14 arseniy Exp $
+ * $Id: ModelingType.java,v 1.26 2005/05/18 11:34:42 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ModelingType_Transferable;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/05/14 09:43:14 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.26 $, $Date: 2005/05/18 11:34:42 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -235,7 +235,7 @@ public class ModelingType extends ActionType {
 
 	/**
 	 * client setter for inParameterTypeIds
-	 * 
+	 *
 	 * @param inParameterTypeIds
 	 *            The inParameterTypeIds to set.
 	 */
@@ -255,7 +255,7 @@ public class ModelingType extends ActionType {
 
 	/**
 	 * client setter for outParameterTypeIds
-	 * 
+	 *
 	 * @param outParameterTypeIds
 	 *            The outParameterTypeIds to set.
 	 */

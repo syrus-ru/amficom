@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingDatabase.java,v 1.37 2005/04/01 08:43:32 bob Exp $
+ * $Id: ModelingDatabase.java,v 1.38 2005/05/18 11:34:41 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2005/04/01 08:43:32 $
- * @author $Author: bob $
+ * @version $Revision: 1.38 $, $Date: 2005/05/18 11:34:41 $
+ * @author $Author: bass $
  * @module module_name
  */
 
@@ -94,8 +94,8 @@ public class ModelingDatabase extends StorableObjectDatabase {
 
   protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
-		Modeling modeling = (storableObject == null) ? 
-                new Modeling(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, null, null) : 
+		Modeling modeling = (storableObject == null) ?
+                new Modeling(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, null, null) :
                     this.fromStorableObject(storableObject);
 		ModelingType modelingType;
 		Set argumentSet;
@@ -119,7 +119,7 @@ public class ModelingDatabase extends StorableObjectDatabase {
     return modeling;
 	}
 
-  public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+  public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
   	Modeling modeling = this.fromStorableObject(storableObject);
     switch (retrieveKind) {
 			default:

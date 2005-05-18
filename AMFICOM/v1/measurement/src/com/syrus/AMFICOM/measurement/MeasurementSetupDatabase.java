@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.83 2005/04/13 10:01:20 arseniy Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.84 2005/05/18 11:34:42 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.83 $, $Date: 2005/04/13 10:01:20 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.84 $, $Date: 2005/05/18 11:34:42 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -96,7 +96,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		Set criteriaSet = measurementSetup.getCriteriaSet();
 		Set thresholdSet = measurementSetup.getThresholdSet();
 		Set etalon = measurementSetup.getEtalon();
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, measurementSetup.getParameterSet().getId()); 
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, measurementSetup.getParameterSet().getId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, (criteriaSet != null) ? criteriaSet.getId() : null);
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, (thresholdSet != null) ? thresholdSet.getId() : null);
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, (etalon != null) ? etalon.getId() : null);
@@ -207,7 +207,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
 		MeasurementSetup measurementSetup = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
