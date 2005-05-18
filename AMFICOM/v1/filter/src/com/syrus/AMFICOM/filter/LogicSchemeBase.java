@@ -1,5 +1,5 @@
 /*
- * $Id: LogicSchemeBase.java,v 1.5 2005/04/13 19:09:41 arseniy Exp $
+ * $Id: LogicSchemeBase.java,v 1.6 2005/05/18 12:42:49 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.ListIterator;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/04/13 19:09:41 $
+ * @version $Revision: 1.6 $, $Date: 2005/05/18 12:42:49 $
  * @module filter_v1
  */
 public class LogicSchemeBase implements Serializable
@@ -380,7 +380,7 @@ public class LogicSchemeBase implements Serializable
 		List allTopLinks = top.input.getLinks();
 
 		boolean result = true;
-    
+
     int index = 0;
 		for (ListIterator lIt = allTopLinks.listIterator(); lIt.hasNext(); index++)
 		{
@@ -648,14 +648,14 @@ public class LogicSchemeBase implements Serializable
 	public void writeObject(ObjectOutputStream out) throws IOException
 	{
 		List filterExpressions = new ArrayList();
-		for (ListIterator lIt = this.schemeElements.listIterator(); lIt.hasNext();)    
+		for (ListIterator lIt = this.schemeElements.listIterator(); lIt.hasNext();)
 		{
 			LogicSchemeElementBase se = (LogicSchemeElementBase)lIt.next();
 			if (se.type.equals(LogicSchemeElementBase.tCondition))
 				filterExpressions.add(se.filterExpression);
 		}
 		out.writeInt(filterExpressions.size());
-		for (ListIterator lIt = filterExpressions.listIterator(); lIt.hasNext();)    
+		for (ListIterator lIt = filterExpressions.listIterator(); lIt.hasNext();)
 		{
 			FilterExpressionInterface filterExpression = (FilterExpressionInterface )lIt.next();
 			filterExpression.writeObject(out);

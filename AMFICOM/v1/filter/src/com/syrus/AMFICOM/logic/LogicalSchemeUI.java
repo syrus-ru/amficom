@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalSchemeUI.java,v 1.19 2005/04/07 10:55:50 bob Exp $
+ * $Id: LogicalSchemeUI.java,v 1.20 2005/05/18 12:42:49 bass Exp $
  *
  * Copyright ? 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,8 +34,8 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/04/07 10:55:50 $
- * @author $Author: bob $
+ * @version $Revision: 1.20 $, $Date: 2005/05/18 12:42:49 $
+ * @author $Author: bass $
  * @module filter_v1
  */
 public class LogicalSchemeUI extends JComponent implements MouseListener, MouseMotionListener, SelectionListener, ItemListener {
@@ -380,7 +380,7 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 
 	/**
 	 * &copy by Vitaliy Shiryaev
-	 * 
+	 *
 	 * @param g2d
 	 * @param startX
 	 * @param startY
@@ -846,11 +846,11 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 //		}
 //	}
 
-	public void selectedItems(Collection selectedItems) {
+	public void selectedItems(Collection selectedItems1) {
 		this.selectedItems.clear();
 		this.firstSelectedLineItem = null;
 		this.secondSelectedLineItem = null;
-		for (Iterator it = selectedItems.iterator(); it.hasNext();) {
+		for (Iterator it = selectedItems1.iterator(); it.hasNext();) {
 			Item item = (Item) it.next();
 			if (item.isService())
 				continue;

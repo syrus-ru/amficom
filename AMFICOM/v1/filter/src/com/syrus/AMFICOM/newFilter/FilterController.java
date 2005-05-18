@@ -1,5 +1,5 @@
 /*
- * $Id: FilterController.java,v 1.10 2005/04/15 16:39:33 max Exp $
+ * $Id: FilterController.java,v 1.11 2005/05/18 12:42:50 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,8 +40,8 @@ import javax.swing.event.PopupMenuListener;
 
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/04/15 16:39:33 $
- * @author $Author: max $
+ * @version $Revision: 1.11 $, $Date: 2005/05/18 12:42:50 $
+ * @author $Author: bass $
  * @module filter_v1
  */
 public class FilterController implements ActionListener, PopupMenuListener {
@@ -129,7 +129,7 @@ public class FilterController implements ActionListener, PopupMenuListener {
 					e1.printStackTrace();
 				}
 				linkedObjects = key.getLinkedObjects();
-				String[] linkedNames = new String[linkedObjects.size()]; 
+				String[] linkedNames = new String[linkedObjects.size()];
 				for (int i = 0; i < linkedObjects.size(); i++) {
 					StorableObject linkedObject = (StorableObject) linkedObjects.get(i);
 					StorableObjectWrapper wrapper;
@@ -275,7 +275,7 @@ public class FilterController implements ActionListener, PopupMenuListener {
 				TypicalCondition condition = new TypicalCondition(selectedIndices[i], selectedIndices[i], OperationSort.OPERATION_EQUALS, entityCode, key);
 				conditions.add(condition);					
 			}
-			if (conditions.size() == 1) 
+			if (conditions.size() == 1)
 				this.model.addCondition((StorableObjectCondition)conditions.iterator().next(), conditionKey);
 			else {
 				try {
@@ -288,7 +288,7 @@ public class FilterController implements ActionListener, PopupMenuListener {
 			break;
 		case ConditionWrapper.LIST:
 			ListCondition listCondition = (ListCondition) tempCondition;
-			List linkedObjects = conditionKey.getLinkedObjects(); 
+			List linkedObjects = conditionKey.getLinkedObjects();
 			int[] linkedIndex = listCondition.getSelectedIndices();
 			if(linkedIndex.length == 0) {
 				this.view.showErrorMessage(Filter.WRONG_LIST_MESSAGE);

@@ -1,5 +1,5 @@
 /*-
- * $Id: FilterPanel.java,v 1.2 2005/04/16 21:36:20 arseniy Exp $
+ * $Id: FilterPanel.java,v 1.3 2005/05/18 12:42:50 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,8 +37,8 @@ import javax.swing.border.EtchedBorder;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/16 21:36:20 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/05/18 12:42:50 $
+ * @author $Author: bass $
  * @module filter_v1
  */
 public class FilterPanel extends JScrollPane implements FilterView {
@@ -90,7 +90,7 @@ public class FilterPanel extends JScrollPane implements FilterView {
 	
 	private JButton addButton;
 	private JButton changeButton;
-	private JButton removeButton; 
+	private JButton removeButton;
 	private JButton createSchemeButton;
 	private JButton startClear;
 	private JButton startDayButton;
@@ -217,7 +217,7 @@ public class FilterPanel extends JScrollPane implements FilterView {
 		filterPanel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.
 			RAISED));
 		
-		conditionPanel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.
+		this.conditionPanel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.
 				RAISED));
 		Insets none = new Insets( 0, 0, 0, 0);
 		Insets right = new Insets( 0, 0, 0, HORISONTAL_GAP);
@@ -236,7 +236,7 @@ public class FilterPanel extends JScrollPane implements FilterView {
 		gbc.insets = none;
 		gbc.weightx = 1;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
-		keysLine.add(keysCombo, gbc);
+		keysLine.add(this.keysCombo, gbc);
 		//typeLine
 		gbc.insets = smallRight;
 		gbc.weightx = 0;
@@ -246,7 +246,7 @@ public class FilterPanel extends JScrollPane implements FilterView {
 		gbc.insets = none;
 		gbc.weightx = 1;
 		gbc.fill = GridBagConstraints.BOTH;
-		typeLine.add(conditionPanel,gbc);
+		typeLine.add(this.conditionPanel,gbc);
 		//buttonLine
 		gbc.gridwidth = 1;
 		gbc.insets = right;
@@ -254,23 +254,23 @@ public class FilterPanel extends JScrollPane implements FilterView {
 		gbc.weighty = 0;
 		gbc.fill = GridBagConstraints.NONE;
 		gbc.anchor = GridBagConstraints.EAST;
-		buttonLine.add(addButton,gbc);
+		buttonLine.add(this.addButton,gbc);
 		gbc.weightx = 0;
 		gbc.anchor = GridBagConstraints.CENTER;
-		buttonLine.add(changeButton,gbc);
+		buttonLine.add(this.changeButton,gbc);
 		gbc.insets = none;
 		gbc.weightx = 1;
 		gbc.anchor = GridBagConstraints.WEST;
-		buttonLine.add(removeButton,gbc);
+		buttonLine.add(this.removeButton,gbc);
 		//textConditionAndSchemeLine
 		gbc.insets = right;
 		gbc.weightx = 1;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
-		textConditionAndSchemeLine.add(resultConditionTextField, gbc);
+		textConditionAndSchemeLine.add(this.resultConditionTextField, gbc);
 		gbc.insets = none;
 		gbc.weightx = 0;
 		gbc.fill = GridBagConstraints.NONE;
-		textConditionAndSchemeLine.add(createSchemeButton, gbc);
+		textConditionAndSchemeLine.add(this.createSchemeButton, gbc);
 		
 		//main panel
 		gbc.weightx = 1;
@@ -437,7 +437,7 @@ public class FilterPanel extends JScrollPane implements FilterView {
 			int index = indices[i];
 			selectedNames[i] = (String) this.conditionNames[index];
 		}
-		return selectedNames; 
+		return selectedNames;
 	}
 	
 	public void createLogicalSchemeView(LogicalScheme logicalScheme) {
@@ -460,9 +460,9 @@ public class FilterPanel extends JScrollPane implements FilterView {
 	}
 	
 	public void setDateCondition(DateCondition dateCondition) {
-		long startYearMonthDay = ((Date)this.startDateSpinner.getValue()).getTime(); 
+		long startYearMonthDay = ((Date)this.startDateSpinner.getValue()).getTime();
 		long startTime = ((Date)this.startTimeSpinner.getValue()).getTime();
-		long endYearMonthDay = ((Date)this.endDateSpinner.getValue()).getTime(); 
+		long endYearMonthDay = ((Date)this.endDateSpinner.getValue()).getTime();
 		long endTime = ((Date)this.endTimeSpinner.getValue()).getTime();
 		Date start = new Date(startYearMonthDay + startTime);
 		Date end = new Date(endYearMonthDay + endTime);
@@ -470,11 +470,11 @@ public class FilterPanel extends JScrollPane implements FilterView {
 		dateCondition.setEndDate(end);		
 	}
 
-	public void refreshCreatedConditions(Object[] conditionNames) {
-		this.conditionNames = conditionNames;
-		String[] names = new String[conditionNames.length]; 
-		for (int i = 0; i < conditionNames.length; i++) {
-			names[i] = "Condition " + (i+1) + " : " + conditionNames[i];
+	public void refreshCreatedConditions(Object[] conditionNames1) {
+		this.conditionNames = conditionNames1;
+		String[] names = new String[conditionNames1.length];
+		for (int i = 0; i < conditionNames1.length; i++) {
+			names[i] = "Condition " + (i+1) + " : " + conditionNames1[i];
 		}
 		this.conditions.setListData(names);
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalConditionUI.java,v 1.16 2005/04/14 13:23:05 bob Exp $
+ * $Id: LogicalConditionUI.java,v 1.17 2005/05/18 12:42:49 bass Exp $
  *
  * Copyright ? 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,8 +34,8 @@ import com.syrus.AMFICOM.logic.Populatable;
 import com.syrus.AMFICOM.logic.ServiceItem;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/04/14 13:23:05 $
- * @author $Author: bob $
+ * @version $Revision: 1.17 $, $Date: 2005/05/18 12:42:49 $
+ * @author $Author: bass $
  * @module filter_v1
  */
 public class LogicalConditionUI {
@@ -194,7 +194,7 @@ public class LogicalConditionUI {
 						public void run() {
 							while (true) {		
 								String oldName = result.getName();
-								result.setName("Result" + i++);
+								result.setName("Result" + this.i++);
 								String newName = result.getName();
 								result.propertyChange(new PropertyChangeEvent(this, AbstractItem.OBJECT_NAME_PROPERTY, oldName, newName));
 								try {

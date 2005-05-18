@@ -1,5 +1,5 @@
 /*
- * $Id: FilterGUI.java,v 1.9 2005/04/15 16:46:24 max Exp $
+ * $Id: FilterGUI.java,v 1.10 2005/05/18 12:42:50 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/04/15 16:46:24 $
- * @author $Author: max $
+ * @version $Revision: 1.10 $, $Date: 2005/05/18 12:42:50 $
+ * @author $Author: bass $
  * @module misc
  * @deprecated use {@link com.syrus.AMFICOM.newFilter.FilterPanel}
  */
@@ -76,8 +76,8 @@ public class FilterGUI extends JFrame implements FilterView {
 	private JTextField toField 		= 		new JTextField(5);
 	private JCheckBox boundaryCheckBox = 	new JCheckBox();
 	
-	private JButton addButton;  
-	private JButton removeButton; 
+	private JButton addButton;
+	private JButton removeButton;
 	private JButton createSchemeButton;
 	private JButton startClear;
 	private JButton startDayButton;
@@ -383,9 +383,9 @@ public class FilterGUI extends JFrame implements FilterView {
 	}
 	
 	public void setDateCondition(DateCondition dateCondition) {
-		long startYearMonthDay = ((Date)this.startDateSpinner.getValue()).getTime(); 
+		long startYearMonthDay = ((Date)this.startDateSpinner.getValue()).getTime();
 		long startTime = ((Date)this.startTimeSpinner.getValue()).getTime();
-		long endYearMonthDay = ((Date)this.endDateSpinner.getValue()).getTime(); 
+		long endYearMonthDay = ((Date)this.endDateSpinner.getValue()).getTime();
 		long endTime = ((Date)this.endTimeSpinner.getValue()).getTime();
 		Date start = new Date(startYearMonthDay + startTime);
 		Date end = new Date(endYearMonthDay + endTime);

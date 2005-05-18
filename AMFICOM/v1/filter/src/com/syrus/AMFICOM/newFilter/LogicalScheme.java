@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalScheme.java,v 1.7 2005/04/15 16:43:26 max Exp $
+ * $Id: LogicalScheme.java,v 1.8 2005/05/18 12:42:50 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,8 +24,8 @@ import com.syrus.AMFICOM.logic.LogicalItem;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/04/15 16:43:26 $
- * @author $Author: max $
+ * @version $Revision: 1.8 $, $Date: 2005/05/18 12:42:50 $
+ * @author $Author: bass $
  * @module filter_v1
  */
 public class LogicalScheme {
@@ -47,13 +47,13 @@ public class LogicalScheme {
 		for (Iterator it = children.iterator(); it.hasNext();) {
 			LogicalItem child = (LogicalItem) it.next();
 			String type = child.getType();
-			if (type.equals(LogicalItem.OR)) 
+			if (type.equals(LogicalItem.OR))
 				condition = new CompoundCondition(getResultConditions(child), CompoundConditionSort.OR);
 			else if (type.equals(LogicalItem.AND))
 				condition = new CompoundCondition(getResultConditions(child), CompoundConditionSort.AND);
 			else if (type.equals(LogicalItem.CONDITION))
 				condition = child.getCondition();
-			else 
+			else
 				throw new IllegalDataException("LogicalScheme getResultConditions | wrong type");
 			conditions.add(condition);
 		}
@@ -120,7 +120,7 @@ public class LogicalScheme {
 		if (oldItem != null) {
 			oldItem.setCondition(condition);
 			return;
-		} 
+		}
 		if(isDefault()) {
 			if(this.rootItem.getChildren() == Collections.EMPTY_LIST) {
 				LogicalItem conditionItem = new LogicalItem(name, condition);
@@ -172,7 +172,7 @@ public class LogicalScheme {
 	public void removeCondition(String keyName) {
 		int index = this.keyNames.indexOf(keyName);
 		this.keyNames.remove(index);
-		String name = CONDITION + (index+1); 
+		String name = CONDITION + (index+1);
 		LogicalItem conditionItem = findConditionItem(name, this.rootItem);
 		LogicalItem parent = (LogicalItem) conditionItem.getParent();
 		conditionItem.setParent(null);
@@ -202,7 +202,7 @@ public class LogicalScheme {
 	}
 	
 	public String getStringCondition() {
-		StringBuffer condition = createStringCondition(rootItem, new StringBuffer());
+		StringBuffer condition = createStringCondition(this.rootItem, new StringBuffer());
 		return condition.toString();
 	}
 	

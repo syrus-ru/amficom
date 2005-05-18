@@ -1,5 +1,5 @@
 /*
- * $Id: Filter.java,v 1.10 2005/04/15 16:36:23 max Exp $
+ * $Id: Filter.java,v 1.11 2005/05/18 12:42:50 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,8 +18,8 @@ import com.syrus.AMFICOM.general.LinkedConditionLoader;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/04/15 16:36:23 $
- * @author $Author: max $
+ * @version $Revision: 1.11 $, $Date: 2005/05/18 12:42:50 $
+ * @author $Author: bass $
  * @module misc
  */
 public class Filter {
@@ -45,7 +45,7 @@ public class Filter {
 		
 	public Filter(ConditionWrapper wrapper, LinkedConditionLoader linkedConditionLoader) {
 		this.keys = new ArrayList(wrapper.getKeys());
-		this.entityCode = wrapper.getEntityCode(); 
+		this.entityCode = wrapper.getEntityCode();
 		this.filterViews = new LinkedList();
 		this.linkedConditionLoader = linkedConditionLoader;
 		this.keyNames = new String[this.keys.size()];
@@ -81,7 +81,7 @@ public class Filter {
 	public void refreshCreatedConditions() {
 		for (Iterator it = this.filterViews.iterator(); it.hasNext();) {
 			FilterView view = (FilterView) it.next();
-			view.refreshCreatedConditions(conditionNames.toArray());
+			view.refreshCreatedConditions(this.conditionNames.toArray());
 			view.refreshResultConditionString(this.logicalScheme.getStringCondition());
 		}
 	}

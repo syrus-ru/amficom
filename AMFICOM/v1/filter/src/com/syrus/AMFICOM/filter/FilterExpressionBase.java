@@ -1,5 +1,5 @@
 /*
- * $Id: FilterExpressionBase.java,v 1.4 2005/04/13 19:09:41 arseniy Exp $
+ * $Id: FilterExpressionBase.java,v 1.5 2005/05/18 12:42:49 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/04/13 19:09:41 $
+ * @version $Revision: 1.5 $, $Date: 2005/05/18 12:42:49 $
  * @module filter_v1
  */
 public class FilterExpressionBase implements FilterExpressionInterface
@@ -146,7 +146,7 @@ public class FilterExpressionBase implements FilterExpressionInterface
 		fe.setName(getName());
 		fe.setColumnName(getColumnName());
 		fe.setId(getId());
-    
+
     List cloneList = new ArrayList();
     cloneList.addAll(getVec());
 		fe.setVec(cloneList);

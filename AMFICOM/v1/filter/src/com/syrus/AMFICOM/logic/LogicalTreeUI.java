@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalTreeUI.java,v 1.16 2005/04/14 13:23:05 bob Exp $
+ * $Id: LogicalTreeUI.java,v 1.17 2005/05/18 12:42:49 bass Exp $
  *
  * Copyright ? 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,15 +51,14 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.event.TreeWillExpandListener;
 import javax.swing.tree.DefaultTreeCellRenderer;
-import javax.swing.tree.ExpandVetoException;
 import javax.swing.tree.TreeCellEditor;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/04/14 13:23:05 $
- * @author $Author: bob $
+ * @version $Revision: 1.17 $, $Date: 2005/05/18 12:42:49 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module filter_v1
  */
@@ -275,7 +274,7 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems, Seriali
 
 				public Object createValue(UIDefaults arg0) {
 					if (useCheckedRenderer)
-						return new ItemCheckBoxTreeCellRenderer(); 
+						return new ItemCheckBoxTreeCellRenderer();
 					return new ItemTreeLabelCellRenderer();
 				}
 			});			
@@ -310,7 +309,7 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems, Seriali
 				this.rootItem = new ServiceItem("/");
 				this.treeModel = new ItemTreeModel(this.rootItem);
 				this.rootItem.addChangeListener(this.treeModel.getItemListener());
-			} else 
+			} else
 				this.treeModel = new ItemTreeModel(this.rootItem);
 			
 		}
@@ -482,12 +481,12 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems, Seriali
 			
 			this.tree.addTreeWillExpandListener(new TreeWillExpandListener() {
 
-				public void treeWillCollapse(TreeExpansionEvent event) throws ExpandVetoException {
+				public void treeWillCollapse(TreeExpansionEvent event) {
 					// TODO Auto-generated method stub
 
 				}
 
-				public void treeWillExpand(TreeExpansionEvent event) throws ExpandVetoException {
+				public void treeWillExpand(TreeExpansionEvent event) {
 					TreePath path = event.getPath();
 					Object lastPathComponent = path.getLastPathComponent();
 					if (lastPathComponent instanceof Populatable) {

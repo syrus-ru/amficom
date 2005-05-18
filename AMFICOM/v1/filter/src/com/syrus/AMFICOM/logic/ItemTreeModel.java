@@ -1,5 +1,5 @@
 /*-
- * $Id: ItemTreeModel.java,v 1.11 2005/04/14 14:08:57 bob Exp $
+ * $Id: ItemTreeModel.java,v 1.12 2005/05/18 12:42:49 bass Exp $
  *
  * Copyright ? 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,8 +22,8 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/04/14 14:08:57 $
- * @author $Author: bob $
+ * @version $Revision: 1.12 $, $Date: 2005/05/18 12:42:49 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module filter_v1
  */
@@ -241,7 +241,7 @@ public class ItemTreeModel implements TreeModel, ItemListener {
 	 * Notifies all listeners that have registered interest for notification on
 	 * this event type. The event instance is lazily created using the
 	 * parameters passed into the fire method.
-	 * 
+	 *
 	 * @param source
 	 *            the node being changed
 	 * @param path
@@ -310,7 +310,7 @@ public class ItemTreeModel implements TreeModel, ItemListener {
 	 * Notifies all listeners that have registered interest for notification on
 	 * this event type. The event instance is lazily created using the
 	 * parameters passed into the fire method.
-	 * 
+	 *
 	 * @param source
 	 *            the node where new elements are being inserted
 	 * @param path
@@ -347,7 +347,7 @@ public class ItemTreeModel implements TreeModel, ItemListener {
 	 * Notifies all listeners that have registered interest for notification on
 	 * this event type. The event instance is lazily created using the
 	 * parameters passed into the fire method.
-	 * 
+	 *
 	 * @param source
 	 *            the node where elements are being removed
 	 * @param path

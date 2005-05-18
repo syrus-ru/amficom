@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalSchemeController.java,v 1.3 2005/04/12 13:31:04 max Exp $
+ * $Id: LogicalSchemeController.java,v 1.4 2005/05/18 12:42:50 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,14 +14,14 @@ import com.syrus.AMFICOM.logic.LogicalItem;
 import com.syrus.AMFICOM.logic.LogicalSchemeUI;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/04/12 13:31:04 $
- * @author $Author: max $
+ * @version $Revision: 1.4 $, $Date: 2005/05/18 12:42:50 $
+ * @author $Author: bass $
  * @module filter_v1
  */
 
 public class LogicalSchemeController {
 	
-	private LogicalScheme model; 
+	private LogicalScheme model;
 	private LogicalSchemeView view;
 	private LogicalSchemeUI logicalSchemeUI;
 	
@@ -124,7 +124,7 @@ public class LogicalSchemeController {
 			LogicalItem item = (LogicalItem) it.next();
 			if (item.getMaxChildrenCount() == 0)
 				number++;
-			else 
+			else
 				number = getConditionCount0(item, number);		
 		}
 		
