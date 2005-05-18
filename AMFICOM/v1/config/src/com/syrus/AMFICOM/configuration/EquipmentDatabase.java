@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.82 2005/03/23 18:16:36 arseniy Exp $
+ * $Id: EquipmentDatabase.java,v 1.83 2005/05/18 11:27:14 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,6 @@ import com.syrus.AMFICOM.general.CharacterizableDatabase;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -27,8 +26,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.82 $, $Date: 2005/03/23 18:16:36 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.83 $, $Date: 2005/05/18 11:27:14 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
@@ -206,7 +205,7 @@ public class EquipmentDatabase extends CharacterizableDatabase {
 		return equipment;
 	}
 
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
 		Equipment equipment = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:

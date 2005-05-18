@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortDatabase.java,v 1.48 2005/03/11 10:17:12 bob Exp $
+ * $Id: MeasurementPortDatabase.java,v 1.49 2005/05/18 11:27:15 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,6 @@ import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -28,8 +27,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.48 $, $Date: 2005/03/11 10:17:12 $
- * @author $Author: bob $
+ * @version $Revision: 1.49 $, $Date: 2005/05/18 11:27:15 $
+ * @author $Author: bass $
  * @module config_v1
  */
 public class MeasurementPortDatabase extends CharacterizableDatabase {
@@ -52,7 +51,7 @@ public class MeasurementPortDatabase extends CharacterizableDatabase {
 				+ MeasurementPortWrapper.COLUMN_KIS_ID + COMMA
 				+ MeasurementPortWrapper.COLUMN_PORT_ID;
 		}
-		return columns; 
+		return columns;
 	}
 
 	protected String getUpdateMultipleSQLValuesTmpl() {
@@ -138,7 +137,7 @@ public class MeasurementPortDatabase extends CharacterizableDatabase {
 		return measurementPort;
 	}
 
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
 		MeasurementPort measurementPort = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:

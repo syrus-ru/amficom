@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadType.java,v 1.31 2005/04/15 19:22:12 arseniy Exp $
+ * $Id: CableThreadType.java,v 1.32 2005/05/18 11:27:14 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
  * optical fiber (or an <i>abstract </i> optical fiber), the latter is a type of
  * cable (or an <i>abstract </i> cable containing this thread).
  *
- * @version $Revision: 1.31 $, $Date: 2005/04/15 19:22:12 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.32 $, $Date: 2005/05/18 11:27:14 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
@@ -83,13 +83,13 @@ public final class CableThreadType extends StorableObjectType implements Namable
 			final int color,
 			final LinkType linkType,
 			final CableLinkType cableLinkType) {
-		super(id, 
-			new Date(), 
-			new Date(), 
-			creatorId, 
+		super(id,
+			new Date(),
+			new Date(),
+			creatorId,
 			creatorId,
 			version,
-			codename, 
+			codename,
 			description);
 
 		this.name = name;
@@ -164,12 +164,12 @@ public final class CableThreadType extends StorableObjectType implements Namable
 			final int color,
 			final LinkType linkType,
 			final CableLinkType cableLinkType) {
-		super.setAttributes(created, 
-			modified, 
-			creatorId, 
+		super.setAttributes(created,
+			modified,
+			creatorId,
 			modifierId,
 			version,
-			codename, 
+			codename,
 			description);
 		this.name = name;
 		this.color = color;

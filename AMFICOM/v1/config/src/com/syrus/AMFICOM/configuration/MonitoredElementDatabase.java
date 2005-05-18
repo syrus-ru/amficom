@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.64 2005/04/12 16:50:24 arseniy Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.65 2005/05/18 11:27:16 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,8 +40,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.64 $, $Date: 2005/04/12 16:50:24 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.65 $, $Date: 2005/05/18 11:27:16 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
@@ -77,10 +77,10 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
-			updateMultipleSQLValues = QUESTION + COMMA 
-				+ QUESTION + COMMA 
-				+ QUESTION + COMMA 
-				+ QUESTION + COMMA 
+			updateMultipleSQLValues = QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
 				+ QUESTION;
 		}
 		return updateMultipleSQLValues;
@@ -118,22 +118,22 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 	}
 
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
-			throws IllegalDataException, RetrieveObjectException, SQLException {
+			throws IllegalDataException, SQLException {
 		MonitoredElement monitoredElement = (storableObject == null) ? null : this.fromStorableObject(storableObject);
 		if (monitoredElement == null) {
 			monitoredElement = new MonitoredElement(DatabaseIdentifier.getIdentifier(resultSet,
 				StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, null, 0, null, null);
 		}
 		monitoredElement.setAttributes(
-			DatabaseDate.fromQuerySubString(resultSet,StorableObjectWrapper.COLUMN_CREATED), 
-			DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED), 
+			DatabaseDate.fromQuerySubString(resultSet,StorableObjectWrapper.COLUMN_CREATED),
+			DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 			DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 			DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
 			resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
-			DatabaseIdentifier.getIdentifier(resultSet, DomainMember.COLUMN_DOMAIN_ID), 
-			DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)), 
-			DatabaseIdentifier.getIdentifier(resultSet, MonitoredElementWrapper.COLUMN_MEASUREMENT_PORT_ID), 
-			resultSet.getInt(MonitoredElementWrapper.COLUMN_SORT), 
+			DatabaseIdentifier.getIdentifier(resultSet, DomainMember.COLUMN_DOMAIN_ID),
+			DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
+			DatabaseIdentifier.getIdentifier(resultSet, MonitoredElementWrapper.COLUMN_MEASUREMENT_PORT_ID),
+			resultSet.getInt(MonitoredElementWrapper.COLUMN_SORT),
 			DatabaseString.fromQuerySubString(resultSet.getString(MonitoredElementWrapper.COLUMN_LOCAL_ADDRESS)));
 		return monitoredElement;
 	}
@@ -272,7 +272,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg)
-			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+			throws IllegalDataException {
 		MonitoredElement monitoredElement = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:

@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathDatabase.java,v 1.58 2005/03/11 10:17:12 bob Exp $
+ * $Id: TransmissionPathDatabase.java,v 1.59 2005/05/18 11:27:14 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,6 @@ import com.syrus.AMFICOM.general.CharacterizableDatabase;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -27,8 +26,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.58 $, $Date: 2005/03/11 10:17:12 $
- * @author $Author: bob $
+ * @version $Revision: 1.59 $, $Date: 2005/05/18 11:27:14 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
@@ -118,22 +117,22 @@ public class TransmissionPathDatabase extends CharacterizableDatabase {
 			throw new RetrieveObjectException(ae);
 		}
 		transmissionPath.setAttributes(
-			DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED), 
-			DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED), 
-			DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID), 
+			DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
+			DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
+			DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 			DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
 			resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
-			DatabaseIdentifier.getIdentifier(resultSet, DomainMember.COLUMN_DOMAIN_ID), 
+			DatabaseIdentifier.getIdentifier(resultSet, DomainMember.COLUMN_DOMAIN_ID),
 			(name != null) ? name : "",
-			(description != null) ? description : "", 
-			type, 
-			DatabaseIdentifier.getIdentifier(resultSet,	TransmissionPathWrapper.COLUMN_START_PORT_ID), 
+			(description != null) ? description : "",
+			type,
+			DatabaseIdentifier.getIdentifier(resultSet,	TransmissionPathWrapper.COLUMN_START_PORT_ID),
 			DatabaseIdentifier.getIdentifier(resultSet,	TransmissionPathWrapper.COLUMN_FINISH_PORT_ID));
 		return transmissionPath;
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg)
-			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+			throws IllegalDataException {
 		TransmissionPath transmissionPath = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:

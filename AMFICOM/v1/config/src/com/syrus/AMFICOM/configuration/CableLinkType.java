@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkType.java,v 1.34 2005/04/15 19:22:12 arseniy Exp $
+ * $Id: CableLinkType.java,v 1.35 2005/05/18 11:27:15 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,6 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -30,13 +29,14 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/04/15 19:22:12 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.35 $, $Date: 2005/05/18 11:27:15 $
+ * @author $Author: bass $
  * @module config_v1
  */
 public final class CableLinkType extends AbstractLinkType implements Characterizable {
@@ -153,7 +153,7 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 
 		Set characteristicIds = Identifier.fromTransferables(cltt.characteristic_ids);
 		this.characteristics = new HashSet(cltt.characteristic_ids.length);
-		this.setCharacteristics0(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
+		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
 	}
 	
 	public IDLEntity getTransferable() {
@@ -243,7 +243,7 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 		final LinkedIdsCondition lic = new LinkedIdsCondition(this.id, ObjectEntities.CABLETHREADTYPE_ENTITY_CODE);
 		Set cableThreadTypes;
 		try {
-			cableThreadTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(lic, true);
+			cableThreadTypes = StorableObjectPool.getStorableObjectsByCondition(lic, true);
 		}
 		catch (final ApplicationException ae) {
 			Log.errorException(ae);

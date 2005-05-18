@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortType.java,v 1.44 2005/04/15 19:22:12 arseniy Exp $
+ * $Id: MeasurementPortType.java,v 1.45 2005/05/18 11:27:15 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,6 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -30,13 +29,14 @@ import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2005/04/15 19:22:12 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.45 $, $Date: 2005/05/18 11:27:15 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
@@ -89,7 +89,7 @@ public class MeasurementPortType extends StorableObjectType implements Character
 	}
 	
 	/**
-	 * create new instance for client 
+	 * create new instance for client
 	 * @param creatorId
 	 * @param codename
 	 * @param description
@@ -124,7 +124,7 @@ public class MeasurementPortType extends StorableObjectType implements Character
 
 		Set characteristicIds = Identifier.fromTransferables(mptt.characteristic_ids);
 		this.characteristics = new HashSet(mptt.characteristic_ids.length);
-		this.setCharacteristics0(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
+		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
 	}
 
 	public IDLEntity getTransferable() {

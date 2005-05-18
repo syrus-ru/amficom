@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.47 2005/04/15 19:22:12 arseniy Exp $
+ * $Id: MonitoredElement.java,v 1.48 2005/05/18 11:27:15 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,7 +19,6 @@ import org.omg.CORBA.portable.IDLEntity;
 import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
-import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
@@ -31,8 +30,8 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.47 $, $Date: 2005/04/15 19:22:12 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.48 $, $Date: 2005/05/18 11:27:15 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
@@ -60,13 +59,8 @@ public class MonitoredElement extends DomainMember {
 		}
 	}
 
-	public MonitoredElement(MonitoredElement_Transferable met) throws CreateObjectException {
-		try {
-			this.fromTransferable(met);
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
+	public MonitoredElement(MonitoredElement_Transferable met) {
+		this.fromTransferable(met);
 	}
 	
 	protected MonitoredElement(Identifier id,
@@ -110,7 +104,7 @@ public class MonitoredElement extends DomainMember {
 												  MonitoredElementSort sort,
 												  String localAddress,
 												  Set monitoredDomainMemberIds) throws CreateObjectException {
-		if (creatorId == null || domainId == null || name == null || measurementPortId == null || 
+		if (creatorId == null || domainId == null || name == null || measurementPortId == null ||
 				localAddress == null || monitoredDomainMemberIds == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		
@@ -132,7 +126,7 @@ public class MonitoredElement extends DomainMember {
 		}
 	}
 
-	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(IDLEntity transferable) {
 		MonitoredElement_Transferable met = (MonitoredElement_Transferable) transferable;
 		super.fromTransferable(met.header, new Identifier(met.domain_id));
 		this.measurementPortId = new Identifier(met.measurement_port_id);

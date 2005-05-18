@@ -1,5 +1,5 @@
 /*
- * $Id: Port.java,v 1.56 2005/04/20 16:37:28 bass Exp $
+ * $Id: Port.java,v 1.57 2005/05/18 11:27:15 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,6 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -31,13 +30,14 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.56 $, $Date: 2005/04/20 16:37:28 $
+ * @version $Revision: 1.57 $, $Date: 2005/05/18 11:27:15 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -141,8 +141,8 @@ public class Port extends StorableObject implements Characterizable, TypedObject
 		this.sort = pt.sort.value();
 
 		Set characteristicIds = Identifier.fromTransferables(pt.characteristic_ids);
-		this.characteristics = new HashSet(pt.characteristic_ids.length); 
-		this.setCharacteristics0(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
+		this.characteristics = new HashSet(pt.characteristic_ids.length);
+		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
 	}
 	
 

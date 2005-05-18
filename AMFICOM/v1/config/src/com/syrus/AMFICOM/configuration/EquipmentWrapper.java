@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentWrapper.java,v 1.11 2005/04/11 11:48:35 bob Exp $
+ * $Id: EquipmentWrapper.java,v 1.12 2005/05/18 11:27:15 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/04/11 11:48:35 $
- * @author $Author: bob $
+ * @version $Revision: 1.12 $, $Date: 2005/05/18 11:27:15 $
+ * @author $Author: bass $
  * @module configuration_v1
  */
 public final class EquipmentWrapper extends StorableObjectWrapper {
@@ -128,7 +128,7 @@ public final class EquipmentWrapper extends StorableObjectWrapper {
 				equipment.setName((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))
 				equipment.setDescription((String) value);
-			else if (key.equals(COLUMN_TYPE_ID)) 
+			else if (key.equals(COLUMN_TYPE_ID))
 				equipment.setType((EquipmentType)value);
 			else if (key.equals(COLUMN_IMAGE_ID))
 				equipment.setImageId((Identifier) value);

@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeWrapper.java,v 1.12 2005/04/11 11:48:35 bob Exp $
+ * $Id: CableLinkTypeWrapper.java,v 1.13 2005/05/18 11:27:16 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/04/11 11:48:35 $
- * @author $Author: bob $
+ * @version $Revision: 1.13 $, $Date: 2005/05/18 11:27:16 $
+ * @author $Author: bass $
  * @module configuration_v1
  */
 public final class CableLinkTypeWrapper extends StorableObjectWrapper {
@@ -109,7 +109,7 @@ public final class CableLinkTypeWrapper extends StorableObjectWrapper {
 				type.setManufacturerCode((String) value);
 			else if (key.equals(COLUMN_IMAGE_ID))
 				type.setImageId((Identifier) value);
-			else if (key.equals(COLUMN_CHARACTERISTICS)) 
+			else if (key.equals(COLUMN_CHARACTERISTICS))
 				type.setCharacteristics((Set) value);
 		}
 	}

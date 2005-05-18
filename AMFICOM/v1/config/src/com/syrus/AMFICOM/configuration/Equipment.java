@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.84 2005/04/15 19:22:12 arseniy Exp $
+ * $Id: Equipment.java,v 1.85 2005/05/18 11:27:15 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,6 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -31,6 +30,7 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
@@ -38,8 +38,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.84 $, $Date: 2005/04/15 19:22:12 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.85 $, $Date: 2005/05/18 11:27:15 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
@@ -130,7 +130,7 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 
 	/**
 	 * create new instance for client
-	 * 
+	 *
 	 * @param creatorId
 	 * @param domainId
 	 * @param type
@@ -216,7 +216,7 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 
 		Set characteristicIds = Identifier.fromTransferables(et.characteristic_ids);
 		this.characteristics = new HashSet(et.characteristic_ids.length);
-		this.setCharacteristics0(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
+		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
 	}
 
 	public IDLEntity getTransferable() {
@@ -451,7 +451,7 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 	 */
 	public Set getPorts() {
 		try {
-			return ConfigurationStorableObjectPool
+			return StorableObjectPool
 					.getStorableObjectsByCondition(
 							new LinkedIdsCondition(
 									this.id,

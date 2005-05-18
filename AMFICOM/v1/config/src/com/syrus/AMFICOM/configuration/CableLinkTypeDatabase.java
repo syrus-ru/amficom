@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeDatabase.java,v 1.27 2005/03/29 12:09:09 bob Exp $
+ * $Id: CableLinkTypeDatabase.java,v 1.28 2005/05/18 11:27:16 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,8 +15,6 @@ import com.syrus.AMFICOM.general.CharacterizableDatabase;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.Log;
@@ -24,12 +22,12 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/03/29 12:09:09 $
- * @author $Author: bob $
+ * @version $Revision: 1.28 $, $Date: 2005/05/18 11:27:16 $
+ * @author $Author: bass $
  * @module config_v1
  */
 public class CableLinkTypeDatabase extends CharacterizableDatabase {
-	private static final int SIZE_MANUFACTURER_COLUMN = 64; 
+	private static final int SIZE_MANUFACTURER_COLUMN = 64;
 
 	private static final int SIZE_MANUFACTURER_CODE_COLUMN = 64;
 
@@ -74,7 +72,7 @@ public class CableLinkTypeDatabase extends CharacterizableDatabase {
 	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		CableLinkType cableLinkType = this.fromStorableObject(storableObject);
 		String sql = APOSTOPHE + DatabaseString.toQuerySubString(cableLinkType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(cableLinkType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE 
+			+ APOSTOPHE + DatabaseString.toQuerySubString(cableLinkType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE
 			+ APOSTOPHE + DatabaseString.toQuerySubString(cableLinkType.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
 			+ cableLinkType.getSort().value() + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(cableLinkType.getManufacturer(), SIZE_MANUFACTURER_COLUMN) + APOSTOPHE + COMMA
@@ -103,7 +101,7 @@ public class CableLinkTypeDatabase extends CharacterizableDatabase {
 	}
 
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
-			throws IllegalDataException, RetrieveObjectException, SQLException {
+			throws IllegalDataException, SQLException {
 		CableLinkType cableLinkType = storableObject == null ? null : this.fromStorableObject(storableObject);
 		if (cableLinkType == null) {
 			cableLinkType = new CableLinkType(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
@@ -133,7 +131,7 @@ public class CableLinkTypeDatabase extends CharacterizableDatabase {
 		return cableLinkType;
 	}
 
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
       CableLinkType cableLinkType = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:

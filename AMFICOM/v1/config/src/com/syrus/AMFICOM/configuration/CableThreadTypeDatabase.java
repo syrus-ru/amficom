@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadTypeDatabase.java,v 1.29 2005/04/01 07:57:28 bob Exp $
+ * $Id: CableThreadTypeDatabase.java,v 1.30 2005/05/18 11:27:15 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/04/01 07:57:28 $
- * @author $Author: bob $
+ * @version $Revision: 1.30 $, $Date: 2005/05/18 11:27:15 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
@@ -112,7 +112,7 @@ public class CableThreadTypeDatabase extends StorableObjectDatabase {
 		catch (final ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
 		}
-        
+
 		cableThreadType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),									
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
@@ -129,7 +129,7 @@ public class CableThreadTypeDatabase extends StorableObjectDatabase {
 		return cableThreadType;
 	}
 	
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
 		CableThreadType cableThreadType = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:

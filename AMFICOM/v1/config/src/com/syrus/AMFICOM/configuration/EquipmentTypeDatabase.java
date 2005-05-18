@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentTypeDatabase.java,v 1.46 2005/03/11 10:17:12 bob Exp $
+ * $Id: EquipmentTypeDatabase.java,v 1.47 2005/05/18 11:27:15 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,8 +16,6 @@ import com.syrus.AMFICOM.general.CharacterizableDatabase;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.Log;
@@ -25,13 +23,13 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2005/03/11 10:17:12 $
- * @author $Author: bob $
+ * @version $Revision: 1.47 $, $Date: 2005/05/18 11:27:15 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
 public class EquipmentTypeDatabase extends CharacterizableDatabase {
-	private static final int SIZE_MANUFACTURER_COLUMN = 64; 
+	private static final int SIZE_MANUFACTURER_COLUMN = 64;
 
 	private static final int SIZE_MANUFACTURER_CODE_COLUMN = 64;
 
@@ -94,7 +92,7 @@ public class EquipmentTypeDatabase extends CharacterizableDatabase {
 	}
 
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
-			throws IllegalDataException, RetrieveObjectException, SQLException {
+			throws IllegalDataException, SQLException {
 		EquipmentType equipmentType = storableObject == null ? null : this.fromStorableObject(storableObject);
 		if (equipmentType == null) {
 			equipmentType = new EquipmentType(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
@@ -120,7 +118,7 @@ public class EquipmentTypeDatabase extends CharacterizableDatabase {
 		return equipmentType;
 	}
 
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
 		EquipmentType equipmentType = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:

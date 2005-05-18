@@ -1,5 +1,5 @@
 /*
- * $Id: PortType.java,v 1.50 2005/04/15 19:22:12 arseniy Exp $
+ * $Id: PortType.java,v 1.51 2005/05/18 11:27:16 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,6 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -31,13 +30,14 @@ import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.50 $, $Date: 2005/04/15 19:22:12 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.51 $, $Date: 2005/05/18 11:27:16 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
@@ -132,7 +132,7 @@ public class PortType extends StorableObjectType implements Characterizable, Nam
 		this.sort = ptt.sort.value();
 
 		Set characteristicIds = Identifier.fromTransferables(ptt.characteristic_ids);
-		this.characteristics = GeneralStorableObjectPool.getStorableObjects(characteristicIds, true);
+		this.characteristics = StorableObjectPool.getStorableObjects(characteristicIds, true);
 	}
 
 	public IDLEntity getTransferable() {

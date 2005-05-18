@@ -1,5 +1,5 @@
 /*-
- * $Id: ConfigurationDatabaseContext.java,v 1.41 2005/04/01 11:02:30 bass Exp $
+ * $Id: ConfigurationDatabaseContext.java,v 1.42 2005/05/18 11:27:14 bass Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,7 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2005/04/01 11:02:30 $
+ * @version $Revision: 1.42 $, $Date: 2005/05/18 11:27:14 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -35,7 +35,7 @@ public final class ConfigurationDatabaseContext {
 	private static CableThreadDatabase		cableThreadDatabase;
 
 	private ConfigurationDatabaseContext() {
-		assert false; 
+		assert false;
 	}
 
 	public static void init(
@@ -123,7 +123,7 @@ public final class ConfigurationDatabaseContext {
 			case ObjectEntities.CABLETHREAD_ENTITY_CODE:
 				return getCableThreadDatabase();
 			default:
-				Log.errorMessage("ConfigurationDatabaseContext.getDatabase | Unknown entity: " + entityCode); //$NON-NLS-1$
+				Log.errorMessage("ConfigurationDatabaseContext.getDatabase | Unknown entity: " + entityCode);
 				return null;
 		}
 	}

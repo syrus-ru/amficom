@@ -1,5 +1,5 @@
 /*
- * $Id: LinkTypeDatabase.java,v 1.32 2005/03/11 10:17:12 bob Exp $
+ * $Id: LinkTypeDatabase.java,v 1.33 2005/05/18 11:27:14 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,8 +16,6 @@ import com.syrus.AMFICOM.general.CharacterizableDatabase;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.Log;
@@ -25,8 +23,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/03/11 10:17:12 $
- * @author $Author: bob $
+ * @version $Revision: 1.33 $, $Date: 2005/05/18 11:27:14 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
@@ -71,7 +69,7 @@ public class LinkTypeDatabase extends CharacterizableDatabase {
 	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		LinkType linkType = this.fromStorableObject(storableObject);
 		String sql = APOSTOPHE + DatabaseString.toQuerySubString(linkType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(linkType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE 
+			+ APOSTOPHE + DatabaseString.toQuerySubString(linkType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE
 			+ APOSTOPHE + DatabaseString.toQuerySubString(linkType.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
 			+ linkType.getSort().value() + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(linkType.getManufacturer(), SIZE_MANUFACTURER_COLUMN) + APOSTOPHE + COMMA
@@ -101,7 +99,7 @@ public class LinkTypeDatabase extends CharacterizableDatabase {
 	}
 
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
-			throws IllegalDataException, RetrieveObjectException, SQLException {
+			throws IllegalDataException, SQLException {
 		LinkType linkType = storableObject == null ? null : this.fromStorableObject(storableObject);
 		if (linkType == null) {
 			linkType = new LinkType(DatabaseIdentifier.getIdentifier(resultSet,StorableObjectWrapper.COLUMN_ID),
@@ -131,7 +129,7 @@ public class LinkTypeDatabase extends CharacterizableDatabase {
 		return linkType;
 	}
 
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
 		LinkType linkType = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:

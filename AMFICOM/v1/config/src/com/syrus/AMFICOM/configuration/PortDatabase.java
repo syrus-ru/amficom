@@ -1,5 +1,5 @@
 /*
- * $Id: PortDatabase.java,v 1.55 2005/04/20 16:37:29 bass Exp $
+ * $Id: PortDatabase.java,v 1.56 2005/05/18 11:27:15 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,6 @@ import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -27,7 +26,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.55 $, $Date: 2005/04/20 16:37:29 $
+ * @version $Revision: 1.56 $, $Date: 2005/05/18 11:27:15 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -74,7 +73,7 @@ public class PortDatabase extends CharacterizableDatabase {
 		Identifier equipmentId = port.getEquipmentId();
 		return DatabaseIdentifier.toSQLString(typeId) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(port.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE	+ COMMA
-			+ DatabaseIdentifier.toSQLString(equipmentId) + COMMA 
+			+ DatabaseIdentifier.toSQLString(equipmentId) + COMMA
 			+ port.getSort().value();
 	}
 
@@ -109,7 +108,7 @@ public class PortDatabase extends CharacterizableDatabase {
 		return port;
 	}
 
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
 		Port port = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:

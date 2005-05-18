@@ -1,5 +1,5 @@
 /*
- * $Id: LinkType.java,v 1.43 2005/04/15 19:22:12 arseniy Exp $
+ * $Id: LinkType.java,v 1.44 2005/05/18 11:27:15 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,6 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -30,12 +29,13 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2005/04/15 19:22:12 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.44 $, $Date: 2005/05/18 11:27:15 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
@@ -119,15 +119,15 @@ public class LinkType extends AbstractLinkType implements Characterizable {
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			LinkType linkType = new LinkType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.LINKTYPE_ENTITY_CODE), 
+			LinkType linkType = new LinkType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.LINKTYPE_ENTITY_CODE),
 						creatorId,
 						0L,
-						codename, 
-						description, 
-						name, 
-						sort.value(), 
-						manufacturer, 
-						manufacturerCode, 
+						codename,
+						description,
+						name,
+						sort.value(),
+						manufacturer,
+						manufacturerCode,
 						imageId);
 			linkType.changed = true;
 			return linkType;
@@ -149,7 +149,7 @@ public class LinkType extends AbstractLinkType implements Characterizable {
 
 		Set characteristicIds = Identifier.fromTransferables(ltt.characteristic_ids);
 		this.characteristics = new HashSet(ltt.characteristic_ids.length);
-		this.setCharacteristics0(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
+		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
 	}
 
 	public IDLEntity getTransferable() {

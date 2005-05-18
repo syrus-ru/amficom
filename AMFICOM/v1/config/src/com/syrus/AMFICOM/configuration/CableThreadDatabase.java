@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadDatabase.java,v 1.24 2005/05/03 14:02:14 max Exp $
+ * $Id: CableThreadDatabase.java,v 1.25 2005/05/18 11:27:15 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,12 +28,12 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/05/03 14:02:14 $
- * @author $Author: max $
+ * @version $Revision: 1.25 $, $Date: 2005/05/18 11:27:15 $
+ * @author $Author: bass $
  * @module config_v1
  */
 public class CableThreadDatabase extends StorableObjectDatabase  {
-    
+
 	private static String columns;
 	private static String updateMultipleSQLValues;
 
@@ -135,7 +135,7 @@ public class CableThreadDatabase extends StorableObjectDatabase  {
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg)
-			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+			throws IllegalDataException {
 		CableThread cableThread = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
