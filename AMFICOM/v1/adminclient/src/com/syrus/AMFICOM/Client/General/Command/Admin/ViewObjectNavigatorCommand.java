@@ -1,5 +1,5 @@
 /*
- * $Id: ViewObjectNavigatorCommand.java,v 1.2 2004/09/27 16:32:17 bass Exp $
+ * $Id: ViewObjectNavigatorCommand.java,v 1.3 2005/05/18 14:49:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,7 +19,7 @@ import javax.swing.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2004/09/27 16:32:17 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/18 14:49:56 $
  * @module admin_v1
  */
 public class ViewObjectNavigatorCommand extends VoidCommand
@@ -62,8 +62,8 @@ public class ViewObjectNavigatorCommand extends VoidCommand
 
     frame = new JInternalFrame();
     JScrollPane jScrollPane1 = new JScrollPane();
-    jScrollPane1.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-    jScrollPane1.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+    jScrollPane1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+    jScrollPane1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
     jScrollPane1.setBorder(BorderFactory.createLoweredBevelBorder());
     frame.getContentPane().add(jScrollPane1, BorderLayout.CENTER);
     jScrollPane1.getViewport().add(utp, null);

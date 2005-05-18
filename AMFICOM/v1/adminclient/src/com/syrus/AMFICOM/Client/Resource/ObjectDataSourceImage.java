@@ -2,12 +2,7 @@ package com.syrus.AMFICOM.Client.Resource;
 
 import java.util.Vector;
 
-import com.syrus.AMFICOM.Client.Resource.Object.OperatorCategory;
-import com.syrus.AMFICOM.Client.Resource.Object.OperatorGroup;
-import com.syrus.AMFICOM.Client.Resource.Object.OperatorProfile;
-import com.syrus.AMFICOM.Client.Resource.System.Agent;
-import com.syrus.AMFICOM.Client.Resource.System.Client;
-import com.syrus.AMFICOM.Client.Resource.System.Server;
+import com.syrus.AMFICOM.administration.Server;
 
 public final class ObjectDataSourceImage extends DataSourceImage {
 	public ObjectDataSourceImage(DataSourceInterface di) {

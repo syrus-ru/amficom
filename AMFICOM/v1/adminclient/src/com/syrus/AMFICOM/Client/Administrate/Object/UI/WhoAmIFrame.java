@@ -7,7 +7,6 @@ import javax.swing.*;
 import com.syrus.AMFICOM.Client.General.Lang.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Object.*;
 
 public class WhoAmIFrame extends JInternalFrame
 {

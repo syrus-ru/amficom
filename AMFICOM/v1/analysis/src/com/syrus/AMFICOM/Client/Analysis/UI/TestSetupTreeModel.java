@@ -25,8 +25,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
-import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.io.BellcoreStructure;
 
 class TestSetupTreeModel extends ObjectResourceTreeModel
@@ -112,7 +112,7 @@ class TestSetupTreeModel extends ObjectResourceTreeModel
 					{
 						Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(domainId, true);
 						LinkedIdsCondition condition = new LinkedIdsCondition(domain.getId(), ObjectEntities.MS_ENTITY_CODE);
-						Collection mSetups = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
+						Collection mSetups = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 
 						java.util.Set testsHt = new HashSet();
 						for(Iterator it = mSetups.iterator(); it.hasNext(); )

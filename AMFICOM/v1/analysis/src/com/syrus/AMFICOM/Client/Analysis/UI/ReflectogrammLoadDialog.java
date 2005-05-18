@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogrammLoadDialog.java,v 1.16 2005/05/05 12:40:44 bob Exp $
+ * $Id: ReflectogrammLoadDialog.java,v 1.17 2005/05/18 14:49:56 bass Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,6 +34,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.ParameterTypeCodenames;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.logic.IconPopulatableItem;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.logic.ItemTreeIconLabelCellRenderer;
@@ -50,8 +51,8 @@ import com.syrus.io.BellcoreReader;
 import com.syrus.io.BellcoreStructure;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/05/05 12:40:44 $
- * @author $Author: bob $
+ * @version $Revision: 1.17 $, $Date: 2005/05/18 14:49:56 $
+ * @author $Author: bass $
  * @module analysis_v1
  */
 public class ReflectogrammLoadDialog extends JDialog {
@@ -118,7 +119,7 @@ public class ReflectogrammLoadDialog extends JDialog {
 
 			public void actionPerformed(ActionEvent e) {		
 				try {
-					MeasurementStorableObjectPool.refresh();
+					StorableObjectPool.refresh();
 				} catch (ApplicationException e1) {
 					JOptionPane.showMessageDialog((Component) e.getSource(), e1.getMessage(), LangModelAnalyse.getString("Error"),
 						JOptionPane.OK_OPTION);

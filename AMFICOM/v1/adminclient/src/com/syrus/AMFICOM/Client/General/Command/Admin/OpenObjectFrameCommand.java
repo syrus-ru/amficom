@@ -1,5 +1,5 @@
 /*
- * $Id: OpenObjectFrameCommand.java,v 1.3 2004/09/27 16:34:18 bass Exp $
+ * $Id: OpenObjectFrameCommand.java,v 1.4 2005/05/18 14:49:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,14 +14,12 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelAdmin;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Object.*;
-import com.syrus.AMFICOM.Client.Resource.System.*;
 import java.awt.*;
 import javax.swing.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2004/09/27 16:34:18 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/18 14:49:56 $
  * @module admin_v1
  */
 public class OpenObjectFrameCommand extends VoidCommand

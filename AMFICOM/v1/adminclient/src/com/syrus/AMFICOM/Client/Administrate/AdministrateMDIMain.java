@@ -1,5 +1,5 @@
 /*
- * $Id: AdministrateMDIMain.java,v 1.4 2005/04/25 09:41:04 bass Exp $
+ * $Id: AdministrateMDIMain.java,v 1.5 2005/05/18 14:49:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,8 +19,6 @@ import com.syrus.AMFICOM.Client.General.Lang.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Object.*;
-import com.syrus.AMFICOM.Client.Resource.System.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.text.SimpleDateFormat;
@@ -29,7 +27,7 @@ import javax.swing.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/04/25 09:41:04 $
+ * @version $Revision: 1.5 $, $Date: 2005/05/18 14:49:56 $
  * @module admin_v1
  */
 public class AdministrateMDIMain extends JFrame implements OperationListener {

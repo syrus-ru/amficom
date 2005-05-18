@@ -11,20 +11,19 @@ import com.syrus.AMFICOM.analysis.dadara.DataStreamableUtil;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.ParameterTypeCodenames;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
-import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.Set;
 import com.syrus.AMFICOM.measurement.SetParameter;
 import com.syrus.AMFICOM.measurement.corba.SetSort;
@@ -56,7 +55,7 @@ public class AnalysisUtil
 				ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
 				StorableObjectWrapper.COLUMN_CODENAME);
 
-			java.util.Set parameterTypeSet = GeneralStorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
+			java.util.Set parameterTypeSet = StorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
 			if (parameterTypeSet.isEmpty())
 				throw new RetrieveObjectException("AnalysisUtil.getParameterType | parameter type with codename " + pTypeCondition.getValue() + " not found");
 
@@ -76,7 +75,7 @@ public class AnalysisUtil
 				ObjectEntities.ANALYSISTYPE_ENTITY_CODE,
 				StorableObjectWrapper.COLUMN_CODENAME);			
 
-		Collection aTypes = MeasurementStorableObjectPool.getStorableObjectsByCondition(aTypeCondition, true);
+		Collection aTypes = StorableObjectPool.getStorableObjectsByCondition(aTypeCondition, true);
 		for (Iterator it = aTypes.iterator(); it.hasNext();)
 		{
 			AnalysisType type = (AnalysisType)it.next();

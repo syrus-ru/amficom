@@ -15,6 +15,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.Set;
@@ -114,7 +115,7 @@ public class SaveTestSetupCommand extends VoidCommand
 					msTest.getMeasurementDuration(),
 					msTest.getMonitoredElementIds(),
                     msTest.getMeasurementTypeIds());
-			MeasurementStorableObjectPool.putStorableObject(measurementSetup);
+			StorableObjectPool.putStorableObject(measurementSetup);
 		}
 		catch (CreateObjectException e)
 		{

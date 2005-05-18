@@ -1,5 +1,5 @@
 /*
- * $Id: WhoAmIPasswordPanel.java,v 1.3 2004/09/27 16:21:03 bass Exp $
+ * $Id: WhoAmIPasswordPanel.java,v 1.4 2005/05/18 14:49:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.Client.Administrate.Object.UI;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.Resource.Object.*;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import java.awt.*;
 import java.awt.event.*;
@@ -21,7 +20,7 @@ import oracle.jdeveloper.layout.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2004/09/27 16:21:03 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/18 14:49:56 $
  * @module admin_v1
  */
 final class WhoAmIPasswordPanel extends JPanel

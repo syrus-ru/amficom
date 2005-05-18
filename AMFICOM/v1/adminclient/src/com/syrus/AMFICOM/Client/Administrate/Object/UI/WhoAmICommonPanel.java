@@ -1,12 +1,9 @@
 package com.syrus.AMFICOM.Client.Administrate.Object.UI;
 
 import java.awt.*;
-import java.text.*;
-
 import javax.swing.*;
 
 import oracle.jdeveloper.layout.*;
-import com.syrus.AMFICOM.Client.Resource.Object.*;
 
 
 public class WhoAmICommonPanel extends JPanel {

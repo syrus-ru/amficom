@@ -15,8 +15,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.scheme.SchemePath;
-import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.io.BellcoreStructure;
 
 public class PathElementsFrame extends AnalysisFrame
@@ -57,7 +57,7 @@ public class PathElementsFrame extends AnalysisFrame
 				if (me.getSort().equals(MonitoredElementSort.MONITOREDELEMENT_SORT_TRANSMISSION_PATH)) {
 					LinkedIdsCondition condition = new LinkedIdsCondition(LoginManager.getDomainId(),
 							ObjectEntities.SCHEME_PATH_ENTITY_CODE);
-					Set paths = SchemeStorableObjectPool.getStorableObjectsByCondition(condition, true);
+					Set paths = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 
 					Collection tpathIds = me.getMonitoredDomainMemberIds();
 					for (Iterator it = paths.iterator(); it.hasNext(); ) {

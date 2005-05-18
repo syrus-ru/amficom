@@ -1,5 +1,5 @@
 /*-
- * $Id: ArchiveChildrenFactory.java,v 1.6 2005/04/11 15:54:21 bob Exp $
+ * $Id: ArchiveChildrenFactory.java,v 1.7 2005/05/18 14:49:56 bass Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,6 @@ import java.util.Set;
 import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.configuration.MonitoredElementWrapper;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -30,6 +29,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.OperationSort;
@@ -39,19 +39,17 @@ import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.logic.PopulatableItem;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
-import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestWrapper;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.scheme.SchemePath;
-import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/04/11 15:54:21 $
- * @author $Author: bob $
+ * @version $Revision: 1.7 $, $Date: 2005/05/18 14:49:56 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module analysis_v1
  */
@@ -116,7 +114,7 @@ public class ArchiveChildrenFactory implements ChildrenFactory {
 			} else if (s.equals(MEASUREMENTS) || s.equals(PREDICTED)) {
 				LinkedIdsCondition condition = new LinkedIdsCondition(this.domainId, ObjectEntities.ME_ENTITY_CODE);
 				try {
-					Set meSet = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
+					Set meSet = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 					List list = new LinkedList(meSet);
 
 					Collections.sort(list, new WrapperComparator(MonitoredElementWrapper.getInstance(),
@@ -151,7 +149,7 @@ public class ArchiveChildrenFactory implements ChildrenFactory {
 				LinkedIdsCondition condition = new LinkedIdsCondition(this.domainId,
 																		ObjectEntities.SCHEME_PATH_ENTITY_CODE);
 				try {
-					Set paths = SchemeStorableObjectPool.getStorableObjectsByCondition(condition, true);
+					Set paths = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 					for (Iterator it = paths.iterator(); it.hasNext();) {
 						SchemePath path = (SchemePath) it.next();
 						IconPopulatableItem item2 = new IconPopulatableItem();
@@ -169,7 +167,7 @@ public class ArchiveChildrenFactory implements ChildrenFactory {
 				MonitoredElement me = (MonitoredElement) parent.getObject();
 				LinkedIdsCondition condition = new LinkedIdsCondition(me.getId(), ObjectEntities.MS_ENTITY_CODE);
 				try {
-					Collection mSetups = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
+					Collection mSetups = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 					for (Iterator it = mSetups.iterator(); it.hasNext();) {
 						MeasurementSetup measurementSetup = (MeasurementSetup) it.next();
 						IconPopulatableItem item2 = new IconPopulatableItem();
@@ -263,7 +261,7 @@ public class ArchiveChildrenFactory implements ChildrenFactory {
 			LinkedIdsCondition condition = new LinkedIdsCondition(setup.getId(), ObjectEntities.TEST_ENTITY_CODE);
 			try {
 				condition.setEntityCode(ObjectEntities.TEST_ENTITY_CODE);
-				Collection tests = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
+				Collection tests = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 				for (Iterator it = tests.iterator(); it.hasNext();) {
 					Test test = (Test) it.next();
 					PopulatableItem item2 = new PopulatableItem();
@@ -279,7 +277,7 @@ public class ArchiveChildrenFactory implements ChildrenFactory {
 			Test test = (Test) nodeObject;
 			LinkedIdsCondition condition = new LinkedIdsCondition(test.getId(), ObjectEntities.MEASUREMENT_ENTITY_CODE);
 			try {
-				Collection measurements = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
+				Collection measurements = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 				Set measurementIds = new HashSet();
 				for (Iterator it = measurements.iterator(); it.hasNext();) {
 					Measurement measurement = (Measurement) it.next();
@@ -288,7 +286,7 @@ public class ArchiveChildrenFactory implements ChildrenFactory {
 				if (!measurementIds.isEmpty()) {
 					condition.setEntityCode(ObjectEntities.RESULT_ENTITY_CODE);
 					condition.setLinkedIds(measurementIds);
-					for (Iterator iter = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true)
+					for (Iterator iter = StorableObjectPool.getStorableObjectsByCondition(condition, true)
 							.iterator(); iter.hasNext();) {
 						Result result = (Result) iter.next();
 						if (result.getSort().value() == ResultSort.RESULT_SORT_MEASUREMENT.value()) {
@@ -355,7 +353,7 @@ public class ArchiveChildrenFactory implements ChildrenFactory {
 				 * cannot be occur throw new UnsupportedOperationException(); } //
 				 */
 				try {
-					Set tests = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
+					Set tests = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 					List list = new LinkedList(tests);
 
 					Collections.sort(list, new WrapperComparator(TestWrapper.getInstance(),
