@@ -1,5 +1,5 @@
 /*-
- * $Id: Constants.java,v 1.2 2005/05/18 14:01:19 bass Exp $
+ * $Id: Constants.java,v 1.3 2005/05/18 14:04:00 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,14 +10,14 @@ package com.syrus.AMFICOM.resource;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/05/18 14:01:19 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/18 14:04:00 $
  * @module generalclient_v1
  */
 
 public interface Constants {
 	public static final String ROOT = "root";
 	
-	public static final String CHARACTERISTIC = "characteristic"; "
+	public static final String CHARACTERISTIC = "characteristic";
 	public static final String CHARACTERISTICTYPESORT_OPTICAL = "optical_characteristics";
 	public static final String CHARACTERISTICTYPESORT_ELECTRICAL = "electrical_characteristics";
 	public static final String CHARACTERISTICTYPESORT_OPERATIONAL = "operational_characteristics";
