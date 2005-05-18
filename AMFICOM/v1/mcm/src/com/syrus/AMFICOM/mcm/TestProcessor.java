@@ -1,5 +1,5 @@
 /*
- * $Id: TestProcessor.java,v 1.49 2005/04/27 15:10:29 arseniy Exp $
+ * $Id: TestProcessor.java,v 1.50 2005/05/18 13:21:12 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,6 +22,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.Result;
@@ -33,8 +34,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.49 $, $Date: 2005/04/27 15:10:29 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.50 $, $Date: 2005/05/18 13:21:12 $
+ * @author $Author: bass $
  * @module mcm_v1
  */
 
@@ -108,7 +109,7 @@ public abstract class TestProcessor extends SleepButWorkThread {
 			lastMeasurement = this.test.retrieveLastMeasurement();
 			Log.debugMessage("TestProcessor.startWithProcessingTest | Last measurement for test '" + this.test.getId()
 					+ "' -- '" + lastMeasurement.getId() + "'", Log.DEBUGLEVEL08);
-			MeasurementStorableObjectPool.putStorableObject(lastMeasurement);
+			StorableObjectPool.putStorableObject(lastMeasurement);
 		}
 		catch (ApplicationException ae) {
 			if (ae instanceof ObjectNotFoundException) {
@@ -206,8 +207,8 @@ public abstract class TestProcessor extends SleepButWorkThread {
 		this.transceiver.addMeasurement(measurement, this);
 		this.currentMeasurementStartTime = startTime.getTime();
 		try {
-			MeasurementStorableObjectPool.putStorableObject(this.test);
-			MeasurementStorableObjectPool.putStorableObject(measurement);
+			StorableObjectPool.putStorableObject(this.test);
+			StorableObjectPool.putStorableObject(measurement);
 			MeasurementStorableObjectPool.flush(true);
 		}
 		catch (ApplicationException ae) {
@@ -217,9 +218,9 @@ public abstract class TestProcessor extends SleepButWorkThread {
 
 	final void checkIfCompletedOrAborted() {
 		final int numberOfScheduledMeasurements = this.test.getNumberOfMeasurements();
-		Log.debugMessage('\'' + this.test.getId().getIdentifierString() 
-				 + "' numberOfReceivedMResults: " + this.numberOfReceivedMResults 
-				 + ", numberOfScheduledMeasurements: " + numberOfScheduledMeasurements 
+		Log.debugMessage('\'' + this.test.getId().getIdentifierString()
+				 + "' numberOfReceivedMResults: " + this.numberOfReceivedMResults
+				 + ", numberOfScheduledMeasurements: " + numberOfScheduledMeasurements
 				 + ", lastMeasurementAcquisition: " + this.lastMeasurementAcquisition, Log.DEBUGLEVEL07);
 		if (this.numberOfReceivedMResults == numberOfScheduledMeasurements && this.lastMeasurementAcquisition)
 			this.complete();
@@ -274,7 +275,7 @@ public abstract class TestProcessor extends SleepButWorkThread {
 	private final void updateMyTestStatus(TestStatus status) {
 		this.test.setStatus(status);
 		try {
-			MeasurementStorableObjectPool.putStorableObject(this.test);
+			StorableObjectPool.putStorableObject(this.test);
 			MeasurementStorableObjectPool.flush(this.test.getId(), true);
 		}
 		catch (ApplicationException ae) {

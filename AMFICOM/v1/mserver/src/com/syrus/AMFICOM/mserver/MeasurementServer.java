@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementServer.java,v 1.45 2005/05/16 14:49:26 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.46 2005/05/18 13:25:44 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,6 +33,7 @@ import com.syrus.AMFICOM.general.LoginException;
 import com.syrus.AMFICOM.general.LoginRestorer;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.OperationSort;
@@ -48,43 +49,43 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2005/05/16 14:49:26 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.46 $, $Date: 2005/05/18 13:25:44 $
+ * @author $Author: bass $
  * @module mserver_v1
  */
 
 public class MeasurementServer extends SleepButWorkThread {
-	public static final String APPLICATION_NAME = "mserver"; //$NON-NLS-1$
+	public static final String APPLICATION_NAME = "mserver";
 
 	/*-********************************************************************
 	 * Keys.                                                              *
 	 **********************************************************************/
 
-	public static final String KEY_DB_HOST_NAME = "DBHostName"; //$NON-NLS-1$
-	public static final String KEY_DB_SID = "DBSID"; //$NON-NLS-1$
-	public static final String KEY_DB_CONNECTION_TIMEOUT = "DBConnectionTimeout"; //$NON-NLS-1$
-	public static final String KEY_DB_LOGIN_NAME = "DBLoginName"; //$NON-NLS-1$
-	public static final String KEY_SERVER_ID = "ServerID"; //$NON-NLS-1$
-	public static final String KEY_TICK_TIME = "TickTime"; //$NON-NLS-1$
-	public static final String KEY_MAX_FALLS = "MaxFalls"; //$NON-NLS-1$
+	public static final String KEY_DB_HOST_NAME = "DBHostName";
+	public static final String KEY_DB_SID = "DBSID";
+	public static final String KEY_DB_CONNECTION_TIMEOUT = "DBConnectionTimeout";
+	public static final String KEY_DB_LOGIN_NAME = "DBLoginName";
+	public static final String KEY_SERVER_ID = "ServerID";
+	public static final String KEY_TICK_TIME = "TickTime";
+	public static final String KEY_MAX_FALLS = "MaxFalls";
 
 	/*-********************************************************************
 	 * Default values.                                                    *
 	 **********************************************************************/
 
-	public static final String DB_SID = "amficom"; //$NON-NLS-1$
+	public static final String DB_SID = "amficom";
 	/**
 	 * Database connection timeout, in seconds.
 	 */
 	public static final int DB_CONNECTION_TIMEOUT = 120;
-	public static final String DB_LOGIN_NAME = "amficom"; //$NON-NLS-1$
-	public static final String SERVER_ID = "Server_1"; //$NON-NLS-1$
+	public static final String DB_LOGIN_NAME = "amficom";
+	public static final String SERVER_ID = "Server_1";
 	/**
 	 * Tick time, in seconds.
 	 */
 	public static final int TICK_TIME = 5;	//sec
 
-	private static final String PASSWORD = "MServer"; //$NON-NLS-1$
+	private static final String PASSWORD = "MServer";
 
 	/*	Error codes for method processFall()	(abort tests, ...)*/
 	public static final int FALL_CODE_RECEIVE_TESTS = 1;
@@ -301,7 +302,7 @@ public class MeasurementServer extends SleepButWorkThread {
 			}
 		}
 
-		tests = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(addedTestIds, cc, true);
+		tests = StorableObjectPool.getStorableObjectsByConditionButIds(addedTestIds, cc, true);
 
 		Set testQueue;
 		for (Iterator it = tests.iterator(); it.hasNext();) {
@@ -346,7 +347,7 @@ public class MeasurementServer extends SleepButWorkThread {
 				if (test.getStatus().value() != status.value()) {
 					test.setStatus(status);
 					try {
-						MeasurementStorableObjectPool.putStorableObject(test);
+						StorableObjectPool.putStorableObject(test);
 					}
 					catch (IllegalObjectEntityException ioee) {
 						Log.errorException(ioee);

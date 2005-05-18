@@ -1,6 +1,6 @@
 /*
- * $Id: MServerMeasurementReceive.java,v 1.3 2005/05/03 19:29:17 arseniy Exp $
- * 
+ * $Id: MServerMeasurementReceive.java,v 1.4 2005/05/18 13:25:44 bass Exp $
+ *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
@@ -38,8 +38,8 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/05/03 19:29:17 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.4 $, $Date: 2005/05/18 13:25:44 $
+ * @author $Author: bass $
  * @module mserver_v1
  */
 abstract class MServerMeasurementReceive extends MServerPOA {

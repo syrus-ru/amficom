@@ -1,6 +1,6 @@
 /*
- * $Id: MServerMeasurementTransmit.java,v 1.4 2005/05/11 07:36:04 arseniy Exp $
- * 
+ * $Id: MServerMeasurementTransmit.java,v 1.5 2005/05/18 13:25:44 bass Exp $
+ *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
@@ -14,6 +14,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectConditionBuilder;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
@@ -27,7 +28,6 @@ import com.syrus.AMFICOM.measurement.EvaluationType;
 import com.syrus.AMFICOM.measurement.IntervalsTemporalPattern;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
-import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.measurement.PeriodicalTemporalPattern;
 import com.syrus.AMFICOM.measurement.Set;
@@ -45,8 +45,8 @@ import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/05/11 07:36:04 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.5 $, $Date: 2005/05/18 13:25:44 $
+ * @author $Author: bass $
  * @module mserver_v1
  */
 abstract class MServerMeasurementTransmit extends MServerConfigurationTransmit {
@@ -54,7 +54,7 @@ abstract class MServerMeasurementTransmit extends MServerConfigurationTransmit {
 	private static final long serialVersionUID = -3608597706693444950L;
 
   /* Transmit multiple objects*/
- 
+
 	public MeasurementType_Transferable[] transmitMeasurementTypes(Identifier_Transferable[] idsT) throws AMFICOMRemoteException {
 		java.util.Set objects = this.getMeasurementObjects(idsT);
 
@@ -145,7 +145,7 @@ abstract class MServerMeasurementTransmit extends MServerConfigurationTransmit {
 			object = (MeasurementSetup) it.next();
 			transferables[i] = (MeasurementSetup_Transferable) object.getTransferable();
 		}
-		return transferables; 
+		return transferables;
 	}
 
 	public Set_Transferable[] transmitSets(Identifier_Transferable[] idsT) throws AMFICOMRemoteException {
@@ -204,7 +204,7 @@ abstract class MServerMeasurementTransmit extends MServerConfigurationTransmit {
 	private java.util.Set getMeasurementObjects(Identifier_Transferable[] idsT) throws AMFICOMRemoteException {
 		try {
 			java.util.Set ids = Identifier.fromTransferables(idsT);
-			java.util.Set objects = MeasurementStorableObjectPool.getStorableObjects(ids, true);
+			java.util.Set objects = StorableObjectPool.getStorableObjects(ids, true);
 			return objects;
 		}
 		catch (ApplicationException ae) {
@@ -324,7 +324,7 @@ abstract class MServerMeasurementTransmit extends MServerConfigurationTransmit {
 
 			try {
 				java.util.Set ids = Identifier.fromTransferables(idsT);
-				java.util.Set objects = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(ids, condition, true);
+				java.util.Set objects = StorableObjectPool.getStorableObjectsByConditionButIds(ids, condition, true);
 				return objects;
 			}
 			catch (ApplicationException ae) {

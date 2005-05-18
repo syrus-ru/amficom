@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.25 2005/05/03 14:24:31 bob Exp $
+ * $Id: DatabaseContextSetup.java,v 1.26 2005/05/18 13:21:12 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -51,15 +51,15 @@ import com.syrus.AMFICOM.measurement.TestDatabase;
 
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/05/03 14:24:31 $
- * @author $Author: bob $
+ * @version $Revision: 1.26 $, $Date: 2005/05/18 13:21:12 $
+ * @author $Author: bass $
  * @module mcm_v1
  */
 
 final class DatabaseContextSetup {
 
 	private DatabaseContextSetup() {
-		assert false; 
+		assert false;
 	}
 
 	public static void initDatabaseContext() {
@@ -79,7 +79,7 @@ final class DatabaseContextSetup {
 				new MeasurementPortTypeDatabase(),
 				new LinkTypeDatabase(),
 				new CableLinkTypeDatabase(),
-				new CableThreadTypeDatabase(),										  
+				new CableThreadTypeDatabase(),										
 				new EquipmentDatabase(),
 				new PortDatabase(),
 				new MeasurementPortDatabase(),

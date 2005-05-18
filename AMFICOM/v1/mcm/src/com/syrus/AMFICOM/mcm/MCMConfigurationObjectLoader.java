@@ -1,5 +1,5 @@
 /*
- * $Id: MCMConfigurationObjectLoader.java,v 1.34 2005/05/01 19:19:16 arseniy Exp $
+ * $Id: MCMConfigurationObjectLoader.java,v 1.35 2005/05/18 13:21:12 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,8 +38,8 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/05/01 19:19:16 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.35 $, $Date: 2005/05/18 13:21:12 $
+ * @author $Author: bass $
  * @module mcm_v1
  */
 
@@ -196,14 +196,8 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 		try {
 			MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
 			MonitoredElement_Transferable[] transferables = mServerRef.transmitMonitoredElements(loadIdsT);
-			for (int i = 0; i < transferables.length; i++) {
-				try {
-					loadedObjects.add(new MonitoredElement(transferables[i]));
-				}
-				catch (CreateObjectException coe) {
-					Log.errorException(coe);
-				}
-			}
+			for (int i = 0; i < transferables.length; i++)
+				loadedObjects.add(new MonitoredElement(transferables[i]));
 		}
 		catch (CommunicationException ce) {
 			Log.errorException(ce);
@@ -286,164 +280,164 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 	 * MCM do not need in all below methods
 	 * */
 
-	public Set loadCableLinkTypes(Set ids) throws ApplicationException {
+	public Set loadCableLinkTypes(Set ids) {
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids);
 	}
 
-	public Set loadCableLinkTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+	public Set loadCableLinkTypesButIds(StorableObjectCondition condition, Set ids) {
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
 	}
 
-	public Set loadCableThreadTypes(Set ids) throws ApplicationException {
+	public Set loadCableThreadTypes(Set ids) {
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids);
 	}
 
-	public Set loadCableThreadTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+	public Set loadCableThreadTypesButIds(StorableObjectCondition condition, Set ids) {
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
 	}
 
-	public Set loadEquipmentTypes(Set ids) throws ApplicationException {
+	public Set loadEquipmentTypes(Set ids) {
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids);
 	}
 
-	public Set loadEquipmentTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+	public Set loadEquipmentTypesButIds(StorableObjectCondition condition, Set ids) {
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
 	}
 
-	public Set loadTransmissionPathTypes(Set ids) throws ApplicationException {
+	public Set loadTransmissionPathTypes(Set ids) {
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids);
 	}
 
-	public Set loadTransmissionPathTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+	public Set loadTransmissionPathTypesButIds(StorableObjectCondition condition, Set ids) {
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
 	}
 
-	public Set loadPortTypes(Set ids) throws ApplicationException {
+	public Set loadPortTypes(Set ids) {
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids);
 	}
 
-	public Set loadLinkTypes(Set ids) throws ApplicationException {
+	public Set loadLinkTypes(Set ids) {
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids);
 	}
 
-	public Set loadLinkTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+	public Set loadLinkTypesButIds(StorableObjectCondition condition, Set ids) {
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
 	}
 
-	public Set loadPortTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+	public Set loadPortTypesButIds(StorableObjectCondition condition, Set ids) {
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
 	}
 
-	public Set loadCableThreads(Set ids) throws ApplicationException {
+	public Set loadCableThreads(Set ids) {
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids);
 	}
 
-	public Set loadCableThreadsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+	public Set loadCableThreadsButIds(StorableObjectCondition condition, Set ids) {
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
 	}
 
-	public Set loadEquipments(Set ids) throws ApplicationException {
+	public Set loadEquipments(Set ids) {
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids);
 	}
 
-	public Set loadEquipmentsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+	public Set loadEquipmentsButIds(StorableObjectCondition condition, Set ids) {
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
 	}
 
-	public Set loadLinks(Set ids) throws ApplicationException {
+	public Set loadLinks(Set ids) {
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids);
 	}
 
-	public Set loadLinksButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+	public Set loadLinksButIds(StorableObjectCondition condition, Set ids) {
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
 	}
 
-	public Set loadMeasurementPortsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+	public Set loadMeasurementPortsButIds(StorableObjectCondition condition, Set ids) {
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
 	}
 
-	public Set loadMeasurementPortTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+	public Set loadMeasurementPortTypesButIds(StorableObjectCondition condition, Set ids) {
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
 	}
 
-	public Set loadMonitoredElementsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+	public Set loadMonitoredElementsButIds(StorableObjectCondition condition, Set ids) {
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
 	}
 
-	public Set loadPorts(Set ids) throws ApplicationException {
+	public Set loadPorts(Set ids) {
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids);
 	}
 
-	public Set loadPortsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+	public Set loadPortsButIds(StorableObjectCondition condition, Set ids) {
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
 	}
 
-	public Set loadTransmissionPaths(Set ids) throws ApplicationException {
+	public Set loadTransmissionPaths(Set ids) {
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids);
 	}
 
-	public Set loadTransmissionPathsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+	public Set loadTransmissionPathsButIds(StorableObjectCondition condition, Set ids) {
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
 	}
 
 
 
-	public void saveCableLinkTypes(Set objects, boolean force) throws ApplicationException {
+	public void saveCableLinkTypes(Set objects, boolean force) {
 		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
 	}
 
-	public void saveCableThreads(Set objects, boolean force) throws ApplicationException {
+	public void saveCableThreads(Set objects, boolean force) {
 		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
 	}
 
-	public void saveCableThreadTypes(Set objects, boolean force) throws ApplicationException {
+	public void saveCableThreadTypes(Set objects, boolean force) {
 		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
 	}
 
-	public void saveEquipments(Set objects, boolean force) throws ApplicationException {
+	public void saveEquipments(Set objects, boolean force) {
 		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
 	}
 	
-	public void saveEquipmentTypes(Set objects, boolean force) throws ApplicationException {
+	public void saveEquipmentTypes(Set objects, boolean force) {
 		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
 	}
 	
-	public void saveKISs(Set objects, boolean force) throws ApplicationException {
+	public void saveKISs(Set objects, boolean force) {
 		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
 	}
 	
-	public void saveLinks(Set objects, boolean force) throws ApplicationException {
+	public void saveLinks(Set objects, boolean force) {
 		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
 	}
 	
-	public void saveLinkTypes(Set objects, boolean force) throws ApplicationException {
+	public void saveLinkTypes(Set objects, boolean force) {
 		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
 	}
 	
-	public void saveMeasurementPorts(Set objects, boolean force) throws ApplicationException {
+	public void saveMeasurementPorts(Set objects, boolean force) {
 		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
 	}
 	
-	public void saveMeasurementPortTypes(Set objects, boolean force) throws ApplicationException {
+	public void saveMeasurementPortTypes(Set objects, boolean force) {
 		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
 	}
 	
-	public void saveMonitoredElements(Set objects, boolean force) throws ApplicationException {
+	public void saveMonitoredElements(Set objects, boolean force) {
 		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
 	}
 	
-	public void savePorts(Set objects, boolean force) throws ApplicationException {
+	public void savePorts(Set objects, boolean force) {
 		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
 	}
 	
-	public void savePortTypes(Set objects, boolean force) throws ApplicationException {
+	public void savePortTypes(Set objects, boolean force) {
 		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
 	}
 	
-	public void saveTransmissionPaths(Set objects, boolean force) throws ApplicationException {
+	public void saveTransmissionPaths(Set objects, boolean force) {
 		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
 	}
-	public void saveTransmissionPathTypes(Set objects, boolean force) throws ApplicationException {
+	public void saveTransmissionPathTypes(Set objects, boolean force) {
 		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
 	}
 
@@ -451,7 +445,7 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 
 
 
-	public Set refresh(Set storableObjects) throws ApplicationException {
+	public Set refresh(Set storableObjects) {
 		throw new UnsupportedOperationException("Method not implemented, objects: " + storableObjects);
 	}
 

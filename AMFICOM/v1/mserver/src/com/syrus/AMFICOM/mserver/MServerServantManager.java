@@ -1,5 +1,5 @@
 /*-
- * $Id: MServerServantManager.java,v 1.5 2005/05/13 17:58:31 bass Exp $
+ * $Id: MServerServantManager.java,v 1.6 2005/05/18 13:25:44 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/05/13 17:58:31 $
+ * @version $Revision: 1.6 $, $Date: 2005/05/18 13:25:44 $
  * @author $Author: bass $
  * @module cmserver_v1
  */
@@ -78,7 +78,7 @@ final class MServerServantManager extends RunnableVerifiedConnectionManager impl
 		}
 	}
 
-	public IdentifierGeneratorServer getIGSReference() throws CommunicationException {
+	public IdentifierGeneratorServer getIGSReference() {
 		return this.databaseIdentifierGeneratorServer;
 	}
 

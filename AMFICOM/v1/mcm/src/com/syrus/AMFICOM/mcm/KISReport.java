@@ -1,5 +1,5 @@
 /*
- * $Id: KISReport.java,v 1.29 2005/04/27 15:09:39 arseniy Exp $
+ * $Id: KISReport.java,v 1.30 2005/05/18 13:21:12 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,6 +22,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.ParameterTypeCodenames;
 import com.syrus.AMFICOM.general.ParameterTypeDatabase;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.OperationSort;
@@ -33,8 +34,8 @@ import com.syrus.AMFICOM.measurement.SetParameter;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/04/27 15:09:39 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.30 $, $Date: 2005/05/18 13:21:12 $
+ * @author $Author: bass $
  * @module mcm_v1
  */
 
@@ -97,7 +98,7 @@ public class KISReport {
 				Identifier id = parameterType.getId();
 				if (!outParameterTypeIds.containsKey(codename)) {
 					outParameterTypeIds.put(codename, id);
-					GeneralStorableObjectPool.putStorableObject(parameterType);
+					StorableObjectPool.putStorableObject(parameterType);
 				}
 				else
 					Log.errorMessage("Out parameter type of codename '" + codename

@@ -1,5 +1,5 @@
 /*
-* $Id: MCMAdministrationObjectLoader.java,v 1.19 2005/05/01 19:19:16 arseniy Exp $
+* $Id: MCMAdministrationObjectLoader.java,v 1.20 2005/05/18 13:21:12 bass Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -34,8 +34,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/05/01 19:19:16 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.20 $, $Date: 2005/05/18 13:21:12 $
+ * @author $Author: bass $
  * @module mcm_v1
  */
 final class MCMAdministrationObjectLoader extends DatabaseAdministrationObjectLoader {
@@ -139,38 +139,38 @@ final class MCMAdministrationObjectLoader extends DatabaseAdministrationObjectLo
 	 * MCM do not need in all below methods
 	 * */
 
-	public Set loadUsers(Set ids) throws ApplicationException {
+	public Set loadUsers(Set ids) {
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids);
 	}
 
-	public Set loadDomains(Set ids) throws ApplicationException {
+	public Set loadDomains(Set ids) {
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids);
 	}
 
-	public Set loadServerProcesses(Set ids) throws ApplicationException {
+	public Set loadServerProcesses(Set ids) {
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids);
 	}
 
 
 
 
-	public Set loadUsersButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+	public Set loadUsersButIds(StorableObjectCondition condition, Set ids) {
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
 	}
 
-	public Set loadDomainsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+	public Set loadDomainsButIds(StorableObjectCondition condition, Set ids) {
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
 	}
 
-	public Set loadServersButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+	public Set loadServersButIds(StorableObjectCondition condition, Set ids) {
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
 	}
 
-	public Set loadMCMsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+	public Set loadMCMsButIds(StorableObjectCondition condition, Set ids) {
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
 	}
 
-	public Set loadServerProcessesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+	public Set loadServerProcessesButIds(StorableObjectCondition condition, Set ids) {
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
 	}
 
@@ -178,23 +178,23 @@ final class MCMAdministrationObjectLoader extends DatabaseAdministrationObjectLo
 
 
 
-	public void saveUser(User user, boolean force) throws ApplicationException {
+	public void saveUser(User user, boolean force) {
 		throw new UnsupportedOperationException("Method not implemented, user: " + user.getId() + ", force: " + force);
 	}
 
-	public void saveDomain(Domain domain, boolean force) throws ApplicationException {
+	public void saveDomain(Domain domain, boolean force) {
 		throw new UnsupportedOperationException("Method not implemented, domain: " + domain.getId() + ", force: " + force);
 	}
 
-	public void saveServer(Server server, boolean force) throws ApplicationException {
+	public void saveServer(Server server, boolean force) {
 		throw new UnsupportedOperationException("Method not implemented, server: " + server.getId() + ", force: " + force);
 	}
 
-	public void saveMCM(MCM mcm, boolean force) throws ApplicationException {
+	public void saveMCM(MCM mcm, boolean force) {
 		throw new UnsupportedOperationException("Method not implemented, mcm: " + mcm.getId() + ", force: " + force);
 	}
 
-	public void saveServerProcess(ServerProcess serverProcess, boolean force) throws ApplicationException {
+	public void saveServerProcess(ServerProcess serverProcess, boolean force) {
 		throw new UnsupportedOperationException("Method not implemented, server: " + serverProcess.getId() + ", force: " + force);
 	}
 
@@ -202,23 +202,23 @@ final class MCMAdministrationObjectLoader extends DatabaseAdministrationObjectLo
 
 
 
-	public void saveUsers(Set objects, boolean force) throws ApplicationException {
+	public void saveUsers(Set objects, boolean force) {
 		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
 	}
 
-	public void saveDomains(Set objects, boolean force) throws ApplicationException {
+	public void saveDomains(Set objects, boolean force) {
 		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
 	}
 
-	public void saveServers(Set objects, boolean force) throws ApplicationException {
+	public void saveServers(Set objects, boolean force) {
 		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
 	}
 
-	public void saveMCMs(Set objects, boolean force) throws ApplicationException {
+	public void saveMCMs(Set objects, boolean force) {
 		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
 	}
 
-	public void saveServerProcesses(Set objects, boolean force) throws ApplicationException {
+	public void saveServerProcesses(Set objects, boolean force) {
 		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
 	}
 
@@ -226,7 +226,7 @@ final class MCMAdministrationObjectLoader extends DatabaseAdministrationObjectLo
 
 
 
-	public Set refresh(Set storableObjects) throws ApplicationException {
+	public Set refresh(Set storableObjects) {
 		throw new UnsupportedOperationException("Method not implemented, objects: " + storableObjects);
 	}
 

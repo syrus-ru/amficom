@@ -1,5 +1,5 @@
 /*
- * $Id: DadaraAnalysisManager.java,v 1.33 2005/04/30 13:22:45 saa Exp $
+ * $Id: DadaraAnalysisManager.java,v 1.34 2005/05/18 13:21:12 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.mcm;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/04/30 13:22:45 $
- * @author $Author: saa $
+ * @version $Revision: 1.34 $, $Date: 2005/05/18 13:21:12 $
+ * @author $Author: bass $
  * @module mcm_v1
  */
 
@@ -178,7 +178,7 @@ public class DadaraAnalysisManager implements AnalysisManager
 //		outParameters.put(CODENAME_DARARA_MODELFUNCTION, mf.toByteArray());
 
 		// пытаемся обнаружить обрыв волокна:
-		// (1) на участке до ухода в шум (x < traceLength) - по уходу м.ф. ниже уровня breakThresh  
+		// (1) на участке до ухода в шум (x < traceLength) - по уходу м.ф. ниже уровня breakThresh
 		// XXX - надо ли было предварительно смещать р/г по вертикали?
 		int breakPos = ModelTraceComparer.compareToMinLevel(mt, breakThresh);
 		// (2) на участке шума (x >= traceLength) - не ушли ли в шум до начала последнего коннектора?
@@ -195,7 +195,7 @@ public class DadaraAnalysisManager implements AnalysisManager
 			alarm.endPointCoord = Math.min(y.length, etMinLength);
 			
 			// XXX - если на обрыве есть заметное отражение, то дистанция будет завышена
-			// мб, в таком случае не надо игнорировать HARD алармы? 
+			// мб, в таком случае не надо игнорировать HARD алармы?
 
 			alarmList.add(alarm);
 		}
@@ -377,7 +377,7 @@ public class DadaraAnalysisManager implements AnalysisManager, EvaluationManager
 		throws AnalysisException
 	{
 		byte[] rawData = (byte[])this.parameters.get(CODENAME_REFLECTOGRAMMA);
-		if (rawData == null) 
+		if (rawData == null)
 			throw new AnalysisException("Cannot get parameter of codename: '" + CODENAME_REFLECTOGRAMMA + "'  from map");
 		BellcoreStructure bs = (new BellcoreReader()).getData(rawData);
 //----------------
@@ -419,7 +419,7 @@ catch (IOException ioe) {
 	}
 
 	private SetParameter[] getAnalysisResult()
-		throws AnalysisException 
+		throws AnalysisException
 	{
 		ParameterType parTypEventArray = null;
 		try {
@@ -472,7 +472,7 @@ catch (IOException ioe) {
 		if (modelFunctionsRangeBeyondThresholdsAlarmsRequired)
 			addModelFunctionRangeBeyondThresholdsAlarms(alarmList, bs, etEvents, obtainThresholds());
 
-		rAlarms = (ReflectogramAlarm[] )alarmList.toArray(); 
+		rAlarms = (ReflectogramAlarm[] )alarmList.toArray();
 	}
 
 	private void makeAnalysis(BellcoreStructure bs)

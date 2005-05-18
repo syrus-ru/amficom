@@ -1,5 +1,5 @@
 /*
- * $Id: MCMImplementation.java,v 1.31 2005/05/01 19:19:16 arseniy Exp $
+ * $Id: MCMImplementation.java,v 1.32 2005/05/18 13:21:12 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,6 +21,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectConditionBuilder;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
@@ -39,8 +40,8 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/05/01 19:19:16 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.32 $, $Date: 2005/05/18 13:21:12 $
+ * @author $Author: bass $
  * @module mcm_v1
  */
 
@@ -165,7 +166,7 @@ public class MCMImplementation extends MCMPOA {
 
 		Set objects = null;
 		try {
-			objects = MeasurementStorableObjectPool.getStorableObjects(ids, true);
+			objects = StorableObjectPool.getStorableObjects(ids, true);
 		}
 		catch (ApplicationException ae) {
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
@@ -187,7 +188,7 @@ public class MCMImplementation extends MCMPOA {
 
 		Set objects = null;
 		try {
-			objects = MeasurementStorableObjectPool.getStorableObjects(ids, true);
+			objects = StorableObjectPool.getStorableObjects(ids, true);
 		}
 		catch (ApplicationException ae) {
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
@@ -209,7 +210,7 @@ public class MCMImplementation extends MCMPOA {
 
 		Set objects = null;
 		try {
-			objects = MeasurementStorableObjectPool.getStorableObjects(ids, true);
+			objects = StorableObjectPool.getStorableObjects(ids, true);
 		}
 		catch (ApplicationException ae) {
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
@@ -284,7 +285,7 @@ public class MCMImplementation extends MCMPOA {
 			Set objects = null;
 			try {
 				Set ids = Identifier.fromTransferables(identifier_Transferables);
-				objects = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(ids, condition, true);
+				objects = StorableObjectPool.getStorableObjectsByConditionButIds(ids, condition, true);
 				return objects;
 			}
 			catch (ApplicationException ae) {

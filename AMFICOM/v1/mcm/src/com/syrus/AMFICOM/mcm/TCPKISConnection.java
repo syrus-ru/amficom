@@ -126,7 +126,7 @@ public class TCPKISConnection implements KISConnection {
 	public native int establishSocketConnection();
 
 	/**
-	 * Drop connection. Set field kisTCPSocket to KIS_TCP_SOCKET_DISCONNECTED. 
+	 * Drop connection. Set field kisTCPSocket to KIS_TCP_SOCKET_DISCONNECTED.
 	 */
 	public native void dropSocketConnection();
 

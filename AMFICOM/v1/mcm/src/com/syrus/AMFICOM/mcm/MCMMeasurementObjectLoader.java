@@ -1,5 +1,5 @@
 /*
- * $Id: MCMMeasurementObjectLoader.java,v 1.46 2005/05/04 12:00:51 arseniy Exp $
+ * $Id: MCMMeasurementObjectLoader.java,v 1.47 2005/05/18 13:21:12 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -57,8 +57,8 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2005/05/04 12:00:51 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.47 $, $Date: 2005/05/18 13:21:12 $
+ * @author $Author: bass $
  * @module mcm_v1
  */
 final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
@@ -468,23 +468,23 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 
 
 
-	public java.util.Set loadAnalysisTypesButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
+	public java.util.Set loadAnalysisTypesButIds(StorableObjectCondition condition, java.util.Set ids) {
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
 	}
 
-	public java.util.Set loadEvaluationTypesButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
+	public java.util.Set loadEvaluationTypesButIds(StorableObjectCondition condition, java.util.Set ids) {
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
 	}
 
-	public java.util.Set loadMeasurementTypesButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
+	public java.util.Set loadMeasurementTypesButIds(StorableObjectCondition condition, java.util.Set ids) {
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
 	}
 
-	public java.util.Set loadMeasurementSetupsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
+	public java.util.Set loadMeasurementSetupsButIds(StorableObjectCondition condition, java.util.Set ids) {
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
 	}
 
-	public java.util.Set loadSetsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
+	public java.util.Set loadSetsButIds(StorableObjectCondition condition, java.util.Set ids) {
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
 	}
 
@@ -492,11 +492,11 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 	 * MCM do not need in all below methods
 	 * */	
 
-	public java.util.Set loadModelingTypes(java.util.Set ids) throws ApplicationException {
+	public java.util.Set loadModelingTypes(java.util.Set ids) {
 		throw new UnsupportedOperationException("MCM doesn't need in modeling type, ids: " + ids);
 	}
 
-	public java.util.Set loadModelings(java.util.Set ids) throws ApplicationException {
+	public java.util.Set loadModelings(java.util.Set ids) {
 		throw new UnsupportedOperationException("MCM doesn't need in modeling, ids: " + ids);
 	}
 
@@ -504,52 +504,52 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 
 
 	
-	public java.util.Set loadModelingTypesButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
+	public java.util.Set loadModelingTypesButIds(StorableObjectCondition condition, java.util.Set ids) {
 		throw new UnsupportedOperationException("MCM doesn't need in modeling type, ids: " + ids + ", condition: " + condition);
 	}
 
-	public java.util.Set loadModelingsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
+	public java.util.Set loadModelingsButIds(StorableObjectCondition condition, java.util.Set ids) {
 		throw new UnsupportedOperationException("MCM doesn't need in modeling, ids: " + ids + ", condition: " + condition);
 	}
 
 
-	public void saveAnalysisTypes(java.util.Set objects, boolean force) throws ApplicationException {
+	public void saveAnalysisTypes(java.util.Set objects, boolean force) {
 		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
 	}
 
-	public void saveEvaluationTypes(java.util.Set objects, boolean force) throws ApplicationException {
+	public void saveEvaluationTypes(java.util.Set objects, boolean force) {
 		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
 	}
 
-	public void saveMeasurementSetups(java.util.Set objects, boolean force) throws ApplicationException {
+	public void saveMeasurementSetups(java.util.Set objects, boolean force) {
 		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
 	}
 
-	public void saveMeasurementTypes(java.util.Set objects, boolean force) throws ApplicationException {
+	public void saveMeasurementTypes(java.util.Set objects, boolean force) {
 		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
 	}
 
-	public void saveModelings(java.util.Set objects, boolean force) throws ApplicationException {
+	public void saveModelings(java.util.Set objects, boolean force) {
 		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
 	}
 
-	public void saveSets(java.util.Set objects, boolean force) throws ApplicationException {
+	public void saveSets(java.util.Set objects, boolean force) {
 		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
 	}
 
-	public void saveCronTemporalPatterns(java.util.Set storableObjects,boolean force) throws ApplicationException{
+	public void saveCronTemporalPatterns(java.util.Set storableObjects,boolean force){
 		throw new UnsupportedOperationException("May be not need this? " + storableObjects + ", " + force);
 	}
 	
-	public void saveIntervalsTemporalPatterns(java.util.Set storableObjects,boolean force) throws ApplicationException{
+	public void saveIntervalsTemporalPatterns(java.util.Set storableObjects,boolean force){
 		throw new UnsupportedOperationException("May be not need this? " + storableObjects + ", " + force);
 	}
 	
-	public void savePeriodicalTemporalPatterns(java.util.Set storableObjects,boolean force) throws ApplicationException{
+	public void savePeriodicalTemporalPatterns(java.util.Set storableObjects,boolean force){
 		throw new UnsupportedOperationException("May be not need this? " + storableObjects + ", " + force);
 	}
 
-	public java.util.Set refresh(java.util.Set storableObjects) throws ApplicationException {
+	public java.util.Set refresh(java.util.Set storableObjects) {
 		throw new UnsupportedOperationException("Method not implemented, objects: " + storableObjects);
 	}
 

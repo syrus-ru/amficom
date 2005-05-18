@@ -1,5 +1,5 @@
 /*
-* $Id: MCMGeneralObjectLoader.java,v 1.17 2005/05/01 19:19:16 arseniy Exp $
+* $Id: MCMGeneralObjectLoader.java,v 1.18 2005/05/18 13:21:12 bass Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -34,8 +34,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/05/01 19:19:16 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.18 $, $Date: 2005/05/18 13:21:12 $
+ * @author $Author: bass $
  * @module mcm_v1
  */
 final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
@@ -175,13 +175,13 @@ final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
 
 
 
-	public Set loadParameterTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+	public Set loadParameterTypesButIds(StorableObjectCondition condition, Set ids) {
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
 	}
-	public Set loadCharacteristicTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+	public Set loadCharacteristicTypesButIds(StorableObjectCondition condition, Set ids) {
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
 	}
-	public Set loadCharacteristicsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+	public Set loadCharacteristicsButIds(StorableObjectCondition condition, Set ids) {
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
 	}
 
@@ -191,37 +191,37 @@ final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
 	 * MCM do not need in all below methods
 	 * */
 
-	public void saveParameterType(ParameterType parameterType, boolean force) throws ApplicationException {
+	public void saveParameterType(ParameterType parameterType, boolean force) {
 		throw new UnsupportedOperationException("Method not implemented, parameterType: " + parameterType.getId() + ", force: " + force);
 	}
 
-	public void saveCharacteristicType(CharacteristicType characteristicType, boolean force) throws ApplicationException {
+	public void saveCharacteristicType(CharacteristicType characteristicType, boolean force) {
 		throw new UnsupportedOperationException("Method not implemented, characteristicType: " + characteristicType.getId() + ", force: " + force);
 	}
 
-	public void saveCharacteristic(Characteristic characteristic, boolean force) throws ApplicationException {
+	public void saveCharacteristic(Characteristic characteristic, boolean force) {
 		throw new UnsupportedOperationException("Method not implemented, characteristic: " + characteristic.getId() + ", force: " + force);
 	}
 
 
 
 
-	public void saveParameterTypes(Set objects, boolean force) throws ApplicationException {
+	public void saveParameterTypes(Set objects, boolean force) {
 		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
 	}
 
-	public void saveCharacteristicTypes(Set objects, boolean force) throws ApplicationException {
+	public void saveCharacteristicTypes(Set objects, boolean force) {
 		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
 	}
 
-	public void saveCharacteristics(Set objects, boolean force) throws ApplicationException {
+	public void saveCharacteristics(Set objects, boolean force) {
 		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
 	}
 
 
 
 
-	public Set refresh(Set storableObjects) throws ApplicationException {
+	public Set refresh(Set storableObjects) {
 		throw new UnsupportedOperationException("Method not implemented, objects: " + storableObjects);
 	}
 

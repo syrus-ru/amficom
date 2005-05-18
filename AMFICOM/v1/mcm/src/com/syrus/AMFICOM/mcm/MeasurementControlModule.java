@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.90 2005/05/16 14:53:35 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.91 2005/05/18 13:21:12 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,6 @@ import java.util.Map;
 import com.syrus.AMFICOM.administration.MCM;
 import com.syrus.AMFICOM.administration.Server;
 import com.syrus.AMFICOM.administration.User;
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CORBAServer;
@@ -36,6 +35,7 @@ import com.syrus.AMFICOM.general.LoginException;
 import com.syrus.AMFICOM.general.LoginRestorer;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
@@ -55,63 +55,63 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.90 $, $Date: 2005/05/16 14:53:35 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.91 $, $Date: 2005/05/18 13:21:12 $
+ * @author $Author: bass $
  * @module mcm_v1
  */
 
 public final class MeasurementControlModule extends SleepButWorkThread {
-	public static final String APPLICATION_NAME = "mcm"; //$NON-NLS-1$
+	public static final String APPLICATION_NAME = "mcm";
 
 	/*-********************************************************************
 	 * Keys.                                                              *
 	 **********************************************************************/
 
-	public static final String KEY_MCM_ID = "MCMID"; //$NON-NLS-1$
-	public static final String KEY_DB_HOST_NAME = "DBHostName"; //$NON-NLS-1$
-	public static final String KEY_DB_SID = "DBSID"; //$NON-NLS-1$
-	public static final String KEY_DB_CONNECTION_TIMEOUT = "DBConnectionTimeout"; //$NON-NLS-1$
-	public static final String KEY_DB_LOGIN_NAME = "DBLoginName"; //$NON-NLS-1$
-	public static final String KEY_TICK_TIME = "TickTime"; //$NON-NLS-1$
-	public static final String KEY_MAX_FALLS = "MaxFalls"; //$NON-NLS-1$
-	public static final String KEY_FORWARD_PROCESSING = "ForwardProcessing"; //$NON-NLS-1$
-	public static final String KEY_FORGET_FRAME = "ForgetFrame"; //$NON-NLS-1$
-	public static final String KEY_MSERVER_SERVANT_NAME = "MServerServantName"; //$NON-NLS-1$
-	public static final String KEY_MSERVER_CHECK_TIMEOUT = "MServerCheckTimeout"; //$NON-NLS-1$
-	public static final String KEY_KIS_TICK_TIME = "KISTickTime"; //$NON-NLS-1$
-	public static final String KEY_KIS_MAX_FALLS = "KISMaxFalls"; //$NON-NLS-1$
-	public static final String KEY_KIS_HOST_NAME = "KISHostName"; //$NON-NLS-1$
-	public static final String KEY_KIS_TCP_PORT = "KISTCPPort"; //$NON-NLS-1$
-	public static final String KEY_KIS_MAX_OPENED_CONNECTIONS = "KISMaxOpenedConnections"; //$NON-NLS-1$
-	public static final String KEY_KIS_CONNECTION_TIMEOUT = "KISConnectionTimeout"; //$NON-NLS-1$
+	public static final String KEY_MCM_ID = "MCMID";
+	public static final String KEY_DB_HOST_NAME = "DBHostName";
+	public static final String KEY_DB_SID = "DBSID";
+	public static final String KEY_DB_CONNECTION_TIMEOUT = "DBConnectionTimeout";
+	public static final String KEY_DB_LOGIN_NAME = "DBLoginName";
+	public static final String KEY_TICK_TIME = "TickTime";
+	public static final String KEY_MAX_FALLS = "MaxFalls";
+	public static final String KEY_FORWARD_PROCESSING = "ForwardProcessing";
+	public static final String KEY_FORGET_FRAME = "ForgetFrame";
+	public static final String KEY_MSERVER_SERVANT_NAME = "MServerServantName";
+	public static final String KEY_MSERVER_CHECK_TIMEOUT = "MServerCheckTimeout";
+	public static final String KEY_KIS_TICK_TIME = "KISTickTime";
+	public static final String KEY_KIS_MAX_FALLS = "KISMaxFalls";
+	public static final String KEY_KIS_HOST_NAME = "KISHostName";
+	public static final String KEY_KIS_TCP_PORT = "KISTCPPort";
+	public static final String KEY_KIS_MAX_OPENED_CONNECTIONS = "KISMaxOpenedConnections";
+	public static final String KEY_KIS_CONNECTION_TIMEOUT = "KISConnectionTimeout";
 
 	/*-********************************************************************
 	 * Default values.                                                    *
 	 **********************************************************************/
 
-	public static final String MCM_ID = "MCM_1"; //$NON-NLS-1$
-	public static final String DB_SID = "amficom"; //$NON-NLS-1$
+	public static final String MCM_ID = "MCM_1";
+	public static final String DB_SID = "amficom";
 	/**
 	 * Database connection timeout, in seconds.
 	 */
 	public static final int DB_CONNECTION_TIMEOUT = 120;	//sec
-	public static final String DB_LOGIN_NAME = "amficom"; //$NON-NLS-1$
+	public static final String DB_LOGIN_NAME = "amficom";
 	/**
 	 * Tick time, in seconds.
 	 */
 	public static final int TICK_TIME = 5;	//sec
 	public static final int FORWARD_PROCESSING = 2;
 	public static final int FORGET_FRAME = 24 * 60 * 60;	//sec
-	public static final String MSERVER_SERVANT_NAME = "MServer"; //$NON-NLS-1$
+	public static final String MSERVER_SERVANT_NAME = "MServer";
 	public static final int MSERVER_CHECK_TIMEOUT = 10;		//min
 	public static final int KIS_TICK_TIME = 1;	//sec
 	public static final int KIS_MAX_FALLS = 10;
-	public static final String KIS_HOST_NAME = "127.0.0.1"; //$NON-NLS-1$
+	public static final String KIS_HOST_NAME = "127.0.0.1";
 	public static final short KIS_TCP_PORT = 7501;
 	public static final int KIS_MAX_OPENED_CONNECTIONS = 1;
 	public static final int KIS_CONNECTION_TIMEOUT = 120;	//sec
 
-	private static final String PASSWORD = "MCM"; //$NON-NLS-1$
+	private static final String PASSWORD = "MCM";
 
 	/*	Error codes for method processFall()	(remove results, ...)*/
 	public static final int FALL_CODE_RECEIVE_RESULTS = 1;
@@ -249,7 +249,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 	private static void activateKISTransceivers() {
 		try {
 			LinkedIdsCondition lic = new LinkedIdsCondition(mcmId, ObjectEntities.KIS_ENTITY_CODE);
-			Collection kiss = ConfigurationStorableObjectPool.getStorableObjectsByCondition(lic, true);
+			Collection kiss = StorableObjectPool.getStorableObjectsByCondition(lic, true);
 
 			transceivers = Collections.synchronizedMap(new HashMap(kiss.size()));
 			KIS kis;
@@ -290,7 +290,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		}
 
 		try {
-			tests = MeasurementStorableObjectPool.getStorableObjectsByCondition(cc, true);
+			tests = StorableObjectPool.getStorableObjectsByCondition(cc, true);
 			Log.debugMessage("Found " + tests.size() + " tests of status SCHEDULED", Log.DEBUGLEVEL07);
 			sortTestsByStartTime(tests);
 			testList.addAll(tests);
@@ -313,7 +313,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		}
 
 		try {
-			tests = MeasurementStorableObjectPool.getStorableObjectsByCondition(cc, true);
+			tests = StorableObjectPool.getStorableObjectsByCondition(cc, true);
 			Log.debugMessage("Found " + tests.size() + " tests of status PROCESSING", Log.DEBUGLEVEL07);
 			for (Iterator it = tests.iterator(); it.hasNext();)
 				startTestProcessor((Test) it.next());
@@ -463,7 +463,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 	private static void prepareTestToExecute(Test test) {
 		test.setStatus(TestStatus.TEST_STATUS_SCHEDULED);
 		try {
-			MeasurementStorableObjectPool.putStorableObject(test);
+			StorableObjectPool.putStorableObject(test);
 
 			if (test.getTemporalType().value() == TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL)
 				MeasurementStorableObjectPool.getStorableObject(test.getTemporalPatternId(), true);
@@ -480,7 +480,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 			testList.remove(test);
 			test.setStatus(TestStatus.TEST_STATUS_ABORTED);
 			try {
-				MeasurementStorableObjectPool.putStorableObject(test);
+				StorableObjectPool.putStorableObject(test);
 				MeasurementStorableObjectPool.flush(test.getId(), true);
 			}
 			catch (ApplicationException ae) {
