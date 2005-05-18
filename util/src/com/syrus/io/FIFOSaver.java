@@ -1,5 +1,5 @@
 /*-
- * $Id: FIFOSaver.java,v 1.1 2005/05/16 10:06:03 max Exp $
+ * $Id: FIFOSaver.java,v 1.2 2005/05/18 09:41:51 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,6 +14,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.syrus.util.Application;
 import com.syrus.util.ApplicationProperties;
@@ -21,7 +23,7 @@ import com.syrus.util.Fifo;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/05/16 10:06:03 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/18 09:41:51 $
  * @author $Author: max $
  * @module util
  */
@@ -32,7 +34,9 @@ public class FIFOSaver {
 	private static final String DEFAULT_HOME = System.getProperty("user.home"); //$NON-NLS-1$
 	private static final String DEFAULT_CACHE_PATH = DEFAULT_HOME + File.separator 
 			+ "cache" + File.separator + Application.getApplicationName(); //$NON-NLS-1$
-
+	public static final String EXTENSION = "Fifo.serialized";
+	
+	
 	private static String pathNameOfSaveDir;
 	private static File saveDir;   
 
@@ -44,7 +48,7 @@ public class FIFOSaver {
 		File tempFile = null;
 		try {
 			init();
-			File saveFile = new File(saveDir.getPath() + File.separator + objectEntityName + "Fifo.serialized"); //$NON-NLS-1$
+			File saveFile = new File(saveDir.getPath() + File.separator + objectEntityName + EXTENSION); //$NON-NLS-1$
 			tempFile = new File(saveFile.getPath() + ".swp"); //$NON-NLS-1$
 			ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(tempFile));
 			Log.debugMessage("FifoSaver.save | Trying to save Fifo with " + objectEntityName + " to file " + saveFile.getAbsolutePath(), Log.DEBUGLEVEL10); //$NON-NLS-1$ //$NON-NLS-2$
@@ -71,11 +75,10 @@ public class FIFOSaver {
 	 * @todo Consider returning an empty list instead of null. Check all
 	 *       dependent code (within workspace).
 	 */
-	public static Fifo load(final String objectEntityName) {
+	private static Fifo load(final String objectEntityName) {
 		try {
-			init();
 			Log.debugMessage("FifoSaver.load | Trying to load Fifo with " + objectEntityName , Log.DEBUGLEVEL10); //$NON-NLS-1$
-			File savedFile = new File(saveDir.getPath() + File.separator + objectEntityName + "Fifo.serialized"); //$NON-NLS-1$
+			File savedFile = new File(saveDir.getPath() + File.separator + objectEntityName + EXTENSION); //$NON-NLS-1$
 			ObjectInputStream in = new ObjectInputStream(new FileInputStream(savedFile));
 			String keyObjectEntityName = (String) in.readObject();
 			if (keyObjectEntityName == null || !keyObjectEntityName.equals(objectEntityName)) {
@@ -101,6 +104,21 @@ public class FIFOSaver {
 			Log.errorMessage("FifoSaver.load | Error: " + ioe.getMessage()); //$NON-NLS-1$
 			return null;
 		}
+	}
+	
+	public static Map load() {
+		init();
+		Map codeNameFifo = new HashMap(); 
+		File[] fifoFiles = saveDir.listFiles(new FifoFileFilter());
+		for (int i = 0; i < fifoFiles.length; i++) {
+			File file = fifoFiles[i];
+			String fileName = file.getName();
+			int offset = fileName.indexOf(EXTENSION);
+			String codeName = fileName.substring(0 , offset);
+			Fifo fifo = load(codeName);
+			codeNameFifo.put(codeName, fifo);
+		}
+		return codeNameFifo;
 	}
 	
 	private static void init() {
