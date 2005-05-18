@@ -551,7 +551,7 @@ public class StatusBarModel extends JPanel implements OperationListener
 
 	public void operationPerformed(OperationEvent oe)
 	{
-		try 
+		try
 		{
 			StatusMessageEvent sme = (StatusMessageEvent )oe;
 			if(sme.getActionCommand().equals(StatusMessageEvent.STATUS_MESSAGE))
@@ -584,11 +584,11 @@ public class StatusBarModel extends JPanel implements OperationListener
 				this.setProgressBarEnable(sme.getShowProgressBar());
 			}
 			
-		} 
-		catch (Exception ex) 
+		}
+		catch (Exception ex)
 		{
 //			System.out.println("this is not a StatusMessageEvent so don't bother");
-		} 
+		}
 		
 	}
 	

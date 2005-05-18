@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.Client.General.Model;
 
-public class Version 
+public class Version
 {
 	public Version()
 	{

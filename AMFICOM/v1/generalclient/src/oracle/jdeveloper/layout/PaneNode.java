@@ -1,5 +1,5 @@
 /*
- * $Id: PaneNode.java,v 1.1 2005/03/18 09:44:58 bass Exp $
+ * $Id: PaneNode.java,v 1.2 2005/05/18 14:01:18 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import java.awt.*;
 import java.io.*;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/03/18 09:44:58 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/18 14:01:18 $
  * @author $Author: bass $
  * @module generalclient_v1
  * @deprecated
@@ -46,7 +46,7 @@ class PaneNode implements Serializable {
 		this.location = new Rectangle();
 		this.childNodeA = panenode;
 		this.childNodeB = panenode1;
-		if (s.equals("Top") || s.equals("Bottom")) { //$NON-NLS-1$ //$NON-NLS-2$
+		if (s.equals("Top") || s.equals("Bottom")) {
 			this.widthDivide = 1.0F;
 			this.heightDivide = f;
 			this.horizontal = true;
@@ -55,7 +55,7 @@ class PaneNode implements Serializable {
 			this.heightDivide = 1.0F;
 			this.horizontal = false;
 		}
-		if (s.equals("Top") || s.equals("Left")) //$NON-NLS-1$ //$NON-NLS-2$
+		if (s.equals("Top") || s.equals("Left"))
 			this.reverse = true;
 		else
 			this.reverse = false;
@@ -67,34 +67,34 @@ class PaneNode implements Serializable {
 		this.name = s;
 		this.widthDivide = 1.0F;
 		this.heightDivide = 0.5F;
-		this.horizontal = s1.equals("Top") || s1.equals("Bottom"); //$NON-NLS-1$ //$NON-NLS-2$
-		this.reverse = s1.equals("Top") || s1.equals("Left"); //$NON-NLS-1$ //$NON-NLS-2$
+		this.horizontal = s1.equals("Top") || s1.equals("Bottom");
+		this.reverse = s1.equals("Top") || s1.equals("Left");
 	}
 
 	public void addChild(String s, Component component, String s1, float f) {
 		if (this.childComponent != null) {
 			this.childNodeA = new PaneNode(this.name,
-					this.childComponent, "Root"); //$NON-NLS-1$
+					this.childComponent, "Root");
 			this.childComponent = null;
 			this.name = null;
-			this.childNodeB = new PaneNode(s, component, "Root"); //$NON-NLS-1$
+			this.childNodeB = new PaneNode(s, component, "Root");
 			f = 1.0F - f;
 			if (f > 1.0F || f < 0.0F)
 				f = 0.5F;
 			if (s1 == null) {
 				if (this.horizontal)
-					s1 = "Right"; //$NON-NLS-1$
+					s1 = "Right";
 				else
-					s1 = "Bottom"; //$NON-NLS-1$
-			} else if (s1.equals("Right") || s1.equals("Bottom")) { //$NON-NLS-1$ //$NON-NLS-2$
+					s1 = "Bottom";
+			} else if (s1.equals("Right") || s1.equals("Bottom")) {
 				this.reverse = false;
 			} else {
 				this.reverse = true;
-				if (!s1.equals("Left") && !s1.equals("Top") //$NON-NLS-1$ //$NON-NLS-2$
-						&& !s1.equals("Root")) //$NON-NLS-1$
+				if (!s1.equals("Left") && !s1.equals("Top")
+						&& !s1.equals("Root"))
 					f = 0.5F;
 			}
-			if (s1.equals("Left") || s1.equals("Right")) { //$NON-NLS-1$ //$NON-NLS-2$
+			if (s1.equals("Left") || s1.equals("Right")) {
 				this.widthDivide = f;
 				this.heightDivide = 1.0F;
 				this.horizontal = false;
@@ -105,9 +105,9 @@ class PaneNode implements Serializable {
 			}
 		} else {
 			if (this.horizontal)
-				s1 = "Right"; //$NON-NLS-1$
+				s1 = "Right";
 			else
-				s1 = "Bottom"; //$NON-NLS-1$
+				s1 = "Bottom";
 			this.childNodeB.addChild(s, component, s1, f);
 		}
 	}
@@ -259,24 +259,24 @@ class PaneNode implements Serializable {
 			PaneConstraints paneconstraints) {
 		if (this.childComponent != null)
 			return;
-		if (paneconstraints.position.equals("Top") //$NON-NLS-1$
-				|| paneconstraints.position.equals("Left")) //$NON-NLS-1$
+		if (paneconstraints.position.equals("Top")
+				|| paneconstraints.position.equals("Left"))
 			this.reverse = true;
 		else
 			this.reverse = false;
-		if (paneconstraints.position.equals("Bottom")) { //$NON-NLS-1$
+		if (paneconstraints.position.equals("Bottom")) {
 			this.heightDivide = 1.0F - paneconstraints.proportion;
 			this.widthDivide = 1.0F;
 			this.horizontal = true;
-		} else if (paneconstraints.position.equals("Top")) { //$NON-NLS-1$
+		} else if (paneconstraints.position.equals("Top")) {
 			this.heightDivide = 1.0F - paneconstraints.proportion;
 			this.widthDivide = 1.0F;
 			this.horizontal = true;
-		} else if (paneconstraints.position.equals("Right")) { //$NON-NLS-1$
+		} else if (paneconstraints.position.equals("Right")) {
 			this.widthDivide = 1.0F - paneconstraints.proportion;
 			this.heightDivide = 1.0F;
 			this.horizontal = false;
-		} else if (paneconstraints.position.equals("Left")) { //$NON-NLS-1$
+		} else if (paneconstraints.position.equals("Left")) {
 			this.widthDivide = 1.0F - paneconstraints.proportion;
 			this.heightDivide = 1.0F;
 			this.horizontal = false;

@@ -1,5 +1,5 @@
 /*
- * $Id: CheckConnectionCommand.java,v 1.5 2005/05/05 11:04:46 bob Exp $
+ * $Id: CheckConnectionCommand.java,v 1.6 2005/05/18 14:01:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,8 +15,8 @@ import com.syrus.AMFICOM.Client.General.Event.StatusMessageEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.5 $, $Date: 2005/05/05 11:04:46 $
+ * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2005/05/18 14:01:20 $
  * @module generalclient_v1
  */
 public class CheckConnectionCommand extends VoidCommand
@@ -76,7 +76,7 @@ public class CheckConnectionCommand extends VoidCommand
 		catch (Exception e)
 		{
 			/**
-			 * @todo Catch different exceptions separately. 
+			 * @todo Catch different exceptions separately.
 			 */
 			if(dispatcher != null)
 			{

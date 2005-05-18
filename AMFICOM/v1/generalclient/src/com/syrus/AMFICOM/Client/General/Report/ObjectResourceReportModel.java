@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourceReportModel.java,v 1.11 2004/09/27 09:14:49 bass Exp $
+ * $Id: ObjectResourceReportModel.java,v 1.12 2005/05/18 14:01:19 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,12 +13,13 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Resource.*;
 import java.text.*;
 import java.util.*;
+
 import javax.swing.JComponent;
 import org.jfree.data.time.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2004/09/27 09:14:49 $
+ * @version $Revision: 1.12 $, $Date: 2005/05/18 14:01:19 $
  * @module generalclient_v1
  */
 abstract public class ObjectResourceReportModel extends ReportModel
@@ -141,7 +142,7 @@ abstract public class ObjectResourceReportModel extends ReportModel
 		List result = new ArrayList();
 		for (ListIterator lIt = reports.listIterator(); lIt.hasNext();)
 			result.add(lIt.next());
-      
+
 		return result;
 	}
 
@@ -386,10 +387,10 @@ abstract public class ObjectResourceReportModel extends ReportModel
 		{
 			Long[] minmaxTimes = new Long[2];
 			minmaxTimes[0] = new Long(curTimeCalendar.getTime().getTime());
-			curTimeCalendar.add(GregorianCalendar.YEAR, yIncr);
-			curTimeCalendar.add(GregorianCalendar.MONTH, moIncr);
-			curTimeCalendar.add(GregorianCalendar.DATE, daIncr);
-			curTimeCalendar.add(GregorianCalendar.HOUR, hIncr);
+			curTimeCalendar.add(Calendar.YEAR, yIncr);
+			curTimeCalendar.add(Calendar.MONTH, moIncr);
+			curTimeCalendar.add(Calendar.DATE, daIncr);
+			curTimeCalendar.add(Calendar.HOUR, hIncr);
 
 			minmaxTimes[1] = new Long(curTimeCalendar.getTime().getTime());
 			bounds.add(minmaxTimes);

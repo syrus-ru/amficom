@@ -1,5 +1,5 @@
 /*
- * $Id: UniTreePanel.java,v 1.15 2005/05/13 19:05:47 bass Exp $
+ * $Id: UniTreePanel.java,v 1.16 2005/05/18 14:01:18 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,7 +10,6 @@ package com.syrus.AMFICOM.Client.General.UI;
 
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.Resource.*;
 import java.awt.*;
 import java.awt.dnd.*;
 import java.util.*;
@@ -47,7 +46,7 @@ registerSearchableNode(String criteria, ObjectResourceTreeNode tn).
 зарегистрированная ветвь станет выделенной.
  *
  * @author $Author: bass $
- * @version $Revision: 1.15 $, $Date: 2005/05/13 19:05:47 $
+ * @version $Revision: 1.16 $, $Date: 2005/05/18 14:01:18 $
  * @module generalclient_v1
  */
 public class UniTreePanel extends JPanel

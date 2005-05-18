@@ -31,9 +31,9 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.resource.AbstractImageResource;
 import com.syrus.AMFICOM.resource.FileImageResource;
-import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
 
 public class ImagesPanel extends JPanel
 		implements OperationListener
@@ -114,14 +114,14 @@ public class ImagesPanel extends JPanel
 		disp.register(this, "select");
 		disp.register(this, "selectir");
 		
-		StorableObjectCondition condition = 
+		StorableObjectCondition condition =
 			new EquivalentCondition(ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE);
 		
 		Collection irs = null;
 
 		try
 		{
-			irs = ResourceStorableObjectPool.getStorableObjectsByCondition(condition, true);
+			irs = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 		}
 		catch (ApplicationException e)
 		{
@@ -174,13 +174,13 @@ public class ImagesPanel extends JPanel
 		  {
 			try
 			{
-				/* 
+				/*
 				 * Fuck, whoever did this, we're tired of your
 				 * irresponsibility!!! As was previosly mentioned
 				 * (multiple times!), this constructor should
 				 * never be used client-side. Use
 				 * #createInstance(...) instead.
-				 * 
+				 *
 				 * --
 				 * Yours sincerely,
 				 *         Bass.
@@ -206,7 +206,7 @@ public class ImagesPanel extends JPanel
 			((FileImageResource )ir).setFileName(chooser.getSelectedFile().getName());
 			try
 			{
-				ResourceStorableObjectPool.putStorableObject(ir);
+				StorableObjectPool.putStorableObject(ir);
 			}
 			catch (IllegalObjectEntityException e)
 			{

@@ -18,9 +18,9 @@ import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 /**
  * Abstract class for JLabel and simple Component (witch extends JLabel)
  * rendering at JTable
- * 
- * @version $Revision: 1.12 $, $Date: 2005/04/13 21:40:46 $
- * @author $Author: arseniy $
+ *
+ * @version $Revision: 1.13 $, $Date: 2005/05/18 14:01:19 $
+ * @author $Author: bass $
  * @module generalclient_v1
  */
 public abstract class AbstractLabelCellRenderer extends JLabel implements TableCellRenderer {
@@ -48,7 +48,7 @@ public abstract class AbstractLabelCellRenderer extends JLabel implements TableC
 
 	/**
 	 * add custom renderer for object of Clazz clazz
-	 * @param clazz 
+	 * @param clazz
 	 * @param cellRenderer
 	 */
 	public void addCustomRenderer(Class clazz, TableCellRenderer cellRenderer) {
@@ -77,7 +77,7 @@ public abstract class AbstractLabelCellRenderer extends JLabel implements TableC
 					return cellRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, rowIndex,
 						vColIndex);
 			}
-			this.setText((value == null) ? "" : value.toString()); 
+			this.setText((value == null) ? "" : value.toString());
 				
 		}
 
@@ -127,9 +127,9 @@ public abstract class AbstractLabelCellRenderer extends JLabel implements TableC
 
 		if (hasFocus) {
 			setBorder(UIManager.getBorder("Table.focusCellHighlightBorder"));
-			// //$NON-NLS-1$
+			//
 			if (table.isCellEditable(rowIndex, vColIndex)) {
-				this.setForeground(UIManager.getColor("Table.focusCellForeground")); //$NON-NLS-1$
+				this.setForeground(UIManager.getColor("Table.focusCellForeground"));
 				// setBackground(UIManager.getColor("Table.focusCellBackground"));
 			}
 		} else {
@@ -151,7 +151,7 @@ public abstract class AbstractLabelCellRenderer extends JLabel implements TableC
 	/**
 	 * abstract method to custom rendering objectResource with aid of
 	 * objectResourceController
-	 * 
+	 *
 	 * @param table
 	 * @param object
 	 * @param controller

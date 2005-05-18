@@ -1,5 +1,5 @@
 /*
- * $Id: GridBagConstraints2.java,v 1.1 2005/03/18 09:44:58 bass Exp $
+ * $Id: GridBagConstraints2.java,v 1.2 2005/05/18 14:01:18 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import java.awt.*;
 import java.io.Serializable;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/03/18 09:44:58 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/18 14:01:18 $
  * @author $Author: bass $
  * @module generalclient_v1
  * @deprecated
@@ -37,7 +37,7 @@ public class GridBagConstraints2 extends GridBagConstraints implements
 	}
 
 	public String toString() {
-		return ": "	+ this.gridx + "," + this.gridy + "," + this.gridwidth + "," //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		return ": "	+ this.gridx + "," + this.gridy + "," + this.gridwidth + ","
 				+ this.gridheight;
 	}
 }

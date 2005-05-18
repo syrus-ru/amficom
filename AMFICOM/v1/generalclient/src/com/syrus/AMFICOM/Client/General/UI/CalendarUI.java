@@ -332,7 +332,7 @@ class MonthCanvas extends Container
 		JPanel q = new JPanel(new GridLayout(0, weekNames.length));
 		for (int i=0; i<weekNames.length; i++)
 		{
-			JLabel l = new JLabel(weekNames[i], JLabel.CENTER);
+			JLabel l = new JLabel(weekNames[i], SwingConstants.CENTER);
 			q.setBackground(Color.gray);
 			q.add(l);
 		}
@@ -353,7 +353,7 @@ class MonthCanvas extends Container
 		cal.set(Calendar.DAY_OF_MONTH, temp_day);
 		// Fill the first few cells with blanks.
 		for (int i = fday; i < dayOfWeek; i++) {
-			calPanel.add(new JLabel(" ", JLabel.CENTER));
+			calPanel.add(new JLabel(" ", SwingConstants.CENTER));
 		}
 
 		// Add the days.

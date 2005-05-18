@@ -4,9 +4,9 @@ import com.syrus.AMFICOM.Client.Resource.*;
 import java.util.*;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/05/27 12:49:24 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/18 14:01:21 $
  * @author $Author: bass $
- * 
+ *
  * @see Message
  * @see com.syrus.AMFICOM.Client.Object.UI.MessageDisplayModel
  * @deprecated

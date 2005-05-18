@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractPropertiesFrame.java,v 1.7 2005/05/03 13:03:28 stas Exp $
+ * $Id: AbstractPropertiesFrame.java,v 1.8 2005/05/18 14:01:19 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import javax.swing.event.*;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.7 $, $Date: 2005/05/03 13:03:28 $
+ * @author $Author: bass $
+ * @version $Revision: 1.8 $, $Date: 2005/05/18 14:01:19 $
  * @module generalclient_v1
  */
 
@@ -98,8 +98,8 @@ public abstract class AbstractPropertiesFrame extends JInternalFrame implements 
 		});
 	}
 
-	public void stateChanged(ChangeEvent e) { 
-		// should be overriden by children 
+	public void stateChanged(ChangeEvent e) {
+		// should be overriden by children
 	}
 	protected abstract StorableObjectEditor getEditor(VisualManager manager);
 	

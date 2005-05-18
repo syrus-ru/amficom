@@ -2,7 +2,7 @@ package com.syrus.AMFICOM.Client.General.UI;
 
 import com.syrus.io.SimpleStringTokenizer;
 
-public class MultiRowString 
+public class MultiRowString
 {
 	int rows;
 	String[] strings;

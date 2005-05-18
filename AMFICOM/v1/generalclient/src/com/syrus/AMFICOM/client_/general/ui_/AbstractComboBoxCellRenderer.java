@@ -13,9 +13,9 @@ import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 /**
  * Abstract class for JComboBox rendering at JTable
- * 
- * @version $Revision: 1.6 $, $Date: 2005/05/05 11:04:48 $
- * @author $Author: bob $
+ *
+ * @version $Revision: 1.7 $, $Date: 2005/05/18 14:01:19 $
+ * @author $Author: bass $
  * @module generalclient_v1
  */
 public abstract class AbstractComboBoxCellRenderer extends JComboBox implements TableCellRenderer {
@@ -25,7 +25,7 @@ public abstract class AbstractComboBoxCellRenderer extends JComboBox implements 
 	/**
 	 * abstract method to custom rendering objectResource with aid of
 	 * objectResourceController
-	 * 
+	 *
 	 * @param table
 	 * @param objectResource
 	 *                see {@link ObjectResource}
@@ -89,10 +89,10 @@ public abstract class AbstractComboBoxCellRenderer extends JComboBox implements 
 		}
 
 		if (hasFocus) {
-			setBorder(UIManager.getBorder("Table.focusCellHighlightBorder")); //$NON-NLS-1$
+			setBorder(UIManager.getBorder("Table.focusCellHighlightBorder"));
 			if (table.isCellEditable(rowIndex, vColIndex)) {
-				super.setForeground(UIManager.getColor("Table.focusCellForeground")); //$NON-NLS-1$
-				super.setBackground(UIManager.getColor("Table.focusCellBackground")); //$NON-NLS-1$
+				super.setForeground(UIManager.getColor("Table.focusCellForeground"));
+				super.setBackground(UIManager.getColor("Table.focusCellBackground"));
 			}
 		} else {
 			//setBorder(noFocusBorder);
@@ -106,7 +106,7 @@ public abstract class AbstractComboBoxCellRenderer extends JComboBox implements 
 	/**
 	 * Overrides <code>JComponent.setBackground</code> to assign the
 	 * unselected-background color to the specified color.
-	 * 
+	 *
 	 * @param c
 	 *                set the background color to this value
 	 */
@@ -118,7 +118,7 @@ public abstract class AbstractComboBoxCellRenderer extends JComboBox implements 
 	/**
 	 * Overrides <code>JComponent.setForeground</code> to assign the
 	 * unselected-foreground color to the specified color.
-	 * 
+	 *
 	 * @param c
 	 *                set the foreground color to this value
 	 */

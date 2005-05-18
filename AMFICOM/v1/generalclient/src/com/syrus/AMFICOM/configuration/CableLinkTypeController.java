@@ -120,6 +120,6 @@ public final class CableLinkTypeController extends ObjectResourceController {
 	}
 	
 	public static String getPropertyManagerClassName () {
-		return "com.syrus.AMFICOM.client_.configuration.ui.CableLinkTypePropertiesManager";  //$NON-NLS-1$
+		return "com.syrus.AMFICOM.client_.configuration.ui.CableLinkTypePropertiesManager";
 	}
 }

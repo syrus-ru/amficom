@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicsPanel.java,v 1.4 2005/05/05 11:04:48 bob Exp $
+ * $Id: CharacteristicsPanel.java,v 1.5 2005/05/18 14:01:19 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,6 +56,7 @@ import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.CharacteristicTypeSort;
 import com.syrus.AMFICOM.logic.Item;
@@ -63,8 +64,8 @@ import com.syrus.AMFICOM.resource.Constants;
 import com.syrus.AMFICOM.resource.LangModelGeneral;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.4 $, $Date: 2005/05/05 11:04:48 $
+ * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2005/05/18 14:01:19 $
  * @module generalclient_v1
  */
 
@@ -242,8 +243,8 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 				List added = (List) it.next();
 				for (Iterator it2 = added.iterator(); it2.hasNext();) {
 					Characteristic ch = (Characteristic) it2.next();
-					GeneralStorableObjectPool.putStorableObject(ch.getType());
-					GeneralStorableObjectPool.putStorableObject(ch);
+					StorableObjectPool.putStorableObject(ch.getType());
+					StorableObjectPool.putStorableObject(ch);
 				}
 			}
 			Set removedIds = new HashSet();

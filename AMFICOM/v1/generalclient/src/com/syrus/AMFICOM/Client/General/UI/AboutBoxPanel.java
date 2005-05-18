@@ -18,7 +18,7 @@ public class AboutBoxPanel extends JPanel
 
 	public AboutBoxPanel()
 	{
-		try 
+		try
 		{
 			jbInit();
 		}

@@ -10,7 +10,7 @@ import java.util.Vector;
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
 
-public class WindowCascadeCommand extends VoidCommand 
+public class WindowCascadeCommand extends VoidCommand
 {
 	private Dispatcher dispatcher;
 	private JDesktopPane desktop;

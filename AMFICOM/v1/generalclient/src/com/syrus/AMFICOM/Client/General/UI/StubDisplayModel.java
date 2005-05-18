@@ -1,5 +1,5 @@
 /*
- * $Id: StubDisplayModel.java,v 1.5 2005/05/05 11:04:47 bob Exp $
+ * $Id: StubDisplayModel.java,v 1.6 2005/05/18 14:01:18 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,8 +16,8 @@ import java.util.Vector;
 import com.syrus.AMFICOM.corba.portable.reflect.common.ObjectResource;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.5 $, $Date: 2005/05/05 11:04:47 $
+ * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2005/05/18 14:01:18 $
  * @module generalclient_v1
  */
 public class StubDisplayModel implements ObjectResourceDisplayModel
@@ -76,7 +76,7 @@ public class StubDisplayModel implements ObjectResourceDisplayModel
 					return (String)colnames.get(i);
 			}
 		}
-        catch (Exception ex) 
+        catch (Exception ex)
         {
         }
 		return "";
@@ -93,7 +93,7 @@ public class StubDisplayModel implements ObjectResourceDisplayModel
 					return colsizes[i];
 			}
 		}
-        catch (Exception ex) 
+        catch (Exception ex)
         {
         }
 		return 100;

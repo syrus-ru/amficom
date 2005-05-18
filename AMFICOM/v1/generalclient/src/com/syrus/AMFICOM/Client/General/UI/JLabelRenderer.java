@@ -11,12 +11,12 @@ import javax.swing.border.EmptyBorder;
 public class JLabelRenderer extends JLabel
 		implements PropertyRenderer
 {
-    protected static Border noFocusBorder = new EmptyBorder(1, 1, 1, 1); 
-    
-    private Color unselectedForeground; 
-    private Color unselectedBackground; 
+    protected static Border noFocusBorder = new EmptyBorder(1, 1, 1, 1);
 
-    public JLabelRenderer() 
+    private Color unselectedForeground;
+    private Color unselectedBackground;
+
+    public JLabelRenderer()
 	{
 		super();
 		setOpaque(true);
@@ -38,7 +38,7 @@ public class JLabelRenderer extends JLabel
 		setText((String )obj);
 	}
 	
-    protected void setValue(Object value) 
+    protected void setValue(Object value)
 	{
 		setText((value == null) ? "" : value.toString());
     }

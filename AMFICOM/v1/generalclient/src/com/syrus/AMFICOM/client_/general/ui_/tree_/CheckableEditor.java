@@ -1,5 +1,5 @@
 /*-
- * $Id: CheckableEditor.java,v 1.2 2005/04/18 08:54:35 stas Exp $
+ * $Id: CheckableEditor.java,v 1.3 2005/05/18 14:01:21 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import javax.swing.plaf.basic.BasicRadioButtonUI;
 import com.syrus.AMFICOM.logic.Item;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/04/18 08:54:35 $
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/05/18 14:01:21 $
  * @module generalclient_v1
  */
 
@@ -34,7 +34,7 @@ public class CheckableEditor extends DefaultCellEditor {
 				int x = 0;
 				Icon icon = ((BasicRadioButtonUI)getUI()).getDefaultIcon();
 				if (icon != null) {
-					x += icon.getIconWidth() + getIconTextGap(); 
+					x += icon.getIconWidth() + getIconTextGap();
 				}
 				g.setColor(CheckableRenderer.selectedBackground);
 				Insets i = getInsets();

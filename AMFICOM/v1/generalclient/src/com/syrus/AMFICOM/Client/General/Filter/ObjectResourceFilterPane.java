@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourceFilterPane.java,v 1.15 2005/04/13 20:29:08 arseniy Exp $
+ * $Id: ObjectResourceFilterPane.java,v 1.16 2005/05/18 14:01:18 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,8 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
+import com.syrus.AMFICOM.filter.LogicSchemeElementBase;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -22,8 +24,8 @@ import javax.swing.border.EtchedBorder;
 import oracle.jdeveloper.layout.VerticalFlowLayout;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.15 $, $Date: 2005/04/13 20:29:08 $
+ * @author $Author: bass $
+ * @version $Revision: 1.16 $, $Date: 2005/05/18 14:01:18 $
  * @module generalclient_v1
  */
 public class ObjectResourceFilterPane extends JScrollPane
@@ -238,7 +240,7 @@ repaint();
 		for (int i = 0; i < schemeEls.size(); i++)
 		{
 			LogicSchemeElement se = (LogicSchemeElement) schemeEls.get(i);
-			if (se.type.equals(LogicSchemeElement.tCondition))
+			if (se.type.equals(LogicSchemeElementBase.tCondition))
 			{
 				int thisID = Integer.parseInt(se.operandType);
 				if (thisID > removedIndex)
@@ -696,7 +698,7 @@ repaint();
 			curComponent.setEnabled(!curState);
 		}
 	}
-  
+
   public void setTemplateCBEnabled (boolean state)
   {
     if (state)

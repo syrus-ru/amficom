@@ -9,9 +9,9 @@ import java.util.Map;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CharacteristicType;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.CharacteristicTypeSort;
@@ -29,7 +29,7 @@ public class MiscUtil
 		
 
 		try {
-			Collection pTypes = GeneralStorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
+			Collection pTypes = StorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
 			for (Iterator it = pTypes.iterator(); it.hasNext(); ) {
 				CharacteristicType type = (CharacteristicType)it.next();
 				if (type.getCodename().equals(codename))
@@ -95,7 +95,7 @@ public class MiscUtil
 		StringBuffer f = new StringBuffer(str);
 		for (int i = f.length() - 1; i > 0; i--)
 			if (!Character.isDigit(str.charAt(i)))
-				return f.substring(0, i + 1); 
+				return f.substring(0, i + 1);
 		return "";
 	}
 

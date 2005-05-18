@@ -10,8 +10,8 @@ import java.util.Map;
 import javax.swing.table.AbstractTableModel;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/04/13 21:40:46 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/05/18 14:01:19 $
+ * @author $Author: bass $
  * @module generalclient_v1
  */
 public class ObjPropertyTableModel extends AbstractTableModel {
@@ -53,7 +53,7 @@ public class ObjPropertyTableModel extends AbstractTableModel {
 	/**
 	 * override {@link AbstractTableModel#getColumnClass(int)}method
 	 */
-	public Class getColumnClass(int columnIndex) 
+	public Class getColumnClass(int columnIndex)
 	{
 		Class clazz;
 		if(columnIndex == 0)
@@ -75,7 +75,7 @@ public class ObjPropertyTableModel extends AbstractTableModel {
 		return 2;
 	}
 
-	public String getColumnName(int columnIndex) 
+	public String getColumnName(int columnIndex)
 	{
 		String name = "";
 

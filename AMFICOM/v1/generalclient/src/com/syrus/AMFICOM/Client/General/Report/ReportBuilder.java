@@ -1,5 +1,5 @@
 /*
- * $Id: ReportBuilder.java,v 1.10 2005/04/25 09:39:47 bass Exp $
+ * $Id: ReportBuilder.java,v 1.11 2005/05/18 14:01:19 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,11 +8,8 @@
 
 package com.syrus.AMFICOM.Client.General.Report;
 
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Filter.ObjectResourceFilter;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import java.awt.*;
-import java.util.Date;
 import javax.swing.*;
 
 /**
@@ -21,9 +18,9 @@ import javax.swing.*;
  *    а также оптимально подгружает данные с сервера.</p>
  * <p>Copyright: Copyright (c) 2004</p>
  * <p>Company: Syrus Systems</p>
- * 
+ *
  * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2005/04/25 09:39:47 $
+ * @version $Revision: 1.11 $, $Date: 2005/05/18 14:01:19 $
  * @module generalclient_v1
  */
 public class ReportBuilder
@@ -41,17 +38,17 @@ public class ReportBuilder
    * класс, требуемый для реализации данного элемента, передаёт в него данные и
    * получает из него панель с результатом. Эту панель он кладёт на
    * <code> TitledPanel </code> (панель с заголовком).
-   * 
+   *
    * @param rp реализуемый элемент шаблона</p>
    * @param divisionsNumber количество разбиений для таблицы (иначе 1)</p>
    * @param rt шаблон, которому принадлежит элемент</p>
    * @param aContext контекст приложения</p>
    * @param fromAnotherModule флаг вызова из другого модуля (при вызове из
    *                        другого модуля = true, иначе = false)</p>
-   * 
+   *
    * @exception CreateReportException Если отчёт по каким-то причинам
    *  нереализуем.
-   * @return 
+   * @return
    */
 
 	public static TitledPanel createReport(

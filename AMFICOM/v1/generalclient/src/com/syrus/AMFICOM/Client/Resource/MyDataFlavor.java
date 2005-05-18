@@ -9,7 +9,7 @@ public class MyDataFlavor extends DataFlavor
 		super(representationClass, humanPresentableName);
 	}
 	
-    public boolean isFlavorSerializedObjectType() 
+    public boolean isFlavorSerializedObjectType()
 	{
         return false;
     }

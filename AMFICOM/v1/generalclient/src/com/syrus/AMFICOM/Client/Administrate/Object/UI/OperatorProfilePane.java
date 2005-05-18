@@ -1,5 +1,5 @@
 /*
- * $Id: OperatorProfilePane.java,v 1.5 2005/05/13 19:03:16 bass Exp $
+ * $Id: OperatorProfilePane.java,v 1.6 2005/05/18 14:01:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import javax.swing.event.*;
  * dependencies between <tt>generalclient_v1</tt> and <tt>admin_1</tt>.
  *
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/05/13 19:03:16 $
+ * @version $Revision: 1.6 $, $Date: 2005/05/18 14:01:20 $
  * @module generalclient_v1
  */
 public final class OperatorProfilePane extends JPanel implements ObjectResourcePropertiesPane {
@@ -234,7 +234,7 @@ public final class OperatorProfilePane extends JPanel implements ObjectResourceP
     profile.owner_id = this.user.getId();
     profile.modified_by = this.user.getId();
 		Calendar calendar = Calendar.getInstance();
-		long timeInMillis = calendar.getTimeInMillis(); 
+		long timeInMillis = calendar.getTimeInMillis();
 		profile.created = timeInMillis;
 		profile.modified = timeInMillis;
 		calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) + 1);

@@ -18,26 +18,26 @@ public class ObjectResourcePropertiesTableModel extends AbstractTableModel
 	private ObjectResource objectResource;
 
 	public ObjectResourcePropertiesTableModel(
-			ObjectResourcePropertiesController controller) 
+			ObjectResourcePropertiesController controller)
 	{
 		this(controller, null);
 	}
 
 	public ObjectResourcePropertiesTableModel(
-			ObjectResourcePropertiesController controller, 
-			ObjectResource objectResource) 
+			ObjectResourcePropertiesController controller,
+			ObjectResource objectResource)
 	{
 		this.controller = controller;
 		setObjectResource(objectResource);
 	}
 
-	public void clear() 
+	public void clear()
 	{
 		setObjectResource(null);
 		super.fireTableDataChanged();
 	}
 
-	public Class getColumnClass(int columnIndex) 
+	public Class getColumnClass(int columnIndex)
 	{
 		Class clazz = Object.class;
 		if(columnIndex == 0)
@@ -47,12 +47,12 @@ public class ObjectResourcePropertiesTableModel extends AbstractTableModel
 		return clazz;
 	}
 
-	public int getColumnCount() 
+	public int getColumnCount()
 	{
 		return 2;
 	}
 
-	public String getColumnName(int columnIndex) 
+	public String getColumnName(int columnIndex)
 	{
 		String name = "";
 
@@ -65,25 +65,25 @@ public class ObjectResourcePropertiesTableModel extends AbstractTableModel
 		return name;
 	}
 
-	public ObjectResource getObjectResource() 
+	public ObjectResource getObjectResource()
 	{
 		return objectResource;
 	}
 
-	public void setObjectResource(ObjectResource or) 
+	public void setObjectResource(ObjectResource or)
 	{
 		this.objectResource = or;
 		super.fireTableDataChanged();
 	}
 
-	public int getRowCount() 
+	public int getRowCount()
 	{
 		if(this.controller == null)
 			return 0;
 		return this.controller.getKeys().size();
 	}
 
-	public Object getValueAt(int rowIndex, int columnIndex) 
+	public Object getValueAt(int rowIndex, int columnIndex)
 	{
 		if(this.controller == null)
 			return "";
@@ -97,7 +97,7 @@ public class ObjectResourcePropertiesTableModel extends AbstractTableModel
 		{
 			obj = this.controller.getValue(objectResource, property);
 
-			if (this.controller.getPropertyValue(property) instanceof Map) 
+			if (this.controller.getPropertyValue(property) instanceof Map)
 			{
 				Map map = (Map) this.controller.getPropertyValue(property);
 				Object keyObject = null;
@@ -117,7 +117,7 @@ public class ObjectResourcePropertiesTableModel extends AbstractTableModel
 		return obj;
 	}
 
-	public boolean isCellEditable(int rowIndex, int columnIndex) 
+	public boolean isCellEditable(int rowIndex, int columnIndex)
 	{
 		boolean editable;
 		if(this.controller == null)
@@ -132,7 +132,7 @@ public class ObjectResourcePropertiesTableModel extends AbstractTableModel
 		return editable;
 	}
 
-	public void setValueAt(Object obj, int rowIndex, int columnIndex) 
+	public void setValueAt(Object obj, int rowIndex, int columnIndex)
 	{
 		if(this.controller == null)
 			return;
@@ -142,7 +142,7 @@ public class ObjectResourcePropertiesTableModel extends AbstractTableModel
 			return;
 
 		String property = this.controller.getKey(rowIndex);
-		if (this.controller.getPropertyValue(property) instanceof Map) 
+		if (this.controller.getPropertyValue(property) instanceof Map)
 		{
 			Map map = (Map) this.controller.getPropertyValue(property);
 			this.controller.setValue(objectResource, property, map.get(obj));

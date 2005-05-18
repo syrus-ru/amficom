@@ -9,7 +9,7 @@ import java.awt.event.ActionEvent;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import oracle.jdeveloper.layout.VerticalFlowLayout;
 
-public class FilterDialog extends JDialog 
+public class FilterDialog extends JDialog
 {
 	public static final int RETURN_CODE_OK = 1;
 	public static final int RETURN_CODE_CANCEL = 2;

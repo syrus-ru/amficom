@@ -1,5 +1,5 @@
 /*
- * $Id: ImportCommand.java,v 1.9 2005/04/15 22:19:42 arseniy Exp $
+ * $Id: ImportCommand.java,v 1.10 2005/05/18 14:01:20 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,12 +30,12 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.io.IntelStreamReader;
 
 /**
- * Класс $RCSfile: ImportCommand.java,v $ 
- * 
- * 
- * @version $Revision: 1.9 $, $Date: 2005/04/15 22:19:42 $
+ * Класс $RCSfile: ImportCommand.java,v $
+ *
+ *
+ * @version $Revision: 1.10 $, $Date: 2005/05/18 14:01:20 $
  * @module map_v2
- * @author $Author: arseniy $
+ * @author $Author: bass $
  * @see
  */
 public abstract class ImportCommand extends VoidCommand
@@ -153,7 +153,7 @@ public abstract class ImportCommand extends VoidCommand
 	private String[] getString()
 	{
 		String[] readString = new String[2];
-		try 
+		try
 		{
 			if(!isr.ready())
 				return null;
@@ -177,13 +177,13 @@ public abstract class ImportCommand extends VoidCommand
 					readString[1] = s.substring(n + 1, s.length());
 				}
 			}
-		} 
-		catch (Exception ex) 
+		}
+		catch (Exception ex)
 		{
 			ex.printStackTrace();
 			
-		} 
-		finally 
+		}
+		finally
 		{
 		}
 		

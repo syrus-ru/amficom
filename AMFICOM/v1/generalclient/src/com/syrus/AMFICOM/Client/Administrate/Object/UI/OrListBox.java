@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.general.StorableObject;
 
 

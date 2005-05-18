@@ -1,5 +1,5 @@
 /*
- * $Id: Environment.java,v 1.25 2005/05/05 11:04:47 bob Exp $
+ * $Id: Environment.java,v 1.26 2005/05/18 14:01:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -55,9 +55,9 @@ import com.syrus.io.IniFile;
 
 /**
  * Класс Environment используется для хранения общей для приложения информации.
- * 
- * @author $Author: bob $
- * @version $Revision: 1.25 $, $Date: 2005/05/05 11:04:47 $
+ *
+ * @author $Author: bass $
+ * @version $Revision: 1.26 $, $Date: 2005/05/18 14:01:20 $
  * @module generalclient_v1
  */
 public final class Environment
@@ -266,7 +266,7 @@ public final class Environment
 			 .getScaledInstance(15, 15,
 			 Image.SCALE_SMOOTH)));
 		
-		UIManager.put(ResourceKeys.ICON_MINI_MEASUREMENT_SETUP, 
+		UIManager.put(ResourceKeys.ICON_MINI_MEASUREMENT_SETUP,
 		new ImageIcon(Toolkit
 			 .getDefaultToolkit().getImage(
 			 "images/testsetup.gif")
@@ -584,17 +584,17 @@ public final class Environment
 	
 	private static void saveProperties()
 	{
-		try 
+		try
 		{
 			domainId = LoginManager.getDomainId();
 			if (domainId != null)
 				iniFile.setValue(FIELD_DOMAIN, domainId);
 			iniFile.saveKeys();
-		} 
-		catch (Exception ex) 
+		}
+		catch (Exception ex)
 		{
 			ex.printStackTrace();
-		} 
+		}
 	}
 
 

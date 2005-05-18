@@ -1,5 +1,5 @@
 /*
- * $Id: ImagesPanel.java,v 1.6 2005/05/05 11:04:48 bob Exp $
+ * $Id: ImagesPanel.java,v 1.7 2005/05/18 14:01:19 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,6 +28,7 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.border.BevelBorder;
 
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
@@ -38,16 +39,16 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.resource.ImageResourceWrapper;
-import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
 import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceDataPackage.ImageResourceSort;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.6 $, $Date: 2005/05/05 11:04:48 $
+ * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2005/05/18 14:01:19 $
  * @module generalclient_v1
  */
 public class ImagesPanel extends JPanel
@@ -98,7 +99,7 @@ public class ImagesPanel extends JPanel
 				ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE,
 				ImageResourceWrapper.COLUMN_SORT);
 			
-			Collection bitMaps = ResourceStorableObjectPool.getStorableObjectsByCondition(condition, true);
+			Collection bitMaps = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 
 			for (Iterator it = bitMaps.iterator(); it.hasNext(); ) {
 				BitmapImageResource ir = (BitmapImageResource)it.next();
@@ -157,7 +158,7 @@ public class ImagesPanel extends JPanel
 
 				try
 				{
-					ResourceStorableObjectPool.putStorableObject(bitmapImageResource);
+					StorableObjectPool.putStorableObject(bitmapImageResource);
 				}
 				catch (IllegalObjectEntityException ioee)
 				{
@@ -199,8 +200,8 @@ public class ImagesPanel extends JPanel
 		imagesPanel.setMinimumSize(new Dimension(0, 100));
 		imagesPanel.setPreferredSize(new Dimension(0, 100));
 
-		jScrollPane1.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-		jScrollPane1.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		jScrollPane1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+		jScrollPane1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 //		jScrollPane1.getViewport().setLayout();
 		jScrollPane1.getViewport().add(imagesPanel);
 		jScrollPane1.setWheelScrollingEnabled(true);

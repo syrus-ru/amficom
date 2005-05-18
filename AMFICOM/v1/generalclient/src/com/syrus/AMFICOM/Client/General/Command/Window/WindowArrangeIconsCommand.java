@@ -8,7 +8,7 @@ import java.awt.Dimension;
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
 
-public class WindowArrangeIconsCommand extends VoidCommand 
+public class WindowArrangeIconsCommand extends VoidCommand
 {
 	private Dispatcher dispatcher;
 	private JDesktopPane desktop;

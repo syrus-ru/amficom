@@ -11,7 +11,6 @@ import oracle.jdeveloper.layout.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Object.*;
 import com.syrus.AMFICOM.administration.User;
 import com.syrus.AMFICOM.general.StorableObject;
 
@@ -162,7 +161,7 @@ public class UserPanel  extends GeneralPanel
     }
 
     List c = new ArrayList();
-    for(ListIterator lIt = user.category_ids.listIterator(); lIt.hasNext();)    
+    for(ListIterator lIt = user.category_ids.listIterator(); lIt.hasNext();)
     {
       Object o = Pool.get(OperatorCategory.class.getName(), (String)lIt.next());
       if(o != null)

@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourcePropertiesDialog.java,v 1.11 2005/05/05 11:04:47 bob Exp $
+ * $Id: ObjectResourcePropertiesDialog.java,v 1.12 2005/05/18 14:01:18 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,8 +24,8 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.corba.portable.reflect.common.ObjectResource;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.11 $, $Date: 2005/05/05 11:04:47 $
+ * @author $Author: bass $
+ * @version $Revision: 1.12 $, $Date: 2005/05/18 14:01:18 $
  * @module generalclient_v1
  */
 public class ObjectResourcePropertiesDialog extends JDialog
@@ -43,10 +43,10 @@ public class ObjectResourcePropertiesDialog extends JDialog
 	protected  FlowLayout flowLayout1 = new FlowLayout();
 
 	public ObjectResourcePropertiesDialog(
-			JFrame frame, 
-			String title, 
-			boolean modal, 
-			ObjectResource or, 
+			JFrame frame,
+			String title,
+			boolean modal,
+			ObjectResource or,
 			ObjectResourcePropertiesPane pane)
 	{
 		super(frame, title, modal);

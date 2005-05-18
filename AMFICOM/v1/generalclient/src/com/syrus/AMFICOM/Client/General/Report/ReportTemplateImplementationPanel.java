@@ -706,7 +706,7 @@ public class ReportTemplateImplementationPanel extends JPanel
 		int elemCount = 0;
 
 		// Непривязанные к объектам надписи
-		for (ListIterator it = this.labels.listIterator(); it.hasNext();)    
+		for (ListIterator it = this.labels.listIterator(); it.hasNext();)
 		{
 			FirmedTextPane curPane = (FirmedTextPane)it.next();
 			if ((curPane.horizFirmer != null) ||
@@ -835,7 +835,7 @@ public class ReportTemplateImplementationPanel extends JPanel
 	private int getRenderingObjectClasterAt(int x, int y, RenderingObject curRO)
 	{
     int index = 0;
-		for (ListIterator it = this.objects.listIterator(); it.hasNext(); index++)  
+		for (ListIterator it = this.objects.listIterator(); it.hasNext(); index++)
 		{
 			RenderingObject iRO = (RenderingObject) it.next();
 			if (iRO.hasPoint(x, y, this.labels))
@@ -1179,8 +1179,8 @@ public class ReportTemplateImplementationPanel extends JPanel
 						{
 							FirmedTextPane label = (FirmedTextPane)this.labels.get(
 								matrix[row][col]);
-                
-              writeTextPane(label,out);  
+
+              writeTextPane(label,out);
 						}
 						else if (matrix[row][col] >= this.labels.size() + this.objects.size())
 						{
@@ -1246,7 +1246,7 @@ public class ReportTemplateImplementationPanel extends JPanel
 								//Отчёт с текстовым полем
 								JScrollPane sp = (JScrollPane) ro.rendererPanel.
 													  insidePanel;
-                            
+
 								if (sp == null)
 									continue;
 
@@ -1263,7 +1263,7 @@ public class ReportTemplateImplementationPanel extends JPanel
   							out.write(">".getBytes());
 								JScrollPane sp = (JScrollPane) ro.rendererPanel.
 													  insidePanel;
-                            
+
 								if (sp == null)
 									continue;
 
@@ -1271,9 +1271,9 @@ public class ReportTemplateImplementationPanel extends JPanel
 								itsTable.setSize(sp.getPreferredSize());
 								this.writeTable(out, itsTable, beforePrinting);
               }
-							else 
+							else
 							{
-  							out.write(">".getBytes());              
+  							out.write(">".getBytes());
 								//Создаём каталог path/fileName.files
 								File f = new File(fileName);
 								String fileNameWOPNE =
@@ -1375,7 +1375,7 @@ public class ReportTemplateImplementationPanel extends JPanel
 		elemCount++;
 
 		// Непривязанные к объектам надписи
-		for (ListIterator it = this.labels.listIterator(); it.hasNext();)    
+		for (ListIterator it = this.labels.listIterator(); it.hasNext();)
 		{
 			FirmedTextPane curPane = (FirmedTextPane)it.next();
 
@@ -1687,7 +1687,7 @@ public class ReportTemplateImplementationPanel extends JPanel
       italicTagEnd + boldTagEnd + "</font>";
 
     out.write(fontBuffer.getBytes());
-  
+
   }
 
 	public void printReport()

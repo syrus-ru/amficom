@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourceChooserDialog.java,v 1.10 2005/05/13 19:05:46 bass Exp $
+ * $Id: ObjectResourceChooserDialog.java,v 1.11 2005/05/18 14:01:19 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,7 +10,6 @@ package com.syrus.AMFICOM.Client.General.UI;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTable;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTableModel;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
@@ -26,18 +25,18 @@ import javax.swing.event.*;
 /**
  * Класс $RCSfile: ObjectResourceChooserDialog.java,v $ используется для отображения окна со списком объектов с тем,
  * чтобы пользователь мог выбрать один из них. Статус действия пользователя
- * (выбрал объект или отменил действия) определяется методом getReturnCode(). 
+ * (выбрал объект или отменил действия) определяется методом getReturnCode().
  * Выбранный объект получается методом getReturnObject().
  * В окне выбора объекта можно включить функцию удаления выбранного объекта.
  * Для этого следует переопределить метод remove(StorableObject obj). Для того,
- * чтобы включить эту возможность, необходимо вызвать метод 
+ * чтобы включить эту возможность, необходимо вызвать метод
  * setCanDelete(boolean bool)
  *
  * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2005/05/13 19:05:46 $
+ * @version $Revision: 1.11 $, $Date: 2005/05/18 14:01:19 $
  * @module generalclient_v1
  */
-public class ObjectResourceChooserDialog extends JDialog 
+public class ObjectResourceChooserDialog extends JDialog
 {
 	static public final int RET_OK = 1;
 	static public final int RET_CANCEL = 2;
@@ -102,7 +101,7 @@ public class ObjectResourceChooserDialog extends JDialog
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		Dimension frameSize = this.getSize();
 		this.setLocation(
-				(screenSize.width - frameSize.width) / 2, 
+				(screenSize.width - frameSize.width) / 2,
 				(screenSize.height - frameSize.height) / 2);
 
 		this.getContentPane().setLayout(borderLayout2);

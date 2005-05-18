@@ -1,5 +1,5 @@
 /**
- * $Id: VoidCommand.java,v 1.12 2005/05/05 11:04:46 bob Exp $
+ * $Id: VoidCommand.java,v 1.13 2005/05/18 14:01:20 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,12 +15,12 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
 
 /**
  *  Заглушка для команды (пустая команда)
- * 
- * 
- * 
- * @version $Revision: 1.12 $, $Date: 2005/05/05 11:04:46 $
+ *
+ *
+ *
+ * @version $Revision: 1.13 $, $Date: 2005/05/18 14:01:20 $
  * @module
- * @author $Author: bob $
+ * @author $Author: bass $
  * @see
  */
 public class VoidCommand implements Command, Cloneable
@@ -43,7 +43,7 @@ public class VoidCommand implements Command, Cloneable
 		this.next = next;
 	}
 
-	/** у пустой команды по умолчанию нет источника */ 
+	/** у пустой команды по умолчанию нет источника */
 	public VoidCommand()
 	{
 		source = "NULL";
@@ -62,7 +62,7 @@ public class VoidCommand implements Command, Cloneable
 		this.source = source;
 	}
 
-	/** пустая команда не выполняет никаких действий */ 
+	/** пустая команда не выполняет никаких действий */
 	public void execute()
 	{
 		try
@@ -115,9 +115,9 @@ public class VoidCommand implements Command, Cloneable
 	public Object getSource()
 	{
 		Environment.log(
-				Environment.LOG_LEVEL_FINER, 
-				"method call for Void command, ret val " + source.toString() + " - ignored", 
-				getClass().getName(), 
+				Environment.LOG_LEVEL_FINER,
+				"method call for Void command, ret val " + source.toString() + " - ignored",
+				getClass().getName(),
 				"getSource()");
 		
 		return null;

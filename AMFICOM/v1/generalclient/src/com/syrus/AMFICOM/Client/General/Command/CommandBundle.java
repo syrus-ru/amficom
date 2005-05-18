@@ -1,5 +1,5 @@
 /**
- * $Id: CommandBundle.java,v 1.8 2004/10/07 11:52:09 krupenn Exp $
+ * $Id: CommandBundle.java,v 1.9 2005/05/18 14:01:20 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,13 +16,13 @@ import java.util.ArrayList;
 import java.util.ListIterator;
 
 /**
- *  Название: команда, включающая в себя несколько команд 
- * 
- * 
- * 
- * @version $Revision: 1.8 $, $Date: 2004/10/07 11:52:09 $
+ *  Название: команда, включающая в себя несколько команд
+ *
+ *
+ *
+ * @version $Revision: 1.9 $, $Date: 2005/05/18 14:01:20 $
  * @module
- * @author $Author: krupenn $
+ * @author $Author: bass $
  * @see
  */
 public class CommandBundle extends VoidCommand implements Command
@@ -34,8 +34,8 @@ public class CommandBundle extends VoidCommand implements Command
 	{
 	}
 
-	/** 
-	 * получить копию команды 
+	/**
+	 * получить копию команды
 	 */
 	public Object clone()
 	{
@@ -50,32 +50,32 @@ public class CommandBundle extends VoidCommand implements Command
 		return cb;
 	}
 
-	/** 
-	 * добавить в список команду 
+	/**
+	 * добавить в список команду
 	 */
 	public void add(Command command)
 	{
 		commands.add(command);
 	}
 
-	/** 
-	 * удалить команду из списка 
+	/**
+	 * удалить команду из списка
 	 */
 	public void remove(Command command)
 	{
 		commands.remove(command);
 	}
 
-	/** 
-	 * удалить команду из списка 
+	/**
+	 * удалить команду из списка
 	 */
 	public void remove(int index)
 	{
 		commands.remove(index);
 	}
 
-	/** 
-	 * выполнить - все команды в списке 
+	/**
+	 * выполнить - все команды в списке
 	 */
 	public void execute()
 	{
@@ -86,8 +86,8 @@ public class CommandBundle extends VoidCommand implements Command
 		}
 	}
 
-	/** 
-	 * обратно выполнить - все команды в списке в обратном порядке 
+	/**
+	 * обратно выполнить - все команды в списке в обратном порядке
 	 */
 	public void undo()
 	{
@@ -98,8 +98,8 @@ public class CommandBundle extends VoidCommand implements Command
 		}
 	}
 
-	/** 
-	 * выполнить - команды в списке повторно 
+	/**
+	 * выполнить - команды в списке повторно
 	 */
 	public void redo()
 	{
@@ -110,8 +110,8 @@ public class CommandBundle extends VoidCommand implements Command
 		}
 	}
 
-	/** 
-	 * подтверждение выполнения - подтвердить для всех команд 
+	/**
+	 * подтверждение выполнения - подтвердить для всех команд
 	 */
 	public void commitExecute()
 	{
@@ -122,8 +122,8 @@ public class CommandBundle extends VoidCommand implements Command
 		}
 	}
 
-	/** 
-	 * подтверждение обратного выполнения - подтвердить для всех команд 
+	/**
+	 * подтверждение обратного выполнения - подтвердить для всех команд
 	 */
 	public void commitUndo()
 	{

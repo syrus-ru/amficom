@@ -1,6 +1,7 @@
 package com.syrus.AMFICOM.Client.General.Filter;
 
 import javax.swing.*;
+
 import oracle.jdeveloper.layout.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -9,6 +10,8 @@ import com.syrus.AMFICOM.Client.General.Filter.ObjectResourceFilterPane;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Filter.LogicSchemePanel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
+import com.syrus.AMFICOM.filter.LogicSchemeElementBase;
+
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
@@ -130,8 +133,8 @@ public class LogicSchemeWindow extends JDialog//JInternalFrame
 			}
 		});
 		orToggleButton.setMargin(new Insets(2, 2, 2, 2));
-		jScrollPane1.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-		jScrollPane1.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		jScrollPane1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+		jScrollPane1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		jScrollPane1.setAutoscrolls(true);
 		useStandartSchemeCheckBox.setSelected(true);
 		useStandartSchemeCheckBox.setText(LangModel.getString("label_createStandartScheme"));
@@ -202,7 +205,7 @@ public class LogicSchemeWindow extends JDialog//JInternalFrame
 	{
 		if (andToggleButton.isSelected())
 		{
-			lsWindowButtonPressed = LogicSchemeElement.otAnd;
+			lsWindowButtonPressed = LogicSchemeElementBase.otAnd;
 			orToggleButton.setSelected(false);
 		}
 		else
@@ -213,7 +216,7 @@ public class LogicSchemeWindow extends JDialog//JInternalFrame
 	{
 		if (orToggleButton.isSelected())
 		{
-			lsWindowButtonPressed = LogicSchemeElement.otOr;
+			lsWindowButtonPressed = LogicSchemeElementBase.otOr;
 			andToggleButton.setSelected(false);
 		}
 		else

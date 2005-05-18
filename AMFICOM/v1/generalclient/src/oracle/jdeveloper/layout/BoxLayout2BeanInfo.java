@@ -1,5 +1,5 @@
 /*
- * $Id: BoxLayout2BeanInfo.java,v 1.1 2005/03/18 09:44:58 bass Exp $
+ * $Id: BoxLayout2BeanInfo.java,v 1.2 2005/05/18 14:01:18 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import java.awt.Image;
 import java.beans.*;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/03/18 09:44:58 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/18 14:01:18 $
  * @author $Author: bass $
  * @module generalclient_v1
  * @deprecated
@@ -34,7 +34,7 @@ public class BoxLayout2BeanInfo extends SimpleBeanInfo {
 
 	public BoxLayout2BeanInfo() {
 		this.beanClass = class$oracle$jdeveloper$layout$BoxLayout2 != null ? class$oracle$jdeveloper$layout$BoxLayout2
-				: (class$oracle$jdeveloper$layout$BoxLayout2 = _mthclass$("oracle.jdeveloper.layout.BoxLayout2")); //$NON-NLS-1$
+				: (class$oracle$jdeveloper$layout$BoxLayout2 = _mthclass$("oracle.jdeveloper.layout.BoxLayout2"));
 	}
 
 	static Class _mthclass$(String s) {
@@ -71,12 +71,12 @@ public class BoxLayout2BeanInfo extends SimpleBeanInfo {
 	public PropertyDescriptor[] getPropertyDescriptors() {
 		try {
 			PropertyDescriptor propertydescriptor = new PropertyDescriptor(
-					"axis", this.beanClass, "getAxis", "setAxis"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			propertydescriptor.setDisplayName("axis"); //$NON-NLS-1$
-			propertydescriptor.setShortDescription("major axis"); //$NON-NLS-1$
+					"axis", this.beanClass, "getAxis", "setAxis");
+			propertydescriptor.setDisplayName("axis");
+			propertydescriptor.setShortDescription("major axis");
 			propertydescriptor
 					.setPropertyEditorClass(class$oracle$jdevimpl$propertyeditor$BoxAxisEditor != null ? class$oracle$jdevimpl$propertyeditor$BoxAxisEditor
-							: (class$oracle$jdevimpl$propertyeditor$BoxAxisEditor = _mthclass$("oracle.jdevimpl.propertyeditor.BoxAxisEditor"))); //$NON-NLS-1$
+							: (class$oracle$jdevimpl$propertyeditor$BoxAxisEditor = _mthclass$("oracle.jdevimpl.propertyeditor.BoxAxisEditor")));
 			PropertyDescriptor apropertydescriptor[] = {propertydescriptor};
 			PropertyDescriptor apropertydescriptor2[] = apropertydescriptor;
 			return apropertydescriptor2;

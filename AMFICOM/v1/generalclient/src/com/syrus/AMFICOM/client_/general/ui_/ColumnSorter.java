@@ -7,9 +7,9 @@ import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 /**
  * ColumnSorter used for sorting elements with aid of Collections i.g.
  * <code>Collections.sort(list, new ColumnSorter(controller, key, ascending))</code>
- * 
- * @version $Revision: 1.5 $, $Date: 2005/04/13 21:40:46 $
- * @author $Author: arseniy $
+ *
+ * @version $Revision: 1.6 $, $Date: 2005/05/18 14:01:19 $
+ * @author $Author: bass $
  * @module generalclient_v1
  */
 public class ColumnSorter implements Comparator {
@@ -21,7 +21,7 @@ public class ColumnSorter implements Comparator {
 	private boolean				ascending;
 
 	/**
-	 * key of the field at ObjectResourceController. 
+	 * key of the field at ObjectResourceController.
 	 * see {@link ObjectResourceController#getKeys()}
 	 */
 	private String				key;
@@ -33,8 +33,8 @@ public class ColumnSorter implements Comparator {
 	private ObjectResourceController	controller;
 
 	/**
-	 * @param controller see {@link #controller}                
-	 * @param key see {@link #key}               
+	 * @param controller see {@link #controller}
+	 * @param key see {@link #key}
 	 * @param ascending see {@link #ascending}
 	 */
 	public ColumnSorter(ObjectResourceController controller, String key, boolean ascending) {

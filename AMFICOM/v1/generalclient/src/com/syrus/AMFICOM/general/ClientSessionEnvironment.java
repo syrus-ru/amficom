@@ -1,5 +1,5 @@
 /*-
- * $Id: ClientSessionEnvironment.java,v 1.4 2005/05/13 19:08:27 bass Exp $
+ * $Id: ClientSessionEnvironment.java,v 1.5 2005/05/18 14:01:20 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.general;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/05/13 19:08:27 $
+ * @version $Revision: 1.5 $, $Date: 2005/05/18 14:01:20 $
  * @author $Author: bass $
  * @module generalclient_v1
  */
@@ -39,7 +39,7 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 				createMeasurementSession(loginRestorer);
 				break;
 			default:
-				Log.errorMessage("Unknown kind of session -- " + sessionKind); //$NON-NLS-1$
+				Log.errorMessage("Unknown kind of session -- " + sessionKind);
 		}
 
 		/*	Print available objects -- for debugging purpose*/

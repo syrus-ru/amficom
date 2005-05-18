@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicAddDialog.java,v 1.2 2005/05/05 11:04:48 bob Exp $
+ * $Id: CharacteristicAddDialog.java,v 1.3 2005/05/18 14:01:19 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,9 +38,9 @@ import com.syrus.AMFICOM.general.CharacteristicType;
 import com.syrus.AMFICOM.general.CharacteristicTypeController;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.corba.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.corba.DataType;
@@ -48,8 +48,8 @@ import com.syrus.AMFICOM.resource.Constants;
 import com.syrus.AMFICOM.resource.LangModelGeneral;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.2 $, $Date: 2005/05/05 11:04:48 $
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/05/18 14:01:19 $
  * @module generalclient_v1
  */
 
@@ -193,7 +193,7 @@ public class CharacteristicAddDialog extends JDialog {
 			}
 			else
 				return;
-		} 
+		}
 		else {
 			if (!nameField.getText().equals("")) {
 				try {
@@ -224,7 +224,7 @@ public class CharacteristicAddDialog extends JDialog {
 		try {
 			EquivalentCondition condition = new EquivalentCondition(
 					ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE);
-			Collection characteristicTypes = GeneralStorableObjectPool
+			Collection characteristicTypes = StorableObjectPool
 					.getStorableObjectsByCondition(condition, true);
 			for (Iterator it = characteristicTypes.iterator(); it.hasNext();) {
 				CharacteristicType ctype = (CharacteristicType) it.next();

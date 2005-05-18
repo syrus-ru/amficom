@@ -3,7 +3,7 @@ package com.syrus.AMFICOM.Client.General.UI;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 
-public class ReusedGridBagConstraints extends GridBagConstraints 
+public class ReusedGridBagConstraints extends GridBagConstraints
 {
 	protected static GridBagConstraints constraints = new GridBagConstraints();
 
@@ -14,17 +14,17 @@ public class ReusedGridBagConstraints extends GridBagConstraints
 	}
 	
 	public static GridBagConstraints get(
-			int gridx, 
+			int gridx,
 			int gridy,
-			int gridwidth, 
+			int gridwidth,
 			int gridheight,
-			double weightx, 
+			double weightx,
 			double weighty,
-			int anchor, 
+			int anchor,
 			int fill,
-			Insets insets, 
-			int ipadx, 
-			int ipady) 
+			Insets insets,
+			int ipadx,
+			int ipady)
 	
 	{
 		constraints.gridx = gridx;

@@ -91,7 +91,7 @@ public class LogicSchemePanel extends JPanel
 	 if (!(this.lsWindow.lsWindowButtonPressed.equals("")))
 	 {
 		LogicSchemeElement se = new LogicSchemeElement(
-			 LogicSchemeElement.tOperand,
+			 LogicSchemeElementBase.tOperand,
 			 null,
 			 this.lsWindow.lsWindowButtonPressed,
 			 e.getX(),
@@ -222,8 +222,8 @@ public class LogicSchemePanel extends JPanel
 	 {
 		LogicSchemeElement se = (LogicSchemeElement)selectedElement;
 
-		if (se.type.equals(LogicSchemeElement.tResult) ||
-			 se.type.equals(LogicSchemeElement.tCondition))
+		if (se.type.equals(LogicSchemeElementBase.tResult) ||
+			 se.type.equals(LogicSchemeElementBase.tCondition))
 		{
 		  JOptionPane.showMessageDialog(
 				Environment.getActiveWindow(),

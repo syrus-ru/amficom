@@ -1,5 +1,5 @@
 /*
- * $Id: NewUpDater.java,v 1.7 2005/05/13 19:03:16 bass Exp $
+ * $Id: NewUpDater.java,v 1.8 2005/05/18 14:01:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,18 +10,15 @@ package com.syrus.AMFICOM.Client.Administrate.Object.UI;
 
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Object.*;
-import com.syrus.AMFICOM.Client.Resource.System.*;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.User;
 import com.syrus.AMFICOM.general.StorableObject;
 
 import java.util.*;
-import javax.swing.JOptionPane;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/05/13 19:03:16 $
+ * @version $Revision: 1.8 $, $Date: 2005/05/18 14:01:20 $
  * @module generalclient_v1
  */
 public class NewUpDater {
@@ -51,7 +48,7 @@ public class NewUpDater {
           Map h = Pool.getMap(childTyps[i]);
           if(h == null)
             h = new HashMap();
-            
+
           for(Iterator it = h.values().iterator(); it.hasNext();)
           {
             AdminObjectResource child = (AdminObjectResource)it.next();

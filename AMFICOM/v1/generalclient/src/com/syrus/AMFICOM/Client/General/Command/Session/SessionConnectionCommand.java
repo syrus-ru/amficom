@@ -1,5 +1,5 @@
 /*
- * $Id: SessionConnectionCommand.java,v 1.4 2004/09/27 12:17:50 bass Exp $
+ * $Id: SessionConnectionCommand.java,v 1.5 2005/05/18 14:01:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.Client.General.Command.Session;
 
-import com.syrus.AMFICOM.Client.General.*;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
@@ -17,7 +16,7 @@ import java.awt.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2004/09/27 12:17:50 $
+ * @version $Revision: 1.5 $, $Date: 2005/05/18 14:01:20 $
  * @module generalclient_v1
  */
 public class SessionConnectionCommand extends VoidCommand
@@ -67,7 +66,7 @@ public class SessionConnectionCommand extends VoidCommand
 		ConnectionDialog cDialog = new ConnectionDialog(aContext);
 		cDialog.setModal(true);
 
-		SessionInterface session = SessionInterface.getActiveSession(); 
+		SessionInterface session = SessionInterface.getActiveSession();
 		if ((session != null)
 				&& session.getConnectionInterface().equals(connection)
 				&& session.isOpened())

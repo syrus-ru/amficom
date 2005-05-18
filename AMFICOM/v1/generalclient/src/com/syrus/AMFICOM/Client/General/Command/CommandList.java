@@ -1,5 +1,5 @@
 /*
- * $Id: CommandList.java,v 1.9 2004/10/12 14:39:24 bass Exp $
+ * $Id: CommandList.java,v 1.10 2005/05/18 14:01:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.Client.General.Command;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2004/10/12 14:39:24 $
+ * @version $Revision: 1.10 $, $Date: 2005/05/18 14:01:20 $
  * @module generalclient_v1
  */
 public class CommandList extends VoidCommand
@@ -151,7 +151,7 @@ public class CommandList extends VoidCommand
 	 */
 	public void removeBottom(int c)
 	{
-		for (int i = 0; i < c; i++) 
+		for (int i = 0; i < c; i++)
 		{
 			if(bottom != null)
 			{
@@ -233,7 +233,7 @@ public class CommandList extends VoidCommand
 	}
 	
 	/**
-	 * 
+	 *
 	 */
 	 public Command getBottom()
 	 {

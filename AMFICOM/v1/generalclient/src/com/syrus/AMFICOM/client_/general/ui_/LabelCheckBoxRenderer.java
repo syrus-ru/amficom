@@ -17,8 +17,8 @@ import com.syrus.util.Wrapper;
 
 /**
  * Renderer for JCheckBox items based on JLabel.
- * @version $Revision: 1.6 $, $Date: 2005/05/05 11:04:48 $
- * @author $Author: bob $
+ * @version $Revision: 1.7 $, $Date: 2005/05/18 14:01:19 $
+ * @author $Author: bass $
  * @module generalclient_v1
  */
 public class LabelCheckBoxRenderer extends JLabel implements ListCellRenderer {
@@ -52,7 +52,7 @@ public class LabelCheckBoxRenderer extends JLabel implements ListCellRenderer {
 	
 	/**
 	 * There is no need in more than one instance of this renderer.
-	 * @return LabelCheckBoxRenderer instance. 
+	 * @return LabelCheckBoxRenderer instance.
 	 */
 	public static LabelCheckBoxRenderer getInstance(){
 		if (instance==null)

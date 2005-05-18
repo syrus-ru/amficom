@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourcePropertiesDialog.java,v 1.2 2005/04/13 21:40:47 arseniy Exp $
+ * $Id: ObjectResourcePropertiesDialog.java,v 1.3 2005/05/18 14:01:19 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,8 +15,8 @@ import java.awt.event.ActionEvent;
 import javax.swing.*;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.2 $, $Date: 2005/04/13 21:40:47 $
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/05/18 14:01:19 $
  * @module generalclient_v1
  */
 public class ObjectResourcePropertiesDialog extends JDialog
@@ -34,10 +34,10 @@ public class ObjectResourcePropertiesDialog extends JDialog
 	protected  FlowLayout flowLayout1 = new FlowLayout();
 
 	public ObjectResourcePropertiesDialog(
-			JFrame frame, 
-			String title, 
-			boolean modal, 
-			Object or, 
+			JFrame frame,
+			String title,
+			boolean modal,
+			Object or,
 			ObjectResourcePropertiesPane pane)
 	{
 		super(frame, title, modal);

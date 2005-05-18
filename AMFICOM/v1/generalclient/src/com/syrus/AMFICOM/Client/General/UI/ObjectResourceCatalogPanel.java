@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourceCatalogPanel.java,v 1.9 2005/05/13 19:05:47 bass Exp $
+ * $Id: ObjectResourceCatalogPanel.java,v 1.10 2005/05/18 14:01:18 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import oracle.jdeveloper.layout.XYConstraints;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/05/13 19:05:47 $
+ * @version $Revision: 1.10 $, $Date: 2005/05/18 14:01:18 $
  * @module generalclient_v1
  */
 public class ObjectResourceCatalogPanel extends JPanel implements OperationListener
@@ -358,7 +358,7 @@ public class ObjectResourceCatalogPanel extends JPanel implements OperationListe
 					catch (Exception ex)
 					{
 						ex.printStackTrace();
-					} 
+					}
 				}
 			}
 		});

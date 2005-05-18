@@ -25,12 +25,12 @@ public abstract class DividableTableModel extends GeneralTableModel {
   public int getDivisionsNumber() {
 	 return divisionsNumber;
   }
-  
+
   public int getBaseColumnCount()
   {
     return baseColumnsNumber;
   }
-  
+
 	public int getColumnCount()
 	{
 		return this.baseColumnsNumber * this.divisionsNumber;

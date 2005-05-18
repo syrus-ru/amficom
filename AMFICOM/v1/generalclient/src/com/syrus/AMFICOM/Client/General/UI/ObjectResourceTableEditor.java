@@ -69,7 +69,7 @@ public class ObjectResourceTableEditor
 
 //		System.out.println("editor for " + text);
 
-		try 
+		try
 		{
 			JComboBox jcb = (JComboBox )editor;
 			jcb.addActionListener(new ActionListener()
@@ -79,10 +79,10 @@ public class ObjectResourceTableEditor
 						fireEditingStopped();
 					}
 				});
-		} catch (Exception ex) 
+		} catch (Exception ex)
 		{
 //			ex.printStackTrace();
-		} finally 
+		} finally
 		{
 		}
 		

@@ -193,7 +193,7 @@ public class TwoListsPanel extends GeneralPanel
     Map tmp_h = Pool.getMap(childTyp);
     if(tmp_h == null)
       tmp_h = new HashMap();
-      
+
     for(Iterator it = tmp_h.values().iterator(); it.hasNext();)
     {
       ObjectResource o = (ObjectResource)it.next();

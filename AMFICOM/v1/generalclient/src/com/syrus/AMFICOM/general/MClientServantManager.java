@@ -1,5 +1,5 @@
 /*-
- * $Id: MClientServantManager.java,v 1.4 2005/05/13 19:08:27 bass Exp $
+ * $Id: MClientServantManager.java,v 1.5 2005/05/18 14:01:20 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/05/13 19:08:27 $
+ * @version $Revision: 1.5 $, $Date: 2005/05/18 14:01:20 $
  * @author $Author: bass $
  * @module generalclient_v1
  */
@@ -82,12 +82,12 @@ public final class MClientServantManager extends VerifiedConnectionManager imple
 	}
 
 	protected void onLoseConnection(String servantName) {
-		Log.debugMessage("CMServerConnectionManager.onLoseConnection | Connection with '" + servantName + "' lost", Log.DEBUGLEVEL08); //$NON-NLS-1$ //$NON-NLS-2$
+		Log.debugMessage("CMServerConnectionManager.onLoseConnection | Connection with '" + servantName + "' lost", Log.DEBUGLEVEL08);
 		// @todo Maybe, GUI-specific actions
 	}
 
 	protected void onRestoreConnection(String servantName) {
-		Log.debugMessage("CMServerConnectionManager.onRestoreConnection | Connection with '" + servantName + "' restored", //$NON-NLS-1$ //$NON-NLS-2$
+		Log.debugMessage("CMServerConnectionManager.onRestoreConnection | Connection with '" + servantName + "' restored",
 				Log.DEBUGLEVEL08);
 		// @todo Maybe, GUI-specific actions
 	}

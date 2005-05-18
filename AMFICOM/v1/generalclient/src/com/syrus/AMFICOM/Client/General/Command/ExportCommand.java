@@ -1,5 +1,5 @@
 /*
- * $Id: ExportCommand.java,v 1.5 2005/04/13 11:37:33 krupenn Exp $
+ * $Id: ExportCommand.java,v 1.6 2005/05/18 14:01:20 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,12 +24,12 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.UI.ChoosableFileFilter;
 
 /**
- * Класс $RCSfile: ExportCommand.java,v $ 
- * 
- * 
- * @version $Revision: 1.5 $, $Date: 2005/04/13 11:37:33 $
+ * Класс $RCSfile: ExportCommand.java,v $
+ *
+ *
+ * @version $Revision: 1.6 $, $Date: 2005/05/18 14:01:20 $
  * @module map_v2
- * @author $Author: krupenn $
+ * @author $Author: bass $
  */
 public abstract class ExportCommand extends VoidCommand
 {

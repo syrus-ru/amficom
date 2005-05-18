@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class NamedObjectController extends ObjectResourceController 
+public class NamedObjectController extends ObjectResourceController
 {
 	public static final String KEY_NAME = "name";
 
@@ -25,14 +25,14 @@ public class NamedObjectController extends ObjectResourceController
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 	}
 
-	public static NamedObjectController getInstance() 
+	public static NamedObjectController getInstance()
 	{
 		if (instance == null)
 			instance = new NamedObjectController();
 		return instance;
 	}
 
-	public List getKeys() 
+	public List getKeys()
 	{
 		return this.keys;
 	}
@@ -102,22 +102,22 @@ public class NamedObjectController extends ObjectResourceController
 	{
 	}
 
-	public String getKey(final int index) 
+	public String getKey(final int index)
 	{
 		return (String )this.keys.get(index);
 	}
 
-	public Object getPropertyValue(final String key) 
+	public Object getPropertyValue(final String key)
 	{
 		Object result = "";
 		return result;
 	}
 
-	public void setPropertyValue(String key, Object objectKey, Object objectValue) 
+	public void setPropertyValue(String key, Object objectKey, Object objectValue)
 	{
 	}
 
-	public Class getPropertyClass(String key) 
+	public Class getPropertyClass(String key)
 	{
 		Class clazz = String.class;
 		return clazz;

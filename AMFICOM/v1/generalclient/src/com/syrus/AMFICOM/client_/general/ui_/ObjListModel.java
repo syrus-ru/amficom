@@ -15,8 +15,8 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/05/05 11:04:48 $
- * @author $Author: bob $
+ * @version $Revision: 1.11 $, $Date: 2005/05/18 14:01:19 $
+ * @author $Author: bass $
  * @module generalclient_v1
  */
 public class ObjListModel extends AbstractListModel implements MutableComboBoxModel, Serializable {
@@ -54,7 +54,7 @@ public class ObjListModel extends AbstractListModel implements MutableComboBoxMo
 	/**
 	 * Set the value of the selected item. The selected item may be null.
 	 * <p>
-	 * 
+	 *
 	 * @param anObject
 	 *            The combo box value or null for no selection.
 	 */
@@ -122,7 +122,7 @@ public class ObjListModel extends AbstractListModel implements MutableComboBoxMo
 
 	/**
 	 * Returns the index-position of the specified object in the list.
-	 * 
+	 *
 	 * @param anObject
 	 * @return an int representing the index position, where 0 is the first
 	 *         position

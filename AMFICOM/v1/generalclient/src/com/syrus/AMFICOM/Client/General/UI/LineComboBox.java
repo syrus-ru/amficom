@@ -43,7 +43,7 @@ public class LineComboBox extends AComboBox
 					BasicStroke.JOIN_BEVEL,
 					(float)0.0,
 					new float[] {10, 3},
-					(float)0.0), 
+					(float)0.0),
 				"Dash line 1") );
 			vec.addElement( new MyLine(
 				new BasicStroke(
@@ -125,7 +125,7 @@ public class LineComboBox extends AComboBox
 			lbl.setFont(Box.getFont());
         }
 
-		public Component getListCellRendererComponent( 
+		public Component getListCellRendererComponent(
 				JList list,
                 Object value,
                 int index,
@@ -155,23 +155,23 @@ public class LineComboBox extends AComboBox
 			}
 
 			a1.initDrawfield(
-					0, 
+					0,
 					(int)(jComboBox.getHeight()/2 ),
-                    (int)(jComboBox.getWidth()/2 ), 
+                    (int)(jComboBox.getWidth()/2 ),
 					(int)(jComboBox.getHeight()/2 ),
-                    Color.red, 
+                    Color.red,
 					myLine.basicStroke );
 
-			a1.setBounds(new Rectangle( 
-					0 , 
-					0, 
-					(int)(jComboBox.getWidth()/2 ), 
+			a1.setBounds(new Rectangle(
+					0 ,
+					0,
+					(int)(jComboBox.getWidth()/2 ),
 					jComboBox.getHeight() ));
 
-			lbl.setBounds(new Rectangle( 
-					(int)(jComboBox.getWidth()/2 ), 
-					0 , 
-					jComboBox.getWidth(), 
+			lbl.setBounds(new Rectangle(
+					(int)(jComboBox.getWidth()/2 ),
+					0 ,
+					jComboBox.getWidth(),
 					jComboBox.getHeight() ));
 
             this.setLayout(null);
@@ -285,7 +285,7 @@ public class LineComboBox extends AComboBox
         if (this.getSelectedItem() instanceof MyLine)
         {
 			MyLine ml = (MyLine )this.getSelectedItem();
-			returnMyLine.setMyLine( 
+			returnMyLine.setMyLine(
 					ml.basicStroke,
 					ml.text );
 			returnStroke = ml.basicStroke;
@@ -295,7 +295,7 @@ public class LineComboBox extends AComboBox
 
 	void this_actionPerformed(ActionEvent e)
 	{
-		returnMyLine.setMyLine( 
+		returnMyLine.setMyLine(
 				((MyLine)this.getSelectedItem()).basicStroke,
 				((MyLine)this.getSelectedItem()).text );
 		returnStroke = ((MyLine)this.getSelectedItem()).basicStroke;
@@ -304,7 +304,7 @@ public class LineComboBox extends AComboBox
 
 	void this_mousePressed(MouseEvent e)
 	{
-		returnMyLine.setMyLine( 
+		returnMyLine.setMyLine(
 				((MyLine)this.getSelectedItem()).basicStroke,
 				((MyLine)this.getSelectedItem()).text );
 		returnStroke = ((MyLine)this.getSelectedItem()).basicStroke;
@@ -328,7 +328,7 @@ public class LineComboBox extends AComboBox
 
 	public MyLine getReturnMyLine()
 	{
-		returnMyLine.setMyLine( 
+		returnMyLine.setMyLine(
 				((MyLine)this.getSelectedItem()).basicStroke,
 				((MyLine)this.getSelectedItem()).text );
 		returnStroke = ((MyLine)this.getSelectedItem()).basicStroke;

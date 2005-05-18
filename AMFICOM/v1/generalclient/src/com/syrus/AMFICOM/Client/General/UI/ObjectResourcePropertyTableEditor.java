@@ -65,7 +65,7 @@ public class ObjectResourcePropertyTableEditor
 			}
 		}
 
-		try 
+		try
 		{
 			JComboBox jcb = (JComboBox )editor;
 			jcb.addActionListener(new ActionListener()
@@ -75,10 +75,10 @@ public class ObjectResourcePropertyTableEditor
 						fireEditingStopped();
 					}
 				});
-		} catch (Exception ex) 
+		} catch (Exception ex)
 		{
 //			ex.printStackTrace();
-		} finally 
+		} finally
 		{
 		}
 		

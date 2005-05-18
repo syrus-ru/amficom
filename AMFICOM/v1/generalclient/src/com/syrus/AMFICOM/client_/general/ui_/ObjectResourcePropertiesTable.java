@@ -7,25 +7,25 @@ import com.syrus.AMFICOM.Client.General.UI.ATable;
 import com.syrus.AMFICOM.corba.portable.reflect.common.ObjectResource;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/05/05 11:04:48 $
- * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2005/05/18 14:01:19 $
+ * @author $Author: bass $
  * @module generalclient_v1
  */
-public class ObjectResourcePropertiesTable extends ATable 
+public class ObjectResourcePropertiesTable extends ATable
 {
 
-	public ObjectResourcePropertiesTable(ObjectResourcePropertiesController controller, ObjectResource objectResource) 
+	public ObjectResourcePropertiesTable(ObjectResourcePropertiesController controller, ObjectResource objectResource)
 	{
 		this(new ObjectResourcePropertiesTableModel(controller, objectResource));
 	}
 
-	public ObjectResourcePropertiesTable(ObjectResourcePropertiesTableModel dm) 
+	public ObjectResourcePropertiesTable(ObjectResourcePropertiesTableModel dm)
 	{
 		super(dm);
 		initialization();
 	}
 
-	private void updateModel() 
+	private void updateModel()
 	{
 		ObjectResourcePropertiesTableModel model = (ObjectResourcePropertiesTableModel) getModel();
 
@@ -36,7 +36,7 @@ public class ObjectResourcePropertiesTable extends ATable
 //		column.setCellEditor(editor);
 	}
 
-	private void initialization() 
+	private void initialization()
 	{
 		updateModel();
 		this.setColumnSelectionAllowed(false);

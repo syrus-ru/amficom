@@ -1,5 +1,5 @@
 /*
- * $Id: TextPanel.java,v 1.5 2004/09/27 07:55:50 bass Exp $
+ * $Id: TextPanel.java,v 1.6 2005/05/18 14:01:19 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import javax.swing.*;
  * элементов шаблона.
  *
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2004/09/27 07:55:50 $
+ * @version $Revision: 1.6 $, $Date: 2005/05/18 14:01:19 $
  * @module generalclient_v1
  */
 public class TextPanel extends JScrollPane
@@ -41,15 +41,15 @@ public class TextPanel extends JScrollPane
 	private void jbInit() throws Exception
 	{
 		this.setPreferredSize(dataPane.getPreferredSize());
-//    this.getViewport().add(dataPane);    
+//    this.getViewport().add(dataPane);
 
 		this.setVisible(true);
 	}
-  
+
   public void paint(Graphics g)
   {
     super.paint(g);
-    
+
     this.dataPane.paint(g);
   }
 }

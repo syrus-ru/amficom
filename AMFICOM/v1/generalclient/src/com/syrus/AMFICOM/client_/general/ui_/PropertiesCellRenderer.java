@@ -7,17 +7,17 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 import com.syrus.AMFICOM.corba.portable.reflect.common.ObjectResource;
 
-public class PropertiesCellRenderer extends DefaultTableCellRenderer 
+public class PropertiesCellRenderer extends DefaultTableCellRenderer
 {
 
 	private static PropertiesCellRenderer instance;
 
-	private PropertiesCellRenderer() 
+	private PropertiesCellRenderer()
 	{
 		// empty
 	}
 
-	public static PropertiesCellRenderer getInstance() 
+	public static PropertiesCellRenderer getInstance()
 	{
 		if (instance == null)
 			instance = new PropertiesCellRenderer();
@@ -27,7 +27,7 @@ public class PropertiesCellRenderer extends DefaultTableCellRenderer
 	protected void customRendering(	JTable table,
 					ObjectResource objectResource,
 					ObjectResourcePropertiesController objectResourceController,
-					String key) 
+					String key)
 	{
 		
 	}

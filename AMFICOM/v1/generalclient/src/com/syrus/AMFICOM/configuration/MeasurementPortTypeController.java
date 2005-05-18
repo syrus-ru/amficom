@@ -114,6 +114,6 @@ public final class MeasurementPortTypeController extends ObjectResourceControlle
 	}
 	
 	public static String getPropertyManagerClassName () {
-		return "com.syrus.AMFICOM.client_.configuration.ui.MeasurementPortTypePropertiesManager";  //$NON-NLS-1$
+		return "com.syrus.AMFICOM.client_.configuration.ui.MeasurementPortTypePropertiesManager";
 	}
 }

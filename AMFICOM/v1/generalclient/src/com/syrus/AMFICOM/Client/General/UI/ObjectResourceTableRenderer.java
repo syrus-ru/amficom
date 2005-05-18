@@ -76,7 +76,7 @@ public class ObjectResourceTableRenderer extends DefaultTableCellRenderer
 				component.setBackground(table.getBackground());
 			}
 		}
-		else //		if (isSelected) 
+		else //		if (isSelected)
 		{
 //				System.out.println("	(selected)");
 		   component.setForeground(table.getSelectionForeground());
@@ -85,18 +85,18 @@ public class ObjectResourceTableRenderer extends DefaultTableCellRenderer
 //		System.out.println("render " + text + " with fgcolor " + component.getForeground() + " with bkcolor " + component.getBackground());
 		
 
-		if (hasFocus) 
+		if (hasFocus)
 		{
 			setBorder( UIManager.getBorder("Table.focusCellHighlightBorder") );
 /*
-			if (table.isCellEditable(row, column)) 
+			if (table.isCellEditable(row, column))
 			{
 				component.setForeground( UIManager.getColor("Table.focusCellForeground") );
 				component.setBackground( UIManager.getColor("Table.focusCellBackground") );
 			}
 */
-		} 
-		else 
+		}
+		else
 		{
 			setBorder(noFocusBorder);
 		}

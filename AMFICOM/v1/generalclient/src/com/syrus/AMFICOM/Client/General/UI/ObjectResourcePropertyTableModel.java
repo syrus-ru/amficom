@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourcePropertyTableModel.java,v 1.6 2005/05/13 19:05:46 bass Exp $
+ * $Id: ObjectResourcePropertyTableModel.java,v 1.7 2005/05/18 14:01:19 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,7 @@ import javax.swing.table.AbstractTableModel;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/05/13 19:05:46 $
+ * @version $Revision: 1.7 $, $Date: 2005/05/18 14:01:19 $
  * @module generalclient_v1
  */
 public class ObjectResourcePropertyTableModel extends AbstractTableModel
@@ -115,11 +115,11 @@ public class ObjectResourcePropertyTableModel extends AbstractTableModel
 	//--------------------------------------------------------------------------
 	public String getColumnName(int p_col)
 	{
-		try 
+		try
         {
             return (String)columns.get(p_col);
-        } 
-		catch (Exception ex) 
+        }
+		catch (Exception ex)
         {
             return String.valueOf(p_col);
         }

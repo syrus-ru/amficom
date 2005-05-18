@@ -2,7 +2,7 @@ package com.syrus.AMFICOM.Client.General.UI;
 
 import javax.swing.JInternalFrame;
 
-public class ObjectResourceNavigatorFrame extends JInternalFrame 
+public class ObjectResourceNavigatorFrame extends JInternalFrame
 {
 	public ObjectResourceNavigatorFrame()
 	{

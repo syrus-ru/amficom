@@ -1,5 +1,5 @@
 /*
- * $Id: OperatorProfileGeneralPanel.java,v 1.3 2005/05/13 19:03:16 bass Exp $
+ * $Id: OperatorProfileGeneralPanel.java,v 1.4 2005/05/18 14:01:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -51,7 +51,7 @@ import com.syrus.AMFICOM.general.StorableObject;
  * dependencies between <tt>generalclient_v1</tt> and <tt>admin_1</tt>.
  *
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/05/13 19:03:16 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/18 14:01:20 $
  * @module generalclient_v1
  */
 public class OperatorProfileGeneralPanel extends GeneralPanel
@@ -358,7 +358,7 @@ public class OperatorProfileGeneralPanel extends GeneralPanel
 
 //      System.out.println("Profile.disabled = " + profile.disabled);
       Date disableTime = new Date(profile.disabled);
-/*	  
+/*	
 //      System.out.println("DIsable time is set to"+sdf.format(disableTime));
       this.jComboDay.setSelectedIndex(disableTime.getDate()-1);
       this.jComboMonth.setSelectedIndex(disableTime.getMonth());
@@ -444,7 +444,7 @@ public class OperatorProfileGeneralPanel extends GeneralPanel
 		}
 				
 		public void focusGained(FocusEvent e) {}
-		public void focusLost(FocusEvent e) 
+		public void focusLost(FocusEvent e)
 		{
 			jd.setVisible(false);
 		}
@@ -458,7 +458,7 @@ public class OperatorProfileGeneralPanel extends GeneralPanel
 			this.jd = jd;
 		}
 
-		public void keyPressed(KeyEvent e) 
+		public void keyPressed(KeyEvent e)
 		{
 			if(e.getKeyCode() == KeyEvent.VK_ESCAPE)
 				jd.setVisible(false);

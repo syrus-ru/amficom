@@ -1,5 +1,5 @@
 /*
- * $Id: ImagesDialog.java,v 1.5 2004/12/22 13:27:22 krupenn Exp $
+ * $Id: ImagesDialog.java,v 1.6 2005/05/18 14:01:18 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,11 +15,11 @@ import java.awt.event.*;
 import javax.swing.JDialog;
 
 /**
- * @author $Author: krupenn $
- * @version $Revision: 1.5 $, $Date: 2004/12/22 13:27:22 $
+ * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2005/05/18 14:01:18 $
  * @module generalclient_v1
  */
-public class ImagesDialog extends JDialog 
+public class ImagesDialog extends JDialog
 {
 	private ImagesPanel jPanel1;
 	private BorderLayout borderLayout1 = new BorderLayout();

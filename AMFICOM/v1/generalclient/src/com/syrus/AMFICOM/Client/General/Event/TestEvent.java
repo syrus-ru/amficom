@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.Client.General.Event;
 
-public class TestEvent extends OperationEvent 
+public class TestEvent extends OperationEvent
 {
 	public boolean TEST_SELECTED = false;
 	public boolean RESULT_SELECTED = false;

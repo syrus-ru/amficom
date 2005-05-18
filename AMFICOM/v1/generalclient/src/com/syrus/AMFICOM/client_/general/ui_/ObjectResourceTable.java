@@ -25,8 +25,8 @@ import com.syrus.AMFICOM.Client.General.UI.AComboBox;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/04/13 21:40:47 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/05/18 14:01:19 $
+ * @author $Author: bass $
  * @module generalclient_v1
  */
 public class ObjectResourceTable extends JTable {
@@ -146,9 +146,9 @@ public class ObjectResourceTable extends JTable {
 				ObjectResourceTableModel model = (ObjectResourceTableModel) table.getModel();
 				String s;
 				if (model.getSortOrder(mColIndex))
-					s = " v "; //$NON-NLS-1$
+					s = " v ";
 				else
-					s = " ^ "; //$NON-NLS-1$
+					s = " ^ ";
 				String columnName = model.getColumnName(mColIndex);
 				table.getColumnModel().getColumn(columnIndex)
 						.setHeaderValue(s + (columnName == null ? "" : columnName) + s);

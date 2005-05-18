@@ -19,6 +19,7 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.filter.*;
+
 import java.awt.event.*;
 
 public class LogicScheme extends LogicSchemeBase
@@ -41,11 +42,11 @@ public class LogicScheme extends LogicSchemeBase
 
 		ls.activeZones = new ArrayList();
     ls.activeZones.addAll(this.activeZones);
-    
+
 		for (ListIterator lIt = ls.schemeElements.listIterator();lIt.hasNext();)
 		{
 			LogicSchemeElement curLSE = (LogicSchemeElement) lIt.next();
-			if (curLSE.type.equals(LogicSchemeElement.tResult))
+			if (curLSE.type.equals(LogicSchemeElementBase.tResult))
 			{
 				ls.treeResult = curLSE;
 				break;
@@ -110,8 +111,8 @@ public class LogicScheme extends LogicSchemeBase
 
 	private String getTextFor(LogicSchemeElement top)
 	{
-		if (top.type.equals(LogicSchemeElement.tCondition))
-			return "\"" + LangModel.getString(LogicSchemeElement.tCondition) + " " + top.filterExpression.getListID() + "\"";
+		if (top.type.equals(LogicSchemeElementBase.tCondition))
+			return "\"" + LangModel.getString(LogicSchemeElementBase.tCondition) + " " + top.filterExpression.getListID() + "\"";
 
 		List allTopLinks = top.input.getLinks();
 
@@ -122,9 +123,9 @@ public class LogicScheme extends LogicSchemeBase
 			FinishedLink fl = (FinishedLink )allTopLinks.get(i);
 
 			LogicSchemeElement curInputElement = null;
-			if (fl.az1.zoneType.equals(ElementsActiveZone.ztOut))
+			if (fl.az1.zoneType.equals(ElementsActiveZoneBase.ztOut))
 				curInputElement = (LogicSchemeElement )fl.az1.owner;
-			if (fl.az1.zoneType.equals(ElementsActiveZone.ztIn))
+			if (fl.az1.zoneType.equals(ElementsActiveZoneBase.ztIn))
 				curInputElement = (LogicSchemeElement )fl.az2.owner;
 
 			if (i == 0)
@@ -154,17 +155,17 @@ public class LogicScheme extends LogicSchemeBase
 
 		//устанавливаем габариты в схеме
 		schemeWidth = maxDistance * 40 +
-				(maxDistance + 1) * LogicSchemeElement.width;
+				(maxDistance + 1) * LogicSchemeElementBase.width;
 
 		schemeHeight = this.getRestrictionsNumber() *
-				(LogicSchemeElement.height + 10);
+				(LogicSchemeElementBase.height + 10);
 
 		//Теперь устанавливаем координаты в дереве
 		//Сначала ставим координаты для treeResult
 		//Потом находим все элементы одного слоя и в цикле размещаем их сверху вниз
 
-		treeResult.x = schemeWidth - LogicSchemeElement.width;
-		treeResult.y = schemeHeight / 2 - LogicSchemeElement.height / 2;
+		treeResult.x = schemeWidth - LogicSchemeElementBase.width;
+		treeResult.y = schemeHeight / 2 - LogicSchemeElementBase.height / 2;
 
 		for (int curDist = 1; curDist <= maxDistance; curDist++)
 		{
@@ -177,8 +178,8 @@ public class LogicScheme extends LogicSchemeBase
 
 				if (distance == curDist)
 				{
-					curElem.x = schemeWidth - (curDist + 1) * LogicSchemeElement.width - curDist * 40;
-					curElem.y = 10 * (elemOfCurDistNumber + 1) + LogicSchemeElement.height * elemOfCurDistNumber;
+					curElem.x = schemeWidth - (curDist + 1) * LogicSchemeElementBase.width - curDist * 40;
+					curElem.y = 10 * (elemOfCurDistNumber + 1) + LogicSchemeElementBase.height * elemOfCurDistNumber;
 					elemOfCurDistNumber++;
 				}
 			}

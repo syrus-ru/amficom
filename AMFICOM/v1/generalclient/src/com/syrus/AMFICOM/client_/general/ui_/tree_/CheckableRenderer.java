@@ -1,5 +1,5 @@
 /*-
- * $Id: CheckableRenderer.java,v 1.1 2005/03/30 13:27:20 stas Exp $
+ * $Id: CheckableRenderer.java,v 1.2 2005/05/18 14:01:21 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,21 +17,21 @@ import javax.swing.tree.TreeCellRenderer;
 import com.syrus.AMFICOM.logic.Item;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/03/30 13:27:20 $
+ * @author $Author: bass $
+ * @version $Revision: 1.2 $, $Date: 2005/05/18 14:01:21 $
  * @module generalclient_v1
  */
 
 public class CheckableRenderer extends JCheckBox implements TreeCellRenderer {
 	private static final long serialVersionUID = 3258125877622683441L;
 	/**
-	 * @todo fill following fields from UIDefaults 
+	 * @todo fill following fields from UIDefaults
 	 */
 	public static int preferredHeight = 18;
 	public static Color selectedBackground = Color.BLUE;
 	public static Color selectedForeground = Color.WHITE;
 	
-	private boolean selected = false; 
+	private boolean selected = false;
 	private static CheckableRenderer instance;
 	
 	private CheckableRenderer() {
@@ -76,7 +76,7 @@ public class CheckableRenderer extends JCheckBox implements TreeCellRenderer {
 			int x = 0;
 			Icon icon = ((BasicRadioButtonUI)instance.getUI()).getDefaultIcon();
 			if (icon != null) {
-				x += icon.getIconWidth() + getIconTextGap(); 
+				x += icon.getIconWidth() + getIconTextGap();
 			}
 			g.setColor(selectedBackground);
 			Insets i = getInsets();

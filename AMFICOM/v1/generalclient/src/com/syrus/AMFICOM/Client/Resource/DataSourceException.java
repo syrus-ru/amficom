@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.Client.Resource;
 
-final class DataSourceException extends Exception 
+final class DataSourceException extends Exception
 {
 	public DataSourceException()
 	{

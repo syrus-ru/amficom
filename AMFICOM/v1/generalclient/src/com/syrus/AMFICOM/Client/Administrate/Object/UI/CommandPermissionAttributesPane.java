@@ -1,5 +1,5 @@
 /*
- * $Id: CommandPermissionAttributesPane.java,v 1.8 2005/05/13 19:03:16 bass Exp $
+ * $Id: CommandPermissionAttributesPane.java,v 1.9 2005/05/18 14:01:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,6 @@ import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Object.*;
 import com.syrus.AMFICOM.administration.User;
 import com.syrus.AMFICOM.general.StorableObject;
 
@@ -22,7 +21,7 @@ import javax.swing.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/05/13 19:03:16 $
+ * @version $Revision: 1.9 $, $Date: 2005/05/18 14:01:20 $
  * @module generalclient_v1
  */
 public final class CommandPermissionAttributesPane extends JPanel implements ObjectResourcePropertiesPane {

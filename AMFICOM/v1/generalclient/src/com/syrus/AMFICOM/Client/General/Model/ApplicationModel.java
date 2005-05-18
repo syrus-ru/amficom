@@ -1,5 +1,5 @@
 /*
- * $Id: ApplicationModel.java,v 1.9 2005/05/05 11:04:47 bob Exp $
+ * $Id: ApplicationModel.java,v 1.10 2005/05/18 14:01:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Ќаучно-технический центр.
@@ -15,11 +15,11 @@ import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 
 /**
- * ћодель приложени€ описывает действи€, которые пользователь (оператор) 
+ * ћодель приложени€ описывает действи€, которые пользователь (оператор)
  * может производить с системой
- * 
- * @author $Author: bob $
- * @version $Revision: 1.9 $, $Date: 2005/05/05 11:04:47 $
+ *
+ * @author $Author: bass $
+ * @version $Revision: 1.10 $, $Date: 2005/05/18 14:01:20 $
  * @module generalclient_v1
  */
 public class ApplicationModel
@@ -337,7 +337,7 @@ public class ApplicationModel
 	}
 
 	/**
-	 * проинформировать слушателей о том, что изменилось состо€ние 
+	 * проинформировать слушателей о том, что изменилось состо€ние
 	 * всех элементов модели
 	 */
 	public void fireModelChanged()
@@ -372,19 +372,19 @@ public class ApplicationModel
 	}
 
 	/**
-	 * запись об элементе модели включает им€ элемента, св€занную с ним команду 
+	 * запись об элементе модели включает им€ элемента, св€занную с ним команду
 	 * и флаги видимости и доступности команды пользователю.
-	 * конструктора без параметров нет, так как элемент определ€етс€ 
+	 * конструктора без параметров нет, так как элемент определ€етс€
 	 * идентификатором
-	 * 
-	 * @author $Author: bob $
-	 * @version $Revision: 1.9 $, $Date: 2005/05/05 11:04:47 $
+	 *
+	 * @author $Author: bass $
+	 * @version $Revision: 1.10 $, $Date: 2005/05/18 14:01:20 $
 	 * @module generalclient_v1
 	 */
 	class ApplicationEntry
 	{
 		/**
-		 * выделен ли пункт (дл€ пункта меню - отмечен галочкой, дл€ 
+		 * выделен ли пункт (дл€ пункта меню - отмечен галочкой, дл€
 		 * западающей кнопки - западание
 		 */
 		boolean selected = false;
@@ -421,13 +421,13 @@ public class ApplicationModel
 
 		/**
 		 * конструктор с указанием имени элемента и св€занной с ним команды.
-		 * по умолчанию логические пол€ элемента устанавливаютс€ следующим 
+		 * по умолчанию логические пол€ элемента устанавливаютс€ следующим
 		 * образом:
 		 * selected = false
 		 * visible = true
 		 * usable = true
 		 * accessible = true
-		 * 
+		 *
 		 * @param name
 		 * @param command
 		 */

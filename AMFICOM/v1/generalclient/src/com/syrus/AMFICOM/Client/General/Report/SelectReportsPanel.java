@@ -1,5 +1,5 @@
 /*
- * $Id: SelectReportsPanel.java,v 1.11 2005/04/13 21:40:46 arseniy Exp $
+ * $Id: SelectReportsPanel.java,v 1.12 2005/05/18 14:01:19 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,9 +23,9 @@ import oracle.jdeveloper.layout.XYLayout;
 
 /**
  * Панель для отображения дерева доступных отчётов.
- * 
- * @author $Author: arseniy $
- * @version $Revision: 1.11 $, $Date: 2005/04/13 21:40:46 $
+ *
+ * @author $Author: bass $
+ * @version $Revision: 1.12 $, $Date: 2005/05/18 14:01:19 $
  * @module generalclient_v1
  */
 public class SelectReportsPanel extends JInternalFrame implements
@@ -337,7 +337,7 @@ public class SelectReportsPanel extends JInternalFrame implements
 			dataset,
 			aContext,
 			this.ownerWindow);
-    
+
     ((SetRestrictionsWindow)additionalPanel).orfp.setTemplateCBEnabled (true);
 
 		aContext.getDispatcher().notify(

@@ -1,7 +1,7 @@
 /*
  * UIGeneralStorage.java
  * Created on 10.06.2004 13:55:54
- * 
+ *
  */
 
 package com.syrus.AMFICOM.Client.General.UI;
@@ -19,14 +19,14 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/04/11 11:17:37 $
- * @author $Author: bob $
+ * @version $Revision: 1.6 $, $Date: 2005/05/18 14:01:19 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module generalclient_v1
  */
 public final class UIGeneralStorage {
 
-	private static final double SCALE_FACTOR = 1.25;  
+	private static final double SCALE_FACTOR = 1.25;
 	
 	public static final Font	DIALOG_FONT	= new Font("Dialog", Font.PLAIN, 11);
 	public static final Font	SMALL_FONT	= new Font("Dialog", Font.PLAIN, 10);

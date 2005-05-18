@@ -1,5 +1,5 @@
 /*
- * $Id: PaneLayout.java,v 1.1 2005/03/18 09:44:58 bass Exp $
+ * $Id: PaneLayout.java,v 1.2 2005/05/18 14:01:18 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import java.awt.*;
 import java.io.Serializable;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/03/18 09:44:58 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/18 14:01:18 $
  * @author $Author: bass $
  * @module generalclient_v1
  * @deprecated
@@ -41,7 +41,7 @@ public class PaneLayout implements LayoutManager2, Serializable {
 		if (obj == null
 				&& component.getName() != null
 				&& component.getName().equals(
-						"SplitPanel.splitter")) //$NON-NLS-1$
+						"SplitPanel.splitter"))
 			return;
 		if (obj instanceof PaneConstraints) {
 			if (!justDeleted(component, (PaneConstraints) obj)) {
@@ -68,8 +68,8 @@ public class PaneLayout implements LayoutManager2, Serializable {
 	}
 
 	public void addLayoutComponent(String s, Component component) {
-		PaneConstraints paneconstraints = new PaneConstraints(s, "", //$NON-NLS-1$
-				"", 0.5F); //$NON-NLS-1$
+		PaneConstraints paneconstraints = new PaneConstraints(s, "",
+				"", 0.5F);
 		addLayoutComponent(component, paneconstraints);
 	}
 
@@ -99,7 +99,7 @@ public class PaneLayout implements LayoutManager2, Serializable {
 				if (panenode.childComponent == component) {
 					paneconstraints = new PaneConstraints(
 							panenode.name,
-							panenode.name, "Root", //$NON-NLS-1$
+							panenode.name, "Root",
 							0.5F);
 				} else {
 					float f = panenode.heightDivide
@@ -115,24 +115,24 @@ public class PaneLayout implements LayoutManager2, Serializable {
 							paneconstraints = new PaneConstraints(
 									s1,
 									s,
-									"Top", //$NON-NLS-1$
+									"Top",
 									1.0F - f);
 						else
 							paneconstraints = new PaneConstraints(
 									s1,
 									s,
-									"Bottom", //$NON-NLS-1$
+									"Bottom",
 									1.0F - f);
 					} else if (panenode.reverse)
 						paneconstraints = new PaneConstraints(
-								s1, s, "Left", //$NON-NLS-1$
+								s1, s, "Left",
 								1.0F - f);
 					else
 						paneconstraints = new PaneConstraints(
-								s1, s, "Right", //$NON-NLS-1$
+								s1, s, "Right",
 								1.0F - f);
 					if (s1.equals(s))
-						paneconstraints.position = "Root"; //$NON-NLS-1$
+						paneconstraints.position = "Root";
 				}
 		}
 		return paneconstraints;
@@ -231,23 +231,23 @@ public class PaneLayout implements LayoutManager2, Serializable {
 	}
 
 	public String toString() {
-		return "PaneLayout"; //$NON-NLS-1$
+		return "PaneLayout";
 	}
 
 	void addChild(Component component, float f) {
 		this.addCount++;
-		String s = "component" + this.addCount; //$NON-NLS-1$
+		String s = "component" + this.addCount;
 		if (this.rootNode == null)
-			this.rootNode = new PaneNode(s, component, "Top"); //$NON-NLS-1$
+			this.rootNode = new PaneNode(s, component, "Top");
 		else
-			this.rootNode.addChild(s, component, "Bottom", f); //$NON-NLS-1$
+			this.rootNode.addChild(s, component, "Bottom", f);
 		this.lastComponentAdded = s;
 	}
 
 	void addChild(String s, String s1, String s2, Component component,
 			float f) {
 		if (this.rootNode == null) {
-			this.rootNode = new PaneNode(s, component, "Top"); //$NON-NLS-1$
+			this.rootNode = new PaneNode(s, component, "Top");
 		} else {
 			boolean flag = true;
 			if (s1 == null || s1.length() == 0) {
@@ -289,7 +289,7 @@ public class PaneLayout implements LayoutManager2, Serializable {
 					PaneNode panenode2 = new PaneNode(
 							panenode.childNodeA,
 							panenode.childNodeB,
-							"", 0.5F); //$NON-NLS-1$
+							"", 0.5F);
 					panenode2.widthDivide = panenode.widthDivide;
 					panenode2.heightDivide = panenode.heightDivide;
 					panenode2.name = panenode.name;
@@ -314,7 +314,7 @@ public class PaneLayout implements LayoutManager2, Serializable {
 				PaneNode panenode1 = this.lastDeletion.childNodeA;
 				PaneNode panenode3 = new PaneNode(
 						panenode1.childNodeA,
-						panenode1.childNodeB, "", 0.5F); //$NON-NLS-1$
+						panenode1.childNodeB, "", 0.5F);
 				panenode3.widthDivide = panenode1.widthDivide;
 				panenode3.heightDivide = panenode1.heightDivide;
 				panenode3.name = panenode1.name;
@@ -343,7 +343,7 @@ public class PaneLayout implements LayoutManager2, Serializable {
 			PaneConstraints paneconstraints) {
 		if (this.rootNode == null) {
 			this.rootNode = new PaneNode(paneconstraints.name,
-					component, "Root"); //$NON-NLS-1$
+					component, "Root");
 		} else {
 			PaneNode panenode = this.rootNode.getParentNode(
 					component, null);

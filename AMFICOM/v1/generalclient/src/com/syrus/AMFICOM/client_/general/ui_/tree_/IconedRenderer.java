@@ -1,5 +1,5 @@
 /*-
- * $Id: IconedRenderer.java,v 1.1 2005/03/30 13:27:20 stas Exp $
+ * $Id: IconedRenderer.java,v 1.2 2005/05/18 14:01:21 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,19 +16,19 @@ import javax.swing.tree.TreeCellRenderer;
 import com.syrus.AMFICOM.logic.Item;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/03/30 13:27:20 $
+ * @author $Author: bass $
+ * @version $Revision: 1.2 $, $Date: 2005/05/18 14:01:21 $
  * @module generalclient_v1
  */
 
 public class IconedRenderer extends JLabel implements TreeCellRenderer {
 	private static IconedRenderer instance;
 	/**
-	 * @todo fill following fields from UIDefaults 
+	 * @todo fill following fields from UIDefaults
 	 */
 	private Color selectedBackground = Color.BLUE;
 	private Color selectedForeground = Color.WHITE;
-	private boolean selected = false; 
+	private boolean selected = false;
 	
 	private IconedRenderer() {
 		// empty
@@ -64,7 +64,7 @@ public class IconedRenderer extends JLabel implements TreeCellRenderer {
 			int x = 0;
 			Icon icon1 = getIcon();
 			if (icon1 != null) {
-				x += icon1.getIconWidth() + getIconTextGap(); 
+				x += icon1.getIconWidth() + getIconTextGap();
 			}
 			g.setColor(selectedBackground);
 			Insets i = getInsets();

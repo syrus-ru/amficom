@@ -5,7 +5,7 @@ import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 
 import javax.swing.JDesktopPane;
 
-public class WindowListCommand extends VoidCommand 
+public class WindowListCommand extends VoidCommand
 {
 	private Dispatcher dispatcher;
 	private JDesktopPane desktop;

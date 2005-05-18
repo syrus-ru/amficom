@@ -47,13 +47,13 @@ public class JPanelRenderer extends JPanel
 		g.fillRect(0,0,ro.width,ro.height);
 
     Dimension curIPSize = insidePanel.getPreferredSize();
-    
+
     insidePanel.setPreferredSize(new Dimension(ro.width,ro.height));
     insidePanel.setSize(ro.width,ro.height);
-    
+
 		insidePanel.paint(g);
-    
+
     insidePanel.setPreferredSize(curIPSize);
-    insidePanel.setSize(curIPSize);    
+    insidePanel.setSize(curIPSize);
 	}
 }

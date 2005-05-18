@@ -1,5 +1,5 @@
 /*
- * $Id: OpenModuleEvent.java,v 1.1 2004/05/27 11:24:21 bass Exp $
+ * $Id: OpenModuleEvent.java,v 1.2 2005/05/18 14:01:18 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import java.util.*;
  * Events of this class are fired when there's a need to notify the listener
  * that some other module has to be opened.
  *
- * @version $Revision: 1.1 $, $Date: 2004/05/27 11:24:21 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/18 14:01:18 $
  * @author $Author: bass $
  */
 public final class OpenModuleEvent extends OperationEvent implements List {
@@ -118,7 +118,7 @@ public final class OpenModuleEvent extends OperationEvent implements List {
 	 */
 	private List delegate = Collections.synchronizedList(new ArrayList());
 
-	/** 
+	/**
 	 * The name of the module to be visited.
 	 *
 	 * @serial include
@@ -236,7 +236,7 @@ public final class OpenModuleEvent extends OperationEvent implements List {
 		this.moduleName = moduleName;
 	}
 
-	/** 
+	/**
 	 * Getter for property operationType.
 	 *
 	 * @return Value of property operationType.

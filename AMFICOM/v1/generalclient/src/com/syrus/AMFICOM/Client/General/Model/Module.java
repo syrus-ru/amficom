@@ -1,5 +1,5 @@
 /**
- * $Id: Module.java,v 1.2 2005/04/13 21:40:46 arseniy Exp $
+ * $Id: Module.java,v 1.3 2005/05/18 14:01:20 bass Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -15,15 +15,15 @@ package com.syrus.AMFICOM.Client.General.Model;
  * »нтерфейс нужен дл€ начальной инициализации данных модул€ и завершающего
  * освобождени€ ресурсов модул€ (отписки от событий, уничтожени€ файлов и т.д.)
  * при закрытии главного окна модул€
- * 
- * 
- * 
- * @version $Revision: 1.2 $, $Date: 2005/04/13 21:40:46 $
+ *
+ *
+ *
+ * @version $Revision: 1.3 $, $Date: 2005/05/18 14:01:20 $
  * @module generalclient_v1
- * @author $Author: arseniy $
+ * @author $Author: bass $
  * @see com.syrus.AMFICOM.Client.General.Command.ExitCommand#execute
  */
-public interface Module 
+public interface Module
 {
 	void initModule();
 	void finalizeModule();

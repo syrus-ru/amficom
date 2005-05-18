@@ -11,9 +11,6 @@ import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.Dimension;
 
-import java.io.ByteArrayInputStream;
-import java.io.ObjectInputStream;
-
 import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
 /**
  * <p>Title: </p>

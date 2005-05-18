@@ -1,5 +1,5 @@
 /*
- * $Id: EmptyClientResourceObjectLoader.java,v 1.7 2005/04/13 20:20:12 arseniy Exp $
+ * $Id: EmptyClientResourceObjectLoader.java,v 1.8 2005/05/18 14:01:19 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,13 +13,12 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/04/13 20:20:12 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/05/18 14:01:19 $
+ * @author $Author: bass $
  * @module generalclient_v1
  */
 public class EmptyClientResourceObjectLoader implements ResourceObjectLoader {

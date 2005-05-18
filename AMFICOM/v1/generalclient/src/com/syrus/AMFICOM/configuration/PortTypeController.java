@@ -99,6 +99,6 @@ public final class PortTypeController extends ObjectResourceController
 	}
 	
 	public static String getPropertyManagerClassName () {
-		return "com.syrus.AMFICOM.client_.configuration.ui.PortTypePropertiesManager";  //$NON-NLS-1$
+		return "com.syrus.AMFICOM.client_.configuration.ui.PortTypePropertiesManager";
 	}
 }

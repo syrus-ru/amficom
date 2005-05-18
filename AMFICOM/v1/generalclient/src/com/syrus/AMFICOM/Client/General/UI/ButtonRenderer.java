@@ -2,8 +2,8 @@ package com.syrus.AMFICOM.Client.General.UI;
 
 import javax.swing.JButton;
 
-public class ButtonRenderer 
-		extends JButton 
+public class ButtonRenderer
+		extends JButton
 		implements PropertyRenderer
 {
 	public ButtonRenderer()

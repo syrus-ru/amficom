@@ -1,5 +1,5 @@
 /*
- * $Id: Checker.java,v 1.12 2005/05/13 19:03:16 bass Exp $
+ * $Id: Checker.java,v 1.13 2005/05/18 14:01:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,20 +8,15 @@
 
 package com.syrus.AMFICOM.Client.General;
 
-import com.syrus.AMFICOM.Client.Resource.Object.*;
-import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.User;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 
-import java.util.*;
-import javax.swing.JOptionPane;
-
 /**
  * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2005/05/13 19:03:16 $
+ * @version $Revision: 1.13 $, $Date: 2005/05/18 14:01:20 $
  * @module generalclient_v1
  */
 public final class Checker {
@@ -51,90 +46,90 @@ public final class Checker {
 
 	/* 2 */
 	public static final String modifyGroup = admin + "modifyGroup";
-	/* 3 */ 
+	/* 3 */
 	public static final String addGroup = admin + "addGroup";
 	/* 4 */
 	public static final String addProfile = admin + "addProfile";
-	/* 5 */  
+	/* 5 */
 	public static final String modifyProfile = admin + "modifyProfile";
-	/* 6 */  
+	/* 6 */
 	public static final String modifyExec = admin + "modifyExec";
-	/* 7 */  
+	/* 7 */
 	public static final String readGroupInfo = admin + "readGroupInfo";
-	/* 8 */  
+	/* 8 */
 	public static final String readProfileInfo = admin + "readProfileInfo";
-	/* 9 */  
+	/* 9 */
 	public static final String readExecInfo = admin + "readExecInfo";
-	/* 10*/  
+	/* 10*/
 	public static final String addDomain = admin + "addDomain";
-	/* 11*/  
+	/* 11*/
 	public static final String modifyDomain = admin + "modifyDomain";
-	/* 12*/  
+	/* 12*/
 	public static final String readDomainInfo = admin + "readDomainInfo";
-	/* 13*/  
+	/* 13*/
 	public static final String removeDomain = admin + "removeDomain";
-	/* 14*/  
+	/* 14*/
 	public static final String removeProfile = admin + "removeProfile";
-	/* 15*/  
+	/* 15*/
 	public static final String removeGroup = admin + "removeGroup";
-	/* 16*/  
+	/* 16*/
 	public static final String modifyCategory = admin + "modifyCategory";
-	/* 17*/  
+	/* 17*/
 	public static final String readCategoryInfo = admin + "readCategoryInfo";
-	/* 18*/  
+	/* 18*/
 	public static final String readUserInfo = admin + "readUserInfo";
 
-	/* 19*/  
+	/* 19*/
 	public static final String readAgentInfo = admin + "readAgentInfo";
-	/* 20*/  
+	/* 20*/
 	public static final String modifyAgentInfo = admin + "modifyAgentInfo";
-	/* 21*/  
+	/* 21*/
 	public static final String createAgent = admin + "createAgent";
-	/* 22*/  
+	/* 22*/
 	public static final String deleteAgent = admin + "deleteAgent";
 
-	/* 23*/  
+	/* 23*/
 	public static final String readServerInfo = admin + "readServerInfo";
-	/* 24*/  
+	/* 24*/
 	public static final String modifyServerInfo = admin + "modifyServerInfo";
-	/* 25*/  
+	/* 25*/
 	public static final String createServer = admin + "createServer";
-	/* 26*/  
+	/* 26*/
 	public static final String deleteServer = admin + "deleteServer";
 
-	/* 27*/  
+	/* 27*/
 	public static final String readClientInfo = admin + "readClientInfo";
-	/* 28*/  
+	/* 28*/
 	public static final String modifyClientInfo = admin + "modifyClientInfo";
-	/* 29*/  
+	/* 29*/
 	public static final String createClient = admin + "createClient";
-	/* 30*/  
+	/* 30*/
 	public static final String deleteClient = admin + "deleteClient";
 
 	//-------- PLANNER OF THE REFLECTO-TESTS --------//
-	/* 1 */ 
+	/* 1 */
 	public static final String setOneTimeTest = plan + "setOneTimeTest";
-	/* 2 */  
+	/* 2 */
 	public static final String setTestTimeTable = plan + "setTestTimeTable";
-	/* 3 */  
+	/* 3 */
 	public static final String setPeriodicTest = plan + "setPeriodicTest";
-	/* 4 */  
+	/* 4 */
 	public static final String refreshTest = plan + "refreshTest";
-	/* 5 */  
+	/* 5 */
 	public static final String addTests = plan + "addTests";
-	/* 6 */  
+	/* 6 */
 	public static final String saveTests = plan + "saveTests";
-	/* 7 */  
+	/* 7 */
 	public static final String setOneKIStest = plan + "setOneKIStest";
-	/* 8 */  
+	/* 8 */
 	public static final String setAllKIStest = plan + "setAllKIStest";
-	/* 9 */  
+	/* 9 */
 	public static final String setUsualTest = plan + "setUsualTest";
-	/* 10*/  
+	/* 10*/
 	public static final String setExtendedTest = plan + "setExtendedTest";
-	/* 11*/  
+	/* 11*/
 	public static final String setTestFiltration = plan + "setTestFiltration";
-	/* 12*/  
+	/* 12*/
 	public static final String openTestPlannerWindow = plan + "openTestPlannerWindow";
 
 	//-- ANALYSIS, EXTENDED ANALYSIS AND THRESHOLDS --//
@@ -162,17 +157,17 @@ public final class Checker {
 	public static final String loadReferenceTrace = ana + "loadReferenceTrace";
 
 	//--MODELING (CALCULATING OF THE REFLECTOGRAMM)--//
-	/* 1 */ 
+	/* 1 */
 	public static final String enterReflectoModelingWindow = model + "enterReflectoModelingWindow";
-	/* 2 */ 
+	/* 2 */
 	public static final String openSchemeForModeling = model + "openSchemeForModeling";
-	/* 3 */ 
+	/* 3 */
 	public static final String performReflectoModeling = model + "performReflectoModeling";
-	/* 4 */ 
+	/* 4 */
 	public static final String saveReflectoModeling = model + "saveReflectoModeling";
-	/* 5 */ 
+	/* 5 */
 	public static final String setParamsReflectoModeling = model + "setParamsReflectoModeling";
-	/* 6 */ 
+	/* 6 */
 	public static final String openMapForModeling = model + "openMapForModeling";
 
 
@@ -187,7 +182,7 @@ public final class Checker {
 	public static final String setParamsForOptimization = optim + "setParamsForOptimization";
 	/* 5 */
 	public static final String saveParamsForOptimization = optim + "saveParamsOfOptimization";
-	/* 6 */ 
+	/* 6 */
 	public static final String enterOptimizationModul = optim + "enterOptimizationModul";
 	/* 7 */
 	public static final String openMapToBeOptimized = optim + "openMaptoBeOptimized";

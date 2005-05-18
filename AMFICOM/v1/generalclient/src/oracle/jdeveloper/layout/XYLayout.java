@@ -1,5 +1,5 @@
 /*
- * $Id: XYLayout.java,v 1.1 2005/03/18 09:44:58 bass Exp $
+ * $Id: XYLayout.java,v 1.2 2005/05/18 14:01:18 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.io.Serializable;
 import java.util.Hashtable;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/03/18 09:44:58 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/18 14:01:18 $
  * @author $Author: bass $
  * @module generalclient_v1
  * @deprecated
@@ -110,7 +110,7 @@ public class XYLayout implements LayoutManager2, Serializable {
 	}
 
 	public String toString() {
-		return "XYLayout[width=" + this.width + ",height=" + this.height + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		return "XYLayout[width=" + this.width + ",height=" + this.height + "]";
 	}
 
 	Rectangle getComponentBounds(Component component, boolean flag) {

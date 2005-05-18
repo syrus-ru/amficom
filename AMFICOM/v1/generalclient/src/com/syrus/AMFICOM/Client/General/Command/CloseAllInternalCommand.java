@@ -23,11 +23,11 @@ public class CloseAllInternalCommand extends VoidCommand
 		JInternalFrame frame = null;
 		for(int i = 0; i < desktop.getComponents().length; i++)
 		{
-			try 
+			try
 			{
 				frame = (JInternalFrame )desktop.getComponent(i);
 				frame.setVisible(false);
-			} catch (Exception ex) 
+			} catch (Exception ex)
 			{
 				ex.printStackTrace();
 			}

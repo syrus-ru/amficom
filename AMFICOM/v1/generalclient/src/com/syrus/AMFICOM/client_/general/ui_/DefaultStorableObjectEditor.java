@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultStorableObjectEditor.java,v 1.4 2005/04/20 16:34:20 stas Exp $
+ * $Id: DefaultStorableObjectEditor.java,v 1.5 2005/05/18 14:01:19 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,13 +18,13 @@ import javax.swing.event.*;
 import javax.swing.event.ChangeListener;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.4 $, $Date: 2005/04/20 16:34:20 $
+ * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2005/05/18 14:01:19 $
  * @module generalclient_v1
  */
 
 public abstract class DefaultStorableObjectEditor implements StorableObjectEditor {
-	List changeListeners = new LinkedList(); 
+	List changeListeners = new LinkedList();
 	UndoableKeyAdapter keyAdapter;
 	
 	protected DefaultStorableObjectEditor() {
