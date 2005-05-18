@@ -1,5 +1,5 @@
 /*-
- * $Id: FIFOSaver.java,v 1.2 2005/05/18 09:41:51 max Exp $
+ * $Id: FIFOSaver.java,v 1.3 2005/05/18 10:10:03 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,8 +23,8 @@ import com.syrus.util.Fifo;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/05/18 09:41:51 $
- * @author $Author: max $
+ * @version $Revision: 1.3 $, $Date: 2005/05/18 10:10:03 $
+ * @author $Author: bass $
  * @module util
  */
 public class FIFOSaver {
@@ -34,7 +34,7 @@ public class FIFOSaver {
 	private static final String DEFAULT_HOME = System.getProperty("user.home"); //$NON-NLS-1$
 	private static final String DEFAULT_CACHE_PATH = DEFAULT_HOME + File.separator 
 			+ "cache" + File.separator + Application.getApplicationName(); //$NON-NLS-1$
-	public static final String EXTENSION = "Fifo.serialized";
+	public static final String EXTENSION = "Fifo.serialized"; //$NON-NLS-1$
 	
 	
 	private static String pathNameOfSaveDir;

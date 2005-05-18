@@ -1,5 +1,5 @@
 /*
- * $Id: ApplicationProperties.java,v 1.7 2005/04/29 10:32:41 arseniy Exp $
+ * $Id: ApplicationProperties.java,v 1.8 2005/05/18 10:10:03 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,9 +16,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class ApplicationProperties {
-	public static final String COMMON_FILE_NAME = "common";
-	public static final String FILE_EXTENSION = "properties";
-	public static final String DOT = ".";
+	public static final String COMMON_FILE_NAME = "common"; //$NON-NLS-1$
+	public static final String FILE_EXTENSION = "properties"; //$NON-NLS-1$
+	public static final String DOT = "."; //$NON-NLS-1$
 
 	private static String commonFileName;
 	private static ResourceBundle commonResourceBundle;
@@ -48,7 +48,7 @@ public class ApplicationProperties {
 			System.err.println("Cannot find file: " + fileName); //$NON-NLS-1$
 		}
 		catch (IOException ioe) {
-			System.err.println("Exception while reading file " + fileName + ": " + ioe.getMessage()); //$NON-NLS-1$
+			System.err.println("Exception while reading file " + fileName + ": " + ioe.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
 			ioe.printStackTrace();
 		}
 		return resourceBundle;
@@ -60,7 +60,7 @@ public class ApplicationProperties {
 				return applicationResourceBundle.getString(key);
 			}
 			catch (Exception e) {
-				Log.debugMessage("Cannot get resource '" + key + "' from " + applicationFileName + "; using common file", Log.DEBUGLEVEL02); //$NON-NLS-1$
+				Log.debugMessage("Cannot get resource '" + key + "' from " + applicationFileName + "; using common file", Log.DEBUGLEVEL02); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			}
 		}
 
@@ -69,11 +69,11 @@ public class ApplicationProperties {
 				return commonResourceBundle.getString(key);
 			}
 			catch (Exception e) {
-				Log.debugMessage("Cannot get resource '" + key + "' from " + commonFileName, Log.DEBUGLEVEL02); //$NON-NLS-1$
+				Log.debugMessage("Cannot get resource '" + key + "' from " + commonFileName, Log.DEBUGLEVEL02); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 
-		Log.debugMessage("Returning default for key '" + key + "' -- '" + defaultValue + "'", Log.DEBUGLEVEL02); //$NON-NLS-1$
+		Log.debugMessage("Returning default for key '" + key + "' -- '" + defaultValue + "'", Log.DEBUGLEVEL02); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		return defaultValue;
 	}
 
@@ -83,7 +83,7 @@ public class ApplicationProperties {
 				return Integer.parseInt(applicationResourceBundle.getString(key));
 			}
 			catch (Exception e) {
-				Log.debugMessage("Cannot get resource '" + key + "' from " + applicationFileName + "; using common file", Log.DEBUGLEVEL02); //$NON-NLS-1$
+				Log.debugMessage("Cannot get resource '" + key + "' from " + applicationFileName + "; using common file", Log.DEBUGLEVEL02); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			}
 		}
 
@@ -92,11 +92,11 @@ public class ApplicationProperties {
 				return Integer.parseInt(commonResourceBundle.getString(key));
 			}
 			catch (Exception e) {
-				Log.debugMessage("Cannot get resource '" + key + "' from " + commonFileName, Log.DEBUGLEVEL02); //$NON-NLS-1$
+				Log.debugMessage("Cannot get resource '" + key + "' from " + commonFileName, Log.DEBUGLEVEL02); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 
-		Log.debugMessage("Returning default for key '" + key + "' -- " + defaultValue, Log.DEBUGLEVEL02); //$NON-NLS-1$
+		Log.debugMessage("Returning default for key '" + key + "' -- " + defaultValue, Log.DEBUGLEVEL02); //$NON-NLS-1$ //$NON-NLS-2$
 		return defaultValue;
 	}
 
