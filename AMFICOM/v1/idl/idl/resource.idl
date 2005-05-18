@@ -1,5 +1,5 @@
 /*
- * $Id: resource.idl,v 1.14 2005/05/04 15:05:40 bass Exp $
+ * $Id: resource.idl,v 1.15 2005/05/18 10:54:55 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,7 +36,6 @@ module com {
 						} data;
 					};
 
-					typedef sequence<ImageResource_Transferable> ImageResourceSeq_Transferable;
 					typedef ImageResource_Transferable ImageResource;
 					typedef sequence<ImageResource> ImageResourceSeq;
 				};
