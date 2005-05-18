@@ -1,5 +1,5 @@
 /*
- * $Id: XMLResourceObjectLoader.java,v 1.2 2005/04/27 15:39:00 arseniy Exp $
+ * $Id: XMLResourceObjectLoader.java,v 1.3 2005/05/18 12:52:59 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,6 @@ import java.util.Iterator;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
@@ -24,8 +23,8 @@ import com.syrus.AMFICOM.general.StorableObjectXMLDriver;
 import com.syrus.AMFICOM.general.XMLObjectLoader;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/27 15:39:00 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/05/18 12:52:59 $
+ * @author $Author: bass $
  * @module csbridge_v1
  */
 public class XMLResourceObjectLoader extends XMLObjectLoader implements ResourceObjectLoader {
@@ -33,7 +32,7 @@ public class XMLResourceObjectLoader extends XMLObjectLoader implements Resource
 	private StorableObjectXML	resourceXML;
 
 	public XMLResourceObjectLoader(final File path) {
-		StorableObjectXMLDriver driver = new StorableObjectXMLDriver(path, "resource"); //$NON-NLS-1$
+		StorableObjectXMLDriver driver = new StorableObjectXMLDriver(path, "resource");
 		this.resourceXML = new StorableObjectXML(driver);
 	}
 
@@ -93,7 +92,7 @@ public class XMLResourceObjectLoader extends XMLObjectLoader implements Resource
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
-	public Set refresh(Set storableObjects) throws DatabaseException {
+	public Set refresh(Set storableObjects) {
 		return Collections.EMPTY_SET;
 	}
 

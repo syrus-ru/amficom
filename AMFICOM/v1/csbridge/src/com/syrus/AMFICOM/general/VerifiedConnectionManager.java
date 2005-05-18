@@ -1,5 +1,5 @@
 /*-
- * $Id: VerifiedConnectionManager.java,v 1.3 2005/05/13 17:38:43 bass Exp $
+ * $Id: VerifiedConnectionManager.java,v 1.4 2005/05/18 12:52:59 bass Exp $
  *
  * Copyright Ώ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.general.corba.VerifiableHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/05/13 17:38:43 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/18 12:52:59 $
  * @author $Author: bass $
  * @module csbridge_v1
  */
@@ -38,8 +38,8 @@ public class VerifiedConnectionManager {
 	}
 
 	public VerifiedConnectionManager(final CORBAServer corbaServer, final Set servantNames) {
-		assert corbaServer != null: "corbaServer is NULL"; //$NON-NLS-1$
-		assert servantNames != null: "Servant names is NULL"; //$NON-NLS-1$
+		assert corbaServer != null: "corbaServer is NULL";
+		assert servantNames != null: "Servant names is NULL";
 //		assert !servantNames.isEmpty(): ErrorMessages.θυμι_πυστοκ;
 
 		this.corbaServer = corbaServer;
@@ -48,7 +48,7 @@ public class VerifiedConnectionManager {
 		Object servantName;
 		for (Iterator it = servantNames.iterator(); it.hasNext();) {
 			servantName = it.next();
-			assert (servantName instanceof String): "Name of servant must be of type String"; //$NON-NLS-1$
+			assert (servantName instanceof String): "Name of servant must be of type String";
 			this.referencesMap.put(servantName, null);
 		}
 		this.disconnectedServants = Collections.synchronizedSet(new HashSet(servantNames));
@@ -70,7 +70,7 @@ public class VerifiedConnectionManager {
 
 			return reference;
 		}
-		throw new IllegalDataException("Servant '" + servantName + "' not registered for this manager"); //$NON-NLS-1$ //$NON-NLS-2$
+		throw new IllegalDataException("Servant '" + servantName + "' not registered for this manager");
 	}
 
 	public void addServantName(String servantName) {
@@ -96,7 +96,7 @@ public class VerifiedConnectionManager {
 		Verifiable reference = (Verifiable) this.referencesMap.get(servantName);
 		if (reference != null)
 			return reference;
-		throw new CommunicationException("Cannot establish connection with  '" + servantName + "'"); //$NON-NLS-1$ //$NON-NLS-2$
+		throw new CommunicationException("Cannot establish connection with  '" + servantName + "'");
 	}
 
 	private void activateVerifiableReference(String servantName) {
@@ -114,11 +114,11 @@ public class VerifiedConnectionManager {
 	}
 
 	protected void onLoseConnection(String servantName) {
-		Log.debugMessage("VerifiedConnectionManager.onLoseConnection | Connection with '" + servantName + "' lost", Log.DEBUGLEVEL08); //$NON-NLS-1$ //$NON-NLS-2$
+		Log.debugMessage("VerifiedConnectionManager.onLoseConnection | Connection with '" + servantName + "' lost", Log.DEBUGLEVEL08);
 	}
 
 	protected void onRestoreConnection(String servantName) {
-		Log.debugMessage("VerifiedConnectionManager.onRestoreConnection | Connection with '" + servantName + "' restored", //$NON-NLS-1$ //$NON-NLS-2$
+		Log.debugMessage("VerifiedConnectionManager.onRestoreConnection | Connection with '" + servantName + "' restored",
 				Log.DEBUGLEVEL08);
 	}
 

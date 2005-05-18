@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseIdentifierGeneratorServer.java,v 1.3 2005/05/16 14:43:30 arseniy Exp $
+ * $Id: DatabaseIdentifierGeneratorServer.java,v 1.4 2005/05/18 12:52:58 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,8 +13,8 @@ import com.syrus.AMFICOM.general.corba.IdentifierGeneratorServer;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/05/16 14:43:30 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.4 $, $Date: 2005/05/18 12:52:58 $
+ * @author $Author: bass $
  * @module csbridge_v1
  */
 public class DatabaseIdentifierGeneratorServer implements IdentifierGeneratorServer, IGSConnectionManager {
@@ -53,7 +53,7 @@ public class DatabaseIdentifierGeneratorServer implements IdentifierGeneratorSer
 		assert false : "It is dumb to call this method -- " + i;
 	}
 
-	public IdentifierGeneratorServer getIGSReference() throws CommunicationException {
+	public IdentifierGeneratorServer getIGSReference() {
 		return this;
 	}
 

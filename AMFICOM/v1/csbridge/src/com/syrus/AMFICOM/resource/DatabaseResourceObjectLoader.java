@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseResourceObjectLoader.java,v 1.2 2005/04/27 15:39:00 arseniy Exp $
+ * $Id: DatabaseResourceObjectLoader.java,v 1.3 2005/05/18 12:52:59 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,8 +25,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceDataPackage.ImageResourceSort;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/27 15:39:00 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/05/18 12:52:59 $
+ * @author $Author: bass $
  * @module csbridge_v1
  */
 public class DatabaseResourceObjectLoader extends DatabaseObjectLoader implements ResourceObjectLoader {
@@ -46,7 +46,7 @@ public class DatabaseResourceObjectLoader extends DatabaseObjectLoader implement
 				storableObject = new SchemeImageResource(id);
 				return storableObject;
 			default:
-				throw new IllegalDataException("ResourceObjectLoader.loadImageResource | wrong sort" + sort); //$NON-NLS-1$
+				throw new IllegalDataException("ResourceObjectLoader.loadImageResource | wrong sort" + sort);
 		}
 	}
 

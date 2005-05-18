@@ -1,5 +1,5 @@
 /*
- * $Id: LocalIdentifierGeneratorServer.java,v 1.2 2005/04/27 15:30:21 arseniy Exp $
+ * $Id: LocalIdentifierGeneratorServer.java,v 1.3 2005/05/18 12:52:58 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,8 +14,8 @@ import com.syrus.AMFICOM.general.corba.IdentifierGeneratorServer;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/27 15:30:21 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/05/18 12:52:58 $
+ * @author $Author: bass $
  * @module csbridge_v1
  */
 
@@ -36,12 +36,6 @@ public class LocalIdentifierGeneratorServer implements IdentifierGeneratorServer
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY,
 																			 CompletionStatus.COMPLETED_NO,
 																			 "Illegal object entity: '" + ObjectEntities.codeToString(entityCode) + "'");
-		}
-		catch (IdentifierGenerationException ige) {
-			Log.errorException(ige);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE,
-																			 CompletionStatus.COMPLETED_NO,
-																			 "Cannot create major/minor entries of identifier for entity: '" + ObjectEntities.codeToString(entityCode) + "' -- " + ige.getMessage());
 		}	
 	}
 
@@ -59,19 +53,13 @@ public class LocalIdentifierGeneratorServer implements IdentifierGeneratorServer
 																			 CompletionStatus.COMPLETED_NO,
 																			 "Illegal object entity: '" + ObjectEntities.codeToString(entityCode) + "'");
 		}
-		catch (IdentifierGenerationException ige) {
-			Log.errorException(ige);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE,
-																			 CompletionStatus.COMPLETED_NO,
-																			 "Cannot create major/minor entries of identifier for entity: '" + ObjectEntities.codeToString(entityCode) + "' -- " + ige.getMessage());
-		}
 	}
 
 	public void verify(byte i) {
 		throw new UnsupportedOperationException("It is dumb to call this method -- " + i);
 	}
 
-	public IdentifierGeneratorServer getIGSReference() throws CommunicationException {
+	public IdentifierGeneratorServer getIGSReference() {
 		return this;
 	}
 }

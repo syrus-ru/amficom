@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseSchemeObjectLoader.java,v 1.2 2005/04/27 15:39:00 arseniy Exp $
+ * $Id: DatabaseSchemeObjectLoader.java,v 1.3 2005/05/18 12:52:59 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,8 +29,8 @@ import java.util.Set;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.2 $, $Date: 2005/04/27 15:39:00 $
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/05/18 12:52:59 $
  * @module csbridge_v1
  */
 public class DatabaseSchemeObjectLoader extends DatabaseObjectLoader implements SchemeObjectLoader {
@@ -82,8 +82,8 @@ public class DatabaseSchemeObjectLoader extends DatabaseObjectLoader implements 
 
 	/**
 	 * @param id
-	 * @throws ObjectNotFoundException 
-	 * @throws RetrieveObjectException 
+	 * @throws ObjectNotFoundException
+	 * @throws RetrieveObjectException
 	 * @see SchemeObjectLoader#loadCableChannelingItem(Identifier)
 	 */
 	public StorableObject loadCableChannelingItem(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
@@ -100,7 +100,7 @@ public class DatabaseSchemeObjectLoader extends DatabaseObjectLoader implements 
 		try {
 			return SchemeDatabaseContext.getCableChannelingItemDatabase().retrieveByIdsByCondition(ids, null);
 		} catch (final IllegalDataException ide) {
-			throw new DatabaseException("DatabaseSchemeObjectLoader.loadCableChannelingItems | Illegal Storable Object: " + ide.getMessage()); //$NON-NLS-1$
+			throw new DatabaseException("DatabaseSchemeObjectLoader.loadCableChannelingItems | Illegal Storable Object: " + ide.getMessage());
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: XMLMapObjectLoader.java,v 1.2 2005/04/27 15:39:00 arseniy Exp $
+ * $Id: XMLMapObjectLoader.java,v 1.3 2005/05/18 12:52:59 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,8 +23,8 @@ import com.syrus.AMFICOM.general.StorableObjectXMLDriver;
 import com.syrus.AMFICOM.general.XMLObjectLoader;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/27 15:39:00 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/05/18 12:52:59 $
+ * @author $Author: bass $
  * @module csbridge_v1
  */
 
@@ -50,7 +50,7 @@ public final class XMLMapObjectLoader extends XMLObjectLoader implements MapObje
 		this.mapXML.flush();
 	}
 
-	public Set refresh(Set storableObjects) throws ApplicationException {
+	public Set refresh(Set storableObjects) {
 		return Collections.EMPTY_SET;
 	}
 

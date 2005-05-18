@@ -1,5 +1,5 @@
 /*
- * $Id: XMLAdministrationObjectLoader.java,v 1.3 2005/04/29 08:56:46 arseniy Exp $
+ * $Id: XMLAdministrationObjectLoader.java,v 1.4 2005/05/18 12:52:59 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.XMLObjectLoader;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/04/29 08:56:46 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.4 $, $Date: 2005/05/18 12:52:59 $
+ * @author $Author: bass $
  * @module csbridge_v1
  */
 public class XMLAdministrationObjectLoader extends XMLObjectLoader implements AdministrationObjectLoader {
@@ -138,7 +138,7 @@ public class XMLAdministrationObjectLoader extends XMLObjectLoader implements Ad
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
-	public Set refresh(Set storableObjects) throws ApplicationException {
+	public Set refresh(Set storableObjects) {
 		return Collections.EMPTY_SET;
 	}
 
@@ -199,7 +199,7 @@ public class XMLAdministrationObjectLoader extends XMLObjectLoader implements Ad
 		} catch (ObjectNotFoundException e) {
 			throw new ApplicationException("XMLAdministrationObjectLoader.load"
 					+ ObjectEntities.codeToString(id.getMajor()) + " | caught " + e.getMessage(), e);
-		} 
+		}
 	}
 
 	private Set loadStorableObjectButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
@@ -208,7 +208,7 @@ public class XMLAdministrationObjectLoader extends XMLObjectLoader implements Ad
 		} catch (RetrieveObjectException e) {
 			throw new ApplicationException("XMLAdministrationObjectLoader.loadStorableObjectButIds | caught "
 					+ e.getMessage(), e);
-		} 
+		}
 	}
 
 	private void saveStorableObject(StorableObject storableObject, boolean force) throws ApplicationException {
@@ -219,7 +219,7 @@ public class XMLAdministrationObjectLoader extends XMLObjectLoader implements Ad
 		catch (UpdateObjectException e) {
 			throw new ApplicationException("XMLAdministrationObjectLoader.save"
 					+ ObjectEntities.codeToString(id.getMajor()) + " | caught " + e.getMessage(), e);
-		} 
+		}
 	}
 
 	private void saveStorableObjects(Set storableObjects, boolean force) throws ApplicationException {

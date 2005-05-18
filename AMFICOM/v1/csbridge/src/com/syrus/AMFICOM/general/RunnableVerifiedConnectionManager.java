@@ -1,6 +1,6 @@
 /*
- * $Id: RunnableVerifiedConnectionManager.java,v 1.2 2005/05/13 17:38:43 bass Exp $
- * 
+ * $Id: RunnableVerifiedConnectionManager.java,v 1.3 2005/05/18 12:52:59 bass Exp $
+ *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.corba.Verifiable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/05/13 17:38:43 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/18 12:52:59 $
  * @author $Author: bass $
  * @module csbridge_v1
  */

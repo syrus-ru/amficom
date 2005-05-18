@@ -1,6 +1,6 @@
 /*
- * $Id: CORBAAdministrationObjectLoader.java,v 1.10 2005/05/04 11:12:32 arseniy Exp $
- * 
+ * $Id: CORBAAdministrationObjectLoader.java,v 1.11 2005/05/18 12:52:59 bass Exp $
+ *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
@@ -39,8 +39,8 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/05/04 11:12:32 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2005/05/18 12:52:59 $
+ * @author $Author: bass $
  * @module csbridge_v1
  */
 public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader implements AdministrationObjectLoader {

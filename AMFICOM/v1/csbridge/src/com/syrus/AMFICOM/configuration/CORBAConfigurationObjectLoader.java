@@ -1,6 +1,6 @@
 /*
- * $Id: CORBAConfigurationObjectLoader.java,v 1.8 2005/05/04 11:12:32 arseniy Exp $
- * 
+ * $Id: CORBAConfigurationObjectLoader.java,v 1.9 2005/05/18 12:52:59 bass Exp $
+ *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
@@ -49,8 +49,8 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/05/04 11:12:32 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.9 $, $Date: 2005/05/18 12:52:59 $
+ * @author $Author: bass $
  * @module csbridge_v1
  */
 public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader implements ConfigurationObjectLoader {
@@ -373,14 +373,8 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 		try {
 			MonitoredElement_Transferable[] transferables = cmServer.transmitMonitoredElements(idsT, sessionKeyT);
 			Set objects = new HashSet(transferables.length);
-			for (int i = 0; i < transferables.length; i++) {
-				try {
-					objects.add(new MonitoredElement(transferables[i]));
-				}
-				catch (CreateObjectException coe) {
-					Log.errorException(coe);
-				}
-			}
+			for (int i = 0; i < transferables.length; i++)
+				objects.add(new MonitoredElement(transferables[i]));
 			return objects;
 		}
 		catch (AMFICOMRemoteException are) {
@@ -767,14 +761,8 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 		try {
 			MonitoredElement_Transferable[] transferables = cmServer.transmitMonitoredElementsButIdsCondition(idsT, sessionKeyT, conditionT);
 			Set objects = new HashSet(transferables.length);
-			for (int i = 0; i < transferables.length; i++) {
-				try {
-					objects.add(new MonitoredElement(transferables[i]));
-				}
-				catch (CreateObjectException coe) {
-					Log.errorException(coe);
-				}
-			}
+			for (int i = 0; i < transferables.length; i++)
+				objects.add(new MonitoredElement(transferables[i]));
 			return objects;
 		}
 		catch (AMFICOMRemoteException are) {

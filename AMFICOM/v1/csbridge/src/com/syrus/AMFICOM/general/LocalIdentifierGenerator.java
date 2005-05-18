@@ -1,5 +1,5 @@
 /*
- * $Id: LocalIdentifierGenerator.java,v 1.4 2005/05/10 18:57:30 bass Exp $
+ * $Id: LocalIdentifierGenerator.java,v 1.5 2005/05/18 12:52:58 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.general;
 import java.util.List;
 import java.util.LinkedList;
 /**
- * @version $Revision: 1.4 $, $Date: 2005/05/10 18:57:30 $
+ * @version $Revision: 1.5 $, $Date: 2005/05/18 12:52:58 $
  * @author $Author: bass $
  * @module csbridge_v1
  */
@@ -23,13 +23,13 @@ public class LocalIdentifierGenerator {
 		// singleton constructor
 	}
 
-	public static synchronized Identifier generateIdentifier(short entityCode) throws IllegalObjectEntityException, IdentifierGenerationException {
+	public static synchronized Identifier generateIdentifier(short entityCode) throws IllegalObjectEntityException {
 		short major = generateMajor(entityCode);
 		long minor = generateMinor(entityCode);
 		return new Identifier(major, minor);
 	}
 
-	public static synchronized Identifier[] generateIdentifierRange(short entityCode, int rangeSize) throws IllegalObjectEntityException, IdentifierGenerationException {
+	public static synchronized Identifier[] generateIdentifierRange(short entityCode, int rangeSize) throws IllegalObjectEntityException {
 		List list = new LinkedList();
 		short major = generateMajor(entityCode);
 		long minor;
@@ -46,7 +46,7 @@ public class LocalIdentifierGenerator {
 		throw new IllegalObjectEntityException("Illegal or unknown entity code supplied: " + entityCode, IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 	}
 
-	private static long generateMinor(short entityCode) throws IdentifierGenerationException {
+	private static long generateMinor(short entityCode) {
 		if (counter >= MAX_COUNTER)
 			counter = 0;
 
