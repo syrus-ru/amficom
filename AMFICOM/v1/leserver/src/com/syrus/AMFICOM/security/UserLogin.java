@@ -1,6 +1,6 @@
 /*
- * $Id: UserLogin.java,v 1.2 2005/05/03 19:44:46 arseniy Exp $
- * 
+ * $Id: UserLogin.java,v 1.3 2005/05/18 13:29:31 bass Exp $
+ *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
@@ -12,8 +12,8 @@ import java.util.Date;
 import com.syrus.AMFICOM.general.Identifier;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/05/03 19:44:46 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/05/18 13:29:31 $
+ * @author $Author: bass $
  * @module leserver_v1
  */
 public final class UserLogin {

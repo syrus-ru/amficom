@@ -1,6 +1,6 @@
 /*
- * $Id: LoginServerImplementation.java,v 1.12 2005/05/16 14:59:00 arseniy Exp $
- * 
+ * $Id: LoginServerImplementation.java,v 1.13 2005/05/18 13:29:31 bass Exp $
+ *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
@@ -10,7 +10,6 @@ package com.syrus.AMFICOM.leserver;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.User;
 import com.syrus.AMFICOM.administration.UserWrapper;
@@ -22,6 +21,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
@@ -39,8 +39,8 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/05/16 14:59:00 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.13 $, $Date: 2005/05/18 13:29:31 $
+ * @author $Author: bass $
  * @module leserver_v1
  */
 final class LoginServerImplementation extends LoginServerPOA {
@@ -61,7 +61,7 @@ final class LoginServerImplementation extends LoginServerPOA {
 		this.tc.setValue(login);
 		Set set = null;
 		try {
-			set = AdministrationStorableObjectPool.getStorableObjectsByCondition(this.tc, true);
+			set = StorableObjectPool.getStorableObjectsByCondition(this.tc, true);
 		}
 		catch (ApplicationException ae) {
 			Log.errorException(ae);
@@ -123,7 +123,7 @@ final class LoginServerImplementation extends LoginServerPOA {
 
 		EquivalentCondition ec = new EquivalentCondition(ObjectEntities.DOMAIN_ENTITY_CODE);
 		try {
-			Set domains = AdministrationStorableObjectPool.getStorableObjectsByCondition(ec, true);
+			Set domains = StorableObjectPool.getStorableObjectsByCondition(ec, true);
 
 			if (domains.size() == 0)
 				throw new AMFICOMRemoteException(ErrorCode.ERROR_NO_DOMAINS_AVAILABLE,
@@ -169,7 +169,7 @@ final class LoginServerImplementation extends LoginServerPOA {
 			final Identifier_TransferableHolder domainIdTH) throws AMFICOMRemoteException {
 		final UserLogin userLogin = LoginProcessor.getUserLogin(new SessionKey(sessionKeyT));
 		if (userLogin == null)
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_LOGGED_IN, CompletionStatus.COMPLETED_YES, "Not logged in"); //$NON-NLS-1$
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_LOGGED_IN, CompletionStatus.COMPLETED_YES, "Not logged in");
 
 		userLogin.updateLastActivityDate();
 		try {

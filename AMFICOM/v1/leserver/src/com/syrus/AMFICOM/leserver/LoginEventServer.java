@@ -1,5 +1,5 @@
 /*-
- * $Id: LoginEventServer.java,v 1.14 2005/05/16 14:59:00 arseniy Exp $
+ * $Id: LoginEventServer.java,v 1.15 2005/05/18 13:29:31 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,34 +22,34 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/05/16 14:59:00 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.15 $, $Date: 2005/05/18 13:29:31 $
+ * @author $Author: bass $
  * @module leserver_v1
  */
 public final class LoginEventServer {
-	public static final String APPLICATION_NAME = "leserver"; //$NON-NLS-1$
+	public static final String APPLICATION_NAME = "leserver";
 
 	/*-********************************************************************
 	 * Keys.                                                              *
 	 **********************************************************************/
 
-	public static final String KEY_DB_HOST_NAME = "DBHostName"; //$NON-NLS-1$
-	public static final String KEY_DB_SID = "DBSID"; //$NON-NLS-1$
-	public static final String KEY_DB_CONNECTION_TIMEOUT = "DBConnectionTimeout"; //$NON-NLS-1$
-	public static final String KEY_DB_LOGIN_NAME = "DBLoginName"; //$NON-NLS-1$
-	public static final String KEY_SERVER_ID = "ServerID"; //$NON-NLS-1$
+	public static final String KEY_DB_HOST_NAME = "DBHostName";
+	public static final String KEY_DB_SID = "DBSID";
+	public static final String KEY_DB_CONNECTION_TIMEOUT = "DBConnectionTimeout";
+	public static final String KEY_DB_LOGIN_NAME = "DBLoginName";
+	public static final String KEY_SERVER_ID = "ServerID";
 
 	/*-********************************************************************
 	 * Default values.                                                    *
 	 **********************************************************************/
 
-	public static final String DB_SID = "amficom"; //$NON-NLS-1$
+	public static final String DB_SID = "amficom";
 	/**
 	 * Database connection timeout, in seconds.
 	 */
 	public static final int DB_CONNECTION_TIMEOUT = 120;	//sec
-	public static final String DB_LOGIN_NAME = "amficom"; //$NON-NLS-1$
-	public static final String SERVER_ID = "Server_1"; //$NON-NLS-1$
+	public static final String DB_LOGIN_NAME = "amficom";
+	public static final String SERVER_ID = "Server_1";
 
 	private static String loginProcessCodename;
 	private static String eventProcessCodename;
@@ -108,7 +108,7 @@ public final class LoginEventServer {
 			final ServerProcess eventServerProcess = serverProcessDatabase.retrieveForServerAndCodename(serverId, eventProcessCodename);
 			// TODO something with loginServerProcess and eventServerProcess
 			if (loginServerProcess == null || eventServerProcess == null)
-				throw new ApplicationException("Cannot find login server process or event server process"); //$NON-NLS-1$
+				throw new ApplicationException("Cannot find login server process or event server process");
 	
 			/*	Init session environment
 			 * NOTE: No logging in*/

@@ -1,5 +1,5 @@
 /*-
- * $Id: MSHServerServantManager.java,v 1.1 2005/05/13 17:47:53 bass Exp $
+ * $Id: MSHServerServantManager.java,v 1.2 2005/05/18 13:34:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/05/13 17:47:53 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/18 13:34:16 $
  * @module mshserver_v1
  */
 public class MSHServerServantManager extends RunnableVerifiedConnectionManager
@@ -45,6 +45,9 @@ public class MSHServerServantManager extends RunnableVerifiedConnectionManager
 
 		this.loginServerServantName = loginServerServantName;
 		this.eventServerServantName = eventServerServantName;
+
+		//NOTE MSHServer never generates identifiers for himself, so this initialization is redundant.
+		this.databaseIdentifierGeneratorServer = new DatabaseIdentifierGeneratorServer();
 
 		assert timeout >= 10L * 60L * 1000L: ErrorMessages.TIMEOUT_TOO_SHORT; //not less then 10 min
 	}
@@ -87,10 +90,10 @@ public class MSHServerServantManager extends RunnableVerifiedConnectionManager
 	 * @todo Generate event "Connection lost".
 	 */
 	protected void onLoseConnection(final String servantName) {
-		Log.debugMessage("MSHServerServantManager.onLoseConnection | Connection with '" //$NON-NLS-1$
+		Log.debugMessage("MSHServerServantManager.onLoseConnection | Connection with '"
 				+ servantName
-				+ "' lost", //$NON-NLS-1$
-				Log.WARNING);  //$NON-NLS-1$//$NON-NLS-2$
+				+ "' lost",
+				Log.WARNING);
 	}
 
 	/**
@@ -99,9 +102,9 @@ public class MSHServerServantManager extends RunnableVerifiedConnectionManager
 	 * @todo Generate event "Connection restored".
 	 */
 	protected void onRestoreConnection(final String servantName) {
-		Log.debugMessage("MSHServerServantManager.onRestoreConnection | Connection with '" //$NON-NLS-1$
+		Log.debugMessage("MSHServerServantManager.onRestoreConnection | Connection with '"
 				+ servantName
-				+ "' restored", //$NON-NLS-1$
+				+ "' restored",
 				Log.INFO);
 				
 	}

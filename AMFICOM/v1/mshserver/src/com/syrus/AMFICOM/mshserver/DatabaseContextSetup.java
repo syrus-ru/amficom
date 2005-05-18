@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.9 2005/05/13 17:47:53 bass Exp $
+ * $Id: DatabaseContextSetup.java,v 1.10 2005/05/18 13:34:16 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -74,18 +74,18 @@ import com.syrus.util.ApplicationProperties;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/05/13 17:47:53 $
+ * @version $Revision: 1.10 $, $Date: 2005/05/18 13:34:16 $
  * @module msherver_v1
  */
 final class DatabaseContextSetup {
-	public static final String KEY_GENERAL_POOL_SIZE = "GeneralPoolSize"; //$NON-NLS-1$
-	public static final String KEY_ADMINISTRATION_POOL_SIZE = "AdministrationPoolSize"; //$NON-NLS-1$
-	public static final String KEY_CONFIGURATION_POOL_SIZE = "ConfigurationPoolSize"; //$NON-NLS-1$
-	public static final String KEY_MEASUREMENT_POOL_SIZE = "MeasurementPoolSize"; //$NON-NLS-1$
-	public static final String KEY_MAP_POOL_SIZE = "MapPoolSize"; //$NON-NLS-1$
-	public static final String KEY_SCHEME_POOL_SIZE = "SchemePoolSize"; //$NON-NLS-1$
-	public static final String KEY_REFRESH_TIMEOUT = "RefreshTimeout"; //$NON-NLS-1$
-	public static final String KEY_DATABASE_LOADER_ONLY = "DatabaseLoaderOnly"; //$NON-NLS-1$
+	public static final String KEY_GENERAL_POOL_SIZE = "GeneralPoolSize";
+	public static final String KEY_ADMINISTRATION_POOL_SIZE = "AdministrationPoolSize";
+	public static final String KEY_CONFIGURATION_POOL_SIZE = "ConfigurationPoolSize";
+	public static final String KEY_MEASUREMENT_POOL_SIZE = "MeasurementPoolSize";
+	public static final String KEY_MAP_POOL_SIZE = "MapPoolSize";
+	public static final String KEY_SCHEME_POOL_SIZE = "SchemePoolSize";
+	public static final String KEY_REFRESH_TIMEOUT = "RefreshTimeout";
+	public static final String KEY_DATABASE_LOADER_ONLY = "DatabaseLoaderOnly";
 
 	
 	public static final int DEFAULT_GENERAL_POOL_SIZE = 1000;
@@ -117,7 +117,7 @@ final class DatabaseContextSetup {
 				new MeasurementPortTypeDatabase(),
 				new LinkTypeDatabase(),
 				new CableLinkTypeDatabase(),
-				new CableThreadTypeDatabase(),										  
+				new CableThreadTypeDatabase(),										
 				new EquipmentDatabase(),
 				new PortDatabase(),
 				new MeasurementPortDatabase(),
@@ -160,7 +160,7 @@ final class DatabaseContextSetup {
 		final int administrationPoolSize = ApplicationProperties.getInt(KEY_ADMINISTRATION_POOL_SIZE, DEFAULT_ADMINISTRATION_POOL_SIZE);
 		final int configurationPoolSize = ApplicationProperties.getInt(KEY_CONFIGURATION_POOL_SIZE, DEFAULT_CONFIGURATION_POOL_SIZE);
 		final int mapPoolSize = ApplicationProperties.getInt(KEY_MAP_POOL_SIZE, DEFAULT_MAP_POOL_SIZE);
-		final int schemePoolSize = ApplicationProperties.getInt(KEY_SCHEME_POOL_SIZE, DEFAULT_SCHEME_POOL_SIZE); 
+		final int schemePoolSize = ApplicationProperties.getInt(KEY_SCHEME_POOL_SIZE, DEFAULT_SCHEME_POOL_SIZE);
 
 		GeneralStorableObjectPool.init(new DatabaseGeneralObjectLoader(), generalPoolSize);
 		AdministrationStorableObjectPool.init(new DatabaseAdministrationObjectLoader(), administrationPoolSize);

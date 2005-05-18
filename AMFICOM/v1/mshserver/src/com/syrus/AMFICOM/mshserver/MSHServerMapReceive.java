@@ -1,5 +1,5 @@
 /*-
- * $Id: MSHServerMapReceive.java,v 1.3 2005/05/13 17:47:53 bass Exp $
+ * $Id: MSHServerMapReceive.java,v 1.4 2005/05/18 13:34:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,13 +15,13 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.Map;
-import com.syrus.AMFICOM.map.MapStorableObjectPool;
 import com.syrus.AMFICOM.map.Mark;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
@@ -46,177 +46,23 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/05/13 17:47:53 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/18 13:34:16 $
  * @module mshserver_v1
  */
 abstract class MSHServerMapReceive extends SchemeStorableObjectFactory implements MSHServerOperations {
 	final StorableObject_Transferable[] getListHeaders(final Set storableObjects) {
 		StorableObject_Transferable headers[] = new StorableObject_Transferable[storableObjects.size()];
 		int i = 0;
-		for (final Iterator storableObjectIterator = storableObjects.iterator(); storableObjectIterator.hasNext(); i++) 
+		for (final Iterator storableObjectIterator = storableObjects.iterator(); storableObjectIterator.hasNext(); i++)
 			headers[i] = ((StorableObject) storableObjectIterator.next()).getHeaderTransferable();
 		return headers;
 	}
-
-	abstract StorableObject_Transferable receiveStorableObject(
-			final StorableObject storableObject,
-			final SessionKey_Transferable sessionKey, 
-			final boolean force)
-			throws AMFICOMRemoteException;
 
 	abstract StorableObject_Transferable[] receiveStorableObjects(
 			final Set storableObjects,
 			final SessionKey_Transferable sessionKey,
 			final boolean force)
 			throws AMFICOMRemoteException;
-
-	/*-********************************************************************
-	 * Map -- receive a single object.                                    *
-	 **********************************************************************/
-
-	public final StorableObject_Transferable receiveSiteNode(
-			final SiteNode_Transferable siteNode,
-			final boolean force,
-			final SessionKey_Transferable sessionKey)
-			throws AMFICOMRemoteException {
-		try {
-			return receiveStorableObject(newSiteNode(siteNode), sessionKey, force);
-		} catch (final CreateObjectException coe) {
-			Log.errorException(coe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
-		} catch (final Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
-	}
-
-	public final StorableObject_Transferable receiveTopologicalNode(
-			final TopologicalNode_Transferable topologicalNode,
-			final boolean force,
-			final SessionKey_Transferable sessionKey)
-			throws AMFICOMRemoteException {
-		try {
-			return receiveStorableObject(newTopologicalNode(topologicalNode), sessionKey, force);
-		} catch (final CreateObjectException coe) {
-			Log.errorException(coe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
-		} catch (final Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
-	}
-
-	public final StorableObject_Transferable receiveNodeLink(
-			final NodeLink_Transferable nodeLink,
-			final boolean force,
-			final SessionKey_Transferable sessionKey)
-			throws AMFICOMRemoteException {
-		try {
-			return receiveStorableObject(newNodeLink(nodeLink), sessionKey, force);
-		} catch (final CreateObjectException coe) {
-			Log.errorException(coe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
-		} catch (final Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
-	}
-
-	public final StorableObject_Transferable receiveMark(
-			final Mark_Transferable mark,
-			final boolean force,
-			final SessionKey_Transferable sessionKey)
-			throws AMFICOMRemoteException {
-		try {
-			return receiveStorableObject(newMark(mark), sessionKey, force);
-		} catch (final CreateObjectException coe) {
-			Log.errorException(coe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
-		} catch (final Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
-	}
-
-	public final StorableObject_Transferable receivePhysicalLink(
-			final PhysicalLink_Transferable physicalLink,
-			final boolean force,
-			final SessionKey_Transferable sessionKey)
-			throws AMFICOMRemoteException {
-		try {
-			return receiveStorableObject(newPhysicalLink(physicalLink), sessionKey, force);
-		} catch (final CreateObjectException coe) {
-			Log.errorException(coe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
-		} catch (final Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
-	}
-
-	public final StorableObject_Transferable receiveCollector(
-			final Collector_Transferable collector,
-			final boolean force,
-			final SessionKey_Transferable sessionKey)
-			throws AMFICOMRemoteException {
-		try {
-			return receiveStorableObject(newCollector(collector), sessionKey, force);
-		} catch (final CreateObjectException coe) {
-			Log.errorException(coe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
-		} catch (final Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
-	}
-
-	public final StorableObject_Transferable receiveMap(
-			final Map_Transferable map,
-			final boolean force,
-			final SessionKey_Transferable sessionKey)
-			throws AMFICOMRemoteException {
-		try {
-			return receiveStorableObject(newMap(map), sessionKey, force);
-		} catch (final CreateObjectException coe) {
-			Log.errorException(coe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
-		} catch (final Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
-	}
-
-	public final StorableObject_Transferable receiveSiteNodeType(
-			final SiteNodeType_Transferable siteNodeType,
-			final boolean force,
-			final SessionKey_Transferable sessionKey)
-			throws AMFICOMRemoteException {
-		try {
-			return receiveStorableObject(newSiteNodeType(siteNodeType), sessionKey, force);
-		} catch (final CreateObjectException coe) {
-			Log.errorException(coe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
-		} catch (final Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
-	}
-
-	public final StorableObject_Transferable receivePhysicalLinkType(
-			final PhysicalLinkType_Transferable physicalLinkType,
-			final boolean force,
-			final SessionKey_Transferable sessionKey)
-			throws AMFICOMRemoteException {
-		try {
-			return receiveStorableObject(newPhysicalLinkType(physicalLinkType), sessionKey, force);
-		} catch (final CreateObjectException coe) {
-			Log.errorException(coe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
-		} catch (final Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
-	}
 
 	/*-********************************************************************
 	 * Map -- receive multiple objects.                                   *
@@ -231,7 +77,7 @@ abstract class MSHServerMapReceive extends SchemeStorableObjectFactory implement
 			final Set siteNodes1 = new HashSet(siteNodes.length);
 			for (int i = 0; i < siteNodes.length; i++) {
 				final SiteNode siteNode = newSiteNode(siteNodes[i]);
-				MapStorableObjectPool.putStorableObject(siteNode);
+				StorableObjectPool.putStorableObject(siteNode);
 				siteNodes1.add(siteNode);
 			}
 			return receiveStorableObjects(siteNodes1, sessionKey, force);
@@ -256,7 +102,7 @@ abstract class MSHServerMapReceive extends SchemeStorableObjectFactory implement
 			final Set topologicalNodes1 = new HashSet(topologicalNodes.length);
 			for (int i = 0; i < topologicalNodes.length; i++) {
 				final TopologicalNode topologicalNode = newTopologicalNode(topologicalNodes[i]);
-				MapStorableObjectPool.putStorableObject(topologicalNode);
+				StorableObjectPool.putStorableObject(topologicalNode);
 				topologicalNodes1.add(topologicalNode);
 			}
 			return receiveStorableObjects(topologicalNodes1, sessionKey, force);
@@ -281,7 +127,7 @@ abstract class MSHServerMapReceive extends SchemeStorableObjectFactory implement
 			final Set nodeLinks1 = new HashSet(nodeLinks.length);
 			for (int i = 0; i < nodeLinks.length; i++) {
 				final NodeLink nodeLink = newNodeLink(nodeLinks[i]);
-				MapStorableObjectPool.putStorableObject(nodeLink);
+				StorableObjectPool.putStorableObject(nodeLink);
 				nodeLinks1.add(nodeLink);
 			}
 			return receiveStorableObjects(nodeLinks1, sessionKey, force);
@@ -306,7 +152,7 @@ abstract class MSHServerMapReceive extends SchemeStorableObjectFactory implement
 			final Set marks1 = new HashSet(marks.length);
 			for (int i = 0; i < marks.length; i++) {
 				final Mark mark = newMark(marks[i]);
-				MapStorableObjectPool.putStorableObject(mark);
+				StorableObjectPool.putStorableObject(mark);
 				marks1.add(mark);
 			}
 			return receiveStorableObjects(marks1, sessionKey, force);
@@ -331,7 +177,7 @@ abstract class MSHServerMapReceive extends SchemeStorableObjectFactory implement
 			final Set physicalLinks1 = new HashSet(physicalLinks.length);
 			for (int i = 0; i < physicalLinks.length; i++) {
 				final PhysicalLink physicalLink = newPhysicalLink(physicalLinks[i]);
-				MapStorableObjectPool.putStorableObject(physicalLink);
+				StorableObjectPool.putStorableObject(physicalLink);
 				physicalLinks1.add(physicalLink);
 			}
 			return receiveStorableObjects(physicalLinks1, sessionKey, force);
@@ -356,7 +202,7 @@ abstract class MSHServerMapReceive extends SchemeStorableObjectFactory implement
 			final Set collectors1 = new HashSet(collectors.length);
 			for (int i = 0; i < collectors.length; i++) {
 				final Collector collector = newCollector(collectors[i]);
-				MapStorableObjectPool.putStorableObject(collector);
+				StorableObjectPool.putStorableObject(collector);
 				collectors1.add(collector);
 			}
 			return receiveStorableObjects(collectors1, sessionKey, force);
@@ -381,7 +227,7 @@ abstract class MSHServerMapReceive extends SchemeStorableObjectFactory implement
 			final Set maps1 = new HashSet(maps.length);
 			for (int i = 0; i < maps.length; i++) {
 				final Map map = newMap(maps[i]);
-				MapStorableObjectPool.putStorableObject(map);
+				StorableObjectPool.putStorableObject(map);
 				maps1.add(map);
 			}
 			return receiveStorableObjects(maps1, sessionKey, force);
@@ -406,7 +252,7 @@ abstract class MSHServerMapReceive extends SchemeStorableObjectFactory implement
 			final Set siteNodeTypes1 = new HashSet(siteNodeTypes.length);
 			for (int i = 0; i < siteNodeTypes.length; i++) {
 				final SiteNodeType siteNodeType = newSiteNodeType(siteNodeTypes[i]);
-				MapStorableObjectPool.putStorableObject(siteNodeType);
+				StorableObjectPool.putStorableObject(siteNodeType);
 				siteNodeTypes1.add(siteNodeType);
 			}
 			return receiveStorableObjects(siteNodeTypes1, sessionKey, force);
@@ -431,7 +277,7 @@ abstract class MSHServerMapReceive extends SchemeStorableObjectFactory implement
 			final Set physicalLinkTypes1 = new HashSet(physicalLinkTypes.length);
 			for (int i = 0; i < physicalLinkTypes.length; i++) {
 				final PhysicalLinkType physicalLinkType = newPhysicalLinkType(physicalLinkTypes[i]);
-				MapStorableObjectPool.putStorableObject(physicalLinkType);
+				StorableObjectPool.putStorableObject(physicalLinkType);
 				physicalLinkTypes1.add(physicalLinkType);
 			}
 			return receiveStorableObjects(physicalLinkTypes1, sessionKey, force);

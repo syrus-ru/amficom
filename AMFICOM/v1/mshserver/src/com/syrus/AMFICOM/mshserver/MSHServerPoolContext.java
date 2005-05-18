@@ -1,5 +1,5 @@
 /*-
- * $Id: MSHServerPoolContext.java,v 1.1 2005/05/13 17:47:53 bass Exp $
+ * $Id: MSHServerPoolContext.java,v 1.2 2005/05/18 13:34:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,17 +19,17 @@ import com.syrus.util.ApplicationProperties;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/05/13 17:47:53 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/18 13:34:16 $
  * @module mshserver_v1
  */
 final class MSHServerPoolContext extends PoolContext {
-	public static final String KEY_MAP_POOL_SIZE = "MapPoolSize"; //$NON-NLS-1$
+	public static final String KEY_MAP_POOL_SIZE = "MapPoolSize";
 
-	public static final String KEY_SCHEME_POOL_SIZE = "SchemePoolSize"; //$NON-NLS-1$
+	public static final String KEY_SCHEME_POOL_SIZE = "SchemePoolSize";
 
-	public static final String KEY_REFRESH_TIMEOUT = "RefreshPoolTimeout"; //$NON-NLS-1$
+	public static final String KEY_REFRESH_TIMEOUT = "RefreshPoolTimeout";
 
-	public static final String KEY_DATABASE_LOADER_ONLY = "DatabaseLoaderOnly"; //$NON-NLS-1$
+	public static final String KEY_DATABASE_LOADER_ONLY = "DatabaseLoaderOnly";
 
 	public static final int MAP_POOL_SIZE = 1000;
 
@@ -40,7 +40,7 @@ final class MSHServerPoolContext extends PoolContext {
 	 */
 	public static final int REFRESH_TIMEOUT = 5;
 
-	public static final String DATABASE_LOADER_ONLY = "false"; //$NON-NLS-1$
+	public static final String DATABASE_LOADER_ONLY = "false";
 
 	/**
 	 * @see com.syrus.AMFICOM.general.PoolContext#init()

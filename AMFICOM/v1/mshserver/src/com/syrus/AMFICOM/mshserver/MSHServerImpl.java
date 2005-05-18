@@ -1,5 +1,5 @@
 /*-
- * $Id: MSHServerImpl.java,v 1.10 2005/05/13 17:47:53 bass Exp $
+ * $Id: MSHServerImpl.java,v 1.11 2005/05/18 13:34:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,8 +9,6 @@
 package com.syrus.AMFICOM.mshserver;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
@@ -19,11 +17,11 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectGroupEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
@@ -34,7 +32,6 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapDatabaseContext;
-import com.syrus.AMFICOM.map.MapStorableObjectPool;
 import com.syrus.AMFICOM.map.Mark;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
@@ -52,7 +49,6 @@ import com.syrus.AMFICOM.map.corba.SiteNodeType_Transferable;
 import com.syrus.AMFICOM.map.corba.SiteNode_Transferable;
 import com.syrus.AMFICOM.map.corba.TopologicalNode_Transferable;
 import com.syrus.AMFICOM.scheme.SchemeDatabaseContext;
-import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.AMFICOM.security.SessionKey;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
@@ -62,10 +58,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.omg.CORBA.portable.IDLEntity;
-
 /**
- * @version $Revision: 1.10 $, $Date: 2005/05/13 17:47:53 $
+ * @version $Revision: 1.11 $, $Date: 2005/05/18 13:34:16 $
  * @author $Author: bass $
  * @module mshserver_1
  */
@@ -78,27 +72,27 @@ public final class MSHServerImpl extends MSHServerSchemeTransmit {
 
 	public Identifier_Transferable getGeneratedIdentifier(short entityCode) throws AMFICOMRemoteException {
 		try {
-			Log.debugMessage("MSHServerImpl.getGeneratedIdentifier | generate new Identifer for " //$NON-NLS-1$
+			Log.debugMessage("MSHServerImpl.getGeneratedIdentifier | generate new Identifer for "
 					+ ObjectEntities.codeToString(entityCode), Log.DEBUGLEVEL07);
 			Identifier identifier = IdentifierGenerator.generateIdentifier(entityCode);
 			return (Identifier_Transferable) identifier.getTransferable();
 		} catch (IllegalObjectEntityException ioee) {
 			Log.errorException(ioee);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO,
-												"Illegal object entity: '" + ObjectEntities.codeToString(entityCode) //$NON-NLS-1$
-														+ "'"); //$NON-NLS-1$
+												"Illegal object entity: '" + ObjectEntities.codeToString(entityCode)
+														+ "'");
 		} catch (IdentifierGenerationException ige) {
 			Log.errorException(ige);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO,
-												"Cannot create major/minor entries of identifier for entity: '" //$NON-NLS-1$
-														+ ObjectEntities.codeToString(entityCode) + "' -- " //$NON-NLS-1$
+												"Cannot create major/minor entries of identifier for entity: '"
+														+ ObjectEntities.codeToString(entityCode) + "' -- "
 														+ ige.getMessage());
 		}
 	}
 
 	public Identifier_Transferable[] getGeneratedIdentifierRange(short entityCode, int size)
 			throws AMFICOMRemoteException {
-		Log.debugMessage("MSHServerImpl.getGeneratedIdentifierRange | generate new Identifer range " + size + " for " //$NON-NLS-1$ //$NON-NLS-2$
+		Log.debugMessage("MSHServerImpl.getGeneratedIdentifierRange | generate new Identifer range " + size + " for "
 				+ ObjectEntities.codeToString(entityCode), Log.DEBUGLEVEL07);
 		try {
 			Identifier[] identifiers = IdentifierGenerator.generateIdentifierRange(entityCode, size);
@@ -109,40 +103,23 @@ public final class MSHServerImpl extends MSHServerSchemeTransmit {
 		} catch (IllegalObjectEntityException ioee) {
 			Log.errorException(ioee);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO,
-												"Illegal object entity: '" + ObjectEntities.codeToString(entityCode) //$NON-NLS-1$
-														+ "'"); //$NON-NLS-1$
+												"Illegal object entity: '" + ObjectEntities.codeToString(entityCode)
+														+ "'");
 		} catch (IdentifierGenerationException ige) {
 			Log.errorException(ige);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO,
-												"Cannot create major/minor entries of identifier for entity: '" //$NON-NLS-1$
-														+ ObjectEntities.codeToString(entityCode) + "' -- " //$NON-NLS-1$
+												"Cannot create major/minor entries of identifier for entity: '"
+														+ ObjectEntities.codeToString(entityCode) + "' -- "
 														+ ige.getMessage());
 		}
 	}
 
-	public void delete(final Identifier_Transferable id,
+	public void delete(final Identifier_Transferable ids[],
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		final Identifier id1 = new Identifier(id);
-		Log.debugMessage("MSHServerImpl.delete | Trying to delete object '" //$NON-NLS-1$
-				+ id1 + "' as requested by user '" //$NON-NLS-1$
-				+ (new SessionKey(sessionKey)).getUserId() + '\'',
-				Log.INFO);
-		final short entityCode = id1.getMajor();
-		if (ObjectGroupEntities.isInMapGroup(entityCode))
-			MapStorableObjectPool.delete(id1);
-		else if (ObjectGroupEntities.isInSchemeGroup(entityCode))
-			SchemeStorableObjectPool.delete(id1);
-		else
-			Log.errorMessage("MSHServerImpl.delete | Wrong entity code: " + entityCode); //$NON-NLS-1$
-	}
-
-	public void deleteList(final Identifier_Transferable ids[],
-			final SessionKey_Transferable sessionKey)
-			throws AMFICOMRemoteException {
-		Log.debugMessage("MSHServerImpl.deleteList | Trying to delete " //$NON-NLS-1$
+		Log.debugMessage("MSHServerImpl.deleteList | Trying to delete "
 				+ ids.length
-				+ " object(s) as requested by user '" //$NON-NLS-1$
+				+ " object(s) as requested by user '"
 				+ (new SessionKey(sessionKey)).getUserId()
 				+ '\'', Log.INFO);
 		final Set ids1 = Identifier.fromTransferables(ids);
@@ -156,59 +133,10 @@ public final class MSHServerImpl extends MSHServerSchemeTransmit {
 			else if (ObjectGroupEntities.isInSchemeGroup(entityCode))
 				schemeIds.add(id);
 			else
-				Log.errorMessage("MSHServerImpl.deleteList | Wrong entity code: " + entityCode); //$NON-NLS-1$
+				Log.errorMessage("MSHServerImpl.deleteList | Wrong entity code: " + entityCode);
 		}
-		MapStorableObjectPool.delete(mapIds);
-		SchemeStorableObjectPool.delete(schemeIds);
-	}
-
-	/**
-	 * @param storableObject
-	 * @param sessionKey
-	 * @param force
-	 * @throws AMFICOMRemoteException
-	 * @see MSHServerMapReceive#receiveStorableObject(StorableObject, SessionKey_Transferable, boolean)
-	 */
-	StorableObject_Transferable receiveStorableObject(
-			final StorableObject storableObject,
-			final SessionKey_Transferable sessionKey, 
-			final boolean force)
-			throws AMFICOMRemoteException {
-		try {
-			final short entityCode = storableObject.getId().getMajor();
-			final Identifier userId = (new SessionKey(sessionKey)).getUserId();
-			Log.debugMessage("MSHServerImpl.receiveStorableObject | Receiving a(n) " //$NON-NLS-1$
-					+ ObjectEntities.codeToString(entityCode)
-					+ " as requested by user '" + userId + '\'', //$NON-NLS-1$
-					Log.INFO);
-			StorableObjectDatabase storableObjectDatabase = null;
-			if (ObjectGroupEntities.isInMapGroup(entityCode)) {
-				storableObjectDatabase = MapDatabaseContext.getDatabase(entityCode);
-				MapStorableObjectPool.putStorableObject(storableObject);
-			} else if (ObjectGroupEntities.isInSchemeGroup(entityCode)) {
-				storableObjectDatabase = SchemeDatabaseContext.getDatabase(entityCode);
-				SchemeStorableObjectPool.putStorableObject(storableObject);
-			} else
-				assert false;
-			storableObjectDatabase.update(storableObject,
-					userId,
-					force
-						? StorableObjectDatabase.UPDATE_FORCE
-						: StorableObjectDatabase.UPDATE_CHECK);
-			return storableObject.getHeaderTransferable();
-		} catch (final UpdateObjectException uoe) {
-			Log.errorException(uoe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, uoe.getMessage());
-		} catch (final IllegalObjectEntityException ioee) {
-			Log.errorException(ioee);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, ioee.getMessage());
-		} catch (final VersionCollisionException vce) {
-			Log.errorException(vce);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_VERSION_COLLISION, CompletionStatus.COMPLETED_NO, vce.getMessage());
-		} catch (final Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
+		StorableObjectPool.delete(mapIds);
+		StorableObjectPool.delete(schemeIds);
 	}
 
 	/**
@@ -229,10 +157,10 @@ public final class MSHServerImpl extends MSHServerSchemeTransmit {
 			assert StorableObject.hasSingleTypeEntities(storableObjects);
 			final short entityCode = StorableObject.getEntityCodeOfIdentifiables(storableObjects);
 			final Identifier userId = (new SessionKey(sessionKey)).getUserId();
-			Log.debugMessage("MSHServerImpl.receiveStorableObjects | Receiving " //$NON-NLS-1$
+			Log.debugMessage("MSHServerImpl.receiveStorableObjects | Receiving "
 					+ storableObjects.size() + ' '
 					+ ObjectEntities.codeToString(entityCode)
-					+ "(s) as requested by user '" + userId + '\'', ///$NON-NLS-1$
+					+ "(s) as requested by user '" + userId + '\'',
 					Log.INFO);
 			StorableObjectDatabase storableObjectDatabase = null;
 			if (ObjectGroupEntities.isInMapGroup(entityCode))
@@ -259,51 +187,6 @@ public final class MSHServerImpl extends MSHServerSchemeTransmit {
 		}
 	}
 
-	/**
-	 * @param id
-	 * @param sessionKey
-	 * @throws AMFICOMRemoteException
-	 * @see MSHServerMapTransmit#transmitStorableObject(Identifier_Transferable, SessionKey_Transferable)
-	 */
-	IDLEntity transmitStorableObject(
-			final Identifier_Transferable id,
-			final SessionKey_Transferable sessionKey)
-			throws AMFICOMRemoteException {
-		try {
-			final Identifier id1 = new Identifier(id);
-			final short entityCode = id1.getMajor();
-			final Identifier userId = (new SessionKey(sessionKey)).getUserId();
-			Log.debugMessage("MSHServerImpl.transmitStorableObject | Transmitting a(n) " //$NON-NLS-1$
-					+ ObjectEntities.codeToString(entityCode)
-					+ " as requested by user '" + userId + '\'', //$NON-NLS-1$
-					Log.INFO);
-			StorableObject storableObject = null;
-			if (ObjectGroupEntities.isInMapGroup(entityCode))
-				storableObject = MapStorableObjectPool.getStorableObject(id1, true);
-			else if (ObjectGroupEntities.isInSchemeGroup(entityCode))
-				storableObject = SchemeStorableObjectPool.getStorableObject(id1, true);
-			else
-				assert false;
-			return storableObject.getTransferable();
-		} catch (final ObjectNotFoundException onfe) {
-			Log.errorException(onfe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES, onfe.getMessage());
-		} catch (final RetrieveObjectException roe) {
-			Log.errorException(roe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
-		} catch (final CommunicationException ce) {
-			Log.errorException(ce);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ce.getMessage());
-		} catch (final DatabaseException de) {
-			Log.errorException(de);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, de.getMessage());
-		} catch (final Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
-	}
-
-
 	private Collection transmitObjects(Identifier_Transferable[] ids_Transferable, StorableObjectCondition condition)
 			throws AMFICOMRemoteException {
 		try {
@@ -313,9 +196,9 @@ public final class MSHServerImpl extends MSHServerSchemeTransmit {
 				for (int i = 0; i < ids_Transferable.length; i++)
 					idsList.add(new Identifier(ids_Transferable[i]));
 
-				collection = MapStorableObjectPool.getStorableObjects(idsList, true);
+				collection = StorableObjectPool.getStorableObjects(idsList, true);
 			} else
-				collection = MapStorableObjectPool.getStorableObjectsByCondition(condition, true);
+				collection = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 
 			return collection;
 
@@ -342,9 +225,9 @@ public final class MSHServerImpl extends MSHServerSchemeTransmit {
 			throws AMFICOMRemoteException {
 		Identifier domainId = new Identifier(sessionKey.domain_id);
 
-		Log.debugMessage("MSHServerImpl.transmitSiteNodes | requiere " //$NON-NLS-1$
-				+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length)) //$NON-NLS-1$
-				+ " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07); //$NON-NLS-1$
+		Log.debugMessage("MSHServerImpl.transmitSiteNodes | requiere "
+				+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length))
+				+ " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
 
 		StorableObjectCondition condition = new EquivalentCondition(ObjectEntities.SITE_NODE_ENTITY_CODE);
 		Collection collection = this.transmitObjects(ids_Transferable, condition);
@@ -365,9 +248,9 @@ public final class MSHServerImpl extends MSHServerSchemeTransmit {
 			throws AMFICOMRemoteException {
 		Identifier domainId = new Identifier(sessionKey.domain_id);
 
-		Log.debugMessage("MSHServerImpl.transmitTopologicalNodes | requiere " //$NON-NLS-1$
-				+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length)) //$NON-NLS-1$
-				+ " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07); //$NON-NLS-1$
+		Log.debugMessage("MSHServerImpl.transmitTopologicalNodes | requiere "
+				+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length))
+				+ " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
 
 		StorableObjectCondition condition = new EquivalentCondition(ObjectEntities.TOPOLOGICAL_NODE_ENTITY_CODE);
 		Collection collection = this.transmitObjects(ids_Transferable, condition);
@@ -388,9 +271,9 @@ public final class MSHServerImpl extends MSHServerSchemeTransmit {
 			throws AMFICOMRemoteException {
 		Identifier domainId = new Identifier(sessionKey.domain_id);
 
-		Log.debugMessage("MSHServerImpl.transmitNodeLinks | requiere " //$NON-NLS-1$
-				+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length)) //$NON-NLS-1$
-				+ " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07); //$NON-NLS-1$
+		Log.debugMessage("MSHServerImpl.transmitNodeLinks | requiere "
+				+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length))
+				+ " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
 
 		StorableObjectCondition condition = new EquivalentCondition(ObjectEntities.NODE_LINK_ENTITY_CODE);
 		Collection collection = this.transmitObjects(ids_Transferable, condition);
@@ -411,9 +294,9 @@ public final class MSHServerImpl extends MSHServerSchemeTransmit {
 			throws AMFICOMRemoteException {
 		Identifier domainId = new Identifier(sessionKey.domain_id);
 
-		Log.debugMessage("MSHServerImpl.transmitMarks | requiere " //$NON-NLS-1$
-				+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length)) //$NON-NLS-1$
-				+ " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07); //$NON-NLS-1$
+		Log.debugMessage("MSHServerImpl.transmitMarks | requiere "
+				+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length))
+				+ " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
 
 		StorableObjectCondition condition = new EquivalentCondition(ObjectEntities.MARK_ENTITY_CODE);
 		Collection collection = this.transmitObjects(ids_Transferable, condition);
@@ -434,9 +317,9 @@ public final class MSHServerImpl extends MSHServerSchemeTransmit {
 			throws AMFICOMRemoteException {
 		Identifier domainId = new Identifier(sessionKey.domain_id);
 
-		Log.debugMessage("MSHServerImpl.transmitPhysicalLinks | requiere " //$NON-NLS-1$
-				+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length)) //$NON-NLS-1$
-				+ " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07); //$NON-NLS-1$
+		Log.debugMessage("MSHServerImpl.transmitPhysicalLinks | requiere "
+				+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length))
+				+ " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
 
 		StorableObjectCondition condition = new EquivalentCondition(ObjectEntities.MARK_ENTITY_CODE);
 		Collection collection = this.transmitObjects(ids_Transferable, condition);
@@ -457,9 +340,9 @@ public final class MSHServerImpl extends MSHServerSchemeTransmit {
 			throws AMFICOMRemoteException {
 		Identifier domainId = new Identifier(sessionKey.domain_id);
 
-		Log.debugMessage("MSHServerImpl.transmitCollectors | requiere " //$NON-NLS-1$
-				+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length)) //$NON-NLS-1$
-				+ " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07); //$NON-NLS-1$
+		Log.debugMessage("MSHServerImpl.transmitCollectors | requiere "
+				+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length))
+				+ " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
 
 		StorableObjectCondition condition = new EquivalentCondition(ObjectEntities.COLLECTOR_ENTITY_CODE);
 		Collection collection = this.transmitObjects(ids_Transferable, condition);
@@ -480,9 +363,9 @@ public final class MSHServerImpl extends MSHServerSchemeTransmit {
 			throws AMFICOMRemoteException {
 		Identifier domainId = new Identifier(sessionKey.domain_id);
 
-		Log.debugMessage("MSHServerImpl.transmitMaps | requiere " //$NON-NLS-1$
-				+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length)) //$NON-NLS-1$
-				+ " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07); //$NON-NLS-1$
+		Log.debugMessage("MSHServerImpl.transmitMaps | requiere "
+				+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length))
+				+ " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
 
 		StorableObjectCondition condition = new EquivalentCondition(ObjectEntities.MAP_ENTITY_CODE);
 		Collection collection = this.transmitObjects(ids_Transferable, condition);
@@ -503,9 +386,9 @@ public final class MSHServerImpl extends MSHServerSchemeTransmit {
 			throws AMFICOMRemoteException {
 		Identifier domainId = new Identifier(sessionKey.domain_id);
 
-		Log.debugMessage("MSHServerImpl.transmitSiteNodeTypes | requiere " //$NON-NLS-1$
-				+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length)) //$NON-NLS-1$
-				+ " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07); //$NON-NLS-1$
+		Log.debugMessage("MSHServerImpl.transmitSiteNodeTypes | requiere "
+				+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length))
+				+ " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
 
 		StorableObjectCondition condition = new EquivalentCondition(ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE);
 		Collection collection = this.transmitObjects(ids_Transferable, condition);
@@ -526,9 +409,9 @@ public final class MSHServerImpl extends MSHServerSchemeTransmit {
 			throws AMFICOMRemoteException {
 		Identifier domainId = new Identifier(sessionKey.domain_id);
 
-		Log.debugMessage("MSHServerImpl.transmitPhysicalLinkTypes | requiere " //$NON-NLS-1$
-				+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length)) //$NON-NLS-1$
-				+ " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07); //$NON-NLS-1$
+		Log.debugMessage("MSHServerImpl.transmitPhysicalLinkTypes | requiere "
+				+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length))
+				+ " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
 
 		StorableObjectCondition condition = new EquivalentCondition(ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE);
 		Collection collection = this.transmitObjects(ids_Transferable, condition);

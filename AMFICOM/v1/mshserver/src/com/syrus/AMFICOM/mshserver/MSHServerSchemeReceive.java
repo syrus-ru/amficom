@@ -1,5 +1,5 @@
 /*-
- * $Id: MSHServerSchemeReceive.java,v 1.3 2005/05/13 17:47:53 bass Exp $
+ * $Id: MSHServerSchemeReceive.java,v 1.4 2005/05/18 13:34:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
@@ -33,7 +34,6 @@ import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.AMFICOM.scheme.SchemePort;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.AMFICOM.scheme.SchemeProtoGroup;
-import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.AMFICOM.scheme.corba.CableChannelingItem_Transferable;
 import com.syrus.AMFICOM.scheme.corba.PathElement_Transferable;
 import com.syrus.AMFICOM.scheme.corba.SchemeCableLink_Transferable;
@@ -55,341 +55,10 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/05/13 17:47:53 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/18 13:34:16 $
  * @module mshserver_v1
  */
 abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
-	/*-********************************************************************
-	 * Scheme -- receive a single object.                                 *
-	 **********************************************************************/
-
-	/**
-	 * @param schemeProtoGroup
-	 * @param force
-	 * @param sessionKey
-	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receiveSchemeProtoGroup(SchemeProtoGroup_Transferable, boolean, SessionKey_Transferable)
-	 */
-	public final StorableObject_Transferable receiveSchemeProtoGroup(
-			final SchemeProtoGroup_Transferable schemeProtoGroup,
-			final boolean force,
-			final SessionKey_Transferable sessionKey)
-			throws AMFICOMRemoteException {
-		try {
-			return receiveStorableObject(newSchemeProtoGroup(schemeProtoGroup), sessionKey, force);
-		} catch (final Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
-	}
-
-	/**
-	 * @param schemeProtoElement
-	 * @param force
-	 * @param sessionKey
-	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receiveSchemeProtoElement(SchemeProtoElement_Transferable, boolean, SessionKey_Transferable)
-	 */
-	public final StorableObject_Transferable receiveSchemeProtoElement(
-			final SchemeProtoElement_Transferable schemeProtoElement,
-			final boolean force,
-			final SessionKey_Transferable sessionKey)
-			throws AMFICOMRemoteException {
-		try {
-			return receiveStorableObject(newSchemeProtoElement(schemeProtoElement), sessionKey, force);
-		} catch (final CreateObjectException coe) {
-			Log.errorException(coe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
-		} catch (final Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
-	}
-
-	/**
-	 * @param scheme
-	 * @param force
-	 * @param sessionKey
-	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receiveScheme(Scheme_Transferable, boolean, SessionKey_Transferable)
-	 */
-	public final StorableObject_Transferable receiveScheme(
-			final Scheme_Transferable scheme,
-			final boolean force,
-			final SessionKey_Transferable sessionKey)
-			throws AMFICOMRemoteException {
-		try {
-			return receiveStorableObject(newScheme(scheme), sessionKey, force);
-		} catch (final Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
-	}
-
-	/**
-	 * @param schemeElement
-	 * @param force
-	 * @param sessionKey
-	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receiveSchemeElement(SchemeElement_Transferable, boolean, SessionKey_Transferable)
-	 */
-	public final StorableObject_Transferable receiveSchemeElement(
-			final SchemeElement_Transferable schemeElement,
-			final boolean force,
-			final SessionKey_Transferable sessionKey)
-			throws AMFICOMRemoteException {
-		try {
-			return receiveStorableObject(newSchemeElement(schemeElement), sessionKey, force);
-		} catch (final CreateObjectException coe) {
-			Log.errorException(coe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
-		} catch (final Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
-	}
-
-	/**
-	 * @param schemeOptimizeInfo
-	 * @param force
-	 * @param sessionKey
-	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receiveSchemeOptimizeInfo(SchemeOptimizeInfo_Transferable, boolean, SessionKey_Transferable)
-	 */
-	public final StorableObject_Transferable receiveSchemeOptimizeInfo(
-			final SchemeOptimizeInfo_Transferable schemeOptimizeInfo,
-			final boolean force,
-			final SessionKey_Transferable sessionKey)
-			throws AMFICOMRemoteException {
-		try {
-			return receiveStorableObject(newSchemeOptimizeInfo(schemeOptimizeInfo), sessionKey, force);
-		} catch (final Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
-	}
-
-	/**
-	 * @param schemeMonitoringSolution
-	 * @param force
-	 * @param sessionKey
-	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receiveSchemeMonitoringSolution(SchemeMonitoringSolution_Transferable, boolean, SessionKey_Transferable)
-	 */
-	public final StorableObject_Transferable receiveSchemeMonitoringSolution(
-			final SchemeMonitoringSolution_Transferable schemeMonitoringSolution,
-			final boolean force,
-			final SessionKey_Transferable sessionKey)
-			throws AMFICOMRemoteException {
-		try {
-			return receiveStorableObject(newSchemeMonitoringSolution(schemeMonitoringSolution), sessionKey, force);
-		} catch (final Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
-	}
-
-	/**
-	 * @param schemeDevice
-	 * @param force
-	 * @param sessionKey
-	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receiveSchemeDevice(SchemeDevice_Transferable, boolean, SessionKey_Transferable)
-	 */
-	public final StorableObject_Transferable receiveSchemeDevice(
-			final SchemeDevice_Transferable schemeDevice,
-			final boolean force,
-			final SessionKey_Transferable sessionKey)
-			throws AMFICOMRemoteException {
-		try {
-			return receiveStorableObject(newSchemeDevice(schemeDevice), sessionKey, force);
-		} catch (final CreateObjectException coe) {
-			Log.errorException(coe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
-		} catch (final Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
-	}
-
-	/**
-	 * @param schemePort
-	 * @param force
-	 * @param sessionKey
-	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receiveSchemePort(SchemePort_Transferable, boolean, SessionKey_Transferable)
-	 */
-	public final StorableObject_Transferable receiveSchemePort(
-			final SchemePort_Transferable schemePort,
-			final boolean force,
-			final SessionKey_Transferable sessionKey)
-			throws AMFICOMRemoteException {
-		try {
-			return receiveStorableObject(newSchemePort(schemePort), sessionKey, force);
-		} catch (final CreateObjectException coe) {
-			Log.errorException(coe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
-		} catch (final Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
-	}
-
-	/**
-	 * @param schemeCablePort
-	 * @param force
-	 * @param sessionKey
-	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receiveSchemeCablePort(SchemeCablePort_Transferable, boolean, SessionKey_Transferable)
-	 */
-	public final StorableObject_Transferable receiveSchemeCablePort(
-			final SchemeCablePort_Transferable schemeCablePort,
-			final boolean force,
-			final SessionKey_Transferable sessionKey)
-			throws AMFICOMRemoteException {
-		try {
-			return receiveStorableObject(newSchemeCablePort(schemeCablePort), sessionKey, force);
-		} catch (final CreateObjectException coe) {
-			Log.errorException(coe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
-		} catch (final Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
-	}
-
-	/**
-	 * @param schemeLink
-	 * @param force
-	 * @param sessionKey
-	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receiveSchemeLink(SchemeLink_Transferable, boolean, SessionKey_Transferable)
-	 */
-	public final StorableObject_Transferable receiveSchemeLink(
-			final SchemeLink_Transferable schemeLink,
-			final boolean force,
-			final SessionKey_Transferable sessionKey)
-			throws AMFICOMRemoteException {
-		try {
-			return receiveStorableObject(newSchemeLink(schemeLink), sessionKey, force);
-		} catch (final CreateObjectException coe) {
-			Log.errorException(coe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
-		} catch (final Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
-	}
-
-	/**
-	 * @param schemeCableLink
-	 * @param force
-	 * @param sessionKey
-	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receiveSchemeCableLink(SchemeCableLink_Transferable, boolean, SessionKey_Transferable)
-	 */
-	public final StorableObject_Transferable receiveSchemeCableLink(
-			final SchemeCableLink_Transferable schemeCableLink,
-			final boolean force,
-			final SessionKey_Transferable sessionKey)
-			throws AMFICOMRemoteException {
-		try {
-			return receiveStorableObject(newSchemeCableLink(schemeCableLink), sessionKey, force);
-		} catch (final CreateObjectException coe) {
-			Log.errorException(coe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
-		} catch (final Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
-	}
-
-	/**
-	 * @param schemeCableThread
-	 * @param force
-	 * @param sessionKey
-	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receiveSchemeCableThread(SchemeCableThread_Transferable, boolean, SessionKey_Transferable)
-	 */
-	public final StorableObject_Transferable receiveSchemeCableThread(
-			final SchemeCableThread_Transferable schemeCableThread,
-			final boolean force,
-			final SessionKey_Transferable sessionKey)
-			throws AMFICOMRemoteException {
-		try {
-			return receiveStorableObject(newSchemeCableThread(schemeCableThread), sessionKey, force);
-		} catch (final CreateObjectException coe) {
-			Log.errorException(coe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
-		} catch (final Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
-	}
-
-	/**
-	 * @param cableChannelingItem
-	 * @param force
-	 * @param sessionKey
-	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receiveCableChannelingItem(CableChannelingItem_Transferable, boolean, SessionKey_Transferable)
-	 */
-	public final StorableObject_Transferable receiveCableChannelingItem(
-			final CableChannelingItem_Transferable cableChannelingItem,
-			final boolean force,
-			final SessionKey_Transferable sessionKey)
-			throws AMFICOMRemoteException {
-		try {
-			return receiveStorableObject(newCableChannelingItem(cableChannelingItem), sessionKey, force);
-		} catch (final Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
-	}
-
-	/**
-	 * @param schemePath
-	 * @param force
-	 * @param sessionKey
-	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receiveSchemePath(SchemePath_Transferable, boolean, SessionKey_Transferable)
-	 */
-	public final StorableObject_Transferable receiveSchemePath(
-			final SchemePath_Transferable schemePath,
-			final boolean force,
-			final SessionKey_Transferable sessionKey)
-			throws AMFICOMRemoteException {
-		try {
-			return receiveStorableObject(newSchemePath(schemePath), sessionKey, force);
-		} catch (final CreateObjectException coe) {
-			Log.errorException(coe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
-		} catch (final Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
-	}
-
-	/**
-	 * @param pathElement
-	 * @param force
-	 * @param sessionKey
-	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receivePathElement(PathElement_Transferable, boolean, SessionKey_Transferable)
-	 */
-	public final StorableObject_Transferable receivePathElement(
-			final PathElement_Transferable pathElement,
-			final boolean force,
-			final SessionKey_Transferable sessionKey)
-			throws AMFICOMRemoteException {
-		try {
-			return receiveStorableObject(newPathElement(pathElement), sessionKey, force);
-		} catch (final Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
-	}
-
 	/*-********************************************************************
 	 * Scheme -- receive multiple objects.                                *
 	 **********************************************************************/
@@ -411,7 +80,7 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 			final Set schemeProtoGroups1 = new HashSet(length);
 			for (int i = 0; i < length; i++) {
 				final SchemeProtoGroup schemeProtoGroup = newSchemeProtoGroup(schemeProtoGroups[i]);
-				SchemeStorableObjectPool.putStorableObject(schemeProtoGroup);
+				StorableObjectPool.putStorableObject(schemeProtoGroup);
 				schemeProtoGroups1.add(schemeProtoGroup);
 			}
 			return receiveStorableObjects(schemeProtoGroups1, sessionKey, force);
@@ -441,7 +110,7 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 			final Set schemeProtoElements1 = new HashSet(length);
 			for (int i = 0; i < length; i++) {
 				final SchemeProtoElement schemeProtoElement = newSchemeProtoElement(schemeProtoElements[i]);
-				SchemeStorableObjectPool.putStorableObject(schemeProtoElement);
+				StorableObjectPool.putStorableObject(schemeProtoElement);
 				schemeProtoElements1.add(schemeProtoElement);
 			}
 			return receiveStorableObjects(schemeProtoElements1, sessionKey, force);
@@ -474,7 +143,7 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 			final Set schemes1 = new HashSet(length);
 			for (int i = 0; i < length; i++) {
 				final Scheme scheme = newScheme(schemes[i]);
-				SchemeStorableObjectPool.putStorableObject(scheme);
+				StorableObjectPool.putStorableObject(scheme);
 				schemes1.add(scheme);
 			}
 			return receiveStorableObjects(schemes1, sessionKey, force);
@@ -504,7 +173,7 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 			final Set schemeElements1 = new HashSet(length);
 			for (int i = 0; i < length; i++) {
 				final SchemeElement schemeElement = newSchemeElement(schemeElements[i]);
-				SchemeStorableObjectPool.putStorableObject(schemeElement);
+				StorableObjectPool.putStorableObject(schemeElement);
 				schemeElements1.add(schemeElement);
 			}
 			return receiveStorableObjects(schemeElements1, sessionKey, force);
@@ -537,7 +206,7 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 			final Set schemeOptimizeInfos1 = new HashSet(length);
 			for (int i = 0; i < length; i++) {
 				final SchemeOptimizeInfo schemeOptimizeInfo = newSchemeOptimizeInfo(schemeOptimizeInfos[i]);
-				SchemeStorableObjectPool.putStorableObject(schemeOptimizeInfo);
+				StorableObjectPool.putStorableObject(schemeOptimizeInfo);
 				schemeOptimizeInfos1.add(schemeOptimizeInfo);
 			}
 			return receiveStorableObjects(schemeOptimizeInfos1, sessionKey, force);
@@ -567,7 +236,7 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 			final Set schemeMonitoringSolutions1 = new HashSet(length);
 			for (int i = 0; i < length; i++) {
 				final SchemeMonitoringSolution schemeMonitoringSolution = newSchemeMonitoringSolution(schemeMonitoringSolutions[i]);
-				SchemeStorableObjectPool.putStorableObject(schemeMonitoringSolution);
+				StorableObjectPool.putStorableObject(schemeMonitoringSolution);
 				schemeMonitoringSolutions1.add(schemeMonitoringSolution);
 			}
 			return receiveStorableObjects(schemeMonitoringSolutions1, sessionKey, force);
@@ -597,7 +266,7 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 			final Set schemeDevices1 = new HashSet(length);
 			for (int i = 0; i < length; i++) {
 				final SchemeDevice schemeDevice = newSchemeDevice(schemeDevices[i]);
-				SchemeStorableObjectPool.putStorableObject(schemeDevice);
+				StorableObjectPool.putStorableObject(schemeDevice);
 				schemeDevices1.add(schemeDevice);
 			}
 			return receiveStorableObjects(schemeDevices1, sessionKey, force);
@@ -630,7 +299,7 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 			final Set schemePorts1 = new HashSet(length);
 			for (int i = 0; i < length; i++) {
 				final SchemePort schemePort = newSchemePort(schemePorts[i]);
-				SchemeStorableObjectPool.putStorableObject(schemePort);
+				StorableObjectPool.putStorableObject(schemePort);
 				schemePorts1.add(schemePort);
 			}
 			return receiveStorableObjects(schemePorts1, sessionKey, force);
@@ -663,7 +332,7 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 			final Set schemeCablePorts1 = new HashSet(length);
 			for (int i = 0; i < length; i++) {
 				final SchemeCablePort schemeCablePort = newSchemeCablePort(schemeCablePorts[i]);
-				SchemeStorableObjectPool.putStorableObject(schemeCablePort);
+				StorableObjectPool.putStorableObject(schemeCablePort);
 				schemeCablePorts1.add(schemeCablePort);
 			}
 			return receiveStorableObjects(schemeCablePorts1, sessionKey, force);
@@ -696,7 +365,7 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 			final Set schemeLinks1 = new HashSet(length);
 			for (int i = 0; i < length; i++) {
 				final SchemeLink schemeLink = newSchemeLink(schemeLinks[i]);
-				SchemeStorableObjectPool.putStorableObject(schemeLink);
+				StorableObjectPool.putStorableObject(schemeLink);
 				schemeLinks1.add(schemeLink);
 			}
 			return receiveStorableObjects(schemeLinks1, sessionKey, force);
@@ -729,7 +398,7 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 			final Set schemeCableLinks1 = new HashSet(length);
 			for (int i = 0; i < length; i++) {
 				final SchemeCableLink schemeCableLink = newSchemeCableLink(schemeCableLinks[i]);
-				SchemeStorableObjectPool.putStorableObject(schemeCableLink);
+				StorableObjectPool.putStorableObject(schemeCableLink);
 				schemeCableLinks1.add(schemeCableLink);
 			}
 			return receiveStorableObjects(schemeCableLinks1, sessionKey, force);
@@ -762,7 +431,7 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 			final Set schemeCableThreads1 = new HashSet(length);
 			for (int i = 0; i < length; i++) {
 				final SchemeCableThread schemeCableThread = newSchemeCableThread(schemeCableThreads[i]);
-				SchemeStorableObjectPool.putStorableObject(schemeCableThread);
+				StorableObjectPool.putStorableObject(schemeCableThread);
 				schemeCableThreads1.add(schemeCableThread);
 			}
 			return receiveStorableObjects(schemeCableThreads1, sessionKey, force);
@@ -795,7 +464,7 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 			final Set cableChannelingItems1 = new HashSet(length);
 			for (int i = 0; i < length; i++) {
 				final CableChannelingItem cableChannelingItem = newCableChannelingItem(cableChannelingItems[i]);
-				SchemeStorableObjectPool.putStorableObject(cableChannelingItem);
+				StorableObjectPool.putStorableObject(cableChannelingItem);
 				cableChannelingItems1.add(cableChannelingItem);
 			}
 			return receiveStorableObjects(cableChannelingItems1, sessionKey, force);
@@ -825,7 +494,7 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 			final Set schemePaths1 = new HashSet(length);
 			for (int i = 0; i < length; i++) {
 				final SchemePath schemePath = newSchemePath(schemePaths[i]);
-				SchemeStorableObjectPool.putStorableObject(schemePath);
+				StorableObjectPool.putStorableObject(schemePath);
 				schemePaths1.add(schemePath);
 			}
 			return receiveStorableObjects(schemePaths1, sessionKey, force);
@@ -858,7 +527,7 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 			final Set pathElements1 = new HashSet(length);
 			for (int i = 0; i < length; i++) {
 				final PathElement pathElement = newPathElement(pathElements[i]);
-				SchemeStorableObjectPool.putStorableObject(pathElement);
+				StorableObjectPool.putStorableObject(pathElement);
 				pathElements1.add(pathElement);
 			}
 			return receiveStorableObjects(pathElements1, sessionKey, force);

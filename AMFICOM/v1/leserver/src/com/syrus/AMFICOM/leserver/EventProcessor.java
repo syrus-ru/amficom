@@ -1,6 +1,6 @@
 /*
- * $Id: EventProcessor.java,v 1.3 2005/04/29 10:01:43 arseniy Exp $
- * 
+ * $Id: EventProcessor.java,v 1.4 2005/05/18 13:29:31 bass Exp $
+ *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
@@ -19,8 +19,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/04/29 10:01:43 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.4 $, $Date: 2005/05/18 13:29:31 $
+ * @author $Author: bass $
  * @module leserver_v1
  */
 final class EventProcessor extends SleepButWorkThread {

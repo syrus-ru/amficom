@@ -1,5 +1,5 @@
 /*
- * $Id: PasswordVerifier.java,v 1.2 2005/05/03 13:44:57 bass Exp $
+ * $Id: PasswordVerifier.java,v 1.3 2005/05/18 13:29:31 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
  * This class brings the same functionality as the Linux crypt() function does.
  * See <b><tt>crypt(3)</tt></b> manual entry for details.
  *
- * @version $Revision: 1.2 $, $Date: 2005/05/03 13:44:57 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/18 13:29:31 $
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
  * @module leserver_v1
@@ -30,7 +30,7 @@ public final class PasswordVerifier {
 	 * Table of characters which can be used to BASE64-encode data.
 	 */	
 	private static final byte BASE64_TABLE[]
-		= "./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz" //$NON-NLS-1$
+		= "./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 		.getBytes();
 
 	/**
@@ -58,14 +58,14 @@ public final class PasswordVerifier {
 	 * Regexp pattern encrypted key should match.
 	 */
 	private static final Pattern MD5_SALT_PATTERN
-		= Pattern.compile("^\\$1\\$([^\\$]{0,8})\\$[a-zA-Z0-9./]{22}$"); //$NON-NLS-1$
+		= Pattern.compile("^\\$1\\$([^\\$]{0,8})\\$[a-zA-Z0-9./]{22}$");
 
 	/**
 	 * MD5 salt prefix. Every encrypted key starts with this sequence.
 	 *
 	 * Value: {@value}
 	 */
-	private static final String MD5_SALT_PREFIX = "$1$"; //$NON-NLS-1$
+	private static final String MD5_SALT_PREFIX = "$1$";
 
 	/**
 	 * {@link #MD5_SALT_PREFIX} represented as byte array.
@@ -91,11 +91,11 @@ public final class PasswordVerifier {
 	 * Default MD5 salt.
 	 */
 	private static final byte[] DEFAULT_MD5_SALT
-		= (MD5_SALT_PREFIX + "ABCDEFGH" + MD5_SALT_TERMINATOR) //$NON-NLS-1$
+		= (MD5_SALT_PREFIX + "ABCDEFGH" + MD5_SALT_TERMINATOR)
 		.getBytes();
 
 	/**
-	 * This class realizes singleton pattern. 
+	 * This class realizes singleton pattern.
 	 */
 	private PasswordVerifier() {
 		assert false;
@@ -110,7 +110,7 @@ public final class PasswordVerifier {
 	static {
 		boolean libraryLoaded;
 		try {
-			System.loadLibrary("nativecrypt"); //$NON-NLS-1$
+			System.loadLibrary("nativecrypt");
 			libraryLoaded = true;
 		} catch (final UnsatisfiedLinkError ule) {
 			libraryLoaded = false;
@@ -169,7 +169,7 @@ public final class PasswordVerifier {
 			getBytes();
 		int keyLength = key.length;
 
-		MessageDigest ctx = MessageDigest.getInstance("MD5"); //$NON-NLS-1$
+		MessageDigest ctx = MessageDigest.getInstance("MD5");
 		ctx.update(key);
 		ctx.update(innerSalt);
 		ctx.update(key);
@@ -300,7 +300,7 @@ public final class PasswordVerifier {
 	 * After the <code>key</code> is encrypted, it is compared with
 	 * <code>encryptedKey</code>. If the result is negative, a
 	 * {@link GeneralSecurityException} is thrown.
-	 * 
+	 *
 	 * @param key user-typed password.
 	 * @param encryptedKey encrypted password.
 	 * @throws GeneralSecurityException if password is invalid.
@@ -309,7 +309,7 @@ public final class PasswordVerifier {
 			throws GeneralSecurityException {
 		if (!Arrays.equals(encryptedKey,
 				crypt(key, extractSalt(encryptedKey))))
-			throw new GeneralSecurityException("Invalid password"); //$NON-NLS-1$
+			throw new GeneralSecurityException("Invalid password");
 	}
 
 	/**

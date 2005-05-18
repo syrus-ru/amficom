@@ -1,6 +1,6 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.3 2005/04/28 15:00:30 arseniy Exp $
- * 
+ * $Id: DatabaseContextSetup.java,v 1.4 2005/05/18 13:29:31 bass Exp $
+ *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
@@ -23,14 +23,14 @@ import com.syrus.AMFICOM.general.GeneralDatabaseContext;
 import com.syrus.AMFICOM.general.ParameterTypeDatabase;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/04/28 15:00:30 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.4 $, $Date: 2005/05/18 13:29:31 $
+ * @author $Author: bass $
  * @module leserver_v1
  */
 final class DatabaseContextSetup {
 
 	private DatabaseContextSetup() {
-		assert false; 
+		assert false;
 	}
 
 	public static void initDatabaseContext() {
