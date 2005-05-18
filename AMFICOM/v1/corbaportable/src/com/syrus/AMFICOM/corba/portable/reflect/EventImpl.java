@@ -1,5 +1,5 @@
 /*
- * $Id: EventImpl.java,v 1.2 2004/12/22 15:10:55 bass Exp $
+ * $Id: EventImpl.java,v 1.3 2005/05/18 12:54:45 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import com.syrus.AMFICOM.event.corba.EventStatus;
 import java.sql.Timestamp;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/12/22 15:10:55 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/18 12:54:45 $
  * @author $Author: bass $
  * @module corbaportable_v1
  */
@@ -20,7 +20,7 @@ public final class EventImpl {
 	/**
 	 * Value: {@value}.
 	 */
-	private static final int STATUS_GENERATED = EventStatus._EVENT_STATUS_GENERATED;  
+	private static final int STATUS_GENERATED = EventStatus._EVENT_STATUS_GENERATED;
 	
 	/**
 	 * Value: {@value}.

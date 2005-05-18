@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourceImpl.java,v 1.2 2004/09/25 18:06:32 bass Exp $
+ * $Id: ObjectResourceImpl.java,v 1.3 2005/05/18 12:54:45 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,7 @@ import org.omg.CosNaming.NamingContextExtHelper;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2004/09/25 18:06:32 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/18 12:54:45 $
  * @module corbaportable_v1
  */
 public class ObjectResourceImpl extends ObjectResource {
@@ -30,7 +30,7 @@ public class ObjectResourceImpl extends ObjectResource {
 		= new StackTraceElement[0];
 
 	private static final PortableStackTraceElement EMPTY_PORTABLE_STACK_TRACE[]
-		= new PortableStackTraceElement[0]; 
+		= new PortableStackTraceElement[0];
 
 	private static Class connectionClass = null;
 
@@ -65,7 +65,7 @@ public class ObjectResourceImpl extends ObjectResource {
 			/**
 			 * @todo Running server-side. If necessary, get
 			 *       the utility class instance directly
-			 *       from the running server. 
+			 *       from the running server.
 			 */
 			return null;
 		} catch (NoSuchMethodException nsme) {
@@ -132,7 +132,7 @@ public class ObjectResourceImpl extends ObjectResource {
 
 	/**
 	 * Boxes an <code>SQLException</code> into
-	 * a <code>DatabaseAccessException</code>. 
+	 * a <code>DatabaseAccessException</code>.
 	 */
 	public static DatabaseAccessException box(final SQLException sqle) {
 		final Collection exceptionChain = new LinkedList();
@@ -256,7 +256,7 @@ public class ObjectResourceImpl extends ObjectResource {
 		lineNumberField.setAccessible(true);
 		lineNumberField.setInt(returnValue, lineNumber);
 
-		return returnValue; 
+		return returnValue;
 	}
 
 	/**

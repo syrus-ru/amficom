@@ -1,5 +1,5 @@
 /*
- * $Id: AlertingTypeImpl.java,v 1.2 2004/09/25 18:06:32 bass Exp $
+ * $Id: AlertingTypeImpl.java,v 1.3 2005/05/18 12:54:45 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import java.util.Hashtable;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2004/09/25 18:06:32 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/18 12:54:45 $
  * @module corbaportable_v1
  */
 public final class AlertingTypeImpl extends AlertingType {
@@ -116,7 +116,7 @@ public final class AlertingTypeImpl extends AlertingType {
 	/**
 	 * <code>VARCHAR2(64)</code>, can be <code>null</code>. Currently, the same
 	 * as {@link #id id}.
-	 * 
+	 *
 	 * @see #id
 	 */
 	private String codename;

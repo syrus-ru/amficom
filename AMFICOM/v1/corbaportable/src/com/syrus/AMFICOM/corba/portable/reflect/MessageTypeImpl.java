@@ -1,5 +1,5 @@
 /*
- * $Id: MessageTypeImpl.java,v 1.3 2005/05/04 10:42:41 bass Exp $
+ * $Id: MessageTypeImpl.java,v 1.4 2005/05/18 12:54:45 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,7 @@ import com.syrus.util.logging.ErrorHandler;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/05/04 10:42:41 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/18 12:54:45 $
  * @module corbaportable_v1
  */
 public final class MessageTypeImpl {
@@ -194,7 +194,7 @@ public final class MessageTypeImpl {
 	/**
 	 * <code>VARCHAR2(256)</code>, can be <code>null</code>. Long description,
 	 * currently the same as {@link #name name}.
-	 * 
+	 *
 	 * @see #name
 	 */
 	private String description;

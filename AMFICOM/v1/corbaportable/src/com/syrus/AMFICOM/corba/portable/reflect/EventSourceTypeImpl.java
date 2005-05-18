@@ -1,5 +1,5 @@
 /*
- * $Id: EventSourceTypeImpl.java,v 1.2 2004/09/25 18:06:32 bass Exp $
+ * $Id: EventSourceTypeImpl.java,v 1.3 2005/05/18 12:54:45 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,9 +15,9 @@ import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2004/09/25 18:06:32 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/18 12:54:45 $
  * @module corbaportable_v1
- * 
+ *
  * @todo make local object updating from database possible
  * @todo implement dummy object creation when no database connection
  */
@@ -167,7 +167,7 @@ public final class EventSourceTypeImpl {
 	 * </ul>
 	 * When a new {@link EventSourceImpl EventSourceImpl} is created, this class is
 	 * instantiated.
-	 * 
+	 *
 	 * @see com.syrus.AMFICOM.corba.portable.reflect.common.AbstractEventSourceImpl
 	 * @see com.syrus.AMFICOM.corba.portable.reflect.ClientImpl
 	 * @see com.syrus.AMFICOM.corba.portable.reflect.EquipmentImpl
