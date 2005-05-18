@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.21 2005/05/18 11:34:42 bass Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.22 2005/05/18 13:50:28 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/05/18 11:34:42 $
- * @author $Author: bass $
+ * @version $Revision: 1.22 $, $Date: 2005/05/18 13:50:28 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 public class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCondition {
@@ -188,6 +188,8 @@ public class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCon
 						stringBuffer.append(StorableObjectDatabase.CLOSE_BRACKET);
 						stringBuffer.append(StorableObjectDatabase.CLOSE_BRACKET);
 						return stringBuffer.toString();
+					case ObjectEntities.TEST_ENTITY_CODE:
+						return super.getQuery(TestWrapper.COLUMN_GROUP_TEST_ID);
 					default:
 						throw new IllegalObjectEntityException("Unsupported linked entity type -- "
 								+ super.condition.getLinkedEntityCode()
