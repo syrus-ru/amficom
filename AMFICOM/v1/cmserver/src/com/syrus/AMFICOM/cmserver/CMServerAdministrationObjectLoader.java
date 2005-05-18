@@ -1,6 +1,6 @@
 /*
- * $Id: CMServerAdministrationObjectLoader.java,v 1.1 2005/04/01 10:38:19 arseniy Exp $
- * 
+ * $Id: CMServerAdministrationObjectLoader.java,v 1.2 2005/05/18 13:11:21 bass Exp $
+ *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
@@ -13,14 +13,14 @@ import java.util.Set;
 import com.syrus.AMFICOM.administration.DatabaseAdministrationObjectLoader;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/01 10:38:19 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2005/05/18 13:11:21 $
+ * @author $Author: bass $
  * @module cmserver_v1
  */
 public class CMServerAdministrationObjectLoader extends DatabaseAdministrationObjectLoader {
 
 	 /**
-	 * refresh timeout 
+	 * refresh timeout
 	 */
 	private long refreshTimeout;
 

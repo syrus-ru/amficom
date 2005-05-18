@@ -1,5 +1,5 @@
 /*
- * $Id: CMGeneralReceive.java,v 1.18 2005/05/13 17:51:04 bass Exp $
+ * $Id: CMGeneralReceive.java,v 1.19 2005/05/18 13:11:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.cmserver;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.syrus.AMFICOM.cmserver.corba.CMServerPOA;
+import com.syrus.AMFICOM.cmserver.corba.CMServerOperations;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicDatabase;
@@ -40,12 +40,12 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/05/13 17:51:04 $
+ * @version $Revision: 1.19 $, $Date: 2005/05/18 13:11:21 $
  * @author $Author: bass $
  * @module cmserver_v1
  */
 
-public abstract class CMGeneralReceive extends CMServerPOA {
+public abstract class CMGeneralReceive implements CMServerOperations {
 	private static final long serialVersionUID = 4217287655251415892L;	
 
 	/**

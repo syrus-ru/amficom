@@ -1,5 +1,5 @@
 /*
- * $Id: CMConfigurationTransmit.java,v 1.23 2005/05/03 19:29:06 arseniy Exp $
+ * $Id: CMConfigurationTransmit.java,v 1.24 2005/05/18 13:11:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,6 @@ import java.util.Set;
 import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.configuration.CableThread;
 import com.syrus.AMFICOM.configuration.CableThreadType;
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.KIS;
@@ -45,13 +44,12 @@ import com.syrus.AMFICOM.configuration.corba.Port_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPathType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectConditionBuilder;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
@@ -62,8 +60,8 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/05/03 19:29:06 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.24 $, $Date: 2005/05/18 13:11:21 $
+ * @author $Author: bass $
  * @module cmserver_v1
  */
 
@@ -321,7 +319,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 	private Set getObjects(Identifier_Transferable[] idsT) throws AMFICOMRemoteException {
 		try {
 			Set ids = Identifier.fromTransferables(idsT);
-			Set objects = ConfigurationStorableObjectPool.getStorableObjects(ids, true);
+			Set objects = StorableObjectPool.getStorableObjects(ids, true);
 			return objects;
 		}
 		catch (ApplicationException ae) {
@@ -333,272 +331,6 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, throwable.getMessage());
 		}
 	}
-
-
-
-	/* Transmit multiple objects but ids*/
-
-	public EquipmentType_Transferable[] transmitEquipmentTypesButIds(Identifier_Transferable[] idsT,
-			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
-		super.validateAccess(sessionKeyT);
-
-		Set objects = this.getObjectsButIds(idsT, ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE);
-
-		EquipmentType_Transferable[] transferables = new EquipmentType_Transferable[objects.size()];
-		int i = 0;
-		EquipmentType object;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			object = (EquipmentType) it.next();
-			transferables[i] = (EquipmentType_Transferable) object.getTransferable();
-		}
-		return transferables;
-	}
-
-	public PortType_Transferable[] transmitPortTypesButIds(Identifier_Transferable[] idsT,
-			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
-		super.validateAccess(sessionKeyT);
-
-		Set objects = this.getObjectsButIds(idsT, ObjectEntities.PORTTYPE_ENTITY_CODE);
-
-		PortType_Transferable[] transferables = new PortType_Transferable[objects.size()];
-		int i = 0;
-		PortType object;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			object = (PortType) it.next();
-			transferables[i] = (PortType_Transferable) object.getTransferable();
-		}
-		return transferables;
-	}
-
-	public MeasurementPortType_Transferable[] transmitMeasurementPortTypesButIds(Identifier_Transferable[] idsT,
-			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
-		super.validateAccess(sessionKeyT);
-
-		Set objects = this.getObjectsButIds(idsT, ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE);
-
-		MeasurementPortType_Transferable[] transferables = new MeasurementPortType_Transferable[objects.size()];
-		int i = 0;
-		MeasurementPortType object;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			object = (MeasurementPortType) it.next();
-			transferables[i] = (MeasurementPortType_Transferable) object.getTransferable();
-		}
-		return transferables;
-	}
-
-	public TransmissionPathType_Transferable[] transmitTransmissionPathTypesButIds(Identifier_Transferable[] idsT,
-			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
-		super.validateAccess(sessionKeyT);
-
-		Set objects = this.getObjectsButIds(idsT, ObjectEntities.TRANSPATHTYPE_ENTITY_CODE);
-
-		TransmissionPathType_Transferable[] transferables = new TransmissionPathType_Transferable[objects.size()];
-		int i = 0;
-		TransmissionPathType object;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			object = (TransmissionPathType) it.next();
-			transferables[i] = (TransmissionPathType_Transferable) object.getTransferable();
-		}
-		return transferables;
-	}
-
-	public LinkType_Transferable[] transmitLinkTypesButIds(Identifier_Transferable[] idsT,
-			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
-		super.validateAccess(sessionKeyT);
-
-		Set objects = this.getObjectsButIds(idsT, ObjectEntities.LINKTYPE_ENTITY_CODE);
-
-		LinkType_Transferable[] transferables = new LinkType_Transferable[objects.size()];
-		int i = 0;
-		LinkType object;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			object = (LinkType) it.next();
-			transferables[i] = (LinkType_Transferable) object.getTransferable();
-		}
-		return transferables;
-	}
-
-	public CableLinkType_Transferable[] transmitCableLinkTypesButIds(Identifier_Transferable[] idsT,
-			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
-		super.validateAccess(sessionKeyT);
-
-		Set objects = this.getObjectsButIds(idsT, ObjectEntities.CABLELINKTYPE_ENTITY_CODE);
-
-		CableLinkType_Transferable[] transferables = new CableLinkType_Transferable[objects.size()];
-		int i = 0;
-		CableLinkType object;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			object = (CableLinkType) it.next();
-			transferables[i] = (CableLinkType_Transferable) object.getTransferable();
-		}
-		return transferables;
-	}
-
-	public CableThreadType_Transferable[] transmitCableThreadTypesButIds(Identifier_Transferable[] idsT,
-			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
-		super.validateAccess(sessionKeyT);
-
-		Set objects = this.getObjectsButIds(idsT, ObjectEntities.CABLETHREADTYPE_ENTITY_CODE);
-
-		CableThreadType_Transferable[] transferables = new CableThreadType_Transferable[objects.size()];
-		int i = 0;
-		CableThreadType object;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			object = (CableThreadType) it.next();
-			transferables[i] = (CableThreadType_Transferable) object.getTransferable();
-		}
-		return transferables;
-	}
-
-
-
-	public Equipment_Transferable[] transmitEquipmentsButIds(Identifier_Transferable[] idsT,
-			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
-		super.validateAccess(sessionKeyT);
-
-		Set objects = this.getObjectsButIds(idsT, ObjectEntities.EQUIPMENT_ENTITY_CODE);
-
-		Equipment_Transferable[] transferables = new Equipment_Transferable[objects.size()];
-		int i = 0;
-		Equipment object;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			object = (Equipment) it.next();
-			transferables[i] = (Equipment_Transferable) object.getTransferable();
-		}
-		return transferables;
-	}
-
-	public Port_Transferable[] transmitPortsButIds(Identifier_Transferable[] idsT,
-			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
-		super.validateAccess(sessionKeyT);
-
-		Set objects = this.getObjectsButIds(idsT, ObjectEntities.PORT_ENTITY_CODE);
-
-		Port_Transferable[] transferables = new Port_Transferable[objects.size()];
-		int i = 0;
-		Port object;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			object = (Port) it.next();
-			transferables[i] = (Port_Transferable) object.getTransferable();
-		}
-		return transferables;
-	}
-
-	public MeasurementPort_Transferable[] transmitMeasurementPortsButIds(Identifier_Transferable[] idsT,
-			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
-		super.validateAccess(sessionKeyT);
-
-		Set objects = this.getObjectsButIds(idsT, ObjectEntities.MEASUREMENTPORT_ENTITY_CODE);
-
-		MeasurementPort_Transferable[] transferables = new MeasurementPort_Transferable[objects.size()];
-		int i = 0;
-		MeasurementPort object;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			object = (MeasurementPort) it.next();
-			transferables[i] = (MeasurementPort_Transferable) object.getTransferable();
-		}
-		return transferables;
-	}
-
-	public TransmissionPath_Transferable[] transmitTransmissionPathsButIds(Identifier_Transferable[] idsT,
-			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
-		super.validateAccess(sessionKeyT);
-
-		Set objects = this.getObjectsButIds(idsT, ObjectEntities.TRANSPATH_ENTITY_CODE);
-
-		TransmissionPath_Transferable[] transferables = new TransmissionPath_Transferable[objects.size()];
-		int i = 0;
-		TransmissionPath object;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			object = (TransmissionPath) it.next();
-			transferables[i] = (TransmissionPath_Transferable) object.getTransferable();
-		}
-		return transferables;
-	}
-
-	public KIS_Transferable[] transmitKISsButIds(Identifier_Transferable[] idsT,
-			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
-		super.validateAccess(sessionKeyT);
-
-		Set objects = this.getObjectsButIds(idsT, ObjectEntities.KIS_ENTITY_CODE);
-
-		KIS_Transferable[] transferables = new KIS_Transferable[objects.size()];
-		int i = 0;
-		KIS object;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			object = (KIS) it.next();
-			transferables[i] = (KIS_Transferable) object.getTransferable();
-		}
-		return transferables;
-	}
-
-	public MonitoredElement_Transferable[] transmitMonitoredElementsButIds(Identifier_Transferable[] idsT,
-			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
-		super.validateAccess(sessionKeyT);
-
-		Set objects = this.getObjectsButIds(idsT, ObjectEntities.ME_ENTITY_CODE);
-
-		MonitoredElement_Transferable[] transferables = new MonitoredElement_Transferable[objects.size()];
-		int i = 0;
-		MonitoredElement object;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			object = (MonitoredElement) it.next();
-			transferables[i] = (MonitoredElement_Transferable) object.getTransferable();
-		}
-		return transferables;
-	}
-
-	public Link_Transferable[] transmitLinksButIds(Identifier_Transferable[] idsT,
-			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
-		super.validateAccess(sessionKeyT);
-
-		Set objects = this.getObjectsButIds(idsT, ObjectEntities.LINK_ENTITY_CODE);
-
-		Link_Transferable[] transferables = new Link_Transferable[objects.size()];
-		int i = 0;
-		Link object;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			object = (Link) it.next();
-			transferables[i] = (Link_Transferable) object.getTransferable();
-		}
-		return transferables;
-	}
-
-	public CableThread_Transferable[] transmitCableThreadsButIds(Identifier_Transferable[] idsT,
-			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
-		super.validateAccess(sessionKeyT);
-
-		Set objects = this.getObjectsButIds(idsT, ObjectEntities.CABLETHREAD_ENTITY_CODE);
-
-		CableThread_Transferable[] transferables = new CableThread_Transferable[objects.size()];
-		int i = 0;
-		CableThread object;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			object = (CableThread) it.next();
-			transferables[i] = (CableThread_Transferable) object.getTransferable();
-		}
-		return transferables;
-	}
-
-
-	private Set getObjectsButIds(Identifier_Transferable[] idsT, short entityCode) throws AMFICOMRemoteException {
-		try {
-			Set ids = Identifier.fromTransferables(idsT);
-			Set objects = ConfigurationStorableObjectPool.getStorableObjectsByConditionButIds(ids,
-					new EquivalentCondition(entityCode),
-					true);
-			return objects;
-		}
-		catch (ApplicationException ae) {
-			Log.errorException(ae);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
-		}
-		catch (Throwable throwable) {
-			Log.errorException(throwable);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, throwable.getMessage());
-		}
-	}
-
 
 
 	/* Transmit multiple objects but ids by condition*/
@@ -877,7 +609,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 
 			try {
 				Set ids = Identifier.fromTransferables(idsT);
-				Set objects = ConfigurationStorableObjectPool.getStorableObjectsByConditionButIds(ids, condition, true);
+				Set objects = StorableObjectPool.getStorableObjectsByConditionButIds(ids, condition, true);
 				return objects;
 			}
 			catch (ApplicationException ae) {
@@ -904,9 +636,9 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 			storableObjectsTMap.put(new Identifier(storableObjectsT[i].id), storableObjectsT[i]);
 
 		try {
-			ConfigurationStorableObjectPool.refresh();
+			StorableObjectPool.refresh();
 
-			Set storableObjects = ConfigurationStorableObjectPool.getStorableObjects(storableObjectsTMap.keySet(), true);
+			Set storableObjects = StorableObjectPool.getStorableObjects(storableObjectsTMap.keySet(), true);
 			for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 				final StorableObject so = (StorableObject) it.next();
 				final StorableObject_Transferable soT = (StorableObject_Transferable) storableObjectsTMap.get(so.getId());

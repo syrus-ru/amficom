@@ -1,5 +1,5 @@
 /*-
- * $Id: CMServerServantManager.java,v 1.4 2005/05/16 14:38:09 arseniy Exp $
+ * $Id: CMServerServantManager.java,v 1.5 2005/05/18 13:11:21 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,8 +25,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/05/16 14:38:09 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.5 $, $Date: 2005/05/18 13:11:21 $
+ * @author $Author: bass $
  * @module cmserver_v1
  */
 final class CMServerServantManager extends RunnableVerifiedConnectionManager implements BaseConnectionManager {
@@ -100,7 +100,7 @@ final class CMServerServantManager extends RunnableVerifiedConnectionManager imp
 	 *       for ARServer and MShServer.
 	 */
 	protected void onLoseConnection(final String servantName) {
-		Log.debugMessage("CMServerServantManager.onLoseConnection | Connection with '" + servantName + "' lost", Log.DEBUGLEVEL08);  //$NON-NLS-1$//$NON-NLS-2$
+		Log.debugMessage("CMServerServantManager.onLoseConnection | Connection with '" + servantName + "' lost", Log.DEBUGLEVEL08);
 	}
 
 	/**
@@ -110,7 +110,7 @@ final class CMServerServantManager extends RunnableVerifiedConnectionManager imp
 	 *       same for ARServer and MShServer.
 	 */
 	protected void onRestoreConnection(final String servantName) {
-		Log.debugMessage("CMServerServantManager.onRestoreConnection | Connection with '" + servantName + "' restored", //$NON-NLS-1$ //$NON-NLS-2$
+		Log.debugMessage("CMServerServantManager.onRestoreConnection | Connection with '" + servantName + "' restored",
 				Log.DEBUGLEVEL08);
 	}
 

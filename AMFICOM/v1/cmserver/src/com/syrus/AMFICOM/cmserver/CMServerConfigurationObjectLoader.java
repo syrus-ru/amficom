@@ -1,5 +1,5 @@
 /*
-* $Id: CMServerConfigurationObjectLoader.java,v 1.5 2005/04/01 17:39:02 arseniy Exp $
+* $Id: CMServerConfigurationObjectLoader.java,v 1.6 2005/05/18 13:11:21 bass Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -15,14 +15,14 @@ import com.syrus.AMFICOM.configuration.DatabaseConfigurationObjectLoader;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/04/01 17:39:02 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/05/18 13:11:21 $
+ * @author $Author: bass $
  * @module cmserver_v1
  */
 public class CMServerConfigurationObjectLoader extends DatabaseConfigurationObjectLoader {
 
 	 /**
-	 * refresh timeout 
+	 * refresh timeout
 	 */
 	private long refreshTimeout;
 

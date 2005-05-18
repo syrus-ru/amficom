@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerMeasurementObjectLoader.java,v 1.41 2005/05/01 17:26:31 arseniy Exp $
+ * $Id: CMServerMeasurementObjectLoader.java,v 1.42 2005/05/18 13:11:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,13 +41,13 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2005/05/01 17:26:31 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.42 $, $Date: 2005/05/18 13:11:21 $
+ * @author $Author: bass $
  * @module cmserver_v1
  */
 public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 	
-	private Map  lastRefesh; 
+	private Map  lastRefesh;
 	
 	/**
 	 * refresh timeout
@@ -338,7 +338,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 
 	/*	Refresh*/
 
-	public Set refresh(Set storableObjects) throws DatabaseException, CommunicationException {
+	public Set refresh(Set storableObjects) throws DatabaseException {
 		/* refresh no often than one in refreshTimeout ms */
 		if (storableObjects.isEmpty())
 			return Collections.EMPTY_SET;
@@ -352,7 +352,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 			return Collections.EMPTY_SET;
 
 		/* put current date*/
-		this.lastRefesh.put(entityCode, new Date()); 
+		this.lastRefesh.put(entityCode, new Date());
 
 		try {
 			StorableObjectDatabase database = MeasurementDatabaseContext.getDatabase(entityCode.shortValue());

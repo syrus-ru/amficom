@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.103 2005/05/03 19:29:06 arseniy Exp $
+ * $Id: CMServerImpl.java,v 1.104 2005/05/18 13:11:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,26 +13,23 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierGenerator;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectGroupEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.103 $, $Date: 2005/05/03 19:29:06 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.104 $, $Date: 2005/05/18 13:11:21 $
+ * @author $Author: bass $
  * @module cmserver_v1
  */
 
@@ -68,10 +65,10 @@ public class CMServerImpl extends CMMeasurementTransmit {
 						else
 							Log.errorMessage("CMServerImpl.delete | Unknow group of code " + entityCode + " of object '" + id + "'");
 		}
-		GeneralStorableObjectPool.delete(generalObjects);
-		AdministrationStorableObjectPool.delete(administrationObjects);
-		ConfigurationStorableObjectPool.delete(configurationObjects);
-		MeasurementStorableObjectPool.delete(measurementObjects);
+		StorableObjectPool.delete(generalObjects);
+		StorableObjectPool.delete(administrationObjects);
+		StorableObjectPool.delete(configurationObjects);
+		StorableObjectPool.delete(measurementObjects);
 	}
 
 ///////////////////////////////////////// Identifier Generator 	//////////////////////////////////////////////////
@@ -128,8 +125,8 @@ public class CMServerImpl extends CMMeasurementTransmit {
 
 	
 ///////////////////////////////////////// Verifiable 	//////////////////////////////////////////////////
-	public void verify(byte i) {
-		Log.debugMessage("Verify value: " + i, Log.DEBUGLEVEL10);
+	public void verify(final byte i) {
+		Log.debugMessage("Verifying value: " + i, Log.DEBUGLEVEL10);
 	}
 
 }

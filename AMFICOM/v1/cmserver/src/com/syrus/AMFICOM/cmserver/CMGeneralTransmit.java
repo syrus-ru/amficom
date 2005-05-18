@@ -1,5 +1,5 @@
 /*
- * $Id: CMGeneralTransmit.java,v 1.22 2005/05/03 19:29:06 arseniy Exp $
+ * $Id: CMGeneralTransmit.java,v 1.23 2005/05/18 13:11:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,15 +16,13 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicType;
-import com.syrus.AMFICOM.general.EquivalentCondition;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectConditionBuilder;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CharacteristicType_Transferable;
 import com.syrus.AMFICOM.general.corba.Characteristic_Transferable;
@@ -38,8 +36,8 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/05/03 19:29:06 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.23 $, $Date: 2005/05/18 13:11:21 $
+ * @author $Author: bass $
  * @module cmserver_v1
  */
 
@@ -103,7 +101,7 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 	private Set getObjects(Identifier_Transferable[] idsT) throws AMFICOMRemoteException {
 		try {
 			Set ids = Identifier.fromTransferables(idsT);
-			Set objects = GeneralStorableObjectPool.getStorableObjects(ids, true);
+			Set objects = StorableObjectPool.getStorableObjects(ids, true);
 			return objects;
 		}
 		catch (ApplicationException ae) {
@@ -115,78 +113,6 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, throwable.getMessage());
 		}
 	}
-
-
-
-	/* Transmit multiple objects but ids*/
-
-	public ParameterType_Transferable[] transmitParameterTypesButIds(Identifier_Transferable[] idsT,
-			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
-		super.validateAccess(sessionKeyT);
-
-		Set objects = this.getObjectsButIds(idsT, ObjectEntities.PARAMETERTYPE_ENTITY_CODE);
-
-		ParameterType_Transferable[] transferables = new ParameterType_Transferable[objects.size()];
-		int i = 0;
-		ParameterType object;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			object = (ParameterType) it.next();
-			transferables[i] = (ParameterType_Transferable) object.getTransferable();
-		}
-		return transferables;
-	}
-
-	public CharacteristicType_Transferable[] transmitCharacteristicTypesButIds(Identifier_Transferable[] idsT,
-			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
-		super.validateAccess(sessionKeyT);
-
-		Set objects = this.getObjectsButIds(idsT, ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE);
-
-		CharacteristicType_Transferable[] transferables = new CharacteristicType_Transferable[objects.size()];
-		int i = 0;
-		CharacteristicType object;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			object = (CharacteristicType) it.next();
-			transferables[i] = (CharacteristicType_Transferable) object.getTransferable();
-		}
-		return transferables;
-	}
-
-	public Characteristic_Transferable[] transmitCharacteristicsButIds(Identifier_Transferable[] idsT,
-			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
-		super.validateAccess(sessionKeyT);
-
-		Set objects = this.getObjectsButIds(idsT, ObjectEntities.CHARACTERISTIC_ENTITY_CODE);
-
-		Characteristic_Transferable[] transferables = new Characteristic_Transferable[objects.size()];
-		int i = 0;
-		Characteristic object;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			object = (Characteristic) it.next();
-			transferables[i] = (Characteristic_Transferable) object.getTransferable();
-		}
-		return transferables;
-	}
-
-
-	private Set getObjectsButIds(Identifier_Transferable[] idsT, short entityCode) throws AMFICOMRemoteException {
-		try {
-			Set ids = Identifier.fromTransferables(idsT);
-			Set objects = GeneralStorableObjectPool.getStorableObjectsByConditionButIds(ids,
-					new EquivalentCondition(entityCode),
-					true);
-			return objects;
-		}
-		catch (ApplicationException ae) {
-			Log.errorException(ae);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
-		}
-		catch (Throwable throwable) {
-			Log.errorException(throwable);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, throwable.getMessage());
-		}
-	}
-
 
 
 	/* Transmit multiple objects but ids by condition*/
@@ -259,7 +185,7 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 
 			try {
 				Set ids = Identifier.fromTransferables(idsT);
-				Set objects = GeneralStorableObjectPool.getStorableObjectsByConditionButIds(ids, condition, true);
+				Set objects = StorableObjectPool.getStorableObjectsByConditionButIds(ids, condition, true);
 				return objects;
 			}
 			catch (ApplicationException ae) {
@@ -286,9 +212,9 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 			storableObjectsTMap.put(new Identifier(storableObjectsT[i].id), storableObjectsT[i]);
 
 		try {
-			GeneralStorableObjectPool.refresh();
+			StorableObjectPool.refresh();
 
-			Set storableObjects = GeneralStorableObjectPool.getStorableObjects(storableObjectsTMap.keySet(), true);
+			Set storableObjects = StorableObjectPool.getStorableObjects(storableObjectsTMap.keySet(), true);
 			for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 				final StorableObject so = (StorableObject) it.next();
 				final StorableObject_Transferable soT = (StorableObject_Transferable) storableObjectsTMap.get(so.getId());

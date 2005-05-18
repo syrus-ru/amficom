@@ -1,5 +1,5 @@
 /*-
- * $Id: ClientMeasurementServer.java,v 1.43 2005/05/16 14:43:08 arseniy Exp $
+ * $Id: ClientMeasurementServer.java,v 1.44 2005/05/18 13:11:21 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,12 +8,14 @@
 
 package com.syrus.AMFICOM.cmserver;
 
+import org.omg.PortableServer.POA;
+
 import com.syrus.AMFICOM.administration.AdministrationDatabaseContext;
 import com.syrus.AMFICOM.administration.Server;
 import com.syrus.AMFICOM.administration.ServerProcess;
 import com.syrus.AMFICOM.administration.ServerProcessWrapper;
 import com.syrus.AMFICOM.administration.User;
-import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.cmserver.corba.CMServerPOATie;
 import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.DatabaseObjectLoader;
 import com.syrus.AMFICOM.general.Identifier;
@@ -25,36 +27,36 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2005/05/16 14:43:08 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.44 $, $Date: 2005/05/18 13:11:21 $
+ * @author $Author: bass $
  * @module cmserver_v1
  */
 public class ClientMeasurementServer {
-	public static final String APPLICATION_NAME = "cmserver"; //$NON-NLS-1$
+	public static final String APPLICATION_NAME = "cmserver";
 
 	/*-********************************************************************
 	 * Keys.                                                              *
 	 **********************************************************************/
 
-	public static final String KEY_DB_HOST_NAME = "DBHostName"; //$NON-NLS-1$
-	public static final String KEY_DB_SID = "DBSID"; //$NON-NLS-1$
-	public static final String KEY_DB_CONNECTION_TIMEOUT = "DBConnectionTimeout"; //$NON-NLS-1$
-	public static final String KEY_DB_LOGIN_NAME = "DBLoginName"; //$NON-NLS-1$
-	public static final String KEY_SERVER_ID = "ServerID"; //$NON-NLS-1$
+	public static final String KEY_DB_HOST_NAME = "DBHostName";
+	public static final String KEY_DB_SID = "DBSID";
+	public static final String KEY_DB_CONNECTION_TIMEOUT = "DBConnectionTimeout";
+	public static final String KEY_DB_LOGIN_NAME = "DBLoginName";
+	public static final String KEY_SERVER_ID = "ServerID";
 
 	/*-********************************************************************
 	 * Default values.                                                    *
 	 **********************************************************************/
 
-	public static final String DB_SID = "amficom"; //$NON-NLS-1$
+	public static final String DB_SID = "amficom";
 	/**
 	 * Database connection timeout, in seconds.
 	 */
 	public static final int DB_CONNECTION_TIMEOUT = 120;
-	public static final String DB_LOGIN_NAME = "amficom"; //$NON-NLS-1$
-	public static final String SERVER_ID = "Server_1"; //$NON-NLS-1$
+	public static final String DB_LOGIN_NAME = "amficom";
+	public static final String SERVER_ID = "Server_1";
 
-	private static final String PASSWORD = "CMServer"; //$NON-NLS-1$
+	private static final String PASSWORD = "CMServer";
 
 	/**
 	 * Identifier of this server.
@@ -128,11 +130,14 @@ public class ClientMeasurementServer {
 	
 			/*	Activate servant*/
 			final CORBAServer corbaServer = sessionEnvironment.getCMServerServantManager().getCORBAServer();
-			corbaServer.activateServant(new CMServerImpl(), processCodename);
+			final POA poa = corbaServer.getPoa();
+			corbaServer.activateServant(
+					poa.reference_to_servant((new CMServerPOATie(new CMServerImpl(), poa))._this(corbaServer.getOrb())),
+					processCodename);
 			corbaServer.printNamingContext();
 		}
-		catch (final ApplicationException ae) {
-			Log.errorException(ae);
+		catch (final Exception e) {
+			Log.errorException(e);
 			System.exit(0);
 		}
 	}

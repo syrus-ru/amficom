@@ -1,5 +1,5 @@
 /*
- * $Id: CMAdministrationTransmit.java,v 1.19 2005/05/03 19:29:06 arseniy Exp $
+ * $Id: CMAdministrationTransmit.java,v 1.20 2005/05/18 13:11:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.MCM;
 import com.syrus.AMFICOM.administration.Server;
@@ -25,13 +24,12 @@ import com.syrus.AMFICOM.administration.corba.ServerProcess_Transferable;
 import com.syrus.AMFICOM.administration.corba.Server_Transferable;
 import com.syrus.AMFICOM.administration.corba.User_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectConditionBuilder;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
@@ -42,8 +40,8 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/05/03 19:29:06 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.20 $, $Date: 2005/05/18 13:11:21 $
+ * @author $Author: bass $
  * @module cmserver_v1
  */
 
@@ -139,7 +137,7 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 	private Set getObjects(Identifier_Transferable[] idsT) throws AMFICOMRemoteException {
 		try {
 			Set ids = Identifier.fromTransferables(idsT);
-			Set objects = AdministrationStorableObjectPool.getStorableObjects(ids, true);
+			Set objects = StorableObjectPool.getStorableObjects(ids, true);
 			return objects;
 		}
 		catch (ApplicationException ae) {
@@ -151,110 +149,6 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, throwable.getMessage());
 		}
 	}
-
-
-
-	/* Transmit multiple objects but ids*/
-
-	public User_Transferable[] transmitUsersButIds(Identifier_Transferable[] idsT,
-			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
-		super.validateAccess(sessionKeyT);
-
-		Set objects = this.getObjectsButIds(idsT, ObjectEntities.USER_ENTITY_CODE);
-
-		User_Transferable[] transferables = new User_Transferable[objects.size()];
-		int i = 0;
-		User object;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			object = (User) it.next();
-			transferables[i] = (User_Transferable) object.getTransferable();
-		}
-		return transferables;
-	}
-
-	public Domain_Transferable[] transmitDomainsButIds(Identifier_Transferable[] idsT,
-			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
-		super.validateAccess(sessionKeyT);
-
-		Set objects = this.getObjectsButIds(idsT, ObjectEntities.DOMAIN_ENTITY_CODE);
-
-		Domain_Transferable[] transferables = new Domain_Transferable[objects.size()];
-		int i = 0;
-		Domain object;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			object = (Domain) it.next();
-			transferables[i] = (Domain_Transferable) object.getTransferable();
-		}
-		return transferables;
-	}
-
-	public Server_Transferable[] transmitServersButIds(Identifier_Transferable[] idsT,
-			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
-		super.validateAccess(sessionKeyT);
-
-		Set objects = this.getObjectsButIds(idsT, ObjectEntities.SERVER_ENTITY_CODE);
-
-		Server_Transferable[] transferables = new Server_Transferable[objects.size()];
-		int i = 0;
-		Server object;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			object = (Server) it.next();
-			transferables[i] = (Server_Transferable) object.getTransferable();
-		}
-		return transferables;
-	}
-
-	public MCM_Transferable[] transmitMCMsButIds(Identifier_Transferable[] idsT,
-			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
-		super.validateAccess(sessionKeyT);
-
-		Set objects = this.getObjectsButIds(idsT, ObjectEntities.MCM_ENTITY_CODE);
-
-		MCM_Transferable[] transferables = new MCM_Transferable[objects.size()];
-		int i = 0;
-		MCM object;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			object = (MCM) it.next();
-			transferables[i] = (MCM_Transferable) object.getTransferable();
-		}
-		return transferables;
-	}
-
-	public ServerProcess_Transferable[] transmitServerProcessesButIds(Identifier_Transferable[] idsT,
-			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
-		super.validateAccess(sessionKeyT);
-
-		Set objects = this.getObjectsButIds(idsT, ObjectEntities.SERVERPROCESS_ENTITY_CODE);
-
-		ServerProcess_Transferable[] transferables = new ServerProcess_Transferable[objects.size()];
-		int i = 0;
-		ServerProcess object;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			object = (ServerProcess) it.next();
-			transferables[i] = (ServerProcess_Transferable) object.getTransferable();
-		}
-		return transferables;
-	}
-
-
-	private Set getObjectsButIds(Identifier_Transferable[] idsT, short entityCode) throws AMFICOMRemoteException {
-		try {
-			Set ids = Identifier.fromTransferables(idsT);
-			Set objects = AdministrationStorableObjectPool.getStorableObjectsByConditionButIds(ids,
-					new EquivalentCondition(entityCode),
-					true);
-			return objects;
-		}
-		catch (ApplicationException ae) {
-			Log.errorException(ae);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
-		}
-		catch (Throwable throwable) {
-			Log.errorException(throwable);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, throwable.getMessage());
-		}
-	}
-
 
 
 	/* Transmit multiple objects but ids by condition*/
@@ -361,7 +255,7 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 
 			try {
 				Set ids = Identifier.fromTransferables(idsT);
-				Set objects = AdministrationStorableObjectPool.getStorableObjectsByConditionButIds(ids, condition, true);
+				Set objects = StorableObjectPool.getStorableObjectsByConditionButIds(ids, condition, true);
 				return objects;
 			}
 			catch (ApplicationException ae) {
@@ -388,9 +282,9 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 			storableObjectsTMap.put(new Identifier(storableObjectsT[i].id), storableObjectsT[i]);
 
 		try {
-			AdministrationStorableObjectPool.refresh();
+			StorableObjectPool.refresh();
 
-			Set storableObjects = AdministrationStorableObjectPool.getStorableObjects(storableObjectsTMap.keySet(), true);
+			Set storableObjects = StorableObjectPool.getStorableObjects(storableObjectsTMap.keySet(), true);
 			for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 				final StorableObject so = (StorableObject) it.next();
 				final StorableObject_Transferable soT = (StorableObject_Transferable) storableObjectsTMap.get(so.getId());

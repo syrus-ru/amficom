@@ -1,5 +1,5 @@
 /*-
- * $Id: CMServerPoolContext.java,v 1.2 2005/05/13 17:50:01 bass Exp $
+ * $Id: CMServerPoolContext.java,v 1.3 2005/05/18 13:11:21 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,17 +21,17 @@ import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/05/13 17:50:01 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/18 13:11:21 $
  * @author $Author: bass $
  * @module cmserver_v1
  */
 final class CMServerPoolContext extends PoolContext {
-	public static final String KEY_GENERAL_POOL_SIZE = "GeneralPoolSize"; //$NON-NLS-1$
-	public static final String KEY_ADMINISTRATION_POOL_SIZE = "AdministrationPoolSize"; //$NON-NLS-1$
-	public static final String KEY_CONFIGURATION_POOL_SIZE = "ConfigurationPoolSize"; //$NON-NLS-1$
-	public static final String KEY_MEASUREMENT_POOL_SIZE = "MeasurementPoolSize"; //$NON-NLS-1$
-	public static final String KEY_REFRESH_TIMEOUT = "RefreshPoolTimeout"; //$NON-NLS-1$
-	public static final String KEY_DATABASE_LOADER_ONLY = "DatabaseLoaderOnly"; //$NON-NLS-1$
+	public static final String KEY_GENERAL_POOL_SIZE = "GeneralPoolSize";
+	public static final String KEY_ADMINISTRATION_POOL_SIZE = "AdministrationPoolSize";
+	public static final String KEY_CONFIGURATION_POOL_SIZE = "ConfigurationPoolSize";
+	public static final String KEY_MEASUREMENT_POOL_SIZE = "MeasurementPoolSize";
+	public static final String KEY_REFRESH_TIMEOUT = "RefreshPoolTimeout";
+	public static final String KEY_DATABASE_LOADER_ONLY = "DatabaseLoaderOnly";
 
 	
 	public static final int GENERAL_POOL_SIZE = 1000;
@@ -39,7 +39,7 @@ final class CMServerPoolContext extends PoolContext {
 	public static final int CONFIGURATION_POOL_SIZE = 1000;
 	public static final int MEASUREMENT_POOL_SIZE = 1000;
 	public static final int REFRESH_TIMEOUT = 5;// min
-	public static final String DATABASE_LOADER_ONLY = "false"; //$NON-NLS-1$
+	public static final String DATABASE_LOADER_ONLY = "false";
 
 	public void init() {
 		final boolean databaseLoaderOnly = Boolean.valueOf(ApplicationProperties.getString(KEY_DATABASE_LOADER_ONLY, DATABASE_LOADER_ONLY)).booleanValue();
