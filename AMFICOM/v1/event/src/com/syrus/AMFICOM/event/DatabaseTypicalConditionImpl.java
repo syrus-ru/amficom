@@ -1,6 +1,6 @@
 /*
- * $Id: DatabaseTypicalConditionImpl.java,v 1.3 2005/04/12 16:58:16 arseniy Exp $
- * 
+ * $Id: DatabaseTypicalConditionImpl.java,v 1.4 2005/05/18 11:16:58 bass Exp $
+ *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
@@ -14,8 +14,8 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/04/12 16:58:16 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.4 $, $Date: 2005/05/18 11:16:58 $
+ * @author $Author: bass $
  * @module event_v1
  */
 class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {

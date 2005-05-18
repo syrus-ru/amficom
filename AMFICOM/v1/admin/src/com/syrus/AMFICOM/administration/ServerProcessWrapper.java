@@ -1,6 +1,6 @@
 /*
- * $Id: ServerProcessWrapper.java,v 1.3 2005/05/13 17:32:00 bass Exp $
- * 
+ * $Id: ServerProcessWrapper.java,v 1.4 2005/05/18 11:18:39 bass Exp $
+ *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
@@ -14,27 +14,27 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/05/13 17:32:00 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/18 11:18:39 $
  * @author $Author: bass $
  * @module admin_v1
  */
 public class ServerProcessWrapper extends StorableObjectWrapper {
-	public static final String KEY_LOGIN_PROCESS_CODENAME = "LoginProcessCodename"; //$NON-NLS-1$
-	public static final String KEY_EVENT_PROCESS_CODENAME = "EventProcessCodename"; //$NON-NLS-1$
-	public static final String KEY_MSERVER_PROCESS_CODENAME = "MServerProcessCodename"; //$NON-NLS-1$
-	public static final String KEY_CMSERVER_PROCESS_CODENAME = "CMServerProcessCodename"; //$NON-NLS-1$
-	public static final String KEY_MSHSERVER_PROCESS_CODENAME = "MSHServerProcessCodename"; //$NON-NLS-1$
-	public static final String KEY_ARSERVER_PROCESS_CODENAME = "ARServerProcessCodename"; //$NON-NLS-1$
+	public static final String KEY_LOGIN_PROCESS_CODENAME = "LoginProcessCodename";
+	public static final String KEY_EVENT_PROCESS_CODENAME = "EventProcessCodename";
+	public static final String KEY_MSERVER_PROCESS_CODENAME = "MServerProcessCodename";
+	public static final String KEY_CMSERVER_PROCESS_CODENAME = "CMServerProcessCodename";
+	public static final String KEY_MSHSERVER_PROCESS_CODENAME = "MSHServerProcessCodename";
+	public static final String KEY_ARSERVER_PROCESS_CODENAME = "ARServerProcessCodename";
 
-	public static final String LOGIN_PROCESS_CODENAME = "LoginServer"; //$NON-NLS-1$
-	public static final String EVENT_PROCESS_CODENAME = "EventServer"; //$NON-NLS-1$
-	public static final String MSERVER_PROCESS_CODENAME = "MServer"; //$NON-NLS-1$
-	public static final String CMSERVER_PROCESS_CODENAME = "CMServer"; //$NON-NLS-1$
-	public static final String MSHSERVER_PROCESS_CODENAME = "MSHServer"; //$NON-NLS-1$
-	public static final String ARSERVER_PROCESS_CODENAME = "ARServer"; //$NON-NLS-1$
+	public static final String LOGIN_PROCESS_CODENAME = "LoginServer";
+	public static final String EVENT_PROCESS_CODENAME = "EventServer";
+	public static final String MSERVER_PROCESS_CODENAME = "MServer";
+	public static final String CMSERVER_PROCESS_CODENAME = "CMServer";
+	public static final String MSHSERVER_PROCESS_CODENAME = "MSHServer";
+	public static final String ARSERVER_PROCESS_CODENAME = "ARServer";
 
-	public static final String	COLUMN_SERVER_ID = "server_id"; //$NON-NLS-1$
-	public static final String	COLUMN_USER_ID = "user_id"; //$NON-NLS-1$
+	public static final String	COLUMN_SERVER_ID = "server_id";
+	public static final String	COLUMN_USER_ID = "user_id";
 
 	private static ServerProcessWrapper instance;
 

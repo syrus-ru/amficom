@@ -1,5 +1,5 @@
 /*
- * $Id: DomainDatabase.java,v 1.23 2005/03/11 09:26:27 bob Exp $
+ * $Id: DomainDatabase.java,v 1.24 2005/05/18 11:18:39 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,8 +17,6 @@ import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.Log;
@@ -27,8 +25,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/03/11 09:26:27 $
- * @author $Author: bob $
+ * @version $Revision: 1.24 $, $Date: 2005/05/18 11:18:39 $
+ * @author $Author: bass $
  * @module administration_v1
  */
 
@@ -74,7 +72,7 @@ public class DomainDatabase extends CharacterizableDatabase {
 	}
 
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
-			throws IllegalDataException, RetrieveObjectException, SQLException {
+			throws IllegalDataException, SQLException {
 		Domain domain = storableObject == null ? null : this.fromStorableObject(storableObject);
 		if (domain == null) {
 			domain = new Domain(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
@@ -107,7 +105,7 @@ public class DomainDatabase extends CharacterizableDatabase {
 	}
 		
 	
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
 		Domain domain = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:

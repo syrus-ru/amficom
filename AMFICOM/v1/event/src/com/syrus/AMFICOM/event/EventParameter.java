@@ -1,6 +1,6 @@
 /*
- * $Id: EventParameter.java,v 1.11 2005/04/15 19:22:24 arseniy Exp $
- * 
+ * $Id: EventParameter.java,v 1.12 2005/05/18 11:16:58 bass Exp $
+ *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/04/15 19:22:24 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.12 $, $Date: 2005/05/18 11:16:58 $
+ * @author $Author: bass $
  * @module event_v1
  */
 public class EventParameter implements Identifiable, TransferableObject, TypedObject {

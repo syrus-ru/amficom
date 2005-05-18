@@ -1,6 +1,6 @@
 /*
- * $Id: ServerProcessDatabase.java,v 1.3 2005/04/29 09:55:19 arseniy Exp $
- * 
+ * $Id: ServerProcessDatabase.java,v 1.4 2005/05/18 11:18:39 bass Exp $
+ *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
@@ -27,8 +27,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/04/29 09:55:19 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.4 $, $Date: 2005/05/18 11:18:39 $
+ * @author $Author: bass $
  * @module admin_v1
  */
 public class ServerProcessDatabase extends StorableObjectDatabase {
@@ -80,7 +80,7 @@ public class ServerProcessDatabase extends StorableObjectDatabase {
 	}
 
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
-			throws IllegalDataException, RetrieveObjectException, SQLException {
+			throws IllegalDataException, SQLException {
 		ServerProcess user = (storableObject == null)?
 				new ServerProcess(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, null, null) :
 					this.fromStorableObject(storableObject);
@@ -97,7 +97,7 @@ public class ServerProcessDatabase extends StorableObjectDatabase {
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg)
-			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+			throws IllegalDataException {
 		ServerProcess serverProcess = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:

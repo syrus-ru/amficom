@@ -1,5 +1,5 @@
 /*
- * $Id: Server.java,v 1.24 2005/04/29 16:08:23 arseniy Exp $
+ * $Id: Server.java,v 1.25 2005/05/18 11:18:39 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,6 @@ import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -31,12 +30,13 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/04/29 16:08:23 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.25 $, $Date: 2005/05/18 11:18:39 $
+ * @author $Author: bass $
  * @module administration_v1
  */
 
@@ -115,7 +115,7 @@ public class Server extends DomainMember implements Characterizable {
 
 		Set characteristicIds = Identifier.fromTransferables(st.characteristic_ids);
 		this.characteristics = new HashSet(st.characteristic_ids.length);
-		this.setCharacteristics0(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
+		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
 		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}

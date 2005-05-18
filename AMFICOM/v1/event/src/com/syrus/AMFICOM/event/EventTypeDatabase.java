@@ -1,5 +1,5 @@
 /*
- * $Id: EventTypeDatabase.java,v 1.23 2005/04/23 17:46:27 arseniy Exp $
+ * $Id: EventTypeDatabase.java,v 1.24 2005/05/18 11:16:58 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,6 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -31,6 +30,7 @@ import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
@@ -40,8 +40,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/04/23 17:46:27 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.24 $, $Date: 2005/05/18 11:16:58 $
+ * @author $Author: bass $
  * @module event_v1
  */
 
@@ -62,7 +62,7 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 
 	protected String getColumnsTmpl() {
 		if (columns == null) {
-			columns = StorableObjectWrapper.COLUMN_CODENAME + COMMA 
+			columns = StorableObjectWrapper.COLUMN_CODENAME + COMMA
 				+ StorableObjectWrapper.COLUMN_DESCRIPTION;
 		}
 		return columns;
@@ -78,7 +78,7 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
-			updateMultipleSQLValues = QUESTION + COMMA 
+			updateMultipleSQLValues = QUESTION + COMMA
 				+ QUESTION;
 		}
 		return updateMultipleSQLValues;
@@ -86,7 +86,7 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 
 	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		EventType eventType = this.fromStorableObject(storableObject);		
-		String sql = APOSTOPHE + DatabaseString.toQuerySubString(eventType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA 
+		String sql = APOSTOPHE + DatabaseString.toQuerySubString(eventType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(eventType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE;
 		return sql;
 	}
@@ -99,8 +99,8 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 		this.retrieveUserIdsByOneQuery(Collections.singleton(eventType));
 	}
 
-	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet) throws IllegalDataException, RetrieveObjectException, SQLException{
-		EventType eventType = storableObject == null ? 
+	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet) throws IllegalDataException, SQLException{
+		EventType eventType = storableObject == null ?
 				new EventType(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 											null,
 											0L,
@@ -136,7 +136,7 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 			paramaterTypeIds = (Set) eventParamaterTypeIdsMap.get(eventTypeId);
 
 			try {
-				eventType.setParameterTypes0(GeneralStorableObjectPool.getStorableObjects(paramaterTypeIds, true));
+				eventType.setParameterTypes0(StorableObjectPool.getStorableObjects(paramaterTypeIds, true));
 			}
 			catch (ApplicationException ce) {
 				throw new RetrieveObjectException(ce);
@@ -164,7 +164,7 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
 		EventType eventType = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
@@ -317,7 +317,7 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 					+ ObjectEntities.EVENTTYPPARTYPLINK_ENTITY
 					+ SQL_WHERE + EventTypeWrapper.LINK_COLUMN_EVENT_TYPE_ID + EQUALS + id);
 			statement.executeUpdate(SQL_DELETE_FROM
-					+ ObjectEntities.EVENTTYPE_ENTITY 
+					+ ObjectEntities.EVENTTYPE_ENTITY
 					+ SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + id);
 
 			connection.commit();

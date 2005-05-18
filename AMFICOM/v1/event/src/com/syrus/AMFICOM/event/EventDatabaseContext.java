@@ -1,5 +1,5 @@
 /*-
- * $Id: EventDatabaseContext.java,v 1.9 2005/04/01 15:20:21 arseniy Exp $
+ * $Id: EventDatabaseContext.java,v 1.10 2005/05/18 11:16:58 bass Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Научно-технический центр.
@@ -13,8 +13,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/04/01 15:20:21 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.10 $, $Date: 2005/05/18 11:16:58 $
+ * @author $Author: bass $
  * @module event_v1
  */
 public final class EventDatabaseContext {
@@ -54,7 +54,7 @@ public final class EventDatabaseContext {
 			case ObjectEntities.EVENTSOURCE_ENTITY_CODE:
 				return getEventSourceDatabase();
 			default:
-				Log.errorMessage("EventDatabaseContext.getDatabase | Unknown entity: " + entityCode); //$NON-NLS-1$
+				Log.errorMessage("EventDatabaseContext.getDatabase | Unknown entity: " + entityCode);
 				return null;
 		}
 	}

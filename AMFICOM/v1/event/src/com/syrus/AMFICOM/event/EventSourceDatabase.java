@@ -1,6 +1,6 @@
 /*
- * $Id: EventSourceDatabase.java,v 1.14 2005/04/01 09:00:59 bob Exp $
- * 
+ * $Id: EventSourceDatabase.java,v 1.15 2005/05/18 11:16:58 bass Exp $
+ *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
@@ -26,8 +26,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/04/01 09:00:59 $
- * @author $Author: bob $
+ * @version $Revision: 1.15 $, $Date: 2005/05/18 11:16:58 $
+ * @author $Author: bass $
  * @module event_v1
  */
 public class EventSourceDatabase extends StorableObjectDatabase {
@@ -196,7 +196,6 @@ public class EventSourceDatabase extends StorableObjectDatabase {
 
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException,
-				RetrieveObjectException,
 				SQLException {
 		EventSource eventSource = (storableObject == null) ? new EventSource(DatabaseIdentifier.getIdentifier(resultSet,
 				StorableObjectWrapper.COLUMN_ID),
@@ -228,7 +227,7 @@ public class EventSourceDatabase extends StorableObjectDatabase {
 						+ ObjectEntities.codeToString(sourceEntityCode)
 						+ "' not implemented");
 		}
-		eventSource.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED), 
+		eventSource.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 				 DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				 DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 				 DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
@@ -244,7 +243,7 @@ public class EventSourceDatabase extends StorableObjectDatabase {
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg)
-			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+			throws IllegalDataException {
 		EventSource eventSource = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:

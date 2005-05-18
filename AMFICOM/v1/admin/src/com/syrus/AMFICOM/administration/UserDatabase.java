@@ -1,5 +1,5 @@
 /*
- * $Id: UserDatabase.java,v 1.23 2005/04/30 14:20:24 arseniy Exp $
+ * $Id: UserDatabase.java,v 1.24 2005/05/18 11:18:39 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/04/30 14:20:24 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.24 $, $Date: 2005/05/18 11:18:39 $
+ * @author $Author: bass $
  * @module administration_v1
  */
 
@@ -82,7 +82,7 @@ public class UserDatabase extends StorableObjectDatabase {
 	}
 
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
-			throws IllegalDataException, RetrieveObjectException, SQLException {
+			throws IllegalDataException, SQLException {
 		User user = (storableObject == null)?
 				new User(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, 0, null, null) :
 					this.fromStorableObject(storableObject);
@@ -114,7 +114,7 @@ public class UserDatabase extends StorableObjectDatabase {
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg)
-			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+			throws IllegalDataException {
 		User user = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:

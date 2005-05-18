@@ -1,5 +1,5 @@
 /*
- * $Id: ServerDatabase.java,v 1.23 2005/04/29 16:08:23 arseniy Exp $
+ * $Id: ServerDatabase.java,v 1.24 2005/05/18 11:18:39 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,8 +16,6 @@ import com.syrus.AMFICOM.general.CharacterizableDatabase;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.Log;
@@ -25,8 +23,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/04/29 16:08:23 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.24 $, $Date: 2005/05/18 11:18:39 $
+ * @author $Author: bass $
  * @module administration_v1
  */
 
@@ -36,7 +34,7 @@ public class ServerDatabase extends CharacterizableDatabase {
 
   private static String columns;
 	private static String updateMultipleSQLValues;
-  
+
 	private Server fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof Server)
 			return (Server) storableObject;
@@ -76,7 +74,7 @@ public class ServerDatabase extends CharacterizableDatabase {
 	}
 
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
-			throws IllegalDataException, RetrieveObjectException, SQLException {
+			throws IllegalDataException, SQLException {
 		Server server = (storableObject==null)?
 				new Server(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 								null,
@@ -109,7 +107,7 @@ public class ServerDatabase extends CharacterizableDatabase {
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg)
-			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+			throws IllegalDataException {
 		Server server = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:

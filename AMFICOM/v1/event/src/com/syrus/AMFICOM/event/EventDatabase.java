@@ -1,5 +1,5 @@
 /*
- * $Id: EventDatabase.java,v 1.25 2005/04/12 17:07:32 arseniy Exp $
+ * $Id: EventDatabase.java,v 1.26 2005/05/18 11:16:58 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,8 +41,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/04/12 17:07:32 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.26 $, $Date: 2005/05/18 11:16:58 $
+ * @author $Author: bass $
  * @module event_v1
  */
 
@@ -223,7 +223,7 @@ public class EventDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
 		Event event = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:

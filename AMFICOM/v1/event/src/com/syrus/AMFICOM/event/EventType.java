@@ -1,5 +1,5 @@
 /*
- * $Id: EventType.java,v 1.19 2005/04/23 17:46:27 arseniy Exp $
+ * $Id: EventType.java,v 1.20 2005/05/18 11:16:58 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,7 +19,6 @@ import com.syrus.AMFICOM.event.corba.EventType_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -27,13 +26,14 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/04/23 17:46:27 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.20 $, $Date: 2005/05/18 11:16:58 $
+ * @author $Author: bass $
  * @module event_v1
  */
 
@@ -87,7 +87,7 @@ public final class EventType extends StorableObjectType {
 				codename,
 				description);
 
-		this.parameterTypes = new HashSet(); 
+		this.parameterTypes = new HashSet();
 		this.setParameterTypes0(parameterTypes);
 
 		this.userIds = new HashSet();
@@ -137,7 +137,7 @@ public final class EventType extends StorableObjectType {
 
 		Set ids = Identifier.fromTransferables(ett.parameter_type_ids);
 		this.parameterTypes = new HashSet(ett.parameter_type_ids.length);
-		this.setParameterTypes0(GeneralStorableObjectPool.getStorableObjects(ids, true));
+		this.setParameterTypes0(StorableObjectPool.getStorableObjects(ids, true));
 
 		this.userIds = new HashSet(ett.user_ids.length);
 		this.setUserIds0(Identifier.fromTransferables(ett.user_ids));
@@ -198,7 +198,7 @@ public final class EventType extends StorableObjectType {
 
 	/**
 	 * client setter for parameterTypes
-	 * 
+	 *
 	 * @param parameterTypes
 	 *            The inParameterTypes to set.
 	 */
@@ -215,7 +215,7 @@ public final class EventType extends StorableObjectType {
 
 	/**
 	 * client setter for userIds
-	 * 
+	 *
 	 * @param userIds
 	 *            The userIds to set.
 	 */

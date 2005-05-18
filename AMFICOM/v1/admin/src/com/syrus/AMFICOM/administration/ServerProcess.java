@@ -1,6 +1,6 @@
 /*
- * $Id: ServerProcess.java,v 1.2 2005/04/27 19:31:44 arseniy Exp $
- * 
+ * $Id: ServerProcess.java,v 1.3 2005/05/18 11:18:39 bass Exp $
+ *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
@@ -29,8 +29,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/27 19:31:44 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/05/18 11:18:39 $
+ * @author $Author: bass $
  * @module admin_v1
  */
 public class ServerProcess extends StorableObject {
@@ -43,8 +43,8 @@ public class ServerProcess extends StorableObject {
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 * @throws RetrieveObjectException 
-	 * @throws ObjectNotFoundException 
+	 * @throws RetrieveObjectException
+	 * @throws ObjectNotFoundException
 	 */
 	public ServerProcess(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);

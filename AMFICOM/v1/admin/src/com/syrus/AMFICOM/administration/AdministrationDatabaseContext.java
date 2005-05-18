@@ -1,5 +1,5 @@
 /*-
- * $Id: AdministrationDatabaseContext.java,v 1.6 2005/04/27 17:44:40 arseniy Exp $
+ * $Id: AdministrationDatabaseContext.java,v 1.7 2005/05/18 11:18:39 bass Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Научно-технический центр.
@@ -13,8 +13,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/04/27 17:44:40 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2005/05/18 11:18:39 $
+ * @author $Author: bass $
  * @module administration_v1
  */
 public final class AdministrationDatabaseContext {
@@ -25,7 +25,7 @@ public final class AdministrationDatabaseContext {
 	private static ServerProcessDatabase serverProcessDatabase;
 
 	private AdministrationDatabaseContext() {
-		assert false; 
+		assert false;
 	}
 
 	public static void init(
@@ -67,7 +67,7 @@ public final class AdministrationDatabaseContext {
 //				database = AdministrationDatabaseContext.getPermissionAttributesDatabase();
 //				break;
 			default:
-				Log.errorMessage("AdminDatabaseContext.getDatabase | Unknown entity: " + entityCode); //$NON-NLS-1$
+				Log.errorMessage("AdminDatabaseContext.getDatabase | Unknown entity: " + entityCode);
 				return null;
 		}
 	}
