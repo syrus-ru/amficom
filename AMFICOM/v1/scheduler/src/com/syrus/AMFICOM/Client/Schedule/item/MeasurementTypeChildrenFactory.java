@@ -1,5 +1,5 @@
 /*-
-* $Id: MeasurementTypeChildrenFactory.java,v 1.2 2005/04/04 07:13:35 bob Exp $
+* $Id: MeasurementTypeChildrenFactory.java,v 1.3 2005/05/19 14:32:22 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.configuration.MeasurementPortType;
@@ -27,14 +26,14 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.logic.ChildrenFactory;
 import com.syrus.AMFICOM.logic.Item;
-import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/04 07:13:35 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/19 14:32:22 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -60,10 +59,10 @@ public class MeasurementTypeChildrenFactory implements ChildrenFactory {
 			Map kisMeasurementPorts = new HashMap();
 			LinkedIdsCondition measurementPortCondition = null;
 			try {
-				Collection kiss = ConfigurationStorableObjectPool.getStorableObjectsByCondition(domainCondition, true);
+				Collection kiss = StorableObjectPool.getStorableObjectsByCondition(domainCondition, true);
 				
 				domainCondition.setEntityCode(ObjectEntities.ME_ENTITY_CODE);
-				Collection monitoredElements = ConfigurationStorableObjectPool.getStorableObjectsByCondition(
+				Collection monitoredElements = StorableObjectPool.getStorableObjectsByCondition(
 					domainCondition, true);
 				
 				for (Iterator kisIterator = kiss.iterator(); kisIterator.hasNext();) {
@@ -74,7 +73,7 @@ public class MeasurementTypeChildrenFactory implements ChildrenFactory {
 					else
 						measurementPortCondition.setLinkedId(kis.getId());
 
-					Collection measurementPorts = ConfigurationStorableObjectPool.getStorableObjectsByCondition(
+					Collection measurementPorts = StorableObjectPool.getStorableObjectsByCondition(
 						measurementPortCondition, true);
 					kisMeasurementPorts.put(kis, measurementPorts);
 					for (Iterator it = measurementPorts.iterator(); it.hasNext();) {
@@ -88,7 +87,7 @@ public class MeasurementTypeChildrenFactory implements ChildrenFactory {
 																					measurementPortTypeIds,
 																					ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
 
-					Collection measurementTypesFormeasurementPortType = MeasurementStorableObjectPool
+					Collection measurementTypesFormeasurementPortType = StorableObjectPool
 							.getStorableObjectsByCondition(linkedIdsCondition, true);
 					
 					List list = new ArrayList(measurementTypesFormeasurementPortType.size());

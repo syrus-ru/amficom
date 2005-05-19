@@ -8,6 +8,7 @@ import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.beans.PropertyChangeEvent;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Collections;
@@ -28,22 +29,21 @@ import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
+import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.Measurement;
-import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestController;
 import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
+import com.syrus.util.Log;
 
 public class TestLine extends TimeLine {
 
@@ -162,20 +162,9 @@ public class TestLine extends TimeLine {
 		
 		this.acquireTests();
 		
-		this.dispatcher = aContext.getDispatcher();
-		OperationListener operationListener = new OperationListener() {
-			public void operationPerformed(OperationEvent e) {
-				String actionCommand = e.getActionCommand();
-				if (actionCommand.equals(SchedulerModel.COMMAND_REFRESH_TESTS)) {
-					updateTests();
-				} else if (actionCommand.equals(SchedulerModel.COMMAND_REFRESH_TEST)) {
-					updateTest();
-				}
-			}
-		};
-		
-		this.dispatcher.register(operationListener, SchedulerModel.COMMAND_REFRESH_TESTS);
-		this.dispatcher.register(operationListener, SchedulerModel.COMMAND_REFRESH_TEST);
+//		this.dispatcher = aContext.getDispatcher();		
+//		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_REFRESH_TESTS, this);
+//		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_REFRESH_TEST, this);
 		this.setToolTipText("");		
 	}
 //
@@ -254,6 +243,16 @@ public class TestLine extends TimeLine {
 		}
 		return rectangle;
 	}
+	
+//	public void propertyChange(PropertyChangeEvent evt) {
+//		String propertyName = evt.getPropertyName();
+//		if (propertyName.equals(SchedulerModel.COMMAND_REFRESH_TESTS)) {
+//			updateTests();
+//		} else if (propertyName.equals(SchedulerModel.COMMAND_REFRESH_TEST)) {
+//			updateTest();
+//		}	
+//		
+//	}
 
 	private void paintFlash(Graphics g) {
 
@@ -341,10 +340,11 @@ public class TestLine extends TimeLine {
 
 
 	public void updateTests() {
+		Log.debugMessage("TestLine.updateTests | 1 ", Log.FINEST);
 		if (this.skip) {
 			return;
 		}
-
+		Log.debugMessage("TestLine.updateTests | 2 ", Log.FINEST);
 		this.acquireTests();
 		this.updateTest();
 	}
@@ -439,7 +439,7 @@ public class TestLine extends TimeLine {
 						// Log.debugMessage("TestLine.createMouseListener |
 						// mouseReleased ", Log.FINEST);
 						TestLine.this.dispatcher
-								.notify(new OperationEvent(this, 0, SchedulerModel.COMMAND_REFRESH_TIME_STAMPS));
+								.firePropertyChange(new PropertyChangeEvent(this,SchedulerModel.COMMAND_REFRESH_TIME_STAMPS, null, null));
 					}
 
 					TestLine.this.startPoint = null;
@@ -517,7 +517,7 @@ public class TestLine extends TimeLine {
 																					test.getId(),
 																					ObjectEntities.MEASUREMENT_ENTITY_CODE);
 					try {
-						Set testMeasurements = MeasurementStorableObjectPool.getStorableObjectsByCondition(
+						Set testMeasurements = StorableObjectPool.getStorableObjectsByCondition(
 							linkedIdsCondition, true);
 						List measurementTestList = new LinkedList();
 						if (!testMeasurements.isEmpty()) {
@@ -636,7 +636,7 @@ public class TestLine extends TimeLine {
 //		}
 		
 		try {
-		for (Iterator iterator = MeasurementStorableObjectPool.getStorableObjects(this.testIds, true).iterator(); iterator.hasNext();) {
+		for (Iterator iterator = StorableObjectPool.getStorableObjects(this.testIds, true).iterator(); iterator.hasNext();) {
 			Test test = (Test) iterator.next();
 
 			int i = 0;
@@ -713,8 +713,8 @@ public class TestLine extends TimeLine {
 			}
 		}
 		
-//		Log.debugMessage("TestLine.refreshTimeItems | timeItems " + timeItems.size(), Log.FINEST);
-//		Log.debugMessage("TestLine.refreshTimeItems | unsavedTestTimeItems " + unsavedTestTimeItems.size(), Log.FINEST);
+		Log.debugMessage("TestLine.refreshTimeItems | timeItems " + timeItems.size(), Log.FINEST);
+		Log.debugMessage("TestLine.refreshTimeItems | unsavedTestTimeItems " + unsavedTestTimeItems.size(), Log.FINEST);
 		} catch(ApplicationException e) {
 			SchedulerModel.showErrorMessage(this, e);
 		}

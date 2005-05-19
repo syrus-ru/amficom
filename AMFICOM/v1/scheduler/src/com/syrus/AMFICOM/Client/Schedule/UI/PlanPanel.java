@@ -15,6 +15,8 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collection;
@@ -29,22 +31,18 @@ import javax.swing.JScrollPane;
 import javax.swing.Timer;
 import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
-import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
+import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.measurement.Test;
-import com.syrus.AMFICOM.measurement.TestTemporalStamps;
 
 public class PlanPanel extends JPanel implements 
 // TestsEditor, TestEditor, IntervalsEditor, 
-ActionListener {
+ActionListener, PropertyChangeListener {
 
 	private static final long	serialVersionUID	= 3258417243925984817L;
 
@@ -116,34 +114,18 @@ ActionListener {
 
 	private PlanToolBar				toolBar;
 
-	private TimeStampsEditor		timeStampsEditor;
-	
 	private Color selectionColor;
+
+	private Dispatcher	dispatcher;
 	
 	public PlanPanel(JScrollPane parent, ApplicationContext aContext) {
 		this.aContext = aContext;
 		this.parent = parent;
 		this.toolBar = new PlanToolBar(aContext, this);
-//		this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();
-//		this.schedulerModel.addTestsEditor(this);
-//		this.schedulerModel.addTestEditor(this);
-//		this.schedulerModel.setIntervalsEditor(this);
-		/* TODO */
+		this.dispatcher = aContext.getDispatcher();
 		
-		final Dispatcher dispatcher = aContext.getDispatcher();
-		OperationListener operationListener = new OperationListener() {
-			public void operationPerformed(OperationEvent e) {
-				String actionCommand = e.getActionCommand();
-				if (actionCommand.equals(SchedulerModel.COMMAND_REFRESH_TESTS)) {
-					updateTests();
-				} else if (actionCommand.equals(SchedulerModel.COMMAND_REFRESH_TEST)) {
-					updateTest();
-				}
-			}
-		};
-		
-		dispatcher.register(operationListener, SchedulerModel.COMMAND_REFRESH_TESTS);
-		dispatcher.register(operationListener, SchedulerModel.COMMAND_REFRESH_TEST);
+		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_REFRESH_TESTS, this);
+		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_REFRESH_TEST, this);
 		
 		this.addComponentListener(new ComponentAdapter() {
 
@@ -311,6 +293,17 @@ ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		this.revalidate();
 		this.repaint();
+	}
+	
+	public void propertyChange(PropertyChangeEvent evt) {
+		String propertyName = evt.getPropertyName();
+		if (propertyName.equals(SchedulerModel.COMMAND_REFRESH_TESTS)) {
+			updateTests();
+		} else if (propertyName.equals(SchedulerModel.COMMAND_REFRESH_TEST)) {
+			updateTest();
+		}
+	
+		
 	}
 
 	protected void paintScaleDigits(Graphics g,
@@ -566,34 +559,29 @@ ActionListener {
 		this.repaint();
 	}
 
-	public void updateTests() {
+	private void updateTests() {
 		this.updateTestLines();
 		super.repaint();
 		super.revalidate();
 		this.parent.repaint();
-	}
-
-	public void updateTest() {
 		for (Iterator it = this.testLines.keySet().iterator(); it.hasNext();) {
 			Object key = it.next();
 			TestLine line = (TestLine) this.testLines.get(key);
+			line.updateTests();
+		}
+	}
+
+	private void updateTest() {
+		for (Iterator it = this.testLines.keySet().iterator(); it.hasNext();) {
+			Object key = it.next();
+			TestLine line = (TestLine) this.testLines.get(key);
+			line.updateTest();
 			Rectangle visibleRectangle = line.getVisibleRectangle();
 			if (visibleRectangle != null) {
 				this.scrollRectToVisible(visibleRectangle);
 			}
 
 		}
-	}
-
-	public void setIntervalsTemporalPattern(TestTemporalStamps testTemporalStamps) {
-		if (this.timeStampsEditor == null) {
-			this.timeStampsEditor = new TimeStampsEditor(this.aContext, LangModelSchedule.getString("Timetable editor"));
-			this.timeStampsEditor.setPreferredSize(new Dimension(this.getWidth(), 25));
-			this.add(this.timeStampsEditor);
-		}
-
-		this.timeStampsEditor.setTestTemporalStamps(testTemporalStamps);
-		this.updateTestLinesTimeRegion();
 	}
 
 	protected void updateTestLines() {
@@ -611,10 +599,6 @@ ActionListener {
 		}
 
 		this.removeAll();
-		if (this.timeStampsEditor != null) {
-			this.add(this.timeStampsEditor);
-		}
-
 		for (Iterator it = this.testLines.keySet().iterator(); it.hasNext();) {
 			TestLine testLine = (TestLine) this.testLines.get(it.next());
 			this.add(testLine);

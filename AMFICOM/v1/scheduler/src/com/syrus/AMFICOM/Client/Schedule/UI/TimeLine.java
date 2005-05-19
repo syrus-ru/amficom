@@ -1,5 +1,5 @@
 /*-
- * $Id: TimeLine.java,v 1.8 2005/05/17 14:17:30 bob Exp $
+ * $Id: TimeLine.java,v 1.9 2005/05/19 14:32:22 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,12 +24,13 @@ import java.util.TreeSet;
 import javax.swing.JComponent;
 import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.Client.Schedule.UI.TestLine.TestTimeItem;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.measurement.Test;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/05/17 14:17:30 $
+ * @version $Revision: 1.9 $, $Date: 2005/05/19 14:32:22 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -164,7 +165,7 @@ public abstract class TimeLine extends JComponent {
 	
 	protected final void drawItemRect(Graphics g, int x, int y, int width, int height, Color c) {
 		g.setColor(c);
-//		Log.debugMessage("TimeLine.drawItemRect | width " + width, Log.FINEST);
+//		Log.debugMessage("TimeLine.drawItemRect | x: " + x + ", width: " + width, Log.FINEST);
 		g.fillRect(x + 2, y + 2, width - 3, height - 3);
 		g.draw3DRect(x, y, width, height, true);
 	}

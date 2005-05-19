@@ -9,6 +9,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -31,12 +32,11 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
-import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
+import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
@@ -44,7 +44,6 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicTypeCodenames;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginManager;
@@ -53,6 +52,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.ParameterTypeCodenames;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
@@ -68,7 +68,7 @@ import com.syrus.util.ByteArray;
 //import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/05/17 14:13:59 $
+ * @version $Revision: 1.32 $, $Date: 2005/05/19 14:32:22 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -165,7 +165,6 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 	private JLabel					resolutionLabel;
 	private JLabel					maxDistanceLabel;
 	
-	//Set set = null;
 	Identifier setId;
 //	java.util.Set testIds;
 
@@ -179,24 +178,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 		super(aContext);
 		this.aContext = aContext;
 		this.dispatcher = aContext.getDispatcher();
-		this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();
-		
-//		OperationListener operationListener = new OperationListener() {
-//			
-//			public void operationPerformed(OperationEvent e) {
-//				if (e.getActionCommand().equals(SchedulerModel.COMMAND_REFRESH_TEST)) {
-//					Log.debugMessage("ReflectometryTestPanel.operationPerformed | ", Log.FINEST);
-//					java.util.Set selectedTestIds = ReflectometryTestPanel.this.schedulerModel.getSelectedTestIds();
-//					if (selectedTestIds == null || selectedTestIds.isEmpty()) {
-//						ReflectometryTestPanel.this.refreshTestsSet();
-//					}
-//				}
-//				
-//			}
-//		};
-//		
-//		this.dispatcher.register(operationListener, SchedulerModel.COMMAND_REFRESH_TEST);
-		
+		this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();		
 		this.createGUI();
 	}	
 
@@ -352,7 +334,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 				
 				set = Set.createInstance(LoginManager.getUserId(), SetSort.SET_SORT_MEASUREMENT_PARAMETERS,
 					LangModelSchedule.getString("Text.SetCreatedByScheduler"), params, Collections.singleton(this.meId)); //$NON-NLS-1$
-				MeasurementStorableObjectPool.putStorableObject(set);
+				StorableObjectPool.putStorableObject(set);
 				this.setId = set.getId();
 
 //				Log.debugMessage("ReflectometryTestPanel.getSet | ", Log.FINEST);
@@ -512,7 +494,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 			for (Iterator iterator = conditions.iterator(); iterator.hasNext();) {
 				StorableObjectCondition condition = (StorableObjectCondition) iterator.next();
 
-				java.util.Set storableObjectsByCondition = GeneralStorableObjectPool.getStorableObjectsByCondition(
+				java.util.Set storableObjectsByCondition = StorableObjectPool.getStorableObjectsByCondition(
 					condition, true);
 				if (storableObjectsByCondition.isEmpty())
 					throw new IllegalArgumentException(LangModelSchedule.getString("Error.CannotFindParameterTypes") + " "); //$NON-NLS-1$ //$NON-NLS-2$
@@ -646,7 +628,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 				measurementPortId1, true);
 			LinkedIdsCondition linkedIdsCondition = new LinkedIdsCondition(port.getType().getId(),
 																			ObjectEntities.CHARACTERISTIC_ENTITY_CODE);
-			Collection characteristics = GeneralStorableObjectPool.getStorableObjectsByCondition(linkedIdsCondition,
+			Collection characteristics = StorableObjectPool.getStorableObjectsByCondition(linkedIdsCondition,
 				true);
 
 			if (this.traceLength == null)
@@ -817,7 +799,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 			Set parameterSet = this.getSet();
 			if (parameterSet.isChanged()) {
 				try {
-					java.util.Set storableObjects = MeasurementStorableObjectPool
+					java.util.Set storableObjects = StorableObjectPool
 							.getStorableObjects(selectedTestIds, true);
 					SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
 					boolean creareNewSetup = false;
@@ -851,7 +833,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 															.getMeasurementDuration(), measurementSetup
 															.getMonitoredElementIds(), measurementSetup
 															.getMeasurementTypeIds());
-										MeasurementStorableObjectPool.putStorableObject(measurementSetup1);
+										StorableObjectPool.putStorableObject(measurementSetup1);
 										measurementSetupId = measurementSetup1.getId();
 										this.unchangedMeasurementSetupNewMap.put(measurementSetup.getId(),
 											measurementSetupId);
@@ -868,8 +850,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 					
 					if (creareNewSetup) {
 						this.skip = true;
-						this.dispatcher.notify(new OperationEvent(this, 0,
-																	SchedulerModel.COMMAND_ADD_NEW_MEASUREMENT_SETUP));
+						this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, SchedulerModel.COMMAND_ADD_NEW_MEASUREMENT_SETUP, null, null));
 						this.skip = false;
 					}
 				} catch (ApplicationException e) {

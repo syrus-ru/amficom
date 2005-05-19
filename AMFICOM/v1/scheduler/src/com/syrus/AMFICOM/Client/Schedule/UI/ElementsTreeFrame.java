@@ -1,6 +1,8 @@
 
 package com.syrus.AMFICOM.Client.Schedule.UI;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -16,16 +18,11 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.tree.TreePath;
 
-import com.syrus.AMFICOM.Client.General.Command.Command;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
-import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
-import com.syrus.AMFICOM.Client.Schedule.Commandable;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
-import com.syrus.AMFICOM.Client.Schedule.WindowCommand;
+import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
@@ -40,14 +37,12 @@ import com.syrus.AMFICOM.logic.ServiceItem;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 
-public class ElementsTreeFrame extends JInternalFrame implements Commandable {
+public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeListener {
 
 	/**
 	 * 
 	 */
 	private static final long	serialVersionUID	= 3761121639580186678L;
-
-	private Command				command;
 
 	SchedulerModel				schedulerModel;
 
@@ -61,6 +56,7 @@ public class ElementsTreeFrame extends JInternalFrame implements Commandable {
 
 	private Item				rootItem						= new ServiceItem("/");
 
+	private Dispatcher	dispatcher;
 //	public static final String	ACCESSPORT_NAME_REFLECTOMETER	= "MeasurementPortTypeReflectometry";	//$NON-NLS-1$
 
 	public ElementsTreeFrame(ApplicationContext aContext) {
@@ -70,14 +66,6 @@ public class ElementsTreeFrame extends JInternalFrame implements Commandable {
 		setResizable(true);
 		setClosable(true);
 		setIconifiable(true);
-		this.command = new WindowCommand(this);
-	}
-
-	/**
-	 * @return Returns the command.
-	 */
-	public Command getCommand() {
-		return this.command;
 	}
 
 	private Identifier getObject(short entityCode) {
@@ -202,6 +190,32 @@ public class ElementsTreeFrame extends JInternalFrame implements Commandable {
 		}
 	}
 
+	public void propertyChange(PropertyChangeEvent evt) {
+		
+		String propertyName = evt.getPropertyName();
+//		Object obj = e.getSource();
+		Object newValue = evt.getNewValue();
+		if (propertyName.equals(SchedulerModel.COMMAND_GET_MEASUREMENT_TYPE)) {
+			this.setMeasurementType((MeasurementType) newValue);
+		} else if (propertyName.equals(SchedulerModel.COMMAND_SET_MEASUREMENT_TYPES)) {
+			setElements((Collection) newValue);
+		} else if (propertyName.equals(SchedulerModel.COMMAND_GET_MONITORED_ELEMENT)) {
+			this.setMonitoredElement((MonitoredElement) newValue);
+		} else if (propertyName.equals(SchedulerModel.COMMAND_GET_MEASUREMENT_TYPE)) {
+			MeasurementType measurementType = getMeasurementType();
+			if (measurementType != null) {
+				this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, SchedulerModel.COMMAND_GET_MEASUREMENT_TYPE, null, measurementType));
+			}					
+		}   else if (propertyName.equals(SchedulerModel.COMMAND_GET_MONITORED_ELEMENT)) {
+			MonitoredElement monitoredElement = getMonitoredElement();
+			if (monitoredElement != null) {
+				this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, SchedulerModel.COMMAND_GET_MONITORED_ELEMENT, null, monitoredElement));
+			}					
+		}  
+	
+		
+	}
+	
 	public void init() {
 		this.schedulerModel = (SchedulerModel) this.aContext.getApplicationModel();
 		if (this.treePanel == null) {
@@ -238,8 +252,8 @@ public class ElementsTreeFrame extends JInternalFrame implements Commandable {
 
 										public void run() {
 											dispatcher
-													.notify(new OperationEvent(identifier, 0,
-																				SchedulerModel.COMMAND_CHANGE_ME_TYPE));
+													.firePropertyChange(new PropertyChangeEvent(ElementsTreeFrame.this,
+																				SchedulerModel.COMMAND_CHANGE_ME_TYPE, null, identifier));
 											try {
 												ElementsTreeFrame.this.schedulerModel.setSelectedMonitoredElement(
 													(MonitoredElement) ConfigurationStorableObjectPool
@@ -276,48 +290,18 @@ public class ElementsTreeFrame extends JInternalFrame implements Commandable {
 
 		}
 
-		final Dispatcher dispatcher = this.aContext.getDispatcher();
+		//final Dispatcher dispatcher = this.aContext.getDispatcher();
+		this.dispatcher = this.aContext.getDispatcher();
 		
-		OperationListener listener = new OperationListener() {
-			private boolean skip = false;
-			
-			public void operationPerformed(OperationEvent e) {
-				String actionCommand = e.getActionCommand();
-				Object obj = e.getSource();
-				if (actionCommand.equals(SchedulerModel.COMMAND_SET_MEASUREMENT_TYPE)) {
-					if (!this.skip) {
-					setMeasurementType((MeasurementType) obj);
-					}
-				} else if (actionCommand.equals(SchedulerModel.COMMAND_SET_MEASUREMENT_TYPES)) {
-					setElements((Collection) obj);
-				} else if (actionCommand.equals(SchedulerModel.COMMAND_SET_MONITORED_ELEMENT)) {
-					if (!this.skip) {
-					setMonitoredElement((MonitoredElement) obj);
-					}
-				} else if (actionCommand.equals(SchedulerModel.COMMAND_GET_MEASUREMENT_TYPE)) {
-					MeasurementType measurementType = getMeasurementType();
-					if (measurementType != null) {
-						this.skip = true;
-						dispatcher.notify(new OperationEvent(measurementType, 0, SchedulerModel.COMMAND_SET_MEASUREMENT_TYPE));
-						this.skip = false;
-					}					
-				}   else if (actionCommand.equals(SchedulerModel.COMMAND_GET_MONITORED_ELEMENT)) {
-					MonitoredElement monitoredElement = getMonitoredElement();
-					if (monitoredElement != null) {
-						this.skip = true;
-						dispatcher.notify(new OperationEvent(monitoredElement, 0, SchedulerModel.COMMAND_SET_MONITORED_ELEMENT));
-						this.skip = false;
-					}					
-				}  
-			}
-		};
 		
-		dispatcher.register(listener, SchedulerModel.COMMAND_SET_MEASUREMENT_TYPE);
-		dispatcher.register(listener, SchedulerModel.COMMAND_SET_MEASUREMENT_TYPES);
-		dispatcher.register(listener, SchedulerModel.COMMAND_SET_MONITORED_ELEMENT);
-		dispatcher.register(listener, SchedulerModel.COMMAND_GET_MEASUREMENT_TYPE);
-		dispatcher.register(listener, SchedulerModel.COMMAND_GET_MONITORED_ELEMENT);
+		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_SET_MEASUREMENT_TYPES, this);
+		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_GET_MEASUREMENT_TYPE, this);
+		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_GET_MONITORED_ELEMENT, this);
+		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_SET_MEASUREMENT_TYPE, this);
+		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_SET_MONITORED_ELEMENT, this);
 
 	}
+	
+	
 
 }

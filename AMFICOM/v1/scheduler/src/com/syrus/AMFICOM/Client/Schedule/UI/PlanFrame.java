@@ -9,19 +9,15 @@ import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
 import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.General.Command.Command;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
-import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
-import com.syrus.AMFICOM.Client.Schedule.Commandable;
-import com.syrus.AMFICOM.Client.Schedule.WindowCommand;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
-public class PlanFrame extends JInternalFrame implements Commandable {
+public class PlanFrame extends JInternalFrame {
 
 	private static final long	serialVersionUID	= 3761969371601776689L;
 	private JToolBar	toolBar;
 	private PlanPanel	mainPanel;
-	private Command command;
 
 	public PlanFrame(ApplicationContext aContext) {
 		setTitle(LangModelSchedule.getString("Tests time table")); //$NON-NLS-1$
@@ -43,16 +39,8 @@ public class PlanFrame extends JInternalFrame implements Commandable {
 		getContentPane().setLayout(new BorderLayout());
 		getContentPane().add(this.toolBar, BorderLayout.NORTH);
 		getContentPane().add(scroll, BorderLayout.CENTER);
-		this.command = new WindowCommand(this);
 	}
-	
 
-	/**
-	 * @return Returns the command.
-	 */
-	public Command getCommand() {
-		return this.command;
-	}
 	
 	public PlanPanel getPlanPanel(){
 		return this.mainPanel;

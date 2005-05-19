@@ -1,3 +1,4 @@
+
 package com.syrus.AMFICOM.Client.Schedule;
 
 import java.awt.event.ActionEvent;
@@ -8,21 +9,21 @@ import javax.swing.JButton;
 import javax.swing.JToolBar;
 import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.General.Command.Command;
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationModelListener;
-import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
+import com.syrus.AMFICOM.client.model.ApplicationModel;
+import com.syrus.AMFICOM.client.model.ApplicationModelListener;
+import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.AMFICOM.client.resource.LangModel;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 public class ScheduleMainToolBar extends JToolBar implements ApplicationModelListener {
-	
+
 	private static final long	serialVersionUID	= 3258130254177646902L;
 
-	ApplicationModel	aModel;
+	ApplicationModel			aModel;
 
-	private JButton		sessionOpen;
+	private JButton				sessionOpen;
 
-	//public static final int IMAGE_SIZE = 16;
+	// public static final int IMAGE_SIZE = 16;
 
 	public ScheduleMainToolBar() {
 		this.sessionOpen = new JButton();
@@ -32,8 +33,8 @@ public class ScheduleMainToolBar extends JToolBar implements ApplicationModelLis
 		this.sessionOpen.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 		this.sessionOpen.addActionListener(new ActionListener() {
 
-			private boolean executed = false;
-			
+			private boolean	executed	= false;
+
 			public void actionPerformed(ActionEvent e) {
 				if (this.executed || ScheduleMainToolBar.this.aModel == null)
 					return;
@@ -41,7 +42,7 @@ public class ScheduleMainToolBar extends JToolBar implements ApplicationModelLis
 				AbstractButton jb = (AbstractButton) e.getSource();
 				String s = jb.getName();
 				Command command = ScheduleMainToolBar.this.aModel.getCommand(s);
-				command = (Command) command.clone();
+				// command = (Command) command.clone();
 				command.execute();
 				this.executed = false;
 			}
@@ -60,8 +61,11 @@ public class ScheduleMainToolBar extends JToolBar implements ApplicationModelLis
 	}
 
 	public void modelChanged(String e[]) {
+		this.modelChanged("");
+	}
+
+	public void modelChanged(String elementName) {
 		this.sessionOpen.setVisible(this.aModel.isVisible(ScheduleMainMenuBar.MENU_SESSION_NEW));
 		this.sessionOpen.setEnabled(this.aModel.isEnabled(ScheduleMainMenuBar.MENU_SESSION_NEW));
 	}
-
 }

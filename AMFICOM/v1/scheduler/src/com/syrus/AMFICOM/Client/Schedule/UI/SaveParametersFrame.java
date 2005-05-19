@@ -9,6 +9,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.Iterator;
 
 import javax.swing.ButtonGroup;
@@ -19,32 +21,25 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.General.Command.Command;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
-import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
-import com.syrus.AMFICOM.Client.Schedule.Commandable;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
-import com.syrus.AMFICOM.Client.Schedule.WindowCommand;
+import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.corba.TestReturnType;
 import com.syrus.util.Log;
 
 /**
  * 
- * @version $Revision: 1.11 $, $Date: 2005/05/17 14:17:30 $
+ * @version $Revision: 1.12 $, $Date: 2005/05/19 14:32:22 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module schedulerClone
  */
-public class SaveParametersFrame extends JInternalFrame implements 
-// ReturnTypeEditor, 
-Commandable {
+public class SaveParametersFrame extends JInternalFrame implements  PropertyChangeListener {
 
 	private static final long	serialVersionUID	= 3257007652956746292L;
 
@@ -53,47 +48,22 @@ Commandable {
 	private JRadioButton	allResultsButton;
 	private JRadioButton	recognizedEventsButton;
 	private JRadioButton	measurementIdButton;
-	private Command			command;
 
 	SchedulerModel			schedulerModel;
-	
+
+	private Dispatcher	dispatcher;
+
 	public SaveParametersFrame(ApplicationContext aContext) {
-		// this.aContext = aContext;
 		this.init();
 		if (aContext != null) {
-//			SchedulerModel schedulerModel = (SchedulerModel) aContext.getApplicationModel();
-//			schedulerModel.setReturnTypeEditor(this);
+			this.dispatcher = aContext.getDispatcher();
 			
-			final Dispatcher dispatcher = aContext.getDispatcher();
-			
-			this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();
-			
-			OperationListener listener = new OperationListener() {
-				private boolean skip = false;
-				
-				public void operationPerformed(OperationEvent e) {
-					String actionCommand = e.getActionCommand();
-					Object obj = e.getSource();
-					if (actionCommand.equals(SchedulerModel.COMMAND_SET_RETURN_TYPE)) {
-						if (!this.skip) {
-						setReturnType( (TestReturnType) obj);
-						}
-					} else if (actionCommand.equals(SchedulerModel.COMMAND_GET_RETURN_TYPE)) {
-						TestReturnType testReturnType = getReturnType();
-						if (testReturnType != null) {
-							this.skip = true;
-							dispatcher.notify(new OperationEvent(testReturnType, 0, SchedulerModel.COMMAND_SET_RETURN_TYPE));
-							this.skip = false;
-						}					
-					} 
-				}
-			};
+			this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();		
 
-			dispatcher.register(listener, SchedulerModel.COMMAND_REFRESH_TEST);			
-			dispatcher.register(listener, SchedulerModel.COMMAND_SET_RETURN_TYPE);
-			dispatcher.register(listener, SchedulerModel.COMMAND_GET_RETURN_TYPE);
+			this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_REFRESH_TEST, this);			
+			this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_SET_RETURN_TYPE, this);
+			this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_GET_RETURN_TYPE, this);
 		}
-		this.command = new WindowCommand(this);
 	}
 
 	private void init() {
@@ -153,7 +123,7 @@ Commandable {
 					java.util.Set selectedTestIds = SaveParametersFrame.this.schedulerModel.getSelectedTestIds();
 					if (selectedTestIds != null && !selectedTestIds.isEmpty()) {
 						try {
-							java.util.Set storableObjects = MeasurementStorableObjectPool.getStorableObjects(
+							java.util.Set storableObjects = StorableObjectPool.getStorableObjects(
 								selectedTestIds, true);
 							for (Iterator iterator = storableObjects.iterator(); iterator.hasNext();) {
 								Test test = (Test) iterator.next();
@@ -195,6 +165,19 @@ Commandable {
 			returnType = TestReturnType.TEST_RETURN_TYPE_REFERENCE;
 		return returnType;
 	}
+	
+	
+	public void propertyChange(PropertyChangeEvent evt) {
+			String propertyName = evt.getPropertyName();
+			if (propertyName.equals(SchedulerModel.COMMAND_SET_RETURN_TYPE)) {
+				setReturnType( (TestReturnType) evt.getNewValue());
+			} else if (propertyName.equals(SchedulerModel.COMMAND_GET_RETURN_TYPE)) {
+				TestReturnType testReturnType = getReturnType();
+				if (testReturnType != null) {
+					this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, SchedulerModel.COMMAND_SET_RETURN_TYPE, null, testReturnType));
+				}					
+			} 
+	}
 
 	public void setReturnType(TestReturnType returnType) {		
 		if (returnType.equals(TestReturnType.TEST_RETURN_TYPE_WHOLE)) {
@@ -204,12 +187,5 @@ Commandable {
 		} else if (returnType.equals(TestReturnType.TEST_RETURN_TYPE_REFERENCE)) {
 			this.measurementIdButton.doClick();
 		}
-	}
-
-	/**
-	 * @return Returns the command.
-	 */
-	public Command getCommand() {
-		return this.command;
 	}
 }

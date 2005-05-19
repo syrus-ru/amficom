@@ -9,7 +9,8 @@
 	<classpathentry kind="src" path="/admin_v1"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path="/util"/>
-	<classpathentry kind="src" path="/generalclient_v1"/>
 	<classpathentry kind="src" path="/csbridge_v1"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/commonclient_v1"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/filterclient_v1"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

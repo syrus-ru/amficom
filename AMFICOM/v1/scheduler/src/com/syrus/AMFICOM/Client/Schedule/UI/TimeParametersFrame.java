@@ -11,6 +11,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -34,45 +36,38 @@ import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import com.syrus.AMFICOM.Client.General.Command.Command;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.UI.CalendarUI;
-import com.syrus.AMFICOM.Client.General.UI.DateSpinner;
-import com.syrus.AMFICOM.Client.General.UI.TimeSpinner;
-import com.syrus.AMFICOM.Client.General.UI.UIGeneralStorage;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
-import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
-import com.syrus.AMFICOM.Client.Schedule.Commandable;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
-import com.syrus.AMFICOM.Client.Schedule.WindowCommand;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
+import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
+import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
+import com.syrus.AMFICOM.filter.UI.CalendarUI;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.measurement.AbstractTemporalPattern;
-import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.PeriodicalTemporalPattern;
 import com.syrus.AMFICOM.measurement.PeriodicalTemporalPatternWrapper;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestTemporalStamps;
 import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
+import com.syrus.AMFICOM.newFilter.DateSpinner;
+import com.syrus.AMFICOM.newFilter.TimeSpinner;
 import com.syrus.util.Log;
 
-public class TimeParametersFrame extends JInternalFrame  implements Commandable {
+public class TimeParametersFrame extends JInternalFrame {
 
 	private static final long	serialVersionUID	= 6562288896016470275L;
 
-	public class TimeParametersPanel implements 
-	//TestTemporalStampsEditor, 
-	OperationListener {
+	public class TimeParametersPanel implements	PropertyChangeListener {
 
 		private static final long	serialVersionUID	= -7975294015403739057L;
 
@@ -120,9 +115,9 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 
 		Collection					temporalPatterns;
 
-		TestTemporalStamps	temporalStamps;
 		
-		TimeStampsEditor timeStampsEditor;
+		
+		TestTemporalStamps	temporalStamps;
 		
 		JPanel panel;
 		
@@ -140,47 +135,12 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 			this();
 			this.aContext = aContext;
 			this.dispatcher = this.aContext.getDispatcher();
-			this.dispatcher.register(this, TimeStampsEditor.DATE_OPERATION);
+			this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_DATE_OPERATION, this);
 			this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();
-//			this.schedulerModel.setTestTemporalStampsEditor(this);
-			
 			this.dispatcher = aContext.getDispatcher();
-			OperationListener operationListener = new OperationListener() {
-				private boolean skip = false;
-				public void operationPerformed(OperationEvent e) {					
-					
-					String actionCommand = e.getActionCommand();
-					Log.debugMessage(".operationPerformed | actionCommand " + actionCommand, Log.FINEST);
-					if (actionCommand.equals(SchedulerModel.COMMAND_SET_TEMPORAL_STAMPS)) {
-						if (!this.skip) {
-							setTestTemporalStamps((TestTemporalStamps) e.getSource());
-						}
-					} else if (actionCommand.equals(SchedulerModel.COMMAND_GET_TEMPORAL_STAMPS)){
-						TestTemporalStamps testTemporalStamps = getTestTemporalStamps();
-						if (testTemporalStamps != null) {
-							this.skip = true;
-							TimeParametersPanel.this.dispatcher.notify(new OperationEvent(testTemporalStamps, 0, SchedulerModel.COMMAND_SET_TEMPORAL_STAMPS));
-							if (TimeParametersPanel.this.groupRadioButton.isSelected()) {
-								TimeParametersPanel.this.dispatcher.notify(new OperationEvent(testTemporalStamps, 0, SchedulerModel.COMMAND_SET_GROUP_TEST));
-							}
-							this.skip = false;
-						}
-					} else if(actionCommand.equals(SchedulerModel.COMMAND_SET_START_GROUP_TIME)){
-						TimeParametersPanel.this.groupRadioButton.doClick();
-						TimeParametersPanel.this.skipChanging = true;
-						Date date = (Date) e.getSource();
-						// if (!date.equals(this.getStartDate())){
-						TimeParametersPanel.this.startDateSpinner.getModel().setValue(date);
-						TimeParametersPanel.this.startTimeSpinner.getModel().setValue(date);
-						TimeParametersPanel.this.skipChanging = false;
-						
-					}
-				}
-			};
-			
-			this.dispatcher.register(operationListener, SchedulerModel.COMMAND_SET_TEMPORAL_STAMPS);
-			this.dispatcher.register(operationListener, SchedulerModel.COMMAND_GET_TEMPORAL_STAMPS);
-			this.dispatcher.register(operationListener, SchedulerModel.COMMAND_SET_START_GROUP_TIME);
+			this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_SET_TEMPORAL_STAMPS, this);
+			this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_GET_TEMPORAL_STAMPS, this);
+			this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_SET_START_GROUP_TIME, this);
 		}
 
 		private void createGUI() {
@@ -233,22 +193,31 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 																while (true) {
 																	if (waiting
 																			&& (System.currentTimeMillis() - previousEventTime) > TIMEOUT) {
+																		Log.debugMessage(".run | 1 ", Log.FINEST);
 																		
 																		Date startDate = TimeParametersPanel.this
 																		.getStartDate();
 																		Date endDate = TimeParametersPanel.this
-																			.getEndDate();
-																
-																		if (!oneRadioButton.isSelected() || !groupRadioButton.isSelected()) {
-																			if (startDate.getTime() > endDate
-																					.getTime()) {
-																				waiting = false;
-																			}
-																		}
+																			.getEndDate();																
 																		
+																		Log.debugMessage(".run | 2 ", Log.FINEST);
+																		
+//																		if (!oneRadioButton.isSelected() && !groupRadioButton.isSelected()) {
+//																			Log.debugMessage(".run | 3 ", Log.FINEST);
+////																			if (startDate.getTime() > endDate
+////																					.getTime()) 
+//																			{
+//																				Log.debugMessage(".run | 4 ", Log.FINEST);
+//																				waiting = false;
+//																			}
+//																		}
+																		
+																		Log.debugMessage(".run | 5 ", Log.FINEST);
 																		if (waiting) {
+																			Log.debugMessage(".run | 6 ", Log.FINEST);
 																			schedulerModel.moveSelectedTests(startDate);
 																		}
+																		Log.debugMessage(".run | 7 ", Log.FINEST);
 																		waiting = false;
 																	}
 
@@ -297,11 +266,11 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 			
 			{
 				Box box = new Box(BoxLayout.X_AXIS);
-				UIGeneralStorage.fixHorizontalSize(this.startDateSpinner);
+				CommonUIUtilities.fixHorizontalSize(this.startDateSpinner);
 				box.add(this.startDateSpinner);
 				box.add(startDateButton);
 				box.add(Box.createHorizontalGlue());
-				UIGeneralStorage.fixHorizontalSize(this.startTimeSpinner);
+				CommonUIUtilities.fixHorizontalSize(this.startTimeSpinner);
 				box.add(this.startTimeSpinner);
 				box.add(this.startTimeButton);
 				gbc.gridwidth = GridBagConstraints.REMAINDER;				
@@ -322,7 +291,7 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 				{
 					Box box = new Box(BoxLayout.X_AXIS);
 					box.add(Box.createHorizontalGlue());
-					UIGeneralStorage.fixHorizontalSize(this.periodTimeSpinner);
+					CommonUIUtilities.fixHorizontalSize(this.periodTimeSpinner);
 //					box.add(this.periodMonthSpinner);
 //					this.monthIntervalLabel = new JLabel(LangModelSchedule.getString("month"));
 //					box.add(this.monthIntervalLabel);
@@ -373,11 +342,11 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 			});
 			{
 				Box box = new Box(BoxLayout.X_AXIS);
-				UIGeneralStorage.fixHorizontalSize(this.endDateSpinner);
+				CommonUIUtilities.fixHorizontalSize(this.endDateSpinner);
 				box.add(this.endDateSpinner);
 				box.add(this.endDateButton);
 				box.add(Box.createHorizontalGlue());
-				UIGeneralStorage.fixHorizontalSize(this.endTimeSpinner);
+				CommonUIUtilities.fixHorizontalSize(this.endTimeSpinner);
 				box.add(this.endTimeSpinner);
 				box.add(this.endTimeButton);
 				gbc.gridwidth = GridBagConstraints.REMAINDER;
@@ -399,16 +368,20 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 																while (true) {
 																	if (waiting
 																			&& (System.currentTimeMillis() - previousEventTime) > TIMEOUT) {
+																		Log.debugMessage(".run | 1 ", Log.FINEST);
 																		Test selectedTest = TimeParametersPanel.this.schedulerModel
 																				.getSelectedTest();
 																		if (selectedTest != null
 																				&& selectedTest.isChanged()) {
+																			Log.debugMessage(".run | 2 ", Log.FINEST);
 																			Date startDate = TimeParametersPanel.this
 																					.getStartDate();
 																			Date endDate = TimeParametersPanel.this
 																					.getEndDate();
 																			if (startDate.getTime() < endDate.getTime()) {
-																				if (schedulerModel.isValid(startDate, endDate, selectedTest.getMonitoredElement().getId())){
+																				Log.debugMessage(".run | 3 ", Log.FINEST);
+																				if (TimeParametersPanel.this.schedulerModel.isValid(startDate, endDate, selectedTest.getMonitoredElement().getId())){
+																					Log.debugMessage(".run | 4 ", Log.FINEST);
 																					selectedTest.setEndTime(endDate);
 																				} else {
 																					JOptionPane
@@ -423,17 +396,22 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 
 																				}
 																			} else {
+																				Log.debugMessage(".run | 5 ", Log.FINEST);
 																				waiting = false;
 																			}
 
 																			if (waiting) {
+																				Log.debugMessage(".run | 6 ", Log.FINEST);
 																				TimeParametersPanel.this.dispatcher
-																						.notify(new OperationEvent(
-																													this,
-																													0,
-																													SchedulerModel.COMMAND_REFRESH_TESTS));
+																						.firePropertyChange(new PropertyChangeEvent(
+																														TimeParametersPanel.this,
+
+																														SchedulerModel.COMMAND_REFRESH_TESTS,
+																														null,
+																														null));
 																			}
 																		}
+																		Log.debugMessage(".run | 7 ", Log.FINEST);
 																		waiting = false;
 																	}
 
@@ -898,7 +876,7 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 					if (!TimeParametersPanel.this.groupRadioButton.isSelected()) { 
 					TimeParametersPanel.this.schedulerModel.createTest();
 					} else {
-						TimeParametersPanel.this.dispatcher.notify(new OperationEvent(this, 0, SchedulerModel.COMMAND_GET_MONITORED_ELEMENT));
+						TimeParametersPanel.this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, SchedulerModel.COMMAND_GET_MONITORED_ELEMENT, null, null));
 						if (TimeParametersPanel.this.choosedButton == TimeParametersPanel.this.startTimeButton) {
 							TimeParametersPanel.this.schedulerModel.addGroupTest(TimeParametersPanel.this.getStartDate());
 						} else if (TimeParametersPanel.this.choosedButton == TimeParametersPanel.this.pediodTimeButton) {
@@ -915,34 +893,66 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 		}
 		
 		boolean isTestAgree(Test test) {
+			boolean result = false;
+			
 			if (test != null) {
 				TestTemporalType temporalType = test.getTemporalType();
+				Log.debugMessage("TimeParametersPanel.isTestAgree | temporalType.value() " + temporalType.value(), Log.FINEST);
 				switch (temporalType.value()) {
 					case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
-						return this.oneRadioButton.isSelected();
+						result = this.oneRadioButton.isSelected();
+						break;
 					case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
-						return this.pediodTimeButton.isSelected();
+						result = this.periodicalRadioButton.isSelected();
+						break;
 					case TestTemporalType._TEST_TEMPORAL_TYPE_CONTINUOUS:
-						return this.continuosRadioButton.isSelected();
+						result = this.continuosRadioButton.isSelected();
+						break;
 				}
-				if (test.getGroupTestId() != null)
-					return this.groupRadioButton.isSelected();
+				if (test.getGroupTestId() != null) {
+					Log.debugMessage("TimeParametersPanel.isTestAgree | " + test.getGroupTestId(), Log.FINEST);
+					result = this.groupRadioButton.isSelected();
+				}
 			}
-			return false;
+			Log.debugMessage("TimeParametersPanel.isTestAgree | test " + (test != null ? test.getId() : null) + " , result " + result, Log.FINEST);
+			return result;
 		}
 		
-		public void operationPerformed(OperationEvent e) {
-			String actionCommand = e.getActionCommand();
-
-			if (actionCommand.equals(TimeStampsEditor.DATE_OPERATION)) {
+		
+		public void propertyChange(PropertyChangeEvent e) {
+			String propertyName = e.getPropertyName();
+			Object newValue = e.getNewValue();
+			if (propertyName.equals(SchedulerModel.COMMAND_DATE_OPERATION)) {
 				/* TODO remove dummy skipChanging */
-				this.skipChanging = true;
-				Date date = (Date) e.getSource();
+//				this.skipChanging = true;
+				Date date = (Date) newValue;
 				// if (!date.equals(this.getStartDate())){
 				this.startDateSpinner.getModel().setValue(date);
 				this.startTimeSpinner.getModel().setValue(date);
 				this.skipChanging = false;
 				// }
+			} else if (propertyName.equals(SchedulerModel.COMMAND_SET_TEMPORAL_STAMPS)) {
+//				if (!this.skip) {
+					this.setTestTemporalStamps((TestTemporalStamps) newValue);				
+			} else if (propertyName.equals(SchedulerModel.COMMAND_GET_TEMPORAL_STAMPS)){
+				TestTemporalStamps testTemporalStamps = getTestTemporalStamps();
+				if (testTemporalStamps != null) {
+//					this.skip = true;
+					TimeParametersPanel.this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, SchedulerModel.COMMAND_SET_TEMPORAL_STAMPS, null, testTemporalStamps));
+					if (TimeParametersPanel.this.groupRadioButton.isSelected()) {
+						TimeParametersPanel.this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, SchedulerModel.COMMAND_SET_GROUP_TEST, null, testTemporalStamps));
+					}
+//					this.skip = false;
+				}
+			} else if(propertyName.equals(SchedulerModel.COMMAND_SET_START_GROUP_TIME)){
+				TimeParametersPanel.this.groupRadioButton.doClick();
+				TimeParametersPanel.this.skipChanging = true;
+				Date date = (Date) newValue;
+				// if (!date.equals(this.getStartDate())){
+				TimeParametersPanel.this.startDateSpinner.getModel().setValue(date);
+				TimeParametersPanel.this.startTimeSpinner.getModel().setValue(date);
+				TimeParametersPanel.this.skipChanging = false;
+				
 			}
 		}
 		
@@ -1057,7 +1067,7 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 				long intervalLength = this.getIntervalLength();
 				TypicalCondition typicalCondition = new TypicalCondition(intervalLength, intervalLength, OperationSort.OPERATION_EQUALS, ObjectEntities.PERIODICAL_TEMPORALPATTERN_ENTITY_CODE, PeriodicalTemporalPatternWrapper.COLUMN_PERIOD); 
 				try {
-					java.util.Set set = MeasurementStorableObjectPool.getStorableObjectsByCondition(typicalCondition, true);
+					java.util.Set set = StorableObjectPool.getStorableObjectsByCondition(typicalCondition, true);
 					if (!set.isEmpty()) {
 						temporalPattern = (AbstractTemporalPattern)set.iterator().next();
 					}
@@ -1075,7 +1085,7 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 					}
 					
 					try {
-						MeasurementStorableObjectPool.putStorableObject(temporalPattern);
+						StorableObjectPool.putStorableObject(temporalPattern);
 					} catch (IllegalObjectEntityException e) {
 						SchedulerModel.showErrorMessage(this.panel, e);
 						return null;
@@ -1212,8 +1222,6 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 
 	private TimeParametersPanel	timeParametersPanel;
 
-	private Command				command;
-
 	public TimeParametersFrame(ApplicationContext aContext) {
 		setTitle(LangModelSchedule.getString("TemporalType.Title")); //$NON-NLS-1$
 		setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
@@ -1222,14 +1230,6 @@ public class TimeParametersFrame extends JInternalFrame  implements Commandable 
 		setIconifiable(true);
 		this.timeParametersPanel = new TimeParametersPanel(aContext);
 		this.getContentPane().add(this.timeParametersPanel.panel, BorderLayout.CENTER);
-		this.command = new WindowCommand(this);
 	}
 	
-
-	/**
-	 * @return Returns the command.
-	 */
-	public Command getCommand() {
-		return this.command;
-	}
 }

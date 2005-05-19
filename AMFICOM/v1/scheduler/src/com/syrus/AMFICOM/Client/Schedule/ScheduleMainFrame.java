@@ -10,6 +10,8 @@ import java.awt.SystemColor;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.WindowEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JDesktopPane;
@@ -20,27 +22,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JViewport;
 import javax.swing.UIDefaults;
 
-import com.syrus.AMFICOM.Client.General.Command.Command;
-import com.syrus.AMFICOM.Client.General.Command.ExitCommand;
-import com.syrus.AMFICOM.Client.General.Command.HelpAboutCommand;
-import com.syrus.AMFICOM.Client.General.Command.Session.OpenSessionCommand;
-import com.syrus.AMFICOM.Client.General.Command.Session.SessionChangePasswordCommand;
-import com.syrus.AMFICOM.Client.General.Command.Session.SessionCloseCommand;
-import com.syrus.AMFICOM.Client.General.Command.Session.SessionConnectionCommand;
-import com.syrus.AMFICOM.Client.General.Command.Session.SessionDomainCommand;
-import com.syrus.AMFICOM.Client.General.Command.Session.SessionOptionsCommand;
-import com.syrus.AMFICOM.Client.General.Command.Window.ArrangeWindowCommand;
-import com.syrus.AMFICOM.Client.General.Event.ContextChangeEvent;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Event.StatusMessageEvent;
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.UI.StatusBarModel;
-import com.syrus.AMFICOM.Client.General.UI.WindowArranger;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Schedule.UI.ElementsTreeFrame;
 import com.syrus.AMFICOM.Client.Schedule.UI.PlanFrame;
@@ -51,12 +32,33 @@ import com.syrus.AMFICOM.Client.Schedule.UI.TestRequestFrame;
 import com.syrus.AMFICOM.Client.Schedule.UI.TimeParametersFrame;
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.Domain;
+import com.syrus.AMFICOM.client.UI.ArrangeWindowCommand;
+import com.syrus.AMFICOM.client.UI.StatusBarModel;
+import com.syrus.AMFICOM.client.UI.WindowArranger;
+import com.syrus.AMFICOM.client.event.ContextChangeEvent;
+import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.event.StatusMessageEvent;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.ApplicationModel;
+import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.model.ExitCommand;
+import com.syrus.AMFICOM.client.model.HelpAboutCommand;
+import com.syrus.AMFICOM.client.model.LazyCommand;
+import com.syrus.AMFICOM.client.model.OpenSessionCommand;
+import com.syrus.AMFICOM.client.model.SessionChangePasswordCommand;
+import com.syrus.AMFICOM.client.model.SessionCloseCommand;
+import com.syrus.AMFICOM.client.model.SessionConnectionCommand;
+import com.syrus.AMFICOM.client.model.SessionDomainCommand;
+import com.syrus.AMFICOM.client.model.SessionOptionsCommand;
+import com.syrus.AMFICOM.client.model.ShowWindowCommand;
+import com.syrus.AMFICOM.client.resource.LangModel;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 
-public class ScheduleMainFrame extends JFrame implements OperationListener {
+public class ScheduleMainFrame extends JFrame implements PropertyChangeListener {
 
 	private static final long	serialVersionUID	= 3257563988626848055L;
 	
@@ -102,8 +104,8 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		this.addWindowListener(new java.awt.event.WindowAdapter() {
 
 			public void windowClosing(WindowEvent e) {
-				ScheduleMainFrame.this.dispatcher.unregister(ScheduleMainFrame.this, ContextChangeEvent.type);
-				Environment.getDispatcher().unregister(ScheduleMainFrame.this, ContextChangeEvent.type);
+				ScheduleMainFrame.this.dispatcher.removePropertyChangeListener(ContextChangeEvent.TYPE, ScheduleMainFrame.this);
+				Environment.getDispatcher().removePropertyChangeListener(ContextChangeEvent.TYPE, ScheduleMainFrame.this);
 				ScheduleMainFrame.this.aContext.getApplicationModel().getCommand(ScheduleMainMenuBar.MENU_EXIT)
 						.execute();
 			}
@@ -226,27 +228,27 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		return this.aContext.getApplicationModel();
 	}
 
-	public void operationPerformed(OperationEvent ae) {
-		String commandName = ae.getActionCommand();
-		Object obj = ae.getSource();
-		Environment.log(Environment.LOG_LEVEL_INFO, "commandName:" + commandName, getClass().getName());
-		if (commandName.equals(SchedulerModel.COMMAND_CHANGE_STATUSBAR_STATE)) {
+	public void propertyChange(PropertyChangeEvent evt) {
+		String propertyName = evt.getPropertyName();
+		Object obj = evt.getNewValue();
+		Environment.log(Environment.LOG_LEVEL_INFO, "commandName:" + propertyName, getClass().getName());
+		if (propertyName.equals(SchedulerModel.COMMAND_CHANGE_STATUSBAR_STATE)) {
 			boolean value = ((Boolean) obj).booleanValue();
 			// Environment.log(Environment.LOG_LEVEL_INFO,
 			// "progressBar:" +
 			// value);
 			this.statusBar.setProgressBarEnable(value);
 		}
-		if (commandName.equals(StatusMessageEvent.STATUS_MESSAGE)) {
-			StatusMessageEvent sme = (StatusMessageEvent) ae;
+		if (propertyName.equals(StatusMessageEvent.STATUS_MESSAGE)) {
+			StatusMessageEvent sme = (StatusMessageEvent) evt;
 			this.statusBar.setText("status", sme.getText());
-		} else if (commandName.equals(ContextChangeEvent.type)) {
-			ContextChangeEvent cce = (ContextChangeEvent) ae;
-			System.out.println("perform context change \"" + Long.toHexString(cce.change_type) + "\" at "
-					+ this.getTitle());
+		} else if (propertyName.equals(ContextChangeEvent.TYPE)) {
+			ContextChangeEvent cce = (ContextChangeEvent) evt;
+//			System.out.println("perform context change \"" + Long.toHexString(cce.change_type) + "\" at "
+//					+ this.getTitle());
 			// ApplicationModel aModel =
 			// aContext.getApplicationModel();
-			if (cce.SESSION_OPENED) {
+			if (cce.isSessionOpened()) {
 //				SessionInterface ssi = (SessionInterface) cce.getSource();
 //				if (this.aContext.getSessionInterface().equals(ssi)) 
 				{
@@ -259,7 +261,7 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 //					this.statusBar.setText("user", this.aContext.getSessionInterface().getUser());
 				}
 			}
-			if (cce.SESSION_CLOSED) {
+			if (cce.isSessionClosed()) {
 //				SessionInterface ssi = (SessionInterface) cce.getSource();
 //				if (this.aContext.getSessionInterface().equals(ssi)) 
 				{
@@ -271,7 +273,7 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 					this.statusBar.setText("user", LangModel.getString("statusNoUser"));
 				}
 			}
-			if (cce.CONNECTION_OPENED) {
+			if (cce.isConnectionOpened()) {
 //				ConnectionInterface cci = (ConnectionInterface) cce.getSource();
 //				if (ConnectionInterface.getInstance().equals(cci)) 
 				{
@@ -281,7 +283,7 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 //					this.statusBar.setText("server", ConnectionInterface.getInstance().getServerName());
 				}
 			}
-			if (cce.CONNECTION_CLOSED) {
+			if (cce.isConnectionClosed()) {
 //				ConnectionInterface cci = (ConnectionInterface) cce.getSource();
 //				if (this.aContext.getConnectionInterface().equals(cci)) 
 				{
@@ -295,7 +297,7 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 
 				}
 			}
-			if (cce.CONNECTION_FAILED) {
+			if (cce.isConnectionFailed()) {
 //				ConnectionInterface cci = (ConnectionInterface) cce.getSource();
 //				if (this.aContext.getConnectionInterface().equals(cci))
 				{
@@ -305,7 +307,7 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 					setConnectionFailed();
 				}
 			}
-			if (cce.DOMAIN_SELECTED) {
+			if (cce.isDomainSelected()) {
 				setDomainSelected();
 			}
 		}
@@ -392,7 +394,7 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 
 		MeasurementStorableObjectPool.cleanChangedStorableObjects();
 
-		this.dispatcher.notify(new OperationEvent(this, 0, SchedulerModel.COMMAND_CLEAN));
+		this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, SchedulerModel.COMMAND_CLEAN, null, null));
 
 		((Component) this.frames.get(PARAMETERS_FRAME)).setVisible(true);
 		((Component) this.frames.get(PROPERTIES_FRAME)).setVisible(true);
@@ -429,8 +431,9 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		// this.checker = new
 		// Checker(aContext.getDataSourceInterface());
 
-		this.aContext.getDispatcher().notify(
-			new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, LangModelSchedule.getString("Loading_DB")));
+		Dispatcher dispatcher = this.aContext.getDispatcher();
+		dispatcher.firePropertyChange(
+			new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, LangModelSchedule.getString("Loading_DB")));
 		// new SurveyDataSourceImage(dataSource).LoadParameterTypes();
 		// new SurveyDataSourceImage(dataSource).LoadTestTypes();
 		// new SurveyDataSourceImage(dataSource).LoadAnalysisTypes();
@@ -444,9 +447,8 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		// sdsi.LoadAnalysisTypes();
 		// sdsi.LoadEvaluationTypes();
 
-		this.aContext.getDispatcher()
-				.notify(
-					new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, LangModelSchedule
+dispatcher.firePropertyChange(
+			new StatusMessageEvent(this,StatusMessageEvent.STATUS_MESSAGE, LangModelSchedule
 							.getString("Loding_DB_finished")));
 
 		ApplicationModel aModel = this.aContext.getApplicationModel();
@@ -454,8 +456,9 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_SESSION_NEW, false);
 		aModel.fireModelChanged("");
 		Identifier domainId = LoginManager.getDomainId();
-		if (domainId != null && !domainId.isVoid())
-			this.dispatcher.notify(new ContextChangeEvent(domainId, ContextChangeEvent.DOMAIN_SELECTED_EVENT));
+		if (domainId != null && !domainId.isVoid()) {
+			this.dispatcher.firePropertyChange(new ContextChangeEvent(domainId, ContextChangeEvent.DOMAIN_SELECTED_EVENT));
+		}
 	}
 
 	protected void processWindowEvent(WindowEvent e) {
@@ -464,8 +467,8 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		}
 		if (e.getID() == WindowEvent.WINDOW_CLOSING) {
 			// cManager.saveIni();
-			this.dispatcher.unregister(this, ContextChangeEvent.type);
-			Environment.getDispatcher().unregister(this, ContextChangeEvent.type);
+			this.dispatcher.removePropertyChangeListener(ContextChangeEvent.TYPE, this);
+			Environment.getDispatcher().removePropertyChangeListener(ContextChangeEvent.TYPE, this);
 			this.aContext.getApplicationModel().getCommand(ScheduleMainMenuBar.MENU_EXIT).execute();
 			return;
 		}
@@ -555,22 +558,21 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		}
 
 		this.aContext.setDispatcher(this.dispatcher);
-		this.dispatcher.register(this, StatusMessageEvent.STATUS_MESSAGE);
+		this.dispatcher.addPropertyChangeListener(StatusMessageEvent.STATUS_MESSAGE, this);
 		// this.dispatcher.register(this, RefChangeEvent.typ);
 		// this.dispatcher.register(this, RefUpdateEvent.typ);
-		this.dispatcher.register(this, SchedulerModel.COMMAND_CHANGE_STATUSBAR_STATE);
+		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_CHANGE_STATUSBAR_STATE, this);
 
-		this.dispatcher.register(this, ContextChangeEvent.type);
+		this.dispatcher.addPropertyChangeListener(ContextChangeEvent.TYPE, this);
 		Dispatcher dispatcher1 = Environment.getDispatcher();
-		dispatcher1.register(this, ContextChangeEvent.type);
+		dispatcher1.addPropertyChangeListener(ContextChangeEvent.TYPE, this);
 
 		aModel.setCommand(ScheduleMainMenuBar.MENU_SESSION_NEW, new OpenSessionCommand(dispatcher1, this.aContext));
+		// TODO FIXXX
 		aModel.setCommand(ScheduleMainMenuBar.MENU_SESSION_CLOSE, new SessionCloseCommand(dispatcher1, this.aContext));
 		aModel.setCommand(ScheduleMainMenuBar.MENU_SESSION_OPTIONS, new SessionOptionsCommand(this.aContext));
-		aModel.setCommand(ScheduleMainMenuBar.MENU_SESSION_CONNECTION, new SessionConnectionCommand(dispatcher1,
-																									this.aContext));
-		aModel.setCommand(ScheduleMainMenuBar.MENU_SESSION_CHANGE_PASSWORD,
-			new SessionChangePasswordCommand(dispatcher1, this.aContext));
+		aModel.setCommand(ScheduleMainMenuBar.MENU_SESSION_CONNECTION, new SessionConnectionCommand(dispatcher1, this.aContext));
+		aModel.setCommand(ScheduleMainMenuBar.MENU_SESSION_CHANGE_PASSWORD,	new SessionChangePasswordCommand(dispatcher1, this.aContext));
 		aModel.setCommand(ScheduleMainMenuBar.MENU_SESSION_DOMAIN, new SessionDomainCommand(dispatcher1, this.aContext));
 		aModel.setCommand(ScheduleMainMenuBar.MENU_EXIT, new ExitCommand(this));
 
@@ -614,74 +616,15 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 //		}
 	}
 
-	private Command getLazyCommand(final Object key) {
-		return new Command() {
-
-			private Command getLazyCommand() {
-				Command command = null;
-				Object object = ScheduleMainFrame.this.frames.get(key);
-				if (object instanceof Commandable) {
-					command = ((Commandable) object).getCommand();
-				}
-				return command;
+	private Command getLazyCommand(final Object windowKey) {
+		//return new LazyCommand()
+		final String commandKey = windowKey.toString() + "_COMMAND";
+		this.frames.put(commandKey, new UIDefaults.LazyValue() {
+			public Object createValue(UIDefaults defaults) {
+				return new ShowWindowCommand(defaults.get(windowKey));
 			}
-
-			public Object clone() {
-				return this.getLazyCommand().clone();
-			}
-
-			public void commitExecute() {
-				this.getLazyCommand().commitExecute();
-			}
-
-			public void commitUndo() {
-				this.getLazyCommand().commitUndo();
-			}
-
-			public void execute() {
-				this.getLazyCommand().execute();
-			}
-
-			public Command getNext() {
-				return this.getLazyCommand().getNext();
-			}
-
-			public Command getPrevious() {
-				return this.getLazyCommand().getPrevious();
-			}
-
-			public int getResult() {
-				return this.getLazyCommand().getResult();
-			}
-
-			public Object getSource() {
-				return this.getLazyCommand().getSource();
-			}
-
-			public void redo() {
-				this.getLazyCommand().redo();
-			}
-
-			public void setNext(Command next) {
-				this.getLazyCommand().setNext(next);
-
-			}
-
-			public void setParameter(	String field,
-										Object value) {
-				this.getLazyCommand().setParameter(field, value);
-			}
-
-			public void setPrevious(Command previous) {
-				this.getLazyCommand().setPrevious(previous);
-
-			}
-
-			public void undo() {
-				this.getLazyCommand().undo();
-
-			}
-		};
+		});
+		return new LazyCommand(this.frames, commandKey);
 	}
 
 	void setDefaultModel(ApplicationModel aModel) {

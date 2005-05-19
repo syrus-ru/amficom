@@ -10,6 +10,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -31,19 +33,14 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.JTableHeader;
 
-import com.syrus.AMFICOM.Client.General.Command.Command;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
-import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
-import com.syrus.AMFICOM.Client.Schedule.Commandable;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
-import com.syrus.AMFICOM.Client.Schedule.WindowCommand;
-import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTable;
-import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTableModel;
+import com.syrus.AMFICOM.client.UI.WrapperedTable;
+import com.syrus.AMFICOM.client.UI.WrapperedTableModel;
+import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
@@ -54,49 +51,29 @@ import com.syrus.util.Log;
 /**
  * @author Vladimir Dolzhenko
  */
-public class TableFrame extends JInternalFrame implements 
-//TestsEditor, TestEditor , 
-Commandable {
+public class TableFrame extends JInternalFrame implements PropertyChangeListener {
 
 	private static final long	serialVersionUID	= 3761405313630156343L;
-	Dispatcher			dispatcher;
-	SchedulerModel		schedulerModel;
-	ObjectResourceTable	listTable;
-	ApplicationContext	aContext;
-	private JPanel		panel;
-//	private Test		test;
-	java.util.List		rowToRemove;
-	private Command		command;
-	boolean skip = false;
+	Dispatcher					dispatcher;
+	SchedulerModel				schedulerModel;
+	WrapperedTable			listTable;
+	ApplicationContext			aContext;
+	private JPanel				panel;
+	java.util.List				rowToRemove;
+	PropertyChangeEvent	propertyChangeEvent;
 
 	public TableFrame(ApplicationContext aContext) {
 		this.aContext = aContext;
 		if (aContext != null) {
-			// initModule(aContext.getDispatcher());
 			this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();
-//			this.schedulerModel.addTestsEditor(this);
-//			this.schedulerModel.addTestEditor(this);
 			this.dispatcher = aContext.getDispatcher();
-			OperationListener operationListener = new OperationListener() {
-				public void operationPerformed(OperationEvent e) {
-					String actionCommand = e.getActionCommand();
-					if (actionCommand.equals(SchedulerModel.COMMAND_REFRESH_TESTS)) {
-						updateTests();
-					} else if (actionCommand.equals(SchedulerModel.COMMAND_REFRESH_TEST)) {
-						updateTest();
-					}
-				}
-			};
-			
-			this.dispatcher.register(operationListener, SchedulerModel.COMMAND_REFRESH_TESTS);
-			this.dispatcher.register(operationListener, SchedulerModel.COMMAND_REFRESH_TEST);
+			this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_REFRESH_TESTS, this);
+			this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_REFRESH_TEST, this);
 		}
-		init();
-		this.command = new WindowCommand(this);
+		this.init();
 	}
 
-	public void updateTest() {
-		this.skip = true;
+	private void updateTest() {
 		Set selectedTestIds = this.schedulerModel.getSelectedTestIds();
 		if (selectedTestIds == null || selectedTestIds.isEmpty()) {
 
@@ -110,15 +87,15 @@ Commandable {
 				}
 				this.listTable.removeRowSelectionInterval(minRowIndex, maxRowIndex);
 			}
-		
+
 		} else {
-//			int[] selectedRows = new int[selectedTestIds.size()];
-//			int j = 0;
-			ObjectResourceTableModel tableModel = (ObjectResourceTableModel) this.listTable.getModel();
+			// int[] selectedRows = new int[selectedTestIds.size()];
+			// int j = 0;
+			WrapperedTableModel tableModel = (WrapperedTableModel) this.listTable.getModel();
 			for (Iterator iterator = selectedTestIds.iterator(); iterator.hasNext();) {
 				Identifier identifier = (Identifier) iterator.next();
 				try {
-					Test test1 = (Test)MeasurementStorableObjectPool.getStorableObject(identifier, true);
+					Test test1 = (Test) MeasurementStorableObjectPool.getStorableObject(identifier, true);
 					Identifier groupTestId = test1.getGroupTestId();
 					if (groupTestId != null) {
 						identifier = groupTestId;
@@ -127,44 +104,57 @@ Commandable {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				for(int i=0;i<tableModel.getRowCount();i++) {
-					Test test = (Test)tableModel.getObject(i);
+				for (int i = 0; i < tableModel.getRowCount(); i++) {
+					Test test = (Test) tableModel.getObject(i);
 					Identifier testId = test.getGroupTestId();
 					testId = testId != null ? testId : test.getId();
 					if (testId.equals(identifier)) {
-//						selectedRows[j++] = i;
+						// selectedRows[j++] = i;
 						this.listTable.setRowSelectionInterval(i, i);
 						break;
 					}
 				}
 			}
-//			listTable.setRow
+			// listTable.setRow
 		}
-//		ObjectResourceTableModel tableModel = (ObjectResourceTableModel) this.listTable.getModel();
-//		int rowIndex = tableModel.getIndexOfObject(this.test);
-//		if (rowIndex >= 0) {
-//			this.listTable.setRowSelectionInterval(rowIndex, rowIndex);
-//		} else {}
-		this.skip = false;
+		// ObjectResourceTableModel tableModel = (ObjectResourceTableModel)
+		// this.listTable.getModel();
+		// int rowIndex = tableModel.getIndexOfObject(this.test);
+		// if (rowIndex >= 0) {
+		// this.listTable.setRowSelectionInterval(rowIndex, rowIndex);
+		// } else {}
 	}
 
-	public void updateTests() {
+	private void updateTests() {
 		this.setTests();
 		this.updateTest();
 	}
 
+	public void propertyChange(PropertyChangeEvent evt) {
+
+		this.propertyChangeEvent = evt;
+		String propertyName = evt.getPropertyName();
+		if (propertyName.equals(SchedulerModel.COMMAND_REFRESH_TESTS)) {
+			this.updateTests();
+		} else if (propertyName.equals(SchedulerModel.COMMAND_REFRESH_TEST)) {
+			this.updateTest();
+		}
+		this.propertyChangeEvent = null;
+	}
+
 	private void setTests() {
 		this.listTable.removeAll();
-		ObjectResourceTableModel model = (ObjectResourceTableModel) TableFrame.this.listTable.getModel();
+		WrapperedTableModel model = (WrapperedTableModel) TableFrame.this.listTable.getModel();
 		model.clear();
 		Collection tests = this.schedulerModel.getTests();
 		for (Iterator it = tests.iterator(); it.hasNext();) {
-			Test test1 = (Test) it.next();			
+			Test test1 = (Test) it.next();
 			Identifier groupTestId = test1.getGroupTestId();
-			assert Log.debugMessage("TableFrame.setTests | test1 is " + test1.getId() + ", groupTestId is " + groupTestId, Log.FINEST);
+			assert Log.debugMessage("TableFrame.setTests | test1 is " + test1.getId() + ", groupTestId is "
+					+ groupTestId, Log.FINEST);
 			if (groupTestId != null && !groupTestId.equals(test1.getId())) {
 				continue;
-			}			
+			}
 			if (model.getIndexOfObject(test1) < 0) {
 				Log.debugMessage("TableFrame.setTests | added ", Log.FINEST);
 				model.getContents().add(test1);
@@ -178,7 +168,7 @@ Commandable {
 		if (this.panel == null) {
 			this.panel = new JPanel(new BorderLayout());
 
-			this.listTable = new ObjectResourceTable(TestController.getInstance());
+			this.listTable = new WrapperedTable(TestController.getInstance());
 			this.listTable.setDefaultTableCellRenderer();
 			ListSelectionModel rowSM = this.listTable.getSelectionModel();
 			rowSM.addListSelectionListener(new ListSelectionListener() {
@@ -188,12 +178,12 @@ Commandable {
 						return;
 
 					ListSelectionModel lsm = (ListSelectionModel) e.getSource();
-					if (!lsm.isSelectionEmpty() && !TableFrame.this.skip) {
+					if (!lsm.isSelectionEmpty() && TableFrame.this.propertyChangeEvent == null) {
 						int selectedRow = lsm.getMinSelectionIndex();
 						try {
 							TableFrame.this.schedulerModel.unselectTests();
 							TableFrame.this.schedulerModel
-									.addSelectedTest((Test) ((ObjectResourceTableModel) TableFrame.this.listTable
+									.addSelectedTest((Test) ((WrapperedTableModel) TableFrame.this.listTable
 											.getModel()).getObject(selectedRow));
 						} catch (ApplicationException e1) {
 							SchedulerModel.showErrorMessage(TableFrame.this, e1);
@@ -231,7 +221,7 @@ Commandable {
 						System.out.println("RightMouseButton");
 						final int[] rowIndices = table.getSelectedRows();
 						if ((rowIndices != null) && (rowIndices.length > 0)) {
-							final ObjectResourceTableModel model = (ObjectResourceTableModel) table.getModel();
+							final WrapperedTableModel model = (WrapperedTableModel) table.getModel();
 							JMenuItem deleteTestMenuItem = new JMenuItem(LangModelSchedule.getString("delete_tests")); //$NON-NLS-1$
 							deleteTestMenuItem.addActionListener(new ActionListener() {
 
@@ -303,10 +293,4 @@ Commandable {
 		setContentPane(this.panel);
 	}
 
-	/**
-	 * @return Returns the command.
-	 */
-	public Command getCommand() {
-		return this.command;
-	}
 }

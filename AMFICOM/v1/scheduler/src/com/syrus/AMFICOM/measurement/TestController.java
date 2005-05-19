@@ -1,5 +1,5 @@
 /*
- * $Id: TestController.java,v 1.10 2005/05/16 12:54:51 bob Exp $
+ * $Id: TestController.java,v 1.11 2005/05/19 14:32:22 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.measurement;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -18,10 +19,11 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.JLabel;
+import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
-import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
@@ -29,13 +31,14 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.measurement.corba.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 import com.syrus.util.Log;
+import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/05/16 12:54:51 $
+ * @version $Revision: 1.11 $, $Date: 2005/05/19 14:32:22 $
  * @author $Author: bob $
  * @module module
  */
-public class TestController extends ObjectResourceController {
+public class TestController implements Wrapper {
 
 	public static final String		KEY_TEMPORAL_TYPE		= "TemporalType";
 	public static final String		KEY_TEMPORAL_TYPE_NAME	= "TemporalTypeName";
@@ -213,8 +216,10 @@ public class TestController extends ObjectResourceController {
 					Log.errorMessage("TestController.getValue | key='" + key + "', cannot get " + test.getMeasurementTypeId() + " -- " + e.getMessage());
 					e.printStackTrace();
 				}
-			else if (key.equals(KEY_START_TIME))
-				value = SIMPLE_DATE_FORMAT.format(test.getStartTime()); //$NON-NLS-1$
+			else if (key.equals(KEY_START_TIME)) {
+				SimpleDateFormat sdf = (SimpleDateFormat)UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);			
+				value = sdf.format(test.getStartTime());
+			}
 			else if (key.equals(KEY_STATUS)) {
 				return test.getStatus();
 			}

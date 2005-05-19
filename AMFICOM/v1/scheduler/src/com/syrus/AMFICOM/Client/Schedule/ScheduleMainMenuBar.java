@@ -8,12 +8,12 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
-import com.syrus.AMFICOM.Client.General.Command.Command;
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationModelListener;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
+import com.syrus.AMFICOM.client.model.ApplicationModel;
+import com.syrus.AMFICOM.client.model.ApplicationModelListener;
+import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.AMFICOM.client.resource.LangModel;
+import com.syrus.util.Log;
 
 public class ScheduleMainMenuBar extends JMenuBar {
 
@@ -49,7 +49,7 @@ public class ScheduleMainMenuBar extends JMenuBar {
 
 	JMenu								menuSession						= new JMenu();
 	private JMenu						menuView;
-	private JMenu						menuReport;  
+//	private JMenu						menuReport;  
 	private JMenu						menuHelp;
 
 	private ApplicationModelListener	applicationModelListener;
@@ -64,7 +64,8 @@ public class ScheduleMainMenuBar extends JMenuBar {
 				AbstractButton jb = (AbstractButton) e.getSource();
 				String s = jb.getName();
 				Command command = ScheduleMainMenuBar.this.aModel.getCommand(s);
-				command = (Command) command.clone();
+//				command = (Command) command.clone();
+				Log.debugMessage("ScheduleMainMenuBar$ActionListener.actionPerformed | " + command.getClass().getName(), Log.FINEST);
 				command.execute();
 			}
 		};
@@ -152,19 +153,20 @@ public class ScheduleMainMenuBar extends JMenuBar {
 		menuViewArrangeItem.addActionListener(actionAdapter);
 		this.menuView.add(menuViewArrangeItem);
 
-		this.menuReport = new JMenu(LangModelReport.getString(MENU_REPORT));
-		this.menuReport.setName(MENU_REPORT);
-
-		final JMenuItem menuTemplateReportItem = new JMenuItem(LangModelReport.getString(MENU_TEMPLATE_REPORT));
-		menuTemplateReportItem.setName(MENU_TEMPLATE_REPORT);
-		menuTemplateReportItem.addActionListener(actionAdapter);
-		this.menuReport.add(menuTemplateReportItem);
+//		this.menuReport = new JMenu(LangModelReport.getString(MENU_REPORT));
+//		this.menuReport.setName(MENU_REPORT);
+//
+//		final JMenuItem menuTemplateReportItem = new JMenuItem(LangModelReport.getString(MENU_TEMPLATE_REPORT));
+//		menuTemplateReportItem.setName(MENU_TEMPLATE_REPORT);
+//		menuTemplateReportItem.addActionListener(actionAdapter);
+//		this.menuReport.add(menuTemplateReportItem);
 
 		this.menuHelp = new JMenu(LangModelSchedule.getString("Help"));
 		this.menuHelp.setName(MENU_HELP);
 
 		final JMenuItem menuHelpAboutItem = new JMenuItem(LangModelSchedule.getString("About_program"));
 		menuHelpAboutItem.setName(MENU_HELP_ABOUT);
+		menuHelpAboutItem.addActionListener(actionAdapter);
 		this.menuHelp.add(menuHelpAboutItem);
 
 		this.menuSession.add(menuSessionNew);
@@ -180,12 +182,20 @@ public class ScheduleMainMenuBar extends JMenuBar {
 
 		this.add(this.menuSession);
 		this.add(this.menuView);
-		this.add(this.menuReport);    
+//		this.add(this.menuReport);    
 		this.add(this.menuHelp);
 
 		this.applicationModelListener = new ApplicationModelListener() {
 
-			public void modelChanged(String e[]) {
+			public void modelChanged(String elementName) {
+				this.modelChanged();				
+			}
+			
+			public void modelChanged(String[] elementNames) {
+				this.modelChanged();				
+			}
+			
+			private void modelChanged() {
 				ScheduleMainMenuBar.this.menuSession
 						.setVisible(ScheduleMainMenuBar.this.aModel.isVisible(MENU_SESSION));
 				ScheduleMainMenuBar.this.menuSession
@@ -223,8 +233,8 @@ public class ScheduleMainMenuBar extends JMenuBar {
 				menuViewTableItem.setVisible(ScheduleMainMenuBar.this.aModel.isVisible(MENU_VIEW_TABLE));
 				menuViewTableItem.setEnabled(ScheduleMainMenuBar.this.aModel.isEnabled(MENU_VIEW_TABLE));
 
-				menuTemplateReportItem.setVisible(ScheduleMainMenuBar.this.aModel.isVisible(MENU_TEMPLATE_REPORT));
-				menuTemplateReportItem.setEnabled(ScheduleMainMenuBar.this.aModel.isEnabled(MENU_TEMPLATE_REPORT));
+//				menuTemplateReportItem.setVisible(ScheduleMainMenuBar.this.aModel.isVisible(MENU_TEMPLATE_REPORT));
+//				menuTemplateReportItem.setEnabled(ScheduleMainMenuBar.this.aModel.isEnabled(MENU_TEMPLATE_REPORT));
 
 				menuViewSaveParametersItem.setVisible(ScheduleMainMenuBar.this.aModel
 						.isVisible(MENU_VIEW_SAVE_PARAMETERS));

@@ -22,11 +22,11 @@ import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
-import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.measurement.CronTemporalPattern;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/04/27 15:26:37 $
+ * @version $Revision: 1.10 $, $Date: 2005/05/19 14:32:22 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1

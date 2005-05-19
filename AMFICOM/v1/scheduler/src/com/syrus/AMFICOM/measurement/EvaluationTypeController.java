@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeController.java,v 1.3 2005/05/12 11:26:27 bob Exp $
+ * $Id: EvaluationTypeController.java,v 1.4 2005/05/19 14:32:22 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,14 +13,14 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
+import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/05/12 11:26:27 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/19 14:32:22 $
  * @author $Author: bob $
  * @module module
  */
-public class EvaluationTypeController extends ObjectResourceController {
+public class EvaluationTypeController implements Wrapper {
 
 	public static final String		KEY_NAME	= "name";
 

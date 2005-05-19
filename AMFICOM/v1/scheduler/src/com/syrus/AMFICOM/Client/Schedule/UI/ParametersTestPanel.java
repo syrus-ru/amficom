@@ -7,7 +7,7 @@ package com.syrus.AMFICOM.Client.Schedule.UI;
 
 import javax.swing.JPanel;
 
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 
 /**

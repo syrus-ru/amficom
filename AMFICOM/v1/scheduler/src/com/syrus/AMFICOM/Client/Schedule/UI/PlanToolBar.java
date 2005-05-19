@@ -16,6 +16,7 @@ import java.awt.event.FocusListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.image.BufferedImage;
+import java.beans.PropertyChangeEvent;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -35,22 +36,19 @@ import javax.swing.WindowConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Filter.FilterDialog;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.Report.ReportBuilder;
-import com.syrus.AMFICOM.Client.General.UI.AComboBox;
-import com.syrus.AMFICOM.Client.General.UI.CalendarUI;
-import com.syrus.AMFICOM.Client.General.UI.DateSpinner;
-import com.syrus.AMFICOM.Client.General.UI.TimeSpinner;
-import com.syrus.AMFICOM.Client.General.UI.UIGeneralStorage;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
-import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
+import com.syrus.AMFICOM.client.UI.AComboBox;
+import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
+import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
+import com.syrus.AMFICOM.filter.UI.CalendarUI;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.newFilter.DateSpinner;
+import com.syrus.AMFICOM.newFilter.TimeSpinner;
 
 class PlanToolBar {
 
@@ -102,7 +100,7 @@ class PlanToolBar {
 	AComboBox		scaleComboBox;
 	JSpinner		timeSpinner		= new TimeSpinner();
 
-	FilterDialog	filterDialog;
+//	FilterDialog	filterDialog;
 
 	private JButton	filterButton	= new JButton();
 	private JButton	zoomInButton	= new JButton();
@@ -285,18 +283,18 @@ class PlanToolBar {
 		});
 
 		this.toolBar.add(new JLabel(LangModelSchedule.getString("Detalization") + ':')); //$NON-NLS-1$
-		UIGeneralStorage.fixHorizontalSize(this.scaleComboBox);
+		CommonUIUtilities.fixHorizontalSize(this.scaleComboBox);
 		this.toolBar.add(this.scaleComboBox);
 		this.toolBar.addSeparator();
 		this.toolBar.add(new JLabel(LangModelSchedule.getString("Date") + ':')); //$NON-NLS-1$
 		
-		UIGeneralStorage.fixHorizontalSize(this.dateSpinner);
+		CommonUIUtilities.fixHorizontalSize(this.dateSpinner);
 		this.toolBar.add(this.dateSpinner);
 		this.toolBar.add(this.dateButton);
 		this.toolBar.addSeparator();
 		this.toolBar.add(new JLabel(LangModelSchedule.getString("Time") + ':')); //$NON-NLS-1$
 
-		UIGeneralStorage.fixHorizontalSize(this.timeSpinner);
+		CommonUIUtilities.fixHorizontalSize(this.timeSpinner);
 		this.toolBar.add(this.timeSpinner);
 
 		this.nowButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
@@ -398,9 +396,9 @@ class PlanToolBar {
 		this.applyButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				aContext.getDispatcher().notify(
-					new OperationEvent(new Boolean(true), 0, SchedulerModel.COMMAND_CHANGE_STATUSBAR_STATE));
-				ReportBuilder.invokeAsynchronously(new Runnable() {
+				aContext.getDispatcher().firePropertyChange(
+					new PropertyChangeEvent(PlanToolBar.this, SchedulerModel.COMMAND_CHANGE_STATUSBAR_STATE, Boolean.FALSE, Boolean.TRUE));
+				CommonUIUtilities.invokeAsynchronously(new Runnable() {
 
 					public void run() {
 						try {
@@ -418,8 +416,7 @@ class PlanToolBar {
 
 						panel.setDate(date.getTime(), PlanToolBar.this.scaleComboBox.getSelectedIndex());
 						PlanToolBar.this.dispatcher
-								.notify(new OperationEvent(new Boolean(false), 0,
-															SchedulerModel.COMMAND_CHANGE_STATUSBAR_STATE));
+								.firePropertyChange(new PropertyChangeEvent(PlanToolBar.this, SchedulerModel.COMMAND_CHANGE_STATUSBAR_STATE,  Boolean.TRUE, Boolean.FALSE));
 					}
 				}, LangModelSchedule.getString("Updating_tests_from_DB"));
 			}
