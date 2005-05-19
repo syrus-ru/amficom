@@ -38,6 +38,7 @@ public class FileOpenCommand extends VoidCommand
     public static BellcoreStructure readTraceFromFile(File file) {
         TraceReader tr = new TraceReader();
         BellcoreStructure bs = null;
+        System.out.println("FileName: " + file.getName());
         try
         {
             bs = tr.getData(file);
@@ -50,6 +51,7 @@ public class FileOpenCommand extends VoidCommand
         }
         if (true && AnalyseMainFrameSimplified.DEBUG)
         {
+            // FIXME: debug-only code
             // этот код написан для отладочных целей и предназначен для
             // считывания рефлектограммы из текстового файла,
             // если не удается считать с помощью известного формата
@@ -63,11 +65,12 @@ public class FileOpenCommand extends VoidCommand
                     while ((s = dis.readLine()) != null)
                         al.add(s);
                     final int N = al.size();
-                    System.out.println("reading file: N=" + N);
+                    //System.out.println("reading file: N=" + N);
                     double[] dl = new double[N];
                     for (int i = 0; i < N; i++)
                         dl[i] = Double.parseDouble((String )al.get(i));
                     bs = new BellcoreCreator(dl).getBS();
+                    dis.close();
                 }
             } catch (IOException e1)
             {
