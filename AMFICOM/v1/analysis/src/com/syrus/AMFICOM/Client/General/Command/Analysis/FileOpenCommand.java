@@ -34,6 +34,54 @@ public class FileOpenCommand extends VoidCommand
 		return new FileOpenCommand(dispatcher, aContext);
 	}
 
+    // may return null
+    public static BellcoreStructure readTraceFromFile(File file) {
+        TraceReader tr = new TraceReader();
+        BellcoreStructure bs = null;
+        try
+        {
+            bs = tr.getData(file);
+            if (bs != null)
+                return bs;
+        }
+        catch (UnsatisfiedLinkError e)
+        {
+            // XXX: exceptions: UnsatisfiedLinkError thrown while reading BS 
+        }
+        if (true && AnalyseMainFrameSimplified.DEBUG)
+        {
+            // этот код написан для отладочных целей и предназначен для
+            // считывания рефлектограммы из текстового файла,
+            // если не удается считать с помощью известного формата
+            try
+            {
+                {
+                    FileInputStream fis = new FileInputStream(file);
+                    DataInputStream dis = new DataInputStream(fis);
+                    ArrayList al = new ArrayList();
+                    String s;
+                    while ((s = dis.readLine()) != null)
+                        al.add(s);
+                    final int N = al.size();
+                    System.out.println("reading file: N=" + N);
+                    double[] dl = new double[N];
+                    for (int i = 0; i < N; i++)
+                        dl[i] = Double.parseDouble((String )al.get(i));
+                    bs = new BellcoreCreator(dl).getBS();
+                }
+            } catch (IOException e1)
+            {
+                // FIXME: exceptions: Auto-generated catch block
+                e1.printStackTrace();
+            }
+        }
+        else
+        {
+            bs = tr.getData(file); // second attempt
+        }
+        return bs;
+    }
+
 	public void execute()
 	{
 		if (!AnalyseMainFrameSimplified.DEBUG)
@@ -79,61 +127,17 @@ public class FileOpenCommand extends VoidCommand
 		int returnVal = chooser.showOpenDialog(Environment.getActiveWindow());
 		if(returnVal == JFileChooser.APPROVE_OPTION)
 		{
-			System.out.println("DEBUG: the user has opened file " + chooser.getSelectedFile().getAbsolutePath()); // FIXME: debugging purpose only
+			System.out.println("DEBUG: the user is opening file " + chooser.getSelectedFile().getAbsolutePath()); // FIXME: debugging purpose only
 			Environment.getActiveWindow().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-			TraceReader tr = new TraceReader();
-			BellcoreStructure bs;
-			try
-			{
-				bs = tr.getData(chooser.getSelectedFile());
-			}
-			catch (UnsatisfiedLinkError e)
-			{
-				bs = null;
-			}
+			BellcoreStructure bs = readTraceFromFile(chooser.getSelectedFile());
 			if (bs == null)
 			{
-				if (true && AnalyseMainFrameSimplified.DEBUG)
-				{
-					// этот код написан для отладочных целей и предназначен для
-					// считывания рефлектограммы из текстового файла,
-					// если не удается считать с помощью известного формата
-					try
-					{
-						//bs = new BellcoreCreator(new double[] { 30, 30, 30, 22, 21, 20, 19, 10, 1, 1 }).getBS();
-						{
-							FileInputStream fis = new FileInputStream(chooser.getSelectedFile());
-							DataInputStream dis = new DataInputStream(fis);
-							ArrayList al = new ArrayList();
-							String s;
-							while ((s = dis.readLine()) != null)
-								al.add(s);
-							final int N = al.size();
-							System.out.println("reading file: N=" + N);
-							double[] dl = new double[N];
-							for (int i = 0; i < N; i++)
-								dl[i] = Double.parseDouble((String )al.get(i));
-							bs = new BellcoreCreator(dl).getBS();
-						}
-					} catch (IOException e1)
-					{
-						// FIXME: exceptions: Auto-generated catch block
-						e1.printStackTrace();
-					}
-				}
-				else
-				{
-					bs = tr.getData(chooser.getSelectedFile());
-					if (bs == null)
-					{
-						JOptionPane.showMessageDialog (Environment.getActiveWindow(),
-								LangModelAnalyse.getString("messageReadError") + ":\n" + chooser.getSelectedFile().getAbsolutePath(),
-								LangModelAnalyse.getString("messageError"),
-								JOptionPane.OK_OPTION);
-						Environment.getActiveWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-						return;
-					}
-				}
+				JOptionPane.showMessageDialog (Environment.getActiveWindow(),
+						LangModelAnalyse.getString("messageReadError") + ":\n" + chooser.getSelectedFile().getAbsolutePath(),
+						LangModelAnalyse.getString("messageError"),
+						JOptionPane.OK_OPTION);
+				Environment.getActiveWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+				return;
 			}
             boolean testBehaviour = false && AnalyseMainFrameSimplified.DEBUG; // FIXME: debug only: for local comparison; should be false
 			if (!Heap.hasEmptyAllBSMap())
