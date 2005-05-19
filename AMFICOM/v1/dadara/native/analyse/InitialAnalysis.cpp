@@ -38,7 +38,7 @@ InitialAnalysis::InitialAnalysis(
 		"len %d deltaX %g minTh %g minWeld %g minConn %g noiseFactor %g\n",
 		data_length, delta_x, minimalThreshold, minimalWeld, minimalConnector, noiseFactor);
 	fprintf(logf, "refSize %d nRefSize %d lTZ %d extNoise %s\n",
-		reflectiveSize, nonReflectiveSize, lengthTillZero, externalNoise ? "present" : "absent");
+		rSBig, nonReflectiveSize, lengthTillZero, externalNoise ? "present" : "absent");
 	fflush(logf);
 #endif
 
@@ -54,8 +54,11 @@ InitialAnalysis::InitialAnalysis(
     this->noiseFactor			= noiseFactor;
 	this->data_length			= data_length;
 	this->data					= data;
-    this->reflectiveSize		= rSSmall; // @todo: use rACrit/rSSmall/rSBig
+    this->rACrit 				= rACrit;
+    this->rSSmall				= rSSmall;
+    this->rSBig					= rSBig;
     this->wlet_width			= nonReflectiveSize;
+
 
     events = new ArrList();
 
@@ -163,7 +166,7 @@ return;
       sp2 = (Splash*)splashes[i+1];
       int dist = abs(sp2->begin_weld_n - sp1->end_weld_n);
       // две сварки "+" и "-" очень близко
-      if( dist<reflectiveSize/2			// если всплески очень близко
+      if( dist<rSSmall			// если всплески очень близко
           && (sp1->sign>0 && sp2->sign<0) // первый положительный, а второй - отрицательный
           && ( sp1->begin_weld_n != -1 && sp2->begin_weld_n != -1)// и при этом как минимум сварочные
         )
@@ -193,8 +196,8 @@ int InitialAnalysis::processDeadZone(ArrList& splashes)
     { begin = 0;
       end  = sp1->end_thr;
     }
-    else // иначе на расстоянии reflectiveSize от начала ищём максимальный всплеск вверх и поле него минимальный всплеск вниз
-    { for(i = 0; sp2->begin_thr<reflectiveSize && i+1<splashes.getLength(); i++)
+    else // иначе на расстоянии rSBig от начала ищём максимальный всплеск вверх и поле него минимальный всплеск вниз
+    { for(i = 0; sp2->begin_thr<rSBig && i+1<splashes.getLength(); i++)
       { sp1 = (Splash*)splashes[i];
         sp2 = (Splash*)splashes[i+1];
         if(sp1->sign>0 && f_max<sp1->f_extr )
@@ -211,7 +214,7 @@ int InitialAnalysis::processDeadZone(ArrList& splashes)
         }
       }
     }
-    if(end == -1)// если не нашли колебание вверх-вниз в пределах reflectiveSize , то ищем первый вниз
+    if(end == -1)// если не нашли колебание вверх-вниз в пределах rSBig, то ищем первый вниз
     { for( ; i<splashes.getLength(); i++)
       { sp1 = (Splash*)splashes[i];
         if(sp1->sign<0)
@@ -238,7 +241,6 @@ int InitialAnalysis::processDeadZone(ArrList& splashes)
 // граничного берётся самый дальний ( в пределах reflSize ) сварочный.
 int InitialAnalysis::processIfIsConnector(int i, ArrList& splashes)
 {   int shift = 0;
-    int rsz = reflectiveSize;
     Splash* sp1 = (Splash*)splashes[i];
     Splash* sp2, *sp_tmp;
     // если начинается с большого всплеска вверх, то ищём, где же сплеск вниз
@@ -246,24 +248,41 @@ int InitialAnalysis::processIfIsConnector(int i, ArrList& splashes)
     { // если до конца встретится коннекторный минимум, то нас больше ничего не интерсует
       for(int j=i+1; j<splashes.getLength(); j++)
       { sp2 = (Splash*)splashes[j];
-        if(fabs(sp2->begin_weld_n - sp1->begin_conn_n) > rsz){ // !!! считаем, что добавляются только значимые всплески, то есть weld_n != -1
+      	if(sp2->begin_conn_n == -1){// ищем только коннекторный вниз
+      continue;}
+        // если всплески далеко друг от друга , то это не коннектор
+        double dist = fabs(sp2->begin_weld_n - sp1->end_conn_n);
+        if(dist > rSBig){
       break;}
-        if(sp2->begin_conn_n != -1 && sp2->sign < 0) // если нашли всплеск вниз, то значит коннектор локализован
+        if(sp2->begin_conn_n!=-1 && sp2->sign<0 && dist<=rSSmall ) // если нашли всплеск вниз, то значит коннектор локализован
+        { shift = j-i;
+      break;
+        }
+        if(fabs(sp1->f_extr)>=rACrit && dist<=rSBig && sp2->begin_conn_n!=-1 && sp2->sign<0 ) // если всплески далеко, но оба очень большие
         { shift = j-i;
       break;
         }
       }
-      // если коннекорного вниз так и не было, то
+      // если коннекорного вниз так и не было, то ищем последний сварочный
       if(shift==0)
       { for(int j=i+1; j<splashes.getLength(); j++)
         { sp_tmp = (Splash*)splashes[j];
-          if(fabs(sp_tmp->begin_weld_n - sp1->begin_conn_n) > rsz){ // !!! считаем, что добавляются только значимые всплески, то есть weld_n != -1
-      break;}
-          if(sp_tmp->begin_weld_n != -1 && sp_tmp->sign < 0)//ищем последний сварочный вниз на отрезке reflSize
+		  if(sp_tmp->begin_weld_n == -1){
+        continue;}
+		  double dist = fabs(sp_tmp->begin_weld_n - sp1->end_conn_n);
+          if(dist > rSBig){
+        break;}
+          if(fabs(sp1->f_extr)>=rACrit && dist<rSBig && sp_tmp->begin_weld_n!=-1 && sp_tmp->sign<0)// ищем последний сварочный вниз на отрезке rsBig 
           { shift = j-i;
             sp2 = (Splash*)splashes[i+shift];
+        continue;
           }
-          if(sp_tmp->begin_conn_n != -1 && sp_tmp->sign > 0)//если нашли коннекторный вверх, то значит найдено начало нового коннектора
+          else if(fabs(sp1->f_extr)<rACrit && dist<rSSmall && sp_tmp->begin_weld_n!=-1 && sp_tmp->sign<0)// ищем последний сварочный вниз на отрезке rSSmall
+          { shift = j-i;
+            sp2 = (Splash*)splashes[i+shift];
+        continue;
+          }
+          if(sp_tmp->begin_conn_n!=-1 && sp_tmp->sign>0)// если нашли коннекторный вверх, то значит найдено начало нового коннектора
           { shift = j-i;
             sp2 = (Splash*)splashes[i+shift];
             shift--;// чтобы этот же всплеск был началом следующего коннектора
@@ -276,6 +295,7 @@ int InitialAnalysis::processIfIsConnector(int i, ArrList& splashes)
       { EventParams *ep = new EventParams;
         setConnectorParamsBySplashes((EventParams&)*ep, (Splash&)*sp1, (Splash&)*sp2 );
         events->add(ep);
+
 #ifdef debug_lines
 		double begin = ep->begin, end = ep->end;
         xs[cou] = begin*delta_x; xe[cou] = end*delta_x; ys[cou] = minimalConnector*2*1.1;  ye[cou] = minimalConnector*2*1.5;  col[cou]=0x00FFFF; cou++;
@@ -303,36 +323,48 @@ void InitialAnalysis::setSpliceParamsBySplash( EventParams& ep, Splash& sp)
 }
 // -------------------------------------------------------------------------------------------------
 void InitialAnalysis::setConnectorParamsBySplashes( EventParams& ep, Splash& sp1, Splash& sp2 )
-{  ep.type = EventParams::CONNECTOR;
-   ep.begin = sp1.begin_thr;
-   if(ep.begin<0){ep.begin=0;}
-   ep.end = sp2.end_thr;
-   if(sp2.begin_conn_n != -1 && sp2.sign > 0)// если это начало нового коннектора
-   { ep.end = sp2.begin_thr;// если два коннектора рядом, то конец первого совпадает с началом следующего 
-   }
-   if(ep.end>lastPoint)
-   {ep.end = lastPoint;
-   }
-   double max = -1;
-   int i;
-   for(i=sp1.begin_conn_n ; i<sp1.end_conn_n; i++)
-   { double res = (f_wlet[i]-minimalConnector)/noise[i] - 1;
-     if(max<res) max = res;
-   }
-   ep.R1 = max;
-   max = -1;
-   for(i=sp2.begin_thr ; i<sp2.end_thr; i++)
-   { double res = fabs(f_wlet[i])/minimalThreshold - 1;
-     if(max<res) { max = res;}         
-   }
-   ep.R2 = max;
-   double l = sp2.begin_thr - sp1.end_conn_n, l_max = reflectiveSize*2;
-   assert(l>=-1);// -1 может быть так как мы искуствнно расширяем на одну точку каждый всплеск (начало ДО уровня, а конец ПОСЛЕ )
-   ep.R3 = 2*ep.R2*(l_max-l)/(l+wlet_width)*(wlet_width/l_max);
-   // может ли этот "коннектор" быть концом волокна
-   if(sp1.sign>0 && sp1.f_extr>= minimalEnd)
-   { ep.can_be_endoftrace = true;
-   }
+{   double r1s, r1b, r2, r3s, r3b, rmin;
+    ep.type = EventParams::CONNECTOR;
+    ep.begin = sp1.begin_thr;
+    if(ep.begin<0){ep.begin=0;}
+    ep.end = sp2.end_thr;
+    if(sp2.begin_conn_n != -1 && sp2.sign > 0)// если это начало нового коннектора
+    { ep.end = sp2.begin_thr;// если два коннектора рядом, то конец первого совпадает с началом следующего
+    }
+    if(ep.end>lastPoint)
+    { ep.end = lastPoint;
+    }
+    double max1 = -1, max2 = -1, max3 = -1;
+    int i;
+    for(i=sp1.begin_conn_n ; i<sp1.end_conn_n; i++)
+    { double res = (f_wlet[i]-minimalConnector)/noise[i];
+      if(max1<res) { max1 = res;}
+      res = (f_wlet[i]-rACrit)/noise[i];
+      if(max2<res) { max2 = res;}
+      res = (f_wlet[i]-minimalWeld)/noise[i];
+      if(max3<res) {max3 = res;}
+    }
+    r1s = max1;
+    r1b = max2;
+    r2  = max3;
+    double l = sp2.begin_thr - sp1.end_conn_n;
+    assert(l>=-1);// -1 может быть так как мы искуствнно расширяем на одну точку каждый всплеск (начало ДО уровня, а конец ПОСЛЕ )
+    r3s = r2*(rSSmall - l)/wlet_width;
+    r3b = r2*(rSBig - l)/wlet_width;
+    // может ли этот "коннектор" быть концом волокна
+    if(sp1.sign>0 && sp1.f_extr>= minimalEnd)
+    { ep.can_be_endoftrace = true;
+    }
+	if(r3s>r1b){
+    	ep.R1 = r1s; ep.R3=r3s;
+    }
+    else{
+    	ep.R1 = r1b; ep.R3 = r3b;
+    }
+    ep.R2 = r2;
+	double t1 = r1s<r3b ? r1s:r3b, t2 = r3s>r1b ? r3s:r1b;
+    double t3 = r2<t2 ? r2:t2;
+    ep.R = t1<t3 ? t1:t3;
 }
 // -------------------------------------------------------------------------------------------------
 void InitialAnalysis::setUnrecognizedParamsBySplashes( EventParams& ep, Splash& sp1, Splash& sp2 )
@@ -635,7 +667,7 @@ return;
 		// ищем пересечение слева, пытаясь сдвинуть границу влево ( то есть пока i+width<=left_cross )
         for(i=w_l; i<w_r && i+width*angle_factor<=left_cross; i++)
         {	//if(fabs(f_wlet[i])>= minimalThreshold+noise[i]*noise_factor+df_left)
-	        if(fabs(f_wlet[i]) >= level_factor*fabs(f_max) && fabs(f_wlet[i]) > fabs(df_left)/(0.5*level_factor) )// &&... - сигнал должен превышать свой шум ( за шум принимаем степень немонотонности ) 
+	        if(fabs(f_wlet[i]) >= level_factor*fabs(f_max) && fabs(f_wlet[i]) > fabs(df_left)/(0.5*level_factor) )// &&... - сигнал должен превышать свой шум ( за шум принимаем степень немонотонности )
         	{	w_l=i-1;//w_l=i;
             	w_lr_ch = true;
 	            if(w_l+width*angle_factor<left_cross){ left_cross = (int)(w_l+width*angle_factor);}

@@ -66,7 +66,10 @@ private:
     double noiseFactor;
 
     int wlet_width; // базовая ширина вейвлета
-    int reflectiveSize;// максимальная ширина коннектора
+    int reflectiveSize; // максимальная ширина коннектора
+    double rACrit;  	// порог "большого" коннектора
+	int rSSmall;		// макс. длина для маленького коннектора
+	int rSBig;          // макс. длина для большого коннектора
 
 	int lastPoint;
 	double wletMeanValue; // среднее значение образа рефлектограммы
