@@ -48,10 +48,10 @@ public class AnalysisPanel extends MapMarkersPanel
 //		markerA.id = "A";
 		lines[0] = new AnaLine();
 		lines[1] = new AnaLine();
-		lines[0].point[0] = markerA.pos - (int)(y.length*.05);
-		lines[0].point[1] = markerA.pos-8-(int)ana_line_w;
-		lines[1].point[0] = markerA.pos+8+(int)ana_line_w;
-		lines[1].point[1] = markerA.pos + (int)(y.length*.05);
+		lines[0].point[0] = markerA.pos -16 -(int)(y.length*.02);
+		lines[0].point[1] = markerA.pos -8  -(int)ana_line_w;
+		lines[1].point[0] = markerA.pos +8  +(int)ana_line_w;
+		lines[1].point[1] = markerA.pos +16 +(int)(y.length*.02);
 		lines[0].factor = MathRef.calcLSA(y, lines[0].point[0], lines[0].point[1]);
 		lines[1].factor = MathRef.calcLSA(y, lines[1].point[0], lines[1].point[1]);
 
