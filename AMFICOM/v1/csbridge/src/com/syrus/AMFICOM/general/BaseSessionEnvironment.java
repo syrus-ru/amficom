@@ -1,5 +1,5 @@
 /*-
- * $Id: BaseSessionEnvironment.java,v 1.7 2005/05/16 16:04:19 arseniy Exp $
+ * $Id: BaseSessionEnvironment.java,v 1.8 2005/05/19 15:10:08 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,8 +11,8 @@ package com.syrus.AMFICOM.general;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/05/16 16:04:19 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/05/19 15:10:08 $
+ * @author $Author: max $
  * @module csbridge_v1
  */
 public abstract class BaseSessionEnvironment {
@@ -57,6 +57,7 @@ public abstract class BaseSessionEnvironment {
 
 	public void login(String login, String password) throws CommunicationException, LoginException {
 		LoginManager.login(login, password);
+		IdentifierPool.deserialize();
 		this.poolContext.deserialize();
 
 		this.baseConnectionManager.getCORBAServer().addShutdownHook(this.logoutShutdownHook);
@@ -69,6 +70,7 @@ public abstract class BaseSessionEnvironment {
 	}
 
 	void logout0() throws CommunicationException, LoginException {
+		IdentifierPool.serialize();
 		this.poolContext.serialize();
 		LoginManager.logout();
 	}
