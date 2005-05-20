@@ -1,5 +1,5 @@
 /*
- * $Id: HelpAboutCommand.java,v 1.1 2005/05/19 14:06:42 bob Exp $
+ * $Id: HelpAboutCommand.java,v 1.2 2005/05/20 10:05:10 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -16,11 +16,9 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-
-import oracle.jdeveloper.layout.GridBagConstraints2;
 /**
  * 
- * @version $Revision: 1.1 $, $Date: 2005/05/19 14:06:42 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/20 10:05:10 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient_v1
@@ -41,19 +39,22 @@ public class HelpAboutCommand extends AbstractCommand {
 	private JPanel getAboutPanel() {
 		if (this.about == null) {
 			this.about = new JPanel(new GridBagLayout());
-			JLabel jLabel1 = new JLabel("АМФИКОМ");
-			JLabel jLabel2 = new JLabel("Версия " + Version.getVersionNumber() + " обновление " + Patch.getVersion());
-			JLabel jLabel3 = new JLabel(Version.getVersionText());
-			JLabel jLabel4 = new JLabel(Version.getVersionCopyright());
 			this.about.setBorder(BorderFactory.createEtchedBorder());
-			this.about.add(jLabel1, new GridBagConstraints2(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST,
-															GridBagConstraints.NONE, new Insets(5, 5, 0, 5), 0, 0));
-			this.about.add(jLabel2, new GridBagConstraints2(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST,
-															GridBagConstraints.NONE, new Insets(0, 5, 0, 5), 0, 0));
-			this.about.add(jLabel3, new GridBagConstraints2(0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.WEST,
-															GridBagConstraints.NONE, new Insets(0, 5, 0, 5), 0, 0));
-			this.about.add(jLabel4, new GridBagConstraints2(0, 3, 1, 1, 0.0, 0.0, GridBagConstraints.WEST,
-															GridBagConstraints.NONE, new Insets(0, 5, 5, 5), 0, 0));
+			
+			GridBagConstraints gbc = new GridBagConstraints();
+			gbc.gridwidth = GridBagConstraints.REMAINDER;
+			gbc.insets =  new Insets(5, 5, 0, 5);
+			gbc.anchor = GridBagConstraints.WEST;
+			
+			this.about.add(new JLabel("АМФИКОМ"), gbc);
+			
+			gbc.insets = new Insets(0, 5, 0, 5);
+			this.about.add(new JLabel("Версия " + Version.getVersionNumber() + " обновление " + Patch.getVersion()), gbc);
+			this.about.add(new JLabel(Version.getVersionText()), gbc);
+			
+			gbc.insets = new Insets(0, 5, 5, 5);
+			this.about.add(new JLabel(Version.getVersionCopyright()), gbc);
+
 		}
 		return this.about;
 	}
