@@ -1,5 +1,5 @@
 /*
- * $Id: event.idl,v 1.15 2005/05/04 15:05:40 bass Exp $
+ * $Id: event.idl,v 1.16 2005/05/20 21:14:47 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -57,11 +57,17 @@ module corba {
 		sequence <general::corba::Identifier> event_source_ids;
 	};
 
+	enum AlertKind {
+		ALERT_KIND_WINDOW,
+		ALERT_KIND_EMAIL,
+		ALERT_KIND_SMS
+	};
+
 
 /////////////////// EventListener ////////////////////
 
 	abstract interface EventListener {
-		void eventNotification(in Event_Transferable et) raises (general::corba::AMFICOMRemoteException);
+		void receiveEvent(in Event_Transferable et) raises (general::corba::AMFICOMRemoteException);
 	};
 
 };
