@@ -36,6 +36,7 @@ import com.syrus.AMFICOM.logic.SelectionListener;
 import com.syrus.AMFICOM.logic.ServiceItem;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.MeasurementType;
+import com.syrus.util.Log;
 
 public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeListener {
 
@@ -46,7 +47,7 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 
 	SchedulerModel				schedulerModel;
 
-	private Map					paramMap						= new HashMap();
+	private Map					paramMap			= new HashMap();
 
 	LogicalTreeUI				treePanel;
 
@@ -54,10 +55,12 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 
 	ApplicationContext			aContext;
 
-	private Item				rootItem						= new ServiceItem("/");
+	private Item				rootItem			= new ServiceItem("/");
 
-	private Dispatcher	dispatcher;
-//	public static final String	ACCESSPORT_NAME_REFLECTOMETER	= "MeasurementPortTypeReflectometry";	//$NON-NLS-1$
+	private Dispatcher			dispatcher;
+
+	// public static final String ACCESSPORT_NAME_REFLECTOMETER =
+	// "MeasurementPortTypeReflectometry"; //$NON-NLS-1$
 
 	public ElementsTreeFrame(ApplicationContext aContext) {
 		this.aContext = aContext;
@@ -101,9 +104,9 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 
 	public MeasurementType getMeasurementType() {
 		try {
-			Identifier measurementTypeId = this
-			.getObject(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
-			return measurementTypeId != null ? (MeasurementType) MeasurementStorableObjectPool.getStorableObject(measurementTypeId, true) : null;
+			Identifier measurementTypeId = this.getObject(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
+			return measurementTypeId != null ? (MeasurementType) MeasurementStorableObjectPool.getStorableObject(
+				measurementTypeId, true) : null;
 		} catch (ApplicationException e) {
 			//
 		}
@@ -131,27 +134,18 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 	}
 
 	public void setMeasurementType(MeasurementType measurementType) {
-		// this.paramMap.put(ObjectEntities.MEASUREMENTTYPE_ENTITY,
-		// measurementType);
 		this.treePanel.expandAll(true);
 		this.selectItems();
 
 	}
 
 	public void setMonitoredElement(MonitoredElement monitoredElement) {
-		// try {
-		// MeasurementPort measurementPort = (MeasurementPort)
-		// ConfigurationStorableObjectPool.getStorableObject(
-		// monitoredElement.getMeasurementPortId(), true);
-		// this.paramMap.put(ObjectEntities.MEASUREMENTPORT_ENTITY,
-		// measurementPort);
+		Log.debugMessage("ElementsTreeFrame.setMonitoredElement | monitoredElement " + (monitoredElement != null ? monitoredElement.getId() : null), Log.FINEST);
 		this.paramMap.put(ObjectEntities.ME_ENTITY, monitoredElement);
 		this.treePanel.expandAll(true);
 		this.selectItems();
 
-		// } catch (ApplicationException e) {
-		// SchedulerModel.showErrorMessage(this, e);
-		// }
+		
 	}
 
 	private void selectItems() {
@@ -191,31 +185,32 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 	}
 
 	public void propertyChange(PropertyChangeEvent evt) {
-		
 		String propertyName = evt.getPropertyName();
-//		Object obj = e.getSource();
 		Object newValue = evt.getNewValue();
-		if (propertyName.equals(SchedulerModel.COMMAND_GET_MEASUREMENT_TYPE)) {
+		if (propertyName.equals(SchedulerModel.COMMAND_SET_MEASUREMENT_TYPE)) {
 			this.setMeasurementType((MeasurementType) newValue);
 		} else if (propertyName.equals(SchedulerModel.COMMAND_SET_MEASUREMENT_TYPES)) {
 			setElements((Collection) newValue);
-		} else if (propertyName.equals(SchedulerModel.COMMAND_GET_MONITORED_ELEMENT)) {
+		} else if (propertyName.equals(SchedulerModel.COMMAND_SET_MONITORED_ELEMENT)) {
 			this.setMonitoredElement((MonitoredElement) newValue);
 		} else if (propertyName.equals(SchedulerModel.COMMAND_GET_MEASUREMENT_TYPE)) {
 			MeasurementType measurementType = getMeasurementType();
 			if (measurementType != null) {
-				this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, SchedulerModel.COMMAND_GET_MEASUREMENT_TYPE, null, measurementType));
-			}					
-		}   else if (propertyName.equals(SchedulerModel.COMMAND_GET_MONITORED_ELEMENT)) {
+				this.dispatcher
+						.firePropertyChange(new PropertyChangeEvent(this, SchedulerModel.COMMAND_SET_MEASUREMENT_TYPE,
+																	null, measurementType));
+			}
+		} else if (propertyName.equals(SchedulerModel.COMMAND_GET_MONITORED_ELEMENT)) {
 			MonitoredElement monitoredElement = getMonitoredElement();
 			if (monitoredElement != null) {
-				this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, SchedulerModel.COMMAND_GET_MONITORED_ELEMENT, null, monitoredElement));
-			}					
-		}  
-	
-		
+				this.dispatcher
+						.firePropertyChange(new PropertyChangeEvent(this, SchedulerModel.COMMAND_SET_MONITORED_ELEMENT,
+																	null, monitoredElement));
+			}
+		}
+
 	}
-	
+
 	public void init() {
 		this.schedulerModel = (SchedulerModel) this.aContext.getApplicationModel();
 		if (this.treePanel == null) {
@@ -252,8 +247,10 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 
 										public void run() {
 											dispatcher
-													.firePropertyChange(new PropertyChangeEvent(ElementsTreeFrame.this,
-																				SchedulerModel.COMMAND_CHANGE_ME_TYPE, null, identifier));
+													.firePropertyChange(new PropertyChangeEvent(
+																								ElementsTreeFrame.this,
+																								SchedulerModel.COMMAND_CHANGE_ME_TYPE,
+																								null, identifier));
 											try {
 												ElementsTreeFrame.this.schedulerModel.setSelectedMonitoredElement(
 													(MonitoredElement) ConfigurationStorableObjectPool
@@ -290,10 +287,9 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 
 		}
 
-		//final Dispatcher dispatcher = this.aContext.getDispatcher();
+		// final Dispatcher dispatcher = this.aContext.getDispatcher();
 		this.dispatcher = this.aContext.getDispatcher();
-		
-		
+
 		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_SET_MEASUREMENT_TYPES, this);
 		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_GET_MEASUREMENT_TYPE, this);
 		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_GET_MONITORED_ELEMENT, this);
@@ -301,7 +297,5 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_SET_MONITORED_ELEMENT, this);
 
 	}
-	
-	
 
 }
