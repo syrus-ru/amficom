@@ -364,7 +364,8 @@ void InitialAnalysis::setConnectorParamsBySplashes( EventParams& ep, Splash& sp1
     ep.R2 = r2;
 	double t1 = r1s<r3b ? r1s:r3b, t2 = r3s>r1b ? r3s:r1b;
     double t3 = r2<t2 ? r2:t2;
-    ep.R = t1<t3 ? t1:t3;
+	rmin = t1<t3 ? t1:t3;
+    ep.R = rmin;
 }
 // -------------------------------------------------------------------------------------------------
 void InitialAnalysis::setUnrecognizedParamsBySplashes( EventParams& ep, Splash& sp1, Splash& sp2 )
