@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.58 2005/05/18 11:07:39 bass Exp $
+ * $Id: StorableObject.java,v 1.59 2005/05/20 08:23:50 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import org.omg.CORBA.portable.IDLEntity;
  * same identifier, comparison of object references (in Java terms) is enough.
  *
  * @author $Author: bass $
- * @version $Revision: 1.58 $, $Date: 2005/05/18 11:07:39 $
+ * @version $Revision: 1.59 $, $Date: 2005/05/20 08:23:50 $
  * @module general_v1
  */
 public abstract class StorableObject implements Identifiable, TransferableObject, Serializable {
@@ -363,6 +363,23 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	}
 
 	/**
+	 * @see #hasSingleTypeEntities(Set)
+	 */
+	public static boolean hasSingleTypeEntities(final Identifier_Transferable ids[]) {
+		assert ids != null;
+
+		final int length = ids.length;
+		if (length == 0)
+			return true;
+
+		final short entityCode = (new Identifier(ids[0])).getMajor();
+		for (int i = 1; i < length; i++)
+			if (entityCode != (new Identifier(ids[i])).getMajor())
+				return false;
+		return true;
+	}
+
+	/**
 	 * This method should only be invoked during assertion evaluation, and
 	 * never in a release system.
 	 *
@@ -405,6 +422,15 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 		assert identifiables != null && !identifiables.isEmpty();
 
 		return ((Identifiable) identifiables.iterator().next()).getId().getMajor();
+	}
+
+	/**
+	 * @see #getEntityCodeOfIdentifiables(Set)
+	 */
+	public static short getEntityCodeOfIdentifiables(final Identifier_Transferable ids[]) {
+		assert ids != null && ids.length != 0;
+
+		return new Identifier(ids[0]).getMajor();
 	}
 
 	/**
