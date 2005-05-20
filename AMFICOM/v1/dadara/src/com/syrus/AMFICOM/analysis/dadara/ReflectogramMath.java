@@ -316,7 +316,7 @@ public class ReflectogramMath
 			}
 		double[] d = ReflectogramMath.linearize2point(data, firstPoint, secondPoint);
 		double eventSize = - 3d / d[0] + 150d / refraction * pulsewidth / 1000d / resolution;
-        System.out.println("eventSize = " + (- 3d / d[0]) + " + " + (150d / refraction * pulsewidth / 1000d / resolution));
+        //System.out.println("eventSize = " + (- 3d / d[0]) + " + " + (150d / refraction * pulsewidth / 1000d / resolution));
 		if(eventSize < 2)
 			eventSize = 2;
 		return (int)eventSize;
