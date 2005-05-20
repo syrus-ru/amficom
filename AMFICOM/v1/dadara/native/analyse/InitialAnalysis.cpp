@@ -316,8 +316,8 @@ void InitialAnalysis::setSpliceParamsBySplash( EventParams& ep, Splash& sp)
     if(ep.begin<0){ep.begin=0;}
     double max = -1;
 	for(int i=sp.begin_weld_n; i<sp.end_weld_n; i++)
-    { double res = (fabs(f_wlet[i])-minimalWeld)/noise[i] - 1;
-      if(max<res) max = res;
+    { double res = (fabs(f_wlet[i])-minimalWeld)/noise[i];
+      if(max<res){ max = res;}
     }
     ep.R = max;
 }
