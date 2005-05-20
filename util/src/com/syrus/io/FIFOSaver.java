@@ -1,5 +1,5 @@
 /*-
- * $Id: FIFOSaver.java,v 1.6 2005/05/20 13:23:35 max Exp $
+ * $Id: FIFOSaver.java,v 1.7 2005/05/20 13:43:56 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,8 +23,8 @@ import com.syrus.util.Fifo;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/05/20 13:23:35 $
- * @author $Author: max $
+ * @version $Revision: 1.7 $, $Date: 2005/05/20 13:43:56 $
+ * @author $Author: bob $
  * @module util
  */
 public class FIFOSaver {
@@ -124,11 +124,16 @@ public class FIFOSaver {
 	}
 	
 	private static void init() {
-		if (pathNameOfSaveDir == null)
+		if (pathNameOfSaveDir == null) {
 			pathNameOfSaveDir = ApplicationProperties.getString(KEY_CACHE_PATH, DEFAULT_CACHE_PATH);
+			String applicationName = Application.getApplicationName();
+			if (!pathNameOfSaveDir.endsWith(applicationName) && !pathNameOfSaveDir.endsWith(applicationName + File.separator)) {
+				pathNameOfSaveDir = pathNameOfSaveDir + File.separator + applicationName;
+			}
+		}
 		if (saveDir == null || !saveDir.exists()) {
 			saveDir = new File(pathNameOfSaveDir);
-			saveDir.mkdir();
+			saveDir.mkdirs();
 		}		
 	}
 }

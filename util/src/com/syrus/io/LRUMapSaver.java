@@ -1,5 +1,5 @@
 /*
- * $Id: LRUMapSaver.java,v 1.11 2005/05/20 12:51:20 max Exp $
+ * $Id: LRUMapSaver.java,v 1.12 2005/05/20 13:43:56 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,8 +25,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/05/20 12:51:20 $
- * @author $Author: max $
+ * @version $Revision: 1.12 $, $Date: 2005/05/20 13:43:56 $
+ * @author $Author: bob $
  * @module util
  */
 public class LRUMapSaver {
@@ -113,11 +113,17 @@ public class LRUMapSaver {
 	}
 	
 	private static void init() {
-		if (pathNameOfSaveDir == null)
+		if (pathNameOfSaveDir == null) {
 			pathNameOfSaveDir = ApplicationProperties.getString(KEY_CACHE_PATH, DEFAULT_CACHE_PATH);
+			String applicationName = Application.getApplicationName();
+			if (!pathNameOfSaveDir.endsWith(applicationName)
+					&& !pathNameOfSaveDir.endsWith(applicationName + File.separator)) {
+				pathNameOfSaveDir = pathNameOfSaveDir + File.separator + applicationName;
+			}
+		}
 		if (saveDir == null || !saveDir.exists()) {
 			saveDir = new File(pathNameOfSaveDir);
-			saveDir.mkdir();
+			saveDir.mkdirs();
 		}
 	}
 }
