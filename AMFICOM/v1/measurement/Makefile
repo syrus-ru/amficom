@@ -29,10 +29,13 @@ include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 $(call checkenve,ORACLE_HOME)
 
+
 APPCLASSPATH := $(LIBDIR)/configuration.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/general.jar:$(LIBDIR)/util.jar
+EXTCLASSPATH := $(EXTLIBDIR)/trove-1.1b4/lib/trove.jar
+
 
 SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/measurement/*.java) \
-		$(SRCDIR)/com/syrus/AMFICOM/resource/LangModelMeasurement.java 
+	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/resource/*.java)
 
 
 $(LIBNAME): .mach
@@ -45,7 +48,7 @@ $(LIBNAME): .mach
 
 .mach:	.corba .ora $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
-		-classpath $(APPCLASSPATH):$(JDBCCLASSPATH):$(CLASSDIR) \
+		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(JDBCCLASSPATH):$(CLASSDIR) \
 		$(SOURCES)
 	touch $@
 
@@ -76,8 +79,7 @@ clean:	cleanmach cleanora cleancorba
 
 .PHONY:	cleanmach
 cleanmach:
-	$(RM) $(wildcard $(CLASSDIR)/com/syrus/AMFICOM/measurement/*.class) \
-		$(CLASSDIR)/com/syrus/AMFICOM/resource/LangModelMeasurement.class
+	$(RM) $(subst $(SRCDIR),$(CLASSDIR),$(subst .java,*.class,$(SOURCES)))
 	$(RM) .mach
 
 .PHONY:	cleanora

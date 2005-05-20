@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.20 2005/05/14 09:50:16 arseniy Exp $
+# $Id: Makefile,v 1.21 2005/05/20 21:13:01 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -25,7 +25,13 @@ DIRS_TO_SCRUB = \
 	com/syrus/AMFICOM/scheme/corba
 
 SRCDIRS_TO_SCRUB = $(foreach dir,$(DIRS_TO_SCRUB),$(SRCDIR)/$(dir))
+
 APPCLASSPATH = $(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/general.jar:$(LIBDIR)/map.jar:$(LIBDIR)/resource.jar:$(LIBDIR)/filter.jar:$(LIBDIR)/util.jar
+EXTCLASSPATH := $(EXTLIBDIR)/trove-1.1b4/lib/trove.jar
+
+
+SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/scheme/*.java)
+
 
 $(LIBNAME): .mach
 	$(JAR) -cf $@ \
@@ -34,8 +40,8 @@ $(LIBNAME): .mach
 
 .mach:	.corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
-		-classpath $(APPCLASSPATH):$(CLASSDIR) \
-		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/scheme/*.java)
+		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(CLASSDIR) \
+		$(SOURCES)
 	touch $@
 
 .PHONY: idl
@@ -73,7 +79,7 @@ clean: cleanmach cleancorba
 
 .PHONY:	cleanmach
 cleanmach:
-	$(RM) $(subst $$,\$$,$(wildcard $(CLASSDIR)/com/syrus/AMFICOM/scheme/*.class))
+	$(RM) $(subst $(SRCDIR),$(CLASSDIR),$(subst .java,*.class,$(SOURCES)))
 	$(RM) .mach
 
 .PHONY: cleancorba
@@ -91,30 +97,15 @@ install: $(LIBNAME) $(LIBDIR)
 uninstall: $(LIBDIR)/$(LIBNAME)
 	$(RM) $<
 
-#### Distribution ####
-.PHONY: dist
-dist:
-	-ln -s \
-		$(IDLDIR)/scheme-administration.idl \
-		$(IDLDIR)/scheme-configuration.idl \
-		$(IDLDIR)/scheme-general.idl \
-		$(IDLDIR)/scheme-map.idl \
-		$(IDLDIR)/scheme-resource.idl \
-		$(IDLDIR)/scheme-vt.idl \
-		.
-	tar ch \
-		scheme-administration.idl \
-		scheme-configuration.idl \
-		scheme-general.idl \
-		scheme-map.idl \
-		scheme-resource.idl \
-		scheme-vt.idl \
-		Makefile \
-		README \
-		$(SRCDIR)/com/syrus/AMFICOM/scheme/*.java \
-		| bzip2 -9 >$(ARCHFILE)
-	$(RM) *.idl
-
 #### Archive ####
 .PHONY:	arch
-arch: dist
+arch:
+	tar -czvf $(ARCHFILE) \
+		Makefile \
+		$(IDLDIR)/scheme.idl \
+		$(SOURCES)
+
+#### Distribution ####
+.PHONY: dist
+dist:	arch
+

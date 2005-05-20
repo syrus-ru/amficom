@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.40 2005/05/11 06:38:36 arseniy Exp $
+# $Id: Makefile,v 1.41 2005/05/20 21:12:29 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -21,6 +21,11 @@ $(call checkenve,JAVA_HOME)
 APPCLASSPATH := $(LIBDIR)/util.jar
 EXTCLASSPATH := $(EXTLIBDIR)/trove-1.1b4/lib/trove.jar
 
+
+SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/general/*.java) \
+	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/security/*.java)
+
+
 $(LIBNAME): .mach
 	$(JAR) -cf $@ \
 		-C $(CLASSDIR) com
@@ -29,8 +34,7 @@ $(LIBNAME): .mach
 	$(JAVAC) \
 		$(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(CLASSDIR) \
-		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/general/*.java) \
-		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/security/*.java)
+		$(SOURCES)
 	touch $@
 
 .PHONY: idl
@@ -68,8 +72,7 @@ clean:	cleanmach cleancorba
 
 .PHONY:	cleanmach
 cleanmach:
-	$(RM) $(subst $$,\$$,$(wildcard $(CLASSDIR)/com/syrus/AMFICOM/general/*.class))
-	$(RM) $(subst $$,\$$,$(wildcard $(CLASSDIR)/com/syrus/AMFICOM/security/*.class))
+	$(RM) $(subst $(SRCDIR),$(CLASSDIR),$(subst .java,*.class,$(SOURCES)))
 	$(RM) .mach
 
 .PHONY:	cleancorba
@@ -91,4 +94,4 @@ arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
 		$(IDLDIR)/general.idl \
-		$(SRCDIR)/com/syrus/AMFICOM/general/*.java
+		$(SOURCES)

@@ -5,12 +5,19 @@ ARCHFILE := $(subst _v1,,$(MODULE_NAME)).tar.gz
 
 IDLDIR=../idl_v1/idl
 
-APPCLASSPATH = $(LIBDIR)/util.jar:$(LIBDIR)/general.jar
+JAVACFLAGS = -source 1.4
+SUNJAVACFLAGS = -target 1.2
+JIKESFLAGS = -target 1.4.2
 
-JAVACFLAGS = -source 1.4 -target 1.4
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 
+
+APPCLASSPATH = $(LIBDIR)/util.jar:$(LIBDIR)/general.jar
+EXTCLASSPATH := $(EXTLIBDIR)/trove-1.1b4/lib/trove.jar
+
+
+SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/resource/*.java)
 
 
 $(LIBNAME): .mach
@@ -20,8 +27,8 @@ $(LIBNAME): .mach
 
 .mach:	.corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
-		-classpath $(APPCLASSPATH):$(CLASSDIR) \
-		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/resource/*.java)
+		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(CLASSDIR) \
+		$(SOURCES)
 	touch $@
 
 .corba:	$(CLASSDIR)
@@ -41,7 +48,7 @@ clean:	cleanmach cleancorba
 
 .PHONY:	cleanmach
 cleanmach:
-	$(RM) $(wildcard $(CLASSDIR)/com/syrus/AMFICOM/resource/*.class)
+	$(RM) $(subst $(SRCDIR),$(CLASSDIR),$(subst .java,*.class,$(SOURCES)))
 	$(RM) .mach
 
 .PHONY:	cleancorba
@@ -61,5 +68,5 @@ arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
 		$(IDLDIR)/resource.idl \
-		$(SRCDIR)/com/syrus/AMFICOM/resource/*.java
+		$(SOURCES)
 

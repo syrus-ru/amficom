@@ -18,9 +18,11 @@ $(call checkenve,ORACLE_HOME)
 
 
 APPCLASSPATH := $(LIBDIR)/administration.jar:$(LIBDIR)/general.jar:$(LIBDIR)/util.jar
+EXTCLASSPATH := $(EXTLIBDIR)/trove-1.1b4/lib/trove.jar
 
 
 SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/configuration/*.java)
+
 
 $(LIBNAME): .mach
 	$(JAR) -cf $@ \
@@ -28,7 +30,7 @@ $(LIBNAME): .mach
 
 .mach:	.corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
-		-classpath $(APPCLASSPATH):$(CLASSDIR) \
+		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(CLASSDIR) \
 		$(SOURCES)
 	touch $@
 
@@ -49,8 +51,8 @@ clean:	cleanmach cleancorba
 
 .PHONY:	cleanmach
 cleanmach:
-	rm -rf $(CLASSDIR)/com/syrus/AMFICOM/configuration/*.class
-	rm -f .mach
+	$(RM) $(subst $(SRCDIR),$(CLASSDIR),$(subst .java,*.class,$(SOURCES)))
+	$(RM) -f .mach
 
 
 .PHONY:	cleancorba

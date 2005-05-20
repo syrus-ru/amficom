@@ -15,23 +15,10 @@ $(call checkenve,JAVA_HOME)
 $(call checkenve,ORACLE_HOME)
 
 APPCLASSPATH := $(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/general.jar:$(LIBDIR)/util.jar
+EXTCLASSPATH := $(EXTLIBDIR)/trove-1.1b4/lib/trove.jar
 
 
-SOURCES := com/syrus/AMFICOM/event/EventDatabaseContext.java \
-	com/syrus/AMFICOM/event/EventObjectLoader.java \
-	com/syrus/AMFICOM/event/EventStorableObjectPool.java \
-	com/syrus/AMFICOM/event/EventType.java \
-	com/syrus/AMFICOM/event/EventTypeDatabase.java \
-	com/syrus/AMFICOM/event/EventTypeWrapper.java \
-	com/syrus/AMFICOM/event/Event.java \
-	com/syrus/AMFICOM/event/EventDatabase.java \
-	com/syrus/AMFICOM/event/EventWrapper.java \
-	com/syrus/AMFICOM/event/EventParameter.java \
-	com/syrus/AMFICOM/event/EventSource.java \
-	com/syrus/AMFICOM/event/EventSourceWrapper.java \
-	com/syrus/AMFICOM/event/EventSourceDatabase.java \
-	com/syrus/AMFICOM/event/TypicalConditionImpl.java \
-	com/syrus/AMFICOM/event/DatabaseTypicalConditionImpl.java
+SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/event/*.java)
 
 
 $(LIBNAME): .mach
@@ -40,8 +27,8 @@ $(LIBNAME): .mach
 
 .mach:	.corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
-		-classpath $(APPCLASSPATH):$(JDBCCLASSPATH):$(CLASSDIR) \
-		$(addprefix $(SRCDIR)/,$(SOURCES))
+		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(CLASSDIR) \
+		$(SOURCES)
 	touch $@
 
 .corba:	$(CLASSDIR)
@@ -61,7 +48,7 @@ clean:	cleanmach cleancorba
 
 .PHONY:	cleanmach
 cleanmach:
-	$(RM) $(addprefix $(CLASSDIR)/,$(subst .java,*.class,$(SOURCES)))
+	$(RM) $(subst $(SRCDIR),$(CLASSDIR),$(subst .java,*.class,$(SOURCES)))
 	$(RM) .mach
 
 .PHONY:	cleancorba
@@ -83,7 +70,7 @@ arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
 		$(IDLDIR)/event.idl \
-		$(addprefix $(SRCDIR)/,$(SOURCES))
+		$(SOURCES)
 		
 .PHONY: pmd
 pmd:

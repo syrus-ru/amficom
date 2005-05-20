@@ -3,8 +3,6 @@ MODULE_NAME = mapview_v1
 LIBNAME = $(subst _v1,,$(MODULE_NAME)).jar
 ARCHFILE = $(subst _v1,,$(MODULE_NAME)).tar.gz
 
-APPCLASSPATH = $(LIBDIR)/resource.jar:$(LIBDIR)/scheme.jar:$(LIBDIR)/map.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/util.jar
-
 JAVACFLAGS = -source 1.4
 SUNJAVACFLAGS = -target 1.4
 JIKESFLAGS = -target 1.4.2
@@ -14,14 +12,21 @@ include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 
 
+APPCLASSPATH = $(LIBDIR)/resource.jar:$(LIBDIR)/scheme.jar:$(LIBDIR)/map.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/util.jar
+EXTCLASSPATH := $(EXTLIBDIR)/trove-1.1b4/lib/trove.jar
+
+
+SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/mapview/*.java)
+
+
 $(LIBNAME): .mach
 	$(JAR) -cf $@ \
-		-C $(CLASSDIR) com/syrus/AMFICOM/mapview
+		-C $(CLASSDIR) com
 
 .mach:	$(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
-		-classpath $(APPCLASSPATH):$(CLASSDIR) \
-		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/mapview/*.java)
+		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(CLASSDIR) \
+		$(SOURCES)
 	touch $@
 
 $(CLASSDIR):
@@ -33,7 +38,7 @@ clean:	cleanmach
 
 .PHONY:	cleanmach
 cleanmach:
-	$(RM) $(wildcard $(CLASSDIR)/com/syrus/AMFICOM/mapview/*.class)
+	$(RM) $(subst $(SRCDIR),$(CLASSDIR),$(subst .java,*.class,$(SOURCES)))
 	$(RM) .mach
 
 
@@ -47,7 +52,7 @@ install: $(LIBNAME) $(LIBDIR)
 arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
-		$(SRCDIR)/com/syrus/AMFICOM/mapview/*.java
+		$(SOURCES)
 		
 .PHONY: pmd
 pmd:

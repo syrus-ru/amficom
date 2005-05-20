@@ -5,30 +5,21 @@ ARCHFILE = $(subst _v1,,$(MODULE_NAME)).tar.gz
 
 IDLDIR=../idl_v1/idl
 
-APPCLASSPATH = $(LIBDIR)/configuration.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/resource.jar:$(LIBDIR)/util.jar
-
-HOST=mongol
-SERVICE_NAME=mongol
-
 JAVACFLAGS = -source 1.4
 SUNJAVACFLAGS = -target 1.4
 JIKESFLAGS = -target 1.4.2
 
-JPUB = $(ORACLE_HOME)/bin/jpub
-JPUB_FLAGS = \
-	-J-classpath $(JDBCCLASSPATH):$(SQLJCLASSPATH) \
-	-user=amficom/amficom \
-	-url=jdbc:oracle:thin:@$(HOST):1521:$(SERVICE_NAME) \
-	-omit_schema_names \
-	-package=com.syrus.AMFICOM.map.ora \
-	-dir=$(SRCDIR) \
-	-usertypes=oracle \
-	-methods=all
-
-
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 $(call checkenve,ORACLE_HOME)
+
+
+APPCLASSPATH = $(LIBDIR)/configuration.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/resource.jar:$(LIBDIR)/util.jar
+EXTCLASSPATH := $(EXTLIBDIR)/trove-1.1b4/lib/trove.jar
+
+
+SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/map/*.java)
+
 
 $(LIBNAME): .mach
 	$(JAR) -cf $@ \
@@ -37,8 +28,8 @@ $(LIBNAME): .mach
 
 .mach:	.corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
-		-classpath $(APPCLASSPATH):$(JDBCCLASSPATH):$(CLASSDIR) \
-		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/map/*.java)
+		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(CLASSDIR) \
+		$(SOURCES)
 	touch $@
 
 .corba:	$(CLASSDIR)
@@ -54,20 +45,18 @@ $(CLASSDIR):
 
 .PHONY:	clean
 clean:	cleanmach cleancorba
-	rm -f $(LIBNAME)
+	$(RM) $(LIBNAME)
 
 .PHONY:	cleanmach
 cleanmach:
-	rm -rf $(CLASSDIR)/com/syrus/AMFICOM/map/*.class
-	rm -f .mach
+	$(RM) $(subst $(SRCDIR),$(CLASSDIR),$(subst .java,*.class,$(SOURCES)))
+	$(RM) .mach
 
 .PHONY:	cleancorba
 cleancorba:
-	rm -rf $(SRCDIR)/com/syrus/AMFICOM/map/corba
-	rm -rf $(CLASSDIR)/com/syrus/AMFICOM/map/corba
-	rm -rf $(SRCDIR)/com/syrus/AMFICOM/event/corba
-	rm -rf $(CLASSDIR)/com/syrus/AMFICOM/event/corba
-	rm -f .corba
+	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/map/corba
+	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/map/corba
+	$(RM) -f .corba
 
 #### Install ####
 .PHONY:	install
@@ -81,7 +70,7 @@ arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
 		$(IDLDIR)/map.idl \
-		$(SRCDIR)/com/syrus/AMFICOM/map/*.java
+		$(SOURCES)
 		
 .PHONY: pmd
 pmd:
