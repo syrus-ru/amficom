@@ -1,3 +1,11 @@
+/*-
+* $Id: LabelCheckBoxRenderer.java,v 1.3 2005/05/20 09:39:12 bob Exp $
+*
+* Copyright © 2004-2005 Syrus Systems.
+* Dept. of Science & Technology.
+* Project: AMFICOM.
+*/
+
 package com.syrus.AMFICOM.client.UI;
 
 import java.awt.Component;
@@ -17,7 +25,7 @@ import com.syrus.util.Wrapper;
 
 /**
  * Renderer for JCheckBox items based on JLabel.
- * @version $Revision: 1.2 $, $Date: 2005/05/20 09:35:49 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/20 09:39:12 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
