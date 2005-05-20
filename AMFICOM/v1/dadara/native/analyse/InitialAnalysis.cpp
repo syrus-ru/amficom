@@ -35,10 +35,10 @@ InitialAnalysis::InitialAnalysis(
 	logf = fopen(DEBUG_INITIAL_WIN_LOGF, "a");
 	assert(logf);
 	fprintf(logf, "=== IA invoked\n"
-		"len %d deltaX %g minTh %g minWeld %g minConn %g noiseFactor %g\n",
-		data_length, delta_x, minimalThreshold, minimalWeld, minimalConnector, noiseFactor);
-	fprintf(logf, "refSize %d nRefSize %d lTZ %d extNoise %s\n",
-		rSBig, nonReflectiveSize, lengthTillZero, externalNoise ? "present" : "absent");
+		"len %d deltaX %g minTh %g minWeld %g minConn %g minEnd %g noiseFactor %g\n",
+		data_length, delta_x, minimalThreshold, minimalWeld, minimalConnector, minimalEnd, noiseFactor);
+	fprintf(logf, "rSBig %d rSSmall %d nRefSize %d lTZ %d extNoise %s\n",
+		rSBig, rSSmall, nonReflectiveSize, lengthTillZero, externalNoise ? "present" : "absent");
 	fflush(logf);
 #endif
 
