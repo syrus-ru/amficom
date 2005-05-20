@@ -1,5 +1,5 @@
 /*-
- * $Id: FIFOSaver.java,v 1.5 2005/05/20 12:51:20 max Exp $
+ * $Id: FIFOSaver.java,v 1.6 2005/05/20 13:23:35 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.util.Fifo;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/05/20 12:51:20 $
+ * @version $Revision: 1.6 $, $Date: 2005/05/20 13:23:35 $
  * @author $Author: max $
  * @module util
  */
@@ -110,6 +110,8 @@ public class FIFOSaver {
 		init();
 		Map codeNameFifo = new HashMap();
 		File[] fifoFiles = saveDir.listFiles(new FifoFileFilter());
+		if(fifoFiles == null)
+			return codeNameFifo;
 		for (int i = 0; i < fifoFiles.length; i++) {
 			File file = fifoFiles[i];
 			String fileName = file.getName();
