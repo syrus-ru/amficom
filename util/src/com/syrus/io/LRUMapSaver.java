@@ -1,5 +1,5 @@
 /*
- * $Id: LRUMapSaver.java,v 1.10 2005/05/18 10:49:17 bass Exp $
+ * $Id: LRUMapSaver.java,v 1.11 2005/05/20 12:51:20 max Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,20 +19,23 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.syrus.util.Application;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/05/18 10:49:17 $
- * @author $Author: bass $
+ * @version $Revision: 1.11 $, $Date: 2005/05/20 12:51:20 $
+ * @author $Author: max $
  * @module util
  */
 public class LRUMapSaver {
 	private static final String KEY_CACHE_PATH = "CachePath";
 
-	private static final String DEFAULT_HOME = System.getProperty("user.home");
-	private static final String DEFAULT_CACHE_PATH = DEFAULT_HOME + "/cache";
+	private static final String DEFAULT_HOME = System.getProperty("user.dir");
+	private static final String DEFAULT_CACHE_PATH = DEFAULT_HOME + File.separator
+			+ "cache" + File.separator + Application.getApplicationName();
+	public static final String EXTENSION = "LRUMap.serialized";
 
 	private static String pathNameOfSaveDir;
 	private static File saveDir;
@@ -44,14 +47,8 @@ public class LRUMapSaver {
 	public static void save(LRUMap lruMap, String objectEntityName) {
 		File tempFile = null;
 		try {
-			if (pathNameOfSaveDir == null)
-				pathNameOfSaveDir = ApplicationProperties.getString(KEY_CACHE_PATH, DEFAULT_CACHE_PATH);
-			if (saveDir == null || !saveDir.exists()) {
-				saveDir = new File(pathNameOfSaveDir);
-				saveDir.mkdir();
-			}
-
-			File saveFile = new File(saveDir.getPath() + File.separator + objectEntityName + "LRUMap.serialized");
+			init();
+			File saveFile = new File(saveDir.getPath() + File.separator + objectEntityName + EXTENSION);
 			tempFile = new File(saveFile.getPath() + ".swp");
 			ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(tempFile));
 			Log.debugMessage("LRUMapSaver.save | Trying to save LRUMap with " + objectEntityName + " to file " + saveFile.getAbsolutePath(), Log.DEBUGLEVEL10);
@@ -89,14 +86,9 @@ public class LRUMapSaver {
 	 */
 	public static Set load(final String objectEntityName) {
 		try {
-			if (pathNameOfSaveDir == null)
-				pathNameOfSaveDir = ApplicationProperties.getString(KEY_CACHE_PATH, DEFAULT_CACHE_PATH);
-			if (saveDir == null || !saveDir.exists()) {
-				saveDir = new File(pathNameOfSaveDir);
-				saveDir.mkdir();
-			}
+			init();
 			Log.debugMessage("LRUMapSaver.load | Trying to load LRUMap with " + objectEntityName , Log.DEBUGLEVEL10);
-			File saveFile = new File(saveDir.getPath() + File.separator + objectEntityName + "LRUMap.serialized");
+			File saveFile = new File(saveDir.getPath() + File.separator + objectEntityName + EXTENSION);
 			ObjectInputStream in = new ObjectInputStream(new FileInputStream(saveFile));
 			String keyObjectEntityName = (String) in.readObject();
 			if (keyObjectEntityName == null || !keyObjectEntityName.equals(objectEntityName)) {
@@ -117,6 +109,15 @@ public class LRUMapSaver {
 		catch (IOException ioe) {
 			Log.errorMessage("LRUMapSaver.load | Error: " + ioe.getMessage());
 			return null;
+		}
+	}
+	
+	private static void init() {
+		if (pathNameOfSaveDir == null)
+			pathNameOfSaveDir = ApplicationProperties.getString(KEY_CACHE_PATH, DEFAULT_CACHE_PATH);
+		if (saveDir == null || !saveDir.exists()) {
+			saveDir = new File(pathNameOfSaveDir);
+			saveDir.mkdir();
 		}
 	}
 }
