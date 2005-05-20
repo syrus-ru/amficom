@@ -68,8 +68,8 @@ Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_analyse5(
 	//double noiseFactor = THRESHOLD_TO_NOISE_RATIO; // was 2
 
 	// корректируем параметры. FIXME: не корректировать, а проверить валидатором
-	if (min_level < 0.01)
-		min_level =  0.01;
+	if (min_level < 0.001)
+		min_level =  0.001;
 	if (min_weld < min_level)
 		min_weld = min_level;
 	if (min_connector < min_weld)
@@ -119,7 +119,7 @@ Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_analyse5(
 		{
 			fprintf(stderr, " -- R %g", ep.R);
 		}
-		if (ep.type == EventParams::REFLECTIVE)
+		if (ep.type == EventParams::CONNECTOR)
 		{
 			fprintf(stderr, " --            R1 %.1f R2 %.1f R3 %.1f",
 				ep.R1, ep.R2, ep.R3);
