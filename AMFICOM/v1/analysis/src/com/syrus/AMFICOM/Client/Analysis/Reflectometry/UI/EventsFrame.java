@@ -4,14 +4,21 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.FontMetrics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JViewport;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.swing.event.ListSelectionEvent;
@@ -51,7 +58,7 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener,
 	private static final String DASH = "-----";
 
 	private FixedSizeEditableTableModel tModel;
-	private JTable jTable;
+	JTable jTable;
 
 	private JPanel mainPanel = new JPanel();
 	private JScrollPane scrollPane = new JScrollPane();
@@ -224,11 +231,60 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener,
 			}
 		}
 		});
+		
+		final JPopupMenu popupMenu = this.createPopupMenu();
+		
+		this.jTable.addMouseListener(new MouseAdapter() {
+
+			public void mouseClicked(MouseEvent e) {
+				if (SwingUtilities.isRightMouseButton(e)) {
+					popupMenu.show((Component) e.getSource(), e.getX(), e.getY());
+				}
+			};
+		});
 
 		jTable.setDefaultRenderer(Object.class, new EventTableRenderer(jTable));
 
 		mainPanel.add(scrollPane, BorderLayout.CENTER);
 		scrollPane.getViewport().add(jTable);
+	}
+	
+	private JPopupMenu createPopupMenu() {
+		JPopupMenu popupMenu = new JPopupMenu();
+		JMenuItem joinPreviousMenuItem = new JMenuItem("Join previous");
+		JMenuItem joinNextMenuItem = new JMenuItem("Join next");
+		JMenuItem spiltMenuItem = new JMenuItem("Split");
+
+		joinPreviousMenuItem.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {	
+//				 TODO Auto-generated method stub
+				jTable.getSelectedRow();
+				
+			}
+		});
+
+		joinNextMenuItem.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		spiltMenuItem.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		popupMenu.add(joinPreviousMenuItem);
+		popupMenu.add(joinNextMenuItem);
+		popupMenu.addSeparator();
+		popupMenu.add(spiltMenuItem);
+		return popupMenu;
 	}
 
 	private void updateTableModel()
