@@ -61,11 +61,13 @@ public class AnalysisPanel extends MapMarkersPanel
 		this.markerColor = UIManager.getColor(AnalysisResourceKeys.COLOR_MARKER);
 		this.markerA.setColor(markerColor);
 		this.markerB.setColor(markerColor);
-		
+
 		this.markerColorXOR = new Color(this.markerColor.getRGB() ^ UIManager.getColor(ResourceKeys.COLOR_GRAPHICS_BACKGROUND).getRGB());
 
 		MARKER_STROKE = new BasicStroke(marker_w);
 		this.useXORMode = false;
+
+        Heap.setMarkerObject(markerA);
 	}
 
 	public void updEvents(String id)

@@ -3,7 +3,7 @@ package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 import java.awt.Color;
 import com.syrus.AMFICOM.general.*;
 
-class Marker
+public class Marker
 {
 	int pos;
 	private Identifier id;
@@ -28,6 +28,10 @@ class Marker
 		}
 	}
 
+    public int getPos()
+    {
+        return pos;
+    }
 	public Identifier getId()
 	{
 		return id;

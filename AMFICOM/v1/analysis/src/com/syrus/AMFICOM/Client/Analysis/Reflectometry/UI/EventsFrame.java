@@ -231,16 +231,17 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener,
 			}
 		}
 		});
-		
+
 		final JPopupMenu popupMenu = this.createPopupMenu();
-		
+
+        // FIXME: event edition is currently for internal use only. Should be either improved or disabled in final version. 
 		this.jTable.addMouseListener(new MouseAdapter() {
 
 			public void mouseClicked(MouseEvent e) {
 				if (SwingUtilities.isRightMouseButton(e)) {
 					popupMenu.show((Component) e.getSource(), e.getX(), e.getY());
 				}
-			};
+			}
 		});
 
 		jTable.setDefaultRenderer(Object.class, new EventTableRenderer(jTable));
@@ -252,38 +253,91 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener,
 	private JPopupMenu createPopupMenu() {
 		JPopupMenu popupMenu = new JPopupMenu();
 		JMenuItem joinPreviousMenuItem = new JMenuItem("Join previous");
-		JMenuItem joinNextMenuItem = new JMenuItem("Join next");
-		JMenuItem spiltMenuItem = new JMenuItem("Split");
+        JMenuItem splitTo2MenuItem = new JMenuItem("Split to 2");
+        JMenuItem splitTo3MenuItem = new JMenuItem("Split to 3");
+        JMenuItem changeToConnectorMenuItem = new JMenuItem("Change to CONNECTOR");
+        JMenuItem changeToGainMenuItem = new JMenuItem("Change to GAIN");
+        JMenuItem changeToLinearMenuItem = new JMenuItem("Change to LINEAR");
+        JMenuItem changeToLossMenuItem = new JMenuItem("Change to LOSS");
+        JMenuItem changeToNonidMenuItem = new JMenuItem("Change to NOT IDENTIFIED");
+        JMenuItem moveBeginToMarkerA = new JMenuItem("Move begin to Marker A");
+        JMenuItem moveEndToMarkerA = new JMenuItem("Move end to Marker A");
 
 		joinPreviousMenuItem.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e) {	
-//				 TODO Auto-generated method stub
-				jTable.getSelectedRow();
-				
-			}
-		});
-
-		joinNextMenuItem.addActionListener(new ActionListener() {
-
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-
+                Heap.joinCurrentEventWithPrevious();
 			}
 		});
 
-		spiltMenuItem.addActionListener(new ActionListener() {
+        splitTo2MenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Heap.splitCurrentEventToN(2);
+            }
+        });
 
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
+        splitTo3MenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Heap.splitCurrentEventToN(3);
+            }
+        });
 
-			}
-		});
+        changeToConnectorMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Heap.changeCurrentEventType(SimpleReflectogramEvent.CONNECTOR);
+            }
+        });
 
-		popupMenu.add(joinPreviousMenuItem);
-		popupMenu.add(joinNextMenuItem);
-		popupMenu.addSeparator();
-		popupMenu.add(spiltMenuItem);
+        changeToGainMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Heap.changeCurrentEventType(SimpleReflectogramEvent.GAIN);
+            }
+        });
+
+        changeToLinearMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Heap.changeCurrentEventType(SimpleReflectogramEvent.LINEAR);
+            }
+        });
+
+        changeToLossMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Heap.changeCurrentEventType(SimpleReflectogramEvent.LOSS);
+            }
+        });
+
+        changeToNonidMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Heap.changeCurrentEventType(SimpleReflectogramEvent.NOTIDENTIFIED);
+            }
+        });
+
+        moveBeginToMarkerA.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (Heap.hasMarkerPosition())
+                    Heap.changeCurrentEventBegin(Heap.getMarkerPosition());
+            }
+        });
+
+        moveEndToMarkerA.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (Heap.hasMarkerPosition())
+                    Heap.changeCurrentEventEnd(Heap.getMarkerPosition());
+            }
+        });
+
+        popupMenu.add(joinPreviousMenuItem);
+        popupMenu.addSeparator();
+        popupMenu.add(splitTo2MenuItem);
+        popupMenu.add(splitTo3MenuItem);
+        popupMenu.addSeparator();
+        popupMenu.add(changeToLinearMenuItem);
+        popupMenu.add(changeToLossMenuItem);
+        popupMenu.add(changeToGainMenuItem);
+        popupMenu.add(changeToConnectorMenuItem);
+        popupMenu.add(changeToNonidMenuItem);
+        popupMenu.addSeparator();
+        popupMenu.add(moveBeginToMarkerA);
+        popupMenu.add(moveEndToMarkerA);
 		return popupMenu;
 	}
 

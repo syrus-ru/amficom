@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.58 2005/05/06 11:27:41 saa Exp $
+ * $Id: Heap.java,v 1.59 2005/05/20 17:44:55 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.Marker;
 import com.syrus.AMFICOM.Client.Analysis.UI.ReflectogrammLoadDialog;
 import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.CurrentEventChangeListener;
@@ -26,6 +27,7 @@ import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEventsImpl;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
+import com.syrus.AMFICOM.analysis.dadara.ReliabilitySimpleReflectogramEventImpl;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEventComparer;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.Set;
@@ -45,6 +47,7 @@ import com.syrus.io.BellcoreStructure;
  * rLDialog{};
  * backupEtalonMTM;
  * newMSName
+ * setMarkerObject() / hasMarkerPosition() / getMarkerPosition()
  * 
  * Свойства, по которым уведомления предусмотрены, но не систематизированы
  * (и не гарантированы):
@@ -65,7 +68,7 @@ import com.syrus.io.BellcoreStructure;
  * Фактически, primaryMTAE - это часть refAnalysisPrimary.
  * 
  * @author $Author: saa $
- * @version $Revision: 1.58 $, $Date: 2005/05/06 11:27:41 $
+ * @version $Revision: 1.59 $, $Date: 2005/05/20 17:44:55 $
  * @module
  */
 public class Heap
@@ -99,6 +102,8 @@ public class Heap
     private static SimpleReflectogramEventComparer rComp = null;
 
 	private static String newMSName = null; // the name for newly created (unsaved) MeasurementSetup; null if no new MS
+
+    private static Marker markerObject = null;
 
     // listeners
 
@@ -351,6 +356,16 @@ public class Heap
 
     public static SimpleReflectogramEventComparer getEventComparer() {
         return rComp;
+    }
+
+    public static void setMarkerObject(Marker marker) {
+        markerObject = marker;
+    }
+    public static boolean hasMarkerPosition() {
+        return markerObject != null;
+    }
+    public static int getMarkerPosition() {
+        return markerObject.getPos();
     }
 
     // dispatcher stuff
@@ -611,6 +626,158 @@ public class Heap
         fixEventList();
         notifyPrimaryRefAnalysisRemoved();
         notifyPrimaryMTAERemoved();
+    }
+
+    // объединяет два события
+    // rather slow: replaces the whole analysis
+    public static void joinCurrentEventWithPrevious() {
+        int nEvent = getCurrentEvent2();
+        if (nEvent < 0)
+            return; // no event selected
+        int joinPoint = nEvent - 1;
+        if (joinPoint < 0)
+            return; // current event is at the beginning of list
+        ModelTraceAndEventsImpl mtae = getMTAEPrimary();
+        ReliabilitySimpleReflectogramEventImpl[] in =
+            (ReliabilitySimpleReflectogramEventImpl[])mtae.getSimpleEvents();
+        ReliabilitySimpleReflectogramEventImpl[] out =
+            new ReliabilitySimpleReflectogramEventImpl[in.length - 1];
+        for (int i = 0; i < out.length; i++) {
+            out[i] =
+                i <= joinPoint ? i < joinPoint // tri-case: <, =, >
+                ? in[i]
+                : new ReliabilitySimpleReflectogramEventImpl(
+                        in[i].getBegin(),
+                        in[i + 1].getEnd(),
+                        in[i].getEventType(),
+                        -1.0)
+                : in[i + 1];
+        }
+        BellcoreStructure bs = getBSPrimaryTrace();
+        ModelTraceAndEventsImpl newMtae = ModelTraceAndEventsImpl.replaceRSE(
+                mtae, out, bs.getTraceData());
+        setRefAnalysisPrimary(new RefAnalysis(getBSPrimaryTrace(), newMtae));
+    }
+
+    // rather slow: replaces the whole analysis
+    // n must be be >= 1 (only >=2 are useless)
+    public static void splitCurrentEventToN(int n) {
+        int nEvent = getCurrentEvent2();
+        if (nEvent < 0)
+            return;
+        if (n < 1)
+            throw new IllegalArgumentException("n < 1");
+        ModelTraceAndEventsImpl mtae = getMTAEPrimary();
+        ReliabilitySimpleReflectogramEventImpl[] in =
+            (ReliabilitySimpleReflectogramEventImpl[])mtae.getSimpleEvents();
+        ReliabilitySimpleReflectogramEventImpl[] out =
+            new ReliabilitySimpleReflectogramEventImpl[in.length + n - 1];
+        for (int i = 0; i < nEvent; i++) {
+            out[i] = in[i];
+        }
+        int evLen = in[nEvent].getEnd() - in[nEvent].getBegin();
+        for (int i = 0; i < n; i++) {
+            out[nEvent + i] = new ReliabilitySimpleReflectogramEventImpl(
+                    in[nEvent].getBegin() + evLen * i / n,
+                    in[nEvent].getBegin() + evLen * (i + 1) / n,
+                    in[nEvent].getEventType(),
+                    -1.0);
+        }
+        for (int i = nEvent + 1; i < in.length; i++) {
+                out[i + n - 1] = in[i];
+        }
+        BellcoreStructure bs = getBSPrimaryTrace();
+        ModelTraceAndEventsImpl newMtae = ModelTraceAndEventsImpl.replaceRSE(
+                mtae, out, bs.getTraceData());
+        setRefAnalysisPrimary(new RefAnalysis(getBSPrimaryTrace(), newMtae));
+    }
+
+    // rather slow: replaces the whole analysis
+    public static void changeCurrentEventType(int newType) {
+        int nEvent = getCurrentEvent2();
+        if (nEvent < 0)
+            return; // no event selected
+        ModelTraceAndEventsImpl mtae = getMTAEPrimary();
+        changeOneEventAndFixNeighbours(nEvent, new ReliabilitySimpleReflectogramEventImpl(
+                        mtae.getSimpleEvent(nEvent).getBegin(),
+                        mtae.getSimpleEvent(nEvent).getEnd(),
+                        newType,
+                        -1.0));
+    }
+
+    // rather slow: replaces the whole analysis
+    // also change prev. event end
+    public static void changeCurrentEventBegin(int begin) {
+        int nEvent = getCurrentEvent2();
+        if (nEvent < 0)
+            return; // no event selected
+        ModelTraceAndEventsImpl mtae = getMTAEPrimary();
+        if (nEvent >= 0
+                && begin <= mtae.getSimpleEvent(nEvent - 1).getBegin())
+            return; // begin <= prev.begin
+        if (nEvent < mtae.getNEvents() - 1
+                && begin >= mtae.getSimpleEvent(nEvent + 1).getEnd())
+            return; // begin >= next.end
+        changeOneEventAndFixNeighbours(nEvent, new ReliabilitySimpleReflectogramEventImpl(
+                        begin,
+                        mtae.getSimpleEvent(nEvent).getEnd(),
+                        mtae.getSimpleEvent(nEvent).getEventType(),
+                        -1.0));
+    }
+
+    // rather slow: replaces the whole analysis
+    // also change prev. event end
+    public static void changeCurrentEventEnd(int end) {
+        int nEvent = getCurrentEvent2();
+        if (nEvent < 0)
+            return; // no event selected
+        ModelTraceAndEventsImpl mtae = getMTAEPrimary();
+        if (nEvent >= 0
+                && end <= mtae.getSimpleEvent(nEvent - 1).getBegin())
+            return; // end <= prev.begin
+        if (nEvent < mtae.getNEvents() - 1
+                && end >= mtae.getSimpleEvent(nEvent + 1).getEnd())
+            return; // end >= next.end
+        changeOneEventAndFixNeighbours(nEvent,
+                new ReliabilitySimpleReflectogramEventImpl(
+                        mtae.getSimpleEvent(nEvent).getBegin(),
+                        end,
+                        mtae.getSimpleEvent(nEvent).getEventType(),
+                        -1.0));
+    }
+
+    // rather slow: replaces the whole analysis
+    // moves nearby events if required (and resets their reliability)
+    private static void changeOneEventAndFixNeighbours(int nEvent,
+            ReliabilitySimpleReflectogramEventImpl ev) {
+        ModelTraceAndEventsImpl mtae = getMTAEPrimary();
+        ReliabilitySimpleReflectogramEventImpl[] in =
+            (ReliabilitySimpleReflectogramEventImpl[])mtae.getSimpleEvents();
+        ReliabilitySimpleReflectogramEventImpl[] out =
+            new ReliabilitySimpleReflectogramEventImpl[in.length];
+        for (int i = 0; i < in.length; i++) {
+            if (i == nEvent) {
+                out[i] = ev;
+            } else if (i == nEvent - 1 && in[i].getEnd() != ev.getBegin()) {
+                out[i] = new ReliabilitySimpleReflectogramEventImpl(
+                        in[i].getBegin(),
+                        ev.getBegin(),
+                        in[i].getEventType(),
+                        -1.0);
+            } else if (i == nEvent + 1 && in[i].getBegin() != ev.getEnd()) {
+                out[i] = new ReliabilitySimpleReflectogramEventImpl(
+                        ev.getEnd(),
+                        in[i].getEnd(),
+                        in[i].getEventType(),
+                        -1.0);
+            } else {
+                out[i] = in[i];
+            }
+        }
+        BellcoreStructure bs = getBSPrimaryTrace();
+        ModelTraceAndEventsImpl newMtae = ModelTraceAndEventsImpl.replaceRSE(
+                mtae, out, bs.getTraceData());
+        setRefAnalysisPrimary(new RefAnalysis(getBSPrimaryTrace(), newMtae));
     }
 
     /*
