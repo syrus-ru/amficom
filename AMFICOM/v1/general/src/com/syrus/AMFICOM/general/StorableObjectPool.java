@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.81 2005/05/18 11:07:39 bass Exp $
+ * $Id: StorableObjectPool.java,v 1.82 2005/05/20 08:25:30 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,12 +8,9 @@
 
 package com.syrus.AMFICOM.general;
 
-import com.syrus.io.LRUMapSaver;
-import com.syrus.util.LRUMap;
-import com.syrus.util.Log;
-
 import gnu.trove.TObjectProcedure;
 import gnu.trove.TShortObjectHashMap;
+import gnu.trove.TShortObjectIterator;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -26,8 +23,12 @@ import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
 
+import com.syrus.io.LRUMapSaver;
+import com.syrus.util.LRUMap;
+import com.syrus.util.Log;
+
 /**
- * @version $Revision: 1.81 $, $Date: 2005/05/18 11:07:39 $
+ * @version $Revision: 1.82 $, $Date: 2005/05/20 08:25:30 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -177,18 +178,49 @@ public abstract class StorableObjectPool {
 	 */
 	public static void delete(final Set identifiables) {
 		assert identifiables != null: ErrorMessages.NON_NULL_EXPECTED;
-		if (identifiables.isEmpty())
-			return;
+		/*
+		 * Map<short, Set<Identifiable>>
+		 */
+		final TShortObjectHashMap groupCodeIdentifiablesMap = new TShortObjectHashMap();
+		for (final Iterator identifiableIterator = identifiables.iterator(); identifiableIterator.hasNext();) {
+			final Identifiable identifiable = (Identifiable) identifiableIterator.next();
+			final short entityCode = identifiable.getId().getMajor();
+			final short groupCode = ObjectGroupEntities.getGroupCode(entityCode);
+			Set singleGroupIdentifiables = (Set) groupCodeIdentifiablesMap.get(groupCode);
+			if (singleGroupIdentifiables == null) {
+				singleGroupIdentifiables = new HashSet();
+				groupCodeIdentifiablesMap.put(groupCode, singleGroupIdentifiables);
+			}
+			singleGroupIdentifiables.add(identifiable);
+		}
+		for (final TShortObjectIterator groupCodeIdentifiablesIterator = groupCodeIdentifiablesMap.iterator(); groupCodeIdentifiablesIterator.hasNext();) {
+			groupCodeIdentifiablesIterator.advance();
+			
+			final short groupCode = groupCodeIdentifiablesIterator.key();
+			final Set singleGroupIdentifiables = (Set) groupCodeIdentifiablesIterator.value();
 
-		assert StorableObject.hasSingleGroupEntities(identifiables);
-		final short groupCode = StorableObject.getGroupCodeOfIdentifiables(identifiables);
-		assert ObjectGroupEntities.isGroupCodeValid(groupCode);
-		final StorableObjectPool pool = (StorableObjectPool) GROUP_CODE_POOL_MAP.get(groupCode);
-		if (pool == null)
-			Log.debugMessage("StorableObjectPool.delete() | Unable to delete identifiables since the corresponding pool is not registered",
-					Log.WARNING);
-		else
-			pool.deleteImpl(identifiables);
+			assert StorableObject.hasSingleGroupEntities(singleGroupIdentifiables);
+			assert groupCode == StorableObject.getGroupCodeOfIdentifiables(singleGroupIdentifiables);
+			assert ObjectGroupEntities.isGroupCodeValid(groupCode);
+
+			final StorableObjectPool pool = (StorableObjectPool) GROUP_CODE_POOL_MAP.get(groupCode);
+			/*-
+			 * Extra braces added upon Bob's request. Keep them, and
+			 * treat them with care.
+			 *
+			 * --
+			 * Bass, 2005.05.20 AD.
+			 */
+			if (pool == null) {
+				Log.debugMessage("StorableObjectPool.delete() | Unable to delete identifiables of group: "
+						+ ObjectGroupEntities.codeToString(groupCode)
+						+ '(' + groupCode
+						+ ") since the corresponding pool is not registered",
+						Log.SEVERE);
+			} else {
+				pool.deleteImpl(identifiables);
+			}
+		}
 	}
 
 	protected final void deleteImpl(final Set identifiables) {
@@ -831,7 +863,7 @@ public abstract class StorableObjectPool {
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.81 $, $Date: 2005/05/18 11:07:39 $
+	 * @version $Revision: 1.82 $, $Date: 2005/05/20 08:25:30 $
 	 * @module general_v1
 	 */
 	private static final class RefreshProcedure implements TObjectProcedure {
