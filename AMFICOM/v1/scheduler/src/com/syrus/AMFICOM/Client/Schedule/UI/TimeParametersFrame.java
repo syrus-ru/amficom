@@ -16,6 +16,7 @@ import java.beans.PropertyChangeListener;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Set;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -187,35 +188,92 @@ public class TimeParametersFrame extends JInternalFrame {
 					boolean startedThread = false;
 					static final long TIMEOUT = 500;
 					
-					private Thread thread = new Thread() {
-						
-						public void run() {																
+					private Thread		thread			= new Thread() {
+
+															public void run() {
 																while (true) {
 																	if (waiting
 																			&& (System.currentTimeMillis() - previousEventTime) > TIMEOUT) {
 																		Log.debugMessage(".run | 1 ", Log.FINEST);
-																		
+
 																		Date startDate = TimeParametersPanel.this
-																		.getStartDate();
+																				.getStartDate();
 																		Date endDate = TimeParametersPanel.this
-																			.getEndDate();																
-																		
+																				.getEndDate();
+
 																		Log.debugMessage(".run | 2 ", Log.FINEST);
-																		
-//																		if (!oneRadioButton.isSelected() && !groupRadioButton.isSelected()) {
-//																			Log.debugMessage(".run | 3 ", Log.FINEST);
-////																			if (startDate.getTime() > endDate
-////																					.getTime()) 
-//																			{
-//																				Log.debugMessage(".run | 4 ", Log.FINEST);
-//																				waiting = false;
-//																			}
-//																		}
-																		
+
 																		Log.debugMessage(".run | 5 ", Log.FINEST);
 																		if (waiting) {
 																			Log.debugMessage(".run | 6 ", Log.FINEST);
-																			schedulerModel.moveSelectedTests(startDate);
+																			Set selectedTestIds = TimeParametersPanel.this.schedulerModel
+																					.getSelectedTestIds();
+																			if (selectedTestIds != null
+																					&& !selectedTestIds.isEmpty()) {
+																				int size = selectedTestIds.size();
+																				Log.debugMessage(".run | size " + size,
+																					Log.FINEST);
+																				boolean b = !oneRadioButton
+																						.isSelected()
+																						&& !groupRadioButton
+																								.isSelected();
+																				if (size == 1 || !b) {
+																					if (b) {
+																						Log.debugMessage(".run | 3 ",
+																							Log.FINEST);
+																						if (startDate.getTime() > endDate
+																								.getTime()) {
+																							Log
+																									.debugMessage(
+																										".run | 4 ",
+																										Log.FINEST);
+																							waiting = false;
+
+																						} else {
+																							Test selectedTest = TimeParametersPanel.this.schedulerModel
+																									.getSelectedTest();
+																							if (selectedTest
+																									.isChanged()
+																									&& TimeParametersPanel.this.schedulerModel
+																											.isValid(
+																												startDate,
+																												selectedTest
+																														.getEndTime(),
+																												selectedTest
+																														.getMonitoredElement()
+																														.getId())) {
+																								selectedTest
+																										.setStartTime(startDate);
+
+																								if (selectedTest
+																										.getGroupTestId() == null) {
+																									TimeParametersPanel.this.dispatcher
+																											.firePropertyChange(new PropertyChangeEvent(
+																																						this,
+																																						SchedulerModel.COMMAND_REFRESH_TESTS,
+																																						null,
+																																						null));
+																								} else {
+																									TimeParametersPanel.this.dispatcher
+																											.firePropertyChange(new PropertyChangeEvent(
+																																						this,
+																																						SchedulerModel.COMMAND_SET_START_GROUP_TIME,
+																																						null,
+																																						selectedTest
+																																								.getStartTime()));
+																								}
+																							}
+																						}
+																					} else {
+																						TimeParametersPanel.this.schedulerModel
+																								.moveSelectedTests(startDate);
+																					}
+																				} else {
+																					TimeParametersPanel.this.schedulerModel
+																							.moveSelectedTests(startDate);
+																				}
+																			}
+
 																		}
 																		Log.debugMessage(".run | 7 ", Log.FINEST);
 																		waiting = false;
@@ -228,8 +286,8 @@ public class TimeParametersFrame extends JInternalFrame {
 																	}
 																}
 															}
-						
-					};
+
+														};
 					
 
 					public void stateChanged(ChangeEvent e) {
