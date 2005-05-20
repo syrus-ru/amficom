@@ -51,8 +51,6 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.CompoundConditionSort;
 import com.syrus.AMFICOM.measurement.AbstractTemporalPattern;
-import com.syrus.AMFICOM.measurement.AnalysisType;
-import com.syrus.AMFICOM.measurement.EvaluationType;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.MeasurementType;
@@ -109,9 +107,11 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 
 	public static final String COMMAND_GET_ANALYSIS_TYPE = "GetAnalysisType";
 	public static final String COMMAND_SET_ANALYSIS_TYPE = "SetAnalysisType";
+	public static final String COMMAND_SET_ANALYSIS_TYPES = "SetAnalysisTypes";
 
 	public static final String COMMAND_GET_EVALUATION_TYPE = "GetEvaluationType";
 	public static final String COMMAND_SET_EVALUATION_TYPE = "SetEvaluationType";
+	public static final String COMMAND_SET_EVALUATION_TYPES = "SetEvaluationTypes";
 
 	public static final String COMMAND_GET_SET = "GetSet";
 	public static final String COMMAND_SET_SET = "SetSet";
@@ -147,8 +147,8 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 //	private KIS							kis								= null;
 	private String name = null;
 	private MonitoredElement			monitoredElement				= null;
-	private AnalysisType				analysisType					= null;
-	private EvaluationType				evaluationType					= null;
+	private Identifier				analysisTypeId					= null;
+	private Identifier				evaluationTypeId					= null;
 	private Set							set								= null;
 	private MeasurementSetup			measurementSetup				= null;
 	private TestReturnType				returnType						= null;
@@ -302,10 +302,10 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 				showErrorMessage(Environment.getActiveWindow(), e);
 			}
 		} else if (propertyName.equals(COMMAND_SET_ANALYSIS_TYPE)) {
-			this.analysisType = (AnalysisType) evt.getNewValue();
+			this.analysisTypeId = (Identifier) evt.getNewValue();
 			// this.generateTest();
 		} else if (propertyName.equals(COMMAND_SET_EVALUATION_TYPE)) {
-			this.evaluationType = (EvaluationType) evt.getNewValue();
+			this.evaluationTypeId = (Identifier) evt.getNewValue();
 			// this.generateTest();
 		} else if (propertyName.equals(COMMAND_SET_MEASUREMENT_TYPE)) {
 			this.measurementType = (MeasurementType) evt.getNewValue();
@@ -395,6 +395,28 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 
 //			this.elementsViewer.setElements(measurementTypeItems);
 			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this , COMMAND_SET_MEASUREMENT_TYPES, null, measurementTypeItems));
+			
+			this.dispatcher
+					.firePropertyChange(new PropertyChangeEvent(
+																this,
+																COMMAND_SET_ANALYSIS_TYPES,
+																null,
+																StorableObjectPool
+																		.getStorableObjectsByCondition(
+																			new EquivalentCondition(
+																									ObjectEntities.ANALYSISTYPE_ENTITY_CODE),
+																			true)));
+			
+			this.dispatcher
+			.firePropertyChange(new PropertyChangeEvent(
+														this,
+														COMMAND_SET_EVALUATION_TYPES,
+														null,
+														StorableObjectPool
+																.getStorableObjectsByCondition(
+																	new EquivalentCondition(
+																							ObjectEntities.EVALUATIONTYPE_ENTITY_CODE),
+																	true)));
 
 			// if (!monitoredElements.isEmpty()) {
 			// LinkedIdsCondition linkedIdsCondition;
@@ -431,19 +453,11 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 //				true));
 			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_MONITORED_ELEMENT, null, monitoredElement1));
 
-			Identifier analysisTypeId = test.getAnalysisTypeId();
-			if (analysisTypeId != null) {
-				this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_ANALYSIS_TYPE, this,
-																			MeasurementStorableObjectPool
-																					.getStorableObject(analysisTypeId,
-																						true)));
-			}
-
-			Identifier evaluationTypeId = test.getEvaluationTypeId();
-			if (evaluationTypeId != null) {
-				this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_EVALUATION_TYPE, null, MeasurementStorableObjectPool
-					.getStorableObject(evaluationTypeId, true)));
-			}
+			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_ANALYSIS_TYPE, this, test
+					.getAnalysisTypeId()));
+			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_EVALUATION_TYPE, null, test
+					.getEvaluationTypeId()));
+			
 			Collection measurementSetupIds = test.getMeasurementSetupIds();
 			if (!measurementSetupIds.isEmpty()) {
 				Identifier mainMeasurementSetupId = (Identifier) measurementSetupIds.iterator().next();
@@ -827,8 +841,8 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 					if (this.isValid(startTime, endTime, this.monitoredElement.getId())) {
 					test = Test.createInstance(LoginManager.getUserId(), startTime, endTime, temporalPattern == null
 							? null : temporalPattern.getId(), temporalType, this.measurementType.getId(),
-						this.analysisType == null ? null : this.analysisType.getId(), this.evaluationType == null
-								? null : this.evaluationType.getId(), null, this.monitoredElement, this.returnType,
+						this.analysisTypeId == null ? null : this.analysisTypeId, this.evaluationTypeId == null
+								? null : this.evaluationTypeId, null, this.monitoredElement, this.returnType,
 						this.name != null && this.name.trim().length() > 0 ? this.name : sdf.format(startTime),
 						measurementSetupIds);
 					
@@ -864,8 +878,8 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 				test.setAttributes(test.getCreated(), new Date(System.currentTimeMillis()), test.getCreatorId(),
 					LoginManager.getUserId(), test.getVersion(), temporalType.value(), startTime, endTime,
 					temporalPattern == null ? null : temporalPattern.getId(), this.measurementType.getId(),
-					this.analysisType == null ? null : this.analysisType.getId(), test.getGroupTestId(), this.evaluationType == null ? null
-							: this.evaluationType.getId(), test.getStatus().value(), this.monitoredElement,
+					this.analysisTypeId == null ? null : this.analysisTypeId, test.getGroupTestId(), this.evaluationTypeId == null ? null
+							: this.evaluationTypeId, test.getStatus().value(), this.monitoredElement,
 					this.returnType.value(), this.name != null && this.name.trim().length() > 0 ? this.name : sdf
 							.format(startTime), test.getNumberOfMeasurements());
 				} else {
