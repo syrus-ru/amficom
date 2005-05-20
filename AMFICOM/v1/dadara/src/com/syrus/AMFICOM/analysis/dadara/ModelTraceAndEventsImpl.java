@@ -1,5 +1,5 @@
 /*-
- * $Id: ModelTraceAndEventsImpl.java,v 1.9 2005/05/05 15:24:25 saa Exp $
+ * $Id: ModelTraceAndEventsImpl.java,v 1.10 2005/05/20 17:50:18 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.analysis.dadara.events.SpliceDetailedEvent;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.9 $, $Date: 2005/05/05 15:24:25 $
+ * @version $Revision: 1.10 $, $Date: 2005/05/20 17:50:18 $
  * @module
  */
 public class ModelTraceAndEventsImpl
@@ -42,8 +42,10 @@ implements ReliabilityModelTraceAndEvents, DataStreamable
 	private static DataStreamable.Reader dsReader = null; // DIS reader singleton-style object
 
     // private only: cinfo should be initialized later
-    protected ModelTraceAndEventsImpl(ReliabilitySimpleReflectogramEventImpl[] rse,
-            ModelFunction mf, double deltaX)
+    protected ModelTraceAndEventsImpl(
+            ReliabilitySimpleReflectogramEventImpl[] rse,
+            ModelFunction mf,
+            double deltaX)
     {
         this.rse = rse;
         this.mf = mf;
@@ -58,6 +60,15 @@ implements ReliabilityModelTraceAndEvents, DataStreamable
         this(rse, mf, deltaX);
         cinfo = new ComplexInfo(y); // use all our internal fields initialized by this moment
 	}
+
+    public static ModelTraceAndEventsImpl replaceRSE(
+            ModelTraceAndEventsImpl that,
+            ReliabilitySimpleReflectogramEventImpl[] rse,
+            double[] y)
+    {
+        return new ModelTraceAndEventsImpl(rse, that.mf, y, that.deltaX);
+    }
+            
 
 	public double getDeltaX()
 	{
