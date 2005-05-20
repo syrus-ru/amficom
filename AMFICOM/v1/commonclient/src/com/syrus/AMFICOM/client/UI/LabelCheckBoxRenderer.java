@@ -17,7 +17,7 @@ import com.syrus.util.Wrapper;
 
 /**
  * Renderer for JCheckBox items based on JLabel.
- * @version $Revision: 1.1 $, $Date: 2005/05/19 14:06:41 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/20 09:35:49 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -89,13 +89,13 @@ public class LabelCheckBoxRenderer extends JLabel implements ListCellRenderer {
 
 		if (object instanceof Icon) {
 			setIcon((Icon) object);
-			setText("");
+			setText(" ");
 		} else {
 			if (object instanceof JComponent)
 				this.component = (JComponent) object;
 			else {
 				setIcon(null);
-				setText((object == null) ? "" : object.toString());
+				setText((object == null) ? " " : object.toString());
 			}
 		}
 		
