@@ -1,5 +1,5 @@
 /*-
- * $Id: scheme.idl,v 1.22 2005/05/04 16:18:55 bass Exp $
+ * $Id: scheme.idl,v 1.23 2005/05/20 11:45:18 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,8 @@ module com {
 						general::corba::Identifier parentSchemeProtoGroupId;
 					};
 
-					typedef sequence<SchemeProtoGroup_Transferable> SchemeProtoGroupSeq_Transferable;
+					typedef SchemeProtoGroup_Transferable SchemeProtoGroup;
+					typedef sequence<SchemeProtoGroup> SchemeProtoGroupSeq;
 
 					struct SchemeProtoElement_Transferable {
 						general::corba::StorableObject header;
@@ -45,7 +46,8 @@ module com {
 						general::corba::IdentifierSeq characteristicIds;
 					};
 
-					typedef sequence<SchemeProtoElement_Transferable> SchemeProtoElementSeq_Transferable;
+					typedef SchemeProtoElement_Transferable SchemeProtoElement;
+					typedef sequence<SchemeProtoElement> SchemeProtoElementSeq;
 
 					struct Scheme_Transferable {
 						general::corba::StorableObject header;
@@ -75,7 +77,8 @@ module com {
 						general::corba::Identifier parentSchemeElementId;
 					};
 
-					typedef sequence<Scheme_Transferable> SchemeSeq_Transferable;
+					typedef Scheme_Transferable Scheme;
+					typedef sequence<Scheme> SchemeSeq;
 
 					struct SchemeElement_Transferable {
 						general::corba::StorableObject header;
@@ -97,7 +100,8 @@ module com {
 						general::corba::IdentifierSeq characteristicIds;
 					};
 
-					typedef sequence<SchemeElement_Transferable> SchemeElementSeq_Transferable;
+					typedef SchemeElement_Transferable SchemeElement;
+					typedef sequence<SchemeElement> SchemeElementSeq;
 
 					struct SchemeOptimizeInfo_Transferable {
 						general::corba::StorableObject header;
@@ -120,7 +124,22 @@ module com {
 						general::corba::Identifier parentSchemeId;
 					};
 
-					typedef sequence<SchemeOptimizeInfo_Transferable> SchemeOptimizeInfoSeq_Transferable;
+					typedef SchemeOptimizeInfo_Transferable SchemeOptimizeInfo;
+					typedef sequence<SchemeOptimizeInfo> SchemeOptimizeInfoSeq;
+
+					struct SchemeOptimizeInfoSwitch_Transferable {
+						general::corba::StorableObject header;
+					};
+
+					typedef SchemeOptimizeInfoSwitch_Transferable SchemeOptimizeInfoSwitch;
+					typedef sequence<SchemeOptimizeInfoSwitch> SchemeOptimizeInfoSwitchSeq;
+
+					struct SchemeOptimizeInfoRtu_Transferable {
+						general::corba::StorableObject header;
+					};
+
+					typedef SchemeOptimizeInfoRtu_Transferable SchemeOptimizeInfoRtu;
+					typedef sequence<SchemeOptimizeInfoRtu> SchemeOptimizeInfoRtuSeq;
 
 					struct SchemeMonitoringSolution_Transferable {
 						general::corba::StorableObject header;
@@ -132,7 +151,8 @@ module com {
 						general::corba::Identifier parentSchemeOptimizeInfoId;
 					};
 
-					typedef sequence<SchemeMonitoringSolution_Transferable> SchemeMonitoringSolutionSeq_Transferable;
+					typedef SchemeMonitoringSolution_Transferable SchemeMonitoringSolution;
+					typedef sequence<SchemeMonitoringSolution> SchemeMonitoringSolutionSeq;
 
 					struct SchemeDevice_Transferable {
 						general::corba::StorableObject header;
@@ -146,7 +166,8 @@ module com {
 						general::corba::IdentifierSeq characteristicIds;
 					};
 
-					typedef sequence<SchemeDevice_Transferable> SchemeDeviceSeq_Transferable;					
+					typedef SchemeDevice_Transferable SchemeDevice;
+					typedef sequence<SchemeDevice> SchemeDeviceSeq;					
 
 					enum AbstractSchemePortDirectionType {
 						_IN,
@@ -168,7 +189,8 @@ module com {
 						general::corba::IdentifierSeq characteristicIds;
 					};
 
-					typedef sequence<SchemePort_Transferable> SchemePortSeq_Transferable;
+					typedef SchemePort_Transferable SchemePort;
+					typedef sequence<SchemePort> SchemePortSeq;
 
 					struct SchemeCablePort_Transferable {
 						general::corba::StorableObject header;
@@ -185,7 +207,8 @@ module com {
 						general::corba::IdentifierSeq characteristicIds;
 					};
 
-					typedef sequence<SchemeCablePort_Transferable> SchemeCablePortSeq_Transferable;
+					typedef SchemeCablePort_Transferable SchemeCablePort;
+					typedef sequence<SchemeCablePort> SchemeCablePortSeq;
 
 					struct SchemeLink_Transferable {
 						general::corba::StorableObject header;
@@ -207,7 +230,8 @@ module com {
 						general::corba::IdentifierSeq characteristicIds;
 					};
 
-					typedef sequence<SchemeLink_Transferable> SchemeLinkSeq_Transferable;
+					typedef SchemeLink_Transferable SchemeLink;
+					typedef sequence<SchemeLink> SchemeLinkSeq;
 
 					struct SchemeCableLink_Transferable {
 						general::corba::StorableObject header;
@@ -226,7 +250,8 @@ module com {
 						general::corba::IdentifierSeq characteristicIds;
 					};
 
-					typedef sequence<SchemeCableLink_Transferable> SchemeCableLinkSeq_Transferable;
+					typedef SchemeCableLink_Transferable SchemeCableLink;
+					typedef sequence<SchemeCableLink> SchemeCableLinkSeq;
 
 					struct SchemeCableThread_Transferable {
 						general::corba::StorableObject header;
@@ -243,8 +268,8 @@ module com {
 						general::corba::IdentifierSeq characteristicIds;
 					};
 
-
-					typedef sequence<SchemeCableThread_Transferable> SchemeCableThreadSeq_Transferable;
+					typedef SchemeCableThread_Transferable SchemeCableThread;
+					typedef sequence<SchemeCableThread> SchemeCableThreadSeq;
 
 					struct CableChannelingItem_Transferable {
 						general::corba::StorableObject header;
@@ -261,7 +286,8 @@ module com {
 						general::corba::Identifier parentSchemeCableLinkId;
 					};
 
-					typedef sequence<CableChannelingItem_Transferable> CableChannelingItemSeq_Transferable;
+					typedef CableChannelingItem_Transferable CableChannelingItem;
+					typedef sequence<CableChannelingItem> CableChannelingItemSeq;
 
 					struct SchemePath_Transferable {
 						general::corba::StorableObject header;
@@ -275,7 +301,8 @@ module com {
 						general::corba::IdentifierSeq characteristicIds;
 					};
 
-					typedef sequence<SchemePath_Transferable> SchemePathSeq_Transferable;
+					typedef SchemePath_Transferable SchemePath;
+					typedef sequence<SchemePath> SchemePathSeq;
 
 					struct PathElement_Transferable {
 						general::corba::StorableObject header;
@@ -298,7 +325,8 @@ module com {
 						} data;
 					};
 
-					typedef sequence<PathElement_Transferable> PathElementSeq_Transferable;
+					typedef PathElement_Transferable PathElement;
+					typedef sequence<PathElement> PathElementSeq;
 				};
 			};
 		};

@@ -1,5 +1,5 @@
 /*-
- * $Id: map.idl,v 1.16 2005/05/18 10:55:20 bass Exp $
+ * $Id: map.idl,v 1.17 2005/05/20 11:45:18 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,165 +17,158 @@ module com {
 		module AMFICOM {
 			module map {
 				module corba {
-				
-					// was MapNodeProtoElement
-					// MapNodeProtoElement is node type
-					
 					struct SiteNodeType_Transferable {
 							general::corba::StorableObject header;
-							
-							wstring codename;
-							wstring name;
-							wstring description;
-							
-							general::corba::Identifier imageId;
-							boolean topological;
-							general::corba::IdentifierSeq characteristicIds;
-					};
-					typedef sequence<SiteNodeType_Transferable> SiteNodeTypeSeq_Transferable;
-				
-					// was MapLinkProtoElement
-					// MapLinkProtoElement is physical line type such as tunnel, subway
-					struct PhysicalLinkType_Transferable {
-							general::corba::StorableObject header;							
 
 							wstring codename;
 							wstring name;
 							wstring description;
-							
-							long dimensionX;
-							long dimensionY;
-							
+
+							general::corba::Identifier imageId;
+							boolean topological;
 							general::corba::IdentifierSeq characteristicIds;
 					};
-					typedef sequence<PhysicalLinkType_Transferable> PhysicalLinkTypeSeq_Transferable;
-					
+
+					typedef SiteNodeType_Transferable SiteNodeType;
+					typedef sequence<SiteNodeType> SiteNodeTypeSeq;
+
+					/**
+					 * Physical line type such as tunnel, subway, etc.
+						*/
+					struct PhysicalLinkType_Transferable {
+							general::corba::StorableObject header;
+
+							wstring codename;
+							wstring name;
+							wstring description;
+
+							long dimensionX;
+							long dimensionY;
+
+							general::corba::IdentifierSeq characteristicIds;
+					};
+
+					typedef PhysicalLinkType_Transferable PhysicalLinkType;
+					typedef sequence<PhysicalLinkType> PhysicalLinkTypeSeq;
+
 					enum AbstractNodeSort {
 							NODE_SORT_SITE,
 							NODE_SORT_TOPOLOGICAL
 						};
-					
-					// was MapSiteElement
-					// MapSiteElement is node
+
+					/**
+					 * Node.
+						*/
 					struct SiteNode_Transferable {
 							general::corba::StorableObject header;
 
 							wstring name;
 							wstring description;
-							
-							// was wstring
+
 							double  longitude;		// anchor
-							// was wstring
 							double latitude;		// anchor
-							
+
 							general::corba::Identifier imageId;
-							general::corba::Identifier siteNodeTypeId;			
-							//SiteNodeType siteNodeType;
-							
+							general::corba::Identifier siteNodeTypeId;
+
 							wstring city;
 							wstring street;
 							wstring building;
 
-							general::corba::IdentifierSeq characteristicIds;				
+							general::corba::IdentifierSeq characteristicIds;
 					};
 
-					typedef sequence<SiteNode_Transferable> SiteNodeSeq_Transferable;
 					typedef SiteNode_Transferable SiteNode;
 					typedef sequence<SiteNode> SiteNodeSeq;
 
-					// was MapPhysicalNodeElement
-					// MapPhysicalNodeElement is topological node
 					struct TopologicalNode_Transferable {
 							general::corba::StorableObject header;
 
 							wstring name;
 							wstring description;
-							
-							// was wstring
+
 							double  longitude;		// anchor
-							// was wstring
 							double latitude;		// anchor
 
 							general::corba::Identifier physicalLinkId;
-							//PhysicalLink physicalLink;
 
 							boolean active;
 
 							general::corba::IdentifierSeq characteristicIds;
 					};
-					
-					typedef sequence<TopologicalNode_Transferable> TopologicalNodeSeq_Transferable;
-					
+
+					typedef TopologicalNode_Transferable TopologicalNode;
+					typedef sequence<TopologicalNode> TopologicalNodeSeq;
+
 					union AbstractNode_Transferable switch (AbstractNodeSort) {
 						case NODE_SORT_SITE:
-							SiteNode_Transferable siteNode;
+							SiteNode siteNode;
 						case NODE_SORT_TOPOLOGICAL:
-							TopologicalNode_Transferable topologicalNode;
+							TopologicalNode topologicalNode;
 					};
-					
-					// was MapNodeLinkElement
-					// MapNodeLinkElement is map item, line fragment
-					
+
+					typedef AbstractNode_Transferable AbstractNode;
+					typedef sequence<AbstractNode> AbstractNodeSeq;
+
+					/**
+					 * Map item, line fragment.
+						*/
 					struct NodeLink_Transferable {
 							general::corba::StorableObject header;
 
 							wstring name;
 
 							general::corba::Identifier physicalLinkId;
-							//PhysicalLink physicalLink;
 
 							general::corba::Identifier startNodeId;
-							//Node startNode;
 							general::corba::Identifier endNodeId;
-							//Node endNode;							
 
 							double length;
-							
-							general::corba::IdentifierSeq characteristicIds;							
+
+							general::corba::IdentifierSeq characteristicIds;
 					};
-					
-					typedef sequence<NodeLink_Transferable> NodeLinkSeq_Transferable;
-					
-					// was MapMarkElement
-					// MapMarkElement is mark, have coordinates and bound to subway (MapLink) by distance
+
+					typedef NodeLink_Transferable NodeLink;
+					typedef sequence<NodeLink> NodeLinkSeq;
+
+					/**
+					 * Mark which has coordinates and is bound to a subway (MapLink) by distance.
+						*/
 					struct Mark_Transferable {
 							general::corba::StorableObject header;
 
 							wstring name;
 							wstring description;
-							// was wstring
 							double  longitude;		// anchor
-							// was wstring
 							double latitude;		// anchor
-							
+
 							general::corba::Identifier physicalLinkId;
-							//PhysicalLink physicalLink;
 
 							double distance;
 
 							wstring city;
 							wstring street;
 							wstring building;
-							
+
 							general::corba::IdentifierSeq characteristicIds;
 					};
-					typedef sequence<Mark_Transferable> MarkSeq_Transferable;
-					
-						// was MapPhysicalLinkElement
-					// MapPhysicalLinkElement is line item
+
+					typedef Mark_Transferable Mark;
+					typedef sequence<Mark> MarkSeq;
+
+					/**
+					 * Line item.
+						*/
 					struct PhysicalLink_Transferable {
 							general::corba::StorableObject header;
 
 							wstring name;
 							wstring description;
-							
+
 							general::corba::Identifier physicalLinkTypeId;
-							//PhysicalLineType physicalLinkType;
 
 							general::corba::Identifier startNodeId;
-							//Node startNode;
 							general::corba::Identifier endNodeId;
-							//Node endNode;
 
 							wstring city;
 							wstring street;
@@ -183,59 +176,48 @@ module com {
 
 							long dimensionX;
 							long dimensionY;
-							
+
 							boolean leftToRight;
 							boolean topToBottom;
 
 							general::corba::IdentifierSeq nodeLinkIds;
-							//NodeLinkSeq nodeLinks;
 
 							general::corba::IdentifierSeq characteristicIds;
-					};					
+					};
 
-					typedef sequence<PhysicalLink_Transferable> PhysicalLinkSeq_Transferable;
 					typedef PhysicalLink_Transferable PhysicalLink;
 					typedef sequence<PhysicalLink> PhysicalLinkSeq;
 
-					// was MapPipePathElement
-					// MapPipePathElement is collector
 					struct Collector_Transferable {
 							general::corba::StorableObject header;
 
 							wstring name;
-							wstring description;							
-							
+							wstring description;
+
 							general::corba::IdentifierSeq physicalLinkIds;
-							//PhysicalLinkSeq physicalLinks;
-							
+
 							general::corba::IdentifierSeq characteristicIds;
 					};
-					
-					typedef sequence<Collector_Transferable> CollectorSeq_Transferable;
+
+					typedef Collector_Transferable Collector;
+					typedef sequence<Collector> CollectorSeq;
 
 					struct Map_Transferable {
 							general::corba::StorableObject header;
-							
+
 							general::corba::Identifier domain_id;
-							
+
 							wstring name;
 							wstring description;
 
 							general::corba::IdentifierSeq siteNodeIds;
-							//SiteNodeSeq siteNodes;
 							general::corba::IdentifierSeq topologicalNodeIds;
-							//TopologicalNodeSeq topologicalNodes;
 							general::corba::IdentifierSeq nodeLinkIds;
-							//NodeLinkSeq nodeLinks;
 							general::corba::IdentifierSeq physicalLinkIds;
-							//PhysicalLinkSeq physicalLinks;
 							general::corba::IdentifierSeq markIds;
-							//MarkSeq marks;
 							general::corba::IdentifierSeq collectorIds;
-							//CollectorSeq collectors;
 					};
-					
-					typedef sequence<Map_Transferable> MapSeq_Transferable;
+
 					typedef Map_Transferable Map;
 					typedef sequence<Map> MapSeq;
 
@@ -254,7 +236,9 @@ module com {
 							general::corba::Identifier mapId;
 							general::corba::IdentifierSeq schemeIds;
 					};
-					
+
+					typedef MapView_Transferable MapView;
+					typedef sequence<MapView> MapViewSeq;
 				};
 			};
 		};
