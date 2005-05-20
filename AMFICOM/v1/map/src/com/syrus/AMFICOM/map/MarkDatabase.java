@@ -1,5 +1,5 @@
 /*
- * $Id: MarkDatabase.java,v 1.21 2005/05/18 11:48:19 bass Exp $
+ * $Id: MarkDatabase.java,v 1.22 2005/05/20 21:11:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,16 +22,18 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
+import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/05/18 11:48:19 $
- * @author $Author: bass $
+ * @version $Revision: 1.22 $, $Date: 2005/05/20 21:11:56 $
+ * @author $Author: arseniy $
  * @module map_v1
  */
 public class MarkDatabase extends CharacterizableDatabase {
@@ -127,7 +129,7 @@ public class MarkDatabase extends CharacterizableDatabase {
 				
 		PhysicalLink physicalLink;
 		try {
-			physicalLink = (PhysicalLink) MapStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, MarkWrapper.COLUMN_PHYSICAL_LINK_ID), true);
+			physicalLink = (PhysicalLink) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, MarkWrapper.COLUMN_PHYSICAL_LINK_ID), true);
 		} catch (ApplicationException ae) {
 			String msg = this.getEnityName() + "Database.updateEntityFromResultSet | Error " + ae.getMessage();
 			throw new RetrieveObjectException(msg, ae);
@@ -153,10 +155,11 @@ public class MarkDatabase extends CharacterizableDatabase {
 	}
 
 	
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) {
-//		Mark mark = this.fromStorableObject(storableObject);
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
+		Mark mark = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  mark.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}

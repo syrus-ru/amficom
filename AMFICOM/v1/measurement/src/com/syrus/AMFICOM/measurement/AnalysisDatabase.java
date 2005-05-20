@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisDatabase.java,v 1.55 2005/05/18 11:34:42 bass Exp $
+ * $Id: AnalysisDatabase.java,v 1.56 2005/05/20 21:11:38 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,14 +22,15 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.55 $, $Date: 2005/05/18 11:34:42 $
- * @author $Author: bass $
+ * @version $Revision: 1.56 $, $Date: 2005/05/20 21:11:38 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -115,11 +116,11 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 		Measurement measurement = null;
 		Set criteriaSet;
 		try {
-			analysisType = (AnalysisType) MeasurementStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_TYPE_ID), true);
+			analysisType = (AnalysisType) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_TYPE_ID), true);
 			Identifier measurementId = DatabaseIdentifier.getIdentifier(resultSet, AnalysisWrapper.COLUMN_MEASUREMENT_ID);
 			if (measurementId != null)
-				measurement = (Measurement) MeasurementStorableObjectPool.getStorableObject(measurementId, true);
-			criteriaSet = (Set) MeasurementStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, AnalysisWrapper.COLUMN_CRITERIA_SET_ID), true);
+				measurement = (Measurement) StorableObjectPool.getStorableObject(measurementId, true);
+			criteriaSet = (Set) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, AnalysisWrapper.COLUMN_CRITERIA_SET_ID), true);
 		}
 		catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);

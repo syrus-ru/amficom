@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeDatabase.java,v 1.23 2005/05/18 11:48:20 bass Exp $
+ * $Id: SiteNodeDatabase.java,v 1.24 2005/05/20 21:11:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,16 +22,18 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
+import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/05/18 11:48:20 $
- * @author $Author: bass $
+ * @version $Revision: 1.24 $, $Date: 2005/05/20 21:11:57 $
+ * @author $Author: arseniy $
  * @module map_v1
  */
 public class SiteNodeDatabase extends CharacterizableDatabase {
@@ -123,7 +125,7 @@ public class SiteNodeDatabase extends CharacterizableDatabase {
 				
 		SiteNodeType type;
 		try {
-			type = (SiteNodeType) MapStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, SiteNodeWrapper.COLUMN_SITE_NODE_TYPE_ID), true);
+			type = (SiteNodeType) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, SiteNodeWrapper.COLUMN_SITE_NODE_TYPE_ID), true);
 		} catch (ApplicationException ae) {
 			String msg = this.getEnityName() + "Database.updateEntityFromResultSet | Error " + ae.getMessage();
 			throw new RetrieveObjectException(msg, ae);
@@ -149,10 +151,11 @@ public class SiteNodeDatabase extends CharacterizableDatabase {
 	}
 
 	
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) {
-//		SiteNode siteNode = this.fromStorableObject(storableObject);
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
+		SiteNode siteNode = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  siteNode.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}

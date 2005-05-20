@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.66 2005/05/18 11:34:42 bass Exp $
+ * $Id: MeasurementSetup.java,v 1.67 2005/05/20 21:11:38 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,12 +25,13 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 
 /**
- * @version $Revision: 1.66 $, $Date: 2005/05/18 11:34:42 $
- * @author $Author: bass $
+ * @version $Revision: 1.67 $, $Date: 2005/05/20 21:11:38 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -169,22 +170,25 @@ public final class MeasurementSetup extends StorableObject {
 		MeasurementSetup_Transferable mst = (MeasurementSetup_Transferable)transferable;
 		super.fromTransferable(mst.header);
 
-		this.parameterSet = (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(mst.parameter_set_id), true);
+		this.parameterSet = (Set) StorableObjectPool.getStorableObject(new Identifier(mst.parameter_set_id), true);
 		/**
 		 * @todo when change DB Identifier model ,change identifier_string
 		 *       to identifier_code
 		 */
-		this.criteriaSet = (mst.criteria_set_id.identifier_string.length() != 0) ? (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(mst.criteria_set_id), true) : null;
+		this.criteriaSet = (mst.criteria_set_id.identifier_string.length() != 0)
+				? (Set) StorableObjectPool.getStorableObject(new Identifier(mst.criteria_set_id), true) : null;
 		/**
 		 * @todo when change DB Identifier model ,change identifier_string
 		 *       to identifier_code
 		 */
-		this.thresholdSet = (mst.threshold_set_id.identifier_string.length() != 0) ? (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(mst.threshold_set_id), true) : null;
+		this.thresholdSet = (mst.threshold_set_id.identifier_string.length() != 0)
+				? (Set) StorableObjectPool.getStorableObject(new Identifier(mst.threshold_set_id), true) : null;
 		/**
 		 * @todo when change DB Identifier model ,change identifier_string
 		 *       to identifier_code
 		 */
-		this.etalon = (mst.etalon_id.identifier_string.length() != 0) ? (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(mst.etalon_id), true) : null;
+		this.etalon = (mst.etalon_id.identifier_string.length() != 0)
+				? (Set) StorableObjectPool.getStorableObject(new Identifier(mst.etalon_id), true) : null;
 
 		this.description = mst.description;
 		this.measurementDuration = mst.measurement_duration;

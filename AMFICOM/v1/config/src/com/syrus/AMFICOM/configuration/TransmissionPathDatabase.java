@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathDatabase.java,v 1.59 2005/05/18 11:27:14 bass Exp $
+ * $Id: TransmissionPathDatabase.java,v 1.60 2005/05/20 21:11:34 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,14 +20,15 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.59 $, $Date: 2005/05/18 11:27:14 $
- * @author $Author: bass $
+ * @version $Revision: 1.60 $, $Date: 2005/05/20 21:11:34 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -110,7 +111,7 @@ public class TransmissionPathDatabase extends CharacterizableDatabase {
 
 		TransmissionPathType type;
 		try {
-			type = (TransmissionPathType) ConfigurationStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
+			type = (TransmissionPathType) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
 					StorableObjectWrapper.COLUMN_TYPE_ID), true);
 		}
 		catch (ApplicationException ae) {

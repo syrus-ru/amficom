@@ -1,5 +1,5 @@
 /*
- * $Id: MapStorableObjectPool.java,v 1.21 2005/05/18 11:48:20 bass Exp $
+ * $Id: MapStorableObjectPool.java,v 1.22 2005/05/20 21:11:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,8 +10,6 @@ package com.syrus.AMFICOM.map;
 
 import java.util.Collections;
 import java.util.Set;
-
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -24,8 +22,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/05/18 11:48:20 $
- * @author $Author: bass $
+ * @version $Revision: 1.22 $, $Date: 2005/05/20 21:11:56 $
+ * @author $Author: arseniy $
  * @module map_v1
  */
 public final class MapStorableObjectPool extends StorableObjectPool {
@@ -67,7 +65,6 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 
 	private MapStorableObjectPool(final Class cacheMapClass) {
 		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.MAP_GROUP_CODE, cacheMapClass);
-		registerPool(ObjectGroupEntities.MAP_GROUP_CODE, this);
 	}
 
 	public static void init(final MapObjectLoader mapObjectLoader1, final int size) {
@@ -136,39 +133,6 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 
 	protected Set refreshStorableObjects(final Set storableObjects) throws ApplicationException {
 		return mapObjectLoader.refresh(storableObjects);
-	}
-
-	public static StorableObject getStorableObject(final Identifier id, final boolean useLoader) throws ApplicationException {
-		return instance.getStorableObjectImpl(id, useLoader);
-	}
-
-	protected StorableObject loadStorableObject(final Identifier id) throws ApplicationException {
-		switch (id.getMajor()) {
-			case ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE:
-				return mapObjectLoader.loadSiteNodeType(id);
-			case ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE:
-				return mapObjectLoader.loadPhysicalLinkType(id);
-			case ObjectEntities.SITE_NODE_ENTITY_CODE:
-				return mapObjectLoader.loadSiteNode(id);
-			case ObjectEntities.TOPOLOGICAL_NODE_ENTITY_CODE:
-				return mapObjectLoader.loadTopologicalNode(id);
-			case ObjectEntities.NODE_LINK_ENTITY_CODE:
-				return mapObjectLoader.loadNodeLink(id);
-			case ObjectEntities.MARK_ENTITY_CODE:
-				return mapObjectLoader.loadMark(id);
-			case ObjectEntities.PHYSICAL_LINK_ENTITY_CODE:
-				return mapObjectLoader.loadPhysicalLink(id);
-			case ObjectEntities.COLLECTOR_ENTITY_CODE:
-				return mapObjectLoader.loadCollector(id);
-			case ObjectEntities.MAP_ENTITY_CODE:
-				return mapObjectLoader.loadMap(id);
-			default:
-				final short entityCode = id.getMajor();
-				Log.errorMessage("MapStorableObjectPool.loadStorableObject | Unknown entity: "
-						+ ObjectEntities.codeToString(entityCode)
-						+ " (" + entityCode + ')');
-				return null;
-		}
 	}
 
 	protected Set loadStorableObjects(final Set ids) throws ApplicationException {
@@ -303,55 +267,8 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 		}
 	}
 
-	public static StorableObject fromTransferable(final Identifier id, final IDLEntity transferable) throws ApplicationException {
-		return instance.fromTransferableImpl(id, transferable);
-	}
-
-	public static void flush(final Identifier id, final boolean force) throws ApplicationException {
-		instance.flushImpl(id, force);
-	}
-
-	public static void flush(final short entityCode, final boolean force) throws ApplicationException {		
-		instance.flushImpl(entityCode, force);
-	}
-
-	public static void flush(final Short entityCode, final boolean force) throws ApplicationException {		
-		instance.flushImpl(entityCode, force);
-	}
-
-	public static void flush(final boolean force) throws ApplicationException {
-		instance.flushImpl(force);
-	}
-
-	public static void cleanChangedStorableObject(final Short entityCode) {
-		instance.cleanChangedStorableObjectImpl(entityCode);
-	}
-
-	public static void cleanChangedStorableObjects() {
-		instance.cleanChangedStorableObjectsImpl();
-	}
-
-	public static void delete(final Identifier id) {
-		instance.deleteImpl(id);
-	}
-
-	protected void deleteStorableObject(final Identifier id) {
-	 	mapObjectLoader.delete(id);
-	}
-
 	protected void deleteStorableObjects(final Set identifiables) {
 		mapObjectLoader.delete(identifiables);
 	}
 
-	public static void deserializePool() {
-		instance.deserializePoolImpl();
-	}
-
-	public static void serializePool() {
-		instance.serializePoolImpl();
-	}
-
-	public static void truncateObjectPool(final short entityCode) {
-		instance.truncateObjectPoolImpl(entityCode);
-	}
 }

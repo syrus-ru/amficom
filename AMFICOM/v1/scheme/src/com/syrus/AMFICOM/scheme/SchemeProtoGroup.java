@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.26 2005/05/18 12:03:15 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.27 2005/05/20 21:12:12 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,7 +36,6 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.logic.ItemListener;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
-import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
 import com.syrus.AMFICOM.scheme.corba.SchemeProtoGroup_Transferable;
 import com.syrus.AMFICOM.scheme.logic.Library;
 import com.syrus.AMFICOM.scheme.logic.LibraryEntry;
@@ -45,8 +44,8 @@ import com.syrus.util.Log;
 /**
  * #01 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.26 $, $Date: 2005/05/18 12:03:15 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.27 $, $Date: 2005/05/20 21:12:12 $
  * @module scheme_v1
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
@@ -340,8 +339,9 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 		assert this.parentSchemeProtoGroupId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
 
 		try {
-			return (SchemeProtoGroup) SchemeStorableObjectPool.getStorableObject(this.parentSchemeProtoGroupId, true);
-		} catch (final ApplicationException ae) {
+			return (SchemeProtoGroup) StorableObjectPool.getStorableObject(this.parentSchemeProtoGroupId, true);
+		}
+		catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
 		}
@@ -375,11 +375,11 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	 * @see SchemeSymbolContainer#getSymbol()
 	 */
 	public BitmapImageResource getSymbol() {
-		assert this.symbolId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.symbolId != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
 		try {
-			return (BitmapImageResource) ResourceStorableObjectPool
-					.getStorableObject(this.symbolId, true);
-		} catch (final ApplicationException ae) {
+			return (BitmapImageResource) StorableObjectPool.getStorableObject(this.symbolId, true);
+		}
+		catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
 		}

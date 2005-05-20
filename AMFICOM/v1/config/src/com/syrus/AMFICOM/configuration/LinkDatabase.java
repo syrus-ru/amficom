@@ -1,5 +1,5 @@
 /*
- * $Id: LinkDatabase.java,v 1.38 2005/05/18 11:27:16 bass Exp $
+ * $Id: LinkDatabase.java,v 1.39 2005/05/20 21:11:34 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,14 +20,15 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/05/18 11:27:16 $
- * @author $Author: bass $
+ * @version $Revision: 1.39 $, $Date: 2005/05/20 21:11:34 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -145,7 +146,7 @@ public class LinkDatabase extends CharacterizableDatabase {
 		String supplierCode = DatabaseString.fromQuerySubString(resultSet.getString(LinkWrapper.COLUMN_SUPPLIER_CODE));
 		AbstractLinkType linkType;
 		try {
-			linkType = (AbstractLinkType) ConfigurationStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
+			linkType = (AbstractLinkType) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
 					StorableObjectWrapper.COLUMN_TYPE_ID), true);
 		}
 		catch (ApplicationException ae) {

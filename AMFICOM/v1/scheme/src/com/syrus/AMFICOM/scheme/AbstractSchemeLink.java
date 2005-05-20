@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeLink.java,v 1.14 2005/05/18 12:03:14 bass Exp $
+ * $Id: AbstractSchemeLink.java,v 1.15 2005/05/20 21:12:12 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,13 +15,13 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.configuration.AbstractLinkType;
 import com.syrus.AMFICOM.configuration.CableLinkType;
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.Link;
 import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.util.Log;
@@ -31,8 +31,8 @@ import com.syrus.util.Log;
  * generated from IDL files to compile cleanly. Use other implementations of
  * {@link AbstractSchemeLink}instead.
  *
- * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2005/05/18 12:03:14 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.15 $, $Date: 2005/05/20 21:12:12 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemeLink extends AbstractSchemeElement {
@@ -141,8 +141,9 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 		assert this.assertAbstractLinkTypeSetStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
 
 		try {
-			return (Link) ConfigurationStorableObjectPool.getStorableObject(this.linkId, true);
-		} catch (final ApplicationException ae) {
+			return (Link) StorableObjectPool.getStorableObject(this.linkId, true);
+		}
+		catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
 		}
@@ -158,8 +159,9 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 			return (AbstractLinkType) getLink().getType();
 
 		try {
-			return (AbstractLinkType) ConfigurationStorableObjectPool.getStorableObject(this.abstractLinkTypeId, true);
-		} catch (final ApplicationException ae) {
+			return (AbstractLinkType) StorableObjectPool.getStorableObject(this.abstractLinkTypeId, true);
+		}
+		catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
 		}
@@ -193,8 +195,9 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 				|| !this.sourceAbstractSchemePortId.equals(this.targetAbstractSchemePortId): ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
 
 		try {
-			return (AbstractSchemePort) SchemeStorableObjectPool.getStorableObject(this.sourceAbstractSchemePortId, true);
-		} catch (final ApplicationException ae) {
+			return (AbstractSchemePort) StorableObjectPool.getStorableObject(this.sourceAbstractSchemePortId, true);
+		}
+		catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
 		}
@@ -210,8 +213,9 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 				|| !this.targetAbstractSchemePortId.equals(this.sourceAbstractSchemePortId): ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
 
 		try {
-			return (AbstractSchemePort) SchemeStorableObjectPool.getStorableObject(this.targetAbstractSchemePortId, true);
-		} catch (final ApplicationException ae) {
+			return (AbstractSchemePort) StorableObjectPool.getStorableObject(this.targetAbstractSchemePortId, true);
+		}
+		catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
 		}

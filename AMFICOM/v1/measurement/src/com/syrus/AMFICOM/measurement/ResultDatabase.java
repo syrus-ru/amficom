@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.86 2005/05/18 11:34:42 bass Exp $
+ * $Id: ResultDatabase.java,v 1.87 2005/05/20 21:11:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,6 @@ import java.util.Map;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -31,6 +30,7 @@ import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.util.Log;
@@ -39,8 +39,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.86 $, $Date: 2005/05/18 11:34:42 $
- * @author $Author: bass $
+ * @version $Revision: 1.87 $, $Date: 2005/05/20 21:11:39 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -198,7 +198,8 @@ public class ResultDatabase extends StorableObjectDatabase {
 		switch (resultSort) {
 			case ResultSort._RESULT_SORT_MEASUREMENT:
 				try {
-					action = (Measurement) MeasurementStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, ResultWrapper.COLUMN_MEASUREMENT_ID), true);
+					action = (Measurement) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
+							ResultWrapper.COLUMN_MEASUREMENT_ID), true);
 				}
 				catch (ApplicationException ae) {
 					throw new RetrieveObjectException(ae);
@@ -206,7 +207,8 @@ public class ResultDatabase extends StorableObjectDatabase {
 				break;
 			case ResultSort._RESULT_SORT_ANALYSIS:
 				try {
-					action = (Analysis) MeasurementStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, ResultWrapper.COLUMN_ANALYSIS_ID), true);
+					action = (Analysis) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
+							ResultWrapper.COLUMN_ANALYSIS_ID), true);
 				}
 				catch (Exception e) {
 					throw new RetrieveObjectException(e);
@@ -214,7 +216,8 @@ public class ResultDatabase extends StorableObjectDatabase {
 				break;
 			case ResultSort._RESULT_SORT_EVALUATION:
 				try {
-					action = (Evaluation) MeasurementStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, ResultWrapper.COLUMN_EVALUATION_ID), true);
+					action = (Evaluation) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
+							ResultWrapper.COLUMN_EVALUATION_ID), true);
 				}
 				catch (Exception e) {
 					throw new RetrieveObjectException(e);
@@ -222,7 +225,8 @@ public class ResultDatabase extends StorableObjectDatabase {
 				break;
 			case ResultSort._RESULT_SORT_MODELING:
 				try {
-					action = (Modeling) MeasurementStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, ResultWrapper.COLUMN_MODELING_ID), true);
+					action = (Modeling) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
+							ResultWrapper.COLUMN_MODELING_ID), true);
 				}
 				catch (Exception e) {
 					throw new RetrieveObjectException(e);
@@ -328,7 +332,8 @@ public class ResultDatabase extends StorableObjectDatabase {
 			SetParameter parameter;
 			while (resultSet.next()) {
 				try {
-					parameterType = (ParameterType) GeneralStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_TYPE_ID), true);
+					parameterType = (ParameterType) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
+							StorableObjectWrapper.COLUMN_TYPE_ID), true);
 				}
 				catch (ApplicationException ae) {
 					throw new RetrieveObjectException(ae);

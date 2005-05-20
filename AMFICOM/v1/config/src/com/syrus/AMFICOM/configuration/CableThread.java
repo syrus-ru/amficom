@@ -1,5 +1,5 @@
 /*
- * $Id: CableThread.java,v 1.21 2005/04/15 19:22:12 arseniy Exp $
+ * $Id: CableThread.java,v 1.22 2005/05/20 21:11:33 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,12 +24,13 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/04/15 19:22:12 $
+ * @version $Revision: 1.22 $, $Date: 2005/05/20 21:11:33 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -111,7 +112,7 @@ public class CableThread extends DomainMember implements TypedObject {
 
 		this.name = ctt.name;
 		this.description = ctt.description;
-		this.type = (CableThreadType) ConfigurationStorableObjectPool.getStorableObject(new Identifier(ctt.type_id), true);
+		this.type = (CableThreadType) StorableObjectPool.getStorableObject(new Identifier(ctt.type_id), true);
 	}
 
 	public IDLEntity getTransferable() {

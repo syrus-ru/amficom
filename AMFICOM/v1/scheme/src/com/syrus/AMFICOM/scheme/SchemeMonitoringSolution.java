@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.25 2005/05/18 12:03:14 bass Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.26 2005/05/20 21:12:12 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,8 +37,8 @@ import com.syrus.util.Log;
 /**
  * #06 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.25 $, $Date: 2005/05/18 12:03:14 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.26 $, $Date: 2005/05/20 21:12:12 $
  * @module scheme_v1
  */
 public final class SchemeMonitoringSolution extends
@@ -205,8 +205,9 @@ public final class SchemeMonitoringSolution extends
 		assert this.parentSchemeOptimizeInfoId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
 
 		try {
-			return (SchemeOptimizeInfo) SchemeStorableObjectPool.getStorableObject(this.parentSchemeOptimizeInfoId, true);
-		} catch (final ApplicationException ae) {
+			return (SchemeOptimizeInfo) StorableObjectPool.getStorableObject(this.parentSchemeOptimizeInfoId, true);
+		}
+		catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
 		}

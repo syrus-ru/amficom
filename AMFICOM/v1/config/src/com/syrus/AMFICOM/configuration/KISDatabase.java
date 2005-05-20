@@ -1,5 +1,5 @@
 /*
- * $Id: KISDatabase.java,v 1.70 2005/05/18 11:27:16 bass Exp $
+ * $Id: KISDatabase.java,v 1.71 2005/05/20 21:11:33 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,6 +29,7 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
@@ -36,8 +37,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.70 $, $Date: 2005/05/18 11:27:16 $
- * @author $Author: bass $
+ * @version $Revision: 1.71 $, $Date: 2005/05/20 21:11:33 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -179,7 +180,7 @@ public class KISDatabase extends CharacterizableDatabase {
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next()) {
 				try {
-					monitoredElements.add(ConfigurationStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), true));
+					monitoredElements.add(StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), true));
 				}
 				catch (ApplicationException ae) {
 					throw new RetrieveObjectException(ae);

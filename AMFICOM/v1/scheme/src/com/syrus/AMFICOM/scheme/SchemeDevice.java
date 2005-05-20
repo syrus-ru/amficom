@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.25 2005/05/18 12:03:14 bass Exp $
+ * $Id: SchemeDevice.java,v 1.26 2005/05/20 21:12:12 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,8 +40,8 @@ import com.syrus.util.Log;
 /**
  * #07 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.25 $, $Date: 2005/05/18 12:03:14 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.26 $, $Date: 2005/05/20 21:12:12 $
  * @module scheme_v1
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -345,7 +345,8 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 * @throws IllegalStateException
 	 */
 	public SchemeElement getParentSchemeElement() {
-//		assert this.assertParentSetStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
+		// assert this.assertParentSetStrict():
+		// ErrorMessages.OBJECT_BADLY_INITIALIZED;
 		if (!this.assertParentSetStrict())
 			throw new IllegalStateException(ErrorMessages.OBJECT_BADLY_INITIALIZED);
 
@@ -356,8 +357,9 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 		}
 
 		try {
-			return (SchemeElement) SchemeStorableObjectPool.getStorableObject(this.parentSchemeElementId, true);
-		} catch (final ApplicationException ae) {
+			return (SchemeElement) StorableObjectPool.getStorableObject(this.parentSchemeElementId, true);
+		}
+		catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
 		}
@@ -367,7 +369,8 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 * @throws IllegalStateException
 	 */
 	public SchemeProtoElement getParentSchemeProtoElement() {
-//		assert this.assertParentSetStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
+		// assert this.assertParentSetStrict():
+		// ErrorMessages.OBJECT_BADLY_INITIALIZED;
 		if (!this.assertParentSetStrict())
 			throw new IllegalStateException(ErrorMessages.OBJECT_BADLY_INITIALIZED);
 
@@ -377,8 +380,9 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 		}
 
 		try {
-			return (SchemeProtoElement) SchemeStorableObjectPool.getStorableObject(this.parentSchemeProtoElementId, true);
-		} catch (final ApplicationException ae) {
+			return (SchemeProtoElement) StorableObjectPool.getStorableObject(this.parentSchemeProtoElementId, true);
+		}
+		catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
 		}
@@ -536,7 +540,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 * @todo skip check if parentless.
 	 */
 	public void setParentSchemeElement(final SchemeElement parentSchemeElement) {
-		assert this.assertParentSetNonStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
+		assert this.assertParentSetNonStrict() : ErrorMessages.OBJECT_BADLY_INITIALIZED;
 
 		Identifier newParentSchemeElementId;
 		if (this.parentSchemeProtoElementId.isVoid()) {
@@ -545,13 +549,14 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 			 */
 			if (parentSchemeElement == null) {
 				Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Log.WARNING);
-				SchemeStorableObjectPool.delete(super.id);
+				StorableObjectPool.delete(super.id);
 				return;
 			}
 			newParentSchemeElementId = parentSchemeElement.getId();
 			if (this.parentSchemeElementId.equals(newParentSchemeElementId))
 				return;
-		} else {
+		}
+		else {
 			/*
 			 * Moving from a protoelement to an element.
 			 */
@@ -570,7 +575,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 * @todo skip check if parentless.
 	 */
 	public void setParentSchemeProtoElement(final SchemeProtoElement parentSchemeProtoElement) {
-		assert this.assertParentSetNonStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
+		assert this.assertParentSetNonStrict() : ErrorMessages.OBJECT_BADLY_INITIALIZED;
 
 		Identifier newParentSchemeProtoElementId;
 		if (this.parentSchemeElementId.isVoid()) {
@@ -579,13 +584,14 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 			 */
 			if (parentSchemeProtoElement == null) {
 				Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Log.WARNING);
-				SchemeStorableObjectPool.delete(super.id);
+				StorableObjectPool.delete(super.id);
 				return;
 			}
 			newParentSchemeProtoElementId = parentSchemeProtoElement.getId();
 			if (this.parentSchemeProtoElementId.equals(newParentSchemeProtoElementId))
 				return;
-		} else {
+		}
+		else {
 			/*
 			 * Moving from an element to a protoelement.
 			 */

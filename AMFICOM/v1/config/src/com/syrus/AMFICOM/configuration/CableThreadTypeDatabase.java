@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadTypeDatabase.java,v 1.30 2005/05/18 11:27:15 bass Exp $
+ * $Id: CableThreadTypeDatabase.java,v 1.31 2005/05/20 21:11:33 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,14 +22,15 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/05/18 11:27:15 $
- * @author $Author: bass $
+ * @version $Revision: 1.31 $, $Date: 2005/05/20 21:11:33 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -106,8 +107,8 @@ public class CableThreadTypeDatabase extends StorableObjectDatabase {
 		LinkType linkType;
 		CableLinkType cableLinkType;
 		try {
-			linkType = (LinkType) ConfigurationStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, CableThreadTypeWrapper.COLUMN_LINK_TYPE_ID), true);
-			cableLinkType = (CableLinkType) ConfigurationStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, CableThreadTypeWrapper.COLUMN_CABLE_LINK_TYPE_ID), true);
+			linkType = (LinkType) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, CableThreadTypeWrapper.COLUMN_LINK_TYPE_ID), true);
+			cableLinkType = (CableLinkType) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, CableThreadTypeWrapper.COLUMN_CABLE_LINK_TYPE_ID), true);
 		}
 		catch (final ApplicationException ae) {
 			throw new RetrieveObjectException(ae);

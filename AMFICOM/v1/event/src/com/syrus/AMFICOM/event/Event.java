@@ -1,5 +1,5 @@
 /*
- * $Id: Event.java,v 1.20 2005/04/23 17:45:49 arseniy Exp $
+ * $Id: Event.java,v 1.21 2005/05/20 21:11:44 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,12 +29,13 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/04/23 17:45:49 $
+ * @version $Revision: 1.21 $, $Date: 2005/05/20 21:11:44 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -139,7 +140,7 @@ public final class Event extends StorableObject implements TypedObject {
 
 		super.fromTransferable(et.header);
 
-		this.type = (EventType) EventStorableObjectPool.getStorableObject(new Identifier(et.type_id), true);
+		this.type = (EventType) StorableObjectPool.getStorableObject(new Identifier(et.type_id), true);
 
 		this.description = et.description;
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.53 2005/05/18 11:48:19 bass Exp $
+ * $Id: PhysicalLink.java,v 1.54 2005/05/20 21:11:57 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,8 +52,8 @@ import com.syrus.AMFICOM.map.corba.PhysicalLink_Transferable;
  * Предуствновленными являются  два типа -
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
- * @author $Author: bass $
- * @version $Revision: 1.53 $, $Date: 2005/05/18 11:48:19 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.54 $, $Date: 2005/05/20 21:11:57 $
  * @module map_v1
  * @todo make binding.dimension persistent (just as bindingDimension for PhysicalLinkType)
  * @todo nodeLinks should be transient
@@ -260,11 +260,10 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		this.leftToRight = plt.leftToRight;
 		this.topToBottom = plt.topToBottom;
 
-		this.physicalLinkType = (PhysicalLinkType) MapStorableObjectPool.getStorableObject(new Identifier(plt.physicalLinkTypeId),
-				true);
+		this.physicalLinkType = (PhysicalLinkType) StorableObjectPool.getStorableObject(new Identifier(plt.physicalLinkTypeId), true);
 
-		this.startNode = (AbstractNode) MapStorableObjectPool.getStorableObject(new Identifier(plt.startNodeId), true);
-		this.endNode = (AbstractNode) MapStorableObjectPool.getStorableObject(new Identifier(plt.endNodeId), true);
+		this.startNode = (AbstractNode) StorableObjectPool.getStorableObject(new Identifier(plt.startNodeId), true);
+		this.endNode = (AbstractNode) StorableObjectPool.getStorableObject(new Identifier(plt.endNodeId), true);
 
 		Set ids = Identifier.fromTransferables(plt.characteristicIds);
 		this.characteristics = StorableObjectPool.getStorableObjects(ids, true);
@@ -840,7 +839,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 			this.nodeLinks.add(mnle);
 		}
 		try {
-			setType((PhysicalLinkType) (MapStorableObjectPool.getStorableObject(mples.mapProtoId, true)));
+			setType((PhysicalLinkType) (StorableObjectPool.getStorableObject(mples.mapProtoId, true)));
 		}
 		catch (ApplicationException e) {
 			e.printStackTrace();
@@ -921,8 +920,8 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 			}
 			physicalLinkType1 = (PhysicalLinkType) collection.iterator().next();
 
-			AbstractNode startNode1 = (AbstractNode) MapStorableObjectPool.getStorableObject(startNodeId1, true);
-			AbstractNode endNode1 = (AbstractNode) MapStorableObjectPool.getStorableObject(endNodeId1, true);
+			AbstractNode startNode1 = (AbstractNode) StorableObjectPool.getStorableObject(startNodeId1, true);
+			AbstractNode endNode1 = (AbstractNode) StorableObjectPool.getStorableObject(endNodeId1, true);
 			PhysicalLink link1 = new PhysicalLink(id1,
 					creatorId,
 					0L,

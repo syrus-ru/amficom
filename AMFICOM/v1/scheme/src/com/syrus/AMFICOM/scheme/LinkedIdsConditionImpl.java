@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.5 2005/05/18 12:03:15 bass Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.6 2005/05/20 21:12:12 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,9 @@
 
 package com.syrus.AMFICOM.scheme;
 
-import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
+import java.util.Iterator;
+import java.util.Set;
+
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -17,18 +19,17 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
-
-import java.util.Iterator;
-import java.util.Set;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/05/18 12:03:15 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/05/20 21:12:12 $
  * @module scheme_v1
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
+
 	private LinkedIdsConditionImpl(final Set linkedIds, final Short linkedEntityCode, final Short entityCode) {
 		this.linkedIds = linkedIds;
 		this.linkedEntityCode = linkedEntityCode.shortValue();
@@ -37,11 +38,11 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 
 	private boolean checkDomain(final DomainMember domainMember) {
 		try {
-			final Domain dmDomain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainMember.getDomainId(), true);
+			final Domain dmDomain = (Domain) StorableObjectPool.getStorableObject(domainMember.getDomainId(), true);
 			for (final Iterator linkedIdIterator = this.linkedIds.iterator(); linkedIdIterator.hasNext();) {
 				final Identifier id = (Identifier) linkedIdIterator.next();
 				if (id.getMajor() == ObjectEntities.DOMAIN_ENTITY_CODE
-						&& dmDomain.isChild((Domain) AdministrationStorableObjectPool.getStorableObject(id, true)))
+						&& dmDomain.isChild((Domain) StorableObjectPool.getStorableObject(id, true)))
 					return true;
 			}
 		} catch (final ApplicationException ae) {

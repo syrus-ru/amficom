@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadType.java,v 1.32 2005/05/18 11:27:14 bass Exp $
+ * $Id: CableThreadType.java,v 1.33 2005/05/20 21:11:33 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,6 +26,7 @@ import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
@@ -35,8 +36,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
  * optical fiber (or an <i>abstract </i> optical fiber), the latter is a type of
  * cable (or an <i>abstract </i> cable containing this thread).
  *
- * @version $Revision: 1.32 $, $Date: 2005/05/18 11:27:14 $
- * @author $Author: bass $
+ * @version $Revision: 1.33 $, $Date: 2005/05/20 21:11:33 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -138,8 +139,8 @@ public final class CableThreadType extends StorableObjectType implements Namable
 		super.fromTransferable(cttt.header, cttt.codename, cttt.description);
 		this.name = cttt.name;
 		this.color = cttt.color;
-		this.linkType = (LinkType) ConfigurationStorableObjectPool.getStorableObject(new Identifier(cttt.linkTypeId), true);
-		this.cableLinkType = (CableLinkType) ConfigurationStorableObjectPool.getStorableObject(new Identifier(cttt.cableLinkTypeId),
+		this.linkType = (LinkType) StorableObjectPool.getStorableObject(new Identifier(cttt.linkTypeId), true);
+		this.cableLinkType = (CableLinkType) StorableObjectPool.getStorableObject(new Identifier(cttt.cableLinkTypeId),
 				true);
 	}
 

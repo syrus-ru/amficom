@@ -1,5 +1,5 @@
 /*
- * $Id: Evaluation.java,v 1.53 2005/04/15 19:22:18 arseniy Exp $
+ * $Id: Evaluation.java,v 1.54 2005/05/20 21:11:38 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,12 +23,13 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.53 $, $Date: 2005/04/15 19:22:18 $
+ * @version $Revision: 1.54 $, $Date: 2005/05/20 21:11:38 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -100,11 +101,11 @@ public class Evaluation extends Action {
 		Evaluation_Transferable et = (Evaluation_Transferable) transferable;
 		super.fromTransferable(et.header, null, new Identifier(et.monitored_element_id), null);
 
-		super.type = (EvaluationType) MeasurementStorableObjectPool.getStorableObject(new Identifier(et.type_id), true);
+		super.type = (EvaluationType) StorableObjectPool.getStorableObject(new Identifier(et.type_id), true);
 		super.parentAction = (et.measurement_id.identifier_string.length() != 0)
-				? (Measurement) MeasurementStorableObjectPool.getStorableObject(new Identifier(et.measurement_id), true) : null;
+				? (Measurement) StorableObjectPool.getStorableObject(new Identifier(et.measurement_id), true) : null;
 
-		this.thresholdSet = (Set) MeasurementStorableObjectPool.getStorableObject(new Identifier(et.threshold_set_id), true);
+		this.thresholdSet = (Set) StorableObjectPool.getStorableObject(new Identifier(et.threshold_set_id), true);
 		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}

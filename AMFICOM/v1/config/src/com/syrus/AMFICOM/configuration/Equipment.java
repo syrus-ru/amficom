@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.85 2005/05/18 11:27:15 bass Exp $
+ * $Id: Equipment.java,v 1.86 2005/05/20 21:11:33 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,8 +38,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.85 $, $Date: 2005/05/18 11:27:15 $
- * @author $Author: bass $
+ * @version $Revision: 1.86 $, $Date: 2005/05/20 21:11:33 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -199,7 +199,7 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 		Equipment_Transferable et = (Equipment_Transferable) transferable;
 		super.fromTransferable(et.header, new Identifier(et.domain_id));
 
-		this.type = (EquipmentType) ConfigurationStorableObjectPool.getStorableObject(new Identifier(et.type_id), true);
+		this.type = (EquipmentType) StorableObjectPool.getStorableObject(new Identifier(et.type_id), true);
 
 		this.name = et.name;
 		this.description = et.description;

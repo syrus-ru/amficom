@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.65 2005/05/18 11:34:43 bass Exp $
+ * $Id: Measurement.java,v 1.66 2005/05/20 21:11:38 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.65 $, $Date: 2005/05/18 11:34:43 $
- * @author $Author: bass $
+ * @version $Revision: 1.66 $, $Date: 2005/05/20 21:11:38 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -123,10 +123,10 @@ public class Measurement extends Action {
 		Measurement_Transferable mt = (Measurement_Transferable) transferable;
 		super.fromTransferable(mt.header, null, new Identifier(mt.monitored_element_id), null);
 
-		super.type = (MeasurementType) MeasurementStorableObjectPool.getStorableObject(new Identifier(mt.type_id),
+		super.type = (MeasurementType) StorableObjectPool.getStorableObject(new Identifier(mt.type_id),
 			true);
 
-		this.setup = (MeasurementSetup) MeasurementStorableObjectPool.getStorableObject(
+		this.setup = (MeasurementSetup) StorableObjectPool.getStorableObject(
 			new Identifier(mt.setup_id), true);
 
 		this.name = mt.name;

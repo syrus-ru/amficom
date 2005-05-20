@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.27 2005/05/18 12:03:15 bass Exp $
+ * $Id: Scheme.java,v 1.28 2005/05/20 21:12:12 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,9 +32,7 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.Map;
-import com.syrus.AMFICOM.map.MapStorableObjectPool;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
-import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.corba.Scheme_Transferable;
 import com.syrus.AMFICOM.scheme.corba.Scheme_TransferablePackage.Kind;
@@ -43,8 +41,8 @@ import com.syrus.util.Log;
 /**
  * #03 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.27 $, $Date: 2005/05/18 12:03:15 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.28 $, $Date: 2005/05/20 21:12:12 $
  * @module scheme_v1
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -267,10 +265,11 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	}
 
 	public SchemeMonitoringSolution getCurrentSchemeMonitoringSolution() {
-		assert this.currentSchemeMonitoringSolutionId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.currentSchemeMonitoringSolutionId != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
 		try {
-			return (SchemeMonitoringSolution) SchemeStorableObjectPool.getStorableObject(this.currentSchemeMonitoringSolutionId, true);
-		} catch (final ApplicationException ae) {
+			return (SchemeMonitoringSolution) StorableObjectPool.getStorableObject(this.currentSchemeMonitoringSolutionId, true);
+		}
+		catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
 		}
@@ -323,10 +322,11 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	}
 
 	public Map getMap() {
-		assert this.mapId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.mapId != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
 		try {
-			return (Map) MapStorableObjectPool.getStorableObject(this.mapId, true);
-		} catch (final ApplicationException ae) {
+			return (Map) StorableObjectPool.getStorableObject(this.mapId, true);
+		}
+		catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
 		}
@@ -341,10 +341,11 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	}
 
 	public SchemeElement getParentSchemeElement() {
-		assert this.parentSchemeElementId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.parentSchemeElementId != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
 		try {
-			return (SchemeElement) SchemeStorableObjectPool.getStorableObject(this.parentSchemeElementId, true);
-		} catch (final ApplicationException ae) {
+			return (SchemeElement) StorableObjectPool.getStorableObject(this.parentSchemeElementId, true);
+		}
+		catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
 		}
@@ -352,8 +353,10 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 
 	public Set getSchemeCableLinks() {
 		try {
-			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE), true));
-		} catch (final ApplicationException ae) {
+			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id,
+					ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE), true));
+		}
+		catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return Collections.EMPTY_SET;
 		}
@@ -363,11 +366,11 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 * @see SchemeCellContainer#getSchemeCell()
 	 */
 	public SchemeImageResource getSchemeCell() {
-		assert this.schemeCellId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.schemeCellId != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
 		try {
-			return (SchemeImageResource) ResourceStorableObjectPool
-					.getStorableObject(this.schemeCellId, true);
-		} catch (final ApplicationException ae) {
+			return (SchemeImageResource) StorableObjectPool.getStorableObject(this.schemeCellId, true);
+		}
+		catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
 		}
@@ -409,11 +412,11 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 * @see SchemeSymbolContainer#getSymbol()
 	 */
 	public BitmapImageResource getSymbol() {
-		assert this.symbolId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.symbolId != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
 		try {
-			return (BitmapImageResource) ResourceStorableObjectPool
-					.getStorableObject(this.symbolId, true);
-		} catch (final ApplicationException ae) {
+			return (BitmapImageResource) StorableObjectPool.getStorableObject(this.symbolId, true);
+		}
+		catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
 		}
@@ -442,11 +445,11 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 * @see SchemeCellContainer#getUgoCell()
 	 */
 	public SchemeImageResource getUgoCell() {
-		assert this.ugoCellId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.ugoCellId != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
 		try {
-			return (SchemeImageResource) ResourceStorableObjectPool
-					.getStorableObject(this.ugoCellId, true);
-		} catch (final ApplicationException ae) {
+			return (SchemeImageResource) StorableObjectPool.getStorableObject(this.ugoCellId, true);
+		}
+		catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
 		}

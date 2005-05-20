@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.21 2005/05/18 12:03:14 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.22 2005/05/20 21:12:12 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.map.MapStorableObjectPool;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.scheme.corba.CableChannelingItem_Transferable;
@@ -36,8 +36,8 @@ import com.syrus.util.Log;
 /**
  * #13 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.21 $, $Date: 2005/05/18 12:03:14 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.22 $, $Date: 2005/05/20 21:12:12 $
  * @module scheme_v1
  */
 public final class CableChannelingItem extends AbstractCloneableStorableObject {
@@ -228,8 +228,9 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject {
 		assert !this.endSiteNodeId.equals(this.startSiteNodeId): ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
 
 		try {
-			return (SiteNode) MapStorableObjectPool.getStorableObject(this.endSiteNodeId, true);
-		} catch (final ApplicationException ae) {
+			return (SiteNode) StorableObjectPool.getStorableObject(this.endSiteNodeId, true);
+		}
+		catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
 		}
@@ -240,22 +241,24 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject {
 	}
 
 	public SchemeCableLink getParentSchemeCableLink() {
-		assert this.parentSchemeCableLinkId != null: ErrorMessages.OBJECT_BADLY_INITIALIZED;
-		assert !this.parentSchemeCableLinkId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+		assert this.parentSchemeCableLinkId != null : ErrorMessages.OBJECT_BADLY_INITIALIZED;
+		assert !this.parentSchemeCableLinkId.isVoid() : ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 
 		try {
-			return (SchemeCableLink) SchemeStorableObjectPool.getStorableObject(this.parentSchemeCableLinkId, true);
-		} catch (final ApplicationException ae) {
+			return (SchemeCableLink) StorableObjectPool.getStorableObject(this.parentSchemeCableLinkId, true);
+		}
+		catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
 		}
 	}
 
 	public PhysicalLink getPhysicalLink() {
-		assert this.physicalLinkId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.physicalLinkId != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
 		try {
-			return (PhysicalLink) MapStorableObjectPool.getStorableObject(this.physicalLinkId, true);
-		} catch (final ApplicationException ae) {
+			return (PhysicalLink) StorableObjectPool.getStorableObject(this.physicalLinkId, true);
+		}
+		catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
 		}
@@ -281,8 +284,9 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject {
 		assert !this.startSiteNodeId.equals(this.endSiteNodeId): ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
 
 		try {
-			return (SiteNode) MapStorableObjectPool.getStorableObject(this.startSiteNodeId, true);
-		} catch (final ApplicationException ae) {
+			return (SiteNode) StorableObjectPool.getStorableObject(this.startSiteNodeId, true);
+		}
+		catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
 		}
@@ -382,7 +386,7 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject {
 		assert !this.parentSchemeCableLinkId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 		if (parentSchemeCableLink == null) {
 			Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Log.WARNING);
-			SchemeStorableObjectPool.delete(super.id);
+			StorableObjectPool.delete(super.id);
 			return;
 		}
 		final Identifier newParentSchemeCableLinkId = parentSchemeCableLink.getId();

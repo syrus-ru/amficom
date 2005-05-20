@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.31 2005/05/18 12:03:14 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.32 2005/05/20 21:12:12 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,6 @@ import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
 
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -41,7 +40,6 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.logic.ItemListener;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
-import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.corba.SchemeProtoElement_Transferable;
 import com.syrus.AMFICOM.scheme.logic.Library;
@@ -51,8 +49,8 @@ import com.syrus.util.Log;
 /**
  * #02 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.31 $, $Date: 2005/05/18 12:03:14 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.32 $, $Date: 2005/05/20 21:12:12 $
  * @module scheme_v1
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
@@ -479,11 +477,11 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 *         none.
 	 */
 	public EquipmentType getEquipmentType() {
-		assert this.equipmentTypeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.equipmentTypeId != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
 		try {
-			return (EquipmentType) ConfigurationStorableObjectPool
-					.getStorableObject(this.equipmentTypeId, true);
-		} catch (final ApplicationException ae) {
+			return (EquipmentType) StorableObjectPool.getStorableObject(this.equipmentTypeId, true);
+		}
+		catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
 		}
@@ -541,7 +539,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	}
 
 	public SchemeProtoElement getParentSchemeProtoElement() {
-		assert this.assertParentSetStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
+		assert this.assertParentSetStrict() : ErrorMessages.OBJECT_BADLY_INITIALIZED;
 
 		if (this.parentSchemeProtoElementId.isVoid()) {
 			Log.debugMessage("SchemeProtoElement.getParentSchemeProtoElement() | Parent SchemeProtoElement was requested, while parent is a SchemeProtoGroup; returning null.",
@@ -550,16 +548,17 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		}
 
 		try {
-			return (SchemeProtoElement) SchemeStorableObjectPool.getStorableObject(this.parentSchemeProtoElementId, true);
-		} catch (final ApplicationException ae) {
+			return (SchemeProtoElement) StorableObjectPool.getStorableObject(this.parentSchemeProtoElementId, true);
+		}
+		catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
 		}
 	}
 
 	public SchemeProtoGroup getParentSchemeProtoGroup() {
-		assert this.assertParentSetStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
-		
+		assert this.assertParentSetStrict() : ErrorMessages.OBJECT_BADLY_INITIALIZED;
+
 		if (this.parentSchemeProtoGroupId.isVoid()) {
 			Log.debugMessage("SchemeProtoElement.getParentSchemeProtoGroup() | Parent SchemeProtoGroup was requested, while parent is a SchemeProtoElement; returnning null",
 					Log.FINE);
@@ -567,8 +566,9 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		}
 
 		try {
-			return (SchemeProtoGroup) SchemeStorableObjectPool.getStorableObject(this.parentSchemeProtoGroupId, true);
-		} catch (final ApplicationException ae) {
+			return (SchemeProtoGroup) StorableObjectPool.getStorableObject(this.parentSchemeProtoGroupId, true);
+		}
+		catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
 		}
@@ -578,11 +578,11 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * @see SchemeCellContainer#getSchemeCell()
 	 */
 	public SchemeImageResource getSchemeCell() {
-		assert this.schemeCellId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.schemeCellId != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
 		try {
-			return (SchemeImageResource) ResourceStorableObjectPool
-					.getStorableObject(this.schemeCellId, true);
-		} catch (final ApplicationException ae) {
+			return (SchemeImageResource) StorableObjectPool.getStorableObject(this.schemeCellId, true);
+		}
+		catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
 		}
@@ -628,11 +628,11 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * @see SchemeSymbolContainer#getSymbol()
 	 */
 	public BitmapImageResource getSymbol() {
-		assert this.symbolId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.symbolId != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
 		try {
-			return (BitmapImageResource) ResourceStorableObjectPool
-					.getStorableObject(this.symbolId, true);
-		} catch (final ApplicationException ae) {
+			return (BitmapImageResource) StorableObjectPool.getStorableObject(this.symbolId, true);
+		}
+		catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
 		}
@@ -660,11 +660,11 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * @see SchemeCellContainer#getUgoCell()
 	 */
 	public SchemeImageResource getUgoCell() {
-		assert this.ugoCellId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.ugoCellId != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
 		try {
-			return (SchemeImageResource) ResourceStorableObjectPool
-					.getStorableObject(this.ugoCellId, true);
-		} catch (final ApplicationException ae) {
+			return (SchemeImageResource) StorableObjectPool.getStorableObject(this.ugoCellId, true);
+		}
+		catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
 		}
@@ -895,8 +895,8 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * @param parentSchemeProtoElement
 	 */
 	public void setParentSchemeProtoElement(final SchemeProtoElement parentSchemeProtoElement) {
-		assert this.assertParentSetNonStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
-		assert parentSchemeProtoElement != this: ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
+		assert this.assertParentSetNonStrict() : ErrorMessages.OBJECT_BADLY_INITIALIZED;
+		assert parentSchemeProtoElement != this : ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
 
 		Identifier newParentSchemeProtoElementId;
 		if (this.parentSchemeProtoGroupId.isVoid()) {
@@ -905,13 +905,14 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 			 */
 			if (parentSchemeProtoElement == null) {
 				Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Log.WARNING);
-				SchemeStorableObjectPool.delete(super.id);
+				StorableObjectPool.delete(super.id);
 				return;
 			}
 			newParentSchemeProtoElementId = parentSchemeProtoElement.id;
 			if (this.parentSchemeProtoElementId.equals(newParentSchemeProtoElementId))
 				return;
-		} else {
+		}
+		else {
 			/*
 			 * Moving from a group to an element.
 			 */
@@ -940,7 +941,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * @param parentSchemeProtoGroup
 	 */
 	public void setParentSchemeProtoGroup(final SchemeProtoGroup parentSchemeProtoGroup) {
-		assert this.assertParentSetNonStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
+		assert this.assertParentSetNonStrict() : ErrorMessages.OBJECT_BADLY_INITIALIZED;
 
 		Identifier newParentSchemeProtoGroupId;
 		if (this.parentSchemeProtoElementId.isVoid()) {
@@ -949,13 +950,14 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 			 */
 			if (parentSchemeProtoGroup == null) {
 				Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Log.WARNING);
-				SchemeStorableObjectPool.delete(super.id);
+				StorableObjectPool.delete(super.id);
 				return;
 			}
 			newParentSchemeProtoGroupId = parentSchemeProtoGroup.getId();
 			if (this.parentSchemeProtoGroupId.equals(newParentSchemeProtoGroupId))
 				return;
-		} else {
+		}
+		else {
 			/*
 			 * Moving from an element to a group.
 			 */

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.21 2005/05/18 12:03:14 bass Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.22 2005/05/20 21:12:12 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,8 +37,8 @@ import com.syrus.util.Log;
 /**
  * #05 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.21 $, $Date: 2005/05/18 12:03:14 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.22 $, $Date: 2005/05/20 21:12:12 $
  * @module scheme_v1
  */
 public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
@@ -310,8 +310,9 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 		assert !this.parentSchemeId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 
 		try {
-			return (Scheme) SchemeStorableObjectPool.getStorableObject(this.parentSchemeId, true);
-		} catch (final ApplicationException ae) {
+			return (Scheme) StorableObjectPool.getStorableObject(this.parentSchemeId, true);
+		}
+		catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
 		}
@@ -535,7 +536,7 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 		assert !this.parentSchemeId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 		if (parentScheme == null) {
 			Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Log.WARNING);
-			SchemeStorableObjectPool.delete(super.id);
+			StorableObjectPool.delete(super.id);
 			return;
 		}
 		final Identifier newParentSchemeId = parentScheme.getId();

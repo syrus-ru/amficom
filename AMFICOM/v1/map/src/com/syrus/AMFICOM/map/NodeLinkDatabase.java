@@ -1,5 +1,5 @@
 /*
- * $Id: NodeLinkDatabase.java,v 1.21 2005/05/18 11:48:20 bass Exp $
+ * $Id: NodeLinkDatabase.java,v 1.22 2005/05/20 21:11:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,16 +22,18 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
+import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/05/18 11:48:20 $
- * @author $Author: bass $
+ * @version $Revision: 1.22 $, $Date: 2005/05/20 21:11:57 $
+ * @author $Author: arseniy $
  * @module map_v1
  */
 public class NodeLinkDatabase extends CharacterizableDatabase {
@@ -108,37 +110,43 @@ public class NodeLinkDatabase extends CharacterizableDatabase {
 		PhysicalLink physicalLink;
 		AbstractNode startNode;
 		AbstractNode endNode;
-		
-		try{
-			physicalLink = (PhysicalLink)MapStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, NodeLinkWrapper.COLUMN_PHYSICAL_LINK_ID), true);
-			startNode = (AbstractNode)MapStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, NodeLinkWrapper.COLUMN_START_NODE_ID), true);
-			endNode = (AbstractNode)MapStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, NodeLinkWrapper.COLUMN_END_NODE_ID), true);
-		} catch (ApplicationException ae) {
+
+		try {
+			physicalLink = (PhysicalLink) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
+					NodeLinkWrapper.COLUMN_PHYSICAL_LINK_ID), true);
+			startNode = (AbstractNode) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
+					NodeLinkWrapper.COLUMN_START_NODE_ID), true);
+			endNode = (AbstractNode) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
+					NodeLinkWrapper.COLUMN_END_NODE_ID), true);
+		}
+		catch (ApplicationException ae) {
 			String msg = this.getEnityName() + "Database.updateEntityFromResultSet | Error " + ae.getMessage();
 			throw new RetrieveObjectException(msg, ae);
-		} catch (SQLException sqle) {
+		}
+		catch (SQLException sqle) {
 			String msg = this.getEnityName() + "Database.updateEntityFromResultSet | Error " + sqle.getMessage();
 			throw new RetrieveObjectException(msg, sqle);
 		}
-		
+
 		nodeLink.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
-							   DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
-							   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
-							   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-							   resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
-							   DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
-							   physicalLink,
-							   startNode,
-							   endNode,
-							   resultSet.getDouble(NodeLinkWrapper.COLUMN_LENGTH));		
+				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
+				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+				resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
+				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
+				physicalLink,
+				startNode,
+				endNode,
+				resultSet.getDouble(NodeLinkWrapper.COLUMN_LENGTH));
 		return nodeLink;
 	}
 
 	
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) {
-//		NodeLink nodeLink = this.fromStorableObject(storableObject);
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
+		NodeLink nodeLink = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {			
 			default:
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  nodeLink.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}	

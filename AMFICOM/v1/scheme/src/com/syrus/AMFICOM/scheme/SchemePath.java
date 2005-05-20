@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.26 2005/05/18 12:03:14 bass Exp $
+ * $Id: SchemePath.java,v 1.27 2005/05/20 21:12:12 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,6 @@ import java.util.TreeSet;
 
 import org.omg.CORBA.portable.IDLEntity;
 
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.TransmissionPath;
 import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -45,8 +44,8 @@ import com.syrus.util.Log;
 /**
  * #14 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.26 $, $Date: 2005/05/18 12:03:14 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.27 $, $Date: 2005/05/20 21:12:12 $
  * @module scheme_v1
  */
 public final class SchemePath extends AbstractCloneableStorableObject implements
@@ -239,10 +238,11 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	}
 
 	public SchemeMonitoringSolution getParentSchemeMonitoringSolution() {
-		assert this.parentSchemeMonitoringSolutionId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.parentSchemeMonitoringSolutionId != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
 		try {
-			return (SchemeMonitoringSolution) SchemeStorableObjectPool.getStorableObject(this.parentSchemeMonitoringSolutionId, true);
-		} catch (final ApplicationException ae) {
+			return (SchemeMonitoringSolution) StorableObjectPool.getStorableObject(this.parentSchemeMonitoringSolutionId, true);
+		}
+		catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
 		}
@@ -277,10 +277,11 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	}
 
 	public TransmissionPath getTransmissionPath() {
-		assert this.transmissionPathId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.transmissionPathId != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
 		try {
-			return (TransmissionPath) ConfigurationStorableObjectPool.getStorableObject(this.transmissionPathId, true);
-		} catch (final ApplicationException ae) {
+			return (TransmissionPath) StorableObjectPool.getStorableObject(this.transmissionPathId, true);
+		}
+		catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
 		}

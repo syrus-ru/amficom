@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalNode.java,v 1.33 2005/05/18 11:48:20 bass Exp $
+ * $Id: TopologicalNode.java,v 1.34 2005/05/20 21:11:57 arseniy Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,8 +40,8 @@ import com.syrus.AMFICOM.map.corba.TopologicalNode_Transferable;
  * быть концевым дл€ линии и дл€ фрагмента линии. ¬ физическом смысле
  * топологический узел соответствует точке изгиба линии и не требует
  * дополнительной описательной информации.
- * @author $Author: bass $
- * @version $Revision: 1.33 $, $Date: 2005/05/18 11:48:20 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.34 $, $Date: 2005/05/20 21:11:57 $
  * @module map_v1
  * @todo physicalLink should be transient
  */
@@ -333,7 +333,7 @@ public class TopologicalNode extends AbstractNode {
 		setLocation(mpnes.location);
 		setActive(mpnes.active);
 		try {
-			setPhysicalLink((PhysicalLink) MapStorableObjectPool.getStorableObject(mpnes.physicalLinkId, false));
+			setPhysicalLink((PhysicalLink) StorableObjectPool.getStorableObject(mpnes.physicalLinkId, false));
 		}
 		catch (ApplicationException e) {
 			e.printStackTrace();
@@ -372,7 +372,7 @@ public class TopologicalNode extends AbstractNode {
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			PhysicalLink physicalLink1 = (PhysicalLink) MapStorableObjectPool.getStorableObject(physicalLinkId1, false);
+			PhysicalLink physicalLink1 = (PhysicalLink) StorableObjectPool.getStorableObject(physicalLinkId1, false);
 			TopologicalNode node1 = new TopologicalNode(id1, creatorId, 0L, name1, description1, x1, y1, active1);
 			node1.changed = true;
 			node1.setPhysicalLink(physicalLink1);

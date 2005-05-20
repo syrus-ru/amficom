@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.27 2005/05/18 12:37:39 bass Exp $
+* $Id: MapView.java,v 1.28 2005/05/20 21:12:22 arseniy Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -36,7 +36,6 @@ import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
-import com.syrus.AMFICOM.map.MapStorableObjectPool;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
@@ -54,8 +53,8 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
  * канализационную
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
- * @author $Author: bass $
- * @version $Revision: 1.27 $, $Date: 2005/05/18 12:37:39 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.28 $, $Date: 2005/05/20 21:12:22 $
  * @module mapview_v1
  * @todo use getCenter, setCenter instead of pair longitude, latitude
  */
@@ -191,15 +190,17 @@ public class MapView extends DomainMember implements Namable {
 			schemeIds.add(new Identifier(mvt.schemeIds[i]));
 
 		Identifier mapId = new Identifier(mvt.mapId);
-		try{
-			this.map = (Map) MapStorableObjectPool.getStorableObject(mapId, true);
-		}catch(ApplicationException ae){
+		try {
+			this.map = (Map) StorableObjectPool.getStorableObject(mapId, true);
+		}
+		catch (ApplicationException ae) {
 			throw new CreateObjectException("MapView.<init> | cannot get map " + mapId.toString(), ae);
-		}			
-		
-		try{
+		}
+
+		try {
 			this.schemes = StorableObjectPool.getStorableObjects(schemeIds, true);
-		}catch(ApplicationException ae){
+		}
+		catch (ApplicationException ae) {
 			throw new CreateObjectException("MapView.<init> | cannot get schemes ", ae);
 		}
 	}

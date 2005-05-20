@@ -1,5 +1,5 @@
 /*
- * $Id: ResourceStorableObjectPool.java,v 1.23 2005/05/18 11:37:17 bass Exp $
+ * $Id: ResourceStorableObjectPool.java,v 1.24 2005/05/20 21:11:49 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,8 +10,6 @@ package com.syrus.AMFICOM.resource;
 
 import java.util.Collections;
 import java.util.Set;
-
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -24,8 +22,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.23 $, $Date: 2005/05/18 11:37:17 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.24 $, $Date: 2005/05/20 21:11:49 $
  * @module resource_v1
  */
 public final class ResourceStorableObjectPool extends StorableObjectPool {
@@ -42,9 +40,8 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 		this(LRUMap.class);
 	}
 	
-	private ResourceStorableObjectPool(Class cacheMapClass){
+	private ResourceStorableObjectPool(Class cacheMapClass) {
 		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.RESOURCE_GROUP_CODE, cacheMapClass);
-		registerPool(ObjectGroupEntities.RESOURCE_GROUP_CODE, this);
 	}
 
 	public static void init(ResourceObjectLoader rObjectLoader1, final int size) {
@@ -94,26 +91,6 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 	protected Set refreshStorableObjects(Set storableObjects) throws ApplicationException{
 		return rObjectLoader.refresh(storableObjects);
 	}
-
-	public static StorableObject getStorableObject(Identifier objectId, boolean useLoader)
-			throws ApplicationException {
-		return instance.getStorableObjectImpl(objectId, useLoader);
-	}
-	
-	protected StorableObject loadStorableObject(Identifier objectId)
-			throws ApplicationException {
-		StorableObject storableObject;
-		switch (objectId.getMajor()) {
-		case ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE:
-			storableObject = rObjectLoader.loadImageResource(objectId);
-			break;
-		default:
-			Log.errorMessage("ResourceStorableObjectPool.loadStorableObject | Unknown entity: "
-							+ ObjectEntities.codeToString(objectId.getMajor()));
-			storableObject = null;
-		}
-		return storableObject;
-	}
 	
 	protected Set loadStorableObjects(final Set ids) throws ApplicationException {
 		assert StorableObject.hasSingleTypeEntities(ids);
@@ -161,52 +138,9 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 				Log.errorMessage("ResourceStorableObjectPool.saveStorableObjects | Unknown Unknown entity : '" + ObjectEntities.codeToString(entityCode) + "'");
 		}
 	}
-
-	public static StorableObject fromTransferable(Identifier id, IDLEntity transferable) throws ApplicationException {
-		return instance.fromTransferableImpl(id, transferable);
-	}
-
-	public static void flush(final Identifier id, final boolean force) throws ApplicationException {
-		instance.flushImpl(id, force);
-	}
-
-	public static void flush(final short entityCode, final boolean force) throws ApplicationException {		
-		instance.flushImpl(entityCode, force);
-	}
-
-	public static void flush(final Short entityCode, final boolean force) throws ApplicationException {		
-		instance.flushImpl(entityCode, force);
-	}
-
-	public static void flush(boolean force) throws ApplicationException{		
-		instance.flushImpl(force);
-	}
-
-	public static void cleanChangedStorableObject(Short entityCode) {
-		instance.cleanChangedStorableObjectImpl(entityCode);
-	}
-
-	public static void cleanChangedStorableObjects() {
-		instance.cleanChangedStorableObjectsImpl();
-	}
-	
-	protected void deleteStorableObject(Identifier id) {
-		rObjectLoader.delete(id);
-	}
 	
 	protected void deleteStorableObjects(final Set identifiables) {
 		rObjectLoader.delete(identifiables);
 	}
 
-	public static void delete(Identifier id) {
-		instance.deleteImpl(id);
-	}
-
-	public static void deserializePool() {
-		instance.deserializePoolImpl();
-	}
-
-	public static void serializePool() {
-		instance.serializePoolImpl();
-	}
 }

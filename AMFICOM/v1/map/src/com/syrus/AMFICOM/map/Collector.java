@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.39 2005/05/18 11:48:20 bass Exp $
+ * $Id: Collector.java,v 1.40 2005/05/20 21:11:56 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,8 +38,8 @@ import com.syrus.AMFICOM.map.corba.Collector_Transferable;
  * Коллектор на топологической схеме, который характеризуется набором входящих
  * в него линий. Линии не обязаны быть связными.
  *
- * @author $Author: bass $
- * @version $Revision: 1.39 $, $Date: 2005/05/18 11:48:20 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.40 $, $Date: 2005/05/20 21:11:56 $
  * @module map_v1
  */
 public class Collector extends StorableObject implements MapElement {
@@ -361,7 +361,7 @@ public class Collector extends StorableObject implements MapElement {
 			collector.changed = true;
 			for (Iterator it = physicalLinkIds1.iterator(); it.hasNext();) {
 				Identifier physicalLinkId = (Identifier) it.next();
-				PhysicalLink physicalLink = (PhysicalLink) MapStorableObjectPool.getStorableObject(physicalLinkId, false);
+				PhysicalLink physicalLink = (PhysicalLink) StorableObjectPool.getStorableObject(physicalLinkId, false);
 				collector.addPhysicalLink(physicalLink);
 			}
 			return collector;

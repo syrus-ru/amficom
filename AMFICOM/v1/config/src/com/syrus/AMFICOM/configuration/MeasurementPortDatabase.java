@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortDatabase.java,v 1.49 2005/05/18 11:27:15 bass Exp $
+ * $Id: MeasurementPortDatabase.java,v 1.50 2005/05/20 21:11:34 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
@@ -27,8 +28,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.49 $, $Date: 2005/05/18 11:27:15 $
- * @author $Author: bass $
+ * @version $Revision: 1.50 $, $Date: 2005/05/20 21:11:34 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 public class MeasurementPortDatabase extends CharacterizableDatabase {
@@ -115,7 +116,7 @@ public class MeasurementPortDatabase extends CharacterizableDatabase {
 		try {
 			Identifier measurementPortTypeId = DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_TYPE_ID);
 			measurementPortType = (measurementPortTypeId != null)
-					? (MeasurementPortType) ConfigurationStorableObjectPool.getStorableObject(measurementPortTypeId, true) : null;
+					? (MeasurementPortType) StorableObjectPool.getStorableObject(measurementPortTypeId, true) : null;
 		}
 		catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);

@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.37 2005/04/15 19:22:19 arseniy Exp $
+ * $Id: Modeling.java,v 1.38 2005/05/20 21:11:38 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,12 +23,13 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Modeling_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2005/04/15 19:22:19 $
+ * @version $Revision: 1.38 $, $Date: 2005/05/20 21:11:38 $
  * @author $Author: arseniy $
  * @author arseniy
  * @module measurement_v1
@@ -102,9 +103,9 @@ public class Modeling extends Action {
 		Modeling_Transferable mt = (Modeling_Transferable) transferable;
 		super.fromTransferable(mt.header, null, new Identifier(mt.monitored_element_id), null);
 
-		super.type = (ModelingType) MeasurementStorableObjectPool.getStorableObject(new Identifier(mt.type_id), true);
+		super.type = (ModelingType) StorableObjectPool.getStorableObject(new Identifier(mt.type_id), true);
 
-		this.argumentSet = (Set) MeasurementStorableObjectPool.getStorableObject(new Identifier(mt.argument_set_id), true);
+		this.argumentSet = (Set) StorableObjectPool.getStorableObject(new Identifier(mt.argument_set_id), true);
 
 		this.name = mt.name;
 		

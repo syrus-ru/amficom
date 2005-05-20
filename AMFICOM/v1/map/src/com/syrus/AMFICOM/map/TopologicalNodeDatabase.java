@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalNodeDatabase.java,v 1.23 2005/05/18 11:48:20 bass Exp $
+ * $Id: TopologicalNodeDatabase.java,v 1.24 2005/05/20 21:11:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,6 +28,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
@@ -36,10 +37,9 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
-
 /**
- * @version $Revision: 1.23 $, $Date: 2005/05/18 11:48:20 $
- * @author $Author: bass $
+ * @version $Revision: 1.24 $, $Date: 2005/05/20 21:11:57 $
+ * @author $Author: arseniy $
  * @module map_v1
  */
 public class TopologicalNodeDatabase extends CharacterizableDatabase {
@@ -53,13 +53,12 @@ public class TopologicalNodeDatabase extends CharacterizableDatabase {
 		throw new IllegalDataException(this.getEnityName() + "Database.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
-	
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		TopologicalNode topologicalNode = this.fromStorableObject(storableObject);
 		this.retrieveEntity(topologicalNode);		
 		this.retrievePhysicalLink(topologicalNode);
 	}	
-	
+
 	private void retrievePhysicalLink(TopologicalNode node) throws RetrieveObjectException, ObjectNotFoundException{
 		String nodeIdStr = DatabaseIdentifier.toSQLString(node.getId());
 		String sql = SQL_SELECT + NodeLinkWrapper.COLUMN_PHYSICAL_LINK_ID + SQL_FROM
@@ -75,7 +74,8 @@ public class TopologicalNodeDatabase extends CharacterizableDatabase {
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next()){				
 				try {
-					node.setPhysicalLink((PhysicalLink)MapStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), true));
+					node.setPhysicalLink((PhysicalLink) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
+							StorableObjectWrapper.COLUMN_ID), true));
 				}
 				catch (ApplicationException ae) {
 					throw new RetrieveObjectException(ae);
@@ -98,13 +98,14 @@ public class TopologicalNodeDatabase extends CharacterizableDatabase {
 			}
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			} finally {
+			}
+			finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}
 	}
-	
-	private void retrievePhysicalLinks(Set topologicalNodes) throws RetrieveObjectException, IllegalDataException{
+
+	private void retrievePhysicalLinks(Set topologicalNodes) throws RetrieveObjectException, IllegalDataException {
 		if (topologicalNodes == null || topologicalNodes.isEmpty())
 			return;
 		String startNodeIdStrs;
@@ -113,41 +114,44 @@ public class TopologicalNodeDatabase extends CharacterizableDatabase {
 			StringBuffer startNodeBuffer = new StringBuffer(NodeLinkWrapper.COLUMN_START_NODE_ID);
 			startNodeBuffer.append(SQL_IN);
 			startNodeBuffer.append(OPEN_BRACKET);
-			
+
 			StringBuffer endNodeBuffer = new StringBuffer(NodeLinkWrapper.COLUMN_END_NODE_ID);
 			endNodeBuffer.append(SQL_IN);
 			endNodeBuffer.append(OPEN_BRACKET);
-			
+
 			int i = 1;
-			for (Iterator it = topologicalNodes.iterator(); it.hasNext();i++) {
+			for (Iterator it = topologicalNodes.iterator(); it.hasNext(); i++) {
 				Object object = it.next();
 				Identifier id = null;
 				if (object instanceof Identifier)
 					id = (Identifier) object;
-				else if (object instanceof Identifiable)
-					id = ((Identifiable)object).getId();
-				else throw new IllegalDataException(this.getEnityName() + "Database.retrievePhysicalLinks | Object " +
-													object.getClass().getName()
-													+ " isn't Identifier or Identifiable");
+				else
+					if (object instanceof Identifiable)
+						id = ((Identifiable) object).getId();
+					else
+						throw new IllegalDataException(this.getEnityName()
+								+ "Database.retrievePhysicalLinks | Object "
+								+ object.getClass().getName()
+								+ " isn't Identifier or Identifiable");
 
-				if (id != null){
+				if (id != null) {
 					startNodeBuffer.append(DatabaseIdentifier.toSQLString(id));
 					endNodeBuffer.append(DatabaseIdentifier.toSQLString(id));
 					if (it.hasNext()) {
-						if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0)){
+						if (((i + 1) % MAXIMUM_EXPRESSION_NUMBER != 0)) {
 							startNodeBuffer.append(COMMA);
 							endNodeBuffer.append(COMMA);
 						}
 						else {
 							startNodeBuffer.append(CLOSE_BRACKET);
 							startNodeBuffer.append(SQL_OR);
-							startNodeBuffer.append(NodeLinkWrapper.COLUMN_START_NODE_ID);				
+							startNodeBuffer.append(NodeLinkWrapper.COLUMN_START_NODE_ID);
 							startNodeBuffer.append(SQL_IN);
 							startNodeBuffer.append(OPEN_BRACKET);
-							
+
 							endNodeBuffer.append(CLOSE_BRACKET);
 							endNodeBuffer.append(SQL_OR);
-							endNodeBuffer.append(NodeLinkWrapper.COLUMN_END_NODE_ID);				
+							endNodeBuffer.append(NodeLinkWrapper.COLUMN_END_NODE_ID);
 							endNodeBuffer.append(SQL_IN);
 							endNodeBuffer.append(OPEN_BRACKET);
 						}
@@ -156,7 +160,7 @@ public class TopologicalNodeDatabase extends CharacterizableDatabase {
 			}
 			startNodeBuffer.append(CLOSE_BRACKET);
 			endNodeBuffer.append(CLOSE_BRACKET);
-			
+
 			startNodeIdStrs = startNodeBuffer.toString();
 			endNodeIdStrs = endNodeBuffer.toString();
 		}
@@ -164,80 +168,87 @@ public class TopologicalNodeDatabase extends CharacterizableDatabase {
 				+ NodeLinkWrapper.COLUMN_START_NODE_ID + COMMA
 				+ NodeLinkWrapper.COLUMN_END_NODE_ID + COMMA
 				+ NodeLinkWrapper.COLUMN_PHYSICAL_LINK_ID + COMMA
-				+ SQL_FROM + ObjectEntities.NODE_LINK_ENTITY + SQL_WHERE
-				+ startNodeIdStrs + SQL_OR + endNodeIdStrs;
-		 Statement statement = null;
-	        ResultSet resultSet = null;
-	        Connection connection = DatabaseConnection.getConnection();
-	        try {
-	            statement = connection.createStatement();
-	            Log.debugMessage(this.getEnityName() + "Database.retrievePhysicalLinks | Trying: " + sql, Log.DEBUGLEVEL09);
-	            resultSet = statement.executeQuery(sql.toString());
-	            Map nodePhysicalLinkMap = new HashMap();
-	            while (resultSet.next()) {
-	                Identifier startNodeId = DatabaseIdentifier.getIdentifier(resultSet, NodeLinkWrapper.COLUMN_START_NODE_ID);
-	                Identifier endNodeId = DatabaseIdentifier.getIdentifier(resultSet, NodeLinkWrapper.COLUMN_END_NODE_ID);
-	                TopologicalNode node = null;
-	                for (Iterator it = topologicalNodes.iterator(); it.hasNext();) {
-	                	TopologicalNode nodeToCompare = (TopologicalNode) it.next();
-	                    if (nodeToCompare.getId().equals(startNodeId) || nodeToCompare.getId().equals(endNodeId)){
-	                    	node = nodeToCompare;
-	                        break;
-	                    }	
-	                }
-	
-	                if (node == null){
-	                    String mesg = this.getEnityName() + "Database.retrievePhysicalLinks | Cannot found correspond node " ;
-	                    throw new RetrieveObjectException(mesg);
-	                }
-	
-	                PhysicalLink physicalLink = (PhysicalLink)nodePhysicalLinkMap.get(node);
-	                if (physicalLink != null)
-	                	continue;
-	                try {
-	                	physicalLink = (PhysicalLink) MapStorableObjectPool
-	                            .getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, NodeLinkWrapper.COLUMN_PHYSICAL_LINK_ID), true);
-	                } catch (ApplicationException ae) {
-	                    throw new RetrieveObjectException(ae);
-	                }
-	                nodePhysicalLinkMap.put(node, physicalLink);
-	            }
-	
-	            for (Iterator iter = nodePhysicalLinkMap.keySet().iterator(); iter.hasNext();) {
-	            	/**
-	            	 * topologicalNode refer to item of input list topologicalNodes
-	            	 *  that why modifing item of map we modify item of list
-	            	 */
-	            	TopologicalNode topologicalNode = (TopologicalNode) iter.next();
-	                PhysicalLink physicalLink = (PhysicalLink)nodePhysicalLinkMap.get(topologicalNode);
-	                topologicalNode.setPhysicalLink(physicalLink);
-	            }
-	
-	        } catch (SQLException sqle) {
-	            String mesg = this.getEnityName() + "Database.retrievePhysicalLinks | Cannot retrieve parameters for result -- " + sqle.getMessage();
-	            throw new RetrieveObjectException(mesg, sqle);
-	        } finally {
-	            try {
-	                if (statement != null)
-	                    statement.close();
-	                if (resultSet != null)
-	                    resultSet.close();
-	                statement = null;
-	                resultSet = null;
-	            } catch (SQLException sqle1) {
-	                Log.errorException(sqle1);
-	            } finally {
-	                DatabaseConnection.releaseConnection(connection);
-	            }
-	        }
+				+ SQL_FROM + ObjectEntities.NODE_LINK_ENTITY
+				+ SQL_WHERE + startNodeIdStrs + SQL_OR + endNodeIdStrs;
+		Statement statement = null;
+		ResultSet resultSet = null;
+		Connection connection = DatabaseConnection.getConnection();
+		try {
+			statement = connection.createStatement();
+			Log.debugMessage(this.getEnityName() + "Database.retrievePhysicalLinks | Trying: " + sql, Log.DEBUGLEVEL09);
+			resultSet = statement.executeQuery(sql.toString());
+			Map nodePhysicalLinkMap = new HashMap();
+			while (resultSet.next()) {
+				Identifier startNodeId = DatabaseIdentifier.getIdentifier(resultSet, NodeLinkWrapper.COLUMN_START_NODE_ID);
+				Identifier endNodeId = DatabaseIdentifier.getIdentifier(resultSet, NodeLinkWrapper.COLUMN_END_NODE_ID);
+				TopologicalNode node = null;
+				for (Iterator it = topologicalNodes.iterator(); it.hasNext();) {
+					TopologicalNode nodeToCompare = (TopologicalNode) it.next();
+					if (nodeToCompare.getId().equals(startNodeId) || nodeToCompare.getId().equals(endNodeId)) {
+						node = nodeToCompare;
+						break;
+					}
+				}
+
+				if (node == null) {
+					String mesg = this.getEnityName() + "Database.retrievePhysicalLinks | Cannot found correspond node ";
+					throw new RetrieveObjectException(mesg);
+				}
+
+				PhysicalLink physicalLink = (PhysicalLink) nodePhysicalLinkMap.get(node);
+				if (physicalLink != null)
+					continue;
+				try {
+					physicalLink = (PhysicalLink) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
+							NodeLinkWrapper.COLUMN_PHYSICAL_LINK_ID), true);
+				}
+				catch (ApplicationException ae) {
+					throw new RetrieveObjectException(ae);
+				}
+				nodePhysicalLinkMap.put(node, physicalLink);
+			}
+
+			for (Iterator iter = nodePhysicalLinkMap.keySet().iterator(); iter.hasNext();) {
+				/**
+				 * topologicalNode refer to item of input list topologicalNodes that why
+				 * modifing item of map we modify item of list
+				 */
+				TopologicalNode topologicalNode = (TopologicalNode) iter.next();
+				PhysicalLink physicalLink = (PhysicalLink) nodePhysicalLinkMap.get(topologicalNode);
+				topologicalNode.setPhysicalLink(physicalLink);
+			}
+
+		}
+		catch (SQLException sqle) {
+			String mesg = this.getEnityName()
+					+ "Database.retrievePhysicalLinks | Cannot retrieve parameters for result -- "
+					+ sqle.getMessage();
+			throw new RetrieveObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (resultSet != null)
+					resultSet.close();
+				statement = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+			finally {
+				DatabaseConnection.releaseConnection(connection);
+			}
+		}
 	}
-	
+
 	protected String getEnityName() {		
 		return ObjectEntities.TOPOLOGICAL_NODE_ENTITY;
 	}	
-	
+
 	protected String getColumnsTmpl() {
-		if (columns == null){
+		if (columns == null) {
 			columns = StorableObjectWrapper.COLUMN_NAME + COMMA
 				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
 				+ TopologicalNodeWrapper.COLUMN_LONGITUDE + COMMA
@@ -246,9 +257,9 @@ public class TopologicalNodeDatabase extends CharacterizableDatabase {
 		}
 		return columns;
 	}	
-	
+
 	protected String getUpdateMultipleSQLValuesTmpl() {
-		if (updateMultipleSQLValues == null){
+		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues = QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -257,8 +268,7 @@ public class TopologicalNodeDatabase extends CharacterizableDatabase {
 		}
 		return updateMultipleSQLValues;
 	}
-	
-	
+
 	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
 			throws IllegalDataException, SQLException {
 		TopologicalNode topologicalNode = fromStorableObject(storableObject);
@@ -269,7 +279,7 @@ public class TopologicalNodeDatabase extends CharacterizableDatabase {
 		preparedStatement.setInt(++startParameterNumber, topologicalNode.isActive() ? 1 : 0);
 		return startParameterNumber;
 	}
-	
+
 	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		TopologicalNode topologicalNode = fromStorableObject(storableObject);
 		String values = APOSTOPHE + DatabaseString.toQuerySubString(topologicalNode.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
@@ -279,13 +289,13 @@ public class TopologicalNodeDatabase extends CharacterizableDatabase {
 			+ (topologicalNode.isActive() ? 1 : 0);
 		return values;
 	}
-	
+
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 	throws IllegalDataException, SQLException {
 		TopologicalNode topologicalNode = (storableObject == null) ?
 				new TopologicalNode(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, 0.0, 0.0, false) :
 					fromStorableObject(storableObject);
-				
+
 		topologicalNode.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 							   DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 							   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
@@ -299,11 +309,11 @@ public class TopologicalNodeDatabase extends CharacterizableDatabase {
 		return topologicalNode;
 	}
 
-	
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) {
-//		TopologicalNode topologicalNode = this.fromStorableObject(storableObject);
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
+		TopologicalNode topologicalNode = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  topologicalNode.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}
@@ -312,8 +322,7 @@ public class TopologicalNodeDatabase extends CharacterizableDatabase {
 		TopologicalNode topologicalNode = this.fromStorableObject(storableObject);
 		super.insertEntity(topologicalNode);
 	}
-	
-	
+
 	public void insert(Set storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
 	}
@@ -329,8 +338,7 @@ public class TopologicalNodeDatabase extends CharacterizableDatabase {
 				return;
 		}
 	}
-	
-	
+
 	public void update(Set storableObjects, Identifier modifierId, int updateKind) throws VersionCollisionException, UpdateObjectException {
 		switch (updateKind) {
 			case UPDATE_CHECK:
@@ -341,13 +349,11 @@ public class TopologicalNodeDatabase extends CharacterizableDatabase {
 				super.checkAndUpdateEntities(storableObjects, modifierId, true);		
 				return;
 		}
-
 	}	
-	
+
 	protected Set retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
 		Set collection = super.retrieveByCondition(conditionQuery);
 		this.retrievePhysicalLinks(collection);
 		return collection;
 	}
 }
-

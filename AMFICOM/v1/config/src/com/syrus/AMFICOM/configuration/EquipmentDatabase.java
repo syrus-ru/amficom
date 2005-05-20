@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.83 2005/05/18 11:27:14 bass Exp $
+ * $Id: EquipmentDatabase.java,v 1.84 2005/05/20 21:11:33 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,14 +20,15 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.83 $, $Date: 2005/05/18 11:27:14 $
- * @author $Author: bass $
+ * @version $Revision: 1.84 $, $Date: 2005/05/20 21:11:33 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -175,7 +176,7 @@ public class EquipmentDatabase extends CharacterizableDatabase {
 		String description = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION));
 		EquipmentType equipmentType;
 		try {
-			equipmentType = (EquipmentType) ConfigurationStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
+			equipmentType = (EquipmentType) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
 					StorableObjectWrapper.COLUMN_TYPE_ID),
 					true);
 		}

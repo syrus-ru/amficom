@@ -1,5 +1,5 @@
 /*
-* $Id: MapViewDatabase.java,v 1.21 2005/05/18 12:37:39 bass Exp $
+* $Id: MapViewDatabase.java,v 1.22 2005/05/20 21:12:23 arseniy Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -33,7 +33,6 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
-import com.syrus.AMFICOM.map.MapStorableObjectPool;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
@@ -42,8 +41,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/05/18 12:37:39 $
- * @author $Author: bass $
+ * @version $Revision: 1.22 $, $Date: 2005/05/20 21:12:23 $
+ * @author $Author: arseniy $
  * @module mapview_v1
  */
 public class MapViewDatabase extends CharacterizableDatabase {
@@ -169,31 +168,34 @@ public class MapViewDatabase extends CharacterizableDatabase {
 				new MapView(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, null, 0.0, 0.0, 0.0, 0.0, null) :
 					fromStorableObject(storableObject);				
 		
-		try{
-		map.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
-				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
-				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-				resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
-				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_DOMAIN_ID),
-				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
-				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
-				resultSet.getDouble(COLUMN_LONGITUDE),
-				resultSet.getDouble(COLUMN_LATITUDE),
-				resultSet.getDouble(COLUMN_SCALE),
-				resultSet.getDouble(COLUMN_DEFAULTSCALE),
-				(com.syrus.AMFICOM.map.Map)MapStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MAP_ID), true));
-		} catch(ApplicationException ae){
-			throw new RetrieveObjectException(this.getEnityName() + "Database.updateEntityFromResultSet | cannot retrieve map" ,  ae);
+		try {
+			map.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
+					DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
+					DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+					DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+					resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
+					DatabaseIdentifier.getIdentifier(resultSet, COLUMN_DOMAIN_ID),
+					DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
+					DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
+					resultSet.getDouble(COLUMN_LONGITUDE),
+					resultSet.getDouble(COLUMN_LATITUDE),
+					resultSet.getDouble(COLUMN_SCALE),
+					resultSet.getDouble(COLUMN_DEFAULTSCALE),
+					(com.syrus.AMFICOM.map.Map) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
+							COLUMN_MAP_ID), true));
+		}
+		catch (ApplicationException ae) {
+			throw new RetrieveObjectException(this.getEnityName() + "Database.updateEntityFromResultSet | cannot retrieve map", ae);
 		}
 		return map;
 	}
 
 	
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) {
-//		MapView mapView = this.fromStorableObject(storableObject);
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
+		MapView mapView = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  mapView.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}
@@ -274,79 +276,83 @@ public class MapViewDatabase extends CharacterizableDatabase {
 	
 	public void delete(Set ids) {
 		super.delete(ids);
-		
+
 		java.util.Map linkedObjectIds = new HashMap();
-		
+
 		java.util.Map mapIds = new HashMap();
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier mapId = (Identifier) it.next();
-			try{
-				MapView map = (MapView)MapViewStorableObjectPool.getStorableObject(mapId, true);
+			try {
+				MapView map = (MapView) StorableObjectPool.getStorableObject(mapId, true);
 				mapIds.put(mapId, map);
-			}catch(ApplicationException ae){
-				Log.errorMessage(this.getEnityName()+"Database.delete | Couldn't found map for " + mapId);
+			}
+			catch (ApplicationException ae) {
+				Log.errorMessage(this.getEnityName() + "Database.delete | Couldn't found map for " + mapId);
 			}
 		}
-		
+
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier mapId = (Identifier) it.next();
 			MapView mapView = (MapView) mapIds.get(mapId);
 			linkedObjectIds.put(mapView, mapView.getSchemes());
 		}
-		
+
 		this.deleteSchemeIds(linkedObjectIds);
-		
-	}	
+
+	}
 
 	private void deleteSchemeIds(java.util.Map linkedObjectIds) {
 		StringBuffer linkBuffer = new StringBuffer(LINK_COLUMN_SCHEME_ID);
-		
+
 		linkBuffer.append(SQL_IN);
 		linkBuffer.append(OPEN_BRACKET);
-		
+
 		int i = 0;
 		for (Iterator mvIter = linkedObjectIds.keySet().iterator(); mvIter.hasNext();) {
 			Identifier mapViewId = (Identifier) mvIter.next();
-			Set schemes = (Set)linkedObjectIds.get(mapViewId);
+			Set schemes = (Set) linkedObjectIds.get(mapViewId);
 			for (Iterator it = schemes.iterator(); it.hasNext(); i++) {
 				Identifier id = ((Scheme) it.next()).getId();
-	
+
 				linkBuffer.append(DatabaseIdentifier.toSQLString(id));
 				if (it.hasNext()) {
-					if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0)){
+					if (((i + 1) % MAXIMUM_EXPRESSION_NUMBER != 0)) {
 						linkBuffer.append(COMMA);
 					}
 					else {
 						linkBuffer.append(CLOSE_BRACKET);
 						linkBuffer.append(SQL_AND);
-						linkBuffer.append(LINK_COLUMN_SCHEME_ID);				
+						linkBuffer.append(LINK_COLUMN_SCHEME_ID);
 						linkBuffer.append(SQL_IN);
 						linkBuffer.append(OPEN_BRACKET);
 					}
 				}
-			
+
 			}
 		}
-		
+
 		linkBuffer.append(CLOSE_BRACKET);
-		
+
 		Statement statement = null;
 		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
-			statement.executeUpdate(SQL_DELETE_FROM + MAPVIEW_SCHEME + SQL_WHERE
-					+ linkBuffer.toString());
+			statement.executeUpdate(SQL_DELETE_FROM + MAPVIEW_SCHEME + SQL_WHERE + linkBuffer.toString());
 			connection.commit();
-		} catch (SQLException sqle1) {
+		}
+		catch (SQLException sqle1) {
 			Log.errorException(sqle1);
-		} finally {
+		}
+		finally {
 			try {
 				if (statement != null)
 					statement.close();
 				statement = null;
-			} catch (SQLException sqle1) {
+			}
+			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			} finally {
+			}
+			finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}

@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.83 2005/05/18 11:27:15 bass Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.84 2005/05/20 21:11:33 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,10 +11,7 @@ package com.syrus.AMFICOM.configuration;
 import java.util.Collections;
 import java.util.Set;
 
-import org.omg.CORBA.portable.IDLEntity;
-
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectGroupEntities;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -24,8 +21,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.83 $, $Date: 2005/05/18 11:27:15 $
- * @author $Author: bass $
+ * @version $Revision: 1.84 $, $Date: 2005/05/20 21:11:33 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -60,7 +57,6 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 
 	private ConfigurationStorableObjectPool(Class cacheMapClass) {
 		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.CONFIGURATION_GROUP_CODE, cacheMapClass);
-		registerPool(ObjectGroupEntities.CONFIGURATION_GROUP_CODE, this);
 	}
 
 	public static void init(ConfigurationObjectLoader cObjectLoader1, final int size) {
@@ -137,10 +133,6 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 
 	protected Set refreshStorableObjects(Set storableObjects) throws ApplicationException {
 		return cObjectLoader.refresh(storableObjects);
-	}
-
-	public static StorableObject getStorableObject(Identifier objectId, boolean useLoader) throws ApplicationException {
-		return instance.getStorableObjectImpl(objectId, useLoader);
 	}
 
 	protected Set loadStorableObjects(final Set ids) throws ApplicationException {
@@ -289,52 +281,8 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 		}
 	}
 
-	public static StorableObject fromTransferable(Identifier id, IDLEntity transferable) throws ApplicationException {
-		return instance.fromTransferableImpl(id, transferable);
-	}
-
-	public static void flush(final Identifier id, final boolean force) throws ApplicationException {
-		instance.flushImpl(id, force);
-	}
-
-	public static void flush(final short entityCode, final boolean force) throws ApplicationException {		
-		instance.flushImpl(entityCode, force);
-	}
-
-	public static void flush(final Short entityCode, final boolean force) throws ApplicationException {		
-		instance.flushImpl(entityCode, force);
-	}
-
-	public static void flush(boolean force) throws ApplicationException {		
-		instance.flushImpl(force);
-	}
-
-	public static void cleanChangedStorableObject(Short entityCode) {
-		instance.cleanChangedStorableObjectImpl(entityCode);
-	}
-
-	public static void cleanChangedStorableObjects() {
-		instance.cleanChangedStorableObjectsImpl();
-	}
-
-	public static void delete(Identifier id) {
-		instance.deleteImpl(id);
-	}
-
 	protected void deleteStorableObjects(final Set identifiables) {
 		cObjectLoader.delete(identifiables);
-	}
-
-	public static void deserializePool() {
-		instance.deserializePoolImpl();
-	}
-
-	public static void serializePool() {
-		instance.serializePoolImpl();
-	}
-
-	public static void truncateObjectPool(final short entityCode) {
-		instance.truncateObjectPoolImpl(entityCode);
 	}
 
 }

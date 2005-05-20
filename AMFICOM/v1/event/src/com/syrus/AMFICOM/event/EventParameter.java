@@ -1,5 +1,5 @@
 /*
- * $Id: EventParameter.java,v 1.12 2005/05/18 11:16:58 bass Exp $
+ * $Id: EventParameter.java,v 1.13 2005/05/20 21:11:44 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,13 +12,13 @@ import org.omg.CORBA.portable.IDLEntity;
 import com.syrus.AMFICOM.event.corba.EventParameter_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ParameterType;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TransferableObject;
 import com.syrus.AMFICOM.general.TypedObject;
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/05/18 11:16:58 $
- * @author $Author: bass $
+ * @version $Revision: 1.13 $, $Date: 2005/05/20 21:11:44 $
+ * @author $Author: arseniy $
  * @module event_v1
  */
 public class EventParameter implements Identifiable, TransferableObject, TypedObject {
@@ -38,7 +38,7 @@ public class EventParameter implements Identifiable, TransferableObject, TypedOb
 
 	public EventParameter(EventParameter_Transferable ept) throws ApplicationException {
 		this.id = new Identifier(ept.id);
-		this.type = (ParameterType) GeneralStorableObjectPool.getStorableObject(new Identifier(ept.type_id), true);
+		this.type = (ParameterType) StorableObjectPool.getStorableObject(new Identifier(ept.type_id), true);
 		this.value = ept.value;
 	}
 

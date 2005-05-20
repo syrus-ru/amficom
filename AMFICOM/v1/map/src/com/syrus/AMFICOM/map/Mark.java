@@ -1,5 +1,5 @@
 /*-
- * $Id: Mark.java,v 1.34 2005/05/18 11:48:20 bass Exp $
+ * $Id: Mark.java,v 1.35 2005/05/20 21:11:56 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,8 +41,8 @@ import com.syrus.AMFICOM.map.corba.Mark_Transferable;
  * в связи с чем методы класса {@link AbstractNode}, работающие с линиями и
  * фрагментами линий, переопределены и бросают
  * <code>{@link UnsupportedOperationException}</code>.
- * @author $Author: bass $
- * @version $Revision: 1.34 $, $Date: 2005/05/18 11:48:20 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.35 $, $Date: 2005/05/20 21:11:56 $
  * @module map_v1
  */
 public class Mark extends AbstractNode {
@@ -108,7 +108,7 @@ public class Mark extends AbstractNode {
 		this.building = mt.building;
 
 		try {
-			this.physicalLink = (PhysicalLink) MapStorableObjectPool.getStorableObject(new Identifier(mt.physicalLinkId), true);
+			this.physicalLink = (PhysicalLink) StorableObjectPool.getStorableObject(new Identifier(mt.physicalLinkId), true);
 
 			super.characteristics = new HashSet(mt.characteristicIds.length);
 			Set characteristicIds = new HashSet(mt.characteristicIds.length);
@@ -505,7 +505,7 @@ public class Mark extends AbstractNode {
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			PhysicalLink physicalLink1 = (PhysicalLink) MapStorableObjectPool.getStorableObject(physicalLinkId1, false);
+			PhysicalLink physicalLink1 = (PhysicalLink) StorableObjectPool.getStorableObject(physicalLinkId1, false);
    			Mark mark = new Mark(
 					id1,
 					creatorId,

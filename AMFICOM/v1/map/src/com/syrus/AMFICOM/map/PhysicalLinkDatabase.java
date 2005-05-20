@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLinkDatabase.java,v 1.22 2005/05/18 11:48:20 bass Exp $
+ * $Id: PhysicalLinkDatabase.java,v 1.23 2005/05/20 21:11:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,15 +22,17 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
+import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/05/18 11:48:20 $
- * @author $Author: bass $
+ * @version $Revision: 1.23 $, $Date: 2005/05/20 21:11:57 $
+ * @author $Author: arseniy $
  * @module map_v1
  */
 public class PhysicalLinkDatabase extends CharacterizableDatabase {
@@ -124,54 +126,61 @@ public class PhysicalLinkDatabase extends CharacterizableDatabase {
 			+ DatabaseIdentifier.toSQLString(physicalLink.getEndNode().getId());
 		return values;
 	}
-	
+
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
-	throws IllegalDataException, RetrieveObjectException, SQLException {
-		PhysicalLink physicalLink = (storableObject == null) ?
-				new PhysicalLink(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, null, null, null,
-						null, null, null, 0, 0, false, false) :
-					fromStorableObject(storableObject);
-				
+			throws IllegalDataException,
+				RetrieveObjectException,
+				SQLException {
+		PhysicalLink physicalLink = (storableObject == null) ? new PhysicalLink(DatabaseIdentifier.getIdentifier(resultSet,
+				StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, null, null, null, null, null, null, 0, 0, false, false)
+				: fromStorableObject(storableObject);
+
 		PhysicalLinkType type;
 		AbstractNode startNode;
 		AbstractNode endNode;
 		try {
-			type = (PhysicalLinkType) MapStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, PhysicalLinkWrapper.COLUMN_PHYSICAL_LINK_TYPE_ID), true);
-			startNode = (AbstractNode) MapStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, PhysicalLinkWrapper.COLUMN_START_NODE_ID), true);
-			endNode = (AbstractNode) MapStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, PhysicalLinkWrapper.COLUMN_END_NODE_ID), true);
-		} catch (ApplicationException ae) {
+			type = (PhysicalLinkType) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
+					PhysicalLinkWrapper.COLUMN_PHYSICAL_LINK_TYPE_ID), true);
+			startNode = (AbstractNode) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
+					PhysicalLinkWrapper.COLUMN_START_NODE_ID), true);
+			endNode = (AbstractNode) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
+					PhysicalLinkWrapper.COLUMN_END_NODE_ID), true);
+		}
+		catch (ApplicationException ae) {
 			String msg = this.getEnityName() + "Database.updateEntityFromResultSet | Error " + ae.getMessage();
 			throw new RetrieveObjectException(msg, ae);
-		} catch (SQLException sqle) {
+		}
+		catch (SQLException sqle) {
 			String msg = this.getEnityName() + "Database.updateEntityFromResultSet | Error " + sqle.getMessage();
 			throw new RetrieveObjectException(msg, sqle);
 		}
 		int topLeft = resultSet.getInt(PhysicalLinkWrapper.COLUMN_TOPLEFT);
 		physicalLink.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
-							   DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
-							   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
-							   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-							   resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
-							   DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
-							   DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),							
-							   type,
-							   DatabaseString.fromQuerySubString(resultSet.getString(PhysicalLinkWrapper.COLUMN_CITY)),
-							   DatabaseString.fromQuerySubString(resultSet.getString(PhysicalLinkWrapper.COLUMN_STREET)),
-							   DatabaseString.fromQuerySubString(resultSet.getString(PhysicalLinkWrapper.COLUMN_BUILDING)),
-							   resultSet.getInt(PhysicalLinkWrapper.COLUMN_DIMENSION_X),
-							   resultSet.getInt(PhysicalLinkWrapper.COLUMN_DIMENSION_Y),
-							   (topLeft & LEFT_RIGHT) == 1,
-							   (topLeft & TOP_BOTTOM) == 1,
-							   startNode,
-							   endNode);		
+				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
+				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+				resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
+				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
+				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
+				type,
+				DatabaseString.fromQuerySubString(resultSet.getString(PhysicalLinkWrapper.COLUMN_CITY)),
+				DatabaseString.fromQuerySubString(resultSet.getString(PhysicalLinkWrapper.COLUMN_STREET)),
+				DatabaseString.fromQuerySubString(resultSet.getString(PhysicalLinkWrapper.COLUMN_BUILDING)),
+				resultSet.getInt(PhysicalLinkWrapper.COLUMN_DIMENSION_X),
+				resultSet.getInt(PhysicalLinkWrapper.COLUMN_DIMENSION_Y),
+				(topLeft & LEFT_RIGHT) == 1,
+				(topLeft & TOP_BOTTOM) == 1,
+				startNode,
+				endNode);
 		return physicalLink;
 	}
 
 	
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) {
-//		Mark mark = this.fromStorableObject(storableObject);
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
+		PhysicalLink physicalLink = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  physicalLink.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}

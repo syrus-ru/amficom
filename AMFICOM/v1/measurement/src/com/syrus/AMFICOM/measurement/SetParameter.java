@@ -1,5 +1,5 @@
 /*
- * $Id: SetParameter.java,v 1.31 2005/05/18 11:34:42 bass Exp $
+ * $Id: SetParameter.java,v 1.32 2005/05/20 21:11:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,6 @@ import org.omg.CORBA.portable.IDLEntity;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
@@ -24,6 +23,7 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.ParameterType;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TransferableObject;
 import com.syrus.AMFICOM.general.TypedObject;
@@ -35,8 +35,8 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/05/18 11:34:42 $
- * @author $Author: bass $
+ * @version $Revision: 1.32 $, $Date: 2005/05/20 21:11:39 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -52,7 +52,7 @@ public class SetParameter implements TransferableObject, TypedObject, Identifiab
 	 */
 	public SetParameter(Parameter_Transferable pt) throws ApplicationException {
 		this.id = new Identifier(pt.id);
-		this.type = (ParameterType) GeneralStorableObjectPool.getStorableObject(new Identifier(pt.type_id), true);
+		this.type = (ParameterType) StorableObjectPool.getStorableObject(new Identifier(pt.type_id), true);
 		this.value = new byte[pt.value.length];
 		for (int i = 0; i < this.value.length; i++)
 			this.value[i] = pt.value[i];

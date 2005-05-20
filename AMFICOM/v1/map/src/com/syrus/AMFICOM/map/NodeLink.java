@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.39 2005/05/18 11:48:21 bass Exp $
+ * $Id: NodeLink.java,v 1.40 2005/05/20 21:11:56 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,8 +37,8 @@ import com.syrus.AMFICOM.map.corba.NodeLink_Transferable;
  * отрезок, соединяющий два концевых узла ({@link AbstractNode}). Фрагменты
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
- * @author $Author: bass $
- * @version $Revision: 1.39 $, $Date: 2005/05/18 11:48:21 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.40 $, $Date: 2005/05/20 21:11:56 $
  * @module map_v1
  */
 public class NodeLink extends StorableObject implements MapElement {
@@ -164,10 +164,10 @@ public class NodeLink extends StorableObject implements MapElement {
 		this.name = nlt.name;
 		this.length = nlt.length;
 
-		this.physicalLink = (PhysicalLink) MapStorableObjectPool.getStorableObject(new Identifier(nlt.physicalLinkId), true);
+		this.physicalLink = (PhysicalLink) StorableObjectPool.getStorableObject(new Identifier(nlt.physicalLinkId), true);
 
-		this.startNode = (AbstractNode) MapStorableObjectPool.getStorableObject(new Identifier(nlt.startNodeId), true);
-		this.endNode = (AbstractNode) MapStorableObjectPool.getStorableObject(new Identifier(nlt.endNodeId), true);
+		this.startNode = (AbstractNode) StorableObjectPool.getStorableObject(new Identifier(nlt.startNodeId), true);
+		this.endNode = (AbstractNode) StorableObjectPool.getStorableObject(new Identifier(nlt.endNodeId), true);
 
 		Set characteristicIds = Identifier.fromTransferables(nlt.characteristicIds);
 		this.characteristics.addAll(StorableObjectPool.getStorableObjects(characteristicIds, true));
@@ -341,7 +341,7 @@ public class NodeLink extends StorableObject implements MapElement {
 		this.setEndNode(mnles.endNode);
 
 		try {
-			setPhysicalLink((PhysicalLink) MapStorableObjectPool.getStorableObject(mnles.physicalLinkId, false));
+			setPhysicalLink((PhysicalLink) StorableObjectPool.getStorableObject(mnles.physicalLinkId, false));
 		}
 		catch (ApplicationException e) {
 			e.printStackTrace();
@@ -414,9 +414,9 @@ public class NodeLink extends StorableObject implements MapElement {
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			PhysicalLink physicalLink1 = (PhysicalLink) MapStorableObjectPool.getStorableObject(physicalLinkId1, false);
-			AbstractNode startNode1 = (AbstractNode) MapStorableObjectPool.getStorableObject(startNodeId1, true);
-			AbstractNode endNode1 = (AbstractNode) MapStorableObjectPool.getStorableObject(endNodeId1, true);
+			PhysicalLink physicalLink1 = (PhysicalLink) StorableObjectPool.getStorableObject(physicalLinkId1, false);
+			AbstractNode startNode1 = (AbstractNode) StorableObjectPool.getStorableObject(startNodeId1, true);
+			AbstractNode endNode1 = (AbstractNode) StorableObjectPool.getStorableObject(endNodeId1, true);
 			NodeLink nodeLink1 = new NodeLink(id1, creatorId, 0L, name1, physicalLink1, startNode1, endNode1, length1);
 			nodeLink1.changed = true;
 			physicalLink1.addNodeLink(nodeLink1);

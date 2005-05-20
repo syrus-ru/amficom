@@ -1,5 +1,5 @@
 /*
- * $Id: MapViewStorableObjectPool.java,v 1.17 2005/05/18 12:37:39 bass Exp $
+ * $Id: MapViewStorableObjectPool.java,v 1.18 2005/05/20 21:12:23 arseniy Exp $
  *
  * Copyright ? 2004 Syrus Systems.
  * ѕвиапр-жейпкаехмкл зепжф.
@@ -12,7 +12,6 @@ import java.util.Collections;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectGroupEntities;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -22,8 +21,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/05/18 12:37:39 $
- * @author $Author: bass $
+ * @version $Revision: 1.18 $, $Date: 2005/05/20 21:12:23 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -47,7 +46,6 @@ public final class MapViewStorableObjectPool extends StorableObjectPool {
 
 	private MapViewStorableObjectPool(Class cacheMapClass) {
 		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.MAPVIEW_GROUP_CODE, cacheMapClass);
-		registerPool(ObjectGroupEntities.MAPVIEW_GROUP_CODE, this);
 	}
 
 	public static void init(MapViewObjectLoader mvObjectLoader1, final int size) {
@@ -95,24 +93,6 @@ public final class MapViewStorableObjectPool extends StorableObjectPool {
 
 	protected java.util.Set refreshStorableObjects(java.util.Set storableObjects) throws ApplicationException {
 		return mvObjectLoader.refresh(storableObjects);
-	}
-
-	public static StorableObject getStorableObject(Identifier objectId, boolean useLoader) throws ApplicationException {
-		return instance.getStorableObjectImpl(objectId, useLoader);
-	}
-
-	protected StorableObject loadStorableObject(Identifier objectId) throws ApplicationException {
-		StorableObject storableObject;
-		switch (objectId.getMajor()) {
-			case ObjectEntities.MAPVIEW_ENTITY_CODE:
-				storableObject = mvObjectLoader.loadMapView(objectId);
-				break;		
-			default:
-				Log.errorMessage("MapViewStorableObjectPool.loadStorableObject | Unknown entity: "
-						+ ObjectEntities.codeToString(objectId.getMajor()));
-				storableObject = null;
-		}
-		return storableObject;
 	}
 
 	protected Set loadStorableObjects(final Set ids) throws ApplicationException {
@@ -163,47 +143,8 @@ public final class MapViewStorableObjectPool extends StorableObjectPool {
 		}
 	}
 
-	public static void flush(final Identifier id, final boolean force) throws ApplicationException {
-		instance.flushImpl(id, force);
-	}
-
-	public static void flush(final short entityCode, final boolean force) throws ApplicationException {		
-		instance.flushImpl(entityCode, force);
-	}
-
-	public static void flush(final Short entityCode, final boolean force) throws ApplicationException {		
-		instance.flushImpl(entityCode, force);
-	}
-
-	public static void flush(boolean force) throws ApplicationException {
-		instance.flushImpl(force);
-	}
-
-	public static void cleanChangedStorableObject(Short entityCode) {
-		instance.cleanChangedStorableObjectImpl(entityCode);
-	}
-
-	public static void cleanChangedStorableObjects() {
-		instance.cleanChangedStorableObjectsImpl();
-	}
-
-	protected void deleteStorableObject(Identifier id) {
-	 	mvObjectLoader.delete(id);
-	}
-
 	protected void deleteStorableObjects(final Set identifiables) {
 		mvObjectLoader.delete(identifiables);
 	}
 
-	public static void delete(Identifier id) {
-		instance.deleteImpl(id);
-	}
-
-	public static void deserializePool() {
-		instance.deserializePoolImpl();
-	}
-
-	public static void serializePool() {
-		instance.serializePoolImpl();
-	}
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.34 2005/05/18 11:48:20 bass Exp $
+ * $Id: SiteNode.java,v 1.35 2005/05/20 21:11:57 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,6 @@ import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.map.corba.SiteNode_Transferable;
 import com.syrus.AMFICOM.resource.AbstractBitmapImageResource;
 import com.syrus.AMFICOM.resource.AbstractImageResource;
-import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
 
 /**
  * Сетевой узел на топологической схеме. Характеризуется типом
@@ -52,8 +51,8 @@ import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
  * Дополнительно описывается полями
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
- * @author $Author: bass $
- * @version $Revision: 1.34 $, $Date: 2005/05/18 11:48:20 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.35 $, $Date: 2005/05/20 21:11:57 $
  * @module map_v1
  */
 public class SiteNode extends AbstractNode implements TypedObject {
@@ -110,7 +109,7 @@ public class SiteNode extends AbstractNode implements TypedObject {
 		this.building = snt.building;
 
 		try {
-			this.type = (SiteNodeType) MapStorableObjectPool.getStorableObject(new Identifier(snt.siteNodeTypeId), true);
+			this.type = (SiteNodeType) StorableObjectPool.getStorableObject(new Identifier(snt.siteNodeTypeId), true);
 
 			this.characteristics = new HashSet(snt.characteristicIds.length);
 			Set characteristicIds = new HashSet(snt.characteristicIds.length);
@@ -320,7 +319,7 @@ public class SiteNode extends AbstractNode implements TypedObject {
 		setLocation(msnes.location);
 
 		try {
-			setType((SiteNodeType) (MapStorableObjectPool.getStorableObject(msnes.mapProtoId, true)));
+			setType((SiteNodeType) (StorableObjectPool.getStorableObject(msnes.mapProtoId, true)));
 		}
 		catch (ApplicationException e) {
 			e.printStackTrace();
@@ -345,7 +344,7 @@ public class SiteNode extends AbstractNode implements TypedObject {
 				exportMap.put(COLUMN_CITY, this.city);
 				exportMap.put(COLUMN_STREET, this.street);
 				exportMap.put(COLUMN_BUILDING, this.building);
-				AbstractBitmapImageResource imageResource = (AbstractBitmapImageResource) ResourceStorableObjectPool.getStorableObject(this.imageId,
+				AbstractBitmapImageResource imageResource = (AbstractBitmapImageResource) StorableObjectPool.getStorableObject(this.imageId,
 						false);
 				exportMap.put(COLUMN_IMAGE, imageResource.getCodename());
 			}

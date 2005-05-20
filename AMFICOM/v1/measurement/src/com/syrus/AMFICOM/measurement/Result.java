@@ -1,5 +1,5 @@
 /*
- * $Id: Result.java,v 1.52 2005/04/15 19:22:19 arseniy Exp $
+ * $Id: Result.java,v 1.53 2005/05/20 21:11:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,6 +24,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
@@ -31,7 +32,7 @@ import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.52 $, $Date: 2005/04/15 19:22:19 $
+ * @version $Revision: 1.53 $, $Date: 2005/05/20 21:11:39 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -104,16 +105,16 @@ public class Result extends StorableObject {
 		this.sort = rt.sort.value();
 		switch (this.sort) {
 			case ResultSort._RESULT_SORT_MEASUREMENT:
-				this.action = (Measurement) MeasurementStorableObjectPool.getStorableObject(new Identifier(rt.measurement_id), true);
+				this.action = (Measurement) StorableObjectPool.getStorableObject(new Identifier(rt.measurement_id), true);
 				break;
 			case ResultSort._RESULT_SORT_ANALYSIS:
-				this.action = (Analysis) MeasurementStorableObjectPool.getStorableObject(new Identifier(rt.analysis_id), true);
+				this.action = (Analysis) StorableObjectPool.getStorableObject(new Identifier(rt.analysis_id), true);
 				break;
 			case ResultSort._RESULT_SORT_EVALUATION:
-				this.action = (Evaluation) MeasurementStorableObjectPool.getStorableObject(new Identifier(rt.evaluation_id), true);
+				this.action = (Evaluation) StorableObjectPool.getStorableObject(new Identifier(rt.evaluation_id), true);
 				break;
 			case ResultSort._RESULT_SORT_MODELING:
-				this.action = (Modeling) MeasurementStorableObjectPool.getStorableObject(new Identifier(rt.evaluation_id), true);
+				this.action = (Modeling) StorableObjectPool.getStorableObject(new Identifier(rt.evaluation_id), true);
 				break;
 			default:
 				Log.errorMessage("Result.init | Illegal sort: " + this.sort + " of result '" + super.id.toString() + "'");

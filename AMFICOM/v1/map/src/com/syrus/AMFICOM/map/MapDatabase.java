@@ -1,5 +1,5 @@
 /*
- * $Id: MapDatabase.java,v 1.26 2005/05/18 11:48:20 bass Exp $
+ * $Id: MapDatabase.java,v 1.27 2005/05/20 21:11:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,8 +39,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/05/18 11:48:20 $
- * @author $Author: bass $
+ * @version $Revision: 1.27 $, $Date: 2005/05/20 21:11:56 $
+ * @author $Author: arseniy $
  * @module map_v1
  */
 public class MapDatabase extends CharacterizableDatabase {
@@ -430,7 +430,7 @@ public class MapDatabase extends CharacterizableDatabase {
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier mapId = (Identifier) it.next();
 			try {
-				Map map = (Map) MapStorableObjectPool.getStorableObject(mapId, true);
+				Map map = (Map) StorableObjectPool.getStorableObject(mapId, true);
 				mapIds.put(mapId, map);
 			}
 			catch (ApplicationException ae) {

@@ -1,5 +1,5 @@
 /*
- * $Id: Analysis.java,v 1.56 2005/05/18 11:34:42 bass Exp $
+ * $Id: Analysis.java,v 1.57 2005/05/20 21:11:38 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,13 +23,14 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.56 $, $Date: 2005/05/18 11:34:42 $
- * @author $Author: bass $
+ * @version $Revision: 1.57 $, $Date: 2005/05/20 21:11:38 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -101,11 +102,11 @@ public class Analysis extends Action {
 		Analysis_Transferable at = (Analysis_Transferable) transferable;
 		super.fromTransferable(at.header, null, new Identifier(at.monitored_element_id), null);
 
-		super.type = (AnalysisType) MeasurementStorableObjectPool.getStorableObject(new Identifier(at.type_id), true);
+		super.type = (AnalysisType) StorableObjectPool.getStorableObject(new Identifier(at.type_id), true);
 		super.parentAction = (at.measurement_id.identifier_string.length() != 0)
-				? (Measurement) MeasurementStorableObjectPool.getStorableObject(new Identifier(at.measurement_id), true) : null;
+				? (Measurement) StorableObjectPool.getStorableObject(new Identifier(at.measurement_id), true) : null;
 
-		this.criteriaSet = (Set) MeasurementStorableObjectPool.getStorableObject(new Identifier(at.criteria_set_id), true);
+		this.criteriaSet = (Set) StorableObjectPool.getStorableObject(new Identifier(at.criteria_set_id), true);
 		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}

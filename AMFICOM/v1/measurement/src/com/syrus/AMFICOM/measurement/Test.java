@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.116 2005/05/18 11:34:42 bass Exp $
+ * $Id: Test.java,v 1.117 2005/05/20 21:11:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,6 @@ import java.util.HashSet;
 
 import org.omg.CORBA.portable.IDLEntity;
 
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
@@ -29,6 +28,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
@@ -45,8 +45,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.116 $, $Date: 2005/05/18 11:34:42 $
- * @author $Author: bass $
+ * @version $Revision: 1.117 $, $Date: 2005/05/20 21:11:39 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -111,7 +111,7 @@ public class Test extends StorableObject {
 		Measurement measurement;
 		try {
 			measurement = Measurement.createInstance(measurementCreatorId,
-					(MeasurementType) MeasurementStorableObjectPool.getStorableObject(this.measurementTypeId, true),
+					(MeasurementType) StorableObjectPool.getStorableObject(this.measurementTypeId, true),
 					this.monitoredElement.getId(),
 					LangModelMeasurement.getString("created by Test") + ":'"
 					+ this.getDescription() + "' "
@@ -268,8 +268,7 @@ public class Test extends StorableObject {
 
 		this.status = tt.status.value();
 
-		this.monitoredElement = (MonitoredElement) ConfigurationStorableObjectPool.getStorableObject(new Identifier(tt.monitored_element_id),
-				true);
+		this.monitoredElement = (MonitoredElement) StorableObjectPool.getStorableObject(new Identifier(tt.monitored_element_id), true);
 
 		this.returnType = tt.return_type.value();
 		this.description = tt.description;
@@ -278,7 +277,7 @@ public class Test extends StorableObject {
 		this.measurementSetupIds = Identifier.fromTransferables(tt.measurement_setup_ids);
 		if (!this.measurementSetupIds.isEmpty()) {
 			Identifier msId = (Identifier) this.measurementSetupIds.iterator().next();
-			this.mainMeasurementSetup = (MeasurementSetup) MeasurementStorableObjectPool.getStorableObject(msId, true);
+			this.mainMeasurementSetup = (MeasurementSetup) StorableObjectPool.getStorableObject(msId, true);
 		}
 		else
 			throw new IllegalDataException("Cannot find measurement setup for test '" + this.id + '\'');
@@ -554,7 +553,7 @@ public class Test extends StorableObject {
 
 		if (!this.measurementSetupIds.isEmpty())
 			try {
-				this.mainMeasurementSetup = (MeasurementSetup) MeasurementStorableObjectPool.getStorableObject((Identifier) this.measurementSetupIds.iterator().next(),
+				this.mainMeasurementSetup = (MeasurementSetup) StorableObjectPool.getStorableObject((Identifier) this.measurementSetupIds.iterator().next(),
 						true);
 			}
 			catch (ApplicationException ae) {
@@ -570,7 +569,8 @@ public class Test extends StorableObject {
 	public Identifier getKISId() {
 		if (this.kisId == null) {
 			try {
-				MeasurementPort measurementPort = (MeasurementPort) ConfigurationStorableObjectPool.getStorableObject(this.getMonitoredElement().getMeasurementPortId(), true);
+				MeasurementPort measurementPort = (MeasurementPort) StorableObjectPool.getStorableObject(this.getMonitoredElement().getMeasurementPortId(),
+						true);
 				this.kisId = measurementPort.getKISId();
 			}
 			catch (ApplicationException ae) {
@@ -583,7 +583,7 @@ public class Test extends StorableObject {
 	public Identifier getMCMId() {
 		if (this.mcmId == null) {
 			try {
-				KIS kis = (KIS) ConfigurationStorableObjectPool.getStorableObject(this.getKISId(), true);
+				KIS kis = (KIS) StorableObjectPool.getStorableObject(this.getKISId(), true);
 				this.mcmId = kis.getMCMId();
 			}
 			catch (ApplicationException ae) {

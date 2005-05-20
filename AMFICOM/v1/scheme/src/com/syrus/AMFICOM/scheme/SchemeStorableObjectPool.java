@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeStorableObjectPool.java,v 1.20 2005/05/18 12:03:14 bass Exp $
+ * $Id: SchemeStorableObjectPool.java,v 1.21 2005/05/20 21:12:12 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,10 +11,7 @@ package com.syrus.AMFICOM.scheme;
 import java.util.Collections;
 import java.util.Set;
 
-import org.omg.CORBA.portable.IDLEntity;
-
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectGroupEntities;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -24,8 +21,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.20 $, $Date: 2005/05/18 12:03:14 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.21 $, $Date: 2005/05/20 21:12:12 $
  * @module scheme_v1
  */
 public final class SchemeStorableObjectPool extends StorableObjectPool {
@@ -78,7 +75,6 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 
 	private SchemeStorableObjectPool(final Class cacheMapClass) {
 		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.SCHEME_GROUP_CODE, cacheMapClass);
-		registerPool(ObjectGroupEntities.SCHEME_GROUP_CODE, this);
 	}
 
 	public static void init(final SchemeObjectLoader schemeObjectLoader1, final int size) {
@@ -162,55 +158,6 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 	 */
 	protected Set refreshStorableObjects(final Set storableObjects) throws ApplicationException {
 		return schemeObjectLoader.refresh(storableObjects);
-	}
-
-	public static StorableObject getStorableObject(final Identifier id, final boolean useLoader) throws ApplicationException {
-		return instance.getStorableObjectImpl(id, useLoader);
-	}
-
-	/**
-	 * @param id
-	 * @throws ApplicationException
-	 */
-	protected StorableObject loadStorableObject(final Identifier id) throws ApplicationException {
-		switch (id.getMajor()) {
-			case ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE:
-				return schemeObjectLoader.loadSchemeProtoGroup(id);
-			case ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE:
-				return schemeObjectLoader.loadSchemeProtoElement(id);
-			case ObjectEntities.SCHEME_ENTITY_CODE:
-				return schemeObjectLoader.loadScheme(id);
-			case ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE:
-				return schemeObjectLoader.loadSchemeElement(id);
-			case ObjectEntities.SCHEME_OPTIMIZE_INFO_ENTITY_CODE:
-				return schemeObjectLoader.loadSchemeOptimizeInfo(id);
-			case ObjectEntities.SCHEME_MONITORING_SOLUTION_ENTITY_CODE:
-				return schemeObjectLoader.loadSchemeMonitoringSolution(id);
-			case ObjectEntities.SCHEME_DEVICE_ENTITY_CODE:
-				return schemeObjectLoader.loadSchemeDevice(id);
-			case ObjectEntities.SCHEME_PORT_ENTITY_CODE:
-				return schemeObjectLoader.loadSchemePort(id);
-			case ObjectEntities.SCHEME_CABLE_PORT_ENTITY_CODE:
-				return schemeObjectLoader.loadSchemeCablePort(id);
-			case ObjectEntities.SCHEME_LINK_ENTITY_CODE:
-				return schemeObjectLoader.loadSchemeLink(id);
-			case ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE:
-				return schemeObjectLoader.loadSchemeCableLink(id);
-			case ObjectEntities.SCHEME_CABLE_THREAD_ENTITY_CODE:
-				return schemeObjectLoader.loadSchemeCableThread(id);
-			case ObjectEntities.CABLE_CHANNELING_ITEM_ENTITY_CODE:
-				return schemeObjectLoader.loadCableChannelingItem(id);
-			case ObjectEntities.SCHEME_PATH_ENTITY_CODE:
-				return schemeObjectLoader.loadSchemePath(id);
-			case ObjectEntities.PATH_ELEMENT_ENTITY_CODE:
-				return schemeObjectLoader.loadPathElement(id);
-			default:
-				final short entityCode = id.getMajor();
-				Log.errorMessage("SchemeStorableObjectPool.loadStorableObject | Unknown entity: "
-						+ ObjectEntities.codeToString(entityCode)
-						+ " (" + entityCode + ')');
-				return null;
-		}
 	}
 
 	/**
@@ -421,45 +368,6 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 		}
 	}
 
-	public static StorableObject fromTransferable(final Identifier id, final IDLEntity transferable) throws ApplicationException {
-		return instance.fromTransferableImpl(id, transferable);
-	}
-
-	public static void flush(final Identifier id, final boolean force) throws ApplicationException {
-		instance.flushImpl(id, force);
-	}
-
-	public static void flush(final short entityCode, final boolean force) throws ApplicationException {		
-		instance.flushImpl(entityCode, force);
-	}
-
-	public static void flush(final Short entityCode, final boolean force) throws ApplicationException {		
-		instance.flushImpl(entityCode, force);
-	}
-
-	public static void flush(final boolean force) throws ApplicationException {		
-		instance.flushImpl(force);
-	}
-
-	public static void cleanChangedStorableObject(final Short entityCode) {
-		instance.cleanChangedStorableObjectImpl(entityCode);
-	}
-
-	public static void cleanChangedStorableObjects() {
-		instance.cleanChangedStorableObjectsImpl();
-	}
-
-	public static void delete(final Identifier id) {
-		instance.deleteImpl(id);
-	}
-
-	/**
-	 * @param id
-	 */
-	protected void deleteStorableObject(final Identifier id) {
-		schemeObjectLoader.delete(id);
-	}
-
 	/**
 	 * @param identifiables
 	 * @see StorableObjectPool#deleteStorableObjects(Set)
@@ -468,15 +376,4 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 		schemeObjectLoader.delete(identifiables);
 	}
 
-	public static void deserializePool() {
-		instance.deserializePoolImpl();
-	}
-
-	public static void serializePool() {
-		instance.serializePoolImpl();
-	}
-
-	public static void truncateObjectPool(final short entityCode) {
-		instance.truncateObjectPoolImpl(entityCode);
-	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractSchemeElement.java,v 1.19 2005/05/18 12:03:15 bass Exp $
+ * $Id: AbstractSchemeElement.java,v 1.20 2005/05/20 21:12:12 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,8 +31,8 @@ import com.syrus.util.Log;
  * generated from IDL files to compile cleanly. Use other implementations of
  * {@link AbstractSchemeElement}instead.
  *
- * @author $Author: bass $
- * @version $Revision: 1.19 $, $Date: 2005/05/18 12:03:15 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.20 $, $Date: 2005/05/20 21:12:12 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemeElement extends
@@ -147,8 +147,9 @@ public abstract class AbstractSchemeElement extends
 	 */
 	public Scheme getParentScheme() {
 		try {
-			return (Scheme) SchemeStorableObjectPool.getStorableObject(this.parentSchemeId, true);
-		} catch (final ApplicationException ae) {
+			return (Scheme) StorableObjectPool.getStorableObject(this.parentSchemeId, true);
+		}
+		catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
 		}
@@ -219,7 +220,7 @@ public abstract class AbstractSchemeElement extends
 	public void setParentScheme(final Scheme parentScheme) {
 		if (parentScheme == null) {
 			Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Log.WARNING);
-			SchemeStorableObjectPool.delete(this.id);
+			StorableObjectPool.delete(this.id);
 			return;
 		}
 		final Identifier newParentSchemeId = parentScheme.getId();

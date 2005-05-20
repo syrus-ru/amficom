@@ -1,5 +1,5 @@
 /*
- * $Id: Link.java,v 1.48 2005/05/18 11:27:14 bass Exp $
+ * $Id: Link.java,v 1.49 2005/05/20 21:11:34 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,8 +36,8 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2005/05/18 11:27:14 $
- * @author $Author: bass $
+ * @version $Revision: 1.49 $, $Date: 2005/05/20 21:11:34 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 public class Link extends DomainMember implements Characterizable, TypedObject {
@@ -179,7 +179,7 @@ public class Link extends DomainMember implements Characterizable, TypedObject {
 		this.characteristics = new HashSet(lt.characteristic_ids.length);
 		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
 
-		this.type = (AbstractLinkType) ConfigurationStorableObjectPool.getStorableObject(new Identifier(lt.type_id), true);
+		this.type = (AbstractLinkType) StorableObjectPool.getStorableObject(new Identifier(lt.type_id), true);
 	}
 
 	public IDLEntity getTransferable() {

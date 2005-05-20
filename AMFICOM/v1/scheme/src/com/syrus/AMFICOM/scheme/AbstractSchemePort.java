@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.23 2005/05/18 12:03:14 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.24 2005/05/20 21:12:12 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.configuration.Port;
 import com.syrus.AMFICOM.configuration.PortType;
@@ -32,8 +31,8 @@ import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.23 $, $Date: 2005/05/18 12:03:14 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.24 $, $Date: 2005/05/20 21:12:12 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemePort extends
@@ -166,10 +165,11 @@ public abstract class AbstractSchemePort extends
 	}
 
 	public final MeasurementPort getMeasurementPort() {
-		assert this.measurementPortId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.measurementPortId != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
 		try {
-			return (MeasurementPort) ConfigurationStorableObjectPool.getStorableObject(this.measurementPortId, true);
-		} catch (final ApplicationException ae) {
+			return (MeasurementPort) StorableObjectPool.getStorableObject(this.measurementPortId, true);
+		}
+		catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
 		}
@@ -179,17 +179,18 @@ public abstract class AbstractSchemePort extends
 	 * @see com.syrus.AMFICOM.general.Namable#getName()
 	 */
 	public final String getName() {
-		assert this.name != null && this.name.length() != 0: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
 		return this.name;
 	}
 
 	public final SchemeDevice getParentSchemeDevice() {
-		assert this.parentSchemeDeviceId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert !this.parentSchemeDeviceId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
-		
+		assert this.parentSchemeDeviceId != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert !this.parentSchemeDeviceId.isVoid() : ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+
 		try {
-			return (SchemeDevice) SchemeStorableObjectPool.getStorableObject(this.parentSchemeDeviceId, true);
-		} catch (final ApplicationException ae) {
+			return (SchemeDevice) StorableObjectPool.getStorableObject(this.parentSchemeDeviceId, true);
+		}
+		catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
 		}
@@ -199,25 +200,27 @@ public abstract class AbstractSchemePort extends
 	 * Overridden by descendants to add extra checks.
 	 */
 	public Port getPort() {
-		assert this.assertPortTypeSetStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
+		assert this.assertPortTypeSetStrict() : ErrorMessages.OBJECT_BADLY_INITIALIZED;
 
 		try {
-			return (Port) ConfigurationStorableObjectPool.getStorableObject(this.portId, true);
-		} catch (final ApplicationException ae) {
+			return (Port) StorableObjectPool.getStorableObject(this.portId, true);
+		}
+		catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
 		}
 	}
 
 	public final PortType getPortType() {
-		assert this.assertPortTypeSetStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
+		assert this.assertPortTypeSetStrict() : ErrorMessages.OBJECT_BADLY_INITIALIZED;
 
 		if (!this.portId.isVoid())
 			return (PortType) getPort().getType();
 
 		try {
-			return (PortType) ConfigurationStorableObjectPool.getStorableObject(this.portTypeId, true);
-		} catch (final ApplicationException ae) {
+			return (PortType) StorableObjectPool.getStorableObject(this.portTypeId, true);
+		}
+		catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
 		}
@@ -347,7 +350,7 @@ public abstract class AbstractSchemePort extends
 		assert !this.parentSchemeDeviceId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 		if (parentSchemeDevice == null) {
 			Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Log.WARNING);
-			SchemeStorableObjectPool.delete(super.id);
+			StorableObjectPool.delete(super.id);
 			return;
 		}
 		final Identifier newParentSchemeDeviceId = parentSchemeDevice.getId();

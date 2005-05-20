@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.39 2005/05/18 13:50:28 bob Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.40 2005/05/20 21:11:38 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,11 +18,12 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/05/18 13:50:28 $
- * @author $Author: bob $
+ * @version $Revision: 1.40 $, $Date: 2005/05/20 21:11:38 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -264,7 +265,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 						for (Iterator it = this.linkedIds.iterator(); it.hasNext();) {
 							id = (Identifier) it.next();
 							try {
-								test = (Test) MeasurementStorableObjectPool.getStorableObject(id, false);
+								test = (Test) StorableObjectPool.getStorableObject(id, false);
 							}
 							catch (ApplicationException ae) {
 								Log.errorException(ae);

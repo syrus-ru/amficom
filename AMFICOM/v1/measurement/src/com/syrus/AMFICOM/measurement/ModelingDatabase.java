@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingDatabase.java,v 1.38 2005/05/18 11:34:41 bass Exp $
+ * $Id: ModelingDatabase.java,v 1.39 2005/05/20 21:11:38 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,14 +21,15 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/05/18 11:34:41 $
- * @author $Author: bass $
+ * @version $Revision: 1.39 $, $Date: 2005/05/20 21:11:38 $
+ * @author $Author: arseniy $
  * @module module_name
  */
 
@@ -100,8 +101,10 @@ public class ModelingDatabase extends StorableObjectDatabase {
 		ModelingType modelingType;
 		Set argumentSet;
 		try {
-			modelingType = (ModelingType)MeasurementStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_TYPE_ID), true);
-			argumentSet = (Set)MeasurementStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, ModelingWrapper.COLUMN_ARGUMENT_SET_ID), true);
+			modelingType = (ModelingType) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
+					StorableObjectWrapper.COLUMN_TYPE_ID), true);
+			argumentSet = (Set) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
+					ModelingWrapper.COLUMN_ARGUMENT_SET_ID), true);
 		}
 		catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
