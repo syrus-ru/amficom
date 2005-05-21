@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerCore.java,v 1.2 2005/05/21 19:42:26 bass Exp $
+ * $Id: ServerCore.java,v 1.3 2005/05/21 19:51:36 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,13 +26,14 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/05/21 19:42:26 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/05/21 19:51:36 $
  * @module csbridge_v1
  * @todo Refactor ApplicationException descendants to be capable of generating
  *       an AMFICOMRemoteException.
  */
 public abstract class ServerCore implements IdentifierGeneratorServer, Verifiable {
+	private static final long serialVersionUID = 2873567194611284256L;
 	/**
 	 * @param sessionKey an "in" parameter.
 	 * @param userId an "out" parameter.
