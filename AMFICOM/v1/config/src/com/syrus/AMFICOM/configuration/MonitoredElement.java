@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.48 2005/05/18 11:27:15 bass Exp $
+ * $Id: MonitoredElement.java,v 1.49 2005/05/21 19:42:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2005/05/18 11:27:15 $
- * @author $Author: bass $
+ * @version $Revision: 1.49 $, $Date: 2005/05/21 19:42:58 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -59,7 +59,7 @@ public class MonitoredElement extends DomainMember {
 		}
 	}
 
-	public MonitoredElement(MonitoredElement_Transferable met) {
+	public MonitoredElement(MonitoredElement_Transferable met) throws CreateObjectException {
 		this.fromTransferable(met);
 	}
 	
@@ -126,7 +126,7 @@ public class MonitoredElement extends DomainMember {
 		}
 	}
 
-	protected void fromTransferable(IDLEntity transferable) {
+	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
 		MonitoredElement_Transferable met = (MonitoredElement_Transferable) transferable;
 		super.fromTransferable(met.header, new Identifier(met.domain_id));
 		this.measurementPortId = new Identifier(met.measurement_port_id);
