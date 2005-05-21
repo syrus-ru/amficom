@@ -1,5 +1,5 @@
 /*-
- * $Id: MapStorableObjectFactory.java,v 1.1 2005/04/08 09:32:27 bass Exp $
+ * $Id: MapStorableObjectFactory.java,v 1.2 2005/05/21 19:43:37 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.map;
 
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.ServerCore;
 import com.syrus.AMFICOM.map.corba.Collector_Transferable;
 import com.syrus.AMFICOM.map.corba.Map_Transferable;
 import com.syrus.AMFICOM.map.corba.Mark_Transferable;
@@ -22,10 +23,10 @@ import com.syrus.AMFICOM.map.corba.TopologicalNode_Transferable;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/04/08 09:32:27 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/21 19:43:37 $
  * @module mshserver_v1
  */
-public abstract class MapStorableObjectFactory {
+public abstract class MapStorableObjectFactory extends ServerCore {
 	protected final SiteNode newSiteNode(final SiteNode_Transferable siteNode) throws CreateObjectException {
 		return new SiteNode(siteNode);
 	}

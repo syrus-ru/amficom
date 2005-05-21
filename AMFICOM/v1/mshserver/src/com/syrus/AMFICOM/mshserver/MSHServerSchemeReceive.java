@@ -1,5 +1,5 @@
 /*-
- * $Id: MSHServerSchemeReceive.java,v 1.4 2005/05/18 13:34:16 bass Exp $
+ * $Id: MSHServerSchemeReceive.java,v 1.5 2005/05/21 19:43:37 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,6 +43,8 @@ import com.syrus.AMFICOM.scheme.corba.SchemeDevice_Transferable;
 import com.syrus.AMFICOM.scheme.corba.SchemeElement_Transferable;
 import com.syrus.AMFICOM.scheme.corba.SchemeLink_Transferable;
 import com.syrus.AMFICOM.scheme.corba.SchemeMonitoringSolution_Transferable;
+import com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfoRtu_Transferable;
+import com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfoSwitch_Transferable;
 import com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfo_Transferable;
 import com.syrus.AMFICOM.scheme.corba.SchemePath_Transferable;
 import com.syrus.AMFICOM.scheme.corba.SchemePort_Transferable;
@@ -55,7 +57,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/05/18 13:34:16 $
+ * @version $Revision: 1.5 $, $Date: 2005/05/21 19:43:37 $
  * @module mshserver_v1
  */
 abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
@@ -217,6 +219,34 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 			Log.errorException(t);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
 		}
+	}
+
+	/**
+	 * @param schemeOptimizeInfoSwitches
+	 * @param force
+	 * @param sessionKey
+	 * @throws AMFICOMRemoteException
+	 * @see com.syrus.AMFICOM.mshserver.corba.MSHServerOperations#receiveSchemeOptimizeInfoSwitches(com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfoSwitch_Transferable[], boolean, com.syrus.AMFICOM.security.corba.SessionKey_Transferable)
+	 */
+	public final StorableObject_Transferable[] receiveSchemeOptimizeInfoSwitches(
+			final SchemeOptimizeInfoSwitch_Transferable schemeOptimizeInfoSwitches[],
+			final boolean force,
+			final SessionKey_Transferable sessionKey)
+			throws AMFICOMRemoteException {
+	}
+			
+	/**
+	 * @param schemeOptimizeInfoRtus
+	 * @param force
+	 * @param sessionKey
+	 * @throws AMFICOMRemoteException
+	 * @see com.syrus.AMFICOM.mshserver.corba.MSHServerOperations#receiveSchemeOptimizeInfoRtus(com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfoRtu_Transferable[], boolean, com.syrus.AMFICOM.security.corba.SessionKey_Transferable)
+	 */
+	public final StorableObject_Transferable[] receiveSchemeOptimizeInfoRtus(
+			final SchemeOptimizeInfoRtu_Transferable schemeOptimizeInfoRtus[],
+			final boolean force,
+			final SessionKey_Transferable sessionKey)
+			throws AMFICOMRemoteException {
 	}
 
 	/**
