@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementServer.java,v 1.46 2005/05/18 13:25:44 bass Exp $
+ * $Id: MeasurementServer.java,v 1.47 2005/05/21 19:57:57 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,6 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.CompoundConditionSort;
-import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestWrapper;
 import com.syrus.AMFICOM.measurement.corba.TestStatus;
@@ -49,8 +48,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2005/05/18 13:25:44 $
- * @author $Author: bass $
+ * @version $Revision: 1.47 $, $Date: 2005/05/21 19:57:57 $
+ * @author $Author: arseniy $
  * @module mserver_v1
  */
 
@@ -357,7 +356,7 @@ public class MeasurementServer extends SleepButWorkThread {
 		}
 
 		try {
-			MeasurementStorableObjectPool.flush(ObjectEntities.TEST_ENTITY_CODE, true);
+			StorableObjectPool.flush(ObjectEntities.TEST_ENTITY_CODE, true);
 		}
 		catch (ApplicationException ae) {
 			Log.errorException(ae);
@@ -394,7 +393,7 @@ public class MeasurementServer extends SleepButWorkThread {
 
 			mcmIdsToAbortTests.clear();
 
-			MeasurementStorableObjectPool.truncateObjectPool(ObjectEntities.TEST_ENTITY_CODE);
+			StorableObjectPool.truncate(ObjectEntities.TEST_ENTITY_CODE);
 		}
 		else
 			Log.errorMessage("abortTests | Collection is NULL or empty");
