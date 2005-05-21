@@ -1,5 +1,5 @@
 /*-
- * $Id: LEServerPoolContext.java,v 1.2 2005/05/13 17:55:50 bass Exp $
+ * $Id: LEServerPoolContext.java,v 1.3 2005/05/21 19:56:13 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.AMFICOM.general.PoolContext;
 import com.syrus.AMFICOM.general.StorableObjectResizableLRUMap;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/05/13 17:55:50 $
- * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/05/21 19:56:13 $
+ * @author $Author: arseniy $
  * @module leserver_v1
  */
 final class LEServerPoolContext extends PoolContext {
@@ -29,15 +29,4 @@ final class LEServerPoolContext extends PoolContext {
 		EventStorableObjectPool.init(new DatabaseEventObjectLoader(), StorableObjectResizableLRUMap.class);
 	}
 
-	public void deserialize() {
-		GeneralStorableObjectPool.deserializePool();
-		AdministrationStorableObjectPool.deserializePool();
-		EventStorableObjectPool.deserializePool();
-	}
-
-	public void serialize() {
-		GeneralStorableObjectPool.serializePool();
-		AdministrationStorableObjectPool.serializePool();
-		EventStorableObjectPool.serializePool();
-	}
 }

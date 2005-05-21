@@ -1,5 +1,5 @@
 /*-
- * $Id: MServerPoolContext.java,v 1.2 2005/05/13 17:58:31 bass Exp $
+ * $Id: MServerPoolContext.java,v 1.3 2005/05/21 19:57:46 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import com.syrus.AMFICOM.general.StorableObjectResizableLRUMap;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/05/13 17:58:31 $
- * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/05/21 19:57:46 $
+ * @author $Author: arseniy $
  * @module mserver_v1
  */
 final class MServerPoolContext extends PoolContext {
@@ -31,17 +31,4 @@ final class MServerPoolContext extends PoolContext {
 		MeasurementStorableObjectPool.init(new MServerMeasurementObjectLoader(), StorableObjectResizableLRUMap.class);
 	}
 
-	public void deserialize() {
-		GeneralStorableObjectPool.deserializePool();
-		AdministrationStorableObjectPool.deserializePool();
-		ConfigurationStorableObjectPool.deserializePool();
-		MeasurementStorableObjectPool.deserializePool();
-	}
-
-	public void serialize() {
-		GeneralStorableObjectPool.serializePool();
-		AdministrationStorableObjectPool.serializePool();
-		ConfigurationStorableObjectPool.serializePool();
-		MeasurementStorableObjectPool.serializePool();
-	}
 }
