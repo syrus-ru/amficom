@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeStorableObjectPool.java,v 1.21 2005/05/20 21:12:12 arseniy Exp $
+ * $Id: SchemeStorableObjectPool.java,v 1.22 2005/05/23 16:18:43 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.21 $, $Date: 2005/05/20 21:12:12 $
+ * @author $Author: bass $
+ * @version $Revision: 1.22 $, $Date: 2005/05/23 16:18:43 $
  * @module scheme_v1
  */
 public final class SchemeStorableObjectPool extends StorableObjectPool {
@@ -41,6 +41,10 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 	private static final int SCHEME_ELEMENT_OBJECT_POOL_SIZE = 10;
 
 	private static final int SCHEME_OPTIMIZE_INFO_OBJECT_POOL_SIZE = 10;
+
+	private static final int SCHEME_OPTIMIZE_INFO_SWITCH_OBJECT_POOL_SIZE = 10;
+
+	private static final int SCHEME_OPTIMIZE_INFO_RTU_OBJECT_POOL_SIZE = 10;
 
 	private static final int SCHEME_MONITORING_SOLUTION_OBJECT_POOL_SIZE = 10;
 
@@ -75,6 +79,24 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 
 	private SchemeStorableObjectPool(final Class cacheMapClass) {
 		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.SCHEME_GROUP_CODE, cacheMapClass);
+
+		registerFactory(ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE, new SchemeProtoGroupFactory());
+		registerFactory(ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE, new SchemeProtoElementFactory());
+		registerFactory(ObjectEntities.SCHEME_ENTITY_CODE, new SchemeFactory());
+		registerFactory(ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE, new SchemeElementFactory());
+		registerFactory(ObjectEntities.SCHEME_OPTIMIZE_INFO_ENTITY_CODE, new SchemeOptimizeInfoFactory());
+		registerFactory(ObjectEntities.SCHEME_OPTIMIZE_INFO_SWITCH_ENTITY_CODE, new SchemeOptimizeInfoSwitchFactory());
+		registerFactory(ObjectEntities.SCHEME_OPTIMIZE_INFO_RTU_ENTITY_CODE, new SchemeOptimizeInfoRtuFactory());
+		registerFactory(ObjectEntities.SCHEME_MONITORING_SOLUTION_ENTITY_CODE, new SchemeMonitoringSolutionFactory());
+		registerFactory(ObjectEntities.SCHEME_DEVICE_ENTITY_CODE, new SchemeDeviceFactory());
+		registerFactory(ObjectEntities.SCHEME_PORT_ENTITY_CODE, new SchemePortFactory());
+		registerFactory(ObjectEntities.SCHEME_CABLE_PORT_ENTITY_CODE, new SchemeCablePortFactory());
+		registerFactory(ObjectEntities.SCHEME_LINK_ENTITY_CODE, new SchemeLinkFactory());
+		registerFactory(ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE, new SchemeCableLinkFactory());
+		registerFactory(ObjectEntities.SCHEME_CABLE_THREAD_ENTITY_CODE, new SchemeCableThreadFactory());
+		registerFactory(ObjectEntities.CABLE_CHANNELING_ITEM_ENTITY_CODE, new CableChannelingItemFactory());
+		registerFactory(ObjectEntities.SCHEME_PATH_ENTITY_CODE, new SchemePathFactory());
+		registerFactory(ObjectEntities.PATH_ELEMENT_ENTITY_CODE, new PathElementFactory());
 	}
 
 	public static void init(final SchemeObjectLoader schemeObjectLoader1, final int size) {
@@ -88,6 +110,8 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 		instance.addObjectPool(ObjectEntities.SCHEME_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.SCHEME_OPTIMIZE_INFO_ENTITY_CODE, size);
+		instance.addObjectPool(ObjectEntities.SCHEME_OPTIMIZE_INFO_SWITCH_ENTITY_CODE, size);
+		instance.addObjectPool(ObjectEntities.SCHEME_OPTIMIZE_INFO_RTU_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.SCHEME_MONITORING_SOLUTION_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.SCHEME_DEVICE_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.SCHEME_PORT_ENTITY_CODE, size);
@@ -111,6 +135,8 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 		instance.addObjectPool(ObjectEntities.SCHEME_ENTITY_CODE, SCHEME_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE, SCHEME_ELEMENT_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.SCHEME_OPTIMIZE_INFO_ENTITY_CODE, SCHEME_OPTIMIZE_INFO_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.SCHEME_OPTIMIZE_INFO_SWITCH_ENTITY_CODE, SCHEME_OPTIMIZE_INFO_SWITCH_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.SCHEME_OPTIMIZE_INFO_RTU_ENTITY_CODE, SCHEME_OPTIMIZE_INFO_RTU_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.SCHEME_MONITORING_SOLUTION_ENTITY_CODE, SCHEME_MONITORING_SOLUTION_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.SCHEME_DEVICE_ENTITY_CODE, SCHEME_DEVICE_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.SCHEME_PORT_ENTITY_CODE, SCHEME_PORT_OBJECT_POOL_SIZE);
@@ -179,6 +205,10 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 				return schemeObjectLoader.loadSchemeElements(ids);
 			case ObjectEntities.SCHEME_OPTIMIZE_INFO_ENTITY_CODE:
 				return schemeObjectLoader.loadSchemeOptimizeInfos(ids);
+			case ObjectEntities.SCHEME_OPTIMIZE_INFO_SWITCH_ENTITY_CODE:
+				return schemeObjectLoader.loadSchemeOptimizeInfoSwitches(ids);
+			case ObjectEntities.SCHEME_OPTIMIZE_INFO_RTU_ENTITY_CODE:
+				return schemeObjectLoader.loadSchemeOptimizeInfoRtus(ids);
 			case ObjectEntities.SCHEME_MONITORING_SOLUTION_ENTITY_CODE:
 				return schemeObjectLoader.loadSchemeMonitoringSolutions(ids);
 			case ObjectEntities.SCHEME_DEVICE_ENTITY_CODE:
@@ -228,6 +258,10 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 				return schemeObjectLoader.loadSchemeElementsButIds(storableObjectCondition, ids);
 			case ObjectEntities.SCHEME_OPTIMIZE_INFO_ENTITY_CODE:
 				return schemeObjectLoader.loadSchemeOptimizeInfosButIds(storableObjectCondition, ids);
+			case ObjectEntities.SCHEME_OPTIMIZE_INFO_SWITCH_ENTITY_CODE:
+				return schemeObjectLoader.loadSchemeOptimizeInfoSwitchesButIds(storableObjectCondition, ids);
+			case ObjectEntities.SCHEME_OPTIMIZE_INFO_RTU_ENTITY_CODE:
+				return schemeObjectLoader.loadSchemeOptimizeInfoRtusButIds(storableObjectCondition, ids);
 			case ObjectEntities.SCHEME_MONITORING_SOLUTION_ENTITY_CODE:
 				return schemeObjectLoader.loadSchemeMonitoringSolutionsButIds(storableObjectCondition, ids);
 			case ObjectEntities.SCHEME_DEVICE_ENTITY_CODE:
@@ -269,97 +303,57 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 			return;
 		assert StorableObject.hasSingleTypeEntities(storableObjects);
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(storableObjects);
-		final boolean singleton = storableObjects.size() == 1;
 		switch (entityCode) {
 			case ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE:
-				if (singleton)
-					schemeObjectLoader.saveSchemeProtoGroup((SchemeProtoGroup) storableObjects.iterator().next(), force);
-				else
-					schemeObjectLoader.saveSchemeProtoGroups(storableObjects, force);
+				schemeObjectLoader.saveSchemeProtoGroups(storableObjects, force);
 				break;
 			case ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE:
-				if (singleton)
-					schemeObjectLoader.saveSchemeProtoElement((SchemeProtoElement) storableObjects.iterator().next(), force);
-				else
-					schemeObjectLoader.saveSchemeProtoElements(storableObjects, force);
+				schemeObjectLoader.saveSchemeProtoElements(storableObjects, force);
 				break;
 			case ObjectEntities.SCHEME_ENTITY_CODE:
-				if (singleton)
-					schemeObjectLoader.saveScheme((Scheme) storableObjects.iterator().next(), force);
-				else
-					schemeObjectLoader.saveSchemes(storableObjects, force);
+				schemeObjectLoader.saveSchemes(storableObjects, force);
 				break;
 			case ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE:
-				if (singleton)
-					schemeObjectLoader.saveSchemeElement((SchemeElement) storableObjects.iterator().next(), force);
-				else
-					schemeObjectLoader.saveSchemeElements(storableObjects, force);
+				schemeObjectLoader.saveSchemeElements(storableObjects, force);
 				break;
 			case ObjectEntities.SCHEME_OPTIMIZE_INFO_ENTITY_CODE:
-				if (singleton)
-					schemeObjectLoader.saveSchemeOptimizeInfo((SchemeOptimizeInfo) storableObjects.iterator().next(), force);
-				else
-					schemeObjectLoader.saveSchemeOptimizeInfos(storableObjects, force);
+				schemeObjectLoader.saveSchemeOptimizeInfos(storableObjects, force);
+				break;
+			case ObjectEntities.SCHEME_OPTIMIZE_INFO_SWITCH_ENTITY_CODE:
+				schemeObjectLoader.saveSchemeOptimizeInfoSwitches(storableObjects, force);
+				break;
+			case ObjectEntities.SCHEME_OPTIMIZE_INFO_RTU_ENTITY_CODE:
+				schemeObjectLoader.saveSchemeOptimizeInfoRtus(storableObjects, force);
 				break;
 			case ObjectEntities.SCHEME_MONITORING_SOLUTION_ENTITY_CODE:
-				if (singleton)
-					schemeObjectLoader.saveSchemeMonitoringSolution((SchemeMonitoringSolution) storableObjects.iterator().next(), force);
-				else
-					schemeObjectLoader.saveSchemeMonitoringSolutions(storableObjects, force);
+				schemeObjectLoader.saveSchemeMonitoringSolutions(storableObjects, force);
 				break;
 			case ObjectEntities.SCHEME_DEVICE_ENTITY_CODE:
-				if (singleton)
-					schemeObjectLoader.saveSchemeDevice((SchemeDevice) storableObjects.iterator().next(), force);
-				else
-					schemeObjectLoader.saveSchemeDevices(storableObjects, force);
+				schemeObjectLoader.saveSchemeDevices(storableObjects, force);
 				break;
 			case ObjectEntities.SCHEME_PORT_ENTITY_CODE:
-				if (singleton)
-					schemeObjectLoader.saveSchemePort((SchemePort) storableObjects.iterator().next(), force);
-				else
-					schemeObjectLoader.saveSchemePorts(storableObjects, force);
+				schemeObjectLoader.saveSchemePorts(storableObjects, force);
 				break;
 			case ObjectEntities.SCHEME_CABLE_PORT_ENTITY_CODE:
-				if (singleton)
-					schemeObjectLoader.saveSchemeCablePort((SchemeCablePort) storableObjects.iterator().next(), force);
-				else
-					schemeObjectLoader.saveSchemeCablePorts(storableObjects, force);
+				schemeObjectLoader.saveSchemeCablePorts(storableObjects, force);
 				break;
 			case ObjectEntities.SCHEME_LINK_ENTITY_CODE:
-				if (singleton)
-					schemeObjectLoader.saveSchemeLink((SchemeLink) storableObjects.iterator().next(), force);
-				else
-					schemeObjectLoader.saveSchemeLinks(storableObjects, force);
+				schemeObjectLoader.saveSchemeLinks(storableObjects, force);
 				break;
 			case ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE:
-				if (singleton)
-					schemeObjectLoader.saveSchemeCableLink((SchemeCableLink) storableObjects.iterator().next(), force);
-				else
-					schemeObjectLoader.saveSchemeCableLinks(storableObjects, force);
+				schemeObjectLoader.saveSchemeCableLinks(storableObjects, force);
 				break;
 			case ObjectEntities.SCHEME_CABLE_THREAD_ENTITY_CODE:
-				if (singleton)
-					schemeObjectLoader.saveSchemeCableThread((SchemeCableThread) storableObjects.iterator().next(), force);
-				else
-					schemeObjectLoader.saveSchemeCableThreads(storableObjects, force);
+				schemeObjectLoader.saveSchemeCableThreads(storableObjects, force);
 				break;
 			case ObjectEntities.CABLE_CHANNELING_ITEM_ENTITY_CODE:
-				if (singleton)
-					schemeObjectLoader.saveCableChannelingItem((CableChannelingItem) storableObjects.iterator().next(), force);
-				else
-					schemeObjectLoader.saveCableChannelingItems(storableObjects, force);
+				schemeObjectLoader.saveCableChannelingItems(storableObjects, force);
 				break;
 			case ObjectEntities.SCHEME_PATH_ENTITY_CODE:
-				if (singleton)
-					schemeObjectLoader.saveSchemePath((SchemePath) storableObjects.iterator().next(), force);
-				else
-					schemeObjectLoader.saveSchemePaths(storableObjects, force);
+				schemeObjectLoader.saveSchemePaths(storableObjects, force);
 				break;
 			case ObjectEntities.PATH_ELEMENT_ENTITY_CODE:
-				if (singleton)
-					schemeObjectLoader.savePathElement((PathElement) storableObjects.iterator().next(), force);
-				else
-					schemeObjectLoader.savePathElements(storableObjects, force);
+				schemeObjectLoader.savePathElements(storableObjects, force);
 				break;
 			default:
 				Log.errorMessage("SchemeStorableObjectPool.saveStorableObjects | Unknown entity: "
@@ -375,5 +369,4 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 	protected void deleteStorableObjects(final Set identifiables) {
 		schemeObjectLoader.delete(identifiables);
 	}
-
 }

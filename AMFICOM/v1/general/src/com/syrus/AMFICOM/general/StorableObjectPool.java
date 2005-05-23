@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.85 2005/05/23 07:51:19 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.86 2005/05/23 16:18:42 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.85 $, $Date: 2005/05/23 07:51:19 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.86 $, $Date: 2005/05/23 16:18:42 $
+ * @author $Author: bass $
  * @module general_v1
  */
 public abstract class StorableObjectPool {
@@ -56,6 +56,12 @@ public abstract class StorableObjectPool {
 	 */
 	private static final TShortObjectHashMap GROUP_CODE_POOL_MAP = new TShortObjectHashMap();
 
+	/**
+	 * An "entity code" -- "factory" map so store factories pool can use to
+	 * create objects.
+	 */
+	private static final TShortObjectHashMap ENTITY_CODE_FACTORY_MAP = new TShortObjectHashMap();
+
 	public StorableObjectPool(final int objectPoolMapSize, final short selfGroupCode) {
 		this(objectPoolMapSize, selfGroupCode, LRUMap.class);
 	}
@@ -77,7 +83,14 @@ public abstract class StorableObjectPool {
 
 	private static final void registerPool(final short groupCode, final StorableObjectPool pool) {
 		assert ObjectGroupEntities.isGroupCodeValid(groupCode);
+		assert GROUP_CODE_POOL_MAP.get(groupCode) == null;
 		GROUP_CODE_POOL_MAP.put(groupCode, pool);
+	}
+
+	protected static final void registerFactory(final short entityCode, final StorableObjectFactory factory) {
+		assert ObjectEntities.isEntityCodeValid(entityCode);
+		assert ENTITY_CODE_FACTORY_MAP.get(entityCode) == null;
+		ENTITY_CODE_FACTORY_MAP.put(entityCode, factory);
 	}
 
 	protected void addObjectPool(	final short objectEntityCode, final int poolSize) {
@@ -987,8 +1000,8 @@ public abstract class StorableObjectPool {
 	 * Aborts execution at first <code>ApplicationException</code> caught.
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: arseniy $
-	 * @version $Revision: 1.85 $, $Date: 2005/05/23 07:51:19 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.86 $, $Date: 2005/05/23 16:18:42 $
 	 * @module general_v1
 	 */
 	private static final class RefreshProcedure implements TObjectProcedure {
