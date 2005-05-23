@@ -1,5 +1,5 @@
 /*-
- * $Id: MSHServerPoolContext.java,v 1.2 2005/05/18 13:34:16 bass Exp $
+ * $Id: MSHServerPoolContext.java,v 1.3 2005/05/23 09:02:09 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.util.ApplicationProperties;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/05/18 13:34:16 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/23 09:02:09 $
  * @module mshserver_v1
  */
 final class MSHServerPoolContext extends PoolContext {
@@ -59,21 +59,5 @@ final class MSHServerPoolContext extends PoolContext {
 						: new MSHServerSchemeObjectLoader(refreshTimeoutMillis),
 				lruMapClass,
 				ApplicationProperties.getInt(KEY_SCHEME_POOL_SIZE, SCHEME_POOL_SIZE));
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.general.PoolContext#deserialize()
-	 */
-	public void deserialize() {
-		MapStorableObjectPool.deserializePool();
-		SchemeStorableObjectPool.deserializePool();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.general.PoolContext#serialize()
-	 */
-	public void serialize() {
-		SchemeStorableObjectPool.serializePool();
-		MapStorableObjectPool.serializePool();
 	}
 }

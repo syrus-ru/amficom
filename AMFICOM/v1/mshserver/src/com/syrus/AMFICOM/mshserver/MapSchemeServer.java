@@ -1,5 +1,5 @@
 /*-
- * $Id: MapSchemeServer.java,v 1.5 2005/05/18 13:34:15 bass Exp $
+ * $Id: MapSchemeServer.java,v 1.6 2005/05/23 09:02:09 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,8 +7,6 @@
  */
 
 package com.syrus.AMFICOM.mshserver;
-
-import org.omg.PortableServer.POA;
 
 import com.syrus.AMFICOM.administration.AdministrationDatabaseContext;
 import com.syrus.AMFICOM.administration.Server;
@@ -20,16 +18,15 @@ import com.syrus.AMFICOM.general.DatabaseObjectLoader;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginException;
 import com.syrus.AMFICOM.general.LoginRestorer;
-import com.syrus.AMFICOM.map.MapStorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.mshserver.corba.MSHServerPOATie;
-import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.util.Application;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/05/18 13:34:15 $
+ * @version $Revision: 1.6 $, $Date: 2005/05/23 09:02:09 $
  * @author $Author: bass $
  * @module cmserver_v1
  */
@@ -155,9 +152,8 @@ public class MapSchemeServer {
 			 * Activate the servant.
 			 */
 			final CORBAServer corbaServer = sessionEnvironment.getMSHServerServantManager().getCORBAServer();
-			final POA poa = corbaServer.getPoa();
 			corbaServer.activateServant(
-					poa.reference_to_servant((new MSHServerPOATie(new MSHServerImpl(), poa))._this(corbaServer.getOrb())),
+					new MSHServerPOATie(new MSHServerImpl(), corbaServer.getPoa()),
 					processCodename);
 			corbaServer.printNamingContext();
 		} catch (final Exception e) {
@@ -167,10 +163,8 @@ public class MapSchemeServer {
 	}
 
 	protected static synchronized void shutdown() {
-		Log.debugMessage("MapSchemeServer.shutdown | serializing MapStorableObjectPool" , Log.INFO);
-		MapStorableObjectPool.serializePool();
-		Log.debugMessage("MapSchemeServer.shutdown | serializing SchemeStorableObjectPool" , Log.INFO);
-		SchemeStorableObjectPool.serializePool();
+		Log.debugMessage("MapSchemeServer.shutdown | serializing StorableObjectPool" , Log.INFO);
+		StorableObjectPool.serialize();
 	}
 
 	static class MSHServerLoginRestorer implements LoginRestorer {

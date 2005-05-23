@@ -1,5 +1,5 @@
 /*-
- * $Id: MSHServerSchemeReceive.java,v 1.5 2005/05/21 19:43:37 bass Exp $
+ * $Id: MSHServerSchemeReceive.java,v 1.6 2005/05/23 09:02:09 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,7 +57,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/05/21 19:43:37 $
+ * @version $Revision: 1.6 $, $Date: 2005/05/23 09:02:09 $
  * @module mshserver_v1
  */
 abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
@@ -233,6 +233,7 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 			final boolean force,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
+		throw new UnsupportedOperationException();
 	}
 			
 	/**
@@ -247,6 +248,7 @@ abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
 			final boolean force,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
+		throw new UnsupportedOperationException();
 	}
 
 	/**
