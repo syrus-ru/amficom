@@ -1,5 +1,5 @@
 /*
- * $Id: CMMeasurementTransmit.java,v 1.29 2005/05/18 13:11:21 bass Exp $
+ * $Id: CMMeasurementTransmit.java,v 1.30 2005/05/23 09:01:04 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,34 +12,19 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.omg.CORBA.portable.IDLEntity;
+
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectCondition;
-import com.syrus.AMFICOM.general.StorableObjectConditionBuilder;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
-import com.syrus.AMFICOM.measurement.Analysis;
-import com.syrus.AMFICOM.measurement.AnalysisType;
-import com.syrus.AMFICOM.measurement.CronTemporalPattern;
-import com.syrus.AMFICOM.measurement.Evaluation;
-import com.syrus.AMFICOM.measurement.EvaluationType;
-import com.syrus.AMFICOM.measurement.IntervalsTemporalPattern;
-import com.syrus.AMFICOM.measurement.Measurement;
-import com.syrus.AMFICOM.measurement.MeasurementSetup;
-import com.syrus.AMFICOM.measurement.MeasurementType;
-import com.syrus.AMFICOM.measurement.Modeling;
-import com.syrus.AMFICOM.measurement.ModelingType;
-import com.syrus.AMFICOM.measurement.PeriodicalTemporalPattern;
-import com.syrus.AMFICOM.measurement.Result;
-import com.syrus.AMFICOM.measurement.Set;
-import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
 import com.syrus.AMFICOM.measurement.corba.CronTemporalPattern_Transferable;
@@ -59,575 +44,366 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/05/18 13:11:21 $
+ * @version $Revision: 1.30 $, $Date: 2005/05/23 09:01:04 $
  * @author $Author: bass $
  * @module cmserver_v1
  */
 public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
-
-	private static final long serialVersionUID = 3410028455480782250L;
-
-
-
-	/* Transmit multiple objects*/
-
-	public MeasurementType_Transferable[] transmitMeasurementTypes(Identifier_Transferable[] idsT, SessionKey_Transferable sessionKeyT)
+	public MeasurementType_Transferable[] transmitMeasurementTypes(
+			final Identifier_Transferable ids[],
+			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		super.validateAccess(sessionKeyT);
-
-		java.util.Set objects = this.getObjects(idsT);
-
-		MeasurementType_Transferable[] transferables = new MeasurementType_Transferable[objects.size()];
-		int i = 0;
-		MeasurementType object;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			object = (MeasurementType) it.next();
-			transferables[i] = (MeasurementType_Transferable) object.getTransferable();
-		}
-		return transferables;
+		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
+		final int length = storableObjects.length;
+		final MeasurementType_Transferable measurementTypes[] = new MeasurementType_Transferable[length];
+		System.arraycopy(storableObjects, 0, measurementTypes, 0, length);
+		return measurementTypes;
 	}
 
-	public AnalysisType_Transferable[] transmitAnalysisTypes(Identifier_Transferable[] idsT, SessionKey_Transferable sessionKeyT)
+	public MeasurementType_Transferable[] transmitMeasurementTypesButIdsCondition(
+			final Identifier_Transferable ids[],
+			final SessionKey_Transferable sessionKey,
+			final StorableObjectCondition_Transferable storableObjectCondition)
 			throws AMFICOMRemoteException {
-		super.validateAccess(sessionKeyT);
-
-		java.util.Set objects = this.getObjects(idsT);
-
-		AnalysisType_Transferable[] transferables = new AnalysisType_Transferable[objects.size()];
-		int i = 0;
-		AnalysisType object;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			object = (AnalysisType) it.next();
-			transferables[i] = (AnalysisType_Transferable) object.getTransferable();
-		}
-		return transferables;
+		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsCondition(ids, sessionKey, storableObjectCondition);
+		final int length = storableObjects.length;
+		final MeasurementType_Transferable measurementTypes[] = new MeasurementType_Transferable[length];
+		System.arraycopy(storableObjects, 0, measurementTypes, 0, length);
+		return measurementTypes;
 	}
 
-	public EvaluationType_Transferable[] transmitEvaluationTypes(Identifier_Transferable[] idsT, SessionKey_Transferable sessionKeyT)
+	public AnalysisType_Transferable[] transmitAnalysisTypes(
+			final Identifier_Transferable ids[],
+			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		super.validateAccess(sessionKeyT);
-
-		java.util.Set objects = this.getObjects(idsT);
-
-		EvaluationType_Transferable[] transferables = new EvaluationType_Transferable[objects.size()];
-		int i = 0;
-		EvaluationType object;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			object = (EvaluationType) it.next();
-			transferables[i] = (EvaluationType_Transferable) object.getTransferable();
-		}
-		return transferables;
+		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
+		final int length = storableObjects.length;
+		final AnalysisType_Transferable analysisTypes[] = new AnalysisType_Transferable[length];
+		System.arraycopy(storableObjects, 0, analysisTypes, 0, length);
+		return analysisTypes;
 	}
 
-	public ModelingType_Transferable[] transmitModelingTypes(Identifier_Transferable[] idsT, SessionKey_Transferable sessionKeyT)
+	public AnalysisType_Transferable[] transmitAnalysisTypesButIdsCondition(
+			final Identifier_Transferable ids[],
+			final SessionKey_Transferable sessionKey,
+			final StorableObjectCondition_Transferable storableObjectCondition)
 			throws AMFICOMRemoteException {
-		super.validateAccess(sessionKeyT);
-
-		java.util.Set objects = this.getObjects(idsT);
-
-		ModelingType_Transferable[] transferables = new ModelingType_Transferable[objects.size()];
-		int i = 0;
-		ModelingType object;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			object = (ModelingType) it.next();
-			transferables[i] = (ModelingType_Transferable) object.getTransferable();
-		}
-		return transferables;
+		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsCondition(ids, sessionKey, storableObjectCondition);
+		final int length = storableObjects.length;
+		final AnalysisType_Transferable analysisTypes[] = new AnalysisType_Transferable[length];
+		System.arraycopy(storableObjects, 0, analysisTypes, 0, length);
+		return analysisTypes;
 	}
 
-
-
-	public Measurement_Transferable[] transmitMeasurements(Identifier_Transferable[] idsT, SessionKey_Transferable sessionKeyT)
+	public EvaluationType_Transferable[] transmitEvaluationTypes(
+			final Identifier_Transferable ids[],
+			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		super.validateAccess(sessionKeyT);
-
-		java.util.Set objects = this.getObjects(idsT);
-
-		Measurement_Transferable[] transferables = new Measurement_Transferable[objects.size()];
-		int i = 0;
-		Measurement object;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			object = (Measurement) it.next();
-			transferables[i] = (Measurement_Transferable) object.getTransferable();
-		}
-		return transferables;
+		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
+		final int length = storableObjects.length;
+		final EvaluationType_Transferable evaluationTypes[] = new EvaluationType_Transferable[length];
+		System.arraycopy(storableObjects, 0, evaluationTypes, 0, length);
+		return evaluationTypes;
 	}
 
-	public Analysis_Transferable[] transmitAnalyses(Identifier_Transferable[] idsT, SessionKey_Transferable sessionKeyT)
+	public EvaluationType_Transferable[] transmitEvaluationTypesButIdsCondition(
+			final Identifier_Transferable ids[],
+			final SessionKey_Transferable sessionKey,
+			final StorableObjectCondition_Transferable storableObjectCondition)
 			throws AMFICOMRemoteException {
-		super.validateAccess(sessionKeyT);
-
-		java.util.Set objects = this.getObjects(idsT);
-
-		Analysis_Transferable[] transferables = new Analysis_Transferable[objects.size()];
-		int i = 0;
-		Analysis object;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			object = (Analysis) it.next();
-			transferables[i] = (Analysis_Transferable) object.getTransferable();
-		}
-		return transferables;
+		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsCondition(ids, sessionKey, storableObjectCondition);
+		final int length = storableObjects.length;
+		final EvaluationType_Transferable evaluationTypes[] = new EvaluationType_Transferable[length];
+		System.arraycopy(storableObjects, 0, evaluationTypes, 0, length);
+		return evaluationTypes;
 	}
 
-	public Evaluation_Transferable[] transmitEvaluations(Identifier_Transferable[] idsT, SessionKey_Transferable sessionKeyT)
+	public ModelingType_Transferable[] transmitModelingTypes(
+			final Identifier_Transferable ids[],
+			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		super.validateAccess(sessionKeyT);
-
-		java.util.Set objects = this.getObjects(idsT);
-
-		Evaluation_Transferable[] transferables = new Evaluation_Transferable[objects.size()];
-		int i = 0;
-		Evaluation object;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			object = (Evaluation) it.next();
-			transferables[i] = (Evaluation_Transferable) object.getTransferable();
-		}
-		return transferables;
+		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
+		final int length = storableObjects.length;
+		final ModelingType_Transferable modelingTypes[] = new ModelingType_Transferable[length];
+		System.arraycopy(storableObjects, 0, modelingTypes, 0, length);
+		return modelingTypes;
 	}
 
-	public Modeling_Transferable[] transmitModelings(Identifier_Transferable[] idsT, SessionKey_Transferable sessionKeyT)
+	public ModelingType_Transferable[] transmitModelingTypesButIdsCondition(
+			final Identifier_Transferable ids[],
+			final SessionKey_Transferable sessionKey,
+			final StorableObjectCondition_Transferable storableObjectCondition)
 			throws AMFICOMRemoteException {
-		super.validateAccess(sessionKeyT);
-
-		java.util.Set objects = this.getObjects(idsT);
-
-		Modeling_Transferable[] transferables = new Modeling_Transferable[objects.size()];
-		int i = 0;
-		Modeling object;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			object = (Modeling) it.next();
-			transferables[i] = (Modeling_Transferable) object.getTransferable();
-		}
-		return transferables;
+		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsCondition(ids, sessionKey, storableObjectCondition);
+		final int length = storableObjects.length;
+		final ModelingType_Transferable modelingTypes[] = new ModelingType_Transferable[length];
+		System.arraycopy(storableObjects, 0, modelingTypes, 0, length);
+		return modelingTypes;
 	}
 
-	public MeasurementSetup_Transferable[] transmitMeasurementSetups(Identifier_Transferable[] idsT, SessionKey_Transferable sessionKeyT)
+	public Measurement_Transferable[] transmitMeasurements(
+			final Identifier_Transferable ids[],
+			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		super.validateAccess(sessionKeyT);
-
-		java.util.Set objects = this.getObjects(idsT);
-
-		MeasurementSetup_Transferable[] transferables = new MeasurementSetup_Transferable[objects.size()];
-		int i = 0;
-		MeasurementSetup object;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			object = (MeasurementSetup) it.next();
-			transferables[i] = (MeasurementSetup_Transferable) object.getTransferable();
-		}
-		return transferables;
+		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
+		final int length = storableObjects.length;
+		final Measurement_Transferable measurements[] = new Measurement_Transferable[length];
+		System.arraycopy(storableObjects, 0, measurements, 0, length);
+		return measurements;
 	}
 
-	public Result_Transferable[] transmitResults(Identifier_Transferable[] idsT, SessionKey_Transferable sessionKeyT)
+	public Measurement_Transferable[] transmitMeasurementsButIdsCondition(
+			final Identifier_Transferable ids[],
+			final SessionKey_Transferable sessionKey,
+			final StorableObjectCondition_Transferable storableObjectCondition)
 			throws AMFICOMRemoteException {
-		super.validateAccess(sessionKeyT);
-
-		java.util.Set objects = this.getObjects(idsT);
-
-		Result_Transferable[] transferables = new Result_Transferable[objects.size()];
-		int i = 0;
-		Result object;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			object = (Result) it.next();
-			transferables[i] = (Result_Transferable) object.getTransferable();
-		}
-		return transferables;
+		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsCondition(ids, sessionKey, storableObjectCondition);
+		final int length = storableObjects.length;
+		final Measurement_Transferable measurements[] = new Measurement_Transferable[length];
+		System.arraycopy(storableObjects, 0, measurements, 0, length);
+		return measurements;
 	}
 
-	public Set_Transferable[] transmitSets(Identifier_Transferable[] idsT, SessionKey_Transferable sessionKeyT)
+	public Analysis_Transferable[] transmitAnalyses(
+			final Identifier_Transferable ids[],
+			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		super.validateAccess(sessionKeyT);
-
-		java.util.Set objects = this.getObjects(idsT);
-
-		Set_Transferable[] transferables = new Set_Transferable[objects.size()];
-		int i = 0;
-		Set object;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			object = (Set) it.next();
-			transferables[i] = (Set_Transferable) object.getTransferable();
-		}
-		return transferables;
+		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
+		final int length = storableObjects.length;
+		final Analysis_Transferable analyses[] = new Analysis_Transferable[length];
+		System.arraycopy(storableObjects, 0, analyses, 0, length);
+		return analyses;
 	}
 
-	public Test_Transferable[] transmitTests(Identifier_Transferable[] idsT, SessionKey_Transferable sessionKeyT)
+	public Analysis_Transferable[] transmitAnalysesButIdsCondition(
+			final Identifier_Transferable ids[],
+			final SessionKey_Transferable sessionKey,
+			final StorableObjectCondition_Transferable storableObjectCondition)
 			throws AMFICOMRemoteException {
-		super.validateAccess(sessionKeyT);
-
-		java.util.Set objects = this.getObjects(idsT);
-
-		Test_Transferable[] transferables = new Test_Transferable[objects.size()];
-		int i = 0;
-		Test object;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			object = (Test) it.next();
-			transferables[i] = (Test_Transferable) object.getTransferable();
-		}
-		return transferables;
+		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsCondition(ids, sessionKey, storableObjectCondition);
+		final int length = storableObjects.length;
+		final Analysis_Transferable analyses[] = new Analysis_Transferable[length];
+		System.arraycopy(storableObjects, 0, analyses, 0, length);
+		return analyses;
 	}
 
-	public CronTemporalPattern_Transferable[] transmitCronTemporalPatterns(Identifier_Transferable[] idsT, SessionKey_Transferable sessionKeyT)
+	public Evaluation_Transferable[] transmitEvaluations(
+			final Identifier_Transferable ids[],
+			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		super.validateAccess(sessionKeyT);
-
-		java.util.Set objects = this.getObjects(idsT);
-
-		CronTemporalPattern_Transferable[] transferables = new CronTemporalPattern_Transferable[objects.size()];
-		int i = 0;
-		CronTemporalPattern object;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			object = (CronTemporalPattern) it.next();
-			transferables[i] = (CronTemporalPattern_Transferable) object.getTransferable();
-		}
-		return transferables;
+		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
+		final int length = storableObjects.length;
+		final Evaluation_Transferable evaluations[] = new Evaluation_Transferable[length];
+		System.arraycopy(storableObjects, 0, evaluations, 0, length);
+		return evaluations;
 	}
 
-	public IntervalsTemporalPattern_Transferable[] transmitIntervalsTemporalPatterns(Identifier_Transferable[] idsT, SessionKey_Transferable sessionKeyT)
+	public Evaluation_Transferable[] transmitEvaluationsButIdsCondition(
+			final Identifier_Transferable ids[],
+			final SessionKey_Transferable sessionKey,
+			final StorableObjectCondition_Transferable storableObjectCondition)
 			throws AMFICOMRemoteException {
-		super.validateAccess(sessionKeyT);
-
-		java.util.Set objects = this.getObjects(idsT);
-
-		IntervalsTemporalPattern_Transferable[] transferables = new IntervalsTemporalPattern_Transferable[objects.size()];
-		int i = 0;
-		IntervalsTemporalPattern object;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			object = (IntervalsTemporalPattern) it.next();
-			transferables[i] = (IntervalsTemporalPattern_Transferable) object.getTransferable();
-		}
-		return transferables;
+		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsCondition(ids, sessionKey, storableObjectCondition);
+		final int length = storableObjects.length;
+		final Evaluation_Transferable evaluations[] = new Evaluation_Transferable[length];
+		System.arraycopy(storableObjects, 0, evaluations, 0, length);
+		return evaluations;
 	}
 
-	public PeriodicalTemporalPattern_Transferable[] transmitPeriodicalTemporalPatterns(Identifier_Transferable[] idsT, SessionKey_Transferable sessionKeyT)
+	public Modeling_Transferable[] transmitModelings(
+			final Identifier_Transferable ids[],
+			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		super.validateAccess(sessionKeyT);
-
-		java.util.Set objects = this.getObjects(idsT);
-
-		PeriodicalTemporalPattern_Transferable[] transferables = new PeriodicalTemporalPattern_Transferable[objects.size()];
-		int i = 0;
-		PeriodicalTemporalPattern object;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			object = (PeriodicalTemporalPattern) it.next();
-			transferables[i] = (PeriodicalTemporalPattern_Transferable) object.getTransferable();
-		}
-		return transferables;
+		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
+		final int length = storableObjects.length;
+		final Modeling_Transferable modelings[] = new Modeling_Transferable[length];
+		System.arraycopy(storableObjects, 0, modelings, 0, length);
+		return modelings;
 	}
 
-
-	private java.util.Set getObjects(Identifier_Transferable[] idsT) throws AMFICOMRemoteException {
-		try {
-			java.util.Set ids = Identifier.fromTransferables(idsT);
-			java.util.Set objects = StorableObjectPool.getStorableObjects(ids, true);
-			return objects;
-		}
-		catch (ApplicationException ae) {
-			Log.errorException(ae);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
-		}
-		catch (Throwable throwable) {
-			Log.errorException(throwable);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, throwable.getMessage());
-		}
-	}
-
-
-	/* Transmit multiple objects but ids by condition*/
-
-	public MeasurementType_Transferable[] transmitMeasurementTypesButIdsCondition(Identifier_Transferable[] idsT,
-			SessionKey_Transferable sessionKeyT,
-			StorableObjectCondition_Transferable conditionT) throws AMFICOMRemoteException {
-		super.validateAccess(sessionKeyT);
-
-		java.util.Set objects = this.getObjectsButIdsCondition(idsT, conditionT);
-
-		MeasurementType_Transferable[] transferables = new MeasurementType_Transferable[objects.size()];
-		int i = 0;
-		MeasurementType object;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			object = (MeasurementType) it.next();
-			transferables[i] = (MeasurementType_Transferable) object.getTransferable();
-		}
-		return transferables;
-	}
-
-	public AnalysisType_Transferable[] transmitAnalysisTypesButIdsCondition(Identifier_Transferable[] idsT,
-			SessionKey_Transferable sessionKeyT,
-			StorableObjectCondition_Transferable conditionT) throws AMFICOMRemoteException {
-		super.validateAccess(sessionKeyT);
-
-		java.util.Set objects = this.getObjectsButIdsCondition(idsT, conditionT);
-
-		AnalysisType_Transferable[] transferables = new AnalysisType_Transferable[objects.size()];
-		int i = 0;
-		AnalysisType object;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			object = (AnalysisType) it.next();
-			transferables[i] = (AnalysisType_Transferable) object.getTransferable();
-		}
-		return transferables;
-	}
-
-	public EvaluationType_Transferable[] transmitEvaluationTypesButIdsCondition(Identifier_Transferable[] idsT,
-			SessionKey_Transferable sessionKeyT,
-			StorableObjectCondition_Transferable conditionT) throws AMFICOMRemoteException {
-		super.validateAccess(sessionKeyT);
-
-		java.util.Set objects = this.getObjectsButIdsCondition(idsT, conditionT);
-
-		EvaluationType_Transferable[] transferables = new EvaluationType_Transferable[objects.size()];
-		int i = 0;
-		EvaluationType object;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			object = (EvaluationType) it.next();
-			transferables[i] = (EvaluationType_Transferable) object.getTransferable();
-		}
-		return transferables;
-	}
-
-	public ModelingType_Transferable[] transmitModelingTypesButIdsCondition(Identifier_Transferable[] idsT,
-			SessionKey_Transferable sessionKeyT,
-			StorableObjectCondition_Transferable conditionT) throws AMFICOMRemoteException {
-		super.validateAccess(sessionKeyT);
-
-		java.util.Set objects = this.getObjectsButIdsCondition(idsT, conditionT);
-
-		ModelingType_Transferable[] transferables = new ModelingType_Transferable[objects.size()];
-		int i = 0;
-		ModelingType object;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			object = (ModelingType) it.next();
-			transferables[i] = (ModelingType_Transferable) object.getTransferable();
-		}
-		return transferables;
-	}
-
-
-
-	public Measurement_Transferable[] transmitMeasurementsButIdsCondition(Identifier_Transferable[] idsT,
-			SessionKey_Transferable sessionKeyT,
-			StorableObjectCondition_Transferable conditionT) throws AMFICOMRemoteException {
-		super.validateAccess(sessionKeyT);
-
-		java.util.Set objects = this.getObjectsButIdsCondition(idsT, conditionT);
-
-		Measurement_Transferable[] transferables = new Measurement_Transferable[objects.size()];
-		int i = 0;
-		Measurement object;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			object = (Measurement) it.next();
-			transferables[i] = (Measurement_Transferable) object.getTransferable();
-		}
-		return transferables;
-	}
-
-	public Analysis_Transferable[] transmitAnalysesButIdsCondition(Identifier_Transferable[] idsT,
-			SessionKey_Transferable sessionKeyT,
-			StorableObjectCondition_Transferable conditionT) throws AMFICOMRemoteException {
-		super.validateAccess(sessionKeyT);
-
-		java.util.Set objects = this.getObjectsButIdsCondition(idsT, conditionT);
-
-		Analysis_Transferable[] transferables = new Analysis_Transferable[objects.size()];
-		int i = 0;
-		Analysis object;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			object = (Analysis) it.next();
-			transferables[i] = (Analysis_Transferable) object.getTransferable();
-		}
-		return transferables;
-	}
-
-	public Evaluation_Transferable[] transmitEvaluationsButIdsCondition(Identifier_Transferable[] idsT,
-			SessionKey_Transferable sessionKeyT,
-			StorableObjectCondition_Transferable conditionT) throws AMFICOMRemoteException {
-		super.validateAccess(sessionKeyT);
-
-		java.util.Set objects = this.getObjectsButIdsCondition(idsT, conditionT);
-
-		Evaluation_Transferable[] transferables = new Evaluation_Transferable[objects.size()];
-		int i = 0;
-		Evaluation object;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			object = (Evaluation) it.next();
-			transferables[i] = (Evaluation_Transferable) object.getTransferable();
-		}
-		return transferables;
-	}
-
-	public Modeling_Transferable[] transmitModelingsButIdsCondition(Identifier_Transferable[] idsT,
-			SessionKey_Transferable sessionKeyT,
-			StorableObjectCondition_Transferable conditionT) throws AMFICOMRemoteException {
-		super.validateAccess(sessionKeyT);
-
-		java.util.Set objects = this.getObjectsButIdsCondition(idsT, conditionT);
-
-		Modeling_Transferable[] transferables = new Modeling_Transferable[objects.size()];
-		int i = 0;
-		Modeling object;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			object = (Modeling) it.next();
-			transferables[i] = (Modeling_Transferable) object.getTransferable();
-		}
-		return transferables;
-	}
-
-	public MeasurementSetup_Transferable[] transmitMeasurementSetupsButIdsCondition(Identifier_Transferable[] idsT,
-			SessionKey_Transferable sessionKeyT,
-			StorableObjectCondition_Transferable conditionT) throws AMFICOMRemoteException {
-		super.validateAccess(sessionKeyT);
-
-		java.util.Set objects = this.getObjectsButIdsCondition(idsT, conditionT);
-
-		MeasurementSetup_Transferable[] transferables = new MeasurementSetup_Transferable[objects.size()];
-		int i = 0;
-		MeasurementSetup object;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			object = (MeasurementSetup) it.next();
-			transferables[i] = (MeasurementSetup_Transferable) object.getTransferable();
-		}
-		return transferables;
-	}
-
-	public Result_Transferable[] transmitResultsButIdsCondition(Identifier_Transferable[] idsT,
-			SessionKey_Transferable sessionKeyT,
-			StorableObjectCondition_Transferable conditionT) throws AMFICOMRemoteException {
-		super.validateAccess(sessionKeyT);
-
-		java.util.Set objects = this.getObjectsButIdsCondition(idsT, conditionT);
-
-		Result_Transferable[] transferables = new Result_Transferable[objects.size()];
-		int i = 0;
-		Result object;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			object = (Result) it.next();
-			transferables[i] = (Result_Transferable) object.getTransferable();
-		}
-		return transferables;
-	}
-
-	public Set_Transferable[] transmitSetsButIdsCondition(Identifier_Transferable[] idsT,
-			SessionKey_Transferable sessionKeyT,
-			StorableObjectCondition_Transferable conditionT) throws AMFICOMRemoteException {
-		super.validateAccess(sessionKeyT);
-
-		java.util.Set objects = this.getObjectsButIdsCondition(idsT, conditionT);
-
-		Set_Transferable[] transferables = new Set_Transferable[objects.size()];
-		int i = 0;
-		Set object;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			object = (Set) it.next();
-			transferables[i] = (Set_Transferable) object.getTransferable();
-		}
-		return transferables;
-	}
-
-	public Test_Transferable[] transmitTestsButIdsCondition(Identifier_Transferable[] idsT,
-			SessionKey_Transferable sessionKeyT,
-			StorableObjectCondition_Transferable conditionT) throws AMFICOMRemoteException {
-		super.validateAccess(sessionKeyT);
-
-		java.util.Set objects = this.getObjectsButIdsCondition(idsT, conditionT);
-
-		Test_Transferable[] transferables = new Test_Transferable[objects.size()];
-		int i = 0;
-		Test object;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			object = (Test) it.next();
-			transferables[i] = (Test_Transferable) object.getTransferable();
-		}
-		return transferables;
-	}
-
-	public CronTemporalPattern_Transferable[] transmitCronTemporalPatternsButIdsCondition(Identifier_Transferable[] idsT,
-			SessionKey_Transferable sessionKeyT,
-			StorableObjectCondition_Transferable conditionT) throws AMFICOMRemoteException {
-		super.validateAccess(sessionKeyT);
-
-		java.util.Set objects = this.getObjectsButIdsCondition(idsT, conditionT);
-
-		CronTemporalPattern_Transferable[] transferables = new CronTemporalPattern_Transferable[objects.size()];
-		int i = 0;
-		CronTemporalPattern object;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			object = (CronTemporalPattern) it.next();
-			transferables[i] = (CronTemporalPattern_Transferable) object.getTransferable();
-		}
-		return transferables;
-	}
-
-	public IntervalsTemporalPattern_Transferable[] transmitIntervalsTemporalPatternsButIdsCondition(Identifier_Transferable[] idsT,
-			SessionKey_Transferable sessionKeyT,
-			StorableObjectCondition_Transferable conditionT) throws AMFICOMRemoteException {
-		super.validateAccess(sessionKeyT);
-
-		java.util.Set objects = this.getObjectsButIdsCondition(idsT, conditionT);
-
-		IntervalsTemporalPattern_Transferable[] transferables = new IntervalsTemporalPattern_Transferable[objects.size()];
-		int i = 0;
-		IntervalsTemporalPattern object;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			object = (IntervalsTemporalPattern) it.next();
-			transferables[i] = (IntervalsTemporalPattern_Transferable) object.getTransferable();
-		}
-		return transferables;
-	}
-
-	public PeriodicalTemporalPattern_Transferable[] transmitPeriodicalTemporalPatternsButIdsCondition(Identifier_Transferable[] idsT,
-			SessionKey_Transferable sessionKeyT,
-			StorableObjectCondition_Transferable conditionT) throws AMFICOMRemoteException {
-		super.validateAccess(sessionKeyT);
-
-		java.util.Set objects = this.getObjectsButIdsCondition(idsT, conditionT);
-
-		PeriodicalTemporalPattern_Transferable[] transferables = new PeriodicalTemporalPattern_Transferable[objects.size()];
-		int i = 0;
-		PeriodicalTemporalPattern object;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			object = (PeriodicalTemporalPattern) it.next();
-			transferables[i] = (PeriodicalTemporalPattern_Transferable) object.getTransferable();
-		}
-		return transferables;
-	}
-
-
-	private java.util.Set getObjectsButIdsCondition(Identifier_Transferable[] idsT, StorableObjectCondition_Transferable conditionT)
+	public Modeling_Transferable[] transmitModelingsButIdsCondition(
+			final Identifier_Transferable ids[],
+			final SessionKey_Transferable sessionKey,
+			final StorableObjectCondition_Transferable storableObjectCondition)
 			throws AMFICOMRemoteException {
-		try {
-
-			StorableObjectCondition condition = null;
-			try {
-				condition = StorableObjectConditionBuilder.restoreCondition(conditionT);
-			}
-			catch (IllegalDataException ide) {
-				throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_DATA,
-						CompletionStatus.COMPLETED_NO,
-						"Cannot restore condition -- " + ide.getMessage());
-			}
-
-			try {
-				java.util.Set ids = Identifier.fromTransferables(idsT);
-				java.util.Set objects = StorableObjectPool.getStorableObjectsByConditionButIds(ids, condition, true);
-				return objects;
-			}
-			catch (ApplicationException ae) {
-				Log.errorException(ae);
-				throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
-			}
-		}
-		catch (Throwable throwable) {
-			Log.errorException(throwable);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, throwable.getMessage());
-		}
+		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsCondition(ids, sessionKey, storableObjectCondition);
+		final int length = storableObjects.length;
+		final Modeling_Transferable modelings[] = new Modeling_Transferable[length];
+		System.arraycopy(storableObjects, 0, modelings, 0, length);
+		return modelings;
 	}
 
+	public MeasurementSetup_Transferable[] transmitMeasurementSetups(
+			final Identifier_Transferable ids[],
+			final SessionKey_Transferable sessionKey)
+			throws AMFICOMRemoteException {
+		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
+		final int length = storableObjects.length;
+		final MeasurementSetup_Transferable measurementSetups[] = new MeasurementSetup_Transferable[length];
+		System.arraycopy(storableObjects, 0, measurementSetups, 0, length);
+		return measurementSetups;
+	}
 
+	public MeasurementSetup_Transferable[] transmitMeasurementSetupsButIdsCondition(
+			final Identifier_Transferable ids[],
+			final SessionKey_Transferable sessionKey,
+			final StorableObjectCondition_Transferable storableObjectCondition)
+			throws AMFICOMRemoteException {
+		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsCondition(ids, sessionKey, storableObjectCondition);
+		final int length = storableObjects.length;
+		final MeasurementSetup_Transferable measurementSetups[] = new MeasurementSetup_Transferable[length];
+		System.arraycopy(storableObjects, 0, measurementSetups, 0, length);
+		return measurementSetups;
+	}
+
+	public Result_Transferable[] transmitResults(
+			final Identifier_Transferable ids[],
+			final SessionKey_Transferable sessionKey)
+			throws AMFICOMRemoteException {
+		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
+		final int length = storableObjects.length;
+		final Result_Transferable results[] = new Result_Transferable[length];
+		System.arraycopy(storableObjects, 0, results, 0, length);
+		return results;
+	}
+
+	public Result_Transferable[] transmitResultsButIdsCondition(
+			final Identifier_Transferable ids[],
+			final SessionKey_Transferable sessionKey,
+			final StorableObjectCondition_Transferable storableObjectCondition)
+			throws AMFICOMRemoteException {
+		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsCondition(ids, sessionKey, storableObjectCondition);
+		final int length = storableObjects.length;
+		final Result_Transferable results[] = new Result_Transferable[length];
+		System.arraycopy(storableObjects, 0, results, 0, length);
+		return results;
+	}
+
+	public Set_Transferable[] transmitSets(
+			final Identifier_Transferable ids[],
+			final SessionKey_Transferable sessionKey)
+			throws AMFICOMRemoteException {
+		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
+		final int length = storableObjects.length;
+		final Set_Transferable sets[] = new Set_Transferable[length];
+		System.arraycopy(storableObjects, 0, sets, 0, length);
+		return sets;
+	}
+
+	public Set_Transferable[] transmitSetsButIdsCondition(
+			final Identifier_Transferable ids[],
+			final SessionKey_Transferable sessionKey,
+			final StorableObjectCondition_Transferable storableObjectCondition)
+			throws AMFICOMRemoteException {
+		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsCondition(ids, sessionKey, storableObjectCondition);
+		final int length = storableObjects.length;
+		final Set_Transferable sets[] = new Set_Transferable[length];
+		System.arraycopy(storableObjects, 0, sets, 0, length);
+		return sets;
+	}
+
+	public Test_Transferable[] transmitTests(
+			final Identifier_Transferable ids[],
+			final SessionKey_Transferable sessionKey)
+			throws AMFICOMRemoteException {
+		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
+		final int length = storableObjects.length;
+		final Test_Transferable tests[] = new Test_Transferable[length];
+		System.arraycopy(storableObjects, 0, tests, 0, length);
+		return tests;
+	}
+
+	public Test_Transferable[] transmitTestsButIdsCondition(
+			final Identifier_Transferable ids[],
+			final SessionKey_Transferable sessionKey,
+			final StorableObjectCondition_Transferable storableObjectCondition)
+			throws AMFICOMRemoteException {
+		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsCondition(ids, sessionKey, storableObjectCondition);
+		final int length = storableObjects.length;
+		final Test_Transferable tests[] = new Test_Transferable[length];
+		System.arraycopy(storableObjects, 0, tests, 0, length);
+		return tests;
+	}
+
+	public CronTemporalPattern_Transferable[] transmitCronTemporalPatterns(
+			final Identifier_Transferable ids[],
+			final SessionKey_Transferable sessionKey)
+			throws AMFICOMRemoteException {
+		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
+		final int length = storableObjects.length;
+		final CronTemporalPattern_Transferable cronTemporalPatterns[] = new CronTemporalPattern_Transferable[length];
+		System.arraycopy(storableObjects, 0, cronTemporalPatterns, 0, length);
+		return cronTemporalPatterns;
+	}
+
+	public CronTemporalPattern_Transferable[] transmitCronTemporalPatternsButIdsCondition(
+			final Identifier_Transferable ids[],
+			final SessionKey_Transferable sessionKey,
+			final StorableObjectCondition_Transferable storableObjectCondition)
+			throws AMFICOMRemoteException {
+		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsCondition(ids, sessionKey, storableObjectCondition);
+		final int length = storableObjects.length;
+		final CronTemporalPattern_Transferable cronTemporalPatterns[] = new CronTemporalPattern_Transferable[length];
+		System.arraycopy(storableObjects, 0, cronTemporalPatterns, 0, length);
+		return cronTemporalPatterns;
+	}
+
+	public IntervalsTemporalPattern_Transferable[] transmitIntervalsTemporalPatterns(
+			final Identifier_Transferable ids[],
+			final SessionKey_Transferable sessionKey)
+			throws AMFICOMRemoteException {
+		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
+		final int length = storableObjects.length;
+		final IntervalsTemporalPattern_Transferable intervalsTemporalPatterns[] = new IntervalsTemporalPattern_Transferable[length];
+		System.arraycopy(storableObjects, 0, intervalsTemporalPatterns, 0, length);
+		return intervalsTemporalPatterns;
+	}
+
+	public IntervalsTemporalPattern_Transferable[] transmitIntervalsTemporalPatternsButIdsCondition(
+			final Identifier_Transferable ids[],
+			final SessionKey_Transferable sessionKey,
+			final StorableObjectCondition_Transferable storableObjectCondition)
+			throws AMFICOMRemoteException {
+		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsCondition(ids, sessionKey, storableObjectCondition);
+		final int length = storableObjects.length;
+		final IntervalsTemporalPattern_Transferable intervalsTemporalPatterns[] = new IntervalsTemporalPattern_Transferable[length];
+		System.arraycopy(storableObjects, 0, intervalsTemporalPatterns, 0, length);
+		return intervalsTemporalPatterns;
+	}
+
+	public PeriodicalTemporalPattern_Transferable[] transmitPeriodicalTemporalPatterns(
+			final Identifier_Transferable ids[],
+			final SessionKey_Transferable sessionKey)
+			throws AMFICOMRemoteException {
+		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
+		final int length = storableObjects.length;
+		final PeriodicalTemporalPattern_Transferable periodicalTemporalPatterns[] = new PeriodicalTemporalPattern_Transferable[length];
+		System.arraycopy(storableObjects, 0, periodicalTemporalPatterns, 0, length);
+		return periodicalTemporalPatterns;
+	}
+
+	public PeriodicalTemporalPattern_Transferable[] transmitPeriodicalTemporalPatternsButIdsCondition(
+			final Identifier_Transferable ids[],
+			final SessionKey_Transferable sessionKey,
+			final StorableObjectCondition_Transferable storableObjectCondition)
+			throws AMFICOMRemoteException {
+		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsCondition(ids, sessionKey, storableObjectCondition);
+		final int length = storableObjects.length;
+		final PeriodicalTemporalPattern_Transferable periodicalTemporalPatterns[] = new PeriodicalTemporalPattern_Transferable[length];
+		System.arraycopy(storableObjects, 0, periodicalTemporalPatterns, 0, length);
+		return periodicalTemporalPatterns;
+	}
 
 	/*	Refresh*/
 
+	/**
+	 * @deprecated
+	 */
 	public Identifier_Transferable[] transmitRefreshedMeasurementObjects(StorableObject_Transferable[] storableObjectsT,
 			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
-		super.validateAccess(sessionKeyT);
+		final Identifier_TransferableHolder userId = new Identifier_TransferableHolder();
+		final Identifier_TransferableHolder domainId = new Identifier_TransferableHolder();
+		this.validateAccess(sessionKeyT, userId, domainId);
 
 		Map storableObjectsTMap = new HashMap();
 		for (int i = 0; i < storableObjectsT.length; i++)
@@ -657,5 +433,4 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_PARTIALLY, throwable.getMessage());
 		}
 	}
-
 }

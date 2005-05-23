@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.104 2005/05/18 13:11:21 bass Exp $
+ * $Id: CMServerImpl.java,v 1.105 2005/05/23 09:01:04 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,124 +9,44 @@
 package com.syrus.AMFICOM.cmserver;
 
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IdentifierGenerationException;
-import com.syrus.AMFICOM.general.IdentifierGenerator;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectGroupEntities;
-import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.104 $, $Date: 2005/05/18 13:11:21 $
+ * @version $Revision: 1.105 $, $Date: 2005/05/23 09:01:04 $
  * @author $Author: bass $
  * @module cmserver_v1
  */
 
 public class CMServerImpl extends CMMeasurementTransmit {
-
 	private static final long serialVersionUID = 3760563104903672628L;
 
-
-	/* Delete*/
-
-	public void delete(Identifier_Transferable[] idsT, SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
-		super.validateAccess(sessionKeyT);
-
-		Set ids = Identifier.fromTransferables(idsT);
-		Set generalObjects = new HashSet(idsT.length);
-		Set administrationObjects = new HashSet(idsT.length);
-		Set configurationObjects = new HashSet(idsT.length);
-		Set measurementObjects = new HashSet(idsT.length);
-		for (Iterator it = ids.iterator(); it.hasNext();) {
-			final Identifier id = (Identifier) it.next();
-			final short entityCode = id.getMajor();
-			if (ObjectGroupEntities.isInGeneralGroup(entityCode))
-				generalObjects.add(id);
-			else
-				if (ObjectGroupEntities.isInAdministrationGroup(entityCode))
-					administrationObjects.add(id);
-				else
-					if (ObjectGroupEntities.isInConfigurationGroup(entityCode))
-						configurationObjects.add(id);
-					else
-						if (ObjectGroupEntities.isInMeasurementGroup(entityCode))
-							measurementObjects.add(id);
-						else
-							Log.errorMessage("CMServerImpl.delete | Unknow group of code " + entityCode + " of object '" + id + "'");
-		}
-		StorableObjectPool.delete(generalObjects);
-		StorableObjectPool.delete(administrationObjects);
-		StorableObjectPool.delete(configurationObjects);
-		StorableObjectPool.delete(measurementObjects);
-	}
-
-///////////////////////////////////////// Identifier Generator 	//////////////////////////////////////////////////
-
-	public Identifier_Transferable getGeneratedIdentifier(short entityCode) throws AMFICOMRemoteException {
-		try {
-			Log.debugMessage("CMServerImpl.getGeneratedIdentifier | generate new Identifer for "
-					+ ObjectEntities.codeToString(entityCode), Log.DEBUGLEVEL07);
-			Identifier identifier = IdentifierGenerator.generateIdentifier(entityCode);
-			return (Identifier_Transferable) identifier.getTransferable();
-		}
-		catch (IllegalObjectEntityException ioee) {
-			Log.errorException(ioee);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY,
-					CompletionStatus.COMPLETED_NO,
-					"Illegal object entity: '" + ObjectEntities.codeToString(entityCode) + "'");
-		}
-		catch (IdentifierGenerationException ige) {
-			Log.errorException(ige);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE,
-					CompletionStatus.COMPLETED_NO,
-					"Cannot create major/minor entries of identifier for entity: '"
-							+ ObjectEntities.codeToString(entityCode)
-							+ "' -- "
-							+ ige.getMessage());
-		}
-	}
-
-	public Identifier_Transferable[] getGeneratedIdentifierRange(short entityCode, int size)
+	/**
+	 * @param sessionKey
+	 * @param userId
+	 * @param domainId
+	 * @throws AMFICOMRemoteException
+	 * @see com.syrus.AMFICOM.general.ServerCore#validateAccess(com.syrus.AMFICOM.security.corba.SessionKey_Transferable, com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder, com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder)
+	 */
+	protected void validateAccess(final SessionKey_Transferable sessionKey,
+			final Identifier_TransferableHolder userId,
+			final Identifier_TransferableHolder domainId)
 			throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.getGeneratedIdentifierRange | generate new Identifer range "
-				+ size + " for " + ObjectEntities.codeToString(entityCode), Log.DEBUGLEVEL07);
 		try {
-			Identifier[] identifiers = IdentifierGenerator.generateIdentifierRange(entityCode, size);
-			Identifier_Transferable[] identifiersT = new Identifier_Transferable[identifiers.length];
-			for (int i = 0; i < identifiersT.length; i++)
-				identifiersT[i] = (Identifier_Transferable) identifiers[i].getTransferable();
-			return identifiersT;
-		}
-		catch (IllegalObjectEntityException ioee) {
-			Log.errorException(ioee);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY,
-					CompletionStatus.COMPLETED_NO,
-					"Illegal object entity: '" + ObjectEntities.codeToString(entityCode) + "'");
-		}
-		catch (IdentifierGenerationException ige) {
-			Log.errorException(ige);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE,
-					CompletionStatus.COMPLETED_NO,
-					"Cannot create major/minor entries of identifier for entity: '"
-							+ ObjectEntities.codeToString(entityCode) + "' -- " + ige.getMessage());
+			CMServerSessionEnvironment.getInstance()
+					.getCMServerServantManager()
+					.getLoginServerReference()
+					.validateAccess(sessionKey, userId, domainId);
+		} catch (final CommunicationException ce) {
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_ACCESS_VALIDATION, CompletionStatus.COMPLETED_NO, ce.getMessage());
+		} catch (final Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_ACCESS_VALIDATION, CompletionStatus.COMPLETED_PARTIALLY, t.getMessage());
 		}
 	}
-
-	
-///////////////////////////////////////// Verifiable 	//////////////////////////////////////////////////
-	public void verify(final byte i) {
-		Log.debugMessage("Verifying value: " + i, Log.DEBUGLEVEL10);
-	}
-
 }
