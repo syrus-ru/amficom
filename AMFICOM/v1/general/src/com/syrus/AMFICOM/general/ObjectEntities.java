@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectEntities.java,v 1.65 2005/05/18 11:07:38 bass Exp $
+ * $Id: ObjectEntities.java,v 1.66 2005/05/23 18:44:04 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,7 @@ import gnu.trove.TObjectShortHashMap;
 import gnu.trove.TShortObjectHashMap;
 
 /**
- * @version $Revision: 1.65 $, $Date: 2005/05/18 11:07:38 $
+ * @version $Revision: 1.66 $, $Date: 2005/05/23 18:44:04 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -80,7 +80,7 @@ public final class ObjectEntities {
 	public static final String TRANSPATHMELINK_ENTITY = "TransmissionPathMELink";
 	public static final String KIS_ENTITY = "KIS";
 	public static final String MEASUREMENTPORT_ENTITY = "MeasurementPort";
-	public static final String ME_ENTITY = "MonitoredElement";
+	public static final String MONITORED_ELEMENT_ENTITY = "MonitoredElement";
 	public static final String LINK_ENTITY = "Link";
 	public static final String CABLETHREAD_ENTITY = "CableThread";
 
@@ -88,7 +88,7 @@ public final class ObjectEntities {
 	public static final String SET_ENTITY = "Set";
 	public static final String SETPARAMETER_ENTITY = "SetParameter";
 	public static final String SETMELINK_ENTITY = "SetMELink";
-	public static final String MS_ENTITY = "MeasurementSetup";
+	public static final String MEASUREMENT_SETUP_ENTITY = "MeasurementSetup";
 	public static final String MSMELINK_ENTITY = "MeasurementSetupMELink";
 	public static final String MSMTLINK_ENTITY = "MeasurementSetupMTLink";
 	public static final String MEASUREMENT_ENTITY = "Measurement";
@@ -208,7 +208,7 @@ public final class ObjectEntities {
 	public static final short TRANSPATH_ENTITY_CODE = 0x0183;
 	public static final short KIS_ENTITY_CODE = 0x0184;
 	public static final short MEASUREMENTPORT_ENTITY_CODE = 0x0185;
-	public static final short ME_ENTITY_CODE = 0x0186;
+	public static final short MONITORED_ELEMENT_ENTITY_CODE = 0x0186;
 	public static final short LINK_ENTITY_CODE = 0x0187;
 	public static final short CABLETHREAD_ENTITY_CODE = 0x0188;
 
@@ -231,7 +231,7 @@ public final class ObjectEntities {
 
 	public static final short SET_ENTITY_CODE = MEASUREMENT_MIN_ENTITY_CODE;
 	public static final short SETPARAMETER_ENTITY_CODE = 0x0202;
-	public static final short MS_ENTITY_CODE = 0x0203;
+	public static final short MEASUREMENT_SETUP_ENTITY_CODE = 0x0203;
 	public static final short MEASUREMENT_ENTITY_CODE = 0x0204;
 	public static final short ANALYSIS_ENTITY_CODE = 0x0205;
 	public static final short EVALUATION_ENTITY_CODE = 0x0206;
@@ -377,13 +377,13 @@ public final class ObjectEntities {
 		registerEntity(KIS_ENTITY_CODE, KIS_ENTITY);
 //		registerEntity(KISTYPE_ENTITY_CODE, KISTYPE_ENTITY);
 		registerEntity(MEASUREMENTPORT_ENTITY_CODE, MEASUREMENTPORT_ENTITY);
-		registerEntity(ME_ENTITY_CODE, ME_ENTITY);
+		registerEntity(MONITORED_ELEMENT_ENTITY_CODE, MONITORED_ELEMENT_ENTITY);
 		registerEntity(LINK_ENTITY_CODE, LINK_ENTITY);
 		registerEntity(CABLETHREAD_ENTITY_CODE, CABLETHREAD_ENTITY);
 
 		registerEntity(SET_ENTITY_CODE, SET_ENTITY);
 		registerEntity(SETPARAMETER_ENTITY_CODE, SETPARAMETER_ENTITY);
-		registerEntity(MS_ENTITY_CODE, MS_ENTITY);
+		registerEntity(MEASUREMENT_SETUP_ENTITY_CODE, MEASUREMENT_SETUP_ENTITY);
 		registerEntity(MEASUREMENT_ENTITY_CODE, MEASUREMENT_ENTITY);
 		registerEntity(ANALYSIS_ENTITY_CODE, ANALYSIS_ENTITY);
 		registerEntity(EVALUATION_ENTITY_CODE, EVALUATION_ENTITY);
@@ -429,7 +429,9 @@ public final class ObjectEntities {
 	}
 
 	private static void registerEntity(final short entityCode, final String entity) {
+		assert CODE_NAME_MAP.get(entityCode) == null;
 		CODE_NAME_MAP.put(entityCode, entity);
+		assert NAME_CODE_MAP.get(entity) == 0;
 		NAME_CODE_MAP.put(entity, entityCode);
 	}
 
