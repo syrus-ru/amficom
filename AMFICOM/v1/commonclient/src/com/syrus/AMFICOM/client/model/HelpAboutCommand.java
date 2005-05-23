@@ -1,5 +1,5 @@
 /*
- * $Id: HelpAboutCommand.java,v 1.2 2005/05/20 10:05:10 bob Exp $
+ * $Id: HelpAboutCommand.java,v 1.3 2005/05/23 06:43:47 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 /**
  * 
- * @version $Revision: 1.2 $, $Date: 2005/05/20 10:05:10 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/23 06:43:47 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient_v1
@@ -49,7 +49,7 @@ public class HelpAboutCommand extends AbstractCommand {
 			this.about.add(new JLabel("АМФИКОМ"), gbc);
 			
 			gbc.insets = new Insets(0, 5, 0, 5);
-			this.about.add(new JLabel("Версия " + Version.getVersionNumber() + " обновление " + Patch.getVersion()), gbc);
+			this.about.add(new JLabel("Версия " + Version.getVersionNumber() + " обновление " + Version.getPatchVersion()), gbc);
 			this.about.add(new JLabel(Version.getVersionText()), gbc);
 			
 			gbc.insets = new Insets(0, 5, 5, 5);

@@ -19,4 +19,8 @@ public class Version {
 	public static String getVersionCopyright() {
 		return "Syrus Systems 2002-2005";
 	}
+	
+	public static String getPatchVersion() {
+		return "clear";
+	}
 }
