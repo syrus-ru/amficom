@@ -1,13 +1,11 @@
 /*
- * $Id: AdministrationResourceServer.java,v 1.5 2005/05/18 12:56:28 bass Exp $
+ * $Id: AdministrationResourceServer.java,v 1.6 2005/05/23 09:01:41 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
 package com.syrus.AMFICOM.arserver;
-
-import org.omg.PortableServer.POA;
 
 import com.syrus.AMFICOM.administration.AdministrationDatabaseContext;
 import com.syrus.AMFICOM.administration.Server;
@@ -20,14 +18,14 @@ import com.syrus.AMFICOM.general.DatabaseObjectLoader;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginException;
 import com.syrus.AMFICOM.general.LoginRestorer;
-import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Application;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/05/18 12:56:28 $
+ * @version $Revision: 1.6 $, $Date: 2005/05/23 09:01:41 $
  * @author $Author: bass $
  * @module arserver_v1
  */
@@ -150,9 +148,8 @@ public class AdministrationResourceServer {
 			 * Activate the servant.
 			 */
 			final CORBAServer corbaServer = sessionEnvironment.getARServerServantManager().getCORBAServer();
-			final POA poa = corbaServer.getPoa();
 			corbaServer.activateServant(
-					poa.reference_to_servant((new ARServerPOATie(new ARServerImpl(), poa))._this(corbaServer.getOrb())),
+					new ARServerPOATie(new ARServerImpl(), corbaServer.getPoa()),
 					processCodename);
 			corbaServer.printNamingContext();
 		} catch (final Exception e) {
@@ -162,8 +159,8 @@ public class AdministrationResourceServer {
 	}
 	
 	protected static synchronized void shutdown() {
-		Log.debugMessage("AdministrationResourceServer.shutdown | serializing ResourceStorableObjectPool" , Log.INFO);
-		ResourceStorableObjectPool.serializePool();		
+		Log.debugMessage("AdministrationResourceServer.shutdown | serializing StorableObjectPool" , Log.INFO);
+		StorableObjectPool.serialize();		
 	}
 
 	static class ARServerLoginRestorer implements LoginRestorer {

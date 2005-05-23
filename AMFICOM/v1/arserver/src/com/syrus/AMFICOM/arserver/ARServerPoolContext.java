@@ -1,5 +1,5 @@
 /*-
- * $Id: ARServerPoolContext.java,v 1.2 2005/05/18 12:56:28 bass Exp $
+ * $Id: ARServerPoolContext.java,v 1.3 2005/05/23 09:01:41 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.util.ApplicationProperties;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/05/18 12:56:28 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/23 09:01:41 $
  * @module arserver_v1
  */
 final class ARServerPoolContext extends PoolContext {
@@ -42,13 +42,5 @@ final class ARServerPoolContext extends PoolContext {
 						: new ARServerResourceObjectLoader(ApplicationProperties.getInt(KEY_REFRESH_TIMEOUT, REFRESH_TIMEOUT) * 1000L * 60L),
 				StorableObjectResizableLRUMap.class,
 				ApplicationProperties.getInt(KEY_RESOURCE_POOL_SIZE, RESOURCE_POOL_SIZE));
-	}
-
-	public void deserialize() {
-		ResourceStorableObjectPool.deserializePool();
-	}
-
-	public void serialize() {
-		ResourceStorableObjectPool.serializePool();
 	}
 }
