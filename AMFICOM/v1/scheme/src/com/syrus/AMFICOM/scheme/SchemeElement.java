@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.29 2005/05/20 21:12:12 arseniy Exp $
+ * $Id: SchemeElement.java,v 1.30 2005/05/23 10:01:26 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,8 +42,8 @@ import com.syrus.util.Log;
 /**
  * #04 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.29 $, $Date: 2005/05/20 21:12:12 $
+ * @author $Author: bass $
+ * @version $Revision: 1.30 $, $Date: 2005/05/23 10:01:26 $
  * @module scheme_v1
  */
 public final class SchemeElement extends AbstractSchemeElement implements
@@ -360,38 +360,35 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	}
 
 	public Equipment getEquipment() {
-		assert this.assertEquipmentTypeSetStrict() : ErrorMessages.OBJECT_BADLY_INITIALIZED;
+		assert this.assertEquipmentTypeSetStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
 
 		try {
 			return (Equipment) StorableObjectPool.getStorableObject(this.equipmentId, true);
-		}
-		catch (final ApplicationException ae) {
+		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
 		}
 	}
 
 	public EquipmentType getEquipmentType() {
-		assert this.assertEquipmentTypeSetStrict() : ErrorMessages.OBJECT_BADLY_INITIALIZED;
+		assert this.assertEquipmentTypeSetStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
 
 		if (!this.equipmentId.isVoid())
 			return (EquipmentType) getEquipment().getType();
 
 		try {
 			return (EquipmentType) StorableObjectPool.getStorableObject(this.equipmentTypeId, true);
-		}
-		catch (final ApplicationException ae) {
+		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
 		}
 	}
 
 	public KIS getKis() {
-		assert this.kisId != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.kisId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
 		try {
 			return (KIS) StorableObjectPool.getStorableObject(this.kisId, true);
-		}
-		catch (final ApplicationException ae) {
+		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
 		}
@@ -423,19 +420,18 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	}
 
 	public SchemeElement getParentSchemeElement() {
-		assert super.parentSchemeId != null && this.parentSchemeElementId != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert super.parentSchemeId.isVoid() ^ this.parentSchemeElementId.isVoid() : ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+		assert super.parentSchemeId != null && this.parentSchemeElementId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert super.parentSchemeId.isVoid() ^ this.parentSchemeElementId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 
 		if (this.parentSchemeElementId.isVoid()) {
 			Log.debugMessage("SchemeElement.getParentSchemeElement() | Parent SchemeElement was requested, while parent is a Scheme; returnung null",
 					Log.FINE);
 			return null;
 		}
-
+		
 		try {
 			return (SchemeElement) StorableObjectPool.getStorableObject(this.parentSchemeElementId, true);
-		}
-		catch (final ApplicationException ae) {
+		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
 		}
@@ -457,11 +453,11 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 * @see SchemeCellContainer#getSchemeCell()
 	 */
 	public SchemeImageResource getSchemeCell() {
-		assert this.schemeCellId != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.schemeCellId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
 		try {
-			return (SchemeImageResource) StorableObjectPool.getStorableObject(this.schemeCellId, true);
-		}
-		catch (final ApplicationException ae) {
+			return (SchemeImageResource) StorableObjectPool
+					.getStorableObject(this.schemeCellId, true);
+		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
 		}
@@ -516,11 +512,10 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	}
 
 	public SiteNode getSiteNode() {
-		assert this.siteNodeId != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.siteNodeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
 		try {
 			return (SiteNode) StorableObjectPool.getStorableObject(this.siteNodeId, true);
-		}
-		catch (final ApplicationException ae) {
+		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
 		}
@@ -530,11 +525,11 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 * @see SchemeSymbolContainer#getSymbol()
 	 */
 	public BitmapImageResource getSymbol() {
-		assert this.symbolId != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.symbolId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
 		try {
-			return (BitmapImageResource) StorableObjectPool.getStorableObject(this.symbolId, true);
-		}
-		catch (final ApplicationException ae) {
+			return (BitmapImageResource) StorableObjectPool
+					.getStorableObject(this.symbolId, true);
+		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
 		}
@@ -564,20 +559,20 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 * @see SchemeCellContainer#getUgoCell()
 	 */
 	public SchemeImageResource getUgoCell() {
-		assert this.ugoCellId != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.ugoCellId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
 		try {
-			return (SchemeImageResource) StorableObjectPool.getStorableObject(this.ugoCellId, true);
-		}
-		catch (final ApplicationException ae) {
+			return (SchemeImageResource) StorableObjectPool
+					.getStorableObject(this.ugoCellId, true);
+		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
 		}
 	}
 
 	/**
-	 * The <code>Scheme</code> must belong to this <code>SchemeElement</code>,
-	 * or crap will meet the fan.
-	 * 
+	 * The <code>Scheme</code> must belong to this
+	 * <code>SchemeElement</code>, or crap will meet the fan.
+	 *
 	 * @param scheme
 	 */
 	public void removeScheme(final Scheme scheme) {

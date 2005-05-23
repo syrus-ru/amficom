@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.25 2005/05/20 21:12:12 arseniy Exp $
+ * $Id: PathElement.java,v 1.26 2005/05/23 10:01:25 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,8 +44,8 @@ import com.syrus.util.Log;
  * its {@link PathElement#getName() getName()} method actually returns
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.25 $, $Date: 2005/05/20 21:12:12 $
+ * @author $Author: bass $
+ * @version $Revision: 1.26 $, $Date: 2005/05/23 10:01:25 $
  * @module scheme_v1
  * @todo <code>setAttributes()</code> should contain, among others,
  *       kind and sequentialNumber paremeters.
@@ -465,18 +465,17 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 	public AbstractSchemePort getEndAbstractSchemePort() {
 		if (this.kind.value() != Kind._SCHEME_ELEMENT)
 			throw new UnsupportedOperationException(ErrorMessages.OBJECT_STATE_ILLEGAL);
-		assert this.endAbstractSchemePortId != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.endAbstractSchemePortId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
 		if (isLast())
 			return null;
-		assert !this.endAbstractSchemePortId.isVoid() : ErrorMessages.OBJECT_BADLY_INITIALIZED;
+		assert !this.endAbstractSchemePortId.isVoid(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
 		try {
 			return (AbstractSchemePort) StorableObjectPool.getStorableObject(this.endAbstractSchemePortId, true);
-		}
-		catch (final ApplicationException ae) {
+		} catch (final ApplicationException ae) {
 			/*
 			 * Never.
 			 */
-			assert false : ae.getMessage();
+			assert false: ae.getMessage();
 			Log.debugException(ae, Log.SEVERE);
 			return null;
 		}
@@ -567,18 +566,17 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 	public AbstractSchemePort getStartAbstractSchemePort() {
 		if (this.kind.value() != Kind._SCHEME_ELEMENT)
 			throw new UnsupportedOperationException(ErrorMessages.OBJECT_STATE_ILLEGAL);
-		assert this.startAbstractSchemePortId != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.startAbstractSchemePortId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
 		if (isFirst())
 			return null;
-		assert !this.startAbstractSchemePortId.isVoid() : ErrorMessages.OBJECT_BADLY_INITIALIZED;
+		assert !this.startAbstractSchemePortId.isVoid(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
 		try {
 			return (AbstractSchemePort) StorableObjectPool.getStorableObject(this.startAbstractSchemePortId, true);
-		}
-		catch (final ApplicationException ae) {
+		} catch (final ApplicationException ae) {
 			/*
 			 * Never.
 			 */
-			assert false : ae.getMessage();
+			assert false: ae.getMessage();
 			Log.debugException(ae, Log.SEVERE);
 			return null;
 		}

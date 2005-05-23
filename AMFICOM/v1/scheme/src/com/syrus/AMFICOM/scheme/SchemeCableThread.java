@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.28 2005/05/20 21:12:12 arseniy Exp $
+ * $Id: SchemeCableThread.java,v 1.29 2005/05/23 10:01:26 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,8 +40,8 @@ import com.syrus.util.Log;
 /**
  * #12 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.28 $, $Date: 2005/05/20 21:12:12 $
+ * @author $Author: bass $
+ * @version $Revision: 1.29 $, $Date: 2005/05/23 10:01:26 $
  * @module scheme_v1
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
@@ -202,12 +202,11 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	}
 
 	public CableThreadType getCableThreadType() {
-		assert this.cableThreadTypeId != null && !this.cableThreadTypeId.isVoid() : ErrorMessages.OBJECT_BADLY_INITIALIZED;
+		assert this.cableThreadTypeId != null && !this.cableThreadTypeId.isVoid(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
 
 		try {
 			return (CableThreadType) StorableObjectPool.getStorableObject(this.cableThreadTypeId, true);
-		}
-		catch (final ApplicationException ae) {
+		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
 		}
@@ -255,11 +254,10 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	}
 
 	public Link getLink() {
-		assert this.linkId != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.linkId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
 		try {
 			return (Link) StorableObjectPool.getStorableObject(this.linkId, true);
-		}
-		catch (final ApplicationException ae) {
+		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
 		}
@@ -274,13 +272,12 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	}
 
 	public SchemeCableLink getParentSchemeCableLink() {
-		assert this.parentSchemeCableLinkId != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert !this.parentSchemeCableLinkId.isVoid() : ErrorMessages.OBJECT_BADLY_INITIALIZED;
+		assert this.parentSchemeCableLinkId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert !this.parentSchemeCableLinkId.isVoid(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
 
 		try {
 			return (SchemeCableLink) StorableObjectPool.getStorableObject(this.parentSchemeCableLinkId, true);
-		}
-		catch (final ApplicationException ae) {
+		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
 		}
@@ -308,26 +305,28 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	}
 
 	public SchemePort getSourceSchemePort() {
-		assert this.sourceSchemePortId != null && this.targetSchemePortId != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert this.sourceSchemePortId.isVoid() || !this.sourceSchemePortId.equals(this.targetSchemePortId) : ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
+		assert this.sourceSchemePortId != null
+				&& this.targetSchemePortId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.sourceSchemePortId.isVoid()
+				|| !this.sourceSchemePortId.equals(this.targetSchemePortId): ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
 
 		try {
 			return (SchemePort) StorableObjectPool.getStorableObject(this.sourceSchemePortId, true);
-		}
-		catch (final ApplicationException ae) {
+		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
 		}
 	}
 
 	public SchemePort getTargetSchemePort() {
-		assert this.sourceSchemePortId != null && this.targetSchemePortId != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert this.targetSchemePortId.isVoid() || !this.targetSchemePortId.equals(this.sourceSchemePortId) : ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
+		assert this.sourceSchemePortId != null
+				&& this.targetSchemePortId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.targetSchemePortId.isVoid()
+				|| !this.targetSchemePortId.equals(this.sourceSchemePortId): ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
 
 		try {
 			return (SchemePort) StorableObjectPool.getStorableObject(this.targetSchemePortId, true);
-		}
-		catch (final ApplicationException ae) {
+		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
 		}

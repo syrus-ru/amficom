@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.22 2005/05/20 21:12:12 arseniy Exp $
+ * $Id: CableChannelingItem.java,v 1.23 2005/05/23 10:01:25 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,8 +36,8 @@ import com.syrus.util.Log;
 /**
  * #13 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.22 $, $Date: 2005/05/20 21:12:12 $
+ * @author $Author: bass $
+ * @version $Revision: 1.23 $, $Date: 2005/05/23 10:01:25 $
  * @module scheme_v1
  */
 public final class CableChannelingItem extends AbstractCloneableStorableObject {
@@ -229,8 +229,7 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject {
 
 		try {
 			return (SiteNode) StorableObjectPool.getStorableObject(this.endSiteNodeId, true);
-		}
-		catch (final ApplicationException ae) {
+		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
 		}
@@ -241,24 +240,22 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject {
 	}
 
 	public SchemeCableLink getParentSchemeCableLink() {
-		assert this.parentSchemeCableLinkId != null : ErrorMessages.OBJECT_BADLY_INITIALIZED;
-		assert !this.parentSchemeCableLinkId.isVoid() : ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+		assert this.parentSchemeCableLinkId != null: ErrorMessages.OBJECT_BADLY_INITIALIZED;
+		assert !this.parentSchemeCableLinkId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 
 		try {
 			return (SchemeCableLink) StorableObjectPool.getStorableObject(this.parentSchemeCableLinkId, true);
-		}
-		catch (final ApplicationException ae) {
+		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
 		}
 	}
 
 	public PhysicalLink getPhysicalLink() {
-		assert this.physicalLinkId != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.physicalLinkId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
 		try {
 			return (PhysicalLink) StorableObjectPool.getStorableObject(this.physicalLinkId, true);
-		}
-		catch (final ApplicationException ae) {
+		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
 		}
@@ -285,8 +282,7 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject {
 
 		try {
 			return (SiteNode) StorableObjectPool.getStorableObject(this.startSiteNodeId, true);
-		}
-		catch (final ApplicationException ae) {
+		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
 		}

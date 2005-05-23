@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.6 2005/05/20 21:12:12 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.7 2005/05/23 10:01:25 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,12 +24,11 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.6 $, $Date: 2005/05/20 21:12:12 $
+ * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2005/05/23 10:01:25 $
  * @module scheme_v1
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
-
 	private LinkedIdsConditionImpl(final Set linkedIds, final Short linkedEntityCode, final Short entityCode) {
 		this.linkedIds = linkedIds;
 		this.linkedEntityCode = linkedEntityCode.shortValue();
@@ -42,8 +41,9 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 			for (final Iterator linkedIdIterator = this.linkedIds.iterator(); linkedIdIterator.hasNext();) {
 				final Identifier id = (Identifier) linkedIdIterator.next();
 				if (id.getMajor() == ObjectEntities.DOMAIN_ENTITY_CODE
-						&& dmDomain.isChild((Domain) StorableObjectPool.getStorableObject(id, true)))
+						&& dmDomain.isChild((Domain) StorableObjectPool.getStorableObject(id, true))) {
 					return true;
+				}
 			}
 		} catch (final ApplicationException ae) {
 			Log.errorException(ae);

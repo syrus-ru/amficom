@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeLink.java,v 1.15 2005/05/20 21:12:12 arseniy Exp $
+ * $Id: AbstractSchemeLink.java,v 1.16 2005/05/23 10:01:26 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,8 +31,8 @@ import com.syrus.util.Log;
  * generated from IDL files to compile cleanly. Use other implementations of
  * {@link AbstractSchemeLink}instead.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.15 $, $Date: 2005/05/20 21:12:12 $
+ * @author $Author: bass $
+ * @version $Revision: 1.16 $, $Date: 2005/05/23 10:01:26 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemeLink extends AbstractSchemeElement {
@@ -142,8 +142,7 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 
 		try {
 			return (Link) StorableObjectPool.getStorableObject(this.linkId, true);
-		}
-		catch (final ApplicationException ae) {
+		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
 		}
@@ -160,8 +159,7 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 
 		try {
 			return (AbstractLinkType) StorableObjectPool.getStorableObject(this.abstractLinkTypeId, true);
-		}
-		catch (final ApplicationException ae) {
+		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
 		}
@@ -196,8 +194,7 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 
 		try {
 			return (AbstractSchemePort) StorableObjectPool.getStorableObject(this.sourceAbstractSchemePortId, true);
-		}
-		catch (final ApplicationException ae) {
+		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
 		}
@@ -214,8 +211,7 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 
 		try {
 			return (AbstractSchemePort) StorableObjectPool.getStorableObject(this.targetAbstractSchemePortId, true);
-		}
-		catch (final ApplicationException ae) {
+		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
 		}
