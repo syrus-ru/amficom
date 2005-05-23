@@ -1,5 +1,5 @@
 /*
- * $Id: ResourceKeys.java,v 1.1 2005/05/19 14:06:42 bob Exp $
+ * $Id: ResourceKeys.java,v 1.2 2005/05/23 11:09:12 bob Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.client.resource;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/05/19 14:06:42 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/23 11:09:12 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module generalclient_v1
@@ -34,9 +34,13 @@ public interface ResourceKeys {
 	String	ICON_ADD_FILE				= "com.syrus.AMFICOM.icon.general.addfile";
 	String	ICON_REMOVE_FILE			= "com.syrus.AMFICOM.icon.general.removefile";
 
+	Object	ICON_MINI_FOLDER			= "com.syrus.AMFICOM.icon.mini.general.folder";
 	String	ICON_MINI_PATHMODE			= "com.syrus.AMFICOM.icon.mini.general.pathmode";
+	Object	ICON_MINI_PORT				= "com.syrus.AMFICOM.icon.mini.general.port";
 	Object	ICON_MINI_MEASUREMENT_SETUP	= "com.syrus.AMFICOM.icon.mini.general.measurementSetup";
 	Object	ICON_MINI_RESULT			= "com.syrus.AMFICOM.icon.mini.general.result";
+	Object	ICON_MINI_TESTING			= "com.syrus.AMFICOM.icon.mini.general.testing";
+	
 	
 	Object IMAGE_LOGIN_LOGO = "LoginLogo";
 }

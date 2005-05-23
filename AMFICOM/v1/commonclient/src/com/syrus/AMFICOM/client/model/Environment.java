@@ -1,5 +1,5 @@
 /*
- * $Id: Environment.java,v 1.1 2005/05/19 14:06:42 bob Exp $
+ * $Id: Environment.java,v 1.2 2005/05/23 11:09:12 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -57,7 +57,7 @@ import com.syrus.io.IniFile;
  * Класс Environment используется для хранения общей для приложения информации.
  * 
  * @author $Author: bob $
- * @version $Revision: 1.1 $, $Date: 2005/05/19 14:06:42 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/23 11:09:12 $
  * @module commonclient_v1
  */
 public final class Environment {
@@ -211,7 +211,18 @@ public final class Environment {
 
 		UIManager.put(ResourceKeys.ICON_MINI_PATHMODE, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
 			"images/pathmode.gif").getScaledInstance(15, 15, Image.SCALE_SMOOTH)));
+		
+		UIManager.put(ResourceKeys.ICON_MINI_FOLDER, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+		"images/folder.gif").getScaledInstance(15, 15, Image.SCALE_SMOOTH)));
+		
 
+		UIManager.put(ResourceKeys.ICON_MINI_PORT, new ImageIcon(Toolkit.getDefaultToolkit()
+				.getImage("images/port.gif").getScaledInstance(15, 15, Image.SCALE_SMOOTH)));
+		
+		UIManager.put(ResourceKeys.ICON_MINI_TESTING, new ImageIcon(Toolkit.getDefaultToolkit()
+			.getImage("images/testing.gif").getScaledInstance(15, 15, Image.SCALE_SMOOTH)));
+		
+		
 		UIManager.put(ResourceKeys.ICON_MINI_MEASUREMENT_SETUP, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
 			"images/testsetup.gif").getScaledInstance(15, 15, Image.SCALE_SMOOTH)));
 

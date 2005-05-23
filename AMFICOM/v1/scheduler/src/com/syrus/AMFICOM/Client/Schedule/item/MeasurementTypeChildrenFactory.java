@@ -1,5 +1,5 @@
 /*-
-* $Id: MeasurementTypeChildrenFactory.java,v 1.3 2005/05/19 14:32:22 bob Exp $
+* $Id: MeasurementTypeChildrenFactory.java,v 1.4 2005/05/23 11:09:02 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -17,6 +17,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.swing.UIManager;
+
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.configuration.MeasurementPortType;
@@ -33,7 +36,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/05/19 14:32:22 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/23 11:09:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -105,12 +108,14 @@ public class MeasurementTypeChildrenFactory implements ChildrenFactory {
 					Collection measurementTypesFormeasurementPortType = (Collection) kisMeasurementTypes.get(kis);
 					if (measurementTypesFormeasurementPortType.contains(item.getObject())) {
 						KISItem kisItem = new KISItem(kis.getId());
+						kisItem.setIcon(UIManager.getIcon(ResourceKeys.ICON_MINI_TESTING));
 						item.addChild(kisItem);
 						Collection measurementPort = (Collection) kisMeasurementPorts.get(kis);
 						for (Iterator measurementPortIterator = measurementPort.iterator(); measurementPortIterator
 								.hasNext();) {
 							MeasurementPort measurementPort2 = (MeasurementPort) measurementPortIterator.next();
 							MeasurementPortItem measurementPortItem = new MeasurementPortItem(measurementPort2.getId());
+							measurementPortItem.setIcon(UIManager.getIcon(ResourceKeys.ICON_MINI_PORT));
 							kisItem.addChild(measurementPortItem);
 							for (Iterator monitoredElementIterator = monitoredElements.iterator(); monitoredElementIterator
 									.hasNext();) {
@@ -118,6 +123,7 @@ public class MeasurementTypeChildrenFactory implements ChildrenFactory {
 								if (monitoredElement.getMeasurementPortId().equals(measurementPort2.getId())) {
 									MonitoredElementItem monitoredElementItem = new MonitoredElementItem(
 																											monitoredElement.getId());
+									monitoredElementItem.setIcon(UIManager.getIcon(ResourceKeys.ICON_MINI_PATHMODE));									
 									measurementPortItem.addChild(monitoredElementItem);
 								}
 							}

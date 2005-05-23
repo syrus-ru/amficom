@@ -20,6 +20,7 @@ import javax.swing.tree.TreePath;
 
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
+import com.syrus.AMFICOM.Client.Schedule.item.ElementItem;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
@@ -30,7 +31,9 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.logic.IconPopulatableItem;
 import com.syrus.AMFICOM.logic.Item;
+import com.syrus.AMFICOM.logic.ItemTreeIconLabelCellRenderer;
 import com.syrus.AMFICOM.logic.LogicalTreeUI;
 import com.syrus.AMFICOM.logic.SelectionListener;
 import com.syrus.AMFICOM.logic.ServiceItem;
@@ -177,6 +180,10 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 	public void setElements(Collection elements) {
 		for (Iterator it = elements.iterator(); it.hasNext();) {
 			Item item = (Item) it.next();
+			if (item instanceof IconPopulatableItem) {
+				IconPopulatableItem iconPopulatableItem = (IconPopulatableItem)item;
+				iconPopulatableItem.setIcon(UIManager.getIcon(ResourceKeys.ICON_MINI_FOLDER));
+			}
 			this.rootItem.addChild(item);
 			this.treePanel.addItem(item);
 			this.treePanel.expandAll(item);
@@ -215,6 +222,7 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 		if (this.treePanel == null) {
 			final Dispatcher dispatcher = this.aContext.getDispatcher();
 			this.treePanel = new LogicalTreeUI(this.rootItem, false);
+			this.treePanel.setRenderer(ElementItem.class, new ItemTreeIconLabelCellRenderer());
 			this.selectionListener = new SelectionListener() {
 
 				public void selectedItems(Collection items) {

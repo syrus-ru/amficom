@@ -1,5 +1,5 @@
 /*
- * $Id: ElementItem.java,v 1.7 2005/05/17 14:13:59 bob Exp $
+ * $Id: ElementItem.java,v 1.8 2005/05/23 11:09:02 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,18 +10,21 @@ package com.syrus.AMFICOM.Client.Schedule.item;
 
 import java.util.Iterator;
 
+import javax.swing.Icon;
+
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.logic.AbstractItem;
+import com.syrus.AMFICOM.logic.IconPopulatableItem;
 import com.syrus.AMFICOM.logic.Item;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/05/17 14:13:59 $
+ * @version $Revision: 1.8 $, $Date: 2005/05/23 11:09:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
  */
-public abstract class ElementItem extends AbstractItem {
+public abstract class ElementItem extends IconPopulatableItem {
 
 	protected Identifier	identifier;
 
