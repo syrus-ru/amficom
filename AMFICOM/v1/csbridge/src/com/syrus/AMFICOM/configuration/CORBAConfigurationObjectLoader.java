@@ -1,5 +1,5 @@
 /*
- * $Id: CORBAConfigurationObjectLoader.java,v 1.10 2005/05/21 19:49:41 arseniy Exp $
+ * $Id: CORBAConfigurationObjectLoader.java,v 1.11 2005/05/23 08:29:26 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -49,7 +49,7 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/05/21 19:49:41 $
+ * @version $Revision: 1.11 $, $Date: 2005/05/23 08:29:26 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
@@ -766,8 +766,14 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 		try {
 			MonitoredElement_Transferable[] transferables = cmServer.transmitMonitoredElementsButIdsCondition(idsT, sessionKeyT, conditionT);
 			Set objects = new HashSet(transferables.length);
-			for (int i = 0; i < transferables.length; i++)
-				objects.add(new MonitoredElement(transferables[i]));
+			for (int i = 0; i < transferables.length; i++) {
+				try {
+					objects.add(new MonitoredElement(transferables[i]));
+				}
+				catch (CreateObjectException coe) {
+					Log.errorException(coe);
+				}
+			}
 			return objects;
 		}
 		catch (AMFICOMRemoteException are) {
