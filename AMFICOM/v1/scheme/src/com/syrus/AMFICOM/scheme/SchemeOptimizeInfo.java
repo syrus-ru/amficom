@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.23 2005/05/23 10:01:25 bass Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.24 2005/05/23 18:45:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.util.Log;
  * #05 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.23 $, $Date: 2005/05/23 10:01:25 $
+ * @version $Revision: 1.24 $, $Date: 2005/05/23 18:45:16 $
  * @module scheme_v1
  */
 public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
@@ -85,7 +85,7 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 	SchemeOptimizeInfo(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 	
-		this.schemeOptimizeInfoDatabase = SchemeDatabaseContext.getSchemeOptimizeInfoDatabase();
+		this.schemeOptimizeInfoDatabase = (SchemeOptimizeInfoDatabase) SchemeDatabaseContext.getDatabase(ObjectEntities.SCHEME_OPTIMIZE_INFO_ENTITY_CODE);
 		try {
 			this.schemeOptimizeInfoDatabase.retrieve(this);
 		} catch (final IllegalDataException ide) {
@@ -150,7 +150,7 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 	 * @param transferable
 	 */
 	SchemeOptimizeInfo(final SchemeOptimizeInfo_Transferable transferable) {
-		this.schemeOptimizeInfoDatabase = SchemeDatabaseContext.getSchemeOptimizeInfoDatabase();
+		this.schemeOptimizeInfoDatabase = (SchemeOptimizeInfoDatabase) SchemeDatabaseContext.getDatabase(ObjectEntities.SCHEME_OPTIMIZE_INFO_ENTITY_CODE);
 		fromTransferable(transferable);
 	}
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.31 2005/05/18 11:48:20 bass Exp $
+ * $Id: SiteNodeType.java,v 1.32 2005/05/23 18:45:17 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,7 +40,7 @@ import com.syrus.AMFICOM.map.corba.SiteNodeType_Transferable;
  * {@link #DEFAULT_PIQUET}, {@link #DEFAULT_ATS}, {@link #DEFAULT_BUILDING}, {@link #DEFAULT_UNBOUND},
  * {@link #DEFAULT_CABLE_INLET}, {@link #DEFAULT_TOWER}
  * @author $Author: bass $
- * @version $Revision: 1.31 $, $Date: 2005/05/18 11:48:20 $
+ * @version $Revision: 1.32 $, $Date: 2005/05/23 18:45:17 $
  * @module map_v1
  * @todo make 'sort' persistent (update database scheme as well)
  */
@@ -70,7 +70,7 @@ public class SiteNodeType extends StorableObjectType implements Characterizable,
 	SiteNodeType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		SiteNodeTypeDatabase database = MapDatabaseContext.getSiteNodeTypeDatabase();
+		SiteNodeTypeDatabase database = (SiteNodeTypeDatabase) MapDatabaseContext.getDatabase(ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE);
 		try {
 			database.retrieve(this);
 		}

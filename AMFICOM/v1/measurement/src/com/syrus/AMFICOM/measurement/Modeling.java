@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.38 2005/05/20 21:11:38 arseniy Exp $
+ * $Id: Modeling.java,v 1.39 2005/05/23 18:45:15 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,8 +29,8 @@ import com.syrus.AMFICOM.measurement.corba.Modeling_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/05/20 21:11:38 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.39 $, $Date: 2005/05/23 18:45:15 $
+ * @author $Author: bass $
  * @author arseniy
  * @module measurement_v1
  */
@@ -50,7 +50,7 @@ public class Modeling extends Action {
 	public Modeling(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		ModelingDatabase database = MeasurementDatabaseContext.getModelingDatabase();
+		ModelingDatabase database = (ModelingDatabase) MeasurementDatabaseContext.getDatabase(ObjectEntities.MODELING_ENTITY_CODE);
 		try {
 			database.retrieve(this);
 		}

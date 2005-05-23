@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterType.java,v 1.26 2005/05/18 11:07:39 bass Exp $
+ * $Id: ParameterType.java,v 1.27 2005/05/23 18:45:13 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/05/18 11:07:39 $
+ * @version $Revision: 1.27 $, $Date: 2005/05/23 18:45:13 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -44,7 +44,7 @@ public final class ParameterType extends StorableObjectType implements Character
 		
 		this.characteristics = new HashSet();
 		
-		ParameterTypeDatabase database = GeneralDatabaseContext.getParameterTypeDatabase();
+		ParameterTypeDatabase database = (ParameterTypeDatabase) GeneralDatabaseContext.getDatabase(ObjectEntities.PARAMETERTYPE_ENTITY_CODE);
 		try {
 			database.retrieve(this);
 		}

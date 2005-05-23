@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseSchemeObjectLoader.java,v 1.4 2005/05/23 12:56:45 bass Exp $
+ * $Id: DatabaseSchemeObjectLoader.java,v 1.5 2005/05/23 18:45:12 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,13 +20,14 @@ import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.DatabaseObjectLoader;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/05/23 12:56:45 $
+ * @version $Revision: 1.5 $, $Date: 2005/05/23 18:45:12 $
  * @module csbridge_v1
  */
 public class DatabaseSchemeObjectLoader extends DatabaseObjectLoader implements SchemeObjectLoader {
@@ -73,7 +74,7 @@ public class DatabaseSchemeObjectLoader extends DatabaseObjectLoader implements 
 	 */
 	public Set loadCableChannelingItems(final Set ids) throws ApplicationException {
 		try {
-			return SchemeDatabaseContext.getCableChannelingItemDatabase().retrieveByIdsByCondition(ids, null);
+			return ((CableChannelingItemDatabase) SchemeDatabaseContext.getDatabase(ObjectEntities.CABLE_CHANNELING_ITEM_ENTITY_CODE)).retrieveByIdsByCondition(ids, null);
 		} catch (final IllegalDataException ide) {
 			throw new DatabaseException("DatabaseSchemeObjectLoader.loadCableChannelingItems | Illegal Storable Object: " + ide.getMessage());
 		}

@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.41 2005/05/18 11:48:20 bass Exp $
+ * $Id: Map.java,v 1.42 2005/05/23 18:45:17 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,7 +41,7 @@ import com.syrus.AMFICOM.map.corba.Map_Transferable;
  * линиях, коллекторов (объединяющих в себе линии).
  *
  * @author $Author: bass $
- * @version $Revision: 1.41 $, $Date: 2005/05/18 11:48:20 $
+ * @version $Revision: 1.42 $, $Date: 2005/05/23 18:45:17 $
  * @module map_v1
  * @todo make maps persistent
  * @todo make externalNodes persistent
@@ -91,7 +91,7 @@ public class Map extends DomainMember implements Namable {
 	Map(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		MapDatabase database = MapDatabaseContext.getMapDatabase();
+		MapDatabase database = (MapDatabase) MapDatabaseContext.getDatabase(ObjectEntities.MAP_ENTITY_CODE);
 		try {
 			database.retrieve(this);
 		}

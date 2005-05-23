@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentType.java,v 1.58 2005/05/18 11:27:16 bass Exp $
+ * $Id: EquipmentType.java,v 1.59 2005/05/23 18:45:19 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.58 $, $Date: 2005/05/18 11:27:16 $
+ * @version $Revision: 1.59 $, $Date: 2005/05/23 18:45:19 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -54,7 +54,7 @@ public class EquipmentType extends StorableObjectType implements Characterizable
 
 		this.characteristics = new HashSet();
 
-		EquipmentTypeDatabase database = ConfigurationDatabaseContext.getEquipmentTypeDatabase();
+		EquipmentTypeDatabase database = (EquipmentTypeDatabase) ConfigurationDatabaseContext.getDatabase(ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE);
 		try {
 			database.retrieve(this);
 		}

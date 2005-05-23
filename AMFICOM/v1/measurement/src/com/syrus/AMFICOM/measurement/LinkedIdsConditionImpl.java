@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.40 2005/05/20 21:11:38 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.41 2005/05/23 18:45:15 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,8 +22,8 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2005/05/20 21:11:38 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.41 $, $Date: 2005/05/23 18:45:15 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -35,7 +35,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 	protected static final Short	MEASUREMENT_SHORT		= new Short(ObjectEntities.MEASUREMENT_ENTITY_CODE);
 	protected static final Short	RESULT_SHORT			= new Short(ObjectEntities.RESULT_ENTITY_CODE);
 	protected static final Short	MEASUREMENTTYPE_SHORT	= new Short(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
-	protected static final Short	MS_SHORT				= new Short(ObjectEntities.MS_ENTITY_CODE);
+	protected static final Short	MS_SHORT				= new Short(ObjectEntities.MEASUREMENT_SETUP_ENTITY_CODE);
 
 	private LinkedIdsConditionImpl(final Set linkedIds, final Short linkedEntityCode, final Short entityCode) {
 		this.linkedIds = linkedIds;
@@ -168,10 +168,10 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				}
 				break;
 			}
-			case ObjectEntities.MS_ENTITY_CODE:
+			case ObjectEntities.MEASUREMENT_SETUP_ENTITY_CODE:
 				MeasurementSetup measurementSetup = (MeasurementSetup) storableObject;
 				switch (this.linkedEntityCode) {
-					case ObjectEntities.ME_ENTITY_CODE:
+					case ObjectEntities.MONITORED_ELEMENT_ENTITY_CODE:
 						Set params = new HashSet();
 						params.addAll(measurementSetup.getMonitoredElementIds());
 						condition = super.conditionTest(params);
@@ -208,7 +208,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 			case ObjectEntities.TEST_ENTITY_CODE:
 				Test test = (Test) storableObject;
 				switch (this.linkedEntityCode) {
-					case ObjectEntities.ME_ENTITY_CODE:
+					case ObjectEntities.MONITORED_ELEMENT_ENTITY_CODE:
 						condition = super.conditionTest(test.getMonitoredElement().getId());
 						break;
 					case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:
@@ -242,7 +242,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 			case ObjectEntities.EVALUATION_ENTITY_CODE:
 			case ObjectEntities.MEASUREMENT_ENTITY_CODE:
 			case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
-			case ObjectEntities.MS_ENTITY_CODE:
+			case ObjectEntities.MEASUREMENT_SETUP_ENTITY_CODE:
 			case ObjectEntities.RESULT_ENTITY_CODE:
 			case ObjectEntities.TEST_ENTITY_CODE:
 				this.entityCode = entityCode;

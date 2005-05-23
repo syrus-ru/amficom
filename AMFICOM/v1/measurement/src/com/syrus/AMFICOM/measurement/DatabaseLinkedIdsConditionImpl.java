@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.22 2005/05/18 13:50:28 bob Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.23 2005/05/23 18:45:15 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/05/18 13:50:28 $
- * @author $Author: bob $
+ * @version $Revision: 1.23 $, $Date: 2005/05/23 18:45:15 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 public class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCondition {
@@ -106,9 +106,9 @@ public class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCon
 								+ " for entity type " + super.condition.getEntityCode(),
 								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 				}
-			case ObjectEntities.MS_ENTITY_CODE:
+			case ObjectEntities.MEASUREMENT_SETUP_ENTITY_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
-					case ObjectEntities.ME_ENTITY_CODE:
+					case ObjectEntities.MONITORED_ELEMENT_ENTITY_CODE:
 						return super.getLinkedQuery(MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID,
 									MeasurementSetupWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID,
 									ObjectEntities.MSMELINK_ENTITY);
@@ -156,13 +156,13 @@ public class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCon
 				}
 			case ObjectEntities.TEST_ENTITY_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
-					case ObjectEntities.ME_ENTITY_CODE:
+					case ObjectEntities.MONITORED_ELEMENT_ENTITY_CODE:
 						return super.getQuery(TestWrapper.COLUMN_MONITORED_ELEMENT_ID);
 					case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:
 						return super.getLinkedQuery(TestWrapper.COLUMN_MONITORED_ELEMENT_ID,
 								StorableObjectWrapper.COLUMN_ID,
 								MonitoredElementWrapper.COLUMN_MEASUREMENT_PORT_ID,
-								ObjectEntities.ME_ENTITY);
+								ObjectEntities.MONITORED_ELEMENT_ENTITY);
 					case ObjectEntities.MCM_ENTITY_CODE:
 						stringBuffer = new StringBuffer();
 						stringBuffer.append(TestWrapper.COLUMN_MONITORED_ELEMENT_ID);
@@ -171,7 +171,7 @@ public class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCon
 						stringBuffer.append(StorableObjectDatabase.SQL_SELECT);
 						stringBuffer.append(StorableObjectWrapper.COLUMN_ID);
 						stringBuffer.append(StorableObjectDatabase.SQL_FROM);
-						stringBuffer.append(ObjectEntities.ME_ENTITY);
+						stringBuffer.append(ObjectEntities.MONITORED_ELEMENT_ENTITY);
 						stringBuffer.append(StorableObjectDatabase.SQL_WHERE);
 						stringBuffer.append(MonitoredElementWrapper.COLUMN_MEASUREMENT_PORT_ID);
 						stringBuffer.append(StorableObjectDatabase.SQL_IN);

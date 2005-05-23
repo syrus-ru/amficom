@@ -1,5 +1,5 @@
 /*-
- * $Id: ConfigurationDatabaseContext.java,v 1.42 2005/05/18 11:27:14 bass Exp $
+ * $Id: ConfigurationDatabaseContext.java,v 1.43 2005/05/23 18:45:19 bass Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,7 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2005/05/18 11:27:14 $
+ * @version $Revision: 1.43 $, $Date: 2005/05/23 18:45:19 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -93,98 +93,38 @@ public final class ConfigurationDatabaseContext {
 	public static StorableObjectDatabase getDatabase(final short entityCode) {
 		switch (entityCode) {
 			case ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE:
-				return getEquipmentTypeDatabase();
+				return equipmentTypeDatabase;
 			case ObjectEntities.PORTTYPE_ENTITY_CODE:
-				return getPortTypeDatabase();
+				return portTypeDatabase;
 			case ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE:
-				return getMeasurementPortTypeDatabase();
+				return measurementPortTypeDatabase;
 			case ObjectEntities.LINKTYPE_ENTITY_CODE:
-				return getLinkTypeDatabase();
+				return linkTypeDatabase;
 			case ObjectEntities.CABLELINKTYPE_ENTITY_CODE:
-				return getCableLinkTypeDatabase();
+				return cableLinkTypeDatabase;
 			case ObjectEntities.CABLETHREADTYPE_ENTITY_CODE:
-				return getCableThreadTypeDatabase();
+				return cableThreadTypeDatabase;
 			case ObjectEntities.EQUIPMENT_ENTITY_CODE:
-				return getEquipmentDatabase();
+				return equipmentDatabase;
 			case ObjectEntities.PORT_ENTITY_CODE:
-				return getPortDatabase();
+				return portDatabase;
 			case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:
-				return getMeasurementPortDatabase();
+				return measurementPortDatabase;
 			case ObjectEntities.TRANSPATH_ENTITY_CODE:
-				return getTransmissionPathDatabase();
+				return transmissionPathDatabase;
 			case ObjectEntities.TRANSPATHTYPE_ENTITY_CODE:
-				return getTransmissionPathTypeDatabase();
+				return transmissionPathTypeDatabase;
 			case ObjectEntities.KIS_ENTITY_CODE:
-				return getKISDatabase();
-			case ObjectEntities.ME_ENTITY_CODE:
-				return getMonitoredElementDatabase();
+				return kisDatabase;
+			case ObjectEntities.MONITORED_ELEMENT_ENTITY_CODE:
+				return monitoredElementDatabase;
 			case ObjectEntities.LINK_ENTITY_CODE:
-				return getLinkDatabase();
+				return linkDatabase;
 			case ObjectEntities.CABLETHREAD_ENTITY_CODE:
-				return getCableThreadDatabase();
+				return cableThreadDatabase;
 			default:
 				Log.errorMessage("ConfigurationDatabaseContext.getDatabase | Unknown entity: " + entityCode);
 				return null;
 		}
-	}
-
-	public static EquipmentDatabase getEquipmentDatabase() {
-		return equipmentDatabase;
-	}
-
-	public static EquipmentTypeDatabase getEquipmentTypeDatabase() {
-		return equipmentTypeDatabase;
-	}
-
-	public static KISDatabase getKISDatabase() {
-		return kisDatabase;
-	}
-
-	public static LinkDatabase getLinkDatabase() {
-		return linkDatabase;
-	}
-
-	public static CableThreadDatabase getCableThreadDatabase() {
-		return cableThreadDatabase;
-	}
-
-	public static CableThreadTypeDatabase getCableThreadTypeDatabase() {
-		return cableThreadTypeDatabase;
-	}
-
-	public static LinkTypeDatabase getLinkTypeDatabase() {
-		return linkTypeDatabase;
-	}
-
-	public static CableLinkTypeDatabase getCableLinkTypeDatabase() {
-		return cableLinkTypeDatabase;
-	}
-
-	public static MeasurementPortDatabase getMeasurementPortDatabase() {
-		return measurementPortDatabase;
-	}
-
-	public static MeasurementPortTypeDatabase getMeasurementPortTypeDatabase() {
-		return measurementPortTypeDatabase;
-	}
-
-	public static MonitoredElementDatabase getMonitoredElementDatabase() {
-		return monitoredElementDatabase;
-	}
-
-	public static PortDatabase getPortDatabase() {
-		return portDatabase;
-	}
-
-	public static PortTypeDatabase getPortTypeDatabase() {
-		return portTypeDatabase;
-	}
-
-	public static TransmissionPathDatabase getTransmissionPathDatabase() {
-		return transmissionPathDatabase;
-	}
-
-	public static TransmissionPathTypeDatabase getTransmissionPathTypeDatabase() {
-		return transmissionPathTypeDatabase;
 	}
 }

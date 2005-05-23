@@ -1,5 +1,5 @@
 /*-
- * $Id: ArchiveChildrenFactory.java,v 1.7 2005/05/18 14:49:56 bass Exp $
+ * $Id: ArchiveChildrenFactory.java,v 1.8 2005/05/23 18:45:20 bass Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,7 +48,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/05/18 14:49:56 $
+ * @version $Revision: 1.8 $, $Date: 2005/05/23 18:45:20 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module analysis_v1
@@ -112,7 +112,7 @@ public class ArchiveChildrenFactory implements ChildrenFactory {
 				item.addChild(item3);
 
 			} else if (s.equals(MEASUREMENTS) || s.equals(PREDICTED)) {
-				LinkedIdsCondition condition = new LinkedIdsCondition(this.domainId, ObjectEntities.ME_ENTITY_CODE);
+				LinkedIdsCondition condition = new LinkedIdsCondition(this.domainId, ObjectEntities.MONITORED_ELEMENT_ENTITY_CODE);
 				try {
 					Set meSet = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 					List list = new LinkedList(meSet);
@@ -165,7 +165,7 @@ public class ArchiveChildrenFactory implements ChildrenFactory {
 			} else if (s.equals(MEASUREMENTSETUPS)) {
 				Item parent = item.getParent();
 				MonitoredElement me = (MonitoredElement) parent.getObject();
-				LinkedIdsCondition condition = new LinkedIdsCondition(me.getId(), ObjectEntities.MS_ENTITY_CODE);
+				LinkedIdsCondition condition = new LinkedIdsCondition(me.getId(), ObjectEntities.MEASUREMENT_SETUP_ENTITY_CODE);
 				try {
 					Collection mSetups = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 					for (Iterator it = mSetups.iterator(); it.hasNext();) {

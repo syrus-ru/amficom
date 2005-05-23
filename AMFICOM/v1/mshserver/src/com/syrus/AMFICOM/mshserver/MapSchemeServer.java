@@ -1,5 +1,5 @@
 /*-
- * $Id: MapSchemeServer.java,v 1.6 2005/05/23 09:02:09 bass Exp $
+ * $Id: MapSchemeServer.java,v 1.7 2005/05/23 18:45:20 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.mshserver;
 import com.syrus.AMFICOM.administration.AdministrationDatabaseContext;
 import com.syrus.AMFICOM.administration.Server;
 import com.syrus.AMFICOM.administration.ServerProcess;
+import com.syrus.AMFICOM.administration.ServerProcessDatabase;
 import com.syrus.AMFICOM.administration.ServerProcessWrapper;
 import com.syrus.AMFICOM.administration.User;
 import com.syrus.AMFICOM.general.CORBAServer;
@@ -18,6 +19,7 @@ import com.syrus.AMFICOM.general.DatabaseObjectLoader;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginException;
 import com.syrus.AMFICOM.general.LoginRestorer;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.mshserver.corba.MSHServerPOATie;
 import com.syrus.util.Application;
@@ -26,7 +28,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/05/23 09:02:09 $
+ * @version $Revision: 1.7 $, $Date: 2005/05/23 18:45:20 $
  * @author $Author: bass $
  * @module cmserver_v1
  */
@@ -124,7 +126,7 @@ public class MapSchemeServer {
 				ServerProcessWrapper.MSHSERVER_PROCESS_CODENAME);
 		try {
 			final Server server = new Server(serverId);
-			final ServerProcess serverProcess = AdministrationDatabaseContext.getServerProcessDatabase().retrieveForServerAndCodename(serverId, processCodename);
+			final ServerProcess serverProcess = ((ServerProcessDatabase) AdministrationDatabaseContext.getDatabase(ObjectEntities.SERVERPROCESS_ENTITY_CODE)).retrieveForServerAndCodename(serverId, processCodename);
 			final User user = new User(serverProcess.getUserId());
 			login = user.getLogin();
 

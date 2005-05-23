@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.22 2005/05/18 11:18:39 bass Exp $
+ * $Id: MCM.java,v 1.23 2005/05/23 18:45:11 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/05/18 11:18:39 $
+ * @version $Revision: 1.23 $, $Date: 2005/05/23 18:45:11 $
  * @author $Author: bass $
  * @module administration_v1
  */
@@ -58,7 +58,7 @@ public class MCM extends DomainMember implements Characterizable {
 
 		this.characteristics = new HashSet();
 
-		MCMDatabase database = AdministrationDatabaseContext.getMCMDatabase();
+		MCMDatabase database = (MCMDatabase) AdministrationDatabaseContext.getDatabase(ObjectEntities.MCM_ENTITY_CODE);
 		try {
 			database.retrieve(this);
 		}

@@ -1,5 +1,5 @@
 /*
- * $Id: MServerMeasurementReceive.java,v 1.6 2005/05/23 08:59:42 arseniy Exp $
+ * $Id: MServerMeasurementReceive.java,v 1.7 2005/05/23 18:45:10 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,7 @@ import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -38,8 +39,8 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/05/23 08:59:42 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2005/05/23 18:45:10 $
+ * @author $Author: bass $
  * @module mserver_v1
  */
 abstract class MServerMeasurementReceive extends MServerPOA {
@@ -64,7 +65,7 @@ abstract class MServerMeasurementReceive extends MServerPOA {
 						throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
 					}
 				}
-				ResultDatabase resultDatabase = MeasurementDatabaseContext.getResultDatabase();
+				ResultDatabase resultDatabase = (ResultDatabase) MeasurementDatabaseContext.getDatabase(ObjectEntities.RESULT_ENTITY_CODE);
 				try {
 					resultDatabase.insert(results);
 				}
@@ -107,7 +108,7 @@ abstract class MServerMeasurementReceive extends MServerPOA {
 				objects.add(object);
 		}
 
-		TestDatabase testDatabase = MeasurementDatabaseContext.getTestDatabase();
+		TestDatabase testDatabase = (TestDatabase) MeasurementDatabaseContext.getDatabase(ObjectEntities.TEST_ENTITY_CODE);
 		try {
 			testDatabase.update(objects, modifierId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return StorableObject.createHeadersTransferable(objects);

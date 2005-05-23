@@ -1,5 +1,5 @@
 /*-
- * $Id: LoginEventServer.java,v 1.15 2005/05/18 13:29:31 bass Exp $
+ * $Id: LoginEventServer.java,v 1.16 2005/05/23 18:45:11 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,13 +16,14 @@ import com.syrus.AMFICOM.administration.ServerProcessWrapper;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.util.Application;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/05/18 13:29:31 $
+ * @version $Revision: 1.16 $, $Date: 2005/05/23 18:45:11 $
  * @author $Author: bass $
  * @module leserver_v1
  */
@@ -103,7 +104,7 @@ public final class LoginEventServer {
 					ServerProcessWrapper.LOGIN_PROCESS_CODENAME);
 			eventProcessCodename = ApplicationProperties.getString(ServerProcessWrapper.KEY_EVENT_PROCESS_CODENAME,
 					ServerProcessWrapper.EVENT_PROCESS_CODENAME);
-			final ServerProcessDatabase serverProcessDatabase = AdministrationDatabaseContext.getServerProcessDatabase();
+			final ServerProcessDatabase serverProcessDatabase = (ServerProcessDatabase) AdministrationDatabaseContext.getDatabase(ObjectEntities.SERVERPROCESS_ENTITY_CODE);
 			final ServerProcess loginServerProcess = serverProcessDatabase.retrieveForServerAndCodename(serverId, loginProcessCodename);
 			final ServerProcess eventServerProcess = serverProcessDatabase.retrieveForServerAndCodename(serverId, eventProcessCodename);
 			// TODO something with loginServerProcess and eventServerProcess

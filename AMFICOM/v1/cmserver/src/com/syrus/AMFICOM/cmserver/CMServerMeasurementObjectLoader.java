@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerMeasurementObjectLoader.java,v 1.42 2005/05/18 13:11:21 bass Exp $
+ * $Id: CMServerMeasurementObjectLoader.java,v 1.43 2005/05/23 18:45:13 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,6 +18,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
@@ -41,7 +42,7 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2005/05/18 13:11:21 $
+ * @version $Revision: 1.43 $, $Date: 2005/05/23 18:45:13 $
  * @author $Author: bass $
  * @module cmserver_v1
  */
@@ -64,7 +65,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 	/* Load multiple objects*/
 
 	public Set loadMeasurements(Set ids) throws RetrieveObjectException {
-		MeasurementDatabase database = MeasurementDatabaseContext.getMeasurementDatabase();
+		MeasurementDatabase database = (MeasurementDatabase) MeasurementDatabaseContext.getDatabase(ObjectEntities.MEASUREMENT_ENTITY_CODE);
 		Set objects = super.retrieveFromDatabase(database, ids);
 		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
 		if (loadIdsT.length == 0)
@@ -109,7 +110,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 	}
 
 	public Set loadAnalyses(Set ids) throws RetrieveObjectException {
-		AnalysisDatabase database = MeasurementDatabaseContext.getAnalysisDatabase();
+		AnalysisDatabase database = (AnalysisDatabase) MeasurementDatabaseContext.getDatabase(ObjectEntities.ANALYSIS_ENTITY_CODE);
 		Set objects = super.retrieveFromDatabase(database, ids);
 		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
 		if (loadIdsT.length == 0)
@@ -154,7 +155,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 	}
 
 	public Set loadEvaluations(Set ids) throws RetrieveObjectException {
-		EvaluationDatabase database = MeasurementDatabaseContext.getEvaluationDatabase();
+		EvaluationDatabase database = (EvaluationDatabase) MeasurementDatabaseContext.getDatabase(ObjectEntities.EVALUATION_ENTITY_CODE);
 		Set objects = super.retrieveFromDatabase(database, ids);
 		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
 		if (loadIdsT.length == 0)
@@ -203,7 +204,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 
 
 	public Set loadMeasurementsButIds(StorableObjectCondition condition, Set ids) throws RetrieveObjectException {
-		MeasurementDatabase database = MeasurementDatabaseContext.getMeasurementDatabase();
+		MeasurementDatabase database = (MeasurementDatabase) MeasurementDatabaseContext.getDatabase(ObjectEntities.MEASUREMENT_ENTITY_CODE);
 		Set objects = super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 		Identifier_Transferable[] loadButIdsT = super.createLoadButIdsTransferable(ids, objects);
 		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
@@ -247,7 +248,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 	}
 
 	public Set loadAnalysesButIds(StorableObjectCondition condition, Set ids) throws RetrieveObjectException {
-		AnalysisDatabase database = MeasurementDatabaseContext.getAnalysisDatabase();
+		AnalysisDatabase database = (AnalysisDatabase) MeasurementDatabaseContext.getDatabase(ObjectEntities.ANALYSIS_ENTITY_CODE);
 		Set objects = super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 		Identifier_Transferable[] loadButIdsT = super.createLoadButIdsTransferable(ids, objects);
 		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
@@ -291,7 +292,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 	}
 
 	public Set loadEvaluationsButIds(StorableObjectCondition condition, Set ids) throws RetrieveObjectException {
-		EvaluationDatabase database = MeasurementDatabaseContext.getEvaluationDatabase();
+		EvaluationDatabase database = (EvaluationDatabase) MeasurementDatabaseContext.getDatabase(ObjectEntities.EVALUATION_ENTITY_CODE);
 		Set objects = super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 		Identifier_Transferable[] loadButIdsT = super.createLoadButIdsTransferable(ids, objects);
 		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);

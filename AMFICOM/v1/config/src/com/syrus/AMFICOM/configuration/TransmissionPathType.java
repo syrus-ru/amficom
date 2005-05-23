@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathType.java,v 1.44 2005/05/18 11:27:15 bass Exp $
+ * $Id: TransmissionPathType.java,v 1.45 2005/05/23 18:45:19 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2005/05/18 11:27:15 $
+ * @version $Revision: 1.45 $, $Date: 2005/05/23 18:45:19 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -53,7 +53,7 @@ public class TransmissionPathType extends StorableObjectType implements Characte
 
 		this.characteristics = new HashSet();
 
-		TransmissionPathTypeDatabase database = ConfigurationDatabaseContext.getTransmissionPathTypeDatabase();
+		TransmissionPathTypeDatabase database = (TransmissionPathTypeDatabase) ConfigurationDatabaseContext.getDatabase(ObjectEntities.TRANSPATHTYPE_ENTITY_CODE);
 		try {
 			database.retrieve(this);
 		}

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.33 2005/05/23 10:01:25 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.34 2005/05/23 18:45:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,7 +50,7 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.33 $, $Date: 2005/05/23 10:01:25 $
+ * @version $Revision: 1.34 $, $Date: 2005/05/23 18:45:16 $
  * @module scheme_v1
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
@@ -94,7 +94,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		super(id);
 
 		this.characteristics = new HashSet();
-		this.schemeProtoElementDatabase = SchemeDatabaseContext.getSchemeProtoElementDatabase();
+		this.schemeProtoElementDatabase = (SchemeProtoElementDatabase) SchemeDatabaseContext.getDatabase(ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE);
 		try {
 			this.schemeProtoElementDatabase.retrieve(this);
 		} catch (final IllegalDataException ide) {
@@ -143,7 +143,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		this.parentSchemeProtoElementId = Identifier.possiblyVoid(parentSchemeProtoElement);
 
 		this.characteristics = new HashSet();
-		this.schemeProtoElementDatabase = SchemeDatabaseContext.getSchemeProtoElementDatabase();
+		this.schemeProtoElementDatabase = (SchemeProtoElementDatabase) SchemeDatabaseContext.getDatabase(ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE);
 	}
 
 	/**
@@ -151,7 +151,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * @throws CreateObjectException
 	 */
 	SchemeProtoElement(final SchemeProtoElement_Transferable transferable) throws CreateObjectException {
-		this.schemeProtoElementDatabase = SchemeDatabaseContext.getSchemeProtoElementDatabase();
+		this.schemeProtoElementDatabase = (SchemeProtoElementDatabase) SchemeDatabaseContext.getDatabase(ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE);
 		fromTransferable(transferable);
 	}
 

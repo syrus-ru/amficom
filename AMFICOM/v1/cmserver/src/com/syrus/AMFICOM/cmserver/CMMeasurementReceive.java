@@ -1,5 +1,5 @@
 /*
- * $Id: CMMeasurementReceive.java,v 1.16 2005/05/23 09:01:04 bass Exp $
+ * $Id: CMMeasurementReceive.java,v 1.17 2005/05/23 18:45:13 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,6 +11,7 @@ import java.util.HashSet;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -72,7 +73,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/05/23 09:01:04 $
+ * @version $Revision: 1.17 $, $Date: 2005/05/23 18:45:13 $
  * @author $Author: bass $
  * @module cmserver_v1
  */
@@ -106,7 +107,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 				objects.add(object);
 		}
 
-		MeasurementTypeDatabase database = MeasurementDatabaseContext.getMeasurementTypeDatabase();
+		MeasurementTypeDatabase database = (MeasurementTypeDatabase) MeasurementDatabaseContext.getDatabase(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
 		try {
 			database.update(objects, new Identifier(userId.value), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return StorableObject.createHeadersTransferable(objects);
@@ -149,7 +150,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 				objects.add(object);
 		}
 
-		AnalysisTypeDatabase database = MeasurementDatabaseContext.getAnalysisTypeDatabase();
+		AnalysisTypeDatabase database = (AnalysisTypeDatabase) MeasurementDatabaseContext.getDatabase(ObjectEntities.ANALYSISTYPE_ENTITY_CODE);
 		try {
 			database.update(objects, new Identifier(userId.value), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return StorableObject.createHeadersTransferable(objects);
@@ -192,7 +193,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 				objects.add(object);
 		}
 
-		EvaluationTypeDatabase database = MeasurementDatabaseContext.getEvaluationTypeDatabase();
+		EvaluationTypeDatabase database = (EvaluationTypeDatabase) MeasurementDatabaseContext.getDatabase(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE);
 		try {
 			database.update(objects, new Identifier(userId.value), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return StorableObject.createHeadersTransferable(objects);
@@ -235,7 +236,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 				objects.add(object);
 		}
 
-		ModelingTypeDatabase database = MeasurementDatabaseContext.getModelingTypeDatabase();
+		ModelingTypeDatabase database = (ModelingTypeDatabase) MeasurementDatabaseContext.getDatabase(ObjectEntities.MODELINGTYPE_ENTITY_CODE);
 		try {
 			database.update(objects, new Identifier(userId.value), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return StorableObject.createHeadersTransferable(objects);
@@ -280,7 +281,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 				objects.add(object);
 		}
 
-		MeasurementDatabase database = MeasurementDatabaseContext.getMeasurementDatabase();
+		MeasurementDatabase database = (MeasurementDatabase) MeasurementDatabaseContext.getDatabase(ObjectEntities.MEASUREMENT_ENTITY_CODE);
 		try {
 			database.update(objects, new Identifier(userId.value), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return StorableObject.createHeadersTransferable(objects);
@@ -323,7 +324,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 				objects.add(object);
 		}
 
-		AnalysisDatabase database = MeasurementDatabaseContext.getAnalysisDatabase();
+		AnalysisDatabase database = (AnalysisDatabase) MeasurementDatabaseContext.getDatabase(ObjectEntities.ANALYSIS_ENTITY_CODE);
 		try {
 			database.update(objects, new Identifier(userId.value), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return StorableObject.createHeadersTransferable(objects);
@@ -366,7 +367,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 				objects.add(object);
 		}
 
-		EvaluationDatabase database = MeasurementDatabaseContext.getEvaluationDatabase();
+		EvaluationDatabase database = (EvaluationDatabase) MeasurementDatabaseContext.getDatabase(ObjectEntities.EVALUATION_ENTITY_CODE);
 		try {
 			database.update(objects, new Identifier(userId.value), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return StorableObject.createHeadersTransferable(objects);
@@ -409,7 +410,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 				objects.add(object);
 		}
 
-		ModelingDatabase database = MeasurementDatabaseContext.getModelingDatabase();
+		ModelingDatabase database = (ModelingDatabase) MeasurementDatabaseContext.getDatabase(ObjectEntities.MODELING_ENTITY_CODE);
 		try {
 			database.update(objects, new Identifier(userId.value), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return StorableObject.createHeadersTransferable(objects);
@@ -452,7 +453,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 				objects.add(object);
 		}
 
-		MeasurementSetupDatabase database = MeasurementDatabaseContext.getMeasurementSetupDatabase();
+		MeasurementSetupDatabase database = (MeasurementSetupDatabase) MeasurementDatabaseContext.getDatabase(ObjectEntities.MEASUREMENT_SETUP_ENTITY_CODE);
 		try {
 			database.update(objects, new Identifier(userId.value), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return StorableObject.createHeadersTransferable(objects);
@@ -495,7 +496,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 				objects.add(object);
 		}
 
-		ResultDatabase database = MeasurementDatabaseContext.getResultDatabase();
+		ResultDatabase database = (ResultDatabase) MeasurementDatabaseContext.getDatabase(ObjectEntities.RESULT_ENTITY_CODE);
 		try {
 			database.update(objects, new Identifier(userId.value), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return StorableObject.createHeadersTransferable(objects);
@@ -538,7 +539,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 				objects.add(object);
 		}
 
-		SetDatabase database = MeasurementDatabaseContext.getSetDatabase();
+		SetDatabase database = (SetDatabase) MeasurementDatabaseContext.getDatabase(ObjectEntities.SET_ENTITY_CODE);
 		try {
 			database.update(objects, new Identifier(userId.value), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return StorableObject.createHeadersTransferable(objects);
@@ -581,7 +582,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 				objects.add(object);
 		}
 
-		TestDatabase database = MeasurementDatabaseContext.getTestDatabase();
+		TestDatabase database = (TestDatabase) MeasurementDatabaseContext.getDatabase(ObjectEntities.TEST_ENTITY_CODE);
 		try {
 			database.update(objects, new Identifier(userId.value), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return StorableObject.createHeadersTransferable(objects);
@@ -624,7 +625,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 				objects.add(object);
 		}
 
-		CronTemporalPatternDatabase database = MeasurementDatabaseContext.getCronTemporalPatternDatabase();
+		CronTemporalPatternDatabase database = (CronTemporalPatternDatabase) MeasurementDatabaseContext.getDatabase(ObjectEntities.CRONTEMPORALPATTERN_ENTITY_CODE);
 		try {
 			database.update(objects, new Identifier(userId.value), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return StorableObject.createHeadersTransferable(objects);
@@ -667,7 +668,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 				objects.add(object);
 		}
 
-		IntervalsTemporalPatternDatabase database = MeasurementDatabaseContext.getIntervalsTemporalPatternDatabase();
+		IntervalsTemporalPatternDatabase database = (IntervalsTemporalPatternDatabase) MeasurementDatabaseContext.getDatabase(ObjectEntities.INTERVALS_TEMPORALPATTERN_ENTITY_CODE);
 		try {
 			database.update(objects, new Identifier(userId.value), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return StorableObject.createHeadersTransferable(objects);
@@ -710,7 +711,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 				objects.add(object);
 		}
 
-		PeriodicalTemporalPatternDatabase database = MeasurementDatabaseContext.getPeriodicalTemporalPatternDatabase();
+		PeriodicalTemporalPatternDatabase database = (PeriodicalTemporalPatternDatabase) MeasurementDatabaseContext.getDatabase(ObjectEntities.PERIODICAL_TEMPORALPATTERN_ENTITY_CODE);
 		try {
 			database.update(objects, new Identifier(userId.value), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return StorableObject.createHeadersTransferable(objects);

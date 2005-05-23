@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.27 2005/05/18 11:18:39 bass Exp $
+ * $Id: Domain.java,v 1.28 2005/05/23 18:45:12 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.administration;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/05/18 11:18:39 $
+ * @version $Revision: 1.28 $, $Date: 2005/05/23 18:45:12 $
  * @author $Author: bass $
  * @module administration_v1
  */
@@ -54,7 +54,7 @@ public class Domain extends DomainMember implements Characterizable {
 
 		this.characteristics = new HashSet();
 
-		DomainDatabase database = AdministrationDatabaseContext.getDomainDatabase();
+		DomainDatabase database = (DomainDatabase) AdministrationDatabaseContext.getDatabase(ObjectEntities.DOMAIN_ENTITY_CODE);
 		try {
 			database.retrieve(this);
 		}

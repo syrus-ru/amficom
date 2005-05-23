@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPort.java,v 1.51 2005/05/20 21:11:34 arseniy Exp $
+ * $Id: MeasurementPort.java,v 1.52 2005/05/23 18:45:19 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,8 +36,8 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2005/05/20 21:11:34 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.52 $, $Date: 2005/05/23 18:45:19 $
+ * @author $Author: bass $
  * @module config_v1
  */
 public class MeasurementPort extends StorableObject implements Characterizable, TypedObject {
@@ -58,7 +58,7 @@ public class MeasurementPort extends StorableObject implements Characterizable, 
 
 		this.characteristics = new HashSet();
 
-		MeasurementPortDatabase database = ConfigurationDatabaseContext.getMeasurementPortDatabase();
+		MeasurementPortDatabase database = (MeasurementPortDatabase) ConfigurationDatabaseContext.getDatabase(ObjectEntities.MEASUREMENTPORT_ENTITY_CODE);
 		try {
 			database.retrieve(this);
 		}

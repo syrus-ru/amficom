@@ -1,5 +1,5 @@
 /*
- * $Id: User.java,v 1.19 2005/04/27 17:48:50 arseniy Exp $
+ * $Id: User.java,v 1.20 2005/05/23 18:45:12 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/04/27 17:48:50 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.20 $, $Date: 2005/05/23 18:45:12 $
+ * @author $Author: bass $
  * @module administration_v1
  */
 
@@ -49,7 +49,7 @@ public final class User extends StorableObject {
 	public User(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
-		UserDatabase database = AdministrationDatabaseContext.getUserDatabase();
+		UserDatabase database = (UserDatabase) AdministrationDatabaseContext.getDatabase(ObjectEntities.USER_ENTITY_CODE);
 		try {
 			database.retrieve(this);
 		}

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.85 2005/05/20 21:11:38 arseniy Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.86 2005/05/23 18:45:14 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.85 $, $Date: 2005/05/20 21:11:38 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.86 $, $Date: 2005/05/23 18:45:14 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -49,7 +49,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 	private static String updateMultipleSQLValues;	
 
 	protected String getEnityName() {
-		return ObjectEntities.MS_ENTITY;
+		return ObjectEntities.MEASUREMENT_SETUP_ENTITY;
 	}	
 
 	protected String getColumnsTmpl() {

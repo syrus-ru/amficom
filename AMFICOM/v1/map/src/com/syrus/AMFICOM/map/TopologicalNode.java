@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalNode.java,v 1.34 2005/05/20 21:11:57 arseniy Exp $
+ * $Id: TopologicalNode.java,v 1.35 2005/05/23 18:45:17 bass Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,8 +40,8 @@ import com.syrus.AMFICOM.map.corba.TopologicalNode_Transferable;
  * быть концевым дл€ линии и дл€ фрагмента линии. ¬ физическом смысле
  * топологический узел соответствует точке изгиба линии и не требует
  * дополнительной описательной информации.
- * @author $Author: arseniy $
- * @version $Revision: 1.34 $, $Date: 2005/05/20 21:11:57 $
+ * @author $Author: bass $
+ * @version $Revision: 1.35 $, $Date: 2005/05/23 18:45:17 $
  * @module map_v1
  * @todo physicalLink should be transient
  */
@@ -77,7 +77,7 @@ public class TopologicalNode extends AbstractNode {
 	TopologicalNode(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		TopologicalNodeDatabase database = MapDatabaseContext.getTopologicalNodeDatabase();
+		TopologicalNodeDatabase database = (TopologicalNodeDatabase) MapDatabaseContext.getDatabase(ObjectEntities.TOPOLOGICAL_NODE_ENTITY_CODE);
 		try {
 			database.retrieve(this);
 		}

@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.29 2005/05/23 10:01:25 bass Exp $
+ * $Id: Scheme.java,v 1.30 2005/05/23 18:45:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,7 +42,7 @@ import com.syrus.util.Log;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.29 $, $Date: 2005/05/23 10:01:25 $
+ * @version $Revision: 1.30 $, $Date: 2005/05/23 18:45:16 $
  * @module scheme_v1
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -87,7 +87,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	Scheme(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.schemeDatabase = SchemeDatabaseContext.getSchemeDatabase();
+		this.schemeDatabase = (SchemeDatabase) SchemeDatabaseContext.getDatabase(ObjectEntities.SCHEME_ENTITY_CODE);
 		try {
 			this.schemeDatabase.retrieve(this);
 		} catch (final IllegalDataException ide) {
@@ -141,14 +141,14 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		this.currentSchemeMonitoringSolutionId = Identifier.possiblyVoid(currentSchemeMonitoringSolution);
 		this.parentSchemeElementId = Identifier.possiblyVoid(parentSchemeElement);
 
-		this.schemeDatabase = SchemeDatabaseContext.getSchemeDatabase();
+		this.schemeDatabase = (SchemeDatabase) SchemeDatabaseContext.getDatabase(ObjectEntities.SCHEME_ENTITY_CODE);
 	}
 
 	/**
 	 * @param transferable
 	 */
 	Scheme(final Scheme_Transferable transferable) {
-		this.schemeDatabase = SchemeDatabaseContext.getSchemeDatabase();
+		this.schemeDatabase = (SchemeDatabase) SchemeDatabaseContext.getDatabase(ObjectEntities.SCHEME_ENTITY_CODE);
 		fromTransferable(transferable);
 	}
 

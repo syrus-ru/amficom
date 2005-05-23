@@ -1,5 +1,5 @@
 /*
- * $Id: PortType.java,v 1.51 2005/05/18 11:27:16 bass Exp $
+ * $Id: PortType.java,v 1.52 2005/05/23 18:45:19 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2005/05/18 11:27:16 $
+ * @version $Revision: 1.52 $, $Date: 2005/05/23 18:45:19 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -54,7 +54,7 @@ public class PortType extends StorableObjectType implements Characterizable, Nam
 
 		this.characteristics = new HashSet();
 
-		PortTypeDatabase database = ConfigurationDatabaseContext.getPortTypeDatabase();
+		PortTypeDatabase database = (PortTypeDatabase) ConfigurationDatabaseContext.getDatabase(ObjectEntities.PORTTYPE_ENTITY_CODE);
 		try {
 			database.retrieve(this);
 		}

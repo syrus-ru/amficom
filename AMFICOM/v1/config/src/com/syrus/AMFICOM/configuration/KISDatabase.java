@@ -1,5 +1,5 @@
 /*
- * $Id: KISDatabase.java,v 1.71 2005/05/20 21:11:33 arseniy Exp $
+ * $Id: KISDatabase.java,v 1.72 2005/05/23 18:45:19 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,8 +37,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.71 $, $Date: 2005/05/20 21:11:33 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.72 $, $Date: 2005/05/23 18:45:19 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
@@ -163,7 +163,7 @@ public class KISDatabase extends CharacterizableDatabase {
 		String kisIdStr = DatabaseIdentifier.toSQLString(kis.getId());
 		String sql = SQL_SELECT
 			+ StorableObjectWrapper.COLUMN_ID
-			+ SQL_FROM + ObjectEntities.ME_ENTITY
+			+ SQL_FROM + ObjectEntities.MONITORED_ELEMENT_ENTITY
 			+ SQL_WHERE + MonitoredElementWrapper.COLUMN_MEASUREMENT_PORT_ID + SQL_IN + OPEN_BRACKET
 				+ SQL_SELECT
 				+ StorableObjectWrapper.COLUMN_ID
@@ -214,10 +214,10 @@ public class KISDatabase extends CharacterizableDatabase {
 			return null;
 
 		StringBuffer sql = new StringBuffer(SQL_SELECT
-		+ ObjectEntities.ME_ENTITY + DOT + StorableObjectWrapper.COLUMN_ID + COMMA
+		+ ObjectEntities.MONITORED_ELEMENT_ENTITY + DOT + StorableObjectWrapper.COLUMN_ID + COMMA
 		+ ObjectEntities.MEASUREMENTPORT_ENTITY + DOT + MeasurementPortWrapper.COLUMN_KIS_ID
-		+ SQL_FROM + ObjectEntities.ME_ENTITY + COMMA + ObjectEntities.MEASUREMENTPORT_ENTITY
-		+ SQL_WHERE + ObjectEntities.ME_ENTITY + DOT + MonitoredElementWrapper.COLUMN_MEASUREMENT_PORT_ID + SQL_IN
+		+ SQL_FROM + ObjectEntities.MONITORED_ELEMENT_ENTITY + COMMA + ObjectEntities.MEASUREMENTPORT_ENTITY
+		+ SQL_WHERE + ObjectEntities.MONITORED_ELEMENT_ENTITY + DOT + MonitoredElementWrapper.COLUMN_MEASUREMENT_PORT_ID + SQL_IN
 		+ OPEN_BRACKET
 			+ SQL_SELECT
 			+ StorableObjectWrapper.COLUMN_ID

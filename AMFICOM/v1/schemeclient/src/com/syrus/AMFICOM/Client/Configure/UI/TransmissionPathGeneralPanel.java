@@ -164,7 +164,7 @@ public class TransmissionPathGeneralPanel extends GeneralPanel
 			try {
 				Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
 						getAccessIdentifier().domain_id);
-				StorableObjectCondition condition = new LinkedIdsCondition(domain_id, ObjectEntities.ME_ENTITY_CODE);
+				StorableObjectCondition condition = new LinkedIdsCondition(domain_id, ObjectEntities.MONITORED_ELEMENT_ENTITY_CODE);
 				Collection mes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 				for (Iterator it = mes.iterator(); it.hasNext(); ) {
 					MonitoredElement monitoredelement = (MonitoredElement)it.next();

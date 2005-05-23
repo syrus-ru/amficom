@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkType.java,v 1.35 2005/05/18 11:27:15 bass Exp $
+ * $Id: CableLinkType.java,v 1.36 2005/05/23 18:45:19 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/05/18 11:27:15 $
+ * @version $Revision: 1.36 $, $Date: 2005/05/23 18:45:19 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -56,7 +56,7 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 
 		this.characteristics = new HashSet();
 
-		CableLinkTypeDatabase database = ConfigurationDatabaseContext.getCableLinkTypeDatabase();
+		CableLinkTypeDatabase database = (CableLinkTypeDatabase) ConfigurationDatabaseContext.getDatabase(ObjectEntities.CABLELINKTYPE_ENTITY_CODE);
 		try {
 			database.retrieve(this);
 		}

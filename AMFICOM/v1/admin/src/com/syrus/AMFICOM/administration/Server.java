@@ -1,5 +1,5 @@
 /*
- * $Id: Server.java,v 1.25 2005/05/18 11:18:39 bass Exp $
+ * $Id: Server.java,v 1.26 2005/05/23 18:45:12 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/05/18 11:18:39 $
+ * @version $Revision: 1.26 $, $Date: 2005/05/23 18:45:12 $
  * @author $Author: bass $
  * @module administration_v1
  */
@@ -56,7 +56,7 @@ public class Server extends DomainMember implements Characterizable {
 		super(id);
 		this.characteristics = new LinkedHashSet();
 
-		ServerDatabase database = AdministrationDatabaseContext.getServerDatabase();
+		ServerDatabase database = (ServerDatabase) AdministrationDatabaseContext.getDatabase(ObjectEntities.SERVER_ENTITY_CODE);
 		try {
 			database.retrieve(this);
 		}

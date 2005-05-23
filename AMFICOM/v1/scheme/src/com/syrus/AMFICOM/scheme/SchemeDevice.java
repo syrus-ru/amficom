@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.27 2005/05/23 10:01:25 bass Exp $
+ * $Id: SchemeDevice.java,v 1.28 2005/05/23 18:45:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,7 +41,7 @@ import com.syrus.util.Log;
  * #07 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.27 $, $Date: 2005/05/23 10:01:25 $
+ * @version $Revision: 1.28 $, $Date: 2005/05/23 18:45:16 $
  * @module scheme_v1
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -71,7 +71,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 		super(id);
 
 		this.characteristics = new HashSet();
-		this.schemeDeviceDatabase = SchemeDatabaseContext.getSchemeDeviceDatabase();
+		this.schemeDeviceDatabase = (SchemeDeviceDatabase) SchemeDatabaseContext.getDatabase(ObjectEntities.SCHEME_DEVICE_ENTITY_CODE);
 		try {
 			this.schemeDeviceDatabase.retrieve(this);
 		} catch (final IllegalDataException ide) {
@@ -106,7 +106,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 		this.parentSchemeElementId = Identifier.possiblyVoid(parentSchemeElement);
 
 		this.characteristics = new HashSet();
-		this.schemeDeviceDatabase = SchemeDatabaseContext.getSchemeDeviceDatabase();
+		this.schemeDeviceDatabase = (SchemeDeviceDatabase) SchemeDatabaseContext.getDatabase(ObjectEntities.SCHEME_DEVICE_ENTITY_CODE);
 	}
 
 	/**
@@ -114,7 +114,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 * @throws CreateObjectException
 	 */
 	SchemeDevice(final SchemeDevice_Transferable transferable) throws CreateObjectException {
-		this.schemeDeviceDatabase = SchemeDatabaseContext.getSchemeDeviceDatabase();
+		this.schemeDeviceDatabase = (SchemeDeviceDatabase) SchemeDatabaseContext.getDatabase(ObjectEntities.SCHEME_DEVICE_ENTITY_CODE);
 		fromTransferable(transferable);
 	}
 

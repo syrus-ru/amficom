@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.28 2005/05/23 10:01:25 bass Exp $
+ * $Id: SchemeLink.java,v 1.29 2005/05/23 18:45:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,7 +40,7 @@ import com.syrus.util.Log;
  * #10 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.28 $, $Date: 2005/05/23 10:01:25 $
+ * @version $Revision: 1.29 $, $Date: 2005/05/23 18:45:16 $
  * @module scheme_v1
  */
 public final class SchemeLink extends AbstractSchemeLink {
@@ -62,7 +62,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 	SchemeLink(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.schemeLinkDatabase = SchemeDatabaseContext.getSchemeLinkDatabase();
+		this.schemeLinkDatabase = (SchemeLinkDatabase) SchemeDatabaseContext.getDatabase(ObjectEntities.SCHEME_LINK_ENTITY_CODE);
 		try {
 			this.schemeLinkDatabase.retrieve(this);
 		} catch (final IllegalDataException ide) {
@@ -115,7 +115,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 		this.parentSchemeElementId = Identifier.possiblyVoid(parentSchemeElement);
 		this.parentSchemeProtoElementId = Identifier.possiblyVoid(parentSchemeProtoElement);
 
-		this.schemeLinkDatabase = SchemeDatabaseContext.getSchemeLinkDatabase();
+		this.schemeLinkDatabase = (SchemeLinkDatabase) SchemeDatabaseContext.getDatabase(ObjectEntities.SCHEME_LINK_ENTITY_CODE);
 	}
 
 	/**
@@ -123,7 +123,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 	 * @throws CreateObjectException
 	 */
 	SchemeLink(final SchemeLink_Transferable transferable) throws CreateObjectException {
-		this.schemeLinkDatabase = SchemeDatabaseContext.getSchemeLinkDatabase();
+		this.schemeLinkDatabase = (SchemeLinkDatabase) SchemeDatabaseContext.getDatabase(ObjectEntities.SCHEME_LINK_ENTITY_CODE);
 		fromTransferable(transferable);
 	}
 

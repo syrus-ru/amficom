@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementDatabaseContext.java,v 1.30 2005/05/18 11:34:42 bass Exp $
+ * $Id: MeasurementDatabaseContext.java,v 1.31 2005/05/23 18:45:14 bass Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,7 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/05/18 11:34:42 $
+ * @version $Revision: 1.31 $, $Date: 2005/05/23 18:45:14 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -94,98 +94,38 @@ public final class MeasurementDatabaseContext {
 	public static StorableObjectDatabase getDatabase(final short entityCode) {
 		switch (entityCode) {
 			case ObjectEntities.ANALYSIS_ENTITY_CODE:
-				return getAnalysisDatabase();
+				return analysisDatabase;
 			case ObjectEntities.ANALYSISTYPE_ENTITY_CODE:
-				return getAnalysisTypeDatabase();
+				return analysisTypeDatabase;
 			case ObjectEntities.EVALUATION_ENTITY_CODE:
-				return getEvaluationDatabase();
+				return evaluationDatabase;
 			case ObjectEntities.EVALUATIONTYPE_ENTITY_CODE:
-				return getEvaluationTypeDatabase();
+				return evaluationTypeDatabase;
 			case ObjectEntities.MEASUREMENT_ENTITY_CODE:
-				return getMeasurementDatabase();
-			case ObjectEntities.MS_ENTITY_CODE:
-				return getMeasurementSetupDatabase();
+				return measurementDatabase;
+			case ObjectEntities.MEASUREMENT_SETUP_ENTITY_CODE:
+				return measurementSetupDatabase;
 			case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
-				return getMeasurementTypeDatabase();
+				return measurementTypeDatabase;
 			case ObjectEntities.MODELING_ENTITY_CODE:
-				return getModelingDatabase();
+				return modelingDatabase;
 			case ObjectEntities.MODELINGTYPE_ENTITY_CODE:
-				return getModelingTypeDatabase();
+				return modelingTypeDatabase;
 			case ObjectEntities.RESULT_ENTITY_CODE:
-				return getResultDatabase();
+				return resultDatabase;
 			case ObjectEntities.SET_ENTITY_CODE:
-				return getSetDatabase();
+				return setDatabase;
 			case ObjectEntities.CRONTEMPORALPATTERN_ENTITY_CODE:
-				return getCronTemporalPatternDatabase();
+				return cronTemporalPatternDatabase;
 			case ObjectEntities.INTERVALS_TEMPORALPATTERN_ENTITY_CODE:
-				return getIntervalsTemporalPatternDatabase();
+				return intervalsTemporalPatternDatabase;
 			case ObjectEntities.PERIODICAL_TEMPORALPATTERN_ENTITY_CODE:
-				return getPeriodicalTemporalPatternDatabase();
+				return periodicalTemporalPatternDatabase;
 			case ObjectEntities.TEST_ENTITY_CODE:
-				return getTestDatabase();
+				return testDatabase;
 			default:
 				Log.errorMessage("MeasurementDatabaseContext.getDatabase | Unknown entity: " + entityCode);
 				return null;
 		}
-	}
-
-	public static AnalysisDatabase getAnalysisDatabase() {
-		return analysisDatabase;
-	}
-
-	public static AnalysisTypeDatabase getAnalysisTypeDatabase() {
-		return analysisTypeDatabase;
-	}
-
-	public static EvaluationDatabase getEvaluationDatabase() {
-		return evaluationDatabase;
-	}
-
-	public static EvaluationTypeDatabase getEvaluationTypeDatabase() {
-		return evaluationTypeDatabase;
-	}
-
-	public static ModelingDatabase getModelingDatabase() {
-		return modelingDatabase;
-	}
-
-	public static ModelingTypeDatabase getModelingTypeDatabase() {
-		return modelingTypeDatabase;
-	}
-
-	public static MeasurementDatabase getMeasurementDatabase() {
-		return measurementDatabase;
-	}
-
-	public static MeasurementSetupDatabase getMeasurementSetupDatabase() {
-		return measurementSetupDatabase;
-	}
-
-	public static MeasurementTypeDatabase getMeasurementTypeDatabase() {
-		return measurementTypeDatabase;
-	}
-
-	public static ResultDatabase getResultDatabase() {
-		return resultDatabase;
-	}
-
-	public static SetDatabase getSetDatabase() {
-		return setDatabase;
-	}
-
-	public static CronTemporalPatternDatabase getCronTemporalPatternDatabase() {
-		return cronTemporalPatternDatabase;
-	}
-
-	public static IntervalsTemporalPatternDatabase getIntervalsTemporalPatternDatabase() {
-		return intervalsTemporalPatternDatabase;
-	}
-	
-	public static PeriodicalTemporalPatternDatabase getPeriodicalTemporalPatternDatabase() {
-		return periodicalTemporalPatternDatabase;
-	}
-	
-	public static TestDatabase getTestDatabase() {
-		return testDatabase;
 	}
 }

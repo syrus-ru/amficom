@@ -1,5 +1,5 @@
 /*
- * $Id: CMAdministrationReceive.java,v 1.11 2005/05/23 09:01:04 bass Exp $
+ * $Id: CMAdministrationReceive.java,v 1.12 2005/05/23 18:45:13 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,6 +28,7 @@ import com.syrus.AMFICOM.administration.corba.Server_Transferable;
 import com.syrus.AMFICOM.administration.corba.User_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -41,7 +42,7 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 /**
- * @version $Revision: 1.11 $, $Date: 2005/05/23 09:01:04 $
+ * @version $Revision: 1.12 $, $Date: 2005/05/23 18:45:13 $
  * @author $Author: bass $
  * @module cmserver_v1
  */
@@ -76,7 +77,7 @@ public abstract class CMAdministrationReceive extends CMGeneralReceive {
 				objects.add(object);
 		}
 
-		UserDatabase database = AdministrationDatabaseContext.getUserDatabase();
+		UserDatabase database = (UserDatabase) AdministrationDatabaseContext.getDatabase(ObjectEntities.USER_ENTITY_CODE);
 		try {
 			database.update(objects, new Identifier(userId.value), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return StorableObject.createHeadersTransferable(objects);
@@ -119,7 +120,7 @@ public abstract class CMAdministrationReceive extends CMGeneralReceive {
 				objects.add(object);
 		}
 
-		DomainDatabase database = AdministrationDatabaseContext.getDomainDatabase();
+		DomainDatabase database = (DomainDatabase) AdministrationDatabaseContext.getDatabase(ObjectEntities.DOMAIN_ENTITY_CODE);
 		try {
 			database.update(objects, new Identifier(userId.value), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return StorableObject.createHeadersTransferable(objects);
@@ -162,7 +163,7 @@ public abstract class CMAdministrationReceive extends CMGeneralReceive {
 				objects.add(object);
 		}
 
-		ServerDatabase database = AdministrationDatabaseContext.getServerDatabase();
+		ServerDatabase database = (ServerDatabase) AdministrationDatabaseContext.getDatabase(ObjectEntities.SERVER_ENTITY_CODE);
 		try {
 			database.update(objects, new Identifier(userId.value), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return StorableObject.createHeadersTransferable(objects);
@@ -205,7 +206,7 @@ public abstract class CMAdministrationReceive extends CMGeneralReceive {
 				objects.add(object);
 		}
 
-		MCMDatabase database = AdministrationDatabaseContext.getMCMDatabase();
+		MCMDatabase database = (MCMDatabase) AdministrationDatabaseContext.getDatabase(ObjectEntities.MCM_ENTITY_CODE);
 		try {
 			database.update(objects, new Identifier(userId.value), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return StorableObject.createHeadersTransferable(objects);
@@ -248,7 +249,7 @@ public abstract class CMAdministrationReceive extends CMGeneralReceive {
 				objects.add(object);
 		}
 
-		ServerProcessDatabase database = AdministrationDatabaseContext.getServerProcessDatabase();
+		ServerProcessDatabase database = (ServerProcessDatabase) AdministrationDatabaseContext.getDatabase(ObjectEntities.SERVERPROCESS_ENTITY_CODE);
 		try {
 			database.update(objects, new Identifier(userId.value), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return StorableObject.createHeadersTransferable(objects);

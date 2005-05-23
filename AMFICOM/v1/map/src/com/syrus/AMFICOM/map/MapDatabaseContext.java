@@ -1,5 +1,5 @@
 /*-
- * $Id: MapDatabaseContext.java,v 1.6 2005/05/18 11:48:20 bass Exp $
+ * $Id: MapDatabaseContext.java,v 1.7 2005/05/23 18:45:17 bass Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,7 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/05/18 11:48:20 $
+ * @version $Revision: 1.7 $, $Date: 2005/05/23 18:45:17 $
  * @author Vladimir ``Bob'' Dolzhenko
  * @author $Author: bass $
  * @module map_v1
@@ -72,62 +72,26 @@ public final class MapDatabaseContext {
 	public static StorableObjectDatabase getDatabase(final short entityCode) {
 		switch (entityCode) {
 			case ObjectEntities.COLLECTOR_ENTITY_CODE:
-				return getCollectorDatabase();
+				return collectorDatabase;
 			case ObjectEntities.MAP_ENTITY_CODE:
-				return getMapDatabase();
+				return mapDatabase;
 			case ObjectEntities.MARK_ENTITY_CODE:
-				return getMarkDatabase();
+				return markDatabase;
 			case ObjectEntities.NODE_LINK_ENTITY_CODE:
-				return getNodeLinkDatabase();
+				return nodeLinkDatabase;
 			case ObjectEntities.PHYSICAL_LINK_ENTITY_CODE:
-				return getPhysicalLinkDatabase();
+				return physicalLinkDatabase;
 			case ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE:
-				return getPhysicalLinkTypeDatabase();
+				return physicalLinkTypeDatabase;
 			case ObjectEntities.SITE_NODE_ENTITY_CODE:
-				return getSiteNodeDatabase();
+				return siteNodeDatabase;
 			case ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE:
-				return getSiteNodeTypeDatabase();
+				return siteNodeTypeDatabase;
 			case ObjectEntities.TOPOLOGICAL_NODE_ENTITY_CODE:
-				return getTopologicalNodeDatabase();
+				return topologicalNodeDatabase;
 			default:
 				Log.errorMessage("MapDatabaseContext.getDatabase | Unknown entity: " + entityCode);
 				return null;
 		}
-	}
-
-	public static CollectorDatabase getCollectorDatabase() {
-		return collectorDatabase;
-	}
-
-	public static MapDatabase getMapDatabase() {
-		return mapDatabase;
-	}
-
-	public static MarkDatabase getMarkDatabase() {
-		return markDatabase;
-	}
-
-	public static NodeLinkDatabase getNodeLinkDatabase() {
-		return nodeLinkDatabase;
-	}
-
-	public static PhysicalLinkDatabase getPhysicalLinkDatabase() {
-		return physicalLinkDatabase;
-	}
-
-	public static PhysicalLinkTypeDatabase getPhysicalLinkTypeDatabase() {
-		return physicalLinkTypeDatabase;
-	}
-
-	public static SiteNodeDatabase getSiteNodeDatabase() {
-		return siteNodeDatabase;
-	}
-
-	public static SiteNodeTypeDatabase getSiteNodeTypeDatabase() {
-		return siteNodeTypeDatabase;
-	}
-
-	public static TopologicalNodeDatabase getTopologicalNodeDatabase() {
-		return topologicalNodeDatabase;
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.10 2005/05/18 13:34:16 bass Exp $
+ * $Id: DatabaseContextSetup.java,v 1.11 2005/05/23 18:45:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -65,6 +65,8 @@ import com.syrus.AMFICOM.scheme.SchemeElementDatabase;
 import com.syrus.AMFICOM.scheme.SchemeLinkDatabase;
 import com.syrus.AMFICOM.scheme.SchemeMonitoringSolutionDatabase;
 import com.syrus.AMFICOM.scheme.SchemeOptimizeInfoDatabase;
+import com.syrus.AMFICOM.scheme.SchemeOptimizeInfoRtuDatabase;
+import com.syrus.AMFICOM.scheme.SchemeOptimizeInfoSwitchDatabase;
 import com.syrus.AMFICOM.scheme.SchemePathDatabase;
 import com.syrus.AMFICOM.scheme.SchemePortDatabase;
 import com.syrus.AMFICOM.scheme.SchemeProtoElementDatabase;
@@ -74,7 +76,7 @@ import com.syrus.util.ApplicationProperties;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2005/05/18 13:34:16 $
+ * @version $Revision: 1.11 $, $Date: 2005/05/23 18:45:20 $
  * @module msherver_v1
  */
 final class DatabaseContextSetup {
@@ -143,6 +145,8 @@ final class DatabaseContextSetup {
 				new SchemeDatabase(),
 				new SchemeElementDatabase(),
 				new SchemeOptimizeInfoDatabase(),
+				new SchemeOptimizeInfoSwitchDatabase(),
+				new SchemeOptimizeInfoRtuDatabase(),
 				new SchemeMonitoringSolutionDatabase(),
 				new SchemeDeviceDatabase(),
 				new SchemePortDatabase(),

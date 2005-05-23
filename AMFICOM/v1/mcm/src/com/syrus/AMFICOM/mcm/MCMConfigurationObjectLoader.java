@@ -1,5 +1,5 @@
 /*
- * $Id: MCMConfigurationObjectLoader.java,v 1.36 2005/05/23 08:28:54 arseniy Exp $
+ * $Id: MCMConfigurationObjectLoader.java,v 1.37 2005/05/23 18:45:11 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,6 +28,7 @@ import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectConditionBuilder;
@@ -38,8 +39,8 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/05/23 08:28:54 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.37 $, $Date: 2005/05/23 18:45:11 $
+ * @author $Author: bass $
  * @module mcm_v1
  */
 
@@ -48,7 +49,7 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 	/* Load multiple objects*/
 
 	public Set loadMeasurementPortTypes(Set ids) throws RetrieveObjectException {
-		MeasurementPortTypeDatabase database = ConfigurationDatabaseContext.getMeasurementPortTypeDatabase();
+		MeasurementPortTypeDatabase database = (MeasurementPortTypeDatabase) ConfigurationDatabaseContext.getDatabase(ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE);
 		Set objects = super.retrieveFromDatabase(database, ids);
 		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
 		if (loadIdsT.length == 0)
@@ -95,7 +96,7 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 
 
 	public Set loadMeasurementPorts(Set ids) throws RetrieveObjectException {
-		MeasurementPortDatabase database = ConfigurationDatabaseContext.getMeasurementPortDatabase();
+		MeasurementPortDatabase database = (MeasurementPortDatabase) ConfigurationDatabaseContext.getDatabase(ObjectEntities.MEASUREMENTPORT_ENTITY_CODE);
 		Set objects = super.retrieveFromDatabase(database, ids);
 		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
 		if (loadIdsT.length == 0)
@@ -140,7 +141,7 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 	}
 
 	public Set loadKISs(Set ids) throws RetrieveObjectException {
-		KISDatabase database = ConfigurationDatabaseContext.getKISDatabase();
+		KISDatabase database = (KISDatabase) ConfigurationDatabaseContext.getDatabase(ObjectEntities.KIS_ENTITY_CODE);
 		Set objects = super.retrieveFromDatabase(database, ids);
 		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
 		if (loadIdsT.length == 0)
@@ -185,7 +186,7 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 	}
 
 	public Set loadMonitoredElements(Set ids) throws RetrieveObjectException {
-		MonitoredElementDatabase database = ConfigurationDatabaseContext.getMonitoredElementDatabase();
+		MonitoredElementDatabase database = (MonitoredElementDatabase) ConfigurationDatabaseContext.getDatabase(ObjectEntities.MONITORED_ELEMENT_ENTITY_CODE);
 		Set objects = super.retrieveFromDatabase(database, ids);
 		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
 		if (loadIdsT.length == 0)
@@ -235,7 +236,7 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 	/* Load multiple objects but ids*/
 
 	public Set loadKISsButIds(StorableObjectCondition condition, Set ids) throws RetrieveObjectException {
-		KISDatabase database = ConfigurationDatabaseContext.getKISDatabase();
+		KISDatabase database = (KISDatabase) ConfigurationDatabaseContext.getDatabase(ObjectEntities.KIS_ENTITY_CODE);
 		Set objects = super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 		Identifier_Transferable[] loadButIdsT = super.createLoadButIdsTransferable(ids, objects);
 		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);

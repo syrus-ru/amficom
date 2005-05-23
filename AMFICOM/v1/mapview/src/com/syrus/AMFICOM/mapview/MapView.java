@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.28 2005/05/20 21:12:22 arseniy Exp $
+* $Id: MapView.java,v 1.29 2005/05/23 18:45:17 bass Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -53,8 +53,8 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
  * канализационную
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
- * @author $Author: arseniy $
- * @version $Revision: 1.28 $, $Date: 2005/05/20 21:12:22 $
+ * @author $Author: bass $
+ * @version $Revision: 1.29 $, $Date: 2005/05/23 18:45:17 $
  * @module mapview_v1
  * @todo use getCenter, setCenter instead of pair longitude, latitude
  */
@@ -93,7 +93,7 @@ public class MapView extends DomainMember implements Namable {
 	public MapView(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.mapViewDatabase = MapViewDatabaseContext.getMapViewDatabase();
+		this.mapViewDatabase = (MapViewDatabase) MapViewDatabaseContext.getDatabase(ObjectEntities.MAPVIEW_ENTITY_CODE);
 		try {
 			this.mapViewDatabase.retrieve(this);
 		} catch (IllegalDataException e) {
@@ -137,7 +137,7 @@ public class MapView extends DomainMember implements Namable {
 
 		this.schemes = new HashSet();
 
-		this.mapViewDatabase = MapViewDatabaseContext.getMapViewDatabase();
+		this.mapViewDatabase = (MapViewDatabase) MapViewDatabaseContext.getDatabase(ObjectEntities.MAPVIEW_ENTITY_CODE);
 	}	
 	
 	public static MapView createInstance(final Identifier creatorId,

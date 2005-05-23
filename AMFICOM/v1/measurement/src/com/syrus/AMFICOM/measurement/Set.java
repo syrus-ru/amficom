@@ -1,5 +1,5 @@
 /*
- * $Id: Set.java,v 1.66 2005/05/11 06:34:00 arseniy Exp $
+ * $Id: Set.java,v 1.67 2005/05/23 18:45:14 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.66 $, $Date: 2005/05/11 06:34:00 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.67 $, $Date: 2005/05/23 18:45:14 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -62,7 +62,7 @@ public final class Set extends StorableObject {
 
 		this.monitoredElementIds = new HashSet();
 		
-		SetDatabase database = MeasurementDatabaseContext.getSetDatabase();
+		SetDatabase database = (SetDatabase) MeasurementDatabaseContext.getDatabase(ObjectEntities.SET_ENTITY_CODE);
 		try {
 			database.retrieve(this);
 		}

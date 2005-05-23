@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.49 2005/05/21 19:42:58 arseniy Exp $
+ * $Id: MonitoredElement.java,v 1.50 2005/05/23 18:45:19 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.49 $, $Date: 2005/05/21 19:42:58 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.50 $, $Date: 2005/05/23 18:45:19 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
@@ -50,7 +50,7 @@ public class MonitoredElement extends DomainMember {
 
 		this.monitoredDomainMemberIds = new HashSet();
 
-		MonitoredElementDatabase database = ConfigurationDatabaseContext.getMonitoredElementDatabase();
+		MonitoredElementDatabase database = (MonitoredElementDatabase) ConfigurationDatabaseContext.getDatabase(ObjectEntities.MONITORED_ELEMENT_ENTITY_CODE);
 		try {
 			database.retrieve(this);
 		}
@@ -109,7 +109,7 @@ public class MonitoredElement extends DomainMember {
 			throw new IllegalArgumentException("Argument is 'null'");
 		
 		try {
-			MonitoredElement monitoredElement =  new MonitoredElement(IdentifierPool.getGeneratedIdentifier(ObjectEntities.ME_ENTITY_CODE),
+			MonitoredElement monitoredElement =  new MonitoredElement(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MONITORED_ELEMENT_ENTITY_CODE),
 								creatorId,
 								0L,
 								domainId,

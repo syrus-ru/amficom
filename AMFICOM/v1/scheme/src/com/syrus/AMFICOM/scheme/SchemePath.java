@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.28 2005/05/23 10:01:25 bass Exp $
+ * $Id: SchemePath.java,v 1.29 2005/05/23 18:45:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.util.Log;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.28 $, $Date: 2005/05/23 10:01:25 $
+ * @version $Revision: 1.29 $, $Date: 2005/05/23 18:45:16 $
  * @module scheme_v1
  */
 public final class SchemePath extends AbstractCloneableStorableObject implements
@@ -73,7 +73,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 		super(id);
 		
 		this.characteristics = new HashSet();
-		this.schemePathDatabase = SchemeDatabaseContext.getSchemePathDatabase();
+		this.schemePathDatabase = (SchemePathDatabase) SchemeDatabaseContext.getDatabase(ObjectEntities.SCHEME_PATH_ENTITY_CODE);
 		try {
 			this.schemePathDatabase.retrieve(this);
 		} catch (final IllegalDataException ide) {
@@ -111,7 +111,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 * @throws CreateObjectException
 	 */
 	SchemePath(final SchemePath_Transferable transferable) throws CreateObjectException {
-		this.schemePathDatabase = SchemeDatabaseContext.getSchemePathDatabase();
+		this.schemePathDatabase = (SchemePathDatabase) SchemeDatabaseContext.getDatabase(ObjectEntities.SCHEME_PATH_ENTITY_CODE);
 		fromTransferable(transferable);
 	}
 

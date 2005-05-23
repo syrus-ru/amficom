@@ -1,5 +1,5 @@
 /*
-* $Id: MCMAdministrationObjectLoader.java,v 1.20 2005/05/18 13:21:12 bass Exp $
+* $Id: MCMAdministrationObjectLoader.java,v 1.21 2005/05/23 18:45:11 bass Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -25,6 +25,7 @@ import com.syrus.AMFICOM.administration.corba.Server_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
@@ -34,7 +35,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/05/18 13:21:12 $
+ * @version $Revision: 1.21 $, $Date: 2005/05/23 18:45:11 $
  * @author $Author: bass $
  * @module mcm_v1
  */
@@ -43,7 +44,7 @@ final class MCMAdministrationObjectLoader extends DatabaseAdministrationObjectLo
 	/* Load multiple objects*/
 
 	public Set loadServers(Set ids) throws RetrieveObjectException {
-		ServerDatabase database = AdministrationDatabaseContext.getServerDatabase();
+		ServerDatabase database = (ServerDatabase) AdministrationDatabaseContext.getDatabase(ObjectEntities.SERVER_ENTITY_CODE);
 		Set objects = super.retrieveFromDatabase(database, ids);
 		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
 		if (loadIdsT.length == 0)
@@ -88,7 +89,7 @@ final class MCMAdministrationObjectLoader extends DatabaseAdministrationObjectLo
 	}
 
 	public Set loadMCMs(Set ids) throws RetrieveObjectException {
-		MCMDatabase database = AdministrationDatabaseContext.getMCMDatabase();
+		MCMDatabase database = (MCMDatabase) AdministrationDatabaseContext.getDatabase(ObjectEntities.MCM_ENTITY_CODE);
 		Set objects = super.retrieveFromDatabase(database, ids);
 		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
 		if (loadIdsT.length == 0)

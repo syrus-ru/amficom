@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.67 2005/05/20 21:11:38 arseniy Exp $
+ * $Id: MeasurementSetup.java,v 1.68 2005/05/23 18:45:15 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 
 /**
- * @version $Revision: 1.67 $, $Date: 2005/05/20 21:11:38 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.68 $, $Date: 2005/05/23 18:45:15 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -61,7 +61,7 @@ public final class MeasurementSetup extends StorableObject {
 		this.monitoredElementIds = new HashSet();
 		this.measurementTypeIds = new HashSet();
 
-		MeasurementSetupDatabase database = MeasurementDatabaseContext.getMeasurementSetupDatabase();
+		MeasurementSetupDatabase database = (MeasurementSetupDatabase) MeasurementDatabaseContext.getDatabase(ObjectEntities.MEASUREMENT_SETUP_ENTITY_CODE);
 		try {
 			database.retrieve(this);
 		}
@@ -141,7 +141,7 @@ public final class MeasurementSetup extends StorableObject {
 												  java.util.Set measurementTypeIds) throws CreateObjectException {
 
 		try {
-			MeasurementSetup measurementSetup = new MeasurementSetup(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MS_ENTITY_CODE),
+			MeasurementSetup measurementSetup = new MeasurementSetup(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENT_SETUP_ENTITY_CODE),
 				creatorId,
 				0L,
 				parameterSet,
@@ -227,7 +227,7 @@ public final class MeasurementSetup extends StorableObject {
 	}
 
     public short getEntityCode() {
-        return ObjectEntities.MS_ENTITY_CODE;
+        return ObjectEntities.MEASUREMENT_SETUP_ENTITY_CODE;
     }
 
     public Set getParameterSet() {

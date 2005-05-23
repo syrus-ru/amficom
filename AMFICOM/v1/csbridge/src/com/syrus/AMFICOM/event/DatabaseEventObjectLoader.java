@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseEventObjectLoader.java,v 1.5 2005/05/18 12:52:59 bass Exp $
+ * $Id: DatabaseEventObjectLoader.java,v 1.6 2005/05/23 18:45:12 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,12 +17,13 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseObjectLoader;
 import com.syrus.AMFICOM.general.Identifiable;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/05/18 12:52:59 $
+ * @version $Revision: 1.6 $, $Date: 2005/05/23 18:45:12 $
  * @author $Author: bass $
  * @module csbridge_v1
  */
@@ -31,17 +32,17 @@ public class DatabaseEventObjectLoader extends DatabaseObjectLoader implements E
 	/* Load multiple objects*/
 
 	public Set loadEventTypes(Set ids) throws ApplicationException {
-		EventTypeDatabase database = EventDatabaseContext.getEventTypeDatabase();
+		EventTypeDatabase database = (EventTypeDatabase) EventDatabaseContext.getDatabase(ObjectEntities.EVENTTYPE_ENTITY_CODE);
 		return super.retrieveFromDatabase(database, ids);
 	}
 
 	public Set loadEvents(Set ids) throws ApplicationException {
-		EventDatabase database = EventDatabaseContext.getEventDatabase();
+		EventDatabase database = (EventDatabase) EventDatabaseContext.getDatabase(ObjectEntities.EVENT_ENTITY_CODE);
 		return super.retrieveFromDatabase(database, ids);
 	}
 
 	public Set loadEventSources(Set ids) throws ApplicationException {
-		EventSourceDatabase database = EventDatabaseContext.getEventSourceDatabase();
+		EventSourceDatabase database = (EventSourceDatabase) EventDatabaseContext.getDatabase(ObjectEntities.EVENTSOURCE_ENTITY_CODE);
 		return super.retrieveFromDatabase(database, ids);
 	}
 
@@ -50,17 +51,17 @@ public class DatabaseEventObjectLoader extends DatabaseObjectLoader implements E
 	/* Load multiple objects but ids*/
 
 	public Set loadEventTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		EventTypeDatabase database = EventDatabaseContext.getEventTypeDatabase();
+		EventTypeDatabase database = (EventTypeDatabase) EventDatabaseContext.getDatabase(ObjectEntities.EVENTTYPE_ENTITY_CODE);
 		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 	}
 
 	public Set loadEventsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		EventDatabase database = EventDatabaseContext.getEventDatabase();
+		EventDatabase database = (EventDatabase) EventDatabaseContext.getDatabase(ObjectEntities.EVENT_ENTITY_CODE);
 		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 	}
 
 	public Set loadEventSourcesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		EventSourceDatabase database = EventDatabaseContext.getEventSourceDatabase();
+		EventSourceDatabase database = (EventSourceDatabase) EventDatabaseContext.getDatabase(ObjectEntities.EVENTSOURCE_ENTITY_CODE);
 		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 	}
 
@@ -69,17 +70,17 @@ public class DatabaseEventObjectLoader extends DatabaseObjectLoader implements E
 	/* Save multiple objects*/
 
 	public void saveEventTypes(Set collection, boolean force) throws ApplicationException {
-		EventTypeDatabase eventTypeDatabase = EventDatabaseContext.getEventTypeDatabase();
+		EventTypeDatabase eventTypeDatabase = (EventTypeDatabase) EventDatabaseContext.getDatabase(ObjectEntities.EVENTTYPE_ENTITY_CODE);
 		eventTypeDatabase.update(collection, userId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveEvents(Set collection, boolean force) throws ApplicationException {
-		EventDatabase eventDatabase = EventDatabaseContext.getEventDatabase();
+		EventDatabase eventDatabase = (EventDatabase) EventDatabaseContext.getDatabase(ObjectEntities.EVENT_ENTITY_CODE);
 		eventDatabase.update(collection, userId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveEventSources(Set collection, boolean force) throws ApplicationException {
-		EventSourceDatabase eventSourceDatabase = EventDatabaseContext.getEventSourceDatabase();
+		EventSourceDatabase eventSourceDatabase = (EventSourceDatabase) EventDatabaseContext.getDatabase(ObjectEntities.EVENTSOURCE_ENTITY_CODE);
 		eventSourceDatabase.update(collection, userId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 

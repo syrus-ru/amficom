@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.117 2005/05/20 21:11:39 arseniy Exp $
+ * $Id: Test.java,v 1.118 2005/05/23 18:45:14 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,8 +45,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.117 $, $Date: 2005/05/20 21:11:39 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.118 $, $Date: 2005/05/23 18:45:14 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -90,7 +90,7 @@ public class Test extends StorableObject {
 		super(id);
 		this.measurementSetupIds = new HashSet();
 
-		TestDatabase database = MeasurementDatabaseContext.getTestDatabase();
+		TestDatabase database = (TestDatabase) MeasurementDatabaseContext.getDatabase(ObjectEntities.TEST_ENTITY_CODE);
 		try {
 			database.retrieve(this);
 		}
@@ -389,7 +389,7 @@ public class Test extends StorableObject {
 	}
 
 	public java.util.Set retrieveMeasurementsOrderByStartTime(MeasurementStatus measurementStatus)	throws RetrieveObjectException, ObjectNotFoundException {
-		TestDatabase database = MeasurementDatabaseContext.getTestDatabase();
+		TestDatabase database = (TestDatabase) MeasurementDatabaseContext.getDatabase(ObjectEntities.TEST_ENTITY_CODE);
 		try {
 			return (java.util.Set) database.retrieveObject(this, RETRIEVE_MEASUREMENTS, measurementStatus);
 		}
@@ -399,7 +399,7 @@ public class Test extends StorableObject {
 	}
 	
 	public Measurement retrieveLastMeasurement() throws RetrieveObjectException, ObjectNotFoundException {
-		TestDatabase database = MeasurementDatabaseContext.getTestDatabase();
+		TestDatabase database = (TestDatabase) MeasurementDatabaseContext.getDatabase(ObjectEntities.TEST_ENTITY_CODE);
 		try {
 			return (Measurement) database.retrieveObject(this, RETRIEVE_LAST_MEASUREMENT, null);
 		}
@@ -409,7 +409,7 @@ public class Test extends StorableObject {
 	}
 
 	public int retrieveNumberOfResults(ResultSort resultSort) throws RetrieveObjectException, ObjectNotFoundException {
-		TestDatabase database = MeasurementDatabaseContext.getTestDatabase();
+		TestDatabase database = (TestDatabase) MeasurementDatabaseContext.getDatabase(ObjectEntities.TEST_ENTITY_CODE);
 		try {
 			return ((Integer) database.retrieveObject(this, RETRIEVE_NUMBER_OF_RESULTS, resultSort)).intValue();
 		}

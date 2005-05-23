@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.65 2005/05/18 11:27:16 bass Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.66 2005/05/23 18:45:19 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.65 $, $Date: 2005/05/18 11:27:16 $
+ * @version $Revision: 1.66 $, $Date: 2005/05/23 18:45:19 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -62,7 +62,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 	}
 
 	protected String getEnityName() {
-		return ObjectEntities.ME_ENTITY;
+		return ObjectEntities.MONITORED_ELEMENT_ENTITY;
 	}
 
 	protected String getColumnsTmpl() {
@@ -456,7 +456,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 	}
 
 	public void delete(Identifier id) {
-		assert (id.getMajor() == ObjectEntities.ME_ENTITY_CODE) : "Illegal entity code: "
+		assert (id.getMajor() == ObjectEntities.MONITORED_ELEMENT_ENTITY_CODE) : "Illegal entity code: "
 				+ id.getMajor() + ", entity '" + ObjectEntities.codeToString(id.getMajor()) + "'";
 
 		try {
@@ -482,7 +482,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 			sql1.append(EQUALS);
 			sql1.append(meIdStr);
 
-			String sql2 = SQL_DELETE_FROM + ObjectEntities.ME_ENTITY
+			String sql2 = SQL_DELETE_FROM + ObjectEntities.MONITORED_ELEMENT_ENTITY
 					+ SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + meIdStr;
 
 			Statement statement = null;

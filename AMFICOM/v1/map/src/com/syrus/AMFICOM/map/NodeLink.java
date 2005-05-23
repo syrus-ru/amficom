@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.40 2005/05/20 21:11:56 arseniy Exp $
+ * $Id: NodeLink.java,v 1.41 2005/05/23 18:45:18 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,8 +37,8 @@ import com.syrus.AMFICOM.map.corba.NodeLink_Transferable;
  * отрезок, соединяющий два концевых узла ({@link AbstractNode}). Фрагменты
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
- * @author $Author: arseniy $
- * @version $Revision: 1.40 $, $Date: 2005/05/20 21:11:56 $
+ * @author $Author: bass $
+ * @version $Revision: 1.41 $, $Date: 2005/05/23 18:45:18 $
  * @module map_v1
  */
 public class NodeLink extends StorableObject implements MapElement {
@@ -76,7 +76,7 @@ public class NodeLink extends StorableObject implements MapElement {
 	NodeLink(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		NodeLinkDatabase database = MapDatabaseContext.getNodeLinkDatabase();
+		NodeLinkDatabase database = (NodeLinkDatabase) MapDatabaseContext.getDatabase(ObjectEntities.NODE_LINK_ENTITY_CODE);
 		try {
 			database.retrieve(this);
 		}

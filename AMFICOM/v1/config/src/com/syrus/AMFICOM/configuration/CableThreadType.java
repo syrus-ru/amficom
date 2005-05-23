@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadType.java,v 1.33 2005/05/20 21:11:33 arseniy Exp $
+ * $Id: CableThreadType.java,v 1.34 2005/05/23 18:45:19 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,8 +36,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
  * optical fiber (or an <i>abstract </i> optical fiber), the latter is a type of
  * cable (or an <i>abstract </i> cable containing this thread).
  *
- * @version $Revision: 1.33 $, $Date: 2005/05/20 21:11:33 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.34 $, $Date: 2005/05/23 18:45:19 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
@@ -56,7 +56,7 @@ public final class CableThreadType extends StorableObjectType implements Namable
 	public CableThreadType(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
-		CableThreadTypeDatabase database = ConfigurationDatabaseContext.getCableThreadTypeDatabase();
+		CableThreadTypeDatabase database = (CableThreadTypeDatabase) ConfigurationDatabaseContext.getDatabase(ObjectEntities.CABLETHREADTYPE_ENTITY_CODE);
 		try {
 			database.retrieve(this);
 		}

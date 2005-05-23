@@ -1,5 +1,5 @@
 /*
- * $Id: KISReport.java,v 1.31 2005/05/23 08:28:54 arseniy Exp $
+ * $Id: KISReport.java,v 1.32 2005/05/23 18:45:11 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,12 +28,13 @@ import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
 import com.syrus.AMFICOM.measurement.Result;
+import com.syrus.AMFICOM.measurement.ResultDatabase;
 import com.syrus.AMFICOM.measurement.SetParameter;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/05/23 08:28:54 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.32 $, $Date: 2005/05/23 18:45:11 $
+ * @author $Author: bass $
  * @module mcm_v1
  */
 
@@ -70,7 +71,7 @@ public class KISReport {
 			}
 
 			Result result = measurement.createResult(LoginManager.getUserId(), parameters);
-			MeasurementDatabaseContext.getResultDatabase().insert(result);
+			((ResultDatabase) MeasurementDatabaseContext.getDatabase(ObjectEntities.RESULT_ENTITY_CODE)).insert(result);
 			return result;
 		}
 		catch (ApplicationException ae) {
@@ -85,7 +86,7 @@ public class KISReport {
 	}
 
 	private static void addOutParameterTypeId(String codename) {
-		ParameterTypeDatabase parameterTypeDatabase = GeneralDatabaseContext.getParameterTypeDatabase();
+		ParameterTypeDatabase parameterTypeDatabase = (ParameterTypeDatabase) GeneralDatabaseContext.getDatabase(ObjectEntities.PARAMETERTYPE_ENTITY_CODE);
 		try {
 			TypicalCondition tc = new TypicalCondition(codename,
 					OperationSort.OPERATION_EQUALS,

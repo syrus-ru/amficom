@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementServer.java,v 1.47 2005/05/21 19:57:57 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.48 2005/05/23 18:45:10 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,10 @@ import java.util.Map;
 import java.util.Set;
 
 import com.syrus.AMFICOM.administration.AdministrationDatabaseContext;
+import com.syrus.AMFICOM.administration.MCMDatabase;
 import com.syrus.AMFICOM.administration.Server;
 import com.syrus.AMFICOM.administration.ServerProcess;
+import com.syrus.AMFICOM.administration.ServerProcessDatabase;
 import com.syrus.AMFICOM.administration.ServerProcessWrapper;
 import com.syrus.AMFICOM.administration.User;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -48,8 +50,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.47 $, $Date: 2005/05/21 19:57:57 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.48 $, $Date: 2005/05/23 18:45:10 $
+ * @author $Author: bass $
  * @module mserver_v1
  */
 
@@ -153,9 +155,9 @@ public class MeasurementServer extends SleepButWorkThread {
 				ServerProcessWrapper.MSERVER_PROCESS_CODENAME);
 		try {
 			final Server server = new Server(serverId);
-			final ServerProcess serverProcess = AdministrationDatabaseContext.getServerProcessDatabase().retrieveForServerAndCodename(serverId, processCodename);
+			final ServerProcess serverProcess = ((ServerProcessDatabase) AdministrationDatabaseContext.getDatabase(ObjectEntities.SERVERPROCESS_ENTITY_CODE)).retrieveForServerAndCodename(serverId, processCodename);
 			final User user = new User(serverProcess.getUserId());
-			final Set mcmIds = Identifier.getIdentifiers(AdministrationDatabaseContext.getMCMDatabase().retrieveForServer(serverId));
+			final Set mcmIds = Identifier.getIdentifiers(((MCMDatabase) AdministrationDatabaseContext.getDatabase(ObjectEntities.MCM_ENTITY_CODE)).retrieveForServer(serverId));
 			login = user.getLogin();
 	
 			/*	Init database object loader*/

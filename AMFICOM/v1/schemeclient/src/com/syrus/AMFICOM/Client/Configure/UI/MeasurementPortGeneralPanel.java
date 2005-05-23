@@ -130,7 +130,7 @@ public class MeasurementPortGeneralPanel extends GeneralPanel
 		if(port != null)
 		{
 			try {
-				LinkedIdsCondition condition = new LinkedIdsCondition(port.getId(), ObjectEntities.ME_ENTITY_CODE);
+				LinkedIdsCondition condition = new LinkedIdsCondition(port.getId(), ObjectEntities.MONITORED_ELEMENT_ENTITY_CODE);
 
 				Collection list = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 				if (list.size() > 0) {

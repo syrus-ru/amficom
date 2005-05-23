@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.28 2005/05/23 10:01:25 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.29 2005/05/23 18:45:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.util.Log;
  * #01 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.28 $, $Date: 2005/05/23 10:01:25 $
+ * @version $Revision: 1.29 $, $Date: 2005/05/23 18:45:16 $
  * @module scheme_v1
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
@@ -73,7 +73,7 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	SchemeProtoGroup(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.schemeProtoGroupDatabase = SchemeDatabaseContext.getSchemeProtoGroupDatabase();
+		this.schemeProtoGroupDatabase = (SchemeProtoGroupDatabase) SchemeDatabaseContext.getDatabase(ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE);
 		try {
 			this.schemeProtoGroupDatabase.retrieve(this);
 		} catch (final IllegalDataException ide) {
@@ -106,14 +106,14 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 		this.symbolId = Identifier.possiblyVoid(symbol);
 		this.parentSchemeProtoGroupId = Identifier.possiblyVoid(parentSchemeProtoGroup);
 
-		this.schemeProtoGroupDatabase = SchemeDatabaseContext.getSchemeProtoGroupDatabase();
+		this.schemeProtoGroupDatabase = (SchemeProtoGroupDatabase) SchemeDatabaseContext.getDatabase(ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE);
 	}
 
 	/**
 	 * @param transferable
 	 */
 	SchemeProtoGroup(final SchemeProtoGroup_Transferable transferable) {
-		this.schemeProtoGroupDatabase = SchemeDatabaseContext.getSchemeProtoGroupDatabase();
+		this.schemeProtoGroupDatabase = (SchemeProtoGroupDatabase) SchemeDatabaseContext.getDatabase(ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE);
 		fromTransferable(transferable);
 	}
 

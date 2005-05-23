@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.26 2005/05/23 10:01:25 bass Exp $
+ * $Id: PathElement.java,v 1.27 2005/05/23 18:45:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.util.Log;
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
  * @author $Author: bass $
- * @version $Revision: 1.26 $, $Date: 2005/05/23 10:01:25 $
+ * @version $Revision: 1.27 $, $Date: 2005/05/23 18:45:16 $
  * @module scheme_v1
  * @todo <code>setAttributes()</code> should contain, among others,
  *       kind and sequentialNumber paremeters.
@@ -94,7 +94,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 	PathElement(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 		
-		this.pathElementDatabase = SchemeDatabaseContext.getPathElementDatabase();
+		this.pathElementDatabase = (PathElementDatabase) SchemeDatabaseContext.getDatabase(ObjectEntities.PATH_ELEMENT_ENTITY_CODE);
 		try {
 			this.pathElementDatabase.retrieve(this);
 		} catch (final IllegalDataException ide) {
@@ -262,14 +262,14 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 		this.schemeCableThreadId = Identifier.possiblyVoid(schemeCableThread);
 		this.schemeLinkId = Identifier.possiblyVoid(schemeLink);
 
-		this.pathElementDatabase = SchemeDatabaseContext.getPathElementDatabase();
+		this.pathElementDatabase = (PathElementDatabase) SchemeDatabaseContext.getDatabase(ObjectEntities.PATH_ELEMENT_ENTITY_CODE);
 	}
 
 	/**
 	 * @param transferable
 	 */
 	PathElement(final PathElement_Transferable transferable) {
-		this.pathElementDatabase = SchemeDatabaseContext.getPathElementDatabase();
+		this.pathElementDatabase = (PathElementDatabase) SchemeDatabaseContext.getDatabase(ObjectEntities.PATH_ELEMENT_ENTITY_CODE);
 		fromTransferable(transferable);
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: EventSource.java,v 1.13 2005/04/15 19:22:24 arseniy Exp $
+ * $Id: EventSource.java,v 1.14 2005/05/23 18:45:10 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,8 +29,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/04/15 19:22:24 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2005/05/23 18:45:10 $
+ * @author $Author: bass $
  * @module event_v1
  */
 public final class EventSource extends StorableObject {
@@ -41,7 +41,7 @@ public final class EventSource extends StorableObject {
 	protected EventSource (Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		EventSourceDatabase database = EventDatabaseContext.getEventSourceDatabase();
+		EventSourceDatabase database = (EventSourceDatabase) EventDatabaseContext.getDatabase(ObjectEntities.EVENTSOURCE_ENTITY_CODE);
 		try {
 			database.retrieve(this);
 		}

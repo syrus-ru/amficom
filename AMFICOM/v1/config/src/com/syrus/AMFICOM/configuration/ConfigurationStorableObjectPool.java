@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.84 2005/05/20 21:11:33 arseniy Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.85 2005/05/23 18:45:19 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,8 +21,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.84 $, $Date: 2005/05/20 21:11:33 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.85 $, $Date: 2005/05/23 18:45:19 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
@@ -79,7 +79,7 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 		instance.addObjectPool(ObjectEntities.TRANSPATH_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.KIS_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.MEASUREMENTPORT_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.ME_ENTITY_CODE, size);
+		instance.addObjectPool(ObjectEntities.MONITORED_ELEMENT_ENTITY_CODE, size);
 	}
 
 	public static void init(ConfigurationObjectLoader cObjectLoader1) {
@@ -102,7 +102,7 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 		instance.addObjectPool(ObjectEntities.TRANSPATH_ENTITY_CODE, TRANSPATH_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.KIS_ENTITY_CODE, KIS_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.MEASUREMENTPORT_ENTITY_CODE, MEASUREMENTPORT_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.ME_ENTITY_CODE, ME_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.MONITORED_ELEMENT_ENTITY_CODE, ME_OBJECT_POOL_SIZE);
 	}
 
 	public static void init(ConfigurationObjectLoader cObjectLoader1, Class cacheClass, final int size) {
@@ -165,7 +165,7 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 				return cObjectLoader.loadLinks(ids);
 			case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:
 				return cObjectLoader.loadMeasurementPorts(ids);
-			case ObjectEntities.ME_ENTITY_CODE:
+			case ObjectEntities.MONITORED_ELEMENT_ENTITY_CODE:
 				return cObjectLoader.loadMonitoredElements(ids);
 			default:
 				Log.errorMessage("ConfigurationStorableObjectPool.loadStorableObjects | Unknown entity: '" + ObjectEntities.codeToString(entityCode) + "', entity code: " + entityCode);
@@ -216,7 +216,7 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 				case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:
 					loadedCollection = cObjectLoader.loadMeasurementPortsButIds(condition, ids);
 					break;
-				case ObjectEntities.ME_ENTITY_CODE:
+				case ObjectEntities.MONITORED_ELEMENT_ENTITY_CODE:
 					loadedCollection = cObjectLoader.loadMonitoredElementsButIds(condition, ids);
 					break;
 			default:				
@@ -267,7 +267,7 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 			case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:
 				cObjectLoader.saveMeasurementPorts(storableObjects, force);
 				break;
-			case ObjectEntities.ME_ENTITY_CODE:
+			case ObjectEntities.MONITORED_ELEMENT_ENTITY_CODE:
 				cObjectLoader.saveMonitoredElements(storableObjects, force);
 				break;
 			case ObjectEntities.TRANSPATH_ENTITY_CODE:

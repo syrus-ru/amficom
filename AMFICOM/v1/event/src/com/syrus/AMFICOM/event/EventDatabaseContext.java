@@ -1,5 +1,5 @@
 /*-
- * $Id: EventDatabaseContext.java,v 1.10 2005/05/18 11:16:58 bass Exp $
+ * $Id: EventDatabaseContext.java,v 1.11 2005/05/23 18:45:10 bass Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Научно-технический центр.
@@ -13,18 +13,16 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/05/18 11:16:58 $
+ * @version $Revision: 1.11 $, $Date: 2005/05/23 18:45:10 $
  * @author $Author: bass $
  * @module event_v1
  */
 public final class EventDatabaseContext {
 	private static EventTypeDatabase eventTypeDatabase;
-	// private static AlarmTypeDatabase alarmTypeDatabase;
 
 	private static EventDatabase eventDatabase;
-	private static EventSourceDatabase eventSourceDatabase;
 
-	// private static AlarmDatabase alarmDatabase;
+	private static EventSourceDatabase eventSourceDatabase;
 
 	private EventDatabaseContext() {
 		assert false;
@@ -48,27 +46,14 @@ public final class EventDatabaseContext {
 	public static StorableObjectDatabase getDatabase(final short entityCode) {
 		switch (entityCode) {
 			case ObjectEntities.EVENTTYPE_ENTITY_CODE:
-				return getEventTypeDatabase();
+				return eventTypeDatabase;
 			case ObjectEntities.EVENT_ENTITY_CODE:
-				return getEventDatabase();
+				return eventDatabase;
 			case ObjectEntities.EVENTSOURCE_ENTITY_CODE:
-				return getEventSourceDatabase();
+				return eventSourceDatabase;
 			default:
 				Log.errorMessage("EventDatabaseContext.getDatabase | Unknown entity: " + entityCode);
 				return null;
 		}
 	}
-
-	public static EventTypeDatabase getEventTypeDatabase() {
-		return eventTypeDatabase;
-	}
-
-	public static EventDatabase getEventDatabase() {
-		return eventDatabase;
-	}
-
-	public static EventSourceDatabase getEventSourceDatabase() {
-		return eventSourceDatabase;
-	}
-
 }

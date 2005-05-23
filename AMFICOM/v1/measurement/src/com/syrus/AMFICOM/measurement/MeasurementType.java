@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementType.java,v 1.71 2005/05/18 11:34:41 bass Exp $
+ * $Id: MeasurementType.java,v 1.72 2005/05/23 18:45:14 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 
 /**
- * @version $Revision: 1.71 $, $Date: 2005/05/18 11:34:41 $
+ * @version $Revision: 1.72 $, $Date: 2005/05/23 18:45:14 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -58,7 +58,7 @@ public class MeasurementType extends ActionType implements Namable {
 		this.outParameterTypeIds = new HashSet();
 		this.measurementPortTypeIds = new HashSet();
 
-		MeasurementTypeDatabase database = MeasurementDatabaseContext.getMeasurementTypeDatabase();
+		MeasurementTypeDatabase database = (MeasurementTypeDatabase) MeasurementDatabaseContext.getDatabase(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
 		try {
 			database.retrieve(this);
 		}

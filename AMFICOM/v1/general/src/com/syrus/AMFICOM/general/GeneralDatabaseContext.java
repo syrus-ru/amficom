@@ -1,5 +1,5 @@
 /*-
- * $Id: GeneralDatabaseContext.java,v 1.7 2005/05/18 11:07:39 bass Exp $
+ * $Id: GeneralDatabaseContext.java,v 1.8 2005/05/23 18:45:13 bass Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.general;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/05/18 11:07:39 $
+ * @version $Revision: 1.8 $, $Date: 2005/05/23 18:45:13 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -43,26 +43,14 @@ public final class GeneralDatabaseContext {
 	public static StorableObjectDatabase getDatabase(final short entityCode ) {
 		switch (entityCode) {
 			case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
-				return getParameterTypeDatabase();
+				return parameterTypeDatabase;
 			case ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE:
-				return getCharacteristicTypeDatabase();
+				return characteristicTypeDatabase;
 			case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
-				return getCharacteristicDatabase();
+				return characteristicDatabase;
 			default:
 				Log.errorMessage("GeneralDatabaseContext.getDatabase | Unknown entity: " + entityCode);
 				return null;
 		}
-	}
-
-	public static ParameterTypeDatabase getParameterTypeDatabase() {
-		return parameterTypeDatabase;
-	}
-
-	public static CharacteristicDatabase getCharacteristicDatabase() {
-		return characteristicDatabase;
-	}
-
-	public static CharacteristicTypeDatabase getCharacteristicTypeDatabase() {
-		return characteristicTypeDatabase;
 	}
 }

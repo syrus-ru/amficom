@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDatabaseContext.java,v 1.4 2005/05/18 12:03:15 bass Exp $
+ * $Id: SchemeDatabaseContext.java,v 1.5 2005/05/23 18:45:16 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,13 +8,14 @@
 
 package com.syrus.AMFICOM.scheme;
 
-import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/05/18 12:03:15 $
+ * @version $Revision: 1.5 $, $Date: 2005/05/23 18:45:16 $
  * @module scheme_v1
  */
 public final class SchemeDatabaseContext {
@@ -27,6 +28,10 @@ public final class SchemeDatabaseContext {
 	private static SchemeElementDatabase		schemeElementDatabase;
 
 	private static SchemeOptimizeInfoDatabase	schemeOptimizeInfoDatabase;
+
+	private static SchemeOptimizeInfoSwitchDatabase	schemeOptimizeInfoSwitchDatabase;
+
+	private static SchemeOptimizeInfoRtuDatabase	schemeOptimizeInfoRtuDatabase;
 
 	private static SchemeMonitoringSolutionDatabase	schemeMonitoringSolutionDatabase;
 
@@ -58,6 +63,8 @@ public final class SchemeDatabaseContext {
 			final SchemeDatabase			schemeDatabase1,
 			final SchemeElementDatabase		schemeElementDatabase1,
 			final SchemeOptimizeInfoDatabase	schemeOptimizeInfoDatabase1,
+			final SchemeOptimizeInfoSwitchDatabase	schemeOptimizeInfoSwitchDatabase1,
+			final SchemeOptimizeInfoRtuDatabase	schemeOptimizeInfoRtuDatabase1,
 			final SchemeMonitoringSolutionDatabase	schemeMonitoringSolutionDatabase1,
 			final SchemeDeviceDatabase		schemeDeviceDatabase1,
 			final SchemePortDatabase		schemePortDatabase1,
@@ -78,6 +85,10 @@ public final class SchemeDatabaseContext {
 			schemeElementDatabase = schemeElementDatabase1;
 		if (schemeOptimizeInfoDatabase1 != null)
 			schemeOptimizeInfoDatabase = schemeOptimizeInfoDatabase1;
+		if (schemeOptimizeInfoSwitchDatabase1 != null)
+			schemeOptimizeInfoSwitchDatabase = schemeOptimizeInfoSwitchDatabase1;
+		if (schemeOptimizeInfoRtuDatabase1 != null)
+			schemeOptimizeInfoRtuDatabase = schemeOptimizeInfoRtuDatabase1;
 		if (schemeMonitoringSolutionDatabase1 != null)
 			schemeMonitoringSolutionDatabase = schemeMonitoringSolutionDatabase1;
 		if (schemeDeviceDatabase1 != null)
@@ -107,98 +118,42 @@ public final class SchemeDatabaseContext {
 	public static StorableObjectDatabase getDatabase(final short entityCode ) {
 		switch (entityCode) {
 			case ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE:
-				return getSchemeProtoGroupDatabase();
+				return schemeProtoGroupDatabase;
 			case ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE:
-				return getSchemeProtoElementDatabase();
+				return schemeProtoElementDatabase;
 			case ObjectEntities.SCHEME_ENTITY_CODE:
-				return getSchemeDatabase();
+				return schemeDatabase;
 			case ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE:
-				return getSchemeElementDatabase();
+				return schemeElementDatabase;
 			case ObjectEntities.SCHEME_OPTIMIZE_INFO_ENTITY_CODE:
-				return getSchemeOptimizeInfoDatabase();
+				return schemeOptimizeInfoDatabase;
+			case ObjectEntities.SCHEME_OPTIMIZE_INFO_SWITCH_ENTITY_CODE:
+				return schemeOptimizeInfoSwitchDatabase;
+			case ObjectEntities.SCHEME_OPTIMIZE_INFO_RTU_ENTITY_CODE:
+				return schemeOptimizeInfoRtuDatabase;
 			case ObjectEntities.SCHEME_MONITORING_SOLUTION_ENTITY_CODE:
-				return getSchemeMonitoringSolutionDatabase();
+				return schemeMonitoringSolutionDatabase;
 			case ObjectEntities.SCHEME_DEVICE_ENTITY_CODE:
-				return getSchemeDeviceDatabase();
+				return schemeDeviceDatabase;
 			case ObjectEntities.SCHEME_PORT_ENTITY_CODE:
-				return getSchemePortDatabase();
+				return schemePortDatabase;
 			case ObjectEntities.SCHEME_CABLE_PORT_ENTITY_CODE:
-				return getSchemeCablePortDatabase();
+				return schemeCablePortDatabase;
 			case ObjectEntities.SCHEME_LINK_ENTITY_CODE:
-				return getSchemeLinkDatabase();
+				return schemeLinkDatabase;
 			case ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE:
-				return getSchemeCableLinkDatabase();
+				return schemeCableLinkDatabase;
 			case ObjectEntities.SCHEME_CABLE_THREAD_ENTITY_CODE:
-				return getSchemeCableThreadDatabase();
+				return schemeCableThreadDatabase;
 			case ObjectEntities.CABLE_CHANNELING_ITEM_ENTITY_CODE:
-				return getCableChannelingItemDatabase();
+				return cableChannelingItemDatabase;
 			case ObjectEntities.SCHEME_PATH_ENTITY_CODE:
-				return getSchemePathDatabase();
+				return schemePathDatabase;
 			case ObjectEntities.PATH_ELEMENT_ENTITY_CODE:
-				return getPathElementDatabase();
+				return pathElementDatabase;
 			default:
 				Log.errorMessage("SchemeDatabaseContext.getDatabase | Unknown entity: " + entityCode);
 				return null;
 		}
-	}
-
-	public static SchemeProtoGroupDatabase getSchemeProtoGroupDatabase() {
-		return schemeProtoGroupDatabase;
-	}
-
-	public static SchemeProtoElementDatabase getSchemeProtoElementDatabase() {
-		return schemeProtoElementDatabase;
-	}
-
-	public static SchemeDatabase getSchemeDatabase() {
-		return schemeDatabase;
-	}
-
-	public static SchemeElementDatabase getSchemeElementDatabase() {
-		return schemeElementDatabase;
-	}
-
-	public static SchemeOptimizeInfoDatabase getSchemeOptimizeInfoDatabase() {
-		return schemeOptimizeInfoDatabase;
-	}
-
-	public static SchemeMonitoringSolutionDatabase getSchemeMonitoringSolutionDatabase() {
-		return schemeMonitoringSolutionDatabase;
-	}
-
-	public static SchemeDeviceDatabase getSchemeDeviceDatabase() {
-		return schemeDeviceDatabase;
-	}
-
-	public static SchemePortDatabase getSchemePortDatabase() {
-		return schemePortDatabase;
-	}
-
-	public static SchemeCablePortDatabase getSchemeCablePortDatabase() {
-		return schemeCablePortDatabase;
-	}
-
-	public static SchemeLinkDatabase getSchemeLinkDatabase() {
-		return schemeLinkDatabase;
-	}
-
-	public static SchemeCableLinkDatabase getSchemeCableLinkDatabase() {
-		return schemeCableLinkDatabase;
-	}
-
-	public static SchemeCableThreadDatabase getSchemeCableThreadDatabase() {
-		return schemeCableThreadDatabase;
-	}
-
-	public static CableChannelingItemDatabase getCableChannelingItemDatabase() {
-		return cableChannelingItemDatabase;
-	}
-
-	public static SchemePathDatabase getSchemePathDatabase() {
-		return schemePathDatabase;
-	}
-
-	public static PathElementDatabase getPathElementDatabase() {
-		return pathElementDatabase;
 	}
 }

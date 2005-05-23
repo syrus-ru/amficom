@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseResourceObjectLoader.java,v 1.4 2005/05/23 13:51:17 bass Exp $
+ * $Id: DatabaseResourceObjectLoader.java,v 1.5 2005/05/23 18:45:12 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,12 +17,13 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseObjectLoader;
 import com.syrus.AMFICOM.general.Identifiable;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/05/23 13:51:17 $
+ * @version $Revision: 1.5 $, $Date: 2005/05/23 18:45:12 $
  * @author $Author: bass $
  * @module csbridge_v1
  */
@@ -33,7 +34,7 @@ public class DatabaseResourceObjectLoader extends DatabaseObjectLoader implement
 	 * @see com.syrus.AMFICOM.resource.ResourceObjectLoader#loadImageResources(java.util.Set)
 	 */
 	public Set loadImageResources(final Set ids) throws ApplicationException {
-		ImageResourceDatabase database = ResourceDatabaseContext.getImageResourceDatabase();
+		ImageResourceDatabase database = (ImageResourceDatabase) ResourceDatabaseContext.getDatabase(ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE);
 		return super.retrieveFromDatabase(database, ids);
 	}
 
@@ -44,7 +45,7 @@ public class DatabaseResourceObjectLoader extends DatabaseObjectLoader implement
 	 * @see com.syrus.AMFICOM.resource.ResourceObjectLoader#loadImageResourcesButIds(com.syrus.AMFICOM.general.StorableObjectCondition, java.util.Set)
 	 */
 	public Set loadImageResourcesButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		ImageResourceDatabase database = ResourceDatabaseContext.getImageResourceDatabase();
+		ImageResourceDatabase database = (ImageResourceDatabase) ResourceDatabaseContext.getDatabase(ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE);
 		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 	}
 
@@ -55,7 +56,7 @@ public class DatabaseResourceObjectLoader extends DatabaseObjectLoader implement
 	 * @see com.syrus.AMFICOM.resource.ResourceObjectLoader#saveImageResources(java.util.Set, boolean)
 	 */
 	public void saveImageResources(final Set list, boolean force) throws ApplicationException {
-		ImageResourceDatabase database = ResourceDatabaseContext.getImageResourceDatabase();
+		ImageResourceDatabase database = (ImageResourceDatabase) ResourceDatabaseContext.getDatabase(ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE);
 		database.update(list, userId, force ? StorableObjectDatabase.UPDATE_FORCE
 				: StorableObjectDatabase.UPDATE_CHECK);
 	}

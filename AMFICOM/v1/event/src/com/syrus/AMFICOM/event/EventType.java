@@ -1,5 +1,5 @@
 /*
- * $Id: EventType.java,v 1.20 2005/05/18 11:16:58 bass Exp $
+ * $Id: EventType.java,v 1.21 2005/05/23 18:45:10 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/05/18 11:16:58 $
+ * @version $Revision: 1.21 $, $Date: 2005/05/23 18:45:10 $
  * @author $Author: bass $
  * @module event_v1
  */
@@ -51,7 +51,7 @@ public final class EventType extends StorableObjectType {
 		this.parameterTypes = new HashSet();
 		this.userIds = new HashSet();
 
-		EventTypeDatabase database = EventDatabaseContext.getEventTypeDatabase();
+		EventTypeDatabase database = (EventTypeDatabase) EventDatabaseContext.getDatabase(ObjectEntities.EVENTTYPE_ENTITY_CODE);
 		try {
 			database.retrieve(this);
 		}

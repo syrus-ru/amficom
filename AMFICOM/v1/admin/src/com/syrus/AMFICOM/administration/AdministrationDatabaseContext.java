@@ -1,5 +1,5 @@
 /*-
- * $Id: AdministrationDatabaseContext.java,v 1.7 2005/05/18 11:18:39 bass Exp $
+ * $Id: AdministrationDatabaseContext.java,v 1.8 2005/05/23 18:45:12 bass Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,7 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/05/18 11:18:39 $
+ * @version $Revision: 1.8 $, $Date: 2005/05/23 18:45:12 $
  * @author $Author: bass $
  * @module administration_v1
  */
@@ -62,33 +62,9 @@ public final class AdministrationDatabaseContext {
 				return mcmDatabase;
 			case ObjectEntities.SERVERPROCESS_ENTITY_CODE:
 				return serverProcessDatabase;
-			
-//			case ObjectEntities.PERMATTR_ENTITY_CODE:
-//				database = AdministrationDatabaseContext.getPermissionAttributesDatabase();
-//				break;
 			default:
 				Log.errorMessage("AdminDatabaseContext.getDatabase | Unknown entity: " + entityCode);
 				return null;
 		}
-	}
-
-	public static UserDatabase getUserDatabase() {
-		return userDatabase;
-	}
-
-	public static DomainDatabase getDomainDatabase() {
-		return domainDatabase;
-	}
-
-	public static ServerDatabase getServerDatabase() {
-		return serverDatabase;
-	}
-
-	public static MCMDatabase getMCMDatabase() {
-		return mcmDatabase;
-	}
-
-	public static ServerProcessDatabase getServerProcessDatabase() {
-		return serverProcessDatabase;
 	}
 }
