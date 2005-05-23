@@ -30,7 +30,6 @@ import com.syrus.AMFICOM.Client.Schedule.UI.TableFrame;
 import com.syrus.AMFICOM.Client.Schedule.UI.TestParametersFrame;
 import com.syrus.AMFICOM.Client.Schedule.UI.TestRequestFrame;
 import com.syrus.AMFICOM.Client.Schedule.UI.TimeParametersFrame;
-import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.client.UI.ArrangeWindowCommand;
 import com.syrus.AMFICOM.client.UI.StatusBarModel;
@@ -56,7 +55,8 @@ import com.syrus.AMFICOM.client.resource.LangModel;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
-import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 
 public class ScheduleMainFrame extends JFrame implements PropertyChangeListener {
 
@@ -382,7 +382,7 @@ public class ScheduleMainFrame extends JFrame implements PropertyChangeListener 
 		aModel.fireModelChanged("");
 
 		try {
-			Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(LoginManager.getDomainId(), true);
+			Domain domain = (Domain) StorableObjectPool.getStorableObject(LoginManager.getDomainId(), true);
 			this.statusBar.setText("domain", domain.getName());
 		} catch (ApplicationException e) {
 			SchedulerModel.showErrorMessage(this, e);
@@ -392,7 +392,10 @@ public class ScheduleMainFrame extends JFrame implements PropertyChangeListener 
 		ElementsTreeFrame treeFrame = (ElementsTreeFrame) this.frames.get(TREE_FRAME);
 		treeFrame.init();
 
-		MeasurementStorableObjectPool.cleanChangedStorableObjects();
+		StorableObjectPool.cleanChangedStorableObjects(ObjectEntities.TEST_ENTITY_CODE);
+		StorableObjectPool.cleanChangedStorableObjects(ObjectEntities.MS_ENTITY_CODE);
+		StorableObjectPool.cleanChangedStorableObjects(ObjectEntities.SET_ENTITY_CODE);
+		StorableObjectPool.cleanChangedStorableObjects(ObjectEntities.PERIODICAL_TEMPORALPATTERN_ENTITY_CODE);
 
 		this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, SchedulerModel.COMMAND_CLEAN, null, null));
 
@@ -567,9 +570,9 @@ dispatcher.firePropertyChange(
 		Dispatcher dispatcher1 = Environment.getDispatcher();
 		dispatcher1.addPropertyChangeListener(ContextChangeEvent.TYPE, this);
 
-		aModel.setCommand(ScheduleMainMenuBar.MENU_SESSION_NEW, new OpenSessionCommand(dispatcher1, this.aContext));
+		aModel.setCommand(ScheduleMainMenuBar.MENU_SESSION_NEW, new OpenSessionCommand(dispatcher1));
 		// TODO FIXXX
-		aModel.setCommand(ScheduleMainMenuBar.MENU_SESSION_CLOSE, new SessionCloseCommand(dispatcher1, this.aContext));
+		aModel.setCommand(ScheduleMainMenuBar.MENU_SESSION_CLOSE, new SessionCloseCommand(dispatcher1));
 		aModel.setCommand(ScheduleMainMenuBar.MENU_SESSION_OPTIONS, new SessionOptionsCommand(this.aContext));
 		aModel.setCommand(ScheduleMainMenuBar.MENU_SESSION_CONNECTION, new SessionConnectionCommand(dispatcher1, this.aContext));
 		aModel.setCommand(ScheduleMainMenuBar.MENU_SESSION_CHANGE_PASSWORD,	new SessionChangePasswordCommand(dispatcher1, this.aContext));

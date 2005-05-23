@@ -1,5 +1,5 @@
 /*
- * $Id: TestController.java,v 1.11 2005/05/19 14:32:22 bob Exp $
+ * $Id: TestController.java,v 1.12 2005/05/23 10:26:12 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,17 +24,19 @@ import javax.swing.UIManager;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.corba.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 import com.syrus.util.Log;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/05/19 14:32:22 $
+ * @version $Revision: 1.12 $, $Date: 2005/05/23 10:26:12 $
  * @author $Author: bob $
  * @module module
  */
@@ -185,14 +187,28 @@ public class TestController implements Wrapper {
 							break;
 						}
 					}
+					
+					if (temporalType.value() == TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL) {
+						Identifier temporalPatternId = test.getTemporalPatternId();
+						if (temporalPatternId != null && temporalPatternId.getMajor() == ObjectEntities.PERIODICAL_TEMPORALPATTERN_ENTITY_CODE) {
+							try {
+								PeriodicalTemporalPattern periodicalTemporalPattern = (PeriodicalTemporalPattern) StorableObjectPool.getStorableObject(temporalPatternId, true);
+								value = value + ", " + periodicalTemporalPattern.getPeriodDescription();
+								
+							} catch (ApplicationException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+					}
 				} else {
 					value = LangModelSchedule.getString("Sectional");
 				}				
 			}
 			else if (key.equals(KEY_KIS))
 				try {
-					MeasurementPort mp = (MeasurementPort)ConfigurationStorableObjectPool.getStorableObject(test.getMonitoredElement().getMeasurementPortId(), true);
-					KIS kis = (KIS)ConfigurationStorableObjectPool.getStorableObject(mp.getKISId(), true);
+					MeasurementPort mp = (MeasurementPort)StorableObjectPool.getStorableObject(test.getMonitoredElement().getMeasurementPortId(), true);
+					KIS kis = (KIS)StorableObjectPool.getStorableObject(mp.getKISId(), true);
 					value = kis.getName();
 				} catch (ApplicationException e) {
 					// TODO Auto-generated catch block
@@ -202,7 +218,7 @@ public class TestController implements Wrapper {
 				value = test.getMonitoredElement().getName();
 			else if (key.equals(KEY_TEST_OBJECT)){
 				try {
-					MeasurementPort mp = (MeasurementPort)ConfigurationStorableObjectPool.getStorableObject(test.getMonitoredElement().getMeasurementPortId(), true);
+					MeasurementPort mp = (MeasurementPort)StorableObjectPool.getStorableObject(test.getMonitoredElement().getMeasurementPortId(), true);
 					value = mp.getName();
 				} catch (ApplicationException e) {
 					// TODO Auto-generated catch block
@@ -211,7 +227,7 @@ public class TestController implements Wrapper {
 			}
 			else if (key.equals(KEY_MEASUREMENT_TYPE))
 				try {
-					value = ((MeasurementType)MeasurementStorableObjectPool.getStorableObject(test.getMeasurementTypeId(), true)).getDescription();
+					value = ((MeasurementType)StorableObjectPool.getStorableObject(test.getMeasurementTypeId(), true)).getDescription();
 				} catch (ApplicationException e) {
 					Log.errorMessage("TestController.getValue | key='" + key + "', cannot get " + test.getMeasurementTypeId() + " -- " + e.getMessage());
 					e.printStackTrace();

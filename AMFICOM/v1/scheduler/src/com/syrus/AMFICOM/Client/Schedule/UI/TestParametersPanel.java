@@ -43,7 +43,6 @@ import com.syrus.AMFICOM.client.UI.WrapperedList;
 import com.syrus.AMFICOM.client.UI.WrapperedListModel;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -326,14 +325,16 @@ public class TestParametersPanel implements PropertyChangeListener {
 				JCheckBox checkBox = (JCheckBox) e.getSource();
 				boolean enable = checkBox.isSelected();
 				analysisLabel.setEnabled(enable);
-				if (!enable) {
-					TestParametersPanel.this.selectComboBox(TestParametersPanel.this.analysisComboBox, null, false);
-					TestParametersPanel.this.selectComboBox(TestParametersPanel.this.evaluationComboBox, null, false);
-				}
+				if (TestParametersPanel.this.propertyChangeEvent == null) {
+					if (!enable) {
+						TestParametersPanel.this.selectComboBox(TestParametersPanel.this.analysisComboBox, null, false);
+						TestParametersPanel.this.selectComboBox(TestParametersPanel.this.evaluationComboBox, null,
+							false);
+					}
+				}				
 				TestParametersPanel.this.analysisComboBox.setEnabled(enable);
 				evaluationLabel.setEnabled(enable);
 				TestParametersPanel.this.evaluationComboBox.setEnabled(enable);
-
 			}
 		});
 		// it's for set enabled status for analysisComboBox &
@@ -508,8 +509,8 @@ public class TestParametersPanel implements PropertyChangeListener {
 		if (propertyName.equals(SchedulerModel.COMMAND_CHANGE_ME_TYPE)) {
 			Identifier meId = (Identifier) evt.getNewValue();
 			try {
-				MonitoredElement me = (MonitoredElement) ConfigurationStorableObjectPool.getStorableObject(meId, true);
-				MeasurementPort port = (MeasurementPort) ConfigurationStorableObjectPool.getStorableObject(me
+				MonitoredElement me = (MonitoredElement) StorableObjectPool.getStorableObject(meId, true);
+				MeasurementPort port = (MeasurementPort) StorableObjectPool.getStorableObject(me
 						.getMeasurementPortId(), true);
 				this.switchPanel.removeAll();
 
@@ -626,6 +627,14 @@ public class TestParametersPanel implements PropertyChangeListener {
 				// System.out.println("selected " + i);
 				break;
 			}
+		}
+		
+		Log.debugMessage("TestParametersPanel.selectComboBox | this.evaluationComboBox.getSelectedItem(): " + this.evaluationComboBox.getSelectedItem(), Log.FINEST);
+		Log.debugMessage("TestParametersPanel.selectComboBox | this.analysisComboBox.getSelectedItem(): " + this.analysisComboBox.getSelectedItem(), Log.FINEST);
+		Log.debugMessage("TestParametersPanel.selectComboBox | this.useAnalysisBox.isSelected():" + this.useAnalysisBox.isSelected(), Log.FINEST);
+		
+		if (this.evaluationComboBox.getSelectedItem() == null && this.analysisComboBox.getSelectedItem() == null && this.useAnalysisBox.isSelected()) {
+			this.useAnalysisBox.doClick();
 		}
 	}
 

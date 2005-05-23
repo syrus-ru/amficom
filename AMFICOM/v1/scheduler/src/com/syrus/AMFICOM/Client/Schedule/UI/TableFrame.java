@@ -43,7 +43,7 @@ import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestController;
 import com.syrus.util.Log;
@@ -95,7 +95,7 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 			for (Iterator iterator = selectedTestIds.iterator(); iterator.hasNext();) {
 				Identifier identifier = (Identifier) iterator.next();
 				try {
-					Test test1 = (Test) MeasurementStorableObjectPool.getStorableObject(identifier, true);
+					Test test1 = (Test) StorableObjectPool.getStorableObject(identifier, true);
 					Identifier groupTestId = test1.getGroupTestId();
 					if (groupTestId != null) {
 						identifier = groupTestId;

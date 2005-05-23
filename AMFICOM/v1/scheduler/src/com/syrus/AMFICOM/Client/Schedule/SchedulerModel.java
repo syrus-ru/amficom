@@ -52,7 +52,6 @@ import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.CompoundConditionSort;
 import com.syrus.AMFICOM.measurement.AbstractTemporalPattern;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
-import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.measurement.Set;
 import com.syrus.AMFICOM.measurement.Test;
@@ -358,7 +357,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 			}
 		} else {
 			this.tests.remove(test);
-			MeasurementStorableObjectPool.delete(test.getId());
+			StorableObjectPool.delete(test.getId());
 		}
 		if (this.selectedTestIds != null) {
 			this.selectedTestIds.clear();
@@ -444,7 +443,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		Test test = this.getSelectedTest();
 
 		if (test != null) {			
-			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_MEASUREMENT_TYPE, null, MeasurementStorableObjectPool
+			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_MEASUREMENT_TYPE, null, StorableObjectPool
 				.getStorableObject(test.getMeasurementTypeId(), true)));
 			MonitoredElement monitoredElement1 = test.getMonitoredElement();
 //			MeasurementPort measurementPort = (MeasurementPort) ConfigurationStorableObjectPool.getStorableObject(
@@ -461,7 +460,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 			Collection measurementSetupIds = test.getMeasurementSetupIds();
 			if (!measurementSetupIds.isEmpty()) {
 				Identifier mainMeasurementSetupId = (Identifier) measurementSetupIds.iterator().next();
-				MeasurementSetup measurementSetup1 = (MeasurementSetup) MeasurementStorableObjectPool
+				MeasurementSetup measurementSetup1 = (MeasurementSetup) StorableObjectPool
 						.getStorableObject(mainMeasurementSetupId, true);
 				if (measurementSetup1 != null) {
 					this.refreshMeasurementSetups();
@@ -498,7 +497,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		AbstractTemporalPattern temporalPattern = null;
 		if (temporalPatternId != null) {
 			try {
-				temporalPattern = (AbstractTemporalPattern) MeasurementStorableObjectPool.getStorableObject(
+				temporalPattern = (AbstractTemporalPattern) StorableObjectPool.getStorableObject(
 					temporalPatternId, true);
 			} catch (ApplicationException e) {
 				Log.errorException(e);
@@ -777,7 +776,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 				Collection measurementSetupIds = this.getSelectedTest().getMeasurementSetupIds();
 				if (!measurementSetupIds.isEmpty()) {
 					Identifier mainMeasurementSetupId = (Identifier) measurementSetupIds.iterator().next();
-					MeasurementSetup measurementSetup1 = (MeasurementSetup) MeasurementStorableObjectPool
+					MeasurementSetup measurementSetup1 = (MeasurementSetup) StorableObjectPool
 							.getStorableObject(mainMeasurementSetupId, true);
 					if (measurementSetup1 != null) {
 						this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_SET, null, measurementSetup1.getParameterSet()));
@@ -793,7 +792,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 	}
 
 	public void commitChanges() throws ApplicationException {		
-		MeasurementStorableObjectPool.flush(true);
+		StorableObjectPool.flush(ObjectEntities.TEST_ENTITY_CODE, true);
 		if (this.meTestGroup != null) {
 			this.meTestGroup.clear();
 		}
@@ -981,7 +980,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		Identifier testGroupId = (Identifier) (this.meTestGroup != null ? this.meTestGroup.get(meId) : null);
 		if (testGroupId != null) {
 			try {
-				Test testGroup = (Test) MeasurementStorableObjectPool.getStorableObject(testGroupId, true);
+				Test testGroup = (Test) StorableObjectPool.getStorableObject(testGroupId, true);
 				if (this.aloneGroupTest) {
 					if (this.isValid(this.startGroupDate, null, testGroup
 								.getMonitoredElement().getId())) {

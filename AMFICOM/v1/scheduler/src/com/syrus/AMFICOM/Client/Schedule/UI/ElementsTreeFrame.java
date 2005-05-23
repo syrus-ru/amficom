@@ -23,18 +23,17 @@ import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.logic.LogicalTreeUI;
 import com.syrus.AMFICOM.logic.SelectionListener;
 import com.syrus.AMFICOM.logic.ServiceItem;
-import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.util.Log;
 
@@ -94,7 +93,7 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 
 	public KIS getKIS() {
 		try {
-			return (KIS) ConfigurationStorableObjectPool.getStorableObject(this
+			return (KIS) StorableObjectPool.getStorableObject(this
 					.getObject(ObjectEntities.KIS_ENTITY_CODE), true);
 		} catch (ApplicationException e) {
 			//
@@ -105,7 +104,7 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 	public MeasurementType getMeasurementType() {
 		try {
 			Identifier measurementTypeId = this.getObject(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
-			return measurementTypeId != null ? (MeasurementType) MeasurementStorableObjectPool.getStorableObject(
+			return measurementTypeId != null ? (MeasurementType) StorableObjectPool.getStorableObject(
 				measurementTypeId, true) : null;
 		} catch (ApplicationException e) {
 			//
@@ -119,7 +118,7 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 
 			MonitoredElement me = null;
 			if (meId != null)
-				me = (MonitoredElement) ConfigurationStorableObjectPool.getStorableObject(meId, true);
+				me = (MonitoredElement) StorableObjectPool.getStorableObject(meId, true);
 			return me;
 		} catch (ApplicationException e) {
 			//
@@ -253,9 +252,9 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 																								null, identifier));
 											try {
 												ElementsTreeFrame.this.schedulerModel.setSelectedMonitoredElement(
-													(MonitoredElement) ConfigurationStorableObjectPool
+													(MonitoredElement) StorableObjectPool
 															.getStorableObject(identifier, true), parent != null
-															? (MeasurementType) MeasurementStorableObjectPool
+															? (MeasurementType) StorableObjectPool
 																	.getStorableObject((Identifier) parent.getObject(),
 																		true) : null);
 											} catch (ApplicationException e) {
@@ -269,7 +268,7 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 								case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE: {
 									try {
 										ElementsTreeFrame.this.schedulerModel
-												.setSelectedMeasurementType((MeasurementType) MeasurementStorableObjectPool
+												.setSelectedMeasurementType((MeasurementType) StorableObjectPool
 														.getStorableObject(identifier, true));
 									} catch (ApplicationException e) {
 										SchedulerModel.showErrorMessage(ElementsTreeFrame.this, e);

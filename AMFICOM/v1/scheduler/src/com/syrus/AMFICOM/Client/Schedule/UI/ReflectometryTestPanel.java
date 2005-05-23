@@ -37,7 +37,6 @@ import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -59,7 +58,6 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
-import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.Set;
 import com.syrus.AMFICOM.measurement.SetParameter;
 import com.syrus.AMFICOM.measurement.Test;
@@ -68,7 +66,7 @@ import com.syrus.util.ByteArray;
 //import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/05/19 14:32:22 $
+ * @version $Revision: 1.33 $, $Date: 2005/05/23 10:26:12 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -187,7 +185,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 //		Log.debugMessage("ReflectometryTestPanel.getSet | set id is " + this.setId, Log.FINEST);
 		if (this.setId != null) {
 			try {
-				set = (Set) MeasurementStorableObjectPool.getStorableObject(this.setId, true);
+				set = (Set) StorableObjectPool.getStorableObject(this.setId, true);
 				if (!set.isChanged()) {
 					SetParameter[] parameters = set.getParameters();
 					for (int i = 0; i < parameters.length; i++) {
@@ -624,7 +622,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 
 			this.refreshTitles();
 
-			MeasurementPort port = (MeasurementPort) ConfigurationStorableObjectPool.getStorableObject(
+			MeasurementPort port = (MeasurementPort) StorableObjectPool.getStorableObject(
 				measurementPortId1, true);
 			LinkedIdsCondition linkedIdsCondition = new LinkedIdsCondition(port.getType().getId(),
 																			ObjectEntities.CHARACTERISTIC_ENTITY_CODE);
@@ -809,7 +807,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 						if (test.isChanged()) {
 							java.util.Set measurementSetupIds = test.getMeasurementSetupIds();
 							if (measurementSetupIds.size() == 1) {
-								MeasurementSetup measurementSetup = (MeasurementSetup) MeasurementStorableObjectPool
+								MeasurementSetup measurementSetup = (MeasurementSetup) StorableObjectPool
 										.getStorableObject((Identifier) measurementSetupIds.iterator().next(), true);
 								if (measurementSetup.isChanged()) {
 									measurementSetup.setParameterSet(parameterSet);

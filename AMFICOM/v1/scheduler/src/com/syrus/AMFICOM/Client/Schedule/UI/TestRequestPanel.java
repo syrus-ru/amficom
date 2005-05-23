@@ -15,13 +15,12 @@ import javax.swing.JTextField;
 
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
-import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.User;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.measurement.Test;
 
@@ -114,11 +113,11 @@ public class TestRequestPanel extends JPanel implements PropertyChangeListener {
 			try {
 				this.nameTextField.setText(test.getDescription());
 
-				MeasurementType measurementType = (MeasurementType) MeasurementStorableObjectPool.getStorableObject(
+				MeasurementType measurementType = (MeasurementType) StorableObjectPool.getStorableObject(
 					test.getMeasurementTypeId(), true);
 				this.typeTextField.setText(measurementType.getDescription());
 
-				User user = (User) AdministrationStorableObjectPool.getStorableObject(test.getCreatorId(), true);
+				User user = (User) StorableObjectPool.getStorableObject(test.getCreatorId(), true);
 				this.ownerTextField.setText(user.getName());
 
 				MonitoredElement me = test.getMonitoredElement();
