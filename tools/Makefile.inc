@@ -1,5 +1,5 @@
 #
-# $Id: Makefile.inc,v 1.21 2005/04/28 12:26:56 arseniy Exp $
+# $Id: Makefile.inc,v 1.22 2005/05/23 08:31:25 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -160,8 +160,7 @@ IDLJ = $(JAVA_HOME)/bin/idlj
 IDLJFLAGS += \
 	-fallTIE \
 	-i $(IDLDIR) \
-	-td $(SRCDIR) \
-	-v
+	-td $(SRCDIR)
 
 PMD_JAR = $(shell find $(PMD_HOME) -name pmd-*.jar)
 PMD_JARS = $(shell find $(PMD_HOME) -name '*\.[jz][ai][pr]' -printf '%p:')
