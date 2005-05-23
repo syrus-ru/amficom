@@ -11,11 +11,6 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 public class EmptyClientMapViewObjectLoader implements MapViewObjectLoader {
-
-	public EmptyClientMapViewObjectLoader() {
-		// nothing to do
-	}
-
 	public void delete(Identifier id) {
 		// nothing to do
 	}
