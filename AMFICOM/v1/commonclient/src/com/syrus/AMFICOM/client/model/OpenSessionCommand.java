@@ -1,5 +1,5 @@
 /*
- * $Id: OpenSessionCommand.java,v 1.2 2005/05/23 08:19:09 bob Exp $
+ * $Id: OpenSessionCommand.java,v 1.3 2005/05/23 13:36:58 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,9 @@ import java.awt.FontMetrics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -40,7 +43,7 @@ import com.syrus.AMFICOM.general.LoginRestorer;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.2 $, $Date: 2005/05/23 08:19:09 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/23 13:36:58 $
  * @module generalclient_v1
  */
 public class OpenSessionCommand extends AbstractCommand {
@@ -49,7 +52,7 @@ public class OpenSessionCommand extends AbstractCommand {
 	/* static fields use due to dummy command using -> clone (new ...) */
 	private static JPanel			mainPanel;
 
-	private static JTextField		loginTextField;
+	static JTextField		loginTextField;
 	private static JPasswordField	passwordTextField;
 	private static String			login;
 	private static String			password;
@@ -266,6 +269,7 @@ public class OpenSessionCommand extends AbstractCommand {
 				GridBagConstraints gbc = new GridBagConstraints();
 				FontMetrics fontMetrics = loginTextField.getFontMetrics(loginTextField.getFont());
 
+				
 				gbc.gridwidth = GridBagConstraints.RELATIVE;
 				gbc.insets = new Insets(fontMetrics.getHeight() / 2, iconWidth / 50, fontMetrics.getHeight() / 2,
 										iconWidth / 50);
@@ -288,7 +292,8 @@ public class OpenSessionCommand extends AbstractCommand {
 				gbc.fill = GridBagConstraints.HORIZONTAL;
 				gbc.weightx = 1.0;
 				gbc.anchor = GridBagConstraints.WEST;
-				textFieldsPanel.add(passwordTextField, gbc);
+				textFieldsPanel.add(passwordTextField, gbc);				
+				
 			}
 
 			gbc1.gridwidth = GridBagConstraints.REMAINDER;
@@ -299,11 +304,12 @@ public class OpenSessionCommand extends AbstractCommand {
 			mainPanel.add(textFieldsPanel, gbc1);
 
 		}
-
+		
+		loginTextField.requestFocus();
+		
 		int result = JOptionPane.showOptionDialog(frame, mainPanel, LangModel.getString("SessionOpenTitle"),
 			JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, new Object[] {
-					LangModel.getString("buttonEnter"), LangModel.getString("buttonCancel")}, LangModel
-					.getString("buttonEnter"));
+					LangModel.getString("buttonEnter"), LangModel.getString("buttonCancel")}, null);
 		if (result == JOptionPane.OK_OPTION) {
 			login = loginTextField.getText();
 			password = new String(passwordTextField.getPassword());
