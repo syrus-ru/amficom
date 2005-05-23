@@ -1,5 +1,5 @@
 /*
- * $Id: MServerMeasurementReceive.java,v 1.4 2005/05/18 13:25:44 bass Exp $
+ * $Id: MServerMeasurementReceive.java,v 1.5 2005/05/23 07:36:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,6 +16,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
@@ -38,8 +39,8 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/05/18 13:25:44 $
- * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2005/05/23 07:36:39 $
+ * @author $Author: arseniy $
  * @module mserver_v1
  */
 abstract class MServerMeasurementReceive extends MServerPOA {
@@ -95,7 +96,7 @@ abstract class MServerMeasurementReceive extends MServerPOA {
 			Test object = null;
 			try {
 				final Identifier id = new Identifier(testsT[i].header.id);
-				object = (Test) MeasurementStorableObjectPool.fromTransferable(id, testsT[i]);
+				object = (Test) StorableObjectPool.fromTransferable(id, testsT[i]);
 				if (object == null)
 					object = new Test(testsT[i]);
 			}

@@ -1,5 +1,5 @@
 /*-
- * $Id: CMServerPoolContext.java,v 1.3 2005/05/18 13:11:21 bass Exp $
+ * $Id: CMServerPoolContext.java,v 1.4 2005/05/23 07:35:01 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/05/18 13:11:21 $
- * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2005/05/23 07:35:01 $
+ * @author $Author: arseniy $
  * @module cmserver_v1
  */
 final class CMServerPoolContext extends PoolContext {
@@ -75,19 +75,5 @@ final class CMServerPoolContext extends PoolContext {
 					lruMapClass,
 					measurementPoolSize);
 		}
-	}
-
-	public void deserialize() {
-		GeneralStorableObjectPool.deserializePool();
-		AdministrationStorableObjectPool.deserializePool();
-		ConfigurationStorableObjectPool.deserializePool();
-		MeasurementStorableObjectPool.deserializePool();
-	}
-
-	public void serialize() {
-		GeneralStorableObjectPool.serializePool();
-		AdministrationStorableObjectPool.serializePool();
-		ConfigurationStorableObjectPool.serializePool();
-		MeasurementStorableObjectPool.serializePool();
 	}
 }
