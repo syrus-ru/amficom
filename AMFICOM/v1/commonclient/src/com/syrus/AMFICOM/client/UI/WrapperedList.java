@@ -1,5 +1,5 @@
 /*
- * $Id: WrapperedList.java,v 1.1 2005/05/19 14:06:41 bob Exp $
+ * $Id: WrapperedList.java,v 1.2 2005/05/23 12:51:04 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -13,12 +13,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.JList;
+import javax.swing.ListModel;
 
 import com.syrus.util.Wrapper;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.1 $, $Date: 2005/05/19 14:06:41 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/23 12:51:04 $
  * @module generalclient_v1
  */
 public class WrapperedList extends JList {
@@ -34,12 +35,12 @@ public class WrapperedList extends JList {
 		this.setModel(model);		
 	}
 
-	public WrapperedList(Wrapper controller, List objects, String key) {
-		this(new WrapperedListModel(controller, objects, key));
+	public WrapperedList(Wrapper controller, List objects, String key, String compareKey) {
+		this(new WrapperedListModel(controller, objects, key, compareKey));
 	}
 
-	public WrapperedList(Wrapper controller, String key) {
-		this(new WrapperedListModel(controller, new LinkedList(), key));
+	public WrapperedList(Wrapper controller, String key, String compareKey) {
+		this(new WrapperedListModel(controller, new LinkedList(), key, compareKey));
 	}	
 
 	public void removeAll() {
@@ -49,5 +50,40 @@ public class WrapperedList extends JList {
 
 	public void addElements(Collection objects) {
 		this.model.addElements(objects);
+	}	
+	
+
+
+	public void setSelectedValue(	Object anObject,
+									boolean shouldScroll) {
+		Object anObjectValue = this.model.wrapper.getValue(anObject, this.model.compareKey);
+//		Log.debugMessage("WrapperedList.setSelectedValue | anObject " + anObject, Log.FINEST);
+//		Log.debugMessage("WrapperedList.setSelectedValue | this.model.compareKey: " + this.model.compareKey, Log.FINEST);
+//		Log.debugMessage("WrapperedList.setSelectedValue | anObjectValue " + anObjectValue, Log.FINEST);
+		if (anObjectValue == null) {
+			setSelectedIndex(-1);
+		} else {
+			Object elementValue = this.model.wrapper.getValue(getSelectedValue(), this.model.compareKey);
+//			Log.debugMessage("WrapperedList.setSelectedValue | elementValue " + elementValue, Log.FINEST);
+			if (!anObjectValue.equals(elementValue)) {
+				int i, c;
+				ListModel dm = getModel();
+				for (i = 0, c = dm.getSize(); i < c; i++) {
+					elementValue = this.model.wrapper.getValue(dm.getElementAt(i), this.model.compareKey);
+//					Log.debugMessage("WrapperedList.setSelectedValue | anObjectValue " + anObjectValue, Log.FINEST);
+//					Log.debugMessage("WrapperedList.setSelectedValue | elementValue " + elementValue, Log.FINEST);
+					if (anObjectValue.equals(elementValue)) {
+						setSelectedIndex(i);
+						if (shouldScroll) {
+							ensureIndexIsVisible(i);
+						}
+						this.repaint();						
+						return;
+					}
+				}
+				this.setSelectedIndex(-1);
+			}
+			this.repaint();
+		}
 	}
 }

@@ -11,11 +11,10 @@ import java.util.Map;
 import javax.swing.AbstractListModel;
 import javax.swing.MutableComboBoxModel;
 
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/05/19 14:06:41 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/23 12:51:04 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -34,20 +33,23 @@ public class WrapperedListModel extends AbstractListModel implements MutableComb
 	protected Wrapper			wrapper;
 
 	protected String			key;
+	
+	protected String			compareKey;
 
 	/**
 	 * @param wrapper
 	 *            see {@link #wrapper}
 	 */
-	public WrapperedListModel(Wrapper wrapper, String key) {
-		this(wrapper, new LinkedList(), key);
+	public WrapperedListModel(Wrapper wrapper, String key, String compareKey) {
+		this(wrapper, new LinkedList(), key, compareKey);
 
 	}
 
-	public WrapperedListModel(Wrapper wrapper, List objects, String key) {
+	public WrapperedListModel(Wrapper wrapper, List objects, String key, String compareKey) {
 		this.wrapper = wrapper;
 		this.key = key;
 		this.objects = objects;
+		this.compareKey = compareKey;
 	}
 
 	// implements javax.swing.ComboBoxModel
@@ -132,8 +134,9 @@ public class WrapperedListModel extends AbstractListModel implements MutableComb
 		if (this.objects != null) {
 			for (int i = 0; i < this.objects.size(); i++) {
 				Object element = this.objects.get(i);
-				if ((element instanceof StorableObject) && (anObject instanceof StorableObject)
-						&& (((StorableObject) element).getId().equals(((StorableObject) anObject).getId()))) {
+				Object anObjectValue = this.wrapper.getValue(anObject, this.compareKey);
+				Object elementValue = this.wrapper.getValue(element, this.compareKey);
+				if (anObjectValue.equals(elementValue)) {
 					index = i;
 					break;
 				}
