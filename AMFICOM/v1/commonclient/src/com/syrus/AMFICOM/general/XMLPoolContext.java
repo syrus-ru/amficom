@@ -1,5 +1,5 @@
 /*
- * $Id: XMLPoolContext.java,v 1.1 2005/05/16 15:56:15 arseniy Exp $
+ * $Id: XMLPoolContext.java,v 1.2 2005/05/23 08:40:15 bob Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,8 +24,8 @@ import com.syrus.AMFICOM.scheme.XMLSchemeObjectLoader;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/05/16 15:56:15 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2005/05/23 08:40:15 $
+ * @author $Author: bob $
  * @module commonclient_v1
  */
 public final class XMLPoolContext extends PoolContext {
@@ -45,29 +45,5 @@ public final class XMLPoolContext extends PoolContext {
 		MapStorableObjectPool.init(new XMLMapObjectLoader(cachePath), cacheClass);
 		//MapViewStorableObjectPool.init(new XMLMapViewObjectLoader(cachePath), cacheClass);
 		SchemeStorableObjectPool.init(new XMLSchemeObjectLoader(cachePath), cacheClass);
-	}
-
-	public void deserialize() {
-		GeneralStorableObjectPool.deserializePool();
-		AdministrationStorableObjectPool.deserializePool();
-		ConfigurationStorableObjectPool.deserializePool();
-		MeasurementStorableObjectPool.deserializePool();
-		//EventStorableObjectPool.deserializePool();
-		ResourceStorableObjectPool.deserializePool();
-		MapStorableObjectPool.deserializePool();
-		//MapViewStorableObjectPool.deserializePool();
-		SchemeStorableObjectPool.deserializePool();
-	}
-
-	public void serialize() {
-		GeneralStorableObjectPool.serializePool();
-		AdministrationStorableObjectPool.serializePool();
-		ConfigurationStorableObjectPool.serializePool();
-		MeasurementStorableObjectPool.serializePool();
-		//EventStorableObjectPool.serializePool();
-		ResourceStorableObjectPool.serializePool();
-		MapStorableObjectPool.serializePool();
-		//MapViewStorableObjectPool.serializePool();
-		SchemeStorableObjectPool.serializePool();
 	}
 }
