@@ -387,6 +387,7 @@ void InitialAnalysis::findAllWletSplashes(double* f_wlet, ArrList& splashes)
 {   //minimalThreshold,	//минимальный уровень события
 	//minimalWeld,		//минимальный уровень неотражательного события
 	//minimalConnector,	//минимальный уровень отражательного события
+	double noise_factor = 0.4;  // XXX - надо бы это снаружи задавать 
     for(int i=1; i<lastPoint; i++)// 1 т.к. i-1
     {   if(fabs(f_wlet[i])<=minimalThreshold)
      continue;
@@ -402,7 +403,7 @@ void InitialAnalysis::findAllWletSplashes(double* f_wlet, ArrList& splashes)
             {	spl.begin_thr_n = i-1;
             }
             if( spl.begin_thr_n != -1 && spl.end_thr_n == -1
-            	&& ( fabs(f_wlet[i])<= calcThresh(minimalThreshold, noise[i]) || sign_cur!=sign || i==lastPoint-1)
+            	&& ( fabs(f_wlet[i])<= calcThresh(minimalThreshold, noise[i]*noise_factor) || sign_cur!=sign || i==lastPoint-1)
 	          )
             {	spl.end_thr_n = i;
             }
@@ -411,7 +412,7 @@ void InitialAnalysis::findAllWletSplashes(double* f_wlet, ArrList& splashes)
             {	spl.begin_weld = i-1;
             }
             if( spl.begin_weld != -1 && spl.end_weld == -1
-            	&& ( fabs(f_wlet[i])<= minimalWeld || sign_cur!=sign || i==lastPoint-1)
+             	&& ( fabs(f_wlet[i])<= minimalWeld || sign_cur!=sign || i==lastPoint-1)
               )
             {	spl.end_weld = i;
             }
@@ -419,7 +420,8 @@ void InitialAnalysis::findAllWletSplashes(double* f_wlet, ArrList& splashes)
             {	spl.begin_weld_n = i-1;
             }
             if( spl.begin_weld_n != -1 && spl.end_weld_n == -1
-            	&& (fabs(f_wlet[i])<= calcThresh(minimalWeld, noise[i]) || sign_cur!=sign || i==lastPoint-1)
+            	//&& (fabs(f_wlet[i])<= calcThresh(minimalWeld, noise[i]) || sign_cur!=sign || i==lastPoint-1)
+                && (fabs(f_wlet[i])<= calcThresh(minimalThreshold, noise[i]*noise_factor) || sign_cur!=sign || i==lastPoint-1)// вемсто предыдущей строки
               )
             {	spl.end_weld_n = i;
             }
