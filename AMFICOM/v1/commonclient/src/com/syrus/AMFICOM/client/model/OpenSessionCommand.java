@@ -1,5 +1,5 @@
 /*
- * $Id: OpenSessionCommand.java,v 1.1 2005/05/19 14:06:42 bob Exp $
+ * $Id: OpenSessionCommand.java,v 1.2 2005/05/23 08:19:09 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,14 +40,12 @@ import com.syrus.AMFICOM.general.LoginRestorer;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.1 $, $Date: 2005/05/19 14:06:42 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/23 08:19:09 $
  * @module generalclient_v1
  */
 public class OpenSessionCommand extends AbstractCommand {
 
 	Dispatcher				dispatcher;
-	private ApplicationContext		aContext;
-
 	/* static fields use due to dummy command using -> clone (new ...) */
 	private static JPanel			mainPanel;
 
@@ -64,25 +62,18 @@ public class OpenSessionCommand extends AbstractCommand {
 		// nothing
 	}
 
-	public OpenSessionCommand(Dispatcher dispatcher, ApplicationContext aContext) {
+	public OpenSessionCommand(Dispatcher dispatcher) {
 		this.dispatcher = dispatcher;
-		this.aContext = aContext;
 	}
 
 	public void setParameter(	String field,
 								Object value) {
 		if (field.equals("dispatcher"))
-			setDispatcher((Dispatcher) value);
-		else if (field.equals("aContext"))
-			setApplicationContext((ApplicationContext) value);
+			this.setDispatcher((Dispatcher) value);
 	}
 
 	public void setDispatcher(Dispatcher dispatcher) {
 		this.dispatcher = dispatcher;
-	}
-
-	public void setApplicationContext(ApplicationContext aContext) {
-		this.aContext = aContext;
 	}
 
 	public void execute() {
