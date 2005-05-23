@@ -1,5 +1,5 @@
 /*-
-* $Id: PeriodicalTemporalPattern.java,v 1.3 2005/05/18 11:34:42 bass Exp $
+* $Id: PeriodicalTemporalPattern.java,v 1.4 2005/05/23 08:21:48 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -22,11 +22,12 @@ import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.measurement.corba.PeriodicalTemporalPattern_Transferable;
+import com.syrus.AMFICOM.resource.LangModelMeasurement;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/05/18 11:34:42 $
- * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2005/05/23 08:21:48 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module measurement_v1
  */
@@ -35,6 +36,16 @@ public class PeriodicalTemporalPattern extends AbstractTemporalPattern {
 	private static final long	serialVersionUID	= 3257567312898175032L;
 	
 	private long period;	
+	
+	private static final long	SECOND_LONG	= 1000;
+	private static final long	MINUTE_LONG	= 60 * SECOND_LONG;
+	private static final long	HOUR_LONG	= 60 * MINUTE_LONG;
+	private static final long	DAY_LONG	= 24 * HOUR_LONG;
+
+	private static final String	I18N_KEY_MIN		= "min";
+	private static final String	I18N_KEY_HOUR		= "hour";
+	private static final String	I18N_KEY_DAYS		= "days";
+
 	
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
@@ -137,6 +148,39 @@ public class PeriodicalTemporalPattern extends AbstractTemporalPattern {
 	
 	public long getPeriod() {
 		return this.period;
+	}
+	
+	public String getPeriodDescription() {
+		StringBuffer buffer = new StringBuffer();
+		long period1 = this.period;
+		
+		int days = (int) (period1 / DAY_LONG);
+		period1 -= days * DAY_LONG;
+		int hours = (int) (period1 / HOUR_LONG);
+		period1 -= hours * HOUR_LONG;
+		int mins = (int) (period1 / MINUTE_LONG);
+		
+		if (days > 0) {
+			buffer.append(days);
+			buffer.append(LangModelMeasurement.getString(I18N_KEY_DAYS));
+		}
+		
+		if (hours > 0) {
+			if (buffer.length() > 0) {
+				buffer.append(", ");
+			}
+			buffer.append(hours);
+			buffer.append(LangModelMeasurement.getString(I18N_KEY_HOUR));
+		}
+		
+		if (mins > 0) {
+			if (buffer.length() > 0) {
+				buffer.append(", ");
+			}
+			buffer.append(mins);
+			buffer.append(LangModelMeasurement.getString(I18N_KEY_MIN));
+		}
+		return buffer.toString();
 	}
 	
 	public void setPeriod(long period) {
