@@ -58,11 +58,11 @@ public class FileOpenCommand extends VoidCommand
             try
             {
                 {
-                    FileInputStream fis = new FileInputStream(file);
-                    DataInputStream dis = new DataInputStream(fis);
+                    FileReader fr = new FileReader(file);
+                    BufferedReader br = new BufferedReader(fr);
                     ArrayList al = new ArrayList();
                     String s;
-                    while ((s = dis.readLine()) != null)
+                    while ((s = br.readLine()) != null)
                         al.add(s);
                     final int N = al.size();
                     //System.out.println("reading file: N=" + N);
@@ -70,7 +70,7 @@ public class FileOpenCommand extends VoidCommand
                     for (int i = 0; i < N; i++)
                         dl[i] = Double.parseDouble((String )al.get(i));
                     bs = new BellcoreCreator(dl).getBS();
-                    dis.close();
+                    br.close();
                 }
             } catch (IOException e1)
             {
