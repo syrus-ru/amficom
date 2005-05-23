@@ -1,5 +1,5 @@
 /*
-* $Id: MapViewObjectLoader.java,v 1.8 2005/04/22 14:45:58 arseniy Exp $
+* $Id: MapViewObjectLoader.java,v 1.9 2005/05/23 13:51:16 bass Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -11,30 +11,21 @@ package com.syrus.AMFICOM.mapview;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/04/22 14:45:58 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.9 $, $Date: 2005/05/23 13:51:16 $
+ * @author $Author: bass $
  * @module mapview_v1
  */
 public interface MapViewObjectLoader {
-
-	void delete(Identifier id);
-
 	void delete(final Set identifiables);
 
-	MapView loadMapView(Identifier id) throws ApplicationException;
+	Set loadMapViews(final Set ids) throws ApplicationException;
 
-	Set loadMapViews(Set ids) throws ApplicationException;
+	Set loadMapViewsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException;
 
-	Set loadMapViewsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException;
+	Set refresh(final Set storableObjects) throws ApplicationException;
 
-	java.util.Set refresh(java.util.Set storableObjects) throws ApplicationException;
-
-	void saveMapView(MapView map, boolean force) throws ApplicationException;	
-
-	void saveMapViews(Set objects, boolean force) throws ApplicationException;
-
+	void saveMapViews(final Set objects, final boolean force) throws ApplicationException;
 }

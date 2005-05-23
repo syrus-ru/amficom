@@ -1,5 +1,5 @@
 /*
- * $Id: ResourceStorableObjectPool.java,v 1.24 2005/05/20 21:11:49 arseniy Exp $
+ * $Id: ResourceStorableObjectPool.java,v 1.25 2005/05/23 13:51:17 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,6 @@ import java.util.Collections;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectGroupEntities;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -22,8 +21,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.24 $, $Date: 2005/05/20 21:11:49 $
+ * @author $Author: bass $
+ * @version $Revision: 1.25 $, $Date: 2005/05/23 13:51:17 $
  * @module resource_v1
  */
 public final class ResourceStorableObjectPool extends StorableObjectPool {
@@ -126,13 +125,9 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 			return;
 		assert StorableObject.hasSingleTypeEntities(storableObjects);
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(storableObjects);
-		final boolean singleton = storableObjects.size() == 1;
 		switch (entityCode) {
 			case ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE:
-				if (singleton)
-					rObjectLoader.saveImageResource((AbstractImageResource)storableObjects.iterator().next(), force);
-				else
-					rObjectLoader.saveImageResources(storableObjects, force);
+				rObjectLoader.saveImageResources(storableObjects, force);
 				break;
 			default:
 				Log.errorMessage("ResourceStorableObjectPool.saveStorableObjects | Unknown Unknown entity : '" + ObjectEntities.codeToString(entityCode) + "'");

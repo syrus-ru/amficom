@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseResourceObjectLoader.java,v 1.3 2005/05/18 12:52:59 bass Exp $
+ * $Id: DatabaseResourceObjectLoader.java,v 1.4 2005/05/23 13:51:17 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,78 +17,55 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseObjectLoader;
 import com.syrus.AMFICOM.general.Identifiable;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceDataPackage.ImageResourceSort;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/05/18 12:52:59 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/23 13:51:17 $
  * @author $Author: bass $
  * @module csbridge_v1
  */
 public class DatabaseResourceObjectLoader extends DatabaseObjectLoader implements ResourceObjectLoader {
-
-	public StorableObject loadImageResource(Identifier id) throws ApplicationException {
-		StorableObject storableObject;
-		ImageResourceDatabase database = ResourceDatabaseContext.getImageResourceDatabase();
-		int sort = database.getSort(id);
-		switch (sort) {
-			case ImageResourceSort._BITMAP:
-				storableObject = new BitmapImageResource(id);
-				return storableObject;
-			case ImageResourceSort._FILE:
-				storableObject = new FileImageResource(id);
-				return storableObject;
-			case ImageResourceSort._SCHEME:
-				storableObject = new SchemeImageResource(id);
-				return storableObject;
-			default:
-				throw new IllegalDataException("ResourceObjectLoader.loadImageResource | wrong sort" + sort);
-		}
-	}
-
-
-
-
-
-	public Set loadImageResources(Set ids) throws ApplicationException {
+	/**
+	 * @param ids
+	 * @throws ApplicationException
+	 * @see com.syrus.AMFICOM.resource.ResourceObjectLoader#loadImageResources(java.util.Set)
+	 */
+	public Set loadImageResources(final Set ids) throws ApplicationException {
 		ImageResourceDatabase database = ResourceDatabaseContext.getImageResourceDatabase();
 		return super.retrieveFromDatabase(database, ids);
 	}
 
-
-
-
-
-	public Set loadImageResourcesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+	/**
+	 * @param condition
+	 * @param ids
+	 * @throws ApplicationException
+	 * @see com.syrus.AMFICOM.resource.ResourceObjectLoader#loadImageResourcesButIds(com.syrus.AMFICOM.general.StorableObjectCondition, java.util.Set)
+	 */
+	public Set loadImageResourcesButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
 		ImageResourceDatabase database = ResourceDatabaseContext.getImageResourceDatabase();
 		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 	}
 
-
-
-
-
-
-	public void saveImageResource(AbstractImageResource abstractImageResource, boolean force) throws ApplicationException {
-		ImageResourceDatabase database = ResourceDatabaseContext.getImageResourceDatabase();
-		database.update(abstractImageResource, userId, force
-				? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
-	}
-
-	public void saveImageResources(Set list, boolean force) throws ApplicationException {
+	/**
+	 * @param list
+	 * @param force
+	 * @throws ApplicationException
+	 * @see com.syrus.AMFICOM.resource.ResourceObjectLoader#saveImageResources(java.util.Set, boolean)
+	 */
+	public void saveImageResources(final Set list, boolean force) throws ApplicationException {
 		ImageResourceDatabase database = ResourceDatabaseContext.getImageResourceDatabase();
 		database.update(list, userId, force ? StorableObjectDatabase.UPDATE_FORCE
 				: StorableObjectDatabase.UPDATE_CHECK);
 	}
 
-
-
-
-	public Set refresh(Set storableObjects) throws ApplicationException {
+	/**
+	 * @param storableObjects
+	 * @throws ApplicationException
+	 * @see com.syrus.AMFICOM.resource.ResourceObjectLoader#refresh(java.util.Set)
+	 */
+	public Set refresh(final Set storableObjects) throws ApplicationException {
 		if (storableObjects.isEmpty())
 			return Collections.EMPTY_SET;
 
@@ -102,17 +79,10 @@ public class DatabaseResourceObjectLoader extends DatabaseObjectLoader implement
 		return Collections.EMPTY_SET;
 	}
 
-
-
-
-
-	public void delete(Identifier id) {
-		short entityCode = id.getMajor();
-		StorableObjectDatabase storableObjectDatabase = ResourceDatabaseContext.getDatabase(entityCode);
-		if (storableObjectDatabase != null)
-			storableObjectDatabase.delete(id);
-	}
-
+	/**
+	 * @param identifiables
+	 * @see com.syrus.AMFICOM.resource.ResourceObjectLoader#delete(java.util.Set)
+	 */
 	public void delete(final Set identifiables) {
 		if (identifiables == null || identifiables.isEmpty())
 			return;
@@ -143,5 +113,4 @@ public class DatabaseResourceObjectLoader extends DatabaseObjectLoader implement
 				storableObjectDatabase.delete(entityObjects);
 		}
 	}
-
 }

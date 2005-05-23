@@ -1,5 +1,5 @@
 /*
- * $Id: MapViewStorableObjectPool.java,v 1.18 2005/05/20 21:12:23 arseniy Exp $
+ * $Id: MapViewStorableObjectPool.java,v 1.19 2005/05/23 13:51:16 bass Exp $
  *
  * Copyright ? 2004 Syrus Systems.
  * ѕвиапр-жейпкаехмкл зепжф.
@@ -21,8 +21,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/05/20 21:12:23 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.19 $, $Date: 2005/05/23 13:51:16 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -129,13 +129,9 @@ public final class MapViewStorableObjectPool extends StorableObjectPool {
 			return;
 		assert StorableObject.hasSingleTypeEntities(storableObjects);
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(storableObjects);
-		final boolean singleton = storableObjects.size() == 1;
 		switch (entityCode) {
 			case ObjectEntities.MAPVIEW_ENTITY_CODE:
-				if (singleton)
-					mvObjectLoader.saveMapView((MapView)storableObjects.iterator().next(), force);
-				else
-					mvObjectLoader.saveMapViews(storableObjects, force);
+				mvObjectLoader.saveMapViews(storableObjects, force);
 				break;
 			default:
 				Log.errorMessage("MapViewStorableObjectPool.saveStorableObjects | Unknown Unknown entity : '"

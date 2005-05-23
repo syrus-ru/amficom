@@ -1,5 +1,5 @@
 /*
- * $Id: MapStorableObjectPool.java,v 1.22 2005/05/20 21:11:56 arseniy Exp $
+ * $Id: MapStorableObjectPool.java,v 1.23 2005/05/23 13:51:17 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,6 @@ import java.util.Collections;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectGroupEntities;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -22,8 +21,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/05/20 21:11:56 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.23 $, $Date: 2005/05/23 13:51:17 $
+ * @author $Author: bass $
  * @module map_v1
  */
 public final class MapStorableObjectPool extends StorableObjectPool {
@@ -204,61 +203,33 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 			return;
 		assert StorableObject.hasSingleTypeEntities(storableObjects);
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(storableObjects);
-		final boolean singleton = storableObjects.size() == 1;
 		switch (entityCode) {				
 			case ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE:
-				if (singleton)
-					mapObjectLoader.saveSiteNodeType((SiteNodeType)storableObjects.iterator().next(), force);
-				else
-					mapObjectLoader.saveSiteNodeTypes(storableObjects, force);
+				mapObjectLoader.saveSiteNodeTypes(storableObjects, force);
 				break;
 			case ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE:
-				if (singleton)
-					mapObjectLoader.savePhysicalLinkType((PhysicalLinkType) storableObjects.iterator().next(), force);
-				else
-					mapObjectLoader.savePhysicalLinkTypes(storableObjects, force);
+				mapObjectLoader.savePhysicalLinkTypes(storableObjects, force);
 				break;
 			case ObjectEntities.SITE_NODE_ENTITY_CODE:
-				if (singleton)
-					mapObjectLoader.saveSiteNode((SiteNode)storableObjects.iterator().next(), force);
-				else
-					mapObjectLoader.saveSiteNodes(storableObjects, force);
+				mapObjectLoader.saveSiteNodes(storableObjects, force);
 				break;
 			case ObjectEntities.TOPOLOGICAL_NODE_ENTITY_CODE:
-				if (singleton)
-					mapObjectLoader.saveTopologicalNode((TopologicalNode) storableObjects.iterator().next(), force);
-				else
-					mapObjectLoader.saveTopologicalNodes(storableObjects, force);
+				mapObjectLoader.saveTopologicalNodes(storableObjects, force);
 				break;
 			case ObjectEntities.NODE_LINK_ENTITY_CODE:
-				if (singleton)
-					mapObjectLoader.saveNodeLink((NodeLink)storableObjects.iterator().next(), force);
-				else
-					mapObjectLoader.saveNodeLinks(storableObjects, force);
+				mapObjectLoader.saveNodeLinks(storableObjects, force);
 				break;
 			case ObjectEntities.MARK_ENTITY_CODE:
-				if (singleton)
-					mapObjectLoader.saveMark((Mark)storableObjects.iterator().next(), force);
-				else
-					mapObjectLoader.saveMarks(storableObjects, force);
+				mapObjectLoader.saveMarks(storableObjects, force);
 				break;
 			case ObjectEntities.PHYSICAL_LINK_ENTITY_CODE:
-				if (singleton)
-					mapObjectLoader.savePhysicalLink((PhysicalLink)storableObjects.iterator().next(), force);
-				else
-					mapObjectLoader.savePhysicalLinks(storableObjects, force);
+				mapObjectLoader.savePhysicalLinks(storableObjects, force);
 				break;
 			case ObjectEntities.COLLECTOR_ENTITY_CODE:
-				if (singleton)
-					mapObjectLoader.saveCollector((Collector)storableObjects.iterator().next(), force);
-				else
-					mapObjectLoader.saveCollectors(storableObjects, force);
+				mapObjectLoader.saveCollectors(storableObjects, force);
 				break;
 			case ObjectEntities.MAP_ENTITY_CODE:
-				if (singleton)
-					mapObjectLoader.saveMap((Map)storableObjects.iterator().next(), force);
-				else
-					mapObjectLoader.saveMaps(storableObjects, force);
+				mapObjectLoader.saveMaps(storableObjects, force);
 				break;
 			default:
 				Log.errorMessage("MapStorableObjectPool.saveStorableObjects | Unknown entity: "

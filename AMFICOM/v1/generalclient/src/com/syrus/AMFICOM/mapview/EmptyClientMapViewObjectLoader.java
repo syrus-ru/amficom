@@ -1,47 +1,31 @@
-
 package com.syrus.AMFICOM.mapview;
 
 import java.util.Collections;
 import java.util.Set;
 
-import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.DatabaseException;
-import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
-import com.syrus.AMFICOM.general.VersionCollisionException;
 
 public class EmptyClientMapViewObjectLoader implements MapViewObjectLoader {
-	public void delete(Identifier id) {
+	public void delete(final Set ids) {
 		// nothing to do
 	}
 
-	public void delete(Set ids) {
-		// nothing to do
-	}
-
-	public MapView loadMapView(Identifier id) throws DatabaseException, CommunicationException {
-		return null;
-	}
-
-	public Set loadMapViews(Set ids) {
+	public Set loadMapViews(final Set ids) {
 		return Collections.EMPTY_SET;
 	}
 
-	public Set loadMapViewsButIds(	StorableObjectCondition condition,
-									Set ids) throws DatabaseException, CommunicationException {
+	public Set loadMapViewsButIds(final StorableObjectCondition condition,
+			final Set ids) throws ApplicationException {
 		return Collections.EMPTY_SET;
 	}
 
-	public Set refresh(Set storableObjects) throws CommunicationException, DatabaseException {
+	public Set refresh(final Set storableObjects) throws ApplicationException {
 		return Collections.EMPTY_SET;
 	}
 
-	public void saveMapView(MapView map,
-							boolean force) throws VersionCollisionException, DatabaseException, CommunicationException {
-	}
-
-	public void saveMapViews(	Set set,
-								boolean force) throws VersionCollisionException, DatabaseException,
-			CommunicationException {
+	public void saveMapViews(final Set set,
+			final boolean force) throws ApplicationException {
+		// empty
 	}
 }

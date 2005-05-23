@@ -1,5 +1,5 @@
 /*
- * $Id: MapObjectLoader.java,v 1.10 2005/04/22 14:45:41 arseniy Exp $
+ * $Id: MapObjectLoader.java,v 1.11 2005/05/23 13:51:17 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,140 +11,87 @@ package com.syrus.AMFICOM.map;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/04/22 14:45:41 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2005/05/23 13:51:17 $
+ * @author $Author: bass $
  * @module map_v1
  */
 public interface MapObjectLoader {
+	Set loadCollectors(final Set ids) throws ApplicationException;
 
-	Collector loadCollector(Identifier id) throws ApplicationException;
+	Set loadMaps(final Set ids) throws ApplicationException;
 
-	Set loadCollectors(Set ids) throws ApplicationException;
+	Set loadMarks(final Set ids) throws ApplicationException;
 
-	Map loadMap(Identifier id) throws ApplicationException;
+	Set loadNodeLinks(final Set ids) throws ApplicationException;
 
-	Set loadMaps(Set ids) throws ApplicationException;
+	Set loadPhysicalLinks(final Set ids) throws ApplicationException;
 
-	Mark loadMark(Identifier id) throws ApplicationException;
+	Set loadPhysicalLinkTypes(final Set ids) throws ApplicationException;
 
-	Set loadMarks(Set ids) throws ApplicationException;
+	Set loadSiteNodes(final Set ids) throws ApplicationException;
 
-	NodeLink loadNodeLink(Identifier id) throws ApplicationException;
+	Set loadSiteNodeTypes(final Set ids) throws ApplicationException;
 
-	Set loadNodeLinks(Set ids) throws ApplicationException;
+	Set loadTopologicalNodes(final Set ids) throws ApplicationException;
 
-	PhysicalLink loadPhysicalLink(Identifier id) throws ApplicationException;
+	Set loadCollectorsButIds(final StorableObjectCondition condition,
+			final Set ids) throws ApplicationException;
 
-	Set loadPhysicalLinks(Set ids) throws ApplicationException;
+	Set loadMapsButIds(final StorableObjectCondition condition,
+			final Set ids) throws ApplicationException;
 
-	PhysicalLinkType loadPhysicalLinkType(Identifier id) throws ApplicationException;
+	Set loadMarksButIds(final StorableObjectCondition condition,
+			final Set ids) throws ApplicationException;
 
-	Set loadPhysicalLinkTypes(Set ids) throws ApplicationException;
+	Set loadNodeLinksButIds(final StorableObjectCondition condition,
+			final Set ids) throws ApplicationException;
 
-	SiteNode loadSiteNode(Identifier id) throws ApplicationException;
+	Set loadPhysicalLinksButIds(final StorableObjectCondition condition,
+			final Set ids) throws ApplicationException;
 
-	Set loadSiteNodes(Set ids) throws ApplicationException;
+	Set loadPhysicalLinkTypesButIds(final StorableObjectCondition condition,
+			final Set ids) throws ApplicationException;
 
-	SiteNodeType loadSiteNodeType(Identifier id) throws ApplicationException;
+	Set loadSiteNodesButIds(final StorableObjectCondition condition,
+			final Set ids) throws ApplicationException;
 
-	Set loadSiteNodeTypes(Set ids) throws ApplicationException;
+	Set loadSiteNodeTypesButIds(final StorableObjectCondition condition,
+			final Set ids) throws ApplicationException;
 
-	TopologicalNode loadTopologicalNode(Identifier id) throws ApplicationException;
+	Set loadTopologicalNodesButIds(final StorableObjectCondition condition,
+			final Set ids) throws ApplicationException;
 
-	Set loadTopologicalNodes(Set ids) throws ApplicationException;
+	java.util.Set refresh(final Set storableObjects) throws ApplicationException;
 
-	Set loadCollectorsButIds(StorableObjectCondition condition,
-									Set ids) throws ApplicationException;
+	void saveCollectors(final Set objects,
+			final boolean force) throws ApplicationException;
 
-	Set loadMapsButIds(	StorableObjectCondition condition,
-								Set ids) throws ApplicationException;
+	void saveMaps(final Set objects,
+			final boolean force) throws ApplicationException;
 
-	Set loadMarksButIds(	StorableObjectCondition condition,
-								Set ids) throws ApplicationException;
+	void saveMarks(final Set objects,
+			final boolean force) throws ApplicationException;
 
-	Set loadNodeLinksButIds(	StorableObjectCondition condition,
-									Set ids) throws ApplicationException;
+	void saveNodeLinks(final Set objects,
+			final boolean force) throws ApplicationException;
 
-	Set loadPhysicalLinksButIds(	StorableObjectCondition condition,
-										Set ids) throws ApplicationException;
+	void savePhysicalLinks(final Set objects,
+			final boolean force) throws ApplicationException;
 
-	Set loadPhysicalLinkTypesButIds(	StorableObjectCondition condition,
-											Set ids) throws ApplicationException;
+	void savePhysicalLinkTypes(final Set objects,
+			final boolean force) throws ApplicationException;
 
-	Set loadSiteNodesButIds(	StorableObjectCondition condition,
-									Set ids) throws ApplicationException;
+	void saveSiteNodes(final Set objects,
+			final boolean force) throws ApplicationException;
 
-	Set loadSiteNodeTypesButIds(	StorableObjectCondition condition,
-										Set ids) throws ApplicationException;
+	void saveSiteNodeTypes(final Set objects,
+			final boolean force) throws ApplicationException;
 
-	Set loadTopologicalNodesButIds(	StorableObjectCondition condition,
-											Set ids) throws ApplicationException;
-
-	java.util.Set refresh(java.util.Set storableObjects) throws ApplicationException;
-
-	void saveCollector(	Collector collector,
-						boolean force) throws ApplicationException;
-
-	void saveMap(	Map map,
-					boolean force) throws ApplicationException;
-
-	void saveMark(	Mark mark,
-					boolean force) throws ApplicationException;
-
-	void saveNodeLink(	NodeLink nodeLink,
-						boolean force) throws ApplicationException;
-
-	void savePhysicalLink(	PhysicalLink physicalLink,
-							boolean force) throws ApplicationException;
-
-	void savePhysicalLinkType(	PhysicalLinkType physicalLinkType,
-								boolean force) throws ApplicationException;
-
-	void saveSiteNode(	SiteNode siteNode,
-						boolean force) throws ApplicationException;
-
-	void saveSiteNodeType(	SiteNodeType siteNodeType,
-							boolean force) throws ApplicationException;
-
-	void saveTopologicalNode(	TopologicalNode topologicalNode,
-								boolean force) throws ApplicationException;
-
-	void saveCollectors(Set objects,
-						boolean force) throws ApplicationException;
-
-	void saveMaps(	Set objects,
-					boolean force) throws ApplicationException;
-
-	void saveMarks(	Set objects,
-					boolean force) throws ApplicationException;
-
-	void saveNodeLinks(	Set objects,
-						boolean force) throws ApplicationException;
-
-	void savePhysicalLinks(	Set objects,
-							boolean force) throws ApplicationException;
-
-	void savePhysicalLinkTypes(	Set objects,
-								boolean force) throws ApplicationException;
-
-	void saveSiteNodes(	Set objects,
-						boolean force) throws ApplicationException;
-
-	void saveSiteNodeTypes(	Set objects,
-							boolean force) throws ApplicationException;
-
-	void saveTopologicalNodes(	Set objects,
-								boolean force) throws ApplicationException;
-
-
-
-
-	void delete(Identifier id);
+	void saveTopologicalNodes(final Set objects,
+			final boolean force) throws ApplicationException;
 
 	void delete(final Set identifiables);
-
 }

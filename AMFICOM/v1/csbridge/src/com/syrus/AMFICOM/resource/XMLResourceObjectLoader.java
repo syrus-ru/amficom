@@ -1,5 +1,5 @@
 /*
- * $Id: XMLResourceObjectLoader.java,v 1.4 2005/05/23 12:56:33 bass Exp $
+ * $Id: XMLResourceObjectLoader.java,v 1.5 2005/05/23 13:51:17 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,12 +23,11 @@ import com.syrus.AMFICOM.general.StorableObjectXMLDriver;
 import com.syrus.AMFICOM.general.XMLObjectLoader;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/05/23 12:56:33 $
+ * @version $Revision: 1.5 $, $Date: 2005/05/23 13:51:17 $
  * @author $Author: bass $
  * @module csbridge_v1
  */
 public class XMLResourceObjectLoader extends XMLObjectLoader implements ResourceObjectLoader {
-
 	private StorableObjectXML	resourceXML;
 
 	public XMLResourceObjectLoader(final File path) {
@@ -36,74 +35,64 @@ public class XMLResourceObjectLoader extends XMLObjectLoader implements Resource
 		this.resourceXML = new StorableObjectXML(driver);
 	}
 
-	public void delete(Identifier id) {
-		this.resourceXML.delete(id);
-		this.resourceXML.flush();
-	}
-
+	/**
+	 * @param identifiables
+	 * @see com.syrus.AMFICOM.resource.ResourceObjectLoader#delete(java.util.Set)
+	 */
 	public void delete(final Set identifiables) {
 		for (Iterator it = identifiables.iterator(); it.hasNext();) {
-				Identifier id = (Identifier) it.next();
-				this.resourceXML.delete(id);
+			Identifier id = (Identifier) it.next();
+			this.resourceXML.delete(id);
 		}
 		this.resourceXML.flush();
-
 	}
 
-	private StorableObject loadStorableObject(Identifier id) throws ApplicationException {
-		return this.resourceXML.retrieve(id);
-	}
-	
-	private Set loadStorableObjects(Set ids) throws ApplicationException {
+	/**
+	 * @param ids
+	 * @throws ApplicationException
+	 * @see com.syrus.AMFICOM.resource.ResourceObjectLoader#loadImageResources(java.util.Set)
+	 */
+	public Set loadImageResources(final Set ids) throws ApplicationException {
 		Set objects = new HashSet(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
-			objects.add(this.loadStorableObject(id));
+			objects.add(this.resourceXML.retrieve(id));
 		}
 		return objects;
 	}
 
-	private Set loadStorableObjectButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+	/**
+	 * @param condition
+	 * @param ids
+	 * @throws ApplicationException
+	 * @see com.syrus.AMFICOM.resource.ResourceObjectLoader#loadImageResourcesButIds(com.syrus.AMFICOM.general.StorableObjectCondition, java.util.Set)
+	 */
+	public Set loadImageResourcesButIds(final StorableObjectCondition condition,
+			final Set ids) throws ApplicationException {
 		return this.resourceXML.retrieveByCondition(ids, condition);
 	}
 
-	private void saveStorableObject(StorableObject storableObject, boolean force) throws ApplicationException {
-		this.resourceXML.updateObject(storableObject, force);
-	}
-	
-	private void saveStorableObjects(Set storableObjects, boolean force) throws ApplicationException {
-		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
-			StorableObject storableObject = (StorableObject) it.next();
-			this.saveStorableObject(storableObject, force);
-		}
-		this.resourceXML.flush();
-	}
-	
-	public StorableObject loadImageResource(Identifier id) throws ApplicationException {
-		return this.loadStorableObject(id);
-	}
-
-	public Set loadImageResources(Set ids) throws ApplicationException {
-		return this.loadStorableObjects(ids);
-	}
-
-	public Set loadImageResourcesButIds(	StorableObjectCondition condition,
-												Set ids) throws ApplicationException {
-		return this.loadStorableObjectButIds(condition, ids);
-	}
-
+	/**
+	 * @param storableObjects
+	 * @throws ApplicationException
+	 * @see com.syrus.AMFICOM.resource.ResourceObjectLoader#refresh(java.util.Set)
+	 */
 	public Set refresh(final Set storableObjects) throws ApplicationException {
 		return Collections.EMPTY_SET;
 	}
 
-	public void saveImageResource(	AbstractImageResource abstractImageResource,
-									boolean force) throws ApplicationException {
-		this.saveStorableObject(abstractImageResource, force);
+	/**
+	 * @param storableObjects
+	 * @param force
+	 * @throws ApplicationException
+	 * @see com.syrus.AMFICOM.resource.ResourceObjectLoader#saveImageResources(java.util.Set, boolean)
+	 */
+	public void saveImageResources(final Set storableObjects,
+			final boolean force) throws ApplicationException {
+		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
+			StorableObject storableObject = (StorableObject) it.next();
+			this.resourceXML.updateObject(storableObject, force);
+		}
+		this.resourceXML.flush();
 	}
-	
-	public void saveImageResources(	Set collection,
-									boolean force) throws ApplicationException {
-		this.saveStorableObjects(collection, force);
-	}
-
 }
