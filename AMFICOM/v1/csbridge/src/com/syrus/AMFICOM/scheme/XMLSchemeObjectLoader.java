@@ -1,5 +1,5 @@
 /*-
- * $Id: XMLSchemeObjectLoader.java,v 1.3 2005/05/16 16:04:19 arseniy Exp $
+ * $Id: XMLSchemeObjectLoader.java,v 1.4 2005/05/23 12:56:45 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,15 +8,20 @@
 
 package com.syrus.AMFICOM.scheme;
 
-import com.syrus.AMFICOM.general.*;
-
 import java.io.File;
-import java.util.*;
+import java.util.Collections;
+import java.util.Set;
+
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.general.StorableObjectXML;
+import com.syrus.AMFICOM.general.StorableObjectXMLDriver;
+import com.syrus.AMFICOM.general.XMLObjectLoader;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.3 $, $Date: 2005/05/16 16:04:19 $
+ * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2005/05/23 12:56:45 $
  * @module csbridge_v1
  */
 public final class XMLSchemeObjectLoader extends XMLObjectLoader implements SchemeObjectLoader {
@@ -32,24 +37,6 @@ public final class XMLSchemeObjectLoader extends XMLObjectLoader implements Sche
 	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#delete(java.util.Set)
 	 */
 	public void delete(Set ids) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param id
-	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#delete(com.syrus.AMFICOM.general.Identifier)
-	 */
-	public void delete(Identifier id) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param id
-	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#loadCableChannelingItem(com.syrus.AMFICOM.general.Identifier)
-	 */
-	public StorableObject loadCableChannelingItem(Identifier id)
-			throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -76,16 +63,6 @@ public final class XMLSchemeObjectLoader extends XMLObjectLoader implements Sche
 	}
 
 	/**
-	 * @param id
-	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#loadPathElement(com.syrus.AMFICOM.general.Identifier)
-	 */
-	public StorableObject loadPathElement(Identifier id)
-			throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
 	 * @param ids
 	 * @throws ApplicationException
 	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#loadPathElements(java.util.Set)
@@ -104,26 +81,6 @@ public final class XMLSchemeObjectLoader extends XMLObjectLoader implements Sche
 	public Set loadPathElementsButIds(
 			StorableObjectCondition storableObjectCondition,
 			Set ids) throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param id
-	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#loadScheme(com.syrus.AMFICOM.general.Identifier)
-	 */
-	public StorableObject loadScheme(Identifier id)
-			throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param id
-	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#loadSchemeCableLink(com.syrus.AMFICOM.general.Identifier)
-	 */
-	public StorableObject loadSchemeCableLink(Identifier id)
-			throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -150,16 +107,6 @@ public final class XMLSchemeObjectLoader extends XMLObjectLoader implements Sche
 	}
 
 	/**
-	 * @param id
-	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#loadSchemeCablePort(com.syrus.AMFICOM.general.Identifier)
-	 */
-	public StorableObject loadSchemeCablePort(Identifier id)
-			throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
 	 * @param ids
 	 * @throws ApplicationException
 	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#loadSchemeCablePorts(java.util.Set)
@@ -178,16 +125,6 @@ public final class XMLSchemeObjectLoader extends XMLObjectLoader implements Sche
 	public Set loadSchemeCablePortsButIds(
 			StorableObjectCondition storableObjectCondition,
 			Set ids) throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param id
-	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#loadSchemeCableThread(com.syrus.AMFICOM.general.Identifier)
-	 */
-	public StorableObject loadSchemeCableThread(Identifier id)
-			throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -214,16 +151,6 @@ public final class XMLSchemeObjectLoader extends XMLObjectLoader implements Sche
 	}
 
 	/**
-	 * @param id
-	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#loadSchemeDevice(com.syrus.AMFICOM.general.Identifier)
-	 */
-	public StorableObject loadSchemeDevice(Identifier id)
-			throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
 	 * @param ids
 	 * @throws ApplicationException
 	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#loadSchemeDevices(java.util.Set)
@@ -242,16 +169,6 @@ public final class XMLSchemeObjectLoader extends XMLObjectLoader implements Sche
 	public Set loadSchemeDevicesButIds(
 			StorableObjectCondition storableObjectCondition,
 			Set ids) throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param id
-	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#loadSchemeElement(com.syrus.AMFICOM.general.Identifier)
-	 */
-	public StorableObject loadSchemeElement(Identifier id)
-			throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -278,16 +195,6 @@ public final class XMLSchemeObjectLoader extends XMLObjectLoader implements Sche
 	}
 
 	/**
-	 * @param id
-	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#loadSchemeLink(com.syrus.AMFICOM.general.Identifier)
-	 */
-	public StorableObject loadSchemeLink(Identifier id)
-			throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
 	 * @param ids
 	 * @throws ApplicationException
 	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#loadSchemeLinks(java.util.Set)
@@ -306,16 +213,6 @@ public final class XMLSchemeObjectLoader extends XMLObjectLoader implements Sche
 	public Set loadSchemeLinksButIds(
 			StorableObjectCondition storableObjectCondition,
 			Set ids) throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param id
-	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#loadSchemeMonitoringSolution(com.syrus.AMFICOM.general.Identifier)
-	 */
-	public StorableObject loadSchemeMonitoringSolution(Identifier id)
-			throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -342,12 +239,21 @@ public final class XMLSchemeObjectLoader extends XMLObjectLoader implements Sche
 	}
 
 	/**
-	 * @param id
+	 * @param ids
 	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#loadSchemeOptimizeInfo(com.syrus.AMFICOM.general.Identifier)
+	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#loadSchemeOptimizeInfoRtus(java.util.Set)
 	 */
-	public StorableObject loadSchemeOptimizeInfo(Identifier id)
-			throws ApplicationException {
+	public Set loadSchemeOptimizeInfoRtus(final Set ids) throws ApplicationException {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param storableObjectCondition
+	 * @param ids
+	 * @throws ApplicationException
+	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#loadSchemeOptimizeInfoRtusButIds(com.syrus.AMFICOM.general.StorableObjectCondition, java.util.Set)
+	 */
+	public Set loadSchemeOptimizeInfoRtusButIds(final StorableObjectCondition storableObjectCondition, final Set ids) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -374,12 +280,22 @@ public final class XMLSchemeObjectLoader extends XMLObjectLoader implements Sche
 	}
 
 	/**
-	 * @param id
+	 * 
+	 * @param ids
 	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#loadSchemePath(com.syrus.AMFICOM.general.Identifier)
+	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#loadSchemeOptimizeInfoSwitches(java.util.Set)
 	 */
-	public StorableObject loadSchemePath(Identifier id)
-			throws ApplicationException {
+	public Set loadSchemeOptimizeInfoSwitches(final Set ids) throws ApplicationException {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param storableObjectCondition
+	 * @param ids
+	 * @throws ApplicationException
+	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#loadSchemeOptimizeInfoSwitchesButIds(com.syrus.AMFICOM.general.StorableObjectCondition, java.util.Set)
+	 */
+	public Set loadSchemeOptimizeInfoSwitchesButIds(final StorableObjectCondition storableObjectCondition, final Set ids) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -406,16 +322,6 @@ public final class XMLSchemeObjectLoader extends XMLObjectLoader implements Sche
 	}
 
 	/**
-	 * @param id
-	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#loadSchemePort(com.syrus.AMFICOM.general.Identifier)
-	 */
-	public StorableObject loadSchemePort(Identifier id)
-			throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
 	 * @param ids
 	 * @throws ApplicationException
 	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#loadSchemePorts(java.util.Set)
@@ -438,16 +344,6 @@ public final class XMLSchemeObjectLoader extends XMLObjectLoader implements Sche
 	}
 
 	/**
-	 * @param id
-	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#loadSchemeProtoElement(com.syrus.AMFICOM.general.Identifier)
-	 */
-	public StorableObject loadSchemeProtoElement(Identifier id)
-			throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
 	 * @param ids
 	 * @throws ApplicationException
 	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#loadSchemeProtoElements(java.util.Set)
@@ -466,16 +362,6 @@ public final class XMLSchemeObjectLoader extends XMLObjectLoader implements Sche
 	public Set loadSchemeProtoElementsButIds(
 			StorableObjectCondition storableObjectCondition,
 			Set ids) throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param id
-	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#loadSchemeProtoGroup(com.syrus.AMFICOM.general.Identifier)
-	 */
-	public StorableObject loadSchemeProtoGroup(Identifier id)
-			throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -533,18 +419,6 @@ public final class XMLSchemeObjectLoader extends XMLObjectLoader implements Sche
 	}
 
 	/**
-	 * @param cableChannelingItem
-	 * @param force
-	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#saveCableChannelingItem(com.syrus.AMFICOM.scheme.CableChannelingItem, boolean)
-	 */
-	public void saveCableChannelingItem(
-			CableChannelingItem cableChannelingItem, boolean force)
-			throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
 	 * @param cableChannelingItems
 	 * @param force
 	 * @throws ApplicationException
@@ -552,17 +426,6 @@ public final class XMLSchemeObjectLoader extends XMLObjectLoader implements Sche
 	 */
 	public void saveCableChannelingItems(Set cableChannelingItems,
 			boolean force) throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param pathElement
-	 * @param force
-	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#savePathElement(com.syrus.AMFICOM.scheme.PathElement, boolean)
-	 */
-	public void savePathElement(PathElement pathElement, boolean force)
-			throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -578,45 +441,12 @@ public final class XMLSchemeObjectLoader extends XMLObjectLoader implements Sche
 	}
 
 	/**
-	 * @param scheme
-	 * @param force
-	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#saveScheme(com.syrus.AMFICOM.scheme.Scheme, boolean)
-	 */
-	public void saveScheme(Scheme scheme, boolean force)
-			throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param schemeCableLink
-	 * @param force
-	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#saveSchemeCableLink(com.syrus.AMFICOM.scheme.SchemeCableLink, boolean)
-	 */
-	public void saveSchemeCableLink(SchemeCableLink schemeCableLink,
-			boolean force) throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
 	 * @param schemeCableLinks
 	 * @param force
 	 * @throws ApplicationException
 	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#saveSchemeCableLinks(java.util.Set, boolean)
 	 */
 	public void saveSchemeCableLinks(Set schemeCableLinks,
-			boolean force) throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param schemeCablePort
-	 * @param force
-	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#saveSchemeCablePort(com.syrus.AMFICOM.scheme.SchemeCablePort, boolean)
-	 */
-	public void saveSchemeCablePort(SchemeCablePort schemeCablePort,
 			boolean force) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
@@ -633,17 +463,6 @@ public final class XMLSchemeObjectLoader extends XMLObjectLoader implements Sche
 	}
 
 	/**
-	 * @param schemeCableThread
-	 * @param force
-	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#saveSchemeCableThread(com.syrus.AMFICOM.scheme.SchemeCableThread, boolean)
-	 */
-	public void saveSchemeCableThread(SchemeCableThread schemeCableThread,
-			boolean force) throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
 	 * @param schemeCableThreads
 	 * @param force
 	 * @throws ApplicationException
@@ -655,34 +474,12 @@ public final class XMLSchemeObjectLoader extends XMLObjectLoader implements Sche
 	}
 
 	/**
-	 * @param schemeDevice
-	 * @param force
-	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#saveSchemeDevice(com.syrus.AMFICOM.scheme.SchemeDevice, boolean)
-	 */
-	public void saveSchemeDevice(SchemeDevice schemeDevice, boolean force)
-			throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
 	 * @param schemeDevices
 	 * @param force
 	 * @throws ApplicationException
 	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#saveSchemeDevices(java.util.Set, boolean)
 	 */
 	public void saveSchemeDevices(Set schemeDevices, boolean force)
-			throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param schemeElement
-	 * @param force
-	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#saveSchemeElement(com.syrus.AMFICOM.scheme.SchemeElement, boolean)
-	 */
-	public void saveSchemeElement(SchemeElement schemeElement, boolean force)
 			throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
@@ -699,17 +496,6 @@ public final class XMLSchemeObjectLoader extends XMLObjectLoader implements Sche
 	}
 
 	/**
-	 * @param schemeLink
-	 * @param force
-	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#saveSchemeLink(com.syrus.AMFICOM.scheme.SchemeLink, boolean)
-	 */
-	public void saveSchemeLink(SchemeLink schemeLink, boolean force)
-			throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
 	 * @param schemeLinks
 	 * @param force
 	 * @throws ApplicationException
@@ -717,18 +503,6 @@ public final class XMLSchemeObjectLoader extends XMLObjectLoader implements Sche
 	 */
 	public void saveSchemeLinks(Set schemeLinks, boolean force)
 			throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param schemeMonitoringSolution
-	 * @param force
-	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#saveSchemeMonitoringSolution(com.syrus.AMFICOM.scheme.SchemeMonitoringSolution, boolean)
-	 */
-	public void saveSchemeMonitoringSolution(
-			SchemeMonitoringSolution schemeMonitoringSolution,
-			boolean force) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -745,14 +519,12 @@ public final class XMLSchemeObjectLoader extends XMLObjectLoader implements Sche
 	}
 
 	/**
-	 * @param schemeOptimizeInfo
+	 * @param schemeOptimizeInfoRtus
 	 * @param force
 	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#saveSchemeOptimizeInfo(com.syrus.AMFICOM.scheme.SchemeOptimizeInfo, boolean)
+	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#saveSchemeOptimizeInfoRtus(java.util.Set, boolean)
 	 */
-	public void saveSchemeOptimizeInfo(
-			SchemeOptimizeInfo schemeOptimizeInfo, boolean force)
-			throws ApplicationException {
+	public void saveSchemeOptimizeInfoRtus(final Set schemeOptimizeInfoRtus, final boolean force) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -768,13 +540,12 @@ public final class XMLSchemeObjectLoader extends XMLObjectLoader implements Sche
 	}
 
 	/**
-	 * @param schemePath
+	 * @param schemeOptimizeInfoSwitches
 	 * @param force
 	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#saveSchemePath(com.syrus.AMFICOM.scheme.SchemePath, boolean)
+	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#saveSchemeOptimizeInfoSwitches(java.util.Set, boolean)
 	 */
-	public void saveSchemePath(SchemePath schemePath, boolean force)
-			throws ApplicationException {
+	public void saveSchemeOptimizeInfoSwitches(final Set schemeOptimizeInfoSwitches, final boolean force) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -785,17 +556,6 @@ public final class XMLSchemeObjectLoader extends XMLObjectLoader implements Sche
 	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#saveSchemePaths(java.util.Set, boolean)
 	 */
 	public void saveSchemePaths(Set schemePaths, boolean force)
-			throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param schemePort
-	 * @param force
-	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#saveSchemePort(com.syrus.AMFICOM.scheme.SchemePort, boolean)
-	 */
-	public void saveSchemePort(SchemePort schemePort, boolean force)
 			throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
@@ -830,17 +590,6 @@ public final class XMLSchemeObjectLoader extends XMLObjectLoader implements Sche
 	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#saveSchemeProtoElements(java.util.Set, boolean)
 	 */
 	public void saveSchemeProtoElements(Set schemeProtoElements,
-			boolean force) throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param schemeProtoGroup
-	 * @param force
-	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#saveSchemeProtoGroup(com.syrus.AMFICOM.scheme.SchemeProtoGroup, boolean)
-	 */
-	public void saveSchemeProtoGroup(SchemeProtoGroup schemeProtoGroup,
 			boolean force) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
