@@ -1,5 +1,5 @@
 /*
- * $Id: MCMImplementation.java,v 1.32 2005/05/18 13:21:12 bass Exp $
+ * $Id: MCMImplementation.java,v 1.33 2005/05/23 08:28:54 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,6 @@ import com.syrus.AMFICOM.mcm.corba.MCMPOA;
 import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.AMFICOM.measurement.Evaluation;
 import com.syrus.AMFICOM.measurement.Measurement;
-import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
@@ -40,8 +39,8 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/05/18 13:21:12 $
- * @author $Author: bass $
+ * @version $Revision: 1.33 $, $Date: 2005/05/23 08:28:54 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 
@@ -79,7 +78,7 @@ public class MCMImplementation extends MCMPOA {
 		Identifier testId = new Identifier(testIdT);
 		Log.debugMessage("Received signal to abort test '" + testId + "'", Log.DEBUGLEVEL07);
 		try {
-			Test test = (Test) MeasurementStorableObjectPool.getStorableObject(testId, true);
+			Test test = (Test) StorableObjectPool.getStorableObject(testId, true);
 			MeasurementControlModule.abortTest(test);
 		}
 		catch (ApplicationException ae) {

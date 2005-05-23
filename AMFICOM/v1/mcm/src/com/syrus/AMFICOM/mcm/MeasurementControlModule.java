@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.91 2005/05/18 13:21:12 bass Exp $
+ * $Id: MeasurementControlModule.java,v 1.92 2005/05/23 08:28:54 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,7 +41,6 @@ import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.CompoundConditionSort;
-import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestWrapper;
@@ -55,8 +54,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.91 $, $Date: 2005/05/18 13:21:12 $
- * @author $Author: bass $
+ * @version $Revision: 1.92 $, $Date: 2005/05/23 08:28:54 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 
@@ -451,7 +450,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 			}
 
 			try {
-				MeasurementStorableObjectPool.flush(ObjectEntities.TEST_ENTITY_CODE, true);
+				StorableObjectPool.flush(ObjectEntities.TEST_ENTITY_CODE, true);
 			}
 			catch (ApplicationException ae) {
 				Log.errorException(ae);
@@ -466,7 +465,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 			StorableObjectPool.putStorableObject(test);
 
 			if (test.getTemporalType().value() == TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL)
-				MeasurementStorableObjectPool.getStorableObject(test.getTemporalPatternId(), true);
+				StorableObjectPool.getStorableObject(test.getTemporalPatternId(), true);
 		}
 		catch (ApplicationException ae) {
 			Log.errorException(ae);
@@ -481,7 +480,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 			test.setStatus(TestStatus.TEST_STATUS_ABORTED);
 			try {
 				StorableObjectPool.putStorableObject(test);
-				MeasurementStorableObjectPool.flush(test.getId(), true);
+				StorableObjectPool.flush(test.getId(), true);
 			}
 			catch (ApplicationException ae) {
 				Log.errorException(ae);

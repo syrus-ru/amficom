@@ -1,5 +1,5 @@
 /*
- * $Id: MCMConfigurationObjectLoader.java,v 1.35 2005/05/18 13:21:12 bass Exp $
+ * $Id: MCMConfigurationObjectLoader.java,v 1.36 2005/05/23 08:28:54 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,8 +38,8 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/05/18 13:21:12 $
- * @author $Author: bass $
+ * @version $Revision: 1.36 $, $Date: 2005/05/23 08:28:54 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 
@@ -196,8 +196,14 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 		try {
 			MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
 			MonitoredElement_Transferable[] transferables = mServerRef.transmitMonitoredElements(loadIdsT);
-			for (int i = 0; i < transferables.length; i++)
-				loadedObjects.add(new MonitoredElement(transferables[i]));
+			for (int i = 0; i < transferables.length; i++) {
+				try {
+					loadedObjects.add(new MonitoredElement(transferables[i]));
+				}
+				catch (CreateObjectException coe) {
+					Log.errorException(coe);
+				}
+			}
 		}
 		catch (CommunicationException ce) {
 			Log.errorException(ce);

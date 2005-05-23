@@ -1,5 +1,5 @@
 /*
- * $Id: PeriodicalTestProcessor.java,v 1.38 2005/04/22 16:05:41 arseniy Exp $
+ * $Id: PeriodicalTestProcessor.java,v 1.39 2005/05/23 08:28:54 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,13 +17,13 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
-import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.CronTemporalPattern;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/04/22 16:05:41 $
+ * @version $Revision: 1.39 $, $Date: 2005/05/23 08:28:54 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -46,7 +46,7 @@ public class PeriodicalTestProcessor extends TestProcessor {
 
 		this.endTime = test.getEndTime().getTime();
 		try {
-			this.temporalPattern = (CronTemporalPattern) MeasurementStorableObjectPool.getStorableObject(test.getTemporalPatternId(), true);
+			this.temporalPattern = (CronTemporalPattern) StorableObjectPool.getStorableObject(test.getTemporalPatternId(), true);
 		}
 		catch (ApplicationException ae) {
 			Log.errorMessage("Cannot load temporal pattern '" + test.getTemporalPatternId() + "' for test '" + test.getId() + "'");

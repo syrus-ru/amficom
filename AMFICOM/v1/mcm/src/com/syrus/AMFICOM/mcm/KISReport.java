@@ -1,5 +1,5 @@
 /*
- * $Id: KISReport.java,v 1.30 2005/05/18 13:21:12 bass Exp $
+ * $Id: KISReport.java,v 1.31 2005/05/23 08:28:54 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,6 @@ import java.util.Map;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.GeneralDatabaseContext;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LoginManager;
@@ -28,14 +27,13 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
-import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.SetParameter;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/05/18 13:21:12 $
- * @author $Author: bass $
+ * @version $Revision: 1.31 $, $Date: 2005/05/23 08:28:54 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 
@@ -61,12 +59,13 @@ public class KISReport {
 
 	public Result createResult() throws MeasurementException {
 		try {
-			Measurement measurement = (Measurement)MeasurementStorableObjectPool.getStorableObject(this.measurementId, true);
+			Measurement measurement = (Measurement) StorableObjectPool.getStorableObject(this.measurementId, true);
 
 			SetParameter[] parameters = new SetParameter[this.parameterCodenames.length];
 			ParameterType parameterType;
 			for (int i = 0; i < parameters.length; i++) {
-				parameterType = (ParameterType)GeneralStorableObjectPool.getStorableObject((Identifier)outParameterTypeIds.get(this.parameterCodenames[i]), true);
+				parameterType = (ParameterType) StorableObjectPool.getStorableObject((Identifier) outParameterTypeIds.get(this.parameterCodenames[i]),
+						true);
 				parameters[i] = SetParameter.createInstance(parameterType, this.parameterValues[i]);
 			}
 

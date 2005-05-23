@@ -16,7 +16,6 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.Measurement;
-import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
 import com.syrus.util.ApplicationProperties;
@@ -93,7 +92,7 @@ public class Transceiver extends SleepButWorkThread {
 				tp = (TestProcessor) this.testProcessors.get(measurementId);
 				if (tp.getTestId().equals(testProcessor.getTestId())) {
 					try {
-						measurement = (Measurement) MeasurementStorableObjectPool.getStorableObject(measurementId, true);
+						measurement = (Measurement) StorableObjectPool.getStorableObject(measurementId, true);
 
 						it.remove();
 						this.scheduledMeasurements.remove(measurement);
@@ -109,7 +108,7 @@ public class Transceiver extends SleepButWorkThread {
 		}
 
 		try {
-			MeasurementStorableObjectPool.flush(ObjectEntities.MEASUREMENT_ENTITY_CODE, true);
+			StorableObjectPool.flush(ObjectEntities.MEASUREMENT_ENTITY_CODE, true);
 		}
 		catch (ApplicationException ae) {
 			Log.errorException(ae);
@@ -137,7 +136,7 @@ public class Transceiver extends SleepButWorkThread {
 							this.scheduledMeasurements.remove(measurement);
 							measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ACQUIRING);
 							StorableObjectPool.putStorableObject(measurement);
-							MeasurementStorableObjectPool.flush(measurementId, true);
+							StorableObjectPool.flush(measurementId, true);
 							super.clearFalls();
 						}
 						catch (CommunicationException ce) {
@@ -169,7 +168,7 @@ public class Transceiver extends SleepButWorkThread {
 						Log.debugMessage("Transceiver.run | Received report for measurement '" + measurementId + "'", Log.DEBUGLEVEL03);
 						measurement = null;
 						try {
-							measurement = (Measurement) MeasurementStorableObjectPool.getStorableObject(measurementId, true);
+							measurement = (Measurement) StorableObjectPool.getStorableObject(measurementId, true);
 						}
 						catch (ApplicationException ae) {
 							Log.errorException(ae);
@@ -182,7 +181,7 @@ public class Transceiver extends SleepButWorkThread {
 								try {
 									result = this.kisReport.createResult();
 									measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ACQUIRED);
-									MeasurementStorableObjectPool.flush(measurementId, true);
+									StorableObjectPool.flush(measurementId, true);
 									super.clearFalls();
 								}
 								catch (MeasurementException me) {

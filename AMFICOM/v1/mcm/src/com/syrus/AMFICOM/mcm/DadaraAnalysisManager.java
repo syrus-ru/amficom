@@ -1,5 +1,5 @@
 /*
- * $Id: DadaraAnalysisManager.java,v 1.34 2005/05/18 13:21:12 bass Exp $
+ * $Id: DadaraAnalysisManager.java,v 1.35 2005/05/23 08:28:54 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.mcm;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/05/18 13:21:12 $
- * @author $Author: bass $
+ * @version $Revision: 1.35 $, $Date: 2005/05/23 08:28:54 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 
@@ -35,10 +35,10 @@ import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramAlarm;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.ParameterTypeCodenames;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.OperationSort;
@@ -240,7 +240,7 @@ public class DadaraAnalysisManager implements AnalysisManager
 					OperationSort.OPERATION_EQUALS,
 					new Short(ObjectEntities.PARAMETERTYPE_ENTITY_CODE),
 					StorableObjectWrapper.COLUMN_CODENAME);
-				pt = (ParameterType) GeneralStorableObjectPool.getStorableObjectsByCondition(tc, true).iterator().next();
+				pt = (ParameterType) StorableObjectPool.getStorableObjectsByCondition(tc, true).iterator().next();
 			}
 			catch (ApplicationException ae) {
 				throw new AnalysisException("Cannot find parameter type of codename: '" + key + "' -- " + ae.getMessage(), ae);

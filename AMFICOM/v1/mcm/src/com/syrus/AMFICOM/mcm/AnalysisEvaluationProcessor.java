@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisEvaluationProcessor.java,v 1.27 2005/05/13 17:57:30 bass Exp $
+ * $Id: AnalysisEvaluationProcessor.java,v 1.28 2005/05/23 08:28:54 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,12 +15,12 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
-import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.Set;
 import com.syrus.AMFICOM.measurement.SetParameter;
@@ -28,8 +28,8 @@ import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/05/13 17:57:30 $
- * @author $Author: bass $
+ * @version $Revision: 1.28 $, $Date: 2005/05/23 08:28:54 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 
@@ -51,7 +51,7 @@ public class AnalysisEvaluationProcessor {
 		Measurement measurement = (Measurement) measurementResult.getAction();
 		Test test = null;
 		try {
-			test = (Test) MeasurementStorableObjectPool.getStorableObject(measurement.getTestId(), true);
+			test = (Test) StorableObjectPool.getStorableObject(measurement.getTestId(), true);
 		}
 		catch (ApplicationException ae) {
 			throw new AnalysisException("Cannot find test -- " + ae.getMessage(), ae);
@@ -63,7 +63,7 @@ public class AnalysisEvaluationProcessor {
 		AnalysisType analysisType = null;
 		try {
 			if (analysisTypeId != null)
-				analysisType = (AnalysisType) MeasurementStorableObjectPool.getStorableObject(analysisTypeId, true);
+				analysisType = (AnalysisType) StorableObjectPool.getStorableObject(analysisTypeId, true);
 		}
 		catch (ApplicationException ae) {
 			throw new AnalysisException("Cannot load analysis type '" + analysisTypeId
