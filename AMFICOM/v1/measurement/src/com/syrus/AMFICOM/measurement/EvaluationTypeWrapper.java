@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeWrapper.java,v 1.8 2005/05/13 21:17:13 arseniy Exp $
+ * $Id: EvaluationTypeWrapper.java,v 1.9 2005/05/23 12:49:46 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/05/13 21:17:13 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.9 $, $Date: 2005/05/23 12:49:46 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 public class EvaluationTypeWrapper extends StorableObjectWrapper {
@@ -54,7 +54,8 @@ public class EvaluationTypeWrapper extends StorableObjectWrapper {
 	}
 
 	public Object getValue(final Object object, final String key) {
-		if (object instanceof EvaluationType) {
+		Object value = super.getValue(object, key);
+		if (value == null && object instanceof EvaluationType) {
 			EvaluationType evaluationType = (EvaluationType) object;
 			if (key.equals(COLUMN_CODENAME))
 				return evaluationType.getCodename();
@@ -70,7 +71,7 @@ public class EvaluationTypeWrapper extends StorableObjectWrapper {
 				return evaluationType.getEtalonParameterTypeIds();
 
 		}
-		return null;
+		return value;
 	}
 
 	public boolean isEditable(final String key) {
