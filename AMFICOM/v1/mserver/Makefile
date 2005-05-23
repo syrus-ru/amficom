@@ -32,7 +32,7 @@ $(LIBNAME_INTERFACE):	.corba
 		-C $(CLASSDIR) com/syrus/AMFICOM/mserver/corba/_MServerStub.class \
 		-C $(CLASSDIR) com/syrus/AMFICOM/mserver/corba/MServerHelper.class \
 		-C $(CLASSDIR) com/syrus/AMFICOM/mserver/corba/MServerHolder.class
-	$(CP) $(LIBNAME_INTERFACE) $(LIBDIR)
+	$(CP) $@ $(LIBDIR)
 
 .mach:	.corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \

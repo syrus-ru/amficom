@@ -34,8 +34,12 @@ $(LIBNAME): .mach
 
 $(LIBNAME_INTERFACE):	.corba
 	$(JAR) -cf $@ \
-		-C $(CLASSDIR) com
-
+		-C $(CLASSDIR) com/syrus/AMFICOM/mshserver/corba/MSHServer.class \
+		-C $(CLASSDIR) com/syrus/AMFICOM/mshserver/corba/MSHServerOperations.class \
+		-C $(CLASSDIR) com/syrus/AMFICOM/mshserver/corba/_MSHServerStub.class \
+		-C $(CLASSDIR) com/syrus/AMFICOM/mshserver/corba/MSHServerHelper.class \
+		-C $(CLASSDIR) com/syrus/AMFICOM/mshserver/corba/MSHServerHolder.class
+	$(CP) $@ $(LIBDIR)
 
 .mach:	.corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \

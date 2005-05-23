@@ -38,7 +38,7 @@ $(LIBNAME_INTERFACE):	.corba
 		-C $(CLASSDIR) com/syrus/AMFICOM/leserver/corba/_EventServerStub.class \
 		-C $(CLASSDIR) com/syrus/AMFICOM/leserver/corba/EventServerHelper.class \
 		-C $(CLASSDIR) com/syrus/AMFICOM/leserver/corba/EventServerHolder.class
-	$(CP) $(LIBNAME_INTERFACE) $(LIBDIR)
+	$(CP) $@ $(LIBDIR)
 
 .mach:	.corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \

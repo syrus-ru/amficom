@@ -42,7 +42,7 @@ $(LIBNAME_INTERFACE):	.corba
 		-C $(CLASSDIR) com/syrus/AMFICOM/mcm/corba/_MCMStub.class \
 		-C $(CLASSDIR) com/syrus/AMFICOM/mcm/corba/MCMHelper.class \
 		-C $(CLASSDIR) com/syrus/AMFICOM/mcm/corba/MCMHolder.class
-	$(CP) $(LIBNAME_INTERFACE) $(LIBDIR)
+	$(CP) $@ $(LIBDIR)
 
 .head:	.mach
 	$(JAVAH) $(JAVAH_FLAGS) \
