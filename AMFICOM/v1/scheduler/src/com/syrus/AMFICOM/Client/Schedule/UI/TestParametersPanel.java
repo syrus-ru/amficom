@@ -49,6 +49,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.Plugger;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.measurement.AnalysisType;
@@ -127,9 +128,9 @@ public class TestParametersPanel implements PropertyChangeListener {
 		this.tabbedPane = new JTabbedPane();
 
 		this.analysisComboBox = new WrapperedComboBox(AnalysisTypeWrapper.getInstance(),
-														StorableObjectWrapper.COLUMN_DESCRIPTION);
+														StorableObjectWrapper.COLUMN_DESCRIPTION, StorableObjectWrapper.COLUMN_ID);
 		this.evaluationComboBox = new WrapperedComboBox(EvaluationTypeWrapper.getInstance(),
-														StorableObjectWrapper.COLUMN_DESCRIPTION);
+														StorableObjectWrapper.COLUMN_DESCRIPTION, StorableObjectWrapper.COLUMN_ID);
 		this.switchPanel = new JPanel(new CardLayout());
 
 		JPanel patternPanel = new JPanel(new GridBagLayout());
@@ -248,8 +249,8 @@ public class TestParametersPanel implements PropertyChangeListener {
 			}
 		});
 
-		this.testSetups = new WrapperedList(MeasurementSetupController.getInstance(),
-											MeasurementSetupController.KEY_NAME);
+		this.testSetups = new WrapperedList(MeasurementSetupWrapper.getInstance(),
+			StorableObjectWrapper.COLUMN_DESCRIPTION, StorableObjectWrapper.COLUMN_ID);
 		this.testSetups.addMouseListener(new MouseAdapter() {
 
 			public void mouseClicked(MouseEvent e) {
@@ -407,8 +408,24 @@ public class TestParametersPanel implements PropertyChangeListener {
 		if (!this.msList.contains(measurementSetup)) {
 			this.msList.add(measurementSetup);
 		}
-		this.testSetups
-				.setSelectedIndex(((WrapperedListModel) this.testSetups.getModel()).getIndexOf(measurementSetup));
+//		Log.debugMessage("TestParametersPanel.setMeasurementSetup | testSetups " + testSetups.getSelectedValue(), Log.FINEST);
+		this.testSetups.setSelectedValue(null, true);
+//		Log.debugMessage("TestParametersPanel.setMeasurementSetup | testSetups " + testSetups.getSelectedValue(), Log.FINEST);
+		this.testSetups.setSelectedValue(measurementSetup, true);
+//		{
+//		int i,c;
+//		 ListModel dm = testSetups.getModel();
+//         for(i=0,c=dm.getSize();i<c;i++) {
+//        	 MeasurementSetup measurementSetup1 = (MeasurementSetup) dm.getElementAt(i);
+//        	 Log.debugMessage("TestParametersPanel.setMeasurementSetup | measurementSetup:" + measurementSetup.getId() + ", " + measurementSetup1.getId(), Log.FINEST);
+//             if(measurementSetup.equals(measurementSetup1)){
+//            	Log.debugMessage("TestParametersPanel.setMeasurementSetup | eq!", Log.FINEST);
+//            	break;
+//             }
+//         }
+//		}
+//		
+//		Log.debugMessage("TestParametersPanel.setMeasurementSetup | testSetups " + testSetups.getSelectedValue(), Log.FINEST);
 		// this.testSetups.setSelectedValue(measurementSetup, true);
 		// Log.debugMessage("TestParametersPanel.setMeasurementSetup |
 		// this.testSetups.getSelectedIndex() " +
@@ -607,31 +624,21 @@ public class TestParametersPanel implements PropertyChangeListener {
 		if (changeStatus && !this.useAnalysisBox.isSelected()) {
 			this.useAnalysisBox.doClick();
 		}
-		for (int i = 0; i < cb.getItemCount(); i++) {
-			Object obj = cb.getItemAt(i);
-			Identifier id = null;
-			// System.out.println("obj:" +
-			// obj.getClass().getName());
-			if (obj instanceof Identifiable) {
-				id = ((Identifiable) obj).getId();
-			}
-			if (id != null) {
-				// System.out.println("id:" + id);
-				if (id.equals(identifier)) {
-					cb.setSelectedIndex(i);
-					// System.out.println("selected " + i);
-					break;
-				}
-			} else if (identifier == null) {
-				cb.setSelectedIndex(i);
-				// System.out.println("selected " + i);
-				break;
+
+		StorableObject storableObject = null;
+		if (identifier != null) {
+			try {
+				storableObject = StorableObjectPool.getStorableObject(identifier, true);
+			} catch (ApplicationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
+		cb.setSelectedItem(storableObject);
 		
-		Log.debugMessage("TestParametersPanel.selectComboBox | this.evaluationComboBox.getSelectedItem(): " + this.evaluationComboBox.getSelectedItem(), Log.FINEST);
-		Log.debugMessage("TestParametersPanel.selectComboBox | this.analysisComboBox.getSelectedItem(): " + this.analysisComboBox.getSelectedItem(), Log.FINEST);
-		Log.debugMessage("TestParametersPanel.selectComboBox | this.useAnalysisBox.isSelected():" + this.useAnalysisBox.isSelected(), Log.FINEST);
+//		Log.debugMessage("TestParametersPanel.selectComboBox | this.evaluationComboBox.getSelectedItem(): " + this.evaluationComboBox.getSelectedItem(), Log.FINEST);
+//		Log.debugMessage("TestParametersPanel.selectComboBox | this.analysisComboBox.getSelectedItem(): " + this.analysisComboBox.getSelectedItem(), Log.FINEST);
+//		Log.debugMessage("TestParametersPanel.selectComboBox | this.useAnalysisBox.isSelected():" + this.useAnalysisBox.isSelected(), Log.FINEST);
 		
 		if (this.evaluationComboBox.getSelectedItem() == null && this.analysisComboBox.getSelectedItem() == null && this.useAnalysisBox.isSelected()) {
 			this.useAnalysisBox.doClick();

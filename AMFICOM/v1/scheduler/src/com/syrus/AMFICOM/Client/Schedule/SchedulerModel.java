@@ -934,29 +934,34 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 				boolean correct = true;
 				for (Iterator iterator = selectedTests.iterator(); iterator.hasNext();) {
 					Test selectedTest = (Test) iterator.next();
-					Date newStartDate = new Date(selectedTest.getStartTime().getTime() + offset);
-					Date newEndDate = selectedTest.getEndTime();
-					if (newEndDate != null) {
-						newEndDate = new Date(newEndDate.getTime() + offset);
-					}
-					correct = this.isValid(newStartDate, newEndDate, selectedTest.getMonitoredElement().getId());
-					if (!correct) {
-						JOptionPane.showMessageDialog(Environment.getActiveWindow(), LangModelSchedule.getString("Cannot move tests"), LangModelSchedule.getString("Error"),
-							JOptionPane.OK_OPTION);
-						break;
+					if (selectedTest.isChanged()) {
+						Date newStartDate = new Date(selectedTest.getStartTime().getTime() + offset);
+						Date newEndDate = selectedTest.getEndTime();
+						if (newEndDate != null) {
+							newEndDate = new Date(newEndDate.getTime() + offset);
+						}
+						correct = this.isValid(newStartDate, newEndDate, selectedTest.getMonitoredElement().getId());
+						if (!correct) {
+							JOptionPane.showMessageDialog(Environment.getActiveWindow(), LangModelSchedule
+									.getString("Cannot move tests"), LangModelSchedule.getString("Error"),
+								JOptionPane.OK_OPTION);
+							break;
+						}
 					}
 				}
 
 				if (correct) {
 					for (Iterator iterator = selectedTests.iterator(); iterator.hasNext();) {
 						Test selectedTest = (Test) iterator.next();
-						Date newStartDate = new Date(selectedTest.getStartTime().getTime() + offset);
-						Date newEndDate = selectedTest.getEndTime();
-						if (newEndDate != null) {
-							newEndDate = new Date(newEndDate.getTime() + offset);
+						if (selectedTest.isChanged()) {
+							Date newStartDate = new Date(selectedTest.getStartTime().getTime() + offset);
+							Date newEndDate = selectedTest.getEndTime();
+							if (newEndDate != null) {
+								newEndDate = new Date(newEndDate.getTime() + offset);
+							}
+							selectedTest.setStartTime(newStartDate);
+							selectedTest.setEndTime(newEndDate);
 						}
-						selectedTest.setStartTime(newStartDate);
-						selectedTest.setEndTime(newEndDate);
 					}
 				}
 			} catch (ApplicationException e) {

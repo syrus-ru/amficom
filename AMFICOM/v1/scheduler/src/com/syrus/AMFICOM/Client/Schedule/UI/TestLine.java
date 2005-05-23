@@ -622,19 +622,13 @@ public class TestLine extends TimeLine {
 	}
 
 	void refreshTimeItems() {
-		
+//		Log.debugMessage("TestLine.refreshTimeItems | ", Log.FINEST);
 		this.timeItems.clear();
 		if (this.scale <= 0.0 || super.start == 0 || super.end == 0) {
-			return;
+//			Log.debugMessage("TestLine.refreshTimeItems | this.scale is " +this.scale + ", return", Log.FINEST);
+			super.scale = (double) (this.getWidth() - PlanPanel.MARGIN) / (double) (this.end - this.start);
 		}
 
-//		try {
-//			throw new Exception();
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-		
 		try {
 		for (Iterator iterator = StorableObjectPool.getStorableObjects(this.testIds, true).iterator(); iterator.hasNext();) {
 			Test test = (Test) iterator.next();
@@ -713,8 +707,8 @@ public class TestLine extends TimeLine {
 			}
 		}
 		
-		Log.debugMessage("TestLine.refreshTimeItems | timeItems " + timeItems.size(), Log.FINEST);
-		Log.debugMessage("TestLine.refreshTimeItems | unsavedTestTimeItems " + unsavedTestTimeItems.size(), Log.FINEST);
+		Log.debugMessage("TestLine.refreshTimeItems | timeItems " + this.timeItems.size(), Log.FINEST);
+		Log.debugMessage("TestLine.refreshTimeItems | unsavedTestTimeItems " + this.unsavedTestTimeItems.size(), Log.FINEST);
 		} catch(ApplicationException e) {
 			SchedulerModel.showErrorMessage(this, e);
 		}

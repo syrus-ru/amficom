@@ -66,7 +66,7 @@ import com.syrus.util.ByteArray;
 //import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/05/23 10:26:12 $
+ * @version $Revision: 1.34 $, $Date: 2005/05/23 14:15:44 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -606,6 +606,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 	}
 
 	public void setMonitoredElement(MonitoredElement me) {
+		this.skip = true;
 		this.meId = me.getId();
 		Identifier measurementPortId1 = me.getMeasurementPortId();
 		if (this.measurementPortId != null && this.measurementPortId.equals(measurementPortId1))
@@ -788,7 +789,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 		} catch (ApplicationException ae) {
 			SchedulerModel.showErrorMessage(this, ae);
 		}
-
+		this.skip = false;
 	}
 	
 	synchronized void  refreshTestsSet() {
