@@ -1,5 +1,5 @@
 /*
- * $Id: OpenSessionCommand.java,v 1.3 2005/05/23 13:36:58 bob Exp $
+ * $Id: OpenSessionCommand.java,v 1.4 2005/05/23 14:08:05 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,13 +12,13 @@ import java.awt.FontMetrics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Iterator;
 import java.util.Set;
 
 import javax.swing.ImageIcon;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -43,7 +43,7 @@ import com.syrus.AMFICOM.general.LoginRestorer;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.3 $, $Date: 2005/05/23 13:36:58 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/23 14:08:05 $
  * @module generalclient_v1
  */
 public class OpenSessionCommand extends AbstractCommand {
@@ -52,7 +52,7 @@ public class OpenSessionCommand extends AbstractCommand {
 	/* static fields use due to dummy command using -> clone (new ...) */
 	private static JPanel			mainPanel;
 
-	static JTextField		loginTextField;
+	private static JTextField		loginTextField;
 	private static JPasswordField	passwordTextField;
 	private static String			login;
 	private static String			password;
@@ -249,27 +249,26 @@ public class OpenSessionCommand extends AbstractCommand {
 		return true;
 	}
 
-	private void showOpenSessionDialog(JFrame frame) {
+	private void showOpenSessionDialog(final JFrame frame) {
 		if (mainPanel == null) {
 			mainPanel = new JPanel(new GridBagLayout());
-			GridBagConstraints gbc1 = new GridBagConstraints();
+			final GridBagConstraints gbc1 = new GridBagConstraints();
 
-			ImageIcon imageIcon = (ImageIcon) UIManager.get(ResourceKeys.IMAGE_LOGIN_LOGO);
-			int iconWidth = imageIcon.getIconWidth();
-			int iconHeight = imageIcon.getIconHeight();
+			final ImageIcon imageIcon = (ImageIcon) UIManager.get(ResourceKeys.IMAGE_LOGIN_LOGO);
+			final int iconWidth = imageIcon.getIconWidth();
+			final int iconHeight = imageIcon.getIconHeight();
 
 			gbc1.gridwidth = GridBagConstraints.REMAINDER;
 			mainPanel.add(new JLabel(imageIcon), gbc1);
 
-			JPanel textFieldsPanel = new JPanel(new GridBagLayout());
+			final JPanel textFieldsPanel = new JPanel(new GridBagLayout());
 			loginTextField = new JTextField();
 			passwordTextField = new JPasswordField();
 
 			{
-				GridBagConstraints gbc = new GridBagConstraints();
-				FontMetrics fontMetrics = loginTextField.getFontMetrics(loginTextField.getFont());
+				final GridBagConstraints gbc = new GridBagConstraints();
+				final FontMetrics fontMetrics = loginTextField.getFontMetrics(loginTextField.getFont());
 
-				
 				gbc.gridwidth = GridBagConstraints.RELATIVE;
 				gbc.insets = new Insets(fontMetrics.getHeight() / 2, iconWidth / 50, fontMetrics.getHeight() / 2,
 										iconWidth / 50);
@@ -292,8 +291,8 @@ public class OpenSessionCommand extends AbstractCommand {
 				gbc.fill = GridBagConstraints.HORIZONTAL;
 				gbc.weightx = 1.0;
 				gbc.anchor = GridBagConstraints.WEST;
-				textFieldsPanel.add(passwordTextField, gbc);				
-				
+				textFieldsPanel.add(passwordTextField, gbc);
+
 			}
 
 			gbc1.gridwidth = GridBagConstraints.REMAINDER;
@@ -304,13 +303,32 @@ public class OpenSessionCommand extends AbstractCommand {
 			mainPanel.add(textFieldsPanel, gbc1);
 
 		}
-		
+
 		loginTextField.requestFocus();
-		
-		int result = JOptionPane.showOptionDialog(frame, mainPanel, LangModel.getString("SessionOpenTitle"),
-			JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, new Object[] {
-					LangModel.getString("buttonEnter"), LangModel.getString("buttonCancel")}, null);
-		if (result == JOptionPane.OK_OPTION) {
+		final String okButton = LangModel.getString("buttonEnter");
+		final String cancelButton = LangModel.getString("buttonCancel");
+		final JOptionPane optionPane = new JOptionPane(mainPanel, JOptionPane.PLAIN_MESSAGE,
+														JOptionPane.OK_CANCEL_OPTION, null, new Object[] { okButton,
+																cancelButton}, null);
+
+		final JDialog dialog = optionPane.createDialog(frame, LangModel.getString("SessionOpenTitle"));
+
+		final ActionListener actionListener = new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				optionPane.setValue(okButton);
+			}
+		};
+
+		loginTextField.addActionListener(actionListener);
+		passwordTextField.addActionListener(actionListener);
+
+		dialog.show();
+		dialog.dispose();
+
+		final Object selectedValue = optionPane.getValue();
+
+		if (selectedValue == okButton) {
 			login = loginTextField.getText();
 			password = new String(passwordTextField.getPassword());
 			logged = true;
