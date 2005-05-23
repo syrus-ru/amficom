@@ -1,5 +1,5 @@
 /*
- * $Id: XMLResourceObjectLoader.java,v 1.3 2005/05/18 12:52:59 bass Exp $
+ * $Id: XMLResourceObjectLoader.java,v 1.4 2005/05/23 12:56:33 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.general.StorableObjectXMLDriver;
 import com.syrus.AMFICOM.general.XMLObjectLoader;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/05/18 12:52:59 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/23 12:56:33 $
  * @author $Author: bass $
  * @module csbridge_v1
  */
@@ -92,7 +92,7 @@ public class XMLResourceObjectLoader extends XMLObjectLoader implements Resource
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
-	public Set refresh(Set storableObjects) {
+	public Set refresh(final Set storableObjects) throws ApplicationException {
 		return Collections.EMPTY_SET;
 	}
 

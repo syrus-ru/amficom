@@ -1,5 +1,5 @@
 /*
- * $Id: XMLAdministrationObjectLoader.java,v 1.4 2005/05/18 12:52:59 bass Exp $
+ * $Id: XMLAdministrationObjectLoader.java,v 1.5 2005/05/23 12:56:33 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.XMLObjectLoader;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/05/18 12:52:59 $
+ * @version $Revision: 1.5 $, $Date: 2005/05/23 12:56:33 $
  * @author $Author: bass $
  * @module csbridge_v1
  */
@@ -138,7 +138,11 @@ public class XMLAdministrationObjectLoader extends XMLObjectLoader implements Ad
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
-	public Set refresh(Set storableObjects) {
+	/**
+	 * @param storableObjects
+	 * @see com.syrus.AMFICOM.administration.AdministrationObjectLoader#refresh(java.util.Set)
+	 */
+	public Set refresh(final Set storableObjects) throws ApplicationException {
 		return Collections.EMPTY_SET;
 	}
 

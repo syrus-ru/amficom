@@ -1,5 +1,5 @@
 /*
- * $Id: XMLGeneralObjectLoader.java,v 1.3 2005/05/18 12:52:58 bass Exp $
+ * $Id: XMLGeneralObjectLoader.java,v 1.4 2005/05/23 12:56:33 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/05/18 12:52:58 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/23 12:56:33 $
  * @author $Author: bass $
  * @module csbridge_v1
  */
@@ -127,7 +127,7 @@ public final class XMLGeneralObjectLoader extends XMLObjectLoader implements Gen
 		this.saveStorableObjects(collection, force);
 	}
 
-	public Set refresh(Set storableObjects) {
+	public Set refresh(final Set storableObjects) throws ApplicationException {
 		return Collections.EMPTY_SET;
 	}
 
