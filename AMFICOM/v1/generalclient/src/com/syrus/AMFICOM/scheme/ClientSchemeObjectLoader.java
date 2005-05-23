@@ -1,5 +1,5 @@
 /*-
- * $Id: ClientSchemeObjectLoader.java,v 1.3 2005/04/23 13:58:27 arseniy Exp $
+ * $Id: ClientSchemeObjectLoader.java,v 1.4 2005/05/23 12:45:23 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,15 +8,20 @@
 
 package com.syrus.AMFICOM.scheme;
 
-import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.general.corba.*;
+import java.util.Iterator;
+import java.util.Set;
+
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.mshserver.corba.MSHServer;
-import java.util.*;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.3 $, $Date: 2005/04/23 13:58:27 $
+ * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2005/05/23 12:45:23 $
  * @module generalclient_v1
  */
 public final class ClientSchemeObjectLoader implements SchemeObjectLoader {
@@ -31,23 +36,6 @@ public final class ClientSchemeObjectLoader implements SchemeObjectLoader {
 	 * @see SchemeObjectLoader#delete(Set)
 	 */
 	public void delete(final Set ids) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param id
-	 * @see SchemeObjectLoader#delete(Identifier)
-	 */
-	public void delete(final Identifier id) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param id
-	 * @throws ApplicationException
-	 * @see SchemeObjectLoader#loadCableChannelingItem(Identifier)
-	 */
-	public StorableObject loadCableChannelingItem(final Identifier id) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -71,15 +59,6 @@ public final class ClientSchemeObjectLoader implements SchemeObjectLoader {
 	}
 
 	/**
-	 * @param id
-	 * @throws ApplicationException
-	 * @see SchemeObjectLoader#loadPathElement(Identifier)
-	 */
-	public StorableObject loadPathElement(final Identifier id) throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
 	 * @param ids
 	 * @throws ApplicationException
 	 * @see SchemeObjectLoader#loadPathElements(Set)
@@ -95,24 +74,6 @@ public final class ClientSchemeObjectLoader implements SchemeObjectLoader {
 	 * @see SchemeObjectLoader#loadPathElementsButIds(StorableObjectCondition, Set)
 	 */
 	public Set loadPathElementsButIds(final StorableObjectCondition storableObjectCondition, final Set ids) throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param id
-	 * @throws ApplicationException
-	 * @see SchemeObjectLoader#loadScheme(Identifier)
-	 */
-	public StorableObject loadScheme(final Identifier id) throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param id
-	 * @throws ApplicationException
-	 * @see SchemeObjectLoader#loadSchemeCableLink(Identifier)
-	 */
-	public StorableObject loadSchemeCableLink(final Identifier id) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -136,15 +97,6 @@ public final class ClientSchemeObjectLoader implements SchemeObjectLoader {
 	}
 
 	/**
-	 * @param id
-	 * @throws ApplicationException
-	 * @see SchemeObjectLoader#loadSchemeCablePort(Identifier)
-	 */
-	public StorableObject loadSchemeCablePort(final Identifier id) throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
 	 * @param ids
 	 * @throws ApplicationException
 	 * @see SchemeObjectLoader#loadSchemeCablePorts(Set)
@@ -160,15 +112,6 @@ public final class ClientSchemeObjectLoader implements SchemeObjectLoader {
 	 * @see SchemeObjectLoader#loadSchemeCablePortsButIds(StorableObjectCondition, Set)
 	 */
 	public Set loadSchemeCablePortsButIds(final StorableObjectCondition storableObjectCondition, final Set ids) throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param id
-	 * @throws ApplicationException
-	 * @see SchemeObjectLoader#loadSchemeCableThread(Identifier)
-	 */
-	public StorableObject loadSchemeCableThread(final Identifier id) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -192,15 +135,6 @@ public final class ClientSchemeObjectLoader implements SchemeObjectLoader {
 	}
 
 	/**
-	 * @param id
-	 * @throws ApplicationException
-	 * @see SchemeObjectLoader#loadSchemeDevice(Identifier)
-	 */
-	public StorableObject loadSchemeDevice(final Identifier id) throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
 	 * @param ids
 	 * @throws ApplicationException
 	 * @see SchemeObjectLoader#loadSchemeDevices(Set)
@@ -216,15 +150,6 @@ public final class ClientSchemeObjectLoader implements SchemeObjectLoader {
 	 * @see SchemeObjectLoader#loadSchemeDevicesButIds(StorableObjectCondition, Set)
 	 */
 	public Set loadSchemeDevicesButIds(final StorableObjectCondition storableObjectCondition, final Set ids) throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param id
-	 * @throws ApplicationException
-	 * @see SchemeObjectLoader#loadSchemeElement(Identifier)
-	 */
-	public StorableObject loadSchemeElement(final Identifier id) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -248,15 +173,6 @@ public final class ClientSchemeObjectLoader implements SchemeObjectLoader {
 	}
 
 	/**
-	 * @param id
-	 * @throws ApplicationException
-	 * @see SchemeObjectLoader#loadSchemeLink(Identifier)
-	 */
-	public StorableObject loadSchemeLink(final Identifier id) throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
 	 * @param ids
 	 * @throws ApplicationException
 	 * @see SchemeObjectLoader#loadSchemeLinks(Set)
@@ -272,15 +188,6 @@ public final class ClientSchemeObjectLoader implements SchemeObjectLoader {
 	 * @see SchemeObjectLoader#loadSchemeLinksButIds(StorableObjectCondition, Set)
 	 */
 	public Set loadSchemeLinksButIds(final StorableObjectCondition storableObjectCondition, final Set ids) throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param id
-	 * @throws ApplicationException
-	 * @see SchemeObjectLoader#loadSchemeMonitoringSolution(Identifier)
-	 */
-	public StorableObject loadSchemeMonitoringSolution(final Identifier id) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -304,11 +211,21 @@ public final class ClientSchemeObjectLoader implements SchemeObjectLoader {
 	}
 
 	/**
-	 * @param id
+	 * @param ids
 	 * @throws ApplicationException
-	 * @see SchemeObjectLoader#loadSchemeOptimizeInfo(Identifier)
+	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#loadSchemeOptimizeInfoRtus(java.util.Set)
 	 */
-	public StorableObject loadSchemeOptimizeInfo(final Identifier id) throws ApplicationException {
+	public Set loadSchemeOptimizeInfoRtus(final Set ids) throws ApplicationException {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param storableObjectCondition
+	 * @param ids
+	 * @throws ApplicationException
+	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#loadSchemeOptimizeInfoRtusButIds(com.syrus.AMFICOM.general.StorableObjectCondition, java.util.Set)
+	 */
+	public Set loadSchemeOptimizeInfoRtusButIds(final StorableObjectCondition storableObjectCondition, final Set ids) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -332,11 +249,21 @@ public final class ClientSchemeObjectLoader implements SchemeObjectLoader {
 	}
 
 	/**
-	 * @param id
+	 * @param ids
 	 * @throws ApplicationException
-	 * @see SchemeObjectLoader#loadSchemePath(Identifier)
+	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#loadSchemeOptimizeInfoSwitches(java.util.Set)
 	 */
-	public StorableObject loadSchemePath(final Identifier id) throws ApplicationException {
+	public Set loadSchemeOptimizeInfoSwitches(final Set ids) throws ApplicationException {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param storableObjectCondition
+	 * @param ids
+	 * @throws ApplicationException
+	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#loadSchemeOptimizeInfoSwitchesButIds(com.syrus.AMFICOM.general.StorableObjectCondition, java.util.Set)
+	 */
+	public Set loadSchemeOptimizeInfoSwitchesButIds(final StorableObjectCondition storableObjectCondition, final Set ids) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -360,15 +287,6 @@ public final class ClientSchemeObjectLoader implements SchemeObjectLoader {
 	}
 
 	/**
-	 * @param id
-	 * @throws ApplicationException
-	 * @see SchemeObjectLoader#loadSchemePort(Identifier)
-	 */
-	public StorableObject loadSchemePort(final Identifier id) throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
 	 * @param ids
 	 * @throws ApplicationException
 	 * @see SchemeObjectLoader#loadSchemePorts(Set)
@@ -388,15 +306,6 @@ public final class ClientSchemeObjectLoader implements SchemeObjectLoader {
 	}
 
 	/**
-	 * @param id
-	 * @throws ApplicationException
-	 * @see SchemeObjectLoader#loadSchemeProtoElement(Identifier)
-	 */
-	public StorableObject loadSchemeProtoElement(final Identifier id) throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
 	 * @param ids
 	 * @throws ApplicationException
 	 * @see SchemeObjectLoader#loadSchemeProtoElements(Set)
@@ -412,15 +321,6 @@ public final class ClientSchemeObjectLoader implements SchemeObjectLoader {
 	 * @see SchemeObjectLoader#loadSchemeProtoElementsButIds(StorableObjectCondition, Set)
 	 */
 	public Set loadSchemeProtoElementsButIds(final StorableObjectCondition storableObjectCondition, final Set ids) throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param id
-	 * @throws ApplicationException
-	 * @see SchemeObjectLoader#loadSchemeProtoGroup(Identifier)
-	 */
-	public StorableObject loadSchemeProtoGroup(final Identifier id) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -472,32 +372,12 @@ public final class ClientSchemeObjectLoader implements SchemeObjectLoader {
 	}
 
 	/**
-	 * @param cableChannelingItem
-	 * @param force
-	 * @throws ApplicationException
-	 * @see SchemeObjectLoader#saveCableChannelingItem(CableChannelingItem, boolean)
-	 */
-	public void saveCableChannelingItem(final CableChannelingItem cableChannelingItem, final boolean force) throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
 	 * @param cableChannelingItems
 	 * @param force
 	 * @throws ApplicationException
 	 * @see SchemeObjectLoader#saveCableChannelingItems(Set, boolean)
 	 */
 	public void saveCableChannelingItems(final Set cableChannelingItems, final boolean force) throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param pathElement
-	 * @param force
-	 * @throws ApplicationException
-	 * @see SchemeObjectLoader#savePathElement(PathElement, boolean)
-	 */
-	public void savePathElement(final PathElement pathElement, final boolean force) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -512,42 +392,12 @@ public final class ClientSchemeObjectLoader implements SchemeObjectLoader {
 	}
 
 	/**
-	 * @param scheme
-	 * @param force
-	 * @throws ApplicationException
-	 * @see SchemeObjectLoader#saveScheme(Scheme, boolean)
-	 */
-	public void saveScheme(final Scheme scheme, final boolean force) throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param schemeCableLink
-	 * @param force
-	 * @throws ApplicationException
-	 * @see SchemeObjectLoader#saveSchemeCableLink(SchemeCableLink, boolean)
-	 */
-	public void saveSchemeCableLink(final SchemeCableLink schemeCableLink, final boolean force) throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
 	 * @param schemeCableLinks
 	 * @param force
 	 * @throws ApplicationException
 	 * @see SchemeObjectLoader#saveSchemeCableLinks(Set, boolean)
 	 */
 	public void saveSchemeCableLinks(final Set schemeCableLinks, final boolean force) throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param schemeCablePort
-	 * @param force
-	 * @throws ApplicationException
-	 * @see SchemeObjectLoader#saveSchemeCablePort(SchemeCablePort, boolean)
-	 */
-	public void saveSchemeCablePort(final SchemeCablePort schemeCablePort, boolean force) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -562,32 +412,12 @@ public final class ClientSchemeObjectLoader implements SchemeObjectLoader {
 	}
 
 	/**
-	 * @param schemeCableThread
-	 * @param force
-	 * @throws ApplicationException
-	 * @see SchemeObjectLoader#saveSchemeCableThread(SchemeCableThread, boolean)
-	 */
-	public void saveSchemeCableThread(final SchemeCableThread schemeCableThread, final boolean force) throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
 	 * @param schemeCableThreads
 	 * @param force
 	 * @throws ApplicationException
 	 * @see SchemeObjectLoader#saveSchemeCableThreads(Set, boolean)
 	 */
 	public void saveSchemeCableThreads(final Set schemeCableThreads, final boolean force) throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param schemeDevice
-	 * @param force
-	 * @throws ApplicationException
-	 * @see SchemeObjectLoader#saveSchemeDevice(SchemeDevice, boolean)
-	 */
-	public void saveSchemeDevice(final SchemeDevice schemeDevice, final boolean force) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -602,33 +432,12 @@ public final class ClientSchemeObjectLoader implements SchemeObjectLoader {
 	}
 
 	/**
-	 * @param schemeElement
-	 * @param force
-	 * @throws ApplicationException
-	 * @see SchemeObjectLoader#saveSchemeElement(SchemeElement, boolean)
-	 */
-	public void saveSchemeElement(final SchemeElement schemeElement, final boolean force) throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
 	 * @param schemeElements
 	 * @param force
 	 * @throws ApplicationException
 	 * @see SchemeObjectLoader#saveSchemeElements(Set, boolean)
 	 */
 	public void saveSchemeElements(final Set schemeElements, final boolean force) throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param schemeLink
-	 * @param force
-	 * @throws ApplicationException
-	 * @see SchemeObjectLoader#saveSchemeLink(SchemeLink, boolean)
-	 */
-	public void saveSchemeLink(final SchemeLink schemeLink, final boolean force)
-			throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -644,16 +453,6 @@ public final class ClientSchemeObjectLoader implements SchemeObjectLoader {
 	}
 
 	/**
-	 * @param schemeMonitoringSolution
-	 * @param force
-	 * @throws ApplicationException
-	 * @see SchemeObjectLoader#saveSchemeMonitoringSolution(SchemeMonitoringSolution, boolean)
-	 */
-	public void saveSchemeMonitoringSolution(final SchemeMonitoringSolution schemeMonitoringSolution, final boolean force) throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
 	 * @param schemeMonitoringSolutions
 	 * @param force
 	 * @throws ApplicationException
@@ -664,12 +463,12 @@ public final class ClientSchemeObjectLoader implements SchemeObjectLoader {
 	}
 
 	/**
-	 * @param schemeOptimizeInfo
+	 * @param schemeOptimizeInfoRtus
 	 * @param force
 	 * @throws ApplicationException
-	 * @see SchemeObjectLoader#saveSchemeOptimizeInfo(SchemeOptimizeInfo, boolean)
+	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#saveSchemeOptimizeInfoRtus(java.util.Set, boolean)
 	 */
-	public void saveSchemeOptimizeInfo(final SchemeOptimizeInfo schemeOptimizeInfo, final boolean force) throws ApplicationException {
+	public void saveSchemeOptimizeInfoRtus(final Set schemeOptimizeInfoRtus, final boolean force) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -684,12 +483,12 @@ public final class ClientSchemeObjectLoader implements SchemeObjectLoader {
 	}
 
 	/**
-	 * @param schemePath
+	 * @param schemeOptimizeInfoSwitches
 	 * @param force
 	 * @throws ApplicationException
-	 * @see SchemeObjectLoader#saveSchemePath(SchemePath, boolean)
+	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#saveSchemeOptimizeInfoSwitches(java.util.Set, boolean)
 	 */
-	public void saveSchemePath(final SchemePath schemePath, final boolean force) throws ApplicationException {
+	public void saveSchemeOptimizeInfoSwitches(final Set schemeOptimizeInfoSwitches, final boolean force) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -700,16 +499,6 @@ public final class ClientSchemeObjectLoader implements SchemeObjectLoader {
 	 * @see SchemeObjectLoader#saveSchemePaths(Set, boolean)
 	 */
 	public void saveSchemePaths(final Set schemePaths, final boolean force) throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param schemePort
-	 * @param force
-	 * @throws ApplicationException
-	 * @see SchemeObjectLoader#saveSchemePort(SchemePort, boolean)
-	 */
-	public void saveSchemePort(final SchemePort schemePort, final boolean force) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -740,16 +529,6 @@ public final class ClientSchemeObjectLoader implements SchemeObjectLoader {
 	 * @see SchemeObjectLoader#saveSchemeProtoElements(Set, boolean)
 	 */
 	public void saveSchemeProtoElements(final Set schemeProtoElements, final boolean force) throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param schemeProtoGroup
-	 * @param force
-	 * @throws ApplicationException
-	 * @see SchemeObjectLoader#saveSchemeProtoGroup(SchemeProtoGroup, boolean)
-	 */
-	public void saveSchemeProtoGroup(final SchemeProtoGroup schemeProtoGroup, final boolean force) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 

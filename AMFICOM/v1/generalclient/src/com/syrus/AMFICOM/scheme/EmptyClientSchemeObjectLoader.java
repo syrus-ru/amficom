@@ -1,5 +1,5 @@
 /*-
- * $Id: EmptyClientSchemeObjectLoader.java,v 1.1 2005/04/15 18:04:08 bass Exp $
+ * $Id: EmptyClientSchemeObjectLoader.java,v 1.2 2005/05/23 12:45:23 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,14 +11,13 @@ package com.syrus.AMFICOM.scheme;
 import java.util.Collections;
 import java.util.Set;
 
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/04/15 18:04:08 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/23 12:45:23 $
  * @module generalclient_v1
  */
 public final class EmptyClientSchemeObjectLoader implements SchemeObjectLoader {
@@ -32,22 +31,6 @@ public final class EmptyClientSchemeObjectLoader implements SchemeObjectLoader {
 	 */
 	public void delete(final Set identifiables) {
 		// empty
-	}
-
-	/**
-	 * @param id
-	 * @see SchemeObjectLoader#delete(Identifier)
-	 */
-	public void delete(final Identifier id) {
-		// empty
-	}
-
-	/**
-	 * @param id
-	 * @see SchemeObjectLoader#loadCableChannelingItem(Identifier)
-	 */
-	public StorableObject loadCableChannelingItem(final Identifier id) {
-		return null;
 	}
 
 	/**
@@ -68,14 +51,6 @@ public final class EmptyClientSchemeObjectLoader implements SchemeObjectLoader {
 	}
 
 	/**
-	 * @param id
-	 * @see SchemeObjectLoader#loadPathElement(Identifier)
-	 */
-	public StorableObject loadPathElement(final Identifier id) {
-		return null;
-	}
-
-	/**
 	 * @param ids
 	 * @see SchemeObjectLoader#loadPathElements(Set)
 	 */
@@ -90,22 +65,6 @@ public final class EmptyClientSchemeObjectLoader implements SchemeObjectLoader {
 	 */
 	public Set loadPathElementsButIds(final StorableObjectCondition storableObjectCondition, final Set ids) {
 		return Collections.EMPTY_SET;
-	}
-
-	/**
-	 * @param id
-	 * @see SchemeObjectLoader#loadScheme(Identifier)
-	 */
-	public StorableObject loadScheme(final Identifier id) {
-		return null;
-	}
-
-	/**
-	 * @param id
-	 * @see SchemeObjectLoader#loadSchemeCableLink(Identifier)
-	 */
-	public StorableObject loadSchemeCableLink(final Identifier id) {
-		return null;
 	}
 
 	/**
@@ -126,14 +85,6 @@ public final class EmptyClientSchemeObjectLoader implements SchemeObjectLoader {
 	}
 
 	/**
-	 * @param id
-	 * @see SchemeObjectLoader#loadSchemeCablePort(Identifier)
-	 */
-	public StorableObject loadSchemeCablePort(final Identifier id) {
-		return null;
-	}
-
-	/**
 	 * @param ids
 	 * @see SchemeObjectLoader#loadSchemeCablePorts(Set)
 	 */
@@ -148,14 +99,6 @@ public final class EmptyClientSchemeObjectLoader implements SchemeObjectLoader {
 	 */
 	public Set loadSchemeCablePortsButIds(final StorableObjectCondition storableObjectCondition, final Set ids) {
 		return Collections.EMPTY_SET;
-	}
-
-	/**
-	 * @param id
-	 * @see SchemeObjectLoader#loadSchemeCableThread(Identifier)
-	 */
-	public StorableObject loadSchemeCableThread(final Identifier id) {
-		return null;
 	}
 
 	/**
@@ -176,14 +119,6 @@ public final class EmptyClientSchemeObjectLoader implements SchemeObjectLoader {
 	}
 
 	/**
-	 * @param id
-	 * @see SchemeObjectLoader#loadSchemeDevice(Identifier)
-	 */
-	public StorableObject loadSchemeDevice(final Identifier id) {
-		return null;
-	}
-
-	/**
 	 * @param ids
 	 * @see SchemeObjectLoader#loadSchemeDevices(Set)
 	 */
@@ -198,14 +133,6 @@ public final class EmptyClientSchemeObjectLoader implements SchemeObjectLoader {
 	 */
 	public Set loadSchemeDevicesButIds(final StorableObjectCondition storableObjectCondition, final Set ids) {
 		return Collections.EMPTY_SET;
-	}
-
-	/**
-	 * @param id
-	 * @see SchemeObjectLoader#loadSchemeElement(Identifier)
-	 */
-	public StorableObject loadSchemeElement(final Identifier id) {
-		return null;
 	}
 
 	/**
@@ -226,14 +153,6 @@ public final class EmptyClientSchemeObjectLoader implements SchemeObjectLoader {
 	}
 
 	/**
-	 * @param id
-	 * @see SchemeObjectLoader#loadSchemeLink(Identifier)
-	 */
-	public StorableObject loadSchemeLink(final Identifier id) {
-		return null;
-	}
-
-	/**
 	 * @param ids
 	 * @see SchemeObjectLoader#loadSchemeLinks(Set)
 	 */
@@ -248,14 +167,6 @@ public final class EmptyClientSchemeObjectLoader implements SchemeObjectLoader {
 	 */
 	public Set loadSchemeLinksButIds(final StorableObjectCondition storableObjectCondition, final Set ids) {
 		return Collections.EMPTY_SET;
-	}
-
-	/**
-	 * @param id
-	 * @see SchemeObjectLoader#loadSchemeMonitoringSolution(Identifier)
-	 */
-	public StorableObject loadSchemeMonitoringSolution(final Identifier id) {
-		return null;
 	}
 
 	/**
@@ -276,11 +187,22 @@ public final class EmptyClientSchemeObjectLoader implements SchemeObjectLoader {
 	}
 
 	/**
-	 * @param id
-	 * @see SchemeObjectLoader#loadSchemeOptimizeInfo(Identifier)
+	 * @param ids
+	 * @throws ApplicationException
+	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#loadSchemeOptimizeInfoRtus(java.util.Set)
 	 */
-	public StorableObject loadSchemeOptimizeInfo(final Identifier id) {
-		return null;
+	public Set loadSchemeOptimizeInfoRtus(final Set ids) throws ApplicationException {
+		return Collections.EMPTY_SET;
+	}
+
+	/**
+	 * @param storableObjectCondition
+	 * @param ids
+	 * @throws ApplicationException
+	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#loadSchemeOptimizeInfoRtusButIds(com.syrus.AMFICOM.general.StorableObjectCondition, java.util.Set)
+	 */
+	public Set loadSchemeOptimizeInfoRtusButIds(final StorableObjectCondition storableObjectCondition, final Set ids) throws ApplicationException {
+		return Collections.EMPTY_SET;
 	}
 
 	/**
@@ -301,11 +223,22 @@ public final class EmptyClientSchemeObjectLoader implements SchemeObjectLoader {
 	}
 
 	/**
-	 * @param id
-	 * @see SchemeObjectLoader#loadSchemePath(Identifier)
+	 * @param ids
+	 * @throws ApplicationException
+	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#loadSchemeOptimizeInfoSwitches(java.util.Set)
 	 */
-	public StorableObject loadSchemePath(final Identifier id) {
-		return null;
+	public Set loadSchemeOptimizeInfoSwitches(final Set ids) throws ApplicationException {
+		return Collections.EMPTY_SET;
+	}
+
+	/**
+	 * @param storableObjectCondition
+	 * @param ids
+	 * @throws ApplicationException
+	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#loadSchemeOptimizeInfoSwitchesButIds(com.syrus.AMFICOM.general.StorableObjectCondition, java.util.Set)
+	 */
+	public Set loadSchemeOptimizeInfoSwitchesButIds(final StorableObjectCondition storableObjectCondition, final Set ids) throws ApplicationException {
+		return Collections.EMPTY_SET;
 	}
 
 	/**
@@ -326,14 +259,6 @@ public final class EmptyClientSchemeObjectLoader implements SchemeObjectLoader {
 	}
 
 	/**
-	 * @param id
-	 * @see SchemeObjectLoader#loadSchemePort(Identifier)
-	 */
-	public StorableObject loadSchemePort(final Identifier id) {
-		return null;
-	}
-
-	/**
 	 * @param ids
 	 * @see SchemeObjectLoader#loadSchemePorts(Set)
 	 */
@@ -351,14 +276,6 @@ public final class EmptyClientSchemeObjectLoader implements SchemeObjectLoader {
 	}
 
 	/**
-	 * @param id
-	 * @see SchemeObjectLoader#loadSchemeProtoElement(Identifier)
-	 */
-	public StorableObject loadSchemeProtoElement(final Identifier id) {
-		return null;
-	}
-
-	/**
 	 * @param ids
 	 * @see SchemeObjectLoader#loadSchemeProtoElements(Set)
 	 */
@@ -373,14 +290,6 @@ public final class EmptyClientSchemeObjectLoader implements SchemeObjectLoader {
 	 */
 	public Set loadSchemeProtoElementsButIds(final StorableObjectCondition storableObjectCondition, final Set ids) {
 		return Collections.EMPTY_SET;
-	}
-
-	/**
-	 * @param id
-	 * @see SchemeObjectLoader#loadSchemeProtoGroup(Identifier)
-	 */
-	public StorableObject loadSchemeProtoGroup(final Identifier id) {
-		return null;
 	}
 
 	/**
@@ -426,29 +335,11 @@ public final class EmptyClientSchemeObjectLoader implements SchemeObjectLoader {
 	}
 
 	/**
-	 * @param cableChannelingItem
-	 * @param force
-	 * @see SchemeObjectLoader#saveCableChannelingItem(CableChannelingItem, boolean)
-	 */
-	public void saveCableChannelingItem(final CableChannelingItem cableChannelingItem, final boolean force) {
-		// empty
-	}
-
-	/**
 	 * @param cableChannelingItems
 	 * @param force
 	 * @see SchemeObjectLoader#saveCableChannelingItems(Set, boolean)
 	 */
 	public void saveCableChannelingItems(final Set cableChannelingItems, final boolean force) {
-		// empty
-	}
-
-	/**
-	 * @param pathElement
-	 * @param force
-	 * @see SchemeObjectLoader#savePathElement(PathElement, boolean)
-	 */
-	public void savePathElement(final PathElement pathElement, final boolean force) {
 		// empty
 	}
 
@@ -462,38 +353,11 @@ public final class EmptyClientSchemeObjectLoader implements SchemeObjectLoader {
 	}
 
 	/**
-	 * @param scheme
-	 * @param force
-	 * @see SchemeObjectLoader#saveScheme(Scheme, boolean)
-	 */
-	public void saveScheme(final Scheme scheme, final boolean force) {
-		// empty
-	}
-
-	/**
-	 * @param schemeCableLink
-	 * @param force
-	 * @see SchemeObjectLoader#saveSchemeCableLink(SchemeCableLink, boolean)
-	 */
-	public void saveSchemeCableLink(final SchemeCableLink schemeCableLink, final boolean force) {
-		// empty
-	}
-
-	/**
 	 * @param schemeCableLinks
 	 * @param force
 	 * @see SchemeObjectLoader#saveSchemeCableLinks(Set, boolean)
 	 */
 	public void saveSchemeCableLinks(final Set schemeCableLinks, final boolean force) {
-		// empty
-	}
-
-	/**
-	 * @param schemeCablePort
-	 * @param force
-	 * @see SchemeObjectLoader#saveSchemeCablePort(SchemeCablePort, boolean)
-	 */
-	public void saveSchemeCablePort(final SchemeCablePort schemeCablePort, final boolean force) {
 		// empty
 	}
 
@@ -507,29 +371,11 @@ public final class EmptyClientSchemeObjectLoader implements SchemeObjectLoader {
 	}
 
 	/**
-	 * @param schemeCableThread
-	 * @param force
-	 * @see SchemeObjectLoader#saveSchemeCableThread(SchemeCableThread, boolean)
-	 */
-	public void saveSchemeCableThread(final SchemeCableThread schemeCableThread, final boolean force) {
-		// empty
-	}
-
-	/**
 	 * @param schemeCableThreads
 	 * @param force
 	 * @see SchemeObjectLoader#saveSchemeCableThreads(Set, boolean)
 	 */
 	public void saveSchemeCableThreads(final Set schemeCableThreads, final boolean force) {
-		// empty
-	}
-
-	/**
-	 * @param schemeDevice
-	 * @param force
-	 * @see SchemeObjectLoader#saveSchemeDevice(SchemeDevice, boolean)
-	 */
-	public void saveSchemeDevice(final SchemeDevice schemeDevice, final boolean force) {
 		// empty
 	}
 
@@ -543,29 +389,11 @@ public final class EmptyClientSchemeObjectLoader implements SchemeObjectLoader {
 	}
 
 	/**
-	 * @param schemeElement
-	 * @param force
-	 * @see SchemeObjectLoader#saveSchemeElement(SchemeElement, boolean)
-	 */
-	public void saveSchemeElement(final SchemeElement schemeElement, final boolean force) {
-		// empty
-	}
-
-	/**
 	 * @param schemeElements
 	 * @param force
 	 * @see SchemeObjectLoader#saveSchemeElements(Set, boolean)
 	 */
 	public void saveSchemeElements(final Set schemeElements, final boolean force) {
-		// empty
-	}
-
-	/**
-	 * @param schemeLink
-	 * @param force
-	 * @see SchemeObjectLoader#saveSchemeLink(SchemeLink, boolean)
-	 */
-	public void saveSchemeLink(final SchemeLink schemeLink, final boolean force) {
 		// empty
 	}
 
@@ -579,15 +407,6 @@ public final class EmptyClientSchemeObjectLoader implements SchemeObjectLoader {
 	}
 
 	/**
-	 * @param schemeMonitoringSolution
-	 * @param force
-	 * @see SchemeObjectLoader#saveSchemeMonitoringSolution(SchemeMonitoringSolution, boolean)
-	 */
-	public void saveSchemeMonitoringSolution(final SchemeMonitoringSolution schemeMonitoringSolution, final boolean force) {
-		// empty
-	}
-
-	/**
 	 * @param schemeMonitoringSolutions
 	 * @param force
 	 * @see SchemeObjectLoader#saveSchemeMonitoringSolutions(Set, boolean)
@@ -597,11 +416,12 @@ public final class EmptyClientSchemeObjectLoader implements SchemeObjectLoader {
 	}
 
 	/**
-	 * @param schemeOptimizeInfo
+	 * @param schemeOptimizeInfoRtus
 	 * @param force
-	 * @see SchemeObjectLoader#saveSchemeOptimizeInfo(SchemeOptimizeInfo, boolean)
+	 * @throws ApplicationException
+	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#saveSchemeOptimizeInfoRtus(java.util.Set, boolean)
 	 */
-	public void saveSchemeOptimizeInfo(final SchemeOptimizeInfo schemeOptimizeInfo, final boolean force) {
+	public void saveSchemeOptimizeInfoRtus(final Set schemeOptimizeInfoRtus, final boolean force) throws ApplicationException {
 		// empty
 	}
 
@@ -615,11 +435,13 @@ public final class EmptyClientSchemeObjectLoader implements SchemeObjectLoader {
 	}
 
 	/**
-	 * @param schemePath
+	 * 
+	 * @param schemeOptimizeInfoSwitches
 	 * @param force
-	 * @see SchemeObjectLoader#saveSchemePath(SchemePath, boolean)
+	 * @throws ApplicationException
+	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#saveSchemeOptimizeInfoSwitches(java.util.Set, boolean)
 	 */
-	public void saveSchemePath(final SchemePath schemePath, final boolean force) {
+	public void saveSchemeOptimizeInfoSwitches(final Set schemeOptimizeInfoSwitches, final boolean force) throws ApplicationException {
 		// empty
 	}
 
@@ -629,15 +451,6 @@ public final class EmptyClientSchemeObjectLoader implements SchemeObjectLoader {
 	 * @see SchemeObjectLoader#saveSchemePaths(Set, boolean)
 	 */
 	public void saveSchemePaths(final Set schemePaths, final boolean force) {
-		// empty
-	}
-
-	/**
-	 * @param schemePort
-	 * @param force
-	 * @see SchemeObjectLoader#saveSchemePort(SchemePort, boolean)
-	 */
-	public void saveSchemePort(final SchemePort schemePort, final boolean force) {
 		// empty
 	}
 
@@ -665,15 +478,6 @@ public final class EmptyClientSchemeObjectLoader implements SchemeObjectLoader {
 	 * @see SchemeObjectLoader#saveSchemeProtoElements(Set, boolean)
 	 */
 	public void saveSchemeProtoElements(final Set schemeProtoElements, final boolean force) {
-		// empty
-	}
-
-	/**
-	 * @param schemeProtoGroup
-	 * @param force
-	 * @see SchemeObjectLoader#saveSchemeProtoGroup(SchemeProtoGroup, boolean)
-	 */
-	public void saveSchemeProtoGroup(final SchemeProtoGroup schemeProtoGroup, final boolean force) {
 		// empty
 	}
 
