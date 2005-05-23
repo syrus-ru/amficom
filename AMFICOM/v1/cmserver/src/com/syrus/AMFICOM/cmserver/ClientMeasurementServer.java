@@ -1,5 +1,5 @@
 /*-
- * $Id: ClientMeasurementServer.java,v 1.45 2005/05/23 08:08:47 arseniy Exp $
+ * $Id: ClientMeasurementServer.java,v 1.46 2005/05/23 08:09:20 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,8 +7,6 @@
  */
 
 package com.syrus.AMFICOM.cmserver;
-
-import org.omg.PortableServer.POA;
 
 import com.syrus.AMFICOM.administration.AdministrationDatabaseContext;
 import com.syrus.AMFICOM.administration.Server;
@@ -27,7 +25,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2005/05/23 08:08:47 $
+ * @version $Revision: 1.46 $, $Date: 2005/05/23 08:09:20 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */

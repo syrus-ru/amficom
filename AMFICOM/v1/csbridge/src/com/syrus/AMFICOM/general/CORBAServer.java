@@ -1,5 +1,5 @@
 /*
- * $Id: CORBAServer.java,v 1.7 2005/05/18 12:52:58 bass Exp $
+ * $Id: CORBAServer.java,v 1.8 2005/05/23 08:09:43 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,8 +41,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/05/18 12:52:58 $
- * @author $Author: bass $
+ * @version $Revision: 1.8 $, $Date: 2005/05/23 08:09:43 $
+ * @author $Author: arseniy $
  * @module csbridge_v1
  */
 
@@ -187,6 +187,7 @@ public class CORBAServer {
 		}
 	}
 */
+
 	public void activateServant(final Servant servant, final String name) throws CommunicationException {
 		if (this.running) {
 			try {
@@ -199,7 +200,7 @@ public class CORBAServer {
 				Log.debugMessage("Activated servant '" + name + "'", Log.DEBUGLEVEL05);
 			}
 			catch (UserException ue) {
-				throw new CommunicationException("Cannot activate servant '" + name + "'", ue);
+				throw new CommunicationException("Cannot activate servant '" + name + "' -- " + ue.getMessage(), ue);
 			}
 		}
 		else
