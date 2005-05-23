@@ -59,12 +59,14 @@ RTUTransceiver::~RTUTransceiver() {
 		}
 	}
 
-	delete[] this->otdr_cards;
+	if (this->state != RTU_STATE_INIT_FAILED) {
+		delete[] this->otdr_cards;
 
-	for (i = 0; i < this->com_port_number; i++)
-		CloseHandle(this->com_ports[i]);
-	delete[] this->otau_numbers;
-	delete[] this->com_ports;
+		for (i = 0; i < this->com_port_number; i++)
+			CloseHandle(this->com_ports[i]);
+		delete[] this->otau_numbers;
+		delete[] this->com_ports;
+	}
 }
 
 void RTUTransceiver::start() {
