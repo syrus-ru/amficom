@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectGroupEntities.java,v 1.16 2005/05/18 11:07:38 bass Exp $
+ * $Id: ObjectGroupEntities.java,v 1.17 2005/05/23 18:44:18 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,7 @@ import gnu.trove.TObjectShortHashMap;
 import gnu.trove.TShortObjectHashMap;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/05/18 11:07:38 $
+ * @version $Revision: 1.17 $, $Date: 2005/05/23 18:44:18 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -72,7 +72,9 @@ public final class ObjectGroupEntities {
 	}
 
 	private static void registerGroup(final short groupCode, final String group) {
+		assert CODE_NAME_MAP.get(groupCode) == null;
 		CODE_NAME_MAP.put(groupCode, group);
+		assert NAME_CODE_MAP.get(group) == 0;
 		NAME_CODE_MAP.put(group, groupCode);
 	}
 
