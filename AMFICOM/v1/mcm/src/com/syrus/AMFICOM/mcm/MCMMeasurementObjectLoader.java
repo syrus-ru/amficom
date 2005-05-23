@@ -1,5 +1,5 @@
 /*
- * $Id: MCMMeasurementObjectLoader.java,v 1.47 2005/05/18 13:21:12 bass Exp $
+ * $Id: MCMMeasurementObjectLoader.java,v 1.48 2005/05/23 12:04:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -57,8 +57,8 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.47 $, $Date: 2005/05/18 13:21:12 $
- * @author $Author: bass $
+ * @version $Revision: 1.48 $, $Date: 2005/05/23 12:04:39 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
@@ -427,7 +427,6 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 		return objects;
 	}
 
-	
 	public void saveTests(java.util.Set objects, boolean force) throws ApplicationException {
 		super.saveTests(objects, force);
 
@@ -440,33 +439,32 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 
 		int n = 0;
 		while (true) {
-			SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
+			n++;
+
 			try {
-				n++;
+				SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
 				StorableObject_Transferable[] headers = mServerRef.receiveTests(transferables, force, sessionKeyT);
 				super.updateHeaders(objects, headers);
+				break;
 			}
 			catch (AMFICOMRemoteException are) {
-				String mesg = "Cannot save objects -- ";
 				if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN) {
 					if (n <= 1) {
-						if (LoginManager.restoreLogin()) {
+						if (LoginManager.restoreLogin())
 							continue;
-						}
 						Log.debugMessage("MCMMeasurementObjectLoader.saveTests | Restore login cancelled", Log.DEBUGLEVEL09);
 						return;
 					}
 					throw new LoginException(are.message);
 				}
+				String mesg = "Cannot save objects -- ";
 				if (are.error_code.value() == ErrorCode._ERROR_VERSION_COLLISION)
 					throw new VersionCollisionException(mesg + are.message, 0L, 0L);
 				throw new UpdateObjectException(mesg + are.message);
 			}
+
 		}
-
 	}
-
-
 
 	public java.util.Set loadAnalysisTypesButIds(StorableObjectCondition condition, java.util.Set ids) {
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
