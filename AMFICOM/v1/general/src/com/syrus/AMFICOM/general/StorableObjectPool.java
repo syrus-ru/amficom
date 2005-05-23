@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.84 2005/05/23 07:41:34 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.85 2005/05/23 07:51:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.84 $, $Date: 2005/05/23 07:41:34 $
+ * @version $Revision: 1.85 $, $Date: 2005/05/23 07:51:19 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -87,8 +87,8 @@ public abstract class StorableObjectPool {
 			if (obj instanceof LRUMap) {
 				final LRUMap objectPool = (LRUMap) obj;
 				this.objectPoolMap.put(objectEntityCode, objectPool);
-				Log.debugMessage("StorableObjectPool.addObjectPool | Pool for" + ObjectEntities.codeToString(objectEntityCode)
-						+ "/" + objectEntityCode + " of size " + poolSize + " added", Log.DEBUGLEVEL07);
+				Log.debugMessage("StorableObjectPool.addObjectPool | Pool for '" + ObjectEntities.codeToString(objectEntityCode)
+						+ "'/" + objectEntityCode + " of size " + poolSize + " added", Log.DEBUGLEVEL07);
 			}
 			else
 				throw new UnsupportedOperationException(this.selfGroupName + "StorableObjectPool.addObjectPool | CacheMapClass "
@@ -988,7 +988,7 @@ public abstract class StorableObjectPool {
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: arseniy $
-	 * @version $Revision: 1.84 $, $Date: 2005/05/23 07:41:34 $
+	 * @version $Revision: 1.85 $, $Date: 2005/05/23 07:51:19 $
 	 * @module general_v1
 	 */
 	private static final class RefreshProcedure implements TObjectProcedure {

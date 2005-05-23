@@ -1,5 +1,5 @@
 /*
- * $Id: MClientServantManager.java,v 1.1 2005/05/05 08:56:37 cvsadmin Exp $
+ * $Id: MClientServantManager.java,v 1.2 2005/05/23 07:52:20 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,9 +16,9 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/05/05 08:56:37 $
- * @author $Author: cvsadmin $
- * @module generalclient_v1
+ * @version $Revision: 1.2 $, $Date: 2005/05/23 07:52:20 $
+ * @author $Author: arseniy $
+ * @module commonclient_v1
  */
 public final class MClientServantManager extends VerifiedConnectionManager implements ClientServantManager, CMServerConnectionManager {
 	private String loginServerServantName;
