@@ -13,7 +13,7 @@ import com.syrus.util.Log;
 
 /**
  * 
- * @version $Revision: 1.1 $, $Date: 2005/05/19 14:06:41 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/23 06:37:28 $
  * @author $Author: bob $
  * @author Kholshin Stanislav
  * @author Vladimir Dolzhenko
@@ -59,6 +59,10 @@ public class Dispatcher {
 	}
 
 	public synchronized void firePropertyChange(PropertyChangeEvent event) {
+		this.firePropertyChange(event, false);
+	}
+	                                            
+	public synchronized void firePropertyChange(PropertyChangeEvent event, boolean canSendToSelf) {
 		String propertyName = event.getPropertyName();
 
 		List listeners = (List) this.events.get(propertyName);
@@ -72,7 +76,7 @@ public class Dispatcher {
 				 * yeah, really compare references, skip sending message to
 				 * source
 				 */
-				if (listener == source) {
+				if (!canSendToSelf && listener == source) {
 					Log.debugMessage("Dispatcher.firePropertyChange | propertyName: " + propertyName
 							+ ", listener == source (" + source.getClass().getName() + ")", Log.FINEST);
 					continue;
