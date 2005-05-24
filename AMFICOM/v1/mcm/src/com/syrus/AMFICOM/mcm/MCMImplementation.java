@@ -1,5 +1,5 @@
 /*
- * $Id: MCMImplementation.java,v 1.33 2005/05/23 08:28:54 arseniy Exp $
+ * $Id: MCMImplementation.java,v 1.34 2005/05/24 14:43:44 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/05/23 08:28:54 $
+ * @version $Revision: 1.34 $, $Date: 2005/05/24 14:43:44 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -74,26 +74,10 @@ public class MCMImplementation extends MCMPOA {
 		}
 	}
 
-	public void abortTest(Identifier_Transferable testIdT) throws AMFICOMRemoteException {
-		Identifier testId = new Identifier(testIdT);
-		Log.debugMessage("Received signal to abort test '" + testId + "'", Log.DEBUGLEVEL07);
-		try {
-			Test test = (Test) StorableObjectPool.getStorableObject(testId, true);
-			MeasurementControlModule.abortTest(test);
-		}
-		catch (ApplicationException ae) {
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES, "Test '"
-					+ testIdT.identifier_string + "' not found -- " + ae.getMessage());
-		}
-		catch (Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
+	public void abortTests(Identifier_Transferable[] testIdsT) throws AMFICOMRemoteException {
+		Set ids = Identifier.fromTransferables(testIdsT);
+		MeasurementControlModule.abortTests(ids);
 	}
-
-
-
-
 
 	public Measurement_Transferable transmitMeasurement(Identifier_Transferable idT) throws AMFICOMRemoteException {
 		Identifier id = new Identifier(idT);
