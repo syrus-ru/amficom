@@ -67,7 +67,7 @@ import com.syrus.util.ByteArray;
 // import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/05/24 15:57:41 $
+ * @version $Revision: 1.36 $, $Date: 2005/05/24 16:36:25 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -124,8 +124,8 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 	double					maxIndexOfRefraction			= 1.46820;
 	double					minIndexOfRefraction			= 1.46820;
 	
-	// TODO create pulseWidthLoResMap
 	Map						pulseWidthHiResMap;
+	Map						pulseWidthLowResMap;
 	List					resolutionList;
 	Map						traceLength;
 	Map						indexOfRefraction;
@@ -756,7 +756,8 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 
 			Pattern pattern = Pattern.compile(CharacteristicTypeCodenames.TRACE_WAVELENGTH_PREFIX + "(\\d+)(" //$NON-NLS-1$
 					+ CharacteristicTypeCodenames.TRACE_LENGTH_SUFFIX + "|" //$NON-NLS-1$
-					+ CharacteristicTypeCodenames.TRACE_PULSE_WIDTH_SUFFIX + "|" //$NON-NLS-1$
+					+ CharacteristicTypeCodenames.TRACE_PULSE_WIDTH_HIGH_RES_SUFFIX + "|" //$NON-NLS-1$
+					+ CharacteristicTypeCodenames.TRACE_PULSE_WIDTH_LOW_RES_SUFFIX + "|" //$NON-NLS-1$
 					+ CharacteristicTypeCodenames.TRACE_INDEX_OF_REFRACTION_SUFFIX + "|" //$NON-NLS-1$
 					+ CharacteristicTypeCodenames.TRACE_AVERAGE_COUNT_SUFFIX + ")"); //$NON-NLS-1$
 
@@ -826,10 +827,12 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 						}
 						if ((waveLength != null) && (suffix != null)) {
 							Map map = null;
-							if (suffix.equals(CharacteristicTypeCodenames.TRACE_LENGTH_SUFFIX))
+							if (suffix.equals(CharacteristicTypeCodenames.TRACE_LENGTH_SUFFIX)) {
 								map = this.traceLength;
-							else if (suffix.equals(CharacteristicTypeCodenames.TRACE_PULSE_WIDTH_SUFFIX)) {
+							} else if (suffix.equals(CharacteristicTypeCodenames.TRACE_PULSE_WIDTH_HIGH_RES_SUFFIX)) {
 								map = this.pulseWidthHiResMap;
+							} else if (suffix.equals(CharacteristicTypeCodenames.TRACE_PULSE_WIDTH_LOW_RES_SUFFIX)) {
+								map = this.pulseWidthLowResMap;
 							} else if (suffix.equals(CharacteristicTypeCodenames.TRACE_INDEX_OF_REFRACTION_SUFFIX)) {
 								map = this.indexOfRefraction;
 							} else if (suffix.equals(CharacteristicTypeCodenames.TRACE_AVERAGE_COUNT_SUFFIX)) {
@@ -865,6 +868,15 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 					this.pulseWidthHiResComboBox.removeAllItems();
 					for (int i = 0; i < values.length; i++)
 						this.pulseWidthHiResComboBox.addItem(values[i]);
+				}
+				
+				{
+					String value = (String) this.pulseWidthLowResMap.get(wavelength);
+					String[] values = value.split("\\s+"); //$NON-NLS-1$
+					Arrays.sort(values, this.comparator);
+					this.pulseWidthLowResComboBox.removeAllItems();
+					for (int i = 0; i < values.length; i++)
+						this.pulseWidthLowResComboBox.addItem(values[i]);
 				}
 
 				{
@@ -1044,6 +1056,14 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 					selectCBValue(this.resolutionComboBox, stringValue);
 				} else if (codename.equals(ParameterTypeCodenames.TRACE_PULSE_WIDTH_HIGH_RES)) {
 					selectCBValue(this.pulseWidthHiResComboBox, stringValue);
+					if (!this.pulseWidthCheckBox.isSelected()) {
+						this.pulseWidthCheckBox.doClick();
+					}
+				}  else if (codename.equals(ParameterTypeCodenames.TRACE_PULSE_WIDTH_LOW_RES)) {
+					selectCBValue(this.pulseWidthLowResComboBox, stringValue);
+					if (this.pulseWidthCheckBox.isSelected()) {
+						this.pulseWidthCheckBox.doClick();
+					}
 				}
 			}
 		}
