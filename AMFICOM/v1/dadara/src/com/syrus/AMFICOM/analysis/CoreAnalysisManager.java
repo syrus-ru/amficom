@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.69 2005/05/24 09:57:34 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.70 2005/05/24 10:00:05 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.69 $, $Date: 2005/05/24 09:57:34 $
+ * @version $Revision: 1.70 $, $Date: 2005/05/24 10:00:05 $
  * @module
  */
 
@@ -465,7 +465,7 @@ public class CoreAnalysisManager
 	/**
 	 * Делает анализ. Скрывает сложности, связанные с правильным
 	 * порядком вызова IA, fit, calcMutualParameters и выставлением нач. порогов.
-	 * @todo: declare to throw "invalid parameters exception"
+	 * @todo declare to throw "invalid parameters exception"
 	 * 
 	 * @param bs рефлектограмма
 	 * @param ap параметры анализа

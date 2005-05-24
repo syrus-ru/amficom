@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTrace.java,v 1.6 2005/05/01 09:35:16 saa Exp $
+ * $Id: ModelTrace.java,v 1.7 2005/05/24 10:00:05 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,8 +12,8 @@ package com.syrus.AMFICOM.analysis.dadara;
  * кривая, определенная на участке от 0 до getLength()-1.
  * 
  * @author $Author: saa $
- * @author: saa
- * @version $Revision: 1.6 $, $Date: 2005/05/01 09:35:16 $
+ * @author saa
+ * @version $Revision: 1.7 $, $Date: 2005/05/24 10:00:05 $
  * @module
  */
 public abstract class ModelTrace extends ModelTraceRange

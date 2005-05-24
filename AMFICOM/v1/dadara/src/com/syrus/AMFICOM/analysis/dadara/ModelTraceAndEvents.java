@@ -1,5 +1,5 @@
 /*-
- * $Id: ModelTraceAndEvents.java,v 1.4 2005/05/05 11:45:28 saa Exp $
+ * $Id: ModelTraceAndEvents.java,v 1.5 2005/05/24 10:00:05 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import com.syrus.AMFICOM.analysis.dadara.events.DetailedEvent;
  * для м.ф.
  * 
  * @author $Author: saa $
- * @author: saa
- * @version $Revision: 1.4 $, $Date: 2005/05/05 11:45:28 $
+ * @author saa
+ * @version $Revision: 1.5 $, $Date: 2005/05/24 10:00:05 $
  * @module
  */
 public interface ModelTraceAndEvents
